@@ -71,27 +71,53 @@ public class Letter implements IClusterable
 		return false;
 	}
 
-	/**
-	 * @return ResourceReference token for this letter
-	 */
-	public ResourceReference getSharedImageResource()
+	static String PARAMETER_GUESSED = "guessed";
+	static String PARAMETER_LETTER = "letter";
+
+	static ResourceReference LETTER_RESOURCE_REFERENCE = new ResourceReference(Letter.class,
+		"letter")
 	{
-		return new ResourceReference(Letter.class, asString() +
-			(isGuessed() ? "_enabled" : "_disabled"))
+		/**
+		 * @see org.apache.wicket.ng.resource.ResourceReference#getResource()
+		 */
+		@Override
+		public IResource getResource()
 		{
-			@Override
-			public IResource getResource()
+			return new ButtonResource();
+		}
+	};
+
+	/**
+	 * Simple resource implementation that checks for "guessed" parameter and delegates to
+	 * {@link DefaultButtonImageResource}.
+	 * 
+	 * @author Matej Knopp
+	 */
+	private static class ButtonResource implements IResource
+	{
+		/**
+		 * @see org.apache.wicket.ng.resource.IResource#respond(org.apache.wicket.ng.resource.IResource.Attributes)
+		 */
+		public void respond(Attributes attributes)
+		{
+			// request parameter for the resource
+			boolean guessed = attributes.getParameters()
+				.getNamedParameter(PARAMETER_GUESSED)
+				.toBoolean(false);
+			String letter = attributes.getParameters()
+				.getNamedParameter(PARAMETER_LETTER)
+				.toString();
+
+			// delegate to another resource
+			DefaultButtonImageResource buttonResource = new DefaultButtonImageResource(30, 30,
+				letter);
+
+			if (guessed)
 			{
-				// Lazy loading of shared resource
-				final DefaultButtonImageResource buttonResource = new DefaultButtonImageResource(
-					30, 30, asString());
-				if (!isGuessed())
-				{
-					buttonResource.setColor(Color.GRAY);
-				}
-				return buttonResource;
+				buttonResource.setColor(Color.GRAY);
 			}
-		};
+			buttonResource.respond(attributes);
+		}
 	}
 
 	/**

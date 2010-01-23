@@ -245,24 +245,35 @@ public class ResourceReferenceRegistry
 	private ResourceReference addDefaultResourceReference(Class<?> scope, String name,
 		Locale locale, String style, String variation)
 	{
-		Key key = new Key(scope.getName(), name, locale, style, variation);
-		if (autoAddedQueue.size() > getAutoAddedCapacity())
-		{
-			Key first = autoAddedQueue.remove();
-			map.remove(first);
-		}
-		autoAddedQueue.add(key);
-
 		ResourceReference reference = createDefaultResourceReference(scope, name, locale, style,
 			variation);
-		registerResourceReference(reference);
+
+		if (reference != null)
+		{
+			Key key = new Key(scope.getName(), name, locale, style, variation);
+			if (autoAddedQueue.size() > getAutoAddedCapacity())
+			{
+				Key first = autoAddedQueue.remove();
+				map.remove(first);
+			}
+			autoAddedQueue.add(key);
+
+			registerResourceReference(reference);
+		}
 		return reference;
 	}
 
 	protected ResourceReference createDefaultResourceReference(Class<?> scope, String name,
 		Locale locale, String style, String variation)
 	{
-		return new PackageResourceReference(scope, name, locale, style, variation);
+		if (PackageResource.exists(scope, name, locale, style, variation))
+		{
+			return new PackageResourceReference(scope, name, locale, style, variation);
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 

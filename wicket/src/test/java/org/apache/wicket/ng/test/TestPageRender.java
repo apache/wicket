@@ -18,10 +18,11 @@ package org.apache.wicket.ng.test;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.Page;
 import org.apache.wicket.Request;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.ILinkListener;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.ng.ThreadContext;
-import org.apache.wicket.ng.markup.html.link.ILinkListener;
 import org.apache.wicket.ng.mock.MockApplication;
 import org.apache.wicket.ng.mock.MockRequestCycle;
 import org.apache.wicket.ng.mock.MockWebRequest;
@@ -31,33 +32,24 @@ import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.mapper.MountedMapper;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
-import org.junit.Ignore;
 
-/**
- * TODO WICKET-NG needs to be reworked
- * 
- * @author igor.vaynberg
- */
-@Ignore
 public class TestPageRender extends TestCase
 {
-	public static class Page1 extends Page
+	public static class Page1 extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 
 		public Page1()
 		{
-// Link l;
-// add(l = new Link("link")
-// {
-// private static final long serialVersionUID = 1L;
-//
-// public void onLinkClicked()
-// {
-// System.out.println("Link clicked!");
-// }
-// });
-// l.setLabel("A Link!");
+			Link l;
+			add(l = new Link("link")
+			{
+				@Override
+				public void onClick()
+				{
+					System.out.println("Link clicked!");
+				}
+			});
 		}
 
 	};
@@ -75,7 +67,7 @@ public class TestPageRender extends TestCase
 		app.getRequestCycleSettings().setRenderStrategy(RenderStrategy.ONE_PASS_RENDER);
 
 		// Mount the test page
-		app.registerEncoder(new MountedMapper("first-test-page", Page1.class));
+		app.getRootRequestMapper().register(new MountedMapper("first-test-page", Page1.class));
 
 		// Construct request for first-test-page
 		Request request = new MockWebRequest(Url.parse("first-test-page"));

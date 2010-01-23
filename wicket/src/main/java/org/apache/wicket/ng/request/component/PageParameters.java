@@ -213,6 +213,56 @@ public class PageParameters implements Serializable
 	}
 
 	/**
+	 * Represents a named parameter entry. There can be multiple {@link NamedParameterPair}s in
+	 * {@link PageParameters} that have same key.
+	 * 
+	 * @author Matej Knopp
+	 */
+	public static class NamedParameterPair
+	{
+		private final String key;
+		private final String value;
+
+		private NamedParameterPair(String key, String value)
+		{
+			this.key = key;
+			this.value = value;
+		}
+
+		/**
+		 * @return key
+		 */
+		public String getKey()
+		{
+			return key;
+		}
+
+		/**
+		 * @return value
+		 */
+		public String getValue()
+		{
+			return value;
+		}
+	};
+
+	/**
+	 * @return All named parameters in exact order.
+	 */
+	public List<NamedParameterPair> getNamedParameters()
+	{
+		List<NamedParameterPair> res = new ArrayList<NamedParameterPair>();
+		if (namedParameters != null)
+		{
+			for (Entry e : namedParameters)
+			{
+				res.add(new NamedParameterPair(e.key, e.value));
+			}
+		}
+		return Collections.unmodifiableList(res);
+	}
+
+	/**
 	 * Removes named parameter with given name.
 	 * 
 	 * @param name

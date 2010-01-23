@@ -16,11 +16,14 @@
  */
 package org.apache.wicket.ng.request.mapper;
 
+import java.util.Locale;
+
+import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ng.MockPage;
 import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.component.PageParameters;
-import org.apache.wicket.ng.request.listener.RequestListenerInterface;
+import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.ng.resource.ResourceReferenceRegistry;
 
 /**
@@ -63,12 +66,21 @@ public class TestMapperContext implements IMapperContext
 		return registry;
 	}
 
-	private final ResourceReferenceRegistry registry = new ResourceReferenceRegistry();
+	private final ResourceReferenceRegistry registry = new ResourceReferenceRegistry()
+	{
+		@Override
+		protected ResourceReference createDefaultResourceReference(Class<?> scope, String name,
+			Locale locale, String style, String variation)
+		{
+			// Do not create package resource here because it requires "real" application
+			return null;
+		}
+	};
 
 	private boolean bookmarkable = true;
 
 	/**
-	 * Determines whether the newly created page will have bookarkable flag set
+	 * Determines whether the newly created page will have bookmarkable flag set
 	 * 
 	 * @param bookmarkable
 	 */
@@ -122,7 +134,7 @@ public class TestMapperContext implements IMapperContext
 			page.setPageId(++idCounter);
 			page.setBookmarkable(true);
 			page.setCreatedBookmarkable(true);
-			page.getPageParametersNg().assign(pageParameters);
+			page.getPageParameters().assign(pageParameters);
 			return page;
 		}
 		catch (Exception e)

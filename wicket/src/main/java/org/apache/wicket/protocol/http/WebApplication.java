@@ -121,12 +121,6 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * The cached application key. Will be set in {@link #setWicketFilter(WicketFilter)} based on
-	 * the filter name.
-	 */
-	private String applicationKey;
-
-	/**
 	 * Map of buffered responses that are in progress per session. Buffered responses are
 	 * temporarily stored
 	 */
@@ -152,16 +146,11 @@ public abstract class WebApplication extends Application
 	/**
 	 * @see org.apache.wicket.Application#getApplicationKey()
 	 */
+	@Deprecated
 	@Override
 	public final String getApplicationKey()
 	{
-		if (applicationKey == null)
-		{
-			throw new IllegalStateException("the application key does not seem to"
-				+ " be set properly or this method is called before WicketServlet is"
-				+ " set, which leads to the wrong behavior");
-		}
-		return applicationKey;
+		return getName();
 	}
 
 	/**
@@ -171,7 +160,7 @@ public abstract class WebApplication extends Application
 	 *            the key to search for
 	 * @return the value of the filter init parameter
 	 */
-	public final String getInitParameter(String key)
+	public String getInitParameter(String key)
 	{
 		if (wicketFilter != null)
 		{
@@ -364,7 +353,6 @@ public abstract class WebApplication extends Application
 	public final void setWicketFilter(final WicketFilter wicketFilter)
 	{
 		this.wicketFilter = wicketFilter;
-		applicationKey = wicketFilter.getFilterConfig().getFilterName();
 	}
 
 	/**
@@ -521,17 +509,6 @@ public abstract class WebApplication extends Application
 	public AjaxRequestTarget newAjaxRequestTarget(final Page page)
 	{
 		return new AjaxRequestTarget(page);
-	}
-
-	/**
-	 * Set the application key value
-	 * 
-	 * @param applicationKey
-	 *            Unique application key (typically the filter name).
-	 */
-	protected final void setApplicationKey(String applicationKey)
-	{
-		this.applicationKey = applicationKey;
 	}
 
 	/**

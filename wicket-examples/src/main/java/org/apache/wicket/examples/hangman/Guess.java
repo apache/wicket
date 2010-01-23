@@ -24,6 +24,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.ng.request.component.PageParameters;
 
 /**
  * The main guess page for the hangman application.
@@ -93,7 +94,13 @@ public class Guess extends HangmanPage
 					}
 				};
 
-				link.add(new Image("image", letter.getSharedImageResource()));
+				PageParameters parameters = new PageParameters();
+				parameters.setNamedParameter(Letter.PARAMETER_LETTER, letter.asString());
+				if (letter.isGuessed())
+				{
+					parameters.setNamedParameter(Letter.PARAMETER_GUESSED, true);
+				}
+				link.add(new Image("image", Letter.LETTER_RESOURCE_REFERENCE, parameters));
 				listItem.add(link);
 
 				// append id attribute to link for unit tests

@@ -16,13 +16,10 @@
  */
 package org.apache.wicket.ng.request.mapper.parameters;
 
-import java.util.List;
-
 import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.Url.QueryParameter;
 import org.apache.wicket.ng.request.component.PageParameters;
-import org.apache.wicket.util.string.StringValue;
 
 /**
  * Simple encoder with direct indexed/named parameters mapping.
@@ -72,17 +69,10 @@ public class SimplePageParametersEncoder implements IPageParametersEncoder
 			url.getSegments().add(pageParameters.getIndexedParameter(i).toString());
 		}
 
-		for (String key : pageParameters.getNamedParameterKeys())
+		for (PageParameters.NamedParameterPair pair : pageParameters.getNamedParameters())
 		{
-			List<StringValue> values = pageParameters.getNamedParameters(key);
-			if (values != null)
-			{
-				for (StringValue value : values)
-				{
-					QueryParameter param = new QueryParameter(key, value.toString());
-					url.getQueryParameters().add(param);
-				}
-			}
+			QueryParameter param = new QueryParameter(pair.getKey(), pair.getValue());
+			url.getQueryParameters().add(param);
 		}
 
 		return url;

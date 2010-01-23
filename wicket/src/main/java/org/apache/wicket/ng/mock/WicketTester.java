@@ -24,6 +24,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestListenerInterface;
+import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.request.IRequestMapper;
@@ -34,6 +35,7 @@ import org.apache.wicket.ng.request.handler.IPageProvider;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
+import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 
 /**
@@ -68,6 +70,9 @@ public class WicketTester
 		application.setName("WicketTesterApplication");
 		application.set();
 		application.initApplication();
+
+		Session session = new WebSession(new MockWebRequest(Url.parse("/")));
+		getApplication().getSessionStore().bind(null, session);
 	}
 
 	/**

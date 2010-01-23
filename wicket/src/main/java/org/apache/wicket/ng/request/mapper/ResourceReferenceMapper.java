@@ -95,6 +95,7 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 				ResourceReference res = getContext().getResourceReferenceRegistry()
 					.getResourceReference(scope, name.toString(), attributes.getLocale(),
 						attributes.getStyle(), attributes.getVariation(), true);
+
 				if (res != null)
 				{
 					return new ResourceReferenceRequestHandler(res, pageParameters);

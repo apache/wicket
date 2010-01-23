@@ -30,7 +30,6 @@ import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.ng.resource.IResource;
-import org.apache.wicket.ng.resource.PackageResource;
 import org.apache.wicket.ng.resource.PackageResourceReference;
 import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.ng.resource.IResource.Attributes;
@@ -185,16 +184,6 @@ public final class LocalizedImageResource implements IClusterable
 			component.getApplication().getResourceReferenceRegistry().registerResourceReference(
 				resourceReference);
 			// Bind the reference to the application
-
-			// Then dereference the resource
-			resource = resourceReference.getResource();
-
-			if (resource instanceof PackageResource)
-			{
-				// TODO NG - deal with this
-				// it's really ugly how resource pushes locale to resource reference :-|
-				// resourceReference.setLocale(((PackageResource)resource).getLocale());
-			}
 		}
 	}
 

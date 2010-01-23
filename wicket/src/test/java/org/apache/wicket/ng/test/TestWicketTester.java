@@ -20,45 +20,45 @@ import junit.framework.TestCase;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.ng.markup.html.link.ILinkListener;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.ILinkListener;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.mock.WicketTester;
-import org.junit.Ignore;
 
 
-/**
- * TODO WICKET-NG needs to be reworked
- * 
- */
-@Ignore
 public class TestWicketTester extends TestCase
 {
-	public static class Page1 extends Page
+	public static class Page1 extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 
 		public Page1()
 		{
-// Link l;
-// add(l = new Link("link")
-// {
-// private static final long serialVersionUID = 1L;
-//
-// public void onLinkClicked()
-// {
-// System.out.println("Link clicked!");
-// }
-// });
-// l.setLabel("A Link!");
+			Link l;
+			add(l = new Link("link")
+			{
+				@Override
+				public void onClick()
+				{
+					System.out.println("Link clicked!");
+				}
+			});
 		}
-
-
 	};
 
 	public void testPageRender1()
 	{
 		WicketTester tester = new WicketTester();
 
-		tester.startPage(new Page1());
+		// this is not too pretty but new Page1() needs Session.get() to be working for various
+		// reasons
+		ThreadContext old = ThreadContext.get(false);
+		ThreadContext.setSession(tester.getApplication().getSession());
+
+		Page page = new Page1();
+
+		tester.startPage(page);
 
 		System.out.println(tester.getLastResponse().getTextResponse());
 
@@ -67,5 +67,7 @@ public class TestWicketTester extends TestCase
 		tester.executeListener(c, ILinkListener.INTERFACE);
 
 		tester.destroy();
+
+		ThreadContext.restore(old);
 	}
 }

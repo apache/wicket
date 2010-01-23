@@ -17,25 +17,24 @@
 package org.apache.wicket.ng.request.mapper;
 
 import java.util.Locale;
-import java.util.Map;
 
 import junit.framework.TestCase;
 
 import org.apache.wicket.Request;
-import org.apache.wicket.ng.markup.html.link.ILinkListener;
+import org.apache.wicket.RequestListenerInterface;
+import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.IRequestablePage;
-import org.apache.wicket.ng.request.listener.RequestListenerInterface;
 
 /**
  * @author Matej Knopp
  */
-public abstract class AbstractEncoderTest extends TestCase
+public abstract class AbstractMapperTest extends TestCase
 {
 	/**
 	 * Construct.
 	 */
-	public AbstractEncoderTest()
+	public AbstractMapperTest()
 	{
 	}
 
@@ -60,48 +59,6 @@ public abstract class AbstractEncoderTest extends TestCase
 
 			@Override
 			public Locale getLocale()
-			{
-				return null;
-			}
-
-			@Override
-			public String getParameter(String key)
-			{
-				return null;
-			}
-
-			@Override
-			public Map<String, String[]> getParameterMap()
-			{
-				return null;
-			}
-
-			@Override
-			public String[] getParameters(String key)
-			{
-				return null;
-			}
-
-			@Override
-			public String getPath()
-			{
-				return null;
-			}
-
-			@Override
-			public String getQueryString()
-			{
-				return null;
-			}
-
-			@Override
-			public String getRelativePathPrefixToContextRoot()
-			{
-				return null;
-			}
-
-			@Override
-			public String getRelativePathPrefixToWicketHandler()
 			{
 				return null;
 			}

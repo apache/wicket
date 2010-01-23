@@ -49,13 +49,13 @@ public class MockComponent implements IRequestableComponent
 	public IRequestableComponent get(String path)
 	{
 		MockComponent c = new MockComponent();
-		if (Strings.isEmpty(getPath()))
+		if (Strings.isEmpty(getPageRelativePath()))
 		{
 			c.setPath(path);
 		}
 		else
 		{
-			c.setPath(getPath() + ":" + path);
+			c.setPath(getPageRelativePath() + ":" + path);
 		}
 		c.setPage(getPage());
 		c.setId(Strings.lastPathComponent(path, ':'));

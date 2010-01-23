@@ -24,13 +24,13 @@ import org.apache.wicket.ng.resource.ResourceReference;
 /**
  * @author Matej Knopp
  */
-public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncoderTest
+public abstract class AbstractResourceReferenceMapperTest extends AbstractMapperTest
 {
 
 	/**
 	 * Construct.
 	 */
-	public AbstractResourceReferenceEncoderTest()
+	public AbstractResourceReferenceMapperTest()
 	{
 	}
 
@@ -42,7 +42,7 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 		{
 		}
 	};
-	
+
 	protected final IResource resource2 = new IResource()
 	{
 		private static final long serialVersionUID = 1L;
@@ -51,7 +51,7 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 		{
 		}
 	};
-	
+
 	protected final IResource resource3 = new IResource()
 	{
 		private static final long serialVersionUID = 1L;
@@ -60,7 +60,7 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 		{
 		}
 	};
-	
+
 	protected final IResource resource4 = new IResource()
 	{
 		private static final long serialVersionUID = 1L;
@@ -69,7 +69,7 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 		{
 		}
 	};
-	
+
 	protected final IResource resource5 = new IResource()
 	{
 		private static final long serialVersionUID = 1L;
@@ -88,10 +88,10 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 		}
 	};
 
-	protected String CLASS_NAME = AbstractResourceReferenceEncoderTest.class.getName();
+	protected String CLASS_NAME = AbstractResourceReferenceMapperTest.class.getName();
 
 	protected ResourceReference reference1 = new ResourceReference(
-		AbstractResourceReferenceEncoderTest.class, "reference1", null, null, null)
+		AbstractResourceReferenceMapperTest.class, "reference1", null, null, null)
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -101,9 +101,33 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 			return resource1;
 		};
 	};
-	
+
+	protected ResourceReference reference1_a = new ResourceReference(
+		AbstractResourceReferenceMapperTest.class, "reference1", Locale.ENGLISH, null, null)
+	{
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public IResource getResource()
+		{
+			return resource1;
+		};
+	};
+
+	protected ResourceReference reference1_b = new ResourceReference(
+		AbstractResourceReferenceMapperTest.class, "reference1", null, "style", null)
+	{
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public IResource getResource()
+		{
+			return resource1;
+		};
+	};
+
 	protected ResourceReference reference2 = new ResourceReference(
-		AbstractResourceReferenceEncoderTest.class, "reference2/name2", new Locale("en", "en"),
+		AbstractResourceReferenceMapperTest.class, "reference2/name2", new Locale("en", "en"),
 		null, null)
 	{
 		private static final long serialVersionUID = 1L;
@@ -114,9 +138,22 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 			return resource2;
 		};
 	};
-	
+
+	protected ResourceReference reference2_a = new ResourceReference(
+		AbstractResourceReferenceMapperTest.class, "reference2/name2", new Locale("en", "en"),
+		"style", null)
+	{
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public IResource getResource()
+		{
+			return resource2;
+		};
+	};
+
 	protected ResourceReference reference3 = new ResourceReference(
-		AbstractResourceReferenceEncoderTest.class, "reference3", null, "style", null)
+		AbstractResourceReferenceMapperTest.class, "reference3", null, "style", null)
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -126,9 +163,9 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 			return resource3;
 		};
 	};
-	
+
 	protected ResourceReference reference4 = new ResourceReference(
-		AbstractResourceReferenceEncoderTest.class, "reference4", Locale.ENGLISH, "style", null)
+		AbstractResourceReferenceMapperTest.class, "reference4", Locale.ENGLISH, "style", null)
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -140,11 +177,11 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 	};
 
 	protected ResourceReference reference5 = new ResourceReference(
-		AbstractResourceReferenceEncoderTest.class, "reference5", Locale.ENGLISH, null, "variation")
+		AbstractResourceReferenceMapperTest.class, "reference5", Locale.ENGLISH, null, "variation")
 	{
 		private static final long serialVersionUID = 1L;
 
-	@Override
+		@Override
 		public IResource getResource()
 		{
 			return resource5;
@@ -152,7 +189,7 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 	};
 
 	protected ResourceReference reference6 = new ResourceReference(
-		AbstractResourceReferenceEncoderTest.class, "reference6", Locale.ENGLISH, "style",
+		AbstractResourceReferenceMapperTest.class, "reference6", Locale.ENGLISH, "style",
 		"variation")
 	{
 		private static final long serialVersionUID = 1L;
@@ -170,7 +207,10 @@ public abstract class AbstractResourceReferenceEncoderTest extends AbstractEncod
 		super.setUp();
 
 		context.getResourceReferenceRegistry().registerResourceReference(reference1);
+		context.getResourceReferenceRegistry().registerResourceReference(reference1_a);
+		context.getResourceReferenceRegistry().registerResourceReference(reference1_b);
 		context.getResourceReferenceRegistry().registerResourceReference(reference2);
+		context.getResourceReferenceRegistry().registerResourceReference(reference2_a);
 		context.getResourceReferenceRegistry().registerResourceReference(reference3);
 		context.getResourceReferenceRegistry().registerResourceReference(reference4);
 		context.getResourceReferenceRegistry().registerResourceReference(reference5);

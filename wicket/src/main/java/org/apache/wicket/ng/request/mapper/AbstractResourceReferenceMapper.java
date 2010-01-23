@@ -65,6 +65,18 @@ public abstract class AbstractResourceReferenceMapper extends AbstractMapper
 		}
 	};
 
+	private static String nonEmpty(String s)
+	{
+		if (Strings.isEmpty(s))
+		{
+			return null;
+		}
+		else
+		{
+			return s;
+		}
+	}
+
 	/**
 	 * 
 	 * @param attributes
@@ -83,12 +95,12 @@ public abstract class AbstractResourceReferenceMapper extends AbstractMapper
 			locale = parseLocale(split[0]);
 			if (split.length == 2)
 			{
-				style = split[1];
+				style = nonEmpty(split[1]);
 			}
 			else if (split.length == 3)
 			{
-				style = split[1];
-				variation = split[2];
+				style = nonEmpty(split[1]);
+				variation = nonEmpty(split[2]);
 			}
 		}
 		return new ResourceReference.UrlAttributes(locale, style, variation);
