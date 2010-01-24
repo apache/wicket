@@ -19,6 +19,9 @@ package org.apache.wicket.util.listener;
 /**
  * Holds a set of IChangeListeners.
  * 
+ * Note that these classes are not meant to be serializable or for you to hold them in session (see
+ * WICKET-2697)
+ * 
  * @author Jonathan Locke
  */
 public final class ChangeListenerSet extends ListenerSet

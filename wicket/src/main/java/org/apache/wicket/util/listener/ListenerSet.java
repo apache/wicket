@@ -24,6 +24,9 @@ import java.util.Set;
  * notification methods that cast the listener to the correct subinterface and invoke the
  * appropriate listener method.
  * 
+ * Note that these classes are not meant to be serializable or for you to hold them in session (see
+ * WICKET-2697)
+ * 
  * @author Jonathan Locke
  */
 public abstract class ListenerSet
