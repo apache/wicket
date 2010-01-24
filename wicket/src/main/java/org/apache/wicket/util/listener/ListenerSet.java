@@ -28,11 +28,13 @@ import java.util.Set;
  * WICKET-2697)
  * 
  * @author Jonathan Locke
+ * 
+ * @param <T>
  */
-public abstract class ListenerSet
+public abstract class ListenerSet<T extends IListener>
 {
 	/** Set of change listeners */
-	private final Set<IListener> listeners = new HashSet<IListener>();
+	private final Set<T> listeners = new HashSet<T>();
 
 	/**
 	 * Adds a listener to this set of listeners.
@@ -41,7 +43,7 @@ public abstract class ListenerSet
 	 *            The listener to add
 	 * @return <tt>true</tt> if the set did not already contain the specified listener.
 	 */
-	public boolean add(final IListener listener)
+	public boolean add(final T listener)
 	{
 		return listeners.add(listener);
 	}
@@ -52,10 +54,10 @@ public abstract class ListenerSet
 	public void notifyListeners()
 	{
 		// Create a stable copy for iterating over
-		final Set<IListener> copy = new HashSet<IListener>(listeners);
+		final Set<T> copy = new HashSet<T>(listeners);
 
 		// Notify all listeners that the file changed
-		for (IListener listener : copy)
+		for (T listener : copy)
 		{
 			notifyListener(listener);
 		}
@@ -67,7 +69,7 @@ public abstract class ListenerSet
 	 * @param listener
 	 *            The listener to remove
 	 */
-	public void remove(final IListener listener)
+	public void remove(final T listener)
 	{
 		listeners.remove(listener);
 	}
@@ -78,5 +80,5 @@ public abstract class ListenerSet
 	 * @param listener
 	 *            The listener to notify
 	 */
-	protected abstract void notifyListener(IListener listener);
+	protected abstract void notifyListener(T listener);
 }

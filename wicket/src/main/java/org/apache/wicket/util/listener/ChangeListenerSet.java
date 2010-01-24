@@ -24,14 +24,14 @@ package org.apache.wicket.util.listener;
  * 
  * @author Jonathan Locke
  */
-public final class ChangeListenerSet extends ListenerSet
+public final class ChangeListenerSet extends ListenerSet<IChangeListener>
 {
 	/**
 	 * @see org.apache.wicket.util.listener.ListenerSet#notifyListener(org.apache.wicket.util.listener.IListener)
 	 */
 	@Override
-	protected void notifyListener(IListener listener)
+	protected void notifyListener(IChangeListener listener)
 	{
-		((IChangeListener)listener).onChange();
+		listener.onChange();
 	}
 }
