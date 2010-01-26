@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Page;
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
@@ -37,6 +38,7 @@ import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.ng.request.IRequestParameters;
+import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WicketURLDecoder;
@@ -221,109 +223,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 		}
 	}
 
-
-	/**
-	 * 
-	 */
-// class FormDispatchRequest extends Request
-// {
-// private final Map<String, String[]> params = new HashMap<String, String[]>();
-//
-// private final Request realRequest;
-//
-// private final Url url;
-//
-// /**
-// * Construct.
-// *
-// * @param realRequest
-// * @param url
-// */
-// public FormDispatchRequest(final Request realRequest, final Url url)
-// {
-// this.realRequest = realRequest;
-// this.url = realRequest.decodeURL(url);
-// this.url.putQueryParameters(params);
-// }
-//
-// /**
-// * @see org.apache.wicket.Request#getLocale()
-// */
-// @Override
-// public Locale getLocale()
-// {
-// return realRequest.getLocale();
-// }
-//
-// /**
-// * @see org.apache.wicket.Request#getParameter(java.lang.String)
-// */
-// @Override
-// public String getParameter(String key)
-// {
-// String p[] = params.get(key);
-// return p != null && p.length > 0 ? p[0] : null;
-// }
-//
-// /**
-// * @see org.apache.wicket.Request#getParameterMap()
-// */
-// @Override
-// public Map<String, String[]> getParameterMap()
-// {
-// return params;
-// }
-//
-// /**
-// * @see org.apache.wicket.Request#getParameters(java.lang.String)
-// */
-// @Override
-// public String[] getParameters(String key)
-// {
-// String[] param = params.get(key);
-// if (param != null)
-// {
-// return param;
-// }
-// return new String[0];
-// }
-//
-// /**
-// * @see org.apache.wicket.Request#getPath()
-// */
-// @Override
-// public String getPath()
-// {
-// return realRequest.getPath();
-// }
-//
-// @Override
-// public String getRelativePathPrefixToContextRoot()
-// {
-// return realRequest.getRelativePathPrefixToContextRoot();
-// }
-//
-// @Override
-// public String getRelativePathPrefixToWicketHandler()
-// {
-// return realRequest.getRelativePathPrefixToWicketHandler();
-// }
-//
-// /**
-// * @see org.apache.wicket.Request#getUrl()
-// */
-// @Override
-// public Url getUrl()
-// {
-// return url;
-// }
-//
-// @Override
-// public String getQueryString()
-// {
-// return realRequest.getQueryString();
-// }
-// }
 	/**
 	 * Constant for specifying how a form is submitted, in this case using get.
 	 */
@@ -1169,23 +1068,14 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 */
 	private void dispatchEvent(final Page page, final String url)
 	{
-		// TODO: Find a saner way
-// RequestCycle rc = RequestCycle.get();
-// IRequestCycleProcessor processor = rc.getProcessor();
-// final ObsoleteRequestParameters requestParameters = processor.getRequestCodingStrategy()
-// .decode(new FormDispatchRequest(rc.getRequest(), Url.parse(url)));
-// IRequestTarget rt = processor.resolve(rc, requestParameters);
-// if (rt instanceof IListenerInterfaceRequestTarget)
-// {
-// IListenerInterfaceRequestTarget interfaceTarget = ((IListenerInterfaceRequestTarget)rt);
-// interfaceTarget.getRequestListenerInterface().invoke(page, interfaceTarget.getTarget());
-// }
-// else
-// {
-// throw new WicketRuntimeException(
-// "Attempt to access unknown request listener interface " +
-// requestParameters.getInterfaceName());
-// }
+		Url parsed = Url.parse(url);
+		IRequestHandler handler = getApplication().getRootRequestMapper().mapRequest(
+			getRequest().requestWithUrl(parsed));
+
+		if (handler != null)
+		{
+			getRequestCycle().scheduleRequestHandlerAfterCurrent(handler);
+		}
 	}
 
 	/**
