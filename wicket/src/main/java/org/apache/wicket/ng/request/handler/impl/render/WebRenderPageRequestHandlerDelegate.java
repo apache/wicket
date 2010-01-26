@@ -209,14 +209,11 @@ public class WebRenderPageRequestHandlerDelegate extends RenderPageRequestHandle
 			// render it to buffer
 
 			// note: if we had session here we would render the page to buffer and then redirect to
-			// URL generated
-			// *after* page has been rendered (the statelessness may change during render). this
-			// would save one redirect
-			// because now we have to render to URL generated *before* page is rendered, render the
-			// page, get URL
-			// after render and if the URL is different (meaning page is not stateless), save the
-			// buffer and redirect again
-			// (which is pretty much what the next step does)
+			// URL generated *after* page has been rendered (the statelessness may change during
+			// render). this would save one redirect because now we have to render to URL generated
+			// *before* page is rendered, render the page, get URL after render and if the URL is
+			// different (meaning page is not stateless), save the buffer and redirect again (which
+			// is pretty much what the next step does)
 			redirectTo(targetUrl, requestCycle);
 		}
 		else if (isRedirectToBuffer())
