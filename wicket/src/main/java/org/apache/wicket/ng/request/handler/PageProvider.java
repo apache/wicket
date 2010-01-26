@@ -36,16 +36,16 @@ import org.apache.wicket.util.lang.Checks;
  * Purpose of this class is to reduce complexity of both {@link IRequestMapper}s and
  * {@link IRequestHandler}s. {@link IRequestMapper} examines the URL, gathers all relevant
  * information about the page in the URL (combination of page id, page class, page parameters and
- * render count), creates {@link DefaultPageProvider} object and creates a {@link IRequestHandler}
- * instance that can use the {@link DefaultPageProvider} to access the page.
+ * render count), creates {@link PageProvider} object and creates a {@link IRequestHandler}
+ * instance that can use the {@link PageProvider} to access the page.
  * <p>
  * Apart from simplifying {@link IRequestMapper}s and {@link IRequestHandler}s
- * {@link DefaultPageProvider} also helps performance because creating or obtaining page from
+ * {@link PageProvider} also helps performance because creating or obtaining page from
  * {@link IPageManager} is delayed until the {@link IRequestHandler} actually requires the page.
  * 
  * @author Matej Knopp
  */
-public class DefaultPageProvider implements IPageProvider
+public class PageProvider implements IPageProvider
 {
 	private Integer renderCount;
 
@@ -67,7 +67,7 @@ public class DefaultPageProvider implements IPageProvider
 	 * @param renderCount
 	 *            optional argument
 	 */
-	public DefaultPageProvider(final int pageId, final Integer renderCount)
+	public PageProvider(final int pageId, final Integer renderCount)
 	{
 		this.pageId = pageId;
 		this.renderCount = renderCount;
@@ -83,7 +83,7 @@ public class DefaultPageProvider implements IPageProvider
 	 * @param renderCount
 	 *            optional argument
 	 */
-	public DefaultPageProvider(final int pageId, final Class<? extends IRequestablePage> pageClass,
+	public PageProvider(final int pageId, final Class<? extends IRequestablePage> pageClass,
 		Integer renderCount)
 	{
 		this(pageId, pageClass, new PageParameters(), renderCount);
@@ -100,7 +100,7 @@ public class DefaultPageProvider implements IPageProvider
 	 * @param renderCount
 	 *            optional argument
 	 */
-	public DefaultPageProvider(final int pageId, final Class<? extends IRequestablePage> pageClass,
+	public PageProvider(final int pageId, final Class<? extends IRequestablePage> pageClass,
 		final PageParameters pageParameters, final Integer renderCount)
 	{
 		this.pageId = pageId;
@@ -116,7 +116,7 @@ public class DefaultPageProvider implements IPageProvider
 	 * @param pageClass
 	 * @param pageParameters
 	 */
-	public DefaultPageProvider(final Class<? extends IRequestablePage> pageClass,
+	public PageProvider(final Class<? extends IRequestablePage> pageClass,
 		final PageParameters pageParameters)
 	{
 		setPageClass(pageClass);
@@ -136,7 +136,7 @@ public class DefaultPageProvider implements IPageProvider
 	 * 
 	 * @param pageClass
 	 */
-	public DefaultPageProvider(Class<? extends IRequestablePage> pageClass)
+	public PageProvider(Class<? extends IRequestablePage> pageClass)
 	{
 		this(pageClass, new PageParameters());
 	}
@@ -147,7 +147,7 @@ public class DefaultPageProvider implements IPageProvider
 	 * 
 	 * @param page
 	 */
-	public DefaultPageProvider(IRequestablePage page)
+	public PageProvider(IRequestablePage page)
 	{
 		Checks.argumentNotNull(page, "page");
 
@@ -285,9 +285,9 @@ public class DefaultPageProvider implements IPageProvider
 	}
 
 	/**
-	 * If the {@link DefaultPageProvider} is used outside request thread (thread that does not have
+	 * If the {@link PageProvider} is used outside request thread (thread that does not have
 	 * application instance assigned) it is necessary to specify a {@link IPageSource} instance so
-	 * that {@link DefaultPageProvider} knows how to get a page instance.
+	 * that {@link PageProvider} knows how to get a page instance.
 	 * 
 	 * @param pageSource
 	 */

@@ -19,7 +19,7 @@ package org.apache.wicket.ng.request.mapper;
 import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.handler.DefaultPageProvider;
+import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 
 public class HomePageMapper extends AbstractMapper
@@ -44,7 +44,7 @@ public class HomePageMapper extends AbstractMapper
 		if (request.getUrl().getSegments().size() == 0 &&
 			request.getUrl().getQueryParameters().size() == 0)
 		{
-			return new RenderPageRequestHandler(new DefaultPageProvider(
+			return new RenderPageRequestHandler(new PageProvider(
 				getContext().getHomePageClass()));
 		}
 		else

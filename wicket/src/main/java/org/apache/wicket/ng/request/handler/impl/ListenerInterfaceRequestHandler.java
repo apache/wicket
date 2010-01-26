@@ -23,8 +23,9 @@ import org.apache.wicket.ng.request.component.IRequestableComponent;
 import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.request.handler.DefaultPageProvider;
+import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.IComponentRequestHandler;
+import org.apache.wicket.ng.request.handler.IPageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.IPageRequestHandler;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler.RedirectPolicy;
@@ -41,7 +42,7 @@ public class ListenerInterfaceRequestHandler
 		IPageRequestHandler,
 		IComponentRequestHandler
 {
-	private final PageAndComponentProvider pageComponentProvider;
+	private final IPageAndComponentProvider pageComponentProvider;
 
 	private final RequestListenerInterface listenerInterface;
 
@@ -54,7 +55,7 @@ public class ListenerInterfaceRequestHandler
 	 * @param listenerInterface
 	 * @param behaviorIndex
 	 */
-	public ListenerInterfaceRequestHandler(PageAndComponentProvider pageComponentProvider,
+	public ListenerInterfaceRequestHandler(IPageAndComponentProvider pageComponentProvider,
 		RequestListenerInterface listenerInterface, Integer behaviorIndex)
 	{
 		Checks.argumentNotNull(pageComponentProvider, "pageComponentProvider");
@@ -154,7 +155,7 @@ public class ListenerInterfaceRequestHandler
 				RedirectPolicy policy = getPage().isPageStateless() ? RedirectPolicy.NEVER_REDIRECT
 					: RedirectPolicy.AUTO_REDIRECT;
 				requestCycle.scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(
-					new DefaultPageProvider(getPage()), policy));
+					new PageProvider(getPage()), policy));
 			}
 
 			if (getBehaviorIndex() == null)

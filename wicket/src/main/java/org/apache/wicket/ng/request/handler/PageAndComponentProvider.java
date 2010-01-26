@@ -22,21 +22,21 @@ import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.util.lang.Checks;
 
 /**
- * Extension of {@link DefaultPageProvider} that is also capable of providing a Component belonging
+ * Extension of {@link PageProvider} that is also capable of providing a Component belonging
  * to the page.
  * 
- * @see DefaultPageProvider
+ * @see PageProvider
  * 
  * @author Matej Knopp
  */
-public class PageAndComponentProvider extends DefaultPageProvider
+public class PageAndComponentProvider extends PageProvider implements IPageAndComponentProvider
 {
 	private IRequestableComponent component;
 
 	private String componentPath;
 
 	/**
-	 * @see DefaultPageProvider#PageProvider(IRequestablePage)
+	 * @see PageProvider#PageProvider(IRequestablePage)
 	 * 
 	 * @param page
 	 * @param componentPath
@@ -48,7 +48,7 @@ public class PageAndComponentProvider extends DefaultPageProvider
 	}
 
 	/**
-	 * @see DefaultPageProvider#PageProvider(IRequestablePage)
+	 * @see PageProvider#PageProvider(IRequestablePage)
 	 * 
 	 * @param page
 	 * @param component
@@ -63,7 +63,7 @@ public class PageAndComponentProvider extends DefaultPageProvider
 	}
 
 	/**
-	 * @see DefaultPageProvider#PageProvider(Class, PageParameters)
+	 * @see PageProvider#PageProvider(Class, PageParameters)
 	 * 
 	 * @param pageClass
 	 * @param pageParameters
@@ -77,7 +77,7 @@ public class PageAndComponentProvider extends DefaultPageProvider
 	}
 
 	/**
-	 * @see DefaultPageProvider#PageProvider(Class)
+	 * @see PageProvider#PageProvider(Class)
 	 * 
 	 * @param pageClass
 	 * @param componentPath
@@ -90,7 +90,7 @@ public class PageAndComponentProvider extends DefaultPageProvider
 	}
 
 	/**
-	 * @see DefaultPageProvider#PageProvider(int, Class, Integer)
+	 * @see PageProvider#PageProvider(int, Class, Integer)
 	 * 
 	 * @param pageId
 	 * @param pageClass
@@ -105,7 +105,7 @@ public class PageAndComponentProvider extends DefaultPageProvider
 	}
 
 	/**
-	 * @see DefaultPageProvider#PageProvider(int, Class, PageParameters, Integer)
+	 * @see PageProvider#PageProvider(int, Class, PageParameters, Integer)
 	 * 
 	 * @param pageId
 	 * @param pageClass
@@ -121,7 +121,7 @@ public class PageAndComponentProvider extends DefaultPageProvider
 	}
 
 	/**
-	 * @see DefaultPageProvider#PageProvider(int, Integer)
+	 * @see PageProvider#PageProvider(int, Integer)
 	 * 
 	 * @param pageId
 	 * @param renderCount
@@ -134,7 +134,7 @@ public class PageAndComponentProvider extends DefaultPageProvider
 	}
 
 	/**
-	 * @see org.apache.wicket.ng.request.handler.DefaultPageProvider#prepareForRenderNewPage()
+	 * @see org.apache.wicket.ng.request.handler.PageProvider#prepareForRenderNewPage()
 	 */
 	@Override
 	protected boolean prepareForRenderNewPage()
@@ -143,9 +143,7 @@ public class PageAndComponentProvider extends DefaultPageProvider
 	}
 
 	/**
-	 * Returns component on specified page with given path.
-	 * 
-	 * @return component
+	 * @see org.apache.wicket.ng.request.handler.IPageAndComponentProvider#getComponent()
 	 */
 	public IRequestableComponent getComponent()
 	{
@@ -163,9 +161,7 @@ public class PageAndComponentProvider extends DefaultPageProvider
 	}
 
 	/**
-	 * Returns the component path.
-	 * 
-	 * @return component path
+	 * @see org.apache.wicket.ng.request.handler.IPageAndComponentProvider#getComponentPath()
 	 */
 	public String getComponentPath()
 	{

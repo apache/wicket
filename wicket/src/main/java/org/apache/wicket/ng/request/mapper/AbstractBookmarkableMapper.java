@@ -23,7 +23,7 @@ import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.component.PageParameters;
-import org.apache.wicket.ng.request.handler.DefaultPageProvider;
+import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.impl.BookmarkableListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.BookmarkablePageRequestHandler;
@@ -151,7 +151,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 	private IRequestHandler processBookmarkable(Class<? extends IRequestablePage> pageClass,
 		PageParameters pageParameters)
 	{
-		DefaultPageProvider provider = new DefaultPageProvider(pageClass, pageParameters);
+		PageProvider provider = new PageProvider(pageClass, pageParameters);
 		provider.setPageSource(getContext());
 		return new RenderPageRequestHandler(provider);
 	}
@@ -168,7 +168,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		Class<? extends IRequestablePage> pageClass, PageParameters pageParameters,
 		Integer renderCount)
 	{
-		DefaultPageProvider provider = new DefaultPageProvider(pageInfo.getPageId(), pageClass,
+		PageProvider provider = new PageProvider(pageInfo.getPageId(), pageClass,
 			pageParameters, renderCount);
 		provider.setPageSource(getContext());
 		return new RenderPageRequestHandler(provider);

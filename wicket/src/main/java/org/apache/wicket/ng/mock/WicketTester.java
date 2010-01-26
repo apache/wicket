@@ -30,7 +30,7 @@ import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.request.handler.DefaultPageProvider;
+import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.IPageProvider;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
@@ -178,7 +178,7 @@ public class WicketTester
 	 */
 	public void startPage(Page page)
 	{
-		startPage(new DefaultPageProvider(page));
+		startPage(new PageProvider(page));
 	}
 
 	/**

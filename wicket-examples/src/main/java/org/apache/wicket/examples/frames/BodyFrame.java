@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.request.handler.DefaultPageProvider;
+import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 
 
@@ -41,7 +41,7 @@ public class BodyFrame extends WebPage
 	{
 		public CharSequence getObject()
 		{
-			IRequestHandler handler = new RenderPageRequestHandler(new DefaultPageProvider(
+			IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(
 				frameTarget.getFrameClass()));
 			return RequestCycle.get().renderUrlFor(handler);
 		}
@@ -71,7 +71,7 @@ public class BodyFrame extends WebPage
 		// create a new page instance, passing this 'master page' as an argument
 		LeftFrame leftFrame = new LeftFrame(this);
 		// get the url to that page
-		IRequestHandler handler = new RenderPageRequestHandler(new DefaultPageProvider(leftFrame));
+		IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(leftFrame));
 		String leftFrameSrc = RequestCycle.get().renderUrlFor(handler).toString();
 		// and create a simple component that modifies it's src attribute to
 		// hold the url to that frame

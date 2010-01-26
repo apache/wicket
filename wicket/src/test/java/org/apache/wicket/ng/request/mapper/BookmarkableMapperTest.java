@@ -23,7 +23,7 @@ import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.IRequestableComponent;
 import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.component.PageParameters;
-import org.apache.wicket.ng.request.handler.DefaultPageProvider;
+import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.IPageProvider;
 import org.apache.wicket.ng.request.handler.IPageRequestHandler;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
@@ -245,7 +245,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 	 */
 	public void testEncode1()
 	{
-		DefaultPageProvider provider = new DefaultPageProvider(MockPage.class, new PageParameters());
+		PageProvider provider = new PageProvider(MockPage.class, new PageParameters());
 		provider.setPageSource(context);
 		IRequestHandler handler = new BookmarkablePageRequestHandler(provider);
 		Url url = encoder.mapHandler(handler);
@@ -262,7 +262,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		parameters.setIndexedParameter(1, "i2");
 		parameters.setNamedParameter("a", "b");
 		parameters.setNamedParameter("b", "c");
-		DefaultPageProvider provider = new DefaultPageProvider(MockPage.class, parameters);
+		PageProvider provider = new PageProvider(MockPage.class, parameters);
 		provider.setPageSource(context);
 		IRequestHandler handler = new BookmarkablePageRequestHandler(provider);
 		Url url = encoder.mapHandler(handler);
@@ -280,7 +280,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		parameters.setNamedParameter("a", "b");
 		parameters.setNamedParameter("b", "c");
 
-		DefaultPageProvider provider = new DefaultPageProvider(MockPage.class, parameters);
+		PageProvider provider = new PageProvider(MockPage.class, parameters);
 		provider.setPageSource(context);
 		IRequestHandler handler = new BookmarkablePageRequestHandler(provider);
 		Url url = encoder.mapHandler(handler);
@@ -300,7 +300,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		page.getPageParameters().setNamedParameter("b", "c");
 		page.setCreatedBookmarkable(true);
 
-		IPageProvider provider = new DefaultPageProvider(page);
+		IPageProvider provider = new PageProvider(page);
 		IRequestHandler handler = new RenderPageRequestHandler(provider);
 		Url url = encoder.mapHandler(handler);
 
@@ -320,7 +320,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 
 		page.setCreatedBookmarkable(false);
 
-		IPageProvider provider = new DefaultPageProvider(page);
+		IPageProvider provider = new PageProvider(page);
 		IRequestHandler handler = new RenderPageRequestHandler(provider);
 		Url url = encoder.mapHandler(handler);
 
@@ -394,7 +394,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		page.setCreatedBookmarkable(true);
 		page.setPageStateless(true);
 
-		IPageProvider provider = new DefaultPageProvider(page);
+		IPageProvider provider = new PageProvider(page);
 		IRequestHandler handler = new RenderPageRequestHandler(provider);
 
 		Url url = encoder.mapHandler(handler);

@@ -44,7 +44,7 @@ import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.request.handler.DefaultPageProvider;
+import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.IPageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.resource.ResourceReference;
@@ -540,7 +540,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		{
 			// the page itself has been added to the request target, we simply issue a redirect back
 			// to the page
-			IRequestHandler handler = new RenderPageRequestHandler(new DefaultPageProvider(page));
+			IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(page));
 			final String url = requestCycle.renderUrlFor(handler).toString();
 			response.sendRedirect(url);
 			return;

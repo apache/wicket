@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.request.handler.DefaultPageProvider;
+import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.impl.BookmarkablePageRequestHandler;
 import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.WebSession;
@@ -135,7 +135,7 @@ public class BrowserInfoPage extends WebPage
 		PageParameters parameters = new PageParameters();
 		parameters.setNamedParameter("cto", continueTo);
 
-		CharSequence url = urlFor(new BookmarkablePageRequestHandler(new DefaultPageProvider(
+		CharSequence url = urlFor(new BookmarkablePageRequestHandler(new PageProvider(
 			BrowserInfoPage.class, parameters)));
 
 		meta.add(new AttributeModifier("content", true, new Model<String>("0; url=" + url)));

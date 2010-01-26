@@ -32,7 +32,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.request.handler.DefaultPageProvider;
+import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.resource.CompressedResourceReference;
 import org.apache.wicket.ng.resource.JavascriptResourceReference;
@@ -991,7 +991,7 @@ public class ModalWindow extends Panel
 			// TODO (NG)
 // RequestCycle.get().setUrlForNewWindowEncoding();
 
-			IRequestHandler handler = new RenderPageRequestHandler(new DefaultPageProvider(page));
+			IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(page));
 			appendAssignment(buffer, "settings.src", RequestCycle.get().renderUrlFor(handler));
 		}
 		else

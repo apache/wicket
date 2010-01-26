@@ -29,7 +29,7 @@ import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.component.PageParameters;
-import org.apache.wicket.ng.request.handler.DefaultPageProvider;
+import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.IPageProvider;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
@@ -431,7 +431,7 @@ public class RequestCycle extends RequestHandlerStack
 	 */
 	public void setResponsePage(IRequestablePage page)
 	{
-		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(new DefaultPageProvider(
+		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(new PageProvider(
 			page), RenderPageRequestHandler.RedirectPolicy.AUTO_REDIRECT));
 	}
 
@@ -444,7 +444,7 @@ public class RequestCycle extends RequestHandlerStack
 	public void setResponsePage(Class<? extends IRequestablePage> pageClass,
 		PageParameters parameters)
 	{
-		IPageProvider provider = new DefaultPageProvider(pageClass, parameters);
+		IPageProvider provider = new PageProvider(pageClass, parameters);
 		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(provider,
 			RenderPageRequestHandler.RedirectPolicy.AUTO_REDIRECT));
 	}
