@@ -94,6 +94,9 @@ public class WebSession extends Session
 		// without further delay) or in case the redirect to render strategy is
 		// used, when we're doing the render request (isRedirect should return
 		// false in that case)
+
+		// TODO NG - does this huge if really make sense?
+
 		if (Application.get().getRequestCycleSettings().getRenderStrategy() != IRequestCycleSettings.RenderStrategy.REDIRECT_TO_RENDER ||
 			((WebRequest)RequestCycle.get().getRequest()).isAjax() ||
 			(!((WebResponse)RequestCycle.get().getResponse()).isRedirect()))

@@ -1424,6 +1424,7 @@ public abstract class Application implements UnboundListener
 			public void onDetach(RequestCycle requestCycle)
 			{
 				getPageManager().commitRequest();
+				Session.get().cleanupFeedbackMessages();
 			}
 		});
 		return requestCycle;

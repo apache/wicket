@@ -364,4 +364,17 @@ class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 	}
 
+	@Override
+	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize)
+		throws FileUploadException
+	{
+		return this;
+	}
+
+	@Override
+	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, FileItemFactory factory)
+		throws FileUploadException
+	{
+		return this;
+	}
 }
