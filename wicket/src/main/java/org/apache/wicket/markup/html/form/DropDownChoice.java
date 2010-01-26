@@ -22,7 +22,9 @@ import org.apache.wicket.RequestContext;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
+import org.apache.wicket.ng.request.Url;
+import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
+import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
 
 
 /**
@@ -175,8 +177,11 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 		// selection changed?
 		if (wantOnSelectionChangedNotifications())
 		{
-			// url that points to this components IOnChangeListener method
-			CharSequence url = urlFor(IOnChangeListener.INTERFACE);
+			// we do not want relative URL here, because it will be used by
+			// Form#dispatchEvent
+			Url url = getRequestCycle().urlFor(
+				new ListenerInterfaceRequestHandler(new PageAndComponentProvider(getPage(), this),
+					IOnChangeListener.INTERFACE));
 
 			Form<?> form = findParent(Form.class);
 			if (form != null)
@@ -186,9 +191,10 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 				{
 					// restore url back to real wicket path as its going to be interpreted by the
 					// form itself
-					url = ((PortletRequestContext)rc).getLastEncodedPath();
+					// TODO NG
+					// url = ((PortletRequestContext)rc).getLastEncodedPath();
 				}
-				tag.put("onchange", form.getJsForInterfaceUrl(url));
+				tag.put("onchange", form.getJsForInterfaceUrl(url.toString()));
 			}
 			else
 			{
