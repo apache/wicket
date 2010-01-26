@@ -23,7 +23,7 @@ import org.apache.wicket.ng.request.IRequestMapper;
 
 /**
  * Represents the context for the request cycle. This class is mainly a grouping parameter for the
- * {@link RequestCycle} constructor. It is only necesary to future-proof the API by making sure
+ * {@link RequestCycle} constructor. It is only necessary to future-proof the API by making sure
  * method signatures do not change if further parameters are introduced at a later time.
  * <p>
  * NOTE: Once a {@link RequestCycle} is instantiated using an instance of this class, the setters
