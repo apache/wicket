@@ -210,10 +210,6 @@ public class DefaultPageProvider implements IPageProvider
 		return false;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
 	protected IPageSource getPageSource()
 	{
 		if (pageSource != null)
@@ -231,14 +227,6 @@ public class DefaultPageProvider implements IPageProvider
 		}
 	}
 
-	/**
-	 * 
-	 * @param pageId
-	 * @param pageClass
-	 * @param pageParameters
-	 * @param renderCount
-	 * @return
-	 */
 	private IRequestablePage getPageInstance(Integer pageId,
 		Class<? extends IRequestablePage> pageClass, PageParameters pageParameters,
 		Integer renderCount)
