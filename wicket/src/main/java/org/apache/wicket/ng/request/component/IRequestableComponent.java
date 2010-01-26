@@ -95,7 +95,7 @@ public interface IRequestableComponent
 	 * }
 	 * </pre>
 	 * 
-	 * If the model was constructed thusly, which is quiet common: {@code new PropertyModel(this,
+	 * If the model was constructed thusly, which is quite common: {@code new PropertyModel(this,
 	 * "person")} and {@link Component} implemented {@link IDetachable} then calling @{code
 	 * model.detach()} will cause an infinite loop with the model trying to detach the component and
 	 * the component trying to detach the model.
