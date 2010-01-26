@@ -136,11 +136,9 @@ public abstract class RequestHandlerStack
 	// FIXME
 	// Is this method really useful for anything? To execute request handler after current
 	// #scheduleRequestHandlerAfterCurrent is better alternative because it doesn't terminate
-	// current
-	// request handler.
+	// current request handler.
 	// To restart request processing #replaceAllRequestHandlers is better alternative because it
-	// unrolls
-	// entire stack and cancels all request handlers in stack
+	// unrolls entire stack and cancels all request handlers in stack
 	public void replaceCurrentRequestHandler(IRequestHandler handler)
 	{
 		if (requestHandlers.isEmpty())
