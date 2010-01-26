@@ -53,6 +53,11 @@ public class PersistentPageManager extends AbstractPageManager
 		this.applicationName = applicationName;
 		this.pageStore = pageStore;
 
+		if (managers.containsKey(applicationName))
+		{
+			throw new IllegalStateException("Manager for application with key '" + applicationName +
+				"' already exists.");
+		}
 		managers.put(applicationName, this);
 	}
 
@@ -244,6 +249,11 @@ public class PersistentPageManager extends AbstractPageManager
 	{
 		private static final String ATTRIBUTE_NAME = "wicket:persistentPageManagerData";
 
+		private String getAttributeName()
+		{
+			return ATTRIBUTE_NAME + " - " + applicationName;
+		}
+
 		/**
 		 * Construct.
 		 * 
@@ -280,7 +290,7 @@ public class PersistentPageManager extends AbstractPageManager
 		 */
 		private SessionEntry getSessionEntry(boolean create)
 		{
-			SessionEntry entry = (SessionEntry)getSessionAttribute(ATTRIBUTE_NAME);
+			SessionEntry entry = (SessionEntry)getSessionAttribute(getAttributeName());
 			if (entry == null && create)
 			{
 				bind();
@@ -290,8 +300,8 @@ public class PersistentPageManager extends AbstractPageManager
 			{
 				synchronized (entry)
 				{
-					setSessionAttribute(ATTRIBUTE_NAME, null);
-					setSessionAttribute(ATTRIBUTE_NAME, entry);
+					setSessionAttribute(getAttributeName(), null);
+					setSessionAttribute(getAttributeName(), entry);
 				}
 			}
 			return entry;
