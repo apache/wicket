@@ -79,6 +79,11 @@ public class UrlRenderer
 	/**
 	 * Renders the Url relative to currently set Base Url.
 	 * 
+	 * This method is only intended for Wicket URLs, because the {@link Url} object represents part
+	 * of URL after Wicket Filter.
+	 * 
+	 * For general URLs within context use {@link #renderContextPathRelativeUrl(String, Request)}
+	 * 
 	 * @param url
 	 * @return Url rendered as string
 	 */
@@ -127,6 +132,13 @@ public class UrlRenderer
 		}
 	}
 
+	/**
+	 * Renders the URL within context relative to current base URL.
+	 * 
+	 * @param url
+	 * @param request
+	 * @return relative URL
+	 */
 	public String renderContextPathRelativeUrl(final String url, final Request request)
 	{
 		PrependingStringBuffer buffer = new PrependingStringBuffer(url);
