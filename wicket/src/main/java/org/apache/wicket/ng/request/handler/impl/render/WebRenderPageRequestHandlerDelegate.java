@@ -58,65 +58,37 @@ public class WebRenderPageRequestHandlerDelegate extends RenderPageRequestHandle
 		return getPageProvider().getPageInstance();
 	}
 
-	/**
-	 * 
-	 * @return true if render happens with one pass
-	 */
 	private boolean isOnePassRender()
 	{
 		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.ONE_PASS_RENDER;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
 	private boolean isRedirectToRender()
 	{
 		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_RENDER;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
 	private boolean isRedirectToBuffer()
 	{
 		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_BUFFER;
 	}
 
-	/**
-	 * 
-	 */
 	private void renderPage()
 	{
 		getPage().renderPage();
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	protected String getSessionId()
+	private String getSessionId()
 	{
 		return Session.get().getId();
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	protected boolean isSessionTemporary()
+	private boolean isSessionTemporary()
 	{
 		return Session.get().isTemporary();
 	}
 
-	/**
-	 * 
-	 * @param url
-	 * @return
-	 */
-	protected BufferedWebResponse getAndRemoveBufferedResponse(Url url)
+	private BufferedWebResponse getAndRemoveBufferedResponse(Url url)
 	{
 		return WebApplication.get().getAndRemoveBufferedResponse(getSessionId(), url);
 	}
