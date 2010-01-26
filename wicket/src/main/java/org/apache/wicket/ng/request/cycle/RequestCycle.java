@@ -291,13 +291,19 @@ public class RequestCycle extends RequestHandlerStack
 		return request;
 	}
 
-	@Deprecated
-	// TODO NG: Remove. Request should be final
-	// the only reason why the method is here is that form sets new request if the request is
-	// multipart
-	// can't this be handled by wicket filter?
+	/**
+	 * INTERNAL This method is for internal Wicket use. Do not call it yourself unless you know what
+	 * you are doing.
+	 * 
+	 * @param request
+	 */
 	public void setRequest(Request request)
 	{
+		// It would be mighty nice if request was final. However during multipart it needs to be set
+		// to
+		// MultipartServletWebRequest by Form. It can't be done before creating the request cycle
+		// (in wicket filter)
+		// because only the form knows max upload size
 		this.request = request;
 	}
 
