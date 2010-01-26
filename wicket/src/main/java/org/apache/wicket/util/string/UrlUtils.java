@@ -63,8 +63,6 @@ public class UrlUtils
 	{
 		if (isRelative(url))
 		{
-			// TODO: NG: This is pretty much a marker method; We dont have any means to do this now
-			System.out.println("TODO NG: Make sure this work properly");
 			return requestCycle.getUrlRenderer().renderContextPathRelativeUrl(url,
 				requestCycle.getRequest());
 		}
