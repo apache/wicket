@@ -23,8 +23,8 @@ import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.component.PageParameters;
-import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
+import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.impl.BookmarkableListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.BookmarkablePageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
@@ -142,12 +142,6 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 	 */
 	public abstract int getCompatibilityScore(Request request);
 
-	/**
-	 * 
-	 * @param pageClass
-	 * @param pageParameters
-	 * @return
-	 */
 	private IRequestHandler processBookmarkable(Class<? extends IRequestablePage> pageClass,
 		PageParameters pageParameters)
 	{
@@ -156,31 +150,16 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		return new RenderPageRequestHandler(provider);
 	}
 
-	/**
-	 * 
-	 * @param pageInfo
-	 * @param pageClass
-	 * @param pageParameters
-	 * @param renderCount
-	 * @return
-	 */
 	private IRequestHandler processHybrid(PageInfo pageInfo,
 		Class<? extends IRequestablePage> pageClass, PageParameters pageParameters,
 		Integer renderCount)
 	{
-		PageProvider provider = new PageProvider(pageInfo.getPageId(), pageClass,
-			pageParameters, renderCount);
+		PageProvider provider = new PageProvider(pageInfo.getPageId(), pageClass, pageParameters,
+			renderCount);
 		provider.setPageSource(getContext());
 		return new RenderPageRequestHandler(provider);
 	}
 
-	/**
-	 * 
-	 * @param pageComponentInfo
-	 * @param pageClass
-	 * @param pageParameters
-	 * @return
-	 */
 	private IRequestHandler processListener(PageComponentInfo pageComponentInfo,
 		Class<? extends IRequestablePage> pageClass, PageParameters pageParameters)
 	{
@@ -247,11 +226,6 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 		return null;
 	}
 
-	/**
-	 * 
-	 * @param pageClass
-	 * @return
-	 */
 	protected boolean checkPageClass(Class<? extends IRequestablePage> pageClass)
 	{
 		return true;

@@ -105,21 +105,11 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 		return null;
 	}
 
-	/**
-	 * 
-	 * @param name
-	 * @return
-	 */
 	protected Class<?> resolveClass(String name)
 	{
 		return Classes.resolveClass(name);
 	}
 
-	/**
-	 * 
-	 * @param scope
-	 * @return
-	 */
 	protected String getClassName(Class<?> scope)
 	{
 		return scope.getName();

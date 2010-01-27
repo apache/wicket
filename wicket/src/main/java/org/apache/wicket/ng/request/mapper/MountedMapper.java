@@ -138,10 +138,6 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		}
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
 	protected PageParameters newPageParameters()
 	{
 		return new PageParameters();

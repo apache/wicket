@@ -22,12 +22,13 @@ import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 
+/**
+ * Mapper for rendering home page.
+ * 
+ * @author Matej Knopp
+ */
 public class HomePageMapper extends AbstractMapper
 {
-
-	public HomePageMapper()
-	{
-	}
 
 	public int getCompatibilityScore(Request request)
 	{
@@ -44,8 +45,7 @@ public class HomePageMapper extends AbstractMapper
 		if (request.getUrl().getSegments().size() == 0 &&
 			request.getUrl().getQueryParameters().size() == 0)
 		{
-			return new RenderPageRequestHandler(new PageProvider(
-				getContext().getHomePageClass()));
+			return new RenderPageRequestHandler(new PageProvider(getContext().getHomePageClass()));
 		}
 		else
 		{

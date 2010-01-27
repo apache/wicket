@@ -37,11 +37,6 @@ public class ComponentInfo
 	private static final String TMP_PLACEHOLDER = "[[[[[[[WICKET[[TMP]]DASH]]" + Math.random() +
 		"]]]]";
 
-	/**
-	 * 
-	 * @param path
-	 * @return
-	 */
 	private static String encodeComponentPath(String path)
 	{
 		if (path != null)
@@ -57,11 +52,6 @@ public class ComponentInfo
 		}
 	}
 
-	/**
-	 * 
-	 * @param path
-	 * @return
-	 */
 	private static String decodeComponentPath(String path)
 	{
 		if (path != null)

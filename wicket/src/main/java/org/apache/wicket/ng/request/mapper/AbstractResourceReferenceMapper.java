@@ -31,11 +31,6 @@ import org.apache.wicket.util.string.Strings;
 public abstract class AbstractResourceReferenceMapper extends AbstractMapper
 {
 
-	/**
-	 * 
-	 * @param attributes
-	 * @return
-	 */
 	protected static String encodeResourceReferenceAttributes(
 		ResourceReference.UrlAttributes attributes)
 	{
@@ -77,11 +72,6 @@ public abstract class AbstractResourceReferenceMapper extends AbstractMapper
 		}
 	}
 
-	/**
-	 * 
-	 * @param attributes
-	 * @return
-	 */
 	protected static ResourceReference.UrlAttributes decodeResourceReferenceAttributes(
 		String attributes)
 	{
@@ -106,11 +96,6 @@ public abstract class AbstractResourceReferenceMapper extends AbstractMapper
 		return new ResourceReference.UrlAttributes(locale, style, variation);
 	}
 
-	/**
-	 * 
-	 * @param locale
-	 * @return
-	 */
 	private static Locale parseLocale(String locale)
 	{
 		if (Strings.isEmpty(locale))
@@ -139,11 +124,6 @@ public abstract class AbstractResourceReferenceMapper extends AbstractMapper
 		}
 	}
 
-	/**
-	 * 
-	 * @param url
-	 * @param reference
-	 */
 	protected void encodeResourceReferenceAttributes(Url url, ResourceReference reference)
 	{
 		String encoded = encodeResourceReferenceAttributes(reference.getUrlAttributes());
@@ -153,11 +133,6 @@ public abstract class AbstractResourceReferenceMapper extends AbstractMapper
 		}
 	}
 
-	/**
-	 * 
-	 * @param url
-	 * @return
-	 */
 	protected ResourceReference.UrlAttributes getResourceReferenceAttributes(Url url)
 	{
 		if (url == null)

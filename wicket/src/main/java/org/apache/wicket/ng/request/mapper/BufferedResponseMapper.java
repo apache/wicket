@@ -49,11 +49,7 @@ public class BufferedResponseMapper implements IRequestMapper
 		return Session.get().getId();
 	}
 
-	/**
-	 * 
-	 * @param url
-	 * @return
-	 */
+
 	protected boolean hasBufferedResponse(Url url)
 	{
 		String sessionId = getSessionId();
@@ -67,21 +63,11 @@ public class BufferedResponseMapper implements IRequestMapper
 		}
 	}
 
-	/**
-	 * 
-	 * @param url
-	 * @return
-	 */
 	protected BufferedWebResponse getAndRemoveBufferedResponse(Url url)
 	{
 		return WebApplication.get().getAndRemoveBufferedResponse(getSessionId(), url);
 	}
 
-	/**
-	 * 
-	 * @param original
-	 * @return
-	 */
 	private Request getRequest(Request original)
 	{
 		// The buffers are stored under "real" URL which can be different

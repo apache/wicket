@@ -44,10 +44,6 @@ public abstract class AbstractMapper implements IRequestMapper
 	{
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
 	protected IMapperContext getContext()
 	{
 		return Application.get().getEncoderContext();
