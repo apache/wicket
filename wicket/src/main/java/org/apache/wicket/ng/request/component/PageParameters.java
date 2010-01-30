@@ -448,6 +448,8 @@ public class PageParameters implements Serializable
 	 */
 	public static boolean equals(PageParameters p1, PageParameters p2)
 	{
+		// @TODO see wicket-2698 and review patch applied to 1.4 if it needs to be applied here as
+		// well.
 		if (Objects.equal(p1, p2))
 		{
 			return true;
