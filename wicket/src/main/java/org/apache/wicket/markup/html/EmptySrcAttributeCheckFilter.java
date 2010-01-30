@@ -45,12 +45,20 @@ public class EmptySrcAttributeCheckFilter implements IResponseFilter
 	/**
 	 * @see org.apache.wicket.IResponseFilter#filter(AppendingStringBuffer)
 	 */
-	public AppendingStringBuffer filter(AppendingStringBuffer responseBuffer)
+	public AppendingStringBuffer filter(final AppendingStringBuffer responseBuffer)
 	{
 		int pos = responseBuffer.indexOf("src=\"\"");
 		if (pos < 0)
 		{
 			pos = responseBuffer.indexOf("src=''");
+			if (pos < 0)
+			{
+				pos = responseBuffer.indexOf("src=\"#\"");
+				if (pos < 0)
+				{
+					pos = responseBuffer.indexOf("src='#'");
+				}
+			}
 		}
 		if (pos >= 0)
 		{
