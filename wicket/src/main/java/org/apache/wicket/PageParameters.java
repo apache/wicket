@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -199,5 +200,74 @@ public final class PageParameters extends ValueMap
 			}
 		}
 		return params;
+	}
+
+	/**
+	 * 
+	 * @see java.util.AbstractMap#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object o)
+	{
+		if (o == null)
+		{
+			return false;
+		}
+
+		if (o.getClass() != this.getClass())
+		{
+			return false;
+		}
+
+		PageParameters other = (PageParameters)o;
+		if (size() != other.size())
+		{
+			return false;
+		}
+
+		for (String key : keySet())
+		{
+			Object first = get(key);
+			Object second = other.get(key);
+
+			if (first != second)
+			{
+				if (first != null && second != null)
+				{
+					Class<?> firstClazz = first.getClass();
+					Class<?> secondClazz = second.getClass();
+					Object[] firstArray;
+					Object[] secondArray;
+
+					// If both of the objects are arrays or atleast one of the them is an array, we
+					// can use the Arrays.equals method
+					if ((firstClazz.isArray() && secondClazz.isArray()) ||
+						(firstClazz.isArray() || secondClazz.isArray()))
+					{
+						firstArray = !first.getClass().isArray() ? new Object[] { first }
+							: (Object[])first;
+						secondArray = !second.getClass().isArray() ? new Object[] { second }
+							: (Object[])second;
+						if (!Arrays.equals(firstArray, secondArray))
+						{
+							return false;
+						}
+					}
+					else
+					{
+						if (!first.equals(second))
+						{
+							return false;
+						}
+					}
+				}
+				else
+				// one of first or second is null
+				{
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 }
