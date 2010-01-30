@@ -175,11 +175,11 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			if (Strings.isEmpty(message))
 			{
 				resource = prefix(prefix, key);
-				message = getString(localizer, key, formComponent);
+				message = getString(localizer, resource, formComponent);
 			}
 
 			// If not found try the most general form [key]
-			if (Strings.isEmpty(message) && Strings.isEmpty(prefix))
+			if (Strings.isEmpty(message))
 			{
 				// Try a variation of the resource key
 				message = getString(localizer, key, formComponent);
