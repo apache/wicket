@@ -65,7 +65,6 @@ class SwitchProtocolRequestTarget implements IRequestTarget
 	/** {@inheritDoc} */
 	public void detach(RequestCycle requestCycle)
 	{
-
 	}
 
 	/**
@@ -76,7 +75,7 @@ class SwitchProtocolRequestTarget implements IRequestTarget
 	 * @param request
 	 * @return url
 	 */
-	private String getUrl(String protocol, Integer port, HttpServletRequest request)
+	protected String getUrl(String protocol, Integer port, HttpServletRequest request)
 	{
 		StringBuilder result = new StringBuilder();
 		result.append(protocol);
@@ -158,5 +157,4 @@ class SwitchProtocolRequestTarget implements IRequestTarget
 			return new SwitchProtocolRequestTarget(protocol);
 		}
 	}
-
 }
