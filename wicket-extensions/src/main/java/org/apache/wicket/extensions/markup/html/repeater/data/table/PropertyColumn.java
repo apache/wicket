@@ -41,8 +41,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Igor Vaynberg ( ivaynberg )
  * @param <T>
- *            The type of the property
- * 
+ *            The Model object type
  */
 public class PropertyColumn<T> extends AbstractColumn<T>
 {
