@@ -161,9 +161,14 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 			attrs.put("disabled", "disabled");
 		}
 
+		avoidAjaxSerialization();
+	}
 
-		// A piece of javascript to avoid serializing the options during AJAX
-		// serialization.
+	/**
+	* A piece of javascript to avoid serializing the options during AJAX
+	* serialization.
+	*/
+	protected void avoidAjaxSerialization() {
 		getResponse().write(
 			JavascriptUtils.SCRIPT_OPEN_TAG +
 				"if (typeof(Wicket) != \"undefined\" && typeof(Wicket.Form) != \"undefined\")" +
