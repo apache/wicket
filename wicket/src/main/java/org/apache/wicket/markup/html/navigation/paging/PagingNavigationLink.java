@@ -46,8 +46,8 @@ public class PagingNavigationLink<T> extends Link<T>
 	 * @param pageable
 	 *            The pageable component for this page link
 	 * @param pageNumber
-	 *            The page number in the PageableListView that this link links
-	 *            to. Negative pageNumbers are relative to the end of the list.
+	 *            The page number in the PageableListView that this link links to. Negative
+	 *            pageNumbers are relative to the end of the list.
 	 */
 	public PagingNavigationLink(final String id, final IPageable pageable, final int pageNumber)
 	{
@@ -73,12 +73,39 @@ public class PagingNavigationLink<T> extends Link<T>
 	 */
 	public final int getPageNumber()
 	{
-		return pageNumber;
+		return cullPageNumber(pageNumber);
 	}
 
 	/**
-	 * @return True if this page is the first page of the containing
-	 *         PageableListView
+	 * Allows the link to cull the page number to the valid range before it is retrieved from the
+	 * link
+	 * 
+	 * @param pageNumber
+	 * @return culled page number
+	 */
+	protected int cullPageNumber(int pageNumber)
+	{
+		int idx = pageNumber;
+		if (idx < 0)
+		{
+			idx = pageable.getPageCount() + idx;
+		}
+
+		if (idx > (pageable.getPageCount() - 1))
+		{
+			idx = pageable.getPageCount() - 1;
+		}
+
+		if (idx < 0)
+		{
+			idx = 0;
+		}
+
+		return idx;
+	}
+
+	/**
+	 * @return True if this page is the first page of the containing PageableListView
 	 */
 	public final boolean isFirst()
 	{
@@ -86,8 +113,7 @@ public class PagingNavigationLink<T> extends Link<T>
 	}
 
 	/**
-	 * @return True if this page is the last page of the containing
-	 *         PageableListView
+	 * @return True if this page is the last page of the containing PageableListView
 	 */
 	public final boolean isLast()
 	{
@@ -95,8 +121,7 @@ public class PagingNavigationLink<T> extends Link<T>
 	}
 
 	/**
-	 * Returns true if this PageableListView navigation link links to the given
-	 * page.
+	 * Returns true if this PageableListView navigation link links to the given page.
 	 * 
 	 * @param page
 	 *            The page
