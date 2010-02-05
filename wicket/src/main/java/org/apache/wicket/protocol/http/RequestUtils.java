@@ -34,12 +34,12 @@ import org.apache.wicket.util.value.ValueMap;
 public final class RequestUtils
 {
 	/**
-	 * Decode the provided queryString as a series of key/ value pairs and set them in the provided
-	 * value map.
+	 * Decode the provided queryString as a series of key/ value pairs and set
+	 * them in the provided value map.
 	 * 
 	 * @param queryString
-	 *            string to decode, uses '&' to separate parameters and '=' to separate key from
-	 *            value
+	 *            string to decode, uses '&' to separate parameters and '=' to
+	 *            separate key from value
 	 * @param params
 	 *            parameters map to write the found key/ value pairs to
 	 */
@@ -52,7 +52,7 @@ public final class RequestUtils
 			if (bits.length == 2)
 			{
 				params.add(WicketURLDecoder.QUERY_INSTANCE.decode(bits[0]),
-					WicketURLDecoder.QUERY_INSTANCE.decode(bits[1]));
+						WicketURLDecoder.QUERY_INSTANCE.decode(bits[1]));
 			}
 			else
 			{
@@ -62,7 +62,8 @@ public final class RequestUtils
 	}
 
 	/**
-	 * decores url parameters form <code>queryString</code> into <code>parameters</code> map
+	 * decores url parameters form <code>queryString</code> into
+	 * <code>parameters</code> map
 	 * 
 	 * @param queryString
 	 * @param parameters
@@ -175,12 +176,16 @@ public final class RequestUtils
 	 */
 	public final static String toAbsolutePath(final String relativePagePath)
 	{
-		HttpServletRequest req = ((WebRequest)RequestCycle.get().getRequest()).getHttpServletRequest();
+		HttpServletRequest req = ((WebRequest)RequestCycle.get().getRequest())
+				.getHttpServletRequest();
 		return toAbsolutePath(req.getRequestURL().toString(), relativePagePath);
 	}
 
 	/**
 	 * Calculates absolute path to url relative to another absolute url.
+	 * 
+	 * NOTE: this method must be called within a thread processing a wicket
+	 * request as it depends on {@link RequestCycle} threadlocal
 	 * 
 	 * @param requestPath
 	 *            absolute path.
@@ -210,17 +215,33 @@ public final class RequestUtils
 		{
 			StringBuffer tempRelative = new StringBuffer(relativePagePath);
 
-			// Go up through hierarchy until we find most common directory for both pathes.
+			// Go up through hierarchy until we find most common directory for
+			// both pathes.
 			while (tempRelative.indexOf("../") == 0)
 			{
 				// Delete ../ from relative path
 				tempRelative.delete(0, 3);
 
-				// Delete last slash from result
-				result.setLength(result.length() - 1);
+				/*
+				 * i cant believe this is the only way to do this, what a mess!
+				 * i am so happy code like this and all its friends are
+				 * unnecessary and gone in 1.5 see WICKET-2717 and WICKET-2312
+				 * the reason we have to do this is that the ajax request is
+				 * done against the context path, while the url of the browser
+				 * may contain mounts and is not changed by the ajax request, so
+				 * we have to generate a link that is not relative to the
+				 * current request but to whatever the browser has in its url
+				 * bar
+				 */
+				if (RequestCycle.get() != null
+						&& !((WebRequest)RequestCycle.get().getRequest()).isAjax())
+				{
+					// Delete last slash from result
+					result.setLength(result.length() - 1);
 
-				// Delete everyting up to last slash
-				result.delete(result.lastIndexOf("/") + 1, result.length());
+					// Delete everyting up to last slash
+					result.delete(result.lastIndexOf("/") + 1, result.length());
+				}
 			}
 			result.append(tempRelative);
 		}

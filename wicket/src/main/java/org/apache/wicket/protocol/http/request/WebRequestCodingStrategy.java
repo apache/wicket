@@ -254,16 +254,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		boolean portletRequest = requestContext.isPortletRequest();
 		boolean sharedResourceURL = false;
 
-		boolean isAjax = ((WebRequestCycle)requestCycle).getWebRequest().isAjax();
-		boolean skipRelativePathPrefix = false;
-
 		if (url != null && !portletRequest)
 		{
-			// We've found the URL and it's mounted.
-
-			// In the case of Ajax, we don't want to prepend a relative path
-			// to the mounted URL. See WICKET-2312.
-			skipRelativePathPrefix = isAjax;
+			// Do nothing - we've found the URL and it's mounted.
 		}
 		else if (requestTarget instanceof IBookmarkablePageRequestTarget)
 		{
@@ -307,7 +300,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 				else if (IRedirectListener.class.isAssignableFrom(rli.getMethod()
 					.getDeclaringClass()))
 				{
-					if (isAjax)
+					if (((WebRequestCycle)requestCycle).getWebRequest().isAjax())
 					{
 						// TODO: Probably not all Ajax based redirects need to break out of
 						// ResourceURL encoding
@@ -361,8 +354,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		if (url != null)
 		{
 			String result = null;
-			if (!UrlUtils.isRelative(url.toString()) || (!sharedResourceURL && portletRequest) ||
-				skipRelativePathPrefix)
+			if (!UrlUtils.isRelative(url.toString()) || (!sharedResourceURL && portletRequest))
 			{
 				result = url.toString();
 			}
