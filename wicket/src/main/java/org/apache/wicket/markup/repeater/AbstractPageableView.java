@@ -26,14 +26,18 @@ import org.apache.wicket.version.undo.Change;
 
 
 /**
- * An abstract repeater view that provides paging functionality to its subclasses.
+ * An abstract repeater view that provides paging functionality to its
+ * subclasses.
  * <p>
- * The view is populated by overriding the <code>getItemModels(int offset, int count)</code> method
- * and providing an iterator that returns models for items in the current page. The
- * AbstractPageableView builds the items that will be rendered by looping over the models and
- * calling the <code>newItem(String id, int index, IModel model)</code> to generate the child item
- * container followed by <code>populateItem(Component item)</code> to let the user populate the
- * newly created item container with with custom components.
+ * The view is populated by overriding the
+ * <code>getItemModels(int offset, int count)</code> method and providing an
+ * iterator that returns models for items in the current page. The
+ * AbstractPageableView builds the items that will be rendered by looping over
+ * the models and calling the
+ * <code>newItem(String id, int index, IModel model)</code> to generate the
+ * child item container followed by <code>populateItem(Component item)</code> to
+ * let the user populate the newly created item container with with custom
+ * components.
  * </p>
  * 
  * @see org.apache.wicket.markup.repeater.RefreshingView
@@ -50,8 +54,8 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Keeps track of the number of items we show per page. The default is Integer.MAX_VALUE which
-	 * effectively disables paging.
+	 * Keeps track of the number of items we show per page. The default is
+	 * Integer.MAX_VALUE which effectively disables paging.
 	 */
 	private int itemsPerPage = Integer.MAX_VALUE;
 
@@ -61,9 +65,10 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	private int currentPage;
 
 	/**
-	 * <code>cachedItemCount</code> is used to cache the call to <code>internalGetItemCount()</code>
-	 * for the duration of the request because that call can potentially be expensive ( a select
-	 * count query ) and so we do not want to execute it multiple times.
+	 * <code>cachedItemCount</code> is used to cache the call to
+	 * <code>internalGetItemCount()</code> for the duration of the request
+	 * because that call can potentially be expensive ( a select count query )
+	 * and so we do not want to execute it multiple times.
 	 */
 	private transient int cachedItemCount;
 
@@ -88,8 +93,8 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	}
 
 	/**
-	 * This method retrieves the subset of models for items in the current page and allows
-	 * RefreshingView to generate items.
+	 * This method retrieves the subset of models for items in the current page
+	 * and allows RefreshingView to generate items.
 	 * 
 	 * @return iterator over models for items in the current page
 	 */
@@ -168,7 +173,8 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	}
 
 	/**
-	 * Sets the maximum number of items to show per page. The current page will also be set to zero
+	 * Sets the maximum number of items to show per page. The current page will
+	 * also be set to zero
 	 * 
 	 * @param items
 	 */
@@ -198,8 +204,8 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 					@Override
 					public String toString()
 					{
-						return "ItemsPerPageChange[component: " + getPath() + ", itemsPerPage: " +
-							old + "]";
+						return "ItemsPerPageChange[component: " + getPath() + ", itemsPerPage: "
+								+ old + "]";
 					}
 				});
 			}
@@ -235,8 +241,8 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	}
 
 	/**
-	 * Get the item count. Since dataprovider.size() could potentially be expensive, the item count
-	 * is cached.
+	 * Get the item count. Since dataprovider.size() could potentially be
+	 * expensive, the item count is cached.
 	 * 
 	 * @see #getRowCount()
 	 * 
@@ -263,8 +269,8 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 		int page = currentPage;
 
 		/*
-		 * trim current page if its out of bounds this can happen if items are added/deleted between
-		 * requests
+		 * trim current page if its out of bounds this can happen if items are
+		 * added/deleted between requests
 		 */
 
 		if (page > 0 && page >= getPageCount())
@@ -282,15 +288,6 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	 */
 	public final void setCurrentPage(int page)
 	{
-		// If page == 0, short-circuit the range check. This saves a call to
-		// getPageCount(), but more importantly avoids it being called until
-		// your AbstractPageableView is actually rendered.
-		if (page != 0 && (page < 0 || (page >= getPageCount() && getPageCount() > 0)))
-		{
-			throw new IndexOutOfBoundsException("argument [page]=" + page + ", must be 0<=page<" +
-				getPageCount());
-		}
-
 		if (currentPage != page)
 		{
 			if (isVersioned())
@@ -310,8 +307,8 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 					@Override
 					public String toString()
 					{
-						return "CurrentPageChange[component: " + getPath() + ", currentPage: " +
-							old + "]";
+						return "CurrentPageChange[component: " + getPath() + ", currentPage: "
+								+ old + "]";
 					}
 				});
 
@@ -360,8 +357,8 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	// /////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * Iterator adapter that makes sure only the specified max number of items can be accessed from
-	 * its delegate.
+	 * Iterator adapter that makes sure only the specified max number of items
+	 * can be accessed from its delegate.
 	 * 
 	 * @param <T>
 	 *            Model object type
@@ -428,7 +425,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	}
 
 	private void readObject(java.io.ObjectInputStream s) throws java.io.IOException,
-		ClassNotFoundException
+			ClassNotFoundException
 	{
 		// Read in all fields
 		s.defaultReadObject();
