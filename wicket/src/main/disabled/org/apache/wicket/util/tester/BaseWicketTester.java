@@ -1086,7 +1086,9 @@ public class BaseWicketTester extends MockWebApplication
 						log.debug("Triggering AjaxSelfUpdatingTimerBehavior: " +
 							component.getClassRelativePath());
 						AjaxSelfUpdatingTimerBehavior abstractAjaxBehaviour = (AjaxSelfUpdatingTimerBehavior)b;
+						if (!abstractAjaxBehavior.isStopped()) {
 						executeBehavior(abstractAjaxBehaviour);
+						}
 					}
 				}
 				return CONTINUE_TRAVERSAL;

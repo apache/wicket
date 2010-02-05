@@ -124,8 +124,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	@Override
 	protected CharSequence getCallbackScript()
 	{
-		return generateCallbackScript("wicketAjaxGet('" + getCallbackUrl() +
-			"'");
+		return generateCallbackScript("wicketAjaxGet('" + getCallbackUrl() + "'");
 	}
 
 	/**
@@ -171,4 +170,14 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 *            The request target
 	 */
 	protected abstract void onTimer(final AjaxRequestTarget target);
+
+	/**
+	 * @return {@code true} if has been stopped via {@link #stop()}
+	 */
+	public final boolean isStopped()
+	{
+		return stopped;
+	}
+
+
 }
