@@ -1124,8 +1124,6 @@ Wicket.Ajax.Call.prototype = {
 		
 		iframe.style.display="none";
 		iframe.style.visibility="hidden";
-				
-		Wicket.Event.add(iframe, "load", this.handleMultipartComplete.bind(this));
 		
 		document.body.appendChild(iframe);
 		
@@ -1151,6 +1149,11 @@ Wicket.Ajax.Call.prototype = {
 		
 		//submit the form into the iframe, response will be handled by the onload callback
 		form.submit();
+
+		
+		// install handler to deal with the ajax response
+		// ... we add the onload event after form submit because chrome fires it prematurely
+		Wicket.Event.add(iframe, "load", this.handleMultipartComplete.bind(this));
 
 		// handled, restore state and return true
 		form.action=originalFormAction;
