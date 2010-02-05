@@ -68,8 +68,8 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	}
 
 	/**
-	 * Sets the update interval duration. This method should only be called within the
-	 * {@link #onTimer(AjaxRequestTarget)} method.
+	 * Sets the update interval duration. This method should only be called
+	 * within the {@link #onTimer(AjaxRequestTarget)} method.
 	 * 
 	 * @param updateInterval
 	 */
@@ -117,15 +117,15 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	protected final String getJsTimeoutCall(final Duration updateInterval)
 	{
 		// this might look strange, but it is necessary for IE not to leak :(
-		return "setTimeout(\"" + getCallbackScript() + "\", " + updateInterval.getMilliseconds() +
-			");";
+		return "setTimeout(\"" + getCallbackScript() + "\", " + updateInterval.getMilliseconds()
+				+ ");";
 	}
 
 	@Override
 	protected CharSequence getCallbackScript()
 	{
-		return generateCallbackScript("wicketAjaxGet('" + getCallbackUrl(onlyTargetActivePage()) +
-			"'");
+		return generateCallbackScript("wicketAjaxGet('" + getCallbackUrl(onlyTargetActivePage())
+				+ "'");
 	}
 
 	/**
@@ -138,8 +138,8 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 		if (!(getComponent() instanceof Page))
 		{
 			String componentId = getComponent().getMarkupId();
-			precondition = "var c = Wicket.$('" + componentId +
-				"'); return typeof(c) != 'undefined' && c != null";
+			precondition = "var c = Wicket.$('" + componentId
+					+ "'); return typeof(c) != 'undefined' && c != null";
 		}
 		return precondition;
 	}
@@ -171,4 +171,14 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 *            The request target
 	 */
 	protected abstract void onTimer(final AjaxRequestTarget target);
+
+	/**
+	 * @return {@code true} if the behavior has been stopped via {@link #stop()}
+	 */
+	public final boolean isStopped()
+	{
+		return stopped;
+	}
+
+
 }
