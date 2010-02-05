@@ -189,7 +189,7 @@ public class FileUploadField extends FormComponent<FileUpload>
 
 			if (getModel() != null)
 			{
-				setModelObject(null);
+				getModel().setObject(null);
 			}
 		}
 		super.onDetach();
