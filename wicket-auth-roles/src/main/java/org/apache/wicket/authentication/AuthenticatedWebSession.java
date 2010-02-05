@@ -41,7 +41,7 @@ public abstract class AuthenticatedWebSession extends WebSession
 	}
 
 	/** True when the user is signed in */
-	private boolean signedIn;
+	private volatile boolean signedIn;
 
 	/**
 	 * Construct.
