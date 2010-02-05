@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  */
 public class WicketURLDecoder
 {
-	private static final Logger log = LoggerFactory.getLogger(Application.class);
+	private static final Logger log = LoggerFactory.getLogger(WicketURLDecoder.class);
 
 	private final boolean decodePlus;
 

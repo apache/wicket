@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  */
 public class WicketURLEncoder
 {
-	private static final Logger log = LoggerFactory.getLogger(Application.class);
+	private static final Logger log = LoggerFactory.getLogger(WicketURLEncoder.class);
 
 	/**
 	 * encoder types
