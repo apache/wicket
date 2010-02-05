@@ -233,7 +233,7 @@ public final class RequestUtils
 				 * current request but to whatever the browser has in its url
 				 * bar
 				 */
-				if (RequestCycle.get() != null
+				if (RequestCycle.get() == null || RequestCycle.get() != null
 						&& !((WebRequest)RequestCycle.get().getRequest()).isAjax())
 				{
 					// Delete last slash from result
