@@ -69,7 +69,7 @@ public class WebSession extends Session
 	};
 
 	/** True when the user is signed in */
-	private boolean signedIn;
+	private volatile boolean signedIn;
 
 	/**
 	 * Constructor. Note that {@link RequestCycle} is not available until this constructor returns.
