@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.target.resource;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
@@ -34,8 +36,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Default implementation of {@link ISharedResourceRequestTarget}. Target that denotes a shared
- * {@link org.apache.wicket.Resource}.
+ * Default implementation of {@link ISharedResourceRequestTarget}. Target that
+ * denotes a shared {@link org.apache.wicket.Resource}.
  * 
  * @author Eelco Hillenius
  */
@@ -62,7 +64,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 		else if (requestParameters.getResourceKey() == null)
 		{
 			throw new IllegalArgumentException("requestParameters.getResourceKey() "
-				+ "may not be null");
+					+ "may not be null");
 		}
 	}
 
@@ -83,7 +85,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 		{
 			SharedResourceRequestTarget that = (SharedResourceRequestTarget)obj;
 			return getRequestParameters().getResourceKey().equals(
-				that.getRequestParameters().getResourceKey());
+					that.getRequestParameters().getResourceKey());
 		}
 		return false;
 	}
@@ -116,8 +118,8 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	}
 
 	/**
-	 * Respond by looking up the shared resource and delegating the actual response to that
-	 * resource.
+	 * Respond by looking up the shared resource and delegating the actual
+	 * response to that resource.
 	 * 
 	 * @see org.apache.wicket.IRequestTarget#respond(org.apache.wicket.RequestCycle)
 	 */
@@ -149,10 +151,11 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 						scope = resolver.resolveClass(className);
 					}
 
-					// get path component of resource key, replace '..' with escape sequence to
+					// get path component of resource key, replace '..' with
+					// escape sequence to
 					// prevent crippled urls in browser
 					final CharSequence escapeString = application.getResourceSettings()
-						.getParentFolderPlaceholder();
+							.getParentFolderPlaceholder();
 
 					String path = resourceKey.substring(ix + 1);
 					if (Strings.isEmpty(escapeString) == false)
@@ -183,8 +186,15 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 			Response response = requestCycle.getResponse();
 			if (response instanceof WebResponse)
 			{
-				((WebResponse)response).getHttpServletResponse().setStatus(
-					HttpServletResponse.SC_NOT_FOUND);
+				try
+				{
+					((WebResponse)response).getHttpServletResponse().sendError(
+							HttpServletResponse.SC_NOT_FOUND);
+				}
+				catch (IOException e)
+				{
+					throw new WicketRuntimeException("Error sending 404 error to client", e);
+				}
 				return;
 			}
 			else
@@ -209,7 +219,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	@Override
 	public String toString()
 	{
-		return "[SharedResourceRequestTarget@" + hashCode() + ", resourceKey=" +
-			getRequestParameters().getResourceKey() + "]";
+		return "[SharedResourceRequestTarget@" + hashCode() + ", resourceKey="
+				+ getRequestParameters().getResourceKey() + "]";
 	}
 }
