@@ -63,7 +63,9 @@ public class UploadWebRequest extends ServletWebRequest
 	{
 		try
 		{
-			return new MultipartRequest(req, maxsize);
+			final MultipartRequest multipartRequest = new MultipartRequest(req, maxsize);
+			multipartRequest.setRequestParameters(getRequestParameters());
+			return multipartRequest;
 		}
 		catch (FileUploadException e)
 		{
