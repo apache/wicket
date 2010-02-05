@@ -23,6 +23,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Component representing a single radio choice in a org.apache.wicket.markup.html.form.RadioGroup.
@@ -121,22 +122,6 @@ public class Radio<T> extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onBeforeRender()
-	 */
-	@Override
-	protected void onBeforeRender()
-	{
-		// prefix markup id of this radio with its group's id
-		// this will make it easier to identify all radios that belong to a specific group
-		final String prefix = getGroup().getMarkupId() + "-";
-		if (!getMarkupId().startsWith(prefix))
-		{
-			setMarkupId(prefix + getMarkupId());
-		}
-		super.onBeforeRender();
-	}
-
-	/**
 	 * 
 	 * @return The associated radio group Component
 	 */
@@ -228,6 +213,20 @@ public class Radio<T> extends LabeledWebMarkupContainer
 		{
 			tag.put(ATTR_DISABLED, ATTR_DISABLED);
 		}
+
+		// put group id into the class so we can easily identify all radios belonging to the group
+		final String marker = "wicket-" + getGroup().getMarkupId();
+		String clazz = tag.getAttribute("class");
+		if (Strings.isEmpty(clazz))
+		{
+			clazz = marker;
+		}
+		else
+		{
+			clazz = clazz + " " + marker;
+		}
+		tag.put("class", clazz);
+
 	}
 
 	/**
