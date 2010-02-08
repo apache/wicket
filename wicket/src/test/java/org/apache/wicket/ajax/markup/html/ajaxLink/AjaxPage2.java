@@ -59,7 +59,7 @@ public class AjaxPage2 extends WebPage
 				ajaxLabel.getParent().replace(ajaxLabel2);
 				if (target != null)
 				{
-					target.addComponent(ajaxLabel2, "ajaxLabel");
+					target.addComponent(ajaxLabel2);
 				}
 			}
 		});
