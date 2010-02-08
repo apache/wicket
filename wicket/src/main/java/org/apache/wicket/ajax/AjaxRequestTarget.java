@@ -44,8 +44,8 @@ import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.IPageRequestHandler;
+import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.protocol.http.WebRequest;
@@ -387,6 +387,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 					" has been added to the target. This component is a repeater and cannot be repainted via ajax directly. Instead add its parent or another markup container higher in the hierarchy.");
 		}
 
+		component.setMarkupId(markupId);
 		markupIdToComponent.put(markupId, component);
 	}
 
