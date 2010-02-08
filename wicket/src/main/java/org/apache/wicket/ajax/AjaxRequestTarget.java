@@ -384,6 +384,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 					" has been added to the target. This component is a repeater and cannot be repainted via ajax directly. Instead add its parent or another markup container higher in the hierarchy.");
 		}
 
+		component.setMarkupId(markupId);
 		markupIdToComponent.put(markupId, component);
 	}
 
