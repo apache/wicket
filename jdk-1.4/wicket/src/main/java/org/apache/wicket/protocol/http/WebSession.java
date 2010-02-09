@@ -45,7 +45,7 @@ public class WebSession extends Session
 
 		public boolean accept(FeedbackMessage message)
 		{
-			return message.getReporter() != null;
+			return message.getReporter() != null && message.isRendered();
 		}
 	};
 	/**
