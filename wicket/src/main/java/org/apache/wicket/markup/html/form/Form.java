@@ -1250,6 +1250,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	{
 		final boolean[] error = new boolean[] { false };
 
+		// TODO not sure why we need that class. We only use the callback method.
 		final IVisitor<Component> visitor = new IVisitor<Component>()
 		{
 			public Object component(final Component component)
@@ -1265,35 +1266,27 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 			}
 		};
 
+		// Iterator over all children and grand children. Any component may have registered an error
+		// message. Do NOT restrict to Form and FormComponents.
 		visitChildren(Component.class, new IVisitor<Component>()
 		{
 			public Object component(final Component component)
 			{
-				if ((component instanceof Form) || (component instanceof FormComponent))
-				{
-					return visitor.component(component);
-				}
-				return Component.IVisitor.CONTINUE_TRAVERSAL;
+				return visitor.component(component);
 			}
 		});
 
-		if (!error[0])
+		// Borders need special treatment
+		if (!error[0] && (getParent() instanceof Border))
 		{
-			if (getParent() instanceof Border)
+			MarkupContainer border = getParent();
+			Iterator<? extends Component> iter = border.iterator();
+			while (!error[0] && iter.hasNext())
 			{
-				MarkupContainer border = getParent();
-				Iterator<? extends Component> iter = border.iterator();
-				while (iter.hasNext())
+				Component child = iter.next();
+				if ((child != this) && (child instanceof FormComponent))
 				{
-					Component child = iter.next();
-					if ((child != this) && (child instanceof FormComponent))
-					{
-						visitor.component(child);
-						if (error[0])
-						{
-							break;
-						}
-					}
+					visitor.component(child);
 				}
 			}
 		}
