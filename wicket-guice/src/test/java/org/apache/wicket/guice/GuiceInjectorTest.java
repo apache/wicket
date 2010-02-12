@@ -21,12 +21,12 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.Application;
-import org.apache.wicket.Page;
-import org.apache.wicket.protocol.http.MockWebApplication;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.session.HttpSessionStore;
-import org.apache.wicket.session.ISessionStore;
+import org.apache.wicket.Session;
+import org.apache.wicket.ng.ThreadContext;
+import org.apache.wicket.ng.mock.MockApplication;
+import org.apache.wicket.ng.mock.MockWebRequest;
+import org.apache.wicket.ng.request.Url;
+import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.util.lang.Objects;
 
 import com.google.inject.Binder;
@@ -38,36 +38,18 @@ public class GuiceInjectorTest extends TestCase
 {
 	public void testInjectionAndSerialization()
 	{
-		MockWebApplication mockApp = new MockWebApplication(new WebApplication()
-		{
-			@Override
-			protected void outputDevelopmentModeWarning()
-			{
-				// Do nothing.
-			}
-
-			@Override
-			public Class< ? extends Page> getHomePage()
-			{
-				return null;
-			}
-
-			@Override
-			protected ISessionStore newSessionStore()
-			{
-				// Don't use a filestore, or we spawn lots of threads, which
-				// makes things slow.
-				return new HttpSessionStore();
-			}
-		}, null);
-
-		// Make a new webapp and injector, and register the injector with the
-		// webapp as a component instantiation listener.
-		Application app = mockApp.getApplication();
-
+		MockApplication app = new MockApplication();
 		try
 		{
-			Application.set(app);
+			ThreadContext.setApplication(app);
+
+			app.setName(getClass().getName());
+			app.initApplication();
+
+			Session session = new WebSession(new MockWebRequest(Url.parse("/")));
+			app.getSessionStore().bind(null, session);
+			ThreadContext.setSession(session);
+
 			GuiceComponentInjector injector = new GuiceComponentInjector(app, new Module()
 			{
 
@@ -108,7 +90,8 @@ public class GuiceInjectorTest extends TestCase
 		}
 		finally
 		{
-			Application.unset();
+			app.destroy();
+			ThreadContext.detach();
 		}
 	}
 
