@@ -19,6 +19,7 @@ package org.apache.wicket;
 import junit.framework.TestCase;
 
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
@@ -33,41 +34,18 @@ public abstract class WicketTestCase extends TestCase
 	/** */
 	public WicketTester tester;
 
-	/**
-	 * Constructor
-	 */
-	public WicketTestCase()
-	{
-	}
-
-	/**
-	 * Create the test.
-	 * 
-	 * @param name
-	 *            The test name
-	 */
-	public WicketTestCase(String name)
-	{
-		super(name);
-	}
-
-	/**
-	 * @see junit.framework.TestCase#setUp()
-	 */
 	@Override
 	protected void setUp() throws Exception
 	{
 		tester = new WicketTester();
 	}
 
-	/**
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	@Override
 	protected void tearDown() throws Exception
 	{
 		tester.destroy();
 	}
+
 
 	/**
 	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected

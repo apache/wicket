@@ -16,18 +16,16 @@
  */
 package org.apache.wicket.extensions.markup.html;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanel;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanelTester;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.util.tester.DummyPanelPage;
 import org.apache.wicket.util.tester.TestPanelSource;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * 
@@ -36,7 +34,7 @@ import org.apache.wicket.util.tester.WicketTester;
  * @author Antony Stubbs
  */
 
-public class AjaxLazyLoadPanelTesterTest extends TestCase
+public class AjaxLazyLoadPanelTesterTest extends WicketTestCase
 {
 	private MarkupContainer ajaxLazyLoadPanel;
 
@@ -45,7 +43,6 @@ public class AjaxLazyLoadPanelTesterTest extends TestCase
 	 */
 	public void test()
 	{
-		WicketTester wt = new WicketTester();
 		final Page dummyPanelPage = new DummyPanelPage(new TestPanelSource()
 		{
 			private static final long serialVersionUID = 1L;
@@ -67,13 +64,13 @@ public class AjaxLazyLoadPanelTesterTest extends TestCase
 			}
 
 		});
-		wt.startPage(dummyPanelPage);
-		wt.assertLabel("panel:content",
+		tester.startPage(dummyPanelPage);
+		tester.assertLabel("panel:content",
 			"<img src=\"resources/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/indicator.gif\"/>");
-		AjaxLazyLoadPanelTester.executeAjaxLazyLoadPanel(wt, dummyPanelPage);
-		wt.debugComponentTrees();
-		wt.assertLabel("panel:content", "lazy panel test");
-		String doc = wt.getServletResponse().getDocument();
+		AjaxLazyLoadPanelTester.executeAjaxLazyLoadPanel(tester, dummyPanelPage);
+		tester.debugComponentTrees();
+		tester.assertLabel("panel:content", "lazy panel test");
+		String doc = tester.getLastResponseAsString();
 		assertNotNull(doc);
 	}
 }

@@ -16,17 +16,15 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
-import junit.framework.TestCase;
-
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.diff.DiffUtil;
-import org.apache.wicket.util.tester.WicketTester;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * 
  */
-public class DataTableTest extends TestCase
+public class DataTableTest extends WicketTestCase
 {
 	/** Log for reporting. */
 	private static final Logger log = LoggerFactory.getLogger(DataTableTest.class);
@@ -36,11 +34,10 @@ public class DataTableTest extends TestCase
 	 */
 	public void test_1() throws Exception
 	{
-		WicketTester tester = new WicketTester(new RepeaterApplication());
 		tester.startPage(DataTablePage.class);
 		tester.assertRenderedPage(DataTablePage.class);
 
-		String document = tester.getServletResponse().getDocument();
+		String document = tester.getLastResponseAsString();
 		int index = document.indexOf("<thead");
 		assertTrue("Expected at least on <thead>", index != -1);
 		index = document.indexOf("<thead", index + 1);
