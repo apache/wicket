@@ -21,8 +21,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.apache.wicket.protocol.http.MockHttpServletResponse;
-import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;

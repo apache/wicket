@@ -24,7 +24,6 @@ public class InvalidImageTest extends WicketTestCase
 	{
 		tester.startPage(InvalidImagePage.class);
 		tester.assertRenderedPage(InvalidImagePage.class);
-		tester.createRequestCycle();
 		tester.startPage(new InvalidImagePage());
 		tester.assertRenderedPage(InvalidImagePage.class);
 	}

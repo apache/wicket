@@ -17,7 +17,6 @@
 package org.apache.wicket.redirect.encodingtest;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.protocol.http.WebApplication;
 
 /**

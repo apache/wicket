@@ -16,8 +16,7 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.protocol.http.MockHttpServletRequest;
-import org.apache.wicket.protocol.http.WebRequestCycle;
+import org.apache.wicket.ng.resource.ResourceReference;
 
 public class ParentResourceEscapePathTest extends WicketTestCase
 {
@@ -32,12 +31,12 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 
 	private void parentEscapeSequenceInRenderedHtml()
 	{
-		tester.setupRequestAndResponse();
+
 		tester.startPage(ParentResourceEscapePathTestPage.class);
 		tester.assertRenderedPage(ParentResourceEscapePathTestPage.class);
 		tester.assertNoErrorMessage();
 
-		String html = tester.getServletResponse().getDocument();
+		String html = tester.getLastResponse().getTextResponse().toString();
 		assertContains(html, "<html><head><wicket:link><script ");
 		assertContains(html, " type=\"text/javascript\"");
 		assertContains(html, "src=\"" + expectedResourceUrl() + "\"");

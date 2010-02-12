@@ -22,9 +22,6 @@ import java.lang.reflect.Method;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.pages.ExceptionErrorPage;
-import org.apache.wicket.protocol.http.MockWebApplication;
-import org.apache.wicket.protocol.http.WebRequestCycle;
-import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.settings.IExceptionSettings;
 
 public class StringResponseTest extends WicketTestCase

@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
-import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.markup.html.WebPage;
 
 /**

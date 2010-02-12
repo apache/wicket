@@ -19,12 +19,10 @@ package org.apache.wicket.util.tester;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
@@ -42,12 +40,8 @@ import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.RadioGroup;
-import org.apache.wicket.markup.html.form.upload.FileUploadField;
-import org.apache.wicket.protocol.http.MockHttpServletRequest;
-import org.apache.wicket.protocol.http.WebRequestCycle;
-import org.apache.wicket.util.file.File;
+import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
-
 
 /**
  * A helper class for testing validation and submission of <code>FormComponent</code>s.
@@ -373,7 +367,6 @@ public class FormTester
 		this.path = path;
 		this.workingForm = workingForm;
 		baseWicketTester = wicketTester;
-		baseWicketTester.setupRequestAndResponse();
 
 		// fill blank String for Text Component.
 		workingForm.visitFormComponents(new FormComponent.AbstractVisitor()
@@ -631,22 +624,22 @@ public class FormTester
 	 * @param contentType
 	 *            the content type of the file. Must be a valid mime type.
 	 */
-	public void setFile(final String formComponentId, final File file, final String contentType)
-	{
-		checkClosed();
-
-		FormComponent<?> formComponent = (FormComponent<?>)workingForm.get(formComponentId);
-
-		if (formComponent instanceof FileUploadField == false)
-		{
-			throw new IllegalArgumentException("'" + formComponentId + "' is not " +
-				"a FileUploadField. You can only attach a file to form " +
-				"component of this type.");
-		}
-
-		MockHttpServletRequest servletRequest = baseWicketTester.getServletRequest();
-		servletRequest.addFile(formComponent.getInputName(), file, contentType);
-	}
+// public void setFile(final String formComponentId, final File file, final String contentType)
+// {
+// checkClosed();
+//
+// FormComponent<?> formComponent = (FormComponent<?>)workingForm.get(formComponentId);
+//
+// if (formComponent instanceof FileUploadField == false)
+// {
+// throw new IllegalArgumentException("'" + formComponentId + "' is not " +
+// "a FileUploadField. You can only attach a file to form " +
+// "component of this type.");
+// }
+//
+// MockHttpServletRequest servletRequest = baseWicketTester.getServletRequest();
+// servletRequest.addFile(formComponent.getInputName(), file, contentType);
+// }
 
 	/**
 	 * Submits the <code>Form</code>. Note that <code>submit</code> can be executed only once.
@@ -656,15 +649,9 @@ public class FormTester
 		checkClosed();
 		try
 		{
-			baseWicketTester.getWicketSession().cleanupFeedbackMessages();
-
-			MockHttpServletRequest servletRequest = baseWicketTester.getServletRequest();
-
-			WebRequestCycle requestCycle = baseWicketTester.createRequestCycle();
-			servletRequest.setRequestToComponent(workingForm);
-
-			servletRequest.setUseMultiPartContentType(isMultiPart());
-			baseWicketTester.processRequestCycle(requestCycle);
+			baseWicketTester.getLastRenderedPage().getSession().cleanupFeedbackMessages();
+			baseWicketTester.submitForm(path);
+// servletRequest.setUseMultiPartContentType(isMultiPart());
 		}
 		finally
 		{
@@ -751,14 +738,25 @@ public class FormTester
 	{
 		if (parameterExist(formComponent))
 		{
-			String[] values = baseWicketTester.getServletRequest().getParameterValues(
-				formComponent.getInputName());
+			List<StringValue> values = baseWicketTester.getLastRequest()
+				.getPostRequestParameters()
+				.getParameterValues(formComponent.getInputName());
 			// remove duplicated
-			HashSet<String> all = new HashSet<String>(Arrays.asList(values));
+
+			HashSet<String> all = new HashSet<String>();
+			for (StringValue val : values)
+			{
+				all.add(val.toString());
+			}
 			all.add(value);
-			Map<String, String[]> newParameters = new HashMap<String, String[]>();
-			newParameters.put(formComponent.getInputName(), all.toArray(new String[all.size()]));
-			baseWicketTester.getServletRequest().setParameters(newParameters);
+
+			values = new ArrayList<StringValue>();
+			for (String val : all)
+			{
+				values.add(StringValue.valueOf(val));
+			}
+			baseWicketTester.getLastRequest().getPostRequestParameters().setParameterValues(
+				formComponent.getInputName(), values);
 		}
 		else
 		{
@@ -788,8 +786,10 @@ public class FormTester
 	 */
 	private boolean parameterExist(FormComponent<?> formComponent)
 	{
-		String parameter = baseWicketTester.getServletRequest().getParameter(
-			formComponent.getInputName());
+		String parameter = baseWicketTester.getLastRequest()
+			.getPostRequestParameters()
+			.getParameterValue(formComponent.getInputName())
+			.toString();
 		return parameter != null && parameter.trim().length() > 0;
 	}
 
@@ -803,7 +803,8 @@ public class FormTester
 	 */
 	private void setFormComponentValue(FormComponent<?> formComponent, String value)
 	{
-		baseWicketTester.getServletRequest().setParameter(formComponent.getInputName(), value);
+		baseWicketTester.getLastRequest().getPostRequestParameters().setParameterValue(
+			formComponent.getInputName(), value);
 	}
 
 	/**
@@ -816,7 +817,8 @@ public class FormTester
 	 */
 	private void setFormSubmittingComponentValue(IFormSubmittingComponent component, String value)
 	{
-		baseWicketTester.getServletRequest().setParameter(component.getInputName(), value);
+		baseWicketTester.getLastRequest().getPostRequestParameters().setParameterValue(
+			component.getInputName(), value);
 	}
 
 	private void fail(String message)

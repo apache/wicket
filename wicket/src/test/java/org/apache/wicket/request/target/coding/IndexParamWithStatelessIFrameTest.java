@@ -16,9 +16,8 @@
  */
 package org.apache.wicket.request.target.coding;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.protocol.http.WebRequestCycle;
+import org.apache.wicket.ng.request.component.PageParameters;
 
 /**
  * @author jcompagner

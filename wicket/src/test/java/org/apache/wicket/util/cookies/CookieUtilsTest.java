@@ -23,12 +23,9 @@ import javax.servlet.http.Cookie;
 import junit.framework.TestCase;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.protocol.http.MockHttpServletRequest;
-import org.apache.wicket.protocol.http.MockHttpServletResponse;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.protocol.http.WebRequest;
-import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.util.cookies.CookieValuePersisterTestPage.TestForm;
 import org.apache.wicket.util.tester.WicketTester;

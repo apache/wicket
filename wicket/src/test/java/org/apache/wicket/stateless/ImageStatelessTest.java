@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.stateless;
 
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.image.Image;
-import org.apache.wicket.resource.ByteArrayResource;
+import org.apache.wicket.ng.resource.ByteArrayResource;
+import org.apache.wicket.ng.resource.ResourceReference;
 
 /**
  * @author jcompagner

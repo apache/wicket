@@ -21,8 +21,8 @@ import junit.framework.TestCase;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
- * Test the {@link Component#onRemove()}. Test if it gets called and propagated to the
- * Components children.
+ * Test the {@link Component#onRemove()}. Test if it gets called and propagated to the Components
+ * children.
  */
 public class RemoveTest extends TestCase
 {
@@ -49,7 +49,7 @@ public class RemoveTest extends TestCase
 	 */
 	public void testOnRemovalFromHierarchy()
 	{
-		Session session = tester.setupRequestAndResponse().getSession();
+		Session session = tester.getSession();
 		final RemoveTestPage page = new RemoveTestPage();
 		tester.startPage(page);
 		// on initial load of the page no calls should have occurred.

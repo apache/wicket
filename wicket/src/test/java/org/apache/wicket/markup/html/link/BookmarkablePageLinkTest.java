@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.markup.html.link;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.ng.request.component.PageParameters;
 
 /**
  * @author jcompagner
@@ -41,7 +41,6 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 	public void testBookmarkableRequest() throws Exception
 	{
 		tester.startPage(BookmarkableHomePageLinksPage.class);
-
 		assertEquals(tester.getLastRenderedPage().getClass(), BookmarkableHomePageLinksPage.class);
 
 	}
@@ -73,7 +72,7 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 			return;
 
 		PageParameters pp = new PageParameters();
-		pp.put("test", "test");
+		pp.setNamedParameter("test", "test");
 
 		tester.startPage(BookmarkableThrowsInterceptPage.class, pp);
 

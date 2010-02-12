@@ -22,8 +22,8 @@ import junit.framework.TestCase;
 
 import org.apache.wicket.AbortException;
 import org.apache.wicket.Application;
-import org.apache.wicket.Resource;
 import org.apache.wicket.SharedResources;
+import org.apache.wicket.ng.resource.PackageResource;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTester;
 

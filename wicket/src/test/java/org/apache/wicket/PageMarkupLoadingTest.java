@@ -19,7 +19,6 @@ package org.apache.wicket;
 import java.util.Locale;
 
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.protocol.http.WebRequestCycle;
 
 /**
  * Tests markup loading.
@@ -33,9 +32,7 @@ public class PageMarkupLoadingTest extends WicketTestCase
 	 */
 	public void testDefault() throws Exception
 	{
-		tester.setupRequestAndResponse();
-		WebRequestCycle cycle = tester.createRequestCycle();
-		cycle.getSession().setLocale(Locale.ENGLISH);
+		tester.getSession().setLocale(Locale.ENGLISH);
 		tester.startPage(Page1.class);
 		tester.assertRenderedPage(Page1.class);
 		tester.assertResultPage(getClass(), "PageMarkupLoadingTest$Page1_expected.html");
@@ -48,9 +45,7 @@ public class PageMarkupLoadingTest extends WicketTestCase
 	 */
 	public void testDutch() throws Exception
 	{
-		tester.setupRequestAndResponse();
-		WebRequestCycle cycle = tester.createRequestCycle();
-		cycle.getSession().setLocale(new Locale("nl"));
+		tester.getSession().setLocale(new Locale("nl"));
 		tester.startPage(Page1.class);
 		tester.assertRenderedPage(Page1.class);
 		tester.assertResultPage(getClass(), "PageMarkupLoadingTest$Page1_nl_expected.html");
@@ -63,10 +58,8 @@ public class PageMarkupLoadingTest extends WicketTestCase
 	 */
 	public void testDutchMyStyle() throws Exception
 	{
-		tester.setupRequestAndResponse();
-		WebRequestCycle cycle = tester.createRequestCycle();
-		cycle.getSession().setLocale(new Locale("nl"));
-		cycle.getSession().setStyle("mystyle");
+		tester.getSession().setLocale(new Locale("nl"));
+		tester.getSession().setStyle("mystyle");
 		tester.startPage(Page1.class);
 		tester.assertRenderedPage(Page1.class);
 		tester.assertResultPage(getClass(), "PageMarkupLoadingTest$Page1_mystyle_nl_expected.html");
@@ -79,10 +72,8 @@ public class PageMarkupLoadingTest extends WicketTestCase
 	 */
 	public void testDutchMyStyleMyVar() throws Exception
 	{
-		tester.setupRequestAndResponse();
-		WebRequestCycle cycle = tester.createRequestCycle();
-		cycle.getSession().setLocale(new Locale("nl"));
-		cycle.getSession().setStyle("mystyle");
+		tester.getSession().setLocale(new Locale("nl"));
+		tester.getSession().setStyle("mystyle");
 		tester.startPage(Page2.class);
 		tester.assertRenderedPage(Page2.class);
 		tester.assertResultPage(getClass(),

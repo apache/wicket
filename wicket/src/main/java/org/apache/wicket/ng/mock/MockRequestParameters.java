@@ -50,9 +50,14 @@ public class MockRequestParameters implements IRequestParameters
 	public List<StringValue> getParameterValues(String name)
 	{
 		List<StringValue> values = parameters.get(name);
-
 		return values != null ? Collections.unmodifiableList(values) : null;
 	}
+
+	public void setParameterValues(String name, List<StringValue> values)
+	{
+		parameters.put(name, values);
+	}
+
 
 	/**
 	 * Sets value for given key.

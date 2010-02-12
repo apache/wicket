@@ -17,7 +17,6 @@
 package org.apache.wicket.ajax;
 
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.resources.StyleSheetReference;
 
 /**
  * 

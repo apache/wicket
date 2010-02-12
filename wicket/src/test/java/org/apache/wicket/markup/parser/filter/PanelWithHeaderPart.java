@@ -18,8 +18,6 @@ package org.apache.wicket.markup.parser.filter;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.resources.JavaScriptReference;
-import org.apache.wicket.markup.html.resources.StyleSheetReference;
 
 /**
  * @author jcompagner

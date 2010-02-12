@@ -25,9 +25,13 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.wicket.ng.request.IRequestMapper;
+import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.lang.Objects;
+import org.apache.wicket.util.string.IStringIterator;
+import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.util.value.ValueMap;
 
 /**
  * Mutable class that holds parameters of a Page. Page parameters consist of indexed parameters and
@@ -80,6 +84,75 @@ public class PageParameters implements Serializable
 			namedParameters = new ArrayList<Entry>(copy.namedParameters);
 		}
 	}
+
+
+	/**
+	 * Construct.
+	 * 
+	 * @param keyValuePairs
+	 *            List of key value pairs separated by commas. For example, "param1=foo,param2=bar"
+	 * @see ValueMap#ValueMap(String)
+	 */
+	@Deprecated
+	public PageParameters(final String keyValuePairs)
+	{
+		this(keyValuePairs, ",");
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param keyValuePairs
+	 *            List of key value pairs separated by commas. For example, "param1=foo,param2=bar"
+	 * @param delimiter
+	 *            Delimiter string used to separate key/value pairs
+	 * @see ValueMap#ValueMap(String)
+	 * 
+	 * @deprecated Please use {@link RequestUtils#decodeParameters(String, ValueMap)} to decode a
+	 *             request URL, or {@link ValueMap#ValueMap(String, String)} for other usecases.
+	 */
+	@Deprecated
+	public PageParameters(final String keyValuePairs, final String delimiter)
+	{
+		super();
+
+		// We can not use ValueMaps constructor as it uses
+		// VariableAssignmentParser which is more suitable for markup
+		// attributes, rather than URL parameters. URL param keys for
+		// examples are allowed to start with a digit (e.g. 0=xxx)
+		// and quotes are not "quotes".
+
+		// Get list of strings separated by the delimiter
+		final StringList pairs = StringList.tokenize(keyValuePairs, delimiter);
+
+		// Go through each string in the list
+		for (IStringIterator iterator = pairs.iterator(); iterator.hasNext();)
+		{
+			// Get the next key value pair
+			final String pair = iterator.next();
+
+			final int pos = pair.indexOf('=');
+			if (pos == 0)
+			{
+				throw new IllegalArgumentException("URL parameter is missing the lvalue: " + pair);
+			}
+			else if (pos != -1)
+			{
+				final String key = pair.substring(0, pos).trim();
+				final String value = pair.substring(pos + 1).trim();
+
+				addNamedParameter(key, value);
+			}
+			else
+			{
+				final String key = pair.trim();
+				final String value = null;
+
+				addNamedParameter(key, value);
+			}
+		}
+	}
+
 
 	/**
 	 * @return count of indexed parameters
@@ -218,6 +291,7 @@ public class PageParameters implements Serializable
 	 * 
 	 * @author Matej Knopp
 	 */
+	// TODO rename to NamedParameter
 	public static class NamedParameterPair
 	{
 		private final String key;

@@ -16,19 +16,7 @@
  */
 package org.apache.wicket.markup.html.header.inheritance;
 
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.wicket.Page;
-import org.apache.wicket.Request;
-import org.apache.wicket.Response;
-import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.http.WebResponse;
-import org.apache.wicket.protocol.http.WebSession;
-import org.apache.wicket.session.HttpSessionStore;
-import org.apache.wicket.session.ISessionStore;
-import org.apache.wicket.util.tester.WicketTester;
 
 
 /**
@@ -63,44 +51,7 @@ public class InheritanceHeadTest extends WicketTestCase
 	 */
 	public void test_3() throws Exception
 	{
-		tester = new WicketTester(new WebApplication()
-		{
-			/**
-			 * @see org.apache.wicket.protocol.http.WebApplication#newSession(Request, Response)
-			 */
-			@Override
-			public Session newSession(Request request, Response response)
-			{
-				return new WebSession(request).setStyle("myStyle");
-			}
-
-			@Override
-			public Class<? extends Page> getHomePage()
-			{
-				return ConcretePage2.class;
-			}
-
-			@Override
-			protected WebResponse newWebResponse(HttpServletResponse servletResponse)
-			{
-				return new WebResponse(servletResponse);
-			}
-
-			@Override
-			protected void outputDevelopmentModeWarning()
-			{
-				// Do nothing.
-			}
-
-			@Override
-			protected ISessionStore newSessionStore()
-			{
-				// Don't use a filestore, or we spawn lots of threads, which
-				// makes things slow.
-				return new HttpSessionStore();
-			}
-		});
-
+		tester.getSession().setStyle("myStyle");
 		executeTest(ConcretePage2.class, "ExpectedResult3.html");
 	}
 }

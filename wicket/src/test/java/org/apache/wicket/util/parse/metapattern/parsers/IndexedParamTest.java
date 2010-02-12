@@ -17,9 +17,6 @@
 package org.apache.wicket.util.parse.metapattern.parsers;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.protocol.http.MockHttpServletRequest;
-import org.apache.wicket.protocol.http.WebRequestCycle;
-import org.apache.wicket.request.target.coding.IndexedParamUrlCodingStrategy;
 import org.apache.wicket.util.diff.DiffUtil;
 
 

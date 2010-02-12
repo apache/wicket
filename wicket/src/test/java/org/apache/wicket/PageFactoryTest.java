@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.session.DefaultPageFactory;
 
 

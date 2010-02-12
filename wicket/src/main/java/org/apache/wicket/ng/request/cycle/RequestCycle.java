@@ -29,8 +29,8 @@ import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.component.PageParameters;
-import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.IPageProvider;
+import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.ClientInfo;
@@ -431,9 +431,23 @@ public class RequestCycle extends RequestHandlerStack
 	 */
 	public void setResponsePage(IRequestablePage page)
 	{
-		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(new PageProvider(
-			page), RenderPageRequestHandler.RedirectPolicy.AUTO_REDIRECT));
+		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(new PageProvider(page),
+			RenderPageRequestHandler.RedirectPolicy.AUTO_REDIRECT));
 	}
+
+
+	/**
+	 * Convenience method for setting next page to be rendered.
+	 * 
+	 * @param pageClass
+	 */
+	public void setResponsePage(Class<? extends IRequestablePage> pageClass)
+	{
+		IPageProvider provider = new PageProvider(pageClass, null);
+		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(provider,
+			RenderPageRequestHandler.RedirectPolicy.AUTO_REDIRECT));
+	}
+
 
 	/**
 	 * Convenience method for setting next page to be rendered.

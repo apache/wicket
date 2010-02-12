@@ -19,14 +19,11 @@ package org.apache.wicket.markup.html.internal;
 import java.io.IOException;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.resource.DummyApplication;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.util.diff.DiffUtil;
 import org.apache.wicket.util.tester.FormTester;
-import org.apache.wicket.util.tester.WicketTester;
 
 
 /**
@@ -35,28 +32,6 @@ import org.apache.wicket.util.tester.WicketTester;
  */
 public class EnclosureTest extends WicketTestCase
 {
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public EnclosureTest(final String name)
-	{
-		super(name);
-	}
-
-	/**
-	 * 
-	 * @see org.apache.wicket.WicketTestCase#setUp()
-	 */
-
-	@Override
-	protected void setUp() throws Exception
-	{
-		WebApplication app = new DummyApplication();
-		tester = new WicketTester(app);
-	}
-
 	/**
 	 * @throws Exception
 	 */
@@ -126,19 +101,19 @@ public class EnclosureTest extends WicketTestCase
 	{
 		// render with enclosure initially visible
 		tester.startPage(EnclosurePage_6.class);
-		String doc = tester.getServletResponse().getDocument();
+		String doc = tester.getLastResponse().getTextResponse().toString();
 		assertTrue(doc.contains("content1"));
 		assertTrue(doc.contains("content2"));
 
 		// render with enclosure hidden
 		tester.clickLink("link");
-		doc = tester.getServletResponse().getDocument();
+		doc = tester.getLastResponse().getTextResponse().toString();
 		assertFalse(doc.contains("content1"));
 		assertFalse(doc.contains("content2"));
 
 		// render with enclosure visible again
 		tester.clickLink("link");
-		doc = tester.getServletResponse().getDocument();
+		doc = tester.getLastResponse().getTextResponse().toString();
 		assertTrue(doc.contains("content1"));
 		assertTrue(doc.contains("content2"));
 	}
@@ -148,7 +123,6 @@ public class EnclosureTest extends WicketTestCase
 	 */
 	public void testRender()
 	{
-		tester = new WicketTester(EnclosurePage_7.class);
 		tester.startPage(EnclosurePage_7.class);
 	}
 
@@ -177,7 +151,7 @@ public class EnclosureTest extends WicketTestCase
 
 	private void assertResultPage(final String file) throws IOException
 	{
-		String document = tester.getServletResponse().getDocument();
+		String document = tester.getLastResponse().getTextResponse().toString();
 		document = document.replaceAll(":form:[1-90]+:IFormSubmitListener:",
 			":form::IFormSubmitListener:");
 		DiffUtil.validatePage(document, getClass(), file, true);
@@ -189,7 +163,6 @@ public class EnclosureTest extends WicketTestCase
 	public void testRender9() throws Exception
 	{
 		Class<? extends Page> clazz = EnclosurePage_9.class;
-		tester = new WicketTester(clazz);
 
 		executeTest(clazz, "EnclosurePageExpectedResult_9.html");
 		EnclosurePage_9 page = (EnclosurePage_9)tester.getLastRenderedPage();
@@ -248,15 +221,14 @@ public class EnclosureTest extends WicketTestCase
 	public void testRender9a() throws Exception
 	{
 		Class<? extends Page> clazz = EnclosurePage_9.class;
-		tester = new WicketTester(clazz);
 
 		executeTest(clazz, "EnclosurePageExpectedResult_9.html");
 		EnclosurePage_9 page = (EnclosurePage_9)tester.getLastRenderedPage();
 
 		page.reset();
 		FormTester formTester = tester.newFormTester("form");
-		tester.getServletRequest().setParameter(((CheckBox)page.get("form:input")).getInputName(),
-			"true");
+		tester.getLastRequest().getPostRequestParameters().setParameterValue(
+			((CheckBox)page.get("form:input")).getInputName(), "true");
 		page.get("form:label").setVisible(true);
 		formTester.submit();
 		tester.assertRenderedPage(clazz);
@@ -266,8 +238,8 @@ public class EnclosureTest extends WicketTestCase
 		assertTrue(page.labelOnBeforeRender);
 
 		page.reset();
-		tester.getServletRequest().setParameter(((CheckBox)page.get("form:input")).getInputName(),
-			"true");
+		tester.getLastRequest().getPostRequestParameters().setParameterValue(
+			((CheckBox)page.get("form:input")).getInputName(), "true");
 		page.get("form:label").setVisible(false);
 		tester.submitForm("form");
 		tester.assertRenderedPage(clazz);

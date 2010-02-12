@@ -40,8 +40,6 @@ public class FormDispatchEventTest extends WicketTestCase
 	{
 		tester.startPage(MockPageWithForm.class);
 
-		// FIXME should not be needed
-		tester.createRequestCycle();
 
 		FormTester formTester = tester.newFormTester("form");
 		formTester.select("dropdown", 0);

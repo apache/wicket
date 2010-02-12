@@ -18,6 +18,7 @@ package org.apache.wicket;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -76,6 +77,8 @@ public class RequestListenerInterface
 	 */
 	private boolean renderPageAfterInvocation = true;
 
+	final Class<? extends IRequestListener> listenerInterfaceClass;
+
 	/**
 	 * Constructor.
 	 * 
@@ -84,6 +87,8 @@ public class RequestListenerInterface
 	 */
 	public RequestListenerInterface(final Class<? extends IRequestListener> listenerInterfaceClass)
 	{
+		this.listenerInterfaceClass = listenerInterfaceClass;
+
 		// Ensure that it extends IRequestListener
 		if (!IRequestListener.class.isAssignableFrom(listenerInterfaceClass))
 		{
@@ -120,6 +125,13 @@ public class RequestListenerInterface
 		// Register this listener
 		register();
 	}
+
+
+	public Class<? extends IRequestListener> getListenerInterfaceClass()
+	{
+		return listenerInterfaceClass;
+	}
+
 
 	/**
 	 * @param includeRenderCount
@@ -196,7 +208,7 @@ public class RequestListenerInterface
 		try
 		{
 			// Invoke the interface method on the component
-			method.invoke(component, new Object[] {});
+			method.invoke(component, new Object[] { });
 		}
 		catch (InvocationTargetException e)
 		{
@@ -242,7 +254,7 @@ public class RequestListenerInterface
 		try
 		{
 			// Invoke the interface method on the component
-			method.invoke(behavior, new Object[] {});
+			method.invoke(behavior, new Object[] { });
 		}
 		catch (InvocationTargetException e)
 		{
@@ -314,4 +326,15 @@ public class RequestListenerInterface
 
 		log.info("registered listener interface " + this);
 	}
+
+	/**
+	 * 
+	 * @return collection of all registered interfaces
+	 */
+	public static Collection<RequestListenerInterface> getRegisteredInterfaces()
+	{
+		return Collections.unmodifiableCollection(interfaces.values());
+	}
+
+
 }

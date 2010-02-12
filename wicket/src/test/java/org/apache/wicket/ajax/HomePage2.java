@@ -16,11 +16,11 @@
  */
 package org.apache.wicket.ajax;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.ng.request.component.PageParameters;
 
 /**
  * Homepage WICKET-2328

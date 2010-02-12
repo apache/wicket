@@ -17,9 +17,6 @@
 package org.apache.wicket.protocol.http.request;
 
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.http.WebRequestCycleProcessor;
-import org.apache.wicket.request.IRequestCodingStrategy;
-import org.apache.wicket.request.IRequestCycleProcessor;
 
 /**
  * Application object for your web application. If you want to run this application without

@@ -18,7 +18,7 @@ package org.apache.wicket.markup.parser.filter;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.markup.html.PackageResource;
+import org.apache.wicket.ng.resource.PackageResource;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

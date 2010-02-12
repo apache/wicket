@@ -21,20 +21,20 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.RequestCycle;
+import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.Component.IVisitor;
-import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -46,25 +46,34 @@ import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
-import org.apache.wicket.markup.html.form.IFormVisitorParticipant;
-import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.markup.html.form.IFormSubmitListener;
 import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.protocol.http.MockHttpServletResponse;
-import org.apache.wicket.protocol.http.MockWebApplication;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.http.WebRequestCycle;
-import org.apache.wicket.session.HttpSessionStore;
-import org.apache.wicket.session.ISessionStore;
+import org.apache.wicket.ng.ThreadContext;
+import org.apache.wicket.ng.mock.MockApplication;
+import org.apache.wicket.ng.mock.MockRequestCycle;
+import org.apache.wicket.ng.mock.MockWebRequest;
+import org.apache.wicket.ng.mock.MockWebResponse;
+import org.apache.wicket.ng.mock.WicketTester;
+import org.apache.wicket.ng.request.IRequestMapper;
+import org.apache.wicket.ng.request.Url;
+import org.apache.wicket.ng.request.component.IRequestablePage;
+import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.ng.request.handler.IPageProvider;
+import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
+import org.apache.wicket.ng.request.handler.PageProvider;
+import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
+import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
+import org.apache.wicket.protocol.http.WebSession;
+import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.apache.wicket.util.diff.DiffUtil;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.Strings;
@@ -81,9 +90,12 @@ import org.slf4j.LoggerFactory;
  * @author Ingram Chen
  * @author Juergen Donnerstag
  * @author Frank Bille
+ * @author Igor Vaynberg
+ * 
  * @since 1.2.6
+ * 
  */
-public class BaseWicketTester extends MockWebApplication
+public class BaseWicketTester
 {
 	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(BaseWicketTester.class);
@@ -113,31 +125,20 @@ public class BaseWicketTester extends MockWebApplication
 		}
 	}
 
-	/**
-	 * @author frankbille
-	 */
-	public static class DummyWebApplication extends WebApplication
-	{
-		@Override
-		public Class<? extends Page> getHomePage()
-		{
-			return DummyHomePage.class;
-		}
 
-		@Override
-		protected void outputDevelopmentModeWarning()
-		{
-			// Do nothing.
-		}
+	private final MockApplication application;
 
-		@Override
-		protected ISessionStore newSessionStore()
-		{
-			// Don't use a filestore, or we spawn lots of threads, which makes
-			// things slow.
-			return new HttpSessionStore();
-		}
-	}
+	private boolean followRedirects = true;
+	private int redirectCount;
+
+	private MockWebRequest lastRequest;
+	private MockWebResponse lastResponse;
+
+	private final List<MockWebRequest> previousRequests = new ArrayList<MockWebRequest>();
+	private final List<MockWebResponse> previousResponses = new ArrayList<MockWebResponse>();
+
+	private final ThreadContext oldThreadContext;
+	private final Session session;
 
 	/**
 	 * Creates <code>WicketTester</code> and automatically create a <code>WebApplication</code>, but
@@ -145,7 +146,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public BaseWicketTester()
 	{
-		this(new DummyWebApplication(), null);
+		this(new MockApplication());
 	}
 
 	/**
@@ -158,7 +159,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public <C extends Page> BaseWicketTester(final Class<C> homePage)
 	{
-		this(new WebApplication()
+		this(new MockApplication()
 		{
 			/**
 			 * @see org.apache.wicket.Application#getHomePage()
@@ -175,15 +176,7 @@ public class BaseWicketTester extends MockWebApplication
 				// Do nothing.
 			}
 
-			@Override
-			protected ISessionStore newSessionStore()
-			{
-				// Don't use a filestore, or we spawn lots of threads, which
-				// makes things slow.
-				return new HttpSessionStore();
-			}
-
-		}, null);
+		});
 	}
 
 	/**
@@ -192,10 +185,20 @@ public class BaseWicketTester extends MockWebApplication
 	 * @param application
 	 *            a <code>WicketTester</code> <code>WebApplication</code> object
 	 */
-	public BaseWicketTester(final WebApplication application)
+	public BaseWicketTester(final MockApplication application)
 	{
-		this(application, null);
+		oldThreadContext = ThreadContext.detach();
+
+		this.application = new MockApplication();
+		this.application.setName("WicketTesterApplication");
+		this.application.set();
+		this.application.initApplication();
+
+		session = new WebSession(new MockWebRequest(Url.parse("/")));
+		getApplication().getSessionStore().bind(null, session);
+		ThreadContext.setSession(session);
 	}
+
 
 	/**
 	 * Creates a <code>WicketTester</code> for unit testing.
@@ -209,10 +212,219 @@ public class BaseWicketTester extends MockWebApplication
 	 * @see org.apache.wicket.protocol.http.MockWebApplication#MockWebApplication(org.apache.wicket.protocol.http.WebApplication,
 	 *      String)
 	 */
-	public BaseWicketTester(final WebApplication application, final String path)
+// public BaseWicketTester(final WebApplication application, final String path)
+// {
+// super(application, path);
+// }
+
+
+	public Session getSession()
 	{
-		super(application, path);
+		return session;
 	}
+
+	/**
+	 * Returns the {@link MockApplication} for this environment.
+	 * 
+	 * @return application
+	 */
+	public MockApplication getApplication()
+	{
+		return application;
+	}
+
+	/**
+	 * Destroys the tester. Restores {@link ThreadContext} to state before instance of
+	 * {@link WicketTester} was created.
+	 */
+	public void destroy()
+	{
+		ThreadContext.restore(oldThreadContext);
+		application.internalDestroy();
+	}
+
+	/**
+	 * Processes the request in mocked Wicket environment.
+	 * 
+	 * @param request
+	 *            request to process
+	 * 
+	 */
+	public void processRequest(MockWebRequest request)
+	{
+		processRequest(request);
+	}
+
+	/**
+	 * Processes the request in mocked Wicket environment.
+	 * 
+	 * @param request
+	 *            request to process
+	 * 
+	 * @param forcedRequestHandler
+	 *            optional parameter to override parsing the request URL and force
+	 *            {@link IRequestHandler}
+	 */
+	public void processRequest(MockWebRequest request, IRequestHandler forcedRequestHandler)
+	{
+		try
+		{
+			if (lastRequest != null)
+			{
+				previousRequests.add(lastRequest);
+			}
+			if (lastResponse != null)
+			{
+				previousResponses.add(lastResponse);
+			}
+
+			lastRequest = request;
+			lastResponse = new MockWebResponse();
+
+			MockRequestCycle cycle = (MockRequestCycle)application.createRequestCycle(request,
+				lastResponse);
+
+			ThreadContext.setRequestCycle(cycle);
+
+			if (forcedRequestHandler != null)
+			{
+				cycle.forceRequestHandler(forcedRequestHandler);
+			}
+
+			cycle.processRequestAndDetach();
+
+			if (followRedirects && lastResponse.isRedirect())
+			{
+				if (redirectCount == 100)
+				{
+					throw new IllegalStateException(
+						"Possible infinite redirect detected. Bailing out.");
+				}
+				++redirectCount;
+				Url newUrl = Url.parse(lastResponse.getRedirectUrl());
+				if (newUrl.isAbsolute())
+				{
+					throw new WicketRuntimeException("Can not follow absolute redirect URL.");
+				}
+
+				// append redirect URL to current URL (what browser would do)
+				Url mergedURL = new Url(request.getUrl().getSegments(), newUrl.getQueryParameters());
+				mergedURL.concatSegments(newUrl.getSegments());
+
+				processRequest(new MockWebRequest(mergedURL), null);
+
+				--redirectCount;
+			}
+		}
+		finally
+		{
+			redirectCount = 0;
+		}
+	}
+
+	/**
+	 * Renders the page specified by given {@link IPageProvider}. After render the page instance can
+	 * be retreived using {@link #getLastRenderedPage()} and the rendered document will be available
+	 * in {@link #getLastResponse()}.
+	 * 
+	 * Depending on {@link RenderStrategy} invoking this method can mean that a redirect will happen
+	 * before the actual render.
+	 * 
+	 * @param pageProvider
+	 * @return last rendered page
+	 */
+	public Page startPage(IPageProvider pageProvider)
+	{
+		MockWebRequest request = new MockWebRequest(new Url());
+		IRequestHandler handler = new RenderPageRequestHandler(pageProvider);
+		processRequest(request, handler);
+		return getLastRenderedPage();
+	}
+
+	/**
+	 * Renders the page.
+	 * 
+	 * @see #startPage(IPageProvider)
+	 * 
+	 * @param page
+	 */
+	public Page startPage(Page page)
+	{
+		return startPage(new PageProvider(page));
+	}
+
+	/**
+	 * @return last request or <code>null</code> if no request has happened yet.
+	 */
+	public MockWebRequest getLastRequest()
+	{
+		return lastRequest;
+	}
+
+	/**
+	 * @return last response or <code>null</code>> if no response has been produced yet.
+	 */
+	public MockWebResponse getLastResponse()
+	{
+		return lastResponse;
+	}
+
+	/**
+	 * @return list of prior requests
+	 */
+	public List<MockWebRequest> getPreviousRequests()
+	{
+		return Collections.unmodifiableList(previousRequests);
+	}
+
+	/**
+	 * @return list of prior responses
+	 */
+	public List<MockWebResponse> getPreviousResponses()
+	{
+		return Collections.unmodifiableList(previousResponses);
+	}
+
+	/**
+	 * @return last rendered page
+	 */
+	public Page getLastRenderedPage()
+	{
+		return (Page)application.getLastRenderedPage();
+	}
+
+	/**
+	 * Sets whether responses with redirects will be followed automatically.
+	 * 
+	 * @param followRedirects
+	 */
+	public void setFollowRedirects(boolean followRedirects)
+	{
+		this.followRedirects = followRedirects;
+	}
+
+	/**
+	 * @return <code>true</code> if redirect responses will be followed automatically,
+	 *         <code>false</code> otherwise.
+	 */
+	public boolean isFollowRedirects()
+	{
+		return followRedirects;
+	}
+
+	/**
+	 * Encodes the {@link IRequestHandler} to {@link Url}. It should be safe to call this method
+	 * outside request thread as log as no registered {@link IRequestMapper} requires a
+	 * {@link RequestCycle}.
+	 * 
+	 * @param handler
+	 * @return {@link Url} for handler.
+	 */
+	public Url urlFor(IRequestHandler handler)
+	{
+		return application.getRootRequestMapper().mapHandler(handler);
+	}
+
 
 	/**
 	 * Renders a <code>Page</code> defined in <code>TestPageSource</code>. This is usually used when
@@ -236,13 +448,52 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public final Page startPage(final ITestPageSource testPageSource)
 	{
-		startPage(DummyHomePage.class);
-		DummyHomePage page = (DummyHomePage)getLastRenderedPage();
-		page.setTestPageSource(testPageSource);
+		return startPage(new IPageProvider()
+		{
+			public void detach()
+			{
+			}
 
-		executeListener(page.getTestPageLink());
-		return getLastRenderedPage();
+			public Class<? extends IRequestablePage> getPageClass()
+			{
+				return null;
+			}
+
+			public IRequestablePage getPageInstance()
+			{
+				return testPageSource.getTestPage();
+			}
+
+			public PageParameters getPageParameters()
+			{
+				return null;
+			}
+
+		});
 	}
+
+	/**
+	 * Simulates processing URL that invokes specified {@link RequestListenerInterface} on
+	 * component.
+	 * 
+	 * After the listener interface is invoked the page containing the component will be rendered
+	 * (with an optional redirect - depending on {@link RenderStrategy}).
+	 * 
+	 * @param component
+	 * @param listener
+	 */
+	public void executeListener(Component component, RequestListenerInterface listener)
+	{
+		// there are two ways to do this. RequestCycle could be forced to call the handler
+		// directly but constructing and parsing the URL increases the chance of triggering bugs
+		IRequestHandler handler = new ListenerInterfaceRequestHandler(new PageAndComponentProvider(
+			component.getPage(), component), listener);
+
+		Url url = urlFor(handler);
+
+		processRequest(new MockWebRequest(url), null);
+	}
+
 
 	/**
 	 * Builds and processes a request suitable for invoking a listener. The <code>Component</code>
@@ -253,9 +504,13 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public void executeListener(Component component)
 	{
-		WebRequestCycle cycle = setupRequestAndResponse();
-		getServletRequest().setRequestToComponent(component);
-		processRequestCycle(cycle);
+		for (RequestListenerInterface iface : RequestListenerInterface.getRegisteredInterfaces())
+		{
+			if (iface.getListenerInterfaceClass().isAssignableFrom(component.getClass()))
+			{
+				executeListener(component, iface);
+			}
+		}
 	}
 
 	/**
@@ -266,22 +521,8 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public void executeBehavior(final AbstractAjaxBehavior behavior)
 	{
-		CharSequence url = behavior.getCallbackUrl(false);
-		WebRequestCycle cycle = setupRequestAndResponse(true);
-		getServletRequest().setRequestToRedirectString(url.toString());
-		processRequestCycle(cycle);
-	}
-
-	/**
-	 * Renders the <code>Page</code>.
-	 * 
-	 * @param page
-	 *            a <code>Page</code> to render
-	 * @return the rendered <code>Page</code>
-	 */
-	public final Page startPage(final Page page)
-	{
-		return startPage(new TestPageSource(page));
+		Url url = Url.parse(behavior.getCallbackUrl().toString());
+		processRequest(new MockWebRequest(url), null);
 	}
 
 	/**
@@ -295,8 +536,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public final <C extends Page> Page startPage(Class<C> pageClass)
 	{
-		processRequestCycle(pageClass);
-		return getLastRenderedPage();
+		return startPage(new PageProvider(pageClass));
 	}
 
 	/**
@@ -312,8 +552,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public final <C extends Page> Page startPage(Class<C> pageClass, PageParameters parameters)
 	{
-		processRequestCycle(pageClass, parameters);
-		return getLastRenderedPage();
+		return startPage(new PageProvider(pageClass, parameters));
 	}
 
 	/**
@@ -572,8 +811,9 @@ public class BaseWicketTester extends MockWebApplication
 	public Result ifContains(String pattern)
 	{
 		return isTrue("pattern '" + pattern + "' not found in:\n" +
-			getServletResponse().getDocument(), getServletResponse().getDocument().matches(
-			"(?s).*" + pattern + ".*"));
+			getLastResponse().getTextResponse(), getLastResponse().getTextResponse()
+			.toString()
+			.matches("(?s).*" + pattern + ".*"));
 	}
 
 	/**
@@ -645,34 +885,14 @@ public class BaseWicketTester extends MockWebApplication
 					"not be invoked when AJAX (javascript) is disabled.");
 			}
 
-			AjaxLink<?> link = (AjaxLink<?>)linkComponent;
-
-			setupRequestAndResponse(true);
-			WebRequestCycle requestCycle = createRequestCycle();
-			AjaxRequestTarget target = getApplication().newAjaxRequestTarget(link.getPage());
-			requestCycle.setRequestTarget(target);
-
-			link.onClick(target);
-
-			// process the request target
-			processRequestCycle(requestCycle);
+			executeBehavior(WicketTesterHelper.findAjaxEventBehavior(linkComponent, "onclick"));
 		}
 		// AjaxFallbackLinks is processed like an AjaxLink if isAjax is true
 		// If it's not handling of the linkComponent is passed through to the
 		// Link.
 		else if (linkComponent instanceof AjaxFallbackLink && isAjax)
 		{
-			AjaxFallbackLink<?> link = (AjaxFallbackLink<?>)linkComponent;
-
-			setupRequestAndResponse(true);
-			WebRequestCycle requestCycle = createRequestCycle();
-			AjaxRequestTarget target = getApplication().newAjaxRequestTarget(link.getPage());
-			requestCycle.setRequestTarget(target);
-
-			link.onClick(target);
-
-			// process the request target
-			processRequestCycle(requestCycle);
+			executeBehavior(WicketTesterHelper.findAjaxEventBehavior(linkComponent, "onclick"));
 		}
 		// if the link is an AjaxSubmitLink, we need to find the form
 		// from it using reflection so we know what to submit.
@@ -686,32 +906,8 @@ public class BaseWicketTester extends MockWebApplication
 			}
 
 			AjaxSubmitLink link = (AjaxSubmitLink)linkComponent;
-
-			// We cycle through the attached behaviors and select the
-			// LAST matching behavior as the one we handle.
-			List<IBehavior> behaviors = link.getBehaviors();
-			AjaxFormSubmitBehavior ajaxFormSubmitBehavior = null;
-			for (IBehavior behavior : behaviors)
-			{
-				if (behavior instanceof AjaxFormSubmitBehavior)
-				{
-					AjaxFormSubmitBehavior submitBehavior = (AjaxFormSubmitBehavior)behavior;
-					ajaxFormSubmitBehavior = submitBehavior;
-				}
-			}
-
-			String failMessage = "No form submit behavior found on the submit link. Strange!!";
-			notNull(failMessage, ajaxFormSubmitBehavior);
-
-			WebRequestCycle requestCycle = setupRequestAndResponse(true);
-
-			submitAjaxFormSubmitBehavior(linkComponent, ajaxFormSubmitBehavior);
-
-			// Ok, finally we "click" the link
-			ajaxFormSubmitBehavior.onRequest();
-
-			// process the request target
-			processRequestCycle(requestCycle);
+			submitAjaxFormSubmitBehavior(link,
+				(AjaxFormSubmitBehavior)WicketTesterHelper.findAjaxEventBehavior(link, "onclick"));
 		}
 		/*
 		 * If the link is a submitlink then we pretend to have clicked it
@@ -721,23 +917,7 @@ public class BaseWicketTester extends MockWebApplication
 			SubmitLink submitLink = (SubmitLink)linkComponent;
 
 			String pageRelativePath = submitLink.getInputName();
-			getParametersForNextRequest().put(pageRelativePath, new String[] { "x" });
-
-			Form<?> form = submitLink.getForm();
-			form.visitFormComponents(new FormComponent.IVisitor()
-			{
-				public Object formComponent(IFormVisitorParticipant formComponent)
-				{
-					FormComponent<?> component = (FormComponent<?>)formComponent;
-					if (getParametersForNextRequest().containsKey(component.getInputName()) == false)
-					{
-						getParametersForNextRequest().put(component.getInputName(),
-							new String[] { component.getDefaultModelObjectAsString() });
-					}
-
-					return IVisitor.CONTINUE_TRAVERSAL;
-				}
-			});
+			getLastRequest().getPostRequestParameters().setParameterValue(pageRelativePath, "x");
 
 			submitForm(submitLink.getForm().getPageRelativePath());
 		}
@@ -762,7 +942,8 @@ public class BaseWicketTester extends MockWebApplication
 
 					PageParameters parameters = (PageParameters)getParametersMethod.invoke(
 						bookmarkablePageLink, (Object[])null);
-					setParametersForNextRequest(parameters.toRequestParameters());
+
+					startPage(bookmarkablePageLink.getPageClass(), parameters);
 				}
 				catch (Exception e)
 				{
@@ -772,7 +953,7 @@ public class BaseWicketTester extends MockWebApplication
 
 			}
 
-			executeListener(link);
+			executeListener(link, ILinkListener.INTERFACE);
 		}
 		else
 		{
@@ -789,44 +970,13 @@ public class BaseWicketTester extends MockWebApplication
 	public void submitForm(String path)
 	{
 		Form<?> form = (Form<?>)getComponentFromLastRenderedPage(path);
-		executeListener(form);
+		Url url = Url.parse(form.urlFor(IFormSubmitListener.INTERFACE).toString());
+		processRequest(getLastRequest().requestWithUrl(url));
 	}
 
-	/**
-	 * Sets a parameter for the <code>Component</code> with the given path to be used with the next
-	 * request.
-	 * <p>
-	 * NOTE: this method only works when a <code>Page</code> was rendered first.
-	 * 
-	 * @param componentPath
-	 *            path to the <code>Component</code>
-	 * @param value
-	 *            the parameter value to set
-	 */
-	public void setParameterForNextRequest(String componentPath, Object value)
+	public void setParameterForNextRequest(String param, String value)
 	{
-		if (getLastRenderedPage() == null)
-		{
-			fail("before using this method, at least one page has to be rendered");
-		}
-
-		Component c = getComponentFromLastRenderedPage(componentPath);
-		if (c == null)
-		{
-			fail("component " + componentPath + " was not found");
-			return;
-		}
-
-		if (c instanceof FormComponent)
-		{
-			getParametersForNextRequest().put(((FormComponent<?>)c).getInputName(),
-				new String[] { value.toString() });
-		}
-		else
-		{
-			getParametersForNextRequest().put(c.getPath(), new String[] { value.toString() });
-		}
-
+		getLastRequest().getPostRequestParameters().setParameterValue(param, value);
 	}
 
 	/**
@@ -871,7 +1021,7 @@ public class BaseWicketTester extends MockWebApplication
 	public void assertResultPage(final Class<?> pageClass, final String filename) throws Exception
 	{
 		// Validate the document
-		String document = getServletResponse().getDocument();
+		String document = getLastResponse().getTextResponse().toString();
 		DiffUtil.validatePage(document, pageClass, filename, true);
 	}
 
@@ -887,7 +1037,7 @@ public class BaseWicketTester extends MockWebApplication
 	public Result isResultPage(final String expectedDocument) throws Exception
 	{
 		// Validate the document
-		String document = getServletResponse().getDocument();
+		String document = getLastResponse().getTextResponse().toString();
 		return isTrue("expected rendered page equals", document.equals(expectedDocument));
 	}
 
@@ -949,7 +1099,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public void dumpPage()
 	{
-		log.info(getServletResponse().getDocument());
+		log.info(getLastResponse().getTextResponse().toString());
 	}
 
 	/**
@@ -1012,7 +1162,7 @@ public class BaseWicketTester extends MockWebApplication
 		}
 
 		// Get the AJAX response
-		String ajaxResponse = getServletResponse().getDocument();
+		String ajaxResponse = getLastResponse().getTextResponse().toString();
 
 		// Test that the previous response was actually a AJAX response
 		failMessage = "The Previous response was not an AJAX response. "
@@ -1078,16 +1228,17 @@ public class BaseWicketTester extends MockWebApplication
 				// get the AbstractAjaxBehaviour which is responsible for
 				// getting the contents of the lazy panel
 				List<IBehavior> behaviors = BehaviorsUtil.getBehaviors(component,
-					AjaxSelfUpdatingTimerBehavior.class);
+					AbstractAjaxTimerBehavior.class);
 				for (IBehavior b : behaviors)
 				{
-					if (b instanceof AjaxSelfUpdatingTimerBehavior)
+					if (b instanceof AbstractAjaxTimerBehavior)
 					{
 						log.debug("Triggering AjaxSelfUpdatingTimerBehavior: " +
 							component.getClassRelativePath());
-						AjaxSelfUpdatingTimerBehavior abstractAjaxBehaviour = (AjaxSelfUpdatingTimerBehavior)b;
-						if (!abstractAjaxBehavior.isStopped()) {
-						executeBehavior(abstractAjaxBehaviour);
+						AbstractAjaxTimerBehavior timer = (AbstractAjaxTimerBehavior)b;
+						if (!timer.isStopped())
+						{
+							executeBehavior(timer);
 						}
 					}
 				}
@@ -1135,8 +1286,6 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public void executeAjaxEvent(final Component component, final String event)
 	{
-		setCreateAjaxRequest(true);
-
 		String failMessage = "Can't execute event on a component which is null.";
 		notNull(failMessage, component);
 
@@ -1149,79 +1298,36 @@ public class BaseWicketTester extends MockWebApplication
 				" Component: " + component + "; Event: " + event);
 		}
 
-		// Run through all the behavior and select the LAST ADDED behavior which
-		// matches the event parameter.
-		AjaxEventBehavior ajaxEventBehavior = null;
-		List<IBehavior> behaviors = component.getBehaviors();
-		for (IBehavior behavior : behaviors)
-		{
-			// AjaxEventBehavior is the one to look for
-			if (behavior instanceof AjaxEventBehavior)
-			{
-				AjaxEventBehavior tmp = (AjaxEventBehavior)behavior;
-				if (event.equals(tmp.getEvent()))
-				{
-					ajaxEventBehavior = tmp;
-				}
-			}
-		}
-
-		// If there haven't been found any event behaviors on the component
-		// which matches the parameters we fail.
-		failMessage = "No AjaxEventBehavior found on component: " + component.getId() +
-			" which matches the event: " + event;
-		notNull(failMessage, ajaxEventBehavior);
-
-		// when the requestcycle is not created via setupRequestAndResponse(true), than create a new
-		// one
-		WebRequestCycle requestCycle = resolveRequestCycle();
-		if (!requestCycle.getWebRequest().isAjax())
-		{
-			throw new IllegalStateException(
-				"The ServletWebRequest was created without wicket-ajax header. Please use tester.setCreateAjaxRequest(true)");
-		}
-
-		// If the event is an FormSubmitBehavior then also "submit" the form
-		if (ajaxEventBehavior instanceof AjaxFormSubmitBehavior)
-		{
-			AjaxFormSubmitBehavior ajaxFormSubmitBehavior = (AjaxFormSubmitBehavior)ajaxEventBehavior;
-			submitAjaxFormSubmitBehavior(component, ajaxFormSubmitBehavior);
-		}
-
-		// process the event
-		ajaxEventBehavior.onRequest();
-
-		// process the request target
-		processRequestCycle(requestCycle);
+		executeBehavior(WicketTesterHelper.findAjaxEventBehavior(component, event));
 	}
 
 	/**
 	 * 
 	 * @return WebRequestCycle
 	 */
-	protected WebRequestCycle resolveRequestCycle()
-	{
-		// initialize the request only if needed to allow the user to pass
-		// request parameters, see WICKET-254
-		WebRequestCycle requestCycle;
-		if (RequestCycle.get() == null)
-		{
-			requestCycle = setupRequestAndResponse();
-		}
-		else
-		{
-			requestCycle = (WebRequestCycle)RequestCycle.get();
-
-			// If a ajax request is requested but the existing is not, than we still need to create
-			// a new one
-			if ((requestCycle.getWebRequest().isAjax() == false) && (isCreateAjaxRequest() == true))
-			{
-				setParametersForNextRequest(requestCycle.getWebRequest().getParameterMap());
-				requestCycle = setupRequestAndResponse();
-			}
-		}
-		return requestCycle;
-	}
+// protected WebRequestCycle resolveRequestCycle()
+// {
+// // initialize the request only if needed to allow the user to pass
+// // request parameters, see WICKET-254
+// WebRequestCycle requestCycle;
+// if (RequestCycle.get() == null)
+// {
+// requestCycle = setupRequestAndResponse();
+// }
+// else
+// {
+// requestCycle = (WebRequestCycle)RequestCycle.get();
+//
+// // If a ajax request is requested but the existing is not, than we still need to create
+// // a new one
+// if ((requestCycle.getWebRequest().isAjax() == false) && (isCreateAjaxRequest() == true))
+// {
+// setParametersForNextRequest(requestCycle.getWebRequest().getParameterMap());
+// requestCycle = setupRequestAndResponse();
+// }
+// }
+// return requestCycle;
+// }
 
 	/**
 	 * Retrieves a <code>TagTester</code> based on a <code>wicket:id</code>. If more
@@ -1234,8 +1340,8 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public TagTester getTagByWicketId(String wicketId)
 	{
-		return TagTester.createTagByAttribute(getServletResponse().getDocument(), "wicket:id",
-			wicketId);
+		return TagTester.createTagByAttribute(getLastResponse().getTextResponse().toString(),
+			"wicket:id", wicketId);
 	}
 
 	/**
@@ -1244,9 +1350,9 @@ public class BaseWicketTester extends MockWebApplication
 	 * 
 	 * @see BaseWicketTester#getTagByWicketId(String)
 	 */
-	public static List<TagTester> getTagsByWicketId(WicketTester tester, String wicketId)
+	public List<TagTester> getTagsByWicketId(String wicketId)
 	{
-		return TagTester.createTagsByAttribute(tester.getServletResponse().getDocument(),
+		return TagTester.createTagsByAttribute(getLastResponse().getTextResponse().toString(),
 			"wicket:id", wicketId, false);
 	}
 
@@ -1260,7 +1366,8 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public TagTester getTagById(String id)
 	{
-		return TagTester.createTagByAttribute(getServletResponse().getDocument(), "id", id);
+		return TagTester.createTagByAttribute(getLastResponse().getTextResponse().toString(), "id",
+			id);
 	}
 
 	/**
@@ -1281,33 +1388,8 @@ public class BaseWicketTester extends MockWebApplication
 		String failMessage = "No form attached to the submitlink.";
 		notNull(failMessage, form);
 
-		form.visitFormComponents(new FormComponent.AbstractVisitor()
-		{
-			@Override
-			public void onFormComponent(FormComponent<?> formComponent)
-			{
-				if (!(formComponent instanceof RadioGroup) &&
-					!(formComponent instanceof CheckGroup) &&
-					!formComponent.getClass().isAssignableFrom(Button.class) &&
-					formComponent.isVisible() && formComponent.isEnabledInHierarchy())
-				{
-					if (!((formComponent instanceof IFormSubmittingComponent) && (component instanceof IFormSubmittingComponent)) ||
-						(component == formComponent))
-					{
-						String name = formComponent.getInputName();
-						String value = formComponent.getValue();
-
-						// Set request parameter with the field value, but do not modify an
-						// existing request parameter explicitly set using
-						// FormTester.setValue()
-						if (getServletRequest().getParameterMap().get(name) == null)
-						{
-							getServletRequest().setParameter(name, value);
-						}
-					}
-				}
-			}
-		});
+		Url url = Url.parse(behavior.getCallbackUrl().toString());
+		processRequest(getLastRequest().requestWithUrl(url), null);
 	}
 
 	/**
@@ -1317,7 +1399,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public String getContentTypeFromResponseHeader()
 	{
-		String contentType = ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse()).getHeader("Content-Type");
+		String contentType = getLastResponse().getHeader("Content-Type");
 		if (contentType == null)
 		{
 			throw new WicketRuntimeException("No Content-Type header found");
@@ -1332,7 +1414,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public int getContentLengthFromResponseHeader()
 	{
-		String contentLength = ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse()).getHeader("Content-Length");
+		String contentLength = getLastResponse().getHeader("Content-Length");
 		if (contentLength == null)
 		{
 			throw new WicketRuntimeException("No Content-Length header found");
@@ -1347,7 +1429,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public String getLastModifiedFromResponseHeader()
 	{
-		return ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse()).getHeader("Last-Modified");
+		return getLastResponse().getHeader("Last-Modified");
 	}
 
 	/**
@@ -1357,7 +1439,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public String getContentDispositionFromResponseHeader()
 	{
-		return ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse()).getHeader("Content-Disposition");
+		return getLastResponse().getHeader("Content-Disposition");
 	}
 
 	private Result isTrue(String message, boolean condition)

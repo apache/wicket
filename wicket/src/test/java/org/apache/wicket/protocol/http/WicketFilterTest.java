@@ -42,8 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 import junit.framework.TestCase;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.markup.html.image.resource.DynamicImageResource;
-import org.apache.wicket.util.tester.WicketTester.DummyWebApplication;
+import org.apache.wicket.ng.resource.DynamicImageResource;
 
 public class WicketFilterTest extends TestCase
 {

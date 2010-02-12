@@ -30,11 +30,9 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.resource.DummyApplication;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.value.ValueMap;
 
 /**
@@ -91,7 +89,7 @@ public class LocalizerTest extends WicketTestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		tester = new WicketTester(new DummyApplication());
+		super.setUp();
 		settings = tester.getApplication().getResourceSettings();
 		localizer = tester.getApplication().getResourceSettings().getLocalizer();
 	}

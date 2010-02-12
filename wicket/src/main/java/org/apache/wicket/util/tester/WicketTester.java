@@ -22,8 +22,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 
@@ -34,12 +32,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.pageStore.IPageStore;
-import org.apache.wicket.protocol.http.MockHttpServletResponse;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.http.WebResponse;
-import org.apache.wicket.session.HttpSessionStore;
-import org.apache.wicket.session.ISessionStore;
+import org.apache.wicket.ng.mock.MockApplication;
 import org.apache.wicket.util.diff.DiffUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -158,53 +151,7 @@ import org.slf4j.LoggerFactory;
  */
 public class WicketTester extends BaseWicketTester
 {
-	/**
-	 * Default dummy web application for testing. Uses {@link HttpSessionStore} to store pages and
-	 * the <code>Session</code>.
-	 */
-	public static class DummyWebApplication extends WebApplication
-	{
-		/**
-		 * @see org.apache.wicket.Application#getHomePage()
-		 */
-		@Override
-		public Class<? extends Page> getHomePage()
-		{
-			return DummyHomePage.class;
-		}
 
-		@Override
-		protected ISessionStore newSessionStore()
-		{
-			// Don't use a filestore, or we spawn lots of threads, which makes
-			// things slow.
-			return new HttpSessionStore();
-		}
-
-		/**
-		 * @see org.apache.wicket.protocol.http.WebApplication#newWebResponse(javax.servlet.http.HttpServletResponse)
-		 */
-		@Override
-		protected WebResponse newWebResponse(final HttpServletResponse servletResponse)
-		{
-			return new WebResponse(servletResponse);
-		}
-
-		@Override
-		protected void outputDevelopmentModeWarning()
-		{
-			// do nothing
-		}
-	}
-
-	/**
-	 * Dummy web application that does not support back button support but is cheaper to use for
-	 * unit tests. Uses {@link SecondLevelCacheSessionStore} with a noop {@link IPageStore}.
-	 */
-	public static class NonPageCachingDummyWebApplication extends DummyWebApplication
-	{
-
-	}
 
 	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(WicketTester.class);
@@ -215,7 +162,6 @@ public class WicketTester extends BaseWicketTester
 	 */
 	public WicketTester()
 	{
-		this(new DummyWebApplication());
 	}
 
 	/**
@@ -226,37 +172,7 @@ public class WicketTester extends BaseWicketTester
 	 */
 	public WicketTester(final Class<? extends Page> homePage)
 	{
-		this(new WebApplication()
-		{
-			/**
-			 * @see org.apache.wicket.Application#getHomePage()
-			 */
-			@Override
-			public Class<? extends Page> getHomePage()
-			{
-				return homePage;
-			}
-
-			@Override
-			protected ISessionStore newSessionStore()
-			{
-				// Don't use a filestore, or we spawn lots of threads, which
-				// makes things slow.
-				return new HttpSessionStore();
-			}
-
-			@Override
-			protected WebResponse newWebResponse(final HttpServletResponse servletResponse)
-			{
-				return new WebResponse(servletResponse);
-			}
-
-			@Override
-			protected void outputDevelopmentModeWarning()
-			{
-				// Do nothing.
-			}
-		});
+		super(homePage);
 	}
 
 	/**
@@ -265,9 +181,9 @@ public class WicketTester extends BaseWicketTester
 	 * @param application
 	 *            a <code>WicketTester</code> <code>WebApplication</code> object
 	 */
-	public WicketTester(final WebApplication application)
+	public WicketTester(final MockApplication application)
 	{
-		this(application, null);
+		super(application);
 	}
 
 	/**
@@ -282,10 +198,10 @@ public class WicketTester extends BaseWicketTester
 	 * @see org.apache.wicket.protocol.http.MockWebApplication#MockWebApplication(org.apache.wicket.protocol.http.WebApplication,
 	 *      String)
 	 */
-	public WicketTester(final WebApplication application, final String path)
-	{
-		super(application, path);
-	}
+// public WicketTester(final WebApplication application, final String path)
+// {
+// super(application, path);
+// }
 
 
 	/**
@@ -293,19 +209,19 @@ public class WicketTester extends BaseWicketTester
 	 */
 	public void assertAjaxLocation()
 	{
-		if (null != ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse()).getRedirectLocation())
+		if (null != getLastResponse().getHeader("Location"))
 		{
 			throw new AssertionFailedError(
 				"Location header should *not* be present when using Ajax");
 		}
 
-		String ajaxLocation = ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse()).getHeader("Ajax-Location");
+		String ajaxLocation = getLastResponse().getHeader("Ajax-Location");
 		if (null == ajaxLocation)
 		{
 			throw new AssertionFailedError("Ajax-Location header should be present when using Ajax");
 		}
 
-		int statusCode = ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse()).getStatus();
+		int statusCode = getLastResponse().getStatus();
 		if (statusCode != 200)
 		{
 			throw new AssertionFailedError("Expected HTTP status code to be 200 (OK)");
@@ -500,7 +416,7 @@ public class WicketTester extends BaseWicketTester
 	@Override
 	public void assertResultPage(final Class<?> clazz, final String filename) throws Exception
 	{
-		String document = getServletResponse().getDocument();
+		String document = getLastResponse().getTextResponse().toString();
 		DiffUtil.validatePage(document, clazz, filename, true);
 	}
 
@@ -515,7 +431,7 @@ public class WicketTester extends BaseWicketTester
 	public void assertResultPage(final String expectedDocument) throws Exception
 	{
 		// Validate the document
-		String document = getServletResponse().getDocument();
+		String document = getLastResponse().getTextResponse().toString();
 		Assert.assertEquals(expectedDocument, document);
 	}
 

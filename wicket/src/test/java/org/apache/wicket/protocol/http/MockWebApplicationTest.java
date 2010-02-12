@@ -32,7 +32,6 @@ import org.apache.wicket.util.diff.DiffUtil;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
-import org.apache.wicket.util.tester.WicketTester.DummyWebApplication;
 
 /**
  * Simple application that demonstrates the mock http application code (and checks that it is

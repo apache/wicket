@@ -19,7 +19,6 @@ package org.apache.wicket.stateless.pages;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**

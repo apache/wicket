@@ -23,7 +23,6 @@ import junit.framework.TestCase;
 
 import org.apache.wicket.properties.MyTesterApplication;
 import org.apache.wicket.properties.TestPage;
-import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**

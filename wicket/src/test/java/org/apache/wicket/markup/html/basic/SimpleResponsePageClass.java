@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.markup.html.basic;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.ng.request.component.PageParameters;
 
 /**
  * @author jcompagner

@@ -26,7 +26,6 @@ import org.apache.wicket.request.target.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.resource.WebExternalResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
-import org.apache.wicket.util.tester.WicketTester.DummyWebApplication;
 
 /**
  * Test WebExternalResourceRequestTarget and WebExternalResourceStream

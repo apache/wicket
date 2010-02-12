@@ -23,6 +23,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
+import org.apache.wicket.ng.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.util.tester.WicketTester;
 
@@ -80,7 +81,7 @@ public class AjaxBehaviorEnabledTest extends WicketTestCase
 	protected void setUp() throws Exception
 	{
 		final IAuthorizationStrategy strategy = new CustomStrategy();
-		tester = new WicketTester(new WicketTester.DummyWebApplication()
+		tester = new WicketTester(new MockApplication()
 		{
 			@Override
 			public Session newSession(Request request, Response response)

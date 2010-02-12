@@ -22,7 +22,7 @@ import java.util.Random;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.RequestCycle;
+import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.util.tester.WicketTester;
 

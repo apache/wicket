@@ -19,7 +19,6 @@ package org.apache.wicket.properties;
 import java.util.Locale;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.util.tester.WicketTester;
 
 

@@ -16,9 +16,8 @@
  */
 package org.apache.wicket.redirect.encodingtest;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.request.target.coding.MixedParamUrlCodingStrategy;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

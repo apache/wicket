@@ -18,11 +18,9 @@ package org.apache.wicket.request.target.coding;
 
 import java.io.OutputStream;
 
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.Resource;
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.protocol.http.WebRequestCycle;
+import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.value.ValueMap;

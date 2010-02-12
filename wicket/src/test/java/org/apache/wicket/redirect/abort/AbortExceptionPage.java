@@ -19,13 +19,12 @@ package org.apache.wicket.redirect.abort;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
-import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
+import org.apache.wicket.ng.request.component.PageParameters;
 
 /**
  * Page that optionally throws an abortexception during render phase.

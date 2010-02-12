@@ -16,7 +16,7 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.protocol.http.WebRequestCycle;
+import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.util.value.ValueMap;
 
 /**

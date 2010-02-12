@@ -26,7 +26,6 @@ import junit.framework.TestCase;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.MockPage;
-import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.resource.loader.BundleStringResourceLoader;
 import org.apache.wicket.util.tester.WicketTester;
 

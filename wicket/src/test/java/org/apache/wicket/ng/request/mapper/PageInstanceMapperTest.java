@@ -21,10 +21,10 @@ import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.ng.MockPage;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.IRequestableComponent;
-import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.IPageProvider;
 import org.apache.wicket.ng.request.handler.IPageRequestHandler;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
+import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 

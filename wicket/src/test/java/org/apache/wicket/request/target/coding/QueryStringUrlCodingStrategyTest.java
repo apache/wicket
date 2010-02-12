@@ -19,10 +19,9 @@ package org.apache.wicket.request.target.coding;
 import java.math.BigDecimal;
 
 import org.apache.wicket.IRequestHandler;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
+import org.apache.wicket.ng.request.component.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

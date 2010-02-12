@@ -18,8 +18,8 @@ package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.ng.request.component.PageParameters;
 
 /**
  * @author jcompagner

@@ -29,7 +29,6 @@ import junit.framework.TestCase;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.protocol.http.MockWebApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.session.ISessionStore;

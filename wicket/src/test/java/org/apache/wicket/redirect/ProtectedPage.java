@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.redirect;
 
-import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.markup.html.WebPage;
 
 /**

@@ -22,6 +22,8 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.apache.wicket.ng.request.component.PageParameters;
+
 /**
  * Unit test for the PageParameters, introduced for bug [ 1213889 ] PageParameter keyValuePair
  * disallows negatives.

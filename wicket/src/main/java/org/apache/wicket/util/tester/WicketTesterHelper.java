@@ -27,6 +27,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.Page;
 import org.apache.wicket.Component.IVisitor;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -160,4 +162,33 @@ public class WicketTesterHelper
 		}
 		return lined.toString();
 	}
+
+	public static AjaxEventBehavior findAjaxEventBehavior(Component component, String event)
+	{
+		for (IBehavior behavior : component.getBehaviors())
+		{
+			if (behavior instanceof AjaxEventBehavior)
+			{
+				if (event.equalsIgnoreCase(((AjaxEventBehavior)behavior).getEvent()))
+				{
+					return (AjaxEventBehavior)behavior;
+				}
+			}
+		}
+		return null;
+	}
+
+	public static IBehavior findBehavior(Component component,
+		Class<? extends IBehavior> behaviorClass)
+	{
+		for (IBehavior behavior : component.getBehaviors())
+		{
+			if (behaviorClass.isAssignableFrom(behavior.getClass()))
+			{
+				return behavior;
+			}
+		}
+		return null;
+	}
+
 }

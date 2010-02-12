@@ -23,7 +23,6 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.protocol.http.MockHttpServletRequest;
 import org.apache.wicket.settings.IMarkupSettings;
 
 /**
