@@ -18,10 +18,10 @@ package org.apache.wicket.examples.niceurl;
 
 import java.util.Random;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.ng.request.component.PageParameters;
 
 
 /**
@@ -40,17 +40,8 @@ public class Page2 extends WicketExamplePage
 	 */
 	public Page2(PageParameters parameters)
 	{
-		String p1 = "CANNOT RESOLVE FROM URL";
-		if (parameters.containsKey("param1"))
-		{
-			p1 = parameters.getString("param1");
-		}
-		String p2 = "CANNOT RESOLVE FROM URL";
-		if (parameters.containsKey("param2"))
-		{
-			p2 = parameters.getString("param2");
-		}
-
+		String p1 = parameters.getNamedParameter("param1").toString("CANNOT RESOLVE FROM URL");
+		String p2 = parameters.getNamedParameter("param2").toString("CANNOT RESOLVE FROM URL");
 		add(new Label("p1", p1));
 		add(new Label("p2", p2));
 
@@ -58,8 +49,8 @@ public class Page2 extends WicketExamplePage
 		String newP2 = String.valueOf(random.nextInt());
 
 		PageParameters params = new PageParameters();
-		params.put("param1", newP1 + " " + newP2);
-		params.put("param2", newP2 + " " + newP1);
+		params.setNamedParameter("param1", newP1 + " " + newP2);
+		params.setNamedParameter("param2", newP2 + " " + newP1);
 
 		BookmarkablePageLink link = new BookmarkablePageLink("refreshLink", getClass(), params);
 		add(link);

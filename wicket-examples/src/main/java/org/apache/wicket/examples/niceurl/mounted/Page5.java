@@ -16,13 +16,14 @@
  */
 package org.apache.wicket.examples.niceurl.mounted;
 
+import java.util.List;
 import java.util.Random;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.examples.niceurl.Home;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.ng.request.component.PageParameters;
 
 
 /**
@@ -42,36 +43,14 @@ public class Page5 extends WicketExamplePage
 	public Page5(PageParameters parameters)
 	{
 		String p1 = "CANNOT RESOLVE FROM URL";
-		if (parameters.containsKey("param1"))
+		if (parameters.getNamedParameterKeys().contains("param1"))
 		{
-			StringBuffer sb = new StringBuffer();
-			String[] array = parameters.getStringArray("param1");
-			for (int i = 0; i < array.length; i++)
-			{
-				sb.append(array[i]);
-				if (array.length - 1 != i)
-				{
-					sb.append(", ");
-				}
-			}
-
-			p1 = sb.toString();
+			p1 = join(parameters.getNamedParameters("param1"));
 		}
 		String p2 = "CANNOT RESOLVE FROM URL";
-		if (parameters.containsKey("param2"))
+		if (parameters.getNamedParameterKeys().contains("param2"))
 		{
-			StringBuffer sb = new StringBuffer();
-			String[] array = parameters.getStringArray("param2");
-			for (int i = 0; i < array.length; i++)
-			{
-				sb.append(array[i]);
-				if (array.length - 1 != i)
-				{
-					sb.append(", ");
-				}
-			}
-
-			p2 = sb.toString();
+			p2 = join(parameters.getNamedParameters("param2"));
 		}
 
 		add(new Label("p1", p1));
@@ -81,11 +60,30 @@ public class Page5 extends WicketExamplePage
 		String newP2 = String.valueOf(random.nextInt());
 
 		PageParameters params = new PageParameters();
-		params.put("param1", newP1);
-		params.put("param2", newP2);
+		params.setNamedParameter("param1", newP1);
+		params.setNamedParameter("param2", newP2);
 
 		BookmarkablePageLink link = new BookmarkablePageLink("refreshLink", Page5.class, params);
 		add(link);
 		add(new BookmarkablePageLink("homeLink", Home.class));
+	}
+
+	/**
+	 * @param parameters
+	 * @return
+	 */
+	private String join(List<org.apache.wicket.util.string.StringValue> values)
+	{
+		StringBuffer sb = new StringBuffer();
+		for (org.apache.wicket.util.string.StringValue sv : values)
+		{
+			if (sb.length() > 0)
+			{
+				sb.append(", ");
+			}
+
+			sb.append(sv.toString());
+		}
+		return sb.toString();
 	}
 }

@@ -21,7 +21,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.request.target.component.ComponentRequestTarget;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 

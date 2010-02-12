@@ -52,8 +52,7 @@ public class GuestbookTest extends TestCase
 	 */
 	public void test_1() throws Exception
 	{
-		GuestBookApplication book = new GuestBookApplication();
-		WicketTester tester = new WicketTester(book);
+		WicketTester tester = new WicketTester();
 
 		tester.startPage(GuestBook.class);
 		tester.assertContains("Wicket Examples - guestbook");

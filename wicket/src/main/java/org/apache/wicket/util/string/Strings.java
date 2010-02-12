@@ -603,6 +603,23 @@ public final class Strings
 	 * @param fragments
 	 * @return combined fragments
 	 */
+	public static String join(String separator, List<String> fragments)
+	{
+		if (fragments == null)
+		{
+			return "";
+		}
+		return join(separator, fragments.toArray(new String[fragments.size()]));
+	}
+
+
+	/**
+	 * Joins string fragments using the specified separator
+	 * 
+	 * @param separator
+	 * @param fragments
+	 * @return combined fragments
+	 */
 	public static String join(String separator, String... fragments)
 	{
 		if ((fragments == null) || (fragments.length < 1))

@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.examples.niceurl.mounted;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.examples.niceurl.Home;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.ng.request.component.PageParameters;
 
 
 /**
