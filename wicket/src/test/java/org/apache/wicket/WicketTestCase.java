@@ -34,24 +34,6 @@ public abstract class WicketTestCase extends TestCase
 	/** */
 	public WicketTester tester;
 
-	/**
-	 * Constructor
-	 */
-	public WicketTestCase()
-	{
-	}
-
-	/**
-	 * Create the test.
-	 * 
-	 * @param name
-	 *            The test name
-	 */
-	public WicketTestCase(String name)
-	{
-		super(name);
-	}
-
 	@Override
 	protected void setUp() throws Exception
 	{
