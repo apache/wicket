@@ -16,17 +16,12 @@
  */
 package org.apache.wicket.markup;
 
-import junit.framework.TestCase;
-
-import org.apache.wicket.util.diff.DiffUtil;
-import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.WicketTestCase;
 
 /**
  */
-public class WicketNamespaceTest extends TestCase
+public class WicketNamespaceTest extends WicketTestCase
 {
-	private WicketTester application;
-
 	/**
 	 * Create the test.
 	 * 
@@ -86,21 +81,4 @@ public class WicketNamespaceTest extends TestCase
 		executeTest(WicketNamespace_6.class, "WicketNamespaceExpectedResult_6.html");
 	}
 
-	/**
-	 * @param pageClass
-	 * @param filename
-	 * @throws Exception
-	 */
-	public void executeTest(final Class pageClass, final String filename) throws Exception
-	{
-		System.out.println("=== " + pageClass.getName() + " ===");
-
-		application = new WicketTester();
-		application.startPage(pageClass);
-
-		// Validate the document
-		String document = application.getServletResponse().getDocument();
-		DiffUtil.validatePage(document, this.getClass(), filename, true);
-		application.destroy();
-	}
 }

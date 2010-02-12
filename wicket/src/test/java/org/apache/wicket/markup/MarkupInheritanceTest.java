@@ -51,17 +51,13 @@ public class MarkupInheritanceTest extends WicketTestCase
 		executeTest(MarkupInheritanceExtension_1.class, "MarkupInheritanceExpectedResult_1.html");
 
 		// then, render with style1
-		tester.setupRequestAndResponse();
-		WebRequestCycle cycle = tester.createRequestCycle();
-		cycle.getSession().setStyle("style1");
+		tester.getSession().setStyle("style1");
 		tester.startPage(MarkupInheritanceExtension_1.class);
 		tester.assertRenderedPage(MarkupInheritanceExtension_1.class);
 		tester.assertResultPage(getClass(), "MarkupInheritanceExpectedResult_1_style1.html");
 
 		// then, render with style2
-		tester.setupRequestAndResponse();
-		cycle = tester.createRequestCycle();
-		cycle.getSession().setStyle("style2");
+		tester.getSession().setStyle("style2");
 		tester.startPage(MarkupInheritanceExtension_1.class);
 		tester.assertRenderedPage(MarkupInheritanceExtension_1.class);
 		tester.assertResultPage(getClass(), "MarkupInheritanceExpectedResult_1_style2.html");
@@ -102,19 +98,17 @@ public class MarkupInheritanceTest extends WicketTestCase
 
 		// Validate the document
 		assertEquals(MarkupInheritanceExtension_4.class, tester.getLastRenderedPage().getClass());
-		String document = tester.getServletResponse().getDocument();
+		String document = tester.getLastResponse().getTextResponse().toString();
 		DiffUtil.validatePage(document, getClass(), "MarkupInheritanceExpectedResult_4.html", true);
 
 		MarkupInheritanceExtension_4 page = (MarkupInheritanceExtension_4)tester.getLastRenderedPage();
 
 		Link link = (Link)page.get("link");
-		tester.setupRequestAndResponse();
-		tester.getServletRequest().setRequestToComponent(link);
-		tester.processRequestCycle();
+		tester.clickLink(link.getPageRelativePath());
 
 		assertEquals(MarkupInheritanceExtension_4.class, tester.getLastRenderedPage().getClass());
 
-		document = tester.getServletResponse().getDocument();
+		document = tester.getLastResponse().getTextResponse().toString();
 		DiffUtil.validatePage(document, getClass(), "MarkupInheritanceExpectedResult_4-1.html",
 			true);
 	}

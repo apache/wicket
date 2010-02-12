@@ -16,29 +16,14 @@
  */
 package org.apache.wicket.markup.html.basic;
 
-import junit.framework.TestCase;
-
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.diff.DiffUtil;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * @author jcompagner
  */
-public class HomePageRedirectTest extends TestCase
+public class HomePageRedirectTest extends WicketTestCase
 {
-	WicketTester application;
-
-	@Override
-	protected void setUp() throws Exception
-	{
-		application = new WicketTester();
-	}
-
-	@Override
-	protected void tearDown() throws Exception
-	{
-		application.destroy();
-	}
 
 	/**
 	 * Construct.
@@ -53,12 +38,12 @@ public class HomePageRedirectTest extends TestCase
 	 */
 	public void testRenderHomePagePageRedirect() throws Exception
 	{
-		application.startPage(HomePagePageRedirect.class);
+		tester.startPage(HomePagePageRedirect.class);
 
-		assertEquals(RedirectPage.class, application.getLastRenderedPage().getClass());
+		assertEquals(RedirectPage.class, tester.getLastRenderedPage().getClass());
 
 		// Validate the document
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getLastResponseAsString();
 		DiffUtil.validatePage(document, this.getClass(), "RedirectPage.html", true);
 	}
 
@@ -67,12 +52,11 @@ public class HomePageRedirectTest extends TestCase
 	 */
 	public void testRenderHomePageClassRedirect() throws Exception
 	{
-		application.startPage(HomePageClassRedirect.class);
+		tester.startPage(HomePageClassRedirect.class);
 
-		assertEquals(RedirectPage.class, application.getLastRenderedPage().getClass());
+		assertEquals(RedirectPage.class, tester.getLastRenderedPage().getClass());
 
-		// Validate the document
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getLastResponseAsString();
 		DiffUtil.validatePage(document, this.getClass(), "RedirectPage.html", true);
 	}
 }

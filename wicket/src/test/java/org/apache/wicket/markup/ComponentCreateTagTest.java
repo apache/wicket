@@ -18,12 +18,7 @@ package org.apache.wicket.markup;
 
 import java.util.Locale;
 
-import org.apache.wicket.Request;
-import org.apache.wicket.Response;
-import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.util.tester.WicketTester;
 
 
 /**
@@ -34,17 +29,6 @@ import org.apache.wicket.util.tester.WicketTester;
  */
 public class ComponentCreateTagTest extends WicketTestCase
 {
-	/**
-	 * Create the test.
-	 * 
-	 * @param name
-	 *            The test name
-	 */
-	public ComponentCreateTagTest(String name)
-	{
-		super(name);
-	}
-
 	/**
 	 * Simple Label
 	 * 
@@ -96,23 +80,7 @@ public class ComponentCreateTagTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_6() throws Exception
 	{
-		WebApplication myApplication = new DummyWebApplication()
-		{
-			/**
-			 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.Request,
-			 *      org.apache.wicket.Response)
-			 */
-			@Override
-			public Session newSession(Request request, Response response)
-			{
-				Session session = super.newSession(request, response);
-				session.setLocale(Locale.ENGLISH);
-				return session;
-			}
-		};
-
-		tester = new WicketTester(myApplication);
-
+		tester.getSession().setLocale(Locale.ENGLISH);
 		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
 		executeTest(ComponentCreateTag_6.class, "ComponentCreateTagExpectedResult_6.html");
 	}

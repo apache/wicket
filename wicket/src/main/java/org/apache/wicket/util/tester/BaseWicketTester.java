@@ -369,6 +369,11 @@ public class BaseWicketTester
 		return lastResponse;
 	}
 
+	public String getLastResponseAsString()
+	{
+		return lastResponse.getTextResponse().toString();
+	}
+
 	/**
 	 * @return list of prior requests
 	 */

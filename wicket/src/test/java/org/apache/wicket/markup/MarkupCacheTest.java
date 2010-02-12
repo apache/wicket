@@ -16,35 +16,23 @@
  */
 package org.apache.wicket.markup;
 
-import junit.framework.TestCase;
-
-import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * @author Timo Rantalaiho
  */
-public class MarkupCacheTest extends TestCase
+public class MarkupCacheTest extends WicketTestCase
 {
 	private MarkupCache cache;
 	private MarkupCachingAssumingComponent component;
 
 	@Override
-	public void setUp()
+	public void setUp() throws Exception
 	{
-		WebApplication application = new WicketTester.DummyWebApplication()
-		{
-			@Override
-			public String getConfigurationType()
-			{
-				return Application.DEPLOYMENT;
-			}
-		};
-		WicketTester tester = new WicketTester(application);
+		super.setUp();
 		cache = new MarkupCache();
 
 		component = new MarkupCachingAssumingComponent("panel");
