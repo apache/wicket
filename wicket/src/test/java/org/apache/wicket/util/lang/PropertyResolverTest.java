@@ -27,11 +27,9 @@ import java.util.Vector;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.session.HttpSessionStore;
-import org.apache.wicket.session.ISessionStore;
+import org.apache.wicket.ng.ThreadContext;
+import org.apache.wicket.ng.mock.MockApplication;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.ConverterLocator;
 
@@ -45,7 +43,7 @@ public class PropertyResolverTest extends TestCase
 		new ConverterLocator(), Locale.US);
 
 	private Person person;
-	private MockWebApplication app;
+	private MockApplication app;
 
 	/**
 	 * @see junit.framework.TestCase#setUp()
@@ -54,36 +52,15 @@ public class PropertyResolverTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		person = new Person();
-		app = new MockWebApplication(new WebApplication()
-		{
-
-			@Override
-			public Class<? extends Page> getHomePage()
-			{
-				return null;
-			}
-
-			@Override
-			protected void outputDevelopmentModeWarning()
-			{
-				// Do nothing.
-			}
-
-			@Override
-			protected ISessionStore newSessionStore()
-			{
-				// Don't use a filestore, or we spawn lots of threads, which makes things slow.
-				return new HttpSessionStore();
-			}
-
-		}, "/foo");
+		app = new MockApplication();
+		app.set();
 	}
 
 	@Override
 	protected void tearDown() throws Exception
 	{
-		super.tearDown();
-		PropertyResolver.destroy(app.getApplication());
+		PropertyResolver.destroy(app);
+		ThreadContext.detach();
 	}
 
 	/**

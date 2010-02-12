@@ -16,8 +16,7 @@
  */
 package org.apache.wicket.markup.html.form.validation;
 
-import junit.framework.TestCase;
-
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.util.tester.FormTester;
@@ -26,14 +25,13 @@ import org.apache.wicket.util.tester.WicketTester;
 /**
  * Simple test using the WicketTester
  */
-public class HomePageTest extends TestCase
+public class HomePageTest extends WicketTestCase
 {
-	private WicketTester tester;
 
 	@Override
-	public void setUp()
+	public void setUp() throws Exception
 	{
-		tester = new WicketTester();
+		super.setUp();
 		tester.startPage(HomePage.class);
 		tester.assertRenderedPage(HomePage.class);
 	}
@@ -82,7 +80,8 @@ public class HomePageTest extends TestCase
 	{
 		TextField textfield = (TextField)tester.getLastRenderedPage().get(
 			"border:form2:border_body:textfield1");
-		tester.getServletRequest().setParameter(textfield.getInputName(), "abcde");
+		tester.getLastRequest().getPostRequestParameters().setParameterValue(
+			textfield.getInputName(), "abcde");
 		tester.executeAjaxEvent("border:form2:submit", "onclick");
 		tester.assertNoErrorMessage();
 		assertFalse(((MyBorder)tester.getLastRenderedPage().get("border")).hitOnError);

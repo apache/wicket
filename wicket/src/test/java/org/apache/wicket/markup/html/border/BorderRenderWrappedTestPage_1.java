@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.markup.html.border;
 
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.image.Image;
 
 /**
  * Mock page for testing.
@@ -39,6 +39,6 @@ public class BorderRenderWrappedTestPage_1 extends WebPage
 		add(border);
 
 		border.getBodyContainer().add(new TextField<String>("text"));
-		border.getBodyContainer().add(new Image("img"));
+		border.getBodyContainer().add(new WebMarkupContainer("img"));
 	}
 }

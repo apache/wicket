@@ -16,20 +16,18 @@
  */
 package org.apache.wicket.markup.html.list;
 
-import junit.framework.TestCase;
-
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import org.apache.wicket.protocol.http.documentvalidation.Tag;
 import org.apache.wicket.protocol.http.documentvalidation.TextContent;
 import org.apache.wicket.util.diff.DiffUtil;
-import org.apache.wicket.util.tester.WicketTester;
 
 
 /**
  * Test for simple table behavior.
  */
-public class PagedTableTest extends TestCase
+public class PagedTableTest extends WicketTestCase
 {
 
 	/**
@@ -58,19 +56,16 @@ public class PagedTableTest extends TestCase
 	 */
 	public void testPagedTable() throws Exception
 	{
-		WicketTester application = new WicketTester();
-		application.startPage(PagedTablePage.class);
-		PagedTablePage page = (PagedTablePage)application.getLastRenderedPage();
-		String document = application.getServletResponse().getDocument();
+		tester.startPage(PagedTablePage.class);
+		PagedTablePage page = (PagedTablePage)tester.getLastRenderedPage();
+		String document = tester.getLastResponseAsString();
 		assertTrue(validatePage1(document));
 
 		Link link = (Link)page.get("navigation:1:pageLink");
-		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToComponent(link);
-		application.processRequestCycle();
-		document = application.getServletResponse().getDocument();
+		tester.clickLink(link.getPageRelativePath());
+		document = tester.getLastResponseAsString();
 		DiffUtil.validatePage(document, this.getClass(), "PagedTablePageExpectedResult.html", true);
-		application.destroy();
+		tester.destroy();
 	}
 
 	/**

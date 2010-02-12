@@ -17,6 +17,7 @@
 package org.apache.wicket.ng.mock;
 
 import org.apache.wicket.IRequestHandler;
+import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.cycle.RequestCycleContext;
 
@@ -61,5 +62,13 @@ public class MockRequestCycle extends RequestCycle
 		{
 			return super.resolveRequestHandler();
 		}
+	}
+
+	@Override
+	public void detach()
+	{
+		super.detach();
+		// keep self in the threadlocal so we can generate urls in the test case
+		ThreadContext.setRequestCycle(this);
 	}
 }

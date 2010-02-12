@@ -16,22 +16,13 @@
  */
 package org.apache.wicket.markup.html.page;
 
-import junit.framework.TestCase;
-
-import org.apache.wicket.ng.mock.WicketTester;
+import org.apache.wicket.WicketTestCase;
 
 /**
  * Simple test using the WicketTester
  */
-public class TestHomePage extends TestCase
+public class TestHomePage extends WicketTestCase
 {
-	private WicketTester tester;
-
-	@Override
-	public void setUp()
-	{
-		tester = new WicketTester();
-	}
 
 	public void testRenderMyPage()
 	{

@@ -39,12 +39,11 @@ public class InheritedModelTest extends WicketTestCase
 
 		InheritedTestPage page = new InheritedTestPage();
 
-		tester.setupRequestAndResponse();
+
 		page.setDefaultModel(new CompoundPropertyModel(data1));
 		tester.startPage(page);
 		tester.assertLabel("label", "foo");
 
-		tester.setupRequestAndResponse();
 		page.setDefaultModel(new CompoundPropertyModel(data2));
 		tester.startPage(page);
 		tester.assertLabel("label", "bar");

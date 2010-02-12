@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.Component;
@@ -61,7 +62,6 @@ import org.apache.wicket.ng.mock.MockApplication;
 import org.apache.wicket.ng.mock.MockRequestCycle;
 import org.apache.wicket.ng.mock.MockWebRequest;
 import org.apache.wicket.ng.mock.MockWebResponse;
-import org.apache.wicket.ng.mock.WicketTester;
 import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.IRequestablePage;
@@ -189,8 +189,10 @@ public class BaseWicketTester
 	{
 		oldThreadContext = ThreadContext.detach();
 
-		this.application = new MockApplication();
-		this.application.setName("WicketTesterApplication");
+		this.application = application;
+		// FIXME some tests are leaking applications by not calling destroy on them or overriding
+		// teardown() without calling super, for now we work around by making each name unique
+		this.application.setName("WicketTesterApplication-" + UUID.randomUUID());
 		this.application.set();
 		this.application.initApplication();
 
@@ -239,8 +241,8 @@ public class BaseWicketTester
 	 */
 	public void destroy()
 	{
-		ThreadContext.restore(oldThreadContext);
-		application.internalDestroy();
+		application.destroy();
+		ThreadContext.detach();
 	}
 
 	/**

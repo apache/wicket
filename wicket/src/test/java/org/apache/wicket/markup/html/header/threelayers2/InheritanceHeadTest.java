@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.header.threelayers2;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * Tests the inclusion of the wicket:head section from a panel in a subclassed page.
@@ -26,19 +27,10 @@ import org.apache.wicket.WicketTestCase;
 public class InheritanceHeadTest extends WicketTestCase
 {
 	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public InheritanceHeadTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test_1() throws Exception
 	{
 		executeTest(MeldingPage.class, "ExpectedResult.html");

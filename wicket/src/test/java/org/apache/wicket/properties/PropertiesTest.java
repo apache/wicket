@@ -19,7 +19,6 @@ package org.apache.wicket.properties;
 import java.util.Locale;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.util.tester.WicketTester;
 
 
 /**
@@ -28,44 +27,22 @@ import org.apache.wicket.util.tester.WicketTester;
  */
 public class PropertiesTest extends WicketTestCase
 {
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public PropertiesTest(final String name)
-	{
-		super(name);
-	}
-
-	@Override
-	protected void setUp() throws Exception
-	{
-		tester = new WicketTester(new MyApplication());
-	}
-
-	@Override
-	protected void tearDown() throws Exception
-	{
-		tester.destroy();
-	}
 
 	/**
 	 */
 	public void test_1()
 	{
-		tester.setupRequestAndResponse();
-		WebRequestCycle cycle = tester.createRequestCycle();
+		tester.getSession().setLocale(Locale.GERMANY);
+		tester.getSession().setStyle("mystyle");
+
 		TestPage page = new TestPage();
-		cycle.getSession().setLocale(Locale.GERMANY);
-		cycle.getSession().setStyle("mystyle");
 
 		assertEquals("MyApplication", page.getString("test1"));
 		assertEquals("MyApplication_de", page.getString("test2"));
 		assertEquals("MyApplication_mystyle", page.getString("test3"));
 		assertEquals("MyApplication_mystyle_de", page.getString("test4"));
 
-		cycle.getSession().setLocale(Locale.ENGLISH);
+		tester.getSession().setLocale(Locale.ENGLISH);
 
 		assertEquals("MyApplication_en", page.getString("test2"));
 		assertEquals("MyApplication_mystyle_en", page.getString("test4"));
@@ -75,9 +52,7 @@ public class PropertiesTest extends WicketTestCase
 	 */
 	public void test_2()
 	{
-		tester.setupRequestAndResponse();
-		WebRequestCycle cycle = tester.createRequestCycle();
-		cycle.getSession().setLocale(Locale.GERMANY);
+		tester.getSession().setLocale(Locale.GERMANY);
 		TestPage page = new TestPage()
 		{
 			private static final long serialVersionUID = 1L;
@@ -94,7 +69,7 @@ public class PropertiesTest extends WicketTestCase
 		assertEquals("MyApplication_mystyle", page.getString("test3"));
 		assertEquals("MyApplication_mystyle_de", page.getString("test4"));
 
-		cycle.getSession().setLocale(Locale.ENGLISH);
+		tester.getSession().setLocale(Locale.ENGLISH);
 
 		assertEquals("MyApplication_en", page.getString("test2"));
 		assertEquals("MyApplication_mystyle_en", page.getString("test4"));

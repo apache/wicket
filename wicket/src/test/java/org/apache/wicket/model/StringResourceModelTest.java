@@ -22,22 +22,19 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.MockPage;
 import org.apache.wicket.resource.loader.BundleStringResourceLoader;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Test cases for the <code>StringResourceModel</code> class.
  * 
  * @author Chris Turner
  */
-public class StringResourceModelTest extends TestCase
+public class StringResourceModelTest extends WicketTestCase
 {
-	private WicketTester tester;
-
 	private WebPage page;
 
 	private WeatherStation ws;
@@ -58,7 +55,7 @@ public class StringResourceModelTest extends TestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		tester = new WicketTester();
+		super.setUp();
 		tester.getApplication().getResourceSettings().addStringResourceLoader(
 			new BundleStringResourceLoader("org.apache.wicket.model.StringResourceModelTest"));
 		page = new MockPage();
@@ -66,11 +63,6 @@ public class StringResourceModelTest extends TestCase
 		wsModel = new Model<WeatherStation>(ws);
 	}
 
-	@Override
-	protected void tearDown() throws Exception
-	{
-		tester.destroy();
-	}
 
 	/**
 	 * 
@@ -181,7 +173,7 @@ public class StringResourceModelTest extends TestCase
 
 	public void testSubstitutionParametersResourceWithSingleQuote() throws Exception
 	{
-		tester.getWicketSession().setLocale(Locale.ENGLISH);
+		tester.getSession().setLocale(Locale.ENGLISH);
 		StringResourceModel model = new StringResourceModel("with.quote", page, null, new Object[] {
 				10, 20 });
 		assertEquals("2010.00", model.getString());
@@ -229,9 +221,6 @@ public class StringResourceModelTest extends TestCase
 
 		};
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsDetachModel);
-		tester.setupRequestAndResponse();
-		new WebRequestCycle(tester.getApplication(), tester.getWicketRequest(),
-			tester.getWicketResponse());
 		model.getObject();
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();

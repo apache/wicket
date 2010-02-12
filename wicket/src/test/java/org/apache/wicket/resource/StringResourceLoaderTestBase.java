@@ -19,9 +19,9 @@ package org.apache.wicket.resource;
 import java.util.Locale;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.util.tester.WicketTester;
@@ -32,7 +32,7 @@ import org.apache.wicket.util.tester.WicketTester;
  * 
  * @author Chris Turner
  */
-public abstract class StringResourceLoaderTestBase extends TestCase
+public abstract class StringResourceLoaderTestBase extends WicketTestCase
 {
 	WicketTester tester;
 	// The loader to test
@@ -66,9 +66,6 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		application = new DummyApplication();
-		// Initialize the application
-		tester = new WicketTester(application);
 		component = new DummyComponent("test", application);
 		DummyPage page = new DummyPage();
 		page.add(component);
@@ -78,7 +75,7 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	@Override
 	protected void tearDown() throws Exception
 	{
-		tester.destroy();
+		super.tearDown();
 	}
 
 	/**

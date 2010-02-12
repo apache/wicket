@@ -22,7 +22,6 @@ import java.util.Random;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.util.tester.WicketTester;
 
@@ -271,7 +270,6 @@ public class Base64Test extends TestCase
 	public void test_5() throws IOException
 	{
 		WicketTester tester = new WicketTester();
-		RequestCycle cycle = tester.createRequestCycle();
 		ICrypt crypt = tester.getApplication().getSecuritySettings().getCryptFactory().newCrypt();
 
 		String input = "wicket-sep-wicket";
@@ -283,5 +281,7 @@ public class Base64Test extends TestCase
 			String output = crypt.decryptUrlSafe(encrypted);
 			assertEquals(in, output);
 		}
+
+		tester.destroy();
 	}
 }

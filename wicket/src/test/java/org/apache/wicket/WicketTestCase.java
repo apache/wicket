@@ -52,23 +52,18 @@ public abstract class WicketTestCase extends TestCase
 		super(name);
 	}
 
-	/**
-	 * @see junit.framework.TestCase#setUp()
-	 */
 	@Override
 	protected void setUp() throws Exception
 	{
 		tester = new WicketTester();
 	}
 
-	/**
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	@Override
 	protected void tearDown() throws Exception
 	{
 		tester.destroy();
 	}
+
 
 	/**
 	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected

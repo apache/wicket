@@ -16,26 +16,13 @@
  */
 package org.apache.wicket.util.tester.apps_7;
 
-import junit.framework.TestCase;
-
-import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.WicketTestCase;
 
 /**
  * Simple test using the WicketTester
  */
-public class TestHomePage extends TestCase
+public class TestHomePage extends WicketTestCase
 {
-	private WicketTester tester;
-
-	@Override
-	public void setUp()
-	{
-		tester = new WicketTester(new WicketApplication());
-	}
-
-	/**
-	 * 
-	 */
 	public void testAjaxSubmitWhileAnotherButtonIsNotVisible()
 	{
 		// start and render the test page

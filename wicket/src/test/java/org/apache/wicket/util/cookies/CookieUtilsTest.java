@@ -20,36 +20,27 @@ import java.util.List;
 
 import javax.servlet.http.Cookie;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.Page;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.util.cookies.CookieValuePersisterTestPage.TestForm;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * 
  * @author Juergen Donnerstag
  */
-public class CookieUtilsTest extends TestCase
+public class CookieUtilsTest extends WicketTestCase
 {
-	private WicketTester application;
-
 	@Override
 	protected void setUp() throws Exception
 	{
-		application = new WicketTester();
-		application.startPage(CookieValuePersisterTestPage.class);
+		super.setUp();
+		tester.startPage(CookieValuePersisterTestPage.class);
 	}
 
-	@Override
-	protected void tearDown() throws Exception
-	{
-		application.destroy();
-	}
 
 	/**
 	 * 
@@ -60,7 +51,7 @@ public class CookieUtilsTest extends TestCase
 	{
 		// How does the test work: Make sure you have a page, form and form component properly set
 		// up (getRelativePath() etc.). See setUp().
-		final Page page = application.getLastRenderedPage();
+		final Page page = tester.getLastRenderedPage();
 
 		// Get the form and form component created
 		final TestForm form = (TestForm)page.get("form");
@@ -68,7 +59,7 @@ public class CookieUtilsTest extends TestCase
 
 		// Make sure a valid cycle is available via RequestCycle.get(). Attached to this cycle must
 		// be a valid request and response.
-		final WebRequestCycle cycle = application.createRequestCycle();
+		final WebRequestCycle cycle = tester.createRequestCycle();
 
 		// Right after init, the requests and responses cookie lists must be empty
 		assertNull(getRequestCookies(cycle));
