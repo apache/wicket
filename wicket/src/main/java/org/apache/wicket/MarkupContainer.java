@@ -33,6 +33,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.RawMarkup;
 import org.apache.wicket.markup.WicketTag;
+import org.apache.wicket.markup.html.HeaderPartContainer;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;

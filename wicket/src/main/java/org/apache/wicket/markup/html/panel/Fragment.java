@@ -24,7 +24,7 @@ import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Objects;
@@ -52,7 +52,7 @@ import org.apache.wicket.util.lang.Objects;
  * 
  * @author Juergen Donnerstag
  */
-public class Fragment extends WebMarkupContainer
+public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 {
 	private static final long serialVersionUID = 1L;
 
@@ -148,6 +148,12 @@ public class Fragment extends WebMarkupContainer
 	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
+		// Skip the components body. It will be replaced by the fragment
+		if (((ComponentTag)markupStream.get(markupStream.getCurrentIndex() - 1)).isOpen())
+		{
+			markupStream.skipRawMarkup();
+		}
+
 		final MarkupStream providerMarkupStream = chooseMarkupStream(markupStream);
 		if (providerMarkupStream == null)
 		{

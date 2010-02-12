@@ -19,7 +19,10 @@ package org.apache.wicket.markup.html.panel;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.MarkupException;
+import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
@@ -116,6 +119,17 @@ public abstract class Panel extends WebMarkupContainerWithAssociatedMarkup
 		// Render the associated markup
 		renderAssociatedMarkup(PANEL,
 			"Markup for a panel component has to contain part '<wicket:panel>'");
+
+		if (wasOpenCloseTag == false)
+		{
+			// Skip any raw markup in the body
+			markupStream.skipRawMarkup();
+			if (markupStream.get().closes(openTag) == false)
+			{
+				throw new MarkupException("close tag not found for tag: " + openTag.toString() +
+					". Component: " + this.toString());
+			}
+		}
 	}
 
 	/**
@@ -124,6 +138,68 @@ public abstract class Panel extends WebMarkupContainerWithAssociatedMarkup
 	@Override
 	public IMarkupFragment getMarkup(final Component child)
 	{
-		return getMarkup(PANEL, child);
+		IMarkupFragment markup = getAssociatedMarkup();
+		if (markup == null)
+		{
+			throw new MarkupNotFoundException(
+				"Failed to find markup file associated with panel. Panel: " + this.toString());
+		}
+
+		// Find <wicket:panel>
+		IMarkupFragment panelMarkup = findPanelTag(markup);
+		if (panelMarkup == null)
+		{
+			throw new MarkupNotFoundException(
+				"Expected to find <wicket:panel> in associated markup file. Markup: " +
+					markup.toString());
+		}
+
+		// If child == null, than return the markup fragment starting with <wicket:panel>
+		if (child == null)
+		{
+			return panelMarkup;
+		}
+
+		// Find the markup for the child component
+		IMarkupFragment childMarkup = panelMarkup.find(child.getId());
+		if (childMarkup != null)
+		{
+			return childMarkup;
+		}
+
+		return findMarkupInAssociatedFileHeader(markup, child);
+	}
+
+	/**
+	 * Search for &lt;wicket:panel ...&gt; on the same level.
+	 * 
+	 * @param markup
+	 * @param name
+	 * @return null, if not found
+	 */
+	private final IMarkupFragment findPanelTag(final IMarkupFragment markup)
+	{
+		MarkupStream stream = new MarkupStream(markup);
+
+		while (stream.skipUntil(ComponentTag.class))
+		{
+			ComponentTag tag = stream.getTag();
+			if (tag.isOpen() || tag.isOpenClose())
+			{
+				if (tag instanceof WicketTag)
+				{
+					WicketTag wtag = (WicketTag)tag;
+					if (wtag.isPanelTag())
+					{
+						return stream.getMarkupFragment();
+					}
+				}
+				stream.skipToMatchingCloseTag(tag);
+			}
+
+			stream.next();
+		}
+
+		return null;
 	}
 }

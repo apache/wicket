@@ -22,6 +22,9 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupException;
+import org.apache.wicket.markup.MarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
@@ -359,13 +362,50 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	@Override
 	public IMarkupFragment getMarkup(final Component child)
 	{
+		// Border require an associated markup resource file
+		IMarkupFragment markup = getAssociatedMarkup();
+		if (markup == null)
+		{
+			throw new MarkupException("Unable to find associated markup file for Border: " +
+				this.toString());
+		}
+
+		// Find <wicket:border>
+		IMarkupFragment childMarkup = null;
+		for (int i = 0; i < markup.size(); i++)
+		{
+			MarkupElement elem = markup.get(i);
+			if (elem instanceof WicketTag)
+			{
+				WicketTag tag = (WicketTag)elem;
+				if (tag.isBorderTag())
+				{
+					childMarkup = new MarkupFragment(markup, i);
+					break;
+				}
+			}
+		}
+
+		// If child == null, return the markup fragment starting with the <wicket:border> tag
+		if (child == null)
+		{
+			return childMarkup;
+		}
+
 		// Since we created the body component instance, identifying that we found it is easy.
-		if ((child != null) && (child == body))
+		if (child == body)
 		{
 			return body.getMarkup();
 		}
 
-		return getMarkup(BORDER, child);
+		// Find the markup for the child component
+		childMarkup = childMarkup.find(child.getId());
+		if (childMarkup != null)
+		{
+			return childMarkup;
+		}
+
+		return findMarkupInAssociatedFileHeader(markup, child);
 	}
 
 	/**
