@@ -16,9 +16,7 @@
  */
 package org.apache.wicket.settings;
 
-import org.apache.wicket.markup.IMarkupCache;
-import org.apache.wicket.markup.IMarkupParserFactory;
-import org.apache.wicket.markup.MarkupParserFactory;
+import org.apache.wicket.markup.MarkupFactory;
 
 /**
  * Interface for markup related settings.
@@ -65,18 +63,6 @@ public interface IMarkupSettings
 	 *         encoding will be used.
 	 */
 	String getDefaultMarkupEncoding();
-
-	/**
-	 * @return markup parser factory
-	 */
-	IMarkupParserFactory getMarkupParserFactory();
-
-	/**
-	 * The markup cache also loads the markup if not yet available in the cache.
-	 * 
-	 * @return markup cache
-	 */
-	IMarkupCache getMarkupCache();
 
 	/**
 	 * @return Returns the stripComments.
@@ -155,24 +141,6 @@ public interface IMarkupSettings
 	void setDefaultMarkupEncoding(final String encoding);
 
 	/**
-	 * Sets the markup parser factory that will be used to generate parsers for markup. By default
-	 * {@link MarkupParserFactory} will be used.
-	 * 
-	 * @param factory
-	 *            new factory
-	 */
-	void setMarkupParserFactory(IMarkupParserFactory factory);
-
-	/**
-	 * Sets a new markup cache which will also be used to load markup if not yet available in the
-	 * cache.
-	 * 
-	 * @param markupCache
-	 *            new markup cache
-	 */
-	void setMarkupCache(IMarkupCache markupCache);
-
-	/**
 	 * Enables stripping of markup comments denoted in markup by HTML comment tagging.
 	 * 
 	 * @param stripComments
@@ -203,4 +171,18 @@ public interface IMarkupSettings
 	 * @param throwException
 	 */
 	void setThrowExceptionOnMissingXmlDeclaration(final boolean throwException);
+
+	/**
+	 * Get the markup factory
+	 * 
+	 * @return A new instance of MarkupFactory.
+	 */
+	MarkupFactory getMarkupFactory();
+
+	/**
+	 * Set a new markup factory
+	 * 
+	 * @param factory
+	 */
+	void setMarkupFactory(MarkupFactory factory);
 }

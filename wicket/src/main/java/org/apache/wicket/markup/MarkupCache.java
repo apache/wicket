@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,12 +23,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.markup.loader.DefaultMarkupLoader;
-import org.apache.wicket.markup.loader.IMarkupLoader;
 import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.util.listener.IChangeListener;
-import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.watch.IModifiable;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.apache.wicket.util.watch.ModificationWatcher;
@@ -65,18 +60,20 @@ public class MarkupCache implements IMarkupCache
 	/** The markup cache key provider used by MarkupCache */
 	private IMarkupCacheKeyProvider markupCacheKeyProvider;
 
-	/** The markup resource stream provider used by MarkupCache */
-	private IMarkupResourceStreamProvider markupResourceStreamProvider;
-
-	/** The markup loader used by MarkupCache */
-	private IMarkupLoader markupLoader;
+	/**
+	 * @return The markup cache associated with the application
+	 */
+	public final static IMarkupCache get()
+	{
+		return Application.get().getMarkupSettings().getMarkupFactory().getMarkupCache();
+	}
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param application
 	 */
-	public MarkupCache()
+	protected MarkupCache()
 	{
 		markupCache = newCacheImplementation();
 		markupKeyCache = newCacheImplementation();
@@ -197,30 +194,6 @@ public class MarkupCache implements IMarkupCache
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.IMarkupCache#getMarkup(org.apache.wicket.MarkupContainer,
-	 *      boolean)
-	 */
-	public final IMarkupFragment getMarkup(final MarkupContainer container,
-		final boolean enforceReload)
-	{
-		if (container == null)
-		{
-			throw new IllegalArgumentException("Parameter 'container' must not be 'null'.");
-		}
-
-		// Look for associated markup
-		return getMarkup(container, container.getClass(), enforceReload);
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.IMarkupCache#hasAssociatedMarkup(org.apache.wicket.MarkupContainer)
-	 */
-	public final boolean hasAssociatedMarkup(final MarkupContainer container)
-	{
-		return getMarkup(container, container.getClass(), false) != Markup.NO_MARKUP;
-	}
-
-	/**
 	 * @see org.apache.wicket.markup.IMarkupCache#size()
 	 */
 	public final int size()
@@ -277,28 +250,16 @@ public class MarkupCache implements IMarkupCache
 
 			// Who is going to provide the markup resource stream?
 			// And ask the provider to locate the markup resource stream
-			final IResourceStream resourceStream = getMarkupResourceStreamProvider(container).getMarkupResourceStream(
-				container, containerClass);
+			final MarkupResourceStream resourceStream = MarkupFactory.get()
+				.getMarkupResourceStream(container, containerClass);
 
 			// Found markup?
 			if (resourceStream != null)
 			{
-				final MarkupResourceStream markupResourceStream;
-				if (resourceStream instanceof MarkupResourceStream)
-				{
-					markupResourceStream = (MarkupResourceStream)resourceStream;
-				}
-				else
-				{
-					markupResourceStream = new MarkupResourceStream(resourceStream,
-						new ContainerInfo(container), containerClass);
-				}
-
-				markupResourceStream.setCacheKey(cacheKey);
+				resourceStream.setCacheKey(cacheKey);
 
 				// load the markup and watch for changes
-				markup = loadMarkupAndWatchForChanges(container, markupResourceStream,
-					enforceReload);
+				markup = loadMarkupAndWatchForChanges(container, resourceStream, enforceReload);
 			}
 			else
 			{
@@ -416,30 +377,23 @@ public class MarkupCache implements IMarkupCache
 			// couldn't be resolved.
 			locationString = cacheKey;
 		}
-		try
-		{
-			Markup markup = getMarkupLoader().loadMarkup(container, markupResourceStream, null,
-				enforceReload);
 
+		Markup markup = MarkupFactory.get().loadMarkup(container, markupResourceStream,
+			enforceReload);
+		if (markup != null)
+		{
 			if (cacheKey != null)
 			{
 				if (markup.locationAsString() != null)
 				{
 					locationString = markup.locationAsString();
 				}
+
 				// add the markup to the cache.
 				markupKeyCache.put(cacheKey, locationString);
 				return putIntoCache(locationString, container, markup);
 			}
 			return markup;
-		}
-		catch (ResourceStreamNotFoundException e)
-		{
-			log.error("Unable to find markup from " + markupResourceStream, e);
-		}
-		catch (IOException e)
-		{
-			log.error("Unable to read markup from " + markupResourceStream, e);
 		}
 
 		// In case of an error, remove the cache entry
@@ -535,42 +489,6 @@ public class MarkupCache implements IMarkupCache
 			markupCacheKeyProvider = new DefaultMarkupCacheKeyProvider();
 		}
 		return markupCacheKeyProvider;
-	}
-
-	/**
-	 * Get the markup resource stream provider to be used
-	 * 
-	 * @param container
-	 *            The MarkupContainer requesting the markup resource stream
-	 * @return IMarkupResourceStreamProvider
-	 */
-	protected IMarkupResourceStreamProvider getMarkupResourceStreamProvider(
-		final MarkupContainer container)
-	{
-		if (container instanceof IMarkupResourceStreamProvider)
-		{
-			return (IMarkupResourceStreamProvider)container;
-		}
-
-		if (markupResourceStreamProvider == null)
-		{
-			markupResourceStreamProvider = new DefaultMarkupResourceStreamProvider();
-		}
-		return markupResourceStreamProvider;
-	}
-
-	/**
-	 * In case there is a need to extend the default chain of MarkupLoaders
-	 * 
-	 * @return MarkupLoader
-	 */
-	protected IMarkupLoader getMarkupLoader()
-	{
-		if (markupLoader == null)
-		{
-			markupLoader = new DefaultMarkupLoader();
-		}
-		return markupLoader;
 	}
 
 	/**

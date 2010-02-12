@@ -22,7 +22,6 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupCache;
 import org.apache.wicket.markup.MarkupParser;
-import org.apache.wicket.markup.MarkupParserFactory;
 import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 

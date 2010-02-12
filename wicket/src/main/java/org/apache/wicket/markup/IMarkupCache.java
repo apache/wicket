@@ -51,29 +51,6 @@ public interface IMarkupCache
 		final boolean enforceReload);
 
 	/**
-	 * Gets a fresh markup stream that contains the (immutable) markup resource for this class.
-	 * 
-	 * @param container
-	 *            The container the markup should be associated with
-	 * @param enforceReload
-	 *            The cache will be ignored and all, including inherited markup files, will be
-	 *            reloaded. Whatever is in the cache, it will be ignored
-	 * @param throwException
-	 *            If true, throw an exception, if markup could not be found
-	 * @return A stream of MarkupElement elements
-	 */
-	IMarkupFragment getMarkup(final MarkupContainer container, final boolean enforceReload);
-
-	/**
-	 * Check if container has associated markup
-	 * 
-	 * @param container
-	 *            The container the markup should be associated with
-	 * @return True if this markup container has associated markup
-	 */
-	boolean hasAssociatedMarkup(final MarkupContainer container);
-
-	/**
 	 * Remove the markup associated with the cache key from the cache including all dependent
 	 * markups (markup inheritance)
 	 * 

@@ -33,6 +33,7 @@ import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.application.IComponentOnAfterRenderListener;
 import org.apache.wicket.application.IComponentOnBeforeRenderListener;
 import org.apache.wicket.javascript.DefaultJavascriptCompressor;
+import org.apache.wicket.markup.MarkupCache;
 import org.apache.wicket.markup.html.EmptySrcAttributeCheckFilter;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -430,8 +431,6 @@ public abstract class Application implements UnboundListener
 	 * THIS METHOD IS CALLED OFTEN FROM MANY DIFFERENT POINTS IN CODE, INCLUDING DURING THE RENDER
 	 * PROCESS, THEREFORE THE IMPLEMENTATION SHOULD BE FAST - PREFERRABLY USING A FAST-TO-RETRIEVE
 	 * CACHED VALUE
-	 * 
-	 * 
 	 * 
 	 * @return configuration
 	 * @since 1.2.3 (function existed as a property getter)
@@ -862,7 +861,7 @@ public abstract class Application implements UnboundListener
 		// Clear caches of Class keys so the classloader can be garbage
 		// collected (WICKET-625)
 		PropertyResolver.destroy(this);
-		getMarkupSettings().getMarkupCache().shutdown();
+		MarkupCache.get().shutdown();
 
 		onDestroy();
 

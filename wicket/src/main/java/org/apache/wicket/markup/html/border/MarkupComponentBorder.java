@@ -28,6 +28,7 @@ import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.markup.ContainerInfo;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupFactory;
 import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
@@ -218,11 +219,10 @@ public class MarkupComponentBorder extends AbstractBehavior
 
 		try
 		{
-			IMarkupFragment markup = Application.get()
-				.getMarkupSettings()
-				.getMarkupParserFactory()
+			IMarkupFragment markup = MarkupFactory.get()
 				.newMarkupParser(markupResourceStream)
 				.parse();
+
 			return new MarkupStream(markup);
 		}
 		catch (Exception e)

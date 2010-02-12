@@ -39,10 +39,7 @@ import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.javascript.IJavascriptCompressor;
-import org.apache.wicket.markup.IMarkupCache;
-import org.apache.wicket.markup.IMarkupParserFactory;
-import org.apache.wicket.markup.MarkupCache;
-import org.apache.wicket.markup.MarkupParserFactory;
+import org.apache.wicket.markup.MarkupFactory;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.PackageResourceGuard;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
@@ -185,12 +182,6 @@ public final class Settings
 	/** I18N support */
 	private Localizer localizer;
 
-	/** Factory for creating markup parsers */
-	private IMarkupParserFactory markupParserFactory;
-
-	/** A markup cache which will load the markup if required. */
-	private IMarkupCache markupCache;
-
 	/** if true than throw an exception if the xml declaration is missing from the markup file */
 	private boolean throwExceptionOnMissingXmlDeclaration = false;
 
@@ -327,6 +318,8 @@ public final class Settings
 
 	/** Default cache duration */
 	private int defaultCacheDuration = 3600;
+
+	private MarkupFactory markupFactory;
 
 	/**
 	 * Create the application settings, carrying out any necessary initializations.
@@ -568,18 +561,6 @@ public final class Settings
 	public void setLocalizer(final Localizer localizer)
 	{
 		this.localizer = localizer;
-	}
-
-	/**
-	 * @see org.apache.wicket.settings.IMarkupSettings#getMarkupParserFactory()
-	 */
-	public IMarkupParserFactory getMarkupParserFactory()
-	{
-		if (markupParserFactory == null)
-		{
-			markupParserFactory = new MarkupParserFactory();
-		}
-		return markupParserFactory;
 	}
 
 	/**
@@ -971,19 +952,6 @@ public final class Settings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IMarkupSettings#setMarkupParserFactory(org.apache.wicket.markup.IMarkupParserFactory)
-	 */
-	public void setMarkupParserFactory(IMarkupParserFactory factory)
-	{
-		if (factory == null)
-		{
-			throw new IllegalArgumentException("markup parser factory cannot be null");
-		}
-
-		markupParserFactory = factory;
-	}
-
-	/**
 	 * @see org.apache.wicket.settings.ISessionSettings#setMaxPageMaps(int)
 	 */
 	public final void setMaxPageMaps(int maxPageMaps)
@@ -1249,28 +1217,6 @@ public final class Settings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IMarkupSettings#getMarkupCache()
-	 */
-	public IMarkupCache getMarkupCache()
-	{
-		if (markupCache == null)
-		{
-			// Construct markup cache for this application
-			markupCache = new MarkupCache();
-		}
-
-		return markupCache;
-	}
-
-	/**
-	 * @see org.apache.wicket.settings.IMarkupSettings#setMarkupCache(org.apache.wicket.markup.IMarkupCache)
-	 */
-	public void setMarkupCache(final IMarkupCache markupCache)
-	{
-		this.markupCache = markupCache;
-	}
-
-	/**
 	 * 
 	 * @see org.apache.wicket.settings.IApplicationSettings#getDefaultMaximumUploadSize()
 	 */
@@ -1493,5 +1439,25 @@ public final class Settings
 	public void setAuthenticationStrategy(final IAuthenticationStrategy strategy)
 	{
 		authenticationStrategy = strategy;
+	}
+
+	/**
+	 * @see org.apache.wicket.settings.IMarkupSettings#getMarkupFactory()
+	 */
+	public MarkupFactory getMarkupFactory()
+	{
+		if (markupFactory == null)
+		{
+			markupFactory = new MarkupFactory();
+		}
+		return markupFactory;
+	}
+
+	/**
+	 * @see org.apache.wicket.settings.IMarkupSettings#setMarkupFactory(org.apache.wicket.markup.MarkupFactory)
+	 */
+	public void setMarkupFactory(final MarkupFactory factory)
+	{
+		markupFactory = factory;
 	}
 }

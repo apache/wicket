@@ -18,9 +18,9 @@ package org.apache.wicket.markup.loader;
 
 import java.io.IOException;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.Markup;
+import org.apache.wicket.markup.MarkupFactory;
 import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 
@@ -49,7 +49,6 @@ public class SimpleMarkupLoader implements IMarkupLoader
 		final MarkupResourceStream markupResourceStream, final IMarkupLoader baseLoader,
 		final boolean enforceReload) throws IOException, ResourceStreamNotFoundException
 	{
-		return Application.get().getMarkupSettings().getMarkupParserFactory().newMarkupParser(
-			markupResourceStream).parse();
+		return MarkupFactory.get().newMarkupParser(markupResourceStream).parse();
 	}
 }

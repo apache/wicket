@@ -18,11 +18,11 @@ package org.apache.wicket.markup.loader;
 
 import java.io.IOException;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupFactory;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MergedMarkup;
@@ -119,9 +119,8 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 		final boolean enforceReload)
 	{
 		// get the base markup
-		Markup baseMarkup = Application.get().getMarkupSettings().getMarkupCache().getMarkup(
-			container, markup.getMarkupResourceStream().getMarkupClass().getSuperclass(),
-			enforceReload);
+		Markup baseMarkup = MarkupFactory.get().getMarkup(container,
+			markup.getMarkupResourceStream().getMarkupClass().getSuperclass(), enforceReload);
 
 		return baseMarkup;
 	}

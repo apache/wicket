@@ -28,12 +28,12 @@ import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
+import org.apache.wicket.markup.MarkupFactory;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.RawMarkup;
 import org.apache.wicket.markup.WicketTag;
-import org.apache.wicket.markup.html.HeaderPartContainer;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
@@ -42,7 +42,6 @@ import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * A MarkupContainer holds a map of child components.
@@ -387,9 +386,7 @@ public abstract class MarkupContainer extends Component
 	{
 		try
 		{
-			IMarkupFragment markup = getApplication().getMarkupSettings()
-				.getMarkupCache()
-				.getMarkup(this, false);
+			IMarkupFragment markup = MarkupFactory.get().getMarkup(this, false);
 
 			// If we found markup for this container
 			if ((markup != null) && (markup != Markup.NO_MARKUP))
@@ -1806,7 +1803,7 @@ public abstract class MarkupContainer extends Component
 	 */
 	public boolean hasAssociatedMarkup()
 	{
-		return getApplication().getMarkupSettings().getMarkupCache().hasAssociatedMarkup(this);
+		return MarkupFactory.get().hasAssociatedMarkup(this);
 	}
 
 	/**
