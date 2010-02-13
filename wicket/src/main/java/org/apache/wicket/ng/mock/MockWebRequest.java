@@ -35,7 +35,11 @@ import org.apache.wicket.protocol.http.WebRequest;
  */
 public class MockWebRequest extends WebRequest
 {
-	private final Url url;
+	private Url url;
+	private Cookie cookies[];
+	private Map<String, List<Object>> headers = new HashMap<String, List<Object>>();
+	private MockRequestParameters postRequestParameters = new MockRequestParameters();
+	private Locale locale = Locale.getDefault();
 
 	/**
 	 * Construct.
@@ -47,10 +51,26 @@ public class MockWebRequest extends WebRequest
 		this.url = url;
 	}
 
+	MockWebRequest(Url url, Cookie[] cookies, Map<String, List<Object>> headers,
+		MockRequestParameters postRequestParameters, Locale locale)
+	{
+		this.url = url;
+		this.cookies = cookies;
+		this.headers = headers;
+		this.postRequestParameters = postRequestParameters;
+		this.locale = locale;
+	}
+
+
 	@Override
 	public MockWebRequest requestWithUrl(Url url)
 	{
-		return new MockWebRequest(url);
+		return new MockWebRequest(url, cookies, headers, postRequestParameters, locale);
+	}
+
+	public void setUrl(Url url)
+	{
+		this.url = url;
 	}
 
 	@Override
@@ -65,7 +85,6 @@ public class MockWebRequest extends WebRequest
 		return "MockWebRequest [url=" + url + "]";
 	}
 
-	private Cookie cookies[];
 
 	/**
 	 * Sets cookies for current request.
@@ -83,7 +102,6 @@ public class MockWebRequest extends WebRequest
 		return cookies;
 	}
 
-	private final Map<String, List<Object>> headers = new HashMap<String, List<Object>>();
 
 	@Override
 	public long getDateHeader(String name)
@@ -168,7 +186,6 @@ public class MockWebRequest extends WebRequest
 		addHeaderObject(name, value);
 	}
 
-	private Locale locale = Locale.getDefault();
 
 	/**
 	 * Sets request locale.
@@ -214,7 +231,6 @@ public class MockWebRequest extends WebRequest
 		headers.remove(header);
 	}
 
-	private final MockRequestParameters postRequestParameters = new MockRequestParameters();
 
 	@Override
 	public MockRequestParameters getPostRequestParameters()

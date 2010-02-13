@@ -87,7 +87,7 @@ public class MockWebApplicationTest extends TestCase
 	public void testRenderHomePage() throws Exception
 	{
 		// Validate the document
-		String document = application.getServletResponse().getDocument();
+		String document = application.getLastResponseAsString();
 		DiffUtil.validatePage(document, getClass(), "MockPage_expectedResult.html", true);
 
 		// Inspect the page & model

@@ -42,15 +42,6 @@ import org.apache.wicket.protocol.http.MockPage;
  */
 public class CheckGroupTest extends WicketTestCase
 {
-
-	/**
-	 * @param name
-	 */
-	public CheckGroupTest(String name)
-	{
-		super(name);
-	}
-
 	/**
 	 * mock model object with an embedded property used to test compound property model
 	 * 
@@ -128,8 +119,6 @@ public class CheckGroupTest extends WicketTestCase
 
 		// set up necessary objects to emulate a form submission
 
-		tester.createRequestCycle();
-
 		// this could have been any page it seems. see comment at method
 		MockPage page = new MockPage();
 
@@ -170,13 +159,13 @@ public class CheckGroupTest extends WicketTestCase
 		assertTrue("running with nothing selected - model must be empty", modelObject.getProp1()
 			.size() == 0);
 
-		tester.getServletRequest().setParameter(group.getInputName(),
+		tester.getRequest().getPostRequestParameters().setParameterValue(group.getInputName(),
 			String.valueOf(choice1.getValue()));
 		form.onFormSubmitted();
 		assertTrue("running with choice1 selected - model must only contain value of check1",
 			modelObject.getProp1().size() == 1 && modelObject.getProp1().contains(check1));
 
-		tester.getServletRequest().setParameter(group.getInputName(),
+		tester.getRequest().getPostRequestParameters().setParameterValue(group.getInputName(),
 			String.valueOf(choice2.getValue()));
 		form.onFormSubmitted();
 		assertTrue("running with choice2 selected - model must only contain value of check2",
@@ -184,18 +173,23 @@ public class CheckGroupTest extends WicketTestCase
 
 		// throw in some nulls into the request param to make sure they are
 		// ignored
-		tester.getServletRequest().getParameterMap().put(
-			group.getInputName(),
-			new String[] { null, String.valueOf(choice1.getValue()), null,
-					String.valueOf(choice2.getValue()) });
+		tester.getRequest()
+			.getPostRequestParameters()
+			.addParameterValue(group.getInputName(), null);
+		tester.getRequest().getPostRequestParameters().addParameterValue(group.getInputName(),
+			String.valueOf(choice1.getValue()));
+		tester.getRequest().getPostRequestParameters().addParameterValue(group.getInputName(),
+			String.valueOf(choice2.getValue()));
+
 		form.onFormSubmitted();
+
 		assertTrue(
 			"running with choice1 and choice2 selected - model must only contain values of check1 and check2",
 			modelObject.getProp1().size() == 2 && modelObject.getProp1().contains(check2) &&
 				modelObject.getProp1().contains(check1));
 
-		tester.getServletRequest().getParameterMap().put(group.getInputName(),
-			new String[] { "some weird choice uuid to test error" });
+		tester.getRequest().getPostRequestParameters().setParameterValue(group.getInputName(),
+			"some weird choice uuid to test error");
 		try
 		{
 			form.onFormSubmitted();

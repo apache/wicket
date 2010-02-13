@@ -24,15 +24,6 @@ import org.apache.wicket.util.tester.FormTester;
  */
 public class DropDownChoiceTest extends WicketTestCase
 {
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public DropDownChoiceTest(String name)
-	{
-		super(name);
-	}
 
 	/**
 	 * Test Case for jira issue 1979

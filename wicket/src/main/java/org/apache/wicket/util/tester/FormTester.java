@@ -343,7 +343,7 @@ public class FormTester
 	private final String path;
 
 	/** <code>BaseWicketTester</code> that create <code>FormTester</code> */
-	private final BaseWicketTester baseWicketTester;
+	private final BaseWicketTester tester;
 
 	/** <code>FormComponent</code> to be tested */
 	private final Form<?> workingForm;
@@ -366,7 +366,7 @@ public class FormTester
 	{
 		this.path = path;
 		this.workingForm = workingForm;
-		baseWicketTester = wicketTester;
+		tester = wicketTester;
 
 		// fill blank String for Text Component.
 		workingForm.visitFormComponents(new FormComponent.AbstractVisitor()
@@ -649,8 +649,8 @@ public class FormTester
 		checkClosed();
 		try
 		{
-			baseWicketTester.getLastRenderedPage().getSession().cleanupFeedbackMessages();
-			baseWicketTester.submitForm(path);
+			tester.getLastRenderedPage().getSession().cleanupFeedbackMessages();
+			tester.submitForm(path);
 // servletRequest.setUseMultiPartContentType(isMultiPart());
 		}
 		finally
@@ -716,12 +716,12 @@ public class FormTester
 	{
 		if (pageRelative)
 		{
-			baseWicketTester.clickLink(path, false);
+			tester.clickLink(path, false);
 		}
 		else
 		{
 			path = this.path + ":" + path;
-			baseWicketTester.clickLink(path, false);
+			tester.clickLink(path, false);
 		}
 	}
 
@@ -738,7 +738,7 @@ public class FormTester
 	{
 		if (parameterExist(formComponent))
 		{
-			List<StringValue> values = baseWicketTester.getLastRequest()
+			List<StringValue> values = tester.getRequest()
 				.getPostRequestParameters()
 				.getParameterValues(formComponent.getInputName());
 			// remove duplicated
@@ -755,7 +755,7 @@ public class FormTester
 			{
 				values.add(StringValue.valueOf(val));
 			}
-			baseWicketTester.getLastRequest().getPostRequestParameters().setParameterValues(
+			tester.getRequest().getPostRequestParameters().setParameterValues(
 				formComponent.getInputName(), values);
 		}
 		else
@@ -786,7 +786,7 @@ public class FormTester
 	 */
 	private boolean parameterExist(FormComponent<?> formComponent)
 	{
-		String parameter = baseWicketTester.getLastRequest()
+		String parameter = tester.getRequest()
 			.getPostRequestParameters()
 			.getParameterValue(formComponent.getInputName())
 			.toString();
@@ -803,7 +803,7 @@ public class FormTester
 	 */
 	private void setFormComponentValue(FormComponent<?> formComponent, String value)
 	{
-		baseWicketTester.getLastRequest().getPostRequestParameters().setParameterValue(
+		tester.getRequest().getPostRequestParameters().setParameterValue(
 			formComponent.getInputName(), value);
 	}
 
@@ -817,7 +817,7 @@ public class FormTester
 	 */
 	private void setFormSubmittingComponentValue(IFormSubmittingComponent component, String value)
 	{
-		baseWicketTester.getLastRequest().getPostRequestParameters().setParameterValue(
+		tester.getRequest().getPostRequestParameters().setParameterValue(
 			component.getInputName(), value);
 	}
 

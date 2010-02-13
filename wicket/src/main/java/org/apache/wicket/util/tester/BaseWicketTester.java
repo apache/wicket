@@ -70,6 +70,7 @@ import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.IPageProvider;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.PageProvider;
+import org.apache.wicket.ng.request.handler.impl.BookmarkablePageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.protocol.http.WebSession;
@@ -138,7 +139,17 @@ public class BaseWicketTester
 	private final List<MockWebResponse> previousResponses = new ArrayList<MockWebResponse>();
 
 	private final ThreadContext oldThreadContext;
+
+	/** current request */
+	private MockWebRequest request;
+	/** current response */
+	private MockWebResponse response;
+
+	/** current session */
 	private final Session session;
+
+	/** current request cycle */
+	private MockRequestCycle requestCycle;
 
 	/**
 	 * Creates <code>WicketTester</code> and automatically create a <code>WebApplication</code>, but
@@ -196,9 +207,31 @@ public class BaseWicketTester
 		this.application.set();
 		this.application.initApplication();
 
+		// prepare session
 		session = new WebSession(new MockWebRequest(Url.parse("/")));
 		getApplication().getSessionStore().bind(null, session);
 		ThreadContext.setSession(session);
+
+		setupNextRequestCycle();
+	}
+
+	private void setupNextRequestCycle()
+	{
+		request = new MockWebRequest(Url.parse("/"));
+		response = new MockWebResponse();
+		requestCycle = (MockRequestCycle)application.createRequestCycle(request, response);
+		ThreadContext.setRequestCycle(requestCycle);
+	}
+
+	public MockWebRequest getRequest()
+	{
+		return request;
+	}
+
+	public void setRequest(MockWebRequest request)
+	{
+		this.request = request;
+		requestCycle.setRequest(request);
 	}
 
 
@@ -245,6 +278,12 @@ public class BaseWicketTester
 		ThreadContext.detach();
 	}
 
+
+	public void processRequest()
+	{
+		processRequest(null, null);
+	}
+
 	/**
 	 * Processes the request in mocked Wicket environment.
 	 * 
@@ -254,7 +293,7 @@ public class BaseWicketTester
 	 */
 	public void processRequest(MockWebRequest request)
 	{
-		processRequest(request);
+		processRequest(request, null);
 	}
 
 	/**
@@ -271,29 +310,21 @@ public class BaseWicketTester
 	{
 		try
 		{
-			if (lastRequest != null)
+			if (request != null)
 			{
-				previousRequests.add(lastRequest);
-			}
-			if (lastResponse != null)
-			{
-				previousResponses.add(lastResponse);
+				setRequest(request);
 			}
 
-			lastRequest = request;
-			lastResponse = new MockWebResponse();
-
-			MockRequestCycle cycle = (MockRequestCycle)application.createRequestCycle(request,
-				lastResponse);
-
-			ThreadContext.setRequestCycle(cycle);
 
 			if (forcedRequestHandler != null)
 			{
-				cycle.forceRequestHandler(forcedRequestHandler);
+				requestCycle.forceRequestHandler(forcedRequestHandler);
 			}
 
-			cycle.processRequestAndDetach();
+			requestCycle.processRequestAndDetach();
+
+			recordRequestResponse();
+			setupNextRequestCycle();
 
 			if (followRedirects && lastResponse.isRedirect())
 			{
@@ -310,10 +341,12 @@ public class BaseWicketTester
 				}
 
 				// append redirect URL to current URL (what browser would do)
-				Url mergedURL = new Url(request.getUrl().getSegments(), newUrl.getQueryParameters());
+				Url mergedURL = new Url(lastRequest.getUrl().getSegments(),
+					newUrl.getQueryParameters());
 				mergedURL.concatSegments(newUrl.getSegments());
 
-				processRequest(new MockWebRequest(mergedURL), null);
+				this.request.setUrl(mergedURL);
+				processRequest();
 
 				--redirectCount;
 			}
@@ -322,6 +355,15 @@ public class BaseWicketTester
 		{
 			redirectCount = 0;
 		}
+	}
+
+	private void recordRequestResponse()
+	{
+		lastRequest = request;
+		lastResponse = response;
+
+		previousRequests.add(request);
+		previousResponses.add(response);
 	}
 
 	/**
@@ -337,7 +379,7 @@ public class BaseWicketTester
 	 */
 	public Page startPage(IPageProvider pageProvider)
 	{
-		MockWebRequest request = new MockWebRequest(new Url());
+		request = new MockWebRequest(new Url());
 		IRequestHandler handler = new RenderPageRequestHandler(pageProvider);
 		processRequest(request, handler);
 		return getLastRenderedPage();
@@ -353,14 +395,6 @@ public class BaseWicketTester
 	public Page startPage(Page page)
 	{
 		return startPage(new PageProvider(page));
-	}
-
-	/**
-	 * @return last request or <code>null</code> if no request has happened yet.
-	 */
-	public MockWebRequest getLastRequest()
-	{
-		return lastRequest;
 	}
 
 	/**
@@ -541,9 +575,13 @@ public class BaseWicketTester
 	 *            a test <code>Page</code> class with default constructor
 	 * @return the rendered <code>Page</code>
 	 */
-	public final <C extends Page> Page startPage(Class<C> pageClass)
+	public final <C extends Page> void startPage(Class<C> pageClass)
 	{
-		return startPage(new PageProvider(pageClass));
+		//
+		request.setUrl(RequestCycle.get().urlFor(
+			new BookmarkablePageRequestHandler(new PageProvider(pageClass))));
+		processRequest();
+// return startPage(new PageProvider(pageClass));
 	}
 
 	/**
@@ -924,7 +962,7 @@ public class BaseWicketTester
 			SubmitLink submitLink = (SubmitLink)linkComponent;
 
 			String pageRelativePath = submitLink.getInputName();
-			getLastRequest().getPostRequestParameters().setParameterValue(pageRelativePath, "x");
+			request.getPostRequestParameters().setParameterValue(pageRelativePath, "x");
 
 			submitForm(submitLink.getForm().getPageRelativePath());
 		}
@@ -968,6 +1006,11 @@ public class BaseWicketTester
 		}
 	}
 
+	public void submitForm(Form form)
+	{
+		submitForm(form.getPageRelativePath());
+	}
+
 	/**
 	 * Submits the <code>Form</code> in the last rendered <code>Page</code>.
 	 * 
@@ -978,13 +1021,10 @@ public class BaseWicketTester
 	{
 		Form<?> form = (Form<?>)getComponentFromLastRenderedPage(path);
 		Url url = Url.parse(form.urlFor(IFormSubmitListener.INTERFACE).toString());
-		processRequest(getLastRequest().requestWithUrl(url));
+		request.setUrl(url);
+		processRequest();
 	}
 
-	public void setParameterForNextRequest(String param, String value)
-	{
-		getLastRequest().getPostRequestParameters().setParameterValue(param, value);
-	}
 
 	/**
 	 * Asserts the last rendered <code>Page</code> class.
@@ -1396,7 +1436,7 @@ public class BaseWicketTester
 		notNull(failMessage, form);
 
 		Url url = Url.parse(behavior.getCallbackUrl().toString());
-		processRequest(getLastRequest().requestWithUrl(url), null);
+		processRequest(request.requestWithUrl(url), null);
 	}
 
 	/**

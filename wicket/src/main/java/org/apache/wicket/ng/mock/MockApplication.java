@@ -48,7 +48,7 @@ public class MockApplication extends WebApplication
 	@Override
 	public String getConfigurationType()
 	{
-		return DEPLOYMENT;
+		return DEVELOPMENT;
 	}
 
 	@Override
