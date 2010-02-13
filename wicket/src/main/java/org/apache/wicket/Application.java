@@ -272,7 +272,7 @@ public abstract class Application
 		name = Classes.simpleName(getClass());
 
 		// Create shared resources repository
-		sharedResources = new SharedResources(this);
+		sharedResources = new SharedResources();
 
 		// Install default component instantiation listener that uses
 		// authorization strategy to check component instantiations.
@@ -349,8 +349,7 @@ public abstract class Application
 			getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 			// getDebugSettings().setOutputMarkupContainerClassName(true);
 			getResourceSettings().setJavascriptCompressor(null);
-			getRequestCycleSettings().addResponseFilter(
-				EmptySrcAttributeCheckFilter.INSTANCE);
+			getRequestCycleSettings().addResponseFilter(EmptySrcAttributeCheckFilter.INSTANCE);
 		}
 		else if (DEPLOYMENT.equalsIgnoreCase(configurationType))
 		{

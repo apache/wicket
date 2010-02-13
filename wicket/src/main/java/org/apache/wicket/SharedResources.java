@@ -130,13 +130,13 @@ public class SharedResources
 	/** Map of shared resources states */
 	private final ConcurrentHashMap<String, Resource> resourceMap = new ConcurrentHashMap<String, Resource>();
 
+	/** Throw an exception if class name has not alias, and thus the FQN is exposed in the URL */
+	private boolean throwExceptionIfNotMapped = false;
+
 	/**
 	 * Construct.
-	 * 
-	 * @param application
-	 *            The application
 	 */
-	SharedResources(Application application)
+	SharedResources()
 	{
 	}
 
@@ -332,8 +332,35 @@ public class SharedResources
 		String alias = classAliasMap.get(scope);
 		if (alias == null)
 		{
+			if (isThrowExceptionIfNotMapped())
+			{
+				throw new WicketRuntimeException("FQN will be exposed in the URL. " +
+					"See Application.get().getSharedResources().putClassAlias(): " + "class: " +
+					scope.getName());
+			}
 			alias = scope.getName();
 		}
 		return alias + '/' + resourceKey(path, locale, style);
+	}
+
+	/**
+	 * 
+	 * @return If true an exception is thrown if no alias has been defined for the class and thus
+	 *         the fully-qualified-class-name is exposed in the URL.
+	 */
+	public boolean isThrowExceptionIfNotMapped()
+	{
+		return throwExceptionIfNotMapped;
+	}
+
+	/**
+	 * Set to true, if an exception shall be thrown if no alias has been defined for the class and
+	 * thus the fully-qualified-class name is exposed in the URL.
+	 * 
+	 * @param throwExceptionIfNotMapped
+	 */
+	public void setThrowExceptionIfNotMapped(boolean throwExceptionIfNotMapped)
+	{
+		this.throwExceptionIfNotMapped = throwExceptionIfNotMapped;
 	}
 }

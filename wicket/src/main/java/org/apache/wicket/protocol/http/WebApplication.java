@@ -389,7 +389,6 @@ public abstract class WebApplication extends Application
 		mount(new SharedResourceRequestTargetUrlCodingStrategy(path, resourceKey));
 	}
 
-
 	/**
 	 * Partly unmounts/ignores a path that normally would map to another mount path. Like
 	 * mount("/mypage", MyPage.class); and then "/mypage/arealdir" should be ignored. This can be
@@ -397,16 +396,15 @@ public abstract class WebApplication extends Application
 	 * 
 	 * @param path
 	 *            the path that should be ignored.
-	 * 
 	 */
 	public final void addIgnoreMountPath(String path)
 	{
 		getRequestCycleProcessor().getRequestCodingStrategy().addIgnoreMountPath(path);
 	}
 
-	/*
+	/**
 	 * @see org.apache.wicket.Application#newRequestCycle(org.apache.wicket.Request,
-	 * org.apache.wicket.Response)
+	 *      org.apache.wicket.Response)
 	 */
 	@Override
 	public RequestCycle newRequestCycle(final Request request, final Response response)
