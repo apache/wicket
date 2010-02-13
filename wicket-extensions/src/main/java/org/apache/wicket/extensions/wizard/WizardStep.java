@@ -489,6 +489,4 @@ public class WizardStep extends Panel implements IWizardStep
 	{
 		return wizardModel;
 	}
-
-
 }
