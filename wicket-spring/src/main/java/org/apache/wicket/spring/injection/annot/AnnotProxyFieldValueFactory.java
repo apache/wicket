@@ -17,12 +17,20 @@
 package org.apache.wicket.spring.injection.annot;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.injection.IFieldValueFactory;
 import org.apache.wicket.proxy.LazyInitProxyFactory;
 import org.apache.wicket.spring.ISpringContextLocator;
 import org.apache.wicket.spring.SpringBeanLocator;
+import org.apache.wicket.util.lang.Generics;
+import org.apache.wicket.util.string.Strings;
+import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.context.ApplicationContext;
 
 /**
  * {@link IFieldValueFactory} that uses {@link LazyInitProxyFactory} to create proxies for Spring
@@ -60,7 +68,11 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 {
 	private final ISpringContextLocator contextLocator;
 
-	private final ConcurrentHashMap<SpringBeanLocator, Object> cache = new ConcurrentHashMap<SpringBeanLocator, Object>();
+	private final ConcurrentHashMap<SpringBeanLocator, Object> cache = Generics
+			.newConcurrentHashMap();
+
+	private final ConcurrentHashMap<Class< ? >, String> beanNameCache = Generics
+			.newConcurrentHashMap();
 
 	private final boolean wrapInProxies;
 
@@ -98,8 +110,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	{
 		if (field.isAnnotationPresent(SpringBean.class))
 		{
-			SpringBean annot = field.getAnnotation(SpringBean.class);
-			SpringBeanLocator locator = new SpringBeanLocator(annot.name(), field.getType(),
+			SpringBeanLocator locator = new SpringBeanLocator(getBeanName(field), field.getType(),
 					contextLocator);
 
 			// only check the cache if the bean is a singleton
@@ -107,7 +118,6 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			{
 				return cache.get(locator);
 			}
-
 
 			final Object target;
 			if (wrapInProxies)
@@ -126,9 +136,78 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			}
 			return target;
 		}
+		return null;
+	}
+
+	/**
+	 * 
+	 * @param field
+	 * @return bean name
+	 */
+	private String getBeanName(Field field)
+	{
+		SpringBean annot = field.getAnnotation(SpringBean.class);
+
+		String name = annot.name();
+		if (Strings.isEmpty(name))
+		{
+			name = beanNameCache.get(field.getType());
+			if (name == null)
+			{
+				name = getBeanNameOfClass(contextLocator.getSpringContext(), field.getType());
+				beanNameCache.put(field.getType(), name);
+			}
+		}
+		return name;
+	}
+
+	/**
+	 * Returns the name of the Bean as registered to Spring. Throws IllegalState exception if none
+	 * or more than one beans are found.
+	 * 
+	 * @param ctx
+	 *            spring application context
+	 * @param clazz
+	 *            bean class
+	 * @throws IllegalStateException
+	 * @return spring name of the bean
+	 */
+	private final String getBeanNameOfClass(ApplicationContext ctx, Class< ? > clazz)
+	{
+		// get the list of all possible matching beans
+		List<String> names = new ArrayList<String>(Arrays.asList(BeanFactoryUtils
+				.beanNamesForTypeIncludingAncestors(ctx, clazz)));
+
+		// filter out beans that are not condidates for autowiring
+		Iterator<String> it = names.iterator();
+		while (it.hasNext())
+		{
+			final String possibility = it.next();
+			if (BeanFactoryUtils.isFactoryDereference(possibility) ||
+					possibility.startsWith("scopedTarget."))
+			{
+				it.remove();
+			}
+		}
+
+		if (names.isEmpty())
+		{
+			throw new IllegalStateException("bean of type [" + clazz.getName() + "] not found");
+		}
+		else if (names.size() > 1)
+		{
+			StringBuilder msg = new StringBuilder();
+			msg.append("more then one bean of type [");
+			msg.append(clazz.getName());
+			msg.append("] found, you have to specify the name of the bean ");
+			msg.append("(@SpringBean(name=\"foo\")) in order to resolve this conflict. ");
+			msg.append("Matched beans: ");
+			msg.append(Strings.join(",", names.toArray(new String[0])));
+			throw new IllegalStateException(msg.toString());
+		}
 		else
 		{
-			return null;
+			return names.get(0);
 		}
 	}
 
