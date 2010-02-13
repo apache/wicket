@@ -55,10 +55,22 @@ public class ListDataProvider<T extends Serializable> implements IDataProvider<T
 	}
 
 	/**
+	 * Subclass to lazy load the list
+	 * 
+	 * @return The list
+	 */
+	protected List<T> getData()
+	{
+		return list;
+	}
+
+	/**
 	 * @see IDataProvider#iterator(int, int)
 	 */
 	public Iterator<? extends T> iterator(final int first, final int count)
 	{
+		List<T> list = getData();
+
 		int toIndex = first + count;
 		if (toIndex > list.size())
 		{
