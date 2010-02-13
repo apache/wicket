@@ -120,8 +120,8 @@ public class Panel extends WebMarkupContainerWithAssociatedMarkup
 			markupStream.skipRawMarkup();
 			if (markupStream.get().closes(openTag) == false)
 			{
-				throw new MarkupException("close tag not found for tag: " + openTag.toString() +
-					". Component: " + this.toString());
+				throw new MarkupException(markupStream, "close tag not found for tag: " +
+					openTag.toString() + ". Component: " + this.toString());
 			}
 		}
 	}
