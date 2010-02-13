@@ -24,14 +24,13 @@ import org.apache.wicket.extensions.wizard.WizardModel;
 
 /**
  * Wizard model that is specialized on dynamic wizards. Unlike the default, static
- * {@link WizardModel wizard model}, this model isn't very intelligent, but rather delegates much
- * of the work and knowledge to the {@link IDynamicWizardStep dynamic wizard steps} it uses.
+ * {@link WizardModel wizard model}, this model isn't very intelligent, but rather delegates much of
+ * the work and knowledge to the {@link IDynamicWizardStep dynamic wizard steps} it uses.
  * 
  * @author eelcohillenius
  */
 public class DynamicWizardModel extends AbstractWizardModel
 {
-
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -52,7 +51,6 @@ public class DynamicWizardModel extends AbstractWizardModel
 	 */
 	public DynamicWizardModel(IDynamicWizardStep startStep)
 	{
-		setActiveStep(startStep);
 		this.startStep = startStep;
 	}
 
