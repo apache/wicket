@@ -55,6 +55,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	{
 		if (Application.exists())
 		{
+			// @TODO remove in 1.5; see IHeaderRenderStrategy
 			Application.get().notifyRenderHeadListener(this);
 		}
 	}

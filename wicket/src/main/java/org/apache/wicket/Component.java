@@ -2639,26 +2639,31 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	{
 		if (isVisibleInHierarchy() && isRenderAllowed())
 		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("renderHead: " + toString(false));
+			}
+
 			IHeaderResponse response = container.getHeaderResponse();
 
+			// First check the component itself (implements IHeaderContributor)
 			if (this instanceof IHeaderContributor)
 			{
 				if (response.wasRendered(this) == false)
 				{
-					((IHeaderContributor)this).renderHead(container.getHeaderResponse());
+					((IHeaderContributor)this).renderHead(response);
 					response.markRendered(this);
 				}
 			}
 
-			// Ask all behaviors if they have something to contribute to the
-			// header or body onLoad tag.
+			// Than ask all behaviors
 			for (IBehavior behavior : getBehaviors())
 			{
 				if ((behavior instanceof IHeaderContributor) && isBehaviorAccepted(behavior))
 				{
 					if (response.wasRendered(behavior) == false)
 					{
-						((IHeaderContributor)behavior).renderHead(container.getHeaderResponse());
+						((IHeaderContributor)behavior).renderHead(response);
 						response.markRendered(behavior);
 					}
 				}

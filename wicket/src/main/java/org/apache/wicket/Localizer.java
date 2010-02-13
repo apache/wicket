@@ -65,6 +65,14 @@ public class Localizer
 	private final ClassMetaDatabase metaDatabase = new ClassMetaDatabase();
 
 	/**
+	 * @return Same as Application.get().getResourceSettings().getLocalizer()
+	 */
+	public Localizer get()
+	{
+		return Application.get().getResourceSettings().getLocalizer();
+	}
+
+	/**
 	 * Create the utils instance class backed by the configuration information contained within the
 	 * supplied application object.
 	 */

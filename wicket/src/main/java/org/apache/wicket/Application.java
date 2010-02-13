@@ -168,7 +168,8 @@ public abstract class Application implements UnboundListener
 	/** */
 	private List<IComponentOnAfterRenderListener> componentOnAfterRenderListeners;
 
-	/** */
+	/** @deprecated will be removed in 1.5; see IHeaderRenderStrategy */
+	@Deprecated
 	private List<IHeaderContributor> renderHeadListeners;
 
 	/** root mapper */
@@ -1131,7 +1132,9 @@ public abstract class Application implements UnboundListener
 	 * Adds a listener that will be invoked for every header response
 	 * 
 	 * @param listener
+	 * @deprecated will be removed in 1.5; see IHeaderRenderStrategy
 	 */
+	@Deprecated
 	public final void addRenderHeadListener(final IHeaderContributor listener)
 	{
 		if (renderHeadListeners == null)
@@ -1144,7 +1147,9 @@ public abstract class Application implements UnboundListener
 	/**
 	 * 
 	 * @param listener
+	 * @deprecated will be removed in 1.5; see IHeaderRenderStrategy
 	 */
+	@Deprecated
 	public void removeRenderHeadListener(final IHeaderContributor listener)
 	{
 		if (renderHeadListeners != null)

@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.RequestContext;
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
@@ -33,6 +32,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
+import org.apache.wicket.markup.renderStrategy.AbstractHeaderRenderStrategy;
 import org.apache.wicket.response.StringResponse;
 
 
@@ -138,7 +138,7 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 			super.onComponentTagBody(markupStream, openTag);
 
 			// Render all header sections of all components on the page
-			renderHeaderSections(getPage(), this);
+			AbstractHeaderRenderStrategy.get().renderHeader(this, getPage());
 			getHeaderResponse().close();
 
 			// Automatically add <head> if necessary
@@ -200,44 +200,6 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 	protected boolean renderOpenAndCloseTags()
 	{
 		return true;
-	}
-
-	/**
-	 * Ask all child components of the Page if they have something to contribute to the &lt;head&gt;
-	 * section of the HTML output. Every component interested must implement IHeaderContributor.
-	 * <p>
-	 * Note: HtmlHeaderContainer will be removed from the component hierarchy at the end of the
-	 * request (@see #onEndRequest()) and thus can not transport status from one request to the
-	 * next. This is true for all components added to the header.
-	 * 
-	 * @param page
-	 *            Usually it is the page object, but there might also be that a WebMarkupContainer
-	 *            has been attached to the &lt;html&gt; tag
-	 * @param container
-	 *            The header component container
-	 */
-	private final void renderHeaderSections(final MarkupContainer page,
-		final HtmlHeaderContainer container)
-	{
-		page.renderHead(container);
-
-		// Make sure all Components interested in contributing to the header
-		// and there attached behaviors are asked.
-		page.visitChildren(new IVisitor<Component>()
-		{
-			/**
-			 * @see org.apache.wicket.Component.IVisitor#component(org.apache.wicket.Component)
-			 */
-			public Object component(Component component)
-			{
-				if (component.isVisibleInHierarchy())
-				{
-					component.renderHead(container);
-					return IVisitor.CONTINUE_TRAVERSAL;
-				}
-				return IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
-			}
-		});
 	}
 
 	/**

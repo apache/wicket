@@ -896,7 +896,6 @@ public abstract class MarkupContainer extends Component
 	 */
 	public final <S extends Component> Object visitChildren(final Class<?> clazz,
 		final IVisitor<S> visitor)
-
 	{
 		if (visitor == null)
 		{
