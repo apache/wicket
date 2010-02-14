@@ -19,7 +19,7 @@ package org.apache.wicket.stateless;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.ng.resource.ByteArrayResource;
-import org.apache.wicket.ng.resource.ResourceReference;
+import org.apache.wicket.ng.resource.PackageResourceReference;
 
 /**
  * @author jcompagner
@@ -31,7 +31,7 @@ public class ImageStatelessTest extends WicketTestCase
 	 */
 	public void testResourceReference()
 	{
-		final Image i = new Image("test", new ResourceReference("test"));
+		final Image i = new Image("test", new PackageResourceReference("test"));
 		tester.startComponent(i);
 		assertTrue("image with resource reference should be stateless", i.isStateless());
 	}

@@ -67,16 +67,6 @@ public class ModelToStringTest extends WicketTestCase
 	}
 
 	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public ModelToStringTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * Tests AbstractReadOnlyModel.toString().
 	 */
 	public void testAbstractReadOnlyModel()

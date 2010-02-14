@@ -17,6 +17,7 @@
 package org.apache.wicket.ng.mock;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -36,7 +37,7 @@ import org.apache.wicket.protocol.http.WebRequest;
 public class MockWebRequest extends WebRequest
 {
 	private Url url;
-	private Cookie cookies[];
+	private List<Cookie> cookies = new ArrayList<Cookie>();
 	private Map<String, List<Object>> headers = new HashMap<String, List<Object>>();
 	private MockRequestParameters postRequestParameters = new MockRequestParameters();
 	private Locale locale = Locale.getDefault();
@@ -51,16 +52,15 @@ public class MockWebRequest extends WebRequest
 		this.url = url;
 	}
 
-	MockWebRequest(Url url, Cookie[] cookies, Map<String, List<Object>> headers,
+	MockWebRequest(Url url, List<Cookie> cookies, Map<String, List<Object>> headers,
 		MockRequestParameters postRequestParameters, Locale locale)
 	{
 		this.url = url;
-		this.cookies = cookies;
+		this.cookies.addAll(cookies);
 		this.headers = headers;
 		this.postRequestParameters = postRequestParameters;
 		this.locale = locale;
 	}
-
 
 	@Override
 	public MockWebRequest requestWithUrl(Url url)
@@ -85,21 +85,26 @@ public class MockWebRequest extends WebRequest
 		return "MockWebRequest [url=" + url + "]";
 	}
 
-
 	/**
 	 * Sets cookies for current request.
 	 * 
 	 * @param cookies
 	 */
-	public void setCookies(Cookie[] cookies)
+	public void setCookies(List<Cookie> cookies)
 	{
-		this.cookies = cookies;
+		this.cookies.clear();
+		this.cookies.addAll(cookies);
+	}
+
+	public void addCookie(Cookie cookie)
+	{
+		cookies.add(cookie);
 	}
 
 	@Override
-	public Cookie[] getCookies()
+	public List<Cookie> getCookies()
 	{
-		return cookies;
+		return Collections.unmodifiableList(cookies);
 	}
 
 

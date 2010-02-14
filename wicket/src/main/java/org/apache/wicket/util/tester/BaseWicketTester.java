@@ -60,6 +60,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.mock.MockApplication;
 import org.apache.wicket.ng.mock.MockRequestCycle;
+import org.apache.wicket.ng.mock.MockSession;
 import org.apache.wicket.ng.mock.MockWebRequest;
 import org.apache.wicket.ng.mock.MockWebResponse;
 import org.apache.wicket.ng.request.IRequestMapper;
@@ -73,7 +74,6 @@ import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.impl.BookmarkablePageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
-import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.apache.wicket.util.diff.DiffUtil;
 import org.apache.wicket.util.lang.Classes;
@@ -146,7 +146,7 @@ public class BaseWicketTester
 	private MockWebResponse response;
 
 	/** current session */
-	private final Session session;
+	private final MockSession session;
 
 	/** current request cycle */
 	private MockRequestCycle requestCycle;
@@ -208,7 +208,7 @@ public class BaseWicketTester
 		this.application.initApplication();
 
 		// prepare session
-		session = new WebSession(new MockWebRequest(Url.parse("/")));
+		session = new MockSession(new MockWebRequest(Url.parse("/")));
 		getApplication().getSessionStore().bind(null, session);
 		ThreadContext.setSession(session);
 
@@ -308,8 +308,24 @@ public class BaseWicketTester
 	 */
 	public void processRequest(MockWebRequest request, IRequestHandler forcedRequestHandler)
 	{
+		processRequest(request, forcedRequestHandler, false);
+	}
+
+	private void processRequest(MockWebRequest request, IRequestHandler forcedRequestHandler,
+		boolean redirect)
+	{
+
 		try
 		{
+			if (!redirect)
+			{
+				/*
+				 * we do not reset the session during redirect processing because we want to
+				 * preserve the state before the redirect, eg any error messages reported
+				 */
+				session.reset();
+			}
+
 			if (request != null)
 			{
 				setRequest(request);
@@ -346,7 +362,7 @@ public class BaseWicketTester
 				mergedURL.concatSegments(newUrl.getSegments());
 
 				this.request.setUrl(mergedURL);
-				processRequest();
+				processRequest(null, null, true);
 
 				--redirectCount;
 			}
@@ -577,11 +593,9 @@ public class BaseWicketTester
 	 */
 	public final <C extends Page> void startPage(Class<C> pageClass)
 	{
-		//
 		request.setUrl(RequestCycle.get().urlFor(
 			new BookmarkablePageRequestHandler(new PageProvider(pageClass))));
 		processRequest();
-// return startPage(new PageProvider(pageClass));
 	}
 
 	/**
@@ -597,7 +611,10 @@ public class BaseWicketTester
 	 */
 	public final <C extends Page> Page startPage(Class<C> pageClass, PageParameters parameters)
 	{
-		return startPage(new PageProvider(pageClass, parameters));
+		request.setUrl(RequestCycle.get().urlFor(
+			new BookmarkablePageRequestHandler(new PageProvider(pageClass, parameters))));
+		processRequest();
+		return getLastRenderedPage();
 	}
 
 	/**
@@ -1021,6 +1038,13 @@ public class BaseWicketTester
 	{
 		Form<?> form = (Form<?>)getComponentFromLastRenderedPage(path);
 		Url url = Url.parse(form.urlFor(IFormSubmitListener.INTERFACE).toString());
+
+		// make url absolute
+		while (url.getSegments().size() > 0 && url.getSegments().get(0).equals(".."))
+		{
+			url.getSegments().remove(0);
+		}
+
 		request.setUrl(url);
 		processRequest();
 	}
@@ -1532,5 +1556,10 @@ public class BaseWicketTester
 	private void fail(String message)
 	{
 		throw new WicketRuntimeException(message);
+	}
+
+	public RequestCycle getRequestCycle()
+	{
+		return requestCycle;
 	}
 }

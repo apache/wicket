@@ -24,15 +24,6 @@ import org.apache.wicket.WicketTestCase;
  */
 public class WicketMessageResolverTest extends WicketTestCase
 {
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public WicketMessageResolverTest(String name)
-	{
-		super(name);
-	}
 
 	/**
 	 * @throws Exception
@@ -76,7 +67,8 @@ public class WicketMessageResolverTest extends WicketTestCase
 		try
 		{
 			tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(true);
-			executeTest(SimplePage_4.class, "SimplePageExpectedResult_4.html");
+			tester.startPage(SimplePage_4.class);
+			fail("Expected a WicketRuntimeException to happen");
 		}
 		catch (WicketRuntimeException ex)
 		{
@@ -84,7 +76,7 @@ public class WicketMessageResolverTest extends WicketTestCase
 			assertEquals(text, ex.getMessage().substring(0, text.length()));
 			return;
 		}
-		assertTrue("Expected a WicketRuntimeException to happen", false);
+
 	}
 
 	/**

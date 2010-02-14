@@ -34,6 +34,16 @@ public abstract class WicketTestCase extends TestCase
 	/** */
 	public WicketTester tester;
 
+	public WicketTestCase()
+	{
+	}
+
+	public WicketTestCase(String name)
+	{
+		super(name);
+	}
+
+
 	@Override
 	protected void setUp() throws Exception
 	{

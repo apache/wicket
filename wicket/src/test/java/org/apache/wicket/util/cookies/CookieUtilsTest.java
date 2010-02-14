@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.cookies;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
@@ -23,9 +24,6 @@ import javax.servlet.http.Cookie;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.protocol.http.WebRequest;
-import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.util.cookies.CookieValuePersisterTestPage.TestForm;
 
 /**
@@ -57,13 +55,9 @@ public class CookieUtilsTest extends WicketTestCase
 		final TestForm form = (TestForm)page.get("form");
 		final TextField<String> textField = (TextField<String>)form.get("input");
 
-		// Make sure a valid cycle is available via RequestCycle.get(). Attached to this cycle must
-		// be a valid request and response.
-		final WebRequestCycle cycle = tester.createRequestCycle();
-
 		// Right after init, the requests and responses cookie lists must be empty
-		assertNull(getRequestCookies(cycle));
-		assertEquals(0, getResponseCookies(cycle).size());
+		assertEquals(0, getRequestCookies().size());
+		assertEquals(0, getResponseCookies().size());
 
 		// Create a persister for the test
 		final CookieUtils persister = new CookieUtils();
@@ -71,27 +65,27 @@ public class CookieUtilsTest extends WicketTestCase
 		// See comment in CookieUtils on how removing a Cookies works. As no cookies in the request,
 		// no "delete" cookie will be added to the response.
 		persister.remove(textField);
-		assertNull(getRequestCookies(cycle));
-		assertEquals(0, getResponseCookies(cycle).size());
+		assertNull(getRequestCookies());
+		assertEquals(0, getResponseCookies().size());
 
 		// Save the input field's value (add it to the response's cookie list)
 		persister.save(textField);
-		assertNull(getRequestCookies(cycle));
-		assertEquals(1, getResponseCookies(cycle).size());
-		assertEquals("test", (getResponseCookies(cycle).get(0)).getValue());
-		assertEquals("form.input", (getResponseCookies(cycle).get(0)).getName());
+		assertNull(getRequestCookies());
+		assertEquals(1, getResponseCookies().size());
+		assertEquals("test", (getResponseCookies().get(0)).getValue());
+		assertEquals("form.input", (getResponseCookies().get(0)).getName());
 		assertEquals("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication",
-			(getResponseCookies(cycle).get(0)).getPath());
+			(getResponseCookies().get(0)).getPath());
 
 		// To remove a cookie means to add a cookie with maxAge=0. Provided a cookie with the same
 		// name has been provided in the request. Thus, no changes in our test case
 		persister.remove(textField);
-		assertNull(getRequestCookies(cycle));
-		assertEquals(1, getResponseCookies(cycle).size());
-		assertEquals("test", (getResponseCookies(cycle).get(0)).getValue());
-		assertEquals("form.input", (getResponseCookies(cycle).get(0)).getName());
+		assertNull(getRequestCookies());
+		assertEquals(1, getResponseCookies().size());
+		assertEquals("test", (getResponseCookies().get(0)).getValue());
+		assertEquals("form.input", (getResponseCookies().get(0)).getName());
 		assertEquals("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication",
-			(getResponseCookies(cycle).get(0)).getPath());
+			(getResponseCookies().get(0)).getPath());
 
 		// Try to load it. Because there is no Cookie matching the textfield's name the model's
 		// value remains unchanged
@@ -106,40 +100,38 @@ public class CookieUtilsTest extends WicketTestCase
 		assertEquals("test", textField.getDefaultModelObjectAsString());
 		textField.setDefaultModelObject("new text");
 		assertEquals("new text", textField.getDefaultModelObjectAsString());
-		copyCookieFromResponseToRequest(cycle);
-		assertEquals(1, getRequestCookies(cycle).length);
-		assertEquals(1, getResponseCookies(cycle).size());
+		copyCookieFromResponseToRequest();
+		assertEquals(1, getRequestCookies().size());
+		assertEquals(1, getResponseCookies().size());
 
 		persister.load(textField);
 		assertEquals("test", textField.getDefaultModelObjectAsString());
-		assertEquals(1, getRequestCookies(cycle).length);
-		assertEquals(1, getResponseCookies(cycle).size());
+		assertEquals(1, getRequestCookies().size());
+		assertEquals(1, getResponseCookies().size());
 
 		// remove all cookies from mock response. Because I'll find the cookie to be removed in the
 		// request, the persister will create a "delete" cookie to remove the cookie on the client
 		// and add it to the response. The already existing Cookie from the previous test gets
 		// removed from response since it is the same.
 		persister.remove(textField);
-		assertEquals(1, getRequestCookies(cycle).length);
-		assertEquals(1, getResponseCookies(cycle).size());
-		assertEquals("form.input", (getResponseCookies(cycle).get(0)).getName());
-		assertEquals(0, (getResponseCookies(cycle).get(0)).getMaxAge());
+		assertEquals(1, getRequestCookies().size());
+		assertEquals(1, getResponseCookies().size());
+		assertEquals("form.input", (getResponseCookies().get(0)).getName());
+		assertEquals(0, (getResponseCookies().get(0)).getMaxAge());
 	}
 
-	private void copyCookieFromResponseToRequest(final RequestCycle cycle)
+	private void copyCookieFromResponseToRequest()
 	{
-		((MockHttpServletRequest)((WebRequest)cycle.getRequest()).getHttpServletRequest()).addCookie(getResponseCookies(
-			cycle).get(0));
+		tester.getRequest().addCookie(getResponseCookies().iterator().next());
 	}
 
-	private Cookie[] getRequestCookies(final RequestCycle cycle)
+	private Collection<Cookie> getRequestCookies()
 	{
-		return ((WebRequest)cycle.getRequest()).getHttpServletRequest().getCookies();
+		return tester.getRequest().getCookies();
 	}
 
-	private List<Cookie> getResponseCookies(final RequestCycle cycle)
+	private List<Cookie> getResponseCookies()
 	{
-		MockHttpServletResponse response = (MockHttpServletResponse)((WebResponse)cycle.getResponse()).getHttpServletResponse();
-		return (List<Cookie>)response.getCookies();
+		return tester.getLastResponse().getCookies();
 	}
 }

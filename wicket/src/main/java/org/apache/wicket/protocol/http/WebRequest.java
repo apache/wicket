@@ -37,7 +37,7 @@ public abstract class WebRequest extends Request
 	/**
 	 * @return request cookies
 	 */
-	public abstract Cookie[] getCookies();
+	public abstract List<Cookie> getCookies();
 
 	/**
 	 * @param cookieName
@@ -45,15 +45,11 @@ public abstract class WebRequest extends Request
 	 */
 	public Cookie getCookie(String cookieName)
 	{
-		Cookie[] cookies = getCookies();
-		if (cookies != null && cookies.length > 0)
+		for (Cookie cookie : getCookies())
 		{
-			for (int i = 0; i < cookies.length; i++)
+			if (cookie.getName().equals(cookieName))
 			{
-				if (cookies[i].getName().equals(cookieName))
-				{
-					return cookies[i];
-				}
+				return cookie;
 			}
 		}
 		return null;
@@ -146,7 +142,7 @@ public abstract class WebRequest extends Request
 			}
 
 			@Override
-			public Cookie[] getCookies()
+			public List<Cookie> getCookies()
 			{
 				return WebRequest.this.getCookies();
 			}

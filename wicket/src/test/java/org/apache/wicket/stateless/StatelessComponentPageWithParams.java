@@ -43,7 +43,7 @@ public class StatelessComponentPageWithParams extends WebPage
 			@Override
 			public void onClick()
 			{
-				if (getPageParameters().size() == 2)
+				if (getPageParameters().getNamedParameterKeys().size() == 2)
 				{
 					throw new WicketRuntimeException("wanted exception");
 				}

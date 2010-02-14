@@ -16,11 +16,11 @@
  */
 package org.apache.wicket.util.tester.apps_1;
 
-import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.ng.mock.MockApplication;
 
 /**
  * @author Juergen Donnerstag
  */
-public class MyMockApplication extends WicketTester.DummyWebApplication
+public class MyMockApplication extends MockApplication
 {
 }

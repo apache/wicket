@@ -28,6 +28,8 @@ import org.apache.wicket.ng.request.cycle.RequestCycleContext;
  */
 public class MockRequestCycle extends RequestCycle
 {
+	private boolean exposeExceptions = true;
+
 	/**
 	 * Construct.
 	 * 
@@ -62,5 +64,45 @@ public class MockRequestCycle extends RequestCycle
 			return super.resolveRequestHandler();
 		}
 	}
+
+	@Override
+	protected IRequestHandler handleException(Exception e)
+	{
+		if (exposeExceptions)
+		{
+			if (e instanceof RuntimeException)
+			{
+				throw (RuntimeException)e;
+			}
+			throw new RuntimeException("Exception during mock request processing", e);
+		}
+		return super.handleException(e);
+	}
+
+	/**
+	 * Checks how the exceptions are handled during request processing, see
+	 * {@link #setExposeExceptions(boolean)}
+	 * 
+	 * @return {@code true} if exceptions will bubble up, {@code false} if exceptions will be
+	 *         handled in the normal way
+	 */
+	public boolean isExposeExceptions()
+	{
+		return exposeExceptions;
+	}
+
+	/**
+	 * Sets whether or not the mock request cycle will expose exceptions (let them bubble out of
+	 * request processing) or handle them in the usual way of redirecting to an error page
+	 * 
+	 * @param exposeExceptions
+	 *            {@code true} to let the exceptions bubble up, {@code false} to handle them in the
+	 *            normal way
+	 */
+	public void setExposeExceptions(boolean exposeExceptions)
+	{
+		this.exposeExceptions = exposeExceptions;
+	}
+
 
 }

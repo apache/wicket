@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.http;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.TimeZone;
 
 import javax.servlet.http.Cookie;
@@ -423,8 +424,8 @@ public class ClientProperties implements IClusterable
 	{
 		if (!cookiesEnabled && RequestCycle.get() != null)
 		{
-			Cookie[] cookies = ((WebRequest)RequestCycle.get().getRequest()).getCookies();
-			cookiesEnabled = cookies != null ? cookies.length > 0 : false;
+			Collection<Cookie> cookies = ((WebRequest)RequestCycle.get().getRequest()).getCookies();
+			cookiesEnabled = cookies != null ? cookies.size() > 0 : false;
 		}
 		return cookiesEnabled;
 	}

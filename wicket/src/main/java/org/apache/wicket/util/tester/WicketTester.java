@@ -453,4 +453,6 @@ public class WicketTester extends BaseWicketTester
 			throw new AssertionFailedError(result.getMessage());
 		}
 	}
+
+
 }

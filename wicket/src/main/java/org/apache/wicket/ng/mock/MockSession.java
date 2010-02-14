@@ -14,21 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.resolver;
+package org.apache.wicket.ng.mock;
 
-import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.Request;
+import org.apache.wicket.protocol.http.WebSession;
 
-/**
- * 
- */
-public class WicketContainerResolverTest extends WicketTestCase
+public class MockSession extends WebSession
 {
+	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @throws Exception
-	 */
-	public void test_1() throws Exception
+	public MockSession(Request request)
 	{
-		executeTest(SimpleContainerPage_1.class, "SimpleContainerPageExpectedResult_1.html");
+		super(request);
+	}
+
+	@Override
+	public void cleanupFeedbackMessages()
+	{
+		// do not cleanup
+	}
+
+	public void reset()
+	{
+		getFeedbackMessages().clear();
 	}
 }

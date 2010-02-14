@@ -19,6 +19,7 @@ package org.apache.wicket.protocol.http.servlet;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -132,9 +133,12 @@ public class ServletWebRequest extends WebRequest
 	}
 
 	@Override
-	public Cookie[] getCookies()
+	public List<Cookie> getCookies()
 	{
-		return httpServletRequest.getCookies();
+		Cookie[] cookies = httpServletRequest.getCookies();
+		List<Cookie> result = (cookies == null) ? Collections.<Cookie> emptyList()
+			: Arrays.asList(cookies);
+		return Collections.unmodifiableList(result);
 	}
 
 

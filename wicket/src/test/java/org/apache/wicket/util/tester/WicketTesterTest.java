@@ -451,8 +451,6 @@ public class WicketTesterTest extends TestCase
 			}
 		});
 
-		tester.setupRequestAndResponse();
-
 		// Execute the event
 		tester.executeAjaxEvent(label, "ondblclick");
 
@@ -472,14 +470,6 @@ public class WicketTesterTest extends TestCase
 
 	public void testTesterCanBeOverridenToNotReuseExistingRequestCycleInExecuteAjaxEvent()
 	{
-		tester = new WicketTester(new MyMockApplication())
-		{
-			@Override
-			protected WebRequestCycle resolveRequestCycle()
-			{
-				return setupRequestAndResponse(true);
-			}
-		};
 		tester.startPage(MockPageWithFormAndCheckGroup.class);
 		tester.executeAjaxEvent("submitLink", "onclick");
 		tester.assertComponentOnAjaxResponse("submitLink");
@@ -574,18 +564,19 @@ public class WicketTesterTest extends TestCase
 
 		tester.startPage(MockResourceLinkPage.class);
 		tester.clickLink("link");
-		assertNull(getRequestCodingStrategy());
+		fail("check below...");
+		// assertNull(getRequestCodingStrategy());
 	}
 
-	IRequestTargetUrlCodingStrategy getRequestCodingStrategy()
-	{
-		String relativePath = tester.getApplication().getWicketFilter().getRelativePath(
-			tester.getServletRequest());
-		return tester.getApplication()
-			.getRequestCycleProcessor()
-			.getRequestCodingStrategy()
-			.urlCodingStrategyForPath(relativePath);
-	}
+// IRequestTargetUrlCodingStrategy getRequestCodingStrategy()
+// {
+// String relativePath = tester.getApplication().getWicketFilter().getRelativePath(
+// tester.getServletRequest());
+// return tester.getApplication()
+// .getRequestCycleProcessor()
+// .getRequestCodingStrategy()
+// .urlCodingStrategyForPath(relativePath);
+// }
 
 	/**
 	 * Toggle submit button to disabled state.
@@ -595,7 +586,6 @@ public class WicketTesterTest extends TestCase
 		tester.startPage(MockFormPage.class);
 		Component submit = tester.getComponentFromLastRenderedPage("form:submit");
 		assertTrue(submit.isEnabled());
-		tester.createRequestCycle();
 		submit.setEnabled(false);
 		assertFalse(submit.isEnabled());
 	}
@@ -610,16 +600,13 @@ public class WicketTesterTest extends TestCase
 		assertFalse(submit.isEnabled());
 		FormTester form = tester.newFormTester("form");
 
-		tester.setupRequestAndResponse(true);
 		form.setValue("text", "XX");
 		setTextFieldAndAssertSubmit(false);
 		Session.get().cleanupFeedbackMessages();
 
-		tester.setupRequestAndResponse(true);
 		form.setValue("text", "XXXYYYXXX");
 		setTextFieldAndAssertSubmit(true);
 
-		tester.setupRequestAndResponse(true);
 		form.setValue("text", "");
 		setTextFieldAndAssertSubmit(false);
 	}
