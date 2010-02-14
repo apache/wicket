@@ -479,7 +479,9 @@ public class BaseWicketTester
 	 */
 	public Url urlFor(IRequestHandler handler)
 	{
-		return application.getRootRequestMapper().mapHandler(handler);
+		Url url = application.getRootRequestMapper().mapHandler(handler);
+		transform(url);
+		return url;
 	}
 
 
@@ -579,6 +581,7 @@ public class BaseWicketTester
 	public void executeBehavior(final AbstractAjaxBehavior behavior)
 	{
 		Url url = Url.parse(behavior.getCallbackUrl().toString());
+		transform(url);
 		processRequest(new MockWebRequest(url), null);
 	}
 
@@ -1006,6 +1009,7 @@ public class BaseWicketTester
 						bookmarkablePageLink, (Object[])null);
 
 					startPage(bookmarkablePageLink.getPageClass(), parameters);
+					return;
 				}
 				catch (Exception e)
 				{
@@ -1040,13 +1044,24 @@ public class BaseWicketTester
 		Url url = Url.parse(form.urlFor(IFormSubmitListener.INTERFACE).toString());
 
 		// make url absolute
+		transform(url);
+
+		request.setUrl(url);
+		processRequest();
+	}
+
+	/**
+	 * make url suitable for wicket tester use. usually this involves stripping any leading ..
+	 * segments to make the url absolute
+	 * 
+	 * @param url
+	 */
+	private void transform(Url url)
+	{
 		while (url.getSegments().size() > 0 && url.getSegments().get(0).equals(".."))
 		{
 			url.getSegments().remove(0);
 		}
-
-		request.setUrl(url);
-		processRequest();
 	}
 
 
