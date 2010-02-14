@@ -582,7 +582,9 @@ public class BaseWicketTester
 	{
 		Url url = Url.parse(behavior.getCallbackUrl().toString());
 		transform(url);
-		processRequest(new MockWebRequest(url), null);
+		request.setUrl(url);
+		request.setHeader("Wicket-Ajax-BaseURL", url.toString());
+		processRequest();
 	}
 
 	/**
