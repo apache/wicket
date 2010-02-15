@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.extensions.markup.html.form.palette.Palette;
 import org.apache.wicket.markup.html.form.HiddenField;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
@@ -99,7 +100,14 @@ public class Recorder<T> extends HiddenField<Object>
 		// construct the model string based on selection collection
 		IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
 		StringBuffer modelStringBuffer = new StringBuffer();
-		Iterator<T> selection = getPalette().getModelCollection().iterator();
+		Collection<T> modelCollection = getPalette().getModelCollection();
+		if (modelCollection == null)
+		{
+			throw new WicketRuntimeException(
+				"Expected getPalette().getModelCollection() to return a non-null value."
+					+ " Please make sure you have model object assigned to the palette");
+		}
+		Iterator<T> selection = modelCollection.iterator();
 
 		int i = 0;
 		while (selection.hasNext())
