@@ -197,23 +197,10 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		buff.append("var ").append(IAjaxCallDecorator.WICKET_CALL_RESULT_VAR).append("=");
 		buff.append(partialCall);
 
-		if (success.length() == 0)
-		{
-			buff.append(",null");
-		}
-		else
-		{
-			buff.append(",function(){").append(success).append("}.bind(this)");
-		}
-
-		if (failure.length() == 0)
-		{
-			buff.append(",null");
-		}
-		else
-		{
-			buff.append(",function() { ").append(failure).append("}.bind(this)");
-		}
+		// IE 6 breaks if we pass in null for function reference, so we pass in an empty function
+		// instead
+		buff.append(",function() { ").append(success).append("}.bind(this)");
+		buff.append(",function() { ").append(failure).append("}.bind(this)");
 
 		if (precondition != null)
 		{
