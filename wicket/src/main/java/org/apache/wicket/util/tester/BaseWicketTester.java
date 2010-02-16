@@ -1477,6 +1477,8 @@ public class BaseWicketTester
 		notNull(failMessage, form);
 
 		Url url = Url.parse(behavior.getCallbackUrl().toString());
+		transform(url);
+		request.setHeader("Wicket-Ajax-BaseURL", url.toString());
 		processRequest(request.requestWithUrl(url), null);
 	}
 
