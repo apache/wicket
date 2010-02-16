@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.Cookie;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.MarkupContainer;
@@ -331,6 +333,15 @@ public class BaseWicketTester
 				setRequest(request);
 			}
 
+			if (getLastResponse() != null)
+			{
+				// transfer cookies from previous response to this request, quirky but how old stuff
+				// worked...
+				for (Cookie cookie : getLastResponse().getCookies())
+				{
+					this.request.addCookie(cookie);
+				}
+			}
 
 			if (forcedRequestHandler != null)
 			{
@@ -380,6 +391,14 @@ public class BaseWicketTester
 
 		previousRequests.add(request);
 		previousResponses.add(response);
+
+		// transfer cookies from previous request to previous response, quirky but how old stuff
+		// worked...
+		for (Cookie cookie : lastRequest.getCookies())
+		{
+			lastResponse.addCookie(cookie);
+		}
+
 	}
 
 	/**

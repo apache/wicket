@@ -18,7 +18,7 @@ package org.apache.wicket.util.tester;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.ResourceLink;
-import org.apache.wicket.ng.resource.ResourceReference;
+import org.apache.wicket.ng.resource.PackageResourceReference;
 
 /**
  * Mock page for testing WicketTesters ability to test ResourceLinks
@@ -34,7 +34,7 @@ public class BlockedResourceLinkPage extends WebPage
 	 */
 	public BlockedResourceLinkPage()
 	{
-		add(new ResourceLink<Void>("link", new ResourceReference(BlockedResourceLinkPage.class,
-			"BlockedResourceLinkPage.html")));
+		add(new ResourceLink<Void>("link", new PackageResourceReference(
+			BlockedResourceLinkPage.class, "BlockedResourceLinkPage.html")));
 	}
 }

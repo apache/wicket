@@ -451,6 +451,8 @@ public class WicketTesterTest extends TestCase
 			}
 		});
 
+// tester.setupRequestAndResponse();
+
 		// Execute the event
 		tester.executeAjaxEvent(label, "ondblclick");
 
@@ -468,13 +470,6 @@ public class WicketTesterTest extends TestCase
 		tester.clickLink("submitLink");
 	}
 
-	public void testTesterCanBeOverridenToNotReuseExistingRequestCycleInExecuteAjaxEvent()
-	{
-		tester.startPage(MockPageWithFormAndCheckGroup.class);
-		tester.executeAjaxEvent("submitLink", "onclick");
-		tester.assertComponentOnAjaxResponse("submitLink");
-	}
-
 	/**
 	 * Test that the executeAjaxEvent "submits" the form if the event is a AjaxFormSubmitBehavior.
 	 */
@@ -488,10 +483,13 @@ public class WicketTesterTest extends TestCase
 		Pojo pojo = page.getPojo();
 
 		assertEquals("Mock name", pojo.getName());
-		assertEquals("Mock name", ((TextField<?>)tester.getComponentFromLastRenderedPage("form" +
-			Component.PATH_SEPARATOR + "name")).getValue());
+		TextField<?> name = (TextField<?>)tester.getComponentFromLastRenderedPage("form:name");
+		assertEquals("Mock name", name.getValue());
 
 		assertFalse(page.isExecuted());
+
+		tester.getRequest().getPostRequestParameters().setParameterValue(name.getInputName(),
+			"Mock name");
 
 		// Execute the ajax event
 		tester.executeAjaxEvent(MockPageWithFormAndAjaxFormSubmitBehavior.EVENT_COMPONENT,
@@ -500,8 +498,8 @@ public class WicketTesterTest extends TestCase
 		assertTrue("AjaxFormSubmitBehavior.onSubmit() has not been executed in " +
 			MockPageWithFormAndAjaxFormSubmitBehavior.class, page.isExecuted());
 
-		assertEquals("Mock name", ((TextField<?>)tester.getComponentFromLastRenderedPage("form" +
-			Component.PATH_SEPARATOR + "name")).getValue());
+		assertEquals("Mock name",
+			((TextField<?>)tester.getComponentFromLastRenderedPage("form:name")).getValue());
 
 		// The name of the pojo should still be the same. If the
 		// executeAjaxEvent weren't submitting the form the name would have been
@@ -564,7 +562,6 @@ public class WicketTesterTest extends TestCase
 
 		tester.startPage(MockResourceLinkPage.class);
 		tester.clickLink("link");
-		fail("check below...");
 		// assertNull(getRequestCodingStrategy());
 	}
 
@@ -611,26 +608,29 @@ public class WicketTesterTest extends TestCase
 		setTextFieldAndAssertSubmit(false);
 	}
 
-	public void testCookieIsFoundWhenAddedToServletRequest()
+	public void testCookieIsFoundWhenAddedToRequest()
 	{
-		tester.getServletRequest().addCookie(new Cookie("name", "value"));
-		assertEquals("value", tester.getWicketRequest().getCookie("name").getValue());
+		tester.getRequest().addCookie(new Cookie("name", "value"));
+		assertEquals("value", tester.getRequest().getCookie("name").getValue());
 	}
 
-	public void testCookieIsFoundWhenAddedToServletResponse()
+	public void testCookieIsFoundWhenAddedToResponse()
 	{
-		tester.getServletResponse().addCookie(new Cookie("name", "value"));
-		Collection<Cookie> cookies = tester.getServletResponse().getCookies();
+		tester.startPage(CreateBook.class);
+		tester.getLastResponse().addCookie(new Cookie("name", "value"));
+		Collection<Cookie> cookies = tester.getLastResponse().getCookies();
 		assertEquals(cookies.iterator().next().getValue(), "value");
 	}
 
-	public void testCookieIsFoundOnNextRequestWhenAddedToWicketResponse()
+	public void testCookieIsFoundOnNextRequestWhenAddedToResponse()
 	{
+		tester.startPage(CreateBook.class);
 		Cookie cookie = new Cookie("name", "value");
 		cookie.setMaxAge(60);
-		tester.getWicketResponse().addCookie(cookie);
-		tester.setupRequestAndResponse();
-		assertEquals("value", tester.getWicketRequest().getCookie("name").getValue());
+		tester.getLastResponse().addCookie(cookie);
+		tester.startPage(CreateBook.class);
+		assertEquals("value", tester.getLastResponse().getCookies().iterator().next().getValue(),
+			"value");
 	}
 
 	private void setTextFieldAndAssertSubmit(boolean expected)
