@@ -33,7 +33,7 @@ public class DomReadyOrderTest extends WicketTestCase
 	 */
 	public void testDomReadyOrder() throws Exception
 	{
-		tester.processRequestCycle(DomReadyOrderPage.class);
+		tester.startPage(DomReadyOrderPage.class);
 		tester.assertResultPage(DomReadyOrderPage.class, "DomReadyOrderPage_expected.html");
 
 		tester.clickLink("test", true);
@@ -45,7 +45,7 @@ public class DomReadyOrderTest extends WicketTestCase
 	 */
 	public void testDomReadyOrder2() throws Exception
 	{
-		tester.processRequestCycle(DomReadyOrderPage.class);
+		tester.startPage(DomReadyOrderPage.class);
 		tester.assertResultPage(DomReadyOrderPage.class, "DomReadyOrderPage_expected.html");
 
 		tester.executeAjaxEvent("test", "onclick");
@@ -74,7 +74,7 @@ public class DomReadyOrderTest extends WicketTestCase
 		// assert rendered page class
 		tester.assertRenderedPage(HomePage.class);
 
-		String doc = tester.getServletResponse().getDocument();
+		String doc = tester.getLastResponseAsString();
 		log.error("'" + doc + "'");
 
 		// assert rendered row elements

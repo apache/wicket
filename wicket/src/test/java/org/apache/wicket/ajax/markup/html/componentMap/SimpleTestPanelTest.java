@@ -29,28 +29,17 @@ import org.apache.wicket.util.diff.DiffUtil;
 public class SimpleTestPanelTest extends WicketTestCase
 {
 	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public SimpleTestPanelTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * @throws Exception
 	 */
 	public void testRenderHomePage_2() throws Exception
 	{
-		tester.setupRequestAndResponse(true);
 		executeTest(SimpleTestPage.class, "SimpleTestPageExpectedResult.html");
 
 		Page page = tester.getLastRenderedPage();
 		tester.executeBehavior(((SimpleTestPanel)page.get("testPanel")).getTimeBehavior());
 
 		// Validate the document
-		String document = tester.getServletResponse().getDocument();
+		String document = tester.getLastResponseAsString();
 		DiffUtil.validatePage(document, SimpleTestPage.class,
 			"SimpleTestPageExpectedResult-1.html", true);
 	}

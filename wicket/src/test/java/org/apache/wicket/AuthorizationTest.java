@@ -37,24 +37,6 @@ import org.apache.wicket.model.CompoundPropertyModel;
 public class AuthorizationTest extends WicketTestCase
 {
 	/**
-	 * Construct.
-	 */
-	public AuthorizationTest()
-	{
-		super();
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public AuthorizationTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * Tests that a component can be created when authorization is allowed.
 	 * 
 	 * @throws Exception
@@ -149,7 +131,9 @@ public class AuthorizationTest extends WicketTestCase
 
 		tester.startPage(AuthTestPage1.class);
 		tester.assertRenderedPage(AuthTestPage1.class);
-		tester.setParameterForNextRequest("form:stringInput", "test");
+		tester.getRequest()
+			.getPostRequestParameters()
+			.setParameterValue("form:stringInput", "test");
 		tester.submitForm("form");
 		tester.assertRenderedPage(AuthTestPage1.class);
 		AuthTestPage1 page = (AuthTestPage1)tester.getLastRenderedPage();
@@ -186,7 +170,9 @@ public class AuthorizationTest extends WicketTestCase
 			});
 		tester.startPage(AuthTestPage1.class);
 		tester.assertRenderedPage(AuthTestPage1.class);
-		tester.setParameterForNextRequest("form:stringInput", "test");
+		tester.getRequest()
+			.getPostRequestParameters()
+			.setParameterValue("form:stringInput", "test");
 		try
 		{
 			tester.submitForm("form");

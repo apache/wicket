@@ -26,23 +26,6 @@ public class FormFeedbackTest extends WicketTestCase
 {
 
 	/**
-	 * Construct.
-	 */
-	public FormFeedbackTest()
-	{
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public FormFeedbackTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * @throws Exception
 	 */
 	public void testFormComponentFeedbackBorder() throws Exception

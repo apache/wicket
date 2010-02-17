@@ -31,36 +31,27 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 	 */
 	public void testWICKET_891()
 	{
-		tester.setupRequestAndResponse();
-
-		tester.getWicketSession().setLocale(new Locale("nl"));
+		tester.getSession().setLocale(new Locale("nl"));
 
 		LocalizedMessagePage page = new LocalizedMessagePage();
 		tester.startPage(page);
-		tester.processRequestCycle();
-		tester.setupRequestAndResponse();
 
-		tester.getServletRequest().setRequestToComponent(page.form);
-		tester.getServletRequest().setParameter(page.integerField.getInputName(), "foo");
-
-		page.form.onFormSubmitted();
+		tester.getRequest().getPostRequestParameters().setParameterValue(
+			page.integerField.getInputName(), "foo");
+		tester.submitForm(page.form);
 
 		tester.assertErrorMessages(new String[] { "'foo' in veld 'integer' moet een geheel getal zijn. " });
-		tester.getWicketSession().setLocale(new Locale("us"));
+		tester.getSession().setLocale(new Locale("us"));
 
-		tester.getWicketSession().cleanupFeedbackMessages();
-
-		tester.setupRequestAndResponse();
+		tester.getSession().cleanupFeedbackMessages();
 
 		page = new LocalizedMessagePage();
 		tester.startPage(page);
-		tester.processRequestCycle();
-		tester.setupRequestAndResponse();
 
-		tester.getServletRequest().setRequestToComponent(page.form);
-		tester.getServletRequest().setParameter(page.integerField.getInputName(), "foo");
+		tester.getRequest().getPostRequestParameters().setParameterValue(
+			page.integerField.getInputName(), "foo");
 
-		page.form.onFormSubmitted();
+		tester.submitForm(page.form);
 
 		tester.assertErrorMessages(new String[] { "'foo' is not a valid Integer." });
 	}
@@ -74,37 +65,28 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 	public void testWICKET_1927()
 	{
 		tester.getApplication().getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
-		tester.setupRequestAndResponse();
-
-		tester.getWicketSession().setLocale(new Locale("de"));
+		tester.getSession().setLocale(new Locale("de"));
 
 		LocalizedMessagePage page = new LocalizedMessagePage();
 		tester.startPage(page);
-		tester.processRequestCycle();
-		tester.setupRequestAndResponse();
 
-		tester.getServletRequest().setRequestToComponent(page.form);
-		tester.getServletRequest().setParameter(page.integerField.getInputName(), "foo");
+		tester.getRequest().getPostRequestParameters().setParameterValue(
+			page.integerField.getInputName(), "foo");
 
-		page.form.onFormSubmitted();
+		tester.submitForm(page.form);
 
 		tester.assertErrorMessages(new String[] { "'foo' ist kein g\u00FCltiger Wert f\u00FCr 'Integer'." });
-		tester.getWicketSession().setLocale(new Locale("pl"));
+		tester.getSession().setLocale(new Locale("pl"));
 
-		tester.getWicketSession().cleanupFeedbackMessages();
-
-		tester.setupRequestAndResponse();
+		tester.getSession().cleanupFeedbackMessages();
 
 		page = new LocalizedMessagePage();
 		tester.startPage(page);
-		tester.processRequestCycle();
-		tester.setupRequestAndResponse();
 
-		tester.getServletRequest().setRequestToComponent(page.form);
-		tester.getServletRequest().setParameter(page.integerField.getInputName(), "foo");
+		tester.getRequest().getPostRequestParameters().setParameterValue(
+			page.integerField.getInputName(), "foo");
 
-		page.form.onFormSubmitted();
-
+		tester.submitForm(page.form);
 		tester.assertErrorMessages(new String[] { "'foo' nie jest w\u0142a\u015Bciwym Integer." });
 	}
 }

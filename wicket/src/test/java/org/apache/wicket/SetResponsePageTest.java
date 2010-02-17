@@ -17,7 +17,6 @@
 package org.apache.wicket;
 
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Test for calling {@link Component#setResponsePage(Class)} in constructor.
@@ -27,11 +26,6 @@ public class SetResponsePageTest extends WicketTestCase
 	/** Fixe setting response page in constructor. */
 	public void testSetResponsePage()
 	{
-		WicketTester tester = new WicketTester(Page1.class);
-		tester.setupRequestAndResponse();
-// tester.getServletRequest()
-// .setURL("?wicket:bookmarkablePage=:" + Page1.class.getName() + "");
-// tester.processRequestCycle();
 		tester.startPage(Page1.class);
 		tester.assertRenderedPage(Page3.class);
 		tester.destroy();

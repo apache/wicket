@@ -32,16 +32,6 @@ import org.apache.wicket.settings.IMarkupSettings;
  */
 public class BoxBorderTest extends WicketTestCase
 {
-	/**
-	 * Create the test.
-	 * 
-	 * @param name
-	 *            The test name
-	 */
-	public BoxBorderTest(String name)
-	{
-		super(name);
-	}
 
 	/**
 	 * Test a simply page containing the debug component
@@ -81,7 +71,7 @@ public class BoxBorderTest extends WicketTestCase
 			"border:myForm:border_body:name");
 		assertEquals("", input.getDefaultModelObjectAsString());
 
-		tester.getLastRequest().getPostRequestParameters().setParameterValue(input.getInputName(),
+		tester.getRequest().getPostRequestParameters().setParameterValue(input.getInputName(),
 			"jdo");
 		tester.submitForm(form.getPageRelativePath());
 

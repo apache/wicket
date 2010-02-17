@@ -615,11 +615,12 @@ public class BaseWicketTester
 	 *            a test <code>Page</code> class with default constructor
 	 * @return the rendered <code>Page</code>
 	 */
-	public final <C extends Page> void startPage(Class<C> pageClass)
+	public final <C extends Page> Page startPage(Class<C> pageClass)
 	{
 		request.setUrl(RequestCycle.get().urlFor(
 			new BookmarkablePageRequestHandler(new PageProvider(pageClass))));
 		processRequest();
+		return getLastRenderedPage();
 	}
 
 	/**

@@ -38,7 +38,7 @@ public class ImmutableBehaviorIndexTest extends WicketTestCase
 		page.getContainer().add(new SimpleAttributeModifier("class", "border"));
 		tester.startPage(page);
 
-		assertTrue(tester.getServletResponse().getDocument().contains("class=\"border\""));
+		assertTrue(tester.getLastResponseAsString().contains("class=\"border\""));
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class ImmutableBehaviorIndexTest extends WicketTestCase
 		page.getContainer().add(border, auto, link, border2, link2, auto2);
 		tester.startPage(page);
 
-		String output = tester.getServletResponse().getDocument();
+		String output = tester.getLastResponseAsString();
 		System.out.println(output);
 		assertTrue(output.contains("class=\"border\""));
 		assertTrue(output.contains("autocomplete=\"off\""));
@@ -75,7 +75,7 @@ public class ImmutableBehaviorIndexTest extends WicketTestCase
 		page.getContainer().remove(auto);
 		page.getContainer().remove(auto2);
 		tester.startPage(page);
-		output = tester.getServletResponse().getDocument();
+		output = tester.getLastResponseAsString();
 		assertTrue(output.contains("IBehaviorListener:2"));
 		assertTrue(output.contains("IBehaviorListener:4"));
 	}

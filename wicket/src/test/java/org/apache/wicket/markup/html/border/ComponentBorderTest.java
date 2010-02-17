@@ -81,10 +81,10 @@ public class ComponentBorderTest extends WicketTestCase
 		WebMarkupContainer wrapper = (WebMarkupContainer)border.get("wrapper");
 		assertNotNull(wrapper);
 		tester.clickLink("hideable:hideLink");
-		String ajaxResponse = tester.getServletResponse().getDocument();
+		String ajaxResponse = tester.getLastResponseAsString();
 		tester.assertComponentOnAjaxResponse(wrapper);
 		tester.clickLink("hideable:hideLink");
-		ajaxResponse = tester.getServletResponse().getDocument();
+		ajaxResponse = tester.getLastResponseAsString();
 		tester.assertComponentOnAjaxResponse(wrapper);
 	}
 }

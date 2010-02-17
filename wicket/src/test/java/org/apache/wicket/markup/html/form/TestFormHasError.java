@@ -16,27 +16,10 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import junit.framework.TestCase;
+import org.apache.wicket.WicketTestCase;
 
-import org.apache.wicket.ng.mock.WicketTester;
-
-public class TestFormHasError extends TestCase
+public class TestFormHasError extends WicketTestCase
 {
-	private WicketTester tester;
-
-	@Override
-	protected void setUp() throws Exception
-	{
-		super.setUp();
-		tester = new WicketTester();
-	}
-
-	@Override
-	protected void tearDown() throws Exception
-	{
-		super.tearDown();
-		tester = null;
-	}
 
 	public void testFormHasError()
 	{

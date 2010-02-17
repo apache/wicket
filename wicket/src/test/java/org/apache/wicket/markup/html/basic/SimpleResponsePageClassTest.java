@@ -16,35 +16,28 @@
  */
 package org.apache.wicket.markup.html.basic;
 
-import junit.framework.TestCase;
-
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * @author jcompagner
  * 
  */
-public class SimpleResponsePageClassTest extends TestCase
+public class SimpleResponsePageClassTest extends WicketTestCase
 {
 	/**
 	 * @throws Exception
 	 */
 	public void testResponsePageClass() throws Exception
 	{
-		WicketTester mockWebApp = new WicketTester();
-		mockWebApp.startPage(SimpleResponsePageClass.class);
-		SimpleResponsePageClass manageBook = (SimpleResponsePageClass)mockWebApp.getLastRenderedPage();
+		tester.startPage(SimpleResponsePageClass.class);
+		SimpleResponsePageClass manageBook = (SimpleResponsePageClass)tester.getLastRenderedPage();
 
 		Form form = (Form)manageBook.get("form");
-		mockWebApp.setupRequestAndResponse();
 
-		MockHttpServletRequest mockRequest = mockWebApp.getServletRequest();
-		mockRequest.setRequestToComponent(form);
-		mockWebApp.processRequestCycle();
+		tester.submitForm(form);
 
 		// assertion failed, getLastRenderedPage() return null.
-		assertTrue(mockWebApp.getLastRenderedPage() instanceof SimplePage);
-		mockWebApp.destroy();
+		assertTrue(tester.getLastRenderedPage() instanceof SimplePage);
 	}
 }

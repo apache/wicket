@@ -18,11 +18,10 @@ package org.apache.wicket.protocol.http;
 
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
-
 import junit.framework.TestCase;
 
-import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.ng.mock.MockWebRequest;
+import org.apache.wicket.ng.request.Url;
 
 /**
  * @author Timo Rantalaiho
@@ -32,7 +31,7 @@ public class WebSessionTest extends TestCase
 	public void testReadsLocaleFromRequestOnConstruction()
 	{
 		final Locale locale = Locale.TRADITIONAL_CHINESE;
-		HttpServletRequest request = new MockHttpServletRequest(null, null, null)
+		MockWebRequest request = new MockWebRequest(Url.parse("/"))
 		{
 			@Override
 			public Locale getLocale()
@@ -41,7 +40,7 @@ public class WebSessionTest extends TestCase
 			}
 		};
 
-		WebSession session = new WebSession(new ServletWebRequest(request));
+		WebSession session = new WebSession(request);
 		assertEquals(locale, session.getLocale());
 	}
 }

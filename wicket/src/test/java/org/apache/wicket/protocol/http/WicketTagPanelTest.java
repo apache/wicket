@@ -16,12 +16,10 @@
  */
 package org.apache.wicket.protocol.http;
 
-import junit.framework.TestCase;
-
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import org.apache.wicket.protocol.http.documentvalidation.Tag;
 import org.apache.wicket.protocol.http.documentvalidation.TextContent;
-import org.apache.wicket.util.tester.WicketTester;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,44 +30,18 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Chris Turner
  */
-public class WicketTagPanelTest extends TestCase
+public class WicketTagPanelTest extends WicketTestCase
 {
 	private static final Logger log = LoggerFactory.getLogger(WicketTagPanelTest.class);
-
-	private WicketTester application;
-
-	/**
-	 * Create the test.
-	 * 
-	 * @param name
-	 *            The test name
-	 */
-	public WicketTagPanelTest(String name)
-	{
-		super(name);
-	}
-
-	@Override
-	protected void setUp() throws Exception
-	{
-		super.setUp();
-		application = new WicketTester();
-	}
-
-	@Override
-	protected void tearDown() throws Exception
-	{
-		application.destroy();
-	}
 
 	/**
 	 * @throws Exception
 	 */
 	public void testRenderHomePage() throws Exception
 	{
-		application.startPage(WicketPanelPage.class);
+		tester.startPage(WicketPanelPage.class);
 		// Validate the document
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getLastResponseAsString();
 		log.info(document);
 		assertTrue(validatePage1(document));
 	}
@@ -105,11 +77,11 @@ public class WicketTagPanelTest extends TestCase
 	public void testRenderHomePageWicketTagRemoved() throws Exception
 	{
 		// Remove wicket tags from output
-		application.getApplication().getMarkupSettings().setStripWicketTags(true);
-		application.startPage(WicketPanelPage.class);
+		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
+		tester.startPage(WicketPanelPage.class);
 
 		// Validate the document
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getLastResponseAsString();
 		log.info(document);
 		assertTrue("Document with Wicket tags stripped did not match", validatePage2(document));
 	}

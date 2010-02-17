@@ -19,11 +19,8 @@ package org.apache.wicket.markup.html.form;
 import java.util.Locale;
 import java.util.MissingResourceException;
 
-import junit.framework.TestCase;
-
-import org.apache.wicket.properties.MyTesterApplication;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.properties.TestPage;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * 
@@ -33,29 +30,14 @@ import org.apache.wicket.util.tester.WicketTester;
  * 
  * @author Juergen Donnerstag
  */
-public class ValidatorPropertiesTest extends TestCase
+public class ValidatorPropertiesTest extends WicketTestCase
 {
-	WicketTester tester;
-
-	@Override
-	protected void setUp() throws Exception
-	{
-		tester = new WicketTester(new MyTesterApplication());
-	}
-
-	@Override
-	protected void tearDown() throws Exception
-	{
-		tester.destroy();
-	}
-
 	/**
 	 * 
 	 */
 	public void test1()
 	{
-		WebRequestCycle cycle = tester.setupRequestAndResponse();
-		cycle.getSession().setLocale(Locale.ENGLISH);
+		tester.getSession().setLocale(Locale.ENGLISH);
 
 		// test English/ default
 
@@ -157,7 +139,7 @@ public class ValidatorPropertiesTest extends TestCase
 
 		// now test Dutch
 
-		cycle.getSession().setLocale(new Locale("nl"));
+		tester.getSession().setLocale(new Locale("nl"));
 		page = new TestPage();
 		form = (Form)page.get("form1");
 		assertNotNull(form);
@@ -249,8 +231,6 @@ public class ValidatorPropertiesTest extends TestCase
 	public void test2()
 	{
 		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(false);
-		tester.setupRequestAndResponse();
-		tester.createRequestCycle();
 
 		String str = tester.getApplication().getResourceSettings().getLocalizer().getString("XXX",
 			null);
@@ -263,8 +243,6 @@ public class ValidatorPropertiesTest extends TestCase
 	public void test3()
 	{
 		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(true);
-		tester.setupRequestAndResponse();
-		tester.createRequestCycle();
 
 		boolean hit = false;
 		try

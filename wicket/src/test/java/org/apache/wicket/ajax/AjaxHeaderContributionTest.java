@@ -28,7 +28,7 @@ public class AjaxHeaderContributionTest extends WicketTestCase
 	 */
 	public void testAjaxHeaderContribution() throws Exception
 	{
-		tester.processRequestCycle(AjaxHeaderContributionPage.class);
+		tester.startPage(AjaxHeaderContributionPage.class);
 		tester.assertResultPage(AjaxHeaderContributionPage.class,
 			"AjaxHeaderContributionPage_expected.html");
 
@@ -40,7 +40,7 @@ public class AjaxHeaderContributionTest extends WicketTestCase
 
 	public void testDoubleAjaxHeaderContribution() throws Exception
 	{
-		tester.processRequestCycle(AjaxHeaderContributionPage2.class);
+		tester.startPage(AjaxHeaderContributionPage2.class);
 		tester.assertResultPage(AjaxHeaderContributionPage2.class,
 			"AjaxHeaderContributionPage2_expected.html");
 

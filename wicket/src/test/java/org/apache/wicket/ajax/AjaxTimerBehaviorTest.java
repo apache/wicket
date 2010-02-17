@@ -44,17 +44,6 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	private static final Logger log = LoggerFactory.getLogger(AjaxTimerBehaviorTest.class);
 
 	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public AjaxTimerBehaviorTest(String name)
-	{
-		super(name);
-	}
-
-
-	/**
 	 * Tests timer behavior in a component added to an AjaxRequestTarget
 	 */
 	public void testAddToAjaxUpdate()
@@ -148,7 +137,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	 */
 	private void validate(MyAjaxSelfUpdatingTimerBehavior timer, boolean inBodyOnLoad)
 	{
-		String document = tester.getServletResponse().getDocument();
+		String document = tester.getLastResponseAsString();
 
 		String updateScript = timer.getUpdateScript();
 
@@ -173,7 +162,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		}
 
 		// Validate the document
-		document = tester.getServletResponse().getDocument();
+		document = tester.getLastResponseAsString();
 		validateTimerScript(document, updateScript);
 	}
 

@@ -39,14 +39,6 @@ import org.apache.wicket.util.tester.ITestPageSource;
 public class AjaxRequestTargetTest extends WicketTestCase
 {
 	/**
-	 * Construct.
-	 */
-	public AjaxRequestTargetTest()
-	{
-		super("Test of AjaxRequestTarget");
-	}
-
-	/**
 	 * Test that a normal <style> header contribution is added correctly.
 	 * 
 	 * @throws IOException
@@ -131,7 +123,7 @@ public class AjaxRequestTargetTest extends WicketTestCase
 
 		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
 
-		String document = tester.getServletResponse().getDocument();
+		String document = tester.getLastResponseAsString();
 
 		Pattern pat = Pattern.compile(".*<header-contribution>(.*?)</header-contribution>.*",
 			Pattern.DOTALL);
@@ -193,7 +185,7 @@ public class AjaxRequestTargetTest extends WicketTestCase
 			final String labelMarkupId = "label" + i;
 			final String expectedContent = String.format(VarargsAddComponentPage.INITIAL_CONTENT, i);
 			tester.assertLabel(labelMarkupId, expectedContent);
-}
+		}
 
 		tester.clickLink("link");
 

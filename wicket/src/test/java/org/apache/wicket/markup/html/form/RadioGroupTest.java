@@ -110,8 +110,6 @@ public class RadioGroupTest extends WicketTestCase
 
 		// set up necessary objects to emulate a form submission
 
-		tester.createRequestCycle();
-
 		// this could have been any page it seems. see comment at method
 		MockPage page = new MockPage();
 
@@ -159,8 +157,10 @@ public class RadioGroupTest extends WicketTestCase
 		assertTrue("group2: running with nothing selected - model must be set to null",
 			model.getObject() == null);
 
-		tester.getServletRequest().setParameter(group.getInputName(), choice1.getValue());
-		tester.getServletRequest().setParameter(group2.getInputName(), choice3.getValue());
+		tester.getRequest().getPostRequestParameters().setParameterValue(group.getInputName(),
+			choice1.getValue());
+		tester.getRequest().getPostRequestParameters().setParameterValue(group2.getInputName(),
+			choice3.getValue());
 		form.onFormSubmitted();
 		assertEquals("group: running with choice1 selected - model must be set to value of radio1",
 			modelObject.getProp1(), choice1.getDefaultModelObject());
@@ -168,12 +168,14 @@ public class RadioGroupTest extends WicketTestCase
 			"group2: running with choice3 selected - model must be set to value of radio1",
 			model.getObject(), choice3.getDefaultModelObject());
 
-		tester.getServletRequest().setParameter(group.getInputName(), choice2.getValue());
+		tester.getRequest().getPostRequestParameters().setParameterValue(group.getInputName(),
+			choice2.getValue());
 		form.onFormSubmitted();
 		assertEquals("group: running with choice2 selected - model must be set to value of radio2",
 			modelObject.getProp1(), choice2.getDefaultModelObject());
 
-		tester.getServletRequest().setParameter(group2.getInputName(), choice1.getValue());
+		tester.getRequest().getPostRequestParameters().setParameterValue(group2.getInputName(),
+			choice1.getValue());
 		try
 		{
 			form.onFormSubmitted();

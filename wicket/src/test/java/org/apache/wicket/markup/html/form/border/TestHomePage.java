@@ -16,25 +16,19 @@
  */
 package org.apache.wicket.markup.html.form.border;
 
-import junit.framework.TestCase;
-
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.util.tester.FormTester;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Simple test using the WicketTester
  */
-public class TestHomePage extends TestCase
+public class TestHomePage extends WicketTestCase
 {
-	private WicketTester tester;
-
-	private FormTester formTester;
-
 	@Override
-	public void setUp()
+	public void setUp() throws Exception
 	{
-		tester = new WicketTester();
+		super.setUp();
 
 		// Start and render the test page
 		tester.startPage(HomePage.class);
@@ -46,21 +40,24 @@ public class TestHomePage extends TestCase
 	 */
 	public void testWithBorder2()
 	{
-		formTester = tester.newFormTester("border:form");
+		FormTester formTester = tester.newFormTester("border:form");
 
 		// formTester.setValue("..:textfield1", "testxxx");
 		TextField<String> textfield = (TextField<String>)tester.getLastRenderedPage().get(
 			"border:form:border_body:textfield");
-		tester.getServletRequest().setParameter(textfield.getInputName(), "abcde");
+		tester.getRequest().getPostRequestParameters().setParameterValue(textfield.getInputName(),
+			"abcde");
 
 		MyTextField datefield = (MyTextField)tester.getLastRenderedPage().get(
 			"border:form:border_body:datefield");
-		tester.getServletRequest().setParameter(datefield.getInputName(), "aaabbb");
+		tester.getRequest().getPostRequestParameters().setParameterValue(datefield.getInputName(),
+			"aaabbb");
 
 		MyDateField datefield2 = (MyDateField)tester.getLastRenderedPage().get(
 			"border:form:border_body:datefield2");
 		TextField<String> date = (TextField<String>)datefield2.get("date");
-		tester.getServletRequest().setParameter(date.getInputName(), "abcdef");
+		tester.getRequest().getPostRequestParameters().setParameterValue(date.getInputName(),
+			"abcdef");
 
 		formTester.submit();
 		tester.assertNoErrorMessage();
