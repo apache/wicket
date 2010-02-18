@@ -113,6 +113,10 @@ public class UrlRenderer
 					++common;
 					last = urlSegments.remove(0);
 				}
+				else
+				{
+					break;
+				}
 			}
 
 			// we want the new URL to have at least one segment (other than possible ../)
