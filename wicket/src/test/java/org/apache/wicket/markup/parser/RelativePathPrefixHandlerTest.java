@@ -26,25 +26,6 @@ import org.apache.wicket.WicketTestCase;
 public class RelativePathPrefixHandlerTest extends WicketTestCase
 {
 	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public RelativePathPrefixHandlerTest(String name)
-	{
-		super(name);
-	}
-
-	/**
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	@Override
-	protected void setUp() throws Exception
-	{
-		super.setUp();
-	}
-
-	/**
 	 * 
 	 * @throws Exception
 	 */

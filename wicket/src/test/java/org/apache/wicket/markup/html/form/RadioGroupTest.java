@@ -34,15 +34,6 @@ import org.apache.wicket.protocol.http.MockPage;
  */
 public class RadioGroupTest extends WicketTestCase
 {
-
-	/**
-	 * @param name
-	 */
-	public RadioGroupTest(String name)
-	{
-		super(name);
-	}
-
 	/**
 	 * mock model object with an embedded property used to test compound property model
 	 * 

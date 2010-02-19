@@ -1,18 +1,20 @@
 <html xmlns:wicket>
-<head><script type="text/javascript" src="resources/org.apache.wicket.markup.html.WicketEventReference/wicket-event.js"></script>
-<script type="text/javascript" src="resources/org.apache.wicket.ajax.WicketAjaxReference/wicket-ajax.js"></script>
-<script type="text/javascript" src="resources/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug.js"></script>
+<head><script type="text/javascript" src="../resource/org.apache.wicket.markup.html.WicketEventReference/wicket-event.js"></script>
+<script type="text/javascript" src="../resource/org.apache.wicket.ajax.WicketAjaxReference/wicket-ajax.js"></script>
+<script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug.js"></script>
 <script type="text/javascript" id="wicket-ajax-debug-enable"><!--/*--><![CDATA[/*><!--*/
 wicketAjaxDebugEnable=true;
 /*-->]]>*/</script>
-
+<script type="text/javascript" id="wicket-ajax-base-url"><!--/*--><![CDATA[/*><!--*/
+Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.markup.html.panel.InlinePanelPage_8?0";
+/*-->]]>*/</script>
 </head><body>
 
 <div wicket:id="first">
   <span wicket:id="number">0</span><br/>
   <div id="nextContainer1" style="display:none"></div>
 </div>
-<a href="#" wicket:id="add" onclick="var wcall=wicketAjaxGet('?wicket:interface=:0:add::IBehaviorListener:0:',null,null, function() {return Wicket.$('add2') != null;}.bind(this));return !wcall;" id="add2">Add</a>
+<a wicket:id="add" id="add2" href="#" onclick="var wcall=wicketAjaxGet('../page?0-1.IBehaviorListener.0-add',function() { }.bind(this),function() { }.bind(this), function() {return Wicket.$('add2') != null;}.bind(this));return !wcall;">Add</a>
 
 
 

@@ -18,7 +18,7 @@ package org.apache.wicket.util.tester;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.ResourceLink;
-import org.apache.wicket.ng.resource.ResourceReference;
+import org.apache.wicket.ng.resource.PackageResourceReference;
 
 /**
  * Mock page for testing WicketTesters ability to test ResourceLinks
@@ -34,6 +34,7 @@ public class MockResourceLinkPage extends WebPage
 	 */
 	public MockResourceLinkPage()
 	{
-		add(new ResourceLink("link", new ResourceReference(MockResourceLinkPage.class, "test.html")));
+		add(new ResourceLink("link", new PackageResourceReference(MockResourceLinkPage.class,
+			"test.html")));
 	}
 }
