@@ -25,11 +25,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.ng.ThreadContext;
-import org.apache.wicket.ng.mock.MockApplication;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.ConverterLocator;
 
@@ -37,13 +34,12 @@ import org.apache.wicket.util.convert.ConverterLocator;
  * @author jcompagner
  * 
  */
-public class PropertyResolverTest extends TestCase
+public class PropertyResolverTest extends WicketTestCase
 {
 	private static final PropertyResolverConverter CONVERTER = new PropertyResolverConverter(
 		new ConverterLocator(), Locale.US);
 
 	private Person person;
-	private MockApplication app;
 
 	/**
 	 * @see junit.framework.TestCase#setUp()
@@ -51,16 +47,15 @@ public class PropertyResolverTest extends TestCase
 	@Override
 	protected void setUp() throws Exception
 	{
+		super.setUp();
 		person = new Person();
-		app = new MockApplication();
-		app.set();
 	}
 
 	@Override
 	protected void tearDown() throws Exception
 	{
-		PropertyResolver.destroy(app);
-		ThreadContext.detach();
+		PropertyResolver.destroy(tester.getApplication());
+		super.tearDown();
 	}
 
 	/**

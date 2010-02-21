@@ -21,7 +21,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
-import org.apache.wicket.resource.DummyApplication;
+import org.apache.wicket.ng.mock.MockApplication;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
@@ -39,7 +39,7 @@ public class InterceptTest extends WicketTestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		tester = new WicketTester(new DummyApplication()
+		tester = new WicketTester(new MockApplication()
 		{
 			@Override
 			protected void init()
@@ -83,10 +83,6 @@ public class InterceptTest extends WicketTestCase
 	 */
 	public void testRestartResponseAtInterceptPageAndContinueTorOriginalDestination()
 	{
-		// TODO WICKET-NG
-		if (true)
-			return;
-
 		tester.startPage(TargetPage.class);
 		tester.assertRenderedPage(InterceptPage.class);
 		tester.clickLink("link");
@@ -99,10 +95,6 @@ public class InterceptTest extends WicketTestCase
 	 */
 	public void testRestartResponseAtInterceptPageAndContinueTorOriginalDestination2()
 	{
-		// TODO WICKET-NG
-		if (true)
-			return;
-
 		tester.startPage(HomePage.class);
 		tester.assertRenderedPage(InterceptPage.class);
 		tester.clickLink("link");

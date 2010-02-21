@@ -32,17 +32,6 @@ public class BundleStringResourceLoaderTest extends StringResourceLoaderTestBase
 {
 
 	/**
-	 * Create the test case.
-	 * 
-	 * @param message
-	 *            The test name
-	 */
-	public BundleStringResourceLoaderTest(String message)
-	{
-		super(message);
-	}
-
-	/**
 	 * Create and return the loader instance.
 	 * 
 	 * @return The loader instance to test

@@ -22,6 +22,7 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -30,9 +31,11 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.resource.DummyApplication;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.value.ValueMap;
 
 /**
@@ -40,7 +43,7 @@ import org.apache.wicket.util.value.ValueMap;
  * 
  * @author Chris Turner
  */
-public class LocalizerTest extends WicketTestCase
+public class LocalizerTest extends TestCase
 {
 
 	private static class MyMockPage extends WebPage
@@ -67,20 +70,10 @@ public class LocalizerTest extends WicketTestCase
 		}
 	}
 
+	private WicketTester tester;
 	private IResourceSettings settings;
 
 	protected Localizer localizer;
-
-	/**
-	 * Create the test case.
-	 * 
-	 * @param message
-	 *            The test name
-	 */
-	public LocalizerTest(String message)
-	{
-		super(message);
-	}
 
 	/**
 	 * 
@@ -89,9 +82,16 @@ public class LocalizerTest extends WicketTestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		super.setUp();
+		tester = new WicketTester(new DummyApplication());
 		settings = tester.getApplication().getResourceSettings();
 		localizer = tester.getApplication().getResourceSettings().getLocalizer();
+	}
+
+	@Override
+	protected void tearDown() throws Exception
+	{
+		super.tearDown();
+		tester.destroy();
 	}
 
 	/**

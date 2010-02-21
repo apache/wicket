@@ -33,16 +33,6 @@ import org.apache.wicket.resource.loader.IStringResourceLoader;
  */
 public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestBase
 {
-	/**
-	 * Create the test case.
-	 * 
-	 * @param message
-	 *            The test name
-	 */
-	public ComponentStringResourceLoaderTest(String message)
-	{
-		super(message);
-	}
 
 	/**
 	 * Create and return the loader instance
@@ -61,7 +51,7 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	@Override
 	public void testLoaderUnknownResources()
 	{
-		Component c = new DummyComponent("hello", application)
+		Component c = new DummyComponent("hello", tester.getApplication())
 		{
 			private static final long serialVersionUID = 1L;
 		};
@@ -89,7 +79,7 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 		DummyPage p = new DummyPage();
 		Panel panel = new EmptyPanel("panel");
 		p.add(panel);
-		DummyComponent c = new DummyComponent("hello", application);
+		DummyComponent c = new DummyComponent("hello", tester.getApplication());
 		panel.add(c);
 		IStringResourceLoader loader = new ComponentStringResourceLoader();
 		Assert.assertEquals("Valid resourse string should be found", "Component string",

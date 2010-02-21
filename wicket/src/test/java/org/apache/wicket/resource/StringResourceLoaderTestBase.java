@@ -19,10 +19,9 @@ package org.apache.wicket.resource;
 import java.util.Locale;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.util.tester.WicketTester;
 
@@ -32,28 +31,16 @@ import org.apache.wicket.util.tester.WicketTester;
  * 
  * @author Chris Turner
  */
-public abstract class StringResourceLoaderTestBase extends WicketTestCase
+public abstract class StringResourceLoaderTestBase extends TestCase
 {
-	WicketTester tester;
+	protected WicketTester tester;
+
 	// The loader to test
 	protected IStringResourceLoader loader;
-
-	// The dummy application
-	protected WebApplication application;
 
 	// The dummy component
 	protected Component component;
 
-	/**
-	 * Create the test case.
-	 * 
-	 * @param message
-	 *            The name of the test
-	 */
-	protected StringResourceLoaderTestBase(String message)
-	{
-		super(message);
-	}
 
 	/**
 	 * Abstract method to create the loader instance to be tested.
@@ -65,8 +52,8 @@ public abstract class StringResourceLoaderTestBase extends WicketTestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		super.setUp();
-		component = new DummyComponent("test", application);
+		tester = new WicketTester(new DummyApplication());
+		component = new DummyComponent("test", tester.getApplication());
 		DummyPage page = new DummyPage();
 		page.add(component);
 		loader = createLoader();
@@ -75,7 +62,7 @@ public abstract class StringResourceLoaderTestBase extends WicketTestCase
 	@Override
 	protected void tearDown() throws Exception
 	{
-		super.tearDown();
+		tester.destroy();
 	}
 
 	/**

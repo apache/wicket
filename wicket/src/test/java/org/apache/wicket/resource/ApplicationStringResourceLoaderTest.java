@@ -20,10 +20,8 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Tests for the <code>ApplicationStringResourceLoader</code> class.
@@ -32,18 +30,6 @@ import org.apache.wicket.util.tester.WicketTester;
  */
 public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTestBase
 {
-
-	/**
-	 * Create the test case.
-	 * 
-	 * @param message
-	 *            The test name
-	 */
-	public ApplicationStringResourceLoaderTest(String message)
-	{
-		super(message);
-	}
-
 	/**
 	 * Return the loader instance
 	 * 
@@ -52,7 +38,7 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 	@Override
 	protected IStringResourceLoader createLoader()
 	{
-		return new ClassStringResourceLoader(application.getClass());
+		return new ClassStringResourceLoader(tester.getApplication().getClass());
 	}
 
 	/**
@@ -61,11 +47,8 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 	@Override
 	public void testLoaderUnknownResources()
 	{
-		WicketTester tester = new WicketTester();
-		WebApplication app = tester.getApplication();
-		IStringResourceLoader loader = new ClassStringResourceLoader(app.getClass());
-		Assert.assertNull("Unknown resource should return null", loader.loadStringResource(
-			component.getClass(), "test.string", Locale.getDefault(), null, null));
-		tester.destroy();
+		Assert.assertNull("Unknown resource should return null", createLoader().loadStringResource(
+			component.getClass(), "test.string.that.does.not.exist", Locale.getDefault(), null,
+			null));
 	}
 }

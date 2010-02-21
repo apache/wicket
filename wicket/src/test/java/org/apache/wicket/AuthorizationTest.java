@@ -131,9 +131,7 @@ public class AuthorizationTest extends WicketTestCase
 
 		tester.startPage(AuthTestPage1.class);
 		tester.assertRenderedPage(AuthTestPage1.class);
-		tester.getRequest()
-			.getPostRequestParameters()
-			.setParameterValue("form:stringInput", "test");
+		tester.getRequest().getPostRequestParameters().setParameterValue("stringInput", "test");
 		tester.submitForm("form");
 		tester.assertRenderedPage(AuthTestPage1.class);
 		AuthTestPage1 page = (AuthTestPage1)tester.getLastRenderedPage();
