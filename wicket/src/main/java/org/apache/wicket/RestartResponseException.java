@@ -16,6 +16,10 @@
  */
 package org.apache.wicket;
 
+import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.handler.PageProvider;
+import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
+
 /**
  * Causes wicket to interrupt current request processing and immediately respond with the specified
  * page.
@@ -37,7 +41,7 @@ public class RestartResponseException extends AbstractRestartResponseException
 	 */
 	public <C extends Page> RestartResponseException(Class<C> pageClass)
 	{
-		RequestCycle.get().setResponsePage(pageClass);
+		this(pageClass, null);
 	}
 
 	/**
@@ -53,7 +57,7 @@ public class RestartResponseException extends AbstractRestartResponseException
 	 */
 	public <C extends Page> RestartResponseException(Class<C> pageClass, PageParameters params)
 	{
-		RequestCycle.get().setResponsePage(pageClass, params);
+		super(new RenderPageRequestHandler(new PageProvider(pageClass, params)));
 	}
 
 	/**
@@ -64,6 +68,6 @@ public class RestartResponseException extends AbstractRestartResponseException
 	 */
 	public RestartResponseException(Page page)
 	{
-		RequestCycle.get().setResponsePage(page);
+		super(new RenderPageRequestHandler(new PageProvider(page)));
 	}
 }

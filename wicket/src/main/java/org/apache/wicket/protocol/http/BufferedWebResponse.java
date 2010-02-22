@@ -272,6 +272,15 @@ public abstract class BufferedWebResponse extends WebResponse
 	private WriteDataAction dataAction;
 
 	@Override
+	public void reset()
+	{
+		super.reset();
+		actions.clear();
+		charSequenceAction = null;
+		dataAction = null;
+	}
+
+	@Override
 	public void addCookie(Cookie cookie)
 	{
 		actions.add(new AddCookieAction(cookie));

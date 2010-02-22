@@ -289,4 +289,32 @@ public class MockWebResponse extends WebResponse
 	public void flush()
 	{
 	}
+
+	@Override
+	public void reset()
+	{
+		super.reset();
+		if (binaryResponse != null)
+		{
+			binaryResponse = new ByteArrayOutputStream();
+		}
+		contentLength = null;
+		contentType = null;
+		if (cookies != null)
+		{
+			cookies.clear();
+		}
+		errorMessage = null;
+		if (headers != null)
+		{
+			headers.clear();
+		}
+		redirectUrl = null;
+		status = null;
+		if (textResponse != null)
+		{
+			textResponse.setLength(0);
+		}
+
+	}
 }

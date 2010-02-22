@@ -53,6 +53,7 @@ public class StringResponse extends Response
 	/**
 	 * @see org.apache.wicket.Response#reset()
 	 */
+	@Override
 	public void reset()
 	{
 		out.clear();

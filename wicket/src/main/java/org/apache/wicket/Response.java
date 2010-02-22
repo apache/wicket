@@ -23,6 +23,7 @@ package org.apache.wicket;
  * {@link #write(CharSequence)} on the same {@link Response} instance.
  * 
  * @author Matej Knopp
+ * @author igor.vaynberg
  */
 public abstract class Response
 {
@@ -60,4 +61,12 @@ public abstract class Response
 	 * @return encoded URL
 	 */
 	public abstract String encodeURL(CharSequence url);
+
+	/**
+	 * Called when the Response needs to reset itself. Subclasses can empty there buffer or build up
+	 * state.
+	 */
+	public void reset()
+	{
+	}
 }

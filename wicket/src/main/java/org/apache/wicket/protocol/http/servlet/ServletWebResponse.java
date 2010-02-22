@@ -212,4 +212,12 @@ public class ServletWebResponse extends WebResponse
 			throw new WicketRuntimeException(e);
 		}
 	}
+
+	@Override
+	public void reset()
+	{
+		super.reset();
+		httpServletResponse.reset();
+		redirect = false;
+	}
 }

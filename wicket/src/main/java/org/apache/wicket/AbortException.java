@@ -16,15 +16,32 @@
  */
 package org.apache.wicket;
 
+import org.apache.wicket.ng.request.cycle.RequestHandlerStack.ReplaceHandlerException;
+import org.apache.wicket.request.target.basic.EmptyRequestHandler;
+
 
 /**
  * Immediately aborts any further processing.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class AbortException extends RuntimeException
+public class AbortException extends ReplaceHandlerException
 {
 	private static final long serialVersionUID = 1L;
+
+
+	protected AbortException(IRequestHandler replacementRequestHandler)
+	{
+		super(replacementRequestHandler, true);
+	}
+
+	/**
+	 * Constructor
+	 */
+	public AbortException()
+	{
+		super(EmptyRequestHandler.getInstance(), true);
+	}
 
 	/**
 	 * @see java.lang.Throwable#fillInStackTrace()

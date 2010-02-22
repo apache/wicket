@@ -16,6 +16,8 @@
  */
 package org.apache.wicket;
 
+import org.apache.wicket.ng.request.cycle.RequestCycle;
+
 /**
  * An exception that causes the request cycle to immediately switch to respond stage.
  * 
@@ -32,12 +34,30 @@ public abstract class AbstractRestartResponseException extends AbortException
 	/**
 	 * Construct.
 	 */
-	public AbstractRestartResponseException()
+	protected AbstractRestartResponseException(IRequestHandler handler)
 	{
-		RequestCycle rc = RequestCycle.get();
-		if (rc != null)
+		super(new ResponseResettingDecorator(handler));
+	}
+
+	private static class ResponseResettingDecorator implements IRequestHandler
+	{
+		private final IRequestHandler delegate;
+
+		public ResponseResettingDecorator(IRequestHandler delegate)
 		{
-			rc.getResponse().reset();
+			this.delegate = delegate;
 		}
+
+		public void detach(RequestCycle requestCycle)
+		{
+			delegate.detach(requestCycle);
+		}
+
+		public void respond(RequestCycle requestCycle)
+		{
+			requestCycle.getResponse().reset();
+			delegate.respond(requestCycle);
+		}
+
 	}
 }
