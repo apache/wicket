@@ -61,11 +61,10 @@ public class PagedTableTest extends WicketTestCase
 		String document = tester.getLastResponseAsString();
 		assertTrue(validatePage1(document));
 
-		Link link = (Link)page.get("navigation:1:pageLink");
+		Link<?> link = (Link<?>)page.get("navigation:1:pageLink");
 		tester.clickLink(link.getPageRelativePath());
 		document = tester.getLastResponseAsString();
 		DiffUtil.validatePage(document, this.getClass(), "PagedTablePageExpectedResult.html", true);
-		tester.destroy();
 	}
 
 	/**

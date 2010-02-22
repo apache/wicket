@@ -18,8 +18,6 @@ package org.apache.wicket.markup.parser.filter;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.ng.resource.PackageResource;
-import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -139,21 +137,6 @@ public class HeaderSectionTest extends WicketTestCase
 	public void testRenderHomePage_11() throws Exception
 	{
 		executeTest(HeaderSectionPage_11.class, "HeaderSectionPageExpectedResult_11.html");
-	}
-
-	/**
-	 * @throws Exception
-	 */
-	public void testRenderHomePage_12() throws Exception
-	{
-		executeTest(HeaderSectionPage_12.class, "HeaderSectionPageExpectedResult_12.html");
-		PackageResource res = (PackageResource)tester.getApplication().getSharedResources().get(
-			"org.apache.wicket.markup.parser.filter.sub.HeaderSectionBorder/cborder.css");
-		assertNotNull(res);
-		String absPath = res.getAbsolutePath();
-		assertNotNull(absPath);
-		IResourceStream stream = res.getResourceStream();
-		assertNotNull(stream);
 	}
 
 	/**

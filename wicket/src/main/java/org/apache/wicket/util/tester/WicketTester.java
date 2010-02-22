@@ -454,5 +454,10 @@ public class WicketTester extends BaseWicketTester
 		}
 	}
 
+	public void clickLink(Component link)
+	{
+		clickLink(link.getPageRelativePath());
+	}
+
 
 }

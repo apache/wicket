@@ -76,7 +76,6 @@ class TestForm extends Form<Void>
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
-				System.out.println("Ajax ok");
 			}
 
 			@Override

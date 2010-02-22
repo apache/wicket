@@ -65,6 +65,6 @@ public class ChildFirstHeaderRenderStrategyTest extends WicketTestCase
 		tester.startPage(pageClass);
 		tester.assertRenderedPage(pageClass);
 		tester.assertResultPage(getClass(), filename + "_2");
-		System.setProperty("Wicket_HeaderRenderStrategy", null);
+		System.setProperty("Wicket_HeaderRenderStrategy", "");
 	}
 }
