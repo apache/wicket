@@ -32,6 +32,8 @@ import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.handler.IPageProvider;
 import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
+import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.util.lang.Checks;
@@ -53,6 +55,7 @@ import org.slf4j.LoggerFactory;
  * @see #replaceAllRequestHandlers(IRequestHandler)
  * 
  * @author Matej Knopp
+ * @author igor.vaynberg
  */
 public class RequestCycle extends RequestHandlerStack
 {
@@ -360,6 +363,32 @@ public class RequestCycle extends RequestHandlerStack
 	public Url urlFor(IRequestHandler handler)
 	{
 		return requestMapper.mapHandler(handler);
+	}
+
+	/**
+	 * Returns a {@link Url} for the resource reference
+	 * 
+	 * @param reference
+	 *            resource reference
+	 * @param params
+	 *            parameters for the resource or {@code null} if none
+	 * @return {@link Url} for the reference
+	 */
+	public Url urlFor(ResourceReference reference, PageParameters params)
+	{
+		return urlFor(new ResourceReferenceRequestHandler(reference, params));
+	}
+
+	/**
+	 * Returns a {@link Url} for the resource reference
+	 * 
+	 * @param reference
+	 *            reference
+	 * @return {@link Url} for the reference
+	 */
+	public Url urlFor(ResourceReference reference)
+	{
+		return urlFor(reference, null);
 	}
 
 	/**

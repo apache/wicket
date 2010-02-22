@@ -16,40 +16,27 @@
  */
 package org.apache.wicket;
 
+import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.resource.PackageResourceReference;
 import org.apache.wicket.ng.resource.ResourceReference;
-import org.apache.wicket.util.value.ValueMap;
 
 /**
  * @author jcompagner
  */
 public class SharedResourceUrlTest extends WicketTestCase
 {
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public SharedResourceUrlTest(String name)
-	{
-		super(name);
-	}
-
 	/**
 	 * @throws Exception
 	 */
 	public void testResourceReferenceUrl() throws Exception
 	{
-		tester.setupRequestAndResponse();
-		WebRequestCycle cycle = tester.createRequestCycle();
+		ResourceReference rr = new PackageResourceReference("test");
+		CharSequence url = tester.getRequestCycle().urlFor(rr).toString();
+		assertEquals("wicket/resource/org.apache.wicket.Application/test", url);
 
-		ResourceReference rr = new ResourceReference("test");
-		CharSequence url = cycle.urlFor(rr);
-		assertEquals("resources/org.apache.wicket.Application/test", url);
-
-		rr = new ResourceReference(SharedResourceUrlTest.class, "test");
-		url = cycle.urlFor(rr);
-		assertEquals("resources/org.apache.wicket.SharedResourceUrlTest/test", url);
+		rr = new PackageResourceReference(SharedResourceUrlTest.class, "test");
+		url = tester.getRequestCycle().urlFor(rr).toString();
+		assertEquals("wicket/resource/org.apache.wicket.SharedResourceUrlTest/test", url);
 	}
 
 	/**
@@ -57,16 +44,14 @@ public class SharedResourceUrlTest extends WicketTestCase
 	 */
 	public void testResourceReferenceWithParamsUrl() throws Exception
 	{
-		tester.setupRequestAndResponse();
-		WebRequestCycle cycle = tester.createRequestCycle();
+		ResourceReference rr = new PackageResourceReference("test");
+		CharSequence url = tester.getRequestCycle().urlFor(rr,
+			new PageParameters("param=value", "")).toString();
+		assertEquals("wicket/resource/org.apache.wicket.Application/test?param=value", url);
 
-		ResourceReference rr = new ResourceReference("test");
-		CharSequence url = cycle.urlFor(rr, new ValueMap("param=value", ""));
-		assertEquals("resources/org.apache.wicket.Application/test?param=value", url);
-
-		rr = new ResourceReference(SharedResourceUrlTest.class, "test");
-		url = cycle.urlFor(rr, new ValueMap("param=value", ""));
-		assertEquals("resources/org.apache.wicket.SharedResourceUrlTest/test?param=value", url);
+		rr = new PackageResourceReference(SharedResourceUrlTest.class, "test");
+		url = tester.getRequestCycle().urlFor(rr, new PageParameters("param=value", "")).toString();
+		assertEquals("wicket/resource/org.apache.wicket.SharedResourceUrlTest/test?param=value", url);
 	}
 
 }
