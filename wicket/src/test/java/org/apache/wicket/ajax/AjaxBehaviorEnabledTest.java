@@ -109,10 +109,12 @@ public class AjaxBehaviorEnabledTest extends WicketTestCase
 	{
 		tester.startPage(AjaxBehaviorEnabledPage.class);
 		tester.assertRenderedPage(AjaxBehaviorEnabledPage.class);
+		System.out.println(tester.getLastResponseAsString());
 		tester.assertVisible("enabled");
 		tester.assertVisible("disabled");
 		assertTrue(tester.getTagByWicketId("enabled").hasAttribute("onclick"));
-		assertFalse(tester.getTagByWicketId("disabled").hasAttribute("onclick"));
+		assertFalse("disabled behaviors should not generate onclick", tester.getTagByWicketId(
+			"disabled").hasAttribute("onclick"));
 
 	}
 

@@ -24,15 +24,6 @@ import org.apache.wicket.util.diff.DiffUtil;
  */
 public class HomePageRedirectTest extends WicketTestCase
 {
-
-	/**
-	 * Construct.
-	 */
-	public HomePageRedirectTest()
-	{
-		super();
-	}
-
 	/**
 	 * @throws Exception
 	 */

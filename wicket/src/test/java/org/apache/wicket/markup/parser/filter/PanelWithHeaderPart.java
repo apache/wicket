@@ -16,14 +16,18 @@
  */
 package org.apache.wicket.markup.parser.filter;
 
+import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.ng.resource.JavascriptResourceReference;
+import org.apache.wicket.ng.resource.PackageResourceReference;
 
 /**
  * @author jcompagner
  * 
  */
-public class PanelWithHeaderPart extends Panel
+public class PanelWithHeaderPart extends Panel implements IHeaderContributor
 {
 	private static final long serialVersionUID = 1L;
 
@@ -35,9 +39,14 @@ public class PanelWithHeaderPart extends Panel
 		super(id);
 
 		add(new Label("body"));
-		add(new StyleSheetReference("testlink", PanelWithHeaderPart.class, "test.css"));
-		add(new JavaScriptReference("testscript", PanelWithHeaderPart.class, "test.js"));
+	}
 
+	public void renderHead(IHeaderResponse response)
+	{
+		response.renderCSSReference(new PackageResourceReference(PanelWithHeaderPart.class,
+			"test.css"));
+		response.renderJavascriptReference(new JavascriptResourceReference(
+			PanelWithHeaderPart.class, "test.js"));
 	}
 
 }

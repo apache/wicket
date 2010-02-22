@@ -26,14 +26,6 @@ public class DoubleHeaderPartPageTest extends WicketTestCase
 {
 
 	/**
-	 * @param name
-	 */
-	public DoubleHeaderPartPageTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * @throws Exception
 	 */
 	public void testRenderHeaderPartPage() throws Exception

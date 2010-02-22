@@ -48,6 +48,7 @@ public class AjaxBehaviorEnabledPage extends WebPage
 		});
 		add(enabled);
 		Label disabled = new Label("disabled", "this label is not ajax enabled");
+		disabled.setEnabled(false);
 		disabled.add(new AjaxEventBehavior("onclick")
 		{
 			private static final long serialVersionUID = 1L;
