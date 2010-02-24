@@ -53,7 +53,7 @@ public interface IPageProvider
 
 	/**
 	 * Returns whether calling getPageInstance() will result in creating new page instance or
-	 * whether it will be an existing intance (even though it might be pulled from page store).
+	 * whether it will be an existing instance (even though it might be pulled from page store).
 	 * 
 	 * @return <code>true</code> if calling {@link #getPageInstance()} will create new page
 	 *         instance, <code>false</code> otherwise.
