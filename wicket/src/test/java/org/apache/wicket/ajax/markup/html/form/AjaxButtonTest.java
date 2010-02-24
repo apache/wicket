@@ -50,7 +50,7 @@ public class AjaxButtonTest extends TestCase
 		HomePage homePage = (HomePage)tester.getLastRenderedPage();
 		TestForm testForm = homePage.getForm();
 
-		tester.getRequest().getPostRequestParameters().setParameterValue(
+		tester.getRequest().getPostParameters().setParameterValue(
 			homePage.getForm().getSubmitButton().getInputName(), "x");
 		tester.executeAjaxEvent(testForm.getSubmitButton(), "onclick");
 	}

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
@@ -66,7 +67,7 @@ public class RestartResponseException extends AbstractRestartResponseException
 	 * @param page
 	 *            redirect page
 	 */
-	public RestartResponseException(Page page)
+	public RestartResponseException(IRequestablePage page)
 	{
 		super(new RenderPageRequestHandler(new PageProvider(page)));
 	}

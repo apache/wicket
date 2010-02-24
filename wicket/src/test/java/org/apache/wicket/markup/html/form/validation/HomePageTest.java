@@ -80,7 +80,7 @@ public class HomePageTest extends WicketTestCase
 	{
 		TextField textfield = (TextField)tester.getLastRenderedPage().get(
 			"border:form2:border_body:textfield1");
-		tester.getRequest().getPostRequestParameters().setParameterValue(textfield.getInputName(),
+		tester.getRequest().getPostParameters().setParameterValue(textfield.getInputName(),
 			"abcde");
 		tester.executeAjaxEvent("border:form2:submit", "onclick");
 		tester.assertNoErrorMessage();

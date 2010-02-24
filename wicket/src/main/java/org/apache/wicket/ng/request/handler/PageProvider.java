@@ -36,12 +36,12 @@ import org.apache.wicket.util.lang.Checks;
  * Purpose of this class is to reduce complexity of both {@link IRequestMapper}s and
  * {@link IRequestHandler}s. {@link IRequestMapper} examines the URL, gathers all relevant
  * information about the page in the URL (combination of page id, page class, page parameters and
- * render count), creates {@link PageProvider} object and creates a {@link IRequestHandler}
- * instance that can use the {@link PageProvider} to access the page.
+ * render count), creates {@link PageProvider} object and creates a {@link IRequestHandler} instance
+ * that can use the {@link PageProvider} to access the page.
  * <p>
- * Apart from simplifying {@link IRequestMapper}s and {@link IRequestHandler}s
- * {@link PageProvider} also helps performance because creating or obtaining page from
- * {@link IPageManager} is delayed until the {@link IRequestHandler} actually requires the page.
+ * Apart from simplifying {@link IRequestMapper}s and {@link IRequestHandler}s {@link PageProvider}
+ * also helps performance because creating or obtaining page from {@link IPageManager} is delayed
+ * until the {@link IRequestHandler} actually requires the page.
  * 
  * @author Matej Knopp
  */
@@ -184,6 +184,11 @@ public class PageProvider implements IPageProvider
 		{
 			return getPageInstance().getPageParameters();
 		}
+	}
+
+	public boolean isNewPageInstance()
+	{
+		return pageInstance == null && pageId == null;
 	}
 
 	/**

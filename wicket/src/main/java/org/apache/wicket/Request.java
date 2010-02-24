@@ -39,9 +39,20 @@ public abstract class Request
 	public abstract Url getUrl();
 
 	/**
+	 * In case this request has been created using {@link #requestWithUrl(Url)}, this method should
+	 * return the original URL.
+	 * 
+	 * @return original URL
+	 */
+	public Url getOriginalUrl()
+	{
+		return getUrl();
+	}
+
+	/**
 	 * @return POST request parameters for this request.
 	 */
-	public IRequestParameters getPostRequestParameters()
+	public IRequestParameters getPostParameters()
 	{
 		return EmptyRequestParameters.INSTANCE;
 	}
@@ -49,7 +60,7 @@ public abstract class Request
 	/**
 	 * @return GET request parameters for this request.
 	 */
-	public IRequestParameters getGetRequestParameters()
+	public IRequestParameters getQueryParameters()
 	{
 		return new UrlRequestParametersAdapter(getUrl());
 	}
@@ -59,8 +70,8 @@ public abstract class Request
 	 */
 	public IRequestParameters getRequestParameters()
 	{
-		return new CombinedRequestParametersAdapter(getGetRequestParameters(),
-			getPostRequestParameters());
+		return new CombinedRequestParametersAdapter(getQueryParameters(),
+			getPostParameters());
 	}
 
 	/**
@@ -88,15 +99,21 @@ public abstract class Request
 			}
 
 			@Override
+			public Url getOriginalUrl()
+			{
+				return Request.this.getOriginalUrl();
+			}
+
+			@Override
 			public Locale getLocale()
 			{
 				return Request.this.getLocale();
 			}
 
 			@Override
-			public IRequestParameters getPostRequestParameters()
+			public IRequestParameters getPostParameters()
 			{
-				return Request.this.getPostRequestParameters();
+				return Request.this.getPostParameters();
 			}
 		};
 	}

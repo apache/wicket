@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.wicket.ng.request.IRequestParameters;
+import org.apache.wicket.ng.request.IWritableRequestParameters;
 import org.apache.wicket.util.string.StringValue;
 
 /**
@@ -31,7 +32,7 @@ import org.apache.wicket.util.string.StringValue;
  * 
  * @author Matej Knopp
  */
-public class MockRequestParameters implements IRequestParameters
+public class MockRequestParameters implements IWritableRequestParameters
 {
 	private final Map<String, List<StringValue>> parameters = new HashMap<String, List<StringValue>>();
 
@@ -88,4 +89,10 @@ public class MockRequestParameters implements IRequestParameters
 		}
 		list.add(StringValue.valueOf(value));
 	}
+
+	public void reset()
+	{
+		parameters.clear();
+	}
+
 }

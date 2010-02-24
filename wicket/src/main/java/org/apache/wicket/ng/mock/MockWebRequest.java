@@ -238,7 +238,7 @@ public class MockWebRequest extends WebRequest
 
 
 	@Override
-	public MockRequestParameters getPostRequestParameters()
+	public MockRequestParameters getPostParameters()
 	{
 		return postRequestParameters;
 	}

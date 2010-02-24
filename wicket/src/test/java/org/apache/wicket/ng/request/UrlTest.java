@@ -279,4 +279,46 @@ public class UrlTest extends TestCase
 		url.concatSegments(Arrays.asList("xx", "yy"));
 		assertEquals(Url.parse("abc/efg/xx/yy"), url);
 	}
+
+	/**
+	 * 
+	 */
+	public void testConcat6()
+	{
+		Url url = Url.parse("abc/efg/");
+		url.concatSegments(Arrays.asList(".."));
+		assertEquals(Url.parse("abc/"), url);
+	}
+
+	/**
+	 * 
+	 */
+	public void testConcat7()
+	{
+		Url url = Url.parse("abc/efg/");
+		url.concatSegments(Arrays.asList("..", ".."));
+		assertEquals(Url.parse(""), url);
+	}
+
+
+	/**
+	 * 
+	 */
+	public void testConcat8()
+	{
+		Url url = Url.parse("fff/abc/efg/xxx");
+		url.concatSegments(Arrays.asList(".."));
+		assertEquals(Url.parse("fff/abc/"), url);
+	}
+
+
+	/**
+	 * 
+	 */
+	public void testConcat9()
+	{
+		Url url = Url.parse("fff/abc/efg/xxx");
+		url.concatSegments(Arrays.asList("..", ".."));
+		assertEquals(Url.parse("fff/"), url);
+	}
 }

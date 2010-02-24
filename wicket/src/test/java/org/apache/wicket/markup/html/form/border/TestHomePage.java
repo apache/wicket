@@ -45,18 +45,18 @@ public class TestHomePage extends WicketTestCase
 		// formTester.setValue("..:textfield1", "testxxx");
 		TextField<String> textfield = (TextField<String>)tester.getLastRenderedPage().get(
 			"border:form:border_body:textfield");
-		tester.getRequest().getPostRequestParameters().setParameterValue(textfield.getInputName(),
+		tester.getRequest().getPostParameters().setParameterValue(textfield.getInputName(),
 			"abcde");
 
 		MyTextField datefield = (MyTextField)tester.getLastRenderedPage().get(
 			"border:form:border_body:datefield");
-		tester.getRequest().getPostRequestParameters().setParameterValue(datefield.getInputName(),
+		tester.getRequest().getPostParameters().setParameterValue(datefield.getInputName(),
 			"aaabbb");
 
 		MyDateField datefield2 = (MyDateField)tester.getLastRenderedPage().get(
 			"border:form:border_body:datefield2");
 		TextField<String> date = (TextField<String>)datefield2.get("date");
-		tester.getRequest().getPostRequestParameters().setParameterValue(date.getInputName(),
+		tester.getRequest().getPostParameters().setParameterValue(date.getInputName(),
 			"abcdef");
 
 		formTester.submit();

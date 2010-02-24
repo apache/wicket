@@ -36,7 +36,7 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 		LocalizedMessagePage page = new LocalizedMessagePage();
 		tester.startPage(page);
 
-		tester.getRequest().getPostRequestParameters().setParameterValue(
+		tester.getRequest().getPostParameters().setParameterValue(
 			page.integerField.getInputName(), "foo");
 		tester.submitForm(page.form);
 
@@ -48,7 +48,7 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 		page = new LocalizedMessagePage();
 		tester.startPage(page);
 
-		tester.getRequest().getPostRequestParameters().setParameterValue(
+		tester.getRequest().getPostParameters().setParameterValue(
 			page.integerField.getInputName(), "foo");
 
 		tester.submitForm(page.form);
@@ -70,7 +70,7 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 		LocalizedMessagePage page = new LocalizedMessagePage();
 		tester.startPage(page);
 
-		tester.getRequest().getPostRequestParameters().setParameterValue(
+		tester.getRequest().getPostParameters().setParameterValue(
 			page.integerField.getInputName(), "foo");
 
 		tester.submitForm(page.form);
@@ -83,7 +83,7 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 		page = new LocalizedMessagePage();
 		tester.startPage(page);
 
-		tester.getRequest().getPostRequestParameters().setParameterValue(
+		tester.getRequest().getPostParameters().setParameterValue(
 			page.integerField.getInputName(), "foo");
 
 		tester.submitForm(page.form);

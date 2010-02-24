@@ -19,9 +19,11 @@ package org.apache.wicket.protocol.http.servlet;
 import java.io.IOException;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.util.lang.Checks;
 
@@ -33,17 +35,22 @@ import org.apache.wicket.util.lang.Checks;
 public class ServletWebResponse extends WebResponse
 {
 	private final HttpServletResponse httpServletResponse;
+	private final HttpServletRequest httpServletRequest;
 
 	/**
 	 * Construct.
 	 * 
+	 * @param httpServletRequest
 	 * @param httpServletResponse
 	 */
-	public ServletWebResponse(HttpServletResponse httpServletResponse)
+	public ServletWebResponse(HttpServletRequest httpServletRequest,
+		HttpServletResponse httpServletResponse)
 	{
+		Checks.argumentNotNull(httpServletRequest, "httpServletRequest");
 		Checks.argumentNotNull(httpServletResponse, "httpServletResponse");
 
 		this.httpServletResponse = httpServletResponse;
+		this.httpServletRequest = httpServletRequest;
 	}
 
 	/**
@@ -177,13 +184,46 @@ public class ServletWebResponse extends WebResponse
 		return httpServletResponse.encodeURL(null);
 	}
 
+	private String getAbsolutePrefix()
+	{
+		String port = "";
+		if (("http".equals(httpServletRequest.getScheme()) && httpServletRequest.getServerPort() != 80) ||
+			("https".equals(httpServletRequest.getScheme()) && httpServletRequest.getServerPort() != 443))
+		{
+			port = ":" + httpServletRequest.getServerPort();
+		}
+		return httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName() + port;
+	}
+
+	private String getAbsoluteURL(String url)
+	{
+		if (url.startsWith("http://") || url.startsWith("https://"))
+		{
+			return url;
+		}
+		else if (url.startsWith("/"))
+		{
+			return getAbsolutePrefix() + url;
+		}
+		else
+		{
+			Url current = Url.parse(httpServletRequest.getRequestURI());
+			Url append = Url.parse(url);
+			current.concatSegments(append.getSegments());
+			Url result = new Url(current.getSegments(), append.getQueryParameters());
+			return getAbsolutePrefix() + result.toString();
+		}
+	}
+
 	private boolean redirect = false;
 
 	@Override
 	public void sendRedirect(String url)
 	{
 		redirect = true;
+		url = getAbsoluteURL(url);
 		url = httpServletResponse.encodeRedirectURL(url);
+
 		try
 		{
 			httpServletResponse.sendRedirect(url);

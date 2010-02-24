@@ -50,8 +50,9 @@ import org.apache.wicket.model.IWrapModel;
 import org.apache.wicket.ng.request.component.IRequestableComponent;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
+import org.apache.wicket.ng.request.handler.PageProvider;
+import org.apache.wicket.ng.request.handler.impl.BookmarkableListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.BookmarkablePageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
@@ -1076,9 +1077,7 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	 */
 	public final boolean continueToOriginalDestination()
 	{
-		// TODO WICKET-NG
-		return false;
-		// return getPage().getPageMap().continueToOriginalDestination();
+		return RestartResponseAtInterceptPageException.continueToOriginalDestination();
 	}
 
 	/**
@@ -2217,8 +2216,7 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	 */
 	public final void redirectToInterceptPage(final Page page)
 	{
-		// TODO WICKET-NG
-		// getPage().getPageMap().redirectToInterceptPage(page);
+		throw new RestartResponseAtInterceptPageException(page);
 	}
 
 	/**
@@ -3210,8 +3208,8 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	public final <C extends Page> CharSequence urlFor(final Class<C> pageClass,
 		final PageParameters parameters)
 	{
-		IRequestHandler handler = new BookmarkablePageRequestHandler(new PageProvider(
-			pageClass, parameters));
+		IRequestHandler handler = new BookmarkablePageRequestHandler(new PageProvider(pageClass,
+			parameters));
 		return getRequestCycle().renderUrlFor(handler);
 	}
 
@@ -3230,7 +3228,15 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	{
 		PageAndComponentProvider provider = new PageAndComponentProvider(getPage(), this);
 		int index = getBehaviors().indexOf(behaviour);
-		IRequestHandler handler = new ListenerInterfaceRequestHandler(provider, listener, index);
+		IRequestHandler handler;
+		if (getPage().isPageStateless())
+		{
+			handler = new BookmarkableListenerInterfaceRequestHandler(provider, listener, index);
+		}
+		else
+		{
+			handler = new ListenerInterfaceRequestHandler(provider, listener, index);
+		}
 		return getRequestCycle().renderUrlFor(handler);
 	}
 
@@ -3259,7 +3265,15 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	public final CharSequence urlFor(final RequestListenerInterface listener)
 	{
 		PageAndComponentProvider provider = new PageAndComponentProvider(getPage(), this);
-		IRequestHandler handler = new ListenerInterfaceRequestHandler(provider, listener);
+		IRequestHandler handler;
+		if (getPage().isPageStateless())
+		{
+			handler = new BookmarkableListenerInterfaceRequestHandler(provider, listener);
+		}
+		else
+		{
+			handler = new ListenerInterfaceRequestHandler(provider, listener);
+		}
 		return getRequestCycle().renderUrlFor(handler);
 	}
 

@@ -43,11 +43,11 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
+			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
+			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-util</artifactId>
 		</dependency>
 

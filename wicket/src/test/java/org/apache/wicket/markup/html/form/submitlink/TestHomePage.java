@@ -26,7 +26,7 @@ public class TestHomePage extends WicketTestCase
 		tester.startPage(HomePage.class);
 		tester.assertRenderedPage(HomePage.class);
 		HomePage home = (HomePage)tester.getLastRenderedPage();
-		tester.getRequest().getPostRequestParameters().setParameterValue("form:text", "Hello");
+		tester.getRequest().getPostParameters().setParameterValue("form:text", "Hello");
 		tester.clickLink("form:link");
 		assertEquals("Hello", home.getText());
 		assertTrue("Form.onSubmit() has not been called!", home.isSubmitted());
@@ -38,9 +38,9 @@ public class TestHomePage extends WicketTestCase
 		tester.startPage(HomePage.class);
 		tester.assertRenderedPage(HomePage.class);
 		HomePage home = (HomePage)tester.getLastRenderedPage();
-		tester.getRequest().getPostRequestParameters().setParameterValue("form:text", "Hello");
+		tester.getRequest().getPostParameters().setParameterValue("form:text", "Hello");
 		// Pretend we clicked on "link"
-		tester.getRequest().getPostRequestParameters().setParameterValue("link", "");
+		tester.getRequest().getPostParameters().setParameterValue("link", "");
 		tester.submitForm("form");
 		assertEquals("Hello", home.getText());
 		assertTrue("Form.onSubmit() has not been called!", home.isSubmitted());

@@ -405,7 +405,7 @@ public class RequestCycle extends RequestHandlerStack
 		Url url = urlFor(handler);
 		if (url != null)
 		{
-			return getUrlRenderer().renderUrl(url);
+			return getResponse().encodeURL(getUrlRenderer().renderUrl(url));
 		}
 		else
 		{

@@ -33,6 +33,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.ng.request.IRequestParameters;
+import org.apache.wicket.ng.request.IWritableRequestParameters;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.Url.QueryParameter;
 import org.apache.wicket.protocol.http.WebRequest;
@@ -233,7 +234,7 @@ public class ServletWebRequest extends WebRequest
 		return postParameters;
 	}
 
-	private Map<String, List<StringValue>> getPostParameters()
+	private Map<String, List<StringValue>> getPostRequestParameters()
 	{
 		if (postParameters == null)
 		{
@@ -242,16 +243,26 @@ public class ServletWebRequest extends WebRequest
 		return postParameters;
 	}
 
-	private final IRequestParameters postRequestParameters = new IRequestParameters()
+	private final IRequestParameters postRequestParameters = new IWritableRequestParameters()
 	{
+		public void reset()
+		{
+			getPostRequestParameters().clear();
+		}
+
+		public void setParameterValues(String key, List<StringValue> values)
+		{
+			getPostRequestParameters().put(key, values);
+		}
+
 		public Set<String> getParameterNames()
 		{
-			return Collections.unmodifiableSet(getPostParameters().keySet());
+			return Collections.unmodifiableSet(getPostRequestParameters().keySet());
 		}
 
 		public StringValue getParameterValue(String name)
 		{
-			List<StringValue> values = getPostParameters().get(name);
+			List<StringValue> values = getPostRequestParameters().get(name);
 			if (values == null || values.isEmpty())
 			{
 				return StringValue.valueOf((String)null);
@@ -264,7 +275,7 @@ public class ServletWebRequest extends WebRequest
 
 		public List<StringValue> getParameterValues(String name)
 		{
-			List<StringValue> values = getPostParameters().get(name);
+			List<StringValue> values = getPostRequestParameters().get(name);
 			if (values != null)
 			{
 				values = Collections.unmodifiableList(values);
@@ -274,7 +285,7 @@ public class ServletWebRequest extends WebRequest
 	};
 
 	@Override
-	public IRequestParameters getPostRequestParameters()
+	public IRequestParameters getPostParameters()
 	{
 		return postRequestParameters;
 	}
@@ -291,10 +302,10 @@ public class ServletWebRequest extends WebRequest
 		return new ServletWebRequest(httpServletRequest, filterPrefix, url)
 		{
 			@Override
-			public IRequestParameters getPostRequestParameters()
+			public IRequestParameters getPostParameters()
 			{
 				// don't parse post parameters again
-				return ServletWebRequest.this.getPostRequestParameters();
+				return ServletWebRequest.this.getPostParameters();
 			}
 		};
 	}

@@ -14,26 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.authentication2;
+package org.apache.wicket.ng.request;
 
-import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.ng.request.component.PageParameters;
+import java.util.List;
+
+import org.apache.wicket.util.string.StringValue;
 
 /**
- * Simple logout page.
+ * Request parameters that can be modified.
  * 
- * @author Jonathan Locke
+ * @author Matej Knopp
  */
-public class SignOut extends WicketExamplePage
+public interface IWritableRequestParameters extends IRequestParameters
 {
 	/**
-	 * Constructor
-	 * 
-	 * @param parameters
-	 *            Page parameters (ignored since this is the home page)
+	 * Clears all parameters.
 	 */
-	public SignOut(final PageParameters parameters)
-	{
-		getSession().invalidate();
-	}
+	public void reset();
+
+	/**
+	 * Sets the values for given parameter.
+	 * 
+	 * @param key
+	 * @param values
+	 */
+	public void setParameterValues(String key, List<StringValue> values);
 }

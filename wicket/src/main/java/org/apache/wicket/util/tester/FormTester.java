@@ -739,7 +739,7 @@ public class FormTester
 		if (parameterExist(formComponent))
 		{
 			List<StringValue> values = tester.getRequest()
-				.getPostRequestParameters()
+				.getPostParameters()
 				.getParameterValues(formComponent.getInputName());
 			// remove duplicated
 
@@ -755,7 +755,7 @@ public class FormTester
 			{
 				values.add(StringValue.valueOf(val));
 			}
-			tester.getRequest().getPostRequestParameters().setParameterValues(
+			tester.getRequest().getPostParameters().setParameterValues(
 				formComponent.getInputName(), values);
 		}
 		else
@@ -787,7 +787,7 @@ public class FormTester
 	private boolean parameterExist(FormComponent<?> formComponent)
 	{
 		String parameter = tester.getRequest()
-			.getPostRequestParameters()
+			.getPostParameters()
 			.getParameterValue(formComponent.getInputName())
 			.toString();
 		return parameter != null && parameter.trim().length() > 0;
@@ -803,7 +803,7 @@ public class FormTester
 	 */
 	private void setFormComponentValue(FormComponent<?> formComponent, String value)
 	{
-		tester.getRequest().getPostRequestParameters().setParameterValue(
+		tester.getRequest().getPostParameters().setParameterValue(
 			formComponent.getInputName(), value);
 	}
 
@@ -817,7 +817,7 @@ public class FormTester
 	 */
 	private void setFormSubmittingComponentValue(IFormSubmittingComponent component, String value)
 	{
-		tester.getRequest().getPostRequestParameters().setParameterValue(
+		tester.getRequest().getPostParameters().setParameterValue(
 			component.getInputName(), value);
 	}
 

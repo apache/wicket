@@ -258,12 +258,23 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 			// but only allowed if the page was created by bookamarkable URL
 
 			RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
-			IRequestablePage page = handler.getPage();
 
-			if (!checkPageClass(page.getClass()))
+			if (!checkPageClass(handler.getPageClass()))
 			{
 				return null;
 			}
+
+			if (handler.getPageProvider().isNewPageInstance())
+			{
+				// no existing page instance available, don't bother creating new page instance
+				PageInfo info = new PageInfo();
+				UrlInfo urlInfo = new UrlInfo(new PageComponentInfo(info, null),
+					handler.getPageClass(), handler.getPageParameters());
+
+				return buildUrl(urlInfo);
+			}
+
+			IRequestablePage page = handler.getPage();
 
 			if (!pageMustHaveBeenCreatedBookmarkable() || page.wasCreatedBookmarkable())
 			{

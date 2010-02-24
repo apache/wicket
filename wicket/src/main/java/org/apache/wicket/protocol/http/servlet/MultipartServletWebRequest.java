@@ -75,9 +75,9 @@ public abstract class MultipartServletWebRequest extends ServletWebRequest
 			}
 
 			@Override
-			public IRequestParameters getPostRequestParameters()
+			public IRequestParameters getPostParameters()
 			{
-				return MultipartServletWebRequest.this.getPostRequestParameters();
+				return MultipartServletWebRequest.this.getPostParameters();
 			}
 		};
 	}

@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Response;
+import org.apache.wicket.WicketRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -226,7 +227,7 @@ public abstract class RequestHandlerStack
 	 * 
 	 * @author Matej Knopp
 	 */
-	public static class ReplaceHandlerException extends RuntimeException
+	public static class ReplaceHandlerException extends WicketRuntimeException
 	{
 		private static final long serialVersionUID = 1L;
 

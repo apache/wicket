@@ -194,7 +194,9 @@ public class WebRenderPageRequestHandlerDelegate extends RenderPageRequestHandle
 		}
 		else if (!targetUrl.equals(currentUrl) //
 			&&
-			(getRedirectPolicy() == RedirectPolicy.ALWAYS_REDIRECT || isRedirectToRender()))
+			(getRedirectPolicy() == RedirectPolicy.ALWAYS_REDIRECT || // 
+				isRedirectToRender() || //
+			(getPage().isPageStateless() && Session.get().isTemporary())))
 		{
 			// if target URL is different
 			// and render policy is always-redirect or it's redirect-to-render

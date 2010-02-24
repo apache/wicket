@@ -488,7 +488,7 @@ public class WicketTesterTest extends TestCase
 
 		assertFalse(page.isExecuted());
 
-		tester.getRequest().getPostRequestParameters().setParameterValue(name.getInputName(),
+		tester.getRequest().getPostParameters().setParameterValue(name.getInputName(),
 			"Mock name");
 
 		// Execute the ajax event

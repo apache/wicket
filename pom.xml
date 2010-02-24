@@ -362,15 +362,15 @@
 				<version>2.5.6</version>
 			</dependency>
 			<dependency>
-				<groupId>org.mortbay.jetty</groupId>
+				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty</artifactId>
-				<version>6.1.21</version>
+				<version>7.0.1.v20091125</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.mortbay.jetty</groupId>
+				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>servlet-api-2.5</artifactId>
-				<version>6.1.21</version>
+				<version>7.0.1.v20091125</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
@@ -380,15 +380,15 @@
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.mortbay.jetty</groupId>
+				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-util</artifactId>
-				<version>6.1.21</version>
+				<version>7.0.1.v20091125</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.mortbay.jetty</groupId>
+				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-management</artifactId>
-				<version>6.1.21</version>
+				<version>7.0.1.v20091125</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>

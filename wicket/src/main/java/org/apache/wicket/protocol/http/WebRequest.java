@@ -136,9 +136,9 @@ public abstract class WebRequest extends Request
 			}
 
 			@Override
-			public IRequestParameters getPostRequestParameters()
+			public IRequestParameters getPostParameters()
 			{
-				return WebRequest.this.getPostRequestParameters();
+				return WebRequest.this.getPostParameters();
 			}
 
 			@Override

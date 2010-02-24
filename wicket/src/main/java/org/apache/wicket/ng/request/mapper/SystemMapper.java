@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.ng.request.mapper;
 
+import org.apache.wicket.RestartResponseAtInterceptPageException;
+
 
 /**
  * Mapper that encapsulates mappers that are necessary for Wicket to function.
@@ -30,6 +32,7 @@ public class SystemMapper extends ThreadsafeCompoundRequestMapper
 	 */
 	public SystemMapper()
 	{
+		register(RestartResponseAtInterceptPageException.MAPPER);
 		register(new HomePageMapper());
 		register(new PageInstanceMapper());
 		register(new BookmarkableMapper());

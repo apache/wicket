@@ -71,7 +71,7 @@ public class BoxBorderTest extends WicketTestCase
 			"border:myForm:border_body:name");
 		assertEquals("", input.getDefaultModelObjectAsString());
 
-		tester.getRequest().getPostRequestParameters().setParameterValue(input.getInputName(),
+		tester.getRequest().getPostParameters().setParameterValue(input.getInputName(),
 			"jdo");
 		tester.submitForm(form.getPageRelativePath());
 

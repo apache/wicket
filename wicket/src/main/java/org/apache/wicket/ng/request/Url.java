@@ -446,10 +446,10 @@ public final class Url implements Serializable
 	}
 
 	/**
-	 * 
+	 * @param segments
 	 * @return true if last segment is empty
 	 */
-	private boolean isLastSegmentEmpty()
+	private boolean isLastSegmentEmpty(List<String> segments)
 	{
 		if (segments.isEmpty())
 		{
@@ -457,6 +457,23 @@ public final class Url implements Serializable
 		}
 		String last = segments.get(segments.size() - 1);
 		return last.length() == 0;
+	}
+
+	private boolean isLastSegmentEmpty()
+	{
+		return isLastSegmentEmpty(segments);
+	}
+
+	private boolean isAtLeastOnSegmentReal(List<String> segments)
+	{
+		for (String s : segments)
+		{
+			if (s.length() > 0 && !".".equals(s) && !"..".equals(s))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -468,13 +485,19 @@ public final class Url implements Serializable
 	{
 		boolean checkedLastSegment = false;
 
+		if (!isAtLeastOnSegmentReal(segments) && !isLastSegmentEmpty(segments))
+		{
+			segments = new ArrayList<String>(segments);
+			segments.add("");
+		}
+
 		for (String s : segments)
 		{
 			if (".".equals(s))
 			{
 				continue;
 			}
-			else if ("..".equals(s) && isLastSegmentReal())
+			else if ("..".equals(s) && !this.segments.isEmpty())
 			{
 				this.segments.remove(this.segments.size() - 1);
 			}
@@ -491,19 +514,11 @@ public final class Url implements Serializable
 				this.segments.add(s);
 			}
 		}
-	}
 
-	/**
-	 * 
-	 */
-	public void makeAbsolute()
-	{
-		if (isAbsolute())
+		if (this.segments.size() == 1 && this.segments.get(0).length() == 0)
 		{
-			return;
+			this.segments.clear();
 		}
-
-		segments.add(null);
 	}
 
 	/**

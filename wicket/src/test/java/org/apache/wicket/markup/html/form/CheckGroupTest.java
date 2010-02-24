@@ -159,13 +159,13 @@ public class CheckGroupTest extends WicketTestCase
 		assertTrue("running with nothing selected - model must be empty", modelObject.getProp1()
 			.size() == 0);
 
-		tester.getRequest().getPostRequestParameters().setParameterValue(group.getInputName(),
+		tester.getRequest().getPostParameters().setParameterValue(group.getInputName(),
 			String.valueOf(choice1.getValue()));
 		form.onFormSubmitted();
 		assertTrue("running with choice1 selected - model must only contain value of check1",
 			modelObject.getProp1().size() == 1 && modelObject.getProp1().contains(check1));
 
-		tester.getRequest().getPostRequestParameters().setParameterValue(group.getInputName(),
+		tester.getRequest().getPostParameters().setParameterValue(group.getInputName(),
 			String.valueOf(choice2.getValue()));
 		form.onFormSubmitted();
 		assertTrue("running with choice2 selected - model must only contain value of check2",
@@ -174,11 +174,11 @@ public class CheckGroupTest extends WicketTestCase
 		// throw in some nulls into the request param to make sure they are
 		// ignored
 		tester.getRequest()
-			.getPostRequestParameters()
+			.getPostParameters()
 			.addParameterValue(group.getInputName(), null);
-		tester.getRequest().getPostRequestParameters().addParameterValue(group.getInputName(),
+		tester.getRequest().getPostParameters().addParameterValue(group.getInputName(),
 			String.valueOf(choice1.getValue()));
-		tester.getRequest().getPostRequestParameters().addParameterValue(group.getInputName(),
+		tester.getRequest().getPostParameters().addParameterValue(group.getInputName(),
 			String.valueOf(choice2.getValue()));
 
 		form.onFormSubmitted();
@@ -188,7 +188,7 @@ public class CheckGroupTest extends WicketTestCase
 			modelObject.getProp1().size() == 2 && modelObject.getProp1().contains(check2) &&
 				modelObject.getProp1().contains(check1));
 
-		tester.getRequest().getPostRequestParameters().setParameterValue(group.getInputName(),
+		tester.getRequest().getPostParameters().setParameterValue(group.getInputName(),
 			"some weird choice uuid to test error");
 		try
 		{

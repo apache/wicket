@@ -38,7 +38,7 @@ public interface IPageProvider
 	 * @return page instance
 	 * @throws StalePageException
 	 *             if render count has been specified in constructor and the render count of page
-	 *             does not match the valeu
+	 *             does not match the value
 	 * @throw {@link PageExpiredException} if the specified page could not have been found and the
 	 *        constructor used did not provide enough information to create new page instance
 	 */
@@ -50,6 +50,15 @@ public interface IPageProvider
 	 * @return page parameters
 	 */
 	PageParameters getPageParameters();
+
+	/**
+	 * Returns whether calling getPageInstance() will result in creating new page instance or
+	 * whether it will be an existing intance (even though it might be pulled from page store).
+	 * 
+	 * @return <code>true</code> if calling {@link #getPageInstance()} will create new page
+	 *         instance, <code>false</code> otherwise.
+	 */
+	boolean isNewPageInstance();
 
 	/**
 	 * Returns class of the page.

@@ -254,7 +254,6 @@ public class BaseWicketTester
 // super(application, path);
 // }
 
-
 	public Session getSession()
 	{
 		return session;
@@ -535,6 +534,11 @@ public class BaseWicketTester
 			public Class<? extends IRequestablePage> getPageClass()
 			{
 				return null;
+			}
+
+			public boolean isNewPageInstance()
+			{
+				return false;
 			}
 
 			public IRequestablePage getPageInstance()
@@ -1004,7 +1008,7 @@ public class BaseWicketTester
 			SubmitLink submitLink = (SubmitLink)linkComponent;
 
 			String pageRelativePath = submitLink.getInputName();
-			request.getPostRequestParameters().setParameterValue(pageRelativePath, "x");
+			request.getPostParameters().setParameterValue(pageRelativePath, "x");
 
 			submitForm(submitLink.getForm().getPageRelativePath());
 		}
@@ -1436,7 +1440,6 @@ public class BaseWicketTester
 // }
 // return requestCycle;
 // }
-
 	/**
 	 * Retrieves a <code>TagTester</code> based on a <code>wicket:id</code>. If more
 	 * <code>Component</code>s exist with the same <code>wicket:id</code> in the markup, only the

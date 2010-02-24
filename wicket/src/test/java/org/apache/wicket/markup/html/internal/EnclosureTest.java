@@ -227,7 +227,7 @@ public class EnclosureTest extends WicketTestCase
 
 		page.reset();
 		FormTester formTester = tester.newFormTester("form");
-		tester.getRequest().getPostRequestParameters().setParameterValue(
+		tester.getRequest().getPostParameters().setParameterValue(
 			((CheckBox)page.get("form:input")).getInputName(), "true");
 		page.get("form:label").setVisible(true);
 		formTester.submit();
@@ -238,7 +238,7 @@ public class EnclosureTest extends WicketTestCase
 		assertTrue(page.labelOnBeforeRender);
 
 		page.reset();
-		tester.getRequest().getPostRequestParameters().setParameterValue(
+		tester.getRequest().getPostParameters().setParameterValue(
 			((CheckBox)page.get("form:input")).getInputName(), "true");
 		page.get("form:label").setVisible(false);
 		tester.submitForm("form");

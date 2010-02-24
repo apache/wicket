@@ -148,9 +148,9 @@ public class RadioGroupTest extends WicketTestCase
 		assertTrue("group2: running with nothing selected - model must be set to null",
 			model.getObject() == null);
 
-		tester.getRequest().getPostRequestParameters().setParameterValue(group.getInputName(),
+		tester.getRequest().getPostParameters().setParameterValue(group.getInputName(),
 			choice1.getValue());
-		tester.getRequest().getPostRequestParameters().setParameterValue(group2.getInputName(),
+		tester.getRequest().getPostParameters().setParameterValue(group2.getInputName(),
 			choice3.getValue());
 		form.onFormSubmitted();
 		assertEquals("group: running with choice1 selected - model must be set to value of radio1",
@@ -159,13 +159,13 @@ public class RadioGroupTest extends WicketTestCase
 			"group2: running with choice3 selected - model must be set to value of radio1",
 			model.getObject(), choice3.getDefaultModelObject());
 
-		tester.getRequest().getPostRequestParameters().setParameterValue(group.getInputName(),
+		tester.getRequest().getPostParameters().setParameterValue(group.getInputName(),
 			choice2.getValue());
 		form.onFormSubmitted();
 		assertEquals("group: running with choice2 selected - model must be set to value of radio2",
 			modelObject.getProp1(), choice2.getDefaultModelObject());
 
-		tester.getRequest().getPostRequestParameters().setParameterValue(group2.getInputName(),
+		tester.getRequest().getPostParameters().setParameterValue(group2.getInputName(),
 			choice1.getValue());
 		try
 		{
