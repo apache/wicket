@@ -91,15 +91,15 @@
 			<artifactId>httpunit</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
+			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jetty</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
+			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jetty-util</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
+			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jetty-management</artifactId>
 		</dependency>
 		<dependency>
