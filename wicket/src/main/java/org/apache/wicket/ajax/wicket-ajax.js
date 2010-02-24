@@ -1149,6 +1149,9 @@ Wicket.Ajax.Call.prototype = {
 			form.appendChild(btn);
 		}
 		
+		// invoke pre call handlers
+		Wicket.Ajax.invokePreCallHandlers();
+		
 		//submit the form into the iframe, response will be handled by the onload callback
 		form.submit();
 
