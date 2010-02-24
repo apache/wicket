@@ -180,13 +180,13 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	@Override
 	protected void configureResponse()
 	{
-		super.configureResponse();
-
 		if (getRequestCycle().getResponse() instanceof WebResponse)
 		{
 			final WebResponse response = (WebResponse)getRequestCycle().getResponse();
 			setHeaders(response);
 		}
+
+		super.configureResponse();
 	}
 
 	/**
