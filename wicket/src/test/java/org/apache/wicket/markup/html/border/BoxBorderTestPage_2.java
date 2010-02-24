@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.border;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.ng.resource.PackageResourceReference;
 
 
 /**
@@ -39,6 +40,7 @@ public class BoxBorderTestPage_2 extends WebPage
 		add(border);
 
 		border.addToBorderBody(new TextField<String>("text"));
-		border.addToBorderBody(new Image("img"));
+		border.addToBorderBody(new Image("img", new PackageResourceReference(BoxBorder.class,
+			"test.png")));
 	}
 }
