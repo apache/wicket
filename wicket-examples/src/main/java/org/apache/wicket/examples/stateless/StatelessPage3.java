@@ -29,10 +29,25 @@ import org.apache.wicket.validation.validator.MaximumValidator;
  * Another page of the stateless example.
  * 
  * @author Eelco Hillenius
+ * @author Matej Knopp
  */
 public class StatelessPage3 extends WebPage
 {
-	private final Integer number = new Integer(10);
+	private Integer number;
+
+	private static final String PARAMETER_NAME = "value";
+
+	/**
+	 * @see org.apache.wicket.Page#onBeforeRender()
+	 */
+	@Override
+	protected void onBeforeRender()
+	{
+		super.onBeforeRender();
+
+		// get the value from page parameters
+		number = getPage().getPageParameters().getNamedParameter(PARAMETER_NAME).toInt(10);
+	}
 
 	/**
 	 * Constructor
@@ -56,7 +71,14 @@ public class StatelessPage3 extends WebPage
 			protected void onSubmit()
 			{
 				info("Submitted text: " + field.getDefaultModelObject());
+
+				// store the value in page parameters
+				getPage().getPageParameters().setNamedParameter(PARAMETER_NAME, number);
+
+				// force redirect, otherwise the listener interface URL would be kept
+				getRequestCycle().setResponsePage(getPage());
 			}
+
 		};
 		statelessForm.add(field);
 		add(statelessForm);

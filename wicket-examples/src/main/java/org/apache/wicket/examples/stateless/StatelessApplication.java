@@ -53,7 +53,7 @@ public class StatelessApplication extends WicketExampleApplication
 		mountBookmarkablePage("/statefull", StatefulPage.class);
 		mountBookmarkablePage("/query", StatelessPage1.class);
 		mountBookmarkablePage("/mixed", StatelessPage2.class);
-		mountBookmarkablePage("/indexed", StatelessPage3.class);
+		mountBookmarkablePage("/state-in-url", StatelessPage3.class);
 		// mount("/public", PackageName.forClass(StatelessApplication.class));
 		// mountBookmarkablePage("foo", StatelessPage.class);
 	}
