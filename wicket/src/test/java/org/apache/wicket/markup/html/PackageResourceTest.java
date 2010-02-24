@@ -18,42 +18,23 @@ package org.apache.wicket.markup.html;
 
 import java.util.Locale;
 
-import junit.framework.TestCase;
-
-import org.apache.wicket.AbortException;
 import org.apache.wicket.Application;
 import org.apache.wicket.SharedResources;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ng.resource.PackageResource;
+import org.apache.wicket.ng.resource.PackageResourceReference;
+import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Tests for package resources.
  * 
  * @author Eelco Hillenius
  */
-public class PackageResourceTest extends TestCase
+public class PackageResourceTest extends WicketTestCase
 {
 	/** mock application object */
 	public WebApplication application;
-
-	/**
-	 * Construct.
-	 */
-	public PackageResourceTest()
-	{
-		super();
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public PackageResourceTest(String name)
-	{
-		super(name);
-	}
 
 	/**
 	 * @see junit.framework.TestCase#setUp()
@@ -61,7 +42,8 @@ public class PackageResourceTest extends TestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		application = new WicketTester().getApplication();
+		super.setUp();
+		application = tester.getApplication();
 	}
 
 	/**
@@ -72,11 +54,8 @@ public class PackageResourceTest extends TestCase
 	public void testBindAbsolutePackageResource() throws Exception
 	{
 		final SharedResources sharedResources = Application.get().getSharedResources();
-		PackageResource.bind(application, PackageResourceTest.class, "packaged1.txt");
 		assertNotNull("resource packaged1.txt should be available as a packaged resource",
 			sharedResources.get(PackageResourceTest.class, "packaged1.txt", null, null, null, true));
-		assertNull("resource packaged2.txt should NOT be available as a packaged resource",
-			sharedResources.get(PackageResourceTest.class, "packaged2.txt", null, null, null, true));
 	}
 
 	/**
@@ -107,12 +86,11 @@ public class PackageResourceTest extends TestCase
 	 */
 	public void testLenientPackageResourceMatching() throws Exception
 	{
-		Application.get().getSharedResources();
-		Resource invalidResource = new PackageResource(PackageResourceTest.class, "packaged3.txt",
-			Locale.ENGLISH, null, null);
+		ResourceReference invalidResource = new PackageResourceReference(PackageResourceTest.class,
+			"i_do_not_exist.txt", Locale.ENGLISH, null, null);
 		assertNotNull(
 			"resource packaged3.txt SHOULD be available as a packaged resource even if it doesn't exist",
-			invalidResource);
+			invalidResource.getResource());
 
 		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1.txt", null, null,
 			null));
@@ -141,13 +119,10 @@ public class PackageResourceTest extends TestCase
 		assertTrue(PackageResource.exists(PackageResourceTest.class,
 			"packaged1_foo_bar_en_US_MAC.txt", null, null, null));
 
-		try
-		{
-			invalidResource.getResourceStream();
-			fail("Should have raised an AbortException");
-		}
-		catch (AbortException e)
-		{
-		}
+		tester.getRequest().setUrl(tester.getRequestCycle().urlFor(invalidResource));
+		// since the resource does not exist wicket should let the handling fall through to the next
+		// filter/servlet which will cause a 404 later
+		assertFalse(tester.processRequest());
+
 	}
 }

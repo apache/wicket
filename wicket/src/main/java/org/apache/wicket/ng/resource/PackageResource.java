@@ -154,6 +154,7 @@ public class PackageResource implements IResource
 			{
 				RequestCycle.get().replaceAllRequestHandlers(new AbortRequestHandler());
 			}
+			return;
 		}
 
 		new ResourceStreamResource(resourceStream).respond(attributes);

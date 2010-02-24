@@ -150,7 +150,7 @@ public class ResourceReferenceRegistry
 		ResourceReference res = map.get(key);
 		if (strict)
 		{
-			if (res == null)
+			if (res == null && createIfNotFound)
 			{
 				res = addDefaultResourceReference(scope, name, locale, style, variation);
 			}

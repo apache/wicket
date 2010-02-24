@@ -100,4 +100,21 @@ public class SharedResources
 	{
 		add(Application.class, name, null, null, null, resource);
 	}
+
+	/**
+	 * Resolves a {@link ResourceReference} for a shared resource.
+	 * 
+	 * @param scope
+	 * @param name
+	 * @param locale
+	 * @param style
+	 * @param variation
+	 * @param strict
+	 * @return
+	 */
+	public ResourceReference get(Class<?> scope, String name, Locale locale, String style,
+		String variation, boolean strict)
+	{
+		return registry.getResourceReference(scope, name, locale, style, variation, strict);
+}
 }

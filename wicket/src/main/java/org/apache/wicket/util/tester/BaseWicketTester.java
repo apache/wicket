@@ -280,9 +280,9 @@ public class BaseWicketTester
 	}
 
 
-	public void processRequest()
+	public boolean processRequest()
 	{
-		processRequest(null, null);
+		return processRequest(null, null);
 	}
 
 	/**
@@ -307,12 +307,12 @@ public class BaseWicketTester
 	 *            optional parameter to override parsing the request URL and force
 	 *            {@link IRequestHandler}
 	 */
-	public void processRequest(MockWebRequest request, IRequestHandler forcedRequestHandler)
+	public boolean processRequest(MockWebRequest request, IRequestHandler forcedRequestHandler)
 	{
-		processRequest(request, forcedRequestHandler, false);
+		return processRequest(request, forcedRequestHandler, false);
 	}
 
-	private void processRequest(MockWebRequest request, IRequestHandler forcedRequestHandler,
+	private boolean processRequest(MockWebRequest request, IRequestHandler forcedRequestHandler,
 		boolean redirect)
 	{
 
@@ -347,7 +347,10 @@ public class BaseWicketTester
 				requestCycle.forceRequestHandler(forcedRequestHandler);
 			}
 
-			requestCycle.processRequestAndDetach();
+			if (!requestCycle.processRequestAndDetach())
+			{
+				return false;
+			}
 
 			recordRequestResponse();
 			setupNextRequestCycle();
@@ -376,11 +379,14 @@ public class BaseWicketTester
 
 				--redirectCount;
 			}
+
+			return true;
 		}
 		finally
 		{
 			redirectCount = 0;
 		}
+
 	}
 
 	private void recordRequestResponse()
@@ -1604,4 +1610,11 @@ public class BaseWicketTester
 	{
 		return requestCycle;
 	}
+
+	public MockWebResponse getResponse()
+	{
+		return response;
+	}
+
+
 }
