@@ -17,6 +17,7 @@
 package org.apache.wicket.stateless;
 
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.PageParameters;
 
 /**
@@ -24,18 +25,6 @@ import org.apache.wicket.ng.request.component.PageParameters;
  */
 public class StatelessComponentTest extends WicketTestCase
 {
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public StatelessComponentTest(String name)
-	{
-		super(name);
-	}
-
-
 	/**
 	 * @throws Exception
 	 */
@@ -43,14 +32,13 @@ public class StatelessComponentTest extends WicketTestCase
 	{
 		executeTest(StatelessComponentPage.class, "StatelessComponentPage_result.html");
 
-		tester.setupRequestAndResponse();
-		tester.getServletRequest()
-			.setURL(
-				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication?wicket:bookmarkablePage=:org.apache.wicket.stateless.StatelessComponentPage&wicket:interface=:0:link::ILinkListener::");
+		tester.getRequest()
+			.setUrl(
+				Url.parse("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication?wicket:bookmarkablePage=:org.apache.wicket.stateless.StatelessComponentPage&wicket:interface=:0:link::ILinkListener::"));
 		try
 		{
-			tester.processRequestCycle();
-			assertTrue(false);
+			tester.processRequest();
+			fail();
 		}
 		catch (Exception e)
 		{
@@ -67,13 +55,12 @@ public class StatelessComponentTest extends WicketTestCase
 		tester.getApplication().mountBookmarkablePage("/stateless", StatelessComponentPage.class);
 		// test is always the home page. it doesn't work then
 		executeTest(StatelessComponentPage.class, "StatelessComponentPage_mount_result.html");
-		tester.setupRequestAndResponse();
-		tester.getServletRequest()
-			.setURL(
-				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/stateless/wicket:interface/:0:link::ILinkListener::");
+		tester.getRequest()
+			.setUrl(
+				Url.parse("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/stateless/wicket:interface/:0:link::ILinkListener::"));
 		try
 		{
-			tester.processRequestCycle();
+			tester.processRequest();
 			fail("An exception should have been thrown for this request!");
 		}
 		catch (Exception e)
@@ -88,20 +75,19 @@ public class StatelessComponentTest extends WicketTestCase
 	public void testStatelessComponentPageWithParams() throws Exception
 	{
 		PageParameters params = new PageParameters();
-		params.put("testParam1", "testValue1");
-		params.put("testParam2", "testValue2");
+		params.setNamedParameter("testParam1", "testValue1");
+		params.setNamedParameter("testParam2", "testValue2");
 
 		executeTest(StatelessComponentPageWithParams.class, params,
 			"StatelessComponentPageWithParams_result.html");
 
-		tester.setupRequestAndResponse();
-		tester.getServletRequest()
-			.setURL(
-				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication?wicket:bookmarkablePage=:org.apache.wicket.stateless.StatelessComponentPageWithParams&testParam1=testValue1&testParam2=testValue2&wicket:interface=:0:link::ILinkListener::");
+		tester.getRequest()
+			.setUrl(
+				Url.parse("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication?wicket:bookmarkablePage=:org.apache.wicket.stateless.StatelessComponentPageWithParams&testParam1=testValue1&testParam2=testValue2&wicket:interface=:0:link::ILinkListener::"));
 		try
 		{
-			tester.processRequestCycle();
-			assertTrue(false);
+			tester.processRequest();
+			fail();
 		}
 		catch (Exception e)
 		{
@@ -116,20 +102,19 @@ public class StatelessComponentTest extends WicketTestCase
 	public void testStatelessComponentPageWithParamsWithMount() throws Exception
 	{
 		PageParameters params = new PageParameters();
-		params.put("testParam1", "testValue1");
-		params.put("testParam2", "testValue2");
+		params.setNamedParameter("testParam1", "testValue1");
+		params.setNamedParameter("testParam2", "testValue2");
 		tester.getApplication().mountBookmarkablePage("/stateless",
 			StatelessComponentPageWithParams.class);
 		// test is always the home page. it doesn't work then
 		executeTest(StatelessComponentPageWithParams.class, params,
 			"StatelessComponentPageWithParams_mount_result.html");
-		tester.setupRequestAndResponse();
-		tester.getServletRequest()
-			.setURL(
-				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/stateless/testParam1/testValue1/testParam2/testValue2/wicket:interface/%3A0%3Alink%3A%3AILinkListener%3A%3A/");
+		tester.getRequest()
+			.setUrl(
+				Url.parse("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/stateless/testParam1/testValue1/testParam2/testValue2/wicket:interface/%3A0%3Alink%3A%3AILinkListener%3A%3A/"));
 		try
 		{
-			tester.processRequestCycle();
+			tester.processRequest();
 			fail("An exception should have been thrown for this request!");
 		}
 		catch (Exception e)
@@ -144,22 +129,19 @@ public class StatelessComponentTest extends WicketTestCase
 	public void testStatelessComponentPageWithParamsWithIndexMount() throws Exception
 	{
 		PageParameters params = new PageParameters();
-		params.put("0", "testValue1");
-		params.put("1", "testValue2");
-		tester.getApplication()
-			.mount(
-				new IndexedParamUrlCodingStrategy("/stateless",
-					StatelessComponentPageWithParams.class));
+		params.setIndexedParameter(0, "testValue1");
+		params.setIndexedParameter(1, "testValue2");
+		tester.getApplication().mountBookmarkablePage("/stateless",
+			StatelessComponentPageWithParams.class);
 		// test is always the home page. it doesn't work then
 		executeTest(StatelessComponentPageWithParams.class, params,
 			"StatelessComponentPageWithParams_indexed_mount_result.html");
-		tester.setupRequestAndResponse();
-		tester.getServletRequest()
-			.setURL(
-				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/stateless/testValue1/testValue2/wicket:interface/%3A0%3Alink%3A%3AILinkListener%3A%3A/");
+		tester.getRequest()
+			.setUrl(
+				Url.parse("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/stateless/testValue1/testValue2/wicket:interface/%3A0%3Alink%3A%3AILinkListener%3A%3A/"));
 		try
 		{
-			tester.processRequestCycle();
+			tester.processRequest();
 			fail("An exception should have been thrown for this request!");
 		}
 		catch (Exception e)

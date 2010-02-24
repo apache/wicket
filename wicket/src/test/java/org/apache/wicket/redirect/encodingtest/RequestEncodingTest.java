@@ -16,7 +16,8 @@
  */
 package org.apache.wicket.redirect.encodingtest;
 
-import org.apache.wicket.WicketTestCase;
+import junit.framework.TestCase;
+
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
 import org.slf4j.Logger;
@@ -25,12 +26,13 @@ import org.slf4j.LoggerFactory;
 /**
  * 
  */
-public class RequestEncodingTest extends WicketTestCase
+public class RequestEncodingTest extends TestCase
 {
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(RequestEncodingTest.class);
 
 	private WicketApplication application;
+	private WicketTester tester;
 
 	/**
 	 * @see org.apache.wicket.WicketTestCase#setUp()
@@ -42,7 +44,13 @@ public class RequestEncodingTest extends WicketTestCase
 		tester = new WicketTester(application);
 		tester.startPage(HomePage.class);
 		tester.assertRenderedPage(HomePage.class);
-		// String document = tester.getServletResponse().getDocument();
+	}
+
+	@Override
+	protected void tearDown() throws Exception
+	{
+		super.tearDown();
+		tester.destroy();
 	}
 
 	/**
@@ -50,10 +58,6 @@ public class RequestEncodingTest extends WicketTestCase
 	 */
 	public void testDefault()
 	{
-		// TODO Wicket NG
-		if (true)
-			return;
-
 		tester.startPage(A.class, new PageParameters("file=umlaut-\u00E4-\u00F6-\u00FC"));
 		tester.assertRenderedPage(B.class);
 
@@ -66,32 +70,16 @@ public class RequestEncodingTest extends WicketTestCase
 		String file = ((A)tester.getLastRenderedPage()).getFileParameter();
 		assertEquals("umlaut-\u00E4-\u00F6-\u00FC", file);
 
-		String document = tester.getServletResponse().getDocument();
+		String document = tester.getLastResponseAsString();
 		assertTrue(document.contains("\u00E4-\u00F6-\u00FC"));
 	}
 
-	/**
-	 * 
-	 */
-	public void testUmlautsInQueryParameter()
-	{
-		// TODO Wicket NG
-		if (true)
-			return;
-
-		application.mount(new MixedParamUrlCodingStrategy("Apath", A.class, new String[] { "file" }));
-		testDefault();
-	}
 
 	/**
 	 * 
 	 */
 	public void testUmlautsInRequestUri()
 	{
-		// TODO Wicket NG
-		if (true)
-			return;
-
 		application.mountBookmarkablePage("Aparameter", A.class);
 		testDefault();
 	}

@@ -21,6 +21,7 @@ import junit.framework.Assert;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 
 /**
  * Testcase for WICKET-1418, throwing an abortexception during rendering.
@@ -37,9 +38,8 @@ public class AbortExceptionTest extends WicketTestCase
 	 */
 	public void testNoAbort()
 	{
-		System.out.println("testing good usecase");
-		tester.processRequestCycle(AbortExceptionPage.class, new PageParameters("trigger=false"));
-		Assert.assertEquals(1234, tester.getServletResponse().getCode());
+		tester.startPage(AbortExceptionPage.class, new PageParameters("trigger=false"));
+		Assert.assertEquals((Integer)1234, tester.getLastResponse().getStatus());
 	}
 
 	/**
@@ -49,10 +49,9 @@ public class AbortExceptionTest extends WicketTestCase
 	{
 		try
 		{
-
-			System.out.println("testing bad usecase");
-			tester.processRequestCycle(AbortExceptionPage.class, new PageParameters("trigger=true"));
-			Assert.assertEquals(1234, tester.getServletResponse().getCode()); // this will fail
+			tester.startPage(AbortExceptionPage.class, new PageParameters("trigger=true"));
+			Assert.assertEquals((Integer)1234, tester.getLastResponse().getStatus()); // this will
+																						// fail
 		}
 		catch (WicketRuntimeException x)
 		{

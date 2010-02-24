@@ -25,6 +25,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 
 /**
  * Page that optionally throws an abortexception during render phase.
@@ -37,7 +38,7 @@ public class AbortExceptionPage extends WebPage
 
 	public AbortExceptionPage(PageParameters parameters)
 	{
-		final boolean triggerError = parameters.getBoolean("trigger");
+		final boolean triggerError = parameters.getNamedParameter("trigger").toBoolean();
 
 		if (!triggerError)
 		{

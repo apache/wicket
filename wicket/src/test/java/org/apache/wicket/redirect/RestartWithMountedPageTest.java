@@ -17,7 +17,6 @@
 package org.apache.wicket.redirect;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.util.lang.PackageName;
 
 public class RestartWithMountedPageTest extends WicketTestCase
 {
@@ -38,17 +37,6 @@ public class RestartWithMountedPageTest extends WicketTestCase
 	public RestartWithMountedPageTest(String name)
 	{
 		super(name);
-	}
-
-	/**
-	 * Tests that a protected page can redirect to a login page from a mounted package.
-	 */
-	public void testWithMountedPackage()
-	{
-		tester.getApplication().mount("/test",
-			PackageName.forPackage(ProtectedPage.class.getPackage()));
-		tester.startPage(ProtectedPage.class);
-		tester.assertRenderedPage(LoginPage.class);
 	}
 
 	/**

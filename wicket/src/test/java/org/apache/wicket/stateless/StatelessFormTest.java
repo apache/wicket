@@ -19,9 +19,7 @@ package org.apache.wicket.stateless;
 import junit.framework.TestCase;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.session.HttpSessionStore;
-import org.apache.wicket.session.ISessionStore;
+import org.apache.wicket.ng.mock.MockApplication;
 import org.apache.wicket.stateless.pages.HomePage;
 import org.apache.wicket.stateless.pages.LoginPage;
 import org.apache.wicket.util.tester.FormTester;
@@ -39,7 +37,7 @@ public class StatelessFormTest extends TestCase
 
 	private WicketTester mock = null;
 
-	private WebApplication application;
+	private MockApplication application;
 
 	private Class<? extends Page> homePage = HomePage.class;
 	private Class<? extends Page> loginPage = LoginPage.class;
@@ -48,7 +46,7 @@ public class StatelessFormTest extends TestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		mock = new WicketTester(application = new WebApplication()
+		mock = new WicketTester(application = new MockApplication()
 		{
 			@Override
 			public Class<? extends Page> getHomePage()
@@ -56,28 +54,14 @@ public class StatelessFormTest extends TestCase
 				return StatelessFormTest.this.getHomePage();
 			}
 
-			@Override
-			protected void outputDevelopmentModeWarning()
-			{
-				// Do nothing.
-			}
-
-			@Override
-			protected ISessionStore newSessionStore()
-			{
-				// Don't use a filestore, or we spawn lots of threads, which makes things slow.
-				return new HttpSessionStore();
-			}
-
-		}, "src/test/java/" + getClass().getPackage().getName().replace('.', '/'));
+		});
 	}
 
 	@Override
 	protected void tearDown() throws Exception
 	{
-		mock.setupRequestAndResponse();
-		mock.getWicketSession().invalidate();
-		mock.processRequestCycle();
+		mock.getSession().invalidate();
+		mock.processRequest();
 		mock.destroy();
 		mock = null;
 		application = null;

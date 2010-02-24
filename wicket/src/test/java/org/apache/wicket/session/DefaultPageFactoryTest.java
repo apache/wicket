@@ -16,11 +16,13 @@
  */
 package org.apache.wicket.session;
 
+import org.apache.wicket.AbstractRestartResponseException;
 import org.apache.wicket.IPageFactory;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.request.target.basic.EmptyRequestHandler;
 
 
 /**
@@ -42,7 +44,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		 */
 		public AbortAndRespondPage1()
 		{
-			throw new AbstractRestartResponseException()
+			throw new AbstractRestartResponseException(EmptyRequestHandler.getInstance())
 			{
 
 				/**
@@ -68,7 +70,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		 */
 		public AbortAndRespondPage2(PageParameters params)
 		{
-			throw new AbstractRestartResponseException()
+			throw new AbstractRestartResponseException(EmptyRequestHandler.getInstance())
 			{
 
 				/**
@@ -93,7 +95,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		 */
 		public AbortAndRespondPage3()
 		{
-			throw new AbstractRestartResponseException()
+			throw new AbstractRestartResponseException(EmptyRequestHandler.getInstance())
 			{
 
 				/**
@@ -111,7 +113,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		 */
 		public AbortAndRespondPage3(PageParameters params)
 		{
-			throw new AbstractRestartResponseException()
+			throw new AbstractRestartResponseException(EmptyRequestHandler.getInstance())
 			{
 
 				/**
@@ -156,8 +158,6 @@ public class DefaultPageFactoryTest extends WicketTestCase
 	{
 		try
 		{
-			tester.setupRequestAndResponse();
-			tester.createRequestCycle();
 			pageFactory.newPage(AbortAndRespondPage1.class);
 			fail();
 		}

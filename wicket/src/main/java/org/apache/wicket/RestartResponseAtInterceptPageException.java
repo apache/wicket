@@ -37,26 +37,44 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 	public RestartResponseAtInterceptPageException(Page interceptPage)
 	{
 		super(new RenderPageRequestHandler(new PageProvider(interceptPage)));
-		SessionData.set();
+		InterceptData.set();
 	}
 
 	public RestartResponseAtInterceptPageException(Class<? extends Page> interceptPageClass)
 	{
 		super(new RenderPageRequestHandler(new PageProvider(interceptPageClass)));
-		SessionData.set();
+		InterceptData.set();
 	}
 
-	private static class SessionData implements Serializable
+	/**
+	 * INTERNAL CLASS, DO NOT USE
+	 * 
+	 * TODO Public for now, need to move the test that is using this to this package and make it
+	 * package private
+	 * 
+	 * @author igor.vaynberg
+	 */
+	public static class InterceptData implements Serializable
 	{
 		private Url originalUrl;
 		private Map<String, List<StringValue>> postParameters;
 		private boolean continueOk;
 
+		public Url getOriginalUrl()
+		{
+			return originalUrl;
+		}
+
+		public Map<String, List<StringValue>> getPostParameters()
+		{
+			return postParameters;
+		}
+
 		public static void set()
 		{
 			Session session = Session.get();
 			session.bind();
-			SessionData data = new SessionData();
+			InterceptData data = new InterceptData();
 			Request request = RequestCycle.get().getRequest();
 			data.originalUrl = request.getOriginalUrl();
 			data.postParameters = new HashMap<String, List<StringValue>>();
@@ -69,7 +87,7 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 			session.setMetaData(key, data);
 		}
 
-		public static SessionData get()
+		public static InterceptData get()
 		{
 			Session session = Session.get();
 			if (session != null)
@@ -91,7 +109,7 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 			}
 		}
 
-		private static MetaDataKey<SessionData> key = new MetaDataKey<SessionData>()
+		private static MetaDataKey<InterceptData> key = new MetaDataKey<InterceptData>()
 		{
 			private static final long serialVersionUID = 1L;
 		};
@@ -99,7 +117,7 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 
 	static boolean continueToOriginalDestination()
 	{
-		SessionData data = SessionData.get();
+		InterceptData data = InterceptData.get();
 		if (data != null)
 		{
 			data.continueOk = true;
@@ -124,7 +142,7 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 
 		public IRequestHandler mapRequest(Request request)
 		{
-			SessionData data = SessionData.get();
+			InterceptData data = InterceptData.get();
 			if (data != null)
 			{
 				if (data.originalUrl.equals(request.getOriginalUrl()))
@@ -139,7 +157,7 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 							parameters.setParameterValues(s, data.postParameters.get(s));
 						}
 					}
-					SessionData.clear();
+					InterceptData.clear();
 				}
 			}
 			return null;

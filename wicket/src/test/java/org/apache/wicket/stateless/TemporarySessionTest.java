@@ -19,7 +19,7 @@ package org.apache.wicket.stateless;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.ng.mock.MockApplication;
 import org.apache.wicket.stateless.pages.HomePage;
 import org.apache.wicket.stateless.pages.LoginPage;
 import org.apache.wicket.util.tester.FormTester;
@@ -34,7 +34,7 @@ import org.apache.wicket.util.tester.WicketTester;
  */
 public class TemporarySessionTest extends WicketTestCase
 {
-// private WicketTester tester;
+	private WicketTester tester;
 
 	/**
 	 * @see junit.framework.TestCase#setUp()
@@ -42,7 +42,7 @@ public class TemporarySessionTest extends WicketTestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		tester = new WicketTester(new WebApplication()
+		tester = new WicketTester(new MockApplication()
 		{
 
 			@Override
@@ -51,47 +51,35 @@ public class TemporarySessionTest extends WicketTestCase
 				return HomePage.class;
 			}
 
-			@Override
-			protected void outputDevelopmentModeWarning()
-			{
-				// Do nothing.
-			}
-		}, "src/test/java/" + getClass().getPackage().getName().replace('.', '/'))
-		{
-			@Override
-			public boolean initializeHttpSessionAsTemporary()
-			{
-				return true;
-			}
-		};
+		});
 	}
 
 
 	/**
 	 * @see junit.framework.TestCase#tearDown()
 	 */
-// protected void tearDown() throws Exception
-// {
-// tester.destroy();
-// }
+	@Override
+	protected void tearDown() throws Exception
+	{
+		tester.destroy();
+	}
+
 	/**
 	 * Test if we can keep a session temporary.
 	 */
 	public void testSessionIsTemporary()
 	{
 		tester.startPage(LoginPage.class);
-		tester.setupRequestAndResponse();
-		assertTrue(tester.getWicketSession().isTemporary());
-		tester.processRequestCycle(LoginPage.class);
+		assertTrue(tester.getSession().isTemporary());
+		tester.startPage(LoginPage.class);
 		FormTester form = tester.newFormTester("signInPanel:signInForm");
 		form.setValue("username", "test");
 		form.setValue("password", "test");
-		tester.getWicketSession().bind();
+		tester.getSession().bind();
 		form.submit();
 		tester.assertRenderedPage(HomePage.class);
-		tester.setupRequestAndResponse();
 		assertFalse(Session.get().isTemporary());
-		tester.processRequestCycle(LoginPage.class);
+		tester.startPage(LoginPage.class);
 	}
 
 }
