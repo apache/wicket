@@ -87,7 +87,8 @@ public class WebExternalResourceStream extends AbstractResourceStream
 	@Override
 	public Time lastModifiedTime()
 	{
-		return null;
+		// external resource pretends to be just modified
+		return Time.now();
 	}
 
 	@Override
