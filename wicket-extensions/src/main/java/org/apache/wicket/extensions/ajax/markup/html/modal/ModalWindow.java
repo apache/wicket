@@ -35,6 +35,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.resources.CompressedResourceReference;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
+import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.RequestParameters;
@@ -894,6 +895,11 @@ public class ModalWindow extends Panel
 		{
 			throw new WicketRuntimeException("Modal window content id is wrong. Component ID:" +
 				component.getId() + "; content ID: " + getContentId());
+		}
+		else if (component instanceof AbstractRepeater)
+		{
+			throw new WicketRuntimeException(
+				"A repeater component cannot be used as the content of a modal window, please use repeater's parent");
 		}
 
 		component.setOutputMarkupPlaceholderTag(true);
