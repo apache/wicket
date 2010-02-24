@@ -20,9 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.AbortException;
 import org.apache.wicket.AbstractRestartResponseException;
-import org.apache.wicket.IRequestHandler;
-import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.protocol.http.request.WebErrorCodeResponseHandler;
 
 /**
  * Causes Wicket to abort processing and set the specified HTTP error code, with the provided
@@ -49,31 +47,9 @@ public final class AbortWithWebErrorCodeException extends AbstractRestartRespons
 	 */
 	public AbortWithWebErrorCodeException(int errorCode, String message)
 	{
-		super(new ErrorCodeHandler(errorCode, message));
+		super(new WebErrorCodeResponseHandler(errorCode, message));
 		this.errorCode = errorCode;
 		this.message = message;
-	}
-
-	private static class ErrorCodeHandler implements IRequestHandler
-	{
-		private final int erorrCode;
-		private final String message;
-
-		public ErrorCodeHandler(int erorrCode, String message)
-		{
-			this.erorrCode = erorrCode;
-			this.message = message;
-		}
-
-		public void detach(RequestCycle requestCycle)
-		{
-		}
-
-		public void respond(RequestCycle requestCycle)
-		{
-			((WebResponse)requestCycle.getResponse()).sendError(erorrCode, message);
-		}
-
 	}
 
 	/**
