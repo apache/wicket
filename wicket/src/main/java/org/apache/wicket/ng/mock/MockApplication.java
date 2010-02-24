@@ -42,7 +42,7 @@ public class MockApplication extends WebApplication
 	@Override
 	public Class<? extends Page> getHomePage()
 	{
-		return null;
+		return MockHomePage.class;
 	}
 
 	@Override

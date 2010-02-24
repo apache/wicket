@@ -1600,7 +1600,7 @@ public class BaseWicketTester
 		throw new WicketRuntimeException(message);
 	}
 
-	public RequestCycle getRequestCycle()
+	public MockRequestCycle getRequestCycle()
 	{
 		return requestCycle;
 	}

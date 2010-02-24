@@ -17,7 +17,6 @@
 package org.apache.wicket.protocol.http;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IRequestCycleSettings;
@@ -58,7 +57,7 @@ public class WebResponseExceptionsTest extends WicketTestCase
 	public void testExpirePage()
 	{
 		tester.startPage(TestExpirePage.class);
-		String document = tester.getServletResponse().getDocument();
+		String document = tester.getLastResponseAsString();
 		assertTrue(document.contains("Click me to get an error"));
 
 		AjaxLink link = (AjaxLink)tester.getComponentFromLastRenderedPage("link");
@@ -74,22 +73,15 @@ public class WebResponseExceptionsTest extends WicketTestCase
 		// assertTrue(document.contains("-"));
 		// tester.assertAjaxLocation();
 
-		WebRequestCycle cycle = tester.setupRequestAndResponse(true);
-		tester.getWicketSession().invalidateNow();
+		tester.getSession().invalidateNow();
 
 		// Clear the session to remove the pages
-		tester.getWicketSession().invalidateNow();
+		tester.getSession().invalidateNow();
 
 		// Invoke the call back URL of the ajax event behavior
-		String callbackUrl = ((AjaxEventBehavior)link.getBehaviors().get(0)).getCallbackUrl()
-			.toString();
-		tester.getServletRequest().setURL(callbackUrl);
+		tester.clickLink(link);
 
-		// Do not call processRequestCycle() because it throws an
-		// exception when getting an error page
-		cycle.request();
-
-		document = tester.getServletResponse().getDocument();
+		document = tester.getLastResponseAsString();
 		assertTrue(document.equals("-"));
 		tester.assertAjaxLocation();
 	}
@@ -100,31 +92,10 @@ public class WebResponseExceptionsTest extends WicketTestCase
 	public void testInternalErrorPage()
 	{
 		tester.startPage(TestErrorPage.class);
+		tester.getRequestCycle().setExposeExceptions(false);
 		AjaxLink link = (AjaxLink)tester.getComponentFromLastRenderedPage("link");
 
-		try
-		{
-			tester.executeAjaxEvent(link, "onclick");
-			fail("Excepted an error message to be thrown");
-		}
-		catch (IllegalStateException ex)
-		{
-			// expected exception
-			assertEquals(500, ((MockHttpServletResponse)tester.getWicketResponse()
-				.getHttpServletResponse()).getStatus());
-		}
-
-		tester.startPage(TestErrorPage.class);
-
-		try
-		{
-			tester.clickLink("link");
-			fail("Excepted an error message to be thrown");
-		}
-		catch (IllegalStateException ex)
-		{
-			assertEquals(500, ((MockHttpServletResponse)tester.getWicketResponse()
-				.getHttpServletResponse()).getStatus());
-		}
+		tester.executeAjaxEvent(link, "onclick");
+		assertEquals((Integer)500, tester.getLastResponse().getStatus());
 	}
 }
