@@ -27,25 +27,6 @@ import org.apache.wicket.util.diff.DiffUtil;
 public class PagedTableNavigatorWithLabelProviderTest extends WicketTestCase
 {
 	/**
-	 * Construct.
-	 */
-	public PagedTableNavigatorWithLabelProviderTest()
-	{
-		super();
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 *            name of test
-	 */
-	public PagedTableNavigatorWithLabelProviderTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * Test simple table behavior.
 	 * 
 	 * @throws Exception
@@ -178,6 +159,5 @@ public class PagedTableNavigatorWithLabelProviderTest extends WicketTestCase
 		link = (Link)page.get("navigator:last");
 		assertTrue(link.isEnabled());
 
-		tester.destroy();
 	}
 }

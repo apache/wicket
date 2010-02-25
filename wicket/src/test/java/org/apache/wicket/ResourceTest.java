@@ -21,8 +21,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.apache.wicket.ng.resource.IResource;
+import org.apache.wicket.ng.resource.ResourceStreamResource;
 import org.apache.wicket.util.resource.FileResourceStream;
-import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,49 +37,9 @@ public class ResourceTest extends WicketTestCase
 	private static final String TEST_STRING = "Hello, World!";
 
 	/**
-	 * Tests a resource that should be marked as being cacheable.
-	 */
-	public void testCacheableResource()
-	{
-		String testFileLastModified;
-		final File testFile;
-		try
-		{
-			testFile = File.createTempFile(ResourceTest.class.getName(), null);
-			OutputStream out = new FileOutputStream(testFile);
-			out.write(TEST_STRING.getBytes());
-			out.close();
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException(e);
-		}
-		testFileLastModified = MockHttpServletResponse.formatDate(testFile.lastModified());
-		tester.setupRequestAndResponse();
-		WebRequestCycle cycle = tester.createRequestCycle();
-		Resource resource = new Resource()
-		{
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public IResourceStream getResourceStream()
-			{
-				return new FileResourceStream(new org.apache.wicket.util.file.File(testFile));
-			}
-		};
-		resource.onResourceRequested();
-		tester.processRequestCycle(cycle);
-
-		log.debug(tester.getLastModifiedFromResponseHeader());
-		assertEquals(testFileLastModified, tester.getLastModifiedFromResponseHeader());
-		assertEquals(TEST_STRING.length(), tester.getContentLengthFromResponseHeader());
-	}
-
-	/**
 	 * tests a resource that is not cacheable.
 	 */
-	public void testNonCacheableResource()
+	public void testResource()
 	{
 		final File testFile;
 		try
@@ -92,27 +53,18 @@ public class ResourceTest extends WicketTestCase
 		{
 			throw new RuntimeException(e);
 		}
-		MockHttpServletResponse.formatDate(testFile.lastModified());
-		tester.setupRequestAndResponse();
-		WebRequestCycle cycle = tester.createRequestCycle();
-		Resource resource = new Resource()
-		{
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
 
-			@Override
-			public IResourceStream getResourceStream()
-			{
-				return new FileResourceStream(new org.apache.wicket.util.file.File(testFile));
-			}
-		};
-		resource.setCacheable(false);
-		resource.onResourceRequested();
-		tester.processRequestCycle(cycle);
+		IResource file = new ResourceStreamResource(new FileResourceStream(
+			new org.apache.wicket.util.file.File(testFile)));
+		tester.getApplication().getSharedResources().add("file", file);
+		tester.getRequest().setUrl(
+			tester.getRequestCycle().urlFor(
+				tester.getApplication().getSharedResources().get(Application.class, "file", null,
+					null, null, true)));
+		tester.processRequest();
 
-		assertNull(tester.getLastModifiedFromResponseHeader());
+		assertEquals(String.valueOf(testFile.lastModified()),
+			tester.getLastModifiedFromResponseHeader());
 		assertEquals(TEST_STRING.length(), tester.getContentLengthFromResponseHeader());
 	}
 }

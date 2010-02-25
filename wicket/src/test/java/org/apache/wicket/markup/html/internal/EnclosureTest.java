@@ -152,8 +152,7 @@ public class EnclosureTest extends WicketTestCase
 	private void assertResultPage(final String file) throws IOException
 	{
 		String document = tester.getLastResponse().getTextResponse().toString();
-		document = document.replaceAll(":form:[1-90]+:IFormSubmitListener:",
-			":form::IFormSubmitListener:");
+		document = document.replaceAll("[1-9]+[.]IFormSubmitListener", "1.IFormSubmitListener");
 		DiffUtil.validatePage(document, getClass(), file, true);
 	}
 
@@ -164,7 +163,7 @@ public class EnclosureTest extends WicketTestCase
 	{
 		Class<? extends Page> clazz = EnclosurePage_9.class;
 
-		executeTest(clazz, "EnclosurePageExpectedResult_9.html");
+		executePage(new EnclosurePage_9(), "EnclosurePageExpectedResult_9.html");
 		EnclosurePage_9 page = (EnclosurePage_9)tester.getLastRenderedPage();
 		assertTrue(page.inputOnBeforeRender);
 		assertFalse(page.inputValidate);
@@ -222,7 +221,7 @@ public class EnclosureTest extends WicketTestCase
 	{
 		Class<? extends Page> clazz = EnclosurePage_9.class;
 
-		executeTest(clazz, "EnclosurePageExpectedResult_9.html");
+		executePage(new EnclosurePage_9(), "EnclosurePageExpectedResult_9.html");
 		EnclosurePage_9 page = (EnclosurePage_9)tester.getLastRenderedPage();
 
 		page.reset();

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket;
 
+import org.apache.wicket.ng.request.Url;
+import org.apache.wicket.ng.resource.PackageResourceReference;
 import org.apache.wicket.ng.resource.ResourceReference;
 
 public class ParentResourceEscapePathTest extends WicketTestCase
@@ -36,7 +38,7 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 		tester.assertRenderedPage(ParentResourceEscapePathTestPage.class);
 		tester.assertNoErrorMessage();
 
-		String html = tester.getLastResponse().getTextResponse().toString();
+		String html = tester.getLastResponseAsString();
 		assertContains(html, "<html><head><wicket:link><script ");
 		assertContains(html, " type=\"text/javascript\"");
 		assertContains(html, "src=\"" + expectedResourceUrl() + "\"");
@@ -59,10 +61,10 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 
 	private void resourceUrlGeneratedByResourceReference()
 	{
-		final ResourceReference ref = new ResourceReference(ParentResourceEscapePathTestPage.class,
-			"../../../ParentResourceTest.js");
+		final ResourceReference ref = new PackageResourceReference(
+			ParentResourceEscapePathTestPage.class, "../../../ParentResourceTest.js");
 
-		assertEquals(expectedResourceUrl(), tester.createRequestCycle().urlFor(ref).toString());
+		assertEquals(expectedResourceUrl(), tester.getRequestCycle().urlFor(ref));
 	}
 
 	public void testRequestHandlingOfResourceUrlWithEscapeStringInside()
@@ -76,14 +78,13 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 
 	private void requestHandlingOfResourceUrlWithEscapeStringInside()
 	{
-		final WebRequestCycle cycle = tester.setupRequestAndResponse();
-		final MockHttpServletRequest request = tester.getServletRequest();
-		request.setMethod("GET");
-		request.setURL("http://localhost/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/" +
-			expectedResourceUrl());
-		tester.processRequestCycle(cycle);
+		tester.getRequest()
+			.setUrl(
+				Url.parse("wicket/resource/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/" +
+					expectedResourceUrl()));
+		tester.processRequest();
 		tester.assertNoErrorMessage();
-		assertEquals("// ParentResourceTest.js", tester.getServletResponse().getDocument());
+		assertEquals("// ParentResourceTest.js", tester.getLastResponseAsString());
 	}
 
 	private String expectedResourceUrl()
@@ -93,7 +94,7 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 			.getParentFolderPlaceholder();
 
 		final StringBuilder url = new StringBuilder();
-		url.append("resources/org.apache.wicket.ParentResourceEscapePathTestPage/");
+		url.append("../wicket/resource/org.apache.wicket.ParentResourceEscapePathTestPage/");
 
 		for (int i = 0; i < 3; i++)
 		{

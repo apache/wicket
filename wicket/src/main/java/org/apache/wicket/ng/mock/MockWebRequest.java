@@ -114,7 +114,7 @@ public class MockWebRequest extends WebRequest
 		List<Object> dates = headers.get(name);
 		if (dates == null || dates.isEmpty())
 		{
-			throw new WicketRuntimeException("Date header with name '" + name + "' does not exist.");
+			return -1;
 		}
 
 		Object date = dates.get(0);

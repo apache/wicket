@@ -488,8 +488,7 @@ public class WicketTesterTest extends TestCase
 
 		assertFalse(page.isExecuted());
 
-		tester.getRequest().getPostParameters().setParameterValue(name.getInputName(),
-			"Mock name");
+		tester.getRequest().getPostParameters().setParameterValue(name.getInputName(), "Mock name");
 
 		// Execute the ajax event
 		tester.executeAjaxEvent(MockPageWithFormAndAjaxFormSubmitBehavior.EVENT_COMPONENT,
@@ -552,6 +551,7 @@ public class WicketTesterTest extends TestCase
 		try
 		{
 			tester.startPage(BlockedResourceLinkPage.class);
+			System.out.println(tester.getLastResponse().getStatus());
 			fail("Accessing " + BlockedResourceLinkPage.class + " should have raised a " +
 				PackageResourceBlockedException.class);
 		}

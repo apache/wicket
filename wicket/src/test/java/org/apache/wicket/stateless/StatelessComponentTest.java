@@ -34,7 +34,7 @@ public class StatelessComponentTest extends WicketTestCase
 
 		tester.getRequest()
 			.setUrl(
-				Url.parse("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication?wicket:bookmarkablePage=:org.apache.wicket.stateless.StatelessComponentPage&wicket:interface=:0:link::ILinkListener::"));
+				Url.parse("wicket/bookmarkable/org.apache.wicket.stateless.StatelessComponentPage?0-1.ILinkListener-link"));
 		try
 		{
 			tester.processRequest();
@@ -57,7 +57,7 @@ public class StatelessComponentTest extends WicketTestCase
 		executeTest(StatelessComponentPage.class, "StatelessComponentPage_mount_result.html");
 		tester.getRequest()
 			.setUrl(
-				Url.parse("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/stateless/wicket:interface/:0:link::ILinkListener::"));
+				Url.parse("stateless?0-1.ILinkListener-link&amp;testParam1=testValue1&amp;testParam2=testValue2"));
 		try
 		{
 			tester.processRequest();
@@ -83,7 +83,7 @@ public class StatelessComponentTest extends WicketTestCase
 
 		tester.getRequest()
 			.setUrl(
-				Url.parse("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication?wicket:bookmarkablePage=:org.apache.wicket.stateless.StatelessComponentPageWithParams&testParam1=testValue1&testParam2=testValue2&wicket:interface=:0:link::ILinkListener::"));
+				Url.parse("wicket/bookmarkable/org.apache.wicket.stateless.StatelessComponentPageWithParams?0-1.ILinkListener-link&amp;testParam1=testValue1&amp;testParam2=testValue2"));
 		try
 		{
 			tester.processRequest();
@@ -111,7 +111,7 @@ public class StatelessComponentTest extends WicketTestCase
 			"StatelessComponentPageWithParams_mount_result.html");
 		tester.getRequest()
 			.setUrl(
-				Url.parse("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/stateless/testParam1/testValue1/testParam2/testValue2/wicket:interface/%3A0%3Alink%3A%3AILinkListener%3A%3A/"));
+				Url.parse("stateless?0-1.ILinkListener-link&amp;testParam1=testValue1&amp;testParam2=testValue2"));
 		try
 		{
 			tester.processRequest();
@@ -136,9 +136,8 @@ public class StatelessComponentTest extends WicketTestCase
 		// test is always the home page. it doesn't work then
 		executeTest(StatelessComponentPageWithParams.class, params,
 			"StatelessComponentPageWithParams_indexed_mount_result.html");
-		tester.getRequest()
-			.setUrl(
-				Url.parse("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/stateless/testValue1/testValue2/wicket:interface/%3A0%3Alink%3A%3AILinkListener%3A%3A/"));
+		tester.getRequest().setUrl(
+			Url.parse("stateless/testValue1/testValue2?0-1.ILinkListener-link"));
 		try
 		{
 			tester.processRequest();
