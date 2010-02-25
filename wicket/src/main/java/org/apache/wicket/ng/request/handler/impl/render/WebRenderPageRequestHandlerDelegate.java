@@ -117,14 +117,7 @@ public class WebRenderPageRequestHandlerDelegate extends RenderPageRequestHandle
 		final Response originalResponse = requestCycle.getResponse();
 
 		// buffered web response for page
-		BufferedWebResponse response = new BufferedWebResponse()
-		{
-			@Override
-			public String encodeURL(CharSequence url)
-			{
-				return originalResponse.encodeURL(url).toString();
-			}
-		};
+		BufferedWebResponse response = new BufferedWebResponse((WebResponse)originalResponse);
 
 		// keep the original base URL
 		Url originalBaseUrl = requestCycle.getUrlRenderer().setBaseUrl(targetUrl);

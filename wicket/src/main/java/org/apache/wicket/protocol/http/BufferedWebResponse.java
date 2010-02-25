@@ -35,8 +35,32 @@ import org.apache.wicket.util.lang.Checks;
  * 
  * @author Matej Knopp
  */
-public abstract class BufferedWebResponse extends WebResponse
+public class BufferedWebResponse extends WebResponse
 {
+	private final transient WebResponse originalResponse;
+
+	/**
+	 * Construct.
+	 * 
+	 * @param originalResponse
+	 */
+	public BufferedWebResponse(WebResponse originalResponse)
+	{
+		this.originalResponse = originalResponse;
+	}
+
+	@Override
+	public String encodeURL(CharSequence url)
+	{
+		if (originalResponse != null)
+		{
+			return originalResponse.encodeURL(url);
+		}
+		else
+		{
+			return url != null ? url.toString() : null;
+		}
+	}
 
 	private static abstract class Action
 	{
@@ -259,13 +283,6 @@ public abstract class BufferedWebResponse extends WebResponse
 			response.flush();
 		}
 	};
-
-	/**
-	 * Construct.
-	 */
-	public BufferedWebResponse()
-	{
-	}
 
 	private final List<Action> actions = new ArrayList<Action>();
 	private WriteCharSequenceAction charSequenceAction;

@@ -39,14 +39,7 @@ class HeaderBufferingWebResponse extends WebResponse
 	public HeaderBufferingWebResponse(WebResponse originalResponse)
 	{
 		this.originalResponse = originalResponse;
-		bufferedResponse = new BufferedWebResponse()
-		{
-			@Override
-			public String encodeURL(CharSequence url)
-			{
-				return HeaderBufferingWebResponse.this.encodeURL(url);
-			}
-		};
+		bufferedResponse = new BufferedWebResponse(originalResponse);
 	}
 
 	private boolean bufferedWritten = false;

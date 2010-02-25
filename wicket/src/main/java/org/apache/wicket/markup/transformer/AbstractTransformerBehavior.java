@@ -17,7 +17,6 @@
 package org.apache.wicket.markup.transformer;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.markup.ComponentTag;
@@ -54,16 +53,9 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 	 * 
 	 * @return Response object. Must not be null
 	 */
-	protected BufferedWebResponse newResponse(final Response originalResponse)
+	protected BufferedWebResponse newResponse(final WebResponse originalResponse)
 	{
-		return new BufferedWebResponse()
-		{
-			@Override
-			public String encodeURL(CharSequence url)
-			{
-				return originalResponse.encodeURL(url);
-			}
-		};
+		return new BufferedWebResponse(originalResponse);
 	}
 
 	/**
