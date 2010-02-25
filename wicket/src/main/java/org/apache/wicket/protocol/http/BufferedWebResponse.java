@@ -333,6 +333,45 @@ public abstract class BufferedWebResponse extends WebResponse
 		charSequenceAction.append(sequence);
 	}
 
+	/**
+	 * Returns the text already written to this response.
+	 * 
+	 * @return text
+	 */
+	public CharSequence getText()
+	{
+		if (dataAction != null)
+		{
+			throw new IllegalStateException("write(byte[]) has already been called.");
+		}
+		if (charSequenceAction != null)
+		{
+			return charSequenceAction.builder;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/**
+	 * Replaces the text in this response
+	 * 
+	 * @param text
+	 */
+	public void setText(CharSequence text)
+	{
+		if (dataAction != null)
+		{
+			throw new IllegalStateException("write(byte[]) has already been called.");
+		}
+		if (charSequenceAction != null)
+		{
+			charSequenceAction.builder.setLength(0);
+		}
+		write(text);
+	}
+
 	@Override
 	public void write(byte[] array)
 	{
