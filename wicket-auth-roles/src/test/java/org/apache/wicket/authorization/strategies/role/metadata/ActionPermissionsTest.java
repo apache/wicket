@@ -31,22 +31,18 @@ import org.apache.wicket.util.tester.WicketTester;
  */
 public class ActionPermissionsTest extends TestCase
 {
-	/**
-	 * Construct.
-	 */
-	public ActionPermissionsTest()
+	private WicketTester tester;
+
+	@Override
+	protected void setUp() throws Exception
 	{
-		super();
+		tester = new WicketTester();
 	}
 
-	/**
-	 * Construct.
-	 * 
-	 * @param arg0
-	 */
-	public ActionPermissionsTest(String arg0)
+	@Override
+	protected void tearDown() throws Exception
 	{
-		super(arg0);
+		tester.destroy();
 	}
 
 	/**
@@ -90,8 +86,6 @@ public class ActionPermissionsTest extends TestCase
 	 */
 	public void testRemove2()
 	{
-		WicketTester tester = new WicketTester();
-		tester.setupRequestAndResponse();
 		Label label = new Label("label", "text");
 		Action mambo = new Action("mambo");
 		MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
@@ -107,8 +101,6 @@ public class ActionPermissionsTest extends TestCase
 			new ActionPermissions());
 		MetaDataRoleAuthorizationStrategy.unauthorize(label, mambo, "johan");
 		assertFalse(strategy.isActionAuthorized(label, mambo));
-		tester.processRequestCycle();
-		tester.destroy();
 	}
 
 	/**
@@ -117,8 +109,6 @@ public class ActionPermissionsTest extends TestCase
 	 */
 	public void testRemove3()
 	{
-		WicketTester tester = new WicketTester();
-		tester.setupRequestAndResponse();
 		Label label = new Label("label", "text");
 		Action mambo = new Action("mambo");
 		MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
@@ -135,7 +125,5 @@ public class ActionPermissionsTest extends TestCase
 		MetaDataRoleAuthorizationStrategy.authorize(label, mambo, "johan");
 		MetaDataRoleAuthorizationStrategy.unauthorize(label, mambo, "johan");
 		assertFalse(strategy.isActionAuthorized(label, mambo));
-		tester.processRequestCycle();
-		tester.destroy();
 	}
 }

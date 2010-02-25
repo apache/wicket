@@ -31,22 +31,18 @@ import org.apache.wicket.util.tester.WicketTester;
  */
 public class InstantiationPermissionsTest extends TestCase
 {
-	/**
-	 * Construct.
-	 */
-	public InstantiationPermissionsTest()
+	private WicketTester tester;
+
+	@Override
+	protected void setUp() throws Exception
 	{
-		super();
+		tester = new WicketTester();
 	}
 
-	/**
-	 * Construct.
-	 * 
-	 * @param arg0
-	 */
-	public InstantiationPermissionsTest(String arg0)
+	@Override
+	protected void tearDown() throws Exception
 	{
-		super(arg0);
+		tester.destroy();
 	}
 
 	/**
@@ -88,8 +84,6 @@ public class InstantiationPermissionsTest extends TestCase
 	 */
 	public void testRemove2()
 	{
-		WicketTester tester = new WicketTester();
-		tester.setupRequestAndResponse();
 		MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
 			new IRoleCheckingStrategy()
 			{
@@ -104,8 +98,6 @@ public class InstantiationPermissionsTest extends TestCase
 			new InstantiationPermissions());
 		MetaDataRoleAuthorizationStrategy.unauthorize(Page.class, "martijn");
 		assertFalse(strategy.isInstantiationAuthorized(Page.class));
-		tester.processRequestCycle();
-		tester.destroy();
 	}
 
 	/**
@@ -114,8 +106,6 @@ public class InstantiationPermissionsTest extends TestCase
 	 */
 	public void testRemove3()
 	{
-		WicketTester tester = new WicketTester();
-		tester.setupRequestAndResponse();
 		MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
 			new IRoleCheckingStrategy()
 			{
@@ -131,7 +121,5 @@ public class InstantiationPermissionsTest extends TestCase
 		MetaDataRoleAuthorizationStrategy.authorize(Page.class, "martijn");
 		MetaDataRoleAuthorizationStrategy.unauthorize(Page.class, "martijn");
 		assertFalse(strategy.isInstantiationAuthorized(Page.class));
-		tester.processRequestCycle();
-		tester.destroy();
 	}
 }

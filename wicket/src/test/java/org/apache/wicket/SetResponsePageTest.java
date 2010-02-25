@@ -28,7 +28,6 @@ public class SetResponsePageTest extends WicketTestCase
 	{
 		tester.startPage(Page1.class);
 		tester.assertRenderedPage(Page3.class);
-		tester.destroy();
 	}
 
 	/** first page, redirects to page 2. */

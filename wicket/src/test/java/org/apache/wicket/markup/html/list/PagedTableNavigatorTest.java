@@ -28,24 +28,6 @@ import org.apache.wicket.util.diff.DiffUtil;
  */
 public class PagedTableNavigatorTest extends WicketTestCase
 {
-	/**
-	 * Construct.
-	 */
-	public PagedTableNavigatorTest()
-	{
-		super();
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 *            name of test
-	 */
-	public PagedTableNavigatorTest(String name)
-	{
-		super(name);
-	}
 
 	/**
 	 * Test simple table behavior.
@@ -194,7 +176,5 @@ public class PagedTableNavigatorTest extends WicketTestCase
 		document = tester.getLastResponseAsString();
 		DiffUtil.validatePage(document, this.getClass(),
 			"PagedTableNavigatorExpectedResult_8.html", true);
-
-		tester.destroy();
 	}
 }

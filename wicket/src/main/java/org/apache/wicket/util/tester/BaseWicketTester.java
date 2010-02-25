@@ -67,7 +67,6 @@ import org.apache.wicket.ng.mock.MockWebRequest;
 import org.apache.wicket.ng.mock.MockWebResponse;
 import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.handler.IPageProvider;
@@ -531,33 +530,7 @@ public class BaseWicketTester
 	 */
 	public final Page startPage(final ITestPageSource testPageSource)
 	{
-		return startPage(new IPageProvider()
-		{
-			public void detach()
-			{
-			}
-
-			public Class<? extends IRequestablePage> getPageClass()
-			{
-				return null;
-			}
-
-			public boolean isNewPageInstance()
-			{
-				return false;
-			}
-
-			public IRequestablePage getPageInstance()
-			{
-				return testPageSource.getTestPage();
-			}
-
-			public PageParameters getPageParameters()
-			{
-				return null;
-			}
-
-		});
+		return startPage(testPageSource.getTestPage());
 	}
 
 	/**
@@ -1614,6 +1587,11 @@ public class BaseWicketTester
 	public MockWebResponse getResponse()
 	{
 		return response;
+	}
+
+	public MockWebRequest getLastRequest()
+	{
+		return lastRequest;
 	}
 
 

@@ -16,9 +16,10 @@
  */
 package org.apache.wicket.stateless;
 
+import junit.framework.TestCase;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ng.mock.MockApplication;
 import org.apache.wicket.stateless.pages.HomePage;
 import org.apache.wicket.stateless.pages.LoginPage;
@@ -32,7 +33,7 @@ import org.apache.wicket.util.tester.WicketTester;
  * 
  * @author marrink
  */
-public class TemporarySessionTest extends WicketTestCase
+public class TemporarySessionTest extends TestCase
 {
 	private WicketTester tester;
 

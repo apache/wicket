@@ -22,13 +22,11 @@ import java.lang.reflect.InvocationTargetException;
 import junit.framework.TestCase;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.Page;
 import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.authorization.strategies.role.IRoleCheckingStrategy;
 import org.apache.wicket.authorization.strategies.role.RoleAuthorizationStrategy;
 import org.apache.wicket.authorization.strategies.role.Roles;
-import org.apache.wicket.util.tester.ITestPageSource;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
@@ -39,24 +37,6 @@ import org.apache.wicket.util.tester.WicketTester;
 public class AnnotationsRoleTest extends TestCase
 {
 	WicketTester tester;
-
-	/**
-	 * Construct.
-	 */
-	public AnnotationsRoleTest()
-	{
-		super();
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param arg0
-	 */
-	public AnnotationsRoleTest(String arg0)
-	{
-		super(arg0);
-	}
 
 	@Override
 	protected void setUp() throws Exception
@@ -77,15 +57,7 @@ public class AnnotationsRoleTest extends TestCase
 	{
 		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(
 			new RoleAuthorizationStrategy(new UserRolesAuthorizer("FOO")));
-		tester.startPage(new ITestPageSource()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public Page getTestPage()
-			{
-				return new NormalPage();
-			}
-		});
+		tester.startPage(NormalPage.class);
 		tester.assertRenderedPage(NormalPage.class);
 	}
 
@@ -97,15 +69,7 @@ public class AnnotationsRoleTest extends TestCase
 		WicketTester tester = new WicketTester();
 		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(
 			new RoleAuthorizationStrategy(new UserRolesAuthorizer("ADMIN")));
-		tester.startPage(new ITestPageSource()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public Page getTestPage()
-			{
-				return new AdminPage();
-			}
-		});
+		tester.startPage(AdminPage.class);
 		tester.assertRenderedPage(AdminPage.class);
 	}
 
@@ -133,15 +97,7 @@ public class AnnotationsRoleTest extends TestCase
 
 		try
 		{
-			tester.startPage(new ITestPageSource()
-			{
-				private static final long serialVersionUID = 1L;
-
-				public Page getTestPage()
-				{
-					return new AdminPage();
-				}
-			});
+			tester.startPage(AdminPage.class);
 			assertTrue("an authorization exception event should have been received",
 				listener.eventReceived);
 		}
