@@ -1306,9 +1306,11 @@ Wicket.Ajax.Call.prototype = {
 
 			// get the new component body
 			if (node.hasChildNodes()) {
-				text = node.firstChild.nodeValue;
+				for( i=0 ; i < node.childNodes.length; i++ ) {
+					text = text + node.childNodes[i].nodeValue;
+				}
 			}
-
+			 
 			// if the text was escaped, unascape it
 			// (escaping is done when the component body contains a CDATA section)
 			var encoding = node.getAttribute("encoding");
