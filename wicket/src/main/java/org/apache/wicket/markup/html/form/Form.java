@@ -1988,7 +1988,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	protected void registerJavascriptNamespaces(IHeaderResponse response)
 	{
 		response.renderJavascript(
-			"if (typeof(Wicket)=='undefined') { Wicket={}; } if (typeof('Wicket.Forms')=='undefined') { Wicket.Forms={}; }",
+			"if (typeof(Wicket)=='undefined') { Wicket={}; } if (typeof(Wicket.Forms)=='undefined') { Wicket.Forms={}; }",
 			Form.class.getName());
 	}
 
