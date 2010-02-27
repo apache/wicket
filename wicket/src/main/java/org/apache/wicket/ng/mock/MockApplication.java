@@ -16,19 +16,10 @@
  */
 package org.apache.wicket.ng.mock;
 
-import javax.servlet.ServletContext;
-
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
-import org.apache.wicket.ng.request.component.IRequestablePage;
-import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.request.cycle.RequestCycleContext;
-import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
-import org.apache.wicket.ng.request.handler.impl.render.RenderPageRequestHandlerDelegate;
-import org.apache.wicket.ng.request.handler.impl.render.WebRenderPageRequestHandlerDelegate;
 import org.apache.wicket.pageStore.IPageManager;
 import org.apache.wicket.pageStore.IPageManagerContext;
-import org.apache.wicket.protocol.http.MockServletContext;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.session.ISessionStore;
 
@@ -51,38 +42,6 @@ public class MockApplication extends WebApplication
 		return DEVELOPMENT;
 	}
 
-	@Override
-	protected MockRequestCycle newRequestCycle(RequestCycleContext context)
-	{
-		return new MockRequestCycle(context);
-	}
-
-	private IRequestablePage lastRenderedPage;
-
-	public IRequestablePage getLastRenderedPage()
-	{
-		return lastRenderedPage;
-	}
-
-	public void clearLastRenderedPage()
-	{
-		lastRenderedPage = null;
-	}
-
-	@Override
-	public RenderPageRequestHandlerDelegate getRenderPageRequestHandlerDelegate(
-		RenderPageRequestHandler renderPageRequestHandler)
-	{
-		return new WebRenderPageRequestHandlerDelegate(renderPageRequestHandler)
-		{
-			@Override
-			public void respond(RequestCycle requestCycle)
-			{
-				lastRenderedPage = getPageProvider().getPageInstance();
-				super.respond(requestCycle);
-			}
-		};
-	}
 
 	@Override
 	protected IPageManager newPageManager(IPageManagerContext context)
@@ -104,30 +63,9 @@ public class MockApplication extends WebApplication
 		return getSessionStore().lookup(null);
 	}
 
-	private MockServletContext mockServletContext;
-
-	@Override
-	public ServletContext getServletContext()
-	{
-		return mockServletContext;
-	}
-
 	@Override
 	public final String getInitParameter(String key)
 	{
 		return null;
-	}
-
-	@Override
-	protected void internalInit()
-	{
-		// TODO NG What should the proper path be
-		mockServletContext = new MockServletContext(this, "");
-		super.internalInit();
-	}
-
-	public void destroy()
-	{
-		internalDestroy();
 	}
 }

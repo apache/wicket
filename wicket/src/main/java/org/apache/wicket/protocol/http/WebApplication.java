@@ -24,6 +24,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.IPageRendererProvider;
 import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Page;
 import org.apache.wicket.Request;
@@ -39,8 +40,8 @@ import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
-import org.apache.wicket.ng.request.handler.impl.render.RenderPageRequestHandlerDelegate;
-import org.apache.wicket.ng.request.handler.impl.render.WebRenderPageRequestHandlerDelegate;
+import org.apache.wicket.ng.request.handler.impl.render.PageRenderer;
+import org.apache.wicket.ng.request.handler.impl.render.WebPageRenderer;
 import org.apache.wicket.ng.request.mapper.MountedMapper;
 import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.session.HttpSessionStore;
@@ -102,6 +103,8 @@ public abstract class WebApplication extends Application
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(WebApplication.class);
 
+	private ServletContext servletContext;
+
 	/**
 	 * Covariant override for easy getting the current {@link WebApplication} without having to cast
 	 * it.
@@ -134,6 +137,7 @@ public abstract class WebApplication extends Application
 
 	/** The WicketFilter that this application is attached to */
 	private WicketFilter wicketFilter;
+
 
 	/**
 	 * Constructor. <strong>Use {@link #init()} for any configuration of your application instead of
@@ -172,6 +176,18 @@ public abstract class WebApplication extends Application
 			" in the init() method instead of your constructor");
 	}
 
+
+	/**
+	 * Sets servlet context this application runs after. This is uaully done from a filter or a
+	 * servlet responsible for managing this application object, such as {@link WicketFilter}
+	 * 
+	 * @param servletContext
+	 */
+	public void setServletContext(ServletContext servletContext)
+	{
+		this.servletContext = servletContext;
+	}
+
 	/**
 	 * Gets the servlet context for this application. Use this to get references to absolute paths,
 	 * global web.xml parameters (&lt;context-param&gt;), etc.
@@ -180,13 +196,13 @@ public abstract class WebApplication extends Application
 	 */
 	public ServletContext getServletContext()
 	{
-		if (wicketFilter != null)
+		if (servletContext == null)
 		{
-			return wicketFilter.getFilterConfig().getServletContext();
+			throw new IllegalStateException("servletContext is not set yet. Any code in your"
+				+ " Application object that uses the wicket filter instance should be put"
+				+ " in the init() method instead of your constructor");
 		}
-		throw new IllegalStateException("servletContext is not set yet. Any code in your"
-			+ " Application object that uses the wicket filter instance should be put"
-			+ " in the init() method instead of your constructor");
+		return servletContext;
 	}
 
 	/**
@@ -352,7 +368,9 @@ public abstract class WebApplication extends Application
 	 */
 	public final void setWicketFilter(final WicketFilter wicketFilter)
 	{
+		Checks.argumentNotNull(wicketFilter, "wicketFilter");
 		this.wicketFilter = wicketFilter;
+		servletContext = wicketFilter.getFilterConfig().getServletContext();
 	}
 
 	/**
@@ -420,6 +438,8 @@ public abstract class WebApplication extends Application
 		{
 			getResourceSettings().addResourceFolder(resourceFolder);
 		}
+
+		setPageRendererProvider(new WebPageRendererProvider());
 
 		// Configure the app.
 		configure();
@@ -633,13 +653,6 @@ public abstract class WebApplication extends Application
 	}
 
 	@Override
-	public RenderPageRequestHandlerDelegate getRenderPageRequestHandlerDelegate(
-		RenderPageRequestHandler renderPageRequestHandler)
-	{
-		return new WebRenderPageRequestHandlerDelegate(renderPageRequestHandler);
-	}
-
-	@Override
 	public void set()
 	{
 		ThreadContext.setApplication(this);
@@ -650,5 +663,14 @@ public abstract class WebApplication extends Application
 	{
 		String mimeType = getServletContext().getMimeType(fileName);
 		return mimeType != null ? mimeType : super.getMimeType(fileName);
+	}
+
+	private static class WebPageRendererProvider implements IPageRendererProvider
+	{
+		public PageRenderer get(RenderPageRequestHandler handler)
+		{
+			return new WebPageRenderer(handler);
+		}
+
 	}
 }

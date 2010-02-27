@@ -24,6 +24,7 @@ import org.apache.wicket.MetaDataEntry;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
+import org.apache.wicket.Session;
 import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
@@ -60,6 +61,8 @@ import org.slf4j.LoggerFactory;
 public class RequestCycle extends RequestHandlerStack
 {
 	private static final Logger log = LoggerFactory.getLogger(RequestCycle.class);
+
+	private boolean cleanupFeedbackMessagesOnDetach = true;
 
 	/**
 	 * Custom callback invoked on request cycle detach. Detach callbacks are invoked after all
@@ -133,6 +136,7 @@ public class RequestCycle extends RequestHandlerStack
 		requestMapper = context.getRequestMapper();
 		exceptionMapper = context.getExceptionMapper();
 	}
+
 
 	/**
 	 * 
@@ -420,6 +424,15 @@ public class RequestCycle extends RequestHandlerStack
 	public void detach()
 	{
 		set(this);
+
+		if (cleanupFeedbackMessagesOnDetach)
+		{
+			if (Session.exists())
+			{
+				Session.get().cleanupFeedbackMessages();
+			}
+		}
+
 		try
 		{
 			super.detach();
@@ -511,4 +524,16 @@ public class RequestCycle extends RequestHandlerStack
 	{
 		return newClientInfo();
 	}
+
+	public boolean isCleanupFeedbackMessagesOnDetach()
+	{
+		return cleanupFeedbackMessagesOnDetach;
+	}
+
+	public void setCleanupFeedbackMessagesOnDetach(boolean cleanupFeedbackMessagesOnDetach)
+	{
+		this.cleanupFeedbackMessagesOnDetach = cleanupFeedbackMessagesOnDetach;
+	}
+
+
 }

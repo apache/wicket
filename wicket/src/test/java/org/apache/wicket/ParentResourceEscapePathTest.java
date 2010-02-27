@@ -64,7 +64,7 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 		final ResourceReference ref = new PackageResourceReference(
 			ParentResourceEscapePathTestPage.class, "../../../ParentResourceTest.js");
 
-		assertEquals(expectedResourceUrl(), tester.getRequestCycle().urlFor(ref));
+		assertEquals(expectedResourceUrl(), tester.getLastRequestCycle().urlFor(ref));
 	}
 
 	public void testRequestHandlingOfResourceUrlWithEscapeStringInside()

@@ -55,8 +55,6 @@ import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.cycle.RequestCycleContext;
-import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
-import org.apache.wicket.ng.request.handler.impl.render.RenderPageRequestHandlerDelegate;
 import org.apache.wicket.ng.request.mapper.IMapperContext;
 import org.apache.wicket.ng.request.mapper.SystemMapper;
 import org.apache.wicket.ng.resource.ResourceReferenceRegistry;
@@ -202,6 +200,11 @@ public abstract class Application implements UnboundListener
 	/** can the settings object be set/used. */
 	private boolean settingsAccessible;
 
+	/** page renderer provider */
+	private IPageRendererProvider pageRendererProvider;
+
+	/** request cycle provider */
+	private IRequestCycleProvider requestCycleProvider;
 
 	/**
 	 * Checks if the <code>Application</code> threadlocal is set in this thread
@@ -850,7 +853,7 @@ public abstract class Application implements UnboundListener
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 */
-	protected void internalDestroy()
+	public void internalDestroy()
 	{
 		// destroy detach listener
 		final IDetachListener detachListener = getFrameworkSettings().getDetachListener();
@@ -916,6 +919,8 @@ public abstract class Application implements UnboundListener
 		setRootRequestMapper(new SystemMapper());
 
 		pageFactory = newPageFactory();
+
+		requestCycleProvider = new DefaultRequestCycleProvider();
 	}
 
 	/**
@@ -1247,11 +1252,17 @@ public abstract class Application implements UnboundListener
 	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	/**
-	 * Returns the {@link RenderPageRequestHandlerDelegate} responsible for rendering the page.
-	 */
-	public abstract RenderPageRequestHandlerDelegate getRenderPageRequestHandlerDelegate(
-		RenderPageRequestHandler renderPageRequestHandler);
+	public final IPageRendererProvider getPageRendererProvider()
+	{
+		return pageRendererProvider;
+	}
+
+	public final void setPageRendererProvider(IPageRendererProvider pageRendererProvider)
+	{
+		Checks.argumentNotNull(pageRendererProvider, "pageRendererProvider");
+		this.pageRendererProvider = pageRendererProvider;
+	}
+
 
 	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1402,17 +1413,25 @@ public abstract class Application implements UnboundListener
 		return session;
 	}
 
-	/**
-	 * Override this method to create custom Request Cycle instance.
-	 * 
-	 * @param context
-	 *            holds context necessary to instantiate a request cycle, such as the current
-	 *            request, response, and request mappers
-	 * @return
-	 */
-	protected RequestCycle newRequestCycle(RequestCycleContext context)
+
+	public IRequestCycleProvider getRequestCycleProvider()
 	{
-		return new RequestCycle(context);
+		return requestCycleProvider;
+	}
+
+	public void setRequestCycleProvider(IRequestCycleProvider requestCycleProvider)
+	{
+		this.requestCycleProvider = requestCycleProvider;
+	}
+
+	private static class DefaultRequestCycleProvider implements IRequestCycleProvider
+	{
+
+		public RequestCycle get(RequestCycleContext context)
+		{
+			return new RequestCycle(context);
+		}
+
 	}
 
 
@@ -1422,15 +1441,8 @@ public abstract class Application implements UnboundListener
 		RequestCycleContext context = new RequestCycleContext(request, response,
 			getRootRequestMapper(), new DefaultExceptionMapper());
 
-		RequestCycle requestCycle = newRequestCycle(context);
-		requestCycle.register(new RequestCycle.DetachCallback()
-		{
-			public void onDetach(RequestCycle requestCycle)
-			{
-				getPageManager().commitRequest();
-				Session.get().cleanupFeedbackMessages();
-			}
-		});
+		RequestCycle requestCycle = getRequestCycleProvider().get(context);
+
 		return requestCycle;
 	}
 
@@ -1445,6 +1457,19 @@ public abstract class Application implements UnboundListener
 		}
 		internalInit();
 		init();
+		validateInit();
+	}
+
+	/**
+	 * Gives the Application object a chance to validate if it has been properly initialized
+	 */
+	protected void validateInit()
+	{
+		if (getPageRendererProvider() == null)
+		{
+			throw new IllegalStateException(
+				"An instance of IPageRendererProvider has not yet been set on this Application. @see Application#setPageRendererProvider");
+		}
 	}
 
 	/**
@@ -1482,5 +1507,4 @@ public abstract class Application implements UnboundListener
 	{
 		return URLConnection.getFileNameMap().getContentTypeFor(fileName);
 	}
-
 }

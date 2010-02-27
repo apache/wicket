@@ -32,20 +32,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * {@link RenderPageRequestHandlerDelegate} for web applications.
+ * {@link PageRenderer} for web applications.
  * 
  * @author Matej Knopp
  */
-public class WebRenderPageRequestHandlerDelegate extends RenderPageRequestHandlerDelegate
+public class WebPageRenderer extends PageRenderer
 {
-	private static Logger logger = LoggerFactory.getLogger(WebRenderPageRequestHandlerDelegate.class);
+	private static Logger logger = LoggerFactory.getLogger(WebPageRenderer.class);
 
 	/**
 	 * Construct.
 	 * 
 	 * @param renderPageRequestHandler
 	 */
-	public WebRenderPageRequestHandlerDelegate(RenderPageRequestHandler renderPageRequestHandler)
+	public WebPageRenderer(RenderPageRequestHandler renderPageRequestHandler)
 	{
 		super(renderPageRequestHandler);
 	}
@@ -149,7 +149,7 @@ public class WebRenderPageRequestHandlerDelegate extends RenderPageRequestHandle
 	}
 
 	/**
-	 * @see org.apache.wicket.ng.request.handler.impl.render.RenderPageRequestHandlerDelegate#respond(org.apache.wicket.ng.request.cycle.RequestCycle)
+	 * @see org.apache.wicket.ng.request.handler.impl.render.PageRenderer#respond(org.apache.wicket.ng.request.cycle.RequestCycle)
 	 */
 	@Override
 	public void respond(RequestCycle requestCycle)

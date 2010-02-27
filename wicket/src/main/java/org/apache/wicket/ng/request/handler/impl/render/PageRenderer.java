@@ -28,7 +28,7 @@ import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler.Redire
  * 
  * @author Matej Knopp
  */
-public abstract class RenderPageRequestHandlerDelegate
+public abstract class PageRenderer
 {
 	private final RenderPageRequestHandler renderPageRequestHandler;
 
@@ -37,7 +37,7 @@ public abstract class RenderPageRequestHandlerDelegate
 	 * 
 	 * @param renderPageRequestHandler
 	 */
-	public RenderPageRequestHandlerDelegate(RenderPageRequestHandler renderPageRequestHandler)
+	public PageRenderer(RenderPageRequestHandler renderPageRequestHandler)
 	{
 		this.renderPageRequestHandler = renderPageRequestHandler;
 	}

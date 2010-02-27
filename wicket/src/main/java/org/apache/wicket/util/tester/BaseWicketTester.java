@@ -18,7 +18,6 @@ package org.apache.wicket.util.tester;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,10 +27,14 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.Cookie;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
+import org.apache.wicket.IPageRendererProvider;
+import org.apache.wicket.IRequestCycleProvider;
 import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
+import org.apache.wicket.Request;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
@@ -61,20 +64,24 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.mock.MockApplication;
-import org.apache.wicket.ng.mock.MockRequestCycle;
 import org.apache.wicket.ng.mock.MockSession;
 import org.apache.wicket.ng.mock.MockWebRequest;
 import org.apache.wicket.ng.mock.MockWebResponse;
 import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.ng.request.cycle.IExceptionMapper;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.ng.request.cycle.RequestCycleContext;
 import org.apache.wicket.ng.request.handler.IPageProvider;
 import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
 import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.impl.BookmarkablePageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
+import org.apache.wicket.ng.request.handler.impl.render.PageRenderer;
+import org.apache.wicket.protocol.http.MockServletContext;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.apache.wicket.util.diff.DiffUtil;
 import org.apache.wicket.util.lang.Classes;
@@ -128,7 +135,7 @@ public class BaseWicketTester
 	}
 
 
-	private final MockApplication application;
+	private final WebApplication application;
 
 	private boolean followRedirects = true;
 	private int redirectCount;
@@ -150,7 +157,23 @@ public class BaseWicketTester
 	private final MockSession session;
 
 	/** current request cycle */
-	private MockRequestCycle requestCycle;
+	private RequestCycle requestCycle;
+	private RequestCycle lastRequestCycle;
+
+	private Page lastRenderedPage;
+
+	private boolean exposeExceptions = true;
+
+	private IRequestHandler forcedHandler;
+
+	/**
+	 * @return last rendered page
+	 */
+	public Page getLastRenderedPage()
+	{
+		return lastRenderedPage;
+	}
+
 
 	/**
 	 * Creates <code>WicketTester</code> and automatically create a <code>WebApplication</code>, but
@@ -197,16 +220,27 @@ public class BaseWicketTester
 	 * @param application
 	 *            a <code>WicketTester</code> <code>WebApplication</code> object
 	 */
-	public BaseWicketTester(final MockApplication application)
+	public BaseWicketTester(final WebApplication application)
 	{
 		oldThreadContext = ThreadContext.detach();
 
 		this.application = application;
+
 		// FIXME some tests are leaking applications by not calling destroy on them or overriding
 		// teardown() without calling super, for now we work around by making each name unique
 		this.application.setName("WicketTesterApplication-" + UUID.randomUUID());
 		this.application.set();
+
+		application.setServletContext(new MockServletContext(application, ""));
+
+		// initialize the application
 		this.application.initApplication();
+
+		// reconfigure application for the test environment
+		application.setPageRendererProvider(new LastPageRecordingPageRendererProvider(
+			application.getPageRendererProvider()));
+		application.setRequestCycleProvider(new TestRequestCycleProvider(
+			application.getRequestCycleProvider()));
 
 		// prepare session
 		session = new MockSession(new MockWebRequest(Url.parse("/")));
@@ -220,7 +254,7 @@ public class BaseWicketTester
 	{
 		request = new MockWebRequest(Url.parse("/"));
 		response = new MockWebResponse();
-		requestCycle = (MockRequestCycle)application.createRequestCycle(request, response);
+		requestCycle = application.createRequestCycle(request, response);
 		ThreadContext.setRequestCycle(requestCycle);
 	}
 
@@ -259,11 +293,11 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * Returns the {@link MockApplication} for this environment.
+	 * Returns the {@link Application} for this environment.
 	 * 
 	 * @return application
 	 */
-	public MockApplication getApplication()
+	public WebApplication getApplication()
 	{
 		return application;
 	}
@@ -274,7 +308,7 @@ public class BaseWicketTester
 	 */
 	public void destroy()
 	{
-		application.destroy();
+		application.internalDestroy();
 		ThreadContext.detach();
 	}
 
@@ -311,24 +345,29 @@ public class BaseWicketTester
 		return processRequest(request, forcedRequestHandler, false);
 	}
 
-	private boolean processRequest(MockWebRequest request, IRequestHandler forcedRequestHandler,
-		boolean redirect)
+	private boolean processRequest(MockWebRequest forcedRequest,
+		IRequestHandler forcedRequestHandler, boolean redirect)
 	{
+
+		if (forcedRequest != null)
+		{
+			request = forcedRequest;
+		}
+
+		forcedHandler = forcedRequestHandler;
+		requestCycle = application.createRequestCycle(request, response);
+		ThreadContext.setRequestCycle(requestCycle);
 
 		try
 		{
+
 			if (!redirect)
 			{
 				/*
 				 * we do not reset the session during redirect processing because we want to
 				 * preserve the state before the redirect, eg any error messages reported
 				 */
-				session.reset();
-			}
-
-			if (request != null)
-			{
-				setRequest(request);
+				session.cleanupFeedbackMessages();
 			}
 
 			if (getLastResponse() != null)
@@ -337,13 +376,8 @@ public class BaseWicketTester
 				// worked...
 				for (Cookie cookie : getLastResponse().getCookies())
 				{
-					this.request.addCookie(cookie);
+					request.addCookie(cookie);
 				}
-			}
-
-			if (forcedRequestHandler != null)
-			{
-				requestCycle.forceRequestHandler(forcedRequestHandler);
 			}
 
 			if (!requestCycle.processRequestAndDetach())
@@ -353,6 +387,13 @@ public class BaseWicketTester
 
 			recordRequestResponse();
 			setupNextRequestCycle();
+
+
+			// reattach request cycle to thread after it removed itself in detach
+			lastRequestCycle = requestCycle;
+			requestCycle = application.createRequestCycle(request, response);
+			ThreadContext.setRequestCycle(requestCycle);
+
 
 			if (followRedirects && lastResponse.isRedirect())
 			{
@@ -373,7 +414,7 @@ public class BaseWicketTester
 					newUrl.getQueryParameters());
 				mergedURL.concatSegments(newUrl.getSegments());
 
-				this.request.setUrl(mergedURL);
+				request.setUrl(mergedURL);
 				processRequest(null, null, true);
 
 				--redirectCount;
@@ -387,6 +428,13 @@ public class BaseWicketTester
 		}
 
 	}
+
+
+	public RequestCycle getLastRequestCycle()
+	{
+		return lastRequestCycle;
+	}
+
 
 	private void recordRequestResponse()
 	{
@@ -463,14 +511,6 @@ public class BaseWicketTester
 	public List<MockWebResponse> getPreviousResponses()
 	{
 		return Collections.unmodifiableList(previousResponses);
-	}
-
-	/**
-	 * @return last rendered page
-	 */
-	public Page getLastRenderedPage()
-	{
-		return (Page)application.getLastRenderedPage();
 	}
 
 	/**
@@ -600,7 +640,7 @@ public class BaseWicketTester
 	 */
 	public final <C extends Page> Page startPage(Class<C> pageClass)
 	{
-		request.setUrl(RequestCycle.get().urlFor(
+		request.setUrl(application.getRootRequestMapper().mapHandler(
 			new BookmarkablePageRequestHandler(new PageProvider(pageClass))));
 		processRequest();
 		return getLastRenderedPage();
@@ -619,7 +659,7 @@ public class BaseWicketTester
 	 */
 	public final <C extends Page> Page startPage(Class<C> pageClass, PageParameters parameters)
 	{
-		request.setUrl(RequestCycle.get().urlFor(
+		request.setUrl(application.getRootRequestMapper().mapHandler(
 			new BookmarkablePageRequestHandler(new PageProvider(pageClass, parameters))));
 		processRequest();
 		return getLastRenderedPage();
@@ -717,23 +757,7 @@ public class BaseWicketTester
 							Constructor<? extends Panel> c = panelClass.getConstructor(String.class);
 							return c.newInstance(panelId);
 						}
-						catch (SecurityException e)
-						{
-							throw convertoUnexpect(e);
-						}
-						catch (NoSuchMethodException e)
-						{
-							throw convertoUnexpect(e);
-						}
-						catch (InstantiationException e)
-						{
-							throw convertoUnexpect(e);
-						}
-						catch (IllegalAccessException e)
-						{
-							throw convertoUnexpect(e);
-						}
-						catch (InvocationTargetException e)
+						catch (Exception e)
 						{
 							throw convertoUnexpect(e);
 						}
@@ -1579,7 +1603,7 @@ public class BaseWicketTester
 		throw new WicketRuntimeException(message);
 	}
 
-	public MockRequestCycle getRequestCycle()
+	public RequestCycle getRequestCycle()
 	{
 		return requestCycle;
 	}
@@ -1594,5 +1618,118 @@ public class BaseWicketTester
 		return lastRequest;
 	}
 
+
+	public boolean isExposeExceptions()
+	{
+		return exposeExceptions;
+	}
+
+
+	public void setExposeExceptions(boolean exposeExceptions)
+	{
+		this.exposeExceptions = exposeExceptions;
+	}
+
+
+	private class LastPageRecordingPageRendererProvider implements IPageRendererProvider
+	{
+		private final IPageRendererProvider delegate;
+
+		public LastPageRecordingPageRendererProvider(IPageRendererProvider delegate)
+		{
+			this.delegate = delegate;
+		}
+
+		public PageRenderer get(RenderPageRequestHandler handler)
+		{
+			lastRenderedPage = (Page)handler.getPageProvider().getPageInstance();
+			return delegate.get(handler);
+		}
+	}
+
+	private class TestExceptionMapper implements IExceptionMapper
+	{
+		private final IExceptionMapper delegate;
+
+		public TestExceptionMapper(IExceptionMapper delegate)
+		{
+			this.delegate = delegate;
+		}
+
+		public IRequestHandler map(Exception e)
+		{
+			if (exposeExceptions)
+			{
+				if (e instanceof RuntimeException)
+				{
+					throw (RuntimeException)e;
+				}
+				else
+				{
+					throw new WicketRuntimeException(e);
+				}
+			}
+			else
+			{
+				return delegate.map(e);
+			}
+		}
+	}
+
+	private class TestRequestCycleProvider implements IRequestCycleProvider
+	{
+		private final IRequestCycleProvider delegate;
+
+		public TestRequestCycleProvider(IRequestCycleProvider delegate)
+		{
+			this.delegate = delegate;
+		}
+
+
+		public RequestCycle get(RequestCycleContext context)
+		{
+			context.setRequestMapper(new TestRequestMapper(context.getRequestMapper(),
+				forcedHandler));
+			forcedHandler = null;
+			context.setExceptionMapper(new TestExceptionMapper(context.getExceptionMapper()));
+			return delegate.get(context);
+		}
+
+	}
+
+	private static class TestRequestMapper implements IRequestMapper
+	{
+		private final IRequestMapper delegate;
+		private final IRequestHandler forcedHandler;
+
+		public TestRequestMapper(IRequestMapper delegate, IRequestHandler forced)
+		{
+			this.delegate = delegate;
+			forcedHandler = forced;
+		}
+
+		public int getCompatibilityScore(Request request)
+		{
+			return delegate.getCompatibilityScore(request);
+		}
+
+		public Url mapHandler(IRequestHandler requestHandler)
+		{
+			return delegate.mapHandler(requestHandler);
+		}
+
+		public IRequestHandler mapRequest(Request request)
+		{
+			if (forcedHandler != null)
+			{
+				return forcedHandler;
+			}
+			else
+			{
+				return delegate.mapRequest(request);
+			}
+		}
+
+	}
 
 }

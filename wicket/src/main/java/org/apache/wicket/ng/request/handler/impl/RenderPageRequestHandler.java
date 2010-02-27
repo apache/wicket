@@ -146,6 +146,6 @@ public class RenderPageRequestHandler implements IPageRequestHandler, IPageClass
 	 */
 	public void respond(RequestCycle requestCycle)
 	{
-		Application.get().getRenderPageRequestHandlerDelegate(this).respond(requestCycle);
+		Application.get().getPageRendererProvider().get(this).respond(requestCycle);
 	}
 }
