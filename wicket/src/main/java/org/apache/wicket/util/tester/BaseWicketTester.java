@@ -158,7 +158,6 @@ public class BaseWicketTester
 
 	/** current request cycle */
 	private RequestCycle requestCycle;
-	private RequestCycle lastRequestCycle;
 
 	private Page lastRenderedPage;
 
@@ -355,8 +354,6 @@ public class BaseWicketTester
 		}
 
 		forcedHandler = forcedRequestHandler;
-		requestCycle = application.createRequestCycle(request, response);
-		ThreadContext.setRequestCycle(requestCycle);
 
 		try
 		{
@@ -380,6 +377,8 @@ public class BaseWicketTester
 				}
 			}
 
+			requestCycle.setRequest(request);
+
 			if (!requestCycle.processRequestAndDetach())
 			{
 				return false;
@@ -387,12 +386,6 @@ public class BaseWicketTester
 
 			recordRequestResponse();
 			setupNextRequestCycle();
-
-
-			// reattach request cycle to thread after it removed itself in detach
-			lastRequestCycle = requestCycle;
-			requestCycle = application.createRequestCycle(request, response);
-			ThreadContext.setRequestCycle(requestCycle);
 
 
 			if (followRedirects && lastResponse.isRedirect())
@@ -428,13 +421,6 @@ public class BaseWicketTester
 		}
 
 	}
-
-
-	public RequestCycle getLastRequestCycle()
-	{
-		return lastRequestCycle;
-	}
-
 
 	private void recordRequestResponse()
 	{
@@ -1688,8 +1674,7 @@ public class BaseWicketTester
 
 		public RequestCycle get(RequestCycleContext context)
 		{
-			context.setRequestMapper(new TestRequestMapper(context.getRequestMapper(),
-				forcedHandler));
+			context.setRequestMapper(new TestRequestMapper(context.getRequestMapper()));
 			forcedHandler = null;
 			context.setExceptionMapper(new TestExceptionMapper(context.getExceptionMapper()));
 			return delegate.get(context);
@@ -1697,15 +1682,13 @@ public class BaseWicketTester
 
 	}
 
-	private static class TestRequestMapper implements IRequestMapper
+	private class TestRequestMapper implements IRequestMapper
 	{
 		private final IRequestMapper delegate;
-		private final IRequestHandler forcedHandler;
 
-		public TestRequestMapper(IRequestMapper delegate, IRequestHandler forced)
+		public TestRequestMapper(IRequestMapper delegate)
 		{
 			this.delegate = delegate;
-			forcedHandler = forced;
 		}
 
 		public int getCompatibilityScore(Request request)
@@ -1722,7 +1705,9 @@ public class BaseWicketTester
 		{
 			if (forcedHandler != null)
 			{
-				return forcedHandler;
+				IRequestHandler handler = forcedHandler;
+				forcedHandler = null;
+				return handler;
 			}
 			else
 			{
