@@ -160,6 +160,10 @@ public class MockWebResponse extends WebResponse
 	public void setHeader(String name, String value)
 	{
 		headers.put(name, value);
+		if (name.equals("Content-Type"))
+		{
+			setContentType(value);
+		}
 	}
 
 	/**

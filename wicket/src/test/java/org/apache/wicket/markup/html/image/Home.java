@@ -21,7 +21,7 @@ import java.util.Locale;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.ng.request.component.PageParameters;
-
+import org.apache.wicket.ng.resource.PackageResourceReference;
 
 /**
  * Demonstrates localization.
@@ -41,8 +41,8 @@ public final class Home extends WebPage
 	 */
 	public Home(final PageParameters parameters)
 	{
-		add(new Image("logo"));
-		add(new Image("beer"));
+		add(new Image("logo", new PackageResourceReference(Home.class, "../../border/logo.gif")));
+		add(new Image("beer", new PackageResourceReference(Home.class, "Beer.gif")));
 
 		// Add a couple of links to be able to play around with the session
 		// locale

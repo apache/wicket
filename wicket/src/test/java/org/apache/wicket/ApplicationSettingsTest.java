@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 
 import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.mock.MockApplication;
+import org.apache.wicket.protocol.http.MockServletContext;
 import org.apache.wicket.resource.loader.BundleStringResourceLoader;
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
@@ -141,9 +142,11 @@ public class ApplicationSettingsTest extends TestCase
 	 */
 	public void testLocalizer()
 	{
-		Application dummy = new MockApplication();
+		MockApplication dummy = new MockApplication();
+		dummy.setName("test-app");
+		dummy.setServletContext(new MockServletContext(dummy, ""));
 		dummy.set();
-		dummy.internalInit();
+		dummy.initApplication();
 		Localizer localizer = dummy.getResourceSettings().getLocalizer();
 		Assert.assertNotNull("Localizer should be available", localizer);
 	}

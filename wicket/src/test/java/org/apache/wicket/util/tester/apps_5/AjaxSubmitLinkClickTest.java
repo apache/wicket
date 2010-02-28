@@ -34,15 +34,6 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 {
 	private boolean linkClicked;
 
-	/**
-	 * Construct.
-	 */
-	public AjaxSubmitLinkClickTest()
-	{
-		super("Ajax submit link click test");
-	}
-
-
 	@Override
 	protected void setUp() throws Exception
 	{
@@ -78,20 +69,13 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 			}
 		});
 
-		tester.startPage(new ITestPageSource()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public Page getTestPage()
-			{
-				return page;
-			}
-		});
+		tester.startPage(page);
 
 		tester.assertRenderedPage(MockPageWithFormAndContainedLink.class);
 
 		// Change the name in the textfield
-		page.getNameField().setModelValue(new String[] { "new mock value" });
+		tester.getRequest().getPostParameters().setParameterValue(
+			page.getNameField().getInputName(), "new mock value");
 
 		// Click the submit link
 		tester.clickLink("form:link");
@@ -143,7 +127,8 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 		tester.assertRenderedPage(MockPageWithFormAndLink.class);
 
 		// Change the name in the textfield
-		page.getNameField().setModelValue(new String[] { "new mock value" });
+		tester.getRequest().getPostParameters().setParameterValue(
+			page.getNameField().getInputName(), "new mock value");
 
 		// Click the submit link
 		tester.clickLink("link");
