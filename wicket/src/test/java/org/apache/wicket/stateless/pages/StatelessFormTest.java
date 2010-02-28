@@ -18,7 +18,8 @@ package org.apache.wicket.stateless.pages;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.ng.mock.MockApplication;
+import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
@@ -30,7 +31,7 @@ public class StatelessFormTest extends WicketTestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		tester = new WicketTester(new WebApplication()
+		tester = new WicketTester(new MockApplication()
 		{
 			@Override
 			protected void init()
@@ -46,33 +47,24 @@ public class StatelessFormTest extends WicketTestCase
 				return Page1.class;
 			}
 
-			@Override
-			protected void outputDevelopmentModeWarning()
-			{
-				// Do nothing.
-			}
 		});
 	}
 
 	public void testBug()
 	{
 		{
-			final WebRequestCycle cycle = tester.setupRequestAndResponse(false);
-			tester.getServletRequest().setURL("page2");
-			tester.processRequestCycle(cycle);
+			tester.getRequest().setUrl(Url.parse("page2"));
+			tester.processRequest();
 			tester.assertRenderedPage(Page2.class);
 		}
 		{
-			final WebRequestCycle cycle = tester.setupRequestAndResponse(false);
-			tester.getServletRequest().setURL("page1");
-			tester.processRequestCycle(cycle);
+			tester.getRequest().setUrl(Url.parse("page1"));
+			tester.processRequest();
 			tester.assertRenderedPage(Page1.class);
 		}
 		{
-			final WebRequestCycle cycle = tester.setupRequestAndResponse(false);
-			tester.getServletRequest().setURL(
-				"page1/wicket:interface/:0:form::IFormSubmitListener::");
-			tester.processRequestCycle(cycle);
+			tester.getRequest().setUrl(Url.parse("page1?1-1.IFormSubmitListener-form"));
+			tester.processRequest();
 			tester.assertRenderedPage(Page1.class);
 		}
 	}

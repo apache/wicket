@@ -31,8 +31,8 @@ public class SimplePage_10 extends WebPage
 	/**
 	 * Construct.
 	 */
-	public SimplePage_10()
+	public SimplePage_10(boolean visible)
 	{
-		add(new SimplePanel("myPanel").setVisible(false));
+		add(new SimplePanel("myPanel").setVisible(visible));
 	}
 }

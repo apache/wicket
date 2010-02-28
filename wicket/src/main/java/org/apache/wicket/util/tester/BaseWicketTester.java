@@ -348,9 +348,20 @@ public class BaseWicketTester
 		return processRequest(request, forcedRequestHandler, false);
 	}
 
+	public boolean processRequest(IRequestHandler forcedRequestHandler)
+	{
+		return processRequest(null, forcedRequestHandler, false);
+	}
+
+
 	private boolean processRequest(MockWebRequest forcedRequest,
 		IRequestHandler forcedRequestHandler, boolean redirect)
 	{
+
+		if (!redirect)
+		{
+			lastRenderedPage = null;
+		}
 
 		if (forcedRequest != null)
 		{

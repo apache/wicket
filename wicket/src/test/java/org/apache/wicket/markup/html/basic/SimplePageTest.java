@@ -308,12 +308,9 @@ public class SimplePageTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_10() throws Exception
 	{
-		executeTest(SimplePage_10.class, "SimplePageExpectedResult_10.html");
+		executeTest(new SimplePage_10(false), "SimplePageExpectedResult_10.html");
+		tester.startPage(new SimplePage_10(true));
 		String document = tester.getLastResponseAsString();
-		Panel panel = (Panel)tester.getLastRenderedPage().get("myPanel");
-		assertNotNull(panel);
-
-		panel.setVisible(true);
 		assertTrue(document.contains("<wicket:panel>Inside the panel<span wicket:id=\"label\">mein Label</span></wicket:panel>"));
 	}
 
