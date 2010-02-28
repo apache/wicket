@@ -12,6 +12,26 @@ NB: DO NOT ADD LICENSES/NOTICES/ATTRIBUTIONS TO THIS FILE, BUT IN THE
     AUTOMATICALLY INCLUDE THE NOTICE IN THIS FILE.
 
 ---------------------------------------------------------------------------
+src/./wicket-guice
+---------------------------------------------------------------------------
+   Apache Wicket
+   Copyright 2007 The Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+
+   This product includes Guice, developed at Google, and licensed
+   under the Apache License 2.0. (http://code.google.com/p/google-guice/).
+---------------------------------------------------------------------------
+src/./wicket-quickstart/NOTICE
+---------------------------------------------------------------------------
+   Apache Wicket
+   Copyright 2007 The Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+
+---------------------------------------------------------------------------
 src/./wicket
 ---------------------------------------------------------------------------
    Apache Wicket
@@ -76,9 +96,9 @@ src/./wicket
    [1]: http://the-stickman.com/web-development/javascript/upload-multiple-files-with-a-single-file-element/
 
 ---------------------------------------------------------------------------
-src/./wicket-auth-roles
+src/./wicket-jmx
 ---------------------------------------------------------------------------
-   Apache Wicket Auth Roles
+   Apache Wicket
    Copyright 2007 The Apache Software Foundation
 
    This product includes software developed at
@@ -101,6 +121,47 @@ src/./wicket-datetime
    This product includes software developed by
    Joda.org (http://www.joda.org/).
    
+---------------------------------------------------------------------------
+src/./wicket-ioc
+---------------------------------------------------------------------------
+   Apache Wicket
+   Copyright 2007 The Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+
+---------------------------------------------------------------------------
+src/./wicket-objectssizeof-agent
+---------------------------------------------------------------------------
+   Apache Wicket
+   Copyright 2007 The Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+
+
+---------------------------------------------------------------------------
+src/./wicket-auth-roles
+---------------------------------------------------------------------------
+   Apache Wicket Auth Roles
+   Copyright 2007 The Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+
+---------------------------------------------------------------------------
+src/./wicket-extensions
+---------------------------------------------------------------------------
+   Apache Wicket Extensions
+   Copyright 2007 The Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+
+   Contains software developed in Apache Turbine, released
+   under the Apache Software License, Version 2.0. 
+   (c) 2001-2005
+
 ---------------------------------------------------------------------------
 src/./wicket-examples
 ---------------------------------------------------------------------------
@@ -143,67 +204,6 @@ src/./wicket-examples
 
    This product includes jhighlight (https://jhighlight.dev.java.net/)
    which is released under CDDL 1.0 license (http://www.opensource.org/licenses/cddl1.php).
-
----------------------------------------------------------------------------
-src/./wicket-extensions
----------------------------------------------------------------------------
-   Apache Wicket Extensions
-   Copyright 2007 The Apache Software Foundation
-
-   This product includes software developed at
-   The Apache Software Foundation (http://www.apache.org/).
-
-   Contains software developed in Apache Turbine, released
-   under the Apache Software License, Version 2.0. 
-   (c) 2001-2005
-
----------------------------------------------------------------------------
-src/./wicket-guice
----------------------------------------------------------------------------
-   Apache Wicket
-   Copyright 2007 The Apache Software Foundation
-
-   This product includes software developed at
-   The Apache Software Foundation (http://www.apache.org/).
-
-   This product includes Guice, developed at Google, and licensed
-   under the Apache License 2.0. (http://code.google.com/p/google-guice/).
----------------------------------------------------------------------------
-src/./wicket-ioc
----------------------------------------------------------------------------
-   Apache Wicket
-   Copyright 2007 The Apache Software Foundation
-
-   This product includes software developed at
-   The Apache Software Foundation (http://www.apache.org/).
-
----------------------------------------------------------------------------
-src/./wicket-jmx
----------------------------------------------------------------------------
-   Apache Wicket
-   Copyright 2007 The Apache Software Foundation
-
-   This product includes software developed at
-   The Apache Software Foundation (http://www.apache.org/).
-
----------------------------------------------------------------------------
-src/./wicket-objectssizeof-agent
----------------------------------------------------------------------------
-   Apache Wicket
-   Copyright 2007 The Apache Software Foundation
-
-   This product includes software developed at
-   The Apache Software Foundation (http://www.apache.org/).
-
-
----------------------------------------------------------------------------
-src/./wicket-quickstart/NOTICE
----------------------------------------------------------------------------
-   Apache Wicket
-   Copyright 2007 The Apache Software Foundation
-
-   This product includes software developed at
-   The Apache Software Foundation (http://www.apache.org/).
 
 ---------------------------------------------------------------------------
 src/./wicket-spring

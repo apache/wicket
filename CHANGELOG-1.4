@@ -1,5 +1,125 @@
 This file contains all changes done on the 1.4 version.
 
+
+Release Notes - Wicket - Version 1.4.7
+
+** Bug
+    * [WICKET-2510] - Radio getMarkupId not working correctly
+    * [WICKET-2615] - URL mismatch with RENDER_TO_BUFFER when URL rewriting features of container are used
+    * [WICKET-2648] - DatePicker javascript uses 4 symbols for year although pattern contains just yy
+    * [WICKET-2657] - Multipart forms fails on Chrome during Ajax submit
+    * [WICKET-2660] - Wickettester executeAllTimerBehaviors executes stopped behaviors too
+    * [WICKET-2663] - Modal Dialog cannot add AjaxLink when UploadWebRequest is in use
+    * [WICKET-2688] - Versioned form with FileUploadField will expire page if you submit the form twice.
+    * [WICKET-2702] - update PropertyColumn Javadoc
+    * [WICKET-2704] - FormComponent.MessageSource.getMessage(String) and getValidatorKeyPrefix()
+    * [WICKET-2714] - SharedResourceRequestTarget sets Status 404 when not found, ignoring any 404 settings
+    * [WICKET-2715] - AuthenticatedWebSession in wicket-auth-roles does thread-unsafe access to signedIn boolean
+    * [WICKET-2717] - bookmarkablepagelink broken on ajaxupdate
+    * [WICKET-2718] - RedirectPage does not work in IE
+    * [WICKET-2721] - IE does not display ExceptionErrorPage
+    * [WICKET-2726] - CLONE -Ajax multipart broken on mounted pages
+    * [WICKET-2734] - Form#anyComponentError change in 1.4 breaks validation
+    * [WICKET-2738] - setResponsePage doesn't work with MixedParamUrlCodingStrategy
+    * [WICKET-2740] - DynamicWizardModel: setActiveStep is called twice
+    * [WICKET-2744] - AjaxFormChoiceComponentUpdatingBehavior cannot find the choice
+    * [WICKET-2749] - multipart form does not call window.wicketGlobalPreCallHandler
+    * [WICKET-2753] - Javascript in Form.registerJavascriptNamespaces() fails in Firefox 3.5.8
+    * [WICKET-2757] - MimeType/ContentType detection in ResourceStreamRequestTarget unreliable
+    * [WICKET-2759] - libxml2 splits large CData section. this breaks the processing of components
+
+** Improvement
+    * [WICKET-2661] - Palette does not allow tracking the AbstractChoices components via Ajax
+    * [WICKET-2698] - Page Parameters needs to implement equals
+    * [WICKET-2706] - French translations for missing properties
+    * [WICKET-2708] - Extend SwitchProtocolRequestTarget so it's possible to customize the redirect url
+    * [WICKET-2709] - EmptySrcAttributeCheckFilter should check for src="#"
+    * [WICKET-2719] - Extract lazy AbstractListDataProvider out of ListDataProvider.
+    * [WICKET-2720] - Panel throws MarkupException without passing MarkupStream
+    * [WICKET-2731] - provide hook to enforce fqn's leaking out from shared resources
+    * [WICKET-2737] - reduce number of  SpringBeanLocator#getBeanNameOfClass calls.
+    * [WICKET-2748] - IE6 sometimes fails when using wicket ajax
+    * [WICKET-2750] - Better error handling in modal window setContent() when a repeater is used
+
+
+Release Notes - Wicket - Version 1.4.6
+
+** Sub-task
+    * [WICKET-2678] -  isEnabled called in AjaxRequestTarget for Behaviors even if component is not Visible in hierarchy
+
+** Bug
+    * [WICKET-1825] - url-escaping is not undone for requestcodingstrategy
+    * [WICKET-2312] - RequestUtils.toAbsolutePath() not output hostname and url-pattern in AJAX
+    * [WICKET-2567] - Images and stylesheets leave open file handles
+    * [WICKET-2616] - BaseWicketTester chooses a disabled component as the source of an AjaxFormSubmit event
+    * [WICKET-2619] - wicket should handle Enums like other primitives when injecting them.
+    * [WICKET-2620] - DataTable generates two <thead wicket:id="topToolbars">
+    * [WICKET-2624] - MethodGetAndSet.setValue uses wrong source to determine which type to convert to when there's no setter
+    * [WICKET-2629] - HttpsRequestCycleProcessor causes HttpSession to be created
+    * [WICKET-2630] - MockHttpServletResponse doesn't delete cookies
+    * [WICKET-2633] - AjaxEditableLabel fails to focus editor upon validation errors
+    * [WICKET-2635] - Sucessfull login on SignInPanel causes HomePage to become stateful
+    * [WICKET-2638] - Form.isMultipart() doesn't check FormComponent.isMultipart() on nested components
+    * [WICKET-2639] - More pages missing xml prolog
+    * [WICKET-2641] - EnumLabel misbehaves with anonymous enum
+    * [WICKET-2645] - Resources aren't gziped by default
+    * [WICKET-2647] - InspectorPage (from devutils) is stateful for no valid reason
+    * [WICKET-2650] - Consistently create body for short tags.
+    * [WICKET-2655] - WicketTester javadocs are referring in many places to a component's path but it's not documented anywhere
+    * [WICKET-2666] - ConvererLocator.convertToString discards original cause of conversion failure
+    * [WICKET-2667] - When multipart on form is set to true, setResponsePage() doesnt work
+    * [WICKET-2668] - UploadProgressBar component can't be removed or replaced easily
+    * [WICKET-2669] - DataTable mutiple bottom toolbars are misplaced because of bad html
+    * [WICKET-2671] - Enclosure causes Nullpointer exception
+    * [WICKET-2672] - FormComponent doesn't properly handle array model types
+    * [WICKET-2675] - CryptedUrlWebRequestCodingStrategy fails in form with method="get"
+    * [WICKET-2679] - checkRendering() throws Exception if TransparentResolver is invisible
+    * [WICKET-2685] - MixedParamsUrlCodingStrategy ,classcastexception from Long to String
+    * [WICKET-2686] - CryptedUrlWebRequestCodingStrategy fails in form with method="get" - 1.5
+    * [WICKET-2692] - DropDownChoice value may be lost after ajax submit call
+
+** Improvement
+    * [WICKET-2591] - Allow subclasses of AuthenticatedWebSession to set "signedIn" field
+    * [WICKET-2626] - Make DatePicker on DateTimeField overrideable
+    * [WICKET-2628] - SerializingObjectSizeOfStrategy should warn when unable to serialize the object
+    * [WICKET-2637] - Lithuanian translation for the Application.properties
+    * [WICKET-2642] - Russian translation of SignInPage/SignInPanel
+    * [WICKET-2644] - Hungarian translation for wizard
+    * [WICKET-2646] - Better error reporting from StatelessChecker
+    * [WICKET-2649] - Make SignInPage stateless
+    * [WICKET-2653] - Make GoAndClearFilter.defaultClearModel and GoFilter.defaultGoModel internationalizable
+    * [WICKET-2656] - Ability to add CSS style to table body in DataTable
+    * [WICKET-2664] - CheckBoxMultipleChoice should use isEnabledInHierarchy()
+    * [WICKET-2673] - TabbedPanel not generic
+    * [WICKET-2682] - Maven 3 produces various warnings
+
+** Task
+    * [WICKET-2670] - Remove deprecated API calls from wicket-extensions
+
+
+Release Notes - Wicket - Version 1.4.5
+
+** Bug
+    * [WICKET-2598] - Some components still escape non-ASCII symbols by default
+    * [WICKET-2599] - Missing XML prolog in wicket-extensions panel htmls
+    * [WICKET-2600] - Redirect to home page still does not work (regression)
+    * [WICKET-2606] - Enclosure reports incorrect component id for missing components inside the enclosure
+    * [WICKET-2609] - EnumChoiceRenderer misbehaves with anonymous enum classes
+    * [WICKET-2613] - Content-Length Issue with 1.4.4
+    * [WICKET-2617] - ModalWindow can't be shown when it is rendered with ajax request
+    * [WICKET-2621] - Ajax buttons inside ModalWindows don't submit properly
+
+** Improvement
+    * [WICKET-1888] - FormComponents (and subclasses) should be able to provide their own resource bundles
+    * [WICKET-2247] - IndexedHybridUrlCodingStrategy constructor should accept a redirectOnBookmarkableRequest boolan
+    * [WICKET-2428] - AbstractSingleSelectChoice: custom resource key for null option
+    * [WICKET-2592] - Add support for arbitrary PageParameters values in QueryStringUrlCodingStrategy
+    * [WICKET-2597] - The PagingNavigator.newNavigation method does not provide a markup id of the element to create an navigation for
+    * [WICKET-2602] - Display upload progress bar only when a file is selected
+    * [WICKET-2603] - javadoc update
+    * [WICKET-2604] - Add another german Wicket book 
+
+
 Release Notes - Wicket - Version 1.4.4
 
 ** Bug
