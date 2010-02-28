@@ -18,12 +18,12 @@ package org.apache.wicket.request.target.resource;
 
 import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.ng.resource.ContentDisposition;
 import org.apache.wicket.ng.resource.ResourceStreamResource;
 import org.apache.wicket.ng.resource.IResource.Attributes;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * Request target that responds by sending its resource stream.
@@ -40,6 +40,7 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 	 * with web requests.
 	 */
 	private String fileName;
+	private ContentDisposition contentDisposition;
 
 	/** the resource stream for the response. */
 	private final IResourceStream resourceStream;
@@ -95,7 +96,7 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 	 * @return Optional filename, used to set the content disposition header. Only meaningful when
 	 *         using with web requests.
 	 */
-	public String getFileName()
+	public final String getFileName()
 	{
 		return fileName;
 	}
@@ -134,7 +135,7 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 
 		ResourceStreamResource resource = new ResourceStreamResource(resourceStream);
 		resource.setFileName(fileName);
-
+		resource.setContentDisposition(contentDisposition);
 		resource.respond(attributes);
 	}
 
@@ -145,7 +146,7 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 	 * 
 	 * @return The this.
 	 */
-	public ResourceStreamRequestHandler setFileName(String fileName)
+	public final ResourceStreamRequestHandler setFileName(String fileName)
 	{
 		this.fileName = fileName;
 		return this;
@@ -158,7 +159,20 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 	public String toString()
 	{
 		return "[ResourceStreamRequestTarget[resourceStream=" + resourceStream + ",fileName=" +
-			fileName + "]";
+			fileName + ", contentDisposition=" + contentDisposition + "]";
 	}
+
+	public final ContentDisposition getContentDisposition()
+	{
+		return contentDisposition;
+	}
+
+	public final ResourceStreamRequestHandler setContentDisposition(
+		ContentDisposition contentDisposition)
+	{
+		this.contentDisposition = contentDisposition;
+		return this;
+	}
+
 
 }

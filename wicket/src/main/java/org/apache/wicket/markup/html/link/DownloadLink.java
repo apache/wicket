@@ -21,12 +21,12 @@ import java.io.File;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.ng.resource.ContentDisposition;
 import org.apache.wicket.protocol.http.WicketURLEncoder;
 import org.apache.wicket.request.target.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
-
 
 /**
  * A link that streams a file to the client. When clicked this link will prompt the save as dialog
@@ -151,12 +151,6 @@ public class DownloadLink extends Link<File>
 			new ResourceStreamRequestHandler(resourceStream)
 			{
 				@Override
-				public String getFileName()
-				{
-					return fn;
-				}
-
-				@Override
 				public void respond(RequestCycle requestCycle)
 				{
 					super.respond(requestCycle);
@@ -166,7 +160,7 @@ public class DownloadLink extends Link<File>
 						file.delete();
 					}
 				}
-			});
+			}.setFileName(fn).setContentDisposition(ContentDisposition.ATTACHMENT));
 	}
 
 	/**

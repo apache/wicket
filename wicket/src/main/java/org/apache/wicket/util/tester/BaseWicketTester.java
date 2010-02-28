@@ -1517,7 +1517,7 @@ public class BaseWicketTester
 	 */
 	public String getContentTypeFromResponseHeader()
 	{
-		String contentType = getLastResponse().getHeader("Content-Type");
+		String contentType = getLastResponse().getContentType();
 		if (contentType == null)
 		{
 			throw new WicketRuntimeException("No Content-Type header found");
