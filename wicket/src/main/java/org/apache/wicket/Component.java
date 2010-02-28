@@ -3227,7 +3227,7 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 		final RequestListenerInterface listener)
 	{
 		PageAndComponentProvider provider = new PageAndComponentProvider(getPage(), this);
-		int index = getBehaviors().indexOf(behaviour);
+		int index = getBehaviorsRawList().indexOf(behaviour);
 		IRequestHandler handler;
 		if (getPage().isPageStateless())
 		{

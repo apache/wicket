@@ -59,13 +59,12 @@ public class ImmutableBehaviorIndexTest extends WicketTestCase
 		tester.startPage(page);
 
 		String output = tester.getLastResponseAsString();
-		System.out.println(output);
 		assertTrue(output.contains("class=\"border\""));
 		assertTrue(output.contains("autocomplete=\"off\""));
 		assertTrue(output.contains("class2=\"border\""));
 		assertTrue(output.contains("autocomplete2=\"off\""));
-		assertTrue(output.contains("IBehaviorListener:2"));
-		assertTrue(output.contains("IBehaviorListener:4"));
+		assertTrue(output.contains("IBehaviorListener.2"));
+		assertTrue(output.contains("IBehaviorListener.4"));
 
 		// if we remove a behavior that is before the ibehaviorlistener its url index should not
 		// change
@@ -76,8 +75,9 @@ public class ImmutableBehaviorIndexTest extends WicketTestCase
 		page.getContainer().remove(auto2);
 		tester.startPage(page);
 		output = tester.getLastResponseAsString();
-		assertTrue(output.contains("IBehaviorListener:2"));
-		assertTrue(output.contains("IBehaviorListener:4"));
+		System.out.println(output);
+		assertTrue(output.contains("IBehaviorListener.2"));
+		assertTrue(output.contains("IBehaviorListener.4"));
 	}
 
 	/**
