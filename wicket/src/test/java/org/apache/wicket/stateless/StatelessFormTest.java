@@ -35,88 +35,38 @@ public class StatelessFormTest extends TestCase
 {
 	private static final Logger log = LoggerFactory.getLogger(StatelessFormTest.class);
 
-	private WicketTester mock = null;
-
-	private MockApplication application;
-
-	private Class<? extends Page> homePage = HomePage.class;
-	private Class<? extends Page> loginPage = LoginPage.class;
-
-
-	@Override
-	protected void setUp() throws Exception
-	{
-		mock = new WicketTester(application = new MockApplication()
-		{
-			@Override
-			public Class<? extends Page> getHomePage()
-			{
-				return StatelessFormTest.this.getHomePage();
-			}
-
-		});
-	}
-
-	@Override
-	protected void tearDown() throws Exception
-	{
-		mock.getSession().invalidate();
-		mock.processRequest();
-		mock.destroy();
-		mock = null;
-		application = null;
-		setHomePage(HomePage.class);
-		setLoginPage(LoginPage.class);
-	}
-
-	/**
-	 * @return Returns the homePage.
-	 */
-	public Class<? extends Page> getHomePage()
-	{
-		return homePage;
-	}
-
-	/**
-	 * @param <C>
-	 * @param homePage
-	 *            The homePage to set.
-	 */
-	public <C extends Page> void setHomePage(Class<C> homePage)
-	{
-		this.homePage = homePage;
-	}
-
-	/**
-	 * @return Returns the loginPage.
-	 */
-	public Class<? extends Page> getLoginPage()
-	{
-		return loginPage;
-	}
-
-	/**
-	 * @param <C>
-	 * @param loginPage
-	 *            The loginPage to set.
-	 */
-	public <C extends Page> void setLoginPage(Class<C> loginPage)
-	{
-		this.loginPage = loginPage;
-	}
+	private final Class<? extends Page> HOME = HomePage.class;
+	private final Class<? extends Page> LOGIN = LoginPage.class;
 
 	/**
 	 * Login through the login page.
 	 */
 	public void testLogin()
 	{
-		mock.startPage(getLoginPage());
-		mock.assertRenderedPage(getLoginPage());
-		FormTester form = mock.newFormTester("signInPanel:signInForm");
-		form.setValue("username", "test");
-		form.setValue("password", "test");
-		form.submit();
-		mock.assertRenderedPage(getHomePage());
+		WicketTester tester = new WicketTester(new MockApplication()
+		{
+			@Override
+			public Class<? extends Page> getHomePage()
+			{
+				return HOME;
+			}
+
+		});
+
+		try
+		{
+			tester.startPage(LOGIN);
+			tester.assertRenderedPage(LOGIN);
+			FormTester form = tester.newFormTester("signInPanel:signInForm");
+			form.setValue("username", "test");
+			form.setValue("password", "test");
+			form.submit();
+			tester.assertRenderedPage(HOME);
+		}
+		finally
+		{
+			tester.destroy();
+		}
 	}
 
 }
