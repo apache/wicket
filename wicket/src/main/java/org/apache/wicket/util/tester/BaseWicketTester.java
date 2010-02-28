@@ -358,10 +358,6 @@ public class BaseWicketTester
 		IRequestHandler forcedRequestHandler, boolean redirect)
 	{
 
-		if (!redirect)
-		{
-			lastRenderedPage = null;
-		}
 
 		if (forcedRequest != null)
 		{
@@ -369,6 +365,11 @@ public class BaseWicketTester
 		}
 
 		forcedHandler = forcedRequestHandler;
+
+		if (!redirect && getRequest().getHeader("Wicket-Ajax-BaseURL") == null)
+		{
+			lastRenderedPage = null;
+		}
 
 		try
 		{
