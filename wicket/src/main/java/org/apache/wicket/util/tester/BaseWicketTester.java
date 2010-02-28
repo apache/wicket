@@ -64,7 +64,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.mock.MockApplication;
-import org.apache.wicket.ng.mock.MockSession;
 import org.apache.wicket.ng.mock.MockWebRequest;
 import org.apache.wicket.ng.mock.MockWebResponse;
 import org.apache.wicket.ng.request.IRequestMapper;
@@ -154,7 +153,7 @@ public class BaseWicketTester
 	private MockWebResponse response;
 
 	/** current session */
-	private final MockSession session;
+	private Session session;
 
 	/** current request cycle */
 	private RequestCycle requestCycle;
@@ -242,10 +241,6 @@ public class BaseWicketTester
 			application.getRequestCycleProvider()));
 
 		// prepare session
-		session = new MockSession(new MockWebRequest(Url.parse("/")));
-		getApplication().getSessionStore().bind(null, session);
-		ThreadContext.setSession(session);
-
 		setupNextRequestCycle();
 	}
 
@@ -253,7 +248,16 @@ public class BaseWicketTester
 	{
 		request = new MockWebRequest(Url.parse("/"));
 		response = new MockWebResponse();
+
+		if (session == null)
+		{
+			session = application.newSession(request, response);
+			application.getSessionStore().bind(null, session);
+			ThreadContext.setSession(session);
+		}
+
 		requestCycle = application.createRequestCycle(request, response);
+		requestCycle.setCleanupFeedbackMessagesOnDetach(false);
 		ThreadContext.setRequestCycle(requestCycle);
 	}
 
