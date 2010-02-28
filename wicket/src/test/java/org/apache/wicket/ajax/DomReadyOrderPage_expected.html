@@ -1,20 +1,20 @@
 <html>
-<head><script type="text/javascript" src="resources/org.apache.wicket.markup.html.WicketEventReference/wicket-event.js"></script>
-<script type="text/javascript" src="resources/org.apache.wicket.ajax.WicketAjaxReference/wicket-ajax.js"></script>
-<script type="text/javascript" src="resources/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug.js"></script>
+<head><script type="text/javascript" src="../resource/org.apache.wicket.markup.html.WicketEventReference/wicket-event.js"></script>
+<script type="text/javascript" src="../resource/org.apache.wicket.ajax.WicketAjaxReference/wicket-ajax.js"></script>
+<script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug.js"></script>
 <script type="text/javascript" id="wicket-ajax-debug-enable"><!--/*--><![CDATA[/*><!--*/
 wicketAjaxDebugEnable=true;
 /*-->]]>*/</script>
-
+<script type="text/javascript" id="wicket-ajax-base-url"><!--/*--><![CDATA[/*><!--*/
+Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.ajax.DomReadyOrderPage?0";
+/*-->]]>*/</script>
 <script type="text/javascript" ><!--/*--><![CDATA[/*><!--*/
 Wicket.Event.add(window, "domready", function(event) { test1();;});
 /*-->]]>*/</script>
-
 <script type="text/javascript" ><!--/*--><![CDATA[/*><!--*/
 Wicket.Event.add(window, "domready", function(event) { test2();;});
 /*-->]]>*/</script>
-
 </head><body>
-<a href="?wicket:interface=:0:test::ILinkListener::" wicket:id="test" id="test1" onclick="var wcall=wicketAjaxGet('?wicket:interface=:0:test::IBehaviorListener:0:',null,null, function() {return Wicket.$('test1') != null;}.bind(this));return !wcall;">Test</a>
+<a href="../page?0-1.ILinkListener-test" wicket:id="test" id="test1" onclick="var wcall=wicketAjaxGet('../page?0-1.IBehaviorListener.0-test',function() { }.bind(this),function() { }.bind(this), function() {return Wicket.$('test1') != null;}.bind(this));return !wcall;">Test</a>
 </body>
 </html>

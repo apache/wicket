@@ -19,8 +19,11 @@ package org.apache.wicket.markup.html.form;
 import java.util.Locale;
 import java.util.MissingResourceException;
 
-import org.apache.wicket.WicketTestCase;
+import junit.framework.TestCase;
+
+import org.apache.wicket.properties.MyApplication;
 import org.apache.wicket.properties.TestPage;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * 
@@ -30,8 +33,24 @@ import org.apache.wicket.properties.TestPage;
  * 
  * @author Juergen Donnerstag
  */
-public class ValidatorPropertiesTest extends WicketTestCase
+public class ValidatorPropertiesTest extends TestCase
 {
+	private WicketTester tester;
+
+	@Override
+	protected void setUp() throws Exception
+	{
+		super.setUp();
+		tester = new WicketTester(new MyApplication());
+	}
+
+	@Override
+	protected void tearDown() throws Exception
+	{
+		tester.destroy();
+		super.tearDown();
+	}
+
 	/**
 	 * 
 	 */

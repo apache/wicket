@@ -60,14 +60,7 @@ public class HomePage extends WebPage
 
 		Form<Void> form = new Form<Void>("form")
 		{
-			@Override
-			protected void onSubmit()
-			{
-				if (!continueToOriginalDestination())
-				{
-					setResponsePage(HomePage.class);
-				}
-			}
+
 		};
 		add(form);
 		form.add(new TextField<String>("textfield", new Model<String>()));

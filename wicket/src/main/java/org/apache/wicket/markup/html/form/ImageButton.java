@@ -42,19 +42,6 @@ public class ImageButton extends Button implements IResourceListener
 	private final LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
 
 	/**
-	 * This constructor can be used if you have an <code>img</code> tag that has a <code>src</code>
-	 * that points to a <code>PackageResource</code> (which will be created and bind to the shared
-	 * resources) or if you have a <code>value</code> attribute in your tag for which the image
-	 * factory can make an image.
-	 * 
-	 * @see org.apache.wicket.Component#Component(String)
-	 */
-	public ImageButton(final String id)
-	{
-		super(id);
-	}
-
-	/**
 	 * Constructs an image button from an image <code>ResourceReference</code>. That resource
 	 * reference will bind its resource to the current SharedResources.
 	 * 

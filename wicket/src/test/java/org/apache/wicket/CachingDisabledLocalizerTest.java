@@ -25,17 +25,6 @@ package org.apache.wicket;
 public class CachingDisabledLocalizerTest extends LocalizerTest
 {
 	/**
-	 * Create the test case.
-	 * 
-	 * @param message
-	 *            The test name
-	 */
-	public CachingDisabledLocalizerTest(String message)
-	{
-		super(message);
-	}
-
-	/**
 	 * 
 	 * @throws Exception
 	 */

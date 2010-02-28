@@ -16,12 +16,15 @@
  */
 package org.apache.wicket.ajax;
 
+import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.ng.resource.PackageResourceReference;
 
 /**
  * 
  */
-public class MockComponent3 extends Panel
+public class MockComponent3 extends Panel implements IHeaderContributor
 {
 	private static final long serialVersionUID = 1L;
 
@@ -34,7 +37,11 @@ public class MockComponent3 extends Panel
 	public MockComponent3(String id)
 	{
 		super(id);
+	}
 
-		add(new StyleSheetReference("stylesheet", MockComponent3.class, "mockStyleSheet3.css"));
+	public void renderHead(IHeaderResponse response)
+	{
+		response.renderCSSReference(new PackageResourceReference(MockComponent3.class,
+			"mockStyleSheet3.css"));
 	}
 }
