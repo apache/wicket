@@ -28,25 +28,6 @@ import org.apache.wicket.util.tester.FormTester;
  */
 public class AjaxFormSubmitTest extends WicketTestCase
 {
-
-	/**
-	 * @see org.apache.wicket.WicketTestCase#setUp()
-	 */
-	@Override
-	protected void setUp() throws Exception
-	{
-		super.setUp();
-	}
-
-	/**
-	 * @see org.apache.wicket.WicketTestCase#tearDown()
-	 */
-	@Override
-	protected void tearDown() throws Exception
-	{
-		super.tearDown();
-	}
-
 	/**
 	 * Test ajax form submit without default form processing.
 	 */
@@ -60,6 +41,9 @@ public class AjaxFormSubmitTest extends WicketTestCase
 		FormTester form = tester.newFormTester("form");
 		form.setValue("txt1", "txt1");
 		form.setValue("txt2", "txt2");
+		// mark the button as the one being pressed. there is a ':' infront of name because wicket
+		// escapes "submit" input names as they break browsers
+		tester.getRequest().getPostParameters().setParameterValue(":submit", "x");
 		tester.executeAjaxEvent("form:submit", "onclick");
 		AjaxFormSubmitTestPage page = (AjaxFormSubmitTestPage)tester.getLastRenderedPage();
 		assertFalse((page.getFormSubmitted() & AjaxFormSubmitTestPage.FORM) == AjaxFormSubmitTestPage.FORM);
@@ -71,8 +55,8 @@ public class AjaxFormSubmitTest extends WicketTestCase
 	}
 
 	/**
-	 * Test that onclick handler is generated with the proper XHTML entities
-	 * for special characters, notably ampersand. See WICKET-2033.
+	 * Test that onclick handler is generated with the proper XHTML entities for special characters,
+	 * notably ampersand. See WICKET-2033.
 	 */
 	public void testEventJavaScriptEscaped() throws Exception
 	{
