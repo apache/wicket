@@ -1440,7 +1440,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	private byte[] buildRequest()
 	{
-		if (uploadedFiles == null)
+		if (uploadedFiles == null && useMultiPartContentType == false)
 		{
 			if (post.getParameterNames().size() == 0)
 			{
