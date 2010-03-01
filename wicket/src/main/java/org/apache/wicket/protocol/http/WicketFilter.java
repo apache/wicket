@@ -366,9 +366,16 @@ public class WicketFilter implements Filter
 				foundUrlPattern = n.getTextContent();
 			}
 		}
+
+		if (foundFilterName != null)
+		{
+			foundFilterName = foundFilterName.trim();
+		}
+
+
 		if (filterName.equals(foundFilterName))
 		{
-			return foundUrlPattern;
+			return (foundUrlPattern != null) ? foundUrlPattern.trim() : null;
 		}
 		else
 		{

@@ -551,7 +551,12 @@ public class WicketTesterTest extends TestCase
 		try
 		{
 			tester.startPage(BlockedResourceLinkPage.class);
-			System.out.println(tester.getLastResponse().getStatus());
+
+			TagTester linkTag = TagTester.createTagByAttribute(tester.getLastResponseAsString(),
+				"wicket:id", "link");
+			String url = linkTag.getAttribute("href");
+			url = url.replace("../", "wicket/");
+			tester.executeUrl(url);
 			fail("Accessing " + BlockedResourceLinkPage.class + " should have raised a " +
 				PackageResourceBlockedException.class);
 		}

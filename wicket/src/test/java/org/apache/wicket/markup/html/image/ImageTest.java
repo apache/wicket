@@ -58,6 +58,6 @@ public class ImageTest extends WicketTestCase
 	{
 		tester.getApplication().getResourceSettings().setParentFolderPlaceholder("$up$");
 		tester.startPage(Home.class);
-		tester.assertContains("resource/org.apache.wicket.markup.html.image.Home/[$]up[$]/border/test.png\"");
+		tester.assertContains("resource/org.apache.wicket.markup.html.image.Home/[$]up[$]/[$]up[$]/border/logo.gif\"");
 	}
 }

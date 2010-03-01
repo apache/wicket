@@ -16,9 +16,8 @@
  */
 package org.apache.wicket.protocol.http;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.Link;
 
 /**
  * Test page for session expiry (/ page not found).
@@ -33,14 +32,13 @@ public class TestExpirePage extends WebPage
 	public TestExpirePage()
 	{
 
-		add(new AjaxLink("link")
+		add(new Link("link")
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick()
 			{
-				target.addComponent(this);
 			}
 		});
 	}

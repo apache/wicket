@@ -16,12 +16,14 @@
  */
 package org.apache.wicket.ng.mock;
 
+import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.pageStore.IPageManager;
 import org.apache.wicket.pageStore.IPageManagerContext;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.session.ISessionStore;
+import org.apache.wicket.util.IProvider;
 
 public class MockApplication extends WebApplication
 {
@@ -43,21 +45,6 @@ public class MockApplication extends WebApplication
 	}
 
 
-	@Override
-	protected IPageManager newPageManager(IPageManagerContext context)
-	{
-		return new MockPageManager(context);
-	}
-
-	/**
-	 * @see org.apache.wicket.ng.protocol.http.WebApplication#newSessionStore()
-	 */
-	@Override
-	public ISessionStore newSessionStore()
-	{
-		return new MockSessionStore();
-	}
-
 	public Session getSession()
 	{
 		return getSessionStore().lookup(null);
@@ -68,4 +55,33 @@ public class MockApplication extends WebApplication
 	{
 		return null;
 	}
+
+	@Override
+	protected void internalInit()
+	{
+		super.internalInit();
+		setSessionStoreProvider(new MockSessionStoreProvider());
+		setPageManagerProvider(new MockPageManagerProvider());
+	}
+
+	private static class MockSessionStoreProvider implements IProvider<ISessionStore>
+	{
+
+		public ISessionStore get()
+		{
+			return new MockSessionStore();
+		}
+
+	}
+	private static class MockPageManagerProvider implements IPageManagerProvider
+	{
+
+		public IPageManager get(IPageManagerContext context)
+		{
+			return new MockPageManager(context);
+		}
+
+
+	}
+
 }

@@ -65,7 +65,7 @@ public class CookieUtilsTest extends WicketTestCase
 		// See comment in CookieUtils on how removing a Cookies works. As no cookies in the request,
 		// no "delete" cookie will be added to the response.
 		persister.remove(textField);
-		assertNull(getRequestCookies());
+		assertEquals(0, getRequestCookies().size());
 		assertEquals(0, getResponseCookies().size());
 
 		// Save the input field's value (add it to the response's cookie list)

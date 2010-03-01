@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ng.request.mapper;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.Url;
@@ -69,6 +70,16 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 	public IRequestHandler mapRequest(Request request)
 	{
 		Url url = request.getUrl();
+
+		for (int i = 0; i < url.getSegments().size(); i++)
+		{
+			if (url.getSegments().get(i).equals(
+				Application.get().getResourceSettings().getParentFolderPlaceholder()))
+			{
+				url.getSegments().set(i, "..");
+			}
+		}
+
 		if (url.getSegments().size() >= 4 &&
 			urlStartsWith(url, getContext().getNamespace(), getContext().getResourceIdentifier()))
 		{
@@ -142,6 +153,19 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 				parameters.clearIndexedParameters();
 				url = encodePageParameters(url, parameters, pageParametersEncoder);
 			}
+
+			final CharSequence placeholder = Application.get()
+				.getResourceSettings()
+				.getParentFolderPlaceholder();
+
+			for (int i = 0; i < url.getSegments().size(); i++)
+			{
+				if ("..".equals(url.getSegments().get(i)))
+				{
+					url.getSegments().set(i, placeholder.toString());
+				}
+			}
+
 			return url;
 		}
 		return null;

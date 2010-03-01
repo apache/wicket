@@ -56,10 +56,12 @@ public class MockPageManager implements IPageManager
 
 	public void newSessionCreated()
 	{
+		pages.clear();
 	}
 
 	public void sessionExpired(String sessionId)
 	{
+		pages.clear();
 	}
 
 	public void setContext(IPageManagerContext context)

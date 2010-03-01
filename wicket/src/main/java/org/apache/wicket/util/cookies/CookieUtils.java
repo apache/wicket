@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.util.string.Strings;
@@ -261,12 +262,12 @@ public class CookieUtils
 				if (cookie != null)
 				{
 					log.debug("Found Cookie with name=" + key + " and request URI=" +
-						getWebRequest().getHttpServletRequest().getRequestURI());
+						getWebRequest().getUrl().toString());
 				}
 				else
 				{
 					log.debug("Unable to find Cookie with name=" + key + " and request URI=" +
-						getWebRequest().getHttpServletRequest().getRequestURI());
+						getWebRequest().getUrl().toString());
 				}
 			}
 
@@ -301,7 +302,7 @@ public class CookieUtils
 		if (log.isDebugEnabled())
 		{
 			log.debug("Cookie saved: " + cookieToDebugString(cookie) + "; request URI=" +
-				getWebRequest().getHttpServletRequest().getRequestURI());
+				getWebRequest().getUrl().toString());
 		}
 
 		return cookie;
@@ -327,7 +328,7 @@ public class CookieUtils
 			cookie.setDomain(domain);
 		}
 
-		HttpServletRequest request = getWebRequest().getHttpServletRequest();
+		HttpServletRequest request = ((ServletWebRequest)getWebRequest()).getHttpServletRequest();
 		String path = request.getContextPath() + request.getServletPath();
 		if (Strings.isEmpty(path))
 		{
@@ -343,9 +344,9 @@ public class CookieUtils
 	 * 
 	 * @return WebRequest related to the RequestCycle
 	 */
-	private ServletWebRequest getWebRequest()
+	private WebRequest getWebRequest()
 	{
-		return (ServletWebRequest)RequestCycle.get().getRequest();
+		return (WebRequest)RequestCycle.get().getRequest();
 	}
 
 	/**

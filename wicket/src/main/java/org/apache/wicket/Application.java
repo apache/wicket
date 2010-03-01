@@ -85,6 +85,7 @@ import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.settings.ISessionSettings;
 import org.apache.wicket.settings.Settings;
+import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.convert.ConverterLocator;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.lang.Objects;
@@ -192,7 +193,7 @@ public abstract class Application implements UnboundListener
 	private IRequestLogger requestLogger;
 
 	/** The session facade. */
-	private ISessionStore sessionStore;
+	private volatile ISessionStore sessionStore;
 
 	/** Settings for this application. */
 	private Settings settings;
@@ -205,6 +206,9 @@ public abstract class Application implements UnboundListener
 
 	/** request cycle provider */
 	private IRequestCycleProvider requestCycleProvider;
+
+	/** session store provider */
+	private IProvider<ISessionStore> sessionStoreProvider;
 
 	/**
 	 * Checks if the <code>Application</code> threadlocal is set in this thread
@@ -609,6 +613,17 @@ public abstract class Application implements UnboundListener
 	 */
 	public final ISessionStore getSessionStore()
 	{
+		if (sessionStore == null)
+		{
+			synchronized (this)
+			{
+				if (sessionStore == null)
+				{
+					sessionStore = sessionStoreProvider.get();
+					sessionStore.registerUnboundListener(this);
+				}
+			}
+		}
 		return sessionStore;
 	}
 
@@ -907,11 +922,9 @@ public abstract class Application implements UnboundListener
 		String applicationKey = getApplicationKey();
 		applicationKeyToApplication.put(applicationKey, this);
 
-		sessionStore = newSessionStore();
-		sessionStore.registerUnboundListener(this);
 		converterLocator = newConverterLocator();
 
-		pageManager = newPageManager(getPageManagerContext());
+		setPageManagerProvider(new DefaultPageManagerProvider());
 		resourceReferenceRegistry = newResourceReferenceRegistry();
 		sharedResources = newSharedResources(resourceReferenceRegistry);
 
@@ -921,6 +934,17 @@ public abstract class Application implements UnboundListener
 		pageFactory = newPageFactory();
 
 		requestCycleProvider = new DefaultRequestCycleProvider();
+	}
+
+
+	public final IProvider<ISessionStore> getSessionStoreProvider()
+	{
+		return sessionStoreProvider;
+	}
+
+	public final void setSessionStoreProvider(IProvider<ISessionStore> sessionStoreProvider)
+	{
+		this.sessionStoreProvider = sessionStoreProvider;
 	}
 
 	/**
@@ -943,14 +967,6 @@ public abstract class Application implements UnboundListener
 	{
 		return new DummyRequestLogger();
 	}
-
-	/**
-	 * Creates a new session facade. Is called once per application, and is typically not something
-	 * clients reimplement.
-	 * 
-	 * @return The session facade
-	 */
-	protected abstract ISessionStore newSessionStore();
 
 	/**
 	 * Notifies the registered component instantiation listeners of the construction of the provided
@@ -1210,16 +1226,19 @@ public abstract class Application implements UnboundListener
 	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	protected IPageManager newPageManager(IPageManagerContext context)
+	private volatile IPageManager pageManager;
+	private IPageManagerProvider pageManagerProvider;
+
+
+	public final IPageManagerProvider getPageManagerProvider()
 	{
-		int cacheSize = 40;
-		int fileChannelPoolCapacity = 50;
-		IDataStore dataStore = new DiskDataStore(getName(), 1000000, fileChannelPoolCapacity);
-		IPageStore pageStore = new DefaultPageStore(getName(), dataStore, cacheSize);
-		return new PersistentPageManager(getName(), pageStore, context);
+		return pageManagerProvider;
 	}
 
-	private IPageManager pageManager;
+	public final void setPageManagerProvider(IPageManagerProvider pageManagerProvider)
+	{
+		this.pageManagerProvider = pageManagerProvider;
+	}
 
 	/**
 	 * Context for PageManager to interact with rest of Wicket
@@ -1230,8 +1249,18 @@ public abstract class Application implements UnboundListener
 	 * 
 	 * @return the page manager
 	 */
-	public IPageManager getPageManager()
+	public final IPageManager getPageManager()
 	{
+		if (pageManager == null)
+		{
+			synchronized (this)
+			{
+				if (pageManager == null)
+				{
+					pageManager = pageManagerProvider.get(getPageManagerContext());
+				}
+			}
+		}
 		return pageManager;
 	}
 
@@ -1470,6 +1499,16 @@ public abstract class Application implements UnboundListener
 			throw new IllegalStateException(
 				"An instance of IPageRendererProvider has not yet been set on this Application. @see Application#setPageRendererProvider");
 		}
+		if (getSessionStoreProvider() == null)
+		{
+			throw new IllegalStateException(
+				"An instance of ISessionStoreProvider has not yet been set on this Application. @see Application#setSessionStoreProvider");
+		}
+		if (getPageManagerProvider() == null)
+		{
+			throw new IllegalStateException(
+				"An instance of IPageManagerProvider has not yet been set on this Application. @see Application#setPageManagerProvider");
+		}
 	}
 
 	/**
@@ -1506,5 +1545,20 @@ public abstract class Application implements UnboundListener
 	public String getMimeType(String fileName)
 	{
 		return URLConnection.getFileNameMap().getContentTypeFor(fileName);
+	}
+
+	private class DefaultPageManagerProvider implements IPageManagerProvider
+	{
+
+		public IPageManager get(IPageManagerContext context)
+		{
+			int cacheSize = 40;
+			int fileChannelPoolCapacity = 50;
+			IDataStore dataStore = new DiskDataStore(getName(), 1000000, fileChannelPoolCapacity);
+			IPageStore pageStore = new DefaultPageStore(getName(), dataStore, cacheSize);
+			return new PersistentPageManager(getName(), pageStore, context);
+
+		}
+
 	}
 }

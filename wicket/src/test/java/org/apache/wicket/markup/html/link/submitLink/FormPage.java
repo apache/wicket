@@ -27,7 +27,7 @@ import org.apache.wicket.model.PropertyModel;
  */
 public class FormPage extends WebPage
 {
-	private final int somevalue = 1;
+	private final Integer somevalue = 1;
 
 	private boolean formSubmitted;
 

@@ -39,7 +39,7 @@ public class TestHomePage extends WicketTestCase
 		tester.assertLabel("message",
 			"If you see this message wicket is properly configured and running");
 
-		String href = "href=\"resources/org.apache.wicket.markup.resolver.HomePage_1/main.css\"";
+		String href = "href=\"../resource/org.apache.wicket.markup.resolver.HomePage_1/main.css\"";
 
 		String doc = tester.getLastResponseAsString();
 		tester.assertContains(href);
@@ -58,7 +58,7 @@ public class TestHomePage extends WicketTestCase
 		// start and render the test page
 		tester.startPage(HomePage_2.class);
 
-		String href = "href=\"resources/org.apache.wicket.markup.resolver.HomePage_2/main.css\"";
+		String href = "href=\"../resource/org.apache.wicket.markup.resolver.HomePage_2/main.css\"";
 
 		String doc = tester.getLastResponseAsString();
 		tester.assertContains(href);

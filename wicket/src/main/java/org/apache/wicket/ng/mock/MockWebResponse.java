@@ -273,7 +273,14 @@ public class MockWebResponse extends WebResponse
 		}
 		else
 		{
-			return binaryResponse.toByteArray();
+			byte[] bytes = binaryResponse.toByteArray();
+			if (getContentLength() != null)
+			{
+				byte[] trimmed = new byte[getContentLength().intValue()];
+				System.arraycopy(bytes, 0, trimmed, 0, getContentLength().intValue());
+				return trimmed;
+			}
+			return bytes;
 		}
 	}
 

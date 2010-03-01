@@ -42,7 +42,11 @@ import javax.servlet.http.HttpServletResponse;
 import junit.framework.TestCase;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.ng.ThreadContext;
+import org.apache.wicket.ng.mock.MockApplication;
 import org.apache.wicket.ng.resource.DynamicImageResource;
+import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
+import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 
 public class WicketFilterTest extends TestCase
 {
@@ -73,41 +77,49 @@ public class WicketFilterTest extends TestCase
 	public void testNotModifiedResponseIncludesExpiresHeader() throws IOException,
 		ServletException, ParseException
 	{
-		application = new DummyWebApplication();
-		WicketFilter filter = new WicketFilter();
-		filter.init(new FilterTestingConfig());
-		Application.set(application);
-		DynamicImageResource resource = new DynamicImageResource()
+		try
 		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected byte[] getImageData()
+			application = new MockApplication();
+			WicketFilter filter = new WicketFilter();
+			filter.init(new FilterTestingConfig());
+			application.set();
+			DynamicImageResource resource = new DynamicImageResource()
 			{
-				throw new UnsupportedOperationException("Not implemented");
-			}
-		};
-		resource.setCacheable(true);
-		application.getSharedResources().add("foo.gif", resource);
-		MockHttpServletRequest request = new MockHttpServletRequest(application, null, null);
-		request.setURL(request.getContextPath() + "/app/" + "resources/" +
-			Application.class.getName() + "/foo.gif");
-		setIfModifiedSinceToNextWeek(request);
-		MockHttpServletResponse response = new MockHttpServletResponse(request);
-		filter.doFilter(request, response, new FilterChain()
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected byte[] getImageData()
+				{
+					throw new UnsupportedOperationException("Not implemented");
+				}
+			};
+			// resource.setCacheable(true);
+			application.getSharedResources().add("foo.gif", resource);
+			MockHttpServletRequest request = new MockHttpServletRequest(application, null, null);
+			request.setURL(request.getContextPath() + "/app/" + "resources/" +
+				Application.class.getName() + "/foo.gif");
+			setIfModifiedSinceToNextWeek(request);
+			MockHttpServletResponse response = new MockHttpServletResponse(request);
+			filter.doFilter(request, response, new FilterChain()
+			{
+				public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse)
+					throws IOException, ServletException
+				{
+				}
+			});
+			assertEquals(HttpServletResponse.SC_NOT_MODIFIED, response.getStatus());
+			String responseExpiresHeader = response.getHeader("Expires");
+			assertNotNull("Expires header must be set on not modified response",
+				responseExpiresHeader);
+
+			Date responseExpires = headerDateFormat.parse(responseExpiresHeader);
+			assertTrue("Expected later than current date but was " + responseExpires,
+				responseExpires.after(new Date()));
+		}
+		finally
 		{
-			public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse)
-				throws IOException, ServletException
-			{
-			}
-		});
-		assertEquals(HttpServletResponse.SC_NOT_MODIFIED, response.getStatus());
-		String responseExpiresHeader = response.getHeader("Expires");
-		assertNotNull("Expires header must be set on not modified response", responseExpiresHeader);
-
-		Date responseExpires = headerDateFormat.parse(responseExpiresHeader);
-		assertTrue("Expected later than current date but was " + responseExpires,
-			responseExpires.after(new Date()));
+			ThreadContext.detach();
+		}
 	}
 
 	private void setIfModifiedSinceToNextWeek(MockHttpServletRequest request)
@@ -159,7 +171,7 @@ public class WicketFilterTest extends TestCase
 				FilterTestingApplicationFactory.class.getName());
 			initParameters.put(WicketFilter.FILTER_MAPPING_PARAM, "/app/*");
 			initParameters.put(ContextParamWebApplicationFactory.APP_CLASS_PARAM,
-				DummyWebApplication.class.getName());
+				MockApplication.class.getName());
 		}
 
 		public String getFilterName()

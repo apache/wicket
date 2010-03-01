@@ -22,6 +22,7 @@ import org.apache.wicket.ng.request.cycle.IExceptionMapper;
 import org.apache.wicket.ng.request.handler.PageProvider;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.mapper.StalePageException;
+import org.apache.wicket.protocol.http.PageExpiredException;
 
 public class DefaultExceptionMapper implements IExceptionMapper
 {
@@ -32,6 +33,12 @@ public class DefaultExceptionMapper implements IExceptionMapper
 		{
 			// If the page was stale, just rerender it
 			return new RenderPageRequestHandler(new PageProvider(((StalePageException)e).getPage()));
+		}
+		else if (e instanceof PageExpiredException)
+		{
+			return new RenderPageRequestHandler(new PageProvider(Application.get()
+				.getApplicationSettings()
+				.getPageExpiredErrorPage()));
 		}
 		else
 		{

@@ -46,6 +46,7 @@ import org.apache.wicket.ng.request.mapper.MountedMapper;
 import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.session.ISessionStore;
+import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.collections.MostRecentlyUsedMap;
 import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.file.IResourceFinder;
@@ -440,7 +441,7 @@ public abstract class WebApplication extends Application
 		}
 
 		setPageRendererProvider(new WebPageRendererProvider());
-
+		setSessionStoreProvider(new WebSessionStoreProvider());
 		// Configure the app.
 		configure();
 	}
@@ -508,16 +509,6 @@ public abstract class WebApplication extends Application
 	{
 		return new WebApplicationPath(getServletContext());
 	}
-
-	/**
-	 * @see org.apache.wicket.Application#newSessionStore()
-	 */
-	@Override
-	protected ISessionStore newSessionStore()
-	{
-		return new HttpSessionStore();
-	}
-
 
 	/**
 	 * Creates a new ajax request target used to control ajax responses
@@ -670,6 +661,15 @@ public abstract class WebApplication extends Application
 		public PageRenderer get(RenderPageRequestHandler handler)
 		{
 			return new WebPageRenderer(handler);
+		}
+	}
+
+	private static class WebSessionStoreProvider implements IProvider<ISessionStore>
+	{
+
+		public ISessionStore get()
+		{
+			return new HttpSessionStore();
 		}
 
 	}

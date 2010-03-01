@@ -18,12 +18,9 @@ package org.apache.wicket.util.crypt;
 
 import java.util.UUID;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.apache.wicket.Application;
+import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.Session;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 
 /**
  * Crypt factory that produces {@link SunJceCrypt} instances based on http session-specific
@@ -36,22 +33,28 @@ import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
  */
 public class KeyInSessionSunJceCryptFactory implements ICryptFactory
 {
+	/** metadata-key used to store crypto-key in session metadata */
+	private static MetaDataKey<String> KEY = new MetaDataKey<String>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
+
 	public ICrypt newCrypt()
 	{
 		RequestCycle rc = RequestCycle.get();
-		HttpServletRequest request = ((ServletWebRequest)rc.getRequest()).getHttpServletRequest();
 
-		// get http session, create if necessary
-		HttpSession session = request.getSession(true);
+		Session session = Session.get();
+		session.bind();
+
 
 		// retrieve or generate encryption key from session
-		final String keyAttr = Application.get().getApplicationKey() + "." + getClass().getName();
-		String key = (String)session.getAttribute(keyAttr);
+		String key = session.getMetaData(KEY);
 		if (key == null)
 		{
 			// generate new key
 			key = session.getId() + "." + UUID.randomUUID().toString();
-			session.setAttribute(keyAttr, key);
+			session.setMetaData(KEY, key);
 		}
 
 		// build the crypt based on session key

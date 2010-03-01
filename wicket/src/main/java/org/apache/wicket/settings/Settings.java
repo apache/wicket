@@ -314,7 +314,7 @@ public final class Settings
 	private Bytes defaultMaximumUploadSize = Bytes.MAX;
 
 	/** escape string for '..' within resource keys */
-	private CharSequence parentFolderPlaceholder = null;
+	private CharSequence parentFolderPlaceholder = "";
 
 	/** Default cache duration */
 	private int defaultCacheDuration = 3600;

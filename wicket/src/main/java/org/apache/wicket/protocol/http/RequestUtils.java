@@ -135,7 +135,7 @@ public final class RequestUtils
 	 * @param path
 	 * @return path string with double dots removed
 	 */
-	static String removeDoubleDots(String path)
+	public static String removeDoubleDots(String path)
 	{
 		List<String> newcomponents = new ArrayList<String>(Arrays.asList(path.split("/")));
 

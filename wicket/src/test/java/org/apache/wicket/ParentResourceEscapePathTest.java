@@ -16,6 +16,8 @@
  */
 package org.apache.wicket;
 
+import java.io.InputStream;
+
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.resource.PackageResourceReference;
 import org.apache.wicket.ng.resource.ResourceReference;
@@ -38,10 +40,12 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 		tester.assertRenderedPage(ParentResourceEscapePathTestPage.class);
 		tester.assertNoErrorMessage();
 
+		System.out.println(tester.getLastResponseAsString());
+
 		String html = tester.getLastResponseAsString();
 		assertContains(html, "<html><head><wicket:link><script ");
 		assertContains(html, " type=\"text/javascript\"");
-		assertContains(html, "src=\"" + expectedResourceUrl() + "\"");
+		assertContains(html, expectedResourceUrl() + "\"");
 		assertContains(html, "\"></script></wicket:link></head></html>");
 	}
 
@@ -64,7 +68,7 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 		final ResourceReference ref = new PackageResourceReference(
 			ParentResourceEscapePathTestPage.class, "../../../ParentResourceTest.js");
 
-		assertEquals(expectedResourceUrl(), tester.getLastRequestCycle().urlFor(ref));
+		assertContains(tester.getRequestCycle().urlFor(ref).toString(), expectedResourceUrl());
 	}
 
 	public void testRequestHandlingOfResourceUrlWithEscapeStringInside()
@@ -78,13 +82,15 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 
 	private void requestHandlingOfResourceUrlWithEscapeStringInside()
 	{
-		tester.getRequest()
-			.setUrl(
-				Url.parse("wicket/resource/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/" +
-					expectedResourceUrl()));
+		tester.getRequest().setUrl(Url.parse("wicket/" + expectedResourceUrl()));
+		InputStream i = getClass().getClassLoader().getResourceAsStream("ParentResourceTest.js");
+		i = getClass().getClassLoader().getResourceAsStream("/ParentResourceTest.js");
+
 		tester.processRequest();
 		tester.assertNoErrorMessage();
-		assertEquals("// ParentResourceTest.js", tester.getLastResponseAsString());
+
+		String res = new String(tester.getLastResponse().getBinaryResponse());
+		assertEquals("// ParentResourceTest.js", res);
 	}
 
 	private String expectedResourceUrl()
@@ -94,7 +100,7 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 			.getParentFolderPlaceholder();
 
 		final StringBuilder url = new StringBuilder();
-		url.append("../wicket/resource/org.apache.wicket.ParentResourceEscapePathTestPage/");
+		url.append("resource/org.apache.wicket.ParentResourceEscapePathTestPage/");
 
 		for (int i = 0; i < 3; i++)
 		{

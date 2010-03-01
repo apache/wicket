@@ -29,6 +29,7 @@ import javax.servlet.http.Cookie;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
+import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.IPageRendererProvider;
 import org.apache.wicket.IRequestCycleProvider;
 import org.apache.wicket.IRequestHandler;
@@ -64,6 +65,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.mock.MockApplication;
+import org.apache.wicket.ng.mock.MockPageManager;
+import org.apache.wicket.ng.mock.MockSessionStore;
 import org.apache.wicket.ng.mock.MockWebRequest;
 import org.apache.wicket.ng.mock.MockWebResponse;
 import org.apache.wicket.ng.request.IRequestMapper;
@@ -79,9 +82,13 @@ import org.apache.wicket.ng.request.handler.impl.BookmarkablePageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.render.PageRenderer;
+import org.apache.wicket.pageStore.IPageManager;
+import org.apache.wicket.pageStore.IPageManagerContext;
 import org.apache.wicket.protocol.http.MockServletContext;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
+import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.diff.DiffUtil;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.Strings;
@@ -239,6 +246,8 @@ public class BaseWicketTester
 			application.getPageRendererProvider()));
 		application.setRequestCycleProvider(new TestRequestCycleProvider(
 			application.getRequestCycleProvider()));
+		application.setSessionStoreProvider(new TestSessionStoreProvider());
+		application.setPageManagerProvider(new TestPageManagerProvider());
 
 		// prepare session
 		setupNextRequestCycle();
@@ -249,16 +258,27 @@ public class BaseWicketTester
 		request = new MockWebRequest(Url.parse("/"));
 		response = new MockWebResponse();
 
-		if (session == null)
-		{
-			session = application.newSession(request, response);
-			application.getSessionStore().bind(null, session);
-			ThreadContext.setSession(session);
-		}
 
 		requestCycle = application.createRequestCycle(request, response);
 		requestCycle.setCleanupFeedbackMessagesOnDetach(false);
 		ThreadContext.setRequestCycle(requestCycle);
+
+
+		if (session == null)
+		{
+			createNewSession();
+		}
+	}
+
+
+	/**
+	 * 
+	 */
+	private void createNewSession()
+	{
+		session = Session.get();
+		application.getSessionStore().bind(null, session);
+		ThreadContext.setSession(session);
 	}
 
 	public MockWebRequest getRequest()
@@ -366,7 +386,7 @@ public class BaseWicketTester
 
 		forcedHandler = forcedRequestHandler;
 
-		if (!redirect && getRequest().getHeader("Wicket-Ajax-BaseURL") == null)
+		if (!redirect && getRequest().getHeader("Wicket-Ajax") == null)
 		{
 			lastRenderedPage = null;
 		}
@@ -549,6 +569,10 @@ public class BaseWicketTester
 		return url;
 	}
 
+	public String urlFor(Link link)
+	{
+		return link.urlFor(ILinkListener.INTERFACE).toString();
+	}
 
 	/**
 	 * Renders a <code>Page</code> defined in <code>TestPageSource</code>. This is usually used when
@@ -628,6 +652,24 @@ public class BaseWicketTester
 		transform(url);
 		request.setUrl(url);
 		request.setHeader("Wicket-Ajax-BaseURL", url.toString());
+		request.setHeader("Wicket-Ajax", "Wicket-Ajax");
+		processRequest();
+	}
+
+	public Url urlFor(AjaxLink link)
+	{
+		AbstractAjaxBehavior behavior = WicketTesterHelper.findAjaxEventBehavior(link, "onclick");
+		Url url = Url.parse(behavior.getCallbackUrl().toString());
+		transform(url);
+		return url;
+	}
+
+	public void executeAjaxUrl(Url url)
+	{
+		transform(url);
+		request.setUrl(url);
+		request.setHeader("Wicket-Ajax-BaseURL", url.toString());
+		request.setHeader("Wicket-Ajax", "Wicket-Ajax");
 		processRequest();
 	}
 
@@ -1507,6 +1549,7 @@ public class BaseWicketTester
 		Url url = Url.parse(behavior.getCallbackUrl().toString());
 		transform(url);
 		request.setHeader("Wicket-Ajax-BaseURL", url.toString());
+		request.setHeader("Wicket-Ajax", "Wicket-Ajax");
 		processRequest(request.requestWithUrl(url), null);
 	}
 
@@ -1632,6 +1675,14 @@ public class BaseWicketTester
 		this.exposeExceptions = exposeExceptions;
 	}
 
+	public void executeUrl(String _url)
+	{
+		Url url = Url.parse(_url);
+		transform(url);
+		getRequest().setUrl(url);
+		processRequest();
+	}
+
 
 	private class LastPageRecordingPageRendererProvider implements IPageRendererProvider
 	{
@@ -1729,6 +1780,33 @@ public class BaseWicketTester
 			{
 				return delegate.mapRequest(request);
 			}
+		}
+
+	}
+
+	private class TestSessionStore extends MockSessionStore
+	{
+		@Override
+		public void invalidate(Request request)
+		{
+			super.invalidate(request);
+			createNewSession();
+		}
+	}
+	private class TestSessionStoreProvider implements IProvider<ISessionStore>
+	{
+		public ISessionStore get()
+		{
+			return new TestSessionStore();
+		}
+	}
+
+	private class TestPageManagerProvider implements IPageManagerProvider
+	{
+
+		public IPageManager get(IPageManagerContext context)
+		{
+			return new MockPageManager(context);
 		}
 
 	}

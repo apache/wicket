@@ -18,6 +18,8 @@ package org.apache.wicket.protocol.http;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IRequestCycleSettings;
 
@@ -60,30 +62,16 @@ public class WebResponseExceptionsTest extends WicketTestCase
 		String document = tester.getLastResponseAsString();
 		assertTrue(document.contains("Click me to get an error"));
 
-		AjaxLink link = (AjaxLink)tester.getComponentFromLastRenderedPage("link");
-
-		// Clear the session to remove the pages
-		// tester.getWicketSession().invalidateNow();
-		//
-		// tester.setCreateAjaxRequest(true);
-		// tester.executeAjaxEvent(link, "onclick");
-		// tester.clickLink("link");
-		//
-		// document = tester.getServletResponse().getDocument();
-		// assertTrue(document.contains("-"));
-		// tester.assertAjaxLocation();
-
-		tester.getSession().invalidateNow();
+		Link<?> link = (Link<?>)tester.getComponentFromLastRenderedPage("link");
+		String linkUrl = tester.urlFor(link);
 
 		// Clear the session to remove the pages
 		tester.getSession().invalidateNow();
 
 		// Invoke the call back URL of the ajax event behavior
-		tester.clickLink(link);
-
-		document = tester.getLastResponseAsString();
-		assertTrue(document.equals("-"));
-		tester.assertAjaxLocation();
+		tester.setExposeExceptions(false);
+		tester.executeUrl(linkUrl);
+		assertEquals(PageExpiredErrorPage.class, tester.getLastRenderedPage().getClass());
 	}
 
 	/**
@@ -92,7 +80,7 @@ public class WebResponseExceptionsTest extends WicketTestCase
 	public void testInternalErrorPage()
 	{
 		tester.startPage(TestErrorPage.class);
-		tester.getRequestCycle().setExposeExceptions(false);
+		tester.setExposeExceptions(false);
 		AjaxLink link = (AjaxLink)tester.getComponentFromLastRenderedPage("link");
 
 		tester.executeAjaxEvent(link, "onclick");
