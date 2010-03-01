@@ -23,7 +23,7 @@ import org.apache.wicket.ng.request.mapper.PageInstanceMapper;
 import org.apache.wicket.ng.request.mapper.ResourceReferenceMapper;
 import org.apache.wicket.ng.request.mapper.ThreadsafeCompoundRequestMapper;
 import org.apache.wicket.ng.request.mapper.parameters.SimplePageParametersEncoder;
-import org.apache.wicket.settings.IResourceSettings;
+import org.apache.wicket.util.IProvider;
 
 
 /**
@@ -37,14 +37,31 @@ public class SystemMapper extends ThreadsafeCompoundRequestMapper
 	/**
 	 * Constructor
 	 */
-	public SystemMapper(IResourceSettings settings)
+	public SystemMapper(Application application)
 	{
 		register(RestartResponseAtInterceptPageException.MAPPER);
 		register(new HomePageMapper());
 		register(new PageInstanceMapper());
 		register(new BookmarkableMapper());
 		register(new ResourceReferenceMapper(new SimplePageParametersEncoder(),
-			settings.getParentFolderPlaceholder()));
+			new ParentFolderPlaceholderProvider(application)));
 		register(new BufferedResponseMapper());
+	}
+
+	private static class ParentFolderPlaceholderProvider implements IProvider<String>
+	{
+		private final Application application;
+
+		public ParentFolderPlaceholderProvider(Application application)
+		{
+			this.application = application;
+		}
+
+		public String get()
+		{
+			return application.getResourceSettings().getParentFolderPlaceholder();
+		}
+
+
 	}
 }

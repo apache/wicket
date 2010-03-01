@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.tester;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -67,7 +68,6 @@ import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.mock.MockApplication;
 import org.apache.wicket.ng.mock.MockPageManager;
 import org.apache.wicket.ng.mock.MockSessionStore;
-import org.apache.wicket.ng.mock.MockWebResponse;
 import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.component.PageParameters;
@@ -86,8 +86,10 @@ import org.apache.wicket.pageStore.IPageManagerContext;
 import org.apache.wicket.protocol.http.MockServletContext;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
+import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.mock.MockHttpSession;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.apache.wicket.util.IProvider;
@@ -151,17 +153,17 @@ public class BaseWicketTester
 	private int redirectCount;
 
 	private MockHttpServletRequest lastRequest;
-	private MockWebResponse lastResponse;
+	private MockHttpServletResponse lastResponse;
 
 	private final List<MockHttpServletRequest> previousRequests = new ArrayList<MockHttpServletRequest>();
-	private final List<MockWebResponse> previousResponses = new ArrayList<MockWebResponse>();
+	private final List<MockHttpServletResponse> previousResponses = new ArrayList<MockHttpServletResponse>();
 
 	private final ThreadContext oldThreadContext;
 
 	/** current request */
 	private MockHttpServletRequest request;
 	/** current response */
-	private MockWebResponse response;
+	private MockHttpServletResponse response;
 
 	/** current session */
 	private Session session;
@@ -265,11 +267,11 @@ public class BaseWicketTester
 	{
 		request = new MockHttpServletRequest(application, hsession, servletContext);
 		request.setURL(request.getContextPath() + request.getServletPath() + "/");
-		response = new MockWebResponse();
+		response = new MockHttpServletResponse(request);
 
 
-		requestCycle = application.createRequestCycle(new ServletWebRequest(request,
-			request.getFilterPrefix()), response);
+		requestCycle = application.createRequestCycle(createServletWebRequest(),
+			createServletWebResponse());
 		requestCycle.setCleanupFeedbackMessagesOnDetach(false);
 		ThreadContext.setRequestCycle(requestCycle);
 
@@ -278,6 +280,38 @@ public class BaseWicketTester
 		{
 			createNewSession();
 		}
+	}
+
+
+	/**
+	 * @return
+	 */
+	private ServletWebResponse createServletWebResponse()
+	{
+		return new ServletWebResponse(request, response)
+		{
+			@Override
+			public void sendRedirect(String url)
+			{
+				super.sendRedirect(url);
+				try
+				{
+					getHttpServletResponse().sendRedirect(url);
+				}
+				catch (IOException e)
+				{
+					throw new RuntimeException(e);
+				}
+			}
+		};
+	}
+
+	/**
+	 * @return
+	 */
+	private ServletWebRequest createServletWebRequest()
+	{
+		return new ServletWebRequest(request, request.getFilterPrefix());
 	}
 
 
@@ -299,7 +333,7 @@ public class BaseWicketTester
 	public void setRequest(MockHttpServletRequest request)
 	{
 		this.request = request;
-		requestCycle.setRequest(new ServletWebRequest(request, request.getServletPath()));
+		applyRequest();
 	}
 
 
@@ -424,12 +458,14 @@ public class BaseWicketTester
 				}
 			}
 
-			requestCycle.setRequest(new ServletWebRequest(request, request.getFilterPrefix()));
+			applyRequest();
+			requestCycle.scheduleRequestHandlerAfterCurrent(null);
 
 			if (!requestCycle.processRequestAndDetach())
 			{
 				return false;
 			}
+
 
 			recordRequestResponse();
 			setupNextRequestCycle();
@@ -443,7 +479,8 @@ public class BaseWicketTester
 						"Possible infinite redirect detected. Bailing out.");
 				}
 				++redirectCount;
-				Url newUrl = Url.parse(lastResponse.getRedirectUrl());
+				Url newUrl = Url.parse(lastResponse.getRedirectLocation());
+
 				if (newUrl.isAbsolute())
 				{
 					throw new WicketRuntimeException("Can not follow absolute redirect URL.");
@@ -524,14 +561,14 @@ public class BaseWicketTester
 	/**
 	 * @return last response or <code>null</code>> if no response has been produced yet.
 	 */
-	public MockWebResponse getLastResponse()
+	public MockHttpServletResponse getLastResponse()
 	{
 		return lastResponse;
 	}
 
 	public String getLastResponseAsString()
 	{
-		return lastResponse.getTextResponse().toString();
+		return lastResponse.getDocument();
 	}
 
 	/**
@@ -545,7 +582,7 @@ public class BaseWicketTester
 	/**
 	 * @return list of prior responses
 	 */
-	public List<MockWebResponse> getPreviousResponses()
+	public List<MockHttpServletResponse> getPreviousResponses()
 	{
 		return Collections.unmodifiableList(previousResponses);
 	}
@@ -965,10 +1002,8 @@ public class BaseWicketTester
 	 */
 	public Result ifContains(String pattern)
 	{
-		return isTrue("pattern '" + pattern + "' not found in:\n" +
-			getLastResponse().getTextResponse(), getLastResponse().getTextResponse()
-			.toString()
-			.matches("(?s).*" + pattern + ".*"));
+		return isTrue("pattern '" + pattern + "' not found in:\n" + getLastResponseAsString(),
+			getLastResponseAsString().toString().matches("(?s).*" + pattern + ".*"));
 	}
 
 	/**
@@ -1197,7 +1232,7 @@ public class BaseWicketTester
 	public void assertResultPage(final Class<?> pageClass, final String filename) throws Exception
 	{
 		// Validate the document
-		String document = getLastResponse().getTextResponse().toString();
+		String document = getLastResponseAsString();
 		DiffUtil.validatePage(document, pageClass, filename, true);
 	}
 
@@ -1213,7 +1248,7 @@ public class BaseWicketTester
 	public Result isResultPage(final String expectedDocument) throws Exception
 	{
 		// Validate the document
-		String document = getLastResponse().getTextResponse().toString();
+		String document = getLastResponseAsString();
 		return isTrue("expected rendered page equals", document.equals(expectedDocument));
 	}
 
@@ -1275,7 +1310,7 @@ public class BaseWicketTester
 	 */
 	public void dumpPage()
 	{
-		log.info(getLastResponse().getTextResponse().toString());
+		log.info(getLastResponseAsString());
 	}
 
 	/**
@@ -1338,7 +1373,7 @@ public class BaseWicketTester
 		}
 
 		// Get the AJAX response
-		String ajaxResponse = getLastResponse().getTextResponse().toString();
+		String ajaxResponse = getLastResponseAsString();
 
 		// Test that the previous response was actually a AJAX response
 		failMessage = "The Previous response was not an AJAX response. "
@@ -1515,8 +1550,7 @@ public class BaseWicketTester
 	 */
 	public TagTester getTagByWicketId(String wicketId)
 	{
-		return TagTester.createTagByAttribute(getLastResponse().getTextResponse().toString(),
-			"wicket:id", wicketId);
+		return TagTester.createTagByAttribute(getLastResponseAsString(), "wicket:id", wicketId);
 	}
 
 	/**
@@ -1527,8 +1561,8 @@ public class BaseWicketTester
 	 */
 	public List<TagTester> getTagsByWicketId(String wicketId)
 	{
-		return TagTester.createTagsByAttribute(getLastResponse().getTextResponse().toString(),
-			"wicket:id", wicketId, false);
+		return TagTester.createTagsByAttribute(getLastResponseAsString(), "wicket:id", wicketId,
+			false);
 	}
 
 	/**
@@ -1541,8 +1575,7 @@ public class BaseWicketTester
 	 */
 	public TagTester getTagById(String id)
 	{
-		return TagTester.createTagByAttribute(getLastResponse().getTextResponse().toString(), "id",
-			id);
+		return TagTester.createTagByAttribute(getLastResponseAsString(), "id", id);
 	}
 
 	/**
@@ -1621,6 +1654,19 @@ public class BaseWicketTester
 		return getLastResponse().getHeader("Content-Disposition");
 	}
 
+	/**
+	 * Rebuilds {@link ServletWebRequest} used by wicket from the mock request used to build
+	 * requests. Sometimes this method is useful when changes need to be checked without processing
+	 * a request.
+	 */
+	public void applyRequest()
+	{
+		ServletWebRequest req = createServletWebRequest();
+		requestCycle.setRequest(req);
+		requestCycle.getUrlRenderer().setBaseUrl(req.getUrl());
+
+	}
+
 	private Result isTrue(String message, boolean condition)
 	{
 		if (condition)
@@ -1671,7 +1717,7 @@ public class BaseWicketTester
 		return requestCycle;
 	}
 
-	public MockWebResponse getResponse()
+	public MockHttpServletResponse getResponse()
 	{
 		return response;
 	}
@@ -1828,5 +1874,6 @@ public class BaseWicketTester
 		}
 
 	}
+
 
 }

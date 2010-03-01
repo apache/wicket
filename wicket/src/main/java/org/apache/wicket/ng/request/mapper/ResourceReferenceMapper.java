@@ -24,6 +24,9 @@ import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHan
 import org.apache.wicket.ng.request.mapper.parameters.IPageParametersEncoder;
 import org.apache.wicket.ng.request.mapper.parameters.SimplePageParametersEncoder;
 import org.apache.wicket.ng.resource.ResourceReference;
+import org.apache.wicket.util.IProvider;
+import org.apache.wicket.util.NullProvider;
+import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.lang.Classes;
 
 /**
@@ -44,7 +47,7 @@ import org.apache.wicket.util.lang.Classes;
 public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 {
 	private final IPageParametersEncoder pageParametersEncoder;
-	private final String relativePathPartEscapeSequence;
+	private final IProvider<String> relativePathPartEscapeSequence;
 
 	/**
 	 * Construct.
@@ -53,8 +56,9 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 	 * @param relativePathPartEscapeSequence
 	 */
 	public ResourceReferenceMapper(IPageParametersEncoder pageParametersEncoder,
-		String relativePathPartEscapeSequence)
+		IProvider<String> relativePathPartEscapeSequence)
 	{
+		Checks.argumentNotNull("relativePathPartEscapeSequence", "relativePathPartEscapeSequence");
 		this.pageParametersEncoder = pageParametersEncoder;
 		this.relativePathPartEscapeSequence = relativePathPartEscapeSequence;
 	}
@@ -64,7 +68,7 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 	 */
 	public ResourceReferenceMapper()
 	{
-		this(new SimplePageParametersEncoder(), null);
+		this(new SimplePageParametersEncoder(), new NullProvider<String>());
 	}
 
 	/**
@@ -74,11 +78,11 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 	{
 		Url url = request.getUrl();
 
-		if (relativePathPartEscapeSequence != null)
+		if (relativePathPartEscapeSequence.get() != null)
 		{
 			for (int i = 0; i < url.getSegments().size(); i++)
 			{
-				if (url.getSegments().get(i).equals(relativePathPartEscapeSequence))
+				if (url.getSegments().get(i).equals(relativePathPartEscapeSequence.get()))
 				{
 					url.getSegments().set(i, "..");
 				}
@@ -159,13 +163,13 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 				url = encodePageParameters(url, parameters, pageParametersEncoder);
 			}
 
-			if (relativePathPartEscapeSequence != null)
+			if (relativePathPartEscapeSequence.get() != null)
 			{
 				for (int i = 0; i < url.getSegments().size(); i++)
 				{
 					if ("..".equals(url.getSegments().get(i)))
 					{
-						url.getSegments().set(i, relativePathPartEscapeSequence);
+						url.getSegments().set(i, relativePathPartEscapeSequence.get());
 					}
 				}
 			}

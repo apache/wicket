@@ -23,6 +23,7 @@ import java.io.OutputStream;
 
 import org.apache.wicket.ng.resource.IResource;
 import org.apache.wicket.ng.resource.ResourceStreamResource;
+import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +64,7 @@ public class ResourceTest extends WicketTestCase
 					null, null, true)));
 		tester.processRequest();
 
-		assertEquals(String.valueOf(testFile.lastModified()),
+		assertEquals(MockHttpServletResponse.formatDate(testFile.lastModified()),
 			tester.getLastModifiedFromResponseHeader());
 		assertEquals(TEST_STRING.length(), tester.getContentLengthFromResponseHeader());
 	}

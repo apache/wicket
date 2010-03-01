@@ -72,7 +72,7 @@ public class AttributeModifierComponentTest extends TestCase
 	public void testComponentTagAttributeModification() throws Exception
 	{
 		// Validate the document
-		String document = tester.getLastResponse().getTextResponse().toString();
+		String document = tester.getLastResponseAsString();
 		log.info(document);
 		Assert.assertTrue(validateDocument(document));
 	}

@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.util.cookies;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
@@ -70,21 +72,21 @@ public class CookieUtilsTest extends WicketTestCase
 
 		// Save the input field's value (add it to the response's cookie list)
 		persister.save(textField);
-		assertNull(getRequestCookies());
+		assertTrue(getRequestCookies().isEmpty());
 		assertEquals(1, getResponseCookies().size());
 		assertEquals("test", (getResponseCookies().get(0)).getValue());
 		assertEquals("form.input", (getResponseCookies().get(0)).getName());
-		assertEquals("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication",
+		assertEquals(tester.getRequest().getContextPath() + tester.getRequest().getServletPath(),
 			(getResponseCookies().get(0)).getPath());
 
 		// To remove a cookie means to add a cookie with maxAge=0. Provided a cookie with the same
 		// name has been provided in the request. Thus, no changes in our test case
 		persister.remove(textField);
-		assertNull(getRequestCookies());
+		assertEquals(0, getRequestCookies().size());
 		assertEquals(1, getResponseCookies().size());
 		assertEquals("test", (getResponseCookies().get(0)).getValue());
 		assertEquals("form.input", (getResponseCookies().get(0)).getName());
-		assertEquals("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication",
+		assertEquals(tester.getRequest().getContextPath() + tester.getRequest().getServletPath(),
 			(getResponseCookies().get(0)).getPath());
 
 		// Try to load it. Because there is no Cookie matching the textfield's name the model's
@@ -127,11 +129,18 @@ public class CookieUtilsTest extends WicketTestCase
 
 	private Collection<Cookie> getRequestCookies()
 	{
-		return tester.getRequest().getCookies();
+		if (tester.getRequest().getCookies() == null)
+		{
+			return Collections.emptyList();
+		}
+		else
+		{
+			return Arrays.asList(tester.getRequest().getCookies());
+		}
 	}
 
 	private List<Cookie> getResponseCookies()
 	{
-		return tester.getLastResponse().getCookies();
+		return tester.getResponse().getCookies();
 	}
 }

@@ -277,6 +277,17 @@ public final class Url implements Serializable
 	public void setQueryParameter(String name, Object value)
 	{
 		removeQueryParameters(name);
+		addQueryParameter(name, value);
+	}
+
+	/**
+	 * Convenience method that removes adds a query parameter with given name
+	 * 
+	 * @param name
+	 * @param value
+	 */
+	public void addQueryParameter(String name, Object value)
+	{
 		if (value != null)
 		{
 			QueryParameter parameter = new QueryParameter(name, value.toString());

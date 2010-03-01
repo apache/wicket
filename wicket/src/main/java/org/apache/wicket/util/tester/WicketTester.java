@@ -416,7 +416,7 @@ public class WicketTester extends BaseWicketTester
 	@Override
 	public void assertResultPage(final Class<?> clazz, final String filename) throws Exception
 	{
-		String document = getLastResponse().getTextResponse().toString();
+		String document = getLastResponseAsString();
 		DiffUtil.validatePage(document, clazz, filename, true);
 	}
 
@@ -431,7 +431,7 @@ public class WicketTester extends BaseWicketTester
 	public void assertResultPage(final String expectedDocument) throws Exception
 	{
 		// Validate the document
-		String document = getLastResponse().getTextResponse().toString();
+		String document = getLastResponseAsString();
 		Assert.assertEquals(expectedDocument, document);
 	}
 

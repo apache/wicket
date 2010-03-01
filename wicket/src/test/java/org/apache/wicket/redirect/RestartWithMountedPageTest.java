@@ -22,24 +22,6 @@ public class RestartWithMountedPageTest extends WicketTestCase
 {
 
 	/**
-	 * Construct.
-	 */
-	public RestartWithMountedPageTest()
-	{
-		super();
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public RestartWithMountedPageTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * Tests that a protected page can redirect to a login page from mounted pages.
 	 */
 	public void testWithMountedLoginPage()

@@ -33,6 +33,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -48,7 +49,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ng.mock.MockRequestParameters;
 import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.protocol.http.RequestUtils;
+import org.apache.wicket.ng.request.Url.QueryParameter;
 import org.apache.wicket.protocol.http.WicketURLDecoder;
 import org.apache.wicket.protocol.http.WicketURLEncoder;
 import org.apache.wicket.util.file.File;
@@ -162,7 +163,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	private String method;
 
-	private final ValueMap parameters = new ValueMap();
+	private final LinkedHashMap<String, String[]> parameters = new LinkedHashMap<String, String[]>();
 
 	private String path;
 
@@ -383,6 +384,23 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		// return "/" + application.getName();
 		return "/context";
+	}
+
+	public Cookie getCookie(String name)
+	{
+		Cookie[] cookies = getCookies();
+		if (cookies == null)
+		{
+			return null;
+		}
+		for (Cookie cookie : cookies)
+		{
+			if (cookie.getName().equals(name))
+			{
+				return cookie;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -607,7 +625,15 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public String getParameter(final String name)
 	{
-		return parameters.getString(name);
+		String[] param = parameters.get(name);
+		if (param == null)
+		{
+			return null;
+		}
+		else
+		{
+			return param[0];
+		}
 	}
 
 	/**
@@ -617,7 +643,9 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public Map<String, Object> getParameterMap()
 	{
-		return parameters;
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.putAll(parameters);
+		return Collections.unmodifiableMap(map);
 	}
 
 	/**
@@ -704,7 +732,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 			for (Iterator<String> iterator = parameters.keySet().iterator(); iterator.hasNext();)
 			{
 				final String name = iterator.next();
-				final String value = parameters.getString(name);
+				final String value = getParameter(name);
 				if (name != null)
 				{
 					buf.append(WicketURLEncoder.QUERY_INSTANCE.encode(name));
@@ -1121,7 +1149,34 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void setParameter(final String name, final String value)
 	{
-		parameters.put(name, value);
+		if (value == null)
+		{
+			parameters.remove(name);
+		}
+		else
+		{
+			parameters.put(name, new String[] { value });
+		}
+	}
+
+	public void addParameter(final String name, final String value)
+	{
+		if (value == null)
+		{
+			return;
+		}
+		String[] val = parameters.get(name);
+		if (val == null)
+		{
+			parameters.put(name, new String[] { value });
+		}
+		else
+		{
+			String[] newval = new String[val.length + 1];
+			System.arraycopy(val, 0, newval, 0, val.length);
+			newval[val.length] = value;
+			parameters.put(name, newval);
+		}
 	}
 
 	/**
@@ -1182,9 +1237,12 @@ public class MockHttpServletRequest implements HttpServletRequest
 			setPath(url.substring(0, index));
 
 			String queryString = url.substring(index + 1);
-			Map<String, String[]> params = new HashMap<String, String[]>();
-			RequestUtils.decodeUrlParameters(queryString, params);
-			parameters.putAll(params);
+
+			parameters.clear();
+			for (QueryParameter parameter : Url.parse("?" + queryString).getQueryParameters())
+			{
+				addParameter(parameter.getName(), parameter.getValue());
+			}
 		}
 	}
 
@@ -1349,39 +1407,6 @@ public class MockHttpServletRequest implements HttpServletRequest
 // }
 
 	/**
-	 * Initialize the request parameters from the given redirect string that redirects back to a
-	 * particular component for display.
-	 * 
-	 * @param redirect
-	 *            The redirect string to display from
-	 */
-	public void setRequestToRedirectString(final String redirect)
-	{
-		parameters.clear();
-
-		int queryStringPos = redirect.indexOf('?');
-
-		// Decode the parameters
-		if (queryStringPos != -1)
-		{
-			final String queryString = redirect.substring(queryStringPos + 1);
-			RequestUtils.decodeParameters(queryString, parameters);
-		}
-
-		// We need to absolutize the redirect URL as we are not as smart as a web-browser
-		// (WICKET-702)
-		url = redirect;
-		if ((url.length() == 0) || (url.charAt(0) != '/'))
-		{
-			url = getContextPath() + getServletPath() + "/" + redirect;
-		}
-
-		// Remove occurrences of ".." from the path
-		url = RequestUtils.removeDoubleDots(url);
-		log.info("Redirecting to " + url);
-	}
-
-	/**
 	 * Helper method to create some default headers for the request
 	 */
 	private void setDefaultHeaders()
@@ -1424,7 +1449,11 @@ public class MockHttpServletRequest implements HttpServletRequest
 			for (Iterator<String> iterator = post.getParameterNames().iterator(); iterator.hasNext();)
 			{
 				final String name = iterator.next();
-				url.setQueryParameter(name, post.getParameterValue(name.toString()));
+				List<org.apache.wicket.util.string.StringValue> values = post.getParameterValues(name);
+				for (org.apache.wicket.util.string.StringValue value : values)
+				{
+					url.addQueryParameter(name, value.toString());
+				}
 			}
 			String body = url.toString().substring(1);
 			return body.getBytes();

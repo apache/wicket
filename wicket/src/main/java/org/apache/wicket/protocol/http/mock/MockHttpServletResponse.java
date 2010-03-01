@@ -23,7 +23,6 @@ import java.io.StringWriter;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -35,7 +34,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.util.value.ValueMap;
 
 
@@ -56,8 +54,6 @@ public class MockHttpServletResponse implements HttpServletResponse
 	private ByteArrayOutputStream byteStream;
 
 	private String characterEncoding = "UTF-8";
-
-	private int code = HttpServletResponse.SC_OK;
 
 	private final List<Cookie> cookies = new ArrayList<Cookie>();
 
@@ -264,22 +260,13 @@ public class MockHttpServletResponse implements HttpServletResponse
 		return characterEncoding;
 	}
 
-	/**
-	 * Get the response code for this request.
-	 * 
-	 * @return The response code
-	 */
-	public int getCode()
-	{
-		return code;
-	}
 
 	/**
 	 * Get all of the cookies that have been added to the response.
 	 * 
 	 * @return The collection of cookies
 	 */
-	public Collection<Cookie> getCookies()
+	public List<Cookie> getCookies()
 	{
 		return cookies;
 	}
@@ -382,7 +369,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	 * 
 	 * @return The status code
 	 */
-	public int getStatus()
+	public Integer getStatus()
 	{
 		return status;
 	}
@@ -411,7 +398,6 @@ public class MockHttpServletResponse implements HttpServletResponse
 	{
 		cookies.clear();
 		headers.clear();
-		code = HttpServletResponse.SC_OK;
 		errorMessage = null;
 		redirectLocation = null;
 		status = HttpServletResponse.SC_OK;
@@ -462,7 +448,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	 */
 	public boolean isError()
 	{
-		return (code != HttpServletResponse.SC_OK);
+		return (status != HttpServletResponse.SC_OK);
 	}
 
 	/**
@@ -508,7 +494,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	 */
 	public void sendError(final int code) throws IOException
 	{
-		this.code = code;
+		status = code;
 		errorMessage = null;
 	}
 
@@ -524,7 +510,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	 */
 	public void sendError(final int code, final String msg) throws IOException
 	{
-		this.code = code;
+		status = code;
 		errorMessage = msg;
 	}
 
@@ -580,24 +566,6 @@ public class MockHttpServletResponse implements HttpServletResponse
 	 */
 	public void sendRedirect(String location) throws IOException
 	{
-		// If the location starts with ../
-		if (location.startsWith("../"))
-		{
-			// Test if the current url has a / in it. (a mount)
-			String url = getURL();
-			int index = url.lastIndexOf("/");
-			if (index != -1)
-			{
-				// Then we have to recalculate what the real redirect is for the next request
-				// which is just getContext() + getServletPath() + "/" + location;
-				url = url.substring(0, index + 1) + location;
-				url = RequestUtils.removeDoubleDots(url);
-
-				// stril the servlet path again from it.
-				index = url.indexOf("/");
-				location = url.substring(index + 1);
-			}
-		}
 		redirectLocation = location;
 	}
 
@@ -816,5 +784,28 @@ public class MockHttpServletResponse implements HttpServletResponse
 	public void setStatus(final int status, final String msg)
 	{
 		setStatus(status);
+	}
+
+	/**
+	 * @deprecated use {@link #getDocument()}
+	 * @return
+	 */
+	@Deprecated
+	public String getTextResponse()
+	{
+		return getDocument();
+	}
+
+	public String getBinaryResponse()
+	{
+		String ctheader = getHeader("Content-Length");
+		if (ctheader == null)
+		{
+			return getDocument();
+		}
+		else
+		{
+			return getDocument().substring(0, Integer.valueOf(ctheader));
+		}
 	}
 }

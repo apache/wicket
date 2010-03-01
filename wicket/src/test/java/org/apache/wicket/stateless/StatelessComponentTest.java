@@ -57,7 +57,7 @@ public class StatelessComponentTest extends WicketTestCase
 		executeTest(StatelessComponentPage.class, "StatelessComponentPage_mount_result.html");
 		tester.getRequest()
 			.setUrl(
-				Url.parse("stateless?0-1.ILinkListener-link&amp;testParam1=testValue1&amp;testParam2=testValue2"));
+				Url.parse("stateless?0-1.ILinkListener-link&testParam1=testValue1&testParam2=testValue2"));
 		try
 		{
 			tester.processRequest();

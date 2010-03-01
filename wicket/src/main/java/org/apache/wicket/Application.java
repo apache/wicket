@@ -928,7 +928,7 @@ public abstract class Application implements UnboundListener
 		sharedResources = newSharedResources(resourceReferenceRegistry);
 
 		// set up default request mapper
-		setRootRequestMapper(new SystemMapper(getResourceSettings()));
+		setRootRequestMapper(new SystemMapper(this));
 
 		pageFactory = newPageFactory();
 
