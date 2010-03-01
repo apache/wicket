@@ -27,8 +27,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.session.HttpSessionStore;
-import org.apache.wicket.session.ISessionStore;
 
 /**
  * @author jcompagner
@@ -84,13 +82,6 @@ public class WicketOutputStreamTest extends WicketTestCase
 			public Class<? extends Page> getHomePage()
 			{
 				return null;
-			}
-
-			@Override
-			protected ISessionStore newSessionStore()
-			{
-				// Don't use a filestore, or we spawn lots of threads, which makes things slow.
-				return new HttpSessionStore();
 			}
 
 		};
