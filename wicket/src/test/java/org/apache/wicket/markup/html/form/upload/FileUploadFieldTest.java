@@ -58,15 +58,7 @@ public class FileUploadFieldTest extends WicketTestCase
 	{
 		final MockPageWithFormAndUploadField page = new MockPageWithFormAndUploadField();
 
-		tester.startPage(new ITestPageSource()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public Page getTestPage()
-			{
-				return page;
-			}
-		});
+		tester.startPage(page);
 
 		File tmp = null;
 		try

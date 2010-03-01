@@ -98,8 +98,6 @@ public class FormTesterTest extends WicketTestCase
 		MockFormFileUploadPage page = (MockFormFileUploadPage)tester.getLastRenderedPage();
 		MockDomainObjectFileUpload domainObject = page.getDomainObject();
 
-		tester.createRequestCycle();
-
 		assertNull(page.getFileUpload());
 		assertNotNull(domainObject);
 		assertNull(domainObject.getText());
@@ -134,8 +132,6 @@ public class FormTesterTest extends WicketTestCase
 		MockFormFileUploadPage page = (MockFormFileUploadPage)tester.getLastRenderedPage();
 		MockDomainObjectFileUpload domainObject = page.getDomainObject();
 
-		tester.createRequestCycle();
-
 		assertNull(page.getFileUpload());
 		assertNotNull(domainObject);
 		assertNull(domainObject.getText());
@@ -166,12 +162,14 @@ public class FormTesterTest extends WicketTestCase
 	 */
 	public void testSubmitWithoutUploadFile()
 	{
-		tester.startPage(MockFormFileUploadPage.class);
+		tester.startPage(MockFormFileUploadPage.class, new PageParameters("required=true"));
 		MockFormFileUploadPage page = (MockFormFileUploadPage)tester.getLastRenderedPage();
 
 		Session.get().setLocale(Locale.US);
 
 		FormTester formTester = tester.newFormTester("form");
+
+		tester.getRequest().setUseMultiPartContentType(true);
 		// without file upload
 		formTester.submit();
 		assertNull(page.getFileUpload());
@@ -192,6 +190,8 @@ public class FormTesterTest extends WicketTestCase
 
 		FormTester formTester = tester.newFormTester("form");
 		formTester.setValue("text", "Mock Value");
+
+		tester.getRequest().setUseMultiPartContentType(true);
 		formTester.submit();
 
 		assertFalse(formTester.getForm().hasError());

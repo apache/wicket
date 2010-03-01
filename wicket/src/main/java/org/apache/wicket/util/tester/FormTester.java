@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.tester;
 
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -40,6 +41,9 @@ import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.markup.html.form.upload.FileUploadField;
+import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
+import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 
@@ -624,22 +628,22 @@ public class FormTester
 	 * @param contentType
 	 *            the content type of the file. Must be a valid mime type.
 	 */
-// public void setFile(final String formComponentId, final File file, final String contentType)
-// {
-// checkClosed();
-//
-// FormComponent<?> formComponent = (FormComponent<?>)workingForm.get(formComponentId);
-//
-// if (formComponent instanceof FileUploadField == false)
-// {
-// throw new IllegalArgumentException("'" + formComponentId + "' is not " +
-// "a FileUploadField. You can only attach a file to form " +
-// "component of this type.");
-// }
-//
-// MockHttpServletRequest servletRequest = baseWicketTester.getServletRequest();
-// servletRequest.addFile(formComponent.getInputName(), file, contentType);
-// }
+	public void setFile(final String formComponentId, final File file, final String contentType)
+	{
+		checkClosed();
+
+		FormComponent<?> formComponent = (FormComponent<?>)workingForm.get(formComponentId);
+
+		if (formComponent instanceof FileUploadField == false)
+		{
+			throw new IllegalArgumentException("'" + formComponentId + "' is not " +
+				"a FileUploadField. You can only attach a file to form " +
+				"component of this type.");
+		}
+
+		MockHttpServletRequest servletRequest = tester.getRequest();
+		servletRequest.addFile(formComponent.getInputName(), file, contentType);
+	}
 
 	/**
 	 * Submits the <code>Form</code>. Note that <code>submit</code> can be executed only once.
@@ -738,9 +742,8 @@ public class FormTester
 	{
 		if (parameterExist(formComponent))
 		{
-			List<StringValue> values = tester.getRequest()
-				.getPostParameters()
-				.getParameterValues(formComponent.getInputName());
+			List<StringValue> values = tester.getRequest().getPostParameters().getParameterValues(
+				formComponent.getInputName());
 			// remove duplicated
 
 			HashSet<String> all = new HashSet<String>();
@@ -786,10 +789,8 @@ public class FormTester
 	 */
 	private boolean parameterExist(FormComponent<?> formComponent)
 	{
-		String parameter = tester.getRequest()
-			.getPostParameters()
-			.getParameterValue(formComponent.getInputName())
-			.toString();
+		String parameter = tester.getRequest().getPostParameters().getParameterValue(
+			formComponent.getInputName()).toString();
 		return parameter != null && parameter.trim().length() > 0;
 	}
 
@@ -803,8 +804,8 @@ public class FormTester
 	 */
 	private void setFormComponentValue(FormComponent<?> formComponent, String value)
 	{
-		tester.getRequest().getPostParameters().setParameterValue(
-			formComponent.getInputName(), value);
+		tester.getRequest().getPostParameters().setParameterValue(formComponent.getInputName(),
+			value);
 	}
 
 	/**
@@ -817,8 +818,7 @@ public class FormTester
 	 */
 	private void setFormSubmittingComponentValue(IFormSubmittingComponent component, String value)
 	{
-		tester.getRequest().getPostParameters().setParameterValue(
-			component.getInputName(), value);
+		tester.getRequest().getPostParameters().setParameterValue(component.getInputName(), value);
 	}
 
 	private void fail(String message)

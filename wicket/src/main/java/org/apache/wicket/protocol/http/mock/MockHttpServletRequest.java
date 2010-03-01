@@ -254,6 +254,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		UploadedFile uf = new UploadedFile(fieldName, file, contentType);
 
 		uploadedFiles.put(fieldName, uf);
+		setUseMultiPartContentType(true);
 	}
 
 	/**
@@ -1469,14 +1470,19 @@ public class MockHttpServletRequest implements HttpServletRequest
 			for (Iterator<String> iterator = post.getParameterNames().iterator(); iterator.hasNext();)
 			{
 				final String name = iterator.next();
-				newAttachment(out);
-				out.write("; name=\"".getBytes());
-				out.write(name.getBytes());
-				out.write("\"".getBytes());
-				out.write(crlf.getBytes());
-				out.write(crlf.getBytes());
-				out.write(post.getParameterValue(name).toString().getBytes());
-				out.write(crlf.getBytes());
+				List<org.apache.wicket.util.string.StringValue> values = post.getParameterValues(name);
+				for (org.apache.wicket.util.string.StringValue value : values)
+				{
+					newAttachment(out);
+					out.write("; name=\"".getBytes());
+					out.write(name.getBytes());
+					out.write("\"".getBytes());
+					out.write(crlf.getBytes());
+					out.write(crlf.getBytes());
+					out.write(post.getParameterValue(name).toString().getBytes());
+					out.write(crlf.getBytes());
+				}
+
 			}
 
 			// Add files

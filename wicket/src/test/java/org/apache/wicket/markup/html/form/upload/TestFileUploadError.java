@@ -44,9 +44,16 @@ public class TestFileUploadError extends TestCase
 		tester.startPage(FileUploadError.class);
 		tester.assertRenderedPage(FileUploadError.class);
 		// Set locale to fix error messages on this test.
-		tester.getWicketSession().setLocale(Locale.ENGLISH);
+		tester.getSession().setLocale(Locale.ENGLISH);
 		//
 		formTester = tester.newFormTester("form");
+		tester.getRequest().setUseMultiPartContentType(true);
+	}
+
+	@Override
+	protected void tearDown() throws Exception
+	{
+		tester.destroy();
 	}
 
 	/**

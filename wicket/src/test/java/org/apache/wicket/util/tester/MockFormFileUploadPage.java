@@ -27,6 +27,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.string.StringValue;
 
 /**
  * Mock form for use when testing FormTester's addFile functionality.
@@ -72,6 +73,10 @@ public class MockFormFileUploadPage extends WebPage
 	private FileUpload fileUpload;
 
 
+	/**
+	 * Construct.
+	 */
+	@SuppressWarnings("deprecation")
 	public MockFormFileUploadPage()
 	{
 		this(new PageParameters("required=true"));
@@ -99,7 +104,9 @@ public class MockFormFileUploadPage extends WebPage
 		form.setMaxSize(Bytes.kilobytes(100));
 		form.add(new TextField<String>("text"));
 		fileUploadField = new FileUploadField("file", new Model<FileUpload>());
-		fileUploadField.setRequired(param.getNamedParameter("required").toBoolean());
+		StringValue requiredParam = param.getNamedParameter("required");
+		boolean required = requiredParam.toBoolean();
+		fileUploadField.setRequired(required);
 		form.add(fileUploadField);
 	}
 
