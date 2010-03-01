@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.ng.request.mapper;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Request;
 import org.apache.wicket.ng.request.Url;
@@ -45,15 +44,19 @@ import org.apache.wicket.util.lang.Classes;
 public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 {
 	private final IPageParametersEncoder pageParametersEncoder;
+	private final String relativePathPartEscapeSequence;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param pageParametersEncoder
+	 * @param relativePathPartEscapeSequence
 	 */
-	public ResourceReferenceMapper(IPageParametersEncoder pageParametersEncoder)
+	public ResourceReferenceMapper(IPageParametersEncoder pageParametersEncoder,
+		String relativePathPartEscapeSequence)
 	{
 		this.pageParametersEncoder = pageParametersEncoder;
+		this.relativePathPartEscapeSequence = relativePathPartEscapeSequence;
 	}
 
 	/**
@@ -61,7 +64,7 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 	 */
 	public ResourceReferenceMapper()
 	{
-		this(new SimplePageParametersEncoder());
+		this(new SimplePageParametersEncoder(), null);
 	}
 
 	/**
@@ -71,12 +74,14 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 	{
 		Url url = request.getUrl();
 
-		for (int i = 0; i < url.getSegments().size(); i++)
+		if (relativePathPartEscapeSequence != null)
 		{
-			if (url.getSegments().get(i).equals(
-				Application.get().getResourceSettings().getParentFolderPlaceholder()))
+			for (int i = 0; i < url.getSegments().size(); i++)
 			{
-				url.getSegments().set(i, "..");
+				if (url.getSegments().get(i).equals(relativePathPartEscapeSequence))
+				{
+					url.getSegments().set(i, "..");
+				}
 			}
 		}
 
@@ -154,18 +159,16 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 				url = encodePageParameters(url, parameters, pageParametersEncoder);
 			}
 
-			final CharSequence placeholder = Application.get()
-				.getResourceSettings()
-				.getParentFolderPlaceholder();
-
-			for (int i = 0; i < url.getSegments().size(); i++)
+			if (relativePathPartEscapeSequence != null)
 			{
-				if ("..".equals(url.getSegments().get(i)))
+				for (int i = 0; i < url.getSegments().size(); i++)
 				{
-					url.getSegments().set(i, placeholder.toString());
+					if ("..".equals(url.getSegments().get(i)))
+					{
+						url.getSegments().set(i, relativePathPartEscapeSequence);
+					}
 				}
 			}
-
 			return url;
 		}
 		return null;

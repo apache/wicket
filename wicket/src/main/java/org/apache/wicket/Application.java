@@ -56,7 +56,6 @@ import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.cycle.RequestCycleContext;
 import org.apache.wicket.ng.request.mapper.IMapperContext;
-import org.apache.wicket.ng.request.mapper.SystemMapper;
 import org.apache.wicket.ng.resource.ResourceReferenceRegistry;
 import org.apache.wicket.pageStore.DefaultPageManagerContext;
 import org.apache.wicket.pageStore.DefaultPageStore;
@@ -929,7 +928,7 @@ public abstract class Application implements UnboundListener
 		sharedResources = newSharedResources(resourceReferenceRegistry);
 
 		// set up default request mapper
-		setRootRequestMapper(new SystemMapper());
+		setRootRequestMapper(new SystemMapper(getResourceSettings()));
 
 		pageFactory = newPageFactory();
 

@@ -314,7 +314,7 @@ public final class Settings
 	private Bytes defaultMaximumUploadSize = Bytes.MAX;
 
 	/** escape string for '..' within resource keys */
-	private CharSequence parentFolderPlaceholder = "";
+	private String parentFolderPlaceholder = null;
 
 	/** Default cache duration */
 	private int defaultCacheDuration = 3600;
@@ -1325,7 +1325,7 @@ public final class Settings
 	/**
 	 * @see org.apache.wicket.settings.IResourceSettings#getParentFolderPlaceholder()
 	 */
-	public CharSequence getParentFolderPlaceholder()
+	public String getParentFolderPlaceholder()
 	{
 		return parentFolderPlaceholder;
 	}
@@ -1333,7 +1333,7 @@ public final class Settings
 	/**
 	 * @see org.apache.wicket.settings.IResourceSettings#setParentFolderPlaceholder(CharSequence)
 	 */
-	public void setParentFolderPlaceholder(final CharSequence sequence)
+	public void setParentFolderPlaceholder(final String sequence)
 	{
 		parentFolderPlaceholder = sequence;
 	}

@@ -14,9 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ng.request.mapper;
+package org.apache.wicket;
 
-import org.apache.wicket.RestartResponseAtInterceptPageException;
+import org.apache.wicket.ng.request.mapper.BookmarkableMapper;
+import org.apache.wicket.ng.request.mapper.BufferedResponseMapper;
+import org.apache.wicket.ng.request.mapper.HomePageMapper;
+import org.apache.wicket.ng.request.mapper.PageInstanceMapper;
+import org.apache.wicket.ng.request.mapper.ResourceReferenceMapper;
+import org.apache.wicket.ng.request.mapper.ThreadsafeCompoundRequestMapper;
+import org.apache.wicket.ng.request.mapper.parameters.SimplePageParametersEncoder;
+import org.apache.wicket.settings.IResourceSettings;
 
 
 /**
@@ -30,13 +37,14 @@ public class SystemMapper extends ThreadsafeCompoundRequestMapper
 	/**
 	 * Constructor
 	 */
-	public SystemMapper()
+	public SystemMapper(IResourceSettings settings)
 	{
 		register(RestartResponseAtInterceptPageException.MAPPER);
 		register(new HomePageMapper());
 		register(new PageInstanceMapper());
 		register(new BookmarkableMapper());
-		register(new ResourceReferenceMapper());
+		register(new ResourceReferenceMapper(new SimplePageParametersEncoder(),
+			settings.getParentFolderPlaceholder()));
 		register(new BufferedResponseMapper());
 	}
 }

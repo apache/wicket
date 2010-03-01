@@ -347,7 +347,7 @@ public interface IResourceSettings
 	 * 
 	 * @return placeholder
 	 */
-	CharSequence getParentFolderPlaceholder();
+	String getParentFolderPlaceholder();
 
 	/**
 	 * Placeholder string for '..' within resource urls (which will be crippled by the browser and
@@ -364,5 +364,5 @@ public interface IResourceSettings
 	 * @param sequence
 	 *            character sequence which must not be ambiguous within urls
 	 */
-	void setParentFolderPlaceholder(CharSequence sequence);
+	void setParentFolderPlaceholder(String sequence);
 }
