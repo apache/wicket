@@ -105,8 +105,9 @@ public class ServletWebRequest extends WebRequest
 		}
 		StringBuilder url = new StringBuilder();
 		String uri = request.getRequestURI();
-		url.append(Strings.stripJSessionId(uri.substring(request.getContextPath().length() +
-			filterPrefix.length() + 1)));
+		uri = Strings.stripJSessionId(uri);
+		final int start = request.getContextPath().length() + filterPrefix.length() + 1;
+		url.append(uri.substring(start));
 
 		String query = request.getQueryString();
 		if (!Strings.isEmpty(query))

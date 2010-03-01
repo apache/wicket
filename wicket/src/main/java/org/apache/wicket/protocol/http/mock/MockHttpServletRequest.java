@@ -19,9 +19,9 @@ package org.apache.wicket.protocol.http.mock;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.CharArrayReader;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
@@ -46,6 +46,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ng.mock.MockRequestParameters;
+import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.protocol.http.WicketURLDecoder;
 import org.apache.wicket.protocol.http.WicketURLEncoder;
@@ -379,7 +381,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public String getContextPath()
 	{
-		return "/" + application.getName();
+		// return "/" + application.getName();
+		return "/context";
 	}
 
 	/**
@@ -730,7 +733,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public BufferedReader getReader() throws IOException
 	{
-		return new BufferedReader(new CharArrayReader(new char[0]));
+		return new BufferedReader(new InputStreamReader(getInputStream()));
 	}
 
 	/**
@@ -890,7 +893,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public String getServletPath()
 	{
-		return getContextPath();
+		return "/servlet";
 	}
 
 	/**
@@ -1411,13 +1414,30 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	private byte[] buildRequest()
 	{
+		if (uploadedFiles == null)
+		{
+			if (post.getParameterNames().size() == 0)
+			{
+				return "".getBytes();
+			}
+			Url url = new Url();
+			for (Iterator<String> iterator = post.getParameterNames().iterator(); iterator.hasNext();)
+			{
+				final String name = iterator.next();
+				url.setQueryParameter(name, post.getParameterValue(name.toString()));
+			}
+			String body = url.toString().substring(1);
+			return body.getBytes();
+		}
+
+
 		try
 		{
 			// Build up the input stream based on the files and parameters
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 			// Add parameters
-			for (Iterator<String> iterator = parameters.keySet().iterator(); iterator.hasNext();)
+			for (Iterator<String> iterator = post.getParameterNames().iterator(); iterator.hasNext();)
 			{
 				final String name = iterator.next();
 				newAttachment(out);
@@ -1426,7 +1446,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 				out.write("\"".getBytes());
 				out.write(crlf.getBytes());
 				out.write(crlf.getBytes());
-				out.write(parameters.get(name).toString().getBytes());
+				out.write(post.getParameterValue(name).toString().getBytes());
 				out.write(crlf.getBytes());
 			}
 
@@ -1502,4 +1522,29 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		return 80;
 	}
+
+	public void setUrl(Url url)
+	{
+		setURL(url.toString());
+	}
+
+	public Url getUrl()
+	{
+		String url = getRequestURI();
+		url += "?" + getQueryString();
+		return Url.parse(url);
+	}
+
+	public MockRequestParameters getPostParameters()
+	{
+		return post;
+	}
+
+
+	public String getFilterPrefix()
+	{
+		return getServletPath().substring(1);
+	}
+
+	private final MockRequestParameters post = new MockRequestParameters();
 }

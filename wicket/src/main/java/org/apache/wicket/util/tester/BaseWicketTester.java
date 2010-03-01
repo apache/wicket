@@ -67,7 +67,6 @@ import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.mock.MockApplication;
 import org.apache.wicket.ng.mock.MockPageManager;
 import org.apache.wicket.ng.mock.MockSessionStore;
-import org.apache.wicket.ng.mock.MockWebRequest;
 import org.apache.wicket.ng.mock.MockWebResponse;
 import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
@@ -86,6 +85,9 @@ import org.apache.wicket.pageStore.IPageManager;
 import org.apache.wicket.pageStore.IPageManagerContext;
 import org.apache.wicket.protocol.http.MockServletContext;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
+import org.apache.wicket.protocol.http.mock.MockHttpSession;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.apache.wicket.util.IProvider;
@@ -140,22 +142,24 @@ public class BaseWicketTester
 		}
 	}
 
+	private org.apache.wicket.protocol.http.mock.MockServletContext servletContext;
+	private MockHttpSession hsession;
 
 	private final WebApplication application;
 
 	private boolean followRedirects = true;
 	private int redirectCount;
 
-	private MockWebRequest lastRequest;
+	private MockHttpServletRequest lastRequest;
 	private MockWebResponse lastResponse;
 
-	private final List<MockWebRequest> previousRequests = new ArrayList<MockWebRequest>();
+	private final List<MockHttpServletRequest> previousRequests = new ArrayList<MockHttpServletRequest>();
 	private final List<MockWebResponse> previousResponses = new ArrayList<MockWebResponse>();
 
 	private final ThreadContext oldThreadContext;
 
 	/** current request */
-	private MockWebRequest request;
+	private MockHttpServletRequest request;
 	/** current response */
 	private MockWebResponse response;
 
@@ -227,6 +231,10 @@ public class BaseWicketTester
 	 */
 	public BaseWicketTester(final WebApplication application)
 	{
+		servletContext = new org.apache.wicket.protocol.http.mock.MockServletContext(application,
+			"");
+		hsession = new MockHttpSession(servletContext);
+
 		oldThreadContext = ThreadContext.detach();
 
 		this.application = application;
@@ -255,11 +263,13 @@ public class BaseWicketTester
 
 	private void setupNextRequestCycle()
 	{
-		request = new MockWebRequest(Url.parse("/"));
+		request = new MockHttpServletRequest(application, hsession, servletContext);
+		request.setURL(request.getContextPath() + request.getServletPath() + "/");
 		response = new MockWebResponse();
 
 
-		requestCycle = application.createRequestCycle(request, response);
+		requestCycle = application.createRequestCycle(new ServletWebRequest(request,
+			request.getFilterPrefix()), response);
 		requestCycle.setCleanupFeedbackMessagesOnDetach(false);
 		ThreadContext.setRequestCycle(requestCycle);
 
@@ -281,15 +291,15 @@ public class BaseWicketTester
 		ThreadContext.setSession(session);
 	}
 
-	public MockWebRequest getRequest()
+	public MockHttpServletRequest getRequest()
 	{
 		return request;
 	}
 
-	public void setRequest(MockWebRequest request)
+	public void setRequest(MockHttpServletRequest request)
 	{
 		this.request = request;
-		requestCycle.setRequest(request);
+		requestCycle.setRequest(new ServletWebRequest(request, request.getServletPath()));
 	}
 
 
@@ -348,7 +358,7 @@ public class BaseWicketTester
 	 *            request to process
 	 * 
 	 */
-	public void processRequest(MockWebRequest request)
+	public void processRequest(MockHttpServletRequest request)
 	{
 		processRequest(request, null);
 	}
@@ -363,7 +373,8 @@ public class BaseWicketTester
 	 *            optional parameter to override parsing the request URL and force
 	 *            {@link IRequestHandler}
 	 */
-	public boolean processRequest(MockWebRequest request, IRequestHandler forcedRequestHandler)
+	public boolean processRequest(MockHttpServletRequest request,
+		IRequestHandler forcedRequestHandler)
 	{
 		return processRequest(request, forcedRequestHandler, false);
 	}
@@ -374,7 +385,7 @@ public class BaseWicketTester
 	}
 
 
-	private boolean processRequest(MockWebRequest forcedRequest,
+	private boolean processRequest(MockHttpServletRequest forcedRequest,
 		IRequestHandler forcedRequestHandler, boolean redirect)
 	{
 
@@ -413,7 +424,7 @@ public class BaseWicketTester
 				}
 			}
 
-			requestCycle.setRequest(request);
+			requestCycle.setRequest(new ServletWebRequest(request, request.getFilterPrefix()));
 
 			if (!requestCycle.processRequestAndDetach())
 			{
@@ -468,9 +479,12 @@ public class BaseWicketTester
 
 		// transfer cookies from previous request to previous response, quirky but how old stuff
 		// worked...
-		for (Cookie cookie : lastRequest.getCookies())
+		if (lastRequest.getCookies() != null)
 		{
-			lastResponse.addCookie(cookie);
+			for (Cookie cookie : lastRequest.getCookies())
+			{
+				lastResponse.addCookie(cookie);
+			}
 		}
 
 	}
@@ -488,7 +502,8 @@ public class BaseWicketTester
 	 */
 	public Page startPage(IPageProvider pageProvider)
 	{
-		request = new MockWebRequest(new Url());
+		request = new MockHttpServletRequest(application, hsession, servletContext);
+		request.setURL(request.getContextPath() + request.getServletPath() + "/");
 		IRequestHandler handler = new RenderPageRequestHandler(pageProvider);
 		processRequest(request, handler);
 		return getLastRenderedPage();
@@ -522,7 +537,7 @@ public class BaseWicketTester
 	/**
 	 * @return list of prior requests
 	 */
-	public List<MockWebRequest> getPreviousRequests()
+	public List<MockHttpServletRequest> getPreviousRequests()
 	{
 		return Collections.unmodifiableList(previousRequests);
 	}
@@ -617,8 +632,10 @@ public class BaseWicketTester
 			component.getPage(), component), listener);
 
 		Url url = urlFor(handler);
-
-		processRequest(new MockWebRequest(url), null);
+		MockHttpServletRequest request = new MockHttpServletRequest(application, hsession,
+			servletContext);
+		request.setUrl(url);
+		processRequest(request, null);
 	}
 
 
@@ -651,8 +668,8 @@ public class BaseWicketTester
 		Url url = Url.parse(behavior.getCallbackUrl().toString());
 		transform(url);
 		request.setUrl(url);
-		request.setHeader("Wicket-Ajax-BaseURL", url.toString());
-		request.setHeader("Wicket-Ajax", "Wicket-Ajax");
+		request.addHeader("Wicket-Ajax-BaseURL", url.toString());
+		request.addHeader("Wicket-Ajax", "Wicket-Ajax");
 		processRequest();
 	}
 
@@ -668,8 +685,8 @@ public class BaseWicketTester
 	{
 		transform(url);
 		request.setUrl(url);
-		request.setHeader("Wicket-Ajax-BaseURL", url.toString());
-		request.setHeader("Wicket-Ajax", "Wicket-Ajax");
+		request.addHeader("Wicket-Ajax-BaseURL", url.toString());
+		request.addHeader("Wicket-Ajax", "Wicket-Ajax");
 		processRequest();
 	}
 
@@ -1548,9 +1565,10 @@ public class BaseWicketTester
 
 		Url url = Url.parse(behavior.getCallbackUrl().toString());
 		transform(url);
-		request.setHeader("Wicket-Ajax-BaseURL", url.toString());
-		request.setHeader("Wicket-Ajax", "Wicket-Ajax");
-		processRequest(request.requestWithUrl(url), null);
+		request.addHeader("Wicket-Ajax-BaseURL", url.toString());
+		request.addHeader("Wicket-Ajax", "Wicket-Ajax");
+		request.setUrl(url);
+		processRequest(request, null);
 	}
 
 	/**
@@ -1658,7 +1676,7 @@ public class BaseWicketTester
 		return response;
 	}
 
-	public MockWebRequest getLastRequest()
+	public MockHttpServletRequest getLastRequest()
 	{
 		return lastRequest;
 	}
