@@ -20,7 +20,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.protocol.http.MockServletContext;
+import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
