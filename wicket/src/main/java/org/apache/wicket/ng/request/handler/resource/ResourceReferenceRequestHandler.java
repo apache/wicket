@@ -58,7 +58,7 @@ public class ResourceReferenceRequestHandler implements IRequestHandler
 		Checks.argumentNotNull(resourceReference, "resourceReference");
 
 		this.resourceReference = resourceReference;
-		this.pageParameters = pageParameters;
+		this.pageParameters = pageParameters != null ? pageParameters : new PageParameters();
 	}
 
 	/**

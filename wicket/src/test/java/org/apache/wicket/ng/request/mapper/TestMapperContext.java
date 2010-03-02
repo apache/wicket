@@ -134,7 +134,10 @@ public class TestMapperContext implements IMapperContext
 			page.setPageId(++idCounter);
 			page.setBookmarkable(true);
 			page.setCreatedBookmarkable(true);
-			page.getPageParameters().assign(pageParameters);
+			if (pageParameters != null)
+			{
+				page.getPageParameters().assign(pageParameters);
+			}
 			return page;
 		}
 		catch (Exception e)

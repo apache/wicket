@@ -124,10 +124,6 @@ public class PageProvider implements IPageProvider
 		{
 			setPageParameters(pageParameters);
 		}
-		else
-		{
-			setPageParameters(new PageParameters());
-		}
 	}
 
 	/**
@@ -138,7 +134,7 @@ public class PageProvider implements IPageProvider
 	 */
 	public PageProvider(Class<? extends IRequestablePage> pageClass)
 	{
-		this(pageClass, new PageParameters());
+		this(pageClass, null);
 	}
 
 	/**
@@ -180,9 +176,13 @@ public class PageProvider implements IPageProvider
 		{
 			return pageParameters;
 		}
+		else if (pageInstance != null)
+		{
+			return pageInstance.getPageParameters();
+		}
 		else
 		{
-			return getPageInstance().getPageParameters();
+			return null;
 		}
 	}
 
@@ -318,8 +318,6 @@ public class PageProvider implements IPageProvider
 	 */
 	private void setPageParameters(PageParameters pageParameters)
 	{
-		Checks.argumentNotNull(pageParameters, "pageParameters");
-
 		this.pageParameters = pageParameters;
 	}
 

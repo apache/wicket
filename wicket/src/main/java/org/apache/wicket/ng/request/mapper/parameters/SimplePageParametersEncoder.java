@@ -54,7 +54,7 @@ public class SimplePageParametersEncoder implements IPageParametersEncoder
 			parameters.addNamedParameter(p.getName(), p.getValue());
 		}
 
-		return parameters;
+		return parameters.isEmpty() ? null : parameters;
 	}
 
 	/**

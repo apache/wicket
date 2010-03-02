@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.basic;
 
+import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.markup.html.WebPage;
 
 /**
@@ -30,6 +31,6 @@ public class HomePageClassRedirect extends WebPage
 	 */
 	public HomePageClassRedirect()
 	{
-		setResponsePage(RedirectPage.class);
+		throw new RestartResponseException(RedirectPage.class);
 	}
 }

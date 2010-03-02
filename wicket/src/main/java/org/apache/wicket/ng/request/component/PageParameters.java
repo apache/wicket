@@ -72,16 +72,17 @@ public class PageParameters implements Serializable
 	 */
 	public PageParameters(final PageParameters copy)
 	{
-		Checks.argumentNotNull(copy, "copy");
-
-		if (copy.indexedParameters != null)
+		if (copy != null)
 		{
-			indexedParameters = new ArrayList<String>(copy.indexedParameters);
-		}
+			if (copy.indexedParameters != null)
+			{
+				indexedParameters = new ArrayList<String>(copy.indexedParameters);
+			}
 
-		if (copy.namedParameters != null)
-		{
-			namedParameters = new ArrayList<Entry>(copy.namedParameters);
+			if (copy.namedParameters != null)
+			{
+				namedParameters = new ArrayList<Entry>(copy.namedParameters);
+			}
 		}
 	}
 

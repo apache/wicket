@@ -230,7 +230,7 @@ public abstract class AbstractMapper implements IRequestMapper
 		}
 
 		PageParameters decoded = encoder.decodePageParameters(request.requestWithUrl(urlCopy));
-		return decoded != null ? decoded : new PageParameters();
+		return decoded;
 	}
 
 	/**

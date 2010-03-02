@@ -126,6 +126,10 @@ public class MountedMapper extends AbstractBookmarkableMapper
 				if (placeholder != null)
 				{
 					// extract the parameter from URL
+					if (pageParameters == null)
+					{
+						pageParameters = new PageParameters();
+					}
 					pageParameters.addNamedParameter(placeholder, url.getSegments().get(i));
 				}
 			}

@@ -43,7 +43,7 @@ public class ComponentInfoTest extends TestCase
 		assertEquals("listener", info.getListenerInterface());
 		assertEquals("component:path", info.getComponentPath());
 		assertNull(info.getBehaviorIndex());
-		
+
 		assertEquals(s, info.toString());
 	}
 
@@ -54,19 +54,21 @@ public class ComponentInfoTest extends TestCase
 	{
 		String s = "-component-path";
 		ComponentInfo info = ComponentInfo.parse(s);
-		assertEquals(null, info);		
+		assertEquals(null, info);
 	}
-	
+
 	/**
 	 * 
 	 */
 	public void test3()
 	{
 		String s = "listener-";
-		ComponentInfo info = ComponentInfo.parse(s);		
-		assertEquals(null, info);
+		ComponentInfo info = ComponentInfo.parse(s);
+		// empty component path is allowed - listener invoked on page
+		assertEquals("listener", info.getListenerInterface());
+		assertEquals("", info.getComponentPath());
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -76,7 +78,7 @@ public class ComponentInfoTest extends TestCase
 		ComponentInfo info = ComponentInfo.parse(s);
 		assertEquals(null, info);
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -85,7 +87,7 @@ public class ComponentInfoTest extends TestCase
 		String s = "abcd";
 		assertEquals(null, ComponentInfo.parse(s));
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -96,7 +98,7 @@ public class ComponentInfoTest extends TestCase
 		assertEquals("listener", info.getListenerInterface());
 		assertEquals("compo-nent:path", info.getComponentPath());
 		assertNull(info.getBehaviorIndex());
-		
+
 		assertEquals(s, info.toString());
 	}
 
@@ -110,7 +112,7 @@ public class ComponentInfoTest extends TestCase
 		assertEquals("listener", info.getListenerInterface());
 		assertEquals("co-mpo--nent:path", info.getComponentPath());
 		assertNull(info.getBehaviorIndex());
-		
+
 		assertEquals(s, info.toString());
 	}
 
@@ -124,10 +126,10 @@ public class ComponentInfoTest extends TestCase
 		assertEquals("listener", info.getListenerInterface());
 		assertEquals("component:path", info.getComponentPath());
 		assertEquals((Object)12, info.getBehaviorIndex());
-		
+
 		assertEquals(s, info.toString());
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -137,10 +139,10 @@ public class ComponentInfoTest extends TestCase
 		ComponentInfo info = ComponentInfo.parse(s);
 		assertEquals("listener", info.getListenerInterface());
 		assertEquals((Integer)4, info.getRenderCount());
-		
+
 		assertEquals(s, info.toString());
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -151,7 +153,7 @@ public class ComponentInfoTest extends TestCase
 		assertEquals("listener", info.getListenerInterface());
 		assertEquals((Integer)4, info.getRenderCount());
 		assertEquals((Integer)5, info.getBehaviorIndex());
-		
+
 		assertEquals(s, info.toString());
 	}
 

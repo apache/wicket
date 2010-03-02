@@ -1470,7 +1470,13 @@ public abstract class Application implements UnboundListener
 			getRootRequestMapper(), new DefaultExceptionMapper());
 
 		RequestCycle requestCycle = getRequestCycleProvider().get(context);
-
+		requestCycle.register(new RequestCycle.DetachCallback()
+		{
+			public void onDetach(RequestCycle requestCycle)
+			{
+				getPageManager().commitRequest();
+			}
+		});
 		return requestCycle;
 	}
 

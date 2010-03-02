@@ -72,7 +72,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractMapper
 			Checks.argumentNotNull(pageClass, "pageClass");
 
 			this.pageComponentInfo = pageComponentInfo;
-			this.pageParameters = pageParameters != null ? pageParameters : null;
+			this.pageParameters = pageParameters;
 			this.pageClass = pageClass;
 		}
 

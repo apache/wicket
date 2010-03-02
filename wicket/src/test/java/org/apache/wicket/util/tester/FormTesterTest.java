@@ -162,7 +162,8 @@ public class FormTesterTest extends WicketTestCase
 	 */
 	public void testSubmitWithoutUploadFile()
 	{
-		tester.startPage(MockFormFileUploadPage.class, new PageParameters("required=true"));
+		// tester.startPage(MockFormFileUploadPage.class, new PageParameters("required=true"));
+		tester.startPage(MockFormFileUploadPage.class);
 		MockFormFileUploadPage page = (MockFormFileUploadPage)tester.getLastRenderedPage();
 
 		Session.get().setLocale(Locale.US);

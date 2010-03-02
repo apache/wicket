@@ -64,7 +64,8 @@ public final class DefaultPageFactory implements IPageFactory
 			Constructor<?> constructor = constructor(pageClass, PageParameters.class);
 			if (constructor != null)
 			{
-				return newPage(constructor, new PageParameters());
+				PageParameters pp = new PageParameters();
+				return processPage(newPage(constructor, pp), pp);
 			}
 			else
 			{
