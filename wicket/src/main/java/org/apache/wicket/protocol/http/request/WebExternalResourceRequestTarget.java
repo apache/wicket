@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.http.request;
 
 import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.ng.resource.ContentDisposition;
 import org.apache.wicket.request.target.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.util.resource.WebExternalResourceStream;
 import org.slf4j.Logger;
@@ -54,6 +55,7 @@ public class WebExternalResourceRequestTarget extends ResourceStreamRequestHandl
 	{
 		super(new WebExternalResourceStream(uri));
 		this.uri = uri;
+		setContentDisposition(ContentDisposition.INLINE);
 	}
 
 	/**

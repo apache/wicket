@@ -94,7 +94,7 @@ public class WebExternalResourceStream extends AbstractResourceStream
 	@Override
 	public String getContentType()
 	{
-		return null;
+		return WebApplication.get().getServletContext().getMimeType(url);
 	}
 
 	public InputStream getInputStream() throws ResourceStreamNotFoundException

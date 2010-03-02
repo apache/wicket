@@ -40,7 +40,7 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 	 * with web requests.
 	 */
 	private String fileName;
-	private ContentDisposition contentDisposition;
+	private ContentDisposition contentDisposition = ContentDisposition.INLINE;
 
 	/** the resource stream for the response. */
 	private final IResourceStream resourceStream;

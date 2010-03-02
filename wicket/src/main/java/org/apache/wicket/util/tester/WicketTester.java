@@ -198,10 +198,10 @@ public class WicketTester extends BaseWicketTester
 	 * @see org.apache.wicket.protocol.http.MockWebApplication#MockWebApplication(org.apache.wicket.protocol.http.WebApplication,
 	 *      String)
 	 */
-// public WicketTester(final WebApplication application, final String path)
-// {
-// super(application, path);
-// }
+	public WicketTester(final MockApplication application, final String path)
+	{
+		super(application, path);
+	}
 
 
 	/**

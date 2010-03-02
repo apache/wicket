@@ -83,7 +83,6 @@ import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.render.PageRenderer;
 import org.apache.wicket.pageStore.IPageManager;
 import org.apache.wicket.pageStore.IPageManagerContext;
-import org.apache.wicket.protocol.http.MockServletContext;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
@@ -215,13 +214,6 @@ public class BaseWicketTester
 			{
 				return homePage;
 			}
-
-			@Override
-			protected void outputDevelopmentModeWarning()
-			{
-				// Do nothing.
-			}
-
 		});
 	}
 
@@ -233,8 +225,24 @@ public class BaseWicketTester
 	 */
 	public BaseWicketTester(final WebApplication application)
 	{
+		this(application, null);
+	}
+
+	/**
+	 * Creates a <code>WicketTester</code>.
+	 * 
+	 * @param application
+	 *            a <code>WicketTester</code> <code>WebApplication</code> object
+	 * 
+	 * 
+	 * @param servletContextBasePath
+	 *            the absolute path on disk to the web application's contents (e.g. war root) - may
+	 *            be <code>null</code>
+	 */
+	public BaseWicketTester(final WebApplication application, String servletContextBasePath)
+	{
 		servletContext = new org.apache.wicket.protocol.http.mock.MockServletContext(application,
-			"");
+			servletContextBasePath);
 		hsession = new MockHttpSession(servletContext);
 
 		oldThreadContext = ThreadContext.detach();
@@ -246,7 +254,7 @@ public class BaseWicketTester
 		this.application.setName("WicketTesterApplication-" + UUID.randomUUID());
 		this.application.set();
 
-		application.setServletContext(new MockServletContext(application, ""));
+		application.setServletContext(servletContext);
 
 		// initialize the application
 		this.application.initApplication();
