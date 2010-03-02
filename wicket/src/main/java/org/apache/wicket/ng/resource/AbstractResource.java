@@ -337,6 +337,18 @@ public abstract class AbstractResource implements IResource
 		WebRequest request = (WebRequest)attributes.getRequest();
 		WebResponse response = (WebResponse)attributes.getResponse();
 
+
+		// 1. Last Modified
+		Date lastModified = data.getLastModified();
+		if (lastModified != null)
+		{
+			response.setLastModifiedTime(lastModified.getTime());
+		}
+
+		// 2. Caching
+
+		configureCache(request, response, data, attributes);
+
 		if (!data.dataNeedsToBeWritten(attributes))
 		{
 			response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
@@ -358,7 +370,7 @@ public abstract class AbstractResource implements IResource
 			ContentDisposition disposition = data.getContentDisposition();
 			String mimeType = data.getContentType();
 			String encoding = null;
-			Date lastModified = data.getLastModified();
+
 
 			if (mimeType != null && mimeType.indexOf("text") != -1)
 			{
@@ -367,7 +379,7 @@ public abstract class AbstractResource implements IResource
 
 			long contentLength = data.getContentLength();
 
-			// 1. Content Disposition
+			// 3. Content Disposition
 
 			if (ContentDisposition.ATTACHMENT == disposition)
 			{
@@ -378,7 +390,7 @@ public abstract class AbstractResource implements IResource
 				response.setInlineHeader(fileName);
 			}
 
-			// 2. Mime Type (+ encoding)
+			// 4. Mime Type (+ encoding)
 
 			if (mimeType != null)
 			{
@@ -392,16 +404,6 @@ public abstract class AbstractResource implements IResource
 				}
 			}
 
-			// 3. Last Modified
-
-			if (lastModified != null)
-			{
-				response.setLastModifiedTime(lastModified.getTime());
-			}
-
-			// 4. Caching
-
-			configureCache(request, response, data, attributes);
 
 			// 5. Content Length
 

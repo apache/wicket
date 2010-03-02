@@ -92,12 +92,19 @@ public class WicketFilterTest extends TestCase
 				{
 					throw new UnsupportedOperationException("Not implemented");
 				}
+
+				@Override
+				protected ResourceResponse newResourceResponse(Attributes attributes)
+				{
+					ResourceResponse response = super.newResourceResponse(attributes);
+					response.setCacheable(true);
+					return response;
+				}
 			};
-			// resource.setCacheable(true);
 			application.getSharedResources().add("foo.gif", resource);
 			MockHttpServletRequest request = new MockHttpServletRequest(application, null, null);
-			request.setURL(request.getContextPath() + "/app/" + "resources/" +
-				Application.class.getName() + "/foo.gif");
+			request.setURL(request.getContextPath() + request.getServletPath() +
+				"/wicket/resource/" + Application.class.getName() + "/foo.gif");
 			setIfModifiedSinceToNextWeek(request);
 			MockHttpServletResponse response = new MockHttpServletResponse(request);
 			filter.doFilter(request, response, new FilterChain()
@@ -107,7 +114,7 @@ public class WicketFilterTest extends TestCase
 				{
 				}
 			});
-			assertEquals(HttpServletResponse.SC_NOT_MODIFIED, response.getStatus());
+			assertEquals((Integer)HttpServletResponse.SC_NOT_MODIFIED, response.getStatus());
 			String responseExpiresHeader = response.getHeader("Expires");
 			assertNotNull("Expires header must be set on not modified response",
 				responseExpiresHeader);
@@ -169,7 +176,7 @@ public class WicketFilterTest extends TestCase
 		{
 			initParameters.put(WicketFilter.APP_FACT_PARAM,
 				FilterTestingApplicationFactory.class.getName());
-			initParameters.put(WicketFilter.FILTER_MAPPING_PARAM, "/app/*");
+			initParameters.put(WicketFilter.FILTER_MAPPING_PARAM, "/servlet/*");
 			initParameters.put(ContextParamWebApplicationFactory.APP_CLASS_PARAM,
 				MockApplication.class.getName());
 		}

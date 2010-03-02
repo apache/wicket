@@ -45,11 +45,10 @@ public class WebExternalResourceTest extends WicketTestCase
 		Streams.copy(in, out);
 		in.close();
 		out.close();
-		tester = new WicketTester(new DummyWebApplication(), tempDir.getPath());
-		tester.setupRequestAndResponse();
+		tester = new WicketTester(tempDir.getPath());
 		// We fake the browser URL, otherwise Wicket doesn't know the requested URL and cannot guess
 		// the Content-Type
-		tester.getServletRequest().setPath("/index.html");
+		tester.getRequest().setPath("/index.html");
 	}
 
 	/**
