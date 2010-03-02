@@ -20,7 +20,13 @@ import junit.framework.TestCase;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.SimplePage;
-import org.apache.wicket.ng.mock.WicketTester;
+import org.apache.wicket.ng.mock.MockApplication;
+import org.apache.wicket.ng.request.mapper.CryptoMapper;
+import org.apache.wicket.ng.request.mapper.ThreadsafeCompoundRequestMapper;
+import org.apache.wicket.util.crypt.Base64;
+import org.apache.wicket.util.crypt.ICrypt;
+import org.apache.wicket.util.crypt.ICryptFactory;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Simple test using the WicketTester
@@ -29,10 +35,23 @@ public class CryptedUrlWebRequestCodingStrategyTest extends TestCase
 {
 	private WicketTester tester;
 
+
 	@Override
 	public void setUp()
 	{
-		tester = new WicketTester(new WicketApplication());
+		tester = new WicketTester(new MockApplication()
+		{
+			@Override
+			protected void init()
+			{
+				super.init();
+				// install crypto mapper to encrypt all application urls
+				getSecuritySettings().setCryptFactory(new TestCryptFactory());
+				ThreadsafeCompoundRequestMapper root = new ThreadsafeCompoundRequestMapper();
+				root.register(new CryptoMapper(getRootRequestMapper(), this));
+				setRootRequestMapper(root);
+			}
+		});
 	}
 
 	/**
@@ -53,6 +72,7 @@ public class CryptedUrlWebRequestCodingStrategyTest extends TestCase
 
 		// POST
 		tester.submitForm("form1");
+		tester.assertRenderedPage(HomePage.class);
 	}
 
 	public void testRenderMyPageGet()
@@ -63,6 +83,38 @@ public class CryptedUrlWebRequestCodingStrategyTest extends TestCase
 
 		// POST
 		tester.submitForm("form2");
+		tester.assertRenderedPage(HomePage.class);
+	}
+
+	/**
+	 * Simple obfuscation crypt for test purposes
+	 * 
+	 * @author igor.vaynberg
+	 */
+	private static class TestCryptFactory implements ICryptFactory
+	{
+
+		public ICrypt newCrypt()
+		{
+			return new ICrypt()
+			{
+
+				public String decryptUrlSafe(String text)
+				{
+					return new String(new Base64(true).decode(text));
+				}
+
+				public String encryptUrlSafe(String plainText)
+				{
+					return new String(new Base64(true).encode(plainText.getBytes()));
+				}
+
+				public void setKey(String key)
+				{
+				}
+
+			};
+		}
 	}
 
 }

@@ -82,5 +82,11 @@ public final class LibraryApplication extends WicketExampleApplication
 			}
 		};
 		getSecuritySettings().setAuthorizationStrategy(authorizationStrategy);
+
+		// install crypto mapper to encrypt all application urls
+		// getSecuritySettings().setCryptFactory(new KeyInSessionSunJceCryptFactory());
+		// ThreadsafeCompoundRequestMapper root = new ThreadsafeCompoundRequestMapper();
+		// root.register(new CryptoMapper(getRootRequestMapper(), this));
+		// setRootRequestMapper(root);
 	}
 }

@@ -21,6 +21,8 @@ import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.util.cookies.CookieUtils;
 import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Wicket's default implementation of an authentication strategy. It'll concatenate username and
@@ -31,6 +33,8 @@ import org.apache.wicket.util.string.Strings;
 public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 {
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger logger = LoggerFactory.getLogger(DefaultAuthenticationStrategy.class);
 
 	/** The cookie name to store the username and password */
 	private final String cookieKey;
@@ -43,6 +47,7 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 
 	/** Use to encrypt cookie values for username and password. */
 	private ICrypt crypt;
+
 
 	/**
 	 * Constructor
@@ -93,7 +98,18 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 		String value = getCookieUtils().load(cookieKey);
 		if (Strings.isEmpty(value) == false)
 		{
-			value = getCrypt().decryptUrlSafe(value);
+			try
+			{
+				value = getCrypt().decryptUrlSafe(value);
+			}
+			catch (RuntimeException e)
+			{
+				logger.info(
+					"Error decrypting login cookie: {}. The cookie will be deleted. Possible cause is that a session-relative encryption key was used to encrypt this cookie while this decryption attempt is happening in a different session, eg user coming back to the application after session expiration",
+					cookieKey);
+				getCookieUtils().remove(cookieKey);
+				value = null;
+			}
 			if (Strings.isEmpty(value) == false)
 			{
 				String username = null;

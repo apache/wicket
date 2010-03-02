@@ -886,8 +886,8 @@ public abstract class Application implements UnboundListener
 		callDestroyers();
 		applicationKeyToApplication.remove(getApplicationKey());
 
-		pageManager.destroy();
-		sessionStore.destroy();
+		getPageManager().destroy();
+		getSessionStore().destroy();
 
 		RequestContext.unset();
 	}
