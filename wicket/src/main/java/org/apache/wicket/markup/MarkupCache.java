@@ -384,9 +384,10 @@ public class MarkupCache implements IMarkupCache
 		{
 			if (cacheKey != null)
 			{
-				if (markup.locationAsString() != null)
+				String temp = markup.locationAsString();
+				if (temp != null)
 				{
-					locationString = markup.locationAsString();
+					locationString = temp;
 				}
 
 				// add the markup to the cache.

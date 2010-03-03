@@ -96,7 +96,8 @@ public class Markup implements IMarkupFragment
 	 * @see MarkupResourceStream#locationAsString()
 	 * @see IFixedLocationResourceStream#locationAsString()
 	 * 
-	 * @return The fixed location as a string, e.g. the file name or the URL
+	 * @return The fixed location as a string, e.g. the file name or the URL. Return null to avoid
+	 *         caching the markup.
 	 */
 	public String locationAsString()
 	{
