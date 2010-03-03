@@ -26,7 +26,8 @@ package org.apache.wicket.util.resource;
 public interface IFixedLocationResourceStream
 {
 	/**
-	 * @return The fixed location as a string, e.g. the file name or the URL
+	 * @return The fixed location as a string, e.g. the file name or the URL. Return null to avoid
+	 *         caching the markup.
 	 */
 	String locationAsString();
 }

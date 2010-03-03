@@ -103,7 +103,7 @@ public class Markup
 	 * MergedMarkup) to override their location, as they are composed of multiple Markups in
 	 * different locations. SEE WICKET-1507 (Jeremy Thomerson)
 	 * 
-	 * @return the location of this markup
+	 * @return the location of this markup. Return null to avoid caching the markup.
 	 */
 	public String locationAsString()
 	{

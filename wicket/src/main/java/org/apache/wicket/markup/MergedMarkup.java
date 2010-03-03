@@ -94,6 +94,9 @@ public class MergedMarkup extends Markup
 		}
 	}
 
+	/**
+	 * @see org.apache.wicket.markup.Markup#locationAsString()
+	 */
 	@Override
 	public String locationAsString()
 	{
@@ -102,8 +105,14 @@ public class MergedMarkup extends Markup
 		 * does, the location is unique to this combination (or vice versa) SEE WICKET-1507 (Jeremy
 		 * Thomerson)
 		 */
-		return getMarkupResourceData().getBaseMarkup().locationAsString() + ":" +
-			getMarkupResourceData().getResource().locationAsString();
+		String l1 = getMarkupResourceData().getBaseMarkup().locationAsString();
+		String l2 = getMarkupResourceData().getResource().locationAsString();
+		if ((l1 == null) && (l2 == null))
+		{
+			return null;
+		}
+
+		return l1 + ":" + l2;
 	}
 
 	/**

@@ -459,6 +459,7 @@ public class MarkupCache implements IMarkupCache
 			// couldn't be resolved.
 			locationString = cacheKey;
 		}
+
 		try
 		{
 			Markup markup = getMarkupLoader().loadMarkup(container, markupResourceStream, null,
@@ -466,9 +467,10 @@ public class MarkupCache implements IMarkupCache
 
 			if (cacheKey != null)
 			{
-				if (markup.locationAsString() != null)
+				String temp = markup.locationAsString();
+				if (temp != null)
 				{
-					locationString = markup.locationAsString();
+					locationString = temp;
 				}
 				// add the markup to the cache.
 				markupKeyCache.put(cacheKey, locationString);
