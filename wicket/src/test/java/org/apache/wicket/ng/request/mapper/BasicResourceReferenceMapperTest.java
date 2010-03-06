@@ -26,16 +26,16 @@ import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHan
 /**
  * @author Matej Knopp
  */
-public class ResourceReferenceMapperTest extends AbstractResourceReferenceMapperTest
+public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTest
 {
 	/**
 	 * Construct.
 	 */
-	public ResourceReferenceMapperTest()
+	public BasicResourceReferenceMapperTest()
 	{
 	}
 
-	private final ResourceReferenceMapper encoder = new ResourceReferenceMapper()
+	private final BasicResourceReferenceMapper encoder = new BasicResourceReferenceMapper()
 	{
 		@Override
 		protected IMapperContext getContext()

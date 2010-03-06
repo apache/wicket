@@ -16,18 +16,11 @@
  */
 package org.apache.wicket.ng.request.mapper;
 
-import org.apache.wicket.IRequestHandler;
-import org.apache.wicket.Request;
-import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.component.PageParameters;
-import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.ng.request.mapper.parameters.IPageParametersEncoder;
 import org.apache.wicket.ng.request.mapper.parameters.SimplePageParametersEncoder;
 import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.NullProvider;
-import org.apache.wicket.util.lang.Checks;
-import org.apache.wicket.util.lang.Classes;
 
 /**
  * Generic {@link ResourceReference} encoder that encodes and decodes non-mounted
@@ -42,25 +35,20 @@ import org.apache.wicket.util.lang.Classes;
  *    /wicket/resource/org.apache.wicket.ResourceScope/resource/name.xyz?en_EN-style
  * </pre>
  * 
- * @author Matej Knopp
+ * @author igor.vaynberg
  */
-public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
+public class ResourceReferenceMapper extends ParentPathReferenceRewriter
 {
-	private final IPageParametersEncoder pageParametersEncoder;
-	private final IProvider<String> relativePathPartEscapeSequence;
-
 	/**
 	 * Construct.
 	 * 
 	 * @param pageParametersEncoder
-	 * @param relativePathPartEscapeSequence
+	 * @param parentPathPartEscapeSequence
 	 */
 	public ResourceReferenceMapper(IPageParametersEncoder pageParametersEncoder,
-		IProvider<String> relativePathPartEscapeSequence)
+		IProvider<String> parentPathPartEscapeSequence)
 	{
-		Checks.argumentNotNull("relativePathPartEscapeSequence", "relativePathPartEscapeSequence");
-		this.pageParametersEncoder = pageParametersEncoder;
-		this.relativePathPartEscapeSequence = relativePathPartEscapeSequence;
+		super(new BasicResourceReferenceMapper(pageParametersEncoder), parentPathPartEscapeSequence);
 	}
 
 	/**
@@ -69,121 +57,5 @@ public class ResourceReferenceMapper extends AbstractResourceReferenceMapper
 	public ResourceReferenceMapper()
 	{
 		this(new SimplePageParametersEncoder(), new NullProvider<String>());
-	}
-
-	/**
-	 * @see org.apache.wicket.ng.request.IRequestMapper#mapRequest(org.apache.wicket.Request)
-	 */
-	public IRequestHandler mapRequest(Request request)
-	{
-		Url url = request.getUrl();
-
-		if (relativePathPartEscapeSequence.get() != null)
-		{
-			for (int i = 0; i < url.getSegments().size(); i++)
-			{
-				if (url.getSegments().get(i).equals(relativePathPartEscapeSequence.get()))
-				{
-					url.getSegments().set(i, "..");
-				}
-			}
-		}
-
-		if (url.getSegments().size() >= 4 &&
-			urlStartsWith(url, getContext().getNamespace(), getContext().getResourceIdentifier()))
-		{
-			String className = url.getSegments().get(2);
-			StringBuilder name = new StringBuilder();
-			for (int i = 3; i < url.getSegments().size(); ++i)
-			{
-				if (name.length() > 0)
-				{
-					name.append("/");
-				}
-				name.append(url.getSegments().get(i));
-			}
-
-			ResourceReference.UrlAttributes attributes = getResourceReferenceAttributes(url);
-
-			// extract the PageParameters from URL if there are any
-			PageParameters pageParameters = extractPageParameters(request,
-				url.getSegments().size(), pageParametersEncoder);
-
-			Class<?> scope = resolveClass(className);
-			if (scope != null)
-			{
-				ResourceReference res = getContext().getResourceReferenceRegistry()
-					.getResourceReference(scope, name.toString(), attributes.getLocale(),
-						attributes.getStyle(), attributes.getVariation(), true);
-
-				if (res != null)
-				{
-					return new ResourceReferenceRequestHandler(res, pageParameters);
-				}
-			}
-		}
-		return null;
-	}
-
-	protected Class<?> resolveClass(String name)
-	{
-		return Classes.resolveClass(name);
-	}
-
-	protected String getClassName(Class<?> scope)
-	{
-		return scope.getName();
-	}
-
-	/**
-	 * @see org.apache.wicket.ng.request.IRequestMapper#mapHandler(org.apache.wicket.ng.request.IRequestHandler)
-	 */
-	public Url mapHandler(IRequestHandler requestHandler)
-	{
-		if (requestHandler instanceof ResourceReferenceRequestHandler)
-		{
-			ResourceReferenceRequestHandler referenceRequestHandler = (ResourceReferenceRequestHandler)requestHandler;
-			ResourceReference reference = referenceRequestHandler.getResourceReference();
-			Url url = new Url();
-			url.getSegments().add(getContext().getNamespace());
-			url.getSegments().add(getContext().getResourceIdentifier());
-			url.getSegments().add(getClassName(reference.getScope()));
-			String nameParts[] = reference.getName().split("/");
-			for (String name : nameParts)
-			{
-				url.getSegments().add(name);
-			}
-			encodeResourceReferenceAttributes(url, reference);
-			PageParameters parameters = referenceRequestHandler.getPageParameters();
-			if (parameters != null)
-			{
-				parameters = new PageParameters(parameters);
-				// need to remove indexed parameters otherwise the URL won't be able to decode
-				parameters.clearIndexedParameters();
-				url = encodePageParameters(url, parameters, pageParametersEncoder);
-			}
-
-			if (relativePathPartEscapeSequence.get() != null)
-			{
-				for (int i = 0; i < url.getSegments().size(); i++)
-				{
-					if ("..".equals(url.getSegments().get(i)))
-					{
-						url.getSegments().set(i, relativePathPartEscapeSequence.get());
-					}
-				}
-			}
-			return url;
-		}
-		return null;
-	}
-
-	/**
-	 * @see org.apache.wicket.ng.request.IRequestMapper#getCompatibilityScore(org.apache.wicket.Request)
-	 */
-	public int getCompatibilityScore(Request request)
-	{
-		// always return 0 here so that the mounts have higher priority
-		return 0;
 	}
 }
