@@ -18,10 +18,10 @@ package org.apache.wicket;
 
 import org.apache.wicket.ng.request.mapper.BookmarkableMapper;
 import org.apache.wicket.ng.request.mapper.BufferedResponseMapper;
+import org.apache.wicket.ng.request.mapper.CompoundRequestMapper;
 import org.apache.wicket.ng.request.mapper.HomePageMapper;
 import org.apache.wicket.ng.request.mapper.PageInstanceMapper;
 import org.apache.wicket.ng.request.mapper.ResourceReferenceMapper;
-import org.apache.wicket.ng.request.mapper.ThreadsafeCompoundRequestMapper;
 import org.apache.wicket.ng.request.mapper.parameters.SimplePageParametersEncoder;
 import org.apache.wicket.util.IProvider;
 
@@ -32,20 +32,20 @@ import org.apache.wicket.util.IProvider;
  * @author igor.vaynberg
  * 
  */
-public class SystemMapper extends ThreadsafeCompoundRequestMapper
+public class SystemMapper extends CompoundRequestMapper
 {
 	/**
 	 * Constructor
 	 */
 	public SystemMapper(Application application)
 	{
-		register(RestartResponseAtInterceptPageException.MAPPER);
-		register(new HomePageMapper());
-		register(new PageInstanceMapper());
-		register(new BookmarkableMapper());
-		register(new ResourceReferenceMapper(new SimplePageParametersEncoder(),
+		add(RestartResponseAtInterceptPageException.MAPPER);
+		add(new HomePageMapper());
+		add(new PageInstanceMapper());
+		add(new BookmarkableMapper());
+		add(new ResourceReferenceMapper(new SimplePageParametersEncoder(),
 			new ParentFolderPlaceholderProvider(application)));
-		register(new BufferedResponseMapper());
+		add(new BufferedResponseMapper());
 	}
 
 	private static class ParentFolderPlaceholderProvider implements IProvider<String>

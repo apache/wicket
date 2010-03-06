@@ -50,7 +50,7 @@ import org.apache.wicket.markup.resolver.WicketContainerResolver;
 import org.apache.wicket.markup.resolver.WicketMessageResolver;
 import org.apache.wicket.ng.DefaultExceptionMapper;
 import org.apache.wicket.ng.ThreadContext;
-import org.apache.wicket.ng.request.ICompoundRequestMapper;
+import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
@@ -171,7 +171,7 @@ public abstract class Application implements UnboundListener
 	private List<IHeaderContributor> renderHeadListeners;
 
 	/** root mapper */
-	private ICompoundRequestMapper rootRequestMapper;
+	private IRequestMapper rootRequestMapper;
 
 	/** list of {@link IComponentInstantiationListener}s. */
 	private IComponentInstantiationListener[] componentInstantiationListeners = new IComponentInstantiationListener[0];
@@ -1202,7 +1202,7 @@ public abstract class Application implements UnboundListener
 	/**
 	 * @return The root request mapper
 	 */
-	public final ICompoundRequestMapper getRootRequestMapper()
+	public final IRequestMapper getRootRequestMapper()
 	{
 		return rootRequestMapper;
 	}
@@ -1212,7 +1212,7 @@ public abstract class Application implements UnboundListener
 	 * 
 	 * @param rootRequestMapper
 	 */
-	public final void setRootRequestMapper(final ICompoundRequestMapper rootRequestMapper)
+	public final void setRootRequestMapper(final IRequestMapper rootRequestMapper)
 	{
 		this.rootRequestMapper = rootRequestMapper;
 	}

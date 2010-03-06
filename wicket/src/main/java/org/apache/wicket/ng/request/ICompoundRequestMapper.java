@@ -17,21 +17,26 @@
 package org.apache.wicket.ng.request;
 
 /**
- * Mapper that delegates the mapping to other {@link IRequestMapper}s.
+ * Mapper that delegates the mapping to a contained {@link IRequestMapper}s with the highest
+ * compatibility score.
+ * 
+ * @author igor.vaynberg
  */
-public interface ICompoundRequestMapper extends IRequestMapper
+public interface ICompoundRequestMapper extends IRequestMapper, Iterable<IRequestMapper>
 {
 	/**
 	 * Registers a {@link IRequestMapper}
 	 * 
 	 * @param encoder
+	 * @return {@code this} for chaining
 	 */
-	void register(IRequestMapper encoder);
+	ICompoundRequestMapper add(IRequestMapper encoder);
 
 	/**
 	 * Unregisters {@link IRequestMapper}
 	 * 
 	 * @param encoder
+	 * @return {@code this} for chaining
 	 */
-	void unregister(IRequestMapper encoder);
+	ICompoundRequestMapper remove(IRequestMapper encoder);
 }

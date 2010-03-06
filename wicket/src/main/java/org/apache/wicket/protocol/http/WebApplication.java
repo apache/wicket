@@ -37,11 +37,13 @@ import org.apache.wicket.markup.html.pages.InternalErrorPage;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
 import org.apache.wicket.markup.resolver.AutoLinkResolver;
 import org.apache.wicket.ng.ThreadContext;
+import org.apache.wicket.ng.request.ICompoundRequestMapper;
 import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.render.PageRenderer;
 import org.apache.wicket.ng.request.handler.impl.render.WebPageRenderer;
+import org.apache.wicket.ng.request.mapper.CompoundRequestMapper;
 import org.apache.wicket.ng.request.mapper.MountedMapper;
 import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.session.HttpSessionStore;
@@ -279,12 +281,30 @@ public abstract class WebApplication extends Application
 	 * 
 	 * @param mapper
 	 *            the encoder that will be used for this mount
+	 * 
+	 * @deprecated this is the same as {@code getRotmapperAsCompound().add(mapper)}
 	 */
+	@Deprecated
 	public final void mount(IRequestMapper mapper)
 	{
 		Checks.argumentNotNull(mapper, "mapper");
+		getRootMapperAsCompound().add(mapper);
+	}
 
-		getRootRequestMapper().register(mapper);
+	/**
+	 * Converts the root mapper to a {@link ICompoundRequestMapper} if necessary and returns the
+	 * converted instance.
+	 * 
+	 * @return compound instance of the root mapper
+	 */
+	public ICompoundRequestMapper getRootMapperAsCompound()
+	{
+		IRequestMapper root = getRootRequestMapper();
+		if (!(root instanceof ICompoundRequestMapper))
+		{
+			root = new CompoundRequestMapper().add(root);
+		}
+		return (ICompoundRequestMapper)root;
 	}
 
 
@@ -298,7 +318,11 @@ public abstract class WebApplication extends Application
 	 *            the path to mount the bookmarkable page class on
 	 * @param bookmarkablePageClass
 	 *            the bookmarkable page class to mount
+	 * 
+	 * @deprecated use mounted mapper instead, this method can be represented as {@code
+	 *             getRootMapperAsCompound().mount(new MountedMapper(path,clazz))}
 	 */
+	@Deprecated
 	public final <T extends Page> void mountBookmarkablePage(final String path,
 		final Class<T> bookmarkablePageClass)
 	{
@@ -313,7 +337,10 @@ public abstract class WebApplication extends Application
 	 *            the path to mount the resource class on
 	 * @param reference
 	 *            resource reference to be mounted
+	 * 
+	 * @deprecated - not sure what to use yet but this will be deprecated :)
 	 */
+	@Deprecated
 	public final void mountSharedResource(final String path, final ResourceReference reference)
 	{
 		getResourceReferenceRegistry().registerResourceReference(reference);
@@ -333,6 +360,7 @@ public abstract class WebApplication extends Application
 	 */
 	public final void addIgnoreMountPath(String path)
 	{
+		// TODO how is this supposed to work :/
 		throw new UnsupportedOperationException();
 	}
 

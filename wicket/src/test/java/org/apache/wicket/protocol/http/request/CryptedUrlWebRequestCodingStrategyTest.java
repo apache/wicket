@@ -21,8 +21,8 @@ import junit.framework.TestCase;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.SimplePage;
 import org.apache.wicket.ng.mock.MockApplication;
+import org.apache.wicket.ng.request.mapper.CompoundRequestMapper;
 import org.apache.wicket.ng.request.mapper.CryptoMapper;
-import org.apache.wicket.ng.request.mapper.ThreadsafeCompoundRequestMapper;
 import org.apache.wicket.util.crypt.Base64;
 import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.crypt.ICryptFactory;
@@ -47,8 +47,8 @@ public class CryptedUrlWebRequestCodingStrategyTest extends TestCase
 				super.init();
 				// install crypto mapper to encrypt all application urls
 				getSecuritySettings().setCryptFactory(new TestCryptFactory());
-				ThreadsafeCompoundRequestMapper root = new ThreadsafeCompoundRequestMapper();
-				root.register(new CryptoMapper(getRootRequestMapper(), this));
+				CompoundRequestMapper root = new CompoundRequestMapper();
+				root.add(new CryptoMapper(getRootRequestMapper(), this));
 				setRootRequestMapper(root);
 			}
 		});

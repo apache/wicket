@@ -18,6 +18,7 @@ package org.apache.wicket.ng.request.mapper;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -33,9 +34,10 @@ import org.apache.wicket.ng.request.Url;
  * compatibility score and the orders they were registered. If two or more {@link IRequestMapper}s
  * have the same compatibility score, the last registered mapper has highest priority.
  * 
+ * @author igor.vaynberg
  * @author Matej Knopp
  */
-public class ThreadsafeCompoundRequestMapper implements ICompoundRequestMapper
+public class CompoundRequestMapper implements ICompoundRequestMapper
 {
 	/**
 	 * 
@@ -67,24 +69,26 @@ public class ThreadsafeCompoundRequestMapper implements ICompoundRequestMapper
 	/**
 	 * Construct.
 	 */
-	public ThreadsafeCompoundRequestMapper()
+	public CompoundRequestMapper()
 	{
 	}
 
 	/**
-	 * @see org.apache.wicket.ng.request.ICompoundRequestMapper#register(org.apache.wicket.ng.request.IRequestMapper)
+	 * @see org.apache.wicket.ng.request.ICompoundRequestMapper#add(org.apache.wicket.ng.request.IRequestMapper)
 	 */
-	public void register(IRequestMapper encoder)
+	public CompoundRequestMapper add(IRequestMapper encoder)
 	{
 		mappers.add(0, encoder);
+		return this;
 	}
 
 	/**
-	 * @see org.apache.wicket.ng.request.ICompoundRequestMapper#unregister(org.apache.wicket.ng.request.IRequestMapper)
+	 * @see org.apache.wicket.ng.request.ICompoundRequestMapper#remove(org.apache.wicket.ng.request.IRequestMapper)
 	 */
-	public void unregister(IRequestMapper encoder)
+	public CompoundRequestMapper remove(IRequestMapper encoder)
 	{
 		mappers.remove(encoder);
+		return this;
 	}
 
 	/**
@@ -161,5 +165,11 @@ public class ThreadsafeCompoundRequestMapper implements ICompoundRequestMapper
 			score = Math.max(score, mapper.getCompatibilityScore(request));
 		}
 		return score;
+	}
+
+	/** {@inheritDoc} */
+	public Iterator<IRequestMapper> iterator()
+	{
+		return mappers.iterator();
 	}
 }
