@@ -1112,6 +1112,7 @@ Wicket.Ajax.Call.prototype = {
 		var originalFormTarget=form.target;
 		var originalFormMethod=form.method;
 		var originalFormEnctype=form.enctype;
+		var originalFormEncoding=form.encoding;
 		
 		var iframeName="wicket-submit-"+(""+Math.random()).substr(2);
 		
@@ -1134,6 +1135,7 @@ Wicket.Ajax.Call.prototype = {
 		form.action=this.request.url + "&wicket:ajax=true";
 		form.method="post";
 		form.enctype="multipart/form-data";
+		form.encoding="multipart/form-data";
 		
 		// create submitting button element
 		if (submitButton!=null) {
@@ -1165,6 +1167,7 @@ Wicket.Ajax.Call.prototype = {
 		form.target=originalFormTarget;
 		form.method=originalFormMethod;
 		form.enctype=originalFormEnctype;
+		form.encoding=originalFormEncoding;
 		
  		return true;
  	},
