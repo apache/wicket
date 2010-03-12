@@ -282,7 +282,7 @@ public abstract class WebApplication extends Application
 	 * @param mapper
 	 *            the encoder that will be used for this mount
 	 * 
-	 * @deprecated this is the same as {@code getRotmapperAsCompound().add(mapper)}
+	 * @deprecated this is the same as {@code getRootMapperAsCompound().add(mapper)}
 	 */
 	@Deprecated
 	public final void mount(IRequestMapper mapper)
@@ -320,7 +320,7 @@ public abstract class WebApplication extends Application
 	 *            the bookmarkable page class to mount
 	 * 
 	 * @deprecated use mounted mapper instead, this method can be represented as {@code
-	 *             getRootMapperAsCompound().mount(new MountedMapper(path,clazz))}
+	 *             getRootMapperAsCompound().add(new MountedMapper(path,clazz))}
 	 */
 	@Deprecated
 	public final <T extends Page> void mountBookmarkablePage(final String path,
