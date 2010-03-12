@@ -271,8 +271,15 @@ public abstract class Session implements IClusterable
 
 		current.set(session);
 
-		// execute any attach logic now
-		session.attach();
+		try
+		{
+			// execute any attach logic now
+			session.attach();
+		}
+		catch (RuntimeException e)
+		{
+			current.set(null);
+		}
 	}
 
 	/**
