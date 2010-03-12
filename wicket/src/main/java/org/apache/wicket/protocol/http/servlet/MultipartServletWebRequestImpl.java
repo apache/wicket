@@ -48,7 +48,7 @@ import org.apache.wicket.util.value.ValueMap;
  * @author Ate Douma
  * @author Igor Vaynberg (ivaynberg)
  */
-class MultipartServletWebRequestImpl extends MultipartServletWebRequest
+public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 {
 	/** Map of file items. */
 	private final Map<String, FileItem> files = new HashMap<String, FileItem>();
