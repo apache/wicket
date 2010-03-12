@@ -18,9 +18,8 @@ package org.apache.wicket.extensions.ajax.markup.html.form.upload;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.markup.html.DynamicWebResource;
-import org.apache.wicket.protocol.http.WebRequest;
+import org.apache.wicket.ng.resource.AbstractResource;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 
 
 /**
@@ -31,68 +30,57 @@ import org.apache.wicket.protocol.http.WebRequest;
  * @author Andrew Lombardi
  * @author Igor Vaynberg (ivaynberg)
  */
-class UploadStatusResource extends DynamicWebResource
+class UploadStatusResource extends AbstractResource
 {
 
 	private static final long serialVersionUID = 1L;
 
-	protected ResourceState getResourceState()
+	@Override
+	protected ResourceResponse newResourceResponse(Attributes attributes)
 	{
-		return new UploadResourceState();
+		ResourceResponse response = new ResourceResponse();
+		response.setContentType("text/plain");
+
+		final String content = getStatus(attributes);
+		response.setWriteCallback(new WriteCallback()
+		{
+			@Override
+			public void writeData(Attributes attributes)
+			{
+				attributes.getResponse().write(content);
+			}
+		});
+
+		response.setContentLength(content.getBytes().length);
+
+		return response;
+
+
 	}
 
-	private static class UploadResourceState extends DynamicWebResource.ResourceState
+	/**
+	 * @param attributes
+	 * @return
+	 */
+	private String getStatus(Attributes attributes)
 	{
-		/**
-		 * status string that will be returned to javascript to be parsed
-		 * 
-		 * uploaded count|total count|transfer rate|time remaining
-		 */
-		private String status;
+		HttpServletRequest req = ((ServletWebRequest)attributes.getRequest()).getHttpServletRequest();
+		UploadInfo info = UploadWebRequest.getUploadInfo(req);
 
-		/** Create a new one of these from the current request */
-		public UploadResourceState()
+		String status = null;
+		if (info == null || info.getTotalBytes() < 1)
 		{
-
-			RequestCycle rc = RequestCycle.get();
-			HttpServletRequest req = ((WebRequest)rc.getRequest()).getHttpServletRequest();
-			UploadInfo info = UploadWebRequest.getUploadInfo(req);
-
-			if (info == null || info.getTotalBytes() < 1)
-			{
-				status = "0|0|0|0";
-			}
-			else
-			{
-				status = "" + info.getPercentageComplete() + "|" + info.getBytesUploadedString() +
-						"|" + info.getTotalBytesString() + "|" + info.getTransferRateString() +
-						"|" + info.getRemainingTimeString();
-			}
-			status = "<html>|" + status + "|</html>";
+			status = "0|0|0|0";
 		}
-
-		/**
-		 * @see org.apache.wicket.markup.html.DynamicWebResource.ResourceState#getContentType()
-		 */
-		public String getContentType()
+		else
 		{
-			return "text/plain";
+			status = "" + info.getPercentageComplete() + "|" + info.getBytesUploadedString() + "|" +
+				info.getTotalBytesString() + "|" + info.getTransferRateString() + "|" +
+				info.getRemainingTimeString();
 		}
-
-		/**
-		 * @see org.apache.wicket.markup.html.DynamicWebResource.ResourceState#getLength()
-		 */
-		public int getLength()
-		{
-			return status.length();
-		}
-
-		/**
-		 * @see org.apache.wicket.markup.html.DynamicWebResource.ResourceState#getData()
-		 */
-		public byte[] getData()
-		{
-			return status.getBytes();
-		}
+		status = "<html>|" + status + "|</html>";
+		return status;
 	}
+
+
 }

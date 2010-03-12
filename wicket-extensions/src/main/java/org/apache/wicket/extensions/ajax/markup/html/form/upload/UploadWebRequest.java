@@ -19,7 +19,8 @@ package org.apache.wicket.extensions.ajax.markup.html.form.upload;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.protocol.http.WebRequest;
+import org.apache.wicket.ng.request.Url;
+import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.upload.FileUploadException;
@@ -42,30 +43,26 @@ import org.apache.wicket.util.upload.FileUploadException;
  */
 public class UploadWebRequest extends ServletWebRequest
 {
-	final HttpServletRequest req;
-
-	/**
-	 * Constructor
-	 * 
-	 * @param req
-	 */
-	public UploadWebRequest(final HttpServletRequest req)
+	public UploadWebRequest(HttpServletRequest httpServletRequest, String filterPrefix, Url url)
 	{
-		super(req);
-		this.req = req;
+		super(httpServletRequest, filterPrefix, url);
 	}
+
+	public UploadWebRequest(HttpServletRequest httpServletRequest, String filterPrefix)
+	{
+		super(httpServletRequest, filterPrefix);
+	}
+
 
 	/**
 	 * @see org.apache.wicket.protocol.http.WebRequest#newMultipartWebRequest(org.apache.wicket.util.lang.Bytes)
 	 */
 	@Override
-	public WebRequest newMultipartWebRequest(Bytes maxsize)
+	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxsize)
 	{
 		try
 		{
-			final MultipartRequest multipartRequest = new MultipartRequest(req, maxsize);
-			multipartRequest.setRequestParameters(getRequestParameters());
-			return multipartRequest;
+			return new MultipartRequest(getHttpServletRequest(), getFilterPrefix(), maxsize);
 		}
 		catch (FileUploadException e)
 		{

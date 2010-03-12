@@ -30,6 +30,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.resource.PackageResourceReference;
 import org.apache.wicket.ng.resource.ResourceReference;
+import org.apache.wicket.ng.resource.SharedResourceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -195,7 +196,7 @@ public class UploadProgressBar extends Panel
 		@Override
 		public void onComponentTag(Component component, ComponentTag tag)
 		{
-			ResourceReference ref = new ResourceReference(RESOURCE_NAME);
+			ResourceReference ref = new SharedResourceReference(RESOURCE_NAME);
 			final String uploadFieldId = (uploadField == null) ? "" : uploadField.getMarkupId();
 			tag.put("onsubmit", "var def=new Wicket.WUPB.Def('" + component.getMarkupId() + "', '" +
 				status.getMarkupId() + "', '" + bar.getMarkupId() + "', '" +

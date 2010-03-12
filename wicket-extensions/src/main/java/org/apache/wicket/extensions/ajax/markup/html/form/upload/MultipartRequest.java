@@ -18,10 +18,9 @@ package org.apache.wicket.extensions.ajax.markup.html.form.upload;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequestImpl;
 import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.upload.FileItemFactory;
 import org.apache.wicket.util.upload.FileUploadException;
 
 /**
@@ -31,18 +30,18 @@ import org.apache.wicket.util.upload.FileUploadException;
  */
 class MultipartRequest extends MultipartServletWebRequestImpl
 {
-	/**
-	 * @param req
-	 * @param maxSize
-	 * @throws FileUploadException
-	 */
-	public MultipartRequest(HttpServletRequest req, Bytes maxSize) throws FileUploadException
+
+
+	public MultipartRequest(HttpServletRequest request, String filterPrefix, Bytes maxSize,
+		FileItemFactory factory) throws FileUploadException
 	{
-		super(req, maxSize);
-		if (req == null)
-		{
-			throw new IllegalStateException("req cannot be null");
-		}
+		super(request, filterPrefix, maxSize, factory);
+	}
+
+	public MultipartRequest(HttpServletRequest request, String filterPrefix, Bytes maxSize)
+		throws FileUploadException
+	{
+		super(request, filterPrefix, maxSize);
 	}
 
 	/**
@@ -62,8 +61,7 @@ class MultipartRequest extends MultipartServletWebRequestImpl
 	{
 		UploadInfo info = new UploadInfo(totalBytes);
 
-		HttpServletRequest request = ((WebRequest)RequestCycle.get().getRequest()).getHttpServletRequest();
-		UploadWebRequest.setUploadInfo(request, info);
+		UploadWebRequest.setUploadInfo(getHttpServletRequest(), info);
 	}
 
 	/**
@@ -73,7 +71,7 @@ class MultipartRequest extends MultipartServletWebRequestImpl
 	@Override
 	protected void onUploadUpdate(int bytesUploaded, int total)
 	{
-		HttpServletRequest request = ((WebRequest)RequestCycle.get().getRequest()).getHttpServletRequest();
+		HttpServletRequest request = getHttpServletRequest();
 		UploadInfo info = UploadWebRequest.getUploadInfo(request);
 		if (info == null)
 		{
@@ -91,7 +89,6 @@ class MultipartRequest extends MultipartServletWebRequestImpl
 	@Override
 	protected void onUploadCompleted()
 	{
-		HttpServletRequest request = ((WebRequest)RequestCycle.get().getRequest()).getHttpServletRequest();
-		UploadWebRequest.clearUploadInfo(request);
+		UploadWebRequest.clearUploadInfo(getHttpServletRequest());
 	}
 }
