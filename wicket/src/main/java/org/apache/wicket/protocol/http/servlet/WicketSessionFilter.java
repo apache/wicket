@@ -146,11 +146,13 @@ public class WicketSessionFilter implements Filter
 	{
 		HttpServletRequest httpServletRequest = ((HttpServletRequest)request);
 		HttpSession httpSession = httpServletRequest.getSession(false);
+		WebApplication application = null;
+		Session session = null;
 		if (httpSession != null)
 		{
 			if (sessionKey == null)
 			{
-				WebApplication application = (WebApplication)Application.get(filterName);
+				application = (WebApplication)Application.get(filterName);
 				if (application == null)
 				{
 					throw new IllegalStateException(
@@ -159,34 +161,14 @@ public class WicketSessionFilter implements Filter
 							". Make sure you set filterName attribute to the name of the wicket filter " +
 							"for the wicket application whose session you want to access.");
 				}
+
 				sessionKey = application.getSessionAttributePrefix(null, filterName) +
 					Session.SESSION_ATTRIBUTE_NAME;
 
 				log.debug("will use {} as the session key to get the Wicket session", sessionKey);
 			}
 
-			Session session = (Session)httpSession.getAttribute(sessionKey);
-			if (session != null)
-			{
-				// set the session's threadlocal
-				Session.set(session);
-
-				if (log.isDebugEnabled())
-				{
-					log.debug("session " + session + " set as current for " +
-						httpServletRequest.getContextPath() + "," +
-						httpServletRequest.getServerName());
-				}
-			}
-			else
-			{
-				if (log.isDebugEnabled())
-				{
-					log.debug("could not set Wicket session: key " + sessionKey +
-						" not found in http session for " + httpServletRequest.getContextPath() +
-						"," + httpServletRequest.getServerName());
-				}
-			}
+			session = (Session)httpSession.getAttribute(sessionKey);
 		}
 		else
 		{
@@ -194,14 +176,47 @@ public class WicketSessionFilter implements Filter
 				httpServletRequest.getContextPath(), httpServletRequest.getServerName());
 		}
 
-		try
+		if (session == null)
 		{
+			// no session found
+
+			if (log.isDebugEnabled())
+			{
+				log.debug("could not set Wicket session: key " + sessionKey +
+					" not found in http session for " + httpServletRequest.getContextPath() + "," +
+					httpServletRequest.getServerName());
+			}
+
 			// go on with processing
 			chain.doFilter(request, response);
 		}
-		finally
+		else
 		{
-			Session.unset();
+			// session found
+
+			Application.set(application);
+			try
+			{
+				Session.set(session);
+				try
+				{
+					log.debug("session " + session + " set as current for " +
+						httpServletRequest.getContextPath() + "," +
+						httpServletRequest.getServerName());
+
+					// go on with processing
+					chain.doFilter(request, response);
+				}
+				finally
+				{
+					Session.unset();
+				}
+
+			}
+			finally
+			{
+				Application.unset();
+			}
 		}
 	}
 
