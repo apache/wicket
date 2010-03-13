@@ -18,6 +18,7 @@ package org.apache.wicket.filtertest;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
+import org.apache.wicket.ng.request.mapper.MountedMapper;
 
 /**
  * Application class.
@@ -39,7 +40,7 @@ public class Application extends WicketExampleApplication
 	{
 		super.init();
 
-		mountBookmarkablePage("/hello", HelloWorld.class);
+		getRootMapperAsCompound().add(new MountedMapper("/hello", HelloWorld.class));
 	}
 
 	/**

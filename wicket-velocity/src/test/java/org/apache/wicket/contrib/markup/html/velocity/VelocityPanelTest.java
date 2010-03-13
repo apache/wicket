@@ -18,8 +18,6 @@ package org.apache.wicket.contrib.markup.html.velocity;
 
 import junit.framework.TestCase;
 
-import org.apache.velocity.app.Velocity;
-
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
@@ -29,18 +27,6 @@ import org.apache.wicket.util.tester.WicketTester;
  */
 public class VelocityPanelTest extends TestCase
 {
-	static
-	{
-		try
-		{
-			Velocity.init();
-		}
-		catch (Exception e)
-		{
-			throw new RuntimeException("Could not initialize the Velocity engine", e);
-		}
-	}
-
 	/**
 	 * Basic test
 	 */
