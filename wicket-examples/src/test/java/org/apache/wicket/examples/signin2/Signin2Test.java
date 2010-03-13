@@ -75,7 +75,7 @@ public class Signin2Test extends TestCase
 		// this.assertCookiePresent("signInPanel.signInForm.username");
 		// this.assertCookiePresent("signInPanel.signInForm.password");
 
-		Collection<Cookie> cookies = tester.getServletResponse().getCookies();
+		Collection<Cookie> cookies = tester.getLastResponse().getCookies();
 		for (Cookie cookie : cookies)
 		{
 			if ("signInPanel.signInForm.username".equals(cookie.getName()))

@@ -17,7 +17,6 @@
 package org.apache.wicket.jmx;
 
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
-import org.apache.wicket.protocol.http.WebRequestCycle;
 
 /**
  * Request cycle settings.
@@ -33,8 +32,8 @@ public interface RequestCycleSettingsMBean
 
 	/**
 	 * Gets whether Wicket should try to get extensive client info by redirecting to
-	 * {@link BrowserInfoPage a page that polls for client capabilities}. This method is used by
-	 * the default implementation of {@link WebRequestCycle#newClientInfo()}, so if that method is
+	 * {@link BrowserInfoPage a page that polls for client capabilities}. This method is used by the
+	 * default implementation of {@link WebRequestCycle#newClientInfo()}, so if that method is
 	 * overriden, there is no guarantee this method will be taken into account.
 	 * 
 	 * @return Whether to gather extensive client info
@@ -66,8 +65,8 @@ public interface RequestCycleSettingsMBean
 
 	/**
 	 * Sets whether Wicket should try to get extensive client info by redirecting to
-	 * {@link BrowserInfoPage a page that polls for client capabilities}. This method is used by
-	 * the default implementation of {@link WebRequestCycle#newClientInfo()}, so if that method is
+	 * {@link BrowserInfoPage a page that polls for client capabilities}. This method is used by the
+	 * default implementation of {@link WebRequestCycle#newClientInfo()}, so if that method is
 	 * overriden, there is no guarantee this method will be taken into account.
 	 * 
 	 * @param gatherExtendedBrowserInfo

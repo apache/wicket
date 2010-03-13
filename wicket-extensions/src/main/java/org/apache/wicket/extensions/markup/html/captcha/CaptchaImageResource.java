@@ -239,7 +239,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 	 * @see org.apache.wicket.markup.html.image.resource.DynamicImageResource#getImageData()
 	 */
 	@Override
-	protected final byte[] getImageData()
+	protected final byte[] getImageData(Attributes attributes)
 	{
 		// get image data is always called in sync block
 		byte[] data = null;

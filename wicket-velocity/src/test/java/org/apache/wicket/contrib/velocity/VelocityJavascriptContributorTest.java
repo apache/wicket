@@ -17,6 +17,7 @@
 package org.apache.wicket.contrib.velocity;
 
 import junit.framework.TestCase;
+
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
@@ -31,7 +32,9 @@ public class VelocityJavascriptContributorTest extends TestCase
 	{
 		WicketTester tester = new WicketTester();
 		tester.startPage(VelocityJavascriptPage.class);
+		System.out.println(tester.getLastResponseAsString());
 		tester.assertContains("msg1: " + VelocityJavascriptPage.MSG1);
 		tester.dumpPage();
+		tester.destroy();
 	}
 }

@@ -21,6 +21,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.ng.request.handler.ComponentRenderingRequestHandler;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 
@@ -59,7 +60,8 @@ public class Index extends WicketExamplePage
 				count++;
 
 				// The response should refresh the label displaying the counter.
-				getRequestCycle().setRequestTarget(new ComponentRequestTarget(counter));
+				getRequestCycle().replaceAllRequestHandlers(
+					new ComponentRenderingRequestHandler(counter));
 			}
 
 			/**

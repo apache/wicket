@@ -47,6 +47,7 @@ import org.apache.wicket.ng.mock.MockApplication;
 import org.apache.wicket.ng.resource.DynamicImageResource;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
+import org.apache.wicket.protocol.http.mock.MockServletContext;
 
 public class WicketFilterTest extends TestCase
 {
@@ -88,7 +89,7 @@ public class WicketFilterTest extends TestCase
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				protected byte[] getImageData()
+				protected byte[] getImageData(Attributes attributes)
 				{
 					throw new UnsupportedOperationException("Not implemented");
 				}

@@ -16,16 +16,32 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
-import org.apache.wicket.WicketTestCase;
+import junit.framework.TestCase;
+
 import org.apache.wicket.util.diff.DiffUtil;
+import org.apache.wicket.util.tester.WicketTester;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * 
  */
-public class DataTableTest extends WicketTestCase
+public class DataTableTest extends TestCase
 {
+	private WicketTester tester;
+
+	@Override
+	protected void setUp() throws Exception
+	{
+		tester = new WicketTester(new RepeaterApplication());
+	}
+
+	@Override
+	protected void tearDown() throws Exception
+	{
+		tester.destroy();
+	}
+
 	/** Log for reporting. */
 	private static final Logger log = LoggerFactory.getLogger(DataTableTest.class);
 

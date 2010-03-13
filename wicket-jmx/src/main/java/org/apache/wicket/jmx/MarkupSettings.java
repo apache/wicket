@@ -77,14 +77,6 @@ public class MarkupSettings implements MarkupSettingsMBean
 	}
 
 	/**
-	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#getMarkupParserFactory()
-	 */
-	public String getMarkupParserFactory()
-	{
-		return Stringz.className(application.getMarkupSettings().getMarkupParserFactory());
-	}
-
-	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#getStripComments()
 	 */
 	public boolean getStripComments()

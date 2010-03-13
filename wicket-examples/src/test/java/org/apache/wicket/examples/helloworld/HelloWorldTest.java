@@ -33,7 +33,6 @@ public class HelloWorldTest extends TestCase
 	public void testHelloWorld() throws Exception
 	{
 		WicketTester tester = new WicketTester();
-		tester.setupRequestAndResponse();
 		tester.startPage(HelloWorld.class);
 		tester.assertContains("Wicket Examples - helloworld");
 		tester.assertLabel("message", "Hello World!");

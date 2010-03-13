@@ -34,18 +34,18 @@ public class TemplateTest extends TestCase
 	{
 		WicketTester tester = new WicketTester(new TemplateApplication());
 		tester.startPage(tester.getApplication().getHomePage());
-		String doc = tester.getServletResponse().getDocument();
+		String doc = tester.getLastResponse().getDocument();
 		tester.assertContains("Wicket Examples - template");
 		tester.assertContains("This example shows two different ways of building your page up from shared parts.");
 
 		tester.startPage(org.apache.wicket.examples.template.pageinheritance.Page1.class);
-		doc = tester.getServletResponse().getDocument();
+		doc = tester.getLastResponse().getDocument();
 		tester.assertContains("Template example, page 1 - page inheritance");
 		tester.assertContains("This is some concrete content from a panel.");
 
 		tester.startPage(org.apache.wicket.examples.template.border.Page1.class);
 		tester.assertRenderedPage(org.apache.wicket.examples.template.border.Page1.class);
-		doc = tester.getServletResponse().getDocument();
+		doc = tester.getLastResponse().getDocument();
 		tester.assertContains("Template example, page 1 - border");
 		tester.assertContains("contents here");
 	}

@@ -32,7 +32,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.ng.mock.MockApplication;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.diff.DiffUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -181,7 +181,7 @@ public class WicketTester extends BaseWicketTester
 	 * @param application
 	 *            a <code>WicketTester</code> <code>WebApplication</code> object
 	 */
-	public WicketTester(final MockApplication application)
+	public WicketTester(final WebApplication application)
 	{
 		super(application);
 	}
@@ -198,7 +198,7 @@ public class WicketTester extends BaseWicketTester
 	 * @see org.apache.wicket.protocol.http.MockWebApplication#MockWebApplication(org.apache.wicket.protocol.http.WebApplication,
 	 *      String)
 	 */
-	public WicketTester(final MockApplication application, final String path)
+	public WicketTester(final WebApplication application, final String path)
 	{
 		super(application, path);
 	}

@@ -58,11 +58,6 @@ public interface MarkupSettingsMBean
 	String getDefaultMarkupEncoding();
 
 	/**
-	 * @return markup parser factory
-	 */
-	String getMarkupParserFactory();
-
-	/**
 	 * @return Returns the stripComments.
 	 * @see IMarkupSettings#setStripComments(boolean)
 	 */

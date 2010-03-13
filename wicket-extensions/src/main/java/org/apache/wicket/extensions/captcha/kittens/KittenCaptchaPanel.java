@@ -407,7 +407,7 @@ public class KittenCaptchaPanel extends Panel
 		 * @return Rendered image data
 		 */
 		@Override
-		protected byte[] getImageData()
+		protected byte[] getImageData(Attributes attributes)
 		{
 			// Handle caching
 			setLastModifiedTime(Time.now());

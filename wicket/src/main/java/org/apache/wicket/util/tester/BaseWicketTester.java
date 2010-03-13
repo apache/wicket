@@ -22,10 +22,15 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 
 import org.apache.wicket.Application;
@@ -84,6 +89,7 @@ import org.apache.wicket.ng.request.handler.impl.render.PageRenderer;
 import org.apache.wicket.pageStore.IPageManager;
 import org.apache.wicket.pageStore.IPageManagerContext;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.mock.MockHttpSession;
@@ -243,6 +249,18 @@ public class BaseWicketTester
 	{
 		servletContext = new org.apache.wicket.protocol.http.mock.MockServletContext(application,
 			servletContextBasePath);
+
+		final FilterConfig filterConfig = new TestFilterConfig();
+		WicketFilter filter = new WicketFilter()
+		{
+			@Override
+			public FilterConfig getFilterConfig()
+			{
+				return filterConfig;
+			}
+		};
+		application.setWicketFilter(filter);
+
 		hsession = new MockHttpSession(servletContext);
 
 		oldThreadContext = ThreadContext.detach();
@@ -1883,5 +1901,33 @@ public class BaseWicketTester
 
 	}
 
+	private class TestFilterConfig implements FilterConfig
+	{
+		private final Map<String, String> initParameters = new HashMap<String, String>();
 
+		public TestFilterConfig()
+		{
+			initParameters.put(WicketFilter.FILTER_MAPPING_PARAM, "/servlet/*");
+		}
+
+		public String getFilterName()
+		{
+			return getClass().getName();
+		}
+
+		public ServletContext getServletContext()
+		{
+			return servletContext;
+		}
+
+		public String getInitParameter(String s)
+		{
+			return initParameters.get(s);
+		}
+
+		public Enumeration<String> getInitParameterNames()
+		{
+			throw new UnsupportedOperationException("Not implemented");
+		}
+	}
 }

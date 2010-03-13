@@ -108,9 +108,11 @@ public abstract class DynamicImageResource extends AbstractResource
 	 * should set the lastModifiedTime when it does so. This ensures that image caching works
 	 * correctly.
 	 * 
+	 * @param attributes
+	 * 
 	 * @return The image data for this dynamic image
 	 */
-	protected abstract byte[] getImageData();
+	protected abstract byte[] getImageData(Attributes attributes);
 
 
 	protected void configureResponse(final ResourceResponse response, final Attributes attributes)
@@ -143,7 +145,7 @@ public abstract class DynamicImageResource extends AbstractResource
 				@Override
 				public void writeData(final Attributes attributes)
 				{
-					attributes.getResponse().write(getImageData());
+					attributes.getResponse().write(getImageData(attributes));
 				}
 			});
 

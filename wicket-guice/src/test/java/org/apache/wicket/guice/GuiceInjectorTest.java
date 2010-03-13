@@ -27,6 +27,7 @@ import org.apache.wicket.ng.mock.MockApplication;
 import org.apache.wicket.ng.mock.MockWebRequest;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.protocol.http.WebSession;
+import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.util.lang.Objects;
 
 import com.google.inject.Binder;
@@ -39,6 +40,7 @@ public class GuiceInjectorTest extends TestCase
 	public void testInjectionAndSerialization()
 	{
 		MockApplication app = new MockApplication();
+		app.setServletContext(new MockServletContext(app, null));
 		try
 		{
 			ThreadContext.setApplication(app);
@@ -90,7 +92,7 @@ public class GuiceInjectorTest extends TestCase
 		}
 		finally
 		{
-			app.destroy();
+			app.internalDestroy();
 			ThreadContext.detach();
 		}
 	}

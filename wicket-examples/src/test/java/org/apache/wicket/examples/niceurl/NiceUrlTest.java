@@ -33,9 +33,17 @@ public class NiceUrlTest extends TestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		super.setUp();
 		tester = new WicketTester(new NiceUrlApplication());
 		tester.startPage(Home.class);
+	}
+
+	/**
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	@Override
+	protected void tearDown() throws Exception
+	{
+		tester.destroy();
 	}
 
 	/**

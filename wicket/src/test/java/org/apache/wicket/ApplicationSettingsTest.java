@@ -23,7 +23,7 @@ import junit.framework.TestCase;
 
 import org.apache.wicket.ng.ThreadContext;
 import org.apache.wicket.ng.mock.MockApplication;
-import org.apache.wicket.protocol.http.MockServletContext;
+import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.resource.loader.BundleStringResourceLoader;
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;

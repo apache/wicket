@@ -19,24 +19,18 @@ package org.apache.wicket.threadtest.apps.app1;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.WebResource;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
-import org.apache.wicket.util.time.Time;
+import org.apache.wicket.ng.resource.DynamicImageResource;
 
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
@@ -87,55 +81,15 @@ public class ResourceTestPage extends WebPage
 				}
 				final byte[] imageData = baos.toByteArray();
 
-				item.add(new Image("image", new WebResource()
+				item.add(new Image("image", new DynamicImageResource("jpeg")
 				{
 					private static final long serialVersionUID = 1L;
 
 					@Override
-					public IResourceStream getResourceStream()
+					protected byte[] getImageData(Attributes attributes)
 					{
-						return new IResourceStream()
-						{
-							private static final long serialVersionUID = 1L;
-
-							public Time lastModifiedTime()
-							{
-								return Time.now();
-							}
-
-							public void setLocale(Locale locale)
-							{
-							}
-
-							public long length()
-							{
-								return imageData.length;
-							}
-
-							public Locale getLocale()
-							{
-								return null;
-							}
-
-							// Make a 16x16 randomly background-coloured JPEG.
-							public InputStream getInputStream()
-								throws ResourceStreamNotFoundException
-							{
-								return new ByteArrayInputStream(imageData);
-							}
-
-							public String getContentType()
-							{
-								return "image/jpeg";
-							}
-
-							public void close() throws IOException
-							{
-							}
-
-						};
+						return imageData;
 					}
-
 				}));
 			}
 

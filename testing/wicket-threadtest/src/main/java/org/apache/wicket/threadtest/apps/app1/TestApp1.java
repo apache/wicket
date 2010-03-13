@@ -19,9 +19,7 @@ package org.apache.wicket.threadtest.apps.app1;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
-import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.session.ISessionStore;
 
 /**
  * Test application
@@ -65,9 +63,10 @@ public class TestApp1 extends WebApplication
 		getSharedResources().add("cancelButton", new DefaultButtonImageResource("Cancel"));
 	}
 
-	@Override
-	protected ISessionStore newSessionStore()
-	{
-		return new HttpSessionStore(this);
-	}
+	// TODO ng change the store/pagemanager to a non-disk one
+// @Override
+// protected ISessionStore newSessionStore()
+// {
+// return new HttpSessionStore(this);
+// }
 }

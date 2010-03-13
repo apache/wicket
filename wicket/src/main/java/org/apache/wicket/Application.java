@@ -1491,6 +1491,8 @@ public abstract class Application implements UnboundListener
 		}
 		internalInit();
 		init();
+		initializeComponents();
+
 		validateInit();
 	}
 

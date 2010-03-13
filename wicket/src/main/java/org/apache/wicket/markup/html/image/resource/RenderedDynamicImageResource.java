@@ -153,7 +153,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	}
 
 	@Override
-	protected byte[] getImageData()
+	protected byte[] getImageData(Attributes attributes)
 	{
 		// get image data is always called in sync block
 		byte[] data = null;

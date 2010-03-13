@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.markup.html.image.resource;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -26,7 +27,8 @@ import javax.imageio.ImageIO;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ng.resource.DynamicImageResource;
-import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.apache.wicket.ng.resource.IResource;
+import org.apache.wicket.response.ByteArrayResponse;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +50,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 	private static final Logger log = LoggerFactory.getLogger(ThumbnailImageResource.class);
 
 	/** the unscaled, original image resource. */
-	private final WebResource unscaledImageResource;
+	private final IResource unscaledImageResource;
 
 	/** maximum size (width or height) for resize operation. */
 	private final int maxSize;
@@ -64,7 +66,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 	 * @param maxSize
 	 *            maximum size (width or height) for resize operation
 	 */
-	public ThumbnailImageResource(WebResource unscaledImageResource, int maxSize)
+	public ThumbnailImageResource(IResource unscaledImageResource, int maxSize)
 	{
 		super();
 
@@ -81,11 +83,11 @@ public class ThumbnailImageResource extends DynamicImageResource
 	 * @return The image data for this dynamic image
 	 */
 	@Override
-	protected byte[] getImageData()
+	protected byte[] getImageData(Attributes attributes)
 	{
 		if (thumbnail == null)
 		{
-			final BufferedImage image = getScaledImageInstance();
+			final BufferedImage image = getScaledImageInstance(attributes);
 			thumbnail = toImageData(image);
 			setLastModifiedTime(Time.now());
 		}
@@ -95,28 +97,28 @@ public class ThumbnailImageResource extends DynamicImageResource
 	/**
 	 * get resized image instance.
 	 * 
+	 * @param attributes2
+	 * 
 	 * @return BufferedImage
 	 */
-	protected final BufferedImage getScaledImageInstance()
+	protected final BufferedImage getScaledImageInstance(Attributes attributes)
 	{
 		InputStream is = null;
 		BufferedImage originalImage = null;
 		try
 		{
 			// read original image
-			is = unscaledImageResource.getResourceStream().getInputStream();
+			ByteArrayResponse byteResponse = new ByteArrayResponse();
+			Attributes dispatchAttributes = new Attributes(attributes.getRequest(), byteResponse);
+			unscaledImageResource.respond(dispatchAttributes);
+			is = new ByteArrayInputStream(byteResponse.getBytes());
 			originalImage = ImageIO.read(is);
 			if (originalImage == null)
 			{
-				throw new IOException("Unable to read image: " +
-					unscaledImageResource.getResourceStream().toString());
+				throw new IOException("Unable to read unscaled image");
 			}
 		}
 		catch (IOException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
-		catch (ResourceStreamNotFoundException e)
 		{
 			throw new WicketRuntimeException(e);
 		}
@@ -170,12 +172,4 @@ public class ThumbnailImageResource extends DynamicImageResource
 		return originalImage;
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.DynamicWebResource#invalidate()
-	 */
-	@Override
-	public synchronized void invalidate()
-	{
-		thumbnail = null;
-	}
 }

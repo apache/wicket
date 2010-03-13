@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.filtertest;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.ng.request.component.PageParameters;
 
 
 /**
@@ -35,6 +35,7 @@ public class HelloWorld extends WicketExamplePage
 	 */
 	public HelloWorld(PageParameters params)
 	{
-		add(new Label("message", "Message is: '" + params.getString("message") + "'"));
+		add(new Label("message", "Message is: '" + params.getNamedParameter("message").toString() +
+			"'"));
 	}
 }

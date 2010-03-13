@@ -19,10 +19,6 @@ package org.apache.wicket.jmx;
 import java.io.IOException;
 
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.IRequestCodingStrategy;
-import org.apache.wicket.request.IRequestTargetMountsInfo;
-import org.apache.wicket.request.target.coding.IMountableRequestTargetUrlCodingStrategy;
-import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 
 
 /**
@@ -61,7 +57,7 @@ public class Application implements ApplicationMBean
 	 */
 	public void clearMarkupCache() throws IOException
 	{
-		application.getMarkupSettings().getMarkupCache().clear();
+		application.getMarkupSettings().getMarkupFactory().getMarkupCache().clear();
 	}
 
 	/**
@@ -93,42 +89,7 @@ public class Application implements ApplicationMBean
 	 */
 	public int getMarkupCacheSize() throws IOException
 	{
-		return application.getMarkupSettings().getMarkupCache().size();
-	}
-
-	/**
-	 * @see org.apache.wicket.jmx.ApplicationMBean#getMounts()
-	 */
-	public String[] getMounts() throws IOException
-	{
-		if (webApplication != null)
-		{
-			IRequestCodingStrategy mounter = webApplication.getRequestCycleProcessor()
-					.getRequestCodingStrategy();
-			if (mounter instanceof IRequestTargetMountsInfo)
-			{
-				IRequestTargetMountsInfo mountsInfo = (IRequestTargetMountsInfo)mounter;
-				IRequestTargetUrlCodingStrategy[] targets = mountsInfo.listMounts();
-				String[] results = new String[targets.length];
-				for (int i = 0; i < targets.length; i++)
-				{
-					if (targets[i] instanceof IMountableRequestTargetUrlCodingStrategy)
-					{
-						// ugly hack for 1.2 to avoid breaking the API
-						results[i] = ((IMountableRequestTargetUrlCodingStrategy)targets[i])
-								.getMountPath() +
-								" - " + targets[i].toString();
-					}
-					else
-					{
-						// should never happen, but to be sure
-						results[i] = "/? - " + targets[i].toString();
-					}
-				}
-				return results;
-			}
-		}
-		return null;
+		return application.getMarkupSettings().getMarkupFactory().getMarkupCache().size();
 	}
 
 	/**

@@ -14,13 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.staticpages;
+package org.apache.wicket.examples;
 
-import org.apache.wicket.examples.WicketExamplePage;
+import junit.framework.TestCase;
 
-/**
- * @author jbq
- */
-public class Sent extends WicketExamplePage
+import org.apache.wicket.util.tester.WicketTester;
+
+public abstract class WicketTestCase extends TestCase
 {
+	public WicketTester tester;
+
+	@Override
+	protected void setUp() throws Exception
+	{
+		tester = new WicketTester();
+	}
+
+	@Override
+	protected void tearDown() throws Exception
+	{
+		tester.destroy();
+	}
+
+
 }
