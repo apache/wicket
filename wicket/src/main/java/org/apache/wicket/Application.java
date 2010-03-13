@@ -33,7 +33,6 @@ import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.application.IComponentOnAfterRenderListener;
 import org.apache.wicket.application.IComponentOnBeforeRenderListener;
 import org.apache.wicket.javascript.DefaultJavascriptCompressor;
-import org.apache.wicket.markup.MarkupCache;
 import org.apache.wicket.markup.html.EmptySrcAttributeCheckFilter;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -879,7 +878,7 @@ public abstract class Application implements UnboundListener
 		// Clear caches of Class keys so the classloader can be garbage
 		// collected (WICKET-625)
 		PropertyResolver.destroy(this);
-		MarkupCache.get().shutdown();
+		getMarkupSettings().getMarkupFactory().getMarkupCache().shutdown();
 
 		onDestroy();
 
