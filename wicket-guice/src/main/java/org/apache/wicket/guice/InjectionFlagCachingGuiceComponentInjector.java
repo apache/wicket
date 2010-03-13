@@ -63,13 +63,13 @@ public class InjectionFlagCachingGuiceComponentInjector extends GuiceComponentIn
 	 * @see org.apache.wicket.guice.GuiceComponentInjector#inject(java.lang.Object)
 	 */
 	@Override
-	public void inject(final Object object)
+	public Object inject(final Object object)
 	{
 		Class< ? > current = object.getClass();
 		Boolean doInject = classToDoInject.get(current);
 		if (doInject != null && !doInject.booleanValue())
 		{
-			return;
+			return object;
 		}
 
 		boolean actualDoInject = false;
@@ -170,6 +170,8 @@ public class InjectionFlagCachingGuiceComponentInjector extends GuiceComponentIn
 		{
 			classToDoInject.put(object.getClass(), new Boolean(actualDoInject));
 		}
+
+		return object;
 	}
 
 	/**

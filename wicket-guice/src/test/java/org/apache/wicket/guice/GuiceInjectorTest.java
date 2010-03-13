@@ -104,12 +104,18 @@ public class GuiceInjectorTest extends TestCase
 			// Serialize and deserialize the object, and check it still works.
 			TestComponent clonedComponent = (TestComponent)Objects.cloneObject(testComponent);
 			doChecksForComponent(clonedComponent);
+			doChecksForNoComponent(clonedComponent);
 
 		}
 		finally
 		{
 			Application.unset();
 		}
+	}
+
+	private void doChecksForNoComponent(TestComponent component)
+	{
+		assertEquals(ITestService.RESULT_RED, component.getNoComponentString());
 	}
 
 	private void doChecksForComponent(TestComponent component)

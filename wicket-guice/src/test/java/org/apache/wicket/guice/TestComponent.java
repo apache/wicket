@@ -56,9 +56,13 @@ public class TestComponent extends Component
 
 	private Map<String, String> injectedTypeLiteralMethod;
 
+	private final TestNoComponent noComponent;
+
 	public TestComponent(String id)
 	{
 		super(id);
+
+		noComponent = new TestNoComponent();
 	}
 
 	public ITestService getInjectedField()
@@ -156,4 +160,9 @@ public class TestComponent extends Component
 	{
 		// Do nothing.
 	}
+
+	public String getNoComponentString()
+	{
+		return noComponent.getString();
+}
 }

@@ -28,6 +28,9 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.IComponentInstantiationListener;
+import org.apache.wicket.injection.ConfigurableInjector;
+import org.apache.wicket.injection.IFieldValueFactory;
+import org.apache.wicket.injection.web.InjectorHolder;
 import org.apache.wicket.proxy.LazyInitProxyFactory;
 
 import com.google.inject.BindingAnnotation;
@@ -53,7 +56,9 @@ import com.google.inject.Stage;
  * 
  * @author Alastair Maw
  */
-public class GuiceComponentInjector implements IComponentInstantiationListener
+public class GuiceComponentInjector extends ConfigurableInjector
+		implements
+			IComponentInstantiationListener
 {
 	/**
 	 * Creates a new Wicket GuiceComponentInjector instance.
@@ -94,9 +99,16 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 	public GuiceComponentInjector(Application app, Injector injector)
 	{
 		app.setMetaData(GuiceInjectorHolder.INJECTOR_KEY, new GuiceInjectorHolder(injector));
+		InjectorHolder.setInjector(this);
 	}
 
-	public void inject(Object object)
+	/**
+	 * @param object
+	 *            object to be injected
+	 * @return Object that was injected - used for chaining
+	 */
+	@Override
+	public Object inject(Object object)
 	{
 		Class< ? > current = object.getClass();
 		do
@@ -188,6 +200,8 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 		}
 		// Do a null check in case Object isn't in the current classloader.
 		while (current != null && current != Object.class);
+
+		return object;
 	}
 
 	public void onInstantiation(Component component)
@@ -225,4 +239,14 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 	{
 		private static final long serialVersionUID = 1L;
 	}
+
+	/**
+	 * @see org.apache.wicket.injection.ConfigurableInjector#getFieldValueFactory()
+	 */
+	@Override
+	protected IFieldValueFactory getFieldValueFactory()
+	{
+		// No need of {@link IFieldValueFactory}
+		return null;
+}
 }
