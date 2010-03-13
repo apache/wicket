@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.form;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.wicket.RequestContext;
 import org.apache.wicket.markup.ComponentTag;
@@ -26,6 +27,7 @@ import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.version.undo.Change;
 
 
@@ -135,7 +137,6 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 			return "PrefixChange[component: " + getPath() + ", prefix: " + prevPrefix + "]";
 		}
 	}
-
 
 	private String prefix = "";
 	private String suffix = "<br />\n";
@@ -491,8 +492,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 					else
 					{
 						// TODO: following doesn't work with portlets, should be posted to a dynamic
-						// hidden form
-						// with an ActionURL or something
+						// hidden form with an ActionURL or something
 						// NOTE: do not encode the url as that would give
 						// invalid JavaScript
 						buffer.append(" onclick=\"window.location.href='")
@@ -503,6 +503,31 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 							.append(id)
 							.append("';\"");
 					}
+				}
+
+				// Allows user to add attributes to the <input..> tag
+				{
+					IValueMap attrs = getAdditionalAttributes();
+					if (attrs != null)
+					{
+						for (Map.Entry<String, Object> attr : attrs.entrySet())
+						{
+							buffer.append(" ").append(attr.getKey()).append("=\"").append(
+								attr.getValue()).append("\"");
+						}
+					}
+				}
+
+				if (getApplication().getDebugSettings().isOutputComponentPath())
+				{
+					String path = getPageRelativePath();
+					path = path.replace("_", "__");
+					path = path.replace(":", "_");
+					buffer.append(" wicketpath=\"")
+						.append(path)
+						.append("_input_")
+						.append(index)
+						.append("\"");
 				}
 
 				buffer.append("/>");
@@ -529,5 +554,15 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 
 		// Replace body
 		replaceComponentTagBody(markupStream, openTag, buffer);
+	}
+
+	/**
+	 * You may subclass this method to provide additional attributes to the &lt;input ..&gt; tag.
+	 * 
+	 * @return tag attribute name/value pairs.
+	 */
+	protected IValueMap getAdditionalAttributes()
+	{
+		return null;
 	}
 }
