@@ -28,7 +28,10 @@ import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.Strings;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 
 /**
  * Implementation of {@link IProxyTargetLocator} that can locate beans within a spring application
@@ -106,7 +109,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * @throws IllegalStateException
 	 * @return spring name of the bean
 	 */
-	private final String getBeanNameOfClass(ApplicationContext ctx, Class< ? > clazz)
+	private final String getBeanNameOfClass(final ApplicationContext ctx, final Class< ? > clazz)
 	{
 		// get the list of all possible matching beans
 		List<String> names = new ArrayList<String>(Arrays.asList(BeanFactoryUtils
@@ -130,6 +133,22 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		}
 		else if (names.size() > 1)
 		{
+			if (ctx instanceof AbstractApplicationContext)
+			{
+				for (String name : names)
+				{
+					BeanDefinition beanDef = ((AbstractApplicationContext)ctx).getBeanFactory()
+							.getBeanDefinition(name);
+					if (beanDef instanceof AbstractBeanDefinition)
+					{
+						if (((AbstractBeanDefinition)beanDef).isPrimary())
+						{
+							return name;
+						}
+					}
+				}
+			}
+
 			StringBuilder msg = new StringBuilder();
 			msg.append("more then one bean of type [");
 			msg.append(clazz.getName());
