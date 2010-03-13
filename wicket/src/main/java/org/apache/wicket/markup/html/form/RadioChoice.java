@@ -507,7 +507,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 
 				// Allows user to add attributes to the <input..> tag
 				{
-					IValueMap attrs = getAdditionalAttributes();
+					IValueMap attrs = getAdditionalAttributes(index, choice);
 					if (attrs != null)
 					{
 						for (Map.Entry<String, Object> attr : attrs.entrySet())
@@ -559,9 +559,11 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	/**
 	 * You may subclass this method to provide additional attributes to the &lt;input ..&gt; tag.
 	 * 
+	 * @param index
+	 * @param choice
 	 * @return tag attribute name/value pairs.
 	 */
-	protected IValueMap getAdditionalAttributes()
+	protected IValueMap getAdditionalAttributes(final int index, final T choice)
 	{
 		return null;
 	}
