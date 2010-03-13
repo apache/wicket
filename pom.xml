@@ -23,6 +23,10 @@
 	<packaging>pom</packaging>
 	<name>Wicket Parent</name>
 	<description>Wicket is a Java-based open source component web application framework.</description>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
 	<profiles>
 		<profile>
 			<id>bamboo</id>
@@ -560,8 +564,8 @@
 				<inherited>true</inherited>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>surefire-report-maven-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
 				<inherited>true</inherited>
 			</plugin>
 			<plugin>
@@ -577,6 +581,13 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<artifactId>maven-resources-plugin</artifactId>
+					<configuration>
+						<encoding>${project.build.sourceEncoding}</encoding>
+					</configuration>
+				</plugin>
+
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-assembly-plugin</artifactId>
@@ -629,7 +640,7 @@
 					<artifactId>maven-war-plugin</artifactId>
 					<version>2.0.2</version>
 					<configuration>
-						<warName>${pom.artifactId}</warName>
+						<warName>${project.artifactId}</warName>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -707,6 +718,11 @@
 					</configuration>
 				</plugin>
 				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-report-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
+				<plugin>
 					<groupId>org.mortbay.jetty</groupId>
 					<artifactId>maven-jetty-plugin</artifactId>
 					<version>6.1.1</version>
@@ -781,6 +797,7 @@
 				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.5</version>
 			</plugin>
 		</plugins>
 	</reporting>
