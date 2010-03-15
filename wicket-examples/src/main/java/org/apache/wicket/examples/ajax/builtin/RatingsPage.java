@@ -24,9 +24,9 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
-import org.apache.wicket.ng.resource.PackageResourceReference;
-import org.apache.wicket.ng.resource.ResourceReference;
+import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 
 
 /**

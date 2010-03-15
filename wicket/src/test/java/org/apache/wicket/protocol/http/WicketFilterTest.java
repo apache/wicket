@@ -42,12 +42,12 @@ import javax.servlet.http.HttpServletResponse;
 import junit.framework.TestCase;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.ng.ThreadContext;
-import org.apache.wicket.ng.mock.MockApplication;
-import org.apache.wicket.ng.resource.DynamicImageResource;
+import org.apache.wicket.ThreadContext;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
+import org.apache.wicket.request.resource.DynamicImageResource;
 
 public class WicketFilterTest extends TestCase
 {

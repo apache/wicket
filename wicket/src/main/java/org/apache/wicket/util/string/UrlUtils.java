@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.util.string;
 
-import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
  * Various url utilities

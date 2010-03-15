@@ -31,8 +31,8 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.ng.resource.CompressedResourceReference;
-import org.apache.wicket.ng.resource.ResourceReference;
+import org.apache.wicket.request.resource.CompressedResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.util.string.Strings;
 

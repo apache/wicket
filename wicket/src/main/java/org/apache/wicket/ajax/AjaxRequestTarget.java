@@ -40,16 +40,16 @@ import org.apache.wicket.markup.html.internal.HeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
-import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.component.IRequestablePage;
-import org.apache.wicket.ng.request.component.PageParameters;
-import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.request.handler.IPageRequestHandler;
-import org.apache.wicket.ng.request.handler.PageProvider;
-import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
-import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.handler.IPageRequestHandler;
+import org.apache.wicket.request.handler.PageProvider;
+import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -437,7 +437,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	}
 
 	/**
-	 * @see org.apache.wicket.IRequestHandler#detach(org.apache.wicket.RequestCycle)
+	 * @see org.apache.wicket.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
 	 */
 	public void detach(final RequestCycle requestCycle)
 	{
@@ -527,7 +527,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	}
 
 	/**
-	 * @see org.apache.wicket.IRequestHandler#respond(org.apache.wicket.RequestCycle)
+	 * @see org.apache.wicket.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
 	 */
 	public final void respond(final RequestCycle requestCycle)
 	{

@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.markup.html;
 
-import org.apache.wicket.ng.resource.JavascriptResourceReference;
-import org.apache.wicket.ng.resource.ResourceReference;
+import org.apache.wicket.request.resource.JavascriptResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * Resource reference to wicket-event.js which is used to allow events via javascript

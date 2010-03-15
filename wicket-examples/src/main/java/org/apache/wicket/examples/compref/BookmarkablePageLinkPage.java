@@ -18,7 +18,7 @@ package org.apache.wicket.examples.compref;
 
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.request.component.PageParameters;
 
 
 /**

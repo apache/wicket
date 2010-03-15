@@ -32,11 +32,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.ng.request.IRequestParameters;
-import org.apache.wicket.ng.request.IWritableRequestParameters;
-import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.Url.QueryParameter;
 import org.apache.wicket.protocol.http.WebRequest;
+import org.apache.wicket.request.IRequestParameters;
+import org.apache.wicket.request.IWritableRequestParameters;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.Url.QueryParameter;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.lang.Checks;

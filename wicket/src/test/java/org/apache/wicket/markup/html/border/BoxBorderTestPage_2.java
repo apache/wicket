@@ -19,7 +19,7 @@ package org.apache.wicket.markup.html.border;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.image.Image;
-import org.apache.wicket.ng.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.PackageResourceReference;
 
 
 /**

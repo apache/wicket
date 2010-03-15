@@ -20,8 +20,8 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.ng.mock.MockWebRequest;
-import org.apache.wicket.ng.request.Url;
+import org.apache.wicket.mock.MockWebRequest;
+import org.apache.wicket.request.Url;
 
 /**
  * @author Timo Rantalaiho

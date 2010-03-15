@@ -18,8 +18,8 @@ package org.apache.wicket.ajax;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.protocol.http.WebRequest;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.time.Duration;
 
 /**

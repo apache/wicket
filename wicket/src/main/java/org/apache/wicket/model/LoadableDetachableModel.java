@@ -17,7 +17,7 @@
 package org.apache.wicket.model;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

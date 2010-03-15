@@ -17,8 +17,8 @@
 package org.apache.wicket.stateless;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.component.PageParameters;
 
 /**
  * @author jcompagner

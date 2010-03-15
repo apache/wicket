@@ -19,7 +19,7 @@ package org.apache.wicket.stateless;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.StatelessLink;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.request.component.PageParameters;
 
 /**
  * @author jcompagner

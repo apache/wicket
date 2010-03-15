@@ -23,7 +23,7 @@ import java.sql.Blob;
 import java.sql.SQLException;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.ng.resource.DynamicImageResource;
+import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.util.io.Streams;
 
 

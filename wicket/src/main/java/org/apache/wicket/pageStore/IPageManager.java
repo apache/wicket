@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.pageStore;
 
-import org.apache.wicket.ng.page.IManageablePage;
+import org.apache.wicket.page.IManageablePage;
 
 /**
  * Page manager.

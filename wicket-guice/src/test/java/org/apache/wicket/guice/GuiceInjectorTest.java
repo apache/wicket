@@ -22,12 +22,12 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.apache.wicket.Session;
-import org.apache.wicket.ng.ThreadContext;
-import org.apache.wicket.ng.mock.MockApplication;
-import org.apache.wicket.ng.mock.MockWebRequest;
-import org.apache.wicket.ng.request.Url;
+import org.apache.wicket.ThreadContext;
+import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.mock.MockWebRequest;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.util.lang.Objects;
 
 import com.google.inject.Binder;

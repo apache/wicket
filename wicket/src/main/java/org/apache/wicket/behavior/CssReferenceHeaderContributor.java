@@ -17,7 +17,7 @@
 package org.apache.wicket.behavior;
 
 import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.ng.resource.ResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * @author Juergen Donnerstag

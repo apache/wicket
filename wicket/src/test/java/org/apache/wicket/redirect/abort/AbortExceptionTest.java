@@ -20,8 +20,8 @@ import junit.framework.Assert;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
+import org.apache.wicket.request.component.PageParameters;
 
 /**
  * Testcase for WICKET-1418, throwing an abortexception during rendering.

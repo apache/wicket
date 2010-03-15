@@ -16,7 +16,7 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
  * An exception that causes the request cycle to immediately switch to respond stage.

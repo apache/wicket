@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.examples;
 
-import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.request.cycle.RequestCycleContext;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.cycle.RequestCycleContext;
 
 /**
  * Handles the PageExpiredException so that the SourcesPage can recover from a session expired.

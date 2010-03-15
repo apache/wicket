@@ -17,12 +17,12 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.IResourceListener;
-import org.apache.wicket.ng.request.component.PageParameters;
-import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.request.handler.resource.ResourceReferenceRequestHandler;
-import org.apache.wicket.ng.resource.IResource;
-import org.apache.wicket.ng.resource.ResourceReference;
-import org.apache.wicket.ng.resource.IResource.Attributes;
+import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.IResource.Attributes;
 
 /**
  * A link to any ResourceReference.

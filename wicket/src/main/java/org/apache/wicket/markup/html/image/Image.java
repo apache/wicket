@@ -24,9 +24,9 @@ import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.image.resource.LocalizedImageResource;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.ng.request.component.PageParameters;
-import org.apache.wicket.ng.resource.IResource;
-import org.apache.wicket.ng.resource.ResourceReference;
+import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * An Image component displays a localizable image resource.

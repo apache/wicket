@@ -17,7 +17,7 @@
 package org.apache.wicket.markup.html;
 
 import org.apache.wicket.Response;
-import org.apache.wicket.ng.resource.ResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * Interface that is used to render header elements (usually javascript and CSS references).

@@ -20,9 +20,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.ng.request.IRequestParameters;
-import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.protocol.http.IMultipartWebRequest;
+import org.apache.wicket.request.IRequestParameters;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.util.upload.FileItem;
 
 /**

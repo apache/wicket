@@ -20,8 +20,8 @@ import java.awt.Color;
 
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
-import org.apache.wicket.ng.resource.IResource;
-import org.apache.wicket.ng.resource.ResourceReference;
+import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Primitives;
 
 
@@ -78,7 +78,7 @@ public class Letter implements IClusterable
 		"letter")
 	{
 		/**
-		 * @see org.apache.wicket.ng.resource.ResourceReference#getResource()
+		 * @see org.apache.wicket.request.resource.ResourceReference#getResource()
 		 */
 		@Override
 		public IResource getResource()
@@ -96,7 +96,7 @@ public class Letter implements IClusterable
 	private static class ButtonResource implements IResource
 	{
 		/**
-		 * @see org.apache.wicket.ng.resource.IResource#respond(org.apache.wicket.ng.resource.IResource.Attributes)
+		 * @see org.apache.wicket.request.resource.IResource#respond(org.apache.wicket.request.resource.IResource.Attributes)
 		 */
 		public void respond(Attributes attributes)
 		{

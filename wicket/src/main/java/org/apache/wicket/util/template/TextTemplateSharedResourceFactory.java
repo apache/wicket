@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.ng.resource.ResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 
 
 /**

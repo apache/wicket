@@ -47,11 +47,11 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.ng.mock.MockRequestParameters;
-import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.Url.QueryParameter;
+import org.apache.wicket.mock.MockRequestParameters;
 import org.apache.wicket.protocol.http.WicketURLDecoder;
 import org.apache.wicket.protocol.http.WicketURLEncoder;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.Url.QueryParameter;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.upload.FileUploadBase;

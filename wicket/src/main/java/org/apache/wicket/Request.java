@@ -18,11 +18,11 @@ package org.apache.wicket;
 
 import java.util.Locale;
 
-import org.apache.wicket.ng.request.IRequestParameters;
-import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.parameter.CombinedRequestParametersAdapter;
-import org.apache.wicket.ng.request.parameter.EmptyRequestParameters;
-import org.apache.wicket.ng.request.parameter.UrlRequestParametersAdapter;
+import org.apache.wicket.request.IRequestParameters;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.parameter.CombinedRequestParametersAdapter;
+import org.apache.wicket.request.parameter.EmptyRequestParameters;
+import org.apache.wicket.request.parameter.UrlRequestParametersAdapter;
 
 /**
  * Request object.

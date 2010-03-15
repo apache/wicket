@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.protocol.http.request;
 
-import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.resource.ContentDisposition;
-import org.apache.wicket.request.target.resource.ResourceStreamRequestHandler;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
+import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.util.resource.WebExternalResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +69,7 @@ public class WebExternalResourceRequestTarget extends ResourceStreamRequestHandl
 	}
 
 	/**
-	 * @see org.apache.wicket.IRequestHandler#detach(org.apache.wicket.RequestCycle)
+	 * @see org.apache.wicket.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
 	 */
 	@Override
 	public void detach(RequestCycle requestCycle)

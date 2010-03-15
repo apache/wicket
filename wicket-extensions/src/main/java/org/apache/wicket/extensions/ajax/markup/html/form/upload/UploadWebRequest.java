@@ -19,9 +19,9 @@ package org.apache.wicket.extensions.ajax.markup.html.form.upload;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.upload.FileUploadException;
 

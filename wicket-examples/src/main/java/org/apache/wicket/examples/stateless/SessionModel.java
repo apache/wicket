@@ -18,7 +18,7 @@ package org.apache.wicket.examples.stateless;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
  * Model that displays whether a session was created yet, and if it was, prints the session id.

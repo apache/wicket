@@ -26,8 +26,8 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.markup.MarkupException;
-import org.apache.wicket.ng.request.component.IRequestablePage;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.component.PageParameters;
 import org.apache.wicket.util.lang.Generics;
 
 

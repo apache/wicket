@@ -16,10 +16,10 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.ng.request.component.PageParameters;
-import org.apache.wicket.ng.resource.PackageResourceReference;
-import org.apache.wicket.ng.resource.ResourceReference;
-import org.apache.wicket.ng.resource.SharedResourceReference;
+import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.SharedResourceReference;
 
 /**
  * @author jcompagner

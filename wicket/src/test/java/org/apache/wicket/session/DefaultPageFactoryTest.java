@@ -21,8 +21,8 @@ import org.apache.wicket.IPageFactory;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.ng.request.component.PageParameters;
-import org.apache.wicket.request.target.basic.EmptyRequestHandler;
+import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.handler.basic.EmptyRequestHandler;
 
 
 /**

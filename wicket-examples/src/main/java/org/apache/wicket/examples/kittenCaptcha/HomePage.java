@@ -22,7 +22,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.captcha.kittens.KittenCaptchaPanel;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.request.component.PageParameters;
 
 /**
  * Kitten captcha example

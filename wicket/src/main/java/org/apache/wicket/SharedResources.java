@@ -18,9 +18,9 @@ package org.apache.wicket;
 
 import java.util.Locale;
 
-import org.apache.wicket.ng.resource.IResource;
-import org.apache.wicket.ng.resource.ResourceReference;
-import org.apache.wicket.ng.resource.ResourceReferenceRegistry;
+import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 
 public class SharedResources
 {

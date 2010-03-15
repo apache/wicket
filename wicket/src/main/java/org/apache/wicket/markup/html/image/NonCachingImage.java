@@ -18,9 +18,9 @@ package org.apache.wicket.markup.html.image;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.ng.request.component.PageParameters;
-import org.apache.wicket.ng.resource.IResource;
-import org.apache.wicket.ng.resource.ResourceReference;
+import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.value.ValueMap;
 
 /**

@@ -19,7 +19,7 @@ package org.apache.wicket.ajax;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.ng.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
  * 

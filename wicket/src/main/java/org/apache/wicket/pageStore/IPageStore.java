@@ -18,7 +18,7 @@ package org.apache.wicket.pageStore;
 
 import java.io.Serializable;
 
-import org.apache.wicket.ng.page.IManageablePage;
+import org.apache.wicket.page.IManageablePage;
 
 /**
  * Persist (read & write) Page data

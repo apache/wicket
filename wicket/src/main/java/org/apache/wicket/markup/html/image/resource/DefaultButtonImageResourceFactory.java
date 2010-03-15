@@ -20,7 +20,7 @@ import java.util.Locale;
 
 import org.apache.wicket.IResourceFactory;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.ng.resource.IResource;
+import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.util.parse.metapattern.Group;
 import org.apache.wicket.util.parse.metapattern.IntegerGroup;
 import org.apache.wicket.util.parse.metapattern.MetaPattern;

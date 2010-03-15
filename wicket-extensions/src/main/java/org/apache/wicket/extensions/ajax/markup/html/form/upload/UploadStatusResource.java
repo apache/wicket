@@ -18,8 +18,8 @@ package org.apache.wicket.extensions.ajax.markup.html.form.upload;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.ng.resource.AbstractResource;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.request.resource.AbstractResource;
 
 
 /**

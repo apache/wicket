@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
-import org.apache.wicket.ng.mock.MockApplication;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.stateless.pages.HomePage;
 import org.apache.wicket.stateless.pages.LoginPage;
 import org.apache.wicket.util.tester.FormTester;

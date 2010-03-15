@@ -26,8 +26,8 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.ng.resource.DynamicImageResource;
-import org.apache.wicket.ng.resource.IResource;
+import org.apache.wicket.request.resource.DynamicImageResource;
+import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.response.ByteArrayResponse;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;

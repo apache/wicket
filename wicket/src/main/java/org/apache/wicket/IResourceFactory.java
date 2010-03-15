@@ -18,7 +18,7 @@ package org.apache.wicket;
 
 import java.util.Locale;
 
-import org.apache.wicket.ng.resource.IResource;
+import org.apache.wicket.request.resource.IResource;
 
 /**
  * A factory which creates resources for a given specification string. The format of the

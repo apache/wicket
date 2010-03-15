@@ -21,8 +21,7 @@ import java.util.List;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.apache.wicket.ng.ThreadContext;
-import org.apache.wicket.ng.mock.MockApplication;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.resource.loader.BundleStringResourceLoader;
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;

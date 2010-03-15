@@ -18,8 +18,8 @@ package org.apache.wicket.stateless.pages;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.ng.mock.MockApplication;
-import org.apache.wicket.ng.request.Url;
+import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**

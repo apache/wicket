@@ -22,8 +22,8 @@ import java.util.Locale;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.ImageButton;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.ng.request.component.PageParameters;
-import org.apache.wicket.ng.resource.PackageResourceReference;
+import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
  * Demonstrates localization.

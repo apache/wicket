@@ -37,11 +37,11 @@ import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.ng.page.IManageablePage;
-import org.apache.wicket.ng.request.component.IRequestablePage;
-import org.apache.wicket.ng.request.component.PageParameters;
-import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.lang.Classes;
@@ -1216,7 +1216,7 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
-	 * @see org.apache.wicket.ng.page.IManageablePage#getPageId()
+	 * @see org.apache.wicket.page.IManageablePage#getPageId()
 	 */
 	public int getPageId()
 	{
@@ -1224,7 +1224,7 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
-	 * @see org.apache.wicket.ng.request.component.IRequestablePage#getRenderCount()
+	 * @see org.apache.wicket.request.component.IRequestablePage#getRenderCount()
 	 */
 	public int getRenderCount()
 	{
@@ -1253,7 +1253,7 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
-	 * @see org.apache.wicket.ng.request.component.IRequestablePage#renderPage()
+	 * @see org.apache.wicket.request.component.IRequestablePage#renderPage()
 	 */
 	public void renderPage()
 	{

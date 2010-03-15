@@ -17,8 +17,8 @@
 package org.apache.wicket.protocol.http.request;
 
 import org.apache.wicket.IRequestHandler;
-import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 
 /**
@@ -68,7 +68,7 @@ public final class WebErrorCodeResponseHandler implements IRequestHandler
 	/**
 	 * Respond by sending the set errorCode and optionally the message to the browser.
 	 * 
-	 * @see org.apache.wicket.IRequestHandler#respond(org.apache.wicket.RequestCycle)
+	 * @see org.apache.wicket.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
 	 */
 	public void respond(RequestCycle requestCycle)
 	{
@@ -97,7 +97,7 @@ public final class WebErrorCodeResponseHandler implements IRequestHandler
 	}
 
 	/**
-	 * @see org.apache.wicket.IRequestHandler#detach(org.apache.wicket.RequestCycle)
+	 * @see org.apache.wicket.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
 	 */
 	public void detach(RequestCycle requestCycle)
 	{

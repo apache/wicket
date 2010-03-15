@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.util.tester.apps_1;
 
-import org.apache.wicket.ng.mock.MockApplication;
+import org.apache.wicket.mock.MockApplication;
 
 /**
  * @author Juergen Donnerstag

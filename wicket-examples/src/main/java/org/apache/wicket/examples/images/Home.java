@@ -27,10 +27,10 @@ import org.apache.wicket.markup.html.image.resource.BufferedDynamicImageResource
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
 import org.apache.wicket.markup.html.image.resource.RenderedDynamicImageResource;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.ng.resource.IResource;
-import org.apache.wicket.ng.resource.PackageResourceReference;
-import org.apache.wicket.ng.resource.ResourceReference;
-import org.apache.wicket.ng.resource.SharedResourceReference;
+import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.SharedResourceReference;
 
 
 /**

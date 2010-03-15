@@ -22,9 +22,9 @@ import java.io.InputStream;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.ng.mock.MockApplication;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.request.WebExternalResourceRequestTarget;
-import org.apache.wicket.request.target.resource.ResourceStreamRequestHandler;
+import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.resource.WebExternalResourceStream;
 import org.apache.wicket.util.tester.WicketTester;

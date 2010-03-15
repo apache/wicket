@@ -17,7 +17,7 @@
 package org.apache.wicket.pageStore;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.ng.page.IManageablePage;
+import org.apache.wicket.page.IManageablePage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,7 +121,7 @@ public abstract class AbstractPageManager implements IPageManager
 	}
 
 	/**
-	 * @see org.apache.wicket.pageStore.IPageManager#touchPage(org.apache.wicket.ng.page.IManageablePage)
+	 * @see org.apache.wicket.pageStore.IPageManager#touchPage(org.apache.wicket.page.IManageablePage)
 	 */
 	public void touchPage(IManageablePage page)
 	{

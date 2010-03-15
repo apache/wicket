@@ -18,9 +18,9 @@ package org.apache.wicket;
 
 import java.io.InputStream;
 
-import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.resource.PackageResourceReference;
-import org.apache.wicket.ng.resource.ResourceReference;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 
 public class ParentResourceEscapePathTest extends WicketTestCase
 {

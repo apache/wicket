@@ -16,7 +16,7 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.ng.resource.PackageResource;
+import org.apache.wicket.request.resource.PackageResource;
 
 /**
  * Initializes something when application loads.

@@ -20,7 +20,7 @@ import java.io.Serializable;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
-import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
  * Wicket's default page manager context

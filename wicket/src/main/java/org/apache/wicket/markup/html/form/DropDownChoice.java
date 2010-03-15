@@ -22,9 +22,9 @@ import org.apache.wicket.RequestContext;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.handler.PageAndComponentProvider;
-import org.apache.wicket.ng.request.handler.impl.ListenerInterfaceRequestHandler;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.handler.PageAndComponentProvider;
+import org.apache.wicket.request.handler.impl.ListenerInterfaceRequestHandler;
 
 
 /**

@@ -16,8 +16,8 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.ng.request.component.IRequestablePage;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.component.PageParameters;
 
 
 /**

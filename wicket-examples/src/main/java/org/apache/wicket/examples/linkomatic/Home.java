@@ -32,7 +32,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.ng.resource.SharedResourceReference;
+import org.apache.wicket.request.resource.SharedResourceReference;
 
 
 /**

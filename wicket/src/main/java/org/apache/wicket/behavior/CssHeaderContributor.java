@@ -17,7 +17,7 @@
 package org.apache.wicket.behavior;
 
 import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.ng.resource.CompressedResourceReference;
+import org.apache.wicket.request.resource.CompressedResourceReference;
 
 /**
  * @author Juergen Donnerstag

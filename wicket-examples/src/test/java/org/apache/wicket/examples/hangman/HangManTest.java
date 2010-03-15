@@ -22,7 +22,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.ng.request.component.PageParameters;
+import org.apache.wicket.request.component.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**

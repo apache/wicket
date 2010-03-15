@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.ng.page.IManageablePage;
+import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.lang.Objects;
 
@@ -145,7 +145,7 @@ public class DefaultPageStore implements IPageStore
 
 	/**
 	 * @see org.apache.wicket.pageStore.IPageStore#storePage(java.lang.String,
-	 *      org.apache.wicket.ng.page.IManageablePage)
+	 *      org.apache.wicket.page.IManageablePage)
 	 */
 	public void storePage(final String sessionId, final IManageablePage page)
 	{

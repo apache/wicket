@@ -20,7 +20,7 @@ import java.util.UUID;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
-import org.apache.wicket.ng.request.cycle.RequestCycle;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
  * Crypt factory that produces {@link SunJceCrypt} instances based on http session-specific

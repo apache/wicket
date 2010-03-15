@@ -16,13 +16,13 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.ng.request.mapper.BookmarkableMapper;
-import org.apache.wicket.ng.request.mapper.BufferedResponseMapper;
-import org.apache.wicket.ng.request.mapper.CompoundRequestMapper;
-import org.apache.wicket.ng.request.mapper.HomePageMapper;
-import org.apache.wicket.ng.request.mapper.PageInstanceMapper;
-import org.apache.wicket.ng.request.mapper.ResourceReferenceMapper;
-import org.apache.wicket.ng.request.mapper.parameters.SimplePageParametersEncoder;
+import org.apache.wicket.request.mapper.BookmarkableMapper;
+import org.apache.wicket.request.mapper.BufferedResponseMapper;
+import org.apache.wicket.request.mapper.CompoundRequestMapper;
+import org.apache.wicket.request.mapper.HomePageMapper;
+import org.apache.wicket.request.mapper.PageInstanceMapper;
+import org.apache.wicket.request.mapper.ResourceReferenceMapper;
+import org.apache.wicket.request.mapper.parameters.SimplePageParametersEncoder;
 import org.apache.wicket.util.IProvider;
 
 

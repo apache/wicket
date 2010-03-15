@@ -102,7 +102,7 @@ import org.slf4j.LoggerFactory;
  * webApplication is protected instead of private. Thus subclasses may provide their own means of
  * providing the application object.
  * 
- * @see org.apache.wicket.RequestCycle
+ * @see org.apache.wicket.request.cycle.RequestCycle
  * @author Jonathan Locke
  * @author Timur Mehrvarz
  * @author Juergen Donnerstag

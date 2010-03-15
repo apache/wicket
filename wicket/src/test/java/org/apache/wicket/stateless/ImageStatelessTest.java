@@ -18,8 +18,8 @@ package org.apache.wicket.stateless;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.image.Image;
-import org.apache.wicket.ng.resource.ByteArrayResource;
-import org.apache.wicket.ng.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.ByteArrayResource;
+import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
  * @author jcompagner

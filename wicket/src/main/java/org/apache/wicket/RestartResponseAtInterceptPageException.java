@@ -22,13 +22,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.wicket.ng.request.IRequestMapper;
-import org.apache.wicket.ng.request.IWritableRequestParameters;
-import org.apache.wicket.ng.request.Url;
-import org.apache.wicket.ng.request.cycle.RequestCycle;
-import org.apache.wicket.ng.request.handler.PageProvider;
-import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
-import org.apache.wicket.request.target.basic.RedirectRequestHandler;
+import org.apache.wicket.request.IRequestMapper;
+import org.apache.wicket.request.IWritableRequestParameters;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.handler.PageProvider;
+import org.apache.wicket.request.handler.basic.RedirectRequestHandler;
+import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.util.string.StringValue;
 
 public class RestartResponseAtInterceptPageException extends AbstractRestartResponseException

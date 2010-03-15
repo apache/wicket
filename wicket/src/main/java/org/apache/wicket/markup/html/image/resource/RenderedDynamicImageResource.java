@@ -20,7 +20,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.lang.ref.SoftReference;
 
-import org.apache.wicket.ng.resource.DynamicImageResource;
+import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.util.time.Time;
 
 
