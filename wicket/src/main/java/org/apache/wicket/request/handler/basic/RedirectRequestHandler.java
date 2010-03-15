@@ -16,11 +16,11 @@
  */
 package org.apache.wicket.request.handler.basic;
 
-import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.RequestContext;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.UrlUtils;
 
@@ -58,7 +58,7 @@ public class RedirectRequestHandler implements IRequestHandler
 	}
 
 	/**
-	 * @see org.apache.wicket.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
 	 */
 	public void detach(RequestCycle requestCycle)
 	{
@@ -67,7 +67,7 @@ public class RedirectRequestHandler implements IRequestHandler
 	/**
 	 * FIXME javadoc - what's special about this implementation?
 	 * 
-	 * @see org.apache.wicket.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
 	 */
 	public void respond(RequestCycle requestCycle)
 	{

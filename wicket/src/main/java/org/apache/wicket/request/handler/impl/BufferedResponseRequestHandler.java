@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.request.handler.impl;
 
-import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
@@ -41,14 +41,14 @@ public class BufferedResponseRequestHandler implements IRequestHandler
 	}
 
 	/**
-	 * @see org.apache.wicket.ng.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
 	 */
 	public void detach(RequestCycle requestCycle)
 	{
 	}
 
 	/**
-	 * @see org.apache.wicket.ng.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
 	 */
 	public void respond(RequestCycle requestCycle)
 	{

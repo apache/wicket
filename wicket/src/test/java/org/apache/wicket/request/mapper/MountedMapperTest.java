@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.request.mapper;
 
-import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.MockPage;
 import org.apache.wicket.markup.html.link.ILinkListener;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestableComponent;

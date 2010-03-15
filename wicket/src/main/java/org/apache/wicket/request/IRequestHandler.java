@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket;
+package org.apache.wicket.request;
 
 import org.apache.wicket.request.cycle.RequestCycle;
 

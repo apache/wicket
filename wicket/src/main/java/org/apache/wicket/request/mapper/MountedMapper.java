@@ -18,7 +18,7 @@ package org.apache.wicket.request.mapper;
 
 import java.lang.ref.WeakReference;
 
-import org.apache.wicket.Request;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.component.PageParameters;
@@ -91,7 +91,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	}
 
 	/**
-	 * @see org.apache.wicket.request.mapper.AbstractBookmarkableMapper#parseRequest(org.apache.wicket.Request)
+	 * @see org.apache.wicket.request.mapper.AbstractBookmarkableMapper#parseRequest(org.apache.wicket.request.Request)
 	 */
 	@Override
 	protected UrlInfo parseRequest(Request request)
@@ -218,7 +218,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	}
 
 	/**
-	 * @see org.apache.wicket.request.mapper.AbstractBookmarkableMapper#getCompatibilityScore(org.apache.wicket.Request)
+	 * @see org.apache.wicket.request.mapper.AbstractBookmarkableMapper#getCompatibilityScore(org.apache.wicket.request.Request)
 	 */
 	@Override
 	public int getCompatibilityScore(Request request)

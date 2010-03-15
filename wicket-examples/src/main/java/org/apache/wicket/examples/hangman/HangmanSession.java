@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.examples.hangman;
 
-import org.apache.wicket.Request;
 import org.apache.wicket.protocol.http.WebSession;
+import org.apache.wicket.request.Request;
 
 /**
  * Session for hangman game.

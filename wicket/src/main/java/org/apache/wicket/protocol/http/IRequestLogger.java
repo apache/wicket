@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.wicket.IClusterable;
-import org.apache.wicket.IRequestHandler;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 

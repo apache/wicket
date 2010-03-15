@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.request.handler.basic;
 
-import org.apache.wicket.IRequestHandler;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 public class AbortRequestHandler implements IRequestHandler

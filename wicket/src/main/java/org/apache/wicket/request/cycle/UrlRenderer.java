@@ -19,7 +19,7 @@ package org.apache.wicket.request.cycle;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.Request;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.PrependingStringBuffer;

@@ -33,7 +33,6 @@ import javax.imageio.ImageIO;
 import javax.imageio.stream.MemoryCacheImageInputStream;
 
 import org.apache.wicket.IResourceListener;
-import org.apache.wicket.Request;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
@@ -42,6 +41,7 @@ import org.apache.wicket.markup.html.image.NonCachingImage;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.util.time.Time;

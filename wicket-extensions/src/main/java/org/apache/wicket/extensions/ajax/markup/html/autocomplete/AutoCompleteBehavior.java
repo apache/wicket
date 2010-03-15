@@ -19,8 +19,8 @@ package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 import java.util.Iterator;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 

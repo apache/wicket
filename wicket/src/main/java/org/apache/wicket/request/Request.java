@@ -14,12 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket;
+package org.apache.wicket.request;
 
 import java.util.Locale;
 
-import org.apache.wicket.request.IRequestParameters;
-import org.apache.wicket.request.Url;
 import org.apache.wicket.request.parameter.CombinedRequestParametersAdapter;
 import org.apache.wicket.request.parameter.EmptyRequestParameters;
 import org.apache.wicket.request.parameter.UrlRequestParametersAdapter;

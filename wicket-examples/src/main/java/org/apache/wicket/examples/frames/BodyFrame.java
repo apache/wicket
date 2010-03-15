@@ -17,11 +17,11 @@
 package org.apache.wicket.examples.frames;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;

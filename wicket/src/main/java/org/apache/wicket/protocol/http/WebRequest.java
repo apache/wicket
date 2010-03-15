@@ -22,8 +22,8 @@ import java.util.Locale;
 
 import javax.servlet.http.Cookie;
 
-import org.apache.wicket.Request;
 import org.apache.wicket.request.IRequestParameters;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 
 

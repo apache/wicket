@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.request.mapper;
 
-import org.apache.wicket.IRequestHandler;
-import org.apache.wicket.Request;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;

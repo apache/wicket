@@ -18,8 +18,8 @@ package org.apache.wicket.examples.library;
 
 import java.util.List;
 
-import org.apache.wicket.Request;
 import org.apache.wicket.protocol.http.WebSession;
+import org.apache.wicket.request.Request;
 
 
 /**

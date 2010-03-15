@@ -17,11 +17,11 @@
 package org.apache.wicket.markup.html.form.upload;
 
 
-import org.apache.wicket.Request;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.IMultipartWebRequest;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.upload.FileItem;
 

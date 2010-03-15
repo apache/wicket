@@ -26,8 +26,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.apache.wicket.Request;
 import org.apache.wicket.Session;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.session.ISessionStore;
 
 /**

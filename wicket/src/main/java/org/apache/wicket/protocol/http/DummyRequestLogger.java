@@ -18,7 +18,7 @@ package org.apache.wicket.protocol.http;
 
 import java.util.List;
 
-import org.apache.wicket.IRequestHandler;
+import org.apache.wicket.request.IRequestHandler;
 
 // TODO (NG) DO something useful here
 public class DummyRequestLogger implements IRequestLogger

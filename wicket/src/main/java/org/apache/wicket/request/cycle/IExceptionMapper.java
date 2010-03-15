@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.request.cycle;
 
-import org.apache.wicket.IRequestHandler;
+import org.apache.wicket.request.IRequestHandler;
 
 /**
  * Maps exception to {@link IRequestHandler}.

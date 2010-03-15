@@ -17,13 +17,13 @@
 package org.apache.wicket.examples.ajax.builtin;
 
 import org.apache.wicket.IClusterable;
-import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.rating.RatingPanel;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;

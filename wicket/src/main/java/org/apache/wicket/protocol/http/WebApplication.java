@@ -25,9 +25,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.IPageRendererProvider;
-import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Page;
-import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
@@ -37,7 +35,9 @@ import org.apache.wicket.markup.html.pages.AccessDeniedPage;
 import org.apache.wicket.markup.html.pages.InternalErrorPage;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
 import org.apache.wicket.markup.resolver.AutoLinkResolver;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.impl.render.PageRenderer;
@@ -247,7 +247,7 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * @see org.apache.wicket.Application#logEventTarget(org.apache.wicket.IRequestHandler)
+	 * @see org.apache.wicket.Application#logEventTarget(org.apache.wicket.request.IRequestHandler)
 	 */
 	@Override
 	public void logEventTarget(IRequestHandler target)
@@ -261,7 +261,7 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * @see org.apache.wicket.Application#logResponseTarget(org.apache.wicket.IRequestHandler)
+	 * @see org.apache.wicket.Application#logResponseTarget(org.apache.wicket.request.IRequestHandler)
 	 */
 	@Override
 	public void logResponseTarget(IRequestHandler target)
@@ -346,7 +346,7 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * @see org.apache.wicket.Application#newSession(org.apache.wicket.Request,
+	 * @see org.apache.wicket.Application#newSession(org.apache.wicket.request.Request,
 	 *      org.apache.wicket.Response)
 	 */
 	@Override

@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Page;
 import org.apache.wicket.Response;
 import org.apache.wicket.behavior.AbstractBehavior;
@@ -28,6 +27,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.component.PageParameters;
 import org.apache.wicket.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.resource.PackageResourceReference;

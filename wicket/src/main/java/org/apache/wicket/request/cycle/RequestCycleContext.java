@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.request.cycle;
 
-import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.request.IRequestMapper;
+import org.apache.wicket.request.Request;
 
 
 /**

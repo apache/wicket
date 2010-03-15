@@ -17,10 +17,10 @@
 package org.apache.wicket.request.handler;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Page;
 import org.apache.wicket.pageStore.IPageManager;
 import org.apache.wicket.protocol.http.PageExpiredException;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.component.PageParameters;

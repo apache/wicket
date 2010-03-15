@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.examples.authentication1;
 
-import org.apache.wicket.Request;
 import org.apache.wicket.protocol.http.WebSession;
+import org.apache.wicket.request.Request;
 
 /**
  * Session class for signin example. Holds and authenticates users.

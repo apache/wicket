@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.request.handler.resource;
 
-import org.apache.wicket.IRequestHandler;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.request.resource.ResourceStreamResource;
@@ -70,7 +70,7 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 	}
 
 	/**
-	 * @see org.apache.wicket.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
 	 */
 	public void detach(RequestCycle requestCycle)
 	{
@@ -126,7 +126,7 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 	/**
 	 * Responds by sending the contents of the resource stream.
 	 * 
-	 * @see org.apache.wicket.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
 	 */
 	public void respond(RequestCycle requestCycle)
 	{

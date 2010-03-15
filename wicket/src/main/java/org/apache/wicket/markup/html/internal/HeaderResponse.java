@@ -22,10 +22,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Response;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WicketEventReference;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.resource.ResourceReference;

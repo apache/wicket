@@ -30,7 +30,6 @@ import java.util.Set;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.Response;
@@ -42,6 +41,7 @@ import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.component.PageParameters;
@@ -437,7 +437,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	}
 
 	/**
-	 * @see org.apache.wicket.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
 	 */
 	public void detach(final RequestCycle requestCycle)
 	{
@@ -527,7 +527,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	}
 
 	/**
-	 * @see org.apache.wicket.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
 	 */
 	public final void respond(final RequestCycle requestCycle)
 	{

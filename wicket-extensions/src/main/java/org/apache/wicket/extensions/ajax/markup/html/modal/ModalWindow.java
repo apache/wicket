@@ -18,7 +18,6 @@ package org.apache.wicket.extensions.ajax.markup.html.modal;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
-import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
@@ -32,6 +31,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;

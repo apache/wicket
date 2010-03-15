@@ -30,10 +30,10 @@ import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Request;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.request.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -128,7 +128,7 @@ public class HttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * @see org.apache.wicket.session.ISessionStore#getSessionId(org.apache.wicket.ng.request.Request,
+	 * @see org.apache.wicket.session.ISessionStore#getSessionId(org.apache.org.apache.wicket.request.Request,
 	 *      boolean)
 	 */
 	public final String getSessionId(final Request request, final boolean create)
@@ -168,7 +168,7 @@ public class HttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * @see org.apache.wicket.session.ISessionStore#lookup(org.apache.wicket.ng.request.Request)
+	 * @see org.apache.wicket.session.ISessionStore#lookup(org.apache.org.apache.wicket.request.Request)
 	 */
 	public final Session lookup(final Request request)
 	{
@@ -223,7 +223,7 @@ public class HttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * @see org.apache.wicket.session.ISessionStore#getAttribute(org.apache.wicket.Request,
+	 * @see org.apache.wicket.session.ISessionStore#getAttribute(org.apache.wicket.request.Request,
 	 *      java.lang.String)
 	 */
 	public final Serializable getAttribute(final Request request, final String name)
@@ -237,7 +237,7 @@ public class HttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * @see org.apache.wicket.session.ISessionStore#getAttributeNames(org.apache.wicket.Request)
+	 * @see org.apache.wicket.session.ISessionStore#getAttributeNames(org.apache.wicket.request.Request)
 	 */
 	public final List<String> getAttributeNames(final Request request)
 	{
@@ -261,7 +261,7 @@ public class HttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * @see org.apache.wicket.session.ISessionStore#removeAttribute(org.apache.wicket.Request,
+	 * @see org.apache.wicket.session.ISessionStore#removeAttribute(org.apache.wicket.request.Request,
 	 *      java.lang.String)
 	 */
 	public final void removeAttribute(final Request request, final String name)
@@ -285,7 +285,7 @@ public class HttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * @see org.apache.wicket.session.ISessionStore#setAttribute(org.apache.wicket.Request,
+	 * @see org.apache.wicket.session.ISessionStore#setAttribute(org.apache.wicket.request.Request,
 	 *      java.lang.String, java.io.Serializable)
 	 */
 	public final void setAttribute(final Request request, final String name,

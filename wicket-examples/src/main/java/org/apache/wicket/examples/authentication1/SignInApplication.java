@@ -18,13 +18,13 @@ package org.apache.wicket.examples.authentication1;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.examples.WicketExampleApplication;
+import org.apache.wicket.request.Request;
 
 /**
  * Forms example.

@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.request.mapper.mount;
 
-import org.apache.wicket.IRequestHandler;
-import org.apache.wicket.Request;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Request;
 
 /**
  * TODO javadoc, explain "parameters resolved from the mount"

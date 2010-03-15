@@ -20,7 +20,6 @@ import java.lang.ref.WeakReference;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
@@ -32,6 +31,7 @@ import org.apache.wicket.authorization.strategies.role.RoleAuthorizationStrategy
 import org.apache.wicket.authorization.strategies.role.Roles;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.Request;
 
 
 /**
@@ -106,7 +106,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.Request,
+	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.request.Request,
 	 *      org.apache.wicket.Response)
 	 */
 	@Override

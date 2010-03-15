@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Page;
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
@@ -40,6 +39,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WicketURLDecoder;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.PageParameters;

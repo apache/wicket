@@ -18,13 +18,13 @@ package org.apache.wicket.examples.authentication2;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.examples.WicketExampleApplication;
+import org.apache.wicket.request.Request;
 
 
 /**
@@ -51,7 +51,7 @@ public final class SignIn2Application extends WicketExampleApplication
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.Request,
+	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.request.Request,
 	 *      Response)
 	 */
 	@Override

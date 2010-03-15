@@ -18,7 +18,7 @@ package org.apache.wicket.request.handler.resource;
 
 import java.util.Locale;
 
-import org.apache.wicket.IRequestHandler;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.component.PageParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.IResource;
@@ -78,14 +78,14 @@ public class ResourceReferenceRequestHandler implements IRequestHandler
 	}
 
 	/**
-	 * @see org.apache.wicket.ng.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
 	 */
 	public void detach(RequestCycle requestCycle)
 	{
 	}
 
 	/**
-	 * @see org.apache.wicket.ng.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
 	 */
 	public void respond(RequestCycle requestCycle)
 	{

@@ -18,7 +18,7 @@ package org.apache.wicket.request.mapper;
 
 import java.util.Locale;
 
-import org.apache.wicket.IRequestHandler;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.PageParameters;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;

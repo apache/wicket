@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.authentication;
 
-import org.apache.wicket.Request;
 import org.apache.wicket.Session;
 import org.apache.wicket.authorization.strategies.role.Roles;
 import org.apache.wicket.protocol.http.WebSession;
+import org.apache.wicket.request.Request;
 
 
 /**

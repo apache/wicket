@@ -17,12 +17,12 @@
 package org.apache.wicket.examples.library;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.Session;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
 import org.apache.wicket.examples.WicketExampleApplication;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 
 

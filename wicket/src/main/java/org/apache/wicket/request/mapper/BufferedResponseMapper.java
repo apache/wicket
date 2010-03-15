@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.request.mapper;
 
-import org.apache.wicket.IRequestHandler;
-import org.apache.wicket.Request;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.impl.BufferedResponseRequestHandler;
@@ -86,7 +86,7 @@ public class BufferedResponseMapper implements IRequestMapper
 	}
 
 	/**
-	 * @see org.apache.wicket.request.IRequestMapper#mapRequest(org.apache.wicket.Request)
+	 * @see org.apache.wicket.request.IRequestMapper#mapRequest(org.apache.wicket.request.Request)
 	 */
 	public IRequestHandler mapRequest(Request request)
 	{
@@ -104,7 +104,7 @@ public class BufferedResponseMapper implements IRequestMapper
 	}
 
 	/**
-	 * @see org.apache.wicket.request.IRequestMapper#mapHandler(org.apache.wicket.ng.request.IRequestHandler)
+	 * @see org.apache.wicket.request.IRequestMapper#mapHandler(org.apache.org.apache.wicket.request.IRequestHandler)
 	 */
 	public Url mapHandler(IRequestHandler requestHandler)
 	{
@@ -112,7 +112,7 @@ public class BufferedResponseMapper implements IRequestMapper
 	}
 
 	/**
-	 * @see org.apache.wicket.request.IRequestMapper#getCompatibilityScore(org.apache.wicket.Request)
+	 * @see org.apache.wicket.request.IRequestMapper#getCompatibilityScore(org.apache.wicket.request.Request)
 	 */
 	public int getCompatibilityScore(Request request)
 	{

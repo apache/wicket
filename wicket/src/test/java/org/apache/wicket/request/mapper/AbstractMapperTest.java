@@ -20,9 +20,9 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.Request;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.markup.html.link.ILinkListener;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
 

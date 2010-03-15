@@ -17,9 +17,9 @@
 package org.apache.wicket.request.mapper;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.IRequestHandler;
-import org.apache.wicket.Request;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.crypt.ICrypt;

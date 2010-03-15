@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.wicket.IRequestHandler;
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.request.IRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

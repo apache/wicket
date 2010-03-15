@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.examples.authorization;
 
-import org.apache.wicket.Request;
 import org.apache.wicket.protocol.http.WebSession;
+import org.apache.wicket.request.Request;
 
 /**
  * Web Session for this example.

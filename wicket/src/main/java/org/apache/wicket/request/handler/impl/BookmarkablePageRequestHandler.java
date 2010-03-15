@@ -63,7 +63,7 @@ public class BookmarkablePageRequestHandler implements IPageClassRequestHandler
 	}
 
 	/**
-	 * @see org.apache.wicket.ng.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
 	 */
 	public void respond(RequestCycle requestCycle)
 	{
@@ -72,7 +72,7 @@ public class BookmarkablePageRequestHandler implements IPageClassRequestHandler
 	}
 
 	/**
-	 * @see org.apache.wicket.ng.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
 	 */
 	public void detach(RequestCycle requestCycle)
 	{

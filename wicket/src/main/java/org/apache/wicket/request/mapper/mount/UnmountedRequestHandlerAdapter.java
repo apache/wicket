@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.request.mapper.mount;
 
-import org.apache.wicket.IRequestHandler;
-import org.apache.wicket.Request;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 
 /**
@@ -42,7 +42,7 @@ class UnmountedRequestHandlerAdapter implements IMountedRequestMapper
 	}
 
 	/**
-	 * @see org.apache.wicket.request.mapper.mount.IMountedRequestMapper#getCompatibilityScore(org.apache.wicket.Request)
+	 * @see org.apache.wicket.request.mapper.mount.IMountedRequestMapper#getCompatibilityScore(org.apache.wicket.request.Request)
 	 */
 	public int getCompatibilityScore(Request request)
 	{
@@ -50,7 +50,7 @@ class UnmountedRequestHandlerAdapter implements IMountedRequestMapper
 	}
 
 	/**
-	 * @see org.apache.wicket.request.mapper.mount.IMountedRequestMapper#mapHandler(org.apache.wicket.ng.request.IRequestHandler)
+	 * @see org.apache.wicket.request.mapper.mount.IMountedRequestMapper#mapHandler(org.apache.org.apache.wicket.request.IRequestHandler)
 	 */
 	public Mount mapHandler(IRequestHandler requestHandler)
 	{
@@ -62,7 +62,7 @@ class UnmountedRequestHandlerAdapter implements IMountedRequestMapper
 	}
 
 	/**
-	 * @see org.apache.wicket.request.mapper.mount.IMountedRequestMapper#mapRequest(org.apache.wicket.Request,
+	 * @see org.apache.wicket.request.mapper.mount.IMountedRequestMapper#mapRequest(org.apache.wicket.request.Request,
 	 *      org.apache.wicket.request.mapper.mount.MountParameters)
 	 */
 	public IRequestHandler mapRequest(Request request, MountParameters mountParams)

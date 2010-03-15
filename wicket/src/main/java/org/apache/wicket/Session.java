@@ -30,6 +30,7 @@ import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.pageStore.IPageManager;
 import org.apache.wicket.request.ClientInfo;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.lang.Objects;

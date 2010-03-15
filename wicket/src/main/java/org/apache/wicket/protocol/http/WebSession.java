@@ -19,11 +19,11 @@ package org.apache.wicket.protocol.http;
 import java.util.List;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Request;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.settings.IRequestCycleSettings;
 import org.slf4j.Logger;

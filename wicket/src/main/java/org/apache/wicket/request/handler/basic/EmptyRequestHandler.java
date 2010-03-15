@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.request.handler.basic;
 
-import org.apache.wicket.IRequestHandler;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
@@ -53,14 +53,14 @@ public final class EmptyRequestHandler implements IRequestHandler
 	/**
 	 * Does nothing at all.
 	 * 
-	 * @see org.apache.wicket.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
 	 */
 	public void respond(RequestCycle requestCycle)
 	{
 	}
 
 	/**
-	 * @see org.apache.wicket.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
 	 */
 	public void detach(RequestCycle requestCycle)
 	{
