@@ -2315,6 +2315,7 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 						}
 					}
 				}
+				behavior.unbind(this);
 				return true;
 			}
 		}

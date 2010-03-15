@@ -288,7 +288,7 @@ public abstract class WebApplication extends Application
 	public final void mount(IRequestMapper mapper)
 	{
 		Checks.argumentNotNull(mapper, "mapper");
-		getRootMapperAsCompound().add(mapper);
+		getRootRequestMapperAsCompound().add(mapper);
 	}
 
 	/**
@@ -297,7 +297,7 @@ public abstract class WebApplication extends Application
 	 * 
 	 * @return compound instance of the root mapper
 	 */
-	public ICompoundRequestMapper getRootMapperAsCompound()
+	public ICompoundRequestMapper getRootRequestMapperAsCompound()
 	{
 		IRequestMapper root = getRootRequestMapper();
 		if (!(root instanceof ICompoundRequestMapper))

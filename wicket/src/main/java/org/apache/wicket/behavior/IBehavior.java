@@ -80,6 +80,14 @@ public interface IBehavior extends IClusterable
 	void bind(Component component);
 
 	/**
+	 * Notifies the behavior it is removed from the specified component
+	 * 
+	 * @param component
+	 *            the component this behavior is unbound from
+	 */
+	void unbind(Component component);
+
+	/**
 	 * Allows the behavior to detach any state it has attached during request processing.
 	 * 
 	 * @param component

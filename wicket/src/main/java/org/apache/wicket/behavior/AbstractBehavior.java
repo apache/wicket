@@ -155,4 +155,11 @@ public abstract class AbstractBehavior implements IBehavior
 	{
 		return false;
 	}
+
+	/**
+	 * @see org.apache.wicket.behavior.IBehavior#unbind(org.apache.wicket.Component)
+	 */
+	public void unbind(Component component)
+	{
+	}
 }

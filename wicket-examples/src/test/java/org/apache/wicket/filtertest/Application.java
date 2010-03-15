@@ -40,7 +40,7 @@ public class Application extends WicketExampleApplication
 	{
 		super.init();
 
-		getRootMapperAsCompound().add(new MountedMapper("/hello", HelloWorld.class));
+		getRootRequestMapperAsCompound().add(new MountedMapper("/hello", HelloWorld.class));
 	}
 
 	/**
