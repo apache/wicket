@@ -37,13 +37,11 @@ import org.apache.wicket.markup.html.pages.InternalErrorPage;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
 import org.apache.wicket.markup.resolver.AutoLinkResolver;
 import org.apache.wicket.ng.ThreadContext;
-import org.apache.wicket.ng.request.ICompoundRequestMapper;
 import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.Url;
 import org.apache.wicket.ng.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.ng.request.handler.impl.render.PageRenderer;
 import org.apache.wicket.ng.request.handler.impl.render.WebPageRenderer;
-import org.apache.wicket.ng.request.mapper.CompoundRequestMapper;
 import org.apache.wicket.ng.request.mapper.MountedMapper;
 import org.apache.wicket.ng.resource.ResourceReference;
 import org.apache.wicket.session.HttpSessionStore;
@@ -290,23 +288,6 @@ public abstract class WebApplication extends Application
 		Checks.argumentNotNull(mapper, "mapper");
 		getRootRequestMapperAsCompound().add(mapper);
 	}
-
-	/**
-	 * Converts the root mapper to a {@link ICompoundRequestMapper} if necessary and returns the
-	 * converted instance.
-	 * 
-	 * @return compound instance of the root mapper
-	 */
-	public ICompoundRequestMapper getRootRequestMapperAsCompound()
-	{
-		IRequestMapper root = getRootRequestMapper();
-		if (!(root instanceof ICompoundRequestMapper))
-		{
-			root = new CompoundRequestMapper().add(root);
-		}
-		return (ICompoundRequestMapper)root;
-	}
-
 
 	/**
 	 * Mounts a bookmarkable page class to the given path.

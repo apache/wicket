@@ -49,11 +49,13 @@ import org.apache.wicket.markup.resolver.WicketContainerResolver;
 import org.apache.wicket.markup.resolver.WicketMessageResolver;
 import org.apache.wicket.ng.DefaultExceptionMapper;
 import org.apache.wicket.ng.ThreadContext;
+import org.apache.wicket.ng.request.ICompoundRequestMapper;
 import org.apache.wicket.ng.request.IRequestMapper;
 import org.apache.wicket.ng.request.component.IRequestablePage;
 import org.apache.wicket.ng.request.component.PageParameters;
 import org.apache.wicket.ng.request.cycle.RequestCycle;
 import org.apache.wicket.ng.request.cycle.RequestCycleContext;
+import org.apache.wicket.ng.request.mapper.CompoundRequestMapper;
 import org.apache.wicket.ng.request.mapper.IMapperContext;
 import org.apache.wicket.ng.resource.ResourceReferenceRegistry;
 import org.apache.wicket.pageStore.DefaultPageManagerContext;
@@ -1197,6 +1199,23 @@ public abstract class Application implements UnboundListener
 			}
 		}
 	}
+
+	/**
+	 * Converts the root mapper to a {@link ICompoundRequestMapper} if necessary and returns the
+	 * converted instance.
+	 * 
+	 * @return compound instance of the root mapper
+	 */
+	public ICompoundRequestMapper getRootRequestMapperAsCompound()
+	{
+		IRequestMapper root = getRootRequestMapper();
+		if (!(root instanceof ICompoundRequestMapper))
+		{
+			root = new CompoundRequestMapper().add(root);
+		}
+		return (ICompoundRequestMapper)root;
+	}
+
 
 	/**
 	 * @return The root request mapper
