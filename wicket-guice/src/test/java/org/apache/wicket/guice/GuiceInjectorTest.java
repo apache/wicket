@@ -89,6 +89,10 @@ public class GuiceInjectorTest extends TestCase
 			TestComponent clonedComponent = (TestComponent)Objects.cloneObject(testComponent);
 			doChecksForComponent(clonedComponent);
 
+			// Test injection of a class that does not extend Component
+			TestNoComponent noncomponent = new TestNoComponent();
+			doChecksForNoComponent(noncomponent);
+
 		}
 		finally
 		{
@@ -97,22 +101,21 @@ public class GuiceInjectorTest extends TestCase
 		}
 	}
 
+	private void doChecksForNoComponent(TestNoComponent component)
+	{
+		assertEquals(ITestService.RESULT_RED, component.getString());
+	}
+
 	private void doChecksForComponent(TestComponent component)
 	{
 		assertEquals(ITestService.RESULT, component.getInjectedField().getString());
 		assertEquals(null, component.getInjectedOptionalField());
 		assertEquals(ITestService.RESULT_RED, component.getInjectedFieldRed().getString());
 		assertEquals(ITestService.RESULT_BLUE, component.getInjectedFieldBlue().getString());
-		assertEquals(ITestService.RESULT, component.getInjectedMethod().getString());
-		assertEquals(ITestService.RESULT_BLUE, component.getInjectedMethodBlue().getString());
-		assertEquals(ITestService.RESULT_RED, component.getInjectedMethodRed().getString());
 
 		assertEquals(ITestService.RESULT, component.getInjectedFieldProvider().get().getString());
-		assertEquals(ITestService.RESULT, component.getInjectedMethodProvider().get().getString());
 
 		assertEquals(ITestService.RESULT, component.getInjectedTypeLiteralField().get(
-				ITestService.RESULT));
-		assertEquals(ITestService.RESULT, component.getInjectedTypeLiteralMethod().get(
 				ITestService.RESULT));
 	}
 }

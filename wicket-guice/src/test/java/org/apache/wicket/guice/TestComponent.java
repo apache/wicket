@@ -49,15 +49,12 @@ public class TestComponent extends Component
 	@Inject
 	private Map<String, String> injectedTypeLiteralField;
 
-	private ITestService injectedMethod, injectedMethodRed, injectedMethodBlue;
-
-	private Provider<ITestService> injectedMethodProvider;
-
-	private Map<String, String> injectedTypeLiteralMethod;
+	private final TestNoComponent noComponent;
 
 	public TestComponent(String id)
 	{
 		super(id);
+		noComponent = new TestNoComponent();
 	}
 
 	public ITestService getInjectedField()
@@ -73,21 +70,6 @@ public class TestComponent extends Component
 	public ITestService getInjectedFieldRed()
 	{
 		return injectedFieldRed;
-	}
-
-	public ITestService getInjectedMethod()
-	{
-		return injectedMethod;
-	}
-
-	public ITestService getInjectedMethodBlue()
-	{
-		return injectedMethodBlue;
-	}
-
-	public ITestService getInjectedMethodRed()
-	{
-		return injectedMethodRed;
 	}
 
 	public Provider<ITestService> getInjectedFieldProvider()
@@ -110,49 +92,15 @@ public class TestComponent extends Component
 		return injectedTypeLiteralField;
 	}
 
-	public Provider<ITestService> getInjectedMethodProvider()
-	{
-		return injectedMethodProvider;
-	}
-
-	public Map<String, String> getInjectedTypeLiteralMethod()
-	{
-		return injectedTypeLiteralMethod;
-	}
-
-	@Inject
-	public void injectProvider(Provider<ITestService> provider)
-	{
-		injectedMethodProvider = provider;
-	}
-
-	@Inject
-	public void injectService(ITestService service)
-	{
-		injectedMethod = service;
-	}
-
-	@Inject
-	public void injectServiceBlue(@Blue ITestService service)
-	{
-		injectedMethodBlue = service;
-	}
-
-	@Inject
-	public void injectServiceRed(@Red ITestService service)
-	{
-		injectedMethodRed = service;
-	}
-
-	@Inject
-	public void injectTypeLiteral(Map<String, String> map)
-	{
-		injectedTypeLiteralMethod = map;
-	}
-
 	@Override
 	protected void onRender()
 	{
 		// Do nothing.
 	}
+
+	public String getNoComponentString()
+	{
+		return noComponent.getString();
+	}
+
 }

@@ -18,7 +18,6 @@ package org.apache.wicket.guice;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 import org.apache.wicket.Application;
@@ -38,34 +37,16 @@ class GuiceProxyTargetLocator implements IProxyTargetLocator
 
 	private final boolean optional;
 
-	private final String[] data;
+	private final String className;
 
-	/** index of argument in the method being injected, or -1 for field */
-	private final int argIndex;
+	private final String fieldName;
 
 	public GuiceProxyTargetLocator(Field field, Annotation bindingAnnotation, boolean optional)
 	{
 		this.bindingAnnotation = bindingAnnotation;
 		this.optional = optional;
-		data = new String[2];
-		data[0] = field.getDeclaringClass().getName();
-		data[1] = field.getName();
-		argIndex = -1;
-	}
-
-	public GuiceProxyTargetLocator(Method method, int argIndex, Annotation bindingAnnotation,
-			boolean optional)
-	{
-		this.bindingAnnotation = bindingAnnotation;
-		this.optional = optional;
-		data = new String[2 + method.getParameterTypes().length];
-		data[0] = method.getDeclaringClass().getName();
-		data[1] = method.getName();
-		for (int i = 0; i < method.getParameterTypes().length; i++)
-		{
-			data[2 + i] = method.getParameterTypes()[i].getName();
-		}
-		this.argIndex = argIndex;
+		className = field.getDeclaringClass().getName();
+		fieldName = field.getName();
 	}
 
 	public Object locateProxyTarget()
@@ -77,27 +58,14 @@ class GuiceProxyTargetLocator implements IProxyTargetLocator
 		try
 		{
 
-			Class< ? > clazz = Classes.resolveClass(data[0]);
-			if (argIndex < 0)
-			{
-				final Field field = clazz.getDeclaredField(data[1]);
-				type = field.getGenericType();
-			}
-			else
-			{
-				Class< ? >[] paramTypes = new Class[data.length - 2];
-				for (int i = 2; i < data.length; i++)
-				{
-					paramTypes[i - 2] = Classes.resolveClass(data[i]);
-				}
-				final Method method = clazz.getDeclaredMethod(data[1], paramTypes);
-				type = method.getGenericParameterTypes()[argIndex];
-			}
+			Class< ? > clazz = Classes.resolveClass(className);
+			final Field field = clazz.getDeclaredField(fieldName);
+			type = field.getGenericType();
 		}
 		catch (Exception e)
 		{
-			throw new WicketRuntimeException("Error accessing member: " + data[1] + " of class: " +
-					data[0], e);
+			throw new WicketRuntimeException("Error accessing member: " + fieldName +
+					" of class: " + className, e);
 		}
 
 		// using TypeLiteral to retrieve the key gives us automatic support for

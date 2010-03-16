@@ -16,30 +16,19 @@
  */
 package org.apache.wicket.guice;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.IComponentInstantiationListener;
-import org.apache.wicket.proxy.LazyInitProxyFactory;
+import org.apache.wicket.injection.IFieldValueFactory;
 
-import com.google.inject.BindingAnnotation;
 import com.google.inject.Guice;
 import com.google.inject.ImplementedBy;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Stage;
 
 /**
- * Injects fields/members of components using Guice.
+ * Injects field members of components using Guice.
  * <p>
  * Add this to your application in its {@link Application#init()} method like so:
  * 
@@ -53,8 +42,12 @@ import com.google.inject.Stage;
  * 
  * @author Alastair Maw
  */
-public class GuiceComponentInjector implements IComponentInstantiationListener
+public class GuiceComponentInjector extends org.apache.wicket.injection.Injector
+		implements
+			IComponentInstantiationListener
 {
+	private final IFieldValueFactory fieldValueFactory;
+
 	/**
 	 * Creates a new Wicket GuiceComponentInjector instance.
 	 * <p>
@@ -81,7 +74,15 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 	{
 		this(app, Guice.createInjector(app.getConfigurationType().equals(Application.DEVELOPMENT)
 				? Stage.DEVELOPMENT
-				: Stage.PRODUCTION, modules));
+				: Stage.PRODUCTION, modules), true);
+	}
+
+	/**
+	 * @see GuiceComponentInjector(Application app, Injector injector, boolean wrapInProxies)
+	 */
+	public GuiceComponentInjector(Application app, Injector injector)
+	{
+		this(app, injector, true);
 	}
 
 	/**
@@ -90,139 +91,25 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 	 * 
 	 * @param app
 	 * @param injector
+	 * @param wrapInProxies
+	 *            whether or not wicket should wrap dependencies with specialized proxies that can
+	 *            be safely serialized. in most cases this should be set to true.
 	 */
-	public GuiceComponentInjector(Application app, Injector injector)
+	public GuiceComponentInjector(Application app, Injector injector, final boolean wrapInProxies)
 	{
 		app.setMetaData(GuiceInjectorHolder.INJECTOR_KEY, new GuiceInjectorHolder(injector));
+		fieldValueFactory = new GuiceFieldValueFactory(wrapInProxies);
+		bind(app);
 	}
 
+	@Override
 	public void inject(Object object)
 	{
-		Class< ? > current = object.getClass();
-		do
-		{
-			Field[] currentFields = current.getDeclaredFields();
-			for (final Field field : currentFields)
-			{
-				Inject injectAnnotation = field.getAnnotation(Inject.class);
-				if (!Modifier.isStatic(field.getModifiers()) && injectAnnotation != null)
-				{
-					try
-					{
-						Annotation bindingAnnotation = findBindingAnnotation(field.getAnnotations());
-						Object proxy = LazyInitProxyFactory.createProxy(field.getType(),
-								new GuiceProxyTargetLocator(field, bindingAnnotation,
-										injectAnnotation.optional()));
-
-						if (!field.isAccessible())
-						{
-							field.setAccessible(true);
-						}
-						field.set(object, proxy);
-					}
-					catch (IllegalAccessException e)
-					{
-						throw new WicketRuntimeException("Error Guice-injecting field " +
-								field.getName() + " in " + object, e);
-					}
-					catch (MoreThanOneBindingException e)
-					{
-						throw new RuntimeException(
-								"Can't have more than one BindingAnnotation on field " +
-										field.getName() + " of class " +
-										object.getClass().getName());
-					}
-				}
-			}
-			Method[] currentMethods = current.getDeclaredMethods();
-			for (final Method method : currentMethods)
-			{
-				Inject injectAnnotation = method.getAnnotation(Inject.class);
-				if (!Modifier.isStatic(method.getModifiers()) && injectAnnotation != null)
-				{
-					Annotation[][] paramAnnotations = method.getParameterAnnotations();
-					Class< ? >[] paramTypes = method.getParameterTypes();
-					Type[] genericParamTypes = method.getGenericParameterTypes();
-					Object[] args = new Object[paramTypes.length];
-					for (int i = 0; i < paramTypes.length; i++)
-					{
-						Type paramType;
-						if (genericParamTypes[i] instanceof ParameterizedType)
-						{
-							paramType = ((ParameterizedType)genericParamTypes[i]).getRawType();
-						}
-						else
-						{
-							paramType = paramTypes[i];
-						}
-						try
-						{
-							Annotation bindingAnnotation = findBindingAnnotation(paramAnnotations[i]);
-							args[i] = LazyInitProxyFactory.createProxy(paramTypes[i],
-									new GuiceProxyTargetLocator(method, i, bindingAnnotation,
-											injectAnnotation.optional()));
-						}
-						catch (MoreThanOneBindingException e)
-						{
-							throw new RuntimeException(
-									"Can't have more than one BindingAnnotation on parameter " + i +
-											"(" + paramType + ") of method " + method.getName() +
-											" of class " + object.getClass().getName());
-						}
-					}
-					try
-					{
-						method.invoke(object, args);
-					}
-					catch (IllegalAccessException e)
-					{
-						throw new WicketRuntimeException(e);
-					}
-					catch (InvocationTargetException e)
-					{
-						throw new WicketRuntimeException(e);
-					}
-				}
-			}
-			current = current.getSuperclass();
-		}
-		// Do a null check in case Object isn't in the current classloader.
-		while (current != null && current != Object.class);
+		inject(object, fieldValueFactory);
 	}
 
 	public void onInstantiation(Component component)
 	{
 		inject(component);
-	}
-
-	/**
-	 * 
-	 * @param annotations
-	 * @return
-	 * @throws MoreThanOneBindingException
-	 */
-	public static Annotation findBindingAnnotation(final Annotation[] annotations)
-			throws MoreThanOneBindingException
-	{
-		Annotation bindingAnnotation = null;
-
-		// Work out if we have a BindingAnnotation on this parameter.
-		for (Annotation annotation : annotations)
-		{
-			if (annotation.annotationType().getAnnotation(BindingAnnotation.class) != null)
-			{
-				if (bindingAnnotation != null)
-				{
-					throw new MoreThanOneBindingException();
-				}
-				bindingAnnotation = annotation;
-			}
-		}
-		return bindingAnnotation;
-	}
-
-	public static class MoreThanOneBindingException extends Exception
-	{
-		private static final long serialVersionUID = 1L;
 	}
 }
