@@ -37,6 +37,7 @@
 				<module>wicket</module>
                 <module>wicket-util</module>
 				<module>wicket-datetime</module>
+                <module>wicket-request</module>
 				<!-- TODO NG
 				<module>wicket-devutils</module>
 				 -->
@@ -108,6 +109,7 @@
 				<module>wicket</module>
                 <module>wicket-util</module>
 				<module>wicket-datetime</module>
+                <module>wicket-request</module>
 				<!-- TODO NG 
 				<module>wicket-devutils</module>
 				 -->
@@ -183,6 +185,7 @@
 				<module>wicket</module>
                 <module>wicket-util</module>
 				<module>wicket-datetime</module>
+                <module>wicket-request</module>
 				<!-- TODO NG 
 				<module>wicket-devutils</module>
 				-->
@@ -281,6 +284,12 @@
 				<type>jar</type>
 			</dependency>
 			 -->
+           <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-request</artifactId>
+                <version>${project.version}</version>
+                <type>jar</type>
+            </dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-extensions</artifactId>
