@@ -1405,97 +1405,112 @@ public abstract class Session implements IClusterable
 		{
 			for (int i = 0; i < touchedPages.size(); i++)
 			{
-				Page page = touchedPages.get(i);
-				// page must be detached before it gets stored
-				page.detach();
-				page.getPageMap().put(page);
+				try
+				{
+					Page page = touchedPages.get(i);
+					// page must be detached before it gets stored
+					page.detach();
+					page.getPageMap().put(page);
+				}
+				catch (Throwable t)
+				{
+					// catch runtime and errors so that the next page is not detached/serialized and
+					// the pagemap released. (see below)
+					log.error("Exception when detaching/serializing page", t);
+				}
 				dirty = true;
 			}
 		}
 
-		// If state is dirty
-		if (dirty)
+		try
 		{
-			// State is no longer dirty
-			dirty = false;
-
-			// Set attribute.
-			setAttribute(SESSION_ATTRIBUTE_NAME, this);
-		}
-		else
-		{
-			if (log.isDebugEnabled())
+			// If state is dirty
+			if (dirty)
 			{
-				log.debug("update: Session not dirty.");
+				// State is no longer dirty
+				dirty = false;
+
+				// Set attribute.
+				setAttribute(SESSION_ATTRIBUTE_NAME, this);
+			}
+			else
+			{
+				if (log.isDebugEnabled())
+				{
+					log.debug("update: Session not dirty.");
+				}
+			}
+
+			List<IClusterable> dirtyObjects = Session.dirtyObjects.get();
+			Session.dirtyObjects.set(null);
+
+			Map<String, Object> tempMap = new HashMap<String, Object>();
+
+			// Go through all dirty entries, replicating any dirty objects
+			if (dirtyObjects != null)
+			{
+				for (final Iterator<IClusterable> iterator = dirtyObjects.iterator(); iterator.hasNext();)
+				{
+					String attribute = null;
+					Object object = iterator.next();
+					if (object instanceof Page)
+					{
+						final Page page = (Page)object;
+						if (page.isPageStateless())
+						{
+							// check, can it be that stateless pages where added to
+							// the session?
+							// and should be removed now?
+							continue;
+						}
+						attribute = page.getPageMap().attributeForId(page.getNumericId());
+						if (getAttribute(attribute) == null)
+						{
+							// page removed by another thread. don't add it again.
+							continue;
+						}
+						object = page.getPageMapEntry();
+					}
+					else if (object instanceof IPageMap)
+					{
+						attribute = attributeForPageMapName(((IPageMap)object).getName());
+					}
+
+					// we might override some attributes, so we use a temporary map
+					// and then just copy the last values to real sesssion
+					tempMap.put(attribute, object);
+				}
+			}
+
+			// in case we have dirty attributes, set them to session
+			if (tempMap.isEmpty() == false)
+			{
+				for (Entry<String, Object> entry : tempMap.entrySet())
+				{
+					setAttribute(entry.getKey(), entry.getValue());
+				}
 			}
 		}
-
-		List<IClusterable> dirtyObjects = Session.dirtyObjects.get();
-		Session.dirtyObjects.set(null);
-
-		Map<String, Object> tempMap = new HashMap<String, Object>();
-
-		// Go through all dirty entries, replicating any dirty objects
-		if (dirtyObjects != null)
+		finally
 		{
-			for (final Iterator<IClusterable> iterator = dirtyObjects.iterator(); iterator.hasNext();)
-			{
-				String attribute = null;
-				Object object = iterator.next();
-				if (object instanceof Page)
-				{
-					final Page page = (Page)object;
-					if (page.isPageStateless())
-					{
-						// check, can it be that stateless pages where added to
-						// the session?
-						// and should be removed now?
-						continue;
-					}
-					attribute = page.getPageMap().attributeForId(page.getNumericId());
-					if (getAttribute(attribute) == null)
-					{
-						// page removed by another thread. don't add it again.
-						continue;
-					}
-					object = page.getPageMapEntry();
-				}
-				else if (object instanceof IPageMap)
-				{
-					attribute = attributeForPageMapName(((IPageMap)object).getName());
-				}
 
-				// we might override some attributes, so we use a temporary map
-				// and then just copy the last values to real sesssion
-				tempMap.put(attribute, object);
-			}
-		}
-
-		// in case we have dirty attributes, set them to session
-		if (tempMap.isEmpty() == false)
-		{
-			for (Entry<String, Object> entry : tempMap.entrySet())
+			if (pageMapsUsedInRequest != null)
 			{
-				setAttribute(entry.getKey(), entry.getValue());
-			}
-		}
-
-		if (pageMapsUsedInRequest != null)
-		{
-			synchronized (pageMapsUsedInRequest)
-			{
-				Thread t = Thread.currentThread();
-				Iterator<Entry<IPageMap, PageMapsUsedInRequestEntry>> it = pageMapsUsedInRequest.entrySet()
-					.iterator();
-				while (it.hasNext())
+				synchronized (pageMapsUsedInRequest)
 				{
-					Entry<IPageMap, PageMapsUsedInRequestEntry> entry = it.next();
-					if ((entry.getValue()).thread == t)
+					Thread t = Thread.currentThread();
+					Iterator<Entry<IPageMap, PageMapsUsedInRequestEntry>> it = pageMapsUsedInRequest.entrySet()
+						.iterator();
+					while (it.hasNext())
 					{
-						it.remove();
+						Entry<IPageMap, PageMapsUsedInRequestEntry> entry = it.next();
+						if ((entry.getValue()).thread == t)
+						{
+							it.remove();
+						}
 					}
+					pageMapsUsedInRequest.notifyAll();
 				}
-				pageMapsUsedInRequest.notifyAll();
 			}
 		}
 	}
