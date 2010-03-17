@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.request;
 
-import org.apache.wicket.request.cycle.RequestCycle;
-
 /**
  * A request handler is the base entity that is the subject of a request. Different types of request
  * have different request targets. For instance a request for a bookmarkable page differs from a
@@ -35,7 +33,7 @@ public interface IRequestHandler
 	 * @param requestCycle
 	 *            the current request cycle
 	 */
-	void respond(RequestCycle requestCycle);
+	void respond(IRequestCycle requestCycle);
 
 	/**
 	 * This method is called at the end of a request cycle to indicate that processing is done and
@@ -44,5 +42,5 @@ public interface IRequestHandler
 	 * @param requestCycle
 	 *            the current request cycle
 	 */
-	void detach(RequestCycle requestCycle);
+	void detach(IRequestCycle requestCycle);
 }

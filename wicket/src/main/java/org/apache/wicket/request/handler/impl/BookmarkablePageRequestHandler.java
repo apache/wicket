@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.request.handler.impl;
 
+import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.component.PageParameters;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.IPageClassRequestHandler;
 import org.apache.wicket.request.handler.IPageProvider;
 import org.apache.wicket.util.lang.Checks;
@@ -65,7 +65,7 @@ public class BookmarkablePageRequestHandler implements IPageClassRequestHandler
 	/**
 	 * @see org.apache.org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
 	 */
-	public void respond(RequestCycle requestCycle)
+	public void respond(IRequestCycle requestCycle)
 	{
 		// not used as BookmarkablePageRequestHandler is only used when generating URLs.
 		// However URL will never be resolved to BookmarkablePageRequestTarget
@@ -74,7 +74,7 @@ public class BookmarkablePageRequestHandler implements IPageClassRequestHandler
 	/**
 	 * @see org.apache.org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
 	 */
-	public void detach(RequestCycle requestCycle)
+	public void detach(IRequestCycle requestCycle)
 	{
 	}
 }

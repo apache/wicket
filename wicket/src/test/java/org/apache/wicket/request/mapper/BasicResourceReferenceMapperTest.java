@@ -22,8 +22,6 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.PageParameters;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
-import org.apache.wicket.request.mapper.BasicResourceReferenceMapper;
-import org.apache.wicket.request.mapper.IMapperContext;
 
 /**
  * @author Matej Knopp

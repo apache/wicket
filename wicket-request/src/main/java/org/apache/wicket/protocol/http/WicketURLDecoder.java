@@ -17,18 +17,18 @@
 package org.apache.wicket.protocol.http;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
-import org.apache.wicket.Application;
-import org.apache.wicket.WicketRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Adapted from java.net.URLDecoder, but defines instances for query string decoding versus URL path
- * component decoding.
+ * Adapted from java.net.URLDecoder, but defines instances for query string
+ * decoding versus URL path component decoding.
  * <p/>
- * The difference is important because a space is encoded as a + in a query string, but this is a
- * valid value in a path component (and is therefore not decode back to a space).
+ * The difference is important because a space is encoded as a + in a query
+ * string, but this is a valid value in a path component (and is therefore not
+ * decode back to a space).
  * 
  * @author Doug Donohoe
  * @see java.net.URLDecoder
@@ -44,7 +44,8 @@ public class WicketURLDecoder
 	 * Encoder used to decode name or value components of a query string.<br/>
 	 * <br/>
 	 * 
-	 * For example: http://org.acme/notthis/northis/oreventhis?buthis=isokay&asis=thispart
+	 * For example:
+	 * http://org.acme/notthis/northis/oreventhis?buthis=isokay&asis=thispart
 	 */
 	public static final WicketURLDecoder QUERY_INSTANCE = new WicketURLDecoder(true);
 
@@ -67,29 +68,46 @@ public class WicketURLDecoder
 		this.decodePlus = decodePlus;
 	}
 
-	/**
-	 * Calls decode with the application response request encoding as returned by
-	 * Application.get().getRequestCycleSettings().getResponseRequestEncoding()
-	 * 
-	 * @param s
-	 *            Value to encode
-	 * @return String encoded using default Application request/respose encoding
-	 */
-	public String decode(String s)
-	{
-		Application app = null;
+	// /**
+	// * Calls decode with the application response request encoding as returned
+	// by
+	// *
+	// Application.get().getRequestCycleSettings().getResponseRequestEncoding()
+	// *
+	// * @param s
+	// * Value to encode
+	// * @return String encoded using default Application request/respose
+	// encoding
+	// */
+	// public String decode(String s)
+	// {
+	// Application app = null;
+	//
+	// try
+	// {
+	// app = Application.get();
+	// }
+	// catch (WicketRuntimeException ignored)
+	// {
+	// log.warn("No current Application found - defaulting encoding to UTF-8");
+	// }
+	// return decode(s, app == null ? "UTF-8" : app.getRequestCycleSettings()
+	// .getResponseRequestEncoding());
+	// }
 
-		try
-		{
-			app = Application.get();
-		}
-		catch (WicketRuntimeException ignored)
-		{
-			log.warn("No current Application found - defaulting encoding to UTF-8");
-		}
-		return decode(s, app == null ? "UTF-8" : app.getRequestCycleSettings()
-			.getResponseRequestEncoding());
+	/**
+	 * @param s
+	 *            string to decode
+	 * @param enc
+	 *            encoding to decode with
+	 * @return decoded string
+	 * @see java.net.URLDecoder#decode(String, String)
+	 */
+	public String decode(String s, Charset enc)
+	{
+		return decode(s, enc.name());
 	}
+
 
 	/**
 	 * @param s
@@ -113,8 +131,8 @@ public class WicketURLDecoder
 
 		if (enc.length() == 0)
 		{
-			throw new WicketRuntimeException(new UnsupportedEncodingException(
-				"URLDecoder: empty string enc parameter"));
+			throw new RuntimeException(new UnsupportedEncodingException(
+					"URLDecoder: empty string enc parameter"));
 		}
 
 		char c;
@@ -132,9 +150,10 @@ public class WicketURLDecoder
 
 				case '%' :
 					/*
-					 * Starting with this instance of %, process all consecutive substrings of the
-					 * form %xy. Each substring %xy will yield a byte. Convert all consecutive bytes
-					 * obtained this way to whatever character(s) they represent in the provided
+					 * Starting with this instance of %, process all consecutive
+					 * substrings of the form %xy. Each substring %xy will yield
+					 * a byte. Convert all consecutive bytes obtained this way
+					 * to whatever character(s) they represent in the provided
 					 * encoding.
 					 */
 					try
@@ -162,7 +181,7 @@ public class WicketURLDecoder
 						if ((i < numChars) && (c == '%'))
 						{
 							throw new IllegalArgumentException(
-								"URLDecoder: Incomplete trailing escape (%) pattern");
+									"URLDecoder: Incomplete trailing escape (%) pattern");
 						}
 
 						try
@@ -171,14 +190,14 @@ public class WicketURLDecoder
 						}
 						catch (UnsupportedEncodingException e)
 						{
-							throw new WicketRuntimeException(e);
+							throw new RuntimeException(e);
 						}
 					}
 					catch (NumberFormatException e)
 					{
 						throw new IllegalArgumentException(
-							"URLDecoder: Illegal hex characters in escape (%) pattern - " +
-								e.getMessage());
+								"URLDecoder: Illegal hex characters in escape (%) pattern - "
+										+ e.getMessage());
 					}
 					needToChange = true;
 					break;

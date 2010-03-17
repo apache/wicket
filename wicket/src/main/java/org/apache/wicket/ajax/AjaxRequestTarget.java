@@ -41,6 +41,7 @@ import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -439,7 +440,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	/**
 	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
 	 */
-	public void detach(final RequestCycle requestCycle)
+	public void detach(final IRequestCycle requestCycle)
 	{
 		// detach the page if it was updated
 		if (markupIdToComponent.size() > 0)
@@ -529,12 +530,14 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	/**
 	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
 	 */
-	public final void respond(final RequestCycle requestCycle)
+	public final void respond(final IRequestCycle requestCycle)
 	{
-		Url oldBaseURL = requestCycle.getUrlRenderer().getBaseUrl();
-		Url baseURL = Url.parse(((WebRequest)requestCycle.getRequest()).getHeader("Wicket-Ajax-BaseURL"));
+		RequestCycle rc = (RequestCycle)requestCycle;
+		Url oldBaseURL = rc.getUrlRenderer().getBaseUrl();
+		WebRequest request = (WebRequest)requestCycle.getRequest();
+		Url baseURL = Url.parse(request.getHeader("Wicket-Ajax-BaseURL"), request.getCharset());
 
-		requestCycle.getUrlRenderer().setBaseUrl(baseURL);
+		rc.getUrlRenderer().setBaseUrl(baseURL);
 
 		final WebResponse response = (WebResponse)requestCycle.getResponse();
 
@@ -543,7 +546,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 			// the page itself has been added to the request target, we simply issue a redirect back
 			// to the page
 			IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(page));
-			final String url = requestCycle.renderUrlFor(handler).toString();
+			final String url = rc.renderUrlFor(handler).toString();
 			response.sendRedirect(url);
 			return;
 		}
@@ -604,7 +607,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 
 		response.write("</ajax-response>");
 
-		requestCycle.getUrlRenderer().setBaseUrl(oldBaseURL);
+		rc.getUrlRenderer().setBaseUrl(oldBaseURL);
 	}
 
 	/**

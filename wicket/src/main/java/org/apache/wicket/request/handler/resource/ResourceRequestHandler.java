@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.request.handler.resource;
 
+import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.component.PageParameters;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.util.lang.Checks;
 
@@ -70,7 +70,7 @@ public class ResourceRequestHandler implements IRequestHandler
 	/**
 	 * @see org.apache.org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
 	 */
-	public void respond(final RequestCycle requestCycle)
+	public void respond(final IRequestCycle requestCycle)
 	{
 		IResource.Attributes a = new IResource.Attributes(requestCycle.getRequest(),
 			requestCycle.getResponse(), pageParameters);
@@ -80,7 +80,7 @@ public class ResourceRequestHandler implements IRequestHandler
 	/**
 	 * @see org.apache.org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
 	 */
-	public void detach(RequestCycle requestCycle)
+	public void detach(IRequestCycle requestCycle)
 	{
 	}
 }

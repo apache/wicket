@@ -16,17 +16,17 @@
  */
 package org.apache.wicket.request.handler.basic;
 
+import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.cycle.RequestCycle;
 
 public class AbortRequestHandler implements IRequestHandler
 {
 
-	public void detach(RequestCycle requestCycle)
+	public void detach(IRequestCycle requestCycle)
 	{
 	}
 
-	public void respond(RequestCycle requestCycle)
+	public void respond(IRequestCycle requestCycle)
 	{
 		// TODO
 	}

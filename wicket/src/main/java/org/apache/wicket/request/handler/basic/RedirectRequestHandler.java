@@ -20,6 +20,7 @@ import org.apache.wicket.RequestContext;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
+import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.UrlUtils;
@@ -60,7 +61,7 @@ public class RedirectRequestHandler implements IRequestHandler
 	/**
 	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
 	 */
-	public void detach(RequestCycle requestCycle)
+	public void detach(IRequestCycle requestCycle)
 	{
 	}
 
@@ -69,7 +70,7 @@ public class RedirectRequestHandler implements IRequestHandler
 	 * 
 	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
 	 */
-	public void respond(RequestCycle requestCycle)
+	public void respond(IRequestCycle requestCycle)
 	{
 		WebResponse response = (WebResponse)requestCycle.getResponse();
 
@@ -85,7 +86,7 @@ public class RedirectRequestHandler implements IRequestHandler
 			else
 			{
 				String location = UrlUtils.rewriteToContextRelative(redirectUrl.substring(1),
-					requestCycle);
+					(RequestCycle)requestCycle);
 
 				// IE does not understand "./" in a path, just "." is okay.
 				if (location.startsWith("./"))

@@ -433,7 +433,7 @@ public final class StringsTest extends TestCase
 		{
 			final String toString = Strings.toString((Object)e);
 			String before = Strings.beforeFirst(toString, '\n').trim();
-			assertEquals("Root cause:", before);
+			assertEquals("Message: Foo", before);
 		}
 	}
 

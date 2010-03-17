@@ -21,8 +21,8 @@ import java.io.IOException;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.Strings;
 
 
@@ -101,7 +101,7 @@ public class StringRequestHandler implements IRequestHandler
 	 * 
 	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
 	 */
-	public void respond(RequestCycle requestCycle)
+	public void respond(IRequestCycle requestCycle)
 	{
 		// Get servlet response to use when responding with resource
 		final WebResponse response = (WebResponse)requestCycle.getResponse();
@@ -121,7 +121,7 @@ public class StringRequestHandler implements IRequestHandler
 	/**
 	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
 	 */
-	public void detach(RequestCycle requestCycle)
+	public void detach(IRequestCycle requestCycle)
 	{
 	}
 

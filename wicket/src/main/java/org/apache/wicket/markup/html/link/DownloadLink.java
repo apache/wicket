@@ -21,7 +21,7 @@ import java.io.File;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WicketURLEncoder;
-import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.util.resource.FileResourceStream;
@@ -142,7 +142,7 @@ public class DownloadLink extends Link<File>
 				" failed to retrieve a File object from model");
 		}
 		final String fn = WicketURLEncoder.QUERY_INSTANCE.encode((fileName != null) ? fileName
-			: file.getName());
+			: file.getName(), getRequest().getCharset());
 
 
 		IResourceStream resourceStream = new FileResourceStream(
@@ -151,7 +151,7 @@ public class DownloadLink extends Link<File>
 			new ResourceStreamRequestHandler(resourceStream)
 			{
 				@Override
-				public void respond(RequestCycle requestCycle)
+				public void respond(IRequestCycle requestCycle)
 				{
 					super.respond(requestCycle);
 

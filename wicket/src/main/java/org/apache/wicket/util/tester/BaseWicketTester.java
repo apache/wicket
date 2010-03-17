@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -504,7 +505,8 @@ public class BaseWicketTester
 						"Possible infinite redirect detected. Bailing out.");
 				}
 				++redirectCount;
-				Url newUrl = Url.parse(lastResponse.getRedirectLocation());
+				Url newUrl = Url.parse(lastResponse.getRedirectLocation(),
+					Charset.forName(request.getCharacterEncoding()));
 
 				if (newUrl.isAbsolute())
 				{
@@ -727,7 +729,8 @@ public class BaseWicketTester
 	 */
 	public void executeBehavior(final AbstractAjaxBehavior behavior)
 	{
-		Url url = Url.parse(behavior.getCallbackUrl().toString());
+		Url url = Url.parse(behavior.getCallbackUrl().toString(),
+			Charset.forName(request.getCharacterEncoding()));
 		transform(url);
 		request.setUrl(url);
 		request.addHeader("Wicket-Ajax-BaseURL", url.toString());
@@ -738,7 +741,8 @@ public class BaseWicketTester
 	public Url urlFor(AjaxLink link)
 	{
 		AbstractAjaxBehavior behavior = WicketTesterHelper.findAjaxEventBehavior(link, "onclick");
-		Url url = Url.parse(behavior.getCallbackUrl().toString());
+		Url url = Url.parse(behavior.getCallbackUrl().toString(),
+			Charset.forName(request.getCharacterEncoding()));
 		transform(url);
 		return url;
 	}
@@ -1191,7 +1195,8 @@ public class BaseWicketTester
 	public void submitForm(String path)
 	{
 		Form<?> form = (Form<?>)getComponentFromLastRenderedPage(path);
-		Url url = Url.parse(form.urlFor(IFormSubmitListener.INTERFACE).toString());
+		Url url = Url.parse(form.urlFor(IFormSubmitListener.INTERFACE).toString(),
+			Charset.forName(request.getCharacterEncoding()));
 
 		// make url absolute
 		transform(url);
@@ -1621,7 +1626,8 @@ public class BaseWicketTester
 		String failMessage = "No form attached to the submitlink.";
 		notNull(failMessage, form);
 
-		Url url = Url.parse(behavior.getCallbackUrl().toString());
+		Url url = Url.parse(behavior.getCallbackUrl().toString(),
+			Charset.forName(request.getCharacterEncoding()));
 		transform(url);
 		request.addHeader("Wicket-Ajax-BaseURL", url.toString());
 		request.addHeader("Wicket-Ajax", "Wicket-Ajax");
@@ -1766,7 +1772,7 @@ public class BaseWicketTester
 
 	public void executeUrl(String _url)
 	{
-		Url url = Url.parse(_url);
+		Url url = Url.parse(_url, Charset.forName(request.getCharacterEncoding()));
 		transform(url);
 		getRequest().setUrl(url);
 		processRequest();

@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.http.servlet;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -207,8 +208,9 @@ public class ServletWebResponse extends WebResponse
 		}
 		else
 		{
-			Url current = Url.parse(httpServletRequest.getRequestURI());
-			Url append = Url.parse(url);
+			Charset charset = Charset.forName(httpServletRequest.getCharacterEncoding());
+			Url current = Url.parse(httpServletRequest.getRequestURI(), charset);
+			Url append = Url.parse(url, charset);
 			current.concatSegments(append.getSegments());
 			Url result = new Url(current.getSegments(), append.getQueryParameters());
 			return getAbsolutePrefix() + result.toString();

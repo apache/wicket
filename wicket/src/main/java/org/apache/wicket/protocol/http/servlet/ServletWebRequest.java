@@ -18,6 +18,7 @@ package org.apache.wicket.protocol.http.servlet;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,6 +33,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.IWritableRequestParameters;
@@ -116,7 +118,7 @@ public class ServletWebRequest extends WebRequest
 			url.append(query);
 		}
 
-		return Url.parse(Strings.stripJSessionId(url.toString()));
+		return Url.parse(Strings.stripJSessionId(url.toString()), getCharset());
 	}
 
 	protected String getFilterPrefix()
@@ -200,7 +202,7 @@ public class ServletWebRequest extends WebRequest
 
 			if (!Strings.isEmpty(value))
 			{
-				final Url url = Url.parse("?" + value);
+				final Url url = Url.parse("?" + value, getCharset());
 				for (final QueryParameter q : url.getQueryParameters())
 				{
 					List<StringValue> list = postParameters.get(q.getName());
@@ -345,11 +347,17 @@ public class ServletWebRequest extends WebRequest
 	public String getPrefixToContextPath()
 	{
 		PrependingStringBuffer buffer = new PrependingStringBuffer();
-		Url filterPrefixUrl = Url.parse(filterPrefix);
+		Url filterPrefixUrl = Url.parse(filterPrefix, getCharset());
 		for (int i = 0; i < filterPrefixUrl.getSegments().size() - 1; ++i)
 		{
 			buffer.prepend("../");
 		}
 		return buffer.toString();
+	}
+
+	@Override
+	public Charset getCharset()
+	{
+		return RequestUtils.getCharset(httpServletRequest);
 	}
 }

@@ -59,6 +59,7 @@ public abstract class AbstractHeaderContributor extends AbstractBehavior
 			return location;
 		}
 
-		return RequestCycle.get().getUrlRenderer().renderUrl(Url.parse(location));
+		RequestCycle rc = RequestCycle.get();
+		return rc.getUrlRenderer().renderUrl(Url.parse(location, rc.getRequest().getCharset()));
 	}
 }

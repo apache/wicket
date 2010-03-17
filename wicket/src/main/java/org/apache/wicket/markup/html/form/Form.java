@@ -1054,7 +1054,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 */
 	private void dispatchEvent(final Page page, final String url)
 	{
-		Url parsed = Url.parse(url);
+		Url parsed = Url.parse(url, getRequest().getCharset());
 		IRequestHandler handler = getApplication().getRootRequestMapper().mapRequest(
 			getRequest().requestWithUrl(parsed));
 
@@ -1651,7 +1651,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 */
 	private String recode(String s)
 	{
-		String un = WicketURLDecoder.QUERY_INSTANCE.decode(s);
+		String un = WicketURLDecoder.QUERY_INSTANCE.decode(s, getRequest().getCharset());
 		return Strings.escapeMarkup(un).toString();
 	}
 

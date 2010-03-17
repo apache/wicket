@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.request;
 
+import java.nio.charset.Charset;
 import java.util.Locale;
 
 import org.apache.wicket.request.parameter.CombinedRequestParametersAdapter;
@@ -113,6 +114,12 @@ public abstract class Request
 			{
 				return Request.this.getPostParameters();
 			}
+
+			@Override
+			public Charset getCharset()
+			{
+				return Request.this.getCharset();
+			}
 		};
 	}
 
@@ -130,4 +137,6 @@ public abstract class Request
 	{
 		return "";
 	}
+	
+	public abstract Charset getCharset();
 }

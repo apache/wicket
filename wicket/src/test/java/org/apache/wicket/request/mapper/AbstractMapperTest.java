@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.request.mapper;
 
+import java.nio.charset.Charset;
 import java.util.Locale;
 
 import junit.framework.TestCase;
@@ -61,6 +62,12 @@ public abstract class AbstractMapperTest extends TestCase
 			public Locale getLocale()
 			{
 				return null;
+			}
+
+			@Override
+			public Charset getCharset()
+			{
+				return Charset.forName("UTF-8");
 			}
 		};
 	}

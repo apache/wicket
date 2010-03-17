@@ -20,6 +20,7 @@ import java.util.Iterator;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 
@@ -97,7 +98,7 @@ public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavi
 		IRequestHandler target = new IRequestHandler()
 		{
 
-			public void respond(RequestCycle requestCycle)
+			public void respond(IRequestCycle requestCycle)
 			{
 
 				WebResponse r = (WebResponse)requestCycle.getResponse();
@@ -123,7 +124,7 @@ public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavi
 				renderer.renderFooter(r);
 			}
 
-			public void detach(RequestCycle requestCycle)
+			public void detach(IRequestCycle requestCycle)
 			{
 			}
 

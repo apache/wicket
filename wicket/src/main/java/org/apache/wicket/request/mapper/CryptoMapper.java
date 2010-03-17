@@ -66,7 +66,7 @@ public class CryptoMapper implements IRequestMapper
 
 	public IRequestHandler mapRequest(Request request)
 	{
-		Url url = decryptUrl(request.getUrl());
+		Url url = decryptUrl(request, request.getUrl());
 
 		if (url == null)
 		{
@@ -90,7 +90,7 @@ public class CryptoMapper implements IRequestMapper
 		return encrypted;
 	}
 
-	private Url decryptUrl(Url encryptedUrl)
+	private Url decryptUrl(Request request, Url encryptedUrl)
 	{
 		if (encryptedUrl.getSegments().isEmpty() && encryptedUrl.getQueryParameters().isEmpty())
 		{
@@ -109,7 +109,7 @@ public class CryptoMapper implements IRequestMapper
 			String urlString = getCrypt().decryptUrlSafe(encryptedUrlString);
 			if (!Strings.isEmpty(urlString))
 			{
-				url = Url.parse(urlString);
+				url = Url.parse(urlString, request.getCharset());
 			}
 		}
 		catch (Exception e)

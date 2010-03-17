@@ -16,49 +16,23 @@
  */
 package org.apache.wicket.protocol.http;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.wicket.Application;
 import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.value.ValueMap;
 
 /**
  * Wicket Http specific utilities class.
  */
 public final class RequestUtils
 {
-	/**
-	 * Decode the provided queryString as a series of key/ value pairs and set them in the provided
-	 * value map.
-	 * 
-	 * @param queryString
-	 *            string to decode, uses '&' to separate parameters and '=' to separate key from
-	 *            value
-	 * @param params
-	 *            parameters map to write the found key/ value pairs to
-	 */
-	public static void decodeParameters(String queryString, ValueMap params)
-	{
-		final String[] paramTuples = queryString.split("&");
-		for (int t = 0; t < paramTuples.length; t++)
-		{
-			final String[] bits = paramTuples[t].split("=");
-			if (bits.length == 2)
-			{
-				params.add(WicketURLDecoder.QUERY_INSTANCE.decode(bits[0]),
-					WicketURLDecoder.QUERY_INSTANCE.decode(bits[1]));
-			}
-			else
-			{
-				params.add(WicketURLDecoder.QUERY_INSTANCE.decode(bits[0]), "");
-			}
-		}
-	}
-
 	/**
 	 * Decode the provided queryString as a series of key/ value pairs and set them in the provided
 	 * value map.
@@ -77,57 +51,60 @@ public final class RequestUtils
 			final String[] bits = paramTuples[t].split("=");
 			if (bits.length == 2)
 			{
-				params.addNamedParameter(WicketURLDecoder.QUERY_INSTANCE.decode(bits[0]),
-					WicketURLDecoder.QUERY_INSTANCE.decode(bits[1]));
+				params.addNamedParameter(WicketURLDecoder.QUERY_INSTANCE.decode(bits[0],
+					getCurrentCharset()), WicketURLDecoder.QUERY_INSTANCE.decode(bits[1],
+					getCurrentCharset()));
 			}
 			else
 			{
-				params.addNamedParameter(WicketURLDecoder.QUERY_INSTANCE.decode(bits[0]), "");
+				params.addNamedParameter(WicketURLDecoder.QUERY_INSTANCE.decode(bits[0],
+					getCurrentCharset()), "");
 			}
 		}
 	}
 
-
-	/**
-	 * decores url parameters form <code>queryString</code> into <code>parameters</code> map
-	 * 
-	 * @param queryString
-	 * @param parameters
-	 */
-	public static void decodeUrlParameters(String queryString, Map<String, String[]> parameters)
-	{
-		Map<String, List<String>> temp = new HashMap<String, List<String>>();
-		final String[] paramTuples = queryString.split("&");
-		for (int t = 0; t < paramTuples.length; t++)
-		{
-			final String[] bits = paramTuples[t].split("=");
-			final String key;
-			final String value;
-			key = WicketURLDecoder.QUERY_INSTANCE.decode(bits[0]);
-			if (bits.length == 2)
-			{
-				value = WicketURLDecoder.QUERY_INSTANCE.decode(bits[1]);
-			}
-			else
-			{
-				value = "";
-			}
-			List<String> l = temp.get(key);
-			if (l == null)
-			{
-				l = new ArrayList<String>();
-				temp.put(key, l);
-			}
-			l.add(value);
-		}
-
-		for (Map.Entry<String, List<String>> entry : temp.entrySet())
-		{
-			String s[] = new String[entry.getValue().size()];
-			entry.getValue().toArray(s);
-			parameters.put(entry.getKey(), s);
-		}
-	}
+// TODO review
+// NO LONGER USED SINCE WE HAVE URL OBJECT
+// /**
+// * decores url parameters form <code>queryString</code> into <code>parameters</code> map
+// *
+// * @param queryString
+// * @param parameters
+// */
+// public static void decodeUrlParameters(String queryString, Map<String, String[]> parameters)
+// {
+// Map<String, List<String>> temp = new HashMap<String, List<String>>();
+// final String[] paramTuples = queryString.split("&");
+// for (int t = 0; t < paramTuples.length; t++)
+// {
+// final String[] bits = paramTuples[t].split("=");
+// final String key;
+// final String value;
+// key = WicketURLDecoder.QUERY_INSTANCE.decode(bits[0]);
+// if (bits.length == 2)
+// {
+// value = WicketURLDecoder.QUERY_INSTANCE.decode(bits[1]);
+// }
+// else
+// {
+// value = "";
+// }
+// List<String> l = temp.get(key);
+// if (l == null)
+// {
+// l = new ArrayList<String>();
+// temp.put(key, l);
+// }
+// l.add(value);
+// }
+//
+// for (Map.Entry<String, List<String>> entry : temp.entrySet())
+// {
+// String s[] = new String[entry.getValue().size()];
+// entry.getValue().toArray(s);
+// parameters.put(entry.getKey(), s);
+// }
+// }
 
 	/**
 	 * Remove occurrences of ".." from the path
@@ -223,5 +200,48 @@ public final class RequestUtils
 			result.append(relativePagePath);
 		}
 		return result.toString();
+	}
+
+	private static Charset getDefaultCharset()
+	{
+		String charsetName = null;
+
+		Application application = Application.get();
+		if (application != null)
+		{
+			charsetName = application.getRequestCycleSettings().getResponseRequestEncoding();
+		}
+		if (Strings.isEmpty(charsetName))
+		{
+			charsetName = "UTF-8";
+		}
+		return Charset.forName(charsetName);
+	}
+
+	private static Charset getCurrentCharset()
+	{
+		return RequestCycle.get().getRequest().getCharset();
+	}
+
+	public static Charset getCharset(HttpServletRequest request)
+	{
+		String charsetName = null;
+		if (request != null)
+		{
+			charsetName = request.getCharacterEncoding();
+		}
+		if (Strings.isEmpty(charsetName))
+		{
+			Application application = Application.get();
+			if (application != null)
+			{
+				charsetName = application.getRequestCycleSettings().getResponseRequestEncoding();
+			}
+		}
+		if (Strings.isEmpty(charsetName))
+		{
+			charsetName = "UTF-8";
+		}
+		return Charset.forName(charsetName);
 	}
 }

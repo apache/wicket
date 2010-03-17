@@ -26,6 +26,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.ClientInfo;
+import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
@@ -58,7 +59,7 @@ import org.slf4j.LoggerFactory;
  * @author Matej Knopp
  * @author igor.vaynberg
  */
-public class RequestCycle extends RequestHandlerStack
+public class RequestCycle extends RequestHandlerStack implements IRequestCycle
 {
 	private static final Logger log = LoggerFactory.getLogger(RequestCycle.class);
 

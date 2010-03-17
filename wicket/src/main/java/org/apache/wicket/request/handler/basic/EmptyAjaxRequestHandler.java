@@ -18,8 +18,8 @@ package org.apache.wicket.request.handler.basic;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
  * The empty AJAX request target does output an empty AJAX response.
@@ -54,7 +54,7 @@ public final class EmptyAjaxRequestHandler implements IRequestHandler
 	/**
 	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
 	 */
-	public void respond(RequestCycle requestCycle)
+	public void respond(IRequestCycle requestCycle)
 	{
 		WebResponse response = (WebResponse)requestCycle.getResponse();
 		final String encoding = Application.get()
@@ -77,7 +77,7 @@ public final class EmptyAjaxRequestHandler implements IRequestHandler
 	/**
 	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
 	 */
-	public void detach(RequestCycle requestCycle)
+	public void detach(IRequestCycle requestCycle)
 	{
 	}
 

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.protocol.http;
 
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -169,6 +170,12 @@ public abstract class WebRequest extends Request
 			public List<String> getHeaders(String name)
 			{
 				return WebRequest.this.getHeaders(name);
+			}
+
+			@Override
+			public Charset getCharset()
+			{
+				return WebRequest.this.getCharset();
 			}
 		};
 	}

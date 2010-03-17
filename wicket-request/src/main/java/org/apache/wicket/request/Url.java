@@ -17,6 +17,7 @@
 package org.apache.wicket.request;
 
 import java.io.Serializable;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -29,11 +30,12 @@ import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * Represents the URL part <b>after Wicket Filter</b>. For example if Wicket Filter is mapped to
- * <code>/app/*</code> then with URL <code>/app/my/url</code> the {@link Url} object would represent
- * part <code>my/url</code>. If Wicket Filter is mapped to <code>/*</code> then with URL
- * <code>/my/url</code> the {@link Url} object would represent <code>my/url</code> (without leading
- * the slash).
+ * Represents the URL part <b>after Wicket Filter</b>. For example if Wicket
+ * Filter is mapped to <code>/app/*</code> then with URL
+ * <code>/app/my/url</code> the {@link Url} object would represent part
+ * <code>my/url</code>. If Wicket Filter is mapped to <code>/*</code> then with
+ * URL <code>/my/url</code> the {@link Url} object would represent
+ * <code>my/url</code> (without leading the slash).
  * <p>
  * URL consists of segments and query parameters.
  * <p>
@@ -50,7 +52,8 @@ import org.apache.wicket.util.string.Strings;
  *                                                an additional slash, i.e. //
  * </pre>
  * 
- * The Url class takes care of encoding and decoding of the segments and parameters.
+ * The Url class takes care of encoding and decoding of the segments and
+ * parameters.
  * 
  * @author Matej Knopp
  * @author Igor Vaynberg
@@ -59,20 +62,25 @@ public final class Url implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
+	private static final String DEFAULT_CHARSET_NAME = "UTF-8";
+
 	private final List<String> segments = new ArrayList<String>();
 
 	private final List<QueryParameter> parameters = new ArrayList<QueryParameter>();
+
+	private String charsetName;
+	private transient Charset _charset;
 
 	/**
 	 * 
 	 * @param qp
 	 * @return query parameters
 	 */
-	private static QueryParameter parseQueryParameter(final String qp)
+	private static QueryParameter parseQueryParameter(final String qp, Charset charset)
 	{
 		if (qp.indexOf('=') == -1)
 		{
-			return new QueryParameter(decodeParameter(qp), "");
+			return new QueryParameter(decodeParameter(qp, charset), "");
 		}
 		String parts[] = Strings.split(qp, '=');
 		if (parts.length == 0)
@@ -81,13 +89,15 @@ public final class Url implements Serializable
 		}
 		else if (parts.length == 1)
 		{
-			return new QueryParameter("", decodeParameter(parts[0]));
+			return new QueryParameter("", decodeParameter(parts[0], charset));
 		}
 		else
 		{
-			return new QueryParameter(decodeParameter(parts[0]), decodeParameter(parts[1]));
+			return new QueryParameter(decodeParameter(parts[0], charset), decodeParameter(parts[1],
+					charset));
 		}
 	}
+
 
 	/**
 	 * Parses the given URL string.
@@ -97,10 +107,25 @@ public final class Url implements Serializable
 	 */
 	public static Url parse(String url)
 	{
+		return parse(url, null);
+	}
+
+
+	/**
+	 * Parses the given URL string.
+	 * 
+	 * @param url
+	 * @return Url object
+	 */
+	public static Url parse(String url, Charset charset)
+	{
 		Checks.argumentNotNull(url, "url");
 
-		Url result = new Url();
-
+		Url result = new Url(charset);
+		
+		// the url object resolved the charset, use that
+		charset=result.getCharset();
+		
 		String segments;
 		String query;
 
@@ -141,7 +166,7 @@ public final class Url implements Serializable
 			{
 				if (s != null)
 				{
-					result.segments.add(decodeSegment(s));
+					result.segments.add(decodeSegment(s, charset));
 				}
 			}
 		}
@@ -151,12 +176,34 @@ public final class Url implements Serializable
 			String queryArray[] = Strings.split(query, '&');
 			for (String s : queryArray)
 			{
-				result.parameters.add(parseQueryParameter(s));
+				result.parameters.add(parseQueryParameter(s, charset));
 			}
 		}
 
 		return result;
 	};
+
+	public Charset getCharset()
+	{
+		if (Strings.isEmpty(charsetName))
+		{
+			charsetName = DEFAULT_CHARSET_NAME;
+		}
+		if (_charset == null)
+		{
+			_charset = Charset.forName(charsetName);
+		}
+		return _charset;
+	}
+
+	private void setCharset(Charset charset)
+	{
+		if (charset == null)
+		{
+			charsetName = "UTF-8";
+		}
+		_charset = null;
+	}
 
 	/**
 	 * Construct.
@@ -164,6 +211,12 @@ public final class Url implements Serializable
 	public Url()
 	{
 	}
+
+	public Url(Charset charset)
+	{
+		setCharset(charset);
+	}
+
 
 	/**
 	 * Construct.
@@ -177,6 +230,7 @@ public final class Url implements Serializable
 
 		segments.addAll(url.getSegments());
 		parameters.addAll(url.getQueryParameters());
+		setCharset(url.getCharset());
 	}
 
 	/**
@@ -187,11 +241,23 @@ public final class Url implements Serializable
 	 */
 	public Url(List<String> segments, List<QueryParameter> parameters)
 	{
+		this(segments, parameters, null);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param segments
+	 * @param parameters
+	 */
+	public Url(List<String> segments, List<QueryParameter> parameters, Charset charset)
+	{
 		Checks.argumentNotNull(segments, "segments");
 		Checks.argumentNotNull(parameters, "parameters");
 
 		this.segments.addAll(segments);
 		this.parameters.addAll(parameters);
+		setCharset(charset);
 	}
 
 	/**
@@ -217,7 +283,8 @@ public final class Url implements Serializable
 	/**
 	 * Returns whether the URL is absolute.
 	 * 
-	 * @return <code>true</code> if URL is absolute, <code>false</code> otherwise.
+	 * @return <code>true</code> if URL is absolute, <code>false</code>
+	 *         otherwise.
 	 */
 	public boolean isAbsolute()
 	{
@@ -257,7 +324,8 @@ public final class Url implements Serializable
 	}
 
 	/**
-	 * Convenience method that prepends <code>segments</code> to the segments collection
+	 * Convenience method that prepends <code>segments</code> to the segments
+	 * collection
 	 * 
 	 * @param newSegments
 	 */
@@ -268,8 +336,8 @@ public final class Url implements Serializable
 	}
 
 	/**
-	 * Convenience method that removes all query parameters with given name and adds new query
-	 * parameter with specified name and value
+	 * Convenience method that removes all query parameters with given name and
+	 * adds new query parameter with specified name and value
 	 * 
 	 * @param name
 	 * @param value
@@ -296,8 +364,8 @@ public final class Url implements Serializable
 	}
 
 	/**
-	 * Returns first query parameter with specified name or null if such query parameter doesn't
-	 * exist.
+	 * Returns first query parameter with specified name or null if such query
+	 * parameter doesn't exist.
 	 * 
 	 * @param name
 	 * @return query parameter or <code>null</code>
@@ -315,8 +383,9 @@ public final class Url implements Serializable
 	}
 
 	/**
-	 * Returns the value of first query parameter with specified name. Note that this method never
-	 * returns <code>null</code>. Not even if the parameter does not exist.
+	 * Returns the value of first query parameter with specified name. Note that
+	 * this method never returns <code>null</code>. Not even if the parameter
+	 * does not exist.
 	 * 
 	 * @see StringValue#isNull()
 	 * 
@@ -352,8 +421,8 @@ public final class Url implements Serializable
 		}
 		Url rhs = (Url)obj;
 
-		return getSegments().equals(rhs.getSegments()) &&
-			getQueryParameters().equals(rhs.getQueryParameters());
+		return getSegments().equals(rhs.getSegments())
+				&& getQueryParameters().equals(rhs.getQueryParameters());
 	}
 
 	/**
@@ -370,9 +439,9 @@ public final class Url implements Serializable
 	 * @param string
 	 * @return encoded segment
 	 */
-	private static String encodeSegment(String string)
+	private static String encodeSegment(String string, Charset charset)
 	{
-		return WicketURLEncoder.PATH_INSTANCE.encode(string);
+		return WicketURLEncoder.PATH_INSTANCE.encode(string, charset);
 	}
 
 	/**
@@ -380,9 +449,9 @@ public final class Url implements Serializable
 	 * @param string
 	 * @return decoded segment
 	 */
-	private static String decodeSegment(String string)
+	private static String decodeSegment(String string, Charset charset)
 	{
-		return WicketURLDecoder.PATH_INSTANCE.decode(string);
+		return WicketURLDecoder.PATH_INSTANCE.decode(string, charset);
 	}
 
 	/**
@@ -390,9 +459,9 @@ public final class Url implements Serializable
 	 * @param string
 	 * @return encoded parameter
 	 */
-	private static String encodeParameter(String string)
+	private static String encodeParameter(String string, Charset charset)
 	{
-		return WicketURLEncoder.QUERY_INSTANCE.encode(string);
+		return WicketURLEncoder.QUERY_INSTANCE.encode(string, charset);
 	}
 
 	/**
@@ -400,16 +469,24 @@ public final class Url implements Serializable
 	 * @param string
 	 * @return decoded parameter
 	 */
-	private static String decodeParameter(String string)
+	private static String decodeParameter(String string, Charset charset)
 	{
-		return WicketURLDecoder.QUERY_INSTANCE.decode(string);
+		return WicketURLDecoder.QUERY_INSTANCE.decode(string, charset);
+	}
+
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return toString(getCharset());
 	}
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
-	public String toString()
+	public String toString(Charset charset)
 	{
 		StringBuilder result = new StringBuilder();
 		boolean first = true;
@@ -420,7 +497,7 @@ public final class Url implements Serializable
 				result.append('/');
 			}
 			first = false;
-			result.append(encodeSegment(s));
+			result.append(encodeSegment(s, charset));
 		}
 
 		first = true;
@@ -436,7 +513,7 @@ public final class Url implements Serializable
 			{
 				result.append("&");
 			}
-			result.append(p.toString());
+			result.append(p.toString(charset));
 		}
 
 		return result.toString();
@@ -444,7 +521,8 @@ public final class Url implements Serializable
 
 	/**
 	 * 
-	 * @return true if last segment contains a name and not something like "." or "..".
+	 * @return true if last segment contains a name and not something like "."
+	 *         or "..".
 	 */
 	private boolean isLastSegmentReal()
 	{
@@ -488,7 +566,8 @@ public final class Url implements Serializable
 	}
 
 	/**
-	 * Concatenate the specified segments; The segments can be relative - begin with "." or "..".
+	 * Concatenate the specified segments; The segments can be relative - begin
+	 * with "." or "..".
 	 * 
 	 * @param segments
 	 */
@@ -543,8 +622,9 @@ public final class Url implements Serializable
 		private final String value;
 
 		/**
-		 * Creates new {@link QueryParameter} instance. The <code>name</code> and <code>value</code>
-		 * parameters must not be <code>null</code>, though they can be empty strings.
+		 * Creates new {@link QueryParameter} instance. The <code>name</code>
+		 * and <code>value</code> parameters must not be <code>null</code>,
+		 * though they can be empty strings.
 		 * 
 		 * @param name
 		 *            parameter name
@@ -595,8 +675,8 @@ public final class Url implements Serializable
 				return false;
 			}
 			QueryParameter rhs = (QueryParameter)obj;
-			return Objects.equal(getName(), rhs.getName()) &&
-				Objects.equal(getValue(), rhs.getValue());
+			return Objects.equal(getName(), rhs.getName())
+					&& Objects.equal(getValue(), rhs.getValue());
 		}
 
 		/**
@@ -614,12 +694,17 @@ public final class Url implements Serializable
 		@Override
 		public String toString()
 		{
+			return toString(Charset.forName("UTF-8"));
+		}
+
+		public String toString(Charset charset)
+		{
 			StringBuilder result = new StringBuilder();
-			result.append(encodeParameter(getName()));
+			result.append(encodeParameter(getName(), charset));
 			if (!Strings.isEmpty(getValue()))
 			{
 				result.append('=');
-				result.append(encodeParameter(getValue()));
+				result.append(encodeParameter(getValue(), charset));
 			}
 			return result.toString();
 		}

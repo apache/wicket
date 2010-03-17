@@ -17,6 +17,7 @@
 package org.apache.wicket.request.handler.impl;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.component.PageParameters;
@@ -128,7 +129,7 @@ public class RenderPageRequestHandler implements IPageRequestHandler, IPageClass
 	/**
 	 * @see org.apache.org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
 	 */
-	public void detach(RequestCycle requestCycle)
+	public void detach(IRequestCycle requestCycle)
 	{
 		pageProvider.detach();
 	}
@@ -144,8 +145,8 @@ public class RenderPageRequestHandler implements IPageRequestHandler, IPageClass
 	/**
 	 * @see org.apache.org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
 	 */
-	public void respond(RequestCycle requestCycle)
+	public void respond(IRequestCycle requestCycle)
 	{
-		Application.get().getPageRendererProvider().get(this).respond(requestCycle);
+		Application.get().getPageRendererProvider().get(this).respond((RequestCycle)requestCycle);
 	}
 }

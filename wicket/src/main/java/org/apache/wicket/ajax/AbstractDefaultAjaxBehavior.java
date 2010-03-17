@@ -288,7 +288,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		requestCycle.scheduleRequestHandlerAfterCurrent(target);
 
 		Url oldBaseURL = requestCycle.getUrlRenderer().getBaseUrl();
-		Url baseURL = Url.parse(((WebRequest)requestCycle.getRequest()).getHeader("Wicket-Ajax-BaseURL"));
+		WebRequest request = (WebRequest)requestCycle.getRequest();
+		Url baseURL = Url.parse(request.getHeader("Wicket-Ajax-BaseURL"), request.getCharset());
 		requestCycle.getUrlRenderer().setBaseUrl(baseURL);
 
 		respond(target);

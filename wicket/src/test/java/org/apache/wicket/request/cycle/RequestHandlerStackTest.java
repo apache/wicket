@@ -19,9 +19,8 @@ package org.apache.wicket.request.cycle;
 import junit.framework.TestCase;
 
 import org.apache.wicket.Response;
+import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.cycle.RequestHandlerStack;
 
 /**
  * 
@@ -107,12 +106,12 @@ public class RequestHandlerStackTest extends TestCase
 
 		final IRequestHandler handler3 = new IRequestHandler()
 		{
-			public void respond(RequestCycle requestCycle)
+			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag3 = false;
 			}
 
-			public void detach(RequestCycle requestCycle)
+			public void detach(IRequestCycle requestCycle)
 			{
 				detachedFlag3 = true;
 			}
@@ -120,7 +119,7 @@ public class RequestHandlerStackTest extends TestCase
 
 		final IRequestHandler handler2 = new IRequestHandler()
 		{
-			public void respond(RequestCycle requestCycle)
+			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag2 = false;
 
@@ -130,7 +129,7 @@ public class RequestHandlerStackTest extends TestCase
 				testFlag2 = true;
 			}
 
-			public void detach(RequestCycle requestCycle)
+			public void detach(IRequestCycle requestCycle)
 			{
 				detachedFlag2 = true;
 			}
@@ -138,7 +137,7 @@ public class RequestHandlerStackTest extends TestCase
 
 		final IRequestHandler handler1 = new IRequestHandler()
 		{
-			public void respond(RequestCycle requestCycle)
+			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag1 = false;
 
@@ -151,7 +150,7 @@ public class RequestHandlerStackTest extends TestCase
 				testFlag1 = true;
 			}
 
-			public void detach(RequestCycle requestCycle)
+			public void detach(IRequestCycle requestCycle)
 			{
 				detachedFlag1 = true;
 			}
@@ -184,7 +183,7 @@ public class RequestHandlerStackTest extends TestCase
 
 		final IRequestHandler handler4 = new IRequestHandler()
 		{
-			public void respond(RequestCycle requestCycle)
+			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag4 = false;
 
@@ -193,7 +192,7 @@ public class RequestHandlerStackTest extends TestCase
 				stack.setResponse(newResponse());
 			}
 
-			public void detach(RequestCycle requestCycle)
+			public void detach(IRequestCycle requestCycle)
 			{
 				detachedFlag4 = true;
 			}
@@ -201,7 +200,7 @@ public class RequestHandlerStackTest extends TestCase
 
 		final IRequestHandler handler3 = new IRequestHandler()
 		{
-			public void respond(RequestCycle requestCycle)
+			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag3 = false;
 				stack.setResponse(newResponse());
@@ -210,7 +209,7 @@ public class RequestHandlerStackTest extends TestCase
 				testFlag3 = true;
 			}
 
-			public void detach(RequestCycle requestCycle)
+			public void detach(IRequestCycle requestCycle)
 			{
 				detachedFlag3 = true;
 			}
@@ -218,7 +217,7 @@ public class RequestHandlerStackTest extends TestCase
 
 		final IRequestHandler handler2 = new IRequestHandler()
 		{
-			public void respond(RequestCycle requestCycle)
+			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag2 = false;
 				stack.setResponse(newResponse());
@@ -227,7 +226,7 @@ public class RequestHandlerStackTest extends TestCase
 				testFlag2 = true;
 			}
 
-			public void detach(RequestCycle requestCycle)
+			public void detach(IRequestCycle requestCycle)
 			{
 				detachedFlag2 = true;
 			}
@@ -235,7 +234,7 @@ public class RequestHandlerStackTest extends TestCase
 
 		IRequestHandler handler1 = new IRequestHandler()
 		{
-			public void respond(RequestCycle requestCycle)
+			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag1 = false;
 				stack.setResponse(newResponse());
@@ -245,7 +244,7 @@ public class RequestHandlerStackTest extends TestCase
 				testFlag1 = true;
 			}
 
-			public void detach(RequestCycle requestCycle)
+			public void detach(IRequestCycle requestCycle)
 			{
 				detachedFlag1 = true;
 			}
@@ -281,14 +280,14 @@ public class RequestHandlerStackTest extends TestCase
 
 		final IRequestHandler handler4 = new IRequestHandler()
 		{
-			public void respond(RequestCycle requestCycle)
+			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag4 = true;
 
 				stack.setResponse(newResponse());
 			}
 
-			public void detach(RequestCycle requestCycle)
+			public void detach(IRequestCycle requestCycle)
 			{
 				detachedFlag4 = true;
 			}
@@ -296,7 +295,7 @@ public class RequestHandlerStackTest extends TestCase
 
 		final IRequestHandler handler3 = new IRequestHandler()
 		{
-			public void respond(RequestCycle requestCycle)
+			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag3 = false;
 				stack.scheduleRequestHandlerAfterCurrent(handler4);
@@ -309,7 +308,7 @@ public class RequestHandlerStackTest extends TestCase
 				testFlag3 = true;
 			}
 
-			public void detach(RequestCycle requestCycle)
+			public void detach(IRequestCycle requestCycle)
 			{
 				detachedFlag3 = true;
 			}
@@ -317,7 +316,7 @@ public class RequestHandlerStackTest extends TestCase
 
 		final IRequestHandler handler2 = new IRequestHandler()
 		{
-			public void respond(RequestCycle requestCycle)
+			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag2 = false;
 				stack.executeRequestHandler(handler3);
@@ -325,7 +324,7 @@ public class RequestHandlerStackTest extends TestCase
 				testFlag2 = true;
 			}
 
-			public void detach(RequestCycle requestCycle)
+			public void detach(IRequestCycle requestCycle)
 			{
 				detachedFlag2 = true;
 			}
@@ -333,7 +332,7 @@ public class RequestHandlerStackTest extends TestCase
 
 		IRequestHandler handler1 = new IRequestHandler()
 		{
-			public void respond(RequestCycle requestCycle)
+			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag1 = false;
 				stack.executeRequestHandler(handler2);
@@ -342,7 +341,7 @@ public class RequestHandlerStackTest extends TestCase
 				testFlag1 = true;
 			}
 
-			public void detach(RequestCycle requestCycle)
+			public void detach(IRequestCycle requestCycle)
 			{
 				detachedFlag1 = true;
 			}

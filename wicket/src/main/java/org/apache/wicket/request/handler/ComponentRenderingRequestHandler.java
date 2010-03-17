@@ -17,8 +17,8 @@
 package org.apache.wicket.request.handler;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestableComponent;
-import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
  * Request handler that renders a component
@@ -39,12 +39,12 @@ public class ComponentRenderingRequestHandler implements IComponentRequestHandle
 		return component;
 	}
 
-	public void detach(RequestCycle requestCycle)
+	public void detach(IRequestCycle requestCycle)
 	{
 		component.getPage().detach();
 	}
 
-	public void respond(RequestCycle requestCycle)
+	public void respond(IRequestCycle requestCycle)
 	{
 		component.render();
 	}

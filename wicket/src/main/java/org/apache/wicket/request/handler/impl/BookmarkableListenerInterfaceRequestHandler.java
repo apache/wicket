@@ -17,10 +17,10 @@
 package org.apache.wicket.request.handler.impl;
 
 import org.apache.wicket.RequestListenerInterface;
+import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.component.PageParameters;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.IComponentRequestHandler;
 import org.apache.wicket.request.handler.IPageAndComponentProvider;
 import org.apache.wicket.request.handler.IPageRequestHandler;
@@ -111,7 +111,7 @@ public class BookmarkableListenerInterfaceRequestHandler
 	/**
 	 * @see org.apache.org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
 	 */
-	public void detach(RequestCycle requestCycle)
+	public void detach(IRequestCycle requestCycle)
 	{
 		pageComponentProvider.detach();
 	}
@@ -140,7 +140,7 @@ public class BookmarkableListenerInterfaceRequestHandler
 	/**
 	 * @see org.apache.org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
 	 */
-	public void respond(RequestCycle requestCycle)
+	public void respond(IRequestCycle requestCycle)
 	{
 		// nothing to do here, this handler is only used to generate URLs
 	}

@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.security.Principal;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -153,7 +154,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	private String authType;
 
-	private String characterEncoding;
+	private String characterEncoding = "UTF-8";
 
 	private final ServletContext context;
 
@@ -736,12 +737,14 @@ public class MockHttpServletRequest implements HttpServletRequest
 				final String value = getParameter(name);
 				if (name != null)
 				{
-					buf.append(WicketURLEncoder.QUERY_INSTANCE.encode(name));
+					buf.append(WicketURLEncoder.QUERY_INSTANCE.encode(name,
+						Charset.forName(getCharacterEncoding())));
 				}
 				buf.append('=');
 				if (value != null)
 				{
-					buf.append(WicketURLEncoder.QUERY_INSTANCE.encode(value));
+					buf.append(WicketURLEncoder.QUERY_INSTANCE.encode(value,
+						Charset.forName(getCharacterEncoding())));
 				}
 				if (iterator.hasNext())
 				{
@@ -1199,7 +1202,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void setPath(final String path)
 	{
-		this.path = WicketURLDecoder.PATH_INSTANCE.decode(path);
+		this.path = WicketURLDecoder.PATH_INSTANCE.decode(path,
+			Charset.forName(getCharacterEncoding()));
 	}
 
 	/**
@@ -1240,7 +1244,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 			String queryString = url.substring(index + 1);
 
 			parameters.clear();
-			for (QueryParameter parameter : Url.parse("?" + queryString).getQueryParameters())
+			for (QueryParameter parameter : Url.parse("?" + queryString,
+				Charset.forName(getCharacterEncoding())).getQueryParameters())
 			{
 				addParameter(parameter.getName(), parameter.getValue());
 			}
@@ -1567,7 +1572,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		String url = getRequestURI();
 		url += "?" + getQueryString();
-		return Url.parse(url);
+		return Url.parse(url, Charset.forName(getCharacterEncoding()));
 	}
 
 	public MockRequestParameters getPostParameters()
