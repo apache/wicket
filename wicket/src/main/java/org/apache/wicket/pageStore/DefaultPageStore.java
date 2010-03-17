@@ -26,6 +26,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.lang.Objects;
+import org.apache.wicket.util.lang.WicketObjects;
 
 /**
  * Wicket's default page store
@@ -360,7 +361,7 @@ public class DefaultPageStore implements IPageStore
 		Checks.argumentNotNull(sessionId, "sessionId");
 		Checks.argumentNotNull(page, "page");
 
-		byte data[] = Objects.objectToByteArray(page, applicationName);
+		byte data[] = WicketObjects.objectToByteArray(page, applicationName);
 		return new SerializedPage(sessionId, page.getPageId(), data);
 	}
 
@@ -371,7 +372,7 @@ public class DefaultPageStore implements IPageStore
 	 */
 	protected IManageablePage deserializePage(final byte data[])
 	{
-		return (IManageablePage)Objects.byteArrayToObject(data);
+		return (IManageablePage)WicketObjects.byteArrayToObject(data);
 	}
 
 	/**

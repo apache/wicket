@@ -26,7 +26,7 @@ import org.apache.wicket.proxy.util.IInterface;
 import org.apache.wicket.proxy.util.IObjectMethodTester;
 import org.apache.wicket.proxy.util.InterfaceObject;
 import org.apache.wicket.proxy.util.ObjectMethodTester;
-import org.apache.wicket.util.lang.Objects;
+import org.apache.wicket.util.lang.WicketObjects;
 
 /**
  * Tests lazy init proxy factory
@@ -77,7 +77,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 	{
 		// test proxy creation for an interface class
 		IInterface proxy = (IInterface)LazyInitProxyFactory.createProxy(IInterface.class,
-				interfaceObjectLocator);
+			interfaceObjectLocator);
 
 		// test we have a jdk dynamic proxy
 		assertTrue(Proxy.isProxyClass(proxy.getClass()));
@@ -90,7 +90,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 		assertEquals(proxy.getMessage(), "interface");
 
 		// test serialization
-		IInterface proxy2 = (IInterface)Objects.cloneObject(proxy);
+		IInterface proxy2 = (IInterface)WicketObjects.cloneObject(proxy);
 		assertTrue(proxy != proxy2);
 		assertEquals(proxy2.getMessage(), "interface");
 
@@ -109,7 +109,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 		};
 
 		IObjectMethodTester testerProxy = (IObjectMethodTester)LazyInitProxyFactory.createProxy(
-				IObjectMethodTester.class, testerLocator);
+			IObjectMethodTester.class, testerLocator);
 		testerProxy.equals(this);
 		testerProxy.hashCode();
 		testerProxy.toString();
@@ -122,7 +122,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 	public void testConcreteProxy()
 	{
 		ConcreteObject proxy = (ConcreteObject)LazyInitProxyFactory.createProxy(
-				ConcreteObject.class, concreteObjectLocator);
+			ConcreteObject.class, concreteObjectLocator);
 
 		// test proxy implements ILazyInitProxy
 		assertTrue(proxy instanceof ILazyInitProxy);
@@ -135,7 +135,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 		assertEquals(proxy.getMessage(), "concrete");
 
 		// test serialization
-		ConcreteObject proxy2 = (ConcreteObject)Objects.cloneObject(proxy);
+		ConcreteObject proxy2 = (ConcreteObject)WicketObjects.cloneObject(proxy);
 		assertTrue(proxy != proxy2);
 		assertEquals(proxy2.getMessage(), "concrete");
 
@@ -154,7 +154,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 		};
 
 		ObjectMethodTester testerProxy = (ObjectMethodTester)LazyInitProxyFactory.createProxy(
-				ObjectMethodTester.class, testerLocator);
+			ObjectMethodTester.class, testerLocator);
 		testerProxy.equals(this);
 		testerProxy.hashCode();
 		testerProxy.toString();
@@ -167,9 +167,9 @@ public class LazyInitProxyFactoryTest extends TestCase
 	public void testCGLibInterceptorReplacement()
 	{
 		ProxyReplacement ser = new ProxyReplacement(ConcreteObject.class.getName(),
-				concreteObjectLocator);
+			concreteObjectLocator);
 
-		ConcreteObject proxy2 = (ConcreteObject)Objects.cloneObject(ser);
+		ConcreteObject proxy2 = (ConcreteObject)WicketObjects.cloneObject(ser);
 		assertEquals(proxy2.getMessage(), "concrete");
 	}
 

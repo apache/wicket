@@ -39,6 +39,7 @@ import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
 import org.apache.wicket.settings.IDebugSettings;
+import org.apache.wicket.util.string.ComponentStrings;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -984,7 +985,8 @@ public abstract class MarkupContainer extends Component
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnAddComponentEnabled())
 		{
-			child.setMetaData(ADDED_AT_KEY, Strings.toString(child, new MarkupException("added")));
+			child.setMetaData(ADDED_AT_KEY, ComponentStrings.toString(child, new MarkupException(
+				"added")));
 		}
 
 		if (page != null)

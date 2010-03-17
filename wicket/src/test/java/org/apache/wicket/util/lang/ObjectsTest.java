@@ -67,7 +67,7 @@ public class ObjectsTest extends WicketTestCase
 	 */
 	public void testCloneNull()
 	{
-		Object clone = Objects.cloneModel(null);
+		Object clone = WicketObjects.cloneModel(null);
 		assertEquals(null, clone);
 	}
 
@@ -78,7 +78,7 @@ public class ObjectsTest extends WicketTestCase
 	{
 		String cloneMe = "Mini-me";
 
-		Object clone = Objects.cloneModel(cloneMe);
+		Object clone = WicketObjects.cloneModel(cloneMe);
 		assertEquals(cloneMe, clone);
 		assertNotSame(cloneMe, clone);
 	}
@@ -92,7 +92,7 @@ public class ObjectsTest extends WicketTestCase
 
 		try
 		{
-			Objects.cloneModel(cloneMe);
+			WicketObjects.cloneModel(cloneMe);
 			fail("Exception expected");
 		}
 		catch (RuntimeException e)
@@ -109,7 +109,7 @@ public class ObjectsTest extends WicketTestCase
 	{
 		PropertyModel<String> pm = new PropertyModel<String>(new TextField<String>("test",
 			new Model<String>("test")), "modelObject");
-		PropertyModel<String> pm2 = (PropertyModel<String>)Objects.cloneModel(pm);
+		PropertyModel<String> pm2 = (PropertyModel<String>)WicketObjects.cloneModel(pm);
 		assertTrue(pm.getObject() == pm2.getObject());
 	}
 
@@ -121,7 +121,7 @@ public class ObjectsTest extends WicketTestCase
 		CloneObject cloneMe = new CloneObject();
 		cloneMe.nr = 1;
 
-		Object clone = Objects.cloneModel(cloneMe);
+		Object clone = WicketObjects.cloneModel(cloneMe);
 		assertEquals(cloneMe, clone);
 		assertNotSame(cloneMe, clone);
 	}

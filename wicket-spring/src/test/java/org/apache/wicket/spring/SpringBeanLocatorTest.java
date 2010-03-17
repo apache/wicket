@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.apache.wicket.spring.test.SpringContextLocatorMock;
-import org.apache.wicket.util.lang.Objects;
+import org.apache.wicket.util.lang.WicketObjects;
 
 /**
  * Tests {@link SpringBeanLocator}
@@ -71,8 +71,8 @@ public class SpringBeanLocatorTest extends TestCase
 
 		ctx.putBean("bean", bean);
 
-		SpringBeanLocator locator = (SpringBeanLocator)Objects.cloneObject(new SpringBeanLocator(
-				Bean.class, ctxLocator));
+		SpringBeanLocator locator = (SpringBeanLocator)WicketObjects
+				.cloneObject(new SpringBeanLocator(Bean.class, ctxLocator));
 
 		assertNotNull(locator.locateProxyTarget());
 	}
@@ -137,8 +137,8 @@ public class SpringBeanLocatorTest extends TestCase
 		Bean bean = new Bean();
 		ctx.putBean("bean", bean);
 
-		SpringBeanLocator locator = (SpringBeanLocator)Objects.cloneObject(new SpringBeanLocator(
-				"bean", Bean.class, ctxLocator));
+		SpringBeanLocator locator = (SpringBeanLocator)WicketObjects
+				.cloneObject(new SpringBeanLocator("bean", Bean.class, ctxLocator));
 
 		assertNotNull(locator.locateProxyTarget());
 	}

@@ -215,4 +215,17 @@ public class Model<T extends Serializable> implements IModel<T>
 		Model<?> that = (Model<?>)obj;
 		return Objects.equal(object, that.object);
 	}
+
+	/**
+	 * Supresses generics warning when converting model types
+	 * 
+	 * @param <T>
+	 * @param model
+	 * @return <code>model</code>
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> IModel<T> of(IModel<?> model)
+	{
+		return (IModel<T>)model;
+	}
 }

@@ -18,8 +18,8 @@ package org.apache.wicket.util.instrument;
 
 import java.lang.instrument.Instrumentation;
 
-import org.apache.wicket.util.lang.Objects;
-import org.apache.wicket.util.lang.Objects.IObjectSizeOfStrategy;
+import org.apache.wicket.util.lang.WicketObjects;
+import org.apache.wicket.util.lang.WicketObjects.IObjectSizeOfStrategy;
 
 /**
  * Instrumentation agent for calculating object sizes using Java's instrumentation API. To use it,
@@ -48,7 +48,7 @@ public class ObjectSizeOfAgent
 
 		InstrumentationObjectSizeOfStrategy strategy = new InstrumentationObjectSizeOfStrategy(
 				instrumentation);
-		Objects.setObjectSizeOfStrategy(strategy);
+		WicketObjects.setObjectSizeOfStrategy(strategy);
 	}
 
 	/**
@@ -64,6 +64,6 @@ public class ObjectSizeOfAgent
 
 		InstrumentationObjectSizeOfStrategy strategy = new InstrumentationObjectSizeOfStrategy(
 				instrumentation);
-		Objects.setObjectSizeOfStrategy(strategy);
+		WicketObjects.setObjectSizeOfStrategy(strategy);
 	}
 }

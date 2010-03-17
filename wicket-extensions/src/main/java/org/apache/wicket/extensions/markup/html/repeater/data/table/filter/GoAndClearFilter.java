@@ -20,7 +20,7 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.util.lang.Objects;
+import org.apache.wicket.util.lang.WicketObjects;
 
 /**
  * Filter component that generates a 'go' and 'clear' buttons.
@@ -71,7 +71,7 @@ public class GoAndClearFilter extends GoFilter
 	{
 		super(id, goModel);
 
-		originalState = Objects.cloneModel(form.getDefaultModelObject());
+		originalState = WicketObjects.cloneModel(form.getDefaultModelObject());
 
 		clear = new Button("clear", clearModel)
 		{
@@ -108,7 +108,7 @@ public class GoAndClearFilter extends GoFilter
 	protected void onClearSubmit(Button button)
 	{
 		Form<Object> form = (Form<Object>)button.getForm();
-		form.setDefaultModelObject(Objects.cloneModel(originalState));
+		form.setDefaultModelObject(WicketObjects.cloneModel(originalState));
 	}
 
 }

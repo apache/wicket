@@ -21,7 +21,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.lang.instrument.Instrumentation;
 
-import org.apache.wicket.util.lang.Objects.IObjectSizeOfStrategy;
+import org.apache.wicket.util.lang.WicketObjects.IObjectSizeOfStrategy;
 
 /**
  * Object size of strategy that is based on instrumentation.

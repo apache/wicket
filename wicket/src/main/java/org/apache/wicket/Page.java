@@ -45,7 +45,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.lang.Classes;
-import org.apache.wicket.util.lang.Objects;
+import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.string.StringValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -454,7 +454,7 @@ public abstract class Page extends MarkupContainer
 	@Override
 	public final long getSizeInBytes()
 	{
-		return Objects.sizeof(this);
+		return WicketObjects.sizeof(this);
 	}
 
 	/**

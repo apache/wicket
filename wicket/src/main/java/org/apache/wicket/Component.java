@@ -63,7 +63,8 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Classes;
-import org.apache.wicket.util.lang.Objects;
+import org.apache.wicket.util.lang.WicketObjects;
+import org.apache.wicket.util.string.ComponentStrings;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
@@ -694,7 +695,7 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled())
 		{
-			setMetaData(CONSTRUCTED_AT_KEY, Strings.toString(this, new MarkupException(
+			setMetaData(CONSTRUCTED_AT_KEY, ComponentStrings.toString(this, new MarkupException(
 				"constructed")));
 		}
 
@@ -1848,7 +1849,7 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 		long size = -1;
 		try
 		{
-			size = Objects.sizeof(this);
+			size = WicketObjects.sizeof(this);
 		}
 		catch (Exception e)
 		{

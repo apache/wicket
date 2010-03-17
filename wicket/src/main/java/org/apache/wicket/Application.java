@@ -88,8 +88,8 @@ import org.apache.wicket.settings.Settings;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.convert.ConverterLocator;
 import org.apache.wicket.util.lang.Checks;
-import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.lang.PropertyResolver;
+import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -772,7 +772,7 @@ public abstract class Application implements UnboundListener
 	 */
 	private final void addInitializer(String className)
 	{
-		IInitializer initializer = (IInitializer)Objects.newInstance(className);
+		IInitializer initializer = (IInitializer)WicketObjects.newInstance(className);
 		if (initializer != null)
 		{
 			initializers.add(initializer);

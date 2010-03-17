@@ -28,7 +28,7 @@ import org.apache.wicket.mock.MockWebRequest;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.util.lang.Objects;
+import org.apache.wicket.util.lang.WicketObjects;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;
@@ -86,7 +86,7 @@ public class GuiceInjectorTest extends TestCase
 			doChecksForComponent(testComponent);
 
 			// Serialize and deserialize the object, and check it still works.
-			TestComponent clonedComponent = (TestComponent)Objects.cloneObject(testComponent);
+			TestComponent clonedComponent = (TestComponent)WicketObjects.cloneObject(testComponent);
 			doChecksForComponent(clonedComponent);
 
 			// Test injection of a class that does not extend Component
