@@ -35,6 +35,7 @@
 			</activation>
 			<modules>
 				<module>wicket</module>
+                <module>wicket-util</module>
 				<module>wicket-datetime</module>
 				<!-- TODO NG
 				<module>wicket-devutils</module>
@@ -105,6 +106,7 @@
 			-->
 			<modules>
 				<module>wicket</module>
+                <module>wicket-util</module>
 				<module>wicket-datetime</module>
 				<!-- TODO NG 
 				<module>wicket-devutils</module>
@@ -179,6 +181,7 @@
 			</activation>
 			<modules>
 				<module>wicket</module>
+                <module>wicket-util</module>
 				<module>wicket-datetime</module>
 				<!-- TODO NG 
 				<module>wicket-devutils</module>
@@ -284,6 +287,12 @@
 				<version>${project.version}</version>
 				<type>jar</type>
 			</dependency>
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-util</artifactId>
+                <version>${project.version}</version>
+                <type>jar</type>
+            </dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-guice</artifactId>
