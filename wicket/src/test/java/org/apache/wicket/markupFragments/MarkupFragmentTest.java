@@ -27,7 +27,7 @@ import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.InlinePanelPage_1;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.util.diff.DiffUtil;
+import org.apache.wicket.util.tester.DiffUtil;
 
 /**
  * 

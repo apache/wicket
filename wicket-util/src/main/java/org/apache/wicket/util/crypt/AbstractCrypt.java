@@ -21,7 +21,6 @@ import java.security.GeneralSecurityException;
 
 import javax.crypto.Cipher;
 
-import org.apache.wicket.WicketRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -131,7 +130,7 @@ public abstract class AbstractCrypt implements ICrypt
 	 * @throws GeneralSecurityException
 	 */
 	protected abstract byte[] crypt(final byte[] input, final int mode)
-		throws GeneralSecurityException;
+			throws GeneralSecurityException;
 
 	/**
 	 * Decrypts an encrypted, but Base64 decoded byte array into a byte array.
@@ -148,8 +147,8 @@ public abstract class AbstractCrypt implements ICrypt
 		}
 		catch (GeneralSecurityException e)
 		{
-			throw new WicketRuntimeException("Unable to decrypt the text '" +
-				new String(encrypted) + "'", e);
+			throw new RuntimeException(
+					"Unable to decrypt the text '" + new String(encrypted) + "'", e);
 		}
 	}
 
@@ -162,7 +161,7 @@ public abstract class AbstractCrypt implements ICrypt
 	 * @throws GeneralSecurityException
 	 */
 	private final byte[] encryptStringToByteArray(final String plainText)
-		throws GeneralSecurityException
+			throws GeneralSecurityException
 	{
 		try
 		{
@@ -170,7 +169,7 @@ public abstract class AbstractCrypt implements ICrypt
 		}
 		catch (UnsupportedEncodingException ex)
 		{
-			throw new WicketRuntimeException(ex.getMessage());
+			throw new RuntimeException(ex.getMessage());
 		}
 	}
 }

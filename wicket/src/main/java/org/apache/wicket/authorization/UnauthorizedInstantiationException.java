@@ -17,7 +17,7 @@
 package org.apache.wicket.authorization;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.util.lang.Classes;
+import org.apache.wicket.util.lang.WicketObjects;
 
 /**
  * Exception that is thrown when the creation of a component is not allowed.
@@ -52,6 +52,6 @@ public class UnauthorizedInstantiationException extends AuthorizationException
 	 */
 	public Class<? extends Component> getComponentClass()
 	{
-		return Classes.resolveClass(componentClassName);
+		return WicketObjects.resolveClass(componentClassName);
 	}
 }

@@ -27,8 +27,8 @@ import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.request.WebErrorCodeResponseHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.basic.AbortRequestHandler;
-import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Packages;
+import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,7 +117,7 @@ public class PackageResource implements IResource
 	 */
 	public final Class<?> getScope()
 	{
-		return Classes.resolveClass(scopeName);
+		return WicketObjects.resolveClass(scopeName);
 	}
 
 	/**

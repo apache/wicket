@@ -21,8 +21,8 @@ import java.util.Locale;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.util.lang.Checks;
-import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Objects;
+import org.apache.wicket.util.lang.WicketObjects;
 
 /**
  * Reference to a resource. Can be used to reference global resources.
@@ -108,7 +108,7 @@ public abstract class ResourceReference implements Serializable
 	 */
 	public Class<?> getScope()
 	{
-		return Classes.resolveClass(scope);
+		return WicketObjects.resolveClass(scope);
 	}
 
 	/**

@@ -18,7 +18,7 @@ package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.request.component.PageParameters;
-import org.apache.wicket.util.lang.Classes;
+import org.apache.wicket.util.lang.WicketObjects;
 
 /**
  * Renders a stable link which can be cached in a web browser and used at a later time.
@@ -103,7 +103,7 @@ public class BookmarkablePageLink<T> extends Link<T>
 	 */
 	public final Class<? extends Page> getPageClass()
 	{
-		return Classes.resolveClass(pageClassName);
+		return WicketObjects.resolveClass(pageClassName);
 	}
 
 	/**

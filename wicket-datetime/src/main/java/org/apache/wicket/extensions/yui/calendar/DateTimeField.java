@@ -34,7 +34,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.util.convert.IConverter;
-import org.apache.wicket.util.convert.converters.ZeroPaddingIntegerConverter;
+import org.apache.wicket.util.convert.converter.ZeroPaddingIntegerConverter;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.joda.time.DateTimeFieldType;
 import org.joda.time.DateTimeZone;

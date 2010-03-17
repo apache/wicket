@@ -14,33 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ajax.markup.html.componentMap;
-
-import org.apache.wicket.Page;
-import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.util.tester.DiffUtil;
-
+package org.apache.wicket.util;
 
 /**
- * Test for ajax handler.
+ * Provider that always provides the specified value.
  * 
- * @author Juergen Donnerstag
+ * @author igor.vaynberg
+ * @param <T>
  */
-public class SimpleTestPanelTest extends WicketTestCase
+public class ValueProvider<T> implements IProvider<T>
 {
+	private final T value;
+
 	/**
-	 * @throws Exception
+	 * Construct.
+	 * 
+	 * @param value
+	 *            value to provide
 	 */
-	public void testRenderHomePage_2() throws Exception
+	public ValueProvider(T value)
 	{
-		executeTest(SimpleTestPage.class, "SimpleTestPageExpectedResult.html");
-
-		Page page = tester.getLastRenderedPage();
-		tester.executeBehavior(((SimpleTestPanel)page.get("testPanel")).getTimeBehavior());
-
-		// Validate the document
-		String document = tester.getLastResponseAsString();
-		DiffUtil.validatePage(document, SimpleTestPage.class,
-			"SimpleTestPageExpectedResult-1.html", true);
+		this.value = value;
 	}
+
+	public T get()
+	{
+		return value;
+	}
+
 }

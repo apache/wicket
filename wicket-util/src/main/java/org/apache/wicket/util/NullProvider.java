@@ -14,24 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.crypt;
-
-import org.apache.wicket.settings.ISecuritySettings;
+package org.apache.wicket.util;
 
 /**
- * Crypt factory implementation for noop {@link NoCrypt} class
+ * Provider that provides {@code null}s. Convenient to have to avoid a double {@code null} check for
+ * the provider and its provided instance.
  * 
- * @author Igor Vaynberg (ivaynberg)
+ * @author igor.vaynberg
+ * @param <T>
  */
-public class NoCryptFactory extends CryptFactoryCachingDecorator
+public class NullProvider<T> implements IProvider<T>
 {
 
-	/**
-	 * Construct.
-	 */
-	public NoCryptFactory()
+	public T get()
 	{
-		super(new ClassCryptFactory(NoCrypt.class, ISecuritySettings.DEFAULT_ENCRYPTION_KEY));
+		return null;
 	}
 
 }

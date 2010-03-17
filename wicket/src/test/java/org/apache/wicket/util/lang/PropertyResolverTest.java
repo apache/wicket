@@ -25,10 +25,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 
+import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.convert.ConversionException;
-import org.apache.wicket.util.convert.ConverterLocator;
 
 /**
  * @author jcompagner

@@ -23,7 +23,7 @@ import java.lang.reflect.Type;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.proxy.IProxyTargetLocator;
-import org.apache.wicket.util.lang.Classes;
+import org.apache.wicket.util.lang.WicketObjects;
 
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -58,7 +58,7 @@ class GuiceProxyTargetLocator implements IProxyTargetLocator
 		try
 		{
 
-			Class< ? > clazz = Classes.resolveClass(className);
+			Class< ? > clazz = WicketObjects.resolveClass(className);
 			final Field field = clazz.getDeclaredField(fieldName);
 			type = field.getGenericType();
 		}

@@ -28,9 +28,6 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
-import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.util.lang.Classes;
-
 
 /**
  * Provide some simple means to encrypt and decrypt strings such as passwords. The whole
@@ -66,17 +63,13 @@ public class SunJceCrypt extends AbstractCrypt
 		try
 		{
 			// Initialize and add a security provider required for encryption
-			final Class<?> clazz = Classes.resolveClass("com.sun.crypto.provider.SunJCE");
+			final Class<?> clazz = Class.forName("com.sun.crypto.provider.SunJCE");
 
 			Security.addProvider((Provider)clazz.newInstance());
 		}
-		catch (IllegalAccessException ex)
+		catch (Exception ex)
 		{
-			throw new WicketRuntimeException("Unable to load SunJCE service provider", ex);
-		}
-		catch (InstantiationException ex)
-		{
-			throw new WicketRuntimeException("Unable to load SunJCE service provider", ex);
+			throw new RuntimeException("Unable to load SunJCE service provider", ex);
 		}
 	}
 

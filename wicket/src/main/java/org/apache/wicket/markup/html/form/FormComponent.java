@@ -41,6 +41,7 @@ import org.apache.wicket.model.IPropertyReflectionAwareModel;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Classes;
+import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.string.StringValue;
@@ -829,7 +830,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	@SuppressWarnings("unchecked")
 	public final Class<T> getType()
 	{
-		return typeName == null ? null : (Class<T>)Classes.resolveClass(typeName);
+		return typeName == null ? null : (Class<T>)WicketObjects.resolveClass(typeName);
 	}
 
 	/**

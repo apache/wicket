@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.diff;
+package org.apache.wicket.util.tester;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,6 +26,9 @@ import junit.framework.Assert;
 
 import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.util.diff.Diff;
+import org.apache.wicket.util.diff.DifferentiationFailedException;
+import org.apache.wicket.util.diff.Revision;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.string.StringList;

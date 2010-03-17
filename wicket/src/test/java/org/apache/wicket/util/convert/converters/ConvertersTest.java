@@ -23,9 +23,9 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
+import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.util.convert.ConversionException;
-import org.apache.wicket.util.convert.ConverterLocator;
 import org.apache.wicket.util.convert.converter.BigDecimalConverter;
 import org.apache.wicket.util.convert.converter.BooleanConverter;
 import org.apache.wicket.util.convert.converter.ByteConverter;

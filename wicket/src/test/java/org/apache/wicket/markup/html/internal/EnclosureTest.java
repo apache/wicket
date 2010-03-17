@@ -22,7 +22,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.request.component.PageParameters;
-import org.apache.wicket.util.diff.DiffUtil;
+import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.tester.FormTester;
 
 

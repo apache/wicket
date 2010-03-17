@@ -17,7 +17,7 @@
 package org.apache.wicket.markup.html.basic;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.util.diff.DiffUtil;
+import org.apache.wicket.util.tester.DiffUtil;
 
 /**
  * @author jcompagner

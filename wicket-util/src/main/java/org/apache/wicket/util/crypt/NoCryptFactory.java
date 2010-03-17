@@ -14,33 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ajax.markup.html.componentMap;
-
-import org.apache.wicket.Page;
-import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.util.tester.DiffUtil;
+package org.apache.wicket.util.crypt;
 
 
 /**
- * Test for ajax handler.
+ * Crypt factory implementation for noop {@link NoCrypt} class
  * 
- * @author Juergen Donnerstag
+ * @author Igor Vaynberg (ivaynberg)
  */
-public class SimpleTestPanelTest extends WicketTestCase
+public class NoCryptFactory implements ICryptFactory
 {
+	private static final ICrypt crypt = new NoCrypt();
+
 	/**
-	 * @throws Exception
+	 * Construct.
 	 */
-	public void testRenderHomePage_2() throws Exception
+	public NoCryptFactory()
 	{
-		executeTest(SimpleTestPage.class, "SimpleTestPageExpectedResult.html");
 
-		Page page = tester.getLastRenderedPage();
-		tester.executeBehavior(((SimpleTestPanel)page.get("testPanel")).getTimeBehavior());
-
-		// Validate the document
-		String document = tester.getLastResponseAsString();
-		DiffUtil.validatePage(document, SimpleTestPage.class,
-			"SimpleTestPageExpectedResult-1.html", true);
 	}
+
+	public ICrypt newCrypt()
+	{
+		return crypt;
+	}
+
 }

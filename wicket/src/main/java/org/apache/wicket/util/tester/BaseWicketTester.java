@@ -98,7 +98,6 @@ import org.apache.wicket.request.handler.impl.render.PageRenderer;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.apache.wicket.util.IProvider;
-import org.apache.wicket.util.diff.DiffUtil;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;

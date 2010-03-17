@@ -27,7 +27,7 @@ import org.apache.wicket.request.component.PageParameters;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.parameters.IPageParametersEncoder;
 import org.apache.wicket.util.lang.Checks;
-import org.apache.wicket.util.lang.Classes;
+import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -196,7 +196,7 @@ public abstract class AbstractMapper implements IRequestMapper
 	{
 		Checks.argumentNotEmpty(name, "name");
 
-		return Classes.resolveClass(name);
+		return WicketObjects.resolveClass(name);
 	}
 
 	/**

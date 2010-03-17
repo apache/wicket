@@ -27,7 +27,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebComponent;
-import org.apache.wicket.util.diff.DiffUtil;
+import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.tester.ITestPageSource;
 
 

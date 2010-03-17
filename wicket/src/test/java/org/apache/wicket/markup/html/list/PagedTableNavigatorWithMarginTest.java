@@ -18,7 +18,7 @@ package org.apache.wicket.markup.html.list;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.util.diff.DiffUtil;
+import org.apache.wicket.util.tester.DiffUtil;
 
 
 /**

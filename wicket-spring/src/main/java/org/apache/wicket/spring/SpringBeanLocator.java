@@ -23,8 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.proxy.IProxyTargetLocator;
-import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Objects;
+import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.string.Strings;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -185,7 +185,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		Class< ? > clazz = beanTypeCache == null ? null : (Class< ? >)beanTypeCache.get();
 		if (clazz == null)
 		{
-			beanTypeCache = new WeakReference<Class< ? >>(clazz = Classes
+			beanTypeCache = new WeakReference<Class< ? >>(clazz = WicketObjects
 					.resolveClass(beanTypeName));
 			if (clazz == null)
 			{

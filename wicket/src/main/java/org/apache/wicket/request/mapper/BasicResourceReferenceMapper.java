@@ -24,7 +24,7 @@ import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandle
 import org.apache.wicket.request.mapper.parameters.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameters.SimplePageParametersEncoder;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.util.lang.Classes;
+import org.apache.wicket.util.lang.WicketObjects;
 
 /**
  * Generic {@link ResourceReference} encoder that encodes and decodes non-mounted
@@ -110,7 +110,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 
 	protected Class<?> resolveClass(String name)
 	{
-		return Classes.resolveClass(name);
+		return WicketObjects.resolveClass(name);
 	}
 
 	protected String getClassName(Class<?> scope)

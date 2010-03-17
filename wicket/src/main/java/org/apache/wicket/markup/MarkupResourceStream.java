@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.util.Locale;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.util.lang.Classes;
+import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.resource.IFixedLocationResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
@@ -189,7 +189,7 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	 */
 	public Class<? extends Component> getMarkupClass()
 	{
-		return Classes.resolveClass(markupClassName);
+		return WicketObjects.resolveClass(markupClassName);
 	}
 
 	/**

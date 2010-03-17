@@ -18,7 +18,7 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.util.diff.DiffUtil;
+import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.tester.WicketTester;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

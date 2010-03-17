@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.IConverter;
-import org.apache.wicket.util.convert.converters.DateConverter;
+import org.apache.wicket.util.convert.converter.DateConverter;
 
 
 /**
@@ -122,7 +122,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 			private static final long serialVersionUID = 1L;
 
 			/**
-			 * @see org.apache.wicket.util.convert.converters.DateConverter#getDateFormat(java.util.Locale)
+			 * @see org.apache.wicket.util.convert.converter.DateConverter#getDateFormat(java.util.Locale)
 			 */
 			@Override
 			public DateFormat getDateFormat(Locale locale)
