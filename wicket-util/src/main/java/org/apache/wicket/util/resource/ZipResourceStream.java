@@ -25,7 +25,6 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
@@ -82,7 +81,7 @@ public class ZipResourceStream extends AbstractResourceStream
 		}
 		catch (Exception e)
 		{
-			throw new WicketRuntimeException(e);
+			throw new RuntimeException(e);
 		}
 	}
 

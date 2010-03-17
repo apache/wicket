@@ -22,8 +22,6 @@ import java.io.InputStream;
 import java.util.Locale;
 
 import org.apache.wicket.IClusterable;
-import org.apache.wicket.protocol.http.WebResponse;
-import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.util.watch.IModifiable;
 
 

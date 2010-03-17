@@ -28,7 +28,6 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.io.DeferredFileOutputStream;
 
@@ -612,7 +611,7 @@ public class DiskFileItem implements FileItem
 			}
 			catch (SecurityException e)
 			{
-				throw new WicketRuntimeException("Reading property java.io.tmpdir is not allowed"
+				throw new RuntimeException("Reading property java.io.tmpdir is not allowed"
 					+ " for the current security settings. The repository location needs to be"
 					+ " set manually, or upgrade permissions to allow reading the tmpdir property.");
 			}

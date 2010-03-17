@@ -30,7 +30,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.wicket.WicketRuntimeException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -209,11 +208,11 @@ public final class Streams
 		}
 		catch (ParserConfigurationException e)
 		{
-			throw new WicketRuntimeException(e);
+			throw new RuntimeException(e);
 		}
 		catch (SAXException e)
 		{
-			throw new WicketRuntimeException("invalid XML properties format", e);
+			throw new RuntimeException("invalid XML properties format", e);
 		}
 	}
 

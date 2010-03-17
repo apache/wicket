@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.time.Time;
 
 /**
@@ -96,7 +95,7 @@ public class XSLTResourceStream extends AbstractResourceStream
 		}
 		catch (Exception e)
 		{
-			throw new WicketRuntimeException(e);
+			throw new RuntimeException(e);
 		}
 		finally
 		{

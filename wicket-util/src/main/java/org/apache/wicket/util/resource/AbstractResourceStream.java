@@ -22,7 +22,6 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.time.Time;
@@ -72,11 +71,11 @@ public abstract class AbstractResourceStream implements IStringResourceStream
 		}
 		catch (IOException e)
 		{
-			throw new WicketRuntimeException("Unable to read resource as String", e);
+			throw new RuntimeException("Unable to read resource as String", e);
 		}
 		catch (ResourceStreamNotFoundException e)
 		{
-			throw new WicketRuntimeException("Unable to read resource as String", e);
+			throw new RuntimeException("Unable to read resource as String", e);
 		}
 		finally
 		{
