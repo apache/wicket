@@ -14,20 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.convert.converters;
+package org.apache.wicket.util.convert.converter;
 
+import java.sql.Date;
 import java.text.DateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 import org.apache.wicket.util.string.Strings;
 
 /**
- * Converts from Object to Date.
- * 
- * @author Eelco Hillenius
+ * Converts to {@link java.sql.Date}.
  */
-public class DateConverter extends AbstractConverter
+public class SqlDateConverter extends AbstractConverter
 {
 	private static final long serialVersionUID = 1L;
 
@@ -42,12 +40,13 @@ public class DateConverter extends AbstractConverter
 		}
 		else
 		{
-			return (Date)parse(getDateFormat(locale), value, locale);
+			return new Date(((java.util.Date)parse(getDateFormat(locale), value, locale)).getTime());
 		}
 	}
 
 	/**
-	 * @see org.apache.wicket.util.convert.IConverter#convertToString(Object, java.util.Locale)
+	 * @see org.apache.wicket.util.convert.converter.DateConverter#convertToObject(java.lang.String,
+	 *      java.util.Locale)
 	 */
 	@Override
 	public String convertToString(final Object value, Locale locale)
@@ -75,9 +74,6 @@ public class DateConverter extends AbstractConverter
 		return DateFormat.getDateInstance(DateFormat.SHORT, locale);
 	}
 
-	/**
-	 * @see org.apache.wicket.util.convert.converters.AbstractConverter#getTargetType()
-	 */
 	@Override
 	protected Class<Date> getTargetType()
 	{

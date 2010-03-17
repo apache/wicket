@@ -14,50 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.convert.converters;
+package org.apache.wicket.util.convert.converter;
 
 import java.util.Locale;
 
+import org.apache.wicket.util.convert.IConverter;
+
+
 /**
- * Converts from Object to Integer, adding zero-padding.
+ * Converts from Object to Integer.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
- * @author Al Maw
  */
-public class ZeroPaddingIntegerConverter extends AbstractIntegerConverter
+public class IntegerConverter extends AbstractIntegerConverter
 {
 	private static final long serialVersionUID = 1L;
 
-	private final int zeroPadLength;
-
 	/**
-	 * Constructs this converter.
-	 * 
-	 * @param zeroPadLength
-	 *            Minimum length of String to be outputted (will be zero-padded).
+	 * The singleton instance for a integer converter
 	 */
-	public ZeroPaddingIntegerConverter(int zeroPadLength)
-	{
-		this.zeroPadLength = zeroPadLength;
-	}
-
-	/**
-	 * @see org.apache.wicket.util.convert.converters.AbstractNumberConverter#convertToString(java.lang.Object,
-	 *      java.util.Locale)
-	 */
-	@Override
-	public String convertToString(Object value, Locale locale)
-	{
-		String result = super.convertToString(value, locale);
-
-		while (result.length() < zeroPadLength)
-		{
-			result = "0" + result;
-		}
-
-		return result;
-	}
+	public static final IConverter INSTANCE = new IntegerConverter();
 
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
@@ -75,7 +52,7 @@ public class ZeroPaddingIntegerConverter extends AbstractIntegerConverter
 	}
 
 	/**
-	 * @see org.apache.wicket.util.convert.converters.AbstractConverter#getTargetType()
+	 * @see org.apache.wicket.util.convert.converter.AbstractConverter#getTargetType()
 	 */
 	@Override
 	protected Class<Integer> getTargetType()

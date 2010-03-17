@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.convert.converters;
+package org.apache.wicket.util.convert.converter;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -101,7 +101,7 @@ public class SqlTimestampConverter extends AbstractConverter
 
 	/**
 	 * 
-	 * @see org.apache.wicket.util.convert.converters.AbstractConverter#convertToString(java.lang.Object,
+	 * @see org.apache.wicket.util.convert.converter.AbstractConverter#convertToString(java.lang.Object,
 	 *      java.util.Locale)
 	 */
 	@Override
@@ -124,7 +124,7 @@ public class SqlTimestampConverter extends AbstractConverter
 
 	/**
 	 * 
-	 * @see org.apache.wicket.util.convert.converters.AbstractConverter#getTargetType()
+	 * @see org.apache.wicket.util.convert.converter.AbstractConverter#getTargetType()
 	 */
 	@Override
 	protected Class<Timestamp> getTargetType()

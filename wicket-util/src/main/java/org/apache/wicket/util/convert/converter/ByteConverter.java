@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.convert.converters;
+package org.apache.wicket.util.convert.converter;
 
 import java.util.Locale;
 
@@ -22,41 +22,41 @@ import org.apache.wicket.util.convert.IConverter;
 
 
 /**
- * Converts from Object to Integer.
+ * Converts from Object to Byte.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class IntegerConverter extends AbstractIntegerConverter
+public class ByteConverter extends AbstractIntegerConverter
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The singleton instance for a integer converter
+	 * The singleton instance for a byte converter
 	 */
-	public static final IConverter INSTANCE = new IntegerConverter();
+	public static final IConverter INSTANCE = new ByteConverter();
 
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
-	public Integer convertToObject(final String value, Locale locale)
+	public Object convertToObject(final String value, Locale locale)
 	{
-		final Number number = parse(value, Integer.MIN_VALUE, Integer.MAX_VALUE, locale);
+		final Number number = parse(value, Byte.MIN_VALUE, Byte.MAX_VALUE, locale);
 
 		if (number == null)
 		{
 			return null;
 		}
 
-		return new Integer(number.intValue());
+		return new Byte(number.byteValue());
 	}
 
 	/**
-	 * @see org.apache.wicket.util.convert.converters.AbstractConverter#getTargetType()
+	 * @see org.apache.wicket.util.convert.converter.AbstractConverter#getTargetType()
 	 */
 	@Override
-	protected Class<Integer> getTargetType()
+	protected Class<?> getTargetType()
 	{
-		return Integer.class;
+		return Byte.class;
 	}
 }

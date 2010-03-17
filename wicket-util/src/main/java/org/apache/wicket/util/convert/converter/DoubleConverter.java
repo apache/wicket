@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.convert.converters;
+package org.apache.wicket.util.convert.converter;
 
 import java.util.Locale;
 
@@ -22,41 +22,43 @@ import org.apache.wicket.util.convert.IConverter;
 
 
 /**
- * Converts from Object to Float.
+ * Converts from Object to Double.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class FloatConverter extends AbstractDecimalConverter
+public class DoubleConverter extends AbstractDecimalConverter
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The singleton instance for a float converter
+	 * The singleton instance for a double converter
 	 */
-	public static final IConverter INSTANCE = new FloatConverter();
+	public static final IConverter INSTANCE = new DoubleConverter();
 
 	/**
-	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
+	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(String, java.util.Locale)
 	 */
-	public Float convertToObject(final String value, Locale locale)
+	public Double convertToObject(final String value, Locale locale)
 	{
-		final Number number = parse(value, -Float.MAX_VALUE, Float.MAX_VALUE, locale);
+		final Number number = parse(value, -Double.MAX_VALUE, Double.MAX_VALUE, locale);
+		// Double.MIN is the smallest nonzero positive number, not the largest
+		// negative number
 
 		if (number == null)
 		{
 			return null;
 		}
 
-		return new Float(number.floatValue());
+		return new Double(number.doubleValue());
 	}
 
 	/**
-	 * @see org.apache.wicket.util.convert.converters.AbstractConverter#getTargetType()
+	 * @see org.apache.wicket.util.convert.converter.AbstractConverter#getTargetType()
 	 */
 	@Override
-	protected Class<Float> getTargetType()
+	protected Class<Double> getTargetType()
 	{
-		return Float.class;
+		return Double.class;
 	}
 }

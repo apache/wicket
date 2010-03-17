@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.convert.converters;
+package org.apache.wicket.util.convert.converter;
 
 import java.util.Locale;
 
@@ -22,43 +22,41 @@ import org.apache.wicket.util.convert.IConverter;
 
 
 /**
- * Converts from Object to Double.
+ * Converts from Object to Short.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class DoubleConverter extends AbstractDecimalConverter
+public class ShortConverter extends AbstractIntegerConverter
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The singleton instance for a double converter
+	 * The singleton instance for a short converter
 	 */
-	public static final IConverter INSTANCE = new DoubleConverter();
+	public static final IConverter INSTANCE = new ShortConverter();
 
 	/**
-	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(String, java.util.Locale)
+	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
-	public Double convertToObject(final String value, Locale locale)
+	public Short convertToObject(final String value, Locale locale)
 	{
-		final Number number = parse(value, -Double.MAX_VALUE, Double.MAX_VALUE, locale);
-		// Double.MIN is the smallest nonzero positive number, not the largest
-		// negative number
+		final Number number = parse(value, Short.MIN_VALUE, Short.MAX_VALUE, locale);
 
 		if (number == null)
 		{
 			return null;
 		}
 
-		return new Double(number.doubleValue());
+		return new Short(number.shortValue());
 	}
 
 	/**
-	 * @see org.apache.wicket.util.convert.converters.AbstractConverter#getTargetType()
+	 * @see org.apache.wicket.util.convert.converter.AbstractConverter#getTargetType()
 	 */
 	@Override
-	protected Class<Double> getTargetType()
+	protected Class<Short> getTargetType()
 	{
-		return Double.class;
+		return Short.class;
 	}
 }

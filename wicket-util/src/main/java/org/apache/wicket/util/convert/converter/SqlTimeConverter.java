@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.convert.converters;
+package org.apache.wicket.util.convert.converter;
 
 import java.sql.Time;
 import java.text.DateFormat;
@@ -32,7 +32,7 @@ public class SqlTimeConverter extends AbstractConverter
 
 	private static final long serialVersionUID = 1L;
 
-	/** @see org.apache.wicket.util.convert.converters.DateConverter#convertToObject(java.lang.String,java.util.Locale) */
+	/** @see org.apache.wicket.util.convert.converter.DateConverter#convertToObject(java.lang.String,java.util.Locale) */
 	public Time convertToObject(String value, Locale locale)
 	{
 		if (value == null)

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.convert.converters;
+package org.apache.wicket.util.convert.converter;
 
 import java.util.Locale;
 
@@ -22,41 +22,41 @@ import org.apache.wicket.util.convert.IConverter;
 
 
 /**
- * Converts from Object to Short.
+ * Converts from Object to Long.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class ShortConverter extends AbstractIntegerConverter
+public class LongConverter extends AbstractIntegerConverter
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The singleton instance for a short converter
+	 * The singleton instance for a long converter
 	 */
-	public static final IConverter INSTANCE = new ShortConverter();
+	public static final IConverter INSTANCE = new LongConverter();
 
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
-	public Short convertToObject(final String value, Locale locale)
+	public Long convertToObject(final String value, Locale locale)
 	{
-		final Number number = parse(value, Short.MIN_VALUE, Short.MAX_VALUE, locale);
+		final Number number = parse(value, Long.MIN_VALUE, Long.MAX_VALUE, locale);
 
 		if (number == null)
 		{
 			return null;
 		}
 
-		return new Short(number.shortValue());
+		return new Long(number.longValue());
 	}
 
 	/**
-	 * @see org.apache.wicket.util.convert.converters.AbstractConverter#getTargetType()
+	 * @see org.apache.wicket.util.convert.converter.AbstractConverter#getTargetType()
 	 */
 	@Override
-	protected Class<Short> getTargetType()
+	protected Class<Long> getTargetType()
 	{
-		return Short.class;
+		return Long.class;
 	}
 }

@@ -14,49 +14,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.convert.converters;
+package org.apache.wicket.util.convert.converter;
 
+import java.text.NumberFormat;
 import java.util.Locale;
-
-import org.apache.wicket.util.convert.IConverter;
-
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Converts from Object to Long.
+ * Base class for all number converters.
  * 
- * @author Eelco Hillenius
  * @author Jonathan Locke
+ * 
  */
-public class LongConverter extends AbstractIntegerConverter
+public abstract class AbstractIntegerConverter extends AbstractNumberConverter
 {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * The singleton instance for a long converter
-	 */
-	public static final IConverter INSTANCE = new LongConverter();
+	/** The date format to use */
+	private final Map<Locale, NumberFormat> numberFormats = new ConcurrentHashMap<Locale, NumberFormat>();
 
 	/**
-	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
-	 */
-	public Long convertToObject(final String value, Locale locale)
-	{
-		final Number number = parse(value, Long.MIN_VALUE, Long.MAX_VALUE, locale);
-
-		if (number == null)
-		{
-			return null;
-		}
-
-		return new Long(number.longValue());
-	}
-
-	/**
-	 * @see org.apache.wicket.util.convert.converters.AbstractConverter#getTargetType()
+	 * @param locale
+	 *            The locale
+	 * @return Returns the numberFormat.
 	 */
 	@Override
-	protected Class<Long> getTargetType()
+	public NumberFormat getNumberFormat(Locale locale)
 	{
-		return Long.class;
+		NumberFormat numberFormat = numberFormats.get(locale);
+		if (numberFormat == null)
+		{
+			numberFormat = NumberFormat.getIntegerInstance(locale);
+			numberFormat.setParseIntegerOnly(true);
+			numberFormat.setGroupingUsed(false);
+			numberFormats.put(locale, numberFormat);
+		}
+		return (NumberFormat)numberFormat.clone();
 	}
+
 }

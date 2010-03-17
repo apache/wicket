@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.convert.converters;
+package org.apache.wicket.util.convert.converter;
 
 import java.util.Locale;
 
@@ -22,41 +22,41 @@ import org.apache.wicket.util.convert.IConverter;
 
 
 /**
- * Converts from Object to Byte.
+ * Converts from Object to Float.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class ByteConverter extends AbstractIntegerConverter
+public class FloatConverter extends AbstractDecimalConverter
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The singleton instance for a byte converter
+	 * The singleton instance for a float converter
 	 */
-	public static final IConverter INSTANCE = new ByteConverter();
+	public static final IConverter INSTANCE = new FloatConverter();
 
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
-	public Object convertToObject(final String value, Locale locale)
+	public Float convertToObject(final String value, Locale locale)
 	{
-		final Number number = parse(value, Byte.MIN_VALUE, Byte.MAX_VALUE, locale);
+		final Number number = parse(value, -Float.MAX_VALUE, Float.MAX_VALUE, locale);
 
 		if (number == null)
 		{
 			return null;
 		}
 
-		return new Byte(number.byteValue());
+		return new Float(number.floatValue());
 	}
 
 	/**
-	 * @see org.apache.wicket.util.convert.converters.AbstractConverter#getTargetType()
+	 * @see org.apache.wicket.util.convert.converter.AbstractConverter#getTargetType()
 	 */
 	@Override
-	protected Class<?> getTargetType()
+	protected Class<Float> getTargetType()
 	{
-		return Byte.class;
+		return Float.class;
 	}
 }

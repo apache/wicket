@@ -14,43 +14,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.convert.converters;
+package org.apache.wicket.util.convert.converter;
 
-import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+
+import org.apache.wicket.util.convert.IConverter;
+
 
 /**
- * Base class for all number converters.
+ * Converts from Object to Character.
  * 
+ * @author Eelco Hillenius
  * @author Jonathan Locke
- * 
  */
-public abstract class AbstractIntegerConverter extends AbstractNumberConverter
+public class CharacterConverter extends AbstractConverter
 {
 	private static final long serialVersionUID = 1L;
 
-	/** The date format to use */
-	private final Map<Locale, NumberFormat> numberFormats = new ConcurrentHashMap<Locale, NumberFormat>();
+	/**
+	 * The singleton instance for a character converter
+	 */
+	public static final IConverter INSTANCE = new CharacterConverter();
 
 	/**
-	 * @param locale
-	 *            The locale
-	 * @return Returns the numberFormat.
+	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
-	@Override
-	public NumberFormat getNumberFormat(Locale locale)
+	public Object convertToObject(final String value, Locale locale)
 	{
-		NumberFormat numberFormat = numberFormats.get(locale);
-		if (numberFormat == null)
+		int length = value.length();
+		if (length == 0)
 		{
-			numberFormat = NumberFormat.getIntegerInstance(locale);
-			numberFormat.setParseIntegerOnly(true);
-			numberFormat.setGroupingUsed(false);
-			numberFormats.put(locale, numberFormat);
+			return null;
 		}
-		return (NumberFormat)numberFormat.clone();
+		else if (length == 1)
+		{
+			return new Character(value.charAt(0));
+		}
+		throw newConversionException("Cannot convert '" + value + "' to Character", value, locale);
 	}
 
+	/**
+	 * @see org.apache.wicket.util.convert.converter.AbstractConverter#getTargetType()
+	 */
+	@Override
+	protected Class<Character> getTargetType()
+	{
+		return Character.class;
+	}
 }

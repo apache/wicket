@@ -26,6 +26,15 @@ import junit.framework.TestCase;
 import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.ConverterLocator;
+import org.apache.wicket.util.convert.converter.BigDecimalConverter;
+import org.apache.wicket.util.convert.converter.BooleanConverter;
+import org.apache.wicket.util.convert.converter.ByteConverter;
+import org.apache.wicket.util.convert.converter.DateConverter;
+import org.apache.wicket.util.convert.converter.DoubleConverter;
+import org.apache.wicket.util.convert.converter.FloatConverter;
+import org.apache.wicket.util.convert.converter.IntegerConverter;
+import org.apache.wicket.util.convert.converter.LongConverter;
+import org.apache.wicket.util.convert.converter.ShortConverter;
 
 /**
  * Tests for the base converters.

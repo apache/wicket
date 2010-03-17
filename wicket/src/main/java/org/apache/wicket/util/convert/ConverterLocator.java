@@ -24,19 +24,19 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.IConverterLocator;
-import org.apache.wicket.util.convert.converters.BigDecimalConverter;
-import org.apache.wicket.util.convert.converters.BooleanConverter;
-import org.apache.wicket.util.convert.converters.ByteConverter;
-import org.apache.wicket.util.convert.converters.CharacterConverter;
-import org.apache.wicket.util.convert.converters.DateConverter;
-import org.apache.wicket.util.convert.converters.DoubleConverter;
-import org.apache.wicket.util.convert.converters.FloatConverter;
-import org.apache.wicket.util.convert.converters.IntegerConverter;
-import org.apache.wicket.util.convert.converters.LongConverter;
-import org.apache.wicket.util.convert.converters.ShortConverter;
-import org.apache.wicket.util.convert.converters.SqlDateConverter;
-import org.apache.wicket.util.convert.converters.SqlTimeConverter;
-import org.apache.wicket.util.convert.converters.SqlTimestampConverter;
+import org.apache.wicket.util.convert.converter.BigDecimalConverter;
+import org.apache.wicket.util.convert.converter.BooleanConverter;
+import org.apache.wicket.util.convert.converter.ByteConverter;
+import org.apache.wicket.util.convert.converter.CharacterConverter;
+import org.apache.wicket.util.convert.converter.DateConverter;
+import org.apache.wicket.util.convert.converter.DoubleConverter;
+import org.apache.wicket.util.convert.converter.FloatConverter;
+import org.apache.wicket.util.convert.converter.IntegerConverter;
+import org.apache.wicket.util.convert.converter.LongConverter;
+import org.apache.wicket.util.convert.converter.ShortConverter;
+import org.apache.wicket.util.convert.converter.SqlDateConverter;
+import org.apache.wicket.util.convert.converter.SqlTimeConverter;
+import org.apache.wicket.util.convert.converter.SqlTimestampConverter;
 import org.apache.wicket.util.lang.Objects;
 
 
