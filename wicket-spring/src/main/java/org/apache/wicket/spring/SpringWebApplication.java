@@ -36,7 +36,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * @deprecated when using java5 it is preferrable to use {@link SpringBean} annotations for
  * 	injection rather then this spring-specific application subclass with its helpers. To setup
  * 	{@link SpringBean} add the following line to your {@link WebApplication} subclass init method
- * 	<code>add(new SpringComponentInjector(this));</code>
+ * 	<code>addComponentInstantiationListener(new SpringComponentInjector(this));</code>
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
