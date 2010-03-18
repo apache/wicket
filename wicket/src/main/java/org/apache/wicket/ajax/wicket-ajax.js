@@ -2030,6 +2030,8 @@ Wicket.ChangeHandler=function(elementId){
 
 	var obj = Wicket.$(elementId);
 	obj.setAttribute("autocomplete", "off");
+	obj.onchangeoriginal = obj.onchange;
+	
 	if (Wicket.Browser.isIE() || Wicket.Browser.isKHTML() || Wicket.Browser.isSafari()) {
 	
 		var objonchange = obj.onchange;

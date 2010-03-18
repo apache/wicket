@@ -183,6 +183,7 @@ Wicket.DateTime.init = function(cfg) {
 			if (cfg.hideOnSelect) cal.hide();
 			if (cfg.fireChangeEvent) {
 				var field = YAHOO.util.Dom.get(cfg.componentId);
+				if (field.onchangeoriginal != null && typeof(field.onchangeoriginal) != 'undefined') field.onchangeoriginal();
 				if (field.onchange != null && typeof(field.onchange) != 'undefined') field.onchange();
 			}
 		}
