@@ -56,7 +56,6 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.7</version>
 			<scope>provided</scope> <!-- provided because of the -test jar we build? -->
 		</dependency>
 		<dependency>
