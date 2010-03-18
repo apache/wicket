@@ -30,7 +30,7 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.flow.ResetResponseException;
 import org.apache.wicket.request.handler.PageProvider;
-import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
+import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.http.handler.RedirectRequestHandler;
 import org.apache.wicket.util.string.StringValue;
 

@@ -20,7 +20,7 @@ import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.handler.PageProvider;
-import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
+import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.mapper.StalePageException;
 
 public class DefaultExceptionMapper implements IExceptionMapper

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.request.handler.impl.render;
+package org.apache.wicket.request.handler.render;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
@@ -24,8 +24,8 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
-import org.apache.wicket.request.handler.impl.RenderPageRequestHandler.RedirectPolicy;
+import org.apache.wicket.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.slf4j.Logger;
@@ -149,7 +149,7 @@ public class WebPageRenderer extends PageRenderer
 	}
 
 	/**
-	 * @see org.apache.wicket.request.handler.impl.render.PageRenderer#respond(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.wicket.request.handler.render.PageRenderer#respond(org.apache.wicket.request.cycle.RequestCycle)
 	 */
 	@Override
 	public void respond(RequestCycle requestCycle)

@@ -46,7 +46,7 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.handler.PageProvider;
-import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
+import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;

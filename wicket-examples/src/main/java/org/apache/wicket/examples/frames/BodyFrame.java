@@ -24,7 +24,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.PageProvider;
-import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
+import org.apache.wicket.request.handler.RenderPageRequestHandler;
 
 
 /**

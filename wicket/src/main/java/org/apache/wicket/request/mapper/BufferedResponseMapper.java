@@ -24,7 +24,7 @@ import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.handler.impl.BufferedResponseRequestHandler;
+import org.apache.wicket.request.handler.BufferedResponseRequestHandler;
 
 /**
  * Encoder that intercepts requests for which there is already stored buffer with rendered data.

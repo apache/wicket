@@ -37,7 +37,7 @@ import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.handler.IPageProvider;
 import org.apache.wicket.request.handler.PageProvider;
-import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
+import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;

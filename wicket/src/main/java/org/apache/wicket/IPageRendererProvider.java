@@ -16,8 +16,8 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
-import org.apache.wicket.request.handler.impl.render.PageRenderer;
+import org.apache.wicket.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.request.handler.render.PageRenderer;
 
 public interface IPageRendererProvider
 {

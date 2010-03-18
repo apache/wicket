@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.request.handler.impl.render;
+package org.apache.wicket.request.handler.render;
 
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.IPageProvider;
-import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
-import org.apache.wicket.request.handler.impl.RenderPageRequestHandler.RedirectPolicy;
+import org.apache.wicket.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.request.handler.RenderPageRequestHandler.RedirectPolicy;
 
 /**
  * Delegate responsible for rendering the page. Depending on the implementation (web, test, portlet,

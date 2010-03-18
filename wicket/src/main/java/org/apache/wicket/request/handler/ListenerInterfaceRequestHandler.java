@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.request.handler.impl;
+package org.apache.wicket.request.handler;
 
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
@@ -22,12 +22,7 @@ import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.handler.IComponentRequestHandler;
-import org.apache.wicket.request.handler.IPageAndComponentProvider;
-import org.apache.wicket.request.handler.IPageRequestHandler;
-import org.apache.wicket.request.handler.PageAndComponentProvider;
-import org.apache.wicket.request.handler.PageProvider;
-import org.apache.wicket.request.handler.impl.RenderPageRequestHandler.RedirectPolicy;
+import org.apache.wicket.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Checks;

@@ -14,12 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.request.handler.impl;
+package org.apache.wicket.request.handler;
 
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.handler.IPageClassRequestHandler;
-import org.apache.wicket.request.handler.IPageProvider;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Checks;
 
