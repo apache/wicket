@@ -212,6 +212,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E>
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
+	@SuppressWarnings("unchecked")
 	private void readObject(ObjectInputStream inputStream) throws ClassNotFoundException,
 		IOException
 	{

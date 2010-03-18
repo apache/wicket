@@ -21,9 +21,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * Object utilities.
@@ -56,9 +53,6 @@ public final class Objects
 
 	/** Type tag meaning int. */
 	private static final int INT = 4;
-
-	/** log. */
-	private static final Logger log = LoggerFactory.getLogger(Objects.class);
 
 	/** Type tag meaning long. */
 	private static final int LONG = 5;

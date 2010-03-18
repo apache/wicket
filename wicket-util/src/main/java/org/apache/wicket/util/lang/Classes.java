@@ -18,8 +18,6 @@ package org.apache.wicket.util.lang;
 
 
 import org.apache.wicket.util.string.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -29,7 +27,6 @@ import org.slf4j.LoggerFactory;
  */
 public final class Classes
 {
-	private static final Logger log = LoggerFactory.getLogger(Classes.class);
 
 	/**
 	 * Gets the name of the given class or null if the class is null.
