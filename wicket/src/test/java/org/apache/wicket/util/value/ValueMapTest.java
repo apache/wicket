@@ -196,6 +196,7 @@ public class ValueMapTest extends TestCase
 		assertEquals(defBoolean, vm.getAsBoolean("boolean.bad", defBoolean));
 		assertNull(vm.getAsBoolean("boolean.missing"));
 		assertEquals(defBoolean, vm.getAsBoolean("boolean.missing", defBoolean));
+		assertEquals(!defBoolean, vm.getAsBoolean("boolean.missing", !defBoolean));
 
 		// integer
 		assertEquals(integerValue, vm.getAsInteger("num"));
