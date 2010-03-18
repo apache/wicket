@@ -19,6 +19,8 @@ package org.apache.wicket.protocol.http;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.wicket.request.http.WebResponse;
+
 /**
  * Response that keeps headers in buffers but writes the content directly to the response.
  * 

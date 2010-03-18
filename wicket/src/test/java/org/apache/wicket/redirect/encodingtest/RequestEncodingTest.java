@@ -18,7 +18,7 @@ package org.apache.wicket.redirect.encodingtest;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

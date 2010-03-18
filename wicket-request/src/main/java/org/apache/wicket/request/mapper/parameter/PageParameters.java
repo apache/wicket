@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.request.mapper.parameters;
+package org.apache.wicket.request.mapper.parameter;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -25,11 +25,11 @@ import javax.portlet.ResourceURL;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.RequestContext;
-import org.apache.wicket.Response;
 import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.WebResponse;
 
 /**
  * FIXME javadoc

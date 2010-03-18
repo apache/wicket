@@ -27,8 +27,8 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.http.WebRequest;
 
 /**
  * Mutable mock {@link WebRequest}.

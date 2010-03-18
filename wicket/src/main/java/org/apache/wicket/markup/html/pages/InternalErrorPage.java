@@ -19,8 +19,8 @@ package org.apache.wicket.markup.html.pages;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.WebResponse;
 
 
 /**

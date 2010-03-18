@@ -32,24 +32,24 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
-import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.internal.HeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
-import org.apache.wicket.protocol.http.WebRequest;
-import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
-import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -162,7 +162,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		}
 
 		/**
-		 * @see org.apache.wicket.Response#encodeURL(CharSequence)
+		 * @see org.apache.wicket.request.Response#encodeURL(CharSequence)
 		 */
 		@Override
 		public String encodeURL(CharSequence url)
@@ -187,7 +187,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		}
 
 		/**
-		 * @see org.apache.wicket.Response#write(CharSequence)
+		 * @see org.apache.wicket.request.Response#write(CharSequence)
 		 */
 		@Override
 		public void write(CharSequence cs)

@@ -23,7 +23,6 @@ import java.util.Map;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.RequestContext;
-import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
@@ -33,6 +32,7 @@ import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.renderStrategy.AbstractHeaderRenderStrategy;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.response.StringResponse;
 
 

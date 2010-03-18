@@ -55,7 +55,7 @@ public class UploadWebRequest extends ServletWebRequest
 
 
 	/**
-	 * @see org.apache.wicket.protocol.http.WebRequest#newMultipartWebRequest(org.apache.wicket.util.lang.Bytes)
+	 * @see org.apache.wicket.request.http.WebRequest#newMultipartWebRequest(org.apache.wicket.util.lang.Bytes)
 	 */
 	@Override
 	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxsize)

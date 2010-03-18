@@ -21,8 +21,8 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
-import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.WebResponse;
 
 /**
  * A IBehavior which can be added to any component. It allows to post-process (transform) the markup

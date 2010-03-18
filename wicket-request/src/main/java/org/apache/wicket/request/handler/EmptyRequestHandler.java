@@ -14,40 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.request.handler.basic;
+package org.apache.wicket.request.handler;
 
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 
 /**
- * The empty request target does nothing in itself but instead relies on some other source to
- * generate a response. It can be regarded as a dummy implementation.
+ * Request handler that performs no work
  * 
+ * @author igor.vaynberg
  * @author Eelco Hillenius
  */
 public final class EmptyRequestHandler implements IRequestHandler
 {
-	/** immutable hashcode. */
-	private static final int HASH = 17 * 3214424;
-
-	/** singleton instance. */
-	private static final EmptyRequestHandler instance = new EmptyRequestHandler();
-
 	/**
 	 * Construct.
 	 */
-	private EmptyRequestHandler()
+	public EmptyRequestHandler()
 	{
-	}
-
-	/**
-	 * Gets the singleton instance.
-	 * 
-	 * @return the singleton instance
-	 */
-	public static final EmptyRequestHandler getInstance()
-	{
-		return instance;
 	}
 
 	/**
@@ -66,34 +50,4 @@ public final class EmptyRequestHandler implements IRequestHandler
 	{
 	}
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (obj instanceof EmptyRequestHandler)
-		{
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode()
-	{
-		return HASH;
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString()
-	{
-		return "EmptyRequestTarget";
-	}
 }

@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.markup.html.internal;
 
-import org.apache.wicket.Response;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.response.StringResponse;
 

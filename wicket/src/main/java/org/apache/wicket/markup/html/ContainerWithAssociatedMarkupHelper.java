@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html;
 
-import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.markup.ComponentTag;
@@ -26,6 +25,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.TagUtils;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.response.NullResponse;
 import org.apache.wicket.util.lang.Classes;
 

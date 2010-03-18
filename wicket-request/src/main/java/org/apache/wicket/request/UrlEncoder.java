@@ -23,9 +23,6 @@ import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.BitSet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Adapted from java.net.URLEncoder, but defines instances for query string
  * encoding versus URL path component encoding.
@@ -40,8 +37,6 @@ import org.slf4j.LoggerFactory;
  */
 public class UrlEncoder
 {
-	private static final Logger log = LoggerFactory.getLogger(UrlEncoder.class);
-
 	/**
 	 * encoder types
 	 */

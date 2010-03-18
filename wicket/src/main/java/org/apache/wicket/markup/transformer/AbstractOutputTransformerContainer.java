@@ -18,11 +18,11 @@ package org.apache.wicket.markup.transformer;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.response.StringResponse;
 
 /**

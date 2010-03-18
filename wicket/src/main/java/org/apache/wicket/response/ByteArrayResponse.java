@@ -19,8 +19,8 @@ package org.apache.wicket.response;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.request.Response;
 
 
 /**
@@ -59,7 +59,7 @@ public class ByteArrayResponse extends Response
 	}
 
 	/**
-	 * @see org.apache.wicket.Response#write(CharSequence)
+	 * @see org.apache.wicket.request.Response#write(CharSequence)
 	 */
 	@Override
 	public void write(final CharSequence string)
@@ -75,7 +75,7 @@ public class ByteArrayResponse extends Response
 	}
 
 	/**
-	 * @see org.apache.wicket.Response#reset()
+	 * @see org.apache.wicket.request.Response#reset()
 	 */
 	@Override
 	public void reset()
@@ -85,7 +85,7 @@ public class ByteArrayResponse extends Response
 
 
 	/**
-	 * @see org.apache.wicket.Response#getOutputStream()
+	 * @see org.apache.wicket.request.Response#getOutputStream()
 	 */
 	@Override
 	public void write(byte[] array)

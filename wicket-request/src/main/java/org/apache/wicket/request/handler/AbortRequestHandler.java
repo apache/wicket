@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.request.handler.basic;
+package org.apache.wicket.request.handler;
 
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
@@ -28,7 +28,7 @@ public class AbortRequestHandler implements IRequestHandler
 
 	public void respond(IRequestCycle requestCycle)
 	{
-		// TODO
+		// TODO matej: what to do here???
 	}
 
 }

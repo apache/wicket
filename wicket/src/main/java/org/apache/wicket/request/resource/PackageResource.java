@@ -23,10 +23,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
-import org.apache.wicket.protocol.http.WebResponse;
-import org.apache.wicket.protocol.http.request.WebErrorCodeResponseHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.handler.basic.AbortRequestHandler;
+import org.apache.wicket.request.handler.AbortRequestHandler;
+import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.request.http.handler.ErrorCodeResponseHandler;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -148,7 +148,7 @@ public class PackageResource implements IResource
 			if (RequestCycle.get().getResponse() instanceof WebResponse)
 			{
 				RequestCycle.get().replaceAllRequestHandlers(
-					new WebErrorCodeResponseHandler(HttpServletResponse.SC_NOT_FOUND, msg));
+					new ErrorCodeResponseHandler(HttpServletResponse.SC_NOT_FOUND, msg));
 			}
 			else
 			{

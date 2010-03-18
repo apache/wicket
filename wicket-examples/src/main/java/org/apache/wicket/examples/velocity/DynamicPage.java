@@ -23,7 +23,7 @@ import java.util.Map;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.util.MapModel;
-import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IStringResourceStream;
 import org.apache.wicket.util.resource.PackageResourceStream;
 import org.apache.wicket.velocity.markup.html.VelocityPanel;

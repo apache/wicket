@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.request.cycle;
 
-import org.apache.wicket.Response;
 import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Response;
 
 
 /**

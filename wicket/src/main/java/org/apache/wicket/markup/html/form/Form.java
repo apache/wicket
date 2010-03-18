@@ -25,7 +25,6 @@ import java.util.Map;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -36,13 +35,14 @@ import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestParameters;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlDecoder;
-import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -1542,7 +1542,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 
 	/**
 	 * @see org.apache.wicket.Component#renderPlaceholderTag(org.apache.wicket.markup.ComponentTag,
-	 *      org.apache.wicket.Response)
+	 *      org.apache.wicket.request.Response)
 	 */
 	@Override
 	protected void renderPlaceholderTag(ComponentTag tag, Response response)

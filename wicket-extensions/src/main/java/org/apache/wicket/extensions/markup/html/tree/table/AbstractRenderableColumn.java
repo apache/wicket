@@ -20,7 +20,7 @@ import javax.swing.tree.TreeNode;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.Response;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
 
 

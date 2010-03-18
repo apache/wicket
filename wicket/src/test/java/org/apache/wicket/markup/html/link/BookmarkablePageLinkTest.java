@@ -17,7 +17,7 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * @author jcompagner

@@ -95,7 +95,7 @@ import org.apache.wicket.request.handler.impl.BookmarkablePageRequestHandler;
 import org.apache.wicket.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.impl.render.PageRenderer;
-import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.apache.wicket.util.IProvider;

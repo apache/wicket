@@ -24,8 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.lang.Checks;
 
 /**

@@ -19,7 +19,7 @@ package org.apache.wicket.request.handler;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.StalePageException;
-import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 
 /**

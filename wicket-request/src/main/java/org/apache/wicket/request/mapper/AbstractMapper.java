@@ -21,8 +21,8 @@ import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.Url.QueryParameter;
-import org.apache.wicket.request.mapper.parameters.IPageParametersEncoder;
-import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.Strings;
 

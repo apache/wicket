@@ -24,8 +24,8 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
-import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
-import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * Page that optionally throws an abortexception during render phase.
@@ -42,7 +42,7 @@ public class AbortExceptionPage extends WebPage
 
 		if (!triggerError)
 		{
-			throw new AbortWithWebErrorCodeException(1234, "this error will be rendered");
+			throw new AbortWithHttpErrorCodeException(1234, "this error will be rendered");
 		}
 
 		IModel<List<Object>> model = new LoadableDetachableModel<List<Object>>()
@@ -54,7 +54,7 @@ public class AbortExceptionPage extends WebPage
 			{
 				if (triggerError)
 				{
-					throw new AbortWithWebErrorCodeException(1234,
+					throw new AbortWithHttpErrorCodeException(1234,
 						"this error will NOT be rendered");
 				}
 				else

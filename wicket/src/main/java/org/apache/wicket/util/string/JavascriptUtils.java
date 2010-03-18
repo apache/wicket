@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.util.string;
 
-import org.apache.wicket.Response;
+import org.apache.wicket.request.Response;
 
 
 /**

@@ -25,11 +25,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.Response;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.XmlTag.Type;
 import org.apache.wicket.markup.parser.filter.HtmlHandler;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;

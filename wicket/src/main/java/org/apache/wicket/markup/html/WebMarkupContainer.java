@@ -19,7 +19,7 @@ package org.apache.wicket.markup.html;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.protocol.http.WebRequest;
+import org.apache.wicket.request.http.WebRequest;
 
 /**
  * A container of HTML markup and components. It is very similar to the base class MarkupContainer,

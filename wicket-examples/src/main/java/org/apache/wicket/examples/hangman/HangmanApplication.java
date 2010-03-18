@@ -17,10 +17,10 @@
 package org.apache.wicket.examples.hangman;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.Response;
 import org.apache.wicket.Session;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Response;
 
 
 /**

@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.request.mapper;
 
-import org.apache.wicket.request.mapper.parameters.IPageParametersEncoder;
-import org.apache.wicket.request.mapper.parameters.PageParametersEncoder;
+import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
+import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.NullProvider;

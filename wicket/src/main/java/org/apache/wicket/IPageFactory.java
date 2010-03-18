@@ -17,7 +17,7 @@
 package org.apache.wicket;
 
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 
 /**
@@ -25,7 +25,7 @@ import org.apache.wicket.request.mapper.parameters.PageParameters;
  * PageParameters argument to pass to the Page's constructor.
  * <p>
  * IMPORTANT NOTE: Implementations must let subclasses of
- * {@link org.apache.wicket.AbstractRestartResponseException} thrown from the constructing page's
+ * {@link org.apache.wicket.request.flow.ResetResponseException} thrown from the constructing page's
  * constructor bubble up.
  * 
  * @see org.apache.wicket.settings.ISessionSettings#setPageFactory(IPageFactory)

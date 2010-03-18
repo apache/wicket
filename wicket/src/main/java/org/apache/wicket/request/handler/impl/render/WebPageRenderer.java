@@ -17,16 +17,16 @@
 package org.apache.wicket.request.handler.impl.render;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Response;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.impl.RenderPageRequestHandler.RedirectPolicy;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

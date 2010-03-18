@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.request.handler.basic;
+package org.apache.wicket.request.handler;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.http.WebResponse;
 
 /**
  * The empty AJAX request target does output an empty AJAX response.

@@ -47,9 +47,9 @@ import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IModelComparator;
 import org.apache.wicket.model.IWrapModel;
-import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
@@ -58,7 +58,8 @@ import org.apache.wicket.request.handler.impl.BookmarkableListenerInterfaceReque
 import org.apache.wicket.request.handler.impl.BookmarkablePageRequestHandler;
 import org.apache.wicket.request.handler.impl.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
-import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.convert.IConverter;
@@ -2574,12 +2575,12 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 				}
 			}
 		}
+		catch (WicketRuntimeException wre)
+		{
+			throw wre;
+		}
 		catch (RuntimeException re)
 		{
-			if (re instanceof WicketRuntimeException || re instanceof AbortException)
-			{
-				throw re;
-			}
 			throw new WicketRuntimeException("Exception in rendering component: " + this, re);
 		}
 	}

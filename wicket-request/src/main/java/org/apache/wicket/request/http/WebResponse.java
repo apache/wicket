@@ -14,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.http;
+package org.apache.wicket.request.http;
 
 import java.io.IOException;
 
 import javax.servlet.http.Cookie;
 
-import org.apache.wicket.Response;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
 
 
@@ -107,7 +107,7 @@ public abstract class WebResponse extends Response
 	}
 
 	/**
-	 * Convenience method for setting the content-disposition:in;ine header. This header is used if
+	 * Convenience method for setting the content-disposition:inline header. This header is used if
 	 * the response should be shown embedded in browser window while having custom file name when
 	 * user saves the response. browser.
 	 * 

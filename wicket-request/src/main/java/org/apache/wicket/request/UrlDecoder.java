@@ -19,9 +19,6 @@ package org.apache.wicket.request;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Adapted from java.net.URLDecoder, but defines instances for query string
  * decoding versus URL path component decoding.
@@ -36,8 +33,6 @@ import org.slf4j.LoggerFactory;
  */
 public class UrlDecoder
 {
-	private static final Logger log = LoggerFactory.getLogger(UrlDecoder.class);
-
 	private final boolean decodePlus;
 
 	/**

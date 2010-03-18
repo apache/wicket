@@ -14,24 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.request.handler.basic;
+package org.apache.wicket.request.handler;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
-import org.apache.wicket.Application;
-import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.string.Strings;
 
 
 /**
  * Request target that responds by sending its string property.
  * 
+ * @author igor.vaynberg
  * @author Eelco Hillenius
  */
-public class StringRequestHandler implements IRequestHandler
+public class TextRequestHandler implements IRequestHandler
 {
 	/** the string for the response. */
 	private final String string;
@@ -44,15 +44,15 @@ public class StringRequestHandler implements IRequestHandler
 
 
 	/**
-	 * Creates a string request target with content type <code>text/plain</code> and default charset
-	 * (usually UTF-8)
+	 * Creates a string request target with content type <code>text/plain</code>
+	 * and default charset (usually UTF-8)
 	 * 
 	 * @param string
 	 *            the string for the response
 	 */
-	public StringRequestHandler(String string)
+	public TextRequestHandler(String string)
 	{
-		this("text/plain", getDefaultEncoding(), string);
+		this("text/plain", null, string);
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class StringRequestHandler implements IRequestHandler
 	 * @param string
 	 *            string for the response
 	 */
-	public StringRequestHandler(String contentType, String encoding, String string)
+	public TextRequestHandler(String contentType, String encoding, String string)
 	{
 		if (string == null)
 		{
@@ -85,16 +85,6 @@ public class StringRequestHandler implements IRequestHandler
 		this.encoding = encoding;
 	}
 
-	/**
-	 * Retrieves default charset configured in application
-	 * 
-	 * @return charset
-	 */
-	private static String getDefaultEncoding()
-	{
-		return Application.get().getRequestCycleSettings().getResponseRequestEncoding();
-	}
-
 
 	/**
 	 * Responds by sending the string property.
@@ -103,6 +93,8 @@ public class StringRequestHandler implements IRequestHandler
 	 */
 	public void respond(IRequestCycle requestCycle)
 	{
+		String encoding = getEncoding(requestCycle);
+
 		// Get servlet response to use when responding with resource
 		final WebResponse response = (WebResponse)requestCycle.getResponse();
 		response.setContentType(contentType + ";charset=" + encoding);
@@ -114,8 +106,26 @@ public class StringRequestHandler implements IRequestHandler
 		}
 		catch (IOException e)
 		{
-			throw new WicketRuntimeException("Unable to render string: " + e.getMessage(), e);
+			throw new RuntimeException("Unable to render string: " + e.getMessage(), e);
 		}
+	}
+
+	/**
+	 * @param requestCycle
+	 * @return
+	 */
+	private String getEncoding(IRequestCycle requestCycle)
+	{
+		String encoding = this.encoding;
+		if (Strings.isEmpty(encoding))
+		{
+			Charset charset = requestCycle.getRequest().getCharset();
+			if (charset != null)
+			{
+				encoding = charset.name();
+			}
+		}
+		return encoding;
 	}
 
 	/**
@@ -135,37 +145,5 @@ public class StringRequestHandler implements IRequestHandler
 		return string;
 	}
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (obj instanceof StringRequestHandler)
-		{
-			StringRequestHandler that = (StringRequestHandler)obj;
-			return string.equals(that.string);
-		}
-		return false;
-	}
-
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode()
-	{
-		int result = "StringRequestTarget".hashCode();
-		result += string.hashCode();
-		return 17 * result;
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString()
-	{
-		return "[StringRequestTarget@" + hashCode() + " " + string + "]";
-	}
+	
 }

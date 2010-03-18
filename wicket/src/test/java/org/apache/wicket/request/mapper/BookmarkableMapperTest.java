@@ -33,7 +33,7 @@ import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.request.mapper.BookmarkableMapper;
 import org.apache.wicket.request.mapper.IMapperContext;
 import org.apache.wicket.request.mapper.StalePageException;
-import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * @author Matej Knopp

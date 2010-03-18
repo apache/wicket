@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.http.request;
+package org.apache.wicket.request.http.handler;
 
-import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.http.WebResponse;
 
 
 /**
@@ -28,7 +28,7 @@ import org.apache.wicket.request.IRequestHandler;
  * 
  * @author Eelco Hillenius
  */
-public final class WebErrorCodeResponseHandler implements IRequestHandler
+public final class ErrorCodeResponseHandler implements IRequestHandler
 {
 	/** the servlet error code. */
 	private final int errorCode;
@@ -44,7 +44,7 @@ public final class WebErrorCodeResponseHandler implements IRequestHandler
 	 *            {@link javax.servlet.http.HttpServletResponse} constants
 	 * @see javax.servlet.http.HttpServletResponse
 	 */
-	public WebErrorCodeResponseHandler(int errorCode)
+	public ErrorCodeResponseHandler(int errorCode)
 	{
 		this(errorCode, null);
 	}
@@ -59,7 +59,7 @@ public final class WebErrorCodeResponseHandler implements IRequestHandler
 	 *            the optional message to send to the client
 	 * @see javax.servlet.http.HttpServletResponse
 	 */
-	public WebErrorCodeResponseHandler(int errorCode, String message)
+	public ErrorCodeResponseHandler(int errorCode, String message)
 	{
 		this.errorCode = errorCode;
 		this.message = message;
@@ -101,52 +101,5 @@ public final class WebErrorCodeResponseHandler implements IRequestHandler
 	 */
 	public void detach(IRequestCycle requestCycle)
 	{
-	}
-
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj)
-	{
-		boolean equal = false;
-		if (obj instanceof WebErrorCodeResponseHandler)
-		{
-			WebErrorCodeResponseHandler that = (WebErrorCodeResponseHandler)obj;
-			if (errorCode == that.errorCode)
-			{
-				if (message != null)
-				{
-					equal = (that.message != null && message.equals(that.message));
-				}
-				else
-				{
-					equal = (that.message == null);
-				}
-			}
-		}
-		return equal;
-	}
-
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode()
-	{
-		int result = "WebErrorCodeResponseTarget".hashCode();
-		result += message != null ? message.hashCode() : 0;
-		result += errorCode;
-		return 17 * result;
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString()
-	{
-		return "[WebErrorCodeResponseTarget@" + hashCode() + " errorCode=" + getErrorCode() +
-			((message != null) ? " (" + message + ")" : "" + "]");
 	}
 }

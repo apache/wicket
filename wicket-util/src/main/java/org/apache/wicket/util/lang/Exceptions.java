@@ -23,6 +23,7 @@ public class Exceptions
 		});
 	}
 
+	// TODO Component$IVisitor should utilize a similar object, much cleaner than magic return values
 	public static class Traversal<T>
 	{
 		private T result;

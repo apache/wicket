@@ -25,6 +25,7 @@ import javax.servlet.http.Cookie;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 

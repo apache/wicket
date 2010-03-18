@@ -22,13 +22,13 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.Response;
 import org.apache.wicket.Session;
 import org.apache.wicket.SharedResources;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Response;
 
 
 /**
@@ -62,7 +62,7 @@ public class FormInputApplication extends WicketExampleApplication
 
 	/**
 	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.request.Request,
-	 *      org.apache.wicket.Response)
+	 *      org.apache.wicket.request.Response)
 	 */
 	@Override
 	public Session newSession(Request request, Response response)

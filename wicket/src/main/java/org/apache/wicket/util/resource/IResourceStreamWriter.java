@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.util.resource;
 
-import org.apache.wicket.Response;
+import org.apache.wicket.request.Response;
 
 /**
  * Special IResourceStream implementation that a Resource can return when it directly wants to write

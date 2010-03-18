@@ -25,7 +25,7 @@ import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.IPageSource;
 import org.apache.wicket.request.mapper.StalePageException;
-import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Checks;
 
 /**

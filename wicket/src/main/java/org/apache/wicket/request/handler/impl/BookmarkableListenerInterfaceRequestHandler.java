@@ -24,7 +24,7 @@ import org.apache.wicket.request.handler.IComponentRequestHandler;
 import org.apache.wicket.request.handler.IPageAndComponentProvider;
 import org.apache.wicket.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
-import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Checks;
 
 /**

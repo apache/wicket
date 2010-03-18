@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
-import org.apache.wicket.Response;
+import org.apache.wicket.request.Response;
 
 /**
  * A renderer that abstracts autoassist specific details and allows subclasses to only render the
@@ -40,7 +40,7 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 
 	/**
 	 * @see org.apache.wicket.extensions.ajax.markup.html.autocomplete.IAutoCompleteRenderer#render(java.lang.Object,
-	 *      org.apache.wicket.Response, String)
+	 *      org.apache.wicket.request.Response, String)
 	 */
 	public final void render(T object, Response response, String criteria)
 	{
@@ -64,7 +64,7 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 
 
 	/**
-	 * @see org.apache.wicket.extensions.ajax.markup.html.autocomplete.IAutoCompleteRenderer#renderHeader(org.apache.wicket.Response)
+	 * @see org.apache.wicket.extensions.ajax.markup.html.autocomplete.IAutoCompleteRenderer#renderHeader(org.apache.wicket.request.Response)
 	 */
 	public final void renderHeader(Response response)
 	{
@@ -72,7 +72,7 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.ajax.markup.html.autocomplete.IAutoCompleteRenderer#renderFooter(org.apache.wicket.Response)
+	 * @see org.apache.wicket.extensions.ajax.markup.html.autocomplete.IAutoCompleteRenderer#renderFooter(org.apache.wicket.request.Response)
 	 */
 	public final void renderFooter(Response response)
 	{

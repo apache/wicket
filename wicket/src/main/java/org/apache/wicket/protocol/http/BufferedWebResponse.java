@@ -24,8 +24,9 @@ import java.util.List;
 
 import javax.servlet.http.Cookie;
 
-import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.request.Response;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.lang.Checks;
 
 /**

@@ -16,13 +16,13 @@
  */
 package org.apache.wicket.session;
 
-import org.apache.wicket.AbstractRestartResponseException;
 import org.apache.wicket.IPageFactory;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.request.handler.basic.EmptyRequestHandler;
-import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.flow.ResetResponseException;
+import org.apache.wicket.request.handler.EmptyRequestHandler;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 
 /**
@@ -44,7 +44,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		 */
 		public AbortAndRespondPage1()
 		{
-			throw new AbstractRestartResponseException(EmptyRequestHandler.getInstance())
+			throw new ResetResponseException(new EmptyRequestHandler())
 			{
 
 				/**
@@ -70,7 +70,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		 */
 		public AbortAndRespondPage2(PageParameters params)
 		{
-			throw new AbstractRestartResponseException(EmptyRequestHandler.getInstance())
+			throw new ResetResponseException(new EmptyRequestHandler())
 			{
 
 				/**
@@ -95,7 +95,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		 */
 		public AbortAndRespondPage3()
 		{
-			throw new AbstractRestartResponseException(EmptyRequestHandler.getInstance())
+			throw new ResetResponseException(new EmptyRequestHandler())
 			{
 
 				/**
@@ -113,7 +113,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		 */
 		public AbortAndRespondPage3(PageParameters params)
 		{
-			throw new AbstractRestartResponseException(EmptyRequestHandler.getInstance())
+			throw new ResetResponseException(new EmptyRequestHandler())
 			{
 
 				/**
@@ -161,7 +161,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 			pageFactory.newPage(AbortAndRespondPage1.class);
 			fail();
 		}
-		catch (AbstractRestartResponseException e)
+		catch (ResetResponseException e)
 		{
 			// noop
 		}
@@ -171,7 +171,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 			pageFactory.newPage(AbortAndRespondPage2.class);
 			fail();
 		}
-		catch (AbstractRestartResponseException e)
+		catch (ResetResponseException e)
 		{
 			// noop
 		}
@@ -181,7 +181,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 			pageFactory.newPage(AbortAndRespondPage2.class, new PageParameters());
 			fail();
 		}
-		catch (AbstractRestartResponseException e)
+		catch (ResetResponseException e)
 		{
 			// noop
 		}
@@ -191,7 +191,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 			pageFactory.newPage(AbortAndRespondPage3.class);
 			fail();
 		}
-		catch (AbstractRestartResponseException e)
+		catch (ResetResponseException e)
 		{
 			// noop
 		}
@@ -201,7 +201,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 			pageFactory.newPage(AbortAndRespondPage3.class, new PageParameters());
 			fail();
 		}
-		catch (AbstractRestartResponseException e)
+		catch (ResetResponseException e)
 		{
 			// noop
 		}

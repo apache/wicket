@@ -26,7 +26,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.wicket.Application;
 import org.apache.wicket.IPageRendererProvider;
 import org.apache.wicket.Page;
-import org.apache.wicket.Response;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
@@ -38,10 +37,12 @@ import org.apache.wicket.markup.resolver.AutoLinkResolver;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.impl.render.PageRenderer;
 import org.apache.wicket.request.handler.impl.render.WebPageRenderer;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.MountedMapper;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.session.HttpSessionStore;
@@ -347,7 +348,7 @@ public abstract class WebApplication extends Application
 
 	/**
 	 * @see org.apache.wicket.Application#newSession(org.apache.wicket.request.Request,
-	 *      org.apache.wicket.Response)
+	 *      org.apache.wicket.request.Response)
 	 */
 	@Override
 	public Session newSession(Request request, Response response)

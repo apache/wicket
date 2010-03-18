@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.ajax.form;
 
-import org.apache.wicket.Response;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.JavascriptUtils;
 
 /**

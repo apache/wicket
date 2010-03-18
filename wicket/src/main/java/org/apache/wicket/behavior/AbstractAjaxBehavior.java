@@ -18,8 +18,8 @@ package org.apache.wicket.behavior;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.RequestListenerInterface;
-import org.apache.wicket.Response;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.request.Response;
 
 /**
  * Abstract class for handling Ajax roundtrips. This class serves as a base for javascript specific

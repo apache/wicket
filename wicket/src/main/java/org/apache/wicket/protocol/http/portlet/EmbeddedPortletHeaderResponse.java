@@ -20,8 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.wicket.RequestContext;
-import org.apache.wicket.Response;
 import org.apache.wicket.markup.html.internal.HeaderResponse;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.response.StringResponse;
 
 /**

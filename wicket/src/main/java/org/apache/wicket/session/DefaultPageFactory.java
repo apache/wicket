@@ -20,14 +20,14 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
-import org.apache.wicket.AbortException;
 import org.apache.wicket.IPageFactory;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.markup.MarkupException;
+import org.apache.wicket.request.RequestHandlerStack.ReplaceHandlerException;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Generics;
 
 
@@ -152,7 +152,7 @@ public final class DefaultPageFactory implements IPageFactory
 			if (argument != null)
 				return (Page)constructor.newInstance(new Object[] { argument });
 			else
-				return (Page)constructor.newInstance(new Object[] {});
+				return (Page)constructor.newInstance(new Object[] { });
 		}
 		catch (InstantiationException e)
 		{
@@ -164,7 +164,7 @@ public final class DefaultPageFactory implements IPageFactory
 		}
 		catch (InvocationTargetException e)
 		{
-			if (e.getTargetException() instanceof AbortException ||
+			if (e.getTargetException() instanceof ReplaceHandlerException ||
 				e.getTargetException() instanceof AuthorizationException ||
 				e.getTargetException() instanceof MarkupException)
 			{

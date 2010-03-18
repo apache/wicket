@@ -18,10 +18,10 @@ package org.apache.wicket.request.cycle;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.Response;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.RequestHandlerStack;
+import org.apache.wicket.request.Response;
 
 /**
  * 

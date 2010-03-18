@@ -24,10 +24,10 @@ import java.util.Date;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.protocol.http.WebRequest;
-import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.request.Response;
+import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Checks;

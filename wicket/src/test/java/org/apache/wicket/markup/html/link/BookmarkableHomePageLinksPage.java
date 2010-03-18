@@ -19,7 +19,7 @@ package org.apache.wicket.markup.html.link;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * @author jcompagner

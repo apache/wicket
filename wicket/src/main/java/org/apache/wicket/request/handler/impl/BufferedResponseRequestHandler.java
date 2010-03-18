@@ -17,9 +17,9 @@
 package org.apache.wicket.request.handler.impl;
 
 import org.apache.wicket.protocol.http.BufferedWebResponse;
-import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.http.WebResponse;
 
 /**
  * Handler that renders a {@link BufferedWebResponse}.

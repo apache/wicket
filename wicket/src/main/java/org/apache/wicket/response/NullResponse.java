@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.response;
 
-import org.apache.wicket.Response;
+import org.apache.wicket.request.Response;
 
 
 /**
@@ -45,7 +45,7 @@ public class NullResponse extends Response
 	}
 
 	/**
-	 * @see org.apache.wicket.Response#write(CharSequence)
+	 * @see org.apache.wicket.request.Response#write(CharSequence)
 	 */
 	@Override
 	public void write(CharSequence string)

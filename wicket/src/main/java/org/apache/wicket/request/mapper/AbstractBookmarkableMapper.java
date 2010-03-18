@@ -31,7 +31,7 @@ import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.request.mapper.info.ComponentInfo;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.info.PageInfo;
-import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Checks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

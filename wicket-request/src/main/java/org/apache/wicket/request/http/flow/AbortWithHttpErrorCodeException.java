@@ -14,13 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.http.servlet;
+package org.apache.wicket.request.http.flow;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.wicket.AbortException;
-import org.apache.wicket.AbstractRestartResponseException;
-import org.apache.wicket.protocol.http.request.WebErrorCodeResponseHandler;
+import org.apache.wicket.request.flow.ResetResponseException;
+import org.apache.wicket.request.http.handler.ErrorCodeResponseHandler;
 
 /**
  * Causes Wicket to abort processing and set the specified HTTP error code, with the provided
@@ -28,9 +27,8 @@ import org.apache.wicket.protocol.http.request.WebErrorCodeResponseHandler;
  * 
  * @author igor.vaynberg
  * 
- * @see AbortException
  */
-public final class AbortWithWebErrorCodeException extends AbstractRestartResponseException
+public final class AbortWithHttpErrorCodeException extends ResetResponseException
 {
 	private static final long serialVersionUID = 1L;
 
@@ -45,9 +43,9 @@ public final class AbortWithWebErrorCodeException extends AbstractRestartRespons
 	 *            {@link javax.servlet.http.HttpServletResponse} constants
 	 * @see javax.servlet.http.HttpServletResponse
 	 */
-	public AbortWithWebErrorCodeException(int errorCode, String message)
+	public AbortWithHttpErrorCodeException(int errorCode, String message)
 	{
-		super(new WebErrorCodeResponseHandler(errorCode, message));
+		super(new ErrorCodeResponseHandler(errorCode, message));
 		this.errorCode = errorCode;
 		this.message = message;
 	}

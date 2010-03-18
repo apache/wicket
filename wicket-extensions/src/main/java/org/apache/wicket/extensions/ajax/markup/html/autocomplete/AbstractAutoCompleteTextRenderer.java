@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
-import org.apache.wicket.Response;
+import org.apache.wicket.request.Response;
 
 /**
  * Base for text renderers that simply want to show a string

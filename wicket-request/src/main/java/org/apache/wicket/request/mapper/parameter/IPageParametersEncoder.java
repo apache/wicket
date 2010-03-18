@@ -14,44 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket;
+package org.apache.wicket.request.mapper.parameter;
 
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.RequestHandlerStack.ReplaceHandlerException;
-import org.apache.wicket.request.handler.basic.EmptyRequestHandler;
-
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Url;
 
 /**
- * Immediately aborts any further processing.
+ * Encoder that can encode and decode {@link PageParameters} to/from URL.
  * 
- * @author Igor Vaynberg (ivaynberg)
+ * @author Matej Knopp
  */
-public class AbortException extends ReplaceHandlerException
+public interface IPageParametersEncoder
 {
-	private static final long serialVersionUID = 1L;
-
-
-	protected AbortException(IRequestHandler replacementRequestHandler)
-	{
-		super(replacementRequestHandler, true);
-	}
+	/**
+	 * Encode the given {@link PageParameters} instance into URL. The URL will be then merged with
+	 * the URL generated for {@link IRequestHandler}.
+	 * 
+	 * @param pageParameters
+	 * @return Url generated from the page parameters
+	 */
+	Url encodePageParameters(PageParameters pageParameters);
 
 	/**
-	 * Constructor
+	 * Decodes the given URL to {@link PageParameters}. The URL will have all
+	 * {@link IRequestHandler} specified segments/parameters stripped.
+	 * 
+	 * @param request
+	 * @return {@link PageParameters} instance
 	 */
-	public AbortException()
-	{
-		super(EmptyRequestHandler.getInstance(), true);
-	}
-
-	/**
-	 * @see java.lang.Throwable#fillInStackTrace()
-	 */
-	@Override
-	public synchronized Throwable fillInStackTrace()
-	{
-		// we do not need a stack trace, so to speed things up just return null
-		return null;
-	}
-
+	PageParameters decodePageParameters(Request request);
 }

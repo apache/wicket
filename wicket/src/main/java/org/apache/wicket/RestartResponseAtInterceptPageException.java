@@ -28,12 +28,13 @@ import org.apache.wicket.request.IWritableRequestParameters;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.flow.ResetResponseException;
 import org.apache.wicket.request.handler.PageProvider;
-import org.apache.wicket.request.handler.basic.RedirectRequestHandler;
 import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
+import org.apache.wicket.request.http.handler.RedirectRequestHandler;
 import org.apache.wicket.util.string.StringValue;
 
-public class RestartResponseAtInterceptPageException extends AbstractRestartResponseException
+public class RestartResponseAtInterceptPageException extends ResetResponseException
 {
 
 	public RestartResponseAtInterceptPageException(Page interceptPage)

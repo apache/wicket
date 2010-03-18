@@ -17,7 +17,7 @@
 package org.apache.wicket.examples.hangman;
 
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * The home page for the hangman application. Contains just a single hyperlink to the actual guess

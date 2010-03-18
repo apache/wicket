@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.request.mapper.parameters;
+package org.apache.wicket.request.mapper.parameter;
 
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
@@ -35,7 +35,7 @@ public class PageParametersEncoder implements IPageParametersEncoder
 	}
 
 	/**
-	 * @see org.apache.wicket.request.mapper.parameters.IPageParametersEncoder#decodePageParameters(org.apache.wicket.request.Request)
+	 * @see org.apache.wicket.request.mapper.parameter.IPageParametersEncoder#decodePageParameters(org.apache.wicket.request.Request)
 	 */
 	public PageParameters decodePageParameters(Request request)
 	{
@@ -57,7 +57,7 @@ public class PageParametersEncoder implements IPageParametersEncoder
 	}
 
 	/**
-	 * @see org.apache.wicket.request.mapper.parameters.IPageParametersEncoder#encodePageParameters(org.apache.wicket.request.mapper.parameters.PageParameters)
+	 * @see org.apache.wicket.request.mapper.parameter.IPageParametersEncoder#encodePageParameters(org.apache.wicket.request.mapper.parameter.PageParameters)
 	 */
 	public Url encodePageParameters(PageParameters pageParameters)
 	{

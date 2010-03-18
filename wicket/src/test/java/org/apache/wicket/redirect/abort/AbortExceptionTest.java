@@ -19,8 +19,8 @@ package org.apache.wicket.redirect.abort;
 import junit.framework.Assert;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
-import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * Testcase for WICKET-1418, throwing an abortexception during rendering.
@@ -56,7 +56,7 @@ public class AbortExceptionTest extends WicketTestCase
 		{
 			final Throwable reason = x.getCause();
 
-			Assert.assertEquals(reason.getClass(), AbortWithWebErrorCodeException.class);
+			Assert.assertEquals(reason.getClass(), AbortWithHttpErrorCodeException.class);
 			Assert.fail("this must not happen (we expect a redirect happen here and handled by wicket request processor)");
 		}
 	}

@@ -17,9 +17,10 @@
 package org.apache.wicket;
 
 import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.flow.ResetResponseException;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
-import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * Causes wicket to interrupt current request processing and immediately respond with the specified
@@ -27,7 +28,7 @@ import org.apache.wicket.request.mapper.parameters.PageParameters;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class RestartResponseException extends AbstractRestartResponseException
+public class RestartResponseException extends ResetResponseException
 {
 	private static final long serialVersionUID = 1L;
 

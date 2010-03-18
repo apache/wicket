@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.link.Link;
 
 /**
  * Example page that cannot be bookmarked. A page is bookmarkable when it has a public default
- * constructor and/or a constructor with a {@link org.apache.wicket.request.mapper.parameters.PageParameters} argument.
+ * constructor and/or a constructor with a {@link org.apache.wicket.request.mapper.parameter.PageParameters} argument.
  * 
  * @author Eelco Hillenius
  */

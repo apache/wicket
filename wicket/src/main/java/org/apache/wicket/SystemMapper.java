@@ -22,7 +22,7 @@ import org.apache.wicket.request.mapper.CompoundRequestMapper;
 import org.apache.wicket.request.mapper.HomePageMapper;
 import org.apache.wicket.request.mapper.PageInstanceMapper;
 import org.apache.wicket.request.mapper.ResourceReferenceMapper;
-import org.apache.wicket.request.mapper.parameters.PageParametersEncoder;
+import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.util.IProvider;
 
 

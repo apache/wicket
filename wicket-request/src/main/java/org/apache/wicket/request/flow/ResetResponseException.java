@@ -14,18 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket;
+package org.apache.wicket.request.flow;
 
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.RequestHandlerStack.ReplaceHandlerException;
 
 /**
- * An exception that causes the request cycle to immediately switch to respond stage.
+ * An exception that resets the response before executing the specified request
+ * handler
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @author Jonathan Locke
  */
-public abstract class AbstractRestartResponseException extends AbortException
+public abstract class ResetResponseException extends ReplaceHandlerException
 {
 	/**
 	 * 
@@ -35,9 +37,9 @@ public abstract class AbstractRestartResponseException extends AbortException
 	/**
 	 * Construct.
 	 */
-	protected AbstractRestartResponseException(IRequestHandler handler)
+	protected ResetResponseException(IRequestHandler handler)
 	{
-		super(new ResponseResettingDecorator(handler));
+		super(new ResponseResettingDecorator(handler), true);
 	}
 
 	private static class ResponseResettingDecorator implements IRequestHandler
