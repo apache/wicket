@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.lang.Checks;
@@ -208,7 +209,7 @@ public class ServletWebResponse extends WebResponse
 		}
 		else
 		{
-			Charset charset = Charset.forName(httpServletRequest.getCharacterEncoding());
+			Charset charset = RequestUtils.getCharset(httpServletRequest);
 			Url current = Url.parse(httpServletRequest.getRequestURI(), charset);
 			Url append = Url.parse(url, charset);
 			current.concatSegments(append.getSegments());
