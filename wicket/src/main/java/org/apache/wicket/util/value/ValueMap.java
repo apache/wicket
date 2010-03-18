@@ -606,6 +606,11 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	 */
 	public boolean getAsBoolean(String key, boolean defaultValue)
 	{
+		if (!containsKey(key))
+		{
+			return defaultValue;
+		}
+
 		try
 		{
 			return getBoolean(key);
