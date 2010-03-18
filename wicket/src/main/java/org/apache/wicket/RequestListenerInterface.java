@@ -25,8 +25,8 @@ import java.util.Map;
 
 import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.request.RequestHandlerStack.ReplaceHandlerException;
 import org.apache.wicket.request.component.IRequestableComponent;
-import org.apache.wicket.request.cycle.RequestHandlerStack.ReplaceHandlerException;
 import org.apache.wicket.util.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

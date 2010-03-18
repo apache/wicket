@@ -24,8 +24,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.UrlDecoder;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -51,13 +52,13 @@ public final class RequestUtils
 			final String[] bits = paramTuples[t].split("=");
 			if (bits.length == 2)
 			{
-				params.addNamedParameter(WicketURLDecoder.QUERY_INSTANCE.decode(bits[0],
-					getCurrentCharset()), WicketURLDecoder.QUERY_INSTANCE.decode(bits[1],
+				params.addNamedParameter(UrlDecoder.QUERY_INSTANCE.decode(bits[0],
+					getCurrentCharset()), UrlDecoder.QUERY_INSTANCE.decode(bits[1],
 					getCurrentCharset()));
 			}
 			else
 			{
-				params.addNamedParameter(WicketURLDecoder.QUERY_INSTANCE.decode(bits[0],
+				params.addNamedParameter(UrlDecoder.QUERY_INSTANCE.decode(bits[0],
 					getCurrentCharset()), "");
 			}
 		}

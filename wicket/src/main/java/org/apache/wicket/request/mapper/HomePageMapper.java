@@ -27,7 +27,7 @@ import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
  * 
  * @author Matej Knopp
  */
-public class HomePageMapper extends AbstractMapper
+public class HomePageMapper extends AbstractComponentMapper
 {
 
 	public int getCompatibilityScore(Request request)

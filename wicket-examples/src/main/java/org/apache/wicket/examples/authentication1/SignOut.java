@@ -17,7 +17,7 @@
 package org.apache.wicket.examples.authentication1;
 
 import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 
 /**
  * Simple logout page.

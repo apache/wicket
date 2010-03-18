@@ -23,9 +23,9 @@ import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.component.PageParameters;
 import org.apache.wicket.request.mapper.IPageSource;
 import org.apache.wicket.request.mapper.StalePageException;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 import org.apache.wicket.util.lang.Checks;
 
 /**

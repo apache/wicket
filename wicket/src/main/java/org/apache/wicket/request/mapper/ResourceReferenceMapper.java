@@ -17,7 +17,7 @@
 package org.apache.wicket.request.mapper;
 
 import org.apache.wicket.request.mapper.parameters.IPageParametersEncoder;
-import org.apache.wicket.request.mapper.parameters.SimplePageParametersEncoder;
+import org.apache.wicket.request.mapper.parameters.PageParametersEncoder;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.NullProvider;
@@ -56,6 +56,6 @@ public class ResourceReferenceMapper extends ParentPathReferenceRewriter
 	 */
 	public ResourceReferenceMapper()
 	{
-		this(new SimplePageParametersEncoder(), new NullProvider<String>());
+		this(new PageParametersEncoder(), new NullProvider<String>());
 	}
 }

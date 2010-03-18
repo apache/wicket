@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.apache.wicket.request.ICompoundRequestMapper;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
@@ -74,7 +73,7 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 	}
 
 	/**
-	 * @see org.apache.wicket.request.ICompoundRequestMapper#add(org.apache.wicket.request.IRequestMapper)
+	 * @see org.apache.wicket.request.mapper.ICompoundRequestMapper#add(org.apache.wicket.request.IRequestMapper)
 	 */
 	public CompoundRequestMapper add(IRequestMapper encoder)
 	{
@@ -83,7 +82,7 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 	}
 
 	/**
-	 * @see org.apache.wicket.request.ICompoundRequestMapper#remove(org.apache.wicket.request.IRequestMapper)
+	 * @see org.apache.wicket.request.mapper.ICompoundRequestMapper#remove(org.apache.wicket.request.IRequestMapper)
 	 */
 	public CompoundRequestMapper remove(IRequestMapper encoder)
 	{

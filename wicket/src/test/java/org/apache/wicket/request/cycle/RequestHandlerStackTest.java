@@ -21,6 +21,7 @@ import junit.framework.TestCase;
 import org.apache.wicket.Response;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.RequestHandlerStack;
 
 /**
  * 

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.http;
+package org.apache.wicket.request;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
@@ -34,9 +34,9 @@ import org.slf4j.LoggerFactory;
  * @see java.net.URLDecoder
  * @see {@link "http://www.ietf.org/rfc/rfc2396.txt"}
  */
-public class WicketURLDecoder
+public class UrlDecoder
 {
-	private static final Logger log = LoggerFactory.getLogger(WicketURLDecoder.class);
+	private static final Logger log = LoggerFactory.getLogger(UrlDecoder.class);
 
 	private final boolean decodePlus;
 
@@ -47,7 +47,7 @@ public class WicketURLDecoder
 	 * For example:
 	 * http://org.acme/notthis/northis/oreventhis?buthis=isokay&asis=thispart
 	 */
-	public static final WicketURLDecoder QUERY_INSTANCE = new WicketURLDecoder(true);
+	public static final UrlDecoder QUERY_INSTANCE = new UrlDecoder(true);
 
 	/**
 	 * Encoder used to decode components of a path.<br/>
@@ -55,7 +55,7 @@ public class WicketURLDecoder
 	 * 
 	 * For example: http://org.acme/foo/thispart/orthispart?butnot=thispart
 	 */
-	public static final WicketURLDecoder PATH_INSTANCE = new WicketURLDecoder(false);
+	public static final UrlDecoder PATH_INSTANCE = new UrlDecoder(false);
 
 	/**
 	 * Create decoder
@@ -63,7 +63,7 @@ public class WicketURLDecoder
 	 * @param decodePlus
 	 *            - whether to decode + to space
 	 */
-	private WicketURLDecoder(boolean decodePlus)
+	private UrlDecoder(boolean decodePlus)
 	{
 		this.decodePlus = decodePlus;
 	}

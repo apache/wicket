@@ -14,13 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.request.cycle;
+package org.apache.wicket.request;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.request.Request;
-import org.apache.wicket.request.Url;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 

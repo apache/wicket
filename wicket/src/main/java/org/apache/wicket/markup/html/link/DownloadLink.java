@@ -20,8 +20,8 @@ import java.io.File;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.WicketURLEncoder;
 import org.apache.wicket.request.IRequestCycle;
+import org.apache.wicket.request.UrlEncoder;
 import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.util.resource.FileResourceStream;
@@ -141,7 +141,7 @@ public class DownloadLink extends Link<File>
 			throw new IllegalStateException(getClass().getName() +
 				" failed to retrieve a File object from model");
 		}
-		final String fn = WicketURLEncoder.QUERY_INSTANCE.encode((fileName != null) ? fileName
+		final String fn = UrlEncoder.QUERY_INSTANCE.encode((fileName != null) ? fileName
 			: file.getName(), getRequest().getCharset());
 
 

@@ -19,10 +19,10 @@ package org.apache.wicket.request.mapper;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.request.component.PageParameters;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameters.IPageParametersEncoder;
-import org.apache.wicket.request.mapper.parameters.SimplePageParametersEncoder;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.mapper.parameters.PageParametersEncoder;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.WicketObjects;
 
@@ -62,7 +62,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 	 */
 	public BasicResourceReferenceMapper()
 	{
-		this(new SimplePageParametersEncoder());
+		this(new PageParametersEncoder());
 	}
 
 	/**

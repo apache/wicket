@@ -20,7 +20,7 @@ import java.util.Locale;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**

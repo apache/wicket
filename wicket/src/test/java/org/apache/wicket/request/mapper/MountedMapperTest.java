@@ -23,7 +23,6 @@ import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.component.PageParameters;
 import org.apache.wicket.request.handler.IPageProvider;
 import org.apache.wicket.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
@@ -35,6 +34,7 @@ import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.request.mapper.IMapperContext;
 import org.apache.wicket.request.mapper.MountedMapper;
 import org.apache.wicket.request.mapper.StalePageException;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 
 /**
  * @author Matej Knopp

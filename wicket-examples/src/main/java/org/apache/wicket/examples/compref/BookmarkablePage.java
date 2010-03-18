@@ -19,11 +19,11 @@ package org.apache.wicket.examples.compref;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 
 /**
  * Example page that cannot be bookmarked. A page is bookmarkable when it has a public default
- * constructor and/or a public constructor with a {@link org.apache.wicket.PageParameters} argument.
+ * constructor and/or a public constructor with a {@link org.apache.wicket.request.mapper.parameters.PageParameters} argument.
  * 
  * @author Eelco Hillenius
  */

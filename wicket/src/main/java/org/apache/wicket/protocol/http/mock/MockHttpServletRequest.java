@@ -49,9 +49,9 @@ import javax.servlet.http.HttpSession;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.mock.MockRequestParameters;
-import org.apache.wicket.protocol.http.WicketURLDecoder;
-import org.apache.wicket.protocol.http.WicketURLEncoder;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.UrlDecoder;
+import org.apache.wicket.request.UrlEncoder;
 import org.apache.wicket.request.Url.QueryParameter;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.io.IOUtils;
@@ -737,13 +737,13 @@ public class MockHttpServletRequest implements HttpServletRequest
 				final String value = getParameter(name);
 				if (name != null)
 				{
-					buf.append(WicketURLEncoder.QUERY_INSTANCE.encode(name,
+					buf.append(UrlEncoder.QUERY_INSTANCE.encode(name,
 						Charset.forName(getCharacterEncoding())));
 				}
 				buf.append('=');
 				if (value != null)
 				{
-					buf.append(WicketURLEncoder.QUERY_INSTANCE.encode(value,
+					buf.append(UrlEncoder.QUERY_INSTANCE.encode(value,
 						Charset.forName(getCharacterEncoding())));
 				}
 				if (iterator.hasNext())
@@ -1202,7 +1202,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void setPath(final String path)
 	{
-		this.path = WicketURLDecoder.PATH_INSTANCE.decode(path,
+		this.path = UrlDecoder.PATH_INSTANCE.decode(path,
 			Charset.forName(getCharacterEncoding()));
 	}
 

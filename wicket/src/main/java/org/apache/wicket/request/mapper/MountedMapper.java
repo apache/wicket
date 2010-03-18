@@ -21,10 +21,10 @@ import java.lang.ref.WeakReference;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.component.PageParameters;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.parameters.IPageParametersEncoder;
-import org.apache.wicket.request.mapper.parameters.SimplePageParametersEncoder;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.mapper.parameters.PageParametersEncoder;
 import org.apache.wicket.util.lang.Checks;
 
 /**
@@ -87,7 +87,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	 */
 	public MountedMapper(String mountPath, Class<? extends IRequestablePage> pageClass)
 	{
-		this(mountPath, pageClass, new SimplePageParametersEncoder());
+		this(mountPath, pageClass, new PageParametersEncoder());
 	}
 
 	/**

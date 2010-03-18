@@ -19,10 +19,10 @@ package org.apache.wicket.request.mapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.component.PageParameters;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.parameters.IPageParametersEncoder;
-import org.apache.wicket.request.mapper.parameters.SimplePageParametersEncoder;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
+import org.apache.wicket.request.mapper.parameters.PageParametersEncoder;
 import org.apache.wicket.util.lang.Checks;
 
 /**
@@ -70,7 +70,7 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 	 */
 	public BookmarkableMapper()
 	{
-		this(new SimplePageParametersEncoder());
+		this(new PageParametersEncoder());
 	}
 
 	/**

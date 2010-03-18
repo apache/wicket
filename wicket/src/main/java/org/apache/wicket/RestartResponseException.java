@@ -17,9 +17,9 @@
 package org.apache.wicket;
 
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.component.PageParameters;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 
 /**
  * Causes wicket to interrupt current request processing and immediately respond with the specified

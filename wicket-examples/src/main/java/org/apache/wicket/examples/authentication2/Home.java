@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.examples.authentication2;
 
-import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 
 /**
  * Simple home page which requires authentication

@@ -18,10 +18,9 @@ package org.apache.wicket.redirect.abort;
 
 import junit.framework.Assert;
 
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
-import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 
 /**
  * Testcase for WICKET-1418, throwing an abortexception during rendering.
@@ -51,9 +50,9 @@ public class AbortExceptionTest extends WicketTestCase
 		{
 			tester.startPage(AbortExceptionPage.class, new PageParameters("trigger=true"));
 			Assert.assertEquals((Integer)1234, tester.getLastResponse().getStatus()); // this will
-																						// fail
+			// fail
 		}
-		catch (WicketRuntimeException x)
+		catch (RuntimeException x)
 		{
 			final Throwable reason = x.getCause();
 

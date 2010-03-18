@@ -16,27 +16,16 @@
  */
 package org.apache.wicket.request;
 
+
 /**
- * Mapper that delegates the mapping to a contained {@link IRequestMapper}s with the highest
- * compatibility score.
- * 
- * @author igor.vaynberg
+ * Maps exception to {@link IRequestHandler}.
  */
-public interface ICompoundRequestMapper extends IRequestMapper, Iterable<IRequestMapper>
+public interface IExceptionMapper
 {
 	/**
-	 * Registers a {@link IRequestMapper}
+	 * @param e
 	 * 
-	 * @param encoder
-	 * @return {@code this} for chaining
+	 * @return {@link IRequestHandler} for given exception
 	 */
-	ICompoundRequestMapper add(IRequestMapper encoder);
-
-	/**
-	 * Unregisters {@link IRequestMapper}
-	 * 
-	 * @param encoder
-	 * @return {@code this} for chaining
-	 */
-	ICompoundRequestMapper remove(IRequestMapper encoder);
+	IRequestHandler map(Exception e);
 }

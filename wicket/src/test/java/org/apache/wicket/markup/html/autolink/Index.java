@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.autolink;
 
-import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 
 /**
  * Basic bookmarkable index page.

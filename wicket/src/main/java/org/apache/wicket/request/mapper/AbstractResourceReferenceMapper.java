@@ -28,7 +28,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Matej Knopp
  */
-public abstract class AbstractResourceReferenceMapper extends AbstractMapper
+public abstract class AbstractResourceReferenceMapper extends AbstractComponentMapper
 {
 
 	protected static String encodeResourceReferenceAttributes(

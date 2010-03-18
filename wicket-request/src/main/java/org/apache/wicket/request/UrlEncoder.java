@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.http;
+package org.apache.wicket.request;
 
 import java.io.CharArrayWriter;
 import java.io.UnsupportedEncodingException;
@@ -38,9 +38,9 @@ import org.slf4j.LoggerFactory;
  * @see java.net.URLEncoder
  * @see {@link "http://www.ietf.org/rfc/rfc2396.txt"}
  */
-public class WicketURLEncoder
+public class UrlEncoder
 {
-	private static final Logger log = LoggerFactory.getLogger(WicketURLEncoder.class);
+	private static final Logger log = LoggerFactory.getLogger(UrlEncoder.class);
 
 	/**
 	 * encoder types
@@ -77,7 +77,7 @@ public class WicketURLEncoder
 	 * For example:
 	 * http://org.acme/notthis/northis/oreventhis?buthis=isokay&asis=thispart
 	 */
-	public static final WicketURLEncoder QUERY_INSTANCE = new WicketURLEncoder(Type.QUERY, '\0');
+	public static final UrlEncoder QUERY_INSTANCE = new UrlEncoder(Type.QUERY, '\0');
 
 	/**
 	 * Encoder used to encode components of a path.<br/>
@@ -85,7 +85,7 @@ public class WicketURLEncoder
 	 * 
 	 * For example: http://org.acme/foo/thispart/orthispart?butnot=thispart
 	 */
-	public static final WicketURLEncoder PATH_INSTANCE = new WicketURLEncoder(Type.PATH, '\0');
+	public static final UrlEncoder PATH_INSTANCE = new UrlEncoder(Type.PATH, '\0');
 
 	/**
 	 * Encoder used to encode all path segments. Querystring will be excluded.<br/>
@@ -93,7 +93,7 @@ public class WicketURLEncoder
 	 * 
 	 * For example: http://org.acme/foo/thispart/orthispart?butnot=thispart
 	 */
-	public static final WicketURLEncoder FULL_PATH_INSTANCE = new WicketURLEncoder(Type.FULL_PATH,
+	public static final UrlEncoder FULL_PATH_INSTANCE = new UrlEncoder(Type.FULL_PATH,
 			'?');
 
 	/**
@@ -104,7 +104,7 @@ public class WicketURLEncoder
 	 * @param stopChar
 	 *            stop encoding when stopChar found
 	 */
-	protected WicketURLEncoder(Type type, char stopChar)
+	protected UrlEncoder(Type type, char stopChar)
 	{
 		this.stopChar = stopChar;
 

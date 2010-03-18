@@ -19,7 +19,7 @@ package org.apache.wicket.request.cycle;
 import junit.framework.TestCase;
 
 import org.apache.wicket.request.Url;
-import org.apache.wicket.request.cycle.UrlRenderer;
+import org.apache.wicket.request.UrlRenderer;
 
 /**
  * @author MAtej Knopp

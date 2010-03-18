@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.request.component;
+package org.apache.wicket.request.mapper.parameters;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.lang.Objects;

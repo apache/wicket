@@ -19,19 +19,18 @@ package org.apache.wicket.request.mapper.parameters;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.Url.QueryParameter;
-import org.apache.wicket.request.component.PageParameters;
 
 /**
  * Simple encoder with direct indexed/named parameters mapping.
  * 
  * @author Matej Knopp
  */
-public class SimplePageParametersEncoder implements IPageParametersEncoder
+public class PageParametersEncoder implements IPageParametersEncoder
 {
 	/**
 	 * Construct.
 	 */
-	public SimplePageParametersEncoder()
+	public PageParametersEncoder()
 	{
 	}
 
@@ -58,7 +57,7 @@ public class SimplePageParametersEncoder implements IPageParametersEncoder
 	}
 
 	/**
-	 * @see org.apache.wicket.request.mapper.parameters.IPageParametersEncoder#encodePageParameters(org.apache.wicket.request.component.PageParameters)
+	 * @see org.apache.wicket.request.mapper.parameters.IPageParametersEncoder#encodePageParameters(org.apache.wicket.request.mapper.parameters.PageParameters)
 	 */
 	public Url encodePageParameters(PageParameters pageParameters)
 	{

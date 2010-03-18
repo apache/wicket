@@ -19,7 +19,6 @@ package org.apache.wicket.request.mapper.parameters;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.request.component.PageParameters;
 
 /**
  * Encoder that can encode and decode {@link PageParameters} to/from URL.

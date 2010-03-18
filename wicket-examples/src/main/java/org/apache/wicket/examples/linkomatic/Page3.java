@@ -18,7 +18,7 @@ package org.apache.wicket.examples.linkomatic;
 
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 
 
 /**

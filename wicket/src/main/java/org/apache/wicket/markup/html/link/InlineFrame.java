@@ -20,7 +20,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 import org.apache.wicket.util.string.Strings;
 
 /**

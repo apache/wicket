@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.wicket.protocol.http.WicketURLDecoder;
-import org.apache.wicket.protocol.http.WicketURLEncoder;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.StringValue;
@@ -441,7 +439,7 @@ public final class Url implements Serializable
 	 */
 	private static String encodeSegment(String string, Charset charset)
 	{
-		return WicketURLEncoder.PATH_INSTANCE.encode(string, charset);
+		return UrlEncoder.PATH_INSTANCE.encode(string, charset);
 	}
 
 	/**
@@ -451,7 +449,7 @@ public final class Url implements Serializable
 	 */
 	private static String decodeSegment(String string, Charset charset)
 	{
-		return WicketURLDecoder.PATH_INSTANCE.decode(string, charset);
+		return UrlDecoder.PATH_INSTANCE.decode(string, charset);
 	}
 
 	/**
@@ -461,7 +459,7 @@ public final class Url implements Serializable
 	 */
 	private static String encodeParameter(String string, Charset charset)
 	{
-		return WicketURLEncoder.QUERY_INSTANCE.encode(string, charset);
+		return UrlEncoder.QUERY_INSTANCE.encode(string, charset);
 	}
 
 	/**
@@ -471,7 +469,7 @@ public final class Url implements Serializable
 	 */
 	private static String decodeParameter(String string, Charset charset)
 	{
-		return WicketURLDecoder.QUERY_INSTANCE.decode(string, charset);
+		return UrlDecoder.QUERY_INSTANCE.decode(string, charset);
 	}
 
 

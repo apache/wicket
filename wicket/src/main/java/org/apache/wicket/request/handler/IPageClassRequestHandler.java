@@ -18,7 +18,7 @@ package org.apache.wicket.request.handler;
 
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 
 /**
  * Request handler that works with page class.

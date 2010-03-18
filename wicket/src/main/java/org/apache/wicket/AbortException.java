@@ -17,7 +17,7 @@
 package org.apache.wicket;
 
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.cycle.RequestHandlerStack.ReplaceHandlerException;
+import org.apache.wicket.request.RequestHandlerStack.ReplaceHandlerException;
 import org.apache.wicket.request.handler.basic.EmptyRequestHandler;
 
 

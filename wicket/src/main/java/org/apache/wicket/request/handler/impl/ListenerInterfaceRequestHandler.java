@@ -23,13 +23,13 @@ import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.component.PageParameters;
 import org.apache.wicket.request.handler.IComponentRequestHandler;
 import org.apache.wicket.request.handler.IPageAndComponentProvider;
 import org.apache.wicket.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.impl.RenderPageRequestHandler.RedirectPolicy;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 import org.apache.wicket.util.lang.Checks;
 
 /**

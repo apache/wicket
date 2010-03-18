@@ -17,6 +17,7 @@
 package org.apache.wicket.request.component;
 
 import org.apache.wicket.page.IManageablePage;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 
 
 /**

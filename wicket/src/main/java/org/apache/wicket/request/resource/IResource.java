@@ -20,8 +20,8 @@ import java.io.Serializable;
 
 import org.apache.wicket.Response;
 import org.apache.wicket.request.Request;
-import org.apache.wicket.request.component.PageParameters;
 import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 import org.apache.wicket.util.lang.Checks;
 
 /**

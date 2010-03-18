@@ -17,9 +17,9 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.IResourceListener;
-import org.apache.wicket.request.component.PageParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.IResource.Attributes;

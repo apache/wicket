@@ -22,7 +22,7 @@ import org.apache.wicket.request.mapper.CompoundRequestMapper;
 import org.apache.wicket.request.mapper.HomePageMapper;
 import org.apache.wicket.request.mapper.PageInstanceMapper;
 import org.apache.wicket.request.mapper.ResourceReferenceMapper;
-import org.apache.wicket.request.mapper.parameters.SimplePageParametersEncoder;
+import org.apache.wicket.request.mapper.parameters.PageParametersEncoder;
 import org.apache.wicket.util.IProvider;
 
 
@@ -43,7 +43,7 @@ public class SystemMapper extends CompoundRequestMapper
 		add(new HomePageMapper());
 		add(new PageInstanceMapper());
 		add(new BookmarkableMapper());
-		add(new ResourceReferenceMapper(new SimplePageParametersEncoder(),
+		add(new ResourceReferenceMapper(new PageParametersEncoder(),
 			new ParentFolderPlaceholderProvider(application)));
 		add(new BufferedResponseMapper());
 	}

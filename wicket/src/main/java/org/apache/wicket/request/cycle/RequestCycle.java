@@ -26,17 +26,20 @@ import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.ClientInfo;
+import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
+import org.apache.wicket.request.RequestHandlerStack;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.component.PageParameters;
 import org.apache.wicket.request.handler.IPageProvider;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Checks;
 import org.slf4j.Logger;
@@ -316,7 +319,7 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle
 	}
 
 	/**
-	 * @see org.apache.wicket.request.cycle.RequestHandlerStack#getRequestCycle()
+	 * @see org.apache.wicket.request.RequestHandlerStack#getRequestCycle()
 	 */
 	@Override
 	protected RequestCycle getRequestCycle()
@@ -419,7 +422,7 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle
 	}
 
 	/**
-	 * @see org.apache.wicket.request.cycle.RequestHandlerStack#detach()
+	 * @see org.apache.wicket.request.RequestHandlerStack#detach()
 	 */
 	@Override
 	public void detach()

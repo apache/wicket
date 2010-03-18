@@ -44,7 +44,7 @@ import org.apache.wicket.request.mapper.info.PageInfo;
  * 
  * @author Matej Knopp
  */
-public class PageInstanceMapper extends AbstractMapper
+public class PageInstanceMapper extends AbstractComponentMapper
 {
 	/**
 	 * Construct.

@@ -49,7 +49,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.protocol.http.request.WebErrorCodeResponseHandler;
-import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.string.AppendingStringBuffer;

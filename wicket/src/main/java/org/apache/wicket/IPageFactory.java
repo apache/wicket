@@ -17,7 +17,7 @@
 package org.apache.wicket;
 
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 
 
 /**

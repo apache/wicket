@@ -18,9 +18,9 @@ package org.apache.wicket.request.handler.impl;
 
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.component.PageParameters;
 import org.apache.wicket.request.handler.IPageClassRequestHandler;
 import org.apache.wicket.request.handler.IPageProvider;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 import org.apache.wicket.util.lang.Checks;
 
 /**

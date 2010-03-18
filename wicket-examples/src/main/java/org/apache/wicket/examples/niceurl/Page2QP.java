@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.examples.niceurl;
 
-import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 
 /**
  * Simple bookmarkable page that displays page parameters which is mounted with another parameter

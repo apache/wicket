@@ -38,7 +38,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.request.component.PageParameters;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.file.Folder;
 import org.apache.wicket.util.lang.Bytes;

@@ -22,7 +22,6 @@ import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.component.PageParameters;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.impl.BookmarkableListenerInterfaceRequestHandler;
@@ -32,6 +31,7 @@ import org.apache.wicket.request.handler.impl.RenderPageRequestHandler;
 import org.apache.wicket.request.mapper.info.ComponentInfo;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.info.PageInfo;
+import org.apache.wicket.request.mapper.parameters.PageParameters;
 import org.apache.wicket.util.lang.Checks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Matej Knopp
  */
-public abstract class AbstractBookmarkableMapper extends AbstractMapper
+public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 {
 	private static Logger logger = LoggerFactory.getLogger(AbstractBookmarkableMapper.class);
 

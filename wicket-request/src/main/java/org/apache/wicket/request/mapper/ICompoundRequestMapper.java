@@ -14,19 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.request.cycle;
+package org.apache.wicket.request.mapper;
 
-import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.IRequestMapper;
 
 /**
- * Maps exception to {@link IRequestHandler}.
+ * Mapper that delegates the mapping to a contained {@link IRequestMapper}s with the highest
+ * compatibility score.
+ * 
+ * @author igor.vaynberg
  */
-public interface IExceptionMapper
+public interface ICompoundRequestMapper extends IRequestMapper, Iterable<IRequestMapper>
 {
 	/**
-	 * @param e
+	 * Registers a {@link IRequestMapper}
 	 * 
-	 * @return {@link IRequestHandler} for given exception
+	 * @param encoder
+	 * @return {@code this} for chaining
 	 */
-	IRequestHandler map(Exception e);
+	ICompoundRequestMapper add(IRequestMapper encoder);
+
+	/**
+	 * Unregisters {@link IRequestMapper}
+	 * 
+	 * @param encoder
+	 * @return {@code this} for chaining
+	 */
+	ICompoundRequestMapper remove(IRequestMapper encoder);
 }
