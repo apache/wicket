@@ -31,6 +31,7 @@ import org.apache.wicket.markup.html.form.FormComponent;
  * | +-E
  * |   +-F
  * +-G
+ *   +-H
  * </code>
  * 
  * @author igor.vaynberg
@@ -52,7 +53,7 @@ public class VisitorTest extends WicketTestCase
 			}
 		});
 
-		Assert.assertEquals("BCDEFG", path.toString());
+		Assert.assertEquals("BCDEFGH", path.toString());
 	}
 
 	public void testContinuePostOrder()
@@ -69,10 +70,10 @@ public class VisitorTest extends WicketTestCase
 			}
 		});
 
-		Assert.assertEquals("BDFECGA", path.toString());
+		Assert.assertEquals("BDFECHGA", path.toString());
 	}
 
-	public void testDoNotGoDeeper1()
+	public void testStop()
 	{
 		final StringBuilder path = new StringBuilder();
 
@@ -93,7 +94,7 @@ public class VisitorTest extends WicketTestCase
 		Assert.assertEquals("RESULT", result);
 	}
 
-	public void testStop()
+	public void testDoNotGoDeeper1()
 	{
 		final StringBuilder path = new StringBuilder();
 
@@ -110,7 +111,7 @@ public class VisitorTest extends WicketTestCase
 				return CONTINUE_TRAVERSAL;
 			}
 		});
-		Assert.assertEquals("BCG", path.toString());
+		Assert.assertEquals("BCGH", path.toString());
 	}
 
 	public void testDoNotGoDeeper2()
@@ -130,7 +131,7 @@ public class VisitorTest extends WicketTestCase
 				return CONTINUE_TRAVERSAL;
 			}
 		});
-		Assert.assertEquals("BCDEG", path.toString());
+		Assert.assertEquals("BCDEGH", path.toString());
 	}
 
 
@@ -145,12 +146,14 @@ public class VisitorTest extends WicketTestCase
 			WebMarkupContainer e = new WebMarkupContainer("E");
 			WebMarkupContainer f = new WebMarkupContainer("F");
 			WebMarkupContainer g = new WebMarkupContainer("G");
+			WebMarkupContainer h = new WebMarkupContainer("H");
 			add(b);
 			add(c);
 			c.add(d);
 			c.add(e);
 			e.add(f);
 			add(g);
+			g.add(h);
 		}
 
 	}
