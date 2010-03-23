@@ -69,7 +69,7 @@ public final class Home extends WicketExamplePage
 	public Home()
 	{
 		// Image as package resource
-		add(new Image("image2", new PackageResourceReference(Home.class, "image2.gif")));
+		add(new Image("image2", new PackageResourceReference(Home.class, "Image2.gif")));
 
 		// Dynamically created image. Will re-render whenever resource is asked
 		// for.

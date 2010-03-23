@@ -16,12 +16,16 @@
  */
 package org.apache.wicket;
 
+import org.apache.wicket.markup.html.pages.ExceptionErrorPage;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.mapper.StalePageException;
+import org.apache.wicket.settings.IExceptionSettings;
+import org.apache.wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
 
 public class DefaultExceptionMapper implements IExceptionMapper
 {
@@ -41,10 +45,26 @@ public class DefaultExceptionMapper implements IExceptionMapper
 		}
 		else
 		{
-			return new RenderPageRequestHandler(new PageProvider(Application.get()
-				.getApplicationSettings()
-				.getInternalErrorPage()));
+			final Application application = Application.get();
+			final UnexpectedExceptionDisplay unexpectedExceptionDisplay = application.getExceptionSettings()
+				.getUnexpectedExceptionDisplay();
+
+			if (IExceptionSettings.SHOW_EXCEPTION_PAGE.equals(unexpectedExceptionDisplay))
+			{
+				return new RenderPageRequestHandler(new PageProvider(
+				// TODO WICKET-NG How to provide the page to ExceptionErrorPage ?!
+					new ExceptionErrorPage(e, null)));
+			}
+			else if (IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE.equals(unexpectedExceptionDisplay))
+			{
+				return new RenderPageRequestHandler(new PageProvider(
+					application.getApplicationSettings().getInternalErrorPage()));
+			}
+			else
+			{
+				// IExceptionSettings.SHOW_NO_EXCEPTION_PAGE
+				return new EmptyRequestHandler();
+			}
 		}
 	}
-
 }

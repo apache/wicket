@@ -292,6 +292,9 @@ public class WicketFilter implements Filter
 			}
 
 			webApplication.initApplication();
+
+			// Give the application the option to log that it is started
+			webApplication.logStarted();
 		}
 		finally
 		{
