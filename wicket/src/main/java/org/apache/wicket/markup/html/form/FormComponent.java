@@ -983,8 +983,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			}
 		}
 		IsValidVisitor tmp = new IsValidVisitor();
-		final Boolean result;
-		result = visitFormComponentsPostOrder(this, tmp);
+		final Object result = visitFormComponentsPostOrder(this, tmp);
 		return (Boolean.FALSE == result) ? false : true;
 	}
 
