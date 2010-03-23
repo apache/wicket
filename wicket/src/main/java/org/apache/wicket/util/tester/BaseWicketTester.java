@@ -45,6 +45,7 @@ import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.Component.IVisit;
 import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -1462,9 +1463,9 @@ public class BaseWicketTester
 	 */
 	public void executeAllTimerBehaviors(MarkupContainer container)
 	{
-		container.visitChildren(MarkupContainer.class, new IVisitor<MarkupContainer>()
+		container.visitChildren(MarkupContainer.class, new IVisitor<MarkupContainer, Void>()
 		{
-			public Object component(MarkupContainer component)
+			public void component(final MarkupContainer component, final IVisit<Void> visit)
 			{
 				// get the AbstractAjaxBehaviour which is responsible for
 				// getting the contents of the lazy panel
@@ -1483,7 +1484,6 @@ public class BaseWicketTester
 						}
 					}
 				}
-				return CONTINUE_TRAVERSAL;
 			}
 		});
 	}

@@ -12,11 +12,11 @@ public class Exceptions
 		return visit(throwable, new IThrowableVisitor<T>()
 		{
 			@SuppressWarnings("unchecked")
-			public void visit(Throwable throwable, Traversal<T> traversal)
+			public void visit(Throwable throwable, Visit<T> visit)
 			{
 				if (causeType.isAssignableFrom(throwable.getClass()))
 				{
-					traversal.stop((T)throwable);
+					visit.stop((T)throwable);
 				}
 
 			}
@@ -24,7 +24,7 @@ public class Exceptions
 	}
 
 	// TODO Component$IVisitor should utilize a similar object, much cleaner than magic return values
-	public static class Traversal<T>
+	public static class Visit<T>
 	{
 		private T result;
 		private boolean stopped;
@@ -43,19 +43,19 @@ public class Exceptions
 
 	public static interface IThrowableVisitor<T>
 	{
-		void visit(Throwable throwable, Traversal<T> traversal);
+		void visit(Throwable throwable, Visit<T> visit);
 	}
 
 	public static <T> T visit(Throwable throwable, IThrowableVisitor<T> visitor)
 	{
-		Traversal<T> traversal = new Traversal<T>();
+		Visit<T> visit = new Visit<T>();
 		Throwable cursor = throwable;
 		while (cursor != null)
 		{
-			visitor.visit(cursor, traversal);
-			if (traversal.stopped)
+			visitor.visit(cursor, visit);
+			if (visit.stopped)
 			{
-				return traversal.result;
+				return visit.result;
 			}
 			cursor = cursor.getCause();
 		}

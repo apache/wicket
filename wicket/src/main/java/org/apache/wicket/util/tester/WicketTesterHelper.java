@@ -26,6 +26,7 @@ import junit.framework.Assert;
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.Page;
+import org.apache.wicket.Component.IVisit;
 import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.behavior.IBehavior;
@@ -73,9 +74,9 @@ public class WicketTesterHelper
 
 		if (page != null)
 		{
-			page.visitChildren(new IVisitor<Component>()
+			page.visitChildren(new IVisitor<Component, Void>()
 			{
-				public Object component(final Component component)
+				public void component(final Component component, final IVisit<Void> visit)
 				{
 					final ComponentData object = new ComponentData();
 
@@ -101,7 +102,6 @@ public class WicketTesterHelper
 					}
 
 					data.add(object);
-					return IVisitor.CONTINUE_TRAVERSAL;
 				}
 			});
 		}

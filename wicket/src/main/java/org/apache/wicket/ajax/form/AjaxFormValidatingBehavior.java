@@ -17,6 +17,7 @@
 package org.apache.wicket.ajax.form;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.Component.IVisit;
 import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.feedback.IFeedback;
@@ -77,12 +78,11 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	 */
 	private void addFeedbackPanels(final AjaxRequestTarget target)
 	{
-		getComponent().getPage().visitChildren(IFeedback.class, new IVisitor<Component>()
+		getComponent().getPage().visitChildren(IFeedback.class, new IVisitor<Component, Void>()
 		{
-			public Object component(Component component)
+			public void component(final Component component, final IVisit<Void> visit)
 			{
 				target.addComponent(component);
-				return IVisitor.CONTINUE_TRAVERSAL;
 			}
 		});
 	}
@@ -108,9 +108,9 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	public static void addToAllFormComponents(final Form<?> form, final String event,
 		final Duration throttleDelay)
 	{
-		form.visitChildren(FormComponent.class, new IVisitor<Component>()
+		form.visitChildren(FormComponent.class, new IVisitor<Component, Void>()
 		{
-			public Object component(Component component)
+			public void component(final Component component, final IVisit<Void> visit)
 			{
 				AjaxFormValidatingBehavior behavior = new AjaxFormValidatingBehavior(form, event);
 				if (throttleDelay != null)
@@ -118,7 +118,7 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 					behavior.setThrottleDelay(throttleDelay);
 				}
 				component.add(behavior);
-				return IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+				visit.dontGoDeeper();
 			}
 		});
 	}

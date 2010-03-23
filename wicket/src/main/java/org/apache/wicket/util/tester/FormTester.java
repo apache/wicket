@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.Component.IVisit;
 import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;
 import org.apache.wicket.markup.html.form.Check;
@@ -66,7 +67,7 @@ public class FormTester
 		/**
 		 * TODO need Javadoc from author.
 		 */
-		private final class SearchOptionByIndexVisitor implements IVisitor<Component>
+		private final class SearchOptionByIndexVisitor implements IVisitor<Component, Component>
 		{
 			int count = 0;
 
@@ -81,16 +82,15 @@ public class FormTester
 			/**
 			 * @see org.apache.wicket.Component.IVisitor#component(org.apache.wicket.Component)
 			 */
-			public Object component(Component component)
+			public void component(final Component component, final IVisit<Component> visit)
 			{
 				if (count == index)
 				{
-					return component;
+					visit.stop(component);
 				}
 				else
 				{
 					count++;
-					return CONTINUE_TRAVERSAL;
 				}
 			}
 		}
@@ -373,11 +373,12 @@ public class FormTester
 		tester = wicketTester;
 
 		// fill blank String for Text Component.
-		workingForm.visitFormComponents(new FormComponent.AbstractVisitor()
+		workingForm.visitFormComponents(new FormComponent.AbstractVisitor<Void>()
 		{
 			@SuppressWarnings("unchecked")
 			@Override
-			public void onFormComponent(final FormComponent<?> formComponent)
+			public void onFormComponent(final FormComponent<?> formComponent,
+				IVisit<Void> visit)
 			{
 				// do nothing for invisible component
 				if (!formComponent.isVisibleInHierarchy())
@@ -418,16 +419,16 @@ public class FormTester
 				else if (formComponent instanceof CheckGroup)
 				{
 					final Collection<?> checkGroupValues = (Collection<?>)formComponent.getDefaultModelObject();
-					formComponent.visitChildren(Check.class, new IVisitor<Component>()
+					formComponent.visitChildren(Check.class, new IVisitor<Component, Void>()
 					{
-						public Object component(Component component)
+						public void component(final Component component,
+							final IVisit<Void> visit)
 						{
 							if (checkGroupValues.contains(component.getDefaultModelObject()))
 							{
 								addFormComponentValue(formComponent,
 									((Check<?>)component).getValue());
 							}
-							return CONTINUE_TRAVERSAL;
 						}
 					});
 				}
@@ -439,17 +440,21 @@ public class FormTester
 					final Object value = formComponent.getDefaultModelObject();
 					if (value != null)
 					{
-						formComponent.visitChildren(Radio.class, new IVisitor<Component>()
+						formComponent.visitChildren(Radio.class, new IVisitor<Component, Void>()
 						{
-							public Object component(Component component)
+							public void component(final Component component,
+								final IVisit<Void> visit)
 							{
 								if (value.equals(component.getDefaultModelObject()))
 								{
 									addFormComponentValue(formComponent,
 										((Radio<?>)component).getValue());
-									return STOP_TRAVERSAL;
+									visit.stop();
 								}
-								return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+								else
+								{
+									visit.dontGoDeeper();
+								}
 							}
 						});
 					}

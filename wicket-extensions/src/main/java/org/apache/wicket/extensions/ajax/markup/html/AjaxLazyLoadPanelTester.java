@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.ajax.markup.html;
 import java.util.List;
 
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.Component.IVisit;
 import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
@@ -51,9 +52,9 @@ public class AjaxLazyLoadPanelTester
 	 */
 	public static void executeAjaxLazyLoadPanel(final WicketTester wt, MarkupContainer container)
 	{
-		container.visitChildren(AjaxLazyLoadPanel.class, new IVisitor<AjaxLazyLoadPanel>()
+		container.visitChildren(AjaxLazyLoadPanel.class, new IVisitor<AjaxLazyLoadPanel, Void>()
 		{
-			public Object component(AjaxLazyLoadPanel component)
+			public void component(AjaxLazyLoadPanel component, final IVisit<Void> visit)
 			{
 				// get the AbstractAjaxBehaviour which is responsible for
 				// getting the contents of the lazy panel
@@ -75,7 +76,6 @@ public class AjaxLazyLoadPanelTester
 					}
 				}
 				// continue looking for other AjazLazyLoadPanel
-				return CONTINUE_TRAVERSAL;
 			}
 		});
 	}

@@ -18,14 +18,16 @@ package org.apache.wicket.markup.renderStrategy;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.Component.IVisit;
 import org.apache.wicket.Component.IVisitor;
+import org.apache.wicket.Component.Visit;
 import org.apache.wicket.util.lang.Checks;
 
 /**
  * 
  * @author Juergen Donnerstag
  */
-public abstract class DeepChildFirstVisitor implements IVisitor<Component>
+public abstract class DeepChildFirstVisitor implements IVisitor<Component, Component>
 {
 	/**
 	 * Construct.
@@ -46,10 +48,11 @@ public abstract class DeepChildFirstVisitor implements IVisitor<Component>
 
 		if (rootComponent instanceof MarkupContainer)
 		{
+			final Visit<Component> visit = new Visit<Component>();
 			final Component[] lastComponent = new Component[1];
-			Object rtn = ((MarkupContainer)rootComponent).visitChildren(new Component.IVisitor<Component>()
+			Object rtn = ((MarkupContainer)rootComponent).visitChildren(new Component.IVisitor<Component, Component>()
 			{
-				public Object component(Component component)
+				public void component(final Component component, final IVisit<Component> visit)
 				{
 					// skip invisible components
 					if (component.isVisibleInHierarchy())
@@ -70,13 +73,12 @@ public abstract class DeepChildFirstVisitor implements IVisitor<Component>
 								{
 									// Render the container since all its children have been
 									// rendered by now
-									Object rtn = component(parent);
+									component(parent, visit);
 
 									// If visitor returns a non-null value, it halts the traversal
-									if ((rtn != IVisitor.CONTINUE_TRAVERSAL) &&
-										(rtn != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
+									if (((Visit)visit).isStopped())
 									{
-										return rtn;
+										return;
 									}
 
 									parent = parent.getParent();
@@ -84,25 +86,23 @@ public abstract class DeepChildFirstVisitor implements IVisitor<Component>
 							}
 
 							// The 'leafs' header
-							Object rtn = component(component);
+							component(component, visit);
 
 							// If visitor returns a non-null value, it halts the traversal
-							if ((rtn != IVisitor.CONTINUE_TRAVERSAL) &&
-								(rtn != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
+							if (((Visit)visit).isStopped())
 							{
-								return rtn;
+								return;
 							}
 
 							// Remember the current leaf, we need it for comparison later on
-							lastComponent[0] = component;
+							visit.stop(component);
 						}
-						return CONTINUE_TRAVERSAL;
 					}
 					else
 					{
 						// Remember the current leaf, we need it for comparison later on
 						lastComponent[0] = component;
-						return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+						visit.dontGoDeeper();
 					}
 				}
 
@@ -148,11 +148,10 @@ public abstract class DeepChildFirstVisitor implements IVisitor<Component>
 				{
 					// Render the container since all its children have been
 					// rendered by now
-					rtn = component(parent);
+					component(parent, visit);
 
 					// If visitor returns a non-null value, it halts the traversal
-					if ((rtn != IVisitor.CONTINUE_TRAVERSAL) &&
-						(rtn != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
+					if (visit.isStopped())
 					{
 						return rtn;
 					}
@@ -170,5 +169,5 @@ public abstract class DeepChildFirstVisitor implements IVisitor<Component>
 	/**
 	 * @see org.apache.wicket.Component.IVisitor#component(org.apache.wicket.Component)
 	 */
-	public abstract Object component(Component component);
+	public abstract void component(Component component, IVisit<Component> visit);
 }

@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.WicketTestCase;
 
 
@@ -51,32 +50,6 @@ public class FormTest extends WicketTestCase
 		};
 	}
 
-	/**
-	 * 
-	 */
-	public void testShouldContinueTraversalIfListenerAllowsChildProcessing()
-	{
-		assertTraversalStatus(Component.IVisitor.CONTINUE_TRAVERSAL, true);
-	}
-
-	/**
-	 * 
-	 */
-	public void testShouldContinueTraversalButDontGoDeeperIfListenerDisallowsChildProcessing()
-	{
-		assertTraversalStatus(Component.IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER, false);
-	}
-
-	private void assertTraversalStatus(Object expected, final boolean processChildren)
-	{
-		assertEquals(expected, visitor.formComponent(new IFormVisitorParticipant()
-		{
-			public boolean processChildren()
-			{
-				return processChildren;
-			}
-		}));
-	}
 
 	/**
 	 * @throws Exception

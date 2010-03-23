@@ -149,9 +149,9 @@ public final class PageView extends Panel
 	{
 		final List<ComponentData> data = new ArrayList<ComponentData>();
 
-		page.visitChildren(new IVisitor<Component>()
+		page.visitChildren(new IVisitor<Component, Void>()
 		{
-			public Object component(final Component component)
+			public void component(final Component component, final IVisit<Void> visit)
 			{
 				if (!component.getPath().startsWith(PageView.this.getPath()))
 				{
@@ -182,7 +182,6 @@ public final class PageView extends Panel
 					data.add(componentData);
 				}
 
-				return IVisitor.CONTINUE_TRAVERSAL;
 			}
 		});
 

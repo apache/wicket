@@ -21,6 +21,7 @@ package org.apache.wicket.extensions.breadcrumb.panel;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.Component.IVisit;
 import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -81,30 +82,30 @@ public abstract class BreadCrumbParticipantDelegate implements IBreadCrumbPartic
 				{
 					// try to search downwards to match the id
 					// NOTE unfortunately, we can't rely on the path pre 2.0
-					Component c = (Component)parent.visitChildren(new IVisitor<Component>()
+					Component c = parent.visitChildren(new IVisitor<Component, Component>()
 					{
-						public Object component(Component component)
+						public void component(Component component,
+							final IVisit<Component> visit)
 						{
 							if (component.getId().equals(thisId))
 							{
-								return component;
+								visit.stop(component);
 							}
-							return IVisitor.CONTINUE_TRAVERSAL;
 						}
 					});
 					if (c == null)
 					{
 						// not found... do a reverse search (upwards)
-						c = (Component)parent.visitParents(Component.class,
-							new IVisitor<Component>()
+						c = parent.visitParents(Component.class,
+							new IVisitor<Component, Component>()
 							{
-								public Object component(Component component)
+								public void component(Component component,
+									final IVisit<Component> visit)
 								{
 									if (component.getId().equals(thisId))
 									{
-										return component;
+										visit.stop(component);
 									}
-									return IVisitor.CONTINUE_TRAVERSAL;
 								}
 							});
 					}

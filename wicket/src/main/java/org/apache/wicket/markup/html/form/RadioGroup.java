@@ -101,17 +101,16 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 			final String value = input[0];
 
 			// retrieve the selected single radio choice component
-			Radio<T> choice = (Radio<T>)visitChildren(Radio.class,
-				new Component.IVisitor<Radio<T>>()
+			Radio<T> choice = visitChildren(Radio.class,
+				new Component.IVisitor<Radio<T>, Radio<T>>()
 				{
 
-					public Object component(Radio<T> radio)
+					public void component(final Radio<T> radio, final IVisit<Radio<T>> visit)
 					{
 						if (radio.getValue().equals(value))
 						{
-							return radio;
+							visit.stop(radio);
 						}
-						return CONTINUE_TRAVERSAL;
 					}
 
 				});

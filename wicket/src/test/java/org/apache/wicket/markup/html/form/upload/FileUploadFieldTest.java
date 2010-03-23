@@ -27,6 +27,7 @@ import java.util.Set;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.Component.IVisit;
 import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.tester.FormTester;
@@ -136,12 +137,12 @@ public class FileUploadFieldTest extends WicketTestCase
 			}
 		};
 		final MockPageWithFormAndUploadField page = new MockPageWithFormAndUploadField();
-		page.getForm().visitChildren(FileUploadField.class, new IVisitor<FileUploadField>()
+		page.getForm().visitChildren(FileUploadField.class, new IVisitor<FileUploadField, Void>()
 		{
-			public Object component(FileUploadField uploadField)
+			public void component(FileUploadField uploadField, IVisit<Void> visit)
 			{
 				uploadField.add(testValidator);
-				return STOP_TRAVERSAL;
+				visit.stop();
 			}
 		});
 

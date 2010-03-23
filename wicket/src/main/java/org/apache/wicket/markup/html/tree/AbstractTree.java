@@ -253,18 +253,18 @@ public abstract class AbstractTree extends Panel
 					public void visitItem(TreeItem item)
 					{
 						// write header contributions from the children of item
-						item.visitChildren(new Component.IVisitor<Component>()
+						item.visitChildren(new Component.IVisitor<Component, Void>()
 						{
-							public Object component(Component component)
+							public void component(final Component component,
+								final IVisit<Void> visit)
 							{
 								if (component.isVisible())
 								{
 									component.renderHead(container);
-									return CONTINUE_TRAVERSAL;
 								}
 								else
 								{
-									return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+									visit.dontGoDeeper();
 								}
 							}
 						});

@@ -166,12 +166,15 @@ public abstract class MarkupContainer extends Component
 					if (child instanceof MarkupContainer)
 					{
 						MarkupContainer container = (MarkupContainer)child;
-						container.visitChildren(new IVisitor<Component>()
+						container.visitChildren(new IVisitor<Component, Void>()
 						{
-							public Object component(final Component component)
+							public void component(final Component component,
+								final IVisit<Void> visit)
 							{
-								return component.internalOnMarkupAttached()
-									? CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER : CONTINUE_TRAVERSAL;
+								if (component.internalOnMarkupAttached())
+								{
+									visit.dontGoDeeper();
+								}
 							}
 						});
 					}
@@ -794,9 +797,9 @@ public abstract class MarkupContainer extends Component
 		super.setDefaultModel(model);
 		if (previous instanceof IComponentInheritedModel)
 		{
-			visitChildren(new IVisitor<Component>()
+			visitChildren(new IVisitor<Component, Void>()
 			{
-				public Object component(Component component)
+				public void component(final Component component, final IVisit<Void> visit)
 				{
 					IModel<?> compModel = component.getDefaultModel();
 					if (compModel instanceof IWrapModel)
@@ -811,7 +814,6 @@ public abstract class MarkupContainer extends Component
 					{
 						component.modelChanged();
 					}
-					return IVisitor.CONTINUE_TRAVERSAL;
 				}
 
 			});
@@ -895,8 +897,18 @@ public abstract class MarkupContainer extends Component
 	 * @return The return value from a visitor which halted the traversal, or null if the entire
 	 *         traversal occurred
 	 */
-	public final <S extends Component> Object visitChildren(final Class<?> clazz,
-		final IVisitor<S> visitor)
+
+	public final <S extends Component, R> R visitChildren(final Class<?> clazz,
+		final IVisitor<S, R> visitor)
+	{
+		Visit<R> visit = new Visit<R>();
+		visitChildren(clazz, visitor, visit);
+		return visit.getResult();
+	}
+
+
+	private final <S extends Component, R> void visitChildren(final Class<?> clazz,
+		final IVisitor<S, R> visitor, Visit<R> visit)
 	{
 		if (visitor == null)
 		{
@@ -908,41 +920,44 @@ public abstract class MarkupContainer extends Component
 		{
 			// Get next child component
 			final Component child = children_get(i);
-			Object value = null;
 
 			// Is the child of the correct class (or was no class specified)?
 			if (clazz == null || clazz.isInstance(child))
 			{
+				Visit<R> childTraversal = new Visit<R>();
+
 				// Call visitor
 				@SuppressWarnings("unchecked")
 				S s = (S)child;
-				value = visitor.component(s);
+				visitor.component(s, childTraversal);
 
-				// If visitor returns a non-null value, it halts the traversal
-				if ((value != IVisitor.CONTINUE_TRAVERSAL) &&
-					(value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
+				if (childTraversal.isStopped())
 				{
-					return value;
+					visit.stop(childTraversal.getResult());
+					return;
+				}
+				else if (childTraversal.isDontGoDeeper())
+				{
+					continue;
 				}
 			}
 
 			// If child is a container
-			if ((child instanceof MarkupContainer) &&
-				(value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
+			if ((child instanceof MarkupContainer) && !visit.isDontGoDeeper())
 			{
-				// visit the children in the container
-				value = ((MarkupContainer)child).visitChildren(clazz, visitor);
+				Visit<R> childTraversal = new Visit<R>();
 
-				// If visitor returns a non-null value, it halts the traversal
-				if ((value != IVisitor.CONTINUE_TRAVERSAL) &&
-					(value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
+				// visit the children in the container
+				((MarkupContainer)child).visitChildren(clazz, visitor, visit);
+
+				if (visit.isStopped())
 				{
-					return value;
+					return;
 				}
 			}
 		}
 
-		return null;
+		return;
 	}
 
 	/**
@@ -954,7 +969,7 @@ public abstract class MarkupContainer extends Component
 	 * @return The return value from a visitor which halted the traversal, or null if the entire
 	 *         traversal occurred
 	 */
-	public final Object visitChildren(final IVisitor<Component> visitor)
+	public final <R> R visitChildren(final IVisitor<Component, R> visitor)
 	{
 		return visitChildren(null, visitor);
 	}
@@ -997,12 +1012,11 @@ public abstract class MarkupContainer extends Component
 			if (child instanceof MarkupContainer)
 			{
 				MarkupContainer container = (MarkupContainer)child;
-				container.visitChildren(new IVisitor<Component>()
+				container.visitChildren(new IVisitor<Component, Void>()
 				{
-					public Object component(final Component component)
+					public void component(final Component component, final IVisit<Void> visit)
 					{
 						component.onConnectedToPage();
-						return CONTINUE_TRAVERSAL;
 					}
 				});
 			}
@@ -1815,15 +1829,14 @@ public abstract class MarkupContainer extends Component
 	{
 		super.setRenderAllowed();
 
-		visitChildren(new IVisitor<Component>()
+		visitChildren(new IVisitor<Component, Void>()
 		{
-			public Object component(final Component component)
+			public void component(final Component component, final IVisit<Void> visit)
 			{
 				// Find out if this component can be rendered
 				final boolean renderAllowed = component.isActionAuthorized(RENDER);
 				// Authorize rendering
 				component.setRenderAllowed(renderAllowed);
-				return IVisitor.CONTINUE_TRAVERSAL;
 			}
 		});
 	}

@@ -101,36 +101,33 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	/**
 	 * Visitor for traversing form components
 	 */
-	public static abstract class AbstractVisitor implements IVisitor
+	public static abstract class AbstractVisitor<R> implements IVisitor<R>
 	{
-		/**
-		 * @see org.apache.wicket.markup.html.form.FormComponent.IVisitor#formComponent(IFormVisitorParticipant)
-		 */
-		public Object formComponent(IFormVisitorParticipant component)
+		public void formComponent(final IFormVisitorParticipant component, final IVisit<R> visit)
 		{
 			if (component instanceof FormComponent<?>)
 			{
-				onFormComponent((FormComponent<?>)component);
+				onFormComponent((FormComponent<?>)component, visit);
 			}
-			return Component.IVisitor.CONTINUE_TRAVERSAL;
 		}
 
-		protected abstract void onFormComponent(FormComponent<?> formComponent);
+		protected abstract void onFormComponent(FormComponent<?> formComponent, IVisit<R> visit);
 	}
 
 	/**
 	 * Typesafe interface to code that is called when visiting a form component.
 	 */
-	public static interface IVisitor
+	public static interface IVisitor<R>
 	{
 		/**
 		 * Called when visiting a form component
 		 * 
 		 * @param formComponent
 		 *            The form component
-		 * @return component
+		 * @param traversal
+		 *            The {@link IVisit} that will keep the result and traversing state
 		 */
-		public Object formComponent(IFormVisitorParticipant formComponent);
+		public void formComponent(IFormVisitorParticipant formComponent, IVisit<R> visit);
 	}
 
 	/**
@@ -364,15 +361,18 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * @param visitor
 	 *            The visitor to call
 	 */
-	public static final void visitFormComponentsPostOrder(Component component,
-		final FormComponent.IVisitor visitor)
+	public static final <R> R visitFormComponentsPostOrder(Component component,
+		final FormComponent.IVisitor<R> visitor)
 	{
 		if (visitor == null)
 		{
 			throw new IllegalArgumentException("Argument `visitor` cannot be null");
 		}
 
-		visitFormComponentsPostOrderHelper(component, visitor);
+		Visit<R> visit = new Visit<R>();
+		visitFormComponentsPostOrderHelper(component, visitor, visit);
+		return visit.getResult();
+
 	}
 
 	/**
@@ -381,8 +381,8 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * @param visitor
 	 * @return Object
 	 */
-	private static final Object visitFormComponentsPostOrderHelper(Component component,
-		final FormComponent.IVisitor visitor)
+	private static final <R> void visitFormComponentsPostOrderHelper(Component component,
+		final FormComponent.IVisitor<R> visitor, Visit<R> visit)
 	{
 		if (component instanceof MarkupContainer)
 		{
@@ -396,14 +396,16 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 				}
 				if (visitChildren)
 				{
+					Visit<R> childTraversal = new Visit<R>();
 					final Iterator<? extends Component> children = container.iterator();
 					while (children.hasNext())
 					{
 						final Component child = children.next();
-						Object value = visitFormComponentsPostOrderHelper(child, visitor);
-						if (value == Component.IVisitor.STOP_TRAVERSAL)
+						visitFormComponentsPostOrderHelper(child, visitor, childTraversal);
+						if (childTraversal.isStopped())
 						{
-							return value;
+							visit.stop(childTraversal.getResult());
+							return;
 						}
 					}
 				}
@@ -413,10 +415,8 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		if (component instanceof FormComponent<?>)
 		{
 			final FormComponent<?> fc = (FormComponent<?>)component;
-			return visitor.formComponent(fc);
+			visitor.formComponent(fc, visit);
 		}
-
-		return null;
 	}
 
 	/**
@@ -429,15 +429,17 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * @param visitor
 	 *            The visitor to call
 	 */
-	public static final void visitComponentsPostOrder(Component component,
-		final Component.IVisitor<Component> visitor)
+	public static final <R> R visitComponentsPostOrder(Component component,
+		final Component.IVisitor<Component, R> visitor)
 	{
 		if (visitor == null)
 		{
 			throw new IllegalArgumentException("Argument `visitor` cannot be null");
 		}
 
-		visitComponentsPostOrderHelper(component, visitor);
+		Visit<R> visit = new Visit<R>();
+		visitComponentsPostOrderHelper(component, visitor, visit);
+		return visit.getResult();
 	}
 
 	/**
@@ -446,8 +448,8 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * @param visitor
 	 * @return Object
 	 */
-	private static final Object visitComponentsPostOrderHelper(Component component,
-		final Component.IVisitor<Component> visitor)
+	private static final <R> void visitComponentsPostOrderHelper(Component component,
+		final Component.IVisitor<Component, R> visitor, Visit<R> visit)
 	{
 		if (component instanceof MarkupContainer)
 		{
@@ -461,32 +463,22 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 				}
 				if (visitChildren)
 				{
+					Visit<R> childTraversal = new Visit<R>();
 					final Iterator<? extends Component> children = container.iterator();
 					while (children.hasNext())
 					{
 						final Component child = children.next();
-						Object value = visitComponentsPostOrderHelper(child, visitor);
-						if (value == Component.IVisitor.STOP_TRAVERSAL)
+						visitComponentsPostOrderHelper(child, visitor, childTraversal);
+						if (childTraversal.isStopped())
 						{
-							return value;
-						}
-						else if (value == Component.IVisitor.CONTINUE_TRAVERSAL)
-						{
-							// noop
-						}
-						else if (value == Component.IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER)
-						{
-							// noop
-						}
-						else
-						{
-							return value;
+							visit.stop(childTraversal.getResult());
+							return;
 						}
 					}
 				}
 			}
 		}
-		return visitor.component(component);
+		visitor.component(component, visit);
 	}
 
 
@@ -978,24 +970,22 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 */
 	public final boolean isValid()
 	{
-		class IsValidVisitor implements IVisitor
+		class IsValidVisitor implements IVisitor<Boolean>
 		{
-			boolean valid = true;
-
-			public Object formComponent(IFormVisitorParticipant formComponent)
+			public void formComponent(final IFormVisitorParticipant formComponent,
+				final IVisit<Boolean> visit)
 			{
 				final FormComponent<?> fc = (FormComponent<?>)formComponent;
 				if (fc.hasErrorMessage())
 				{
-					valid = false;
-					return Component.IVisitor.STOP_TRAVERSAL;
+					visit.stop(Boolean.FALSE);
 				}
-				return Component.IVisitor.CONTINUE_TRAVERSAL;
 			}
 		}
 		IsValidVisitor tmp = new IsValidVisitor();
-		visitFormComponentsPostOrder(this, tmp);
-		return tmp.valid;
+		final Boolean result;
+		result = visitFormComponentsPostOrder(this, tmp);
+		return (Boolean.FALSE == result) ? false : true;
 	}
 
 	/**

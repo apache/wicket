@@ -33,6 +33,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.Component.IVisit;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.internal.HeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -320,13 +321,13 @@ public class AjaxRequestTarget implements IPageRequestHandler
 					Component.class.getName() + ".class` as the value for this argument");
 		}
 
-		parent.visitChildren(childCriteria, new Component.IVisitor<Component>()
+		parent.visitChildren(childCriteria, new Component.IVisitor<Component, Void>()
 		{
 
-			public Object component(Component component)
+			public void component(final Component component, final IVisit<Void> visit)
 			{
 				addComponent(component);
-				return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+				visit.dontGoDeeper();
 			}
 		});
 	}
@@ -1078,18 +1079,17 @@ public class AjaxRequestTarget implements IPageRequestHandler
 
 		if (component instanceof MarkupContainer)
 		{
-			((MarkupContainer)component).visitChildren(new Component.IVisitor<Component>()
+			((MarkupContainer)component).visitChildren(new Component.IVisitor<Component, Void>()
 			{
-				public Object component(Component component)
+				public void component(final Component component, final IVisit<Void> visit)
 				{
 					if (component.isVisibleInHierarchy())
 					{
 						component.renderHead(header);
-						return CONTINUE_TRAVERSAL;
 					}
 					else
 					{
-						return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+						visit.dontGoDeeper();
 					}
 				}
 			});

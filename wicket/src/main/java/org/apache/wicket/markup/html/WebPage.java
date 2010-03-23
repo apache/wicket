@@ -242,15 +242,19 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 */
 	private void validateHeaders()
 	{
-		HtmlHeaderContainer header = (HtmlHeaderContainer)visitChildren(new IVisitor<Component>()
+		HtmlHeaderContainer header = visitChildren(new IVisitor<Component, HtmlHeaderContainer>()
 		{
-			public Object component(Component component)
+			public void component(final Component component,
+				final IVisit<HtmlHeaderContainer> visit)
 			{
 				if (component instanceof HtmlHeaderContainer)
 				{
-					return component;
+					visit.stop((HtmlHeaderContainer)component);
 				}
-				return IVisitor.CONTINUE_TRAVERSAL;
+				else
+				{
+					visit.dontGoDeeper();
+				}
 			}
 		});
 
@@ -275,15 +279,15 @@ public class WebPage extends Page implements INewBrowserWindowListener
 				// Make sure all Components interested in contributing to the header
 				// and there attached behaviors are asked.
 				final HtmlHeaderContainer finalHeader = header;
-				visitChildren(new IVisitor<Component>()
+				visitChildren(new IVisitor<Component, Void>()
 				{
 					/**
 					 * @see org.apache.wicket.Component.IVisitor#component(org.apache.wicket.Component)
 					 */
-					public Object component(Component component)
+					public void component(final Component component,
+						final IVisit<Void> visit)
 					{
 						component.renderHead(finalHeader);
-						return CONTINUE_TRAVERSAL;
 					}
 				});
 				response.close();

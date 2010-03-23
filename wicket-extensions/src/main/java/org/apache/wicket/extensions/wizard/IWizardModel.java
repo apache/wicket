@@ -167,7 +167,7 @@ public interface IWizardModel extends IClusterable
 
 	/**
 	 * Returns an iterator over all the steps in the model. The iteration order is not guaranteed to
-	 * the be the order of traversal. This is an optional operation; dynamic models can just return
+	 * the be the order of visit. This is an optional operation; dynamic models can just return
 	 * null, and should call init the first time a step is encountered right before rendering it.
 	 * 
 	 * @return an iterator over all the steps of the model or null if the wizard model is not static

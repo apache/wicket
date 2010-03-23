@@ -477,9 +477,9 @@ public abstract class Page extends MarkupContainer
 	{
 		final StringBuffer buffer = new StringBuffer();
 		buffer.append("Page " + getId());
-		visitChildren(new IVisitor<Component>()
+		visitChildren(new IVisitor<Component, Void>()
 		{
-			public Object component(Component component)
+			public void component(final Component component, final IVisit<Void> visit)
 			{
 				int levels = 0;
 				for (Component current = component; current != null; current = current.getParent())
@@ -488,7 +488,6 @@ public abstract class Page extends MarkupContainer
 				}
 				buffer.append(StringValue.repeat(levels, "	") + component.getPageRelativePath() +
 					":" + Classes.simpleName(component.getClass()));
-				return null;
 			}
 		});
 		return buffer.toString();
@@ -594,17 +593,15 @@ public abstract class Page extends MarkupContainer
 		if (stateless == null)
 		{
 			final Object[] returnArray = new Object[1];
-			Object returnValue = visitChildren(Component.class, new IVisitor<Component>()
+			Boolean returnValue = visitChildren(Component.class, new IVisitor<Component, Boolean>()
 			{
-				public Object component(Component component)
+				public void component(final Component component, final IVisit<Boolean> visit)
 				{
 					if (!component.isStateless())
 					{
 						returnArray[0] = component;
-						return Boolean.FALSE;
+						visit.stop(Boolean.FALSE);
 					}
-
-					return CONTINUE_TRAVERSAL;
 				}
 			});
 			if (returnValue == null)
@@ -613,7 +610,7 @@ public abstract class Page extends MarkupContainer
 			}
 			else if (returnValue instanceof Boolean)
 			{
-				stateless = (Boolean)returnValue;
+				stateless = returnValue;
 			}
 
 			// TODO (matej_k): The stateless hint semantics has been changed, this warning doesn't
@@ -712,9 +709,9 @@ public abstract class Page extends MarkupContainer
 		{
 			final List<Component> unrenderedComponents = new ArrayList<Component>();
 			final StringBuffer buffer = new StringBuffer();
-			renderedContainer.visitChildren(new IVisitor<Component>()
+			renderedContainer.visitChildren(new IVisitor<Component, Void>()
 			{
-				public Object component(final Component component)
+				public void component(final Component component, final IVisit<Void> visit)
 				{
 					// If component never rendered
 					if (renderedComponents == null || !renderedComponents.contains(component))
@@ -744,10 +741,9 @@ public abstract class Page extends MarkupContainer
 							// if the component is not visible in hierarchy we
 							// should not visit its children since they are also
 							// not visible
-							return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+							visit.dontGoDeeper();
 						}
 					}
-					return CONTINUE_TRAVERSAL;
 				}
 			});
 
@@ -992,16 +988,15 @@ public abstract class Page extends MarkupContainer
 	@Override
 	protected final void internalOnModelChanged()
 	{
-		visitChildren(new Component.IVisitor<Component>()
+		visitChildren(new Component.IVisitor<Component, Void>()
 		{
-			public Object component(final Component component)
+			public void component(final Component component, final IVisit<Void> visit)
 			{
 				// If form component is using form model
 				if (component.sameInnermostModel(Page.this))
 				{
 					component.modelChanged();
 				}
-				return IVisitor.CONTINUE_TRAVERSAL;
 			}
 		});
 	}
@@ -1058,13 +1053,12 @@ public abstract class Page extends MarkupContainer
 		// clean up debug meta data if component check is on
 		if (Application.get().getDebugSettings().getComponentUseCheck())
 		{
-			visitChildren(new IVisitor<Component>()
+			visitChildren(new IVisitor<Component, Void>()
 			{
-				public Object component(Component component)
+				public void component(final Component component, final IVisit<Void> visit)
 				{
 					component.setMetaData(Component.CONSTRUCTED_AT_KEY, null);
 					component.setMetaData(Component.ADDED_AT_KEY, null);
-					return CONTINUE_TRAVERSAL;
 				}
 			});
 		}
