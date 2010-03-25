@@ -3,11 +3,38 @@ package org.apache.wicket.util.visit;
 import java.util.Iterator;
 
 
+/**
+ * Utility class that contains visitor/traversal related code
+ */
 public class Visits
 {
-	// TODO replace class argument with IVisitFilter
-	public static final <S, R> R visitChildren(Iterable<?> container, 
-			final IVisitor<S, R> visitor, IVisitFilter filter)
+	/** Constructor */
+	private Visits()
+	{
+
+	}
+
+	/**
+	 * Visits children of the specified {@link Iterable} pre-order (parent
+	 * first). Children are determined by calling {@link Iterable#iterator()}.
+	 * 
+	 * @param <S>
+	 *            the type of object that will be visited, notice that {@code
+	 *            container} is not declared as {@code Iterable<S>} because it
+	 *            may return a generalization of {@code S}
+	 * @param <R>
+	 *            the type of object that should be returned from the visitor,
+	 *            use {@link Void} if no return value is needed
+	 * @param container
+	 *            object whose children will be visited
+	 * @param visitor
+	 *            the visitor
+	 * @param filter
+	 *            filter used to limit the types of objects that will be visited
+	 * @return return value from the {@code visitor} or {@code null} if none
+	 */
+	public static final <S, R> R visitChildren(Iterable<?> container, final IVisitor<S, R> visitor,
+			IVisitFilter filter)
 	{
 		Visit<R> visit = new Visit<R>();
 		visitChildren(container, visitor, filter, visit);
@@ -15,7 +42,7 @@ public class Visits
 	}
 
 
-	private static final <S, R> void visitChildren(Iterable<?> container, 
+	private static final <S, R> void visitChildren(Iterable<?> container,
 			final IVisitor<S, R> visitor, IVisitFilter filter, Visit<R> visit)
 	{
 		if (visitor == null)
@@ -51,10 +78,11 @@ public class Visits
 			}
 
 			// If child is a container
-			if (!visit.isDontGoDeeper() && (child instanceof Iterable<?>)&&filter.visitChildren(child))
+			if (!visit.isDontGoDeeper() && (child instanceof Iterable<?>)
+					&& filter.visitChildren(child))
 			{
 				// visit the children in the container
-				visitChildren((Iterable<?>)child,  visitor, filter, visit);
+				visitChildren((Iterable<?>)child, visitor, filter, visit);
 
 				if (visit.isStopped())
 				{
@@ -67,46 +95,72 @@ public class Visits
 	}
 
 	/**
-	 * Traverses all child components in this container, calling the visitor's
-	 * visit method at each one.
+	 * Visits children of the specified {@link Iterable} pre-order (parent
+	 * first). Children are determined by calling {@link Iterable#iterator()}.
 	 * 
+	 * @param <S>
+	 *            the type of object that will be visited, notice that {@code
+	 *            container} is not declared as {@code Iterable<S>} because it
+	 *            may return a generalization of {@code S}
+	 * @param <R>
+	 *            the type of object that should be returned from the visitor,
+	 *            use {@link Void} if no return value is needed
+	 * @param container
+	 *            object whose children will be visited
 	 * @param visitor
-	 *            The visitor to call back to
-	 * @return The return value from a visitor which halted the traversal, or
-	 *         null if the entire traversal occurred
+	 *            the visitor
+	 * @return return value from the {@code visitor} or {@code null} if none
 	 */
-	public static final <S, R> R visitChildren(Iterable<?> visitable, final IVisitor<S, R> visitor)
+	public static final <S, R> R visitChildren(Iterable<?> container, final IVisitor<S, R> visitor)
 	{
-		return visitChildren(visitable, visitor, IVisitFilter.ANY);
+		return visitChildren(container, visitor, IVisitFilter.ANY);
 	}
 
 	/**
-	 * Visits any form components inside component if it is a container, or
-	 * component itself if it is itself a form component
+	 * Visits the specified object and any of its children using a post-order
+	 * (child first) traversal. Children are determined by calling
+	 * {@link Iterable#iterator()} if the object implements {@link Iterable}.
 	 * 
-	 * @param component
-	 *            starting point of the traversal
-	 * 
+	 * @param <S>
+	 *            the type of object that will be visited, notice that {@code
+	 *            container} is not declared as {@code Iterable<S>} because it
+	 *            may return a generalization of {@code S}
+	 * @param <R>
+	 *            the type of object that should be returned from the visitor,
+	 *            use {@link Void} if no return value is needed
+	 * @param root
+	 *            root object that will be visited
 	 * @param visitor
-	 *            The visitor to call
+	 *            the visitor
+	 * @return return value from the {@code visitor} or {@code null} if none
 	 */
-	public static final <S, R> R visitComponentsPostOrder(Iterable<?> component,
+	public static final <S, R> R visitComponentsPostOrder(S root,
 			final org.apache.wicket.util.visit.IVisitor<S, R> visitor)
 	{
-		return visitComponentsPostOrder(component, visitor, IVisitFilter.ANY);
+		return visitComponentsPostOrder(root, visitor, IVisitFilter.ANY);
 	}
 
 	/**
-	 * Visits any form components inside component if it is a container, or
-	 * component itself if it is itself a form component
+	 * Visits the specified object and any of its children using a post-order
+	 * (child first) traversal. Children are determined by calling
+	 * {@link Iterable#iterator()} if the object implements {@link Iterable}.
 	 * 
-	 * @param component
-	 *            starting point of the traversal
-	 * 
+	 * @param <S>
+	 *            the type of object that will be visited, notice that {@code
+	 *            container} is not declared as {@code Iterable<S>} because it
+	 *            may return a generalization of {@code S}
+	 * @param <R>
+	 *            the type of object that should be returned from the visitor,
+	 *            use {@link Void} if no return value is needed
+	 * @param root
+	 *            root object that will be visited
 	 * @param visitor
-	 *            The visitor to call
+	 *            the visitor
+	 * @param filter
+	 *            filter used to limit the types of objects that will be visited
+	 * @return return value from the {@code visitor} or {@code null} if none
 	 */
-	public static final <S, R> R visitComponentsPostOrder(Object component,
+	public static final <S, R> R visitComponentsPostOrder(Object root,
 			final org.apache.wicket.util.visit.IVisitor<S, R> visitor, IVisitFilter filter)
 	{
 		if (visitor == null)
@@ -115,16 +169,11 @@ public class Visits
 		}
 
 		Visit<R> visit = new Visit<R>();
-		visitComponentsPostOrderHelper(component, visitor, filter, visit);
+		visitComponentsPostOrderHelper(root, visitor, filter, visit);
 		return visit.getResult();
 	}
 
-	/**
-	 * 
-	 * @param component
-	 * @param visitor
-	 * @return Object
-	 */
+	
 	private static final <S, R> void visitComponentsPostOrderHelper(Object component,
 			final org.apache.wicket.util.visit.IVisitor<S, R> visitor, IVisitFilter filter,
 			Visit<R> visit)
@@ -142,7 +191,7 @@ public class Visits
 					final Object child = iterator.next();
 					if (child instanceof Iterable<?>)
 					{
-						visitComponentsPostOrderHelper((Iterable<?>)child, visitor, filter,
+						visitComponentsPostOrderHelper(child, visitor, filter,
 								childTraversal);
 						if (childTraversal.isStopped())
 						{

@@ -2,24 +2,23 @@ package org.apache.wicket.util.visit;
 
 
 /**
- * Generic component visitor interface for component traversals.
+ * Generic visitor interface for traversals.
  * 
  * @param <T>
- *            The component
+ *            type of object to be visited
+ * @param <R>
+ *            type of value the visitor should return as the result of the
+ *            visit/traversal
  */
 public interface IVisitor<T, R>
 {
 	/**
-	 * Called at each component in a visit.
+	 * Called at each object in a visit.
 	 * 
-	 * @param component
-	 *            The component
-	 * @param traversal
-	 *            An {@link IVisit} which state will be modified depending on
-	 *            the visitation. CONTINUE_TRAVERSAL (null) if the traversal
-	 *            should continue, or a non-null return value for the traversal
-	 *            method if it should stop. If no return value is useful, the
-	 *            generic non-null value STOP_TRAVERSAL can be used.
+	 * @param object
+	 *            Object being visited
+	 * @param visit
+	 *            Object used to control the visit/traversal
 	 */
-	public void component(T component, IVisit<R> visit);
+	public void component(T object, IVisit<R> visit);
 }
