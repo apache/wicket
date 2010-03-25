@@ -6,17 +6,17 @@ import java.util.Iterator;
 public class Visits
 {
 	// TODO replace class argument with IVisitFilter
-	public static final <S, R> R visitChildren(Iterable<?> container, final Class<?> clazz,
-			final IVisitor<S, R> visitor)
+	public static final <S, R> R visitChildren(Iterable<?> container, 
+			final IVisitor<S, R> visitor, IVisitFilter filter)
 	{
 		Visit<R> visit = new Visit<R>();
-		visitChildren(container, clazz, visitor, visit);
+		visitChildren(container, visitor, filter, visit);
 		return visit.getResult();
 	}
 
 
-	private static final <S, R> void visitChildren(Iterable<?> container, final Class<?> clazz,
-			final IVisitor<S, R> visitor, Visit<R> visit)
+	private static final <S, R> void visitChildren(Iterable<?> container, 
+			final IVisitor<S, R> visitor, IVisitFilter filter, Visit<R> visit)
 	{
 		if (visitor == null)
 		{
@@ -30,7 +30,7 @@ public class Visits
 			final Object child = children.next();
 
 			// Is the child of the correct class (or was no class specified)?
-			if (clazz == null || clazz.isInstance(child))
+			if (filter.visitObject(child))
 			{
 				Visit<R> childTraversal = new Visit<R>();
 
@@ -51,10 +51,10 @@ public class Visits
 			}
 
 			// If child is a container
-			if (!visit.isDontGoDeeper() && (child instanceof Iterable<?>))
+			if (!visit.isDontGoDeeper() && (child instanceof Iterable<?>)&&filter.visitChildren(child))
 			{
 				// visit the children in the container
-				visitChildren((Iterable<?>)child, clazz, visitor, visit);
+				visitChildren((Iterable<?>)child,  visitor, filter, visit);
 
 				if (visit.isStopped())
 				{
@@ -77,7 +77,7 @@ public class Visits
 	 */
 	public static final <S, R> R visitChildren(Iterable<?> visitable, final IVisitor<S, R> visitor)
 	{
-		return visitChildren(visitable, null, visitor);
+		return visitChildren(visitable, visitor, IVisitFilter.ANY);
 	}
 
 	/**

@@ -18,4 +18,5 @@ public interface IVisitFilter
 			return true;
 		}
 	};
+	
 }

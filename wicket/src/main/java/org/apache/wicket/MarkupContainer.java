@@ -41,6 +41,7 @@ import org.apache.wicket.model.IWrapModel;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.string.ComponentStrings;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.visit.ClassVisitFilter;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.apache.wicket.util.visit.Visits;
@@ -904,7 +905,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	public final <S extends Component, R> R visitChildren(final Class<?> clazz,
 		final IVisitor<S, R> visitor)
 	{
-		return Visits.visitChildren(this, clazz, visitor);
+		return Visits.visitChildren(this, visitor, new ClassVisitFilter(clazz));
 	}
 
 	/**
