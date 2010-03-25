@@ -33,6 +33,8 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.response.StringResponse;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -244,8 +246,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	{
 		HtmlHeaderContainer header = visitChildren(new IVisitor<Component, HtmlHeaderContainer>()
 		{
-			public void component(final Component component,
-				final IVisit<HtmlHeaderContainer> visit)
+			public void component(final Component component, final IVisit<HtmlHeaderContainer> visit)
 			{
 				if (component instanceof HtmlHeaderContainer)
 				{
@@ -282,10 +283,9 @@ public class WebPage extends Page implements INewBrowserWindowListener
 				visitChildren(new IVisitor<Component, Void>()
 				{
 					/**
-					 * @see org.apache.wicket.Component.IVisitor#component(org.apache.wicket.Component)
+					 * @see org.apache.wicket.IVisitor#component(org.apache.wicket.Component)
 					 */
-					public void component(final Component component,
-						final IVisit<Void> visit)
+					public void component(final Component component, final IVisit<Void> visit)
 					{
 						component.renderHead(finalHeader);
 					}

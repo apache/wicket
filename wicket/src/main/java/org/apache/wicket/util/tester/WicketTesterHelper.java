@@ -26,11 +26,11 @@ import junit.framework.Assert;
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.Page;
-import org.apache.wicket.Component.IVisit;
-import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 
 /**
  * A <code>WicketTester</code>-specific helper class.

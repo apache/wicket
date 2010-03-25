@@ -18,9 +18,9 @@ package org.apache.wicket.markup.renderStrategy;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.Component.IVisit;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.visit.IVisit;
 
 /**
  * THIS IS EXPERIMENTAL ONLY. YOU MUST NOT USE IT IN YOUR APPLICATION. SOME WICKET CORE COMPONENT
@@ -84,8 +84,7 @@ public class ChildFirstHeaderRenderStrategy extends AbstractHeaderRenderStrategy
 			new DeepChildFirstVisitor()
 			{
 				@Override
-				public void component(final Component component,
-					final IVisit<Component> visit)
+				public void component(final Component component, final IVisit<Component> visit)
 				{
 					component.renderHead(headerContainer);
 				}

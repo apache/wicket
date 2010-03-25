@@ -50,6 +50,8 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.apache.wicket.util.upload.FileUploadException;
 import org.apache.wicket.util.upload.FileUploadBase.SizeLimitExceededException;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 import org.apache.wicket.validation.IValidatorAddListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,29 +138,25 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
-	public static abstract class ValidationVisitor implements FormComponent.IVisitor<Void>
+	public static abstract class ValidationVisitor implements IVisitor<FormComponent<?>, Void>
 	{
-		public void formComponent(final IFormVisitorParticipant component, final IVisit<Void> visit)
+		public void component(final FormComponent<?> formComponent, final IVisit<Void> visit)
 		{
-			if (component instanceof FormComponent<?>)
+
+			Form<?> form = formComponent.getForm();
+			if (!form.isVisibleInHierarchy() || !form.isEnabledInHierarchy())
 			{
-				FormComponent<?> formComponent = (FormComponent<?>)component;
-
-				Form<?> form = formComponent.getForm();
-				if (!form.isVisibleInHierarchy() || !form.isEnabledInHierarchy())
-				{
-					// do not validate formComponent or any of formComponent's children
-					visit.dontGoDeeper();
-					return;
-				}
-
-				if (formComponent.isVisibleInHierarchy() && formComponent.isValid() &&
-					formComponent.isEnabledInHierarchy())
-				{
-					validate(formComponent);
-				}
+				// do not validate formComponent or any of formComponent's children
+				visit.dontGoDeeper();
+				return;
 			}
-			if (component.processChildren())
+
+			if (formComponent.isVisibleInHierarchy() && formComponent.isValid() &&
+				formComponent.isEnabledInHierarchy())
+			{
+				validate(formComponent);
+			}
+			if (formComponent.processChildren())
 			{
 				return;
 			}
@@ -183,7 +181,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
-	private static class FormModelUpdateVisitor implements Component.IVisitor<Component, Void>
+	private static class FormModelUpdateVisitor implements IVisitor<Component, Void>
 	{
 		private final Form<?> formFilter;
 
@@ -795,15 +793,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 		final PageParameters parameters = page.getPageParameters();
 		if (parameters != null)
 		{
-			visitFormComponents(new FormComponent.IVisitor<Void>()
+			visitFormComponents(new IVisitor<FormComponent<?>, Void>()
 			{
-				public void formComponent(final IFormVisitorParticipant formComponent,
-					final IVisit<Void> visit)
+				public void component(final FormComponent<?> formComponent, final IVisit<Void> visit)
 				{
-					if (formComponent instanceof FormComponent<?>)
-					{
-						parameters.removeNamedParameter(((FormComponent<?>)formComponent).getInputName());
-					}
+					parameters.removeNamedParameter(formComponent.getInputName());
 				}
 			});
 			parameters.removeNamedParameter(getHiddenFieldId());
@@ -993,15 +987,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 * @param visitor
 	 *            The visitor interface to call
 	 */
-	public final <R> R visitFormComponents(final FormComponent.IVisitor<R> visitor)
+	public final <R> R visitFormComponents(final IVisitor<? extends FormComponent<?>, R> visitor)
 	{
-		return visitChildren(FormComponent.class, new IVisitor<Component, R>()
-		{
-			public void component(final Component component, final IVisit<R> visit)
-			{
-				visitor.formComponent((FormComponent<?>)component, visit);
-			}
-		});
+		return visitChildren(FormComponent.class, visitor);
 	}
 
 	/**
@@ -1011,7 +999,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 * @param visitor
 	 *            The visitor interface to call
 	 */
-	public final <R> R visitFormComponentsPostOrder(final FormComponent.IVisitor<R> visitor)
+	public final <R> R visitFormComponentsPostOrder(
+		final IVisitor<? extends FormComponent<?>, R> visitor)
 	{
 		return FormComponent.visitFormComponentsPostOrder(this, visitor);
 	}

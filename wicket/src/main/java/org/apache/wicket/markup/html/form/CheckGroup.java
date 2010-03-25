@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -28,6 +27,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.visit.IVisit;
 
 
 /**
@@ -119,10 +119,9 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 				if (value != null)
 				{
 					Check<T> checkbox = visitChildren(Check.class,
-						new Component.IVisitor<Check<T>, Check<T>>()
+						new org.apache.wicket.util.visit.IVisitor<Check<T>, Check<T>>()
 						{
-							public void component(final Check<T> check,
-								final IVisit<Check<T>> visit)
+							public void component(final Check<T> check, final IVisit<Check<T>> visit)
 							{
 								if (String.valueOf(check.getValue()).equals(value))
 								{

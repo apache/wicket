@@ -47,6 +47,8 @@ import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -988,7 +990,7 @@ public abstract class Page extends MarkupContainer
 	@Override
 	protected final void internalOnModelChanged()
 	{
-		visitChildren(new Component.IVisitor<Component, Void>()
+		visitChildren(new IVisitor<Component, Void>()
 		{
 			public void component(final Component component, final IVisit<Void> visit)
 			{

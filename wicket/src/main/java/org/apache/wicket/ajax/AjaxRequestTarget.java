@@ -33,7 +33,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.Component.IVisit;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.internal.HeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -54,6 +53,8 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -321,7 +322,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 					Component.class.getName() + ".class` as the value for this argument");
 		}
 
-		parent.visitChildren(childCriteria, new Component.IVisitor<Component, Void>()
+		parent.visitChildren(childCriteria, new IVisitor<Component, Void>()
 		{
 
 			public void component(final Component component, final IVisit<Void> visit)
@@ -1079,7 +1080,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 
 		if (component instanceof MarkupContainer)
 		{
-			((MarkupContainer)component).visitChildren(new Component.IVisitor<Component, Void>()
+			((MarkupContainer)component).visitChildren(new IVisitor<Component, Void>()
 			{
 				public void component(final Component component, final IVisit<Void> visit)
 				{

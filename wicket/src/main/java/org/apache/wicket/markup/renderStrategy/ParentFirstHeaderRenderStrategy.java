@@ -18,14 +18,15 @@ package org.apache.wicket.markup.renderStrategy;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.Component.IVisit;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 
 /**
  * This is Wicket's default header render strategy which uses
- * {@link MarkupContainer#visitChildren(org.apache.wicket.Component.IVisitor)} to traverse the
- * hierarchy to render the children headers.
+ * {@link MarkupContainer#visitChildren(org.apache.wicket.IVisitor)} to traverse the hierarchy to
+ * render the children headers.
  * 
  * Since child contributions are added to the markup after the parent contributions, children may
  * replace / modify existing settings.
@@ -60,7 +61,7 @@ public class ParentFirstHeaderRenderStrategy extends AbstractHeaderRenderStrateg
 
 		if (rootComponent instanceof MarkupContainer)
 		{
-			((MarkupContainer)rootComponent).visitChildren(new Component.IVisitor<Component, Void>()
+			((MarkupContainer)rootComponent).visitChildren(new IVisitor<Component, Void>()
 			{
 				public void component(final Component component, final IVisit<Void> visit)
 				{

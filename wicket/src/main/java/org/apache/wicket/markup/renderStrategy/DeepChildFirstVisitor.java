@@ -18,10 +18,10 @@ package org.apache.wicket.markup.renderStrategy;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.Component.IVisit;
-import org.apache.wicket.Component.IVisitor;
-import org.apache.wicket.Component.Visit;
 import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
+import org.apache.wicket.util.visit.Visit;
 
 /**
  * 
@@ -50,7 +50,7 @@ public abstract class DeepChildFirstVisitor implements IVisitor<Component, Compo
 		{
 			final Visit<Component> visit = new Visit<Component>();
 			final Component[] lastComponent = new Component[1];
-			Object rtn = ((MarkupContainer)rootComponent).visitChildren(new Component.IVisitor<Component, Component>()
+			Object rtn = ((MarkupContainer)rootComponent).visitChildren(new IVisitor<Component, Component>()
 			{
 				public void component(final Component component, final IVisit<Component> visit)
 				{
@@ -167,7 +167,7 @@ public abstract class DeepChildFirstVisitor implements IVisitor<Component, Compo
 	}
 
 	/**
-	 * @see org.apache.wicket.Component.IVisitor#component(org.apache.wicket.Component)
+	 * @see org.apache.wicket.IVisitor#component(org.apache.wicket.Component)
 	 */
 	public abstract void component(Component component, IVisit<Component> visit);
 }

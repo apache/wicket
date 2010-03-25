@@ -69,6 +69,9 @@ import org.apache.wicket.util.string.ComponentStrings;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
+import org.apache.wicket.util.visit.Visit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -216,83 +219,6 @@ import org.slf4j.LoggerFactory;
 public abstract class Component implements IClusterable, IConverterLocator, IRequestableComponent
 {
 
-	public static interface IVisit<R>
-	{
-		void stop();
-
-		void stop(R result);
-
-		void dontGoDeeper();
-	}
-	public static class Visit<R> implements IVisit<R>
-	{
-		private static enum Action {
-			CONTINUE, CONTINUE_BUT_DONT_GO_DEEPER, STOP;
-		}
-
-		private R result;
-		private Action action = Action.CONTINUE;
-
-		public void stop()
-		{
-			stop(null);
-		}
-
-		public void stop(R result)
-		{
-			action = Action.STOP;
-			this.result = result;
-		}
-
-		public void dontGoDeeper()
-		{
-			action = Action.CONTINUE_BUT_DONT_GO_DEEPER;
-		}
-
-		public boolean isStopped()
-		{
-			return action == Action.STOP;
-		}
-
-		public boolean isContinue()
-		{
-			return action == Action.CONTINUE;
-		}
-
-		public boolean isDontGoDeeper()
-		{
-			return action == Action.CONTINUE_BUT_DONT_GO_DEEPER;
-		}
-
-		public R getResult()
-		{
-			return result;
-		}
-
-
-	}
-
-	/**
-	 * Generic component visitor interface for component traversals.
-	 * 
-	 * @param <T>
-	 *            The component
-	 */
-	public static interface IVisitor<T extends Component, R>
-	{
-		/**
-		 * Called at each component in a visit.
-		 * 
-		 * @param component
-		 *            The component
-		 * @param traversal
-		 *            An {@link IVisit} which state will be modified depending on the visitation.
-		 *            CONTINUE_TRAVERSAL (null) if the traversal should continue, or a non-null
-		 *            return value for the traversal method if it should stop. If no return value is
-		 *            useful, the generic non-null value STOP_TRAVERSAL can be used.
-		 */
-		public void component(T component, IVisit<R> visit);
-	}
 
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Component.class);
@@ -3365,9 +3291,9 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 			if (c.isInstance(current))
 			{
 				visitor.component(current, visit);
-				if (visit.action == Visit.Action.STOP)
+				if (visit.isStopped())
 				{
-					return visit.result;
+					return visit.getResult();
 				}
 			}
 

@@ -1323,7 +1323,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		setRequestToComponent(form);
 
 		final Map<String, Object> valuesApplied = new HashMap<String, Object>();
-		form.visitChildren(FormComponent.class, new Component.IVisitor<FormComponent<?>>()
+		form.visitChildren(FormComponent.class, new IVisitor<FormComponent<?>>()
 		{
 			public Object component(final FormComponent<?> component)
 			{

@@ -27,8 +27,6 @@ import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.Component.IVisit;
-import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;
 import org.apache.wicket.markup.html.form.Check;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -47,6 +45,8 @@ import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 
 /**
  * A helper class for testing validation and submission of <code>FormComponent</code>s.
@@ -80,7 +80,7 @@ public class FormTester
 			}
 
 			/**
-			 * @see org.apache.wicket.Component.IVisitor#component(org.apache.wicket.Component)
+			 * @see org.apache.wicket.IVisitor#component(org.apache.wicket.Component)
 			 */
 			public void component(final Component component, final IVisit<Component> visit)
 			{
@@ -377,8 +377,7 @@ public class FormTester
 		{
 			@SuppressWarnings("unchecked")
 			@Override
-			public void onFormComponent(final FormComponent<?> formComponent,
-				IVisit<Void> visit)
+			public void onFormComponent(final FormComponent<?> formComponent, IVisit<Void> visit)
 			{
 				// do nothing for invisible component
 				if (!formComponent.isVisibleInHierarchy())
@@ -421,8 +420,7 @@ public class FormTester
 					final Collection<?> checkGroupValues = (Collection<?>)formComponent.getDefaultModelObject();
 					formComponent.visitChildren(Check.class, new IVisitor<Component, Void>()
 					{
-						public void component(final Component component,
-							final IVisit<Void> visit)
+						public void component(final Component component, final IVisit<Void> visit)
 						{
 							if (checkGroupValues.contains(component.getDefaultModelObject()))
 							{

@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.util.visit.IVisitor;
 
 
 /**
@@ -25,7 +26,7 @@ import org.apache.wicket.WicketTestCase;
  */
 public class FormTest extends WicketTestCase
 {
-	private FormComponent.IVisitor visitor;
+	private IVisitor visitor;
 
 	/**
 	 * Construct.

@@ -44,6 +44,8 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.resource.JavascriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 
 
 /**
@@ -253,7 +255,7 @@ public abstract class AbstractTree extends Panel
 					public void visitItem(TreeItem item)
 					{
 						// write header contributions from the children of item
-						item.visitChildren(new Component.IVisitor<Component, Void>()
+						item.visitChildren(new IVisitor<Component, Void>()
 						{
 							public void component(final Component component,
 								final IVisit<Void> visit)

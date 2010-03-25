@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.ConversionException;
+import org.apache.wicket.util.visit.IVisit;
 
 /**
  * Component used to connect instances of Radio components into a group. Instances of Radio have to
@@ -102,7 +102,7 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 
 			// retrieve the selected single radio choice component
 			Radio<T> choice = visitChildren(Radio.class,
-				new Component.IVisitor<Radio<T>, Radio<T>>()
+				new org.apache.wicket.util.visit.IVisitor<Radio<T>, Radio<T>>()
 				{
 
 					public void component(final Radio<T> radio, final IVisit<Radio<T>> visit)

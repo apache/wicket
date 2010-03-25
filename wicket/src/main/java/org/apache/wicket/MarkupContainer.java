@@ -41,6 +41,9 @@ import org.apache.wicket.model.IWrapModel;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.string.ComponentStrings;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
+import org.apache.wicket.util.visit.Visits;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +55,7 @@ import org.slf4j.LoggerFactory;
  * held a nested component "c", then a.get("b:c") would return the Component with id "c". The number
  * of children in a MarkupContainer can be determined by calling size(), and the whole hierarchy of
  * children held by a MarkupContainer can be traversed by calling visitChildren(), passing in an
- * implementation of Component.IVisitor.
+ * implementation of IVisitor.
  * 
  * <li><b>Markup Rendering </b>- A MarkupContainer also holds/references associated markup which is
  * used to render the container. As the markup stream for a container is rendered, component
@@ -84,7 +87,7 @@ import org.slf4j.LoggerFactory;
  * @author Jonathan Locke
  * 
  */
-public abstract class MarkupContainer extends Component
+public abstract class MarkupContainer extends Component implements Iterable<Component>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -533,7 +536,7 @@ public abstract class MarkupContainer extends Component
 	/**
 	 * @return Iterator that iterates through children in the order they were added
 	 */
-	public Iterator<? extends Component> iterator()
+	public Iterator<Component> iterator()
 	{
 		return new Iterator<Component>()
 		{
@@ -901,63 +904,7 @@ public abstract class MarkupContainer extends Component
 	public final <S extends Component, R> R visitChildren(final Class<?> clazz,
 		final IVisitor<S, R> visitor)
 	{
-		Visit<R> visit = new Visit<R>();
-		visitChildren(clazz, visitor, visit);
-		return visit.getResult();
-	}
-
-
-	private final <S extends Component, R> void visitChildren(final Class<?> clazz,
-		final IVisitor<S, R> visitor, Visit<R> visit)
-	{
-		if (visitor == null)
-		{
-			throw new IllegalArgumentException("argument visitor may not be null");
-		}
-
-		// Iterate through children of this container
-		for (int i = 0; i < children_size(); i++)
-		{
-			// Get next child component
-			final Component child = children_get(i);
-
-			// Is the child of the correct class (or was no class specified)?
-			if (clazz == null || clazz.isInstance(child))
-			{
-				Visit<R> childTraversal = new Visit<R>();
-
-				// Call visitor
-				@SuppressWarnings("unchecked")
-				S s = (S)child;
-				visitor.component(s, childTraversal);
-
-				if (childTraversal.isStopped())
-				{
-					visit.stop(childTraversal.getResult());
-					return;
-				}
-				else if (childTraversal.isDontGoDeeper())
-				{
-					continue;
-				}
-			}
-
-			// If child is a container
-			if ((child instanceof MarkupContainer) && !visit.isDontGoDeeper())
-			{
-				Visit<R> childTraversal = new Visit<R>();
-
-				// visit the children in the container
-				((MarkupContainer)child).visitChildren(clazz, visitor, visit);
-
-				if (visit.isStopped())
-				{
-					return;
-				}
-			}
-		}
-
-		return;
+		return Visits.visitChildren(this, clazz, visitor);
 	}
 
 	/**
@@ -971,7 +918,7 @@ public abstract class MarkupContainer extends Component
 	 */
 	public final <R> R visitChildren(final IVisitor<Component, R> visitor)
 	{
-		return visitChildren(null, visitor);
+		return Visits.visitChildren(this, visitor);
 	}
 
 	/**

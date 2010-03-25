@@ -18,10 +18,10 @@ package org.apache.wicket;
 
 import junit.framework.Assert;
 
-import org.apache.wicket.Component.IVisit;
-import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 
 /**
  * <code>
@@ -45,6 +45,7 @@ public class VisitorTest extends WicketTestCase
 		final StringBuilder path = new StringBuilder();
 
 		TestContainer container = new TestContainer();
+
 		container.visitChildren(new IVisitor<Component, Void>()
 		{
 			public void component(Component component, IVisit<Void> visit)

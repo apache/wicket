@@ -19,13 +19,13 @@ package org.apache.wicket.extensions.ajax.markup.html;
 import java.util.List;
 
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.Component.IVisit;
-import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.behavior.BehaviorsUtil;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

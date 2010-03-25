@@ -21,10 +21,10 @@ package org.apache.wicket.extensions.breadcrumb.panel;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.Component.IVisit;
-import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 
 /**
  * Base implementation for {@link Panel}/ {@link Component} based {@link IBreadCrumbParticipant}
@@ -84,8 +84,7 @@ public abstract class BreadCrumbParticipantDelegate implements IBreadCrumbPartic
 					// NOTE unfortunately, we can't rely on the path pre 2.0
 					Component c = parent.visitChildren(new IVisitor<Component, Component>()
 					{
-						public void component(Component component,
-							final IVisit<Component> visit)
+						public void component(Component component, final IVisit<Component> visit)
 						{
 							if (component.getId().equals(thisId))
 							{
