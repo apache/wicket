@@ -950,16 +950,12 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				"added")));
 		}
 
-		if (this instanceof Page)
-		{ // a little icky...
-			child.initialize();
-		}
-		else if (isInitialized())
+		final Page page = findPage();
+
+		if (page != null)
 		{
 			child.initialize();
 		}
-
-		final Page page = findPage();
 
 		if (page != null)
 		{
@@ -976,9 +972,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	@Override
-	final void performInitialization()
+	final void initialize()
 	{
-		super.performInitialization();
+		super.initialize();
 		visitChildren(new IVisitor<Component, Void>()
 		{
 			public void component(final Component component, final IVisit<Void> visit)

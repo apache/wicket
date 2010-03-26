@@ -28,6 +28,7 @@ public class ComponentInitializationTest extends WicketTestCase
 		TestComponent t1 = new TestComponent("t1");
 		TestComponent t2 = new TestComponent("t2");
 		TestComponent t3 = new TestComponent("t3");
+		TestComponent t4 = new TestComponent("t4");
 
 		// as soon as we add to page child should be initialized
 		page.add(t1);
@@ -43,7 +44,19 @@ public class ComponentInitializationTest extends WicketTestCase
 		assertEquals(1, t1.getCount());
 		assertEquals(1, t2.getCount());
 		assertEquals(1, t3.getCount());
+
+		// test intialization when adding to removed components
+		page.remove(t1);
+		t3.add(t4);
+		assertEquals(0, t4.getCount());
+
+		// test initialization when readding a component with uninitialized children
+		page.add(t1);
+		assertEquals(1, t4.getCount());
+
+
 	}
+
 
 	public void testAtomicity()
 	{
@@ -72,8 +85,8 @@ public class ComponentInitializationTest extends WicketTestCase
 		page.add(t1);
 		assertEquals(1, t1.getCount());
 		assertEquals(1, t2.getCount());
-
 	}
+
 
 	private static class TestPage extends WebPage
 	{
