@@ -131,7 +131,10 @@ public class PortletServletRequestWrapper extends HttpServletRequestWrapper
 	{
 		this(context, proxiedSession, request, filterPath);
 
-		String pathInfo = requestURI.substring(contextPath.length() + filterPath.length());
+		// Liferay sometimes gives an incorrect requestURI
+		int pathInfoBegin = contextPath.length() + filterPath.length();
+		String pathInfo = pathInfoBegin >= requestURI.length() ? null
+			: requestURI.substring(pathInfoBegin);
 		this.pathInfo = pathInfo == null || pathInfo.length() < 2 ? null : pathInfo;
 	}
 
