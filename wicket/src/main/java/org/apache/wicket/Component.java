@@ -356,9 +356,9 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	/** Reserved subclass-definable flag bit */
 	protected static final int FLAG_RESERVED5 = 0x10000;
 	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED6 = 0x20000;
+	private static final int FLAG_INITIALIZED = 0x20000;
 	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED7 = 0x40000;
+	private static final int FLAG_NOTUSED7 = 0x40000;
 	/** Reserved subclass-definable flag bit */
 	protected static final int FLAG_RESERVED8 = 0x80000;
 
@@ -860,11 +860,45 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	 * Callback method invoked after the component was added to its parent AND you can walk up the
 	 * hierarchy up until the Page. That is, all parents must be have been added to their parents as
 	 * well. Add this point in time {@link #getMarkup() getMarkup} is guaranteed to be available.
-	 * <p/>
+	 * <p>
+	 * This method is guaranteed to only be called once
+	 * </p>
+	 * <p>
 	 * If you don't like constructors to initialize your component, this is the method to use.
+	 * </p>
 	 */
-	protected void onConnectedToPage()
+	protected void onInitialize()
 	{
+	}
+
+	/**
+	 * Checks if the component has been initialized - {@link #onInitialize()} has been called
+	 * 
+	 * @return {@code true} if component has been initialized
+	 */
+	boolean isInitialized()
+	{
+		return getFlag(FLAG_INITIALIZED);
+	}
+
+	/**
+	 * Used to call {@link #onInitialize()}
+	 */
+	void initialize()
+	{
+		if (!getFlag(FLAG_INITIALIZED))
+		{
+			performInitialization();
+			setFlag(FLAG_INITIALIZED, true);
+		}
+	}
+
+	/**
+	 * Takes care of calling {@link #onInitialize()}
+	 */
+	void performInitialization()
+	{
+		onInitialize();
 	}
 
 	/**

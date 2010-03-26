@@ -943,8 +943,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		// Set child's parent
 		child.setParent(this);
 
-		final Page page = findPage();
-
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnAddComponentEnabled())
 		{
@@ -952,23 +950,19 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				"added")));
 		}
 
+		if (this instanceof Page)
+		{ // a little icky...
+			child.initialize();
+		}
+		else if (isInitialized())
+		{
+			child.initialize();
+		}
+
+		final Page page = findPage();
+
 		if (page != null)
 		{
-			child.onConnectedToPage();
-
-			// Tell all children of "component" as well
-			if (child instanceof MarkupContainer)
-			{
-				MarkupContainer container = (MarkupContainer)child;
-				container.visitChildren(new IVisitor<Component, Void>()
-				{
-					public void component(final Component component, final IVisit<Void> visit)
-					{
-						component.onConnectedToPage();
-					}
-				});
-			}
-
 			// Tell the page a component has been added
 			page.componentAdded(child);
 		}
@@ -979,6 +973,19 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		{
 			child.beforeRender();
 		}
+	}
+
+	@Override
+	final void performInitialization()
+	{
+		super.performInitialization();
+		visitChildren(new IVisitor<Component, Void>()
+		{
+			public void component(final Component component, final IVisit<Void> visit)
+			{
+				component.initialize();
+			}
+		});
 	}
 
 	/**
@@ -2007,4 +2014,5 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			}
 		}
 	}
+
 }

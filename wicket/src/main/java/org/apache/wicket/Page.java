@@ -1267,4 +1267,16 @@ public abstract class Page extends MarkupContainer
 		}
 		return (Page)session.getPageManager().getPage(id);
 	}
+
+	/**
+	 * This method does nothing, it is here to prevent subclasses from overriding it since this
+	 * callback is never called on the {@link Page}
+	 * 
+	 * @see org.apache.wicket.Component#onInitialize()
+	 */
+	@Override
+	protected final void onInitialize()
+	{
+	}
+
 }
