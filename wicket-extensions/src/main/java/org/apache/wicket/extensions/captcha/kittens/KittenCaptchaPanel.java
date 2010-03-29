@@ -143,16 +143,17 @@ public class KittenCaptchaPanel extends Panel
 		setOutputMarkupId(true);
 
 		// Show how many animals have been selected
-		animalSelectionLabel = new Label("animalSelectionLabel", new AbstractReadOnlyModel()
-		{
-			private static final long serialVersionUID = 6792322972316712326L;
-
-			@Override
-			public Object getObject()
+		animalSelectionLabel = new Label("animalSelectionLabel",
+			new AbstractReadOnlyModel<String>()
 			{
-				return imageResource.selectString();
-			}
-		});
+				private static final long serialVersionUID = 6792322972316712326L;
+
+				@Override
+				public String getObject()
+				{
+					return imageResource.selectString();
+				}
+			});
 		animalSelectionLabel.setOutputMarkupId(true);
 		add(animalSelectionLabel);
 
