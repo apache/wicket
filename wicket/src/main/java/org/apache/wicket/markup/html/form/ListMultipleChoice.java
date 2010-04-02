@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.StringTokenizer;
+
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
@@ -25,11 +30,6 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.StringTokenizer;
 
 
 /**
@@ -122,7 +122,8 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List)
 	 */
-	public ListMultipleChoice(final String id, IModel<? extends Collection<T>> object, final List<? extends T> choices)
+	public ListMultipleChoice(final String id, IModel<? extends Collection<T>> object,
+		final List<? extends T> choices)
 	{
 		super(id, (IModel<Collection<T>>)object, choices);
 	}
@@ -340,7 +341,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 		}
 		else
 		{
-			selectedValues = getConvertedInput();
+			selectedValues = new ArrayList<T>(getConvertedInput());
 			setDefaultModelObject(selectedValues);
 		}
 	}
