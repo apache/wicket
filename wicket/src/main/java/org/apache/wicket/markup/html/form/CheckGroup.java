@@ -90,9 +90,10 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	 * @param model
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public CheckGroup(String id, IModel<Collection<T>> model)
+	@SuppressWarnings("unchecked")
+	public CheckGroup(String id, IModel<? extends Collection<T>> model)
 	{
-		super(id, model);
+		super(id, (IModel<Collection<T>>)model);
 		setRenderBodyOnly(true);
 	}
 
