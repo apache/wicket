@@ -16,9 +16,6 @@
  */
 package org.apache.wicket.extensions.markup.html.form.select;
 
-import java.util.Collection;
-import java.util.Iterator;
-
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -26,6 +23,9 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.WildcardCollectionModel;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 
 /**
@@ -55,7 +55,7 @@ public class SelectOptions<T> extends RepeatingView
 	 * @param model
 	 * @param renderer
 	 */
-	public SelectOptions(String id, IModel<Collection<? extends T>> model,
+	public SelectOptions(String id, IModel<? extends Collection<? extends T>> model,
 		IOptionRenderer<T> renderer)
 	{
 		super(id, model);

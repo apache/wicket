@@ -16,9 +16,6 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import java.util.Collection;
-import java.util.List;
-
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -26,6 +23,9 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
+
+import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -126,7 +126,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 * @see org.apache.wicket.Component#Component(String, org.apache.wicket.model.IModel)
 	 * @see AbstractChoice#AbstractChoice(String, org.apache.wicket.model.IModel, java.util.List)
 	 */
-	public CheckBoxMultipleChoice(final String id, IModel<Collection<T>> model,
+	public CheckBoxMultipleChoice(final String id, IModel<? extends Collection<T>> model,
 		final List<? extends T> choices)
 	{
 		super(id, model, choices);
@@ -147,7 +147,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 * @see AbstractChoice#AbstractChoice(String, org.apache.wicket.model.IModel,
 	 *      java.util.List,org.apache.wicket.markup.html.form.IChoiceRenderer)
 	 */
-	public CheckBoxMultipleChoice(final String id, IModel<Collection<T>> model,
+	public CheckBoxMultipleChoice(final String id, IModel<? extends Collection<T>> model,
 		final List<? extends T> choices, final IChoiceRenderer<? super T> renderer)
 	{
 		super(id, model, choices, renderer);
@@ -181,7 +181,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 *      org.apache.wicket.model.IModel,org.apache.wicket.model.IModel)
 	 * @see org.apache.wicket.Component#Component(String, org.apache.wicket.model.IModel)
 	 */
-	public CheckBoxMultipleChoice(String id, IModel<Collection<T>> model,
+	public CheckBoxMultipleChoice(String id, IModel<? extends Collection<T>> model,
 		IModel<? extends List<? extends T>> choices)
 	{
 		super(id, model, choices);
@@ -221,7 +221,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 * @see AbstractChoice#AbstractChoice(String, org.apache.wicket.model.IModel,
 	 *      org.apache.wicket.model.IModel,org.apache.wicket.markup.html.form.IChoiceRenderer)
 	 */
-	public CheckBoxMultipleChoice(String id, IModel<Collection<T>> model,
+	public CheckBoxMultipleChoice(String id, IModel<? extends Collection<T>> model,
 		IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer)
 	{
 		super(id, model, choices, renderer);
