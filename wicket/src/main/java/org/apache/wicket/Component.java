@@ -861,7 +861,7 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	 * hierarchy up until the Page. That is, all parents must be have been added to their parents as
 	 * well. Add this point in time {@link #getMarkup() getMarkup} is guaranteed to be available.
 	 * <p>
-	 * This method is guaranteed to only be called once
+	 * This method is guaranteed to called only once
 	 * </p>
 	 * <p>
 	 * If you don't like constructors to initialize your component, this is the method to use.
