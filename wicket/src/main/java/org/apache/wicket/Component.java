@@ -876,7 +876,7 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	 * 
 	 * @return {@code true} if component has been initialized
 	 */
-	boolean isInitialized()
+	final boolean isInitialized()
 	{
 		return getFlag(FLAG_INITIALIZED);
 	}
@@ -884,7 +884,7 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	/**
 	 * Used to call {@link #onInitialize()}
 	 */
-	void initialize()
+	final void initialize()
 	{
 		if (!getFlag(FLAG_INITIALIZED))
 		{
