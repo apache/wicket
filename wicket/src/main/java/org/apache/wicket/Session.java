@@ -758,22 +758,9 @@ public abstract class Session implements IClusterable
 						// if it is still not the right thread..
 						// This either points to long running code (a report
 						// page?) or a deadlock or such
-						try
-						{
-							StackTraceElement[] stackTrace = t.getStackTrace();
-							asb.append("\n\tBegin of stack trace of " + t);
-							for (StackTraceElement stackTraceElement : stackTrace)
-							{
-								asb.append("\n\t");
-								asb.append(stackTraceElement);
-							}
-							asb.append("\n\tEnd of stack trace of " + t);
-						}
-						catch (Exception e)
-						{
-							// ignore
-						}
-						throw new WicketRuntimeException(asb.toString());
+						WicketRuntimeException ex = new WicketRuntimeException(asb.toString());
+						ex.setStackTrace(t.getStackTrace());
+						throw ex;
 					}
 				}
 
