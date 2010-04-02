@@ -41,6 +41,7 @@ class SwitchProtocolRequestTarget implements IRequestTarget
 	}
 
 	private final Protocol protocol;
+	private final IRequestTarget target;
 
 	/**
 	 * Constructor
@@ -49,6 +50,19 @@ class SwitchProtocolRequestTarget implements IRequestTarget
 	 *            required protocol
 	 */
 	public SwitchProtocolRequestTarget(Protocol protocol)
+	{
+		this(protocol, null);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param protocol
+	 *            required protocol
+	 * @param target
+	 *            target to redirect to, or {@code null} to replay the current url
+	 */
+	public SwitchProtocolRequestTarget(Protocol protocol, IRequestTarget target)
 	{
 		if (protocol == null)
 		{
@@ -60,6 +74,7 @@ class SwitchProtocolRequestTarget implements IRequestTarget
 				Protocol.PRESERVE_CURRENT.toString() + "'.");
 		}
 		this.protocol = protocol;
+		this.target = target;
 	}
 
 	/** {@inheritDoc} */
@@ -120,7 +135,15 @@ class SwitchProtocolRequestTarget implements IRequestTarget
 			}
 		}
 
-		String url = getUrl(protocol.toString().toLowerCase(), port, request);
+		final String url;
+		if (target == null)
+		{
+			url = getUrl(protocol.toString().toLowerCase(), port, request);
+		}
+		else
+		{
+			url = requestCycle.urlFor(target).toString();
+		}
 
 		WebResponse response = (WebResponse)requestCycle.getResponse();
 
@@ -144,6 +167,21 @@ class SwitchProtocolRequestTarget implements IRequestTarget
 	 */
 	public static IRequestTarget requireProtocol(Protocol protocol)
 	{
+		return requireProtocol(protocol, null);
+	}
+
+	/**
+	 * Returns a target that can be used to redirect to the specified protocol. If no change is
+	 * required null will be returned.
+	 * 
+	 * @param protocol
+	 *            required protocol
+	 * @param target
+	 *            request target to redirect to or {@code null} to redirect to current url
+	 * @return request target or null
+	 */
+	public static IRequestTarget requireProtocol(Protocol protocol, IRequestTarget target)
+	{
 		RequestCycle requestCycle = RequestCycle.get();
 		WebRequest webRequest = (WebRequest)requestCycle.getRequest();
 		HttpServletRequest request = webRequest.getHttpServletRequest();
@@ -154,7 +192,7 @@ class SwitchProtocolRequestTarget implements IRequestTarget
 		}
 		else
 		{
-			return new SwitchProtocolRequestTarget(protocol);
+			return new SwitchProtocolRequestTarget(protocol, target);
 		}
 	}
 }

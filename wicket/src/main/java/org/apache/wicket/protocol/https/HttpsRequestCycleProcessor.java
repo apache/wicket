@@ -131,35 +131,79 @@ public class HttpsRequestCycleProcessor extends WebRequestCycleProcessor
 		}
 	}
 
+	/** @deprecated use checkSecureIncoming */
+	@Deprecated
 	protected IRequestTarget checkSecure(IRequestTarget target)
 	{
+		return checkSecureIncoming(target);
+	}
+
+	protected IRequestTarget checkSecureIncoming(IRequestTarget target)
+	{
+
+		if (target != null && target instanceof SwitchProtocolRequestTarget)
+		{
+			return target;
+		}
 		if (portConfig == null)
 		{
 			return target;
 		}
-		else
-		{
-			Class<?> pageClass = getPageClass(target);
-			if (pageClass != null)
-			{
-				IRequestTarget redirect = null;
-				if (hasSecureAnnotation(pageClass))
-				{
-					redirect = SwitchProtocolRequestTarget.requireProtocol(Protocol.HTTPS);
-				}
-				else
-				{
-					redirect = SwitchProtocolRequestTarget.requireProtocol(Protocol.HTTP);
-				}
-				if (redirect != null)
-				{
-					return redirect;
-				}
 
+		Class<?> pageClass = getPageClass(target);
+		if (pageClass != null)
+		{
+			IRequestTarget redirect = null;
+			if (hasSecureAnnotation(pageClass))
+			{
+				redirect = SwitchProtocolRequestTarget.requireProtocol(Protocol.HTTPS);
 			}
+			else
+			{
+				redirect = SwitchProtocolRequestTarget.requireProtocol(Protocol.HTTP);
+			}
+			if (redirect != null)
+			{
+				return redirect;
+			}
+
+		}
+		return target;
+	}
+
+	protected IRequestTarget checkSecureOutgoing(IRequestTarget target)
+	{
+
+		if (target != null && target instanceof SwitchProtocolRequestTarget)
+		{
 			return target;
 		}
+		if (portConfig == null)
+		{
+			return target;
+		}
+
+		Class<?> pageClass = getPageClass(target);
+		if (pageClass != null)
+		{
+			IRequestTarget redirect = null;
+			if (hasSecureAnnotation(pageClass))
+			{
+				redirect = SwitchProtocolRequestTarget.requireProtocol(Protocol.HTTPS, target);
+			}
+			else
+			{
+				redirect = SwitchProtocolRequestTarget.requireProtocol(Protocol.HTTP, target);
+			}
+			if (redirect != null)
+			{
+				return redirect;
+			}
+
+		}
+		return target;
 	}
+
 
 	/** {@inheritDoc} */
 	@Override
@@ -171,5 +215,24 @@ public class HttpsRequestCycleProcessor extends WebRequestCycleProcessor
 
 		IRequestTarget target = super.resolve(rc, rp);
 		return checkSecure(target);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void respond(RequestCycle requestCycle)
+	{
+		IRequestTarget requestTarget = requestCycle.getRequestTarget();
+		if (requestTarget != null)
+		{
+			IRequestTarget secured = checkSecureOutgoing(requestTarget);
+			if (secured != requestTarget)
+			{
+				requestCycle.setRequestTarget(secured);
+				// respond will be called again because we called setrequesttarget(), so we do not
+				// process it this time
+				return;
+			}
+		}
+		super.respond(requestCycle);
 	}
 }
