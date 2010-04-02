@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.ajax.markup.html;
 import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.model.IModel;
 
 /**
  * A variant of the {@link AjaxButton} that displays a busy indicator while the ajax request is in
@@ -43,7 +44,31 @@ public abstract class IndicatingAjaxButton extends AjaxButton implements IAjaxIn
 	 */
 	public IndicatingAjaxButton(String id)
 	{
-		this(id, null);
+		this(id, null, null);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param id
+	 * @param model
+	 *            model used to set <code>value</code> markup attribute
+	 */
+	public IndicatingAjaxButton(String id, IModel<String> model)
+	{
+		this(id, model, null);
+	}
+
+	/**
+	 *
+	 * Constructor
+	 * 
+	 * @param id
+	 * @param form
+	 */
+	public IndicatingAjaxButton(String id, Form<?> form)
+	{
+		this(id, null, form);
 	}
 
 	/**
@@ -52,9 +77,9 @@ public abstract class IndicatingAjaxButton extends AjaxButton implements IAjaxIn
 	 * @param id
 	 * @param form
 	 */
-	public IndicatingAjaxButton(String id, Form<?> form)
+	public IndicatingAjaxButton(String id, IModel<String> model, Form<?> form)
 	{
-		super(id, form);
+		super(id, model, form);
 		add(indicatorAppender);
 	}
 
