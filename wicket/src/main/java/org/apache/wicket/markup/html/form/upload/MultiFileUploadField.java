@@ -42,6 +42,13 @@ import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.upload.FileItem;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
 
 /**
  * Form component that allows the user to select multiple files to upload via a single &lt;input
@@ -132,7 +139,7 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 	 * @param id
 	 * @param model
 	 */
-	public MultiFileUploadField(String id, IModel<Collection<FileUpload>> model)
+	public MultiFileUploadField(String id, IModel<? extends Collection<FileUpload>> model)
 	{
 		this(id, model, UNLIMITED);
 	}
@@ -146,9 +153,10 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 	 *            max number of files a user can upload
 	 * 
 	 */
-	public MultiFileUploadField(String id, IModel<Collection<FileUpload>> model, int max)
+    @SuppressWarnings("unchecked")
+	public MultiFileUploadField(String id, IModel<? extends Collection<FileUpload>> model, int max)
 	{
-		super(id, model);
+		super(id, (IModel<Collection<FileUpload>>)model);
 
 		this.max = max;
 
