@@ -77,7 +77,7 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 	{
 		convertInput();
 		updateModel();
-		onSelectionChanged(getDefaultModelObject());
+		onSelectionChanged(getModelObject());
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 	 *            The newly selected object of the backing model NOTE this is the same as you would
 	 *            get by calling getModelObject() if the new selection were current
 	 */
-	protected void onSelectionChanged(Object newSelection)
+	protected void onSelectionChanged(Boolean newSelection)
 	{
 	}
 
