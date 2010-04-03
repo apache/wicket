@@ -88,7 +88,7 @@ import org.apache.wicket.util.lang.Checks;
  * <p>
  * The border body container will automatically be created for you and added to the border
  * container. It is accessible via {@link #getBodyContainer()}. In case the body markup is not an
- * immediate child of border (see the example below), than you must use code such as
+ * immediate child of border (see the example below), then you must use code such as
  * <code>someContainer.add(getBodyContainer())</code> to add the body component to the correct
  * container.
  * 
@@ -104,7 +104,7 @@ import org.apache.wicket.util.lang.Checks;
  *   &lt;/html&gt;
  * </pre>
  * 
- * The components "someContainer" in the previous example must be added to the border, and not the
+ * The component "someContainer" in the previous example must be added to the border, and not the
  * body, which is achieved via {@link #addToBorder(Component...)}.
  * <p/>
  * {@link #add(Component...)} or {@link #addToBorderBody(Component...)} will add a child component
@@ -532,10 +532,6 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 						{
 							return stream.getMarkupFragment();
 						}
-					}
-					if (tag.isOpen() && !tag.hasNoCloseTag() && !(tag instanceof WicketTag))
-					{
-						stream.skipToMatchingCloseTag(tag);
 					}
 				}
 
