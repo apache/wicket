@@ -247,7 +247,7 @@ public class RequestListenerInterface
 		{
 			// just return so that we have a silent fail and just re-render the
 			// page
-			log.info("component not enabled or visible; ignoring call. Component: " + component);
+			log.warn("component not enabled or visible; ignoring call. Component: " + component);
 			return;
 		}
 

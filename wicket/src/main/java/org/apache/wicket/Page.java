@@ -1227,15 +1227,6 @@ public abstract class Page extends MarkupContainer
 		return renderCount;
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#canCallListenerInterface()
-	 */
-	@Override
-	public boolean canCallListenerInterface()
-	{
-		return true;
-	}
-
 	/** TODO WICKET-NG javadoc */
 	public final void setWasCreatedBookmarkable(boolean wasCreatedBookmarkable)
 	{
