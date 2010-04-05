@@ -857,14 +857,15 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	}
 
 	/**
-	 * Callback method invoked after the component was added to its parent AND you can walk up the
-	 * hierarchy up until the Page. That is, all parents must be have been added to their parents as
-	 * well. Add this point in time {@link #getMarkup() getMarkup} is guaranteed to be available.
+	 * This method is meant to be used as an alternative to initialize components. Usually the
+	 * component's constructor is used for this task, but sometimes a component cannot be
+	 * initialized in isolation, it may need to access its parent component or its markup in order
+	 * to fully initialize. This method is invoked once per component's lifecycle when a path exists
+	 * from this component to the {@link Page} thus providing the component with an atomic callback
+	 * when the component's environment is built out.
+	 * 
 	 * <p>
-	 * This method is guaranteed to called only once
-	 * </p>
-	 * <p>
-	 * If you don't like constructors to initialize your component, this is the method to use.
+	 * It is safe to use {@link #getPage()} and {@link #getMarkup()} in this method
 	 * </p>
 	 */
 	protected void onInitialize()
