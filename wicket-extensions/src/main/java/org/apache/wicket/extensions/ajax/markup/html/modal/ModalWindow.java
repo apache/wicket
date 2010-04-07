@@ -366,7 +366,7 @@ public class ModalWindow extends Panel
 	 */
 	public static final void closeCurrent(AjaxRequestTarget target)
 	{
-		target.appendJavascript(getCloseJavacript());
+		target.appendJavascript(getCloseJavacriptInternal());
 	}
 
 	/**
@@ -383,9 +383,16 @@ public class ModalWindow extends Panel
 	}
 
 	/**
-	 * @return javascript that closes current modal window
+	 * Method that allows alternate script for showing the window.
+	 * 
+	 * @return the script that actually shows the window.
 	 */
-	private static String getCloseJavacript()
+	protected Object getShowJavascript()
+	{
+		return "Wicket.Window.create(settings).show();\n";
+	}
+
+	private static String getCloseJavacriptInternal()
 	{
 		return "var win;\n" //
 			+ "try {\n"
@@ -403,6 +410,16 @@ public class ModalWindow extends Panel
 			+ "		win.current.close();\n"
 			+ "	}, 0);  } \n"
 			+ "	try { close(window.parent); } catch (ignore) { close(window); };\n" + "}";
+	}
+
+	/**
+	 * Method that allows alternate script for closing the window.
+	 * 
+	 * @return the script that actually closes the window.
+	 */
+	protected String getCloseJavacript()
+	{
+		return getCloseJavacriptInternal();
 	}
 
 	/**
@@ -865,7 +882,7 @@ public class ModalWindow extends Panel
 	 * 
 	 * @return True if user has added own component to the window, false otherwise.
 	 */
-	private boolean isCustomComponent()
+	protected boolean isCustomComponent()
 	{
 		return getContent() != empty;
 	}
@@ -1124,7 +1141,7 @@ public class ModalWindow extends Panel
 
 		postProcessSettings(buffer);
 
-		buffer.append("Wicket.Window.create(settings).show();\n");
+		buffer.append(getShowJavascript());
 		return buffer.toString();
 	}
 
