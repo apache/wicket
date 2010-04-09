@@ -124,7 +124,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends
 	/**
 	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#encode(org.apache.wicket.IRequestTarget)
 	 */
-	public final CharSequence encode(final IRequestTarget requestTarget)
+	public CharSequence encode(final IRequestTarget requestTarget)
 	{
 		if (!(requestTarget instanceof IBookmarkablePageRequestTarget))
 		{
