@@ -42,6 +42,8 @@ import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
  */
 public class RequestParameters implements IClusterable
 {
+	private static final int MAX_URL_DEPTH = 75;
+
 	private static final long serialVersionUID = 1L;
 
 	/** the full path to a component (might be just the page). */
@@ -358,6 +360,8 @@ public class RequestParameters implements IClusterable
 	 */
 	public void setUrlDepth(int urlDepth)
 	{
+		if (urlDepth > MAX_URL_DEPTH)
+			throw new RuntimeException("Url depth to large: " + urlDepth);
 		this.urlDepth = urlDepth;
 	}
 
