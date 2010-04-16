@@ -361,7 +361,7 @@ public class RequestParameters implements IClusterable
 	public void setUrlDepth(int urlDepth)
 	{
 		if (urlDepth > MAX_URL_DEPTH)
-			throw new RuntimeException("Url depth to large: " + urlDepth);
+			throw new RuntimeException("Url depth too large: " + urlDepth);
 		this.urlDepth = urlDepth;
 	}
 
