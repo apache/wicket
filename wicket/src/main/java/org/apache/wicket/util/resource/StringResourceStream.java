@@ -24,7 +24,7 @@ package org.apache.wicket.util.resource;
  * @see org.apache.wicket.util.watch.IModifiable
  * @author Jonathan Locke
  */
-public final class StringResourceStream extends AbstractStringResourceStream
+public class StringResourceStream extends AbstractStringResourceStream
 {
 	private static final long serialVersionUID = 1L;
 
