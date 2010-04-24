@@ -1,6 +1,38 @@
 This file contains all changes done on the 1.4 version.
 
 
+Release Notes - Wicket - Version 1.4.8
+
+** Bug
+    * [WICKET-2075] - Pagemap is locked forever with some Page serialization exceptions
+    * [WICKET-2424] - OnChangeAjaxBehavior + DatePicker do not work together
+    * [WICKET-2764] - MarkupCache messed up when using MergedMarkup (e.g. for Page markup inheritance) together with IResourceStreams that do NOT also implement IFixedLocationResourceStream
+    * [WICKET-2767] - DatePicker Calendar: wrong year format when 4 digits are used (yyyy), e.g. 2010 --> 0010
+    * [WICKET-2772] - Generate wicketpath attribute for RadioChoice
+    * [WICKET-2779] - Submit a nested form via ajax to upload a file inside modal window does not work on IE.
+    * [WICKET-2787] - ValueMap.getAsBoolean(key, defaultValue) always returns false for non-existing keys, instead of the defaultValue
+    * [WICKET-2799] - @RequireHttps not switching to https when setting response page to non-bookmarkable page
+    * [WICKET-2802] - StringIndexOutOfBoundsException in PortletServletRequestWrapper for some resource requests
+    * [WICKET-2806] - Javascript looking for related radio in group is not working if css class is already assigned to radio
+    * [WICKET-2822] - Small Bug in JavaDoc for SpringWebApplicationFactory
+
+** Improvement
+    * [WICKET-2771] - Please support "isPrimary" for @SpringBean
+    * [WICKET-2776] - Enhancing RadioChoice input items with individual title and css class attributes
+    * [WICKET-2778] - Set Application ThreadLocal in WicketSessionFilter
+    * [WICKET-2796] - Improve error reporting on locked page maps
+    * [WICKET-2803] - ListMultipleChoice's Constructors Should Accept IModel<? extends Collection<T>>
+    * [WICKET-2813] - IndicatingAjaxButton should have construtors that take a IModel for the button text as does AjaxButton.
+    * [WICKET-2817] - ChoiceGroup's Constructor Should Accept IModel<? extends Collection<T>>
+    * [WICKET-2821] - More "IModel<? extends Collection<" Fixes
+    * [WICKET-2830] - Make BookmarkablePageRequestTargetUrlCodingStrategy#encode non final
+    * [WICKET-2831] - ConverterLocator#get(Class<T>) shouldn't be final
+    * [WICKET-2837] - Inaccurate AjaxSubmitLink Javadoc
+
+** Wish
+    * [WICKET-2847] - Make StringResourceStream non final
+
+
 Release Notes - Wicket - Version 1.4.7
 
 ** Bug
