@@ -70,7 +70,7 @@ public class InjectorHolder
 			throw new IllegalStateException("InjectorHolder has not been assigned an injector. "
 				+ "Use InjectorHolder.setInjector() to assign an injector. "
 				+ "In most cases this should be done once inside "
-				+ "SpringWebApplication subclass's init() method.");
+				+ "your WebApplication subclass's init() method.");
 		}
 		return injector;
 	}
