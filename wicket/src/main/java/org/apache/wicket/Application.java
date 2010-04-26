@@ -138,7 +138,7 @@ public abstract class Application
 		1);
 
 	/** Thread local holder of the application object. */
-	private static final ThreadLocal<Application> current = new ThreadLocal<Application>();
+	private static final ThreadLocal<Application> current = new InheritableThreadLocal<Application>();
 
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
