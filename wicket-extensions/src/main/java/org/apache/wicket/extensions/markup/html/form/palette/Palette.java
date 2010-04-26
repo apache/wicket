@@ -515,6 +515,7 @@ public class Palette<T> extends Panel implements IHeaderContributor
 	protected final void updateModel()
 	{
 		// prepare model
+		modelChanging();
 		Collection<T> model = getModelCollection();
 		model.clear();
 
@@ -526,8 +527,10 @@ public class Palette<T> extends Panel implements IHeaderContributor
 			final T selectedChoice = it.next();
 			model.add(selectedChoice);
 		}
+		modelChanged();
 
-		setDefaultModelObject(model);
+		// call model.setObject()
+		((IModel<Object>) getDefaultModel()).setObject(model);
 	}
 
 	/**
