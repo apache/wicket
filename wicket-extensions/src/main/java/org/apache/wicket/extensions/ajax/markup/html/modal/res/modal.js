@@ -528,7 +528,10 @@ Wicket.Window.prototype = {
 	 * Saves the position (and size if resizable) as a cookie.
 	 */
 	savePosition: function() {
-		
+	   savePositionAs(this.window.style.left, this.window.style.top, this.window.style.width, this.content.style.height);
+	},
+	
+	savePositionAs: function(x, y, width, height) {
 		if (typeof(this.settings.cookieId) != "undefined" &&  this.settings.cookieId != null) {
 	
 			this.findPositionString(true);
@@ -541,10 +544,10 @@ Wicket.Window.prototype = {
 			var cookie = this.settings.cookieId;
 			cookie += "::";
 			
-			cookie += this.window.style.left + ",";
-			cookie += this.window.style.top + ",";
-			cookie += this.window.style.width + ",";
-			cookie += this.content.style.height;
+			cookie += x + ",";
+			cookie += y + ",";
+			cookie += width + ",";
+			cookie += height;
 					
 			var rest = Wicket.Cookie.get(this.cookieKey);
 			if (rest != null) {
