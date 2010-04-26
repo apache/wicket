@@ -69,7 +69,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	/**
 	 * @see org.apache.wicket.request.target.coding.IMountableRequestTargetUrlCodingStrategy#getMountPath()
 	 */
-	public final String getMountPath()
+	public String getMountPath()
 	{
 		return mountPath;
 	}
