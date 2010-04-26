@@ -463,7 +463,7 @@ public abstract class AbstractResource implements IResource
 				@Override
 				public void write(byte[] b, int off, int len) throws IOException
 				{
-					if (off == 0 || len == b.length)
+					if (off == 0 && len == b.length)
 					{
 						write(b);
 					}
