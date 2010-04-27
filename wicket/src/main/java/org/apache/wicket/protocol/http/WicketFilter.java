@@ -1133,8 +1133,6 @@ public class WicketFilter implements Filter
 
 		if (pathInfo.startsWith(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX))
 		{
-			final String resourceReferenceKey = WicketURLDecoder.PATH_INSTANCE.decode(pathInfo.substring(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX.length()));
-
 			Resource resource = null;
 			WebRequestCycle requestCycle = null;
 
@@ -1147,6 +1145,9 @@ public class WicketFilter implements Filter
 				{
 					Application.set(webApplication);
 				}
+
+				final String resourceReferenceKey = WicketURLDecoder.PATH_INSTANCE.decode(pathInfo.substring(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX.length()));
+
 
 				// Try to find shared resource
 				resource = webApplication.getSharedResources().get(resourceReferenceKey);
