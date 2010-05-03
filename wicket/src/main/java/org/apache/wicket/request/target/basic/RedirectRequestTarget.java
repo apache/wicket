@@ -23,6 +23,7 @@ import org.apache.wicket.Response;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 import org.apache.wicket.request.target.component.listener.RedirectPageRequestTarget;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * A RequestTarget that will send a redirect url to the browser. Use this if you want to direct the
@@ -53,6 +54,11 @@ public class RedirectRequestTarget implements IRequestTarget
 	 */
 	public RedirectRequestTarget(String redirectUrl)
 	{
+		if (Strings.isEmpty(redirectUrl))
+		{
+			throw new IllegalArgumentException(
+				"The redirect URL passed to the RedirectRequestTarget constructor can not be null or empty.");
+		}
 		this.redirectUrl = redirectUrl;
 
 	}
