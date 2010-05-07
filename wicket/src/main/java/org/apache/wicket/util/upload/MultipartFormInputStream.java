@@ -655,7 +655,7 @@ public class MultipartFormInputStream
 	public int readBodyData(OutputStream output) throws MalformedStreamException, IOException
 	{
 		final InputStream istream = newInputStream();
-		return (int)Streams.copy(istream, output);
+		return Streams.copy(istream, output == null ? new NoopOutputStream() : output);
 	}
 
 	/**
@@ -1181,6 +1181,34 @@ public class MultipartFormInputStream
 		public boolean isClosed()
 		{
 			return closed;
+		}
+	}
+
+	private final static class NoopOutputStream extends OutputStream
+	{
+		@Override
+		public void close()
+		{
+		}
+
+		@Override
+		public void flush()
+		{
+		}
+
+		@Override
+		public void write(byte[] b)
+		{
+		}
+
+		@Override
+		public void write(byte[] b, int i, int l)
+		{
+		}
+
+		@Override
+		public void write(int b)
+		{
 		}
 	}
 
