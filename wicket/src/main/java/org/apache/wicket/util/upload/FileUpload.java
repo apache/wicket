@@ -24,7 +24,9 @@ package org.apache.wicket.util.upload;
  * 
  * <p>
  * This class handles multiple files per single HTML widget, sent using <code>multipart/mixed</code>
- * encoding type, as specified by <a href="http://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a>.
+ * encoding type, as specified by <a href="http://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a>. Use
+ * {@link #parseRequest(javax.servlet.http.HttpServletRequest)} to acquire a list of
+ * {@link org.apache.wicket.util.upload.FileItem FileItems} associated with a given HTML widget.
  * </p>
  * 
  * <p>
@@ -42,13 +44,20 @@ package org.apache.wicket.util.upload;
 public class FileUpload extends FileUploadBase
 {
 
+	// ----------------------------------------------------------- Data members
+
+
 	/**
 	 * The factory to use to create new form items.
 	 */
 	private FileItemFactory fileItemFactory;
 
+
+	// ----------------------------------------------------------- Constructors
+
+
 	/**
-	 * Constructs an uninitialized instance of this class. A factory must be configured, using
+	 * Constructs an uninitialised instance of this class. A factory must be configured, using
 	 * <code>setFileItemFactory()</code>, before attempting to parse requests.
 	 * 
 	 * @see #FileUpload(FileItemFactory)
@@ -63,15 +72,19 @@ public class FileUpload extends FileUploadBase
 	 * Constructs an instance of this class which uses the supplied factory to create
 	 * <code>FileItem</code> instances.
 	 * 
-	 * @param fileItemFactory
-	 * 
 	 * @see #FileUpload()
+	 * @param fileItemFactory
+	 *            The factory to use for creating file items.
 	 */
 	public FileUpload(FileItemFactory fileItemFactory)
 	{
 		super();
 		this.fileItemFactory = fileItemFactory;
 	}
+
+
+	// ----------------------------------------------------- Property accessors
+
 
 	/**
 	 * Returns the factory class used when creating file items.
@@ -96,4 +109,6 @@ public class FileUpload extends FileUploadBase
 	{
 		fileItemFactory = factory;
 	}
+
+
 }

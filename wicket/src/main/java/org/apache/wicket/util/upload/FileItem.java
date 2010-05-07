@@ -20,10 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-
-import org.apache.wicket.IClusterable;
-
 
 /**
  * <p>
@@ -32,10 +30,11 @@ import org.apache.wicket.IClusterable;
  * 
  * <p>
  * After retrieving an instance of this class from a
- * {@link org.apache.wicket.util.upload.FileUpload FileUpload} instance, you may either request all
- * contents of the file at once using {@link #get()} or request an {@link java.io.InputStream
- * InputStream} with {@link #getInputStream()} and process the file without attempting to load it
- * into memory, which may come handy with large files.
+ * {@link org.apache.wicket.util.upload.FileUpload FileUpload} instance (see
+ * {@link org.apache.wicket.util.upload.FileUpload #parseRequest(javax.servlet.http.HttpServletRequest)}
+ * ), you may either request all contents of the file at once using {@link #get()} or request an
+ * {@link java.io.InputStream InputStream} with {@link #getInputStream()} and process the file
+ * without attempting to load it into memory, which may come handy with large files.
  * 
  * <p>
  * While this interface does not extend <code>javax.activation.DataSource</code> per se (to avoid a
@@ -48,7 +47,7 @@ import org.apache.wicket.IClusterable;
  * @author <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>
  * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
  */
-public interface FileItem extends IClusterable
+public interface FileItem extends Serializable
 {
 
 
@@ -62,8 +61,8 @@ public interface FileItem extends IClusterable
 	 * @return An {@link java.io.InputStream InputStream} that can be used to retrieve the contents
 	 *         of the file.
 	 * 
-	 * @exception IOException
-	 *                if an error occurs.
+	 * @throws IOException
+	 *             if an error occurs.
 	 */
 	InputStream getInputStream() throws IOException;
 
@@ -123,8 +122,8 @@ public interface FileItem extends IClusterable
 	 * 
 	 * @return The contents of the item, as a string.
 	 * 
-	 * @exception UnsupportedEncodingException
-	 *                if the requested character encoding is not available.
+	 * @throws UnsupportedEncodingException
+	 *             if the requested character encoding is not available.
 	 */
 	String getString(String encoding) throws UnsupportedEncodingException;
 
@@ -150,8 +149,8 @@ public interface FileItem extends IClusterable
 	 * @param file
 	 *            The <code>File</code> into which the uploaded item should be stored.
 	 * 
-	 * @exception Exception
-	 *                if an error occurs.
+	 * @throws Exception
+	 *             if an error occurs.
 	 */
 	void write(File file) throws Exception;
 
@@ -206,10 +205,10 @@ public interface FileItem extends IClusterable
 	 * contents of the file.
 	 * 
 	 * @return An {@link java.io.OutputStream OutputStream} that can be used for storing the
-	 *         contents of the file.
+	 *         contensts of the file.
 	 * 
-	 * @exception IOException
-	 *                if an error occurs.
+	 * @throws IOException
+	 *             if an error occurs.
 	 */
 	OutputStream getOutputStream() throws IOException;
 

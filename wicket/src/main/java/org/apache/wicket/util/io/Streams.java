@@ -74,6 +74,44 @@ public final class Streams
 
 	/**
 	 * Writes the input stream to the output stream. Input is done without a Reader object, meaning
+	 * that the input is copied in its raw form. After it is copied it will close the streams.
+	 * 
+	 * @param in
+	 *            The input stream
+	 * @param out
+	 *            The output stream
+	 * @return Number of bytes copied from one stream to the other
+	 * @throws IOException
+	 */
+	public static long copyAndClose(InputStream in, OutputStream out) throws IOException
+	{
+		try
+		{
+			return copy(in, out);
+		}
+		finally
+		{
+			try
+			{
+				in.close();
+			}
+			catch (Exception e)
+			{
+
+			}
+			try
+			{
+				out.close();
+			}
+			catch (Exception e)
+			{
+
+			}
+		}
+	}
+
+	/**
+	 * Writes the input stream to the output stream. Input is done without a Reader object, meaning
 	 * that the input is copied in its raw form.
 	 * 
 	 * @param in

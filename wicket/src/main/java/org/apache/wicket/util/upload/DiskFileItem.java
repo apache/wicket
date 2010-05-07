@@ -24,13 +24,17 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
+import java.util.Random;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.io.DeferredFileOutputStream;
+import org.apache.wicket.util.io.Streams;
 
 
 /**
@@ -39,10 +43,22 @@ import org.apache.wicket.util.io.DeferredFileOutputStream;
  * interface.
  * 
  * <p>
- * After retrieving an instance of this class, you may either request all contents of file at once
- * using {@link #get()} or request an {@link java.io.InputStream InputStream} with
- * {@link #getInputStream()} and process the file without attempting to load it into memory, which
- * may come handy with large files.
+ * After retrieving an instance of this class from a
+ * {@link org.apache.wicket.util.upload.DiskFileUpload DiskFileUpload} instance (see
+ * {@link org.apache.wicket.util.upload.DiskFileUpload #parseRequest(javax.servlet.http.HttpServletRequest)}
+ * ), you may either request all contents of file at once using {@link #get()} or request an
+ * {@link java.io.InputStream InputStream} with {@link #getInputStream()} and process the file
+ * without attempting to load it into memory, which may come handy with large files.
+ * 
+ * <p>
+ * When using the <code>DiskFileItemFactory</code>, then you should consider the following:
+ * Temporary files are automatically deleted as soon as they are no longer needed. (More precisely,
+ * when the corresponding instance of {@link java.io.File} is garbage collected.) This is done by
+ * the so-called reaper thread, which is started automatically when the class
+ * {@link org.apache.commons.io.FileCleaner} is loaded. It might make sense to terminate that
+ * thread, for example, if your web application ends. See the section on "Resource cleanup" in the
+ * users guide of commons-fileupload.
+ * </p>
  * 
  * @author <a href="mailto:Rafal.Krzewski@e-point.pl">Rafal Krzewski</a>
  * @author <a href="mailto:sean@informage.net">Sean Legassick</a>
@@ -51,12 +67,15 @@ import org.apache.wicket.util.io.DeferredFileOutputStream;
  * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
  * @author Sean C. Sullivan
  */
-public class DiskFileItem implements FileItem
+public class DiskFileItem implements FileItem, FileItemHeadersSupport
 {
 
-	private static final long serialVersionUID = 1L;
-
 	// ----------------------------------------------------- Manifest constants
+
+	/**
+	 * The UID to use when serializing this instance.
+	 */
+	private static final long serialVersionUID = 2237570099615271025L;
 
 
 	/**
@@ -67,20 +86,20 @@ public class DiskFileItem implements FileItem
 	public static final String DEFAULT_CHARSET = "ISO-8859-1";
 
 
-	/**
-	 * Size of buffer to use when writing an item to disk.
-	 */
-	private static final int WRITE_BUFFER_SIZE = 2048;
-
-
 	// ----------------------------------------------------------- Data members
 
 
 	/**
-	 * Counter used in unique identifier generation.
+	 * UID used in unique file name generation.
 	 */
-	private static int counter = 0;
+	private static final String UID = new java.rmi.server.UID().toString()
+		.replace(':', '_')
+		.replace('-', '_');
 
+	/**
+	 * Random counter used in unique identifier generation.
+	 */
+	private static final Random counter = new Random();
 
 	/**
 	 * The name of the form field as provided by the browser.
@@ -107,6 +126,13 @@ public class DiskFileItem implements FileItem
 
 
 	/**
+	 * The size of the item, in bytes. This is used to cache the size when a file item is moved from
+	 * its original location.
+	 */
+	private long size = -1;
+
+
+	/**
 	 * The threshold above which uploads will be stored on disk.
 	 */
 	private final int sizeThreshold;
@@ -127,8 +153,22 @@ public class DiskFileItem implements FileItem
 	/**
 	 * Output stream for this item.
 	 */
-	private DeferredFileOutputStream dfos;
+	private transient DeferredFileOutputStream dfos;
 
+	/**
+	 * The temporary file to use.
+	 */
+	private transient File tempFile;
+
+	/**
+	 * File to allow for serialization of the content of this item.
+	 */
+	private File dfosFile;
+
+	/**
+	 * The file items headers.
+	 */
+	private FileItemHeaders headers;
 
 	// ----------------------------------------------------------- Constructors
 
@@ -174,12 +214,12 @@ public class DiskFileItem implements FileItem
 	 * @return An {@link java.io.InputStream InputStream} that can be used to retrieve the contents
 	 *         of the file.
 	 * 
-	 * @exception IOException
-	 *                if an error occurs.
+	 * @throws IOException
+	 *             if an error occurs.
 	 */
 	public InputStream getInputStream() throws IOException
 	{
-		if (!dfos.isInMemory())
+		if (!isInMemory())
 		{
 			return new FileInputStream(dfos.getFile());
 		}
@@ -240,7 +280,11 @@ public class DiskFileItem implements FileItem
 	 */
 	public boolean isInMemory()
 	{
-		return (dfos.isInMemory());
+		if (cachedContent != null)
+		{
+			return true;
+		}
+		return dfos.isInMemory();
 	}
 
 
@@ -251,7 +295,11 @@ public class DiskFileItem implements FileItem
 	 */
 	public long getSize()
 	{
-		if (cachedContent != null)
+		if (size >= 0)
+		{
+			return size;
+		}
+		else if (cachedContent != null)
 		{
 			return cachedContent.length;
 		}
@@ -274,7 +322,7 @@ public class DiskFileItem implements FileItem
 	 */
 	public byte[] get()
 	{
-		if (dfos.isInMemory())
+		if (isInMemory())
 		{
 			if (cachedContent == null)
 			{
@@ -323,8 +371,8 @@ public class DiskFileItem implements FileItem
 	 * 
 	 * @return The contents of the file, as a string.
 	 * 
-	 * @exception UnsupportedEncodingException
-	 *                if the requested character encoding is not available.
+	 * @throws UnsupportedEncodingException
+	 *             if the requested character encoding is not available.
 	 */
 	public String getString(final String charset) throws UnsupportedEncodingException
 	{
@@ -375,8 +423,8 @@ public class DiskFileItem implements FileItem
 	 * @param file
 	 *            The <code>File</code> into which the uploaded item should be stored.
 	 * 
-	 * @exception Exception
-	 *                if an error occurs.
+	 * @throws Exception
+	 *             if an error occurs.
 	 */
 	public void write(File file) throws Exception
 	{
@@ -401,6 +449,8 @@ public class DiskFileItem implements FileItem
 			File outputFile = getStoreLocation();
 			if (outputFile != null)
 			{
+				// Save the length of the file
+				size = outputFile.length();
 				/*
 				 * The uploaded file is being stored on disk in a temporary location so move it to
 				 * the desired file.
@@ -413,12 +463,7 @@ public class DiskFileItem implements FileItem
 					{
 						in = new BufferedInputStream(new FileInputStream(outputFile));
 						out = new BufferedOutputStream(new FileOutputStream(file));
-						byte[] bytes = new byte[WRITE_BUFFER_SIZE];
-						int s = 0;
-						while ((s = in.read(bytes)) != -1)
-						{
-							out.write(bytes, 0, s);
-						}
+						Streams.copy(in, out);
 					}
 					finally
 					{
@@ -542,15 +587,21 @@ public class DiskFileItem implements FileItem
 	 * @return An {@link java.io.OutputStream OutputStream} that can be used for storing the
 	 *         contensts of the file.
 	 * 
-	 * @exception IOException
-	 *                if an error occurs.
+	 * @throws IOException
+	 *             if an error occurs.
 	 */
 	public OutputStream getOutputStream() throws IOException
 	{
 		if (dfos == null)
 		{
-			File outputFile = getTempFile();
-			dfos = new DeferredFileOutputStream(sizeThreshold, outputFile);
+			dfos = new DeferredFileOutputStream(sizeThreshold,
+				new DeferredFileOutputStream.FileFactory()
+				{
+					public File createFile()
+					{
+						return getTempFile();
+					}
+				});
 		}
 		return dfos;
 	}
@@ -570,7 +621,7 @@ public class DiskFileItem implements FileItem
 	 */
 	public File getStoreLocation()
 	{
-		return dfos.getFile();
+		return dfos == null ? null : dfos.getFile();
 	}
 
 
@@ -602,57 +653,73 @@ public class DiskFileItem implements FileItem
 	 */
 	protected File getTempFile()
 	{
-		File tempDir = repository;
-		if (tempDir == null)
+		if (tempFile == null)
 		{
-			String systemTmp = null;
+			File tempDir = repository;
+			if (tempDir == null)
+			{
+				String systemTmp = null;
+				try
+				{
+					systemTmp = System.getProperty("java.io.tmpdir");
+				}
+				catch (SecurityException e)
+				{
+					throw new WicketRuntimeException(
+						"Reading property java.io.tmpdir is not allowed"
+							+ " for the current security settings. The repository location needs to be"
+							+ " set manually, or upgrade permissions to allow reading the tmpdir property.");
+				}
+				tempDir = new File(systemTmp);
+			}
+
 			try
 			{
-				systemTmp = System.getProperty("java.io.tmpdir");
+				do
+				{
+					String tempFileName = "upload_" + UID + "_" + getUniqueId() + ".tmp";
+					tempFile = new File(tempDir, tempFileName);
+				}
+				while (!tempFile.createNewFile());
 			}
-			catch (SecurityException e)
+			catch (IOException e)
 			{
-				throw new WicketRuntimeException("Reading property java.io.tmpdir is not allowed"
-					+ " for the current security settings. The repository location needs to be"
-					+ " set manually, or upgrade permissions to allow reading the tmpdir property.");
+				throw new WicketRuntimeException("Could not create the temp file for upload", e);
 			}
-			tempDir = new File(systemTmp);
+
+			FileCleaner.track(tempFile, this);
 		}
-
-		String fileName = "upload_" + getUniqueId() + ".tmp";
-
-		File f = new File(tempDir, fileName);
-		FileCleaner.track(f, this);
-		return f;
+		return tempFile;
 	}
-
 
 	// -------------------------------------------------------- Private methods
 
 
 	/**
 	 * Returns an identifier that is unique within the class loader used to load this class, but
-	 * does not have random-like apearance.
+	 * does not have random-like appearance.
 	 * 
 	 * @return A String with the non-random looking instance identifier.
 	 */
 	private static String getUniqueId()
 	{
+		final int limit = 100000000;
 		int current;
 		synchronized (DiskFileItem.class)
 		{
-			current = counter++;
+			current = counter.nextInt();
 		}
 		String id = Integer.toString(current);
 
 		// If you manage to get more than 100 million of ids, you'll
 		// start getting ids longer than 8 characters.
-		if (current < 100000000)
+		if (current < limit)
 		{
 			id = ("00000000" + id).substring(id.length());
 		}
 		return id;
 	}
+
 
 	/**
 	 * @see java.lang.Object#toString()
@@ -663,5 +730,89 @@ public class DiskFileItem implements FileItem
 		return "name=" + getName() + ", StoreLocation=" + String.valueOf(getStoreLocation()) +
 			", size=" + getSize() + "bytes, " + "isFormField=" + isFormField() + ", FieldName=" +
 			getFieldName();
+	}
+
+
+	// -------------------------------------------------- Serialization methods
+
+
+	/**
+	 * Writes the state of this object during serialization.
+	 * 
+	 * @param out
+	 *            The stream to which the state should be written.
+	 * 
+	 * @throws IOException
+	 *             if an error occurs.
+	 */
+	private void writeObject(ObjectOutputStream out) throws IOException
+	{
+		// Read the data
+		if (dfos.isInMemory())
+		{
+			cachedContent = get();
+		}
+		else
+		{
+			cachedContent = null;
+			dfosFile = dfos.getFile();
+		}
+
+		// write out values
+		out.defaultWriteObject();
+	}
+
+	/**
+	 * Reads the state of this object during deserialization.
+	 * 
+	 * @param in
+	 *            The stream from which the state should be read.
+	 * 
+	 * @throws IOException
+	 *             if an error occurs.
+	 * @throws ClassNotFoundException
+	 *             if class cannot be found.
+	 */
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+	{
+		// read values
+		in.defaultReadObject();
+
+		OutputStream output = getOutputStream();
+		if (cachedContent != null)
+		{
+			output.write(cachedContent);
+		}
+		else
+		{
+			FileInputStream input = new FileInputStream(dfosFile);
+			Streams.copy(input, output);
+			dfosFile.delete();
+			dfosFile = null;
+		}
+		output.close();
+
+		cachedContent = null;
+	}
+
+	/**
+	 * Returns the file item headers.
+	 * 
+	 * @return The file items headers.
+	 */
+	public FileItemHeaders getHeaders()
+	{
+		return headers;
+	}
+
+	/**
+	 * Sets the file item headers.
+	 * 
+	 * @param pHeaders
+	 *            The file items headers.
+	 */
+	public void setHeaders(FileItemHeaders pHeaders)
+	{
+		headers = pHeaders;
 	}
 }
