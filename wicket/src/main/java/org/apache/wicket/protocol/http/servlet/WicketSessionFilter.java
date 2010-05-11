@@ -105,7 +105,7 @@ import org.slf4j.LoggerFactory;
 public class WicketSessionFilter implements Filter
 {
 	/** log. */
-	private static final Logger log = LoggerFactory.getLogger(WicketSessionFilter.class);
+	private static final Logger logger = LoggerFactory.getLogger(WicketSessionFilter.class);
 
 	/** the filter name/ application key. */
 	private String filterName;
@@ -134,8 +134,7 @@ public class WicketSessionFilter implements Filter
 					getClass().getName());
 		}
 
-		log.debug("filterName/ application key set to {}", filterName);
-
+		logger.debug("filterName/application key set to {}", filterName);
 	}
 
 	/**
@@ -145,71 +144,76 @@ public class WicketSessionFilter implements Filter
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 		throws IOException, ServletException
 	{
-		HttpServletRequest httpServletRequest = ((HttpServletRequest)request);
-		HttpSession httpSession = httpServletRequest.getSession(false);
-		WebApplication application = null;
-		Session session = null;
-		if (httpSession != null)
+		try
+		{
+			WebApplication application = bindApplication();
+			bindSession(request, application);
+			chain.doFilter(request, response);
+		}
+		finally
+		{
+			cleanupBoundApplicationAndSession();
+		}
+	}
+
+	private void cleanupBoundApplicationAndSession()
+	{
+		ThreadContext.detach();
+	}
+
+	private void bindSession(ServletRequest request, WebApplication application)
+	{
+		// find wicket session and bind it to thread
+
+		HttpSession httpSession = ((HttpServletRequest)request).getSession(false);
+		Session session = getSession(httpSession, application);
+		if (session == null)
+		{
+			if (logger.isDebugEnabled())
+			{
+				logger.debug("could not set Wicket session: key " + sessionKey +
+					" not found in http session for " +
+					((HttpServletRequest)request).getContextPath() + "," + request.getServerName() +
+					", or http session does not exist");
+			}
+		}
+		else
+		{
+			session.bind();
+		}
+	}
+
+	private WebApplication bindApplication()
+	{
+		// find wicket application and bind it to thread
+
+		WebApplication application = (WebApplication)Application.get(filterName);
+		if (application == null)
+		{
+			throw new IllegalStateException("Could not find wicket application mapped to filter: " +
+				filterName +
+				". Make sure you set filterName attribute to the name of the wicket filter " +
+				"for the wicket application whose session you want to access.");
+		}
+		application.set();
+		return application;
+	}
+
+	private Session getSession(HttpSession session, WebApplication application)
+	{
+		if (session != null)
 		{
 			if (sessionKey == null)
 			{
-				application = (WebApplication)Application.get(filterName);
-				if (application == null)
-				{
-					throw new IllegalStateException(
-						"Could not find wicket application mapped to filter: " +
-							filterName +
-							". Make sure you set filterName attribute to the name of the wicket filter " +
-							"for the wicket application whose session you want to access.");
-				}
-
 				sessionKey = application.getSessionAttributePrefix(null, filterName) +
 					Session.SESSION_ATTRIBUTE_NAME;
 
-				log.debug("will use {} as the session key to get the Wicket session", sessionKey);
+				logger.debug("will use {} as the session key to get the Wicket session", sessionKey);
 			}
 
-			session = (Session)httpSession.getAttribute(sessionKey);
+			return (Session)session.getAttribute(sessionKey);
 		}
-		else
-		{
-			log.debug("could not set Wicket session: no http session was created yet for {},{}",
-				httpServletRequest.getContextPath(), httpServletRequest.getServerName());
-		}
-
-		if (session == null)
-		{
-			// no session found
-
-			if (log.isDebugEnabled())
-			{
-				log.debug("could not set Wicket session: key " + sessionKey +
-					" not found in http session for " + httpServletRequest.getContextPath() + "," +
-					httpServletRequest.getServerName());
-			}
-
-			// go on with processing
-			chain.doFilter(request, response);
-		}
-		else
-		{
-			// session found
-
-			try
-			{
-				ThreadContext.setApplication(application);
-				ThreadContext.setSession(session);
-				log.debug("session " + session + " set as current for " +
-					httpServletRequest.getContextPath() + "," + httpServletRequest.getServerName());
-
-				// go on with processing
-				chain.doFilter(request, response);
-			}
-			finally
-			{
-				ThreadContext.detach();
-			}
-		}
+		return null;
 	}
 
 	/**
