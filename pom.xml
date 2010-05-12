@@ -789,6 +789,11 @@
 						</execution>
 					</executions>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-archetype-plugin</artifactId>
+					<version>2.0-alpha-5</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
