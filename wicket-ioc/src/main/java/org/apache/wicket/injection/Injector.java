@@ -18,14 +18,11 @@ package org.apache.wicket.injection;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.util.collections.ClassMetaCache;
 
 /**
  * Injector scans fields of an object instance and checks if the specified
@@ -42,7 +39,7 @@ public abstract class Injector
 		private static final long serialVersionUID = 1L;
 	};
 
-	private final Map<ClassLoader, ConcurrentHashMap<String, Field[]>> cache = Collections.synchronizedMap(new WeakHashMap<ClassLoader, ConcurrentHashMap<String, Field[]>>());
+	private final ClassMetaCache<Field[]> cache = new ClassMetaCache<Field[]>();
 
 	/**
 	 * Binds current instance of the injector to the Application. After this method is called this
@@ -88,20 +85,15 @@ public abstract class Injector
 		Field[] fields = null;
 
 		// try cache
-		ConcurrentHashMap<String, Field[]> container = cache.get(clazz.getClassLoader());
-		if (container != null)
-		{
-			fields = container.get(clazz.getName());
-		}
+		fields = cache.get(clazz);
 
 		if (fields == null)
 		{
+			// cache miss, discover fields
 			fields = findFields(clazz, factory);
 
 			// write to cache
-			container = new ConcurrentHashMap<String, Field[]>();
-			container.put(clazz.getName(), fields);
-			cache.put(clazz.getClassLoader(), container);
+			cache.put(clazz, fields);
 		}
 
 		for (int i = 0; i < fields.length; i++)
