@@ -18,17 +18,14 @@ package org.apache.wicket.injection;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.util.collections.ClassMetaCache;
 
 /**
  * Injector scans fields of an object instance and checks if the specified
@@ -40,9 +37,11 @@ import org.apache.wicket.markup.html.panel.Panel;
  */
 public class Injector
 {
+	private static final Field[] EMPTY_FIELDS = new Field[0];
+
 	private static Injector instance = new Injector();
 
-	private final Map<ClassLoader, ConcurrentHashMap<String, Field[]>> cache = Collections.synchronizedMap(new WeakHashMap<ClassLoader, ConcurrentHashMap<String, Field[]>>());
+	private final ClassMetaCache<Field[]> cache = new ClassMetaCache<Field[]>();
 
 	/**
 	 * @return static instance of ProxyInjector
@@ -85,24 +84,7 @@ public class Injector
 	{
 		final Class<?> clazz = object.getClass();
 
-		Field[] fields = null;
-
-		// try cache
-		ConcurrentHashMap<String, Field[]> container = cache.get(clazz.getClassLoader());
-		if (container != null)
-		{
-			fields = container.get(clazz.getName());
-		}
-
-		if (fields == null)
-		{
-			fields = findFields(clazz, factory);
-
-			// write to cache
-			container = new ConcurrentHashMap<String, Field[]>();
-			container.put(clazz.getName(), fields);
-			cache.put(clazz.getClassLoader(), container);
-		}
+		Field[] fields = getFields(clazz, factory);
 
 		for (int i = 0; i < fields.length; i++)
 		{
@@ -142,6 +124,28 @@ public class Injector
 	}
 
 	/**
+	 * caches results of {@link #getFields(Class, IFieldValueFactory)}
+	 * 
+	 * @param clazz
+	 * @param factory
+	 * @return cached results as returned by {@link #getFields(Class, IFieldValueFactory)}
+	 */
+	private Field[] getFields(Class<?> clazz, IFieldValueFactory factory)
+	{
+		Field[] fields = cache.get(clazz);
+
+		if (fields == null)
+		{
+			fields = findFields(clazz, factory);
+
+			// write to cache
+			cache.put(clazz, fields);
+		}
+
+		return fields;
+	}
+
+	/**
 	 * Returns an array of fields that can be injected using the given field value factory
 	 * 
 	 * @param clazz
@@ -167,7 +171,6 @@ public class Injector
 			clazz = clazz.getSuperclass();
 		}
 
-		return matched.toArray(new Field[matched.size()]);
+		return matched.size() == 0 ? EMPTY_FIELDS : matched.toArray(new Field[matched.size()]);
 	}
-
 }
