@@ -71,12 +71,14 @@ public class RangeValidator<Z extends Comparable<Z> & Serializable> implements I
 	public void validate(IValidatable<Z> validatable)
 	{
 		Z value = validatable.getValue();
-		if (value.compareTo(minimum) < 0 || value.compareTo(maximum) > 0)
+		final Z min = getMinimum();
+		final Z max = getMaximum();
+		if (value.compareTo(min) < 0 || value.compareTo(max) > 0)
 		{
 			ValidationError error = new ValidationError();
 			error.addMessageKey("RangeValidator");
-			error.setVariable("minimum", minimum);
-			error.setVariable("maximum", maximum);
+			error.setVariable("minimum", min);
+			error.setVariable("maximum", max);
 			validatable.error(error);
 		}
 	}
