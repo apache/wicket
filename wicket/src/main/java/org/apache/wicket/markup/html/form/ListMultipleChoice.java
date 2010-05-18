@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
@@ -45,6 +46,12 @@ import org.slf4j.LoggerFactory;
 public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 {
 	private static final long serialVersionUID = 1L;
+
+	/** Meta key for the retain disabled flag */
+	MetaDataKey<Boolean> RETAIN_DISABLED_META_KEY = new MetaDataKey<Boolean>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
 
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(ListMultipleChoice.class);
@@ -261,7 +268,9 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 		else
 		{
 			// TODO 1.3: check if its safe to return Collections.EMPTY_LIST here
-			return new ArrayList<T>();
+			ArrayList<T> result = new ArrayList<T>();
+			addRetainedDisabled(result);
+			return result;
 		}
 	}
 
@@ -297,8 +306,44 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 				}
 			}
 		}
+
+		addRetainedDisabled(selectedValues);
+
 		return selectedValues;
 
+	}
+
+	private void addRetainedDisabled(ArrayList<T> selectedValues)
+	{
+		if (isRetainDisabledSelected())
+		{
+			Collection<T> unchangedModel = getModelObject();
+			String selected;
+			{
+				StringBuilder builder = new StringBuilder();
+				for (T t : unchangedModel)
+				{
+					builder.append(t);
+					builder.append(";");
+				}
+				selected = builder.toString();
+			}
+			List<? extends T> choices = getChoices();
+			for (int i = 0; i < choices.size(); i++)
+			{
+				final T choice = choices.get(i);
+				if (isDisabled(choice, i, selected))
+				{
+					if (unchangedModel.contains(choice))
+					{
+						if (!selectedValues.contains(choice))
+						{
+							selectedValues.add(choice);
+						}
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -344,5 +389,38 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 			selectedValues = new ArrayList<T>(getConvertedInput());
 			setDefaultModelObject(selectedValues);
 		}
+	}
+
+	/**
+	 * If true, choices that were selected in the model but disabled in rendering will be retained
+	 * in the model after a form submit. Example: Choices are [1, 2, 3, 4]. Model collection is [2,
+	 * 4]. In rendering, choices 2 and 3 are disabled ({@link #isDisabled(Object, int, String)}).
+	 * That means that four checkboxes are rendered, checkboxes 2 and 4 are checked, but 2 and 3 are
+	 * not clickable. User checks 1 and unchecks 4. If this flag is off, the model will be updated
+	 * to [1]. This is because the browser does not re-submit a disabled checked checkbox: it only
+	 * submits [1]. Therefore Wicket will only see the [1] and update the model accordingly. If you
+	 * set this flag to true, Wicket will check the model before updating to find choices that were
+	 * selected but disabled. These choices will then be retained, leading to a new model value of
+	 * [1, 2] as (probably) expected by the user. Note that this will lead to additional calls to
+	 * {@link #isDisabled(Object, int, String)}.
+	 * 
+	 * @return flag
+	 */
+	public boolean isRetainDisabledSelected()
+	{
+		Boolean flag = getMetaData(RETAIN_DISABLED_META_KEY);
+		return (flag != null && flag);
+	}
+
+	/**
+	 * @param retain
+	 *            flag
+	 * @return this
+	 * @see #isRetainDisabledSelected()
+	 */
+	public ListMultipleChoice<T> setRetainDisabledSelected(boolean retain)
+	{
+		setMetaData(RETAIN_DISABLED_META_KEY, (retain) ? true : null);
+		return this;
 	}
 }
