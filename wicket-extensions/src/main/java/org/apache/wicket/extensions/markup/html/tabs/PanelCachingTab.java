@@ -71,6 +71,6 @@ public class PanelCachingTab implements ITab
 	 */
 	public boolean isVisible()
 	{
-		return true;
+		return delegate.isVisible();
 	}
 }
