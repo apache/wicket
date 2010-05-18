@@ -370,7 +370,11 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 
 			modelChanging();
 			selectedValues.clear();
-			selectedValues.addAll(getConvertedInput());
+			final Collection<T> converted = getConvertedInput();
+			if (converted != null)
+			{
+				selectedValues.addAll(converted);
+			}
 			modelChanged();
 			// call model.setObject()
 			try
