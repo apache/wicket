@@ -79,13 +79,18 @@ public class PackageStringResourceLoader extends ComponentStringResourceLoader
 
 		while (true)
 		{
-			String packageName = clazz.getPackage().getName();
+			Package pkg = clazz.getPackage();
+			String packageName = (pkg == null) ? "" : pkg.getName();
 			packageName = packageName.replace('.', '/');
 
-			while (packageName.length() > 0)
+			do
 			{
 				// Create the base path
-				String path = packageName + "/" + filename;
+				String path = filename;
+				if (packageName.length() > 0)
+				{
+					path = packageName + "/" + path;
+				}
 
 				// Iterator over all the combinations
 				ResourceNameIterator iter = new ResourceNameIterator(path, style, variation,
@@ -114,6 +119,7 @@ public class PackageStringResourceLoader extends ComponentStringResourceLoader
 				// Didn't find the key yet, continue searching if possible
 				packageName = Strings.beforeLast(packageName, '/');
 			}
+			while (packageName.length() > 0);
 
 			clazz = clazz.getSuperclass();
 			if (clazz == null)
