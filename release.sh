@@ -62,14 +62,14 @@ mvn5 clean -Pall
 
 # package and assemble the release
 echo "Package and assemble the release"
-mvn5 -ff -Dgpg.passphrase="$passphrase" -Prelease deploy javadoc:javadoc assembly:attached $1
+mvn5 -ff -Dgpg.passphrase='$passphrase' -Prelease deploy javadoc:javadoc assembly:attached $1
 
 filename=`ls target/dist/apache-wicket*gz`
 gpg --print-md MD5 $filename > $filename.md5
 gpg --print-md SHA1 $filename > $filename.sha
-echo "$passphrase" | gpg --passphrase-fd 0 --armor --output $filename.asc --detach-sig $filename
+echo '$passphrase' | gpg --passphrase-fd 0 --armor --output $filename.asc --detach-sig $filename
 
 filename=`ls target/dist/apache-wicket*zip`
 gpg --print-md MD5 $filename > $filename.md5
 gpg --print-md SHA1 $filename > $filename.sha
-echo "$passphrase" | gpg --passphrase-fd 0 --armor --output $filename.asc --detach-sig $filename
+echo '$passphrase' | gpg --passphrase-fd 0 --armor --output $filename.asc --detach-sig $filename
