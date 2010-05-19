@@ -45,11 +45,22 @@ while ( defined( $_ = <DATA> )  ) {
 	}
 }
 close DATA;
-
 print "Last revision: " . $last . "\n\n";
 
+open DATA, "svn info |"   or die "Error running cmd: $!";
 
-$cmd = "svn log " . $baseurl . " -r " . $last . ":HEAD";
+my $thisVersionURL = '';
+while ( defined( $_ = <DATA> )  ) {
+	chomp();
+	#print "line: $_\n";
+	if ( /^URL: (http.*)/ ) {
+		$thisVersionURL = $1;
+	}
+}
+close DATA;
+print "This version's URL: $thisVersionURL";
+
+$cmd = "svn log " . $thisVersionURL . " -r " . $last . ":HEAD";
 open DATA, "$cmd |"   or die "Error running cmd: $!";
 
 while ( defined( $_ = <DATA> )  ) {
