@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import java.util.Collection;
+import java.util.List;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -24,9 +27,6 @@ import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.version.undo.Change;
-
-import java.util.Collection;
-import java.util.List;
 
 
 /**
@@ -411,7 +411,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 				buffer.append(getPrefix());
 
 				String id = getChoiceRenderer().getIdValue(choice, index);
-				final String idAttr = getMarkupId() + "-" + getInputName() + "_" + id;
+				final String idAttr = getCheckBoxMarkupId(id);
 
 				// Add checkbox element
 				buffer.append("<input name=\"").append(getInputName()).append("\"").append(
@@ -445,6 +445,25 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 
 		// Replace body
 		replaceComponentTagBody(markupStream, openTag, buffer);
+	}
+
+	/**
+	 * Creates markup id for the input tag used to generate the checkbox for the element with the
+	 * specified {@code id}.
+	 * <p>
+	 * NOTE It is useful to override this method if the contract for the genreated ids should be
+	 * fixed, for example in cases when the id generation pattern in this method is used to predict
+	 * ids by some external javascript. If the contract is fixed in the user's code then upgrading
+	 * wicket versions will guarantee not to break it should the default contract be changed at a
+	 * later time.
+	 * </p>
+	 * 
+	 * @param id
+	 * @return markup id for the input tag
+	 */
+	protected String getCheckBoxMarkupId(String id)
+	{
+		return getMarkupId() + "-" + getInputName() + "_" + id;
 	}
 
 	/**
