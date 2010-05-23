@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.protocol.http;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -581,19 +580,19 @@ public class RequestLogger implements IRequestLogger
 			return sessionId;
 		}
 
-		void addTimeTaken(long time)
+		public void addTimeTaken(long time)
 		{
 			lastActive = System.currentTimeMillis();
 			numberOfRequests++;
 			totalTimeTaken += time;
 		}
 
-		void setSessionInfo(Object sessionInfo)
+		public void setSessionInfo(Object sessionInfo)
 		{
 			this.sessionInfo = sessionInfo;
 		}
 
-		void setSessionSize(long size)
+		public void setSessionSize(long size)
 		{
 			sessionSize = size;
 		}
@@ -605,186 +604,5 @@ public class RequestLogger implements IRequestLogger
 
 	}
 
-	/**
-	 * This class hold the information one request of a session has.
-	 * 
-	 * @author jcompagner
-	 */
-	public static class RequestData implements IClusterable
-	{
-		private static final long serialVersionUID = 1L;
 
-		private long startDate;
-		private long timeTaken;
-		private final List<String> entries = new ArrayList<String>(5);
-		private String eventTarget;
-		private String responseTarget;
-
-		private String sessionId;
-
-		private long totalSessionSize;
-
-		private Object sessionInfo;
-
-		private int activeRequest;
-
-		/**
-		 * @return The time taken for this request
-		 */
-		public Long getTimeTaken()
-		{
-			return new Long(timeTaken);
-		}
-
-		/**
-		 * @param activeRequest
-		 *            The number of active request when this request happened
-		 */
-		public void setActiveRequest(int activeRequest)
-		{
-			this.activeRequest = activeRequest;
-		}
-
-		/**
-		 * @return The number of active request when this request happened
-		 */
-		public int getActiveRequest()
-		{
-			return activeRequest;
-		}
-
-		/**
-		 * @return The session object info, created by {@link ISessionLogInfo#getSessionInfo()}
-		 */
-		public Object getSessionInfo()
-		{
-			return sessionInfo;
-		}
-
-		/**
-		 * Set the session info object of the session for this request.
-		 * 
-		 * @param sessionInfo
-		 */
-		public void setSessionInfo(Object sessionInfo)
-		{
-			this.sessionInfo = sessionInfo;
-		}
-
-		/**
-		 * @param sizeInBytes
-		 */
-		public void setSessionSize(long sizeInBytes)
-		{
-			totalSessionSize = sizeInBytes;
-		}
-
-		/**
-		 * @param id
-		 */
-		public void setSessionId(String id)
-		{
-			sessionId = id;
-		}
-
-		/**
-		 * @return The time taken for this request
-		 */
-		public Date getStartDate()
-		{
-			return new Date(startDate);
-		}
-
-		/**
-		 * @return The event target string
-		 */
-		public String getEventTarget()
-		{
-			return eventTarget;
-		}
-
-		/**
-		 * @return The response target string
-		 */
-		public String getResponseTarget()
-		{
-			return responseTarget;
-		}
-
-		/**
-		 * @param target
-		 */
-		public void addResponseTarget(String target)
-		{
-			responseTarget = target;
-		}
-
-		/**
-		 * @param target
-		 */
-		public void addEventTarget(String target)
-		{
-			eventTarget = target;
-		}
-
-		/**
-		 * @param timeTaken
-		 */
-		public void setTimeTaken(long timeTaken)
-		{
-			this.timeTaken = timeTaken;
-			startDate = System.currentTimeMillis() - timeTaken;
-		}
-
-		/**
-		 * @param string
-		 */
-		public void addEntry(String string)
-		{
-			entries.add(string);
-		}
-
-		/**
-		 * @return All entries of the objects that are created/updated or removed in this request
-		 */
-		public String getAlteredObjects()
-		{
-			AppendingStringBuffer sb = new AppendingStringBuffer();
-			for (int i = 0; i < entries.size(); i++)
-			{
-				String element = entries.get(i);
-				sb.append(element);
-				if (entries.size() != i + 1)
-				{
-					sb.append("<br/>");
-				}
-			}
-			return sb.toString();
-		}
-
-		/**
-		 * @return The session id for this request
-		 */
-		public String getSessionId()
-		{
-			return sessionId;
-		}
-
-		/**
-		 * @return The total session size.
-		 */
-		public Long getSessionSize()
-		{
-			return new Long(totalSessionSize);
-		}
-
-		@Override
-		public String toString()
-		{
-			return "Request[timetaken=" + getTimeTaken() + ",sessioninfo=" + sessionInfo +
-				",sessionid=" + sessionId + ",sessionsize=" + totalSessionSize + ",request=" +
-				eventTarget + ",response=" + responseTarget + ",alteredobjects=" +
-				getAlteredObjects() + ",activerequest=" + activeRequest + "]";
-		}
-	}
 }
