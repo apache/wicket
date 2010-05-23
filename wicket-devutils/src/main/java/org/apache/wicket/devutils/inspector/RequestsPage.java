@@ -35,7 +35,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.RequestLogger;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.http.RequestLogger.RequestData;
+import org.apache.wicket.protocol.http.IRequestLogger.RequestData;
 import org.apache.wicket.protocol.http.RequestLogger.SessionData;
 import org.apache.wicket.util.lang.Bytes;
 
