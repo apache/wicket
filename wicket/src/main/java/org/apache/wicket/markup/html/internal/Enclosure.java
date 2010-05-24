@@ -240,10 +240,6 @@ public class Enclosure extends WebMarkupContainer
 				Component child = container.get(tag.getId());
 				if (child == null)
 				{
-					// component does not yet exist in the container, attempt to resolve it using
-					// resolvers
-					final int tagIndex = it.getCurrentIndex();
-
 					// because the resolvers can auto-add and therefore immediately render the
 					// component we have to buffer the output since we do not yet know the
 					// visibility of the enclosure
@@ -252,7 +248,9 @@ public class Enclosure extends WebMarkupContainer
 						@Override
 						protected void executeInsideBufferedZone()
 						{
-							markupStream.setCurrentIndex(tagIndex);
+							final int ind = markupStream.findComponentIndex(tag.getPath(),
+								tag.getId());
+							markupStream.setCurrentIndex(ind);
 							ComponentResolvers.resolve(getApplication(), container, markupStream,
 								tag);
 						}

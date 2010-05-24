@@ -322,4 +322,14 @@ public class EnclosureTest extends WicketTestCase
 		tester.assertRenderedPage(clazz);
 		tester.assertResultPage(getClass(), "EnclosurePageExpectedResult_10.html");
 	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderPage11() throws Exception
+	{
+		executeTest(EnclosurePage_11.class, "EnclosurePageExpectedResult_11.html");
+	}
+
+
 }
