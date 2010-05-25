@@ -101,10 +101,12 @@ public final class AutoCompleteSettings implements IClusterable
 	 * 
 	 * @param throttleDelay
 	 *            The delay in milliseconds.
+	 * @return this {@link AutoCompleteSettings}
 	 */
-	public void setThrottleDelay(int throttleDelay)
+	public AutoCompleteSettings setThrottleDelay(int throttleDelay)
 	{
 		this.throttleDelay = throttleDelay;
+		return this;
 	}
 
 	/**
@@ -267,11 +269,12 @@ public final class AutoCompleteSettings implements IClusterable
 	/**
 	 * Sets whether the list should be shown when the input field receives focus.
 	 * 
-	 * @param showListOnEmptyInput
+	 * @param showCompleteListOnFocusGain
 	 *            the flag
 	 * @return this {@link AutoCompleteSettings}.
 	 */
-	public AutoCompleteSettings setShowCompleteListOnFocusGain(final boolean showCompleteListOnFocusGain)
+	public AutoCompleteSettings setShowCompleteListOnFocusGain(
+		final boolean showCompleteListOnFocusGain)
 	{
 		this.showCompleteListOnFocusGain = showCompleteListOnFocusGain;
 		return this;
@@ -291,7 +294,7 @@ public final class AutoCompleteSettings implements IClusterable
 	/**
 	 * Sets whether the list should be shown when the input field receives focus.
 	 * 
-	 * @param showListOnEmptyInput
+	 * @param showListOnFocusGain
 	 *            the flag
 	 * @return this {@link AutoCompleteSettings}.
 	 */
@@ -302,8 +305,10 @@ public final class AutoCompleteSettings implements IClusterable
 	}
 
 	/**
-	 * Sets whether the popup positioning will take into account browser window visible area or not. (so always show popup bottom-right or not)<br>
-	 * THIS WILL PRODUCE UNWANTED BEHAVIOR WITH IE versions < 8 (probably because of unreliable clientWidth/clientHeight browser element properties).
+	 * Sets whether the popup positioning will take into account browser window visible area or not.
+	 * (so always show popup bottom-right or not)<br>
+	 * THIS WILL PRODUCE UNWANTED BEHAVIOR WITH IE versions < 8 (probably because of unreliable
+	 * clientWidth/clientHeight browser element properties).
 	 * 
 	 * @param useSmartPositioning
 	 *            the flag
