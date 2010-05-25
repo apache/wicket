@@ -46,12 +46,7 @@ public abstract class AbstractDecimalConverter extends AbstractNumberConverter
 		if (numberFormat == null)
 		{
 			numberFormat = newNumberFormat(locale);
-			if (numberFormat instanceof DecimalFormat)
-			{
-				((DecimalFormat)numberFormat).setParseBigDecimal(true);
-			}
-
-			numberFormats.put(locale, numberFormat);
+			setNumberFormat(locale, numberFormat);
 		}
 		return (NumberFormat)numberFormat.clone();
 	}
@@ -76,6 +71,11 @@ public abstract class AbstractDecimalConverter extends AbstractNumberConverter
 	 */
 	public final void setNumberFormat(final Locale locale, final NumberFormat numberFormat)
 	{
+		if (numberFormat instanceof DecimalFormat)
+		{
+			((DecimalFormat)numberFormat).setParseBigDecimal(true);
+		}
+
 		numberFormats.put(locale, numberFormat);
 	}
 }
