@@ -30,7 +30,9 @@ import org.apache.wicket.spring.SpringBeanLocator;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
 import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 
 /**
  * {@link IFieldValueFactory} that uses {@link LazyInitProxyFactory} to create proxies for Spring
@@ -184,8 +186,10 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 		while (it.hasNext())
 		{
 			final String possibility = it.next();
+			BeanDefinition beanDef = ((AbstractApplicationContext)ctx).getBeanFactory()
+					.getBeanDefinition(possibility);
 			if (BeanFactoryUtils.isFactoryDereference(possibility) ||
-					possibility.startsWith("scopedTarget."))
+					possibility.startsWith("scopedTarget.") || !beanDef.isAutowireCandidate())
 			{
 				it.remove();
 			}

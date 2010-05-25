@@ -116,12 +116,14 @@ public class SpringBeanLocator implements IProxyTargetLocator
 				.beanNamesForTypeIncludingAncestors(ctx, clazz)));
 		Iterator<String> it = names.iterator();
 
-		// filter out beans that are not condidates for autowiring
+		// filter out beans that are not candidates for autowiring
 		while (it.hasNext())
 		{
 			final String possibility = it.next();
+			BeanDefinition beanDef = ((AbstractApplicationContext)ctx).getBeanFactory()
+					.getBeanDefinition(possibility);
 			if (BeanFactoryUtils.isFactoryDereference(possibility) ||
-					possibility.startsWith("scopedTarget."))
+					possibility.startsWith("scopedTarget.") || !beanDef.isAutowireCandidate())
 			{
 				it.remove();
 			}
