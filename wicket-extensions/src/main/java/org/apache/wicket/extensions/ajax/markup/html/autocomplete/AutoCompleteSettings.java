@@ -97,10 +97,12 @@ public final class AutoCompleteSettings implements IClusterable
 	 * 
 	 * @param throttleDelay
 	 *            The delay in milliseconds.
+	 * @return this {@link AutoCompleteSettings}
 	 */
-	public void setThrottleDelay(int throttleDelay)
+	public AutoCompleteSettings setThrottleDelay(int throttleDelay)
 	{
 		this.throttleDelay = throttleDelay;
+		return this;
 	}
 
 	/**
@@ -236,7 +238,7 @@ public final class AutoCompleteSettings implements IClusterable
 	/**
 	 * Sets whether the list should be shown when the input field receives focus.
 	 * 
-	 * @param showListOnEmptyInput
+	 * @param showCompleteListOnFocusGain
 	 *            the flag
 	 */
 	public void setShowCompleteListOnFocusGain(final boolean showCompleteListOnFocusGain)
@@ -258,7 +260,7 @@ public final class AutoCompleteSettings implements IClusterable
 	/**
 	 * Sets whether the list should be shown when the input field receives focus.
 	 * 
-	 * @param showListOnEmptyInput
+	 * @param showListOnFocusGain
 	 *            the flag
 	 */
 	public void setShowListOnFocusGain(final boolean showListOnFocusGain)
