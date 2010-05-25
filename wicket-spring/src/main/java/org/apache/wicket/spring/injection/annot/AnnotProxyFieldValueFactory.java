@@ -30,7 +30,10 @@ import org.apache.wicket.spring.SpringBeanLocator;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
 import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 
 /**
  * {@link IFieldValueFactory} that uses {@link LazyInitProxyFactory} to create proxies for Spring
@@ -196,6 +199,21 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 		}
 		else if (names.size() > 1)
 		{
+			if (ctx instanceof AbstractApplicationContext)
+			{
+				for (String name : names)
+				{
+					BeanDefinition beanDef = ((AbstractApplicationContext)ctx).getBeanFactory()
+							.getBeanDefinition(name);
+					if (beanDef instanceof AbstractBeanDefinition)
+					{
+						if (((AbstractBeanDefinition)beanDef).isPrimary())
+						{
+							return name;
+						}
+					}
+				}
+			}
 			StringBuilder msg = new StringBuilder();
 			msg.append("more then one bean of type [");
 			msg.append(clazz.getName());
