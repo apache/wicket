@@ -23,21 +23,33 @@ import java.util.Locale;
  * BigDecimal converter
  * 
  * see IConverter
- * 
  */
 public class BigDecimalConverter extends AbstractDecimalConverter
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * @see org.apache.wicket.util.convert.converters.AbstractConverter#getTargetType()
+	 */
 	@Override
 	protected Class<?> getTargetType()
 	{
 		return BigDecimal.class;
 	}
 
-	public BigDecimal convertToObject(String value, Locale locale)
+	/**
+	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
+	 *      java.util.Locale)
+	 */
+	public BigDecimal convertToObject(String value, final Locale locale)
 	{
-		if (value == null || value.trim().equals(""))
+		if (value == null)
+		{
+			return null;
+		}
+
+		value = value.trim();
+		if (value.trim().equals(""))
 		{
 			return null;
 		}
@@ -49,7 +61,9 @@ public class BigDecimalConverter extends AbstractDecimalConverter
 		}
 		else if (number instanceof Double)
 		{
-			return new BigDecimal(number.doubleValue());
+			// See link why the String is preferred for doubles
+			// http://java.sun.com/j2se/1.4.2/docs/api/java/math/BigDecimal.html#BigDecimal%28double%29
+			return new BigDecimal(Double.toString(number.doubleValue()));
 		}
 		else if (number instanceof Long)
 		{

@@ -374,4 +374,17 @@ public final class ConvertersTest extends TestCase
 			// this is correct
 		}
 	}
+
+	/**
+	 * See WICKET-2878 and
+	 * http://java.sun.com/j2se/1.4.2/docs/api/java/math/BigDecimal.html#BigDecimal%28double%29
+	 */
+	public void testBigDecimalsDoubles()
+	{
+		BigDecimal bd = new BigDecimalConverter().convertToObject("0.1", Locale.US);
+		assertTrue(bd.doubleValue() == 0.1d);
+
+		bd = new BigDecimalConverter().convertToObject("0,1", Locale.GERMAN);
+		assertTrue(bd.doubleValue() == 0.1d);
+	}
 }
