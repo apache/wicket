@@ -41,6 +41,18 @@ public abstract class WicketExampleApplication extends WebApplication
 	private static final Log log = LogFactory.getLog(WicketExampleApplication.class);
 
 	/**
+	 * prevent wicket from launching a java application window on the desktop
+	 * <br/> 
+	 * once someone uses awt-specific classes java will automatically do so and allocate a window
+	 * unless you tell java to run in 'headless-mode'
+	 */
+	static
+	{
+		System.setProperty("java.awt.headless", "true");
+	}
+
+
+	/**
 	 * Constructor.
 	 */
 	public WicketExampleApplication()
