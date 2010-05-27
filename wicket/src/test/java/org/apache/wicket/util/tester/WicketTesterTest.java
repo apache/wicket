@@ -641,7 +641,13 @@ public class WicketTesterTest extends TestCase
 
 	public void testCookieIsFoundOnNextRequestWhenAddedToWicketResponse()
 	{
+		// Test that maxAge == -1 (Default) works properly
 		Cookie cookie = new Cookie("name", "value");
+		tester.getWicketResponse().addCookie(cookie);
+		tester.setupRequestAndResponse();
+		assertEquals("value", tester.getWicketRequest().getCookie("name").getValue());
+
+		cookie = new Cookie("name", "value");
 		cookie.setMaxAge(60);
 		tester.getWicketResponse().addCookie(cookie);
 		tester.setupRequestAndResponse();

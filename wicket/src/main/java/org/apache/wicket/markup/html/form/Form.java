@@ -1272,6 +1272,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 		{
 			public Object component(final Component component)
 			{
+				log.error("1: " + component.getPageRelativePath());
 				return visitor.component(component);
 			}
 		});
@@ -1280,15 +1281,19 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 		if (!error[0] && (getParent() instanceof Border))
 		{
 			MarkupContainer border = getParent();
-			Iterator<? extends Component> iter = border.iterator();
-			while (!error[0] && iter.hasNext())
+			border.visitChildren(Component.class, new IVisitor<Component>()
 			{
-				Component child = iter.next();
-				if ((child != this) && (child instanceof FormComponent))
+				public Object component(final Component component)
 				{
-					visitor.component(child);
+					if ((component == Form.this) || !(component instanceof FormComponent))
+					{
+						return Component.IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+					}
+
+					log.error("2: " + component.getPageRelativePath());
+					return visitor.component(component);
 				}
-			}
+			});
 		}
 
 		return error[0];

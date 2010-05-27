@@ -214,25 +214,28 @@ public class MockWebApplication
 				super.addCookie(cookie);
 
 				// remove any potential duplicates
-				cookiesOfThisSession.remove(cookie);
+				Iterator<Cookie> iter = cookiesOfThisSession.iterator();
+				while (iter.hasNext())
+				{
+					Cookie entry = iter.next();
+					if (cookie.getName().equals(entry.getName()))
+					{
+						iter.remove();
+					}
+				}
 
-				// if maxAge <= 0, than remove cookie from browser session
-				if (cookie.getMaxAge() > 0)
+				// From Cookie javadoc:
+				// A positive value indicates that the cookie will expire after that many seconds
+				// have passed. Note that the value is the maximum age when the cookie will expire,
+				// not the cookie's current age.
+				// A negative value means that the cookie is not stored persistently and will be
+				// deleted when the Web browser exits. A zero value causes the cookie to be deleted.
+				if (cookie.getMaxAge() != 0)
 				{
 					cookiesOfThisSession.add(cookie);
 				}
-				else
-				{
-					Iterator<Cookie> iter = cookiesOfThisSession.iterator();
-					while (iter.hasNext())
-					{
-						Cookie entry = iter.next();
-						if (cookie.getName().equals(entry.getName()))
-						{
-							iter.remove();
-						}
-					}
-				}
+
+				// Note that Cookie expiration is not yet implemented in WicketTester
 			}
 		};
 
