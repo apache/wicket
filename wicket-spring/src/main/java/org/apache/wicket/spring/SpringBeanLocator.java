@@ -152,7 +152,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 			}
 
 			StringBuilder msg = new StringBuilder();
-			msg.append("more then one bean of type [");
+			msg.append("More than one bean of type [");
 			msg.append(clazz.getName());
 			msg.append("] found, you have to specify the name of the bean ");
 			msg.append("(@SpringBean(name=\"foo\")) in order to resolve this conflict. ");
@@ -248,7 +248,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	}
 
 	/**
-	 * Looks up a bean by its class. Throws IllegalState exception if none or more then one beans
+	 * Looks up a bean by its class. Throws IllegalState exception if none or more than one beans
 	 * are found.
 	 * 
 	 * @param ctx

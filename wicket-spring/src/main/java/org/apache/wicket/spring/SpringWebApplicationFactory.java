@@ -162,7 +162,7 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 			}
 			if (beans.size() > 1)
 			{
-				throw new IllegalStateException("more then one bean of type [" +
+				throw new IllegalStateException("More than one bean of type [" +
 						WebApplication.class.getName() + "] found, must have only one");
 			}
 			return (WebApplication)beans.values().iterator().next();
