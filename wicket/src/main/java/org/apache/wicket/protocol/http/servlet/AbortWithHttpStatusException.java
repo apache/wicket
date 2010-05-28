@@ -47,7 +47,8 @@ public class AbortWithHttpStatusException extends AbstractRestartResponseExcepti
 	 * @param status
 	 *            The http response status code
 	 * @param statusCodeOptional
-	 *            If true and http status could not be set, an IllegalStateException will be thrown
+	 *            If false (meaning the http status is not required to be set), an
+	 *            IllegalStateException will be thrown
 	 */
 	public AbortWithHttpStatusException(int status, boolean statusCodeOptional)
 	{
