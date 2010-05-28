@@ -26,9 +26,11 @@ import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.Strings;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
@@ -135,17 +137,22 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		{
 			if (ctx instanceof AbstractApplicationContext)
 			{
+				List<String> primaries = new ArrayList<String>();
 				for (String name : names)
 				{
-					BeanDefinition beanDef = ((AbstractApplicationContext)ctx).getBeanFactory()
-							.getBeanDefinition(name);
+					BeanDefinition beanDef = getBeanDefinition(((AbstractApplicationContext)ctx)
+							.getBeanFactory(), name);
 					if (beanDef instanceof AbstractBeanDefinition)
 					{
 						if (((AbstractBeanDefinition)beanDef).isPrimary())
 						{
-							return name;
+							primaries.add(name);
 						}
 					}
+				}
+				if (primaries.size() == 1)
+				{
+					return primaries.get(0);
 				}
 			}
 
@@ -161,6 +168,27 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		else
 		{
 			return names.get(0);
+		}
+	}
+
+	private BeanDefinition getBeanDefinition(ConfigurableListableBeanFactory beanFactory,
+			String name)
+	{
+		if (beanFactory.containsBeanDefinition(name))
+		{
+			return beanFactory.getBeanDefinition(name);
+		}
+		else
+		{
+			BeanFactory parent = beanFactory.getParentBeanFactory();
+			if (parent != null && parent instanceof ConfigurableListableBeanFactory)
+			{
+				return getBeanDefinition(beanFactory, name);
+			}
+			else
+			{
+				return null;
+			}
 		}
 	}
 
