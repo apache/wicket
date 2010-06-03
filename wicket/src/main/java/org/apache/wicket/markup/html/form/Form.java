@@ -58,8 +58,8 @@ import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
-import org.apache.wicket.util.upload.FileUploadException;
 import org.apache.wicket.util.upload.FileUploadBase.SizeLimitExceededException;
+import org.apache.wicket.util.upload.FileUploadException;
 import org.apache.wicket.validation.IValidatorAddListener;
 import org.apache.wicket.version.undo.Change;
 import org.slf4j.Logger;
@@ -707,8 +707,12 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	{
 		Form<?> root = getRootForm();
 		return new AppendingStringBuffer("document.getElementById('").append(
-			root.getHiddenFieldId()).append("').value='").append(url).append(
-			"';document.getElementById('").append(root.getMarkupId()).append("').submit();");
+			root.getHiddenFieldId())
+			.append("').value='")
+			.append(url)
+			.append("';document.getElementById('")
+			.append(root.getMarkupId())
+			.append("').submit();");
 	}
 
 	/**
@@ -1272,7 +1276,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 		{
 			public Object component(final Component component)
 			{
-				log.error("1: " + component.getPageRelativePath());
 				return visitor.component(component);
 			}
 		});
@@ -1290,7 +1293,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 						return Component.IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
 					}
 
-					log.error("2: " + component.getPageRelativePath());
 					return visitor.component(component);
 				}
 			});
@@ -1969,8 +1971,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 		{
 			String[] pair = params[j].split("=");
 
-			buffer.append("<input type=\"hidden\" name=\"").append(recode(pair[0])).append(
-				"\" value=\"").append(pair.length > 1 ? recode(pair[1]) : "").append("\" />");
+			buffer.append("<input type=\"hidden\" name=\"")
+				.append(recode(pair[0]))
+				.append("\" value=\"")
+				.append(pair.length > 1 ? recode(pair[1]) : "")
+				.append("\" />");
 		}
 	}
 
