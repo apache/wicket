@@ -300,7 +300,7 @@ public class WebResponse extends Response
 	{
 		if (httpServletResponse != null)
 		{
-			httpServletResponse.setContentLength((int)length);
+			httpServletResponse.addHeader("Content-Length", Long.toString(length));
 		}
 	}
 
