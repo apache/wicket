@@ -135,7 +135,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 	 * Removes all pages from this map
 	 */
 	@Override
-	public final void clear()
+	public void clear()
 	{
 		super.clear();
 		// Clear access stack
@@ -181,7 +181,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 	 *            The entry to remove
 	 */
 	@Override
-	public final void removeEntry(final IPageMapEntry entry)
+	public void removeEntry(final IPageMapEntry entry)
 	{
 		if (entry == null)
 		{
@@ -223,7 +223,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 	 * @return Any page having the given id
 	 */
 	@Override
-	public final Page get(final int id, int versionNumber)
+	public Page get(final int id, int versionNumber)
 	{
 		final IPageMapEntry entry = (IPageMapEntry)getSession().getAttribute(attributeForId(id));
 		if (entry != null)
@@ -279,7 +279,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 	 *            The page to put into this map
 	 */
 	@Override
-	public final void put(final Page page)
+	public void put(final Page page)
 	{
 		// Page only goes into session if it is stateless
 		if (!page.isPageStateless())

@@ -303,7 +303,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	/**
 	 * @see org.apache.wicket.IPageMap#remove(org.apache.wicket.Page)
 	 */
-	public final void remove(final Page page)
+	public void remove(final Page page)
 	{
 		// Remove the pagemap entry from session
 		removeEntry(page.getPageMapEntry());
