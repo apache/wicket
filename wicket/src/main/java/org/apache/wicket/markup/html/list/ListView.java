@@ -26,7 +26,6 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.util.collections.ReadOnlyIterator;
 import org.apache.wicket.version.undo.Change;
 
@@ -161,7 +160,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	 */
 	public ListView(final String id, final List<? extends T> list)
 	{
-		this(id, Model.of(list));
+		this(id, Model.ofList(list));
 	}
 
 	/**
@@ -266,7 +265,7 @@ public abstract class ListView<T> extends AbstractRepeater
 			@Override
 			public void onClick()
 			{
-				final int index = getList().indexOf(item.getModelObject());
+				final int index = item.getIndex();
 				if (index != -1)
 				{
 					addStateChange(new Change()
@@ -325,7 +324,7 @@ public abstract class ListView<T> extends AbstractRepeater
 			@Override
 			public void onClick()
 			{
-				final int index = getList().indexOf(item.getModelObject());
+				final int index = item.getIndex();
 				if (index != -1)
 				{
 
@@ -385,13 +384,15 @@ public abstract class ListView<T> extends AbstractRepeater
 			@Override
 			public void onClick()
 			{
+				final int oldIndex = item.getIndex();
+
 				addStateChange(new Change()
 				{
 					private static final long serialVersionUID = 1L;
 
-					final int oldIndex = getList().indexOf(item.getModelObject());
 					final T removedObject = item.getModelObject();
 
+					@SuppressWarnings("unchecked")
 					@Override
 					public void undo()
 					{
@@ -403,7 +404,7 @@ public abstract class ListView<T> extends AbstractRepeater
 				item.modelChanging();
 
 				// Remove item and invalidate listView
-				getList().remove(item.getModelObject());
+				getList().remove(oldIndex);
 
 				ListView.this.modelChanged();
 				ListView.this.removeAll();
@@ -421,7 +422,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	 */
 	public ListView<T> setList(List<? extends T> list)
 	{
-		setDefaultModel(Model.of(list));
+		setDefaultModel(Model.ofList(list));
 		return this;
 	}
 
@@ -497,7 +498,8 @@ public abstract class ListView<T> extends AbstractRepeater
 	 *            The list item index
 	 * @return The ListItemModel created
 	 */
-	protected IModel<T> getListItemModel(final IModel<? extends List<T>> listViewModel, final int index)
+	protected IModel<T> getListItemModel(final IModel<? extends List<T>> listViewModel,
+		final int index)
 	{
 		return new ListItemModel<T>(this, index);
 	}
