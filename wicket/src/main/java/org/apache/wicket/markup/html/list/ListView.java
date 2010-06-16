@@ -264,7 +264,7 @@ public abstract class ListView<T> extends AbstractRepeater
 			@Override
 			public void onClick()
 			{
-				final int index = getList().indexOf(item.getModelObject());
+				final int index = item.getIndex();
 				if (index != -1)
 				{
 					addStateChange();
@@ -275,19 +275,12 @@ public abstract class ListView<T> extends AbstractRepeater
 				}
 			}
 
-			/**
-			 * @see org.apache.wicket.Component#onBeforeRender()
-			 */
 			@Override
-			protected void onBeforeRender()
+			public boolean isEnabled()
 			{
-				super.onBeforeRender();
-				setAutoEnable(false);
-				if (getList().indexOf(item.getModelObject()) == (getList().size() - 1))
-				{
-					setEnabled(false);
-				}
+				return item.getIndex() != (getList().size() - 1);
 			}
+
 		};
 	}
 
@@ -311,7 +304,7 @@ public abstract class ListView<T> extends AbstractRepeater
 			@Override
 			public void onClick()
 			{
-				final int index = getList().indexOf(item.getModelObject());
+				final int index = item.getIndex();
 				if (index != -1)
 				{
 
@@ -323,18 +316,10 @@ public abstract class ListView<T> extends AbstractRepeater
 				}
 			}
 
-			/**
-			 * @see org.apache.wicket.Component#onBeforeRender()
-			 */
 			@Override
-			protected void onBeforeRender()
+			public boolean isEnabled()
 			{
-				super.onBeforeRender();
-				setAutoEnable(false);
-				if (getList().indexOf(item.getModelObject()) == 0)
-				{
-					setEnabled(false);
-				}
+				return item.getIndex() != 0;
 			}
 		};
 	}
@@ -364,7 +349,7 @@ public abstract class ListView<T> extends AbstractRepeater
 				item.modelChanging();
 
 				// Remove item and invalidate listView
-				getList().remove(item.getModelObject());
+				getList().remove(item.getIndex());
 
 				ListView.this.modelChanged();
 				ListView.this.removeAll();
