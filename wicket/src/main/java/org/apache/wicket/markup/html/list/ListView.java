@@ -288,18 +288,10 @@ public abstract class ListView<T> extends AbstractRepeater
 				}
 			}
 
-			/**
-			 * @see org.apache.wicket.Component#onBeforeRender()
-			 */
 			@Override
-			protected void onBeforeRender()
+			public boolean isEnabled()
 			{
-				super.onBeforeRender();
-				setAutoEnable(false);
-				if (getList().indexOf(item.getModelObject()) == (getList().size() - 1))
-				{
-					setEnabled(false);
-				}
+				return item.getIndex() != (getList().size() - 1);
 			}
 		};
 	}
@@ -348,18 +340,10 @@ public abstract class ListView<T> extends AbstractRepeater
 				}
 			}
 
-			/**
-			 * @see org.apache.wicket.Component#onBeforeRender()
-			 */
 			@Override
-			protected void onBeforeRender()
+			public boolean isEnabled()
 			{
-				super.onBeforeRender();
-				setAutoEnable(false);
-				if (getList().indexOf(item.getModelObject()) == 0)
-				{
-					setEnabled(false);
-				}
+				return item.getIndex() != 0;
 			}
 		};
 	}
