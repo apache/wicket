@@ -17,6 +17,13 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
+    <parent>
+			<groupId>org.apache</groupId>
+            <artifactId>apache</artifactId>
+            <version>7</version>	
+	</parent>
+
 	<groupId>org.apache.wicket</groupId>
 	<artifactId>wicket-parent</artifactId>
 	<version>1.5-SNAPSHOT</version>
@@ -166,6 +173,7 @@
 					</plugin>
 				</plugins>
 			</build>
+
 			<distributionManagement>
 				<site>
 					<id>local</id>
@@ -176,6 +184,66 @@
 					<url>file:target/m2-repo</url>
 				</repository>
 			</distributionManagement>
+		</profile>
+		<profile>
+			<id>apache-nexus-deploy</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<modules>
+				<module>wicket</module>
+                <module>wicket-util</module>
+				<module>wicket-datetime</module>
+                <module>wicket-request</module>
+				<!-- TODO NG
+				<module>wicket-devutils</module>
+				 -->
+				<module>wicket-extensions</module>
+				<module>wicket-ioc</module>
+				<module>wicket-spring</module>
+				<module>wicket-velocity</module>
+				<module>wicket-auth-roles</module>
+				<module>wicket-guice</module>
+				<module>wicket-jmx</module>
+				<module>wicket-objectssizeof-agent</module>
+				<module>wicket-examples</module>
+				<module>archetypes/quickstart</module>
+			</modules>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<inherited>true</inherited>
+					</plugin>
+					<plugin>
+						<artifactId>maven-remote-resources-plugin</artifactId>
+						<inherited>true</inherited>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<inherited>true</inherited>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<inherited>true</inherited>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<inherited>true</inherited>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.felix</groupId>
+						<artifactId>maven-bundle-plugin</artifactId>
+						<inherited>true</inherited>
+					</plugin>
+				</plugins>
+			</build>
+
+			<!-- distribution management is inherited from the parent pom -->
 		</profile>
 		<profile>
 			<id>all</id>
@@ -202,6 +270,7 @@
 				<module>archetypes/quickstart</module>
 				<module>testing/wicket-threadtest</module>
 			</modules>
+
 			<distributionManagement>
 				<repository>
 					<id>local</id>
