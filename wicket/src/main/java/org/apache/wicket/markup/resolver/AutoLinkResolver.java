@@ -107,7 +107,7 @@ public final class AutoLinkResolver implements IComponentResolver
 
 				// Create the component implementing the link
 				ResourceReferenceAutolink autoLink = new ResourceReferenceAutolink(autoId, clazz,
-					pathInfo.reference, attribute);
+					pathInfo.reference, attribute, container);
 				if (autoLink.resourceReference != null)
 				{
 					// if the resource reference is null, it means that it the
@@ -542,17 +542,24 @@ public final class AutoLinkResolver implements IComponentResolver
 		private final ResourceReference resourceReference;
 
 		/**
+		 * Preserve a reference to the the parent container so that the variation could be resolved
+		 */
+		private final MarkupContainer parent;
+
+		/**
 		 * @param id
 		 * @param clazz
 		 * @param href
 		 * @param attribute
+		 * @param parent
 		 */
 		public ResourceReferenceAutolink(final String id, final Class<?> clazz, final String href,
-			final String attribute)
+			final String attribute, final MarkupContainer parent)
 		{
 			super(id);
 
 			this.attribute = attribute;
+			this.parent = parent;
 			// Check whether it is a valid resource reference
 			if (PackageResource.exists(clazz, href, getLocale(), getStyle()))
 			{
@@ -566,6 +573,21 @@ public final class AutoLinkResolver implements IComponentResolver
 				resourceReference = null;
 			}
 		}
+
+		/**
+		 * @see org.apache.wicket.Component#getVariation()
+		 */
+		@Override
+		public String getVariation()
+		{
+			if (parent != null)
+			{
+				return parent.getVariation();
+			}
+
+			return super.getVariation();
+		}
+
 
 		/**
 		 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
