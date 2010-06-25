@@ -132,7 +132,7 @@ public class Model<T extends Serializable> implements IModel<T>
 
 
 	/**
-	 * Factory methods for Model which uses type inference to make code shorter. Eqivalent to
+	 * Factory methods for Model which uses type inference to make code shorter. Equivalent to
 	 * <code>new Model<TypeOfObject>(object)</code>.
 	 * 
 	 * @param <T>
@@ -142,6 +142,19 @@ public class Model<T extends Serializable> implements IModel<T>
 	public static <T extends Serializable> Model<T> of(T object)
 	{
 		return new Model<T>(object);
+	}
+
+	/**
+	 * Factory methods for Model which uses type inference to make code shorter. Equivalent to
+	 * <code>new Model<TypeOfObject>()</code>.
+	 * 
+	 * @param <T>
+	 * @param object
+	 * @return Model that contains <code>object</code>
+	 */
+	public static <T extends Serializable> Model<T> of()
+	{
+		return new Model<T>();
 	}
 
 	/**
