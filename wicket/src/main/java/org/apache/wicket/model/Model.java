@@ -16,13 +16,20 @@
  */
 package org.apache.wicket.model;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.model.util.*;
+import org.apache.wicket.model.util.MapModel;
+import org.apache.wicket.model.util.WildcardCollectionModel;
+import org.apache.wicket.model.util.WildcardListModel;
+import org.apache.wicket.model.util.WildcardSetModel;
 import org.apache.wicket.util.lang.Objects;
-
-import java.io.Serializable;
-import java.util.*;
 
 
 /**
@@ -112,7 +119,7 @@ public class Model<T extends Serializable> implements IModel<T>
 	/**
 	 * Factory method for models that contain lists. This factory method will automatically rebuild
 	 * a nonserializable <code>list</code> into a serializable one.
-	 *
+	 * 
 	 * @param <C>
 	 *            model type
 	 * @param list
@@ -182,7 +189,7 @@ public class Model<T extends Serializable> implements IModel<T>
 	/**
 	 * Factory method for models that contain sets. This factory method will automatically rebuild a
 	 * nonserializable <code>set</code> into a serializable one.
-	 *
+	 * 
 	 * @param <C>
 	 *            model type
 	 * @param set
@@ -211,7 +218,7 @@ public class Model<T extends Serializable> implements IModel<T>
 
 
 	/**
-	 * Factory methods for Model which uses type inference to make code shorter. Eqivalent to
+	 * Factory methods for Model which uses type inference to make code shorter. Equivalent to
 	 * <code>new Model<TypeOfObject>(object)</code>.
 	 * 
 	 * @param <T>
@@ -221,6 +228,19 @@ public class Model<T extends Serializable> implements IModel<T>
 	public static <T extends Serializable> Model<T> of(T object)
 	{
 		return new Model<T>(object);
+	}
+
+	/**
+	 * Factory methods for Model which uses type inference to make code shorter. Equivalent to
+	 * <code>new Model<TypeOfObject>()</code>.
+	 * 
+	 * @param <T>
+	 * @param object
+	 * @return Model that contains <code>object</code>
+	 */
+	public static <T extends Serializable> Model<T> of()
+	{
+		return new Model<T>();
 	}
 
 	/**
