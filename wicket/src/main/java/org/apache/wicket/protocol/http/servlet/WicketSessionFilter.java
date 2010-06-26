@@ -179,7 +179,7 @@ public class WicketSessionFilter implements Filter
 		}
 		else
 		{
-			session.bind();
+			ThreadContext.setSession(session);
 		}
 	}
 
