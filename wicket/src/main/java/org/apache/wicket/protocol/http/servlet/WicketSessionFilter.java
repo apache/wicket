@@ -185,7 +185,7 @@ public class WicketSessionFilter implements Filter
 		}
 		else
 		{
-			session.bind();
+			Session.set(session);
 		}
 	}
 
