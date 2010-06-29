@@ -21,8 +21,10 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -169,6 +171,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * </p>
 	 */
 	private final MountsMap mountsOnPath;
+	private final ReadWriteLock mountsOnPathLock = new ReentrantReadWriteLock();
 
 	/**
 	 * Construct.
@@ -402,10 +405,15 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 */
 	public IRequestTargetUrlCodingStrategy[] listMounts()
 	{
-		synchronized (mountsOnPath)
+		try
 		{
+			mountsOnPathLock.readLock().lock();
 			return mountsOnPath.strategies().toArray(
 				new IRequestTargetUrlCodingStrategy[mountsOnPath.size()]);
+		}
+		finally
+		{
+			mountsOnPathLock.readLock().unlock();
 		}
 	}
 
@@ -414,8 +422,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 */
 	public IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(String path)
 	{
-		synchronized (mountsOnPath)
+		try
 		{
+			mountsOnPathLock.readLock().lock();
 			if (path == null)
 			{
 				return mountsOnPath.strategyForMount(null);
@@ -428,8 +437,13 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 					return strategy;
 				}
 			}
+			return null;
 		}
-		return null;
+		finally
+		{
+			mountsOnPathLock.readLock().unlock();
+		}
+
 	}
 
 	/**
@@ -461,14 +475,19 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			path = path.substring(1);
 		}
 
-		synchronized (mountsOnPath)
+		try
 		{
+			mountsOnPathLock.writeLock().lock();
 			if (mountsOnPath.strategyForMount(path) != null)
 			{
 				throw new WicketRuntimeException(path + " is already mounted for " +
 					mountsOnPath.strategyForMount(path));
 			}
 			mountsOnPath.mount(path, encoder);
+		}
+		finally
+		{
+			mountsOnPathLock.writeLock().unlock();
 		}
 	}
 
@@ -523,9 +542,14 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			path = path.substring(1);
 		}
 
-		synchronized (mountsOnPath)
+		try
 		{
+			mountsOnPathLock.writeLock().lock();
 			mountsOnPath.unmount(path);
+		}
+		finally
+		{
+			mountsOnPathLock.writeLock().unlock();
 		}
 	}
 
@@ -981,8 +1005,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 
 		if (IActivePageBehaviorListener.INTERFACE.getName().equals(listenerName))
 		{
-			url.append(url.indexOf("?") > -1 ? "&" : "?").append(
-				IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME).append("=true");
+			url.append(url.indexOf("?") > -1 ? "&" : "?")
+				.append(IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME)
+				.append("=true");
 		}
 		return url;
 	}
@@ -1020,8 +1045,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 */
 	protected IRequestTargetUrlCodingStrategy getMountEncoder(IRequestTarget requestTarget)
 	{
-		synchronized (mountsOnPath)
+		try
 		{
+			mountsOnPathLock.readLock().lock();
 			// TODO Post 1.2: Performance: Optimize algorithm if possible and/ or
 			// cache lookup results
 			for (IRequestTargetUrlCodingStrategy encoder : mountsOnPath.strategies())
@@ -1031,6 +1057,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 					return encoder;
 				}
 			}
+		}
+		finally
+		{
+			mountsOnPathLock.readLock().unlock();
 		}
 		return null;
 	}
