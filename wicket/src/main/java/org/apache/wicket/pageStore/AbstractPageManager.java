@@ -82,7 +82,7 @@ public abstract class AbstractPageManager implements IPageManager
 	 */
 	protected RequestAdapter getRequestAdapter()
 	{
-		RequestAdapter adapter = getContext().getRequestData();
+		RequestAdapter adapter = (RequestAdapter)getContext().getRequestData();
 		if (adapter == null)
 		{
 			adapter = newRequestAdapter(getContext());

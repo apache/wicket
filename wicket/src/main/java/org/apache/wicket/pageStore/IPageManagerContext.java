@@ -30,13 +30,13 @@ public interface IPageManagerContext
 	 * 
 	 * @param data
 	 */
-	void setRequestData(RequestAdapter data);
+	void setRequestData(Object data);
 
 	/**
 	 * 
 	 * @return request data
 	 */
-	RequestAdapter getRequestData();
+	Object getRequestData();
 
 	/**
 	 * 
@@ -53,7 +53,8 @@ public interface IPageManagerContext
 	Serializable getSessionAttribute(String key);
 
 	/**
-	 * 
+	 * Tells Wicket to bind the current session. This make a temporary session become persistent
+	 * across requests.
 	 */
 	void bind();
 
