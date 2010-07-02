@@ -132,6 +132,12 @@ public abstract class Session implements IClusterable
 		return ThreadContext.getSession() != null;
 	}
 
+	/**
+	 * Returns session associated to current thread. Should always return a session during a request
+	 * cycle, even though the session might be temporary
+	 * 
+	 * @return session.
+	 */
 	public static Session get()
 	{
 		Session session = ThreadContext.getSession();
@@ -334,8 +340,8 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * Gets the unique id for this session from the underlying SessionStore. May be null if a
-	 * concrete session is not yet created.
+	 * Gets the unique id for this session from the underlying SessionStore. May be
+	 * <code>null</code> if a concrete session is not yet created.
 	 * 
 	 * @return The unique id for this session or null if it is a temporary session
 	 */
