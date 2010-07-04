@@ -493,4 +493,13 @@ public class BufferedWebResponse extends WebResponse
 			response.write(stream.toByteArray());
 		}
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return charSequenceAction.builder.toString();
+	}
 }

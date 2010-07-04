@@ -34,6 +34,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.RawMarkup;
 import org.apache.wicket.markup.WicketTag;
+import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
@@ -136,6 +137,24 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			if (child == null)
 			{
 				throw new IllegalArgumentException("argument child may not be null");
+			}
+
+			MarkupContainer parent = getParent();
+			while (parent != null)
+			{
+				if (child == parent)
+				{
+					String msg = "You can not add a component's parent as child to the component (loop): Component: " +
+						this.toString(false) + "; parent == child: " + parent.toString(false);
+					if (child instanceof Border.BorderBodyContainer)
+					{
+						msg += ". Please consider using Border.addToBorder(new " +
+							this.getClass().getSimpleName() + "(\"" + this.getId() +
+							"\", ...) instead of add(...)";
+					}
+					throw new WicketRuntimeException(msg);
+				}
+				parent = parent.getParent();
 			}
 
 			checkHierarchyChange(child);
@@ -951,14 +970,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 
 		final Page page = findPage();
-
 		if (page != null)
 		{
 			child.initialize();
-		}
 
-		if (page != null)
-		{
 			// Tell the page a component has been added
 			page.componentAdded(child);
 		}

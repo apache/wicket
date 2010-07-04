@@ -301,6 +301,4 @@ public class EnclosureTest extends WicketTestCase
 	{
 		executeTest(EnclosurePage_11.class, "EnclosurePageExpectedResult_11.html");
 	}
-
-
 }

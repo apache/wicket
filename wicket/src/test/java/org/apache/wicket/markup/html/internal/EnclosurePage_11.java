@@ -43,12 +43,12 @@ public class EnclosurePage_11 extends WebPage implements IComponentResolver
 
 	public Component resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
-		if (tag instanceof WicketTag)
+		if ((tag instanceof WicketTag) || !"autoCreatedPanel".equals(tag.getId()))
 		{
 			// this resolver does not handle wicket tags
 			return null;
 		}
 
-		return "autoCreatedPanel".equals(tag.getId()) ? new SimplePanel(tag.getId()) : null;
+		return new SimplePanel(tag.getId());
 	}
 }
