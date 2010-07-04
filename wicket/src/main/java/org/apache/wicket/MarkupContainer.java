@@ -1446,7 +1446,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			Component component = get(id);
 			if (component == null)
 			{
-				component = ComponentResolvers.resolve(this, markupStream, tag);
+				component = ComponentResolvers.resolve(this, markupStream, tag, null);
 				if ((component != null) && (component.getParent() == null))
 				{
 					autoAdd(component, markupStream);
@@ -2003,7 +2003,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				{
 					if (tag instanceof WicketTag)
 					{
-						Component component = ComponentResolvers.resolve(this, stream, tag);
+						Component component = ComponentResolvers.resolve(this, stream, tag, null);
 						if ((component != null) && (component.getParent() == null))
 						{
 							if (component.getId().equals(tag.getId()) == false)

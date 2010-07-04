@@ -31,6 +31,7 @@ import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.markup.resolver.IComponentResolver;
+import org.apache.wicket.markup.resolver.ComponentResolvers.ResolverFilter;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.response.NullResponse;
@@ -224,8 +225,15 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 						{
 							if (childId.equals(tag.getId()))
 							{
-								controller = ComponentResolvers.resolveByComponentHierarchy(
-									container, markupStream, tag);
+								controller = ComponentResolvers.resolve(container, markupStream,
+									tag, new ResolverFilter()
+									{
+										public boolean ignoreResolver(
+											final IComponentResolver resolver)
+										{
+											return resolver instanceof EnclosureHandler;
+										}
+									});
 								break;
 							}
 						}

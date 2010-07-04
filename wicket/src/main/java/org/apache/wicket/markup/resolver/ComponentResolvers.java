@@ -44,10 +44,11 @@ public class ComponentResolvers
 	 * @param container
 	 * @param markupStream
 	 * @param tag
+	 * @param filter
 	 * @return <code>null</code> if a component was could not be found
 	 */
 	public static Component resolve(final MarkupContainer container,
-		final MarkupStream markupStream, final ComponentTag tag)
+		final MarkupStream markupStream, final ComponentTag tag, final ResolverFilter filter)
 	{
 		// try to resolve using component hierarchy
 		Component component = resolveByComponentHierarchy(container, markupStream, tag);
@@ -55,7 +56,7 @@ public class ComponentResolvers
 		if (component == null)
 		{
 			// fallback to application-level resolvers
-			component = resolveByApplication(container, markupStream, tag);
+			component = resolveByApplication(container, markupStream, tag, filter);
 		}
 
 		return component;
@@ -67,19 +68,23 @@ public class ComponentResolvers
 	 * @param container
 	 * @param markupStream
 	 * @param tag
+	 * @param filter
 	 * @return Null, if no component was found
 	 */
-	public static Component resolveByApplication(final MarkupContainer container,
-		final MarkupStream markupStream, final ComponentTag tag)
+	private static Component resolveByApplication(final MarkupContainer container,
+		final MarkupStream markupStream, final ComponentTag tag, final ResolverFilter filter)
 	{
 		for (final IComponentResolver resolver : Application.get()
 			.getPageSettings()
 			.getComponentResolvers())
 		{
-			Component component = resolver.resolve(container, markupStream, tag);
-			if (component != null)
+			if ((filter == null) || (filter.ignoreResolver(resolver) == false))
 			{
-				return component;
+				Component component = resolver.resolve(container, markupStream, tag);
+				if (component != null)
+				{
+					return component;
+				}
 			}
 		}
 
@@ -94,7 +99,7 @@ public class ComponentResolvers
 	 * @param tag
 	 * @return Null, if no component was found
 	 */
-	public static Component resolveByComponentHierarchy(final MarkupContainer container,
+	private static Component resolveByComponentHierarchy(final MarkupContainer container,
 		final MarkupStream markupStream, final ComponentTag tag)
 	{
 		Component cursor = container;
@@ -113,5 +118,18 @@ public class ComponentResolvers
 		}
 
 		return null;
+	}
+
+	/**
+	 * 
+	 */
+	public interface ResolverFilter
+	{
+		/**
+		 * 
+		 * @param resolver
+		 * @return true, if resolvers should be skipped
+		 */
+		boolean ignoreResolver(IComponentResolver resolver);
 	}
 }
