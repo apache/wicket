@@ -118,7 +118,6 @@ import org.slf4j.LoggerFactory;
  * @author Igor Vaynberg
  * 
  * @since 1.2.6
- * 
  */
 public class BaseWicketTester
 {
@@ -183,14 +182,8 @@ public class BaseWicketTester
 
 	private IRequestHandler forcedHandler;
 
-	/**
-	 * @return last rendered page
-	 */
-	public Page getLastRenderedPage()
-	{
-		return lastRenderedPage;
-	}
-
+	// Simulates the cookies maintained by the browser
+	private final List<Cookie> browserCookies = new ArrayList<Cookie>();
 
 	/**
 	 * Creates <code>WicketTester</code> and automatically create a <code>WebApplication</code>, but
@@ -241,7 +234,6 @@ public class BaseWicketTester
 	 * @param application
 	 *            a <code>WicketTester</code> <code>WebApplication</code> object
 	 * 
-	 * 
 	 * @param servletContextBasePath
 	 *            the absolute path on disk to the web application's contents (e.g. war root) - may
 	 *            be <code>null</code>
@@ -290,25 +282,33 @@ public class BaseWicketTester
 		setupNextRequestCycle();
 	}
 
+	/**
+	 * @return last rendered page
+	 */
+	public Page getLastRenderedPage()
+	{
+		return lastRenderedPage;
+	}
+
+	/**
+	 * 
+	 */
 	private void setupNextRequestCycle()
 	{
 		request = new MockHttpServletRequest(application, hsession, servletContext);
 		request.setURL(request.getContextPath() + request.getServletPath() + "/");
 		response = new MockHttpServletResponse(request);
 
-
 		requestCycle = application.createRequestCycle(createServletWebRequest(),
 			createServletWebResponse());
 		requestCycle.setCleanupFeedbackMessagesOnDetach(false);
 		ThreadContext.setRequestCycle(requestCycle);
-
 
 		if (session == null)
 		{
 			createNewSession();
 		}
 	}
-
 
 	/**
 	 * @return
@@ -341,7 +341,6 @@ public class BaseWicketTester
 		return new ServletWebRequest(request, request.getFilterPrefix());
 	}
 
-
 	/**
 	 * 
 	 */
@@ -352,35 +351,29 @@ public class BaseWicketTester
 		ThreadContext.setSession(session);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public MockHttpServletRequest getRequest()
 	{
 		return request;
 	}
 
+	/**
+	 * 
+	 * @param request
+	 */
 	public void setRequest(MockHttpServletRequest request)
 	{
 		this.request = request;
 		applyRequest();
 	}
 
-
 	/**
-	 * Creates a <code>WicketTester</code> for unit testing.
 	 * 
-	 * @param application
-	 *            a <code>WicketTester</code> <code>WebApplication</code> object
-	 * @param path
-	 *            the absolute path on disk to the <code>WebApplication</code>'s contents (e.g. war
-	 *            root) - may be <code>null</code>
-	 * 
-	 * @see org.apache.wicket.protocol.http.MockWebApplication#MockWebApplication(org.apache.wicket.protocol.http.WebApplication,
-	 *      String)
+	 * @return
 	 */
-// public BaseWicketTester(final WebApplication application, final String path)
-// {
-// super(application, path);
-// }
-
 	public Session getSession()
 	{
 		return session;
@@ -406,7 +399,10 @@ public class BaseWicketTester
 		ThreadContext.detach();
 	}
 
-
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean processRequest()
 	{
 		return processRequest(null, null);
@@ -440,17 +436,26 @@ public class BaseWicketTester
 		return processRequest(request, forcedRequestHandler, false);
 	}
 
+	/**
+	 * 
+	 * @param forcedRequestHandler
+	 * @return
+	 */
 	public boolean processRequest(IRequestHandler forcedRequestHandler)
 	{
 		return processRequest(null, forcedRequestHandler, false);
 	}
 
-
+	/**
+	 * 
+	 * @param forcedRequest
+	 * @param forcedRequestHandler
+	 * @param redirect
+	 * @return
+	 */
 	private boolean processRequest(MockHttpServletRequest forcedRequest,
 		IRequestHandler forcedRequestHandler, boolean redirect)
 	{
-
-
 		if (forcedRequest != null)
 		{
 			request = forcedRequest;
@@ -465,7 +470,6 @@ public class BaseWicketTester
 
 		try
 		{
-
 			if (!redirect)
 			{
 				/*
@@ -493,19 +497,17 @@ public class BaseWicketTester
 				return false;
 			}
 
-
 			recordRequestResponse();
 			setupNextRequestCycle();
 
-
 			if (followRedirects && lastResponse.isRedirect())
 			{
-				if (redirectCount == 100)
+				if (redirectCount++ >= 100)
 				{
 					throw new IllegalStateException(
 						"Possible infinite redirect detected. Bailing out.");
 				}
-				++redirectCount;
+
 				Url newUrl = Url.parse(lastResponse.getRedirectLocation(),
 					Charset.forName(request.getCharacterEncoding()));
 
@@ -531,9 +533,11 @@ public class BaseWicketTester
 		{
 			redirectCount = 0;
 		}
-
 	}
 
+	/**
+	 * 
+	 */
 	private void recordRequestResponse()
 	{
 		lastRequest = request;
@@ -551,7 +555,6 @@ public class BaseWicketTester
 				lastResponse.addCookie(cookie);
 			}
 		}
-
 	}
 
 	/**
@@ -703,7 +706,6 @@ public class BaseWicketTester
 		processRequest(request, null);
 	}
 
-
 	/**
 	 * Builds and processes a request suitable for invoking a listener. The <code>Component</code>
 	 * must implement any of the known <code>IListener</code> interfaces.
@@ -739,6 +741,11 @@ public class BaseWicketTester
 		processRequest();
 	}
 
+	/**
+	 * 
+	 * @param link
+	 * @return
+	 */
 	public Url urlFor(AjaxLink link)
 	{
 		AbstractAjaxBehavior behavior = WicketTesterHelper.findAjaxEventBehavior(link, "onclick");
@@ -748,6 +755,10 @@ public class BaseWicketTester
 		return url;
 	}
 
+	/**
+	 * 
+	 * @param url
+	 */
 	public void executeAjaxUrl(Url url)
 	{
 		transform(url);
@@ -1121,7 +1132,7 @@ public class BaseWicketTester
 			// If it's not ajax we fail
 			if (isAjax == false)
 			{
-				fail("Link " + path + "is an AjaxSubmitLink and " +
+				fail("Link " + path + " is an AjaxSubmitLink and " +
 					"will not be invoked when AJAX (javascript) is disabled.");
 			}
 
@@ -1182,6 +1193,10 @@ public class BaseWicketTester
 		}
 	}
 
+	/**
+	 * 
+	 * @param form
+	 */
 	public void submitForm(Form form)
 	{
 		submitForm(form.getPageRelativePath());
@@ -1219,7 +1234,6 @@ public class BaseWicketTester
 			url.getSegments().remove(0);
 		}
 	}
-
 
 	/**
 	 * Asserts the last rendered <code>Page</code> class.
@@ -1488,7 +1502,6 @@ public class BaseWicketTester
 		});
 	}
 
-
 	/**
 	 * Simulates the firing of an Ajax event. You add an Ajax event to a <code>Component</code> by
 	 * using:
@@ -1517,7 +1530,6 @@ public class BaseWicketTester
 	 * PLEASE NOTE! This method doesn't actually insert the <code>Component</code> in the client DOM
 	 * tree, using Javascript.
 	 * 
-	 * 
 	 * @param component
 	 *            the <code>Component</code> that has the <code>AjaxEventBehavior</code> we want to
 	 *            test. If the <code>Component</code> is <code>null</code>, the test will fail.
@@ -1542,33 +1554,6 @@ public class BaseWicketTester
 		executeBehavior(WicketTesterHelper.findAjaxEventBehavior(component, event));
 	}
 
-	/**
-	 * 
-	 * @return WebRequestCycle
-	 */
-// protected WebRequestCycle resolveRequestCycle()
-// {
-// // initialize the request only if needed to allow the user to pass
-// // request parameters, see WICKET-254
-// WebRequestCycle requestCycle;
-// if (RequestCycle.get() == null)
-// {
-// requestCycle = setupRequestAndResponse();
-// }
-// else
-// {
-// requestCycle = (WebRequestCycle)RequestCycle.get();
-//
-// // If a ajax request is requested but the existing is not, than we still need to create
-// // a new one
-// if ((requestCycle.getWebRequest().isAjax() == false) && (isCreateAjaxRequest() == true))
-// {
-// setParametersForNextRequest(requestCycle.getWebRequest().getParameterMap());
-// requestCycle = setupRequestAndResponse();
-// }
-// }
-// return requestCycle;
-// }
 	/**
 	 * Retrieves a <code>TagTester</code> based on a <code>wicket:id</code>. If more
 	 * <code>Component</code>s exist with the same <code>wicket:id</code> in the markup, only the
@@ -1698,6 +1683,12 @@ public class BaseWicketTester
 
 	}
 
+	/**
+	 * 
+	 * @param message
+	 * @param condition
+	 * @return
+	 */
 	private Result isTrue(String message, boolean condition)
 	{
 		if (condition)
@@ -1707,6 +1698,12 @@ public class BaseWicketTester
 		return Result.fail(message);
 	}
 
+	/**
+	 * 
+	 * @param expected
+	 * @param actual
+	 * @return
+	 */
 	private Result isEqual(Object expected, Object actual)
 	{
 		if (expected == null && actual == null)
@@ -1721,6 +1718,11 @@ public class BaseWicketTester
 		return Result.fail(message);
 	}
 
+	/**
+	 * 
+	 * @param message
+	 * @param object
+	 */
 	private void notNull(String message, Object object)
 	{
 		if (object == null)
@@ -1729,6 +1731,12 @@ public class BaseWicketTester
 		}
 	}
 
+	/**
+	 * 
+	 * @param message
+	 * @param object
+	 * @return
+	 */
 	private Result isNull(String message, Object object)
 	{
 		if (object != null)
@@ -1738,38 +1746,64 @@ public class BaseWicketTester
 		return Result.pass();
 	}
 
+	/**
+	 * 
+	 * @param message
+	 */
 	private void fail(String message)
 	{
 		throw new WicketRuntimeException(message);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public RequestCycle getRequestCycle()
 	{
 		return requestCycle;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public MockHttpServletResponse getResponse()
 	{
 		return response;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public MockHttpServletRequest getLastRequest()
 	{
 		return lastRequest;
 	}
 
-
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean isExposeExceptions()
 	{
 		return exposeExceptions;
 	}
 
-
+	/**
+	 * 
+	 * @param exposeExceptions
+	 */
 	public void setExposeExceptions(boolean exposeExceptions)
 	{
 		this.exposeExceptions = exposeExceptions;
 	}
 
+	/**
+	 * 
+	 * @param _url
+	 */
 	public void executeUrl(String _url)
 	{
 		Url url = Url.parse(_url, Charset.forName(request.getCharacterEncoding()));
@@ -1778,7 +1812,9 @@ public class BaseWicketTester
 		processRequest();
 	}
 
-
+	/**
+	 * 
+	 */
 	private class LastPageRecordingPageRendererProvider implements IPageRendererProvider
 	{
 		private final IPageRendererProvider delegate;
@@ -1795,6 +1831,9 @@ public class BaseWicketTester
 		}
 	}
 
+	/**
+	 * 
+	 */
 	private class TestExceptionMapper implements IExceptionMapper
 	{
 		private final IExceptionMapper delegate;
@@ -1824,6 +1863,9 @@ public class BaseWicketTester
 		}
 	}
 
+	/**
+	 * 
+	 */
 	private class TestRequestCycleProvider implements IRequestCycleProvider
 	{
 		private final IRequestCycleProvider delegate;
@@ -1833,7 +1875,6 @@ public class BaseWicketTester
 			this.delegate = delegate;
 		}
 
-
 		public RequestCycle get(RequestCycleContext context)
 		{
 			context.setRequestMapper(new TestRequestMapper(context.getRequestMapper()));
@@ -1841,9 +1882,11 @@ public class BaseWicketTester
 			context.setExceptionMapper(new TestExceptionMapper(context.getExceptionMapper()));
 			return delegate.get(context);
 		}
-
 	}
 
+	/**
+	 * 
+	 */
 	private class TestRequestMapper implements IRequestMapper
 	{
 		private final IRequestMapper delegate;
@@ -1879,6 +1922,9 @@ public class BaseWicketTester
 
 	}
 
+	/**
+	 * 
+	 */
 	private class TestSessionStore extends MockSessionStore
 	{
 		@Override
@@ -1888,6 +1934,10 @@ public class BaseWicketTester
 			createNewSession();
 		}
 	}
+
+	/**
+	 * 
+	 */
 	private class TestSessionStoreProvider implements IProvider<ISessionStore>
 	{
 		public ISessionStore get()
@@ -1896,6 +1946,9 @@ public class BaseWicketTester
 		}
 	}
 
+	/**
+	 * 
+	 */
 	private class TestPageManagerProvider implements IPageManagerProvider
 	{
 
@@ -1906,6 +1959,9 @@ public class BaseWicketTester
 
 	}
 
+	/**
+	 * 
+	 */
 	private class TestFilterConfig implements FilterConfig
 	{
 		private final Map<String, String> initParameters = new HashMap<String, String>();

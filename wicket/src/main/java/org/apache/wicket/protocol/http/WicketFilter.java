@@ -162,9 +162,7 @@ public class WicketFilter implements Filter
 
 			if (checkForTrailingSlash(httpServletRequest, httpServletResponse, filterPath))
 			{
-				ServletWebRequest req;
-
-				req = new ServletWebRequest(httpServletRequest, filterPath);
+				ServletWebRequest req = new ServletWebRequest(httpServletRequest, filterPath);
 
 				WebResponse resp = new HeaderBufferingWebResponse(new ServletWebResponse(
 					httpServletRequest, httpServletResponse));

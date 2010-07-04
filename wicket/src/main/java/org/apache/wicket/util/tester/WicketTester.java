@@ -150,8 +150,6 @@ import org.slf4j.LoggerFactory;
  */
 public class WicketTester extends BaseWicketTester
 {
-
-
 	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(WicketTester.class);
 
@@ -292,7 +290,7 @@ public class WicketTester extends BaseWicketTester
 	 * @param expectedErrorMessages
 	 *            expected error messages
 	 */
-	public void assertErrorMessages(String[] expectedErrorMessages)
+	public void assertErrorMessages(String... expectedErrorMessages)
 	{
 		List<Serializable> actualMessages = getMessages(FeedbackMessage.ERROR);
 		List<Serializable> msgs = new ArrayList<Serializable>();
@@ -309,7 +307,7 @@ public class WicketTester extends BaseWicketTester
 	 * @param expectedInfoMessages
 	 *            expected info messages
 	 */
-	public void assertInfoMessages(String[] expectedInfoMessages)
+	public void assertInfoMessages(String... expectedInfoMessages)
 	{
 		List<Serializable> actualMessages = getMessages(FeedbackMessage.INFO);
 		WicketTesterHelper.assertEquals(Arrays.asList(expectedInfoMessages), actualMessages);

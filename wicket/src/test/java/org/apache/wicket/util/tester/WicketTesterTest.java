@@ -629,10 +629,23 @@ public class WicketTesterTest extends TestCase
 
 	public void testCookieIsFoundOnNextRequestWhenAddedToResponse()
 	{
+		// Test that maxAge == -1 (Default) works properly
 		tester.startPage(CreateBook.class);
 		Cookie cookie = new Cookie("name", "value");
+		tester.getLastResponse().addCookie(cookie);
+		tester.startPage(CreateBook.class);
+		assertEquals("value", tester.getLastResponse().getCookies().iterator().next().getValue(),
+			"value");
+
+		tester.startPage(CreateBook.class);
+		cookie = new Cookie("name", "value");
 		cookie.setMaxAge(60);
 		tester.getLastResponse().addCookie(cookie);
+		tester.startPage(CreateBook.class);
+		assertEquals("value", tester.getLastResponse().getCookies().iterator().next().getValue(),
+			"value");
+
+		// Should copy persisted cookie from browser
 		tester.startPage(CreateBook.class);
 		assertEquals("value", tester.getLastResponse().getCookies().iterator().next().getValue(),
 			"value");
