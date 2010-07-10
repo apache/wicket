@@ -33,6 +33,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ajax.AjaxRequestTarget.IListener;
+import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.internal.HeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -678,9 +680,33 @@ public class AjaxRequestTarget implements IPageRequestHandler
 
 			if (!containsAncestorFor(component))
 			{
-				respondComponent(response, markupId, component);
+				respondComponent(response, getAjaxRegionMarkupId(component), component);
 			}
 		}
+	}
+
+	private String getAjaxRegionMarkupId(Component component)
+	{
+		String markupId = null;
+		for (IBehavior behavior : component.getBehaviors())
+		{
+			if (behavior instanceof IAjaxRegionMarkupIdProvider)
+			{
+				markupId = ((IAjaxRegionMarkupIdProvider)behavior).getAjaxRegionMarkupId(component);
+			}
+		}
+		if (markupId == null)
+		{
+			if (component instanceof IAjaxRegionMarkupIdProvider)
+			{
+				markupId = ((IAjaxRegionMarkupIdProvider)component).getAjaxRegionMarkupId(component);
+			}
+		}
+		if (markupId == null)
+		{
+			markupId = component.getMarkupId();
+		}
+		return markupId;
 	}
 
 	/**
