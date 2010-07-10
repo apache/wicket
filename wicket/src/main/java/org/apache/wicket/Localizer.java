@@ -193,7 +193,7 @@ public class Localizer
 				addedToPage = true;
 			}
 
-			if (!addedToPage)
+			if (!addedToPage && log.isWarnEnabled())
 			{
 				log.warn(
 					"Tried to retrieve a localized string for a component that has not yet been added to the page. "
