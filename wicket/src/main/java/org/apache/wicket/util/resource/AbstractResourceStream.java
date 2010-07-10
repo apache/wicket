@@ -35,10 +35,8 @@ import org.apache.wicket.util.time.Time;
  */
 public abstract class AbstractResourceStream implements IStringResourceStream
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
 	/** Charset for resource */
 	private Charset charset;
 	private Locale locale;
@@ -101,7 +99,6 @@ public abstract class AbstractResourceStream implements IStringResourceStream
 	{
 		return charset;
 	}
-
 
 	/**
 	 * @see org.apache.wicket.util.resource.IResourceStream#getLocale()
