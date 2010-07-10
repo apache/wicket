@@ -32,10 +32,10 @@ import org.apache.wicket.util.time.Time;
  */
 public abstract class AbstractStringResourceStream extends AbstractResourceStream
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
+	/** The content-type applied in case the resource stream's default constructor is used */
+	public static final String DEFAULT_CONTENT_TYPE = "text";
 
 	/** MIME content type */
 	private final String contentType;
@@ -48,7 +48,7 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 	 */
 	public AbstractStringResourceStream()
 	{
-		this("text");
+		this(DEFAULT_CONTENT_TYPE);
 	}
 
 	/**
@@ -59,6 +59,7 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 	 */
 	public AbstractStringResourceStream(final String contentType)
 	{
+		// TODO null for contentType is allowed? or should the default be applied instead?
 		this.contentType = contentType;
 	}
 

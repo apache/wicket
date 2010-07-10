@@ -119,7 +119,11 @@ public class TextTemplateSharedResourceFactory
 // @Override
 // public IResourceStream getResourceStream()
 // {
-// return new AbstractStringResourceStream()
+// String contentType = template.getContentType() == null
+// ? AbstractStringResourceStream.DEFAULT_CONTENT_TYPE
+// : template.getContentType();
+//
+// return new AbstractStringResourceStream(contentType)
 // {
 // private static final long serialVersionUID = 1L;
 //
