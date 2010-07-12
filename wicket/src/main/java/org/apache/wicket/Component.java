@@ -632,6 +632,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/** True when a component is being removed from the hierarchy */
 	protected static final int FLAG_REMOVING_FROM_HIERARCHY = 0x200000;
 
+	/** True when a component has been initialized, had {@link #onInitialize()} called */
+	protected static final int FLAG_INITIALIZED = 0x400000;
+
+
 	private static final int FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED = 0x1000000;
 
 	/**
@@ -922,8 +926,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled())
 		{
-			setMetaData(CONSTRUCTED_AT_KEY, Strings.toString(this, new MarkupException(
-				"constructed")));
+			setMetaData(CONSTRUCTED_AT_KEY,
+				Strings.toString(this, new MarkupException("constructed")));
 		}
 
 		if (model != null)
@@ -3226,9 +3230,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 			final Page page = findPage();
 			if (page == null)
 			{
-				return new StringBuffer("[Component id = ").append(getId()).append(
-					", page = <No Page>, path = ").append(getPath()).append(".").append(
-					Classes.simpleName(getClass())).append("]").toString();
+				return new StringBuffer("[Component id = ").append(getId())
+					.append(", page = <No Page>, path = ")
+					.append(getPath())
+					.append(".")
+					.append(Classes.simpleName(getClass()))
+					.append("]")
+					.toString();
 			}
 			else
 			{
@@ -3930,6 +3938,35 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		setFlag(FLAG_DETACHING, false);
 	}
+
+	/**
+	 * Used to call {@link #onInitialize()}
+	 */
+	void initialize()
+	{
+		if (!getFlag(FLAG_INITIALIZED))
+		{
+			onInitialize();
+			setFlag(FLAG_INITIALIZED, true);
+		}
+	}
+
+	/**
+	 * This method is meant to be used as an alternative to initialize components. Usually the
+	 * component's constructor is used for this task, but sometimes a component cannot be
+	 * initialized in isolation, it may need to access its parent component or its markup in order
+	 * to fully initialize. This method is invoked once per component's lifecycle when a path exists
+	 * from this component to the {@link Page} thus providing the component with an atomic callback
+	 * when the component's environment is built out.
+	 * 
+	 * <p>
+	 * It is safe to use {@link #getPage()} in this method
+	 * </p>
+	 */
+	protected void onInitialize()
+	{
+	}
+
 
 	/**
 	 * Called to notify the component it is being removed from the component hierarchy

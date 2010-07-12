@@ -348,8 +348,9 @@ public abstract class MarkupContainer extends Component
 	{
 		try
 		{
-			return getApplication().getMarkupSettings().getMarkupCache().getMarkupStream(this,
-				false, throwException);
+			return getApplication().getMarkupSettings()
+				.getMarkupCache()
+				.getMarkupStream(this, false, throwException);
 		}
 		catch (MarkupException ex)
 		{
@@ -398,6 +399,20 @@ public abstract class MarkupContainer extends Component
 	public String getMarkupType()
 	{
 		return getPage().getMarkupType();
+	}
+
+	@Override
+	final void initialize()
+	{
+		super.initialize();
+		visitChildren(new IVisitor<Component>()
+		{
+			public Object component(Component component)
+			{
+				component.initialize();
+				return CONTINUE_TRAVERSAL;
+			}
+		});
 	}
 
 	/**
@@ -944,8 +959,13 @@ public abstract class MarkupContainer extends Component
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnAddComponentEnabled())
 		{
-			component.setMetaData(ADDED_AT_KEY, Strings.toString(component, new MarkupException(
-				"added")));
+			component.setMetaData(ADDED_AT_KEY,
+				Strings.toString(component, new MarkupException("added")));
+		}
+
+		if (page != null)
+		{
+			component.initialize();
 		}
 
 		if (page != null)
