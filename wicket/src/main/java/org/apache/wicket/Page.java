@@ -417,8 +417,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
 	 * This method is called when a component was rendered standalone. If it is a <code>
-	 * MarkupContainer</code>
-	 * then the rendering for that container is checked.
+	 * MarkupContainer</code> then the rendering for that container is checked.
 	 * 
 	 * @param component
 	 * 
@@ -1158,16 +1157,16 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 					if (border != null && !border.getBodyContainer().isVisibleInHierarchy())
 					{
 						// Suppose:
-						//						  
+						//
 						// <div wicket:id="border"><div wicket:id="label"></div> suppose
 						// border->label and border's body is hidden.
-						//						  
+						//
 						// The label is added to border not to its hidden body so as far as wicket
 						// is concerned label is visible in hierarchy, but when rendering label wont
 						// be rendered because in the markup it is inside the border's hidden body.
 						// Thus component use check will fail even though it shouldnt - make sure it
 						// doesnt.
-						//						 
+						//
 
 						// TODO it would be more accurate to determine that this component is inside
 						// the border parent's markup not the border's itself
@@ -1544,6 +1543,17 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		dirty();
 
 		super.onDetach();
+	}
+
+	/**
+	 * This method does nothing, it is here to prevent subclasses from overriding it since this
+	 * callback is never called on the {@link Page}
+	 * 
+	 * @see org.apache.wicket.Component#onInitialize()
+	 */
+	@Override
+	protected final void onInitialize()
+	{
 	}
 
 	/**
