@@ -1517,6 +1517,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	@Override
 	protected void onBeforeRender()
 	{
+		if (!getFlag(FLAG_INITIALIZED))
+		{
+			// initialize the page if not yet initialized
+			initialize();
+		}
 		super.onBeforeRender();
 		// If any of the components on page is not stateless, we need to bind the session
 		// before we start rendering components, as then jsessionid won't be appended
@@ -1546,17 +1551,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * This method does nothing, it is here to prevent subclasses from overriding it since this
-	 * callback is never called on the {@link Page}
-	 * 
-	 * @see org.apache.wicket.Component#onInitialize()
-	 */
-	@Override
-	protected final void onInitialize()
-	{
-	}
-
-	/**
 	 * Renders this container to the given response object.
 	 * 
 	 * @param markupStream
@@ -1583,6 +1577,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	final void componentAdded(final Component component)
 	{
+		if (!getFlag(Component.FLAG_INITIALIZED))
+		{
+			// initialize the page if not yet initialized
+			initialize();
+		}
 		dirty();
 		if (mayTrackChangesFor(component, component.getParent()))
 		{

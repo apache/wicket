@@ -28,7 +28,7 @@ public class ComponentInitializationTest extends WicketTestCase
 {
 	public void testPropagation()
 	{
-		Page page = new TestPage();
+		TestPage page = new TestPage();
 
 		TestComponent t1 = new TestComponent("t1");
 		TestComponent t2 = new TestComponent("t2");
@@ -59,13 +59,14 @@ public class ComponentInitializationTest extends WicketTestCase
 		page.add(t1);
 		assertEquals(1, t4.getCount());
 
+		// test page was initialized
+		assertEquals(1, page.getCount());
 
 	}
 
-
 	public void testAtomicity()
 	{
-		Page page = new TestPage();
+		TestPage page = new TestPage();
 
 		TestComponent t1 = new TestComponent("t1");
 		TestComponent t2 = new TestComponent("t2");
@@ -90,12 +91,26 @@ public class ComponentInitializationTest extends WicketTestCase
 		page.add(t1);
 		assertEquals(1, t1.getCount());
 		assertEquals(1, t2.getCount());
+
+		// test page was only initialized once
+		assertEquals(1, page.getCount());
 	}
 
 
 	private static class TestPage extends WebPage
 	{
+		private int count = 0;
 
+		@Override
+		protected void onInitialize()
+		{
+			count++;
+		}
+
+		public int getCount()
+		{
+			return count;
+		}
 	}
 
 	private static class TestComponent extends WebMarkupContainer
