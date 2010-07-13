@@ -3963,9 +3963,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * from this component to the {@link Page} thus providing the component with an atomic callback
 	 * when the component's environment is built out.
 	 * <p>
-	 * Overrides must call super#{@link #onInitialize()}
+	 * Overrides must call super#{@link #onInitialize()}. Usually this should be the first thing an
+	 * override does, much like a constructor.
 	 * </p>
-	 * 
+	 * <p>
+	 * Parent containers are guaranteed to be initialized before their children
+	 * </p>
 	 * <p>
 	 * It is safe to use {@link #getPage()} in this method
 	 * </p>
