@@ -61,6 +61,7 @@ public class ClientProperties implements IClusterable
 	private boolean browserMozillaFirefox;
 	private boolean browserOpera;
 	private boolean browserSafari;
+	private boolean browserChrome;
 	private int browserVersionMajor = -1;
 	private int browserVersionMinor = -1;
 	private int browserWidth = -1;
@@ -417,6 +418,16 @@ public class ClientProperties implements IClusterable
 	}
 
 	/**
+	 * Flag indicating that the browser is a derivative of the Chrome browser platform.
+	 * 
+	 * @return True if a derivative of the Chrome browser platform.
+	 */
+	public boolean isBrowserChrome()
+	{
+		return browserChrome;
+	}
+
+	/**
 	 * 
 	 * 
 	 * @return The client's navigator.cookieEnabled property.
@@ -750,6 +761,17 @@ public class ClientProperties implements IClusterable
 	public void setBrowserSafari(boolean browserSafari)
 	{
 		this.browserSafari = browserSafari;
+	}
+
+	/**
+	 * Flag indicating that the browser is a derivative of the Chrome browser platform.
+	 * 
+	 * @param browserChrome
+	 *            True if a derivative of the Chrome browser platform.
+	 */
+	public void setBrowserChrome(boolean browserChrome)
+	{
+		this.browserChrome = browserChrome;
 	}
 
 	/**

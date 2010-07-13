@@ -147,14 +147,20 @@ public class WebClientInfo extends ClientInfo
 	{
 		String userAgent = (getUserAgent() != null) ? getUserAgent().toLowerCase() : "";
 
+		boolean browserChrome = userAgent.indexOf("chrome") != -1;
 		boolean browserOpera = userAgent.indexOf("opera") != -1;
-		boolean browserSafari = userAgent.indexOf("safari") != -1;
 		boolean browserKonqueror = userAgent.indexOf("konqueror") != -1;
 
 		// Note deceptive user agent fields:
-		// - Konqueror and Safari UA fields contain "like Gecko"
+		// - Konqueror and Chrome UA fields contain "like Gecko"
 		// - Opera UA field typically contains "MSIE"
-		boolean deceptiveUserAgent = browserOpera || browserSafari || browserKonqueror;
+		// - Chrome UA field contains "Safari"
+		boolean deceptiveUserAgent = browserOpera || browserKonqueror || browserChrome;
+
+		boolean browserSafari = !deceptiveUserAgent && userAgent.indexOf("safari") != -1;
+
+		// -Safari UA fields contain "like Gecko"
+		deceptiveUserAgent = deceptiveUserAgent || browserSafari;
 
 		boolean browserMozilla = !deceptiveUserAgent && userAgent.indexOf("gecko") != -1;
 		boolean browserFireFox = userAgent.indexOf("firefox") != -1;
@@ -174,6 +180,10 @@ public class WebClientInfo extends ClientInfo
 		else if (browserSafari)
 		{
 			properties.setBrowserSafari(true);
+		}
+		else if (browserChrome)
+		{
+			properties.setBrowserChrome(true);
 		}
 		else if (browserMozilla)
 		{
