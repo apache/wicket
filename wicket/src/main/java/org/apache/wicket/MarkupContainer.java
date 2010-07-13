@@ -1978,6 +1978,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		// createAndAddComponentsForWicketTags();
 	}
 
+
 	/**
 	 * Automatically create components for <wicket:xxx> tag.
 	 */

@@ -380,6 +380,17 @@ public abstract class Page extends MarkupContainer
 		super.detachModels();
 	}
 
+	@Override
+	public void prepareForRender(boolean setRenderingFlag)
+	{
+		if (!getFlag(FLAG_INITIALIZED))
+		{
+			// initialize the page if not yet initialized
+			initialize();
+		}
+		super.prepareForRender(setRenderingFlag);
+	}
+
 
 	/**
 	 * Mark this page as dirty in the session
@@ -393,8 +404,7 @@ public abstract class Page extends MarkupContainer
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
 	 * This method is called when a component was rendered standalone. If it is a <code>
-	 * MarkupContainer</code>
-	 * then the rendering for that container is checked.
+	 * MarkupContainer</code> then the rendering for that container is checked.
 	 * 
 	 * @param component
 	 * 
@@ -963,8 +973,9 @@ public abstract class Page extends MarkupContainer
 			// Gwyn - Wed, 21 May 2008 12:23:41
 			// If the xml declaration in the markup used double-quotes, use them in the output too
 			// Whether it should be or not, sometimes it's significant...
-			final String quoteChar = (markup.getMarkupResourceStream().getXmlDeclaration().indexOf(
-				'\"') == -1) ? "'" : "\"";
+			final String quoteChar = (markup.getMarkupResourceStream()
+				.getXmlDeclaration()
+				.indexOf('\"') == -1) ? "'" : "\"";
 
 			response.write("<?xml version=");
 			response.write(quoteChar);
@@ -1127,6 +1138,12 @@ public abstract class Page extends MarkupContainer
 	 */
 	final void componentAdded(final Component component)
 	{
+		if (!getFlag(FLAG_INITIALIZED))
+		{
+			// initialize the page if not yet initialized
+			initialize();
+		}
+
 		dirty();
 	}
 
@@ -1257,17 +1274,6 @@ public abstract class Page extends MarkupContainer
 			return null;
 		}
 		return (Page)session.getPageManager().getPage(id);
-	}
-
-	/**
-	 * This method does nothing, it is here to prevent subclasses from overriding it since this
-	 * callback is never called on the {@link Page}
-	 * 
-	 * @see org.apache.wicket.Component#onInitialize()
-	 */
-	@Override
-	protected final void onInitialize()
-	{
 	}
 
 }

@@ -356,7 +356,7 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	/** Reserved subclass-definable flag bit */
 	protected static final int FLAG_RESERVED5 = 0x10000;
 	/** Reserved subclass-definable flag bit */
-	private static final int FLAG_INITIALIZED = 0x20000;
+	protected static final int FLAG_INITIALIZED = 0x20000;
 	/** Reserved subclass-definable flag bit */
 	private static final int FLAG_NOTUSED7 = 0x40000;
 	/** Reserved subclass-definable flag bit */
@@ -665,8 +665,8 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled())
 		{
-			setMetaData(CONSTRUCTED_AT_KEY, ComponentStrings.toString(this, new MarkupException(
-				"constructed")));
+			setMetaData(CONSTRUCTED_AT_KEY,
+				ComponentStrings.toString(this, new MarkupException("constructed")));
 		}
 
 		if (model != null)
@@ -2156,13 +2156,17 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	 * be called on the page. On AJAX request, this method must be called on updated component.
 	 * </p>
 	 * 
+	 * TODO this method is not part of public api, so rename to internalPrepareForRender
+	 * 
 	 * @param setRenderingFlag
 	 *            Whether to set the rendering flag. This must be true if the page is about to be
 	 *            rendered. However, there are usecases to call this method without an immediate
 	 *            render (e.g. on stateless listner request target to build the component
 	 *            hierarchy), in that case setRenderingFlag should be false
+	 * 
+	 * 
 	 */
-	public final void prepareForRender(boolean setRenderingFlag)
+	public void prepareForRender(boolean setRenderingFlag)
 	{
 		beforeRender();
 
@@ -3165,9 +3169,13 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 			final Page page = findPage();
 			if (page == null)
 			{
-				return new StringBuffer("[Component id = ").append(getId()).append(
-					", page = <No Page>, path = ").append(getPath()).append(".").append(
-					Classes.simpleName(getClass())).append("]").toString();
+				return new StringBuffer("[Component id = ").append(getId())
+					.append(", page = <No Page>, path = ")
+					.append(getPath())
+					.append(".")
+					.append(Classes.simpleName(getClass()))
+					.append("]")
+					.toString();
 			}
 			else
 			{
