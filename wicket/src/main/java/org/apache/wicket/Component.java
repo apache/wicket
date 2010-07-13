@@ -863,10 +863,19 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	 * to fully initialize. This method is invoked once per component's lifecycle when a path exists
 	 * from this component to the {@link Page} thus providing the component with an atomic callback
 	 * when the component's environment is built out.
+	 * <p>
+	 * Overrides must call super#{@link #onInitialize()}
+	 * </p>
 	 * 
 	 * <p>
-	 * It is safe to use {@link #getPage()} and {@link #getMarkup()} in this method
+	 * It is safe to use {@link #getPage()} in this method
 	 * </p>
+	 * 
+	 * <p>
+	 * NOTE:The timing of this call is not precise, the contract is that it is called sometime
+	 * before {@link Component#onBeforeRender()}.
+	 * </p>
+	 * 
 	 */
 	protected void onInitialize()
 	{
