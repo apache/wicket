@@ -16,8 +16,12 @@
  */
 package org.apache.wicket;
 
+import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Tests {@link Component#onInitialize()} contract
@@ -96,10 +100,22 @@ public class ComponentInitializationTest extends WicketTestCase
 		assertEquals(1, page.getCount());
 	}
 
+	public void testPageInitialization()
+	{
+		WicketTester tester = new WicketTester();
+		tester.startPage(TestPage.class);
+		TestPage page = (TestPage)tester.getLastRenderedPage();
 
-	private static class TestPage extends WebPage
+		assertEquals(1, page.getCount());
+	}
+
+	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		private int count = 0;
+
+		public TestPage()
+		{
+		}
 
 		@Override
 		protected void onInitialize()
@@ -110,6 +126,12 @@ public class ComponentInitializationTest extends WicketTestCase
 		public int getCount()
 		{
 			return count;
+		}
+
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream("<html></html>");
 		}
 	}
 

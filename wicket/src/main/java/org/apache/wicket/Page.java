@@ -1510,6 +1510,17 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		return null;
 	}
 
+	@Override
+	public void prepareForRender(boolean setRenderingFlag)
+	{
+		if (!getFlag(FLAG_INITIALIZED))
+		{
+			// initialize the page if not yet initialized
+			initialize();
+		}
+		super.prepareForRender(setRenderingFlag);
+	}
+
 	/**
 	 * 
 	 * @see org.apache.wicket.Component#onBeforeRender()
@@ -1517,11 +1528,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	@Override
 	protected void onBeforeRender()
 	{
-		if (!getFlag(FLAG_INITIALIZED))
-		{
-			// initialize the page if not yet initialized
-			initialize();
-		}
 		super.onBeforeRender();
 		// If any of the components on page is not stateless, we need to bind the session
 		// before we start rendering components, as then jsessionid won't be appended

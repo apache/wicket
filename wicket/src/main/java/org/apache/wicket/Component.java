@@ -2218,13 +2218,17 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * be called on the page. On AJAX request, this method must be called on updated component.
 	 * </p>
 	 * 
+	 * TODO this method is not part of public api, so rename to internalPrepareForRender
+	 * 
 	 * @param setRenderingFlag
 	 *            Whether to set the rendering flag. This must be true if the page is about to be
 	 *            rendered. However, there are usecases to call this method without an immediate
 	 *            render (e.g. on stateless listner request target to build the component
 	 *            hierarchy), in that case setRenderingFlag should be false
+	 * 
+	 * 
 	 */
-	public final void prepareForRender(boolean setRenderingFlag)
+	public void prepareForRender(boolean setRenderingFlag)
 	{
 		beforeRender();
 
