@@ -401,15 +401,21 @@ public abstract class MarkupContainer extends Component
 		return getPage().getMarkupType();
 	}
 
+	/**
+	 * Overrides {@link Component#initialize()} to call {@link Component#doInitialize()} for itself
+	 * and for all its children.
+	 * 
+	 * @see org.apache.wicket.Component#doInitialize()
+	 */
 	@Override
 	final void initialize()
 	{
-		super.initialize();
+		super.doInitialize();
 		visitChildren(new IVisitor<Component>()
 		{
 			public Object component(Component component)
 			{
-				component.initialize();
+				component.doInitialize();
 				return CONTINUE_TRAVERSAL;
 			}
 		});

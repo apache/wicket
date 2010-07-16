@@ -3944,9 +3944,18 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Used to call {@link #onInitialize()}
+	 * Calls {@link #doInitialize()}, is overridden by {@link MarkupContainer} to create an
+	 * {@link IVisitor} to walk over the child hierarchy.
 	 */
 	void initialize()
+	{
+		doInitialize();
+	}
+
+	/**
+	 * Used to call {@link #onInitialize()}
+	 */
+	final void doInitialize()
 	{
 		if (!getFlag(FLAG_INITIALIZED))
 		{
