@@ -42,13 +42,11 @@ public class App1Test1
 	{
 
 		List<String> gets = Arrays.asList(new String[] {
-				"/app1/?wicket:bookmarkablePage=:org.apache.wicket.threadtest.apps.app1.Home",
-				"/app1/?wicket:interface=:${iteration}:link::ILinkListener::",
-				"/app1/?wicket:interface=:${iteration}:link:1:ILinkListener::",
-				"/app1/?wicket:interface=:${iteration}:link:2:ILinkListener::" });
+				"/app1/wicket/bookmarkable/org.apache.wicket.threadtest.apps.app1.Home",
+				"/app1/wicket/page?0-${iteration}.ILinkListener-link" });
 
 		// you can turn this on if you e.g. want to attach to a profiler
-		// Thread.sleep(5000);
+// Thread.sleep(5000);
 
 		WicketObjects.setObjectStreamFactory(new WicketObjectStreamFactory());
 		SimpleGetCommand getCmd = new SimpleGetCommand(gets, 10);

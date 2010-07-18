@@ -77,7 +77,7 @@ public class Home extends WebPage
 		public ActionPanel(String id, IModel<Contact> model)
 		{
 			super(id, model);
-			add(new Link("select")
+			add(new Link<Void>("select")
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -107,7 +107,7 @@ public class Home extends WebPage
 		{
 			super(name, new CompoundPropertyModel<FormInputModel>(new FormInputModel()));
 			add(new LocaleDropDownChoice("localeSelect"));
-			add(new Link("defaultLocaleLink")
+			add(new Link<Void>("defaultLocaleLink")
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -222,7 +222,7 @@ public class Home extends WebPage
 
 			add(new Button("saveButton"));
 
-			add(new Link("resetButtonLink")
+			add(new Link<Void>("resetButtonLink")
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -351,7 +351,7 @@ public class Home extends WebPage
 	public Home()
 	{
 
-		add(new Link("link")
+		add(new Link<Void>("link")
 		{
 			private static final long serialVersionUID = 1L;
 			int i = 0;
