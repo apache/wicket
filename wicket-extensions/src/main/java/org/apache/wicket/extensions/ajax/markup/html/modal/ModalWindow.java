@@ -25,6 +25,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
 import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow.PageCreator;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -334,7 +335,7 @@ public class ModalWindow extends Panel
 	 */
 	public static final void closeCurrent(AjaxRequestTarget target)
 	{
-		target.appendJavascript(getCloseJavacript());
+		target.appendJavascript(getCloseJavacriptInternal());
 	}
 
 	/**
@@ -351,9 +352,16 @@ public class ModalWindow extends Panel
 	}
 
 	/**
-	 * @return javascript that closes current modal window
+	 * Method that allows alternate script for showing the window.
+	 * 
+	 * @return the script that actually shows the window.
 	 */
-	private static String getCloseJavacript()
+	protected CharSequence getShowJavascript()
+	{
+		return "Wicket.Window.create(settings).show();\n";
+	}
+
+	private static String getCloseJavacriptInternal()
 	{
 		return "var win;\n" //
 			+ "try {\n"
@@ -371,6 +379,16 @@ public class ModalWindow extends Panel
 			+ "		win.current.close();\n"
 			+ "	}, 0);  } \n"
 			+ "	try { close(window.parent); } catch (ignore) { close(window); };\n" + "}";
+	}
+
+	/**
+	 * Method that allows alternate script for closing the window.
+	 * 
+	 * @return the script that actually closes the window.
+	 */
+	protected String getCloseJavacript()
+	{
+		return getCloseJavacriptInternal();
 	}
 
 	/**
@@ -811,7 +829,7 @@ public class ModalWindow extends Panel
 	 * 
 	 * @return True if user has added own component to the window, false otherwise.
 	 */
-	private boolean isCustomComponent()
+	protected boolean isCustomComponent()
 	{
 		return getContent() != empty;
 	}
@@ -1052,7 +1070,7 @@ public class ModalWindow extends Panel
 
 		postProcessSettings(buffer);
 
-		buffer.append("Wicket.Window.create(settings).show();\n");
+		buffer.append(getShowJavascript());
 		return buffer.toString();
 	}
 

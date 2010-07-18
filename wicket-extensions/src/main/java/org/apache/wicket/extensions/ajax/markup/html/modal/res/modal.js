@@ -631,34 +631,34 @@ Wicket.Window.prototype = {
 	show: function() {					
 		
 		// create the DOM elements
-		this.createDOM();								
+		this.createDOM();
 		
 		// set the class of window (blue or silver by default)
-		this.classElement.className = this.settings.className;									
+		this.classElement.className = this.settings.className;
 		
 		// is it an iframe window?
 		if (this.isIframe()) {
 			// load the file
-			this.load();			
+			this.load();
 		} else {
 			// it's an element content
 			
-			// is the element specified?			
+			// is the element specified?
 			if (this.settings.element == null) {
 				throw "Either src or element must be set.";
-			}			
+			}
 			
 			// reparent the element
 			this.oldParent = this.settings.element.parentNode;
-			this.settings.element.parentNode.removeChild(this.settings.element);				
+			this.settings.element.parentNode.removeChild(this.settings.element);
 			this.content.appendChild(this.settings.element);
 			
 			// set the overflow style so that scrollbars are shown when the element is bigger than window
 			this.content.style.overflow="auto";
-		}																								
+		}
 		
 		// bind the events
-		this.bindInit();		
+		this.bindInit();
 
 		// if the title is specified set it
 		if (this.settings.title != null)
@@ -668,27 +668,72 @@ Wicket.Window.prototype = {
 		// initial width and height
 		this.window.style.width = this.settings.width + (this.settings.resizable ? "px" : this.settings.widthUnit);
 		
-		if (this.settings.height != null)		
-			this.content.style.height = this.settings.height + (this.settings.resizable ? "px" : this.settings.heightUnit);				
+		if (this.settings.height != null)
+			this.content.style.height = this.settings.height + (this.settings.resizable ? "px" : this.settings.heightUnit);
 
 		// center the window
-		this.center();				
+		this.center();
 		
 		// load position from cookie
 		this.loadPosition();
 
 		var doShow = function() {
-			// if there is a previous window  
-			if (this.oldWindow != null) {
-				// lower it's z-index so that it's moved under the mask
-				this.oldWindow.window.style.zIndex = Wicket.Window.Mask.zIndex - 1;
-			}			
-				
+			this.adjustOpenWindowZIndexesOnShow();
 			this.window.style.visibility="visible";
 			
 		}.bind(this);
 				
+		this.adjustOpenWindowsStatusOnShow();
+
+		// show the window
+		if (Wicket.Browser.isGecko() && this.isIframe()) {
+			// HACK
+			// gecko flickers when showing the window
+			// unless the showing is postponed a little
+			window.setTimeout(function() { doShow(); }, 0);
+		} else {
+			doShow();
+		}
+
+		// if the content supports focus and blur it, which means
+		// that the already focused element will lose it's focus
+		if (this.content.focus) {
+			this.content.focus();
+			this.content.blur();
+		}
+		// preserve old unload hanler
+		this.old_onunload = window.onunload;
 		
+		// new unload handler - close the window to prevent memory leaks in ie
+		window.onunload = function() {
+			this.close(true);
+			if (this.old_onunload != null)
+				return this.old_onunload();
+		}.bind(this);
+		
+		// preserve old beforeunload handler
+		this.old_onbeforeunload = window.onbeforeunload;
+		
+		if (Wicket.Window.unloadConfirmation == true) {
+			// new beforeunload handler - ask user before reloading window
+			window.onbeforeunload = function() {
+				return "Reloading this page will cause the modal window to disappear.";
+			}
+		}
+		
+		// create the mask that covers the background
+		this.createMask();
+	},
+	
+	adjustOpenWindowZIndexesOnShow: function() {
+		// if there is a previous window
+		if ((this.oldWindow != null) && (typeof(this.oldWindow) != "undefined")) {
+			// lower it's z-index so that it's moved under the mask
+			this.oldWindow.window.style.zIndex = Wicket.Window.Mask.zIndex - 1;
+		}
+	},
+	
+	adjustOpenWindowsStatusOnShow: function() {
 		// is there a window displayed already?
 		if (Wicket.Window.current != null) {
 			// save the reference to it
@@ -696,45 +741,6 @@ Wicket.Window.prototype = {
 		}
 		// keep reference to this window
 		Wicket.Window.current = this;
-		
-		// show the window		
-		if (Wicket.Browser.isGecko() && this.isIframe()) {
-			// HACK
-			// gecko flickers when showing the window
-			// unless the showing is postponed a little				
-			window.setTimeout(function() { doShow(); }, 0);
-		} else {
-			doShow();
-		}		
-
-		// if the content supports focus and blur it, which means
-		// that the already focused element will lose it's focus				
-		if (this.content.focus) {
-			this.content.focus();
-			this.content.blur();
-		}		
-		// preserve old unload hanler
-		this.old_onunload = window.onunload;
-		
-		// new unload handler - close the window to prevent memory leaks in ie		
-		window.onunload = function() {			
-			this.close(true);
-			if (this.old_onunload != null)
-				return this.old_onunload();
-		}.bind(this);				
-		
-		// preserve old beforeunload handler
-		this.old_onbeforeunload = window.onbeforeunload;
-		
-		if (Wicket.Window.unloadConfirmation == true) {
-			// new beforeunload handler - ask user before reloading window
-			window.onbeforeunload = function() {			
-				return "Reloading this page will cause the modal window to disappear.";
-			}				
-		}
-		
-		// create the mask that covers the background		
-		this.createMask();	
 	},
 	
 	/**
@@ -747,20 +753,20 @@ Wicket.Window.prototype = {
 	/**
 	 * Prevent user from closing the window if there's another (nested) modal window in the iframe. 
 	 */
-	canCloseInternal: function() {		
+	canCloseInternal: function() {
 		try {
-			if (this.isIframe() == true) {				
-				var current = this.content.contentWindow.Wicket.Window.current; 
+			if (this.isIframe() == true) {
+				var current = this.content.contentWindow.Wicket.Window.current;
 				if (typeof(current) != "undefined" && current != null) {
 					alert('You can\'t close this modal window. Close the top-level modal window first.');
 					return false;
 				}
 			}
 		} catch (ignore) {
-		}	
+		}
 		return true;
 	},
-		
+	
 	/**
 	 * Closes the window.
 	 * @param {Boolean} force - internal argument 
@@ -814,17 +820,7 @@ Wicket.Window.prototype = {
 			this.settings.onClose();
 		}
 
-		// if there was a window shown before this one
-		if (this.oldWindow != null) {
-			// set the old as current
-			Wicket.Window.current = this.oldWindow;
-			// increase it's z-index so that it's moved above the mask
-			Wicket.Window.current.window.style.zIndex = Wicket.Window.Mask.zIndex + 1;
-			this.oldWindow = null; 
-		} else {
-			// remove reference to the window
-			Wicket.Window.current = null;
-		}					
+		this.adjustOpenWindowsStatusAndZIndexesOnClose();
 		
 		if (Wicket.Browser.isIE()) {
 			// There's a strange focus problem in IE that disables focus on entire page,
@@ -839,6 +835,20 @@ Wicket.Window.prototype = {
 			e.focus();
 			document.body.removeChild(e);
 		}						
+	},
+	
+	adjustOpenWindowsStatusAndZIndexesOnClose: function() {
+		// if there was a window shown before this one
+		if (this.oldWindow != null) {
+			// set the old as current
+			Wicket.Window.current = this.oldWindow;
+			// increase it's z-index so that it's moved above the mask
+			Wicket.Window.current.window.style.zIndex = Wicket.Window.Mask.zIndex + 1;
+			this.oldWindow = null; 
+		} else {
+			// remove reference to the window
+			Wicket.Window.current = null;
+		}
 	},
 	
 	/**
@@ -1251,50 +1261,60 @@ Wicket.Window.Mask.prototype = {
 			this.dontHide = true; 			
 		}
 		
-		var doc = document;
-		var old = Wicket.Window.current.oldWindow;
-		if (typeof(old) != "undefined" && old != null) {
-			doc = old.getContentDocument();
-		}
-		
-		this.document = doc;
-		
-		// disable user interaction
-		setTimeout(function() {this.hideSelectBoxes()}.bind(this), 300);
-		setTimeout(function() {this.disableTabs()}.bind(this), 400);
-		setTimeout(function() {this.disableFocus()}.bind(this), 1000); 			
+		this.disableCoveredContent();
 	},
 	
 	/**
 	 * Hides the mask.
 	 */
 	hide: function() {			
-	
+
 		// if the mask is visible and we can hide it
 		if (typeof(Wicket.Window.Mask.element) != "undefined" && typeof(this.dontHide) == "undefined") {
 	
 			// remove element from document	
 			document.body.removeChild(this.element);
-			this.element = null;						
+			this.element = null;
 			
 			// restore old handlers
 			window.onscroll = this.old_onscroll;
 			window.onresize = this.old_onresize;
 						
-			Wicket.Window.Mask.element = null;			
-		}	
+			Wicket.Window.Mask.element = null;
+		}
 		
+		this.reenableCoveredContent();
+	},
+	
+	// disable user interaction for content that is covered by the mask
+	disableCoveredContent: function() {
+		var doc = document;
+		var old = Wicket.Window.current.oldWindow;
+		if (typeof(old) != "undefined" && old != null) {
+			doc = old.getContentDocument();
+		}
+
+		this.doDisable(doc, Wicket.Window.current);
+	},
+	
+	// disable user interaction for content that is covered by the mask inside the given document, taking into consideration that this modal window is or not in an iframe
+	// and has the given content
+	doDisable: function(doc, win) {
+		setTimeout(function() {this.hideSelectBoxes(doc, win)}.bind(this), 300);
+		setTimeout(function() {this.disableTabs(doc, win)}.bind(this), 400);
+		setTimeout(function() {this.disableFocus(doc, win)}.bind(this), 1000);
+	},
+	
+	// reenable user interaction for content that was covered by the mask
+	reenableCoveredContent: function() {
 		// show old select boxes (ie only)
 		this.showSelectBoxes();
-		
+
 		// restore tab order
 		this.restoreTabs();
-		
+
 		// revert onfocus handlers
 		this.enableFocus();
-		
-		this.document = null;
-
 	},
 	
 	/**
@@ -1340,12 +1360,10 @@ Wicket.Window.Mask.prototype = {
 	 * For internet explorer hides the select boxes (because they
 	 * have always bigger z-order than any other elements).
 	 */
-	hideSelectBoxes : function() {				
+	hideSelectBoxes : function(doc, win) {				
 		if (Wicket.Browser.isIE() && Wicket.Browser.isIE7() == false) {
-			var win = Wicket.Window.current;					
-			
 			this.boxes = new Array();
-			var selects = this.document.getElementsByTagName("select");
+			var selects = doc.getElementsByTagName("select");
 			for (var i = 0; i < selects.length; i++) {				
 				var element = selects[i];
 				
@@ -1379,17 +1397,17 @@ Wicket.Window.Mask.prototype = {
 	/**
 	 * Disable focus on element and all it's children.	 
 	 */
-	disableFocusElement: function(element, revertList) {
+	disableFocusElement: function(element, revertList, win) {
 				
-		if (typeof(Wicket.Window.current) != "undefined" &&
-			Wicket.Window.current != null &&
-			Wicket.Window.current.window != element) {								
+		if (typeof(win) != "undefined" &&
+			win != null &&
+			win.window != element) {								
 				
 			revertList.push([element, element.onfocus]);
 			element.onfocus = function() { element.blur(); }			
 			
 			for (var i = 0; i < element.childNodes.length; ++i) {
-				this.disableFocusElement(element.childNodes[i], revertList);
+				this.disableFocusElement(element.childNodes[i], revertList, win);
 			}
 		}
 	},
@@ -1397,14 +1415,14 @@ Wicket.Window.Mask.prototype = {
 	/**
 	 * Disable focus on all elements in document
 	 */
-	disableFocus: function() {
+	disableFocus: function(doc, win) {
 		// explorer doesn't need this, because for IE disableTabs() is called.
 		// plus in IE this causes problems because it scrolls document		);
 		if (Wicket.Browser.isIE() == false) {			
 			this.focusRevertList = new Array();			
-			var body = this.document.getElementsByTagName("body")[0];			
+			var body = doc.getElementsByTagName("body")[0];			
 			for (var i = 0; i < body.childNodes.length; ++i) {		
-				this.disableFocusElement(body.childNodes[i], this.focusRevertList);
+				this.disableFocusElement(body.childNodes[i], this.focusRevertList, win);
 			}
 		}
 	},
@@ -1426,44 +1444,39 @@ Wicket.Window.Mask.prototype = {
 	/**
 	 * Disable tab indexes (ie).
 	 */
-	disableTabs: function () {		
-		this.tabbableTags = new Array("A","BUTTON","TEXTAREA","INPUT","IFRAME", "SELECT");
+	disableTabs: function (doc, win) {
+		if (typeof (this.tabbableTags) == "undefined") this.tabbableTags = new Array("A","BUTTON","TEXTAREA","INPUT","IFRAME", "SELECT");
 		if (Wicket.Browser.isIE()) {
-			var win = Wicket.Window.current;			
-			this.tabsAreDisabled = 'true';
+			this.disabledTabsRevertList = new Array();
 			for (var j = 0; j < this.tabbableTags.length; j++) {
-				var tagElements = this.document.getElementsByTagName(this.tabbableTags[j]);
+				var tagElements = doc.getElementsByTagName(this.tabbableTags[j]);
 				for (var k = 0 ; k < tagElements.length; k++) {
-					
 					// if this is not an iframe window and the element is child of window content,
 					// don't disable tab on it
-						if (win.isIframe() == true || this.isParent(tagElements[k], win.content) == false) {
+					if (win.isIframe() == true || this.isParent(tagElements[k], win.content) == false) {
 						var element = tagElements[k];
 						element.hiddenTabIndex = element.tabIndex;
 						element.tabIndex="-1";
+						this.disabledTabsRevertList.push(element);
 					}
 				}
 			}
 		}
 	},
-	
+
 	/**
 	 * Restore tab indexes if they were disabled.
 	 */
 	restoreTabs: function() {
-		if (typeof(this.tabsAreDisabled) != 'undefined') {
-			for (var j = 0; j < this.tabbableTags.length; j++) {
-				var tagElements = this.document.getElementsByTagName(this.tabbableTags[j]);
-				for (var k = 0 ; k < tagElements.length; k++) {
-					var element = tagElements[k];
-					if (typeof(element.hiddenTabIndex) != 'undefined') {
-						element.tabIndex = element.hiddenTabIndex;
-						element.hiddenTabIndex = null;
-					}
-					element.tabEnabled = true;
+		if (typeof (this.disabledTabsRevertList) != "undefined" && this.disabledTabsRevertList != null) {
+			for (var i = 0; i < this.disabledTabsRevertList.length; ++i) {
+				var element = this.disabledTabsRevertList[i];
+				if (typeof(element.hiddenTabIndex) != 'undefined') {
+					element.tabIndex = element.hiddenTabIndex;
+					delete element.hiddenTabIndex;
 				}
 			}
-			this.tabsAreDisabled = null;
+			this.disabledTabsRevertList = null;
 		}
 	}
 
@@ -1536,7 +1549,7 @@ Wicket.Cookie = {
 					end = document.cookie.length;
 				}
 				return unescape(document.cookie.substring(start,end))
-    		}
+			}
   		} else {
 			return null
 		}
