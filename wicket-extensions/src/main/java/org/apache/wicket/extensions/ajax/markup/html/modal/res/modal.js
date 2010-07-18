@@ -1473,7 +1473,7 @@ Wicket.Window.Mask.prototype = {
 				var element = this.disabledTabsRevertList[i];
 				if (typeof(element.hiddenTabIndex) != 'undefined') {
 					element.tabIndex = element.hiddenTabIndex;
-					delete element.hiddenTabIndex;
+					try { delete element.hiddenTabIndex; } catch (e) { element.hiddenTabIndex = undefined; }
 				}
 			}
 			this.disabledTabsRevertList = null;
