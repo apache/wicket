@@ -495,6 +495,8 @@ Wicket.Window.prototype = {
 		
 		var left = (width / 2) - (modalWidth / 2) + scLeft;
 		var top = (height / 2) - (modalHeight / 2) + scTop;
+		if (left < 0) left = 0;
+		if (top < 0) top = 0;
 		
 		this.window.style.left = left + "px";
 		this.window.style.top = top + "px";
