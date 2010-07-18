@@ -19,6 +19,7 @@ package org.apache.wicket.util.resource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -95,7 +96,12 @@ public class UrlResourceStream extends AbstractResourceStream
 
 		try
 		{
-			file = Connections.findFile(url);
+			file = new File(new URI(url.toExternalForm()));
+
+			if (file != null && !file.exists())
+			{
+				file = null;
+			}
 		}
 		catch (Exception e)
 		{

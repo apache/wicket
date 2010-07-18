@@ -77,46 +77,6 @@ public class Connections
 	}
 
 	/**
-	 * Tries to find a file on the harddisk that the url points to
-	 * 
-	 * @param url
-	 * @return file file pointing to the connection
-	 * @throws Exception
-	 *             if file could not be located
-	 */
-	public static File findFile(final URL url) throws Exception
-	{
-		File file = null;
-		URL fileUrl = url;
-		URLConnection connection = null;
-
-		try
-		{
-			connection = url.openConnection();
-
-			// if this is a connection to a file inside a jar we point the file to the jar
-			// itself
-			if (connection instanceof JarURLConnection)
-			{
-				fileUrl = ((JarURLConnection)connection).getJarFileURL();
-			}
-
-			file = new File(new URI(fileUrl.toExternalForm()));
-
-			if (file != null && !file.exists())
-			{
-				file = null;
-			}
-
-			return file;
-		}
-		finally
-		{
-			close(connection);
-		}
-	}
-
-	/**
 	 * Closes a connection, ignoring any exceptions if they occur
 	 * 
 	 * @param connection
