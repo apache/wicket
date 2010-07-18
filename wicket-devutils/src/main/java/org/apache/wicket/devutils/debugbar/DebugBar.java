@@ -23,14 +23,15 @@ import org.apache.wicket.Application;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MetaDataKey;
-import org.apache.wicket.ResourceReference;
+import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.devutils.DevUtilsPanel;
-import org.apache.wicket.markup.html.CSSPackageResource;
-import org.apache.wicket.markup.html.JavascriptPackageResource;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.request.resource.CompressedResourceReference;
+import org.apache.wicket.request.resource.JavascriptResourceReference;
+import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
  * The debug bar is for use during development. It allows contributors to add useful functions or
@@ -80,10 +81,10 @@ public class DebugBar extends DevUtilsPanel
             }
 
         }));
-        add(CSSPackageResource.getHeaderContribution(DebugBar.class, "wicket-debugbar.css"));
-        add(JavascriptPackageResource.getHeaderContribution(DebugBar.class, "wicket-debugbar.js"));
-        add(new Image("logo", new ResourceReference(DebugBar.class, "wicket.png")));
-        add(new Image("removeImg", new ResourceReference(DebugBar.class, "remove.png")));
+        add(HeaderContributor.forCss(new CompressedResourceReference(DebugBar.class, "wicket-debugbar.css")));
+        add(HeaderContributor.forJavaScript(new JavascriptResourceReference(DebugBar.class, "wicket-debugbar.js")));
+        add(new Image("logo", new PackageResourceReference(DebugBar.class, "wicket.png")));
+        add(new Image("removeImg", new PackageResourceReference(DebugBar.class, "remove.png")));
         List<IDebugBarContributor> contributors = getContributors();
         
         // no longer necessary, registered from DebugBarInitializer

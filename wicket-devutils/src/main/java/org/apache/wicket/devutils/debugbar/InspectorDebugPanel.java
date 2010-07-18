@@ -18,10 +18,11 @@ package org.apache.wicket.devutils.debugbar;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.devutils.inspector.InspectorPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * A panel that adds a link to the inspector to the debug bar.
@@ -51,7 +52,7 @@ public class InspectorDebugPanel extends StandardDebugPanel {
 
 	@Override
 	protected ResourceReference getImageResourceReference() {
-		return new ResourceReference(InspectorPage.class, "bug.png");
+		return new PackageResourceReference(InspectorPage.class, "bug.png");
 	}
 
 	@Override

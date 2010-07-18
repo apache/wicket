@@ -36,14 +36,6 @@ public class SessionSettings implements SessionSettingsMBean
 	}
 
 	/**
-	 * @see org.apache.wicket.jmx.SessionSettingsMBean#getMaxPageMaps()
-	 */
-	public int getMaxPageMaps()
-	{
-		return application.getSessionSettings().getMaxPageMaps();
-	}
-
-	/**
 	 * @see org.apache.wicket.jmx.SessionSettingsMBean#getPageFactory()
 	 */
 	public String getPageFactory()

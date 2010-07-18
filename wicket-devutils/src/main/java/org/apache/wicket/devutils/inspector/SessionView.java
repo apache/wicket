@@ -16,15 +16,10 @@
  */
 package org.apache.wicket.devutils.inspector;
 
-import java.util.List;
-
 import org.apache.wicket.Component;
-import org.apache.wicket.IPageMap;
 import org.apache.wicket.Session;
 import org.apache.wicket.devutils.DevUtilsPanel;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 
 
 /**
@@ -54,25 +49,6 @@ public final class SessionView extends DevUtilsPanel
 		add(new Label("style", session.getStyle() == null ? "[None]" : session.getStyle()));
 		add(new Label("size", new SessionSizeModel(session)));
 		add(new Label("totalSize", new SessionTotalSizeModel(session)));
-
-		// Get pagemaps
-		final List<IPageMap> pagemaps = session.getPageMaps();
-
-		// Create the table containing the list the components
-		add(new ListView<IPageMap>("pagemaps", pagemaps)
-		{
-			private static final long serialVersionUID = 1L;
-
-			/**
-			 * Populate the table with Wicket elements
-			 */
-			@Override
-			protected void populateItem(final ListItem<IPageMap> listItem)
-			{
-				IPageMap p = listItem.getModelObject();
-				listItem.add(new PageMapView("pagemap", p));
-			}
-		});
 	}
 	
 }

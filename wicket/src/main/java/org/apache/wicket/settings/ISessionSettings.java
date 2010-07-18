@@ -35,13 +35,6 @@ import org.apache.wicket.IPageFactory;
 public interface ISessionSettings
 {
 	/**
-	 * Gets maximum number of page maps allowed in this session
-	 * 
-	 * @return Maximum number of page maps
-	 */
-	int getMaxPageMaps();
-
-	/**
 	 * Gets the factory to be used when creating pages
 	 * 
 	 * @return The default page factory

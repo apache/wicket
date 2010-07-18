@@ -17,15 +17,16 @@
 package org.apache.wicket.devutils.inspector;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.PageParameters;
+import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.devutils.DevUtilsPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.debug.PageView;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.ng.resource.ResourceReference;
-import org.apache.wicket.session.pagemap.IPageMapEntry;
+import org.apache.wicket.page.IManageablePage;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.string.StringValueConversionException;
 
 /**
@@ -48,12 +49,11 @@ public final class InspectorPage extends DevUtilsPage
 	{
 		add(new ApplicationView("application", Application.get()));
 		add(new SessionView("session", Session.get()));
-		IPageMapEntry entry = null;
+		IManageablePage page = null;
 		try
 		{
-			entry = Session.get().pageMapForName(
-					parameters.getString("pageMap").equals("") ? null : parameters.getString("pageMap"),
-					false).getEntry(parameters.getInt("pageId"));
+			final int pageId = parameters.getNamedParameter("pageId").toInt();
+			page = Session.get().getPageManager().getPage(pageId);
 		}
 		catch (StringValueConversionException e)
 		{
@@ -63,8 +63,8 @@ public final class InspectorPage extends DevUtilsPage
 		{
 		        // Ignore
 		}
-		add(new PageView("page", entry == null ? null : entry.getPage()));
-		add(new Image("bug", new ResourceReference(InspectorPage.class, "bug.png")));
+		add(new PageView("page", (Page) page));
+		add(new Image("bug", new PackageResourceReference(InspectorPage.class, "bug.png")));
 		add(new BookmarkablePageLink<Void>("allsessions", LiveSessionsPage.class));
 		add(new Label("wicketVersion", getApplication().getFrameworkSettings().getVersion()));
 	}

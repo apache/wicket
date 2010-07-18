@@ -19,7 +19,7 @@ package org.apache.wicket.devutils.inspector;
 import org.apache.wicket.Session;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.lang.Objects;
+import org.apache.wicket.util.lang.WicketObjects;
 
 public class SessionSizeModel extends LoadableDetachableModel<Bytes> {
 
@@ -33,7 +33,7 @@ public class SessionSizeModel extends LoadableDetachableModel<Bytes> {
 
 	@Override
 	protected Bytes load() {
-		return Bytes.bytes(Objects.sizeof(session));
+		return Bytes.bytes(WicketObjects.sizeof(session));
 	}
 
 	@Override

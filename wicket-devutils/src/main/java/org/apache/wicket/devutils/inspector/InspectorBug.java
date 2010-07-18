@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.devutils.inspector;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.devutils.DevUtilsPanel;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.image.NonCachingImage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * A page that shows interesting attributes of the Wicket environment, including the current session
@@ -45,9 +45,9 @@ public final class InspectorBug extends DevUtilsPanel
 	{
 		super(id);
 		PageParameters parameters = new PageParameters();
-		parameters.put("pageId", page.getId());
+		parameters.addNamedParameter("pageId", page.getId());
 		Link<?> link = new BookmarkablePageLink<Void>("link", InspectorPage.class, parameters);
-		link.add(new Image("bug"));
+		link.add(new NonCachingImage("bug"));
 		add(link);
 	}
 }

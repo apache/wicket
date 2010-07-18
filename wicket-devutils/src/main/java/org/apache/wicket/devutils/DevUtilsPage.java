@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.devutils;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.devutils.debugbar.DebugBar;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * All pages in the wicket-devutils package should extend this page so that they

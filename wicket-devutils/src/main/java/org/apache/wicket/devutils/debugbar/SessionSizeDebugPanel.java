@@ -18,13 +18,14 @@ package org.apache.wicket.devutils.debugbar;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.Session;
 import org.apache.wicket.devutils.inspector.LiveSessionsPage;
 import org.apache.wicket.devutils.inspector.SessionSizeModel;
 import org.apache.wicket.devutils.inspector.SessionTotalSizeModel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Bytes;
 
 /**
@@ -57,8 +58,7 @@ public class SessionSizeDebugPanel extends StandardDebugPanel {
 	@Override
 	protected ResourceReference getImageResourceReference() {
 		// TODO: need better image for this:
-		return new ResourceReference(SessionSizeDebugPanel.class,
-				"harddrive.png");
+		return new PackageResourceReference(SessionSizeDebugPanel.class, "harddrive.png");
 	}
 
 	@Override

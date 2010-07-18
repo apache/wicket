@@ -57,7 +57,5 @@ public final class ApplicationView extends DevUtilsPanel
 			application.getResourceSettings().getResourcePollFrequency()));
 		add(new Label("versionPages", "" +
 			application.getPageSettings().getVersionPagesByDefault()));
-		add(new Label("pageMapEvictionStrategy", "" +
-			application.getSessionSettings().getPageMapEvictionStrategy()));
 	}
 }

@@ -19,8 +19,9 @@ package org.apache.wicket.devutils.stateless;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
-import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.application.IComponentOnBeforeRenderListener;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 
 /**
  * Stateless checker. Checks if components with {@link StatelessComponent} annotation are really
@@ -57,9 +58,9 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 	{
 		if (StatelessChecker.mustCheck(component))
 		{
-			final IVisitor<Component> visitor = new Component.IVisitor<Component>()
+			final IVisitor<Component, Component> visitor = new IVisitor<Component, Component>()
 			{
-				public Object component(final Component comp)
+				public void component(final Component comp, final IVisit<Component> visit) 
 				{
 					if (component instanceof Page && StatelessChecker.mustCheck(comp))
 					{
@@ -69,15 +70,15 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 						// (for current component and for inspected one).
 						// We go deeper for Page because full tree will be inspected during
 						// isPageStateless call.
-						return IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+						visit.dontGoDeeper();
 					}
 					else if (!comp.isStateless())
 					{
-						return comp;
+						visit.stop(comp);
 					}
 					else
 					{
-						return IVisitor.CONTINUE_TRAVERSAL;
+						// continue
 					}
 				}
 			};

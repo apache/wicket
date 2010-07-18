@@ -24,7 +24,7 @@ import java.util.List;
 import org.apache.wicket.Application;
 import org.apache.wicket.devutils.DevUtilsPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.image.NonCachingImage;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PageableListView;
@@ -32,10 +32,10 @@ import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.DummyRequestLogger;
 import org.apache.wicket.protocol.http.IRequestLogger;
-import org.apache.wicket.protocol.http.RequestLogger;
+import org.apache.wicket.protocol.http.IRequestLogger.SessionData;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.http.RequestLogger.SessionData;
 import org.apache.wicket.util.lang.Bytes;
 
 
@@ -51,7 +51,7 @@ public class LiveSessionsPage extends DevUtilsPage
 	 */
 	public LiveSessionsPage()
 	{
-		add(new Image("bug"));
+		add(new NonCachingImage("bug"));
 
 		add(new ApplicationView("application", Application.get()));
 
@@ -178,7 +178,7 @@ public class LiveSessionsPage extends DevUtilsPage
 		if (webApplication.getRequestLogger() == null)
 		{
 			// make default one.
-			requestLogger = new RequestLogger();
+			requestLogger = new DummyRequestLogger();
 		}
 		else
 		{
