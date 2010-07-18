@@ -157,7 +157,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	{
 		onTimer(target);
 
-		if (!stopped)
+		if (!stopped && isEnabled(getComponent()))
 		{
 			target.getHeaderResponse().renderOnLoadJavascript(getJsTimeoutCall(updateInterval));
 		}
