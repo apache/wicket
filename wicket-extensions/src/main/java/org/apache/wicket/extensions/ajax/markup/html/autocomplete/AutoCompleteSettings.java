@@ -55,6 +55,10 @@ public final class AutoCompleteSettings implements IClusterable
 
 	private boolean showListOnEmptyInput = false;
 
+	private boolean useSmartPositioning = false;
+
+	private boolean useHideShowCoveredIEFix = true;
+
 	private String cssClassName = null;
 
 	private boolean adjustInputWidth = true;
@@ -150,6 +154,29 @@ public final class AutoCompleteSettings implements IClusterable
 	}
 
 	/**
+	 * Indicates whether the popup positioning will take into account browser window visible area or
+	 * not. (so always show popup bottom-right or not)
+	 * 
+	 * @return true if popup smart positioning is used, false otherwise.
+	 */
+	public boolean getUseSmartPositioning()
+	{
+		return useSmartPositioning;
+	}
+
+	/**
+	 * Indicates whether in case of IE (and Opera), "select" "iframe" and "applet" tags should be
+	 * hidden if covered by popup. (as they might appear on top)<br>
+	 * By default this is true (before this flag was added).
+	 * 
+	 * @return true if the fix/workaround should be used for IE and Opera, false otherwise.
+	 */
+	public boolean getUseHideShowCoveredIEFix()
+	{
+		return useHideShowCoveredIEFix;
+	}
+
+	/**
 	 * Indicates whether the autocomplete list will be shown if the input is empty.
 	 * 
 	 * @return true if the autocomlete list will be shown if the input string is empty, false
@@ -191,10 +218,12 @@ public final class AutoCompleteSettings implements IClusterable
 	 * 
 	 * @param cssClassName
 	 *            valid CSS class name
+	 * @return this {@link AutoCompleteSettings}.
 	 */
-	public void setCssClassName(final String cssClassName)
+	public AutoCompleteSettings setCssClassName(final String cssClassName)
 	{
 		this.cssClassName = cssClassName;
+		return this;
 	}
 
 	/**
@@ -218,10 +247,12 @@ public final class AutoCompleteSettings implements IClusterable
 	 * @param adjustInputWidth
 	 *            <code>true</code> if the autocompleter should have the same size as the input
 	 *            field, <code>false</code> for default browser behavior
+	 * @return this {@link AutoCompleteSettings}.
 	 */
-	public void setAdjustInputWidth(final boolean adjustInputWidth)
+	public AutoCompleteSettings setAdjustInputWidth(final boolean adjustInputWidth)
 	{
 		this.adjustInputWidth = adjustInputWidth;
+		return this;
 	}
 
 	/**
@@ -240,10 +271,12 @@ public final class AutoCompleteSettings implements IClusterable
 	 * 
 	 * @param showCompleteListOnFocusGain
 	 *            the flag
+	 * @return this {@link AutoCompleteSettings}.
 	 */
-	public void setShowCompleteListOnFocusGain(final boolean showCompleteListOnFocusGain)
+	public AutoCompleteSettings setShowCompleteListOnFocusGain(final boolean showCompleteListOnFocusGain)
 	{
 		this.showCompleteListOnFocusGain = showCompleteListOnFocusGain;
+		return this;
 	}
 
 	/**
@@ -262,9 +295,41 @@ public final class AutoCompleteSettings implements IClusterable
 	 * 
 	 * @param showListOnFocusGain
 	 *            the flag
+	 * @return this {@link AutoCompleteSettings}.
 	 */
-	public void setShowListOnFocusGain(final boolean showListOnFocusGain)
+	public AutoCompleteSettings setShowListOnFocusGain(final boolean showListOnFocusGain)
 	{
 		this.showListOnFocusGain = showListOnFocusGain;
+		return this;
 	}
+
+	/**
+	 * Sets whether the popup positioning will take into account browser window visible area or not. (so always show popup bottom-right or not)<br>
+	 * THIS WILL PRODUCE UNWANTED BEHAVIOR WITH IE versions < 8 (probably because of unreliable clientWidth/clientHeight browser element properties).
+	 * 
+	 * @param useSmartPositioning
+	 *            the flag
+	 * @return this {@link AutoCompleteSettings}.
+	 */
+	public AutoCompleteSettings setUseSmartPositioning(final boolean useSmartPositioning)
+	{
+		this.useSmartPositioning = useSmartPositioning;
+		return this;
+	}
+
+	/**
+	 * Indicates whether in case of IE (and Opera), "select" "iframe" and "applet" tags should be
+	 * hidden if covered by popup. (as they might appear on top)<br>
+	 * By default this is true (before this flag was added).
+	 * 
+	 * @param useHideShowCoveredIEFix
+	 *            the flag
+	 * @return this {@link AutoCompleteSettings}.
+	 */
+	public AutoCompleteSettings setUseHideShowCoveredIEFix(final boolean useHideShowCoveredIEFix)
+	{
+		this.useHideShowCoveredIEFix = useHideShowCoveredIEFix;
+		return this;
+	}
+
 }
