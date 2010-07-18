@@ -371,5 +371,6 @@ public class PersistentPageManager extends AbstractPageManager
 	public void destroy()
 	{
 		managers.remove(applicationName);
+		pageStore.destroy();
 	}
 }
