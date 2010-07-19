@@ -385,15 +385,16 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Initialize; if you need the wicket servlet for initialization, e.g. because you want to read
-	 * an initParameter from web.xml or you want to read a resource from the servlet's context path,
-	 * you can override this method and provide custom initialization. This method is called right
-	 * after this application class is constructed, and the wicket servlet is set. <strong>Use this
-	 * method for any application setup instead of the constructor.</strong>
+	 * Initialize; if you need the wicket servlet/filter for initialization, e.g. because you want
+	 * to read an initParameter from web.xml or you want to read a resource from the servlet's
+	 * context path, you can override this method and provide custom initialization. This method is
+	 * called right after this application class is constructed, and the wicket servlet/filter is
+	 * set. <strong>Use this method for any application setup instead of the constructor.</strong>
 	 */
 	@Override
 	protected void init()
 	{
+		super.init();
 	}
 
 	/**
