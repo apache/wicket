@@ -22,7 +22,7 @@ import org.apache.wicket.request.component.IRequestableComponent;
 /**
  * Request handler that works with a component.
  * 
- * @author Matje Knopp
+ * @author Matej Knopp
  */
 public interface IComponentRequestHandler extends IRequestHandler
 {
