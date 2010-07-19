@@ -20,13 +20,20 @@ import org.apache.wicket.markup.html.pages.ExceptionErrorPage;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.EmptyRequestHandler;
+import org.apache.wicket.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.mapper.StalePageException;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
 
+/**
+ * If an exception is thrown when a page is being rendered this mapper will decide which error page
+ * to show depending on the exception type and {@link Application#getExceptionSettings() application
+ * configuration}
+ */
 public class DefaultExceptionMapper implements IExceptionMapper
 {
 
@@ -51,9 +58,9 @@ public class DefaultExceptionMapper implements IExceptionMapper
 
 			if (IExceptionSettings.SHOW_EXCEPTION_PAGE.equals(unexpectedExceptionDisplay))
 			{
-				return new RenderPageRequestHandler(new PageProvider(
-				// TODO WICKET-NG How to provide the page to ExceptionErrorPage ?!
-					new ExceptionErrorPage(e, null)));
+				Page currentPage = extractCurrentPage();
+				return new RenderPageRequestHandler(new PageProvider(new ExceptionErrorPage(e,
+					currentPage)));
 			}
 			else if (IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE.equals(unexpectedExceptionDisplay))
 			{
@@ -66,5 +73,25 @@ public class DefaultExceptionMapper implements IExceptionMapper
 				return new EmptyRequestHandler();
 			}
 		}
+	}
+
+	/**
+	 * @return the page being rendered when the exception was thrown, or {@code null} if it cannot
+	 *         be extracted
+	 */
+	private Page extractCurrentPage()
+	{
+		final RequestCycle requestCycle = RequestCycle.get();
+		final IRequestHandler activeRequestHandler = requestCycle.getActiveRequestHandler();
+
+		Page currentPage = null;
+
+		if (activeRequestHandler instanceof IPageRequestHandler)
+		{
+			IPageRequestHandler pageRequestHandler = (IPageRequestHandler)activeRequestHandler;
+			currentPage = (Page)pageRequestHandler.getPage();
+		}
+
+		return currentPage;
 	}
 }

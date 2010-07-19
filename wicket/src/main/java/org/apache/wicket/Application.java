@@ -59,6 +59,7 @@ import org.apache.wicket.protocol.http.DummyRequestLogger;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebSession;
+import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
@@ -1483,9 +1484,8 @@ public abstract class Application implements UnboundListener
 
 	public final RequestCycle createRequestCycle(Request request, Response response)
 	{
-		// FIXME exception mapper should come from elsewhere
 		RequestCycleContext context = new RequestCycleContext(request, response,
-			getRootRequestMapper(), new DefaultExceptionMapper());
+			getRootRequestMapper(), newExceptionMapper());
 
 		RequestCycle requestCycle = getRequestCycleProvider().get(context);
 		requestCycle.register(new RequestCycle.DetachCallback()
@@ -1496,6 +1496,15 @@ public abstract class Application implements UnboundListener
 			}
 		});
 		return requestCycle;
+	}
+
+	/**
+	 * @return a mapper that knows what kind of error page to show when an exception occurs during
+	 *         page rendering
+	 */
+	protected IExceptionMapper newExceptionMapper()
+	{
+		return new DefaultExceptionMapper();
 	}
 
 	/**
