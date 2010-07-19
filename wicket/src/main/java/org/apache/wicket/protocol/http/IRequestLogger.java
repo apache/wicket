@@ -424,4 +424,24 @@ public interface IRequestLogger
 		}
 	}
 
+	/**
+	 * This interface can be implemented in a custom session object. to give an object that has more
+	 * information for the current session (state of session).
+	 * 
+	 * @author jcompagner
+	 */
+	public interface ISessionLogInfo
+	{
+
+		/**
+		 * If you use the request logger log functionality then this object should have a nice
+		 * String representation. So make sure that the toString() is implemented for the returned
+		 * object.
+		 * 
+		 * @return The custom object stored in the request loggers current request.
+		 */
+		Object getSessionInfo();
+	}
+
+
 }
