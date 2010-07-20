@@ -151,7 +151,7 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	 */
 	public Component getLoadingComponent(final String markupId)
 	{
-		return new Label(markupId, "<img src=\"" +
+		return new Label(markupId, "<img alt=\"Loading...\" src=\"" +
 			RequestCycle.get().urlFor(AbstractDefaultAjaxBehavior.INDICATOR) + "\"/>").setEscapeModelStrings(false);
 	}
 
