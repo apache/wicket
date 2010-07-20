@@ -276,10 +276,15 @@ public class BaseWicketTester
 		application.setRequestCycleProvider(new TestRequestCycleProvider(
 			application.getRequestCycleProvider()));
 		application.setSessionStoreProvider(new TestSessionStoreProvider());
-		application.setPageManagerProvider(new TestPageManagerProvider());
+		application.setPageManagerProvider(newTestPageManagerProvider());
 
 		// prepare session
 		setupNextRequestCycle();
+	}
+
+	protected IPageManagerProvider newTestPageManagerProvider()
+	{
+		return new TestPageManagerProvider();
 	}
 
 	/**
@@ -1305,8 +1310,9 @@ public class BaseWicketTester
 	public Result hasNoErrorMessage()
 	{
 		List<Serializable> messages = getMessages(FeedbackMessage.ERROR);
-		return isTrue("expect no error message, but contains\n" +
-			WicketTesterHelper.asLined(messages), messages.isEmpty());
+		return isTrue(
+			"expect no error message, but contains\n" + WicketTesterHelper.asLined(messages),
+			messages.isEmpty());
 	}
 
 	/**
@@ -1317,8 +1323,9 @@ public class BaseWicketTester
 	public Result hasNoInfoMessage()
 	{
 		List<Serializable> messages = getMessages(FeedbackMessage.INFO);
-		return isTrue("expect no info message, but contains\n" +
-			WicketTesterHelper.asLined(messages), messages.isEmpty());
+		return isTrue(
+			"expect no info message, but contains\n" + WicketTesterHelper.asLined(messages),
+			messages.isEmpty());
 	}
 
 	/**

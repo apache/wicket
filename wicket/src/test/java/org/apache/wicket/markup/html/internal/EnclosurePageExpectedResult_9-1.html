@@ -2,10 +2,7 @@
 <body>
   <form wicket:id="form" id="form1" method="post" action="page?1-1.IFormSubmitListener-form"><div style="display:none"><input type="hidden" name="form1_hf_0" id="form1_hf_0" /></div>
     <!-- does Wicket behave different if the enclosure child is a FormComponent?? Needs testing -->
-    <wicket:enclosure child="label">
-      <input wicket:id="input" type="checkbox" checked="checked" name="input"/>
-      <span wicket:id="label"></span>
-    </wicket:enclosure>
+    <wicket:enclosure child="label"></wicket:enclosure>
   </form>
 </body>
 </html>

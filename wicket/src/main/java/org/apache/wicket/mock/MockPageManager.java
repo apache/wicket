@@ -47,6 +47,7 @@ public class MockPageManager implements IPageManager
 
 	public void destroy()
 	{
+		pages.clear();
 	}
 
 	public IManageablePage getPage(int id)
@@ -70,7 +71,7 @@ public class MockPageManager implements IPageManager
 
 	public boolean supportsVersioning()
 	{
-		return false;
+		return true;
 	}
 
 	public void touchPage(IManageablePage page)

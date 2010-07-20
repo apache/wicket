@@ -38,6 +38,8 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.page.IManageablePage;
+import org.apache.wicket.pageStore.IPageManager;
+import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
@@ -177,25 +179,18 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
-	 * When passed to {@link Page#getVersion(int)} the latest page version is returned.
-	 */
-	public static final int LATEST_VERSION = -1;
-
-	/**
 	 * This is a thread local that is used for serializing page references in this page.It stores a
 	 * {@link IPageSerializer} which can be set by the outside world to do the serialization of this
 	 * page.
 	 */
 	public static final ThreadLocal<IPageSerializer> serializer = new ThreadLocal<IPageSerializer>();
 
-	/** True if a new version was created for this request. */
-	private static final short FLAG_NEW_VERSION = FLAG_RESERVED3;
+	/** True if the page hierarchy has been modified in the current request. */
+	private static final int FLAG_IS_DIRTY = FLAG_RESERVED3;
 
 	/** True if the page should try to be stateless */
 	private static final int FLAG_STATELESS_HINT = FLAG_RESERVED5;
 
-	/** True if component changes are being tracked. */
-	private static final short FLAG_TRACK_CHANGES = FLAG_RESERVED4;
 
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Page.class);
@@ -225,7 +220,13 @@ public abstract class Page extends MarkupContainer
 	/** Page parameters used to construct this page */
 	private final PageParameters pageParameters;
 
-	/** page render count TODO WICKET-NG more javadoc */
+	/**
+	 * The purpose of render count is to detect stale listener interface links. For example: there
+	 * is a page A rendered in tab 1. Then page A is opened also in tab 2. During render page state
+	 * changes (i.e. some repeater gets rebuilt). This makes all links on tab 2 stale - because they
+	 * no longer match the actual page state. This is done by incrementing render count. When link
+	 * is clicked Wicket checks if it's render count matches the render count value of page
+	 */
 	private int renderCount = 0;
 
 	/** TODO WICKET-NG JAVADOC */
@@ -393,11 +394,20 @@ public abstract class Page extends MarkupContainer
 
 
 	/**
-	 * Mark this page as dirty in the session
+	 * Mark this page as modified in the session. If versioning is supported then a new version of
+	 * the page will be stored in {@link IPageStore page store}
 	 */
 	public final void dirty()
 	{
-		// TODO: Increment page id here if manager supports versioning
+		checkHierarchyChange(this);
+
+		final IPageManager pageManager = getSession().getPageManager();
+		if (isVersioned() && pageManager.supportsVersioning() && !getFlag(FLAG_IS_DIRTY))
+		{
+			setFlag(FLAG_IS_DIRTY, true);
+			setNextAvailableId();
+			pageManager.touchPage(this);
+		}
 	}
 
 	/**
@@ -701,8 +711,8 @@ public abstract class Page extends MarkupContainer
 	@Override
 	public String toString()
 	{
-		return "[Page class = " + getClass().getName() + ", id = " + getId() + ", version = " + 0 +
-			"]";
+		return "[Page class = " + getClass().getName() + ", id = " + getId() + ", render count = " +
+			getRenderCount() + "]";
 	}
 
 	/**
@@ -828,30 +838,6 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE.
-	 * 
-	 * TODO WICKET-NG review if we need this
-	 */
-	private final void endVersion()
-	{
-		// Any changes to the page after this point will be tracked by the
-		// page's version manager. Since trackChanges is never set to false,
-		// this effectively means that change tracking begins after the
-		// first request to a page completes.
-		setFlag(FLAG_TRACK_CHANGES, true);
-
-		// If a new version was created
-		if (getFlag(FLAG_NEW_VERSION))
-		{
-			// Reset boolean for next request
-			setFlag(FLAG_NEW_VERSION, false);
-
-			// Evict any page version(s) as need be
-			// getApplication().getSessionSettings().getPageMapEvictionStrategy().evict(getPageMap());
-		}
-	}
-
-	/**
 	 * Initializes Page by adding it to the Session and initializing it.
 	 * 
 	 * @param pageMap
@@ -863,8 +849,6 @@ public abstract class Page extends MarkupContainer
 		{
 			setStatelessHint(true);
 		}
-
-		setNextAvailableId();
 
 		// Set versioning of page based on default
 		setVersioned(Application.get().getPageSettings().getVersionPagesByDefault());
@@ -894,6 +878,10 @@ public abstract class Page extends MarkupContainer
 	 */
 	protected void componentChanged(Component component, MarkupContainer parent)
 	{
+		if (!component.isAuto())
+		{
+			dirty();
+		}
 	}
 
 	/**
@@ -1081,7 +1069,7 @@ public abstract class Page extends MarkupContainer
 			// trigger creation of the actual session in case it was deferred
 			Session.get().getSessionStore().getSessionId(RequestCycle.get().getRequest(), true);
 
-			// Add/touch the response page in the session (its pagemap).
+			// Add/touch the response page in the session.
 			getSession().getPageManager().touchPage(this);
 		}
 
@@ -1109,9 +1097,7 @@ public abstract class Page extends MarkupContainer
 			log.debug("ending request for page " + this + ", request " + getRequest());
 		}
 
-		endVersion();
-
-		dirty();
+		setFlag(FLAG_IS_DIRTY, false);
 
 		super.onDetach();
 	}
@@ -1144,7 +1130,10 @@ public abstract class Page extends MarkupContainer
 			initialize();
 		}
 
-		dirty();
+		if (!component.isAuto())
+		{
+			dirty();
+		}
 	}
 
 	/**
@@ -1166,7 +1155,10 @@ public abstract class Page extends MarkupContainer
 	 */
 	final void componentRemoved(final Component component)
 	{
-		dirty();
+		if (!component.isAuto())
+		{
+			dirty();
+		}
 	}
 
 	/**
@@ -1176,7 +1168,10 @@ public abstract class Page extends MarkupContainer
 	 */
 	final void componentStateChanging(final Component component)
 	{
-		dirty();
+		if (!component.isAuto())
+		{
+			dirty();
+		}
 	}
 
 

@@ -171,7 +171,7 @@ public class EnclosureTest extends WicketTestCase
 
 		page.reset();
 		page.get("form:label").setVisible(false);
-		executePage(page, "EnclosurePageExpectedResult_9-2.html");
+		executePage(page, "EnclosurePageExpectedResult_9-1.html");
 		// It should be FALSE, but because of auto-component etc. it doesn't
 		// assertFalse(page.inputOnBeforeRender);
 		assertTrue(page.inputOnBeforeRender);
@@ -180,7 +180,7 @@ public class EnclosureTest extends WicketTestCase
 
 		page.reset();
 		page.get("form:label").setVisible(true);
-		executePage(page, "EnclosurePageExpectedResult_9.html");
+		executePage(page, "EnclosurePageExpectedResult_9-1-1.html");
 		assertTrue(page.inputOnBeforeRender);
 		assertFalse(page.inputValidate);
 		assertTrue(page.labelOnBeforeRender);
@@ -201,14 +201,14 @@ public class EnclosureTest extends WicketTestCase
 
 		page.reset();
 		page.get("form:label").setVisible(true);
-		executePage(page, "EnclosurePageExpectedResult_9-3.html");
+		executePage(page, "EnclosurePageExpectedResult_9-3-1.html");
 		assertFalse(page.inputOnBeforeRender);
 		assertFalse(page.inputValidate);
 		assertTrue(page.labelOnBeforeRender);
 
 		page.reset();
 		page.get("form:input").setVisible(true);
-		executePage(page, "EnclosurePageExpectedResult_9.html");
+		executePage(page, "EnclosurePageExpectedResult_9-3-2.html");
 		assertTrue(page.inputOnBeforeRender);
 		assertFalse(page.inputValidate);
 		assertTrue(page.labelOnBeforeRender);
@@ -226,8 +226,9 @@ public class EnclosureTest extends WicketTestCase
 
 		page.reset();
 		FormTester formTester = tester.newFormTester("form");
-		tester.getRequest().getPostParameters().setParameterValue(
-			((CheckBox)page.get("form:input")).getInputName(), "true");
+		tester.getRequest()
+			.getPostParameters()
+			.setParameterValue(((CheckBox)page.get("form:input")).getInputName(), "true");
 		page.get("form:label").setVisible(true);
 		formTester.submit();
 		tester.assertRenderedPage(clazz);
@@ -237,12 +238,13 @@ public class EnclosureTest extends WicketTestCase
 		assertTrue(page.labelOnBeforeRender);
 
 		page.reset();
-		tester.getRequest().getPostParameters().setParameterValue(
-			((CheckBox)page.get("form:input")).getInputName(), "true");
+		tester.getRequest()
+			.getPostParameters()
+			.setParameterValue(((CheckBox)page.get("form:input")).getInputName(), "true");
 		page.get("form:label").setVisible(false);
 		tester.submitForm("form");
 		tester.assertRenderedPage(clazz);
-		assertResultPage("EnclosurePageExpectedResult_9-2.html");
+		assertResultPage("EnclosurePageExpectedResult_9-2-1.html");
 		// It should be FALSE, but because of auto-component etc. it doesn't
 		// assertFalse(page.inputOnBeforeRender);
 		assertTrue(page.inputOnBeforeRender);
