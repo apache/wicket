@@ -65,8 +65,9 @@ public class AjaxLazyLoadPanelTesterTest extends WicketTestCase
 
 		});
 		tester.startPage(dummyPanelPage);
-		tester.assertLabel("panel:content",
-			"<img src=\"resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/indicator.gif\"/>");
+		tester.assertLabel(
+			"panel:content",
+			"<img alt=\"Loading...\" src=\"resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/indicator.gif\"/>");
 		AjaxLazyLoadPanelTester.executeAjaxLazyLoadPanel(tester, dummyPanelPage);
 		tester.debugComponentTrees();
 		tester.assertLabel("panel:content", "lazy panel test");
