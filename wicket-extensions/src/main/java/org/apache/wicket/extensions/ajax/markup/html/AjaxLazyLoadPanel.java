@@ -150,7 +150,7 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	{
 		IRequestHandler handler = new ResourceReferenceRequestHandler(
 			AbstractDefaultAjaxBehavior.INDICATOR);
-		return new Label(markupId, "<img src=\"" + RequestCycle.get().renderUrlFor(handler) +
+		return new Label(markupId, "<img alt=\"Loading...\" src=\"" + RequestCycle.get().renderUrlFor(handler) +
 			"\"/>").setEscapeModelStrings(false);
 	}
 
