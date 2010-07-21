@@ -219,6 +219,8 @@ import org.slf4j.LoggerFactory;
 public abstract class Component implements IClusterable, IConverterLocator, IRequestableComponent
 {
 
+	/** True when component has been configured, had {@link #onConfigure()} called */
+	protected static final int FLAG_CONFIGURED = 0x800000;
 
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Component.class);
@@ -857,6 +859,66 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	}
 
 	/**
+	 * Called once per request on components before they are about to be rendered. This method
+	 * should be used to configure such things as visibility and enabled flags.
+	 * <p>
+	 * NOTE: Component hierarchy should not be modified inside this method, instead it should be
+	 * done in {@link #onBeforeRender()}
+	 * </p>
+	 * <p>
+	 * NOTE: Why this method is preferrable to directly overriding {@link #isVisible()} and
+	 * {@link #isEnabled()}? Because those methods are called multiple times even for processing of
+	 * a single request. If they contain expensive logic they can slow down the response time of the
+	 * entire page. Further, overriding those methods directly on form components may lead to
+	 * inconsistent or unexpected state depending on when those methods are called in the form
+	 * processing workflow. It is a better practice to push changes to state rather than pull.
+	 * </p>
+	 * <p>
+	 * NOTE: If component's visibility or another property depends on another component you may call
+	 * {@code other.configure()} followed by {@code other.isVisible()} as mentioned in
+	 * {@link #configure()} javadoc.
+	 * </p>
+	 * <p>
+	 * NOTE: Why should {@link #onBeforeRender()} not be used for this? Because if visibility of a
+	 * component is toggled inside {@link #onBeforeRender()} another method needs to be overridden
+	 * to make sure {@link #onBeforeRender()} will be invoked on ivisible components:
+	 * 
+	 * <pre>
+	 * class MyComponent extends WebComponent
+	 * {
+	 * 	protected void onBeforeRender()
+	 * 	{
+	 * 		setVisible(Math.rand() &gt; 0.5f);
+	 * 		super.onBeforeRender();
+	 * 	}
+	 * 
+	 * 	// if this override is forgotten, once invisible component will never become visible
+	 * 	protected boolean callOnBeforeRenderIfNotVisible()
+	 * 	{
+	 * 		return true;
+	 * 	}
+	 * }
+	 * </pre>
+	 * 
+	 * VS
+	 * 
+	 * <pre>
+	 * class MyComponent extends WebComponent
+	 * {
+	 * 	protected void onConfigure()
+	 * 	{
+	 * 		setVisible(Math.rand() &gt; 0.5f);
+	 * 		super.onConfigure();
+	 * 	}
+	 * }
+	 * </pre>
+	 */
+	protected void onConfigure()
+	{
+
+	}
+
+	/**
 	 * This method is meant to be used as an alternative to initialize components. Usually the
 	 * component's constructor is used for this task, but sometimes a component cannot be
 	 * initialized in isolation, it may need to access its parent component or its markup in order
@@ -1022,6 +1084,8 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	 */
 	private final void internalBeforeRender()
 	{
+		configure();
+
 		if ((determineVisibility() || callOnBeforeRenderIfNotVisible()) &&
 			!getFlag(FLAG_RENDERING) && !getFlag(FLAG_PREPARED_FOR_RENDER))
 		{
@@ -1084,6 +1148,43 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	}
 
 	/**
+	 * Triggers {@link #onConfigure()} to be invoked on this component if it has not already during
+	 * this request.
+	 * <p>
+	 * This method should be invoked before any calls to {@link #isVisible()} or
+	 * {@link #isEnabled()}. Usually this method will be called by the framework before the
+	 * component is rendered and so users should not need to call it; however, in cases where
+	 * visibility or enabled or other state of one component depends on the state of another this
+	 * method should be manually invoked on the other component by the user. EG to link visiliby of
+	 * two markup containers the following should be done:
+	 * 
+	 * <pre>
+	 * final WebMarkupContainer source=new WebMarkupContainer("a") {
+	 * 	protected void onConfigure() {
+	 *    setVisible(Math.rand()>0.5f);
+	 *  }
+	 * };
+	 * 
+	 * WebMarkupContainer linked=new WebMarkupContainer("b") {
+	 * 	protected void onConfigure() {
+	 * 		source.configure(); // make sure source is configured
+	 * 		setVisible(source.isVisible());
+	 *  }
+	 * }
+	 * </pre>
+	 * 
+	 * </p>
+	 */
+	public final void configure()
+	{
+		if (!getFlag(FLAG_CONFIGURED))
+		{
+			onConfigure();
+			setFlag(FLAG_CONFIGURED, true);
+		}
+	}
+
+	/**
 	 * Redirects to any intercept page previously specified by a call to redirectToInterceptPage.
 	 * 
 	 * @return True if an original destination was redirected to
@@ -1141,6 +1242,8 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 				" has not called super.onDetach() in the override of onDetach() method");
 		}
 		setFlag(FLAG_ATTACHED, false);
+
+		setFlag(FLAG_CONFIGURED, false);
 
 		// always detach models because they can be attached without the
 		// component. eg component has a compoundpropertymodel and one of its
@@ -3665,7 +3768,7 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 			if (model instanceof IComponentInheritedModel)
 			{
 				// return the shared inherited
-				foundModel = ((IComponentInheritedModel)model).wrapOnInheritance(this);
+				foundModel = ((IComponentInheritedModel<?>)model).wrapOnInheritance(this);
 				setFlag(FLAG_INHERITABLE_MODEL, true);
 				break;
 			}
@@ -3775,7 +3878,14 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	 *         default false.
 	 * 
 	 * @see Component#onBeforeRender()
+	 * 
+	 * 
+	 * @deprecated this was only useful for controlling visibility from inside
+	 *             {@link #onBeforeRender()}, with the addition of {@link #onConfigure()} this is
+	 *             now obsolete.
 	 */
+	// TODO remove in 1.5
+	@Deprecated
 	protected boolean callOnBeforeRenderIfNotVisible()
 	{
 		return false;
