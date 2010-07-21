@@ -30,9 +30,12 @@ import junit.framework.AssertionFailedError;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.feedback.FeedbackMessage;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.MockHttpServletResponse;
@@ -523,6 +526,36 @@ public class WicketTester extends BaseWicketTester
 	public void assertPageLink(String path, Class<? extends Page> expectedPageClass)
 	{
 		assertResult(isPageLink(path, expectedPageClass));
+	}
+
+	/**
+	 * Asserts that that the BookmarkablePageLink identified by "id" points to the page as expected
+	 * - including parameters.
+	 * 
+	 * @param id
+	 * @param pageClass
+	 * @param parameters
+	 */
+	public void assertBookmarkablePageLink(final String id,
+		final Class<? extends WebPage> pageClass, final String parameters)
+	{
+		BookmarkablePageLink<?> pageLink = null;
+		try
+		{
+			pageLink = (BookmarkablePageLink<?>)getComponentFromLastRenderedPage(id);
+		}
+		catch (ClassCastException e)
+		{
+			throw new IllegalArgumentException("Component with id:" + id +
+				" is not a BookmarkablePageLink");
+		}
+
+		Assert.assertEquals("BookmarkablePageLink: " + id + " is pointing to the wrong page",
+			pageClass, pageLink.getPageClass());
+
+		Assert.assertEquals(
+			"One or more of the parameters associated with the BookmarkablePageLink: " + id +
+				" do not match", new PageParameters(parameters), pageLink.getPageParameters());
 	}
 
 	/**
