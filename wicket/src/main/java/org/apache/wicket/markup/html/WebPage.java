@@ -322,10 +322,9 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 *            Name of link
 	 * @return Link to home page for this application
 	 */
-	@SuppressWarnings("unchecked")
-	protected final BookmarkablePageLink<?> homePageLink(final String id)
+	protected final BookmarkablePageLink<Void> homePageLink(final String id)
 	{
-		return new BookmarkablePageLink<Void>(id, (Class)getApplication().getHomePage());
+		return new BookmarkablePageLink<Void>(id, getApplication().getHomePage());
 	}
 
 }
