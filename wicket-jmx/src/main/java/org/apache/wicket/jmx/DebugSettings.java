@@ -66,4 +66,85 @@ public class DebugSettings implements DebugSettingsMBean
 	{
 		application.getDebugSettings().setComponentUseCheck(check);
 	}
+
+	/**
+	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setOutputComponentPath(boolean)
+	 */
+	public void setOutputComponentPath(boolean enabled)
+	{
+		application.getDebugSettings().setOutputComponentPath(enabled);
+	}
+
+	/**
+	 * @see org.apache.wicket.jmx.DebugSettingsMBean#isOutputComponentPath()
+	 */
+	public boolean isOutputComponentPath()
+	{
+		return application.getDebugSettings().isOutputComponentPath();
+	}
+
+
+	/**
+	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setOutputMarkupContainerClassName(boolean)
+	 */
+	public void setOutputMarkupContainerClassName(boolean enable)
+	{
+		application.getDebugSettings().setOutputMarkupContainerClassName(enable);
+	}
+
+	/**
+	 * @see org.apache.wicket.jmx.DebugSettingsMBean#isOutputMarkupContainerClassName()
+	 */
+	public boolean isOutputMarkupContainerClassName()
+	{
+		return application.getDebugSettings().isOutputMarkupContainerClassName();
+	}
+
+	/**
+	 * @see org.apache.wicket.jmx.DebugSettingsMBean#isLinePreciseReportingOnAddComponentEnabled()
+	 */
+	public boolean isLinePreciseReportingOnAddComponentEnabled()
+	{
+		return application.getDebugSettings().isLinePreciseReportingOnAddComponentEnabled();
+	}
+
+	/**
+	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setLinePreciseReportingOnAddComponentEnabled(boolean)
+	 */
+	public void setLinePreciseReportingOnAddComponentEnabled(boolean enable)
+	{
+		application.getDebugSettings().setLinePreciseReportingOnAddComponentEnabled(enable);
+	}
+
+	/**
+	 * @see org.apache.wicket.jmx.DebugSettingsMBean#isLinePreciseReportingOnNewComponentEnabled()
+	 */
+	public boolean isLinePreciseReportingOnNewComponentEnabled()
+	{
+		return application.getDebugSettings().isLinePreciseReportingOnNewComponentEnabled();
+	}
+
+	/**
+	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setLinePreciseReportingOnNewComponentEnabled(boolean)
+	 */
+	public void setLinePreciseReportingOnNewComponentEnabled(boolean enable)
+	{
+		application.getDebugSettings().setLinePreciseReportingOnNewComponentEnabled(enable);
+	}
+
+	/**
+	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setDevelopmentUtilitiesEnabled(boolean)
+	 */
+	public void setDevelopmentUtilitiesEnabled(boolean enable)
+	{
+		application.getDebugSettings().setDevelopmentUtilitiesEnabled(enable);
+	}
+
+	/**
+	 * @see org.apache.wicket.jmx.DebugSettingsMBean#isDevelopmentUtilitiesEnabled()
+	 */
+	public boolean isDevelopmentUtilitiesEnabled()
+	{
+		return application.getDebugSettings().isDevelopmentUtilitiesEnabled();
+	}
 }
