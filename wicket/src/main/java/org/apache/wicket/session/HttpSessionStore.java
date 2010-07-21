@@ -131,7 +131,7 @@ public class HttpSessionStore implements ISessionStore
 	 * @see org.apache.wicket.session.ISessionStore#getSessionId(org.apache.org.apache.wicket.request.Request,
 	 *      boolean)
 	 */
-	public final String getSessionId(final Request request, final boolean create)
+	public String getSessionId(final Request request, final boolean create)
 	{
 		String id = null;
 
