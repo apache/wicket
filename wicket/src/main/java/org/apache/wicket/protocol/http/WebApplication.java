@@ -301,8 +301,9 @@ public abstract class WebApplication extends Application
 	 * @param bookmarkablePageClass
 	 *            the bookmarkable page class to mount
 	 * 
-	 * @deprecated use mounted mapper instead, this method can be represented as
-	 *             {@code getRootRequestMapperAsCompound().add(new MountedMapper(path, bookmarkablePageClass))}
+	 * @deprecated use mounted mapper instead, this method can be represented as {@code
+	 *             getRootRequestMapperAsCompound().add(new MountedMapper(path,
+	 *             bookmarkablePageClass))}
 	 */
 	@Deprecated
 	public final <T extends Page> void mountBookmarkablePage(final String path,
@@ -359,6 +360,8 @@ public abstract class WebApplication extends Application
 	/**
 	 * @param sessionId
 	 *            The session id that was destroyed
+	 * 
+	 * @TODO This method is not called anymore by anybody
 	 */
 	public void sessionDestroyed(String sessionId)
 	{
