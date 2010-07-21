@@ -43,7 +43,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractHttpSessionStore implements ISessionStore
 {
-
 	/**
 	 * Reacts on unbinding from the session by cleaning up the session related application data.
 	 */
@@ -171,10 +170,10 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 		// nop
 	}
 
-	/*
+	/**
 	 * @see org.apache.wicket.session.ISessionStore#getSessionId(org.apache.wicket.Request, boolean)
 	 */
-	public final String getSessionId(Request request, boolean create)
+	public String getSessionId(final Request request, final boolean create)
 	{
 		String id = null;
 		WebRequest webRequest = toWebRequest(request);
