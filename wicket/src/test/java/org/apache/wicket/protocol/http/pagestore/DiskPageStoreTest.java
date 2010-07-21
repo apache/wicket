@@ -18,6 +18,10 @@ package org.apache.wicket.protocol.http.pagestore;
 
 import junit.framework.TestCase;
 
+import org.apache.wicket.Page;
+import org.apache.wicket.Session;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
@@ -70,5 +74,29 @@ public class DiskPageStoreTest extends TestCase
 		}
 
 		assertEquals(activeThreadsBefore - 1, activeThreadsAfter);
+	}
+
+	/**
+	 * 
+	 */
+	public void testExceptionInSessionDestroy()
+	{
+		WicketTester tester = new WicketTester(new WebApplication()
+		{
+			@Override
+			public void sessionDestroyed(String sessionId)
+			{
+				throw new NullPointerException("Error");
+			}
+
+			@Override
+			public Class<? extends Page> getHomePage()
+			{
+				return DummyHomePage.class;
+			}
+		});
+
+		tester.startPage(DummyHomePage.class);
+		Session.get().invalidateNow();
 	}
 }
