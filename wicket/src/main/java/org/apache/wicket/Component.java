@@ -4023,6 +4023,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * Called once per request on components before they are about to be rendered. This method
 	 * should be used to configure such things as visibility and enabled flags.
 	 * <p>
+	 * Overrides must call {@code super.onInitialize()}, usually before any other code
+	 * </p>
+	 * <p>
 	 * NOTE: Component hierarchy should not be modified inside this method, instead it should be
 	 * done in {@link #onBeforeRender()}
 	 * </p>
