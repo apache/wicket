@@ -225,7 +225,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 				// can safely be ignored
 				log.warn("Error while invalidating Session Store: Session already invalidated", e);
 			}
-			catch (Throwable e)
+			catch (Exception e)
 			{
 				// can safely be ignored
 				log.error("Error while invalidating Session Store: ", e);
