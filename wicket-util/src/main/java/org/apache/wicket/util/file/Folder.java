@@ -28,7 +28,7 @@ import java.util.List;
  * 
  * @author Jonathan Locke
  */
-public final class Folder extends File
+public class Folder extends File
 {
 	/**
 	 * Filter for files
@@ -145,6 +145,15 @@ public final class Folder extends File
 		{
 			throw new IOException("Unable to create folder " + this);
 		}
+	}
+	
+	/**
+	 * @param name Name of child folder
+	 * @return Child file object
+	 */
+	public Folder folder(final String name)
+	{
+	    return new Folder(this, name);
 	}
 
 	/**

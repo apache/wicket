@@ -58,7 +58,11 @@ public final class DurationTest extends TestCase
 	public void testOperations()
 	{
 		Assert.assertTrue(Duration.milliseconds(3001).greaterThan(Duration.seconds(3)));
+		Assert.assertTrue(Duration.milliseconds(3001).greaterThanOrEqual(Duration.seconds(3)));
+		Assert.assertTrue(Duration.milliseconds(3000).greaterThanOrEqual(Duration.seconds(3)));
 		Assert.assertTrue(Duration.milliseconds(2999).lessThan(Duration.seconds(3)));
+		Assert.assertTrue(Duration.milliseconds(2999).lessThanOrEqual(Duration.seconds(3)));
+		Assert.assertTrue(Duration.milliseconds(3000).lessThanOrEqual(Duration.seconds(3)));
 		Assert.assertEquals(-1, Duration.milliseconds(2999).compareTo(Duration.seconds(3)));
 		Assert.assertEquals(1, Duration.milliseconds(3001).compareTo(Duration.seconds(3)));
 		Assert.assertEquals(0, Duration.milliseconds(3000).compareTo(Duration.seconds(3)));

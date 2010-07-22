@@ -17,10 +17,16 @@
 package org.apache.wicket.util.file;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.URI;
 
 import org.apache.wicket.util.io.Streams;
@@ -57,7 +63,9 @@ public class File extends java.io.File implements IModifiable
 	 * Construct.
 	 * 
 	 * @param parent
+	 *            parent
 	 * @param child
+	 *            child
 	 */
 	public File(final java.io.File parent, final String child)
 	{
@@ -109,7 +117,16 @@ public class File extends java.io.File implements IModifiable
 	{
 		super(uri);
 	}
-
+	
+	/**
+	 * @param name Name of child file
+	 * @return Child file object
+	 */
+	public File file(final String name)
+	{
+	    return new File(this, name);
+	}
+	
 	/**
 	 * @return File extension (whatever is after the last '.' in the file name)
 	 */
@@ -130,22 +147,51 @@ public class File extends java.io.File implements IModifiable
 	{
 		return new Folder(getParent());
 	}
-
+	
+	/**
+	 * @return Input stream that reads this file
+	 * @throws FileNotFoundException Thrown if the file cannot be found
+	 */
+	public InputStream inputStream() throws FileNotFoundException
+	{
+	    return new BufferedInputStream(new FileInputStream(this));
+	}
+	
 	/**
 	 * Returns a Time object representing the most recent time this file was modified.
 	 * 
 	 * @return This file's lastModified() value as a Time object
 	 */
-	public final Time lastModifiedTime()
+	public  Time lastModifiedTime()
 	{
 		return Time.milliseconds(lastModified());
 	}
-
+	
+	/**
+	 * Creates a buffered output stream that writes to this file.
+	 * If the parent folder does not yet exist, creates all necessary
+	 * folders in the path.
+	 * @return Output stream that writes to this file
+	 * @throws FileNotFoundException Thrown if the file cannot be found
+	 */
+	public OutputStream outputStream() throws FileNotFoundException
+	{
+		final Folder parent = getParentFolder();
+		if (!parent.exists()) 
+		{
+		    if (!parent.mkdirs()) 
+		    {
+		    	throw new FileNotFoundException("Couldn't create path " + parent);
+		    }
+		}
+	    return new BufferedOutputStream(new FileOutputStream(this));
+	}
+	
 	/**
 	 * @return String read from this file
 	 * @throws IOException
 	 */
-	public final String readString() throws IOException
+	public String readString() throws IOException
 	{
 		final InputStream in = new FileInputStream(this);
 		try
@@ -156,8 +202,27 @@ public class File extends java.io.File implements IModifiable
 		{
 			in.close();
 		}
+	} 
+	
+	/**
+	 * @return Object read from serialization file
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public Object readObject() throws IOException, ClassNotFoundException
+	{
+	    return new ObjectInputStream(inputStream()).readObject();
 	}
 
+	/**
+	 * @param object Object to write to this file
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public void writeObject(final Object object) throws FileNotFoundException, IOException
+	{
+	    new ObjectOutputStream(outputStream()).writeObject(object);
+	}
 	/**
 	 * @return True if the file was removed
 	 * @see java.io.File#delete()
@@ -184,7 +249,17 @@ public class File extends java.io.File implements IModifiable
 			in.close();
 		}
 	}
-
+	
+	/**
+	 * @return This file in double quotes (useful for passing to 
+	 *         commands and tools that have issues with spaces in 
+	 *         filenames)
+	 */
+	public String toQuotedString()
+	{
+	    return "\"" + toString() + "\"";
+	}
+	
 	/**
 	 * Writes the given file to this one
 	 * 
@@ -192,7 +267,7 @@ public class File extends java.io.File implements IModifiable
 	 *            The file to copy
 	 * @throws IOException
 	 */
-	public final void write(final File file) throws IOException
+	public void write(final File file) throws IOException
 	{
 		final InputStream in = new BufferedInputStream(new FileInputStream(file));
 		try
@@ -213,7 +288,7 @@ public class File extends java.io.File implements IModifiable
 	 * @return Number of bytes written
 	 * @throws IOException
 	 */
-	public final int write(final InputStream input) throws IOException
+	public int write(final InputStream input) throws IOException
 	{
 		return Files.writeTo(this, input);
 	}
@@ -225,7 +300,7 @@ public class File extends java.io.File implements IModifiable
 	 *            The string to write
 	 * @throws IOException
 	 */
-	public final void write(final String string) throws IOException
+	public void write(final String string) throws IOException
 	{
 		final FileWriter out = new FileWriter(this);
 		try
@@ -238,3 +313,8 @@ public class File extends java.io.File implements IModifiable
 		}
 	}
 }
+
+
+
+
+
