@@ -487,6 +487,31 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
+	 * Appends specified {@code value} to the attribute
+	 * 
+	 * @param key
+	 *            The key
+	 * @param value
+	 *            The value
+	 * @param separator
+	 *            The separator used to append the value
+	 */
+	public final void append(String key, CharSequence value, String separator)
+	{
+		String current = getAttribute(key);
+		if (Strings.isEmpty(current))
+		{
+			xmlTag.put(key, value);
+		}
+		else
+		{
+			xmlTag.put(key, current + separator + value);
+		}
+
+		setModified(true);
+	}
+
+	/**
 	 * @see org.apache.wicket.markup.parser.XmlTag#put(String, StringValue)
 	 * @param key
 	 *            The key
