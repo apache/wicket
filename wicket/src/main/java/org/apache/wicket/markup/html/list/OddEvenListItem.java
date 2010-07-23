@@ -51,6 +51,6 @@ public class OddEvenListItem<T> extends ListItem<T>
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		tag.put("class", (getIndex() % 2 == 0) ? CLASS_EVEN : CLASS_ODD);
+		tag.append("class", (getIndex() % 2 == 0) ? CLASS_EVEN : CLASS_ODD, " ");
 	}
 }
