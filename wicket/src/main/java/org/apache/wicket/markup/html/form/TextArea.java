@@ -64,6 +64,23 @@ public class TextArea<T> extends AbstractTextComponent<T>
 		final ComponentTag openTag)
 	{
 		checkComponentTag(openTag, "textarea");
-		replaceComponentTagBody(markupStream, openTag, getValue());
+
+		String value = getValue();
+		if (value != null)
+		{
+			if (value.startsWith("\n"))
+			{
+				value = "\n" + value;
+			}
+			else if (value.startsWith("\r\n"))
+			{
+				value = "\r\n" + value;
+			}
+			else if (value.startsWith("\r"))
+			{
+				value = "\r" + value;
+			}
+		}
+		replaceComponentTagBody(markupStream, openTag, value);
 	}
 }
