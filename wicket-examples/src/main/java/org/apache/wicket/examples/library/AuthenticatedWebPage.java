@@ -42,13 +42,27 @@ public class AuthenticatedWebPage extends WicketExamplePage
 	 */
 	public AuthenticatedWebPage()
 	{
+		border = new LibraryApplicationBorder("border");
+	}
+
+	/**
+	 * @see org.apache.wicket.examples.WicketExamplePage#onInitialize()
+	 */
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+
 		// Create border and add it to the page
-		add(border = new LibraryApplicationBorder("border"));
+		add(border);
 
 		// The WicketExamplePage constructor already created and added it. We need to move it into
 		// the border.
-		border.addToBorder(get("mainNavigation"));
+		Component mainNavigation = border.getFromBorderBody("mainNavigation");
+
+		border.addToBorder(mainNavigation);
 	}
+
 
 	/**
 	 * Get downcast session object

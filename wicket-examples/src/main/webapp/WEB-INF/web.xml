@@ -423,6 +423,16 @@
 		</init-param>
 	</filter>
 
+	<filter>
+		<filter-name>RequestMapperApplication</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+            <param-name>applicationClassName</param-name>
+            <param-value>org.apache.wicket.examples.requestmapper.RequestMapperApplication</param-value>
+		</init-param>
+	</filter>
+
+
 	<filter-mapping>
 		<filter-name>WicketExamplesMenuApplication</filter-name>
         <url-pattern>/examples/*</url-pattern>
@@ -431,6 +441,7 @@
 	</filter-mapping>
 
 	<!-- couple the session filter to the helloworld servlet -->
+
 	<filter-mapping>
 		<filter-name>WicketSessionFilter</filter-name>
 		<url-pattern>/helloworldservlet/*</url-pattern>
@@ -696,6 +707,13 @@
 	<filter-mapping>
 		<filter-name>DatesApplication</filter-name>
         <url-pattern>/dates/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>RequestMapperApplication</filter-name>
+        <url-pattern>/mappers/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>

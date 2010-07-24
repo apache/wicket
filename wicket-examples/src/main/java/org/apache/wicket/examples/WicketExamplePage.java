@@ -18,6 +18,7 @@ package org.apache.wicket.examples;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -32,8 +33,17 @@ public class WicketExamplePage extends WebPage
 	 */
 	public WicketExamplePage()
 	{
-		this(null);
+		this(new PageParameters());
 	}
+
+	/**
+	 * Constructor
+	 */
+	public WicketExamplePage(final PageParameters pageParameters)
+	{
+		super(pageParameters);
+	}
+
 
 	/**
 	 * Construct.
@@ -43,6 +53,16 @@ public class WicketExamplePage extends WebPage
 	public WicketExamplePage(IModel<?> model)
 	{
 		super(model);
+	}
+
+	/**
+	 * @see org.apache.wicket.Component#onInitialize()
+	 */
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+
 		final String packageName = getClass().getPackage().getName();
 		add(new WicketExampleHeader("mainNavigation", Strings.afterLast(packageName, '.'), this));
 		explain();
