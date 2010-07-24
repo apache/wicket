@@ -4014,8 +4014,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		if (!getFlag(FLAG_INITIALIZED))
 		{
-			onInitialize();
 			setFlag(FLAG_INITIALIZED, true);
+			onInitialize();
 		}
 	}
 
