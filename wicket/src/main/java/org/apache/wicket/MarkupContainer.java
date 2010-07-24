@@ -965,8 +965,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnAddComponentEnabled())
 		{
-			child.setMetaData(ADDED_AT_KEY, ComponentStrings.toString(child, new MarkupException(
-				"added")));
+			child.setMetaData(ADDED_AT_KEY,
+				ComponentStrings.toString(child, new MarkupException("added")));
 		}
 
 		final Page page = findPage();
@@ -986,15 +986,21 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 	}
 
+	/**
+	 * Overrides {@link Component#initialize()} to call {@link Component#doInitialize()} for itself
+	 * and for all its children.
+	 * 
+	 * @see org.apache.wicket.Component#doInitialize()
+	 */
 	@Override
 	final void initialize()
 	{
-		super.initialize();
+		super.doInitialize();
 		visitChildren(new IVisitor<Component, Void>()
 		{
 			public void component(final Component component, final IVisit<Void> visit)
 			{
-				component.initialize();
+				component.doInitialize();
 			}
 		});
 	}

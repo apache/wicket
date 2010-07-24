@@ -965,6 +965,14 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	 */
 	void initialize()
 	{
+		doInitialize();
+	}
+
+	/**
+	 * Used to call {@link #onInitialize()}
+	 */
+	final void doInitialize()
+	{
 		if (!getFlag(FLAG_INITIALIZED))
 		{
 			setFlag(FLAG_INITIALIZED, true);
