@@ -31,19 +31,14 @@ import org.apache.wicket.util.lang.Checks;
  * <pre>
  *  Page Class - Render (BookmarkablePageRequestHandler)
  *  /wicket/bookmarkable/org.apache.wicket.MyPage
- *  /wicket/bookmarkable/org.apache.wicket.MyPage?pageMap
- *  (these will redirect to hybrid alternative if page is not stateless)
+ *  (will redirect to hybrid alternative if page is not stateless)
  * 
  *  Page Instance - Render Hybrid (RenderPageRequestHandler for pages that were created using bookmarkable URLs)
  *  /wicket/bookmarkable/org.apache.wicket.MyPage?2
- *  /wicket/bookmarkable/org.apache.wicket.MyPage?2.4
- *  /wicket/bookmarkable/org.apache.wicket.MyPage?pageMap.2.4
  * 
  *  Page Instance - Bookmarkable Listener (BookmarkableListenerInterfaceRequestHandler)
  *  /wicket/bookmarkable/org.apache.wicket.MyPage?2-click-foo-bar-baz
- *  /wicket/bookmarkable/org.apache.wicket.MyPage?2.4-click-foo-bar-baz
- *  /wicket/bookmarkable/org.apache.wicket.MyPage?pageMap.2.4-click-foo-bar-baz
- *  /wicket/bookmarkable/org.apache.wicket.MyPage?2.4-click.1-foo-bar-baz (1 is behavior index)
+ *  /wicket/bookmarkable/org.apache.wicket.MyPage?2-click.1-foo-bar-baz (1 is behavior index)
  *  (these will redirect to hybrid if page is not stateless)
  * </pre>
  * 
@@ -108,8 +103,7 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 			Class<? extends IRequestablePage> pageClass = getPageClass(className);
 
 			// extract the PageParameters from URL if there are any
-			PageParameters pageParameters = extractPageParameters(request, 3,
-				pageParametersEncoder);
+			PageParameters pageParameters = extractPageParameters(request, 3, pageParametersEncoder);
 
 			return new UrlInfo(info, pageClass, pageParameters);
 		}

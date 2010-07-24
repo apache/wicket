@@ -71,14 +71,7 @@ public class PageInfo
 	}
 
 	/**
-	 * <ul>
-	 * <li>pageId
-	 * <li>pageId.version
-	 * <li>pageMap (only in if pagemap starts with a letter)
-	 * <li>.pageMap
-	 * <li>pageMap.pageId (only in if pageMap name starts with a letter)
-	 * <li>pageMap.pageId.version
-	 * </ul>
+	 * The {@link #pageId} as string
 	 */
 	@Override
 	public String toString()
@@ -96,7 +89,7 @@ public class PageInfo
 
 	/**
 	 * @param src
-	 * @return page insfo instance or <code>null</code> if the string couldn't have been parsed
+	 * @return page info instance or <code>null</code> if the string couldn't have been parsed
 	 */
 	public static PageInfo parse(String src)
 	{
