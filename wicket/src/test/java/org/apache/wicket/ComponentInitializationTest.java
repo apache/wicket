@@ -19,6 +19,7 @@ package org.apache.wicket;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
@@ -121,6 +122,8 @@ public class ComponentInitializationTest extends WicketTestCase
 		protected void onInitialize()
 		{
 			count++;
+			add(new Label("addedComponent",
+				"Testing addition of a component to show StackOverflowError"));
 		}
 
 		public int getCount()
@@ -131,7 +134,8 @@ public class ComponentInitializationTest extends WicketTestCase
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{
-			return new StringResourceStream("<html></html>");
+			return new StringResourceStream(
+				"<html><body><span wicket:id=\"addedComponent\"></span></body></html>");
 		}
 	}
 
