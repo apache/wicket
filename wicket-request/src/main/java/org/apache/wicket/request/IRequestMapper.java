@@ -46,7 +46,7 @@ public interface IRequestMapper
 	 * <p>
 	 * A good criteria for calculating the score is the number of matched url segments. For example
 	 * when there are two encoders for mounted page, one mapped to <code>/foo</code> another to
-	 * <code>/foo/bar</code> and the incomming reqest URL is </code>/foo/bar/baz</code>, the encoder
+	 * <code>/foo/bar</code> and the incoming request URL is </code>/foo/bar/baz</code>, the encoder
 	 * mapped to <code>/foo/bar</code> will handle the request first as it has matching segments
 	 * count of 2 while the first one has only matching segments count of 1.
 	 * <p>
