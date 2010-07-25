@@ -27,7 +27,7 @@ import org.apache.wicket.request.Request;
 
 
 /**
- * The actual store that is used by {@link org.apache.wicket.ng.Session} to store its attributes.
+ * The actual store that is used by {@link org.apache.wicket.Session} to store its attributes.
  * <p>
  * This class is intended for internal framework use.
  * 
@@ -134,7 +134,7 @@ public interface ISessionStore
 	public interface UnboundListener
 	{
 		/**
-		 * Informs the listener that session with specifid id has been unbound.
+		 * Informs the listener that session with specific id has been unbound.
 		 * 
 		 * @param sessionId
 		 */
@@ -156,7 +156,7 @@ public interface ISessionStore
 	void unregisterUnboundListener(UnboundListener listener);
 
 	/**
-	 * @return The list of reqistered unbound listeners
+	 * @return The list of registered unbound listeners
 	 */
 	Set<UnboundListener> getUnboundListener();
 }
