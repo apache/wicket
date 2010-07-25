@@ -38,8 +38,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Abstract implementation of {@link ISessionStore} that works with web applications and that
- * provided some specific http servlet/ session related functionality.
+ * Implementation of {@link ISessionStore} that works with web applications and provides some
+ * specific http servlet/ session related functionality.
  * 
  * @author jcompagner
  * @author Eelco Hillenius
@@ -89,9 +89,9 @@ public class HttpSessionStore implements ISessionStore
 	 * @param request
 	 *            A Wicket request object
 	 * @param create
-	 *            If true, a session will be create if not yet exists
-	 * @return The HttpSession associated with this request or null if create is false and the
-	 *         request has no valid session
+	 *            If true, a session will be created if it is not existing yet
+	 * @return The HttpSession associated with this request or null if {@code create} is false and
+	 *         the {@code request} has no valid session
 	 */
 	final HttpSession getHttpSession(final Request request, final boolean create)
 	{
@@ -197,7 +197,7 @@ public class HttpSessionStore implements ISessionStore
 
 	/**
 	 * Template method that is called when the session is being detached from the store, which
-	 * typically happens when the httpsession was invalidated.
+	 * typically happens when the {@link HttpSession} was invalidated.
 	 * 
 	 * @param sessionId
 	 *            The session id of the session that was invalidated.
@@ -207,7 +207,7 @@ public class HttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * Gets the prefix for storing variables in the actual session (typically {@link HttpSession}
+	 * Gets the prefix for storing variables in the actual session (typically {@link HttpSession})
 	 * for this application instance.
 	 * 
 	 * @param request
