@@ -94,7 +94,7 @@ public abstract class AbstractSubmitLink extends AbstractLink implements IFormSu
 
 	/**
 	 * Sets the defaultFormProcessing property. When false (default is true), all validation and
-	 * formupdating is bypassed and the onSubmit method of that button is called directly, and the
+	 * form updating is bypassed and the onSubmit method of that button is called directly, and the
 	 * onSubmit method of the parent form is not called. A common use for this is to create a cancel
 	 * button.
 	 * 
