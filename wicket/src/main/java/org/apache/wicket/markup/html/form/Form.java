@@ -1244,7 +1244,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 * 
 	 * @return The name and id of the hidden field.
 	 */
-	protected final String getHiddenFieldId()
+	public final String getHiddenFieldId()
 	{
 		return getInputNamePrefix() + getMarkupId() + "_hf_0";
 	}
