@@ -27,7 +27,8 @@ init${widgetId} = function() {
 		datePattern: "${datePattern}",
 		alignWithIcon: ${alignWithIcon},
 		fireChangeEvent: ${fireChangeEvent},
-		hideOnSelect: ${hideOnSelect}
+		hideOnSelect: ${hideOnSelect},
+		showOnFieldClick: ${showOnFieldClick}
 	});
 	${additionalJavascript}
 };

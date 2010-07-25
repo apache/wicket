@@ -169,7 +169,10 @@ public class DatesPage extends WicketExamplePage
 		};
 		add(form);
 		form.add(dateTextField);
-		dateTextField.add(new DatePicker());
+
+		DatePicker datePicker = new DatePicker();
+		datePicker.setShowOnFieldClick(true);
+		dateTextField.add(datePicker);
 		add(new FeedbackPanel("feedback"));
 	}
 
