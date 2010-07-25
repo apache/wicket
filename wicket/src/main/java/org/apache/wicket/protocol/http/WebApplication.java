@@ -562,7 +562,8 @@ public abstract class WebApplication extends Application
 				responsesPerSession = previousValue;
 			}
 		}
-		responsesPerSession.put(bufferId, renderedResponse);
+		String bufferKey = bufferId.startsWith("/") ? bufferId.substring(1) : bufferId;
+		responsesPerSession.put(bufferKey, renderedResponse);
 	}
 
 	/**
