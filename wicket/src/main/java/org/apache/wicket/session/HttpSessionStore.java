@@ -32,8 +32,10 @@ import javax.servlet.http.HttpSessionBindingListener;
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.IRequestLogger;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.Request;
+import org.apache.wicket.request.http.WebRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -217,9 +219,15 @@ public class HttpSessionStore implements ISessionStore
 	 */
 	private String getSessionAttributePrefix(final Request request)
 	{
-		return "wicket";
-		// TODO:
-		// return application.getSessionAttributePrefix(request);
+		String sessionAttributePrefix = "wicket";
+
+		if (request instanceof WebRequest)
+		{
+			sessionAttributePrefix = WebApplication.get().getSessionAttributePrefix(
+				(WebRequest)request, null);
+		}
+
+		return sessionAttributePrefix;
 	}
 
 	/**
