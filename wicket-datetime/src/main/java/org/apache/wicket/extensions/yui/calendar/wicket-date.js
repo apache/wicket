@@ -180,6 +180,10 @@ Wicket.DateTime.init = function(cfg) {
 	}
 
 	YAHOO.util.Event.addListener(cfg.icon, "click", showCalendar, YAHOO.wicket[cfg.dpJs], true);
+	
+	if (cfg.showOnFieldClick) {
+		YAHOO.util.Event.addListener(cfg.widgetId, "click", showCalendar, YAHOO.wicket[cfg.dpJs], true);
+	}
 
 	function selectHandler(type, args, cal) {
 		YAHOO.util.Dom.get(cfg.componentId).value = Wicket.DateTime.substituteDate(cfg.datePattern, args[0][0]);

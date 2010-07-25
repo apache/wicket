@@ -133,6 +133,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 
 	/** The target component. */
 	private Component component;
+	
+	private boolean showOnFieldClick = false;
 
 	/**
 	 * Construct.
@@ -231,6 +233,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		variables.put("fireChangeEvent", notifyComponentOnDateSelected());
 		variables.put("alignWithIcon", alignWithIcon());
 		variables.put("hideOnSelect", hideOnSelect());
+		variables.put("showOnFieldClick", showOnFieldClick());
 		// variables for YUILoader
 		variables.put("basePath", Strings.stripJSessionId(RequestCycle.get().renderUrlFor(
 				new ResourceReferenceRequestHandler(YUI))));
@@ -713,6 +716,26 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	protected boolean hideOnSelect()
 	{
 		return true;
+	}
+	
+	/**
+	 * Indicates whether the calendar should be shown when corresponding text input is clicked.
+	 * 
+	 * @return <code>true</code> <br/>
+	 *         <code>false</code> (default)
+	 */
+	protected boolean showOnFieldClick() {
+		return showOnFieldClick;
+	}
+	
+	/**
+	 * 
+	 * @see {@link #showOnFieldClick()}
+	 */
+	public DatePicker setShowOnFieldClick(boolean show) {
+		
+		this.showOnFieldClick = show;
+		return this;
 	}
 
 	/**
