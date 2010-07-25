@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.repeater.data;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,8 +26,9 @@ import org.apache.wicket.model.Model;
 
 
 /**
- * Allows the use of lists with dataview. The only requirement is that either list items must be
- * serializable or model(Object) needs to be overridden to provide the proper model implementation.
+ * Allows the use of lists with {@link DataView}. The only requirement is that either list items
+ * must be serializable or model(Object) needs to be overridden to provide the proper model
+ * implementation.
  * 
  * @author Igor Vaynberg ( ivaynberg )
  * @param <T>
@@ -38,6 +40,14 @@ public class ListDataProvider<T extends Serializable> implements IDataProvider<T
 
 	/** reference to the list used as dataprovider for the dataview */
 	private final List<T> list;
+
+	/**
+	 * Constructs an empty provider. Useful for lazy loading together with {@linkplain #getData()}
+	 */
+	public ListDataProvider()
+	{
+		this(Collections.<T> emptyList());
+	}
 
 	/**
 	 * 
@@ -84,7 +94,7 @@ public class ListDataProvider<T extends Serializable> implements IDataProvider<T
 	 */
 	public int size()
 	{
-		return list.size();
+		return getData().size();
 	}
 
 	/**
