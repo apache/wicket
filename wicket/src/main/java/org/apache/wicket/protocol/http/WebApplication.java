@@ -301,7 +301,8 @@ public abstract class WebApplication extends Application
 	 * @param bookmarkablePageClass
 	 *            the bookmarkable page class to mount
 	 * 
-	 * @deprecated use mounted mapper instead, this method can be represented as {@code
+	 * @deprecated use mounted mapper instead, this method can be represented as
+	 *             {@code
 	 *             getRootRequestMapperAsCompound().add(new MountedMapper(path,
 	 *             bookmarkablePageClass))}
 	 */
@@ -358,13 +359,13 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * @param sessionId
-	 *            The session id that was destroyed
-	 * 
-	 * @TODO This method is not called anymore by anybody
+	 * @see org.apache.wicket.Application#sessionUnbound(java.lang.String)
 	 */
-	public void sessionDestroyed(String sessionId)
+	@Override
+	public void sessionUnbound(final String sessionId)
 	{
+		super.sessionUnbound(sessionId);
+
 		bufferedResponses.remove(sessionId);
 
 		IRequestLogger logger = getRequestLogger();
