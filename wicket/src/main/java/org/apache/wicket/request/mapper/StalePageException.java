@@ -29,7 +29,7 @@ public class StalePageException extends WicketRuntimeException
 {
 	private static final long serialVersionUID = 1L;
 
-	private final IRequestablePage page;
+	private final transient IRequestablePage page;
 
 	/**
 	 * 
