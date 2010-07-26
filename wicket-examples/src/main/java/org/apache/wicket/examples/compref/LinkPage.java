@@ -17,12 +17,12 @@
 package org.apache.wicket.examples.compref;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.util.value.Count;
 
 
 /**
@@ -40,62 +40,56 @@ public class LinkPage extends WicketExamplePage
 		// power to the annonymous classes!
 
 		// first create a simple value holder object
-		final ClickCount count1 = new ClickCount();
+		final Count count1 = new Count();
 
-		// add a link which, when clicked, increases our counter
-		// when a link is clicked, its onClick method is called
+		// add a link which, when clicked, increases our counter when a link is clicked, its onClick
+		// method is called
 		Link link1 = new Link("link1")
 		{
 			@Override
 			public void onClick()
 			{
-				count1.clicks++;
+				count1.increment();
 			}
 		};
 		add(link1);
-		// add a counter label to the link so that we can display it in the body
-		// of the link
+
+		// add a counter label to the link so that we can display it in the body of the link
 		link1.add(new Label("label1", new Model<String>()
 		{
 			@Override
 			public String getObject()
 			{
-				return Integer.toString(count1.clicks);
+				return count1.toString();
 			}
 		}));
 
-		final ClickCount count2 = new ClickCount();
-		// Same idea as above, but now we record a state change. Note that the
-		// URL will change because of this, and pressing the back button and
-		// clicking the link again would revert to the older value.
-		// The same thing could have been achieved by using setModelObject,
-		// which implicitly registers a state change (of type
-		// ComponentModelChange).
+		final Count count2 = new Count();
+		// Same idea as above, but now we record a state change. Note that the URL will change
+		// because of this, and pressing the back button and clicking the link again would revert to
+		// the older value. The same thing could have been achieved by using setModelObject,
+		// which implicitly registers a state change (of type ComponentModelChange).
 		Link linkWithStateChange = new Link("linkWithStateChange")
 		{
 			@Override
 			public void onClick()
 			{
-				final int count = count1.clicks;
-				count2.clicks++;
+				count2.increment();
 				addStateChange();
 			}
 		};
 		add(linkWithStateChange);
-		linkWithStateChange.add(new Label("label", new PropertyModel<Integer>(count2, "clicks")));
+		linkWithStateChange.add(new Label("label", new PropertyModel<Integer>(count2, "count")));
 
-		// we can attach Link components to any HTML tag we want. If it is an
-		// anchor (<a href...),
-		// the url to this component is put in the href attribute. For other
-		// components, a
-		// onclick javascript event handler is created that triggers the round
-		// trip
+		// we can attach Link components to any HTML tag we want. If it is an anchor (<a href...),
+		// the url to this component is put in the href attribute. For other components, a onclick
+		// javascript event handler is created that triggers the round trip
 
-		// it is of course possible to - instead of the above approach - hide as
-		// much of the component as possible within a class.
+		// it is of course possible to - instead of the above approach - hide as much of the
+		// component as possible within a class.
 		class CustomLink extends Link
 		{
-			final ClickCount count2;
+			final Count count2;
 
 			/**
 			 * Construct.
@@ -105,24 +99,23 @@ public class LinkPage extends WicketExamplePage
 			public CustomLink(String id)
 			{
 				super(id);
-				count2 = new ClickCount();
+				count2 = new Count();
 				add(new ClickCountLabel("label2", count2));
 			}
 
 			@Override
 			public void onClick()
 			{
-				count2.clicks++;
+				count2.increment();
 			}
 		}
 		add(new CustomLink("link2"));
 
-		// and if we know we are going to attach it to a <input type="button>
-		// tag, we shouldn't
-		// use a label, but an AttributeModifier instead.
+		// and if we know we are going to attach it to a <input type="button> tag, we shouldn't use
+		// a label, but an AttributeModifier instead.
 		class ButtonLink extends Link
 		{
-			final ClickCount count3;
+			final Count count3;
 
 			/**
 			 * Construct.
@@ -132,18 +125,15 @@ public class LinkPage extends WicketExamplePage
 			public ButtonLink(String id)
 			{
 				super(id);
-				count3 = new ClickCount();
+				count3 = new Count();
 				add(new AttributeModifier("value", new Model<String>()
 				{
 					@Override
 					public String getObject()
 					{
-						// we just replace the whole string. You could use
-						// custom
-						// AttributeModifiers to e.g. just replace one part of
-						// the
-						// string if you want
-						return "this button is clicked " + count3.clicks + " times";
+						// we just replace the whole string. You could use custom AttributeModifiers
+						// to e.g. just replace one part of the string if you want
+						return "this button is clicked " + count3.getCount() + " times";
 					}
 				}));
 			}
@@ -151,19 +141,10 @@ public class LinkPage extends WicketExamplePage
 			@Override
 			public void onClick()
 			{
-				count3.clicks++;
+				count3.increment();
 			}
 		}
 		add(new ButtonLink("link3"));
-	}
-
-	/**
-	 * Simple class to holds the number of clicks.
-	 */
-	private static class ClickCount implements IClusterable
-	{
-		/** number of clicks. */
-		private int clicks = 0;
 	}
 
 	/**
@@ -179,7 +160,7 @@ public class LinkPage extends WicketExamplePage
 		 * @param clickCount
 		 *            the count object
 		 */
-		public ClickCountLabel(String id, final ClickCount clickCount)
+		public ClickCountLabel(String id, final Count clickCount)
 		{
 			// call super with a simple annonymous class model that displays the
 			// current number of clicks
@@ -188,7 +169,7 @@ public class LinkPage extends WicketExamplePage
 				@Override
 				public String getObject()
 				{
-					return Integer.toString(clickCount.clicks);
+					return clickCount.toString();
 				}
 			});
 		}
@@ -196,13 +177,13 @@ public class LinkPage extends WicketExamplePage
 
 	// ----------
 
-	final ClickCount count1 = new ClickCount(); // simple counter object
+	final Count count1 = new Count(); // simple counter object
 	Link link1 = new Link("link1")
 	{
 		@Override
 		public void onClick()
 		{
-			count1.clicks++;
+			count1.increment();
 		}
 	};
 
@@ -213,20 +194,19 @@ public class LinkPage extends WicketExamplePage
 	protected void explain()
 	{
 		String html = "<a href=\"#\" wicket:id=\"link1\">this link is clicked <span wicket:id=\"label1\">n</span> times</a>";
-		String code = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;final ClickCount count1 = new ClickCount(); // simple counter object\n"
+		String code = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;final Count count1 = new Count(); // simple counter object\n"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Link link1 = new Link(\"link1\") {\n"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public void onClick() {\n"
-			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count1.clicks++;\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count1.increment();\n"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};\n"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;link1.add(new Label(\"label1\", new Model&lt;String&gt;() {\n"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Object getObject() {\n"
-			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return Integer.toString(count1.clicks);\n"
+			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return count1.toString();\n"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}));\n"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(link1);";
 		add(new ExplainPanel(html, code));
 
 	}
-
 }
