@@ -29,10 +29,10 @@ public class UnauthorizedActionException extends AuthorizationException
 	private static final long serialVersionUID = 1L;
 
 	/** The action */
-	private final Action action;
+	private final transient Action action;
 
 	/** The component that caused the unauthorized exception */
-	private final Component component;
+	private final transient Component component;
 
 	/**
 	 * Construct.

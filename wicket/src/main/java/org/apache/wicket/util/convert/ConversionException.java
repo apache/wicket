@@ -35,25 +35,25 @@ public class ConversionException extends WicketRuntimeException
 	private static final long serialVersionUID = 1L;
 
 	/** The converter that was used. */
-	private IConverter converter;
+	private transient IConverter converter;
 
 	/** Pattern that was used for conversion. */
-	private Format format;
+	private transient Format format;
 
 	/** Locale that was used for conversion. */
-	private Locale locale;
+	private transient Locale locale;
 
 	/** The value that was tried to convert. */
-	private Object sourceValue;
+	private transient Object sourceValue;
 
 	/** Target type for the failed conversion. */
-	private String targetTypeName;
+	private transient String targetTypeName;
 
 	/** Resource key for the message that should be displayed */
-	private String resourceKey;
+	private transient String resourceKey;
 
 	/** Variable map to use in variable substitution */
-	private Map<String, Object> vars;
+	private transient Map<String, Object> vars;
 
 	/**
 	 * Construct exception with message.
