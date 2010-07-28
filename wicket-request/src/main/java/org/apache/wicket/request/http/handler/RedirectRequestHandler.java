@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.http.handler;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.http.WebResponse;
@@ -47,18 +49,18 @@ public class RedirectRequestHandler implements IRequestHandler
 	 */
 	public RedirectRequestHandler(String redirectUrl)
 	{
-		this(redirectUrl, 302);
+		this(redirectUrl, HttpServletResponse.SC_MOVED_TEMPORARILY);
 	}
 
 	/**
 	 * @param redirectUrl
 	 *            URL to redirect to.
 	 * @param status
-	 *            301 or 302
+	 *            301 (Moved permanently) or 302 (Moved temporarily)
 	 */
 	public RedirectRequestHandler(String redirectUrl, int status)
 	{
-		if (status != 301 && status != 302)
+		if (status != HttpServletResponse.SC_MOVED_PERMANENTLY && status != HttpServletResponse.SC_MOVED_TEMPORARILY)
 		{
 			throw new IllegalStateException("Status must be either 301 or 302, but was: " + status);
 		}
@@ -102,13 +104,13 @@ public class RedirectRequestHandler implements IRequestHandler
 
 		WebResponse response = (WebResponse)requestCycle.getResponse();
 
-		if (status == 302)
+		if (status == HttpServletResponse.SC_MOVED_TEMPORARILY)
 		{
 			response.sendRedirect(location);
 		}
 		else
 		{
-			response.setStatus(301);
+			response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
 			response.setHeader("Location", location);
 		}
 	}
