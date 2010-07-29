@@ -54,6 +54,7 @@ import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.pageStore.IPageManager;
 import org.apache.wicket.pageStore.IPageManagerContext;
 import org.apache.wicket.pageStore.IPageStore;
+import org.apache.wicket.pageStore.PageAccessSynchronizer;
 import org.apache.wicket.pageStore.PersistentPageManager;
 import org.apache.wicket.protocol.http.DummyRequestLogger;
 import org.apache.wicket.protocol.http.IRequestLogger;
@@ -1247,15 +1248,18 @@ public abstract class Application implements UnboundListener
 	private volatile IPageManager pageManager;
 	private IPageManagerProvider pageManagerProvider;
 
+	private final PageAccessSynchronizer pageAccessSynchronizer = new PageAccessSynchronizer(
+		Duration.minutes(2)); // TODO WICKET-NG timeout configurable
 
 	public final IPageManagerProvider getPageManagerProvider()
 	{
 		return pageManagerProvider;
 	}
 
-	public final void setPageManagerProvider(IPageManagerProvider pageManagerProvider)
+
+	public synchronized final void setPageManagerProvider(final IPageManagerProvider provider)
 	{
-		this.pageManagerProvider = pageManagerProvider;
+		pageManagerProvider = provider;
 	}
 
 	/**
@@ -1275,7 +1279,7 @@ public abstract class Application implements UnboundListener
 			{
 				if (pageManager == null)
 				{
-					pageManager = pageManagerProvider.get(getPageManagerContext());
+					pageManager = pageAccessSynchronizer.adapt(pageManagerProvider.get(getPageManagerContext()));
 				}
 			}
 		}

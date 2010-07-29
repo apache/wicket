@@ -36,15 +36,17 @@ public interface IPageManager
 	 * 
 	 * @param id
 	 * @return page instance or <code>null</code>
+	 * @throws CouldNotLockPageException
 	 */
-	public IManageablePage getPage(int id);
+	public IManageablePage getPage(int id) throws CouldNotLockPageException;
 
 	/**
 	 * Marks page as changed.
 	 * 
 	 * @param page
+	 * @throws CouldNotLockPageException
 	 */
-	public void touchPage(IManageablePage page);
+	public void touchPage(IManageablePage page) throws CouldNotLockPageException;
 
 	/**
 	 * Returns whether this manager supports versioning. Managers that support versioning must store
