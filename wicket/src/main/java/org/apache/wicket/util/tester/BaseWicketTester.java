@@ -26,13 +26,13 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
@@ -610,6 +610,45 @@ public class BaseWicketTester extends MockWebApplication
 	}
 
 	/**
+	 * assert component enabled.
+	 * 
+	 * @param path
+	 *            path to component
+	 * @return a <code>Result</code>
+	 */
+	public Result isEnabled(String path)
+	{
+		Component component = getLastRenderedPage().get(path);
+		if (component == null)
+		{
+			fail("path: '" + path + "' does no exist for page: " +
+				Classes.simpleName(getLastRenderedPage().getClass()));
+		}
+
+		return isTrue("component '" + path + "' is disabled", component.isEnabledInHierarchy());
+	}
+
+	/**
+	 * assert component disabled.
+	 * 
+	 * @param path
+	 *            path to component
+	 * @return a <code>Result</code>
+	 */
+	public Result isDisabled(String path)
+	{
+		Component component = getLastRenderedPage().get(path);
+		if (component == null)
+		{
+			fail("path: '" + path + "' does no exist for page: " +
+				Classes.simpleName(getLastRenderedPage().getClass()));
+		}
+
+		return isFalse("component '" + path + "' is enabled", component.isEnabledInHierarchy());
+	}
+
+
+	/**
 	 * assert the content of last rendered page contains(matches) regex pattern.
 	 * 
 	 * @param pattern
@@ -945,8 +984,9 @@ public class BaseWicketTester extends MockWebApplication
 	public Result hasNoErrorMessage()
 	{
 		List<Serializable> messages = getMessages(FeedbackMessage.ERROR);
-		return isTrue("expect no error message, but contains\n" +
-			WicketTesterHelper.asLined(messages), messages.isEmpty());
+		return isTrue(
+			"expect no error message, but contains\n" + WicketTesterHelper.asLined(messages),
+			messages.isEmpty());
 	}
 
 	/**
@@ -957,8 +997,9 @@ public class BaseWicketTester extends MockWebApplication
 	public Result hasNoInfoMessage()
 	{
 		List<Serializable> messages = getMessages(FeedbackMessage.INFO);
-		return isTrue("expect no info message, but contains\n" +
-			WicketTesterHelper.asLined(messages), messages.isEmpty());
+		return isTrue(
+			"expect no info message, but contains\n" + WicketTesterHelper.asLined(messages),
+			messages.isEmpty());
 	}
 
 	/**
@@ -1412,6 +1453,15 @@ public class BaseWicketTester extends MockWebApplication
 	private Result isTrue(String message, boolean condition)
 	{
 		if (condition)
+		{
+			return Result.pass();
+		}
+		return Result.fail(message);
+	}
+
+	private Result isFalse(String message, boolean condition)
+	{
+		if (!condition)
 		{
 			return Result.pass();
 		}
