@@ -1040,6 +1040,45 @@ public class BaseWicketTester
 	}
 
 	/**
+	 * assert component enabled.
+	 * 
+	 * @param path
+	 *            path to component
+	 * @return a <code>Result</code>
+	 */
+	public Result isEnabled(String path)
+	{
+		Component component = getLastRenderedPage().get(path);
+		if (component == null)
+		{
+			fail("path: '" + path + "' does no exist for page: " +
+				Classes.simpleName(getLastRenderedPage().getClass()));
+		}
+
+		return isTrue("component '" + path + "' is disabled", component.isEnabledInHierarchy());
+	}
+
+	/**
+	 * assert component disabled.
+	 * 
+	 * @param path
+	 *            path to component
+	 * @return a <code>Result</code>
+	 */
+	public Result isDisabled(String path)
+	{
+		Component component = getLastRenderedPage().get(path);
+		if (component == null)
+		{
+			fail("path: '" + path + "' does no exist for page: " +
+				Classes.simpleName(getLastRenderedPage().getClass()));
+		}
+
+		return isFalse("component '" + path + "' is enabled", component.isEnabledInHierarchy());
+	}
+
+
+	/**
 	 * assert the content of last rendered page contains(matches) regex pattern.
 	 * 
 	 * @param pattern
@@ -1699,6 +1738,21 @@ public class BaseWicketTester
 	private Result isTrue(String message, boolean condition)
 	{
 		if (condition)
+		{
+			return Result.pass();
+		}
+		return Result.fail(message);
+	}
+
+	/**
+	 * 
+	 * @param message
+	 * @param condition
+	 * @return
+	 */
+	private Result isFalse(String message, boolean condition)
+	{
+		if (!condition)
 		{
 			return Result.pass();
 		}
