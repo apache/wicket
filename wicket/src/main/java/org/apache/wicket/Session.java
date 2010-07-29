@@ -28,7 +28,7 @@ import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
-import org.apache.wicket.pageStore.IPageManager;
+import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;

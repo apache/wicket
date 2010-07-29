@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.pageStore;
+package org.apache.wicket.page;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.wicket.page.IManageablePage;
+import org.apache.wicket.pageStore.IPageStore;
 
 /**
  * 
@@ -265,7 +265,7 @@ public class PersistentPageManager extends AbstractPageManager
 		}
 
 		/**
-		 * @see org.apache.wicket.pageStore.RequestAdapter#getPage(int)
+		 * @see org.apache.wicket.page.RequestAdapter#getPage(int)
 		 */
 		@Override
 		protected IManageablePage getPage(int id)
@@ -308,7 +308,7 @@ public class PersistentPageManager extends AbstractPageManager
 		}
 
 		/**
-		 * @see org.apache.wicket.pageStore.RequestAdapter#newSessionCreated()
+		 * @see org.apache.wicket.page.RequestAdapter#newSessionCreated()
 		 */
 		@Override
 		protected void newSessionCreated()
@@ -321,7 +321,7 @@ public class PersistentPageManager extends AbstractPageManager
 		}
 
 		/**
-		 * @see org.apache.wicket.pageStore.RequestAdapter#storeTouchedPages(java.util.List)
+		 * @see org.apache.wicket.page.RequestAdapter#storeTouchedPages(java.util.List)
 		 */
 		@Override
 		protected void storeTouchedPages(final List<IManageablePage> touchedPages)
@@ -339,7 +339,7 @@ public class PersistentPageManager extends AbstractPageManager
 	}
 
 	/**
-	 * @see org.apache.wicket.pageStore.AbstractPageManager#newRequestAdapter(org.apache.wicket.pageStore.IPageManagerContext)
+	 * @see org.apache.wicket.page.AbstractPageManager#newRequestAdapter(org.apache.wicket.page.IPageManagerContext)
 	 */
 	@Override
 	protected RequestAdapter newRequestAdapter(IPageManagerContext context)
@@ -348,7 +348,7 @@ public class PersistentPageManager extends AbstractPageManager
 	}
 
 	/**
-	 * @see org.apache.wicket.pageStore.AbstractPageManager#supportsVersioning()
+	 * @see org.apache.wicket.page.AbstractPageManager#supportsVersioning()
 	 */
 	@Override
 	public boolean supportsVersioning()
@@ -357,7 +357,7 @@ public class PersistentPageManager extends AbstractPageManager
 	}
 
 	/**
-	 * @see org.apache.wicket.pageStore.AbstractPageManager#sessionExpired(java.lang.String)
+	 * @see org.apache.wicket.page.AbstractPageManager#sessionExpired(java.lang.String)
 	 */
 	@Override
 	public void sessionExpired(String sessionId)
@@ -366,7 +366,7 @@ public class PersistentPageManager extends AbstractPageManager
 	}
 
 	/**
-	 * @see org.apache.wicket.pageStore.IPageManager#destroy()
+	 * @see org.apache.wicket.page.IPageManager#destroy()
 	 */
 	public void destroy()
 	{

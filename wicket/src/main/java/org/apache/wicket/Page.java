@@ -38,7 +38,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.page.IManageablePage;
-import org.apache.wicket.pageStore.IPageManager;
+import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;

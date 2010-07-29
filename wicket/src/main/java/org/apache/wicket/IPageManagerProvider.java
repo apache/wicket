@@ -16,8 +16,8 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.pageStore.IPageManager;
-import org.apache.wicket.pageStore.IPageManagerContext;
+import org.apache.wicket.page.IPageManager;
+import org.apache.wicket.page.IPageManagerContext;
 
 public interface IPageManagerProvider
 {

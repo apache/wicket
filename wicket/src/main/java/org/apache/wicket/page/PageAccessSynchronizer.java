@@ -14,13 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.pageStore;
+package org.apache.wicket.page;
 
 import java.util.Date;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.ValueProvider;
 import org.apache.wicket.util.lang.Checks;

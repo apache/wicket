@@ -14,13 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.pageStore;
+package org.apache.wicket.page;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.page.IManageablePage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -22,6 +22,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.wicket.page.CouldNotLockPageException;
+import org.apache.wicket.page.PageAccessSynchronizer;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.time.Time;
 import org.junit.Rule;

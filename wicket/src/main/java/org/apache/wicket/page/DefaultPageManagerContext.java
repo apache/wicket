@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.pageStore;
+package org.apache.wicket.page;
 
 import java.io.Serializable;
 
@@ -35,7 +35,7 @@ public class DefaultPageManagerContext implements IPageManagerContext
 	};
 
 	/**
-	 * @see org.apache.wicket.pageStore.IPageManagerContext#bind()
+	 * @see org.apache.wicket.page.IPageManagerContext#bind()
 	 */
 	public void bind()
 	{
@@ -43,7 +43,7 @@ public class DefaultPageManagerContext implements IPageManagerContext
 	}
 
 	/**
-	 * @see org.apache.wicket.pageStore.IPageManagerContext#getRequestData()
+	 * @see org.apache.wicket.page.IPageManagerContext#getRequestData()
 	 */
 	public Object getRequestData()
 	{
@@ -56,7 +56,7 @@ public class DefaultPageManagerContext implements IPageManagerContext
 	}
 
 	/**
-	 * @see org.apache.wicket.pageStore.IPageManagerContext#getSessionAttribute(java.lang.String)
+	 * @see org.apache.wicket.page.IPageManagerContext#getSessionAttribute(java.lang.String)
 	 */
 	public Serializable getSessionAttribute(final String key)
 	{
@@ -64,7 +64,7 @@ public class DefaultPageManagerContext implements IPageManagerContext
 	}
 
 	/**
-	 * @see org.apache.wicket.pageStore.IPageManagerContext#getSessionId()
+	 * @see org.apache.wicket.page.IPageManagerContext#getSessionId()
 	 */
 	public String getSessionId()
 	{
@@ -72,7 +72,7 @@ public class DefaultPageManagerContext implements IPageManagerContext
 	}
 
 	/**
-	 * @see org.apache.wicket.pageStore.IPageManagerContext#setRequestData(RequestAdapter)
+	 * @see org.apache.wicket.page.IPageManagerContext#setRequestData(RequestAdapter)
 	 */
 	public void setRequestData(final Object data)
 	{
@@ -85,7 +85,7 @@ public class DefaultPageManagerContext implements IPageManagerContext
 	}
 
 	/**
-	 * @see org.apache.wicket.pageStore.IPageManagerContext#setSessionAttribute(java.lang.String,
+	 * @see org.apache.wicket.page.IPageManagerContext#setSessionAttribute(java.lang.String,
 	 *      java.io.Serializable)
 	 */
 	public void setSessionAttribute(String key, Serializable value)

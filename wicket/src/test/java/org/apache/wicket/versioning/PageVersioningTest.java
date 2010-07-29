@@ -21,12 +21,12 @@ import static org.junit.Assert.assertNotNull;
 
 import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.Page;
+import org.apache.wicket.page.IPageManager;
+import org.apache.wicket.page.IPageManagerContext;
+import org.apache.wicket.page.PersistentPageManager;
 import org.apache.wicket.pageStore.AsynchronousDataStore;
 import org.apache.wicket.pageStore.DefaultPageStore;
 import org.apache.wicket.pageStore.IDataStore;
-import org.apache.wicket.pageStore.IPageManager;
-import org.apache.wicket.pageStore.IPageManagerContext;
-import org.apache.wicket.pageStore.PersistentPageManager;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
