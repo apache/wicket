@@ -49,9 +49,7 @@ public class BundleStringResourceLoader implements IStringResourceLoader
 	}
 
 	/**
-	 * 
-	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(java.lang.Class,
-	 *      java.lang.String, java.util.Locale, java.lang.String, java.lang.String)
+	 * Get the value via a Java ResourceBundle
 	 */
 	public final String loadStringResource(final Class<?> clazz, final String key, Locale locale,
 		final String style, final String variation)
@@ -62,8 +60,7 @@ public class BundleStringResourceLoader implements IStringResourceLoader
 		}
 		try
 		{
-			final ResourceBundle bundle = ResourceBundle.getBundle(bundleName, locale);
-			return bundle.getString(key);
+			return ResourceBundle.getBundle(bundleName, locale).getString(key);
 		}
 		catch (MissingResourceException e)
 		{
@@ -79,11 +76,17 @@ public class BundleStringResourceLoader implements IStringResourceLoader
 	 *            Used to get the locale
 	 * @param key
 	 *            The key to obtain the string for
+	 * @param locale
+	 *            If != null, it supersedes the component's locale
+	 * @param style
+	 *            ignored
+	 * @param variation
+	 *            ignored
 	 * @return The string resource value or null if resource not found
 	 */
-	public final String loadStringResource(final Component component, final String key)
+	public final String loadStringResource(final Component component, final String key,
+		Locale locale, final String style, final String variation)
 	{
-		final Locale locale = (component != null) ? component.getLocale() : null;
-		return loadStringResource(null, key, locale, null, null);
+		return loadStringResource((Class<?>)null, key, locale, style, variation);
 	}
 }

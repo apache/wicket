@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -61,7 +62,7 @@ public class Localizer
 	/** Cache properties */
 	private Map<String, String> cache = newCache();
 
-	/** */
+	/** Database that maps class names to an integer id. */
 	private final ClassMetaDatabase metaDatabase = new ClassMetaDatabase();
 
 	/**
@@ -81,7 +82,9 @@ public class Localizer
 	}
 
 	/**
-	 * Clear all cache entries
+	 * Clear all cache entries by instantiating a new cache object
+	 * 
+	 * @see #newCache()
 	 */
 	public final void clearCache()
 	{
@@ -105,7 +108,7 @@ public class Localizer
 	public String getString(final String key, final Component component)
 		throws MissingResourceException
 	{
-		return getString(key, component, null, null);
+		return getString(key, component, null, null, null, null);
 	}
 
 	/**
@@ -124,7 +127,7 @@ public class Localizer
 	public String getString(final String key, final Component component, final IModel<?> model)
 		throws MissingResourceException
 	{
-		return getString(key, component, model, null);
+		return getString(key, component, model, null, null, null);
 	}
 
 	/**
@@ -143,7 +146,113 @@ public class Localizer
 	public String getString(final String key, final Component component, final String defaultValue)
 		throws MissingResourceException
 	{
-		return getString(key, component, null, defaultValue);
+		return getString(key, component, null, null, null, defaultValue);
+	}
+
+	/**
+	 * @see #getString(String, Component, IModel, Locale, String, String)
+	 * 
+	 * @param key
+	 *            The key to obtain the resource for
+	 * @param component
+	 *            The component to get the resource for
+	 * @param model
+	 *            The model to use for property substitutions in the strings (optional)
+	 * @param defaultValue
+	 *            The default value (optional)
+	 * @return The string resource
+	 * @throws MissingResourceException
+	 *             If resource not found and configuration dictates that exception should be thrown
+	 */
+	public String getString(final String key, final Component component, final IModel<?> model,
+		final String defaultValue) throws MissingResourceException
+	{
+		return getString(key, component, model, null, null, defaultValue);
+	}
+
+	/**
+	 * Get the localized string using all of the supplied parameters. This method is left public to
+	 * allow developers full control over string resource loading. However, it is recommended that
+	 * one of the other convenience methods in the class are used as they handle all of the work
+	 * related to obtaining the current user locale and style information.
+	 * 
+	 * @param key
+	 *            The key to obtain the resource for
+	 * @param component
+	 *            The component to get the resource for (optional)
+	 * @param model
+	 *            The model to use for substitutions in the strings (optional)
+	 * @param locale
+	 *            If != null, it'll supersede the component's locale
+	 * @param style
+	 *            If != null, it'll supersede the component's style
+	 * @param defaultValue
+	 *            The default value (optional)
+	 * @return The string resource
+	 * @throws MissingResourceException
+	 *             If resource not found and configuration dictates that exception should be thrown
+	 */
+	public String getString(final String key, final Component component, final IModel<?> model,
+		final Locale locale, final String style, final String defaultValue)
+		throws MissingResourceException
+	{
+		final IResourceSettings resourceSettings = Application.get().getResourceSettings();
+
+		String value = getStringIgnoreSettings(key, component, model, locale, style, null);
+		if ((value == null) && (defaultValue != null))
+		{
+			// Resource not found, so handle missing resources based on
+			// application configuration and try the default value
+			if (resourceSettings.getUseDefaultOnMissingResource())
+			{
+				value = defaultValue;
+			}
+		}
+
+		// If a property value has been found, or a default value was given,
+		// than replace the placeholder and we are done
+		if (value != null)
+		{
+			return substitutePropertyExpressions(component, value, model);
+		}
+
+		if (resourceSettings.getThrowExceptionOnMissingResource())
+		{
+			AppendingStringBuffer message = new AppendingStringBuffer("Unable to find property: '");
+			message.append(key);
+			message.append("'");
+
+			if (component != null)
+			{
+				message.append(" for component: ");
+				message.append(component.getPageRelativePath());
+				message.append(" [class=").append(component.getClass().getName()).append("]");
+			}
+
+			throw new MissingResourceException(message.toString(), (component != null
+				? component.getClass().getName() : ""), key);
+		}
+
+		return "[Warning: Property for '" + key + "' not found]";
+	}
+
+	/**
+	 * @see #getStringIgnoreSettings(String, Component, IModel, Locale, String, String)
+	 * 
+	 * @param key
+	 *            The key to obtain the resource for
+	 * @param component
+	 *            The component to get the resource for (optional)
+	 * @param model
+	 *            The model to use for substitutions in the strings (optional)
+	 * @param defaultValue
+	 *            The default value (optional)
+	 * @return The string resource
+	 */
+	public final String getStringIgnoreSettings(final String key, final Component component,
+		final IModel<?> model, final String defaultValue)
+	{
+		return getStringIgnoreSettings(key, component, model, null, null, defaultValue);
 	}
 
 	/**
@@ -164,12 +273,16 @@ public class Localizer
 	 *            The component to get the resource for (optional)
 	 * @param model
 	 *            The model to use for substitutions in the strings (optional)
+	 * @param locale
+	 *            If != null, it'll supersede the component's locale
+	 * @param style
+	 *            If != null, it'll supersede the component's style
 	 * @param defaultValue
 	 *            The default value (optional)
 	 * @return The string resource
 	 */
-	public String getStringIgnoreSettings(final String key, final Component component,
-		final IModel<?> model, final String defaultValue)
+	public final String getStringIgnoreSettings(final String key, final Component component,
+		final IModel<?> model, Locale locale, String style, final String defaultValue)
 	{
 		boolean addedToPage = false;
 		if (component != null)
@@ -179,7 +292,7 @@ public class Localizer
 				addedToPage = true;
 			}
 
-			if (!addedToPage)
+			if (!addedToPage && log.isWarnEnabled())
 			{
 				log.warn(
 					"Tried to retrieve a localized string for a component that has not yet been added to the page. "
@@ -192,11 +305,32 @@ public class Localizer
 		String cacheKey = null;
 		String value = null;
 
+		// Make sure locale, style and variation have the right values
+		String variation = (component != null ? component.getVariation() : null);
+
+		if ((locale == null) && (component != null))
+		{
+			locale = component.getLocale();
+		}
+		if (locale == null)
+		{
+			locale = Session.exists() ? Session.get().getLocale() : Locale.getDefault();
+		}
+
+		if ((style == null) && (component != null))
+		{
+			style = component.getStyle();
+		}
+		if (style == null)
+		{
+			style = Session.exists() ? Session.get().getStyle() : null;
+		}
+
 		// If this component is not yet added to page we do not want to check
 		// cache as we can generate an invalid cache key
 		if ((cache != null) && ((component == null) || addedToPage))
 		{
-			cacheKey = getCacheKey(key, component);
+			cacheKey = getCacheKey(key, component, locale, style, variation);
 		}
 
 		// Value not found are cached as well (value = null)
@@ -218,15 +352,13 @@ public class Localizer
 					(component != null ? component.toString(false) : null) + "'");
 			}
 
-			// Iterate over all registered string resource loaders until the
-			// property has been found
-			for (IStringResourceLoader loader : getStringResourceLoaders())
+			// Iterate over all registered string resource loaders until the property has been found
+			Iterator<IStringResourceLoader> iter = getStringResourceLoaders().iterator();
+			value = null;
+			while (iter.hasNext() && (value == null))
 			{
-				value = loader.loadStringResource(component, key);
-				if (value != null)
-				{
-					break;
-				}
+				IStringResourceLoader loader = iter.next();
+				value = loader.loadStringResource(component, key, locale, style, variation);
 			}
 
 			// Cache the result incl null if not found
@@ -265,67 +397,6 @@ public class Localizer
 	protected List<IStringResourceLoader> getStringResourceLoaders()
 	{
 		return Application.get().getResourceSettings().getStringResourceLoaders();
-	}
-
-	/**
-	 * Get the localized string using all of the supplied parameters. This method is left public to
-	 * allow developers full control over string resource loading. However, it is recommended that
-	 * one of the other convenience methods in the class are used as they handle all of the work
-	 * related to obtaining the current user locale and style information.
-	 * 
-	 * @param key
-	 *            The key to obtain the resource for
-	 * @param component
-	 *            The component to get the resource for (optional)
-	 * @param model
-	 *            The model to use for substitutions in the strings (optional)
-	 * @param defaultValue
-	 *            The default value (optional)
-	 * @return The string resource
-	 * @throws MissingResourceException
-	 *             If resource not found and configuration dictates that exception should be thrown
-	 */
-	public String getString(final String key, final Component component, final IModel<?> model,
-		final String defaultValue) throws MissingResourceException
-	{
-		final IResourceSettings resourceSettings = Application.get().getResourceSettings();
-
-		String value = getStringIgnoreSettings(key, component, model, null);
-		if ((value == null) && (defaultValue != null))
-		{
-			// Resource not found, so handle missing resources based on
-			// application configuration and try the default value
-			if (resourceSettings.getUseDefaultOnMissingResource())
-			{
-				value = defaultValue;
-			}
-		}
-
-		// If a property value has been found, or a default value was given,
-		// than replace the placeholder and we are done
-		if (value != null)
-		{
-			return substitutePropertyExpressions(component, value, model);
-		}
-
-		if (resourceSettings.getThrowExceptionOnMissingResource())
-		{
-			AppendingStringBuffer message = new AppendingStringBuffer("Unable to find property: '");
-			message.append(key);
-			message.append("'");
-
-			if (component != null)
-			{
-				message.append(" for component: ");
-				message.append(component.getPageRelativePath());
-				message.append(" [class=").append(component.getClass().getName()).append("]");
-			}
-
-			throw new MissingResourceException(message.toString(), (component != null
-				? component.getClass().getName() : ""), key);
-		}
-
-		return "[Warning: Property for '" + key + "' not found]";
 	}
 
 	/**
@@ -380,9 +451,14 @@ public class Localizer
 	 * 
 	 * @param key
 	 * @param component
+	 * @param locale
+	 *            Guaranteed to be != null
+	 * @param style
+	 * @param variation
 	 * @return The value of the key
 	 */
-	protected String getCacheKey(final String key, final Component component)
+	protected String getCacheKey(final String key, final Component component, final Locale locale,
+		final String style, final String variation)
 	{
 		String cacheKey = key;
 		if (component != null)
@@ -400,29 +476,28 @@ public class Localizer
 					break;
 				}
 
+				/*
+				 * only append component id if parent is not a repeater because (a) these ids are
+				 * irrelevant when generating resource cache keys (b) they cause a lot of redundant
+				 * keys to be generated
+				 */
 				if (cursor.getParent() != null && !(cursor.getParent() instanceof AbstractRepeater))
 				{
-					/*
-					 * only append component id if parent is not a repeater because
-					 * 
-					 * (a) these ids are irrelevant when generating resource cache keys
-					 * 
-					 * (b) they cause a lot of redundant keys to be generated
-					 */
 					buffer.append(":").append(cursor.getId());
 				}
-				cursor = cursor.getParent();
 
+				cursor = cursor.getParent();
 			}
 
-			buffer.append("-").append(component.getLocale());
-			buffer.append("-").append(component.getStyle());
-			buffer.append("-").append(component.getVariation());
+			buffer.append("-").append(locale);
+			buffer.append("-").append(style);
+			buffer.append("-").append(variation);
 			cacheKey = buffer.toString();
 		}
 		else
 		{
-			cacheKey += "-" + Session.get().getLocale().toString();
+			// locale is guaranteed to be != null
+			cacheKey += "-" + locale.toString();
 		}
 
 		return cacheKey;

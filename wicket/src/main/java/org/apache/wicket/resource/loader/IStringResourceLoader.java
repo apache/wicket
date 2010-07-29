@@ -69,16 +69,26 @@ public interface IStringResourceLoader
 		String variation);
 
 	/**
-	 * Get the string resource for the given combination of component and resource key. The
-	 * component provided is used to allow implementation of component specific resource loading
-	 * (e.g. per page or per reusable component). The key should be a String containing a lookup key
-	 * into a resource bundle. The Locale and the style will be taken from the Component provided.
+	 * Get the string resource for the given combination of component, resource key, locale and
+	 * style. The component provided is used to allow implementation of component specific resource
+	 * loading (e.g. per page or per reusable component). The key should be a String containing a
+	 * lookup key into a resource bundle. The Locale and the style will be taken from the Component
+	 * provided.
 	 * 
 	 * @param component
 	 *            The component to get the string resource for
 	 * @param key
 	 *            The key should be a String containing a lookup key into a resource bundle
+	 * @param locale
+	 *            Will be preset with the appropriate value. You shall ignore the component's
+	 *            locale.
+	 * @param style
+	 *            Will be preset with the appropriate value. You shall ignore the component's style.
+	 * @param variation
+	 *            Will be preset with the appropriate value. You shall ignore the component's
+	 *            variation.
 	 * @return The string resource value or null if the resource could not be loaded by this loader
 	 */
-	String loadStringResource(Component component, String key);
+	String loadStringResource(Component component, String key, Locale locale, String style,
+		String variation);
 }

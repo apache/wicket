@@ -42,7 +42,8 @@ public class PackageStringResourceLoaderTest extends WicketTestCase
 	{
 		Page page = new Test1();
 		PackageStringResourceLoader loader = new PackageStringResourceLoader();
-		assertEquals("test successful", loader.loadStringResource(page, "my_package_test_1"));
+		assertEquals("test successful", loader.loadStringResource(page, "my_package_test_1", null,
+			null, null));
 	}
 
 	/**
@@ -52,7 +53,8 @@ public class PackageStringResourceLoaderTest extends WicketTestCase
 	{
 		Page page = new Test1();
 		PackageStringResourceLoader loader = new PackageStringResourceLoader();
-		assertEquals("test 222", loader.loadStringResource(page, "my_package_test_2"));
+		assertEquals("test 222", loader.loadStringResource(page, "my_package_test_2", null, null,
+			null));
 	}
 
 	/**
@@ -62,7 +64,7 @@ public class PackageStringResourceLoaderTest extends WicketTestCase
 	{
 		Page page = new Test1();
 		PackageStringResourceLoader loader = new PackageStringResourceLoader();
-		assertNull(loader.loadStringResource(page, "abcdefgh"));
+		assertNull(loader.loadStringResource(page, "abcdefgh", null, null, null));
 	}
 
 	/**

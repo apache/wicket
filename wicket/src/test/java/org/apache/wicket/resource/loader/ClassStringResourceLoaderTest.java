@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.resource.loader;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.validator.AbstractValidator;
@@ -25,7 +26,6 @@ import org.apache.wicket.validation.validator.AbstractValidator;
  */
 public class ClassStringResourceLoaderTest extends WicketTestCase
 {
-
 	/**
 	 * Construct.
 	 * 
@@ -44,7 +44,8 @@ public class ClassStringResourceLoaderTest extends WicketTestCase
 		ClassStringResourceLoader loader = new ClassStringResourceLoader(MyValidator.class);
 		tester.getApplication().getResourceSettings().addStringResourceLoader(loader);
 
-		assertEquals("${label} is invalid", loader.loadStringResource(null, "error"));
+		assertEquals("${label} is invalid", loader.loadStringResource((Component)null, "error",
+			null, null, null));
 	}
 
 	/**

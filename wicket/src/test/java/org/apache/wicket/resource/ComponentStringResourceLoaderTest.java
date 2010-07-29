@@ -68,7 +68,7 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	public void testNullComponent()
 	{
 		Assert.assertNull("Null component should skip resource load", loader.loadStringResource(
-			null, "test.string", Locale.getDefault(), null, null));
+			(Component)null, "test.string", Locale.getDefault(), null, null));
 	}
 
 	/**

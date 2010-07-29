@@ -18,12 +18,8 @@ package org.apache.wicket.resource.loader;
 
 import java.util.Locale;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.resource.IPropertiesFactory;
-import org.apache.wicket.resource.Properties;
-import org.apache.wicket.util.resource.locator.ResourceNameIterator;
 import org.apache.wicket.validation.IValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +37,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author igor.vaynberg
  */
-public class ValidatorStringResourceLoader implements IStringResourceLoader
+public class ValidatorStringResourceLoader extends ComponentStringResourceLoader
 {
 	private static final Logger log = LoggerFactory.getLogger(ValidatorStringResourceLoader.class);
 
@@ -53,10 +49,10 @@ public class ValidatorStringResourceLoader implements IStringResourceLoader
 	}
 
 	/**
-	 * 
-	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(java.lang.Class,
+	 * @see org.apache.wicket.resource.loader.ComponentStringResourceLoader#loadStringResource(java.lang.Class,
 	 *      java.lang.String, java.util.Locale, java.lang.String, java.lang.String)
 	 */
+	@Override
 	public String loadStringResource(Class<?> clazz, final String key, final Locale locale,
 		final String style, final String variation)
 	{
@@ -66,59 +62,17 @@ public class ValidatorStringResourceLoader implements IStringResourceLoader
 			return null;
 		}
 
-		IPropertiesFactory propertiesFactory = Application.get()
-			.getResourceSettings()
-			.getPropertiesFactory();
-
-		while (true)
-		{
-			// figure out the base path for the class
-			String path = clazz.getName().replace('.', '/');
-
-			// iterate over all the combinations
-			ResourceNameIterator iter = new ResourceNameIterator(path, style, variation, locale,
-				null, false);
-			while (iter.hasNext())
-			{
-				String newPath = iter.next();
-
-				final Properties props = propertiesFactory.load(clazz, newPath);
-				if (props != null)
-				{
-					// Lookup the value
-					String value = props.getString(key);
-					if (value != null)
-					{
-						if (log.isDebugEnabled())
-						{
-							log.debug("Found resource from: " + props + "; key: " + key);
-						}
-
-						return value;
-					}
-				}
-			}
-
-			// Move to the next superclass
-			clazz = clazz.getSuperclass();
-
-			if (clazz == null || Object.class.equals(clazz))
-			{
-				// nothing more to search, done
-				break;
-			}
-		}
-
-		// not found
-		return null;
+		return super.loadStringResource(clazz, key, locale, style, variation);
 	}
 
 	/**
-	 * 
-	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(org.apache.wicket.Component,
-	 *      java.lang.String)
+	 * @see org.apache.wicket.resource.loader.ComponentStringResourceLoader#loadStringResource(org.apache.wicket.Component,
+	 *      java.lang.String, java.util.Locale, java.lang.String, java.lang.String)
 	 */
-	public String loadStringResource(final Component component, final String key)
+	@Override
+	@SuppressWarnings("unchecked")
+	public String loadStringResource(final Component component, final String key,
+		final Locale locale, final String style, final String variation)
 	{
 		if (component == null || !(component instanceof FormComponent))
 		{
@@ -126,11 +80,6 @@ public class ValidatorStringResourceLoader implements IStringResourceLoader
 		}
 
 		FormComponent<?> fc = (FormComponent<?>)component;
-
-		Locale locale = component.getLocale();
-		String style = component.getStyle();
-		String variation = component.getVariation();
-
 		for (IValidator<?> validator : fc.getValidators())
 		{
 			String resource = loadStringResource(validator.getClass(), key, locale, style,
@@ -144,5 +93,4 @@ public class ValidatorStringResourceLoader implements IStringResourceLoader
 		// not found
 		return null;
 	}
-
 }

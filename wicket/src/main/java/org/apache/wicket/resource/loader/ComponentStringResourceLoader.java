@@ -106,7 +106,6 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	}
 
 	/**
-	 * 
 	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(java.lang.Class,
 	 *      java.lang.String, java.util.Locale, java.lang.String, java.lang.String)
 	 */
@@ -203,11 +202,11 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	}
 
 	/**
-	 * 
 	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(org.apache.wicket.Component,
-	 *      java.lang.String)
+	 *      java.lang.String, java.util.Locale, java.lang.String, java.lang.String)
 	 */
-	public String loadStringResource(final Component component, final String key)
+	public String loadStringResource(final Component component, final String key,
+		final Locale locale, final String style, final String variation)
 	{
 		if (component == null)
 		{
@@ -221,9 +220,6 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 
 		// The return value
 		String string = null;
-		Locale locale = component.getLocale();
-		String style = component.getStyle();
-		String variation = component.getVariation();
 
 		// The key prefix is equal to the component path relative to the
 		// current component on the top of the stack.
@@ -232,6 +228,9 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 		// The reason why we need to create that stack is because we need to
 		// walk it downwards starting with Page down to the Component
 		List<Class<?>> searchStack = getComponentStack(component);
+
+		// TODO Should be changed to false in 1.5
+		final boolean old = true;
 
 		// Walk the component hierarchy down from page to the component
 		for (int i = searchStack.size() - 1; (i >= 0) && (string == null); i--)
@@ -243,16 +242,24 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 			if ((prefix != null) && (prefix.length() > 0))
 			{
 				string = loadStringResource(clazz, prefix + '.' + key, locale, style, variation);
+
 				if (string == null)
 				{
 					prefix = Strings.afterFirst(prefix, '.');
 				}
 			}
+
+			// If not found, than check if a property with the 'key' provided by
+			// the user can be found.
+			if ((string == null) && old)
+			{
+				string = loadStringResource(clazz, key, locale, style, variation);
+			}
 		}
 
 		// If not found, than check if a property with the 'key' provided by
 		// the user can be found.
-		if (string == null)
+		if ((string == null) && !old)
 		{
 			// Walk the component hierarchy down from page to the component
 			for (int i = searchStack.size() - 1; (i >= 0) && (string == null); i--)

@@ -20,7 +20,6 @@ import java.lang.ref.WeakReference;
 import java.util.Locale;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.Session;
 
 
 /**
@@ -68,16 +67,16 @@ public class ClassStringResourceLoader extends ComponentStringResourceLoader
 
 	/**
 	 * @see org.apache.wicket.resource.loader.ComponentStringResourceLoader#loadStringResource(org.apache.wicket.Component,
-	 *      java.lang.String)
+	 *      java.lang.String, java.util.Locale, java.lang.String)
 	 */
 	@Override
-	public String loadStringResource(Component component, String key)
+	public String loadStringResource(final Component component, final String key,
+		final Locale locale, final String style, final String variation)
 	{
 		if (component == null)
 		{
-			return loadStringResource(null, key, Session.get().getLocale(), Session.get()
-				.getStyle(), null);
+			return super.loadStringResource(clazzRef.get(), key, locale, style, variation);
 		}
-		return super.loadStringResource(component, key);
+		return super.loadStringResource(component, key, locale, style, variation);
 	}
 }
