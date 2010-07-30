@@ -37,6 +37,8 @@ import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
  * This is Wicket's default markup parser. It gets pre-configured with Wicket's default wicket
  * filters.
  * 
+ * @see MarkupFactory
+ * 
  * @author Juergen Donnerstag
  */
 public class MarkupParser extends AbstractMarkupParser
