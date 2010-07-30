@@ -117,11 +117,11 @@ public class MarkupParser extends AbstractMarkupParser
 	 * b) Allows to disable Wicket filters via returning false
 	 * 
 	 * @param filter
-	 * @return If false, the filter will not be added
+	 * @return The filter to be added. Null to ignore.
 	 */
-	protected boolean onAppendMarkupFilter(final IMarkupFilter filter)
+	protected IMarkupFilter onAppendMarkupFilter(final IMarkupFilter filter)
 	{
-		return true;
+		return filter;
 	}
 
 	/**
@@ -143,11 +143,11 @@ public class MarkupParser extends AbstractMarkupParser
 			 * @see org.apache.wicket.markup.MarkupFactory.MarkupFilterList#onAdd(org.apache.wicket.markup.parser.IMarkupFilter)
 			 */
 			@Override
-			protected boolean onAdd(final IMarkupFilter filter)
+			protected IMarkupFilter onAdd(final IMarkupFilter filter)
 			{
 				// a) allow users to configure wicket filters
-				// b) if return value == false, the filter will not be added
-				return onAppendMarkupFilter(filter);
+				// b) if return value == null, the filter will not be added
+				return MarkupParser.this.onAppendMarkupFilter(filter);
 			}
 		};
 
@@ -207,10 +207,10 @@ public class MarkupParser extends AbstractMarkupParser
 		 * @param beforeFilter
 		 * @return true, if successful
 		 */
-		public boolean add(final IMarkupFilter filter,
-			final Class<? extends IMarkupFilter> beforeFilter)
+		public boolean add(IMarkupFilter filter, final Class<? extends IMarkupFilter> beforeFilter)
 		{
-			if (onAdd(filter) == false)
+			filter = onAdd(filter);
+			if (filter == null)
 			{
 				return false;
 			}
@@ -232,11 +232,11 @@ public class MarkupParser extends AbstractMarkupParser
 		 * b) Allows to disable Wicket filters via returning false
 		 * 
 		 * @param filter
-		 * @return If false, the filter will not be added
+		 * @return The filter to be added. Null to ignore
 		 */
-		protected boolean onAdd(final IMarkupFilter filter)
+		protected IMarkupFilter onAdd(final IMarkupFilter filter)
 		{
-			return true;
+			return filter;
 		}
 	}
 }

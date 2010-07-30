@@ -99,9 +99,9 @@ public class MarkupFactory
 			 * @see org.apache.wicket.markup.WicketMarkupParser#onAppendMarkupFilter(org.apache.wicket.markup.parser.IMarkupFilter)
 			 */
 			@Override
-			protected boolean onAppendMarkupFilter(IMarkupFilter filter)
+			protected IMarkupFilter onAppendMarkupFilter(final IMarkupFilter filter)
 			{
-				return super.onAppendMarkupFilter(filter);
+				return MarkupFactory.this.onAppendMarkupFilter(filter);
 			}
 		};
 	}
@@ -109,14 +109,16 @@ public class MarkupFactory
 	/**
 	 * a) Allow subclasses to configure individual Wicket filters
 	 * <p>
-	 * b) Allows to disable Wicket filters via returning false
+	 * b) Allow to replace default filter with extended one
+	 * <p>
+	 * c) Allows to disable Wicket filters via returning false
 	 * 
 	 * @param filter
-	 * @return If false, the filter will not be added
+	 * @return The filter to be added. Null to ignore.
 	 */
-	protected boolean onAppendMarkupFilter(final IMarkupFilter filter)
+	protected IMarkupFilter onAppendMarkupFilter(final IMarkupFilter filter)
 	{
-		return true;
+		return filter;
 	}
 
 	/**
