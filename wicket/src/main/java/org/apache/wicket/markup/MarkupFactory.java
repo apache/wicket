@@ -23,6 +23,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.loader.DefaultMarkupLoader;
 import org.apache.wicket.markup.loader.IMarkupLoader;
+import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -80,13 +81,42 @@ public class MarkupFactory
 	}
 
 	/**
+	 * Create a new markup parser.
+	 * <p>
+	 * In case you want to add you own markup filters, than subclass the method and call
+	 * {@link WicketMarkupParser#add(IMarkupFilter)} for your own filter on the markup parser
+	 * returned.
+	 * 
 	 * @param resource
 	 * @return A new markup parser
 	 */
 	public MarkupParser newMarkupParser(final MarkupResourceStream resource)
 	{
 		// Markup parsers can not be re-used
-		return new MarkupParser(new XmlPullParser(), resource);
+		return new MarkupParser(new XmlPullParser(), resource)
+		{
+			/**
+			 * @see org.apache.wicket.markup.WicketMarkupParser#onAppendMarkupFilter(org.apache.wicket.markup.parser.IMarkupFilter)
+			 */
+			@Override
+			protected boolean onAppendMarkupFilter(IMarkupFilter filter)
+			{
+				return super.onAppendMarkupFilter(filter);
+			}
+		};
+	}
+
+	/**
+	 * a) Allow subclasses to configure individual Wicket filters
+	 * <p>
+	 * b) Allows to disable Wicket filters via returning false
+	 * 
+	 * @param filter
+	 * @return If false, the filter will not be added
+	 */
+	protected boolean onAppendMarkupFilter(final IMarkupFilter filter)
+	{
+		return true;
 	}
 
 	/**
@@ -137,6 +167,7 @@ public class MarkupFactory
 	{
 		Checks.argumentNotNull(container, "container");
 		Checks.argumentNotNull(clazz, "clazz");
+
 		IMarkupCache cache = getMarkupCache();
 		if (cache != null)
 		{

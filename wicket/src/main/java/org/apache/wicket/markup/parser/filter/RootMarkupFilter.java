@@ -61,17 +61,17 @@ public final class RootMarkupFilter implements IMarkupFilter
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.parser.IMarkupFilter#getParent()
+	 * @see org.apache.wicket.markup.parser.IMarkupFilter#getNextFilter()
 	 */
-	public IMarkupFilter getParent()
+	public IMarkupFilter getNextFilter()
 	{
 		return null;
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.parser.IMarkupFilter#setParent(org.apache.wicket.markup.parser.IMarkupFilter)
+	 * @see org.apache.wicket.markup.parser.IMarkupFilter#setNextFilter(org.apache.wicket.markup.parser.IMarkupFilter)
 	 */
-	public void setParent(final IMarkupFilter parent)
+	public void setNextFilter(final IMarkupFilter parent)
 	{
 		throw new IllegalArgumentException("You can not set the parent with RootMarkupFilter.");
 	}

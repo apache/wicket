@@ -40,7 +40,7 @@ public interface IMarkupFilter
 	 * 
 	 * @return The next filter in the chain, or null if the last one.
 	 */
-	IMarkupFilter getParent();
+	IMarkupFilter getNextFilter();
 
 	/**
 	 * Get the next MarkupElement from the parent MarkupFilter and handle it if the specific filter
@@ -58,5 +58,5 @@ public interface IMarkupFilter
 	 * @param parent
 	 *            The next element in the chain
 	 */
-	void setParent(final IMarkupFilter parent);
+	void setNextFilter(final IMarkupFilter parent);
 }

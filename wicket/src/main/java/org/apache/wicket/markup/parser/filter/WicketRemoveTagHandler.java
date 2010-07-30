@@ -69,7 +69,7 @@ public final class WicketRemoveTagHandler extends BaseMarkupFilter
 
 		// Find the corresponding close tag and remove all tags in between
 		ComponentTag closeTag;
-		while (null != (closeTag = (ComponentTag)getParent().nextTag()))
+		while (null != (closeTag = (ComponentTag)getNextFilter().nextTag()))
 		{
 			// No Wicket component tags are allowed within the preview region.
 			// Wicket components will a component name assigned.

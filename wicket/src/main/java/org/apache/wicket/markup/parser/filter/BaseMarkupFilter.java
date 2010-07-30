@@ -59,7 +59,7 @@ public abstract class BaseMarkupFilter extends AbstractMarkupFilter
 	{
 		// Get the next tag from the next MarkupFilter in the chain.
 		// If null, no more tags are available
-		final MarkupElement tag = getParent().nextTag();
+		final MarkupElement tag = getNextFilter().nextTag();
 		if (tag == null)
 		{
 			return tag;

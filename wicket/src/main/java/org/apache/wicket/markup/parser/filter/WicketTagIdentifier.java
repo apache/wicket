@@ -76,7 +76,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	{
 		// Get the next tag from the markup.
 		// If null, no more tags are available
-		XmlTag xmlTag = (XmlTag)getParent().nextTag();
+		XmlTag xmlTag = (XmlTag)getNextFilter().nextTag();
 		if (xmlTag == null)
 		{
 			return xmlTag;

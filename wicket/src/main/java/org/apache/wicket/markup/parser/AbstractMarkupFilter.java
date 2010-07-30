@@ -56,7 +56,7 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	/**
 	 * @return The next MarkupFilter in the chain
 	 */
-	public final IMarkupFilter getParent()
+	public final IMarkupFilter getNextFilter()
 	{
 		return parent;
 	}
@@ -67,7 +67,7 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	 * @param parent
 	 *            The parent of this component The next element in the chain
 	 */
-	public final void setParent(final IMarkupFilter parent)
+	public final void setNextFilter(final IMarkupFilter parent)
 	{
 		this.parent = parent;
 	}
@@ -81,7 +81,7 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	 */
 	protected final ComponentTag nextComponentTag() throws ParseException
 	{
-		return (ComponentTag)getParent().nextTag();
+		return (ComponentTag)getNextFilter().nextTag();
 	}
 
 	/**

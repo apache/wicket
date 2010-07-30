@@ -16,71 +16,31 @@
  */
 package org.apache.wicket.markup;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.IXmlPullParser;
-import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.parser.filter.HeadForceTagIdHandler;
 import org.apache.wicket.markup.parser.filter.HtmlHandler;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.parser.filter.OpenCloseTagExpander;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
-import org.apache.wicket.markup.parser.filter.RootMarkupFilter;
 import org.apache.wicket.markup.parser.filter.WicketLinkTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketMessageTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketNamespaceHandler;
 import org.apache.wicket.markup.parser.filter.WicketRemoveTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
-import org.apache.wicket.settings.IMarkupSettings;
-import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
-import org.apache.wicket.util.resource.StringResourceStream;
-import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- * This is a Wicket MarkupParser specifically for (X)HTML. It makes use of a streaming XML parser to
- * read the markup and IMarkupFilters to remove comments, identify Wicket relevant tags, apply html
- * specific treatments etc..
- * <p>
- * The result will be an Markup object, which is basically a list, containing Wicket relevant tags
- * and RawMarkup.
+ * This is Wicket's default markup parser. It gets pre-configured with Wicket's default wicket
+ * filters.
  * 
- * @see IMarkupFilter
- * @see IMarkupParserFactory
- * @see IMarkupSettings
- * @see MarkupResourceData
- * 
- * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public class MarkupParser
+public class MarkupParser extends AbstractMarkupParser
 {
-	/** Log for reporting. */
-	private static final Logger log = LoggerFactory.getLogger(MarkupParser.class);
-
-	/** Conditional comment section, which is NOT treated as a comment section */
-	private static final Pattern CONDITIONAL_COMMENT = Pattern.compile("\\[if .+\\]>((?s).*)<!\\[endif\\]");
-
-	/** The XML parser to use */
-	private final IXmlPullParser xmlParser;
-
-	/** The markup handler chain: each filter has a specific task */
-	private IMarkupFilter markupFilterChain;
-
-	/** The markup created by reading the markup file */
-	private final Markup markup;
-
-	/** Temporary variable: Application.get().getMarkupSettings() */
-	private final IMarkupSettings markupSettings;
-
 	/**
 	 * Constructor.
 	 * 
@@ -89,7 +49,7 @@ public class MarkupParser
 	 */
 	public MarkupParser(final MarkupResourceStream resource)
 	{
-		this(new XmlPullParser(), resource);
+		super(resource);
 	}
 
 	/**
@@ -100,7 +60,7 @@ public class MarkupParser
 	 */
 	public MarkupParser(final String markup)
 	{
-		this(new XmlPullParser(), new MarkupResourceStream(new StringResourceStream(markup)));
+		super(markup);
 	}
 
 	/**
@@ -113,52 +73,89 @@ public class MarkupParser
 	 */
 	public MarkupParser(final IXmlPullParser xmlParser, final MarkupResourceStream resource)
 	{
-		this.xmlParser = xmlParser;
-		markupSettings = Application.get().getMarkupSettings();
-
-		markup = new Markup(resource);
-
-		// Initialize the markup filter chain
-		initializeMarkupFilters();
+		super(xmlParser, resource);
 	}
 
 	/**
-	 * In case you want to analyze markup which BY DEFAULT does not use "wicket" to find relevant
-	 * tags.
+	 * @see org.apache.wicket.markup.MarkupParser#getMarkupFilters()
+	 */
+	@Override
+	public MarkupFilterList getMarkupFilters()
+	{
+		return (MarkupFilterList)super.getMarkupFilters();
+	}
+
+	/**
+	 * Add a markup filter
 	 * 
-	 * @param namespace
+	 * @param filter
+	 * @return true, if successful
 	 */
-	public final void setWicketNamespace(final String namespace)
+	public final boolean add(final IMarkupFilter filter)
 	{
-		markup.getMarkupResourceStream().setWicketNamespace(namespace);
+		return getMarkupFilters().add(filter);
 	}
 
 	/**
-	 * Applications which subclass initFilterChain() might also wish to access the markup resource
-	 * stream.
+	 * Add a markup filter before the 'beforeFilter'
 	 * 
-	 * @return The markup resource stream
+	 * @param filter
+	 * @param beforeFilter
+	 * @return true, if successful
 	 */
-	protected MarkupResourceStream getMarkupResourceStream()
+	public final boolean add(final IMarkupFilter filter,
+		final Class<? extends IMarkupFilter> beforeFilter)
 	{
-		return markup.getMarkupResourceStream();
+		return getMarkupFilters().add(filter, beforeFilter);
 	}
 
 	/**
-	 * Create a new markup filter chain and initialize with all default filters required.
+	 * a) Allow subclasses to configure individual Wicket filters
+	 * <p>
+	 * b) Allows to disable Wicket filters via returning false
+	 * 
+	 * @param filter
+	 * @return If false, the filter will not be added
 	 */
-	private final void initializeMarkupFilters()
+	protected boolean onAppendMarkupFilter(final IMarkupFilter filter)
 	{
-		// Chain together all the different markup filters and configure them
-		markupFilterChain = new RootMarkupFilter(xmlParser);
+		return true;
+	}
+
+	/**
+	 * Initialize Wicket's MarkupParser with all necessary markup filters. You may subclass this
+	 * method, to add your own filters to the list.
+	 * 
+	 * @param markup
+	 * @return The list of markup filter
+	 */
+	@Override
+	protected MarkupFilterList initializeMarkupFilters(final Markup markup)
+	{
+		// MarkupFilterList is a simple extension of ArrayList providing few additional helpers
+		final MarkupFilterList filters = new MarkupFilterList()
+		{
+			private static final long serialVersionUID = 1L;
+
+			/**
+			 * @see org.apache.wicket.markup.MarkupFactory.MarkupFilterList#onAdd(org.apache.wicket.markup.parser.IMarkupFilter)
+			 */
+			@Override
+			protected boolean onAdd(final IMarkupFilter filter)
+			{
+				// a) allow users to configure wicket filters
+				// b) if return value == false, the filter will not be added
+				return onAppendMarkupFilter(filter);
+			}
+		};
 
 		MarkupResourceStream markupResourceStream = markup.getMarkupResourceStream();
 
-		appendMarkupFilter(new WicketTagIdentifier(markupResourceStream));
-		appendMarkupFilter(new HtmlHandler());
-		appendMarkupFilter(new WicketRemoveTagHandler());
-		appendMarkupFilter(new WicketLinkTagHandler());
-		appendMarkupFilter(new WicketNamespaceHandler(markupResourceStream));
+		filters.add(new WicketTagIdentifier(markupResourceStream));
+		filters.add(new HtmlHandler());
+		filters.add(new WicketRemoveTagHandler());
+		filters.add(new WicketLinkTagHandler());
+		filters.add(new WicketNamespaceHandler(markupResourceStream));
 
 		// Provided the wicket component requesting the markup is known ...
 		if ((markupResourceStream != null) && (markupResourceStream.getResource() != null))
@@ -166,336 +163,78 @@ public class MarkupParser
 			final ContainerInfo containerInfo = markupResourceStream.getContainerInfo();
 			if (containerInfo != null)
 			{
-				appendMarkupFilter(new WicketMessageTagHandler());
+				filters.add(new WicketMessageTagHandler());
 
 				// Pages require additional handlers
 				if (Page.class.isAssignableFrom(containerInfo.getContainerClass()))
 				{
-					appendMarkupFilter(new HtmlHeaderSectionHandler(markup));
+					filters.add(new HtmlHeaderSectionHandler(markup));
 				}
 
-				appendMarkupFilter(new HeadForceTagIdHandler(containerInfo.getContainerClass()));
+				filters.add(new HeadForceTagIdHandler(containerInfo.getContainerClass()));
 			}
 		}
 
-		appendMarkupFilter(new OpenCloseTagExpander());
-		appendMarkupFilter(new RelativePathPrefixHandler());
-		appendMarkupFilter(new EnclosureHandler());
+		filters.add(new OpenCloseTagExpander());
+		filters.add(new RelativePathPrefixHandler());
+		filters.add(new EnclosureHandler());
+
+		return filters;
 	}
 
 	/**
-	 * Append a new filter to the list of already pre-configured markup filters.
-	 * 
-	 * @param filter
-	 *            The filter to be appended
+	 * A simple extension to ArrayList to manage Wicket MarkupFilter's more easily
 	 */
-	public final void appendMarkupFilter(final IMarkupFilter filter)
+	public static class MarkupFilterList extends ArrayList<IMarkupFilter>
 	{
-		appendMarkupFilter(filter, RelativePathPrefixHandler.class);
-	}
+		private static final long serialVersionUID = 1L;
 
-	/**
-	 * Append a new filter to the list of already pre-configured markup filters. Add the new filter
-	 * before the "beforeFilter" which is identified by its class.
-	 * 
-	 * @param filter
-	 *            The filter to be appended
-	 * @param beforeFilter
-	 *            The filter will be added before the beforeFilter. If beforeFilter == null or
-	 *            beforeFilter not found than append to the end
-	 */
-	public final void appendMarkupFilter(final IMarkupFilter filter,
-		final Class<? extends IMarkupFilter> beforeFilter)
-	{
-		if ((beforeFilter == null) || (markupFilterChain == null))
+		/**
+		 * @see java.util.ArrayList#add(java.lang.Object)
+		 */
+		@Override
+		public boolean add(final IMarkupFilter filter)
 		{
-			filter.setParent(markupFilterChain);
-			markupFilterChain = filter;
-		}
-		else
-		{
-			IMarkupFilter current = markupFilterChain;
-			while (current != null)
-			{
-				if (current.getClass() == beforeFilter)
-				{
-					filter.setParent(current.getParent());
-					current.setParent(filter);
-					break;
-				}
-				current = current.getParent();
-			}
-
-			if (current == null)
-			{
-				filter.setParent(markupFilterChain);
-				markupFilterChain = filter;
-			}
-		}
-	}
-
-	/**
-	 * Reads and parses markup from a file.
-	 * 
-	 * @return The markup
-	 * @throws IOException
-	 * @throws ResourceStreamNotFoundException
-	 */
-	public final Markup parse() throws IOException, ResourceStreamNotFoundException
-	{
-		MarkupResourceStream markupResourceStream = markup.getMarkupResourceStream();
-
-		// Initialize the xml parser
-		xmlParser.parse(markupResourceStream.getResource().getInputStream(),
-			markupSettings.getDefaultMarkupEncoding());
-
-		// parse the xml markup and tokenize it into wicket relevant markup
-		// elements
-		parseMarkup();
-
-		markupResourceStream.setEncoding(xmlParser.getEncoding());
-		markupResourceStream.setXmlDeclaration(xmlParser.getXmlDeclaration());
-
-		if (xmlParser.getXmlDeclaration() == null)
-		{
-			if (markupSettings.getThrowExceptionOnMissingXmlDeclaration())
-			{
-				throw new MarkupException(markupResourceStream.getResource(),
-					"The markup file does not have a XML declaration prolog. "
-						+ ". E.g. <?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
-			}
-			else
-			{
-				log.debug("The markup file does not have a XML declaration prolog: " +
-					markupResourceStream.getResource() +
-					". It is more save to use it. E.g. <?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
-			}
+			return add(filter, RelativePathPrefixHandler.class);
 		}
 
-		return markup;
-	}
-
-	/**
-	 * Get the next tag from the markup file
-	 * 
-	 * @return The next tag
-	 * @throws ParseException
-	 */
-	private ComponentTag getNextTag() throws ParseException
-	{
-		return (ComponentTag)markupFilterChain.nextTag();
-	}
-
-	/**
-	 * Scans the given markup and extracts balancing tags.
-	 */
-	private void parseMarkup()
-	{
-		try
+		/**
+		 * Insert a markup filter before a another one.
+		 * 
+		 * @param filter
+		 * @param beforeFilter
+		 * @return true, if successful
+		 */
+		public boolean add(final IMarkupFilter filter,
+			final Class<? extends IMarkupFilter> beforeFilter)
 		{
-			// always remember the latest index (size)
-			int size = markup.size();
-
-			// Loop through tags
-			ComponentTag tag;
-			while (null != (tag = getNextTag()))
+			if (onAdd(filter) == false)
 			{
-				boolean add = (tag.getId() != null);
-				if (!add && tag.getXmlTag().isClose())
-				{
-					add = ((tag.getOpenTag() != null) && (tag.getOpenTag().getId() != null));
-				}
-
-				// Add tag to list?
-				if (add || tag.isModified() || (markup.size() != size))
-				{
-					// Add text from last position to the current tag position
-					CharSequence text = xmlParser.getInputFromPositionMarker(tag.getPos());
-					if (text.length() > 0)
-					{
-						text = handleRawText(text.toString());
-
-						// Make sure you add it at the correct location.
-						// IMarkupFilters might have added elements as well.
-						markup.addMarkupElement(size, new RawMarkup(text));
-					}
-
-					xmlParser.setPositionMarker();
-
-					if (add)
-					{
-						// Add to the markup unless the tag has been flagged as
-						// to be removed from the markup. (e.g. <wicket:remove>
-						if (tag.isIgnore() == false)
-						{
-							markup.addMarkupElement(tag);
-						}
-					}
-					else if (tag.isModified())
-					{
-						markup.addMarkupElement(new RawMarkup(tag.toCharSequence()));
-					}
-					else
-					{
-						xmlParser.setPositionMarker(tag.getPos());
-					}
-				}
-
-				// always remember the latest index (size)
-				size = markup.size();
-			}
-		}
-		catch (final ParseException ex)
-		{
-			// Add remaining input string
-			final CharSequence text = xmlParser.getInputFromPositionMarker(-1);
-			if (text.length() > 0)
-			{
-				markup.addMarkupElement(new RawMarkup(text));
+				return false;
 			}
 
-			markup.getMarkupResourceStream().setEncoding(xmlParser.getEncoding());
-			markup.getMarkupResourceStream().setXmlDeclaration(xmlParser.getXmlDeclaration());
-
-			final MarkupStream markupStream = new MarkupStream(markup);
-			markupStream.setCurrentIndex(markup.size() - 1);
-			throw new MarkupException(markupStream, ex.getMessage(), ex);
-		}
-
-		// Add tail?
-		CharSequence text = xmlParser.getInputFromPositionMarker(-1);
-		if (text.length() > 0)
-		{
-			text = handleRawText(text.toString());
-
-			// Make sure you add it at the correct location.
-			// IMarkupFilters might have added elements as well.
-			markup.addMarkupElement(new RawMarkup(text));
-		}
-
-		// Make all tags immutable and the list of elements unmodifiable
-		markup.makeImmutable();
-	}
-
-	/**
-	 * 
-	 * @param rawMarkup
-	 * @return The modified raw markup
-	 */
-	protected CharSequence handleRawText(String rawMarkup)
-	{
-		// Get relevant settings from the Application
-		final boolean stripComments = markupSettings.getStripComments();
-		final boolean compressWhitespace = markupSettings.getCompressWhitespace();
-
-		if (stripComments)
-		{
-			rawMarkup = removeComment(rawMarkup);
-		}
-
-		if (compressWhitespace)
-		{
-			rawMarkup = compressWhitespace(rawMarkup);
-		}
-
-		return rawMarkup;
-	}
-
-	/**
-	 * Remove whitespace from the raw markup
-	 * 
-	 * @param rawMarkup
-	 * @return rawMarkup
-	 */
-	protected String compressWhitespace(String rawMarkup)
-	{
-		// We don't want to compress whitespace inside <pre> tags, so we look
-		// for matches and:
-		// - Do whitespace compression on everything before the first match.
-		// - Append the <pre>.*?</pre> match with no compression.
-		// - Loop to find the next match.
-		// - Append with compression everything between the two matches.
-		// - Repeat until no match, then special-case the fragment after the
-		// last <pre>.
-
-		Pattern preBlock = Pattern.compile("<pre>.*?</pre>", Pattern.DOTALL | Pattern.MULTILINE);
-		Matcher m = preBlock.matcher(rawMarkup);
-		int lastend = 0;
-		StringBuffer sb = null;
-		while (true)
-		{
-			boolean matched = m.find();
-			String nonPre = matched ? rawMarkup.substring(lastend, m.start())
-				: rawMarkup.substring(lastend);
-			nonPre = nonPre.replaceAll("[ \\t]+", " ");
-			nonPre = nonPre.replaceAll("( ?[\\r\\n] ?)+", "\n");
-
-			// Don't create a StringBuffer if we don't actually need one.
-			// This optimizes the trivial common case where there is no <pre>
-			// tag at all down to just doing the replaceAlls above.
-			if (lastend == 0)
+			int index = indexOf(beforeFilter);
+			if (index < 0)
 			{
-				if (matched)
-				{
-					sb = new StringBuffer(rawMarkup.length());
-				}
-				else
-				{
-					return nonPre;
-				}
+				return super.add(filter);
 			}
-			sb.append(nonPre);
-			if (matched)
-			{
-				sb.append(m.group());
-				lastend = m.end();
-			}
-			else
-			{
-				break;
-			}
-		}
-		return sb.toString();
-	}
 
-	/**
-	 * Remove all comment sections (&lt;!-- .. --&gt;) from the raw markup.
-	 * 
-	 * @param rawMarkup
-	 * @return raw markup
-	 */
-	private String removeComment(String rawMarkup)
-	{
-		// For reasons I don't understand, the following regex <code>"<!--(.|\n|\r)*?-->"<code>
-		// causes a stack overflow in some circumstances (jdk 1.5)
-		// See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=5050507
-		// See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6337993
-		int pos1 = rawMarkup.indexOf("<!--");
-		while (pos1 != -1)
+			super.add(index, filter);
+			return true;
+		}
+
+		/**
+		 * a) Allow subclasses to configure individual Wicket filters which otherwise can not be
+		 * accessed.
+		 * <p>
+		 * b) Allows to disable Wicket filters via returning false
+		 * 
+		 * @param filter
+		 * @return If false, the filter will not be added
+		 */
+		protected boolean onAdd(final IMarkupFilter filter)
 		{
-			final int pos2 = rawMarkup.indexOf("-->", pos1 + 4);
-
-			final AppendingStringBuffer buf = new AppendingStringBuffer(rawMarkup.length());
-			if (pos2 != -1)
-			{
-				final String comment = rawMarkup.substring(pos1 + 4, pos2);
-
-				// See wicket-2105 for an example where this rather simple regex throws an exception
-				// CONDITIONAL_COMMENT = Pattern.compile("\\[if .+\\]>(.|\n|\r)*<!\\[endif\\]");
-				// See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=5050507
-				// See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6337993
-				if (CONDITIONAL_COMMENT.matcher(comment).matches() == false)
-				{
-					buf.append(rawMarkup.substring(0, pos1));
-					if (rawMarkup.length() >= pos2 + 3)
-					{
-						buf.append(rawMarkup.substring(pos2 + 3));
-					}
-					rawMarkup = buf.toString();
-				}
-			}
-			pos1 = rawMarkup.length() <= pos1 + 2 ? -1 : rawMarkup.indexOf("<!--", pos1 + 4);
+			return true;
 		}
-		return rawMarkup;
 	}
 }

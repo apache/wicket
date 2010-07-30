@@ -45,7 +45,7 @@ public class HtmlProblemFinderTest extends WicketTestCase
 	public void testProblemFinder()
 	{
 		final MarkupParser parser = new MarkupParser("<img src=\"\"/>");
-		parser.appendMarkupFilter(new HtmlProblemFinder(HtmlProblemFinder.ERR_THROW_EXCEPTION),
+		parser.add(new HtmlProblemFinder(HtmlProblemFinder.ERR_THROW_EXCEPTION),
 			RelativePathPrefixHandler.class);
 
 		try
