@@ -43,6 +43,9 @@ import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
  */
 public class MarkupParser extends AbstractMarkupParser
 {
+	/** "wicket" */
+	public final static String WICKET = "wicket";
+
 	/**
 	 * Constructor.
 	 * 

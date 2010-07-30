@@ -50,7 +50,7 @@ public class ComponentTag extends MarkupElement
 	 * Standard component id attribute always available for components regardless of user
 	 * ApplicationSettings for id attribute; value == 'wicket'.
 	 */
-	public static final String DEFAULT_WICKET_NAMESPACE = "wicket";
+	public static final String DEFAULT_WICKET_NAMESPACE = MarkupParser.WICKET;
 
 	/**
 	 * Assuming this is a open (or open-close) tag, 'closes' refers to the ComponentTag which closes

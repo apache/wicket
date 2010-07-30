@@ -21,8 +21,8 @@ import java.util.Locale;
 import org.apache.wicket.MockPage;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.mapper.IMapperContext;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.ResourceReferenceRegistry;
@@ -49,7 +49,7 @@ public class TestMapperContext implements IMapperContext
 
 	public String getNamespace()
 	{
-		return "wicket";
+		return MarkupParser.WICKET;
 	}
 
 	public String getPageIdentifier()

@@ -19,6 +19,7 @@ package org.apache.wicket.markup.parser;
 import junit.framework.TestCase;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.util.tester.WicketTester;
 
@@ -35,7 +36,7 @@ public class MergedMarkupTest extends TestCase
 		MarkupStream markup = page.getAssociatedMarkupStream(true);
 		assertEquals("<?xml version=\"1.0\" encoding=\"utf-8\"?>", markup.getXmlDeclaration());
 		assertEquals("utf-8", markup.getEncoding());
-		assertEquals("wicket", markup.getWicketNamespace());
+		assertEquals(MarkupParser.WICKET, markup.getWicketNamespace());
 	}
 
 	public void test2()
@@ -46,6 +47,6 @@ public class MergedMarkupTest extends TestCase
 		MarkupStream markup = page.getAssociatedMarkupStream(true);
 		assertEquals("<?xml version=\"1.0\" encoding=\"utf-8\"?>", markup.getXmlDeclaration());
 		assertEquals("utf-8", markup.getEncoding());
-		assertEquals("wicket", markup.getWicketNamespace());
+		assertEquals(MarkupParser.WICKET, markup.getWicketNamespace());
 	}
 }
