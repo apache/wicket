@@ -70,9 +70,6 @@ public class WebSession extends Session
 		}
 	};
 
-	/** True when the user is signed in */
-	private volatile boolean signedIn;
-
 	/**
 	 * Constructor. Note that {@link RequestCycle} is not available until this constructor returns.
 	 * 
@@ -149,57 +146,9 @@ public class WebSession extends Session
 	@Override
 	public void invalidate()
 	{
-		signOut();
-
 		getApplication().getSecuritySettings().getAuthenticationStrategy().remove();
 
 		super.invalidate();
-	}
-
-	/**
-	 * Try to logon the user. It'll call {@link #authenticate(String, String)} to do the real work
-	 * and that is what you need to subclass to provide your own authentication mechanism.
-	 * 
-	 * @param username
-	 * @param password
-	 * @return true, if logon was successful
-	 */
-	public final boolean signIn(final String username, final String password)
-	{
-		return signedIn = authenticate(username, password);
-	}
-
-	/**
-	 * @return true, if user is signed in
-	 */
-	public final boolean isSignedIn()
-	{
-		return signedIn;
-	}
-
-	/**
-	 * Sign the user out.
-	 */
-	public void signOut()
-	{
-		signedIn = false;
-	}
-
-	/**
-	 * Cookie based logins (remember me) may not rely on putting username and password into the
-	 * cookie but something else that safely identifies the user. This method is meant to support
-	 * these use cases.
-	 * 
-	 * It is protected (and not public) to enforce that cookie based authentication gets implemented
-	 * in a subclass (like you need to subclass authenticate() for 'normal' authentication).
-	 * 
-	 * @see #authenticate(String, String)
-	 * 
-	 * @param value
-	 */
-	protected final void signIn(boolean value)
-	{
-		signedIn = value;
 	}
 
 	/**

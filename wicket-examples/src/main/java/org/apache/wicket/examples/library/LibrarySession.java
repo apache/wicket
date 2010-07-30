@@ -18,7 +18,8 @@ package org.apache.wicket.examples.library;
 
 import java.util.List;
 
-import org.apache.wicket.protocol.http.WebSession;
+import org.apache.wicket.authentication.AuthenticatedWebSession;
+import org.apache.wicket.authorization.strategies.role.Roles;
 import org.apache.wicket.request.Request;
 
 
@@ -27,7 +28,7 @@ import org.apache.wicket.request.Request;
  * 
  * @author Jonathan Locke
  */
-public final class LibrarySession extends WebSession
+public final class LibrarySession extends AuthenticatedWebSession
 {
 	// Logged in user
 	private User user;
@@ -105,11 +106,20 @@ public final class LibrarySession extends WebSession
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.WebSession#signOut()
+	 * @see org.apache.wicket.authentication.AuthenticatedWebSession#signOut()
 	 */
 	@Override
 	public void signOut()
 	{
 		user = null;
+	}
+
+	/**
+	 * @see org.apache.wicket.authentication.AuthenticatedWebSession#getRoles()
+	 */
+	@Override
+	public Roles getRoles()
+	{
+		return null;
 	}
 }

@@ -16,7 +16,8 @@
  */
 package org.apache.wicket.examples.authentication1;
 
-import org.apache.wicket.protocol.http.WebSession;
+import org.apache.wicket.authentication.AuthenticatedWebSession;
+import org.apache.wicket.authorization.strategies.role.Roles;
 import org.apache.wicket.request.Request;
 
 /**
@@ -24,7 +25,7 @@ import org.apache.wicket.request.Request;
  * 
  * @author Jonathan Locke
  */
-public final class SignInSession extends WebSession
+public final class SignInSession extends AuthenticatedWebSession
 {
 	/** Trivial user representation */
 	private String user;
@@ -81,5 +82,14 @@ public final class SignInSession extends WebSession
 	public void setUser(final String user)
 	{
 		this.user = user;
+	}
+
+	/**
+	 * @see org.apache.wicket.authentication.AuthenticatedWebSession#getRoles()
+	 */
+	@Override
+	public Roles getRoles()
+	{
+		return null;
 	}
 }

@@ -17,6 +17,7 @@
 package org.apache.wicket.authentication.panel;
 
 import org.apache.wicket.RestartResponseException;
+import org.apache.wicket.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.authentication.strategy.DefaultAuthenticationStrategy;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -204,7 +205,7 @@ public class SignInPanel extends Panel
 	 */
 	private boolean signIn(String username, String password)
 	{
-		return ((WebSession)getSession()).signIn(username, password);
+		return AuthenticatedWebSession.get().signIn(username, password);
 	}
 
 	/**
@@ -212,7 +213,7 @@ public class SignInPanel extends Panel
 	 */
 	private boolean isSignedIn()
 	{
-		return ((WebSession)getSession()).isSignedIn();
+		return AuthenticatedWebSession.get().isSignedIn();
 	}
 
 	/**
