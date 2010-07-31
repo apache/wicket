@@ -58,7 +58,6 @@ public final class Classes
 		return Class.forName(Packages.absolutePath(scope, path).replace('/', '.'));
 	}
 
-	
 
 	/**
 	 * Gets the name of a given class without the prefixed package path

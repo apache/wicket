@@ -28,10 +28,8 @@ import org.apache.wicket.request.http.WebResponse;
  * the url should be one of the following:
  * <ul>
  * <li>Fully qualified "http://foo.com/bar"</li>
- * <li>Relative to the Wicket filter/servlet, e.g. "?wicket:interface=foo",
- * "mounted_page"</li>
- * <li>Absolute within your web application's <strong>context root</strong>,
- * e.g. "/foo.html"</li>
+ * <li>Relative to the Wicket filter/servlet, e.g. "?wicket:interface=foo", "mounted_page"</li>
+ * <li>Absolute within your web application's <strong>context root</strong>, e.g. "/foo.html"</li>
  * </ul>
  * 
  * @author igor.vaynberg
@@ -60,7 +58,8 @@ public class RedirectRequestHandler implements IRequestHandler
 	 */
 	public RedirectRequestHandler(String redirectUrl, int status)
 	{
-		if (status != HttpServletResponse.SC_MOVED_PERMANENTLY && status != HttpServletResponse.SC_MOVED_TEMPORARILY)
+		if (status != HttpServletResponse.SC_MOVED_PERMANENTLY &&
+			status != HttpServletResponse.SC_MOVED_TEMPORARILY)
 		{
 			throw new IllegalStateException("Status must be either 301 or 302, but was: " + status);
 		}
@@ -88,7 +87,7 @@ public class RedirectRequestHandler implements IRequestHandler
 		{
 			// context-absolute url
 			location = requestCycle.getUrlRenderer().renderContextPathRelativeUrl(redirectUrl,
-					requestCycle.getRequest());
+				requestCycle.getRequest());
 		}
 		else if (redirectUrl.contains("://"))
 		{

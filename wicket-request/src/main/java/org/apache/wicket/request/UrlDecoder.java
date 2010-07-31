@@ -20,12 +20,11 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 /**
- * Adapted from java.net.URLDecoder, but defines instances for query string
- * decoding versus URL path component decoding.
+ * Adapted from java.net.URLDecoder, but defines instances for query string decoding versus URL path
+ * component decoding.
  * <p/>
- * The difference is important because a space is encoded as a + in a query
- * string, but this is a valid value in a path component (and is therefore not
- * decode back to a space).
+ * The difference is important because a space is encoded as a + in a query string, but this is a
+ * valid value in a path component (and is therefore not decode back to a space).
  * 
  * @author Doug Donohoe
  * @see java.net.URLDecoder
@@ -39,8 +38,7 @@ public class UrlDecoder
 	 * Encoder used to decode name or value components of a query string.<br/>
 	 * <br/>
 	 * 
-	 * For example:
-	 * http://org.acme/notthis/northis/oreventhis?buthis=isokay&asis=thispart
+	 * For example: http://org.acme/notthis/northis/oreventhis?buthis=isokay&asis=thispart
 	 */
 	public static final UrlDecoder QUERY_INSTANCE = new UrlDecoder(true);
 
@@ -127,7 +125,7 @@ public class UrlDecoder
 		if (enc.length() == 0)
 		{
 			throw new RuntimeException(new UnsupportedEncodingException(
-					"URLDecoder: empty string enc parameter"));
+				"URLDecoder: empty string enc parameter"));
 		}
 
 		char c;
@@ -145,10 +143,9 @@ public class UrlDecoder
 
 				case '%' :
 					/*
-					 * Starting with this instance of %, process all consecutive
-					 * substrings of the form %xy. Each substring %xy will yield
-					 * a byte. Convert all consecutive bytes obtained this way
-					 * to whatever character(s) they represent in the provided
+					 * Starting with this instance of %, process all consecutive substrings of the
+					 * form %xy. Each substring %xy will yield a byte. Convert all consecutive bytes
+					 * obtained this way to whatever character(s) they represent in the provided
 					 * encoding.
 					 */
 					try
@@ -176,7 +173,7 @@ public class UrlDecoder
 						if ((i < numChars) && (c == '%'))
 						{
 							throw new IllegalArgumentException(
-									"URLDecoder: Incomplete trailing escape (%) pattern");
+								"URLDecoder: Incomplete trailing escape (%) pattern");
 						}
 
 						try
@@ -191,8 +188,8 @@ public class UrlDecoder
 					catch (NumberFormatException e)
 					{
 						throw new IllegalArgumentException(
-								"URLDecoder: Illegal hex characters in escape (%) pattern - "
-										+ e.getMessage());
+							"URLDecoder: Illegal hex characters in escape (%) pattern - " +
+								e.getMessage());
 					}
 					needToChange = true;
 					break;

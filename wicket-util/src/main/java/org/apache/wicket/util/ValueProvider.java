@@ -23,7 +23,8 @@ package org.apache.wicket.util;
  * @param <T>
  *            type of value this provider provides
  */
-public class ValueProvider<T> implements IProvider<T> {
+public class ValueProvider<T> implements IProvider<T>
+{
 	private final T value;
 
 	/**
@@ -32,12 +33,14 @@ public class ValueProvider<T> implements IProvider<T> {
 	 * @param value
 	 *            value to provide
 	 */
-	public ValueProvider(T value) {
+	public ValueProvider(T value)
+	{
 		this.value = value;
 	}
 
 	/** {@inheritDoc} */
-	public T get() {
+	public T get()
+	{
 		return value;
 	}
 
@@ -50,7 +53,8 @@ public class ValueProvider<T> implements IProvider<T> {
 	 *            value
 	 * @return provider
 	 */
-	public static <T> ValueProvider<T> of(T value) {
+	public static <T> ValueProvider<T> of(T value)
+	{
 		return new ValueProvider<T>(value);
 	}
 

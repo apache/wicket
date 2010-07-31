@@ -44,8 +44,8 @@ public class TextRequestHandler implements IRequestHandler
 
 
 	/**
-	 * Creates a string request target with content type <code>text/plain</code>
-	 * and default charset (usually UTF-8)
+	 * Creates a string request target with content type <code>text/plain</code> and default charset
+	 * (usually UTF-8)
 	 * 
 	 * @param string
 	 *            the string for the response
@@ -145,5 +145,5 @@ public class TextRequestHandler implements IRequestHandler
 		return string;
 	}
 
-	
+
 }

@@ -58,8 +58,7 @@ public abstract class RequestHandlerStack
 	/**
 	 * Returns currently active {@link IRequestHandler}.
 	 * 
-	 * @return Active RequestHandler or <code>null</code> if no handler is
-	 *         active.
+	 * @return Active RequestHandler or <code>null</code> if no handler is active.
 	 */
 	public IRequestHandler getActiveRequestHandler()
 	{
@@ -67,10 +66,9 @@ public abstract class RequestHandlerStack
 	}
 
 	/**
-	 * Executes the specified {@link IRequestHandler}. When the specified
-	 * {@link IRequestHandler} finishes, the {@link IRequestHandler} that
-	 * invoked this method continues (unless the new {@link IRequestHandler}
-	 * called {@link #replaceAllRequestHandlers(IRequestHandler)}.
+	 * Executes the specified {@link IRequestHandler}. When the specified {@link IRequestHandler}
+	 * finishes, the {@link IRequestHandler} that invoked this method continues (unless the new
+	 * {@link IRequestHandler} called {@link #replaceAllRequestHandlers(IRequestHandler)}.
 	 * 
 	 * @param handler
 	 */
@@ -88,13 +86,13 @@ public abstract class RequestHandlerStack
 		catch (RuntimeException exception)
 		{
 			ReplaceHandlerException replacer = Exceptions.findCause(exception,
-					ReplaceHandlerException.class);
-			
+				ReplaceHandlerException.class);
+
 			if (replacer == null)
 			{
 				throw exception;
 			}
-			
+
 			if (replacer.removeAll && !first)
 			{
 				throw (RuntimeException)exception;
@@ -122,13 +120,11 @@ public abstract class RequestHandlerStack
 	}
 
 	/**
-	 * Schedules the request handler to be executed after current request
-	 * handler finishes. If there is already another request handler scheduled
-	 * it will be discarded and overwritten by the new one. If
-	 * {@link #replaceCurrentRequestHandler(IRequestHandler)} or
-	 * {@link #replaceAllRequestHandlers(IRequestHandler)} is invoked during
-	 * current request handler execution the scheduled handler will be also
-	 * discarded.
+	 * Schedules the request handler to be executed after current request handler finishes. If there
+	 * is already another request handler scheduled it will be discarded and overwritten by the new
+	 * one. If {@link #replaceCurrentRequestHandler(IRequestHandler)} or
+	 * {@link #replaceAllRequestHandlers(IRequestHandler)} is invoked during current request handler
+	 * execution the scheduled handler will be also discarded.
 	 * 
 	 * @param handler
 	 *            handler to be executed after current request handler finishes
@@ -139,9 +135,9 @@ public abstract class RequestHandlerStack
 	}
 
 	/**
-	 * Replaces the currently executed {@link IRequestHandler} with new
-	 * {@link IRequestHandler}. The currently executed {@link IRequestHandler}
-	 * is terminated and the new {@link IRequestHandler} is executed.
+	 * Replaces the currently executed {@link IRequestHandler} with new {@link IRequestHandler}. The
+	 * currently executed {@link IRequestHandler} is terminated and the new {@link IRequestHandler}
+	 * is executed.
 	 * 
 	 * @param handler
 	 */
@@ -167,9 +163,8 @@ public abstract class RequestHandlerStack
 	}
 
 	/**
-	 * Removes the whole {@link IRequestHandler} stack, terminates currently
-	 * running {@link IRequestHandler} and executes the new
-	 * {@link IRequestHandler}.
+	 * Removes the whole {@link IRequestHandler} stack, terminates currently running
+	 * {@link IRequestHandler} and executes the new {@link IRequestHandler}.
 	 * 
 	 * @param handler
 	 */
@@ -196,9 +191,9 @@ public abstract class RequestHandlerStack
 	}
 
 	/**
-	 * Replaces current {@link Response} with new {@link Response} instance. The
-	 * original response is always restored after the
-	 * {@link IRequestHandler#respond(RequestCycle)} method is finished.
+	 * Replaces current {@link Response} with new {@link Response} instance. The original response
+	 * is always restored after the {@link IRequestHandler#respond(RequestCycle)} method is
+	 * finished.
 	 * 
 	 * @param response
 	 * @return Response being replaced.

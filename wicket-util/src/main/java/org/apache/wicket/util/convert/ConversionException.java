@@ -239,12 +239,12 @@ public class ConversionException extends RuntimeException
 		if (name == null || name.trim().length() == 0)
 		{
 			throw new IllegalArgumentException(
-					"Argument [[name]] cannot be null or an empty string");
+				"Argument [[name]] cannot be null or an empty string");
 		}
 		if (value == null)
 		{
 			throw new IllegalArgumentException(
-					"Argument [[value]] cannot be null or an empty string");
+				"Argument [[value]] cannot be null or an empty string");
 		}
 
 		if (vars == null)
@@ -259,8 +259,7 @@ public class ConversionException extends RuntimeException
 	/**
 	 * Returns the map of variables for this exception.
 	 * 
-	 * @return map of variables for this exception (or null if no variables were
-	 *         defined)
+	 * @return map of variables for this exception (or null if no variables were defined)
 	 */
 	public Map<String, Object> getVariables()
 	{

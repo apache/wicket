@@ -117,16 +117,17 @@ public class File extends java.io.File implements IModifiable
 	{
 		super(uri);
 	}
-	
+
 	/**
-	 * @param name Name of child file
+	 * @param name
+	 *            Name of child file
 	 * @return Child file object
 	 */
 	public File file(final String name)
 	{
-	    return new File(this, name);
+		return new File(this, name);
 	}
-	
+
 	/**
 	 * @return File extension (whatever is after the last '.' in the file name)
 	 */
@@ -147,46 +148,48 @@ public class File extends java.io.File implements IModifiable
 	{
 		return new Folder(getParent());
 	}
-	
+
 	/**
 	 * @return Input stream that reads this file
-	 * @throws FileNotFoundException Thrown if the file cannot be found
+	 * @throws FileNotFoundException
+	 *             Thrown if the file cannot be found
 	 */
 	public InputStream inputStream() throws FileNotFoundException
 	{
-	    return new BufferedInputStream(new FileInputStream(this));
+		return new BufferedInputStream(new FileInputStream(this));
 	}
-	
+
 	/**
 	 * Returns a Time object representing the most recent time this file was modified.
 	 * 
 	 * @return This file's lastModified() value as a Time object
 	 */
-	public  Time lastModifiedTime()
+	public Time lastModifiedTime()
 	{
 		return Time.milliseconds(lastModified());
 	}
-	
+
 	/**
-	 * Creates a buffered output stream that writes to this file.
-	 * If the parent folder does not yet exist, creates all necessary
-	 * folders in the path.
+	 * Creates a buffered output stream that writes to this file. If the parent folder does not yet
+	 * exist, creates all necessary folders in the path.
+	 * 
 	 * @return Output stream that writes to this file
-	 * @throws FileNotFoundException Thrown if the file cannot be found
+	 * @throws FileNotFoundException
+	 *             Thrown if the file cannot be found
 	 */
 	public OutputStream outputStream() throws FileNotFoundException
 	{
 		final Folder parent = getParentFolder();
-		if (!parent.exists()) 
+		if (!parent.exists())
 		{
-		    if (!parent.mkdirs()) 
-		    {
-		    	throw new FileNotFoundException("Couldn't create path " + parent);
-		    }
+			if (!parent.mkdirs())
+			{
+				throw new FileNotFoundException("Couldn't create path " + parent);
+			}
 		}
-	    return new BufferedOutputStream(new FileOutputStream(this));
+		return new BufferedOutputStream(new FileOutputStream(this));
 	}
-	
+
 	/**
 	 * @return String read from this file
 	 * @throws IOException
@@ -202,8 +205,8 @@ public class File extends java.io.File implements IModifiable
 		{
 			in.close();
 		}
-	} 
-	
+	}
+
 	/**
 	 * @return Object read from serialization file
 	 * @throws IOException
@@ -211,18 +214,20 @@ public class File extends java.io.File implements IModifiable
 	 */
 	public Object readObject() throws IOException, ClassNotFoundException
 	{
-	    return new ObjectInputStream(inputStream()).readObject();
+		return new ObjectInputStream(inputStream()).readObject();
 	}
 
 	/**
-	 * @param object Object to write to this file
+	 * @param object
+	 *            Object to write to this file
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
 	public void writeObject(final Object object) throws FileNotFoundException, IOException
 	{
-	    new ObjectOutputStream(outputStream()).writeObject(object);
+		new ObjectOutputStream(outputStream()).writeObject(object);
 	}
+
 	/**
 	 * @return True if the file was removed
 	 * @see java.io.File#delete()
@@ -249,17 +254,16 @@ public class File extends java.io.File implements IModifiable
 			in.close();
 		}
 	}
-	
+
 	/**
-	 * @return This file in double quotes (useful for passing to 
-	 *         commands and tools that have issues with spaces in 
-	 *         filenames)
+	 * @return This file in double quotes (useful for passing to commands and tools that have issues
+	 *         with spaces in filenames)
 	 */
 	public String toQuotedString()
 	{
-	    return "\"" + toString() + "\"";
+		return "\"" + toString() + "\"";
 	}
-	
+
 	/**
 	 * Writes the given file to this one
 	 * 
@@ -313,8 +317,3 @@ public class File extends java.io.File implements IModifiable
 		}
 	}
 }
-
-
-
-
-

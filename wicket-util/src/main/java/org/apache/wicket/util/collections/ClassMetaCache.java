@@ -22,10 +22,9 @@ import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * This class wraps a WeakHashMap that holds one ConcurrentHashMap per
- * ClassLoader. In the rare event of a previously unmapped ClassLoader, the
- * WeakHashMap is replaced by a new one. This avoids any synchronization
- * overhead, much like a {@link java.util.concurrent.CopyOnWriteArrayList}
+ * This class wraps a WeakHashMap that holds one ConcurrentHashMap per ClassLoader. In the rare
+ * event of a previously unmapped ClassLoader, the WeakHashMap is replaced by a new one. This avoids
+ * any synchronization overhead, much like a {@link java.util.concurrent.CopyOnWriteArrayList}
  * 
  * @param <T>
  *            type of objects stored in cache
@@ -41,8 +40,7 @@ public class ClassMetaCache<T>
 	 *            the class that will be used as the value's key
 	 * @param value
 	 *            the value that should be stored in cache
-	 * @return value previously stored in cache for this key, or {@code null} if
-	 *         none
+	 * @return value previously stored in cache for this key, or {@code null} if none
 	 */
 	public T put(Class<?> key, T value)
 	{
@@ -73,8 +71,8 @@ public class ClassMetaCache<T>
 	/**
 	 * @param classLoader
 	 * @param create
-	 * @return a {@link ConcurrentHashMap} mapping class names to injectable
-	 *         fields, never <code>null</code>
+	 * @return a {@link ConcurrentHashMap} mapping class names to injectable fields, never
+	 *         <code>null</code>
 	 */
 	private ConcurrentHashMap<String, T> getClassLoaderCache(ClassLoader classLoader, boolean create)
 	{
@@ -99,7 +97,7 @@ public class ClassMetaCache<T>
 					 * don't write to current cache, copy instead
 					 */
 					Map<ClassLoader, ConcurrentHashMap<String, T>> newCache = new WeakHashMap<ClassLoader, ConcurrentHashMap<String, T>>(
-							cache);
+						cache);
 					newCache.put(classLoader, container);
 					cache = Collections.unmodifiableMap(newCache);
 				}

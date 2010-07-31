@@ -146,14 +146,15 @@ public class Folder extends File
 			throw new IOException("Unable to create folder " + this);
 		}
 	}
-	
+
 	/**
-	 * @param name Name of child folder
+	 * @param name
+	 *            Name of child folder
 	 * @return Child file object
 	 */
 	public Folder folder(final String name)
 	{
-	    return new Folder(this, name);
+		return new Folder(this, name);
 	}
 
 	/**

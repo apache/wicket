@@ -35,9 +35,11 @@ import javax.swing.text.MaskFormatter;
  * <tr>
  * <th>Character&nbsp;</th>
  * <th>
- * <p align="left"> Description
+ * <p align="left">
+ * Description
  * </p>
- * </th> </tr>
+ * </th>
+ * </tr>
  * <tr>
  * <td>#</td>
  * <td>Any valid number, uses <code>Character.isDigit</code>.</td>

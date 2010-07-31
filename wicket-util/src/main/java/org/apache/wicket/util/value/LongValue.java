@@ -88,7 +88,7 @@ public class LongValue implements Comparable<LongValue>, Serializable
 
 		return false;
 	}
-	
+
 	/**
 	 * Compares this <code>LongValue</code> with a primitive <code>long</code> value.
 	 * 
@@ -100,15 +100,15 @@ public class LongValue implements Comparable<LongValue>, Serializable
 	public final boolean greaterThan(final long value)
 	{
 		return this.value > value;
-	}	
-	
+	}
+
 	/**
 	 * Compares this <code>LongValue</code> with a primitive <code>long</code> value.
 	 * 
 	 * @param value
 	 *            the <code>long</code> value to compare with
-	 * @return <code>true</code> if this <code>LongValue</code> is greater than or equal to 
-	 *         the given <code>long</code> value
+	 * @return <code>true</code> if this <code>LongValue</code> is greater than or equal to the
+	 *         given <code>long</code> value
 	 */
 	public final boolean greaterThanOrEqual(final long value)
 	{
@@ -127,14 +127,14 @@ public class LongValue implements Comparable<LongValue>, Serializable
 	{
 		return value > that.value;
 	}
-	
+
 	/**
 	 * Compares this <code>LongValue</code> with another <code>LongValue</code>.
 	 * 
 	 * @param that
 	 *            the <code>LongValue</code> to compare with
-	 * @return <code>true</code> if this <code>LongValue</code> is greater than or equal 
-	 *         to the given <code>LongValue</code>
+	 * @return <code>true</code> if this <code>LongValue</code> is greater than or equal to the
+	 *         given <code>LongValue</code>
 	 */
 	public final boolean greaterThanOrEqual(final LongValue that)
 	{
@@ -170,14 +170,14 @@ public class LongValue implements Comparable<LongValue>, Serializable
 	 * 
 	 * @param that
 	 *            the <code>long</code> value to compare with
-	 * @return <code>true</code> if this <code>LongValue</code> is less than or equal 
-	 *         to the given <code>long</code> value
+	 * @return <code>true</code> if this <code>LongValue</code> is less than or equal to the given
+	 *         <code>long</code> value
 	 */
 	public final boolean lessThanOrEqual(final long that)
 	{
 		return value <= that;
 	}
-	
+
 	/**
 	 * Compares this <code>LongValue</code> with another <code>LongValue</code>.
 	 * 
@@ -189,15 +189,15 @@ public class LongValue implements Comparable<LongValue>, Serializable
 	public final boolean lessThan(final LongValue that)
 	{
 		return value < that.value;
-	}	
-	
+	}
+
 	/**
 	 * Compares this <code>LongValue</code> with another <code>LongValue</code>.
 	 * 
 	 * @param that
 	 *            the <code>LongValue</code> value to compare with
-	 * @return <code>true</code> if this <code>LongValue</code> is less than or equal 
-	 *         to the given <code>LongValue</code>
+	 * @return <code>true</code> if this <code>LongValue</code> is less than or equal to the given
+	 *         <code>LongValue</code>
 	 */
 	public final boolean lessThanOrEqual(final LongValue that)
 	{

@@ -69,8 +69,7 @@ public abstract class Request
 	 */
 	public IRequestParameters getRequestParameters()
 	{
-		return new CombinedRequestParametersAdapter(getQueryParameters(),
-			getPostParameters());
+		return new CombinedRequestParametersAdapter(getQueryParameters(), getPostParameters());
 	}
 
 	/**
@@ -137,6 +136,6 @@ public abstract class Request
 	{
 		return "";
 	}
-	
+
 	public abstract Charset getCharset();
 }

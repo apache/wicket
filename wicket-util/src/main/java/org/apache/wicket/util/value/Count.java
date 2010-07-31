@@ -48,20 +48,20 @@ public final class Count implements IClusterable
 	{
 		count++;
 	}
-	
+
 	/**
 	 * Decreases the count value by one.
 	 */
-	public void decrement() 
+	public void decrement()
 	{
 		count--;
-	} 
-	
+	}
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
-	public String toString() 
+	public String toString()
 	{
 		return Integer.toString(count);
 	}

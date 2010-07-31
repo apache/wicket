@@ -95,7 +95,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see java.util.Map#entrySet()
 	 */
-	public Set<Entry<String,Object>> entrySet()
+	public Set<Entry<String, Object>> entrySet()
 	{
 		checkAndCopy();
 		return wrapped.entrySet();
@@ -283,7 +283,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see java.util.Map#putAll(Map)
 	 */
-	public void putAll(Map<? extends String,? extends Object> map)
+	public void putAll(Map<? extends String, ? extends Object> map)
 	{
 		checkAndCopy();
 		wrapped.putAll(map);

@@ -29,23 +29,21 @@ import java.util.regex.Pattern;
 /**
  * A variety of static String utility methods.
  * <p>
- * The escapeMarkup() and toMultilineMarkup() methods are useful for turning
- * normal Java Strings into HTML strings.
+ * The escapeMarkup() and toMultilineMarkup() methods are useful for turning normal Java Strings
+ * into HTML strings.
  * <p>
  * The lastPathComponent(), firstPathComponent(), afterFirstPathComponent() and
- * beforeLastPathComponent() methods can chop up a String into path components
- * using a separator character. If the separator cannot be found the original
- * String is returned.
+ * beforeLastPathComponent() methods can chop up a String into path components using a separator
+ * character. If the separator cannot be found the original String is returned.
  * <p>
- * Similarly, the beforeLast(), beforeFirst(), afterFirst() and afterLast()
- * methods return sections before and after a separator character. But if the
- * separator cannot be found, an empty string is returned.
+ * Similarly, the beforeLast(), beforeFirst(), afterFirst() and afterLast() methods return sections
+ * before and after a separator character. But if the separator cannot be found, an empty string is
+ * returned.
  * <p>
- * Some other miscellaneous methods will strip a given ending off a String if it
- * can be found (stripEnding()), replace all occurrences of one String with
- * another (replaceAll), do type conversions (toBoolean(), toChar(),
- * toString()), check a String for emptiness (isEmpty()), convert a Throwable to
- * a String (toString(Throwable)) or capitalize a String (capitalize()).
+ * Some other miscellaneous methods will strip a given ending off a String if it can be found
+ * (stripEnding()), replace all occurrences of one String with another (replaceAll), do type
+ * conversions (toBoolean(), toChar(), toString()), check a String for emptiness (isEmpty()),
+ * convert a Throwable to a String (toString(Throwable)) or capitalize a String (capitalize()).
  * 
  * @author Jonathan Locke
  */
@@ -74,15 +72,14 @@ public final class Strings
 	}
 
 	/**
-	 * Returns everything after the first occurrence of the given character in
-	 * s.
+	 * Returns everything after the first occurrence of the given character in s.
 	 * 
 	 * @param s
 	 *            The string
 	 * @param c
 	 *            The character
-	 * @return Everything after the first occurrence of the given character in
-	 *         s. If the character cannot be found, an empty string is returned.
+	 * @return Everything after the first occurrence of the given character in s. If the character
+	 *         cannot be found, an empty string is returned.
 	 */
 	public static String afterFirst(final String s, final char c)
 	{
@@ -101,11 +98,11 @@ public final class Strings
 	}
 
 	/**
-	 * Gets everything after the first path component of a path using a given
-	 * separator. If the separator cannot be found, an empty String is returned.
+	 * Gets everything after the first path component of a path using a given separator. If the
+	 * separator cannot be found, an empty String is returned.
 	 * <p>
-	 * For example, afterFirstPathComponent("foo.bar.baz", '.') would return
-	 * "bar.baz" and afterFirstPathComponent("foo", '.') would return "".
+	 * For example, afterFirstPathComponent("foo.bar.baz", '.') would return "bar.baz" and
+	 * afterFirstPathComponent("foo", '.') would return "".
 	 * 
 	 * @param path
 	 *            The path to parse
@@ -125,8 +122,8 @@ public final class Strings
 	 *            The string
 	 * @param c
 	 *            The character
-	 * @return Everything after the last occurrence of the given character in s.
-	 *         If the character cannot be found, an empty string is returned.
+	 * @return Everything after the last occurrence of the given character in s. If the character
+	 *         cannot be found, an empty string is returned.
 	 */
 	public static String afterLast(final String s, final char c)
 	{
@@ -145,15 +142,14 @@ public final class Strings
 	}
 
 	/**
-	 * Returns everything before the first occurrence of the given character in
-	 * s.
+	 * Returns everything before the first occurrence of the given character in s.
 	 * 
 	 * @param s
 	 *            The string
 	 * @param c
 	 *            The character
-	 * @return Everything before the first occurrence of the given character in
-	 *         s. If the character cannot be found, an empty string is returned.
+	 * @return Everything before the first occurrence of the given character in s. If the character
+	 *         cannot be found, an empty string is returned.
 	 */
 	public static String beforeFirst(final String s, final char c)
 	{
@@ -172,15 +168,14 @@ public final class Strings
 	}
 
 	/**
-	 * Returns everything before the last occurrence of the given character in
-	 * s.
+	 * Returns everything before the last occurrence of the given character in s.
 	 * 
 	 * @param s
 	 *            The string
 	 * @param c
 	 *            The character
-	 * @return Everything before the last occurrence of the given character in
-	 *         s. If the character cannot be found, an empty string is returned.
+	 * @return Everything before the last occurrence of the given character in s. If the character
+	 *         cannot be found, an empty string is returned.
 	 */
 	public static String beforeLast(final String s, final char c)
 	{
@@ -199,11 +194,11 @@ public final class Strings
 	}
 
 	/**
-	 * Gets everything before the last path component of a path using a given
-	 * separator. If the separator cannot be found, the path itself is returned.
+	 * Gets everything before the last path component of a path using a given separator. If the
+	 * separator cannot be found, the path itself is returned.
 	 * <p>
-	 * For example, beforeLastPathComponent("foo.bar.baz", '.') would return
-	 * "foo.bar" and beforeLastPathComponent("foo", '.') would return "".
+	 * For example, beforeLastPathComponent("foo.bar.baz", '.') would return "foo.bar" and
+	 * beforeLastPathComponent("foo", '.') would return "".
 	 * 
 	 * @param path
 	 *            The path to parse
@@ -240,8 +235,8 @@ public final class Strings
 	}
 
 	/**
-	 * Converts a Java String to an HTML markup string, but does not convert
-	 * normal spaces to non-breaking space entities (&lt;nbsp&gt;).
+	 * Converts a Java String to an HTML markup string, but does not convert normal spaces to
+	 * non-breaking space entities (&lt;nbsp&gt;).
 	 * 
 	 * @param s
 	 *            The string to escape
@@ -254,11 +249,10 @@ public final class Strings
 	}
 
 	/**
-	 * Converts a Java String to an HTML markup String by replacing illegal
-	 * characters with HTML entities where appropriate. Spaces are converted to
-	 * non-breaking spaces (&lt;nbsp&gt;) if escapeSpaces is true, tabs are
-	 * converted to four non-breaking spaces, less than signs are converted to
-	 * &amp;lt; entities and greater than signs to &amp;gt; entities.
+	 * Converts a Java String to an HTML markup String by replacing illegal characters with HTML
+	 * entities where appropriate. Spaces are converted to non-breaking spaces (&lt;nbsp&gt;) if
+	 * escapeSpaces is true, tabs are converted to four non-breaking spaces, less than signs are
+	 * converted to &amp;lt; entities and greater than signs to &amp;gt; entities.
 	 * 
 	 * @param s
 	 *            The string to escape
@@ -272,11 +266,10 @@ public final class Strings
 	}
 
 	/**
-	 * Converts a Java String to an HTML markup String by replacing illegal
-	 * characters with HTML entities where appropriate. Spaces are converted to
-	 * non-breaking spaces (&lt;nbsp&gt;) if escapeSpaces is true, tabs are
-	 * converted to four non-breaking spaces, less than signs are converted to
-	 * &amp;lt; entities and greater than signs to &amp;gt; entities.
+	 * Converts a Java String to an HTML markup String by replacing illegal characters with HTML
+	 * entities where appropriate. Spaces are converted to non-breaking spaces (&lt;nbsp&gt;) if
+	 * escapeSpaces is true, tabs are converted to four non-breaking spaces, less than signs are
+	 * converted to &amp;lt; entities and greater than signs to &amp;gt; entities.
 	 * 
 	 * @param s
 	 *            The string to escape
@@ -287,7 +280,7 @@ public final class Strings
 	 * @return The escaped string
 	 */
 	public static CharSequence escapeMarkup(final String s, final boolean escapeSpaces,
-			final boolean convertToHtmlUnicodeEscapes)
+		final boolean convertToHtmlUnicodeEscapes)
 	{
 		if (s == null)
 		{
@@ -381,8 +374,8 @@ public final class Strings
 	}
 
 	/**
-	 * Gets the first path component of a path using a given separator. If the
-	 * separator cannot be found, the path itself is returned.
+	 * Gets the first path component of a path using a given separator. If the separator cannot be
+	 * found, the path itself is returned.
 	 * <p>
 	 * For example, firstPathComponent("foo.bar", '.') would return "foo" and
 	 * firstPathComponent("foo", '.') would return "foo".
@@ -391,8 +384,7 @@ public final class Strings
 	 *            The path to parse
 	 * @param separator
 	 *            The path separator character
-	 * @return The first component in the path or path itself if no separator
-	 *         characters exist.
+	 * @return The first component in the path or path itself if no separator characters exist.
 	 */
 	public static String firstPathComponent(final String path, final char separator)
 	{
@@ -411,8 +403,8 @@ public final class Strings
 	}
 
 	/**
-	 * Converts encoded &#92;uxxxx to unicode chars and changes special saved
-	 * chars to their original forms.
+	 * Converts encoded &#92;uxxxx to unicode chars and changes special saved chars to their
+	 * original forms.
 	 * 
 	 * @param escapedUnicodeString
 	 *            escaped unicode string, like '\u4F60\u597D'.
@@ -509,8 +501,8 @@ public final class Strings
 	}
 
 	/**
-	 * Checks whether the <code>string</code> is considered empty. Empty means
-	 * that the string may contain whitespace, but no visible characters.
+	 * Checks whether the <code>string</code> is considered empty. Empty means that the string may
+	 * contain whitespace, but no visible characters.
 	 * 
 	 * "\n\t " is considered empty, while " a" is not.
 	 * 
@@ -524,8 +516,8 @@ public final class Strings
 	}
 
 	/**
-	 * Checks whether two strings are equals taken care of 'null' values and
-	 * treating 'null' same as trim(string).equals("")
+	 * Checks whether two strings are equals taken care of 'null' values and treating 'null' same as
+	 * trim(string).equals("")
 	 * 
 	 * @param string1
 	 * @param string2
@@ -551,11 +543,10 @@ public final class Strings
 	}
 
 	/**
-	 * Converts the text in <code>s</code> to a corresponding boolean. On, yes,
-	 * y, true and 1 are converted to <code>true</code>. Off, no, n, false and 0
-	 * (zero) are converted to <code>false</code>. An empty string is converted
-	 * to <code>false</code>. Conversion is case-insensitive, and does
-	 * <em>not</em> take internationalization into account.
+	 * Converts the text in <code>s</code> to a corresponding boolean. On, yes, y, true and 1 are
+	 * converted to <code>true</code>. Off, no, n, false and 0 (zero) are converted to
+	 * <code>false</code>. An empty string is converted to <code>false</code>. Conversion is
+	 * case-insensitive, and does <em>not</em> take internationalization into account.
 	 * 
 	 * 'Ja', 'Oui', 'Igen', 'Nein', 'Nee', 'Non', 'Nem' are all illegal values.
 	 * 
@@ -579,14 +570,14 @@ public final class Strings
 				return false;
 			}
 
-			if (s.equalsIgnoreCase("on") || s.equalsIgnoreCase("yes") || s.equalsIgnoreCase("y")
-					|| s.equalsIgnoreCase("1"))
+			if (s.equalsIgnoreCase("on") || s.equalsIgnoreCase("yes") || s.equalsIgnoreCase("y") ||
+				s.equalsIgnoreCase("1"))
 			{
 				return true;
 			}
 
-			if (s.equalsIgnoreCase("off") || s.equalsIgnoreCase("no") || s.equalsIgnoreCase("n")
-					|| s.equalsIgnoreCase("0"))
+			if (s.equalsIgnoreCase("off") || s.equalsIgnoreCase("no") || s.equalsIgnoreCase("n") ||
+				s.equalsIgnoreCase("0"))
 			{
 				return false;
 			}
@@ -671,8 +662,8 @@ public final class Strings
 	}
 
 	/**
-	 * Gets the last path component of a path using a given separator. If the
-	 * separator cannot be found, the path itself is returned.
+	 * Gets the last path component of a path using a given separator. If the separator cannot be
+	 * found, the path itself is returned.
 	 * <p>
 	 * For example, lastPathComponent("foo.bar", '.') would return "bar" and
 	 * lastPathComponent("foo", '.') would return "foo".
@@ -681,8 +672,7 @@ public final class Strings
 	 *            The path to parse
 	 * @param separator
 	 *            The path separator character
-	 * @return The last component in the path or path itself if no separator
-	 *         characters exist.
+	 * @return The last component in the path or path itself if no separator characters exist.
 	 */
 	public static String lastPathComponent(final String path, final char separator)
 	{
@@ -713,7 +703,7 @@ public final class Strings
 	 * @return The resulting string with searchFor replaced with replaceWith
 	 */
 	public static CharSequence replaceAll(final CharSequence s, final CharSequence searchFor,
-			CharSequence replaceWith)
+		CharSequence replaceWith)
 	{
 		if (s == null)
 		{
@@ -807,8 +797,7 @@ public final class Strings
 	}
 
 	/**
-	 * Simpler, faster version of String.split() for splitting on a simple
-	 * character.
+	 * Simpler, faster version of String.split() for splitting on a simple character.
 	 * 
 	 * @param s
 	 *            The string to split
@@ -850,8 +839,7 @@ public final class Strings
 	 *            The string to strip
 	 * @param ending
 	 *            The ending to strip off
-	 * @return The stripped string or the original string if the ending did not
-	 *         exist
+	 * @return The stripped string or the original string if the ending did not exist
 	 */
 	public static String stripEnding(final String s, final String ending)
 	{
@@ -887,56 +875,45 @@ public final class Strings
 	}
 
 	/**
-	 * Strip any jsessionid and possibly other redundant info that might be in
-	 * our way.
+	 * Strip any jsessionid and possibly other redundant info that might be in our way.
 	 * 
 	 * @param url
 	 *            The url to strip
 	 * @return The stripped url
 	 */
-	public static String stripJSessionId(CharSequence url)
+	public static String stripJSessionId(final String url)
 	{
 		if (url == null)
 		{
 			return null;
 		}
-		StringBuffer path = new StringBuffer(url.toString());
-		int ixSemiColon = path.indexOf(";");
-		// strip off any jsession id
-		if (ixSemiColon != -1)
+
+		// http://.../abc;jsessionid=...?param=...
+		int ixSemiColon = url.indexOf(";");
+		if (ixSemiColon == -1)
 		{
-			int ixEnd = path.indexOf("?");
-			// there is no ? in the path so set it to the length (no arguments)
-			if (ixEnd == -1)
-			{
-				ixEnd = path.length();
-			}
-
-			// there is no ? in the path so set it to the length (no arguments)
-			if (ixEnd == -1)
-			{
-				ixEnd = path.length();
-			}
-
-			if (ixEnd <= ixSemiColon)
-			{
-				// ? is before ; - no jsessionid in the url
-				return url.toString();
-			}
-
-			if (ixEnd == -1)
-			{
-				ixEnd = path.length();
-			}
-			path.delete(ixSemiColon, ixEnd);
+			return url;
 		}
-		return path.toString();
+
+		int ixQuestionMark = url.indexOf("?");
+		if (ixQuestionMark == -1)
+		{
+			// no query paramaters; cut off at ";"
+			// http://.../abc;jsession=...
+			return url.substring(0, ixSemiColon);
+		}
+
+		if (ixQuestionMark <= ixSemiColon)
+		{
+			// ? is before ; - no jsessionid in the url
+			return url;
+		}
+
+		return url.substring(0, ixSemiColon) + url.substring(ixQuestionMark);
 	}
 
-
 	/**
-	 * Converts the string s to a Boolean. See <code>isTrue</code> for valid
-	 * values of s.
+	 * Converts the string s to a Boolean. See <code>isTrue</code> for valid values of s.
 	 * 
 	 * @param s
 	 *            The string to convert.
@@ -957,8 +934,7 @@ public final class Strings
 	 *            The 1 character string to convert to a char.
 	 * @return Character value to convert
 	 * @throws StringValueConversionException
-	 *             when the string is longer or shorter than 1 character, or
-	 *             <code>null</code>.
+	 *             when the string is longer or shorter than 1 character, or <code>null</code>.
 	 */
 	public static char toChar(final String s) throws StringValueConversionException
 	{
@@ -970,8 +946,8 @@ public final class Strings
 			}
 			else
 			{
-				throw new StringValueConversionException("Expected single character, not \"" + s
-						+ "\"");
+				throw new StringValueConversionException("Expected single character, not \"" + s +
+					"\"");
 			}
 		}
 
@@ -1062,15 +1038,13 @@ public final class Strings
 	}
 
 	/**
-	 * Converts a String to multiline HTML markup by replacing newlines with
-	 * line break entities (&lt;br/&gt;) and multiple occurrences of newline
-	 * with paragraph break entities (&lt;p&gt;).
+	 * Converts a String to multiline HTML markup by replacing newlines with line break entities
+	 * (&lt;br/&gt;) and multiple occurrences of newline with paragraph break entities (&lt;p&gt;).
 	 * 
 	 * @param s
 	 *            String to transform
-	 * @return String with all single occurrences of newline replaced with
-	 *         &lt;br/&gt; and all multiple occurrences of newline replaced with
-	 *         &lt;p&gt;.
+	 * @return String with all single occurrences of newline replaced with &lt;br/&gt; and all
+	 *         multiple occurrences of newline replaced with &lt;p&gt;.
 	 */
 	public static CharSequence toMultilineMarkup(final CharSequence s)
 	{
@@ -1124,10 +1098,9 @@ public final class Strings
 	}
 
 	/**
-	 * Converts the given object to a string. Does special conversion for
-	 * {@link Throwable throwables} and String arrays of length 1 (in which case
-	 * it just returns to string in that array, as this is a common thing to
-	 * have in the Servlet API).
+	 * Converts the given object to a string. Does special conversion for {@link Throwable
+	 * throwables} and String arrays of length 1 (in which case it just returns to string in that
+	 * array, as this is a common thing to have in the Servlet API).
 	 * 
 	 * @param object
 	 *            The object
@@ -1227,17 +1200,16 @@ public final class Strings
 	}
 
 	/**
-	 * Outputs the throwable and its stacktrace to the stringbuffer. If
-	 * stopAtWicketSerlvet is true then the output will stop when the
-	 * org.apache.wicket servlet is reached. sun.reflect. packages are filtered
-	 * out.
+	 * Outputs the throwable and its stacktrace to the stringbuffer. If stopAtWicketSerlvet is true
+	 * then the output will stop when the org.apache.wicket servlet is reached. sun.reflect.
+	 * packages are filtered out.
 	 * 
 	 * @param cause
 	 * @param sb
 	 * @param stopAtWicketServlet
 	 */
 	private static void outputThrowable(Throwable cause, AppendingStringBuffer sb,
-			boolean stopAtWicketServlet)
+		boolean stopAtWicketServlet)
 	{
 		sb.append(cause);
 		sb.append("\n");
@@ -1250,9 +1222,8 @@ public final class Strings
 				sb.append("     at ");
 				sb.append(traceString);
 				sb.append("\n");
-				if (stopAtWicketServlet
-						&& (traceString.startsWith("org.apache.wicket.protocol.http.WicketServlet") || traceString
-								.startsWith("org.apache.wicket.protocol.http.WicketFilter")))
+				if (stopAtWicketServlet &&
+					(traceString.startsWith("org.apache.wicket.protocol.http.WicketServlet") || traceString.startsWith("org.apache.wicket.protocol.http.WicketFilter")))
 				{
 					return;
 				}
@@ -1295,13 +1266,11 @@ public final class Strings
 	}
 
 	/**
-	 * Calculates the length of string in bytes, uses specified
-	 * <code>charset</code> if provided.
+	 * Calculates the length of string in bytes, uses specified <code>charset</code> if provided.
 	 * 
 	 * @param string
 	 * @param charset
-	 *            (optional) character set to use when converting string to
-	 *            bytes
+	 *            (optional) character set to use when converting string to bytes
 	 * @return length of string in bytes
 	 */
 	public static int lengthInBytes(String string, Charset charset)
@@ -1319,7 +1288,7 @@ public final class Strings
 			catch (UnsupportedEncodingException e)
 			{
 				throw new RuntimeException(
-						"StringResourceStream created with unsupported charset: " + charset.name());
+					"StringResourceStream created with unsupported charset: " + charset.name());
 			}
 		}
 		else
@@ -1330,14 +1299,12 @@ public final class Strings
 	}
 
 	/**
-	 * Extended {@link String#startsWith(String)} with support for case
-	 * sensitivity
+	 * Extended {@link String#startsWith(String)} with support for case sensitivity
 	 * 
 	 * @param str
 	 * @param prefix
 	 * @param caseSensitive
-	 * @return <code>true</code> if <code>str</code> starts with
-	 *         <code>prefix</code>
+	 * @return <code>true</code> if <code>str</code> starts with <code>prefix</code>
 	 */
 	public static boolean startsWith(String str, String prefix, boolean caseSensitive)
 	{

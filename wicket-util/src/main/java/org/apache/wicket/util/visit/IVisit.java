@@ -6,8 +6,7 @@ package org.apache.wicket.util.visit;
  * @author igor.vaynberg
  * 
  * @param <R>
- *            type of object the visitor is expected to return, if none use
- *            {@link Void}
+ *            type of object the visitor is expected to return, if none use {@link Void}
  */
 public interface IVisit<R>
 {
@@ -24,8 +23,7 @@ public interface IVisit<R>
 	void stop(R result);
 
 	/**
-	 * Prevents the visitor from visiting any children of the object currently
-	 * visited
+	 * Prevents the visitor from visiting any children of the object currently visited
 	 */
 	void dontGoDeeper();
 }

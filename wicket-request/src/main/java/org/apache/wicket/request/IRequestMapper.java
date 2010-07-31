@@ -17,7 +17,6 @@
 package org.apache.wicket.request;
 
 
-
 /**
  * Encodes {@link IRequestHandler}(s) into {@link Url}(s) and decodes {@link Request}(s) to
  * {@link IRequestHandler}(s). For {@link IRequestHandler}s and {@link Request}s the implementation

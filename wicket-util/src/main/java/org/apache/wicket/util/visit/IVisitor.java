@@ -7,8 +7,7 @@ package org.apache.wicket.util.visit;
  * @param <T>
  *            type of object to be visited
  * @param <R>
- *            type of value the visitor should return as the result of the
- *            visit/traversal
+ *            type of value the visitor should return as the result of the visit/traversal
  */
 public interface IVisitor<T, R>
 {

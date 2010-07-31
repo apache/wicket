@@ -84,7 +84,8 @@ public class ModificationWatcher implements IModificationWatcher
 	}
 
 	/**
-	 * @see org.apache.wicket.util.watch.IModificationWatcher#add(org.apache.wicket.util.watch.IModifiable, org.apache.wicket.util.listener.IChangeListener)
+	 * @see org.apache.wicket.util.watch.IModificationWatcher#add(org.apache.wicket.util.watch.IModifiable,
+	 *      org.apache.wicket.util.listener.IChangeListener)
 	 */
 	public final boolean add(final IModifiable modifiable, final IChangeListener listener)
 	{

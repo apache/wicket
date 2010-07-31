@@ -1,8 +1,7 @@
 package org.apache.wicket.util.visit;
 
 /**
- * A filter that can be used to restrict the types of objects visited by the
- * visitor
+ * A filter that can be used to restrict the types of objects visited by the visitor
  * 
  * @author igor.vaynberg
  */

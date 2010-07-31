@@ -57,11 +57,11 @@ public class Visit<R> implements IVisit<R>
 	}
 
 	/**
-	 * Checks if the visit/traversal has been stopped from visiting children of
-	 * the currently visited object
+	 * Checks if the visit/traversal has been stopped from visiting children of the currently
+	 * visited object
 	 * 
-	 * @return {@code true} if the visit/traversal should not visit children of
-	 *         the currently visited object
+	 * @return {@code true} if the visit/traversal should not visit children of the currently
+	 *         visited object
 	 */
 	public boolean isDontGoDeeper()
 	{
@@ -69,12 +69,10 @@ public class Visit<R> implements IVisit<R>
 	}
 
 	/**
-	 * Gets the result of the visit/traversal. This value is set using
-	 * {@link #stop(Object)} or remains {@code null} if visit/traversal has
-	 * ended in any other way
+	 * Gets the result of the visit/traversal. This value is set using {@link #stop(Object)} or
+	 * remains {@code null} if visit/traversal has ended in any other way
 	 * 
-	 * @return value that should be returned to the method that initiated the
-	 *         visit/traversal
+	 * @return value that should be returned to the method that initiated the visit/traversal
 	 */
 	public R getResult()
 	{

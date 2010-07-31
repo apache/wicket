@@ -200,10 +200,6 @@ public final class Objects
 	}
 
 
-
-
-
-
 	/**
 	 * Compares two objects for equality, even if it has to convert one of them to the other type.
 	 * If both objects are numeric they are converted to the widest type and compared. If one is
@@ -663,7 +659,6 @@ public final class Objects
 	}
 
 
-
 	/**
 	 * Returns a new Number object of an appropriate type to hold the given integer value. The type
 	 * of the returned object is consistent with the given type argument, which is a constant from
@@ -703,10 +698,6 @@ public final class Objects
 				return BigInteger.valueOf(value);
 		}
 	}
-
-
-
-
 
 
 	/**

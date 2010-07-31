@@ -21,8 +21,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.RequestHandlerStack.ReplaceHandlerException;
 
 /**
- * An exception that resets the response before executing the specified request
- * handler
+ * An exception that resets the response before executing the specified request handler
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @author Jonathan Locke

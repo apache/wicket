@@ -98,11 +98,12 @@ public class AbstractMapper
 	 * @param encoder
 	 * @return PageParameters instance
 	 */
-	protected PageParameters extractPageParameters(Request request, int segmentsToSkip, IPageParametersEncoder encoder)
+	protected PageParameters extractPageParameters(Request request, int segmentsToSkip,
+		IPageParametersEncoder encoder)
 	{
 		Checks.argumentNotNull(request, "request");
 		Checks.argumentNotNull(encoder, "encoder");
-	
+
 		// strip the segments and first query parameter from URL
 		Url urlCopy = new Url(request.getUrl());
 		while (segmentsToSkip > 0 && urlCopy.getSegments().isEmpty() == false)
@@ -110,13 +111,13 @@ public class AbstractMapper
 			urlCopy.getSegments().remove(0);
 			--segmentsToSkip;
 		}
-	
+
 		if (!urlCopy.getQueryParameters().isEmpty() &&
 			Strings.isEmpty(urlCopy.getQueryParameters().get(0).getValue()))
 		{
 			urlCopy.getQueryParameters().remove(0);
 		}
-	
+
 		PageParameters decoded = encoder.decodePageParameters(request.requestWithUrl(urlCopy));
 		return decoded;
 	}
@@ -130,22 +131,23 @@ public class AbstractMapper
 	 * @param encoder
 	 * @return URL with encoded parameters
 	 */
-	protected Url encodePageParameters(Url url, PageParameters pageParameters, IPageParametersEncoder encoder)
+	protected Url encodePageParameters(Url url, PageParameters pageParameters,
+		IPageParametersEncoder encoder)
 	{
 		Checks.argumentNotNull(url, "url");
 		Checks.argumentNotNull(encoder, "encoder");
-	
+
 		if (pageParameters == null)
 		{
 			pageParameters = new PageParameters();
 		}
-	
+
 		Url parametersUrl = encoder.encodePageParameters(pageParameters);
 		if (parametersUrl != null)
 		{
 			// copy the url
 			url = new Url(url);
-	
+
 			for (String s : parametersUrl.getSegments())
 			{
 				url.getSegments().add(s);
@@ -155,7 +157,7 @@ public class AbstractMapper
 				url.getQueryParameters().add(p);
 			}
 		}
-	
+
 		return url;
 	}
 
@@ -172,12 +174,12 @@ public class AbstractMapper
 			mountPath = mountPath.substring(1);
 		}
 		Url url = Url.parse(mountPath);
-	
+
 		if (url.getSegments().isEmpty())
 		{
 			throw new IllegalArgumentException("Mount path must have at least one segment.");
 		}
-	
+
 		String[] res = new String[url.getSegments().size()];
 		for (int i = 0; i < res.length; ++i)
 		{

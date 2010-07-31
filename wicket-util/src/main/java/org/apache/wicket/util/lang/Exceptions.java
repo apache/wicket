@@ -23,7 +23,8 @@ public class Exceptions
 		});
 	}
 
-	// TODO Component$IVisitor should utilize a similar object, much cleaner than magic return values
+	// TODO Component$IVisitor should utilize a similar object, much cleaner than magic return
+	// values
 	public static class Visit<T>
 	{
 		private T result;

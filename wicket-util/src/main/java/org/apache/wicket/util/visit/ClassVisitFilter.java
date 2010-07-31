@@ -1,8 +1,7 @@
 package org.apache.wicket.util.visit;
 
 /**
- * {@link IVisitFilter} that restricts visitors to only visiting objects of the
- * specified class
+ * {@link IVisitFilter} that restricts visitors to only visiting objects of the specified class
  * 
  * @author igor.vaynberg
  */
