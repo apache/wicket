@@ -19,11 +19,13 @@ package org.apache.wicket.request.cycle;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataEntry;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
+import org.apache.wicket.protocol.https.HttpsRequestChecker;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.IRequestCycle;
@@ -186,6 +188,21 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle
 	protected IRequestHandler resolveRequestHandler()
 	{
 		IRequestHandler handler = requestMapper.mapRequest(request);
+
+		if (handler != null && Application.get().getSecuritySettings().getHttpsConfig() != null)
+		{
+			// we need to persist the session before a redirect to https so the session lasts across
+			// both http and https calls.
+			Session.get().bind();
+
+			final HttpsRequestChecker httpsRequestChecker = new HttpsRequestChecker();
+			final IRequestHandler httpsHandler = httpsRequestChecker.checkSecureIncoming(handler);
+			if (httpsHandler != null)
+			{
+				handler = httpsHandler;
+			}
+		}
+
 		return handler;
 	}
 
@@ -518,7 +535,7 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle
 	 * 
 	 * @return the agent info object based on this request
 	 */
-	// TODO NG Get this shit out of here!
+	// TODO WICKET-NG Get this out of here!
 	public ClientInfo newClientInfo()
 	{
 		return new WebClientInfo(this);

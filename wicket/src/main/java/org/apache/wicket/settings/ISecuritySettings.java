@@ -19,6 +19,7 @@ package org.apache.wicket.settings;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
+import org.apache.wicket.protocol.https.HttpsConfig;
 import org.apache.wicket.util.crypt.ICryptFactory;
 
 /**
@@ -108,4 +109,15 @@ public interface ISecuritySettings
 	 */
 	void setUnauthorizedComponentInstantiationListener(
 		IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener);
+
+	/**
+	 * @return the current configuration for secure communication over https or {@code null} there
+	 *         is no configured
+	 */
+	HttpsConfig getHttpsConfig();
+
+	/**
+	 * Installs a configuration for secure communication over https
+	 */
+	void setHttpsConfig(HttpsConfig httpsConfig);
 }
