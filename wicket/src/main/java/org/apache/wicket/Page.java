@@ -392,21 +392,38 @@ public abstract class Page extends MarkupContainer
 		super.prepareForRender(setRenderingFlag);
 	}
 
+	/**
+	 * @see #dirty(boolean)
+	 */
+	public final void dirty()
+	{
+		dirty(false);
+	}
 
 	/**
 	 * Mark this page as modified in the session. If versioning is supported then a new version of
 	 * the page will be stored in {@link IPageStore page store}
+	 * 
+	 * @param isInitialization
+	 *            a flag whether this is a page instantiation
 	 */
-	public final void dirty()
+	public final void dirty(final boolean isInitialization)
 	{
 		checkHierarchyChange(this);
 
 		final IPageManager pageManager = getSession().getPageManager();
-		if (isVersioned() && pageManager.supportsVersioning() && !getFlag(FLAG_IS_DIRTY))
+		if (!getFlag(FLAG_IS_DIRTY) && isVersioned() && pageManager.supportsVersioning())
 		{
 			setFlag(FLAG_IS_DIRTY, true);
 			setNextAvailableId();
 			pageManager.touchPage(this);
+		}
+		else if (isInitialization)
+		{
+			// we need to get pageId for new page instances even when the page doesn't need
+			// versioning, otherwise pages override each other in the page store and back button
+			// support is broken
+			setNextAvailableId();
 		}
 	}
 
@@ -854,7 +871,7 @@ public abstract class Page extends MarkupContainer
 		setVersioned(Application.get().getPageSettings().getVersionPagesByDefault());
 
 		// All Pages are born dirty so they get clustered right away
-		dirty();
+		dirty(true);
 	}
 
 	/**
