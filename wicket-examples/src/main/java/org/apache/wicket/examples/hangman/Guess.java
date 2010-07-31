@@ -59,7 +59,7 @@ public class Guess extends HangmanPage
 			protected void populateItem(final ListItem<Letter> listItem)
 			{
 				final Letter letter = listItem.getModelObject();
-				final Link link = new Link("letter")
+				final Link<Void> link = new Link<Void>("letter")
 				{
 					@Override
 					protected void onBeforeRender()
