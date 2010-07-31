@@ -121,6 +121,9 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle
 	/** MetaDataEntry array. */
 	private MetaDataEntry<?>[] metaData;
 
+	/** the time that this request cycle object was created. */
+	private final long startTime = System.currentTimeMillis();
+
 	/**
 	 * Construct.
 	 * 
@@ -556,5 +559,11 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle
 		this.cleanupFeedbackMessagesOnDetach = cleanupFeedbackMessagesOnDetach;
 	}
 
-
+	/**
+	 * @return The start time for this request
+	 */
+	public final long getStartTime()
+	{
+		return startTime;
+	}
 }
