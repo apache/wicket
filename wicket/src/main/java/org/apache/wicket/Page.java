@@ -872,6 +872,10 @@ public abstract class Page extends MarkupContainer
 
 		// All Pages are born dirty so they get clustered right away
 		dirty(true);
+
+		// this is a bit of a dirty hack, but calling dirty(true) results in isStateless called
+		// which is bound to set the stateless cache to true as there are no components yet
+		stateless = null;
 	}
 
 	/**
