@@ -146,7 +146,10 @@ public final class EditBook extends AuthenticatedWebPage
 		public final void onSubmit()
 		{
 			final Book book = getModelObject();
-			setResponsePage(new BookDetails(book));
+			BookDetails details = new BookDetails(book);
+
+			setResponsePage(details);
+
 			// setRedirect(true);
 		}
 	}

@@ -1,8 +1,5 @@
-<html xmlns:wicket="http://wicket.apache.org/">
-<head>
-    <title>Wicket Examples - library</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
-</head>    
+<wicket:extend>
+
 <style type="text/css">
 <!--
 .italic {
@@ -10,9 +7,8 @@
 }
 -->
 </style>
-<body>
 
-  <span wicket:id = "border">
+
   Book Details
   <p>
   <table>
@@ -65,8 +61,7 @@
 	  </td>
 	</tr>	
   </table>	
-  <p>
+  <div style="margin-top: 1em">
   <a wicket:id = "edit" href="EditBook.html">Edit</a>
-  </span>
-</body>
-</html>
+  </div>
+</wicket:extend>

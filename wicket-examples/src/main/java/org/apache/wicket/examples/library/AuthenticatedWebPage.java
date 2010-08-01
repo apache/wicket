@@ -16,10 +16,7 @@
  */
 package org.apache.wicket.examples.library;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.markup.html.border.Border;
 
 
 /**
@@ -35,32 +32,14 @@ import org.apache.wicket.markup.html.border.Border;
  */
 public class AuthenticatedWebPage extends WicketExamplePage
 {
-	private final Border border;
+
 
 	/**
 	 * Contruct
 	 */
 	public AuthenticatedWebPage()
 	{
-		border = new LibraryApplicationBorder("border");
-	}
 
-	/**
-	 * @see org.apache.wicket.examples.WicketExamplePage#onInitialize()
-	 */
-	@Override
-	protected void onInitialize()
-	{
-		super.onInitialize();
-
-		// Create border and add it to the page
-		add(border);
-
-		// The WicketExamplePage constructor already created and added it. We need to move it into
-		// the border.
-		Component mainNavigation = border.getFromBorderBody("mainNavigation");
-
-		border.addToBorder(mainNavigation);
 	}
 
 
@@ -74,34 +53,4 @@ public class AuthenticatedWebPage extends WicketExamplePage
 		return (LibrarySession)getSession();
 	}
 
-	/**
-	 * For all components which shall not be added to the border
-	 * 
-	 * @param children
-	 * @return this.
-	 */
-	protected MarkupContainer addToPage(Component... children)
-	{
-		return super.add(children);
-	}
-
-	/**
-	 * @see org.apache.wicket.MarkupContainer#add(org.apache.wicket.Component[])
-	 */
-	@Override
-	public MarkupContainer add(final Component... children)
-	{
-		for (Component child : children)
-		{
-			if ((border == null) || (child == border))
-			{
-				super.add(children);
-			}
-			else
-			{
-				border.addToBorderBody(child);
-			}
-		}
-		return this;
-	}
 }

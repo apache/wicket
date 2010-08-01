@@ -1,11 +1,4 @@
-<html xmlns:wicket="http://wicket.apache.org/">
-<head>
-    <title>Wicket Examples - library</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
-</head>
-<body>
-
-  <span wicket:id = "border">
+<wicket:extend>
   <table width = "100%">
 	<tr>
 	  <th>Title</th>
@@ -40,9 +33,9 @@
       </td>
     </tr>
   </table>	
-  <p>
+  <div style="margin-top: 1em">
   <span wicket:id = "navigator"/>
-  </p>
-  </span>
-</body>
-</html>
+  
+  </div>
+ 
+</wicket:extend>
