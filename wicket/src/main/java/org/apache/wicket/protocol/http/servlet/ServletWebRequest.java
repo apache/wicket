@@ -121,7 +121,13 @@ public class ServletWebRequest extends WebRequest
 		return Url.parse(Strings.stripJSessionId(url.toString()), getCharset());
 	}
 
-	protected String getFilterPrefix()
+
+	/**
+	 * Returns the prefix of Wicket filter (without the leading /)
+	 * 
+	 * @return Wicket filter prefix
+	 */
+	public String getFilterPrefix()
 	{
 		return filterPrefix;
 	}

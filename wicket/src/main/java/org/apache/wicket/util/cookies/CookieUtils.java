@@ -17,7 +17,6 @@
 package org.apache.wicket.util.cookies;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
@@ -328,12 +327,10 @@ public class CookieUtils
 			cookie.setDomain(domain);
 		}
 
-		HttpServletRequest request = ((ServletWebRequest)getWebRequest()).getHttpServletRequest();
-		String path = request.getContextPath() + request.getServletPath();
-		if (Strings.isEmpty(path))
-		{
-			path = "/";
-		}
+		ServletWebRequest request = (ServletWebRequest)getWebRequest();
+		String path = request.getHttpServletRequest().getContextPath() + "/" +
+			request.getFilterPrefix();
+
 		cookie.setPath(path);
 		cookie.setVersion(settings.getVersion());
 		cookie.setSecure(settings.getSecure());
