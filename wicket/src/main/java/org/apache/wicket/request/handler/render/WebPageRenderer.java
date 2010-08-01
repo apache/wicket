@@ -190,7 +190,7 @@ public class WebPageRenderer extends PageRenderer
 			||
 			(targetUrl.equals(currentUrl) && !getPageProvider().isNewPageInstance() && !getPage().isPageStateless()) //
 			||
-			(targetUrl.equals(currentUrl) && isRedirectToRender() && getPage().isPageStateless()))
+			(targetUrl.equals(currentUrl) && isRedirectToRender()))
 		{
 			// if the policy is never to redirect
 			// or one pass render mode is on
