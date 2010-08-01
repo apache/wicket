@@ -204,4 +204,12 @@ public class WicketFilterTest extends TestCase
 		{
 		}
 	}
+
+	public void testCheckRedirect_1()
+	{
+		WicketFilter filter = new WicketFilter();
+
+		// Simulate url-pattern = "/*" and request = http://localhost:8080
+		assertEquals("", filter.checkIfRedirectRequired("/", ""));
+	}
 }

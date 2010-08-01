@@ -146,6 +146,11 @@ public class WicketFilter implements Filter
 			}
 			else
 			{
+				if (Strings.isEmpty(httpServletRequest.getQueryString()) == false)
+				{
+					redirectURL += "?" + httpServletRequest.getQueryString();
+				}
+
 				try
 				{
 					// send redirect - this will discard POST parameters if the request is POST
@@ -350,9 +355,18 @@ public class WicketFilter implements Filter
 	 */
 	private String checkIfRedirectRequired(final HttpServletRequest request)
 	{
-		String requestURI = request.getRequestURI();
-		String contextPath = request.getContextPath();
+		return checkIfRedirectRequired(request.getRequestURI(), request.getContextPath());
+	}
 
+	/**
+	 * Try to determine as fast as possible if a redirect is necessary
+	 * 
+	 * @param requestURI
+	 * @param contextPath
+	 * @return null, if no redirect is necessary. Else the redirect URL
+	 */
+	protected final String checkIfRedirectRequired(final String requestURI, final String contextPath)
+	{
 		// length without jesessionid (http://.../abc;jsessionid=...?param)
 		int uriLength = requestURI.indexOf(';');
 		if (uriLength == -1)
@@ -360,6 +374,7 @@ public class WicketFilter implements Filter
 			uriLength = requestURI.length();
 		}
 
+		// We only need to determine it once. It'll not change.
 		if (filterPathLength == -1)
 		{
 			filterPathLength = filterPath.length();
@@ -369,29 +384,34 @@ public class WicketFilter implements Filter
 			}
 		}
 
-		// uri != request.getContextPath() + "/" + filterPath (without "/" at the end)
-		if (uriLength != (contextPath.length() + 1 + filterPathLength))
+		// request.getContextPath() + "/" + filterPath. But without any trailing "/".
+		int homePathLenth = contextPath.length() + (filterPathLength > 0 ? 1 : 0) +
+			filterPathLength;
+		if (uriLength != homePathLenth)
 		{
+			// requestURI and homePath are different (in length)
+			// => continue with standard request processing. No redirect.
 			return null;
 		}
 
-		// current URI without jsessionid
-		String uri = requestURI.substring(0, uriLength);
+		// Fail fast failed. Revert to "slow" but exact check
+		String uri = Strings.stripJSessionId(requestURI);
 
 		// home page without trailing slash URI
-		String homePageUri = contextPath + "/" + filterPath.substring(0, filterPathLength);
-		if (uri.equals(homePageUri) == false)
+		String homePageUri = contextPath + "/" + filterPath;
+		if (homePageUri.endsWith("/"))
 		{
-			return null;
+			homePageUri = homePageUri.substring(0, homePageUri.length() - 1);
 		}
 
-		// create the redirect URI
-		uri += "/";
-		if (!Strings.isEmpty(request.getQueryString()))
+		// If both are equal => redirect
+		if (uri.equals(homePageUri))
 		{
-			uri += "?" + request.getQueryString();
+			uri += "/";
+			return uri;
 		}
 
-		return uri;
+		// no match => standard request processing; no redirect
+		return null;
 	}
 }
