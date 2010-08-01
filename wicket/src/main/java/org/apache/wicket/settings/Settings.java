@@ -45,7 +45,6 @@ import org.apache.wicket.markup.html.PackageResourceGuard;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.markup.resolver.AutoComponentResolver;
 import org.apache.wicket.markup.resolver.IComponentResolver;
-import org.apache.wicket.protocol.https.HttpsConfig;
 import org.apache.wicket.resource.PropertiesFactory;
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
@@ -262,11 +261,6 @@ public final class Settings
 	 * before giving up. Defaults to one minute.
 	 */
 	private Duration timeout = Duration.ONE_MINUTE;
-
-	/**
-	 * An object that holds the settings for secure communication over https
-	 */
-	private HttpsConfig httpsConfig;
 
 	/** Authorizer for component instantiations */
 	private IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener = new IUnauthorizedComponentInstantiationListener()
@@ -1457,17 +1451,5 @@ public final class Settings
 	public void setMarkupFactory(final MarkupFactory factory)
 	{
 		markupFactory = factory;
-	}
-
-	/** {@inheritDoc} */
-	public HttpsConfig getHttpsConfig()
-	{
-		return httpsConfig;
-	}
-
-	/** {@inheritDoc} */
-	public void setHttpsConfig(final HttpsConfig httpsConfig)
-	{
-		this.httpsConfig = httpsConfig;
 	}
 }

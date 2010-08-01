@@ -1215,6 +1215,7 @@ public abstract class Application implements UnboundListener
 		if (!(root instanceof ICompoundRequestMapper))
 		{
 			root = new CompoundRequestMapper().add(root);
+			setRootRequestMapper(root);
 		}
 		return (ICompoundRequestMapper)root;
 	}

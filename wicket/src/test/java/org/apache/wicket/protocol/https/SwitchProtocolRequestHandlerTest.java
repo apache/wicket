@@ -21,15 +21,11 @@ import java.net.URL;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.ThreadContext;
-import org.apache.wicket.mock.MockApplication;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.protocol.https.SwitchProtocolRequestHandler.Protocol;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -62,19 +58,14 @@ public class SwitchProtocolRequestHandlerTest
 		final IRequestCycle requestCycle = Mockito.mock(IRequestCycle.class);
 		Mockito.when(requestCycle.getRequest()).thenReturn(webRequest);
 
+		HttpsConfig httpsConfig = new HttpsConfig(80, 1443);
+
 		// request secure communication (over https)
 		final SwitchProtocolRequestHandler handler = new SwitchProtocolRequestHandler(
-			Protocol.HTTPS);
+			Protocol.HTTPS, httpsConfig);
 
 		final WebResponse webResponse = Mockito.mock(WebResponse.class);
 		Mockito.when(requestCycle.getResponse()).thenReturn(webResponse);
-
-		final WebApplication application = new MockApplication();
-
-		// needed to be able to call Application.get().getSecuritySettings().getHttpsConfig()
-		final WicketTester tester = new WicketTester(application);
-		ThreadContext.setApplication(application);
-		application.getSecuritySettings().setHttpsConfig(new HttpsConfig(80, 1443));
 
 		handler.respond(requestCycle);
 

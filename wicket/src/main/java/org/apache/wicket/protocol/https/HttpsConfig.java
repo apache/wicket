@@ -23,15 +23,15 @@ package org.apache.wicket.protocol.https;
  */
 public class HttpsConfig
 {
-	private int httpPort = 80;
-	private int httpsPort = 443;
+	private int httpPort;
+	private int httpsPort;
 
 	/**
 	 * Constructor
 	 */
 	public HttpsConfig()
 	{
-
+		this(80, 443);
 	}
 
 	/**

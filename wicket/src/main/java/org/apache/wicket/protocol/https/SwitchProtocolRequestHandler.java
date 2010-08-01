@@ -2,19 +2,18 @@ package org.apache.wicket.protocol.https;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
-import org.apache.wicket.protocol.https.HttpsConfig;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.util.lang.Checks;
 
 /**
  * Request handler that performs redirects across http and https
  */
-public class SwitchProtocolRequestHandler implements IRequestHandler
+class SwitchProtocolRequestHandler implements IRequestHandler
 {
 
 	/**
@@ -35,15 +34,19 @@ public class SwitchProtocolRequestHandler implements IRequestHandler
 	/** the original request handler */
 	private final IRequestHandler handler;
 
+	private final HttpsConfig httpsConfig;
+
 	/**
 	 * Constructor
 	 * 
 	 * @param protocol
 	 *            required protocol
+	 * @param httpsConfig
+	 *            the https configuration
 	 */
-	public SwitchProtocolRequestHandler(Protocol protocol)
+	SwitchProtocolRequestHandler(Protocol protocol, HttpsConfig httpsConfig)
 	{
-		this(protocol, null);
+		this(protocol, null, httpsConfig);
 	}
 
 	/**
@@ -53,20 +56,24 @@ public class SwitchProtocolRequestHandler implements IRequestHandler
 	 *            required protocol
 	 * @param handler
 	 *            target to redirect to, or {@code null} to replay the current url
+	 * @param httpsConfig
+	 *            the https configuration
 	 */
-	public SwitchProtocolRequestHandler(Protocol protocol, IRequestHandler handler)
+	SwitchProtocolRequestHandler(Protocol protocol, IRequestHandler handler,
+		final HttpsConfig httpsConfig)
 	{
-		if (protocol == null)
-		{
-			throw new IllegalArgumentException("Argument 'protocol' may not be null.");
-		}
+		Checks.argumentNotNull(protocol, "protocol");
+		Checks.argumentNotNull(httpsConfig, "httpsConfig");
+
 		if (protocol == Protocol.PRESERVE_CURRENT)
 		{
 			throw new IllegalArgumentException("Argument 'protocol' may not have value '" +
 				Protocol.PRESERVE_CURRENT.toString() + "'.");
 		}
+
 		this.protocol = protocol;
 		this.handler = handler;
+		this.httpsConfig = httpsConfig;
 	}
 
 	/**
@@ -105,8 +112,6 @@ public class SwitchProtocolRequestHandler implements IRequestHandler
 		WebRequest webRequest = (WebRequest)requestCycle.getRequest();
 		HttpServletRequest request = ((ServletWebRequest)webRequest).getHttpServletRequest();
 
-		final HttpsConfig httpsConfig = Application.get().getSecuritySettings().getHttpsConfig();
-
 		Integer port = null;
 		if (protocol == Protocol.HTTP)
 		{
@@ -135,13 +140,6 @@ public class SwitchProtocolRequestHandler implements IRequestHandler
 
 		WebResponse response = (WebResponse)requestCycle.getResponse();
 
-		// an attempt to rewrite a secure jsessionid into nonsecure, doesnt seem to work
-		// Session session = Session.get();
-		// if (!session.isTemporary())
-		// {
-		// response.addCookie(new Cookie("JSESSIONID", session.getId()));
-		// }
-
 		response.sendRedirect(url);
 	}
 
@@ -151,11 +149,13 @@ public class SwitchProtocolRequestHandler implements IRequestHandler
 	 * 
 	 * @param protocol
 	 *            required protocol
+	 * @param httpsConfig
+	 *            the https configuration
 	 * @return request target or {@code null}
 	 */
-	public static IRequestHandler requireProtocol(Protocol protocol)
+	public static IRequestHandler requireProtocol(Protocol protocol, final HttpsConfig httpsConfig)
 	{
-		return requireProtocol(protocol, null);
+		return requireProtocol(protocol, null, httpsConfig);
 	}
 
 	/**
@@ -166,9 +166,12 @@ public class SwitchProtocolRequestHandler implements IRequestHandler
 	 *            required protocol
 	 * @param handler
 	 *            request target to redirect to or {@code null} to redirect to current url
+	 * @param httpsConfig
+	 *            the https configuration
 	 * @return request handler or {@code null}
 	 */
-	public static IRequestHandler requireProtocol(Protocol protocol, IRequestHandler handler)
+	public static IRequestHandler requireProtocol(Protocol protocol, IRequestHandler handler,
+		final HttpsConfig httpsConfig)
 	{
 		IRequestCycle requestCycle = RequestCycle.get();
 		WebRequest webRequest = (WebRequest)requestCycle.getRequest();
@@ -180,7 +183,7 @@ public class SwitchProtocolRequestHandler implements IRequestHandler
 		}
 		else
 		{
-			return new SwitchProtocolRequestHandler(protocol, handler);
+			return new SwitchProtocolRequestHandler(protocol, handler, httpsConfig);
 		}
 	}
 

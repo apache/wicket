@@ -55,13 +55,17 @@ public class HttpsRequestCheckerTest
 		IPageRequestHandler httpsPageRequestHandler = Mockito.mock(IPageRequestHandler.class);
 		Mockito.when(httpsPageRequestHandler.getPage()).thenReturn(new HttpsPage());
 
-		IRequestHandler httpsPageSecureIncoming = checker.checkSecureIncoming(httpsPageRequestHandler);
+		HttpsConfig httpsConfig = new HttpsConfig();
+
+		IRequestHandler httpsPageSecureIncoming = checker.checkSecureIncoming(
+			httpsPageRequestHandler, httpsConfig);
 		assertTrue(httpsPageSecureIncoming instanceof SwitchProtocolRequestHandler);
 
 		IPageRequestHandler httpPageRequestHandler = Mockito.mock(IPageRequestHandler.class);
 		Mockito.when(httpPageRequestHandler.getPage()).thenReturn(new HttpPage());
 
-		IRequestHandler httpPageSecureIncoming = checker.checkSecureIncoming(httpPageRequestHandler);
+		IRequestHandler httpPageSecureIncoming = checker.checkSecureIncoming(
+			httpPageRequestHandler, httpsConfig);
 		assertSame(httpPageRequestHandler, httpPageSecureIncoming);
 	}
 

@@ -20,47 +20,45 @@ import org.apache.wicket.protocol.https.SwitchProtocolRequestHandler.Protocol;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.request.handler.IPageRequestHandler;
-import org.apache.wicket.settings.ISecuritySettings;
 
 /**
  * A helper class which will replace the current {@link IRequestHandler request handler} with
  * {@link SwitchProtocolRequestHandler} if the page that is going to be rendered is annotated with @
  * {@link RequireHttps}.
- * 
- * <p>
- * This helper is used only if the application has registered non-null {@link HttpsConfig} via
- * {@link ISecuritySettings#setHttpsConfig(HttpsConfig)}
  */
-public class HttpsRequestChecker
+class HttpsRequestChecker
 {
 
 	/**
 	 * 
-	 * @param handler
+	 * @param requestHandler
 	 *            the original request handler
+	 * @param httpsConfig
+	 *            the https configuration
 	 * @return either {@link SwitchProtocolRequestHandler} if the page that is going to be rendered
 	 *         is annotated with @{@link RequireHttps} and the protocol of the current request is
 	 *         http, or will return the original handler if these conditions are not fulfilled
 	 */
-	public IRequestHandler checkSecureIncoming(IRequestHandler handler)
+	IRequestHandler checkSecureIncoming(IRequestHandler requestHandler,
+		final HttpsConfig httpsConfig)
 	{
 
-		if (handler instanceof SwitchProtocolRequestHandler)
+		if (requestHandler instanceof SwitchProtocolRequestHandler)
 		{
-			return handler;
+			return requestHandler;
 		}
 
-		Class<?> pageClass = getPageClass(handler);
+		Class<?> pageClass = getPageClass(requestHandler);
 		if (pageClass != null)
 		{
 			IRequestHandler redirect = null;
 			if (hasSecureAnnotation(pageClass))
 			{
-				redirect = SwitchProtocolRequestHandler.requireProtocol(Protocol.HTTPS);
+				redirect = SwitchProtocolRequestHandler.requireProtocol(Protocol.HTTPS, httpsConfig);
 			}
 			else
 			{
-				redirect = SwitchProtocolRequestHandler.requireProtocol(Protocol.HTTP);
+				redirect = SwitchProtocolRequestHandler.requireProtocol(Protocol.HTTP, httpsConfig);
 			}
 
 			if (redirect != null)
@@ -69,7 +67,47 @@ public class HttpsRequestChecker
 			}
 
 		}
-		return handler;
+		return requestHandler;
+	}
+
+	/**
+	 * @param requestHandler
+	 *            the original request handler
+	 * @param httpsConfig
+	 *            the https configuration
+	 * @return either {@link SwitchProtocolRequestHandler} if the page that is going to be rendered
+	 *         is annotated with @{@link RequireHttps} and the protocol of the current request is
+	 *         http, or will return the original handler if these conditions are not fulfilled
+	 */
+	IRequestHandler checkSecureOutgoing(IRequestHandler requestHandler, HttpsConfig httpsConfig)
+	{
+
+		if (requestHandler != null && requestHandler instanceof SwitchProtocolRequestHandler)
+		{
+			return requestHandler;
+		}
+
+		Class<?> pageClass = getPageClass(requestHandler);
+		if (pageClass != null)
+		{
+			IRequestHandler redirect = null;
+			if (hasSecureAnnotation(pageClass))
+			{
+				redirect = SwitchProtocolRequestHandler.requireProtocol(Protocol.HTTPS,
+					requestHandler, httpsConfig);
+			}
+			else
+			{
+				redirect = SwitchProtocolRequestHandler.requireProtocol(Protocol.HTTP,
+					requestHandler, httpsConfig);
+			}
+			if (redirect != null)
+			{
+				return redirect;
+			}
+
+		}
+		return requestHandler;
 	}
 
 	/**
