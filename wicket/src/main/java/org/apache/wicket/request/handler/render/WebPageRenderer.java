@@ -20,6 +20,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -113,6 +114,8 @@ public class WebPageRenderer extends PageRenderer
 	 */
 	protected BufferedWebResponse renderPage(Url targetUrl, RequestCycle requestCycle)
 	{
+		IRequestHandler scheduled = requestCycle.getRequestHandlerScheduledAfterCurrent();
+
 		// keep the original response
 		final Response originalResponse = requestCycle.getResponse();
 
@@ -126,7 +129,18 @@ public class WebPageRenderer extends PageRenderer
 		{
 			requestCycle.setResponse(response);
 			getPage().renderPage();
-			return response;
+
+			if (scheduled == null && requestCycle.getRequestHandlerScheduledAfterCurrent() != null)
+			{
+				// This is a special case. During page render another request handler got scheduled.
+				// The handler
+				// will want to overwrite the response, so we need to let it
+				return null;
+			}
+			else
+			{
+				return response;
+			}
 		}
 		finally
 		{
@@ -183,7 +197,11 @@ public class WebPageRenderer extends PageRenderer
 			// or the targetUrl matches current url and the page is not stateless
 			// or the targetUrl matches current url, page is stateless but it's redirect-to-render
 			// just render the page
-			renderPage();
+			BufferedWebResponse response = renderPage(targetUrl, requestCycle);
+			if (response != null)
+			{
+				response.writeTo((WebResponse)requestCycle.getResponse());
+			}
 		}
 		else if (!targetUrl.equals(currentUrl) && //
 			(getRedirectPolicy() == RedirectPolicy.ALWAYS_REDIRECT || isRedirectToRender()))
@@ -212,6 +230,11 @@ public class WebPageRenderer extends PageRenderer
 		{
 			// redirect to buffer
 			BufferedWebResponse response = renderPage(targetUrl, requestCycle);
+
+			if (response == null)
+			{
+				return;
+			}
 
 			// check if the url hasn't changed after page has been rendered
 			// (i.e. the stateless flag might have changed which could result in different page url)

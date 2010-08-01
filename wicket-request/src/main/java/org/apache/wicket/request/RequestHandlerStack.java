@@ -135,6 +135,17 @@ public abstract class RequestHandlerStack
 	}
 
 	/**
+	 * Returns the request handler scheduled after current request handler.
+	 * 
+	 * @see #scheduleRequestHandlerAfterCurrent(IRequestHandler)
+	 * @return handler or <code>null</code>
+	 */
+	public IRequestHandler getRequestHandlerScheduledAfterCurrent()
+	{
+		return scheduledAfterCurrent;
+	}
+	
+	/**
 	 * Replaces the currently executed {@link IRequestHandler} with new {@link IRequestHandler}. The
 	 * currently executed {@link IRequestHandler} is terminated and the new {@link IRequestHandler}
 	 * is executed.
