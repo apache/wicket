@@ -36,4 +36,15 @@ public class SignOut extends WicketExamplePage
 	{
 		getSession().invalidate();
 	}
+
+	/**
+	 * @see org.apache.wicket.Page#onBeforeRender()
+	 */
+	@Override
+	protected void onBeforeRender()
+	{
+		super.onBeforeRender();
+
+		getApplication().getSecuritySettings().getAuthenticationStrategy().remove();
+	}
 }
