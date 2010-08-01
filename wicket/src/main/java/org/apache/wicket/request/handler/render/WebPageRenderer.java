@@ -174,7 +174,7 @@ public class WebPageRenderer extends PageRenderer
 		else if (getRedirectPolicy() == RedirectPolicy.NEVER_REDIRECT ||
 			isOnePassRender() // 
 			||
-			(targetUrl.equals(currentUrl) && !getPage().isPageStateless()) //
+			(targetUrl.equals(currentUrl) && !getPageProvider().isNewPageInstance() && !getPage().isPageStateless()) //
 			||
 			(targetUrl.equals(currentUrl) && isRedirectToRender() && getPage().isPageStateless()))
 		{
