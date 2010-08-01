@@ -118,6 +118,7 @@ public class WicketFilter implements Filter
 			HttpServletRequest httpServletRequest = (HttpServletRequest)request;
 			HttpServletResponse httpServletResponse = (HttpServletResponse)response;
 
+			// Make sure getFilterPath() gets called before checkIfRedirectRequired()
 			String filterPath = getFilterPath(httpServletRequest);
 
 			String redirectURL = checkIfRedirectRequired(httpServletRequest);
@@ -257,12 +258,16 @@ public class WicketFilter implements Filter
 		application.setName(filterConfig.getFilterName());
 		application.setWicketFilter(this);
 
-		filterPath = new WebXmlFile().getFilterPath(filterConfig);
+		// Allow the filterPath to tbe preset via setFilterPath()
 		if (filterPath == null)
 		{
-			log.info("Unable to parse filter mapping web.xml for " + filterConfig.getFilterName() +
-				". " + "Configure with init-param " + FILTER_MAPPING_PARAM +
-				" if it is not \"/*\".");
+			filterPath = new WebXmlFile().getFilterPath(filterConfig);
+			if (filterPath == null)
+			{
+				log.info("Unable to parse filter mapping web.xml for " +
+					filterConfig.getFilterName() + ". " + "Configure with init-param " +
+					FILTER_MAPPING_PARAM + " if it is not \"/*\".");
+			}
 		}
 
 		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
@@ -385,8 +390,8 @@ public class WicketFilter implements Filter
 		}
 
 		// request.getContextPath() + "/" + filterPath. But without any trailing "/".
-		int homePathLenth = contextPath.length() + (filterPathLength > 0 ? 1 : 0) +
-			filterPathLength;
+		int homePathLenth = contextPath.length() +
+			(filterPathLength > 0 ? 1 + filterPathLength : 0);
 		if (uriLength != homePathLenth)
 		{
 			// requestURI and homePath are different (in length)
@@ -413,5 +418,25 @@ public class WicketFilter implements Filter
 
 		// no match => standard request processing; no redirect
 		return null;
+	}
+
+	/**
+	 * Sets the filter path instead of reading it from web.xml.
+	 * 
+	 * Please note that you must subclass WicketFilter.init(FilterConfig) and set your filter path
+	 * before you call super.init(filterConfig).
+	 * 
+	 * @param filterPath
+	 */
+	public final void setFilterPath(final String filterPath)
+	{
+		// see https://issues.apache.org/jira/browse/WICKET-701
+		if (this.filterPath != null)
+		{
+			throw new IllegalStateException(
+				"Filter path is write-once. You can not change it. Current value='" + filterPath +
+					"'");
+		}
+		this.filterPath = filterPath;
 	}
 }
