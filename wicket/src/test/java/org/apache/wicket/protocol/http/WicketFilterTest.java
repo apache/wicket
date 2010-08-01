@@ -18,8 +18,6 @@ package org.apache.wicket.protocol.http;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,6 +36,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.ParserConfigurationException;
 
 import junit.framework.TestCase;
 
@@ -48,6 +47,8 @@ import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.request.resource.DynamicImageResource;
+import org.apache.wicket.util.file.WebXmlFile;
+import org.xml.sax.SAXException;
 
 public class WicketFilterTest extends TestCase
 {
@@ -142,30 +143,19 @@ public class WicketFilterTest extends TestCase
 	{
 		try
 		{
-			Method method = WicketFilter.class.getDeclaredMethod("getFilterPath", String.class,
-				InputStream.class);
-			method.setAccessible(true);
-			return method.invoke(new WicketFilter(), string, in).toString();
+			return new WebXmlFile().getFilterPath(string, in);
 		}
-		catch (SecurityException e)
+		catch (ParserConfigurationException ex)
 		{
-			throw new RuntimeException(e);
+			throw new RuntimeException(ex);
 		}
-		catch (NoSuchMethodException e)
+		catch (SAXException ex)
 		{
-			throw new RuntimeException(e);
+			throw new RuntimeException(ex);
 		}
-		catch (IllegalArgumentException e)
+		catch (IOException ex)
 		{
-			throw new RuntimeException(e);
-		}
-		catch (IllegalAccessException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (InvocationTargetException e)
-		{
-			throw new RuntimeException(e);
+			throw new RuntimeException(ex);
 		}
 	}
 
