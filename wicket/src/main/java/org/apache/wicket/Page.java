@@ -46,6 +46,7 @@ import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IDebugSettings;
+import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.string.StringValue;
@@ -187,6 +188,9 @@ public abstract class Page extends MarkupContainer
 
 	/** True if the page hierarchy has been modified in the current request. */
 	private static final int FLAG_IS_DIRTY = FLAG_RESERVED3;
+
+	/** Set to prevent marking page as dirty under certain circumstances. */
+	private static final int FLAG_PREVENT_DIRTY = FLAG_RESERVED4;
 
 	/** True if the page should try to be stateless */
 	private static final int FLAG_STATELESS_HINT = FLAG_RESERVED5;
@@ -401,6 +405,17 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
+	 * INTERNAL. Prevent marking page as dirty. Used to prevent incrementing page id during
+	 * REDIRECT_TO_RENDER rendering.
+	 * 
+	 * @param prevent
+	 */
+	private void preventDirty(boolean prevent)
+	{
+		setFlag(FLAG_PREVENT_DIRTY, prevent);
+	}
+
+	/**
 	 * Mark this page as modified in the session. If versioning is supported then a new version of
 	 * the page will be stored in {@link IPageStore page store}
 	 * 
@@ -410,6 +425,11 @@ public abstract class Page extends MarkupContainer
 	public final void dirty(final boolean isInitialization)
 	{
 		checkHierarchyChange(this);
+
+		if (getFlag(FLAG_PREVENT_DIRTY))
+		{
+			return;
+		}
 
 		final IPageManager pageManager = getSession().getPageManager();
 		if (!getFlag(FLAG_IS_DIRTY) && isVersioned() && pageManager.supportsVersioning())
@@ -431,7 +451,8 @@ public abstract class Page extends MarkupContainer
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
 	 * This method is called when a component was rendered standalone. If it is a <code>
-	 * MarkupContainer</code> then the rendering for that container is checked.
+	 * MarkupContainer</code>
+	 * then the rendering for that container is checked.
 	 * 
 	 * @param component
 	 * 
@@ -1277,8 +1298,20 @@ public abstract class Page extends MarkupContainer
 	 */
 	public void renderPage()
 	{
-		++renderCount;
-		render();
+		if (getApplication().getRequestCycleSettings().getRenderStrategy() != RenderStrategy.REDIRECT_TO_BUFFER)
+		{
+			// don't increment page id for redirect to render and one pass render during rendering
+			preventDirty(true);
+		}
+		try
+		{
+			++renderCount;
+			render();
+		}
+		finally
+		{
+			preventDirty(false);
+		}
 	}
 
 	/** TODO WICKET-NG is this really needed? can we remove? */
