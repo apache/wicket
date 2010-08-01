@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 public class ResourceStreamResource extends AbstractResource
 {
+	private static final long serialVersionUID = 1L;
 
 	private final IResourceStream stream;
 	private String fileName;

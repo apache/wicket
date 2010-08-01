@@ -100,7 +100,6 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	/**
 	 * @see FormComponent#convertValue(String[])
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	protected Collection<T> convertValue(String[] values) throws ConversionException
 	{

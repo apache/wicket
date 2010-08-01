@@ -25,6 +25,7 @@ import java.util.Locale;
  */
 public class JavascriptResourceReference extends PackageResourceReference
 {
+	private static final long serialVersionUID = 1L;
 
 	public JavascriptResourceReference(Class<?> scope, String name, Locale locale, String style,
 		String variation)

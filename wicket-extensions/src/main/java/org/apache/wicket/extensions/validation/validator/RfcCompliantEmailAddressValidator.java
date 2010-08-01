@@ -32,9 +32,9 @@ import org.apache.wicket.validation.validator.PatternValidator;
  * <p>
  * Most users will be satisfied with the {@link EmailAddressValidator}
  * 
- * @see <a href="http://www.ex-parrot.com/~pdw/Mail-RFC822-Address.html">Perl Regex implementation *
- *      of RFC 822< /a>
- * @see <a href="http://www.ietf.org/rfc/rfc0822.txt?number=822">RFC 822< /a>
+ * @see <a href="http://www.ex-parrot.com/~pdw/Mail-RFC822-Address.html">Perl Regex implementation
+ *      of RFC 822</a>
+ * @see <a href="http://www.ietf.org/rfc/rfc0822.txt?number=822">RFC 822</a>
  * @author Frank Bille
  */
 public class RfcCompliantEmailAddressValidator extends PatternValidator
@@ -140,6 +140,7 @@ public class RfcCompliantEmailAddressValidator extends PatternValidator
 		super(emailPattern);
 	}
 
+	@Override
 	protected void onValidate(IValidatable validatable)
 	{
 		String email = validatable.getValue().toString();

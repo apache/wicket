@@ -141,6 +141,8 @@ public class ComponentInitializationTest extends WicketTestCase
 
 	private static class TestComponent extends WebMarkupContainer
 	{
+		private static final long serialVersionUID = 1L;
+
 		private int count = 0;
 
 		public TestComponent(String id)

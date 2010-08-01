@@ -33,6 +33,8 @@ public class SharedResources
 
 	private static final class SharedResourceReference extends ResourceReference
 	{
+		private static final long serialVersionUID = 1L;
+
 		private final IResource resource;
 
 		public SharedResourceReference(Class<?> scope, String name, Locale locale, String style,
@@ -116,5 +118,5 @@ public class SharedResources
 		String variation, boolean strict)
 	{
 		return registry.getResourceReference(scope, name, locale, style, variation, strict);
-}
+	}
 }

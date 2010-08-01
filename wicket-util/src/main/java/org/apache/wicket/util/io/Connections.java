@@ -16,11 +16,9 @@
  */
 package org.apache.wicket.util.io;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.JarURLConnection;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -33,7 +31,6 @@ public class Connections
 {
 	private Connections()
 	{
-
 	}
 
 	/**
@@ -45,7 +42,6 @@ public class Connections
 	 */
 	public static long getLastModified(URL url) throws IOException
 	{
-
 		URLConnection connection = url.openConnection();
 
 		try
@@ -68,7 +64,6 @@ public class Connections
 			{
 				return connection.getLastModified();
 			}
-
 		}
 		finally
 		{
@@ -115,5 +110,4 @@ public class Connections
 			connection.getInputStream().close();
 		}
 	}
-
 }

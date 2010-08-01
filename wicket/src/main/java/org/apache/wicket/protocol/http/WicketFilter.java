@@ -17,7 +17,6 @@
 package org.apache.wicket.protocol.http;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -27,21 +26,18 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.util.file.WebXmlFile;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * Filter for initiating handling of Wicket requests.
@@ -75,13 +71,15 @@ public class WicketFilter implements Filter
 
 	static final String SERVLET_PATH_HOLDER = "<servlet>";
 
-	private WebApplication webApplication;
+	// Wicket's Application object
+	private WebApplication application;
 
 	private FilterConfig filterConfig;
 
 	private String filterPath;
 
-	private final boolean servletMode = false;
+	// filterPath length without trailing "/"
+	private int filterPathLength = -1;
 
 	/**
 	 * @return The class loader
@@ -92,55 +90,19 @@ public class WicketFilter implements Filter
 	}
 
 	/**
-	 * Checks if the request is for home page and lacks trailing slash. If necessary redirects to
-	 * URL with trailing slash.
+	 * This is Wicket's main method to execute a request
 	 * 
 	 * @param request
 	 * @param response
-	 * @param filterPath
-	 * @return <code>true</code> if there is a trailing slash, <code>false</code> if redirect was
-	 *         necessary.
+	 * @param chain
+	 * @return false, if the request could not be processed
+	 * @throws IOException
+	 * @throws ServletException
 	 */
-	private boolean checkForTrailingSlash(HttpServletRequest request, HttpServletResponse response,
-		String filterPath)
+	boolean processRequest(final ServletRequest request, final ServletResponse response,
+		final FilterChain chain) throws IOException, ServletException
 	{
-		// current URI
-		String uri = Strings.stripJSessionId(request.getRequestURI());
-
-		// home page without trailing slash URI
-		String homePageUri = request.getContextPath() + "/" + filterPath;
-		if (homePageUri.endsWith("/"))
-		{
-			homePageUri = homePageUri.substring(0, homePageUri.length() - 1);
-		}
-
-		if (uri.equals(homePageUri))
-		{
-			// construct redirect URL
-			String redirect = uri + "/";
-			if (!Strings.isEmpty(request.getQueryString()))
-			{
-				redirect += "?" + request.getQueryString();
-			}
-			try
-			{
-				// send redirect - this will discard POST parameters if the request is POST
-				// - still better than getting an error because of lacking trailing slash
-				response.sendRedirect(response.encodeRedirectURL(redirect));
-			}
-			catch (IOException e)
-			{
-				throw new RuntimeException(e);
-			}
-			return false;
-		}
-
-		return true;
-	}
-
-	boolean processRequest(ServletRequest request, ServletResponse response, FilterChain chain)
-		throws IOException, ServletException
-	{
+		// Assume we are able to handle the request
 		boolean res = true;
 
 		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
@@ -158,17 +120,17 @@ public class WicketFilter implements Filter
 
 			String filterPath = getFilterPath(httpServletRequest);
 
-			webApplication.set();
-
-			if (checkForTrailingSlash(httpServletRequest, httpServletResponse, filterPath))
+			String redirectURL = checkIfRedirectRequired(httpServletRequest);
+			if (redirectURL == null)
 			{
-				ServletWebRequest req = new ServletWebRequest(httpServletRequest, filterPath);
+				// No redirect; process the request
+				application.set();
 
-				WebResponse resp = new HeaderBufferingWebResponse(new ServletWebResponse(
+				WebRequest webRequest = new ServletWebRequest(httpServletRequest, filterPath);
+				WebResponse webResponse = new HeaderBufferingWebResponse(new ServletWebResponse(
 					httpServletRequest, httpServletResponse));
 
-				RequestCycle requestCycle = webApplication.createRequestCycle(req, resp);
-
+				RequestCycle requestCycle = application.createRequestCycle(webRequest, webResponse);
 				if (!requestCycle.processRequestAndDetach())
 				{
 					if (chain != null)
@@ -179,7 +141,20 @@ public class WicketFilter implements Filter
 				}
 				else
 				{
-					resp.flush();
+					webResponse.flush();
+				}
+			}
+			else
+			{
+				try
+				{
+					// send redirect - this will discard POST parameters if the request is POST
+					// - still better than getting an error because of lacking trailing slash
+					httpServletResponse.sendRedirect(httpServletResponse.encodeRedirectURL(redirectURL));
+				}
+				catch (IOException e)
+				{
+					throw new RuntimeException(e);
 				}
 			}
 		}
@@ -201,8 +176,8 @@ public class WicketFilter implements Filter
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
 	 *      javax.servlet.ServletResponse, javax.servlet.FilterChain)
 	 */
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-		throws IOException, ServletException
+	public void doFilter(final ServletRequest request, final ServletResponse response,
+		final FilterChain chain) throws IOException, ServletException
 	{
 		processRequest(request, response, chain);
 	}
@@ -268,20 +243,27 @@ public class WicketFilter implements Filter
 	/**
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
 	 */
-	public void init(FilterConfig filterConfig) throws ServletException
+	public void init(final FilterConfig filterConfig) throws ServletException
 	{
 		this.filterConfig = filterConfig;
-		IWebApplicationFactory factory = getApplicationFactory();
-		webApplication = factory.createApplication(this);
-		webApplication.setName(filterConfig.getFilterName());
-		webApplication.setWicketFilter(this);
 
-		initFilterPath();
+		IWebApplicationFactory factory = getApplicationFactory();
+		application = factory.createApplication(this);
+		application.setName(filterConfig.getFilterName());
+		application.setWicketFilter(this);
+
+		filterPath = new WebXmlFile().getFilterPath(filterConfig);
+		if (filterPath == null)
+		{
+			log.info("Unable to parse filter mapping web.xml for " + filterConfig.getFilterName() +
+				". " + "Configure with init-param " + FILTER_MAPPING_PARAM +
+				" if it is not \"/*\".");
+		}
 
 		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
 		final ClassLoader newClassLoader = getClassLoader();
 
-		webApplication.set();
+		application.set();
 		try
 		{
 			if (previousClassLoader != newClassLoader)
@@ -289,10 +271,10 @@ public class WicketFilter implements Filter
 				Thread.currentThread().setContextClassLoader(newClassLoader);
 			}
 
-			webApplication.initApplication();
+			application.initApplication();
 
 			// Give the application the option to log that it is started
-			webApplication.logStarted();
+			application.logStarted();
 		}
 		finally
 		{
@@ -314,179 +296,38 @@ public class WicketFilter implements Filter
 	}
 
 	/**
-	 * 
-	 */
-	private void initFilterPath()
-	{
-		InputStream is = filterConfig.getServletContext().getResourceAsStream("/WEB-INF/web.xml");
-		if (is != null)
-		{
-			try
-			{
-				filterPath = getFilterPath(filterConfig.getFilterName(), is);
-			}
-			catch (ServletException e)
-			{
-				log.error("Error reading servlet/filter path from web.xml", e);
-			}
-			catch (SecurityException e)
-			{
-				// Swallow this at INFO.
-				log.info("Couldn't read web.xml to automatically pick up servlet/filter path: " +
-					e.getMessage());
-			}
-			if (filterPath == null)
-			{
-				log.info("Unable to parse filter mapping web.xml for " +
-					filterConfig.getFilterName() + ". " + "Configure with init-param " +
-					FILTER_MAPPING_PARAM + " if it is not \"/*\".");
-			}
-		}
-	};
-
-	/**
-	 * 
-	 * @param filterName
-	 * @param name
-	 * @param node
-	 * @return
-	 */
-	private String getFilterPath(String filterName, String name, Node node)
-	{
-		String foundUrlPattern = null;
-		String foundFilterName = null;
-
-		for (int i = 0; i < node.getChildNodes().getLength(); ++i)
-		{
-			Node n = node.getChildNodes().item(i);
-			if (name.equals(n.getNodeName()))
-			{
-				foundFilterName = n.getTextContent();
-			}
-			else if ("url-pattern".equals(n.getNodeName()))
-			{
-				foundUrlPattern = n.getTextContent();
-			}
-		}
-
-		if (foundFilterName != null)
-		{
-			foundFilterName = foundFilterName.trim();
-		}
-
-
-		if (filterName.equals(foundFilterName))
-		{
-			return (foundUrlPattern != null) ? foundUrlPattern.trim() : null;
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	/**
-	 * 
-	 * @param filterName
-	 * @param mapping
-	 * @param name
-	 * @param nodeList
-	 * @return
-	 */
-	private String getFilterPath(String filterName, String mapping, String name, NodeList nodeList)
-	{
-		for (int i = 0; i < nodeList.getLength(); ++i)
-		{
-			Node node = nodeList.item(i);
-			if (mapping.equals(node.getNodeName()))
-			{
-				String path = getFilterPath(filterName, name, node);
-				if (path != null)
-				{
-					return path;
-				}
-			}
-			else
-			{
-				String path = getFilterPath(filterName, mapping, name, node.getChildNodes());
-				if (path != null)
-				{
-					return path;
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * 
-	 * @param filterName
-	 * @param is
-	 * @return
-	 * @throws ServletException
-	 */
-	private String getFilterPath(String filterName, InputStream is) throws ServletException
-	{
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		try
-		{
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document document = builder.parse(is);
-
-			String prefix = servletMode ? "servlet" : "filter";
-			String mapping = prefix + "-mapping";
-			String name = prefix + "-name";
-
-			String urlPattern = getFilterPath(filterName, mapping, name, document.getChildNodes());
-			return stripWildcard(urlPattern);
-		}
-		catch (Exception e)
-		{
-			throw new ServletException(e);
-		}
-	}
-
-	/**
+	 * Either get the filterPath retrieved from web.xml, or if not found the old (1.3) way via a
+	 * filter mapping param.
 	 * 
 	 * @param request
-	 * @return
+	 * @return filterPath
 	 */
-	protected String getFilterPath(HttpServletRequest request)
+	protected String getFilterPath(final HttpServletRequest request)
 	{
 		if (filterPath != null)
 		{
 			return filterPath;
 		}
-		if (servletMode)
-		{
-			return filterPath = request.getServletPath();
-		}
-		String result;
+
 		// Legacy migration check.
 		// TODO: Remove this after 1.3 is released and everyone's upgraded.
 
-		result = filterConfig.getInitParameter(FILTER_MAPPING_PARAM);
+		String result = filterConfig.getInitParameter(FILTER_MAPPING_PARAM);
 		if (result == null || result.equals("/*"))
 		{
-			return "";
+			filterPath = "";
 		}
 		else if (!result.startsWith("/") || !result.endsWith("/*"))
 		{
 			throw new WicketRuntimeException("Your " + FILTER_MAPPING_PARAM +
 				" must start with \"/\" and end with \"/*\". It is: " + result);
 		}
-		return filterPath = stripWildcard(result);
-	}
-
-	/**
-	 * Strip trailing '*' and keep leading '/'
-	 * 
-	 * @param result
-	 * @return The stripped String
-	 */
-	private String stripWildcard(String result)
-	{
-		return result.substring(1, result.length() - 1);
+		else
+		{
+			// remove leading "/" and trailing "*"
+			filterPath = result.substring(1, result.length() - 1);
+		}
+		return filterPath;
 	}
 
 	/**
@@ -494,10 +335,63 @@ public class WicketFilter implements Filter
 	 */
 	public void destroy()
 	{
-		if (webApplication != null)
+		if (application != null)
 		{
-			webApplication.internalDestroy();
-			webApplication = null;
+			application.internalDestroy();
+			application = null;
 		}
+	}
+
+	/**
+	 * Try to determine as fast as possible if a redirect is necessary
+	 * 
+	 * @param request
+	 * @return null, if no redirect is necessary. Else the redirect URL
+	 */
+	private String checkIfRedirectRequired(final HttpServletRequest request)
+	{
+		String requestURI = request.getRequestURI();
+		String contextPath = request.getContextPath();
+
+		// length without jesessionid (http://.../abc;jsessionid=...?param)
+		int uriLength = requestURI.indexOf(';');
+		if (uriLength == -1)
+		{
+			uriLength = requestURI.length();
+		}
+
+		if (filterPathLength == -1)
+		{
+			filterPathLength = filterPath.length();
+			if (filterPath.endsWith("/"))
+			{
+				filterPathLength -= 1;
+			}
+		}
+
+		// uri != request.getContextPath() + "/" + filterPath (without "/" at the end)
+		if (uriLength != (contextPath.length() + 1 + filterPathLength))
+		{
+			return null;
+		}
+
+		// current URI without jsessionid
+		String uri = requestURI.substring(0, uriLength);
+
+		// home page without trailing slash URI
+		String homePageUri = contextPath + "/" + filterPath.substring(0, filterPathLength);
+		if (uri.equals(homePageUri) == false)
+		{
+			return null;
+		}
+
+		// create the redirect URI
+		uri += "/";
+		if (!Strings.isEmpty(request.getQueryString()))
+		{
+			uri += "?" + request.getQueryString();
+		}
+
+		return uri;
 	}
 }

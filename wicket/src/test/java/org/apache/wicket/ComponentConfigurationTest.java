@@ -87,6 +87,7 @@ public class ComponentConfigurationTest extends WicketTestCase
 			add(t2 = new TestComponent("t2"));
 			add(link = new Link<Void>("link")
 			{
+				private static final long serialVersionUID = 1L;
 
 				@Override
 				public void onClick()
@@ -121,6 +122,8 @@ public class ComponentConfigurationTest extends WicketTestCase
 
 	private static class TestComponent extends WebMarkupContainer
 	{
+		private static final long serialVersionUID = 1L;
+
 		private int requestCount = 0;
 		private int totalCount = 0;
 		private int beforeRenderCount = 0;

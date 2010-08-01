@@ -27,6 +27,7 @@ import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 
 public class PackageResourceReference extends ResourceReference
 {
+	private static final long serialVersionUID = 1L;
 
 	public PackageResourceReference(Class<?> scope, String name, Locale locale, String style,
 		String variation)

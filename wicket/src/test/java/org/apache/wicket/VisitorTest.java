@@ -134,6 +134,8 @@ public class VisitorTest extends WicketTestCase
 
 	private static class TestContainer extends WebMarkupContainer
 	{
+		private static final long serialVersionUID = 1L;
+
 		public TestContainer()
 		{
 			super("A");

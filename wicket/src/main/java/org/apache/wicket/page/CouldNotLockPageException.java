@@ -20,6 +20,8 @@ import org.apache.wicket.util.time.Duration;
 
 public class CouldNotLockPageException extends RuntimeException
 {
+	private static final long serialVersionUID = 1L;
+
 	private final int page;
 	private final Duration timeout;
 	private final String threadName;

@@ -36,6 +36,7 @@ import org.apache.wicket.util.string.StringValue;
 
 public class RestartResponseAtInterceptPageException extends ResetResponseException
 {
+	private static final long serialVersionUID = 1L;
 
 	public RestartResponseAtInterceptPageException(Page interceptPage)
 	{
@@ -59,6 +60,8 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 	 */
 	public static class InterceptData implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
+
 		private Url originalUrl;
 		private Map<String, List<StringValue>> postParameters;
 		private boolean continueOk;

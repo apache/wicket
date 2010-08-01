@@ -28,10 +28,10 @@ import org.apache.wicket.model.IModel;
  * 
  * FIXME javadoc - constructors need proper descriptions
  * 
- * Note that you must add your own CSS to make the suggestion display properly,
- * see {@link DefaultCssAutocompleteTextField} for an example.
+ * Note that you must add your own CSS to make the suggestion display properly, see
+ * {@link DefaultCssAutoCompleteTextField} for an example.
  * 
- * @see DefaultCssAutocompleteTextField
+ * @see DefaultCssAutoCompleteTextField
  * @see AutoCompleteBehavior
  * @see IAutoCompleteRenderer
  * 

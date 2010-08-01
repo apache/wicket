@@ -21,6 +21,7 @@ import java.util.Locale;
 // TODO NG
 public class CompressedResourceReference extends PackageResourceReference
 {
+	private static final long serialVersionUID = 1L;
 
 	public CompressedResourceReference(Class<?> scope, String name, Locale locale, String style,
 		String variation)

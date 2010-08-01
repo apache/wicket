@@ -18,8 +18,6 @@ package org.apache.wicket.jmx;
 
 import java.io.IOException;
 
-import org.apache.wicket.protocol.http.WebApplication;
-
 
 /**
  * Exposes Application related functionality for JMX.
@@ -30,8 +28,6 @@ public class Application implements ApplicationMBean
 {
 	private final org.apache.wicket.Application application;
 
-	private final WebApplication webApplication;
-
 	/**
 	 * Create.
 	 * 
@@ -40,16 +36,6 @@ public class Application implements ApplicationMBean
 	public Application(org.apache.wicket.Application application)
 	{
 		this.application = application;
-
-		// do this so that we don't have to cast all the time
-		if (application instanceof WebApplication)
-		{
-			webApplication = (WebApplication)application;
-		}
-		else
-		{
-			webApplication = null;
-		}
 	}
 
 	/**

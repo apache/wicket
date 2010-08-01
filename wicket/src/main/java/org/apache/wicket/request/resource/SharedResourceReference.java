@@ -24,6 +24,7 @@ import org.apache.wicket.Application;
 
 public class SharedResourceReference extends ResourceReference
 {
+	private static final long serialVersionUID = 1L;
 
 	public SharedResourceReference(Class<?> scope, String name, Locale locale, String style,
 		String variation)
@@ -53,6 +54,8 @@ public class SharedResourceReference extends ResourceReference
 		{
 			return new AbstractResource()
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				protected ResourceResponse newResourceResponse(Attributes attributes)
 				{

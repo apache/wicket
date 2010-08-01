@@ -92,7 +92,6 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	protected T convertValue(String[] input) throws ConversionException
 	{

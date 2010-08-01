@@ -33,6 +33,8 @@ public class FormHasErrorPage extends WebPage
 {
 	public static final class InvalidPanel extends Panel
 	{
+		private static final long serialVersionUID = 1L;
+
 		public InvalidPanel(String id)
 		{
 			super(id);
@@ -63,6 +65,8 @@ public class FormHasErrorPage extends WebPage
 
 		Form form = new Form("form")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onError()
 			{

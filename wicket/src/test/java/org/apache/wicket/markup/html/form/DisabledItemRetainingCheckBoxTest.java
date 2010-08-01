@@ -108,6 +108,8 @@ public class DisabledItemRetainingCheckBoxTest extends TestCase
 			form.add(new CheckBoxMultipleChoice<Integer>("choices",
 				new PropertyModel<Collection<Integer>>(this, "selection"), Arrays.asList(0, 1, 2))
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				protected boolean isDisabled(Integer object, int index, String selected)
 				{
@@ -118,6 +120,8 @@ public class DisabledItemRetainingCheckBoxTest extends TestCase
 			form.add(new CheckBoxMultipleChoice<Integer>("choices2",
 				new PropertyModel<Collection<Integer>>(this, "selection2"), Arrays.asList(0, 1, 2))
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				protected boolean isDisabled(Integer object, int index, String selected)
 				{

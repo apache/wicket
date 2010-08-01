@@ -28,6 +28,8 @@ import org.apache.wicket.util.time.Time;
 
 public abstract class DynamicImageResource extends AbstractResource
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The image type */
 	private String format = "png";
 
