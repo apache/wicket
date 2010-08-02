@@ -1209,7 +1209,7 @@ public abstract class Application implements UnboundListener
 	 * 
 	 * @return compound instance of the root mapper
 	 */
-	public ICompoundRequestMapper getRootRequestMapperAsCompound()
+	public final ICompoundRequestMapper getRootRequestMapperAsCompound()
 	{
 		IRequestMapper root = getRootRequestMapper();
 		if (!(root instanceof ICompoundRequestMapper))
