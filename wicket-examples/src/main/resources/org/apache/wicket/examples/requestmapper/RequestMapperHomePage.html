@@ -26,17 +26,21 @@
 	    <a href="Index.html" wicket:id="back">[go back]</a><p/>
 	    <wicket:child/>
 	    
+	    <p>This page uses custom home page request mapper. Loading http://localhost:8080/wicket-examples/mappers/ automatically appends
+	    a preconfigured locale: http://localhost:8080/wicket-examples/mappers/en_US</p>
+	    
 	    <wicket:link>
 		    <a href="en_US/localized">en_US Localized</a><br/>
 		    <a href="bg_BG/localized">bg_BG Localized</a>
 	    </wicket:link>
 	    
-	    <p>This page uses custom home page request mapper. Loading http://localhost:8080/wicket-examples/mappers/ automatically appends
-	    a preconfigured locale: http://localhost:8080/wicket-examples/mappers/en_US</p>
-	    
 	    <p>Clicking to any of the links above will lead to a page mounted at "localized" path but the session locale will be automatically set
 	    depending on the locale in the url. I.e. loading http://localhost:8080/wicket-examples/mappers/bg_BG/localized will show the page with 
 	    text localized in Bulgarian.</p>  
+	    
+	    <p><wicket:link><a href="secured">Go to https</a></wicket:link> - clicking this link will redirect the browser to <em>http<strong>s</strong>://wicketstuff.org/wicket-examples/mappers/secured</em>.<br/>
+	    <strong>Note</strong>: this site is not configured to work with HTTPS so your browser will report that the address cannot be found. Please use
+	    browser's back button to return.
 	    
 	</body>
 
