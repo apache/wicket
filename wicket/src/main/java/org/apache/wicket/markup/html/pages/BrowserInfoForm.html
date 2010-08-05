@@ -42,6 +42,7 @@
 		  document.postback.utcDSTOffset.value = (new Date(new Date().getFullYear(), 6, 1, 0, 0, 0, 0).getTimezoneOffset() / -60);
           document.postback.browserWidth.value =  window.innerWidth || document.body.offsetWidth;
           document.postback.browserHeight.value =  window.innerHeight || document.body.offsetHeight;
+          document.postback.hostname.value =  window.location.hostname;
 
  		  document.postback.submit();
 		}
@@ -64,6 +65,7 @@
 			<input type="text" wicket:id="utcDSTOffset" />
 			<input type="text" wicket:id="browserWidth" />
 			<input type="text" wicket:id="browserHeight" />
+			<input type="text" wicket:id="hostname" />
 		</form>
 	</wicket:panel>
 </html>
