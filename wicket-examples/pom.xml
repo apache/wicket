@@ -129,6 +129,18 @@
 								<include>**/*.java</include>
 							</includes>
 						</resource>
+						<resource>
+							<directory>${basedir}/src/main/resources</directory>
+							<targetPath>WEB-INF/classes</targetPath>
+							<includes>
+								<include>**/*.html</include>
+								<include>**/*.js</include>
+								<include>**/*.css</include>
+								<include>**/*.jpg</include>
+								<include>**/*.gif</include>
+								<include>**/*.png</include>
+							</includes>
+						</resource>
 					</webResources>
 				</configuration>
 			</plugin>
