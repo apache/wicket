@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.markup.html.pages.ExceptionErrorPage;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.IExceptionMapper;
@@ -49,6 +50,12 @@ public class DefaultExceptionMapper implements IExceptionMapper
 			return new RenderPageRequestHandler(new PageProvider(Application.get()
 				.getApplicationSettings()
 				.getPageExpiredErrorPage()));
+		}
+		else if (e instanceof AuthorizationException)
+		{
+			return new RenderPageRequestHandler(new PageProvider(Application.get()
+				.getApplicationSettings()
+				.getAccessDeniedPage()));
 		}
 		else
 		{
