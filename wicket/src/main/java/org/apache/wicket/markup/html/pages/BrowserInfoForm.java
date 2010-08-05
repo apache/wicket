@@ -101,6 +101,7 @@ public class BrowserInfoForm extends Panel
 		form.add(new TextField<String>("utcDSTOffset"));
 		form.add(new TextField<String>("browserWidth"));
 		form.add(new TextField<String>("browserHeight"));
+		form.add(new TextField<String>("hostname"));
 		add(form);
 	}
 
@@ -146,6 +147,7 @@ public class BrowserInfoForm extends Panel
 		private String utcDSTOffset;
 		private String browserWidth;
 		private String browserHeight;
+		private String hostname;
 
 		/**
 		 * Gets browserHeight.
@@ -312,6 +314,7 @@ public class BrowserInfoForm extends Panel
 			properties.setScreenColorDepth(getInt(screenColorDepth));
 			properties.setUtcOffset(utcOffset);
 			properties.setUtcDSTOffset(utcDSTOffset);
+			properties.setHostname(hostname);
 		}
 
 		/**
@@ -455,6 +458,23 @@ public class BrowserInfoForm extends Panel
 		public void setScreenWidth(String screenWidth)
 		{
 			this.screenWidth = screenWidth;
+		}
+
+		/**
+		 * @param hostname
+		 *            the hostname shown in the browser.
+		 */
+		public void setHostname(String hostname)
+		{
+			this.hostname = hostname;
+		}
+
+		/**
+		 * @return The clients hostname shown in the browser
+		 */
+		public String getHostname()
+		{
+			return hostname;
 		}
 
 		/**

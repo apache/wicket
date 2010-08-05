@@ -95,6 +95,8 @@ public class ClientProperties implements IClusterable
 
 	private String utcOffset;
 
+	private String hostname;
+
 	/**
 	 * @return The browser height at the time it was measured
 	 */
@@ -181,6 +183,14 @@ public class ClientProperties implements IClusterable
 	public String getRemoteAddress()
 	{
 		return remoteAddress;
+	}
+
+	/**
+	 * @return The clients hostname shown in the browser
+	 */
+	public String getHostname()
+	{
+		return hostname;
 	}
 
 	/**
@@ -1015,6 +1025,15 @@ public class ClientProperties implements IClusterable
 	public void setRemoteAddress(String remoteAddress)
 	{
 		this.remoteAddress = remoteAddress;
+	}
+
+	/**
+	 * @param hostname
+	 *            the hostname shown in the browser.
+	 */
+	public void setHostname(String hostname)
+	{
+		this.hostname = hostname;
 	}
 
 	/**
