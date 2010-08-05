@@ -23,16 +23,18 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.IResourceFactory;
 import org.apache.wicket.IResourceListener;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.parse.metapattern.Group;
 import org.apache.wicket.util.parse.metapattern.MetaPattern;
@@ -181,8 +183,9 @@ public final class LocalizedImageResource implements IClusterable
 		// If we have a resource reference
 		if (resourceReference != null)
 		{
-			component.getApplication().getResourceReferenceRegistry().registerResourceReference(
-				resourceReference);
+			component.getApplication()
+				.getResourceReferenceRegistry()
+				.registerResourceReference(resourceReference);
 			// Bind the reference to the application
 		}
 	}
@@ -295,31 +298,31 @@ public final class LocalizedImageResource implements IClusterable
 		// Not yet supported
 
 		// Need to load image resource for this component?
-// if (resource == null && resourceReference == null)
-// {
-// // Get SRC attribute of tag
-// final CharSequence src = tag.getString("src");
-// if (src != null)
-// {
-// // Try to load static image
-// // loadStaticImage(src.toString());
-// }
-// else
-// {
-// // Get VALUE attribute of tag
-// final CharSequence value = tag.getString("value");
-// if (value != null)
-// {
-// // Try to generate an image using an image factory
-// newImage(value);
-// }
-// else
-// {
-// // Load static image using model object as the path
-// loadStaticImage(component.getDefaultModelObjectAsString());
-// }
-// }
-// }
+		if (resource == null && resourceReference == null)
+		{
+			// Get SRC attribute of tag
+			final CharSequence src = tag.getString("src");
+			if (src != null)
+			{
+				// Try to load static image
+				loadStaticImage(src.toString());
+			}
+			else
+			{
+				// Get VALUE attribute of tag
+				final CharSequence value = tag.getString("value");
+				if (value != null)
+				{
+					// Try to generate an image using an image factory
+					newImage(value);
+				}
+				else
+				{
+					// Load static image using model object as the path
+					loadStaticImage(component.getDefaultModelObjectAsString());
+				}
+			}
+		}
 
 		// Get URL for resource
 		final CharSequence url;
@@ -337,8 +340,11 @@ public final class LocalizedImageResource implements IClusterable
 		}
 
 		// Set the SRC attribute to point to the component or shared resource
-		tag.put("src", RequestCycle.get().getOriginalResponse().encodeURL(
-			Strings.replaceAll(url, "&", "&amp;")));
+		tag.put(
+			"src",
+			RequestCycle.get()
+				.getOriginalResponse()
+				.encodeURL(Strings.replaceAll(url, "&", "&amp;")));
 	}
 
 	/**
@@ -386,6 +392,28 @@ public final class LocalizedImageResource implements IClusterable
 		}
 
 	};
+
+	/**
+	 * Tries to load static image at the given path and throws an exception if the image cannot be
+	 * located.
+	 * 
+	 * @param path
+	 *            The path to the image
+	 * @throws WicketRuntimeException
+	 *             Thrown if the image cannot be located
+	 */
+	@SuppressWarnings("unchecked")
+	private void loadStaticImage(final String path)
+	{
+		MarkupContainer parent = component.findParentWithAssociatedMarkup();
+		if (parent instanceof Border)
+		{
+			parent = parent.getParent();
+		}
+		final Class<?> scope = parent.getClass();
+		resourceReference = new PackageResourceReference(scope, path, locale, style, variation);
+		bind();
+	}
 
 	/**
 	 * Generates an image resource based on the attribute values on tag
