@@ -34,7 +34,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * {@link IWizardModel} to navigate through the steps.
  * <p>
  * Before you can use the wizard component, it needs to be initialized with a model. You do this by
- * calling {@link #init(IWizardModel)} with the wizard model you intent to use.
+ * calling {@link #init(IWizardModel)} with the wizard model you intend to use.
  * </p>
  * 
  * <p>
