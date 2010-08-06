@@ -928,8 +928,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled())
 		{
-			setMetaData(CONSTRUCTED_AT_KEY,
-				Strings.toString(this, new MarkupException("constructed")));
+			setMetaData(CONSTRUCTED_AT_KEY, Strings.toString(this, new MarkupException(
+				"constructed")));
 		}
 
 		if (model != null)
@@ -1112,7 +1112,21 @@ public abstract class Component implements IClusterable, IConverterLocator
 				feedbacks = new ArrayList<Component>();
 				getRequestCycle().setMetaData(FEEDBACK_LIST, feedbacks);
 			}
-			feedbacks.add(this);
+			if (this instanceof MarkupContainer)
+			{
+				((MarkupContainer)this).visitChildren(IFeedback.class, new IVisitor<Component>()
+				{
+					public Object component(Component component)
+					{
+						component.beforeRender();
+						return IVisitor.CONTINUE_TRAVERSAL;
+					}
+				});
+			}
+			if (!feedbacks.contains(this))
+			{
+				feedbacks.add(this);
+			}
 		}
 	}
 
@@ -3277,13 +3291,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 			final Page page = findPage();
 			if (page == null)
 			{
-				return new StringBuffer("[Component id = ").append(getId())
-					.append(", page = <No Page>, path = ")
-					.append(getPath())
-					.append(".")
-					.append(Classes.simpleName(getClass()))
-					.append("]")
-					.toString();
+				return new StringBuffer("[Component id = ").append(getId()).append(
+					", page = <No Page>, path = ").append(getPath()).append(".").append(
+					Classes.simpleName(getClass())).append("]").toString();
 			}
 			else
 			{
