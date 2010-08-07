@@ -1164,7 +1164,23 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 				feedbacks = new ArrayList<Component>();
 				getRequestCycle().setMetaData(FEEDBACK_LIST, feedbacks);
 			}
-			feedbacks.add(this);
+
+			if (this instanceof MarkupContainer)
+			{
+				((MarkupContainer)this).visitChildren(IFeedback.class,
+					new IVisitor<Component, Void>()
+					{
+						public void component(Component component, IVisit<Void> visit)
+						{
+							component.beforeRender();
+						}
+					});
+			}
+
+			if (!feedbacks.contains(this))
+			{
+				feedbacks.add(this);
+			}
 		}
 	}
 
