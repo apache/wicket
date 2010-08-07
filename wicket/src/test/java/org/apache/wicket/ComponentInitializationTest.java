@@ -111,7 +111,7 @@ public class ComponentInitializationTest extends WicketTestCase
 		assertEquals(1, page.getCount());
 	}
 
-	public void testErrorInDevelopedComponents()
+	public void testOnInitializeSuperVerified()
 	{
 		TestPage page = new TestPage();
 		boolean illegalState = false;
