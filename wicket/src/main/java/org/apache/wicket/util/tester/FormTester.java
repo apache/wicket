@@ -377,7 +377,7 @@ public class FormTester
 		{
 			@SuppressWarnings("unchecked")
 			@Override
-			public void onFormComponent(final FormComponent<?> formComponent, IVisit<Void> visit)
+			public void onFormComponent(final FormComponent formComponent, IVisit<Void> visit)
 			{
 				// do nothing for invisible component
 				if (!formComponent.isVisibleInHierarchy())
@@ -635,7 +635,7 @@ public class FormTester
 	{
 		checkClosed();
 
-		FormComponent<?> formComponent = (FormComponent<?>)workingForm.get(formComponentId);
+		FormComponent formComponent = (FormComponent)workingForm.get(formComponentId);
 
 		if (formComponent instanceof FileUploadField == false)
 		{
