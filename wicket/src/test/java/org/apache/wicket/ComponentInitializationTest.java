@@ -17,6 +17,7 @@
 package org.apache.wicket;
 
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -110,6 +111,21 @@ public class ComponentInitializationTest extends WicketTestCase
 		assertEquals(1, page.getCount());
 	}
 
+	public void testOnInitializeSuperVerified()
+	{
+		TestPage page = new TestPage();
+		boolean illegalState = false;
+		try
+		{
+			page.add(new PossibleDevelopedComponent("addedComponent"));
+		}
+		catch (IllegalStateException e)
+		{
+			illegalState = true;
+		}
+		assertTrue(illegalState);
+	}
+
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		private int count = 0;
@@ -121,6 +137,7 @@ public class ComponentInitializationTest extends WicketTestCase
 		@Override
 		protected void onInitialize()
 		{
+			super.onInitialize();
 			count++;
 			add(new Label("addedComponent",
 				"Testing addition of a component to show StackOverflowError"));
@@ -153,6 +170,7 @@ public class ComponentInitializationTest extends WicketTestCase
 		@Override
 		protected void onInitialize()
 		{
+			super.onInitialize();
 			count++;
 		}
 
@@ -162,5 +180,31 @@ public class ComponentInitializationTest extends WicketTestCase
 		}
 
 
+	}
+
+	private static class PossibleDevelopedComponent extends WebComponent
+	{
+		private final boolean initialized = false;
+
+		public PossibleDevelopedComponent(String id)
+		{
+			super(id);
+		}
+
+		@Override
+		protected void onBeforeRender()
+		{
+			super.onBeforeRender();
+			if (!initialized)
+			{
+				onInitialize();
+			}
+		}
+
+		@Override
+		protected void onInitialize()
+		{
+			// possible already implemented method by some user
+		}
 	}
 }

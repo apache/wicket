@@ -375,8 +375,8 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	/** True when a component is being removed from the hierarchy */
 	protected static final int FLAG_REMOVING_FROM_HIERARCHY = 0x200000;
 
-	private static final int FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED = 0x1000000;
-
+	private static final int FLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED = 0x1000000;
+	private static final int FLAG_INITIALIZE_SUPER_CALL_VERIFIED = 0x10000000;
 	/**
 	 * Flag that makes we are in before-render callback phase Set after component.onBeforeRender is
 	 * invoked (right before invoking beforeRender on children)
@@ -948,6 +948,7 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	 */
 	protected void onInitialize()
 	{
+		setFlag(FLAG_INITIALIZE_SUPER_CALL_VERIFIED, true);
 	}
 
 	/**
@@ -965,18 +966,27 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	 */
 	void initialize()
 	{
-		doInitialize();
+		fireInitialize();
 	}
 
 	/**
 	 * Used to call {@link #onInitialize()}
 	 */
-	final void doInitialize()
+	final void fireInitialize()
 	{
 		if (!getFlag(FLAG_INITIALIZED))
 		{
 			setFlag(FLAG_INITIALIZED, true);
+			setFlag(FLAG_INITIALIZE_SUPER_CALL_VERIFIED, false);
 			onInitialize();
+			if (!getFlag(FLAG_INITIALIZE_SUPER_CALL_VERIFIED))
+			{
+				throw new IllegalStateException(Component.class.getName() +
+					" has not been properly initialized. Something in the hierarchy of " +
+					getClass().getName() +
+					" has not called super.onInitializer() in the override of onInitialize() method");
+			}
+			setFlag(FLAG_INITIALIZE_SUPER_CALL_VERIFIED, false);
 		}
 	}
 
@@ -1100,7 +1110,7 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 		if ((determineVisibility() || callOnBeforeRenderIfNotVisible()) &&
 			!getFlag(FLAG_RENDERING) && !getFlag(FLAG_PREPARED_FOR_RENDER))
 		{
-			setFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED, false);
+			setFlag(FLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, false);
 
 			getApplication().notifyPreComponentOnBeforeRenderListeners(this);
 
@@ -1111,7 +1121,7 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 			onBeforeRender();
 			getApplication().notifyPostComponentOnBeforeRenderListeners(this);
 
-			if (!getFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED))
+			if (!getFlag(FLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED))
 			{
 				throw new IllegalStateException(Component.class.getName() +
 					" has not been properly rendered. Something in the hierarchy of " +
@@ -3878,7 +3888,7 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	{
 		setFlag(FLAG_PREPARED_FOR_RENDER, true);
 		onBeforeRenderChildren();
-		setFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED, true);
+		setFlag(FLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, true);
 	}
 
 	/**

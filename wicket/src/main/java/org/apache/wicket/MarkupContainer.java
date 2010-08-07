@@ -987,20 +987,20 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * Overrides {@link Component#initialize()} to call {@link Component#doInitialize()} for itself
+	 * Overrides {@link Component#initialize()} to call {@link Component#fireInitialize()} for itself
 	 * and for all its children.
 	 * 
-	 * @see org.apache.wicket.Component#doInitialize()
+	 * @see org.apache.wicket.Component#fireInitialize()
 	 */
 	@Override
 	final void initialize()
 	{
-		super.doInitialize();
+		super.fireInitialize();
 		visitChildren(new IVisitor<Component, Void>()
 		{
 			public void component(final Component component, final IVisit<Void> visit)
 			{
-				component.doInitialize();
+				component.fireInitialize();
 			}
 		});
 	}
