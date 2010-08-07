@@ -232,4 +232,15 @@ public class RatingsPage extends BasePage
 	{
 		return hasVoted;
 	}
+
+	/**
+	 * @see org.apache.wicket.Component#isVersioned()
+	 */
+	@Override
+	public boolean isVersioned()
+	{
+		return false;
+	}
+
+
 }
