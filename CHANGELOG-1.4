@@ -1,5 +1,52 @@
 This file contains all changes done on the 1.4 version.
 
+Release Notes - Wicket - Version 1.4.10
+
+** Bug
+    * [WICKET-2844] - Make CheckGroupSelector Ajax friendly
+    * [WICKET-2881] - Cannot substitute RelativePathPrefixHandler
+    * [WICKET-2882] - Dynamically adding component via an IComponentResolver fails within an enclosure for versions after 1.4.1
+    * [WICKET-2885] - RequestLogger.SessionData methods aren't public
+    * [WICKET-2891] - Typo in IllegalStateException when there are multiple beans of the same type
+    * [WICKET-2892] - TextTemplateSharedResourceFactory should use template's content type
+    * [WICKET-2895] - run wicket-examples application in 'headless-mode'
+    * [WICKET-2897] - Javadoc for AbortWithHttpStatusException class constructor says 'true' when it should say 'false'
+    * [WICKET-2900] - "isPrimary" check is not applied to beans in parent contexts
+    * [WICKET-2901] - Always the first bean with primary=true is returned, even if there are more than one primary beans
+    * [WICKET-2902] - WicketSessionFilter still broken: you can only locate or create sessions in the context of a request cycle
+    * [WICKET-2904] - variations don't work when using wicket:link with images
+    * [WICKET-2908] - BaseWicketTester should check for visibility in hierarchy when building param map
+    * [WICKET-2909] - ListView removeLink method should remove items from list based on item index
+    * [WICKET-2917] - WebResponse sets a negative Content-Length when length >2G
+    * [WICKET-2946] - Exceptions raised in overridden sessionDestroyed() event (of WebApplication class) are completely swallowed by the session-store classes without even logging anything
+    * [WICKET-2951] - Markup for AjaxLazyLoadPanel's is not valid HTML
+    * [WICKET-2961] - Adding a component in Component#onInitialize() leads to StackOverflowError
+    * [WICKET-2966] - "markupStream" field in MarkupException breaks Exception's Serializable contract.
+
+** Improvement
+    * [WICKET-1974] - render_to_buffer does not work for absolute URLs (with patch)
+    * [WICKET-2846] - Store Application in InheritableThreadLocal instead of ThreadLocal
+    * [WICKET-2866] - Allow chaining with AutoCompleteSettings.setThrottleDelay(int)
+    * [WICKET-2878] - BigDecimalConverter improvement
+    * [WICKET-2884] - IRequestLogger interface requires that getRequests() method return RequestLogger.RequestData (public inner class)
+    * [WICKET-2923] - Make form.getHiddenFieldId public.
+    * [WICKET-2952] - Exposes Application DebugSettings related functionality for JMX
+    * [WICKET-2954] - Add the ability to assert against BookmarkablePageLink in the same way you can with wicketTester.assertPageLink
+
+** New Feature
+    * [WICKET-2890] - Dynamic CSS and JavaScript resources
+    * [WICKET-2899] - date picker calendar shown on text field clicked (patch included)
+    * [WICKET-2925] - Model.of()
+    * [WICKET-2943] - Introduce a good place to initialize components other than the constructor - Component#onInitialize()
+    * [WICKET-2955] - Component#onConfigure() - Create a new callback to help manage states such as visibility, enabled, etc
+
+** Test
+    * [WICKET-2960] - Test initialization mechanism against one possible implementation using the onbeforerender method
+
+** Wish
+    * [WICKET-2950] - remove final from AbstractHttpSessionStore#getSessionId
+
+
 Release Notes - Wicket - Version 1.4.9
 
 ** Bug
