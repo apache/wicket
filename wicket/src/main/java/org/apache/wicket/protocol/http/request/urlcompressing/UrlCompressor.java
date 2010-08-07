@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.http.request.urlcompressing;
 
 import java.io.IOException;
+import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.Iterator;
@@ -124,8 +125,14 @@ public class UrlCompressor implements IClusterable
 	public ComponentAndInterface getComponentAndInterfaceForUID(String uidString)
 	{
 		IntKeyWeakReference ref = null;
-		while ((ref = (IntKeyWeakReference)queue.poll()) != null)
+		while (true)
 		{
+			Reference temp = queue.poll(); // make it work with  javac 5
+			ref = (IntKeyWeakReference)temp;
+			if (ref == null)
+			{
+				break;
+			}
 			directComponentRefs.remove(ref.uid);
 		}
 		try
@@ -206,8 +213,14 @@ public class UrlCompressor implements IClusterable
 	private void writeObject(java.io.ObjectOutputStream s) throws IOException
 	{
 		IntKeyWeakReference ref = null;
-		while ((ref = (IntKeyWeakReference)queue.poll()) != null)
+		while (true)
 		{
+			Reference temp=queue.poll(); // make java 5 compiler happy
+			ref = (IntKeyWeakReference)temp;
+			if (ref==null)
+			{
+				break;
+			}
 			directComponentRefs.remove(ref.uid);
 		}
 

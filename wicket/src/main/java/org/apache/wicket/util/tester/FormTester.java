@@ -380,7 +380,7 @@ public class FormTester
 		{
 			@SuppressWarnings("unchecked")
 			@Override
-			public void onFormComponent(final FormComponent<?> formComponent)
+			public void onFormComponent(final FormComponent formComponent)
 			{
 				// do nothing for invisible or disabled component -- the browser would not send any parameter
 				// for a disabled component
@@ -636,7 +636,7 @@ public class FormTester
 	{
 		checkClosed();
 
-		FormComponent<?> formComponent = (FormComponent<?>)workingForm.get(formComponentId);
+		FormComponent formComponent = (FormComponent)workingForm.get(formComponentId);
 
 		if (formComponent instanceof FileUploadField == false)
 		{
