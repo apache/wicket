@@ -377,8 +377,9 @@ public class FormTester
 		{
 			@SuppressWarnings("unchecked")
 			@Override
-			public void onFormComponent(final FormComponent formComponent, IVisit<Void> visit)
+			public void onFormComponent(FormComponent<?> formComponent2, IVisit<Void> visit)
 			{
+				final FormComponent formComponent=formComponent2;
 				// do nothing for invisible component
 				if (!formComponent.isVisibleInHierarchy())
 				{
