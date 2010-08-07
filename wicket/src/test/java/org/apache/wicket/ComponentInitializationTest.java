@@ -117,7 +117,7 @@ public class ComponentInitializationTest extends WicketTestCase
 		boolean illegalState = false;
 		try
 		{
-			page.add(new PossibleDevelopedComponent("addedComponent"));
+			page.add(new InvalidComponent("addedComponent"));
 		}
 		catch (IllegalStateException e)
 		{
@@ -180,11 +180,11 @@ public class ComponentInitializationTest extends WicketTestCase
 
 	}
 
-	private static class PossibleDevelopedComponent extends WebComponent
+	private static class InvalidComponent extends WebComponent
 	{
 		private final boolean initialized = false;
 
-		public PossibleDevelopedComponent(String id)
+		public InvalidComponent(String id)
 		{
 			super(id);
 		}
@@ -202,7 +202,7 @@ public class ComponentInitializationTest extends WicketTestCase
 		@Override
 		protected void onInitialize()
 		{
-			// possible already implemented method by some user
+			// missing super call
 		}
 	}
 }
