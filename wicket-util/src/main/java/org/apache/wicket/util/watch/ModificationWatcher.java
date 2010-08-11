@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.util.watch;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -148,10 +147,7 @@ public class ModificationWatcher implements IModificationWatcher
 		{
 			public void run(final Logger log)
 			{
-				// Iterate over a copy of the list of entries to avoid concurrent modification
-				// problems without the associated liveness issues of holding a lock while
-				// potentially polling file times!
-				Iterator<Entry> iter = new ArrayList<Entry>(modifiableToEntry.values()).iterator();
+				Iterator<Entry> iter = modifiableToEntry.values().iterator();
 				while (iter.hasNext())
 				{
 					final Entry entry = iter.next();
