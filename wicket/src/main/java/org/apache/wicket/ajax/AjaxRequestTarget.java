@@ -36,7 +36,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.Response;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget.IListener;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -891,83 +890,104 @@ public class AjaxRequestTarget implements IPageRequestTarget
 
 		private static final long serialVersionUID = 1L;
 
-		private void checkHeaderRendering()
+		private boolean checkHeaderRendering()
 		{
 			if (headerRendering == false)
 			{
-				throw new WicketRuntimeException(
-					"Only methods that can be called on IHeaderResponse outside renderHead() are renderOnLoadJavascript and renderOnDomReadyJavascript");
+				LOG.debug("Only methods that can be called on IHeaderResponse outside renderHead() are renderOnLoadJavascript and renderOnDomReadyJavascript");
 			}
+
+			return headerRendering;
 		}
 
 		@Override
 		public void renderCSSReference(ResourceReference reference, String media)
 		{
-			checkHeaderRendering();
-			super.renderCSSReference(reference, media);
+			if (checkHeaderRendering())
+			{
+				super.renderCSSReference(reference, media);
+			}
 		}
 
 		@Override
 		public void renderCSSReference(String url)
 		{
-			checkHeaderRendering();
-			super.renderCSSReference(url);
+			if (checkHeaderRendering())
+			{
+				super.renderCSSReference(url);
+			}
 		}
 
 		@Override
 		public void renderCSSReference(String url, String media)
 		{
-			checkHeaderRendering();
-			super.renderCSSReference(url, media);
+			if (checkHeaderRendering())
+			{
+				super.renderCSSReference(url, media);
+			}
 		}
 
 		@Override
 		public void renderJavascript(CharSequence javascript, String id)
 		{
-			checkHeaderRendering();
-			super.renderJavascript(javascript, id);
+			if (checkHeaderRendering())
+			{
+				super.renderJavascript(javascript, id);
+			}
 		}
 
 		@Override
 		public void renderCSSReference(ResourceReference reference)
 		{
-			checkHeaderRendering();
-			super.renderCSSReference(reference);
+			if (checkHeaderRendering())
+			{
+				super.renderCSSReference(reference);
+			}
 		}
 
 		@Override
 		public void renderJavascriptReference(ResourceReference reference)
 		{
-			checkHeaderRendering();
-			super.renderJavascriptReference(reference);
+			if (checkHeaderRendering())
+			{
+				super.renderJavascriptReference(reference);
+			}
 		}
 
 		@Override
 		public void renderJavascriptReference(ResourceReference reference, String id)
 		{
-			checkHeaderRendering();
-			super.renderJavascriptReference(reference, id);
+			if (checkHeaderRendering())
+			{
+				super.renderJavascriptReference(reference, id);
+			}
 		}
 
 		@Override
 		public void renderJavascriptReference(String url)
 		{
-			checkHeaderRendering();
-			super.renderJavascriptReference(url);
+			if (checkHeaderRendering())
+			{
+				super.renderJavascriptReference(url);
+			}
 		}
 
 		@Override
 		public void renderJavascriptReference(String url, String id)
 		{
-			checkHeaderRendering();
-			super.renderJavascriptReference(url, id);
+			if (checkHeaderRendering())
+			{
+				super.renderJavascriptReference(url, id);
+			}
 		}
 
 		@Override
 		public void renderString(CharSequence string)
 		{
-			checkHeaderRendering();
-			super.renderString(string);
+			if (checkHeaderRendering())
+			{
+				super.renderString(string);
+			}
 		}
 
 		/**
