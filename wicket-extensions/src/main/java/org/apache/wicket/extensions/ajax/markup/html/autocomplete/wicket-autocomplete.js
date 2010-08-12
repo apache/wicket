@@ -97,7 +97,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         objonchangeoriginal=obj.onchange; 
         obj.onchange=function(event){
       		if(mouseactive==1)return false;
-      		if(typeof objonchangeoriginal=="function")objonchangeoriginal.apply(this,[event]);
+      		if(typeof objonchangeoriginal=="function") return objonchangeoriginal.apply(this,[event]);
       	}
         objonchange=obj.onchange;
                 
@@ -108,7 +108,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     			return killEvent(event);
     		}
           	hideAutoComplete();
-          	if(typeof objonblur=="function")objonblur.apply(this,[event]);
+          	if(typeof objonblur=="function") return objonblur.apply(this,[event]);
         }
       	
       	obj.onfocus=function(event){
@@ -124,7 +124,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                 }
             }
             ignoreOneFocusGain = false;
-          	if(typeof objonfocus=="function")objonfocus.apply(this,[event]);
+          	if(typeof objonfocus=="function") return objonfocus.apply(this,[event]);
         }
 
         obj.onkeydown=function(event){
@@ -170,7 +170,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                         hidingAutocomplete = 1;
                     }
                     mouseactive = 0;
-                    if (typeof objonkeydown=="function") objonkeydown.apply(this,[event]);
+                    if (typeof objonkeydown=="function") return objonkeydown.apply(this,[event]);
                     return true;
                 break;
                 default:
@@ -194,7 +194,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                 default:
     	            updateChoices();
             }
-			if(typeof objonkeyup=="function")objonkeyup.apply(this,[event]);
+			if(typeof objonkeyup=="function") return objonkeyup.apply(this,[event]);
         }
 
         obj.onkeypress=function(event){
@@ -204,7 +204,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 			        return killEvent(event);
                 }
             }
-			if(typeof objonkeypress=="function")objonkeypress.apply(this,[event]);
+			if(typeof objonkeypress=="function") return objonkeypress.apply(this,[event]);
         }
     }
     
