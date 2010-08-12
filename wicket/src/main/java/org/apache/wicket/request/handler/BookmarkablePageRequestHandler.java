@@ -66,7 +66,7 @@ public class BookmarkablePageRequestHandler implements IPageClassRequestHandler
 	public void respond(IRequestCycle requestCycle)
 	{
 		// not used as BookmarkablePageRequestHandler is only used when generating URLs.
-		// However URL will never be resolved to BookmarkablePageRequestTarget
+		// However URL will never be resolved to BookmarkablePageRequestHandler
 	}
 
 	/**
