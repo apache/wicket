@@ -48,8 +48,8 @@ import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
-import org.apache.wicket.util.upload.FileUploadException;
 import org.apache.wicket.util.upload.FileUploadBase.SizeLimitExceededException;
+import org.apache.wicket.util.upload.FileUploadException;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.apache.wicket.validation.IValidatorAddListener;
@@ -133,6 +133,8 @@ import org.slf4j.LoggerFactory;
  */
 public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, IHeaderContributor
 {
+	private static final String HIDDEN_DIV_START = "<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\">";
+
 	/**
 	 * Visitor used for validation
 	 * 
@@ -589,8 +591,12 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	{
 		Form<?> root = getRootForm();
 		return new AppendingStringBuffer("document.getElementById('").append(
-			root.getHiddenFieldId()).append("').value='").append(url).append(
-			"';document.getElementById('").append(root.getMarkupId()).append("').submit();");
+			root.getHiddenFieldId())
+			.append("').value='")
+			.append(url)
+			.append("';document.getElementById('")
+			.append(root.getMarkupId())
+			.append("').submit();");
 	}
 
 	/**
@@ -1157,7 +1163,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 		AppendingStringBuffer buffer = new AppendingStringBuffer();
 
 		// div that is not visible (but not display:none either)
-		buffer.append("<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\">");
+		buffer.append(HIDDEN_DIV_START);
 
 		// add an empty textfield (otherwise IE doesn't work)
 		buffer.append("<input type=\"text\" autocomplete=\"false\"/>");
@@ -1578,8 +1584,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 			String nameAndId = getHiddenFieldId();
 
 			// render the hidden field
-			AppendingStringBuffer buffer = new AppendingStringBuffer(
-				"<div style=\"display:none\"><input type=\"hidden\" name=\"").append(nameAndId)
+			AppendingStringBuffer buffer = new AppendingStringBuffer(HIDDEN_DIV_START).append(
+				"<input type=\"hidden\" name=\"")
+				.append(nameAndId)
 				.append("\" id=\"")
 				.append(nameAndId)
 				.append("\" />");
@@ -1623,8 +1630,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 		{
 			String[] pair = params[j].split("=");
 
-			buffer.append("<input type=\"hidden\" name=\"").append(recode(pair[0])).append(
-				"\" value=\"").append(pair.length > 1 ? recode(pair[1]) : "").append("\" />");
+			buffer.append("<input type=\"hidden\" name=\"")
+				.append(recode(pair[0]))
+				.append("\" value=\"")
+				.append(pair.length > 1 ? recode(pair[1]) : "")
+				.append("\" />");
 		}
 	}
 
