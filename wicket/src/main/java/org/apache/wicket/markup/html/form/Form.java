@@ -142,6 +142,8 @@ import org.slf4j.LoggerFactory;
  */
 public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, IHeaderContributor
 {
+	private static final String HIDDEN_DIV_START = "<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\">";
+
 	/**
 	 * Visitor used for validation
 	 * 
@@ -1481,7 +1483,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 		AppendingStringBuffer buffer = new AppendingStringBuffer();
 
 		// div that is not visible (but not display:none either)
-		buffer.append("<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\">");
+		buffer.append(HIDDEN_DIV_START);
 
 		// add an empty textfield (otherwise IE doesn't work)
 		buffer.append("<input type=\"text\" autocomplete=\"false\"/>");
@@ -1926,8 +1928,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 			String nameAndId = getHiddenFieldId();
 
 			// render the hidden field
-			AppendingStringBuffer buffer = new AppendingStringBuffer(
-				"<div style=\"display:none\"><input type=\"hidden\" name=\"").append(nameAndId)
+			AppendingStringBuffer buffer = new AppendingStringBuffer(HIDDEN_DIV_START +
+				"<input type=\"hidden\" name=\"").append(nameAndId)
 				.append("\" id=\"")
 				.append(nameAndId)
 				.append("\" />");
