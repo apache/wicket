@@ -1928,8 +1928,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 			String nameAndId = getHiddenFieldId();
 
 			// render the hidden field
-			AppendingStringBuffer buffer = new AppendingStringBuffer(HIDDEN_DIV_START +
-				"<input type=\"hidden\" name=\"").append(nameAndId)
+			AppendingStringBuffer buffer = new AppendingStringBuffer(HIDDEN_DIV_START).append(
+				"<input type=\"hidden\" name=\"")
+				.append(nameAndId)
 				.append("\" id=\"")
 				.append(nameAndId)
 				.append("\" />");
