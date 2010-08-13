@@ -19,6 +19,7 @@ package org.apache.wicket.behavior;
 import org.apache.wicket.Component;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.request.Response;
 
 /**
@@ -29,8 +30,9 @@ import org.apache.wicket.request.Response;
  * @author Ralf Ebert
  * @author Igor Vaynberg
  */
-public abstract class AbstractAjaxBehavior extends AbstractHeaderContributor
+public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	implements
+		IHeaderContributor,
 		IBehaviorListener
 {
 	private static final long serialVersionUID = 1L;

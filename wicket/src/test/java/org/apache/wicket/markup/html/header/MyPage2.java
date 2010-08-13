@@ -16,8 +16,9 @@
  */
 package org.apache.wicket.markup.html.header;
 
-import org.apache.wicket.behavior.CssHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
  * 
@@ -31,7 +32,12 @@ public class MyPage2 extends WebPage
 	 */
 	public MyPage2()
 	{
-		// And it is not problem if historically it has been added. Wicket will render it just once
-		add(new CssHeaderContributor(this.getClass(), this.getClass().getSimpleName() + ".css"));
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		response.renderCSSReference(new PackageResourceReference(getClass(),
+			getClass().getSimpleName() + ".css"));
 	}
 }

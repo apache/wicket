@@ -19,6 +19,7 @@ package org.apache.wicket.ajax;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.calldecorator.AjaxPreprocessingCallDecorator;
 
 /**
@@ -37,17 +38,17 @@ public class AjaxPreprocessingCallDecoratorTest extends TestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public CharSequence decorateScript(CharSequence script)
+			public CharSequence decorateScript(Component c, CharSequence script)
 			{
 				return "^" + script;
 			}
 
-			public CharSequence decorateOnSuccessScript(CharSequence script)
+			public CharSequence decorateOnSuccessScript(Component c, CharSequence script)
 			{
 				return "^s" + script;
 			}
 
-			public CharSequence decorateOnFailureScript(CharSequence script)
+			public CharSequence decorateOnFailureScript(Component c, CharSequence script)
 			{
 				return "^f" + script;
 			}
@@ -79,18 +80,18 @@ public class AjaxPreprocessingCallDecoratorTest extends TestCase
 	/** test decorator */
 	public void testDecorateScript()
 	{
-		Assert.assertEquals("^-.", decorator.decorateScript("."));
+		Assert.assertEquals("^-.", decorator.decorateScript(null, "."));
 	}
 
 	/** test decorator */
 	public void testDecorateOnSuccessScript()
 	{
-		Assert.assertEquals("^s-s.", decorator.decorateOnSuccessScript("."));
+		Assert.assertEquals("^s-s.", decorator.decorateOnSuccessScript(null, "."));
 	}
 
 	/** test decorator */
 	public void testDecorateOnFailureScript()
 	{
-		Assert.assertEquals("^f-f.", decorator.decorateOnFailureScript("."));
+		Assert.assertEquals("^f-f.", decorator.decorateOnFailureScript(null, "."));
 	}
 }

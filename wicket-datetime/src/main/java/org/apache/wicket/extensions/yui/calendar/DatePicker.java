@@ -72,7 +72,7 @@ import org.joda.time.DateTime;
  * 
  * @author eelcohillenius
  */
-public class DatePicker extends AbstractBehavior implements IHeaderContributor
+public class DatePicker extends AbstractBehavior
 {
 	private static Method GETINSTANCEMETHOD = null;
 
@@ -133,7 +133,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 
 	/** The target component. */
 	private Component component;
-	
+
 	private boolean showOnFieldClick = false;
 
 	/**
@@ -217,6 +217,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
+	@Override
 	public void renderHead(IHeaderResponse response)
 	{
 		if (includeYUILibraries())
@@ -235,10 +236,12 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		variables.put("hideOnSelect", hideOnSelect());
 		variables.put("showOnFieldClick", showOnFieldClick());
 		// variables for YUILoader
-		variables.put("basePath", Strings.stripJSessionId(RequestCycle.get().renderUrlFor(
-				new ResourceReferenceRequestHandler(YUI))));
-		variables.put("wicketDatePath", RequestCycle.get().renderUrlFor(
-				new ResourceReferenceRequestHandler(WICKET_DATE)));
+		variables.put(
+				"basePath",
+				Strings.stripJSessionId(RequestCycle.get().renderUrlFor(
+						new ResourceReferenceRequestHandler(YUI))));
+		variables.put("wicketDatePath",
+				RequestCycle.get().renderUrlFor(new ResourceReferenceRequestHandler(WICKET_DATE)));
 		if (Application.DEVELOPMENT.equals(Application.get().getConfigurationType()))
 		{
 			variables.put("filter", "filter: \"RAW\",");
@@ -253,8 +256,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		String script = getAdditionalJavascript();
 		if (script != null)
 		{
-			variables.put("additionalJavascript", Strings.replaceAll(script, "${calendar}",
-					"YAHOO.wicket." + widgetId + "DpJs"));
+			variables.put("additionalJavascript",
+					Strings.replaceAll(script, "${calendar}", "YAHOO.wicket." + widgetId + "DpJs"));
 		}
 		// print out the initialization properties
 		Map<String, Object> p = new HashMap<String, Object>();
@@ -605,8 +608,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 
 		setWidgetProperty(widgetProperties, "MONTHS_SHORT", filterEmpty(dfSymbols.getShortMonths()));
 		setWidgetProperty(widgetProperties, "MONTHS_LONG", filterEmpty(dfSymbols.getMonths()));
-		setWidgetProperty(widgetProperties, "WEEKDAYS_MEDIUM", filterEmpty(dfSymbols
-				.getShortWeekdays()));
+		setWidgetProperty(widgetProperties, "WEEKDAYS_MEDIUM",
+				filterEmpty(dfSymbols.getShortWeekdays()));
 		setWidgetProperty(widgetProperties, "WEEKDAYS_LONG", filterEmpty(dfSymbols.getWeekdays()));
 
 		widgetProperties.put("START_WEEKDAY", new Integer(Calendar.getInstance(getLocale())
@@ -615,17 +618,17 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		if (Locale.SIMPLIFIED_CHINESE.equals(getLocale()) ||
 				Locale.TRADITIONAL_CHINESE.equals(getLocale()))
 		{
-			setWidgetProperty(widgetProperties, "WEEKDAYS_1CHAR", filterEmpty(substring(dfSymbols
-					.getShortWeekdays(), 2, 1)));
-			widgetProperties.put("WEEKDAYS_SHORT", filterEmpty(substring(dfSymbols
-					.getShortWeekdays(), 2, 1)));
+			setWidgetProperty(widgetProperties, "WEEKDAYS_1CHAR",
+					filterEmpty(substring(dfSymbols.getShortWeekdays(), 2, 1)));
+			widgetProperties.put("WEEKDAYS_SHORT",
+					filterEmpty(substring(dfSymbols.getShortWeekdays(), 2, 1)));
 		}
 		else
 		{
-			setWidgetProperty(widgetProperties, "WEEKDAYS_1CHAR", filterEmpty(substring(dfSymbols
-					.getShortWeekdays(), 0, 1)));
-			setWidgetProperty(widgetProperties, "WEEKDAYS_SHORT", filterEmpty(substring(dfSymbols
-					.getShortWeekdays(), 0, 2)));
+			setWidgetProperty(widgetProperties, "WEEKDAYS_1CHAR",
+					filterEmpty(substring(dfSymbols.getShortWeekdays(), 0, 1)));
+			setWidgetProperty(widgetProperties, "WEEKDAYS_SHORT",
+					filterEmpty(substring(dfSymbols.getShortWeekdays(), 0, 2)));
 		}
 	}
 
@@ -717,24 +720,26 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	{
 		return true;
 	}
-	
+
 	/**
 	 * Indicates whether the calendar should be shown when corresponding text input is clicked.
 	 * 
 	 * @return <code>true</code> <br/>
 	 *         <code>false</code> (default)
 	 */
-	protected boolean showOnFieldClick() {
+	protected boolean showOnFieldClick()
+	{
 		return showOnFieldClick;
 	}
-	
+
 	/**
 	 * 
 	 * @see {@link #showOnFieldClick()}
 	 */
-	public DatePicker setShowOnFieldClick(boolean show) {
-		
-		this.showOnFieldClick = show;
+	public DatePicker setShowOnFieldClick(boolean show)
+	{
+
+		showOnFieldClick = show;
 		return this;
 	}
 

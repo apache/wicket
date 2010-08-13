@@ -90,8 +90,10 @@ public class SourcesPage extends WebPage
 		{
 			// name contains the name of the selected file
 			if (Strings.isEmpty(name) &&
-				Strings.isEmpty(getPage().getRequest().getRequestParameters().getParameterValue(
-					SOURCE).toOptionalString()))
+				Strings.isEmpty(getPage().getRequest()
+					.getRequestParameters()
+					.getParameterValue(SOURCE)
+					.toOptionalString()))
 			{
 				return "";
 			}
@@ -126,13 +128,15 @@ public class SourcesPage extends WebPage
 						return renderer.highlight(source, sb.toString(), "UTF-8", true);
 					}
 				}
-				return Strings.escapeMarkup(sb.toString(), false, true).toString().replaceAll("\n",
-					"<br />");
+				return Strings.escapeMarkup(sb.toString(), false, true)
+					.toString()
+					.replaceAll("\n", "<br />");
 			}
 			catch (IOException e)
 			{
-				log.error("Unable to read resource stream for: " + source + "; Page=" +
-					page.toString(), e);
+				log.error(
+					"Unable to read resource stream for: " + source + "; Page=" + page.toString(),
+					e);
 				return "";
 			}
 			finally
@@ -251,8 +255,9 @@ public class SourcesPage extends WebPage
 				File file = files[i];
 				if (file.isDirectory())
 				{
-					addResources(scope, new AppendingStringBuffer(relativePath).append(
-						file.getName()).append('/'), file);
+					addResources(scope,
+						new AppendingStringBuffer(relativePath).append(file.getName()).append('/'),
+						file);
 				}
 				else
 				{
@@ -414,13 +419,15 @@ public class SourcesPage extends WebPage
 							return new IAjaxCallDecorator()
 							{
 
-								public CharSequence decorateOnFailureScript(CharSequence script)
+								public CharSequence decorateOnFailureScript(Component c,
+									CharSequence script)
 								{
 									return "window.location=this.href;";
 									// return "alert('It\\'s ok!')";
 								}
 
-								public CharSequence decorateOnSuccessScript(CharSequence script)
+								public CharSequence decorateOnSuccessScript(Component c,
+									CharSequence script)
 								{
 									if (script == null)
 									{
@@ -429,7 +436,7 @@ public class SourcesPage extends WebPage
 									return script;
 								}
 
-								public CharSequence decorateScript(CharSequence script)
+								public CharSequence decorateScript(Component c, CharSequence script)
 								{
 									int index = script.toString().indexOf('?');
 									if (index >= 0)

@@ -101,7 +101,7 @@ public class GuestBook extends BasePage
 				return new AjaxCallDecorator()
 				{
 					@Override
-					public CharSequence decorateScript(CharSequence script)
+					public CharSequence decorateScript(Component c, CharSequence script)
 					{
 						return script + "return false;";
 					}

@@ -25,9 +25,9 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.tree.AbstractTree;
@@ -148,7 +148,6 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	public DefaultAbstractTree(String id)
 	{
 		super(id);
-		init();
 	}
 
 	/**
@@ -162,7 +161,6 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	public DefaultAbstractTree(String id, IModel<TreeModel> model)
 	{
 		super(id, model);
-		init();
 	}
 
 	/**
@@ -177,7 +175,6 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	{
 		super(id, new WicketTreeModel());
 		setModelObject(model);
-		init();
 	}
 
 	/**
@@ -536,8 +533,8 @@ public abstract class DefaultAbstractTree extends AbstractTree
 			{
 				super.onComponentTag(tag);
 				IRequestHandler handler = new ResourceReferenceRequestHandler(getNodeIcon(node));
-				tag.put("style", "background-image: url('" +
-					RequestCycle.get().renderUrlFor(handler) + "')");
+				tag.put("style",
+					"background-image: url('" + RequestCycle.get().renderUrlFor(handler) + "')");
 			}
 		};
 
@@ -597,18 +594,6 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	}
 
 	/**
-	 * Performs the tree initialization. Adds header contribution for the stylesheet.
-	 */
-	private void init()
-	{
-		ResourceReference css = getCSS();
-		if (css != null)
-		{
-			add(HeaderContributor.forCss(css.getScope(), css.getName()));
-		}
-	}
-
-	/**
 	 * Returns whether the provided node is last child of it's parent.
 	 * 
 	 * @param node
@@ -625,6 +610,17 @@ public abstract class DefaultAbstractTree extends AbstractTree
 		else
 		{
 			return parent.getChildAt(parent.getChildCount() - 1).equals(node);
+		}
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		ResourceReference css = getCSS();
+		if (css != null)
+		{
+			response.renderCSSReference(css);
 		}
 	}
 }

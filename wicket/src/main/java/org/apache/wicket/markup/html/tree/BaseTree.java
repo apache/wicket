@@ -25,8 +25,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AbstractBehavior;
-import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
@@ -65,12 +65,6 @@ public abstract class BaseTree extends AbstractTree
 	public BaseTree(String id, IModel<TreeModel> model)
 	{
 		super(id, model);
-
-		ResourceReference css = getCSS();
-		if (css != null)
-		{
-			add(HeaderContributor.forCss(css));
-		}
 	}
 
 	// default stylesheet resource
@@ -507,6 +501,18 @@ public abstract class BaseTree extends AbstractTree
 	protected boolean isForceRebuildOnSelectionChange()
 	{
 		return false;
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		ResourceReference css = getCSS();
+		if (css != null)
+		{
+			response.renderCSSReference(css);
+		}
+
 	}
 
 	private LinkType linkType = LinkType.AJAX;

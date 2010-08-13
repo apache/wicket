@@ -20,9 +20,9 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IInitializer;
 import org.apache.wicket.behavior.AbstractBehavior;
-import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
@@ -119,13 +119,6 @@ public class UploadProgressBar extends Panel
 		}
 		setRenderBodyOnly(true);
 
-		add(HeaderContributor.forJavaScript(JS));
-		ResourceReference css = getCss();
-		if (css != null)
-		{
-			add(HeaderContributor.forCss(css));
-		}
-
 		final WebMarkupContainer barDiv = new WebMarkupContainer("bar");
 		barDiv.setOutputMarkupId(true);
 		add(barDiv);
@@ -151,6 +144,18 @@ public class UploadProgressBar extends Panel
 	protected ResourceReference getCss()
 	{
 		return CSS;
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		response.renderJavascriptReference(JS);
+		ResourceReference css = getCss();
+		if (css != null)
+		{
+			response.renderCSSReference(css);
+		}
 	}
 
 	/** {@inheritDoc} */

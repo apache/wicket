@@ -20,7 +20,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.behavior.CssLocationHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
 
@@ -51,8 +51,11 @@ public class SimplePage_13 extends WebPage
 		};
 		header.add(new AttributeModifier("lang", new Model<String>("de")));
 		add(header);
+	}
 
-		// HeaderContributions must work with <html> components in place as well
-		add(new CssLocationHeaderContributor("BasePage.css"));
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		response.renderCSSReference("BasePage.css");
 	}
 }

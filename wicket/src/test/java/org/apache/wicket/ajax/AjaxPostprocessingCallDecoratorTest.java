@@ -19,6 +19,7 @@ package org.apache.wicket.ajax;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.calldecorator.AjaxPostprocessingCallDecorator;
 
 /**
@@ -37,17 +38,17 @@ public class AjaxPostprocessingCallDecoratorTest extends TestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public CharSequence decorateScript(CharSequence script)
+			public CharSequence decorateScript(Component component, CharSequence script)
 			{
 				return "^" + script;
 			}
 
-			public CharSequence decorateOnSuccessScript(CharSequence script)
+			public CharSequence decorateOnSuccessScript(Component component, CharSequence script)
 			{
 				return "^s" + script;
 			}
 
-			public CharSequence decorateOnFailureScript(CharSequence script)
+			public CharSequence decorateOnFailureScript(Component component, CharSequence script)
 			{
 				return "^f" + script;
 			}
@@ -57,21 +58,21 @@ public class AjaxPostprocessingCallDecoratorTest extends TestCase
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public CharSequence postDecorateScript(CharSequence script)
+			public CharSequence postDecorateScript(Component component, CharSequence script)
 			{
-				return "-" + super.postDecorateScript(script);
+				return "-" + super.postDecorateScript(component, script);
 			}
 
 			@Override
-			public CharSequence postDecorateOnSuccessScript(CharSequence script)
+			public CharSequence postDecorateOnSuccessScript(Component component, CharSequence script)
 			{
-				return "-s" + super.postDecorateOnSuccessScript(script);
+				return "-s" + super.postDecorateOnSuccessScript(component, script);
 			}
 
 			@Override
-			public CharSequence postDecorateOnFailureScript(CharSequence script)
+			public CharSequence postDecorateOnFailureScript(Component component, CharSequence script)
 			{
-				return "-f" + super.postDecorateOnFailureScript(script);
+				return "-f" + super.postDecorateOnFailureScript(component, script);
 			}
 		};
 	}
@@ -79,18 +80,18 @@ public class AjaxPostprocessingCallDecoratorTest extends TestCase
 	/** test script */
 	public void testDecorateScript()
 	{
-		Assert.assertEquals("-^.", decorator.decorateScript("."));
+		Assert.assertEquals("-^.", decorator.decorateScript(null, "."));
 	}
 
 	/** test script */
 	public void testDecorateOnSuccessScript()
 	{
-		Assert.assertEquals("-s^s.", decorator.decorateOnSuccessScript("."));
+		Assert.assertEquals("-s^s.", decorator.decorateOnSuccessScript(null, "."));
 	}
 
 	/** test script */
 	public void testDecorateOnFailureScript()
 	{
-		Assert.assertEquals("-f^f.", decorator.decorateOnFailureScript("."));
+		Assert.assertEquals("-f^f.", decorator.decorateOnFailureScript(null, "."));
 	}
 }

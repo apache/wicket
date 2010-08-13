@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajax;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 
 /**
@@ -67,25 +68,28 @@ public interface IAjaxCallDecorator extends IClusterable
 	/**
 	 * Decorates the script that performs the ajax call
 	 * 
+	 * @param component
 	 * @param script
 	 * @return decorated script
 	 */
-	CharSequence decorateScript(CharSequence script);
+	CharSequence decorateScript(Component component, CharSequence script);
 
 	/**
 	 * Decorates the onSuccess handler script
 	 * 
+	 * @param component
 	 * @param script
 	 * @return decorated onSuccess handler script
 	 */
-	CharSequence decorateOnSuccessScript(CharSequence script);
+	CharSequence decorateOnSuccessScript(Component component, CharSequence script);
 
 	/**
 	 * Decorates the onFailure handler script
 	 * 
+	 * @param component
 	 * @param script
 	 * @return decorated onFailure handler script
 	 */
-	CharSequence decorateOnFailureScript(CharSequence script);
+	CharSequence decorateOnFailureScript(Component component, CharSequence script);
 
 }

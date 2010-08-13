@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajax.calldecorator;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 
 /**
@@ -48,31 +49,27 @@ public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecora
 	}
 
 
-	/**
-	 * @see org.apache.wicket.ajax.IAjaxCallDecorator#decorateScript(CharSequence)
-	 */
-	public final CharSequence decorateScript(CharSequence script)
+	/** {@inheritDoc} */
+	public final CharSequence decorateScript(Component component, CharSequence script)
 	{
-		CharSequence s = (delegate == null) ? script : delegate.decorateScript(script);
-		return postDecorateScript(s);
+		CharSequence s = (delegate == null) ? script : delegate.decorateScript(component, script);
+		return postDecorateScript(component, s);
 	}
 
-	/**
-	 * @see org.apache.wicket.ajax.IAjaxCallDecorator#decorateOnSuccessScript(CharSequence)
-	 */
-	public final CharSequence decorateOnSuccessScript(CharSequence script)
+	/** {@inheritDoc} */
+	public final CharSequence decorateOnSuccessScript(Component component, CharSequence script)
 	{
-		CharSequence s = (delegate == null) ? script : delegate.decorateOnSuccessScript(script);
-		return postDecorateOnSuccessScript(s);
+		CharSequence s = (delegate == null) ? script : delegate.decorateOnSuccessScript(component,
+			script);
+		return postDecorateOnSuccessScript(component, s);
 	}
 
-	/**
-	 * @see org.apache.wicket.ajax.IAjaxCallDecorator#decorateOnFailureScript(CharSequence)
-	 */
-	public final CharSequence decorateOnFailureScript(CharSequence script)
+	/** {@inheritDoc} */
+	public final CharSequence decorateOnFailureScript(Component component, CharSequence script)
 	{
-		CharSequence s = (delegate == null) ? script : delegate.decorateOnFailureScript(script);
-		return postDecorateOnFailureScript(s);
+		CharSequence s = (delegate == null) ? script : delegate.decorateOnFailureScript(component,
+			script);
+		return postDecorateOnFailureScript(component, s);
 	}
 
 
@@ -82,7 +79,7 @@ public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecora
 	 * @param script
 	 * @return decorated script
 	 */
-	public CharSequence postDecorateScript(CharSequence script)
+	public CharSequence postDecorateScript(Component component, CharSequence script)
 	{
 		return script;
 	}
@@ -93,7 +90,7 @@ public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecora
 	 * @param script
 	 * @return decorated script
 	 */
-	public CharSequence postDecorateOnSuccessScript(CharSequence script)
+	public CharSequence postDecorateOnSuccessScript(Component component, CharSequence script)
 	{
 		return script;
 	}
@@ -104,7 +101,7 @@ public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecora
 	 * @param script
 	 * @return decorated script
 	 */
-	public CharSequence postDecorateOnFailureScript(CharSequence script)
+	public CharSequence postDecorateOnFailureScript(Component component, CharSequence script)
 	{
 		return script;
 	}

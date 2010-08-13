@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.parser.filter;
 
-import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -27,7 +26,7 @@ import org.apache.wicket.request.resource.PackageResourceReference;
  * @author jcompagner
  * 
  */
-public class PanelWithHeaderPart extends Panel implements IHeaderContributor
+public class PanelWithHeaderPart extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -41,6 +40,7 @@ public class PanelWithHeaderPart extends Panel implements IHeaderContributor
 		add(new Label("body"));
 	}
 
+	@Override
 	public void renderHead(IHeaderResponse response)
 	{
 		response.renderCSSReference(new PackageResourceReference(PanelWithHeaderPart.class,

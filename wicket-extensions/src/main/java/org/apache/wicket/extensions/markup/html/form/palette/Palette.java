@@ -26,7 +26,6 @@ import org.apache.wicket.extensions.markup.html.form.palette.component.Choices;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Recorder;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Selection;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -75,7 +74,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  *            Type of model object
  * 
  */
-public class Palette<T> extends Panel implements IHeaderContributor
+public class Palette<T> extends Panel
 {
 	private static final String SELECTED_HEADER_ID = "selectedHeader";
 
@@ -524,7 +523,7 @@ public class Palette<T> extends Panel implements IHeaderContributor
 		modelChanged();
 
 		// call model.setObject()
-		((IModel<Object>) getDefaultModel()).setObject(model);
+		((IModel<Object>)getDefaultModel()).setObject(model);
 	}
 
 	/**
@@ -637,6 +636,7 @@ public class Palette<T> extends Panel implements IHeaderContributor
 	 * 
 	 * @param response
 	 */
+	@Override
 	public void renderHead(IHeaderResponse response)
 	{
 		response.renderJavascriptReference(JAVASCRIPT);

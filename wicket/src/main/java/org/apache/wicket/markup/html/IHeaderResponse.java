@@ -116,6 +116,7 @@ public interface IHeaderResponse
 	 * @param media
 	 *            the media type for this CSS ("print", "screen", etc.)
 	 */
+	// TODO make media an enum
 	public void renderCSSReference(String url, String media);
 
 	/**

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajax.calldecorator;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.util.string.Strings;
@@ -81,7 +82,7 @@ public final class AjaxCallThrottlingDecorator extends AjaxPostprocessingCallDec
 	 * @see org.apache.wicket.ajax.calldecorator.AjaxPostprocessingCallDecorator#postDecorateScript(CharSequence)
 	 */
 	@Override
-	public final CharSequence postDecorateScript(CharSequence script)
+	public final CharSequence postDecorateScript(Component c, CharSequence script)
 	{
 		return AbstractDefaultAjaxBehavior.throttleScript(script, id, duration);
 	}

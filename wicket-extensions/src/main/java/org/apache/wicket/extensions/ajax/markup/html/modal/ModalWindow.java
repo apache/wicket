@@ -24,8 +24,9 @@ import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
-import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow.PageCreator;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
@@ -250,9 +251,14 @@ public class ModalWindow extends Panel
 
 		add(new CloseButtonBehavior());
 		add(new WindowClosedBehavior());
+	}
 
-		add(HeaderContributor.forJavaScript(JAVASCRIPT));
-		add(HeaderContributor.forCss(CSS));
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		response.renderJavascriptReference(JAVASCRIPT);
+		response.renderCSSReference(CSS);
 	}
 
 	/**

@@ -17,7 +17,8 @@
 package org.apache.wicket.markup.renderStrategy;
 
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 
@@ -34,8 +35,6 @@ public class SimplePage1 extends WebPage
 	 */
 	public SimplePage1()
 	{
-		add(HeaderContributor.forCss(getClass().getSimpleName() + ".css"));
-
 		MarkupContainer container1 = addXXX("container1", this);
 		MarkupContainer container2 = addXXX("container2", this);
 		MarkupContainer container2_1 = addXXX("container2_1", container2);
@@ -56,7 +55,21 @@ public class SimplePage1 extends WebPage
 	{
 		MarkupContainer container = new WebMarkupContainer(id);
 		parent.add(container);
-		container.add(HeaderContributor.forCss(id + ".css"));
+		container.add(new AbstractBehavior()
+		{
+			@Override
+			public void renderHead(IHeaderResponse response)
+			{
+				response.renderCSSReference(id + ".css");
+			}
+		});
 		return container;
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		response.renderCSSReference(getClass().getSimpleName() + ".css");
 	}
 }

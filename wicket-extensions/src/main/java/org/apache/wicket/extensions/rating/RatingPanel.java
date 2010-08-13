@@ -19,8 +19,8 @@ package org.apache.wicket.extensions.rating;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.Loop;
@@ -187,6 +187,8 @@ public abstract class RatingPanel extends Panel
 	 */
 	private Component ratingLabel;
 
+	private final boolean addDefaultCssStyle;
+
 	/**
 	 * Constructs a rating component with 5 stars, using a compound property model as its model to
 	 * retrieve the rating.
@@ -291,6 +293,7 @@ public abstract class RatingPanel extends Panel
 		IModel<Integer> nrOfVotes, IModel<Boolean> hasVoted, boolean addDefaultCssStyle)
 	{
 		super(id, rating);
+		this.addDefaultCssStyle = addDefaultCssStyle;
 
 		this.nrOfStars = wrap(nrOfStars);
 		this.nrOfVotes = wrap(nrOfVotes);
@@ -310,20 +313,18 @@ public abstract class RatingPanel extends Panel
 		// don't render the outer tags in the target document, just the div that
 		// is inside the panel.
 		setRenderBodyOnly(true);
-		if (addDefaultCssStyle)
-		{
-			addDefaultCssStyle();
-		}
 	}
 
-	/**
-	 * Will let the rating panel contribute a CSS include to the page's header. It will add
-	 * RatingPanel.css from this package. This method is typically called by the class that creates
-	 * the rating panel.
-	 */
-	public final void addDefaultCssStyle()
+	@Override
+	public void renderHead(IHeaderResponse response)
 	{
-		add(HeaderContributor.forCss(RatingPanel.class, "RatingPanel.css"));
+		super.renderHead(response);
+		if (addDefaultCssStyle)
+		{
+			response.renderCSSReference(new PackageResourceReference(RatingPanel.class,
+				"RatingPanel.css"));
+		}
+
 	}
 
 	/**

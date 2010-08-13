@@ -216,7 +216,12 @@ import org.slf4j.LoggerFactory;
  * @author Juergen Donnerstag
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class Component implements IClusterable, IConverterLocator, IRequestableComponent
+public abstract class Component
+	implements
+		IClusterable,
+		IConverterLocator,
+		IRequestableComponent,
+		IHeaderContributor
 {
 
 	/** True when component has been configured, had {@link #onConfigure()} called */
@@ -2803,24 +2808,21 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 
 			IHeaderResponse response = container.getHeaderResponse();
 
-			// First check the component itself (implements IHeaderContributor)
-			if (this instanceof IHeaderContributor)
+			// Allow component to contribute
+			if (response.wasRendered(this) == false)
 			{
-				if (response.wasRendered(this) == false)
-				{
-					((IHeaderContributor)this).renderHead(response);
-					response.markRendered(this);
-				}
+				renderHead(response);
+				response.markRendered(this);
 			}
 
 			// Than ask all behaviors
 			for (IBehavior behavior : getBehaviors())
 			{
-				if ((behavior instanceof IHeaderContributor) && isBehaviorAccepted(behavior))
+				if (isBehaviorAccepted(behavior))
 				{
 					if (response.wasRendered(behavior) == false)
 					{
-						((IHeaderContributor)behavior).renderHead(response);
+						behavior.renderHead(response);
 						response.markRendered(behavior);
 					}
 				}
@@ -4488,5 +4490,10 @@ public abstract class Component implements IClusterable, IConverterLocator, IReq
 	public final boolean canCallListenerInterface()
 	{
 		return isEnabledInHierarchy() && isVisibleInHierarchy();
+	}
+
+	public void renderHead(IHeaderResponse response)
+	{
+		// noop
 	}
 }

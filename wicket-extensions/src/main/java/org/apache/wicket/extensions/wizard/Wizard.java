@@ -19,13 +19,14 @@ package org.apache.wicket.extensions.wizard;
 import java.util.Iterator;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.request.resource.PackageResourceReference;
 
 
 /**
@@ -79,6 +80,8 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	/** The wizard model. */
 	private IWizardModel wizardModel;
 
+	private final boolean addDefaultCssStyle;
+
 	/**
 	 * Construct. Adds the default style.
 	 * <p>
@@ -117,11 +120,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	public Wizard(String id, boolean addDefaultCssStyle)
 	{
 		super(id);
-
-		if (addDefaultCssStyle)
-		{
-			addDefaultCssStyle();
-		}
+		this.addDefaultCssStyle = addDefaultCssStyle;
 	}
 
 	/**
@@ -158,20 +157,27 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 		super(id);
 
 		init(wizardModel);
+		this.addDefaultCssStyle = addDefaultCssStyle;
 
-		if (addDefaultCssStyle)
-		{
-			addDefaultCssStyle();
-		}
 	}
 
 	/**
 	 * Will let the wizard contribute a CSS include to the page's header. It will add Wizard.css
 	 * from this package. This method is typically called by the class that creates the wizard.
 	 */
-	public void addDefaultCssStyle()
+	public void addDefaultCssStyle(IHeaderResponse response)
 	{
-		add(HeaderContributor.forCss(Wizard.class, "Wizard.css"));
+		response.renderCSSReference(new PackageResourceReference(Wizard.class, "Wizard.css"));
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		if (addDefaultCssStyle)
+		{
+			addDefaultCssStyle(response);
+		}
 	}
 
 	/**

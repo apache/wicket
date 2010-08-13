@@ -18,6 +18,7 @@ package org.apache.wicket.behavior;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
  * Adapter implementation of {@link org.apache.wicket.behavior.IBehavior}. It is recommended to
@@ -160,6 +161,10 @@ public abstract class AbstractBehavior implements IBehavior
 	 * @see org.apache.wicket.behavior.IBehavior#unbind(org.apache.wicket.Component)
 	 */
 	public void unbind(Component component)
+	{
+	}
+
+	public void renderHead(IHeaderResponse response)
 	{
 	}
 }

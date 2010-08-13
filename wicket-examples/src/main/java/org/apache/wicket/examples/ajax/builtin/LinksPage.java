@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.calldecorator.AjaxCallDecorator;
@@ -137,19 +138,19 @@ public class LinksPage extends BasePage
 				return new AjaxCallDecorator()
 				{
 					@Override
-					public CharSequence decorateOnSuccessScript(CharSequence script)
+					public CharSequence decorateOnSuccessScript(Component c, CharSequence script)
 					{
 						return "alert('Success');";
 					}
 
 					@Override
-					public CharSequence decorateOnFailureScript(CharSequence script)
+					public CharSequence decorateOnFailureScript(Component c, CharSequence script)
 					{
 						return "alert('Failure');";
 					}
 
 					@Override
-					public CharSequence decorateScript(CharSequence script)
+					public CharSequence decorateScript(Component c, CharSequence script)
 					{
 						return "alert('Before ajax call');" + script;
 					}
@@ -171,19 +172,19 @@ public class LinksPage extends BasePage
 				return new AjaxCallDecorator()
 				{
 					@Override
-					public CharSequence decorateOnSuccessScript(CharSequence script)
+					public CharSequence decorateOnSuccessScript(Component c, CharSequence script)
 					{
 						return "alert('Success');";
 					}
 
 					@Override
-					public CharSequence decorateOnFailureScript(CharSequence script)
+					public CharSequence decorateOnFailureScript(Component c, CharSequence script)
 					{
 						return "alert('Failure');";
 					}
 
 					@Override
-					public CharSequence decorateScript(CharSequence script)
+					public CharSequence decorateScript(Component c, CharSequence script)
 					{
 						return "alert('Before ajax call');" + script;
 					}

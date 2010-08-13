@@ -19,6 +19,7 @@ package org.apache.wicket.behavior;
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.IHeaderContributor;
 
 /**
  * Behaviors are kind of plug-ins for Components. They allow functionality to be added to a
@@ -48,7 +49,7 @@ import org.apache.wicket.markup.ComponentTag;
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
  */
-public interface IBehavior extends IClusterable
+public interface IBehavior extends IClusterable, IHeaderContributor
 {
 	/**
 	 * Called when a component is about to render.

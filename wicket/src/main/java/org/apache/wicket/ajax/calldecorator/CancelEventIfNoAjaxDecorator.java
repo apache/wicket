@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajax.calldecorator;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 
@@ -59,7 +60,7 @@ public final class CancelEventIfNoAjaxDecorator extends AjaxPostprocessingCallDe
 	 * @see org.apache.wicket.ajax.calldecorator.AjaxPostprocessingCallDecorator#postDecorateScript(CharSequence)
 	 */
 	@Override
-	public final CharSequence postDecorateScript(CharSequence script)
+	public final CharSequence postDecorateScript(Component c, CharSequence script)
 	{
 		return script + "return !" + IAjaxCallDecorator.WICKET_CALL_RESULT_VAR + ";";
 	}

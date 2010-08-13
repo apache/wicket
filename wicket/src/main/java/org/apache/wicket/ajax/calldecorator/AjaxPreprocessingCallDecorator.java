@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajax.calldecorator;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 
 /**
@@ -47,30 +48,30 @@ public class AjaxPreprocessingCallDecorator implements IAjaxCallDecorator
 	/**
 	 * @see org.apache.wicket.ajax.IAjaxCallDecorator#decorateScript(CharSequence)
 	 */
-	public CharSequence decorateScript(CharSequence script)
+	public CharSequence decorateScript(Component c, CharSequence script)
 	{
 		CharSequence s = preDecorateScript(script);
-		return (delegate == null) ? s : delegate.decorateScript(s);
+		return (delegate == null) ? s : delegate.decorateScript(c, s);
 
 	}
 
 	/**
 	 * @see org.apache.wicket.ajax.IAjaxCallDecorator#decorateOnSuccessScript(CharSequence)
 	 */
-	public CharSequence decorateOnSuccessScript(CharSequence script)
+	public CharSequence decorateOnSuccessScript(Component c, CharSequence script)
 	{
 		CharSequence s = preDecorateOnSuccessScript(script);
-		return (delegate == null) ? s : delegate.decorateOnSuccessScript(s);
+		return (delegate == null) ? s : delegate.decorateOnSuccessScript(c, s);
 	}
 
 	/**
 	 * @see org.apache.wicket.ajax.IAjaxCallDecorator#decorateOnFailureScript(CharSequence)
 	 */
-	public CharSequence decorateOnFailureScript(CharSequence script)
+	public CharSequence decorateOnFailureScript(Component c, CharSequence script)
 	{
 		CharSequence s = preDecorateOnFailureScript(script);
 
-		return (delegate == null) ? s : delegate.decorateOnFailureScript(s);
+		return (delegate == null) ? s : delegate.decorateOnFailureScript(c, s);
 	}
 
 

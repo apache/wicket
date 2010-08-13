@@ -20,7 +20,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxIndicatorAware;
-import org.apache.wicket.behavior.AbstractHeaderContributor;
+import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
@@ -41,7 +41,7 @@ import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandle
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class AjaxIndicatorAppender extends AbstractHeaderContributor
+public class AjaxIndicatorAppender extends AbstractBehavior
 {
 	/**
 	 * Component instance this behavior is bound to
@@ -60,9 +60,6 @@ public class AjaxIndicatorAppender extends AbstractHeaderContributor
 	{
 	}
 
-	/**
-	 * @see AbstractHeaderContributor#renderHead(IHeaderResponse)
-	 */
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{

@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WicketEventReference;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -55,7 +56,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	{
 		if (Application.exists())
 		{
-			// @TODO remove in 1.5; see IHeaderRenderStrategy
+			// TODO remove in 1.5; see IHeaderRenderStrategy
 			Application.get().notifyRenderHeadListener(this);
 		}
 	}
@@ -81,7 +82,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 		{
 			IRequestHandler handler = new ResourceReferenceRequestHandler(reference);
 			CharSequence url = RequestCycle.get().renderUrlFor(handler);
-			renderCSSReference(url.toString(), null);
+			internalRenderCSSReference(url.toString(), null);
 		}
 	}
 
@@ -99,7 +100,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 		{
 			IRequestHandler handler = new ResourceReferenceRequestHandler(reference);
 			CharSequence url = RequestCycle.get().renderUrlFor(handler);
-			renderCSSReference(url.toString(), media);
+			internalRenderCSSReference(url.toString(), media);
 		}
 	}
 
@@ -114,7 +115,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 		}
 		if (!closed)
 		{
-			renderCSSReference(url, null);
+			internalRenderCSSReference(relative(url), null);
 		}
 	}
 
@@ -123,6 +124,11 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 *      java.lang.String)
 	 */
 	public void renderCSSReference(String url, String media)
+	{
+		internalRenderCSSReference(relative(url), media);
+	}
+
+	private void internalRenderCSSReference(String url, String media)
 	{
 		if (Strings.isEmpty(url))
 		{
@@ -149,6 +155,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 		}
 	}
 
+
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavascriptReference(org.apache.wicket.ResourceReference)
 	 */
@@ -162,7 +169,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 		{
 			IRequestHandler handler = new ResourceReferenceRequestHandler(reference);
 			CharSequence url = RequestCycle.get().renderUrlFor(handler);
-			renderJavascriptReference(url.toString());
+			internalRenderJavascriptReference(url.toString(), null);
 		}
 	}
 
@@ -180,7 +187,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 		{
 			IRequestHandler handler = new ResourceReferenceRequestHandler(reference);
 			CharSequence url = RequestCycle.get().renderUrlFor(handler);
-			renderJavascriptReference(url.toString(), id);
+			internalRenderJavascriptReference(url.toString(), id);
 		}
 	}
 
@@ -189,19 +196,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderJavascriptReference(String url)
 	{
-		if (Strings.isEmpty(url))
-		{
-			throw new IllegalArgumentException("url cannot be empty or null");
-		}
-		if (!closed)
-		{
-			List<Object> token = Arrays.asList(new Object[] { "javascript", url });
-			if (wasRendered(token) == false)
-			{
-				JavascriptUtils.writeJavascriptUrl(getResponse(), url);
-				markRendered(token);
-			}
-		}
+		internalRenderJavascriptReference(relative(url), null);
 	}
 
 	/**
@@ -210,6 +205,11 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderJavascriptReference(String url, String id)
 	{
+		internalRenderJavascriptReference(relative(url), id);
+	}
+
+	private void internalRenderJavascriptReference(String url, String id)
+	{
 		if (Strings.isEmpty(url))
 		{
 			throw new IllegalArgumentException("url cannot be empty or null");
@@ -217,12 +217,20 @@ public abstract class HeaderResponse implements IHeaderResponse
 		if (!closed)
 		{
 			List<Object> token1 = Arrays.asList(new Object[] { "javascript", url });
-			List<Object> token2 = Arrays.asList(new Object[] { "javascript", id });
-			if (wasRendered(token1) == false && wasRendered(token2) == false)
+			List<Object> token2 = (id != null) ? Arrays.asList(new Object[] { "javascript", id })
+				: null;
+
+			final boolean token1Unused = wasRendered(token1) == false;
+			final boolean token2Unused = (token2 != null) ? wasRendered(token2) == false : true;
+
+			if (token1Unused && token2Unused)
 			{
 				JavascriptUtils.writeJavascriptUrl(getResponse(), url, id);
 				markRendered(token1);
-				markRendered(token2);
+				if (token2 != null)
+				{
+					markRendered(token2);
+				}
 			}
 		}
 	}
@@ -349,6 +357,23 @@ public abstract class HeaderResponse implements IHeaderResponse
 	public boolean isClosed()
 	{
 		return closed;
+	}
+
+	/**
+	 * 
+	 * @param location
+	 * @return relative path
+	 */
+	private final String relative(final String location)
+	{
+		if (location.startsWith("http://") || location.startsWith("https://") ||
+			location.startsWith("/"))
+		{
+			return location;
+		}
+
+		RequestCycle rc = RequestCycle.get();
+		return rc.getUrlRenderer().renderUrl(Url.parse(location, rc.getRequest().getCharset()));
 	}
 
 	/**

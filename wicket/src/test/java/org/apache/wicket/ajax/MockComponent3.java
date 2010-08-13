@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.ajax;
 
-import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -24,7 +23,7 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 /**
  * 
  */
-public class MockComponent3 extends Panel implements IHeaderContributor
+public class MockComponent3 extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -39,6 +38,7 @@ public class MockComponent3 extends Panel implements IHeaderContributor
 		super(id);
 	}
 
+	@Override
 	public void renderHead(IHeaderResponse response)
 	{
 		response.renderCSSReference(new PackageResourceReference(MockComponent3.class,

@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.basic;
 
-import org.apache.wicket.behavior.CssLocationHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 
 
@@ -29,11 +29,9 @@ public class SimplePage_15 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Construct.
-	 */
-	public SimplePage_15()
+	@Override
+	public void renderHead(IHeaderResponse response)
 	{
-		add(new CssLocationHeaderContributor("BasePage.css"));
+		response.renderCSSReference("BasePage.css");
 	}
 }
