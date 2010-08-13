@@ -1349,9 +1349,8 @@ public class BaseWicketTester
 	public Result hasNoErrorMessage()
 	{
 		List<Serializable> messages = getMessages(FeedbackMessage.ERROR);
-		return isTrue(
-			"expect no error message, but contains\n" + WicketTesterHelper.asLined(messages),
-			messages.isEmpty());
+		return isTrue("expect no error message, but contains\n" +
+			WicketTesterHelper.asLined(messages), messages.isEmpty());
 	}
 
 	/**
@@ -1362,9 +1361,8 @@ public class BaseWicketTester
 	public Result hasNoInfoMessage()
 	{
 		List<Serializable> messages = getMessages(FeedbackMessage.INFO);
-		return isTrue(
-			"expect no info message, but contains\n" + WicketTesterHelper.asLined(messages),
-			messages.isEmpty());
+		return isTrue("expect no info message, but contains\n" +
+			WicketTesterHelper.asLined(messages), messages.isEmpty());
 	}
 
 	/**
@@ -1765,7 +1763,7 @@ public class BaseWicketTester
 	 * @param actual
 	 * @return
 	 */
-	private Result isEqual(Object expected, Object actual)
+	protected final Result isEqual(Object expected, Object actual)
 	{
 		if (expected == null && actual == null)
 		{
@@ -1811,7 +1809,7 @@ public class BaseWicketTester
 	 * 
 	 * @param message
 	 */
-	private void fail(String message)
+	protected final void fail(String message)
 	{
 		throw new WicketRuntimeException(message);
 	}
