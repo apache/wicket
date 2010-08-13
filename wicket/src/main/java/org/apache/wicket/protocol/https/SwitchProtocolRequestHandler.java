@@ -135,7 +135,7 @@ class SwitchProtocolRequestHandler implements IRequestHandler
 		}
 		else
 		{
-			url = ((RequestCycle)requestCycle).urlFor(handler).toString();
+			url = ((RequestCycle)requestCycle).mapUrlFor(handler).toString();
 		}
 
 		WebResponse response = (WebResponse)requestCycle.getResponse();

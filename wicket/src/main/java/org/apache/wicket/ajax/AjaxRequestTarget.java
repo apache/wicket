@@ -548,7 +548,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 			// the page itself has been added to the request target, we simply issue a redirect back
 			// to the page
 			IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(page));
-			final String url = rc.renderUrlFor(handler).toString();
+			final String url = rc.urlFor(handler).toString();
 			response.sendRedirect(url);
 			return;
 		}

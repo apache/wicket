@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.wicket.MetaDataEntry;
 import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
@@ -35,6 +36,7 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.request.handler.IPageProvider;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
@@ -370,7 +372,7 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle
 	 * @param handler
 	 * @return Url instance or <code>null</code>
 	 */
-	public Url urlFor(IRequestHandler handler)
+	public Url mapUrlFor(IRequestHandler handler)
 	{
 		return requestMapper.mapHandler(handler);
 	}
@@ -384,21 +386,67 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle
 	 *            parameters for the resource or {@code null} if none
 	 * @return {@link Url} for the reference
 	 */
-	public Url urlFor(ResourceReference reference, PageParameters params)
+	public Url mapUrlFor(ResourceReference reference, PageParameters params)
 	{
-		return urlFor(new ResourceReferenceRequestHandler(reference, params));
+		return mapUrlFor(new ResourceReferenceRequestHandler(reference, params));
 	}
 
 	/**
-	 * Returns a {@link Url} for the resource reference
+	 * Returns a bookmarkable URL that references a given page class using a given set of page
+	 * parameters. Since the URL which is returned contains all information necessary to instantiate
+	 * and render the page, it can be stored in a user's browser as a stable bookmark.
+	 * 
+	 * @param <C>
+	 * 
+	 * @see RequestCycle#urlFor(IPageMap, Class, PageParameters)
+	 * 
+	 * @param pageClass
+	 *            Class of page
+	 * @param parameters
+	 *            Parameters to page or {@code null} if none
+	 * @return Bookmarkable URL to page
+	 */
+	public final <C extends Page> Url mapUrlFor(final Class<C> pageClass,
+		final PageParameters parameters)
+	{
+		IRequestHandler handler = new BookmarkablePageRequestHandler(new PageProvider(pageClass,
+			parameters));
+		return mapUrlFor(handler);
+	}
+
+	/**
+	 * Returns a rendered {@link Url} for the resource reference
 	 * 
 	 * @param reference
-	 *            reference
+	 *            resource reference
+	 * @param params
+	 *            parameters for the resource or {@code null} if none
 	 * @return {@link Url} for the reference
 	 */
-	public Url urlFor(ResourceReference reference)
+	public final CharSequence urlFor(ResourceReference reference, PageParameters params)
 	{
-		return urlFor(reference, null);
+		return renderUrl(mapUrlFor(reference, params));
+	}
+
+	/**
+	 * Returns a rendered bookmarkable URL that references a given page class using a given set of
+	 * page parameters. Since the URL which is returned contains all information necessary to
+	 * instantiate and render the page, it can be stored in a user's browser as a stable bookmark.
+	 * 
+	 * @param <C>
+	 * 
+	 * @see RequestCycle#urlFor(IPageMap, Class, PageParameters)
+	 * 
+	 * @param pageClass
+	 *            Class of page
+	 * @param parameters
+	 *            Parameters to page or {@code null} if none
+	 * @return Bookmarkable URL to page
+	 */
+	public final <C extends Page> CharSequence urlFor(final Class<C> pageClass,
+		final PageParameters parameters)
+	{
+		return renderUrl(mapUrlFor(pageClass, parameters));
 	}
 
 	/**
@@ -410,9 +458,13 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle
 	 * @param handler
 	 * @return Url String or <code>null</code>
 	 */
-	public String renderUrlFor(IRequestHandler handler)
+	public CharSequence urlFor(IRequestHandler handler)
 	{
-		Url url = urlFor(handler);
+		return renderUrl(mapUrlFor(handler));
+	}
+
+	private String renderUrl(Url url)
+	{
 		if (url != null)
 		{
 			return getResponse().encodeURL(getUrlRenderer().renderUrl(url));

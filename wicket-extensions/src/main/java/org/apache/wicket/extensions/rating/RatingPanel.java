@@ -380,7 +380,7 @@ public abstract class RatingPanel extends Panel
 	protected String getActiveStarUrl(int iteration)
 	{
 		IRequestHandler handler = new ResourceReferenceRequestHandler(STAR1);
-		return getRequestCycle().renderUrlFor(handler).toString();
+		return getRequestCycle().urlFor(handler).toString();
 	}
 
 	/**
@@ -394,7 +394,7 @@ public abstract class RatingPanel extends Panel
 	protected String getInactiveStarUrl(int iteration)
 	{
 		IRequestHandler handler = new ResourceReferenceRequestHandler(STAR0);
-		return getRequestCycle().renderUrlFor(handler).toString();
+		return getRequestCycle().urlFor(handler).toString();
 	}
 
 	/**

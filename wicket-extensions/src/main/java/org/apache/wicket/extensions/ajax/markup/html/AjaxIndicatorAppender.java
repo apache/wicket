@@ -98,7 +98,7 @@ public class AjaxIndicatorAppender extends AbstractBehavior
 	{
 		IRequestHandler handler = new ResourceReferenceRequestHandler(
 			AbstractDefaultAjaxBehavior.INDICATOR);
-		return RequestCycle.get().renderUrlFor(handler);
+		return RequestCycle.get().urlFor(handler);
 	}
 
 	/**

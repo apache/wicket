@@ -59,9 +59,10 @@ public class ResourceTest extends WicketTestCase
 			new org.apache.wicket.util.file.File(testFile)));
 		tester.getApplication().getSharedResources().add("file", file);
 		tester.getRequest().setUrl(
-			tester.getRequestCycle().urlFor(
-				tester.getApplication().getSharedResources().get(Application.class, "file", null,
-					null, null, true)));
+			tester.getRequestCycle().mapUrlFor(
+				tester.getApplication()
+					.getSharedResources()
+					.get(Application.class, "file", null, null, null, true), null));
 		tester.processRequest();
 
 		assertEquals(MockHttpServletResponse.formatDate(testFile.lastModified()),

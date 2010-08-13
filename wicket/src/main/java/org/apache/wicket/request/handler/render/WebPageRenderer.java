@@ -169,7 +169,7 @@ public class WebPageRenderer extends PageRenderer
 	public void respond(RequestCycle requestCycle)
 	{
 		Url currentUrl = requestCycle.getRequest().getUrl();
-		Url targetUrl = requestCycle.urlFor(getRenderPageRequestHandler());
+		Url targetUrl = requestCycle.mapUrlFor(getRenderPageRequestHandler());
 
 		//
 		// the code below is little hairy but we have to handle 3 redirect policies
@@ -238,7 +238,7 @@ public class WebPageRenderer extends PageRenderer
 
 			// check if the url hasn't changed after page has been rendered
 			// (i.e. the stateless flag might have changed which could result in different page url)
-			Url targetUrl2 = requestCycle.urlFor(getRenderPageRequestHandler());
+			Url targetUrl2 = requestCycle.mapUrlFor(getRenderPageRequestHandler());
 
 			if (targetUrl.getSegments().equals(targetUrl2.getSegments()) == false)
 			{

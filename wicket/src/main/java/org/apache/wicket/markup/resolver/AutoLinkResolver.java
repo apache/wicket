@@ -618,7 +618,7 @@ public final class AutoLinkResolver implements IComponentResolver
 
 				ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(
 					resourceReference);
-				CharSequence url = getRequestCycle().renderUrlFor(handler);
+				CharSequence url = getRequestCycle().urlFor(handler);
 
 				// generate the href attribute
 				tag.put(attribute, Strings.replaceAll(url, "&", "&amp;"));

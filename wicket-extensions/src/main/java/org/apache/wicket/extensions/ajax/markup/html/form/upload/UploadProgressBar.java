@@ -205,7 +205,7 @@ public class UploadProgressBar extends Panel
 			final String uploadFieldId = (uploadField == null) ? "" : uploadField.getMarkupId();
 			tag.put("onsubmit", "var def=new Wicket.WUPB.Def('" + component.getMarkupId() + "', '" +
 				status.getMarkupId() + "', '" + bar.getMarkupId() + "', '" +
-				component.getPage().urlFor(ref) + "','" + uploadFieldId +
+				component.getPage().urlFor(ref, null) + "','" + uploadFieldId +
 				"'); Wicket.WUPB.start(def);");
 		}
 

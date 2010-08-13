@@ -1021,7 +1021,7 @@ public class ModalWindow extends Panel
 // RequestCycle.get().setUrlForNewWindowEncoding();
 
 			IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(page));
-			appendAssignment(buffer, "settings.src", RequestCycle.get().renderUrlFor(handler));
+			appendAssignment(buffer, "settings.src", RequestCycle.get().urlFor(handler));
 		}
 		else
 		{

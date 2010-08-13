@@ -195,14 +195,14 @@ public class RatingsPage extends BasePage
 			protected String getActiveStarUrl(int iteration)
 			{
 				IRequestHandler handler = new ResourceReferenceRequestHandler(WICKETSTAR1);
-				return getRequestCycle().renderUrlFor(handler).toString();
+				return getRequestCycle().urlFor(handler).toString();
 			}
 
 			@Override
 			protected String getInactiveStarUrl(int iteration)
 			{
 				IRequestHandler handler = new ResourceReferenceRequestHandler(WICKETSTAR0);
-				return getRequestCycle().renderUrlFor(handler).toString();
+				return getRequestCycle().urlFor(handler).toString();
 			}
 
 			@Override

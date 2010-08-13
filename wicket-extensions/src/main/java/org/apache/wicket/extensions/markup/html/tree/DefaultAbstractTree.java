@@ -534,7 +534,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 				super.onComponentTag(tag);
 				IRequestHandler handler = new ResourceReferenceRequestHandler(getNodeIcon(node));
 				tag.put("style",
-					"background-image: url('" + RequestCycle.get().renderUrlFor(handler) + "')");
+					"background-image: url('" + RequestCycle.get().urlFor(handler) + "')");
 			}
 		};
 

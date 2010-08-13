@@ -331,7 +331,7 @@ public final class LocalizedImageResource implements IClusterable
 			// Create URL to shared resource
 			IRequestHandler handler = new ResourceReferenceRequestHandler(resourceReference,
 				resourceParameters);
-			url = RequestCycle.get().renderUrlFor(handler);
+			url = RequestCycle.get().urlFor(handler);
 		}
 		else
 		{

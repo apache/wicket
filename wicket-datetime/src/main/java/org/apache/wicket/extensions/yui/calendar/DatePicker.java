@@ -37,7 +37,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.extensions.yui.YuiLib;
-import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
 import org.apache.wicket.request.Response;
@@ -238,10 +237,10 @@ public class DatePicker extends AbstractBehavior
 		// variables for YUILoader
 		variables.put(
 				"basePath",
-				Strings.stripJSessionId(RequestCycle.get().renderUrlFor(
-						new ResourceReferenceRequestHandler(YUI))));
+				Strings.stripJSessionId(RequestCycle.get()
+						.urlFor(new ResourceReferenceRequestHandler(YUI)).toString()));
 		variables.put("wicketDatePath",
-				RequestCycle.get().renderUrlFor(new ResourceReferenceRequestHandler(WICKET_DATE)));
+				RequestCycle.get().urlFor(new ResourceReferenceRequestHandler(WICKET_DATE)));
 		if (Application.DEVELOPMENT.equals(Application.get().getConfigurationType()))
 		{
 			variables.put("filter", "filter: \"RAW\",");
@@ -549,7 +548,7 @@ public class DatePicker extends AbstractBehavior
 	 */
 	protected CharSequence getIconUrl()
 	{
-		return RequestCycle.get().renderUrlFor(
+		return RequestCycle.get().urlFor(
 				new ResourceReferenceRequestHandler(new PackageResourceReference(DatePicker.class,
 						"icon1.gif")));
 	}

@@ -119,7 +119,7 @@ public class PackageResourceTest extends WicketTestCase
 		assertTrue(PackageResource.exists(PackageResourceTest.class,
 			"packaged1_foo_bar_en_US_MAC.txt", null, null, null));
 
-		tester.getRequest().setUrl(tester.getRequestCycle().urlFor(invalidResource));
+		tester.getRequest().setUrl(tester.getRequestCycle().mapUrlFor(invalidResource, null));
 		// since the resource does not exist wicket should let the handling fall through to the next
 		// filter/servlet which will cause a 404 later
 		assertFalse(tester.processRequest());

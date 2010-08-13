@@ -53,11 +53,8 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.BookmarkableListenerInterfaceRequestHandler;
-import org.apache.wicket.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
-import org.apache.wicket.request.handler.PageProvider;
-import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -3373,9 +3370,7 @@ public abstract class Component
 	public final <C extends Page> CharSequence urlFor(final Class<C> pageClass,
 		final PageParameters parameters)
 	{
-		IRequestHandler handler = new BookmarkablePageRequestHandler(new PageProvider(pageClass,
-			parameters));
-		return getRequestCycle().renderUrlFor(handler);
+		return getRequestCycle().urlFor(pageClass, parameters);
 	}
 
 	/**
@@ -3402,13 +3397,13 @@ public abstract class Component
 		{
 			handler = new ListenerInterfaceRequestHandler(provider, listener, index);
 		}
-		return getRequestCycle().renderUrlFor(handler);
+		return getRequestCycle().urlFor(handler);
 	}
 
 	/**
 	 * Returns a URL that references the given request target.
 	 * 
-	 * @see RequestCycle#urlFor(IRequestTarget)
+	 * @see RequestCycle#urlFor(IRequestHandler)
 	 * 
 	 * @param requestHandler
 	 *            the request target to reference
@@ -3417,11 +3412,13 @@ public abstract class Component
 	 */
 	public final CharSequence urlFor(final IRequestHandler requestHandler)
 	{
-		return getRequestCycle().renderUrlFor(requestHandler);
+		return getRequestCycle().urlFor(requestHandler);
 	}
 
 	/**
 	 * Gets a URL for the listener interface (e.g. ILinkListener).
+	 * 
+	 * @see RequestCycle#urlFor(IRequestHandler)
 	 * 
 	 * @param listener
 	 *            The listener interface that the URL should call
@@ -3439,22 +3436,24 @@ public abstract class Component
 		{
 			handler = new ListenerInterfaceRequestHandler(provider, listener);
 		}
-		return getRequestCycle().renderUrlFor(handler);
+		return getRequestCycle().urlFor(handler);
 	}
 
 	/**
 	 * Returns a URL that references a shared resource through the provided resource reference.
 	 * 
-	 * @see RequestCycle#urlFor(ResourceReference)
+	 * @see RequestCycle#urlFor(IRequestHandler)
 	 * 
 	 * @param resourceReference
 	 *            The resource reference
+	 * @param parameters
+	 *            parameters or {@code null} if none
 	 * @return The url for the shared resource
 	 */
-	public final CharSequence urlFor(final ResourceReference resourceReference)
+	public final CharSequence urlFor(final ResourceReference resourceReference,
+		PageParameters parameters)
 	{
-		return getRequestCycle().renderUrlFor(
-			new ResourceReferenceRequestHandler(resourceReference));
+		return getRequestCycle().urlFor(resourceReference, parameters);
 	}
 
 	/**

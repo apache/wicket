@@ -81,7 +81,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 		if (!closed)
 		{
 			IRequestHandler handler = new ResourceReferenceRequestHandler(reference);
-			CharSequence url = RequestCycle.get().renderUrlFor(handler);
+			CharSequence url = RequestCycle.get().urlFor(handler);
 			internalRenderCSSReference(url.toString(), null);
 		}
 	}
@@ -99,7 +99,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 		if (!closed)
 		{
 			IRequestHandler handler = new ResourceReferenceRequestHandler(reference);
-			CharSequence url = RequestCycle.get().renderUrlFor(handler);
+			CharSequence url = RequestCycle.get().urlFor(handler);
 			internalRenderCSSReference(url.toString(), media);
 		}
 	}
@@ -168,7 +168,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 		if (!closed)
 		{
 			IRequestHandler handler = new ResourceReferenceRequestHandler(reference);
-			CharSequence url = RequestCycle.get().renderUrlFor(handler);
+			CharSequence url = RequestCycle.get().urlFor(handler);
 			internalRenderJavascriptReference(url.toString(), null);
 		}
 	}
@@ -186,7 +186,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 		if (!closed)
 		{
 			IRequestHandler handler = new ResourceReferenceRequestHandler(reference);
-			CharSequence url = RequestCycle.get().renderUrlFor(handler);
+			CharSequence url = RequestCycle.get().urlFor(handler);
 			internalRenderJavascriptReference(url.toString(), id);
 		}
 	}

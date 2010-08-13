@@ -43,7 +43,7 @@ public class BodyFrame extends WebPage
 		{
 			IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(
 				frameTarget.getFrameClass()));
-			return RequestCycle.get().renderUrlFor(handler);
+			return RequestCycle.get().urlFor(handler);
 		}
 
 		public void setObject(final CharSequence object)
@@ -72,7 +72,7 @@ public class BodyFrame extends WebPage
 		LeftFrame leftFrame = new LeftFrame(this);
 		// get the url to that page
 		IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(leftFrame));
-		String leftFrameSrc = RequestCycle.get().renderUrlFor(handler).toString();
+		String leftFrameSrc = RequestCycle.get().urlFor(handler).toString();
 		// and create a simple component that modifies it's src attribute to
 		// hold the url to that frame
 		WebComponent leftFrameTag = new WebComponent("leftFrame");
