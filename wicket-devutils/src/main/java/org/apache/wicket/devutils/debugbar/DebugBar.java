@@ -23,8 +23,8 @@ import org.apache.wicket.Application;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MetaDataKey;
-import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.devutils.DevUtilsPanel;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -81,8 +81,7 @@ public class DebugBar extends DevUtilsPanel
             }
 
         }));
-        add(HeaderContributor.forCss(new CompressedResourceReference(DebugBar.class, "wicket-debugbar.css")));
-        add(HeaderContributor.forJavaScript(new JavascriptResourceReference(DebugBar.class, "wicket-debugbar.js")));
+
         add(new Image("logo", new PackageResourceReference(DebugBar.class, "wicket.png")));
         add(new Image("removeImg", new PackageResourceReference(DebugBar.class, "remove.png")));
         List<IDebugBarContributor> contributors = getContributors();
@@ -124,6 +123,13 @@ public class DebugBar extends DevUtilsPanel
     public boolean isVisible()
     {
         return getApplication().getDebugSettings().isDevelopmentUtilitiesEnabled();
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response)
+    {
+        response.renderCSSReference(new CompressedResourceReference(DebugBar.class, "wicket-debugbar.css"));
+        response.renderJavascriptReference(new JavascriptResourceReference(DebugBar.class, "wicket-debugbar.js"));
     }
 
     /**
