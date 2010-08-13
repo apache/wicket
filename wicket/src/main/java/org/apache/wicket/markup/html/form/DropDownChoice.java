@@ -22,7 +22,6 @@ import org.apache.wicket.RequestContext;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
 
@@ -179,9 +178,8 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 		{
 			// we do not want relative URL here, because it will be used by
 			// Form#dispatchEvent
-			Url url = getRequestCycle().urlFor(
-				new ListenerInterfaceRequestHandler(new PageAndComponentProvider(getPage(), this),
-					IOnChangeListener.INTERFACE));
+			CharSequence url = urlFor(new ListenerInterfaceRequestHandler(
+				new PageAndComponentProvider(getPage(), this), IOnChangeListener.INTERFACE));
 
 			Form<?> form = findParent(Form.class);
 			if (form != null)
@@ -202,8 +200,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 				// TODO: following doesn't work with portlets, should be posted to a dynamic hidden
 				// form
 				// with an ActionURL or something
-				tag.put("onchange", "window.location.href='" +
-					getRequestCycle().getUrlRenderer().renderUrl(url) +
+				tag.put("onchange", "window.location.href='" + url +
 					(url.toString().indexOf('?') > -1 ? "&amp;" : "?") + getInputName() +
 					"=' + this.options[this.selectedIndex].value;");
 			}
