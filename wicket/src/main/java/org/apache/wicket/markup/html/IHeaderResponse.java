@@ -52,7 +52,7 @@ public interface IHeaderResponse
 	 * Writes a javascript reference, if the specified reference hasn't been rendered yet.
 	 * 
 	 * @param url
-	 *            url of the the javascript resource
+	 *            context-relative url of the the javascript resource
 	 */
 	public void renderJavascriptReference(String url);
 
@@ -60,7 +60,7 @@ public interface IHeaderResponse
 	 * Writes a javascript reference, if the specified reference hasn't been rendered yet.
 	 * 
 	 * @param url
-	 *            url of the the javascript resource
+	 *            context-relative url of the the javascript resource
 	 * @param id
 	 *            id that will be used to filter duplicate reference (it's still filtered by URL
 	 *            too)
@@ -94,7 +94,7 @@ public interface IHeaderResponse
 	 * Writes a CSS reference, if the specified reference hasn't been rendered yet.
 	 * 
 	 * @param url
-	 *            url of the CSS resource
+	 *            context-relative url of the CSS resource
 	 */
 	public void renderCSSReference(String url);
 
@@ -112,7 +112,7 @@ public interface IHeaderResponse
 	 * Writes a CSS reference, if the specified reference hasn't been rendered yet.
 	 * 
 	 * @param url
-	 *            url of the CSS resource
+	 *            context-relative url of the CSS resource
 	 * @param media
 	 *            the media type for this CSS ("print", "screen", etc.)
 	 */
