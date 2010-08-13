@@ -33,10 +33,13 @@ import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.feedback.FeedbackMessage;
+import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore;
@@ -439,6 +442,40 @@ public class WicketTester extends BaseWicketTester
 	{
 		List<Serializable> actualMessages = getMessages(FeedbackMessage.INFO);
 		WicketTesterHelper.assertEquals(Arrays.asList(expectedInfoMessages), actualMessages);
+	}
+
+	/**
+	 * Assert that a particular feedback panel is rendering certain messages.
+	 * 
+	 * NOTE: this casts the component at the specified path to a {@link FeedbackPanel}, so it will
+	 * not work with custom {@link IFeedback} implementations unless you are subclassing
+	 * {@link FeedbackPanel}
+	 * 
+	 * @param path
+	 *            path to the feedback panel
+	 * @param messages
+	 *            messages expected to be rendered
+	 */
+	public void assertFeedback(String path, String[] messages)
+	{
+		final FeedbackPanel fbp = (FeedbackPanel)getComponentFromLastRenderedPage(path);
+		final IModel<List<FeedbackMessage>> model = fbp.getFeedbackMessagesModel();
+		final List<FeedbackMessage> renderedMessages = model.getObject();
+		if (renderedMessages == null)
+		{
+			fail("feedback panel at path [" + path + "] returned null messages");
+		}
+		if (messages.length != renderedMessages.size())
+		{
+			fail("you expected " + messages.length + " messages for the feedback panel [" + path +
+				"], but there were actually " + renderedMessages.size());
+		}
+		for (int i = 0; i < messages.length && i < renderedMessages.size(); i++)
+		{
+			final String expected = messages[i];
+			final String actual = renderedMessages.get(i).getMessage().toString();
+			assertResult(isEqual(expected, actual));
+		}
 	}
 
 	/**

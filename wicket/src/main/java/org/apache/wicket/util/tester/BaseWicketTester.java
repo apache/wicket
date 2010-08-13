@@ -26,13 +26,13 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
@@ -984,9 +984,8 @@ public class BaseWicketTester extends MockWebApplication
 	public Result hasNoErrorMessage()
 	{
 		List<Serializable> messages = getMessages(FeedbackMessage.ERROR);
-		return isTrue(
-			"expect no error message, but contains\n" + WicketTesterHelper.asLined(messages),
-			messages.isEmpty());
+		return isTrue("expect no error message, but contains\n" +
+			WicketTesterHelper.asLined(messages), messages.isEmpty());
 	}
 
 	/**
@@ -997,9 +996,8 @@ public class BaseWicketTester extends MockWebApplication
 	public Result hasNoInfoMessage()
 	{
 		List<Serializable> messages = getMessages(FeedbackMessage.INFO);
-		return isTrue(
-			"expect no info message, but contains\n" + WicketTesterHelper.asLined(messages),
-			messages.isEmpty());
+		return isTrue("expect no info message, but contains\n" +
+			WicketTesterHelper.asLined(messages), messages.isEmpty());
 	}
 
 	/**
@@ -1468,7 +1466,7 @@ public class BaseWicketTester extends MockWebApplication
 		return Result.fail(message);
 	}
 
-	private Result isEqual(Object expected, Object actual)
+	protected final Result isEqual(Object expected, Object actual)
 	{
 		if (expected == null && actual == null)
 		{
@@ -1499,7 +1497,7 @@ public class BaseWicketTester extends MockWebApplication
 		return Result.pass();
 	}
 
-	private void fail(String message)
+	protected final void fail(String message)
 	{
 		throw new WicketRuntimeException(message);
 	}
