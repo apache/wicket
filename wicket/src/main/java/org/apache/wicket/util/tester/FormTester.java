@@ -779,7 +779,7 @@ public class FormTester
 		if (closed)
 		{
 			throw new IllegalStateException("'" + path +
-				"' already sumbitted. Note that FormTester " + "is allowed to submit only once");
+				"' already submitted. Note that FormTester " + "is allowed to submit only once");
 		}
 	}
 
