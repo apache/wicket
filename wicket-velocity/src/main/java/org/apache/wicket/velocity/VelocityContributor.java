@@ -36,7 +36,7 @@ import org.apache.wicket.util.string.Strings;
  * velocity.properties. If you do not have a velocity.properties for your app, it will default to a
  * directory "templates" in the root of your app.
  */
-public class VelocityContributor extends AbstractBehavior implements IHeaderContributor
+public class VelocityContributor extends AbstractBehavior
 {
 	private static final long serialVersionUID = 1L;
 
@@ -86,6 +86,7 @@ public class VelocityContributor extends AbstractBehavior implements IHeaderCont
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
+	@Override
 	public void renderHead(final IHeaderResponse response)
 	{
 		CharSequence s = evaluate();
