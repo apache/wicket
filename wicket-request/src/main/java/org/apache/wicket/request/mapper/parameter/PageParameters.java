@@ -92,6 +92,7 @@ public class PageParameters implements Serializable
 	 * @param keyValuePairs
 	 *            List of key value pairs separated by commas. For example, "param1=foo,param2=bar"
 	 * @see ValueMap#ValueMap(String)
+	 * @deprecated use varios setter methods to set parameters
 	 */
 	@Deprecated
 	public PageParameters(final String keyValuePairs)
@@ -108,8 +109,7 @@ public class PageParameters implements Serializable
 	 *            Delimiter string used to separate key/value pairs
 	 * @see ValueMap#ValueMap(String)
 	 * 
-	 * @deprecated Please use {@link RequestUtils#decodeParameters(String, ValueMap)} to decode a
-	 *             request URL, or {@link ValueMap#ValueMap(String, String)} for other usecases.
+	 * @deprecated use varios setter methods to set parameters
 	 */
 	@Deprecated
 	public PageParameters(final String keyValuePairs, final String delimiter)
