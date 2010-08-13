@@ -52,6 +52,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 	var objonkeypress;
 	var objonchange;
 	var objonchangeoriginal;
+	var objonfocus;
 	
 	// holds the eventual margins, padding, etc. of the menu container.
 	// it is computed when the menu is first rendered, and then reused.
