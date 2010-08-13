@@ -382,7 +382,8 @@ public class FormTester
 			@Override
 			public void onFormComponent(final FormComponent formComponent)
 			{
-				// do nothing for invisible or disabled component -- the browser would not send any parameter
+				// do nothing for invisible or disabled component -- the browser would not send any
+				// parameter
 				// for a disabled component
 				if (!(formComponent.isVisibleInHierarchy() && formComponent.isEnabledInHierarchy()))
 				{
@@ -776,7 +777,7 @@ public class FormTester
 		if (closed)
 		{
 			throw new IllegalStateException("'" + path +
-				"' already sumbitted. Note that FormTester " + "is allowed to submit only once");
+				"' already submitted. Note that FormTester " + "is allowed to submit only once");
 		}
 	}
 
