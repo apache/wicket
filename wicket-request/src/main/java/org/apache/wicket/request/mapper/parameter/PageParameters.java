@@ -37,6 +37,12 @@ import org.apache.wicket.util.value.ValueMap;
  * named parameters. Indexed parameters are URL segments before the query string. Named parameters
  * are usually represented as query string params (i.e. ?arg1=var1&amp;arg2=val)
  * <p>
+ * <strong>Indexed vs Named Parameters</strong>: Suppose we mounted a page on {@code /user} and the
+ * following url was accessed {@code /user/profile/bob?action=view&redirect=false}. In this example
+ * {@code profile} and {@code bob} are indexed parameters with respective indexes 0 and 1.
+ * {@code action} and {@code redirect} are named parameters.
+ * </p>
+ * <p>
  * How those parameters are populated depends on the {@link IRequestMapper}s
  * 
  * @author Matej Knopp
