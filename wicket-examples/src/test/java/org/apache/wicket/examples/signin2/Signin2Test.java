@@ -40,12 +40,6 @@ public class Signin2Test extends TestCase
 	 */
 	public void testSignIn2()
 	{
-		if (1 == 1)
-		{
-			// FIXME this test is disabled until we have a better wicket tester that can deal with
-			// CryptedUrlWebRequestCodingStrategy
-			return;
-		}
 		WicketTester tester = new WicketTester(new SignIn2Application());
 
 		tester.startPage(Home.class);
