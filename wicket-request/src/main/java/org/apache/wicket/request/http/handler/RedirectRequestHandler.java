@@ -96,7 +96,7 @@ public class RedirectRequestHandler implements IRequestHandler
 		}
 		else
 		{
-			// relative url, servlet container will translate to absolute per as
+			// relative url, servlet container will translate to absolute as
 			// per the servlet spec
 			location = redirectUrl;
 		}
