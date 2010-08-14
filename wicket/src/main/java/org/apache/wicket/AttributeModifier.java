@@ -21,7 +21,6 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 import org.apache.wicket.util.value.IValueMap;
 
 /**
@@ -267,7 +266,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 						final String newValue = newValue(value, toStringOrNull(replacementValue));
 						if (newValue != null)
 						{
-							attributes.put(attribute, getContextRelativeValue(newValue));
+							attributes.put(attribute, newValue);
 						}
 					}
 				}
@@ -276,39 +275,11 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 					final String newValue = newValue(null, toStringOrNull(replacementValue));
 					if (newValue != null)
 					{
-						attributes.put(attribute, getContextRelativeValue(newValue));
+						attributes.put(attribute, newValue);
 					}
 				}
 			}
 		}
-	}
-
-	/**
-	 * Checks if <code>value</code> represents a path and if it does transforms it into a relative
-	 * path
-	 * 
-	 * @param value
-	 * @return value as a relative path or untouched if not a path
-	 */
-	protected String getContextRelativeValue(String value)
-	{
-		if ("href".equals(attribute) || "src".equals(attribute))
-		{
-			RequestContext rc = RequestContext.get();
-			if (rc.isPortletRequest() &&
-				!(value.startsWith("http://") || value.startsWith("https://")))
-			{
-				if ("href".equals(attribute))
-				{
-					value = ((PortletRequestContext)rc).encodeRenderURL(value).toString();
-				}
-				else
-				{
-					value = ((PortletRequestContext)rc).encodeSharedResourceURL(value).toString();
-				}
-			}
-		}
-		return value;
 	}
 
 	/**

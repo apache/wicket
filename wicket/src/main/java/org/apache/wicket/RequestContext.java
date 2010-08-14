@@ -17,7 +17,6 @@
 package org.apache.wicket;
 
 import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 
 /**
  * Handles url rewriting, provides access to the namespace for markup Ids and isolated session
@@ -39,9 +38,9 @@ import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
  * web or portlet), in Wicket this context has been termed RequestContext.
  * </p>
  * 
- * @see PortletRequestContext
  * @author Ate Douma
  */
+// WICKET-NG TODO is this still needed since we removed Portlets support ?
 public class RequestContext
 {
 	/** Thread-local that holds the current request context. */
@@ -178,13 +177,5 @@ public class RequestContext
 	public IHeaderResponse getHeaderResponse()
 	{
 		return null;
-	}
-
-	/**
-	 * @return boolean true if this is a portlet request
-	 */
-	public boolean isPortletRequest()
-	{
-		return false;
 	}
 }

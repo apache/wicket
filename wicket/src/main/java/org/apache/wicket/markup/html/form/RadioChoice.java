@@ -18,11 +18,9 @@ package org.apache.wicket.markup.html.form;
 
 import java.util.List;
 
-import org.apache.wicket.RequestContext;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -407,15 +405,9 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 					Form<?> form = findParent(Form.class);
 					if (form != null)
 					{
-						RequestContext rc = RequestContext.get();
-						if (rc.isPortletRequest())
-						{
-							// restore url back to real wicket path as its going to be interpreted
-							// by the form itself
-							url = ((PortletRequestContext)rc).getLastEncodedPath();
-						}
-						buffer.append(" onclick=\"").append(form.getJsForInterfaceUrl(url)).append(
-							";\"");
+						buffer.append(" onclick=\"")
+							.append(form.getJsForInterfaceUrl(url))
+							.append(";\"");
 					}
 					else
 					{
@@ -449,8 +441,11 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 					escaped = Strings.escapeMarkup(display);
 				}
 
-				buffer.append("<label for=\"").append(idAttr).append("\">").append(escaped).append(
-					"</label>");
+				buffer.append("<label for=\"")
+					.append(idAttr)
+					.append("\">")
+					.append(escaped)
+					.append("</label>");
 
 				// Append option suffix
 				buffer.append(getSuffix());

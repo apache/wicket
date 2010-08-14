@@ -18,10 +18,8 @@ package org.apache.wicket.markup.html.form;
 
 import java.util.Locale;
 
-import org.apache.wicket.RequestContext;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 import org.apache.wicket.util.convert.IConverter;
 
 /**
@@ -162,13 +160,6 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 			Form<?> form = findParent(Form.class);
 			if (form != null)
 			{
-				RequestContext rc = RequestContext.get();
-				if (rc.isPortletRequest())
-				{
-					// restore url back to real wicket path as its going to be interpreted by the
-					// form itself
-					url = ((PortletRequestContext)rc).getLastEncodedPath();
-				}
 				tag.put("onclick", form.getJsForInterfaceUrl(url));
 			}
 			else

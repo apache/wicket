@@ -17,12 +17,10 @@
 package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.RequestContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -189,13 +187,6 @@ public class Radio<T> extends LabeledWebMarkupContainer
 			Form<?> form = group.findParent(Form.class);
 			if (form != null)
 			{
-				RequestContext rc = RequestContext.get();
-				if (rc.isPortletRequest())
-				{
-					// restore url back to real wicket path as its going to be interpreted by the
-					// form itself
-					url = ((PortletRequestContext)rc).getLastEncodedPath();
-				}
 				tag.put("onclick", form.getJsForInterfaceUrl(url));
 			}
 			else

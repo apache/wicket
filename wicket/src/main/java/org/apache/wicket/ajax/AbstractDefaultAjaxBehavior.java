@@ -19,7 +19,6 @@ package org.apache.wicket.ajax;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.RequestContext;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WicketEventReference;
@@ -86,12 +85,6 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		// TODO NG Escape
 		response.renderJavascript("Wicket.Ajax.baseUrl=\"" +
 			RequestCycle.get().getUrlRenderer().getBaseUrl() + "\";", "wicket-ajax-base-url");
-
-		RequestContext context = RequestContext.get();
-		if (context.isPortletRequest())
-		{
-			response.renderJavascript("Wicket.portlet=true", "wicket-ajax-portlet-flag");
-		}
 	}
 
 	/**
