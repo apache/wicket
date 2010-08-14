@@ -51,7 +51,7 @@ public class BehaviorsUtil
 	public static <M extends IBehavior> List<IBehavior> getBehaviors(Component component,
 		Class<M> type)
 	{
-		List<IBehavior> behaviors = component.getBehaviors();
+		List<? extends IBehavior> behaviors = component.getBehaviors();
 		if (behaviors == null)
 		{
 			return Collections.emptyList();

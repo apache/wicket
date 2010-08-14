@@ -74,7 +74,7 @@ public interface IRequestableComponent
 	 * 
 	 * @return The currently coupled behaviors as a unmodifiable list
 	 */
-	public List<IBehavior> getBehaviors();
+	public List<? extends IBehavior> getBehaviors();
 
 	/**
 	 * Detaches the component.

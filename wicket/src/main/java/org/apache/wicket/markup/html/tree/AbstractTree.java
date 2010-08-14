@@ -224,7 +224,7 @@ public abstract class AbstractTree extends Panel
 							item.onRender();
 
 							// go through the behaviors and invoke IBehavior.afterRender
-							List<IBehavior> behaviors = item.getBehaviors();
+							List<? extends IBehavior> behaviors = item.getBehaviors();
 							for (IBehavior behavior : behaviors)
 							{
 								behavior.afterRender(item);
@@ -1659,6 +1659,7 @@ public abstract class AbstractTree extends Panel
 		return nodeToItemMap.get(node);
 	}
 
+	@Override
 	public void renderHead(IHeaderResponse response)
 	{
 		response.renderJavascriptReference(JAVASCRIPT);

@@ -669,8 +669,8 @@ public abstract class Component
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled())
 		{
-			setMetaData(CONSTRUCTED_AT_KEY,
-				ComponentStrings.toString(this, new MarkupException("constructed")));
+			setMetaData(CONSTRUCTED_AT_KEY, ComponentStrings.toString(this, new MarkupException(
+				"constructed")));
 		}
 
 		if (model != null)
@@ -1046,7 +1046,7 @@ public abstract class Component
 	 * 
 	 * @return unmodified list of behaviors which may contain null entries
 	 */
-	public final List<IBehavior> getBehaviorsRawList()
+	public final List<? extends IBehavior> getBehaviorsRawList()
 	{
 		if (data != null)
 		{
@@ -1446,7 +1446,7 @@ public abstract class Component
 	 * 
 	 * @return The currently coupled behaviors as a unmodifiable list
 	 */
-	public final List<IBehavior> getBehaviors()
+	public final List<? extends IBehavior> getBehaviors()
 	{
 		return getBehaviors(IBehavior.class);
 	}
@@ -3321,13 +3321,9 @@ public abstract class Component
 			final Page page = findPage();
 			if (page == null)
 			{
-				return new StringBuffer("[Component id = ").append(getId())
-					.append(", page = <No Page>, path = ")
-					.append(getPath())
-					.append(".")
-					.append(Classes.simpleName(getClass()))
-					.append("]")
-					.toString();
+				return new StringBuffer("[Component id = ").append(getId()).append(
+					", page = <No Page>, path = ").append(getPath()).append(".").append(
+					Classes.simpleName(getClass())).append("]").toString();
 			}
 			else
 			{
@@ -3684,7 +3680,7 @@ public abstract class Component
 	@SuppressWarnings("unchecked")
 	protected <M extends IBehavior> List<M> getBehaviors(Class<M> type)
 	{
-		List<IBehavior> behaviors = getBehaviorsRawList();
+		List<? extends IBehavior> behaviors = getBehaviorsRawList();
 		if (behaviors == null)
 		{
 			return Collections.emptyList();
@@ -4025,7 +4021,7 @@ public abstract class Component
 		if (needToRenderTag(tag))
 		{
 			// Apply behavior modifiers
-			List<IBehavior> behaviors = getBehaviors();
+			List<? extends IBehavior> behaviors = getBehaviors();
 			if ((behaviors != null) && !behaviors.isEmpty() && !tag.isClose() &&
 				(isIgnoreAttributeModifier() == false))
 			{

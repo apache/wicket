@@ -95,7 +95,7 @@ public class ImmutableBehaviorIndexTest extends WicketTestCase
 		MyPage page = new MyPage();
 		page.getContainer().add(border, auto, link, border2, link2, auto2);
 
-		List<IBehavior> behaviors = page.getContainer().getBehaviorsRawList();
+		List<? extends IBehavior> behaviors = page.getContainer().getBehaviorsRawList();
 		assertEquals(6, behaviors.size());
 
 		// test removal of various behaviors and make sure they preserve indexes as long as there is
