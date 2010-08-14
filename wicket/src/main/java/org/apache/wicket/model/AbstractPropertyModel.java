@@ -46,7 +46,7 @@ public abstract class AbstractPropertyModel<T>
 	implements
 		IChainingModel<T>,
 		IObjectClassAwareModel<T>,
-		IPropertyReflectionAwareModel
+		IPropertyReflectionAwareModel<T>
 {
 	/**
 	 * 

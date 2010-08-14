@@ -27,8 +27,9 @@ import java.lang.reflect.Method;
  * return null for any method.
  * 
  * @author Matej Knopp
+ * @param <T>
  */
-public interface IPropertyReflectionAwareModel
+public interface IPropertyReflectionAwareModel<T> extends IModel<T>
 {
 	/**
 	 * Returns the field of model property or null if the field doesn't exist.
