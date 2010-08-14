@@ -35,6 +35,7 @@ import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -118,8 +119,10 @@ public class FormInput extends WicketExamplePage
 				@Override
 				protected void populateItem(ListItem<String> item)
 				{
-					item.add(new Radio<String>("radio", item.getModel()));
-					item.add(new Label("number", item.getDefaultModelObjectAsString()));
+					Radio<String> radio = new Radio<String>("radio", item.getModel());
+					radio.setLabel(item.getModel());
+					item.add(radio);
+					item.add(new SimpleFormComponentLabel("number", radio));
 				};
 			}.setReuseItems(true);
 			group.add(persons);
@@ -131,8 +134,10 @@ public class FormInput extends WicketExamplePage
 				@Override
 				protected void populateItem(ListItem<String> item)
 				{
-					item.add(new Check<String>("check", item.getModel()));
-					item.add(new Label("number", item.getDefaultModelObjectAsString()));
+					Check<String> check = new Check<String>("check", item.getModel());
+					check.setLabel(item.getModel());
+					item.add(check);
+					item.add(new SimpleFormComponentLabel("number", check));
 				};
 			}.setReuseItems(true);
 			checks.add(checksList);
