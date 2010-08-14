@@ -29,6 +29,8 @@ import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.mapper.StalePageException;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * If an exception is thrown when a page is being rendered this mapper will decide which error page
@@ -37,6 +39,7 @@ import org.apache.wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
  */
 public class DefaultExceptionMapper implements IExceptionMapper
 {
+	private static final Logger logger = LoggerFactory.getLogger(DefaultExceptionMapper.class);
 
 	public IRequestHandler map(Exception e)
 	{
@@ -62,6 +65,8 @@ public class DefaultExceptionMapper implements IExceptionMapper
 			final Application application = Application.get();
 			final UnexpectedExceptionDisplay unexpectedExceptionDisplay = application.getExceptionSettings()
 				.getUnexpectedExceptionDisplay();
+
+			logger.error("Unexpected error occurred", e);
 
 			if (IExceptionSettings.SHOW_EXCEPTION_PAGE.equals(unexpectedExceptionDisplay))
 			{
