@@ -216,10 +216,15 @@ public class WebSession extends Session
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Override this method if you want to use a custom page for gathering the client's browser
+	 * information.<br/>
+	 * The easiest way is just to extend {@link BrowserInfoPage} and provide your own markup file
+	 * 
+	 * @param url
+	 *            the url to redirect to when the browser info is handled
+	 * @return the {@link WebPage} which should be used while gathering browser info
 	 */
-	@Override
-	public WebPage newBrowserInfoPage(String url)
+	protected WebPage newBrowserInfoPage(String url)
 	{
 		return new BrowserInfoPage(url);
 	}
