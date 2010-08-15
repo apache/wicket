@@ -61,6 +61,12 @@ public class MarkupCache implements IMarkupCache
 	private IMarkupCacheKeyProvider markupCacheKeyProvider;
 
 	/**
+	 * Note that you can not use Application.get() since removeMarkup() will be call from a
+	 * ModificationWatcher thread which has no associated Application.
+	 */
+	private final Application application;
+
+	/**
 	 * @return The markup cache associated with the application
 	 */
 	public final static IMarkupCache get()
@@ -75,6 +81,8 @@ public class MarkupCache implements IMarkupCache
 	 */
 	protected MarkupCache()
 	{
+		application = Application.get();
+
 		markupCache = newCacheImplementation();
 		markupKeyCache = newCacheImplementation();
 		if (markupCache == null)
@@ -167,8 +175,7 @@ public class MarkupCache implements IMarkupCache
 			// resources no longer in the cache. Note that you can not use
 			// Application.get() since removeMarkup() will be call from a
 			// ModificationWatcher thread which has no associated Application.
-			final IModificationWatcher watcher = Application.get()
-				.getResourceSettings()
+			final IModificationWatcher watcher = application.getResourceSettings()
 				.getResourceWatcher(true);
 			if (watcher != null)
 			{
@@ -440,6 +447,7 @@ public class MarkupCache implements IMarkupCache
 				markupKeyCache.put(cacheKey, locationString);
 				return markup;
 			}
+
 			// Watch file in the future
 			final IModificationWatcher watcher = Application.get()
 				.getResourceSettings()
