@@ -111,6 +111,7 @@ public final class Url implements Serializable
 	 * Parses the given URL string.
 	 * 
 	 * @param url
+	 * @param charset
 	 * @return Url object
 	 */
 	public static Url parse(String url, Charset charset)
@@ -471,6 +472,7 @@ public final class Url implements Serializable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return toString(getCharset());

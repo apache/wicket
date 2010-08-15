@@ -141,8 +141,15 @@ public class UrlRenderer
 	 * @param request
 	 * @return relative URL
 	 */
-	public String renderContextPathRelativeUrl(final String url, final Request request)
+	public String renderContextPathRelativeUrl(String url, final Request request)
 	{
+		Checks.argumentNotNull(url, "url");
+
+		if (url.startsWith("/"))
+		{
+			url = url.substring(1);
+		}
+
 		PrependingStringBuffer buffer = new PrependingStringBuffer(url);
 		for (int i = 0; i < baseUrl.getSegments().size() - 1; ++i)
 		{

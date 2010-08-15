@@ -21,6 +21,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.apache.wicket.Session;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
@@ -53,7 +54,7 @@ public class HelloBrowser extends WicketExamplePage
 		// don't use a property model here or anything else that is resolved
 		// during rendering, as changing the request target during rendering
 		// is not allowed.
-		final ClientProperties properties = ((WebClientInfo)getRequestCycle().getClientInfo()).getProperties();
+		final ClientProperties properties = ((WebClientInfo)Session.get().getClientInfo()).getProperties();
 
 		add(new MultiLineLabel("clientinfo", properties.toString()));
 

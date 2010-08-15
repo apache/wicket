@@ -19,10 +19,17 @@ package org.apache.wicket.protocol.http;
 import java.util.List;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.Page;
+import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.pages.BrowserInfoPage;
+import org.apache.wicket.protocol.http.request.WebClientInfo;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
@@ -68,6 +75,11 @@ public class WebSession extends Session
 		{
 			return message.getReporter() == null && message.isRendered();
 		}
+	};
+
+	private static final MetaDataKey<Boolean> BROWSER_WAS_POLLED_KEY = new MetaDataKey<Boolean>()
+	{
+		private static final long serialVersionUID = 1L;
 	};
 
 	/**
@@ -165,5 +177,50 @@ public class WebSession extends Session
 	{
 		throw new WicketRuntimeException(
 			"You must subclass WebSession and implement your own authentication method for all Wicket applications using authentication.");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public WebClientInfo getClientInfo()
+	{
+		if (clientInfo == null)
+		{
+			RequestCycle requestCycle = RequestCycle.get();
+
+			if (getApplication().getRequestCycleSettings().getGatherExtendedBrowserInfo())
+			{
+				if (getMetaData(BROWSER_WAS_POLLED_KEY) == null)
+				{
+					// we haven't done the redirect yet; record that we will be
+					// doing that now and redirect
+					setMetaData(BROWSER_WAS_POLLED_KEY, Boolean.TRUE);
+					Request request = requestCycle.getRequest();
+
+					IRequestHandler activeRequestHandler = requestCycle.getActiveRequestHandler();
+					String url = requestCycle.urlFor(activeRequestHandler).toString();
+					String relativeUrl = requestCycle.getUrlRenderer()
+						.renderContextPathRelativeUrl(url, request);
+					Page browserInfoPage = newBrowserInfoPage(relativeUrl);
+					throw new RestartResponseException(browserInfoPage);
+				}
+				// if we get here, the redirect already has been done; clear
+				// the meta data entry; we don't need it any longer is the client
+				// info object will be cached too
+				setMetaData(BROWSER_WAS_POLLED_KEY, (Boolean)null);
+			}
+			clientInfo = new WebClientInfo(requestCycle);
+		}
+		return (WebClientInfo)clientInfo;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public WebPage newBrowserInfoPage(String url)
+	{
+		return new BrowserInfoPage(url);
 	}
 }

@@ -24,8 +24,6 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
-import org.apache.wicket.protocol.http.request.WebClientInfo;
-import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
@@ -561,26 +559,6 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle
 		IPageProvider provider = new PageProvider(pageClass, parameters);
 		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(provider,
 			RenderPageRequestHandler.RedirectPolicy.AUTO_REDIRECT));
-	}
-
-
-	/**
-	 * Creates a new agent info object based on this request. Typically, this method is called once
-	 * by the session and the returned object will be cached in the session after that call; we can
-	 * expect the client to stay the same for the whole session, and implementations of
-	 * {@link #newClientInfo()} might be relatively expensive.
-	 * 
-	 * @return the agent info object based on this request
-	 */
-	// TODO WICKET-NG Get this out of here!
-	public ClientInfo newClientInfo()
-	{
-		return new WebClientInfo(this);
-	}
-
-	public ClientInfo getClientInfo()
-	{
-		return newClientInfo();
 	}
 
 	public boolean isCleanupFeedbackMessagesOnDetach()

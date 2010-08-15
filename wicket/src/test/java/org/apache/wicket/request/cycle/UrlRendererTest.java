@@ -16,10 +16,14 @@
  */
 package org.apache.wicket.request.cycle;
 
+import javax.servlet.http.HttpServletRequest;
+
 import junit.framework.TestCase;
 
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlRenderer;
+import org.mockito.Mockito;
 
 /**
  * @author MAtej Knopp
@@ -104,4 +108,33 @@ public class UrlRendererTest extends TestCase
 		assertEquals("../../../q/c/d/e", r1.renderUrl(Url.parse("a/q/c/d/e")));
 	}
 
+	/**
+	 * 
+	 */
+	public void test10()
+	{
+		UrlRenderer r1 = new UrlRenderer(Url.parse("a/b/q/d/e"));
+
+		HttpServletRequest httpRequest = Mockito.mock(HttpServletRequest.class);
+		Mockito.when(httpRequest.getCharacterEncoding()).thenReturn("UTF-8");
+		Mockito.when(httpRequest.getContextPath()).thenReturn("/contextPath");
+		Mockito.when(httpRequest.getRequestURI()).thenReturn("/contextPath/filterPath/anything");
+
+		ServletWebRequest request = new ServletWebRequest(httpRequest, "filterPath/");
+
+		assertEquals("../../../../../", r1.renderContextPathRelativeUrl("", request));
+		assertEquals("../../../../../", r1.renderContextPathRelativeUrl("/", request));
+		assertEquals("../../../../../f", r1.renderContextPathRelativeUrl("/f", request));
+		assertEquals("../../../../../../f", r1.renderContextPathRelativeUrl("../f", request));
+
+		try
+		{
+			r1.renderContextPathRelativeUrl(null, request);
+			fail("Null 'url' is not allowed!");
+		}
+		catch (IllegalArgumentException iax)
+		{
+			assertTrue(true);
+		}
+	}
 }

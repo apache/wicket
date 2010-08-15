@@ -91,12 +91,17 @@ public class ServletWebRequest extends WebRequest
 		Checks.argumentNotNull(httpServletRequest, "httpServletRequest");
 		Checks.argumentNotNull(filterPrefix, "filterPrefix");
 
-		if (url != null)
-			this.url = url;
-		else
-			this.url = getUrl(httpServletRequest, filterPrefix);
 		this.httpServletRequest = httpServletRequest;
 		this.filterPrefix = filterPrefix;
+
+		if (url != null)
+		{
+			this.url = url;
+		}
+		else
+		{
+			this.url = getUrl(httpServletRequest, filterPrefix);
+		}
 	}
 
 	private Url getUrl(HttpServletRequest request, String filterPrefix)
