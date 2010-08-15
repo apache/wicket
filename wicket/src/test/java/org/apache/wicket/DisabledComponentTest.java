@@ -41,7 +41,7 @@ public class DisabledComponentTest extends WicketTestCase
 	{
 		executeTest(DisabledComponentPage1.class, "DisabledComponentPage1a_result.html");
 		Link link = ((DisabledComponentPage1)tester.getLastRenderedPage()).link;
-		executedListener(DisabledComponentPage2.class, link, "DisabledComponentPage2_result.html");
+		executeListener(link, "DisabledComponentPage2_result.html");
 	}
 
 	/**
@@ -52,6 +52,6 @@ public class DisabledComponentTest extends WicketTestCase
 		executeTest(DisabledComponentPage1.class, "DisabledComponentPage1a_result.html");
 		Link link = ((DisabledComponentPage1)tester.getLastRenderedPage()).link;
 		link.setEnabled(false);
-		executedListener(DisabledComponentPage1.class, link, "DisabledComponentPage1b_result.html");
+		executeListener(link, "DisabledComponentPage1b_result.html");
 	}
 }

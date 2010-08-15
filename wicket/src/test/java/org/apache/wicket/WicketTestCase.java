@@ -27,35 +27,46 @@ import org.apache.wicket.util.tester.WicketTester;
  * <p>
  * To create/replace the expected result file with the new content, define the system property like
  * -Dwicket.replace.expected.results=true
- * 
  */
 public abstract class WicketTestCase extends TestCase
 {
 	/** */
 	public WicketTester tester;
 
+	/**
+	 * Construct.
+	 */
 	public WicketTestCase()
 	{
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param name
+	 */
 	public WicketTestCase(String name)
 	{
 		super(name);
 	}
 
-
+	/**
+	 * @see junit.framework.TestCase#setUp()
+	 */
 	@Override
 	protected void setUp() throws Exception
 	{
 		tester = new WicketTester();
 	}
 
+	/**
+	 * @see junit.framework.TestCase#tearDown()
+	 */
 	@Override
 	protected void tearDown() throws Exception
 	{
 		tester.destroy();
 	}
-
 
 	/**
 	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
@@ -70,11 +81,7 @@ public abstract class WicketTestCase extends TestCase
 	protected <T extends Page> void executeTest(final Class<T> pageClass, final String filename)
 		throws Exception
 	{
-		System.out.println("=== " + pageClass.getName() + " ===");
-
-		tester.startPage(pageClass);
-		tester.assertRenderedPage(pageClass);
-		tester.assertResultPage(getClass(), filename);
+		tester.executeTest(getClass(), pageClass, filename);
 	}
 
 	/**
@@ -83,18 +90,14 @@ public abstract class WicketTestCase extends TestCase
 	 * 
 	 * @param <T>
 	 * 
-	 * @param pageClass
+	 * @param page
 	 * @param filename
 	 * @throws Exception
 	 */
 	protected <T extends Page> void executeTest(final Page page, final String filename)
 		throws Exception
 	{
-		System.out.println("=== " + page.getClass().getName() + " ===");
-
-		tester.startPage(page);
-		tester.assertRenderedPage(page.getClass());
-		tester.assertResultPage(getClass(), filename);
+		tester.executeTest(getClass(), page, filename);
 	}
 
 	/**
@@ -111,11 +114,7 @@ public abstract class WicketTestCase extends TestCase
 	protected <T extends Page> void executeTest(final Class<T> pageClass,
 		PageParameters parameters, final String filename) throws Exception
 	{
-		System.out.println("=== " + pageClass.getName() + " ===");
-
-		tester.startPage(pageClass, parameters);
-		tester.assertRenderedPage(pageClass);
-		tester.assertResultPage(getClass(), filename);
+		tester.executeTest(getClass(), pageClass, parameters, filename);
 	}
 
 	/**
@@ -125,16 +124,10 @@ public abstract class WicketTestCase extends TestCase
 	 * @param filename
 	 * @throws Exception
 	 */
-	protected void executedListener(final Class<?> clazz, final Component component,
-		final String filename) throws Exception
+	protected void executeListener(final Component component, final String filename)
+		throws Exception
 	{
-		assertNotNull(component);
-
-		System.out.println("=== " + clazz.getName() + " : " + component.getPageRelativePath() +
-			" ===");
-
-		tester.executeListener(component);
-		tester.assertResultPage(clazz, filename);
+		tester.executeListener(getClass(), component, filename);
 	}
 
 	/**
@@ -144,15 +137,10 @@ public abstract class WicketTestCase extends TestCase
 	 * @param filename
 	 * @throws Exception
 	 */
-	protected void executedBehavior(final Class<?> clazz, final AbstractAjaxBehavior behavior,
-		final String filename) throws Exception
+	protected void executeBehavior(final AbstractAjaxBehavior behavior, final String filename)
+		throws Exception
 	{
-		assertNotNull(behavior);
-
-		System.out.println("=== " + clazz.getName() + " : " + behavior.toString() + " ===");
-
-		tester.executeBehavior(behavior);
-		tester.assertResultPage(clazz, filename);
+		tester.executeBehavior(getClass(), behavior, filename);
 	}
 
 	/**
@@ -161,17 +149,8 @@ public abstract class WicketTestCase extends TestCase
 	 * 
 	 * @return path with a trailing slash
 	 */
-	public static String getBasedir()
+	public String getBasedir()
 	{
-		String basedir = System.getProperty("basedir");
-		if (basedir != null)
-		{
-			basedir = basedir + "/";
-		}
-		else
-		{
-			basedir = "";
-		}
-		return basedir;
+		return WicketTester.getBasedir();
 	}
 }

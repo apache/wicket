@@ -44,6 +44,6 @@ public class HeaderTest extends WicketTestCase
 		executeTest(TestPage.class, "TestPage_ExpectedResult-1.html");
 		TestPage page = (TestPage)tester.getLastRenderedPage();
 
-		executedListener(TestPage.class, page.get("link"), "TestPage_ExpectedResult-2.html");
+		executeListener(page.get("link"), "TestPage_ExpectedResult-2.html");
 	}
 }

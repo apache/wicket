@@ -29,6 +29,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.markup.html.WebPage;
@@ -525,5 +526,122 @@ public class WicketTester extends BaseWicketTester
 		Assert.assertEquals(
 			"One or more of the parameters associated with the BookmarkablePageLink: " + id +
 				" do not match", new PageParameters(parameters), pageLink.getPageParameters());
+	}
+
+	/**
+	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
+	 * output file.
+	 * 
+	 * @param <T>
+	 * @param testClass
+	 * @param pageClass
+	 * @param filename
+	 * @throws Exception
+	 */
+	public <T extends Page> void executeTest(final Class<?> testClass, final Class<T> pageClass,
+		final String filename) throws Exception
+	{
+		log.info("=== " + pageClass.getName() + " ===");
+
+		startPage(pageClass);
+		assertRenderedPage(pageClass);
+		assertResultPage(testClass, filename);
+	}
+
+	/**
+	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
+	 * output file.
+	 * 
+	 * @param <T>
+	 * @param testClass
+	 * @param page
+	 * @param filename
+	 * @throws Exception
+	 */
+	public <T extends Page> void executeTest(final Class<?> testClass, final Page page,
+		final String filename) throws Exception
+	{
+		log.info("=== " + page.getClass().getName() + " ===");
+
+		startPage(page);
+		assertRenderedPage(page.getClass());
+		assertResultPage(testClass, filename);
+	}
+
+	/**
+	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
+	 * output file.
+	 * 
+	 * @param <T>
+	 * @param testClass
+	 * @param pageClass
+	 * @param parameters
+	 * @param filename
+	 * @throws Exception
+	 */
+	public <T extends Page> void executeTest(final Class<?> testClass, final Class<T> pageClass,
+		PageParameters parameters, final String filename) throws Exception
+	{
+		log.info("=== " + pageClass.getName() + " ===");
+
+		startPage(pageClass, parameters);
+		assertRenderedPage(pageClass);
+		assertResultPage(testClass, filename);
+	}
+
+	/**
+	 * 
+	 * @param testClass
+	 * @param component
+	 * @param filename
+	 * @throws Exception
+	 */
+	public void executeListener(final Class<?> testClass, final Component component,
+		final String filename) throws Exception
+	{
+		Assert.assertNotNull(component);
+
+		log.info("=== " + testClass.getName() + " : " + component.getPageRelativePath() + " ===");
+
+		executeListener(component);
+		assertResultPage(testClass, filename);
+	}
+
+	/**
+	 * 
+	 * @param testClass
+	 * @param behavior
+	 * @param filename
+	 * @throws Exception
+	 */
+	public void executeBehavior(final Class<?> testClass, final AbstractAjaxBehavior behavior,
+		final String filename) throws Exception
+	{
+		Assert.assertNotNull(behavior);
+
+		log.info("=== " + testClass.getName() + " : " + behavior.toString() + " ===");
+
+		executeBehavior(behavior);
+		assertResultPage(testClass, filename);
+	}
+
+	/**
+	 * Returns the current Maven build directory taken from the <tt>basedir</tt> system property, or
+	 * null if not set
+	 * 
+	 * @return path with a trailing slash
+	 */
+	public static String getBasedir()
+	{
+		String basedir = System.getProperty("basedir");
+		if (basedir != null)
+		{
+			basedir = basedir + "/";
+		}
+		else
+		{
+			basedir = "";
+		}
+		return basedir;
 	}
 }
