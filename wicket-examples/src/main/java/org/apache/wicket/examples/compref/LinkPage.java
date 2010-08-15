@@ -22,8 +22,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.util.value.Count;
-
 
 /**
  * Page with examples on {@link org.apache.wicket.markup.html.link.Link}.
