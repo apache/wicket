@@ -30,9 +30,6 @@ import org.apache.wicket.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
-import org.apache.wicket.request.mapper.BookmarkableMapper;
-import org.apache.wicket.request.mapper.IMapperContext;
-import org.apache.wicket.request.mapper.StalePageException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
@@ -241,6 +238,18 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		{
 
 		}
+	}
+
+	/**
+	 * WICKET-2993
+	 */
+	public void testDecode10()
+	{
+		// use String.class but any other non-Page will do the job as well
+		Url url = Url.parse("wicket/bookmarkable/" + String.class.getName());
+
+		IRequestHandler handler = encoder.mapRequest(getRequest(url));
+		assertNull("A non-page class should not create a request handler!", handler);
 	}
 
 	/**
