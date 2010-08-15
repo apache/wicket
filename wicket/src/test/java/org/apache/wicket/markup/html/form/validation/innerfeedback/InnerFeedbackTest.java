@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.form.validation.innerfeedback;
 
+import java.util.Locale;
+
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
@@ -27,7 +29,6 @@ import org.junit.Test;
  */
 public class InnerFeedbackTest
 {
-
 	private WicketTester tester;
 
 	@Before
@@ -55,9 +56,13 @@ public class InnerFeedbackTest
 		});
 	}
 
+	/**
+	 * 
+	 */
 	@Test
 	public void innerFeedback()
 	{
+		tester.getSession().setLocale(Locale.ENGLISH);
 		tester.startPage(HomePage.class);
 
 		// page's feedback
