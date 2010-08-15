@@ -1670,7 +1670,6 @@ public abstract class Component
 		}
 
 		String markupIdPostfix = Integer.toHexString(generatedMarkupId).toLowerCase();
-		markupIdPostfix = RequestContext.get().encodeMarkupId(markupIdPostfix);
 
 		String markupId = markupIdPrefix + markupIdPostfix;
 

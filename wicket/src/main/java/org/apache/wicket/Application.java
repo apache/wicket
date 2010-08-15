@@ -892,8 +892,6 @@ public abstract class Application implements UnboundListener
 
 		getPageManager().destroy();
 		getSessionStore().destroy();
-
-		RequestContext.unset();
 	}
 
 	/**

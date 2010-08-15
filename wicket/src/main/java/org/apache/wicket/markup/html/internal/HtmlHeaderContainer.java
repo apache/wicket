@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.RequestContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
@@ -253,19 +252,14 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 	 */
 	protected IHeaderResponse newHeaderResponse()
 	{
-		IHeaderResponse headerResponse = RequestContext.get().getHeaderResponse();
-		if (headerResponse == null)
+		IHeaderResponse headerResponse = new HeaderResponse()
 		{
-			// no (portlet) headerResponse override, create a default one
-			headerResponse = new HeaderResponse()
+			@Override
+			protected Response getRealResponse()
 			{
-				@Override
-				protected Response getRealResponse()
-				{
-					return HtmlHeaderContainer.this.getResponse();
-				}
-			};
-		}
+				return HtmlHeaderContainer.this.getResponse();
+			}
+		};
 		return headerResponse;
 	}
 

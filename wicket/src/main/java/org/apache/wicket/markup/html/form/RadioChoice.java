@@ -411,9 +411,6 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 					}
 					else
 					{
-						// TODO: following doesn't work with portlets, should be posted to a dynamic
-						// hidden form
-						// with an ActionURL or something
 						// NOTE: do not encode the url as that would give
 						// invalid JavaScript
 						buffer.append(" onclick=\"window.location.href='")

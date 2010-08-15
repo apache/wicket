@@ -164,9 +164,6 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 			}
 			else
 			{
-				// TODO: following doesn't work with portlets, should be posted to a dynamic hidden
-				// form
-				// with an ActionURL or something
 				// NOTE: do not encode the url as that would give invalid
 				// JavaScript
 				tag.put("onclick", "window.location.href='" + url +
