@@ -173,6 +173,8 @@ public class MarkupFactory
 		IMarkupCache cache = getMarkupCache();
 		if (cache != null)
 		{
+			// MarkupCache acts as pull-through cache. It'll call the same loadMarkup() method as
+			// below, if needed.
 			return cache.getMarkup(container, clazz, enforceReload);
 		}
 
