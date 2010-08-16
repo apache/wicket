@@ -669,8 +669,8 @@ public abstract class Component
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled())
 		{
-			setMetaData(CONSTRUCTED_AT_KEY, ComponentStrings.toString(this, new MarkupException(
-				"constructed")));
+			setMetaData(CONSTRUCTED_AT_KEY,
+				ComponentStrings.toString(this, new MarkupException("constructed")));
 		}
 
 		if (model != null)
@@ -986,7 +986,7 @@ public abstract class Component
 				throw new IllegalStateException(Component.class.getName() +
 					" has not been properly initialized. Something in the hierarchy of " +
 					getClass().getName() +
-					" has not called super.onInitializer() in the override of onInitialize() method");
+					" has not called super.onInitialize() in the override of onInitialize() method");
 			}
 			setFlag(FLAG_INITIALIZE_SUPER_CALL_VERIFIED, false);
 		}
@@ -3320,9 +3320,13 @@ public abstract class Component
 			final Page page = findPage();
 			if (page == null)
 			{
-				return new StringBuffer("[Component id = ").append(getId()).append(
-					", page = <No Page>, path = ").append(getPath()).append(".").append(
-					Classes.simpleName(getClass())).append("]").toString();
+				return new StringBuffer("[Component id = ").append(getId())
+					.append(", page = <No Page>, path = ")
+					.append(getPath())
+					.append(".")
+					.append(Classes.simpleName(getClass()))
+					.append("]")
+					.toString();
 			}
 			else
 			{
