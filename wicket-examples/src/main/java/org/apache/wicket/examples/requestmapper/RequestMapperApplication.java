@@ -19,9 +19,12 @@ package org.apache.wicket.examples.requestmapper;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
+import org.apache.wicket.examples.requestmapper.packageMount.PackageMountedPage;
 import org.apache.wicket.protocol.https.HttpsConfig;
 import org.apache.wicket.protocol.https.HttpsMapper;
 import org.apache.wicket.request.mapper.MountedMapper;
+import org.apache.wicket.request.mapper.PackageMapper;
+import org.apache.wicket.util.lang.PackageName;
 
 /**
  * @author mgrigorov
@@ -53,6 +56,9 @@ public class RequestMapperApplication extends WicketExampleApplication
 			new LocaleFirstMapper(new MountedMapper("/localized", LocalizedPage.class)));
 
 		getRootRequestMapperAsCompound().add(new MountedMapper("secured", HttpsPage.class));
+
+		getRootRequestMapperAsCompound().add(
+			new PackageMapper("pMount", PackageName.forClass(PackageMountedPage.class)));
 
 		setRootRequestMapper(new HttpsMapper(getRootRequestMapper(), new HttpsConfig()));
 	}
