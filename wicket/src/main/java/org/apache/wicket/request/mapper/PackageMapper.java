@@ -93,7 +93,7 @@ public class PackageMapper extends AbstractBookmarkableMapper
 	protected Url buildUrl(UrlInfo info)
 	{
 		Class<? extends IRequestablePage> pageClass = info.getPageClass();
-		if (pageClass.getName().startsWith(packageName.getName()))
+		if (PackageName.forClass(pageClass).equals(packageName))
 		{
 			Url url = new Url();
 			url.getSegments().add(mountPath);
