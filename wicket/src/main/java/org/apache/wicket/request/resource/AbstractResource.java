@@ -65,6 +65,7 @@ public abstract class AbstractResource implements IResource
 	public static class ResourceResponse
 	{
 		private Integer errorCode;
+		private String errorMessage;
 		private String fileName = null;
 		private ContentDisposition contentDisposition = ContentDisposition.INLINE;
 		private String contentType = null;
@@ -89,10 +90,25 @@ public abstract class AbstractResource implements IResource
 		 * 
 		 * @param errorCode
 		 */
-		public void setErrorCode(Integer errorCode)
+		public void setError(Integer errorCode)
+		{
+			setError(errorCode, null);
+		}
+
+		/**
+		 * Sets the error code and message for resource. If there is an error code set the data will
+		 * not be rendered and the code and message will be sent to client.
+		 * 
+		 * @param errorCode
+		 * @param errorMessage
+		 *            error message
+		 */
+		public void setError(Integer errorCode, String errorMessage)
 		{
 			this.errorCode = errorCode;
+			this.errorMessage = errorMessage;
 		}
+
 
 		/**
 		 * @return error code or <code>null</code>
@@ -100,6 +116,14 @@ public abstract class AbstractResource implements IResource
 		public Integer getErrorCode()
 		{
 			return errorCode;
+		}
+
+		/**
+		 * @return error message or <code>null</code>
+		 */
+		public String getErrorMessage()
+		{
+			return errorMessage;
 		}
 
 		/**
@@ -297,7 +321,7 @@ public abstract class AbstractResource implements IResource
 		 * <p>
 		 * It is necessary to set the {@link WriteCallback} if
 		 * {@link #dataNeedsToBeWritten(org.apache.wicket.ng.resource.IResource.Attributes)} returns
-		 * <code>true</code> and {@link #setErrorCode(Integer)} has not been called.
+		 * <code>true</code> and {@link #setError(Integer)} has not been called.
 		 * 
 		 * @param writeCallback
 		 */
@@ -314,7 +338,7 @@ public abstract class AbstractResource implements IResource
 		{
 			return writeCallback;
 		}
-	};
+	}
 
 	protected void configureCache(WebRequest request, WebResponse response, ResourceResponse data,
 		Attributes attributes)
@@ -358,7 +382,7 @@ public abstract class AbstractResource implements IResource
 		}
 		else if (data.getErrorCode() != null)
 		{
-			response.sendError(data.getErrorCode(), null);
+			response.sendError(data.getErrorCode(), data.getErrorMessage());
 		}
 		else
 		{
@@ -486,5 +510,5 @@ public abstract class AbstractResource implements IResource
 				throw new WicketRuntimeException(e);
 			}
 		}
-	};
+	}
 }

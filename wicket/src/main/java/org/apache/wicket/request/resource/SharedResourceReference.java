@@ -60,7 +60,7 @@ public class SharedResourceReference extends ResourceReference
 				protected ResourceResponse newResourceResponse(Attributes attributes)
 				{
 					ResourceResponse res = new ResourceResponse();
-					res.setErrorCode(HttpServletResponse.SC_NOT_FOUND);
+					res.setError(HttpServletResponse.SC_NOT_FOUND);
 					return res;
 				}
 			};
