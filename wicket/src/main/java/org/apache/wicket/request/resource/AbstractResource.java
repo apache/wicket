@@ -236,12 +236,14 @@ public abstract class AbstractResource implements IResource
 		{
 			WebRequest request = (WebRequest)attributes.getRequest();
 			Date ifModifiedSince = request.getIfModifiedSinceHeader();
-			Date lastModifed = getLastModified();
+			Date lastModified = getLastModified();
 
-			if (ifModifiedSince != null && lastModifed != null &&
-				lastModifed.before(ifModifiedSince))
+			if (ifModifiedSince != null && lastModified != null)
 			{
-				return false;
+				// Round down to the nearest second for a proper compare
+				long modified = this.lastModified.getTime() / 1000 * 1000;
+
+				return ifModifiedSince.getTime() < modified;
 			}
 			else
 			{
