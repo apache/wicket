@@ -30,6 +30,10 @@ import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.UnauthorizedActionException;
 import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.event.IEvent;
+import org.apache.wicket.event.IEventSink;
+import org.apache.wicket.event.IEventSource;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.markup.ComponentTag;
@@ -59,6 +63,7 @@ import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.IDebugSettings;
+import org.apache.wicket.util.IHierarchical;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.WicketObjects;
@@ -218,7 +223,10 @@ public abstract class Component
 		IClusterable,
 		IConverterLocator,
 		IRequestableComponent,
-		IHeaderContributor
+		IHeaderContributor,
+		IHierarchical<Component>,
+		IEventSink,
+		IEventSource
 {
 
 	/** True when component has been configured, had {@link #onConfigure()} called */
@@ -4490,8 +4498,21 @@ public abstract class Component
 		return isEnabledInHierarchy() && isVisibleInHierarchy();
 	}
 
+	/** {@inheritDoc} */
 	public void renderHead(IHeaderResponse response)
 	{
 		// noop
 	}
+
+	/** {@inheritDoc} */
+	public void onEvent(IEvent<?> event)
+	{
+	}
+
+	/** {@inheritDoc} */
+	public final void send(IEventSink sink, Broadcast type, Object payload)
+	{
+		new ComponentEventSender(this).send(sink, type, payload);
+	}
+
 }

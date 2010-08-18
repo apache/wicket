@@ -20,8 +20,8 @@ public class Visits
 	 * 
 	 * @param <S>
 	 *            the type of object that will be visited, notice that {@code container} is not
-	 *            declared as {@code Iterable<S>} because it may return a generalization of {@code
-	 *            S}
+	 *            declared as {@code Iterable<S>} because it may return a generalization of
+	 *            {@code S}
 	 * @param <R>
 	 *            the type of object that should be returned from the visitor, use {@link Void} if
 	 *            no return value is needed
@@ -100,8 +100,8 @@ public class Visits
 	 * 
 	 * @param <S>
 	 *            the type of object that will be visited, notice that {@code container} is not
-	 *            declared as {@code Iterable<S>} because it may return a generalization of {@code
-	 *            S}
+	 *            declared as {@code Iterable<S>} because it may return a generalization of
+	 *            {@code S}
 	 * @param <R>
 	 *            the type of object that should be returned from the visitor, use {@link Void} if
 	 *            no return value is needed
@@ -123,8 +123,8 @@ public class Visits
 	 * 
 	 * @param <S>
 	 *            the type of object that will be visited, notice that {@code container} is not
-	 *            declared as {@code Iterable<S>} because it may return a generalization of {@code
-	 *            S}
+	 *            declared as {@code Iterable<S>} because it may return a generalization of
+	 *            {@code S}
 	 * @param <R>
 	 *            the type of object that should be returned from the visitor, use {@link Void} if
 	 *            no return value is needed
@@ -147,8 +147,8 @@ public class Visits
 	 * 
 	 * @param <S>
 	 *            the type of object that will be visited, notice that {@code container} is not
-	 *            declared as {@code Iterable<S>} because it may return a generalization of {@code
-	 *            S}
+	 *            declared as {@code Iterable<S>} because it may return a generalization of
+	 *            {@code S}
 	 * @param <R>
 	 *            the type of object that should be returned from the visitor, use {@link Void} if
 	 *            no return value is needed
@@ -188,21 +188,18 @@ public class Visits
 				for (final Iterator<?> iterator = ((Iterable<?>)component).iterator(); iterator.hasNext();)
 				{
 					final Object child = iterator.next();
-					if (child instanceof Iterable<?>)
+					visitComponentsPostOrderHelper(child, visitor, filter, childTraversal);
+					if (childTraversal.isStopped())
 					{
-						visitComponentsPostOrderHelper(child, visitor, filter, childTraversal);
-						if (childTraversal.isStopped())
-						{
-							visit.stop(childTraversal.getResult());
-							return;
-						}
+						visit.stop(childTraversal.getResult());
+						return;
 					}
 				}
 			}
-			if (filter.visitObject(component))
-			{
-				visitor.component((S)component, visit);
-			}
+		}
+		if (filter.visitObject(component))
+		{
+			visitor.component((S)component, visit);
 		}
 	}
 }

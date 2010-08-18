@@ -24,6 +24,8 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
+import org.apache.wicket.event.IEvent;
+import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
@@ -62,7 +64,7 @@ import org.slf4j.LoggerFactory;
  * @author Matej Knopp
  * @author igor.vaynberg
  */
-public class RequestCycle extends RequestHandlerStack implements IRequestCycle
+public class RequestCycle extends RequestHandlerStack implements IRequestCycle, IEventSink
 {
 	private static final Logger log = LoggerFactory.getLogger(RequestCycle.class);
 
@@ -577,5 +579,10 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle
 	public final long getStartTime()
 	{
 		return startTime;
+	}
+
+	/** {@inheritDoc} */
+	public void onEvent(IEvent<?> event)
+	{
 	}
 }

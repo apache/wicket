@@ -697,6 +697,24 @@
         <dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
+
+	<!-- EVENTS APP -->
+	<filter>
+		<filter-name>EventsApplication</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>org.apache.wicket.examples.events.EventsApplication</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>EventsApplication</filter-name>
+        <url-pattern>/events/*</url-pattern>
+	</filter-mapping>
+
+
+
+
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
