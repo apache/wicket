@@ -78,9 +78,19 @@ public abstract class Resource implements IResourceListener
 		cacheable = true;
 	}
 
-	/**
-	 * @return Gets the resource to render to the requester
-	 */
+
+  /**
+   * Returns a new IResourceStream that provides all data for the request.
+   * 
+   * Despite its name, this method should return a new IResourceStream instance
+   * each time it is invoked (otherwise the InputStream returned from the
+   * IResourceStream would be at EOF when a second request is handled for the
+   * same Resource).
+   * 
+   * The caller must invoke IResourceStream.close() when finished.
+   * 
+   * @return a new IResourceStream instance for this Resource.
+   */
 	public abstract IResourceStream getResourceStream();
 
 	/**
