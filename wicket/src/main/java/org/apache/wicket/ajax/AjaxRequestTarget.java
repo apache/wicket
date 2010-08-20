@@ -1220,6 +1220,10 @@ public class AjaxRequestTarget implements IPageRequestHandler
 			{
 				return (AjaxRequestTarget)requestCycle.getActiveRequestHandler();
 			}
+			else if (requestCycle.getRequestHandlerScheduledAfterCurrent() instanceof AjaxRequestTarget)
+			{
+				return (AjaxRequestTarget)requestCycle.getRequestHandlerScheduledAfterCurrent();
+			}
 		}
 		return null;
 	}
