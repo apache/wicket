@@ -50,8 +50,10 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.apache.wicket.util.upload.FileUploadBase.SizeLimitExceededException;
 import org.apache.wicket.util.upload.FileUploadException;
+import org.apache.wicket.util.visit.ClassVisitFilter;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
+import org.apache.wicket.util.visit.Visits;
 import org.apache.wicket.validation.IValidatorAddListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1224,24 +1226,18 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 		}
 
 		// Model was successfully updated with valid data
-		formToProcess.onSubmit();
 
-		// call onSubmit on nested forms
-		formToProcess.visitChildren(Form.class, new IVisitor<Form<?>, Void>()
+		Visits.visitComponentsPostOrder(this, new IVisitor<Form<?>, Void>()
 		{
-			public void component(final Form<?> component, final IVisit<Void> visit)
+			public void component(Form<?> form, IVisit<Void> visit)
 			{
-				Form<?> form = component;
 				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 				{
+
 					form.onSubmit();
 				}
-				else
-				{
-					visit.dontGoDeeper();
-				}
 			}
-		});
+		}, new ClassVisitFilter(Form.class));
 	}
 
 	/**
@@ -1969,6 +1965,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void renderHead(IHeaderResponse response)
 	{
 		if (!isRootForm() && isMultiPart())
