@@ -197,7 +197,7 @@ public class WebPageRenderer extends PageRenderer
 			// or the targetUrl matches current url and the page is not stateless
 			// or the targetUrl matches current url, page is stateless but it's redirect-to-render
 			// just render the page
-			BufferedWebResponse response = renderPage(targetUrl, requestCycle);
+			BufferedWebResponse response = renderPage(currentUrl, requestCycle);
 			if (response != null)
 			{
 				response.writeTo((WebResponse)requestCycle.getResponse());
