@@ -35,6 +35,7 @@ import org.apache.wicket.application.IComponentOnBeforeRenderListener;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.javascript.DefaultJavascriptCompressor;
+import org.apache.wicket.markup.MarkupFactory;
 import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.markup.html.EmptySrcAttributeCheckFilter;
 import org.apache.wicket.markup.html.IHeaderContributor;
@@ -885,7 +886,10 @@ public abstract class Application implements UnboundListener, IEventSink
 		// Clear caches of Class keys so the classloader can be garbage
 		// collected (WICKET-625)
 		PropertyResolver.destroy(this);
-		getMarkupSettings().getMarkupFactory().getMarkupCache().shutdown();
+		MarkupFactory markupFactory = getMarkupSettings().getMarkupFactory();
+
+		if (markupFactory.hasMarkupCache())
+			markupFactory.getMarkupCache().shutdown();
 
 		onDestroy();
 

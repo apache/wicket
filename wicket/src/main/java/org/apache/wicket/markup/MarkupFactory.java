@@ -137,6 +137,16 @@ public class MarkupFactory
 	}
 
 	/**
+	 * return if markup cache has been initialized yet
+	 *
+	 * @return <code>true</code> if markup cache was already initialized, <code>false</code> otherwise
+	 */
+	public boolean hasMarkupCache()
+	{
+		return markupCache != null;
+	}
+
+	/**
 	 * Gets a fresh markup stream that contains the (immutable) markup resource for this class.
 	 * 
 	 * @param container
