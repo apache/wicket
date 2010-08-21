@@ -163,4 +163,9 @@ public class MockPage extends MockComponent implements IRequestablePage
 	{
 		this.renderCount = renderCount;
 	}
+
+
+	public void setFreezePageId(boolean freeze)
+	{
+	}
 }

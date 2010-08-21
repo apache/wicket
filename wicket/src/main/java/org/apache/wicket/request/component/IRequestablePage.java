@@ -25,6 +25,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * to mock and unit test.
  * 
  * @author Matej Knopp
+ * @author Igor Vaynberg (ivaynberg)
  */
 public interface IRequestablePage extends IRequestableComponent, IManageablePage
 {

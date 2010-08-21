@@ -19,6 +19,7 @@ package org.apache.wicket.request.handler;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -138,10 +139,11 @@ public class ListenerInterfaceRequestHandler
 	 */
 	public void respond(final IRequestCycle requestCycle)
 	{
-		if (getComponent().getPage() == getPage())
+		final IRequestablePage page = getPage();
+		if (getComponent().getPage() == page)
 		{
-			if (((WebRequest)requestCycle.getRequest()).isAjax() == false &&
-				listenerInterface.isRenderPageAfterInvocation())
+			boolean isAjax = ((WebRequest)requestCycle.getRequest()).isAjax();
+			if (isAjax == false && listenerInterface.isRenderPageAfterInvocation())
 			{
 				// schedule page render after current request handler is done. this can be
 				// overridden
@@ -153,20 +155,20 @@ public class ListenerInterfaceRequestHandler
 					new PageProvider(getPage()), policy));
 			}
 
-			if (getBehaviorIndex() == null)
+			if (isAjax & page instanceof IManageablePage)
 			{
-				listenerInterface.invoke(getComponent());
+				((IManageablePage)page).setFreezePageId(true);
 			}
-			else
+
+			try
 			{
-				try
+				invokeListener();
+			}
+			finally
+			{
+				if (isAjax && page instanceof IManageablePage)
 				{
-					IBehavior behavior = getComponent().getBehaviors().get(behaviorIndex);
-					listenerInterface.invoke(getComponent(), behavior);
-				}
-				catch (IndexOutOfBoundsException e)
-				{
-					throw new WicketRuntimeException("Couldn't find component behavior.");
+					((IManageablePage)page).setFreezePageId(false);
 				}
 
 			}
@@ -175,6 +177,27 @@ public class ListenerInterfaceRequestHandler
 		{
 			throw new WicketRuntimeException("Component " + getComponent() +
 				" has been removed from page.");
+		}
+	}
+
+	private void invokeListener()
+	{
+		if (getBehaviorIndex() == null)
+		{
+			listenerInterface.invoke(getComponent());
+		}
+		else
+		{
+			try
+			{
+				IBehavior behavior = getComponent().getBehaviors().get(behaviorIndex);
+				listenerInterface.invoke(getComponent(), behavior);
+			}
+			catch (IndexOutOfBoundsException e)
+			{
+				throw new WicketRuntimeException("Couldn't find component behavior.");
+			}
+
 		}
 	}
 }

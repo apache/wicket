@@ -404,15 +404,10 @@ public abstract class Page extends MarkupContainer
 		dirty(false);
 	}
 
-	/**
-	 * INTERNAL. Prevent marking page as dirty. Used to prevent incrementing page id during
-	 * REDIRECT_TO_RENDER rendering.
-	 * 
-	 * @param prevent
-	 */
-	private void preventDirty(boolean prevent)
+	/** {@inheritDoc} */
+	public void setFreezePageId(boolean freeze)
 	{
-		setFlag(FLAG_PREVENT_DIRTY, prevent);
+		setFlag(FLAG_PREVENT_DIRTY, freeze);
 	}
 
 	/**
@@ -451,8 +446,7 @@ public abstract class Page extends MarkupContainer
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
 	 * This method is called when a component was rendered standalone. If it is a <code>
-	 * MarkupContainer</code>
-	 * then the rendering for that container is checked.
+	 * MarkupContainer</code> then the rendering for that container is checked.
 	 * 
 	 * @param component
 	 * 
@@ -1301,7 +1295,7 @@ public abstract class Page extends MarkupContainer
 		if (getApplication().getRequestCycleSettings().getRenderStrategy() != RenderStrategy.REDIRECT_TO_BUFFER)
 		{
 			// don't increment page id for redirect to render and one pass render during rendering
-			preventDirty(true);
+			setFreezePageId(true);
 		}
 		try
 		{
@@ -1310,7 +1304,7 @@ public abstract class Page extends MarkupContainer
 		}
 		finally
 		{
-			preventDirty(false);
+			setFreezePageId(false);
 		}
 	}
 
