@@ -894,7 +894,7 @@ public abstract class Component
 	 * <p>
 	 * NOTE: Why should {@link #onBeforeRender()} not be used for this? Because if visibility of a
 	 * component is toggled inside {@link #onBeforeRender()} another method needs to be overridden
-	 * to make sure {@link #onBeforeRender()} will be invoked on ivisible components:
+	 * to make sure {@link #onBeforeRender()} will be invoked on invisible components:
 	 * 
 	 * <pre>
 	 * class MyComponent extends WebComponent
