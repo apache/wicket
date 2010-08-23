@@ -31,15 +31,17 @@ import org.slf4j.LoggerFactory;
  * attached to the very same parent container. That leads to a tricky situation since e.g.
  * <code>onBeforeRender()</code> will be called for enclosure children even if the enclosure is made
  * invisible by it controlling child.
- * 
+ * <p>
  * On top auto-components cannot keep any state. A new instance is created during each render
  * process and automatically deleted at the end. That implies that we cannot prevent
- * <code>validation()<code> from being called, since validation() is called before the actual
+ * <code>validation()</code> from being called, since validation() is called before the actual
  * render process has started.
- * 
- * Where any of these problems apply, you may replace the tag and manually add this simple container 
- * which basically does the same. But instead of adding the children to the Page, Panel whatever, 
+ * </p>
+ * <p>
+ * Where any of these problems apply, you may replace the tag and manually add this simple container
+ * which basically does the same. But instead of adding the children to the Page, Panel whatever,
  * you must add the children to this container in order to keep the component hierarchy in sync.
+ * </p>
  * 
  * @author Juergen Donnerstag
  * @since 1.5
@@ -58,6 +60,7 @@ public class EnclosureContainer extends WebMarkupContainer
 	 * 
 	 * @param id
 	 * @param child
+	 *            child component that will control the visibility of the enclosure
 	 */
 	public EnclosureContainer(final String id, final Component child)
 	{
