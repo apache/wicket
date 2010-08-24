@@ -45,6 +45,7 @@ public class JavascriptResourceReference extends ResourceReference
 	public JavascriptResourceReference(Class<?> scope, String name, Locale locale, String style)
 	{
 		super(scope, name, locale, style);
+		setStateless(true);
 	}
 
 	/**
@@ -56,6 +57,7 @@ public class JavascriptResourceReference extends ResourceReference
 	public JavascriptResourceReference(Class<?> scope, String name)
 	{
 		super(scope, name);
+		setStateless(true);
 	}
 
 	/**
@@ -66,6 +68,7 @@ public class JavascriptResourceReference extends ResourceReference
 	public JavascriptResourceReference(String name)
 	{
 		super(name);
+		setStateless(true);
 	}
 
 	@Override

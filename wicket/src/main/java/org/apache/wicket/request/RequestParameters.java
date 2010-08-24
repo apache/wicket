@@ -90,6 +90,9 @@ public class RequestParameters implements IClusterable
 	/** the request query string */
 	private String queryString;
 
+	/** whether the url to the request with these parameters requires a session */
+	private boolean stateless = true;
+
 	/**
 	 * Construct.
 	 */
@@ -363,6 +366,27 @@ public class RequestParameters implements IClusterable
 		if (urlDepth > MAX_URL_DEPTH || urlDepth < -1)
 			throw new RuntimeException("Url depth has an illegal value: " + urlDepth);
 		this.urlDepth = urlDepth;
+	}
+
+	/**
+	 * @see #setStateless(boolean)
+	 * @return stateless flag
+	 */
+	public boolean isStateless()
+	{
+		return stateless;
+	}
+
+	/**
+	 * Sets whether or not this request can be processed without a session present. If a url is
+	 * encoded for a request with these parameters jsessionid will be stripped, this is useful when
+	 * rendering urls to packaged resources and other artifacts that do not require a session.
+	 * 
+	 * @param stateless
+	 */
+	public void setStateless(boolean stateless)
+	{
+		this.stateless = stateless;
 	}
 
 	/**

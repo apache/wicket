@@ -257,6 +257,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		boolean portletRequest = requestContext.isPortletRequest();
 		boolean sharedResourceURL = false;
 
+		boolean stripJsessionId = false;
+
 		if (url != null && !portletRequest)
 		{
 			// Do nothing - we've found the URL and it's mounted.
@@ -280,6 +282,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			url = requestContext.encodeSharedResourceURL(url == null ? encode(requestCycle,
 				(ISharedResourceRequestTarget)requestTarget) : url);
 			sharedResourceURL = true;
+
+			stripJsessionId = ((ISharedResourceRequestTarget)requestTarget).getRequestParameters()
+				.isStateless();
 		}
 		else if (requestTarget instanceof PageReferenceRequestTarget)
 		{
@@ -379,7 +384,13 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 					result = "./";
 				}
 			}
-			return requestCycle.getOriginalResponse().encodeURL(result);
+
+			CharSequence encoded = requestCycle.getOriginalResponse().encodeURL(result);
+			if (stripJsessionId)
+			{
+				encoded = Strings.stripJSessionId(encoded);
+			}
+			return encoded;
 		}
 
 		// Just return null instead of throwing an exception. So that it can be

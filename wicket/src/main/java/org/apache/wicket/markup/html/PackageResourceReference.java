@@ -71,6 +71,7 @@ public class PackageResourceReference extends ResourceReference
 		{
 			setLocale(((PackageResource)getResource()).getLocale());
 		}
+		setStateless(true);
 	}
 
 	/**

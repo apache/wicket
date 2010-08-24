@@ -71,6 +71,9 @@ public class ResourceReference implements IClusterable
 	/** The style of the resource */
 	private String style;
 
+	/** Whether or not this resource reference is stateless */
+	private boolean stateless;
+
 	/**
 	 * Constructs a ResourceReference with the given scope and name. The scope is used as a
 	 * namespace and the scope together with the name must uniquely identify the reference.
@@ -329,4 +332,26 @@ public class ResourceReference implements IClusterable
 			return null;
 		}
 	}
+
+	/**
+	 * @see #setStateless(boolean)
+	 * @return stateless falg
+	 */
+	public boolean isStateless()
+	{
+		return stateless;
+	}
+
+	/**
+	 * Sets whether or not the resource pointed to by this reference requires a session. Urls to
+	 * resources that do not require a session will have their jsessionid stripped.
+	 * 
+	 * @param stateless
+	 */
+	public void setStateless(boolean stateless)
+	{
+		this.stateless = stateless;
+	}
+
+
 }

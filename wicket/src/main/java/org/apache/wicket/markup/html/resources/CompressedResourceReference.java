@@ -42,6 +42,7 @@ public class CompressedResourceReference extends ResourceReference
 	public CompressedResourceReference(Class<?> scope, String name)
 	{
 		super(scope, name);
+		setStateless(true);
 	}
 
 	/**
@@ -51,6 +52,7 @@ public class CompressedResourceReference extends ResourceReference
 	public CompressedResourceReference(Class<?> scope, String name, Locale locale, String style)
 	{
 		super(scope, name, locale, style);
+		setStateless(true);
 	}
 
 	/**
@@ -59,6 +61,7 @@ public class CompressedResourceReference extends ResourceReference
 	public CompressedResourceReference(String name)
 	{
 		super(name);
+		setStateless(true);
 	}
 
 	/**
