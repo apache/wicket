@@ -60,17 +60,7 @@
 			<includes>
 				<include>*.xml</include>
 				<include>wicket/**</include>
-				<include>wicket-auth-roles/**</include>
-				<include>wicket-datetime/**</include>
-				<include>wicket-examples/**</include>
-				<include>wicket-extensions/**</include>
-				<include>wicket-devutils/**</include>
-				<include>wicket-jmx/**</include>
-				<include>wicket-objectssizeof-agent/**</include>
-				<include>wicket-ioc/**</include>
-				<include>wicket-guice/**</include>
-				<include>wicket-spring/**</include>
-				<include>wicket-velocity/**</include>
+				<include>wicket-*/**</include>
 			</includes>
 			<excludes>
 				<exclude>**/wicket/target/**</exclude>
@@ -100,6 +90,8 @@
 		<moduleSet>
 			<includes>
 				<include>org.apache.wicket:wicket</include>
+                                <include>org.apache.wicket:wicket-util</include>
+                                <include>org.apache.wicket:wicket-request</include>
 				<include>org.apache.wicket:wicket-auth-roles</include>
 				<include>org.apache.wicket:wicket-datetime</include>
 				<include>org.apache.wicket:wicket-examples</include>
