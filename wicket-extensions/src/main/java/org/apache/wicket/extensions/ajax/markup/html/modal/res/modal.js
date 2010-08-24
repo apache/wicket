@@ -1139,10 +1139,10 @@ Wicket.Window.getMarkup = function(idWindow, idClassElement, idCaption, idConten
 		 							"<div class=\"w_content\">";
 				if (isFrame) {
 					if (Wicket.Browser.isIELessThan7() || !Wicket.Browser.isIE()) {												
-						s+= "<iframe src='\/\/:' frameborder=\"0\" id='"+idContent+"' allowtransparency=\"false\" style=\"height: 200px\">"+
+						s+= "<iframe src='\/\/:' frameborder=\"0\" id='"+idContent+"' allowtransparency=\"false\" style=\"height: 200px\" class=\"wicket_modal\">"+
 										"</iframe>";
 					} else {
-						s+= "<iframe src='about:blank' frameborder=\"0\" id='"+idContent+"' allowtransparency=\"false\" style=\"height: 200px\">"+
+						s+= "<iframe src='about:blank' frameborder=\"0\" id='"+idContent+"' allowtransparency=\"false\" style=\"height: 200px\" class=\"wicket_modal\">"+
 						"</iframe>";
 					}
 				} else {
