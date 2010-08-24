@@ -588,6 +588,18 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         Wicket.Log.info("Response processed successfully.");
         Wicket.Ajax.invokePostCallHandlers();
         hideIndicator();
+        
+  		// hack for a focus issue in IE, WICKET-2279      
+        if(Wicket.Browser.isIE()) { 
+			Wicket.Focus.refocusLastFocusedComponentAfterResponse = true; 
+			var focusedElement = Wicket.$(elementId); 
+			var temponblur = focusedElement.onblur; 
+			focusedElement.onblur = null; 
+			focusedElement.blur(); 
+			setTimeout(function() { focusedElement.onblur = temponblur;}, 0); 
+			Wicket.Focus.requestFocus(); 
+		} 
+        
     }
     
     function scheduleEmptyCheck() {
