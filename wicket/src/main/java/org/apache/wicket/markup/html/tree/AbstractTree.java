@@ -18,6 +18,8 @@ package org.apache.wicket.markup.html.tree;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -26,6 +28,7 @@ import java.util.Map;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IRequestTarget;
@@ -822,38 +825,66 @@ public abstract class AbstractTree extends Panel
 		}
 
 		// get the parent node of inserted nodes
-		Object parent = e.getTreePath().getLastPathComponent();
+		TreeNode parentNode = (TreeNode)e.getTreePath().getLastPathComponent();
 
-		if (isNodeVisible(parent) && isNodeExpanded(parent))
+		if (isNodeVisible(parentNode))
 		{
-			TreeItem parentItem = nodeToItemMap.get(parent);
-
-			if (parentItem != null)
+			// parentNode was a leaf before this insertion event only if every one of
+			// its current children is in the event's list of children
+			boolean wasLeaf = true;
+			List<?> eventChildren = Arrays.asList(e.getChildren());
+			Enumeration<?> treeChildren = parentNode.children();
+			while (wasLeaf && treeChildren.hasMoreElements())
 			{
-
-				if (parentItem.getChildren() == null || parentItem.getChildren().isEmpty())
+				if (!eventChildren.contains(treeChildren.nextElement()))
 				{
-					invalidateNode(parent, true);
+					wasLeaf = false;
 				}
+			}
 
-				for (int i = 0; i < e.getChildren().length; ++i)
+			if (wasLeaf)
+			{
+				// parentNode now has children for the first time, so we need to invalidate
+				// grandparent so that parentNode's junctionLink gets rebuilt with a plus/minus link
+				Object grandparentNode = getParentNode(parentNode);
+				invalidateNodeWithChildren(grandparentNode);
+				getTreeState().expandNode(parentNode);
+			}
+			else
+			{
+				if (isNodeExpanded(parentNode))
 				{
-					Object node = e.getChildren()[i];
-					int index = e.getChildIndices()[i];
-					TreeItem item = newTreeItem(parentItem, node, parentItem.getLevel() + 1);
-					itemContainer.add(item);
-					parentItem.getChildren().add(index, item);
-
-					markTheLastButOneChildDirty(parentItem, item);
-
-					if (!dirtyItems.contains(item))
+					TreeItem parentItem = nodeToItemMap.get(parentNode);
+					if (parentItem != null)
 					{
-						dirtyItems.add(item);
-					}
+						if (parentItem.getChildren() == null || parentItem.getChildren().isEmpty())
+						{
+							invalidateNode(parentNode, true);
+						}
 
-					if (!dirtyItemsCreateDOM.contains(item))
-					{
-						dirtyItemsCreateDOM.add(item);
+						for (int i = 0; i < e.getChildren().length; ++i)
+						{
+							Object node = e.getChildren()[i];
+							int index = e.getChildIndices()[i];
+							TreeItem item = newTreeItem(parentItem, node, parentItem.getLevel() + 1);
+							itemContainer.add(item);
+
+							if (parentItem.getChildren() != null)
+							{
+								parentItem.getChildren().add(index, item);
+								markTheLastButOneChildDirty(parentItem, item);
+							}
+
+							if (!dirtyItems.contains(item))
+							{
+								dirtyItems.add(item);
+							}
+
+							if (!dirtyItemsCreateDOM.contains(item))
+							{
+								dirtyItemsCreateDOM.add(item);
+							}
+						}
 					}
 				}
 			}
