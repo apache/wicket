@@ -86,6 +86,10 @@ public class Recorder<T> extends HiddenField<Object>
 		{
 			initIds();
 		}
+		else if (ids == null)
+		{
+			ids = EMPTY_IDS;
+		}
 		attached = true;
 	}
 
