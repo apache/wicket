@@ -1381,11 +1381,19 @@ public abstract class RequestCycle
 			}
 			else
 			{
-				// hmmm, we were already handling an exception! give up
-				log.error(
-					"unexpected exception when handling another exception: " + e.getMessage(), e);
+				onExceptionLoop(e);
 			}
 		}
+	}
+
+	/**
+	 * Called when we catch a {@link RuntimeException} while already handling another
+	 */
+	protected void onExceptionLoop(RuntimeException e)
+	{
+		// hmmm, we were already handling an exception! give up
+		log.error("unexpected exception when handling another exception: " + e.getMessage(), e);
+
 	}
 
 	/**

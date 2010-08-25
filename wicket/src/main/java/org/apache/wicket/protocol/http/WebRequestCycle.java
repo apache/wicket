@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.protocol.http;
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.wicket.AbortException;
 import org.apache.wicket.IRedirectListener;
 import org.apache.wicket.MetaDataKey;
@@ -91,6 +95,21 @@ public class WebRequestCycle extends RequestCycle
 	public IRequestCycleProcessor getProcessor()
 	{
 		return ((WebApplication)getApplication()).getRequestCycleProcessor();
+	}
+
+	@Override
+	protected void onExceptionLoop(RuntimeException e)
+	{
+		super.onExceptionLoop(e);
+		try
+		{
+			getWebResponse().getHttpServletResponse().sendError(
+				HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null);
+		}
+		catch (IOException e1)
+		{
+			// ignore
+		}
 	}
 
 	/**
