@@ -1264,6 +1264,9 @@ Wicket.Window.Mask.prototype = {
 			this.dontHide = true; 			
 		}
 		
+		this.shown=true;
+		this.focusDisabled=false;
+				
 		this.disableCoveredContent();
 	},
 	
@@ -1286,7 +1289,10 @@ Wicket.Window.Mask.prototype = {
 			Wicket.Window.Mask.element = null;
 		}
 		
+		this.shown=false;
+		
 		this.reenableCoveredContent();
+		
 	},
 	
 	// disable user interaction for content that is covered by the mask
@@ -1364,6 +1370,10 @@ Wicket.Window.Mask.prototype = {
 	 * have always bigger z-order than any other elements).
 	 */
 	hideSelectBoxes : function(doc, win) {				
+		if (!this.shown) {
+			return;
+		}
+		
 		if (Wicket.Browser.isIE() && Wicket.Browser.isIE7() == false) {
 			this.boxes = new Array();
 			var selects = doc.getElementsByTagName("select");
@@ -1419,6 +1429,9 @@ Wicket.Window.Mask.prototype = {
 	 * Disable focus on all elements in document
 	 */
 	disableFocus: function(doc, win) {
+		if (!this.shown) {
+			return;
+		}
 		// explorer doesn't need this, because for IE disableTabs() is called.
 		// plus in IE this causes problems because it scrolls document		);
 		if (Wicket.Browser.isIE() == false) {			
@@ -1428,12 +1441,17 @@ Wicket.Window.Mask.prototype = {
 				this.disableFocusElement(body.childNodes[i], this.focusRevertList, win);
 			}
 		}
+		this.focusDisabled=true;
 	},
 	
 	/**
 	 * Enables focus on all elements where the focus has been disabled.
 	 */
 	enableFocus: function() {
+		if (this.focusDisabled==false) {
+			return;
+		}
+		
 		if (typeof(this.focusRevertList) != "undefined") {						
 			for (var i = 0; i < this.focusRevertList.length; ++i) {
 				var item = this.focusRevertList[i];
@@ -1448,6 +1466,10 @@ Wicket.Window.Mask.prototype = {
 	 * Disable tab indexes (ie).
 	 */
 	disableTabs: function (doc, win) {
+		if (!this.shown) {
+			return;
+		}
+		
 		if (typeof (this.tabbableTags) == "undefined") this.tabbableTags = new Array("A","BUTTON","TEXTAREA","INPUT","IFRAME", "SELECT");
 		if (Wicket.Browser.isIE()) {
 			this.disabledTabsRevertList = new Array();
