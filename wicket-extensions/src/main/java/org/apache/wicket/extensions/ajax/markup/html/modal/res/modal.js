@@ -493,6 +493,15 @@ Wicket.Window.prototype = {
 		var modalWidth = this.window.offsetWidth;
 		var modalHeight = this.window.offsetHeight;
 		
+		if (modalWidth > width - 10) { 
+			this.window.style.width = (width - 10) + "px"; 
+			modalWidth = this.window.offsetWidth; 
+		} 
+		if (modalHeight > height - 40) { 
+			this.content.style.height = (height - 40) + "px"; 
+			modalHeight = this.window.offsetHeight; 
+		} 
+		
 		var left = (width / 2) - (modalWidth / 2) + scLeft;
 		var top = (height / 2) - (modalHeight / 2) + scTop;
 		if (left < 0) left = 0;
