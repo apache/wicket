@@ -55,7 +55,7 @@ public class ExtendedOpenCloseTagExpander extends OpenCloseTagExpander
 			"sub", "sup", "abbr", "acronym", "cite", "code", "del", "dfn", "em", "ins", "kbd",
 			"samp", "var", "label", "textarea", "tr", "td", "th", "caption", "thead", "tbody",
 			"tfoot", "dl", "dt", "dd", "li", "ol", "ul", "h1", "h2", "h3", "h4", "h5", "h6", "pre",
-			"title" });
+			"title", "col" });
 
 	/**
 	 * @see org.apache.wicket.markup.parser.filter.OpenCloseTagExpander#contains(java.lang.String)
