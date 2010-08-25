@@ -725,6 +725,24 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 */
 	public Bytes getMaxSize()
 	{
+		Bytes maxSize = this.maxSize;
+		if (maxSize == null)
+		{
+			maxSize = (Bytes)visitChildren(Form.class, new IVisitor<Form<?>>()
+			{
+
+				public Object component(Form<?> component)
+				{
+					Bytes maxSize = component.getMaxSize();
+					if (maxSize != null)
+					{
+						return maxSize;
+					}
+					return CONTINUE_TRAVERSAL;
+				}
+
+			});
+		}
 		if (maxSize == null)
 		{
 			return getApplication().getApplicationSettings().getDefaultMaximumUploadSize();
