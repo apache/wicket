@@ -828,7 +828,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 */
 	public final void inputChanged()
 	{
-		if (isVisibleInHierarchy() && isEnabled())
+		if (isVisibleInHierarchy() && isEnabledInHierarchy())
 		{
 			// Get input as String array
 			final String[] input = getInputAsArray();
