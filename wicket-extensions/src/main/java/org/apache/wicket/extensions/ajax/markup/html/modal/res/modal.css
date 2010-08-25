@@ -168,7 +168,7 @@ div.wicket-modal div.w_content {
 
 
 
-div.wicket-modal iframe {
+div.wicket-modal iframe.wicket_modal {
 	width: 100%; 
 	height: 400px; 			
 	padding: 0px; 
