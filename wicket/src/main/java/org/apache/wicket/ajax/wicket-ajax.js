@@ -1056,12 +1056,7 @@ Wicket.Ajax.Call.prototype = {
 	// Submits a form using ajax.
 	// This method serializes a form and sends it as POST body.
 	submitForm: function(form, submitButton) {
-	    if (typeof(form.onsubmit)=="function") {
-	    	var result=form.onsubmit();
-	    	if (typeof(result)=="boolean"&&result==false) {
-	    		return;
-	    	}
-	    }
+	    if (!Wicket.Event.fire(form, "submit")) return;
 	    if (this.handleMultipart(form, submitButton)) {
 	    	return true;
 	    }

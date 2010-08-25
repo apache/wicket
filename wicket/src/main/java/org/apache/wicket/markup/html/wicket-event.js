@@ -112,6 +112,16 @@ if (typeof(Wicket.Event) == "undefined") {
 			original.bind(element)();
 		},
 	
+		fire: function(element, event) {
+			if (document.createEvent) {
+				var e=document.createEvent("Event");
+				e.initEvent(event, true, true);
+				return element.dispatchEvent(e);
+			} else {
+				return element.fireEvent("on"+event);
+			}
+		},
+		
 		// adds an event of specified type to the element
 		// also supports the domready event on window
 		// domready is event fired when the DOM is complete, but before loading external resources (images, ...)
