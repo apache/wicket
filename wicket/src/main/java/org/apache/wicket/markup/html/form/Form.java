@@ -1638,13 +1638,21 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 				if (component instanceof Form)
 				{
 					Form<?> form = (Form<?>)component;
-					isMultiPart = (form.multiPart != 0);
+
+					if (form.isVisibleInHierarchy() && form.isEnabledInHierarchy())
+					{
+						isMultiPart = (form.multiPart != 0);
+					}
 				}
 				else if (component instanceof FormComponent)
 				{
-					FormComponent<?> form = (FormComponent<?>)component;
-					isMultiPart = form.isMultiPart();
+					FormComponent<?> fc = (FormComponent<?>)component;
+					if (fc.isVisibleInHierarchy() && fc.isEnabledInHierarchy())
+					{
+						isMultiPart = fc.isMultiPart();
+					}
 				}
+
 				if (isMultiPart == true)
 				{
 					anyEmbeddedMultipart[0] = true;
@@ -1654,6 +1662,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 			}
 
 		});
+
+		if (anyEmbeddedMultipart[0])
+		{
+			multiPart |= MULTIPART_HINT;
+		}
 		return anyEmbeddedMultipart[0];
 	}
 
@@ -2015,29 +2028,13 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	{
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onRender(MarkupStream)
-	 */
 	@Override
-	protected void onRender(final MarkupStream markupStream)
+	protected void onBeforeRender()
 	{
 		// clear multipart hint, it will be set if necessary by the visitor
 		this.multiPart &= ~MULTIPART_HINT;
 
-		// Force multi-part on if any child form component is multi-part
-		visitFormComponents(new FormComponent.AbstractVisitor()
-		{
-			@Override
-			public void onFormComponent(FormComponent<?> formComponent)
-			{
-				if (formComponent.isVisible() && formComponent.isMultiPart())
-				{
-					multiPart |= MULTIPART_HINT;
-				}
-			}
-		});
-
-		super.onRender(markupStream);
+		super.onBeforeRender();
 	}
 
 	/**
