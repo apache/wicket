@@ -45,7 +45,7 @@ public class OpenCloseTagExpander extends AbstractMarkupFilter
 
 			// tags from pre 1.5 days, shouldnt really be here but make this release more backwards
 			// compatible
-			, "span", "p", "strong", "b", "e", "select" });
+			, "span", "p", "strong", "b", "e", "select", "col" });
 
 	private ComponentTag next = null;
 
