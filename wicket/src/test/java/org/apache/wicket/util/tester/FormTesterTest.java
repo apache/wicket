@@ -18,6 +18,7 @@ package org.apache.wicket.util.tester;
 
 import java.util.Locale;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
@@ -151,8 +152,9 @@ public class FormTesterTest extends WicketTestCase
 		FileUpload fileUpload = page.getFileUpload();
 		assertNotNull(fileUpload);
 
-		assertTrue("uploaded content does not have the right size, expected 428, got " +
-			fileUpload.getBytes().length, fileUpload.getBytes().length == 428);
+		assertTrue(
+			"uploaded content does not have the right size, expected 428, got " +
+				fileUpload.getBytes().length, fileUpload.getBytes().length == 428);
 		assertEquals("bg.jpg", fileUpload.getClientFileName());
 		assertEquals("image/jpeg", fileUpload.getContentType());
 	}
@@ -200,4 +202,31 @@ public class FormTesterTest extends WicketTestCase
 		assertEquals("Mock Value", domainObject.getText());
 	}
 
+	/**
+	 * @throws Exception
+	 */
+	public void testNoParametersCreatedForDisabledComponents() throws Exception
+	{
+		tester.startPage(new MockFormPage()
+		{
+			@Override
+			protected void onBeforeRender()
+			{
+				super.onBeforeRender();
+				// on first rendering there can't be any form parameters.
+				// on second rendering there must not be any since we disable the form.
+				// the components all get rendered as disabled, so the browser would not send
+				// any parameters. thus FormTester must not send any either.
+				assertTrue(getRequest().getPostParameters().getParameterNames().isEmpty());
+			}
+		});
+		final Component form = tester.getComponentFromLastRenderedPage("form");
+		form.setEnabled(false);
+		assertFalse(form.isEnabled());
+		Component check = tester.getComponentFromLastRenderedPage("form:checkbox");
+		assertTrue(check.isEnabled());
+		assertFalse(check.isEnabledInHierarchy());
+		FormTester formTester = tester.newFormTester("form");
+		formTester.submit();
+	}
 }

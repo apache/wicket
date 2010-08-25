@@ -379,8 +379,9 @@ public class FormTester
 			@Override
 			public void onFormComponent(final FormComponent<?> formComponent, IVisit<Void> visit)
 			{
-				// do nothing for invisible component
-				if (!formComponent.isVisibleInHierarchy())
+				// do nothing for invisible or disabled component -- the browser would not send any parameter
+				// for a disabled component
+				if (!(formComponent.isVisibleInHierarchy() && formComponent.isEnabledInHierarchy()))
 				{
 					return;
 				}
