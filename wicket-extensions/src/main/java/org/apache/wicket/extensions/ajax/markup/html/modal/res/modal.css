@@ -141,7 +141,7 @@ div.wicket-modal a.w_close:hover {
 	
 }
 
-div.wicket-modal span.w_captionText {
+div.wicket-modal h3.w_captionText {
 	height: 1.4em; 
 	position: absolute;
 	margin-left: 3px;
