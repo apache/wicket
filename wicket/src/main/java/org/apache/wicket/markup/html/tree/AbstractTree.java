@@ -21,9 +21,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
@@ -420,12 +422,12 @@ public abstract class AbstractTree extends Panel
 	 * list of dirty items. if children property of these items is null, the children will be
 	 * rebuild.
 	 */
-	private final List<TreeItem> dirtyItems = new ArrayList<TreeItem>();
+	private final Set<TreeItem> dirtyItems = new HashSet<TreeItem>();
 
 	/**
 	 * list of dirty items which need the DOM structure to be created for them (added items)
 	 */
-	private final List<TreeItem> dirtyItemsCreateDOM = new ArrayList<TreeItem>();
+	private final Set<TreeItem> dirtyItemsCreateDOM = new HashSet<TreeItem>();
 
 	/** counter for generating unique ids of every tree item. */
 	private int idCounter = 0;
