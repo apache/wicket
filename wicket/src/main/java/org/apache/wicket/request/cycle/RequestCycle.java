@@ -41,6 +41,7 @@ import org.apache.wicket.request.handler.IPageProvider;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.request.http.handler.ErrorCodeResponseHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Checks;
@@ -295,7 +296,16 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 	 */
 	protected IRequestHandler handleException(final Exception e)
 	{
-		return exceptionMapper.map(e);
+		try
+		{
+			return exceptionMapper.map(e);
+		}
+		catch (RuntimeException e2)
+		{
+			// hmmm, we were already handling an exception! give up
+			log.error("unexpected exception when handling another exception: " + e.getMessage(), e);
+			return new ErrorCodeResponseHandler(500);
+		}
 	}
 
 	/**
