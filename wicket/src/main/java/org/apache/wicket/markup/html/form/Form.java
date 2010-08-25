@@ -1633,7 +1633,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 			if (defaultSubmittingComponent instanceof Component)
 			{
 				final Component submittingComponent = (Component)defaultSubmittingComponent;
-				if (submittingComponent.isVisibleInHierarchy() && submittingComponent.isEnabled())
+				if (submittingComponent.isVisibleInHierarchy() &&
+					submittingComponent.isEnabledInHierarchy())
 				{
 					appendDefaultButtonField(markupStream, openTag);
 				}
