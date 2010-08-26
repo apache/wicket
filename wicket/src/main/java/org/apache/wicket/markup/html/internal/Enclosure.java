@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.internal;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
@@ -28,6 +29,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.border.Border.BorderBodyContainer;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.markup.resolver.EnclosureResolver;
@@ -177,6 +179,8 @@ public class Enclosure extends WebMarkupContainer
 		// transfer visibility to direct children
 		applyEnclosureVisibilityToChildren(container, markupStream, enclosureOpenTag);
 
+		warnAboutFormComponentsInsideEnclosure(container, markupStream, enclosureOpenTag);
+
 		// render components inside the enclosure if its visible or skip it if it is not
 		if (isVisible() == true)
 		{
@@ -187,6 +191,52 @@ public class Enclosure extends WebMarkupContainer
 			markupStream.skipToMatchingCloseTag(enclosureOpenTag);
 		}
 	}
+
+	private void warnAboutFormComponentInsideEnclosure(FormComponent fc)
+	{
+		log.warn(
+			"Found a form component {}/{} inside an enclosure. Form components do not work well inside wicket:enclosure tags, use EnclosureContainer instead",
+			fc.getClass().getSimpleName(), fc.getPageRelativePath());
+	}
+
+	private void warnAboutFormComponentsInsideEnclosure(final MarkupContainer container,
+		final MarkupStream markupStream, ComponentTag enclosureOpenTag)
+	{
+		if (!Application.DEVELOPMENT.equals(getApplication().getConfigurationType()))
+		{
+			// only warn in development mode
+			return;
+		}
+
+		DirectChildTagIterator it = new DirectChildTagIterator(markupStream, enclosureOpenTag);
+		while (it.hasNext())
+		{
+			final ComponentTag tag = it.next();
+			if (tag.isAutoComponentTag() == false)
+			{
+				final Component child = container.get(tag.getId());
+
+				if (child instanceof FormComponent)
+				{
+					warnAboutFormComponentInsideEnclosure((FormComponent)child);
+				}
+				else if (child instanceof MarkupContainer)
+				{
+					((MarkupContainer)child).visitChildren(FormComponent.class,
+						new IVisitor<FormComponent<?>>()
+						{
+							public Object component(FormComponent<?> component)
+							{
+								warnAboutFormComponentInsideEnclosure(component);
+								return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+							}
+						});
+				}
+			}
+		}
+		it.rewind();
+	}
+
 
 	private void applyEnclosureVisibilityToChildren(final MarkupContainer container,
 		final MarkupStream markupStream, ComponentTag enclosureOpenTag)
