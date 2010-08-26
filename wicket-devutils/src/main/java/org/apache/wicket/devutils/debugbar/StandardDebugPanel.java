@@ -23,6 +23,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 
 /**
@@ -37,6 +38,11 @@ public abstract class StandardDebugPanel extends DevUtilsPanel {
 
 	public StandardDebugPanel(String id) {
 		super(id);
+	}
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
 		BookmarkablePageLink<Void> link = createLink("link");
 		add(link);
 		ResourceReference img = getImageResourceReference();
@@ -49,7 +55,8 @@ public abstract class StandardDebugPanel extends DevUtilsPanel {
 	}
 
 	protected BookmarkablePageLink<Void> createLink(String id) {
-		return new BookmarkablePageLink<Void>(id, getLinkPageClass());
+		return new BookmarkablePageLink<Void>(id, getLinkPageClass(),
+				getLinkPageParameters());
 	}
 
 	protected abstract IModel<String> getDataModel();
@@ -57,5 +64,9 @@ public abstract class StandardDebugPanel extends DevUtilsPanel {
 	protected abstract ResourceReference getImageResourceReference();
 
 	protected abstract Class<? extends Page> getLinkPageClass();
+
+	protected PageParameters getLinkPageParameters() {
+		return new PageParameters();
+	}
 
 }
