@@ -209,9 +209,12 @@ public class HttpsRequestCycleProcessor extends WebRequestCycleProcessor
 	@Override
 	public IRequestTarget resolve(RequestCycle rc, RequestParameters rp)
 	{
+		if (portConfig.isPreferStateful())
+		{
 		// we need to persist the session before a redirect to https so the session lasts across
 		// both http and https calls.
 		Session.get().bind();
+		}
 
 		IRequestTarget target = super.resolve(rc, rp);
 		return checkSecure(target);

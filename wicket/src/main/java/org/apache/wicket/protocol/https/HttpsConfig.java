@@ -27,6 +27,12 @@ public class HttpsConfig
 	private int httpsPort = 443;
 
 	/**
+	 * A flag which can be used to configure {@link HttpsRequestCycleProcessor} to bind or not the
+	 * session before switching to secure (https) mode
+	 */
+	private boolean preferStateful = true;
+
+	/**
 	 * Constructor
 	 */
 	public HttpsConfig()
@@ -83,5 +89,32 @@ public class HttpsConfig
 	public int getHttpsPort()
 	{
 		return httpsPort;
+	}
+
+	/**
+	 * @see #setPreferStateful(boolean)
+	 * @return preferStateless
+	 */
+	public boolean isPreferStateful()
+	{
+		return preferStateful;
+	}
+
+	/**
+	 * Sets whether or not a new session is created before redirecting from {@code http} to
+	 * {@code https}
+	 * <p>
+	 * BE VERY CAREFUL WHEN SETTING THIS VALUE TO {@code false}.
+	 * 
+	 * If set to {@code false} it is possible that the session created when in {@code https} pages
+	 * will not be accessible to {@code http} pages, and so you may end up with two sessions per
+	 * user both potentially containing different login information.
+	 * </p>
+	 * 
+	 * @param preferStateful
+	 */
+	public void setPreferStateful(boolean preferStateful)
+	{
+		this.preferStateful = preferStateful;
 	}
 }
