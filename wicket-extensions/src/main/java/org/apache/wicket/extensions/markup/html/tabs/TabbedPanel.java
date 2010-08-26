@@ -209,7 +209,12 @@ public class TabbedPanel extends Panel
 	@Override
 	protected void onBeforeRender()
 	{
-		if (getSelectedTab() == -1 || isTabVisible(getSelectedTab()) == false)
+		if (tabs.size() == 0)
+		{
+			// force an empty container to be created every time if we have no tabs
+			setSelectedTab(0);
+		}
+		else if (getSelectedTab() == -1 || isTabVisible(getSelectedTab()) == false)
 		{
 			// find first visible selected tab
 			int selected = 0;
