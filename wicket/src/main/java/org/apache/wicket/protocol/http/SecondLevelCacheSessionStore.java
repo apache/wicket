@@ -361,6 +361,9 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			{
 				getStore().removePage(sessionId, getName(), entry.getNumericId());
 			}
+			if (lastPage instanceof Page && ((Page) lastPage).getPageMapEntry() == entry) {
+				lastPage = null;
+			}
 		}
 
 		private IPageStore getStore()
