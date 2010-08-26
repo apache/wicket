@@ -118,16 +118,6 @@ public class WicketFilter implements Filter
 			HttpServletRequest httpServletRequest = (HttpServletRequest)request;
 			HttpServletResponse httpServletResponse = (HttpServletResponse)response;
 
-			if (!Strings.isEmpty((String)request.getAttribute("javax.servlet.error.request_uri")))
-			{
-				/*
-				 * we are inside an error dispatch, because wicket assumes status is 200 and only
-				 * sets statuses to non-200 conditions we reset the current error status (404 or
-				 * other) back to 200
-				 */
-				httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-			}
-
 			// Make sure getFilterPath() gets called before checkIfRedirectRequired()
 			String filterPath = getFilterPath(httpServletRequest);
 
