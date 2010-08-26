@@ -265,14 +265,6 @@ public class WicketFilter implements Filter
 			httpServletResponse = (HttpServletResponse)response;
 		}
 
-		if (!Strings.isEmpty((String)request.getAttribute("javax.servlet.error.request_uri")))
-		{
-			// we are inside an error dispatch, because wicket assumes status is 200 and only sets
-			// statuses to non-200 conditions we reset the current error status (404 or other) back
-			// to 200
-			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-		}
-
 		// If we are a filter which is only meant to process requests in a portlet context, and we
 		// are in fact not in a portlet context, stop processing now and pass to next filter in the
 		// chain.
