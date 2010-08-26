@@ -788,7 +788,7 @@ Wicket.Window.prototype = {
 		// can user close the window?
 		if (force != true && (!this.canClose() || !this.canCloseInternal()))
 			return;		
-			
+		
 		// if the update handler was set clean it
 		if (typeof(this.update) != "undefined")
 			window.clearInterval(this.update);
@@ -1284,6 +1284,9 @@ Wicket.Window.Mask.prototype = {
 	 */
 	hide: function() {			
 
+		// cancel any pending tasks
+		this.cancelPendingTasks();
+		
 		// if the mask is visible and we can hide it
 		if (typeof(Wicket.Window.Mask.element) != "undefined" && typeof(this.dontHide) == "undefined") {
 	
@@ -1315,12 +1318,35 @@ Wicket.Window.Mask.prototype = {
 		this.doDisable(doc, Wicket.Window.current);
 	},
 	
+	tasks: [],
+	startTask: function (fn, delay) {
+		var taskId=setTimeout(function() { fn(); this.clearTask(taskId); }.bind(this), delay);
+		this.tasks.push(taskId);
+	},
+	clearTask: function (taskId) {
+		var index=-1;
+		for (var i=0;i<this.tasks.length;i++) {
+			if (this.tasks[i]==taskId) {
+				index=i;break;
+			}
+		}
+		if (index>=0) {
+			this.tasks.splice(index,1);
+		}
+	},
+	cancelPendingTasks: function() {
+		while (this.tasks.length>0) {
+			var taskId=this.tasks.shift();
+			clearTimeout(taskId);
+		}
+	},
+	
 	// disable user interaction for content that is covered by the mask inside the given document, taking into consideration that this modal window is or not in an iframe
 	// and has the given content
 	doDisable: function(doc, win) {
-		setTimeout(function() {this.hideSelectBoxes(doc, win)}.bind(this), 300);
-		setTimeout(function() {this.disableTabs(doc, win)}.bind(this), 400);
-		setTimeout(function() {this.disableFocus(doc, win)}.bind(this), 1000);
+		this.startTask(function() {this.hideSelectBoxes(doc, win)}.bind(this), 300);
+		this.startTask(function() {this.disableTabs(doc, win)}.bind(this), 400);
+		this.startTask(function() {this.disableFocus(doc, win)}.bind(this), 1000);
 	},
 	
 	// reenable user interaction for content that was covered by the mask
