@@ -17,6 +17,7 @@
 package org.apache.wicket.devutils.debugbar;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.devutils.DevUtilsPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -37,6 +38,11 @@ public abstract class StandardDebugPanel extends DevUtilsPanel {
 
 	public StandardDebugPanel(String id) {
 		super(id);
+	}
+	
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
 		BookmarkablePageLink<Void> link = createLink("link");
 		add(link);
 		ResourceReference img = getImageResourceReference();
@@ -49,7 +55,7 @@ public abstract class StandardDebugPanel extends DevUtilsPanel {
 	}
 
 	protected BookmarkablePageLink<Void> createLink(String id) {
-		return new BookmarkablePageLink<Void>(id, getLinkPageClass());
+		return new BookmarkablePageLink<Void>(id, getLinkPageClass(), getLinkPageParameters());
 	}
 
 	protected abstract IModel<String> getDataModel();
@@ -57,5 +63,9 @@ public abstract class StandardDebugPanel extends DevUtilsPanel {
 	protected abstract ResourceReference getImageResourceReference();
 
 	protected abstract Class<? extends Page> getLinkPageClass();
+	
+	protected PageParameters getLinkPageParameters() {
+		return new PageParameters();
+	}
 
 }

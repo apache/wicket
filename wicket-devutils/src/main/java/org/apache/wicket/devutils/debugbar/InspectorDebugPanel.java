@@ -18,6 +18,7 @@ package org.apache.wicket.devutils.debugbar;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.devutils.inspector.InspectorPage;
 import org.apache.wicket.model.IModel;
@@ -57,6 +58,15 @@ public class InspectorDebugPanel extends StandardDebugPanel {
 	@Override
 	protected IModel<String> getDataModel() {
 		return new Model<String>("Inspector");
+	}
+
+	@Override
+	protected PageParameters getLinkPageParameters() {
+		PageParameters params = new PageParameters();
+		params.put("pageMap", getPage().getPageMap().getName());
+		params.put("pageId", getPage().getId());
+		params.put("version", getPage().getVersions()-1);
+		return params;
 	}
 
 }

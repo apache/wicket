@@ -17,6 +17,7 @@
 package org.apache.wicket.devutils.inspector;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.Session;
@@ -27,54 +28,51 @@ import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.session.pagemap.IPageMapEntry;
 import org.apache.wicket.util.string.StringValueConversionException;
+import org.apache.wicket.util.string.Strings;
 
 /**
- * A page that shows interesting attributes of the Wicket environment, including the current session
- * and the component tree for the current page.
+ * A page that shows interesting attributes of the Wicket environment, including
+ * the current session and the component tree for the current page.
  * 
  * @author Jonathan Locke
  */
-public final class InspectorPage extends DevUtilsPage
-{
-    private static final long serialVersionUID = 1L;
+public final class InspectorPage extends DevUtilsPage {
+	private static final long serialVersionUID = 1L;
 
-    /**
-     * Constructor.
-     * 
-     * @param parameters
-     *            The page id of any page to be analyzed
-     */
-    public InspectorPage(final PageParameters parameters)
-    {
-        add(new ApplicationView("application", Application.get()));
-        add(new SessionView("session", Session.get()));
-        IPageMapEntry entry = null;
-        try
-        {
-            entry = Session.get().pageMapForName(
-                    parameters.getString("pageMap").equals("") ? null : parameters
-                            .getString("pageMap"), false).getEntry(parameters.getInt("pageId"));
-        }
-        catch (StringValueConversionException e)
-        {
-            // Ignore
-        }
-        catch (NullPointerException e)
-        {
-            // Ignore
-        }
-        add(new PageView("page", entry == null ? null : entry.getPage()));
-        add(new Image("bug", new ResourceReference(InspectorPage.class, "bug.png")));
-        add(new BookmarkablePageLink<Void>("allsessions", LiveSessionsPage.class));
-        add(new Label("wicketVersion", getApplication().getFrameworkSettings().getVersion()));
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param parameters
+	 *            The page id of any page to be analyzed
+	 */
+	public InspectorPage(final PageParameters parameters) {
+		add(new ApplicationView("application", Application.get()));
+		add(new SessionView("session", Session.get()));
+		Page page=null;
+		try {
+			int pageId = parameters.getInt("pageId");
+			int version=parameters.getInt("version");
 
-    /**
-     * @see org.apache.wicket.Component#isVersioned()
-     */
-    @Override
-    public boolean isVersioned()
-    {
-        return false;
-    }
+			page=Session.get().getPage(pageId, version);
+		} catch (StringValueConversionException e) {
+			// Ignore
+		} catch (NullPointerException e) {
+			// Ignore
+		}
+		add(new PageView("page", page));
+		add(new Image("bug", new ResourceReference(InspectorPage.class,
+				"bug.png")));
+		add(new BookmarkablePageLink<Void>("allsessions",
+				LiveSessionsPage.class));
+		add(new Label("wicketVersion", getApplication().getFrameworkSettings()
+				.getVersion()));
+	}
+
+	/**
+	 * @see org.apache.wicket.Component#isVersioned()
+	 */
+	@Override
+	public boolean isVersioned() {
+		return false;
+	}
 }
