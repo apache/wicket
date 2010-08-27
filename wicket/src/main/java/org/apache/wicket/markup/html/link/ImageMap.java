@@ -30,7 +30,9 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
  * An image map holds links with different hot-area shapes.
  * 
  * @author Jonathan Locke
+ * @deprecated going away in 1.4+, to be replaced with ClientSideImageMap
  */
+@Deprecated
 public final class ImageMap extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
