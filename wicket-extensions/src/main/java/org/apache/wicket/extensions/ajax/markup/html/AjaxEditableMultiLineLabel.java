@@ -167,8 +167,8 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
-				final String saveCall = "{wicketAjaxPost('" + getCallbackUrl() +
-					"&save=true', " + "wicketSerialize(this)); return true;}";
+				final String saveCall = "{wicketAjaxPost('" + getCallbackUrl() + "&save=true', " +
+					"wicketSerialize(this)); return true;}";
 
 				final String cancelCall = "{wicketAjaxGet('" + getCallbackUrl() +
 					"&save=false');this.onblur='';return false;}";
@@ -177,7 +177,8 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 					"; ";
 
 				tag.put("onblur", saveCall);
-				tag.put("onkeypress", keypress);
+				tag.put("onkeypress", "if (Wicket.Browser.isSafari()) { return; }; " + keypress);
+				tag.put("onkeydown", "if (!Wicket.Browser.isSafari()) { return; }; " + keypress);
 			}
 		});
 		return editor;
