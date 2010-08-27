@@ -780,13 +780,14 @@ Wicket.Ajax.Request = Wicket.Class.create();
 
 Wicket.Ajax.Request.prototype = {
     // Creates a new request object.
-	initialize: function(url, loadedCallback, parseResponse, randomURL, failureHandler, channel) {
+	initialize: function(url, loadedCallback, parseResponse, randomURL, failureHandler, channel, successHandler) {
 		this.url = url;
 		this.loadedCallback = loadedCallback;
 		// whether we should give the loadedCallback parsed response (DOM tree) or the raw string
 		this.parseResponse = parseResponse != null ? parseResponse : true; 
 		this.randomURL = randomURL != null ? randomURL : true;
 		this.failureHandler = failureHandler != null ? failureHandler : function() { };
+		this.successHandler = successHandler != null ? successHandler : function() { };
 		this.async = true;
 		this.channel = channel;
 		this.precondition = function() { return true; } // allow a condition to block request 
@@ -966,6 +967,7 @@ Wicket.Ajax.Request.prototype = {
 					// In case the page isn't really redirected. For example say the redirect is to an octet-stream.
 					// A file download popup will appear but the page in the browser won't change.					
 					this.done();
+					this.successHandler();
 					
                     // support/check for non-relative redirectUrl like as provided and needed in a portlet context
 					if (redirectUrl.charAt(0)==('/')||redirectUrl.match("^http://")=="http://"||redirectUrl.match("^https://")=="https://") {
@@ -1056,7 +1058,7 @@ Wicket.Ajax.Call.prototype = {
 
 		var c = channel != null ? channel : "0|s"; // set the default channel if not specified
 		// initialize the internal Ajax request
-		this.request = new Wicket.Ajax.Request(url, this.loadedCallback.bind(this), true, true, failureHandler, c);
+		this.request = new Wicket.Ajax.Request(url, this.loadedCallback.bind(this), true, true, failureHandler, c, successHandler);
 		this.request.suppressDone = true;
 	},
 	
