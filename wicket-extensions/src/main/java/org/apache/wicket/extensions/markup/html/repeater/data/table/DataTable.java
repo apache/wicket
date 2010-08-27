@@ -338,9 +338,10 @@ public class DataTable<T> extends Panel implements IPageable
 	 * 
 	 * @return DataItem created DataItem
 	 */
-	protected Item<T> newCellItem(final String id, final int index, final IModel<T> model)
+	protected Item<IColumn<T>> newCellItem(final String id, final int index,
+		final IModel<IColumn<T>> model)
 	{
-		return new Item<T>(id, index, model);
+		return new Item<IColumn<T>>(id, index, model);
 	}
 
 	/**
@@ -413,7 +414,7 @@ public class DataTable<T> extends Panel implements IPageable
 		@Override
 		public boolean isVisible()
 		{
-			return ((Component)iterator().next()).isVisible();
+			return (iterator().next()).isVisible();
 		}
 
 		@Override
