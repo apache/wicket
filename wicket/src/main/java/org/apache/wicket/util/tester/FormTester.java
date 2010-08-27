@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.Component.IVisitor;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;
 import org.apache.wicket.markup.html.form.Check;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -394,7 +394,7 @@ public class FormTester
 				// blank String if required
 				if (formComponent instanceof AbstractTextComponent)
 				{
-					if (Strings.isEmpty(formComponent.getValue()))
+					if (Strings.isEmpty(getFormComponentValue(formComponent)))
 					{
 						if (fillBlankString)
 						{
@@ -403,17 +403,17 @@ public class FormTester
 					}
 					else
 					{
-						setFormComponentValue(formComponent, formComponent.getValue());
+						setFormComponentValue(formComponent, getFormComponentValue(formComponent));
 					}
 				}
 				else if ((formComponent instanceof DropDownChoice) ||
 					(formComponent instanceof RadioChoice) || (formComponent instanceof CheckBox))
 				{
-					setFormComponentValue(formComponent, formComponent.getValue());
+					setFormComponentValue(formComponent, getFormComponentValue(formComponent));
 				}
 				else if (formComponent instanceof ListMultipleChoice)
 				{
-					final String[] modelValues = formComponent.getValue().split(
+					final String[] modelValues = getFormComponentValue(formComponent).split(
 						FormComponent.VALUE_SEPARATOR);
 					for (String modelValue : modelValues)
 					{
@@ -430,7 +430,7 @@ public class FormTester
 							if (checkGroupValues.contains(component.getDefaultModelObject()))
 							{
 								addFormComponentValue(formComponent,
-									((Check<?>)component).getValue());
+									(getFormComponentValue((Check<?>)component)));
 							}
 							return CONTINUE_TRAVERSAL;
 						}
@@ -451,7 +451,7 @@ public class FormTester
 								if (value.equals(component.getDefaultModelObject()))
 								{
 									addFormComponentValue(formComponent,
-										((Radio<?>)component).getValue());
+										getFormComponentValue((Radio<?>)component));
 									return STOP_TRAVERSAL;
 								}
 								return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
@@ -461,6 +461,32 @@ public class FormTester
 				}
 			}
 
+			private String getFormComponentValue(final FormComponent<?> formComponent)
+			{
+				boolean oldEscape = formComponent.getEscapeModelStrings();
+				formComponent.setEscapeModelStrings(false);
+				String val = formComponent.getValue();
+				formComponent.setEscapeModelStrings(oldEscape);
+				return val;
+			}
+
+			private String getFormComponentValue(final Check<?> formComponent)
+			{
+				boolean oldEscape = formComponent.getEscapeModelStrings();
+				formComponent.setEscapeModelStrings(false);
+				String val = formComponent.getValue();
+				formComponent.setEscapeModelStrings(oldEscape);
+				return val;
+			}
+
+			private String getFormComponentValue(final Radio<?> formComponent)
+			{
+				boolean oldEscape = formComponent.getEscapeModelStrings();
+				formComponent.setEscapeModelStrings(false);
+				String val = formComponent.getValue();
+				formComponent.setEscapeModelStrings(oldEscape);
+				return val;
+			}
 		});
 		workingForm.detach();
 	}
