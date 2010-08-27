@@ -181,7 +181,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 		if (!Strings.isEmpty(indicatorId))
 		{
-			String hide = ";wicketHide('" + indicatorId + "');";
+			String hide = ";Wicket.hideIncrementally('" + indicatorId + "');";
 			success = success + hide;
 			failure = failure + hide;
 		}
@@ -223,7 +223,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 		if (!Strings.isEmpty(indicatorId))
 		{
-			call = new AppendingStringBuffer("wicketShow('").append(indicatorId)
+			call = new AppendingStringBuffer("Wicket.showIncrementally('").append(indicatorId)
 				.append("');")
 				.append(call);
 		}
