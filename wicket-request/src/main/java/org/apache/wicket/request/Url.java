@@ -609,7 +609,7 @@ public final class Url implements Serializable
 	 * 
 	 * @author Matej Knopp
 	 */
-	public final static class QueryParameter
+	public final static class QueryParameter implements Serializable
 	{
 		private final String name;
 		private final String value;
