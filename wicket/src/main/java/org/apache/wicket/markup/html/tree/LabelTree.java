@@ -78,7 +78,7 @@ public class LabelTree extends BaseTree
 
 			@Override
 			protected Component newContentComponent(String componentId, BaseTree tree,
-				IModel<Object> model)
+				IModel<?> model)
 			{
 				return super.newContentComponent(componentId, tree, getNodeTextModel(model));
 			}
@@ -103,7 +103,7 @@ public class LabelTree extends BaseTree
 	 *            model representing the current tree node
 	 * @return model used for text
 	 */
-	protected IModel<Object> getNodeTextModel(IModel<Object> nodeModel)
+	protected IModel<?> getNodeTextModel(IModel<?> nodeModel)
 	{
 		return nodeModel;
 	}

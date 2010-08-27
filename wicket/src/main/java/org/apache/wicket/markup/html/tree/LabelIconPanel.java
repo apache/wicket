@@ -97,7 +97,7 @@ public class LabelIconPanel extends Panel
 	 * @param model
 	 * @return content component
 	 */
-	protected Component newContentComponent(String componentId, BaseTree tree, IModel<Object> model)
+	protected Component newContentComponent(String componentId, BaseTree tree, IModel<?> model)
 	{
 		return new Label(componentId, model);
 	}

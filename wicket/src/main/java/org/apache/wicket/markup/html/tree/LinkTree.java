@@ -90,7 +90,7 @@ public class LinkTree extends LabelTree
 
 			@Override
 			protected Component newContentComponent(String componentId, BaseTree tree,
-				IModel<Object> model)
+				IModel<?> model)
 			{
 				return new Label(componentId, getNodeTextModel(model));
 			}
