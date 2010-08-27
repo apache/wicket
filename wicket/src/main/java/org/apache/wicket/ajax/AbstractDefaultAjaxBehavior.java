@@ -159,7 +159,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * @param partialCall
 	 *            Javascript of a partial call to the function performing the actual ajax callback.
 	 *            Must be in format <code>function(params,</code> with signature
-	 *            <code>function(params, onSuccessHandler, onFailureHandler</code>. Example: <code>wicketAjaxGet('callbackurl'</code>
+	 *            <code>function(params, onSuccessHandler, onFailureHandler</code>. Example:
+	 *            <code>wicketAjaxGet('callbackurl'</code>
 	 * 
 	 * @return script that performs ajax callback to this behavior
 	 */
@@ -183,7 +184,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 		if (!Strings.isEmpty(indicatorId))
 		{
-			String hide = ";wicketHide('" + indicatorId + "');";
+			String hide = ";Wicket.hideIncrementally('" + indicatorId + "');";
 			success = success + hide;
 			failure = failure + hide;
 		}
@@ -227,7 +228,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 		if (!Strings.isEmpty(indicatorId))
 		{
-			call = new AppendingStringBuffer("wicketShow('").append(indicatorId)
+			call = new AppendingStringBuffer("Wicket.showIncrementally('").append(indicatorId)
 				.append("');")
 				.append(call);
 		}

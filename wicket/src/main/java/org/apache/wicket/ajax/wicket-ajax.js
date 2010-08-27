@@ -382,6 +382,41 @@ Wicket.replaceAll = function(str, from, to) {
 	return str.replace(regex,to);
 }
 
+/** shows element */
+Wicket.show=function(e) {
+    var e=Wicket.$(e);
+    if (e!=null) {
+	    e.style.display = "";
+	}
+}
+/** hides element */
+Wicket.hide=function(e) {
+    var e=Wicket.$(e);
+    if (e!=null) {
+	    e.style.display = "none";
+	}
+}
+/** call-counting implementation of Wicket.show() */
+Wicket.showIncrementally=function(e) {
+	var e=Wicket.$(e);
+	if (e==null) return;
+	var count=e.getAttribute("showIncrementallyCount");
+	count=parseInt((count==null)?0:count);
+	if (count>=0) Wicket.show(e);
+	e.setAttribute("showIncrementallyCount", count+1);
+
+}
+/** call-counting implementation of Wicket.hide() */
+Wicket.hideIncrementally=function(e) {
+	var e=Wicket.$(e);
+	if (e==null) return;
+	var count=e.getAttribute("showIncrementallyCount");
+	count=parseInt((count==null)?0:count-1);
+	if (count<=0) Wicket.hide(e);
+	e.setAttribute("showIncrementallyCount", count);
+}
+
+
 /**
  * Form serialization
  *
