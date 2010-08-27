@@ -604,13 +604,6 @@ public abstract class Session implements IClusterable, IEventSink
 	}
 
 	/**
-	 * Any attach logic for session subclasses. Called when a session is set for the thread.
-	 */
-	protected void attach()
-	{
-	}
-
-	/**
 	 * Any detach logic for session subclasses. This is called on the end of handling a request,
 	 * when the RequestCycle is about to be detached from the current thread.
 	 */
