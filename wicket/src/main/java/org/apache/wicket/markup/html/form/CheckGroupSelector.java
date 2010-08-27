@@ -87,7 +87,7 @@ public class CheckGroupSelector extends LabeledWebMarkupContainer
 			"onclick",
 			"var cb=this.form['" +
 				group.getInputName() +
-				"']; if (cb!=null) { if (!isNaN(cb.length)) { for(var i=0;i<cb.length;i++) { if (cb[i].checked != this.checked) {cb[i].click();} } } else { if (cb.checked != this.checked) {cb.click();} } }");
+				"']; if (cb!=null) { if (!isNaN(cb.length)) { for(var i=0;i<cb.length;i++) { if (cb[i].disabled) continue; if (cb[i].checked != this.checked) {cb[i].click();} } } else { if (!cb.disabled&&cb.checked != this.checked) {cb.click();} } }");
 
 		super.onComponentTag(tag);
 	}
