@@ -26,8 +26,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
@@ -1149,7 +1149,10 @@ public abstract class Session implements IClusterable
 
 	/**
 	 * Any attach logic for session subclasses. Called when a session is set for the thread.
+	 * 
+	 * @deprecated will not be available in 1.5+
 	 */
+	@Deprecated
 	protected void attach()
 	{
 	}
