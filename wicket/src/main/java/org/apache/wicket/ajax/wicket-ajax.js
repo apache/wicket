@@ -347,9 +347,9 @@ Wicket.replaceOuterHtmlSafari = function(element, text) {
  */
 Wicket.replaceOuterHtml = function(element, text) {	
 
-	if (Wicket.Browser.isIE()) {		
+	if (Wicket.Browser.isIE()|| Wicket.Browser.isOpera()) {		
 		Wicket.replaceOuterHtmlIE(element, text);				
-    } else if (Wicket.Browser.isSafari() || Wicket.Browser.isOpera()) {
+    } else if (Wicket.Browser.isSafari() ) {
     	Wicket.replaceOuterHtmlSafari(element, text);    	
     } else /* GECKO */ {
     	// create range and fragment
