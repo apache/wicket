@@ -62,7 +62,7 @@ public abstract class BaseTree extends AbstractTree
 	 * @param id
 	 * @param model
 	 */
-	public BaseTree(String id, IModel<TreeModel> model)
+	public BaseTree(String id, IModel<? extends TreeModel> model)
 	{
 		super(id, model);
 	}

@@ -476,7 +476,7 @@ public abstract class AbstractTree extends Panel
 	 * @param model
 	 *            The tree model
 	 */
-	public AbstractTree(String id, IModel<TreeModel> model)
+	public AbstractTree(String id, IModel<? extends TreeModel> model)
 	{
 		super(id, model);
 		init();
