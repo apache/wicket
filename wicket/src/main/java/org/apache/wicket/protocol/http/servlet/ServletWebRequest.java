@@ -316,24 +316,8 @@ public class ServletWebRequest extends WebRequest
 		{
 			// Strip off context path from front of URI.
 			errorUrl = errorUrl.substring(httpRequest.getContextPath().length());
-
-			String servletPath = httpRequest.getServletPath();
-			if (!errorUrl.startsWith(servletPath))
-			{
-				prepender.prepend(servletPath.substring(1) + "/");
-			}
-			for (int i = servletPath.length() + 1; i < errorUrl.length(); i++)
-			{
-				if (errorUrl.charAt(i) == '?')
-				{
-					break;
-				}
-				if (errorUrl.charAt(i) == '/')
-				{
-					prepender.prepend("../");
-				}
-			}
-			return relativePathPrefixToWicketHandler = prepender.toString();
+			// strip the leading slash
+			relativeUrl = errorUrl.substring(1);
 		}
 		else if (wicketRedirectUrl != null)
 		{
