@@ -94,6 +94,8 @@ public class WicketFilter implements Filter
 	 */
 	public static final String FILTER_MAPPING_PARAM = "filterMappingUrlPattern";
 
+	public static final String FILTER_PATH_ATTR = "org.apache.wicket.filter.path";
+
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(WicketFilter.class);
 
@@ -264,6 +266,8 @@ public class WicketFilter implements Filter
 			httpServletRequest = (HttpServletRequest)request;
 			httpServletResponse = (HttpServletResponse)response;
 		}
+
+		httpServletRequest.setAttribute(FILTER_PATH_ATTR, getFilterPath(httpServletRequest));
 
 		// If we are a filter which is only meant to process requests in a portlet context, and we
 		// are in fact not in a portlet context, stop processing now and pass to next filter in the

@@ -29,6 +29,7 @@ import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebRequest;
+import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.WicketURLDecoder;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.PrependingStringBuffer;
@@ -307,17 +308,21 @@ public class ServletWebRequest extends WebRequest
 		// stuff, with a leading slash.
 		String forwardUrl = (String)httpRequest.getAttribute("javax.servlet.forward.servlet_path");
 
-		if (forwardUrl != null && forwardUrl.length() > 0)
+		final String filterPath = (String)httpServletRequest.getAttribute(WicketFilter.FILTER_PATH_ATTR);
+
+		if (!Strings.isEmpty(forwardUrl))
 		{
 			// If this is an error page, this will be /mount or /?wicket:foo
 			relativeUrl = forwardUrl.substring(1);
+			relativeUrl = relativeUrl.substring(filterPath.length());
 		}
-		else if (errorUrl != null)
+		else if (!Strings.isEmpty(errorUrl))
 		{
 			// Strip off context path from front of URI.
 			errorUrl = errorUrl.substring(httpRequest.getContextPath().length());
 			// strip the leading slash
 			relativeUrl = errorUrl.substring(1);
+			relativeUrl = relativeUrl.substring(filterPath.length());
 		}
 		else if (wicketRedirectUrl != null)
 		{
