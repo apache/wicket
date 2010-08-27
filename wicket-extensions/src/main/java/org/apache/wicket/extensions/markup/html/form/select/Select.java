@@ -219,13 +219,15 @@ public class Select extends FormComponent
 						return true;
 					}
 				}
+                return false;
 			}
 		}
-		else
-		{
-			Object selected = getDefaultModelObject();
-			Object value = option.getDefaultModelObject();
 
+        return compareModels(getDefaultModelObject(), option.getDefaultModelObject());
+	}
+
+    private boolean compareModels(Object selected, Object value)
+    {
 			if (selected != null && selected instanceof Collection)
 			{
 				if (value instanceof Collection)
@@ -242,9 +244,5 @@ public class Select extends FormComponent
 				return Objects.equal(selected, value);
 			}
 		}
-
-		return false;
-
-	}
 
 }
