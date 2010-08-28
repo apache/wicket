@@ -1066,7 +1066,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 			// clear the enabled in hierarchy cache as it may change as a result of form processing
 			// or other logic executed in onbeforerender (WICKET-2063)
-			setMetaData(Component.ENABLED_IN_HIERARCHY_CACHE_KEY, null);
+			clearEnabledInHierarchyCache();
 
 			onBeforeRender();
 			getApplication().notifyPostComponentOnBeforeRenderListeners(this);
@@ -1252,7 +1252,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		}
 
 		// clear out enabled state metadata
-		setMetaData(ENABLED_IN_HIERARCHY_CACHE_KEY, null);
+		clearEnabledInHierarchyCache();
 
 		// notify any detach listener
 		IDetachListener detachListener = getApplication().getFrameworkSettings()
@@ -2885,8 +2885,19 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 			// Change visibility
 			setFlag(FLAG_ENABLED, enabled);
+			onEnabledStateChanged();
 		}
 		return this;
+	}
+
+	void clearEnabledInHierarchyCache()
+	{
+		setMetaData(ENABLED_IN_HIERARCHY_CACHE_KEY, null);
+	}
+
+	void onEnabledStateChanged()
+	{
+		clearEnabledInHierarchyCache();
 	}
 
 	/**
