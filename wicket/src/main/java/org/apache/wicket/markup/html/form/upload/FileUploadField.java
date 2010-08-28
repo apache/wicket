@@ -30,6 +30,12 @@ import org.apache.wicket.util.upload.FileItem;
  * component is nested in a {@link org.apache.wicket.markup.html.form.Form}, that has multipart ==
  * true, its model is updated with the {@link org.apache.wicket.markup.html.form.upload.FileUpload}
  * for this component.
+ * <p>
+ * <strong>NOTE</strong>The model of this component is reset with {@code null} at the end of the
+ * request because {@link FileUpload} instances do not survive across requests since the input
+ * streams they point to will be closed. Because of this, the {@link FileUpload} instance should be
+ * processed within the same request as the form containing it was submitted.
+ * </p>
  * 
  * @author Eelco Hillenius
  */
