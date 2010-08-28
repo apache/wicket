@@ -119,7 +119,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 			{
 				url.append("/");
 			}
-			url.append(key).append("/").append(escapedValue);
+			url.append(urlEncodePathComponent(key)).append("/").append(escapedValue);
 		}
 	}
 
@@ -168,7 +168,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 		{
 			String value = pairs[i + 1];
 			value = urlDecodePathComponent(value);
-			parameters.add(pairs[i], value);
+			parameters.add(urlDecodePathComponent(pairs[i]), value);
 		}
 
 
