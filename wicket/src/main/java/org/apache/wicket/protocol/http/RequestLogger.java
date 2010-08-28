@@ -98,8 +98,6 @@ public class RequestLogger implements IRequestLogger
 
 	private final Map<String, SessionData> liveSessions;
 
-	private final ThreadLocal<RequestData> currentRequest = new ThreadLocal<RequestData>();
-
 	private final AtomicInteger active = new AtomicInteger();
 
 	/**
@@ -161,7 +159,7 @@ public class RequestLogger implements IRequestLogger
 
 	public SessionData[] getLiveSessions()
 	{
-		SessionData[] sessions = liveSessions.values().toArray(new SessionData[0]);
+		SessionData[] sessions = liveSessions.values().toArray(new SessionData[liveSessions.values().size()]);
 		Arrays.sort(sessions);
 		return sessions;
 	}
@@ -243,7 +241,7 @@ public class RequestLogger implements IRequestLogger
 			if (sessionId != null)
 			{
 				SessionData sd = liveSessions.get(sessionId);
-				if (sd == null)
+				if (sd == null && session.isSessionInvalidated() == false)
 				{
 					// passivated session or logger only started after it.
 					sessionCreated(sessionId);
