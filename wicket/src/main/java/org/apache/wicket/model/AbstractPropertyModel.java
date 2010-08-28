@@ -109,6 +109,11 @@ public abstract class AbstractPropertyModel<T>
 			// Return a meaningful value for an empty property expression
 			return (T)getTarget();
 		}
+		else if (expression.startsWith("."))
+		{
+			throw new IllegalArgumentException(
+				"Property expressions cannot start with a '.' character");
+		}
 
 		final Object target = getTarget();
 		if (target != null)
