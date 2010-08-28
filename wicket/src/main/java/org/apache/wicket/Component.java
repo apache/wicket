@@ -3546,9 +3546,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		if (!tag.getName().equalsIgnoreCase(name))
 		{
-			findMarkupStream().throwMarkupException(
-				"Component " + getId() + " must be applied to a tag of type '" + name + "', not " +
-					tag.toUserDebugString());
+			String msg = String.format("Component [%s] (path = [%s]) must be " +
+					                     "applied to a tag of type [%s], not: %s",
+			                           getId(), getPath(), name, tag.toUserDebugString());
+
+			findMarkupStream().throwMarkupException(msg);
 		}
 	}
 
@@ -3572,9 +3574,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 			final String tagAttributeValue = tag.getAttributes().getString(key);
 			if (tagAttributeValue == null || !value.equalsIgnoreCase(tagAttributeValue))
 			{
-				findMarkupStream().throwMarkupException(
-					"Component " + getId() + " must be applied to a tag with '" + key +
-						"' attribute matching '" + value + "', not '" + tagAttributeValue + "'");
+				String msg = String.format("Component [%s] (path = [%s]) must be applied to a tag " +
+						                     "with [%s] attribute matching [%s], not [%s]",
+				                           getId(), getPath(), key, value, tagAttributeValue);
+
+				findMarkupStream().throwMarkupException(msg);
 			}
 		}
 	}
