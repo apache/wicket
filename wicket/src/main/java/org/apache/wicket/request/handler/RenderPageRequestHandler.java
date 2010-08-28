@@ -22,7 +22,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * {@link IRequestHandler} that renders page instance. Depending on the <code>redirectPolicy</code>
@@ -84,8 +84,8 @@ public class RenderPageRequestHandler implements IPageRequestHandler, IPageClass
 	 */
 	public RenderPageRequestHandler(IPageProvider pageProvider, RedirectPolicy redirectPolicy)
 	{
-		Checks.argumentNotNull(pageProvider, "pageProvider");
-		Checks.argumentNotNull(redirectPolicy, "redirectPolicy");
+		Args.notNull(pageProvider, "pageProvider");
+		Args.notNull(redirectPolicy, "redirectPolicy");
 
 		this.redirectPolicy = redirectPolicy;
 		this.pageProvider = pageProvider;

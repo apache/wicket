@@ -20,7 +20,7 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.event.IEventSource;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.apache.wicket.util.visit.Visits;
@@ -49,7 +49,7 @@ final class ComponentEventSender implements IEventSource
 	public void send(IEventSink sink, Broadcast type, Object payload)
 	{
 		ComponentEvent event = new ComponentEvent(sink, source, type, payload);
-		Checks.argumentNotNull(type, "type");
+		Args.notNull(type, "type");
 		switch (type)
 		{
 			case BUBBLE :

@@ -23,7 +23,7 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.Url.QueryParameter;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.string.Strings;
 
@@ -54,7 +54,7 @@ public abstract class AbstractComponentMapper extends AbstractMapper implements 
 	 */
 	protected String requestListenerInterfaceToString(RequestListenerInterface listenerInterface)
 	{
-		Checks.argumentNotNull(listenerInterface, "listenerInterface");
+		Args.notNull(listenerInterface, "listenerInterface");
 
 		return getContext().requestListenerInterfaceToString(listenerInterface);
 	}
@@ -67,7 +67,7 @@ public abstract class AbstractComponentMapper extends AbstractMapper implements 
 	 */
 	protected RequestListenerInterface requestListenerInterfaceFromString(String interfaceName)
 	{
-		Checks.argumentNotEmpty(interfaceName, "interfaceName");
+		Args.notEmpty(interfaceName, "interfaceName");
 
 		return getContext().requestListenerInterfaceFromString(interfaceName);
 	}
@@ -129,7 +129,7 @@ public abstract class AbstractComponentMapper extends AbstractMapper implements 
 	 */
 	protected Class<? extends IRequestablePage> getPageClass(String name)
 	{
-		Checks.argumentNotEmpty(name, "name");
+		Args.notEmpty(name, "name");
 
 		return WicketObjects.resolveClass(name);
 	}

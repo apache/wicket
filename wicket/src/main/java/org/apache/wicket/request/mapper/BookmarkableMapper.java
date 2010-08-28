@@ -23,7 +23,7 @@ import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Decodes and encodes the following URLs:
@@ -55,7 +55,7 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 	 */
 	public BookmarkableMapper(IPageParametersEncoder pageParametersEncoder)
 	{
-		Checks.argumentNotNull(pageParametersEncoder, "pageParametersEncoder");
+		Args.notNull(pageParametersEncoder, "pageParametersEncoder");
 
 		this.pageParametersEncoder = pageParametersEncoder;
 	}

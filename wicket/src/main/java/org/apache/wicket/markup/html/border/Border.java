@@ -33,7 +33,7 @@ import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * A border component has associated markup which is drawn and determines placement of markup and/or
@@ -510,7 +510,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		 */
 		private final IMarkupFragment findByName(final IMarkupFragment markup, final String name)
 		{
-			Checks.argumentNotEmpty(name, "name");
+			Args.notEmpty(name, "name");
 
 			MarkupStream stream = new MarkupStream(markup);
 

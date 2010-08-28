@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.ValueProvider;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
@@ -65,7 +65,7 @@ public class PageAccessSynchronizer
 	 */
 	public PageAccessSynchronizer(IProvider<Duration> timeout)
 	{
-		Checks.argumentNotNull(timeout, "timeout");
+		Args.notNull(timeout, "timeout");
 		this.timeout = timeout;
 	}
 

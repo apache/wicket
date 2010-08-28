@@ -19,7 +19,7 @@ package org.apache.wicket.request.handler;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Request handler for bookmarkable pages. This handler is only used to generate URLs. Rendering is
@@ -39,7 +39,7 @@ public class BookmarkablePageRequestHandler implements IPageClassRequestHandler
 	public BookmarkablePageRequestHandler(IPageProvider pageProvider)
 	{
 
-		Checks.argumentNotNull(pageProvider, "pageProvider");
+		Args.notNull(pageProvider, "pageProvider");
 
 		this.pageProvider = pageProvider;
 	}

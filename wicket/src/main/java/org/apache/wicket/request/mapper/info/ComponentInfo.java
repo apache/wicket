@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.request.mapper.info;
 
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -83,8 +83,8 @@ public class ComponentInfo
 	public ComponentInfo(Integer renderCount, String listenerInterface, String componentPath,
 		Integer behaviorIndex)
 	{
-		Checks.argumentNotEmpty(listenerInterface, "listenerInterface");
-		Checks.argumentNotNull(componentPath, "componentPath");
+		Args.notEmpty(listenerInterface, "listenerInterface");
+		Args.notNull(componentPath, "componentPath");
 
 		this.listenerInterface = listenerInterface;
 		this.componentPath = componentPath;

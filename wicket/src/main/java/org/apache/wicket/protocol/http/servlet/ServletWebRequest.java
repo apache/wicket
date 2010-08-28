@@ -41,7 +41,7 @@ import org.apache.wicket.request.Url.QueryParameter;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
@@ -88,8 +88,8 @@ public class ServletWebRequest extends WebRequest
 	 */
 	public ServletWebRequest(HttpServletRequest httpServletRequest, String filterPrefix, Url url)
 	{
-		Checks.argumentNotNull(httpServletRequest, "httpServletRequest");
-		Checks.argumentNotNull(filterPrefix, "filterPrefix");
+		Args.notNull(httpServletRequest, "httpServletRequest");
+		Args.notNull(filterPrefix, "filterPrefix");
 
 		this.httpServletRequest = httpServletRequest;
 		this.filterPrefix = filterPrefix;

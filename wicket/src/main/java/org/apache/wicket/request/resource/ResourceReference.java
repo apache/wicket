@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.Locale;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.lang.WicketObjects;
 
@@ -59,8 +59,8 @@ public abstract class ResourceReference implements Serializable
 	public ResourceReference(Class<?> scope, String name, Locale locale, String style,
 		String variation)
 	{
-		Checks.argumentNotNull(scope, "scope");
-		Checks.argumentNotNull(name, "name");
+		Args.notNull(scope, "scope");
+		Args.notNull(name, "name");
 
 		this.scope = scope.getName();
 		this.name = name;

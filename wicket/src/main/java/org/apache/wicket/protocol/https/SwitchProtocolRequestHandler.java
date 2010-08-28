@@ -8,7 +8,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Request handler that performs redirects across http and https
@@ -62,8 +62,8 @@ class SwitchProtocolRequestHandler implements IRequestHandler
 	SwitchProtocolRequestHandler(Protocol protocol, IRequestHandler handler,
 		final HttpsConfig httpsConfig)
 	{
-		Checks.argumentNotNull(protocol, "protocol");
-		Checks.argumentNotNull(httpsConfig, "httpsConfig");
+		Args.notNull(protocol, "protocol");
+		Args.notNull(httpsConfig, "httpsConfig");
 
 		if (protocol == Protocol.PRESERVE_CURRENT)
 		{

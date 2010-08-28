@@ -26,7 +26,7 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.IPageSource;
 import org.apache.wicket.request.mapper.StalePageException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Provides page instance for request handlers. Each of the constructors has just enough information
@@ -145,7 +145,7 @@ public class PageProvider implements IPageProvider
 	 */
 	public PageProvider(IRequestablePage page)
 	{
-		Checks.argumentNotNull(page, "page");
+		Args.notNull(page, "page");
 
 		pageInstance = page;
 	}
@@ -307,7 +307,7 @@ public class PageProvider implements IPageProvider
 	 */
 	private void setPageClass(Class<? extends IRequestablePage> pageClass)
 	{
-		Checks.argumentNotNull(pageClass, "pageClass");
+		Args.notNull(pageClass, "pageClass");
 
 		this.pageClass = pageClass;
 	}

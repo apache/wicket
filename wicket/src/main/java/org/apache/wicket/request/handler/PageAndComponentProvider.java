@@ -19,7 +19,7 @@ package org.apache.wicket.request.handler;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Extension of {@link PageProvider} that is also capable of providing a Component belonging
@@ -57,7 +57,7 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 	{
 		super(page);
 
-		Checks.argumentNotNull(component, "component");
+		Args.notNull(component, "component");
 
 		this.component = component;
 	}
@@ -181,7 +181,7 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 	 */
 	private void setComponentPath(String componentPath)
 	{
-		Checks.argumentNotNull(componentPath, "componentPath");
+		Args.notNull(componentPath, "componentPath");
 
 		this.componentPath = componentPath;
 	}

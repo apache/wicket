@@ -21,14 +21,16 @@ import org.apache.wicket.util.string.Strings;
 /**
  * 
  */
-public class Checks
+public class Args
 {
 	/**
+	 * Checks argument is not null
 	 * 
 	 * @param argument
 	 * @param name
+	 * @throws IllegalargumentException
 	 */
-	public static void argumentNotNull(final Object argument, final String name)
+	public static void notNull(final Object argument, final String name)
 	{
 		if (argument == null)
 		{
@@ -37,11 +39,13 @@ public class Checks
 	}
 
 	/**
+	 * Checks argument is not empty (not null and has a non-whitespace character)
 	 * 
 	 * @param argument
 	 * @param name
+	 * @throws IllegalargumentException
 	 */
-	public static void argumentNotEmpty(final String argument, final String name)
+	public static void notEmpty(final String argument, final String name)
 	{
 		if (Strings.isEmpty(argument))
 		{
@@ -51,18 +55,19 @@ public class Checks
 	}
 
 	/**
-	 * TODO javadoc and unit test
+	 * Checks if argument is within a range
 	 * 
 	 * @param <T>
 	 * @param min
 	 * @param max
 	 * @param value
 	 * @param name
+	 * @throws IllegalargumentException
 	 */
-	public static <T extends Comparable<T>> void argumentWithinRange(T min, T max, T value,
-		String name)
+	public static <T extends Comparable<T>> void withinRange(T min, T max, T value, String name)
 	{
-		// TODO nullchecks
+		notNull(min, name);
+		notNull(max, name);
 		if (value.compareTo(min) < 0 || value.compareTo(max) > 0)
 		{
 			throw new IllegalArgumentException(

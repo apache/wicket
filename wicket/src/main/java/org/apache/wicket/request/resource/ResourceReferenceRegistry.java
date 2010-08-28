@@ -22,7 +22,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
 
 /**
@@ -42,8 +42,8 @@ public class ResourceReferenceRegistry
 
 		public Key(String scope, String name, Locale locale, String style, String variation)
 		{
-			Checks.argumentNotNull(scope, "scope");
-			Checks.argumentNotNull(name, "name");
+			Args.notNull(scope, "scope");
+			Args.notNull(name, "name");
 
 			this.scope = scope.intern();
 			this.name = name.intern();
@@ -103,7 +103,7 @@ public class ResourceReferenceRegistry
 	 */
 	public void registerResourceReference(ResourceReference reference)
 	{
-		Checks.argumentNotNull(reference, "reference");
+		Args.notNull(reference, "reference");
 
 		if (reference.canBeRegistered())
 		{
@@ -125,7 +125,7 @@ public class ResourceReferenceRegistry
 	 */
 	public void unregisterResourceReference(ResourceReference reference)
 	{
-		Checks.argumentNotNull(reference, "reference");
+		Args.notNull(reference, "reference");
 
 		Key key = new Key(reference.getScope().getName(), reference.getName(),
 			reference.getLocale(), reference.getStyle(), reference.getVariation());

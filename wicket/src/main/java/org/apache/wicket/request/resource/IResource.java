@@ -22,7 +22,7 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Resource is an object capable of writing output to response.
@@ -53,8 +53,8 @@ public interface IResource extends Serializable
 		 */
 		public Attributes(Request request, Response response, PageParameters parameters)
 		{
-			Checks.argumentNotNull(request, "request");
-			Checks.argumentNotNull(response, "response");
+			Args.notNull(request, "request");
+			Args.notNull(response, "response");
 
 			this.request = request;
 			this.response = response;

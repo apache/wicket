@@ -25,7 +25,7 @@ import java.util.Set;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.Url.QueryParameter;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.StringValue;
 
@@ -45,7 +45,7 @@ public class UrlRequestParametersAdapter implements IRequestParameters
 	 */
 	public UrlRequestParametersAdapter(Url url)
 	{
-		Checks.argumentNotNull(url, "url");
+		Args.notNull(url, "url");
 
 		this.url = url;
 	}

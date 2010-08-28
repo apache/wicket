@@ -27,7 +27,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * WebResponse that wraps a {@link ServletWebResponse}.
@@ -48,8 +48,8 @@ public class ServletWebResponse extends WebResponse
 	public ServletWebResponse(HttpServletRequest httpServletRequest,
 		HttpServletResponse httpServletResponse)
 	{
-		Checks.argumentNotNull(httpServletRequest, "httpServletRequest");
-		Checks.argumentNotNull(httpServletResponse, "httpServletResponse");
+		Args.notNull(httpServletRequest, "httpServletRequest");
+		Args.notNull(httpServletResponse, "httpServletResponse");
 
 		this.httpServletResponse = httpServletResponse;
 		this.httpServletRequest = httpServletRequest;

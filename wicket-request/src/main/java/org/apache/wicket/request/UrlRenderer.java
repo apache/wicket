@@ -19,7 +19,7 @@ package org.apache.wicket.request;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 
 /**
@@ -44,7 +44,7 @@ public class UrlRenderer
 	 */
 	public UrlRenderer(final Url base)
 	{
-		Checks.argumentNotNull(base, "base");
+		Args.notNull(base, "base");
 
 		baseUrl = base;
 	}
@@ -57,7 +57,7 @@ public class UrlRenderer
 	 */
 	public Url setBaseUrl(final Url base)
 	{
-		Checks.argumentNotNull(base, "base");
+		Args.notNull(base, "base");
 
 		Url original = baseUrl;
 		baseUrl = base;
@@ -87,7 +87,7 @@ public class UrlRenderer
 	 */
 	public String renderUrl(final Url url)
 	{
-		Checks.argumentNotNull(url, "url");
+		Args.notNull(url, "url");
 
 		if (url.isAbsolute())
 		{
@@ -143,7 +143,7 @@ public class UrlRenderer
 	 */
 	public String renderContextPathRelativeUrl(String url, final Request request)
 	{
-		Checks.argumentNotNull(url, "url");
+		Args.notNull(url, "url");
 
 		if (url.startsWith("/"))
 		{

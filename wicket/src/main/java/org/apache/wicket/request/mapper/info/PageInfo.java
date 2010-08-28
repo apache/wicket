@@ -17,7 +17,7 @@
 package org.apache.wicket.request.mapper.info;
 
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -57,7 +57,7 @@ public class PageInfo
 	 */
 	public PageInfo(IRequestablePage page)
 	{
-		Checks.argumentNotNull(page, "page");
+		Args.notNull(page, "page");
 
 		pageId = page.getPageId();
 	}

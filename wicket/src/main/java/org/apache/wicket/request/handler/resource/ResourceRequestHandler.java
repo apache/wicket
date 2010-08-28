@@ -20,7 +20,7 @@ import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Request handler that renders a resource.
@@ -43,7 +43,7 @@ public class ResourceRequestHandler implements IRequestHandler
 	 */
 	public ResourceRequestHandler(IResource resource, PageParameters pageParameters)
 	{
-		Checks.argumentNotNull(resource, "resource");
+		Args.notNull(resource, "resource");
 
 		this.resource = resource;
 

@@ -93,7 +93,7 @@ import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.settings.ISessionSettings;
 import org.apache.wicket.settings.Settings;
 import org.apache.wicket.util.IProvider;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.PropertyResolver;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.time.Duration;
@@ -1316,7 +1316,7 @@ public abstract class Application implements UnboundListener, IEventSink
 
 	public final void setPageRendererProvider(IPageRendererProvider pageRendererProvider)
 	{
-		Checks.argumentNotNull(pageRendererProvider, "pageRendererProvider");
+		Args.notNull(pageRendererProvider, "pageRendererProvider");
 		this.pageRendererProvider = pageRendererProvider;
 	}
 
@@ -1454,7 +1454,7 @@ public abstract class Application implements UnboundListener, IEventSink
 
 	public Session fetchCreateAndSetSession(RequestCycle requestCycle)
 	{
-		Checks.argumentNotNull(requestCycle, "requestCycle");
+		Args.notNull(requestCycle, "requestCycle");
 
 		Session session = getSessionStore().lookup(requestCycle.getRequest());
 		if (session == null)
@@ -1564,7 +1564,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 */
 	public final void setName(String name)
 	{
-		Checks.argumentNotEmpty(name, "name");
+		Args.notEmpty(name, "name");
 
 		if (this.name != null)
 		{

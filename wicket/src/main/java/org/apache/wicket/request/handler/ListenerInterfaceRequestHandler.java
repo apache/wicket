@@ -26,7 +26,7 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Request handler that invokes the listener interface on component and renders page afterwards.
@@ -54,8 +54,8 @@ public class ListenerInterfaceRequestHandler
 	public ListenerInterfaceRequestHandler(IPageAndComponentProvider pageComponentProvider,
 		RequestListenerInterface listenerInterface, Integer behaviorIndex)
 	{
-		Checks.argumentNotNull(pageComponentProvider, "pageComponentProvider");
-		Checks.argumentNotNull(listenerInterface, "listenerInterface");
+		Args.notNull(pageComponentProvider, "pageComponentProvider");
+		Args.notNull(listenerInterface, "listenerInterface");
 
 		this.pageComponentProvider = pageComponentProvider;
 		this.listenerInterface = listenerInterface;

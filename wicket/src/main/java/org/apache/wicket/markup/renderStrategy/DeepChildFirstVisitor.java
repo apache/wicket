@@ -18,7 +18,7 @@ package org.apache.wicket.markup.renderStrategy;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.apache.wicket.util.visit.Visit;
@@ -44,7 +44,7 @@ public abstract class DeepChildFirstVisitor implements IVisitor<Component, Compo
 	 */
 	public final Object visit(final Component rootComponent)
 	{
-		Checks.argumentNotNull(rootComponent, "rootComponent");
+		Args.notNull(rootComponent, "rootComponent");
 
 		if (rootComponent instanceof MarkupContainer)
 		{

@@ -43,7 +43,7 @@ import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -133,12 +133,12 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 	{
 		super(context.getResponse());
 
-		Checks.argumentNotNull(context, "context");
+		Args.notNull(context, "context");
 
-		Checks.argumentNotNull(context.getRequest(), "context.request");
-		Checks.argumentNotNull(context.getResponse(), "context.response");
-		Checks.argumentNotNull(context.getRequestMapper(), "context.requestMapper");
-		Checks.argumentNotNull(context.getExceptionMapper(), "context.exceptionMapper");
+		Args.notNull(context.getRequest(), "context.request");
+		Args.notNull(context.getResponse(), "context.response");
+		Args.notNull(context.getRequestMapper(), "context.requestMapper");
+		Args.notNull(context.getExceptionMapper(), "context.exceptionMapper");
 
 		request = context.getRequest();
 		originalResponse = context.getResponse();

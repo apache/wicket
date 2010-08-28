@@ -19,7 +19,7 @@ package org.apache.wicket.markup.renderStrategy;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.visit.IVisit;
 
 /**
@@ -53,8 +53,8 @@ public class ChildFirstHeaderRenderStrategy extends AbstractHeaderRenderStrategy
 	public void renderHeader(final HtmlHeaderContainer headerContainer,
 		final Component rootComponent)
 	{
-		Checks.argumentNotNull(headerContainer, "headerContainer");
-		Checks.argumentNotNull(rootComponent, "rootComponent");
+		Args.notNull(headerContainer, "headerContainer");
+		Args.notNull(rootComponent, "rootComponent");
 
 		// First the application level headers
 		renderApplicationLevelHeaders(headerContainer);
@@ -76,8 +76,8 @@ public class ChildFirstHeaderRenderStrategy extends AbstractHeaderRenderStrategy
 	protected void renderChildHeaders(final HtmlHeaderContainer headerContainer,
 		final Component rootComponent)
 	{
-		Checks.argumentNotNull(headerContainer, "headerContainer");
-		Checks.argumentNotNull(rootComponent, "rootComponent");
+		Args.notNull(headerContainer, "headerContainer");
+		Args.notNull(rootComponent, "rootComponent");
 
 		if (rootComponent instanceof MarkupContainer)
 		{

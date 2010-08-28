@@ -25,7 +25,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.wicket.request.IRequestMapper;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.IStringIterator;
 import org.apache.wicket.util.string.StringList;
@@ -248,7 +248,7 @@ public class PageParameters implements Serializable
 	 */
 	public StringValue getNamedParameter(final String name)
 	{
-		Checks.argumentNotNull(name, "name");
+		Args.notNull(name, "name");
 
 		if (namedParameters != null)
 		{
@@ -271,7 +271,7 @@ public class PageParameters implements Serializable
 	 */
 	public List<StringValue> getNamedParameters(final String name)
 	{
-		Checks.argumentNotNull(name, "name");
+		Args.notNull(name, "name");
 
 		if (namedParameters != null)
 		{
@@ -349,7 +349,7 @@ public class PageParameters implements Serializable
 	 */
 	public void removeNamedParameter(final String name)
 	{
-		Checks.argumentNotNull(name, "name");
+		Args.notNull(name, "name");
 
 		if (namedParameters != null)
 		{
@@ -385,8 +385,8 @@ public class PageParameters implements Serializable
 	 */
 	public void addNamedParameter(final String name, final Object value, final int index)
 	{
-		Checks.argumentNotNull(name, "name");
-		Checks.argumentNotNull(value, "value");
+		Args.notNull(name, "name");
+		Args.notNull(value, "value");
 
 		if (namedParameters == null)
 		{

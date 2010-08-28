@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.page.IManageablePage;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.lang.WicketObjects;
 
@@ -50,8 +50,8 @@ public class DefaultPageStore implements IPageStore
 	public DefaultPageStore(final String applicationName, final IDataStore dataStore,
 		final int cacheSize)
 	{
-		Checks.argumentNotNull(applicationName, "applicationName");
-		Checks.argumentNotNull(dataStore, "DataStore");
+		Args.notNull(applicationName, "applicationName");
+		Args.notNull(dataStore, "DataStore");
 
 		this.applicationName = applicationName;
 		pageDataStore = dataStore;
@@ -358,8 +358,8 @@ public class DefaultPageStore implements IPageStore
 	 */
 	protected SerializedPage serializePage(final String sessionId, final IManageablePage page)
 	{
-		Checks.argumentNotNull(sessionId, "sessionId");
-		Checks.argumentNotNull(page, "page");
+		Args.notNull(sessionId, "sessionId");
+		Args.notNull(page, "page");
 
 		byte data[] = WicketObjects.objectToByteArray(page, applicationName);
 		return new SerializedPage(sessionId, page.getPageId(), data);
@@ -410,7 +410,7 @@ public class DefaultPageStore implements IPageStore
 		 */
 		public SerializedPage removePage(final String sessionId, final int id)
 		{
-			Checks.argumentNotNull(sessionId, "sessionId");
+			Args.notNull(sessionId, "sessionId");
 
 			if (size > 0)
 			{
@@ -434,7 +434,7 @@ public class DefaultPageStore implements IPageStore
 
 		public void removePages(String sessionId)
 		{
-			Checks.argumentNotNull(sessionId, "sessionId");
+			Args.notNull(sessionId, "sessionId");
 
 			if (size > 0)
 			{
@@ -455,7 +455,7 @@ public class DefaultPageStore implements IPageStore
 
 		public SerializedPage getPage(String sessionId, int id)
 		{
-			Checks.argumentNotNull(sessionId, "sessionId");
+			Args.notNull(sessionId, "sessionId");
 
 			SerializedPage result = null;
 			if (size > 0)

@@ -27,7 +27,7 @@ import javax.servlet.http.Cookie;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Subclass of {@link WebResponse} that buffers the actions and performs those on another response.
@@ -432,7 +432,7 @@ public class BufferedWebResponse extends WebResponse
 	 */
 	public void writeTo(final WebResponse response)
 	{
-		Checks.argumentNotNull(response, "response");
+		Args.notNull(response, "response");
 
 		for (Action action : actions)
 		{

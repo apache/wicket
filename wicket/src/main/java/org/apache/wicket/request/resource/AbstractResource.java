@@ -30,7 +30,7 @@ import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.io.Streams;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Convenience resource implementation. The subclass must implement
@@ -153,7 +153,7 @@ public abstract class AbstractResource implements IResource
 		 */
 		public void setContentDisposition(ContentDisposition contentDisposition)
 		{
-			Checks.argumentNotNull(contentDisposition, "contentDisposition");
+			Args.notNull(contentDisposition, "contentDisposition");
 			this.contentDisposition = contentDisposition;
 		}
 
@@ -327,7 +327,7 @@ public abstract class AbstractResource implements IResource
 		 */
 		public void setWriteCallback(WriteCallback writeCallback)
 		{
-			Checks.argumentNotNull(writeCallback, "writeCallback");
+			Args.notNull(writeCallback, "writeCallback");
 			this.writeCallback = writeCallback;
 		}
 

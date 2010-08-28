@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.page;
 
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Decorator for {@link IPageManager}
@@ -34,7 +34,7 @@ public class PageManagerDecorator implements IPageManager
 	 */
 	public PageManagerDecorator(IPageManager delegate)
 	{
-		Checks.argumentNotNull(delegate, "delegate");
+		Args.notNull(delegate, "delegate");
 		this.delegate = delegate;
 	}
 

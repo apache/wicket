@@ -52,7 +52,7 @@ import org.apache.wicket.util.collections.MostRecentlyUsedMap;
 import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.WebApplicationPath;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.slf4j.Logger;
@@ -286,7 +286,7 @@ public abstract class WebApplication extends Application
 	@Deprecated
 	public final void mount(IRequestMapper mapper)
 	{
-		Checks.argumentNotNull(mapper, "mapper");
+		Args.notNull(mapper, "mapper");
 		getRootRequestMapperAsCompound().add(mapper);
 	}
 
@@ -383,7 +383,7 @@ public abstract class WebApplication extends Application
 	 */
 	public final void setWicketFilter(final WicketFilter wicketFilter)
 	{
-		Checks.argumentNotNull(wicketFilter, "wicketFilter");
+		Args.notNull(wicketFilter, "wicketFilter");
 		this.wicketFilter = wicketFilter;
 		servletContext = wicketFilter.getFilterConfig().getServletContext();
 	}

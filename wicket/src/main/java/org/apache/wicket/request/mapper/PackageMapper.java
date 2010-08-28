@@ -23,7 +23,7 @@ import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.PackageName;
 
 /**
@@ -77,9 +77,9 @@ public class PackageMapper extends AbstractBookmarkableMapper
 	public PackageMapper(final String mountPath, final PackageName packageName,
 		final IPageParametersEncoder pageParametersEncoder)
 	{
-		Checks.argumentNotNull(mountPath, "mountPath");
-		Checks.argumentNotNull(packageName, "packageName");
-		Checks.argumentNotNull(pageParametersEncoder, "pageParametersEncoder");
+		Args.notNull(mountPath, "mountPath");
+		Args.notNull(packageName, "packageName");
+		Args.notNull(pageParametersEncoder, "pageParametersEncoder");
 
 		this.mountPath = mountPath;
 		this.packageName = packageName;

@@ -23,7 +23,7 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.Url.QueryParameter;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 public class AbstractMapper
@@ -101,8 +101,8 @@ public class AbstractMapper
 	protected PageParameters extractPageParameters(Request request, int segmentsToSkip,
 		IPageParametersEncoder encoder)
 	{
-		Checks.argumentNotNull(request, "request");
-		Checks.argumentNotNull(encoder, "encoder");
+		Args.notNull(request, "request");
+		Args.notNull(encoder, "encoder");
 
 		// strip the segments and first query parameter from URL
 		Url urlCopy = new Url(request.getUrl());
@@ -134,8 +134,8 @@ public class AbstractMapper
 	protected Url encodePageParameters(Url url, PageParameters pageParameters,
 		IPageParametersEncoder encoder)
 	{
-		Checks.argumentNotNull(url, "url");
-		Checks.argumentNotNull(encoder, "encoder");
+		Args.notNull(url, "url");
+		Args.notNull(encoder, "encoder");
 
 		if (pageParameters == null)
 		{

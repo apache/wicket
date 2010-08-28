@@ -24,7 +24,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * An abstract implementation of a header render strategy which is only missing the code to traverse
@@ -112,8 +112,8 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 	public void renderHeader(final HtmlHeaderContainer headerContainer,
 		final Component rootComponent)
 	{
-		Checks.argumentNotNull(headerContainer, "headerContainer");
-		Checks.argumentNotNull(rootComponent, "rootComponent");
+		Args.notNull(headerContainer, "headerContainer");
+		Args.notNull(rootComponent, "rootComponent");
 
 		// First the application level headers
 		renderApplicationLevelHeaders(headerContainer);
@@ -153,7 +153,7 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 	 */
 	protected final void renderApplicationLevelHeaders(final HtmlHeaderContainer headerContainer)
 	{
-		Checks.argumentNotNull(headerContainer, "headerContainer");
+		Args.notNull(headerContainer, "headerContainer");
 
 		if (renderHeadListeners != null)
 		{

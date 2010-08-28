@@ -22,7 +22,7 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.NullProvider;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Mapper that rewrites parent path segments ({@code ../}) with the specified string and viceversa.
@@ -44,8 +44,8 @@ public class ParentPathReferenceRewriter implements IRequestMapper
 	 */
 	public ParentPathReferenceRewriter(IRequestMapper chain, IProvider<String> escapeSequence)
 	{
-		Checks.argumentNotNull(chain, "chain");
-		Checks.argumentNotNull(escapeSequence, "relativePathPartEscapeSequence");
+		Args.notNull(chain, "chain");
+		Args.notNull(escapeSequence, "relativePathPartEscapeSequence");
 		this.escapeSequence = escapeSequence;
 		this.chain = chain;
 	}

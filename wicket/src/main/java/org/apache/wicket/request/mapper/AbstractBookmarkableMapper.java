@@ -32,7 +32,7 @@ import org.apache.wicket.request.mapper.info.ComponentInfo;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.info.PageInfo;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,7 +69,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		public UrlInfo(PageComponentInfo pageComponentInfo,
 			Class<? extends IRequestablePage> pageClass, PageParameters pageParameters)
 		{
-			Checks.argumentNotNull(pageClass, "pageClass");
+			Args.notNull(pageClass, "pageClass");
 
 			this.pageComponentInfo = pageComponentInfo;
 			this.pageParameters = pageParameters;

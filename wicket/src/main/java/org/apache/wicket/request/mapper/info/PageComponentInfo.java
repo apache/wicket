@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.request.mapper.info;
 
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -41,7 +41,7 @@ public class PageComponentInfo
 	 */
 	public PageComponentInfo(PageInfo pageInfo, ComponentInfo componentInfo)
 	{
-		Checks.argumentNotNull(pageInfo, "pageInfo");
+		Args.notNull(pageInfo, "pageInfo");
 
 		this.pageInfo = pageInfo;
 		this.componentInfo = componentInfo;

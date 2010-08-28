@@ -23,7 +23,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Request handler for {@link ResourceReference}. This handler is only used to generate URLs.
@@ -55,7 +55,7 @@ public class ResourceReferenceRequestHandler implements IRequestHandler
 	public ResourceReferenceRequestHandler(ResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
-		Checks.argumentNotNull(resourceReference, "resourceReference");
+		Args.notNull(resourceReference, "resourceReference");
 
 		this.resourceReference = resourceReference;
 		this.pageParameters = pageParameters != null ? pageParameters : new PageParameters();
