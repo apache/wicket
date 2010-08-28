@@ -204,12 +204,13 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 	}
 
 	/**
-	 * Processes the request.
+	 * Processes the request and detaches the {@link RequestCycle}, but does not handle any
+	 * exceptions. Exceptions are not caught and thus are passed through to e.g. WicketTester.
 	 * 
 	 * @return <code>true</code> if the request resolved to a Wicket request, <code>false</code>
 	 *         otherwise.
 	 */
-	public boolean processRequest()
+	public boolean processRequestAndDetachWithoutExceptionHandling()
 	{
 		try
 		{
@@ -220,58 +221,59 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 				executeRequestHandler(handler);
 				return true;
 			}
-
-		}
-		catch (Exception e)
-		{
-			IRequestHandler handler = handleException(e);
-			if (handler != null)
-			{
-				executeExceptionRequestHandler(handler, getExceptionRetryCount());
-			}
-			else
-			{
-				log.error("Error during request processing", e);
-			}
-			return true;
 		}
 		finally
 		{
 			set(null);
+			detach();
 		}
 		return false;
 	}
 
 	/**
-	 * Convenience method that processes the request and detaches the {@link RequestCycle}.
+	 * Processes the request and detaches the {@link RequestCycle}. Exceptions are caught and
+	 * managed.
+	 * 
+	 * @see #handleException(Exception)
+	 * @see #executeExceptionRequestHandler(IRequestHandler, int)
 	 * 
 	 * @return <code>true</code> if the request resolved to a Wicket request, <code>false</code>
 	 *         otherwise.
 	 */
 	public boolean processRequestAndDetach()
 	{
-		boolean result;
 		try
 		{
-			result = processRequest();
+			return processRequestAndDetachWithoutExceptionHandling();
 		}
-		finally
+		catch (Exception e)
 		{
-			detach();
+			IRequestHandler handler = handleException(e);
+			if (handler != null)
+			{
+				return executeExceptionRequestHandler(handler, getExceptionRetryCount());
+			}
+			else
+			{
+				log.error("Error during request processing", e);
+			}
 		}
-		return result;
+		return false;
 	}
 
 	/**
 	 * 
 	 * @param handler
 	 * @param retryCount
+	 * @return False, in case all retry attempts failed and the request could not be handled
 	 */
-	private void executeExceptionRequestHandler(final IRequestHandler handler, final int retryCount)
+	private boolean executeExceptionRequestHandler(final IRequestHandler handler,
+		final int retryCount)
 	{
 		try
 		{
 			executeRequestHandler(handler);
+			return true;
 		}
 		catch (Exception e)
 		{
@@ -280,12 +282,12 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 				IRequestHandler next = handleException(e);
 				if (handler != null)
 				{
-					executeExceptionRequestHandler(next, retryCount - 1);
-					return;
+					return executeExceptionRequestHandler(next, retryCount - 1);
 				}
 			}
 			log.error("Error during processing error message", e);
 		}
+		return false;
 	}
 
 	/**
