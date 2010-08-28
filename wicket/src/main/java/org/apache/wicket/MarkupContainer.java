@@ -987,8 +987,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * Overrides {@link Component#initialize()} to call {@link Component#fireInitialize()} for itself
-	 * and for all its children.
+	 * Overrides {@link Component#initialize()} to call {@link Component#fireInitialize()} for
+	 * itself and for all its children.
 	 * 
 	 * @see org.apache.wicket.Component#fireInitialize()
 	 */
@@ -1763,6 +1763,19 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					this, ex);
 			}
 		}
+	}
+
+	@Override
+	void onEnabledStateChanged()
+	{
+		super.onEnabledStateChanged();
+		visitChildren(new IVisitor<Component, Void>()
+		{
+			public void component(Component component, IVisit<Void> visit)
+			{
+				component.clearEnabledInHierarchyCache();
+			}
+		});
 	}
 
 	/**
