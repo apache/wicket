@@ -26,6 +26,7 @@ import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.request.http.handler.ErrorCodeResponseHandler;
 import org.apache.wicket.request.mapper.StalePageException;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
@@ -47,8 +48,9 @@ public class DefaultExceptionMapper implements IExceptionMapper
 	private RenderPageRequestHandler.RedirectPolicy redirectPolicy = RenderPageRequestHandler.RedirectPolicy.NEVER_REDIRECT;
 
 	/**
-	 * get the redirect policy in case of error (controls if the URL changes in case of displaying an error)
-	 *
+	 * get the redirect policy in case of error (controls if the URL changes in case of displaying
+	 * an error)
+	 * 
 	 * @return redirect policy
 	 */
 	public RenderPageRequestHandler.RedirectPolicy getRedirectPolicy()
@@ -57,9 +59,11 @@ public class DefaultExceptionMapper implements IExceptionMapper
 	}
 
 	/**
-	 * set the redirect policy in case of error (you can control if the URL changes in case of displaying an error)
-	 *
-	 * @param redirectPolicy redirection policy
+	 * set the redirect policy in case of error (you can control if the URL changes in case of
+	 * displaying an error)
+	 * 
+	 * @param redirectPolicy
+	 *            redirection policy
 	 */
 	public void setRedirectPolicy(RenderPageRequestHandler.RedirectPolicy redirectPolicy)
 	{
@@ -67,6 +71,22 @@ public class DefaultExceptionMapper implements IExceptionMapper
 	}
 
 	public IRequestHandler map(Exception e)
+	{
+		try
+		{
+			return internalMap(e);
+		}
+		catch (RuntimeException e2)
+		{
+			// hmmm, we were already handling an exception! give up
+			logger.error("unexpected exception when handling another exception: " + e.getMessage(),
+				e);
+			return new ErrorCodeResponseHandler(500);
+		}
+
+	}
+
+	private IRequestHandler internalMap(Exception e)
 	{
 		if (e instanceof StalePageException)
 		{
@@ -97,7 +117,8 @@ public class DefaultExceptionMapper implements IExceptionMapper
 			if (IExceptionSettings.SHOW_EXCEPTION_PAGE.equals(unexpectedExceptionDisplay))
 			{
 				Page currentPage = extractCurrentPage();
-				return createPageRequestHandler(new PageProvider(new ExceptionErrorPage(e,	currentPage)));
+				return createPageRequestHandler(new PageProvider(new ExceptionErrorPage(e,
+					currentPage)));
 			}
 			else if (IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE.equals(unexpectedExceptionDisplay))
 			{

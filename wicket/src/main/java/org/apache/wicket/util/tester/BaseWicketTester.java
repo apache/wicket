@@ -497,21 +497,7 @@ public class BaseWicketTester
 			applyRequest();
 			requestCycle.scheduleRequestHandlerAfterCurrent(null);
 
-			// In production you want RequestCycle to manage any exceptions and react depending on
-			// your needs. In WicketTester you usually want the exception to fall through for the
-			// junit test to fail.
-			boolean requestProcessed;
-			if (exposeExceptions == true)
-			{
-				requestProcessed = requestCycle.processRequestAndDetachWithoutExceptionHandling();
-			}
-			else
-			{
-				requestProcessed = requestCycle.processRequestAndDetach();
-			}
-
-			// In case the request could not be processed, ...
-			if (requestProcessed == false)
+			if (!requestCycle.processRequestAndDetach())
 			{
 				return false;
 			}
@@ -1916,9 +1902,23 @@ public class BaseWicketTester
 			this.delegate = delegate;
 		}
 
-		public IRequestHandler map(final Exception e)
+		public IRequestHandler map(Exception e)
 		{
-			return delegate.map(e);
+			if (exposeExceptions)
+			{
+				if (e instanceof RuntimeException)
+				{
+					throw (RuntimeException)e;
+				}
+				else
+				{
+					throw new WicketRuntimeException(e);
+				}
+			}
+			else
+			{
+				return delegate.map(e);
+			}
 		}
 	}
 

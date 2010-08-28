@@ -41,7 +41,6 @@ import org.apache.wicket.request.handler.IPageProvider;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
-import org.apache.wicket.request.http.handler.ErrorCodeResponseHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Checks;
@@ -204,13 +203,12 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 	}
 
 	/**
-	 * Processes the request and detaches the {@link RequestCycle}, but does not handle any
-	 * exceptions. Exceptions are not caught and thus are passed through to e.g. WicketTester.
+	 * Processes the request.
 	 * 
 	 * @return <code>true</code> if the request resolved to a Wicket request, <code>false</code>
 	 *         otherwise.
 	 */
-	public boolean processRequestAndDetachWithoutExceptionHandling()
+	public boolean processRequest()
 	{
 		try
 		{
@@ -221,59 +219,58 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 				executeRequestHandler(handler);
 				return true;
 			}
-		}
-		finally
-		{
-			set(null);
-			detach();
-		}
-		return false;
-	}
 
-	/**
-	 * Processes the request and detaches the {@link RequestCycle}. Exceptions are caught and
-	 * managed.
-	 * 
-	 * @see #handleException(Exception)
-	 * @see #executeExceptionRequestHandler(IRequestHandler, int)
-	 * 
-	 * @return <code>true</code> if the request resolved to a Wicket request, <code>false</code>
-	 *         otherwise.
-	 */
-	public boolean processRequestAndDetach()
-	{
-		try
-		{
-			return processRequestAndDetachWithoutExceptionHandling();
 		}
 		catch (Exception e)
 		{
 			IRequestHandler handler = handleException(e);
 			if (handler != null)
 			{
-				return executeExceptionRequestHandler(handler, getExceptionRetryCount());
+				executeExceptionRequestHandler(handler, getExceptionRetryCount());
 			}
 			else
 			{
 				log.error("Error during request processing", e);
 			}
+			return true;
+		}
+		finally
+		{
+			set(null);
 		}
 		return false;
+	}
+
+	/**
+	 * Convenience method that processes the request and detaches the {@link RequestCycle}.
+	 * 
+	 * @return <code>true</code> if the request resolved to a Wicket request, <code>false</code>
+	 *         otherwise.
+	 */
+	public boolean processRequestAndDetach()
+	{
+		boolean result;
+		try
+		{
+			result = processRequest();
+		}
+		finally
+		{
+			detach();
+		}
+		return result;
 	}
 
 	/**
 	 * 
 	 * @param handler
 	 * @param retryCount
-	 * @return False, in case all retry attempts failed and the request could not be handled
 	 */
-	private boolean executeExceptionRequestHandler(final IRequestHandler handler,
-		final int retryCount)
+	private void executeExceptionRequestHandler(final IRequestHandler handler, final int retryCount)
 	{
 		try
 		{
 			executeRequestHandler(handler);
-			return true;
 		}
 		catch (Exception e)
 		{
@@ -282,12 +279,12 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 				IRequestHandler next = handleException(e);
 				if (handler != null)
 				{
-					return executeExceptionRequestHandler(next, retryCount - 1);
+					executeExceptionRequestHandler(next, retryCount - 1);
+					return;
 				}
 			}
 			log.error("Error during processing error message", e);
 		}
-		return false;
 	}
 
 	/**
@@ -298,16 +295,7 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 	 */
 	protected IRequestHandler handleException(final Exception e)
 	{
-		try
-		{
-			return exceptionMapper.map(e);
-		}
-		catch (RuntimeException e2)
-		{
-			// hmmm, we were already handling an exception! give up
-			log.error("unexpected exception when handling another exception: " + e.getMessage(), e);
-			return new ErrorCodeResponseHandler(500);
-		}
+		return exceptionMapper.map(e);
 	}
 
 	/**
