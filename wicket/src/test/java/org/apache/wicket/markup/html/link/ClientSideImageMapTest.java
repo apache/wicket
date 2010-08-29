@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.link;
 
+import java.util.Locale;
+
 import org.apache.wicket.WicketTestCase;
 
 /**
@@ -25,6 +27,7 @@ public class ClientSideImageMapTest extends WicketTestCase
 {
 	public void testRenderClientSideImageMapPage_1() throws Exception
 	{
+		tester.getSession().setLocale(Locale.US);
 		executeTest(ClientSideImageMapPage_1.class, "ClientSideImageMapPageExpectedResult_1.html");
 	}
 }
