@@ -20,7 +20,7 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.wicket.Application;
+import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -138,7 +138,7 @@ public class PackageResource implements IResource
 	public void respond(Attributes attributes)
 	{
 		// Locate resource
-		IResourceStream resourceStream = Application.get()
+		IResourceStream resourceStream = ThreadContext.getApplication()
 			.getResourceSettings()
 			.getResourceStreamLocator()
 			.locate(getScope(), absolutePath, style, variation, locale, null);
@@ -172,7 +172,7 @@ public class PackageResource implements IResource
 	 */
 	private boolean accept(Class<?> scope, String path)
 	{
-		IPackageResourceGuard guard = Application.get()
+		IPackageResourceGuard guard = ThreadContext.getApplication()
 			.getResourceSettings()
 			.getPackageResourceGuard();
 
@@ -200,8 +200,9 @@ public class PackageResource implements IResource
 		final String style, final String variation)
 	{
 		String absolutePath = Packages.absolutePath(scope, path);
-		return Application.get().getResourceSettings().getResourceStreamLocator().locate(scope,
-			absolutePath, style, variation, locale, null) != null;
+		return ThreadContext.getApplication()
+			.getResourceSettings()
+			.getResourceStreamLocator()
+			.locate(scope, absolutePath, style, variation, locale, null) != null;
 	}
-
 }

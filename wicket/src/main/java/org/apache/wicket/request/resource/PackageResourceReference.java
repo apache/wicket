@@ -17,11 +17,11 @@
 package org.apache.wicket.request.resource;
 
 import java.util.Locale;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.Session;
+import org.apache.wicket.ThreadContext;
+import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 
@@ -31,32 +31,74 @@ public class PackageResourceReference extends ResourceReference
 
 	private transient ConcurrentMap<UrlAttributes, UrlAttributes> urlAttributesCacheMap;
 
-	public PackageResourceReference(Class<?> scope, String name, Locale locale, String style,
-		String variation)
+	/**
+	 * Construct.
+	 * 
+	 * @param key
+	 */
+	public PackageResourceReference(final Key key)
+	{
+		super(key);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param scope
+	 * @param name
+	 * @param locale
+	 * @param style
+	 * @param variation
+	 */
+	public PackageResourceReference(final Class<?> scope, final String name, final Locale locale,
+		final String style, String variation)
 	{
 		super(scope, name, locale, style, variation);
 	}
 
-	public PackageResourceReference(Class<?> scope, String name)
+	/**
+	 * Construct.
+	 * 
+	 * @param scope
+	 * @param name
+	 */
+	public PackageResourceReference(final Class<?> scope, final String name)
 	{
 		super(scope, name);
 	}
 
-	public PackageResourceReference(String name)
+	/**
+	 * Construct.
+	 * 
+	 * @param name
+	 */
+	public PackageResourceReference(final String name)
 	{
 		super(name);
 	}
 
+	/**
+	 * @see org.apache.wicket.request.resource.ResourceReference#getResource()
+	 */
 	@Override
 	public IResource getResource()
 	{
 		return new PackageResource(getScope(), getName(), getLocale(), getStyle(), getVariation());
 	}
 
-	private UrlAttributes testResource(IResourceStreamLocator locator, Locale locale, String style,
-		String variation)
+	/**
+	 * 
+	 * @param locator
+	 * @param locale
+	 * @param style
+	 * @param variation
+	 * @return
+	 */
+	private UrlAttributes testResource(final IResourceStreamLocator locator, final Locale locale,
+		final String style, final String variation)
 	{
 		String absolutePath = Packages.absolutePath(getScope(), getName());
+
 		if (locator.locate(getScope(), absolutePath, style, variation, locale, null, true) != null)
 		{
 			return new UrlAttributes(locale, style, variation);
@@ -67,15 +109,21 @@ public class PackageResourceReference extends ResourceReference
 		}
 	}
 
-	private UrlAttributes getUrlAttributes(Locale locale, String style, String variation)
+	/**
+	 * 
+	 * @param locale
+	 * @param style
+	 * @param variation
+	 * @return
+	 */
+	private UrlAttributes getUrlAttributes(final Locale locale, final String style,
+		final String variation)
 	{
-		IResourceStreamLocator locator = Application.get()
+		IResourceStreamLocator locator = ThreadContext.getApplication()
 			.getResourceSettings()
 			.getResourceStreamLocator();
 
-		UrlAttributes res;
-
-		res = testResource(locator, locale, style, variation);
+		UrlAttributes res = testResource(locator, locale, style, variation);
 		if (res == null)
 		{
 			res = testResource(locator, locale, style, null);
@@ -107,6 +155,9 @@ public class PackageResourceReference extends ResourceReference
 		return res;
 	}
 
+	/**
+	 * @see org.apache.wicket.request.resource.ResourceReference#getUrlAttributes()
+	 */
 	@Override
 	public UrlAttributes getUrlAttributes()
 	{
@@ -114,12 +165,12 @@ public class PackageResourceReference extends ResourceReference
 		String style = getStyle() != null ? getStyle() : Session.get().getStyle();
 		String variation = getVariation();
 
-		UrlAttributes key = new UrlAttributes(locale, style, variation);
-
 		if (urlAttributesCacheMap == null)
 		{
-			urlAttributesCacheMap = new ConcurrentHashMap<UrlAttributes, UrlAttributes>();
+			urlAttributesCacheMap = Generics.newConcurrentHashMap();
 		}
+
+		UrlAttributes key = new UrlAttributes(locale, style, variation);
 		UrlAttributes value = urlAttributesCacheMap.get(key);
 		if (value == null)
 		{

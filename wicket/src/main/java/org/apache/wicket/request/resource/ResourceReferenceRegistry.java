@@ -21,14 +21,14 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.apache.wicket.request.resource.ResourceReference.Key;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
-import org.apache.wicket.util.lang.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Allows to register and lookup {@link ResourceReference}s.
+ * Allows to register and lookup {@link ResourceReference}s per Application.
  * 
  * @see org.apache.wicket.Application#getResourceReferenceRegistry()
  * @see org.apache.wicket.Application#newResourceReferenceRegistry()
@@ -44,7 +44,6 @@ public class ResourceReferenceRegistry
 	// Scan classes and its superclasses for static ResourceReference fields. For each
 	// RR field found, the callback method is called and the RR gets registered. It's kind of
 	// auto-register all RRs in your Component hierarchy.
-	// TODO wouldn't annotations be similar but more obvious to what happens?
 	private ClassScanner scanner = new ClassScanner()
 	{
 		@Override
@@ -107,7 +106,7 @@ public class ResourceReferenceRegistry
 
 		if (reference.canBeRegistered())
 		{
-			Key key = new Key(reference);
+			Key key = reference.getKey();
 			if (map.containsKey(key) == false)
 			{
 				map.put(key, reference);
@@ -130,7 +129,7 @@ public class ResourceReferenceRegistry
 	{
 		Args.notNull(reference, "reference");
 
-		Key key = new Key(reference);
+		Key key = reference.getKey();
 
 		// remove from registry
 		ResourceReference removed = map.remove(key);
@@ -178,8 +177,37 @@ public class ResourceReferenceRegistry
 		final Locale locale, final String style, final String variation, final boolean strict,
 		final boolean createIfNotFound)
 	{
-		ResourceReference resource = _getResourceReference(scope, name, locale, style, variation,
-			strict);
+		return getResourceReference(new Key(scope.getName(), name, locale, style, variation),
+			strict, createIfNotFound);
+	}
+
+	/**
+	 * Get a resource reference matching the parameters from the registry or if not found and
+	 * requested, create an default resource reference and add it to the registry.
+	 * <p>
+	 * Part of the search is scanning the class (scope) and it's superclass for static
+	 * ResourceReference fields. Found fields get registered automatically (but are different from
+	 * auto-generated ResourceReferences).
+	 * 
+	 * @see #createDefaultResourceReference(Class, String, Locale, String, String)
+	 * @see ClassScanner
+	 * 
+	 * @param key
+	 *            The data making up the resource reference
+	 * @param strict
+	 *            If true, "weaker" combination of scope, name, locale etc. are not tested
+	 * @param createIfNotFound
+	 *            If true a default resource reference is created if no entry can be found in the
+	 *            registry. The newly created resource reference will be added to the registry.
+	 * @return Either the resource reference found in the registry or, if requested, a resource
+	 *         reference automatically created based on the parameters provided. The automatically
+	 *         created resource reference will automatically be added to the registry.
+	 */
+	public final ResourceReference getResourceReference(final Key key, final boolean strict,
+		final boolean createIfNotFound)
+	{
+		ResourceReference resource = _getResourceReference(key.getScope(), key.getName(),
+			key.getLocale(), key.getStyle(), key.getVariation(), strict);
 
 		// Nothing found so far?
 		if (resource == null)
@@ -187,16 +215,17 @@ public class ResourceReferenceRegistry
 			// Scan the class (scope) and it's super classes for static fields containing resource
 			// references. Such resources are registered as normal resource reference (not
 			// auto-added).
-			if (scanner.scanClass(scope) > 0)
+			if (scanner.scanClass(key.getScopeClass()) > 0)
 			{
 				// At least one new resource reference got registered => Search the registry again
-				resource = _getResourceReference(scope, name, locale, style, variation, strict);
+				resource = _getResourceReference(key.getScope(), key.getName(), key.getLocale(),
+					key.getStyle(), key.getVariation(), strict);
 			}
 
 			// Still nothing found => Shall a new reference be auto-created?
 			if ((resource == null) && createIfNotFound)
 			{
-				resource = addDefaultResourceReference(scope, name, locale, style, variation);
+				resource = addDefaultResourceReference(key);
 			}
 		}
 
@@ -220,11 +249,11 @@ public class ResourceReferenceRegistry
 	 *            If true, "weaker" combination of scope, name, locale etc. are not tested
 	 * @return Either the resource reference found in the registry or null if not found
 	 */
-	private final ResourceReference _getResourceReference(final Class<?> scope, final String name,
+	private final ResourceReference _getResourceReference(final String scope, final String name,
 		final Locale locale, final String style, final String variation, final boolean strict)
 	{
 		// Create a registry key containing all of the relevant attributes
-		Key key = new Key(scope.getName(), name, locale, style, variation);
+		Key key = new Key(scope, name, locale, style, variation);
 
 		// Get resource reference matching exactly the attrs provided
 		ResourceReference res = map.get(key);
@@ -264,19 +293,13 @@ public class ResourceReferenceRegistry
 	/**
 	 * Creates a default resource reference and registers it.
 	 * 
-	 * @param scope
-	 * @param name
-	 * @param locale
-	 * @param style
-	 * @param variation
+	 * @param key
 	 * @return The default resource created
 	 */
-	private ResourceReference addDefaultResourceReference(Class<?> scope, String name,
-		Locale locale, String style, String variation)
+	private ResourceReference addDefaultResourceReference(final Key key)
 	{
 		// Can be subclassed to create other than PackagedResourceReference
-		ResourceReference reference = createDefaultResourceReference(scope, name, locale, style,
-			variation);
+		ResourceReference reference = createDefaultResourceReference(key);
 
 		if (reference != null)
 		{
@@ -285,7 +308,7 @@ public class ResourceReferenceRegistry
 			enforceAutoAddedCacheSize(getAutoAddedCapacity());
 
 			// Register the new RR
-			Key key = _registerResourceReference(reference);
+			_registerResourceReference(reference);
 
 			// Add it to the auto-added list
 			if (autoAddedQueue != null)
@@ -296,13 +319,7 @@ public class ResourceReferenceRegistry
 		else
 		{
 			log.warn("Asked to auto-create a ResourceReference, but ResourceReferenceRegistry.createDefaultResourceReference() return null. " +
-				" [scope: " +
-				scope.getName() +
-				"; name: " +
-				name +
-				"; locale: " +
-				locale +
-				"; style: " + style + "; variation: " + variation + "]");
+				" [" + key.toString() + "]");
 		}
 		return reference;
 	}
@@ -335,19 +352,15 @@ public class ResourceReferenceRegistry
 	 * <p>
 	 * A {@link PackageResourceReference} will be created by default
 	 * 
-	 * @param scope
-	 * @param name
-	 * @param locale
-	 * @param style
-	 * @param variation
+	 * @param key
 	 * @return The RR created or null if not successful
 	 */
-	protected ResourceReference createDefaultResourceReference(final Class<?> scope,
-		final String name, final Locale locale, final String style, final String variation)
+	protected ResourceReference createDefaultResourceReference(final Key key)
 	{
-		if (PackageResource.exists(scope, name, locale, style, variation))
+		if (PackageResource.exists(key.getScopeClass(), key.getName(), key.getLocale(),
+			key.getStyle(), key.getVariation()))
 		{
-			return new PackageResourceReference(scope, name, locale, style, variation);
+			return new PackageResourceReference(key);
 		}
 		else
 		{
@@ -422,81 +435,5 @@ public class ResourceReferenceRegistry
 	public final int getSize()
 	{
 		return map.size();
-	}
-
-	/**
-	 * The registry essentially is a Map and needs a Key to store, search and retrieve entries.
-	 */
-	private static class Key
-	{
-		private final String scope;
-		private final String name;
-		private final Locale locale;
-		private final String style;
-		private final String variation;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param reference
-		 */
-		public Key(final ResourceReference reference)
-		{
-			this(reference.getScope().getName(), reference.getName(), reference.getLocale(),
-				reference.getStyle(), reference.getVariation());
-		}
-
-		/**
-		 * Construct.
-		 * 
-		 * @param scope
-		 * @param name
-		 * @param locale
-		 * @param style
-		 * @param variation
-		 */
-		public Key(final String scope, final String name, final Locale locale, final String style,
-			final String variation)
-		{
-			Args.notNull(scope, "scope");
-			Args.notNull(name, "name");
-
-			this.scope = scope.intern();
-			this.name = name.intern();
-			this.locale = locale;
-			this.style = style != null ? style.intern() : null;
-			this.variation = variation != null ? variation.intern() : null;
-		}
-
-		/**
-		 * @see java.lang.Object#equals(java.lang.Object)
-		 */
-		@Override
-		public boolean equals(final Object obj)
-		{
-			if (this == obj)
-			{
-				return true;
-			}
-			if (obj instanceof Key == false)
-			{
-				return false;
-			}
-			Key that = (Key)obj;
-			return Objects.equal(scope, that.scope) && //
-				Objects.equal(name, that.name) && //
-				Objects.equal(locale, that.locale) && //
-				Objects.equal(style, that.style) && //
-				Objects.equal(variation, that.variation);
-		}
-
-		/**
-		 * @see java.lang.Object#hashCode()
-		 */
-		@Override
-		public int hashCode()
-		{
-			return Objects.hashCode(scope, name, locale, style, variation);
-		}
 	}
 }

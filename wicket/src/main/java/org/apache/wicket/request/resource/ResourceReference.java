@@ -34,16 +34,26 @@ import org.apache.wicket.util.lang.WicketObjects;
  * locales, styles and variations.
  * 
  * @author Matej Knopp
+ * @author Juergen Donnerstag
  */
 public abstract class ResourceReference implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	private final String scope;
-	private final String name;
-	private final Locale locale;
-	private final String style;
-	private final String variation;
+	private final Key data;
+
+	/**
+	 * Creates new {@link ResourceReference} instance.
+	 * 
+	 * @param key
+	 *            The data makeing up the resource reference
+	 */
+	public ResourceReference(final Key key)
+	{
+		Args.notNull(key, "key");
+
+		data = key;
+	}
 
 	/**
 	 * Creates new {@link ResourceReference} instance.
@@ -62,11 +72,7 @@ public abstract class ResourceReference implements Serializable
 		Args.notNull(scope, "scope");
 		Args.notNull(name, "name");
 
-		this.scope = scope.getName();
-		this.name = name;
-		this.locale = locale;
-		this.style = style;
-		this.variation = variation;
+		data = new Key(scope.getName(), name, locale, style, variation);
 	}
 
 	/**
@@ -96,11 +102,21 @@ public abstract class ResourceReference implements Serializable
 	}
 
 	/**
+	 * @return Gets the data making up the resource reference. They'll be use by
+	 *         ResourceReferenceRegistry to make up the key under which the resource reference gets
+	 *         stored.
+	 */
+	Key getKey()
+	{
+		return data;
+	}
+
+	/**
 	 * @return name
 	 */
 	public String getName()
 	{
-		return name;
+		return data.getName();
 	}
 
 	/**
@@ -108,7 +124,7 @@ public abstract class ResourceReference implements Serializable
 	 */
 	public Class<?> getScope()
 	{
-		return WicketObjects.resolveClass(scope);
+		return WicketObjects.resolveClass(data.getScope());
 	}
 
 	/**
@@ -116,7 +132,7 @@ public abstract class ResourceReference implements Serializable
 	 */
 	public Locale getLocale()
 	{
-		return locale;
+		return data.getLocale();
 	}
 
 	/**
@@ -124,7 +140,7 @@ public abstract class ResourceReference implements Serializable
 	 */
 	public String getStyle()
 	{
-		return style;
+		return data.getStyle();
 	}
 
 	/**
@@ -132,7 +148,18 @@ public abstract class ResourceReference implements Serializable
 	 */
 	public String getVariation()
 	{
-		return variation;
+		return data.getVariation();
+	}
+
+	/**
+	 * Can be used to disable registering certain resource references in
+	 * {@link ResourceReferenceRegistry}.
+	 * 
+	 * @return <code>true</code> if this reference can be registered, <code>false</code> otherwise.
+	 */
+	public boolean canBeRegistered()
+	{
+		return true;
 	}
 
 	/**
@@ -150,11 +177,7 @@ public abstract class ResourceReference implements Serializable
 			return false;
 		}
 		ResourceReference that = (ResourceReference)obj;
-		return Objects.equal(scope, that.scope) && //
-			Objects.equal(name, that.name) && //
-			Objects.equal(locale, that.locale) && //
-			Objects.equal(style, that.style) && //
-			Objects.equal(variation, that.variation);
+		return Objects.equal(data, that.data);
 	}
 
 	/**
@@ -163,7 +186,7 @@ public abstract class ResourceReference implements Serializable
 	@Override
 	public int hashCode()
 	{
-		return Objects.hashCode(scope, name, locale, style, variation);
+		return data.hashCode();
 	}
 
 	/**
@@ -233,6 +256,9 @@ public abstract class ResourceReference implements Serializable
 			return variation;
 		}
 
+		/**
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
 		@Override
 		public boolean equals(Object obj)
 		{
@@ -250,6 +276,9 @@ public abstract class ResourceReference implements Serializable
 				Objects.equal(getVariation(), that.getVariation());
 		}
 
+		/**
+		 * @see java.lang.Object#hashCode()
+		 */
 		@Override
 		public int hashCode()
 		{
@@ -258,13 +287,146 @@ public abstract class ResourceReference implements Serializable
 	}
 
 	/**
-	 * Can be used to disable registering certain resource references in
-	 * {@link ResourceReferenceRegistry}.
-	 * 
-	 * @return <code>true</code> if this reference can be registered, <code>false</code> otherwise.
+	 * A (re-usable) data store for all relevant ResourceReference data
 	 */
-	public boolean canBeRegistered()
+	public final static class Key
 	{
-		return true;
+		final String scope;
+		final String name;
+		final Locale locale;
+		final String style;
+		final String variation;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param reference
+		 */
+		public Key(final ResourceReference reference)
+		{
+			this(reference.getScope().getName(), reference.getName(), reference.getLocale(),
+				reference.getStyle(), reference.getVariation());
+		}
+
+		/**
+		 * Construct.
+		 * 
+		 * @param scope
+		 * @param name
+		 * @param locale
+		 * @param style
+		 * @param variation
+		 */
+		public Key(final String scope, final String name, final Locale locale, final String style,
+			final String variation)
+		{
+			Args.notNull(scope, "scope");
+			Args.notNull(name, "name");
+
+			this.scope = scope.intern();
+			this.name = name.intern();
+			this.locale = locale;
+			this.style = style != null ? style.intern() : null;
+			this.variation = variation != null ? variation.intern() : null;
+		}
+
+		/**
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		@Override
+		public boolean equals(final Object obj)
+		{
+			if (this == obj)
+			{
+				return true;
+			}
+			if (obj instanceof Key == false)
+			{
+				return false;
+			}
+			Key that = (Key)obj;
+			return Objects.equal(scope, that.scope) && //
+				Objects.equal(name, that.name) && //
+				Objects.equal(locale, that.locale) && //
+				Objects.equal(style, that.style) && //
+				Objects.equal(variation, that.variation);
+		}
+
+		/**
+		 * @see java.lang.Object#hashCode()
+		 */
+		@Override
+		public int hashCode()
+		{
+			return Objects.hashCode(scope, name, locale, style, variation);
+		}
+
+		/**
+		 * Gets scope.
+		 * 
+		 * @return scope
+		 */
+		public final String getScope()
+		{
+			return scope;
+		}
+
+		/**
+		 * @return Assuming scope ist a fully qualified class name, than get the associated class
+		 */
+		public final Class<?> getScopeClass()
+		{
+			return WicketObjects.resolveClass(scope);
+		}
+
+		/**
+		 * Gets name.
+		 * 
+		 * @return name
+		 */
+		public final String getName()
+		{
+			return name;
+		}
+
+		/**
+		 * Gets locale.
+		 * 
+		 * @return locale
+		 */
+		public final Locale getLocale()
+		{
+			return locale;
+		}
+
+		/**
+		 * Gets style.
+		 * 
+		 * @return style
+		 */
+		public final String getStyle()
+		{
+			return style;
+		}
+
+		/**
+		 * Gets variation.
+		 * 
+		 * @return variation
+		 */
+		public final String getVariation()
+		{
+			return variation;
+		}
+
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		@Override
+		public String toString()
+		{
+			return "scope: " + scope + "; name: " + name + "; locale: " + locale + "; style: " +
+				style + "; variation: " + variation;
+		}
 	}
 }

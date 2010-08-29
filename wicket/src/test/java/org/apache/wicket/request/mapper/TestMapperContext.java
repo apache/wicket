@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.request.mapper;
 
-import java.util.Locale;
-
 import org.apache.wicket.MockPage;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
@@ -26,6 +24,7 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.ResourceReferenceRegistry;
+import org.apache.wicket.request.resource.ResourceReference.Key;
 
 /**
  * Simple {@link EncoderContext} implementation for testing purposes
@@ -70,8 +69,7 @@ public class TestMapperContext implements IMapperContext
 	private final ResourceReferenceRegistry registry = new ResourceReferenceRegistry()
 	{
 		@Override
-		protected ResourceReference createDefaultResourceReference(Class<?> scope, String name,
-			Locale locale, String style, String variation)
+		protected ResourceReference createDefaultResourceReference(Key key)
 		{
 			// Do not create package resource here because it requires "real" application
 			return null;
