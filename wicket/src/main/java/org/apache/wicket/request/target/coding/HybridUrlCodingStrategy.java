@@ -26,6 +26,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
@@ -438,6 +439,72 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		}
 
 		return addPageInfo(url.toString(), pageInfo);
+	}
+
+	private static final String ESCAPE = "----------------------------------------";
+	private static final int MAX_ESCAPE = 20;
+
+	@Override
+	protected String urlEncodePathComponent(String string)
+	{
+		String component = super.urlEncodePathComponent(string);
+		if (component != null && component.contains("."))
+		{
+			component = encodeDot(component);
+		}
+		return component;
+	}
+
+	private String encodeDot(String component)
+	{
+		int smallest = -1;
+		for (int i = MAX_ESCAPE; i > 0; i--)
+		{
+			String seq = createEscapeSequence(i);
+			if (component.contains(seq))
+			{
+				break;
+			}
+			smallest = i;
+		}
+		if (smallest == -1)
+		{
+			throw new WicketRuntimeException("Could not encode a dot for hybrid url part: " +
+				component);
+		}
+		String seq = createEscapeSequence(smallest);
+		component = component.replace(".", seq);
+		return component;
+	}
+
+	private static String createEscapeSequence(int i)
+	{
+		return "_" + ESCAPE.substring(0, i) + "_";
+	}
+
+	@Override
+	protected String urlDecodePathComponent(String value)
+	{
+		String component = super.urlDecodePathComponent(value);
+		if (component != null && component.contains("_-"))
+		{
+			component = decodeDot(component);
+		}
+		return component;
+	}
+
+	private String decodeDot(String component)
+	{
+		for (int i = MAX_ESCAPE; i > 0; i--)
+		{
+			String seq = createEscapeSequence(i);
+			if (component.contains(seq))
+			{
+				component = component.replace(seq, ".");
+				break;
+			}
+		}
+		return component;
 	}
 
 	/**

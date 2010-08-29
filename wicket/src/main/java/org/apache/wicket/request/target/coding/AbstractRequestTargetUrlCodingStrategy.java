@@ -97,12 +97,13 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 						String[] values = (String[])value;
 						for (String value1 : values)
 						{
-							appendValue(url, ((Entry<?, ?>)entry1).getKey().toString(), value1);
+							appendPathParameter(url, ((Entry<?, ?>)entry1).getKey().toString(),
+								value1);
 						}
 					}
 					else
 					{
-						appendValue(url, ((Entry<?, ?>)entry1).getKey().toString(),
+						appendPathParameter(url, ((Entry<?, ?>)entry1).getKey().toString(),
 							value.toString());
 					}
 				}
@@ -110,7 +111,14 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 		}
 	}
 
-	private void appendValue(AppendingStringBuffer url, String key, String value)
+	/**
+	 * Appends path parameter
+	 * 
+	 * @param url
+	 * @param key
+	 * @param value
+	 */
+	protected void appendPathParameter(AppendingStringBuffer url, String key, String value)
 	{
 		String escapedValue = urlEncodePathComponent(value);
 		if (!Strings.isEmpty(escapedValue))
