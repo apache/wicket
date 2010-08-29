@@ -18,20 +18,38 @@ package org.apache.wicket.request.resource;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.wicket.util.collections.ConcurrentHashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 abstract class ClassScanner
 {
-	private final Set<String> scannedClasses = new HashSet<String>();;
+	private static Logger log = LoggerFactory.getLogger(ClassScanner.class);
 
-	abstract void foundResourceReference(ResourceReference reference);
+	private final Set<String> scannedClasses = new ConcurrentHashSet<String>();
 
-	public void scanClass(Class<?> klass)
+	abstract boolean foundResourceReference(ResourceReference reference);
+
+	ClassScanner()
 	{
+	}
+
+	public final void clearCache()
+	{
+		scannedClasses.clear();
+	}
+
+	public int scanClass(final Class<?> klass)
+	{
+		// scanClass gets recursively called. If klass == null, than recursion stops
+		if (klass == null)
+		{
+			return 0;
+		}
+
+		int count = 0;
 		String className = klass.getName();
 		if (scannedClasses.contains(className) == false)
 		{
@@ -47,7 +65,10 @@ abstract class ClassScanner
 						Object value = f.get(null);
 						if (value instanceof ResourceReference)
 						{
-							foundResourceReference((ResourceReference)value);
+							if (foundResourceReference((ResourceReference)value) == true)
+							{
+								count += 1;
+							}
 						}
 					}
 					catch (Exception e)
@@ -57,13 +78,8 @@ abstract class ClassScanner
 				}
 			}
 
-			klass = klass.getSuperclass();
-			if (klass != null)
-			{
-				scanClass(klass);
-			}
+			count += scanClass(klass.getSuperclass());
 		}
+		return count;
 	}
-
-	private static Logger log = LoggerFactory.getLogger(ClassScanner.class);
 }

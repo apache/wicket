@@ -61,6 +61,15 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 		{
 			return mapper;
 		}
+
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		@Override
+		public String toString()
+		{
+			return "Mapper: " + mapper.getClass().getName() + "; Score: " + compatibilityScore;
+		}
 	}
 
 	private final List<IRequestMapper> mappers = new CopyOnWriteArrayList<IRequestMapper>();

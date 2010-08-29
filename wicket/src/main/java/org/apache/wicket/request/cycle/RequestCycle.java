@@ -220,6 +220,9 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 				return true;
 			}
 
+			// Did not find any suitable handler, thus not executing the request
+			log.error("Unable to execute request. No suitable RequestHandler found. URL=" +
+				request.getUrl());
 		}
 		catch (Exception e)
 		{
@@ -230,7 +233,7 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 			}
 			else
 			{
-				log.error("Error during request processing", e);
+				log.error("Error during request processing. URL=" + request.getUrl(), e);
 			}
 			return true;
 		}

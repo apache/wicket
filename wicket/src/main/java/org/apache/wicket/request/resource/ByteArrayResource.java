@@ -90,9 +90,11 @@ public class ByteArrayResource extends AbstractResource
 
 	protected void configureResponse(final ResourceResponse response, final Attributes attributes)
 	{
-
 	}
 
+	/**
+	 * @see org.apache.wicket.request.resource.AbstractResource#newResourceResponse(org.apache.wicket.request.resource.IResource.Attributes)
+	 */
 	@Override
 	protected ResourceResponse newResourceResponse(final Attributes attributes)
 	{
@@ -103,7 +105,6 @@ public class ByteArrayResource extends AbstractResource
 
 		if (response.dataNeedsToBeWritten(attributes))
 		{
-
 			if (filename != null)
 			{
 				response.setFileName(filename);
@@ -113,6 +114,7 @@ public class ByteArrayResource extends AbstractResource
 			{
 				response.setContentDisposition(ContentDisposition.INLINE);
 			}
+
 			response.setWriteCallback(new WriteCallback()
 			{
 				@Override
@@ -123,10 +125,8 @@ public class ByteArrayResource extends AbstractResource
 			});
 
 			configureResponse(response, attributes);
-
 		}
 
 		return response;
 	}
-
 }

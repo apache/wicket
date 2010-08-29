@@ -21,6 +21,7 @@ import java.util.Locale;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.Url.QueryParameter;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -135,10 +136,8 @@ public abstract class AbstractResourceReferenceMapper extends AbstractComponentM
 
 	protected ResourceReference.UrlAttributes getResourceReferenceAttributes(Url url)
 	{
-		if (url == null)
-		{
-			throw new IllegalStateException("Argument 'url' may not be null.");
-		}
+		Args.notNull(url, "url");
+
 		if (url.getQueryParameters().size() > 0)
 		{
 			QueryParameter param = url.getQueryParameters().get(0);

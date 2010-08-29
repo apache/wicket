@@ -29,6 +29,8 @@ public class PackageResourceReference extends ResourceReference
 {
 	private static final long serialVersionUID = 1L;
 
+	private transient ConcurrentMap<UrlAttributes, UrlAttributes> urlAttributesCacheMap;
+
 	public PackageResourceReference(Class<?> scope, String name, Locale locale, String style,
 		String variation)
 	{
@@ -104,8 +106,6 @@ public class PackageResourceReference extends ResourceReference
 		}
 		return res;
 	}
-
-	private transient ConcurrentMap<UrlAttributes, UrlAttributes> urlAttributesCacheMap;
 
 	@Override
 	public UrlAttributes getUrlAttributes()

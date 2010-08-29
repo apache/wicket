@@ -117,6 +117,6 @@ public class SharedResources
 	public ResourceReference get(Class<?> scope, String name, Locale locale, String style,
 		String variation, boolean strict)
 	{
-		return registry.getResourceReference(scope, name, locale, style, variation, strict);
+		return registry.getResourceReference(scope, name, locale, style, variation, strict, true);
 	}
 }

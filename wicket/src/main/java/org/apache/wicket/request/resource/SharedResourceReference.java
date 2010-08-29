@@ -48,7 +48,7 @@ public class SharedResourceReference extends ResourceReference
 		ResourceReference ref = Application.get()
 			.getResourceReferenceRegistry()
 			.getResourceReference(getScope(), getName(), getLocale(), getStyle(), getVariation(),
-				false);
+				false, true);
 
 		if (ref == null)
 		{

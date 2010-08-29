@@ -24,6 +24,7 @@ import org.apache.wicket.IClusterable;
 import org.apache.wicket.IResourceFactory;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.border.Border;
@@ -32,9 +33,9 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.parse.metapattern.Group;
 import org.apache.wicket.util.parse.metapattern.MetaPattern;
@@ -183,10 +184,10 @@ public final class LocalizedImageResource implements IClusterable
 		// If we have a resource reference
 		if (resourceReference != null)
 		{
-			component.getApplication()
+			// Bind the reference to the application
+			ThreadContext.getApplication()
 				.getResourceReferenceRegistry()
 				.registerResourceReference(resourceReference);
-			// Bind the reference to the application
 		}
 	}
 
@@ -340,11 +341,8 @@ public final class LocalizedImageResource implements IClusterable
 		}
 
 		// Set the SRC attribute to point to the component or shared resource
-		tag.put(
-			"src",
-			RequestCycle.get()
-				.getOriginalResponse()
-				.encodeURL(Strings.replaceAll(url, "&", "&amp;")));
+		tag.put("src", RequestCycle.get().getOriginalResponse().encodeURL(
+			Strings.replaceAll(url, "&", "&amp;")));
 	}
 
 	/**
@@ -439,7 +437,7 @@ public final class LocalizedImageResource implements IClusterable
 			{
 				// Is resource already available via the application?
 				if (application.getResourceReferenceRegistry().getResourceReference(
-					Application.class, imageReferenceName, locale, style, variation, true) == null)
+					Application.class, imageReferenceName, locale, style, variation, true, false) == null)
 				{
 					// Resource not available yet, so create it with factory and
 					// share via Application

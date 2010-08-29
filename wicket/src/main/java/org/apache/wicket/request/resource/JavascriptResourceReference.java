@@ -37,5 +37,4 @@ public class JavascriptResourceReference extends PackageResourceReference
 	{
 		super(scope, name);
 	}
-
 }

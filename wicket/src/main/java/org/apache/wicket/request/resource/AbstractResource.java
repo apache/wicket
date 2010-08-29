@@ -34,13 +34,15 @@ import org.apache.wicket.util.lang.Args;
 
 /**
  * Convenience resource implementation. The subclass must implement
- * {@link #newResourceResponse(org.apache.wicket.ng.resource.IResource.Attributes)} method.
+ * {@link #newResourceResponse(org.apache.wicket.request.resource.IResource.Attributes)} method.
  * 
  * @author Matej Knopp
  */
 public abstract class AbstractResource implements IResource
 {
 	private static final long serialVersionUID = 1L;
+
+	private static final String CACHE_CONTROL = "Cache-Control";
 
 	/**
 	 * Construct.
@@ -108,7 +110,6 @@ public abstract class AbstractResource implements IResource
 			this.errorCode = errorCode;
 			this.errorMessage = errorMessage;
 		}
-
 
 		/**
 		 * @return error code or <code>null</code>
@@ -325,7 +326,7 @@ public abstract class AbstractResource implements IResource
 		 * 
 		 * @param writeCallback
 		 */
-		public void setWriteCallback(WriteCallback writeCallback)
+		public void setWriteCallback(final WriteCallback writeCallback)
 		{
 			Args.notNull(writeCallback, "writeCallback");
 			this.writeCallback = writeCallback;
@@ -340,29 +341,41 @@ public abstract class AbstractResource implements IResource
 		}
 	}
 
-	protected void configureCache(WebRequest request, WebResponse response, ResourceResponse data,
-		Attributes attributes)
+	/**
+	 * Configure the web response header for client cache control.
+	 * 
+	 * @param request
+	 * @param response
+	 * @param data
+	 * @param attributes
+	 */
+	protected void configureCache(final WebRequest request, final WebResponse response,
+		final ResourceResponse data, final Attributes attributes)
 	{
 		if (data.isCacheable())
 		{
 			// If time is set also set cache headers.
 			response.setDateHeader("Expires", System.currentTimeMillis() +
 				(data.getCacheDuration() * 1000L));
-			response.setHeader("Cache-Control", "max-age=" + data.getCacheDuration());
+			response.setHeader(CACHE_CONTROL, "max-age=" + data.getCacheDuration());
 		}
 		else
 		{
-			response.setHeader("Cache-Control", "no-cache, must-revalidate");
+			response.setHeader(CACHE_CONTROL, "no-cache, must-revalidate");
 		}
 	}
 
-	public final void respond(Attributes attributes)
+	/**
+	 * 
+	 * @see org.apache.wicket.request.resource.IResource#respond(org.apache.wicket.request.resource.IResource.Attributes)
+	 */
+	public final void respond(final Attributes attributes)
 	{
+		// Get a "new" ResourceResponse to write a response
 		ResourceResponse data = newResourceResponse(attributes);
 
 		WebRequest request = (WebRequest)attributes.getRequest();
 		WebResponse response = (WebResponse)attributes.getResponse();
-
 
 		// 1. Last Modified
 		Date lastModified = data.getLastModified();
@@ -372,7 +385,6 @@ public abstract class AbstractResource implements IResource
 		}
 
 		// 2. Caching
-
 		configureCache(request, response, data, attributes);
 
 		if (!data.dataNeedsToBeWritten(attributes))
@@ -383,6 +395,7 @@ public abstract class AbstractResource implements IResource
 		else if (data.getErrorCode() != null)
 		{
 			response.sendError(data.getErrorCode(), data.getErrorMessage());
+			return;
 		}
 		else
 		{
@@ -397,7 +410,6 @@ public abstract class AbstractResource implements IResource
 			String mimeType = data.getContentType();
 			String encoding = null;
 
-
 			if (mimeType != null && mimeType.indexOf("text") != -1)
 			{
 				encoding = data.getTextEncoding();
@@ -406,7 +418,6 @@ public abstract class AbstractResource implements IResource
 			long contentLength = data.getContentLength();
 
 			// 3. Content Disposition
-
 			if (ContentDisposition.ATTACHMENT == disposition)
 			{
 				response.setAttachmentHeader(fileName);
@@ -417,7 +428,6 @@ public abstract class AbstractResource implements IResource
 			}
 
 			// 4. Mime Type (+ encoding)
-
 			if (mimeType != null)
 			{
 				if (encoding == null)
@@ -430,9 +440,7 @@ public abstract class AbstractResource implements IResource
 				}
 			}
 
-
 			// 5. Content Length
-
 			if (contentLength != -1)
 			{
 				response.setContentLength(contentLength);

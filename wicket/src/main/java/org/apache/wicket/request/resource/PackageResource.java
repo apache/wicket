@@ -35,6 +35,10 @@ import org.slf4j.LoggerFactory;
 
 public class PackageResource implements IResource
 {
+	private static final Logger log = LoggerFactory.getLogger(PackageResource.class);
+
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Exception thrown when the creation of a package resource is not allowed.
 	 */
@@ -52,8 +56,6 @@ public class PackageResource implements IResource
 			super(message);
 		}
 	}
-
-	private static final long serialVersionUID = 1L;
 
 	/** The path to the resource */
 	private final String absolutePath;
@@ -130,7 +132,9 @@ public class PackageResource implements IResource
 		return style;
 	}
 
-
+	/**
+	 * @see org.apache.wicket.request.resource.IResource#respond(org.apache.wicket.request.resource.IResource.Attributes)
+	 */
 	public void respond(Attributes attributes)
 	{
 		// Locate resource
@@ -160,6 +164,12 @@ public class PackageResource implements IResource
 		new ResourceStreamResource(resourceStream).respond(attributes);
 	}
 
+	/**
+	 * 
+	 * @param scope
+	 * @param path
+	 * @return
+	 */
 	private boolean accept(Class<?> scope, String path)
 	{
 		IPackageResourceGuard guard = Application.get()
@@ -168,8 +178,6 @@ public class PackageResource implements IResource
 
 		return guard.accept(scope, path);
 	}
-
-	private static final Logger log = LoggerFactory.getLogger(PackageResource.class);
 
 	/**
 	 * Gets whether a resource for a given set of criteria exists.
