@@ -51,7 +51,8 @@ class HttpsRequestChecker
 		Class<?> pageClass = getPageClass(requestHandler);
 		if (pageClass != null)
 		{
-			IRequestHandler redirect = null;
+			final IRequestHandler redirect;
+
 			if (hasSecureAnnotation(pageClass))
 			{
 				redirect = SwitchProtocolRequestHandler.requireProtocol(Protocol.HTTPS, httpsConfig);
@@ -90,7 +91,8 @@ class HttpsRequestChecker
 		Class<?> pageClass = getPageClass(requestHandler);
 		if (pageClass != null)
 		{
-			IRequestHandler redirect = null;
+			final IRequestHandler redirect;
+
 			if (hasSecureAnnotation(pageClass))
 			{
 				redirect = SwitchProtocolRequestHandler.requireProtocol(Protocol.HTTPS,
@@ -134,10 +136,7 @@ class HttpsRequestChecker
 		{
 			return hasSecureAnnotation(klass.getSuperclass());
 		}
-		else
-		{
-			return false;
-		}
+		return false;
 	}
 
 	/**
@@ -150,7 +149,7 @@ class HttpsRequestChecker
 	{
 		if (handler instanceof IPageRequestHandler)
 		{
-			return ((IPageRequestHandler)handler).getPage().getClass();
+			return ((IPageRequestHandler)handler).getPageClass();
 		}
 		else if (handler instanceof BookmarkablePageRequestHandler)
 		{
