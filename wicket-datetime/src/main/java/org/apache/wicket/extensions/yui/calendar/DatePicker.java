@@ -334,10 +334,13 @@ public class DatePicker extends AbstractBehavior
 		// ajax requests to not render the yui calendar multiple times
 		if (AjaxRequestTarget.get() != null)
 		{
-			final String javascript = "var e = Wicket.$('" + getEscapedComponentMarkupId() + "Dp" +
+			final String escapedComponentMarkupId = getEscapedComponentMarkupId();
+			final String javascript = "var e = Wicket.$('" + escapedComponentMarkupId + "Dp" +
 					"'); if (e != null && typeof(e.parentNode) != 'undefined' && " +
 					"typeof(e.parentNode.parentNode != 'undefined')) " +
-					"e.parentNode.parentNode.removeChild(e.parentNode);";
+					"e.parentNode.parentNode.removeChild(e.parentNode);" + "YAHOO.wicket." +
+					escapedComponentMarkupId + "DpJs.destroy(); delete YAHOO.wicket." +
+					escapedComponentMarkupId + "DpJs;";
 
 			response.renderJavascript(javascript, null);
 		}
