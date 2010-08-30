@@ -22,8 +22,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.apache.wicket.Session;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converter.DateConverter;
@@ -127,7 +127,11 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 			@Override
 			public DateFormat getDateFormat(Locale locale)
 			{
-				return new SimpleDateFormat(DateTextField.this.datePattern);
+				if (locale == null)
+				{
+					locale = Locale.getDefault();
+				}
+				return new SimpleDateFormat(DateTextField.this.datePattern, locale);
 			}
 		};
 	}
