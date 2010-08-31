@@ -308,8 +308,6 @@ public final class Settings
 	 */
 	private boolean outputMarkupContainerClassName = false;
 
-	private boolean addLastModifiedTimeToResourceReferenceUrl = false;
-
 	/** */
 	private Bytes defaultMaximumUploadSize = Bytes.MAX;
 
@@ -1281,24 +1279,6 @@ public final class Settings
 	public void setLinePreciseReportingOnNewComponentEnabled(boolean enable)
 	{
 		linePreciseReportingOnNewComponentEnabled = enable;
-	}
-
-	/**
-	 * 
-	 * @see org.apache.wicket.settings.IResourceSettings#setAddLastModifiedTimeToResourceReferenceUrl(boolean)
-	 */
-	public void setAddLastModifiedTimeToResourceReferenceUrl(boolean value)
-	{
-		addLastModifiedTimeToResourceReferenceUrl = value;
-	}
-
-	/**
-	 * 
-	 * @see org.apache.wicket.settings.IResourceSettings#getAddLastModifiedTimeToResourceReferenceUrl()
-	 */
-	public boolean getAddLastModifiedTimeToResourceReferenceUrl()
-	{
-		return addLastModifiedTimeToResourceReferenceUrl;
 	}
 
 	/**

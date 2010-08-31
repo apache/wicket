@@ -321,21 +321,6 @@ public interface IResourceSettings
 	IJavascriptCompressor getJavascriptCompressor();
 
 	/**
-	 * Sets whether Wicket should add last modified time as a parameter to resource reference URL
-	 * (can help with browsers too aggressively caching certain resources).
-	 * 
-	 * @param value
-	 */
-	public void setAddLastModifiedTimeToResourceReferenceUrl(boolean value);
-
-	/**
-	 * Returns whether Wicket should add last modified time as resource reference URL parameter.
-	 * 
-	 * @return whether Wicket should add last modified time as resource reference URL parameter
-	 */
-	public boolean getAddLastModifiedTimeToResourceReferenceUrl();
-
-	/**
 	 * Placeholder string for '..' within resource urls (which will be crippled by the browser and
 	 * not work anymore). Note that by default the placeholder string is empty '' and thus will not
 	 * allow to access parent folders. That is by purpose and for security reasons (see
