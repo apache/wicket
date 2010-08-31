@@ -1181,6 +1181,10 @@ public class BaseWicketTester
 			}
 
 			AjaxSubmitLink link = (AjaxSubmitLink)linkComponent;
+
+			String pageRelativePath = link.getInputName();
+			request.getPostParameters().setParameterValue(pageRelativePath, "x");
+
 			submitAjaxFormSubmitBehavior(link,
 				(AjaxFormSubmitBehavior)WicketTesterHelper.findAjaxEventBehavior(link, "onclick"));
 		}
@@ -1349,8 +1353,9 @@ public class BaseWicketTester
 	public Result hasNoErrorMessage()
 	{
 		List<Serializable> messages = getMessages(FeedbackMessage.ERROR);
-		return isTrue("expect no error message, but contains\n" +
-			WicketTesterHelper.asLined(messages), messages.isEmpty());
+		return isTrue(
+			"expect no error message, but contains\n" + WicketTesterHelper.asLined(messages),
+			messages.isEmpty());
 	}
 
 	/**
@@ -1361,8 +1366,9 @@ public class BaseWicketTester
 	public Result hasNoInfoMessage()
 	{
 		List<Serializable> messages = getMessages(FeedbackMessage.INFO);
-		return isTrue("expect no info message, but contains\n" +
-			WicketTesterHelper.asLined(messages), messages.isEmpty());
+		return isTrue(
+			"expect no info message, but contains\n" + WicketTesterHelper.asLined(messages),
+			messages.isEmpty());
 	}
 
 	/**
