@@ -352,6 +352,6 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			.append(throttleDelay.getMilliseconds())
 			.append(", function() { ")
 			.append(script)
-			.append("});");
+			.append("}.bind(this));");
 	}
 }
