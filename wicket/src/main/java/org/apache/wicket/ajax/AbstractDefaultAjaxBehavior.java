@@ -223,9 +223,22 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 		if (!Strings.isEmpty(indicatorId))
 		{
-			call = new AppendingStringBuffer("Wicket.showIncrementally('").append(indicatorId)
-				.append("');")
+			final AppendingStringBuffer indicatorWithPrecondition = new AppendingStringBuffer(
+				"if (");
+			if (precondition != null)
+			{
+				indicatorWithPrecondition.append("function(){").append(precondition).append("}()");
+			}
+			else
+			{
+				indicatorWithPrecondition.append("true");
+			}
+			indicatorWithPrecondition.append(") { Wicket.showIncrementally('")
+				.append(indicatorId)
+				.append("');}")
 				.append(call);
+
+			call = indicatorWithPrecondition;
 		}
 
 		if (decorator != null)
