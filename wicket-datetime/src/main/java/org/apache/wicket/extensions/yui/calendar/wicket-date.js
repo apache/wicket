@@ -153,8 +153,10 @@ Wicket.DateTime.showCalendar = function(widget, date, datePattern) {
 		if (!isNaN(date)) {
 			widget.select(date);
 			firstDate = widget.getSelectedDates()[0];
-			widget.cfg.setProperty("pagedate", (firstDate.getMonth() + 1) + "/" + firstDate.getFullYear());
-			widget.render();
+			if (firstDate) {
+				widget.cfg.setProperty("pagedate", (firstDate.getMonth() + 1) + "/" + firstDate.getFullYear());
+				widget.render();
+			}
 		}
 	}
 	widget.show();
