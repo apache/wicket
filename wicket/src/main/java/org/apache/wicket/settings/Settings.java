@@ -316,6 +316,9 @@ public final class Settings
 	/** escape string for '..' within resource keys */
 	private String parentFolderPlaceholder = null;
 
+	// use timestamps on resource file names
+	private boolean useTimestampOnResourcesName = true;
+
 	/** Default cache duration */
 	private int defaultCacheDuration = 3600;
 
@@ -1451,5 +1454,21 @@ public final class Settings
 	public void setMarkupFactory(final MarkupFactory factory)
 	{
 		markupFactory = factory;
+	}
+
+	/**
+	 * @see IResourceSettings#getUseTimestampOnResources()
+	 */
+	public boolean getUseTimestampOnResources()
+	{
+		return useTimestampOnResourcesName;
+	}
+
+	/**
+	 * @see org.apache.wicket.settings.IResourceSettings#setUseTimestampOnResources(boolean)
+	 */
+	public void setUseTimestampOnResources(boolean useTimestampOnResourcesName)
+	{
+		this.useTimestampOnResourcesName = useTimestampOnResourcesName;
 	}
 }

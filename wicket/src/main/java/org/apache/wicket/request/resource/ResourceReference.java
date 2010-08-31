@@ -23,6 +23,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.lang.WicketObjects;
+import org.apache.wicket.util.time.Time;
 
 /**
  * Reference to a resource. Can be used to reference global resources.
@@ -57,7 +58,7 @@ public abstract class ResourceReference implements Serializable
 
 	/**
 	 * Creates new {@link ResourceReference} instance.
-	 * 
+	 *
 	 * @param scope
 	 *            mandatory parameter
 	 * @param name
@@ -154,12 +155,23 @@ public abstract class ResourceReference implements Serializable
 	/**
 	 * Can be used to disable registering certain resource references in
 	 * {@link ResourceReferenceRegistry}.
-	 * 
+	 *
 	 * @return <code>true</code> if this reference can be registered, <code>false</code> otherwise.
 	 */
 	public boolean canBeRegistered()
 	{
 		return true;
+	}
+
+	/**
+	 * return the last modification date of the referred resource
+	 * <p/>
+	 * 
+	 * @return last modification time or <code>null</code> if not supported
+	 */
+	public Time getLastModified()
+	{
+		return null;
 	}
 
 	/**
@@ -299,18 +311,18 @@ public abstract class ResourceReference implements Serializable
 
 		/**
 		 * Construct.
-		 * 
+	 * 
 		 * @param reference
-		 */
+	 */
 		public Key(final ResourceReference reference)
-		{
+	{
 			this(reference.getScope().getName(), reference.getName(), reference.getLocale(),
 				reference.getStyle(), reference.getVariation());
 		}
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param scope
 		 * @param name
 		 * @param locale
@@ -338,8 +350,8 @@ public abstract class ResourceReference implements Serializable
 		{
 			if (this == obj)
 			{
-				return true;
-			}
+		return true;
+	}
 			if (obj instanceof Key == false)
 			{
 				return false;
@@ -352,7 +364,7 @@ public abstract class ResourceReference implements Serializable
 				Objects.equal(variation, that.variation);
 		}
 
-		/**
+	/**
 		 * @see java.lang.Object#hashCode()
 		 */
 		@Override
@@ -363,13 +375,13 @@ public abstract class ResourceReference implements Serializable
 
 		/**
 		 * Gets scope.
-		 * 
+	 *
 		 * @return scope
-		 */
+	 */
 		public final String getScope()
-		{
+	{
 			return scope;
-		}
+	}
 
 		/**
 		 * @return Assuming scope ist a fully qualified class name, than get the associated class
@@ -377,11 +389,11 @@ public abstract class ResourceReference implements Serializable
 		public final Class<?> getScopeClass()
 		{
 			return WicketObjects.resolveClass(scope);
-		}
+}
 
 		/**
 		 * Gets name.
-		 * 
+		 *
 		 * @return name
 		 */
 		public final String getName()
@@ -391,7 +403,7 @@ public abstract class ResourceReference implements Serializable
 
 		/**
 		 * Gets locale.
-		 * 
+		 *
 		 * @return locale
 		 */
 		public final Locale getLocale()
@@ -401,7 +413,7 @@ public abstract class ResourceReference implements Serializable
 
 		/**
 		 * Gets style.
-		 * 
+		 *
 		 * @return style
 		 */
 		public final String getStyle()
@@ -411,7 +423,7 @@ public abstract class ResourceReference implements Serializable
 
 		/**
 		 * Gets variation.
-		 * 
+		 *
 		 * @return variation
 		 */
 		public final String getVariation()

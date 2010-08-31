@@ -24,7 +24,7 @@ import org.apache.wicket.request.mapper.PageInstanceMapper;
 import org.apache.wicket.request.mapper.ResourceReferenceMapper;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.util.IProvider;
-
+import org.apache.wicket.util.ValueProvider;
 
 /**
  * Mapper that encapsulates mappers that are necessary for Wicket to function.
@@ -34,18 +34,33 @@ import org.apache.wicket.util.IProvider;
  */
 public class SystemMapper extends CompoundRequestMapper
 {
+	private final Application application;
+
 	/**
 	 * Constructor
 	 */
 	public SystemMapper(Application application)
 	{
+		this.application = application;
 		add(RestartResponseAtInterceptPageException.MAPPER);
 		add(new HomePageMapper());
 		add(new PageInstanceMapper());
 		add(new BookmarkableMapper());
 		add(new ResourceReferenceMapper(new PageParametersEncoder(),
-			new ParentFolderPlaceholderProvider(application)));
+			                              new ParentFolderPlaceholderProvider(application),
+			                              useTimestampsProvider()));
 		add(new BufferedResponseMapper());
+	}
+
+	private IProvider<Boolean> useTimestampsProvider()
+	{
+		return new IProvider<Boolean>()
+		{
+			public Boolean get()
+			{
+				return application.getResourceSettings().getUseTimestampOnResources();
+			}
+		};
 	}
 
 	private static class ParentFolderPlaceholderProvider implements IProvider<String>

@@ -22,47 +22,48 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.lang.WicketObjects;
+import org.apache.wicket.util.time.Time;
+
+import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Generic {@link ResourceReference} encoder that encodes and decodes non-mounted
  * {@link ResourceReference}s.
  * <p>
  * Decodes and encodes the following URLs:
- * 
+ *
  * <pre>
  *    /wicket/resource/org.apache.wicket.ResourceScope/name
  *    /wicket/resource/org.apache.wicket.ResourceScope/name?en
  *    /wicket/resource/org.apache.wicket.ResourceScope/name?-style
  *    /wicket/resource/org.apache.wicket.ResourceScope/resource/name.xyz?en_EN-style
  * </pre>
- * 
+ *
  * @author Matej Knopp
  * @author igor.vaynberg
  */
 class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 {
+	private static final String TIMESTAMP_PREFIX = "-ts";
 	private final IPageParametersEncoder pageParametersEncoder;
+
+	// if true, timestamps should be added to resource names
+	private final IProvider<Boolean> timestamps;
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param pageParametersEncoder
 	 * @param relativePathPartEscapeSequence
 	 */
-	public BasicResourceReferenceMapper(IPageParametersEncoder pageParametersEncoder)
+	public BasicResourceReferenceMapper(IPageParametersEncoder pageParametersEncoder, IProvider<Boolean> timestamps)
 	{
 		this.pageParametersEncoder = pageParametersEncoder;
-	}
-
-	/**
-	 * Construct.
-	 */
-	public BasicResourceReferenceMapper()
-	{
-		this(new PageParametersEncoder());
+		this.timestamps = timestamps;
 	}
 
 	/**
@@ -73,17 +74,30 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 		Url url = request.getUrl();
 
 		if (url.getSegments().size() >= 4 &&
-			urlStartsWith(url, getContext().getNamespace(), getContext().getResourceIdentifier()))
+				urlStartsWith(url, getContext().getNamespace(), getContext().getResourceIdentifier()))
 		{
 			String className = url.getSegments().get(2);
 			StringBuilder name = new StringBuilder();
-			for (int i = 3; i < url.getSegments().size(); ++i)
+			int segmentsSize = url.getSegments().size();
+			for (int i = 3; i < segmentsSize; ++i)
 			{
+				String segment = url.getSegments().get(i);
+
+				// if timestamps are enabled the last segment (=resource name)
+				// should be stripped of timestamps
+				if (isTimestampsEnabled() && i + 1 == segmentsSize)
+				{
+					// The last segment eventually contains a timestamp which we have to remove
+					// resource lookup will not care about timestamp but always deliver the
+					// most current version of the resource. After all this whole timestamp
+					// thing is about caching on proxies and browsers but does not affect wicket.
+					segment = stripTimestampFromResourceName(segment);
+				}
 				if (name.length() > 0)
 				{
 					name.append("/");
 				}
-				name.append(url.getSegments().get(i));
+				name.append(segment);
 			}
 
 			ResourceReference.UrlAttributes attributes = getResourceReferenceAttributes(url);
@@ -108,6 +122,50 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 		return null;
 	}
 
+	private boolean isTimestampsEnabled()
+	{
+		return timestamps.get();
+	}
+
+	/**
+	 * strip timestamp information from resource name
+	 *
+	 * @param resourceName
+	 * @return
+	 */
+
+	private String stripTimestampFromResourceName(final String resourceName)
+	{
+		int pos = resourceName.lastIndexOf('.');
+
+		final String fullname = pos == -1 ? resourceName : resourceName.substring(0, pos);
+		final String extension = pos == -1 ? null : resourceName.substring(pos);
+
+		pos = fullname.lastIndexOf(TIMESTAMP_PREFIX);
+
+		if (pos != -1)
+		{
+			final String timestamp = fullname.substring(pos + TIMESTAMP_PREFIX.length());
+			final String basename = fullname.substring(0, pos);
+
+			try
+			{
+				Long.parseLong(timestamp); // just check the timestamp is numeric
+
+				// create filename without timestamp for resource lookup
+				return extension == null ? basename : basename + extension;
+			}
+			catch (NumberFormatException e)
+			{
+				// some strange case of coincidence where the filename contains the timestamp prefix
+				// but the timestamp itself is non-numeric - we interpret this situation as
+				// "file has no timestamp"
+
+			}
+		}
+		return resourceName;
+	}
+
 	protected Class<?> resolveClass(String name)
 	{
 		return WicketObjects.resolveClass(name);
@@ -128,14 +186,48 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 			ResourceReferenceRequestHandler referenceRequestHandler = (ResourceReferenceRequestHandler)requestHandler;
 			ResourceReference reference = referenceRequestHandler.getResourceReference();
 			Url url = new Url();
-			url.getSegments().add(getContext().getNamespace());
-			url.getSegments().add(getContext().getResourceIdentifier());
-			url.getSegments().add(getClassName(reference.getScope()));
-			String nameParts[] = reference.getName().split("/");
-			for (String name : nameParts)
+
+			List<String> segments = url.getSegments();
+			segments.add(getContext().getNamespace());
+			segments.add(getContext().getResourceIdentifier());
+			segments.add(getClassName(reference.getScope()));
+
+			StringTokenizer tokens = new StringTokenizer(reference.getName(), "/");
+
+			while (tokens.hasMoreTokens())
 			{
-				url.getSegments().add(name);
+				String token = tokens.nextToken();
+
+				// on the last component of the resource path add the timestamp 
+				if (isTimestampsEnabled() && tokens.hasMoreTokens() == false)
+				{
+					// get last modification of resource
+					Time lastModified = reference.getLastModified();
+
+					// if resource provides a timestamp we include it in resource name
+					if (lastModified != null)
+					{
+						// check if resource name has extension
+						int extensionAt = token.lastIndexOf('.');
+
+						// create timestamped version of filename:
+						//
+						//   filename := [basename][timestamp-prefix][last-modified-milliseconds](.extension)
+						//
+						StringBuilder filename = new StringBuilder();
+						filename.append(extensionAt == -1 ? token : token.substring(0, extensionAt));
+						filename.append(TIMESTAMP_PREFIX);
+						filename.append(lastModified.getMilliseconds());
+
+						if (extensionAt != -1)
+							filename.append(token.substring(extensionAt));
+
+						token = filename.toString();
+					}
+				}
+				segments.add(token);
 			}
+
 			encodeResourceReferenceAttributes(url, reference);
 			PageParameters parameters = referenceRequestHandler.getPageParameters();
 			if (parameters != null)

@@ -44,18 +44,12 @@ public class ResourceReferenceMapper extends ParentPathReferenceRewriter
 	 * 
 	 * @param pageParametersEncoder
 	 * @param parentPathPartEscapeSequence
+	 * @param timestamps
 	 */
 	public ResourceReferenceMapper(IPageParametersEncoder pageParametersEncoder,
-		IProvider<String> parentPathPartEscapeSequence)
+	                               IProvider<String> parentPathPartEscapeSequence,
+	                               IProvider<Boolean> useTimestamps)
 	{
-		super(new BasicResourceReferenceMapper(pageParametersEncoder), parentPathPartEscapeSequence);
-	}
-
-	/**
-	 * Construct.
-	 */
-	public ResourceReferenceMapper()
-	{
-		this(new PageParametersEncoder(), new NullProvider<String>());
+		super(new BasicResourceReferenceMapper(pageParametersEncoder, useTimestamps), parentPathPartEscapeSequence);
 	}
 }

@@ -365,4 +365,53 @@ public interface IResourceSettings
 	 *            character sequence which must not be ambiguous within urls
 	 */
 	void setParentFolderPlaceholder(String sequence);
+
+	/**
+	 * Control the usage of timestamps on resources
+	 * <p/>
+	 * Normally the resource names won't change when the resource ifself changes, for example when you add a new
+	 * style to your CSS sheet. This can be very annoying as browsers (and proxies) usally cache resources
+	 * in their cache based on the filename and therefore won't update. Unless you change the file name of the
+	 * resource, force a reload or clear the browser's cache the page will still render with your old CSS.
+	 * <p/>
+	 * Depending on HTTP response headers like 'Last-Modified' and 'Cache' automatic cache
+	 * invalidation can take very, very long or neven happen at all.
+	 * <p/>
+	 * Enabling timestamps on resources will inject the last modification time of the resource into
+	 * the filename (the name will look something like 'style-ts1282915831000.css' where the large number is
+	 * the last modified date in milliseconds and '-ts' is a prefix to avoid conflicts with
+	 * filenames that already contain a number before their extension.
+	 * *
+	 * <p/>
+	 * Since browsers and proxies use the filename of the resource as a cache key the changed filename will
+	 * not hit the cache and the page gets rendered with the changed file.
+	 * <p/>
+	 * @return <code>true</code> if timestamps are enabled
+	 */
+	boolean getUseTimestampOnResources();
+
+	/**
+	 * Control the usage of timestamps on resources
+	 * <p/>
+	 * Normally the resource names won't change when the resource ifself changes, for example when you add a new
+	 * style to your CSS sheet. This can be very annoying as browsers (and proxies) usally cache resources
+	 * in their cache based on the filename and therefore won't update. Unless you change the file name of the
+	 * resource, force a reload or clear the browser's cache the page will still render with your old CSS.
+	 * <p/>
+	 * Depending on HTTP response headers like 'Last-Modified' and 'Cache' automatic cache
+	 * invalidation can take very, very long or neven happen at all.
+	 * <p/>
+	 * Enabling timestamps on resources will inject the last modification time of the resource into
+	 * the filename (the name will look something like 'style-ts1282915831000.css' where the large number is
+	 * the last modified date in milliseconds and '-ts' is a prefix to avoid conflicts with
+	 * filenames that already contain a number before their extension.
+	 * *
+	 * <p/>
+	 * Since browsers and proxies use the filename of the resource as a cache key the changed filename will
+	 * not hit the cache and the page gets rendered with the changed file.
+	 * <p/>
+	 *
+	 * @param enable <code>true</code> for using timestamps on resource names
+	 */
+	void setUseTimestampOnResources(boolean enable);
 }

@@ -22,12 +22,16 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
+import org.apache.wicket.util.ValueProvider;
 
 /**
  * @author Matej Knopp
  */
 public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTest
 {
+	private static final ValueProvider<Boolean> TIMESTAMPS = new ValueProvider<Boolean>(false);
+
 	/**
 	 * Construct.
 	 */
@@ -35,7 +39,7 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	{
 	}
 
-	private final BasicResourceReferenceMapper encoder = new BasicResourceReferenceMapper()
+	private final BasicResourceReferenceMapper encoder = new BasicResourceReferenceMapper(new PageParametersEncoder(), TIMESTAMPS)
 	{
 		@Override
 		protected IMapperContext getContext()

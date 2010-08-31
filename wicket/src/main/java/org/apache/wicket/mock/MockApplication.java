@@ -62,6 +62,7 @@ public class MockApplication extends WebApplication
 		super.internalInit();
 		setSessionStoreProvider(new MockSessionStoreProvider());
 		setPageManagerProvider(new MockPageManagerProvider());
+		getResourceSettings().setUseTimestampOnResources(false);
 	}
 
 	private static class MockSessionStoreProvider implements IProvider<ISessionStore>
