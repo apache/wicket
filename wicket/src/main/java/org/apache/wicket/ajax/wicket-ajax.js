@@ -892,7 +892,7 @@ Wicket.Ajax.Request.prototype = {
 				}				
 				t.open("POST", url, this.async);
 				t.onreadystatechange = this.stateChangeCallback.bind(this);
-				t.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+				t.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 				// set a special flag to allow server distinguish between ajax and non-ajax requests
 				t.setRequestHeader("Wicket-Ajax", "true");
 				t.setRequestHeader("Wicket-Ajax-BaseURL", Wicket.Ajax.baseUrl);
