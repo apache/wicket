@@ -2115,7 +2115,7 @@ YAHOO.register("get", YAHOO.util.Get, {version: "2.7.0", build: "1799"});
 
         'yahoo-dom-event': {
             'type': 'js',
-            'path': 'yahoo-dom-event/yahoo-dom-event.js',
+            'path': 'yahoodomevent/yahoo-dom-event.js',
             'supersedes': ['yahoo', 'event', 'dom'],
             'rollup': 3
         },
