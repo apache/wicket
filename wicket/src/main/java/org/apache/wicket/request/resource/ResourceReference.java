@@ -63,9 +63,9 @@ public abstract class ResourceReference implements Serializable
 	 *            mandatory parameter
 	 * @param name
 	 *            mandatory parameter
-	 * @param locale
-	 * @param style
-	 * @param variation
+	 * @param locale resource locale
+	 * @param style resource style
+	 * @param variation resource variation
 	 */
 	public ResourceReference(Class<?> scope, String name, Locale locale, String style,
 		String variation)
@@ -83,9 +83,6 @@ public abstract class ResourceReference implements Serializable
 	 *            mandatory parameter
 	 * @param name
 	 *            mandatory parameter
-	 * @param locale
-	 * @param style
-	 * @param variation
 	 */
 	public ResourceReference(Class<?> scope, String name)
 	{
@@ -95,7 +92,7 @@ public abstract class ResourceReference implements Serializable
 	/**
 	 * Construct.
 	 * 
-	 * @param name
+	 * @param name resource name
 	 */
 	public ResourceReference(String name)
 	{
@@ -233,9 +230,9 @@ public abstract class ResourceReference implements Serializable
 		/**
 		 * Construct.
 		 * 
-		 * @param locale
-		 * @param style
-		 * @param variation
+		 * @param locale resource locale
+		 * @param style resource style
+		 * @param variation resource variation
 		 */
 		public UrlAttributes(Locale locale, String style, String variation)
 		{
@@ -301,8 +298,10 @@ public abstract class ResourceReference implements Serializable
 	/**
 	 * A (re-usable) data store for all relevant ResourceReference data
 	 */
-	public final static class Key
+	public final static class Key implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
+
 		final String scope;
 		final String name;
 		final Locale locale;
@@ -311,26 +310,26 @@ public abstract class ResourceReference implements Serializable
 
 		/**
 		 * Construct.
-	 * 
-		 * @param reference
-	 */
+		 *
+		 * @param reference resource reference
+		 */
 		public Key(final ResourceReference reference)
-	{
+		{
 			this(reference.getScope().getName(), reference.getName(), reference.getLocale(),
-				reference.getStyle(), reference.getVariation());
+			     reference.getStyle(), reference.getVariation());
 		}
 
 		/**
 		 * Construct.
 		 *
-		 * @param scope
-		 * @param name
-		 * @param locale
-		 * @param style
-		 * @param variation
+		 * @param scope resource scope
+		 * @param name resource name
+		 * @param locale resource locale
+		 * @param style resource style
+		 * @param variation resource variation
 		 */
 		public Key(final String scope, final String name, final Locale locale, final String style,
-			final String variation)
+		           final String variation)
 		{
 			Args.notNull(scope, "scope");
 			Args.notNull(name, "name");
@@ -350,8 +349,8 @@ public abstract class ResourceReference implements Serializable
 		{
 			if (this == obj)
 			{
-		return true;
-	}
+				return true;
+			}
 			if (obj instanceof Key == false)
 			{
 				return false;
@@ -364,7 +363,7 @@ public abstract class ResourceReference implements Serializable
 				Objects.equal(variation, that.variation);
 		}
 
-	/**
+		/**
 		 * @see java.lang.Object#hashCode()
 		 */
 		@Override
@@ -375,13 +374,13 @@ public abstract class ResourceReference implements Serializable
 
 		/**
 		 * Gets scope.
-	 *
+		 *
 		 * @return scope
-	 */
+		 */
 		public final String getScope()
-	{
+		{
 			return scope;
-	}
+		}
 
 		/**
 		 * @return Assuming scope ist a fully qualified class name, than get the associated class
@@ -389,7 +388,7 @@ public abstract class ResourceReference implements Serializable
 		public final Class<?> getScopeClass()
 		{
 			return WicketObjects.resolveClass(scope);
-}
+		}
 
 		/**
 		 * Gets name.
