@@ -54,7 +54,7 @@ public abstract class AbstractResource implements IResource
 	/**
 	 * Override this method to return a {@link ResourceResponse} for the request.
 	 * 
-	 * @param attributes
+	 * @param attributes request attributes
 	 * @return resource data instance
 	 */
 	protected abstract ResourceResponse newResourceResponse(Attributes attributes);
@@ -90,7 +90,7 @@ public abstract class AbstractResource implements IResource
 		 * Sets the error code for resource. If there is an error code set the data will not be
 		 * rendered and the code will be sent to client.
 		 * 
-		 * @param errorCode
+		 * @param errorCode error code
 		 */
 		public void setError(Integer errorCode)
 		{
@@ -101,7 +101,7 @@ public abstract class AbstractResource implements IResource
 		 * Sets the error code and message for resource. If there is an error code set the data will
 		 * not be rendered and the code and message will be sent to client.
 		 * 
-		 * @param errorCode
+		 * @param errorCode error code
 		 * @param errorMessage
 		 *            error message
 		 */
@@ -130,7 +130,7 @@ public abstract class AbstractResource implements IResource
 		/**
 		 * Sets the file name of the resource.
 		 * 
-		 * @param fileName
+		 * @param fileName file name
 		 */
 		public void setFileName(String fileName)
 		{
@@ -150,7 +150,7 @@ public abstract class AbstractResource implements IResource
 		 * 
 		 * @see ContentDisposition
 		 * 
-		 * @param contentDisposition
+		 * @param contentDisposition content disposition (attachment or inline)
 		 */
 		public void setContentDisposition(ContentDisposition contentDisposition)
 		{
@@ -170,7 +170,7 @@ public abstract class AbstractResource implements IResource
 		 * Sets the content type for the resource. If no content type is set it will be determined
 		 * by the extension.
 		 * 
-		 * @param contentType
+		 * @param contentType content type (also known as mime type)
 		 */
 		public void setContentType(String contentType)
 		{
@@ -193,7 +193,7 @@ public abstract class AbstractResource implements IResource
 		 * Sets the text encoding for the resource. The encoding is only used if the content type
 		 * indicates a textual resource.
 		 * 
-		 * @param textEncoding
+		 * @param textEncoding character encoding of text body
 		 */
 		public void setTextEncoding(String textEncoding)
 		{
@@ -212,7 +212,7 @@ public abstract class AbstractResource implements IResource
 		 * Sets the content length (in bytes) of the data. Content length is optional but it's
 		 * recommended to set it so that the browser can show download progress.
 		 * 
-		 * @param contentLength
+		 * @param contentLength length of response body
 		 */
 		public void setContentLength(long contentLength)
 		{
@@ -233,7 +233,7 @@ public abstract class AbstractResource implements IResource
 		 * <code>If-Modified-Since</code> to determine if the actuall data really needs to be sent
 		 * to client.
 		 * 
-		 * @param lastModified
+		 * @param lastModified last modification date
 		 */
 		public void setLastModified(Date lastModified)
 		{
@@ -253,7 +253,7 @@ public abstract class AbstractResource implements IResource
 		 * <code>If-Modified-Since</code> request header and compares it to lastModified property.
 		 * In order for this method to work {@link #setLastModified(Date)} has to be called first.
 		 * 
-		 * @param attributes
+		 * @param attributes request attributes
 		 * @return <code>true</code> if the resource data does need to be written,
 		 *         <code>false</code> otherwise.
 		 */
@@ -280,9 +280,9 @@ public abstract class AbstractResource implements IResource
 		 * Cachable resources are cached on client. This flag affects the <code>Expires</code> and
 		 * <code>Cache-Control</code> headers.
 		 * 
-		 * @see #setCacheDuration(int)
+		 * @see #setCacheDuration(long)
 		 * 
-		 * @param cacheable
+		 * @param cacheable resource may be cached (true/false)
 		 */
 		public void setCacheable(boolean cacheable)
 		{
@@ -301,7 +301,7 @@ public abstract class AbstractResource implements IResource
 		 * Sets the duration for which this resource should be cached on client (in seconds). #see
 		 * {@link IResourceSettings#setDefaultCacheDuration(int)}
 		 * 
-		 * @param cacheDuration
+		 * @param cacheDuration caching duration in seconds
 		 */
 		public void setCacheDuration(long cacheDuration)
 		{
@@ -321,10 +321,10 @@ public abstract class AbstractResource implements IResource
 		 * data.
 		 * <p>
 		 * It is necessary to set the {@link WriteCallback} if
-		 * {@link #dataNeedsToBeWritten(org.apache.wicket.ng.resource.IResource.Attributes)} returns
+		 * {@link #dataNeedsToBeWritten(org.apache.wicket.request.resource.IResource.Attributes)} returns
 		 * <code>true</code> and {@link #setError(Integer)} has not been called.
 		 * 
-		 * @param writeCallback
+		 * @param writeCallback write callback
 		 */
 		public void setWriteCallback(final WriteCallback writeCallback)
 		{
@@ -344,20 +344,30 @@ public abstract class AbstractResource implements IResource
 	/**
 	 * Configure the web response header for client cache control.
 	 * 
-	 * @param request
-	 * @param response
-	 * @param data
-	 * @param attributes
+	 * @param request web request
+	 * @param response web response
+	 * @param data resource data
+	 * @param attributes request attributes
 	 */
 	protected void configureCache(final WebRequest request, final WebResponse response,
 		final ResourceResponse data, final Attributes attributes)
 	{
+		long now = System.currentTimeMillis();
+
+		// Time of message generation
+		response.setDateHeader("Date", now);
+
 		if (data.isCacheable())
 		{
-			// If time is set also set cache headers.
-			response.setDateHeader("Expires", System.currentTimeMillis() +
-				(data.getCacheDuration() * 1000L));
-			response.setHeader(CACHE_CONTROL, "max-age=" + data.getCacheDuration());
+			// Time for cache expiry
+			response.setDateHeader("Expires", now + (data.getCacheDuration() * 1000L));
+
+			// Allow caching even for public proxies or CDN providers
+			response.setHeader(CACHE_CONTROL, "public, max-age=" + data.getCacheDuration());
+
+			// Let caches distinguish between compressed and uncompressed
+			// versions of the resource so they can serve them properly
+			response.setHeader("Vary", "Accept-Encoding");
 		}
 		else
 		{
@@ -392,73 +402,72 @@ public abstract class AbstractResource implements IResource
 			response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
 			return;
 		}
-		else if (data.getErrorCode() != null)
+
+		if (data.getErrorCode() != null)
 		{
 			response.sendError(data.getErrorCode(), data.getErrorMessage());
 			return;
 		}
-		else
+
+		if (data.getWriteCallback() == null)
 		{
-			if (data.getWriteCallback() == null)
-			{
-				throw new IllegalStateException(
-					"ResourceData#setWriteCallback must be called for AbstractResource.");
-			}
-
-			String fileName = data.getFileName();
-			ContentDisposition disposition = data.getContentDisposition();
-			String mimeType = data.getContentType();
-			String encoding = null;
-
-			if (mimeType != null && mimeType.indexOf("text") != -1)
-			{
-				encoding = data.getTextEncoding();
-			}
-
-			long contentLength = data.getContentLength();
-
-			// 3. Content Disposition
-			if (ContentDisposition.ATTACHMENT == disposition)
-			{
-				response.setAttachmentHeader(fileName);
-			}
-			else if (ContentDisposition.INLINE == disposition)
-			{
-				response.setInlineHeader(fileName);
-			}
-
-			// 4. Mime Type (+ encoding)
-			if (mimeType != null)
-			{
-				if (encoding == null)
-				{
-					response.setContentType(mimeType);
-				}
-				else
-				{
-					response.setContentType(mimeType + "; charset=" + encoding);
-				}
-			}
-
-			// 5. Content Length
-			if (contentLength != -1)
-			{
-				response.setContentLength(contentLength);
-			}
-
-			// 6. Flush the response
-			// This is necessary for firefox if this resource is an image, otherwise it messes up
-			// other images on page
-			response.flush();
-
-			// 7. Write Data
-			data.getWriteCallback().writeData(attributes);
+			throw new IllegalStateException(
+				"ResourceData#setWriteCallback must be called for AbstractResource.");
 		}
+
+		String fileName = data.getFileName();
+		ContentDisposition disposition = data.getContentDisposition();
+		String mimeType = data.getContentType();
+		String encoding = null;
+
+		if (mimeType != null && mimeType.indexOf("text") != -1)
+		{
+			encoding = data.getTextEncoding();
+		}
+
+		long contentLength = data.getContentLength();
+
+		// 3. Content Disposition
+		if (ContentDisposition.ATTACHMENT == disposition)
+		{
+			response.setAttachmentHeader(fileName);
+		}
+		else if (ContentDisposition.INLINE == disposition)
+		{
+			response.setInlineHeader(fileName);
+		}
+
+		// 4. Mime Type (+ encoding)
+		if (mimeType != null)
+		{
+			if (encoding == null)
+			{
+				response.setContentType(mimeType);
+			}
+			else
+			{
+				response.setContentType(mimeType + "; charset=" + encoding);
+			}
+		}
+
+		// 5. Content Length
+		if (contentLength != -1)
+		{
+			response.setContentLength(contentLength);
+		}
+
+		// 6. Flush the response
+		// This is necessary for firefox if this resource is an image, otherwise it messes up
+		// other images on page
+		response.flush();
+
+		// 7. Write Data
+		data.getWriteCallback().writeData(attributes);
 	}
 
 	/**
 	 * Callback invoked when resource data needs to be written to response. Subclass needs to
-	 * implement the {@link #writeData(org.apache.wicket.ng.resource.IResource.Attributes)} method.
+	 * implement the {@link #writeData(org.apache.wicket.request.resource.IResource.Attributes)} method.
 	 * 
 	 * @author Matej Knopp
 	 */
@@ -467,15 +476,15 @@ public abstract class AbstractResource implements IResource
 		/**
 		 * Write the resource data to response.
 		 * 
-		 * @param attributes
+		 * @param attributes request attributes
 		 */
 		public abstract void writeData(Attributes attributes);
 
 		/**
 		 * Convenience method to write an {@link InputStream} to response.
 		 * 
-		 * @param attributes
-		 * @param stream
+		 * @param attributes request attributes
+		 * @param stream input stream
 		 */
 		protected final void writeStream(Attributes attributes, InputStream stream)
 		{
