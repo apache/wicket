@@ -236,7 +236,7 @@ public class DatePicker extends AbstractBehavior
 		variables.put("showOnFieldClick", showOnFieldClick());
 		// variables for YUILoader
 		variables.put("basePath",
-				Strings.stripJSessionId(RequestCycle.get().urlFor(YUI, null).toString() + "/"));
+				Strings.stripJSessionId(RequestCycle.get().urlFor(YUI, null).toString()) + "/");
 		variables.put("wicketDatePath", RequestCycle.get().urlFor(WICKET_DATE, null));
 		if (Application.DEVELOPMENT.equals(Application.get().getConfigurationType()))
 		{
