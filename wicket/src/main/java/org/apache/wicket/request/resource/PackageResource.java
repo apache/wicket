@@ -19,8 +19,6 @@ package org.apache.wicket.request.resource;
 import java.io.IOException;
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
@@ -174,23 +172,29 @@ public class PackageResource extends AbstractResource
 	@Override
 	protected ResourceResponse newResourceResponse(Attributes attributes)
 	{
-		ResourceResponse resourceResponse = new ResourceResponse();
+		final ResourceResponse resourceResponse = new ResourceResponse();
 
 		if (resourceResponse.dataNeedsToBeWritten(attributes))
 		{
-			IResourceStream resourceStream = getResourceStream();
+			// get resource stream
+			final IResourceStream resourceStream = getResourceStream();
+
+			// bail out if resource stream could not be found
+			if (resourceStream == null)
+				return sendResourceError(resourceResponse, 404, "Unable to find resource");
+
+			// set Content-Type (may be null)
 			resourceResponse.setContentType(resourceStream.getContentType());
 
+			// add Last-Modified header (to support HEAD requests and If-Modified-Since)
 			final Time lastModified = resourceStream.lastModifiedTime();
-			
+
 			if(lastModified != null)
 				resourceResponse.setLastModified(lastModified.toDate());
 
-			if (resourceStream == null)
-				return sendResourceError(resourceResponse, HttpServletResponse.SC_NOT_FOUND, "Unable to find resource");
-
 			try
 			{
+				// read resource data
 				final byte[] bytes;
 
 				try
@@ -201,7 +205,11 @@ public class PackageResource extends AbstractResource
 				{
 					resourceStream.close();
 				}
+
+				// send Content-Length header
 				resourceResponse.setContentLength(bytes.length);
+
+				// send response body with resource data
 				resourceResponse.setWriteCallback(new WriteCallback()
 				{
 					@Override
