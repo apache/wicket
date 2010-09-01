@@ -29,6 +29,7 @@ import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +49,7 @@ public class PackageResource extends AbstractResource
 		/**
 		 * Construct.
 		 *
-		 * @param message
+		 * @param message error message
 		 */
 		public PackageResourceBlockedException(String message)
 		{
@@ -180,6 +181,11 @@ public class PackageResource extends AbstractResource
 			IResourceStream resourceStream = getResourceStream();
 			resourceResponse.setContentType(resourceStream.getContentType());
 
+			final Time lastModified = resourceStream.lastModifiedTime();
+			
+			if(lastModified != null)
+				resourceResponse.setLastModified(lastModified.toDate());
+
 			if (resourceStream == null)
 				return sendResourceError(resourceResponse, HttpServletResponse.SC_NOT_FOUND, "Unable to find resource");
 
@@ -223,10 +229,10 @@ public class PackageResource extends AbstractResource
 	/**
 	 * send resource specific error message and write log entry
 	 *
-	 * @param resourceResponse resource response for method chaining
+	 * @param resourceResponse resource response
 	 * @param errorCode error code (=http status)
 	 * @param errorMessage error message (=http error message)
-	 * @return
+	 * @return resource response for method chaining
 	 */
 	private ResourceResponse sendResourceError(ResourceResponse resourceResponse, int errorCode, String errorMessage)
 	{
@@ -254,9 +260,9 @@ public class PackageResource extends AbstractResource
 	}
 
 	/**
-	 * @param scope
-	 * @param path
-	 * @return
+	 * @param scope resource scope
+	 * @param path  resource path
+	 * @return <code>true<code> if resource access is granted
 	 */
 	private boolean accept(Class<?> scope, String path)
 	{
