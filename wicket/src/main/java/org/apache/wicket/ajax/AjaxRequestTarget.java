@@ -38,6 +38,7 @@ import org.apache.wicket.markup.html.internal.HeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
+import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
@@ -567,9 +568,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		response.setContentType("text/xml; charset=" + encoding);
 
 		// Make sure it is not cached by a client
-		response.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
-		response.setHeader("Cache-Control", "no-cache, must-revalidate");
-		response.setHeader("Pragma", "no-cache");
+		RequestUtils.disableCaching(response);
 
 		response.write("<?xml version=\"1.0\" encoding=\"");
 		response.write(encoding);

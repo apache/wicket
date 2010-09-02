@@ -223,12 +223,24 @@ public class ServletWebResponse extends WebResponse
 	@Override
 	public void sendRedirect(String url)
 	{
+		sendRedirect(url, false);
+	}
+
+	private void sendRedirect(String url, boolean cacheable)
+	{
 		redirect = true;
 		url = getAbsoluteURL(url);
 		url = httpServletResponse.encodeRedirectURL(url);
 
 		try
 		{
+			// proxies eventually cache '302 temporary redirect' responses:
+			// for most wicket use cases this is fatal since redirects are
+			// usually highly dynamic and can not be statically mapped
+			// to a request url in general
+			if (cacheable == false)
+				RequestUtils.disableCaching(this);
+
 			httpServletResponse.sendRedirect(url);
 		}
 		catch (IOException e)

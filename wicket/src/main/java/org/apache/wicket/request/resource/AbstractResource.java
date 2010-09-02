@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
@@ -352,13 +353,13 @@ public abstract class AbstractResource implements IResource
 	protected void configureCache(final WebRequest request, final WebResponse response,
 		final ResourceResponse data, final Attributes attributes)
 	{
-		long now = System.currentTimeMillis();
-
-		// Time of message generation
-		response.setDateHeader("Date", now);
-
 		if (data.isCacheable())
 		{
+			long now = System.currentTimeMillis();
+
+			// Time of message generation
+			response.setDateHeader("Date", now);
+
 			// Time for cache expiry
 			response.setDateHeader("Expires", now + (data.getCacheDuration() * 1000L));
 
@@ -371,7 +372,7 @@ public abstract class AbstractResource implements IResource
 		}
 		else
 		{
-			response.setHeader(CACHE_CONTROL, "no-cache, must-revalidate");
+			RequestUtils.disableCaching(response);
 		}
 	}
 

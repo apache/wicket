@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html;
 import org.apache.wicket.Application;
 import org.apache.wicket.Resource;
 import org.apache.wicket.Response;
+import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.protocol.http.WebResponse;
 
 /**
@@ -77,7 +78,7 @@ public abstract class WebResource extends Resource
 		}
 		else
 		{
-			response.setHeader("Cache-Control", "no-cache, must-revalidate");
+			RequestUtils.disableCaching(response);
 		}
 	}
 

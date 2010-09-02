@@ -17,6 +17,7 @@
 package org.apache.wicket.request.handler;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.http.WebResponse;
@@ -65,9 +66,7 @@ public final class EmptyAjaxRequestHandler implements IRequestHandler
 		response.setContentType("text/xml; charset=" + encoding);
 
 		// Make sure it is not cached by a client
-		response.setDateHeader("Expires", System.currentTimeMillis());
-		response.setHeader("Cache-Control", "no-cache, must-revalidate");
-		response.setHeader("Pragma", "no-cache");
+		RequestUtils.disableCaching(response);
 
 		response.write("<?xml version=\"1.0\" encoding=\"");
 		response.write(encoding);

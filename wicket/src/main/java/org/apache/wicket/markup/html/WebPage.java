@@ -25,6 +25,7 @@ import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.handler.IPageRequestHandler;
@@ -51,7 +52,7 @@ import org.slf4j.LoggerFactory;
  * a no-arg constructor or with a constructor that accepts a PageParameters argument (which wraps
  * any query string parameters for a request). In case the page has both constructors, the
  * constructor with PageParameters will be used.
- * 
+ *
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Juergen Donnerstag
@@ -79,7 +80,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param webPage
 		 */
 		PageMapChecker(WebPage webPage)
@@ -129,10 +130,10 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 * Note that nothing is done with the page parameters argument. This constructor is provided so
 	 * that tools such as IDEs will include it their list of suggested constructors for derived
 	 * classes.
-	 * 
+	 *
 	 * Please call this constructor (or the one with the pagemap) if you want to remember the
 	 * pageparameters {@link #getPageParameters()}. So that they are reused for stateless links.
-	 * 
+	 *
 	 * @param parameters
 	 *            Wrapped query string parameters.
 	 */
@@ -147,7 +148,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 * markup language, such as VXML, would require the creation of a different Page subclass in an
 	 * appropriate package under org.apache.wicket.markup. To support VXML (voice markup), one might
 	 * create the package org.apache.wicket.markup.vxml and a subclass of Page called VoicePage.
-	 * 
+	 *
 	 * @return Markup type for HTML
 	 */
 	@Override
@@ -192,28 +193,29 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	}
 
 	/**
-	 * Subclasses can override this to set there headers when the Page is being served. By default 2
-	 * headers will be set
-	 * 
+	 * Subclasses can override this to set there headers when the Page is being served.
+	 * By default these headers are set:
+	 *
 	 * <pre>
+	 * response.setHeader(&quot;Date&quot;, &quot;[now]&quot;);
+	 * response.setHeader(&quot;Expires&quot;, &quot;[0]&quot;);
 	 * response.setHeader(&quot;Pragma&quot;, &quot;no-cache&quot;);
-	 * response.setHeader(&quot;Cache-Control&quot;, &quot;no-cache, max-age=0, must-revalidate&quot;);
+	 * response.setHeader(&quot;Cache-Control&quot;, &quot;no-cache&quot;);
 	 * </pre>
-	 * 
+	 *
 	 * So if a Page wants to control this or doesn't want to set this info it should override this
 	 * method and don't call super.
-	 * 
+	 *
 	 * @param response
 	 *            The WebResponse where set(Date)Header can be called on.
 	 */
 	protected void setHeaders(WebResponse response)
 	{
-		response.setHeader("Pragma", "no-cache");
-		response.setHeader("Cache-Control", "no-cache, max-age=0, must-revalidate"); // no-store
+		RequestUtils.disableCaching(response);
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.Component#onAfterRender()
 	 */
 	@Override
@@ -317,7 +319,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 
 	/**
 	 * Creates and returns a bookmarkable link to this application's home page.
-	 * 
+	 *
 	 * @param id
 	 *            Name of link
 	 * @return Link to home page for this application

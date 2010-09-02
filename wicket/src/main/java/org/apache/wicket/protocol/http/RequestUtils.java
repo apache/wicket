@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.wicket.Application;
 import org.apache.wicket.request.UrlDecoder;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
 
@@ -46,20 +47,18 @@ public final class RequestUtils
 	 */
 	public static void decodeParameters(String queryString, PageParameters params)
 	{
-		final String[] paramTuples = queryString.split("&");
-		for (int t = 0; t < paramTuples.length; t++)
+		for (String paramTuple : Strings.split(queryString, '&'))
 		{
-			final String[] bits = paramTuples[t].split("=");
+			final String[] bits = Strings.split(paramTuple, '=');
+
 			if (bits.length == 2)
 			{
-				params.addNamedParameter(UrlDecoder.QUERY_INSTANCE.decode(bits[0],
-					getCurrentCharset()), UrlDecoder.QUERY_INSTANCE.decode(bits[1],
-					getCurrentCharset()));
+				params.addNamedParameter(UrlDecoder.QUERY_INSTANCE.decode(bits[0], getCurrentCharset()),
+				                         UrlDecoder.QUERY_INSTANCE.decode(bits[1], getCurrentCharset()));
 			}
 			else
 			{
-				params.addNamedParameter(UrlDecoder.QUERY_INSTANCE.decode(bits[0],
-					getCurrentCharset()), "");
+				params.addNamedParameter(UrlDecoder.QUERY_INSTANCE.decode(bits[0], getCurrentCharset()), "");
 			}
 		}
 	}
@@ -134,7 +133,7 @@ public final class RequestUtils
 				}
 			}
 		}
-		String newpath = Strings.join("/", newcomponents.toArray(new String[0]));
+		String newpath = Strings.join("/", newcomponents.toArray(new String[newcomponents.size()]));
 		if (path.endsWith("/"))
 		{
 			return newpath + "/";
@@ -159,7 +158,7 @@ public final class RequestUtils
 	 *            path, relative to requestPath
 	 * @return absolute path for given url
 	 */
-	public final static String toAbsolutePath(final String requestPath, String relativePagePath)
+	public static String toAbsolutePath(final String requestPath, String relativePagePath)
 	{
 		final StringBuffer result;
 		if (requestPath.endsWith("/"))
@@ -244,5 +243,23 @@ public final class RequestUtils
 			charsetName = "UTF-8";
 		}
 		return Charset.forName(charsetName);
+	}
+
+	/**
+	 * set all required headers to disable caching
+	 *
+	 * "Pragma" is required for older browsers only supporting HTTP 1.0.
+	 * "Cache" is recommended for HTTP 1.1.
+	 * "Expires" additionally sets the content expiry in the past which effectively prohibits caching.
+	 * "Date" is recommended in general
+	 *
+	 * @param response web response
+	 */
+	public static void disableCaching(WebResponse response)
+	{
+		response.setDateHeader("Date", System.currentTimeMillis());
+		response.setDateHeader("Expires", 0);
+		response.setHeader("Pragma", "no-cache");
+		response.setHeader("Cache-Control", "no-cache");
 	}
 }
