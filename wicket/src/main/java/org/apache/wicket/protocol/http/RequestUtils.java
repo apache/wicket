@@ -247,11 +247,14 @@ public final class RequestUtils
 
 	/**
 	 * set all required headers to disable caching
-	 *
-	 * "Pragma" is required for older browsers only supporting HTTP 1.0.
-	 * "Cache" is recommended for HTTP 1.1.
-	 * "Expires" additionally sets the content expiry in the past which effectively prohibits caching.
-	 * "Date" is recommended in general
+	 * <p/>
+	 * the following headers are set:
+	 * <ul>
+	 * <li>"Pragma" is set for older browsers only supporting HTTP 1.0.</li>
+	 * <li>"Cache-Control" is set for modern browsers that support HTTP 1.1.</li>
+	 * <li>"Expires" additionally sets the content expiry in the past which effectively prohibits caching</li>
+	 * <li>"Date" is recommended in general</li>
+	 * </ul>
 	 *
 	 * @param response web response
 	 */
