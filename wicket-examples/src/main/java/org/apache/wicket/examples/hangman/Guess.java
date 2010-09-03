@@ -95,10 +95,10 @@ public class Guess extends HangmanPage
 				};
 
 				PageParameters parameters = new PageParameters();
-				parameters.setNamedParameter(Letter.PARAMETER_LETTER, letter.asString());
+				parameters.set(Letter.PARAMETER_LETTER, letter.asString());
 				if (letter.isGuessed())
 				{
-					parameters.setNamedParameter(Letter.PARAMETER_GUESSED, true);
+					parameters.set(Letter.PARAMETER_GUESSED, true);
 				}
 				link.add(new Image("image", Letter.LETTER_RESOURCE_REFERENCE, parameters));
 				listItem.add(link);

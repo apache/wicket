@@ -64,7 +64,7 @@ public class InspectorDebugPanel extends StandardDebugPanel {
 	@Override
 	protected PageParameters getLinkPageParameters() {
 		PageParameters params = new PageParameters();
-		params.addNamedParameter("pageId", getPage().getId());
+		params.add("pageId", getPage().getId());
 		return params;
 	}
 

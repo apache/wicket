@@ -52,7 +52,7 @@ public final class InspectorPage extends DevUtilsPage
 		IManageablePage page = null;
 		try
 		{
-			final int pageId = parameters.getNamedParameter("pageId").toInt();
+			final int pageId = parameters.get("pageId").toInt();
 			page = Session.get().getPageManager().getPage(pageId);
 		}
 		catch (StringValueConversionException e)

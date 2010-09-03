@@ -39,7 +39,7 @@ public class EnclosurePage_5 extends EnclosurePage_5_Base
 		final Label bar = new Label("bar", "bazqux");
 
 		// that one doesn't matter
-		boolean visible = param.getNamedParameter("visible").toBoolean();
+		boolean visible = param.get("visible").toBoolean();
 		bar.setVisible(visible);
 
 		foo.add(bar);

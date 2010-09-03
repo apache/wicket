@@ -62,13 +62,13 @@ public class BookmarkablePage extends WebPage
 		// you ever trust
 		// any API enough to just not check it at all?
 		if (pageParameters == null ||
-			pageParameters.getNamedParameter("message").toOptionalString() == null)
+			pageParameters.get("message").toOptionalString() == null)
 		{
 			message = "This is the default message";
 		}
 		else
 		{
-			message = pageParameters.getNamedParameter("message").toOptionalString();
+			message = pageParameters.get("message").toOptionalString();
 		}
 
 		// Add a label to display the message

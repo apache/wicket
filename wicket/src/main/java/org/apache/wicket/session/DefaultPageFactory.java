@@ -180,7 +180,7 @@ public final class DefaultPageFactory implements IPageFactory
 		// we force the parameters
 		if (pageParameters != null && page.getPageParameters() != pageParameters)
 		{
-			page.getPageParameters().assign(pageParameters);
+			page.getPageParameters().overwriteWith(pageParameters);
 		}
 
 		page.setWasCreatedBookmarkable(true);

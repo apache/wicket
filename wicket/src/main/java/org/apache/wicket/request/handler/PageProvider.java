@@ -249,7 +249,7 @@ public class PageProvider implements IPageProvider
 			}
 			else if (page != null && pageParameters != null)
 			{
-				page.getPageParameters().assign(pageParameters);
+				page.getPageParameters().overwriteWith(pageParameters);
 			}
 		}
 		if (page == null)

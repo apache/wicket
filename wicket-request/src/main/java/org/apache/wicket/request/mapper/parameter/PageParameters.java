@@ -147,14 +147,14 @@ public class PageParameters implements Serializable
 				final String key = pair.substring(0, pos).trim();
 				final String value = pair.substring(pos + 1).trim();
 
-				addNamedParameter(key, value);
+				add(key, value);
 			}
 			else
 			{
 				final String key = pair.trim();
 				final String value = null;
 
-				addNamedParameter(key, value);
+				add(key, value);
 			}
 		}
 	}
@@ -163,7 +163,7 @@ public class PageParameters implements Serializable
 	/**
 	 * @return count of indexed parameters
 	 */
-	public int getIndexedParamsCount()
+	public int getIndexedCount()
 	{
 		return indexedParameters != null ? indexedParameters.size() : 0;
 	}
@@ -173,8 +173,9 @@ public class PageParameters implements Serializable
 	 * 
 	 * @param index
 	 * @param object
+	 * @return this
 	 */
-	public void setIndexedParameter(int index, Object object)
+	public PageParameters set(int index, Object object)
 	{
 		if (indexedParameters == null)
 		{
@@ -187,13 +188,14 @@ public class PageParameters implements Serializable
 		}
 
 		indexedParameters.set(index, object != null ? object.toString() : null);
+		return this;
 	}
 
 	/**
 	 * @param index
 	 * @return indexed parameter on given index
 	 */
-	public StringValue getIndexedParameter(int index)
+	public StringValue get(int index)
 	{
 		if (indexedParameters != null)
 		{
@@ -209,8 +211,9 @@ public class PageParameters implements Serializable
 	 * Removes indexed parameter on given index
 	 * 
 	 * @param index
+	 * @return this
 	 */
-	public void removeIndexedParameter(int index)
+	public PageParameters remove(int index)
 	{
 		if (indexedParameters != null)
 		{
@@ -219,6 +222,7 @@ public class PageParameters implements Serializable
 				indexedParameters.remove(index);
 			}
 		}
+		return this;
 	}
 
 	/**
@@ -226,7 +230,7 @@ public class PageParameters implements Serializable
 	 * 
 	 * @return named parameter names
 	 */
-	public Set<String> getNamedParameterKeys()
+	public Set<String> getNamedKeys()
 	{
 		if (namedParameters == null || namedParameters.isEmpty())
 		{
@@ -246,7 +250,7 @@ public class PageParameters implements Serializable
 	 * @param name
 	 * @return parameter value
 	 */
-	public StringValue getNamedParameter(final String name)
+	public StringValue get(final String name)
 	{
 		Args.notNull(name, "name");
 
@@ -269,7 +273,7 @@ public class PageParameters implements Serializable
 	 * @param name
 	 * @return list of parameter values
 	 */
-	public List<StringValue> getNamedParameters(final String name)
+	public List<StringValue> getValues(final String name)
 	{
 		Args.notNull(name, "name");
 
@@ -292,18 +296,17 @@ public class PageParameters implements Serializable
 	}
 
 	/**
-	 * Represents a named parameter entry. There can be multiple {@link NamedParameterPair}s in
+	 * Represents a named parameter entry. There can be multiple {@link NamedPair}s in
 	 * {@link PageParameters} that have same key.
 	 * 
 	 * @author Matej Knopp
 	 */
-	// TODO rename to NamedParameter
-	public static class NamedParameterPair
+	public static class NamedPair
 	{
 		private final String key;
 		private final String value;
 
-		private NamedParameterPair(String key, String value)
+		private NamedPair(String key, String value)
 		{
 			this.key = key;
 			this.value = value;
@@ -329,14 +332,14 @@ public class PageParameters implements Serializable
 	/**
 	 * @return All named parameters in exact order.
 	 */
-	public List<NamedParameterPair> getNamedParameters()
+	public List<NamedPair> getAllNamed()
 	{
-		List<NamedParameterPair> res = new ArrayList<NamedParameterPair>();
+		List<NamedPair> res = new ArrayList<NamedPair>();
 		if (namedParameters != null)
 		{
 			for (Entry e : namedParameters)
 			{
-				res.add(new NamedParameterPair(e.key, e.value));
+				res.add(new NamedPair(e.key, e.value));
 			}
 		}
 		return Collections.unmodifiableList(res);
@@ -346,8 +349,9 @@ public class PageParameters implements Serializable
 	 * Removes named parameter with given name.
 	 * 
 	 * @param name
+	 * @return this
 	 */
-	public void removeNamedParameter(final String name)
+	public PageParameters remove(final String name)
 	{
 		Args.notNull(name, "name");
 
@@ -362,6 +366,7 @@ public class PageParameters implements Serializable
 				}
 			}
 		}
+		return this;
 	}
 
 	/**
@@ -369,10 +374,12 @@ public class PageParameters implements Serializable
 	 * 
 	 * @param name
 	 * @param value
+	 * @return this
 	 */
-	public void addNamedParameter(final String name, final Object value)
+	public PageParameters add(final String name, final Object value)
 	{
-		addNamedParameter(name, value, -1);
+		add(name, value, -1);
+		return this;
 	}
 
 	/**
@@ -382,8 +389,9 @@ public class PageParameters implements Serializable
 	 * @param name
 	 * @param value
 	 * @param index
+	 * @return this
 	 */
-	public void addNamedParameter(final String name, final Object value, final int index)
+	public PageParameters add(final String name, final Object value, final int index)
 	{
 		Args.notNull(name, "name");
 		Args.notNull(value, "value");
@@ -404,6 +412,7 @@ public class PageParameters implements Serializable
 		{
 			namedParameters.add(index, entry);
 		}
+		return this;
 	}
 
 	/**
@@ -413,15 +422,17 @@ public class PageParameters implements Serializable
 	 * @param name
 	 * @param value
 	 * @param index
+	 * @return this
 	 */
-	public void setNamedParameter(String name, Object value, int index)
+	public PageParameters set(String name, Object value, int index)
 	{
-		removeNamedParameter(name);
+		remove(name);
 
 		if (value != null)
 		{
-			addNamedParameter(name, value);
+			add(name, value);
 		}
+		return this;
 	}
 
 	/**
@@ -429,40 +440,50 @@ public class PageParameters implements Serializable
 	 * 
 	 * @param name
 	 * @param value
+	 * @return this
 	 */
-	public void setNamedParameter(String name, Object value)
+	public PageParameters set(String name, Object value)
 	{
-		setNamedParameter(name, value, -1);
+		set(name, value, -1);
+		return this;
 	}
 
 	/**
 	 * Removes all indexed parameters.
+	 * 
+	 * @return this
 	 */
-	public void clearIndexedParameters()
+	public PageParameters clearIndexed()
 	{
 		indexedParameters = null;
+		return this;
 	}
 
 	/**
 	 * Removes all named parameters.
+	 * 
+	 * @return this
 	 */
-	public void clearNamedParameters()
+	public PageParameters clearaNamed()
 	{
 		namedParameters = null;
+		return this;
 	}
 
 	/**
 	 * Copy the paga parameters
 	 * 
 	 * @param other
+	 * @return this
 	 */
-	public void assign(PageParameters other)
+	public PageParameters overwriteWith(PageParameters other)
 	{
 		if (this != other)
 		{
 			indexedParameters = other.indexedParameters;
 			namedParameters = other.namedParameters;
 		}
+		return this;
 	}
 
 	/**
@@ -497,11 +518,11 @@ public class PageParameters implements Serializable
 			return false;
 		}
 
-		for (String key : getNamedParameterKeys())
+		for (String key : getNamedKeys())
 		{
-			List<StringValue> values1 = getNamedParameters(key);
+			List<StringValue> values1 = getValues(key);
 			Set<String> v1 = new TreeSet<String>();
-			List<StringValue> values2 = rhs.getNamedParameters(key);
+			List<StringValue> values2 = rhs.getValues(key);
 			Set<String> v2 = new TreeSet<String>();
 			for (StringValue sv : values1)
 			{
@@ -534,11 +555,11 @@ public class PageParameters implements Serializable
 		{
 			return true;
 		}
-		if (p1 == null && p2.getIndexedParamsCount() == 0 && p2.getNamedParameterKeys().isEmpty())
+		if (p1 == null && p2.getIndexedCount() == 0 && p2.getNamedKeys().isEmpty())
 		{
 			return true;
 		}
-		if (p2 == null && p1.getIndexedParamsCount() == 0 && p1.getNamedParameterKeys().isEmpty())
+		if (p2 == null && p1.getIndexedCount() == 0 && p1.getNamedKeys().isEmpty())
 		{
 			return true;
 		}
@@ -550,6 +571,6 @@ public class PageParameters implements Serializable
 	 */
 	public boolean isEmpty()
 	{
-		return getIndexedParamsCount() == 0 && getNamedParameterKeys().isEmpty();
+		return getIndexedCount() == 0 && getNamedKeys().isEmpty();
 	}
 }

@@ -53,12 +53,12 @@ public final class RequestUtils
 
 			if (bits.length == 2)
 			{
-				params.addNamedParameter(UrlDecoder.QUERY_INSTANCE.decode(bits[0], getCurrentCharset()),
+				params.add(UrlDecoder.QUERY_INSTANCE.decode(bits[0], getCurrentCharset()),
 				                         UrlDecoder.QUERY_INSTANCE.decode(bits[1], getCurrentCharset()));
 			}
 			else
 			{
-				params.addNamedParameter(UrlDecoder.QUERY_INSTANCE.decode(bits[0], getCurrentCharset()), "");
+				params.add(UrlDecoder.QUERY_INSTANCE.decode(bits[0], getCurrentCharset()), "");
 			}
 		}
 	}

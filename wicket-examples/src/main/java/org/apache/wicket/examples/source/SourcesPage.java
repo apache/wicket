@@ -577,9 +577,9 @@ public class SourcesPage extends WebPage
 	public static PageParameters generatePageParameters(Class<? extends Page> clazz, String fileName)
 	{
 		PageParameters p = new PageParameters();
-		p.setNamedParameter(PAGE_CLASS, clazz.getName());
+		p.set(PAGE_CLASS, clazz.getName());
 		if (fileName != null)
-			p.setNamedParameter(SOURCE, fileName);
+			p.set(SOURCE, fileName);
 		return p;
 	}
 

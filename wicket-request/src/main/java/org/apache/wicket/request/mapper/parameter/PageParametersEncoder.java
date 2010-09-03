@@ -44,13 +44,13 @@ public class PageParametersEncoder implements IPageParametersEncoder
 		int i = 0;
 		for (String s : request.getUrl().getSegments())
 		{
-			parameters.setIndexedParameter(i, s);
+			parameters.set(i, s);
 			++i;
 		}
 
 		for (QueryParameter p : request.getUrl().getQueryParameters())
 		{
-			parameters.addNamedParameter(p.getName(), p.getValue());
+			parameters.add(p.getName(), p.getValue());
 		}
 
 		return parameters.isEmpty() ? null : parameters;
@@ -63,12 +63,12 @@ public class PageParametersEncoder implements IPageParametersEncoder
 	{
 		Url url = new Url();
 
-		for (int i = 0; i < pageParameters.getIndexedParamsCount(); ++i)
+		for (int i = 0; i < pageParameters.getIndexedCount(); ++i)
 		{
-			url.getSegments().add(pageParameters.getIndexedParameter(i).toString());
+			url.getSegments().add(pageParameters.get(i).toString());
 		}
 
-		for (PageParameters.NamedParameterPair pair : pageParameters.getNamedParameters())
+		for (PageParameters.NamedPair pair : pageParameters.getAllNamed())
 		{
 			QueryParameter param = new QueryParameter(pair.getKey(), pair.getValue());
 			url.getQueryParameters().add(param);

@@ -130,7 +130,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 					{
 						pageParameters = new PageParameters();
 					}
-					pageParameters.addNamedParameter(placeholder, url.getSegments().get(i));
+					pageParameters.add(placeholder, url.getSegments().get(i));
 				}
 			}
 
@@ -167,8 +167,8 @@ public class MountedMapper extends AbstractBookmarkableMapper
 			String placeholder = getPlaceholder(mountSegments[i]);
 			if (placeholder != null)
 			{
-				url.getSegments().set(i, copy.getNamedParameter(placeholder).toString(""));
-				copy.removeNamedParameter(placeholder);
+				url.getSegments().set(i, copy.get(placeholder).toString(""));
+				copy.remove(placeholder);
 			}
 		}
 

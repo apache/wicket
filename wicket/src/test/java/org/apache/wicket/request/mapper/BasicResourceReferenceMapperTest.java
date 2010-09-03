@@ -58,8 +58,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		assertTrue(handler instanceof ResourceReferenceRequestHandler);
 		ResourceReferenceRequestHandler h = (ResourceReferenceRequestHandler)handler;
 		assertEquals(resource1, h.getResource());
-		assertEquals(0, h.getPageParameters().getIndexedParamsCount());
-		assertEquals(0, h.getPageParameters().getNamedParameterKeys().size());
+		assertEquals(0, h.getPageParameters().getIndexedCount());
+		assertEquals(0, h.getPageParameters().getNamedKeys().size());
 	}
 
 	/**
@@ -75,8 +75,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		assertEquals(Locale.ENGLISH, h.getLocale());
 		assertEquals(null, h.getStyle());
 		assertEquals(null, h.getVariation());
-		assertEquals(0, h.getPageParameters().getIndexedParamsCount());
-		assertEquals(0, h.getPageParameters().getNamedParameterKeys().size());
+		assertEquals(0, h.getPageParameters().getIndexedCount());
+		assertEquals(0, h.getPageParameters().getNamedKeys().size());
 	}
 
 	/**
@@ -92,9 +92,9 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		assertEquals(null, h.getLocale());
 		assertEquals(null, h.getStyle());
 		assertEquals(null, h.getVariation());
-		assertEquals(0, h.getPageParameters().getIndexedParamsCount());
-		assertEquals("v1", h.getPageParameters().getNamedParameter("p1").toString());
-		assertEquals("v2", h.getPageParameters().getNamedParameter("p2").toString());
+		assertEquals(0, h.getPageParameters().getIndexedCount());
+		assertEquals("v1", h.getPageParameters().get("p1").toString());
+		assertEquals("v2", h.getPageParameters().get("p2").toString());
 	}
 
 	/**
@@ -110,9 +110,9 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		assertEquals(null, h.getLocale());
 		assertEquals("style", h.getStyle());
 		assertEquals(null, h.getVariation());
-		assertEquals(0, h.getPageParameters().getIndexedParamsCount());
-		assertEquals("v1", h.getPageParameters().getNamedParameter("p1").toString());
-		assertEquals("v2", h.getPageParameters().getNamedParameter("p2").toString());
+		assertEquals(0, h.getPageParameters().getIndexedCount());
+		assertEquals("v1", h.getPageParameters().get("p1").toString());
+		assertEquals("v2", h.getPageParameters().get("p2").toString());
 	}
 
 	/**
@@ -128,8 +128,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		assertEquals(new Locale("en", "en"), h.getLocale());
 		assertEquals(null, h.getStyle());
 		assertEquals(null, h.getVariation());
-		assertEquals(0, h.getPageParameters().getIndexedParamsCount());
-		assertEquals(0, h.getPageParameters().getNamedParameterKeys().size());
+		assertEquals(0, h.getPageParameters().getIndexedCount());
+		assertEquals(0, h.getPageParameters().getNamedKeys().size());
 	}
 
 	/**
@@ -145,8 +145,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		assertEquals(new Locale("en", "en"), h.getLocale());
 		assertEquals("style", h.getStyle());
 		assertEquals(null, h.getVariation());
-		assertEquals(0, h.getPageParameters().getIndexedParamsCount());
-		assertEquals(0, h.getPageParameters().getNamedParameterKeys().size());
+		assertEquals(0, h.getPageParameters().getIndexedCount());
+		assertEquals(0, h.getPageParameters().getNamedKeys().size());
 	}
 
 	/**
@@ -172,8 +172,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		assertEquals(new Locale("en", "en"), h.getLocale());
 		assertEquals(null, h.getStyle());
 		assertEquals(null, h.getVariation());
-		assertEquals("v1", h.getPageParameters().getNamedParameter("p1").toString());
-		assertEquals("v2", h.getPageParameters().getNamedParameter("p2").toString());
+		assertEquals("v1", h.getPageParameters().get("p1").toString());
+		assertEquals("v2", h.getPageParameters().get("p2").toString());
 	}
 
 	/**
@@ -189,8 +189,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		assertEquals(null, h.getLocale());
 		assertEquals("style", h.getStyle());
 		assertEquals(null, h.getVariation());
-		assertEquals(0, h.getPageParameters().getIndexedParamsCount());
-		assertEquals(0, h.getPageParameters().getNamedParameterKeys().size());
+		assertEquals(0, h.getPageParameters().getIndexedCount());
+		assertEquals(0, h.getPageParameters().getNamedKeys().size());
 	}
 
 	/**
@@ -206,9 +206,9 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		assertEquals(null, h.getLocale());
 		assertEquals("style", h.getStyle());
 		assertEquals(null, h.getVariation());
-		assertEquals(0, h.getPageParameters().getIndexedParamsCount());
-		assertEquals("v1", h.getPageParameters().getNamedParameter("p1").toString());
-		assertEquals("v2", h.getPageParameters().getNamedParameter("p2").toString());
+		assertEquals(0, h.getPageParameters().getIndexedCount());
+		assertEquals("v1", h.getPageParameters().get("p1").toString());
+		assertEquals("v2", h.getPageParameters().get("p2").toString());
 	}
 
 
@@ -225,8 +225,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		assertEquals(Locale.ENGLISH, h.getLocale());
 		assertEquals("style", h.getStyle());
 		assertEquals(null, h.getVariation());
-		assertEquals(0, h.getPageParameters().getIndexedParamsCount());
-		assertEquals(0, h.getPageParameters().getNamedParameterKeys().size());
+		assertEquals(0, h.getPageParameters().getIndexedCount());
+		assertEquals(0, h.getPageParameters().getNamedKeys().size());
 	}
 
 	/**
@@ -252,9 +252,9 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		assertEquals(Locale.ENGLISH, h.getLocale());
 		assertEquals("style", h.getStyle());
 		assertEquals(null, h.getVariation());
-		assertEquals(0, h.getPageParameters().getIndexedParamsCount());
-		assertEquals("v1", h.getPageParameters().getNamedParameter("p1").toString());
-		assertEquals("v2", h.getPageParameters().getNamedParameter("p2").toString());
+		assertEquals(0, h.getPageParameters().getIndexedCount());
+		assertEquals("v1", h.getPageParameters().get("p1").toString());
+		assertEquals("v2", h.getPageParameters().get("p2").toString());
 	}
 
 	/**
@@ -271,9 +271,9 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		assertEquals(Locale.ENGLISH, h.getLocale());
 		assertEquals(null, h.getStyle());
 		assertEquals("variation", h.getVariation());
-		assertEquals(0, h.getPageParameters().getIndexedParamsCount());
-		assertEquals("v1", h.getPageParameters().getNamedParameter("p1").toString());
-		assertEquals("v2", h.getPageParameters().getNamedParameter("p2").toString());
+		assertEquals(0, h.getPageParameters().getIndexedCount());
+		assertEquals("v1", h.getPageParameters().get("p1").toString());
+		assertEquals("v2", h.getPageParameters().get("p2").toString());
 	}
 
 	/**
@@ -290,9 +290,9 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		assertEquals(Locale.ENGLISH, h.getLocale());
 		assertEquals("style", h.getStyle());
 		assertEquals("variation", h.getVariation());
-		assertEquals(0, h.getPageParameters().getIndexedParamsCount());
-		assertEquals("v1", h.getPageParameters().getNamedParameter("p1").toString());
-		assertEquals("v2", h.getPageParameters().getNamedParameter("p2").toString());
+		assertEquals(0, h.getPageParameters().getIndexedCount());
+		assertEquals("v1", h.getPageParameters().get("p1").toString());
+		assertEquals("v2", h.getPageParameters().get("p2").toString());
 	}
 
 	/**
@@ -312,9 +312,9 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	public void testEncode2()
 	{
 		PageParameters parameters = new PageParameters();
-		parameters.setIndexedParameter(0, "X");
-		parameters.addNamedParameter("p1", "v1");
-		parameters.addNamedParameter("p2", "v2");
+		parameters.set(0, "X");
+		parameters.add("p1", "v1");
+		parameters.add("p2", "v2");
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference1,
 			parameters);
 
@@ -339,9 +339,9 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	public void testEncode4()
 	{
 		PageParameters parameters = new PageParameters();
-		parameters.setIndexedParameter(0, "X");
-		parameters.addNamedParameter("p1", "v1");
-		parameters.addNamedParameter("p2", "v2");
+		parameters.set(0, "X");
+		parameters.add("p1", "v1");
+		parameters.add("p2", "v2");
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference2,
 			parameters);
 
@@ -367,9 +367,9 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	public void testEncode6()
 	{
 		PageParameters parameters = new PageParameters();
-		parameters.setIndexedParameter(0, "X");
-		parameters.addNamedParameter("p1", "v1");
-		parameters.addNamedParameter("p2", "v2");
+		parameters.set(0, "X");
+		parameters.add("p1", "v1");
+		parameters.add("p2", "v2");
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference3,
 			parameters);
 
@@ -395,9 +395,9 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	public void testEncode8()
 	{
 		PageParameters parameters = new PageParameters();
-		parameters.setIndexedParameter(0, "X");
-		parameters.addNamedParameter("p1", "v1");
-		parameters.addNamedParameter("p2", "v2");
+		parameters.set(0, "X");
+		parameters.add("p1", "v1");
+		parameters.add("p2", "v2");
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference4,
 			parameters);
 

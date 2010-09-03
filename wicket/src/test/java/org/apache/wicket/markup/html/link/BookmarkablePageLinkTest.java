@@ -72,7 +72,7 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 			return;
 
 		PageParameters pp = new PageParameters();
-		pp.setNamedParameter("test", "test");
+		pp.set("test", "test");
 
 		tester.startPage(BookmarkableThrowsInterceptPage.class, pp);
 

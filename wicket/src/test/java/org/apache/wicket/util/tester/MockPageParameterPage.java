@@ -39,7 +39,7 @@ public class MockPageParameterPage extends WebPage
 	{
 		add(new BookmarkablePageLink("link", MockPageParameterPage.class,
 			new PageParameters("id=1")));
-		add(new Label("label", pageParameters.getNamedParameter("id").toString()));
+		add(new Label("label", pageParameters.get("id").toString()));
 	}
 
 	/**

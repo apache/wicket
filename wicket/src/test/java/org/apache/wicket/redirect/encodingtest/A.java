@@ -39,7 +39,7 @@ public class A extends WebPage
 	{
 		((WicketApplication)WebApplication.get()).intercept();
 
-		file = parameters.getNamedParameter("file").toString();
+		file = parameters.get("file").toString();
 
 		add(new Label("file", file));
 	}

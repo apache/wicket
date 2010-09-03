@@ -35,7 +35,7 @@ public class Page3 extends WicketExamplePage
 	 */
 	public Page3(PageParameters parameters)
 	{
-		add(new Label("bookmarkparameter", parameters.getNamedParameter("bookmarkparameter")
+		add(new Label("bookmarkparameter", parameters.get("bookmarkparameter")
 			.toOptionalString()));
 	}
 }

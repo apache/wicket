@@ -47,7 +47,7 @@ public class BookmarkablePageLinkPage extends WicketExamplePage
 		// Note that any arguments are passed as request parameters, and should
 		// thus be strings
 		PageParameters parameters = new PageParameters();
-		parameters.setNamedParameter("message",
+		parameters.set("message",
 			"This message was passed as a page parameter argument");
 		add(new BookmarkablePageLink<Void>("pageLinkWithArgs", BookmarkablePage.class, parameters));
 	}

@@ -43,14 +43,14 @@ public class Page5 extends WicketExamplePage
 	public Page5(PageParameters parameters)
 	{
 		String p1 = "CANNOT RESOLVE FROM URL";
-		if (parameters.getNamedParameterKeys().contains("param1"))
+		if (parameters.getNamedKeys().contains("param1"))
 		{
-			p1 = join(parameters.getNamedParameters("param1"));
+			p1 = join(parameters.getValues("param1"));
 		}
 		String p2 = "CANNOT RESOLVE FROM URL";
-		if (parameters.getNamedParameterKeys().contains("param2"))
+		if (parameters.getNamedKeys().contains("param2"))
 		{
-			p2 = join(parameters.getNamedParameters("param2"));
+			p2 = join(parameters.getValues("param2"));
 		}
 
 		add(new Label("p1", p1));
@@ -60,8 +60,8 @@ public class Page5 extends WicketExamplePage
 		String newP2 = String.valueOf(random.nextInt());
 
 		PageParameters params = new PageParameters();
-		params.setNamedParameter("param1", newP1);
-		params.setNamedParameter("param2", newP2);
+		params.set("param1", newP1);
+		params.set("param2", newP2);
 
 		BookmarkablePageLink link = new BookmarkablePageLink("refreshLink", Page5.class, params);
 		add(link);

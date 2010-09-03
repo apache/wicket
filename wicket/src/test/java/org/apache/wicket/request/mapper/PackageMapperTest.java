@@ -71,8 +71,8 @@ public class PackageMapperTest extends AbstractMapperTest
 		assertTrue(handler instanceof RenderPageRequestHandler);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		assertEquals(PAGE_CLASS_NAME, page.getClass().getSimpleName());
-		assertEquals(0, page.getPageParameters().getIndexedParamsCount());
-		assertTrue(page.getPageParameters().getNamedParameterKeys().isEmpty());
+		assertEquals(0, page.getPageParameters().getIndexedCount());
+		assertTrue(page.getPageParameters().getNamedKeys().isEmpty());
 	}
 
 	/**
@@ -88,12 +88,12 @@ public class PackageMapperTest extends AbstractMapperTest
 		assertEquals(PAGE_CLASS_NAME, page.getClass().getSimpleName());
 
 		PageParameters p = page.getPageParameters();
-		assertEquals(1, p.getIndexedParamsCount());
-		assertEquals("indexed1", p.getIndexedParameter(0).toString());
+		assertEquals(1, p.getIndexedCount());
+		assertEquals("indexed1", p.get(0).toString());
 
-		assertEquals(2, p.getNamedParameterKeys().size());
-		assertEquals("b", p.getNamedParameter("a").toString());
-		assertEquals("c", p.getNamedParameter("b").toString());
+		assertEquals(2, p.getNamedKeys().size());
+		assertEquals("b", p.get("a").toString());
+		assertEquals("c", p.get("b").toString());
 	}
 
 	/**
@@ -122,13 +122,13 @@ public class PackageMapperTest extends AbstractMapperTest
 		checkPage(page, 15);
 
 		PageParameters p = page.getPageParameters();
-		assertEquals(2, p.getIndexedParamsCount());
-		assertEquals("i1", p.getIndexedParameter(0).toString());
-		assertEquals("i2", p.getIndexedParameter(1).toString());
+		assertEquals(2, p.getIndexedCount());
+		assertEquals("i1", p.get(0).toString());
+		assertEquals("i2", p.get(1).toString());
 
-		assertEquals(2, p.getNamedParameterKeys().size());
-		assertEquals("b", p.getNamedParameter("a").toString());
-		assertEquals("c", p.getNamedParameter("b").toString());
+		assertEquals(2, p.getNamedKeys().size());
+		assertEquals("b", p.get("a").toString());
+		assertEquals("c", p.get("b").toString());
 	}
 
 	/**
@@ -170,13 +170,13 @@ public class PackageMapperTest extends AbstractMapperTest
 		assertEquals("foo:bar", h.getComponent().getPageRelativePath());
 
 		PageParameters p = page.getPageParameters();
-		assertEquals(2, p.getIndexedParamsCount());
-		assertEquals("i1", p.getIndexedParameter(0).toString());
-		assertEquals("i2", p.getIndexedParameter(1).toString());
+		assertEquals(2, p.getIndexedCount());
+		assertEquals("i1", p.get(0).toString());
+		assertEquals("i2", p.get(1).toString());
 
-		assertEquals(2, p.getNamedParameterKeys().size());
-		assertEquals("b", p.getNamedParameter("a").toString());
-		assertEquals("c", p.getNamedParameter("b").toString());
+		assertEquals(2, p.getNamedKeys().size());
+		assertEquals("b", p.get("a").toString());
+		assertEquals("c", p.get("b").toString());
 	}
 
 	/**
@@ -273,10 +273,10 @@ public class PackageMapperTest extends AbstractMapperTest
 	public void testEncode2()
 	{
 		PageParameters parameters = new PageParameters();
-		parameters.setIndexedParameter(0, "i1");
-		parameters.setIndexedParameter(1, "i2");
-		parameters.setNamedParameter("a", "b");
-		parameters.setNamedParameter("b", "c");
+		parameters.set(0, "i1");
+		parameters.set(1, "i2");
+		parameters.set("a", "b");
+		parameters.set("b", "c");
 		PageProvider provider = new PageProvider(MockPage.class, parameters);
 		provider.setPageSource(context);
 		IRequestHandler handler = new BookmarkablePageRequestHandler(provider);
@@ -290,10 +290,10 @@ public class PackageMapperTest extends AbstractMapperTest
 	public void testEncode3()
 	{
 		PageParameters parameters = new PageParameters();
-		parameters.setIndexedParameter(0, "i1");
-		parameters.setIndexedParameter(1, "i2");
-		parameters.setNamedParameter("a", "b");
-		parameters.setNamedParameter("b", "c");
+		parameters.set(0, "i1");
+		parameters.set(1, "i2");
+		parameters.set("a", "b");
+		parameters.set("b", "c");
 
 		PageProvider provider = new PageProvider(MockPage.class, parameters);
 		provider.setPageSource(context);
@@ -309,10 +309,10 @@ public class PackageMapperTest extends AbstractMapperTest
 	public void testEncode4()
 	{
 		MockPage page = new MockPage(15);
-		page.getPageParameters().setIndexedParameter(0, "i1");
-		page.getPageParameters().setIndexedParameter(1, "i2");
-		page.getPageParameters().setNamedParameter("a", "b");
-		page.getPageParameters().setNamedParameter("b", "c");
+		page.getPageParameters().set(0, "i1");
+		page.getPageParameters().set(1, "i2");
+		page.getPageParameters().set("a", "b");
+		page.getPageParameters().set("b", "c");
 		page.setCreatedBookmarkable(true);
 
 		IPageProvider provider = new PageProvider(page);
@@ -328,10 +328,10 @@ public class PackageMapperTest extends AbstractMapperTest
 	public void testEncode5()
 	{
 		MockPage page = new MockPage(15);
-		page.getPageParameters().setIndexedParameter(0, "i1");
-		page.getPageParameters().setIndexedParameter(1, "i2");
-		page.getPageParameters().setNamedParameter("a", "b");
-		page.getPageParameters().setNamedParameter("b", "c");
+		page.getPageParameters().set(0, "i1");
+		page.getPageParameters().set(1, "i2");
+		page.getPageParameters().set("a", "b");
+		page.getPageParameters().set("b", "c");
 
 		page.setCreatedBookmarkable(false);
 
@@ -351,10 +351,10 @@ public class PackageMapperTest extends AbstractMapperTest
 	public void testEncode6()
 	{
 		MockPage page = new MockPage(15);
-		page.getPageParameters().setIndexedParameter(0, "i1");
-		page.getPageParameters().setIndexedParameter(1, "i2");
-		page.getPageParameters().setNamedParameter("a", "b");
-		page.getPageParameters().setNamedParameter("b", "c");
+		page.getPageParameters().set(0, "i1");
+		page.getPageParameters().set(1, "i2");
+		page.getPageParameters().set("a", "b");
+		page.getPageParameters().set("b", "c");
 
 		// shouldn't make any difference for BookmarkableListenerInterfaceRequestHandler,
 		// as this explicitely says the url must be bookmarkable
@@ -378,10 +378,10 @@ public class PackageMapperTest extends AbstractMapperTest
 	public void testEncode7()
 	{
 		MockPage page = new MockPage(15);
-		page.getPageParameters().setIndexedParameter(0, "i1");
-		page.getPageParameters().setIndexedParameter(1, "i2");
-		page.getPageParameters().setNamedParameter("a", "b");
-		page.getPageParameters().setNamedParameter("b", "c");
+		page.getPageParameters().set(0, "i1");
+		page.getPageParameters().set(1, "i2");
+		page.getPageParameters().set("a", "b");
+		page.getPageParameters().set("b", "c");
 
 		// shouldn't make any difference for BookmarkableListenerInterfaceRequestHandler,
 		// as this explicitely says the url must be bookmarkable

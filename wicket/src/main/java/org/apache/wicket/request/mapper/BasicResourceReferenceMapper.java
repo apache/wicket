@@ -234,7 +234,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 			{
 				parameters = new PageParameters(parameters);
 				// need to remove indexed parameters otherwise the URL won't be able to decode
-				parameters.clearIndexedParameters();
+				parameters.clearIndexed();
 				url = encodePageParameters(url, parameters, pageParametersEncoder);
 			}
 

@@ -75,8 +75,8 @@ public class StatelessComponentTest extends WicketTestCase
 	public void testStatelessComponentPageWithParams() throws Exception
 	{
 		PageParameters params = new PageParameters();
-		params.setNamedParameter("testParam1", "testValue1");
-		params.setNamedParameter("testParam2", "testValue2");
+		params.set("testParam1", "testValue1");
+		params.set("testParam2", "testValue2");
 
 		executeTest(StatelessComponentPageWithParams.class, params,
 			"StatelessComponentPageWithParams_result.html");
@@ -102,8 +102,8 @@ public class StatelessComponentTest extends WicketTestCase
 	public void testStatelessComponentPageWithParamsWithMount() throws Exception
 	{
 		PageParameters params = new PageParameters();
-		params.setNamedParameter("testParam1", "testValue1");
-		params.setNamedParameter("testParam2", "testValue2");
+		params.set("testParam1", "testValue1");
+		params.set("testParam2", "testValue2");
 		tester.getApplication().mountBookmarkablePage("/stateless",
 			StatelessComponentPageWithParams.class);
 		// test is always the home page. it doesn't work then
@@ -129,8 +129,8 @@ public class StatelessComponentTest extends WicketTestCase
 	public void testStatelessComponentPageWithParamsWithIndexMount() throws Exception
 	{
 		PageParameters params = new PageParameters();
-		params.setIndexedParameter(0, "testValue1");
-		params.setIndexedParameter(1, "testValue2");
+		params.set(0, "testValue1");
+		params.set(1, "testValue2");
 		tester.getApplication().mountBookmarkablePage("/stateless",
 			StatelessComponentPageWithParams.class);
 		// test is always the home page. it doesn't work then

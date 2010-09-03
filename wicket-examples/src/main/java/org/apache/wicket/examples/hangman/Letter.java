@@ -102,10 +102,10 @@ public class Letter implements IClusterable
 		{
 			// request parameter for the resource
 			boolean guessed = attributes.getParameters()
-				.getNamedParameter(PARAMETER_GUESSED)
+				.get(PARAMETER_GUESSED)
 				.toBoolean(false);
 			String letter = attributes.getParameters()
-				.getNamedParameter(PARAMETER_LETTER)
+				.get(PARAMETER_LETTER)
 				.toString();
 
 			// delegate to another resource

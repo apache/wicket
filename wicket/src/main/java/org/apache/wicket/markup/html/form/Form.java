@@ -820,10 +820,10 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 			{
 				public void component(final FormComponent<?> formComponent, final IVisit<Void> visit)
 				{
-					parameters.removeNamedParameter(formComponent.getInputName());
+					parameters.remove(formComponent.getInputName());
 				}
 			});
-			parameters.removeNamedParameter(getHiddenFieldId());
+			parameters.remove(getHiddenFieldId());
 		}
 	}
 

@@ -23,8 +23,8 @@ import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 import org.apache.wicket.request.resource.ResourceReference.Key;
+import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 
 /**
  * Simple {@link EncoderContext} implementation for testing purposes
@@ -135,7 +135,7 @@ public class TestMapperContext implements IMapperContext
 			page.setCreatedBookmarkable(true);
 			if (pageParameters != null)
 			{
-				page.getPageParameters().assign(pageParameters);
+				page.getPageParameters().overwriteWith(pageParameters);
 			}
 			return page;
 		}

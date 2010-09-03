@@ -144,7 +144,7 @@ public class BookmarkablePageLink<T> extends Link<T>
 		{
 			parameters = new PageParameters();
 		}
-		parameters.setNamedParameter(key, value);
+		parameters.set(key, value);
 	}
 
 	/**

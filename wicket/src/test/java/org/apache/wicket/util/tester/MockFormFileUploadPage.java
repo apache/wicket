@@ -104,7 +104,7 @@ public class MockFormFileUploadPage extends WebPage
 		form.setMaxSize(Bytes.kilobytes(100));
 		form.add(new TextField<String>("text"));
 		fileUploadField = new FileUploadField("file", new Model<FileUpload>());
-		StringValue requiredParam = param.getNamedParameter("required");
+		StringValue requiredParam = param.get("required");
 		boolean required = requiredParam.toBoolean();
 		fileUploadField.setRequired(required);
 		form.add(fileUploadField);

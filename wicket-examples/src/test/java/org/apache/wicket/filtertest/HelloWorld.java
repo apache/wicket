@@ -35,7 +35,7 @@ public class HelloWorld extends WicketExamplePage
 	 */
 	public HelloWorld(PageParameters params)
 	{
-		add(new Label("message", "Message is: '" + params.getNamedParameter("message").toString() +
+		add(new Label("message", "Message is: '" + params.get("message").toString() +
 			"'"));
 	}
 }

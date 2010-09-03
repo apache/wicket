@@ -72,7 +72,7 @@ public class BrowserInfoPage extends WebPage
 	 */
 	public BrowserInfoPage(PageParameters parameters)
 	{
-		String to = parameters.getNamedParameter("cto").toString();
+		String to = parameters.get("cto").toString();
 		if (to == null)
 		{
 			throw new IllegalArgumentException("parameter cto must be provided!");
@@ -133,7 +133,7 @@ public class BrowserInfoPage extends WebPage
 	{
 		WebComponent meta = new WebComponent("meta");
 		PageParameters parameters = new PageParameters();
-		parameters.setNamedParameter("cto", continueTo);
+		parameters.set("cto", continueTo);
 
 		CharSequence url = urlFor(new BookmarkablePageRequestHandler(new PageProvider(
 			BrowserInfoPage.class, parameters)));

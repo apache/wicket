@@ -38,7 +38,7 @@ public class AbortExceptionPage extends WebPage
 
 	public AbortExceptionPage(PageParameters parameters)
 	{
-		final boolean triggerError = parameters.getNamedParameter("trigger").toBoolean();
+		final boolean triggerError = parameters.get("trigger").toBoolean();
 
 		if (!triggerError)
 		{
