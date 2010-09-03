@@ -21,7 +21,6 @@ import java.util.List;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
-import org.apache.wicket.behavior.BehaviorsUtil;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.visit.IVisit;
@@ -58,16 +57,14 @@ public class AjaxLazyLoadPanelTester
 			{
 				// get the AbstractAjaxBehaviour which is responsible for
 				// getting the contents of the lazy panel
-				List<IBehavior> behaviors = BehaviorsUtil.getBehaviors(component,
-					AbstractAjaxBehavior.class);
+				List<AbstractAjaxBehavior> behaviors = component.getBehaviors(AbstractAjaxBehavior.class);
 				if (behaviors.size() == 0)
 				{
 					logger.warn("AjaxLazyLoadPanel child found, but no attached AbstractAjaxBehaviors found. A curious situation...");
 				}
 				for (IBehavior b : behaviors)
 				{
-					if (b instanceof AbstractAjaxBehavior &&
-						!(b instanceof AjaxSelfUpdatingTimerBehavior))
+					if (!(b instanceof AjaxSelfUpdatingTimerBehavior))
 					{
 						// tell wicket tester to execute it :)
 						logger.debug("Triggering lazy panel: " + component.getClassRelativePath());

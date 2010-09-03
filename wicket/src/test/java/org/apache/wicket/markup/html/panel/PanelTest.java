@@ -136,10 +136,11 @@ public class PanelTest extends WicketTestCase
 	 */
 	// TODO FIX the implementation. Fragment markup provider can not be a
 	// sibling of the panel.
-// public void testInlinePanel_6() throws Exception
-// {
-// executeTest(InlinePanelPage_6.class, "InlinePanelPageExpectedResult_6.html");
-// }
+	public void testInlinePanel_6() throws Exception
+	{
+		executeTest(InlinePanelPage_6.class, "InlinePanelPageExpectedResult_6.html");
+	}
+
 	/**
 	 * @throws Exception
 	 */

@@ -32,9 +32,6 @@ public class DropDownChoiceTest extends WicketTestCase
 	{
 		tester.startPage(DropDownChoiceTestPage.class);
 
-		// FIXME should not be needed
-		// tester.createRequestCycle();
-
 		FormTester formTester = tester.newFormTester("form");
 		formTester.submit();
 	}

@@ -52,7 +52,6 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
-import org.apache.wicket.behavior.BehaviorsUtil;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
@@ -1533,19 +1532,15 @@ public class BaseWicketTester
 			{
 				// get the AbstractAjaxBehaviour which is responsible for
 				// getting the contents of the lazy panel
-				List<IBehavior> behaviors = BehaviorsUtil.getBehaviors(component,
-					AbstractAjaxTimerBehavior.class);
+				List<AbstractAjaxTimerBehavior> behaviors = component.getBehaviors(AbstractAjaxTimerBehavior.class);
 				for (IBehavior b : behaviors)
 				{
-					if (b instanceof AbstractAjaxTimerBehavior)
+					log.debug("Triggering AjaxSelfUpdatingTimerBehavior: " +
+						component.getClassRelativePath());
+					AbstractAjaxTimerBehavior timer = (AbstractAjaxTimerBehavior)b;
+					if (!timer.isStopped())
 					{
-						log.debug("Triggering AjaxSelfUpdatingTimerBehavior: " +
-							component.getClassRelativePath());
-						AbstractAjaxTimerBehavior timer = (AbstractAjaxTimerBehavior)b;
-						if (!timer.isStopped())
-						{
-							executeBehavior(timer);
-						}
+						executeBehavior(timer);
 					}
 				}
 			}

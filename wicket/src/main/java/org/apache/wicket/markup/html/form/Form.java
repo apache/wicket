@@ -447,10 +447,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	public final void clearInput()
 	{
 		// Visit all the (visible) form components and clear the input on each.
-		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor<Void>()
+		visitFormComponentsPostOrder(new IVisitor<FormComponent<?>, Void>()
 		{
-			@Override
-			public void onFormComponent(final FormComponent<?> formComponent, IVisit<Void> visit)
+			public void component(final FormComponent<?> formComponent, IVisit<Void> visit)
 			{
 				if (formComponent.isVisibleInHierarchy())
 				{
@@ -993,10 +992,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 		super.setVersioned(isVersioned);
 
 		// Search for FormComponents like TextField etc.
-		visitFormComponents(new FormComponent.AbstractVisitor<Void>()
+		visitFormComponents(new IVisitor<FormComponent<?>, Void>()
 		{
-			@Override
-			public void onFormComponent(final FormComponent<?> formComponent, IVisit<Void> visit)
+			public void component(final FormComponent<?> formComponent, IVisit<Void> visit)
 			{
 				formComponent.setVersioned(isVersioned);
 			}
@@ -1148,10 +1146,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 */
 	private void inputChanged()
 	{
-		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor<Void>()
+		visitFormComponentsPostOrder(new IVisitor<FormComponent<?>, Void>()
 		{
-			@Override
-			public void onFormComponent(final FormComponent<?> formComponent, IVisit<Void> visit)
+			public void component(final FormComponent<?> formComponent, IVisit<Void> visit)
 			{
 				if (formComponent.isVisibleInHierarchy())
 				{
@@ -1419,10 +1416,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	protected void internalOnModelChanged()
 	{
 		// Visit all the form components and validate each
-		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor<Void>()
+		visitFormComponentsPostOrder(new IVisitor<FormComponent<?>, Void>()
 		{
-			@Override
-			public void onFormComponent(final FormComponent<?> formComponent, IVisit<Void> visit)
+			public void component(final FormComponent<?> formComponent, IVisit<Void> visit)
 			{
 				// If form component is using form model
 				if (formComponent.sameInnermostModel(Form.this))
@@ -1439,10 +1435,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	protected final void markFormComponentsInvalid()
 	{
 		// call invalidate methods of all nested form components
-		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor<Void>()
+		visitFormComponentsPostOrder(new IVisitor<FormComponent<?>, Void>()
 		{
-			@Override
-			public void onFormComponent(final FormComponent<?> formComponent, IVisit<Void> visit)
+			public void component(final FormComponent<?> formComponent, IVisit<Void> visit)
 			{
 				if (formComponent.isVisibleInHierarchy())
 				{
@@ -1489,10 +1484,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	private void internalMarkFormComponentsValid()
 	{
 		// call valid methods of all nested form components
-		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor<Void>()
+		visitFormComponentsPostOrder(new IVisitor<FormComponent<?>, Void>()
 		{
-			@Override
-			public void onFormComponent(final FormComponent<?> formComponent, IVisit<Void> visit)
+			public void component(final FormComponent<?> formComponent, IVisit<Void> visit)
 			{
 				if (formComponent.getForm() == Form.this && formComponent.isVisibleInHierarchy())
 				{

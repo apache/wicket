@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WicketEventReference;
 import org.apache.wicket.request.IRequestHandler;
@@ -48,18 +47,6 @@ public abstract class HeaderResponse implements IHeaderResponse
 	private final Set<Object> rendered = new HashSet<Object>();
 
 	private boolean closed;
-
-	/**
-	 * Creates a new header response instance.
-	 */
-	public HeaderResponse()
-	{
-		if (Application.exists())
-		{
-			// TODO remove in 1.5; see IHeaderRenderStrategy
-			Application.get().notifyRenderHeadListener(this);
-		}
-	}
 
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderResponse#markRendered(java.lang.Object)

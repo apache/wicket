@@ -23,19 +23,31 @@ public class Exceptions
 		});
 	}
 
-	// TODO Component$IVisitor should utilize a similar object, much cleaner than magic return
-	// values
+	/**
+	 * Represents a visit
+	 * 
+	 * @author igor
+	 * @param <T>
+	 */
 	public static class Visit<T>
 	{
 		private T result;
 		private boolean stopped;
 
+		/**
+		 * Stops visit with specified resut
+		 * 
+		 * @param result
+		 */
 		public void stop(T result)
 		{
 			this.result = result;
 			stop();
 		}
 
+		/**
+		 * Stops visit
+		 */
 		public void stop()
 		{
 			stopped = true;

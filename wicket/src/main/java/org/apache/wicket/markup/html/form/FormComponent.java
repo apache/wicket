@@ -102,22 +102,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	private static final Logger logger = LoggerFactory.getLogger(FormComponent.class);
 
 	/**
-	 * Visitor for traversing form components
-	 * 
-	 * @deprecated no longer a need for this base class
-	 */
-	@Deprecated
-	public static abstract class AbstractVisitor<R> implements IVisitor<FormComponent<?>, R>
-	{
-		public void component(final FormComponent<?> component, final IVisit<R> visit)
-		{
-			onFormComponent(component, visit);
-		}
-
-		protected abstract void onFormComponent(FormComponent<?> formComponent, IVisit<R> visit);
-	}
-
-	/**
 	 * {@link IErrorMessageSource} used for error messages against this form components.
 	 * 
 	 * @author ivaynberg

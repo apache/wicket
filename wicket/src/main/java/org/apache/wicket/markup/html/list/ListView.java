@@ -453,12 +453,13 @@ public abstract class ListView<T> extends AbstractRepeater
 	 * Create a new ListItem for list item at index.
 	 * 
 	 * @param index
+	 * @param itemModel
+	 *            object in the list that the item represents
 	 * @return ListItem
 	 */
-	protected ListItem<T> newItem(final int index)
+	protected ListItem<T> newItem(final int index, IModel<T> itemModel)
 	{
-		// FIXME 1.5: this method should already include item's model in its definition
-		return new ListItem<T>(index, getListItemModel(getModel(), index));
+		return new ListItem<T>(index, itemModel);
 	}
 
 	/**
@@ -513,7 +514,7 @@ public abstract class ListView<T> extends AbstractRepeater
 				if (item == null)
 				{
 					// Create item for index
-					item = newItem(index);
+					item = newItem(index, getListItemModel(getModel(), index));
 
 					// Add list item
 					add(item);

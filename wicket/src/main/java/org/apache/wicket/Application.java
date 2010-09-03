@@ -38,8 +38,6 @@ import org.apache.wicket.javascript.DefaultJavascriptCompressor;
 import org.apache.wicket.markup.MarkupFactory;
 import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.markup.html.EmptySrcAttributeCheckFilter;
-import org.apache.wicket.markup.html.IHeaderContributor;
-import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
@@ -172,10 +170,6 @@ public abstract class Application implements UnboundListener, IEventSink
 
 	/** */
 	private List<IComponentOnAfterRenderListener> componentOnAfterRenderListeners;
-
-	/** @deprecated will be removed in 1.5; see IHeaderRenderStrategy */
-	@Deprecated
-	private List<IHeaderContributor> renderHeadListeners;
 
 	/** root mapper */
 	private IRequestMapper rootRequestMapper;
@@ -1152,57 +1146,6 @@ public abstract class Application implements UnboundListener, IEventSink
 			{
 				IComponentOnAfterRenderListener listener = iter.next();
 				listener.onAfterRender(component);
-			}
-		}
-	}
-
-	/**
-	 * Adds a listener that will be invoked for every header response
-	 * 
-	 * @param listener
-	 * @deprecated will be removed in 1.5; see IHeaderRenderStrategy
-	 */
-	@Deprecated
-	public final void addRenderHeadListener(final IHeaderContributor listener)
-	{
-		if (renderHeadListeners == null)
-		{
-			renderHeadListeners = new ArrayList<IHeaderContributor>();
-		}
-		renderHeadListeners.add(listener);
-	}
-
-	/**
-	 * 
-	 * @param listener
-	 * @deprecated will be removed in 1.5; see IHeaderRenderStrategy
-	 */
-	@Deprecated
-	public void removeRenderHeadListener(final IHeaderContributor listener)
-	{
-		if (renderHeadListeners != null)
-		{
-			renderHeadListeners.remove(listener);
-			if (renderHeadListeners.isEmpty())
-			{
-				renderHeadListeners = null;
-			}
-		}
-	}
-
-	/**
-	 * INTERNAL
-	 * 
-	 * @param response
-	 */
-	public void notifyRenderHeadListener(final IHeaderResponse response)
-	{
-		if (renderHeadListeners != null)
-		{
-			for (Iterator<IHeaderContributor> iter = renderHeadListeners.iterator(); iter.hasNext();)
-			{
-				IHeaderContributor listener = iter.next();
-				listener.renderHead(response);
 			}
 		}
 	}

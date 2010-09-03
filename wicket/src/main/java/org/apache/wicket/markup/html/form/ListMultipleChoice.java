@@ -267,7 +267,6 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 		}
 		else
 		{
-			// TODO 1.3: check if its safe to return Collections.EMPTY_LIST here
 			ArrayList<T> result = new ArrayList<T>();
 			addRetainedDisabled(result);
 			return result;

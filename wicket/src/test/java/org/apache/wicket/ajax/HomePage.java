@@ -103,6 +103,11 @@ public class HomePage extends WebPage
 				listView.removeAll();
 				target.addComponent(listViewContainer);
 			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form)
+			{
+			}
 		}.setDefaultFormProcessing(false));
 	}
 }

@@ -3583,9 +3583,9 @@ public abstract class Component
 	{
 		if (!tag.getName().equalsIgnoreCase(name))
 		{
-			String msg = String.format("Component [%s] (path = [%s]) must be " +
-					                     "applied to a tag of type [%s], not: %s",
-			                           getId(), getPath(), name, tag.toUserDebugString());
+			String msg = String.format("Component [%s] (path = [%s]) must be "
+				+ "applied to a tag of type [%s], not: %s", getId(), getPath(), name,
+				tag.toUserDebugString());
 
 			findMarkupStream().throwMarkupException(msg);
 		}
@@ -3611,9 +3611,9 @@ public abstract class Component
 			final String tagAttributeValue = tag.getAttributes().getString(key);
 			if (tagAttributeValue == null || !value.equalsIgnoreCase(tagAttributeValue))
 			{
-				String msg = String.format("Component [%s] (path = [%s]) must be applied to a tag " +
-						                     "with [%s] attribute matching [%s], not [%s]",
-				                           getId(), getPath(), key, value, tagAttributeValue);
+				String msg = String.format("Component [%s] (path = [%s]) must be applied to a tag "
+					+ "with [%s] attribute matching [%s], not [%s]", getId(), getPath(), key,
+					value, tagAttributeValue);
 
 				findMarkupStream().throwMarkupException(msg);
 			}
@@ -3704,7 +3704,7 @@ public abstract class Component
 	 *            A class derived from IBehavior
 	 */
 	@SuppressWarnings("unchecked")
-	protected <M extends IBehavior> List<M> getBehaviors(Class<M> type)
+	public <M extends IBehavior> List<M> getBehaviors(Class<M> type)
 	{
 		List<? extends IBehavior> behaviors = getBehaviorsRawList();
 		if (behaviors == null)

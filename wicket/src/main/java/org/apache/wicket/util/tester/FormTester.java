@@ -373,15 +373,13 @@ public class FormTester
 		tester = wicketTester;
 
 		// fill blank String for Text Component.
-		workingForm.visitFormComponents(new FormComponent.AbstractVisitor<Void>()
+		workingForm.visitFormComponents(new IVisitor<FormComponent<?>, Void>()
 		{
-			@SuppressWarnings("unchecked")
-			@Override
-			public void onFormComponent(final FormComponent<?> formComponent, IVisit<Void> visit)
+			public void component(final FormComponent<?> formComponent, final IVisit<Void> visit)
 			{
 				// do nothing for invisible or disabled component -- the browser would not send any
 // parameter
-				// for a disabled component
+// for a disabled component
 				if (!(formComponent.isVisibleInHierarchy() && formComponent.isEnabledInHierarchy()))
 				{
 					return;
@@ -642,6 +640,10 @@ public class FormTester
 		}
 	}
 
+	/**
+	 * @param checkBoxId
+	 * @param value
+	 */
 	public void setValue(String checkBoxId, boolean value)
 	{
 		setValue(checkBoxId, Boolean.toString(value));

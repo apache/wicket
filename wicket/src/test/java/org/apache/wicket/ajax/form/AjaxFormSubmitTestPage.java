@@ -81,6 +81,11 @@ public class AjaxFormSubmitTestPage extends WebPage
 				formSubmitted = formSubmitted | BUTTON;
 			}
 
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form)
+			{
+			}
+
 		}.setDefaultFormProcessing(false));
 	}
 
