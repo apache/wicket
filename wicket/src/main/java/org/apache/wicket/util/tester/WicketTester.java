@@ -499,7 +499,7 @@ public class WicketTester extends BaseWicketTester
 	}
 
 	/**
-	 * Asserts that that the BookmarkablePageLink identified by "id" points to the page as expected
+	 * Asserts that that the BookmarkablePageLink<?> identified by "id" points to the page as expected
 	 * - including parameters.
 	 * 
 	 * @param id

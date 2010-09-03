@@ -42,7 +42,7 @@ public class StatefulPage extends WebPage
 	public StatefulPage()
 	{
 		add(new Label("message", new SessionModel()));
-		add(new BookmarkablePageLink("indexLink", Index.class));
+		add(new BookmarkablePageLink<Void>("indexLink", Index.class));
 
 		// Action link counts link clicks
 		final Link actionLink = new Link("actionLink")

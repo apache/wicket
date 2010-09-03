@@ -71,7 +71,7 @@ public class ModalWindowPage extends BasePage
 			}
 		});
 
-		add(new AjaxLink("showModal1")
+		add(new AjaxLink<Void>("showModal1")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -108,7 +108,7 @@ public class ModalWindowPage extends BasePage
 			}
 		});
 
-		add(new AjaxLink("showModal2")
+		add(new AjaxLink<Void>("showModal2")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)

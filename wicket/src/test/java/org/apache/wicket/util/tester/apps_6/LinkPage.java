@@ -61,7 +61,7 @@ public class LinkPage extends WebPage
 		});
 
 		// AjaxLink
-		add(new AjaxLink("ajaxLinkWithSetResponsePageClass")
+		add(new AjaxLink<Void>("ajaxLinkWithSetResponsePageClass")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -72,7 +72,7 @@ public class LinkPage extends WebPage
 			}
 		});
 
-		add(new AjaxLink("ajaxLinkWithSetResponsePage")
+		add(new AjaxLink<Void>("ajaxLinkWithSetResponsePage")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -84,7 +84,7 @@ public class LinkPage extends WebPage
 		});
 
 		// AjaxFallbackLink
-		add(new AjaxFallbackLink("ajaxFallbackLinkWithSetResponsePageClass")
+		add(new AjaxFallbackLink<Void>("ajaxFallbackLinkWithSetResponsePageClass")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -95,7 +95,7 @@ public class LinkPage extends WebPage
 			}
 		});
 
-		add(new AjaxFallbackLink("ajaxFallbackLinkWithSetResponsePage")
+		add(new AjaxFallbackLink<Void>("ajaxFallbackLinkWithSetResponsePage")
 		{
 			private static final long serialVersionUID = 1L;
 

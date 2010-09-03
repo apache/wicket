@@ -43,7 +43,7 @@ public class AjaxLinkWithBorderPage extends WebPage
 		final Label label = new Label("ajaxLabel", new PropertyModel<String>(this, "labelText"));
 		label.setOutputMarkupId(true);
 		border.addToBorderBody(label);
-		border.addToBorderBody(new AjaxLink("ajaxLink")
+		border.addToBorderBody(new AjaxLink<Void>("ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 

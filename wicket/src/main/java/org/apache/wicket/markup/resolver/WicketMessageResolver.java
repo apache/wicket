@@ -72,7 +72,7 @@ import org.slf4j.LoggerFactory;
  * 
  * <pre>
  * add(new Label(&quot;amount&quot;, new Model&lt;String&gt;(&quot;$5.00&quot;)));
- * add(new BookmarkablePageLink(&quot;link&quot;, DetailsPage.class));
+ * add(new BookmarkablePageLink<Void>(&quot;link&quot;, DetailsPage.class));
  * </pre>
  * 
  * This will output

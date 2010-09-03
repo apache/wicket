@@ -39,7 +39,7 @@ public class AjaxLinkPage extends WebPage
 		final Label label = new Label("ajaxLabel", new PropertyModel<String>(this, "labelText"));
 		label.setOutputMarkupId(true);
 		add(label);
-		add(new AjaxLink("ajaxLink")
+		add(new AjaxLink<Void>("ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 

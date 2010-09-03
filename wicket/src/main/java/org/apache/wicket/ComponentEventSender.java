@@ -46,9 +46,9 @@ final class ComponentEventSender implements IEventSource
 	}
 
 	/** {@inheritDoc} */
-	public void send(IEventSink sink, Broadcast type, Object payload)
+	public <T> void send(IEventSink sink, Broadcast type, T payload)
 	{
-		ComponentEvent event = new ComponentEvent(sink, source, type, payload);
+		ComponentEvent<?> event = new ComponentEvent<T>(sink, source, type, payload);
 		Args.notNull(type, "type");
 		switch (type)
 		{
@@ -72,7 +72,7 @@ final class ComponentEventSender implements IEventSource
 	 * 
 	 * @param event
 	 */
-	private void breadth(final ComponentEvent event)
+	private void breadth(final ComponentEvent<?> event)
 	{
 		IEventSink sink = event.getSink();
 
@@ -135,7 +135,7 @@ final class ComponentEventSender implements IEventSource
 	 * @param event
 	 *            event
 	 */
-	private void depth(final ComponentEvent event)
+	private void depth(final ComponentEvent<?> event)
 	{
 		IEventSink sink = event.getSink();
 
@@ -188,7 +188,7 @@ final class ComponentEventSender implements IEventSource
 	 * @param event
 	 *            event
 	 */
-	private void bubble(ComponentEvent event)
+	private void bubble(ComponentEvent<?> event)
 	{
 		IEventSink sink = event.getSink();
 
@@ -247,7 +247,7 @@ final class ComponentEventSender implements IEventSource
 	 */
 	private static class ComponentEventVisitor implements IVisitor<Component, Void>
 	{
-		private final ComponentEvent e;
+		private final ComponentEvent<?> e;
 
 		/**
 		 * Constructor
@@ -255,7 +255,7 @@ final class ComponentEventSender implements IEventSource
 		 * @param event
 		 *            event to send
 		 */
-		private ComponentEventVisitor(ComponentEvent event)
+		private ComponentEventVisitor(ComponentEvent<?> event)
 		{
 			e = event;
 		}

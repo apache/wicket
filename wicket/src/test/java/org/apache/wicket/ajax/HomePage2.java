@@ -44,7 +44,7 @@ public class HomePage2 extends WebPage
 
 		setOutputMarkupId(true);
 		add(new Label("msg", new PropertyModel<String>(this, "_message")));
-		add(new AjaxLink("link")
+		add(new AjaxLink<Void>("link")
 		{
 			private static final long serialVersionUID = 1L;
 

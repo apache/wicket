@@ -34,6 +34,6 @@ public class SimplePage_12 extends WebPage
 	 */
 	public SimplePage_12()
 	{
-		add(new BookmarkablePageLink("link", SimplePage_3.class));
+		add(new BookmarkablePageLink<Void>("link", SimplePage_3.class));
 	}
 }

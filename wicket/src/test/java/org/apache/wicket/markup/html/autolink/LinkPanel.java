@@ -37,7 +37,7 @@ public class LinkPanel extends Panel
 	public LinkPanel(String id)
 	{
 		super(id);
-		add(new BookmarkablePageLink("indexLink", Index.class));
-		add(new BookmarkablePageLink("subPageLink", SubPage.class));
+		add(new BookmarkablePageLink<Void>("indexLink", Index.class));
+		add(new BookmarkablePageLink<Void>("subPageLink", SubPage.class));
 	}
 }

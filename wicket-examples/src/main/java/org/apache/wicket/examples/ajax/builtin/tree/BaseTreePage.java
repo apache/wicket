@@ -43,7 +43,7 @@ public abstract class BaseTreePage extends BasePage
 	 */
 	public BaseTreePage()
 	{
-		add(new AjaxLink("expandAll")
+		add(new AjaxLink<Void>("expandAll")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -53,7 +53,7 @@ public abstract class BaseTreePage extends BasePage
 			}
 		});
 
-		add(new AjaxLink("collapseAll")
+		add(new AjaxLink<Void>("collapseAll")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -63,7 +63,7 @@ public abstract class BaseTreePage extends BasePage
 			}
 		});
 
-		add(new AjaxLink("switchRootless")
+		add(new AjaxLink<Void>("switchRootless")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)

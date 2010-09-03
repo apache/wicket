@@ -63,7 +63,7 @@ public class Index extends BasePage
 		});
 
 		// pages that are protected using wicket meta data
-		add(new BookmarkablePageLink("adminBookmarkableLink", AdminBookmarkablePage.class));
+		add(new BookmarkablePageLink<Void>("adminBookmarkableLink", AdminBookmarkablePage.class));
 		add(new Link("adminInternalLink")
 		{
 			@Override
@@ -72,10 +72,10 @@ public class Index extends BasePage
 				setResponsePage(new AdminInternalPage("foo"));
 			}
 		});
-		add(new BookmarkablePageLink("panelsPageLink", PanelsPage.class));
+		add(new BookmarkablePageLink<Void>("panelsPageLink", PanelsPage.class));
 
 		// pages that are protected using annotations
-		add(new BookmarkablePageLink("adminAnnotBookmarkableLink",
+		add(new BookmarkablePageLink<Void>("adminAnnotBookmarkableLink",
 			AdminAnnotationsBookmarkablePage.class));
 		add(new Link("adminAnnotInternalLink")
 		{
@@ -85,6 +85,6 @@ public class Index extends BasePage
 				setResponsePage(new AdminAnnotationsInternalPage("bar"));
 			}
 		});
-		add(new BookmarkablePageLink("panelsAnnotPageLink", AnnotationsPanelsPage.class));
+		add(new BookmarkablePageLink<Void>("panelsAnnotPageLink", AnnotationsPanelsPage.class));
 	}
 }

@@ -66,7 +66,7 @@ import org.apache.wicket.util.value.ValueMap;
  * </ul>
  * <p>
  * Regardless of which coding strategy is chosen for the mount,
- * {@link org.apache.wicket.markup.html.link.BookmarkablePageLink BookmarkablePageLink} can be used
+ * {@link org.apache.wicket.markup.html.link.BookmarkablePageLink<?> BookmarkablePageLink} can be used
  * to insert a bookmarkable link to the request target.
  * <p>
  * This example demonstrates how to mount a path with

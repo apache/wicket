@@ -79,7 +79,7 @@ public class LinksPage extends BasePage
 		c3.setOutputMarkupId(true);
 		add(c3);
 
-		add(new AjaxLink("c1-link")
+		add(new AjaxLink<Void>("c1-link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -89,7 +89,7 @@ public class LinksPage extends BasePage
 			}
 		});
 
-		add(new AjaxFallbackLink("c2-link")
+		add(new AjaxFallbackLink<Void>("c2-link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -125,7 +125,7 @@ public class LinksPage extends BasePage
 			}
 		});
 
-		add(new AjaxLink("success-link")
+		add(new AjaxLink<Void>("success-link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -158,7 +158,7 @@ public class LinksPage extends BasePage
 			};
 		});
 
-		add(new AjaxLink("failure-link")
+		add(new AjaxLink<Void>("failure-link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -192,7 +192,7 @@ public class LinksPage extends BasePage
 			};
 		});
 
-		add(new AjaxLink("set-response-page")
+		add(new AjaxLink<Void>("set-response-page")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -201,7 +201,7 @@ public class LinksPage extends BasePage
 			}
 		});
 
-		add(new AjaxLink("exception")
+		add(new AjaxLink<Void>("exception")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)

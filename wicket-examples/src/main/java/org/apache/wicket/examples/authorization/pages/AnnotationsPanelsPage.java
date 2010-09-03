@@ -160,7 +160,7 @@ public class AnnotationsPanelsPage extends BasePage
 		outer.setOutputMarkupId(true);
 
 		outer.add(new WebMarkupContainer("test").setOutputMarkupId(true));
-		add(new AjaxLink("link")
+		add(new AjaxLink<Void>("link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)

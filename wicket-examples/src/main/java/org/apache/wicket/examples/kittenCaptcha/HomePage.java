@@ -45,7 +45,7 @@ public class HomePage extends WicketExamplePage
 		add(captcha = new KittenCaptchaPanel("captcha", new Dimension(400, 200)));
 
 		// In a real application, you'd check the kittens in a form
-		add(new AjaxLink("checkKittens")
+		add(new AjaxLink<Void>("checkKittens")
 		{
 			private static final long serialVersionUID = 642245961797905032L;
 

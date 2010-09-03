@@ -42,7 +42,7 @@ public class InlinePanelPage_8 extends WebPage
 		ListNode first = new ListNode("first", number++);
 		nodes.add(first);
 		add(first);
-		add(new AjaxLink("add")
+		add(new AjaxLink<Void>("add")
 		{
 			private static final long serialVersionUID = 1L;
 

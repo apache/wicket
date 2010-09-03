@@ -41,7 +41,7 @@ public class StatelessPage extends WebPage
 	{
 		setStatelessHint(true);
 		add(new Label("message", new SessionModel()));
-		add(new BookmarkablePageLink("indexLink", Index.class));
+		add(new BookmarkablePageLink<Void>("indexLink", Index.class));
 		final TextField<Integer> field = new TextField<Integer>("textfield",
 			new PropertyModel<Integer>(this, "number"));
 		field.add(new MaximumValidator<Integer>(20));

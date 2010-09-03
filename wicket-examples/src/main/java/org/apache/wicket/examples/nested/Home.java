@@ -103,7 +103,7 @@ public class Home extends WicketExamplePage
 			}
 		});
 
-		add(new BookmarkablePageLink("ajaxTreeLink", SimpleTreePage.class));
+		add(new BookmarkablePageLink<Void>("ajaxTreeLink", SimpleTreePage.class));
 	}
 
 	/**

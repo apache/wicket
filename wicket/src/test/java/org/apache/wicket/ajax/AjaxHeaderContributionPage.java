@@ -38,7 +38,7 @@ public class AjaxHeaderContributionPage extends WebPage
 		add(test2);
 		final Component test3 = new AjaxHeaderContribution("test3").setOutputMarkupId(true);
 		add(test3);
-		add(new AjaxFallbackLink("link")
+		add(new AjaxFallbackLink<Void>("link")
 		{
 			private static final long serialVersionUID = 1L;
 

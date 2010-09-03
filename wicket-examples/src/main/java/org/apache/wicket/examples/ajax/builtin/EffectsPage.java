@@ -77,7 +77,7 @@ public class EffectsPage extends BasePage
 		c2.setOutputMarkupId(true);
 		add(c2);
 
-		add(new AjaxLink("c1-link")
+		add(new AjaxLink<Void>("c1-link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -88,7 +88,7 @@ public class EffectsPage extends BasePage
 			}
 		});
 
-		add(new AjaxFallbackLink("c2-link")
+		add(new AjaxFallbackLink<Void>("c2-link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)

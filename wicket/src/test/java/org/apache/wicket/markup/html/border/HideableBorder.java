@@ -49,7 +49,7 @@ public class HideableBorder extends Border
 		};
 		addToBorder(containerWrapper);
 		containerWrapper.add(getBodyContainer());
-		addToBorder(new AjaxLink("hideLink")
+		addToBorder(new AjaxLink<Void>("hideLink")
 		{
 			private static final long serialVersionUID = 1L;
 

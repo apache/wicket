@@ -26,6 +26,9 @@ public interface IEventSource
 	/**
 	 * Sends an event
 	 * 
+	 * @param <T>
+	 *            tyep of payload
+	 * 
 	 * @param sink
 	 *            object that will receive the event
 	 * @param broadcast
@@ -34,5 +37,5 @@ public interface IEventSource
 	 * @param payload
 	 *            event payload
 	 */
-	void send(IEventSink sink, Broadcast broadcast, Object payload);
+	<T> void send(IEventSink sink, Broadcast broadcast, T payload);
 }

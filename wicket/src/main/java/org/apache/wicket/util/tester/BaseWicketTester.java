@@ -750,7 +750,7 @@ public class BaseWicketTester
 	 * @param link
 	 * @return
 	 */
-	public Url urlFor(AjaxLink link)
+	public Url urlFor(AjaxLink<?> link)
 	{
 		AbstractAjaxBehavior behavior = WicketTesterHelper.findAjaxEventBehavior(link, "onclick");
 		Url url = Url.parse(behavior.getCallbackUrl().toString(),

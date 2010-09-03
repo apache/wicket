@@ -38,7 +38,7 @@ public class Provider extends Panel
 	public Provider(String id)
 	{
 		super(id);
-		add(new AjaxLink("ajaxRefresh")
+		add(new AjaxLink<Void>("ajaxRefresh")
 		{
 			private static final long serialVersionUID = 1L;
 

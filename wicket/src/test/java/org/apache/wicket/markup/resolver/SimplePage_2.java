@@ -37,6 +37,6 @@ public class SimplePage_2 extends WebPage
 	public SimplePage_2()
 	{
 		add(new Label("amount", new Model<String>("$5.00")).setRenderBodyOnly(true));
-		add(new BookmarkablePageLink("link", SimplePage_1.class));
+		add(new BookmarkablePageLink<Void>("link", SimplePage_1.class));
 	}
 }

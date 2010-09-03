@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
  * "autolink" by the MarkupParser for all tags with href attribute, such as anchor and link tags
  * with no explicit wicket id. E.g. &lt;a href="Home.html"&gt;
  * <p>
- * If href points to a *.html file, a BookmarkablePageLink will automatically be created, except for
+ * If href points to a *.html file, a BookmarkablePageLink<?> will automatically be created, except for
  * absolute paths, where an ExternalLink is created.
  * <p>
  * If href points to a *.html file, it resolves the given URL by searching for a page class, either
@@ -823,7 +823,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	 *            the name of the component
 	 * @param tag
 	 *            the component tag
-	 * @return A BookmarkablePageLink to handle the href
+	 * @return A BookmarkablePageLink<?> to handle the href
 	 */
 	private final Component resolveAutomaticLink(final MarkupContainer container, final String id,
 		final ComponentTag tag)

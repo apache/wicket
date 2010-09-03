@@ -79,11 +79,11 @@ public class Home extends WicketExamplePage
 			"onClickLinkClickCount")));
 
 		// Link to Page1 is a simple external page link
-		add(new BookmarkablePageLink("page1Link", Page1.class));
+		add(new BookmarkablePageLink<Void>("page1Link", Page1.class));
 
 		// Link to Page2 is automaticLink, so no code
 		// Link to Page3 is an external link which takes a parameter
-		add(new BookmarkablePageLink("page3Link", Page3.class).setParameter("bookmarkparameter",
+		add(new BookmarkablePageLink<Void>("page3Link", Page3.class).setParameter("bookmarkparameter",
 			"3++2 & 5 � >< space + �"));
 
 		// Link to BookDetails page
@@ -110,10 +110,10 @@ public class Home extends WicketExamplePage
 		// Popup example
 		PopupSettings popupSettings = new PopupSettings("popuppagemap").setHeight(500)
 			.setWidth(500);
-		add(new BookmarkablePageLink("popupLink", Popup.class).setPopupSettings(popupSettings));
+		add(new BookmarkablePageLink<Void>("popupLink", Popup.class).setPopupSettings(popupSettings));
 
 		// Popup example
-		add(new BookmarkablePageLink("popupButtonLink", Popup.class).setPopupSettings(popupSettings));
+		add(new BookmarkablePageLink<Void>("popupButtonLink", Popup.class).setPopupSettings(popupSettings));
 
 		// External site link
 		add(new ExternalLink("google", "http://www.google.com", "Click this link to go to Google"));

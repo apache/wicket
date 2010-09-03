@@ -55,7 +55,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		page.add(new WebComponent(MockPageWithLinkAndComponent.COMPONENT_ID).setOutputMarkupId(true));
 
 
-		page.add(new AjaxLink(MockPageWithLinkAndComponent.LINK_ID)
+		page.add(new AjaxLink<Void>(MockPageWithLinkAndComponent.LINK_ID)
 		{
 			private static final long serialVersionUID = 1L;
 

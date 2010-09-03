@@ -412,7 +412,7 @@ public class TodoList extends BasePage
 		showItems = new TodoItemsContainer("showItems");
 		add(showItems);
 
-		add(new AjaxFallbackLink("ajaxback")
+		add(new AjaxFallbackLink<Void>("ajaxback")
 		{
 			/**
 			 * @see org.apache.wicket.ajax.markup.html.AjaxFallbackLink#onClick(org.apache.wicket.ajax.AjaxRequestTarget)

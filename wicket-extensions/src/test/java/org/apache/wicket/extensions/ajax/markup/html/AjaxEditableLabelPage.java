@@ -36,7 +36,7 @@ public class AjaxEditableLabelPage extends WebPage
 		final AjaxEditableLabel<String> ajaxLabel = new AjaxEditableLabel<String>("ajaxLabel",
 			new Model<String>("ajaxTest"));
 		add(ajaxLabel);
-		add(new AjaxLink("toggle")
+		add(new AjaxLink<Void>("toggle")
 		{
 			private static final long serialVersionUID = 1L;
 

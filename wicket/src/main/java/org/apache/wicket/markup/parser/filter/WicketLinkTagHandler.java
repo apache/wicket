@@ -37,7 +37,7 @@ import org.apache.wicket.util.value.IValueMap;
 /**
  * This is a markup inline filter. It identifies xml tags which include a href attribute and which
  * are not Wicket specific components and flags these tags (ComponentTag) as autolink enabled. A
- * component resolver will later resolve the href and assign a BookmarkablePageLink to it
+ * component resolver will later resolve the href and assign a BookmarkablePageLink<?> to it
  * (automatically).
  * <p>
  * An application setting is used as default value, which might be modified for specific regions.

@@ -38,7 +38,7 @@ public class ModalContent1Page extends WebPage
 	 */
 	public ModalContent1Page(final ModalWindowPage modalWindowPage, final ModalWindow window)
 	{
-		add(new AjaxLink("closeOK")
+		add(new AjaxLink<Void>("closeOK")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -49,7 +49,7 @@ public class ModalContent1Page extends WebPage
 			}
 		});
 
-		add(new AjaxLink("closeCancel")
+		add(new AjaxLink<Void>("closeCancel")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -93,7 +93,7 @@ public class ModalContent1Page extends WebPage
 			}
 		});
 
-		add(new AjaxLink("open")
+		add(new AjaxLink<Void>("open")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
