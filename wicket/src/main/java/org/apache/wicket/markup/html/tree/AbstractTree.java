@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.event.TreeModelEvent;
@@ -438,7 +439,8 @@ public abstract class AbstractTree extends Panel
 	 * map that maps TreeNode to TreeItem. TreeItems only exists for TreeNodes, that are visible
 	 * (their parents are not collapsed).
 	 */
-	private final HashMap<Object, TreeItem> nodeToItemMap = new HashMap<Object, TreeItem>();
+	// TODO this field is not serializable but nested inside an serializable component
+	private final Map<Object, TreeItem> nodeToItemMap = new HashMap<Object, TreeItem>();
 
 	/**
 	 * we need to track previous model. if the model changes, we unregister the tree from listeners
