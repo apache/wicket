@@ -58,7 +58,7 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 				"src/main/java/org/apache/wicket/extensions/yui/yuiloader-min.js",
 				"src/main/java/org/apache/wicket/extensions/yui/yahoo/yahoo.js",
 				"src/main/java/org/apache/wicket/extensions/yui/yahoo/yahoo-min.js",
-				"src/main/java/org/apache/wicket/extensions/yui/yahoo-dom-event/yahoo-dom-event.js",
+				"src/main/java/org/apache/wicket/extensions/yui/yahoodomevent/yahoo-dom-event.js",
 				"src/main/java/org/apache/wicket/extensions/yui/event/event.js",
 				"src/main/java/org/apache/wicket/extensions/yui/event/event-min.js",
 				"src/main/java/org/apache/wicket/extensions/yui/dom/dom.js",
