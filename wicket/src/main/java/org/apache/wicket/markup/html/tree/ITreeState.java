@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.tree;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -25,7 +26,7 @@ import java.util.Collection;
  * 
  * @author Matej Knopp
  */
-public interface ITreeState
+public interface ITreeState extends Serializable
 {
 	/**
 	 * Adds a tree state listener. On state change events on the listener are fired.

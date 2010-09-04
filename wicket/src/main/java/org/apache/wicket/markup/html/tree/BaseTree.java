@@ -193,6 +193,7 @@ public abstract class BaseTree extends AbstractTree
 	{
 		private static final long serialVersionUID = 1L;
 
+		// TODO this field is not serializable but nested inside an serializable component
 		private final Object node;
 		private final int level;
 

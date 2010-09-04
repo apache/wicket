@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.swing.event.TreeModelEvent;
@@ -58,7 +57,7 @@ import org.apache.wicket.util.visit.IVisitor;
  * This class encapsulates the logic for displaying and (partial) updating the tree. Actual
  * presentation is out of scope of this class. User should derive they own tree (if needed) from
  * {@link BaseTree} (recommended).
- * 
+ *
  * @author Matej Knopp
  */
 public abstract class AbstractTree extends Panel
@@ -70,7 +69,7 @@ public abstract class AbstractTree extends Panel
 {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -81,7 +80,7 @@ public abstract class AbstractTree extends Panel
 	{
 		/**
 		 * Visits the tree item.
-		 * 
+		 *
 		 * @param item
 		 *            the item to visit
 		 */
@@ -116,7 +115,7 @@ public abstract class AbstractTree extends Panel
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param id
 		 *            The component id
 		 * @param node
@@ -177,7 +176,7 @@ public abstract class AbstractTree extends Panel
 
 		/**
 		 * Sets the children.
-		 * 
+		 *
 		 * @param children
 		 *            The children
 		 */
@@ -188,7 +187,7 @@ public abstract class AbstractTree extends Panel
 
 		/**
 		 * Whether to render children.
-		 * 
+		 *
 		 * @return whether to render children
 		 */
 		protected final boolean isRenderChildren()
@@ -241,7 +240,7 @@ public abstract class AbstractTree extends Panel
 		}
 
 		/**
-		 * 
+		 *
 		 * @return model object
 		 */
 		public Object getModelObject()
@@ -360,7 +359,7 @@ public abstract class AbstractTree extends Panel
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param id
 		 *            The component id
 		 */
@@ -439,12 +438,14 @@ public abstract class AbstractTree extends Panel
 	 * map that maps TreeNode to TreeItem. TreeItems only exists for TreeNodes, that are visible
 	 * (their parents are not collapsed).
 	 */
-	private final Map<Object, TreeItem> nodeToItemMap = new HashMap<Object, TreeItem>();
+	private final HashMap<Object, TreeItem> nodeToItemMap = new HashMap<Object, TreeItem>();
 
 	/**
 	 * we need to track previous model. if the model changes, we unregister the tree from listeners
 	 * of old model and register the tree as listener of new model.
 	 */
+
+	// TODO this field is not serializable but nested inside an serializable component
 	private TreeModel previousModel = null;
 
 	/** root item of the tree. */
@@ -458,7 +459,7 @@ public abstract class AbstractTree extends Panel
 
 	/**
 	 * Tree constructor
-	 * 
+	 *
 	 * @param id
 	 *            The component id
 	 */
@@ -470,7 +471,7 @@ public abstract class AbstractTree extends Panel
 
 	/**
 	 * Tree constructor
-	 * 
+	 *
 	 * @param id
 	 *            The component id
 	 * @param model
@@ -495,7 +496,7 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
-	 * 
+	 *
 	 * @return model
 	 */
 	@SuppressWarnings("unchecked")
@@ -513,7 +514,7 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
-	 * 
+	 *
 	 * @param model
 	 * @return this
 	 */
@@ -524,7 +525,7 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
-	 * 
+	 *
 	 * @param model
 	 * @return this
 	 */
@@ -536,7 +537,7 @@ public abstract class AbstractTree extends Panel
 
 	/**
 	 * Returns the TreeState of this tree.
-	 * 
+	 *
 	 * @return Tree state instance
 	 */
 	public ITreeState getTreeState()
@@ -695,7 +696,7 @@ public abstract class AbstractTree extends Panel
 
 	/**
 	 * Determines whether the TreeNode needs to be rebuilt if it is selected or deselected
-	 * 
+	 *
 	 * @return true if the node should be rebuilt after (de)selection, false otherwise
 	 */
 	protected boolean isForceRebuildOnSelectionChange()
@@ -705,7 +706,7 @@ public abstract class AbstractTree extends Panel
 
 	/**
 	 * Sets whether the root of the tree should be visible.
-	 * 
+	 *
 	 * @param rootLess
 	 *            whether the root should be visible
 	 */
@@ -763,10 +764,10 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * Marks the last but one visible child node of the given item as dirty, if give child is the
 	 * last item of parent.
-	 * 
+	 *
 	 * We need this to refresh the previous visible item in case the inserted / deleted item was
 	 * last. The reason is that the line shape of previous item changes from L to |- .
-	 * 
+	 *
 	 * @param parent
 	 * @param child
 	 */

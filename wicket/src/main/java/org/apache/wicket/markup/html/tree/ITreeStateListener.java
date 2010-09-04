@@ -16,13 +16,14 @@
  */
 package org.apache.wicket.markup.html.tree;
 
+import java.io.Serializable;
 
 /**
  * Methods this interface are called when tree state is changing.
  * 
  * @author Matej Knopp
  */
-public interface ITreeStateListener
+public interface ITreeStateListener extends Serializable
 {
 	/**
 	 * Fired when all nodes are collapsed.

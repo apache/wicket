@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.model.IDetachable;
@@ -47,13 +46,13 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 	/**
 	 * set of nodes which are collapsed or expanded (depends on nodesCollapsed variable).
 	 */
-	private final Set<Object> nodes = new HashSet<Object>();
+	private final HashSet<Object> nodes = new HashSet<Object>();
 
 	/** Whether the nodes set should be treated as set of collapsed or expanded nodes. */
 	private boolean nodesCollapsed = false; // by default treat the node set as expanded nodes
 
 	/** Set selected nodes. */
-	private final Set<Object> selectedNodes = new HashSet<Object>();
+	private final HashSet<Object> selectedNodes = new HashSet<Object>();
 
 	/**
 	 * @see org.apache.wicket.markup.html.tree.ITreeState#addTreeStateListener(org.apache.wicket.markup.html.tree.ITreeStateListener)
