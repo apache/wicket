@@ -647,11 +647,10 @@ public abstract class AbstractTree extends Panel
 	public final boolean isRootLess()
 	{
 		return rootLess;
-	};
+	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeCollapsed(javax.swing.tree.
-	 *      TreeNode)
+	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeCollapsed(Object)
 	 */
 	public final void nodeCollapsed(Object node)
 	{
@@ -662,8 +661,7 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeExpanded(javax.swing.tree.TreeNode
-	 *      )
+	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeExpanded(Object)
 	 */
 	public final void nodeExpanded(Object node)
 	{
@@ -674,8 +672,7 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeSelected(javax.swing.tree.TreeNode
-	 *      )
+	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeSelected(Object)
 	 */
 	public final void nodeSelected(Object node)
 	{
@@ -686,8 +683,7 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeUnselected(javax.swing.tree.
-	 *      TreeNode)
+	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeUnselected(Object)
 	 */
 	public final void nodeUnselected(Object node)
 	{
@@ -752,9 +748,8 @@ public abstract class AbstractTree extends Panel
 			Object[] children = e.getChildren();
 			if (children != null)
 			{
-				for (int i = 0; i < children.length; i++)
+				for (Object node : children)
 				{
-					Object node = children[i];
 					if (isNodeVisible(node))
 					{
 						// if the nodes is visible invalidate it
@@ -763,7 +758,7 @@ public abstract class AbstractTree extends Panel
 				}
 			}
 		}
-	};
+	}
 
 	/**
 	 * Marks the last but one visible child node of the given item as dirty, if give child is the
@@ -1049,10 +1044,8 @@ public abstract class AbstractTree extends Panel
 			}
 
 			// iterate through dirty items
-			for (Iterator<TreeItem> i = dirtyItems.iterator(); i.hasNext();)
+			for (TreeItem item : dirtyItems)
 			{
-				TreeItem item = i.next();
-
 				// does the item need to rebuild children?
 				if (item.getChildren() == null)
 				{
@@ -1066,7 +1059,6 @@ public abstract class AbstractTree extends Panel
 
 				// add the component to target
 				addComponent(target, item);
-
 			}
 
 			// clear dirty flags
@@ -1153,7 +1145,7 @@ public abstract class AbstractTree extends Panel
 	 * @param item
 	 *            The parent tree item
 	 */
-	private final void buildItemChildren(TreeItem item)
+	private void buildItemChildren(TreeItem item)
 	{
 		List<TreeItem> items;
 
@@ -1182,7 +1174,7 @@ public abstract class AbstractTree extends Panel
 	 *            The current level
 	 * @return List with new tree items
 	 */
-	private final List<TreeItem> buildTreeItems(TreeItem parent, Iterator<Object> nodes, int level)
+	private List<TreeItem> buildTreeItems(TreeItem parent, Iterator<Object> nodes, int level)
 	{
 		List<TreeItem> result = new ArrayList<TreeItem>();
 
@@ -1207,7 +1199,7 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * Checks whether the model has been changed, and if so unregister and register listeners.
 	 */
-	private final void checkModel()
+	private void checkModel()
 	{
 		// find out whether the model object (the TreeModel) has been changed
 		TreeModel model = getModelObject();
@@ -1232,7 +1224,7 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * Removes all TreeItem components.
 	 */
-	private final void clearAllItem()
+	private void clearAllItem()
 	{
 		visitItemAndChildren(rootItem, new IItemCallback()
 		{
@@ -1301,7 +1293,7 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * Initialize the component.
 	 */
-	private final void init()
+	private void init()
 	{
 		setVersioned(false);
 
@@ -1353,7 +1345,7 @@ public abstract class AbstractTree extends Panel
 	 *            The node to invalidate
 	 * @param forceRebuild
 	 */
-	private final void invalidateNode(Object node, boolean forceRebuild)
+	private void invalidateNode(Object node, boolean forceRebuild)
 	{
 		if (dirtyAll == false)
 		{
@@ -1420,7 +1412,7 @@ public abstract class AbstractTree extends Panel
 	 * @param node
 	 *            The node to invalidate
 	 */
-	private final void invalidateNodeWithChildren(Object node)
+	private void invalidateNodeWithChildren(Object node)
 	{
 		if (dirtyAll == false)
 		{
@@ -1458,7 +1450,7 @@ public abstract class AbstractTree extends Panel
 	 *            The node to inspect
 	 * @return true if the node is visible, false otherwise
 	 */
-	private final boolean isNodeVisible(Object node)
+	private boolean isNodeVisible(Object node)
 	{
 		if (node == null)
 		{
@@ -1506,7 +1498,7 @@ public abstract class AbstractTree extends Panel
 	 *            The level *
 	 * @return The new tree item
 	 */
-	private final TreeItem newTreeItem(TreeItem parent, Object node, int level)
+	private TreeItem newTreeItem(TreeItem parent, Object node, int level)
 	{
 		return new TreeItem(parent, "" + idCounter++, node, level);
 	}
@@ -1523,7 +1515,7 @@ public abstract class AbstractTree extends Panel
 	 *            the component id
 	 * @return The new tree item
 	 */
-	private final TreeItem newTreeItem(TreeItem parent, Object node, int level, String id)
+	private TreeItem newTreeItem(TreeItem parent, Object node, int level, String id)
 	{
 		return new TreeItem(parent, id, node, level);
 	}
@@ -1585,12 +1577,11 @@ public abstract class AbstractTree extends Panel
 	 * Rebuilds children of every item in dirtyItems that needs it. This method is called for
 	 * non-partial update.
 	 */
-	private final void rebuildDirty()
+	private void rebuildDirty()
 	{
 		// go through dirty items
-		for (Iterator<TreeItem> i = dirtyItems.iterator(); i.hasNext();)
+		for (TreeItem item : dirtyItems)
 		{
-			TreeItem item = i.next();
 			// item children need to be rebuilt
 			if (item.getChildren() == null)
 			{
@@ -1637,7 +1628,7 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * Calls after the tree has been rendered. Clears all dirty flags.
 	 */
-	private final void updated()
+	private void updated()
 	{
 		dirtyAll = false;
 		dirtyItems.clear();
@@ -1653,7 +1644,7 @@ public abstract class AbstractTree extends Panel
 	 * @param callback
 	 *            item call back
 	 */
-	private final void visitItemAndChildren(TreeItem item, IItemCallback callback)
+	private void visitItemAndChildren(TreeItem item, IItemCallback callback)
 	{
 		callback.visitItem(item);
 		visitItemChildren(item, callback);
@@ -1667,13 +1658,12 @@ public abstract class AbstractTree extends Panel
 	 * @param callback
 	 *            The callback
 	 */
-	private final void visitItemChildren(TreeItem item, IItemCallback callback)
+	private void visitItemChildren(TreeItem item, IItemCallback callback)
 	{
 		if (item.getChildren() != null)
 		{
-			for (Iterator<TreeItem> i = item.getChildren().iterator(); i.hasNext();)
+			for (TreeItem child : item.getChildren())
 			{
-				TreeItem child = i.next();
 				visitItemAndChildren(child, callback);
 			}
 		}

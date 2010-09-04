@@ -255,7 +255,7 @@ public abstract class BaseTree extends AbstractTree
 				response.write("<td class=\"line\">");
 			}
 		}
-	};
+	}
 
 	/**
 	 * Creates the junction link for given node. Also (optionally) creates the junction image. If

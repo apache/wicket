@@ -170,7 +170,7 @@ public class TreeTable extends DefaultAbstractTree
 	 * @param columns
 	 *            The columns
 	 */
-	public TreeTable(String id, IModel model, IColumn columns[])
+	public TreeTable(String id, IModel<TreeModel> model, IColumn columns[])
 	{
 		super(id, model);
 		init(columns);
@@ -195,11 +195,10 @@ public class TreeTable extends DefaultAbstractTree
 
 	private boolean hasLeftColumn()
 	{
-		for (int i = 0; i < columns.length; ++i)
-		{
-			if (columns[i].getLocation().getAlignment().equals(Alignment.LEFT))
+		for (IColumn column : columns)
+			if (column.getLocation().getAlignment().equals(Alignment.LEFT))
 				return true;
-		}
+
 		return false;
 	}
 
@@ -239,10 +238,10 @@ public class TreeTable extends DefaultAbstractTree
 					middleColumns.addColumn(column, component, null);
 				}
 			}
-	};
+	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.DefaultAbstractTree#getCSS()
+	 * @see org.apache.wicket.extensions.markup.html.tree.DefaultAbstractTree#getCSS()
 	 */
 	@Override
 	protected ResourceReference getCSS()
@@ -282,11 +281,8 @@ public class TreeTable extends DefaultAbstractTree
 		{
 			// no. initialize columns first
 			if (columns != null)
-				for (int i = 0; i < columns.length; i++)
-				{
-					IColumn column = columns[i];
+				for (IColumn column : columns)
 					column.setTreeTable(this);
-				}
 
 			// add the tree table header
 			addHeader();
@@ -400,15 +396,16 @@ public class TreeTable extends DefaultAbstractTree
 	{
 		boolean found = false;
 		if (columns != null)
-			for (int i = 0; i < columns.length; i++)
+		{
+			for (IColumn column : columns)
 			{
-				IColumn column = columns[i];
 				if (column instanceof AbstractTreeColumn)
 				{
 					found = true;
 					break;
 				}
 			}
+		}
 		if (found == false)
 		{
 			throw new IllegalArgumentException(

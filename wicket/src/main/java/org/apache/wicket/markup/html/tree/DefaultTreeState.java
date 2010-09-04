@@ -81,12 +81,8 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 			nodes.clear();
 			nodesCollapsed = false;
 
-			Object[] listenersCopy = listeners.toArray();
-			for (int i = 0; i < listenersCopy.length; i++)
-			{
-				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
-				l.allNodesCollapsed();
-			}
+			for (ITreeStateListener listener : listeners)
+				listener.allNodesCollapsed();
 		}
 	}
 
@@ -101,12 +97,8 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 			nodes.remove(node);
 		}
 
-		Object[] listenersCopy = listeners.toArray();
-		for (int i = 0; i < listenersCopy.length; i++)
-		{
-			ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
-			l.nodeCollapsed(node);
-		}
+		for (ITreeStateListener listener : listeners)
+			listener.nodeCollapsed(node);
 	}
 
 	/**
@@ -124,12 +116,8 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 			nodes.clear();
 			nodesCollapsed = true;
 
-			Object[] listenersCopy = listeners.toArray();
-			for (int i = 0; i < listenersCopy.length; i++)
-			{
-				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
-				l.allNodesExpanded();
-			}
+			for (ITreeStateListener listener : listeners)
+				listener.allNodesExpanded();
 		}
 	}
 
@@ -144,12 +132,8 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 			nodes.remove(node);
 		}
 
-		Object[] listenersCopy = listeners.toArray();
-		for (int i = 0; i < listenersCopy.length; i++)
-		{
-			ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
-			l.nodeExpanded(node);
-		}
+		for (ITreeStateListener listener : listeners)
+			listener.nodeExpanded(node);
 	}
 
 	/**
@@ -208,12 +192,8 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 				if (current.equals(node) == false)
 				{
 					i.remove();
-					Object[] listenersCopy = listeners.toArray();
-					for (int j = 0; j < listenersCopy.length; j++)
-					{
-						ITreeStateListener l = (ITreeStateListener)listenersCopy[j];
-						l.nodeUnselected(current);
-					}
+					for (ITreeStateListener listener : listeners)
+						listener.nodeUnselected(current);
 				}
 			}
 		}
@@ -222,22 +202,15 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 		{
 
 			selectedNodes.add(node);
-			Object[] listenersCopy = listeners.toArray();
-			for (int i = 0; i < listenersCopy.length; i++)
-			{
-				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
-				l.nodeSelected(node);
-			}
+			for (ITreeStateListener listener : listeners)
+				listener.nodeSelected(node);
 		}
 		else if (selected == false && selectedNodes.contains(node) == true)
 		{
 			selectedNodes.remove(node);
-			Object[] listenersCopy = listeners.toArray();
-			for (int i = 0; i < listenersCopy.length; i++)
-			{
-				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
-				l.nodeUnselected(node);
-			}
+
+			for (ITreeStateListener listener : listeners)
+				listener.nodeUnselected(node);
 		}
 	}
 
