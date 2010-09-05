@@ -1,5 +1,72 @@
 This file contains all changes done on the 1.4 version.
 
+
+Release Notes - Wicket - Version 1.4.11
+
+** Sub-task
+    * [WICKET-2625] - WICKET-2478 correction are break
+
+** Bug
+    * [WICKET-1094] - Values over-escaped by FormTester
+    * [WICKET-1448] - SubmitLink bypass jquery submit eventhandler
+    * [WICKET-1733] - WicketTester doesn't include form submitting component id in form submissions
+    * [WICKET-1887] - 404 error page customize - with specified url-pattern (not /*)
+    * [WICKET-1928] - Enter key submits form in AjaxEditableMultiLineLabel on Safari
+    * [WICKET-1985] - AbstractTree breaks on multiple tree model events in the same request
+    * [WICKET-2010] - InspectorPage doesn't show component tree
+    * [WICKET-2254] - ModalWindow size may exceed browser viewport making it impossible to close
+    * [WICKET-2262] - The starting of the ajax indicator don't respect AbstractDefaultAjaxBehavior preconditionScript
+    * [WICKET-2275] - HybridUrlCodingStrategy does not support parameters with a "."
+    * [WICKET-2279] - Losing focus on Autocomplete field if DropDownChoice is updated using Ajax.
+    * [WICKET-2353] - CLONE -<wicket:enclosure> bug: setObject(null) called for excplicitly invisible fields in a non-visible enclosure
+    * [WICKET-2401] - AJAX indicator turns off when calls overlap
+    * [WICKET-2712] - Wrong relative URL's when using Java EE 6 container with ERROR dispatching
+    * [WICKET-2739] - Throttling breaks AjaxFormSubmitBehavior's precondition check
+    * [WICKET-2765] - MarkupException on unclosed <col> tag
+    * [WICKET-2783] - FormTester.submit does not work with AjaxButtons
+    * [WICKET-2793] - Incorrect decode parameters in AbstractRequestTargetUrlCodingStrategy#decodeParameters
+    * [WICKET-2794] - Not all exceptions are properly handled by the WicketFilter -> results in empty response document with unset status code -> seen as HTTP_OK by client
+    * [WICKET-2807] - AjaxSubmitLink not calling the onsubmit event handler
+    * [WICKET-2826] - Wicket fails to read html markup from jar after updating and redeploying in jetty
+    * [WICKET-2827] - Removed page might revive when push back-button
+    * [WICKET-2828] - IndexOutOfBoundsException is thrown in onBeforeRender when tabs is empty.
+    * [WICKET-2848] - Rename yahoo-dom-event folder to something else
+    * [WICKET-2850] - Wicket DateTimeField / DatePicker creates a memory leak on the browser when rerenderd using ajax requests
+    * [WICKET-2851] - Ajax responses do not update DOM correctly on Opera
+    * [WICKET-2852] - Palette nested in a ListView results in a NPE when an error feedback is logged when submitting form
+    * [WICKET-2854] - 'this.document' is null or not an object after quickly opening and closing a modal window (modal.js)
+    * [WICKET-2863] - MockHttpServletResponse does not save Session cookies (maxAge = -1)
+    * [WICKET-2877] - PreCallHandler and PostCallHandler registrations are lost when ;jsessionid is removed in javascript files URL
+    * [WICKET-2886] - Tree doesn't update correctly
+    * [WICKET-2903] - CLONE -HttpsRequestCycleProcessor causes HttpSession to be created
+    * [WICKET-2905] - Select.isSelected fails when Wicket application is using REDIRECT_TO_RENDER render strategy.
+    * [WICKET-2931] - Form#getMaxSize - unsupported in the inner forms
+    * [WICKET-2933] - Form.MULTIPART_HINT is not cleared correctly with nested forms
+    * [WICKET-2941] - DatePicker fail with "firstDate is undefined" when an out of range date is written in the textfield
+    * [WICKET-2944] - Application addRenderHeadListener causing error 
+    * [WICKET-2957] - Closing ModalWindow makes some form fields unclickable
+    * [WICKET-2958] - Success handler not called when redirecting with Ajax
+    * [WICKET-2972] - Some RepeaterView examples are not working
+    * [WICKET-2974] - IFeedback that is child of IFeedback gets added to the FEEDBACK_LIST too late
+    * [WICKET-2977] - AutoComplete onfocus behavior only working on last autocomplete field
+    * [WICKET-2999] - Packaged Resource URLs encoded with jsessionid
+    * [WICKET-3014] - unable to launch StartExamples from IDEA (eventually other IDE's as well)
+    * [WICKET-3018] - CheckGroupSelector ignores disabled-state in Check
+    * [WICKET-3025] - DateTextField converter does not honor current locale
+
+** Improvement
+    * [WICKET-2964] - Improve the code that uses copy-list-on-iterate pattern 
+    * [WICKET-2978] - Usage of SimpleFormComponentLabel in FormInput example
+    * [WICKET-3002] - Resource.getResourceStream() javadoc improvements (patch)
+    * [WICKET-3019] - Add getPath to MarkupExceptions to aid in locatin affected components
+
+** New Feature
+    * [WICKET-206] - Default page map is null, should be set to something more usable
+
+** Wish
+    * [WICKET-2967] - org.apache.wicket.util.value.Count: add decrement method
+
+
 Release Notes - Wicket - Version 1.4.10
 
 ** Bug
