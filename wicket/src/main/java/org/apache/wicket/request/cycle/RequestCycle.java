@@ -84,7 +84,7 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 		 * @param requestCycle
 		 */
 		public void onDetach(RequestCycle requestCycle);
-	};
+	}
 
 	/**
 	 * Returns request cycle associated with current thread.
@@ -271,6 +271,8 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 	 */
 	private void executeExceptionRequestHandler(final IRequestHandler handler, final int retryCount)
 	{
+		scheduleRequestHandlerAfterCurrent(null);
+
 		try
 		{
 			executeRequestHandler(handler);
@@ -401,8 +403,6 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 	 * 
 	 * @param <C>
 	 * 
-	 * @see RequestCycle#urlFor(IPageMap, Class, PageParameters)
-	 * 
 	 * @param pageClass
 	 *            Class of page
 	 * @param parameters
@@ -437,8 +437,6 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 	 * instantiate and render the page, it can be stored in a user's browser as a stable bookmark.
 	 * 
 	 * @param <C>
-	 * 
-	 * @see RequestCycle#urlFor(IPageMap, Class, PageParameters)
 	 * 
 	 * @param pageClass
 	 *            Class of page
@@ -510,7 +508,6 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 				{
 					log.error("Error detaching DetachCallback", e);
 				}
-				;
 			}
 			set(null);
 		}

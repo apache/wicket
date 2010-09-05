@@ -95,7 +95,7 @@ public abstract class RequestHandlerStack
 
 			if (replacer.removeAll && !first)
 			{
-				throw (RuntimeException)exception;
+				throw exception;
 			}
 			replacementHandler = replacer.replacementRequestHandler;
 		}
@@ -203,7 +203,7 @@ public abstract class RequestHandlerStack
 
 	/**
 	 * Replaces current {@link Response} with new {@link Response} instance. The original response
-	 * is always restored after the {@link IRequestHandler#respond(RequestCycle)} method is
+	 * is always restored after the {@link IRequestHandler#respond(IRequestCycle)} method is
 	 * finished.
 	 * 
 	 * @param response
@@ -277,5 +277,5 @@ public abstract class RequestHandlerStack
 			// don't do anything here
 			return null;
 		}
-	};
+	}
 }
