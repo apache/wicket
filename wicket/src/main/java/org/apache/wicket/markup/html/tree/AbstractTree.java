@@ -502,9 +502,9 @@ public abstract class AbstractTree extends Panel
 	 * @return model
 	 */
 	@SuppressWarnings("unchecked")
-	public IModel<TreeModel> getModel()
+	public IModel<? extends TreeModel> getModel()
 	{
-		return (IModel<TreeModel>)getDefaultModel();
+		return (IModel<? extends TreeModel>)getDefaultModel();
 	}
 
 	/**
@@ -520,7 +520,7 @@ public abstract class AbstractTree extends Panel
 	 * @param model
 	 * @return this
 	 */
-	public MarkupContainer setModel(IModel<TreeModel> model)
+	public MarkupContainer setModel(IModel<? extends TreeModel> model)
 	{
 		setDefaultModel(model);
 		return this;

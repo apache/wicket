@@ -51,7 +51,7 @@ public class LinkTree extends LabelTree
 	 * @param model
 	 *            model that provides the {@link TreeModel}
 	 */
-	public LinkTree(String id, IModel<TreeModel> model)
+	public LinkTree(String id, IModel<? extends TreeModel> model)
 	{
 		super(id, model);
 	}

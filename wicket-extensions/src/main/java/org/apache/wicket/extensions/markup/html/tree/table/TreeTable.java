@@ -170,7 +170,7 @@ public class TreeTable extends DefaultAbstractTree
 	 * @param columns
 	 *            The columns
 	 */
-	public TreeTable(String id, IModel<TreeModel> model, IColumn columns[])
+	public TreeTable(String id, IModel<? extends TreeModel> model, IColumn columns[])
 	{
 		super(id, model);
 		init(columns);

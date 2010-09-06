@@ -158,7 +158,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 * @param model
 	 *            The tree model
 	 */
-	public DefaultAbstractTree(String id, IModel<TreeModel> model)
+	public DefaultAbstractTree(String id, IModel<? extends TreeModel> model)
 	{
 		super(id, model);
 	}
