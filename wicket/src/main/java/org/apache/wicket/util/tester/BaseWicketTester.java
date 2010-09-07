@@ -773,10 +773,6 @@ public class BaseWicketTester extends MockWebApplication
 
 			AjaxSubmitLink link = (AjaxSubmitLink)linkComponent;
 
-			String inputName = ((IFormSubmittingComponent)link).getInputName();
-			Map<String, String[]> requestParams = getParametersForNextRequest();
-			requestParams.put(inputName, new String[] { "x" });
-
 			// We cycle through the attached behaviors and select the
 			// LAST matching behavior as the one we handle.
 			List<IBehavior> behaviors = link.getBehaviors();
@@ -1376,15 +1372,33 @@ public class BaseWicketTester extends MockWebApplication
 
 		String failMessage = "No form attached to the submitlink.";
 		notNull(failMessage, form);
+		/*
+		 * Means that an button or an ajax link was clicked and needs to be added to the request
+		 * parameters to their form component correctly resolves the submit origin
+		 */
+		if (component instanceof Button)
+		{
+			Button clickedButton = (Button)component;
+			getServletRequest().setParameter(clickedButton.getInputName(), clickedButton.getValue());
+		}
+		else if (component instanceof AjaxSubmitLink)
+		{
+			String inputName = ((IFormSubmittingComponent)component).getInputName();
+			Map<String, String[]> requestParams = getParametersForNextRequest();
+			requestParams.put(inputName, new String[] { "x" });
+		}
 
 		form.visitFormComponents(new FormComponent.AbstractVisitor()
 		{
 			@Override
 			public void onFormComponent(FormComponent<?> formComponent)
 			{
+				/*
+				 * It is important to don't add every button input name as an request parameter to
+				 * respect the submit origin
+				 */
 				if (!(formComponent instanceof RadioGroup) &&
-					!(formComponent instanceof CheckGroup) &&
-					!formComponent.getClass().isAssignableFrom(Button.class) &&
+					!(formComponent instanceof CheckGroup) && !(formComponent instanceof Button) &&
 					formComponent.isVisibleInHierarchy() && formComponent.isEnabledInHierarchy())
 				{
 					if (!((formComponent instanceof IFormSubmittingComponent) && (component instanceof IFormSubmittingComponent)) ||
