@@ -19,7 +19,6 @@ package org.apache.wicket.request.handler;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.IBehavior;
-import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -161,9 +160,11 @@ public class ListenerInterfaceRequestHandler
 			 * into the invoke method so we can access the request and figure out if it is ajax or
 			 * not.
 			 */
-			if (isAjax & page instanceof IManageablePage)
+			Boolean frozen = null;
+			
+			if (isAjax)
 			{
-				page.setFreezePageId(true);
+				frozen = page.setFreezePageId(true);
 			}
 
 			try
@@ -172,11 +173,8 @@ public class ListenerInterfaceRequestHandler
 			}
 			finally
 			{
-				if (isAjax && page instanceof IManageablePage)
-				{
-					page.setFreezePageId(false);
-				}
-
+				if(frozen != null)
+					page.setFreezePageId(frozen);
 			}
 		}
 		else
