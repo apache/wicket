@@ -188,7 +188,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 			BeanFactory parent = beanFactory.getParentBeanFactory();
 			if (parent != null && parent instanceof ConfigurableListableBeanFactory)
 			{
-				return getBeanDefinition(beanFactory, name);
+				return getBeanDefinition((ConfigurableListableBeanFactory)parent, name);
 			}
 			else
 			{
