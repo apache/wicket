@@ -16,8 +16,10 @@
  */
 package org.apache.wicket.page;
 
-// TODO WICKET-NG: this iface used to extend IDetachable, however this causes problems because Page becomes IDetachable and some property models will cause an infinite loop trigging detach on the component again because it is their target object. In the future Component should indeed implement IDetachable, for now copied #detach into this iface directly.
-public interface IManageablePage
+import org.apache.wicket.IClusterable;
+
+// TODO WICKET-NG: this iface used to extend IDetachable, however this causes problems because Page becomes IDetachable and some property models will cause an infinite loop triggering detach on the component again because it is their target object. In the future Component should indeed implement IDetachable, for now copied #detach into this iface directly.
+public interface IManageablePage extends IClusterable
 {
 	/**
 	 * Gets whether the page is stateless. Components on stateless page must not render any stateful

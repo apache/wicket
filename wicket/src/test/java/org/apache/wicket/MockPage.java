@@ -26,6 +26,8 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  */
 public class MockPage extends MockComponent implements IRequestablePage
 {
+	private static final long serialVersionUID = -4776374984666617518L;
+
 	private int pageId;
 
 	/**
