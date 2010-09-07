@@ -402,9 +402,11 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/** {@inheritDoc} */
-	public void setFreezePageId(boolean freeze)
+	public boolean setFreezePageId(boolean freeze)
 	{
+		boolean frozen = getFlag(FLAG_PREVENT_DIRTY);
 		setFlag(FLAG_PREVENT_DIRTY, freeze);
+		return frozen;
 	}
 
 	/**

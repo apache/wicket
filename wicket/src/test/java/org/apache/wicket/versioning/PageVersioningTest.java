@@ -95,19 +95,19 @@ public class PageVersioningTest
 		assertEquals(0, versioningPage.getPageId());
 
 		wicketTester.clickLink("ajaxUpdatingChangeModelLink", true);
-		assertEquals(1, versioningPage.getPageId());
+		assertEquals(0, versioningPage.getPageId());
 
 		wicketTester.clickLink("addTemporaryBehaviorLink");
-		assertEquals(1, versioningPage.getPageId());
+		assertEquals(0, versioningPage.getPageId());
 
 		wicketTester.clickLink("addBehaviorLink");
-		assertEquals(2, versioningPage.getPageId());
+		assertEquals(1, versioningPage.getPageId());
 
 		wicketTester.clickLink("changeEnabledStateLink");
-		assertEquals(3, versioningPage.getPageId());
+		assertEquals(2, versioningPage.getPageId());
 
 		wicketTester.clickLink("changeVisibilityStateLink");
-		assertEquals(4, versioningPage.getPageId());
+		assertEquals(3, versioningPage.getPageId());
 
 		try
 		{
@@ -115,7 +115,7 @@ public class PageVersioningTest
 			// version
 			versioningPage.setVersioned(false);
 			wicketTester.clickLink("changeVisibilityStateLink");
-			assertEquals(4, versioningPage.getPageId());
+			assertEquals(3, versioningPage.getPageId());
 		}
 		finally
 		{
@@ -128,7 +128,6 @@ public class PageVersioningTest
 	/**
 	 * Asserts that there is a version of the page for each operation that modified the page
 	 * 
-	 * @param pageManager
 	 * @param versioningPage
 	 */
 	private void checkPageVersionsAreStored(Page versioningPage)

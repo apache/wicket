@@ -289,19 +289,32 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 */
 	public final void onRequest()
 	{
-		WebApplication app = (WebApplication)getComponent().getApplication();
-		AjaxRequestTarget target = app.newAjaxRequestTarget(getComponent().getPage());
-		RequestCycle requestCycle = RequestCycle.get();
-		requestCycle.scheduleRequestHandlerAfterCurrent(target);
+		final Page page = getComponent().getPage();
 
-		Url oldBaseURL = requestCycle.getUrlRenderer().getBaseUrl();
-		WebRequest request = (WebRequest)requestCycle.getRequest();
-		Url baseURL = Url.parse(request.getHeader("Wicket-Ajax-BaseURL"), request.getCharset());
-		requestCycle.getUrlRenderer().setBaseUrl(baseURL);
+		// do not increment page id during ajax processing
+		boolean previous = page.setFreezePageId(true);
 
-		respond(target);
+		try
+		{
+			WebApplication app = (WebApplication)getComponent().getApplication();
+			AjaxRequestTarget target = app.newAjaxRequestTarget(page);
 
-		requestCycle.getUrlRenderer().setBaseUrl(oldBaseURL);
+			RequestCycle requestCycle = RequestCycle.get();
+			requestCycle.scheduleRequestHandlerAfterCurrent(target);
+
+			Url oldBaseURL = requestCycle.getUrlRenderer().getBaseUrl();
+			WebRequest request = (WebRequest)requestCycle.getRequest();
+			Url baseURL = Url.parse(request.getHeader("Wicket-Ajax-BaseURL"), request.getCharset());
+			requestCycle.getUrlRenderer().setBaseUrl(baseURL);
+
+			respond(target);
+
+			requestCycle.getUrlRenderer().setBaseUrl(oldBaseURL);
+		}
+		finally
+		{
+			page.setFreezePageId(previous);
+		}
 	}
 
 	/**

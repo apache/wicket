@@ -59,6 +59,8 @@ public interface IManageablePage
 	 * solving the problem.
 	 * 
 	 * @param freeze
+	 *
+	 * @return previous state
 	 */
-	void setFreezePageId(boolean freeze);
+	boolean setFreezePageId(boolean freeze);
 }

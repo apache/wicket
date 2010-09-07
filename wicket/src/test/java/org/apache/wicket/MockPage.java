@@ -26,15 +26,10 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  */
 public class MockPage extends MockComponent implements IRequestablePage
 {
-
-	private static final long serialVersionUID = 1L;
-
 	private int pageId;
 
 	/**
 	 * Construct.
-	 * 
-	 * @param pageId
 	 */
 	public MockPage()
 	{
@@ -46,8 +41,6 @@ public class MockPage extends MockComponent implements IRequestablePage
 	 * Construct.
 	 * 
 	 * @param pageId
-	 * @param pageVersion
-	 * @param pageMapName
 	 */
 	public MockPage(int pageId)
 	{
@@ -165,7 +158,8 @@ public class MockPage extends MockComponent implements IRequestablePage
 	}
 
 
-	public void setFreezePageId(boolean freeze)
+	public boolean setFreezePageId(boolean freeze)
 	{
+		return false;
 	}
 }
