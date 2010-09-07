@@ -311,6 +311,9 @@ public abstract class Component
 		}
 	};
 
+	/** an unused flag */
+	private static final int FLAG_UNUSED0 = 0x20000000;
+
 	/** True when a component is being auto-added */
 	private static final int FLAG_AUTO = 0x0001;
 
@@ -405,7 +408,6 @@ public abstract class Component
 	 */
 	private static final int FLAG_VISIBILITY_ALLOWED = 0x40000000;
 
-	private static final int FLAG_ATTACHED = 0x20000000;
 	private static final int FLAG_DETACHING = 0x80000000;
 
 	/**
@@ -1288,8 +1290,6 @@ public abstract class Component
 				getClass().getName() +
 				" has not called super.onDetach() in the override of onDetach() method");
 		}
-		setFlag(FLAG_ATTACHED, false);
-
 		setFlag(FLAG_CONFIGURED, false);
 
 		// always detach models because they can be attached without the
@@ -3847,24 +3847,6 @@ public abstract class Component
 	 */
 	protected void internalOnModelChanged()
 	{
-	}
-
-	/**
-	 * Convenience method that sets the attached flags.
-	 * 
-	 * @param attached
-	 */
-	protected final void markAttached(boolean attached)
-	{
-		setFlag(FLAG_ATTACHED, attached);
-	}
-
-	/**
-	 * @return true if this component is attached
-	 */
-	protected final boolean isAttached()
-	{
-		return getFlag(FLAG_ATTACHED);
 	}
 
 	/**
