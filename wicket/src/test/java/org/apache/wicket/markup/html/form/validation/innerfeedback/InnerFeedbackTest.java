@@ -59,7 +59,7 @@ public class InnerFeedbackTest extends TestCase
 
 	public void testInnerFeedback() throws Exception
 	{
-		tester.getSession().setLocale(Locale.ENGLISH);
+		tester.getWicketSession().setLocale(Locale.ENGLISH);
 		tester.startPage(HomePage.class);
 
 		// page's feedback
