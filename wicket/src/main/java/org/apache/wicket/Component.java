@@ -125,8 +125,6 @@ import org.slf4j.LoggerFactory;
  * methods such as onValidate(), onSubmit() and onError() (although only the latter two are likely
  * to be overridden in practice).
  * 
- * <li><b>onBeginRequest </b>- The {@link Component#onBeginRequest()} method is called.
- * 
  * <li><b>Form Submit </b>- If a Form has been submitted and the Component is a FormComponent, the
  * component's model is validated by a call to FormComponent.validate().
  * 
@@ -139,7 +137,6 @@ import org.slf4j.LoggerFactory;
  * Component becomes immutable. Attempts to alter the Component will result in a
  * WicketRuntimeException.
  * 
- * <li><b>onEndRequest </b>() - The {@link Component#onEndRequest()} method is called.
  * </ul>
  * 
  * <li><b>Component Models </b>- The primary responsibility of a component is to use its model (an
