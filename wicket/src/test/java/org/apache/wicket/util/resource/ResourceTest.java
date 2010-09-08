@@ -140,7 +140,6 @@ public class ResourceTest extends WicketTestCase
 
 		if (!resourcePath.endsWith(filename))
 		{
-
 			filename = Strings.afterLast(filename, '/');
 			resourcePath = Strings.afterLast(resourcePath, '/');
 			assertEquals("Did not find resource", filename, resourcePath);

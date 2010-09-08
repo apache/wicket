@@ -39,6 +39,8 @@ public abstract class AbstractResourceStream implements IStringResourceStream
 	/** Charset for resource */
 	private Charset charset;
 	private Locale locale;
+	private String style;
+	private String variation;
 
 	/**
 	 * Sets the character set used for reading this resource.
@@ -114,6 +116,38 @@ public abstract class AbstractResourceStream implements IStringResourceStream
 	public void setLocale(Locale locale)
 	{
 		this.locale = locale;
+	}
+
+	/**
+	 * @see org.apache.wicket.util.resource.IResourceStream#getStyle()
+	 */
+	public String getStyle()
+	{
+		return style;
+	}
+
+	/**
+	 * @see org.apache.wicket.util.resource.IResourceStream#getVariation()
+	 */
+	public String getVariation()
+	{
+		return variation;
+	}
+
+	/**
+	 * @see org.apache.wicket.util.resource.IResourceStream#setStyle(java.lang.String)
+	 */
+	public void setStyle(String style)
+	{
+		this.style = style;
+	}
+
+	/**
+	 * @see org.apache.wicket.util.resource.IResourceStream#setVariation(java.lang.String)
+	 */
+	public void setVariation(String variation)
+	{
+		this.variation = variation;
 	}
 
 	/**

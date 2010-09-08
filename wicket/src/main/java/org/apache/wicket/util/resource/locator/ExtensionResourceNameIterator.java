@@ -22,34 +22,13 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
- * Contains the logic to build the various combinations of file path, style, variation and locale
- * required while searching for Wicket resources. The full filename will be built like:
- * &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
- * <p>
- * Resource matches will be attempted in the following order:
- * <ol>
- * <li>1. &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
- * <li>2. &lt;path&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
- * <li>3. &lt;path&gt;_&lt;style&gt;.&lt;extension&gt;</li>
- * <li>4. &lt;path&gt;.&lt;extension&gt;</li>
- * </ol>
- * <p>
- * Locales may contain a language, a country and a region or variant. Combinations of these
- * components will be attempted in the following order:
- * <ol>
- * <li>locale.toString() see javadoc for Locale for more details</li>
- * <li>&lt;language&gt;_&lt;country&gt;</li>
- * <li>&lt;language&gt;</li>
- * </ol>
+ * Iterate over a list of 'comma' separated strings. If an empty string is provided, hasNext() will
+ * successfully return once with next() returning an empty string ("").
  * 
  * @author Juergen Donnerstag
- * @author Jonathan Locke
  */
 public class ExtensionResourceNameIterator implements Iterator<String>
 {
-	/** The base path */
-	private final String path;
-
 	private final String[] extensions;
 
 	private int index;
@@ -57,37 +36,20 @@ public class ExtensionResourceNameIterator implements Iterator<String>
 	/**
 	 * Construct.
 	 * 
-	 * @param path
 	 * @param extension
+	 * @param separatorChar
 	 */
-	public ExtensionResourceNameIterator(String path, final String extension)
+	public ExtensionResourceNameIterator(final String extension, final char separatorChar)
 	{
-		if ((extension == null) && (path.indexOf('.') != -1))
+		// Extension can be a comma separated list
+		String[] extensions = Strings.split(extension, separatorChar);
+		if (extensions.length == 0)
 		{
-			// Get the extension from the path provided
-			extensions = new String[] { "." + Strings.lastPathComponent(path, '.') };
-			path = Strings.beforeLastPathComponent(path, '.');
+			// Fail safe: hasNext() needs to return at least once with true.
+			extensions = new String[] { "" };
 		}
-		else if (extension != null)
-		{
-			// Extension can be a comma separated list
-			extensions = Strings.split(extension, ',');
-			for (int i = extensions.length - 1; i >= 0; i--)
-			{
-				extensions[i] = extensions[i].trim();
-				if (!extensions[i].startsWith("."))
-				{
-					extensions[i] = "." + extensions[i];
-				}
-			}
-		}
-		else
-		{
-			extensions = new String[1];
-			extensions[0] = ".";
-		}
+		this.extensions = extensions;
 
-		this.path = path;
 		index = 0;
 	}
 
@@ -101,15 +63,25 @@ public class ExtensionResourceNameIterator implements Iterator<String>
 	}
 
 	/**
-	 * 
-	 * @see java.util.Iterator#next()
+	 * @return The next filename extension. A leading '.' will be removed.
 	 */
 	public String next()
 	{
-		return path + extensions[index++];
+		String rtn = extensions[index++].trim();
+		return rtn.startsWith(".") ? rtn.substring(1) : rtn;
 	}
 
 	/**
+	 * @return Assuming you've called next() already, it'll return the very same value.
+	 */
+	public final String getExtension()
+	{
+		String rtn = extensions[index - 1].trim();
+		return rtn.startsWith(".") ? rtn.substring(1) : rtn;
+	}
+
+	/**
+	 * Noop.
 	 * 
 	 * @see java.util.Iterator#remove()
 	 */

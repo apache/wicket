@@ -347,6 +347,38 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	}
 
 	/**
+	 * @see org.apache.wicket.util.resource.IResourceStream#getStyle()
+	 */
+	public String getStyle()
+	{
+		return resourceStream.getStyle();
+	}
+
+	/**
+	 * @see org.apache.wicket.util.resource.IResourceStream#getVariation()
+	 */
+	public String getVariation()
+	{
+		return resourceStream.getVariation();
+	}
+
+	/**
+	 * @see org.apache.wicket.util.resource.IResourceStream#setStyle(java.lang.String)
+	 */
+	public void setStyle(String style)
+	{
+		resourceStream.setStyle(style);
+	}
+
+	/**
+	 * @see org.apache.wicket.util.resource.IResourceStream#setVariation(java.lang.String)
+	 */
+	public void setVariation(String variation)
+	{
+		resourceStream.setVariation(variation);
+	}
+
+	/**
 	 * 
 	 * @see java.lang.Object#toString()
 	 */

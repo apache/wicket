@@ -19,34 +19,12 @@ package org.apache.wicket.util.resource.locator;
 import java.util.Iterator;
 
 /**
- * Contains the logic to build the various combinations of file path, style and locale required
- * while searching for Wicket resources. The full filename will be built like:
- * &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
- * <p>
- * Resource matches will be attempted in the following order:
- * <ol>
- * <li>1. &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
- * <li>2. &lt;path&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
- * <li>3. &lt;path&gt;_&lt;style&gt;.&lt;extension&gt;</li>
- * <li>4. &lt;path&gt;.&lt;extension&gt;</li>
- * </ol>
- * <p>
- * Locales may contain a language, a country and a region or variant. Combinations of these
- * components will be attempted in the following order:
- * <ol>
- * <li>locale.toString() see javadoc for Locale for more details</li>
- * <li>&lt;language&gt;_&lt;country&gt;</li>
- * <li>&lt;language&gt;</li>
- * </ol>
+ * Iterate over all possible combinations of style and variation
  * 
  * @author Juergen Donnerstag
- * @author Jonathan Locke
  */
 public class StyleAndVariationResourceNameIterator implements Iterator<String>
 {
-	/** The base path */
-	private final String path;
-
 	/** The style (see Session) */
 	private final String style;
 
@@ -59,14 +37,11 @@ public class StyleAndVariationResourceNameIterator implements Iterator<String>
 	/**
 	 * Construct.
 	 * 
-	 * @param path
 	 * @param style
 	 * @param variation
 	 */
-	public StyleAndVariationResourceNameIterator(final String path, final String style,
-		final String variation)
+	public StyleAndVariationResourceNameIterator(final String style, final String variation)
 	{
-		this.path = path;
 		this.style = style;
 		this.variation = variation;
 	}
@@ -81,6 +56,7 @@ public class StyleAndVariationResourceNameIterator implements Iterator<String>
 	}
 
 	/**
+	 * The return value will always be null. Use getStyle() and getVariation() instead.
 	 * 
 	 * @see java.util.Iterator#next()
 	 */
@@ -91,7 +67,7 @@ public class StyleAndVariationResourceNameIterator implements Iterator<String>
 			state++;
 			if ((style != null) && (variation != null))
 			{
-				return path + '_' + variation + '_' + style;
+				return null;
 			}
 		}
 
@@ -100,7 +76,7 @@ public class StyleAndVariationResourceNameIterator implements Iterator<String>
 			state++;
 			if (style != null)
 			{
-				return path + '_' + style;
+				return null;
 			}
 		}
 
@@ -109,12 +85,28 @@ public class StyleAndVariationResourceNameIterator implements Iterator<String>
 			state++;
 			if (variation != null)
 			{
-				return path + '_' + variation;
+				return null;
 			}
 		}
 
 		state = 4;
-		return path;
+		return null;
+	}
+
+	/**
+	 * @return Gets the style related to the iterator state
+	 */
+	public final String getStyle()
+	{
+		return ((state == 1) || (state == 2)) ? style : null;
+	}
+
+	/**
+	 * @return Gets the variation related to the iterator state
+	 */
+	public final String getVariation()
+	{
+		return ((state == 1) || (state == 3)) ? variation : null;
 	}
 
 	/**

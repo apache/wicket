@@ -16,21 +16,17 @@
  */
 package org.apache.wicket.util.resource.locator;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.util.collections.ConcurrentHashSet;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * Contains the logic to locate a resource based on a path, a style (see
- * {@link org.apache.wicket.Session}), a locale and a extension strings. The full filename will be
- * built like: &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
+ * Contains the logic to locate a resource based on a path, style (see
+ * {@link org.apache.wicket.Session}), variation, locale and extension strings. The full filename
+ * will be built like:
+ * &lt;path&gt;_&lt;variation&gt;_&lt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
  * <p>
  * Resource matches will be attempted in the following order:
  * <ol>
@@ -54,35 +50,30 @@ import org.apache.wicket.util.string.Strings;
  */
 public class ResourceNameIterator implements Iterator<String>
 {
-	private static final Pattern LOCALE_PATTERN = Pattern.compile("_([a-z]{2})(_([A-Z]{2})(_([^_]+))?)?$");
-
-	// The locale to search for the resource file
-	private final Locale locale;
+	// The base path without extension, style, locale etc.
+	private final String path;
 
 	// The extensions (comma separated) to search for the resource file
 	private final String extensions;
 
-	// The various iterators used to locate the resource file
-	private final Iterator<String> styleIterator;
-	private LocaleResourceNameIterator localeIterator;
-	private Iterator<String> extenstionsIterator;
+	// The locale to search for the resource file
+	private final Locale locale;
 
-	// The latest exact Locale used
-	private Locale currentLocale;
-
-	private final static Set<String> isoCountries = new ConcurrentHashSet<String>(
-		Arrays.asList(Locale.getISOCountries()));
-
-	private final static Set<String> isoLanguages = new ConcurrentHashSet<String>(
-		Arrays.asList(Locale.getISOLanguages()));
-
+	// Do not test any combinations. Just return the full path based on the locale, style etc.
+	// provided. Only iterate over the extensions provided.
 	private final boolean strict;
+
+	// The various iterators used to locate the resource file
+	private final StyleAndVariationResourceNameIterator styleIterator;
+	private LocaleResourceNameIterator localeIterator;
+	private ExtensionResourceNameIterator extensionsIterator;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param path
-	 *            The path of the resource without extension
+	 *            The path of the resource. In case the parameter 'extensions' is null, the path
+	 *            will be checked and if a filename extension is present, it'll be used instead.
 	 * @param style
 	 *            A theme or style (see {@link org.apache.wicket.Session})
 	 * @param variation
@@ -91,78 +82,26 @@ public class ResourceNameIterator implements Iterator<String>
 	 *            The Locale to apply
 	 * @param extensions
 	 *            the filname's extensions (comma separated)
-	 * 
 	 * @param strict
-	 *            whether other combinations should be tried
+	 *            If false, weaker combinations of style, locale, etc. are tested as well
 	 */
-	public ResourceNameIterator(String path, final String style, final String variation,
+	public ResourceNameIterator(final String path, final String style, final String variation,
 		final Locale locale, final String extensions, boolean strict)
 	{
 		this.locale = locale;
-		if ((extensions == null) && (path.indexOf('.') != -1))
+		if ((extensions == null) && (path != null) && (path.indexOf('.') != -1))
 		{
 			this.extensions = Strings.afterLast(path, '.');
-			path = Strings.beforeLast(path, '.');
+			this.path = Strings.beforeLast(path, '.');
 		}
 		else
 		{
 			this.extensions = extensions;
+			this.path = path;
 		}
 
-		path = getLocaleFromFilename(path);
-
-		styleIterator = new StyleAndVariationResourceNameIterator(path, style, variation);
+		styleIterator = newStyleAndVariationResourceNameIterator(style, variation);
 		this.strict = strict;
-	}
-
-	/**
-	 * Extract the locale from the filename in case where the user
-	 * 
-	 * @param path
-	 *            The file path
-	 * @return The updated path, without the locale
-	 * @TODO That should really be external to RNI in a helper kind of class
-	 */
-	protected String getLocaleFromFilename(String path)
-	{
-		final String filename = Strings.lastPathComponent(path, '/');
-		Matcher matcher = LOCALE_PATTERN.matcher(filename);
-		if (matcher.find())
-		{
-			String language = matcher.group(1);
-			String country = matcher.group(3);
-			String variant = matcher.group(5);
-
-			// did we find a language?
-			if (language != null)
-			{
-				if (isoLanguages.contains(language) == false)
-				{
-					language = null;
-					country = null;
-					variant = null;
-				}
-			}
-
-			// did we find a country?
-			if ((language != null) && (country != null))
-			{
-				if (isoCountries.contains(country) == false)
-				{
-					country = null;
-					variant = null;
-				}
-			}
-
-			if (language != null)
-			{
-				path = path.substring(0, path.length() - filename.length() + matcher.start());
-				localeIterator = new LocaleResourceNameIterator(path, new Locale(language,
-					country != null ? country : "", variant != null ? variant : ""), strict);
-			}
-		} // else skip the whole thing... probably user specific underscores used
-
-		return path;
 	}
 
 	/**
@@ -172,7 +111,37 @@ public class ResourceNameIterator implements Iterator<String>
 	 */
 	public final Locale getLocale()
 	{
-		return currentLocale;
+		return localeIterator.getLocale();
+	}
+
+	/**
+	 * Get the exact Style which has been used for the latest resource path.
+	 * 
+	 * @return current Style
+	 */
+	public final String getStyle()
+	{
+		return styleIterator.getStyle();
+	}
+
+	/**
+	 * Get the exact Variation which has been used for the latest resource path.
+	 * 
+	 * @return current Variation
+	 */
+	public final String getVariation()
+	{
+		return styleIterator.getVariation();
+	}
+
+	/**
+	 * Get the exact filename extension used for the latest resource path.
+	 * 
+	 * @return current filename extension
+	 */
+	public final String getExtension()
+	{
+		return extensionsIterator.getExtension();
 	}
 
 	/**
@@ -181,17 +150,17 @@ public class ResourceNameIterator implements Iterator<String>
 	public boolean hasNext()
 	{
 		// Most inner loop. Loop through all extensions provided
-		if (extenstionsIterator != null)
+		if (extensionsIterator != null)
 		{
-			if (extenstionsIterator.hasNext() == true)
+			if (extensionsIterator.hasNext() == true)
 			{
 				return true;
 			}
 
 			// If there are no more extensions, than return to the next outer
-			// loop (locale), get the next value from that loop and start
+			// loop (locale). Get the next value from that loop and start
 			// over again with the first extension in the list.
-			extenstionsIterator = null;
+			extensionsIterator = null;
 		}
 
 		// 2nd inner loop: Loop through all Locale combinations
@@ -199,12 +168,10 @@ public class ResourceNameIterator implements Iterator<String>
 		{
 			while (localeIterator.hasNext())
 			{
-				// Get the next Locale from the iterator and start the next
-				// inner iterator over again.
-				String newPath = localeIterator.next();
-				currentLocale = localeIterator.getLocale();
-				extenstionsIterator = new ExtensionResourceNameIterator(newPath, extensions);
-				if (extenstionsIterator.hasNext() == true)
+				localeIterator.next();
+
+				extensionsIterator = newExtensionResourceNameIterator(extensions);
+				if (extensionsIterator.hasNext() == true)
 				{
 					return true;
 				}
@@ -212,19 +179,18 @@ public class ResourceNameIterator implements Iterator<String>
 			localeIterator = null;
 		}
 
-		// Most outer loop: Loop through all combinations of styles and
-		// variations
+		// Most outer loop: Loop through all combinations of styles and variations
 		while (styleIterator.hasNext())
 		{
-			String newPath = styleIterator.next();
+			styleIterator.next();
 
-			localeIterator = new LocaleResourceNameIterator(newPath, locale, strict);
+			localeIterator = newLocaleResourceNameIterator(locale, strict);
 			while (localeIterator.hasNext())
 			{
-				newPath = localeIterator.next();
-				currentLocale = localeIterator.getLocale();
-				extenstionsIterator = new ExtensionResourceNameIterator(newPath, extensions);
-				if (extenstionsIterator.hasNext() == true)
+				localeIterator.next();
+
+				extensionsIterator = newExtensionResourceNameIterator(extensions);
+				if (extensionsIterator.hasNext() == true)
 				{
 					return true;
 				}
@@ -245,12 +211,67 @@ public class ResourceNameIterator implements Iterator<String>
 	 */
 	public String next()
 	{
-		if (extenstionsIterator != null)
+		if (extensionsIterator != null)
 		{
-			return extenstionsIterator.next();
+			extensionsIterator.next();
+
+			return toString();
 		}
 		throw new WicketRuntimeException(
 			"Illegal call of next(). Iterator not properly initialized");
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return path + prepend(getVariation(), '_') + prepend(getStyle(), '_') +
+			prepend(getLocale(), '_') + prepend(getExtension(), '.');
+	}
+
+	/**
+	 * 
+	 * @param string
+	 * @param prepend
+	 * @return The string prepended with the char
+	 */
+	private String prepend(Object string, char prepend)
+	{
+		return (string != null) ? prepend + string.toString() : "";
+	}
+
+	/**
+	 * @param locale
+	 * @param strict
+	 * @return New iterator
+	 */
+	protected LocaleResourceNameIterator newLocaleResourceNameIterator(final Locale locale,
+		boolean strict)
+	{
+		return new LocaleResourceNameIterator(locale, strict);
+	}
+
+	/**
+	 * 
+	 * @param style
+	 * @param variation
+	 * @return new iterator
+	 */
+	protected StyleAndVariationResourceNameIterator newStyleAndVariationResourceNameIterator(
+		final String style, final String variation)
+	{
+		return new StyleAndVariationResourceNameIterator(style, variation);
+	}
+
+	/**
+	 * @param extensions
+	 * @return New iterator
+	 */
+	protected ExtensionResourceNameIterator newExtensionResourceNameIterator(final String extensions)
+	{
+		return new ExtensionResourceNameIterator(extensions, ',');
 	}
 
 	/**

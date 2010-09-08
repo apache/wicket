@@ -22,7 +22,9 @@ import java.util.Locale;
 import org.apache.wicket.Application;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.ResourceUtils;
 import org.apache.wicket.util.resource.UrlResourceStream;
+import org.apache.wicket.util.resource.ResourceUtils.PathLocale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -116,11 +118,24 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 		return locate(clazz, path, style, variation, locale, extension, false);
 	}
 
-	public IResourceStream locate(Class<?> clazz, String path, String style, String variation,
-		Locale locale, String extension, boolean strict)
+	/**
+	 * 
+	 * @see org.apache.wicket.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class,
+	 *      java.lang.String, java.lang.String, java.lang.String, java.util.Locale,
+	 *      java.lang.String, boolean)
+	 */
+	public IResourceStream locate(final Class<?> clazz, String path, final String style,
+		final String variation, Locale locale, final String extension, final boolean strict)
 	{
-		// Try the various combinations of style, locale and extension to find
-		// the resource.
+		// If path contains a locale, than it'll replace the locale provided to this method
+		PathLocale data = ResourceUtils.getLocaleFromFilename(path);
+		if ((data != null) && (data.locale != null))
+		{
+			path = data.path;
+			locale = data.locale;
+		}
+
+		// Try the various combinations of style, locale and extension to find the resource.
 		ResourceNameIterator iter = new ResourceNameIterator(path, style, variation, locale,
 			extension, strict);
 		while (iter.hasNext())
@@ -131,6 +146,8 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 			if (stream != null)
 			{
 				stream.setLocale(iter.getLocale());
+				stream.setStyle(iter.getStyle());
+				stream.setVariation(iter.getVariation());
 				return stream;
 			}
 		}

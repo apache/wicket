@@ -23,34 +23,14 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
- * Contains the logic to build the various combinations of file path, style, variation and locale
- * required while searching for Wicket resources. The full filename will be built like:
- * &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
- * <p>
- * Resource matches will be attempted in the following order:
- * <ol>
- * <li>1. &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
- * <li>2. &lt;path&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
- * <li>3. &lt;path&gt;_&lt;style&gt;.&lt;extension&gt;</li>
- * <li>4. &lt;path&gt;.&lt;extension&gt;</li>
- * </ol>
- * <p>
- * Locales may contain a language, a country and a region or variant. Combinations of these
- * components will be attempted in the following order:
- * <ol>
- * <li>locale.toString() see javadoc for Locale for more details</li>
- * <li>&lt;language&gt;_&lt;country&gt;</li>
- * <li>&lt;language&gt;</li>
- * </ol>
+ * Given a Locale it'll iterate over all possible combinations of the attrs making up the Locale.
+ * Starting the Locale provided to more 'weaker' combinations. The latest one will be no Locale in
+ * which case an empty string will be returned.
  * 
  * @author Juergen Donnerstag
- * @author Jonathan Locke
  */
 public class LocaleResourceNameIterator implements Iterator<String>
 {
-	/** The base path */
-	private final String path;
-
 	/** The locale (see Session) */
 	private final Locale locale;
 
@@ -60,24 +40,13 @@ public class LocaleResourceNameIterator implements Iterator<String>
 	private final boolean strict;
 
 	/**
-	 * While iterating the various combinations, it will always contain the current combination used
-	 * to create the path
-	 */
-	private Locale currentLocale;
-
-	/** Internal: used to compare with previous path to avoid duplicates */
-	private String currentPath;
-
-	/**
 	 * Construct.
 	 * 
-	 * @param path
 	 * @param locale
 	 * @param strict
 	 */
-	public LocaleResourceNameIterator(final String path, final Locale locale, boolean strict)
+	public LocaleResourceNameIterator(final Locale locale, boolean strict)
 	{
-		this.path = path;
 		this.locale = locale;
 		this.strict = strict;
 	}
@@ -87,7 +56,20 @@ public class LocaleResourceNameIterator implements Iterator<String>
 	 */
 	public Locale getLocale()
 	{
-		return currentLocale;
+		if (state == 1)
+		{
+			// Language, country, variation
+			return locale;
+		}
+		else if (state == 2)
+		{
+			return new Locale(locale.getLanguage(), locale.getCountry());
+		}
+		else if (state == 3)
+		{
+			return new Locale(locale.getLanguage());
+		}
+		return null;
 	}
 
 	/**
@@ -106,7 +88,6 @@ public class LocaleResourceNameIterator implements Iterator<String>
 	}
 
 	/**
-	 * 
 	 * @see java.util.Iterator#next()
 	 */
 	public String next()
@@ -114,16 +95,14 @@ public class LocaleResourceNameIterator implements Iterator<String>
 		if (locale == null)
 		{
 			state = 999;
-			return path;
+			return "";
 		}
 
 		// 1. Apply Locale default toString() implementation. See Locale.
 		if (state == 0)
 		{
 			state++;
-			currentLocale = locale;
-			currentPath = path + '_' + locale.toString();
-			return currentPath;
+			return '_' + locale.toString();
 		}
 
 		// Get language and country, either of which may be the empty string
@@ -137,9 +116,8 @@ public class LocaleResourceNameIterator implements Iterator<String>
 
 			if (!Strings.isEmpty(language) && !Strings.isEmpty(country))
 			{
-				currentLocale = new Locale(language, country);
-				String newPath = path + '_' + language + '_' + country;
-				if (currentPath.equals(newPath) == false)
+				String newPath = '_' + language + '_' + country;
+				if (locale.toString().equals(newPath) == false)
 				{
 					return newPath;
 				}
@@ -153,16 +131,13 @@ public class LocaleResourceNameIterator implements Iterator<String>
 
 			if (!Strings.isEmpty(language))
 			{
-				currentLocale = new Locale(language);
-				return path + '_' + language;
+				return '_' + language;
 			}
 		}
 
 		// 4. The path only; without locale
 		state++;
-
-		currentLocale = null;
-		return path;
+		return "";
 	}
 
 	/**

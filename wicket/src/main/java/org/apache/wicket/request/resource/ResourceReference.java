@@ -293,6 +293,15 @@ public abstract class ResourceReference implements Serializable
 		{
 			return Objects.hashCode(getLocale(), getStyle(), getVariation());
 		}
+
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		@Override
+		public String toString()
+		{
+			return "locale: " + locale + "; style: " + style + "; variation: " + variation;
+		}
 	}
 
 	/**

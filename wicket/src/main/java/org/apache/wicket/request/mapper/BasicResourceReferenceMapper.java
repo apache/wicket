@@ -185,6 +185,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 		{
 			ResourceReferenceRequestHandler referenceRequestHandler = (ResourceReferenceRequestHandler)requestHandler;
 			ResourceReference reference = referenceRequestHandler.getResourceReference();
+
 			Url url = new Url();
 
 			List<String> segments = url.getSegments();
