@@ -188,7 +188,7 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 			{
 				// The following statement assumes that the markup provider is a
 				// parent along the line up to the Page
-				stream = markupProvider.getMarkupStream();
+				stream = new MarkupStream(markupProvider.getMarkup(null));
 			}
 		}
 		return stream;
