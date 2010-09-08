@@ -161,9 +161,10 @@ public class ListenerInterfaceRequestHandler
 			 * not.
 			 */
 			Boolean frozen = null;
-			
+
 			if (isAjax)
 			{
+				// do not increment page id for ajax requests
 				frozen = page.setFreezePageId(true);
 			}
 

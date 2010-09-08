@@ -289,32 +289,20 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 */
 	public final void onRequest()
 	{
-		final Page page = getComponent().getPage();
+		WebApplication app = (WebApplication)getComponent().getApplication();
+		AjaxRequestTarget target = app.newAjaxRequestTarget(getComponent().getPage());
 
-		// do not increment page id during ajax processing
-		boolean previous = page.setFreezePageId(true);
+		RequestCycle requestCycle = RequestCycle.get();
+		requestCycle.scheduleRequestHandlerAfterCurrent(target);
 
-		try
-		{
-			WebApplication app = (WebApplication)getComponent().getApplication();
-			AjaxRequestTarget target = app.newAjaxRequestTarget(page);
+		Url oldBaseURL = requestCycle.getUrlRenderer().getBaseUrl();
+		WebRequest request = (WebRequest)requestCycle.getRequest();
+		Url baseURL = Url.parse(request.getHeader("Wicket-Ajax-BaseURL"), request.getCharset());
+		requestCycle.getUrlRenderer().setBaseUrl(baseURL);
 
-			RequestCycle requestCycle = RequestCycle.get();
-			requestCycle.scheduleRequestHandlerAfterCurrent(target);
+		respond(target);
 
-			Url oldBaseURL = requestCycle.getUrlRenderer().getBaseUrl();
-			WebRequest request = (WebRequest)requestCycle.getRequest();
-			Url baseURL = Url.parse(request.getHeader("Wicket-Ajax-BaseURL"), request.getCharset());
-			requestCycle.getUrlRenderer().setBaseUrl(baseURL);
-
-			respond(target);
-
-			requestCycle.getUrlRenderer().setBaseUrl(oldBaseURL);
-		}
-		finally
-		{
-			page.setFreezePageId(previous);
-		}
+		requestCycle.getUrlRenderer().setBaseUrl(oldBaseURL);
 	}
 
 	/**
@@ -346,7 +334,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 *            time span within which the javascript block will only execute once
 	 * @return wrapped javascript
 	 */
-	public static final CharSequence throttleScript(CharSequence script, String throttleId,
+	public static CharSequence throttleScript(CharSequence script, String throttleId,
 		Duration throttleDelay)
 	{
 		if (Strings.isEmpty(script))

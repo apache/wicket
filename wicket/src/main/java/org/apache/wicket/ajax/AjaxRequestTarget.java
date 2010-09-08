@@ -537,80 +537,90 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	 */
 	public final void respond(final IRequestCycle requestCycle)
 	{
-		RequestCycle rc = (RequestCycle)requestCycle;
-		Url oldBaseURL = rc.getUrlRenderer().getBaseUrl();
-		WebRequest request = (WebRequest)requestCycle.getRequest();
-		Url baseURL = Url.parse(request.getHeader("Wicket-Ajax-BaseURL"), request.getCharset());
+		// do not increment page id during ajax processing
+		boolean frozen = page.setFreezePageId(true);
 
-		rc.getUrlRenderer().setBaseUrl(baseURL);
-
-		final WebResponse response = (WebResponse)requestCycle.getResponse();
-
-		if (markupIdToComponent.values().contains(page))
+		try
 		{
-			// the page itself has been added to the request target, we simply issue a redirect back
-			// to the page
-			IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(page));
-			final String url = rc.urlFor(handler).toString();
-			response.sendRedirect(url);
-			return;
-		}
+			RequestCycle rc = (RequestCycle)requestCycle;
+			Url oldBaseURL = rc.getUrlRenderer().getBaseUrl();
+			WebRequest request = (WebRequest)requestCycle.getRequest();
+			Url baseURL = Url.parse(request.getHeader("Wicket-Ajax-BaseURL"), request.getCharset());
 
-		for (ITargetRespondListener listener : respondListeners)
+			rc.getUrlRenderer().setBaseUrl(baseURL);
+
+			final WebResponse response = (WebResponse)requestCycle.getResponse();
+
+			if (markupIdToComponent.values().contains(page))
+			{
+				// the page itself has been added to the request target, we simply issue a redirect back
+				// to the page
+				IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(page));
+				final String url = rc.urlFor(handler).toString();
+				response.sendRedirect(url);
+				return;
+			}
+
+			for (ITargetRespondListener listener : respondListeners)
+			{
+				listener.onTargetRespond(this);
+			}
+
+			final Application app = Application.get();
+
+			// Determine encoding
+			final String encoding = app.getRequestCycleSettings().getResponseRequestEncoding();
+
+			// Set content type based on markup type for page
+			response.setContentType("text/xml; charset=" + encoding);
+
+			// Make sure it is not cached by a client
+			RequestUtils.disableCaching(response);
+
+			response.write("<?xml version=\"1.0\" encoding=\"");
+			response.write(encoding);
+			response.write("\"?>");
+			response.write("<ajax-response>");
+
+			// invoke onbeforerespond event on listeners
+			fireOnBeforeRespondListeners();
+
+			// normal behavior
+			Iterator<CharSequence> it = prependJavascripts.iterator();
+			while (it.hasNext())
+			{
+				CharSequence js = it.next();
+				respondInvocation(response, js);
+			}
+
+			// process added components
+			respondComponents(response);
+
+			fireOnAfterRespondListeners(response);
+
+			// execute the dom ready javascripts as first javascripts
+			// after component replacement
+			it = domReadyJavascripts.iterator();
+			while (it.hasNext())
+			{
+				CharSequence js = it.next();
+				respondInvocation(response, js);
+			}
+			it = appendJavascripts.iterator();
+			while (it.hasNext())
+			{
+				CharSequence js = it.next();
+				respondInvocation(response, js);
+			}
+
+			response.write("</ajax-response>");
+
+			rc.getUrlRenderer().setBaseUrl(oldBaseURL);
+		}
+		finally
 		{
-			listener.onTargetRespond(this);
+			page.setFreezePageId(frozen);
 		}
-
-		final Application app = Application.get();
-
-		// Determine encoding
-		final String encoding = app.getRequestCycleSettings().getResponseRequestEncoding();
-
-		// Set content type based on markup type for page
-		response.setContentType("text/xml; charset=" + encoding);
-
-		// Make sure it is not cached by a client
-		RequestUtils.disableCaching(response);
-
-		response.write("<?xml version=\"1.0\" encoding=\"");
-		response.write(encoding);
-		response.write("\"?>");
-		response.write("<ajax-response>");
-
-		// invoke onbeforerespond event on listeners
-		fireOnBeforeRespondListeners();
-
-		// normal behavior
-		Iterator<CharSequence> it = prependJavascripts.iterator();
-		while (it.hasNext())
-		{
-			CharSequence js = it.next();
-			respondInvocation(response, js);
-		}
-
-		// process added components
-		respondComponents(response);
-
-		fireOnAfterRespondListeners(response);
-
-		// execute the dom ready javascripts as first javascripts
-		// after component replacement
-		it = domReadyJavascripts.iterator();
-		while (it.hasNext())
-		{
-			CharSequence js = it.next();
-			respondInvocation(response, js);
-		}
-		it = appendJavascripts.iterator();
-		while (it.hasNext())
-		{
-			CharSequence js = it.next();
-			respondInvocation(response, js);
-		}
-
-		response.write("</ajax-response>");
-
-		rc.getUrlRenderer().setBaseUrl(oldBaseURL);
 	}
 
 	/**
