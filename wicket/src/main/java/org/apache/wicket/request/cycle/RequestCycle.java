@@ -255,6 +255,7 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 		boolean result;
 		try
 		{
+			onBeginRequest();
 			result = processRequest();
 		}
 		finally
@@ -494,6 +495,15 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 
 		try
 		{
+			onEndRequest();
+		}
+		catch (RuntimeException e)
+		{
+			log.error("Exception occurred during onAfterRequest", e);
+		}
+
+		try
+		{
 			super.detach();
 		}
 		finally
@@ -585,4 +595,20 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 	public void onEvent(IEvent<?> event)
 	{
 	}
+
+	/**
+	 * Called when the request cycle object is beginning its response
+	 */
+	protected void onBeginRequest()
+	{
+	}
+
+	/**
+	 * Called when the request cycle object has finished its response
+	 */
+	protected void onEndRequest()
+	{
+	}
+
+
 }
