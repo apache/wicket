@@ -26,6 +26,7 @@ import javax.servlet.http.Cookie;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -114,7 +115,7 @@ public abstract class WebRequest extends Request
 	 */
 	public boolean isAjax()
 	{
-		return "true".equalsIgnoreCase(getHeader(HEADER_AJAX)) ||
+		return (Strings.isEmpty(getHeader(HEADER_AJAX)) == false) ||
 			getRequestParameters().getParameterValue(PARAM_AJAX).toBoolean(false);
 	}
 
