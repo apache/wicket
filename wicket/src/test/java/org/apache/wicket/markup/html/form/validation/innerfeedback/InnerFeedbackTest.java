@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.form.validation.innerfeedback;
 
+import java.util.Locale;
+
 import junit.framework.TestCase;
 
 import org.apache.wicket.protocol.http.WebApplication;
@@ -57,6 +59,7 @@ public class InnerFeedbackTest extends TestCase
 
 	public void testInnerFeedback() throws Exception
 	{
+		tester.getSession().setLocale(Locale.ENGLISH);
 		tester.startPage(HomePage.class);
 
 		// page's feedback
