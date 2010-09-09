@@ -15,21 +15,42 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * resource mapper for resources.
+ * mapper to mount resources to a custom mount path
  * <ul>
  * <li>maps indexed parameters to path segments</li>
  * <li>maps named parameters to query string arguments</li>
  * </ul>
+ *
+ * <h4>sample structure of url</h4>
+ *
+ * <pre>
+ *    /articles/images/[indexed-param-0]/[indexed-param-1]?[named-param-1=value]&[named-param-2=value2]
+ * </pre>
+ *
+ * <h4>sample usage</h4>
+ *
+ * in your wicket application's init() method use a statement like this
  * <p/>
- * example url: <code>/articles/images/[indexed-param-0]/[indexed-param-1]?[named_param1=value1&named_param2=value2</code>
+ * <pre>
+ *   getRootRequestMapperAsCompound().add(new ResourceMapper("/images", new ImagesResourceReference()));
+ * </pre>
  *
  * @author Peter Ertl
  */
 public class ResourceMapper extends AbstractMapper implements IRequestMapper
 {
+	// path the resource is bound to
 	private final String[] mountSegments;
+
+	// resource that the mapper links to
 	private final ResourceReference resourceReference;
 
+	/**
+	 * create a resource mapper for a resource
+	 *
+	 * @param path mount path for the resource
+	 * @param resourceReference resource reference that should be linked to the mount path
+	 */
 	public ResourceMapper(String path, ResourceReference resourceReference)
 	{
 		Args.notEmpty(path, "path");
@@ -57,7 +78,6 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 		}
 
 		// now extract the page parameters from the request url
-
 		PageParameters parameters = new PageParameters();
 
 		// extract indexed parameters
