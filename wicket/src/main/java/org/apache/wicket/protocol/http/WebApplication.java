@@ -22,6 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.Application;
@@ -36,6 +37,7 @@ import org.apache.wicket.markup.html.pages.InternalErrorPage;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
 import org.apache.wicket.markup.resolver.AutoLinkResolver;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
@@ -45,6 +47,7 @@ import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.render.PageRenderer;
 import org.apache.wicket.request.handler.render.WebPageRenderer;
 import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.MountedMapper;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.session.HttpSessionStore;
@@ -363,6 +366,22 @@ public abstract class WebApplication extends Application
 		final String filterPath)
 	{
 		return new ServletWebRequest(servletRequest, filterPath);
+	}
+
+	/**
+	 * Creates a WebResponse. Subclasses of WebRequest could e.g. encode wicket's default URL and
+	 * hide the details from the user. A appropriate WebRequest must be implemented and configured
+	 * to decode the encoded URL.
+	 * 
+	 * @param httpServletRequest
+	 * @param httpServletResponse
+	 * @return a WebResponse object
+	 */
+	protected WebResponse newWebResponse(final HttpServletRequest httpServletRequest,
+		final HttpServletResponse httpServletResponse)
+	{
+		return new HeaderBufferingWebResponse(new ServletWebResponse(httpServletRequest,
+			httpServletResponse));
 	}
 
 	/**

@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
@@ -127,8 +126,8 @@ public class WicketFilter implements Filter
 				application.set();
 
 				WebRequest webRequest = application.newWebRequest(httpServletRequest, filterPath);
-				WebResponse webResponse = new HeaderBufferingWebResponse(new ServletWebResponse(
-					httpServletRequest, httpServletResponse));
+				WebResponse webResponse = application.newWebResponse(httpServletRequest,
+					httpServletResponse);
 
 				RequestCycle requestCycle = application.createRequestCycle(webRequest, webResponse);
 				if (!requestCycle.processRequestAndDetach())
