@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.Application;
@@ -34,6 +35,7 @@ import org.apache.wicket.markup.html.pages.AccessDeniedPage;
 import org.apache.wicket.markup.html.pages.InternalErrorPage;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
 import org.apache.wicket.markup.resolver.AutoLinkResolver;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
@@ -346,6 +348,21 @@ public abstract class WebApplication extends Application
 	{
 		// TODO how is this supposed to work :/
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Create a new WebRequest. Subclasses of WebRequest could e.g. decode and obfuscated URL which
+	 * has been encoded by an appropriate WebResponse.
+	 * 
+	 * @param servletRequest
+	 * @param filterPath
+	 *            the filter mapping read from web.xml
+	 * @return a WebRequest object
+	 */
+	protected WebRequest newWebRequest(final HttpServletRequest servletRequest,
+		final String filterPath)
+	{
+		return new ServletWebRequest(servletRequest, filterPath);
 	}
 
 	/**

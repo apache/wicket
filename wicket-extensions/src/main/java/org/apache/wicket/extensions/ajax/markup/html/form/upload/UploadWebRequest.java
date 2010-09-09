@@ -36,8 +36,8 @@ import org.apache.wicket.util.upload.FileUploadException;
  * class MyApplication extends WebApplication {
  * ...
  * 
- * @Override protected WebRequest newWebRequest(HttpServletRequest servletRequest) { return new
- *           UploadWebRequest(servletRequest); } ... } </code>
+ * @Override protected WebRequest newWebRequest(HttpServletRequest servletRequest, String
+ *           filterPath) { return new UploadWebRequest(servletRequest, filterPath); } ... } </code>
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
