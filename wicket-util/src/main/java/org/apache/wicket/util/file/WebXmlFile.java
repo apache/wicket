@@ -52,29 +52,35 @@ public class WebXmlFile
 	/**
 	 * Gets Wicket filter path via FilterConfig
 	 * 
+	 * @param isServlet
+	 *            true if Servlet, false if Filter
 	 * @param filterConfig
 	 * @return Filter path retrieved from "url-pattern". Null if not found or error occured
 	 */
-	public final String getFilterPath(final FilterConfig filterConfig)
+	public final String getFilterPath(final boolean isServlet, final FilterConfig filterConfig)
 	{
-		return getFilterPath(filterConfig.getServletContext(), filterConfig.getFilterName());
+		return getFilterPath(isServlet, filterConfig.getServletContext(),
+			filterConfig.getFilterName());
 	}
 
 	/**
 	 * Gets Wicket filter path via ServletContext and the filter name
 	 * 
+	 * @param isServlet
+	 *            true if Servlet, false if Filter
 	 * @param servletContext
 	 * @param filterName
 	 * @return Filter path retrieved from "url-pattern". Null if not found or error occured
 	 */
-	public final String getFilterPath(final ServletContext servletContext, final String filterName)
+	public final String getFilterPath(final boolean isServlet, final ServletContext servletContext,
+		final String filterName)
 	{
 		InputStream is = servletContext.getResourceAsStream("/WEB-INF/web.xml");
 		if (is != null)
 		{
 			try
 			{
-				return getFilterPath(filterName, is);
+				return getFilterPath(isServlet, filterName, is);
 			}
 			catch (ParserConfigurationException ex)
 			{
@@ -124,6 +130,8 @@ public class WebXmlFile
 	 * </code>
 	 * </pre>
 	 * 
+	 * @param isServlet
+	 *            true if Servlet, false if Filter
 	 * @param filterName
 	 * @param is
 	 *            The web.xml file
@@ -132,17 +140,31 @@ public class WebXmlFile
 	 * @throws IOException
 	 * @throws SAXException
 	 */
-	public final String getFilterPath(final String filterName, final InputStream is)
-		throws ParserConfigurationException, SAXException, IOException
+	public final String getFilterPath(final boolean isServlet, final String filterName,
+		final InputStream is) throws ParserConfigurationException, SAXException, IOException
 	{
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document document = builder.parse(is);
 
-		String mapping = "filter-mapping";
-		String name = "filter-name";
+		String tag = (isServlet ? "servlet" : "filter");
+		String mapping = tag + "-mapping";
+		String name = tag + "-name";
 
 		String urlPattern = getFilterPath(filterName, mapping, name, document.getChildNodes());
+		if (urlPattern == null)
+		{
+			if (log.isWarnEnabled())
+			{
+				log.warn("web.xml: No url-pattern found for " + tag + " with name " + filterName);
+			}
+			return null;
+		}
+		else if (log.isInfoEnabled())
+		{
+			log.info("web.xml: found " + tag + " with name " + filterName + ". url-pattern=" +
+				urlPattern);
+		}
 
 		// remove leading "/" and trailing "*"
 		return urlPattern.substring(1, urlPattern.length() - 1);

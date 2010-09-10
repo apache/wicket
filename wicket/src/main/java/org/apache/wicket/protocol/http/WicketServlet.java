@@ -162,7 +162,12 @@ public class WicketServlet extends HttpServlet
 		}
 	}
 
-	private static String getURL(HttpServletRequest httpServletRequest)
+	/**
+	 * 
+	 * @param httpServletRequest
+	 * @return URL
+	 */
+	private static String getURL(final HttpServletRequest httpServletRequest)
 	{
 		/*
 		 * Servlet 2.3 specification :
@@ -183,8 +188,7 @@ public class WicketServlet extends HttpServlet
 			url += pathInfo;
 		}
 
-		final String queryString = httpServletRequest.getQueryString();
-
+		String queryString = httpServletRequest.getQueryString();
 		if (queryString != null)
 		{
 			url += ("?" + queryString);
@@ -199,7 +203,13 @@ public class WicketServlet extends HttpServlet
 		return url;
 	}
 
-	private void fallback(HttpServletRequest request, HttpServletResponse response)
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	private void fallback(final HttpServletRequest request, final HttpServletResponse response)
 		throws IOException
 	{
 		// The ServletWebRequest is created here to avoid code duplication. The getURL call doesn't
@@ -251,7 +261,7 @@ public class WicketServlet extends HttpServlet
 	public void init() throws ServletException
 	{
 		wicketFilter = newWicketFilter();
-		wicketFilter.init(new FilterConfig()
+		wicketFilter.init(true, new FilterConfig()
 		{
 			/**
 			 * @see javax.servlet.FilterConfig#getServletContext()
@@ -273,12 +283,8 @@ public class WicketServlet extends HttpServlet
 			/**
 			 * @see javax.servlet.FilterConfig#getInitParameter(java.lang.String)
 			 */
-			public String getInitParameter(String name)
+			public String getInitParameter(final String name)
 			{
-				if (WicketFilter.FILTER_MAPPING_PARAM.equals(name))
-				{
-					return WicketFilter.SERVLET_PATH_HOLDER;
-				}
 				return WicketServlet.this.getInitParameter(name);
 			}
 
@@ -309,5 +315,4 @@ public class WicketServlet extends HttpServlet
 		wicketFilter.destroy();
 		wicketFilter = null;
 	}
-
 }

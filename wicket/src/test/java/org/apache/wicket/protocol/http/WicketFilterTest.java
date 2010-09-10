@@ -143,7 +143,7 @@ public class WicketFilterTest extends TestCase
 	{
 		try
 		{
-			return new WebXmlFile().getFilterPath(string, in);
+			return new WebXmlFile().getFilterPath(false, string, in);
 		}
 		catch (ParserConfigurationException ex)
 		{

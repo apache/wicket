@@ -707,18 +707,18 @@
 		  <param-value>org.apache.wicket.examples.events.EventsApplication</param-value>
 		</init-param>
 	</filter>
+	
 	<filter-mapping>
 		<filter-name>EventsApplication</filter-name>
         <url-pattern>/events/*</url-pattern>
 	</filter-mapping>
 
-
-
-
+	<!-- LISTENER -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 
+	<!-- SERVLET -->
 	<servlet>
 		<servlet-name>HelloWorldServlet</servlet-name>
 		<servlet-class>org.apache.wicket.examples.HelloWorldServlet</servlet-class>
@@ -728,6 +728,22 @@
 		<servlet-name>HelloWorldServlet</servlet-name>
 		<url-pattern>/helloworldservlet/*</url-pattern>
 	</servlet-mapping>
+
+	<servlet>
+   		<servlet-name>ServletTest</servlet-name>
+   		<servlet-class>org.apache.wicket.protocol.http.WicketServlet</servlet-class>
+   		<init-param>
+     		<param-name>applicationClassName</param-name>
+     		<param-value>org.apache.wicket.examples.helloworld.HelloWorldApplication</param-value>
+   		</init-param>
+   		<load-on-startup>0</load-on-startup>
+ 	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>ServletTest</servlet-name>
+		<url-pattern>/servlettest/*</url-pattern>
+	</servlet-mapping>
+
 
 	<session-config>
 		<session-timeout>5</session-timeout>

@@ -143,10 +143,11 @@ public class ReloadingWicketFilter extends WicketFilter
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.WicketFilter#init(javax.servlet.FilterConfig)
+	 * @see org.apache.wicket.protocol.http.WicketFilter#init(boolean, javax.servlet.FilterConfig)
 	 */
 	@Override
-	public void init(final FilterConfig filterConfig) throws ServletException
+	public void init(final boolean isServlet, final FilterConfig filterConfig)
+		throws ServletException
 	{
 		reloadingClassLoader.setListener(new IChangeListener()
 		{
@@ -172,6 +173,6 @@ public class ReloadingWicketFilter extends WicketFilter
 			}
 		});
 
-		super.init(filterConfig);
+		super.init(isServlet, filterConfig);
 	}
 }

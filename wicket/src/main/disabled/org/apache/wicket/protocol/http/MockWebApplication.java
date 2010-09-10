@@ -37,6 +37,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.pages.ExceptionErrorPage;
+import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.request.WebErrorCodeResponseHandler;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.request.target.coding.WebRequestEncoder;
@@ -172,7 +173,6 @@ public class MockWebApplication
 		{
 			filter.init(new FilterConfig()
 			{
-
 				public ServletContext getServletContext()
 				{
 					return context;
@@ -185,12 +185,6 @@ public class MockWebApplication
 
 				public String getInitParameter(String name)
 				{
-					if (name.equals(WicketFilter.FILTER_MAPPING_PARAM))
-					{
-						return WicketFilter.SERVLET_PATH_HOLDER;
-						// return "/" + MockWebApplication.this.getName() +
-						// "/*";
-					}
 					return null;
 				}
 
