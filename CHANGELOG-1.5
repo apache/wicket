@@ -1,4 +1,129 @@
-This file contains all changes done on the 1.4 version.
+This file contains all changes done on the 1.5 version.
+
+
+Release Notes - Wicket - Version 1.5-M2
+
+** Sub-task
+    * [WICKET-777] - See what needs to be done in abstractpageableview
+    * [WICKET-3016] - Port to 1.5
+    * [WICKET-3028] - remove obsoleted way of achieving this
+
+** Bug
+    * [WICKET-830] - FindBugs static alalyser shows many coding issues/errors
+    * [WICKET-945] - WicketTester requiring itself to be serializable
+    * [WICKET-1094] - Values over-escaped by FormTester
+    * [WICKET-1185] - Wrong message / parse error: "Expected close tag for <span wicket:id="column0">"
+    * [WICKET-1448] - SubmitLink bypass jquery submit eventhandler
+    * [WICKET-1456] - ImageMap blocks Image functionality
+    * [WICKET-1727] - Prepending JS in AjaxRequestTarget via listener is unusable
+    * [WICKET-1733] - WicketTester doesn't include form submitting component id in form submissions
+    * [WICKET-1928] - Enter key submits form in AjaxEditableMultiLineLabel on Safari
+    * [WICKET-1947] - rc1 generics - LabelTree
+    * [WICKET-1949] - rc1 generics - BaseTree
+    * [WICKET-1985] - AbstractTree breaks on multiple tree model events in the same request
+    * [WICKET-2010] - InspectorPage doesn't show component tree
+    * [WICKET-2115] - Make Component. 'protected List<IBehavior> getBehaviors(Class<? extends IBehavior>' public
+    * [WICKET-2150] - Wizard executes onSubmit() of wrong nested form
+    * [WICKET-2254] - ModalWindow size may exceed browser viewport making it impossible to close
+    * [WICKET-2262] - The starting of the ajax indicator don't respect AbstractDefaultAjaxBehavior preconditionScript
+    * [WICKET-2265] - Drop AbstractHeaderContributor and friends
+    * [WICKET-2324] - ModalWindow iframe CSS to wide
+    * [WICKET-2401] - AJAX indicator turns off when calls overlap
+    * [WICKET-2514] - Encoding issue with wicket Ajax POST form processing 
+    * [WICKET-2557] - Component.urlFor( ILinkListener.INTERFACE ) + various url coding strategies produce errorneus behavior
+    * [WICKET-2676] - DataTable defines newCellItem to take IModel<T> but should really do IModel<IColumn<T>>
+    * [WICKET-2691] - Apply fixes from the named issues to 1.5 when API stabalizes
+    * [WICKET-2728] - Location headers (redirects) should be absolute, not relative URLs
+    * [WICKET-2739] - Throttling breaks AjaxFormSubmitBehavior's precondition check
+    * [WICKET-2765] - MarkupException on unclosed <col> tag
+    * [WICKET-2774] - Form#onSubmit() not called in StatlessForm on pages mounted using WebPage#mountBookmarkablePage(String, Class)
+    * [WICKET-2783] - FormTester.submit does not work with AjaxButtons
+    * [WICKET-2794] - Not all exceptions are properly handled by the WicketFilter -> results in empty response document with unset status code -> seen as HTTP_OK by client
+    * [WICKET-2807] - AjaxSubmitLink not calling the onsubmit event handler
+    * [WICKET-2828] - IndexOutOfBoundsException is thrown in onBeforeRender when tabs is empty.
+    * [WICKET-2848] - Rename yahoo-dom-event folder to something else
+    * [WICKET-2849] - FormComponent.add(IValidator<T>) should probably accept IValidator<? super T>
+    * [WICKET-2850] - Wicket DateTimeField / DatePicker creates a memory leak on the browser when rerenderd using ajax requests
+    * [WICKET-2851] - Ajax responses do not update DOM correctly on Opera
+    * [WICKET-2852] - Palette nested in a ListView results in a NPE when an error feedback is logged when submitting form
+    * [WICKET-2854] - 'this.document' is null or not an object after quickly opening and closing a modal window (modal.js)
+    * [WICKET-2863] - MockHttpServletResponse does not save Session cookies (maxAge = -1)
+    * [WICKET-2886] - Tree doesn't update correctly
+    * [WICKET-2905] - Select.isSelected fails when Wicket application is using REDIRECT_TO_RENDER render strategy.
+    * [WICKET-2911] - continueToOriginalDestination does not work with mountBookmarkablePage and AjaxLink
+    * [WICKET-2919] - inconsistency in property expression when using . for self reference
+    * [WICKET-2931] - Form#getMaxSize - unsupported in the inner forms
+    * [WICKET-2932] - Modal window titles need to be marked up as such, for accessibility
+    * [WICKET-2933] - Form.MULTIPART_HINT is not cleared correctly with nested forms
+    * [WICKET-2934] - FormTester creates parameters in mock request even for disabled form components
+    * [WICKET-2935] - FormComponent#inputChanged does not properly check enabled/disabled status of the component
+    * [WICKET-2941] - DatePicker fail with "firstDate is undefined" when an out of range date is written in the textfield
+    * [WICKET-2944] - Application addRenderHeadListener causing error 
+    * [WICKET-2957] - Closing ModalWindow makes some form fields unclickable
+    * [WICKET-2958] - Success handler not called when redirecting with Ajax
+    * [WICKET-2972] - Some RepeaterView examples are not working
+    * [WICKET-2974] - IFeedback that is child of IFeedback gets added to the FEEDBACK_LIST too late
+    * [WICKET-2977] - AutoComplete onfocus behavior only working on last autocomplete field
+    * [WICKET-2984] - Wicket Quickstart not working
+    * [WICKET-2985] - DropDownChoice onSelectionChanged with setResponsePage causes weird exceptions
+    * [WICKET-2988] - Ajax requests increment page version when they should not
+    * [WICKET-2989] - Add IRequestMapper that can mount all pages in a package
+    * [WICKET-2993] - ClassCastException when requesting for non-page class 
+    * [WICKET-2994] - Wicket 1.5M1 tarball is incomplete
+    * [WICKET-2996] - if-modified-since checking is not working in AbstractResource
+    * [WICKET-3001] - AjaxRequestTarget.get returns null within AjaxLink#onClick
+    * [WICKET-3004] - Using RedirectPolicy.NEVER_REDIRECT when redirecting to a page will break URLs
+    * [WICKET-3005] - wicket should keep the url of a page that caused a runtime error
+    * [WICKET-3006] - redeploy in jetty 7 fails
+    * [WICKET-3013] - org.apache.wicket.request.Url.QueryParameter is not Serializable
+    * [WICKET-3014] - unable to launch StartExamples from IDEA (eventually other IDE's as well)
+    * [WICKET-3018] - CheckGroupSelector ignores disabled-state in Check
+    * [WICKET-3022] - All exceptions are handled by RequestCycle and no longer "visible" to WicketTester
+    * [WICKET-3024] - HttpsRequestChecker inadvertently instantiates page when checking for annotation
+    * [WICKET-3025] - DateTextField converter does not honor current locale
+    * [WICKET-3027] - set Content-Type for package resources
+    * [WICKET-3031] - Problem with date headers on error pages
+    * [WICKET-3033] - Stack Overflow in getBeanDefinition()'s of SpringBeanLocator and AnnotProxyFieldValueFactory
+    * [WICKET-3035] - there's something wrong with wicket's BaseTree (or with ajax support)
+    * [WICKET-3038] - Return the possibility to create custom WebRequest/WebResponse per Application
+
+** Improvement
+    * [WICKET-563] - Let Application create error pages
+    * [WICKET-776] - need to distinguish between statechange and hierarchychange
+    * [WICKET-822] - add CPU information to WebClientInfo (or ClientProperties)
+    * [WICKET-1620] - Portlet 2.0 support
+    * [WICKET-1936] - Client-Side Image Map
+    * [WICKET-2947] - IPropertyReflectionAwareModel should extend IModel<T>
+    * [WICKET-2964] - Improve the code that uses copy-list-on-iterate pattern 
+    * [WICKET-2978] - Usage of SimpleFormComponentLabel in FormInput example
+    * [WICKET-2981] - Remove HeaderContributor and friends in favor of IHeaderContributor
+    * [WICKET-2982] - IAjaxCallDecorator should receive Component as context
+    * [WICKET-2983] - Make Component and IBehavior directly implement IHeaderContributor to make things simpler
+    * [WICKET-3003] - Form.delegateSubmit: invoke onSubmit() of nested Forms before onSubmit() of enclosing Form
+    * [WICKET-3019] - Add getPath to MarkupExceptions to aid in locatin affected components
+    * [WICKET-3021] - Add timestamp part to resource filenames for better caching
+    * [WICKET-3029] - PageParameters api too verbose, needs to be optimized
+
+** New Feature
+    * [WICKET-206] - Default page map is null, should be set to something more usable
+    * [WICKET-537] - AjaxForm needed for full featured handling
+    * [WICKET-1134] - Multiple abstract/implement tags instead of child/extend
+    * [WICKET-1312] - Generic inter-component event mechanism
+
+
+
+
+
+** Task
+    * [WICKET-1082] - Check for concurrent access to HashMaps and other data structures
+    * [WICKET-2976] - Remove support for portlets from Wicket 1.5
+
+
+
+** Wish
+    * [WICKET-1883] - Refactor some constants in WebRequestCodingStrategy
+    * [WICKET-2967] - org.apache.wicket.util.value.Count: add decrement method
+
 
 
 Release Notes - Wicket - Version 1.5-M1
