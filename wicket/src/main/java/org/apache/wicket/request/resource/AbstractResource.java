@@ -36,7 +36,7 @@ import org.apache.wicket.util.lang.Args;
 /**
  * Convenience resource implementation. The subclass must implement
  * {@link #newResourceResponse(org.apache.wicket.request.resource.IResource.Attributes)} method.
- *
+ * 
  * @author Matej Knopp
  */
 public abstract class AbstractResource implements IResource
@@ -54,15 +54,16 @@ public abstract class AbstractResource implements IResource
 
 	/**
 	 * Override this method to return a {@link ResourceResponse} for the request.
-	 *
-	 * @param attributes request attributes
+	 * 
+	 * @param attributes
+	 *            request attributes
 	 * @return resource data instance
 	 */
 	protected abstract ResourceResponse newResourceResponse(Attributes attributes);
 
 	/**
 	 * Represents data used to configure response and write resource data.
-	 *
+	 * 
 	 * @author Matej Knopp
 	 */
 	public static class ResourceResponse
@@ -90,8 +91,9 @@ public abstract class AbstractResource implements IResource
 		/**
 		 * Sets the error code for resource. If there is an error code set the data will not be
 		 * rendered and the code will be sent to client.
-		 *
-		 * @param errorCode error code
+		 * 
+		 * @param errorCode
+		 *            error code
 		 */
 		public void setError(Integer errorCode)
 		{
@@ -101,8 +103,9 @@ public abstract class AbstractResource implements IResource
 		/**
 		 * Sets the error code and message for resource. If there is an error code set the data will
 		 * not be rendered and the code and message will be sent to client.
-		 *
-		 * @param errorCode error code
+		 * 
+		 * @param errorCode
+		 *            error code
 		 * @param errorMessage
 		 *            error message
 		 */
@@ -130,8 +133,9 @@ public abstract class AbstractResource implements IResource
 
 		/**
 		 * Sets the file name of the resource.
-		 *
-		 * @param fileName file name
+		 * 
+		 * @param fileName
+		 *            file name
 		 */
 		public void setFileName(String fileName)
 		{
@@ -148,10 +152,11 @@ public abstract class AbstractResource implements IResource
 
 		/**
 		 * Determines whether the resource will be inline or an attachment.
-		 *
+		 * 
 		 * @see ContentDisposition
-		 *
-		 * @param contentDisposition content disposition (attachment or inline)
+		 * 
+		 * @param contentDisposition
+		 *            content disposition (attachment or inline)
 		 */
 		public void setContentDisposition(ContentDisposition contentDisposition)
 		{
@@ -170,8 +175,9 @@ public abstract class AbstractResource implements IResource
 		/**
 		 * Sets the content type for the resource. If no content type is set it will be determined
 		 * by the extension.
-		 *
-		 * @param contentType content type (also known as mime type)
+		 * 
+		 * @param contentType
+		 *            content type (also known as mime type)
 		 */
 		public void setContentType(String contentType)
 		{
@@ -193,8 +199,9 @@ public abstract class AbstractResource implements IResource
 		/**
 		 * Sets the text encoding for the resource. The encoding is only used if the content type
 		 * indicates a textual resource.
-		 *
-		 * @param textEncoding character encoding of text body
+		 * 
+		 * @param textEncoding
+		 *            character encoding of text body
 		 */
 		public void setTextEncoding(String textEncoding)
 		{
@@ -212,8 +219,9 @@ public abstract class AbstractResource implements IResource
 		/**
 		 * Sets the content length (in bytes) of the data. Content length is optional but it's
 		 * recommended to set it so that the browser can show download progress.
-		 *
-		 * @param contentLength length of response body
+		 * 
+		 * @param contentLength
+		 *            length of response body
 		 */
 		public void setContentLength(long contentLength)
 		{
@@ -233,8 +241,9 @@ public abstract class AbstractResource implements IResource
 		 * recommended to set the date. If the date is set properly Wicket can check the
 		 * <code>If-Modified-Since</code> to determine if the actuall data really needs to be sent
 		 * to client.
-		 *
-		 * @param lastModified last modification date
+		 * 
+		 * @param lastModified
+		 *            last modification date
 		 */
 		public void setLastModified(Date lastModified)
 		{
@@ -253,8 +262,9 @@ public abstract class AbstractResource implements IResource
 		 * Check to determine if the resource data needs to be written. This method checks the
 		 * <code>If-Modified-Since</code> request header and compares it to lastModified property.
 		 * In order for this method to work {@link #setLastModified(Date)} has to be called first.
-		 *
-		 * @param attributes request attributes
+		 * 
+		 * @param attributes
+		 *            request attributes
 		 * @return <code>true</code> if the resource data does need to be written,
 		 *         <code>false</code> otherwise.
 		 */
@@ -284,10 +294,11 @@ public abstract class AbstractResource implements IResource
 		/**
 		 * Cachable resources are cached on client. This flag affects the <code>Expires</code> and
 		 * <code>Cache-Control</code> headers.
-		 *
+		 * 
 		 * @see #setCacheDuration(long)
-		 *
-		 * @param cacheable resource may be cached (true/false)
+		 * 
+		 * @param cacheable
+		 *            resource may be cached (true/false)
 		 */
 		public void setCacheable(boolean cacheable)
 		{
@@ -305,8 +316,9 @@ public abstract class AbstractResource implements IResource
 		/**
 		 * Sets the duration for which this resource should be cached on client (in seconds). #see
 		 * {@link IResourceSettings#setDefaultCacheDuration(int)}
-		 *
-		 * @param cacheDuration caching duration in seconds
+		 * 
+		 * @param cacheDuration
+		 *            caching duration in seconds
 		 */
 		public void setCacheDuration(long cacheDuration)
 		{
@@ -326,10 +338,11 @@ public abstract class AbstractResource implements IResource
 		 * data.
 		 * <p>
 		 * It is necessary to set the {@link WriteCallback} if
-		 * {@link #dataNeedsToBeWritten(org.apache.wicket.request.resource.IResource.Attributes)} returns
-		 * <code>true</code> and {@link #setError(Integer)} has not been called.
-		 *
-		 * @param writeCallback write callback
+		 * {@link #dataNeedsToBeWritten(org.apache.wicket.request.resource.IResource.Attributes)}
+		 * returns <code>true</code> and {@link #setError(Integer)} has not been called.
+		 * 
+		 * @param writeCallback
+		 *            write callback
 		 */
 		public void setWriteCallback(final WriteCallback writeCallback)
 		{
@@ -348,11 +361,15 @@ public abstract class AbstractResource implements IResource
 
 	/**
 	 * Configure the web response header for client cache control.
-	 *
-	 * @param request web request
-	 * @param response web response
-	 * @param data resource data
-	 * @param attributes request attributes
+	 * 
+	 * @param request
+	 *            web request
+	 * @param response
+	 *            web response
+	 * @param data
+	 *            resource data
+	 * @param attributes
+	 *            request attributes
 	 */
 	protected void configureCache(final WebRequest request, final WebResponse response,
 		final ResourceResponse data, final Attributes attributes)
@@ -381,7 +398,7 @@ public abstract class AbstractResource implements IResource
 	}
 
 	/**
-	 *
+	 * 
 	 * @see org.apache.wicket.request.resource.IResource#respond(org.apache.wicket.request.resource.IResource.Attributes)
 	 */
 	public final void respond(final Attributes attributes)
@@ -472,24 +489,28 @@ public abstract class AbstractResource implements IResource
 
 	/**
 	 * Callback invoked when resource data needs to be written to response. Subclass needs to
-	 * implement the {@link #writeData(org.apache.wicket.request.resource.IResource.Attributes)} method.
-	 *
+	 * implement the {@link #writeData(org.apache.wicket.request.resource.IResource.Attributes)}
+	 * method.
+	 * 
 	 * @author Matej Knopp
 	 */
 	public static abstract class WriteCallback
 	{
 		/**
 		 * Write the resource data to response.
-		 *
-		 * @param attributes request attributes
+		 * 
+		 * @param attributes
+		 *            request attributes
 		 */
 		public abstract void writeData(Attributes attributes);
 
 		/**
 		 * Convenience method to write an {@link InputStream} to response.
-		 *
-		 * @param attributes request attributes
-		 * @param stream input stream
+		 * 
+		 * @param attributes
+		 *            request attributes
+		 * @param stream
+		 *            input stream
 		 */
 		protected final void writeStream(Attributes attributes, InputStream stream)
 		{
