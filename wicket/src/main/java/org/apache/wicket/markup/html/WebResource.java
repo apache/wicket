@@ -82,9 +82,6 @@ public abstract class WebResource extends Resource
 	}
 
 	/**
-	 * default implementation is to cache resources for 1 hour. can be overridden by extension
-	 * classes.
-	 * 
 	 * @return The cache duration in seconds
 	 * @TODO change to long in 1.5
 	 */
