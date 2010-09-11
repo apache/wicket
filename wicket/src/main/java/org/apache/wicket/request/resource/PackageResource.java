@@ -23,7 +23,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
-import org.apache.wicket.protocol.http.RequestUtils;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.lang.WicketObjects;
@@ -212,7 +212,7 @@ public class PackageResource extends AbstractResource
 		if(Application.get().getResourceSettings().getUseTimestampOnResources())
 		{
 			resourceResponse.setCacheDurationToMaximum();
-			resourceResponse.setCachePublic(true);
+			resourceResponse.setCacheScope(WebResponse.CacheScope.PUBLIC);
 		}
 
 		return resourceResponse;

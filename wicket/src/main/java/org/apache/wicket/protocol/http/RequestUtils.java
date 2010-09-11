@@ -312,7 +312,7 @@ public final class RequestUtils
 	 *
 	 * @see RequestUtils#MAX_CACHE_DURATION
 	 */
-	public static void enableCaching(WebResponse response, Duration duration, boolean cachePublic)
+	public static void enableCaching(WebResponse response, Duration duration, WebResponse.CacheScope scope)
 	{
 		Args.notNull(duration, "duration");
 		Args.notNull(response, "response");
@@ -330,11 +330,8 @@ public final class RequestUtils
 		// Time for cache expiry = now + duration
 		response.setDateHeader("Expires", now + duration.getMilliseconds());
 
-		// Set caching scope
-		String scope = cachePublic ? "public" : "private";
-
 		// Enable caching and set max age
-		response.setHeader("Cache-Control", scope + ", max-age=" + duration.getMilliseconds());
+		response.setHeader("Cache-Control", scope.getCacheControl() + ", max-age=" + duration.getMilliseconds());
 
 		// Let caches distinguish between compressed and uncompressed
 		// versions of the resource so they can serve them properly

@@ -77,7 +77,7 @@ public abstract class AbstractResource implements IResource
 		private Date lastModified = null;
 		private WriteCallback writeCallback;
 		private Duration cacheDuration;
-		private boolean cachePublic;
+		private WebResponse.CacheScope cacheScope;
 
 		/**
 		 * Construct.
@@ -89,7 +89,7 @@ public abstract class AbstractResource implements IResource
 			// set caching on public caches to false. this behavior is similar to wicket 1.4
 			// setting it to [true] seems to be sexy but could potentially cache confidential
 			// data on public proxies for users migrating to 1.5
-			cachePublic = false;
+			cacheScope = WebResponse.CacheScope.PRIVATE;
 		}
 
 		/**
@@ -340,11 +340,11 @@ public abstract class AbstractResource implements IResource
 		 * @return <code>true</code> if public caches are allowed to cache the resource
 		 *
 		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#getCacheDuration()
-		 * @see org.apache.wicket.protocol.http.RequestUtils#enableCaching(org.apache.wicket.request.http.WebResponse, org.apache.wicket.util.time.Duration, boolean)
+		 * @see org.apache.wicket.protocol.http.RequestUtils#enableCaching(org.apache.wicket.request.http.WebResponse, org.apache.wicket.util.time.Duration, org.apache.wicket.request.http.WebResponse.CacheScope)
 		 */
-		public boolean isCachePublic()
+		public WebResponse.CacheScope getCacheScope()
 		{
-			return cachePublic;
+			return cacheScope;
 		}
 
 		/**
@@ -352,15 +352,15 @@ public abstract class AbstractResource implements IResource
 		 * <p/>
 		 * resources are only cached at all if the cache duration for the response is > 0.
 		 *
-		 * @param cachePublic
+		 * @param cacheScope
 		 *             if <code>true</code> public caches are allowed to cache the resource
 		 *
 		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#getCacheDuration()
-		 * @see org.apache.wicket.protocol.http.RequestUtils#enableCaching(org.apache.wicket.request.http.WebResponse, org.apache.wicket.util.time.Duration, boolean)
+		 * @see org.apache.wicket.protocol.http.RequestUtils#enableCaching(org.apache.wicket.request.http.WebResponse, org.apache.wicket.util.time.Duration, org.apache.wicket.request.http.WebResponse.CacheScope)
 		 */
-		public void setCachePublic(boolean cachePublic)
+		public void setCacheScope(WebResponse.CacheScope cacheScope)
 		{
-			this.cachePublic = cachePublic;
+			this.cacheScope = cacheScope;
 		}
 
 		/**
@@ -408,7 +408,7 @@ public abstract class AbstractResource implements IResource
 
 		if(duration.compareTo(Duration.NONE) > 0)
 		{
-			RequestUtils.enableCaching(response, duration, data.isCachePublic());
+			RequestUtils.enableCaching(response, duration, data.getCacheScope());
 		}
 		else
 		{

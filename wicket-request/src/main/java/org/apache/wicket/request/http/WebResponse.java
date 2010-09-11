@@ -155,4 +155,26 @@ public abstract class WebResponse extends Response
 	 * Flushes the response.
 	 */
 	public abstract void flush();
+
+	/**
+	 * scope for cache entries when caching is enabled
+	 */
+	public enum CacheScope
+	{
+		PUBLIC("public"),
+		PRIVATE("private");
+
+		// value for Cache-Control header
+		private final String cacheControl;
+
+		CacheScope(String cacheControl)
+		{
+			this.cacheControl = cacheControl;
+		}
+
+		public String getCacheControl()
+		{
+			return cacheControl;
+		}
+	}
 }
