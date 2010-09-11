@@ -66,7 +66,7 @@ public final class EmptyAjaxRequestHandler implements IRequestHandler
 		response.setContentType("text/xml; charset=" + encoding);
 
 		// Make sure it is not cached by a client
-		RequestUtils.disableCaching(response);
+		response.disableCaching();
 
 		response.write("<?xml version=\"1.0\" encoding=\"");
 		response.write(encoding);

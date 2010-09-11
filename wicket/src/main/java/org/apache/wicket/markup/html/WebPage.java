@@ -211,7 +211,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 */
 	protected void setHeaders(WebResponse response)
 	{
-		RequestUtils.disableCaching(response);
+		response.disableCaching();
 	}
 
 	/**

@@ -26,9 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.wicket.Application;
 import org.apache.wicket.request.UrlDecoder;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
 
@@ -37,9 +35,6 @@ import org.apache.wicket.util.time.Duration;
  */
 public final class RequestUtils
 {
-	 // one year, maximum recommended cache duration in RFC-2616
-	public static final Duration MAX_CACHE_DURATION = Duration.days(365);
-
 	/**
 	 * Decode the provided queryString as a series of key/ value pairs and set them in the provided
 	 * value map.
@@ -248,93 +243,5 @@ public final class RequestUtils
 			charsetName = "UTF-8";
 		}
 		return Charset.forName(charsetName);
-	}
-
-	/**
-	 * set all required headers to disable caching
-	 * <p/>
-	 * the following headers are set:
-	 * <ul>
-	 * <li>"Pragma" is set for older browsers only supporting HTTP 1.0.</li>
-	 * <li>"Cache-Control" is set for modern browsers that support HTTP 1.1.</li>
-	 * <li>"Expires" additionally sets the content expiry in the past which effectively prohibits caching</li>
-	 * <li>"Date" is recommended in general</li>
-	 * </ul>
-	 *
-	 * @param response web response
-	 */
-	public static void disableCaching(WebResponse response)
-	{
-		Args.notNull(response, "response");
-		response.setDateHeader("Date", System.currentTimeMillis());
-		response.setDateHeader("Expires", 0);
-		response.setHeader("Pragma", "no-cache");
-		response.setHeader("Cache-Control", "no-cache, no-store");
-	}
-
-	/**
-	 * enable caching for the given response
-	 * <p/>
-	 * The [duration] is the maximum time in seconds until the response is invalidated from the cache. The
-	 * maximum duration should not exceed one year, based on
-	 * <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html">RFC-2616</a>.
-	 * <p/>
-	 * The [cachePublic] flag will let you control if the response may be cached
-	 * by public caches or just by the client itself. This sets the http response header
-	 *
-	 * <ul>
-	 * <li><code>[Cache-Control: public]</code> if <code>cachePublic = true</code></li>
-	 * <li><code>[Cache-Control: private]</code> if <code>cachePublic = false</code></li>
-	 * </ul>
-	 * <p/>
-	 * Details on <code>Cache-Control</code> header can be found
-	 *  <a href="http://palisade.plynt.com/issues/2008Jul/cache-control-attributes">here</a>
-	 * or in <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html">RFC-2616</a>.
-	 * <p/>
-	 * Choose <code>cachePublic = false</code> wisely since setting <code>Cache-Control: private</code>
-	 * may cause trouble with some versions of Firefox which will not cache SSL content at all. More details
-	 * on this Firefox issue can be found <a href="http://blog.pluron.com/2008/07/why-you-should.html">here</a>.
-	 * <p/>
-	 * Never set <code>cachePublic=true</code> when the response is confidential or client-specific. You
-	 * don't want to see your sensitive private data on some public proxy.
-	 * <p/>
-	 * Unless the response really is confidential / top-secret or client-specific the general advice is
-	 * to always prefer <code>cachePublic=true</code> for best network performance.
-	 *
-	 * @param response
-	 *            response that should be cacheable
-	 * @param duration
-	 *            duration in seconds that the response may be cached
-	 *            (Integer.MAX_VALUE will select maximum duration based on RFC-2616)
-	 * @param cachePublic
-	 *            If <code>true</code> all caches are allowed to cache the response.
-	 *            If <code>false</code> only the client may cache the response (if at all).
-	 *
-	 * @see RequestUtils#MAX_CACHE_DURATION
-	 */
-	public static void enableCaching(WebResponse response, Duration duration, WebResponse.CacheScope scope)
-	{
-		Args.notNull(duration, "duration");
-		Args.notNull(response, "response");
-
-		// do not exceed the maximum recommended value from RFC-2616
-		if(duration.compareTo(MAX_CACHE_DURATION) > 0)
-			duration = MAX_CACHE_DURATION;
-
-		// Get current time
-		long now = System.currentTimeMillis();
-
-		// Time of message generation
-		response.setDateHeader("Date", now);
-
-		// Time for cache expiry = now + duration
-		response.setDateHeader("Expires", now + duration.getMilliseconds());
-
-		// Enable caching and set max age
-		response.setHeader("Cache-Control", scope.getCacheControl() + ", max-age=" + duration.getMilliseconds());
-
-		// Let caches distinguish between compressed and uncompressed
-		// versions of the resource so they can serve them properly
-		response.setHeader("Vary", "Accept-Encoding");
 	}
 }

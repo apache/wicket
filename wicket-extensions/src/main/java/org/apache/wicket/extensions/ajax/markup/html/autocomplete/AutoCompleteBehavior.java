@@ -110,7 +110,7 @@ public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavi
 					.getResponseRequestEncoding();
 				r.setContentType("text/xml; charset=" + encoding);
 
-				RequestUtils.disableCaching(r);
+				r.disableCaching();
 
 				Iterator<T> comps = getChoices(val);
 				renderer.renderHeader(r);

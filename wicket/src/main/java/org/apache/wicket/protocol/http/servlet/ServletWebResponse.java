@@ -239,7 +239,7 @@ public class ServletWebResponse extends WebResponse
 			// usually highly dynamic and can not be statically mapped
 			// to a request url in general
 			if (cacheable == false)
-				RequestUtils.disableCaching(this);
+				this.disableCaching();
 
 			httpServletResponse.sendRedirect(url);
 		}
