@@ -40,6 +40,7 @@ import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.image.NonCachingImage;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
@@ -391,7 +392,7 @@ public class KittenCaptchaPanel extends Panel
 		protected void configureResponse(ResourceResponse response, Attributes attributes)
 		{
 			super.configureResponse(response, attributes);
-			response.setCacheable(false);
+			response.setCacheDuration(RequestUtils.MAX_CACHE_DURATION);
 		}
 
 		/**

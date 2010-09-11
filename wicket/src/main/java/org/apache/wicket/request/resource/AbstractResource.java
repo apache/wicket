@@ -292,31 +292,9 @@ public abstract class AbstractResource implements IResource
 		}
 
 		/**
-		 * Cachable resources are cached on client. This flag affects the <code>Expires</code> and
-		 * <code>Cache-Control</code> headers.
-		 * 
-		 * @see #setCacheDuration(long)
-		 * 
-		 * @param cacheable
-		 *            resource may be cached (true/false)
-		 */
-		public void setCacheable(boolean cacheable)
-		{
-			this.cacheable = cacheable;
-		}
-
-		/**
-		 * @return returns whether this resource is cacheable
-		 */
-		public boolean isCacheable()
-		{
-			return cacheable;
-		}
-
-		/**
 		 * Sets the duration for which this resource should be cached on client (in seconds). #see
 		 * {@link IResourceSettings#setDefaultCacheDuration(int)}
-		 * 
+		 *
 		 * @param cacheDuration
 		 *            caching duration in seconds
 		 */
@@ -374,22 +352,11 @@ public abstract class AbstractResource implements IResource
 	protected void configureCache(final WebRequest request, final WebResponse response,
 		final ResourceResponse data, final Attributes attributes)
 	{
-		if (data.isCacheable())
+		final int duration = data.getCacheDuration();
+
+		if(duration > 0)
 		{
-			long now = System.currentTimeMillis();
-
-			// Time of message generation
-			response.setDateHeader("Date", now);
-
-			// Time for cache expiry
-			response.setDateHeader("Expires", now + (data.getCacheDuration() * 1000L));
-
-			// Allow caching even for public proxies or CDN providers
-			response.setHeader(CACHE_CONTROL, "public, max-age=" + data.getCacheDuration());
-
-			// Let caches distinguish between compressed and uncompressed
-			// versions of the resource so they can serve them properly
-			response.setHeader("Vary", "Accept-Encoding");
+			RequestUtils.enableCaching(response, duration, false);
 		}
 		else
 		{

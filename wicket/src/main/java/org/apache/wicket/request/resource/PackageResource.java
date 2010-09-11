@@ -19,9 +19,11 @@ package org.apache.wicket.request.resource;
 import java.io.IOException;
 import java.util.Locale;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
+import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.lang.WicketObjects;
@@ -87,11 +89,6 @@ public class PackageResource extends AbstractResource
 
 
 	/**
-	 * should response be cacheable in browser?
-	 */
-	private boolean cacheable = true;
-
-	/**
 	 * Hidden constructor.
 	 *
 	 * @param scope     This argument will be used to get the class loader for loading the package
@@ -141,26 +138,6 @@ public class PackageResource extends AbstractResource
 	public final String getStyle()
 	{
 		return style;
-	}
-
-	/**
-	 * returns is resource is cacheable
-	 *
-	 * @return <code>true</code> if cacheable
-	 */
-	public boolean isCacheable()
-	{
-		return cacheable;
-	}
-
-	/**
-	 * sets is resource is cacheable
-	 *
-	 * @param cacheable <code>true</code> if cacheable
-	 */
-	public void setCacheable(boolean cacheable)
-	{
-		this.cacheable = cacheable;
 	}
 
 	/**
@@ -230,7 +207,6 @@ public class PackageResource extends AbstractResource
 				return sendResourceError(resourceResponse, 500, "Unable to open resource stream");
 			}
 		}
-		resourceResponse.setCacheable(isCacheable());
 		return resourceResponse;
 	}
 
