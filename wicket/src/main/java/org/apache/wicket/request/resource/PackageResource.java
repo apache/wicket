@@ -207,6 +207,14 @@ public class PackageResource extends AbstractResource
 				return sendResourceError(resourceResponse, 500, "Unable to open resource stream");
 			}
 		}
+
+		// if timestamps are enabled on resource we can maximize caching with no pain
+		if(Application.get().getResourceSettings().getUseTimestampOnResources())
+		{
+			resourceResponse.setCacheDuration(RequestUtils.MAX_CACHE_DURATION);
+			resourceResponse.setCachePublic(true);
+		}
+
 		return resourceResponse;
 	}
 
