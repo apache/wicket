@@ -43,8 +43,6 @@ public abstract class AbstractResource implements IResource
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final String CACHE_CONTROL = "Cache-Control";
-
 	/**
 	 * Construct.
 	 */
