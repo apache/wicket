@@ -36,7 +36,7 @@ import org.apache.wicket.util.string.Strings;
  */
 public final class RequestUtils
 {
-	public static final long MAX_CACHE_DURATION = 60 * 60 * 24 * 365; // one year, maximum recommended cache duration
+	public static final int MAX_CACHE_DURATION = 60 * 60 * 24 * 365; // one year, maximum recommended cache duration
 
 	/**
 	 * Decode the provided queryString as a series of key/ value pairs and set them in the provided
