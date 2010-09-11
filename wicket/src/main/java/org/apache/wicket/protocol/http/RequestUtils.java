@@ -28,6 +28,7 @@ import org.apache.wicket.request.UrlDecoder;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -35,6 +36,8 @@ import org.apache.wicket.util.string.Strings;
  */
 public final class RequestUtils
 {
+	public static final long MAX_CACHE_DURATION = 60 * 60 * 24 * 365; // one year, maximum recommended cache duration
+
 	/**
 	 * Decode the provided queryString as a series of key/ value pairs and set them in the provided
 	 * value map.
@@ -260,9 +263,76 @@ public final class RequestUtils
 	 */
 	public static void disableCaching(WebResponse response)
 	{
+		Args.notNull(response, "response");
 		response.setDateHeader("Date", System.currentTimeMillis());
 		response.setDateHeader("Expires", 0);
 		response.setHeader("Pragma", "no-cache");
 		response.setHeader("Cache-Control", "no-cache");
+	}
+
+	/**
+	 * enable caching for the given response
+	 * <p/>
+	 * The [duration] is the maximum time in seconds until the response is invalidated from the cache. The
+	 * maximum duration should not exceed one year, based on
+	 * <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html">RFC-2616</a>.
+	 * <p/>
+	 * The [cachePublic] flag will let you control if the response may be cached
+	 * by public caches or just by the client itself. This sets the http response header
+	 *
+	 * <ul>
+	 * <li><code>[Cache-Control: public]</code> if <code>cachePublic = true</code></li>
+	 * <li><code>[Cache-Control: private]</code> if <code>cachePublic = false</code></li>
+	 * </ul>
+	 * <p/>
+	 * Details on <code>Cache-Control</code> header can be found
+	 *  <a href="http://palisade.plynt.com/issues/2008Jul/cache-control-attributes">here</a>
+	 * or in <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html">RFC-2616</a>.
+	 * <p/>
+	 * Choose <code>cachePublic = false</code> wisely since setting <code>Cache-Control: private</code>
+	 * may cause trouble with some versions of Firefox which will not cache SSL content at all. More details
+	 * on this Firefox issue can be found <a href="http://blog.pluron.com/2008/07/why-you-should.html">here</a>.
+	 * <p/>
+	 * Never set <code>cachePublic=true</code> when the response is confidential or client-specific. You
+	 * don't want to see your sensitive private data on some public proxy.
+	 * <p/>
+	 * Unless the response really is confidential / top-secret or client-specific the general advice is
+	 * to always prefer <code>cachePublic=true</code> for best network performance.
+	 *
+	 * @param response
+	 *            response that should be cacheable
+	 * @param duration
+	 *            duration in seconds that the response may be cached
+	 * @param cachePublic
+	 *            If <code>true</code> all caches are allowed to cache the response.
+	 *            If <code>false</code> only the client may cache the response (if at all).
+	 *
+	 * @see RequestUtils#MAX_CACHE_DURATION
+	 */
+	public static void enableCaching(WebResponse response, long duration, boolean cachePublic)
+	{
+		Args.notNull(response, "response");
+
+		if(duration < 0)
+			throw new IllegalArgumentException("duration must be a positive value");
+
+		// Get current time
+		long now = System.currentTimeMillis();
+
+		// Time of message generation
+		response.setDateHeader("Date", now);
+
+		// Time for cache expiry = now + duration
+		response.setDateHeader("Expires", now + (duration * 1000L));
+
+		// Set caching scope
+		String scope = cachePublic ? "public" : "private";
+
+		// Enable caching and set max age
+		response.setHeader("Cache-Control", scope + ", max-age=" + duration);
+
+		// Let caches distinguish between compressed and uncompressed
+		// versions of the resource so they can serve them properly
+		response.setHeader("Vary", "Accept-Encoding");
 	}
 }
