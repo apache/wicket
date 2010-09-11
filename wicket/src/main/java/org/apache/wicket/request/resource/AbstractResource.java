@@ -77,7 +77,6 @@ public abstract class AbstractResource implements IResource
 		private long contentLength = -1;
 		private Date lastModified = null;
 		private WriteCallback writeCallback;
-		private boolean cacheable = true;
 		private int cacheDuration;
 
 		/**
