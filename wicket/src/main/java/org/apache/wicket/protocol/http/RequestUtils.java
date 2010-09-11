@@ -36,7 +36,8 @@ import org.apache.wicket.util.string.Strings;
  */
 public final class RequestUtils
 {
-	public static final int MAX_CACHE_DURATION = 60 * 60 * 24 * 365; // one year, maximum recommended cache duration
+	 // one year, maximum recommended cache duration in RFC-2616
+	public static final int MAX_CACHE_DURATION = 60 * 60 * 24 * 365;
 
 	/**
 	 * Decode the provided queryString as a series of key/ value pairs and set them in the provided
@@ -303,6 +304,7 @@ public final class RequestUtils
 	 *            response that should be cacheable
 	 * @param duration
 	 *            duration in seconds that the response may be cached
+	 *            (Integer.MAX_VALUE will select maximum duration based on RFC-2616)
 	 * @param cachePublic
 	 *            If <code>true</code> all caches are allowed to cache the response.
 	 *            If <code>false</code> only the client may cache the response (if at all).
@@ -315,6 +317,10 @@ public final class RequestUtils
 
 		if(duration < 0)
 			throw new IllegalArgumentException("duration must be a positive value");
+
+		// do not exceed the maximum recommended value from RFC-2616
+		if(duration > MAX_CACHE_DURATION)
+			duration = MAX_CACHE_DURATION;
 
 		// Get current time
 		long now = System.currentTimeMillis();

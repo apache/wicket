@@ -214,7 +214,10 @@ public interface IResourceSettings
 
 	/**
 	 * Set the the default cache duration for WebResource.
-	 * 
+	 * <p/>
+	 * Setting <code>duration = Integer.MAX_VALUE</code> will select the largest recommended value
+	 * based on RFC-2616 which actually is one year.
+	 *
 	 * @param defaultDuration
 	 *            default cache duration in seconds
 	 */
