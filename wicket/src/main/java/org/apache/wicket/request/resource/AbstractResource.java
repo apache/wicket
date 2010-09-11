@@ -312,9 +312,8 @@ public abstract class AbstractResource implements IResource
 		}
 
 		/**
-		 * Sets the duration for which this resource should be cached on client (in seconds). #see
-		 * {@link IResourceSettings#setDefaultCacheDuration(org.apache.wicket.util.time.Duration)}
-		 * 
+		 * Controls how long this response may be cached
+		 *
 		 * @param duration
 		 *            caching duration in seconds
 		 */
@@ -325,7 +324,14 @@ public abstract class AbstractResource implements IResource
 		}
 
 		/**
-		 * @return duration for which the resource shoudl be cached on client (in seconds)
+		 * returns how long this resource may be cached
+		 * <p/>
+		 * The special value Duration.NONE means caching is disabled.
+		 *
+		 * @return duration for caching
+		 *
+		 * @see IResourceSettings#setDefaultCacheDuration(org.apache.wicket.util.time.Duration)
+		 * @see IResourceSettings#getDefaultCacheDuration()
 		 */
 		public Duration getCacheDuration()
 		{

@@ -210,9 +210,9 @@ public abstract class WebResponse extends Response
 	}
 
 	/**
-	 * scope for caching web responses
+	 * caching scope for data
 	 * <p/>
-	 * Unless the response is confidential or session-specific the general advice is
+	 * Unless the data is confidential, session-specific or user-specific the general advice is
 	 * to prefer value <code>PUBLIC</code> for best network performance.
 	 * <p/>
 	 * This value will basically affect the header [Cache-Control]. Details can be found
@@ -222,16 +222,16 @@ public abstract class WebResponse extends Response
 	public static enum CacheScope
 	{
 		/**
-		 * all caches are allowed to cache the response
+		 * use all caches (private + public)
 		 * <p/>
-		 * Use this value for caching is your response is not confidential or session-specific. In that
-		 * case public proxies and caches are allowed to cache the response. In some versions of Firefox
-		 * it will enable caching of resources over SSL (details can be found
+		 * Use this value for caching if the data is not confidential or session-specific. It will allow
+		 * public caches to cache the data. In some versions of Firefox this will enable caching
+		 * of resources over SSL (details can be found
 		 * <a href="http://blog.pluron.com/2008/07/why-you-should.html">here</a>).
 		 */
 		 PUBLIC("public"),
 		 /**
-		 *	only the client may cache the response
+		 *	only use non-public caches
 		  * <p/>
 		  * Use this setting if the response is session-specific or confidential and you don't
 		  * want it to be cached on public caches or proxies. On some versions of Firefox this
