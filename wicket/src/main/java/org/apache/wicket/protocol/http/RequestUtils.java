@@ -267,7 +267,7 @@ public final class RequestUtils
 		Args.notNull(response, "response");
 		response.setDateHeader("Date", System.currentTimeMillis());
 		response.setDateHeader("Expires", 0);
-		response.setHeader("Pragma", "no-cache");
+		response.setHeader("Pragma", "no-cache, no-store");
 		response.setHeader("Cache-Control", "no-cache");
 	}
 
