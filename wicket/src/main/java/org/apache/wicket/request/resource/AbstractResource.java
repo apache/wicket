@@ -32,6 +32,7 @@ import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.time.Duration;
 
 /**
  * Convenience resource implementation. The subclass must implement
@@ -75,7 +76,7 @@ public abstract class AbstractResource implements IResource
 		private long contentLength = -1;
 		private Date lastModified = null;
 		private WriteCallback writeCallback;
-		private int cacheDuration;
+		private Duration cacheDuration;
 		private boolean cachePublic;
 
 		/**
@@ -299,7 +300,7 @@ public abstract class AbstractResource implements IResource
 		 */
 		public void disableCaching()
 		{
-			setCacheDuration(0);
+			setCacheDuration(Duration.NONE);
 		}
 
 		/**
@@ -312,20 +313,21 @@ public abstract class AbstractResource implements IResource
 
 		/**
 		 * Sets the duration for which this resource should be cached on client (in seconds). #see
-		 * {@link IResourceSettings#setDefaultCacheDuration(int)}
+		 * {@link IResourceSettings#setDefaultCacheDuration(org.apache.wicket.util.time.Duration)}
 		 * 
-		 * @param cacheDuration
+		 * @param duration
 		 *            caching duration in seconds
 		 */
-		public void setCacheDuration(int cacheDuration)
+		public void setCacheDuration(Duration duration)
 		{
-			this.cacheDuration = cacheDuration;
+			Args.notNull(duration, "duration");
+			this.cacheDuration = duration;
 		}
 
 		/**
 		 * @return duration for which the resource shoudl be cached on client (in seconds)
 		 */
-		public int getCacheDuration()
+		public Duration getCacheDuration()
 		{
 			return cacheDuration;
 		}
@@ -338,7 +340,7 @@ public abstract class AbstractResource implements IResource
 		 * @return <code>true</code> if public caches are allowed to cache the resource
 		 *
 		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#getCacheDuration()
-		 * @see org.apache.wicket.protocol.http.RequestUtils#enableCaching(org.apache.wicket.request.http.WebResponse, int, boolean)
+		 * @see org.apache.wicket.protocol.http.RequestUtils#enableCaching(org.apache.wicket.request.http.WebResponse, org.apache.wicket.util.time.Duration, boolean)
 		 */
 		public boolean isCachePublic()
 		{
@@ -354,7 +356,7 @@ public abstract class AbstractResource implements IResource
 		 *             if <code>true</code> public caches are allowed to cache the resource
 		 *
 		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#getCacheDuration()
-		 * @see org.apache.wicket.protocol.http.RequestUtils#enableCaching(org.apache.wicket.request.http.WebResponse, int, boolean)
+		 * @see org.apache.wicket.protocol.http.RequestUtils#enableCaching(org.apache.wicket.request.http.WebResponse, org.apache.wicket.util.time.Duration, boolean)
 		 */
 		public void setCachePublic(boolean cachePublic)
 		{
@@ -402,9 +404,9 @@ public abstract class AbstractResource implements IResource
 	protected void configureCache(final WebRequest request, final WebResponse response,
 		final ResourceResponse data, final Attributes attributes)
 	{
-		final int duration = data.getCacheDuration();
+	    Duration duration = data.getCacheDuration();
 
-		if(duration > 0)
+		if(duration.compareTo(Duration.NONE) > 0)
 		{
 			RequestUtils.enableCaching(response, duration, data.isCachePublic());
 		}

@@ -118,11 +118,14 @@ public interface IResourceSettings
 	void addStringResourceLoader(final int index, final IStringResourceLoader loader);
 
 	/**
-	 * Get the the default cache duration (3600 secs == 1hr) for WebResource.
-	 * 
-	 * @return cache duration
+	 * Get the the default cache duration for resources.
+	 * <p/>
+	 *
+	 * @return cache duration (Duration.NONE will be returned if caching is disabled)
+	 *
+	 * @see org.apache.wicket.util.time.Duration#NONE
 	 */
-	int getDefaultCacheDuration();
+	Duration getDefaultCacheDuration();
 
 	/**
 	 * Whether to disable gzip compression for resources. You need this on SAP, which gzips things
@@ -213,16 +216,17 @@ public interface IResourceSettings
 	boolean getUseDefaultOnMissingResource();
 
 	/**
-	 * Set the the default cache duration for WebResource.
+	 * Set the the default cache duration for resources.
 	 * <p/>
-	 * Based on RFC-2616 this should not exceed one year.
+	 * Based on RFC-2616 this should not exceed one year. If you set Duration.NONE caching will be disabled.
 	 *
 	 * @param defaultDuration
 	 *            default cache duration in seconds
 	 *
+	 * @see org.apache.wicket.util.time.Duration#NONE
 	 * @see org.apache.wicket.protocol.http.RequestUtils#MAX_CACHE_DURATION
 	 */
-	void setDefaultCacheDuration(int defaultDuration);
+	void setDefaultCacheDuration(Duration defaultDuration);
 
 	/**
 	 * Sets whether to disable gzip compression for resources. You need to set this on some SAP

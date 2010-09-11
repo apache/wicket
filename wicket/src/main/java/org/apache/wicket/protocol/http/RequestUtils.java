@@ -30,6 +30,7 @@ import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.time.Duration;
 
 /**
  * Wicket Http specific utilities class.
@@ -37,7 +38,7 @@ import org.apache.wicket.util.string.Strings;
 public final class RequestUtils
 {
 	 // one year, maximum recommended cache duration in RFC-2616
-	public static final int MAX_CACHE_DURATION = 60 * 60 * 24 * 365;
+	public static final Duration MAX_CACHE_DURATION = Duration.days(365);
 
 	/**
 	 * Decode the provided queryString as a series of key/ value pairs and set them in the provided
@@ -311,15 +312,13 @@ public final class RequestUtils
 	 *
 	 * @see RequestUtils#MAX_CACHE_DURATION
 	 */
-	public static void enableCaching(WebResponse response, int duration, boolean cachePublic)
+	public static void enableCaching(WebResponse response, Duration duration, boolean cachePublic)
 	{
+		Args.notNull(duration, "duration");
 		Args.notNull(response, "response");
 
-		if(duration < 0)
-			throw new IllegalArgumentException("duration must be a positive value");
-
 		// do not exceed the maximum recommended value from RFC-2616
-		if(duration > MAX_CACHE_DURATION)
+		if(duration.compareTo(MAX_CACHE_DURATION) > 0)
 			duration = MAX_CACHE_DURATION;
 
 		// Get current time
@@ -329,13 +328,13 @@ public final class RequestUtils
 		response.setDateHeader("Date", now);
 
 		// Time for cache expiry = now + duration
-		response.setDateHeader("Expires", now + (duration * 1000L));
+		response.setDateHeader("Expires", now + duration.getMilliseconds());
 
 		// Set caching scope
 		String scope = cachePublic ? "public" : "private";
 
 		// Enable caching and set max age
-		response.setHeader("Cache-Control", scope + ", max-age=" + duration);
+		response.setHeader("Cache-Control", scope + ", max-age=" + duration.getMilliseconds());
 
 		// Let caches distinguish between compressed and uncompressed
 		// versions of the resource so they can serve them properly

@@ -57,6 +57,7 @@ import org.apache.wicket.util.crypt.KeyInSessionSunJceCryptFactory;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.IResourcePath;
 import org.apache.wicket.util.file.Path;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
@@ -318,7 +319,7 @@ public final class Settings
 	private boolean useTimestampOnResourcesName = true;
 
 	/** Default cache duration */
-	private int defaultCacheDuration = 3600;
+	private Duration defaultCacheDuration = Duration.hours(1);
 
 	private MarkupFactory markupFactory;
 
@@ -1379,21 +1380,18 @@ public final class Settings
 	/**
 	 * @see org.apache.wicket.settings.IResourceSettings#getDefaultCacheDuration()
 	 */
-	public final int getDefaultCacheDuration()
+	public final Duration getDefaultCacheDuration()
 	{
 		return defaultCacheDuration;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IResourceSettings#setDefaultCacheDuration(long)
+	 * @see org.apache.wicket.settings.IResourceSettings#setDefaultCacheDuration(org.apache.wicket.util.time.Duration)
 	 */
-	public final void setDefaultCacheDuration(int defaultDuration)
+	public final void setDefaultCacheDuration(Duration duration)
 	{
-		if (defaultDuration < 0)
-		{
-			throw new IllegalArgumentException("Parameter 'defaultDuration' must not be < 0");
-		}
-		defaultCacheDuration = defaultDuration;
+		Args.notNull(duration, "duration");
+		defaultCacheDuration = duration;
 	}
 
 	/**
