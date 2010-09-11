@@ -211,7 +211,7 @@ public class PackageResource extends AbstractResource
 		// if timestamps are enabled on resource we can maximize caching with no pain
 		if(Application.get().getResourceSettings().getUseTimestampOnResources())
 		{
-			resourceResponse.setCacheDuration(Integer.MAX_VALUE);
+			resourceResponse.setCacheDurationToMaximum();
 			resourceResponse.setCachePublic(true);
 		}
 

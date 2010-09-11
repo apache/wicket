@@ -215,11 +215,12 @@ public interface IResourceSettings
 	/**
 	 * Set the the default cache duration for WebResource.
 	 * <p/>
-	 * Setting <code>duration = Integer.MAX_VALUE</code> will select the largest recommended value
-	 * based on RFC-2616 which actually is one year.
+	 * Based on RFC-2616 this should not exceed one year.
 	 *
 	 * @param defaultDuration
 	 *            default cache duration in seconds
+	 *
+	 * @see org.apache.wicket.protocol.http.RequestUtils#MAX_CACHE_DURATION
 	 */
 	void setDefaultCacheDuration(int defaultDuration);
 

@@ -99,7 +99,7 @@ public class WicketFilterTest extends TestCase
 				protected ResourceResponse newResourceResponse(Attributes attributes)
 				{
 					ResourceResponse response = super.newResourceResponse(attributes);
-					response.setCacheDuration(Integer.MAX_VALUE);
+					response.setCacheDurationToMaximum();
 					return response;
 				}
 			};

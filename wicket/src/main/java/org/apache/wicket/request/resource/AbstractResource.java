@@ -307,7 +307,7 @@ public abstract class AbstractResource implements IResource
 		 */
 		public void setCacheDurationToMaximum()
 		{
-			cacheDuration = Integer.MAX_VALUE;
+			cacheDuration = RequestUtils.MAX_CACHE_DURATION;
 		}
 
 		/**
