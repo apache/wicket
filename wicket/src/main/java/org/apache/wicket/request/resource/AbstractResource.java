@@ -295,6 +295,22 @@ public abstract class AbstractResource implements IResource
 		}
 
 		/**
+		 * disable caching
+		 */
+		public void disableCaching()
+		{
+			setCacheDuration(0);
+		}
+
+		/**
+		 * set caching to maximum available duration
+		 */
+		public void setCacheDurationToMaximum()
+		{
+			cacheDuration = Integer.MAX_VALUE;
+		}
+
+		/**
 		 * Sets the duration for which this resource should be cached on client (in seconds). #see
 		 * {@link IResourceSettings#setDefaultCacheDuration(int)}
 		 * 
