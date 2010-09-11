@@ -392,7 +392,7 @@ public class KittenCaptchaPanel extends Panel
 		protected void configureResponse(ResourceResponse response, Attributes attributes)
 		{
 			super.configureResponse(response, attributes);
-			response.setCacheDuration(Integer.MAX_VALUE);
+			response.setCacheDuration(0);
 		}
 
 		/**
