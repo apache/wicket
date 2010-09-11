@@ -309,7 +309,7 @@ public final class RequestUtils
 	 *
 	 * @see RequestUtils#MAX_CACHE_DURATION
 	 */
-	public static void enableCaching(WebResponse response, long duration, boolean cachePublic)
+	public static void enableCaching(WebResponse response, int duration, boolean cachePublic)
 	{
 		Args.notNull(response, "response");
 

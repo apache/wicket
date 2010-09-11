@@ -78,7 +78,7 @@ public abstract class AbstractResource implements IResource
 		private Date lastModified = null;
 		private WriteCallback writeCallback;
 		private boolean cacheable = true;
-		private long cacheDuration;
+		private int cacheDuration;
 
 		/**
 		 * Construct.
@@ -320,7 +320,7 @@ public abstract class AbstractResource implements IResource
 		 * @param cacheDuration
 		 *            caching duration in seconds
 		 */
-		public void setCacheDuration(long cacheDuration)
+		public void setCacheDuration(int cacheDuration)
 		{
 			this.cacheDuration = cacheDuration;
 		}
@@ -328,7 +328,7 @@ public abstract class AbstractResource implements IResource
 		/**
 		 * @return duration for which the resource shoudl be cached on client (in seconds)
 		 */
-		public long getCacheDuration()
+		public int getCacheDuration()
 		{
 			return cacheDuration;
 		}
