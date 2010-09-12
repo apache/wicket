@@ -539,7 +539,7 @@ public class WicketFilter implements Filter
 	private void checkCharacterEncoding(final HttpServletRequest servletRequest)
 	{
 		// If the request does not provide information about the encoding of
-		// its body (which includes POST parameters), than assume the
+		// its body (which includes POST parameters), then assume the
 		// default encoding as defined by the wicket application. Bear in
 		// mind that the encoding of the request usually is equal to the
 		// previous response.
