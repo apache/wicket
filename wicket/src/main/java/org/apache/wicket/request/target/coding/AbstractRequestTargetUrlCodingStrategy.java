@@ -59,11 +59,28 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 		{
 			throw new IllegalArgumentException("Mount path cannot be null or empty");
 		}
-		this.mountPath = mountPath.startsWith("/") ? mountPath.substring(1) : mountPath;
+		this.mountPath = initMountPath(mountPath);
+
 		if (this.mountPath.startsWith("resources/") || this.mountPath.equals("resources"))
 		{
 			throw new IllegalArgumentException("Mount path cannot be under '/resources'");
 		}
+	}
+
+	/**
+	 * Encodes the meaningful part of <code>mountPath</code> using
+	 * org.apache.wicket.settings.IRequestCycleSettings.getResponseRequestEncoding() or "UTF-8" if
+	 * there is no default encoding configured
+	 * 
+	 * @param mountPath
+	 *            the mount path to encode
+	 * @return the encoded mount path without the leading '/' if there is such
+	 */
+	private String initMountPath(final String mountPath)
+	{
+		final String path = mountPath.startsWith("/") ? mountPath.substring(1) : mountPath;
+		final String encodedPath = WicketURLEncoder.FULL_PATH_INSTANCE.encode(path);
+		return encodedPath;
 	}
 
 	/**
