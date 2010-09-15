@@ -371,4 +371,23 @@ public class ServletWebRequest extends WebRequest
 	{
 		return RequestUtils.getCharset(httpServletRequest);
 	}
+
+	@Override
+	public boolean isAjax()
+	{
+		return isAjax(httpServletRequest);
+	}
+
+	/**
+	 * check if random http servlet request is an ajax request
+	 *
+	 * @param httpServletRequest web request
+	 * @return <code>true</code> if ajax, <code>false</code> if regular request
+	 */
+	public static boolean isAjax(HttpServletRequest httpServletRequest)
+	{
+		// TODO there is some redundancy in this method and WebRequest#isAjax - can this be eliminated?
+		return Strings.isTrue(httpServletRequest.getHeader(HEADER_AJAX)) ||
+			Strings.isTrue(httpServletRequest.getParameter(PARAM_AJAX));
+	}
 }

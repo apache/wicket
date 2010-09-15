@@ -31,7 +31,7 @@ import org.apache.wicket.util.lang.Args;
 
 /**
  * WebResponse that wraps a {@link ServletWebResponse}.
- * 
+ *
  * @author Matej Knopp
  */
 public class ServletWebResponse extends WebResponse
@@ -41,7 +41,7 @@ public class ServletWebResponse extends WebResponse
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param httpServletRequest
 	 * @param httpServletResponse
 	 */
@@ -57,7 +57,7 @@ public class ServletWebResponse extends WebResponse
 
 	/**
 	 * Returns the wrapped response
-	 * 
+	 *
 	 * @return wrapped response
 	 */
 	public final HttpServletResponse getHttpServletResponse()
@@ -223,25 +223,35 @@ public class ServletWebResponse extends WebResponse
 	@Override
 	public void sendRedirect(String url)
 	{
-		sendRedirect(url, false);
-	}
-
-	private void sendRedirect(String url, boolean cacheable)
-	{
-		redirect = true;
-		url = getAbsoluteURL(url);
-		url = httpServletResponse.encodeRedirectURL(url);
-
 		try
 		{
-			// proxies eventually cache '302 temporary redirect' responses:
-			// for most wicket use cases this is fatal since redirects are
-			// usually highly dynamic and can not be statically mapped
-			// to a request url in general
-			if (cacheable == false)
-				this.disableCaching();
+			redirect = true;
+			url = getAbsoluteURL(url);
+			url = httpServletResponse.encodeRedirectURL(url);
 
-			httpServletResponse.sendRedirect(url);
+			// wicket redirects should never be cached
+			this.disableCaching();
+
+			if (ServletWebRequest.isAjax(httpServletRequest))
+			{
+				httpServletResponse.addHeader("Ajax-Location", url);
+
+				/*
+				 * usually the Ajax-Location header is enough and we do not need to the
+				 * redirect url into the response, but sometimes the response is processed
+				 * via an iframe (eg using multipart ajax handling) and the headers are not
+				 * available because XHR is not used and that is the only way javascript has
+				 * access to response headers.
+				 */
+				httpServletResponse.getWriter().write(
+					"<ajax-response><redirect>" + url + "</redirect></ajax-response>");
+
+				setContentType("text/xml;charset=" + httpServletRequest.getCharacterEncoding());
+			}
+			else
+			{
+				httpServletResponse.sendRedirect(url);
+			}
 		}
 		catch (IOException e)
 		{
