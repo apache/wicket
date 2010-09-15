@@ -177,7 +177,7 @@ public class FormTesterTest extends WicketTestCase
 		formTester.submit();
 		assertNull(page.getFileUpload());
 
-		tester.assertErrorMessages(new String[] { "Field 'file' is required." });
+		tester.assertErrorMessages("Field 'file' is required.");
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class FormTesterTest extends WicketTestCase
 	 */
 	public void testSubmitMultipartForm()
 	{
-		tester.startPage(MockFormFileUploadPage.class, new PageParameters("required=false"));
+		tester.startPage(MockFormFileUploadPage.class, new PageParameters().set("required" , false));
 		MockFormFileUploadPage page = (MockFormFileUploadPage)tester.getLastRenderedPage();
 		MockDomainObjectFileUpload domainObject = page.getDomainObject();
 
@@ -209,6 +209,8 @@ public class FormTesterTest extends WicketTestCase
 	{
 		tester.startPage(new MockFormPage()
 		{
+			private static final long serialVersionUID = -3023635650340910221L;
+
 			@Override
 			protected void onBeforeRender()
 			{

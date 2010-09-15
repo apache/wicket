@@ -19,7 +19,6 @@ package org.apache.wicket.util.tester;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -198,9 +197,8 @@ public class WicketTester extends BaseWicketTester
 	 * @param path
 	 *            the absolute path on disk to the web application's contents (e.g. war root) - may
 	 *            be <code>null</code>
-	 * 
-	 * @see org.apache.wicket.protocol.http.MockWebApplication#MockWebApplication(org.apache.wicket.protocol.http.WebApplication,
-	 *      String)
+	 *
+	 * @see org.apache.wicket.mock.MockApplication#MockApplication()
 	 */
 	public WicketTester(final WebApplication application, final String path)
 	{
@@ -247,7 +245,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Tests that a <code>Component</code> has been added to a <code>AjaxRequestTarget</code>, using
-	 * {@link AjaxRequestTarget#addComponent(Component)}. This method actually tests that a
+	 * {@link AjaxRequestTarget#addComponent(Component...)}. This method actually tests that a
 	 * <code>Component</code> is on the Ajax response sent back to the client.
 	 * <p>
 	 * PLEASE NOTE! This method doesn't actually insert the <code>Component</code> in the client DOM
@@ -265,7 +263,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Tests that a <code>Component</code> has been added to a <code>AjaxRequestTarget</code>, using
-	 * {@link AjaxRequestTarget#addComponent(Component)}. This method actually tests that a
+	 * {@link AjaxRequestTarget#addComponent(Component...)}. This method actually tests that a
 	 * <code>Component</code> is on the Ajax response sent back to the client.
 	 * <p>
 	 * PLEASE NOTE! This method doesn't actually insert the <code>Component</code> in the client DOM
@@ -301,9 +299,9 @@ public class WicketTester extends BaseWicketTester
 	{
 		List<Serializable> actualMessages = getMessages(FeedbackMessage.ERROR);
 		List<Serializable> msgs = new ArrayList<Serializable>();
-		for (Iterator<Serializable> iterator = actualMessages.iterator(); iterator.hasNext();)
+		for (Serializable actualMessage : actualMessages)
 		{
-			msgs.add(iterator.next().toString());
+			msgs.add(actualMessage.toString());
 		}
 		WicketTesterHelper.assertEquals(Arrays.asList(expectedErrorMessages), msgs);
 	}
@@ -507,9 +505,9 @@ public class WicketTester extends BaseWicketTester
 	 * @param parameters
 	 */
 	public void assertBookmarkablePageLink(final String id,
-		final Class<? extends WebPage> pageClass, final String parameters)
+		final Class<? extends WebPage> pageClass, final PageParameters parameters)
 	{
-		BookmarkablePageLink<?> pageLink = null;
+		BookmarkablePageLink<?> pageLink;
 		try
 		{
 			pageLink = (BookmarkablePageLink<?>)getComponentFromLastRenderedPage(id);
@@ -525,7 +523,7 @@ public class WicketTester extends BaseWicketTester
 
 		Assert.assertEquals(
 			"One or more of the parameters associated with the BookmarkablePageLink: " + id +
-				" do not match", new PageParameters(parameters), pageLink.getPageParameters());
+				" do not match", parameters, pageLink.getPageParameters());
 	}
 
 	/**
@@ -552,13 +550,12 @@ public class WicketTester extends BaseWicketTester
 	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
 	 * output file.
 	 * 
-	 * @param <T>
 	 * @param testClass
 	 * @param page
 	 * @param filename
 	 * @throws Exception
 	 */
-	public <T extends Page> void executeTest(final Class<?> testClass, final Page page,
+	public void executeTest(final Class<?> testClass, final Page page,
 		final String filename) throws Exception
 	{
 		log.info("=== " + page.getClass().getName() + " ===");

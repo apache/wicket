@@ -58,7 +58,7 @@ public class RequestEncodingTest extends TestCase
 	 */
 	public void testDefault()
 	{
-		tester.startPage(A.class, new PageParameters("file=umlaut-\u00E4-\u00F6-\u00FC"));
+		tester.startPage(A.class, new PageParameters().set("file", "umlaut-\u00E4-\u00F6-\u00FC"));
 		tester.assertRenderedPage(B.class);
 
 		String url2 = ((B)tester.getLastRenderedPage()).getInterceptContinuationURL();

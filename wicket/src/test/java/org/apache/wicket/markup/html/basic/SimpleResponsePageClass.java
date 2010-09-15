@@ -41,7 +41,7 @@ public class SimpleResponsePageClass extends WebPage
 			protected void onSubmit()
 			{
 				// use Page "class"
-				setResponsePage(SimplePage.class, new PageParameters("test=test"));
+				setResponsePage(SimplePage.class, new PageParameters().set("test", "test"));
 			}
 		};
 		add(form);

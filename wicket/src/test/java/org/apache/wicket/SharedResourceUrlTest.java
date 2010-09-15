@@ -47,13 +47,13 @@ public class SharedResourceUrlTest extends WicketTestCase
 	{
 		ResourceReference rr = new SharedResourceReference("test");
 		CharSequence url = tester.getRequestCycle()
-			.mapUrlFor(rr, new PageParameters("param=value", ""))
+			.mapUrlFor(rr, new PageParameters().set("param", "value"))
 			.toString();
 		assertEquals("wicket/resource/org.apache.wicket.Application/test?param=value", url);
 
 		rr = new PackageResourceReference(SharedResourceUrlTest.class, "test");
 		url = tester.getRequestCycle()
-			.mapUrlFor(rr, new PageParameters("param=value", ""))
+			.mapUrlFor(rr, new PageParameters().set("param", "value"))
 			.toString();
 		assertEquals("wicket/resource/org.apache.wicket.SharedResourceUrlTest/test?param=value",
 			url);

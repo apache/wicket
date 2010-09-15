@@ -61,7 +61,7 @@ public class EnclosureTest extends WicketTestCase
 	 */
 	public void testRenderHomePage4() throws Exception
 	{
-		executeTest(EnclosurePage_4.class, new PageParameters("visible=false"),
+		executeTest(EnclosurePage_4.class, new PageParameters().set("visible", false),
 			"EnclosurePageExpectedResult_4.html");
 	}
 
@@ -70,7 +70,7 @@ public class EnclosureTest extends WicketTestCase
 	 */
 	public void testRenderHomePage4_1() throws Exception
 	{
-		executeTest(EnclosurePage_4.class, new PageParameters("visible=true"),
+		executeTest(EnclosurePage_4.class, new PageParameters().set("visible", true),
 			"EnclosurePageExpectedResult_4-1.html");
 	}
 
@@ -79,7 +79,7 @@ public class EnclosureTest extends WicketTestCase
 	 */
 	public void testRenderHomePage5() throws Exception
 	{
-		executeTest(EnclosurePage_5.class, new PageParameters("visible=false"),
+		executeTest(EnclosurePage_5.class, new PageParameters().set("visible", false),
 			"EnclosurePageExpectedResult_5.html");
 	}
 
@@ -88,7 +88,7 @@ public class EnclosureTest extends WicketTestCase
 	 */
 	public void testRenderHomePage5_1() throws Exception
 	{
-		executeTest(EnclosurePage_5.class, new PageParameters("visible=true"),
+		executeTest(EnclosurePage_5.class, new PageParameters().set("visible", true),
 			"EnclosurePageExpectedResult_5-1.html");
 	}
 
@@ -161,8 +161,6 @@ public class EnclosureTest extends WicketTestCase
 	 */
 	public void testRender9() throws Exception
 	{
-		Class<? extends Page> clazz = EnclosurePage_9.class;
-
 		executePage(new EnclosurePage_9(), "EnclosurePageExpectedResult_9.html");
 		EnclosurePage_9 page = (EnclosurePage_9)tester.getLastRenderedPage();
 		assertTrue(page.inputOnBeforeRender);

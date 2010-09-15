@@ -37,7 +37,7 @@ public class AbortExceptionTest extends WicketTestCase
 	 */
 	public void testNoAbort()
 	{
-		tester.startPage(AbortExceptionPage.class, new PageParameters("trigger=false"));
+		tester.startPage(AbortExceptionPage.class, new PageParameters().set("trigger", false));
 		Assert.assertEquals((Integer)1234, tester.getLastResponse().getStatus());
 	}
 
@@ -48,7 +48,7 @@ public class AbortExceptionTest extends WicketTestCase
 	{
 		try
 		{
-			tester.startPage(AbortExceptionPage.class, new PageParameters("trigger=true"));
+			tester.startPage(AbortExceptionPage.class, new PageParameters().set("trigger", true));
 			Assert.assertEquals((Integer)1234, tester.getLastResponse().getStatus()); // this will
 			// fail
 		}

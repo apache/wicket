@@ -25,8 +25,6 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.wicket.util.lang.Generics;
@@ -199,7 +197,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 			{
 				mapBytes = Generics.newHashMap(4);
 			}
-			mapBytes.put(name, new Byte(val));
+			mapBytes.put(name, val);
 		}
 
 		/**
@@ -212,7 +210,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 			{
 				mapChar = Generics.newHashMap(4);
 			}
-			mapChar.put(name, new Character(val));
+			mapChar.put(name, val);
 		}
 
 		/**
@@ -225,7 +223,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 			{
 				mapDouble = Generics.newHashMap(4);
 			}
-			mapDouble.put(name, new Double(val));
+			mapDouble.put(name, val);
 		}
 
 		/**
@@ -238,7 +236,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 			{
 				mapFloat = Generics.newHashMap(4);
 			}
-			mapFloat.put(name, new Float(val));
+			mapFloat.put(name, val);
 		}
 
 		/**
@@ -251,7 +249,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 			{
 				mapInt = Generics.newHashMap(4);
 			}
-			mapInt.put(name, new Integer(val));
+			mapInt.put(name, val);
 		}
 
 		/**
@@ -264,7 +262,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 			{
 				mapLong = Generics.newHashMap(4);
 			}
-			mapLong.put(name, new Long(val));
+			mapLong.put(name, val);
 		}
 
 		/**
@@ -290,7 +288,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 			{
 				mapShort = Generics.newHashMap(4);
 			}
-			mapShort.put(name, new Short(val));
+			mapShort.put(name, val);
 		}
 
 		/**
@@ -308,10 +306,8 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 				ClassStreamHandler lookup = ClassStreamHandler.lookup(boolean.class);
 				writeShort(lookup.getClassId());
 				writeShort(mapBoolean.size());
-				Iterator<Entry<String, Boolean>> it = mapBoolean.entrySet().iterator();
-				while (it.hasNext())
+				for (Entry<String, Boolean> entry : mapBoolean.entrySet())
 				{
-					Map.Entry<String, Boolean> entry = it.next();
 					// write the key.
 					writeObjectOverride(entry.getKey());
 					writeBoolean((entry.getValue()).booleanValue());
@@ -322,10 +318,8 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 				ClassStreamHandler lookup = ClassStreamHandler.lookup(byte.class);
 				writeShort(lookup.getClassId());
 				writeShort(mapBytes.size());
-				Iterator<Entry<String, Byte>> it = mapBytes.entrySet().iterator();
-				while (it.hasNext())
+				for (Entry<String, Byte> entry : mapBytes.entrySet())
 				{
-					Entry<String, Byte> entry = it.next();
 					// write the key.
 					writeObjectOverride(entry.getKey());
 					writeByte((entry.getValue()).byteValue());
@@ -336,10 +330,8 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 				ClassStreamHandler lookup = ClassStreamHandler.lookup(short.class);
 				writeShort(lookup.getClassId());
 				writeShort(mapShort.size());
-				Iterator<Entry<String, Short>> it = mapShort.entrySet().iterator();
-				while (it.hasNext())
+				for (Entry<String, Short> entry : mapShort.entrySet())
 				{
-					Entry<String, Short> entry = it.next();
 					// write the key.
 					writeObjectOverride(entry.getKey());
 					writeShort((entry.getValue()).shortValue());
@@ -350,10 +342,8 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 				ClassStreamHandler lookup = ClassStreamHandler.lookup(char.class);
 				writeShort(lookup.getClassId());
 				writeShort(mapChar.size());
-				Iterator<Entry<String, Character>> it = mapChar.entrySet().iterator();
-				while (it.hasNext())
+				for (Entry<String, Character> entry : mapChar.entrySet())
 				{
-					Entry<String, Character> entry = it.next();
 					// write the key.
 					writeObjectOverride(entry.getKey());
 					writeChar((entry.getValue()).charValue());
@@ -364,10 +354,8 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 				ClassStreamHandler lookup = ClassStreamHandler.lookup(int.class);
 				writeShort(lookup.getClassId());
 				writeShort(mapInt.size());
-				Iterator<Entry<String, Integer>> it = mapInt.entrySet().iterator();
-				while (it.hasNext())
+				for (Entry<String, Integer> entry : mapInt.entrySet())
 				{
-					Entry<String, Integer> entry = it.next();
 					// write the key.
 					writeObjectOverride(entry.getKey());
 					writeInt((entry.getValue()).intValue());
@@ -378,10 +366,8 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 				ClassStreamHandler lookup = ClassStreamHandler.lookup(long.class);
 				writeShort(lookup.getClassId());
 				writeShort(mapLong.size());
-				Iterator<Entry<String, Long>> it = mapLong.entrySet().iterator();
-				while (it.hasNext())
+				for (Entry<String, Long> entry : mapLong.entrySet())
 				{
-					Entry<String, Long> entry = it.next();
 					// write the key.
 					writeObjectOverride(entry.getKey());
 					writeLong((entry.getValue()).longValue());
@@ -392,10 +378,8 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 				ClassStreamHandler lookup = ClassStreamHandler.lookup(float.class);
 				writeShort(lookup.getClassId());
 				writeShort(mapFloat.size());
-				Iterator<Entry<String, Float>> it = mapFloat.entrySet().iterator();
-				while (it.hasNext())
+				for (Entry<String, Float> entry : mapFloat.entrySet())
 				{
-					Entry<String, Float> entry = it.next();
 					// write the key.
 					writeObjectOverride(entry.getKey());
 					writeFloat((entry.getValue()).floatValue());
@@ -406,10 +390,8 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 				ClassStreamHandler lookup = ClassStreamHandler.lookup(double.class);
 				writeShort(lookup.getClassId());
 				writeShort(mapDouble.size());
-				Iterator<Entry<String, Double>> it = mapDouble.entrySet().iterator();
-				while (it.hasNext())
+				for (Entry<String, Double> entry : mapDouble.entrySet())
 				{
-					Entry<String, Double> entry = it.next();
 					// write the key.
 					writeObjectOverride(entry.getKey());
 					writeDouble((entry.getValue()).doubleValue());
@@ -420,10 +402,8 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 				ClassStreamHandler lookup = ClassStreamHandler.lookup(Serializable.class);
 				writeShort(lookup.getClassId());
 				writeShort(mapObject.size());
-				Iterator<Entry<String, Object>> it = mapObject.entrySet().iterator();
-				while (it.hasNext())
+				for (Entry<String, Object> entry : mapObject.entrySet())
 				{
-					Entry<String, Object> entry = it.next();
 					// write the key.
 					writeObjectOverride(entry.getKey());
 					writeObjectOverride(entry.getValue());

@@ -38,7 +38,7 @@ public class MockPageParameterPage extends WebPage
 	public MockPageParameterPage(PageParameters pageParameters)
 	{
 		add(new BookmarkablePageLink<Void>("link", MockPageParameterPage.class,
-			new PageParameters("id=1")));
+			new PageParameters().set("id", 1)));
 		add(new Label("label", pageParameters.get("id").toString()));
 	}
 
