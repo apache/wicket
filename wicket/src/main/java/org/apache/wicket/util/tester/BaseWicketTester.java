@@ -741,7 +741,7 @@ public class BaseWicketTester
 		transform(url);
 		request.setUrl(url);
 		request.addHeader("Wicket-Ajax-BaseURL", url.toString());
-		request.addHeader("Wicket-Ajax", "Wicket-Ajax");
+		request.addHeader("Wicket-Ajax", "true");
 		processRequest();
 	}
 
@@ -768,7 +768,7 @@ public class BaseWicketTester
 		transform(url);
 		request.setUrl(url);
 		request.addHeader("Wicket-Ajax-BaseURL", url.toString());
-		request.addHeader("Wicket-Ajax", "Wicket-Ajax");
+		request.addHeader("Wicket-Ajax", "true");
 		processRequest();
 	}
 
@@ -1660,7 +1660,7 @@ public class BaseWicketTester
 			Charset.forName(request.getCharacterEncoding()));
 		transform(url);
 		request.addHeader("Wicket-Ajax-BaseURL", url.toString());
-		request.addHeader("Wicket-Ajax", "Wicket-Ajax");
+		request.addHeader("Wicket-Ajax", "true");
 		request.setUrl(url);
 		processRequest(request, null);
 	}
