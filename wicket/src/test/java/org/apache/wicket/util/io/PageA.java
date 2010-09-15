@@ -41,6 +41,12 @@ public class PageA extends WebPage
 		this.page = page;
 	}
 
+	@Override
+	protected void configureResponse()
+	{
+		super.configureResponse();
+	}
+
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -49,7 +55,7 @@ public class PageA extends WebPage
 	{
 		if (obj instanceof PageA)
 		{
-			if (getNumericId() == ((PageA)obj).getNumericId())
+			if (getPageId() == ((PageA)obj).getPageId())
 			{
 				if (page != null)
 				{

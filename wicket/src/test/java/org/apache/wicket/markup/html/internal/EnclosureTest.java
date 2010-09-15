@@ -101,19 +101,19 @@ public class EnclosureTest extends WicketTestCase
 	{
 		// render with enclosure initially visible
 		tester.startPage(EnclosurePage_6.class);
-		String doc = tester.getLastResponse().getTextResponse().toString();
+		String doc = tester.getLastResponse().getDocument();
 		assertTrue(doc.contains("content1"));
 		assertTrue(doc.contains("content2"));
 
 		// render with enclosure hidden
 		tester.clickLink("link");
-		doc = tester.getLastResponse().getTextResponse().toString();
+		doc = tester.getLastResponse().getDocument();
 		assertFalse(doc.contains("content1"));
 		assertFalse(doc.contains("content2"));
 
 		// render with enclosure visible again
 		tester.clickLink("link");
-		doc = tester.getLastResponse().getTextResponse().toString();
+		doc = tester.getLastResponse().getDocument();
 		assertTrue(doc.contains("content1"));
 		assertTrue(doc.contains("content2"));
 	}
@@ -151,7 +151,7 @@ public class EnclosureTest extends WicketTestCase
 
 	private void assertResultPage(final String file) throws IOException
 	{
-		String document = tester.getLastResponse().getTextResponse().toString();
+		String document = tester.getLastResponse().getDocument();
 		document = document.replaceAll("[1-9]+[.]IFormSubmitListener", "1.IFormSubmitListener");
 		DiffUtil.validatePage(document, getClass(), file, true);
 	}

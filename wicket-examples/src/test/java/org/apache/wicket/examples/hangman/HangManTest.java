@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.examples.hangman;
 
-import java.util.Iterator;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -101,9 +99,8 @@ public class HangManTest extends TestCase
 
 	private Letter letter(Game hangman, char c)
 	{
-		for (Iterator iter = hangman.getLetters().iterator(); iter.hasNext();)
+		for (Letter letter : hangman.getLetters())
 		{
-			Letter letter = (Letter)iter.next();
 			if (letter.asString().equalsIgnoreCase(Character.toString(c)))
 			{
 				return letter;
@@ -154,7 +151,7 @@ public class HangManTest extends TestCase
 	{
 		WicketTester tester = new WicketTester(new HangmanApplication());
 
-		tester.startPage(Home.class, new PageParameters("word=hangman"));
+		tester.startPage(Home.class, new PageParameters().set("word", "hangman"));
 		tester.assertComponent("start", Link.class);
 		tester.assertContains("Wicket Examples - hangman");
 		tester.clickLink("start");
@@ -177,7 +174,7 @@ public class HangManTest extends TestCase
 	{
 		WicketTester tester = new WicketTester(new HangmanApplication());
 
-		tester.startPage(Home.class, new PageParameters("word=hangman"));
+		tester.startPage(Home.class, new PageParameters().set("word", "hangman"));
 		tester.assertComponent("start", Link.class);
 		tester.assertContains("Wicket Examples - hangman");
 		tester.clickLink("start");

@@ -46,7 +46,7 @@ public class PageB extends WebPage
 	{
 		if (obj instanceof PageB)
 		{
-			return getNumericId() == ((PageB)obj).getNumericId() && test.equals(((PageB)obj).test);
+			return getPageId() == ((PageB)obj).getPageId() && test.equals(((PageB)obj).test);
 		}
 		return false;
 	}
