@@ -242,7 +242,7 @@ public class SignInPanel extends Panel
 	/**
 	 * Sign in form.
 	 */
-	public final class SignInForm extends StatelessForm<Void>
+	public final class SignInForm extends StatelessForm<SignInPanel>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -256,7 +256,7 @@ public class SignInPanel extends Panel
 		{
 			super(id);
 
-			setModel(new CompoundPropertyModel<Void>(SignInPanel.this));
+			setModel(new CompoundPropertyModel<SignInPanel>(SignInPanel.this));
 
 			// Attach textfields for username and password
 			add(new TextField<String>("username"));

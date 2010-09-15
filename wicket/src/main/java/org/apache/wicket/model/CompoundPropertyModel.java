@@ -45,10 +45,21 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	/**
 	 * Constructor
 	 * 
-	 * @param object
-	 *            The model object, which may or may not implement IModel
+	 * @param model
+	 *            The model
 	 */
-	public CompoundPropertyModel(final Object object)
+	public CompoundPropertyModel(final IModel<T> model)
+	{
+		target = model;
+	}
+
+	/**
+	 * Constructor
+	 *
+	 * @param object
+	 *            The model object
+	 */
+	public CompoundPropertyModel(final T object)
 	{
 		target = object;
 	}
