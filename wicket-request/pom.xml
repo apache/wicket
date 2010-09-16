@@ -5,11 +5,11 @@
   <parent>
     <artifactId>wicket-parent</artifactId>
     <groupId>org.apache.wicket</groupId>
-    <version>1.5-M2.1</version>
+    <version>1.5-SNAPSHOT</version>
   </parent>
   <groupId>org.apache.wicket</groupId>
   <artifactId>wicket-request</artifactId>
-  <version>1.5-M2.1</version>
+  <version>1.5-SNAPSHOT</version>
   <name>wicket-request</name>
   <url>http://maven.apache.org</url>
   <dependencies>
