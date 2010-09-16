@@ -41,7 +41,7 @@ public class HomePage extends WicketExamplePage
 	 */
 	public HomePage()
 	{
-		add(new Link("link")
+		add(new Link<Void>("link")
 		{
 			/**
 			 * @see org.apache.wicket.markup.html.link.Link#onClick()
