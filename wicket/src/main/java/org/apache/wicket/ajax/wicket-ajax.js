@@ -1401,11 +1401,11 @@ Wicket.Ajax.Call.prototype = {
 		c.processContribution(steps, node);
 	},
 
-   // Adds a closure that processes a redirect
+	// Adds a closure that processes a redirect
 	processRedirect: function(steps, node) {
-      var text = node.firstChild.nodeValue;
-      Wicket.Log.info("Redirecting to: "+text);
-      window.location=text;
+		var text = node.firstChild.nodeValue;
+		Wicket.Log.info("Redirecting to: "+text);
+		window.location=text;
 	},
 
 	// mark the focused component so that we know if it has been replaced by response
