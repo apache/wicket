@@ -203,10 +203,6 @@ public abstract class WebResponse extends Response
 
 		// Enable caching and set max age
 		setHeader("Cache-Control", scope.cacheControl + ", max-age=" + duration.getMilliseconds());
-
-		// Let caches distinguish between compressed and uncompressed
-		// versions of the resource so they can serve them properly
-		setHeader("Vary", "Accept-Encoding");
 	}
 
 	/**
