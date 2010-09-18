@@ -86,20 +86,16 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	protected final void onRender()
 	{
 		Iterator<? extends Component> it = renderIterator();
-		if (it.hasNext())
+		while (it.hasNext())
 		{
-			do
+			Component child = it.next();
+			if (child == null)
 			{
-				Component child = it.next();
-				if (child == null)
-				{
-					throw new IllegalStateException(
-						"The render iterator returned null for a child. Container: " +
-							this.toString() + "; Iterator=" + it.toString());
-				}
-				renderChild(child);
+				throw new IllegalStateException(
+					"The render iterator returned null for a child. Container: " + this.toString() +
+						"; Iterator=" + it.toString());
 			}
-			while (it.hasNext());
+			renderChild(child);
 		}
 	}
 
@@ -150,6 +146,7 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	@Override
 	public IMarkupFragment getMarkup(final Component child)
 	{
+		// each direct child gets the markup of this repeater
 		return getMarkup();
 	}
 
