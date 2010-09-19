@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -198,46 +197,76 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 		listeners.remove(l);
 	}
 
-	public void selectNode(Object node, boolean selected)
+	/**
+	 * If <code>node</code> is currently selected, it will be deselected and the
+	 * <code>nodeUnselected</code> method will be called on all registered
+	 * <code>ITreeStateListeners</code>.
+	 * 
+	 * @param node
+	 *            the node to be deselected
+	 */
+	private void deselectNode(Object node)
 	{
-		if (isAllowSelectMultiple() == false && selectedNodes.size() > 0)
+		if (selectedNodes.remove(node))
 		{
-			for (Iterator<Object> i = selectedNodes.iterator(); i.hasNext();)
+			for (ITreeStateListener listener : listeners.toArray(new ITreeStateListener[listeners.size()]))
 			{
-				Object current = i.next();
-				if (current.equals(node) == false)
+				listener.nodeUnselected(node);
+			}
+		}
+	}
+
+	/**
+	 * Selects <code>node</code> and calls the <code>nodeSelected</code> method on all registered
+	 * <code>ITreeStateListeners</code>. If <code>isAllowSelectMultiple</code> is <code>false</code>
+	 * , any currently selected nodes are deselected.
+	 * 
+	 * @param node
+	 *            the node to be selected
+	 */
+	private void selectNode(Object node)
+	{
+		// if multiple selections are not allowed, deselect current selections
+		if (selectedNodes.size() > 0 && !isAllowSelectMultiple())
+		{
+			for (Object currentlySelectedNode : selectedNodes.toArray())
+			{
+				if (!currentlySelectedNode.equals(node))
 				{
-					i.remove();
-					Object[] listenersCopy = listeners.toArray();
-					for (int j = 0; j < listenersCopy.length; j++)
-					{
-						ITreeStateListener l = (ITreeStateListener)listenersCopy[j];
-						l.nodeUnselected(current);
-					}
+					deselectNode(currentlySelectedNode);
 				}
 			}
 		}
 
-		if (selected == true && selectedNodes.contains(node) == false)
+		if (!selectedNodes.contains(node))
 		{
-
 			selectedNodes.add(node);
-			Object[] listenersCopy = listeners.toArray();
-			for (int i = 0; i < listenersCopy.length; i++)
+			for (ITreeStateListener listener : listeners.toArray(new ITreeStateListener[listeners.size()]))
 			{
-				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
-				l.nodeSelected(node);
+				listener.nodeSelected(node);
 			}
 		}
-		else if (selected == false && selectedNodes.contains(node) == true)
+	}
+
+	/**
+	 * Selects or deselects <code>node</code> and calls the corresponding method on all registered
+	 * <code>ITreeStateListeners</code>. If <code>isAllowSelectMultiple</code> is <code>false</code>
+	 * , any currently selected nodes are deselected.
+	 * 
+	 * @param node
+	 *            the node to be selected
+	 * @param selected
+	 *            true if node is to be selected, false if node is to be deselected
+	 */
+	public void selectNode(Object node, boolean selected)
+	{
+		if (selected)
 		{
-			selectedNodes.remove(node);
-			Object[] listenersCopy = listeners.toArray();
-			for (int i = 0; i < listenersCopy.length; i++)
-			{
-				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
-				l.nodeUnselected(node);
-			}
+			selectNode(node);
+		}
+		else
+		{
+			deselectNode(node);
 		}
 	}
 
