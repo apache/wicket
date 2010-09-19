@@ -40,7 +40,7 @@ public class AbstractPropertyModelObjectClassTest extends TestCase
 
 	public void testCompoundPropertyModelBind()
 	{
-		CompoundPropertyModel<CustomType> compoundPropertyModel = new CompoundPropertyModel<CustomType>(
+		CompoundPropertyModel<CustomBean> compoundPropertyModel = new CompoundPropertyModel<CustomBean>(
 			new CustomBean());
 		IModel<?> modelForCustomTypeObject = compoundPropertyModel.bind("customType");
 		assertPropertyModelTargetTypeIsInteger(modelForCustomTypeObject);
