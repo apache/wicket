@@ -373,14 +373,14 @@ public abstract class WebApplication extends Application
 	 * hide the details from the user. A appropriate WebRequest must be implemented and configured
 	 * to decode the encoded URL.
 	 * 
-	 * @param httpServletRequest
+	 * @param webRequest
 	 * @param httpServletResponse
 	 * @return a WebResponse object
 	 */
-	protected WebResponse newWebResponse(final HttpServletRequest httpServletRequest,
+	protected WebResponse newWebResponse(final WebRequest webRequest,
 		final HttpServletResponse httpServletResponse)
 	{
-		return new HeaderBufferingWebResponse(new ServletWebResponse(httpServletRequest,
+		return new HeaderBufferingWebResponse(new ServletWebResponse((ServletWebRequest)webRequest,
 			httpServletResponse));
 	}
 

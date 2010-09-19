@@ -303,8 +303,9 @@ public class BaseWicketTester
 		request.setURL(request.getContextPath() + request.getServletPath() + "/");
 		response = new MockHttpServletResponse(request);
 
-		requestCycle = application.createRequestCycle(createServletWebRequest(),
-			createServletWebResponse());
+		ServletWebRequest servletWebRequest = createServletWebRequest();
+		requestCycle = application.createRequestCycle(servletWebRequest,
+			createServletWebResponse(servletWebRequest));
 		requestCycle.setCleanupFeedbackMessagesOnDetach(false);
 		ThreadContext.setRequestCycle(requestCycle);
 
@@ -317,9 +318,9 @@ public class BaseWicketTester
 	/**
 	 * @return
 	 */
-	private ServletWebResponse createServletWebResponse()
+	private ServletWebResponse createServletWebResponse(ServletWebRequest servletWebRequest)
 	{
-		return new ServletWebResponse(request, response)
+		return new ServletWebResponse(servletWebRequest, response)
 		{
 			@Override
 			public void sendRedirect(String url)

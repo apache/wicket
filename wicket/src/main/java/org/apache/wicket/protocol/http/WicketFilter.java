@@ -124,7 +124,7 @@ public class WicketFilter implements Filter
 				application.set();
 
 				WebRequest webRequest = application.newWebRequest(httpServletRequest, filterPath);
-				WebResponse webResponse = application.newWebResponse(httpServletRequest,
+				WebResponse webResponse = application.newWebResponse(webRequest,
 					httpServletResponse);
 
 				RequestCycle requestCycle = application.createRequestCycle(webRequest, webResponse);

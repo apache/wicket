@@ -31,33 +31,32 @@ import org.apache.wicket.util.lang.Args;
 
 /**
  * WebResponse that wraps a {@link ServletWebResponse}.
- *
+ * 
  * @author Matej Knopp
  */
 public class ServletWebResponse extends WebResponse
 {
 	private final HttpServletResponse httpServletResponse;
-	private final HttpServletRequest httpServletRequest;
+	private final ServletWebRequest webRequest;
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param httpServletRequest
 	 * @param httpServletResponse
 	 */
-	public ServletWebResponse(HttpServletRequest httpServletRequest,
-		HttpServletResponse httpServletResponse)
+	public ServletWebResponse(ServletWebRequest webRequest, HttpServletResponse httpServletResponse)
 	{
-		Args.notNull(httpServletRequest, "httpServletRequest");
+		Args.notNull(webRequest, "webRequest");
 		Args.notNull(httpServletResponse, "httpServletResponse");
 
 		this.httpServletResponse = httpServletResponse;
-		this.httpServletRequest = httpServletRequest;
+		this.webRequest = webRequest;
 	}
 
 	/**
 	 * Returns the wrapped response
-	 *
+	 * 
 	 * @return wrapped response
 	 */
 	public final HttpServletResponse getHttpServletResponse()
@@ -188,6 +187,8 @@ public class ServletWebResponse extends WebResponse
 
 	private String getAbsolutePrefix()
 	{
+		HttpServletRequest httpServletRequest = webRequest.getHttpServletRequest();
+
 		String port = "";
 		if (("http".equals(httpServletRequest.getScheme()) && httpServletRequest.getServerPort() != 80) ||
 			("https".equals(httpServletRequest.getScheme()) && httpServletRequest.getServerPort() != 443))
@@ -209,6 +210,7 @@ public class ServletWebResponse extends WebResponse
 		}
 		else
 		{
+			HttpServletRequest httpServletRequest = webRequest.getHttpServletRequest();
 			Charset charset = RequestUtils.getCharset(httpServletRequest);
 			Url current = Url.parse(httpServletRequest.getRequestURI(), charset);
 			Url append = Url.parse(url, charset);
@@ -230,23 +232,23 @@ public class ServletWebResponse extends WebResponse
 			url = httpServletResponse.encodeRedirectURL(url);
 
 			// wicket redirects should never be cached
-			this.disableCaching();
+			disableCaching();
 
-			if (ServletWebRequest.isAjax(httpServletRequest))
+			if (webRequest.isAjax())
 			{
 				httpServletResponse.addHeader("Ajax-Location", url);
 
 				/*
-				 * usually the Ajax-Location header is enough and we do not need to the
-				 * redirect url into the response, but sometimes the response is processed
-				 * via an iframe (eg using multipart ajax handling) and the headers are not
-				 * available because XHR is not used and that is the only way javascript has
-				 * access to response headers.
+				 * usually the Ajax-Location header is enough and we do not need to the redirect url
+				 * into the response, but sometimes the response is processed via an iframe (eg
+				 * using multipart ajax handling) and the headers are not available because XHR is
+				 * not used and that is the only way javascript has access to response headers.
 				 */
 				httpServletResponse.getWriter().write(
 					"<ajax-response><redirect>" + url + "</redirect></ajax-response>");
 
-				setContentType("text/xml;charset=" + httpServletRequest.getCharacterEncoding());
+				setContentType("text/xml;charset=" +
+					webRequest.getHttpServletRequest().getCharacterEncoding());
 			}
 			else
 			{
