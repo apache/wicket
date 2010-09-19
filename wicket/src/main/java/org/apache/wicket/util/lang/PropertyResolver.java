@@ -28,6 +28,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.convert.ConversionException;
+import org.apache.wicket.util.lang.PropertyResolver.IClassCache;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,6 +155,23 @@ public final class PropertyResolver
 	}
 
 	/**
+	 * @param <T>
+	 * @param expression
+	 * @param clz
+	 * @return class of the target Class property expression
+	 */
+	public static <T> Class<T> getPropertyClass(String expression, Class<?> clz)
+	{
+		ObjectAndGetSetter setter = getObjectAndGetSetter(expression, null, RESOLVE_CLASS, clz);
+		if (setter == null)
+		{
+			throw new WicketRuntimeException("No Class returned for expression: " + expression +
+				" for getting the target classs of: " + clz);
+		}
+		return (Class<T>)setter.getTargetClass();
+	}
+
+	/**
 	 * @param expression
 	 * @param object
 	 * @return Field for the property expression or null if such field doesn't exist (only getters
@@ -204,15 +222,40 @@ public final class PropertyResolver
 		return setter.getSetter();
 	}
 
+	/**
+	 * Just delegating the call to the original getObjectAndGetSetter passing the object type as
+	 * parameter.
+	 * 
+	 * @param expression
+	 * @param object
+	 * @param tryToCreateNull
+	 * @return {@link ObjectAndGetSetter}
+	 */
 	private static ObjectAndGetSetter getObjectAndGetSetter(final String expression,
 		final Object object, int tryToCreateNull)
+	{
+		return getObjectAndGetSetter(expression, object, tryToCreateNull, object.getClass());
+	}
+
+
+	/**
+	 * Receives the class parameter also, since this method can resolve the type for some
+	 * expression, only knowing the target class
+	 * 
+	 * @param expression
+	 * @param object
+	 * @param tryToCreateNull
+	 * @param clz
+	 * @return {@link ObjectAndGetSetter}
+	 */
+	private static ObjectAndGetSetter getObjectAndGetSetter(final String expression,
+		final Object object, int tryToCreateNull, Class<?> clz)
 	{
 		final String expressionBracketsSeperated = Strings.replaceAll(expression, "[", ".[")
 			.toString();
 		int index = getNextDotIndex(expressionBracketsSeperated, 0);
 		int lastIndex = 0;
 		Object value = object;
-		Class<?> clz = value.getClass();
 		String exp = expressionBracketsSeperated;
 		while (index != -1)
 		{
