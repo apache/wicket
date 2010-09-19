@@ -104,8 +104,8 @@ public abstract class WebRequest extends Request
 	/**
 	 * Marker parameter for AjaxRequest.
 	 */
-	protected static final String PARAM_AJAX = "wicket:ajax";
-	protected static final String HEADER_AJAX = "Wicket-Ajax";
+	private static final String PARAM_AJAX = "wicket:ajax";
+	private static final String HEADER_AJAX = "Wicket-Ajax";
 
 	/**
 	 * Returns whether this request is an Ajax request. This implementation only checks for value of
