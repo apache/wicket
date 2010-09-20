@@ -126,7 +126,7 @@ import org.slf4j.LoggerFactory;
  * application without additional overhead (beyond the ResourceReference instance held by each
  * referee) and will yield a stable URL, permitting efficient browser caching of the resource (even
  * if the resource is dynamically generated). Resources shared in this manner may also be localized.
- * See {@link org.apache.wicket.ResourceReference} for more details.
+ * See {@link org.apache.wicket.request.resource.ResourceReference} for more details.
  * 
  * <li><b>Custom Session Subclasses</b>- In order to install your own {@link Session} subclass you
  * must override Application{@link #newSession(Request, Response)}. For subclasses of
@@ -143,6 +143,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	public static final String CONFIGURATION = "configuration";
 
 	/** Configuration type constant for getting the context path out of the web.xml */
+	// TODO this seems to be used nowhere ... either remove it or re-implement it
 	public static final String CONTEXTPATH = "contextpath";
 
 	/** Configuration type constant for deployment */
@@ -257,8 +258,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 */
 	public static Application get(String applicationKey)
 	{
-		Application application = applicationKeyToApplication.get(applicationKey);
-		return application;
+		return applicationKeyToApplication.get(applicationKey);
 	}
 
 	/**
@@ -319,9 +319,9 @@ public abstract class Application implements UnboundListener, IEventSink
 		}
 
 		// if an instance of this listener is already present ignore this call
-		for (int i = 0; i < componentInstantiationListeners.length; i++)
+		for (IComponentInstantiationListener componentInstantiationListener : componentInstantiationListeners)
 		{
-			if (listener == componentInstantiationListeners[i])
+			if (listener == componentInstantiationListener)
 			{
 				return;
 			}
@@ -546,7 +546,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	}
 
 	/**
-	 * Gets the {@link RequestLogger}.
+	 * Gets the {@link IRequestLogger}.
 	 * 
 	 * @return The RequestLogger
 	 */
@@ -725,7 +725,7 @@ public abstract class Application implements UnboundListener, IEventSink
 
 		if (listener != null && len > 0)
 		{
-			int pos = 0;
+			int pos;
 
 			for (pos = 0; pos < len; pos++)
 			{
@@ -770,7 +770,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param className
 	 */
-	private final void addInitializer(String className)
+	private void addInitializer(String className)
 	{
 		IInitializer initializer = (IInitializer)WicketObjects.newInstance(className);
 		if (initializer != null)
@@ -783,11 +783,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * Iterate initializers list, calling any {@link org.apache.wicket.IDestroyer} instances found
 	 * in it.
 	 */
-	private final void callDestroyers()
+	private void callDestroyers()
 	{
-		for (Iterator<IInitializer> iter = initializers.iterator(); iter.hasNext();)
+		for (IInitializer initializer : initializers)
 		{
-			IInitializer initializer = iter.next();
 			if (initializer instanceof IDestroyer)
 			{
 				log.info("[" + getName() + "] destroy: " + initializer);
@@ -799,11 +798,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * Iterate initializers list, calling any instances found in it.
 	 */
-	private final void callInitializers()
+	private void callInitializers()
 	{
-		for (Iterator<IInitializer> iter = initializers.iterator(); iter.hasNext();)
+		for (IInitializer initializer : initializers)
 		{
-			IInitializer initializer = iter.next();
 			log.info("[" + getName() + "] init: " + initializer);
 			initializer.init(this);
 		}
@@ -844,7 +842,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @param properties
 	 *            Properties map with names of any library initializers in it
 	 */
-	private final void load(final Properties properties)
+	private void load(final Properties properties)
 	{
 		addInitializer(properties.getProperty("initializer"));
 		addInitializer(properties.getProperty(getName() + "-initializer"));
@@ -1032,9 +1030,8 @@ public abstract class Application implements UnboundListener, IEventSink
 	{
 		if (componentPreOnBeforeRenderListeners != null)
 		{
-			for (Iterator<IComponentOnBeforeRenderListener> iter = componentPreOnBeforeRenderListeners.iterator(); iter.hasNext();)
+			for (IComponentOnBeforeRenderListener listener : componentPreOnBeforeRenderListeners)
 			{
-				IComponentOnBeforeRenderListener listener = iter.next();
 				listener.onBeforeRender(component);
 			}
 		}
@@ -1087,9 +1084,8 @@ public abstract class Application implements UnboundListener, IEventSink
 	{
 		if (componentPostOnBeforeRenderListeners != null)
 		{
-			for (Iterator<IComponentOnBeforeRenderListener> iter = componentPostOnBeforeRenderListeners.iterator(); iter.hasNext();)
+			for (IComponentOnBeforeRenderListener listener : componentPostOnBeforeRenderListeners)
 			{
-				IComponentOnBeforeRenderListener listener = iter.next();
 				listener.onBeforeRender(component);
 			}
 		}
@@ -1142,9 +1138,8 @@ public abstract class Application implements UnboundListener, IEventSink
 	{
 		if (componentOnAfterRenderListeners != null)
 		{
-			for (Iterator<IComponentOnAfterRenderListener> iter = componentOnAfterRenderListeners.iterator(); iter.hasNext();)
+			for (IComponentOnAfterRenderListener listener : componentOnAfterRenderListeners)
 			{
-				IComponentOnAfterRenderListener listener = iter.next();
 				listener.onAfterRender(component);
 			}
 		}
@@ -1310,9 +1305,9 @@ public abstract class Application implements UnboundListener, IEventSink
 	private IPageFactory pageFactory;
 
 	/**
-	 * Override to create custom {@link PageFactory}
+	 * Override to create custom {@link IPageFactory}
 	 * 
-	 * @return new {@link PageFactory} instance.
+	 * @return new {@link IPageFactory} instance.
 	 */
 	protected IPageFactory newPageFactory()
 	{
@@ -1320,7 +1315,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	}
 
 	/**
-	 * Returns {@link PageFactory} for this application.
+	 * Returns {@link IPageFactory} for this application.
 	 * 
 	 * @return
 	 */
@@ -1371,11 +1366,11 @@ public abstract class Application implements UnboundListener, IEventSink
 		{
 			if (pageParameters == null)
 			{
-				return getPageFactory().newPage((Class<? extends Page>)pageClass);
+				return getPageFactory().newPage(pageClass);
 			}
 			else
 			{
-				return getPageFactory().newPage((Class<? extends Page>)pageClass, pageParameters);
+				return getPageFactory().newPage(pageClass, pageParameters);
 			}
 		}
 
