@@ -40,7 +40,7 @@ public class DefaultMarkupCacheKeyProvider implements IMarkupCacheKeyProvider
 
 	/**
 	 * Construct a proper key value for the cache
-	 * 
+	 *
 	 * @param container
 	 *            The container requesting the markup
 	 * @param clazz
@@ -51,36 +51,36 @@ public class DefaultMarkupCacheKeyProvider implements IMarkupCacheKeyProvider
 	public String getCacheKey(final MarkupContainer container, final Class<?> clazz)
 	{
 		final String classname = clazz.getName();
-		final Locale locale = container.getLocale();
-		final String style = container.getStyle() + "_" + container.getVariation();
-		final String markupType = container.getMarkupType().getExtension();
-
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(classname.length() + 64);
 		buffer.append(classname);
 
+		final Locale locale = container.getLocale();
+
 		if (locale != null)
 		{
-			// TODO What is wrong with locale.toString()?!?
-			final boolean l = locale.getLanguage().length() != 0;
-			final boolean c = locale.getCountry().length() != 0;
-			final boolean v = locale.getVariant().length() != 0;
-			buffer.append(locale.getLanguage());
-			if (c || (l && v))
+			buffer.append('-').append(locale.getLanguage());
+
+			final boolean hasLocale = locale.getLanguage().length() != 0;
+			final boolean hasCountry = locale.getCountry().length() != 0;
+			final boolean hasVariant = locale.getVariant().length() != 0;
+			
+			if (hasCountry || (hasLocale && hasVariant))
 			{
-				buffer.append('_').append(locale.getCountry()); // This may just
-				// append '_'
+				buffer.append('_').append(locale.getCountry());
 			}
-			if (v && (l || c))
+			if (hasVariant && (hasLocale || hasCountry))
 			{
 				buffer.append('_').append(locale.getVariant());
 			}
 		}
-		if (style != null)
-		{
-			buffer.append(style);
-		}
+		if (container.getStyle() != null)
+			buffer.append('_').append(container.getStyle());
 
-		buffer.append(markupType);
+		if (container.getVariation() != null)
+			buffer.append('_').append(container.getVariation());
+
+		buffer.append('.').append(container.getMarkupType().getExtension());
+
 		return buffer.toString();
 	}
 }
