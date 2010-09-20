@@ -348,6 +348,12 @@ public abstract class AbstractTree extends Panel
 				});
 			}
 		}
+
+		private boolean hasParentWithChildrenMarkedToRecreation()
+		{
+			return getParentItem() != null &&
+				(getParentItem().getChildren() == null || getParentItem().hasParentWithChildrenMarkedToRecreation());
+		}
 	}
 
 	/**
@@ -857,7 +863,8 @@ public abstract class AbstractTree extends Panel
 								dirtyItems.add(item);
 							}
 
-							if (!dirtyItemsCreateDOM.contains(item))
+							if (!dirtyItemsCreateDOM.contains(item) &&
+								!item.hasParentWithChildrenMarkedToRecreation())
 							{
 								dirtyItemsCreateDOM.add(item);
 							}
