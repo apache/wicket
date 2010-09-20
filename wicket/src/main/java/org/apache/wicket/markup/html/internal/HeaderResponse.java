@@ -42,8 +42,6 @@ import org.apache.wicket.util.string.Strings;
  */
 public abstract class HeaderResponse implements IHeaderResponse
 {
-	private static final long serialVersionUID = 1L;
-
 	private final Set<Object> rendered = new HashSet<Object>();
 
 	private boolean closed;
@@ -57,7 +55,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderCSSReference(org.apache.wicket.ResourceReference)
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderCSSReference(org.apache.wicket.request.resource.ResourceReference)
 	 */
 	public void renderCSSReference(ResourceReference reference)
 	{
@@ -74,8 +72,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderCSSReference(org.apache.wicket.ResourceReference,
-	 *      java.lang.String)
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderCSSReference(org.apache.wicket.request.resource.ResourceReference, String)
 	 */
 	public void renderCSSReference(ResourceReference reference, String media)
 	{
@@ -123,7 +120,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 		}
 		if (!closed)
 		{
-			List<Object> token = Arrays.asList(new Object[] { "css", url, media });
+			List<String> token = Arrays.asList("css", url, media);
 			if (wasRendered(token) == false)
 			{
 				getResponse().write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
@@ -144,7 +141,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavascriptReference(org.apache.wicket.ResourceReference)
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavascriptReference(org.apache.wicket.request.resource.ResourceReference)
 	 */
 	public void renderJavascriptReference(ResourceReference reference)
 	{
@@ -161,8 +158,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavascriptReference(org.apache.wicket.ResourceReference,
-	 *      java.lang.String)
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavascriptReference(org.apache.wicket.request.resource.ResourceReference, String)
 	 */
 	public void renderJavascriptReference(ResourceReference reference, String id)
 	{
@@ -203,9 +199,8 @@ public abstract class HeaderResponse implements IHeaderResponse
 		}
 		if (!closed)
 		{
-			List<Object> token1 = Arrays.asList(new Object[] { "javascript", url });
-			List<Object> token2 = (id != null) ? Arrays.asList(new Object[] { "javascript", id })
-				: null;
+			List<String> token1 = Arrays.asList("javascript", url);
+			List<String> token2 = (id != null) ? Arrays.asList("javascript", id) : null;
 
 			final boolean token1Unused = wasRendered(token1) == false;
 			final boolean token2Unused = (token2 != null) ? wasRendered(token2) == false : true;
@@ -234,7 +229,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 		}
 		if (!closed)
 		{
-			List<Object> token = Arrays.asList(new Object[] { javascript.toString(), id });
+			List<String> token = Arrays.asList(javascript.toString(), id);
 			if (wasRendered(token) == false)
 			{
 				JavascriptUtils.writeJavascript(getResponse(), javascript, id);
@@ -310,8 +305,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	{
 		if (!closed)
 		{
-			List<Object> token = Arrays.asList(new Object[] { "javascript-event", target, event,
-					javascript });
+			List<String> token = Arrays.asList("javascript-event", target, event, javascript);
 			if (wasRendered(token) == false)
 			{
 				renderJavascriptReference(WicketEventReference.INSTANCE);
@@ -351,7 +345,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 * @param location
 	 * @return relative path
 	 */
-	private final String relative(final String location)
+	private String relative(final String location)
 	{
 		if (location.startsWith("http://") || location.startsWith("https://") ||
 			location.startsWith("/"))
