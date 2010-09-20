@@ -49,6 +49,7 @@ import org.apache.wicket.request.handler.render.WebPageRenderer;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.MountedMapper;
+import org.apache.wicket.request.mapper.ResourceMapper;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.session.ISessionStore;
@@ -327,14 +328,14 @@ public abstract class WebApplication extends Application
 	 * @param reference
 	 *            resource reference to be mounted
 	 * 
-	 * @deprecated - not sure what to use yet but this will be deprecated :)
+	 * @deprecated - this is the same as
+	 *               {@code getRootRequestMapperAsCompound().add(new ResourceMapper(path, reference))}
 	 */
 	@Deprecated
 	public final void mountSharedResource(final String path, final ResourceReference reference)
 	{
 		getResourceReferenceRegistry().registerResourceReference(reference);
-		// TODO NG Implement mounted resources mapper
-		throw new UnsupportedOperationException("Implement Mapper");
+		mount(new ResourceMapper(path, reference));
 	}
 
 
