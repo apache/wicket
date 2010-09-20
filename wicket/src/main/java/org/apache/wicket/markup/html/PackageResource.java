@@ -258,8 +258,10 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 		final String style)
 	{
 		String absolutePath = Packages.absolutePath(scope, path);
-		return Application.get().getResourceSettings().getResourceStreamLocator().locate(scope,
-			absolutePath, style, locale, null) != null;
+		return Application.get()
+			.getResourceSettings()
+			.getResourceStreamLocator()
+			.locate(scope, absolutePath, style, locale, null) != null;
 	}
 
 	/**
@@ -644,7 +646,11 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 		if (lastModifiedTimeUpdate == 0 ||
 			lastModifiedTimeUpdate < System.currentTimeMillis() - 5 * (1000 * 60))
 		{
-			lastModifiedTime = getResourceStream().lastModifiedTime();
+			IResourceStream resourceStream = getResourceStream(false);
+			if (resourceStream != null)
+			{
+				lastModifiedTime = resourceStream.lastModifiedTime();
+			}
 			lastModifiedTimeUpdate = System.currentTimeMillis();
 		}
 		return lastModifiedTime;
