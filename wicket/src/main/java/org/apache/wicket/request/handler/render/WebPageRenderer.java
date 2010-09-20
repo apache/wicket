@@ -168,7 +168,7 @@ public class WebPageRenderer extends PageRenderer
 	@Override
 	public void respond(RequestCycle requestCycle)
 	{
-		Url currentUrl = requestCycle.getRequest().getUrl();
+		Url currentUrl = requestCycle.getUrlRenderer().getBaseUrl();
 		Url targetUrl = requestCycle.mapUrlFor(getRenderPageRequestHandler());
 
 		//
