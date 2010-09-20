@@ -26,6 +26,7 @@ import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.handler.ErrorCodeResponseHandler;
 import org.apache.wicket.request.mapper.StalePageException;
 import org.apache.wicket.settings.IExceptionSettings;
@@ -135,7 +136,22 @@ public class DefaultExceptionMapper implements IExceptionMapper
 
 	private RenderPageRequestHandler createPageRequestHandler(PageProvider pageProvider)
 	{
-		return new RenderPageRequestHandler(pageProvider, redirectPolicy);
+		RequestCycle requestCycle = RequestCycle.get();
+
+		if (requestCycle == null)
+			throw new IllegalStateException("there is no current request cycle attached to this thread");
+
+		RenderPageRequestHandler.RedirectPolicy redirect = redirectPolicy;
+
+		// in case of ajax we must redirect to show the error page
+		if (requestCycle.getRequest() instanceof WebRequest)
+		{
+			WebRequest webRequest = (WebRequest)requestCycle.getRequest();
+
+			if(webRequest.isAjax())
+				redirect = RenderPageRequestHandler.RedirectPolicy.ALWAYS_REDIRECT;
+		}
+		return new RenderPageRequestHandler(pageProvider, redirect);
 	}
 
 	/**
@@ -145,16 +161,17 @@ public class DefaultExceptionMapper implements IExceptionMapper
 	private Page extractCurrentPage()
 	{
 		final RequestCycle requestCycle = RequestCycle.get();
-		final IRequestHandler activeRequestHandler = requestCycle.getActiveRequestHandler();
 
-		Page currentPage = null;
+		IRequestHandler handler = requestCycle.getActiveRequestHandler();
 
-		if (activeRequestHandler instanceof IPageRequestHandler)
+		if(handler == null)
+			handler = requestCycle.getRequestHandlerScheduledAfterCurrent();
+
+		if (handler instanceof IPageRequestHandler)
 		{
-			IPageRequestHandler pageRequestHandler = (IPageRequestHandler)activeRequestHandler;
-			currentPage = (Page)pageRequestHandler.getPage();
+			IPageRequestHandler pageRequestHandler = (IPageRequestHandler)handler;
+			return (Page)pageRequestHandler.getPage();
 		}
-
-		return currentPage;
+		return null;
 	}
 }
