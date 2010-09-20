@@ -212,7 +212,23 @@ public class ServletWebResponse extends WebResponse
 		{
 			HttpServletRequest httpServletRequest = webRequest.getHttpServletRequest();
 			Charset charset = RequestUtils.getCharset(httpServletRequest);
-			Url current = Url.parse(httpServletRequest.getRequestURI(), charset);
+
+			final Url current;
+
+			if(webRequest.isAjax())
+			{
+				String ajaxBaseUrl = httpServletRequest.getHeader("Wicket-Ajax-BaseURL");
+
+				if(ajaxBaseUrl == null)
+					throw new IllegalStateException("current ajax request is missing the base url header");
+				
+				current = Url.parse('/' + ajaxBaseUrl, charset);
+			}
+			else
+			{
+				current = Url.parse(httpServletRequest.getRequestURI(), charset);
+			}
+
 			Url append = Url.parse(url, charset);
 			current.concatSegments(append.getSegments());
 			Url result = new Url(current.getSegments(), append.getQueryParameters());
