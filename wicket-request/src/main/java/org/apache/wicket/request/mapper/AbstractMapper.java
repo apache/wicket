@@ -26,7 +26,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
-public class AbstractMapper
+public abstract class AbstractMapper
 {
 
 	/**
@@ -115,11 +115,25 @@ public class AbstractMapper
 		if (!urlCopy.getQueryParameters().isEmpty() &&
 			Strings.isEmpty(urlCopy.getQueryParameters().get(0).getValue()))
 		{
-			urlCopy.getQueryParameters().remove(0);
+			removeMetaParameter(urlCopy);
 		}
 
 		PageParameters decoded = encoder.decodePageParameters(request.requestWithUrl(urlCopy));
 		return decoded;
+	}
+
+	/**
+	 * The new {@link IRequestMapper}s use the first query parameter to hold meta information about
+	 * the request like page version, component version, locale, ... The actual
+	 * {@link IRequestMapper} implementation can decide whether the this parameter should be removed
+	 * before creating {@link PageParameters} from the current {@link Url#getQueryParameters() query
+	 * parameters}
+	 * 
+	 * @param urlCopy
+	 *            the {@link Url} that first query parameter has no value
+	 */
+	protected void removeMetaParameter(final Url urlCopy)
+	{
 	}
 
 	/**

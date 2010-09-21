@@ -76,4 +76,23 @@ public class HomePageMapperTest extends AbstractMapperTest
 
 		assertEquals("value", page.getPageParameters().get("name").toString());
 	}
+
+	/**
+	 * Tests requests to '/' with query parameters
+	 */
+	@Test
+	public void testWithQueryParameterWithoutEqualSignAndValue()
+	{
+		Url url = Url.parse("?name=");
+		Request request = getRequest(url);
+
+		IRequestHandler handler = encoder.mapRequest(request);
+
+		assertTrue(handler instanceof RenderPageRequestHandler);
+		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
+
+		assertEquals(context.getHomePageClass(), page.getClass());
+
+		assertEquals("", page.getPageParameters().get("name").toString());
+	}
 }

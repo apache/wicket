@@ -133,4 +133,20 @@ public abstract class AbstractComponentMapper extends AbstractMapper implements 
 
 		return WicketObjects.resolveClass(name);
 	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * Removes the first query parameter only if {@link PageComponentInfo#parse(String)} returns
+	 * non-null instance
+	 */
+	@Override
+	protected void removeMetaParameter(final Url urlCopy)
+	{
+		String pageComponentInfoCandidate = urlCopy.getQueryParameters().get(0).getName();
+		if (PageComponentInfo.parse(pageComponentInfoCandidate) != null)
+		{
+			urlCopy.getQueryParameters().remove(0);
+		}
+	}
 }

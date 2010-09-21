@@ -148,4 +148,16 @@ public abstract class AbstractResourceReferenceMapper extends AbstractComponentM
 		}
 		return new ResourceReference.UrlAttributes(null, null, null);
 	}
+
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * Remove the first parameter because it brings meta information like locale
+	 */
+	@Override
+	protected void removeMetaParameter(final Url urlCopy)
+	{
+		urlCopy.getQueryParameters().remove(0);
+	}
 }
