@@ -649,7 +649,18 @@ public abstract class WebApplication extends Application
 	@Override
 	protected ISessionStore newSessionStore()
 	{
-		return new SecondLevelCacheSessionStore(this, new DiskPageStore());
+		DiskPageStore store;
+		try
+		{
+			store = new DiskPageStore();
+		}
+		catch (SecurityException sec)
+		{
+			throw new WicketRuntimeException(
+				"SecurityException occurred while creating DiskPageStore. Consider overriding newSessionStore() in your application and using a PageStore that doesn't required disk access like: " +
+					HttpSessionStore.class.getName());
+		}
+		return new SecondLevelCacheSessionStore(this, store);
 	}
 
 	/**
