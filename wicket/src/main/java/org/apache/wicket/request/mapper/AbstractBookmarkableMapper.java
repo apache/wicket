@@ -281,7 +281,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 				PageInfo info = null;
 				if (!page.isPageStateless())
 				{
-					info = new PageInfo(page);
+					info = new PageInfo(page.getPageId());
 				}
 				PageComponentInfo pageComponentInfo = info != null ? new PageComponentInfo(info,
 					null) : null;
@@ -313,7 +313,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 				renderCount = page.getRenderCount();
 			}
 
-			PageInfo pageInfo = new PageInfo(page);
+			PageInfo pageInfo = new PageInfo(page.getPageId());
 			ComponentInfo componentInfo = new ComponentInfo(renderCount,
 				requestListenerInterfaceToString(handler.getListenerInterface()),
 				handler.getComponent().getPageRelativePath(), handler.getBehaviorIndex());

@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.request.mapper.info;
 
-import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -48,18 +46,6 @@ public class PageInfo
 	public PageInfo()
 	{
 		this((Integer)null);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param page
-	 */
-	public PageInfo(IRequestablePage page)
-	{
-		Args.notNull(page, "page");
-
-		pageId = page.getPageId();
 	}
 
 	/**

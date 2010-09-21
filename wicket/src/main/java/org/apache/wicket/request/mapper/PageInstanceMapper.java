@@ -69,8 +69,8 @@ public class PageInstanceMapper extends AbstractComponentMapper
 
 				if (info.getComponentInfo() == null)
 				{
-					PageProvider provider = new PageProvider(info.getPageInfo()
-						.getPageId(), renderCount);
+					PageProvider provider = new PageProvider(info.getPageInfo().getPageId(),
+						renderCount);
 					provider.setPageSource(getContext());
 					// render page
 					return new RenderPageRequestHandler(provider);
@@ -107,7 +107,7 @@ public class PageInstanceMapper extends AbstractComponentMapper
 		{
 			IRequestablePage page = ((RenderPageRequestHandler)requestHandler).getPage();
 
-			PageInfo i = new PageInfo(page);
+			PageInfo i = new PageInfo(page.getPageId());
 			info = new PageComponentInfo(i, null);
 		}
 		else if (requestHandler instanceof ListenerInterfaceRequestHandler)
@@ -123,7 +123,7 @@ public class PageInstanceMapper extends AbstractComponentMapper
 				renderCount = page.getRenderCount();
 			}
 
-			PageInfo pageInfo = new PageInfo(page);
+			PageInfo pageInfo = new PageInfo(page.getPageId());
 			ComponentInfo componentInfo = new ComponentInfo(renderCount,
 				requestListenerInterfaceToString(listenerInterface), componentPath,
 				handler.getBehaviorIndex());
