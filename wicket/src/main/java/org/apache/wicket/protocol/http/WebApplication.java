@@ -654,11 +654,11 @@ public abstract class WebApplication extends Application
 		{
 			store = new DiskPageStore();
 		}
-		catch (SecurityException sec)
+		catch (SecurityException e)
 		{
 			throw new WicketRuntimeException(
 				"SecurityException occurred while creating DiskPageStore. Consider overriding newSessionStore() in your application and using a PageStore that doesn't required disk access like: " +
-					HttpSessionStore.class.getName());
+					HttpSessionStore.class.getName(), e);
 		}
 		return new SecondLevelCacheSessionStore(this, store);
 	}
