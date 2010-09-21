@@ -87,6 +87,7 @@ public class HomePageMapper extends AbstractComponentMapper
 			{
 				pageProvider = new PageProvider(homePageClass);
 			}
+			pageProvider.setPageSource(getContext());
 
 			return new RenderPageRequestHandler(pageProvider);
 		}
