@@ -73,10 +73,23 @@ public class DiskDataStore implements IDataStore
 		this.applicationName = applicationName;
 		this.fileStoreFolder = fileStoreFolder;
 		maxSizePerPageSession = maxSizePerSession;
-		fileChannelPool = new FileChannelPool(fileChannelPoolCapacity);
 
-		this.fileStoreFolder.mkdirs();
-		loadIndex();
+
+		try
+		{
+			fileChannelPool = new FileChannelPool(fileChannelPoolCapacity);
+
+			this.fileStoreFolder.mkdirs();
+			loadIndex();
+		}
+		catch (SecurityException e)
+		{
+			throw new WicketRuntimeException(
+				// TODO improve the message by explaining where in the API the disk store can be
+				// changed
+				"SecurityException occurred while creating DiskDataStore. Consider using a non-disk based IDataStore implementation.",
+				e);
+		}
 	}
 
 	/**
