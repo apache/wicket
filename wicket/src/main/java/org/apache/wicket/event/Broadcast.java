@@ -16,9 +16,8 @@
  */
 package org.apache.wicket.event;
 
-import java.awt.Component;
-
 import org.apache.wicket.Application;
+import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -99,5 +98,5 @@ public enum Broadcast {
 	/**
 	 * Only the specified sink receives the event
 	 */
-	EXACT;
+	EXACT
 }
