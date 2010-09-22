@@ -90,11 +90,9 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 
 
 	/**
-	 * UID used in unique file name generation.
+	 * UUID used in unique file name generation.
 	 */
-	private static final String UID = new java.rmi.server.UID().toString()
-		.replace(':', '_')
-		.replace('-', '_');
+	private static final String UID = java.util.UUID.randomUUID().toString().replace('-', '_');
 
 	/**
 	 * Random counter used in unique identifier generation.

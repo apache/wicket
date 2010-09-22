@@ -17,7 +17,6 @@
 package org.apache.wicket.protocol.http;
 
 import java.io.Serializable;
-import java.rmi.server.UID;
 import java.util.Collections;
 import java.util.Enumeration;
 
@@ -42,7 +41,7 @@ public class MockHttpSession implements HttpSession, Serializable
 
 	private final long creationTime = System.currentTimeMillis();
 
-	private final String id = (new UID()).toString().replace(':', '_').replace('-', '_');
+	private final String id = java.util.UUID.randomUUID().toString().replace('-', '_');
 
 	private long lastAccessedTime = 0;
 
