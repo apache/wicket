@@ -471,6 +471,43 @@ public class WicketTesterTest extends TestCase
 	}
 
 	/**
+	 * Test that the clickLink on AjaxSubmitLink will re-submit/preserve the values for all form
+	 * components WICKET-3053
+	 */
+	public void testClickLink_ajaxSubmitLink_preservesFormComponentValues()
+	{
+		tester.startPage(MockPageAjaxSubmitLinkSubmitsWholeForm.class);
+
+		tester.assertRenderedPage(MockPageAjaxSubmitLinkSubmitsWholeForm.class);
+
+		FormTester formTester = tester.newFormTester("form");
+
+		formTester.setValue("name", "Bob");
+
+// do not call 'formTester.submit()'. The value of 'name' will be submitted by
+// AjaxSubmitLink
+// formTester.submit();
+
+		// this will submit 'name=Bob'
+		tester.clickLink("helloSubmit", true);
+
+		tester.assertModelValue("form:name", "Bob");
+
+		tester.assertComponentOnAjaxResponse("text");
+
+		tester.assertModelValue("text", "Hello Bob");
+
+		// this should preserve the value of 'name'
+		tester.clickLink("goodbyeSubmit", true);
+
+		tester.assertModelValue("form:name", "Bob");
+
+		tester.assertComponentOnAjaxResponse("text");
+
+		tester.assertModelValue("text", "Goodbye Bob");
+	}
+
+	/**
 	 * Test that the executeAjaxEvent "submits" the form if the event is a AjaxFormSubmitBehavior.
 	 */
 	public void testExecuteAjaxEvent_ajaxFormSubmitLink()

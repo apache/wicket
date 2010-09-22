@@ -22,11 +22,13 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -69,6 +71,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.mock.MockPageManager;
+import org.apache.wicket.mock.MockRequestParameters;
 import org.apache.wicket.mock.MockSessionStore;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
@@ -1657,6 +1660,8 @@ public class BaseWicketTester
 		String failMessage = "No form attached to the submitlink.";
 		notNull(failMessage, form);
 
+		serializeFormToRequest(form);
+
 		Url url = Url.parse(behavior.getCallbackUrl().toString(),
 			Charset.forName(request.getCharacterEncoding()));
 		transform(url);
@@ -1664,6 +1669,44 @@ public class BaseWicketTester
 		request.addHeader("Wicket-Ajax", "true");
 		request.setUrl(url);
 		processRequest(request, null);
+	}
+
+	/**
+	 * Puts all not already scheduled (e.g. via {@link FormTester#setValue(String, String)}) form
+	 * component values in the post parameters for the next form submit
+	 * 
+	 * @param form
+	 *            the {@link Form} which components should be submitted
+	 */
+	private void serializeFormToRequest(final Form<?> form)
+	{
+		final MockRequestParameters postParameters = request.getPostParameters();
+
+		final Set<String> currentParameterNamesSet = postParameters.getParameterNames();
+
+		form.visitFormComponents(new IVisitor<FormComponent<?>, Void>()
+		{
+			public void component(final FormComponent<?> formComponent, final IVisit<Void> visit)
+			{
+				final String inputName = formComponent.getInputName();
+				if (!currentParameterNamesSet.contains(inputName))
+				{
+					final Object modelObject = formComponent.getModelObject();
+					if (modelObject instanceof Collection<?>)
+					{
+						final Collection<?> collectionModelObject = (Collection<?>)modelObject;
+						for (Object value : collectionModelObject)
+						{
+							postParameters.addParameterValue(inputName, value.toString());
+						}
+					}
+					else
+					{
+						postParameters.addParameterValue(inputName, formComponent.getValue());
+					}
+				}
+			}
+		});
 	}
 
 	/**
