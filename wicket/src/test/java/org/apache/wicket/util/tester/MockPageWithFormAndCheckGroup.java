@@ -64,7 +64,7 @@ public class MockPageWithFormAndCheckGroup extends WebPage
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
-				target.addComponent(this);
+				target.add(this);
 			}
 
 			@Override

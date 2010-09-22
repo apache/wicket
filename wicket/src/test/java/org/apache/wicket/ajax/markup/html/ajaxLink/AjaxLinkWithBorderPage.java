@@ -51,7 +51,7 @@ public class AjaxLinkWithBorderPage extends WebPage
 			public void onClick(AjaxRequestTarget target)
 			{
 				labelText = "Updated!";
-				target.addComponent(label);
+				target.add(label);
 			}
 		});
 	}

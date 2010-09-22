@@ -66,11 +66,11 @@ public class WorldClockPage extends BasePage
 			 */
 			protected void onTimer(AjaxRequestTarget target)
 			{
-				target.addComponent(la);
-				target.addComponent(ny);
-				target.addComponent(moscow);
-				target.addComponent(prague);
-				target.addComponent(london);
+				target.add(la);
+				target.add(ny);
+				target.add(moscow);
+				target.add(prague);
+				target.add(london);
 			}
 		});
 	}

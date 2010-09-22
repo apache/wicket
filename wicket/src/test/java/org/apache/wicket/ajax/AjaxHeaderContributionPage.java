@@ -46,9 +46,9 @@ public class AjaxHeaderContributionPage extends WebPage
 			public void onClick(AjaxRequestTarget target)
 			{
 				target.prependJavascript("prepend();");
-				target.addComponent(test1);
-				target.addComponent(test2);
-				target.addComponent(test3);
+				target.add(test1);
+				target.add(test2);
+				target.add(test3);
 				target.appendJavascript("append();");
 			}
 		});

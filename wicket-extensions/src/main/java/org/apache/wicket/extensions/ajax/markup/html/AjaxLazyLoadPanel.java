@@ -79,7 +79,7 @@ public abstract class AjaxLazyLoadPanel extends Panel
 			{
 				Component component = getLazyLoadComponent(LAZY_LOAD_COMPONENT_ID);
 				AjaxLazyLoadPanel.this.replace(component);
-				target.addComponent(AjaxLazyLoadPanel.this);
+				target.add(AjaxLazyLoadPanel.this);
 				setState((byte)2);
 			}
 

@@ -71,7 +71,7 @@ public class AjaxNavigationToolbar extends NavigationToolbar
 			@Override
 			protected void onAjaxEvent(AjaxRequestTarget target)
 			{
-				target.addComponent(table);
+				target.add(table);
 			}
 		};
 	}

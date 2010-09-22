@@ -99,7 +99,7 @@ public class AjaxRequestTargetTest extends WicketTestCase
 					page.replace(comp);
 					comp.setOutputMarkupId(true);
 
-					target.addComponent(comp);
+					target.add(comp);
 				}
 				catch (Exception e)
 				{

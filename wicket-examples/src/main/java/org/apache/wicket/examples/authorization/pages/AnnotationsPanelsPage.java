@@ -174,7 +174,7 @@ public class AnnotationsPanelsPage extends BasePage
 				{
 					outer.replace(new Test("test"));
 				}
-				target.addComponent(outer);
+				target.add(outer);
 			}
 		});
 	}

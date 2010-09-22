@@ -83,7 +83,7 @@ public class EffectsPage extends BasePage
 			public void onClick(AjaxRequestTarget target)
 			{
 				counter1++;
-				target.addComponent(c1);
+				target.add(c1);
 				target.appendJavascript("new Effect.Shake($('" + c1.getMarkupId() + "'));");
 			}
 		});
@@ -96,7 +96,7 @@ public class EffectsPage extends BasePage
 				counter2++;
 				if (target != null)
 				{
-					target.addComponent(c2);
+					target.add(c2);
 					target.appendJavascript("new Effect.Highlight($('" + c2.getMarkupId() + "'));");
 				}
 			}

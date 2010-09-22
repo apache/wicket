@@ -64,7 +64,7 @@ public class AjaxTabbedPanel extends TabbedPanel
 				setSelectedTab(index);
 				if (target != null)
 				{
-					target.addComponent(AjaxTabbedPanel.this);
+					target.add(AjaxTabbedPanel.this);
 				}
 				onAjaxUpdate(target);
 			}

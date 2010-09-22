@@ -85,7 +85,7 @@ public class LinksPage extends BasePage
 			public void onClick(AjaxRequestTarget target)
 			{
 				counter1++;
-				target.addComponent(c1);
+				target.add(c1);
 			}
 		});
 
@@ -101,7 +101,7 @@ public class LinksPage extends BasePage
 				// processing.
 				if (target != null)
 				{
-					target.addComponent(c2);
+					target.add(c2);
 				}
 			}
 		});
@@ -112,7 +112,7 @@ public class LinksPage extends BasePage
 			public void onClick(AjaxRequestTarget target)
 			{
 				counter3++;
-				target.addComponent(c3);
+				target.add(c3);
 				// sleep for 5 seconds to show off the busy indicator
 				try
 				{

@@ -130,7 +130,7 @@ public abstract class RatingPanel extends Panel
 					// if we process an AJAX event, update this panel
 					if (target != null)
 					{
-						target.addComponent(RatingPanel.this.get("rater"));
+						target.add(RatingPanel.this.get("rater"));
 					}
 				}
 

@@ -23,7 +23,7 @@ import org.apache.wicket.model.Model;
 
 /**
  * Simple page with three {@link Label}s which will be updated via
- * {@link AjaxRequestTarget#addComponent(org.apache.wicket.Component...)} in one pass
+ * {@link AjaxRequestTarget#add(org.apache.wicket.Component...)} in one pass
  * 
  * WICKET-2543
  * 
@@ -70,7 +70,7 @@ public class VarargsAddComponentPage extends WebPage
 				label2.setDefaultModelObject(label2.getDefaultModelObjectAsString() +
 					AJAX_APPENDED_SUFFIX);
 
-				target.addComponent(label0, label2, label1);
+				target.add(label0, label2, label1);
 			}
 		};
 		add(link);

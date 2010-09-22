@@ -129,7 +129,7 @@ public class DecoupledAjaxUpdatePage extends BasePage
 			if (event.getPayload() instanceof CounterUpdate)
 			{
 				CounterUpdate update = (CounterUpdate)event.getPayload();
-				update.getTarget().addComponent(this);
+				update.getTarget().add(this);
 			}
 		}
 

@@ -318,7 +318,7 @@ public class WicketTesterTest extends TestCase
 
 				page.replace(link);
 
-				target.addComponent(link);
+				target.add(link);
 			}
 		};
 		ajaxLink.setOutputMarkupId(true);
@@ -388,7 +388,7 @@ public class WicketTesterTest extends TestCase
 			public void onClick(AjaxRequestTarget target)
 			{
 				labelModel.setObject("Label which needs encoding: [] ][");
-				target.addComponent(label);
+				target.add(label);
 			}
 		};
 		ajaxLink.setOutputMarkupId(true);

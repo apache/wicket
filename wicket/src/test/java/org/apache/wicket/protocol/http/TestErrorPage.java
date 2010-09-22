@@ -42,7 +42,7 @@ public class TestErrorPage extends WebPage
 			public void onClick(AjaxRequestTarget target)
 			{
 				clicked = true;
-				target.addComponent(this);
+				target.add(this);
 			}
 
 			@Override

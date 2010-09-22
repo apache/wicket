@@ -61,7 +61,7 @@ public class DomReadyOrderPage extends WebPage
 		@Override
 		public void onClick(AjaxRequestTarget target)
 		{
-			target.addComponent(this);
+			target.add(this);
 		}
 	}
 }

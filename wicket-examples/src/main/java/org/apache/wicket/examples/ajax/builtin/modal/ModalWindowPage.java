@@ -59,7 +59,7 @@ public class ModalWindowPage extends BasePage
 		{
 			public void onClose(AjaxRequestTarget target)
 			{
-				target.addComponent(result);
+				target.add(result);
 			}
 		});
 		modal1.setCloseButtonCallback(new ModalWindow.CloseButtonCallback()
@@ -104,7 +104,7 @@ public class ModalWindowPage extends BasePage
 		{
 			public void onClose(AjaxRequestTarget target)
 			{
-				target.addComponent(result);
+				target.add(result);
 			}
 		});
 

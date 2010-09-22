@@ -45,7 +45,7 @@ public class Provider extends Panel
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
-				target.addComponent(fragmentContent);
+				target.add(fragmentContent);
 			}
 		});
 	}

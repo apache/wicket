@@ -324,7 +324,7 @@ public class ModalWindow extends Panel
 		if (shown == false)
 		{
 			getContent().setVisible(true);
-			target.addComponent(this);
+			target.add(this);
 			target.appendJavascript(getWindowOpenJavascript());
 			shown = true;
 		}

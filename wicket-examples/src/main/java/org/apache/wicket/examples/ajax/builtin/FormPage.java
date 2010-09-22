@@ -86,14 +86,14 @@ public class FormPage extends BasePage
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
 				// repaint the feedback panel so that it is hidden
-				target.addComponent(feedback);
+				target.add(feedback);
 			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form)
 			{
 				// repaint the feedback panel so errors are shown
-				target.addComponent(feedback);
+				target.add(feedback);
 			}
 		});
 	}

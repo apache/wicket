@@ -79,7 +79,7 @@ public class OnChangeAjaxBehaviorPage extends BasePage
 			protected void onUpdate(AjaxRequestTarget target)
 			{
 				label.setDefaultModelObject(getValue(field.getDefaultModelObjectAsString()));
-				target.addComponent(label);
+				target.add(label);
 			}
 		};
 		field.add(onChangeAjaxBehavior);

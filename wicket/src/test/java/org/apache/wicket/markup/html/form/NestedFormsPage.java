@@ -97,13 +97,13 @@ public class NestedFormsPage extends WebPage
 				@Override
 				protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 				{
-					target.addComponent(feedback);
+					target.add(feedback);
 				}
 
 				@Override
 				protected void onError(AjaxRequestTarget target, Form<?> form)
 				{
-					target.addComponent(feedback);
+					target.add(feedback);
 				}
 			});
 			add(new ToggleLink("toggle", this));

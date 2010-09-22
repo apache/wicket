@@ -422,7 +422,7 @@ public class AjaxEditableLabel<T> extends Panel
 	{
 		label.setVisible(true);
 		editor.setVisible(false);
-		target.addComponent(AjaxEditableLabel.this);
+		target.add(AjaxEditableLabel.this);
 	}
 
 	/**
@@ -435,7 +435,7 @@ public class AjaxEditableLabel<T> extends Panel
 	{
 		label.setVisible(false);
 		editor.setVisible(true);
-		target.addComponent(AjaxEditableLabel.this);
+		target.add(AjaxEditableLabel.this);
 		// put focus on the textfield and stupid explorer hack to move the
 		// caret to the end
 		target.appendJavascript("{ var el=wicketGet('" + editor.getMarkupId() + "');" +
@@ -461,7 +461,7 @@ public class AjaxEditableLabel<T> extends Panel
 		}
 		target.appendJavascript("{var el=wicketGet('" + editor.getMarkupId() +
 			"'); el.select(); el.focus();}");
-		target.addComponent(editor);
+		target.add(editor);
 	}
 
 	/**
@@ -476,7 +476,7 @@ public class AjaxEditableLabel<T> extends Panel
 	{
 		label.setVisible(true);
 		editor.setVisible(false);
-		target.addComponent(AjaxEditableLabel.this);
+		target.add(AjaxEditableLabel.this);
 
 		target.appendJavascript("window.status='';");
 	}

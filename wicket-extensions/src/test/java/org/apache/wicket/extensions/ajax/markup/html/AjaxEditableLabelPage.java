@@ -44,7 +44,7 @@ public class AjaxEditableLabelPage extends WebPage
 			public void onClick(AjaxRequestTarget target)
 			{
 				ajaxLabel.setEnabled(!ajaxLabel.isEnabled());
-				target.addComponent(ajaxLabel);
+				target.add(ajaxLabel);
 			}
 		});
 	}

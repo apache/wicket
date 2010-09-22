@@ -57,7 +57,7 @@ public class HideableBorder extends Border
 			public void onClick(AjaxRequestTarget target)
 			{
 				hidden = !hidden;
-				target.addComponent(containerWrapper);
+				target.add(containerWrapper);
 			}
 		});
 		containerWrapper.setOutputMarkupPlaceholderTag(true);

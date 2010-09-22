@@ -327,7 +327,7 @@ public class TodoList extends BasePage
 			linkVisible = false;
 
 			// redraw the add container.
-			target.addComponent(this);
+			target.add(this);
 		}
 
 		void onRemoveCompletedTodos(AjaxRequestTarget target)
@@ -344,10 +344,10 @@ public class TodoList extends BasePage
 			items.removeAll(ready);
 
 			// repaint our panel
-			target.addComponent(this);
+			target.add(this);
 
 			// repaint the listview as there was a new item added.
-			target.addComponent(showItems);
+			target.add(showItems);
 		}
 
 		/**
@@ -370,10 +370,10 @@ public class TodoList extends BasePage
 			linkVisible = true;
 
 			// repaint our panel
-			target.addComponent(this);
+			target.add(this);
 
 			// repaint the listview as there was a new item added.
-			target.addComponent(showItems);
+			target.add(showItems);
 		}
 
 		/**
@@ -389,7 +389,7 @@ public class TodoList extends BasePage
 			linkVisible = true;
 
 			// repaint the panel.
-			target.addComponent(this);
+			target.add(this);
 		}
 	}
 

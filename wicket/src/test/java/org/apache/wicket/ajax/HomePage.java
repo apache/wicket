@@ -101,7 +101,7 @@ public class HomePage extends WebPage
 			{
 				rows++;
 				listView.removeAll();
-				target.addComponent(listViewContainer);
+				target.add(listViewContainer);
 			}
 
 			@Override

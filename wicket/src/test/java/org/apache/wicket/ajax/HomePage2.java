@@ -56,7 +56,7 @@ public class HomePage2 extends WebPage
 				// Adding the entire page to the ajax request target
 				// should force the entire page to be re-requested by the
 				// browser, thereby reverting the _message value.
-				tgt.addComponent(getPage());
+				tgt.add(getPage());
 
 				// And it works. However the when testing this behavior
 				// with WicketTester, the _message value does not revert.

@@ -66,7 +66,7 @@ public class AjaxFallbackHeadersToolbar extends HeadersToolbar
 			@Override
 			protected void onAjaxClick(AjaxRequestTarget target)
 			{
-				target.addComponent(getTable());
+				target.add(getTable());
 			}
 
 			@Override

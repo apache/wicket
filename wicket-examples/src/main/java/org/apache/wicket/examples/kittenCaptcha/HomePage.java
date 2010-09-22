@@ -67,7 +67,7 @@ public class HomePage extends WicketExamplePage
 					{
 						target.appendJavascript("alert('please try again');");
 					}
-					target.addComponent(captcha);
+					target.add(captcha);
 				}
 				captcha.reset();
 			}

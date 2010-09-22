@@ -88,14 +88,14 @@ public class FileUploadPage extends BasePage
 				info("This request was processed using AJAX");
 
 				// ajax-update the feedback panel
-				target.addComponent(feedback);
+				target.add(feedback);
 			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form)
 			{
 				// update feedback to display errors
-				target.addComponent(feedback);
+				target.add(feedback);
 			}
 
 		});

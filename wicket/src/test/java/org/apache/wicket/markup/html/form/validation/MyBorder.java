@@ -57,7 +57,7 @@ public class MyBorder extends Border
 			{
 				info("onSubmit");
 				hitOnSubmit = true;
-				target.addComponent(form);
+				target.add(form);
 			}
 
 			@Override
@@ -65,7 +65,7 @@ public class MyBorder extends Border
 			{
 				error("onError");
 				hitOnError = true;
-				target.addComponent(form);
+				target.add(form);
 			}
 		});
 	}

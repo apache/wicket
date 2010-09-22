@@ -213,7 +213,7 @@ public class KittenCaptchaPanel extends Panel
 				}
 
 				// Update the selection label
-				target.addComponent(animalSelectionLabel);
+				target.add(animalSelectionLabel);
 			}
 		});
 		add(image);

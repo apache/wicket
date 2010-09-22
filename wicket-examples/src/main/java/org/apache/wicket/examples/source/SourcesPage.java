@@ -399,8 +399,8 @@ public class SourcesPage extends WebPage
 
 							if (target != null)
 							{
-								target.addComponent(codePanel);
-								target.addComponent(filename);
+								target.add(codePanel);
+								target.add(filename);
 							}
 						}
 

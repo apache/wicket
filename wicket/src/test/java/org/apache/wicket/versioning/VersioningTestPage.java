@@ -97,7 +97,7 @@ public class VersioningTestPage extends WebPage
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
-				target.addComponent(targetComponent);
+				target.add(targetComponent);
 			}
 		};
 		add(ajaxUpdatingLink);
@@ -117,7 +117,7 @@ public class VersioningTestPage extends WebPage
 			public void onClick(AjaxRequestTarget target)
 			{
 				targetComponent.setDefaultModelObject("label new value");
-				target.addComponent(targetComponent);
+				target.add(targetComponent);
 			}
 		};
 		add(ajaxUpdatingChangeModelLink);

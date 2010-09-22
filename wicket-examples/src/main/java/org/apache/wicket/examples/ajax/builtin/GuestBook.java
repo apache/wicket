@@ -112,8 +112,8 @@ public class GuestBook extends BasePage
 			protected void onSubmit(AjaxRequestTarget target)
 			{
 				// add the list of components that need to be updated
-				target.addComponent(comments);
-				target.addComponent(text);
+				target.add(comments);
+				target.add(text);
 
 				// focus the textarea again
 				target.appendJavascript("document.getElementById('" + text.getMarkupId() +

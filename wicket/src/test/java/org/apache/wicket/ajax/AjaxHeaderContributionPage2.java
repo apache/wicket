@@ -53,12 +53,12 @@ public class AjaxHeaderContributionPage2 extends WebPage
 			public void onClick(AjaxRequestTarget target)
 			{
 				target.prependJavascript("prepend();");
-				target.addComponent(test1);
-				target.addComponent(test2);
-				target.addComponent(test3);
-				target.addComponent(btest1);
-				target.addComponent(btest2);
-				target.addComponent(btest3);
+				target.add(test1);
+				target.add(test2);
+				target.add(test3);
+				target.add(btest1);
+				target.add(btest2);
+				target.add(btest3);
 				target.appendJavascript("append();");
 			}
 		});

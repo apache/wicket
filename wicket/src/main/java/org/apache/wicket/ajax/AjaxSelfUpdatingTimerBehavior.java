@@ -47,7 +47,7 @@ public class AjaxSelfUpdatingTimerBehavior extends AbstractAjaxTimerBehavior
 	@Override
 	protected final void onTimer(final AjaxRequestTarget target)
 	{
-		target.addComponent(getComponent());
+		target.add(getComponent());
 		onPostProcessTarget(target);
 	}
 

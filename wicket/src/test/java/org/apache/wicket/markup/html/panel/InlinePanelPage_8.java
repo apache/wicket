@@ -92,7 +92,7 @@ public class InlinePanelPage_8 extends WebPage
 			ListNode next = new ListNode("next", number);
 			nextContainer.add(next);
 			nextContainer.setVisible(true);
-			target.addComponent(nextContainer);
+			target.add(nextContainer);
 			return next;
 		}
 	}

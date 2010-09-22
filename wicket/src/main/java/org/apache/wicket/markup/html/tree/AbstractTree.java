@@ -976,7 +976,7 @@ public abstract class AbstractTree extends Panel
 	 */
 	protected void addComponent(AjaxRequestTarget target, Component component)
 	{
-		target.addComponent(component);
+		target.add(component);
 	}
 
 	public void onTargetRespond(AjaxRequestTarget target)

@@ -47,7 +47,7 @@ public class AjaxLinkPage extends WebPage
 			public void onClick(AjaxRequestTarget target)
 			{
 				labelText = "Updated!";
-				target.addComponent(label);
+				target.add(label);
 			}
 		});
 	}

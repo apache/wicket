@@ -82,7 +82,7 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 		{
 			public void component(final Component component, final IVisit<Void> visit)
 			{
-				target.addComponent(component);
+				target.add(component);
 			}
 		});
 	}

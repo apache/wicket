@@ -118,7 +118,7 @@ public class TestDetachPage extends WebPage
 			@Override
 			protected void onEvent(AjaxRequestTarget target)
 			{
-				target.addComponent(label);
+				target.add(label);
 			}
 		};
 		label.add(ajaxEventBehavior);

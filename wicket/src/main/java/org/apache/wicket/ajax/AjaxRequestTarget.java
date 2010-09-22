@@ -32,13 +32,13 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.AjaxRequestTarget.IListener;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.internal.HeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
-import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
@@ -330,7 +330,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 
 			public void component(final Component component, final IVisit<Void> visit)
 			{
-				addComponent(component);
+				add(component);
 				visit.dontGoDeeper();
 			}
 		});
@@ -341,8 +341,22 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	 * 
 	 * @param components
 	 *            components to be rendered
+	 * @deprecated use {@link #add(Component...)} instead
 	 */
+	// should stay deprecated in 1.5
+	@Deprecated
 	public void addComponent(Component... components)
+	{
+		add(components);
+	}
+
+	/**
+	 * Adds components to the list of components to be rendered
+	 * 
+	 * @param components
+	 *            components to be rendered
+	 */
+	public void add(Component... components)
 	{
 		for (final Component component : components)
 		{
@@ -356,7 +370,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 					"cannot update component that does not have setOutputMarkupId property set to true. Component: " +
 						component.toString());
 			}
-			addComponent(component, component.getMarkupId());
+			add(component, component.getMarkupId());
 		}
 	}
 
@@ -368,8 +382,25 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	 * 
 	 * @param component
 	 *            component to be rendered
+	 * @deprecated use {@link #add(Component...)} instead
 	 */
+	// should stay deprecated in 1.5
+	@Deprecated
 	public final void addComponent(Component component, String markupId)
+	{
+		add(component, markupId);
+	}
+
+	/**
+	 * Adds a component to the list of components to be rendered
+	 * 
+	 * @param markupId
+	 *            id of client-side dom element that will be updated
+	 * 
+	 * @param component
+	 *            component to be rendered
+	 */
+	public final void add(Component component, String markupId)
 	{
 		if (Strings.isEmpty(markupId))
 		{
@@ -553,8 +584,9 @@ public class AjaxRequestTarget implements IPageRequestHandler
 
 			if (markupIdToComponent.values().contains(page))
 			{
-				// the page itself has been added to the request target, we simply issue a redirect back
-				// to the page
+				// the page itself has been added to the request target, we simply issue a redirect
+// back
+// to the page
 				IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(page));
 				final String url = rc.urlFor(handler).toString();
 				response.sendRedirect(url);
@@ -681,7 +713,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		for (Map.Entry<String, Component> stringComponentEntry : markupIdToComponent.entrySet())
 		{
 			final Component component = stringComponentEntry.getValue();
-			//final String markupId = stringComponentEntry.getKey();
+			// final String markupId = stringComponentEntry.getKey();
 
 			if (!containsAncestorFor(component))
 			{

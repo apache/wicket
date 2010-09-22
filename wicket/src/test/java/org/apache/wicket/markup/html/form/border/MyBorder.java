@@ -42,7 +42,7 @@ public class MyBorder extends Border
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
-				target.addComponent(form);
+				target.add(form);
 			}
 
 			@Override

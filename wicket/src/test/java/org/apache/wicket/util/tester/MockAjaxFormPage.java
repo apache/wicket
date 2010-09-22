@@ -87,7 +87,7 @@ public class MockAjaxFormPage extends WebPage
 			{
 				text.validate();
 				submit.setEnabled(text.isValid());
-				target.addComponent(submit);
+				target.add(submit);
 			}
 		});
 		form.add(text);

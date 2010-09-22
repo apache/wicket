@@ -90,7 +90,7 @@ public class AutoCompletePage extends BasePage
 			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
-				target.addComponent(label);
+				target.add(label);
 			}
 
 			@Override

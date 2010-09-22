@@ -84,7 +84,7 @@ public class HomePage extends WebPage
 			{
 				info("onSubmit");
 				hitOnSubmit = true;
-				target.addComponent(form);
+				target.add(form);
 			}
 
 			@Override
@@ -92,7 +92,7 @@ public class HomePage extends WebPage
 			{
 				error("onError");
 				hitOnError = true;
-				target.addComponent(form);
+				target.add(form);
 			}
 		});
 
@@ -124,7 +124,7 @@ public class HomePage extends WebPage
 			protected void onSubmit(AjaxRequestTarget target, Form form)
 			{
 				formSubmitted = formSubmitted | AJAX;
-				target.addComponent(form);
+				target.add(form);
 			}
 
 			@Override

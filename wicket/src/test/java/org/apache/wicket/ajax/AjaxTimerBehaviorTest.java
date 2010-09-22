@@ -67,7 +67,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 				wmc.setOutputMarkupId(true);
 				wmc.add(timer);
 				page.replace(wmc);
-				target.addComponent(wmc);
+				target.add(wmc);
 			}
 		});
 
