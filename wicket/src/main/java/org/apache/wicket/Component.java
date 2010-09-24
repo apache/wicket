@@ -55,6 +55,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.component.IRequestableComponent;
+import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.BookmarkableListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.ListenerInterfaceRequestHandler;
@@ -3247,7 +3248,7 @@ public abstract class Component
 	 *            The response page class
 	 * @see RequestCycle#setResponsePage(Class)
 	 */
-	public final <C extends Page> void setResponsePage(final Class<C> cls)
+	public final <C extends IRequestablePage> void setResponsePage(final Class<C> cls)
 	{
 		getRequestCycle().setResponsePage(cls, null);
 	}
@@ -3263,7 +3264,8 @@ public abstract class Component
 	 *            The parameters for this bookmarkable page.
 	 * @see RequestCycle#setResponsePage(Class, PageParameters)
 	 */
-	public final <C extends Page> void setResponsePage(final Class<C> cls, PageParameters parameters)
+	public final <C extends IRequestablePage> void setResponsePage(final Class<C> cls,
+		PageParameters parameters)
 	{
 		getRequestCycle().setResponsePage(cls, parameters);
 	}
