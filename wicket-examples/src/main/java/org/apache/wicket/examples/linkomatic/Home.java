@@ -24,10 +24,11 @@ import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.ClientSideImageMap;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.IPageLink;
-import org.apache.wicket.markup.html.link.ImageMap;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.link.PageLink;
 import org.apache.wicket.markup.html.link.PopupSettings;
@@ -121,12 +122,14 @@ public class Home extends WicketExamplePage
 		}));
 
 		// Image map link example
-		add(new ImageMap("imageMap").addRectangleLink(0, 0, 100, 100,
-			new BookmarkablePageLink("page1", Page1.class)).addCircleLink(160, 50, 35,
-			new BookmarkablePageLink("page2", Page2.class)).addPolygonLink(
-			new int[] { 212, 79, 241, 4, 279, 54, 212, 79 },
-			new BookmarkablePageLink("page3", Page3.class)).add(
-			RelativePathPrefixHandler.RELATIVE_PATH_BEHAVIOR));
+		Image imageForMap = new Image("imageForMap");
+		add(imageForMap);
+		add(new ClientSideImageMap("imageMap", imageForMap).addRectangleArea(
+			new BookmarkablePageLink<Page1>("page1", Page1.class), 0, 0, 100, 100)
+			.addCircleArea(new BookmarkablePageLink<Page2>("page2", Page2.class), 160, 50, 35)
+			.addPolygonArea(new BookmarkablePageLink<Page3>("page3", Page3.class),
+				new int[] { 212, 79, 241, 4, 279, 54, 212, 79 })
+			.add(RelativePathPrefixHandler.RELATIVE_PATH_BEHAVIOR));
 
 		// Popup example
 		PopupSettings popupSettings = new PopupSettings(PageMap.forName("popuppagemap")).setHeight(
