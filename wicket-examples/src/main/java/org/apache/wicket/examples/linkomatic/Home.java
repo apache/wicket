@@ -21,15 +21,19 @@ import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.ClientSideImageMap;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.SharedResourceReference;
 
 
@@ -83,8 +87,8 @@ public class Home extends WicketExamplePage
 
 		// Link to Page2 is automaticLink, so no code
 		// Link to Page3 is an external link which takes a parameter
-		add(new BookmarkablePageLink<Void>("page3Link", Page3.class).setParameter("bookmarkparameter",
-			"3++2 & 5 � >< space + �"));
+		add(new BookmarkablePageLink<Void>("page3Link", Page3.class).setParameter(
+			"bookmarkparameter", "3++2 & 5 � >< space + �"));
 
 		// Link to BookDetails page
 		add(new Link<Void>("bookDetailsLink")
@@ -106,6 +110,16 @@ public class Home extends WicketExamplePage
 			}
 		});
 
+		// Image map link example
+		Image imageForMap = new Image("imageForMap", new PackageResourceReference(Home.class,
+			"ImageMap.gif"));
+		add(imageForMap);
+		add(new ClientSideImageMap("imageMap", imageForMap).addRectangleArea(
+			new BookmarkablePageLink<Page1>("page1", Page1.class), 0, 0, 100, 100)
+			.addCircleArea(new BookmarkablePageLink<Page2>("page2", Page2.class), 160, 50, 35)
+			.addPolygonArea(new BookmarkablePageLink<Page3>("page3", Page3.class),
+				new int[] { 212, 79, 241, 4, 279, 54, 212, 79 })
+			.add(RelativePathPrefixHandler.RELATIVE_PATH_BEHAVIOR));
 
 		// Popup example
 		PopupSettings popupSettings = new PopupSettings("popuppagemap").setHeight(500)
