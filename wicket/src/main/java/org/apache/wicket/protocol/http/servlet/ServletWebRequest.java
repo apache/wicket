@@ -332,7 +332,6 @@ public class ServletWebRequest extends WebRequest
 	 * @throws FileUploadException
 	 */
 	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize)
-		throws FileUploadException
 	{
 		return new MultipartServletWebRequestImpl(getHttpServletRequest(), filterPrefix, maxSize);
 	}
