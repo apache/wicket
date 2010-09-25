@@ -1358,21 +1358,14 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 				// TODO: Can't this be detected from header?
 				getRequestCycle().setRequest(multipartWebRequest);
 			}
-			catch (WicketRuntimeException wre)
+			catch (final FileUploadException fux)
 			{
-				if (wre.getCause() == null || !(wre.getCause() instanceof FileUploadException))
-				{
-					throw wre;
-				}
-
-				FileUploadException e = (FileUploadException)wre.getCause();
-
 				// Create model with exception and maximum size values
 				final Map<String, Object> model = new HashMap<String, Object>();
-				model.put("exception", e);
+				model.put("exception", fux);
 				model.put("maxSize", getMaxSize());
 
-				onFileUploadException(e, model);
+				onFileUploadException(fux, model);
 
 				// don't process the form if there is a FileUploadException
 				return false;
