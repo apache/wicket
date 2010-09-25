@@ -18,6 +18,9 @@ package org.apache.wicket.examples.niceurl;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
+import org.apache.wicket.examples.niceurl.mounted.Page3;
+import org.apache.wicket.request.mapper.PackageMapper;
+import org.apache.wicket.util.lang.PackageName;
 
 
 /**
@@ -64,11 +67,10 @@ public class NiceUrlApplication extends WicketExampleApplication
 		getPageSettings().setAutomaticMultiWindowSupport(false);
 
 		// mount single bookmarkable pages
-		mountBookmarkablePage("/the/homepage/path", Home.class);
-		mountBookmarkablePage("/a/nice/path/to/the/first/page", Page1.class);
-		mountBookmarkablePage("/path/to/page2", Page2.class);
-
-// mountBookmarkablePageWithUrlCoding("/path/to/page2qpencoded", Page2QP.class);
+		mountPage("/the/homepage/path", Home.class);
+		mountPage("/a/nice/path/to/the/first/page", Page1.class);
+		mountPage("/path/to/page2", Page2.class);
+		mountPage("/path/to/page2qpencoded", Page2QP.class);
 
 		// mount a whole package at once (all bookmarkable pages,
 		// the relative class name will be part of the url
@@ -77,9 +79,9 @@ public class NiceUrlApplication extends WicketExampleApplication
 		// sense to use one of the (important) classes in your package, so
 		// that any refactoring (like a package rename) will automatically
 		// be applied here.
-// mount("/my/mounted/package", PackageName.forClass(Page3.class));
+		getRootRequestMapperAsCompound().add(
+			new PackageMapper("/my/mounted/package", PackageName.forClass(Page3.class)));
 	}
-
 	/**
 	 * Sets up a request coding strategy that uses case-insensitive mounts
 	 * 

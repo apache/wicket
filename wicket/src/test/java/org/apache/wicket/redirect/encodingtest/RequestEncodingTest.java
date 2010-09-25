@@ -80,7 +80,7 @@ public class RequestEncodingTest extends TestCase
 	 */
 	public void testUmlautsInRequestUri()
 	{
-		application.mountBookmarkablePage("Aparameter", A.class);
+		application.mountPage("Aparameter", A.class);
 		testDefault();
 	}
 }

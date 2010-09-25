@@ -297,45 +297,33 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Mounts a bookmarkable page class to the given path.
+	 * Mounts a page class to the given path.
 	 * 
 	 * @param <T>
 	 *            type of page
 	 * 
 	 * @param path
-	 *            the path to mount the bookmarkable page class on
-	 * @param bookmarkablePageClass
-	 *            the bookmarkable page class to mount
-	 * 
-	 * @deprecated use mounted mapper instead, this method can be represented as
-	 *             {@code
-	 *             getRootRequestMapperAsCompound().add(new MountedMapper(path,
-	 *             bookmarkablePageClass))}
+	 *            the path to mount the page class on
+	 * @param pageClass
+	 *            the page class to be mounted
 	 */
-	@Deprecated
-	public final <T extends Page> void mountBookmarkablePage(final String path,
-		final Class<T> bookmarkablePageClass)
+	public final <T extends Page> void mountPage(final String path, final Class<T> pageClass)
 	{
-		mount(new MountedMapper(path, bookmarkablePageClass));
+		getRootRequestMapperAsCompound().add(new MountedMapper(path, pageClass));
 	}
-
 
 	/**
 	 * Mounts a shared resource class to the given path.
 	 * 
 	 * @param path
-	 *            the path to mount the resource class on
+	 *            the path to mount the resource reference on
 	 * @param reference
 	 *            resource reference to be mounted
-	 * 
-	 * @deprecated - this is the same as
-	 *               {@code getRootRequestMapperAsCompound().add(new ResourceMapper(path, reference))}
 	 */
-	@Deprecated
 	public final void mountSharedResource(final String path, final ResourceReference reference)
 	{
 		getResourceReferenceRegistry().registerResourceReference(reference);
-		mount(new ResourceMapper(path, reference));
+		getRootRequestMapperAsCompound().add(new ResourceMapper(path, reference));
 	}
 
 

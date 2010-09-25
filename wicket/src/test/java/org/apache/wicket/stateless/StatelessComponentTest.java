@@ -52,7 +52,7 @@ public class StatelessComponentTest extends WicketTestCase
 	 */
 	public void testStatelessComponentPageWithMount() throws Exception
 	{
-		tester.getApplication().mountBookmarkablePage("/stateless", StatelessComponentPage.class);
+		tester.getApplication().mountPage("/stateless", StatelessComponentPage.class);
 		// test is always the home page. it doesn't work then
 		executeTest(StatelessComponentPage.class, "StatelessComponentPage_mount_result.html");
 		tester.getRequest()
@@ -104,8 +104,7 @@ public class StatelessComponentTest extends WicketTestCase
 		PageParameters params = new PageParameters();
 		params.set("testParam1", "testValue1");
 		params.set("testParam2", "testValue2");
-		tester.getApplication().mountBookmarkablePage("/stateless",
-			StatelessComponentPageWithParams.class);
+		tester.getApplication().mountPage("/stateless", StatelessComponentPageWithParams.class);
 		// test is always the home page. it doesn't work then
 		executeTest(StatelessComponentPageWithParams.class, params,
 			"StatelessComponentPageWithParams_mount_result.html");
@@ -131,8 +130,7 @@ public class StatelessComponentTest extends WicketTestCase
 		PageParameters params = new PageParameters();
 		params.set(0, "testValue1");
 		params.set(1, "testValue2");
-		tester.getApplication().mountBookmarkablePage("/stateless",
-			StatelessComponentPageWithParams.class);
+		tester.getApplication().mountPage("/stateless", StatelessComponentPageWithParams.class);
 		// test is always the home page. it doesn't work then
 		executeTest(StatelessComponentPageWithParams.class, params,
 			"StatelessComponentPageWithParams_indexed_mount_result.html");

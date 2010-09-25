@@ -37,8 +37,8 @@ public class StatelessFormTest extends WicketTestCase
 			protected void init()
 			{
 				super.init();
-				mountBookmarkablePage("page1", Page1.class);
-				mountBookmarkablePage("page2", Page2.class);
+				mountPage("page1", Page1.class);
+				mountPage("page2", Page2.class);
 			}
 
 			@Override

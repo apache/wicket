@@ -22,6 +22,7 @@ import org.apache.wicket.examples.ajax.builtin.modal.ModalWindowPage;
 import org.apache.wicket.examples.ajax.builtin.tree.EditableTreeTablePage;
 import org.apache.wicket.examples.ajax.builtin.tree.SimpleTreePage;
 import org.apache.wicket.examples.ajax.builtin.tree.TreeTablePage;
+import org.apache.wicket.markup.html.AjaxServerAndClientTimeFilter;
 
 
 /**
@@ -46,31 +47,30 @@ public class AjaxApplication extends WicketExampleApplication
 
 		getResourceSettings().setThrowExceptionOnMissingResource(false);
 
-		// TODO (NG)
-		// getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
+		getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
 
 		getDebugSettings().setAjaxDebugModeEnabled(true);
 
-		mountBookmarkablePage("autocomplete", AutoCompletePage.class);
-		mountBookmarkablePage("choice", ChoicePage.class);
-		mountBookmarkablePage("clock", ClockPage.class);
-		mountBookmarkablePage("editable-label", EditableLabelPage.class);
-		mountBookmarkablePage("effects", EffectsPage.class);
-		mountBookmarkablePage("form", FormPage.class);
-		mountBookmarkablePage("guest-book", GuestBook.class);
-		mountBookmarkablePage("lazy-loading", LazyLoadingPage.class);
-		mountBookmarkablePage("links", LinksPage.class);
-		mountBookmarkablePage("modal-window", ModalWindowPage.class);
-		mountBookmarkablePage("on-change-ajax-behavior", OnChangeAjaxBehaviorPage.class);
-		mountBookmarkablePage("pageables", PageablesPage.class);
-		mountBookmarkablePage("ratings", RatingsPage.class);
-		mountBookmarkablePage("tabbed-panel", TabbedPanelPage.class);
-		mountBookmarkablePage("todo-list", TodoList.class);
-		mountBookmarkablePage("world-clock", WorldClockPage.class);
-		mountBookmarkablePage("tree/simple", SimpleTreePage.class);
-		mountBookmarkablePage("tree/table", TreeTablePage.class);
-		mountBookmarkablePage("tree/table/editable", EditableTreeTablePage.class);
-		mountBookmarkablePage("upload", FileUploadPage.class);
+		mountPage("autocomplete", AutoCompletePage.class);
+		mountPage("choice", ChoicePage.class);
+		mountPage("clock", ClockPage.class);
+		mountPage("editable-label", EditableLabelPage.class);
+		mountPage("effects", EffectsPage.class);
+		mountPage("form", FormPage.class);
+		mountPage("guest-book", GuestBook.class);
+		mountPage("lazy-loading", LazyLoadingPage.class);
+		mountPage("links", LinksPage.class);
+		mountPage("modal-window", ModalWindowPage.class);
+		mountPage("on-change-ajax-behavior", OnChangeAjaxBehaviorPage.class);
+		mountPage("pageables", PageablesPage.class);
+		mountPage("ratings", RatingsPage.class);
+		mountPage("tabbed-panel", TabbedPanelPage.class);
+		mountPage("todo-list", TodoList.class);
+		mountPage("world-clock", WorldClockPage.class);
+		mountPage("tree/simple", SimpleTreePage.class);
+		mountPage("tree/table", TreeTablePage.class);
+		mountPage("tree/table/editable", EditableTreeTablePage.class);
+		mountPage("upload", FileUploadPage.class);
 
 	}
 

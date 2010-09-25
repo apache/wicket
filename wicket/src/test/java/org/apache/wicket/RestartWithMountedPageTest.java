@@ -28,7 +28,7 @@ public class RestartWithMountedPageTest extends WicketTestCase
 	 */
 	public void testWithMountedLoginPage()
 	{
-		tester.getApplication().mountBookmarkablePage("/login", LoginPage.class);
+		tester.getApplication().mountPage("/login", LoginPage.class);
 		tester.startPage(ProtectedPage.class);
 		tester.assertRenderedPage(LoginPage.class);
 	}

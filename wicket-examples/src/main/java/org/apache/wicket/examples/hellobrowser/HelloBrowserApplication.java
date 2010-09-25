@@ -51,6 +51,6 @@ public class HelloBrowserApplication extends WicketExampleApplication
 		super.init();
 
 		getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
-		mountBookmarkablePage("howdy", HelloBrowser.class);
+		mountPage("howdy", HelloBrowser.class);
 	}
 }
