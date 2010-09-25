@@ -200,6 +200,8 @@ public abstract class Application implements UnboundListener, IEventSink
 	/** page renderer provider */
 	private IPageRendererProvider pageRendererProvider;
 
+	private PageAccessSynchronizer pageAccessSynchronizer;
+
 	/** request cycle provider */
 	private IRequestCycleProvider requestCycleProvider;
 
@@ -927,6 +929,9 @@ public abstract class Application implements UnboundListener, IEventSink
 
 		pageFactory = newPageFactory();
 
+		pageAccessSynchronizer = new PageAccessSynchronizer(getRequestCycleSettings().getTimeout());
+
+
 		requestCycleProvider = new DefaultRequestCycleProvider();
 	}
 
@@ -1186,9 +1191,6 @@ public abstract class Application implements UnboundListener, IEventSink
 
 	private volatile IPageManager pageManager;
 	private IProvider<IPageManager> pageManagerProvider;
-
-	private final PageAccessSynchronizer pageAccessSynchronizer = new PageAccessSynchronizer(
-		Duration.minutes(2)); // TODO WICKET-NG timeout configurable
 
 	public final IProvider<IPageManager> getPageManagerProvider()
 	{
