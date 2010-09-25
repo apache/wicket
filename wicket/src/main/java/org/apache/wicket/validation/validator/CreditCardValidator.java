@@ -72,7 +72,14 @@ public class CreditCardValidator extends AbstractValidator<String>
 	protected void onValidate(IValidatable<String> validatable)
 	{
 		creditCardNumber = validatable.getValue();
-		if (!isLengthAndPrefixCorrect(creditCardNumber))
+		try
+		{
+			if (!isLengthAndPrefixCorrect(creditCardNumber))
+			{
+				error(validatable);
+			}
+		}
+		catch (final NumberFormatException _)
 		{
 			error(validatable);
 		}
@@ -181,7 +188,7 @@ public class CreditCardValidator extends AbstractValidator<String>
 	/**
 	 * Check if the credit card is an American Express. An American Express number has to start with
 	 * 34 or 37 and has to have a length of 15. The number has to be validated with the Luhn
-	 * alorithm.
+	 * algorithm.
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
@@ -239,7 +246,7 @@ public class CreditCardValidator extends AbstractValidator<String>
 	/**
 	 * Check if the credit card is a Diners Club Carte Blanche. A Diners Club Carte Blanche number
 	 * has to start with a number between 300 and 305 and has to have a length of 14. The number has
-	 * to be validated with the Luhn alorithm.
+	 * to be validated with the Luhn algorithm.
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
@@ -267,7 +274,7 @@ public class CreditCardValidator extends AbstractValidator<String>
 	/**
 	 * Check if the credit card is a Diners Club International. A Diners Club International number
 	 * has to start with the number 36 and has to have a length of 14. The number has to be
-	 * validated with the Luhn alorithm.
+	 * validated with the Luhn algorithm.
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
@@ -292,7 +299,7 @@ public class CreditCardValidator extends AbstractValidator<String>
 	/**
 	 * Check if the credit card is a Diners Club US & Canada. A Diners Club US & Canada number has
 	 * to start with the number 54 or 55 and has to have a length of 16. The number has to be
-	 * validated with the Luhn alorithm.
+	 * validated with the Luhn algorithm.
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
@@ -318,7 +325,7 @@ public class CreditCardValidator extends AbstractValidator<String>
 	/**
 	 * Check if the credit card is a Discover Card. A Discover Card number has to start with 6011,
 	 * 622126-622925, 644-649 or 65 and has to have a length of 16. The number has to be validated
-	 * with the Luhn alorithm.
+	 * with the Luhn algorithm.
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
@@ -349,7 +356,7 @@ public class CreditCardValidator extends AbstractValidator<String>
 
 	/**
 	 * Check if the credit card is a JCB. A JCB number has to start with a number between 3528 and
-	 * 3589 and has to have a length of 16. The number has to be validated with the Luhn alorithm.
+	 * 3589 and has to have a length of 16. The number has to be validated with the Luhn algorithm.
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
@@ -377,7 +384,7 @@ public class CreditCardValidator extends AbstractValidator<String>
 	/**
 	 * Check if the credit card is a Laser. A Laser number has to start with 6304, 6706, 6771 or
 	 * 6709 and has to have a length between 16 and 19 digits. The number has to be validated with
-	 * the Luhn alorithm.
+	 * the Luhn algorithm.
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
@@ -406,7 +413,7 @@ public class CreditCardValidator extends AbstractValidator<String>
 	/**
 	 * Check if the credit card is a Maestro. A Maestro number has to start with
 	 * 5018,5020,5038,6304,6759,6761 or 6763 and has to have a length between 12 and 19 digits. The
-	 * number has to be validated with the Luhn alorithm.
+	 * number has to be validated with the Luhn algorithm.
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
@@ -436,7 +443,7 @@ public class CreditCardValidator extends AbstractValidator<String>
 
 	/**
 	 * Check if the credit card is a Solo. A Solo number has to start with 6334 or 6767 and has to
-	 * have a length of 16, 18 or 19 digits. The number has to be validated with the Luhn alorithm.
+	 * have a length of 16, 18 or 19 digits. The number has to be validated with the Luhn algorithm.
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
@@ -464,7 +471,7 @@ public class CreditCardValidator extends AbstractValidator<String>
 	/**
 	 * Check if the credit card is a Switch. A Switch number has to start with
 	 * 4903,4905,4911,4936,564182,633110,6333 or 6759 and has to have a length of 16, 18 or 19
-	 * digits. The number has to be validated with the Luhn alorithm.
+	 * digits. The number has to be validated with the Luhn algorithm.
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
@@ -494,7 +501,7 @@ public class CreditCardValidator extends AbstractValidator<String>
 
 	/**
 	 * Check if the credit card is a Visa. A Visa number has to start with a 4 and has to have a
-	 * length of 13 or 16 digits. The number has to be validated with the Luhn alorithm.
+	 * length of 13 or 16 digits. The number has to be validated with the Luhn algorithm.
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
@@ -521,7 +528,7 @@ public class CreditCardValidator extends AbstractValidator<String>
 	/**
 	 * Check if the credit card is a Visa Electron. A Visa Electron number has to start with
 	 * 417500,4917,4913,4508 or 4844 and has to have a length of 16 digits. The number has to be
-	 * validated with the Luhn alorithm.
+	 * validated with the Luhn algorithm.
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
@@ -547,7 +554,7 @@ public class CreditCardValidator extends AbstractValidator<String>
 	/**
 	 * Check if the credit card is a Mastercard. A Mastercard number has to start with a number
 	 * between 51 and 55 and has to have a length of 16. The number has to be validated with the
-	 * Luhn alorithm.
+	 * Luhn algorithm.
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
