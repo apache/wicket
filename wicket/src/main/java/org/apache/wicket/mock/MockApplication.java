@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.mock;
 
-import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.page.IPageManager;
@@ -73,7 +72,7 @@ public class MockApplication extends WebApplication
 		}
 
 	}
-	private static class MockPageManagerProvider implements IPageManagerProvider
+	private static class MockPageManagerProvider implements IProvider<IPageManager>
 	{
 
 		public IPageManager get()

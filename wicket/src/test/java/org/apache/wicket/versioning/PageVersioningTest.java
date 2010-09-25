@@ -19,7 +19,6 @@ package org.apache.wicket.versioning;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.Page;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
@@ -28,6 +27,7 @@ import org.apache.wicket.pageStore.AsynchronousDataStore;
 import org.apache.wicket.pageStore.DefaultPageStore;
 import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,9 +53,9 @@ public class PageVersioningTest
 			 * @see org.apache.wicket.util.tester.BaseWicketTester#newTestPageManagerProvider()
 			 */
 			@Override
-			protected IPageManagerProvider newTestPageManagerProvider()
+			protected IProvider<IPageManager> newTestPageManagerProvider()
 			{
-				return new IPageManagerProvider()
+				return new IProvider<IPageManager>()
 				{
 
 					public IPageManager get()

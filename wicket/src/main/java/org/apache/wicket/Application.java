@@ -1185,18 +1185,18 @@ public abstract class Application implements UnboundListener, IEventSink
 	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	private volatile IPageManager pageManager;
-	private IPageManagerProvider pageManagerProvider;
+	private IProvider<IPageManager> pageManagerProvider;
 
 	private final PageAccessSynchronizer pageAccessSynchronizer = new PageAccessSynchronizer(
 		Duration.minutes(2)); // TODO WICKET-NG timeout configurable
 
-	public final IPageManagerProvider getPageManagerProvider()
+	public final IProvider<IPageManager> getPageManagerProvider()
 	{
 		return pageManagerProvider;
 	}
 
 
-	public synchronized final void setPageManagerProvider(final IPageManagerProvider provider)
+	public synchronized final void setPageManagerProvider(final IProvider<IPageManager> provider)
 	{
 		pageManagerProvider = provider;
 	}

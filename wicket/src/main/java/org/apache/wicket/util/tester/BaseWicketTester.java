@@ -38,7 +38,6 @@ import javax.servlet.http.Cookie;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.IPageRendererProvider;
 import org.apache.wicket.IRequestCycleProvider;
 import org.apache.wicket.MarkupContainer;
@@ -283,7 +282,7 @@ public class BaseWicketTester
 		setupNextRequestCycle();
 	}
 
-	protected IPageManagerProvider newTestPageManagerProvider()
+	protected IProvider<IPageManager> newTestPageManagerProvider()
 	{
 		return new TestPageManagerProvider();
 	}
@@ -2052,7 +2051,7 @@ public class BaseWicketTester
 	/**
 	 * 
 	 */
-	private class TestPageManagerProvider implements IPageManagerProvider
+	private class TestPageManagerProvider implements IProvider<IPageManager>
 	{
 		public IPageManager get()
 		{
