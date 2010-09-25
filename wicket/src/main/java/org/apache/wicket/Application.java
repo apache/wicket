@@ -53,11 +53,6 @@ import org.apache.wicket.page.DefaultPageManagerContext;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.page.PageAccessSynchronizer;
-import org.apache.wicket.page.PersistentPageManager;
-import org.apache.wicket.pageStore.DefaultPageStore;
-import org.apache.wicket.pageStore.DiskDataStore;
-import org.apache.wicket.pageStore.IDataStore;
-import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.protocol.http.DummyRequestLogger;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -923,7 +918,7 @@ public abstract class Application implements UnboundListener, IEventSink
 
 		converterLocator = newConverterLocator();
 
-		setPageManagerProvider(new DefaultPageManagerProvider());
+		setPageManagerProvider(new DefaultPageManagerProvider(this, getPageManagerContext()));
 		resourceReferenceRegistry = newResourceReferenceRegistry();
 		sharedResources = newSharedResources(resourceReferenceRegistry);
 
@@ -1223,7 +1218,7 @@ public abstract class Application implements UnboundListener, IEventSink
 			{
 				if (pageManager == null)
 				{
-					pageManager = pageAccessSynchronizer.adapt(pageManagerProvider.get(getPageManagerContext()));
+					pageManager = pageAccessSynchronizer.adapt(pageManagerProvider.get());
 				}
 			}
 		}
@@ -1532,20 +1527,5 @@ public abstract class Application implements UnboundListener, IEventSink
 	/** {@inheritDoc} */
 	public void onEvent(IEvent<?> event)
 	{
-	}
-
-	private class DefaultPageManagerProvider implements IPageManagerProvider
-	{
-
-		public IPageManager get(IPageManagerContext context)
-		{
-			int cacheSize = 40;
-			int fileChannelPoolCapacity = 50;
-			IDataStore dataStore = new DiskDataStore(getName(), 1000000, fileChannelPoolCapacity);
-			IPageStore pageStore = new DefaultPageStore(getName(), dataStore, cacheSize);
-			return new PersistentPageManager(getName(), pageStore, context);
-
-		}
-
 	}
 }

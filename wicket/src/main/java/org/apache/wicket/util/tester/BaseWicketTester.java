@@ -74,7 +74,6 @@ import org.apache.wicket.mock.MockPageManager;
 import org.apache.wicket.mock.MockRequestParameters;
 import org.apache.wicket.mock.MockSessionStore;
 import org.apache.wicket.page.IPageManager;
-import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
@@ -2055,10 +2054,9 @@ public class BaseWicketTester
 	 */
 	private class TestPageManagerProvider implements IPageManagerProvider
 	{
-
-		public IPageManager get(IPageManagerContext context)
+		public IPageManager get()
 		{
-			return new MockPageManager(context);
+			return new MockPageManager();
 		}
 
 	}

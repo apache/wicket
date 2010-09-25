@@ -35,9 +35,8 @@ public class MockPageManager implements IPageManager
 	/**
 	 * Construct.
 	 * 
-	 * @param context
 	 */
-	public MockPageManager(IPageManagerContext context)
+	public MockPageManager()
 	{
 	}
 

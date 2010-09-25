@@ -17,9 +17,9 @@
 package org.apache.wicket;
 
 import org.apache.wicket.page.IPageManager;
-import org.apache.wicket.page.IPageManagerContext;
+import org.apache.wicket.util.IProvider;
 
-public interface IPageManagerProvider
+public interface IPageManagerProvider extends IProvider<IPageManager>
 {
-	IPageManager get(IPageManagerContext context);
+	IPageManager get();
 }

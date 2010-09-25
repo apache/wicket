@@ -69,6 +69,10 @@ public class PageWindowManager implements Serializable
 
 	private int totalSize = 0;
 
+	/**
+	 * Maximum page size. After this size is exceeded, the pages will be saved starting at the
+	 * beginning of file.
+	 */
 	private final int maxSize;
 
 	/**

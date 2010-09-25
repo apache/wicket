@@ -44,15 +44,7 @@ public class PageVersioningTest
 	@Before
 	public void setup()
 	{
-		final WebApplication application = new WebApplication()
-		{
-
-			@Override
-			public Class<? extends Page> getHomePage()
-			{
-				return VersioningTestPage.class;
-			}
-		};
+		final PageVersioningApplication application = new PageVersioningApplication();
 
 		wicketTester = new WicketTester(application)
 		{
@@ -66,14 +58,15 @@ public class PageVersioningTest
 				return new IPageManagerProvider()
 				{
 
-					public IPageManager get(final IPageManagerContext context)
+					public IPageManager get()
 					{
 
 						final IDataStore dataStore = new InMemoryPageStore();
 						final AsynchronousDataStore asyncDS = new AsynchronousDataStore(dataStore);
 						final DefaultPageStore pageStore = new DefaultPageStore(
 							application.getName(), asyncDS, 40);
-						return new PersistentPageManager(application.getName(), pageStore, context);
+						return new PersistentPageManager(application.getName(), pageStore,
+							application.getPageManagerContext());
 					}
 				};
 			}
@@ -141,4 +134,23 @@ public class PageVersioningTest
 			lastPageId--;
 		}
 	}
+
+	private static final class PageVersioningApplication extends WebApplication
+	{
+
+		@Override
+		public Class<? extends Page> getHomePage()
+		{
+			return VersioningTestPage.class;
+		}
+
+		/**
+		 * @see org.apache.wicket.Application#getPageManagerContext()
+		 */
+		@Override
+		public IPageManagerContext getPageManagerContext()
+		{
+			return super.getPageManagerContext();
+		}
+	};
 }
