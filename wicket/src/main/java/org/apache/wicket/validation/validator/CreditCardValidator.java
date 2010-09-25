@@ -72,7 +72,14 @@ public class CreditCardValidator extends AbstractValidator<String>
 	protected void onValidate(IValidatable<String> validatable)
 	{
 		creditCardNumber = validatable.getValue();
-		if (!isLengthAndPrefixCorrect(creditCardNumber))
+		try
+		{
+			if (!isLengthAndPrefixCorrect(creditCardNumber))
+			{
+				error(validatable);
+			}
+		}
+		catch (final NumberFormatException _)
 		{
 			error(validatable);
 		}
