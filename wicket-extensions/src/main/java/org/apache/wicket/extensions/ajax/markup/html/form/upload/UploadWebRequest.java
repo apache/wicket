@@ -18,7 +18,6 @@ package org.apache.wicket.extensions.ajax.markup.html.form.upload;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.Url;
@@ -43,31 +42,38 @@ import org.apache.wicket.util.upload.FileUploadException;
  */
 public class UploadWebRequest extends ServletWebRequest
 {
+
+	/**
+	 * Construct.
+	 * 
+	 * @param httpServletRequest
+	 * @param filterPrefix
+	 */
+	public UploadWebRequest(HttpServletRequest httpServletRequest, String filterPrefix)
+	{
+		this(httpServletRequest, filterPrefix, null);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param httpServletRequest
+	 * @param filterPrefix
+	 * @param url
+	 */
 	public UploadWebRequest(HttpServletRequest httpServletRequest, String filterPrefix, Url url)
 	{
 		super(httpServletRequest, filterPrefix, url);
 	}
 
-	public UploadWebRequest(HttpServletRequest httpServletRequest, String filterPrefix)
-	{
-		super(httpServletRequest, filterPrefix);
-	}
-
-
 	/**
-	 * @see org.apache.wicket.request.http.WebRequest#newMultipartWebRequest(org.apache.wicket.util.lang.Bytes)
+	 * @see org.apache.wicket.protocol.http.servlet.ServletWebRequest#newMultipartWebRequest(org.apache.wicket.util.lang.Bytes)
 	 */
 	@Override
 	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxsize)
+		throws FileUploadException
 	{
-		try
-		{
-			return new MultipartRequest(getHttpServletRequest(), getFilterPrefix(), maxsize);
-		}
-		catch (FileUploadException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
+		return new MultipartRequest(getHttpServletRequest(), getFilterPrefix(), maxsize);
 	}
 
 	private static final String SESSION_KEY = UploadWebRequest.class.getName();
