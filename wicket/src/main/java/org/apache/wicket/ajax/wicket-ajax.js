@@ -1131,7 +1131,7 @@ Wicket.Ajax.Call.prototype = {
 					}
 				}
 				form = form.parentNode;
-			} while(form.tagName.toLowerCase() != "form" && form.tagName.toLowerCase() != "body")
+			} while(form.tagName.toLowerCase() != "form" && form !== document.body)
 		}	
 
 		
