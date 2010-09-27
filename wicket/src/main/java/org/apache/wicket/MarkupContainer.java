@@ -971,12 +971,12 @@ public abstract class MarkupContainer extends Component
 
 		if (page != null)
 		{
-			component.initialize();
+			page.componentAdded(component);
 		}
 
 		if (page != null)
 		{
-			page.componentAdded(component);
+			component.initialize();
 		}
 
 		// if the PREPARED_FOR_RENDER flag is set, we have already called

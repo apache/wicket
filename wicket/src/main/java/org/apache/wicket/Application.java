@@ -27,7 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.apache.wicket.application.IComponentInitializationListener;
 import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.application.IComponentOnAfterRenderListener;
 import org.apache.wicket.application.IComponentOnBeforeRenderListener;
@@ -235,6 +237,9 @@ public abstract class Application
 	/** list of {@link IComponentInstantiationListener}s. */
 	private IComponentInstantiationListener[] componentInstantiationListeners = new IComponentInstantiationListener[0];
 
+	/** list of {@link IComponentInitializationListener}s. */
+	private CopyOnWriteArrayList<IComponentInitializationListener> componentInitializationListeners = new CopyOnWriteArrayList<IComponentInitializationListener>();
+
 	/** The converter locator instance. */
 	private IConverterLocator converterLocator;
 
@@ -327,6 +332,49 @@ public abstract class Application
 			componentInstantiationListeners.length);
 		newListeners[componentInstantiationListeners.length] = listener;
 		componentInstantiationListeners = newListeners;
+	}
+
+	/**
+	 * Adds a component initialization listener. This method should typically only be called during
+	 * application startup; it is not thread safe.
+	 * <p>
+	 * Each added listener will be notified after Component's {@link Component#onInitialize()}
+	 * method has been executed.
+	 * </p>
+	 * <p>
+	 * Note: wicket does not guarantee the execution order of added listeners
+	 * 
+	 * @param listener
+	 *            the listener to add
+	 */
+	public final void addComponentInitializationListener(
+		final IComponentInitializationListener listener)
+	{
+		if (listener == null)
+		{
+			throw new IllegalArgumentException("argument listener may not be null");
+		}
+
+		if (componentInitializationListeners.contains(listener))
+		{
+			return;
+		}
+		componentInitializationListeners.add(listener);
+	}
+
+	/**
+	 * Fires registered {@link IComponentInitializationListener}s on the component
+	 * 
+	 * @param component
+	 * 
+	 * @see #addComponentInitializationListener(IComponentInitializationListener)
+	 */
+	public final void fireComponentInitializationListeners(Component component)
+	{
+		for (IComponentInitializationListener listener : componentInitializationListeners)
+		{
+			listener.onInitialize(component);
+		}
 	}
 
 	/**
