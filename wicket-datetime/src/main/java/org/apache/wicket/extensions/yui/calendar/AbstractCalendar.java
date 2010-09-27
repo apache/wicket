@@ -20,8 +20,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.behavior.StringHeaderContributor;
@@ -88,7 +88,7 @@ public abstract class AbstractCalendar extends WebComponent
 	 *            them in your web application dir. To contribute yourself (in case you want to pass
 	 *            false), your page header should look like:
 	 * 
-	 * <pre>
+	 *            <pre>
 	 * 	 &lt;script type=&quot;text/javascript&quot; src=&quot;yahoo.js&quot;&gt;&lt;/script&gt;
 	 * 	 &lt;script type=&quot;text/javascript&quot; src=&quot;dom.js&quot;&gt;&lt;/script&gt;
 	 * 	 &lt;script type=&quot;text/javascript&quot; src=&quot;event.js&quot;&gt;&lt;/script&gt;
@@ -228,7 +228,7 @@ public abstract class AbstractCalendar extends WebComponent
 	 */
 	private void contributeDependencies()
 	{
-		add(HeaderContributor.forJavaScript(YuiLib.class, "yahoo-dom-event/yahoo-dom-event.js"));
+		add(HeaderContributor.forJavaScript(YuiLib.class, "yahoodomevent/yahoo-dom-event.js"));
 		add(HeaderContributor.forJavaScript(AbstractCalendar.class, "calendar-min.js"));
 		add(HeaderContributor.forCss(AbstractCalendar.class, "assets/skins/sam/calendar.css"));
 	}
