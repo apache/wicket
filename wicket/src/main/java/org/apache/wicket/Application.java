@@ -236,15 +236,6 @@ public abstract class Application implements UnboundListener, IEventSink
 	}
 
 	/**
-	 * Assign this application to current thread. This method should never be called by framework
-	 * clients.
-	 */
-	public void set()
-	{
-		ThreadContext.setApplication(this);
-	}
-
-	/**
 	 * Gets the Application based on the application key of that application. You typically never
 	 * have to use this method unless you are working on an integration project.
 	 * 
@@ -708,8 +699,8 @@ public abstract class Application implements UnboundListener, IEventSink
 	public abstract Session newSession(Request request, Response response);
 
 	/**
-	 * Removes a component instantiation listener. This method should typicaly only be called during
-	 * application startup; it is not thread safe.
+	 * Removes a component instantiation listener. This method should typically only be called
+	 * during application startup; it is not thread safe.
 	 * 
 	 * @param listener
 	 *            the listener to remove

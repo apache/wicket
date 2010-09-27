@@ -29,7 +29,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.IPageRendererProvider;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
-import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.pages.AccessDeniedPage;
@@ -677,12 +676,6 @@ public abstract class WebApplication extends Application
 			return buffered;
 		}
 		return null;
-	}
-
-	@Override
-	public void set()
-	{
-		ThreadContext.setApplication(this);
 	}
 
 	@Override

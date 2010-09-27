@@ -84,7 +84,7 @@ public class WicketFilterTest extends TestCase
 			application = new MockApplication();
 			WicketFilter filter = new WicketFilter();
 			filter.init(new FilterTestingConfig());
-			application.set();
+			ThreadContext.setApplication(application);
 			DynamicImageResource resource = new DynamicImageResource()
 			{
 				private static final long serialVersionUID = 1L;

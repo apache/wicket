@@ -121,7 +121,7 @@ public class WicketFilter implements Filter
 			if (redirectURL == null)
 			{
 				// No redirect; process the request
-				application.set();
+				ThreadContext.setApplication(application);
 
 				WebRequest webRequest = application.newWebRequest(httpServletRequest, filterPath);
 				WebResponse webResponse = application.newWebResponse(webRequest,
@@ -288,7 +288,7 @@ public class WicketFilter implements Filter
 		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
 		final ClassLoader newClassLoader = getClassLoader();
 
-		application.set();
+		ThreadContext.setApplication(application);
 		try
 		{
 			if (previousClassLoader != newClassLoader)

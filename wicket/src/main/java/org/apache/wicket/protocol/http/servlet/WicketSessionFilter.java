@@ -195,7 +195,7 @@ public class WicketSessionFilter implements Filter
 				". Make sure you set filterName attribute to the name of the wicket filter " +
 				"for the wicket application whose session you want to access.");
 		}
-		application.set();
+		ThreadContext.setApplication(application);
 		return application;
 	}
 

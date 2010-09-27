@@ -263,7 +263,7 @@ public class BaseWicketTester
 		// FIXME some tests are leaking applications by not calling destroy on them or overriding
 		// teardown() without calling super, for now we work around by making each name unique
 		this.application.setName("WicketTesterApplication-" + UUID.randomUUID());
-		this.application.set();
+		ThreadContext.setApplication(application);
 
 		application.setServletContext(servletContext);
 

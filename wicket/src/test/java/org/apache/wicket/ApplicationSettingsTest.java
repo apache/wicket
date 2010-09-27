@@ -144,7 +144,7 @@ public class ApplicationSettingsTest extends TestCase
 		MockApplication dummy = new MockApplication();
 		dummy.setName("test-app");
 		dummy.setServletContext(new MockServletContext(dummy, ""));
-		dummy.set();
+		ThreadContext.setApplication(dummy);
 		dummy.initApplication();
 		Localizer localizer = dummy.getResourceSettings().getLocalizer();
 		Assert.assertNotNull("Localizer should be available", localizer);
