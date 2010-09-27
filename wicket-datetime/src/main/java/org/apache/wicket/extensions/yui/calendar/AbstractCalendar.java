@@ -135,7 +135,7 @@ public abstract class AbstractCalendar extends WebComponent
 	private void contributeDependencies(IHeaderResponse response)
 	{
 		response.renderJavascriptReference(new PackageResourceReference(YuiLib.class,
-				"yahoo-dom-event/yahoo-dom-event.js"));
+				"yahoodomevent/yahoo-dom-event.js"));
 		response.renderJavascriptReference(new PackageResourceReference(AbstractCalendar.class,
 				"calendar-min.js"));
 		response.renderCSSReference(new PackageResourceReference(AbstractCalendar.class,
