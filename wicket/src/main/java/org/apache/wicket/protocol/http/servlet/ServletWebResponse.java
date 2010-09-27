@@ -42,7 +42,7 @@ public class ServletWebResponse extends WebResponse
 	/**
 	 * Construct.
 	 * 
-	 * @param httpServletRequest
+	 * @param webRequest
 	 * @param httpServletResponse
 	 */
 	public ServletWebResponse(ServletWebRequest webRequest, HttpServletResponse httpServletResponse)
@@ -215,13 +215,14 @@ public class ServletWebResponse extends WebResponse
 
 			final Url current;
 
-			if(webRequest.isAjax())
+			if (webRequest.isAjax())
 			{
 				String ajaxBaseUrl = httpServletRequest.getHeader("Wicket-Ajax-BaseURL");
 
-				if(ajaxBaseUrl == null)
-					throw new IllegalStateException("current ajax request is missing the base url header");
-				
+				if (ajaxBaseUrl == null)
+					throw new IllegalStateException(
+						"current ajax request is missing the base url header");
+
 				current = Url.parse('/' + ajaxBaseUrl, charset);
 			}
 			else
