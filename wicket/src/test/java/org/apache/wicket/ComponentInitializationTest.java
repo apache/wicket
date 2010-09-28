@@ -16,6 +16,10 @@
  */
 package org.apache.wicket;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.wicket.application.IComponentInitializationListener;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -126,6 +130,56 @@ public class ComponentInitializationTest extends WicketTestCase
 		assertTrue(illegalState);
 	}
 
+	public void testInitListeners()
+	{
+		TestInitListener listener1 = new TestInitListener();
+		TestInitListener listener2 = new TestInitListener();
+		tester.getApplication().addComponentInitializationListener(listener1);
+		tester.getApplication().addComponentInitializationListener(listener2);
+
+		WebPage page = new WebPage()
+		{
+		};
+		TestComponent t1 = new TestComponent("t1");
+		TestComponent t2 = new TestComponent("t2");
+
+		t1.add(t2);
+		page.add(t1);
+
+		assertTrue(listener1.getComponents().contains(page));
+		assertTrue(listener1.getComponents().contains(t1));
+		assertTrue(listener1.getComponents().contains(t2));
+		assertTrue(listener2.getComponents().contains(page));
+		assertTrue(listener2.getComponents().contains(t1));
+		assertTrue(listener2.getComponents().contains(t2));
+	}
+
+	public void testInitializationOrder()
+	{
+		TestInitListener listener1 = new TestInitListener();
+		tester.getApplication().addComponentInitializationListener(listener1);
+
+		WebPage page = new WebPage()
+		{
+		};
+		TestComponent t1 = new TestComponent("t1");
+		TestComponent t2 = new TestComponent("t2");
+		TestComponent t3 = new TestComponent("t3");
+		TestComponent t4 = new TestComponent("t4");
+
+		t1.add(t2);
+		page.add(t1);
+		t1.add(t3);
+		t3.add(t4);
+
+		assertTrue(page == listener1.getComponents().get(0));
+		assertTrue(t1 == listener1.getComponents().get(1));
+		assertTrue(t2 == listener1.getComponents().get(2));
+		assertTrue(t3 == listener1.getComponents().get(3));
+		assertTrue(t4 == listener1.getComponents().get(4));
+	}
+
+
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		private int count = 0;
@@ -196,5 +250,23 @@ public class ComponentInitializationTest extends WicketTestCase
 		{
 			// missing super call
 		}
+	}
+
+	private static class TestInitListener implements IComponentInitializationListener
+	{
+		private List<Component> components = new ArrayList<Component>();
+
+		public void onInitialize(Component component)
+		{
+			System.out.println(component);
+			components.add(component);
+		}
+
+		public List<Component> getComponents()
+		{
+			return components;
+		}
+
+
 	}
 }

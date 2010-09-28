@@ -997,6 +997,8 @@ public abstract class Component
 					" has not called super.onInitialize() in the override of onInitialize() method");
 			}
 			setFlag(FLAG_INITIALIZE_SUPER_CALL_VERIFIED, false);
+
+			getApplication().fireComponentInitializationListeners(this);
 		}
 	}
 
