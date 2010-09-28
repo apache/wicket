@@ -18,8 +18,10 @@ package org.apache.wicket;
 
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.render.PageRenderer;
+import org.apache.wicket.util.IContextProvider;
 
 public interface IPageRendererProvider
+	extends
+		IContextProvider<PageRenderer, RenderPageRequestHandler>
 {
-	PageRenderer get(RenderPageRequestHandler handler);
 }

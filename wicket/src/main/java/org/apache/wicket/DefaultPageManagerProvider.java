@@ -23,13 +23,12 @@ import org.apache.wicket.pageStore.DefaultPageStore;
 import org.apache.wicket.pageStore.DiskDataStore;
 import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.pageStore.IPageStore;
-import org.apache.wicket.util.IProvider;
 
 /**
  * {@link IPageManagerProvider} implementation that creates new instance of {@link IPageManager}
  * that persists the pages in {@link DiskDataStore}
  */
-public class DefaultPageManagerProvider implements IProvider<IPageManager>
+public class DefaultPageManagerProvider implements IPageManagerProvider
 {
 	private static final int DEFAULT_CACHE_SIZE = 40;
 
@@ -39,22 +38,18 @@ public class DefaultPageManagerProvider implements IProvider<IPageManager>
 
 	private final Application application;
 
-	private final IPageManagerContext pageManagerContext;
-
 	/**
 	 * Construct.
 	 * 
 	 * @param application
 	 * @param pageManagerContext
 	 */
-	public DefaultPageManagerProvider(Application application,
-		IPageManagerContext pageManagerContext)
+	public DefaultPageManagerProvider(Application application)
 	{
 		this.application = application;
-		this.pageManagerContext = pageManagerContext;
 	}
 
-	public IPageManager get()
+	public IPageManager get(IPageManagerContext pageManagerContext)
 	{
 		IDataStore dataStore = new DiskDataStore(application.getName(), getMaxSizePerSession(),
 			getFileChannelPoolCapacity());

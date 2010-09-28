@@ -38,6 +38,7 @@ import javax.servlet.http.Cookie;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
+import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.IPageRendererProvider;
 import org.apache.wicket.IRequestCycleProvider;
 import org.apache.wicket.MarkupContainer;
@@ -73,6 +74,7 @@ import org.apache.wicket.mock.MockPageManager;
 import org.apache.wicket.mock.MockRequestParameters;
 import org.apache.wicket.mock.MockSessionStore;
 import org.apache.wicket.page.IPageManager;
+import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
@@ -282,7 +284,7 @@ public class BaseWicketTester
 		setupNextRequestCycle();
 	}
 
-	protected IProvider<IPageManager> newTestPageManagerProvider()
+	protected IPageManagerProvider newTestPageManagerProvider()
 	{
 		return new TestPageManagerProvider();
 	}
@@ -2051,9 +2053,9 @@ public class BaseWicketTester
 	/**
 	 * 
 	 */
-	private class TestPageManagerProvider implements IProvider<IPageManager>
+	private class TestPageManagerProvider implements IPageManagerProvider
 	{
-		public IPageManager get()
+		public IPageManager get(IPageManagerContext pageManagerContext)
 		{
 			return new MockPageManager();
 		}

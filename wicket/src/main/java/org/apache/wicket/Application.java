@@ -911,7 +911,7 @@ public abstract class Application implements UnboundListener, IEventSink
 
 		converterLocator = newConverterLocator();
 
-		setPageManagerProvider(new DefaultPageManagerProvider(this, getPageManagerContext()));
+		setPageManagerProvider(new DefaultPageManagerProvider(this));
 		resourceReferenceRegistry = newResourceReferenceRegistry();
 		sharedResources = newSharedResources(resourceReferenceRegistry);
 
@@ -921,7 +921,6 @@ public abstract class Application implements UnboundListener, IEventSink
 		pageFactory = newPageFactory();
 
 		pageAccessSynchronizer = new PageAccessSynchronizer(getRequestCycleSettings().getTimeout());
-
 
 		requestCycleProvider = new DefaultRequestCycleProvider();
 	}
@@ -1181,15 +1180,15 @@ public abstract class Application implements UnboundListener, IEventSink
 	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	private volatile IPageManager pageManager;
-	private IProvider<IPageManager> pageManagerProvider;
+	private IPageManagerProvider pageManagerProvider;
 
-	public final IProvider<IPageManager> getPageManagerProvider()
+	public final IPageManagerProvider getPageManagerProvider()
 	{
 		return pageManagerProvider;
 	}
 
 
-	public synchronized final void setPageManagerProvider(final IProvider<IPageManager> provider)
+	public synchronized final void setPageManagerProvider(final IPageManagerProvider provider)
 	{
 		pageManagerProvider = provider;
 	}
@@ -1211,7 +1210,7 @@ public abstract class Application implements UnboundListener, IEventSink
 			{
 				if (pageManager == null)
 				{
-					pageManager = pageAccessSynchronizer.adapt(pageManagerProvider.get());
+					pageManager = pageAccessSynchronizer.adapt(pageManagerProvider.get(getPageManagerContext()));
 				}
 			}
 		}

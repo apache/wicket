@@ -18,19 +18,13 @@ package org.apache.wicket;
 
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleContext;
+import org.apache.wicket.util.IContextProvider;
 
 /**
  * Provides instances of {@link RequestCycle} objects
  * 
  * @author igor.vaynberg
  */
-public interface IRequestCycleProvider
+public interface IRequestCycleProvider extends IContextProvider<RequestCycle, RequestCycleContext>
 {
-	/**
-	 * Provides instance of {@link RequestCycle}
-	 * 
-	 * @param context
-	 * @return instance of request cycle
-	 */
-	RequestCycle get(RequestCycleContext context);
 }
