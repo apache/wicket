@@ -22,6 +22,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
+import org.apache.wicket.util.visit.Visits;
 
 /**
  * <code>
@@ -39,6 +40,23 @@ import org.apache.wicket.util.visit.IVisitor;
  */
 public class VisitorTest extends WicketTestCase
 {
+	public void testVisit()
+	{
+		final StringBuilder path = new StringBuilder();
+
+		TestContainer container = new TestContainer();
+
+		Visits.visit(container, new IVisitor<Component, Void>()
+		{
+			public void component(Component component, IVisit<Void> visit)
+			{
+				path.append(component.getId());
+			}
+		});
+
+		Assert.assertEquals("ABCDEFGH", path.toString());
+	}
+
 
 	public void testContinueTraversal()
 	{
