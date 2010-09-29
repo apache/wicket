@@ -896,53 +896,50 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * @see javax.swing.event.TreeModelListener#treeNodesRemoved(javax.swing.event.TreeModelEvent)
 	 */
-	public final void treeNodesRemoved(TreeModelEvent e)
+	public final void treeNodesRemoved(TreeModelEvent removalEvent)
 	{
 		if (dirtyAll)
 		{
 			return;
 		}
 
-		// get the parent node of inserted nodes
-		Object parent = e.getTreePath().getLastPathComponent();
-		TreeItem parentItem = nodeToItemMap.get(parent);
+		// get the parent node of deleted nodes
+		TreeNode parentNode = (TreeNode)removalEvent.getTreePath().getLastPathComponent();
+		TreeItem parentItem = nodeToItemMap.get(parentNode);
 
-		if (parentItem != null && isNodeVisible(parent) && isNodeExpanded(parent))
+		if (parentItem != null && isNodeVisible(parentNode)) 
 		{
-			boolean nonEmpty = parentItem.getChildren() != null &&
-				!parentItem.getChildren().isEmpty();
-			for (int i = 0; i < e.getChildren().length; ++i)
+			if (parentNode.getChildCount() == 0)
 			{
-				Object node = e.getChildren()[i];
-
-				TreeItem item = nodeToItemMap.get(node);
-				if (item != null)
-				{
-					markTheLastButOneChildDirty(parentItem, item);
-
-					// go though item children and remove every one of them
-					visitItemChildren(item, new IItemCallback()
-					{
-						public void visitItem(TreeItem item)
-						{
-							removeItem(item);
-
-							// deselect the node
-							getTreeState().selectNode(item.getModelObject(), false);
-						}
-					});
-
-					parentItem.getChildren().remove(item);
-
-					removeItem(item);
-
-					getTreeState().selectNode(item.getModelObject(), false);
-
-				}
+				// rebuild parent's icon to show it no longer has children
+				invalidateNode(parentNode, true);
 			}
-			if (nonEmpty && parentItem.getChildren().isEmpty())
+
+			if (isNodeExpanded(parentNode))
 			{
-				invalidateNode(parent, true);
+				// deleted nodes were visible; we need to delete their TreeItems
+				for (Object deletedNode : removalEvent.getChildren()) 
+				{
+					TreeItem itemToDelete = nodeToItemMap.get(deletedNode);
+					if (itemToDelete != null)
+					{
+						markTheLastButOneChildDirty(parentItem, itemToDelete);
+
+						// remove all the deleted item's children
+						visitItemChildren(itemToDelete, new IItemCallback() 
+						{
+							public void visitItem(TreeItem item)
+							{
+								removeItem(item);
+								getTreeState().selectNode(item.getModelObject(), false);
+							}
+						});
+
+						parentItem.getChildren().remove(itemToDelete);
+						removeItem(itemToDelete);
+						getTreeState().selectNode(itemToDelete.getModelObject(), false);
+					}
+				}
 			}
 		}
 	}
