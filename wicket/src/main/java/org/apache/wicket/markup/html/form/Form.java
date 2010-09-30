@@ -1239,7 +1239,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 
 		// Model was successfully updated with valid data
 
-		Visits.visitComponentsPostOrder(this, new IVisitor<Form<?>, Void>()
+		Visits.visitPostOrder(this, new IVisitor<Form<?>, Void>()
 		{
 			public void component(Form<?> form, IVisit<Void> visit)
 			{

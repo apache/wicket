@@ -335,7 +335,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	public static final <R> R visitFormComponentsPostOrder(Component component,
 		final IVisitor<? extends FormComponent, R> visitor)
 	{
-		return Visits.visitComponentsPostOrder(component, visitor, new IVisitFilter()
+		return Visits.visitPostOrder(component, visitor, new IVisitFilter()
 		{
 
 			public boolean visitChildren(Object object)
@@ -374,7 +374,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			throw new IllegalArgumentException("Argument `visitor` cannot be null");
 		}
 
-		return Visits.visitComponentsPostOrder(component, visitor, new IVisitFilter()
+		return Visits.visitPostOrder(component, visitor, new IVisitFilter()
 		{
 
 			public boolean visitObject(Object object)

@@ -154,7 +154,7 @@ final class ComponentEventSender implements IEventSource
 
 		if (cursor instanceof MarkupContainer)
 		{
-			Visits.visitComponentsPostOrder(cursor, new ComponentEventVisitor(event));
+			Visits.visitPostOrder(cursor, new ComponentEventVisitor(event));
 		}
 		if (event.isStop())
 		{
