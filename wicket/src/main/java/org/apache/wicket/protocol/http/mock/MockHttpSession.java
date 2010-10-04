@@ -269,11 +269,11 @@ public class MockHttpSession implements HttpSession, Serializable
 	}
 
 	/**
-	 * Changes the state of this session. Temporary or persisted. Uppon creation all sessions are
+	 * Changes the state of this session. Temporary or persisted. Upon creation all sessions are
 	 * temporary.
 	 * 
 	 * @param temporary
-	 *            trur, for a temporary session, false for a persisted session
+	 *            true, for a temporary session, false for a persisted session
 	 */
 	public final void setTemporary(boolean temporary)
 	{
