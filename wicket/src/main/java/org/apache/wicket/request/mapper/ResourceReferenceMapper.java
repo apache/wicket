@@ -17,10 +17,8 @@
 package org.apache.wicket.request.mapper;
 
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
-import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.IProvider;
-import org.apache.wicket.util.NullProvider;
 
 /**
  * Generic {@link ResourceReference} encoder that encodes and decodes non-mounted
@@ -44,12 +42,12 @@ public class ResourceReferenceMapper extends ParentPathReferenceRewriter
 	 * 
 	 * @param pageParametersEncoder
 	 * @param parentPathPartEscapeSequence
-	 * @param timestamps
+	 * @param useTimestamps
 	 */
 	public ResourceReferenceMapper(IPageParametersEncoder pageParametersEncoder,
-	                               IProvider<String> parentPathPartEscapeSequence,
-	                               IProvider<Boolean> useTimestamps)
+		IProvider<String> parentPathPartEscapeSequence, IProvider<Boolean> useTimestamps)
 	{
-		super(new BasicResourceReferenceMapper(pageParametersEncoder, useTimestamps), parentPathPartEscapeSequence);
+		super(new BasicResourceReferenceMapper(pageParametersEncoder, useTimestamps),
+			parentPathPartEscapeSequence);
 	}
 }
