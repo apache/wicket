@@ -31,7 +31,7 @@ package org.apache.wicket.settings;
 public interface IDebugSettings
 {
 	/**
-	 * If set to <code>true</code> wicket will output component path in a <code>wicket:path</code>
+	 * If set to <code>true</code> wicket will output component path in a <code>wicketpath</code>
 	 * attribute of the component tag. This can be useful for debugging and automating tests.
 	 * 
 	 * @param enabled
