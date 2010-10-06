@@ -1093,10 +1093,13 @@ Wicket.Ajax.Call.prototype = {
 	// Submits a form using ajax.
 	// This method serializes a form and sends it as POST body.
 	submitForm: function(form, submitButton) {
-		if (form.onsubmit) {	
+		var submittingAttribute = 'data-wicket-submitting';
+		if (form.onsubmit && !form.getAttribute(submittingAttribute)) {
+			form.setAttribute(submittingAttribute, true);
 			if (!form.onsubmit()) return;
+			form.removeAttribute(submittingAttribute);
 		}
-	    
+		
 	    if (this.handleMultipart(form, submitButton)) {
 	    	return true;
 	    }
