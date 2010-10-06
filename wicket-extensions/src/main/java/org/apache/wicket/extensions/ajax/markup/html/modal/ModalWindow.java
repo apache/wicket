@@ -378,6 +378,10 @@ public class ModalWindow extends Panel
 	public void close(final AjaxRequestTarget target)
 	{
 		getContent().setVisible(false);
+		if (isCustomComponent())
+		{
+			target.addComponent(getContent());
+		}
 		target.appendJavascript(getCloseJavacript());
 		shown = false;
 	}
