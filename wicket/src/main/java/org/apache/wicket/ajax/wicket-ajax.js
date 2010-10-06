@@ -1095,7 +1095,7 @@ Wicket.Ajax.Call.prototype = {
 	submitForm: function(form, submitButton) {
 		var submittingAttribute = 'data-wicket-submitting';
 		if (form.onsubmit && !form.getAttribute(submittingAttribute)) {
-			form.setAttribute(submittingAttribute, true);
+			form.setAttribute(submittingAttribute, submittingAttribute);
 			if (!form.onsubmit()) return;
 			form.removeAttribute(submittingAttribute);
 		}
