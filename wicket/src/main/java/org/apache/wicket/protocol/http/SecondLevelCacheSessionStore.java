@@ -191,7 +191,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	/**
 	 * Page map implementation for this session store.
 	 */
-	private static final class SecondLevelCachePageMap extends PageMap
+	protected static final class SecondLevelCachePageMap extends PageMap
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -218,7 +218,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			}
 		}
 
-		private Page getLastPage()
+		protected Page getLastPage()
 		{
 			Page result = null;
 			if (lastPage instanceof Page)
@@ -236,7 +236,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			return result;
 		}
 
-		private void setLastPage(Page lastPage)
+		protected void setLastPage(Page lastPage)
 		{
 			this.lastPage = lastPage;
 		}
@@ -361,7 +361,8 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			{
 				getStore().removePage(sessionId, getName(), entry.getNumericId());
 			}
-			if (lastPage instanceof Page && ((Page) lastPage).getPageMapEntry() == entry) {
+			if (lastPage instanceof Page && ((Page)lastPage).getPageMapEntry() == entry)
+			{
 				lastPage = null;
 			}
 		}
