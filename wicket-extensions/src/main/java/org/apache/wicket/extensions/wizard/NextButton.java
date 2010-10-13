@@ -43,7 +43,7 @@ public class NextButton extends WizardButton
 	 * @see org.apache.wicket.Component#isEnabled()
 	 */
 	@Override
-	public final boolean isEnabled()
+	public boolean isEnabled()
 	{
 		return getWizardModel().isNextAvailable();
 	}
@@ -52,7 +52,7 @@ public class NextButton extends WizardButton
 	 * @see org.apache.wicket.extensions.wizard.WizardButton#onClick()
 	 */
 	@Override
-	public final void onClick()
+	public void onClick()
 	{
 		IWizardModel wizardModel = getWizardModel();
 		IWizardStep step = wizardModel.getActiveStep();
@@ -77,7 +77,7 @@ public class NextButton extends WizardButton
 	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
 	@Override
-	protected final void onBeforeRender()
+	protected void onBeforeRender()
 	{
 		getForm().setDefaultButton(this);
 		super.onBeforeRender();

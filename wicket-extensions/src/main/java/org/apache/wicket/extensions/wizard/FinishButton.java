@@ -43,7 +43,7 @@ public class FinishButton extends WizardButton
 	 * @see org.apache.wicket.Component#isEnabled()
 	 */
 	@Override
-	public final boolean isEnabled()
+	public boolean isEnabled()
 	{
 		IWizardStep activeStep = getWizardModel().getActiveStep();
 		return (activeStep != null && getWizardModel().isLastStep(activeStep));
@@ -53,7 +53,7 @@ public class FinishButton extends WizardButton
 	 * @see org.apache.wicket.extensions.wizard.WizardButton#onClick()
 	 */
 	@Override
-	public final void onClick()
+	public void onClick()
 	{
 		IWizardModel wizardModel = getWizardModel();
 		IWizardStep step = wizardModel.getActiveStep();

@@ -44,7 +44,7 @@ public class PreviousButton extends WizardButton
 	 * @see org.apache.wicket.Component#isEnabled()
 	 */
 	@Override
-	public final boolean isEnabled()
+	public boolean isEnabled()
 	{
 		return getWizardModel().isPreviousAvailable();
 	}
@@ -53,7 +53,7 @@ public class PreviousButton extends WizardButton
 	 * @see org.apache.wicket.extensions.wizard.WizardButton#onClick()
 	 */
 	@Override
-	public final void onClick()
+	public void onClick()
 	{
 		getWizardModel().previous();
 	}

@@ -44,7 +44,7 @@ public class LastButton extends WizardButton
 	 * @see org.apache.wicket.Component#isEnabled()
 	 */
 	@Override
-	public final boolean isEnabled()
+	public boolean isEnabled()
 	{
 		return getWizardModel().isLastAvailable();
 	}
@@ -53,7 +53,7 @@ public class LastButton extends WizardButton
 	 * @see org.apache.wicket.Component#isVisible()
 	 */
 	@Override
-	public final boolean isVisible()
+	public boolean isVisible()
 	{
 		return getWizardModel().isLastVisible();
 	}
@@ -62,7 +62,7 @@ public class LastButton extends WizardButton
 	 * @see org.apache.wicket.extensions.wizard.WizardButton#onClick()
 	 */
 	@Override
-	public final void onClick()
+	public void onClick()
 	{
 		IWizardModel wizardModel = getWizardModel();
 		wizardModel.getActiveStep().applyState();
