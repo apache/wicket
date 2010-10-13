@@ -159,6 +159,7 @@ public class WebPageRenderer extends PageRenderer
 	{
 		WebResponse response = (WebResponse)requestCycle.getResponse();
 		String relativeUrl = requestCycle.getUrlRenderer().renderUrl(url);
+		response.reset();
 		response.sendRedirect(relativeUrl);
 	}
 
@@ -185,12 +186,10 @@ public class WebPageRenderer extends PageRenderer
 			// if there is saved response for this URL render it
 			bufferedResponse.writeTo((WebResponse)requestCycle.getResponse());
 		}
-		else if (getRedirectPolicy() == RedirectPolicy.NEVER_REDIRECT ||
-			isOnePassRender() // 
+		else if (getRedirectPolicy() == RedirectPolicy.NEVER_REDIRECT || isOnePassRender() //
 			||
 			(targetUrl.equals(currentUrl) && !getPageProvider().isNewPageInstance() && !getPage().isPageStateless()) //
-			||
-			(targetUrl.equals(currentUrl) && isRedirectToRender()))
+			|| (targetUrl.equals(currentUrl) && isRedirectToRender()))
 		{
 			// if the policy is never to redirect
 			// or one pass render mode is on

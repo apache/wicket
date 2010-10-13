@@ -173,7 +173,7 @@ class HeaderBufferingWebResponse extends WebResponse
 		{
 			throw new IllegalStateException("Response has already been flushed!");
 		}
-		checkHeader();
 		bufferedResponse.reset();
+		bufferedWritten = false;
 	}
 }
