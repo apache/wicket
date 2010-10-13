@@ -220,9 +220,12 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 				return true;
 			}
 
-			// Did not find any suitable handler, thus not executing the request
-			log.error("Unable to execute request. No suitable RequestHandler found. URL=" +
-				request.getUrl());
+			if (log.isDebugEnabled())
+			{
+				// Did not find any suitable handler, thus not executing the request
+				log.debug("Unable to execute request. No suitable RequestHandler found. URL=" +
+					request.getUrl());
+			}
 		}
 		catch (Exception e)
 		{
