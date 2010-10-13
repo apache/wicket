@@ -64,7 +64,7 @@ public final class CharSetMap
 	/**
 	 * A common charset mapper for languages.
 	 */
-	private static final Map<String,String> commonMapper = new HashMap<String,String>();
+	private static final Map<String, String> commonMapper = new HashMap<String, String>();
 
 	static
 	{
@@ -112,7 +112,13 @@ public final class CharSetMap
 	/**
 	 * A collection of available charset mappers.
 	 */
-	private final List<Map<String,String>> mappers = new ArrayList<Map<String, String>>();
+	private final List<Map<String, String>> mappers = new ArrayList<Map<String, String>>();
+	{
+		for (int i = 0; i < MAP_COM; i++)
+		{
+			mappers.add(null);
+		}
+	}
 
 	/**
 	 * Loads mappings from a stream.
@@ -123,13 +129,13 @@ public final class CharSetMap
 	 * @throws IOException
 	 *             for an incorrect stream.
 	 */
-	protected final static Map<String,String> loadStream(final InputStream input) throws IOException
+	protected final static Map<String, String> loadStream(final InputStream input)
+		throws IOException
 	{
 		return createMap(input);
 	}
 
-	private static Map<String, String> createMap(InputStream input)
-			throws IOException
+	private static Map<String, String> createMap(InputStream input) throws IOException
 	{
 		final Properties props = new Properties();
 		props.load(input);
@@ -138,10 +144,10 @@ public final class CharSetMap
 
 	private static Map<String, String> createMap(Properties props)
 	{
-		HashMap<String, String> map = new HashMap<String,String>();
+		HashMap<String, String> map = new HashMap<String, String>();
 		for (Object key : props.keySet())
 		{
-			String keyString = (String) key;
+			String keyString = (String)key;
 			map.put(keyString, props.getProperty(keyString));
 		}
 		return map;
@@ -156,7 +162,7 @@ public final class CharSetMap
 	 * @throws IOException
 	 *             for an incorrect file.
 	 */
-	protected final static Map<String,String> loadFile(final File file) throws IOException
+	protected final static Map<String, String> loadFile(final File file) throws IOException
 	{
 		return loadStream(new FileInputStream(file));
 	}
@@ -170,7 +176,7 @@ public final class CharSetMap
 	 * @throws IOException
 	 *             for an incorrect file.
 	 */
-	protected final static Map<String,String> loadPath(final String path) throws IOException
+	protected final static Map<String, String> loadPath(final String path) throws IOException
 	{
 		return loadFile(new File(path));
 	}
@@ -182,7 +188,7 @@ public final class CharSetMap
 	 *            a resource name.
 	 * @return the mappings.
 	 */
-	protected final static Map<String,String> loadResource(final String name)
+	protected final static Map<String, String> loadResource(final String name)
 	{
 		final InputStream input = CharSetMap.class.getResourceAsStream(name);
 		if (input != null)
@@ -241,7 +247,7 @@ public final class CharSetMap
 		mappers.add(MAP_COM, commonMapper);
 
 		// Set the cache mapper to have the highest priority.
-		mappers.add(MAP_CACHE, new Hashtable<String,String>());
+		mappers.add(MAP_CACHE, new Hashtable<String, String>());
 	}
 
 	/**
@@ -306,13 +312,13 @@ public final class CharSetMap
 	 * @param charset
 	 *            the corresponding charset.
 	 */
-	@SuppressWarnings({"unchecked"})
+	@SuppressWarnings({ "unchecked" })
 	public final synchronized void setCharSet(final String key, final String charset)
 	{
-		HashMap<String,String> mapper = (HashMap<String,String>) mappers.get(MAP_PROG);
+		HashMap<String, String> mapper = (HashMap<String, String>)mappers.get(MAP_PROG);
 		if (mapper != null)
 		{
-			mapper = (HashMap<String, String>) mapper.clone();
+			mapper = (HashMap<String, String>)mapper.clone();
 		}
 		else
 		{
@@ -538,7 +544,7 @@ public final class CharSetMap
 		if ((key != null) && (key.length() > 0))
 		{
 			// Go through mappers.
-			Map<String,String> mapper;
+			Map<String, String> mapper;
 			String charset;
 
 			for (int i = 0; i < mappers.size(); i++)
@@ -575,11 +581,11 @@ public final class CharSetMap
 	 * @param charset
 	 *            the corresponding charset.
 	 */
-	@SuppressWarnings({"unchecked"})
+	@SuppressWarnings({ "unchecked" })
 	protected final synchronized void setCommonCharSet(final String key, final String charset)
 	{
-		HashMap<String, String> map = (HashMap<String, String>) mappers.get(MAP_COM);
-		final HashMap<String,String> mapper = (HashMap<String,String>) map.clone();
+		HashMap<String, String> map = (HashMap<String, String>)mappers.get(MAP_COM);
+		final HashMap<String, String> mapper = (HashMap<String, String>)map.clone();
 		mapper.put(key, charset);
 		mappers.add(MAP_COM, mapper);
 		mappers.get(MAP_CACHE).clear();
