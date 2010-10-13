@@ -174,7 +174,7 @@ public class ListenerInterfaceRequestHandler
 			}
 			finally
 			{
-				if(frozen != null)
+				if (frozen != null)
 					page.setFreezePageId(frozen);
 			}
 		}
@@ -187,16 +187,17 @@ public class ListenerInterfaceRequestHandler
 
 	private void invokeListener()
 	{
+		IRequestableComponent component = getComponent();
 		if (getBehaviorIndex() == null)
 		{
-			listenerInterface.invoke(getComponent());
+			listenerInterface.invoke(component);
 		}
 		else
 		{
 			try
 			{
-				IBehavior behavior = getComponent().getBehaviors().get(behaviorIndex);
-				listenerInterface.invoke(getComponent(), behavior);
+				IBehavior behavior = component.getBehaviorsRawList().get(behaviorIndex);
+				listenerInterface.invoke(component, behavior);
 			}
 			catch (IndexOutOfBoundsException e)
 			{

@@ -596,6 +596,27 @@ public abstract class Component
 		}
 	}
 
+	private boolean data_can_remove(int index)
+	{
+		int len = data_length();
+		for (int j = index + 1; j < len; j++)
+		{
+			if (data_get(j) instanceof IRequestListener)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * WARNING: CALL THIS METHOD ONLY IF {@link #data_can_remove(int)} HAS RETURNED {@code true},
+	 * OTHERWISE USE {@link #data_set(int, Object)} TO SET THE VALUE TO {@code null} OR SOMETHING
+	 * MORE APPROPRIATE FOR THE USECASE
+	 * 
+	 * @param position
+	 * @return {@code true} if the item can be removed
+	 */
 	private Object data_remove(int position)
 	{
 		int currentLength = data_length();
@@ -1061,16 +1082,19 @@ public abstract class Component
 		if (data != null)
 		{
 			// if the model is set, we must skip it
-			final int startIndex = getFlag(FLAG_MODEL_SET) ? 1 : 0;
 			int length = data_length();
 
-			if (length > startIndex)
+			if (length > 0)
 			{
 				final ArrayList<IBehavior> result = new ArrayList<IBehavior>();
-				for (int i = startIndex; i < length; ++i)
+				for (int i = 0; i < length; ++i)
 				{
 					Object o = data_get(i);
-					if (o == null || o instanceof IBehavior)
+					if (o == null || !(o instanceof IBehavior))
+					{
+						result.add((IBehavior)null);
+					}
+					else
 					{
 						result.add((IBehavior)o);
 					}
@@ -1731,6 +1755,20 @@ public abstract class Component
 		return key.get(getMetaData());
 	}
 
+	private int getMetaDataIndex()
+	{
+		int start = getFlag(FLAG_MODEL_SET) ? 1 : 0;
+		for (int i = start; i < data_length(); i++)
+		{
+			Object object = data_get(i);
+			if (object instanceof MetaDataEntry<?>[] || object instanceof MetaDataEntry)
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	/**
 	 * 
 	 * @return meta data entry
@@ -1740,11 +1778,9 @@ public abstract class Component
 		MetaDataEntry<?>[] metaData = null;
 
 		// index where we should expect the entry
-		int index = getFlag(FLAG_MODEL_SET) ? 1 : 0;
+		int index = getMetaDataIndex();
 
-		int length = data_length();
-
-		if (index < length)
+		if (index >= 0)
 		{
 			Object object = data_get(index);
 			if (object instanceof MetaDataEntry<?>[])
@@ -2449,17 +2485,8 @@ public abstract class Component
 				// Instead we check if there are any behaviors downstream that will be affected by
 				// this, and if there are we set this behavior's slot to null instead of removing it
 				// to preserve indexes of behaviors downstream.
-				boolean anyListenersAfter = false;
-				for (int j = i + 1; j < len; j++)
-				{
-					if (data_get(j) instanceof IRequestListener)
-					{
-						anyListenersAfter = true;
-						break;
-					}
-				}
 
-				if (anyListenersAfter)
+				if (!data_can_remove(i))
 				{
 					data_set(i, null);
 				}
@@ -3030,6 +3057,7 @@ public abstract class Component
 	 */
 	public final <M> void setMetaData(final MetaDataKey<M> key, final M object)
 	{
+		int index = getMetaDataIndex();
 		MetaDataEntry<?>[] old = getMetaData();
 
 		Object metaData = null;
@@ -3039,11 +3067,9 @@ public abstract class Component
 			metaData = (metaDataArray.length > 1) ? (Object)metaDataArray : metaDataArray[0];
 		}
 
-		int index = getFlag(FLAG_MODEL_SET) ? 1 : 0;
-
 		if (old == null && metaData != null)
 		{
-			data_insert(index, metaData);
+			data_add(metaData);
 		}
 		else if (old != null && metaData != null)
 		{
@@ -3051,7 +3077,15 @@ public abstract class Component
 		}
 		else if (old != null && metaData == null)
 		{
-			data_remove(index);
+			if (data_can_remove(index))
+			{
+				data_remove(index);
+			}
+			else
+			{
+				data_set(index, null);
+			}
+
 		}
 	}
 
@@ -3122,8 +3156,15 @@ public abstract class Component
 			}
 			else
 			{
-				data_remove(0);
-				setFlag(FLAG_MODEL_SET, false);
+				if (data_can_remove(0))
+				{
+					data_remove(0);
+					setFlag(FLAG_MODEL_SET, false);
+				}
+				else
+				{
+					data_set(0, null);
+				}
 			}
 		}
 		else

@@ -139,7 +139,7 @@ public class MockComponent implements IRequestableComponent
 		return true;
 	}
 
-	public List<IBehavior> getBehaviors()
+	public List<IBehavior> getBehaviorsRawList()
 	{
 		return Collections.emptyList();
 	}

@@ -72,17 +72,21 @@ public interface IRequestableComponent
 	 * Gets the currently coupled {@link IBehavior}s as a unmodifiable list. Returns an empty list
 	 * rather than null if there are no behaviors coupled to this component.
 	 * 
+	 * NOTE: the list of behaviors is used to keep the index of the behavior in the url, which means
+	 * the list returned should preserve the index. Eg, removal of items from the list should not be
+	 * allowed, a removed item should instead be marked by a value such as {@code null}.
+	 * 
 	 * @return The currently coupled behaviors as a unmodifiable list
 	 */
-	public List<? extends IBehavior> getBehaviors();
+	public List<? extends IBehavior> getBehaviorsRawList();
 
 	/**
 	 * Detaches the component.
 	 * <p>
 	 * NOTE: this method is not inherited from {@link IDetachable} on purpose. in Wicket the
 	 * assumption for a long time has been that {@link Component}s do not implement
-	 * {@link IDetachable}; doing so may lead to some very nasty side-effects. Consider {@code
-	 * AbstractPropertyModel#detach()} which looks like this:
+	 * {@link IDetachable}; doing so may lead to some very nasty side-effects. Consider
+	 * {@code AbstractPropertyModel#detach()} which looks like this:
 	 * 
 	 * <pre>
 	 * public void detach()
