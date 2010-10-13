@@ -217,13 +217,16 @@ public class ServletWebResponse extends WebResponse
 
 			if (webRequest.isAjax())
 			{
-				String ajaxBaseUrl = httpServletRequest.getHeader("Wicket-Ajax-BaseURL");
+				String ajaxBaseUrl = webRequest.getAjaxBaseUrl();
 
 				if (ajaxBaseUrl == null)
 					throw new IllegalStateException(
 						"current ajax request is missing the base url header");
 
-				current = Url.parse('/' + ajaxBaseUrl, charset);
+				String contextPath = httpServletRequest.getContextPath();
+				String filterPrefix = webRequest.getFilterPrefix();
+				
+				current = Url.parse(contextPath + '/' + filterPrefix + ajaxBaseUrl, charset);
 			}
 			else
 			{

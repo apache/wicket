@@ -576,7 +576,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 			RequestCycle rc = (RequestCycle)requestCycle;
 			Url oldBaseURL = rc.getUrlRenderer().getBaseUrl();
 			WebRequest request = (WebRequest)requestCycle.getRequest();
-			Url baseURL = Url.parse(request.getHeader("Wicket-Ajax-BaseURL"), request.getCharset());
+			Url baseURL = Url.parse(request.getAjaxBaseUrl(), request.getCharset());
 
 			rc.getUrlRenderer().setBaseUrl(baseURL);
 
