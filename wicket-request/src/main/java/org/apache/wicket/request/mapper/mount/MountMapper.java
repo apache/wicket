@@ -103,7 +103,7 @@ public class MountMapper extends AbstractMapper
 	{
 		Url dismountedUrl = new Url(request.getUrl());
 		dismountedUrl.removeLeadingSegments(mountSegments.length);
-		return request.requestWithUrl(dismountedUrl);
+		return request.cloneWithUrl(dismountedUrl);
 	}
 
 	/**

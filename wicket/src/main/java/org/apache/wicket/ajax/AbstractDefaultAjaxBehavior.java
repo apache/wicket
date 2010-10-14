@@ -23,9 +23,7 @@ import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WicketEventReference;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.resource.JavascriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -295,14 +293,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		RequestCycle requestCycle = RequestCycle.get();
 		requestCycle.scheduleRequestHandlerAfterCurrent(target);
 
-		Url oldBaseURL = requestCycle.getUrlRenderer().getBaseUrl();
-		WebRequest request = (WebRequest)requestCycle.getRequest();
-		Url baseURL = Url.parse(request.getHeader("Wicket-Ajax-BaseURL"), request.getCharset());
-		requestCycle.getUrlRenderer().setBaseUrl(baseURL);
-
 		respond(target);
-
-		requestCycle.getUrlRenderer().setBaseUrl(oldBaseURL);
 	}
 
 	/**

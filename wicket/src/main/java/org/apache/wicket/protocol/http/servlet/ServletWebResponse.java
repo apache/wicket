@@ -28,6 +28,7 @@ import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * WebResponse that wraps a {@link ServletWebResponse}.
@@ -215,25 +216,13 @@ public class ServletWebResponse extends WebResponse
 
 			final Url current;
 
-			if (webRequest.isAjax())
-			{
-				String ajaxBaseUrl = httpServletRequest.getHeader("Wicket-Ajax-BaseURL");
-
-				if (ajaxBaseUrl == null)
-					throw new IllegalStateException(
-						"current ajax request is missing the base url header");
-
-				current = Url.parse('/' + ajaxBaseUrl, charset);
-			}
-			else
-			{
-				current = Url.parse(httpServletRequest.getRequestURI(), charset);
-			}
+			current = webRequest.getBaseUrl();
 
 			Url append = Url.parse(url, charset);
 			current.concatSegments(append.getSegments());
 			Url result = new Url(current.getSegments(), append.getQueryParameters());
-			return getAbsolutePrefix() + result.toString();
+			return Strings.join("/", getAbsolutePrefix(), httpServletRequest.getContextPath(),
+				webRequest.getFilterPrefix(), result.toString());
 		}
 	}
 

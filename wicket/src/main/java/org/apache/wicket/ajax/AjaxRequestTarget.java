@@ -32,7 +32,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
-import org.apache.wicket.ajax.AjaxRequestTarget.IListener;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.internal.HeaderResponse;
@@ -42,7 +41,6 @@ import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.IPageRequestHandler;
@@ -574,19 +572,13 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		try
 		{
 			RequestCycle rc = (RequestCycle)requestCycle;
-			Url oldBaseURL = rc.getUrlRenderer().getBaseUrl();
-			WebRequest request = (WebRequest)requestCycle.getRequest();
-			Url baseURL = Url.parse(request.getHeader("Wicket-Ajax-BaseURL"), request.getCharset());
-
-			rc.getUrlRenderer().setBaseUrl(baseURL);
 
 			final WebResponse response = (WebResponse)requestCycle.getResponse();
 
 			if (markupIdToComponent.values().contains(page))
 			{
 				// the page itself has been added to the request target, we simply issue a redirect
-// back
-// to the page
+				// back to the page
 				IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(page));
 				final String url = rc.urlFor(handler).toString();
 				response.sendRedirect(url);
@@ -646,8 +638,6 @@ public class AjaxRequestTarget implements IPageRequestHandler
 			}
 
 			response.write("</ajax-response>");
-
-			rc.getUrlRenderer().setBaseUrl(oldBaseURL);
 		}
 		finally
 		{

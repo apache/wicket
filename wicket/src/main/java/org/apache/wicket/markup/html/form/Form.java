@@ -37,10 +37,13 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.IRequestParameters;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlDecoder;
+import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.settings.IApplicationSettings;
@@ -590,6 +593,18 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 */
 	public final CharSequence getJsForInterfaceUrl(CharSequence url)
 	{
+		/*
+		 * since the passed in url is handled when the current url is form's action url and not the
+		 * current request's url we rerender the passed in url to be relative to the form's action
+		 * url
+		 */
+		UrlRenderer renderer = getRequestCycle().getUrlRenderer();
+		Url oldBase = renderer.getBaseUrl();
+		Url action = Url.parse(getActionUrl().toString());
+		renderer.setBaseUrl(action);
+		url = renderer.renderUrl(Url.parse(url.toString()));
+		renderer.setBaseUrl(oldBase);
+
 		Form<?> root = getRootForm();
 		return new AppendingStringBuffer("document.getElementById('").append(
 			root.getHiddenFieldId())
@@ -1059,9 +1074,16 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 */
 	private void dispatchEvent(final Page page, final String url)
 	{
-		Url parsed = Url.parse(url, getRequest().getCharset());
-		IRequestHandler handler = getApplication().getRootRequestMapper().mapRequest(
-			getRequest().requestWithUrl(parsed));
+		// the current requst's url is most likely wicket/page?x-y.IFormSubmitListener-path-to-form
+		// while the passed in url is most likely page?x.y.IOnChangeListener-path-to-component
+		// we transform the passed in url into wicket/page?x-y.IOnChangeListener-path-to-component
+		// so the system mapper can interpret it
+		Url resolved = new Url(getRequest().getUrl());
+		resolved.resolveRelative(Url.parse(url));
+
+		IRequestMapper mapper = getApplication().getRootRequestMapper();
+		Request request = getRequest().cloneWithUrl(resolved);
+		IRequestHandler handler = mapper.mapRequest(request);
 
 		if (handler != null)
 		{
@@ -1510,7 +1532,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 		{
 			String method = getMethod().toLowerCase();
 			tag.put("method", method);
-			String url = urlFor(IFormSubmitListener.INTERFACE).toString();
+			String url = getActionUrl().toString();
 			if (encodeUrlInHiddenFields())
 			{
 				int i = url.indexOf('?');
@@ -1549,6 +1571,16 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 			tag.remove("action");
 			tag.remove("enctype");
 		}
+	}
+
+	/**
+	 * Generates the action url for the form
+	 * 
+	 * @return action url
+	 */
+	protected CharSequence getActionUrl()
+	{
+		return urlFor(IFormSubmitListener.INTERFACE);
 	}
 
 	/**
@@ -1614,7 +1646,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 			// and have to write the url parameters as hidden fields
 			if (encodeUrlInHiddenFields())
 			{
-				String url = urlFor(IFormSubmitListener.INTERFACE).toString();
+				String url = getActionUrl().toString();
 				int i = url.indexOf('?');
 				String[] params = ((i > -1) ? url.substring(i + 1) : url).split("&");
 

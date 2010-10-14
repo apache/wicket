@@ -77,7 +77,7 @@ public class LocaleFirstMapper extends AbstractComponentMapper
 				url.getSegments().remove(0);
 
 				// create a request based on the new url
-				request = request.requestWithUrl(url);
+				request = request.cloneWithUrl(url);
 			}
 		}
 

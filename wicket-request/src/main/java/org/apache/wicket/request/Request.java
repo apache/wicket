@@ -38,7 +38,22 @@ public abstract class Request
 	public abstract Url getUrl();
 
 	/**
-	 * In case this request has been created using {@link #requestWithUrl(Url)}, this method should
+	 * Returns the base URL relative to which this request should be processed.
+	 * 
+	 * If the current requested url is:
+	 * 
+	 * <pre>
+	 * /con/text/fil/ter/wicket/page?1&foo=bar
+	 * </pre>
+	 * 
+	 * the relative url is: </pre> wicket/page </pre>
+	 * 
+	 * @return ajax base url
+	 */
+	public abstract Url getBaseUrl();
+
+	/**
+	 * In case this request has been created using {@link #cloneWithUrl(Url)}, this method should
 	 * return the original URL.
 	 * 
 	 * @return original URL
@@ -86,7 +101,7 @@ public abstract class Request
 	 *            Url instance
 	 * @return request with specified URL.
 	 */
-	public Request requestWithUrl(final Url url)
+	public Request cloneWithUrl(final Url url)
 	{
 		return new Request()
 		{
@@ -118,6 +133,12 @@ public abstract class Request
 			public Charset getCharset()
 			{
 				return Request.this.getCharset();
+			}
+
+			@Override
+			public Url getBaseUrl()
+			{
+				return getUrl();
 			}
 		};
 	}

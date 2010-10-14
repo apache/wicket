@@ -118,7 +118,8 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 
 		for (IRequestMapper encoder : mappers)
 		{
-			list.add(new EncoderWithSegmentsCount(encoder, encoder.getCompatibilityScore(request)));
+			int score = encoder.getCompatibilityScore(request);
+			list.add(new EncoderWithSegmentsCount(encoder, score));
 		}
 
 		Collections.sort(list);

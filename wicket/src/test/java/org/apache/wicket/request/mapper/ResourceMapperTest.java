@@ -58,6 +58,12 @@ public class ResourceMapperTest extends WicketTestCase
 			{
 				return CHARSET;
 			}
+
+			@Override
+			public Url getBaseUrl()
+			{
+				return getUrl();
+			}
 		};
 	}
 
@@ -146,7 +152,7 @@ public class ResourceMapperTest extends WicketTestCase
 
 		public void respond(Attributes attributes)
 		{
-			this.pageParameters = attributes.getParameters();
+			pageParameters = attributes.getParameters();
 		}
 	}
 }

@@ -257,6 +257,18 @@ public final class Url implements Serializable
 		setCharset(charset);
 	}
 
+	public void resolveRelativeTo(Url base)
+	{
+		Url url = new Url(base);
+
+		while (!getSegments().isEmpty() && "..".equals(getSegments().get(0)))
+		{
+			removeLeadingSegments(0);
+			url.getSegments().remove(url.getSegments().size() - 1);
+		}
+		getSegments().addAll(url.getSegments());
+	}
+
 	/**
 	 * Returns segments of the URL. Segments form the part before query string.
 	 * 
@@ -700,5 +712,55 @@ public final class Url implements Serializable
 			}
 			return result.toString();
 		}
+	}
+
+	/**
+	 * Makes this url the result of resolving the {@code relative} url against this url.
+	 * <p>
+	 * Segments will be properly resolved, handling any {@code ..} references, while the query
+	 * parameters will be completely replaced with {@code relative}'s query parameters.
+	 * </p>
+	 * <p>
+	 * For example:
+	 * 
+	 * <pre>
+	 * wicket/page/render?foo=bar
+	 * </pre>
+	 * 
+	 * resolved with
+	 * 
+	 * <pre>
+	 * ../component/render?a=b
+	 * </pre>
+	 * 
+	 * will become
+	 * 
+	 * <pre>
+	 * wicket/component/render?a=b
+	 * </pre>
+	 * 
+	 * </p>
+	 * 
+	 * @param relative
+	 *            relative url
+	 */
+	public void resolveRelative(Url relative)
+	{
+		// strip the first non-folder segment
+		getSegments().remove(getSegments().size() - 1);
+
+		// process any ../ segments in the relative url
+		while (!relative.getSegments().isEmpty() && "".equals(relative.getSegments().get(0)))
+		{
+			relative.getSegments().remove(0);
+			getSegments().remove(getSegments().size() - 1);
+		}
+
+		// append the remaining relative segments
+		getSegments().addAll(relative.getSegments());
+
+		// replace query params with the ones from relative
+		parameters.clear();
+		parameters.addAll(relative.getQueryParameters());
 	}
 }

@@ -118,7 +118,7 @@ public abstract class AbstractMapper
 			removeMetaParameter(urlCopy);
 		}
 
-		PageParameters decoded = encoder.decodePageParameters(request.requestWithUrl(urlCopy));
+		PageParameters decoded = encoder.decodePageParameters(request.cloneWithUrl(urlCopy));
 		return decoded;
 	}
 

@@ -639,21 +639,26 @@ public final class Strings
 			}
 			for (int i = 1; i < fragments.length; i++)
 			{
-				if ((fragments[i - 1] != null) || (fragments[i] != null))
+				String fragment = fragments[i];
+				if ((fragments[i - 1] != null) || (fragment != null))
 				{
 					boolean lhsClosed = fragments[i - 1].endsWith(separator);
-					boolean rhsClosed = fragments[i].startsWith(separator);
+					boolean rhsClosed = fragment.startsWith(separator);
 					if (lhsClosed && rhsClosed)
 					{
-						buff.append(fragments[i].substring(1));
+						buff.append(fragment.substring(1));
 					}
 					else if (!lhsClosed && !rhsClosed)
 					{
-						buff.append(separator).append(fragments[i]);
+						if (!Strings.isEmpty(fragment))
+						{
+							buff.append(separator);
+						}
+						buff.append(fragment);
 					}
 					else
 					{
-						buff.append(fragments[i]);
+						buff.append(fragment);
 					}
 				}
 			}

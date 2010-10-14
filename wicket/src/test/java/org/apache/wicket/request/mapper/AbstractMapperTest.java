@@ -69,6 +69,12 @@ public abstract class AbstractMapperTest extends TestCase
 			{
 				return Charset.forName("UTF-8");
 			}
+
+			@Override
+			public Url getBaseUrl()
+			{
+				return url;
+			}
 		};
 	}
 

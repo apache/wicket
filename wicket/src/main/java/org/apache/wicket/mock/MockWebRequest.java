@@ -28,6 +28,7 @@ import javax.servlet.http.Cookie;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.Url.QueryParameter;
 import org.apache.wicket.request.http.WebRequest;
 
 /**
@@ -64,7 +65,7 @@ public class MockWebRequest extends WebRequest
 	}
 
 	@Override
-	public MockWebRequest requestWithUrl(Url url)
+	public MockWebRequest cloneWithUrl(Url url)
 	{
 		return new MockWebRequest(url, cookies, headers, postRequestParameters, locale);
 	}
@@ -248,5 +249,11 @@ public class MockWebRequest extends WebRequest
 	public Charset getCharset()
 	{
 		return Charset.forName("UTF-8");
+	}
+
+	@Override
+	public Url getBaseUrl()
+	{
+		return new Url(url.getSegments(), Collections.<QueryParameter> emptyList());
 	}
 }

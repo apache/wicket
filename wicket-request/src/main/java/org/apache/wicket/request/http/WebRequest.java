@@ -33,9 +33,19 @@ import org.apache.wicket.util.string.Strings;
  * Base class for request that provides additional web-related information.
  * 
  * @author Matej Knopp
+ * @author Igor Vaynberg
  */
 public abstract class WebRequest extends Request
 {
+	/** marker for Ajax requests */
+	protected static final String PARAM_AJAX = "wicket-ajax";
+	/** marker for Ajax requests */
+	protected static final String HEADER_AJAX = "Wicket-Ajax";
+	/** marker for Ajax-relative url */
+	protected static final String PARAM_AJAX_BASE_URL = "wicket-ajax-baseurl";
+	/** marker for Ajax-relative url */
+	protected static final String HEADER_AJAX_BASE_URL = "Wicket-Ajax-BaseURL";
+
 	/**
 	 * @return request cookies
 	 */
@@ -101,15 +111,11 @@ public abstract class WebRequest extends Request
 		}
 	}
 
-	/**
-	 * Marker parameter for AjaxRequest.
-	 */
-	private static final String PARAM_AJAX = "wicket:ajax";
-	private static final String HEADER_AJAX = "Wicket-Ajax";
 
 	/**
-	 * Returns whether this request is an Ajax request. This implementation only checks for value of
-	 * wicket:ajax url parameter. Subclasses can use other approach.
+	 * Returns whether this request is an Ajax request. This implementation checks for values of
+	 * {@value #PARAM_AJAX} url parameter or the {@value #HEADER_AJAX} header. Subclasses can use
+	 * other approaches.
 	 * 
 	 * @return <code>true</code> if this request is an ajax request, <code>false</code> otherwise.
 	 */
@@ -127,7 +133,7 @@ public abstract class WebRequest extends Request
 	 * @return request with specified URL.
 	 */
 	@Override
-	public WebRequest requestWithUrl(final Url url)
+	public WebRequest cloneWithUrl(final Url url)
 	{
 		return new WebRequest()
 		{
@@ -177,6 +183,12 @@ public abstract class WebRequest extends Request
 			public Charset getCharset()
 			{
 				return WebRequest.this.getCharset();
+			}
+
+			@Override
+			public Url getBaseUrl()
+			{
+				return WebRequest.this.getBaseUrl();
 			}
 		};
 	}

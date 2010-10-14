@@ -79,7 +79,7 @@ public class ParentPathReferenceRewriter implements IRequestMapper
 			}
 		}
 
-		return chain.mapRequest(request.requestWithUrl(url));
+		return chain.mapRequest(request.cloneWithUrl(url));
 	}
 
 	/**

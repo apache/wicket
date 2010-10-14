@@ -73,7 +73,7 @@ public class CryptoMapper implements IRequestMapper
 			return null;
 		}
 
-		return wrappedMapper.mapRequest(request.requestWithUrl(url));
+		return wrappedMapper.mapRequest(request.cloneWithUrl(url));
 	}
 
 	private ICrypt getCrypt()

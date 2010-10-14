@@ -60,7 +60,7 @@ public abstract class MultipartServletWebRequest extends ServletWebRequest
 	}
 
 	@Override
-	public ServletWebRequest requestWithUrl(Url url)
+	public ServletWebRequest cloneWithUrl(Url url)
 	{
 		return new MultipartServletWebRequest(getHttpServletRequest(), getFilterPrefix(), url)
 		{
