@@ -71,7 +71,7 @@ public abstract class AbstractMapperTest extends TestCase
 			}
 
 			@Override
-			public Url getBaseUrl()
+			public Url getClientUrl()
 			{
 				return url;
 			}

@@ -186,9 +186,9 @@ public abstract class WebRequest extends Request
 			}
 
 			@Override
-			public Url getBaseUrl()
+			public Url getClientUrl()
 			{
-				return WebRequest.this.getBaseUrl();
+				return WebRequest.this.getClientUrl();
 			}
 		};
 	}

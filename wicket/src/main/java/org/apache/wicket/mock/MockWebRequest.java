@@ -252,7 +252,7 @@ public class MockWebRequest extends WebRequest
 	}
 
 	@Override
-	public Url getBaseUrl()
+	public Url getClientUrl()
 	{
 		return new Url(url.getSegments(), Collections.<QueryParameter> emptyList());
 	}

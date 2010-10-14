@@ -118,10 +118,10 @@ public class ServletWebRequest extends WebRequest
 	 * 
 	 * <pre>
 	 * wicket / bookmarkab
-	 * @see org.apache.wicket.request.Request#getBaseUrl()
+	 * @see org.apache.wicket.request.Request#getClientUrl()
 	 */
 	@Override
-	public Url getBaseUrl()
+	public Url getClientUrl()
 	{
 		if (!isAjax())
 		{

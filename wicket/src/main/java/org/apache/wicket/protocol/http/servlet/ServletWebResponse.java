@@ -216,7 +216,7 @@ public class ServletWebResponse extends WebResponse
 
 			final Url current;
 
-			current = webRequest.getBaseUrl();
+			current = webRequest.getClientUrl();
 
 			Url append = Url.parse(url, charset);
 			current.concatSegments(append.getSegments());

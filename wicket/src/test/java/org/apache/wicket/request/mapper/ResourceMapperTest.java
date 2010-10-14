@@ -60,7 +60,7 @@ public class ResourceMapperTest extends WicketTestCase
 			}
 
 			@Override
-			public Url getBaseUrl()
+			public Url getClientUrl()
 			{
 				return getUrl();
 			}

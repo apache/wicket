@@ -154,7 +154,7 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 	protected UrlRenderer newUrlRenderer()
 	{
 		// All URLs will be rendered relative to current request (can be overriden afterwards)
-		return new UrlRenderer(getRequest().getBaseUrl());
+		return new UrlRenderer(getRequest().getClientUrl());
 	}
 
 	/**
