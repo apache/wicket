@@ -166,11 +166,11 @@ public class RequestListenerInterface
 	 */
 	public final void invoke(final Page page, final Component component)
 	{
-		if (!component.isEnabled() || !component.isVisibleInHierarchy())
+		if (!component.isEnabledInHierarchy() || !component.isVisibleInHierarchy())
 		{
 			// just return so that we have a silent fail and just re-render the
 			// page
-			log.info("component not enabled or visible; ignoring call. Component: " + component);
+			log.warn("component not enabled or visible; ignoring call. Component: " + component);
 			return;
 		}
 
@@ -179,7 +179,7 @@ public class RequestListenerInterface
 		try
 		{
 			// Invoke the interface method on the component
-			method.invoke(component, new Object[] {});
+			method.invoke(component, new Object[] { });
 		}
 		catch (InvocationTargetException e)
 		{

@@ -26,6 +26,8 @@ import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.behavior.IBehaviorListener;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.RequestParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Target that denotes a page instance and a call to a component on that page using an listener
@@ -35,6 +37,8 @@ import org.apache.wicket.request.RequestParameters;
  */
 public class BehaviorRequestTarget extends AbstractListenerInterfaceRequestTarget
 {
+	private static final Logger logger = LoggerFactory.getLogger(BehaviorRequestTarget.class);
+
 	/**
 	 * Construct.
 	 * 
@@ -80,6 +84,14 @@ public class BehaviorRequestTarget extends AbstractListenerInterfaceRequestTarge
 
 		// Get the IBehavior for the component based on the request parameters
 		final Component component = getTarget();
+
+		if (!component.isVisibleInHierarchy() || !component.isEnabledInHierarchy())
+		{
+			// ignore this request
+			logger.warn("component not enabled or visible; ignoring call. Component: {}", component);
+			return;
+		}
+
 		final String id = getRequestParameters().getBehaviorId();
 		if (id == null)
 		{
@@ -88,6 +100,7 @@ public class BehaviorRequestTarget extends AbstractListenerInterfaceRequestTarge
 				"Parameter behaviorId was not provided: unable to locate listener. Component: " +
 					component.toString());
 		}
+
 
 		final int idAsInt = Integer.parseInt(id);
 		final List<IBehavior> behaviors = component.getBehaviorsRawList();
@@ -104,6 +117,16 @@ public class BehaviorRequestTarget extends AbstractListenerInterfaceRequestTarge
 			IBehavior behavior = behaviors.get(idAsInt);
 			if (behavior instanceof IBehaviorListener)
 			{
+
+				if (!behavior.isEnabled(component))
+				{
+					// ignore this request
+					logger.warn(
+						"behavior not enabled; ignoring call. behavior: {} at index: {} on component: {}",
+						new Object[] { behavior, idAsInt, component });
+					return;
+				}
+
 				behaviorListener = (IBehaviorListener)behavior;
 			}
 		}
