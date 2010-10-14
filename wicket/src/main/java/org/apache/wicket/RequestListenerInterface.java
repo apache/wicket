@@ -245,10 +245,16 @@ public class RequestListenerInterface
 	{
 		if (!component.canCallListenerInterface())
 		{
-			// just return so that we have a silent fail and just re-render the
-			// page
+			// just return so that we have a silent fail and just re-render the page
 			log.warn("component not enabled or visible; ignoring call. Component: " + component);
 			return;
+		}
+
+		// XXX a bit of an ugly cast here from IRequestableComponent to Component
+		if (!behavior.isEnabled((Component)component))
+		{
+			log.warn("behavior not enabled; ignore call. Behavior {} at component {}", behavior,
+				component);
 		}
 
 		try
