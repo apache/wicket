@@ -33,7 +33,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
-import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.resources.StyleSheetReference;
 import org.apache.wicket.model.IModel;
@@ -118,22 +117,6 @@ public class Palette<T> extends Panel implements IHeaderContributor
 
 	/** reference to the palette's css resource */
 	private static final ResourceReference CSS = new ResourceReference(Palette.class, "palette.css");
-
-
-	/** reference to default up button image */
-	private static final ResourceReference UP_IMAGE = new ResourceReference(Palette.class, "up.gif");
-
-	/** reference to default down button image */
-	private static final ResourceReference DOWN_IMAGE = new ResourceReference(Palette.class,
-		"down.gif");
-
-	/** reference to default remove button image */
-	private static final ResourceReference REMOVE_IMAGE = new ResourceReference(Palette.class,
-		"remove.gif");
-
-	/** reference to default add button image */
-	private static final ResourceReference ADD_IMAGE = new ResourceReference(Palette.class,
-		"add.gif");
 
 	/**
 	 * @param id
@@ -331,7 +314,7 @@ public class Palette<T> extends Panel implements IHeaderContributor
 				super.onComponentTag(tag);
 				tag.getAttributes().put("onclick", Palette.this.getDownOnClickJS());
 			}
-		}.add(new Image("image", DOWN_IMAGE));
+		};
 	}
 
 	/**
@@ -351,7 +334,7 @@ public class Palette<T> extends Panel implements IHeaderContributor
 				super.onComponentTag(tag);
 				tag.getAttributes().put("onclick", Palette.this.getUpOnClickJS());
 			}
-		}.add(new Image("image", UP_IMAGE));
+		};
 	}
 
 	/**
@@ -371,7 +354,7 @@ public class Palette<T> extends Panel implements IHeaderContributor
 				super.onComponentTag(tag);
 				tag.getAttributes().put("onclick", Palette.this.getRemoveOnClickJS());
 			}
-		}.add(new Image("image", REMOVE_IMAGE));
+		};
 	}
 
 	/**
@@ -391,7 +374,7 @@ public class Palette<T> extends Panel implements IHeaderContributor
 				super.onComponentTag(tag);
 				tag.getAttributes().put("onclick", Palette.this.getAddOnClickJS());
 			}
-		}.add(new Image("image", ADD_IMAGE));
+		};
 	}
 
 	/**
@@ -530,7 +513,7 @@ public class Palette<T> extends Panel implements IHeaderContributor
 		modelChanged();
 
 		// call model.setObject()
-		((IModel<Object>) getDefaultModel()).setObject(model);
+		((IModel<Object>)getDefaultModel()).setObject(model);
 	}
 
 	/**
