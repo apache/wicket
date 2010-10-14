@@ -73,10 +73,6 @@ public class BrowserInfoPage extends WebPage
 	public BrowserInfoPage(PageParameters parameters)
 	{
 		String to = parameters.get("cto").toString();
-		if (to == null)
-		{
-			throw new IllegalArgumentException("parameter cto must be provided!");
-		}
 		setContinueTo(to);
 		initComps();
 		RequestCycle requestCycle = getRequestCycle();
@@ -109,10 +105,6 @@ public class BrowserInfoPage extends WebPage
 	 */
 	public BrowserInfoPage(final String continueTo)
 	{
-		if (continueTo == null)
-		{
-			throw new IllegalArgumentException("Argument continueTo must be not null");
-		}
 		setContinueTo(continueTo);
 		initComps();
 	}
@@ -190,6 +182,32 @@ public class BrowserInfoPage extends WebPage
 	 */
 	protected final void setContinueTo(String continueTo)
 	{
+		if (continueTo == null)
+		{
+			throw new IllegalArgumentException("Argument continueTo must not be null");
+		}
+		else if (continueTo.contains("://"))
+		{
+			// prevent attackers from redirecting to any url by appending &cto=http://<someurl> to
+			// the query string, eg
+			// http://wicketstuff.org/wicket14/compref/?wicket:bookmarkablePage=:org.apache.wicket.markup.html.pages.BrowserInfoPage&cto=http://www.google.de
+			// WICKET-3106
+			throw new IllegalArgumentException("continuTo url : " + continueTo +
+				" must be relative to the current server.")
+			{
+				/**
+				 * No stack trace. We won't tell the hackers about the internals of wicket in case
+				 * stack traces are enabled
+				 * 
+				 * @see java.lang.Throwable#getStackTrace()
+				 */
+				@Override
+				public StackTraceElement[] getStackTrace()
+				{
+					return new StackTraceElement[0];
+				}
+			};
+		}
 		this.continueTo = continueTo;
 	}
 }
