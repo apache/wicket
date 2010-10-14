@@ -118,29 +118,6 @@ public abstract class WebRequest extends Request
 		return Strings.isTrue(getHeader(HEADER_AJAX)) ||
 			Strings.isTrue(getRequestParameters().getParameterValue(PARAM_AJAX).toString());
 	}
-	
-	
-	private static final String PARAM_AJAX_BASE_URL = "wicket:ajax:baseurl";
-	private static final String HEADER_AJAX_BASE_URL = "Wicket-Ajax-BaseURL";
-
-	/**
-	 * Returns the ajax base Url if this request is an Ajax request.
-	 *  
-	 * @return if the request is an ajax request it will return the ajax base Url otherwise null
-	 */
-	public String getAjaxBaseUrl()
-	{
-		if (isAjax())
-		{
-			String baseUrl = getHeader(HEADER_AJAX_BASE_URL);
-
-			if (baseUrl != null)
-				return baseUrl;
-
-			return getRequestParameters().getParameterValue(PARAM_AJAX_BASE_URL).toString(null);
-		}
-		return null;
-	}
 
 	/**
 	 * Returns request with specified URL and same POST parameters as this request.

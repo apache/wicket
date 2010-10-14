@@ -1151,7 +1151,7 @@ Wicket.Ajax.Call.prototype = {
 		
 		// reconfigure the form
 		form.target=iframe.name;
-		form.action=this.request.url + "&wicket:ajax=true&wicket:ajax:baseurl=" + Wicket.Form.encode(Wicket.Ajax.baseUrl);
+		form.action=this.request.url + "&wicket:ajax=true";
 		form.method="post";
 		form.enctype="multipart/form-data";
 		form.encoding="multipart/form-data";
