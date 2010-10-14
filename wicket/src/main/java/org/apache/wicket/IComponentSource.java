@@ -27,6 +27,8 @@ package org.apache.wicket;
  * <p>
  * This feature is experimental.
  * 
+ * TODO figure out what to do with this
+ * 
  * @author Matej Knopp
  */
 public interface IComponentSource extends IClusterable
