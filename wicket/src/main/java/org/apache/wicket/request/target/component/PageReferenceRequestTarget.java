@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.request.target.component;
 
-import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageReference;
 import org.apache.wicket.RequestCycle;
@@ -30,7 +29,7 @@ import org.apache.wicket.RequestCycle;
  * 
  * @author igor.vaynberg
  */
-public class PageReferenceRequestTarget implements IRequestTarget
+public class PageReferenceRequestTarget implements IPageRequestTarget
 {
 	private final PageReference reference;
 
@@ -96,6 +95,12 @@ public class PageReferenceRequestTarget implements IRequestTarget
 	public void detach(RequestCycle requestCycle)
 	{
 		reference.getPage().detach();
+	}
+
+	/** {@inheritDoc} */
+	public Page getPage()
+	{
+		return reference.getPage();
 	}
 
 }
