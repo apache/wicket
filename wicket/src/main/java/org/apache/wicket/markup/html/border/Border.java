@@ -98,6 +98,29 @@ import org.apache.wicket.model.IModel;
  *   &lt;/html&gt;
  * </pre>
  * 
+ * 
+ * <p>
+ * IMPORTANT NOTE<br/>
+ * It is important that components added to the border by downstream users are added to the border's
+ * body container instead of directly to the border. This will properly maintain the component
+ * hierarchy synchronicity with markup hierarchy because in markup children are added under the
+ * {@code border:body} tag which is presented by the border's body container and not the border
+ * itself. Here is an example of an improper usage of the border:
+ * 
+ * <pre>
+ * BoxBorder border=new BoxBorder("border");
+ * border.add(new Label("label")); <== INVALID
+ * </pre>
+ * 
+ * Instead, the label should be added to border's body container:
+ * 
+ * <pre>
+ * BoxBorder border=new BoxBorder("border");
+ * border.getBodyContainer().add(new Label("label")); <== INVALID
+ * </pre>
+ * 
+ * </p>
+ * 
  * @see BorderBodyResolver
  * @see BorderBodyContainer
  * 
