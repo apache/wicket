@@ -37,7 +37,8 @@ public class BoxBorderTestPage_9 extends WebPage
 		Border myBorder = new BorderComponent1("myBorder");
 		add(myBorder);
 
-		Fragment panel1 = new Fragment("fragmentsWillBeRenderedHere", "fragmentSource", this);
+		Fragment panel1 = new Fragment("fragmentsWillBeRenderedHere", "fragmentSource",
+			myBorder.getBodyContainer());
 		myBorder.addToBorderBody(panel1);
 	}
 }

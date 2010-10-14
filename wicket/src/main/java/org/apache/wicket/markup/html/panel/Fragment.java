@@ -20,18 +20,17 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
-import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Objects;
 
 /**
  * Usually you either have a markup file or a xml tag with wicket:id="myComponent" to associate
- * markup with a component. However in some rare cases, especially when working with small panels it
+ * markup with a component. However in some use cases, especially when working with small panels it
  * is a bit awkward to maintain tiny pieces of markup in plenty of panel markup files. Use cases are
  * for example list views where list items are different depending on a state.
  * <p>
@@ -52,7 +51,7 @@ import org.apache.wicket.util.lang.Objects;
  * 
  * @author Juergen Donnerstag
  */
-public class Fragment extends WebMarkupContainerWithAssociatedMarkup
+public class Fragment extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
@@ -154,15 +153,44 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 			markupStream.skipRawMarkup();
 		}
 
-		final MarkupStream providerMarkupStream = chooseMarkupStream(markupStream);
-		if (providerMarkupStream == null)
-		{
-			throw new MarkupNotFoundException(
-				"Fragment: No markup stream found for providing markup container " +
-					markupProvider.toString() + ". Fragment: " + toString());
-		}
+		renderFragment(openTag);
+	}
 
-		renderFragment(providerMarkupStream, openTag);
+	/**
+	 * Render the markup starting at the current position of the markup strean
+	 * 
+	 * @see #onComponentTagBody(MarkupStream, ComponentTag)
+	 * 
+	 * @param openTag
+	 */
+	private void renderFragment(final ComponentTag openTag)
+	{
+		MarkupStream stream = new MarkupStream(getMarkup(null));
+		setMarkupStream(stream);
+
+		// Get the fragments open tag
+		ComponentTag fragmentOpenTag = stream.getTag();
+
+		// if it is an open close tag, skip this fragment.
+		if (!fragmentOpenTag.isOpenClose())
+		{
+			// We'll completely ignore the fragments open tag. It'll not be
+			// rendered
+			stream.next();
+
+			// Render the body of the fragment
+			super.onComponentTagBody(stream, fragmentOpenTag);
+		}
+	}
+
+	/**
+	 * Returns markup provider associated with this fragment
+	 * 
+	 * @return markup provider
+	 */
+	protected final MarkupContainer getMarkupProvider()
+	{
+		return (markupProvider != null ? markupProvider : getParent());
 	}
 
 	/**
@@ -172,161 +200,9 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	 *            The markup stream is associated with the component (not the fragment)
 	 * @return The markup stream to be used to find the fragment markup
 	 */
-	protected MarkupStream chooseMarkupStream(final MarkupStream markupStream)
+	protected IMarkupFragment chooseMarkup()
 	{
-		MarkupStream stream = null;
-
-		// TODO Post 1.3: Cleanup this after deprecated constructors are removed
-		if (markupProvider == null)
-		{
-			stream = markupStream;
-		}
-		else
-		{
-			stream = markupProvider.getAssociatedMarkupStream(false);
-			if (stream == null)
-			{
-				// The following statement assumes that the markup provider is a
-				// parent along the line up to the Page
-				stream = new MarkupStream(markupProvider.getMarkup(null));
-			}
-		}
-		return stream;
-	}
-
-	/**
-	 * Render the markup starting at the current position of the markup strean
-	 * 
-	 * @see #onComponentTagBody(MarkupStream, ComponentTag)
-	 * 
-	 * @param providerMarkupStream
-	 * @param openTag
-	 */
-	private void renderFragment(final MarkupStream providerMarkupStream, final ComponentTag openTag)
-	{
-		// remember the current position in the markup. Will have to come back to it.
-		int currentIndex = providerMarkupStream.getCurrentIndex();
-
-		// Find the markup fragment
-		while (providerMarkupStream.hasMore())
-		{
-			MarkupElement elem = providerMarkupStream.get();
-			if (elem instanceof ComponentTag)
-			{
-				ComponentTag tag = providerMarkupStream.getTag();
-				if (tag.isOpen() || tag.isOpenClose())
-				{
-					if (tag.getId().equals(markupId))
-					{
-						break;
-					}
-				}
-			}
-
-			providerMarkupStream.nextOpenTag();
-		}
-
-		if (providerMarkupStream.hasMore() == false)
-		{
-			throw new MarkupException("Markup of component class `" +
-				providerMarkupStream.getContainerClass().getName() +
-				"` does not contain a fragment with wicket:id `" + markupId + "`. Context: " +
-				toString());
-		}
-
-		try
-		{
-			// Get the fragments open tag
-			ComponentTag fragmentOpenTag = providerMarkupStream.getTag();
-
-			// if it is an open close tag, skip this fragment.
-			if (!fragmentOpenTag.isOpenClose())
-			{
-				// We'll completely ignore the fragments open tag. It'll not be
-				// rendered
-				providerMarkupStream.next();
-
-				// Render the body of the fragment
-				super.onComponentTagBody(providerMarkupStream, fragmentOpenTag);
-			}
-		}
-		finally
-		{
-			// Make sure the markup stream is positioned where we started back
-			// at the original component
-			providerMarkupStream.setCurrentIndex(currentIndex);
-		}
-	}
-
-	/**
-	 * @see org.apache.wicket.MarkupContainer#hasAssociatedMarkup()
-	 */
-	@Override
-	public boolean hasAssociatedMarkup()
-	{
-		return true;
-	}
-
-	/**
-	 * @see org.apache.wicket.MarkupContainer#getAssociatedMarkupStream(boolean)
-	 */
-	@Override
-	public MarkupStream getAssociatedMarkupStream(boolean throwException)
-	{
-		MarkupStream stream = null;
-
-		// TODO Post 1.3: Cleanup this after deprecated constructors are removed
-		if (markupProvider != null)
-		{
-			stream = markupProvider.getAssociatedMarkupStream(false);
-			if (stream == null)
-			{
-				// The following statement assumes that the markup provider is a
-				// parent along the line up to the Page
-				stream = markupProvider.getMarkupStream();
-			}
-		}
-
-		// try self's markup stream
-		if (stream == null)
-		{
-			stream = super.getAssociatedMarkupStream(false);
-		}
-
-		// if self doesn't have markup stream try the parent's
-		if (stream == null)
-		{
-			MarkupContainer container = getParent();
-			while (container != null)
-			{
-				if (container.hasAssociatedMarkup())
-				{
-					stream = container.getAssociatedMarkupStream(false);
-					break;
-				}
-				container = container.getParent();
-			}
-		}
-
-		// if we cant find any markup stream
-		if ((stream == null) && throwException)
-		{
-			// fail, but fail with an error message that will point to this
-			// component
-			super.getAssociatedMarkupStream(true);
-		}
-
-		return stream;
-	}
-
-	/**
-	 * Returns markup provider associated with this fragment
-	 * 
-	 * @return markup provider
-	 */
-	public final MarkupContainer getMarkupProvider()
-	{
-		return markupProvider;
+		return getMarkupProvider().getMarkup(null);
 	}
 
 	/**
@@ -335,36 +211,43 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	@Override
 	public IMarkupFragment getMarkup(final Component child)
 	{
-		IMarkupFragment markup = null;
-
-		// Get the markup provider
-		MarkupContainer provider = getMarkupProvider();
-		if (provider == null)
-		{
-			provider = getParent();
-		}
-
-		if (provider.hasAssociatedMarkup())
-		{
-			markup = provider.getAssociatedMarkup();
-		}
-		else
-		{
-			markup = getParent().getMarkup();
-		}
-
+		// Get the markup to search for the fragment markup
+		IMarkupFragment markup = chooseMarkup();
 		if (markup == null)
 		{
-			return null;
+			throw new MarkupException(
+				"chooseMarkup() returned null. No markup to search for fragment markup with id: " +
+					markupId);
 		}
 
-		markup = markup.find(markupId);
+		// Search for the fragment markup
+		IMarkupFragment childMarkup = markup.find(markupId);
+		if (childMarkup == null)
+		{
+			// There is one more option if the markup provider has associated markup
+			MarkupContainer markupProvider = getMarkupProvider();
+			if (markupProvider.hasAssociatedMarkup())
+			{
+				markup = markupProvider.getAssociatedMarkup();
+				if (markup != null)
+				{
+					childMarkup = markup.find(markupId);
+				}
+			}
+		}
+
+		if (childMarkup == null)
+		{
+			throw new MarkupNotFoundException("No Markup found for Fragment " + markupId +
+				" in providing markup container " + markupProvider.toString());
+		}
 
 		if (child == null)
 		{
-			return markup;
+			return childMarkup;
 		}
 
-		return markup.find(child.getId());
+		// search for the child insight the fragment markup
+		return childMarkup.find(child.getId());
 	}
 }
