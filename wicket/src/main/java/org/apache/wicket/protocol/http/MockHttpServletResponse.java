@@ -592,7 +592,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 				url = url.substring(0, index + 1) + location;
 				url = RequestUtils.removeDoubleDots(url);
 
-				// stril the servlet path again from it.
+				// strip the servlet path again from it.
 				index = url.indexOf("/");
 				location = url.substring(index + 1);
 			}
