@@ -49,6 +49,30 @@ table.palette td.buttons button {
 	height: 40px;
 }
 
+button.button.add div {
+	background: url("add.gif"); 
+	height: 15px; 
+	width: 15px;
+}
+
+button.button.remove div {
+	background: url("remove.gif"); 
+	height: 15px; 
+	width: 15px;
+}
+
+button.button.up div {
+	background: url("up.gif"); 
+	height: 15px; 
+	width: 15px;
+}
+
+button.button.down div {
+	background: url("down.gif"); 
+	height: 15px; 
+	width: 15px;
+}
+
 /* Fix a firefox (2.0.0.4) bug : https://bugzilla.mozilla.org/show_bug.cgi?id=382600 */
 select::-moz-dummy-option { 
 	visibility: hidden; 
