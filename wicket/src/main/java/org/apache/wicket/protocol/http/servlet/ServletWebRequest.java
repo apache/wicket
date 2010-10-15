@@ -125,7 +125,7 @@ public class ServletWebRequest extends WebRequest
 	{
 		if (!isAjax())
 		{
-			return Url.parse(getBaseUrl(httpServletRequest, filterPrefix).toString(), getCharset());
+			return Url.parse(getUrl(httpServletRequest, filterPrefix).toString(), getCharset());
 		}
 		else
 		{
@@ -145,14 +145,7 @@ public class ServletWebRequest extends WebRequest
 
 	}
 
-	/**
-	 * Builds base url for this request
-	 * 
-	 * @param request
-	 * @param filterPrefix
-	 * @return
-	 */
-	private StringBuilder getBaseUrl(HttpServletRequest request, String filterPrefix)
+	private Url getUrl(HttpServletRequest request, String filterPrefix)
 	{
 		if (filterPrefix.length() > 0 && !filterPrefix.endsWith("/"))
 		{
@@ -163,13 +156,6 @@ public class ServletWebRequest extends WebRequest
 		uri = Strings.stripJSessionId(uri);
 		final int start = request.getContextPath().length() + filterPrefix.length() + 1;
 		url.append(uri.substring(start));
-
-		return url;
-	}
-
-	private Url getUrl(HttpServletRequest request, String filterPrefix)
-	{
-		StringBuilder url = getBaseUrl(request, filterPrefix);
 
 		String query = request.getQueryString();
 		if (!Strings.isEmpty(query))
