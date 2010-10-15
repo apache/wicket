@@ -199,7 +199,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	/**
 	 * @see org.apache.wicket.request.IRequestCodingStrategy#decode(org.apache.wicket.Request)
 	 */
-	public final RequestParameters decode(final Request request)
+	public RequestParameters decode(final Request request)
 	{
 		try
 		{
@@ -247,8 +247,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * @see org.apache.wicket.request.IRequestCodingStrategy#encode(org.apache.wicket.RequestCycle,
 	 *      org.apache.wicket.IRequestTarget)
 	 */
-	public final CharSequence encode(final RequestCycle requestCycle,
-		final IRequestTarget requestTarget)
+	public CharSequence encode(final RequestCycle requestCycle, final IRequestTarget requestTarget)
 	{
 		// First check to see whether the target is mounted
 		CharSequence url = pathForTarget(requestTarget);
@@ -460,7 +459,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	/**
 	 * @see org.apache.wicket.request.IRequestTargetMounter#mount(org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
 	 */
-	public final void mount(IRequestTargetUrlCodingStrategy encoder)
+	public void mount(IRequestTargetUrlCodingStrategy encoder)
 	{
 		if (encoder == null)
 		{
@@ -513,7 +512,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	/**
 	 * @see org.apache.wicket.request.IRequestCodingStrategy#pathForTarget(org.apache.wicket.IRequestTarget)
 	 */
-	public final CharSequence pathForTarget(IRequestTarget requestTarget)
+	public CharSequence pathForTarget(IRequestTarget requestTarget)
 	{
 		// first check whether the target was mounted
 		IRequestTargetUrlCodingStrategy encoder = getMountEncoder(requestTarget);
@@ -527,7 +526,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	/**
 	 * @see org.apache.wicket.request.IRequestCodingStrategy#targetForRequest(org.apache.wicket.request.RequestParameters)
 	 */
-	public final IRequestTarget targetForRequest(RequestParameters requestParameters)
+	public IRequestTarget targetForRequest(RequestParameters requestParameters)
 	{
 		IRequestTargetUrlCodingStrategy encoder = urlCodingStrategyForPath(requestParameters.getPath());
 		if (encoder == null)
@@ -540,7 +539,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	/**
 	 * @see org.apache.wicket.request.IRequestCodingStrategy#unmount(java.lang.String)
 	 */
-	public final void unmount(String path)
+	public void unmount(String path)
 	{
 		if (path == null)
 		{
