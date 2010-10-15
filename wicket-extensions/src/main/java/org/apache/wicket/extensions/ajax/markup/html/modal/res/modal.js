@@ -682,6 +682,10 @@ Wicket.Window.prototype = {
 		
 		if (this.settings.height != null)
 			this.content.style.height = this.settings.height + (this.settings.resizable ? "px" : this.settings.heightUnit);
+		
+		//if 'auto' flag was set to true call autoresize function
+		if (this.settings.autoSize)
+			this.autoSizeWindow();		
 
 		// center the window
 		this.center();
@@ -1105,6 +1109,28 @@ Wicket.Window.prototype = {
 		this.resizing();
 						
 		return this.res;
+	},
+
+	/**
+ 	* Resize windows in order to fit content's width and heigth
+ 	*/
+	autoSizeWindow: function(){
+		var targetWindow = this.window; 
+		var targetContent = this.content;
+
+		targetContent.style.height = this.settings.minHeight +'px';
+		targetWindow.style.width = this.settings.minWidth +'px';	
+
+		targetContent.style.overflow = 'hidden'; 
+	
+		var newHeight = targetContent.scrollHeight +'px';
+		var newWidth = (targetContent.scrollWidth + targetWindow.clientWidth - targetContent.clientWidth) + 'px';
+	
+		targetContent.style.height = newHeight;
+		
+		targetWindow.style.width = newWidth;	
+
+		targetContent.style.overflow = 'auto';
 	}
 }
 

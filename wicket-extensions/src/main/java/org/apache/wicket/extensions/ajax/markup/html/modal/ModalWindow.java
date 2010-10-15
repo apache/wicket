@@ -150,6 +150,7 @@ public class ModalWindow extends Panel
 	private String cookieName;
 	private IModel<String> title = null;
 	private MaskType maskType = MaskType.SEMI_TRANSPARENT;
+	private boolean autoSize = false;	
 
 	private PageCreator pageCreator = null;
 	private CloseButtonCallback closeButtonCallback = null;
@@ -1051,6 +1052,9 @@ public class ModalWindow extends Panel
 		{
 			buffer.append("settings.mask=\"semi-transparent\";\n");
 		}
+		
+		appendAssignment(buffer, "settings.autoSize", autoSize);
+
 
 		// set true if we set a windowclosedcallback
 		boolean haveCloseCallback = false;
@@ -1151,4 +1155,21 @@ public class ModalWindow extends Panel
 			title.detach();
 		}
 	}
+
+	public ModalWindow setAutoSize(boolean autoSize)
+	{
+		this.autoSize = autoSize;
+		return this;
+	}
+
+	/**
+	 * Returns whether the window is resizable.
+	 * 
+	 * @return True if the window is resizable, false otherwise
+	 */
+	public boolean isAutoSize()
+	{
+		return autoSize;
+	}
+
 }
