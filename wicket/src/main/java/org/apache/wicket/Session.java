@@ -921,7 +921,7 @@ public abstract class Session implements IClusterable
 		final int maxPageMaps = getApplication().getSessionSettings().getMaxPageMaps();
 		synchronized (usedPageMaps)
 		{
-			if (usedPageMaps.size() >= maxPageMaps)
+			while (usedPageMaps.size() >= maxPageMaps)
 			{
 				IPageMap pm = usedPageMaps.getFirst();
 				pm.remove();
@@ -931,6 +931,7 @@ public abstract class Session implements IClusterable
 		// Create new page map
 		final IPageMap pageMap = getSessionStore().createPageMap(name);
 		setAttribute(attributeForPageMapName(name), pageMap);
+		dirtyPageMap(pageMap);
 		dirty();
 		return pageMap;
 	}
@@ -970,6 +971,10 @@ public abstract class Session implements IClusterable
 		{
 			usedPageMaps.remove(pageMap);
 		}
+
+		// the page map also needs to be removed from the dirty objects list or
+		// the requestDetached method will end up adding it back into session
+		getDirtyObjectsList().remove(pageMap);
 
 		removeAttribute(attributeForPageMapName(pageMap.getName()));
 		dirty();
@@ -1351,14 +1356,13 @@ public abstract class Session implements IClusterable
 	 */
 	void dirtyPageMap(final IPageMap map)
 	{
-		if (!map.isDefault())
+
+		synchronized (usedPageMaps)
 		{
-			synchronized (usedPageMaps)
-			{
-				usedPageMaps.remove(map);
-				usedPageMaps.addLast(map);
-			}
+			usedPageMaps.remove(map);
+			usedPageMaps.addLast(map);
 		}
+
 		List<IClusterable> dirtyObjects = getDirtyObjectsList();
 		if (!dirtyObjects.contains(map))
 		{
