@@ -17,16 +17,17 @@
 package org.apache.wicket.util.license;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 class JavaScriptLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 {
-
 	/**
 	 * Construct.
 	 * 
 	 * @param ignoreFiles
 	 */
-	public JavaScriptLicenseHeaderHandler(String[] ignoreFiles)
+	public JavaScriptLicenseHeaderHandler(List<String> ignoreFiles)
 	{
 		super(ignoreFiles);
 	}
@@ -44,9 +45,9 @@ class JavaScriptLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return getLicenseHeader().equals(header);
 	}
 
-	public String[] getSuffixes()
+	public List<String> getSuffixes()
 	{
-		return new String[] { "js" };
+		return Arrays.asList("js");
 	}
 
 	@Override

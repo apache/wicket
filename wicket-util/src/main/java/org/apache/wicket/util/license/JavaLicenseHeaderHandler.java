@@ -17,6 +17,8 @@
 package org.apache.wicket.util.license;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,7 +36,7 @@ class JavaLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 	 * 
 	 * @param ignoreFiles
 	 */
-	public JavaLicenseHeaderHandler(String[] ignoreFiles)
+	public JavaLicenseHeaderHandler(List<String> ignoreFiles)
 	{
 		super(ignoreFiles);
 	}
@@ -82,9 +84,9 @@ class JavaLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return getLicenseHeader().equals(header);
 	}
 
-	public String[] getSuffixes()
+	public List<String> getSuffixes()
 	{
-		return new String[] { "java" };
+		return Arrays.asList("java");
 	}
 
 	@Override

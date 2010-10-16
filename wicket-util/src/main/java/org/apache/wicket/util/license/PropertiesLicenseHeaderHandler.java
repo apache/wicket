@@ -17,6 +17,8 @@
 package org.apache.wicket.util.license;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -30,7 +32,7 @@ class PropertiesLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 	 * 
 	 * @param ignoreFiles
 	 */
-	public PropertiesLicenseHeaderHandler(String[] ignoreFiles)
+	public PropertiesLicenseHeaderHandler(List<String> ignoreFiles)
 	{
 		super(ignoreFiles);
 	}
@@ -59,9 +61,9 @@ class PropertiesLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return revision.size() == 0;
 	}
 
-	public String[] getSuffixes()
+	public List<String> getSuffixes()
 	{
-		return new String[] { "properties" };
+		return Arrays.asList("properties");
 	}
 
 	@Override

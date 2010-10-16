@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.util.license;
 
+import java.util.Arrays;
+import java.util.List;
+
 class HtmlLicenseHeaderHandler extends XmlLicenseHeaderHandler
 {
 	/**
@@ -23,14 +26,14 @@ class HtmlLicenseHeaderHandler extends XmlLicenseHeaderHandler
 	 * 
 	 * @param ignoreFiles
 	 */
-	public HtmlLicenseHeaderHandler(String[] ignoreFiles)
+	public HtmlLicenseHeaderHandler(List<String> ignoreFiles)
 	{
 		super(ignoreFiles);
 	}
 
 	@Override
-	public String[] getSuffixes()
+	public List<String> getSuffixes()
 	{
-		return new String[] { "html" };
+		return Arrays.asList("html");
 	}
 }

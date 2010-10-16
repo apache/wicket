@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -32,19 +33,19 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 {
 	protected static final String LINE_ENDING = System.getProperty("line.separator");
 	private String licenseHeader;
-	private final String[] ignoreFiles;
+	private final List<String> ignoreFiles;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param ignoreFiles
 	 */
-	public AbstractLicenseHeaderHandler(String[] ignoreFiles)
+	public AbstractLicenseHeaderHandler(List<String> ignoreFiles)
 	{
 		this.ignoreFiles = ignoreFiles;
 	}
 
-	public String[] getIgnoreFiles()
+	public List<String> getIgnoreFiles()
 	{
 		return ignoreFiles;
 	}

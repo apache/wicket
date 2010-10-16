@@ -14,25 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.visit;
+package org.apache.wicket.util.license;
 
 /**
- * Generic visitor interface for traversals.
+ * Test that the license headers are in place in this project. The tests are run from
+ * {@link ApacheLicenseHeaderTestCase}, but you can add project specific tests here if needed.
  * 
- * @param <T>
- *            type of object to be visited
- * @param <R>
- *            type of value the visitor should return as the result of the visit/traversal
+ * @author Frank Bille Jensen (frankbille)
  */
-public interface IVisitor<T, R>
+public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 {
 	/**
-	 * Called at each object in a visit.
-	 * 
-	 * @param object
-	 *            Object being visited
-	 * @param visit
-	 *            Object used to control the visit/traversal
+	 * Construct.
 	 */
-	public void component(T object, IVisit<R> visit);
+	public ApacheLicenceHeaderTest()
+	{
+		// addHeaders = true;
+	}
 }

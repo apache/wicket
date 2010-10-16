@@ -17,6 +17,8 @@
 package org.apache.wicket.util.license;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,7 +38,7 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 	 * 
 	 * @param ignoreFiles
 	 */
-	public XmlLicenseHeaderHandler(String[] ignoreFiles)
+	public XmlLicenseHeaderHandler(List<String> ignoreFiles)
 	{
 		super(ignoreFiles);
 	}
@@ -86,9 +88,9 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return revision.size() == 0;
 	}
 
-	public String[] getSuffixes()
+	public List<String> getSuffixes()
 	{
-		return new String[] { "xml", "fml" };
+		return Arrays.asList("xml", "fml");
 	}
 
 	@Override

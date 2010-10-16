@@ -17,18 +17,19 @@
 package org.apache.wicket.util.license;
 
 import java.io.File;
+import java.util.List;
 
 interface ILicenseHeaderHandler
 {
 	/**
 	 * @return The suffixes that matches the files that it handles.
 	 */
-	String[] getSuffixes();
+	List<String> getSuffixes();
 
 	/**
 	 * @return The files to ignore.
 	 */
-	String[] getIgnoreFiles();
+	List<String> getIgnoreFiles();
 
 	/**
 	 * @param file

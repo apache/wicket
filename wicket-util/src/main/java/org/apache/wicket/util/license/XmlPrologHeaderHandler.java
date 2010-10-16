@@ -17,6 +17,8 @@
 package org.apache.wicket.util.license;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -29,15 +31,15 @@ class XmlPrologHeaderHandler extends XmlLicenseHeaderHandler
 	 * 
 	 * @param ignoreFiles
 	 */
-	public XmlPrologHeaderHandler(String[] ignoreFiles)
+	public XmlPrologHeaderHandler(List<String> ignoreFiles)
 	{
 		super(ignoreFiles);
 	}
 
 	@Override
-	public String[] getSuffixes()
+	public List<String> getSuffixes()
 	{
-		return new String[] { "html" };
+		return Arrays.asList("html");
 	}
 
 	/**

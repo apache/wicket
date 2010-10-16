@@ -1,8 +1,23 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.wicket.util.visit;
 
 import java.util.Collections;
 import java.util.Iterator;
-
 
 /**
  * Utility class that contains visitor/traversal related code
@@ -12,9 +27,7 @@ public class Visits
 	/** Constructor */
 	private Visits()
 	{
-
 	}
-
 
 	private static class SingletonIterable<T> implements Iterable<T>
 	{
@@ -29,7 +42,6 @@ public class Visits
 		{
 			return Collections.singleton(singleton).iterator();
 		}
-
 	}
 
 	/**
@@ -105,7 +117,6 @@ public class Visits
 		visitChildren(container, visitor, filter, visit);
 		return visit.getResult();
 	}
-
 
 	private static final <S, R> void visitChildren(Iterable<? super S> container,
 		final IVisitor<S, R> visitor, IVisitFilter filter, Visit<R> visit)
@@ -238,7 +249,6 @@ public class Visits
 		visitPostOrderHelper(root, visitor, filter, visit);
 		return visit.getResult();
 	}
-
 
 	private static final <S, R> void visitPostOrderHelper(Object component,
 		final org.apache.wicket.util.visit.IVisitor<S, R> visitor, IVisitFilter filter,

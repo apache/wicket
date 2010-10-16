@@ -32,88 +32,62 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 	{
 // addHeaders = true;
 
-		htmlIgnore = new String[] {
-		/*
-		 * .html in test is very test specific and a license header would confuse and make it
-		 * unclear what the test is about.
-		 */
-		"src/test/java",
 		/*
 		 * See NOTICE.txt
 		 */
-		"src/main/java/org/apache/wicket/util/diff", };
-
-		xmlPrologIgnore = new String[] {
-		/*
-		 * .html in test is very test specific and a license header would confuse and make it
-		 * unclear what the test is about.
-		 */
-		"src/test/java",
-
-		/*
-		 * Ignore package.html
-		 */
-		"package.html",
+		htmlIgnore.add("src/main/java/org/apache/wicket/util/diff");
 
 		/*
 		 * See NOTICE.txt
 		 */
-		"src/main/java/org/apache/wicket/util/diff", };
+		xmlPrologIgnore.add("src/main/java/org/apache/wicket/util/diff");
 
-		cssIgnore = new String[] {
 		/*
 		 * .css in test is very test specific and a license header would confuse and make it unclear
 		 * what the test is about.
 		 */
-		"src/test/java" };
+		cssIgnore.add("src/test/java");
 
-		xmlIgnore = new String[] { ".settings", "EclipseCodeFormat.xml", "src/assembly/bin.xml" };
+		xmlIgnore.add("src/assembly/bin.xml");
 
-		javaIgnore = new String[] {
 		/*
 		 * ASL1.1. Taken from Maven JRCS. See NOTICE.txt
 		 */
-		"src/main/java/org/apache/wicket/util/diff/AddDelta.java",
-				"src/main/java/org/apache/wicket/util/diff/ChangeDelta.java",
-				"src/main/java/org/apache/wicket/util/diff/Chunk.java",
-				"src/main/java/org/apache/wicket/util/diff/DeleteDelta.java",
-				"src/main/java/org/apache/wicket/util/diff/Delta.java",
-				"src/main/java/org/apache/wicket/util/diff/Diff.java",
-				"src/main/java/org/apache/wicket/util/diff/DiffAlgorithm.java",
-				"src/main/java/org/apache/wicket/util/diff/DifferentiationFailedException.java",
-				"src/main/java/org/apache/wicket/util/diff/DiffException.java",
-				"src/main/java/org/apache/wicket/util/diff/PatchFailedException.java",
-				"src/main/java/org/apache/wicket/util/diff/Revision.java",
-				"src/main/java/org/apache/wicket/util/diff/RevisionVisitor.java",
-				"src/main/java/org/apache/wicket/util/diff/ToString.java",
-				"src/main/java/org/apache/wicket/util/diff/myers/DiffNode.java",
-				"src/main/java/org/apache/wicket/util/diff/myers/MyersDiff.java",
-				"src/main/java/org/apache/wicket/util/diff/myers/PathNode.java",
-				"src/main/java/org/apache/wicket/util/diff/myers/Snake.java",
-				/*
-				 * Needs to be resolved (rewritten or NOTICE)
-				 */
-				"src/main/java/org/apache/wicket/util/concurrent/ConcurrentReaderHashMap.java",
-				"src/main/java/org/apache/wicket/util/concurrent/ConcurrentHashMap.java",
-				"src/main/java/org/apache/wicket/util/concurrent/CopyOnWriteArrayList.java" };
+		javaIgnore.add("src/main/java/org/apache/wicket/util/diff/AddDelta.java");
+		javaIgnore.add("src/main/java/org/apache/wicket/util/diff/ChangeDelta.java");
+		javaIgnore.add("src/main/java/org/apache/wicket/util/diff/Chunk.java");
+		javaIgnore.add("src/main/java/org/apache/wicket/util/diff/DeleteDelta.java");
+		javaIgnore.add("src/main/java/org/apache/wicket/util/diff/Delta.java");
+		javaIgnore.add("src/main/java/org/apache/wicket/util/diff/Diff.java");
+		javaIgnore.add("src/main/java/org/apache/wicket/util/diff/DiffAlgorithm.java");
+		javaIgnore.add("src/main/java/org/apache/wicket/util/diff/DifferentiationFailedException.java");
+		javaIgnore.add("src/main/java/org/apache/wicket/util/diff/DiffException.java");
+		javaIgnore.add("src/main/java/org/apache/wicket/util/diff/PatchFailedException.java");
+		javaIgnore.add("src/main/java/org/apache/wicket/util/diff/Revision.java");
+		javaIgnore.add("src/main/java/org/apache/wicket/util/diff/RevisionVisitor.java");
+		javaIgnore.add("src/main/java/org/apache/wicket/util/diff/ToString.java");
+		javaIgnore.add("src/main/java/org/apache/wicket/util/diff/myers/DiffNode.java");
+		javaIgnore.add("src/main/java/org/apache/wicket/util/diff/myers/MyersDiff.java");
+		javaIgnore.add("src/main/java/org/apache/wicket/util/diff/myers/PathNode.java");
+		javaIgnore.add("src/main/java/org/apache/wicket/util/diff/myers/Snake.java");
+		/*
+		 * Needs to be resolved (rewritten or NOTICE)
+		 */
+		javaIgnore.add("src/main/java/org/apache/wicket/util/concurrent/ConcurrentReaderHashMap.java");
+		javaIgnore.add("src/main/java/org/apache/wicket/util/concurrent/ConcurrentHashMap.java");
+		javaIgnore.add("src/main/java/org/apache/wicket/util/concurrent/CopyOnWriteArrayList.java");
 
-		javaScriptIgnore = new String[] { "src/site/xdoc/onestat.js",
+		javaScriptIgnore.add("src/site/xdoc/onestat.js");
+
 		/*
 		 * .js in test is very test specific and a license header would confuse and make it unclear
 		 * what the test is about.
 		 */
-		"src/test/java",
+		javaScriptIgnore.add("src/test/java");
 		/*
 		 * See NOTICE.txt
 		 */
-		"src/main/java/org/apache/wicket/ajax/wicket-ajax-debug-drag.js",
-				"src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js" };
-
-		propertiesIgnore = new String[] {
-		/*
-		 * .properties in test is very test specific and a license header would confuse and make it
-		 * unclear what the test is about.
-		 */
-		"src/test/java", };
+		javaScriptIgnore.add("src/main/java/org/apache/wicket/ajax/wicket-ajax-debug-drag.js");
+		javaScriptIgnore.add("src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js");
 	}
 }

@@ -17,6 +17,8 @@
 package org.apache.wicket.util.license;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -25,13 +27,12 @@ import org.apache.wicket.util.diff.Revision;
 
 class CssLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 {
-
 	/**
 	 * Construct.
 	 * 
 	 * @param ignoreFiles
 	 */
-	public CssLicenseHeaderHandler(String[] ignoreFiles)
+	public CssLicenseHeaderHandler(List<String> ignoreFiles)
 	{
 		super(ignoreFiles);
 	}
@@ -60,9 +61,9 @@ class CssLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return revision.size() == 0;
 	}
 
-	public String[] getSuffixes()
+	public List<String> getSuffixes()
 	{
-		return new String[] { "css" };
+		return Arrays.asList("css");
 	}
 
 	@Override
