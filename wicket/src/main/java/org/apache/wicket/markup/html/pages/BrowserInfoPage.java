@@ -192,7 +192,7 @@ public class BrowserInfoPage extends WebPage
 			// the query string, eg
 			// http://wicketstuff.org/wicket14/compref/?wicket:bookmarkablePage=:org.apache.wicket.markup.html.pages.BrowserInfoPage&cto=http://www.google.de
 			// WICKET-3106
-			throw new IllegalArgumentException("continuTo url : " + continueTo +
+			throw new IllegalArgumentException("continueTo url : " + continueTo +
 				" must be relative to the current server.")
 			{
 				/**
