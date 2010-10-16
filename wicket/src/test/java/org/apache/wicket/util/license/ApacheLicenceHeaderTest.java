@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.util.license;
 
-import org.junit.Ignore;
-
 
 /**
  * Test that the license headers are in place in this project. The tests are run from
@@ -25,8 +23,6 @@ import org.junit.Ignore;
  * 
  * @author Frank Bille Jensen (frankbille)
  */
-@Ignore
-// FIXME REENABLE!!!!!
 public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 {
 	/**
@@ -42,6 +38,23 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		 * unclear what the test is about.
 		 */
 		"src/test/java",
+		/*
+		 * See NOTICE.txt
+		 */
+		"src/main/java/org/apache/wicket/util/diff", };
+
+		xmlPrologIgnore = new String[] {
+		/*
+		 * .html in test is very test specific and a license header would confuse and make it
+		 * unclear what the test is about.
+		 */
+		"src/test/java",
+
+		/*
+		 * Ignore package.html
+		 */
+		"package.html",
+
 		/*
 		 * See NOTICE.txt
 		 */

@@ -127,6 +127,4 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 
 		return added;
 	}
-
-
 }

@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.wicket.request.mapper;
 
 import java.util.ArrayList;
@@ -20,21 +36,22 @@ import org.apache.wicket.util.lang.Args;
  * <li>maps indexed parameters to path segments</li>
  * <li>maps named parameters to query string arguments</li>
  * </ul>
- *
+ * 
  * <h4>sample structure of url</h4>
- *
+ * 
  * <pre>
  *    /articles/images/[indexed-param-0]/[indexed-param-1]?[named-param-1=value]&[named-param-2=value2]
  * </pre>
- *
+ * 
  * <h4>sample usage</h4>
- *
+ * 
  * in your wicket application's init() method use a statement like this
  * <p/>
+ * 
  * <pre>
- *   getRootRequestMapperAsCompound().add(new ResourceMapper("/images", new ImagesResourceReference()));
+ * getRootRequestMapperAsCompound().add(new ResourceMapper(&quot;/images&quot;, new ImagesResourceReference()));
  * </pre>
- *
+ * 
  * @author Peter Ertl
  */
 public class ResourceMapper extends AbstractMapper implements IRequestMapper
@@ -47,16 +64,18 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 
 	/**
 	 * create a resource mapper for a resource
-	 *
-	 * @param path mount path for the resource
-	 * @param resourceReference resource reference that should be linked to the mount path
+	 * 
+	 * @param path
+	 *            mount path for the resource
+	 * @param resourceReference
+	 *            resource reference that should be linked to the mount path
 	 */
 	public ResourceMapper(String path, ResourceReference resourceReference)
 	{
 		Args.notEmpty(path, "path");
 		Args.notNull(resourceReference, "resourceReference");
 		this.resourceReference = resourceReference;
-		this.mountSegments = getMountSegments(path);
+		mountSegments = getMountSegments(path);
 	}
 
 	/**
@@ -129,10 +148,12 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 
 		// append named parameters as query strings
 		List<PageParameters.NamedPair> namedParameters = parameters.getAllNamed();
-		List<Url.QueryParameter> queryParams = new ArrayList<Url.QueryParameter>(namedParameters.size());
+		List<Url.QueryParameter> queryParams = new ArrayList<Url.QueryParameter>(
+			namedParameters.size());
 
 		for (PageParameters.NamedPair namedParameter : namedParameters)
-			queryParams.add(new Url.QueryParameter(namedParameter.getKey(), namedParameter.getValue()));
+			queryParams.add(new Url.QueryParameter(namedParameter.getKey(),
+				namedParameter.getValue()));
 
 		// create and return url
 		return new Url(path, queryParams);

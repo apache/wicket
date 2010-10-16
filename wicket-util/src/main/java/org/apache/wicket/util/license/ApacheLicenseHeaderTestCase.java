@@ -27,6 +27,8 @@ import java.util.Map.Entry;
 import junit.framework.TestCase;
 
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Testcase used in the different wicket projects for testing for the correct ASL license headers.
@@ -36,6 +38,9 @@ import org.apache.wicket.util.string.Strings;
  */
 public abstract class ApacheLicenseHeaderTestCase extends TestCase
 {
+	/** Log. */
+	private static final Logger log = LoggerFactory.getLogger(ApacheLicenseHeaderTestCase.class);
+
 	private static final String LINE_ENDING = System.getProperty("line.separator");
 
 	static interface FileVisitor
@@ -79,7 +84,15 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 							accept = true;
 							break;
 						}
+						else
+						{
+							log.info("File ignored: " + pathname.toString());
+						}
 					}
+				}
+				else
+				{
+					log.info("File ignored: " + pathname.toString());
 				}
 			}
 
@@ -114,15 +127,19 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 							break;
 						}
 					}
-
 					// Absolute file
-					if (ignoreFile.isFile())
+					else if (ignoreFile.isFile())
 					{
 						if (relativePathname.equals(ignorePath))
 						{
 							ignore = true;
 							break;
 						}
+					}
+					else if (pathname.getName().equals(ignorePath))
+					{
+						ignore = true;
+						break;
 					}
 				}
 			}
@@ -174,6 +191,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 
 	protected String[] javaIgnore;
 	protected String[] htmlIgnore;
+	protected String[] xmlPrologIgnore;
 	protected String[] propertiesIgnore;
 	protected String[] xmlIgnore;
 	protected String[] cssIgnore;
@@ -215,15 +233,15 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 				new JavaScriptLicenseHeaderHandler(javaScriptIgnore),
 				new XmlLicenseHeaderHandler(xmlIgnore),
 				new PropertiesLicenseHeaderHandler(propertiesIgnore),
-				new CssLicenseHeaderHandler(cssIgnore), new HtmlLicenseHeaderHandler(htmlIgnore),
-				new VelocityLicenseHeaderHandler(velocityIgnore) };
+				new HtmlLicenseHeaderHandler(htmlIgnore),
+				new VelocityLicenseHeaderHandler(velocityIgnore),
+				new XmlPrologHeaderHandler(xmlPrologIgnore),
+				new CssLicenseHeaderHandler(cssIgnore), };
 
 		final Map<ILicenseHeaderHandler, List<File>> badFiles = new HashMap<ILicenseHeaderHandler, List<File>>();
 
-		for (int i = 0; i < licenseHeaderHandlers.length; i++)
+		for (final ILicenseHeaderHandler licenseHeaderHandler : licenseHeaderHandlers)
 		{
-			final ILicenseHeaderHandler licenseHeaderHandler = licenseHeaderHandlers[i];
-
 			visitFiles(licenseHeaderHandler.getSuffixes(), licenseHeaderHandler.getIgnoreFiles(),
 				new FileVisitor()
 				{
