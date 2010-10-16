@@ -56,7 +56,7 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 	{
 		if (component == null)
 		{
-			throw new IllegalArgumentException("Argument [[page]] cannot be null");
+			throw new IllegalArgumentException("Argument 'component' cannot be null");
 		}
 	}
 
