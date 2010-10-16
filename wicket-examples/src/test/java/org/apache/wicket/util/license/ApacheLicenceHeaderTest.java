@@ -16,28 +16,26 @@
  */
 package org.apache.wicket.util.license;
 
-
 /**
- * Test that the license headers are in place in this project. The tests are run from
- * {@link ApacheLicenseHeaderTestCase}, but you can add project specific tests here if needed.
+ * Test that the license headers are in place in this project. The tests are run
+ * from {@link ApacheLicenseHeaderTestCase}, but you can add project specific
+ * tests here if needed.
  * 
  * @author Frank Bille Jensen (frankbille)
  */
-public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
-{
+public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase {
 
 	/**
 	 * Construct.
 	 */
-	public ApacheLicenceHeaderTest()
-	{
-
+	public ApacheLicenceHeaderTest() {
 		// addHeaders = true;
 
 		htmlIgnore = new String[] {
 		/*
-		 * This is an example project. Therefore we'd rather not have license headers in html files,
-		 * because it removes the focus away from what the example is about.
+		 * This is an example project. Therefore we'd rather not have license
+		 * headers in html files, because it removes the focus away from what
+		 * the example is about.
 		 */
 		"src" };
 
@@ -66,12 +64,31 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		/*
 		 * Part of an example
 		 */
-		"src/main/java/org/apache/wicket/examples/compref/XmlPage.xml", ".settings" };
+		"src/main/java/org/apache/wicket/examples/compref/XmlPage.xml",
+				".settings" };
 
 		propertiesIgnore = new String[] {
 		/*
 		 * Configuration files with no "intelligent" content
 		 */
-		"src/main/java/commons-logging.properties", "src/main/java/log4j.properties" };
+		"src/main/java/commons-logging.properties",
+				"src/main/java/log4j.properties" };
+
+		xmlPrologIgnore = new String[] {
+		/*
+		 * .html in test is very test specific and a license header would
+		 * confuse and make it unclear what the test is about.
+		 */
+		"src/test/java",
+
+		/**
+		 * Not really needed for the examples
+		 */
+		"src/main/java", "src/main/webapp", "src/main/resources",
+
+		/*
+		 * Ignore package.html
+		 */
+		"package.html", };
 	}
 }

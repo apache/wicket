@@ -33,5 +33,17 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		// addHeaders = true;
 
 		xmlIgnore = new String[] { ".settings", "EclipseCodeFormat.xml" };
+
+		xmlPrologIgnore = new String[] {
+		/*
+		 * .html in test is very test specific and a license header would
+		 * confuse and make it unclear what the test is about.
+		 */
+		"src/test/java",
+
+		/*
+		 * Ignore package.html
+		 */
+		"package.html", };
 	}
 }
