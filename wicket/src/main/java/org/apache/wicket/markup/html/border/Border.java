@@ -405,7 +405,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 			return childMarkup;
 		}
 
-		return findMarkupInAssociatedFileHeader(markup, child);
+		return findMarkupInAssociatedFileHeader(child);
 	}
 
 	/**

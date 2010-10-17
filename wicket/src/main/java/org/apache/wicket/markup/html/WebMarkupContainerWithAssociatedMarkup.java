@@ -88,13 +88,12 @@ public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
 	/**
 	 * Search the child's markup in the header section of the markup
 	 * 
-	 * @param markup
 	 * @param child
 	 * @return Null, if not found
 	 */
-	public IMarkupFragment findMarkupInAssociatedFileHeader(final IMarkupFragment markup,
-		final Component child)
+	public IMarkupFragment findMarkupInAssociatedFileHeader(final Component child)
 	{
+		IMarkupFragment markup = getAssociatedMarkup();
 		IMarkupFragment childMarkup = null;
 		MarkupStream stream = new MarkupStream(markup);
 		while (stream.skipUntil(ComponentTag.class) && (childMarkup == null))

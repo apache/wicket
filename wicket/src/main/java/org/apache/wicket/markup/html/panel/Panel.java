@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.panel;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupException;
@@ -138,68 +139,87 @@ public abstract class Panel extends WebMarkupContainerWithAssociatedMarkup
 	@Override
 	public IMarkupFragment getMarkup(final Component child)
 	{
-		IMarkupFragment markup = getAssociatedMarkup();
-		if (markup == null)
+		IMarkupFragment markup = PanelMarkupHelper.getMarkup(this, child);
+		if ((child == null) || (markup != null))
 		{
-			throw new MarkupNotFoundException(
-				"Failed to find markup file associated with panel. Panel: " + this.toString());
+			return markup;
 		}
 
-		// Find <wicket:panel>
-		IMarkupFragment panelMarkup = findPanelTag(markup);
-		if (panelMarkup == null)
-		{
-			throw new MarkupNotFoundException(
-				"Expected to find <wicket:panel> in associated markup file. Markup: " +
-					markup.toString());
-		}
-
-		// If child == null, than return the markup fragment starting with <wicket:panel>
-		if (child == null)
-		{
-			return panelMarkup;
-		}
-
-		// Find the markup for the child component
-		IMarkupFragment childMarkup = panelMarkup.find(child.getId());
-		if (childMarkup != null)
-		{
-			return childMarkup;
-		}
-
-		return findMarkupInAssociatedFileHeader(markup, child);
+		return findMarkupInAssociatedFileHeader(child);
 	}
 
 	/**
-	 * Search for &lt;wicket:panel ...&gt; on the same level.
+	 * Re-useable helper
 	 * 
-	 * @param markup
-	 * @param name
-	 * @return null, if not found
 	 */
-	private final IMarkupFragment findPanelTag(final IMarkupFragment markup)
+	public static class PanelMarkupHelper
 	{
-		MarkupStream stream = new MarkupStream(markup);
-
-		while (stream.skipUntil(ComponentTag.class))
+		/**
+		 * @see org.apache.wicket.MarkupContainer#getMarkup(org.apache.wicket.Component)
+		 * 
+		 * @param parent
+		 * @param child
+		 * @return The markup associated with the child
+		 */
+		public static IMarkupFragment getMarkup(final MarkupContainer parent, final Component child)
 		{
-			ComponentTag tag = stream.getTag();
-			if (tag.isOpen() || tag.isOpenClose())
+			IMarkupFragment markup = parent.getAssociatedMarkup();
+			if (markup == null)
 			{
-				if (tag instanceof WicketTag)
-				{
-					WicketTag wtag = (WicketTag)tag;
-					if (wtag.isPanelTag())
-					{
-						return stream.getMarkupFragment();
-					}
-				}
-				stream.skipToMatchingCloseTag(tag);
+				throw new MarkupNotFoundException("Failed to find markup file associated. " +
+					parent.getClass().getSimpleName() + ": " + parent.toString());
 			}
 
-			stream.next();
+			// Find <wicket:panel>
+			IMarkupFragment panelMarkup = findPanelTag(markup);
+			if (panelMarkup == null)
+			{
+				throw new MarkupNotFoundException(
+					"Expected to find <wicket:panel> in associated markup file. Markup: " +
+						markup.toString());
+			}
+
+			// If child == null, than return the markup fragment starting with <wicket:panel>
+			if (child == null)
+			{
+				return panelMarkup;
+			}
+
+			// Find the markup for the child component
+			return panelMarkup.find(child.getId());
 		}
 
-		return null;
+		/**
+		 * Search for &lt;wicket:panel ...&gt; on the same level.
+		 * 
+		 * @param markup
+		 * @param name
+		 * @return null, if not found
+		 */
+		private final static IMarkupFragment findPanelTag(final IMarkupFragment markup)
+		{
+			MarkupStream stream = new MarkupStream(markup);
+
+			while (stream.skipUntil(ComponentTag.class))
+			{
+				ComponentTag tag = stream.getTag();
+				if (tag.isOpen() || tag.isOpenClose())
+				{
+					if (tag instanceof WicketTag)
+					{
+						WicketTag wtag = (WicketTag)tag;
+						if (wtag.isPanelTag())
+						{
+							return stream.getMarkupFragment();
+						}
+					}
+					stream.skipToMatchingCloseTag(tag);
+				}
+
+				stream.next();
+			}
+
+			return null;
+		}
 	}
 }

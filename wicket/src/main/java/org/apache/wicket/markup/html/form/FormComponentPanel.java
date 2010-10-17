@@ -19,12 +19,11 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
-import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.ContainerWithAssociatedMarkupHelper;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.panel.Panel.PanelMarkupHelper;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.model.IModel;
@@ -226,66 +225,6 @@ public abstract class FormComponentPanel<T> extends FormComponent<T>
 	@Override
 	public IMarkupFragment getMarkup(final Component child)
 	{
-		IMarkupFragment markup = getAssociatedMarkup();
-		if (markup == null)
-		{
-			throw new MarkupException("Failed to find associated markup file. Component: " +
-				toString());
-		}
-
-		// Find <wicket:panel>
-		IMarkupFragment panelMarkup = findPanelTag(markup);
-		if (panelMarkup == null)
-		{
-			throw new MarkupException(
-				"Expected to find <wicket:panel> in associated markup file. Markup: " +
-					markup.toString());
-		}
-
-		// If child == null, return the markup starting with <wicket:panel>
-		if (child == null)
-		{
-			return panelMarkup;
-		}
-
-		// else, find the markup fragment for the child component
-		return panelMarkup.find(child.getId());
-	}
-
-	/**
-	 * Search for &lt;wicket:'name' ...&gt; on the same level, but ignoring other "transparent" tags
-	 * such as &lt;wicket:enclosure&gt; etc.
-	 * 
-	 * @param markup
-	 * @param name
-	 * @return null, if not found
-	 */
-	private final IMarkupFragment findPanelTag(final IMarkupFragment markup)
-	{
-		MarkupStream stream = new MarkupStream(markup);
-
-		while (stream.skipUntil(ComponentTag.class))
-		{
-			ComponentTag tag = stream.getTag();
-			if (tag.isOpen() || tag.isOpenClose())
-			{
-				if (tag instanceof WicketTag)
-				{
-					WicketTag wtag = (WicketTag)tag;
-					if (wtag.isPanelTag())
-					{
-						return stream.getMarkupFragment();
-					}
-				}
-				if (tag.isOpen() && !tag.hasNoCloseTag() && !(tag instanceof WicketTag))
-				{
-					stream.skipToMatchingCloseTag(tag);
-				}
-			}
-
-			stream.next();
-		}
-
-		return null;
+		return PanelMarkupHelper.getMarkup(this, child);
 	}
 }
