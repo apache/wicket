@@ -23,7 +23,7 @@ import java.io.InputStream;
 import junit.framework.TestCase;
 
 import org.apache.wicket.mock.MockApplication;
-import org.apache.wicket.protocol.http.request.WebExternalResourceRequestTarget;
+import org.apache.wicket.protocol.http.request.WebExternalResourceRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.resource.WebExternalResourceStream;
@@ -69,7 +69,7 @@ public class WebExternalResourceTest extends TestCase
 	 */
 	public void testWebExternalResourceRequestTarget() throws Exception
 	{
-		WebExternalResourceRequestTarget rt = new WebExternalResourceRequestTarget("/index.html");
+		WebExternalResourceRequestHandler rt = new WebExternalResourceRequestHandler("/index.html");
 		tester.processRequest(rt);
 		assertTrue(tester.getContentTypeFromResponseHeader().startsWith("text/html"));
 		tester.assertContains("<h1>Hello, World!</h1>");

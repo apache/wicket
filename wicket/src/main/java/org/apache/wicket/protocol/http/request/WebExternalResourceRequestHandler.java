@@ -37,10 +37,10 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Eelco Hillenius
  */
-public class WebExternalResourceRequestTarget extends ResourceStreamRequestHandler
+public class WebExternalResourceRequestHandler extends ResourceStreamRequestHandler
 {
 	/** log. */
-	private static final Logger log = LoggerFactory.getLogger(WebExternalResourceRequestTarget.class);
+	private static final Logger log = LoggerFactory.getLogger(WebExternalResourceRequestHandler.class);
 
 	/** the relative url of the external resource. */
 	private final String uri;
@@ -51,7 +51,7 @@ public class WebExternalResourceRequestTarget extends ResourceStreamRequestHandl
 	 * @param uri
 	 *            the relative url of the external resource
 	 */
-	public WebExternalResourceRequestTarget(String uri)
+	public WebExternalResourceRequestHandler(String uri)
 	{
 		super(new WebExternalResourceStream(uri));
 		this.uri = uri;
@@ -82,9 +82,9 @@ public class WebExternalResourceRequestTarget extends ResourceStreamRequestHandl
 	@Override
 	public boolean equals(Object obj)
 	{
-		if (obj instanceof WebExternalResourceRequestTarget)
+		if (obj instanceof WebExternalResourceRequestHandler)
 		{
-			WebExternalResourceRequestTarget that = (WebExternalResourceRequestTarget)obj;
+			WebExternalResourceRequestHandler that = (WebExternalResourceRequestHandler)obj;
 			return uri.equals(that.uri);
 		}
 		return false;
