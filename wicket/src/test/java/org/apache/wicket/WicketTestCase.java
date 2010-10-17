@@ -16,10 +16,15 @@
  */
 package org.apache.wicket;
 
+import java.io.IOException;
+
 import junit.framework.TestCase;
 
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
+import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markupFragments.MyPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
@@ -92,8 +97,7 @@ public abstract class WicketTestCase extends TestCase
 	 * @param filename
 	 * @throws Exception
 	 */
-	protected void executeTest(final Page page, final String filename)
-		throws Exception
+	protected void executeTest(final Page page, final String filename) throws Exception
 	{
 		tester.executeTest(getClass(), page, filename);
 	}
@@ -148,5 +152,40 @@ public abstract class WicketTestCase extends TestCase
 	public String getBasedir()
 	{
 		return WicketTester.getBasedir();
+	}
+
+	/**
+	 * Compare the markup provided with the file content
+	 * 
+	 * @param markup
+	 * @param filename
+	 * @throws IOException
+	 */
+	public final void compareMarkupWithFile(IMarkupFragment markup, String filename)
+		throws IOException
+	{
+		String doc = markup.toString(true);
+		DiffUtil.validatePage(doc, MyPage.class, filename, true);
+	}
+
+	/**
+	 * Compare the markup provided with the String
+	 * 
+	 * @param markup
+	 * @param testMarkup
+	 * @throws IOException
+	 */
+	public final void compareMarkupWithString(IMarkupFragment markup, String testMarkup)
+		throws IOException
+	{
+		testMarkup = testMarkup.replaceAll("\r", "");
+		testMarkup = testMarkup.replaceAll("\n", "");
+		testMarkup = testMarkup.replaceAll("\t", "");
+
+		String doc = markup.toString(true);
+		doc = doc.replaceAll("\n", "");
+		doc = doc.replaceAll("\r", "");
+		doc = doc.replaceAll("\t", "");
+		assertEquals(doc, testMarkup);
 	}
 }

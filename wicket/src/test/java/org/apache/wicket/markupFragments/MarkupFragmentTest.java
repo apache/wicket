@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.markupFragments;
 
-import java.io.IOException;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
@@ -27,33 +25,12 @@ import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.InlinePanelPage_1;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.util.tester.DiffUtil;
-import org.junit.Ignore;
 
 /**
  * 
  */
 public class MarkupFragmentTest extends WicketTestCase
 {
-	private void compareWithFile(IMarkupFragment markup, String filename) throws IOException
-	{
-		String doc = markup.toString(true);
-		DiffUtil.validatePage(doc, MyPage.class, filename, true);
-	}
-
-	private void compare(IMarkupFragment markup, String testMarkup) throws IOException
-	{
-		testMarkup = testMarkup.replaceAll("\r", "");
-		testMarkup = testMarkup.replaceAll("\n", "");
-		testMarkup = testMarkup.replaceAll("\t", "");
-
-		String doc = markup.toString(true);
-		doc = doc.replaceAll("\n", "");
-		doc = doc.replaceAll("\r", "");
-		doc = doc.replaceAll("\t", "");
-		assertEquals(doc, testMarkup);
-	}
-
 	/**
 	 * page.getAssociatedMarkup(), page.getMarkup() and page.getMarkup(null) must all return the
 	 * same
@@ -63,13 +40,13 @@ public class MarkupFragmentTest extends WicketTestCase
 	public void testPage() throws Exception
 	{
 		IMarkupFragment markup = new MyPage().getAssociatedMarkup();
-		compareWithFile(markup, "MyPage_ExpectedResult.html");
+		compareMarkupWithFile(markup, "MyPage_ExpectedResult.html");
 
 		markup = new MyPage().getMarkup();
-		compareWithFile(markup, "MyPage_ExpectedResult.html");
+		compareMarkupWithFile(markup, "MyPage_ExpectedResult.html");
 
 		markup = new MyPage().getMarkup(null);
-		compareWithFile(markup, "MyPage_ExpectedResult.html");
+		compareMarkupWithFile(markup, "MyPage_ExpectedResult.html");
 	}
 
 	/**
@@ -84,7 +61,7 @@ public class MarkupFragmentTest extends WicketTestCase
 
 		// Get the associated markup file
 		IMarkupFragment markup = panel.getAssociatedMarkup();
-		compareWithFile(markup, "MyPanel_ExpectedResult.html");
+		compareMarkupWithFile(markup, "MyPanel_ExpectedResult.html");
 
 		// The Page is missing the tag to "call" the panel
 		assertNull(panel.getMarkup());
@@ -95,11 +72,14 @@ public class MarkupFragmentTest extends WicketTestCase
 
 		// getMarkup() returns the "calling" tags
 		markup = panel.getMarkup();
-		compare(markup, "<span wicket:id=\"panel\">test</span>");
+		compareMarkupWithString(markup, "<span wicket:id=\"panel\">test</span>");
 
-		// getMarkup(null) returns the markup which is used to find a child component
+		// getMarkup(null) returns the markup which is used to find a child component, which in case
+		// of Panel is the <wicket:panel> tag and is thus may not be equal to the associated markup
+		// file.
 		markup = panel.getMarkup(null);
-		compare(markup, "<wicket:panel>  <span wicket:id=\"label\">text</span></wicket:panel>");
+		compareMarkupWithString(markup,
+			"<wicket:panel>  <span wicket:id=\"label\">text</span></wicket:panel>");
 	}
 
 	/**
@@ -107,7 +87,6 @@ public class MarkupFragmentTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	@Ignore("Ignored until WICKET-3111 is fixed")
 	public void testPanelWithAutoComponent() throws Exception
 	{
 		Page page = new MyPage();
@@ -116,7 +95,7 @@ public class MarkupFragmentTest extends WicketTestCase
 
 		// Get the associated markup file
 		IMarkupFragment markup = panel.getAssociatedMarkup();
-		compareWithFile(markup, "MyPanelWithAutoComponent_ExpectedResult.html");
+		compareMarkupWithFile(markup, "MyPanelWithAutoComponent_ExpectedResult.html");
 
 		// The Page is missing the tag to "call" the panel
 		assertNull(panel.getMarkup());
@@ -127,11 +106,11 @@ public class MarkupFragmentTest extends WicketTestCase
 
 		// getMarkup() returns the "calling" tags
 		markup = panel.getMarkup();
-		compare(markup, "<span wicket:id=\"panel\">test</span>");
+		compareMarkupWithString(markup, "<span wicket:id=\"panel\">test</span>");
 
 		// getMarkup(null) returns the markup which is used to find a child component
 		markup = panel.getMarkup(null);
-		compare(markup,
+		compareMarkupWithString(markup,
 			"<wicket:panel><a href=\"something\"><span wicket:id=\"label\">text</span></a></wicket:panel>");
 	}
 
@@ -143,11 +122,11 @@ public class MarkupFragmentTest extends WicketTestCase
 	{
 		Component label = new MyPage().get("label");
 		IMarkupFragment markup = label.getMarkup();
-		compare(markup, "<span wicket:id=\"label\">text</span>");
+		compareMarkupWithString(markup, "<span wicket:id=\"label\">text</span>");
 
 		label = new MyPanelPage().get("panel:label");
 		markup = label.getMarkup();
-		compare(markup, "<span wicket:id=\"label\">text</span>");
+		compareMarkupWithString(markup, "<span wicket:id=\"label\">text</span>");
 	}
 
 	/**
@@ -158,7 +137,7 @@ public class MarkupFragmentTest extends WicketTestCase
 	{
 		MarkupContainer container = (MarkupContainer)new MyPage().get("container");
 		IMarkupFragment markup = container.getMarkup();
-		compare(markup, "<span wicket:id=\"container\">text</span>");
+		compareMarkupWithString(markup, "<span wicket:id=\"container\">text</span>");
 
 		// The container doesn't have an external markup file
 		markup = container.getAssociatedMarkup();
@@ -166,7 +145,7 @@ public class MarkupFragmentTest extends WicketTestCase
 
 		// Get the markup which is used to search for children.
 		markup = container.getMarkup(null);
-		compare(markup, "<span wicket:id=\"container\">text</span>");
+		compareMarkupWithString(markup, "<span wicket:id=\"container\">text</span>");
 	}
 
 	/**
@@ -180,30 +159,30 @@ public class MarkupFragmentTest extends WicketTestCase
 
 		// Get the associated markup file
 		IMarkupFragment markup = border.getAssociatedMarkup();
-		compareWithFile(markup, "MyBorder_ExpectedResult.html");
+		compareMarkupWithFile(markup, "MyBorder_ExpectedResult.html");
 
 		// getMarkup() returns the "calling" tags
 		markup = border.getMarkup();
-		compare(markup, "<span wicket:id=\"border\">test</span>");
+		compareMarkupWithString(markup, "<span wicket:id=\"border\">test</span>");
 
 		// getMarkup(null) returns the markup which is used to find a child component
 		markup = border.getMarkup(null);
-		compare(markup, "<wicket:border>  111  <wicket:body/>  222</wicket:border>");
+		compareMarkupWithString(markup, "<wicket:border>  111  <wicket:body/>  222</wicket:border>");
 
 		assertNull(border.getBodyContainer().getAssociatedMarkup());
 
 		markup = border.getBodyContainer().getMarkup();
-		compare(markup, "<wicket:body/>");
+		compareMarkupWithString(markup, "<wicket:body/>");
 
 		markup = border.getBodyContainer().getMarkup(null);
-		compare(markup, "<span wicket:id=\"border\">test</span>");
+		compareMarkupWithString(markup, "<span wicket:id=\"border\">test</span>");
 
 		markup = border.getBodyContainer().getParent().getMarkup(border.getBodyContainer());
-		compare(markup, "<wicket:body/>");
+		compareMarkupWithString(markup, "<wicket:body/>");
 
 		// getMarkup(null) returns the markup which is used to find a child component
 		markup = border.getBodyContainer().getMarkup(null);
-		compare(markup, "<span wicket:id=\"border\">test</span>");
+		compareMarkupWithString(markup, "<span wicket:id=\"border\">test</span>");
 	}
 
 	/**
@@ -217,31 +196,29 @@ public class MarkupFragmentTest extends WicketTestCase
 
 		// Get the associated markup file
 		IMarkupFragment markup = border.getAssociatedMarkup();
-		compareWithFile(markup, "MyBorder2_ExpectedResult.html");
+		compareMarkupWithFile(markup, "MyBorder2_ExpectedResult.html");
 
 		// getMarkup() returns the "calling" tags
 		markup = border.getMarkup();
-		compare(markup, "<span wicket:id=\"border2\">test</span>");
+		compareMarkupWithString(markup, "<span wicket:id=\"border2\">test</span>");
 
 		// getMarkup(null) returns the markup which is used to find a child component
 		markup = border.getMarkup(null);
-		compare(markup, "<wicket:border>  111  <wicket:body>333</wicket:body>  222</wicket:border>");
+		compareMarkupWithString(markup,
+			"<wicket:border>  111  <wicket:body>333</wicket:body>  222</wicket:border>");
 
 		assertNull(border.getBodyContainer().getAssociatedMarkup());
 
 		// See explanation in BaseBorder.BorderBodyContainer.getMarkup()
 		markup = border.getBodyContainer().getParent().getMarkup(border.getBodyContainer());
-		compare(markup, "<wicket:body>333</wicket:body>");
+		compareMarkupWithString(markup, "<wicket:body>333</wicket:body>");
 
 		markup = border.getBodyContainer().getMarkup();
-		compare(markup, "<wicket:body>333</wicket:body>");
-
-		markup = border.getBodyContainer().getMarkup(null);
-		compare(markup, "<span wicket:id=\"border2\">test</span>");
+		compareMarkupWithString(markup, "<wicket:body>333</wicket:body>");
 
 		// getMarkup(null) returns the markup which is used to find a child component
 		markup = border.getBodyContainer().getMarkup(null);
-		compare(markup, "<span wicket:id=\"border2\">test</span>");
+		compareMarkupWithString(markup, "<span wicket:id=\"border2\">test</span>");
 	}
 
 	/**
@@ -259,10 +236,11 @@ public class MarkupFragmentTest extends WicketTestCase
 
 		// getMarkup() returns the "calling" tags
 		markup = fragment.getMarkup();
-		compare(markup, "<span wicket:id=\"myPanel1\">panel</span>");
+		compareMarkupWithString(markup, "<span wicket:id=\"myPanel1\">panel</span>");
 
 		// getMarkup(null) returns the markup which is used to find a child component
 		markup = fragment.getMarkup(null);
-		compare(markup, "<wicket:fragment wicket:id=\"frag1\">panel 1</wicket:fragment>");
+		compareMarkupWithString(markup,
+			"<wicket:fragment wicket:id=\"frag1\">panel 1</wicket:fragment>");
 	}
 }
