@@ -113,10 +113,14 @@ public abstract class AbstractTree extends Panel
 		/**
 		 * Construct.
 		 * 
-		 * @param parent parent node
-		 * @param id The component id
-		 * @param node tree node
-		 * @param level current level
+		 * @param parent
+		 *            parent node
+		 * @param id
+		 *            The component id
+		 * @param node
+		 *            tree node
+		 * @param level
+		 *            current level
 		 */
 		public TreeItem(TreeItem parent, String id, final Object node, int level)
 		{
@@ -389,7 +393,8 @@ public abstract class AbstractTree extends Panel
 		/**
 		 * renders the tree items, making sure that items are rendered in the order they should be
 		 * 
-		 * @param markupStream stream
+		 * @param markupStream
+		 *            stream
 		 */
 		@Override
 		protected void onRender(final MarkupStream markupStream)
@@ -540,7 +545,8 @@ public abstract class AbstractTree extends Panel
 
 	/**
 	 * 
-	 * @param model model
+	 * @param model
+	 *            model
 	 * @return this
 	 */
 	public MarkupContainer setModel(IModel<TreeModel> model)
@@ -551,7 +557,8 @@ public abstract class AbstractTree extends Panel
 
 	/**
 	 * 
-	 * @param model model
+	 * @param model
+	 *            model
 	 * @return this
 	 */
 	public MarkupContainer setModelObject(TreeModel model)
@@ -698,8 +705,7 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeSelected(Object)
-	 *      )
+	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeSelected(Object) )
 	 */
 	public final void nodeSelected(Object node)
 	{
@@ -794,8 +800,10 @@ public abstract class AbstractTree extends Panel
 	 * We need this to refresh the previous visible item in case the inserted / deleted item was
 	 * last. The reason is that the line shape of previous item changes from L to |- .
 	 * 
-	 * @param parent parent item
-	 * @param child child item
+	 * @param parent
+	 *            parent item
+	 * @param child
+	 *            child item
 	 */
 	private void markTheLastButOneChildDirty(TreeItem parent, TreeItem child)
 	{
@@ -907,7 +915,7 @@ public abstract class AbstractTree extends Panel
 		TreeNode parentNode = (TreeNode)removalEvent.getTreePath().getLastPathComponent();
 		TreeItem parentItem = nodeToItemMap.get(parentNode);
 
-		if (parentItem != null && isNodeVisible(parentNode)) 
+		if (parentItem != null && isNodeVisible(parentNode))
 		{
 			if (parentNode.getChildCount() == 0)
 			{
@@ -918,7 +926,7 @@ public abstract class AbstractTree extends Panel
 			if (isNodeExpanded(parentNode))
 			{
 				// deleted nodes were visible; we need to delete their TreeItems
-				for (Object deletedNode : removalEvent.getChildren()) 
+				for (Object deletedNode : removalEvent.getChildren())
 				{
 					TreeItem itemToDelete = nodeToItemMap.get(deletedNode);
 					if (itemToDelete != null)
@@ -926,7 +934,7 @@ public abstract class AbstractTree extends Panel
 						markTheLastButOneChildDirty(parentItem, itemToDelete);
 
 						// remove all the deleted item's children
-						visitItemChildren(itemToDelete, new IItemCallback() 
+						visitItemChildren(itemToDelete, new IItemCallback()
 						{
 							public void visitItem(TreeItem item)
 							{
@@ -986,8 +994,10 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * Allows to intercept adding dirty components to AjaxRequestTarget.
 	 * 
-	 * @param target ajax request target
-	 * @param component component
+	 * @param target
+	 *            ajax request target
+	 * @param component
+	 *            component
 	 */
 	protected void addComponent(AjaxRequestTarget target, Component component)
 	{
@@ -1192,9 +1202,12 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * Builds (recursively) TreeItems for the given Iterator of TreeNodes.
 	 * 
-	 * @param parent parent item
-	 * @param nodes The nodes to build tree items for
-	 * @param level The current level
+	 * @param parent
+	 *            parent item
+	 * @param nodes
+	 *            The nodes to build tree items for
+	 * @param level
+	 *            The current level
 	 * @return List with new tree items
 	 */
 	private List<TreeItem> buildTreeItems(TreeItem parent, Iterator<Object> nodes, int level)
@@ -1335,7 +1348,8 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * INTERNAL
 	 * 
-	 * @param node node
+	 * @param node
+	 *            node
 	 */
 	public final void markNodeDirty(Object node)
 	{
@@ -1345,7 +1359,8 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * INTERNAL
 	 * 
-	 * @param node node
+	 * @param node
+	 *            node
 	 */
 	public final void markNodeChildrenDirty(Object node)
 	{
@@ -1366,8 +1381,10 @@ public abstract class AbstractTree extends Panel
 	 * Invalidates single node (without children). On the next render, this node will be updated.
 	 * Node will not be rebuilt, unless forceRebuild is true.
 	 * 
-	 * @param node The node to invalidate
-	 * @param forceRebuild force rebuild of node
+	 * @param node
+	 *            The node to invalidate
+	 * @param forceRebuild
+	 *            force rebuild of node
 	 */
 	private void invalidateNode(Object node, boolean forceRebuild)
 	{
@@ -1495,7 +1512,8 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * Returns parent node of given node.
 	 * 
-	 * @param node node
+	 * @param node
+	 *            node
 	 * @return parent node
 	 */
 	public Object getParentNode(Object node)
@@ -1515,9 +1533,12 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * Creates a tree item for given node.
 	 * 
-	 * @param parent parent tree item
-	 * @param node The tree node
-	 * @param level The level
+	 * @param parent
+	 *            parent tree item
+	 * @param node
+	 *            The tree node
+	 * @param level
+	 *            The level
 	 * @return The new tree item
 	 */
 	private TreeItem newTreeItem(TreeItem parent, Object node, int level)
@@ -1528,10 +1549,14 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * Creates a tree item for given node with specified id.
 	 * 
-	 * @param parent parent tree item
-	 * @param node The tree node
-	 * @param level The level
-	 * @param id the component id
+	 * @param parent
+	 *            parent tree item
+	 * @param node
+	 *            The tree node
+	 * @param level
+	 *            The level
+	 * @param id
+	 *            the component id
 	 * @return The new tree item
 	 */
 	private TreeItem newTreeItem(TreeItem parent, Object node, int level, String id)
@@ -1559,8 +1584,10 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
-	 * @param parent parent node
-	 * @param index index
+	 * @param parent
+	 *            parent node
+	 * @param index
+	 *            index
 	 * @return child
 	 */
 	public final Object getChildAt(Object parent, int index)
@@ -1570,7 +1597,8 @@ public abstract class AbstractTree extends Panel
 
 	/**
 	 * 
-	 * @param node node
+	 * @param node
+	 *            node
 	 * @return boolean
 	 */
 	public final boolean isLeaf(Object node)
@@ -1579,7 +1607,8 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
-	 * @param parent parent node
+	 * @param parent
+	 *            parent node
 	 * @return child count
 	 */
 	public final int getChildCount(Object parent)
