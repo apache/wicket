@@ -166,7 +166,8 @@ public class MarkupFragment implements IMarkupFragment
 					{
 						return stream.getMarkupFragment();
 					}
-					if (tag.isOpen() && !tag.hasNoCloseTag() && !(tag instanceof WicketTag))
+					if (tag.isOpen() && !tag.hasNoCloseTag() && !(tag instanceof WicketTag) &&
+						(tag.isAutoComponentTag() == false))
 					{
 						stream.skipToMatchingCloseTag(tag);
 					}
