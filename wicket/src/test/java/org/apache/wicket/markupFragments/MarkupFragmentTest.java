@@ -28,6 +28,7 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.InlinePanelPage_1;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.util.tester.DiffUtil;
+import org.junit.Ignore;
 
 /**
  * 
@@ -42,12 +43,14 @@ public class MarkupFragmentTest extends WicketTestCase
 
 	private void compare(IMarkupFragment markup, String testMarkup) throws IOException
 	{
-		testMarkup = testMarkup.replaceAll("\n\r", "");
-		testMarkup = testMarkup.replaceAll("\r\n", "");
+		testMarkup = testMarkup.replaceAll("\r", "");
+		testMarkup = testMarkup.replaceAll("\n", "");
+		testMarkup = testMarkup.replaceAll("\t", "");
 
 		String doc = markup.toString(true);
-		doc = doc.replaceAll("\n\r", "");
-		doc = doc.replaceAll("\r\n", "");
+		doc = doc.replaceAll("\n", "");
+		doc = doc.replaceAll("\r", "");
+		doc = doc.replaceAll("\t", "");
 		assertEquals(doc, testMarkup);
 	}
 
@@ -97,6 +100,39 @@ public class MarkupFragmentTest extends WicketTestCase
 		// getMarkup(null) returns the markup which is used to find a child component
 		markup = panel.getMarkup(null);
 		compare(markup, "<wicket:panel>  <span wicket:id=\"label\">text</span></wicket:panel>");
+	}
+
+	/**
+	 * @see WICKET-3111
+	 * 
+	 * @throws Exception
+	 */
+	@Ignore("Ignored until WICKET-3111 is fixed")
+	public void testPanelWithAutoComponent() throws Exception
+	{
+		Page page = new MyPage();
+		Panel panel = new MyPanelWithAutoComponent("panel");
+		page.add(panel);
+
+		// Get the associated markup file
+		IMarkupFragment markup = panel.getAssociatedMarkup();
+		compareWithFile(markup, "MyPanelWithAutoComponent_ExpectedResult.html");
+
+		// The Page is missing the tag to "call" the panel
+		assertNull(panel.getMarkup());
+
+		// Create a Page with proper markup for the panel
+		page = new MyPanelWithAutoComponentPage();
+		panel = (Panel)page.get("panel");
+
+		// getMarkup() returns the "calling" tags
+		markup = panel.getMarkup();
+		compare(markup, "<span wicket:id=\"panel\">test</span>");
+
+		// getMarkup(null) returns the markup which is used to find a child component
+		markup = panel.getMarkup(null);
+		compare(markup,
+			"<wicket:panel><a href=\"something\"><span wicket:id=\"label\">text</span></a></wicket:panel>");
 	}
 
 	/**
