@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.request.mapper;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
@@ -28,7 +29,12 @@ import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * Mapper for rendering home page.
+ * Default mapper for rendering the configured {@link Application#getHomePage() home page}.
+ * <p>
+ * <strong>Note</strong>: Handles requests to '/' but does not produce {@link Url} for it, thus
+ * {@link BookmarkableMapper} produces something like '/wicket/bookmarkable/com.example.MyHomePage'
+ * for it. If the user application wants to preserve '/' then it should mount the home page
+ * explicitly in MyApplication#init()
  * 
  * @author Matej Knopp
  */

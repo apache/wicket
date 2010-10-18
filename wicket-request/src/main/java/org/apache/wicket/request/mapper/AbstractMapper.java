@@ -189,11 +189,6 @@ public abstract class AbstractMapper
 		}
 		Url url = Url.parse(mountPath);
 
-		if (url.getSegments().isEmpty())
-		{
-			throw new IllegalArgumentException("Mount path must have at least one segment.");
-		}
-
 		String[] res = new String[url.getSegments().size()];
 		for (int i = 0; i < res.length; ++i)
 		{
