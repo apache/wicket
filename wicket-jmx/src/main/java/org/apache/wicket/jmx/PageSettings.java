@@ -37,27 +37,11 @@ public class PageSettings implements PageSettingsMBean
 	}
 
 	/**
-	 * @see org.apache.wicket.jmx.PageSettingsMBean#getAutomaticMultiWindowSupport()
-	 */
-	public boolean getAutomaticMultiWindowSupport()
-	{
-		return application.getPageSettings().getAutomaticMultiWindowSupport();
-	}
-
-	/**
 	 * @see org.apache.wicket.jmx.PageSettingsMBean#getVersionPagesByDefault()
 	 */
 	public boolean getVersionPagesByDefault()
 	{
 		return application.getPageSettings().getVersionPagesByDefault();
-	}
-
-	/**
-	 * @see org.apache.wicket.jmx.PageSettingsMBean#setAutomaticMultiWindowSupport(boolean)
-	 */
-	public void setAutomaticMultiWindowSupport(boolean automaticMultiWindowSupport)
-	{
-		application.getPageSettings().setAutomaticMultiWindowSupport(automaticMultiWindowSupport);
 	}
 
 	/**

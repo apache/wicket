@@ -62,10 +62,6 @@ public class NiceUrlApplication extends WicketExampleApplication
 	{
 		super.init();
 
-		// Disable creation of javascript which jWebUnit (test only)
-		// doesn't handle properly
-		getPageSettings().setAutomaticMultiWindowSupport(false);
-
 		// mount single bookmarkable pages
 		mountPage("/the/homepage/path", Home.class);
 		mountPage("/a/nice/path/to/the/first/page", Page1.class);

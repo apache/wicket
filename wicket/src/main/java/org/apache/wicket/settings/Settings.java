@@ -427,14 +427,6 @@ public final class Settings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IPageSettings#getAutomaticMultiWindowSupport()
-	 */
-	public boolean getAutomaticMultiWindowSupport()
-	{
-		return automaticMultiWindowSupport;
-	}
-
-	/**
 	 * @see org.apache.wicket.settings.IRequestCycleSettings#getBufferResponse()
 	 */
 	public boolean getBufferResponse()
@@ -829,14 +821,6 @@ public final class Settings
 	public void setAutomaticLinking(boolean automaticLinking)
 	{
 		this.automaticLinking = automaticLinking;
-	}
-
-	/**
-	 * @see org.apache.wicket.settings.IPageSettings#setAutomaticMultiWindowSupport(boolean)
-	 */
-	public void setAutomaticMultiWindowSupport(boolean automaticMultiWindowSupport)
-	{
-		this.automaticMultiWindowSupport = automaticMultiWindowSupport;
 	}
 
 	/**

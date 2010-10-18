@@ -19,13 +19,11 @@ package org.apache.wicket.markup.html;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.handler.IPageRequestHandler;
@@ -52,53 +50,18 @@ import org.slf4j.LoggerFactory;
  * a no-arg constructor or with a constructor that accepts a PageParameters argument (which wraps
  * any query string parameters for a request). In case the page has both constructors, the
  * constructor with PageParameters will be used.
- *
+ * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Juergen Donnerstag
  * @author Gwyn Evans
  */
-public class WebPage extends Page implements INewBrowserWindowListener
+public class WebPage extends Page
 {
 	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(WebPage.class);
 
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Tries to determine whether this page was opened in a new window or tab. If it is (and this
-	 * checker were able to recognize that), a new page map is created for this page instance, so
-	 * that it will start using it's own history in sync with the browser window or tab.
-	 */
-	private static final class PageMapChecker extends AbstractBehavior
-		implements
-			IHeaderContributor
-	{
-		private static final long serialVersionUID = 1L;
-
-		private final WebPage webPage;
-
-		/**
-		 * Construct.
-		 *
-		 * @param webPage
-		 */
-		PageMapChecker(WebPage webPage)
-		{
-			this.webPage = webPage;
-		}
-
-		/**
-		 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(IHeaderResponse)
-		 */
-		public final void renderHead(final IHeaderResponse headResponse)
-		{
-			// TODO
-			// this is the place where page checked for current pagemap name and cloned itself when
-			// opened in new tab.
-			// This will have to be done differently - as implementation detail of PageManager
-		}
-	}
 
 	/** The resource references used for new window/tab support */
 	private static ResourceReference cookiesResource = new PackageResourceReference(WebPage.class,
@@ -130,10 +93,10 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 * Note that nothing is done with the page parameters argument. This constructor is provided so
 	 * that tools such as IDEs will include it their list of suggested constructors for derived
 	 * classes.
-	 *
+	 * 
 	 * Please call this constructor (or the one with the pagemap) if you want to remember the
 	 * pageparameters {@link #getPageParameters()}. So that they are reused for stateless links.
-	 *
+	 * 
 	 * @param parameters
 	 *            Wrapped query string parameters.
 	 */
@@ -148,7 +111,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 * markup language, such as VXML, would require the creation of a different Page subclass in an
 	 * appropriate package under org.apache.wicket.markup. To support VXML (voice markup), one might
 	 * create the package org.apache.wicket.markup.vxml and a subclass of Page called VoicePage.
-	 *
+	 * 
 	 * @return Markup type for HTML
 	 */
 	@Override
@@ -158,23 +121,11 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.INewBrowserWindowListener#onNewBrowserWindow()
-	 */
-	public void onNewBrowserWindow()
-	{
-		// TODO: Needs to be implementation detail of PageManager
-	}
-
-	/**
 	 * Common code executed by constructors.
 	 */
 	private void commonInit()
 	{
-		// if automatic multi window support is on, add a page checker instance
-		if (getApplication().getPageSettings().getAutomaticMultiWindowSupport())
-		{
-			add(new PageMapChecker(this));
-		}
+		// so far a noop
 	}
 
 	/**
@@ -193,19 +144,19 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	}
 
 	/**
-	 * Subclasses can override this to set there headers when the Page is being served.
-	 * By default these headers are set:
-	 *
+	 * Subclasses can override this to set there headers when the Page is being served. By default
+	 * these headers are set:
+	 * 
 	 * <pre>
 	 * response.setHeader(&quot;Date&quot;, &quot;[now]&quot;);
 	 * response.setHeader(&quot;Expires&quot;, &quot;[0]&quot;);
 	 * response.setHeader(&quot;Pragma&quot;, &quot;no-cache&quot;);
 	 * response.setHeader(&quot;Cache-Control&quot;, &quot;no-cache&quot;);
 	 * </pre>
-	 *
+	 * 
 	 * So if a Page wants to control this or doesn't want to set this info it should override this
 	 * method and don't call super.
-	 *
+	 * 
 	 * @param response
 	 *            The WebResponse where set(Date)Header can be called on.
 	 */
@@ -215,7 +166,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	}
 
 	/**
-	 *
+	 * 
 	 * @see org.apache.wicket.Component#onAfterRender()
 	 */
 	@Override
@@ -319,7 +270,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 
 	/**
 	 * Creates and returns a bookmarkable link to this application's home page.
-	 *
+	 * 
 	 * @param id
 	 *            Name of link
 	 * @return Link to home page for this application
