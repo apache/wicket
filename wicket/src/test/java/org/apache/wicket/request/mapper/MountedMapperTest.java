@@ -451,24 +451,6 @@ public class MountedMapperTest extends AbstractMapperTest
 	/**
 	 * 
 	 */
-	public void testConstruct2()
-	{
-		try
-		{
-			IRequestMapper e = new MountedMapper("/", MockPage.class);
-
-			// should never get here
-			assertFalse(true);
-		}
-		catch (IllegalArgumentException e)
-		{
-			// ok
-		}
-	}
-
-	/**
-	 * 
-	 */
 	public void testPlaceholderDecode1()
 	{
 		Url url = Url.parse("some/p1/path/p2");
