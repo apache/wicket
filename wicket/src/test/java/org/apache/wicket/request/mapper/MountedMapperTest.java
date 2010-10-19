@@ -31,9 +31,6 @@ import org.apache.wicket.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
-import org.apache.wicket.request.mapper.IMapperContext;
-import org.apache.wicket.request.mapper.MountedMapper;
-import org.apache.wicket.request.mapper.StalePageException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
@@ -449,7 +446,16 @@ public class MountedMapperTest extends AbstractMapperTest
 	}
 
 	/**
-	 * 
+	 * Overriding mounting on '/' (see HomePageMapper) should be possible
+	 */
+	public void testConstruct2()
+	{
+		IRequestMapper homePageMapper = new MountedMapper("/", MockPage.class);
+		assertNotNull(homePageMapper);
+	}
+
+	/**
+	 *
 	 */
 	public void testPlaceholderDecode1()
 	{
