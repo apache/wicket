@@ -131,13 +131,13 @@ public class AsynchronousDataStore implements IDataStore
 			String key = getKey(sessionId, id);
 			if (key != null)
 			{
-				entryMap.remove(key);
+				Entry entry = entryMap.remove(key);
+				if (entry != null)
+				{
+					entries.remove(entry);
+				}
 			}
-			Entry entry = entryMap.get(key);
-			if (entry != null)
-			{
-				entries.remove(entry);
-			}
+
 		}
 		dataStore.removeData(sessionId, id);
 	}
