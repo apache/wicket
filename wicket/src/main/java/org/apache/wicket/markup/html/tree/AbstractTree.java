@@ -19,7 +19,6 @@ package org.apache.wicket.markup.html.tree;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -30,7 +29,6 @@ import java.util.Set;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -194,6 +192,16 @@ public abstract class AbstractTree extends Panel
 		protected final boolean isRenderChildren()
 		{
 			return getFlag(FLAG_RENDER_CHILDREN);
+		}
+
+		/**
+		 * Whether the TreeItem has any child TreeItems
+		 * 
+		 * @return true if there are one or more child TreeItems; false otherwise
+		 */
+		public boolean hasChildTreeItems()
+		{
+			return children != null && !children.isEmpty();
 		}
 
 		/**
@@ -808,22 +816,17 @@ public abstract class AbstractTree extends Panel
 		}
 
 		// get the parent node of inserted nodes
-		TreeNode parentNode = (TreeNode)e.getTreePath().getLastPathComponent();
+		Object parentNode = e.getTreePath().getLastPathComponent();
+		TreeItem parentItem = nodeToItemMap.get(parentNode);
 
-		if (isNodeVisible(parentNode))
+
+		if (parentItem != null && isNodeVisible(parentNode))
 		{
 			// parentNode was a leaf before this insertion event only if every one of
 			// its current children is in the event's list of children
-			boolean wasLeaf = true;
 			List<?> eventChildren = Arrays.asList(e.getChildren());
-			Enumeration<?> treeChildren = parentNode.children();
-			while (wasLeaf && treeChildren.hasMoreElements())
-			{
-				if (!eventChildren.contains(treeChildren.nextElement()))
-				{
-					wasLeaf = false;
-				}
-			}
+			List<TreeItem> itemChildren = parentItem.getChildren();
+			boolean wasLeaf = itemChildren == null || eventChildren.containsAll(itemChildren);
 
 			if (wasLeaf)
 			{
@@ -837,37 +840,29 @@ public abstract class AbstractTree extends Panel
 			{
 				if (isNodeExpanded(parentNode))
 				{
-					TreeItem parentItem = nodeToItemMap.get(parentNode);
-					if (parentItem != null)
+					final int[] childIndices = e.getChildIndices();
+					for (int i = 0; i < eventChildren.size(); ++i)
 					{
-						if (parentItem.getChildren() == null || parentItem.getChildren().isEmpty())
+						Object node = eventChildren.get(i);
+						int index = childIndices[i];
+						TreeItem item = newTreeItem(parentItem, node, parentItem.getLevel() + 1);
+						itemContainer.add(item);
+
+						if (itemChildren != null)
 						{
-							invalidateNode(parentNode, true);
+							itemChildren.add(index, item);
+							markTheLastButOneChildDirty(parentItem, item);
 						}
 
-						for (int i = 0; i < e.getChildren().length; ++i)
+						if (!dirtyItems.contains(item))
 						{
-							Object node = e.getChildren()[i];
-							int index = e.getChildIndices()[i];
-							TreeItem item = newTreeItem(parentItem, node, parentItem.getLevel() + 1);
-							itemContainer.add(item);
+							dirtyItems.add(item);
+						}
 
-							if (parentItem.getChildren() != null)
-							{
-								parentItem.getChildren().add(index, item);
-								markTheLastButOneChildDirty(parentItem, item);
-							}
-
-							if (!dirtyItems.contains(item))
-							{
-								dirtyItems.add(item);
-							}
-
-							if (!dirtyItemsCreateDOM.contains(item) &&
-								!item.hasParentWithChildrenMarkedToRecreation())
-							{
-								dirtyItemsCreateDOM.add(item);
-							}
+						if (!dirtyItemsCreateDOM.contains(item) &&
+							!item.hasParentWithChildrenMarkedToRecreation())
+						{
+							dirtyItemsCreateDOM.add(item);
 						}
 					}
 				}
@@ -886,17 +881,11 @@ public abstract class AbstractTree extends Panel
 		}
 
 		// get the parent node of deleted nodes
-		TreeNode parentNode = (TreeNode)removalEvent.getTreePath().getLastPathComponent();
+		Object parentNode = removalEvent.getTreePath().getLastPathComponent();
 		TreeItem parentItem = nodeToItemMap.get(parentNode);
 
 		if (parentItem != null && isNodeVisible(parentNode))
 		{
-			if (parentNode.getChildCount() == 0)
-			{
-				// rebuild parent's icon to show it no longer has children
-				invalidateNode(parentNode, true);
-			}
-
 			if (isNodeExpanded(parentNode))
 			{
 				// deleted nodes were visible; we need to delete their TreeItems
@@ -922,6 +911,12 @@ public abstract class AbstractTree extends Panel
 						getTreeState().selectNode(itemToDelete.getModelObject(), false);
 					}
 				}
+			}
+
+			if (!parentItem.hasChildTreeItems())
+			{
+				// rebuild parent's icon to show it no longer has children
+				invalidateNode(parentNode, true);
 			}
 		}
 	}
