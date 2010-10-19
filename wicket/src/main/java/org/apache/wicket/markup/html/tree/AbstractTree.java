@@ -870,30 +870,30 @@ public abstract class AbstractTree extends Panel
 					{
 						Object node = eventChildren.get(i);
 						int index = childIndices[i];
-							TreeItem item = newTreeItem(parentItem, node, parentItem.getLevel() + 1);
-							itemContainer.add(item);
+						TreeItem item = newTreeItem(parentItem, node, parentItem.getLevel() + 1);
+						itemContainer.add(item);
 
 						if (itemChildren != null)
-							{
+						{
 							itemChildren.add(index, item);
-								markTheLastButOneChildDirty(parentItem, item);
-							}
+							markTheLastButOneChildDirty(parentItem, item);
+						}
 
-							if (!dirtyItems.contains(item))
-							{
-								dirtyItems.add(item);
-							}
+						if (!dirtyItems.contains(item))
+						{
+							dirtyItems.add(item);
+						}
 
-							if (!dirtyItemsCreateDOM.contains(item) &&
-								!item.hasParentWithChildrenMarkedToRecreation())
-							{
-								dirtyItemsCreateDOM.add(item);
-							}
+						if (!dirtyItemsCreateDOM.contains(item) &&
+							!item.hasParentWithChildrenMarkedToRecreation())
+						{
+							dirtyItemsCreateDOM.add(item);
 						}
 					}
 				}
 			}
 		}
+	}
 
 	/**
 	 * @see javax.swing.event.TreeModelListener#treeNodesRemoved(javax.swing.event.TreeModelEvent)
@@ -942,9 +942,8 @@ public abstract class AbstractTree extends Panel
 			{
 				// rebuild parent's icon to show it no longer has children
 				invalidateNode(parentNode, true);
+			}
 		}
-
-	}
 	}
 
 	/**
