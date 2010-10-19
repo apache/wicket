@@ -39,8 +39,6 @@ import org.apache.wicket.util.lang.PackageName;
 public class PackageMapperTest extends AbstractMapperTest
 {
 
-	private static final String MOUNT_PATH = "mountPath";
-
 	/**
 	 * Construct.
 	 */
@@ -48,8 +46,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	{
 	}
 
-	private final PackageMapper encoder = new PackageMapper(MOUNT_PATH,
-		PackageName.forClass(MockPage.class))
+	private final PackageMapper encoder = new PackageMapper(PackageName.forClass(MockPage.class))
 	{
 		@Override
 		protected IMapperContext getContext()
@@ -65,7 +62,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	 */
 	public void testDecode1()
 	{
-		Url url = Url.parse(MOUNT_PATH + "/" + PAGE_CLASS_NAME);
+		Url url = Url.parse(PAGE_CLASS_NAME);
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertTrue(handler instanceof RenderPageRequestHandler);
@@ -80,7 +77,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	 */
 	public void testDecode2()
 	{
-		Url url = Url.parse(MOUNT_PATH + "/" + PAGE_CLASS_NAME + "/indexed1?a=b&b=c");
+		Url url = Url.parse(PAGE_CLASS_NAME + "/indexed1?a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertTrue(handler instanceof RenderPageRequestHandler);
@@ -101,7 +98,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	 */
 	public void testDecode3()
 	{
-		Url url = Url.parse(MOUNT_PATH + "/" + PAGE_CLASS_NAME + "?15");
+		Url url = Url.parse(PAGE_CLASS_NAME + "?15");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertTrue(handler instanceof RenderPageRequestHandler);
@@ -114,7 +111,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	 */
 	public void testDecode4()
 	{
-		Url url = Url.parse(MOUNT_PATH + "/" + PAGE_CLASS_NAME + "/i1/i2?15&a=b&b=c");
+		Url url = Url.parse(PAGE_CLASS_NAME + "/i1/i2?15&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertTrue(handler instanceof RenderPageRequestHandler);
@@ -136,7 +133,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	 */
 	public void testDecode5()
 	{
-		Url url = Url.parse(MOUNT_PATH + "/" + PAGE_CLASS_NAME + "?15-ILinkListener-foo-bar");
+		Url url = Url.parse(PAGE_CLASS_NAME + "?15-ILinkListener-foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
@@ -156,8 +153,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	 */
 	public void testDecode6()
 	{
-		Url url = Url.parse(MOUNT_PATH + "/" + PAGE_CLASS_NAME +
-			"/i1/i2?15-ILinkListener-foo-bar&a=b&b=c");
+		Url url = Url.parse(PAGE_CLASS_NAME + "/i1/i2?15-ILinkListener-foo-bar&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
@@ -184,7 +180,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	 */
 	public void testDecode7()
 	{
-		Url url = Url.parse(MOUNT_PATH + "/" + PAGE_CLASS_NAME + "?15-ILinkListener.4-foo-bar");
+		Url url = Url.parse(PAGE_CLASS_NAME + "?15-ILinkListener.4-foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertTrue(handler instanceof ListenerInterfaceRequestHandler);
@@ -204,8 +200,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	 */
 	public void testDecode8()
 	{
-		Url url = Url.parse(MOUNT_PATH + "/" + PAGE_CLASS_NAME +
-			"/i1/i2?15-5.ILinkListener-foo-bar&a=b&b=c");
+		Url url = Url.parse(PAGE_CLASS_NAME + "/i1/i2?15-5.ILinkListener-foo-bar&a=b&b=c");
 
 		context.setNextPageRenderCount(5);
 
@@ -223,8 +218,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	 */
 	public void testDecode9()
 	{
-		Url url = Url.parse(MOUNT_PATH + "/" + PAGE_CLASS_NAME +
-			"/i1/i2?15-5.ILinkListener-foo-bar&a=b&b=c");
+		Url url = Url.parse(PAGE_CLASS_NAME + "/i1/i2?15-5.ILinkListener-foo-bar&a=b&b=c");
 
 		context.setNextPageRenderCount(6);
 
@@ -249,7 +243,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	public void testDecode10()
 	{
 		// use String.class but any other non-Page will do the job as well
-		Url url = Url.parse(MOUNT_PATH + "/" + String.class.getSimpleName());
+		Url url = Url.parse(String.class.getSimpleName());
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		assertNull("A non-page class should not create a request handler!", handler);
@@ -264,7 +258,7 @@ public class PackageMapperTest extends AbstractMapperTest
 		provider.setPageSource(context);
 		IRequestHandler handler = new BookmarkablePageRequestHandler(provider);
 		Url url = encoder.mapHandler(handler);
-		assertEquals(MOUNT_PATH + "/" + PAGE_CLASS_NAME, url.toString());
+		assertEquals(PAGE_CLASS_NAME, url.toString());
 	}
 
 	/**
@@ -281,7 +275,7 @@ public class PackageMapperTest extends AbstractMapperTest
 		provider.setPageSource(context);
 		IRequestHandler handler = new BookmarkablePageRequestHandler(provider);
 		Url url = encoder.mapHandler(handler);
-		assertEquals(MOUNT_PATH + "/" + PAGE_CLASS_NAME + "/i1/i2?a=b&b=c", url.toString());
+		assertEquals(PAGE_CLASS_NAME + "/i1/i2?a=b&b=c", url.toString());
 	}
 
 	/**
@@ -300,7 +294,7 @@ public class PackageMapperTest extends AbstractMapperTest
 		IRequestHandler handler = new BookmarkablePageRequestHandler(provider);
 		Url url = encoder.mapHandler(handler);
 
-		assertEquals(MOUNT_PATH + "/" + PAGE_CLASS_NAME + "/i1/i2?a=b&b=c", url.toString());
+		assertEquals(PAGE_CLASS_NAME + "/i1/i2?a=b&b=c", url.toString());
 	}
 
 	/**
@@ -319,7 +313,7 @@ public class PackageMapperTest extends AbstractMapperTest
 		IRequestHandler handler = new RenderPageRequestHandler(provider);
 		Url url = encoder.mapHandler(handler);
 
-		assertEquals(MOUNT_PATH + "/" + PAGE_CLASS_NAME + "/i1/i2?15&a=b&b=c", url.toString());
+		assertEquals(PAGE_CLASS_NAME + "/i1/i2?15&a=b&b=c", url.toString());
 	}
 
 	/**
@@ -368,8 +362,7 @@ public class PackageMapperTest extends AbstractMapperTest
 
 		Url url = encoder.mapHandler(handler);
 
-		assertEquals(MOUNT_PATH + "/" + PAGE_CLASS_NAME +
-			"/i1/i2?15-0.ILinkListener-foo-bar&a=b&b=c", url.toString());
+		assertEquals(PAGE_CLASS_NAME + "/i1/i2?15-0.ILinkListener-foo-bar&a=b&b=c", url.toString());
 	}
 
 	/**
@@ -395,8 +388,8 @@ public class PackageMapperTest extends AbstractMapperTest
 
 		Url url = encoder.mapHandler(handler);
 
-		assertEquals(MOUNT_PATH + "/" + PAGE_CLASS_NAME +
-			"/i1/i2?15-0.ILinkListener.4-foo-bar&a=b&b=c", url.toString());
+		assertEquals(PAGE_CLASS_NAME + "/i1/i2?15-0.ILinkListener.4-foo-bar&a=b&b=c",
+			url.toString());
 	}
 
 	/**
@@ -414,6 +407,6 @@ public class PackageMapperTest extends AbstractMapperTest
 
 		Url url = encoder.mapHandler(handler);
 
-		assertEquals(MOUNT_PATH + "/" + PAGE_CLASS_NAME, url.toString());
+		assertEquals(PAGE_CLASS_NAME, url.toString());
 	}
 }

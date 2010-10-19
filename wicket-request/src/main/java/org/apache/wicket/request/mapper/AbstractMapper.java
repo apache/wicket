@@ -26,7 +26,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
-public abstract class AbstractMapper
+public abstract class AbstractMapper implements IRequestMapper
 {
 
 	/**

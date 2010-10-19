@@ -24,6 +24,7 @@ import org.apache.wicket.protocol.https.HttpsConfig;
 import org.apache.wicket.protocol.https.HttpsMapper;
 import org.apache.wicket.request.mapper.MountedMapper;
 import org.apache.wicket.request.mapper.PackageMapper;
+import org.apache.wicket.request.mapper.mount.MountMapper;
 import org.apache.wicket.util.lang.PackageName;
 
 /**
@@ -58,7 +59,8 @@ public class RequestMapperApplication extends WicketExampleApplication
 		getRootRequestMapperAsCompound().add(new MountedMapper("secured", HttpsPage.class));
 
 		getRootRequestMapperAsCompound().add(
-			new PackageMapper("pMount", PackageName.forClass(PackageMountedPage.class)));
+			new MountMapper("pMount", new PackageMapper(
+				PackageName.forClass(PackageMountedPage.class))));
 
 		setRootRequestMapper(new HttpsMapper(getRootRequestMapper(), new HttpsConfig()));
 	}

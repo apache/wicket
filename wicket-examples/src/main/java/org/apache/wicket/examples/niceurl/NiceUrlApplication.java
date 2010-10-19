@@ -20,6 +20,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.examples.niceurl.mounted.Page3;
 import org.apache.wicket.request.mapper.PackageMapper;
+import org.apache.wicket.request.mapper.mount.MountMapper;
 import org.apache.wicket.util.lang.PackageName;
 
 
@@ -76,7 +77,8 @@ public class NiceUrlApplication extends WicketExampleApplication
 		// that any refactoring (like a package rename) will automatically
 		// be applied here.
 		getRootRequestMapperAsCompound().add(
-			new PackageMapper("/my/mounted/package", PackageName.forClass(Page3.class)));
+			new MountMapper("/my/mounted/package", new PackageMapper(
+				PackageName.forClass(Page3.class))));
 	}
 	/**
 	 * Sets up a request coding strategy that uses case-insensitive mounts

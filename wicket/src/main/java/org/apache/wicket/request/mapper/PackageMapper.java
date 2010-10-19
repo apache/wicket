@@ -20,6 +20,7 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
+import org.apache.wicket.request.mapper.mount.MountMapper;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
@@ -27,27 +28,33 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.PackageName;
 
 /**
- * A request mapper that mounts all bookmarkable pages at a given package.
+ * A request mapper that mounts all bookmarkable pages in a given package.
+ * <p>
+ * To mount this mapper onto a path use the {@link MountMapper}, ex:
+ * 
+ * <pre>
+ * new MountMapper(&quot;/my/path&quot;, new packageMapper(PackageName.forClass(MyPage.class)));
+ * </pre>
+ * 
+ * will result in urls like {@code /my/path/MyPage}
+ * </p>
  * 
  * <pre>
  *  Page Class - Render (BookmarkablePageRequestHandler)
- *  /mountPath/MyPage
+ *  /MyPage
  *  (will redirect to hybrid alternative if page is not stateless)
  * 
  *  Page Instance - Render Hybrid (RenderPageRequestHandler for pages that were created using bookmarkable URLs)
- *  /mountPath/MyPage?2
+ *  /MyPage?2
  * 
  *  Page Instance - Bookmarkable Listener (BookmarkableListenerInterfaceRequestHandler)
- *  /mountPath/MyPage?2-click-foo-bar-baz
- *  /mountPath/MyPage?2-click.1-foo-bar-baz (1 is behavior index)
+ *  /MyPage?2-click-foo-bar-baz
+ *  /MyPage?2-click.1-foo-bar-baz (1 is behavior index)
  *  (these will redirect to hybrid if page is not stateless)
  * </pre>
  */
 public class PackageMapper extends AbstractBookmarkableMapper
 {
-	/** the path to mount the bookmarkable page classes on */
-	private final String mountPath;
-
 	/**
 	 * the name of the package for which all bookmarkable pages should be mounted
 	 */
@@ -59,29 +66,25 @@ public class PackageMapper extends AbstractBookmarkableMapper
 	/**
 	 * Construct.
 	 * 
-	 * @param mountPath
 	 * @param packageName
 	 */
-	public PackageMapper(final String mountPath, final PackageName packageName)
+	public PackageMapper(final PackageName packageName)
 	{
-		this(mountPath, packageName, new PageParametersEncoder());
+		this(packageName, new PageParametersEncoder());
 	}
 
 	/**
 	 * Construct.
 	 * 
-	 * @param mountPath
 	 * @param packageName
 	 * @param pageParametersEncoder
 	 */
-	public PackageMapper(final String mountPath, final PackageName packageName,
+	public PackageMapper(final PackageName packageName,
 		final IPageParametersEncoder pageParametersEncoder)
 	{
-		Args.notNull(mountPath, "mountPath");
 		Args.notNull(packageName, "packageName");
 		Args.notNull(pageParametersEncoder, "pageParametersEncoder");
 
-		this.mountPath = mountPath;
 		this.packageName = packageName;
 		this.pageParametersEncoder = pageParametersEncoder;
 	}
@@ -96,11 +99,8 @@ public class PackageMapper extends AbstractBookmarkableMapper
 		if (PackageName.forClass(pageClass).equals(packageName))
 		{
 			Url url = new Url();
-			url.getSegments().add(mountPath);
 			url.getSegments().add(pageClass.getSimpleName());
-
 			encodePageComponentInfo(url, info.getPageComponentInfo());
-
 			return encodePageParameters(url, info.getPageParameters(), pageParametersEncoder);
 		}
 
@@ -114,20 +114,20 @@ public class PackageMapper extends AbstractBookmarkableMapper
 	protected UrlInfo parseRequest(Request request)
 	{
 		Url url = request.getUrl();
-		if (url.getSegments().size() >= 1 && urlStartsWith(url, mountPath))
+		if (url.getSegments().size() >= 1)
 		{
 			// try to extract page and component information from URL
 			PageComponentInfo info = getPageComponentInfo(url);
 
 			// load the page class
-			String className = url.getSegments().get(1);
+			String className = url.getSegments().get(0);
 			String fullyQualifiedClassName = packageName.getName() + '.' + className;
 			Class<? extends IRequestablePage> pageClass = getPageClass(fullyQualifiedClassName);
 
 			if (pageClass != null && IRequestablePage.class.isAssignableFrom(pageClass))
 			{
 				// extract the PageParameters from URL if there are any
-				PageParameters pageParameters = extractPageParameters(request, 2,
+				PageParameters pageParameters = extractPageParameters(request, 1,
 					pageParametersEncoder);
 
 				return new UrlInfo(info, pageClass, pageParameters);
