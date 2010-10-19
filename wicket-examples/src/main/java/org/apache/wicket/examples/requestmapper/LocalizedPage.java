@@ -17,7 +17,6 @@
 package org.apache.wicket.examples.requestmapper;
 
 import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.examples.ajax.builtin.Index;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.ResourceModel;
@@ -36,7 +35,7 @@ public class LocalizedPage extends WicketExamplePage
 	 */
 	public LocalizedPage(final PageParameters pageParameters)
 	{
-		add(new BookmarkablePageLink<Void>("back", Index.class).setAutoEnable(true));
+		add(new BookmarkablePageLink<Void>("back", RequestMapperHomePage.class).setAutoEnable(true));
 
 		add(new Label("localizedLabel", new ResourceModel("localizedLabel")));
 	}

@@ -17,8 +17,6 @@
 package org.apache.wicket.examples.requestmapper;
 
 import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.examples.ajax.builtin.Index;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
@@ -36,7 +34,5 @@ public class RequestMapperHomePage extends WicketExamplePage
 	public RequestMapperHomePage(final PageParameters pageParameters)
 	{
 		super(pageParameters);
-
-		add(new BookmarkablePageLink<Void>("back", Index.class).setAutoEnable(true));
 	}
 }
