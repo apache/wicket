@@ -70,14 +70,17 @@ public class LocaleFirstMapper extends AbstractComponentMapper
 			if (!Strings.isEmpty(localeAsString))
 			{
 				Locale locale = LocaleHelper.parseLocale(localeAsString);
-				Session.get().setLocale(locale);
+				if (locale != null)
+				{
+					Session.get().setLocale(locale);
 
-				// now that we have proccessed the first segment we need to strip from the url
-				Url url = request.getUrl();
-				url.getSegments().remove(0);
+					// now that we have proccessed the first segment we need to strip from the url
+					Url url = request.getUrl();
+					url.getSegments().remove(0);
 
-				// create a request based on the new url
-				request = request.cloneWithUrl(url);
+					// create a request based on the new url
+					request = request.cloneWithUrl(url);
+				}
 			}
 		}
 
