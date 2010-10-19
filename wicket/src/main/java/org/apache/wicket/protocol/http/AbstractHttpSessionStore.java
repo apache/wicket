@@ -137,7 +137,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 		onBind(request, newSession);
 
 		WebRequest webRequest = toWebRequest(request);
-		HttpSession httpSession = getHttpSession(webRequest);
+		HttpSession httpSession = getHttpSession(webRequest, true);
 
 		// register an unbinding listener for cleaning up
 		String applicationKey = application.getApplicationKey();
@@ -297,7 +297,26 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	 */
 	protected final HttpSession getHttpSession(WebRequest request)
 	{
-		return request.getHttpServletRequest().getSession(false);
+		return getHttpSession(request, false);
+	}
+
+	/**
+	 * Gets the underlying HttpSession object. If {@code create} is set to true a new instance of
+	 * http session will be created if one does not already exist.
+	 * <p>
+	 * WARNING: it is a bad idea to depend on the http session object directly. Please use the
+	 * classes and methods that are exposed by Wicket instead. Send an email to the mailing list in
+	 * case it is not clear how to do things or you think you miss functionality which causes you to
+	 * depend on this directly.
+	 * </p>
+	 * 
+	 * @param request
+	 * 
+	 * @return The underlying HttpSession object, or {@code null}
+	 */
+	protected final HttpSession getHttpSession(WebRequest request, boolean create)
+	{
+		return request.getHttpServletRequest().getSession(create);
 	}
 
 	/**
