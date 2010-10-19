@@ -18,6 +18,7 @@ package org.apache.wicket.examples.requestmapper;
 
 import java.util.List;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
@@ -55,9 +56,20 @@ public class CustomHomeMapper extends AbstractComponentMapper
 	 */
 	public Url mapHandler(IRequestHandler requestHandler)
 	{
-		String locale = Session.get().getLocale().toString();
-		Url homeUrl = new Url();
-		homeUrl.getSegments().add(0, locale);
+		Url homeUrl = null;
+
+		if (requestHandler instanceof RenderPageRequestHandler)
+		{
+			RenderPageRequestHandler pageRequestHandler = (RenderPageRequestHandler)requestHandler;
+
+			if (pageRequestHandler.getPageClass().equals(Application.get().getHomePage()))
+			{
+				String locale = Session.get().getLocale().toString();
+				homeUrl = new Url();
+				homeUrl.getSegments().add(0, locale);
+			}
+		}
+
 		return homeUrl;
 	}
 
