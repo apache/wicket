@@ -356,7 +356,6 @@ public class BaseWicketTester
 	private void createNewSession()
 	{
 		session = Session.get();
-		application.getSessionStore().bind(null, session);
 		ThreadContext.setSession(session);
 	}
 

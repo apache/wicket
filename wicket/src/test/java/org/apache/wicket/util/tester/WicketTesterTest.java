@@ -46,7 +46,6 @@ import org.apache.wicket.util.tester.apps_1.SuccessPage;
 import org.apache.wicket.util.tester.apps_1.ViewBook;
 import org.apache.wicket.util.tester.apps_6.LinkPage;
 import org.apache.wicket.util.tester.apps_6.ResultPage;
-import org.junit.Ignore;
 
 /**
  * 
@@ -692,7 +691,6 @@ public class WicketTesterTest extends TestCase
 	/**
 	 * Test for WICKET-3123
 	 */
-	@Ignore("Ignored until WICKET-3123 is fixed")
 	public void testSessionBinding()
 	{
 		Session session = tester.getSession();
