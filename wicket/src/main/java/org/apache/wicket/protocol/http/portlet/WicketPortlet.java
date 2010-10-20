@@ -356,8 +356,9 @@ public class WicketPortlet extends GenericPortlet
 		{
 			properties = new Properties();
 		}
-		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(
-			WICKET_PORTLET_PROPERTIES);
+		InputStream is = Thread.currentThread()
+			.getContextClassLoader()
+			.getResourceAsStream(WICKET_PORTLET_PROPERTIES);
 		if (is != null)
 		{
 			try
@@ -673,7 +674,7 @@ public class WicketPortlet extends GenericPortlet
 						{
 							previousURL = wicketURL;
 							wicketURL = redirectLocation;
-							((RenderResponse)response).reset();
+							response.reset();
 							responseState.clear();
 							continue;
 						}
