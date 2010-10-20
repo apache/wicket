@@ -2795,10 +2795,10 @@ public abstract class Component
 
 	/**
 	 * Called to indicate that a component has been rendered. This method should only very rarely be
-	 * called at all. One usage is in ImageMap, which renders its link children its own special way
-	 * (without calling render() on them). If ImageMap did not call rendered() to indicate that its
-	 * child components were actually rendered, the framework would think they had never been
-	 * rendered, and in development mode this would result in a runtime exception.
+	 * called at all. Some components may render its children without calling render() on them.
+	 * These components need to call rendered() to indicate that its child components were actually
+	 * rendered, the framework would think they had never been rendered, and in development mode
+	 * this would result in a runtime exception.
 	 */
 	public final void rendered()
 	{
