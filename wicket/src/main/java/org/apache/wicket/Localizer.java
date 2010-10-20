@@ -498,6 +498,7 @@ public class Localizer
 		{
 			// locale is guaranteed to be != null
 			cacheKey += "-" + locale.toString();
+			cacheKey += "-" + style;
 		}
 
 		return cacheKey;
