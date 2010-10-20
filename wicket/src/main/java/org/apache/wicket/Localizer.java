@@ -445,8 +445,8 @@ public class Localizer
 		else
 		{
 			Session session = Session.get();
-			cacheKey += "-" + session.getStyle();
 			cacheKey += "-" + session.getLocale().toString();
+			cacheKey += "-" + session.getStyle();
 		}
 
 		return cacheKey;
