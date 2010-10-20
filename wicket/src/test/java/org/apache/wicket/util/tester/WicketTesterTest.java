@@ -46,6 +46,7 @@ import org.apache.wicket.util.tester.apps_1.SuccessPage;
 import org.apache.wicket.util.tester.apps_1.ViewBook;
 import org.apache.wicket.util.tester.apps_6.LinkPage;
 import org.apache.wicket.util.tester.apps_6.ResultPage;
+import org.junit.Ignore;
 
 /**
  * 
@@ -686,6 +687,18 @@ public class WicketTesterTest extends TestCase
 		tester.startPage(CreateBook.class);
 		assertEquals("value", tester.getLastResponse().getCookies().iterator().next().getValue(),
 			"value");
+	}
+
+	/**
+	 * Test for WICKET-3123
+	 */
+	@Ignore("Ignored until WICKET-3123 is fixed")
+	public void testSessionBinding()
+	{
+		Session session = tester.getSession();
+		assertTrue(session.isTemporary());
+		session.bind();
+		assertFalse(session.isTemporary());
 	}
 
 	private void setTextFieldAndAssertSubmit(boolean expected)
