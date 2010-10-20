@@ -48,6 +48,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -1600,7 +1601,9 @@ public class BaseWicketTester
 				" Component: " + component + "; Event: " + event);
 		}
 
-		executeBehavior(WicketTesterHelper.findAjaxEventBehavior(component, event));
+		AjaxEventBehavior ajaxEventBehavior = WicketTesterHelper.findAjaxEventBehavior(component,
+			event);
+		executeBehavior(ajaxEventBehavior);
 	}
 
 	/**
@@ -1662,13 +1665,7 @@ public class BaseWicketTester
 
 		serializeFormToRequest(form);
 
-		Url url = Url.parse(behavior.getCallbackUrl().toString(),
-			Charset.forName(request.getCharacterEncoding()));
-		transform(url);
-		request.addHeader("Wicket-Ajax-BaseURL", url.toString());
-		request.addHeader("Wicket-Ajax", "true");
-		request.setUrl(url);
-		processRequest(request, null);
+		executeBehavior(behavior);
 	}
 
 	/**
