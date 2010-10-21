@@ -65,9 +65,11 @@ import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
+import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.cycle.RequestCycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycleContext;
+import org.apache.wicket.request.cycle.RequestCycleListenerCollection;
 import org.apache.wicket.request.mapper.CompoundRequestMapper;
 import org.apache.wicket.request.mapper.ICompoundRequestMapper;
 import org.apache.wicket.request.mapper.IMapperContext;
@@ -170,7 +172,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	/** */
 	private List<IComponentOnAfterRenderListener> componentOnAfterRenderListeners;
 
-	private final List<IRequestCycleListener> requestCycleListeners = new ArrayList<IRequestCycleListener>();
+	private final RequestCycleListenerCollection requestCycleListeners = new RequestCycleListenerCollection();
 
 	/** root mapper */
 	private IRequestMapper rootRequestMapper;
@@ -1165,9 +1167,9 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * @return the unmodifiable request list of {@link IRequestCycleListener}s in this application
 	 */
-	public List<IRequestCycleListener> getRequestCycleListeners()
+	public RequestCycleListenerCollection getRequestCycleListeners()
 	{
-		return Collections.unmodifiableList(requestCycleListeners);
+		return requestCycleListeners;
 	}
 
 
@@ -1493,7 +1495,8 @@ public abstract class Application implements UnboundListener, IEventSink
 			getRootRequestMapper(), newExceptionMapper());
 
 		RequestCycle requestCycle = getRequestCycleProvider().get(context);
-		requestCycle.register(new RequestCycle.DetachCallback()
+		requestCycle.getListeners().add(requestCycleListeners);
+		requestCycle.getListeners().add(new AbstractRequestCycleListener()
 		{
 			public void onDetach(RequestCycle requestCycle)
 			{

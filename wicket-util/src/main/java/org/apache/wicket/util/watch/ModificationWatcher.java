@@ -118,7 +118,7 @@ public class ModificationWatcher implements IModificationWatcher
 		else
 		{
 			// Add listener to existing entry
-			return entry.listeners.add(listener);
+			return !entry.listeners.add(listener);
 		}
 	}
 

@@ -26,7 +26,6 @@ import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.request.cycle.RequestCycle.IRequestCycleListener;
 import org.apache.wicket.resource.DummyApplication;
 
 /**
@@ -34,20 +33,21 @@ import org.apache.wicket.resource.DummyApplication;
  */
 public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 {
-	private int begins, ends, exceptions, exceptionsMapped, responses, detaches = 0;
 
-	private RequestCycle cycle;
+
+	private int begins, ends, exceptions, exceptionsMapped, responses, detaches,
+		detachesnotified = 0;
+
 	private IRequestHandler handler;
 
 	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		setupNewRequestCycle(false);
 		ThreadContext.setApplication(new DummyApplication());
 	}
 
-	private void setupNewRequestCycle(final boolean throwExceptionInRespond)
+	private RequestCycle newRequestCycle(final boolean throwExceptionInRespond)
 	{
 		final Response originalResponse = newResponse();
 		Request request = new MockWebRequest(Url.parse("http://wicket.apache.org"));
@@ -94,7 +94,15 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 		};
 		RequestCycleContext context = new RequestCycleContext(request, originalResponse,
 			requestMapper, exceptionMapper);
-		cycle = new RequestCycle(context);
+
+		RequestCycle cycle = new RequestCycle(context);
+
+		if (Application.exists())
+		{
+			cycle.getListeners().add(Application.get().getRequestCycleListeners());
+		}
+
+		return cycle;
 	}
 
 	/**
@@ -102,19 +110,22 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 	 */
 	public void testBasicOperations() throws Exception
 	{
-		Application.get().addRequestCycleListener(newIncrementingListener());
-		assertValues(0, 0, 0, 0, 0, 0);
+		Application.get().addRequestCycleListener(new IncrementingListener());
+
+		RequestCycle cycle = newRequestCycle(false);
+
+		assertValues(0, 0, 0, 0, 0, 0, 0);
 		/*
 		 * begins, ends, responses and detaches should increment by one because we have one listener
 		 * 
 		 * exceptions should not increment because none are thrown
 		 */
 		cycle.processRequestAndDetach();
-		assertValues(1, 1, 0, 0, 1, 1);
+		assertValues(1, 1, 0, 0, 1, 1, 1);
 
 		// TEST WITH TWO LISTENERS
-		setupNewRequestCycle(false);
-		cycle.register(newIncrementingListener());
+		cycle = newRequestCycle(false);
+		cycle.getListeners().add(new IncrementingListener());
 		/*
 		 * we now have two listeners (app and cycle)
 		 * 
@@ -125,11 +136,11 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 		 * responses and detaches should increment by one
 		 */
 		cycle.processRequestAndDetach();
-		assertValues(3, 3, 0, 0, 2, 2);
+		assertValues(3, 3, 0, 0, 2, 2, 3);
 
 		// TEST WITH TWO LISTENERS AND AN EXCEPTION DURING RESPONSE
-		setupNewRequestCycle(true);
-		cycle.register(newIncrementingListener());
+		cycle = newRequestCycle(true);
+		cycle.getListeners().add(new IncrementingListener());
 		/*
 		 * begins and ends should increment by two (once for each listener)
 		 * 
@@ -142,11 +153,35 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 		 * detaches should increment by one
 		 */
 		cycle.processRequestAndDetach();
-		assertValues(5, 5, 2, 1, 2, 3);
+		assertValues(5, 5, 2, 1, 2, 3, 5);
 	}
 
+	/**
+	 * @throws Exception
+	 */
+	public void testExceptionHandingInOnDetach() throws Exception
+	{
+		// this test is a little flaky because it depends on the ordering of listeners which is not
+		// guaranteed
+		RequestCycle cycle = newRequestCycle(false);
+		cycle.getListeners().add(new IncrementingListener());
+		cycle.getListeners().add(new IncrementingListener()
+		{
+			@Override
+			public void onDetach(final RequestCycle cycle)
+			{
+				super.onDetach(cycle);
+				throw new RuntimeException();
+			}
+		});
+		cycle.getListeners().add(new IncrementingListener());
+		cycle.processRequestAndDetach();
+		assertValues(3, 3, 0, 0, 1, 1, 3);
+	}
+
+
 	private void assertValues(int begins, int ends, int exceptions, int exceptionsMapped,
-		int responses, int detaches)
+		int responses, int detaches, int detachesnotified)
 	{
 		assertEquals(begins, this.begins);
 		assertEquals(ends, this.ends);
@@ -154,26 +189,31 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 		assertEquals(exceptionsMapped, this.exceptionsMapped);
 		assertEquals(responses, this.responses);
 		assertEquals(detaches, this.detaches);
+		assertEquals(detachesnotified, this.detachesnotified);
 	}
 
-	private IRequestCycleListener newIncrementingListener()
+	private class IncrementingListener implements IRequestCycleListener
 	{
-		return new IRequestCycleListener()
+		public void onException(final RequestCycle cycle, Exception ex)
 		{
-			public void onException(Exception ex)
-			{
-				exceptions++;
-			}
+			exceptions++;
+		}
 
-			public void onEndRequest()
-			{
-				ends++;
-			}
+		public void onEndRequest(final RequestCycle cycle)
+		{
+			ends++;
+		}
 
-			public void onBeginRequest()
-			{
-				begins++;
-			}
-		};
+		public void onBeginRequest(final RequestCycle cycle)
+		{
+			begins++;
+		}
+
+		public void onDetach(final RequestCycle cycle)
+		{
+			detachesnotified++;
+		}
 	}
+
+
 }
