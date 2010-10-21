@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.request.cycle;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.RequestHandlerStack;
@@ -27,7 +25,7 @@ import org.apache.wicket.request.Response;
  * 
  * @author Matej Knopp
  */
-public class RequestHandlerStackTest extends TestCase
+public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 {
 
 	/**
@@ -35,40 +33,6 @@ public class RequestHandlerStackTest extends TestCase
 	 */
 	public RequestHandlerStackTest()
 	{
-	}
-
-	private Response newResponse()
-	{
-		return new Response()
-		{
-			@Override
-			public void write(byte[] array)
-			{
-			}
-
-			@Override
-			public void write(CharSequence sequence)
-			{
-			}
-
-			@Override
-			public String encodeURL(CharSequence url)
-			{
-				return null;
-			}
-		};
-	}
-
-	private RequestHandlerStack newStack(Response response)
-	{
-		return new RequestHandlerStack(response)
-		{
-			@Override
-			protected RequestCycle getRequestCycle()
-			{
-				return null;
-			}
-		};
 	}
 
 	private boolean testFlag1;
@@ -268,7 +232,6 @@ public class RequestHandlerStackTest extends TestCase
 		assertTrue(detachedFlag4);
 	}
 
-
 	/**
 	 * 
 	 */
@@ -301,9 +264,9 @@ public class RequestHandlerStackTest extends TestCase
 				testFlag3 = false;
 				stack.scheduleRequestHandlerAfterCurrent(handler4);
 
-				// make sure that handler4's respond method is fired after this one ends
+				// make sure that handler4's respond method is fired after this
+				// one ends
 				testFlag4 = false;
-
 
 				// code must be be reached
 				testFlag3 = true;

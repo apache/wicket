@@ -66,6 +66,7 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.cycle.RequestCycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycleContext;
 import org.apache.wicket.request.mapper.CompoundRequestMapper;
 import org.apache.wicket.request.mapper.ICompoundRequestMapper;
@@ -168,6 +169,8 @@ public abstract class Application implements UnboundListener, IEventSink
 
 	/** */
 	private List<IComponentOnAfterRenderListener> componentOnAfterRenderListeners;
+
+	private final List<IRequestCycleListener> requestCycleListeners = new ArrayList<IRequestCycleListener>();
 
 	/** root mapper */
 	private IRequestMapper rootRequestMapper;
@@ -1148,6 +1151,25 @@ public abstract class Application implements UnboundListener, IEventSink
 			componentOnAfterRenderListeners.add(listener);
 		}
 	}
+
+	/**
+	 * Registers a listener to extend functionality in the {@link RequestCycle}.
+	 * 
+	 * @param listener
+	 */
+	public void addRequestCycleListener(IRequestCycleListener listener)
+	{
+		requestCycleListeners.add(listener);
+	}
+
+	/**
+	 * @return the unmodifiable request list of {@link IRequestCycleListener}s in this application
+	 */
+	public List<IRequestCycleListener> getRequestCycleListeners()
+	{
+		return Collections.unmodifiableList(requestCycleListeners);
+	}
+
 
 	/**
 	 * Removes an {@link IComponentOnAfterRenderListener}.

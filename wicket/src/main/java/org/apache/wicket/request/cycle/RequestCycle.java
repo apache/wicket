@@ -19,6 +19,7 @@ package org.apache.wicket.request.cycle;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataEntry;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
@@ -87,6 +88,51 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 	}
 
 	/**
+	 * A callback interface for various methods in the request cycle. If you are creating a
+	 * framework that needs to do something in this methods, rather than extending RequestCycle or
+	 * one of its subclasses, you should implement this callback and allow users to add your
+	 * listener to their custom request cycle.
+	 * 
+	 * These listeners can be added directly to the request cycle when it is created or to the
+	 * {@link Application}
+	 * 
+	 * @author Jeremy Thomerson
+	 * @see Application#addRequestCycleListener(IRequestCycleListener)
+	 * @see RequestCycle#register(IRequestCycleListener)
+	 */
+	public interface IRequestCycleListener
+	{
+		/**
+		 * Called when the request cycle object is beginning its response
+		 */
+		void onBeginRequest();
+
+		/**
+		 * Called when the request cycle object has finished its response
+		 */
+		void onEndRequest();
+
+		/**
+		 * Called when there is an exception in the request cycle that would normally be handled by
+		 * {@link RequestCycle#handleException(Exception)}
+		 * 
+		 * Note that in the event of an exception, {@link #onEndRequest()} will still be called
+		 * after these listeners have {@link #onException(Exception)} called
+		 * 
+		 * @param ex
+		 *            the exception that was passed in to
+		 *            {@link RequestCycle#handleException(Exception)}
+		 */
+		void onException(Exception ex);
+	}
+
+	private interface IExecutor<T>
+	{
+
+		void execute(T object);
+	}
+
+	/**
 	 * Returns request cycle associated with current thread.
 	 * 
 	 * @return request cycle instance or <code>null</code> if no request cycle is associated with
@@ -115,6 +161,8 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 	private final IExceptionMapper exceptionMapper;
 
 	private final List<DetachCallback> detachCallbacks = new ArrayList<DetachCallback>();
+
+	private final List<IRequestCycleListener> requestCycleListeners = new ArrayList<IRequestCycleListener>();
 
 	private UrlRenderer urlRenderer;
 
@@ -256,6 +304,13 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 		boolean result;
 		try
 		{
+			callRequestCycleListeners(new IExecutor<IRequestCycleListener>()
+			{
+				public void execute(IRequestCycleListener rcl)
+				{
+					rcl.onBeginRequest();
+				}
+			}, "onBeginRequest");
 			onBeginRequest();
 			result = processRequest();
 		}
@@ -264,6 +319,26 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 			detach();
 		}
 		return result;
+	}
+
+	private void callRequestCycleListeners(IExecutor<IRequestCycleListener> executor, String method)
+	{
+		List<IRequestCycleListener> app = Application.get().getRequestCycleListeners();
+		int size = requestCycleListeners.size() + app.size();
+		List<IRequestCycleListener> listeners = new ArrayList<IRequestCycleListener>(size);
+		listeners.addAll(app);
+		listeners.addAll(requestCycleListeners);
+		for (IRequestCycleListener rcl : listeners)
+		{
+			try
+			{
+				executor.execute(rcl);
+			}
+			catch (Exception ex)
+			{
+				log.error("Error executing " + method + " on IRequestCycleListener", ex);
+			}
+		}
 	}
 
 	/**
@@ -302,6 +377,13 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 	 */
 	protected IRequestHandler handleException(final Exception e)
 	{
+		callRequestCycleListeners(new IExecutor<RequestCycle.IRequestCycleListener>()
+		{
+			public void execute(IRequestCycleListener object)
+			{
+				object.onException(e);
+			}
+		}, "onException");
 		return exceptionMapper.map(e);
 	}
 
@@ -496,6 +578,13 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 
 		try
 		{
+			callRequestCycleListeners(new IExecutor<IRequestCycleListener>()
+			{
+				public void execute(IRequestCycleListener rcl)
+				{
+					rcl.onEndRequest();
+				}
+			}, "onEndRequest");
 			onEndRequest();
 		}
 		catch (RuntimeException e)
@@ -533,6 +622,16 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 	public void register(DetachCallback detachCallback)
 	{
 		detachCallbacks.add(detachCallback);
+	}
+
+	/**
+	 * Registers a listener to extend functionality in the {@link RequestCycle}.
+	 * 
+	 * @param listener
+	 */
+	public void register(IRequestCycleListener listener)
+	{
+		requestCycleListeners.add(listener);
 	}
 
 	/**
@@ -574,11 +673,22 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 			RenderPageRequestHandler.RedirectPolicy.AUTO_REDIRECT));
 	}
 
+	/**
+	 * Gets whether or not feedback messages are to be cleaned up on detach.
+	 * 
+	 * @return true if they are
+	 */
 	public boolean isCleanupFeedbackMessagesOnDetach()
 	{
 		return cleanupFeedbackMessagesOnDetach;
 	}
 
+	/**
+	 * Sets whether or not feedback messages should be cleaned up on detach.
+	 * 
+	 * @param cleanupFeedbackMessagesOnDetach
+	 *            true if you want them to be cleaned up
+	 */
 	public void setCleanupFeedbackMessagesOnDetach(boolean cleanupFeedbackMessagesOnDetach)
 	{
 		this.cleanupFeedbackMessagesOnDetach = cleanupFeedbackMessagesOnDetach;
