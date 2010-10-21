@@ -52,7 +52,7 @@ public class ModalWindowPage extends BasePage
 		{
 			public Page createPage()
 			{
-				return new ModalContent1Page(ModalWindowPage.this, modal1);
+				return new ModalContent1Page(ModalWindowPage.this.getPageReference(), modal1);
 			}
 		});
 		modal1.setWindowClosedCallback(new ModalWindow.WindowClosedCallback()

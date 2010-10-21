@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.ajax.builtin.modal;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.PageReference;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
@@ -36,7 +37,7 @@ public class ModalContent1Page extends WebPage
 	 * @param modalWindowPage
 	 * @param window
 	 */
-	public ModalContent1Page(final ModalWindowPage modalWindowPage, final ModalWindow window)
+	public ModalContent1Page(final PageReference modalWindowPage, final ModalWindow window)
 	{
 		add(new AjaxLink<Void>("closeOK")
 		{
@@ -44,7 +45,7 @@ public class ModalContent1Page extends WebPage
 			public void onClick(AjaxRequestTarget target)
 			{
 				if (modalWindowPage != null)
-					modalWindowPage.setResult("Modal window 1 - close link OK");
+					((ModalWindowPage)modalWindowPage.getPage()).setResult("Modal window 1 - close link OK");
 				window.close(target);
 			}
 		});
@@ -55,7 +56,7 @@ public class ModalContent1Page extends WebPage
 			public void onClick(AjaxRequestTarget target)
 			{
 				if (modalWindowPage != null)
-					modalWindowPage.setResult("Modal window 1 - close link Cancel");
+					((ModalWindowPage)modalWindowPage.getPage()).setResult("Modal window 1 - close link Cancel");
 				window.close(target);
 			}
 		});
