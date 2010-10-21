@@ -34,6 +34,7 @@ import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Stack;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
@@ -302,6 +303,8 @@ public final class SerializableChecker extends ObjectOutputStream
 	/** Exception that should be set as the cause when throwing a new exception. */
 	private final NotSerializableException exception;
 
+	private final Stack<Object> stack = new Stack<Object>();
+
 	/**
 	 * Construct.
 	 * 
@@ -331,6 +334,29 @@ public final class SerializableChecker extends ObjectOutputStream
 	}
 
 	private void check(Object obj)
+	{
+		if (obj == null)
+		{
+			return;
+		}
+
+		if (stack.contains(obj))
+		{
+			return;
+		}
+
+		stack.push(obj);
+		try
+		{
+			internalCheck(obj);
+		}
+		finally
+		{
+			stack.pop();
+		}
+	}
+
+	private void internalCheck(Object obj)
 	{
 		if (obj == null)
 		{
