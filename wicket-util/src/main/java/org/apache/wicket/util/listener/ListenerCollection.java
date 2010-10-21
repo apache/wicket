@@ -37,6 +37,8 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class ListenerCollection<T> implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	private static final Logger logger = LoggerFactory.getLogger(ListenerCollection.class);
 
 	/** list of listeners */
