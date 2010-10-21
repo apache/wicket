@@ -24,9 +24,8 @@ import org.apache.wicket.request.Response;
 /**
  * @author Jeremy Thomerson
  */
-public class BaseRequestHandlerStackTest extends TestCase
+public abstract class BaseRequestHandlerStackTest extends TestCase
 {
-
 	protected Response newResponse()
 	{
 		return new Response()
