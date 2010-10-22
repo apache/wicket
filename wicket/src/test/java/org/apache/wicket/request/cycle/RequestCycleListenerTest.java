@@ -110,7 +110,7 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 	 */
 	public void testBasicOperations() throws Exception
 	{
-		Application.get().addRequestCycleListener(new IncrementingListener());
+		Application.get().getRequestCycleListeners().add(new IncrementingListener());
 
 		RequestCycle cycle = newRequestCycle(false);
 

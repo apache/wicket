@@ -693,7 +693,7 @@ public abstract class Component
 	public Component(final String id, final IModel<?> model)
 	{
 		setId(id);
-		getApplication().notifyComponentInstantiationListeners(this);
+		getApplication().getComponentInstantiationListeners().onInstantiation(this);
 
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled())
@@ -1019,7 +1019,7 @@ public abstract class Component
 			}
 			setFlag(FLAG_INITIALIZE_SUPER_CALL_VERIFIED, false);
 
-			getApplication().fireComponentInitializationListeners(this);
+			getApplication().getComponentInitializationListeners().onInitialize(this);
 		}
 	}
 
@@ -1117,7 +1117,7 @@ public abstract class Component
 		{
 			setFlag(FLAG_AFTER_RENDERING, true);
 			onAfterRender();
-			getApplication().notifyComponentOnAfterRenderListeners(this);
+			getApplication().getComponentOnAfterRenderListeners().onAfterRender(this);
 			if (getFlag(FLAG_AFTER_RENDERING))
 			{
 				throw new IllegalStateException(Component.class.getName() +
@@ -1148,14 +1148,14 @@ public abstract class Component
 		{
 			setFlag(FLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, false);
 
-			getApplication().notifyPreComponentOnBeforeRenderListeners(this);
+			getApplication().getComponentPreOnBeforeRenderListeners().onBeforeRender(this);
 
 			// clear the enabled in hierarchy cache as it may change as a result of form processing
 			// or other logic executed in onbeforerender (WICKET-2063)
 			clearEnabledInHierarchyCache();
 
 			onBeforeRender();
-			getApplication().notifyPostComponentOnBeforeRenderListeners(this);
+			getApplication().getComponentPostOnBeforeRenderListeners().onBeforeRender(this);
 
 			if (!getFlag(FLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED))
 			{

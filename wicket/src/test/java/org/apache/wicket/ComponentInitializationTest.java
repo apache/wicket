@@ -134,8 +134,8 @@ public class ComponentInitializationTest extends WicketTestCase
 	{
 		TestInitListener listener1 = new TestInitListener();
 		TestInitListener listener2 = new TestInitListener();
-		tester.getApplication().addComponentInitializationListener(listener1);
-		tester.getApplication().addComponentInitializationListener(listener2);
+		tester.getApplication().getComponentInitializationListeners().add(listener1);
+		tester.getApplication().getComponentInitializationListeners().add(listener2);
 
 		WebPage page = new WebPage()
 		{
@@ -157,7 +157,7 @@ public class ComponentInitializationTest extends WicketTestCase
 	public void testInitializationOrder()
 	{
 		TestInitListener listener1 = new TestInitListener();
-		tester.getApplication().addComponentInitializationListener(listener1);
+		tester.getApplication().getComponentInitializationListeners().add(listener1);
 
 		WebPage page = new WebPage()
 		{

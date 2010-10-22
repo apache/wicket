@@ -98,15 +98,16 @@ public class GuiceWebApplicationFactory implements IWebApplicationFactory
 		Injector injector;
 
 		String injectorContextAttribute = filter.getFilterConfig().getInitParameter(
-				"injectorContextAttribute");
+			"injectorContextAttribute");
 
 		Stage stage = null;
 
 		String stageContextAttribute = filter.getFilterConfig().getInitParameter(STAGE_PARAMETER);
 		if (stageContextAttribute == null)
 		{
-			stageContextAttribute = filter.getFilterConfig().getServletContext().getInitParameter(
-					STAGE_PARAMETER);
+			stageContextAttribute = filter.getFilterConfig()
+				.getServletContext()
+				.getInitParameter(STAGE_PARAMETER);
 		}
 		if (stageContextAttribute != null)
 		{
@@ -123,8 +124,8 @@ public class GuiceWebApplicationFactory implements IWebApplicationFactory
 			if (injector == null)
 			{
 				throw new RuntimeException(
-						"Could not find Guice Injector in the ServletContext under attribute: " +
-								injectorContextAttribute);
+					"Could not find Guice Injector in the ServletContext under attribute: " +
+						injectorContextAttribute);
 			}
 		}
 		else if (filter.getFilterConfig().getInitParameter("module") != null)
@@ -137,24 +138,24 @@ public class GuiceWebApplicationFactory implements IWebApplicationFactory
 				String moduleName = moduleNames[i].trim();
 				try
 				{
-					Class< ? > moduleClazz = Class.forName(moduleName);
+					Class<?> moduleClazz = Class.forName(moduleName);
 					Object moduleObject = moduleClazz.newInstance();
 					modules[i] = (Module)moduleObject;
 				}
 				catch (InstantiationException e)
 				{
 					throw new RuntimeException(
-							"Could not create new instance of Guice Module class " + moduleName, e);
+						"Could not create new instance of Guice Module class " + moduleName, e);
 				}
 				catch (ClassNotFoundException e)
 				{
 					throw new RuntimeException(
-							"Could not create new instance of Guice Module class " + moduleName, e);
+						"Could not create new instance of Guice Module class " + moduleName, e);
 				}
 				catch (IllegalAccessException e)
 				{
 					throw new RuntimeException(
-							"Could not create new instance of Guice Module class " + moduleName, e);
+						"Could not create new instance of Guice Module class " + moduleName, e);
 				}
 			}
 			if (stage != null)
@@ -169,10 +170,10 @@ public class GuiceWebApplicationFactory implements IWebApplicationFactory
 		else
 		{
 			throw new RuntimeException(
-					"To use GuiceWebApplicationFactory, you must specify either an 'injectorContextAttribute' or a 'module' init-param.");
+				"To use GuiceWebApplicationFactory, you must specify either an 'injectorContextAttribute' or a 'module' init-param.");
 		}
 		WebApplication app = injector.getInstance(WebApplication.class);
-		app.addComponentInstantiationListener(new GuiceComponentInjector(app, injector));
+		app.getComponentInstantiationListeners().add(new GuiceComponentInjector(app, injector));
 		return app;
 	}
 

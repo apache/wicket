@@ -58,10 +58,12 @@ public class GuiceInjectorTest extends TestCase
 				public void configure(Binder binder)
 				{
 					binder.bind(ITestService.class).to(TestService.class);
-					binder.bind(ITestService.class).annotatedWith(Red.class).to(
-							TestServiceRed.class);
-					binder.bind(ITestService.class).annotatedWith(Blue.class).to(
-							TestServiceBlue.class);
+					binder.bind(ITestService.class)
+						.annotatedWith(Red.class)
+						.to(TestServiceRed.class);
+					binder.bind(ITestService.class)
+						.annotatedWith(Blue.class)
+						.to(TestServiceBlue.class);
 					binder.bind(new TypeLiteral<Map<String, String>>()
 					{
 					}).toProvider(new Provider<Map<String, String>>()
@@ -78,7 +80,7 @@ public class GuiceInjectorTest extends TestCase
 				}
 
 			});
-			app.addComponentInstantiationListener(injector);
+			app.getComponentInstantiationListeners().add(injector);
 
 			// Create a new component, which should be automatically injected,
 			// and test to make sure the injection has worked.
@@ -115,7 +117,7 @@ public class GuiceInjectorTest extends TestCase
 
 		assertEquals(ITestService.RESULT, component.getInjectedFieldProvider().get().getString());
 
-		assertEquals(ITestService.RESULT, component.getInjectedTypeLiteralField().get(
-				ITestService.RESULT));
+		assertEquals(ITestService.RESULT,
+			component.getInjectedTypeLiteralField().get(ITestService.RESULT));
 	}
 }

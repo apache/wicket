@@ -35,7 +35,7 @@ public class GuiceApplication extends WicketExampleApplication
 	{
 		super.init();
 
-		addComponentInstantiationListener(new GuiceComponentInjector(this));
+		getComponentInstantiationListeners().add(new GuiceComponentInjector(this));
 	}
 
 	/**

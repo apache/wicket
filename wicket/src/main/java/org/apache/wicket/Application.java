@@ -28,12 +28,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.apache.wicket.application.ComponentInitializationListenerCollection;
+import org.apache.wicket.application.ComponentInstantiationListenerCollection;
+import org.apache.wicket.application.ComponentOnAfterRenderListenerCollection;
+import org.apache.wicket.application.ComponentOnBeforeRenderListenerCollection;
 import org.apache.wicket.application.IComponentInitializationListener;
 import org.apache.wicket.application.IComponentInstantiationListener;
-import org.apache.wicket.application.IComponentOnAfterRenderListener;
-import org.apache.wicket.application.IComponentOnBeforeRenderListener;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.javascript.DefaultJavascriptCompressor;
@@ -164,13 +165,13 @@ public abstract class Application implements UnboundListener, IEventSink
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
 
 	/** */
-	private List<IComponentOnBeforeRenderListener> componentPreOnBeforeRenderListeners;
+	private final ComponentOnBeforeRenderListenerCollection componentPreOnBeforeRenderListeners = new ComponentOnBeforeRenderListenerCollection();
 
 	/** */
-	private List<IComponentOnBeforeRenderListener> componentPostOnBeforeRenderListeners;
+	private final ComponentOnBeforeRenderListenerCollection componentPostOnBeforeRenderListeners = new ComponentOnBeforeRenderListenerCollection();
 
 	/** */
-	private List<IComponentOnAfterRenderListener> componentOnAfterRenderListeners;
+	private ComponentOnAfterRenderListenerCollection componentOnAfterRenderListeners = new ComponentOnAfterRenderListenerCollection();
 
 	private final RequestCycleListenerCollection requestCycleListeners = new RequestCycleListenerCollection();
 
@@ -178,10 +179,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	private IRequestMapper rootRequestMapper;
 
 	/** list of {@link IComponentInstantiationListener}s. */
-	private IComponentInstantiationListener[] componentInstantiationListeners = new IComponentInstantiationListener[0];
+	private final ComponentInstantiationListenerCollection componentInstantiationListeners = new ComponentInstantiationListenerCollection();
 
 	/** list of {@link IComponentInitializationListener}s. */
-	private CopyOnWriteArrayList<IComponentInitializationListener> componentInitializationListeners = new CopyOnWriteArrayList<IComponentInitializationListener>();
+	private final ComponentInitializationListenerCollection componentInitializationListeners = new ComponentInitializationListenerCollection();
 
 	/** The converter locator instance. */
 	private IConverterLocator converterLocator;
@@ -279,7 +280,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	{
 		// Install default component instantiation listener that uses
 		// authorization strategy to check component instantiations.
-		addComponentInstantiationListener(new IComponentInstantiationListener()
+		getComponentInstantiationListeners().add(new IComponentInstantiationListener()
 		{
 			/**
 			 * @see org.apache.wicket.application.IComponentInstantiationListener#onInstantiation(org.apache.wicket.Component)
@@ -299,80 +300,15 @@ public abstract class Application implements UnboundListener, IEventSink
 		});
 	}
 
-	/**
-	 * Adds a component instantiation listener. This method should typically only be called during
-	 * application startup; it is not thread safe.
-	 * <p>
-	 * Note: wicket does not guarantee the execution order of added listeners
-	 * 
-	 * @param listener
-	 *            the listener to add
-	 */
-	public final void addComponentInstantiationListener(
-		final IComponentInstantiationListener listener)
+
+	public final ComponentInstantiationListenerCollection getComponentInstantiationListeners()
 	{
-		if (listener == null)
-		{
-			throw new IllegalArgumentException("argument listener may not be null");
-		}
-
-		// if an instance of this listener is already present ignore this call
-		for (IComponentInstantiationListener componentInstantiationListener : componentInstantiationListeners)
-		{
-			if (listener == componentInstantiationListener)
-			{
-				return;
-			}
-		}
-
-		final IComponentInstantiationListener[] newListeners = new IComponentInstantiationListener[componentInstantiationListeners.length + 1];
-		System.arraycopy(componentInstantiationListeners, 0, newListeners, 0,
-			componentInstantiationListeners.length);
-		newListeners[componentInstantiationListeners.length] = listener;
-		componentInstantiationListeners = newListeners;
+		return componentInstantiationListeners;
 	}
 
-	/**
-	 * Adds a component initialization listener. This method should typically only be called during
-	 * application startup; it is not thread safe.
-	 * <p>
-	 * Each added listener will be notified after Component's {@link Component#onInitialize()}
-	 * method has been executed.
-	 * </p>
-	 * <p>
-	 * Note: wicket does not guarantee the execution order of added listeners
-	 * 
-	 * @param listener
-	 *            the listener to add
-	 */
-	public final void addComponentInitializationListener(
-		final IComponentInitializationListener listener)
+	public final ComponentInitializationListenerCollection getComponentInitializationListeners()
 	{
-		if (listener == null)
-		{
-			throw new IllegalArgumentException("argument listener may not be null");
-		}
-
-		if (componentInitializationListeners.contains(listener))
-		{
-			return;
-		}
-		componentInitializationListeners.add(listener);
-	}
-
-	/**
-	 * Fires registered {@link IComponentInitializationListener}s on the component
-	 * 
-	 * @param component
-	 * 
-	 * @see #addComponentInitializationListener(IComponentInitializationListener)
-	 */
-	public final void fireComponentInitializationListeners(Component component)
-	{
-		for (IComponentInitializationListener listener : componentInitializationListeners)
-		{
-			listener.onInitialize(component);
-		}
+		return componentInitializationListeners;
 	}
 
 	/**
@@ -752,42 +688,6 @@ public abstract class Application implements UnboundListener, IEventSink
 	public abstract Session newSession(Request request, Response response);
 
 	/**
-	 * Removes a component instantiation listener. This method should typically only be called
-	 * during application startup; it is not thread safe.
-	 * 
-	 * @param listener
-	 *            the listener to remove
-	 */
-	public final void removeComponentInstantiationListener(
-		final IComponentInstantiationListener listener)
-	{
-		final IComponentInstantiationListener[] listeners = componentInstantiationListeners;
-		final int len = listeners.length;
-
-		if (listener != null && len > 0)
-		{
-			int pos;
-
-			for (pos = 0; pos < len; pos++)
-			{
-				if (listener == listeners[pos])
-				{
-					break;
-				}
-			}
-
-			if (pos < len)
-			{
-				listeners[pos] = listeners[len - 1];
-				final IComponentInstantiationListener[] newListeners = new IComponentInstantiationListener[len - 1];
-				System.arraycopy(listeners, 0, newListeners, 0, newListeners.length);
-
-				componentInstantiationListeners = newListeners;
-			}
-		}
-	}
-
-	/**
 	 * Sets the metadata for this application using the given key. If the metadata object is not of
 	 * the correct type for the metadata key, an IllegalArgumentException will be thrown. For
 	 * information on creating MetaDataKeys, see {@link MetaDataKey}.
@@ -1010,158 +910,22 @@ public abstract class Application implements UnboundListener, IEventSink
 		return new DummyRequestLogger();
 	}
 
-	/**
-	 * Notifies the registered component instantiation listeners of the construction of the provided
-	 * component
-	 * 
-	 * @param component
-	 *            the component that is being instantiated
-	 */
-	final void notifyComponentInstantiationListeners(final Component component)
+	public final ComponentOnBeforeRenderListenerCollection getComponentPreOnBeforeRenderListeners()
 	{
-		final int len = componentInstantiationListeners.length;
-		for (int i = 0; i < len; i++)
-		{
-			componentInstantiationListeners[i].onInstantiation(component);
-		}
+		return componentPreOnBeforeRenderListeners;
+	}
+
+	public final ComponentOnBeforeRenderListenerCollection getComponentPostOnBeforeRenderListeners()
+	{
+		return componentPostOnBeforeRenderListeners;
 	}
 
 	/**
-	 * Adds an {@link IComponentOnBeforeRenderListener}. This method should typically only be called
-	 * during application startup; it is not thread safe.
-	 * 
-	 * @param listener
+	 * @return on after render listeners collection
 	 */
-	final public void addPreComponentOnBeforeRenderListener(
-		final IComponentOnBeforeRenderListener listener)
+	public final ComponentOnAfterRenderListenerCollection getComponentOnAfterRenderListeners()
 	{
-		if (componentPreOnBeforeRenderListeners == null)
-		{
-			componentPreOnBeforeRenderListeners = new ArrayList<IComponentOnBeforeRenderListener>();
-		}
-
-		if (componentPreOnBeforeRenderListeners.contains(listener) == false)
-		{
-			componentPreOnBeforeRenderListeners.add(listener);
-		}
-	}
-
-	/**
-	 * Removes an {@link IComponentOnBeforeRenderListener}.
-	 * 
-	 * @param listener
-	 */
-	final public void removePreComponentOnBeforeRenderListener(
-		final IComponentOnBeforeRenderListener listener)
-	{
-		if (componentPreOnBeforeRenderListeners != null)
-		{
-			componentPreOnBeforeRenderListeners.remove(listener);
-			if (componentPreOnBeforeRenderListeners.isEmpty())
-			{
-				componentPreOnBeforeRenderListeners = null;
-			}
-		}
-	}
-
-	/**
-	 * Notifies the {@link IComponentOnBeforeRenderListener}s.
-	 * 
-	 * @param component
-	 */
-	final void notifyPreComponentOnBeforeRenderListeners(final Component component)
-	{
-		if (componentPreOnBeforeRenderListeners != null)
-		{
-			for (IComponentOnBeforeRenderListener listener : componentPreOnBeforeRenderListeners)
-			{
-				listener.onBeforeRender(component);
-			}
-		}
-	}
-
-	/**
-	 * Adds an {@link IComponentOnBeforeRenderListener}. This method should typically only be called
-	 * during application startup; it is not thread safe.
-	 * 
-	 * @param listener
-	 */
-	final public void addPostComponentOnBeforeRenderListener(
-		final IComponentOnBeforeRenderListener listener)
-	{
-		if (componentPostOnBeforeRenderListeners == null)
-		{
-			componentPostOnBeforeRenderListeners = new ArrayList<IComponentOnBeforeRenderListener>();
-		}
-
-		if (componentPostOnBeforeRenderListeners.contains(listener) == false)
-		{
-			componentPostOnBeforeRenderListeners.add(listener);
-		}
-	}
-
-	/**
-	 * Removes an {@link IComponentOnBeforeRenderListener}.
-	 * 
-	 * @param listener
-	 */
-	final public void removePostComponentOnBeforeRenderListener(
-		final IComponentOnBeforeRenderListener listener)
-	{
-		if (componentPostOnBeforeRenderListeners != null)
-		{
-			componentPostOnBeforeRenderListeners.remove(listener);
-			if (componentPostOnBeforeRenderListeners.isEmpty())
-			{
-				componentPostOnBeforeRenderListeners = null;
-			}
-		}
-	}
-
-	/**
-	 * Notifies the {@link IComponentOnBeforeRenderListener}s.
-	 * 
-	 * @param component
-	 */
-	final void notifyPostComponentOnBeforeRenderListeners(final Component component)
-	{
-		if (componentPostOnBeforeRenderListeners != null)
-		{
-			for (IComponentOnBeforeRenderListener listener : componentPostOnBeforeRenderListeners)
-			{
-				listener.onBeforeRender(component);
-			}
-		}
-	}
-
-	/**
-	 * Adds an {@link IComponentOnAfterRenderListener}. This method should typically only be called
-	 * during application startup; it is not thread safe.
-	 * 
-	 * @param listener
-	 */
-	final public void addComponentOnAfterRenderListener(
-		final IComponentOnAfterRenderListener listener)
-	{
-		if (componentOnAfterRenderListeners == null)
-		{
-			componentOnAfterRenderListeners = new ArrayList<IComponentOnAfterRenderListener>();
-		}
-
-		if (componentOnAfterRenderListeners.contains(listener) == false)
-		{
-			componentOnAfterRenderListeners.add(listener);
-		}
-	}
-
-	/**
-	 * Registers a listener to extend functionality in the {@link RequestCycle}.
-	 * 
-	 * @param listener
-	 */
-	public void addRequestCycleListener(IRequestCycleListener listener)
-	{
-		requestCycleListeners.add(listener);
+		return componentOnAfterRenderListeners;
 	}
 
 	/**
@@ -1170,41 +934,6 @@ public abstract class Application implements UnboundListener, IEventSink
 	public RequestCycleListenerCollection getRequestCycleListeners()
 	{
 		return requestCycleListeners;
-	}
-
-
-	/**
-	 * Removes an {@link IComponentOnAfterRenderListener}.
-	 * 
-	 * @param listener
-	 */
-	final public void removeComponentOnAfterRenderListener(
-		final IComponentOnAfterRenderListener listener)
-	{
-		if (componentOnAfterRenderListeners != null)
-		{
-			componentOnAfterRenderListeners.remove(listener);
-			if (componentOnAfterRenderListeners.isEmpty())
-			{
-				componentOnAfterRenderListeners = null;
-			}
-		}
-	}
-
-	/**
-	 * Notifies the {@link IComponentOnAfterRenderListener}s.
-	 * 
-	 * @param component
-	 */
-	final void notifyComponentOnAfterRenderListeners(final Component component)
-	{
-		if (componentOnAfterRenderListeners != null)
-		{
-			for (IComponentOnAfterRenderListener listener : componentOnAfterRenderListeners)
-			{
-				listener.onAfterRender(component);
-			}
-		}
 	}
 
 	/**
@@ -1498,6 +1227,7 @@ public abstract class Application implements UnboundListener, IEventSink
 		requestCycle.getListeners().add(requestCycleListeners);
 		requestCycle.getListeners().add(new AbstractRequestCycleListener()
 		{
+			@Override
 			public void onDetach(RequestCycle requestCycle)
 			{
 				getPageManager().commitRequest();

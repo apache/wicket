@@ -78,7 +78,7 @@ public class StatelessCheckerTest extends TestCase
 		boolean hit = false;
 		try
 		{
-			tester.getApplication().addPostComponentOnBeforeRenderListener(checker);
+			tester.getApplication().getComponentPostOnBeforeRenderListeners().add(checker);
 			tester.startPage(StatelessPage.class);
 		}
 		catch (IllegalArgumentException ex)
@@ -93,7 +93,7 @@ public class StatelessCheckerTest extends TestCase
 	 */
 	public void testPositive()
 	{
-		tester.getApplication().addPostComponentOnBeforeRenderListener(checker);
+		tester.getApplication().getComponentPostOnBeforeRenderListeners().add(checker);
 		tester.startComponent(new StatelessLabel("foo"));
 	}
 }

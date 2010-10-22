@@ -30,8 +30,8 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
-import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.markup.resolver.ComponentResolvers.ResolverFilter;
+import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.response.NullResponse;
@@ -173,7 +173,7 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 		try
 		{
 			// register the listener
-			getApplication().addComponentOnAfterRenderListener(listener);
+			getApplication().getComponentOnAfterRenderListeners().add(listener);
 
 			if (visible)
 			{
@@ -198,7 +198,7 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 		finally
 		{
 			// make sure we remove the listener
-			getApplication().removeComponentOnAfterRenderListener(listener);
+			getApplication().getComponentOnAfterRenderListeners().remove(listener);
 		}
 	}
 
