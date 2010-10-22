@@ -17,6 +17,7 @@
 package org.apache.wicket.authorization;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.settings.ISecuritySettings;
 
 /**
@@ -40,7 +41,7 @@ public interface IAuthorizationStrategy
 		/**
 		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 		 */
-		public <T extends Component> boolean isInstantiationAuthorized(final Class<T> c)
+		public <T extends IRequestableComponent> boolean isInstantiationAuthorized(final Class<T> c)
 		{
 			return true;
 		}
@@ -49,7 +50,7 @@ public interface IAuthorizationStrategy
 		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 		 *      org.apache.wicket.authorization.Action)
 		 */
-		public boolean isActionAuthorized(Component c, Action action)
+		public boolean isActionAuthorized(IRequestableComponent c, Action action)
 		{
 			return true;
 		}
@@ -72,7 +73,7 @@ public interface IAuthorizationStrategy
 	 *            The component class to check
 	 * @return Whether the given component may be created
 	 */
-	<T extends Component> boolean isInstantiationAuthorized(Class<T> componentClass);
+	<T extends IRequestableComponent> boolean isInstantiationAuthorized(Class<T> componentClass);
 
 	/**
 	 * Gets whether the given action is permitted. If it is, this method should return true. If it
@@ -90,5 +91,5 @@ public interface IAuthorizationStrategy
 	 * @see Component#ENABLE
 	 * @see Component#RENDER
 	 */
-	boolean isActionAuthorized(Component component, Action action);
+	boolean isActionAuthorized(IRequestableComponent component, Action action);
 }

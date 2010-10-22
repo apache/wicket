@@ -27,11 +27,10 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.mapper.AbstractComponentMapper;
-import org.apache.wicket.request.mapper.HomePageMapper;
 
 /**
- * An {@link IRequestMapper} that overrides the behavior of {@link HomePageMapper} and appends the
- * string representation of the current session locale in the url
+ * An {@link IRequestMapper} that handles requests to the home page ('/') and appends the string
+ * representation of the current session locale in the URL
  * 
  * <p>
  * I.e. a request to http://example.com/app will end up in http://example.com/app/en_US

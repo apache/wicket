@@ -16,11 +16,11 @@
  */
 package org.apache.wicket.authorization.strategies.role.annotations;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.strategies.role.AbstractRoleAuthorizationStrategy;
 import org.apache.wicket.authorization.strategies.role.IRoleCheckingStrategy;
 import org.apache.wicket.authorization.strategies.role.Roles;
+import org.apache.wicket.request.component.IRequestableComponent;
 
 
 /**
@@ -46,7 +46,8 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	/**
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */
-	public <T extends Component> boolean isInstantiationAuthorized(final Class<T> componentClass)
+	public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
+		final Class<T> componentClass)
 	{
 		// We are authorized unless we are found not to be
 		boolean authorized = true;
@@ -77,7 +78,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 	 *      org.apache.wicket.authorization.Action)
 	 */
-	public boolean isActionAuthorized(final Component component, final Action action)
+	public boolean isActionAuthorized(final IRequestableComponent component, final Action action)
 	{
 		// Get component's class
 		final Class<?> componentClass = component.getClass();

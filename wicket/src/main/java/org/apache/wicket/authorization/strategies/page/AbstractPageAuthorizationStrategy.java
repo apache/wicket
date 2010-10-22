@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.authorization.strategies.page;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
+import org.apache.wicket.request.component.IRequestableComponent;
 
 /**
  * An abstract base class for implementing simple authorization of Pages. Users should override
@@ -35,7 +35,7 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 	 *      org.apache.wicket.authorization.Action)
 	 */
-	public boolean isActionAuthorized(final Component component, final Action action)
+	public boolean isActionAuthorized(final IRequestableComponent component, final Action action)
 	{
 		return true;
 	}
@@ -44,7 +44,7 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */
 	@SuppressWarnings("unchecked")
-	public final <T extends Component> boolean isInstantiationAuthorized(
+	public final <T extends IRequestableComponent> boolean isInstantiationAuthorized(
 		final Class<T> componentClass)
 	{
 		if (instanceOf(componentClass, Page.class))

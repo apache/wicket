@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.examples.authentication2;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
@@ -25,6 +24,7 @@ import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.component.IRequestableComponent;
 
 
 /**
@@ -71,13 +71,14 @@ public final class SignIn2Application extends WicketExampleApplication
 		// Register the authorization strategy
 		getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy()
 		{
-			public boolean isActionAuthorized(Component component, Action action)
+			public boolean isActionAuthorized(IRequestableComponent component, Action action)
 			{
 				// authorize everything
 				return true;
 			}
 
-			public <T extends Component> boolean isInstantiationAuthorized(Class<T> componentClass)
+			public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
+				Class<T> componentClass)
 			{
 				// Check if the new Page requires authentication (implements the marker interface)
 				if (AuthenticatedWebPage.class.isAssignableFrom(componentClass))

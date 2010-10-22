@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.form.login;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
@@ -28,6 +27,7 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
@@ -208,7 +208,8 @@ public class InterceptTest extends TestCase
 		/**
 		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 		 */
-		public boolean isInstantiationAuthorized(Class componentClass)
+		public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
+			Class<T> componentClass)
 		{
 			if (MockHomePage.class.equals(componentClass) &&
 				!((MySession)Session.get()).isLoggedIn())
@@ -222,7 +223,7 @@ public class InterceptTest extends TestCase
 		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 		 *      org.apache.wicket.authorization.Action)
 		 */
-		public boolean isActionAuthorized(Component component, Action action)
+		public boolean isActionAuthorized(IRequestableComponent component, Action action)
 		{
 			return true;
 		}

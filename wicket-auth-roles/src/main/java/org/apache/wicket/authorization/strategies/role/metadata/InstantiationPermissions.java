@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.authorization.strategies.role.Roles;
+import org.apache.wicket.request.component.IRequestableComponent;
 
 
 /**
@@ -100,7 +101,7 @@ public class InstantiationPermissions implements IClusterable
 	 * @return the roles that have a binding with the given component class, or null if no entries
 	 *         are found
 	 */
-	public <T extends Component> Roles authorizedRoles(final Class<T> componentClass)
+	public <T extends IRequestableComponent> Roles authorizedRoles(final Class<T> componentClass)
 	{
 		if (componentClass == null)
 		{

@@ -16,13 +16,13 @@
  */
 package org.apache.wicket.redirect.intercept;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
@@ -50,12 +50,12 @@ public class InterceptTest extends WicketTestCase
 
 					private boolean block = true;
 
-					public boolean isActionAuthorized(Component component, Action action)
+					public boolean isActionAuthorized(IRequestableComponent component, Action action)
 					{
 						return true;
 					}
 
-					public <T extends Component> boolean isInstantiationAuthorized(
+					public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
 						Class<T> componentClass)
 					{
 						if (block &&

@@ -25,6 +25,7 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
@@ -44,7 +45,7 @@ public class AjaxBehaviorEnabledTest extends WicketTestCase
 		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 		 *      org.apache.wicket.authorization.Action)
 		 */
-		public boolean isActionAuthorized(Component component, Action action)
+		public boolean isActionAuthorized(IRequestableComponent component, Action action)
 		{
 			if (action == Component.ENABLE && component.getId().endsWith("disabled"))
 			{
@@ -57,7 +58,8 @@ public class AjaxBehaviorEnabledTest extends WicketTestCase
 		 * 
 		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 		 */
-		public <T extends Component> boolean isInstantiationAuthorized(Class<T> componentClass)
+		public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
+			Class<T> componentClass)
 		{
 			return true;
 		}
@@ -113,8 +115,8 @@ public class AjaxBehaviorEnabledTest extends WicketTestCase
 		tester.assertVisible("enabled");
 		tester.assertVisible("disabled");
 		assertTrue(tester.getTagByWicketId("enabled").hasAttribute("onclick"));
-		assertFalse("disabled behaviors should not generate onclick", tester.getTagByWicketId(
-			"disabled").hasAttribute("onclick"));
+		assertFalse("disabled behaviors should not generate onclick",
+			tester.getTagByWicketId("disabled").hasAttribute("onclick"));
 
 	}
 

@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.authorization.strategies.action;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.authorization.Action;
+import org.apache.wicket.request.component.IRequestableComponent;
 
 /**
  * A way to provide authorization for a specific component action.
@@ -42,5 +42,5 @@ public interface IActionAuthorizer extends IClusterable
 	 *            The component to authorize this action on
 	 * @return True if this action is authorized
 	 */
-	boolean authorizeAction(Component component);
+	boolean authorizeAction(IRequestableComponent component);
 }
