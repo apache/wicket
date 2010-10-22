@@ -48,7 +48,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	private static final long serialVersionUID = 1L;
 
 	/** Meta key for the retain disabled flag */
-	MetaDataKey<Boolean> RETAIN_DISABLED_META_KEY = new MetaDataKey<Boolean>()
+	static MetaDataKey<Boolean> RETAIN_DISABLED_META_KEY = new MetaDataKey<Boolean>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
