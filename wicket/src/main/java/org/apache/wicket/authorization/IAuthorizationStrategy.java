@@ -50,7 +50,7 @@ public interface IAuthorizationStrategy
 		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 		 *      org.apache.wicket.authorization.Action)
 		 */
-		public boolean isActionAuthorized(IRequestableComponent c, Action action)
+		public boolean isActionAuthorized(Component c, Action action)
 		{
 			return true;
 		}
@@ -91,5 +91,5 @@ public interface IAuthorizationStrategy
 	 * @see Component#ENABLE
 	 * @see Component#RENDER
 	 */
-	boolean isActionAuthorized(IRequestableComponent component, Action action);
+	boolean isActionAuthorized(Component component, Action action);
 }

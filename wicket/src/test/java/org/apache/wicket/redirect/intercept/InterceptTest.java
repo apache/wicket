@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.redirect.intercept;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.WicketTestCase;
@@ -50,7 +51,7 @@ public class InterceptTest extends WicketTestCase
 
 					private boolean block = true;
 
-					public boolean isActionAuthorized(IRequestableComponent component, Action action)
+					public boolean isActionAuthorized(Component component, Action action)
 					{
 						return true;
 					}

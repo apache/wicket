@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.authorization.strategies.page;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
@@ -35,7 +36,7 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 	 *      org.apache.wicket.authorization.Action)
 	 */
-	public boolean isActionAuthorized(final IRequestableComponent component, final Action action)
+	public boolean isActionAuthorized(final Component component, final Action action)
 	{
 		return true;
 	}

@@ -19,6 +19,7 @@ package org.apache.wicket.authorization.strategies;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.request.component.IRequestableComponent;
@@ -72,7 +73,7 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 	 *      org.apache.wicket.authorization.Action)
 	 */
-	public final boolean isActionAuthorized(IRequestableComponent component, Action action)
+	public final boolean isActionAuthorized(Component component, Action action)
 	{
 		int size = strategies.size();
 		for (int i = 0; i < size; i++)

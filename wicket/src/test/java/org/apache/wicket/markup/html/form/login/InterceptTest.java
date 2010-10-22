@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form.login;
 
 import junit.framework.TestCase;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
@@ -223,7 +224,7 @@ public class InterceptTest extends TestCase
 		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 		 *      org.apache.wicket.authorization.Action)
 		 */
-		public boolean isActionAuthorized(IRequestableComponent component, Action action)
+		public boolean isActionAuthorized(Component component, Action action)
 		{
 			return true;
 		}

@@ -19,6 +19,7 @@ package org.apache.wicket.authorization.strategies.action;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.request.component.IRequestableComponent;
@@ -60,7 +61,7 @@ public class ActionAuthorizationStrategy implements IAuthorizationStrategy
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 	 *      org.apache.wicket.authorization.Action)
 	 */
-	public boolean isActionAuthorized(IRequestableComponent component, Action action)
+	public boolean isActionAuthorized(Component component, Action action)
 	{
 		IActionAuthorizer authorizer = actionAuthorizerForAction.get(action);
 		if (authorizer != null)

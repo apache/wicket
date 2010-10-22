@@ -109,7 +109,7 @@ public class AuthorizationTest extends WicketTestCase
 				 *      org.apache.wicket.authorization.Action)
 				 */
 				@Override
-				public boolean isActionAuthorized(IRequestableComponent component, Action action)
+				public boolean isActionAuthorized(Component component, Action action)
 				{
 					if (action == Component.RENDER && component instanceof Label)
 					{
@@ -162,7 +162,7 @@ public class AuthorizationTest extends WicketTestCase
 				 *      org.apache.wicket.authorization.Action)
 				 */
 				@Override
-				public boolean isActionAuthorized(IRequestableComponent c, Action action)
+				public boolean isActionAuthorized(Component c, Action action)
 				{
 					if (action == Component.ENABLE && c instanceof TextField &&
 						c.getId().equals("stringInput"))
@@ -205,7 +205,7 @@ public class AuthorizationTest extends WicketTestCase
 		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 		 *      org.apache.wicket.authorization.Action)
 		 */
-		public boolean isActionAuthorized(IRequestableComponent c, Action action)
+		public boolean isActionAuthorized(Component c, Action action)
 		{
 			return true;
 		}

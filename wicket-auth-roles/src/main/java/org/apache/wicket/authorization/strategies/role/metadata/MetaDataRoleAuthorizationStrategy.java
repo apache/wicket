@@ -254,7 +254,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 	 *      org.apache.wicket.authorization.Action)
 	 */
-	public boolean isActionAuthorized(final IRequestableComponent component, final Action action)
+	public boolean isActionAuthorized(final Component component, final Action action)
 	{
 		if (component == null)
 		{
@@ -332,11 +332,10 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 *            the action
 	 * @return the roles for the action as defined with the given component
 	 */
-	private static Roles rolesAuthorizedToPerformAction(final IRequestableComponent component,
+	private static Roles rolesAuthorizedToPerformAction(final Component component,
 		final Action action)
 	{
-		// XXX WICKET-NG this cast doesn't look nice
-		final ActionPermissions permissions = ((Component)component).getMetaData(ACTION_PERMISSIONS);
+		final ActionPermissions permissions = component.getMetaData(ACTION_PERMISSIONS);
 		if (permissions != null)
 		{
 			return permissions.rolesFor(action);
