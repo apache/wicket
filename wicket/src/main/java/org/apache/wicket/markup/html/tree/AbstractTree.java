@@ -847,12 +847,17 @@ public abstract class AbstractTree extends Panel
 
 		if (parentItem != null && isNodeVisible(parentNode))
 		{
+			List<?> eventChildren = Arrays.asList(e.getChildren());
+
 			// parentNode was a leaf before this insertion event only if every one of
 			// its current children is in the event's list of children
-			List<?> eventChildren = Arrays.asList(e.getChildren());
-			List<TreeItem> itemChildren = parentItem.getChildren();
-			boolean wasLeaf = itemChildren == null || eventChildren.containsAll(itemChildren);
-
+			boolean wasLeaf = true;
+			int nodeChildCount = getChildCount(parentNode);
+			for (int i = 0; wasLeaf && i < nodeChildCount; i++) 
+			{
+				wasLeaf = eventChildren.contains(getChildAt(parentNode, i));
+			}
+			
 			if (wasLeaf)
 			{
 				// parentNode now has children for the first time, so we need to invalidate
@@ -865,17 +870,17 @@ public abstract class AbstractTree extends Panel
 			{
 				if (isNodeExpanded(parentNode))
 				{
+					List<TreeItem> itemChildren = parentItem.getChildren();
+					int childLevel = parentItem.getLevel() + 1;
 					final int[] childIndices = e.getChildIndices();
 					for (int i = 0; i < eventChildren.size(); ++i)
 					{
-						Object node = eventChildren.get(i);
-						int index = childIndices[i];
-						TreeItem item = newTreeItem(parentItem, node, parentItem.getLevel() + 1);
+						TreeItem item = newTreeItem(parentItem, eventChildren.get(i), childLevel);
 						itemContainer.add(item);
 
 						if (itemChildren != null)
 						{
-							itemChildren.add(index, item);
+							itemChildren.add(childIndices[i], item);
 							markTheLastButOneChildDirty(parentItem, item);
 						}
 
