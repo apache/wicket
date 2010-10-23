@@ -185,7 +185,7 @@ public class MarkupComponentBorder extends AbstractBehavior
 			.getResourceStreamLocator();
 
 		final String style = owner.getStyle();
-		final String variation = (owner == null ? null : owner.getVariation());
+		final String variation = owner.getVariation();
 		final Locale locale = owner.getLocale();
 
 		MarkupResourceStream markupResourceStream = null;
