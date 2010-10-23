@@ -117,7 +117,7 @@ import org.slf4j.LoggerFactory;
  * @see org.apache.wicket.MarkupContainer
  * @see org.apache.wicket.model.CompoundPropertyModel
  * @see org.apache.wicket.Component
- *
+ * 
  * @author Jonathan Locke
  * @author Chris Turner
  * @author Eelco Hillenius
@@ -192,6 +192,8 @@ public abstract class Page extends MarkupContainer
 	/** True if the page should try to be stateless */
 	private static final int FLAG_STATELESS_HINT = FLAG_RESERVED5;
 
+	/** TODO WICKET-NG JAVADOC */
+	private static final int FLAG_WAS_CREATED_BOOKMARKABLE = FLAG_RESERVED8;
 
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Page.class);
@@ -229,10 +231,6 @@ public abstract class Page extends MarkupContainer
 	 * is clicked Wicket checks if it's render count matches the render count value of page
 	 */
 	private int renderCount = 0;
-
-	/** TODO WICKET-NG JAVADOC */
-	// TODO WICKET-NG convert into a flag
-	private boolean wasCreatedBookmarkable;
 
 	/**
 	 * Constructor.
@@ -836,8 +834,8 @@ public abstract class Page extends MarkupContainer
 								if (log.isDebugEnabled())
 								{
 									log.debug(
-											"Component {} wasn't rendered but most likely it has a transparent parent: {}",
-											component, sibling);
+										"Component {} wasn't rendered but most likely it has a transparent parent: {}",
+										component, sibling);
 								}
 								transparentContainerChildren.add(component);
 								iterator.remove();
@@ -1266,13 +1264,13 @@ public abstract class Page extends MarkupContainer
 	/** TODO WICKET-NG javadoc */
 	public final void setWasCreatedBookmarkable(boolean wasCreatedBookmarkable)
 	{
-		this.wasCreatedBookmarkable = wasCreatedBookmarkable;
+		setFlag(FLAG_WAS_CREATED_BOOKMARKABLE, wasCreatedBookmarkable);
 	}
 
 	/** TODO WICKET-NG javadoc */
 	public final boolean wasCreatedBookmarkable()
 	{
-		return wasCreatedBookmarkable;
+		return getFlag(FLAG_WAS_CREATED_BOOKMARKABLE);
 	}
 
 	/**
