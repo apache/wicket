@@ -330,7 +330,11 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 
 	/**
 	 * Frees any unnecessary internal storage
+	 * 
+	 * @deprecated because {@link #messages} is actually {@link CopyOnWriteArrayList} and cannot be
+	 *             trimmed. Will be removed in Wicket 1.5
 	 */
+	@Deprecated
 	public final void trimToSize()
 	{
 		if (messages instanceof ArrayList<?>)
