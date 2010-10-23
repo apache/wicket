@@ -701,7 +701,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 
 		// having input name "submit" causes problems with javascript, so we
 		// create a unique string to replace it by prepending a path separator
-		if (inputName.equals("submit"))
+		if ("submit".equals(inputName.toString()))
 		{
 			inputName.prepend(Component.PATH_SEPARATOR);
 		}
