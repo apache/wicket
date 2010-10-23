@@ -85,7 +85,7 @@ public class ConverterLocator implements IConverterLocator
 			Class<?> theType = type.get();
 			if ("".equals(value))
 			{
-				if (theType.equals(String.class))
+				if (String.class.equals(theType))
 				{
 					return theType.cast("");
 				}
