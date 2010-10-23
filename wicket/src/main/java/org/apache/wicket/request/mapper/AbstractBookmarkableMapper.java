@@ -255,7 +255,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		else if (requestHandler instanceof RenderPageRequestHandler)
 		{
 			// possibly hybrid URL - bookmarkable URL with page instance information
-			// but only allowed if the page was created by bookamarkable URL
+			// but only allowed if the page was created by bookmarkable URL
 
 			RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 
