@@ -49,7 +49,7 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	/**
 	 * Holds a list of {@link org.apache.wicket.feedback.FeedbackMessage}s.
 	 */
-	private List<FeedbackMessage> messages = null;
+	private final List<FeedbackMessage> messages;
 
 	/**
 	 * Construct.
@@ -105,7 +105,6 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 
 		messages.removeAll(toDelete);
 
-		trimToSize();
 		return toDelete.size();
 	}
 
@@ -326,17 +325,6 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	public String toString()
 	{
 		return "[feedbackMessages = " + StringList.valueOf(messages) + "]";
-	}
-
-	/**
-	 * Frees any unnecessary internal storage
-	 */
-	public final void trimToSize()
-	{
-		if (messages instanceof ArrayList<?>)
-		{
-			((ArrayList<?>)messages).trimToSize();
-		}
 	}
 
 	/**
