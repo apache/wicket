@@ -22,6 +22,7 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.mapper.AbstractMapper;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.StringValue;
 
 /**
@@ -97,7 +98,9 @@ public class MountMapper extends AbstractMapper
 	/**
 	 * 
 	 * @param request
-	 * @return
+	 *            a {@link Request} with the all mount segments - mount ones and the ones for the
+	 *            delegated mapper
+	 * @return a {@link Request} with {@link Url} without the mount segments
 	 */
 	private Request dismountRequest(Request request)
 	{
@@ -142,9 +145,8 @@ public class MountMapper extends AbstractMapper
 			return null;
 		}
 
-		// TODO
-		// Check.notNull(mount.getUrl());
-		// Check.notNull(mount.getMountParameters());
+		Checks.notNull(mount.getUrl(), "Mount's Url should not be null");
+		Checks.notNull(mount.getMountParameters(), "Mount's parameters should not be null");
 
 		for (int i = mountSegments.length; i > 0; i--)
 		{
@@ -157,7 +159,8 @@ public class MountMapper extends AbstractMapper
 				replacement = mount.getMountParameters().getValue(placeholder).toString();
 				if (replacement == null)
 				{
-					throw new IllegalStateException();// TODO message
+					throw new IllegalStateException(String.format(
+						"Cannot find a value for placeholder '%s'.", placeholder));
 				}
 			}
 
