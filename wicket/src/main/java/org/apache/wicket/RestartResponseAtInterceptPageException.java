@@ -128,7 +128,7 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 		{
 			data.continueOk = true;
 			String url = RequestCycle.get().getUrlRenderer().renderUrl(data.originalUrl);
-			RequestCycle.get().scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(url));
+			RequestCycle.get().replaceCurrentRequestHandler(new RedirectRequestHandler(url));
 			return true;
 		}
 		return false;
