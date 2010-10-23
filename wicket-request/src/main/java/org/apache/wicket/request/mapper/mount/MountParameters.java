@@ -17,6 +17,7 @@
 package org.apache.wicket.request.mapper.mount;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,12 +55,11 @@ public class MountParameters
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return an unmodifiable view of the parameters names
 	 */
 	public final Collection<String> getParameterNames()
 	{
-		return map.keySet();
+		return Collections.unmodifiableCollection(map.keySet());
 	}
 
 	/**
