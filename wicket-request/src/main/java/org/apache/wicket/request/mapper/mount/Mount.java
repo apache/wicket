@@ -23,8 +23,14 @@ import org.apache.wicket.request.Url;
  */
 public class Mount
 {
+	/**
+	 * The {@link Url} to mount on
+	 */
 	private final Url url;
 
+	/**
+	 * A map of placeholder key/value pairs for the {@link #url}'s segments
+	 */
 	private MountParameters mountParameters = new MountParameters();
 
 	/**
