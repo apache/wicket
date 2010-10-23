@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.authorization;
 
-import org.apache.wicket.Component;
+import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.util.lang.WicketObjects;
 
 /**
@@ -41,7 +41,8 @@ public class UnauthorizedInstantiationException extends AuthorizationException
 	 * @param componentClass
 	 *            The unauthorized component class
 	 */
-	public <T extends Component> UnauthorizedInstantiationException(final Class<T> componentClass)
+	public <T extends IRequestableComponent> UnauthorizedInstantiationException(
+		final Class<T> componentClass)
 	{
 		super("Not authorized to instantiate class " + componentClass.getName());
 		componentClassName = componentClass.getName();
@@ -50,7 +51,7 @@ public class UnauthorizedInstantiationException extends AuthorizationException
 	/**
 	 * @return The component class that could not be instantiated
 	 */
-	public Class<? extends Component> getComponentClass()
+	public Class<? extends IRequestableComponent> getComponentClass()
 	{
 		return WicketObjects.resolveClass(componentClassName);
 	}
