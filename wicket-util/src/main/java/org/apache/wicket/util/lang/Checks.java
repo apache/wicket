@@ -27,7 +27,7 @@ public class Checks
 	 * Checks value is not null
 	 * 
 	 * @param argument
-	 * @param name
+	 * @param message
 	 * @throws IllegalStateException
 	 */
 	public static void notNull(final Object argument, final String message)
