@@ -165,9 +165,14 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	{
 		PageInfo pageInfo = pageComponentInfo.getPageInfo();
 		ComponentInfo componentInfo = pageComponentInfo.getComponentInfo();
-		Integer renderCount = componentInfo != null ? componentInfo.getRenderCount() : null;
+		Integer renderCount = null;
+		RequestListenerInterface listenerInterface = null;
 
-		RequestListenerInterface listenerInterface = requestListenerInterfaceFromString(componentInfo.getListenerInterface());
+		if (componentInfo != null)
+		{
+			renderCount = componentInfo.getRenderCount();
+			listenerInterface = requestListenerInterfaceFromString(componentInfo.getListenerInterface());
+		}
 
 		if (listenerInterface != null)
 		{
@@ -183,8 +188,16 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		{
 			if (logger.isWarnEnabled())
 			{
-				logger.warn("Unknown listener interface '" + componentInfo.getListenerInterface() +
-					"'");
+				if (componentInfo != null)
+				{
+					logger.warn("Unknown listener interface '{}'",
+						componentInfo.getListenerInterface());
+				}
+				else
+				{
+					logger.warn("Cannot extract the listener interface for PageComponentInfo: '{}'" +
+						pageComponentInfo);
+				}
 			}
 			return null;
 		}
