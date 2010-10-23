@@ -24,9 +24,7 @@ import java.util.Map;
 import org.apache.wicket.util.string.StringValue;
 
 /**
- * Mount parameters
- * 
- * TODO docs and unit test
+ * A container for the placeholders (e.g. ${placeholder}) found in the mount segments
  * 
  * @author igor.vaynberg
  */
@@ -37,7 +35,9 @@ public class MountParameters
 	/**
 	 * 
 	 * @param parameterName
-	 * @return
+	 *            the name of the placeholder
+	 * @return a StringValue which contains either the actual value if there is a placeholder with
+	 *         name <code>parameterName</code> or <code>null</code> otherwise
 	 */
 	public final StringValue getValue(String parameterName)
 	{
@@ -45,6 +45,7 @@ public class MountParameters
 	}
 
 	/**
+	 * Sets new placeholder name/pair
 	 * 
 	 * @param parameterName
 	 * @param value
