@@ -37,6 +37,7 @@ import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.lang.Objects;
+import org.apache.wicket.util.lang.WicketObjects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -402,12 +403,11 @@ public abstract class Session implements IClusterable, IEventSink
 	}
 
 	/**
-	 * @return Size of this session, including all the pagemaps it contains
+	 * @return Size of this session
 	 */
 	public final long getSizeInBytes()
 	{
-		// TODO WICKET-NG
-		return -1;
+		return WicketObjects.sizeof(this);
 	}
 
 	/**
