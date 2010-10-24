@@ -78,7 +78,7 @@ public class PropertiesFactory implements IPropertiesFactory
 		propertiesLoader = new ArrayList<IPropertiesLoader>();
 		propertiesLoader.add(new IsoPropertiesFilePropertiesLoader("properties"));
 		propertiesLoader.add(new UtfPropertiesFilePropertiesLoader("utf8.properties", "utf-8"));
-		propertiesLoader.add(new XmlFilePropertiesLoader("xml"));
+		propertiesLoader.add(new XmlFilePropertiesLoader("properties.xml"));
 	}
 
 	/**
