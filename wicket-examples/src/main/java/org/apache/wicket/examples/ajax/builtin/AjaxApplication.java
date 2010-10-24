@@ -22,7 +22,7 @@ import org.apache.wicket.examples.ajax.builtin.modal.ModalWindowPage;
 import org.apache.wicket.examples.ajax.builtin.tree.EditableTreeTablePage;
 import org.apache.wicket.examples.ajax.builtin.tree.SimpleTreePage;
 import org.apache.wicket.examples.ajax.builtin.tree.TreeTablePage;
-import org.apache.wicket.markup.html.AjaxServerAndClientTimeFilter;
+import org.apache.wicket.response.filter.AjaxServerAndClientTimeFilter;
 
 
 /**

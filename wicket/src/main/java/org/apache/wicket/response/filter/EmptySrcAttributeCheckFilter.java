@@ -14,9 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html;
+package org.apache.wicket.response.filter;
 
-import org.apache.wicket.IResponseFilter;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

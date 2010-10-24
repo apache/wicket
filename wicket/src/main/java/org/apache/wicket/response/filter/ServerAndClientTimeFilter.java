@@ -14,13 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html;
+package org.apache.wicket.response.filter;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.IResponseFilter;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.AppendingStringBuffer;
