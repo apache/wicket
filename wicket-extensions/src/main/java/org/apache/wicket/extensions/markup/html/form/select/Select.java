@@ -17,6 +17,7 @@
 package org.apache.wicket.extensions.markup.html.form.select;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -138,7 +139,7 @@ public class Select extends FormComponent
 				{
 					throw new WicketRuntimeException(
 						"submitted http post value [" +
-							paths.toString() +
+							Arrays.toString(paths) +
 							"] for SelectOption component [" +
 							getPath() +
 							"] contains an illegal relative path element [" +
