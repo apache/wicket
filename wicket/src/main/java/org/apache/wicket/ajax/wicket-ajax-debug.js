@@ -73,6 +73,10 @@ var WicketAjaxDebug = {
     logError : function(msg) {
 		WicketAjaxDebug.init();
         WicketAjaxDebug.log(msg, "ERROR: ");
+
+        if (console && console.error && typeof(console.error) == 'function') {
+        	console.error('Wicket.Ajax: ' + msg);
+        }
     },
 
     logInfo : function(msg) {
