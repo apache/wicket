@@ -596,7 +596,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 		public char get(String name, char val) throws IOException
 		{
 			Object o = values.get(name);
-			if (o instanceof Byte)
+			if (o instanceof Character)
 			{
 				return ((Character)o).charValue();
 			}
