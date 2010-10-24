@@ -101,19 +101,23 @@ public final class DefaultClassResolver implements IClassResolver
 			}
 			else
 			{
-				ClassLoader loader = Thread.currentThread().getContextClassLoader();
-				if (loader == null)
+				// synchronize on the only class member to load only one class at a time and
+				// prevent LinkageError. See above for more info
+				synchronized (classes)
 				{
-					loader = DefaultClassResolver.class.getClassLoader();
+					ClassLoader loader = Thread.currentThread().getContextClassLoader();
+					if (loader == null)
+					{
+						loader = DefaultClassResolver.class.getClassLoader();
+					}
+					// see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6500212
+					// clazz = loader.loadClass(classname);
+					clazz = Class.forName(classname, false, loader);
+					if (clazz == null)
+					{
+						throw new ClassNotFoundException(classname);
+					}
 				}
-				// see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6500212
-				// clazz = loader.loadClass(classname);
-				clazz = Class.forName(classname, false, loader);
-				if (clazz == null)
-				{
-					throw new ClassNotFoundException(classname);
-				}
-
 				classes.put(classname, new WeakReference<Class<?>>(clazz));
 			}
 		}
