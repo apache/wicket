@@ -26,7 +26,6 @@ import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
-import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.handler.ErrorCodeResponseHandler;
 import org.apache.wicket.request.mapper.StalePageException;
 import org.apache.wicket.settings.IExceptionSettings;
@@ -52,7 +51,8 @@ public class DefaultExceptionMapper implements IExceptionMapper
 		catch (RuntimeException e2)
 		{
 			// hmmm, we were already handling an exception! give up
-			logger.error("unexpected exception when handling another exception: " + e.getMessage(), e);
+			logger.error("unexpected exception when handling another exception: " + e.getMessage(),
+				e);
 			return new ErrorCodeResponseHandler(500);
 		}
 	}
@@ -109,18 +109,15 @@ public class DefaultExceptionMapper implements IExceptionMapper
 		RequestCycle requestCycle = RequestCycle.get();
 
 		if (requestCycle == null)
-			throw new IllegalStateException("there is no current request cycle attached to this thread");
+			throw new IllegalStateException(
+				"there is no current request cycle attached to this thread");
 
+		/*
+		 * Use NEVER_REDIRECT policy to preserve the original page's URL for non-Ajax requests and
+		 * to indicate the error for Ajax requests so that their onFailure() is being called
+		 */
 		RenderPageRequestHandler.RedirectPolicy redirect = RenderPageRequestHandler.RedirectPolicy.NEVER_REDIRECT;
 
-		// in case of ajax we must redirect to show the error page
-		if (requestCycle.getRequest() instanceof WebRequest)
-		{
-			WebRequest webRequest = (WebRequest)requestCycle.getRequest();
-
-			if(webRequest.isAjax())
-				redirect = RenderPageRequestHandler.RedirectPolicy.ALWAYS_REDIRECT;
-		}
 		return new RenderPageRequestHandler(pageProvider, redirect);
 	}
 
@@ -134,7 +131,7 @@ public class DefaultExceptionMapper implements IExceptionMapper
 
 		IRequestHandler handler = requestCycle.getActiveRequestHandler();
 
-		if(handler == null)
+		if (handler == null)
 			handler = requestCycle.getRequestHandlerScheduledAfterCurrent();
 
 		if (handler instanceof IPageRequestHandler)
