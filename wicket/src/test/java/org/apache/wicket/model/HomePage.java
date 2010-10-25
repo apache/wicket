@@ -47,7 +47,7 @@ public class HomePage extends WebPage
 		add(new BookingForm("bookingForm"));
 	}
 
-	private class BookingForm extends Form
+	private class BookingForm extends Form<Booking>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -56,7 +56,7 @@ public class HomePage extends WebPage
 		public BookingForm(String s)
 		{
 			super(s);
-			setDefaultModel(new CompoundPropertyModel(booking));
+			setDefaultModel(new CompoundPropertyModel<Booking>(booking));
 
 			TextField<String> name = new TextField<String>("partyDetails.name");
 			name.setRequired(Boolean.TRUE);
