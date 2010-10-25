@@ -109,8 +109,10 @@ public class DefaultExceptionMapper implements IExceptionMapper
 		RequestCycle requestCycle = RequestCycle.get();
 
 		if (requestCycle == null)
+		{
 			throw new IllegalStateException(
 				"there is no current request cycle attached to this thread");
+		}
 
 		/*
 		 * Use NEVER_REDIRECT policy to preserve the original page's URL for non-Ajax requests and
@@ -132,7 +134,9 @@ public class DefaultExceptionMapper implements IExceptionMapper
 		IRequestHandler handler = requestCycle.getActiveRequestHandler();
 
 		if (handler == null)
+		{
 			handler = requestCycle.getRequestHandlerScheduledAfterCurrent();
+		}
 
 		if (handler instanceof IPageRequestHandler)
 		{
