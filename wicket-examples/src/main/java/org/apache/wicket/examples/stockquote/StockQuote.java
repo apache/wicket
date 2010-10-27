@@ -36,7 +36,7 @@ public class StockQuote
 	 * We used to use the www.xmethods.com demo webservice for stockquotes. We now use webservicex,
 	 * as xmethods was really overloaded and unreliable.
 	 */
-	private static final String serviceUrl = "http://www.webservicex.net/stockquote.asmx";
+	private static final String serviceUrl = "http://www.webservicex.net/stockquote.asmx?op=GetQuote";
 
 	/** the symbol to get the quote for. */
 	private String symbol;
@@ -162,7 +162,7 @@ public class StockQuote
 	 * @throws ProtocolException
 	 */
 	private HttpURLConnection setUpHttpConnection(URL url, int length) throws IOException,
-			ProtocolException
+		ProtocolException
 	{
 		URLConnection connection = url.openConnection();
 		HttpURLConnection httpConn = (HttpURLConnection)connection;
@@ -211,8 +211,7 @@ public class StockQuote
 	private String createMessage(String symbol)
 	{
 		StringBuffer message = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		message
-				.append("<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">");
+		message.append("<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">");
 		message.append("  <soap:Body>");
 		message.append("    <GetQuote xmlns=\"http://www.webserviceX.NET/\">");
 		message.append("      <symbol>").append(symbol).append("</symbol>");
