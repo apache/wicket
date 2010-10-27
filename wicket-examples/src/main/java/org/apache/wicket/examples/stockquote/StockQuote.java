@@ -36,7 +36,7 @@ public class StockQuote
 	 * We used to use the www.xmethods.com demo webservice for stockquotes. We now use webservicex,
 	 * as xmethods was really overloaded and unreliable.
 	 */
-	private static final String serviceUrl = "http://www.webservicex.net/stockquote.asmx?op=GetQuote";
+	private static final String serviceUrl = "http://www.webservicex.net/stockquote.asmx";
 
 	/** the symbol to get the quote for. */
 	private String symbol;
