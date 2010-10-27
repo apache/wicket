@@ -18,9 +18,6 @@ package org.apache.wicket.examples.stateless;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
-import org.apache.wicket.request.mapper.PackageMapper;
-import org.apache.wicket.request.mapper.mount.MountMapper;
-import org.apache.wicket.util.lang.PackageName;
 
 /**
  * Application class for the stateless application.
@@ -57,9 +54,6 @@ public class StatelessApplication extends WicketExampleApplication
 		mountPage("/query", StatelessPage1.class);
 		mountPage("/mixed", StatelessPage2.class);
 		mountPage("/state-in-url", StatelessPage3.class);
-		getRootRequestMapperAsCompound().add(
-			new MountMapper("/public", new PackageMapper(
-				PackageName.forClass(StatelessApplication.class))));
 		mountPage("foo", StatelessPage.class);
 	}
 }
