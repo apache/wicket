@@ -1,5 +1,49 @@
 This file contains all changes done on the 1.4 version.
 
+Release Notes - Wicket - Version 1.4.13
+
+** Sub-task
+    * [WICKET-3069] - java.rmi not allowed on GAE
+    * [WICKET-3112] - Fix of issue 2886 breaks all individual implementations of any AbstractTree
+
+** Bug
+    * [WICKET-2888] - Nullpointer when inserting [i.e. moving] a node in a TreeTable (AbstactTree, treeNodesInserted)
+    * [WICKET-2912] - IE 8 gets 404 error after continueToOriginalDestination() when app is at root context
+    * [WICKET-3052] - HybridUrlCodingStrategy probably uses wrong url encoding
+    * [WICKET-3057] - NPE when deleting a TreeNode with visible children
+    * [WICKET-3061] - Whole page returns 404 when resource cannot be found
+    * [WICKET-3072] - Deleting only child of collapsed tree node doesn't update the node
+    * [WICKET-3074] - CreditCardValidator throws NumberFormatException on non-numeric characters.
+    * [WICKET-3075] - AJAX file upload fails in IE8 due to Wicket.Ajax.handleMultipart() sniffing wicket:body tags as an HTML body element when running Wicket in development mode
+    * [WICKET-3076] - UrlUtils.isRelative returns false if URL parameter contains an absolute URL
+    * [WICKET-3083] - Broken AbstarctCalendar dependency
+    * [WICKET-3084] - CharSetUtil.getEncoding fails with an IndexOutOfBoundsException
+    * [WICKET-3087] - Form inside ModalWindow causes 'Submit Button not visible' exception in parent page's form
+    * [WICKET-3095] - Adding AjaxFormSubmitBehavior to Form leads to "Error: too much recursion" JS Error
+    * [WICKET-3098] - AjaxEventBehavior#onEvent is invoked on disabled behavior
+    * [WICKET-3102] - WicketTester does not handle startPage(ITestPageSource) that contains a redirect/setResponsePage correctly
+    * [WICKET-3106] - Security: Possible Redirection to foreign Page by using BrowserInfoPage's PageParameter
+    * [WICKET-3108] - Problems with page maps stored in session
+    * [WICKET-3116] - class cast exception
+    * [WICKET-3119] - Localizer cache does not include style in cache key when no component is given
+    * [WICKET-3120] - AbstractHttpSessionStore.bind throws null pointer exception
+    * [WICKET-3127] - Adding node to a collapsed tree node should not cause it to expand
+
+** Improvement
+    * [WICKET-1779] - Palette component - make image URLs part of CSS
+    * [WICKET-1936] - Client-Side Image Map
+    * [WICKET-2776] - Enhancing RadioChoice input items with individual title and css class attributes
+    * [WICKET-2937] - AbstractPropertyModel getObjectClass don't consider nested IObjectClassAwareModel targets
+    * [WICKET-3055] - Application fails to start when disk access is denied
+    * [WICKET-3056] - Upgrade pom reference for joda-time from 1.6 to 1.6.2
+    * [WICKET-3071] - Upgrade maven plugins and non-essential dependencies to newest version
+    * [WICKET-3089] - onBeforeRender in NextButton should not be final
+    * [WICKET-3090] - Make SecondLevelCacheSessionStore and its SecondLevelCachePageMap reusable
+    * [WICKET-3128] - FormComponentLabel should open open-close tags like Label does
+
+** New Feature
+    * [WICKET-3082] - Introduce IComponentOnInitializeListener for cross-cutting concerns
+
 
 Release Notes - Wicket - Version 1.4.12
 
