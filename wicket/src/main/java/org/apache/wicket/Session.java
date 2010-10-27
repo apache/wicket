@@ -1356,6 +1356,11 @@ public abstract class Session implements IClusterable
 	 */
 	void dirtyPageMap(final IPageMap map)
 	{
+		// see WICKET-3108 - removed page maps should not be added to dirtyObjects
+		if (!getPageMaps().contains(map))
+		{
+			return;
+		}
 
 		synchronized (usedPageMaps)
 		{

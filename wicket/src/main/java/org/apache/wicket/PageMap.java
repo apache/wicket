@@ -293,11 +293,11 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 */
 	public final void remove()
 	{
-		// First clear all pages from the session for this pagemap
-		clear();
-
-		// Then remove the pagemap itself
+		// First remove the pagemap itself
 		Session.get().removePageMap(this);
+
+		// Then clear all pages from the session for this pagemap
+		clear();
 	}
 
 	/**
