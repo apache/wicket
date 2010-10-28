@@ -1,5 +1,76 @@
 This file contains all changes done on the 1.5 version.
 
+Release Notes - Wicket - Version 1.5-M3
+
+** Sub-task
+    * [WICKET-2081] - Add optional support for "Setting Markup Head Elements" PLT.12.5.4
+    * [WICKET-3069] - java.rmi not allowed on GAE
+    * [WICKET-3110] - update migration guide to reflect the narrowing of the usecases for TransparentMarkupContainer
+    * [WICKET-3112] - Fix of issue 2886 breaks all individual implementations of any AbstractTree
+    * [WICKET-3115] - source code link doesn't work in wicket-examples 1.5 - request mappers demo
+    * [WICKET-3130] - update migration guide
+
+** Bug
+    * [WICKET-2888] - Nullpointer when inserting [i.e. moving] a node in a TreeTable (AbstactTree, treeNodesInserted)
+    * [WICKET-2912] - IE 8 gets 404 error after continueToOriginalDestination() when app is at root context
+    * [WICKET-3048] - Redirect page in Ajax callback broken.
+    * [WICKET-3052] - HybridUrlCodingStrategy probably uses wrong url encoding
+    * [WICKET-3053] - WicketTester does not preserve the form component values when submitting with AjaxSubmitLink
+    * [WICKET-3057] - NPE when deleting a TreeNode with visible children
+    * [WICKET-3065] - HomePageMapper ignores request to '/' with query string parameters
+    * [WICKET-3067] - The new mappers ignore single query parameter with empty value
+    * [WICKET-3070] - Method getParameterMap in CryptedUrlWebRequestCodingStrategy.DecodedUrlRequest is broken
+    * [WICKET-3072] - Deleting only child of collapsed tree node doesn't update the node
+    * [WICKET-3074] - CreditCardValidator throws NumberFormatException on non-numeric characters.
+    * [WICKET-3075] - AJAX file upload fails in IE8 due to Wicket.Ajax.handleMultipart() sniffing wicket:body tags as an HTML body element when running Wicket in development mode
+    * [WICKET-3076] - UrlUtils.isRelative returns false if URL parameter contains an absolute URL
+    * [WICKET-3078] - FileUploadException is masked behind WicketRuntimeException and not handled by a Form
+    * [WICKET-3079] - Nested fragments markup not found
+    * [WICKET-3083] - Broken AbstarctCalendar dependency
+    * [WICKET-3084] - CharSetUtil.getEncoding fails with an IndexOutOfBoundsException
+    * [WICKET-3086] - AjaxLink.onClick() -> setResponsePage(...) redirects to wrong url
+    * [WICKET-3087] - Form inside ModalWindow causes 'Submit Button not visible' exception in parent page's form
+    * [WICKET-3095] - Adding AjaxFormSubmitBehavior to Form leads to "Error: too much recursion" JS Error
+    * [WICKET-3097] - isTemporary behavior and ajax behavior together crashes with WicketRuntimeException: Couldn't find component behavior.
+    * [WICKET-3098] - AjaxEventBehavior#onEvent is invoked on disabled behavior
+    * [WICKET-3101] - No exceptionpage on exceptions during ajax
+    * [WICKET-3102] - WicketTester does not handle startPage(ITestPageSource) that contains a redirect/setResponsePage correctly
+    * [WICKET-3103] - RequestCycle logs something, when its intended for servlet container
+    * [WICKET-3106] - Security: Possible Redirection to foreign Page by using BrowserInfoPage's PageParameter
+    * [WICKET-3111] - TransparentWebMarkupContainer appears magically for html elements without 'wicket:id' but with 'href' attribute
+    * [WICKET-3119] - Localizer cache does not include style in cache key when no component is given
+    * [WICKET-3123] - MockSessionStore doesn't bind sessions properly
+    * [WICKET-3127] - Adding node to a collapsed tree node should not cause it to expand
+    * [WICKET-3134] - Commons logging must die
+
+** Improvement
+    * [WICKET-385] - Move HTTP caching features out of wicket.Resource
+    * [WICKET-1215] - WicketTester recreates session after setting attributes on it
+    * [WICKET-1244] - Move IResponseFilter and its implementations into a new subfolder / package
+    * [WICKET-1531] - Behaviours cannot change tag name
+    * [WICKET-1779] - Palette component - make image URLs part of CSS
+    * [WICKET-1936] - Client-Side Image Map
+    * [WICKET-2035] - Change naming convention for xml properties files to *.properties.xml instead of *.xml
+    * [WICKET-2776] - Enhancing RadioChoice input items with individual title and css class attributes
+    * [WICKET-2937] - AbstractPropertyModel getObjectClass don't consider nested IObjectClassAwareModel targets
+    * [WICKET-3049] - CompoundPropertyModel constructor allows misuse of model object
+    * [WICKET-3055] - Application fails to start when disk access is denied
+    * [WICKET-3056] - Upgrade pom reference for joda-time from 1.6 to 1.6.2
+    * [WICKET-3062] - Improve cache keys to be more readable
+    * [WICKET-3071] - Upgrade maven plugins and non-essential dependencies to newest version
+    * [WICKET-3080] - Automatic sizing modal window
+    * [WICKET-3089] - onBeforeRender in NextButton should not be final
+    * [WICKET-3125] - Add IRequestListener interface to allow easier framework extension points
+    * [WICKET-3128] - FormComponentLabel should open open-close tags like Label does
+
+** New Feature
+    * [WICKET-2084] - Integrate Wicket Ajax debug console to Firebug
+    * [WICKET-3082] - Introduce IComponentOnInitializeListener for cross-cutting concerns
+
+** Wish
+    * [WICKET-3008] - clarify purpose of getMarkupSettings().setThrowExceptionOnMissingXmlDeclaration(true)
+
+
 Release Notes - Wicket - Version 1.5-M2.1
 
 ** Bug
