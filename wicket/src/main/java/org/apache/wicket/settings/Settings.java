@@ -323,6 +323,8 @@ public final class Settings
 
 	private MarkupFactory markupFactory;
 
+	private AjaxErrorStrategy errorHandlingStrategyDuringAjaxRequests = AjaxErrorStrategy.REDIRECT_TO_ERROR_PAGE;
+
 	/**
 	 * Create the application settings, carrying out any necessary initializations.
 	 * 
@@ -1433,4 +1435,22 @@ public final class Settings
 	{
 		this.useTimestampOnResourcesName = useTimestampOnResourcesName;
 	}
+
+	/**
+	 * @see org.apache.wicket.settings.IExceptionSettings#getAjaxErrorHandlingStrategy()
+	 */
+	public AjaxErrorStrategy getAjaxErrorHandlingStrategy()
+	{
+		return errorHandlingStrategyDuringAjaxRequests;
+	}
+
+	/**
+	 * @see org.apache.wicket.settings.IExceptionSettings#setAjaxErrorHandlingStrategy(org.apache.wicket.settings.IExceptionSettings.AjaxErrorStrategy)
+	 */
+	public void setAjaxErrorHandlingStrategy(
+		AjaxErrorStrategy errorHandlingStrategyDuringAjaxRequests)
+	{
+		this.errorHandlingStrategyDuringAjaxRequests = errorHandlingStrategyDuringAjaxRequests;
+	}
+
 }

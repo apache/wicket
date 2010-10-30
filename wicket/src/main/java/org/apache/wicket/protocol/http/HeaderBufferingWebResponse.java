@@ -142,7 +142,6 @@ class HeaderBufferingWebResponse extends WebResponse
 	@Override
 	public void setStatus(int sc)
 	{
-		checkHeader();
 		bufferedResponse.setStatus(sc);
 	}
 
