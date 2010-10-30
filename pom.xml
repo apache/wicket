@@ -26,7 +26,7 @@
 
 	<groupId>org.apache.wicket</groupId>
 	<artifactId>wicket-parent</artifactId>
-	<version>1.5-SNAPSHOT</version>
+	<version>1.5-M3</version>
 	<packaging>pom</packaging>
 	<name>Wicket Parent</name>
 	<description>Wicket is a Java-based open source component web application framework.</description>
@@ -297,9 +297,9 @@
 		<url>http://wicketstuff.org/bamboo</url>
 	</ciManagement>
 	<scm>
-		<connection>scm:svn:http://svn.apache.org/repos/asf/wicket/releases/1.5-SNAPSHOT</connection>
-		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/wicket/releases/1.5-SNAPSHOT</developerConnection>
-		<url>http://svn.apache.org/viewvc/wicket/releases/1.5-SNAPSHOT</url>
+		<connection>scm:svn:http://svn.apache.org/repos/asf/wicket/releases/1.5-M3</connection>
+		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/wicket/releases/1.5-M3</developerConnection>
+		<url>http://svn.apache.org/viewvc/wicket/releases/1.5-M3</url>
 	</scm>
 	<mailingLists>
 		<mailingList>
