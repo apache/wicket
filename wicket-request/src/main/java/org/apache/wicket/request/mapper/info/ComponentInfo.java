@@ -69,7 +69,7 @@ public class ComponentInfo
 
 	private final String listenerInterface;
 	private final String componentPath;
-	private final Integer behaviorIndex;
+	private final Integer behaviorId;
 	private final Integer renderCount;
 
 	/**
@@ -78,17 +78,17 @@ public class ComponentInfo
 	 * @param renderCount
 	 * @param listenerInterface
 	 * @param componentPath
-	 * @param behaviorIndex
+	 * @param behaviorId
 	 */
 	public ComponentInfo(Integer renderCount, String listenerInterface, String componentPath,
-		Integer behaviorIndex)
+		Integer behaviorId)
 	{
 		Args.notEmpty(listenerInterface, "listenerInterface");
 		Args.notNull(componentPath, "componentPath");
 
 		this.listenerInterface = listenerInterface;
 		this.componentPath = componentPath;
-		this.behaviorIndex = behaviorIndex;
+		this.behaviorId = behaviorId;
 		this.renderCount = renderCount;
 	}
 
@@ -111,9 +111,9 @@ public class ComponentInfo
 	/**
 	 * @return behavior index
 	 */
-	public Integer getBehaviorIndex()
+	public Integer getBehaviorId()
 	{
-		return behaviorIndex;
+		return behaviorId;
 	}
 
 	/**
@@ -141,10 +141,10 @@ public class ComponentInfo
 
 		result.append(listenerInterface);
 
-		if (behaviorIndex != null)
+		if (behaviorId != null)
 		{
 			result.append(BEHAVIOR_INDEX_SEPARATOR);
-			result.append(behaviorIndex);
+			result.append(behaviorId);
 		}
 		result.append(SEPARATOR);
 		result.append(encodeComponentPath(componentPath));

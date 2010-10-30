@@ -91,4 +91,28 @@ public interface IExceptionSettings
 	 *            The unexpectedExceptionDisplay to set.
 	 */
 	void setUnexpectedExceptionDisplay(UnexpectedExceptionDisplay unexpectedExceptionDisplay);
+
+	/**
+	 * Sets strategy used to handle errors during Ajax request processing
+	 * 
+	 * @param strategy
+	 */
+	void setAjaxErrorHandlingStrategy(AjaxErrorStrategy strategy);
+
+	/**
+	 * @return strategy used to handle errors during Ajax request processing
+	 */
+	AjaxErrorStrategy getAjaxErrorHandlingStrategy();
+
+	/**
+	 * How to handle errors while processing an Ajax request
+	 * 
+	 * @author igor
+	 */
+	public static enum AjaxErrorStrategy {
+		/** redirect to error page, just like a normal requset */
+		REDIRECT_TO_ERROR_PAGE,
+		/** invoke client side failure handler */
+		INVOKE_FAILURE_HANDLER
+	}
 }

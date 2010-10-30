@@ -16,10 +16,9 @@
  */
 package org.apache.wicket.request.component;
 
-import java.util.List;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.InvalidBehaviorIdException;
 import org.apache.wicket.model.IDetachable;
 
 /**
@@ -69,16 +68,23 @@ public interface IRequestableComponent
 	public boolean canCallListenerInterface();
 
 	/**
-	 * Gets the currently coupled {@link IBehavior}s as a unmodifiable list. Returns an empty list
-	 * rather than null if there are no behaviors coupled to this component.
+	 * Gets a stable id for the specified behavior. The id remains stable from the point this method
+	 * is first called for the behavior until the behavior has been removed from the component
 	 * 
-	 * NOTE: the list of behaviors is used to keep the index of the behavior in the url, which means
-	 * the list returned should preserve the index. Eg, removal of items from the list should not be
-	 * allowed, a removed item should instead be marked by a value such as {@code null}.
-	 * 
-	 * @return The currently coupled behaviors as a unmodifiable list
+	 * @param behavior
+	 * @return
 	 */
-	public List<? extends IBehavior> getBehaviorsRawList();
+	public int getBehaviorId(IBehavior behavior);
+
+	/**
+	 * Gets the behavior for the specified id
+	 * 
+	 * @param id
+	 * @return behavior or {@code null} if none
+	 * @throws InvalidBehaviorIdException
+	 *             when behavior with this id cannot be found
+	 */
+	public IBehavior getBehaviorById(int id);
 
 	/**
 	 * Detaches the component.

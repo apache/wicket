@@ -30,6 +30,7 @@ import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.UnauthorizedActionException;
 import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.InvalidBehaviorIdException;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
@@ -234,6 +235,12 @@ public abstract class Component
 	private static final Logger log = LoggerFactory.getLogger(Component.class);
 
 	private static final long serialVersionUID = 1L;
+
+	/** metadata key that stores stable ids for behavior - ids are used when generating a url, etc */
+	private static MetaDataKey<ArrayList<IBehavior>> BEHAVIOR_IDS = new MetaDataKey<ArrayList<IBehavior>>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
 
 	/**
 	 * Action used with IAuthorizationStrategy to determine whether a component is allowed to be
@@ -596,27 +603,6 @@ public abstract class Component
 		}
 	}
 
-	private boolean data_can_remove(int index)
-	{
-		int len = data_length();
-		for (int j = index + 1; j < len; j++)
-		{
-			if (data_get(j) instanceof IRequestListener)
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * WARNING: CALL THIS METHOD ONLY IF {@link #data_can_remove(int)} HAS RETURNED {@code true},
-	 * OTHERWISE USE {@link #data_set(int, Object)} TO SET THE VALUE TO {@code null} OR SOMETHING
-	 * MORE APPROPRIATE FOR THE USECASE
-	 * 
-	 * @param position
-	 * @return {@code true} if the item can be removed
-	 */
 	private Object data_remove(int position)
 	{
 		int currentLength = data_length();
@@ -1072,29 +1058,21 @@ public abstract class Component
 		data_add(behavior);
 	}
 
-	/**
-	 * FOR INTERNAL USE ONLY
-	 * 
-	 * @return unmodified list of behaviors which may contain null entries
-	 */
-	public final List<? extends IBehavior> getBehaviorsRawList()
+	private final List<? extends IBehavior> getBehaviorsRawList()
 	{
 		if (data != null)
 		{
 			// if the model is set, we must skip it
+			final int startIndex = getFlag(FLAG_MODEL_SET) ? 1 : 0;
 			int length = data_length();
 
-			if (length > 0)
+			if (length > startIndex)
 			{
 				final ArrayList<IBehavior> result = new ArrayList<IBehavior>();
-				for (int i = 0; i < length; ++i)
+				for (int i = startIndex; i < length; ++i)
 				{
 					Object o = data_get(i);
-					if (o == null || !(o instanceof IBehavior))
-					{
-						result.add((IBehavior)null);
-					}
-					else
+					if (o == null || o instanceof IBehavior)
 					{
 						result.add((IBehavior)o);
 					}
@@ -1755,20 +1733,6 @@ public abstract class Component
 		return key.get(getMetaData());
 	}
 
-	private int getMetaDataIndex()
-	{
-		int start = getFlag(FLAG_MODEL_SET) ? 1 : 0;
-		for (int i = start; i < data_length(); i++)
-		{
-			Object object = data_get(i);
-			if (object instanceof MetaDataEntry<?>[] || object instanceof MetaDataEntry)
-			{
-				return i;
-			}
-		}
-		return -1;
-	}
-
 	/**
 	 * 
 	 * @return meta data entry
@@ -1778,9 +1742,11 @@ public abstract class Component
 		MetaDataEntry<?>[] metaData = null;
 
 		// index where we should expect the entry
-		int index = getMetaDataIndex();
+		int index = getFlag(FLAG_MODEL_SET) ? 1 : 0;
 
-		if (index >= 0)
+		int length = data_length();
+
+		if (index < length)
 		{
 			Object object = data_get(index);
 			if (object instanceof MetaDataEntry<?>[])
@@ -2473,44 +2439,31 @@ public abstract class Component
 	 */
 	private boolean removeBehavior(final IBehavior behavior)
 	{
-		final int start = getFlag(FLAG_MODEL_SET) ? 1 : 0;
 		final int len = data_length();
-		for (int i = start; i < len; ++i)
+		for (int i = 0; i < len; i++)
 		{
 			Object o = data_get(i);
 			if (o != null && o.equals(behavior))
 			{
-				// behaviors that produce urls depend on their index in the behaviors list,
-				// therefore we cannot blindly shrink the array by removing this behavior's slot.
-				// Instead we check if there are any behaviors downstream that will be affected by
-				// this, and if there are we set this behavior's slot to null instead of removing it
-				// to preserve indexes of behaviors downstream.
-
-				if (!data_can_remove(i))
-				{
-					data_set(i, null);
-				}
-				else
-				{
-					data_remove(i);
-
-					if (o instanceof IRequestListener)
-					{
-						// this was a listener which mightve caused holes in the array, see if we
-						// can clean them up. notice: at this point we already know there are no
-						// listeners that can be affected by index change downstream because this is
-						// the last one in the array
-						for (int j = i - 1; j >= start; j--)
-						{
-							if (data_get(j) == null)
-							{
-								data_remove(j);
-							}
-						}
-					}
-				}
+				data_remove(i);
 				behavior.unbind(this);
-				return true;
+
+				// remove behavior from behavior-ids metadata
+				ArrayList<IBehavior> ids = getMetaData(BEHAVIOR_IDS);
+				if (ids != null)
+				{
+					int idx = ids.indexOf(behavior);
+					if (idx == ids.size() - 1)
+					{
+						ids.remove(idx);
+					}
+					else if (idx >= 0)
+					{
+						ids.set(idx, null);
+					}
+					ids.trimToSize();
+					return true;
+				}
 			}
 		}
 		return false;
@@ -3057,7 +3010,6 @@ public abstract class Component
 	 */
 	public final <M> void setMetaData(final MetaDataKey<M> key, final M object)
 	{
-		int index = getMetaDataIndex();
 		MetaDataEntry<?>[] old = getMetaData();
 
 		Object metaData = null;
@@ -3067,9 +3019,11 @@ public abstract class Component
 			metaData = (metaDataArray.length > 1) ? (Object)metaDataArray : metaDataArray[0];
 		}
 
+		int index = getFlag(FLAG_MODEL_SET) ? 1 : 0;
+
 		if (old == null && metaData != null)
 		{
-			data_add(metaData);
+			data_insert(index, metaData);
 		}
 		else if (old != null && metaData != null)
 		{
@@ -3077,15 +3031,7 @@ public abstract class Component
 		}
 		else if (old != null && metaData == null)
 		{
-			if (data_can_remove(index))
-			{
-				data_remove(index);
-			}
-			else
-			{
-				data_set(index, null);
-			}
-
+			data_remove(index);
 		}
 	}
 
@@ -3156,15 +3102,8 @@ public abstract class Component
 			}
 			else
 			{
-				if (data_can_remove(0))
-				{
-					data_remove(0);
-					setFlag(FLAG_MODEL_SET, false);
-				}
-				else
-				{
-					data_set(0, null);
-				}
+				data_remove(0);
+				setFlag(FLAG_MODEL_SET, false);
 			}
 		}
 		else
@@ -3447,15 +3386,15 @@ public abstract class Component
 		final RequestListenerInterface listener)
 	{
 		PageAndComponentProvider provider = new PageAndComponentProvider(getPage(), this);
-		int index = getBehaviorsRawList().indexOf(behaviour);
+		int id = getBehaviorId(behaviour);
 		IRequestHandler handler;
 		if (getPage().isPageStateless())
 		{
-			handler = new BookmarkableListenerInterfaceRequestHandler(provider, listener, index);
+			handler = new BookmarkableListenerInterfaceRequestHandler(provider, listener, id);
 		}
 		else
 		{
-			handler = new ListenerInterfaceRequestHandler(provider, listener, index);
+			handler = new ListenerInterfaceRequestHandler(provider, listener, id);
 		}
 		return getRequestCycle().urlFor(handler);
 	}
@@ -4552,6 +4491,71 @@ public abstract class Component
 	public final void send(IEventSink sink, Broadcast type, Object payload)
 	{
 		new ComponentEventSender(this).send(sink, type, payload);
+	}
+
+	/** {@inheritDoc} */
+	public final IBehavior getBehaviorById(int id)
+	{
+		IBehavior behavior = null;
+
+		ArrayList<IBehavior> ids = getMetaData(BEHAVIOR_IDS);
+		if (ids != null)
+		{
+			if (id >= 0 && id < ids.size())
+			{
+				behavior = ids.get(id);
+			}
+		}
+
+		if (behavior != null)
+		{
+			return behavior;
+		}
+		throw new InvalidBehaviorIdException(this, id);
+	}
+
+	/** {@inheritDoc} */
+	public final int getBehaviorId(IBehavior behavior)
+	{
+		if (!getBehaviorsRawList().contains(behavior))
+		{
+			throw new IllegalStateException(
+				"Behavior must be added to component before its id can be generated. Behavior: " +
+					behavior + ", Component: " + this);
+		}
+
+		ArrayList<IBehavior> ids = getMetaData(BEHAVIOR_IDS);
+
+		if (ids == null)
+		{
+			ids = new ArrayList<IBehavior>(1);
+			setMetaData(BEHAVIOR_IDS, ids);
+		}
+
+		int id = ids.indexOf(behavior);
+
+		if (id < 0)
+		{
+			// try to find an unused slot
+			for (int i = 0; i < ids.size(); i++)
+			{
+				if (ids.get(i) == null)
+				{
+					ids.set(i, behavior);
+					id = i;
+				}
+			}
+		}
+
+		if (id < 0)
+		{
+			// no unused slots, add to the end
+			id = ids.size();
+			ids.add(behavior);
+			ids.trimToSize();
+		}
+
+		return id;
 	}
 
 }

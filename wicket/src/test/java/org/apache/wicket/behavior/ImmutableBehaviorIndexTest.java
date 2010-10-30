@@ -63,8 +63,8 @@ public class ImmutableBehaviorIndexTest extends WicketTestCase
 		assertTrue(output.contains("autocomplete=\"off\""));
 		assertTrue(output.contains("class2=\"border\""));
 		assertTrue(output.contains("autocomplete2=\"off\""));
-		assertTrue(output.contains("IBehaviorListener.2"));
-		assertTrue(output.contains("IBehaviorListener.4"));
+		assertTrue(output.contains("IBehaviorListener.0"));
+		assertTrue(output.contains("IBehaviorListener.1"));
 
 		// if we remove a behavior that is before the ibehaviorlistener its url index should not
 		// change
@@ -75,9 +75,8 @@ public class ImmutableBehaviorIndexTest extends WicketTestCase
 		page.getContainer().remove(auto2);
 		tester.startPage(page);
 		output = tester.getLastResponseAsString();
-		System.out.println(output);
-		assertTrue(output.contains("IBehaviorListener.2"));
-		assertTrue(output.contains("IBehaviorListener.4"));
+		assertTrue(output.contains("IBehaviorListener.0"));
+		assertTrue(output.contains("IBehaviorListener.1"));
 	}
 
 	/**
@@ -95,7 +94,14 @@ public class ImmutableBehaviorIndexTest extends WicketTestCase
 		MyPage page = new MyPage();
 		page.getContainer().add(border, auto, link, border2, link2, auto2);
 
-		List<? extends IBehavior> behaviors = page.getContainer().getBehaviorsRawList();
+		int borderId = page.container.getBehaviorId(border);
+		int border2Id = page.container.getBehaviorId(border2);
+		int autoId = page.container.getBehaviorId(auto);
+		int auto2Id = page.container.getBehaviorId(auto2);
+		int linkId = page.container.getBehaviorId(link);
+		int link2Id = page.container.getBehaviorId(link2);
+
+		List<? extends IBehavior> behaviors = page.getContainer().getBehaviors();
 		assertEquals(6, behaviors.size());
 
 		// test removal of various behaviors and make sure they preserve indexes as long as there is
@@ -103,30 +109,31 @@ public class ImmutableBehaviorIndexTest extends WicketTestCase
 
 		// border,auto,link,border2,link2,auto2
 		page.getContainer().remove(border);
-		behaviors = page.getContainer().getBehaviorsRawList();
-		assertEquals(6, behaviors.size());
-		assertNull(behaviors.get(0));
-
-		// null,auto,link,border2,link2,auto2
-		page.getContainer().remove(link);
-		behaviors = page.getContainer().getBehaviorsRawList();
-		assertEquals(6, behaviors.size());
-		assertNull(behaviors.get(0));
-		assertNull(behaviors.get(2));
-
-		// null,auto,null,border2,link2,auto2
-		page.getContainer().remove(auto2);
-		behaviors = page.getContainer().getBehaviorsRawList();
+		behaviors = page.getContainer().getBehaviors();
 		assertEquals(5, behaviors.size());
-		assertNull(behaviors.get(0));
-		assertNull(behaviors.get(2));
+		assertEquals(autoId, page.container.getBehaviorId(auto));
+		assertEquals(link2Id, page.container.getBehaviorId(link2));
 
-		// null,auto,null,border2,link2
+		// auto,link,border2,link2,auto2
+		page.getContainer().remove(link);
+		behaviors = page.getContainer().getBehaviors();
+		assertEquals(4, behaviors.size());
+		assertEquals(autoId, page.container.getBehaviorId(auto));
+		assertEquals(link2Id, page.container.getBehaviorId(link2));
+
+		// auto,border2,link2,auto2
+		page.getContainer().remove(auto2);
+		behaviors = page.getContainer().getBehaviors();
+		assertEquals(3, behaviors.size());
+		assertEquals(autoId, page.container.getBehaviorId(auto));
+		assertEquals(link2Id, page.container.getBehaviorId(link2));
+
+		// auto,border2,link2
 		page.getContainer().remove(link2); // last IBehaviorListener
-		behaviors = page.getContainer().getBehaviorsRawList();
+		behaviors = page.getContainer().getBehaviors();
 		assertEquals(2, behaviors.size());
-		assertSame(auto, behaviors.get(0));
-		assertSame(border2, behaviors.get(1));
+		assertEquals(autoId, page.container.getBehaviorId(auto));
+		assertEquals(border2Id, page.container.getBehaviorId(border2));
 
 	}
 

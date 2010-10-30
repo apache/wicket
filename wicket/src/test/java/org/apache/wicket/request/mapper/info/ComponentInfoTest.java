@@ -44,7 +44,7 @@ public class ComponentInfoTest extends TestCase
 		ComponentInfo info = ComponentInfo.parse(s);
 		assertEquals("listener", info.getListenerInterface());
 		assertEquals("component:path", info.getComponentPath());
-		assertNull(info.getBehaviorIndex());
+		assertNull(info.getBehaviorId());
 
 		assertEquals(s, info.toString());
 	}
@@ -99,7 +99,7 @@ public class ComponentInfoTest extends TestCase
 		ComponentInfo info = ComponentInfo.parse(s);
 		assertEquals("listener", info.getListenerInterface());
 		assertEquals("compo-nent:path", info.getComponentPath());
-		assertNull(info.getBehaviorIndex());
+		assertNull(info.getBehaviorId());
 
 		assertEquals(s, info.toString());
 	}
@@ -113,7 +113,7 @@ public class ComponentInfoTest extends TestCase
 		ComponentInfo info = ComponentInfo.parse(s);
 		assertEquals("listener", info.getListenerInterface());
 		assertEquals("co-mpo--nent:path", info.getComponentPath());
-		assertNull(info.getBehaviorIndex());
+		assertNull(info.getBehaviorId());
 
 		assertEquals(s, info.toString());
 	}
@@ -127,7 +127,7 @@ public class ComponentInfoTest extends TestCase
 		ComponentInfo info = ComponentInfo.parse(s);
 		assertEquals("listener", info.getListenerInterface());
 		assertEquals("component:path", info.getComponentPath());
-		assertEquals((Object)12, info.getBehaviorIndex());
+		assertEquals((Object)12, info.getBehaviorId());
 
 		assertEquals(s, info.toString());
 	}
@@ -154,7 +154,7 @@ public class ComponentInfoTest extends TestCase
 		ComponentInfo info = ComponentInfo.parse(s);
 		assertEquals("listener", info.getListenerInterface());
 		assertEquals((Integer)4, info.getRenderCount());
-		assertEquals((Integer)5, info.getBehaviorIndex());
+		assertEquals((Integer)5, info.getBehaviorId());
 
 		assertEquals(s, info.toString());
 	}

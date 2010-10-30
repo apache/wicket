@@ -41,7 +41,7 @@ public class ListenerInterfaceRequestHandler
 
 	private final RequestListenerInterface listenerInterface;
 
-	private final Integer behaviorIndex;
+	private final Integer behaviorId;
 
 	/**
 	 * Construct.
@@ -58,7 +58,7 @@ public class ListenerInterfaceRequestHandler
 
 		this.pageComponentProvider = pageComponentProvider;
 		this.listenerInterface = listenerInterface;
-		this.behaviorIndex = behaviorIndex;
+		this.behaviorId = behaviorIndex;
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class ListenerInterfaceRequestHandler
 	 */
 	public Integer getBehaviorIndex()
 	{
-		return behaviorIndex;
+		return behaviorId;
 	}
 
 	/**
@@ -187,17 +187,16 @@ public class ListenerInterfaceRequestHandler
 
 	private void invokeListener()
 	{
-		IRequestableComponent component = getComponent();
 		if (getBehaviorIndex() == null)
 		{
-			listenerInterface.invoke(component);
+			listenerInterface.invoke(getComponent());
 		}
 		else
 		{
 			try
 			{
-				IBehavior behavior = component.getBehaviorsRawList().get(behaviorIndex);
-				listenerInterface.invoke(component, behavior);
+				IBehavior behavior = getComponent().getBehaviorById(behaviorId);
+				listenerInterface.invoke(getComponent(), behavior);
 			}
 			catch (IndexOutOfBoundsException e)
 			{

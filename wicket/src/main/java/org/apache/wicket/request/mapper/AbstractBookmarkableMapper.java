@@ -182,7 +182,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 			provider.setPageSource(getContext());
 
 			return new ListenerInterfaceRequestHandler(provider, listenerInterface,
-				componentInfo.getBehaviorIndex());
+				componentInfo.getBehaviorId());
 		}
 		else
 		{

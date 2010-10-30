@@ -21,11 +21,13 @@ import org.apache.wicket.markup.html.pages.ExceptionErrorPage;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.handler.ErrorCodeResponseHandler;
 import org.apache.wicket.request.mapper.StalePageException;
 import org.apache.wicket.settings.IExceptionSettings;
@@ -59,6 +61,18 @@ public class DefaultExceptionMapper implements IExceptionMapper
 
 	private IRequestHandler internalMap(Exception e)
 	{
+		final Application application = Application.get();
+
+		// check if we are processing an Ajax request and if we want to invoke the failure handler
+		if (isProcessingAjaxRequest())
+		{
+			switch (application.getExceptionSettings().getAjaxErrorHandlingStrategy())
+			{
+				case INVOKE_FAILURE_HANDLER :
+					return new ErrorCodeResponseHandler(500);
+			}
+		}
+
 		if (e instanceof StalePageException)
 		{
 			// If the page was stale, just rerender it
@@ -79,7 +93,7 @@ public class DefaultExceptionMapper implements IExceptionMapper
 		}
 		else
 		{
-			final Application application = Application.get();
+
 			final UnexpectedExceptionDisplay unexpectedExceptionDisplay = application.getExceptionSettings()
 				.getUnexpectedExceptionDisplay();
 
@@ -116,11 +130,28 @@ public class DefaultExceptionMapper implements IExceptionMapper
 
 		/*
 		 * Use NEVER_REDIRECT policy to preserve the original page's URL for non-Ajax requests and
-		 * to indicate the error for Ajax requests so that their onFailure() is being called
+		 * always redirect for ajax requests
 		 */
 		RenderPageRequestHandler.RedirectPolicy redirect = RenderPageRequestHandler.RedirectPolicy.NEVER_REDIRECT;
 
+		if (isProcessingAjaxRequest())
+		{
+			redirect = RenderPageRequestHandler.RedirectPolicy.ALWAYS_REDIRECT;
+		}
+
 		return new RenderPageRequestHandler(pageProvider, redirect);
+	}
+
+	private boolean isProcessingAjaxRequest()
+	{
+
+		RequestCycle rc = RequestCycle.get();
+		Request request = rc.getRequest();
+		if (request instanceof WebRequest)
+		{
+			return ((WebRequest)request).isAjax();
+		}
+		return false;
 	}
 
 	/**

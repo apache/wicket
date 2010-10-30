@@ -127,7 +127,7 @@
 		</plugins>
 	</build>
 	<properties>
-		<wicket.version>1.5-M3</wicket.version>
+		<wicket.version>1.5-SNAPSHOT</wicket.version>
 		<jetty.version>6.1.25</jetty.version>
 	</properties>
 	#end
