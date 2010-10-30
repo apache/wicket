@@ -18,19 +18,16 @@ package org.apache.wicket;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.UnauthorizedActionException;
 import org.apache.wicket.behavior.IBehavior;
-import org.apache.wicket.behavior.InvalidBehaviorIdException;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
@@ -235,12 +232,6 @@ public abstract class Component
 	private static final Logger log = LoggerFactory.getLogger(Component.class);
 
 	private static final long serialVersionUID = 1L;
-
-	/** metadata key that stores stable ids for behavior - ids are used when generating a url, etc */
-	private static MetaDataKey<ArrayList<IBehavior>> BEHAVIOR_IDS = new MetaDataKey<ArrayList<IBehavior>>()
-	{
-		private static final long serialVersionUID = 1L;
-	};
 
 	/**
 	 * Action used with IAuthorizationStrategy to determine whether a component is allowed to be
@@ -491,7 +482,12 @@ public abstract class Component
 	 */
 	Object data = null;
 
-	private final int data_length()
+	final int data_start()
+	{
+		return getFlag(FLAG_MODEL_SET) ? 1 : 0;
+	}
+
+	final int data_length()
 	{
 		if (data == null)
 		{
@@ -507,7 +503,7 @@ public abstract class Component
 		}
 	}
 
-	private final Object data_get(int index)
+	final Object data_get(int index)
 	{
 		if (data == null)
 		{
@@ -528,7 +524,7 @@ public abstract class Component
 		}
 	}
 
-	private final Object data_set(int index, Object object)
+	final Object data_set(int index, Object object)
 	{
 		if (index > data_length() - 1)
 		{
@@ -549,12 +545,12 @@ public abstract class Component
 		}
 	}
 
-	private final void data_add(Object object)
+	final void data_add(Object object)
 	{
 		data_insert(-1, object);
 	}
 
-	private final void data_insert(int position, Object object)
+	final void data_insert(int position, Object object)
 	{
 		int currentLength = data_length();
 		if (position == -1)
@@ -603,7 +599,7 @@ public abstract class Component
 		}
 	}
 
-	private Object data_remove(int position)
+	Object data_remove(int position)
 	{
 		int currentLength = data_length();
 
@@ -1010,80 +1006,6 @@ public abstract class Component
 	}
 
 	/**
-	 * Adds a behavior modifier to the component.
-	 * 
-	 * <p>
-	 * Note: this method is override to enable users to do things like discussed in <a
-	 * href="http://www.nabble.com/Why-add%28IBehavior%29-is-final--tf2598263.html#a7248198">this
-	 * thread</a>.
-	 * </p>
-	 * 
-	 * @param behaviors
-	 *            The behavior modifier(s) to be added
-	 * @return this (to allow method call chaining)
-	 */
-	public Component add(final IBehavior... behaviors)
-	{
-		if (behaviors == null)
-		{
-			throw new IllegalArgumentException("Argument may not be null");
-		}
-
-		for (IBehavior behavior : behaviors)
-		{
-			if (behavior == null)
-			{
-				throw new IllegalArgumentException("Argument may not be null");
-			}
-
-			addBehavior(behavior);
-
-			if (!behavior.isTemporary())
-			{
-				addStateChange();
-			}
-
-			// Give handler the opportunity to bind this component
-			behavior.bind(this);
-		}
-		return this;
-	}
-
-	/**
-	 * 
-	 * @param behavior
-	 */
-	private void addBehavior(final IBehavior behavior)
-	{
-		data_add(behavior);
-	}
-
-	private final List<? extends IBehavior> getBehaviorsRawList()
-	{
-		if (data != null)
-		{
-			// if the model is set, we must skip it
-			final int startIndex = getFlag(FLAG_MODEL_SET) ? 1 : 0;
-			int length = data_length();
-
-			if (length > startIndex)
-			{
-				final ArrayList<IBehavior> result = new ArrayList<IBehavior>();
-				for (int i = startIndex; i < length; ++i)
-				{
-					Object o = data_get(i);
-					if (o == null || o instanceof IBehavior)
-					{
-						result.add((IBehavior)o);
-					}
-				}
-				return result;
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * Called on very component after the page is rendered. It will call onAfterRender for it self
 	 * and its children.
 	 */
@@ -1300,7 +1222,7 @@ public abstract class Component
 		detachModels();
 
 		// detach any behaviors
-		detachBehaviors();
+		new Behaviors(this).detach();
 
 		// always detach children because components can be attached
 		// independently of their parents
@@ -1324,32 +1246,6 @@ public abstract class Component
 		if (detachListener != null)
 		{
 			detachListener.onDetach(this);
-		}
-	}
-
-	/**
-	 * THIS IS WICKET INTERNAL ONLY. DO NOT USE IT.
-	 * 
-	 * Traverses all behaviors and calls detachModel() on them. This is needed to cleanup behavior
-	 * after render. This method is necessary for {@link AjaxRequestTarget} to be able to cleanup
-	 * component's behaviors after header contribution has been done (which is separated from
-	 * component render).
-	 */
-	public final void detachBehaviors()
-	{
-		for (IBehavior behavior : getBehaviors())
-		{
-			// Always detach models, 'accepted' or not. Otherwise, if they
-			// are accepted during render, but not here - something can go
-			// undetached, and calling isEnabled can also lead to nasty side
-			// effects. See for instance Timo's comment on
-			// http://issues.apache.org/jira/browse/WICKET-673
-			behavior.detach(this);
-
-			if (behavior.isTemporary())
-			{
-				removeBehavior(behavior);
-			}
 		}
 	}
 
@@ -1448,17 +1344,6 @@ public abstract class Component
 	public final Application getApplication()
 	{
 		return Application.get();
-	}
-
-	/**
-	 * Gets the currently coupled {@link IBehavior}s as a unmodifiable list. Returns an empty list
-	 * rather than null if there are no behaviors coupled to this component.
-	 * 
-	 * @return The currently coupled behaviors as a unmodifiable list
-	 */
-	public final List<? extends IBehavior> getBehaviors()
-	{
-		return getBehaviors(IBehavior.class);
 	}
 
 	/**
@@ -2401,73 +2286,6 @@ public abstract class Component
 		parent.remove(this);
 	}
 
-	/**
-	 * Removes behavior from component
-	 * 
-	 * @param behavior
-	 *            behavior to remove
-	 * 
-	 * @return this (to allow method call chaining)
-	 */
-	public Component remove(final IBehavior behavior)
-	{
-		if (behavior == null)
-		{
-			throw new IllegalArgumentException("Argument `behavior` cannot be null");
-		}
-
-		if (removeBehavior(behavior))
-		{
-			if (!behavior.isTemporary())
-			{
-				addStateChange();
-			}
-		}
-		else
-		{
-			throw new IllegalStateException(
-				"Tried to remove a behavior that was not added to the component. Behavior: " +
-					behavior.toString());
-		}
-		return this;
-	}
-
-	/**
-	 * 
-	 * @param behavior
-	 * @return true if behavior found and removed
-	 */
-	private boolean removeBehavior(final IBehavior behavior)
-	{
-		final int len = data_length();
-		for (int i = 0; i < len; i++)
-		{
-			Object o = data_get(i);
-			if (o != null && o.equals(behavior))
-			{
-				data_remove(i);
-				behavior.unbind(this);
-
-				// remove behavior from behavior-ids metadata
-				ArrayList<IBehavior> ids = getMetaData(BEHAVIOR_IDS);
-				if (ids != null)
-				{
-					int idx = ids.indexOf(behavior);
-					if (idx == ids.size() - 1)
-					{
-						ids.remove(idx);
-					}
-					else if (idx >= 0)
-					{
-						ids.set(idx, null);
-					}
-					ids.trimToSize();
-					return true;
-				}
-			}
-		}
-		return false;
-	}
 
 	/**
 	 * Render the Component.
@@ -3687,28 +3505,7 @@ public abstract class Component
 	@SuppressWarnings("unchecked")
 	public <M extends IBehavior> List<M> getBehaviors(Class<M> type)
 	{
-		List<? extends IBehavior> behaviors = getBehaviorsRawList();
-		if (behaviors == null)
-		{
-			return Collections.emptyList();
-		}
-
-		List<M> subset = new ArrayList<M>(behaviors.size()); // avoid growing
-		for (IBehavior behavior : behaviors)
-		{
-			if (behavior != null)
-			{
-				if (type == null)
-				{
-					subset.add((M)behavior);
-				}
-				else if (type.isAssignableFrom(behavior.getClass()))
-				{
-					subset.add(type.cast(behavior));
-				}
-			}
-		}
-		return Collections.unmodifiableList(subset);
+		return new Behaviors(this).getBehaviors(type);
 	}
 
 	/**
@@ -4493,69 +4290,60 @@ public abstract class Component
 		new ComponentEventSender(this).send(sink, type, payload);
 	}
 
+	/**
+	 * Removes behavior from component
+	 * 
+	 * @param behavior
+	 *            behavior to remove
+	 * 
+	 * @return this (to allow method call chaining)
+	 */
+	public Component remove(final IBehavior behavior)
+	{
+		new Behaviors(this).remove(behavior);
+		return this;
+	}
+
 	/** {@inheritDoc} */
 	public final IBehavior getBehaviorById(int id)
 	{
-		IBehavior behavior = null;
-
-		ArrayList<IBehavior> ids = getMetaData(BEHAVIOR_IDS);
-		if (ids != null)
-		{
-			if (id >= 0 && id < ids.size())
-			{
-				behavior = ids.get(id);
-			}
-		}
-
-		if (behavior != null)
-		{
-			return behavior;
-		}
-		throw new InvalidBehaviorIdException(this, id);
+		return new Behaviors(this).getBehaviorById(id);
 	}
 
 	/** {@inheritDoc} */
 	public final int getBehaviorId(IBehavior behavior)
 	{
-		if (!getBehaviorsRawList().contains(behavior))
-		{
-			throw new IllegalStateException(
-				"Behavior must be added to component before its id can be generated. Behavior: " +
-					behavior + ", Component: " + this);
-		}
+		return new Behaviors(this).getBehaviorId(behavior);
+	}
 
-		ArrayList<IBehavior> ids = getMetaData(BEHAVIOR_IDS);
+	/**
+	 * Adds a behavior modifier to the component.
+	 * 
+	 * <p>
+	 * Note: this method is override to enable users to do things like discussed in <a
+	 * href="http://www.nabble.com/Why-add%28IBehavior%29-is-final--tf2598263.html#a7248198">this
+	 * thread</a>.
+	 * </p>
+	 * 
+	 * @param behaviors
+	 *            The behavior modifier(s) to be added
+	 * @return this (to allow method call chaining)
+	 */
+	public Component add(final IBehavior... behaviors)
+	{
+		new Behaviors(this).add(behaviors);
+		return this;
+	}
 
-		if (ids == null)
-		{
-			ids = new ArrayList<IBehavior>(1);
-			setMetaData(BEHAVIOR_IDS, ids);
-		}
-
-		int id = ids.indexOf(behavior);
-
-		if (id < 0)
-		{
-			// try to find an unused slot
-			for (int i = 0; i < ids.size(); i++)
-			{
-				if (ids.get(i) == null)
-				{
-					ids.set(i, behavior);
-					id = i;
-				}
-			}
-		}
-
-		if (id < 0)
-		{
-			// no unused slots, add to the end
-			id = ids.size();
-			ids.add(behavior);
-			ids.trimToSize();
-		}
-
-		return id;
+	/**
+	 * Gets the currently coupled {@link IBehavior}s as a unmodifiable list. Returns an empty list
+	 * rather than null if there are no behaviors coupled to this component.
+	 * 
+	 * @return The currently coupled behaviors as a unmodifiable list
+	 */
+	public final List<? extends IBehavior> getBehaviors()
+	{
+		return getBehaviors(IBehavior.class);
 	}
 
 }

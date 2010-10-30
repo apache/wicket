@@ -29,7 +29,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 
 /** IBehavior array management tests */
-public class ImmutableBehaviorIndexTest extends WicketTestCase
+public class ImmutableBehaviorIdsTest extends WicketTestCase
 {
 	/** Tests simple behavior */
 	public void testSimple()
@@ -59,6 +59,7 @@ public class ImmutableBehaviorIndexTest extends WicketTestCase
 		tester.startPage(page);
 
 		String output = tester.getLastResponseAsString();
+		System.out.println(output);
 		assertTrue(output.contains("class=\"border\""));
 		assertTrue(output.contains("autocomplete=\"off\""));
 		assertTrue(output.contains("class2=\"border\""));
