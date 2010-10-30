@@ -62,7 +62,7 @@ public class BehaviorRequestTest extends TestCase
 
 	private String urlForBehavior(IBehavior behaviorUnderTest)
 	{
-		int index = page.container.getBehaviorsRawList().indexOf(behaviorUnderTest);
+		int index = page.container.getBehaviorId(behaviorUnderTest);
 		String enabledBehaviorUrl = tester.urlFor(
 			new ListenerInterfaceRequestHandler(new PageAndComponentProvider(page, page.container),
 				IBehaviorListener.INTERFACE, index)).toString();

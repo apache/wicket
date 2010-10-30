@@ -40,12 +40,12 @@ public class BehaviorUrlTest extends TestCase
 
 		TestPage page = new TestPage();
 
-		int indexBeforeRender = page.container.getBehaviorsRawList().indexOf(page.callbackBehavior);
+		int indexBeforeRender = page.container.getBehaviorId(page.callbackBehavior);
 
 		tester.startPage(page);
 
 		page = (TestPage)tester.getLastRenderedPage();
-		int indexAfterRender = page.container.getBehaviorsRawList().indexOf(page.callbackBehavior);
+		int indexAfterRender = page.container.getBehaviorId(page.callbackBehavior);
 
 		assertEquals("index of behavior in the raw list should not have changed",
 			indexBeforeRender, indexAfterRender);

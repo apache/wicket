@@ -89,7 +89,7 @@ public class PageInstanceMapper extends AbstractComponentMapper
 					RequestListenerInterface listenerInterface = requestListenerInterfaceFromString(componentInfo.getListenerInterface());
 
 					return new ListenerInterfaceRequestHandler(provider, listenerInterface,
-						componentInfo.getBehaviorIndex());
+						componentInfo.getBehaviorId());
 				}
 			}
 		}

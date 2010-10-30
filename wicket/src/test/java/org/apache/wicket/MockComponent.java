@@ -16,9 +16,6 @@
  */
 package org.apache.wicket;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -139,11 +136,6 @@ public class MockComponent implements IRequestableComponent
 		return true;
 	}
 
-	public List<IBehavior> getBehaviorsRawList()
-	{
-		return Collections.emptyList();
-	}
-
 	public boolean isEnabledInHierarchy()
 	{
 		return false;
@@ -152,5 +144,15 @@ public class MockComponent implements IRequestableComponent
 	public boolean isVisibleInHierarchy()
 	{
 		return false;
+	}
+
+	public int getBehaviorId(IBehavior behavior)
+	{
+		throw new IllegalArgumentException();
+	}
+
+	public IBehavior getBehaviorById(int id)
+	{
+		return null;
 	}
 }
