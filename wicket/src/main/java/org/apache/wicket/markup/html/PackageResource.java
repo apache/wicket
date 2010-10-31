@@ -669,4 +669,23 @@ public class PackageResource extends WebResource implements IModifiable, IPackag
 
 		return guard.accept(scope, path);
 	}
+
+	@Override
+	public String toString()
+	{
+		StringBuilder result = new StringBuilder();
+		result.append('[')
+			.append(getClass().getSimpleName())
+			.append(' ')
+			.append("name = ")
+			.append(getPath())
+			.append(", scope = ")
+			.append(scopeName)
+			.append(", locale = ")
+			.append(locale)
+			.append(", style = ")
+			.append(style)
+			.append(']');
+		return result.toString();
+	}
 }
