@@ -35,7 +35,7 @@ public class PackageResourceReference extends ResourceReference
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param key
 	 */
 	public PackageResourceReference(final Key key)
@@ -45,7 +45,7 @@ public class PackageResourceReference extends ResourceReference
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param scope
 	 * @param name
 	 * @param locale
@@ -60,7 +60,7 @@ public class PackageResourceReference extends ResourceReference
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param scope
 	 * @param name
 	 */
@@ -71,7 +71,7 @@ public class PackageResourceReference extends ResourceReference
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param name
 	 */
 	public PackageResourceReference(final String name)
@@ -88,11 +88,12 @@ public class PackageResourceReference extends ResourceReference
 		return new PackageResource(getScope(), getName(), getLocale(), getStyle(), getVariation());
 	}
 
-	private StreamInfo lookupStream(IResourceStreamLocator locator,
-	                                Locale locale, String style, String variation)
+	private StreamInfo lookupStream(IResourceStreamLocator locator, Locale locale, String style,
+		String variation)
 	{
 		String absolutePath = Packages.absolutePath(getScope(), getName());
-		IResourceStream stream = locator.locate(getScope(), absolutePath, style, variation, locale, null, true);
+		IResourceStream stream = locator.locate(getScope(), absolutePath, style, variation, locale,
+			null, true);
 
 		if (stream == null)
 			return null;
@@ -103,8 +104,8 @@ public class PackageResourceReference extends ResourceReference
 	private StreamInfo lookupStream(Locale locale, String style, String variation)
 	{
 		IResourceStreamLocator locator = Application.get()
-				.getResourceSettings()
-				.getResourceStreamLocator();
+			.getResourceSettings()
+			.getResourceStreamLocator();
 
 		StreamInfo info;
 
