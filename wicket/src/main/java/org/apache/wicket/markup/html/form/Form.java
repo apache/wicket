@@ -842,8 +842,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	}
 
 	/**
-	 * Process the form. Though you can override this method to provide your whole own algorithm, it
-	 * is not recommended to do so.
+	 * Process the form.
 	 * <p>
 	 * See the class documentation for further details on the form processing
 	 * </p>
