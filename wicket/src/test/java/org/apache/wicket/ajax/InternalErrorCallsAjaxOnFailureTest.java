@@ -16,11 +16,15 @@
  */
 package org.apache.wicket.ajax;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
-
+import org.apache.wicket.markup.html.pages.ExceptionErrorPage;
+import org.apache.wicket.markup.html.pages.InternalErrorPage;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
+import org.apache.wicket.resource.DummyApplication;
+import org.apache.wicket.settings.IExceptionSettings;
+import org.apache.wicket.settings.IExceptionSettings.AjaxErrorStrategy;
 import org.apache.wicket.util.tester.BaseWicketTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
@@ -29,13 +33,20 @@ import org.junit.Test;
  * Tests that for internal errors in Ajax requests Wicket will send the error response immediately
  * (RedirectPolicy.NEVER_REDIRECT). Since WicketTester initializes new MockHttpServletResponse after
  * a request the response with the error is the last one in
- * {@link BaseWicketTester#getPreviousResponses()}
+ * {@link BaseWicketTester#getLastResponse()}
+ * 
+ * See WICKET-3143 No Exception page are rendered when using ajax
+ * 
  */
 public class InternalErrorCallsAjaxOnFailureTest
 {
 
+	/**
+	 * The default {@link IExceptionSettings#getAjaxErrorHandlingStrategy()} is
+	 * {@link AjaxErrorStrategy#REDIRECT_TO_ERROR_PAGE}
+	 */
 	@Test
-	public void callsOnFailure()
+	public void showsInternalErrorPage()
 	{
 
 		WicketTester tester = new WicketTester();
@@ -45,9 +56,50 @@ public class InternalErrorCallsAjaxOnFailureTest
 		tester.clickLink("failure-link", true);
 
 		// the response before current should holds the error page markup
-		List<MockHttpServletResponse> previousResponses = tester.getPreviousResponses();
-		MockHttpServletResponse errorPageResponse = previousResponses.get(previousResponses.size() - 1);
+		MockHttpServletResponse errorPageResponse = tester.getLastResponse();
+		assertEquals(Integer.valueOf(500), errorPageResponse.getStatus());
 		assertTrue(errorPageResponse.getDocument().contains(
 			InternalErrorCallsAjaxOnFailurePage.ERROR_MESSAGE));
+
+		// assert the page with detailed error explanation is rendered
+		tester.assertRenderedPage(ExceptionErrorPage.class);
+	}
+
+
+	/**
+	 * Setup {@link AjaxErrorStrategy#INVOKE_FAILURE_HANDLER} so Wicket will not redirect to the
+	 * configured {@link InternalErrorPage}/{@link ExceptionErrorPage} but will preserve the current
+	 * page and send http status 500 to wicket-ajax.js
+	 */
+	@Test
+	public void callsOnFailure()
+	{
+
+		WicketTester tester = new WicketTester(new DummyApplication()
+		{
+
+			/**
+			 * @see org.apache.wicket.protocol.http.WebApplication#init()
+			 */
+			@Override
+			protected void init()
+			{
+				super.init();
+
+				getExceptionSettings().setAjaxErrorHandlingStrategy(
+					AjaxErrorStrategy.INVOKE_FAILURE_HANDLER);
+			}
+
+		});
+		tester.setExposeExceptions(false);
+		tester.startPage(InternalErrorCallsAjaxOnFailurePage.class);
+
+		tester.clickLink("failure-link", true);
+
+		MockHttpServletResponse errorPageResponse = tester.getLastResponse();
+		assertEquals(Integer.valueOf(500), errorPageResponse.getStatus());
+
+		// assert that the original page is still the last rendered one
+		tester.assertRenderedPage(InternalErrorCallsAjaxOnFailurePage.class);
 	}
 }
