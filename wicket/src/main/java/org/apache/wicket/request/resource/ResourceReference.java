@@ -462,4 +462,10 @@ public abstract class ResourceReference implements Serializable
 				style + "; variation: " + variation;
 		}
 	}
+
+	@Override
+	public String toString()
+	{
+		return data.toString();
+	}
 }
