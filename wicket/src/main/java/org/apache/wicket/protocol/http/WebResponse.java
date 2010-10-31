@@ -240,7 +240,8 @@ public class WebResponse extends Response
 						 * access to response headers.
 						 */
 						httpServletResponse.getWriter().write(
-							"<ajax-response><redirect>" + url + "</redirect></ajax-response>");
+							"<ajax-response><redirect><![CDATA[" + url +
+								"]]></redirect></ajax-response>");
 
 						configureAjaxRedirect();
 					}
