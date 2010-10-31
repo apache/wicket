@@ -30,6 +30,9 @@ import org.apache.wicket.pageStore.IDataStore;
 class InMemoryPageStore implements IDataStore
 {
 
+	/**
+	 * A map of : sessionId => pageId => pageAsBytes
+	 */
 	private final Map<String, Map<Integer, byte[]>> store;
 
 	InMemoryPageStore()
@@ -42,6 +45,9 @@ class InMemoryPageStore implements IDataStore
 		store.clear();
 	}
 
+	/**
+	 * @see org.apache.wicket.pageStore.IDataStore#getData(java.lang.String, int)
+	 */
 	public byte[] getData(String sessionId, int pageId)
 	{
 		byte[] pageAsBytes = null;
@@ -55,6 +61,9 @@ class InMemoryPageStore implements IDataStore
 		return pageAsBytes;
 	}
 
+	/**
+	 * @see org.apache.wicket.pageStore.IDataStore#removeData(java.lang.String, int)
+	 */
 	public void removeData(String sessionId, int pageId)
 	{
 		final Map<Integer, byte[]> sessionPages = store.get(sessionId);
@@ -64,11 +73,17 @@ class InMemoryPageStore implements IDataStore
 		}
 	}
 
+	/**
+	 * @see org.apache.wicket.pageStore.IDataStore#removeData(java.lang.String)
+	 */
 	public void removeData(String sessionId)
 	{
 		store.remove(sessionId);
 	}
 
+	/**
+	 * @see org.apache.wicket.pageStore.IDataStore#storeData(java.lang.String, int, byte[])
+	 */
 	public void storeData(String sessionId, int pageId, byte[] pageAsBytes)
 	{
 		Map<Integer, byte[]> sessionPages = store.get(sessionId);
@@ -81,6 +96,9 @@ class InMemoryPageStore implements IDataStore
 		sessionPages.put(Integer.valueOf(pageId), pageAsBytes);
 	}
 
+	/**
+	 * @see org.apache.wicket.pageStore.IDataStore#isReplicated()
+	 */
 	public boolean isReplicated()
 	{
 		return false;
