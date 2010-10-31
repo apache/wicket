@@ -24,6 +24,7 @@ import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.lang.WicketObjects;
@@ -33,6 +34,27 @@ import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Represents a localizable static resource.
+ * <p>
+ * Use like eg:
+ * 
+ * <pre>
+ * MyPackageResource IMG_UNKNOWN = new MyPackageResource(EditPage.class, &quot;questionmark.gif&quot;);
+ * </pre>
+ * 
+ * where the static resource references image 'questionmark.gif' from the the package that EditPage
+ * is in to get a package resource.
+ * </p>
+ * 
+ * Access to resources can be granted or denied via a {@link IPackageResourceGuard}. Please see
+ * {@link IResourceSettings#getPackageResourceGuard()} as well.
+ * 
+ * @author Jonathan Locke
+ * @author Eelco Hillenius
+ * @author Juergen Donnerstag
+ * @author Matej Knopp
+ */
 public class PackageResource extends AbstractResource
 {
 	private static final Logger log = LoggerFactory.getLogger(PackageResource.class);
@@ -48,8 +70,9 @@ public class PackageResource extends AbstractResource
 
 		/**
 		 * Construct.
-		 *
-		 * @param message error message
+		 * 
+		 * @param message
+		 *            error message
 		 */
 		public PackageResourceBlockedException(String message)
 		{
@@ -90,16 +113,21 @@ public class PackageResource extends AbstractResource
 
 	/**
 	 * Hidden constructor.
-	 *
-	 * @param scope     This argument will be used to get the class loader for loading the package
-	 *                  resource, and to determine what package it is in
-	 * @param name      The relative path to the resource
-	 * @param locale    The locale of the resource
-	 * @param style     The style of the resource
-	 * @param variation The component's variation (of the style)
+	 * 
+	 * @param scope
+	 *            This argument will be used to get the class loader for loading the package
+	 *            resource, and to determine what package it is in
+	 * @param name
+	 *            The relative path to the resource
+	 * @param locale
+	 *            The locale of the resource
+	 * @param style
+	 *            The style of the resource
+	 * @param variation
+	 *            The component's variation (of the style)
 	 */
 	protected PackageResource(final Class<?> scope, final String name, final Locale locale,
-	                          final String style, final String variation)
+		final String style, final String variation)
 	{
 		// Convert resource path to absolute path relative to base package
 		absolutePath = Packages.absolutePath(scope, name);
@@ -107,11 +135,11 @@ public class PackageResource extends AbstractResource
 		if (!accept(scope, name))
 		{
 			throw new PackageResourceBlockedException(
-					"Access denied to (static) package resource " + absolutePath +
-							". See IPackageResourceGuard");
+				"Access denied to (static) package resource " + absolutePath +
+					". See IPackageResourceGuard");
 		}
 
-		// TODO NG: Check path for ../
+		// TODO WICKET-NG: Check path for ../
 
 		scopeName = scope.getName();
 		path = name;
@@ -122,7 +150,7 @@ public class PackageResource extends AbstractResource
 
 	/**
 	 * Gets the scoping class, used for class loading and to determine the package.
-	 *
+	 * 
 	 * @return the scoping class
 	 */
 	public final Class<?> getScope()
@@ -132,7 +160,7 @@ public class PackageResource extends AbstractResource
 
 	/**
 	 * Gets the style.
-	 *
+	 * 
 	 * @return the style
 	 */
 	public final String getStyle()
@@ -142,8 +170,9 @@ public class PackageResource extends AbstractResource
 
 	/**
 	 * creates a new resource response based on the request attributes
-	 *
-	 * @param attributes current request attributes from client
+	 * 
+	 * @param attributes
+	 *            current request attributes from client
 	 * @return resource response for answering request
 	 */
 	@Override
@@ -166,7 +195,7 @@ public class PackageResource extends AbstractResource
 			// add Last-Modified header (to support HEAD requests and If-Modified-Since)
 			final Time lastModified = resourceStream.lastModifiedTime();
 
-			if(lastModified != null)
+			if (lastModified != null)
 				resourceResponse.setLastModified(lastModified.toDate());
 
 			try
@@ -209,7 +238,7 @@ public class PackageResource extends AbstractResource
 		}
 
 		// if timestamps are enabled on resource we can maximize caching with no pain
-		if(Application.get().getResourceSettings().getUseTimestampOnResources())
+		if (Application.get().getResourceSettings().getUseTimestampOnResources())
 		{
 			resourceResponse.setCacheDurationToMaximum();
 			resourceResponse.setCacheScope(WebResponse.CacheScope.PUBLIC);
@@ -220,16 +249,21 @@ public class PackageResource extends AbstractResource
 
 	/**
 	 * send resource specific error message and write log entry
-	 *
-	 * @param resourceResponse resource response
-	 * @param errorCode error code (=http status)
-	 * @param errorMessage error message (=http error message)
+	 * 
+	 * @param resourceResponse
+	 *            resource response
+	 * @param errorCode
+	 *            error code (=http status)
+	 * @param errorMessage
+	 *            error message (=http error message)
 	 * @return resource response for method chaining
 	 */
-	private ResourceResponse sendResourceError(ResourceResponse resourceResponse, int errorCode, String errorMessage)
+	private ResourceResponse sendResourceError(ResourceResponse resourceResponse, int errorCode,
+		String errorMessage)
 	{
-		String msg = String.format("resource [path = %s, style = %s, variation = %s, locale = %s]: %s (status=%d)",
-		                           absolutePath, style, variation, locale, errorMessage, errorCode);
+		String msg = String.format(
+			"resource [path = %s, style = %s, variation = %s, locale = %s]: %s (status=%d)",
+			absolutePath, style, variation, locale, errorMessage, errorCode);
 
 		log.warn(msg);
 
@@ -239,51 +273,59 @@ public class PackageResource extends AbstractResource
 
 	/**
 	 * locate resource stream for current resource
-	 *
+	 * 
 	 * @return resource stream or <code>null</code> if not found
 	 */
 	private IResourceStream getResourceStream()
 	{
 		// Locate resource
 		return ThreadContext.getApplication()
-				.getResourceSettings()
-				.getResourceStreamLocator()
-				.locate(getScope(), absolutePath, style, variation, locale, null);
+			.getResourceSettings()
+			.getResourceStreamLocator()
+			.locate(getScope(), absolutePath, style, variation, locale, null);
 	}
 
 	/**
-	 * @param scope resource scope
-	 * @param path  resource path
+	 * @param scope
+	 *            resource scope
+	 * @param path
+	 *            resource path
 	 * @return <code>true<code> if resource access is granted
 	 */
 	private boolean accept(Class<?> scope, String path)
 	{
 		IPackageResourceGuard guard = ThreadContext.getApplication()
-				.getResourceSettings()
-				.getPackageResourceGuard();
+			.getResourceSettings()
+			.getPackageResourceGuard();
 
 		return guard.accept(scope, path);
 	}
 
 	/**
 	 * Gets whether a resource for a given set of criteria exists.
-	 *
-	 * @param scope     This argument will be used to get the class loader for loading the package
-	 *                  resource, and to determine what package it is in. Typically this is the class in
-	 *                  which you call this method
-	 * @param path      The path to the resource
-	 * @param locale    The locale of the resource
-	 * @param style     The style of the resource (see {@link org.apache.wicket.Session})
-	 * @param variation The component's variation (of the style)
+	 * 
+	 * @param scope
+	 *            This argument will be used to get the class loader for loading the package
+	 *            resource, and to determine what package it is in. Typically this is the class in
+	 *            which you call this method
+	 * @param path
+	 *            The path to the resource
+	 * @param locale
+	 *            The locale of the resource
+	 * @param style
+	 *            The style of the resource (see {@link org.apache.wicket.Session})
+	 * @param variation
+	 *            The component's variation (of the style)
 	 * @return true if a resource could be loaded, false otherwise
 	 */
 	public static boolean exists(final Class<?> scope, final String path, final Locale locale,
-	                             final String style, final String variation)
+		final String style, final String variation)
 	{
 		String absolutePath = Packages.absolutePath(scope, path);
 		return ThreadContext.getApplication()
-				.getResourceSettings()
-				.getResourceStreamLocator()
-				.locate(scope, absolutePath, style, variation, locale, null) != null;
+			.getResourceSettings()
+			.getResourceStreamLocator()
+			.locate(scope, absolutePath, style, variation, locale, null) != null;
 	}
+
 }
