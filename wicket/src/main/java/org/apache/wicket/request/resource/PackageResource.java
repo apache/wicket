@@ -328,4 +328,24 @@ public class PackageResource extends AbstractResource
 			.locate(scope, absolutePath, style, variation, locale, null) != null;
 	}
 
+	@Override
+	public String toString()
+	{
+		final StringBuilder result = new StringBuilder();
+		result.append('[')
+			.append(getClass().getSimpleName())
+			.append(' ')
+			.append("name = ")
+			.append(path)
+			.append(", scope = ")
+			.append(scopeName)
+			.append(", locale = ")
+			.append(locale)
+			.append(", style = ")
+			.append(style)
+			.append(", variation = ")
+			.append(variation)
+			.append(']');
+		return result.toString();
+	}
 }
