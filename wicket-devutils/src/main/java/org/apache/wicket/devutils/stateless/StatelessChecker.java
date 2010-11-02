@@ -45,7 +45,7 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 	 *            component to check.
 	 * @return <code>true</code> if checker must check given component.
 	 */
-	private static boolean mustCheck(final Component component)
+	protected boolean mustCheck(final Component component)
 	{
 		final StatelessComponent ann = component.getClass().getAnnotation(StatelessComponent.class);
 		return ann != null && ann.enabled();
@@ -56,13 +56,13 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 	 */
 	public void onBeforeRender(final Component component)
 	{
-		if (StatelessChecker.mustCheck(component))
+		if (mustCheck(component))
 		{
 			final IVisitor<Component, Component> visitor = new IVisitor<Component, Component>()
 			{
 				public void component(final Component comp, final IVisit<Component> visit) 
 				{
-					if (component instanceof Page && StatelessChecker.mustCheck(comp))
+					if (component instanceof Page && mustCheck(comp))
 					{
 						// Do not go deeper, because this component will be checked by checker
 						// itself.
