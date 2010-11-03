@@ -321,7 +321,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	{
 		if (headerResponse == null)
 		{
-			headerResponse = newHeaderResponse();
+			headerResponse = getApplication().decorateHeaderResponse(newHeaderResponse());
 		}
 		return headerResponse;
 	}

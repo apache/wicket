@@ -38,6 +38,7 @@ import org.apache.wicket.markup.IMarkupCache;
 import org.apache.wicket.markup.html.EmptySrcAttributeCheckFilter;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.html.IHeaderResponseDecorator;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
 import org.apache.wicket.markup.parser.filter.WicketMessageTagHandler;
@@ -158,6 +159,11 @@ public abstract class Application
 	private List<IHeaderContributor> renderHeadListeners;
 
 	/**
+	 * The decorator this application uses to decorate any header responses created by Wicket
+	 */
+	private IHeaderResponseDecorator headerResponseDecorator;
+
+	/**
 	 * Checks if the <code>Application</code> threadlocal is set in this thread
 	 * 
 	 * @return true if {@link Application#get()} can return the instance of application, false
@@ -238,7 +244,7 @@ public abstract class Application
 	private IComponentInstantiationListener[] componentInstantiationListeners = new IComponentInstantiationListener[0];
 
 	/** list of {@link IComponentInitializationListener}s. */
-	private CopyOnWriteArrayList<IComponentInitializationListener> componentInitializationListeners = new CopyOnWriteArrayList<IComponentInitializationListener>();
+	private final CopyOnWriteArrayList<IComponentInitializationListener> componentInitializationListeners = new CopyOnWriteArrayList<IComponentInitializationListener>();
 
 	/** The converter locator instance. */
 	private IConverterLocator converterLocator;
@@ -1298,5 +1304,38 @@ public abstract class Application
 				listener.renderHead(response);
 			}
 		}
+	}
+
+	/**
+	 * Sets an {@link IHeaderResponseDecorator} that you want your application to use to decorate
+	 * header responses.
+	 * 
+	 * @param headerResponseDecorator
+	 *            your custom decorator
+	 */
+	public void setHeaderResponseDecorator(IHeaderResponseDecorator headerResponseDecorator)
+	{
+		this.headerResponseDecorator = headerResponseDecorator;
+	}
+
+	/**
+	 * INTERNAL METHOD - You shouldn't need to call this. This is called every time Wicket creates
+	 * an IHeaderResponse. It gives you the ability to incrementally add features to an
+	 * IHeaderResponse implementation by wrapping it in another implementation.
+	 * 
+	 * To decorate an IHeaderResponse in your application, set the {@link IHeaderResponseDecorator}
+	 * on the application.
+	 * 
+	 * @see IHeaderResponseDecorator
+	 * @param response
+	 *            the response Wicket created
+	 * @return the response Wicket should use in IHeaderContributor traversal
+	 */
+	public final IHeaderResponse decorateHeaderResponse(IHeaderResponse response)
+	{
+		IHeaderResponse hr = headerResponseDecorator == null ? response
+			: headerResponseDecorator.decorate(response);
+		notifyRenderHeadListener(hr);
+		return hr;
 	}
 }

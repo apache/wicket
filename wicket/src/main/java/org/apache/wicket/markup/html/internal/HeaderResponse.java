@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.Response;
@@ -51,10 +50,6 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public HeaderResponse()
 	{
-		if (Application.exists())
-		{
-			Application.get().notifyRenderHeadListener(this);
-		}
 	}
 
 	/**

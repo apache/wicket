@@ -36,7 +36,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.Response;
-import org.apache.wicket.ajax.AjaxRequestTarget.IListener;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.internal.HeaderResponse;
@@ -1061,7 +1060,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	{
 		if (headerResponse == null)
 		{
-			headerResponse = new AjaxHeaderResponse();
+			headerResponse = Application.get().decorateHeaderResponse(new AjaxHeaderResponse());
 		}
 		return headerResponse;
 	}
