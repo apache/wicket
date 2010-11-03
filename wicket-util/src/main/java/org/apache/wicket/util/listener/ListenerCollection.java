@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  * NOTE: Ordering of listeners is not guaranteed and should not be relied upon
  * </p>
  * 
- * @autor ivaynberg (Igor Vaynberg)
+ * @author ivaynberg (Igor Vaynberg)
  * @author Jonathan Locke
  * 
  * @param <T>
