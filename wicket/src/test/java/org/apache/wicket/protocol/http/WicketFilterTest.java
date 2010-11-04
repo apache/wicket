@@ -116,7 +116,7 @@ public class WicketFilterTest extends TestCase
 				{
 				}
 			});
-			assertEquals((Integer)HttpServletResponse.SC_NOT_MODIFIED, response.getStatus());
+			assertEquals(HttpServletResponse.SC_NOT_MODIFIED, response.getStatus());
 			String responseExpiresHeader = response.getHeader("Expires");
 			assertNotNull("Expires header must be set on not modified response",
 				responseExpiresHeader);

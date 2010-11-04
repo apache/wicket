@@ -22,10 +22,10 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.servlet.ServletOutputStream;
@@ -33,6 +33,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.util.collections.MultiMap;
 import org.apache.wicket.util.io.StringBufferWriter;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
@@ -57,7 +58,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	private int status = -1;
 
 	/** headers map */
-	private Map<String, Object> headers;
+	private MultiMap<String, Object> headers;
 
 	/** the real response for encoding the url */
 	private HttpServletResponse realResponse;
@@ -187,7 +188,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		isOpen();
 		if (headers == null)
 		{
-			headers = new HashMap<String, Object>();
+			headers = new MultiMap<String, Object>();
 		}
 	}
 
@@ -199,34 +200,13 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private void addHeaderObject(String name, Object object)
-	{
-		Object previousObject = headers.get(name);
-		if (previousObject == null)
-		{
-			headers.put(name, object);
-		}
-		else if (previousObject instanceof List)
-		{
-			((List<Object>)previousObject).add(object);
-		}
-		else
-		{
-			ArrayList<Object> list = new ArrayList<Object>();
-			list.add(previousObject);
-			list.add(object);
-			headers.put(name, list);
-		}
-	}
-
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#setDateHeader(java.lang.String, long)
 	 */
 	public void setDateHeader(String name, long date)
 	{
 		testAndCreateHeaders();
-		headers.put(name, date);
+		headers.replaceValues(name, date);
 	}
 
 	/**
@@ -235,7 +215,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	public void addDateHeader(String name, long date)
 	{
 		testAndCreateHeaders();
-		addHeaderObject(name, date);
+		headers.addValue(name, date);
 	}
 
 	/**
@@ -244,7 +224,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	public void setHeader(String name, String value)
 	{
 		testAndCreateHeaders();
-		headers.put(name, value);
+		headers.replaceValues(name, value);
 	}
 
 	/**
@@ -253,7 +233,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	public void addHeader(String name, String value)
 	{
 		testAndCreateHeaders();
-		addHeaderObject(name, value);
+		headers.addValue(name, value);
 	}
 
 	/**
@@ -262,7 +242,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	public void setIntHeader(String name, int value)
 	{
 		testAndCreateHeaders();
-		headers.put(name, new Integer(value));
+		headers.replaceValues(name, value);
 	}
 
 	/**
@@ -271,7 +251,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	public void addIntHeader(String name, int value)
 	{
 		testAndCreateHeaders();
-		addHeaderObject(name, value);
+		headers.addValue(name, value);
 	}
 
 	/**
@@ -501,21 +481,13 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		}
 		if (headers != null)
 		{
-			for (Entry<String, Object> stringObjectEntry : headers.entrySet())
+			for (Entry<String, List<Object>> stringObjectEntry : headers.entrySet())
 			{
 				String name = stringObjectEntry.getKey();
-				Object value = stringObjectEntry.getValue();
-				if (value instanceof List)
+				List<Object> values = stringObjectEntry.getValue();
+				for (Object value : values)
 				{
-					List<?> lst = (List<?>)value;
-					for (Object aLst : lst)
-					{
-						addHeader(name, aLst, servletResponse);
-					}
-				}
-				else
-				{
-					setHeader(name, value, servletResponse);
+					addHeader(name, value, servletResponse);
 				}
 			}
 		}
@@ -587,5 +559,52 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		{
 			servletResponse.addIntHeader(name, (Integer)value);
 		}
+	}
+
+	/**
+	 * @see javax.servlet.http.HttpServletResponse#getStatus()
+	 */
+	public int getStatus()
+	{
+		return status;
+	}
+
+	/**
+	 * @see javax.servlet.http.HttpServletResponse#getHeader(java.lang.String)
+	 */
+	public String getHeader(String name)
+	{
+		Object value = headers.getFirstValue(name);
+		if (value == null)
+		{
+			return null;
+		}
+		return value.toString();
+	}
+
+	/**
+	 * @see javax.servlet.http.HttpServletResponse#getHeaders(java.lang.String)
+	 */
+	public Collection<String> getHeaders(String name)
+	{
+		List<Object> values = headers.get(name);
+		if (values == null)
+		{
+			return Collections.emptyList();
+		}
+		List<String> ret = new ArrayList<String>(values.size());
+		for (Object value : values)
+		{
+			ret.add(value.toString());
+		}
+		return ret;
+	}
+
+	/**
+	 * @see javax.servlet.http.HttpServletResponse#getHeaderNames()
+	 */
+	public Collection<String> getHeaderNames()
+	{
+		return Collections.unmodifiableCollection(headers.keySet());
 	}
 }

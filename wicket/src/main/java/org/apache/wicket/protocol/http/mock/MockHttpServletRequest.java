@@ -29,6 +29,7 @@ import java.security.Principal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
@@ -39,20 +40,27 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.AsyncContext;
+import javax.servlet.DispatcherType;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.mock.MockRequestParameters;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.Url.QueryParameter;
 import org.apache.wicket.request.UrlDecoder;
 import org.apache.wicket.request.UrlEncoder;
-import org.apache.wicket.request.Url.QueryParameter;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.upload.FileUploadBase;
@@ -643,11 +651,9 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The parameters
 	 */
-	public Map<String, Object> getParameterMap()
+	public Map<String, String[]> getParameterMap()
 	{
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.putAll(parameters);
-		return Collections.unmodifiableMap(map);
+		return Collections.unmodifiableMap(parameters);
 	}
 
 	/**
@@ -1202,8 +1208,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void setPath(final String path)
 	{
-		this.path = UrlDecoder.PATH_INSTANCE.decode(path,
-			Charset.forName(getCharacterEncoding()));
+		this.path = UrlDecoder.PATH_INSTANCE.decode(path, Charset.forName(getCharacterEncoding()));
 	}
 
 	/**
@@ -1587,4 +1592,63 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	private final MockRequestParameters post = new MockRequestParameters();
+
+	public ServletContext getServletContext()
+	{
+		return null;
+	}
+
+	public AsyncContext startAsync() throws IllegalStateException
+	{
+		return null;
+	}
+
+	public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse)
+		throws IllegalStateException
+	{
+		return null;
+	}
+
+	public boolean isAsyncStarted()
+	{
+		return false;
+	}
+
+	public boolean isAsyncSupported()
+	{
+		return false;
+	}
+
+	public AsyncContext getAsyncContext()
+	{
+		return null;
+	}
+
+	public DispatcherType getDispatcherType()
+	{
+		return null;
+	}
+
+	public boolean authenticate(HttpServletResponse response) throws IOException, ServletException
+	{
+		return false;
+	}
+
+	public void login(String username, String password) throws ServletException
+	{
+	}
+
+	public void logout() throws ServletException
+	{
+	}
+
+	public Collection<Part> getParts() throws IOException, ServletException
+	{
+		return null;
+	}
+
+	public Part getPart(String name) throws IOException, ServletException
+	{
+		return null;
+	}
 }

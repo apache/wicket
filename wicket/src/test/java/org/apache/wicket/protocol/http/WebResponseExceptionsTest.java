@@ -36,10 +36,12 @@ public class WebResponseExceptionsTest extends WicketTestCase
 	 */
 	public void testBufferedExceptionErrorPage()
 	{
-		tester.getApplication().getRequestCycleSettings().setRenderStrategy(
-			IRequestCycleSettings.RenderStrategy.REDIRECT_TO_BUFFER);
-		tester.getApplication().getExceptionSettings().setUnexpectedExceptionDisplay(
-			IExceptionSettings.SHOW_EXCEPTION_PAGE);
+		tester.getApplication()
+			.getRequestCycleSettings()
+			.setRenderStrategy(IRequestCycleSettings.RenderStrategy.REDIRECT_TO_BUFFER);
+		tester.getApplication()
+			.getExceptionSettings()
+			.setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_EXCEPTION_PAGE);
 		testInternalErrorPage();
 	}
 
@@ -48,8 +50,9 @@ public class WebResponseExceptionsTest extends WicketTestCase
 	 */
 	public void testExceptionErrorPage()
 	{
-		tester.getApplication().getExceptionSettings().setUnexpectedExceptionDisplay(
-			IExceptionSettings.SHOW_EXCEPTION_PAGE);
+		tester.getApplication()
+			.getExceptionSettings()
+			.setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_EXCEPTION_PAGE);
 		testInternalErrorPage();
 	}
 
@@ -84,6 +87,6 @@ public class WebResponseExceptionsTest extends WicketTestCase
 		AjaxLink link = (AjaxLink)tester.getComponentFromLastRenderedPage("link");
 
 		tester.executeAjaxEvent(link, "onclick");
-		assertEquals((Integer)500, tester.getLastResponse().getStatus());
+		assertEquals(500, tester.getLastResponse().getStatus());
 	}
 }

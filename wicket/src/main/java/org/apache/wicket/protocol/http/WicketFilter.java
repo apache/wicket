@@ -24,6 +24,8 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -116,6 +118,11 @@ public class WicketFilter implements Filter
 
 			// Make sure getFilterPath() gets called before checkIfRedirectRequired()
 			String filterPath = getFilterPath(httpServletRequest);
+
+			if (Strings.isEmpty(filterPath))
+			{
+				throw new IllegalStateException("filter path was not configured");
+			}
 
 			String redirectURL = checkIfRedirectRequired(httpServletRequest);
 			if (redirectURL == null)
@@ -276,13 +283,24 @@ public class WicketFilter implements Filter
 		// Allow the filterPath to tbe preset via setFilterPath()
 		if (filterPath == null)
 		{
-			filterPath = new WebXmlFile().getFilterPath(isServlet, filterConfig);
-			if ((filterPath == null) && log.isInfoEnabled())
-			{
-				log.info("Unable to parse filter mapping web.xml for " +
-					filterConfig.getFilterName() + ". " + "Configure with init-param " +
-					FILTER_MAPPING_PARAM + " if it is not \"/*\".");
-			}
+			filterPath = getFilterPathFromConfig(filterConfig);
+		}
+
+		if (filterPath == null)
+		{
+			filterPath = getFilterPathFromWebXml(isServlet, filterConfig);
+		}
+
+		if (filterPath == null)
+		{
+			filterPath = getFilterPathFromAnnotation(isServlet);
+		}
+
+		if (filterPath == null)
+		{
+			log.warn("Unable to determine filter path from filter init-parm, web.xml, "
+				+ "or servlet 3.0 annotations. Assuming user will set filter path "
+				+ "manually by calling setFilterPath(String)");
 		}
 
 		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
@@ -312,6 +330,46 @@ public class WicketFilter implements Filter
 		}
 	}
 
+	protected String getFilterPathFromAnnotation(boolean isServlet)
+	{
+		String[] patterns = null;
+
+		if (isServlet)
+		{
+			WebServlet servlet = getClass().getAnnotation(WebServlet.class);
+			if (servlet != null)
+			{
+				patterns = servlet.urlPatterns();
+			}
+		}
+		else
+		{
+			WebFilter filter = getClass().getAnnotation(WebFilter.class);
+			if (filter != null)
+			{
+				patterns = filter.urlPatterns();
+			}
+		}
+		if (patterns != null && patterns.length > 0)
+		{
+			String pattern = patterns[0];
+			if (patterns.length > 1)
+			{
+				log.warn(
+					"Multiple url patterns defined for Wicket filter/servlet, using the first: {}",
+					pattern);
+			}
+			return pattern;
+		}
+		return null;
+	}
+
+	protected String getFilterPathFromWebXml(final boolean isServlet,
+		final FilterConfig filterConfig)
+	{
+		return new WebXmlFile().getFilterPath(isServlet, filterConfig);
+	}
+
 	/**
 	 * @return filter config
 	 */
@@ -333,10 +391,11 @@ public class WicketFilter implements Filter
 		{
 			return filterPath;
 		}
+		return null;
+	}
 
-		// Legacy migration check.
-		// TODO: Remove this after 1.3 is released and everyone's upgraded.
-
+	protected String getFilterPathFromConfig(FilterConfig filterConfig)
+	{
 		String result = filterConfig.getInitParameter(FILTER_MAPPING_PARAM);
 		if (result == null || result.equals("/*"))
 		{

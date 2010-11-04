@@ -57,7 +57,7 @@ public class InternalErrorCallsAjaxOnFailureTest
 
 		// the response before current should holds the error page markup
 		MockHttpServletResponse errorPageResponse = tester.getLastResponse();
-		assertEquals(Integer.valueOf(500), errorPageResponse.getStatus());
+		assertEquals(500, errorPageResponse.getStatus());
 		assertTrue(errorPageResponse.getDocument().contains(
 			InternalErrorCallsAjaxOnFailurePage.ERROR_MESSAGE));
 
@@ -97,7 +97,7 @@ public class InternalErrorCallsAjaxOnFailureTest
 		tester.clickLink("failure-link", true);
 
 		MockHttpServletResponse errorPageResponse = tester.getLastResponse();
-		assertEquals(Integer.valueOf(500), errorPageResponse.getStatus());
+		assertEquals(500, errorPageResponse.getStatus());
 
 		// assert that the original page is still the last rendered one
 		tester.assertRenderedPage(InternalErrorCallsAjaxOnFailurePage.class);

@@ -23,6 +23,8 @@ import java.io.StringWriter;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -369,7 +371,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	 * 
 	 * @return The status code
 	 */
-	public Integer getStatus()
+	public int getStatus()
 	{
 		return status;
 	}
@@ -807,5 +809,10 @@ public class MockHttpServletResponse implements HttpServletResponse
 		{
 			return getDocument().substring(0, Integer.valueOf(ctheader));
 		}
+	}
+
+	public Collection<String> getHeaders(String name)
+	{
+		return Collections.singletonList(headers.get(name).toString());
 	}
 }
