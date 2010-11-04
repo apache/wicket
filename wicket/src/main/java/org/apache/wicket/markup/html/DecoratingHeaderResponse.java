@@ -45,6 +45,17 @@ public abstract class DecoratingHeaderResponse implements IHeaderResponse
 		realResponse = real;
 	}
 
+	/**
+	 * Returns the actual response being decorated for subclasses to be able to pass it off to other
+	 * objects if they need to do so.
+	 * 
+	 * @return the actual wrapped IHeaderResponse
+	 */
+	protected final IHeaderResponse getRealResponse()
+	{
+		return realResponse;
+	}
+
 	public void renderJavascriptReference(ResourceReference reference)
 	{
 		realResponse.renderJavascriptReference(reference);
