@@ -24,8 +24,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -330,44 +328,34 @@ public class WicketFilter implements Filter
 		}
 	}
 
+	/**
+	 * Stub method that lets subclasses configure filter path from annotations.
+	 * 
+	 * @param isServlet
+	 * @return
+	 */
 	protected String getFilterPathFromAnnotation(boolean isServlet)
 	{
+		// @formatter:off
+		/* TODO JAVA6,SERVLET3.0
+		 * the code below is disabled because servlet 3.0 requires java 6 and wicket still supports java 5
+		 * for now the code below will go into a wicket-stuff module
 		String[] patterns = null;
 
 		if (isServlet)
 		{
-			try
+			WebServlet servlet = getClass().getAnnotation(WebServlet.class);
+			if (servlet != null)
 			{
-				if (Class.forName("javax.servlet.annotation.WebServlet") != null)
-				{
-					WebServlet servlet = getClass().getAnnotation(WebServlet.class);
-					if (servlet != null)
-					{
-						patterns = servlet.urlPatterns();
-					}
-				}
-			}
-			catch (ClassNotFoundException e)
-			{
-				// noop
+				patterns = servlet.urlPatterns();
 			}
 		}
 		else
 		{
-			try
+			WebFilter filter = getClass().getAnnotation(WebFilter.class);
+			if (filter != null)
 			{
-				if (Class.forName("javax.servlet.annotation.WebFilter") != null)
-				{
-					WebFilter filter = getClass().getAnnotation(WebFilter.class);
-					if (filter != null)
-					{
-						patterns = filter.urlPatterns();
-					}
-				}
-			}
-			catch (ClassNotFoundException e)
-			{
-				// noop
+				patterns = filter.urlPatterns();
 			}
 		}
 		if (patterns != null && patterns.length > 0)
@@ -381,6 +369,8 @@ public class WicketFilter implements Filter
 			}
 			return pattern;
 		}
+		*/
+		// @formatter:on
 		return null;
 	}
 
