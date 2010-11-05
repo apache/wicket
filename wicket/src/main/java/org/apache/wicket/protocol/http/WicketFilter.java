@@ -336,18 +336,38 @@ public class WicketFilter implements Filter
 
 		if (isServlet)
 		{
-			WebServlet servlet = getClass().getAnnotation(WebServlet.class);
-			if (servlet != null)
+			try
 			{
-				patterns = servlet.urlPatterns();
+				if (Class.forName("javax.servlet.annotation.WebServlet") != null)
+				{
+					WebServlet servlet = getClass().getAnnotation(WebServlet.class);
+					if (servlet != null)
+					{
+						patterns = servlet.urlPatterns();
+					}
+				}
+			}
+			catch (ClassNotFoundException e)
+			{
+				// noop
 			}
 		}
 		else
 		{
-			WebFilter filter = getClass().getAnnotation(WebFilter.class);
-			if (filter != null)
+			try
 			{
-				patterns = filter.urlPatterns();
+				if (Class.forName("javax.servlet.annotation.WebFilter") != null)
+				{
+					WebFilter filter = getClass().getAnnotation(WebFilter.class);
+					if (filter != null)
+					{
+						patterns = filter.urlPatterns();
+					}
+				}
+			}
+			catch (ClassNotFoundException e)
+			{
+				// noop
 			}
 		}
 		if (patterns != null && patterns.length > 0)
