@@ -1143,6 +1143,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 				}
 			});
 		}
+		header.getHeaderResponse().close();
 
 		// revert to old response
 
