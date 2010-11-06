@@ -149,7 +149,7 @@ public class ModalWindow extends Panel
 	private String cookieName;
 	private IModel<String> title = null;
 	private MaskType maskType = MaskType.SEMI_TRANSPARENT;
-	private boolean autoSize = false;	
+	private boolean autoSize = false;
 
 	private PageCreator pageCreator = null;
 	private CloseButtonCallback closeButtonCallback = null;
@@ -249,7 +249,7 @@ public class ModalWindow extends Panel
 
 		add(empty = new WebMarkupContainer(getContentId()));
 
-		add(new CloseButtonBehavior());
+		add(newCloseButtonBehavior());
 		add(new WindowClosedBehavior());
 	}
 
@@ -911,12 +911,16 @@ public class ModalWindow extends Panel
 	/**
 	 * @author Matej Knopp
 	 */
-	private class CloseButtonBehavior extends AbstractDefaultAjaxBehavior
+	protected class CloseButtonBehavior extends AbstractDefaultAjaxBehavior
 	{
 		private static final long serialVersionUID = 1L;
 
+		public CloseButtonBehavior()
+		{
+		}
+
 		@Override
-		protected void respond(AjaxRequestTarget target)
+		protected final void respond(AjaxRequestTarget target)
 		{
 			if (closeButtonCallback == null ||
 				closeButtonCallback.onCloseButtonClicked(target) == true)
@@ -938,7 +942,7 @@ public class ModalWindow extends Panel
 		 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getCallbackScript()
 		 */
 		@Override
-		protected CharSequence getCallbackScript()
+		protected final CharSequence getCallbackScript()
 		{
 			return super.getCallbackScript();
 		}
@@ -1051,7 +1055,7 @@ public class ModalWindow extends Panel
 		{
 			buffer.append("settings.mask=\"semi-transparent\";\n");
 		}
-		
+
 		appendAssignment(buffer, "settings.autoSize", autoSize);
 
 
@@ -1171,4 +1175,13 @@ public class ModalWindow extends Panel
 		return autoSize;
 	}
 
+	/**
+	 * Gives the possibility to provide custom {@link IAjaxCallDecorator}
+	 * 
+	 * @return the behavior that should be used for the window close button
+	 */
+	protected CloseButtonBehavior newCloseButtonBehavior()
+	{
+		return new CloseButtonBehavior();
+	}
 }
