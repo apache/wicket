@@ -22,13 +22,14 @@ import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.file.Files;
+import org.apache.wicket.util.io.IOUtils;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.upload.FileItem;
 
 
@@ -69,18 +70,9 @@ public class FileUpload implements IClusterable
 	{
 		if (inputStreamsToClose != null)
 		{
-			for (Iterator<InputStream> inputStreamsIterator = inputStreamsToClose.iterator(); inputStreamsIterator.hasNext();)
+			for (InputStream inputStream : inputStreamsToClose)
 			{
-				InputStream inputStream = inputStreamsIterator.next();
-
-				try
-				{
-					inputStream.close();
-				}
-				catch (IOException e)
-				{
-					// We don't care aobut the exceptions thrown here.
-				}
+				IOUtils.closeQuietly(inputStream);
 			}
 
 			// Reset the list
@@ -107,58 +99,62 @@ public class FileUpload implements IClusterable
 	/**
 	 * Get the MD5 checksum.
 	 * 
+	 * @param algorithm the digest algorithm, e.g. MD5, SHA-1, SHA-256, SHA-512
+	 *
+	 * @return The cryptographic digest of the file
+	 */
+	public byte[] getDigest(String algorithm)
+	{
+		try
+		{
+			Args.notEmpty(algorithm, "algorithm");
+			MessageDigest digest = java.security.MessageDigest.getInstance(algorithm);
+
+			if (item.isInMemory())
+			{
+				digest.update(getBytes());
+				return digest.digest();
+			}
+
+			InputStream in = null;
+
+			try
+			{
+				in = item.getInputStream();
+				byte[] buf = new byte[Math.min((int) item.getSize(), 4096 * 10)];
+				int len;
+				while (-1 != (len = in.read(buf)))
+				{
+					digest.update(buf, 0, len);
+				}
+				return digest.digest();
+			}
+			catch (IOException ex)
+			{
+				throw new WicketRuntimeException("Error while reading input data for " + algorithm + " checksum", ex);
+			}
+			finally
+			{
+				IOUtils.closeQuietly(in);
+			}
+		}
+		catch (NoSuchAlgorithmException ex)
+		{
+			String error = String.format("Your java runtime does not support digest algorithm [%s]. " +
+					"Please see java.security.MessageDigest.getInstance(\"%s\")", algorithm, algorithm);
+
+			throw new WicketRuntimeException(error, ex);
+		}
+	}
+
+	/**
+	 * Get the MD5 checksum.
+	 *
 	 * @return The MD5 checksum of the file
 	 */
 	public byte[] getMD5()
 	{
-		MessageDigest digest;
-		try
-		{
-			digest = java.security.MessageDigest.getInstance("MD5");
-		}
-		catch (NoSuchAlgorithmException ex)
-		{
-			throw new WicketRuntimeException(
-				"Your java runtime does not support MD5 digests. Please see java.security.MessageDigest.getInstance(\"MD5\"",
-				ex);
-		}
-
-		if (item.isInMemory())
-		{
-			digest.update(getBytes());
-			return digest.digest();
-		}
-
-		InputStream in = null;
-		try
-		{
-			in = item.getInputStream();
-			byte[] buf = new byte[Math.min((int)item.getSize(), 4096 * 10)];
-			int len;
-			while (-1 != (len = in.read(buf)))
-			{
-				digest.update(buf, 0, len);
-			}
-			return digest.digest();
-		}
-		catch (IOException ex)
-		{
-			throw new WicketRuntimeException("Error while reading input data for MD5 checksum", ex);
-		}
-		finally
-		{
-			if (in != null)
-			{
-				try
-				{
-					in.close();
-				}
-				catch (IOException ex)
-				{
-					// ignore
-				}
-			}
-		}
+		return getDigest("MD5");
 	}
 
 	/**
@@ -260,8 +256,7 @@ public class FileUpload implements IClusterable
 	 */
 	public final File writeToTempFile() throws IOException
 	{
-		File temp = File.createTempFile(Session.get().getId(),
-			Files.cleanupFilename(item.getFieldName()));
+		File temp = File.createTempFile(Session.get().getId(), Files.cleanupFilename(item.getFieldName()));
 		writeTo(temp);
 		return temp;
 	}
