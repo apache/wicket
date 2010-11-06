@@ -24,7 +24,6 @@ import org.apache.wicket.request.mapper.PageInstanceMapper;
 import org.apache.wicket.request.mapper.ResourceReferenceMapper;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.util.IProvider;
-import org.apache.wicket.util.ValueProvider;
 
 /**
  * Mapper that encapsulates mappers that are necessary for Wicket to function.

@@ -17,7 +17,6 @@
 package org.apache.wicket.request.handler;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.http.WebResponse;
