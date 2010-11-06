@@ -23,7 +23,8 @@ import java.io.*;
  * <p>
  * This class provides static utility methods for input/output operations.
  * <ul>
- * <li>closeQuietly - these methods close a stream ignoring nulls and exceptions
+ * <li>closeQuietly - these method closes any kind of closeable resource, e.g. an input/output stream
+ * or reader/writer ignoring nulls and exceptions
  * <li>toXxx - these methods read data from a stream
  * <li>write - these methods write data to a stream
  * <li>copy - these methods copy all the data from one stream to another
