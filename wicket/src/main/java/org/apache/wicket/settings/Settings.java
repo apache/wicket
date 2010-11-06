@@ -112,11 +112,6 @@ public final class Settings
 	/** Application default for automatically resolving hrefs */
 	private boolean automaticLinking = false;
 
-	/**
-	 * Whether Wicket should try to support multiple windows transparently, true by default.
-	 */
-	private boolean automaticMultiWindowSupport = true;
-
 	/** True if the response should be buffered */
 	private boolean bufferResponse = true;
 
@@ -296,7 +291,7 @@ public final class Settings
 	 * 
 	 * @TODO Remove in 1.5
 	 */
-	private final boolean stripJavascriptCommentsAndWhitespace = false;
+	//private final boolean stripJavascriptCommentsAndWhitespace = false;
 
 	/** The Javascript compressor */
 	private IJavascriptCompressor javascriptCompressor;
@@ -374,7 +369,7 @@ public final class Settings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IRequestCycleSettings#addResponseFilter(org.apache.wicket.IResponseFilter)
+	 * @see org.apache.wicket.settings.IRequestCycleSettings#addResponseFilter(org.apache.wicket.response.filter.IResponseFilter)
 	 */
 	public void addResponseFilter(final IResponseFilter responseFilter)
 	{
@@ -971,7 +966,7 @@ public final class Settings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IRequestCycleSettings#setRenderStrategy(org.apache.wicket.settings.Settings.RenderStrategy)
+	 * @see org.apache.wicket.settings.IRequestCycleSettings#setRenderStrategy(org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy)
 	 */
 	public void setRenderStrategy(IRequestCycleSettings.RenderStrategy renderStrategy)
 	{
@@ -1075,7 +1070,7 @@ public final class Settings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IRequestCycleSettings#setUnexpectedExceptionDisplay(org.apache.wicket.settings.Settings.UnexpectedExceptionDisplay)
+	 * @see org.apache.wicket.settings.IRequestCycleSettings#setUnexpectedExceptionDisplay(org.apache.wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay)
 	 */
 	public void setUnexpectedExceptionDisplay(
 		final UnexpectedExceptionDisplay unexpectedExceptionDisplay)
@@ -1282,7 +1277,7 @@ public final class Settings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IResourceSettings#setParentFolderPlaceholder(CharSequence)
+	 * @see org.apache.wicket.settings.IResourceSettings#setParentFolderPlaceholder(String)
 	 */
 	public void setParentFolderPlaceholder(final String sequence)
 	{
@@ -1296,7 +1291,7 @@ public final class Settings
 		return outputComponentPath;
 	}
 
-	/** @see IDebugSettings#setOutputComponentPath() */
+	/** @see IDebugSettings#setOutputComponentPath(boolean)  */
 	public void setOutputComponentPath(boolean outputComponentPath)
 	{
 		this.outputComponentPath = outputComponentPath;

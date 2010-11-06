@@ -204,8 +204,6 @@ public interface IResourceSettings
 	List<IStringResourceLoader> getStringResourceLoaders();
 
 	/**
-	 * @see org.apache.wicket.settings.IExceptionSettings#getThrowExceptionOnMissingResource()
-	 * 
 	 * @return boolean
 	 */
 	boolean getThrowExceptionOnMissingResource();
@@ -224,7 +222,7 @@ public interface IResourceSettings
 	 *            default cache duration in seconds
 	 *
 	 * @see org.apache.wicket.util.time.Duration#NONE
-	 * @see org.apache.wicket.protocol.http.RequestUtils#MAX_CACHE_DURATION
+	 * @see org.apache.wicket.request.http.WebResponse#MAX_CACHE_DURATION
 	 */
 	void setDefaultCacheDuration(Duration defaultDuration);
 
@@ -297,8 +295,6 @@ public interface IResourceSettings
 	void setResourceWatcher(IModificationWatcher watcher);
 
 	/**
-	 * @see org.apache.wicket.settings.IExceptionSettings#setThrowExceptionOnMissingResource(boolean)
-	 * 
 	 * @param throwExceptionOnMissingResource
 	 */
 	void setThrowExceptionOnMissingResource(final boolean throwExceptionOnMissingResource);
@@ -349,8 +345,8 @@ public interface IResourceSettings
 	 * Wicket-1992). In case you really need it, a good value for placeholder would e.g. be "$up$".
 	 * Resources additionally are protected by a
 	 * {@link org.apache.wicket.markup.html.IPackageResourceGuard IPackageResourceGuard}
-	 * implementation such as {@link org.apache.wicket.resource.resourceGuard.PackageResourceGuard
-	 * PackageResourceGuard} which you may use or extend based on your needs.
+	 * implementation such as {@link org.apache.wicket.markup.html.PackageResourceGuard}
+	 * which you may use or extend based on your needs.
 	 * 
 	 * @see #getParentFolderPlaceholder()
 	 * 

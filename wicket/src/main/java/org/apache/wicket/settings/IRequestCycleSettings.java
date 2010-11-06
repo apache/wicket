@@ -127,13 +127,13 @@ public interface IRequestCycleSettings
 		 * instances of RequestCycle are created and processed.
 		 * </p>
 		 * <p>
-		 * Also, even with this strategy set, it is ignored for
-		 * {@link BookmarkableListenerInterfaceRequestTarget}s, because otherwise they wouldn't be
-		 * bookmarkable.
+		 * Also, even with this strategy set, it is ignored for instances of
+		 * {@link org.apache.wicket.request.handler.BookmarkableListenerInterfaceRequestHandler},
+		 * because otherwise they wouldn't be bookmarkable.
 		 * </p>
 		 */
 		REDIRECT_TO_RENDER
-	};
+	}
 
 	/**
 	 * Adds a response filter to the list. Filters are evaluated in the order they have been added.
@@ -285,8 +285,6 @@ public interface IRequestCycleSettings
 	void setTimeout(Duration timeout);
 
 	/**
-	 * @see org.apache.wicket.settings.IExceptionSettings#setUnexpectedExceptionDisplay(org.apache.wicket.settings.Settings.UnexpectedExceptionDisplay)
-	 * 
 	 * @param unexpectedExceptionDisplay
 	 */
 	void setUnexpectedExceptionDisplay(final UnexpectedExceptionDisplay unexpectedExceptionDisplay);
