@@ -42,14 +42,6 @@ public interface ISessionSettings
 	IPageFactory getPageFactory();
 
 	/**
-	 * Sets maximum number of page maps allowed in this session
-	 * 
-	 * @param maxPageMaps
-	 *            Maximum number of page maps
-	 */
-	void setMaxPageMaps(int maxPageMaps);
-
-	/**
 	 * Sets the factory to be used when creating pages.
 	 * 
 	 * @param pageFactory

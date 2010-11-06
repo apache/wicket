@@ -37,12 +37,4 @@ public interface SessionSettingsMBean
 	 * @return the session store implementation
 	 */
 	String getSessionStore();
-
-	/**
-	 * Sets maximum number of page maps allowed in this session
-	 * 
-	 * @param maxPageMaps
-	 *            Maximum number of page maps
-	 */
-	void setMaxPageMaps(int maxPageMaps);
 }

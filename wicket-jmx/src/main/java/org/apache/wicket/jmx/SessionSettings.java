@@ -50,13 +50,4 @@ public class SessionSettings implements SessionSettingsMBean
 	{
 		return Stringz.className(application.getSessionStore());
 	}
-
-	/**
-	 * @see org.apache.wicket.jmx.SessionSettingsMBean#setMaxPageMaps(int)
-	 */
-	public void setMaxPageMaps(int maxPageMaps)
-	{
-		application.getSessionSettings().setMaxPageMaps(maxPageMaps);
-	}
-
 }

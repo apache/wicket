@@ -186,9 +186,6 @@ public final class Settings
 	/** if true than throw an exception if the xml declaration is missing from the markup file */
 	private boolean throwExceptionOnMissingXmlDeclaration = false;
 
-	/** To help prevent denial of service attacks */
-	private int maxPageMaps = 5;
-
 	/** Map to look up resource factories by name */
 	private final Map<String, IResourceFactory> nameToResourceFactory = new HashMap<String, IResourceFactory>();
 
@@ -929,14 +926,6 @@ public final class Settings
 		checkPageClass(internalErrorPage);
 
 		this.internalErrorPage = new WeakReference<Class<? extends Page>>(internalErrorPage);
-	}
-
-	/**
-	 * @see org.apache.wicket.settings.ISessionSettings#setMaxPageMaps(int)
-	 */
-	public final void setMaxPageMaps(int maxPageMaps)
-	{
-		this.maxPageMaps = maxPageMaps;
 	}
 
 	/**
