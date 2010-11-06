@@ -16,18 +16,7 @@
  */
 package org.apache.wicket.util.io;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.CharArrayWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-
+import java.io.*;
 
 /**
  * General IO Stream manipulation.
@@ -82,95 +71,24 @@ public final class IOUtils
 	{
 	}
 
-	// -----------------------------------------------------------------------
 	/**
-	 * Unconditionally close an <code>Reader</code>.
+	 * Unconditionally close a <code>Closeable</code>.
 	 * <p>
-	 * Equivalent to {@link Reader#close()}, except any exceptions will be ignored. This is
+	 * closeables can be input or output streams, reader, writers, and much more.
+	 *
+	 * Equivalent to {@link Closeable#close()}, except any exceptions will be ignored. This is
 	 * typically used in finally blocks.
 	 * 
-	 * @param input
-	 *            the Reader to close, may be null or already closed
+	 * @param closeable
+	 *            the Closeable to close, may be null or already closed
 	 */
-	public static void closeQuietly(Reader input)
+	public static void closeQuietly(Closeable closeable)
 	{
-		if (input != null)
+		if (closeable != null)
 		{
 			try
 			{
-				input.close();
-			}
-			catch (Exception e)
-			{
-				// ignore
-			}
-		}
-	}
-
-	/**
-	 * Unconditionally close a <code>Writer</code>.
-	 * <p>
-	 * Equivalent to {@link Writer#close()}, except any exceptions will be ignored. This is
-	 * typically used in finally blocks.
-	 * 
-	 * @param output
-	 *            the Writer to close, may be null or already closed
-	 */
-	public static void closeQuietly(Writer output)
-	{
-		if (output != null)
-		{
-			try
-			{
-				output.close();
-			}
-			catch (Exception e)
-			{
-				// ignore
-			}
-		}
-	}
-
-	/**
-	 * Unconditionally close an <code>InputStream</code>.
-	 * <p>
-	 * Equivalent to {@link InputStream#close()}, except any exceptions will be ignored. This is
-	 * typically used in finally blocks.
-	 * 
-	 * @param input
-	 *            the InputStream to close, may be null or already closed
-	 */
-	public static void closeQuietly(InputStream input)
-	{
-		if (input != null)
-		{
-			try
-			{
-				input.close();
-			}
-			catch (Exception e)
-			{
-				// ignore
-			}
-		}
-	}
-
-	/**
-	 * Unconditionally close an <code>OutputStream</code>.
-	 * <p>
-	 * Equivalent to {@link OutputStream#close()}, except any exceptions will be ignored. This is
-	 * typically used in finally blocks.
-	 * 
-	 * @param output
-	 *            the OutputStream to close, may be null or already closed
-	 */
-	public static void closeQuietly(OutputStream output)
-	{
-		if (output != null)
-		{
-			try
-			{
-				output.close();
+				closeable.close();
 			}
 			catch (Exception e)
 			{
