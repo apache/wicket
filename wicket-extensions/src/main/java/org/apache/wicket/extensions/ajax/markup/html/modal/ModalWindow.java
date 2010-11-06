@@ -257,7 +257,7 @@ public class ModalWindow extends Panel
 
 		add(empty = new WebMarkupContainer(getContentId()));
 
-		add(new CloseButtonBehavior());
+		add(newCloseButtonBehavior());
 		add(new WindowClosedBehavior());
 
 		add(JavascriptPackageResource.getHeaderContribution(JAVASCRIPT));
@@ -974,12 +974,16 @@ public class ModalWindow extends Panel
 	/**
 	 * @author Matej Knopp
 	 */
-	private class CloseButtonBehavior extends AbstractDefaultAjaxBehavior
+	protected class CloseButtonBehavior extends AbstractDefaultAjaxBehavior
 	{
 		private static final long serialVersionUID = 1L;
 
+		public CloseButtonBehavior()
+		{
+		}
+
 		@Override
-		protected void respond(AjaxRequestTarget target)
+		protected final void respond(AjaxRequestTarget target)
 		{
 			if (closeButtonCallback == null ||
 				closeButtonCallback.onCloseButtonClicked(target) == true)
@@ -1001,7 +1005,7 @@ public class ModalWindow extends Panel
 		 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getCallbackScript()
 		 */
 		@Override
-		protected CharSequence getCallbackScript()
+		protected final CharSequence getCallbackScript()
 		{
 			return super.getCallbackScript();
 		}
@@ -1216,5 +1220,15 @@ public class ModalWindow extends Panel
 		{
 			title.detach();
 		}
+	}
+
+	/**
+	 * Gives the possibility to provide custom {@link IAjaxCallDecorator}
+	 * 
+	 * @return the behavior that should be used for the window close button
+	 */
+	protected CloseButtonBehavior newCloseButtonBehavior()
+	{
+		return new CloseButtonBehavior();
 	}
 }
