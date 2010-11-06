@@ -562,7 +562,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#getStatus()
+	 * @see javax.servlet.http.HttpServletResponse#setStatus(int)
 	 */
 	public int getStatus()
 	{
@@ -570,7 +570,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#getHeader(java.lang.String)
+	 * @see javax.servlet.http.HttpServletRequest#getHeader(java.lang.String)
 	 */
 	public String getHeader(String name)
 	{
@@ -583,7 +583,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#getHeaders(java.lang.String)
+	 * @see javax.servlet.http.HttpServletRequest#getHeaders(java.lang.String)
 	 */
 	public Collection<String> getHeaders(String name)
 	{
@@ -601,7 +601,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#getHeaderNames()
+	 * @see javax.servlet.http.HttpServletRequest#getHeaderNames()
 	 */
 	public Collection<String> getHeaderNames()
 	{

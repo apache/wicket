@@ -518,7 +518,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * @return url
-	 * @see org.apache.wicket.request.Request#getURL()
+	 * @see org.apache.wicket.request.Request#getUrl()
 	 */
 	private String getURL()
 	{

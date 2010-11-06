@@ -36,7 +36,8 @@ public class HttpsRequestCheckerTest
 {
 
 	/**
-	 * Asserts that {@link HttpsRequestChecker#checkSecureIncoming(IRequestHandler)} returns
+	 * Asserts that
+	 * {@link HttpsRequestChecker#checkSecureIncoming(org.apache.wicket.request.IRequestHandler, HttpsConfig)} returns
 	 * {@link SwitchProtocolRequestHandler} for pages annotated with {@link RequireHttps} or returns
 	 * the original {@link IRequestHandler} for pages that are not annotated with
 	 * {@link RequireHttps}

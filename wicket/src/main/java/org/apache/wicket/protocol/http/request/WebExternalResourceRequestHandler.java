@@ -69,7 +69,7 @@ public class WebExternalResourceRequestHandler extends ResourceStreamRequestHand
 	}
 
 	/**
-	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.IRequestCycle)
 	 */
 	@Override
 	public void detach(IRequestCycle requestCycle)
