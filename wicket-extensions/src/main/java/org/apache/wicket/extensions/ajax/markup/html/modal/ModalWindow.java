@@ -24,7 +24,6 @@ import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
-import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow.PageCreator;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -355,7 +354,7 @@ public class ModalWindow extends Panel
 		getContent().setVisible(false);
 		if (isCustomComponent())
 		{
-			target.addComponent(getContent());
+			target.add(getContent());
 		}
 		target.appendJavascript(getCloseJavacript());
 		shown = false;

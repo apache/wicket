@@ -71,7 +71,7 @@ public class MockPageAjaxSubmitLinkSubmitsWholeForm extends WebPage
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
 				text = "Hello " + name;
-				target.addComponent(label);
+				target.add(label);
 			}
 
 			@Override
@@ -90,7 +90,7 @@ public class MockPageAjaxSubmitLinkSubmitsWholeForm extends WebPage
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
 				text = "Goodbye " + name;
-				target.addComponent(label);
+				target.add(label);
 			}
 
 			@Override
