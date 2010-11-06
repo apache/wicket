@@ -117,7 +117,7 @@ public class WicketFilter implements Filter
 			// Make sure getFilterPath() gets called before checkIfRedirectRequired()
 			String filterPath = getFilterPath(httpServletRequest);
 
-			if (Strings.isEmpty(filterPath))
+			if (filterPath == null)
 			{
 				throw new IllegalStateException("filter path was not configured");
 			}
@@ -407,19 +407,22 @@ public class WicketFilter implements Filter
 	protected String getFilterPathFromConfig(FilterConfig filterConfig)
 	{
 		String result = filterConfig.getInitParameter(FILTER_MAPPING_PARAM);
-		if (result == null || result.equals("/*"))
+		if (result != null)
 		{
-			filterPath = "";
-		}
-		else if (!result.startsWith("/") || !result.endsWith("/*"))
-		{
-			throw new WicketRuntimeException("Your " + FILTER_MAPPING_PARAM +
-				" must start with \"/\" and end with \"/*\". It is: " + result);
-		}
-		else
-		{
-			// remove leading "/" and trailing "*"
-			filterPath = result.substring(1, result.length() - 1);
+			if (result.equals("/*"))
+			{
+				filterPath = "";
+			}
+			else if (!result.startsWith("/") || !result.endsWith("/*"))
+			{
+				throw new WicketRuntimeException("Your " + FILTER_MAPPING_PARAM +
+					" must start with \"/\" and end with \"/*\". It is: " + result);
+			}
+			else
+			{
+				// remove leading "/" and trailing "*"
+				filterPath = result.substring(1, result.length() - 1);
+			}
 		}
 		return filterPath;
 	}
