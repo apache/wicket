@@ -213,7 +213,7 @@ public class WicketLinkTagHandler extends BaseMarkupFilter implements IComponent
 			WicketTag wtag = (WicketTag)tag;
 			if (wtag.isLinkTag() && (wtag.getNamespace() != null))
 			{
-				final String id = tag.getId() + container.getPage().getAutoIndex();
+				String id = tag.getId() + "-" + container.getPage().getAutoIndex();
 				tag.setId(id);
 
 				return new TransparentWebMarkupContainer(id);
