@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.image;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IResourceListener;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebComponent;
@@ -237,6 +238,25 @@ public class Image extends WebComponent implements IResourceListener
 			localizedImageResource.setResourceReference(resourceReference);
 		}
 		localizedImageResource.setSrcAttribute(tag);
+
+		if (AjaxRequestTarget.get() != null)
+		{
+			addAntiCacheParameter(tag);
+		}
+	}
+
+	/**
+	 * Adds random noise to the url every request to prevent the browser from caching the image.
+	 * 
+	 * @param tag
+	 */
+	protected final void addAntiCacheParameter(final ComponentTag tag)
+	{
+		String url = tag.getAttributes().getString("src");
+		url = url + ((url.indexOf("?") >= 0) ? "&amp;" : "?");
+		url = url + "wicket:antiCache=" + System.currentTimeMillis();
+
+		tag.put("src", url);
 	}
 
 	/**

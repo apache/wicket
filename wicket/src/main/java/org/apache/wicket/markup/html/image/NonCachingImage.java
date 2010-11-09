@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.image;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -124,11 +125,11 @@ public class NonCachingImage extends Image
 	{
 		super.onComponentTag(tag);
 
-		String url = tag.getAttributes().getString("src");
-		url = url + ((url.indexOf("?") >= 0) ? "&amp;" : "?");
-		url = url + "wicket:antiCache=" + System.currentTimeMillis();
-
-		tag.put("src", url);
+		// the parameter is already added for Ajax requests by the super call
+		if (AjaxRequestTarget.get() == null)
+		{
+			addAntiCacheParameter(tag);
+		}
 	}
 
 }
