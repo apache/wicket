@@ -76,10 +76,7 @@ public class TextRequestHandler implements IRequestHandler
 		{
 			throw new IllegalArgumentException("Argument contentType must not be null or empty");
 		}
-		if (encoding == null)
-		{
-			throw new IllegalArgumentException("Argument charset must not be null");
-		}
+
 		this.contentType = contentType;
 		this.string = string;
 		this.encoding = encoding;
@@ -112,7 +109,7 @@ public class TextRequestHandler implements IRequestHandler
 
 	/**
 	 * @param requestCycle
-	 * @return
+	 * @return the configured encoding or the request's one as default
 	 */
 	private String getEncoding(IRequestCycle requestCycle)
 	{
@@ -144,6 +141,5 @@ public class TextRequestHandler implements IRequestHandler
 	{
 		return string;
 	}
-
 
 }
