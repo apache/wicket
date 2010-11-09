@@ -18,6 +18,7 @@ package org.apache.wicket.util.value;
 
 import java.io.Serializable;
 
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Primitives;
 
 
@@ -213,5 +214,52 @@ public class LongValue implements Comparable<LongValue>, Serializable
 	public String toString()
 	{
 		return String.valueOf(value);
+	}
+
+	/**
+	 * Returns the max of the two long values.
+	 * 
+	 * @param <T>
+	 * @param lhs
+	 * @param rhs
+	 * @throws IllegalArgumentException
+	 *             if either argument is {@code null}
+	 * @return max value
+	 */
+	public static <T extends LongValue> T max(T lhs, T rhs)
+	{
+		Args.notNull(lhs, "lhs");
+		Args.notNull(rhs, "rhs");
+		if (lhs.compareTo(rhs) > 0)
+		{
+			return lhs;
+		}
+		return rhs;
+	}
+
+	/**
+	 * Null-safe version of {@link LongValue#max}. Nulls are considered less then any concrete
+	 * value.
+	 * 
+	 * @param <T>
+	 * @param lhs
+	 * @param rhs
+	 * @return max of two values or {@code null} if they are both null
+	 */
+	public static <T extends LongValue> T maxNullSafe(T lhs, T rhs)
+	{
+		if (lhs == rhs)
+		{
+			return lhs;
+		}
+		else if (lhs == null)
+		{
+			return rhs;
+		}
+		else if (rhs == null)
+		{
+			return lhs;
+		}
+		return max(lhs, rhs);
 	}
 }

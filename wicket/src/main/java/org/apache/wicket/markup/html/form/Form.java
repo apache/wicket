@@ -53,6 +53,7 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.apache.wicket.util.upload.FileUploadBase.SizeLimitExceededException;
 import org.apache.wicket.util.upload.FileUploadException;
+import org.apache.wicket.util.value.LongValue;
 import org.apache.wicket.util.visit.ClassVisitFilter;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
@@ -619,30 +620,37 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 * Gets the maximum size for uploads. If null, the setting
 	 * {@link IApplicationSettings#getDefaultMaximumUploadSize()} is used.
 	 * 
+	 * 
 	 * @return the maximum size
 	 */
-	public Bytes getMaxSize()
+	public final Bytes getMaxSize()
 	{
-		Bytes maxSize = this.maxSize;
-		if (maxSize == null)
+		/*
+		 * NOTE: This method should remain final otherwise it will be impossible to set a default
+		 * max size smaller then the one specified in applications settings because the inner form
+		 * will return the default unless it is specifically set in the traversal. With this method
+		 * remaining final we can tell when the value is explicitly set by the user.
+		 * 
+		 * If the value needs to be dynamic it can be set in oncofigure() instead of overriding this
+		 * method.
+		 */
+
+		final Bytes[] maxSize = new Bytes[] { this.maxSize };
+		if (maxSize[0] == null)
 		{
-			maxSize = visitChildren(Form.class, new IVisitor<Form<?>, Bytes>()
+			visitChildren(Form.class, new IVisitor<Form<?>, Bytes>()
 			{
 				public void component(Form<?> component, IVisit<Bytes> visit)
 				{
-					Bytes maxSize = component.getMaxSize();
-					if (maxSize != null)
-					{
-						visit.stop(maxSize);
-					}
+					maxSize[0] = LongValue.maxNullSafe(maxSize[0], component.maxSize);
 				}
 			});
 		}
-		if (maxSize == null)
+		if (maxSize[0] == null)
 		{
 			return getApplication().getApplicationSettings().getDefaultMaximumUploadSize();
 		}
-		return maxSize;
+		return maxSize[0];
 	}
 
 	/**
@@ -973,7 +981,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 * @param maxSize
 	 *            The maximum size
 	 */
-	public void setMaxSize(final Bytes maxSize)
+	public final void setMaxSize(final Bytes maxSize)
 	{
 		this.maxSize = maxSize;
 	}

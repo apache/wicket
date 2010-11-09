@@ -424,4 +424,21 @@ public final class Bytes extends LongValue
 	{
 		return StringValue.valueOf(value, locale) + units;
 	}
+
+	/**
+	 * Compares this <code>Bytes</code> with another <code>Bytes</code> instance.
+	 * 
+	 * @param other
+	 *            the <code>Bytes</code> instance to compare with
+	 * @return <code>true</code> if this <code>Bytes</code> is greater than the given
+	 *         <code>Bytes</code> instance
+	 */
+	public boolean greaterThan(Bytes other)
+	{
+		if (this == other || other == null)
+		{
+			return false;
+		}
+		return bytes() > other.bytes();
+	}
 }
