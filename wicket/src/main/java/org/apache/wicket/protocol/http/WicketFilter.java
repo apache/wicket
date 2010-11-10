@@ -50,6 +50,8 @@ import org.apache.wicket.protocol.http.portlet.PortletServletResponseWrapper;
 import org.apache.wicket.protocol.http.portlet.WicketFilterPortletContext;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
+import org.apache.wicket.request.target.coding.SharedResourceRequestTargetUrlCodingStrategy;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -1132,11 +1134,23 @@ public class WicketFilter implements Filter
 	 * @param servletRequest
 	 * @return The last modified time stamp
 	 */
-	long getLastModified(final HttpServletRequest servletRequest)
+	protected long getLastModified(final HttpServletRequest servletRequest)
 	{
 		final String pathInfo = getRelativePath(servletRequest);
+		if (Strings.isEmpty(pathInfo))
+			return -1;
 
-		if (pathInfo.startsWith(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX))
+		IRequestTargetUrlCodingStrategy sharedResourceMount = null;
+		boolean sharedResource = pathInfo.startsWith(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX);
+		if (!sharedResource)
+		{
+			sharedResourceMount = webApplication.getRequestCycleProcessor()
+				.getRequestCodingStrategy()
+				.urlCodingStrategyForPath(pathInfo);
+			sharedResource = sharedResourceMount instanceof SharedResourceRequestTargetUrlCodingStrategy;
+		}
+
+		if (sharedResource)
 		{
 			Resource resource = null;
 			WebRequestCycle requestCycle = null;
@@ -1151,7 +1165,15 @@ public class WicketFilter implements Filter
 					Application.set(webApplication);
 				}
 
-				final String resourceReferenceKey = WicketURLDecoder.PATH_INSTANCE.decode(pathInfo.substring(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX.length()));
+				final String resourceReferenceKey;
+				if (sharedResourceMount != null)
+				{
+					resourceReferenceKey = ((SharedResourceRequestTargetUrlCodingStrategy)sharedResourceMount).getResourceKey();
+				}
+				else
+				{
+					resourceReferenceKey = WicketURLDecoder.PATH_INSTANCE.decode(pathInfo.substring(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX.length()));
+				}
 
 
 				// Try to find shared resource
@@ -1181,6 +1203,10 @@ public class WicketFilter implements Filter
 						.getProcessor()
 						.getRequestCodingStrategy()
 						.decode(request);
+					if (sharedResourceMount != null)
+					{
+						sharedResourceMount.decode(rp);
+					}
 					// Set parameters from servlet request
 					resource.setParameters(rp.getParameters());
 

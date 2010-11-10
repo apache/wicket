@@ -98,6 +98,14 @@ public class SharedResourceRequestTargetUrlCodingStrategy extends
 	}
 
 	/**
+	 * @return the shared resource key for this mount
+	 */
+	public String getResourceKey()
+	{
+		return resourceKey;
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
