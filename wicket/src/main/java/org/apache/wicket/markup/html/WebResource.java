@@ -73,7 +73,16 @@ public abstract class WebResource extends Resource
 			// If time is set also set cache headers.
 			response.setDateHeader("Expires", System.currentTimeMillis() +
 				(getCacheDuration() * 1000L));
-			response.setHeader("Cache-Control", "max-age=" + getCacheDuration());
+			if (Application.get()
+				.getResourceSettings()
+				.getAddLastModifiedTimeToResourceReferenceUrl())
+			{
+				response.setHeader("Cache-Control", "public,max-age=" + getCacheDuration());
+			}
+			else
+			{
+				response.setHeader("Cache-Control", "max-age=" + getCacheDuration());
+			}
 		}
 		else
 		{
@@ -87,6 +96,6 @@ public abstract class WebResource extends Resource
 	 */
 	protected int getCacheDuration()
 	{
-		return (int)Application.get().getResourceSettings().getDefaultCacheDuration();
+		return Application.get().getResourceSettings().getDefaultCacheDuration();
 	}
 }
