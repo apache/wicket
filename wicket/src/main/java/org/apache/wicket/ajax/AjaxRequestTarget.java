@@ -1083,7 +1083,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	{
 		if (headerResponse == null)
 		{
-			headerResponse = new AjaxHeaderResponse();
+			headerResponse = Application.get().decorateHeaderResponse(new AjaxHeaderResponse());
 		}
 		return headerResponse;
 	}
@@ -1165,6 +1165,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 				}
 			});
 		}
+		header.getHeaderResponse().close();
 
 		// revert to old response
 

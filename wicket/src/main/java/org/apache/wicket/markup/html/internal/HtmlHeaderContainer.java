@@ -272,7 +272,7 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 	{
 		if (headerResponse == null)
 		{
-			headerResponse = newHeaderResponse();
+			headerResponse = getApplication().decorateHeaderResponse(newHeaderResponse());
 		}
 		return headerResponse;
 	}
