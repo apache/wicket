@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.resource.dependencies;
 
-import org.apache.wicket.ResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * You must implement this in order to use ResourceReferenceDependencyInjectingHeaderResponse. It is

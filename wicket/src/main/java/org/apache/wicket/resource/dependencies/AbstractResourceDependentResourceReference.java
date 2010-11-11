@@ -18,8 +18,8 @@ package org.apache.wicket.resource.dependencies;
 
 import java.util.Locale;
 
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -63,11 +63,12 @@ public abstract class AbstractResourceDependentResourceReference extends Resourc
 	 * @param name
 	 * @param locale
 	 * @param style
+	 * @param variation
 	 */
 	public AbstractResourceDependentResourceReference(Class<?> scope, String name, Locale locale,
-		String style)
+		String style, String variation)
 	{
-		super(scope, name, locale, style);
+		super(scope, name, locale, style, variation);
 	}
 
 	/**

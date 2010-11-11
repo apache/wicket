@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.markup.html;
 
-import org.apache.wicket.ResourceReference;
-import org.apache.wicket.Response;
+import org.apache.wicket.request.Response;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * This is simply a helper implementation of IHeaderResponse that really delegates all of its method

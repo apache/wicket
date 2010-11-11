@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.resource;
 
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.string.Strings;
 
 /**

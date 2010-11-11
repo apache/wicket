@@ -25,10 +25,9 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.apache.wicket.Resource;
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.DecoratingHeaderResponse;
 import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.ResourceUtil;
 
 /**

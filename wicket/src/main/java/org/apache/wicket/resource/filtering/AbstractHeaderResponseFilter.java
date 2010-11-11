@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.resource.filtering;
 
-import org.apache.wicket.ResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.filtering.HeaderResponseContainerFilteringHeaderResponse.IHeaderResponseFilter;
 
 /**

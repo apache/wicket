@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.resource.aggregation;
 
-import org.apache.wicket.ResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * A data holder built for the {@link AbstractResourceAggregatingHeaderResponse} that groups the

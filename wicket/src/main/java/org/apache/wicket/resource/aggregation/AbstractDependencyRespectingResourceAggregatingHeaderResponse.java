@@ -18,8 +18,8 @@ package org.apache.wicket.resource.aggregation;
 
 import java.util.Set;
 
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.dependencies.AbstractResourceDependentResourceReference;
 import org.apache.wicket.resource.dependencies.AbstractResourceDependentResourceReference.ResourceType;
 

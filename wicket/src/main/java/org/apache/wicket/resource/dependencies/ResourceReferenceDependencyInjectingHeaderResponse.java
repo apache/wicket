@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.resource.dependencies;
 
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.DecoratingHeaderResponse;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.IHeaderResponseDecorator;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.ResourceUtil;
 import org.apache.wicket.resource.dependencies.AbstractResourceDependentResourceReference.ResourceType;
 

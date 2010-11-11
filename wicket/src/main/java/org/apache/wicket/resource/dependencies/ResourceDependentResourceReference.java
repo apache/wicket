@@ -18,6 +18,8 @@ package org.apache.wicket.resource.dependencies;
 
 import java.util.Locale;
 
+import org.apache.wicket.request.resource.IResource;
+
 /**
  * A basic implementation of {@link AbstractResourceDependentResourceReference} that contains an
  * array of {@link AbstractResourceDependentResourceReference} dependencies that must be passed in
@@ -42,9 +44,9 @@ public class ResourceDependentResourceReference extends AbstractResourceDependen
 	 * @param dependencies
 	 */
 	public ResourceDependentResourceReference(Class<?> scope, String name, Locale locale,
-		String style, AbstractResourceDependentResourceReference[] dependencies)
+		String style, String variation, AbstractResourceDependentResourceReference[] dependencies)
 	{
-		super(scope, name, locale, style);
+		super(scope, name, locale, style, variation);
 		this.dependencies = dependencies;
 	}
 
@@ -79,6 +81,12 @@ public class ResourceDependentResourceReference extends AbstractResourceDependen
 	public final AbstractResourceDependentResourceReference[] getDependentResourceReferences()
 	{
 		return dependencies;
+	}
+
+	@Override
+	public IResource getResource()
+	{
+		return null;
 	}
 
 }
