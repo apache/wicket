@@ -20,5 +20,10 @@ import org.apache.wicket.request.http.WebResponse;
 
 interface IBufferedWebResponse
 {
+	/**
+	 * transfer cookie operations (add + clear cookie) to given web response
+	 *
+	 * @param webResponse web response that should receive the current cookie operation
+	 */
 	void transferCookies(WebResponse webResponse);
 }

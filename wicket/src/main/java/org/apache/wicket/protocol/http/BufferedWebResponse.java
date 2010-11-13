@@ -47,7 +47,8 @@ public class BufferedWebResponse extends WebResponse implements IBufferedWebResp
 	 */
 	public BufferedWebResponse(WebResponse originalResponse)
 	{
-		// if original response had some cookies set we should not forget to transfer them
+		// if original response had some cookies set we should not forget 
+		// to transfer them to the current response
 		if(originalResponse instanceof IBufferedWebResponse)
 			((IBufferedWebResponse) originalResponse).transferCookies(this);
 
