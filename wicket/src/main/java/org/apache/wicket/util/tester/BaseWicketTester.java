@@ -76,6 +76,7 @@ import org.apache.wicket.mock.MockRequestParameters;
 import org.apache.wicket.mock.MockSessionStore;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
+import org.apache.wicket.protocol.http.IBufferedWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
@@ -97,6 +98,7 @@ import org.apache.wicket.request.handler.PageAndComponentProvider;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.render.PageRenderer;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
@@ -324,22 +326,7 @@ public class BaseWicketTester
 	 */
 	private ServletWebResponse createServletWebResponse(ServletWebRequest servletWebRequest)
 	{
-		return new ServletWebResponse(servletWebRequest, response)
-		{
-			@Override
-			public void sendRedirect(String url)
-			{
-				super.sendRedirect(url);
-				try
-				{
-					getHttpServletResponse().sendRedirect(url);
-				}
-				catch (IOException e)
-				{
-					throw new RuntimeException(e);
-				}
-			}
-		};
+		return new WicketTesterServletWebResponse(servletWebRequest, response);
 	}
 
 	/**
@@ -2088,6 +2075,50 @@ public class BaseWicketTester
 		public Enumeration<String> getInitParameterNames()
 		{
 			throw new UnsupportedOperationException("Not implemented");
+		}
+	}
+
+	private class WicketTesterServletWebResponse extends ServletWebResponse implements IBufferedWebResponse
+	{
+		private List<Cookie> cookies = new ArrayList<Cookie>();
+
+		public WicketTesterServletWebResponse(ServletWebRequest request, MockHttpServletResponse response)
+		{
+			super(request, response);
+		}
+
+		@Override
+		public void addCookie(Cookie cookie)
+		{
+			super.addCookie(cookie);
+			cookies.add(cookie);
+		}
+
+		@Override
+		public void clearCookie(Cookie cookie)
+		{
+			super.clearCookie(cookie);
+			cookies.add(cookie);
+		}
+
+		public void transferCookies(WebResponse webResponse)
+		{
+			for (Cookie cookie : cookies)
+				webResponse.addCookie(cookie);
+		}
+
+		@Override
+		public void sendRedirect(String url)
+		{
+			super.sendRedirect(url);
+			try
+			{
+				getHttpServletResponse().sendRedirect(url);
+			}
+			catch (IOException e)
+			{
+				throw new RuntimeException(e);
+			}
 		}
 	}
 }

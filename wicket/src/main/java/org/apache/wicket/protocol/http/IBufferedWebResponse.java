@@ -18,7 +18,7 @@ package org.apache.wicket.protocol.http;
 
 import org.apache.wicket.request.http.WebResponse;
 
-interface IBufferedWebResponse
+public interface IBufferedWebResponse
 {
 	/**
 	 * transfer cookie operations (add + clear cookie) to given web response
