@@ -36,7 +36,7 @@ import org.apache.wicket.util.lang.Args;
  * 
  * @author Matej Knopp
  */
-public class BufferedWebResponse extends WebResponse implements IBufferedWebResponse
+public class BufferedWebResponse extends WebResponse implements ICookieSavingResponse
 {
 	private final transient WebResponse originalResponse;
 
@@ -47,10 +47,10 @@ public class BufferedWebResponse extends WebResponse implements IBufferedWebResp
 	 */
 	public BufferedWebResponse(WebResponse originalResponse)
 	{
-		// if original response had some cookies set we should not forget 
-		// to transfer them to the current response
-		if(originalResponse instanceof IBufferedWebResponse)
-			((IBufferedWebResponse) originalResponse).transferCookies(this);
+		// if original response eventually had some cookies set
+		// we should transfer them to the current response
+		if(originalResponse instanceof ICookieSavingResponse)
+			((ICookieSavingResponse) originalResponse).transferCookies(this);
 
 		this.originalResponse = originalResponse;
 	}

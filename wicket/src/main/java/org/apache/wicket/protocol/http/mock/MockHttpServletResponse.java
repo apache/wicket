@@ -36,7 +36,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.wicket.protocol.http.IBufferedWebResponse;
+import org.apache.wicket.protocol.http.ICookieSavingResponse;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.value.ValueMap;
 
@@ -47,7 +47,7 @@ import org.apache.wicket.util.value.ValueMap;
  * 
  * @author Chris Turner
  */
-public class MockHttpServletResponse implements HttpServletResponse, IBufferedWebResponse
+public class MockHttpServletResponse implements HttpServletResponse, ICookieSavingResponse
 {
 	private static final int MODE_BINARY = 1;
 

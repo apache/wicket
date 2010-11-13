@@ -76,7 +76,7 @@ import org.apache.wicket.mock.MockRequestParameters;
 import org.apache.wicket.mock.MockSessionStore;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
-import org.apache.wicket.protocol.http.IBufferedWebResponse;
+import org.apache.wicket.protocol.http.ICookieSavingResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
@@ -2078,7 +2078,7 @@ public class BaseWicketTester
 		}
 	}
 
-	private class WicketTesterServletWebResponse extends ServletWebResponse implements IBufferedWebResponse
+	private class WicketTesterServletWebResponse extends ServletWebResponse implements ICookieSavingResponse
 	{
 		private List<Cookie> cookies = new ArrayList<Cookie>();
 

@@ -18,12 +18,17 @@ package org.apache.wicket.protocol.http;
 
 import org.apache.wicket.request.http.WebResponse;
 
-public interface IBufferedWebResponse
+/**
+ * any kind of response that is capable of remembering the cookies that were set
+ * <p/>
+ * this is for example needed to save the cookies during a redirect to buffer operation
+ */
+public interface ICookieSavingResponse
 {
 	/**
-	 * transfer cookie operations (add + clear cookie) to given web response
+	 * transfer cookies to given web response
 	 *
-	 * @param webResponse web response that should receive the current cookie operation
+	 * @param webResponse web response that should receive the current cookies
 	 */
 	void transferCookies(WebResponse webResponse);
 }
