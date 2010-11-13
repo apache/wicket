@@ -159,7 +159,8 @@ public class RequestLogger implements IRequestLogger
 
 	public SessionData[] getLiveSessions()
 	{
-		SessionData[] sessions = liveSessions.values().toArray(new SessionData[liveSessions.values().size()]);
+		SessionData[] sessions = liveSessions.values().toArray(
+			new SessionData[liveSessions.values().size()]);
 		Arrays.sort(sessions);
 		return sessions;
 	}
@@ -278,7 +279,7 @@ public class RequestLogger implements IRequestLogger
 		}
 	}
 
-	protected final AppendingStringBuffer createLogString(RequestData rd, SessionData sd,
+	protected AppendingStringBuffer createLogString(RequestData rd, SessionData sd,
 		boolean includeRuntimeInfo)
 	{
 		AppendingStringBuffer asb = new AppendingStringBuffer(150);
