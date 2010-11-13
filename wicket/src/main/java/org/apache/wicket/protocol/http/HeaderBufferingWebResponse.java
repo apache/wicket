@@ -33,7 +33,7 @@ import org.apache.wicket.request.http.WebResponse;
  * 
  * @author Matej Knopp
  */
-class HeaderBufferingWebResponse extends WebResponse
+class HeaderBufferingWebResponse extends WebResponse implements IBufferedWebResponse
 {
 	private final WebResponse originalResponse;
 	private final BufferedWebResponse bufferedResponse;
@@ -174,5 +174,10 @@ class HeaderBufferingWebResponse extends WebResponse
 		}
 		bufferedResponse.reset();
 		bufferedWritten = false;
+	}
+
+	public void transferCookies(WebResponse webResponse)
+	{
+		bufferedResponse.transferCookies(webResponse);
 	}
 }
