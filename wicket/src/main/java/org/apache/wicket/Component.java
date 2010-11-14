@@ -2138,19 +2138,12 @@ public abstract class Component
 	 */
 	public final boolean isVisibleInHierarchy()
 	{
-		Component component = this;
-		while (component != null)
+		Component parent = getParent();
+		if (parent != null && !parent.isVisibleInHierarchy())
 		{
-			if (component.determineVisibility())
-			{
-				component = component.getParent();
-			}
-			else
-			{
-				return false;
-			}
+			return false;
 		}
-		return true;
+		return determineVisibility();
 	}
 
 	/**
@@ -4252,14 +4245,14 @@ public abstract class Component
 		Boolean state = getMetaData(ENABLED_IN_HIERARCHY_CACHE_KEY);
 		if (state == null)
 		{
-			state = isEnabled() && isEnableAllowed();
-			if (state)
+			Component parent = getParent();
+			if (parent != null && !parent.isEnabledInHierarchy())
 			{
-				Component parent = getParent();
-				if (parent != null)
-				{
-					state = state && parent.isEnabledInHierarchy();
-				}
+				state = false;
+			}
+			else
+			{
+				state = isEnabled() && isEnableAllowed();
 			}
 			setMetaData(ENABLED_IN_HIERARCHY_CACHE_KEY, state);
 		}
