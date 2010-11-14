@@ -33,7 +33,7 @@ import org.apache.wicket.pageStore.IDataStore;
  * MyApp#init()
  * {
  * 
- * 	setPageManagerProvider(new IPageManagerProvider() 
+ * 	setPageManagerProvider(new DefaultPageManagerProvider() 
  * 	{
  * 		public IPageManager get(IPageManagerContext pageManagerContext) 
  * 		{ 
