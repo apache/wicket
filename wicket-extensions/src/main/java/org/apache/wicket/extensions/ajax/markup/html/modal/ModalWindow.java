@@ -95,6 +95,8 @@ import org.apache.wicket.util.string.Strings;
  * stored).
  * <li><code>{@link #setMinimalWidth(int)}</code> and <code>{@link #setMinimalHeight(int)}</code>
  * set the minimal dimensions of resizable window.
+ * <li><code>{@link #setAutoSize(boolean)}</code> sets whether window size will be automatically adjusted 
+ * on opening to fit content's width and height. Default is false.<span style="text-decoration: underline"> Doesn't work on IE 6.</span></li>
  * <li>Modal window can chose between two colors of frame.
  * <code>{@link #setCssClassName(String)}</code> sets the dialog css class, possible values are
  * <code>{@link #CSS_CLASS_BLUE}</code> for blue frame and <code>{@link #CSS_CLASS_GRAY}</code> for
@@ -1158,7 +1160,14 @@ public class ModalWindow extends Panel
 			title.detach();
 		}
 	}
-
+	
+	/**
+	 * Sets whether window size will be automatically adjusted on opening to fit
+	 * content's width and height. <span style="text-decoration: underline">Doesn't work on IE 6.</span>
+	 * @param autoSize
+	 *            Whether window size will be automatically adjusted
+	 * @return this
+	 */
 	public ModalWindow setAutoSize(boolean autoSize)
 	{
 		this.autoSize = autoSize;
@@ -1166,9 +1175,9 @@ public class ModalWindow extends Panel
 	}
 
 	/**
-	 * Returns whether the window is resizable.
+	 * Returns whether window will be opened in autosize mode.
 	 * 
-	 * @return True if the window is resizable, false otherwise
+	 * @return True if the window will be opened open in autosize mode, false otherwise
 	 */
 	public boolean isAutoSize()
 	{
