@@ -27,7 +27,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Eelco Hillenius
  */
-public class DateConverter extends AbstractConverter
+public class DateConverter extends AbstractConverter<Date>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -42,7 +42,7 @@ public class DateConverter extends AbstractConverter
 		}
 		else
 		{
-			return (Date)parse(getDateFormat(locale), value, locale);
+			return parse(getDateFormat(locale), value, locale);
 		}
 	}
 
@@ -50,7 +50,7 @@ public class DateConverter extends AbstractConverter
 	 * @see org.apache.wicket.util.convert.IConverter#convertToString(Object, java.util.Locale)
 	 */
 	@Override
-	public String convertToString(final Object value, Locale locale)
+	public String convertToString(final Date value, Locale locale)
 	{
 		final DateFormat dateFormat = getDateFormat(locale);
 		if (dateFormat != null)

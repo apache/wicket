@@ -1363,7 +1363,7 @@ public abstract class Component
 	 * 
 	 * @return The converter that should be used by this component
 	 */
-	public IConverter getConverter(Class<?> type)
+	public <C> IConverter<C> getConverter(Class<C> type)
 	{
 		return getApplication().getConverterLocator().getConverter(type);
 	}

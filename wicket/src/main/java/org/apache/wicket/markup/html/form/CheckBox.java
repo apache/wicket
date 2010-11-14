@@ -134,8 +134,8 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 		checkComponentTagAttribute(tag, "type", "checkbox");
 
 		final String value = getValue();
-		final IConverter converter = getConverter(Boolean.class);
-		final Boolean checked = (Boolean)converter.convertToObject(value, getLocale());
+		final IConverter<Boolean> converter = getConverter(Boolean.class);
+		final Boolean checked = converter.convertToObject(value, getLocale());
 
 		if (Boolean.TRUE.equals(checked))
 		{
@@ -183,11 +183,11 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 	 * @see org.apache.wicket.Component#getConverter(java.lang.Class)
 	 */
 	@Override
-	public final IConverter getConverter(Class<?> type)
+	public final <C> IConverter<C> getConverter(Class<C> type)
 	{
 		if (Boolean.class.equals(type))
 		{
-			return CheckBoxConverter.INSTANCE;
+			return (IConverter<C>)CheckBoxConverter.INSTANCE;
 		}
 		else
 		{
@@ -200,11 +200,11 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 	 * 
 	 * @author igor.vaynberg
 	 */
-	private static class CheckBoxConverter implements IConverter
+	private static class CheckBoxConverter implements IConverter<Boolean>
 	{
 		private static final long serialVersionUID = 1L;
 
-		private static final IConverter INSTANCE = new CheckBoxConverter();
+		private static final IConverter<Boolean> INSTANCE = new CheckBoxConverter();
 
 		/**
 		 * Constructor
@@ -218,7 +218,7 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 		 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
 		 *      java.util.Locale)
 		 */
-		public Object convertToObject(String value, Locale locale)
+		public Boolean convertToObject(String value, Locale locale)
 		{
 			if ("on".equals(value) || "true".equals(value))
 			{
@@ -234,9 +234,9 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 		 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object,
 		 *      java.util.Locale)
 		 */
-		public String convertToString(Object value, Locale locale)
+		public String convertToString(Boolean value, Locale locale)
 		{
-			return ((Boolean)value).toString();
+			return value.toString();
 		}
 	}
 

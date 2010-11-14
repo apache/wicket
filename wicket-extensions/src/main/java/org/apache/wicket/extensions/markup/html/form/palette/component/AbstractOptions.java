@@ -24,6 +24,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.JavascriptUtils;
 import org.apache.wicket.util.string.Strings;
@@ -99,8 +100,8 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 				Object displayValue = renderer.getDisplayValue(choice);
 				Class<?> displayClass = displayValue == null ? null : displayValue.getClass();
 
-				String displayString = getConverter(displayClass).convertToString(displayValue,
-					getLocale());
+				IConverter<Object> converter = (IConverter<Object>)getConverter(displayClass);
+				String displayString = converter.convertToString(displayValue, getLocale());
 				displayString = getLocalizer().getString(displayString, this, displayString);
 
 				if (getEscapeModelStrings())
@@ -165,10 +166,10 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 	}
 
 	/**
-	* A piece of javascript to avoid serializing the options during AJAX
-	* serialization.
-	*/
-	protected void avoidAjaxSerialization() {
+	 * A piece of javascript to avoid serializing the options during AJAX serialization.
+	 */
+	protected void avoidAjaxSerialization()
+	{
 		getResponse().write(
 			JavascriptUtils.SCRIPT_OPEN_TAG +
 				"if (typeof(Wicket) != \"undefined\" && typeof(Wicket.Form) != \"undefined\")" +

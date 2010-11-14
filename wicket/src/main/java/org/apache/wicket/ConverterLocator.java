@@ -56,33 +56,33 @@ public class ConverterLocator implements IConverterLocator
 	/**
 	 * CoverterLocator that is to be used when no registered converter is found.
 	 */
-	private class DefaultConverter implements IConverter
+	private class DefaultConverter<C> implements IConverter<C>
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final WeakReference<Class<?>> type;
+		private final WeakReference<Class<C>> type;
 
 		/**
 		 * Construct.
 		 * 
 		 * @param type
 		 */
-		private DefaultConverter(Class<?> type)
+		private DefaultConverter(Class<C> type)
 		{
-			this.type = new WeakReference<Class<?>>(type);
+			this.type = new WeakReference<Class<C>>(type);
 		}
 
 		/**
 		 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
 		 *      java.util.Locale)
 		 */
-		public Object convertToObject(String value, Locale locale)
+		public C convertToObject(String value, Locale locale)
 		{
 			if (value == null)
 			{
 				return null;
 			}
-			Class<?> theType = type.get();
+			Class<C> theType = type.get();
 			if ("".equals(value))
 			{
 				if (String.class.equals(theType))
@@ -115,7 +115,7 @@ public class ConverterLocator implements IConverterLocator
 		 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object,
 		 *      java.util.Locale)
 		 */
-		public String convertToString(Object value, Locale locale)
+		public String convertToString(C value, Locale locale)
 		{
 			if (value == null || "".equals(value))
 			{
@@ -140,7 +140,7 @@ public class ConverterLocator implements IConverterLocator
 	private static final long serialVersionUID = 1L;
 
 	/** Maps Classes to ITypeConverters. */
-	private final Map<String, IConverter> classToConverter = new HashMap<String, IConverter>();
+	private final Map<String, IConverter<?>> classToConverter = new HashMap<String, IConverter<?>>();
 
 	/**
 	 * Constructor
@@ -178,9 +178,9 @@ public class ConverterLocator implements IConverterLocator
 	 * @return The type converter that is registered for class c or null if no type converter was
 	 *         registered for class c
 	 */
-	public final IConverter get(Class<?> c)
+	public final <C> IConverter<C> get(Class<C> c)
 	{
-		return classToConverter.get(c.getName());
+		return (IConverter<C>)classToConverter.get(c.getName());
 	}
 
 	/**
@@ -193,20 +193,20 @@ public class ConverterLocator implements IConverterLocator
 	 * 
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(String, java.util.Locale)
 	 */
-	public final IConverter getConverter(Class<?> type)
+	public final <C> IConverter<C> getConverter(Class<C> type)
 	{
 		// Null is always converted to null
 		if (type == null)
 		{
-			return new DefaultConverter(String.class);
+			return (IConverter<C>)new DefaultConverter<String>(String.class);
 		}
 
 
 		// Get type converter for class
-		final IConverter converter = get(type);
+		final IConverter<C> converter = get(type);
 		if (converter == null)
 		{
-			return new DefaultConverter(type);
+			return new DefaultConverter<C>(type);
 		}
 		return converter;
 	}
@@ -219,7 +219,7 @@ public class ConverterLocator implements IConverterLocator
 	 * @return The converter that was registered for class c before removal or null if none was
 	 *         registered
 	 */
-	public final IConverter remove(Class<?> c)
+	public final IConverter<?> remove(Class<?> c)
 	{
 		return classToConverter.remove(c.getName());
 	}
@@ -234,8 +234,7 @@ public class ConverterLocator implements IConverterLocator
 	 * @return The previous registered converter for class c or null if none was registered yet for
 	 *         class c
 	 */
-	@SuppressWarnings("unchecked")
-	public final IConverter set(final Class c, final IConverter converter)
+	public final IConverter<?> set(final Class<?> c, final IConverter<?> converter)
 	{
 		if (converter == null)
 		{

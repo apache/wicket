@@ -70,6 +70,7 @@ public class FormInput extends WicketExamplePage
 		 * @param name
 		 *            Component name
 		 */
+		@SuppressWarnings("serial")
 		public InputForm(String name)
 		{
 			super(name, new CompoundPropertyModel<FormInputModel>(new FormInputModel()));
@@ -147,14 +148,15 @@ public class FormInput extends WicketExamplePage
 			// TextField using a custom converter.
 			add(new TextField<URL>("urlProperty", URL.class)
 			{
+				@SuppressWarnings("unchecked")
 				@Override
-				public IConverter getConverter(final Class<?> type)
+				public <C> IConverter<C> getConverter(final Class<C> type)
 				{
 					if (URL.class.isAssignableFrom(type))
 					{
-						return new IConverter()
+						return (IConverter<C>)new IConverter<URL>()
 						{
-							public Object convertToObject(String value, Locale locale)
+							public URL convertToObject(String value, Locale locale)
 							{
 								try
 								{
@@ -167,7 +169,7 @@ public class FormInput extends WicketExamplePage
 								}
 							}
 
-							public String convertToString(Object value, Locale locale)
+							public String convertToString(URL value, Locale locale)
 							{
 								return value != null ? value.toString() : null;
 							}
@@ -185,12 +187,12 @@ public class FormInput extends WicketExamplePage
 			{
 
 				@Override
-				public IConverter getConverter(final Class<?> type)
+				public <C> IConverter<C> getConverter(final Class<C> type)
 				{
 					if (UsPhoneNumber.class.isAssignableFrom(type))
 					{
 						// US telephone number mask
-						return new MaskConverter("(###) ###-####", UsPhoneNumber.class);
+						return new MaskConverter<C>("(###) ###-####", UsPhoneNumber.class);
 					}
 					else
 					{

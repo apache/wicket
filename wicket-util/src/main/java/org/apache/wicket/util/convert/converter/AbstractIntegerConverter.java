@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Jonathan Locke
  * 
  */
-public abstract class AbstractIntegerConverter extends AbstractNumberConverter
+public abstract class AbstractIntegerConverter<I extends Number> extends AbstractNumberConverter<I>
 {
 	private static final long serialVersionUID = 1L;
 

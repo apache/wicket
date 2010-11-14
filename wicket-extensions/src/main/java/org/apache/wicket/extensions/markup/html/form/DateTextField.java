@@ -54,7 +54,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	/**
 	 * The converter for the TextField
 	 */
-	private IConverter converter = null;
+	private IConverter<?> converter = null;
 
 	/**
 	 * Creates a new DateTextField, without a specified pattern. This is the same as calling
@@ -148,7 +148,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
 	@Override
-	public IConverter getConverter(Class<?> type)
+	public <C> IConverter<C> getConverter(Class<C> type)
 	{
 		if (converter == null)
 		{
@@ -156,7 +156,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 		}
 		else
 		{
-			return converter;
+			return (IConverter<C>)converter;
 		}
 	}
 

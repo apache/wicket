@@ -24,7 +24,7 @@ import java.util.Locale;
  * 
  * see IConverter
  */
-public class BigDecimalConverter extends AbstractDecimalConverter
+public class BigDecimalConverter extends AbstractDecimalConverter<BigDecimal>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -32,7 +32,7 @@ public class BigDecimalConverter extends AbstractDecimalConverter
 	 * @see org.apache.wicket.util.convert.converters.AbstractConverter#getTargetType()
 	 */
 	@Override
-	protected Class<?> getTargetType()
+	protected Class<BigDecimal> getTargetType()
 	{
 		return BigDecimal.class;
 	}

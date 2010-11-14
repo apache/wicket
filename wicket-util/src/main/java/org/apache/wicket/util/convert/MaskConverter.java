@@ -85,7 +85,7 @@ import javax.swing.text.MaskFormatter;
  * 
  * @author Eelco Hillenius
  */
-public class MaskConverter implements IConverter
+public class MaskConverter<C> implements IConverter<C>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -149,11 +149,11 @@ public class MaskConverter implements IConverter
 	 * 
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String, Locale)
 	 */
-	public Object convertToObject(String value, Locale locale)
+	public C convertToObject(String value, Locale locale)
 	{
 		try
 		{
-			return maskFormatter.stringToValue(value);
+			return (C)maskFormatter.stringToValue(value);
 		}
 		catch (ParseException e)
 		{
@@ -166,7 +166,7 @@ public class MaskConverter implements IConverter
 	 * 
 	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object, Locale)
 	 */
-	public String convertToString(Object value, Locale locale)
+	public String convertToString(C value, Locale locale)
 	{
 		try
 		{

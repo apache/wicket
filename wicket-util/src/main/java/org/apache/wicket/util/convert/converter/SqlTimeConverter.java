@@ -27,7 +27,7 @@ import org.apache.wicket.util.convert.ConversionException;
 /**
  * Converts to {@link Time}.
  */
-public class SqlTimeConverter extends AbstractConverter
+public class SqlTimeConverter extends AbstractConverter<Time>
 {
 
 	private static final long serialVersionUID = 1L;
@@ -60,7 +60,7 @@ public class SqlTimeConverter extends AbstractConverter
 	}
 
 	@Override
-	public String convertToString(final Object value, Locale locale)
+	public String convertToString(final Time value, Locale locale)
 	{
 		if (value == null)
 		{
@@ -70,7 +70,7 @@ public class SqlTimeConverter extends AbstractConverter
 		{
 			locale = Locale.getDefault();
 		}
-		Time time = (Time)value;
+		Time time = value;
 		DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
 		return format.format(time);
 	}

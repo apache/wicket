@@ -27,14 +27,14 @@ import org.apache.wicket.util.convert.IConverter;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class ShortConverter extends AbstractIntegerConverter
+public class ShortConverter extends AbstractIntegerConverter<Short>
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The singleton instance for a short converter
 	 */
-	public static final IConverter INSTANCE = new ShortConverter();
+	public static final IConverter<Short> INSTANCE = new ShortConverter();
 
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)

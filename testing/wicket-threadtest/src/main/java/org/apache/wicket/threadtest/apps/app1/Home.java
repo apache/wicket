@@ -172,38 +172,47 @@ public class Home extends WebPage
 			{
 				private static final long serialVersionUID = 1L;
 
+				@SuppressWarnings("unchecked")
 				@Override
-				public IConverter getConverter(Class<?> clazz)
+				public <C> IConverter<C> getConverter(Class<C> clazz)
 				{
-					return new IConverter()
+					if (URL.class.isAssignableFrom(clazz))
 					{
-						private static final long serialVersionUID = 1L;
-
-						/**
-						 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
-						 *      java.util.Locale)
-						 */
-						public URL convertToObject(String value, Locale locale)
+						return (IConverter<C>)new IConverter<URL>()
 						{
-							try
-							{
-								return new URL(value.toString());
-							}
-							catch (MalformedURLException e)
-							{
-								throw new ConversionException("'" + value + "' is not a valid URL");
-							}
-						}
+							private static final long serialVersionUID = 1L;
 
-						/**
-						 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object,
-						 *      java.util.Locale)
-						 */
-						public String convertToString(Object value, Locale locale)
-						{
-							return value != null ? value.toString() : null;
-						}
-					};
+							/**
+							 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
+							 *      java.util.Locale)
+							 */
+							public URL convertToObject(String value, Locale locale)
+							{
+								try
+								{
+									return new URL(value.toString());
+								}
+								catch (MalformedURLException e)
+								{
+									throw new ConversionException("'" + value +
+										"' is not a valid URL");
+								}
+							}
+
+							/**
+							 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object,
+							 *      java.util.Locale)
+							 */
+							public String convertToString(URL value, Locale locale)
+							{
+								return value != null ? value.toString() : null;
+							}
+						};
+					}
+					else
+					{
+						return super.getConverter(clazz);
+					}
 				}
 			});
 
@@ -212,9 +221,9 @@ public class Home extends WebPage
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public IConverter getConverter(Class<?> clazz)
+				public <C> IConverter<C> getConverter(Class<C> clazz)
 				{
-					return new MaskConverter("(###) ###-####", UsPhoneNumber.class);
+					return new MaskConverter<C>("(###) ###-####", UsPhoneNumber.class);
 				}
 			});
 

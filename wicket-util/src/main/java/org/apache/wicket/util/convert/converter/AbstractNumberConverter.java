@@ -28,7 +28,7 @@ import org.apache.wicket.util.convert.ConversionException;
  * @author Jonathan Locke
  * 
  */
-public abstract class AbstractNumberConverter extends AbstractConverter
+public abstract class AbstractNumberConverter<N extends Number> extends AbstractConverter<N>
 {
 	/**
 	 * 
@@ -56,7 +56,7 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 	 * @throws ConversionException
 	 *             if value is unparsable or out of range
 	 */
-	protected Number parse(Object value, final double min, final double max, Locale locale)
+	protected N parse(Object value, final double min, final double max, Locale locale)
 	{
 		if (locale == null)
 		{
@@ -77,7 +77,7 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 		}
 
 		final NumberFormat numberFormat = getNumberFormat(locale);
-		final Number number = (Number)parse(numberFormat, value, locale);
+		final N number = parse(numberFormat, value, locale);
 
 		if (number == null)
 		{
@@ -100,10 +100,10 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 	}
 
 	/**
-	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object, Locale)
+	 * @see org.apache.wicket.util.convert.IConverter#convertToString(C, Locale)
 	 */
 	@Override
-	public String convertToString(final Object value, Locale locale)
+	public String convertToString(final Number value, Locale locale)
 	{
 		NumberFormat fmt = getNumberFormat(locale);
 		if (fmt != null)

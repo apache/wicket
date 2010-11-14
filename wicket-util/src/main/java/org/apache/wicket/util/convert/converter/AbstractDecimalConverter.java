@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Jonathan Locke
  * 
  */
-public abstract class AbstractDecimalConverter extends AbstractNumberConverter
+public abstract class AbstractDecimalConverter<N extends Number> extends AbstractNumberConverter<N>
 {
 	private static final long serialVersionUID = 1L;
 
