@@ -16,23 +16,43 @@
  */
 package org.apache.wicket;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+
+import junit.framework.TestCase;
+
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore;
 import org.apache.wicket.protocol.http.WebRequestCycle;
+import org.apache.wicket.protocol.http.pagestore.DiskPageStore;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
+import org.apache.wicket.session.ISessionStore;
+import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * https://issues.apache.org/jira/browse/WICKET-3108
  */
-public class PageMapTest extends WicketTestCase
+public class PageMapTest extends TestCase
 {
 	private static final String TO_REMOVE_PAGE_MAP = "test-0";
 	private static final String WORKING_PAGE_MAP = "test-1";
 	// just to have an test limit, can be any value
 	private static final int MAX_PAGE_MAPS = 2;
+	private static final long BIG_OBJECT_SIZE = 10000;
+
+	private WicketTester tester;
+
+	@Override
+	protected void setUp() throws Exception
+	{
+		tester = new WicketTester();
+	}
 
 	/**
 	 * Making sure that the TO_REMOVE_PAGEMAP doesn't get back to session after a call to
@@ -57,7 +77,6 @@ public class PageMapTest extends WicketTestCase
 			assertFalse(pageMap.getName().equals(TO_REMOVE_PAGE_MAP));
 		}
 	}
-
 
 	/**
 	 * Requesting (maxPageMaps + 1) pages on distinct pagemaps
@@ -85,6 +104,72 @@ public class PageMapTest extends WicketTestCase
 			listPageMapsAtSession();
 		}
 		assertTrue(MAX_PAGE_MAPS >= tester.getWicketSession().getPageMaps().size());
+	}
+
+	/**
+	 * Making sure that the PageMap don't get serialized with the session. If this test is failing,
+	 * please look for any possible memory leak and than increase the BIG_OBJECT_SIZE.
+	 * 
+	 * @see https://issues.apache.org/jira/browse/WICKET-3160
+	 */
+	public void testPagemapIsNotReferencedBySession()
+	{
+		tester = new WicketTester(new WicketTester.DummyWebApplication()
+		{
+			@Override
+			protected ISessionStore newSessionStore()
+			{
+				return new SecondLevelCacheSessionStore(this, new DiskPageStore());
+			}
+		});
+		BigObject bigObject = new BigObject();
+		long bigObjectSize = Objects.sizeof(bigObject);
+		TestPage testPage = new TestPage();
+		testPage.setDefaultModel(new Model(bigObject));
+		tester.startPage(testPage);
+		long sessionSize = Objects.sizeof(tester.getWicketSession());
+		assertTrue(sessionSize < bigObjectSize);
+	}
+
+	public static class BigObject implements Serializable
+	{
+		private final ArrayList list = new ArrayList();
+		{
+			for (int i = 0; i < BIG_OBJECT_SIZE; i++)
+			{
+				list.add(Byte.MIN_VALUE);
+			}
+		}
+	}
+
+	/**
+	 * Making sure that the getPageMaps return the correctly LRU page maps sequence
+	 */
+	public void testLruCache()
+	{
+		for (int i = 0; i < MAX_PAGE_MAPS; i++)
+		{
+			tester.getWicketSession().newPageMap(Integer.toString(i));
+		}
+		Integer cacheIndex = 0;
+		for (IPageMap pageMap : tester.getWicketSession().getPageMaps())
+		{
+			assertEquals(cacheIndex++, Integer.valueOf(pageMap.getName()));
+		}
+	}
+
+	/**
+	 * Making sure that the dirty page map logic is marking the the page map as the last used.
+	 */
+	public void testLruCacheOnDirtyPageMap()
+	{
+		goToPage(TestPage.class, "0");
+		goToPage(TestPage.class, "1");
+		goToPage(TestPage.class, "2");
+		goToPage(TestPage.class, "1");
+		assertEquals(3, tester.getWicketSession().getPageMaps().size());
+		assertEquals("0", tester.getWicketSession().getPageMaps().get(0).getName());
+		assertEquals("1", tester.getWicketSession().getPageMaps().get(2).getName());
 	}
 
 	private void goToPage(Class pageClass, String pageMap)

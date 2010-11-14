@@ -346,11 +346,14 @@ public abstract class PageMap implements IClusterable, IPageMap
 	}
 
 	/**
-	 * 
+	 * Marking this PageMap as the most recently used only if it isn't already removed from session.
 	 */
 	protected final void dirty()
 	{
-		Session.get().dirtyPageMap(this);
+		if (Session.get().getPageMaps().contains(this))
+		{
+			Session.get().dirtyPageMap(this);
+		}
 	}
 
 	/**

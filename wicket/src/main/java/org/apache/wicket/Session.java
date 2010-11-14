@@ -19,6 +19,7 @@ package org.apache.wicket;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -351,8 +352,8 @@ public abstract class Session implements IClusterable
 	 */
 	private transient Map<String, Object> temporarySessionAttributes;
 
-	/** A linked list for last used pagemap queue */
-	private final LinkedList/* <IPageMap> */<IPageMap> usedPageMaps = new LinkedList<IPageMap>();
+	/** A linked list for last used pagemap names queue */
+	private final LinkedList<String> usedPageMapNames = new LinkedList<String>();
 
 	/**
 	 * Constructor. Note that {@link RequestCycle} is not available until this constructor returns.
@@ -705,7 +706,7 @@ public abstract class Session implements IClusterable
 		IPageMap pageMap = pageMapForName(pageMapName, pageMapName == PageMap.DEFAULT_NAME);
 		if (pageMap != null)
 		{
-			synchronized (usedPageMaps) // get a lock so be sure that only one
+			synchronized (usedPageMapNames) // get a lock so be sure that only one
 			// is made
 			{
 				if (pageMapsUsedInRequest == null)
@@ -809,7 +810,21 @@ public abstract class Session implements IClusterable
 				list.add((IPageMap)getAttribute(attribute));
 			}
 		}
+		Collections.sort(list, new LruComparator());
 		return list;
+	}
+
+	/**
+	 * Sorting page maps respecting the least recently used sequence.
+	 */
+	private class LruComparator implements Comparator<IPageMap>
+	{
+		public int compare(IPageMap pg1, IPageMap pg2)
+		{
+			Integer pg1Index = usedPageMapNames.indexOf(pg1.getName());
+			Integer pg2Index = usedPageMapNames.indexOf(pg2.getName());
+			return pg1Index.compareTo(pg2Index);
+		}
 	}
 
 	/**
@@ -919,18 +934,26 @@ public abstract class Session implements IClusterable
 	{
 		// Check that session doesn't have too many page maps already, if so, evict
 		final int maxPageMaps = getApplication().getSessionSettings().getMaxPageMaps();
-		synchronized (usedPageMaps)
+		synchronized (usedPageMapNames)
 		{
-			while (usedPageMaps.size() >= maxPageMaps)
+			List<IPageMap> usedPageMaps = getPageMaps();
+			int excessPagemaps = (usedPageMaps.size() + 1) - maxPageMaps;/*
+																		 * plus 1 meaning the new
+																		 * one we are about to add
+																		 */
+			if (excessPagemaps > 0)
 			{
-				IPageMap pm = usedPageMaps.getFirst();
-				pm.remove();
+				for (int i = 0; i < excessPagemaps; i++)
+				{
+					usedPageMaps.get(i).remove();
+				}
 			}
 		}
 
 		// Create new page map
 		final IPageMap pageMap = getSessionStore().createPageMap(name);
 		setAttribute(attributeForPageMapName(name), pageMap);
+		// marking it as the most recently used
 		dirtyPageMap(pageMap);
 		dirty();
 		return pageMap;
@@ -967,9 +990,9 @@ public abstract class Session implements IClusterable
 			pagemapMetaData.pageMapNames.remove(pageMap.getName());
 		}
 
-		synchronized (usedPageMaps)
+		synchronized (usedPageMapNames)
 		{
-			usedPageMaps.remove(pageMap);
+			usedPageMapNames.remove(pageMap.getName());
 		}
 
 		// the page map also needs to be removed from the dirty objects list or
@@ -1147,7 +1170,7 @@ public abstract class Session implements IClusterable
 	 *            Name of page map
 	 * @return Session attribute holding page map
 	 */
-	private final String attributeForPageMapName(final String pageMapName)
+	private static final String attributeForPageMapName(final String pageMapName)
 	{
 		return pageMapAttributePrefix + pageMapName;
 	}
@@ -1362,10 +1385,10 @@ public abstract class Session implements IClusterable
 			return;
 		}
 
-		synchronized (usedPageMaps)
+		synchronized (usedPageMapNames)
 		{
-			usedPageMaps.remove(map);
-			usedPageMaps.addLast(map);
+			usedPageMapNames.remove(map.getName());
+			usedPageMapNames.addLast(map.getName());
 		}
 
 		List<IClusterable> dirtyObjects = getDirtyObjectsList();
