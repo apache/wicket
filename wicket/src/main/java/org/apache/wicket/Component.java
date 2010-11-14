@@ -82,6 +82,10 @@ import org.slf4j.LoggerFactory;
  * <ul>
  * <li><b>Construction </b>- A Component is constructed with the Java language new operator.
  * Children may be added during construction if the Component is a MarkupContainer.
+ *
+ * <li><b>onInitialize </b>- The {@link #onInitialize()} method is called when a path from this
+ * component to its parent has been established, usually after the component has been added to
+ * its parent.
  * 
  * <li><b>Request Handling </b>- An incoming request is processed by a protocol request handler such
  * as WicketServlet. An associated Application object creates Session, Request and Response objects
@@ -104,8 +108,6 @@ import org.slf4j.LoggerFactory;
  * methods such as onValidate(), onSubmit() and onError() (although only the latter two are likely
  * to be overridden in practice).
  * 
- * <li><b>onBeginRequest </b>- The {@link Component#onBeginRequest()} method is called.
- * 
  * <li><b>Form Submit </b>- If a Form has been submitted and the Component is a FormComponent, the
  * component's model is validated by a call to FormComponent.validate().
  * 
@@ -118,7 +120,7 @@ import org.slf4j.LoggerFactory;
  * Component becomes immutable. Attempts to alter the Component will result in a
  * WicketRuntimeException.
  * 
- * <li><b>onEndRequest </b>() - The {@link Component#onEndRequest()} method is called.
+ * <li><b>onDetach </b>() - The {@link Component#onDetach()} method is called.
  * </ul>
  * 
  * <li><b>Component Models </b>- The primary responsibility of a component is to use its model (an
@@ -3908,7 +3910,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * {@link LoadableDetachableModel} does.
 	 * <p>
 	 * <p>
-	 * Also see {@link #onInitializer()} for an alternative init method
+	 * Also see {@link #onInitialize()} for an alternative init method
 	 * </p>
 	 * <p>
 	 * If you need to get notification when page is taken out of Session (before calling the event
@@ -3963,7 +3965,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * @deprecated use onAttach() instead
+	 * @deprecated use {@link onConfigure()} or {@link onBeforeRender()} instead
 	 */
 	// TODO remove after the deprecation release
 	@Deprecated
@@ -4047,7 +4049,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 				throw new IllegalStateException(Component.class.getName() +
 					" has not been properly initialized. Something in the hierarchy of " +
 					getClass().getName() +
-					" has not called super.onInitializer() in the override of onInitialize() method");
+					" has not called super.onInitialize() in the override of onInitialize() method");
 			}
 			setFlag(FLAG_INITIALIZE_SUPER_CALL_VERIFIED, false);
 
