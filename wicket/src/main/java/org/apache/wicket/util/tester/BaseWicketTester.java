@@ -720,6 +720,18 @@ public class BaseWicketTester extends MockWebApplication
 	{
 		Component linkComponent = getComponentFromLastRenderedPage(path);
 
+		if (linkComponent.isVisibleInHierarchy() == false)
+		{
+			fail("The component is currently not visible in the hierarchy and thus you can not fire events on it." +
+				" Component: " + linkComponent);
+		}
+
+		if (linkComponent.isEnabledInHierarchy() == false)
+		{
+			fail("The component is currently not enabled in the hierarchy and thus you can not be clicked." +
+				" Component: " + linkComponent);
+		}
+
 		// if the link is an AjaxLink, we process it differently
 		// than a normal link
 		if (linkComponent instanceof AjaxLink)
@@ -1236,6 +1248,12 @@ public class BaseWicketTester extends MockWebApplication
 		if (component.isVisibleInHierarchy() == false)
 		{
 			fail("The component is currently not visible in the hierarchy and thus you can not fire events on it." +
+				" Component: " + component + "; Event: " + event);
+		}
+
+		if (component.isEnabledInHierarchy() == false)
+		{
+			fail("The component is currently not enabled in the hierarchy and thus you can not fire events on it." +
 				" Component: " + component + "; Event: " + event);
 		}
 
