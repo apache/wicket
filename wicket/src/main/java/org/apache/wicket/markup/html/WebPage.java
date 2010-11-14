@@ -294,6 +294,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		if (compressor == null)
 		{
 			compressor = new UrlCompressor();
+			setStatelessHint(false);
 		}
 		return compressor;
 	}
