@@ -1139,6 +1139,12 @@ public class BaseWicketTester
 	{
 		Component linkComponent = getComponentFromLastRenderedPage(path);
 
+		if (linkComponent.isVisibleInHierarchy() == false)
+		{
+			fail("The component is currently not visible in the hierarchy and thus you can not fire events on it." +
+				" Component: " + linkComponent);
+		}
+
 		if (linkComponent.isEnabledInHierarchy() == false)
 		{
 			fail("The component is currently not enabled in the hierarchy and thus you can not be clicked." +
