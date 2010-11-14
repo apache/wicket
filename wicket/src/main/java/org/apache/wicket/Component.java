@@ -2210,19 +2210,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final boolean isVisibleInHierarchy()
 	{
-		Component component = this;
-		while (component != null)
+		Component parent = getParent();
+		if (parent != null && !parent.isVisibleInHierarchy())
 		{
-			if (component.determineVisibility())
-			{
-				component = component.getParent();
-			}
-			else
-			{
-				return false;
-			}
+			return false;
 		}
-		return true;
+
+		return determineVisibility();
 	}
 
 	/**
@@ -3546,9 +3540,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		if (!tag.getName().equalsIgnoreCase(name))
 		{
-			String msg = String.format("Component [%s] (path = [%s]) must be " +
-					                     "applied to a tag of type [%s], not: %s",
-			                           getId(), getPath(), name, tag.toUserDebugString());
+			String msg = String.format("Component [%s] (path = [%s]) must be "
+				+ "applied to a tag of type [%s], not: %s", getId(), getPath(), name,
+				tag.toUserDebugString());
 
 			findMarkupStream().throwMarkupException(msg);
 		}
@@ -3574,9 +3568,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 			final String tagAttributeValue = tag.getAttributes().getString(key);
 			if (tagAttributeValue == null || !value.equalsIgnoreCase(tagAttributeValue))
 			{
-				String msg = String.format("Component [%s] (path = [%s]) must be applied to a tag " +
-						                     "with [%s] attribute matching [%s], not [%s]",
-				                           getId(), getPath(), key, value, tagAttributeValue);
+				String msg = String.format("Component [%s] (path = [%s]) must be applied to a tag "
+					+ "with [%s] attribute matching [%s], not [%s]", getId(), getPath(), key,
+					value, tagAttributeValue);
 
 				findMarkupStream().throwMarkupException(msg);
 			}
@@ -4693,14 +4687,14 @@ public abstract class Component implements IClusterable, IConverterLocator
 		Boolean state = getMetaData(ENABLED_IN_HIERARCHY_CACHE_KEY);
 		if (state == null)
 		{
-			state = isEnabled() && isEnableAllowed();
-			if (state)
+			Component parent = getParent();
+			if (parent != null && !parent.isEnabledInHierarchy())
 			{
-				Component parent = getParent();
-				if (parent != null)
-				{
-					state = state && parent.isEnabledInHierarchy();
-				}
+				state = false;
+			}
+			else
+			{
+				state = isEnabled() && isEnableAllowed();
 			}
 			setMetaData(ENABLED_IN_HIERARCHY_CACHE_KEY, state);
 		}
