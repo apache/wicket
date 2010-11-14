@@ -19,16 +19,19 @@ package org.apache.wicket.protocol.http;
 import org.apache.wicket.request.http.WebResponse;
 
 /**
- * any kind of response that is capable of remembering the cookies that were set
- * <p/>
- * this is for example needed to save the cookies during a redirect to buffer operation
+ * Any kind of response that buffers meta data such as cookies and headers and can unbuffer it into
+ * another response
+ * <p>
+ * This is, for example, needed to save the cookies during a redirect to buffer operation
+ * </p>
  */
-public interface ICookieSavingResponse
+public interface IMetaDataBufferingWebResponse
 {
 	/**
 	 * transfer cookies to given web response
-	 *
-	 * @param webResponse web response that should receive the current cookies
+	 * 
+	 * @param webResponse
+	 *            web response that should receive the current cookies
 	 */
-	void transferCookies(WebResponse webResponse);
+	void writeMetaData(WebResponse webResponse);
 }

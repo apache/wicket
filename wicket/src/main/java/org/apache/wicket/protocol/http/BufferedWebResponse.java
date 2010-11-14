@@ -36,7 +36,7 @@ import org.apache.wicket.util.lang.Args;
  * 
  * @author Matej Knopp
  */
-public class BufferedWebResponse extends WebResponse implements ICookieSavingResponse
+public class BufferedWebResponse extends WebResponse implements IMetaDataBufferingWebResponse
 {
 	private final transient WebResponse originalResponse;
 
@@ -47,27 +47,27 @@ public class BufferedWebResponse extends WebResponse implements ICookieSavingRes
 	 */
 	public BufferedWebResponse(WebResponse originalResponse)
 	{
-		// if original response eventually had some cookies set
-		// we should transfer them to the current response
-		if(originalResponse instanceof ICookieSavingResponse)
-			((ICookieSavingResponse) originalResponse).transferCookies(this);
-
+		// if original response had some metadata set
+		// we should transfer it to the current response
+		if (originalResponse instanceof IMetaDataBufferingWebResponse)
+		{
+			((IMetaDataBufferingWebResponse)originalResponse).writeMetaData(this);
+		}
 		this.originalResponse = originalResponse;
 	}
 
 	/**
 	 * transfer cookie operations (add, clear) to given web response
-	 *
-	 * @param response web response that should receive the current cookie operation
+	 * 
+	 * @param response
+	 *            web response that should receive the current cookie operation
 	 */
-	public void transferCookies(WebResponse response)
+	public void writeMetaData(WebResponse response)
 	{
 		for (Action action : actions)
 		{
-			if (action instanceof AddCookieAction)
+			if (action instanceof MetaDataAction)
 				action.invoke(response);
-			else if (action instanceof ClearCookieAction)
-			action.invoke(response);
 		}
 	}
 
@@ -89,6 +89,16 @@ public class BufferedWebResponse extends WebResponse implements ICookieSavingRes
 	{
 		protected abstract void invoke(WebResponse response);
 	};
+
+	/**
+	 * Actions not related directly to the content of the response, eg setting cookies, headers.
+	 * 
+	 * @author igor
+	 */
+	private static abstract class MetaDataAction extends Action
+	{
+	};
+
 
 	private static class WriteCharSequenceAction extends Action
 	{
@@ -148,7 +158,7 @@ public class BufferedWebResponse extends WebResponse implements ICookieSavingRes
 		}
 	};
 
-	private static class AddCookieAction extends Action
+	private static class AddCookieAction extends MetaDataAction
 	{
 		private final Cookie cookie;
 
@@ -164,7 +174,7 @@ public class BufferedWebResponse extends WebResponse implements ICookieSavingRes
 		}
 	};
 
-	private static class ClearCookieAction extends Action
+	private static class ClearCookieAction extends MetaDataAction
 	{
 		private final Cookie cookie;
 
@@ -180,7 +190,7 @@ public class BufferedWebResponse extends WebResponse implements ICookieSavingRes
 		}
 	};
 
-	private static class SetHeaderAction extends Action
+	private static class SetHeaderAction extends MetaDataAction
 	{
 		private final String name;
 		private final String value;
@@ -198,7 +208,7 @@ public class BufferedWebResponse extends WebResponse implements ICookieSavingRes
 		}
 	}
 
-	private static class SetDateHeaderAction extends Action
+	private static class SetDateHeaderAction extends MetaDataAction
 	{
 		private final String name;
 		private final long value;
@@ -248,7 +258,7 @@ public class BufferedWebResponse extends WebResponse implements ICookieSavingRes
 		}
 	};
 
-	private static class SetStatusAction extends Action
+	private static class SetStatusAction extends MetaDataAction
 	{
 		private final int sc;
 

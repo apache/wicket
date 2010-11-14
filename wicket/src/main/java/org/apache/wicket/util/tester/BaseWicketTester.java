@@ -76,7 +76,7 @@ import org.apache.wicket.mock.MockRequestParameters;
 import org.apache.wicket.mock.MockSessionStore;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
-import org.apache.wicket.protocol.http.ICookieSavingResponse;
+import org.apache.wicket.protocol.http.IMetaDataBufferingWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
@@ -2078,11 +2078,14 @@ public class BaseWicketTester
 		}
 	}
 
-	private class WicketTesterServletWebResponse extends ServletWebResponse implements ICookieSavingResponse
+	private class WicketTesterServletWebResponse extends ServletWebResponse
+		implements
+			IMetaDataBufferingWebResponse
 	{
 		private List<Cookie> cookies = new ArrayList<Cookie>();
 
-		public WicketTesterServletWebResponse(ServletWebRequest request, MockHttpServletResponse response)
+		public WicketTesterServletWebResponse(ServletWebRequest request,
+			MockHttpServletResponse response)
 		{
 			super(request, response);
 		}
@@ -2101,10 +2104,13 @@ public class BaseWicketTester
 			cookies.add(cookie);
 		}
 
-		public void transferCookies(WebResponse webResponse)
+		public void writeMetaData(WebResponse webResponse)
 		{
 			for (Cookie cookie : cookies)
+			{
 				webResponse.addCookie(cookie);
+			}
+
 		}
 
 		@Override
