@@ -206,6 +206,52 @@ public class WicketTesterTest extends TestCase
 	}
 
 	/**
+	 * WICKET-3164
+	 * 
+	 * @throws Exception
+	 */
+	public void testClickLink_ajaxLink_notEnabled() throws Exception
+	{
+		tester.startPage(LinkPage.class);
+		tester.assertRenderedPage(LinkPage.class);
+
+		tester.getComponentFromLastRenderedPage("ajaxLinkWithSetResponsePageClass").setEnabled(
+			false);
+		try
+		{
+			tester.clickLink("ajaxLinkWithSetResponsePageClass");
+			fail("Disabled link should not be clickable.");
+		}
+		catch (Exception _)
+		{
+			;
+		}
+	}
+
+	/**
+	 * WICKET-3164
+	 * 
+	 * @throws Exception
+	 */
+	public void testExecuteAjaxEvent_componentNotEnabled() throws Exception
+	{
+		tester.startPage(LinkPage.class);
+		tester.assertRenderedPage(LinkPage.class);
+
+		tester.getComponentFromLastRenderedPage("ajaxLinkWithSetResponsePageClass").setEnabled(
+			false);
+		try
+		{
+			tester.executeAjaxEvent("ajaxLinkWithSetResponsePageClass", "onclick");
+			fail("Disabled link should not be clickable.");
+		}
+		catch (Exception _)
+		{
+			;
+		}
+	}
+
+	/**
 	 * @throws Exception
 	 */
 	public void testClickLink_ajaxLink_setResponsePage() throws Exception

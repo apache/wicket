@@ -1139,6 +1139,12 @@ public class BaseWicketTester
 	{
 		Component linkComponent = getComponentFromLastRenderedPage(path);
 
+		if (linkComponent.isEnabledInHierarchy() == false)
+		{
+			fail("The component is currently not enabled in the hierarchy and thus you can not be clicked." +
+				" Component: " + linkComponent);
+		}
+
 		// if the link is an AjaxLink, we process it differently
 		// than a normal link
 		if (linkComponent instanceof AjaxLink)
@@ -1584,6 +1590,12 @@ public class BaseWicketTester
 		if (component.isVisibleInHierarchy() == false)
 		{
 			fail("The component is currently not visible in the hierarchy and thus you can not fire events on it." +
+				" Component: " + component + "; Event: " + event);
+		}
+
+		if (component.isEnabledInHierarchy() == false)
+		{
+			fail("The component is currently not enabled in the hierarchy and thus you can not fire events on it." +
 				" Component: " + component + "; Event: " + event);
 		}
 
