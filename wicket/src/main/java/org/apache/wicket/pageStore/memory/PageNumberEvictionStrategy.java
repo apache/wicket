@@ -34,6 +34,11 @@ public class PageNumberEvictionStrategy implements DataStoreEvictionStrategy
 	 */
 	public PageNumberEvictionStrategy(int pagesNumber)
 	{
+		if (pagesNumber < 1)
+		{
+			throw new IllegalArgumentException("'pagesNumber' must be greater than 0.");
+		}
+
 		this.pagesNumber = pagesNumber;
 	}
 

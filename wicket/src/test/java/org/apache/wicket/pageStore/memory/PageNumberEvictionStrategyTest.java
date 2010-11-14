@@ -51,4 +51,13 @@ public class PageNumberEvictionStrategyTest
 		assertNotNull(pageTable.getPage(PAGE2.length));
 		assertNull(pageTable.getPage(PAGE1.length));
 	}
+
+	/**
+	 * The number of pages must be at least '1'
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void greaterThanZero()
+	{
+		new PageNumberEvictionStrategy(0);
+	}
 }
