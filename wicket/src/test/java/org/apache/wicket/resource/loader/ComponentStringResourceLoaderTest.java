@@ -16,11 +16,14 @@
  */
 package org.apache.wicket.resource.loader;
 
+import java.util.Map;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.resource.IPropertiesFactory;
 import org.apache.wicket.resource.IsoPropertiesFilePropertiesLoader;
+import org.apache.wicket.resource.Properties;
 import org.apache.wicket.resource.PropertiesFactory;
 
 /**
@@ -68,6 +71,19 @@ public class ComponentStringResourceLoaderTest extends WicketTestCase
 	}
 
 	/**
+	 * @throws Exception
+	 */
+	public void testDisabledCache() throws Exception
+	{
+		IPropertiesFactory myFac = new DisabledCachePropertiesFactory(tester.getApplication());
+		tester.getApplication().getResourceSettings().setPropertiesFactory(myFac);
+
+		executeTest(TestPage_1.class, "TestPageExpectedResult_1.xml");
+
+		myFac.clearCache();
+	}
+
+	/**
 	 * 
 	 */
 	private class MyPropertiesFactory extends PropertiesFactory
@@ -83,6 +99,31 @@ public class ComponentStringResourceLoaderTest extends WicketTestCase
 
 			getPropertiesLoaders().clear();
 			getPropertiesLoaders().add(new IsoPropertiesFilePropertiesLoader("properties"));
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private class DisabledCachePropertiesFactory extends PropertiesFactory
+	{
+		/**
+		 * Construct.
+		 * 
+		 * @param application
+		 */
+		public DisabledCachePropertiesFactory(Application application)
+		{
+			super(application);
+		}
+
+		/**
+		 * @see org.apache.wicket.resource.PropertiesFactory#newPropertiesCache()
+		 */
+		@Override
+		protected Map<String, Properties> newPropertiesCache()
+		{
+			return null;
 		}
 	}
 }

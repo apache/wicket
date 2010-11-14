@@ -195,7 +195,7 @@ public class MarkupComponentBorder extends AbstractBehavior
 		{
 			String path = containerClass.getName().replace('.', '/');
 			IResourceStream resourceStream = locator.locate(containerClass, path, style, variation,
-				locale, markupType);
+				locale, markupType, false);
 
 			// Did we find it already?
 			if (resourceStream != null)

@@ -54,8 +54,10 @@ public class PackageResourceStream extends AbstractResourceStream
 	public PackageResourceStream(Class<?> scope, String path)
 	{
 		String absolutePath = Packages.absolutePath(scope, path);
-		resourceStream = Application.get().getResourceSettings().getResourceStreamLocator().locate(
-			scope, absolutePath, null, null, null, null);
+		resourceStream = Application.get()
+			.getResourceSettings()
+			.getResourceStreamLocator()
+			.locate(scope, absolutePath, null, null, null, null, false);
 
 		if (resourceStream == null)
 		{

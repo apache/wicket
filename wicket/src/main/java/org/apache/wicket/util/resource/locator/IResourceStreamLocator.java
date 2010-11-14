@@ -29,7 +29,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 public interface IResourceStreamLocator
 {
 	/**
-	 * Loads a resource, given a path and class. Typically this method is either called by external
+	 * Locate a resource, given a path and class. Typically this method is either called by external
 	 * clients if they are not interested in a lookup that takes the style and locale into account,
 	 * or it is called by the implementation of
 	 * {@link #locate(Class, String, String, Locale, String)} where the latter just takes care of
@@ -43,10 +43,11 @@ public interface IResourceStreamLocator
 	 * 
 	 * @return The resource or null
 	 */
-	public IResourceStream locate(Class<?> clazz, String path);
+	IResourceStream locate(Class<?> clazz, String path);
 
 	/**
-	 * Loads a resource, given a path, style, variation, locale and extension.
+	 * Locate a resource by combining the given path, style, variation, locale and extension
+	 * parameters. The exact search order depends on the implementation.
 	 * 
 	 * @param clazz
 	 *            The class loader for delegating the loading of the resource
@@ -59,34 +60,33 @@ public interface IResourceStreamLocator
 	 * @param locale
 	 *            The locale of the resource to load
 	 * @param extension
-	 *            The extension of the resource
-	 * 
-	 * @return The resource or null
-	 */
-	public IResourceStream locate(Class<?> clazz, String path, String style, String variation,
-		Locale locale, String extension);
-
-	/**
-	 * Loads a resource, given a path, style, variation, locale and extension.
-	 * 
-	 * @param clazz
-	 *            The class loader for delegating the loading of the resource
-	 * @param path
-	 *            The path of the resource
-	 * @param style
-	 *            Any resource style, such as a skin style (see {@link org.apache.wicket.Session})
-	 * @param variation
-	 *            The component's variation (of the style)
-	 * @param locale
-	 *            The locale of the resource to load
-	 * @param extension
-	 *            The extension of the resource
-	 * 
+	 *            A comma separate list of extensions
 	 * @param strict
 	 *            whether the specified attributes must match exactly
-	 * 
 	 * @return The resource or null
 	 */
-	public IResourceStream locate(Class<?> clazz, String path, String style, String variation,
+	IResourceStream locate(Class<?> clazz, String path, String style, String variation,
 		Locale locale, String extension, boolean strict);
+
+	/**
+	 * Markup resources and Properties files both need to iterate over different combinations of
+	 * locale, style, etc.. And though no single locate(..) method exists which is used by both,
+	 * they both use ResourceNameIterators.
+	 * 
+	 * @param path
+	 *            The path of the resource
+	 * @param style
+	 *            Any resource style, such as a skin style (see {@link org.apache.wicket.Session})
+	 * @param variation
+	 *            The component's variation (of the style)
+	 * @param locale
+	 *            The locale of the resource to load
+	 * @param extension
+	 *            A comma separate list of extensions
+	 * @param strict
+	 *            whether the specified attributes must match exactly
+	 * @return resource name iterator
+	 */
+	ResourceNameIterator newResourceNameIterator(String path, Locale locale, String style,
+		String variation, String extension, boolean strict);
 }

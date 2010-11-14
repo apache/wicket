@@ -23,8 +23,8 @@ import org.apache.wicket.Application;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceUtils;
-import org.apache.wicket.util.resource.UrlResourceStream;
 import org.apache.wicket.util.resource.ResourceUtils.PathLocale;
+import org.apache.wicket.util.resource.UrlResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,18 +110,6 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	 * 
 	 * @see org.apache.wicket.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class,
 	 *      java.lang.String, java.lang.String, java.lang.String, java.util.Locale,
-	 *      java.lang.String)
-	 */
-	public IResourceStream locate(final Class<?> clazz, String path, final String style,
-		final String variation, final Locale locale, final String extension)
-	{
-		return locate(clazz, path, style, variation, locale, extension, false);
-	}
-
-	/**
-	 * 
-	 * @see org.apache.wicket.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class,
-	 *      java.lang.String, java.lang.String, java.lang.String, java.util.Locale,
 	 *      java.lang.String, boolean)
 	 */
 	public IResourceStream locate(final Class<?> clazz, String path, final String style,
@@ -136,7 +124,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 		}
 
 		// Try the various combinations of style, locale and extension to find the resource.
-		ResourceNameIterator iter = new ResourceNameIterator(path, style, variation, locale,
+		ResourceNameIterator iter = newResourceNameIterator(path, locale, style, variation,
 			extension, strict);
 		while (iter.hasNext())
 		{
@@ -243,5 +231,16 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 
 		// Try to find file resource on the path supplied
 		return finder.find(clazz, path);
+	}
+
+	/**
+	 * 
+	 * @see org.apache.wicket.util.resource.locator.IResourceStreamLocator#newResourceNameIterator(java.lang.String,
+	 *      java.util.Locale, java.lang.String, java.lang.String, java.lang.String, boolean)
+	 */
+	public ResourceNameIterator newResourceNameIterator(final String path, final Locale locale,
+		final String style, final String variation, final String extension, final boolean strict)
+	{
+		return new ResourceNameIterator(path, style, variation, locale, extension, strict);
 	}
 }

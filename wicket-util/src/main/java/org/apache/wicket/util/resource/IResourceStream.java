@@ -81,7 +81,7 @@ public interface IResourceStream extends IModifiable, IClusterable, Closeable
 	Locale getLocale();
 
 	/**
-	 * This method shouldn't be used for the outside, It is used by the Loaders to set the resolved
+	 * This method shouldn't be used from the outside. It is used by the Loaders to set the resolved
 	 * locale.
 	 * 
 	 * @param locale
@@ -95,7 +95,7 @@ public interface IResourceStream extends IModifiable, IClusterable, Closeable
 	String getStyle();
 
 	/**
-	 * This method shouldn't be used for the outside, It is used by the Loaders to set the resolved
+	 * This method shouldn't be used from the outside. It is used by the Loaders to set the resolved
 	 * Style.
 	 * 
 	 * @param style
@@ -109,7 +109,7 @@ public interface IResourceStream extends IModifiable, IClusterable, Closeable
 	String getVariation();
 
 	/**
-	 * This method shouldn't be used for the outside, It is used by the Loaders to set the resolved
+	 * This method shouldn't be used from the outside. It is used by the Loaders to set the resolved
 	 * variation.
 	 * 
 	 * @param variation

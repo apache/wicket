@@ -143,9 +143,11 @@ public class XsltTransformer implements ITransformer
 				"/" + component.getId();
 		}
 
-		resourceStream = Application.get().getResourceSettings().getResourceStreamLocator().locate(
-			getClass(), filePath, component.getStyle(), component.getVariation(),
-			component.getLocale(), XsltTransformer.extension);
+		resourceStream = Application.get()
+			.getResourceSettings()
+			.getResourceStreamLocator()
+			.locate(getClass(), filePath, component.getStyle(), component.getVariation(),
+				component.getLocale(), XsltTransformer.extension, false);
 
 		return resourceStream;
 	}

@@ -76,6 +76,6 @@ public final class Properties
 	@Override
 	public final String toString()
 	{
-		return key;
+		return "unique key:" + key;
 	}
 }

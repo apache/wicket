@@ -57,7 +57,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	private final List<IPropertiesChangeListener> afterReloadListeners = new ArrayList<IPropertiesChangeListener>();
 
 	/** Cache for all property files loaded */
-	private final Map<String, Properties> propertiesCache = new ConcurrentHashMap<String, Properties>();
+	private final Map<String, Properties> propertiesCache = newPropertiesCache();
 
 	/** This is necessary since the ModificationWatcher runs in a separate thread */
 	private final Application application;
@@ -93,6 +93,14 @@ public class PropertiesFactory implements IPropertiesFactory
 	}
 
 	/**
+	 * @return new Cache implementation
+	 */
+	protected Map<String, Properties> newPropertiesCache()
+	{
+		return new ConcurrentHashMap<String, Properties>();
+	}
+
+	/**
 	 * @see org.apache.wicket.resource.IPropertiesFactory#addListener(org.apache.wicket.resource.IPropertiesChangeListener)
 	 */
 	public void addListener(final IPropertiesChangeListener listener)
@@ -109,7 +117,10 @@ public class PropertiesFactory implements IPropertiesFactory
 	 */
 	public final void clearCache()
 	{
-		propertiesCache.clear();
+		if (propertiesCache != null)
+		{
+			propertiesCache.clear();
+		}
 
 		// clear the localizer cache as well
 		application.getResourceSettings().getLocalizer().clearCache();
@@ -122,7 +133,12 @@ public class PropertiesFactory implements IPropertiesFactory
 	public Properties load(final Class<?> clazz, final String path)
 	{
 		// Check the cache
-		Properties properties = propertiesCache.get(path);
+		Properties properties = null;
+		if (propertiesCache != null)
+		{
+			properties = propertiesCache.get(path);
+		}
+
 		if (properties == null)
 		{
 			IResourceSettings resourceSettings = Application.get().getResourceSettings();
@@ -134,9 +150,8 @@ public class PropertiesFactory implements IPropertiesFactory
 				String fullPath = path + loader.getFileExtension();
 
 				// If not in the cache than try to load properties
-				final IResourceStream resourceStream = resourceSettings.getResourceStreamLocator()
+				IResourceStream resourceStream = resourceSettings.getResourceStreamLocator()
 					.locate(clazz, fullPath);
-
 				if (resourceStream == null)
 				{
 					continue;
@@ -157,14 +172,17 @@ public class PropertiesFactory implements IPropertiesFactory
 			}
 
 			// Cache the lookup
-			if (properties == null)
+			if (propertiesCache != null)
 			{
-				// Could not locate properties, store a placeholder
-				propertiesCache.put(path, Properties.EMPTY_PROPERTIES);
-			}
-			else
-			{
-				propertiesCache.put(path, properties);
+				if (properties == null)
+				{
+					// Could not locate properties, store a placeholder
+					propertiesCache.put(path, Properties.EMPTY_PROPERTIES);
+				}
+				else
+				{
+					propertiesCache.put(path, properties);
+				}
 			}
 		}
 

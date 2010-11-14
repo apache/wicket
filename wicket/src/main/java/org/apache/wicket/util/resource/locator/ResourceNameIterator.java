@@ -85,7 +85,7 @@ public class ResourceNameIterator implements Iterator<String>
 	 * @param strict
 	 *            If false, weaker combinations of style, locale, etc. are tested as well
 	 */
-	public ResourceNameIterator(final String path, final String style, final String variation,
+	ResourceNameIterator(final String path, final String style, final String variation,
 		final Locale locale, final String extensions, boolean strict)
 	{
 		this.locale = locale;

@@ -67,7 +67,7 @@ public class ResourceTest extends WicketTestCase
 		IResourceStreamLocator locator = new ResourceStreamLocator(sourcePath);
 		IResourceStream resource = locator.locate(this.getClass(), this.getClass()
 			.getName()
-			.replace('.', '/'), style, variation, locale, "txt");
+			.replace('.', '/'), style, variation, locale, "txt", false);
 		compareFilename(resource, extension);
 	}
 
@@ -115,8 +115,8 @@ public class ResourceTest extends WicketTestCase
 
 		// Determine source path
 		IResourceStreamLocator locator = new ResourceStreamLocator();
-		IResourceStream resource = locator.locate(getClass(), this.getClass().getName().replace(
-			'.', '/'), null, null, null, "txt");
+		IResourceStream resource = locator.locate(getClass(),
+			this.getClass().getName().replace('.', '/'), null, null, null, "txt", false);
 		String path = getPath(resource);
 		path = Strings.beforeLastPathComponent(path, '/') + "/sourcePath";
 

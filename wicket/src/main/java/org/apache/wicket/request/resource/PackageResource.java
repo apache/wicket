@@ -282,7 +282,7 @@ public class PackageResource extends AbstractResource
 		return ThreadContext.getApplication()
 			.getResourceSettings()
 			.getResourceStreamLocator()
-			.locate(getScope(), absolutePath, style, variation, locale, null);
+			.locate(getScope(), absolutePath, style, variation, locale, null, false);
 	}
 
 	/**
@@ -325,7 +325,7 @@ public class PackageResource extends AbstractResource
 		return ThreadContext.getApplication()
 			.getResourceSettings()
 			.getResourceStreamLocator()
-			.locate(scope, absolutePath, style, variation, locale, null) != null;
+			.locate(scope, absolutePath, style, variation, locale, null, false) != null;
 	}
 
 	@Override

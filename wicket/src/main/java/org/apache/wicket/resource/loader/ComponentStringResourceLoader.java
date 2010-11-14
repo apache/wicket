@@ -29,6 +29,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.resource.IPropertiesFactory;
 import org.apache.wicket.resource.Properties;
+import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.resource.locator.ResourceNameIterator;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -131,41 +132,19 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 			String path = clazz.getName().replace('.', '/');
 
 			// Iterator over all the combinations
-			ResourceNameIterator iter = new ResourceNameIterator(path, style, variation, locale,
-				null, false);
+			ResourceNameIterator iter = newResourceNameIterator(path, locale, style, variation);
 			while (iter.hasNext())
 			{
 				String newPath = iter.next();
 
-				final Properties props = propertiesFactory.load(clazz, newPath);
+				Properties props = propertiesFactory.load(clazz, newPath);
 				if (props != null)
 				{
 					// Lookup the value
 					String value = props.getString(key);
 					if (value != null)
 					{
-						if (log.isDebugEnabled())
-						{
-							log.debug("Found property '" + key + "' in: '" + props + "'" +
-								"; value: '" + value + "'");
-						}
-
 						return value;
-					}
-					else
-					{
-						if (log.isDebugEnabled())
-						{
-							log.debug("Found properties file: '" + newPath +
-								"' but it doesn't contain the property");
-						}
-					}
-				}
-				else
-				{
-					if (log.isDebugEnabled())
-					{
-						log.debug("Properties file not found: '" + newPath + "'");
 					}
 				}
 			}
@@ -188,6 +167,25 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 
 		// not found
 		return null;
+	}
+
+	/**
+	 * @see IResourceStreamLocator#newResourceNameIterator(String, Locale, String, String, String,
+	 *      boolean)
+	 * 
+	 * @param path
+	 * @param locale
+	 * @param style
+	 * @param variation
+	 * @return resource name iterator
+	 */
+	protected ResourceNameIterator newResourceNameIterator(final String path, final Locale locale,
+		final String style, final String variation)
+	{
+		return Application.get()
+			.getResourceSettings()
+			.getResourceStreamLocator()
+			.newResourceNameIterator(path, locale, style, variation, null, false);
 	}
 
 	/**
