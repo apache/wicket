@@ -82,10 +82,10 @@ import org.slf4j.LoggerFactory;
  * <ul>
  * <li><b>Construction </b>- A Component is constructed with the Java language new operator.
  * Children may be added during construction if the Component is a MarkupContainer.
- *
+ * 
  * <li><b>onInitialize </b>- The {@link #onInitialize()} method is called when a path from this
- * component to its parent has been established, usually after the component has been added to
- * its parent.
+ * component to its parent has been established, usually after the component has been added to its
+ * parent.
  * 
  * <li><b>Request Handling </b>- An incoming request is processed by a protocol request handler such
  * as WicketServlet. An associated Application object creates Session, Request and Response objects
@@ -695,6 +695,17 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		private static final long serialVersionUID = 1L;
 	};
+
+	/**
+	 * Keeps metadata about the visibility state of the component
+	 * 
+	 * The states are: null - not calculated, true and false
+	 */
+	private static final MetaDataKey<Boolean> VISIBLE_IN_HIERARCHY_CACHE_KEY = new MetaDataKey<Boolean>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
 
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
 	private int flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED |
@@ -2212,13 +2223,21 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final boolean isVisibleInHierarchy()
 	{
-		Component parent = getParent();
-		if (parent != null && !parent.isVisibleInHierarchy())
+		Boolean state = getMetaData(VISIBLE_IN_HIERARCHY_CACHE_KEY);
+		if (state == null)
 		{
-			return false;
+			Component parent = getParent();
+			if (parent != null && !parent.isVisibleInHierarchy())
+			{
+				state = false;
+			}
+			else
+			{
+				state = determineVisibility();
+			}
+			setMetaData(VISIBLE_IN_HIERARCHY_CACHE_KEY, state);
 		}
-
-		return determineVisibility();
+		return state;
 	}
 
 	/**
