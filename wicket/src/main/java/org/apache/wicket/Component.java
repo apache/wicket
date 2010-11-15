@@ -430,6 +430,16 @@ public abstract class Component
 	};
 
 	/**
+	 * Keeps metadata about the visibility state of the component
+	 * 
+	 * The states are: null - not calculated, true and false
+	 */
+	private static final MetaDataKey<Boolean> VISIBLE_IN_HIERARCHY_CACHE_KEY = new MetaDataKey<Boolean>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
+	/**
 	 * Keeps metadata about the enabled state of the component
 	 * 
 	 * The states are: null - not calculated, true and false
@@ -2138,12 +2148,21 @@ public abstract class Component
 	 */
 	public final boolean isVisibleInHierarchy()
 	{
-		Component parent = getParent();
-		if (parent != null && !parent.isVisibleInHierarchy())
+		Boolean state = getMetaData(VISIBLE_IN_HIERARCHY_CACHE_KEY);
+		if (state == null)
 		{
-			return false;
+			Component parent = getParent();
+			if (parent != null && !parent.isVisibleInHierarchy())
+			{
+				state = false;
+			}
+			else
+			{
+				state = determineVisibility();
+			}
+			setMetaData(VISIBLE_IN_HIERARCHY_CACHE_KEY, state);
 		}
-		return determineVisibility();
+		return state;
 	}
 
 	/**
