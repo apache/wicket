@@ -926,16 +926,24 @@ Wicket.Window.prototype = {
 	 */	
 	onMove: function(object, deltaX, deltaY) {
 		var w = this.window;
-		var x = parseInt(w.style.left, 10) + deltaX;
-		var y = parseInt(w.style.top, 10) + deltaY;
+		this.left_ = parseInt(w.style.left, 10) + deltaX;
+		this.top_ = parseInt(w.style.top, 10) + deltaY;
 		
-		if (x < 0)
-			x = 0;
-		if (y < 0)
-			y = 0;							
+		if (this.left_ < 0)
+			this.left_ = 0;
+		if (this.top_ < 0)
+			this.top_ = 0;							
 			
-		w.style.left = x + "px";
-		w.style.top = y + "px";
+		w.style.left = this.left_ + "px";
+		w.style.top = this.top_ + "px";
+		
+		this.moving();
+	},
+	
+	/**
+	 * Called when window is being moved
+	 */
+	moving: function() {
 	},
 	
 	/**
@@ -951,13 +959,13 @@ Wicket.Window.prototype = {
 		this.res = [0, 0];
 
 		if (this.width < this.settings.minWidth) {
-			this.left -= this.settings.minWidth - this.width;
+			this.left_ -= this.settings.minWidth - this.width;
 			this.res[0] = this.settings.minWidth - this.width;
 			this.width = this.settings.minWidth;
 		}
 		
 		if (this.height < this.settings.minHeight) {
-			this.top -= this.settings.minHeight - this.height;
+			this.top_ -= this.settings.minHeight - this.height;
 			this.res[1] = this.settings.minHeight - this.height;
 			this.height = this.settings.minHeight;
 		}
@@ -995,14 +1003,17 @@ Wicket.Window.prototype = {
 		
 		this.width = parseInt(w.style.width, 10) - deltaX;
 		this.height = parseInt(f.style.height, 10) + deltaY;
-		this. left = parseInt(w.style.left, 10) + deltaX;
+		this.left_ = parseInt(w.style.left, 10) + deltaX;
 		
 		this.clipSize(true);
 		
 		w.style.width = this.width + "px";
-		w.style.left = this.left + "px";
+		w.style.left = this.left_ + "px";
 		f.style.height = this.height  + "px";
 		
+		this.moving();
+		this.resizing();
+
 		return this.res;
 	},	
 	
@@ -1023,13 +1034,14 @@ Wicket.Window.prototype = {
 		var w = this.window;
 
 		this.width = parseInt(w.style.width, 10) - deltaX;
-		this.left = parseInt(w.style.left, 10) + deltaX;
+		this.left_ = parseInt(w.style.left, 10) + deltaX;
 		
 		this.clipSize(true);
 		
 		w.style.width = this.width + "px";
-		w.style.left = this.left + "px";
+		w.style.left = this.left_ + "px";
 		
+		this.moving();
 		this.resizing();
 		
 		return this.res;
@@ -1040,7 +1052,6 @@ Wicket.Window.prototype = {
 		
 		this.width = parseInt(w.style.width, 10) + deltaX;
 		
-
 		this.clipSize();
 											
 		w.style.width = this.width + "px";
@@ -1056,16 +1067,17 @@ Wicket.Window.prototype = {
 		
 		this.width = parseInt(w.style.width, 10) - deltaX;
 		this.height = parseInt(f.style.height, 10) - deltaY;
-		this.left = parseInt(w.style.left, 10) + deltaX;
-		this.top =  parseInt(w.style.top, 10) + deltaY;
+		this.left_ = parseInt(w.style.left, 10) + deltaX;
+		this.top_ =  parseInt(w.style.top, 10) + deltaY;
 		
 		this.clipSize(true, true);
 		
 		w.style.width = this.width + "px";
-		w.style.left = this.left + "px";
+		w.style.left = this.left_ + "px";
 		f.style.height = this.height  + "px";
-		w.style.top = this.top + "px";
+		w.style.top = this.top_ + "px";
 		
+		this.moving();
 		this.resizing();
 									
 		return this.res;
@@ -1077,14 +1089,15 @@ Wicket.Window.prototype = {
 		
 		this.width = parseInt(w.style.width, 10) + deltaX;
 		this.height = parseInt(f.style.height, 10) - deltaY;
-		this.top = parseInt(w.style.top, 10) + deltaY;
+		this.top_ = parseInt(w.style.top, 10) + deltaY;
 		
 		this.clipSize(false, true);
 		
 		w.style.width = this.width + "px";
 		f.style.height = this.height  + "px";
-		w.style.top = this.top + "px";
+		w.style.top = this.top_ + "px";
 		
+		this.moving();
 		this.resizing();
 						
 		return this.res;
@@ -1095,13 +1108,14 @@ Wicket.Window.prototype = {
 		var w = this.window;
 		
 		this.height = parseInt(f.style.height, 10) - deltaY;
-		this.top = parseInt(w.style.top, 10) + deltaY;
+		this.top_ = parseInt(w.style.top, 10) + deltaY;
 		
 		this.clipSize(false, true);
 		
 		f.style.height = this.height  + "px";
-		w.style.top = this.top + "px";
+		w.style.top = this.top_ + "px";
 		
+		this.moving();
 		this.resizing();
 						
 		return this.res;
