@@ -42,8 +42,8 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 	/** The content-type applied in case the resource stream's default constructor is used */
 	public static final String DEFAULT_CONTENT_TYPE = "text";
 
-	/** Charset for resource */
-	private Charset charset;
+	/** Charset name for resource */
+	private String charsetName;
 
 	/** MIME content type */
 	private final String contentType;
@@ -79,13 +79,13 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 		Reader reader = null;
 		try
 		{
-			if (charset == null)
+			if (charsetName == null)
 			{
 				reader = new InputStreamReader(getInputStream());
 			}
 			else
 			{
-				reader = new InputStreamReader(getInputStream(), charset);
+				reader = new InputStreamReader(getInputStream(), getCharset());
 			}
 			return Streams.readString(reader);
 		}
@@ -116,7 +116,8 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 	 */
 	protected Charset getCharset()
 	{
-		return charset;
+		// java.nio.Charset is not serializable so we can only store the name
+		return (charsetName != null) ? Charset.forName(charsetName) : null;
 	}
 
 	/**
@@ -127,7 +128,8 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 	 */
 	public void setCharset(final Charset charset)
 	{
-		this.charset = charset;
+		// java.nio.Charset itself is not serializable so we can only store the name
+		this.charsetName = (charset != null) ? charset.name() : null;
 	}
 
 	/**
