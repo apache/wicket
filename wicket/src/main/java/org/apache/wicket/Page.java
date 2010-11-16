@@ -203,6 +203,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/** Used to create page-unique numbers */
 	private short autoIndex;
 
+	private int autoIndex2;
+
 	/** Numeric version of this page's id */
 	private int numericId;
 
@@ -464,6 +466,23 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		return autoIndex++;
 	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * Get a page unique number, which will be increased with each call.
+	 * 
+	 * In some extreme cases it is possible to run out of short values, so this is the {@code int}
+	 * version of {@link #autoIndex} which will hopefully not run out. It does not replace the
+	 * original in order to preserve API backwards compat.
+	 * 
+	 * @return A page unique number
+	 */
+	public final int getAutoIndex2()
+	{
+		return autoIndex2++;
+	}
+
 
 	/**
 	 * @return The current version number of this page. If the page has been changed once, the
