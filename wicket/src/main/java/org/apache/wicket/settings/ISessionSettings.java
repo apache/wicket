@@ -48,20 +48,4 @@ public interface ISessionSettings
 	 *            The default factory
 	 */
 	void setPageFactory(final IPageFactory pageFactory);
-
-	/**
-	 * Sets whether the id of a page should be unique across the entire session. Default is true,
-	 * which means that a page id is unique per session.
-	 * 
-	 * @param value
-	 */
-	void setPageIdUniquePerSession(boolean value);
-
-	/**
-	 * Returns whether the page id is unique per session. If the page id is not unique per session,
-	 * it is only unique per pagemap.
-	 * 
-	 * @return true if he page id is unique per session
-	 */
-	boolean isPageIdUniquePerSession();
 }
