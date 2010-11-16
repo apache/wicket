@@ -206,7 +206,7 @@ public abstract class Page extends MarkupContainer
 	private static final long serialVersionUID = 1L;
 
 	/** Used to create page-unique numbers */
-	private short autoIndex;
+	private int autoIndex;
 
 	/** Numeric version of this page's id */
 	private int numericId;
@@ -467,7 +467,7 @@ public abstract class Page extends MarkupContainer
 	 * 
 	 * @return A page unique number
 	 */
-	public final short getAutoIndex()
+	public final int getAutoIndex()
 	{
 		return autoIndex++;
 	}

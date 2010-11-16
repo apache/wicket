@@ -57,7 +57,7 @@ public class Radio<T> extends LabeledWebMarkupContainer
 	 * page-scoped uuid of this check. this property must not be accessed directly, instead
 	 * {@link #getValue()} must be used
 	 */
-	private short uuid = -1;
+	private int uuid = -1;
 
 	private final RadioGroup<T> group;
 
