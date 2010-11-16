@@ -111,7 +111,7 @@ public class ResourceUtil
 				if (charset == null)
 					charset = Charset.defaultCharset();
 
-				return new String(bytes, charset);
+				return new String(bytes, charset.name());
 			}
 			finally
 			{
