@@ -26,6 +26,8 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.lang.PropertyResolver;
 import org.apache.wicket.util.lang.PropertyResolverConverter;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Serves as a base class for different kinds of property models. By default, this class uses
@@ -50,6 +52,8 @@ public abstract class AbstractPropertyModel<T>
 		IObjectClassAwareModel<T>,
 		IPropertyReflectionAwareModel
 {
+	private static final Logger logger = LoggerFactory.getLogger(AbstractPropertyModel.class);
+
 	/**
 	 * 
 	 */
@@ -68,6 +72,14 @@ public abstract class AbstractPropertyModel<T>
 		if (modelObject == null)
 		{
 			throw new IllegalArgumentException("Parameter modelObject cannot be null");
+		}
+
+		if (modelObject instanceof Session)
+		{
+			logger.warn("It is not a good idea to reference the Session instance "
+				+ "in models directly as it may lead to serialization problems. "
+				+ "If you need to access a property of the session via the model use the "
+				+ "page instance as the model object and 'session.attribute' as the path.");
 		}
 
 		target = modelObject;
