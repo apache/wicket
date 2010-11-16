@@ -24,6 +24,7 @@ import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.util.MapModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.IStringResourceStream;
 import org.apache.wicket.util.resource.PackageResourceStream;
 import org.apache.wicket.velocity.markup.html.VelocityPanel;
@@ -43,7 +44,7 @@ public class DynamicPage extends WicketExamplePage
 	 */
 	public DynamicPage(final PageParameters parameters)
 	{
-		final IStringResourceStream template = new PackageResourceStream(DynamicPage.class,
+		final IResourceStream template = new PackageResourceStream(DynamicPage.class,
 			"fields.vm");
 
 		Map<String, List<Field>> map = new HashMap<String, List<Field>>();
@@ -54,7 +55,7 @@ public class DynamicPage extends WicketExamplePage
 		add(panel = new VelocityPanel("templatePanel", new MapModel<String, List<Field>>(map))
 		{
 			@Override
-			protected IStringResourceStream getTemplateResource()
+			protected IResourceStream getTemplateResource()
 			{
 				return template;
 			}

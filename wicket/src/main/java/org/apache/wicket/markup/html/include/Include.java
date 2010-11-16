@@ -29,6 +29,7 @@ import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.resource.ResourceUtil;
 import org.apache.wicket.util.resource.UrlResourceStream;
 
 
@@ -272,13 +273,6 @@ public class Include extends WebComponent
 	 */
 	private final String importUrl(URL url)
 	{
-		UrlResourceStream resourceStream = new UrlResourceStream(url);
-		Charset charset = getCharset();
-		if (charset != null)
-		{
-			resourceStream.setCharset(charset);
-		}
-		String content = resourceStream.asString();
-		return content;
+		return ResourceUtil.readString(new UrlResourceStream(url), getCharset());
 	}
 }

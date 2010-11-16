@@ -35,6 +35,7 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.resource.ResourceUtil;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.IStringResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -73,7 +74,7 @@ public abstract class VelocityPanel extends Panel
 	 * @return an instance of {@link VelocityPanel}
 	 */
 	public static VelocityPanel forTemplateResource(String id, IModel< ? extends Map> model,
-			final IStringResourceStream templateResource)
+			final IResourceStream templateResource)
 	{
 		if (templateResource == null)
 		{
@@ -85,7 +86,7 @@ public abstract class VelocityPanel extends Panel
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected IStringResourceStream getTemplateResource()
+			protected IResourceStream getTemplateResource()
 			{
 				return templateResource;
 			}
@@ -117,13 +118,13 @@ public abstract class VelocityPanel extends Panel
 	 */
 	private Reader getTemplateReader()
 	{
-		final IStringResourceStream resource = getTemplateResource();
+		final IResourceStream resource = getTemplateResource();
 		if (resource == null)
 		{
 			throw new IllegalArgumentException("getTemplateResource must return a resource");
 		}
 
-		final String template = resource.asString();
+		final String template = ResourceUtil.readString(resource);
 		if (template != null)
 		{
 			return new StringReader(template);
@@ -209,7 +210,7 @@ public abstract class VelocityPanel extends Panel
 	 * 
 	 * @return The template resource
 	 */
-	protected abstract IStringResourceStream getTemplateResource();
+	protected abstract IResourceStream getTemplateResource();
 
 	/**
 	 * Evaluates the template and returns the result.

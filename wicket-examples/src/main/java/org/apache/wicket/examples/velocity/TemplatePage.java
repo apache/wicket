@@ -28,6 +28,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.resource.ResourceUtil;
+import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.IStringResourceStream;
 import org.apache.wicket.util.resource.PackageResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -71,8 +73,7 @@ public class TemplatePage extends WicketExamplePage
 	}
 
 	/** the current template contents. */
-	private IStringResourceStream template = new PackageResourceStream(DynamicPage.class,
-		"persons.vm");
+	private IResourceStream template = new PackageResourceStream(DynamicPage.class, "persons.vm");
 
 	/** context to be used by the template. */
 	private final IModel<Map<String, List<Person>>> templateContext;
@@ -93,7 +94,7 @@ public class TemplatePage extends WicketExamplePage
 		add(new VelocityPanel("templatePanel", templateContext)
 		{
 			@Override
-			protected IStringResourceStream getTemplateResource()
+			protected IResourceStream getTemplateResource()
 			{
 				return template;
 			}
@@ -108,7 +109,7 @@ public class TemplatePage extends WicketExamplePage
 	 */
 	public final String getTemplate()
 	{
-		return template.asString();
+		return ResourceUtil.readString(template);
 	}
 
 	/**

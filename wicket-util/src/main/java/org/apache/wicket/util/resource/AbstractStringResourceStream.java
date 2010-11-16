@@ -19,8 +19,13 @@ package org.apache.wicket.util.resource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
+import org.apache.wicket.util.io.IOUtils;
+import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 
@@ -30,12 +35,15 @@ import org.apache.wicket.util.time.Time;
  * 
  * @author Jonathan Locke
  */
-public abstract class AbstractStringResourceStream extends AbstractResourceStream
+public abstract class AbstractStringResourceStream extends AbstractResourceStream implements IStringResourceStream
 {
 	private static final long serialVersionUID = 1L;
 
 	/** The content-type applied in case the resource stream's default constructor is used */
 	public static final String DEFAULT_CONTENT_TYPE = "text";
+
+	/** Charset for resource */
+	private Charset charset;
 
 	/** MIME content type */
 	private final String contentType;
@@ -61,6 +69,65 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 	{
 		// TODO null for contentType is allowed? or should the default be applied instead?
 		this.contentType = contentType;
+	}
+
+	/**
+	 * @return This resource as a String.
+	 */
+	public String asString()
+	{
+		Reader reader = null;
+		try
+		{
+			if (charset == null)
+			{
+				reader = new InputStreamReader(getInputStream());
+			}
+			else
+			{
+				reader = new InputStreamReader(getInputStream(), charset);
+			}
+			return Streams.readString(reader);
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException("Unable to read resource as String", e);
+		}
+		catch (ResourceStreamNotFoundException e)
+		{
+			throw new RuntimeException("Unable to read resource as String", e);
+		}
+		finally
+		{
+			IOUtils.closeQuietly(reader);
+			try
+			{
+				close();
+			}
+			catch (IOException e)
+			{
+				// ignore
+			}
+		}
+	}
+
+	/**
+	 * @return Charset for resource
+	 */
+	protected Charset getCharset()
+	{
+		return charset;
+	}
+
+	/**
+	 * Sets the character set used for reading this resource.
+	 *
+	 * @param charset
+	 *            Charset for component
+	 */
+	public void setCharset(final Charset charset)
+	{
+		this.charset = charset;
 	}
 
 	/**

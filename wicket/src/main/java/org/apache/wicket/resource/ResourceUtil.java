@@ -16,8 +16,16 @@
  */
 package org.apache.wicket.resource;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.io.IOUtils;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -70,6 +78,53 @@ public class ResourceUtil
 			{
 				resp.renderJavascriptReference(ref, string);
 			}
+		}
+	}
+
+	/**
+	 * read string with platform default encoding from resource stream
+	 *
+	 * @see #readString(org.apache.wicket.util.resource.IResourceStream, java.nio.charset.Charset)
+	 */
+	public static String readString(IResourceStream resourceStream)
+	{
+		return readString(resourceStream, null);
+	}
+
+	/**
+	 * read string with specified encoding from resource stream
+	 *
+	 * @param resourceStream string source
+	 * @param charset charset for the string encoding (use <code>null</code> for platform default)
+	 * @return string read from resource stream
+	 */
+	public static String readString(IResourceStream resourceStream, Charset charset)
+	{
+		try
+		{
+			InputStream stream = resourceStream.getInputStream();
+
+			try
+			{
+				byte[] bytes = IOUtils.toByteArray(stream);
+
+				if (charset == null)
+					charset = Charset.defaultCharset();
+
+				return new String(bytes, charset);
+			}
+			finally
+			{
+				resourceStream.close();
+			}
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException("failed to read string from " + resourceStream, e);
+		}
+		catch (ResourceStreamNotFoundException e)
+		{
+			throw new WicketRuntimeException("failed to locate stream from " + resourceStream, e);
 		}
 	}
 }

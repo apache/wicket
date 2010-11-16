@@ -33,15 +33,13 @@ import org.slf4j.LoggerFactory;
 
 /**
  * UrlResourceStream implements IResource for URLs.
- * 
+ *
  * @see org.apache.wicket.util.resource.IResourceStream
  * @see org.apache.wicket.util.watch.IModifiable
  * @author Jonathan Locke
  * @author Igor Vaynberg
  */
-public class UrlResourceStream extends AbstractResourceStream
-	implements
-		IFixedLocationResourceStream
+public class UrlResourceStream extends AbstractResourceStream implements IFixedLocationResourceStream
 {
 	private static final long serialVersionUID = 1L;
 
@@ -68,7 +66,7 @@ public class UrlResourceStream extends AbstractResourceStream
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param url
 	 *            URL of resource
 	 */
@@ -113,7 +111,7 @@ public class UrlResourceStream extends AbstractResourceStream
 
 	/**
 	 * Closes this resource.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public void close() throws IOException
