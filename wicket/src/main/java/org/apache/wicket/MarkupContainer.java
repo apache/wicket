@@ -1779,6 +1779,19 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		});
 	}
 
+	@Override
+	void onVisibleStateChanged()
+	{
+		super.onVisibleStateChanged();
+		visitChildren(new IVisitor<Component, Void>()
+		{
+			public void component(Component component, IVisit<Void> visit)
+			{
+				component.clearVisibleInHierarchyCache();
+			}
+		});
+	}
+
 	/**
 	 * 
 	 * @see org.apache.wicket.Component#onAfterRenderChildren()

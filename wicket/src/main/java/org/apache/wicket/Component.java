@@ -225,8 +225,6 @@ public abstract class Component
 		IEventSource
 {
 
-	/** True when component has been configured, had {@link #onConfigure()} called */
-	protected static final int FLAG_CONFIGURED = 0x800000;
 
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Component.class);
@@ -309,6 +307,9 @@ public abstract class Component
 
 	/** an unused flag */
 	private static final int FLAG_UNUSED0 = 0x20000000;
+	private static final int FLAG_UNUSED1 = 0x800000;
+	private static final int FLAG_UNUSED2 = 0x1000000;
+	private static final int FLAG_UNUSED3 = 0x10000000;
 
 	/** True when a component is being auto-added */
 	private static final int FLAG_AUTO = 0x0001;
@@ -366,7 +367,7 @@ public abstract class Component
 
 	/** Reserved subclass-definable flag bit */
 	protected static final int FLAG_RESERVED5 = 0x10000;
-	/** Reserved subclass-definable flag bit */
+	/** onInitialize called */
 	protected static final int FLAG_INITIALIZED = 0x20000;
 	/** Reserved subclass-definable flag bit */
 	private static final int FLAG_NOTUSED7 = 0x40000;
@@ -384,8 +385,6 @@ public abstract class Component
 	/** True when a component is being removed from the hierarchy */
 	protected static final int FLAG_REMOVING_FROM_HIERARCHY = 0x200000;
 
-	private static final int FLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED = 0x1000000;
-	private static final int FLAG_INITIALIZE_SUPER_CALL_VERIFIED = 0x10000000;
 	/**
 	 * Flag that makes we are in before-render callback phase Set after component.onBeforeRender is
 	 * invoked (right before invoking beforeRender on children)
@@ -429,19 +428,24 @@ public abstract class Component
 		private static final long serialVersionUID = 1L;
 	};
 
-	/**
-	 * Keeps metadata about the enabled state of the component
-	 * 
-	 * The states are: null - not calculated, true and false
-	 */
-	private static final MetaDataKey<Boolean> ENABLED_IN_HIERARCHY_CACHE_KEY = new MetaDataKey<Boolean>()
-	{
-		private static final long serialVersionUID = 1L;
-	};
-
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
 	private int flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED |
 		FLAG_IS_RENDER_ALLOWED | FLAG_VISIBILITY_ALLOWED;
+
+	private static final short RFLAG_ENABLED_IN_HIERARCHY_VALUE = 0x1;
+	private static final short RFLAG_ENABLED_IN_HIERARCHY_SET = 0x2;
+	private static final short RFLAG_VISIBLE_IN_HIEARARCHY_VALUE = 0x4;
+	private static final short RFLAG_VISIBLE_IN_HIERARCHY_SET = 0x8;
+	/** onconfigure has been called */
+	private static final short RFLAG_CONFIGURED = 0x10;
+	private static final short RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED = 0x20;
+	private static final short RFLAG_INITIALIZE_SUPER_CALL_VERIFIED = 0x40;
+
+	/**
+	 * Flags that only keep their value during the request. Useful for cache markers, etc. At the
+	 * end of the request the value of this variable is reset to 0
+	 */
+	private transient short requestFlags = 0;
 
 	/** Component id. */
 	private String id;
@@ -961,7 +965,7 @@ public abstract class Component
 	 */
 	protected void onInitialize()
 	{
-		setFlag(FLAG_INITIALIZE_SUPER_CALL_VERIFIED, true);
+		setRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED, true);
 	}
 
 	/**
@@ -990,16 +994,16 @@ public abstract class Component
 		if (!getFlag(FLAG_INITIALIZED))
 		{
 			setFlag(FLAG_INITIALIZED, true);
-			setFlag(FLAG_INITIALIZE_SUPER_CALL_VERIFIED, false);
+			setRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED, false);
 			onInitialize();
-			if (!getFlag(FLAG_INITIALIZE_SUPER_CALL_VERIFIED))
+			if (!getRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED))
 			{
 				throw new IllegalStateException(Component.class.getName() +
 					" has not been properly initialized. Something in the hierarchy of " +
 					getClass().getName() +
 					" has not called super.onInitialize() in the override of onInitialize() method");
 			}
-			setFlag(FLAG_INITIALIZE_SUPER_CALL_VERIFIED, false);
+			setRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED, false);
 
 			getApplication().getComponentInitializationListeners().onInitialize(this);
 		}
@@ -1046,18 +1050,14 @@ public abstract class Component
 		if ((determineVisibility() || callOnBeforeRenderIfNotVisible()) &&
 			!getFlag(FLAG_RENDERING) && !getFlag(FLAG_PREPARED_FOR_RENDER))
 		{
-			setFlag(FLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, false);
+			setRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, false);
 
 			getApplication().getComponentPreOnBeforeRenderListeners().onBeforeRender(this);
-
-			// clear the enabled in hierarchy cache as it may change as a result of form processing
-			// or other logic executed in onbeforerender (WICKET-2063)
-			clearEnabledInHierarchyCache();
 
 			onBeforeRender();
 			getApplication().getComponentPostOnBeforeRenderListeners().onBeforeRender(this);
 
-			if (!getFlag(FLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED))
+			if (!getRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED))
 			{
 				throw new IllegalStateException(Component.class.getName() +
 					" has not been properly rendered. Something in the hierarchy of " +
@@ -1150,10 +1150,12 @@ public abstract class Component
 	 */
 	public final void configure()
 	{
-		if (!getFlag(FLAG_CONFIGURED))
+		if (!getRequestFlag(RFLAG_CONFIGURED))
 		{
+			clearEnabledInHierarchyCache();
+			clearVisibleInHierarchyCache();
 			onConfigure();
-			setFlag(FLAG_CONFIGURED, true);
+			setRequestFlag(RFLAG_CONFIGURED, true);
 		}
 	}
 
@@ -1214,7 +1216,6 @@ public abstract class Component
 				getClass().getName() +
 				" has not called super.onDetach() in the override of onDetach() method");
 		}
-		setFlag(FLAG_CONFIGURED, false);
 
 		// always detach models because they can be attached without the
 		// component. eg component has a compoundpropertymodel and one of its
@@ -1237,8 +1238,10 @@ public abstract class Component
 			setFlag(FLAG_INHERITABLE_MODEL, false);
 		}
 
-		// clear out enabled state metadata
 		clearEnabledInHierarchyCache();
+		clearVisibleInHierarchyCache();
+
+		requestFlags = 0;
 
 		// notify any detach listener
 		IDetachListener detachListener = getApplication().getFrameworkSettings()
@@ -2731,7 +2734,7 @@ public abstract class Component
 
 	void clearEnabledInHierarchyCache()
 	{
-		setMetaData(ENABLED_IN_HIERARCHY_CACHE_KEY, null);
+		setRequestFlag(RFLAG_ENABLED_IN_HIERARCHY_SET, false);
 	}
 
 	void onEnabledStateChanged()
@@ -3031,7 +3034,7 @@ public abstract class Component
 	 */
 	public final Component setRenderBodyOnly(final boolean renderTag)
 	{
-		this.setFlag(FLAG_RENDER_BODY_ONLY, renderTag);
+		setFlag(FLAG_RENDER_BODY_ONLY, renderTag);
 		return this;
 	}
 
@@ -3107,9 +3110,21 @@ public abstract class Component
 
 			// Change visibility
 			setFlag(FLAG_VISIBLE, visible);
+			onVisibleStateChanged();
 		}
 		return this;
 	}
+
+	void clearVisibleInHierarchyCache()
+	{
+		setRequestFlag(RFLAG_VISIBLE_IN_HIERARCHY_SET, false);
+	}
+
+	void onVisibleStateChanged()
+	{
+		clearVisibleInHierarchyCache();
+	}
+
 
 	/**
 	 * Gets the string representation of this component.
@@ -3523,9 +3538,9 @@ public abstract class Component
 	 *            The flag to test
 	 * @return True if the flag is set
 	 */
-	protected final boolean getFlag(final short flag)
+	protected final boolean getRequestFlag(final short flag)
 	{
-		return getFlag((int)flag);
+		return (requestFlags & flag) != 0;
 	}
 
 	/**
@@ -3648,7 +3663,7 @@ public abstract class Component
 	 */
 	protected final boolean isIgnoreAttributeModifier()
 	{
-		return this.getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER);
+		return getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER);
 	}
 
 	/**
@@ -3683,7 +3698,7 @@ public abstract class Component
 	{
 		setFlag(FLAG_PREPARED_FOR_RENDER, true);
 		onBeforeRenderChildren();
-		setFlag(FLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, true);
+		setRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, true);
 	}
 
 	/**
@@ -3933,9 +3948,16 @@ public abstract class Component
 	 * @param set
 	 *            True to turn the flag on, false to turn it off
 	 */
-	protected final void setFlag(final short flag, final boolean set)
+	protected final void setRequestFlag(final short flag, final boolean set)
 	{
-		setFlag((int)flag, set);
+		if (set)
+		{
+			requestFlags |= flag;
+		}
+		else
+		{
+			requestFlags &= ~flag;
+		}
 	}
 
 	/**
@@ -3947,7 +3969,7 @@ public abstract class Component
 	 */
 	protected final Component setIgnoreAttributeModifier(final boolean ignore)
 	{
-		this.setFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER, ignore);
+		setFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER, ignore);
 		return this;
 	}
 
@@ -4245,20 +4267,24 @@ public abstract class Component
 	 */
 	public final boolean isEnabledInHierarchy()
 	{
-		Boolean state = getMetaData(ENABLED_IN_HIERARCHY_CACHE_KEY);
-		if (state == null)
+		if (getRequestFlag(RFLAG_ENABLED_IN_HIERARCHY_SET))
 		{
-			Component parent = getParent();
-			if (parent != null && !parent.isEnabledInHierarchy())
-			{
-				state = false;
-			}
-			else
-			{
-				state = isEnabled() && isEnableAllowed();
-			}
-			setMetaData(ENABLED_IN_HIERARCHY_CACHE_KEY, state);
+			return getRequestFlag(RFLAG_ENABLED_IN_HIERARCHY_VALUE);
 		}
+
+		final boolean state;
+		Component parent = getParent();
+		if (parent != null && !parent.isEnabledInHierarchy())
+		{
+			state = false;
+		}
+		else
+		{
+			state = isEnabled() && isEnableAllowed();
+		}
+
+		setRequestFlag(RFLAG_ENABLED_IN_HIERARCHY_SET, true);
+		setRequestFlag(RFLAG_ENABLED_IN_HIERARCHY_VALUE, state);
 		return state;
 	}
 
