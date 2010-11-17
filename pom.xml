@@ -581,6 +581,77 @@
 		</testResources>
 		<plugins>
 			<plugin>
+				<inherited>false</inherited>
+				<groupId>com.mycila.maven-license-plugin</groupId>
+				<artifactId>maven-license-plugin</artifactId>
+				<configuration>
+					<header>${basedir}/src/etc/apache-license-header.txt</header>
+					<failIfMissing>true</failIfMissing>
+					<aggregate>true</aggregate>
+					<excludes>
+						<exclude>src/etc/apache-license-header.txt</exclude>
+						<exclude>licenses/*</exclude>
+						<!-- to maintain current functionality we need all these excludes: -->
+						<exclude>**/src/test/java/**/*.html</exclude>
+						<exclude>**/src/test/java/**/*.css</exclude>
+						<exclude>**/src/test/java/**/*.js</exclude>
+						<exclude>**/src/test/java/**/*.txt</exclude>
+						<exclude>**/src/test/java/**/*.vm</exclude>
+						<exclude>wicket-examples/src/main/java/**/*.vm</exclude>
+						<exclude>wicket-datetime/src/main/java/org/apache/wicket/extensions/yui/**/*.*</exclude>
+						<exclude>wicket/src/main/java/org/apache/wicket/util/license/*.txt</exclude>
+						<exclude>wicket-examples/src/main/java/org/apache/wicket/examples/hangman/WordList.txt</exclude>
+						<exclude>wicket-examples/src/main/java/org/apache/wicket/examples/preview/behaviour.js</exclude>
+						<exclude>wicket-examples/src/main/java/org/apache/wicket/examples/preview/dojo.js</exclude>
+						<exclude>wicket-examples/src/main/webapp/prototype.js</exclude>
+						<exclude>wicket-examples/src/main/webapp/effects.js</exclude>
+						<exclude>wicket-examples/src/main/webapp/scriptaculous.js</exclude>
+						<exclude>LICENSE.txt</exclude>
+						<exclude>testing/wicket-threadtest/LICENSE.txt</exclude>
+						<exclude>EclipseCodeFormat.xml</exclude>
+						<exclude>wicket/src/assembly/bin.xml</exclude>
+						<exclude>wicket/src/main/java/org/apache/wicket/util/diff/AddDelta.java</exclude>
+						<exclude>wicket/src/main/java/org/apache/wicket/util/diff/ChangeDelta.java</exclude>
+						<exclude>wicket/src/main/java/org/apache/wicket/util/diff/Chunk.java</exclude>
+						<exclude>wicket/src/main/java/org/apache/wicket/util/diff/DeleteDelta.java</exclude>
+						<exclude>wicket/src/main/java/org/apache/wicket/util/diff/Delta.java</exclude>
+						<exclude>wicket/src/main/java/org/apache/wicket/util/diff/Diff.java</exclude>
+						<exclude>wicket/src/main/java/org/apache/wicket/util/diff/DiffAlgorithm.java</exclude>
+						<exclude>wicket/src/main/java/org/apache/wicket/util/diff/DifferentiationFailedException.java</exclude>
+						<exclude>wicket/src/main/java/org/apache/wicket/util/diff/DiffException.java</exclude>
+						<exclude>wicket/src/main/java/org/apache/wicket/util/diff/PatchFailedException.java</exclude>
+						<exclude>wicket/src/main/java/org/apache/wicket/util/diff/Revision.java</exclude>
+						<exclude>wicket/src/main/java/org/apache/wicket/util/diff/RevisionVisitor.java</exclude>
+						<exclude>wicket/src/main/java/org/apache/wicket/util/diff/ToString.java</exclude>
+						<exclude>wicket/src/main/java/org/apache/wicket/util/diff/myers/DiffNode.java</exclude>
+						<exclude>wicket/src/main/java/org/apache/wicket/util/diff/myers/MyersDiff.java</exclude>
+						<exclude>wicket/src/main/java/org/apache/wicket/util/diff/myers/PathNode.java</exclude>
+						<exclude>wicket/src/main/java/org/apache/wicket/util/diff/myers/Snake.java</exclude>
+						<exclude>wicket/src/main/java/org/apache/wicket/util/diff/**/*.html</exclude>
+						<exclude>wicket/src/site/xdoc/onestat.js</exclude>
+						<exclude>wicket/src/main/java/org/apache/wicket/ajax/wicket-ajax-debug-drag.js</exclude>
+						<exclude>wicket/src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js</exclude>
+						<exclude>wicket/src/site/resources/DTD/wicket-1.0-xhtml11.dtd</exclude>
+						<exclude>wicket/wicket-xhtml1-strict.dtd</exclude>
+						<!-- TODO: remove the following excludes - it's only here while I do some testing -->
+						<exclude>**/*.html</exclude>
+						<exclude>**/*.properties</exclude>
+						<exclude>**/*.xml</exclude>
+					</excludes>
+					<useDefaultExcludes>true</useDefaultExcludes>
+					<strictCheck>true</strictCheck>
+				</configuration>
+				<!-- For right now, I won't turn on automatic license checking
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+				 -->
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<inherited>true</inherited>
