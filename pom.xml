@@ -633,6 +633,18 @@
 						<exclude>wicket/src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js</exclude>
 						<exclude>wicket/src/site/resources/DTD/wicket-1.0-xhtml11.dtd</exclude>
 						<exclude>wicket/wicket-xhtml1-strict.dtd</exclude>
+						<exclude>**/*.log</exclude>
+						<exclude>**/NOTICE</exclude>
+						<exclude>**/VERSION</exclude>
+						<exclude>**/README</exclude>
+						<exclude>**/LICENSE</exclude>
+						<exclude>**/CHANGELOG-1.4</exclude>
+						<exclude>**/*.xmlProperties</exclude>
+						<exclude>**/*.gitignore</exclude>
+						<exclude>**/*.amateras</exclude>
+						<exclude>**/*.tomcatplugin</exclude>
+						<exclude>**/*.launch</exclude>
+						<exclude>**/*.amateras</exclude>
 						<!-- TODO: remove the following excludes - it's only here while I do some testing -->
 						<exclude>**/*.html</exclude>
 						<exclude>**/*.properties</exclude>
