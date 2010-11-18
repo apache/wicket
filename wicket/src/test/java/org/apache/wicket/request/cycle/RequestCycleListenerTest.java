@@ -47,6 +47,14 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 		ThreadContext.setApplication(new DummyApplication());
 	}
 
+	@Override
+	protected void tearDown() throws Exception
+	{
+		super.tearDown();
+		ThreadContext.detach();
+	}
+
+
 	private RequestCycle newRequestCycle(final boolean throwExceptionInRespond)
 	{
 		final Response originalResponse = newResponse();
