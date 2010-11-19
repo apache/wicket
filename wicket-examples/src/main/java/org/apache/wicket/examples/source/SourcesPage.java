@@ -48,7 +48,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.request.http.handler.ErrorCodeResponseHandler;
+import org.apache.wicket.request.http.handler.ErrorCodeRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.PackageName;
@@ -605,7 +605,7 @@ public class SourcesPage extends WebPage
 						log.error("key: " + PAGE_CLASS + " is null.");
 					}
 					getRequestCycle().replaceAllRequestHandlers(
-						new ErrorCodeResponseHandler(404,
+						new ErrorCodeRequestHandler(404,
 							"Could not find sources for the page you requested"));
 				}
 				if (!pageParam.startsWith("org.apache.wicket.examples"))
@@ -622,7 +622,7 @@ public class SourcesPage extends WebPage
 			catch (ClassNotFoundException e)
 			{
 				getRequestCycle().replaceAllRequestHandlers(
-					new ErrorCodeResponseHandler(404,
+					new ErrorCodeRequestHandler(404,
 						"Could not find sources for the page you requested"));
 			}
 		}

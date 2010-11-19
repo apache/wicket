@@ -19,7 +19,7 @@ package org.apache.wicket.request.http.flow;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.request.flow.ResetResponseException;
-import org.apache.wicket.request.http.handler.ErrorCodeResponseHandler;
+import org.apache.wicket.request.http.handler.ErrorCodeRequestHandler;
 
 /**
  * Causes Wicket to abort processing and set the specified HTTP error code, with the provided
@@ -45,7 +45,7 @@ public final class AbortWithHttpErrorCodeException extends ResetResponseExceptio
 	 */
 	public AbortWithHttpErrorCodeException(int errorCode, String message)
 	{
-		super(new ErrorCodeResponseHandler(errorCode, message));
+		super(new ErrorCodeRequestHandler(errorCode, message));
 		this.errorCode = errorCode;
 		this.message = message;
 	}

@@ -28,7 +28,7 @@ import org.apache.wicket.request.http.WebResponse;
  * 
  * @author Eelco Hillenius
  */
-public final class ErrorCodeResponseHandler implements IRequestHandler
+public final class ErrorCodeRequestHandler implements IRequestHandler
 {
 	/** the servlet error code. */
 	private final int errorCode;
@@ -44,7 +44,7 @@ public final class ErrorCodeResponseHandler implements IRequestHandler
 	 *            {@link javax.servlet.http.HttpServletResponse} constants
 	 * @see javax.servlet.http.HttpServletResponse
 	 */
-	public ErrorCodeResponseHandler(int errorCode)
+	public ErrorCodeRequestHandler(int errorCode)
 	{
 		this(errorCode, null);
 	}
@@ -59,7 +59,7 @@ public final class ErrorCodeResponseHandler implements IRequestHandler
 	 *            the optional message to send to the client
 	 * @see javax.servlet.http.HttpServletResponse
 	 */
-	public ErrorCodeResponseHandler(int errorCode, String message)
+	public ErrorCodeRequestHandler(int errorCode, String message)
 	{
 		this.errorCode = errorCode;
 		this.message = message;
