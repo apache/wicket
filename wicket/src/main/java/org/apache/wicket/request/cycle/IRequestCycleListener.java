@@ -17,6 +17,7 @@
 package org.apache.wicket.request.cycle;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.request.IRequestHandler;
 
 /**
  * A callback interface for various methods in the request cycle. If you are creating a framework
@@ -63,9 +64,12 @@ public interface IRequestCycleListener
 	 * 
 	 * @param cycle
 	 * 
+	 * @return request handler that will be exectued or {@code null} if none. If a request handler
+	 *         is returned, it will override any configured exception mapper
+	 * 
 	 * @param ex
 	 *            the exception that was passed in to
 	 *            {@link RequestCycle#handleException(Exception)}
 	 */
-	void onException(RequestCycle cycle, Exception ex);
+	IRequestHandler onException(RequestCycle cycle, Exception ex);
 }

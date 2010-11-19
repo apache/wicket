@@ -18,6 +18,7 @@ package org.apache.wicket.request.cycle;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.ThreadContext;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.mock.MockWebRequest;
 import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.IRequestCycle;
@@ -40,11 +41,14 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 
 	private IRequestHandler handler;
 
+	private int errorCode;
+
 	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
 		ThreadContext.setApplication(new DummyApplication());
+		errorCode = 0;
 	}
 
 	@Override
@@ -167,6 +171,32 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 	/**
 	 * @throws Exception
 	 */
+	public void testExceptionRequestHandlers() throws Exception
+	{
+		Application.get().getRequestCycleListeners().add(new ErrorCodeListener(401));
+
+		RequestCycle cycle = newRequestCycle(true);
+		cycle.processRequestAndDetach();
+
+		assertEquals(401, errorCode);
+
+		// two listeners that return a request handler should cause an exception
+		Application.get().getRequestCycleListeners().add(new ErrorCodeListener(401));
+		cycle = newRequestCycle(true);
+		try
+		{
+			cycle.processRequestAndDetach();
+			fail("expected an exception because two request cycle listeners returned a request handler");
+		}
+		catch (WicketRuntimeException e)
+		{
+			// expected
+		}
+	}
+
+	/**
+	 * @throws Exception
+	 */
 	public void testExceptionHandingInOnDetach() throws Exception
 	{
 		// this test is a little flaky because it depends on the ordering of listeners which is not
@@ -200,11 +230,40 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 		assertEquals(detachesnotified, this.detachesnotified);
 	}
 
+	private class ErrorCodeListener extends AbstractRequestCycleListener
+	{
+		private final int code;
+
+		public ErrorCodeListener(int code)
+		{
+			this.code = code;
+		}
+
+		@Override
+		public IRequestHandler onException(final RequestCycle cycle, Exception ex)
+		{
+			return new IRequestHandler()
+			{
+				public void respond(IRequestCycle requestCycle)
+				{
+					errorCode = code;
+				}
+
+				public void detach(IRequestCycle requestCycle)
+				{
+				}
+
+			};
+		}
+	}
+
+
 	private class IncrementingListener implements IRequestCycleListener
 	{
-		public void onException(final RequestCycle cycle, Exception ex)
+		public IRequestHandler onException(final RequestCycle cycle, Exception ex)
 		{
 			exceptions++;
+			return null;
 		}
 
 		public void onEndRequest(final RequestCycle cycle)

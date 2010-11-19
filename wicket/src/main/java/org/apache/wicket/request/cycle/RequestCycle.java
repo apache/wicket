@@ -290,7 +290,11 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 	 */
 	protected IRequestHandler handleException(final Exception e)
 	{
-		listeners.onException(this, e);
+		IRequestHandler handler = listeners.onException(this, e);
+		if (handler != null)
+		{
+			return handler;
+		}
 		return exceptionMapper.map(e);
 	}
 

@@ -28,7 +28,7 @@ import org.apache.wicket.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.http.WebRequest;
-import org.apache.wicket.request.http.handler.ErrorCodeResponseHandler;
+import org.apache.wicket.request.http.handler.ErrorCodeRequestHandler;
 import org.apache.wicket.request.mapper.StalePageException;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
@@ -55,7 +55,7 @@ public class DefaultExceptionMapper implements IExceptionMapper
 			// hmmm, we were already handling an exception! give up
 			logger.error("unexpected exception when handling another exception: " + e.getMessage(),
 				e);
-			return new ErrorCodeResponseHandler(500);
+			return new ErrorCodeRequestHandler(500);
 		}
 	}
 
@@ -69,7 +69,7 @@ public class DefaultExceptionMapper implements IExceptionMapper
 			switch (application.getExceptionSettings().getAjaxErrorHandlingStrategy())
 			{
 				case INVOKE_FAILURE_HANDLER :
-					return new ErrorCodeResponseHandler(500);
+					return new ErrorCodeRequestHandler(500);
 			}
 		}
 
