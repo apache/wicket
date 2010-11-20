@@ -35,12 +35,8 @@ import org.apache.wicket.util.lang.Bytes;
  * @author Martijn Dashorst
  * @author James Carman
  */
-public class DefaultApplicationSettings implements IApplicationSettings
+public class ApplicationSettings implements IApplicationSettings
 {
-// ****************************************************************************
-// Fields
-// ****************************************************************************
-
 	private WeakReference<Class<? extends Page>> accessDeniedPage;
 
 	private IClassResolver classResolver = new DefaultClassResolver();
@@ -50,10 +46,6 @@ public class DefaultApplicationSettings implements IApplicationSettings
 	private WeakReference<Class<? extends Page>> pageExpiredErrorPage;
 
 	private Bytes defaultMaximumUploadSize = Bytes.MAX;
-
-// ****************************************************************************
-// IApplicationSettings Implementation
-// ****************************************************************************
 
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#getAccessDeniedPage()
@@ -149,10 +141,6 @@ public class DefaultApplicationSettings implements IApplicationSettings
 
 		this.pageExpiredErrorPage = new WeakReference<Class<? extends Page>>(pageExpiredErrorPage);
 	}
-
-// ****************************************************************************
-// Other Methods
-// ****************************************************************************
 
 	/**
 	 * Throws an IllegalArgumentException if the given class is not a subclass of Page.

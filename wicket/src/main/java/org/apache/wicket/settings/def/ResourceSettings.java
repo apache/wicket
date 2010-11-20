@@ -53,12 +53,8 @@ import org.apache.wicket.util.watch.ModificationWatcher;
  * @author Martijn Dashorst
  * @author James Carman
  */
-public class DefaultResourceSettings implements IResourceSettings
+public class ResourceSettings implements IResourceSettings
 {
-// ****************************************************************************
-// Fields
-// ****************************************************************************
-
 	/**
 	 * Whether we should disable gzip compression for resources.
 	 */
@@ -109,26 +105,18 @@ public class DefaultResourceSettings implements IResourceSettings
 	// use timestamps on resource file names
 	private boolean useTimestampOnResourcesName = true;
 
-// ****************************************************************************
-// Constructors
-// ****************************************************************************
-
 	/**
 	 * Construct
 	 * 
 	 * @param application
 	 */
-	public DefaultResourceSettings(final Application application)
+	public ResourceSettings(final Application application)
 	{
 		stringResourceLoaders.add(new ComponentStringResourceLoader());
 		stringResourceLoaders.add(new PackageStringResourceLoader());
 		stringResourceLoaders.add(new ClassStringResourceLoader(application.getClass()));
 		stringResourceLoaders.add(new ValidatorStringResourceLoader());
 	}
-
-// ****************************************************************************
-// IResourceSettings Implementation
-// ****************************************************************************
 
 	/**
 	 * @see org.apache.wicket.settings.IResourceSettings#addResourceFactory(java.lang.String,

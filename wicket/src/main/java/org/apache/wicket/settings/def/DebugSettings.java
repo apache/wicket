@@ -28,12 +28,8 @@ import org.apache.wicket.settings.IDebugSettings;
  * @author Martijn Dashorst
  * @author James Carman
  */
-public class DefaultDebugSettings implements IDebugSettings
+public class DebugSettings implements IDebugSettings
 {
-// ****************************************************************************
-// Fields
-// ****************************************************************************
-
 	/** ajax debug mode status */
 	private boolean ajaxDebugModeEnabled = false;
 
@@ -60,10 +56,6 @@ public class DefaultDebugSettings implements IDebugSettings
 
 	/** @see IDebugSettings#setDevelopmentUtilitiesEnabled(boolean) */
 	private boolean developmentUtilitiesEnabled = false;
-
-// ****************************************************************************
-// IDebugSettings Implementation
-// ****************************************************************************
 
 	/**
 	 * @see org.apache.wicket.settings.IDebugSettings#getComponentUseCheck()

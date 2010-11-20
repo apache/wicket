@@ -32,21 +32,13 @@ import org.apache.wicket.util.lang.Generics;
  * @author Martijn Dashorst
  * @author James Carman
  */
-public class DefaultPageSettings implements IPageSettings
+public class PageSettings implements IPageSettings
 {
-// ****************************************************************************
-// Fields
-// ****************************************************************************
-
 	/** List of (static) ComponentResolvers */
 	private final List<IComponentResolver> componentResolvers = Generics.newArrayList();
 
 	/** Determines if pages should be managed by a version manager by default */
 	private boolean versionPagesByDefault = true;
-
-// ****************************************************************************
-// IPageSettings Implementation
-// ****************************************************************************
 
 	/**
 	 * @see org.apache.wicket.settings.IPageSettings#addComponentResolver(org.apache.wicket.markup.resolver.IComponentResolver)

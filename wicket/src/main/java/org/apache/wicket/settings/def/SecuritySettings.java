@@ -36,12 +36,8 @@ import org.apache.wicket.util.crypt.ICryptFactory;
  * @author Martijn Dashorst
  * @author James Carman
  */
-public class DefaultSecuritySettings implements ISecuritySettings
+public class SecuritySettings implements ISecuritySettings
 {
-// ****************************************************************************
-// Fields
-// ****************************************************************************
-
 	/** The authorization strategy. */
 	private IAuthorizationStrategy authorizationStrategy = IAuthorizationStrategy.ALLOW_ALL;
 
@@ -73,10 +69,6 @@ public class DefaultSecuritySettings implements ISecuritySettings
 			throw new UnauthorizedInstantiationException(component.getClass());
 		}
 	};
-
-// ****************************************************************************
-// ISecuritySettings Implementation
-// ****************************************************************************
 
 	/**
 	 * @see org.apache.wicket.settings.ISecuritySettings#getAuthorizationStrategy()

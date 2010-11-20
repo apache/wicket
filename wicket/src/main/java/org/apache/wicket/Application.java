@@ -87,17 +87,17 @@ import org.apache.wicket.settings.IRequestLoggerSettings;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.settings.ISessionSettings;
-import org.apache.wicket.settings.def.DefaultApplicationSettings;
-import org.apache.wicket.settings.def.DefaultDebugSettings;
-import org.apache.wicket.settings.def.DefaultExceptionSettings;
-import org.apache.wicket.settings.def.DefaultFrameworkSettings;
-import org.apache.wicket.settings.def.DefaultMarkupSettings;
-import org.apache.wicket.settings.def.DefaultPageSettings;
-import org.apache.wicket.settings.def.DefaultRequestCycleSettings;
-import org.apache.wicket.settings.def.DefaultRequestLoggerSettings;
-import org.apache.wicket.settings.def.DefaultResourceSettings;
-import org.apache.wicket.settings.def.DefaultSecuritySettings;
-import org.apache.wicket.settings.def.DefaultSessionSettings;
+import org.apache.wicket.settings.def.ApplicationSettings;
+import org.apache.wicket.settings.def.DebugSettings;
+import org.apache.wicket.settings.def.ExceptionSettings;
+import org.apache.wicket.settings.def.FrameworkSettings;
+import org.apache.wicket.settings.def.MarkupSettings;
+import org.apache.wicket.settings.def.PageSettings;
+import org.apache.wicket.settings.def.RequestCycleSettings;
+import org.apache.wicket.settings.def.RequestLoggerSettings;
+import org.apache.wicket.settings.def.ResourceSettings;
+import org.apache.wicket.settings.def.SecuritySettings;
+import org.apache.wicket.settings.def.SessionSettings;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
@@ -990,7 +990,7 @@ public abstract class Application implements UnboundListener, IEventSink
 		checkSettingsAvailable();
 		if (applicationSettings == null)
 		{
-			applicationSettings = new DefaultApplicationSettings();
+			applicationSettings = new ApplicationSettings();
 		}
 		return applicationSettings;
 	}
@@ -1012,7 +1012,7 @@ public abstract class Application implements UnboundListener, IEventSink
 		checkSettingsAvailable();
 		if (debugSettings == null)
 		{
-			debugSettings = new DefaultDebugSettings();
+			debugSettings = new DebugSettings();
 		}
 		return debugSettings;
 	}
@@ -1034,7 +1034,7 @@ public abstract class Application implements UnboundListener, IEventSink
 		checkSettingsAvailable();
 		if (exceptionSettings == null)
 		{
-			exceptionSettings = new DefaultExceptionSettings();
+			exceptionSettings = new ExceptionSettings();
 		}
 		return exceptionSettings;
 	}
@@ -1056,7 +1056,7 @@ public abstract class Application implements UnboundListener, IEventSink
 		checkSettingsAvailable();
 		if (frameworkSettings == null)
 		{
-			frameworkSettings = new DefaultFrameworkSettings();
+			frameworkSettings = new FrameworkSettings();
 		}
 		return frameworkSettings;
 	}
@@ -1078,7 +1078,7 @@ public abstract class Application implements UnboundListener, IEventSink
 		checkSettingsAvailable();
 		if (pageSettings == null)
 		{
-			pageSettings = new DefaultPageSettings();
+			pageSettings = new PageSettings();
 		}
 		return pageSettings;
 	}
@@ -1100,7 +1100,7 @@ public abstract class Application implements UnboundListener, IEventSink
 		checkSettingsAvailable();
 		if (requestCycleSettings == null)
 		{
-			requestCycleSettings = new DefaultRequestCycleSettings();
+			requestCycleSettings = new RequestCycleSettings();
 		}
 		return requestCycleSettings;
 	}
@@ -1122,7 +1122,7 @@ public abstract class Application implements UnboundListener, IEventSink
 		checkSettingsAvailable();
 		if (markupSettings == null)
 		{
-			markupSettings = new DefaultMarkupSettings(this);
+			markupSettings = new MarkupSettings(this);
 		}
 		return markupSettings;
 	}
@@ -1144,7 +1144,7 @@ public abstract class Application implements UnboundListener, IEventSink
 		checkSettingsAvailable();
 		if (requestLoggerSettings == null)
 		{
-			requestLoggerSettings = new DefaultRequestLoggerSettings();
+			requestLoggerSettings = new RequestLoggerSettings();
 		}
 		return requestLoggerSettings;
 	}
@@ -1166,7 +1166,7 @@ public abstract class Application implements UnboundListener, IEventSink
 		checkSettingsAvailable();
 		if (resourceSettings == null)
 		{
-			resourceSettings = new DefaultResourceSettings(this);
+			resourceSettings = new ResourceSettings(this);
 		}
 		return resourceSettings;
 	}
@@ -1188,7 +1188,7 @@ public abstract class Application implements UnboundListener, IEventSink
 		checkSettingsAvailable();
 		if (securitySettings == null)
 		{
-			securitySettings = new DefaultSecuritySettings();
+			securitySettings = new SecuritySettings();
 		}
 		return securitySettings;
 	}
@@ -1210,7 +1210,7 @@ public abstract class Application implements UnboundListener, IEventSink
 		checkSettingsAvailable();
 		if (sessionSettings == null)
 		{
-			sessionSettings = new DefaultSessionSettings();
+			sessionSettings = new SessionSettings();
 		}
 		return sessionSettings;
 	}

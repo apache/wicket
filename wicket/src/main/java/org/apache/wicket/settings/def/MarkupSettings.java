@@ -31,12 +31,8 @@ import org.apache.wicket.util.lang.Args;
  * @author Martijn Dashorst
  * @author James Carman
  */
-public class DefaultMarkupSettings implements IMarkupSettings
+public class MarkupSettings implements IMarkupSettings
 {
-// ****************************************************************************
-// Fields
-// ****************************************************************************
-
 	/** The application */
 	private final Application application;
 
@@ -72,23 +68,15 @@ public class DefaultMarkupSettings implements IMarkupSettings
 	/** In order to remove <?xml?> from output as required by IE quirks mode */
 	private boolean stripXmlDeclarationFromOutput;
 
-// ****************************************************************************
-// Constructors
-// ****************************************************************************
-
 	/**
 	 * Construct
 	 * 
 	 * @param application
 	 */
-	public DefaultMarkupSettings(Application application)
+	public MarkupSettings(Application application)
 	{
 		this.application = application;
 	}
-
-// ****************************************************************************
-// IMarkupSettings Implementation
-// ****************************************************************************
 
 	/**
 	 * @see org.apache.wicket.settings.IMarkupSettings#getAutomaticLinking()

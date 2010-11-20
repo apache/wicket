@@ -35,12 +35,8 @@ import org.apache.wicket.util.time.Duration;
  * @author Martijn Dashorst
  * @author James Carman
  */
-public class DefaultRequestCycleSettings implements IRequestCycleSettings
+public class RequestCycleSettings implements IRequestCycleSettings
 {
-// ****************************************************************************
-// Fields
-// ****************************************************************************
-
 	/** True if the response should be buffered */
 	private boolean bufferResponse = true;
 

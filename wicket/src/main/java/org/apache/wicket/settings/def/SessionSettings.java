@@ -31,18 +31,10 @@ import org.apache.wicket.settings.ISessionSettings;
  * @author Martijn Dashorst
  * @author James Carman
  */
-public class DefaultSessionSettings implements ISessionSettings
+public class SessionSettings implements ISessionSettings
 {
-// ****************************************************************************
-// Fields
-// ****************************************************************************
-
 	/** factory to create new Page objects */
 	private IPageFactory pageFactory = new DefaultPageFactory();
-
-// ****************************************************************************
-// ISessionSettings Implementation
-// ****************************************************************************
 
 	/**
 	 * @see org.apache.wicket.settings.ISessionSettings#getPageFactory()

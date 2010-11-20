@@ -28,20 +28,12 @@ import org.apache.wicket.settings.IExceptionSettings;
  * @author Martijn Dashorst
  * @author James Carman
  */
-public class DefaultExceptionSettings implements IExceptionSettings
+public class ExceptionSettings implements IExceptionSettings
 {
-// ****************************************************************************
-// Fields
-// ****************************************************************************
-
 	/** Type of handling for unexpected exceptions */
 	private UnexpectedExceptionDisplay unexpectedExceptionDisplay = SHOW_EXCEPTION_PAGE;
 
 	private AjaxErrorStrategy errorHandlingStrategyDuringAjaxRequests = AjaxErrorStrategy.REDIRECT_TO_ERROR_PAGE;
-
-// ****************************************************************************
-// IExceptionSettings Implementation
-// ****************************************************************************
 
 	/**
 	 * @see org.apache.wicket.settings.IRequestCycleSettings#getUnexpectedExceptionDisplay()

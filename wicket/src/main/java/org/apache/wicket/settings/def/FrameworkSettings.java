@@ -30,17 +30,9 @@ import org.apache.wicket.util.string.Strings;
  * @author Martijn Dashorst
  * @author James Carman
  */
-public class DefaultFrameworkSettings implements IFrameworkSettings
+public class FrameworkSettings implements IFrameworkSettings
 {
-// ****************************************************************************
-// Fields
-// ****************************************************************************
-
 	private IDetachListener detachListener;
-
-// ****************************************************************************
-// IFrameworkSettings Implementation
-// ****************************************************************************
 
 	/**
 	 * @see org.apache.wicket.settings.IFrameworkSettings#getVersion()

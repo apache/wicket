@@ -28,21 +28,13 @@ import org.apache.wicket.settings.IRequestLoggerSettings;
  * @author Martijn Dashorst
  * @author James Carman
  */
-public class DefaultRequestLoggerSettings implements IRequestLoggerSettings
+public class RequestLoggerSettings implements IRequestLoggerSettings
 {
-// ****************************************************************************
-// Fields
-// ****************************************************************************
-
 	private boolean recordSessionSize = true;
 
 	private int requestsWindowSize = 0;
 
 	private boolean requestLoggerEnabled;
-
-// ****************************************************************************
-// IRequestLoggerSettings Implementation
-// ****************************************************************************
 
 	/**
 	 * @see org.apache.wicket.settings.IRequestLoggerSettings#getRecordSessionSize()
