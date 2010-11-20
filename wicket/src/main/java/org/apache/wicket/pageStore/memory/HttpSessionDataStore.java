@@ -113,11 +113,9 @@ public class HttpSessionDataStore implements IDataStore
 
 	public void destroy()
 	{
-		PageTable pageTable = getPageTable(false);
-		if (pageTable != null)
-		{
-			pageTable.clear();
-		}
+		// do nothing
+		// this is application lifecycle thread (WicketFilter#destroy())
+		// so there is no reachable http session
 	}
 
 	public boolean isReplicated()

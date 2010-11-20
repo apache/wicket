@@ -434,8 +434,16 @@ public class WicketFilter implements Filter
 	{
 		if (application != null)
 		{
-			application.internalDestroy();
-			application = null;
+			try
+			{
+				ThreadContext.setApplication(application);
+				application.internalDestroy();
+			}
+			finally
+			{
+				ThreadContext.detach();
+				application = null;
+			}
 		}
 	}
 

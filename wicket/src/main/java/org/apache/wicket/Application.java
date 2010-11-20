@@ -834,10 +834,11 @@ public abstract class Application implements UnboundListener, IEventSink
 		onDestroy();
 
 		callDestroyers();
-		applicationKeyToApplication.remove(getApplicationKey());
 
 		getPageManager().destroy();
 		getSessionStore().destroy();
+
+		applicationKeyToApplication.remove(getApplicationKey());
 	}
 
 	/**

@@ -437,10 +437,10 @@ public abstract class WebApplication extends Application
 		{
 			resourceWatcher.destroy();
 		}
-		super.internalDestroy();
 		bufferedResponses.clear();
-		getSessionStore().destroy();
 		FileCleaner.destroy();
+		super.internalDestroy();
+
 	}
 
 	/**
