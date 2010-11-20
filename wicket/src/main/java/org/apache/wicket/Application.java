@@ -20,9 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +37,6 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.javascript.DefaultJavascriptCompressor;
 import org.apache.wicket.markup.MarkupFactory;
-import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.IHeaderResponseDecorator;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
@@ -66,7 +63,6 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -75,7 +71,6 @@ import org.apache.wicket.request.cycle.RequestCycleListenerCollection;
 import org.apache.wicket.request.mapper.CompoundRequestMapper;
 import org.apache.wicket.request.mapper.ICompoundRequestMapper;
 import org.apache.wicket.request.mapper.IMapperContext;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 import org.apache.wicket.response.filter.EmptySrcAttributeCheckFilter;
 import org.apache.wicket.session.DefaultPageFactory;
@@ -92,9 +87,20 @@ import org.apache.wicket.settings.IRequestLoggerSettings;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.settings.ISessionSettings;
-import org.apache.wicket.settings.Settings;
+import org.apache.wicket.settings.def.DefaultApplicationSettings;
+import org.apache.wicket.settings.def.DefaultDebugSettings;
+import org.apache.wicket.settings.def.DefaultExceptionSettings;
+import org.apache.wicket.settings.def.DefaultFrameworkSettings;
+import org.apache.wicket.settings.def.DefaultMarkupSettings;
+import org.apache.wicket.settings.def.DefaultPageSettings;
+import org.apache.wicket.settings.def.DefaultRequestCycleSettings;
+import org.apache.wicket.settings.def.DefaultRequestLoggerSettings;
+import org.apache.wicket.settings.def.DefaultResourceSettings;
+import org.apache.wicket.settings.def.DefaultSecuritySettings;
+import org.apache.wicket.settings.def.DefaultSessionSettings;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.lang.PropertyResolver;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.time.Duration;
@@ -145,10 +151,6 @@ public abstract class Application implements UnboundListener, IEventSink
 	/** Configuration constant for the 2 types */
 	public static final String CONFIGURATION = "configuration";
 
-	/** Configuration type constant for getting the context path out of the web.xml */
-	// TODO this seems to be used nowhere ... either remove it or re-implement it
-	public static final String CONTEXTPATH = "contextpath";
-
 	/** Configuration type constant for deployment */
 	public static final String DEPLOYMENT = "deployment";
 
@@ -160,37 +162,19 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * without being in a request/ being set in the thread local (we need that e.g. for when we are
 	 * in a destruction thread).
 	 */
-	private static final Map<String, Application> applicationKeyToApplication = new HashMap<String, Application>(
-		1);
+	private static final Map<String, Application> applicationKeyToApplication = Generics.newHashMap(1);
 
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
 
-	/** */
-	private final ComponentOnBeforeRenderListenerCollection componentPreOnBeforeRenderListeners = new ComponentOnBeforeRenderListenerCollection();
-
-	/** */
-	private final ComponentOnBeforeRenderListenerCollection componentPostOnBeforeRenderListeners = new ComponentOnBeforeRenderListenerCollection();
-
-	/** */
-	private ComponentOnAfterRenderListenerCollection componentOnAfterRenderListeners = new ComponentOnAfterRenderListenerCollection();
-
-	private final RequestCycleListenerCollection requestCycleListeners = new RequestCycleListenerCollection();
-
 	/** root mapper */
 	private IRequestMapper rootRequestMapper;
-
-	/** list of {@link IComponentInstantiationListener}s. */
-	private final ComponentInstantiationListenerCollection componentInstantiationListeners = new ComponentInstantiationListenerCollection();
-
-	/** list of {@link IComponentInitializationListener}s. */
-	private final ComponentInitializationListenerCollection componentInitializationListeners = new ComponentInitializationListenerCollection();
 
 	/** The converter locator instance. */
 	private IConverterLocator converterLocator;
 
 	/** list of initializers. */
-	private final List<IInitializer> initializers = new ArrayList<IInitializer>();
+	private final List<IInitializer> initializers = Generics.newArrayList();
 
 	/** Application level meta data. */
 	private MetaDataEntry<?>[] metaData;
@@ -204,15 +188,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	/** The session facade. */
 	private volatile ISessionStore sessionStore;
 
-	/** Settings for this application. */
-	private Settings settings;
-
-	/** can the settings object be set/used. */
-	private boolean settingsAccessible;
-
 	/** page renderer provider */
 	private IPageRendererProvider pageRendererProvider;
 
+	/** */
 	private PageAccessSynchronizer pageAccessSynchronizer;
 
 	/** request cycle provider */
@@ -262,7 +241,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 *            application)
 	 * @return The application or <code>null</code> if application has not been found
 	 */
-	public static Application get(String applicationKey)
+	public static Application get(final String applicationKey)
 	{
 		return applicationKeyToApplication.get(applicationKey);
 	}
@@ -305,17 +284,6 @@ public abstract class Application implements UnboundListener, IEventSink
 				}
 			}
 		});
-	}
-
-
-	public final ComponentInstantiationListenerCollection getComponentInstantiationListeners()
-	{
-		return componentInstantiationListeners;
-	}
-
-	public final ComponentInitializationListenerCollection getComponentInitializationListeners()
-	{
-		return componentInitializationListeners;
 	}
 
 	/**
@@ -365,16 +333,6 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @return The unique key of this application
 	 */
 	public abstract String getApplicationKey();
-
-	/**
-	 * @return Application's application-wide settings
-	 * @see IApplicationSettings
-	 * @since 1.2
-	 */
-	public IApplicationSettings getApplicationSettings()
-	{
-		return getSettings();
-	}
 
 	/**
 	 * Gets the configuration mode to use for configuring the app, either {@link #DEVELOPMENT} or
@@ -431,44 +389,6 @@ public abstract class Application implements UnboundListener, IEventSink
 	public abstract String getConfigurationType();
 
 	/**
-	 * @return The converter locator for this application
-	 */
-	public final IConverterLocator getConverterLocator()
-	{
-		return converterLocator;
-	}
-
-	/**
-	 * @return Application's debug related settings
-	 * @see IDebugSettings
-	 * @since 1.2
-	 */
-	public IDebugSettings getDebugSettings()
-	{
-		return getSettings();
-	}
-
-	/**
-	 * @return Application's exception handling settings
-	 * @see IExceptionSettings
-	 * @since 1.2
-	 */
-	public IExceptionSettings getExceptionSettings()
-	{
-		return getSettings();
-	}
-
-	/**
-	 * @return Wicket framework settings
-	 * @see IFrameworkSettings
-	 * @since 1.2
-	 */
-	public IFrameworkSettings getFrameworkSettings()
-	{
-		return getSettings();
-	}
-
-	/**
 	 * Application subclasses must specify a home page class by implementing this abstract method.
 	 * 
 	 * @return Home page class for this application
@@ -476,13 +396,11 @@ public abstract class Application implements UnboundListener, IEventSink
 	public abstract Class<? extends Page> getHomePage();
 
 	/**
-	 * @return Application's markup related settings
-	 * @see IMarkupSettings
-	 * @since 1.2
+	 * @return The converter locator for this application
 	 */
-	public IMarkupSettings getMarkupSettings()
+	public final IConverterLocator getConverterLocator()
 	{
-		return getSettings();
+		return converterLocator;
 	}
 
 	/**
@@ -510,26 +428,6 @@ public abstract class Application implements UnboundListener, IEventSink
 	}
 
 	/**
-	 * @return Application's page related settings
-	 * @see IPageSettings
-	 * @since 1.2
-	 */
-	public IPageSettings getPageSettings()
-	{
-		return getSettings();
-	}
-
-	/**
-	 * @return Application's request cycle related settings
-	 * @see IDebugSettings
-	 * @since 1.2
-	 */
-	public IRequestCycleSettings getRequestCycleSettings()
-	{
-		return getSettings();
-	}
-
-	/**
 	 * Gets the {@link IRequestLogger}.
 	 * 
 	 * @return The RequestLogger
@@ -548,46 +446,6 @@ public abstract class Application implements UnboundListener, IEventSink
 			requestLogger = null;
 		}
 		return requestLogger;
-	}
-
-	/**
-	 * @return Application's resources related settings
-	 * @see IResourceSettings
-	 * @since 1.3
-	 */
-	public IRequestLoggerSettings getRequestLoggerSettings()
-	{
-		return getSettings();
-	}
-
-	/**
-	 * @return Application's resources related settings
-	 * @see IResourceSettings
-	 * @since 1.2
-	 */
-	public IResourceSettings getResourceSettings()
-	{
-		return getSettings();
-	}
-
-	/**
-	 * @return Application's security related settings
-	 * @see ISecuritySettings
-	 * @since 1.2
-	 */
-	public ISecuritySettings getSecuritySettings()
-	{
-		return getSettings();
-	}
-
-	/**
-	 * @return Application's session related settings
-	 * @see ISessionSettings
-	 * @since 1.2
-	 */
-	public ISessionSettings getSessionSettings()
-	{
-		return getSettings();
 	}
 
 	/**
@@ -611,7 +469,10 @@ public abstract class Application implements UnboundListener, IEventSink
 		return sessionStore;
 	}
 
-	public void sessionUnbound(String sessionId)
+	/**
+	 * @see org.apache.wicket.session.ISessionStore.UnboundListener#sessionUnbound(java.lang.String)
+	 */
+	public void sessionUnbound(final String sessionId)
 	{
 		getPageManager().sessionExpired(sessionId);
 	}
@@ -665,7 +526,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param target
 	 */
-	public void logEventTarget(IRequestHandler target)
+	public void logEventTarget(final IRequestHandler target)
 	{
 	}
 
@@ -674,7 +535,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param requestTarget
 	 */
-	public void logResponseTarget(IRequestHandler requestTarget)
+	public void logResponseTarget(final IRequestHandler requestTarget)
 	{
 	}
 
@@ -718,7 +579,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param className
 	 */
-	private void addInitializer(String className)
+	private void addInitializer(final String className)
 	{
 		IInitializer initializer = (IInitializer)WicketObjects.newInstance(className);
 		if (initializer != null)
@@ -753,37 +614,6 @@ public abstract class Application implements UnboundListener, IEventSink
 			log.info("[" + getName() + "] init: " + initializer);
 			initializer.init(this);
 		}
-	}
-
-	/**
-	 * This method is still here for backwards compatibility with 1.1 source code. The
-	 * getXXXSettings() methods are now preferred. This method will be removed post 1.2 version.
-	 * 
-	 * @return Application settings
-	 * 
-	 * @see Application#getApplicationSettings()
-	 * @see Application#getDebugSettings()
-	 * @see Application#getExceptionSettings()
-	 * @see Application#getMarkupSettings()
-	 * @see Application#getPageSettings()
-	 * @see Application#getRequestCycleSettings()
-	 * @see Application#getResourceSettings()
-	 * @see Application#getSecuritySettings()
-	 * @see Application#getSessionSettings()
-	 */
-	private Settings getSettings()
-	{
-		if (!settingsAccessible)
-		{
-			throw new WicketRuntimeException(
-				"Use Application.init() method for configuring your application object");
-		}
-
-		if (settings == null)
-		{
-			settings = new Settings(this);
-		}
-		return settings;
 	}
 
 	/**
@@ -829,7 +659,9 @@ public abstract class Application implements UnboundListener, IEventSink
 		MarkupFactory markupFactory = getMarkupSettings().getMarkupFactory();
 
 		if (markupFactory.hasMarkupCache())
+		{
 			markupFactory.getMarkupCache().shutdown();
+		}
 
 		onDestroy();
 
@@ -886,13 +718,20 @@ public abstract class Application implements UnboundListener, IEventSink
 		requestCycleProvider = new DefaultRequestCycleProvider();
 	}
 
-
+	/**
+	 * 
+	 * @return Session state provider
+	 */
 	public final IProvider<ISessionStore> getSessionStoreProvider()
 	{
 		return sessionStoreProvider;
 	}
 
-	public final void setSessionStoreProvider(IProvider<ISessionStore> sessionStoreProvider)
+	/**
+	 * 
+	 * @param sessionStoreProvider
+	 */
+	public final void setSessionStoreProvider(final IProvider<ISessionStore> sessionStoreProvider)
 	{
 		this.sessionStoreProvider = sessionStoreProvider;
 	}
@@ -918,32 +757,6 @@ public abstract class Application implements UnboundListener, IEventSink
 		return new DummyRequestLogger();
 	}
 
-	public final ComponentOnBeforeRenderListenerCollection getComponentPreOnBeforeRenderListeners()
-	{
-		return componentPreOnBeforeRenderListeners;
-	}
-
-	public final ComponentOnBeforeRenderListenerCollection getComponentPostOnBeforeRenderListeners()
-	{
-		return componentPostOnBeforeRenderListeners;
-	}
-
-	/**
-	 * @return on after render listeners collection
-	 */
-	public final ComponentOnAfterRenderListenerCollection getComponentOnAfterRenderListeners()
-	{
-		return componentOnAfterRenderListeners;
-	}
-
-	/**
-	 * @return the unmodifiable request list of {@link IRequestCycleListener}s in this application
-	 */
-	public RequestCycleListenerCollection getRequestCycleListeners()
-	{
-		return requestCycleListeners;
-	}
-
 	/**
 	 * Converts the root mapper to a {@link ICompoundRequestMapper} if necessary and returns the
 	 * converted instance.
@@ -961,7 +774,6 @@ public abstract class Application implements UnboundListener, IEventSink
 		return (ICompoundRequestMapper)root;
 	}
 
-
 	/**
 	 * @return The root request mapper
 	 */
@@ -978,279 +790,6 @@ public abstract class Application implements UnboundListener, IEventSink
 	public final void setRootRequestMapper(final IRequestMapper rootRequestMapper)
 	{
 		this.rootRequestMapper = rootRequestMapper;
-	}
-
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//
-	// Page Manager
-	//
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	private volatile IPageManager pageManager;
-	private IPageManagerProvider pageManagerProvider;
-
-	public final IPageManagerProvider getPageManagerProvider()
-	{
-		return pageManagerProvider;
-	}
-
-
-	public synchronized final void setPageManagerProvider(final IPageManagerProvider provider)
-	{
-		pageManagerProvider = provider;
-	}
-
-	/**
-	 * Context for PageManager to interact with rest of Wicket
-	 */
-	private final IPageManagerContext pageManagerContext = new DefaultPageManagerContext();
-
-	/**
-	 * 
-	 * @return the page manager
-	 */
-	public final IPageManager getPageManager()
-	{
-		if (pageManager == null)
-		{
-			synchronized (this)
-			{
-				if (pageManager == null)
-				{
-					pageManager = pageAccessSynchronizer.adapt(pageManagerProvider.get(getPageManagerContext()));
-				}
-			}
-		}
-		return pageManager;
-	}
-
-	/**
-	 * 
-	 * @return the page manager context
-	 */
-	protected IPageManagerContext getPageManagerContext()
-	{
-		return pageManagerContext;
-	}
-
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//
-	// Page Rendering
-	//
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	public final IPageRendererProvider getPageRendererProvider()
-	{
-		return pageRendererProvider;
-	}
-
-	public final void setPageRendererProvider(IPageRendererProvider pageRendererProvider)
-	{
-		Args.notNull(pageRendererProvider, "pageRendererProvider");
-		this.pageRendererProvider = pageRendererProvider;
-	}
-
-
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//
-	// Request Handler encoding
-	//
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-	private ResourceReferenceRegistry resourceReferenceRegistry;
-
-	/**
-	 * Override to create custom {@link ResourceReferenceRegistry}.
-	 * 
-	 * @return new {@link ResourceReferenceRegistry} instance.
-	 */
-	protected ResourceReferenceRegistry newResourceReferenceRegistry()
-	{
-		return new ResourceReferenceRegistry();
-	}
-
-	/**
-	 * Returns {@link ResourceReferenceRegistry} for this application.
-	 * 
-	 * @return
-	 */
-	public final ResourceReferenceRegistry getResourceReferenceRegistry()
-	{
-		return resourceReferenceRegistry;
-	}
-
-	private SharedResources sharedResources;
-
-	protected SharedResources newSharedResources(ResourceReferenceRegistry registry)
-	{
-		return new SharedResources(registry);
-	}
-
-	public SharedResources getSharedResources()
-	{
-		return sharedResources;
-	}
-
-	private IPageFactory pageFactory;
-
-	/**
-	 * Override to create custom {@link IPageFactory}
-	 * 
-	 * @return new {@link IPageFactory} instance.
-	 */
-	protected IPageFactory newPageFactory()
-	{
-		return new DefaultPageFactory();
-	}
-
-	/**
-	 * Returns {@link IPageFactory} for this application.
-	 * 
-	 * @return
-	 */
-	public final IPageFactory getPageFactory()
-	{
-		return pageFactory;
-	}
-
-	private final IMapperContext encoderContext = new IMapperContext()
-	{
-		public String getBookmarkableIdentifier()
-		{
-			return "bookmarkable";
-		}
-
-		public String getNamespace()
-		{
-			return MarkupParser.WICKET;
-		}
-
-		public String getPageIdentifier()
-		{
-			return "page";
-		}
-
-		public String getResourceIdentifier()
-		{
-			return "resource";
-		}
-
-		public ResourceReferenceRegistry getResourceReferenceRegistry()
-		{
-			return Application.this.getResourceReferenceRegistry();
-		}
-
-		public RequestListenerInterface requestListenerInterfaceFromString(String interfaceName)
-		{
-			return RequestListenerInterface.forName(interfaceName);
-		}
-
-		public String requestListenerInterfaceToString(RequestListenerInterface listenerInterface)
-		{
-			return listenerInterface.getName();
-		}
-
-		public IRequestablePage newPageInstance(Class<? extends IRequestablePage> pageClass,
-			PageParameters pageParameters)
-		{
-			if (pageParameters == null)
-			{
-				return getPageFactory().newPage(pageClass);
-			}
-			else
-			{
-				return getPageFactory().newPage(pageClass, pageParameters);
-			}
-		}
-
-		public IRequestablePage getPageInstance(int pageId)
-		{
-			return Page.getPage(pageId);
-		}
-
-		public Class<? extends IRequestablePage> getHomePageClass()
-		{
-			return Application.this.getHomePage();
-		}
-	};
-
-	public final IMapperContext getEncoderContext()
-	{
-		return encoderContext;
-	}
-
-	public Session fetchCreateAndSetSession(RequestCycle requestCycle)
-	{
-		Args.notNull(requestCycle, "requestCycle");
-
-		Session session = getSessionStore().lookup(requestCycle.getRequest());
-		if (session == null)
-		{
-			session = newSession(requestCycle.getRequest(), requestCycle.getResponse());
-			ThreadContext.setSession(session);
-			getPageManager().newSessionCreated();
-		}
-		else
-		{
-			ThreadContext.setSession(session);
-		}
-		return session;
-	}
-
-
-	public IRequestCycleProvider getRequestCycleProvider()
-	{
-		return requestCycleProvider;
-	}
-
-	public void setRequestCycleProvider(IRequestCycleProvider requestCycleProvider)
-	{
-		this.requestCycleProvider = requestCycleProvider;
-	}
-
-	private static class DefaultRequestCycleProvider implements IRequestCycleProvider
-	{
-
-		public RequestCycle get(RequestCycleContext context)
-		{
-			return new RequestCycle(context);
-		}
-
-	}
-
-
-	public final RequestCycle createRequestCycle(Request request, Response response)
-	{
-		RequestCycleContext context = new RequestCycleContext(request, response,
-			getRootRequestMapper(), newExceptionMapper());
-
-		RequestCycle requestCycle = getRequestCycleProvider().get(context);
-		requestCycle.getListeners().add(requestCycleListeners);
-		requestCycle.getListeners().add(new AbstractRequestCycleListener()
-		{
-			@Override
-			public void onDetach(RequestCycle requestCycle)
-			{
-				getPageManager().commitRequest();
-			}
-		});
-		return requestCycle;
-	}
-
-	/**
-	 * @return a mapper that knows what kind of error page to show when an exception occurs during
-	 *         page rendering
-	 */
-	protected IExceptionMapper newExceptionMapper()
-	{
-		return new DefaultExceptionMapper();
 	}
 
 	/**
@@ -1298,7 +837,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @param name
 	 *            unique application name
 	 */
-	public final void setName(String name)
+	public final void setName(final String name)
 	{
 		Args.notEmpty(name, "name");
 
@@ -1322,14 +861,648 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @param fileName
 	 * @return mime type
 	 */
-	public String getMimeType(String fileName)
+	public String getMimeType(final String fileName)
 	{
 		return URLConnection.getFileNameMap().getContentTypeFor(fileName);
 	}
 
 	/** {@inheritDoc} */
-	public void onEvent(IEvent<?> event)
+	public void onEvent(final IEvent<?> event)
 	{
+	}
+
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	// Listeners
+	//
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/** */
+	private final ComponentOnBeforeRenderListenerCollection componentPreOnBeforeRenderListeners = new ComponentOnBeforeRenderListenerCollection();
+
+	/** */
+	private final ComponentOnBeforeRenderListenerCollection componentPostOnBeforeRenderListeners = new ComponentOnBeforeRenderListenerCollection();
+
+	/** */
+	private final ComponentOnAfterRenderListenerCollection componentOnAfterRenderListeners = new ComponentOnAfterRenderListenerCollection();
+
+	/** */
+	private final RequestCycleListenerCollection requestCycleListeners = new RequestCycleListenerCollection();
+
+	/** list of {@link IComponentInstantiationListener}s. */
+	private final ComponentInstantiationListenerCollection componentInstantiationListeners = new ComponentInstantiationListenerCollection();
+
+	/** list of {@link IComponentInitializationListener}s. */
+	private final ComponentInitializationListenerCollection componentInitializationListeners = new ComponentInitializationListenerCollection();
+
+	/**
+	 * @return Gets the application's ComponentInstantiationListenerCollection
+	 */
+	public final ComponentInstantiationListenerCollection getComponentInstantiationListeners()
+	{
+		return componentInstantiationListeners;
+	}
+
+	/**
+	 * @return Gets the application's ComponentInitializationListeners
+	 */
+	public final ComponentInitializationListenerCollection getComponentInitializationListeners()
+	{
+		return componentInitializationListeners;
+	}
+
+	/**
+	 * 
+	 * @return ComponentOnBeforeRenderListenerCollection
+	 */
+	public final ComponentOnBeforeRenderListenerCollection getComponentPreOnBeforeRenderListeners()
+	{
+		return componentPreOnBeforeRenderListeners;
+	}
+
+	/**
+	 * 
+	 * @return ComponentOnBeforeRenderListenerCollection
+	 */
+	public final ComponentOnBeforeRenderListenerCollection getComponentPostOnBeforeRenderListeners()
+	{
+		return componentPostOnBeforeRenderListeners;
+	}
+
+	/**
+	 * @return on after render listeners collection
+	 */
+	public final ComponentOnAfterRenderListenerCollection getComponentOnAfterRenderListeners()
+	{
+		return componentOnAfterRenderListeners;
+	}
+
+	/**
+	 * @return the unmodifiable request list of {@link IRequestCycleListener}s in this application
+	 */
+	public RequestCycleListenerCollection getRequestCycleListeners()
+	{
+		return requestCycleListeners;
+	}
+
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	// Settings
+	//
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/** Application settings */
+	private IApplicationSettings applicationSettings;
+
+	/** Debug Settings */
+	private IDebugSettings debugSettings;
+
+	/** Exception Settings */
+	private IExceptionSettings exceptionSettings;
+
+	/** Framework Settings */
+	private IFrameworkSettings frameworkSettings;
+
+	/** The Markup Settings */
+	private IMarkupSettings markupSettings;
+
+	/** The Page Settings */
+	private IPageSettings pageSettings;
+
+	/** The Request Cycle Settings */
+	private IRequestCycleSettings requestCycleSettings;
+
+	/** The Request Logger Settings */
+	private IRequestLoggerSettings requestLoggerSettings;
+
+	/** The Resource Settings */
+	private IResourceSettings resourceSettings;
+
+	/** The Security Settings */
+	private ISecuritySettings securitySettings;
+
+	/** The Session Settings */
+	private ISessionSettings sessionSettings;
+
+	/** can the settings object be set/used. */
+	private boolean settingsAccessible;
+
+	/**
+	 * @return Application's application-wide settings
+	 * @since 1.2
+	 */
+	public final IApplicationSettings getApplicationSettings()
+	{
+		checkSettingsAvailable();
+		if (applicationSettings == null)
+		{
+			applicationSettings = new DefaultApplicationSettings();
+		}
+		return applicationSettings;
+	}
+
+	/**
+	 * 
+	 * @param applicationSettings
+	 */
+	public final void setApplicationSettings(final IApplicationSettings applicationSettings)
+	{
+		this.applicationSettings = applicationSettings;
+	}
+
+	/**
+	 * @return Application's debug related settings
+	 */
+	public final IDebugSettings getDebugSettings()
+	{
+		checkSettingsAvailable();
+		if (debugSettings == null)
+		{
+			debugSettings = new DefaultDebugSettings();
+		}
+		return debugSettings;
+	}
+
+	/**
+	 * 
+	 * @param debugSettings
+	 */
+	public final void setDebugSettings(final IDebugSettings debugSettings)
+	{
+		this.debugSettings = debugSettings;
+	}
+
+	/**
+	 * @return Application's exception handling settings
+	 */
+	public final IExceptionSettings getExceptionSettings()
+	{
+		checkSettingsAvailable();
+		if (exceptionSettings == null)
+		{
+			exceptionSettings = new DefaultExceptionSettings();
+		}
+		return exceptionSettings;
+	}
+
+	/**
+	 * 
+	 * @param exceptionSettings
+	 */
+	public final void setExceptionSettings(final IExceptionSettings exceptionSettings)
+	{
+		this.exceptionSettings = exceptionSettings;
+	}
+
+	/**
+	 * @return Wicket framework settings
+	 */
+	public final IFrameworkSettings getFrameworkSettings()
+	{
+		checkSettingsAvailable();
+		if (frameworkSettings == null)
+		{
+			frameworkSettings = new DefaultFrameworkSettings();
+		}
+		return frameworkSettings;
+	}
+
+	/**
+	 * 
+	 * @param frameworkSettings
+	 */
+	public final void setFrameworkSettings(final IFrameworkSettings frameworkSettings)
+	{
+		this.frameworkSettings = frameworkSettings;
+	}
+
+	/**
+	 * @return Application's page related settings
+	 */
+	public final IPageSettings getPageSettings()
+	{
+		checkSettingsAvailable();
+		if (pageSettings == null)
+		{
+			pageSettings = new DefaultPageSettings();
+		}
+		return pageSettings;
+	}
+
+	/**
+	 * 
+	 * @param pageSettings
+	 */
+	public final void setPageSettings(final IPageSettings pageSettings)
+	{
+		this.pageSettings = pageSettings;
+	}
+
+	/**
+	 * @return Application's request cycle related settings
+	 */
+	public final IRequestCycleSettings getRequestCycleSettings()
+	{
+		checkSettingsAvailable();
+		if (requestCycleSettings == null)
+		{
+			requestCycleSettings = new DefaultRequestCycleSettings();
+		}
+		return requestCycleSettings;
+	}
+
+	/**
+	 * 
+	 * @param requestCycleSettings
+	 */
+	public final void setRequestCycleSettings(final IRequestCycleSettings requestCycleSettings)
+	{
+		this.requestCycleSettings = requestCycleSettings;
+	}
+
+	/**
+	 * @return Application's markup related settings
+	 */
+	public IMarkupSettings getMarkupSettings()
+	{
+		checkSettingsAvailable();
+		if (markupSettings == null)
+		{
+			markupSettings = new DefaultMarkupSettings(this);
+		}
+		return markupSettings;
+	}
+
+	/**
+	 * 
+	 * @param markupSettings
+	 */
+	public final void setMarkupSettings(final IMarkupSettings markupSettings)
+	{
+		this.markupSettings = markupSettings;
+	}
+
+	/**
+	 * @return Application's request logger related settings
+	 */
+	public final IRequestLoggerSettings getRequestLoggerSettings()
+	{
+		checkSettingsAvailable();
+		if (requestLoggerSettings == null)
+		{
+			requestLoggerSettings = new DefaultRequestLoggerSettings();
+		}
+		return requestLoggerSettings;
+	}
+
+	/**
+	 * 
+	 * @param requestLoggerSettings
+	 */
+	public final void setRequestLoggerSettings(final IRequestLoggerSettings requestLoggerSettings)
+	{
+		this.requestLoggerSettings = requestLoggerSettings;
+	}
+
+	/**
+	 * @return Application's resources related settings
+	 */
+	public final IResourceSettings getResourceSettings()
+	{
+		checkSettingsAvailable();
+		if (resourceSettings == null)
+		{
+			resourceSettings = new DefaultResourceSettings(this);
+		}
+		return resourceSettings;
+	}
+
+	/**
+	 * 
+	 * @param resourceSettings
+	 */
+	public final void setResourceSettings(final IResourceSettings resourceSettings)
+	{
+		this.resourceSettings = resourceSettings;
+	}
+
+	/**
+	 * @return Application's security related settings
+	 */
+	public final ISecuritySettings getSecuritySettings()
+	{
+		checkSettingsAvailable();
+		if (securitySettings == null)
+		{
+			securitySettings = new DefaultSecuritySettings();
+		}
+		return securitySettings;
+	}
+
+	/**
+	 * 
+	 * @param securitySettings
+	 */
+	public final void setSecuritySettings(final ISecuritySettings securitySettings)
+	{
+		this.securitySettings = securitySettings;
+	}
+
+	/**
+	 * @return Application's session related settings
+	 */
+	public final ISessionSettings getSessionSettings()
+	{
+		checkSettingsAvailable();
+		if (sessionSettings == null)
+		{
+			sessionSettings = new DefaultSessionSettings();
+		}
+		return sessionSettings;
+	}
+
+	/**
+	 * 
+	 * @param sessionSettings
+	 */
+	public final void setSessionSettings(final ISessionSettings sessionSettings)
+	{
+		this.sessionSettings = sessionSettings;
+	}
+
+	/**
+	 * 
+	 */
+	private void checkSettingsAvailable()
+	{
+		if (!settingsAccessible)
+		{
+			throw new WicketRuntimeException(
+				"Use Application.init() method for configuring your application object");
+		}
+	}
+
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	// Page Manager
+	//
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private volatile IPageManager pageManager;
+	private IPageManagerProvider pageManagerProvider;
+
+	/**
+	 * 
+	 * @return PageManagerProvider
+	 */
+	public final IPageManagerProvider getPageManagerProvider()
+	{
+		return pageManagerProvider;
+	}
+
+	/**
+	 * 
+	 * @param provider
+	 */
+	public synchronized final void setPageManagerProvider(final IPageManagerProvider provider)
+	{
+		pageManagerProvider = provider;
+	}
+
+	/**
+	 * Context for PageManager to interact with rest of Wicket
+	 */
+	private final IPageManagerContext pageManagerContext = new DefaultPageManagerContext();
+
+	/**
+	 * 
+	 * @return the page manager
+	 */
+	public final IPageManager getPageManager()
+	{
+		if (pageManager == null)
+		{
+			synchronized (this)
+			{
+				if (pageManager == null)
+				{
+					pageManager = pageAccessSynchronizer.adapt(pageManagerProvider.get(getPageManagerContext()));
+				}
+			}
+		}
+		return pageManager;
+	}
+
+	/**
+	 * 
+	 * @return the page manager context
+	 */
+	protected IPageManagerContext getPageManagerContext()
+	{
+		return pageManagerContext;
+	}
+
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	// Page Rendering
+	//
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * 
+	 * @return PageRendererProvider
+	 */
+	public final IPageRendererProvider getPageRendererProvider()
+	{
+		return pageRendererProvider;
+	}
+
+	/**
+	 * 
+	 * @param pageRendererProvider
+	 */
+	public final void setPageRendererProvider(final IPageRendererProvider pageRendererProvider)
+	{
+		Args.notNull(pageRendererProvider, "pageRendererProvider");
+		this.pageRendererProvider = pageRendererProvider;
+	}
+
+
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	// Request Handler encoding
+	//
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private ResourceReferenceRegistry resourceReferenceRegistry;
+
+	private SharedResources sharedResources;
+
+	private IPageFactory pageFactory;
+
+	private final IMapperContext encoderContext = new DefaultMapperContext();
+
+	/**
+	 * Override to create custom {@link ResourceReferenceRegistry}.
+	 * 
+	 * @return new {@link ResourceReferenceRegistry} instance.
+	 */
+	protected ResourceReferenceRegistry newResourceReferenceRegistry()
+	{
+		return new ResourceReferenceRegistry();
+	}
+
+	/**
+	 * Returns {@link ResourceReferenceRegistry} for this application.
+	 * 
+	 * @return ResourceReferenceRegistry
+	 */
+	public final ResourceReferenceRegistry getResourceReferenceRegistry()
+	{
+		return resourceReferenceRegistry;
+	}
+
+	/**
+	 * 
+	 * @param registry
+	 * @return SharedResources
+	 */
+	protected SharedResources newSharedResources(final ResourceReferenceRegistry registry)
+	{
+		return new SharedResources(registry);
+	}
+
+	/**
+	 * 
+	 * @return SharedResources
+	 */
+	public SharedResources getSharedResources()
+	{
+		return sharedResources;
+	}
+
+	/**
+	 * Override to create custom {@link IPageFactory}
+	 * 
+	 * @return new {@link IPageFactory} instance.
+	 */
+	protected IPageFactory newPageFactory()
+	{
+		return new DefaultPageFactory();
+	}
+
+	/**
+	 * Returns {@link IPageFactory} for this application.
+	 * 
+	 * @return page factory
+	 */
+	public final IPageFactory getPageFactory()
+	{
+		return pageFactory;
+	}
+
+	/**
+	 * 
+	 * @return mapper context
+	 */
+	public final IMapperContext getEncoderContext()
+	{
+		return encoderContext;
+	}
+
+	/**
+	 * 
+	 * @param requestCycle
+	 * @return Session
+	 */
+	public Session fetchCreateAndSetSession(final RequestCycle requestCycle)
+	{
+		Args.notNull(requestCycle, "requestCycle");
+
+		Session session = getSessionStore().lookup(requestCycle.getRequest());
+		if (session == null)
+		{
+			session = newSession(requestCycle.getRequest(), requestCycle.getResponse());
+			ThreadContext.setSession(session);
+			getPageManager().newSessionCreated();
+		}
+		else
+		{
+			ThreadContext.setSession(session);
+		}
+		return session;
+	}
+
+	/**
+	 * 
+	 * @return RequestCycleProvider
+	 */
+	public IRequestCycleProvider getRequestCycleProvider()
+	{
+		return requestCycleProvider;
+	}
+
+	/**
+	 * 
+	 * @param requestCycleProvider
+	 */
+	public void setRequestCycleProvider(final IRequestCycleProvider requestCycleProvider)
+	{
+		this.requestCycleProvider = requestCycleProvider;
+	}
+
+	/**
+	 * 
+	 */
+	private static class DefaultRequestCycleProvider implements IRequestCycleProvider
+	{
+		public RequestCycle get(final RequestCycleContext context)
+		{
+			return new RequestCycle(context);
+		}
+	}
+
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @return request cycle
+	 */
+	public final RequestCycle createRequestCycle(final Request request, final Response response)
+	{
+		RequestCycleContext context = new RequestCycleContext(request, response,
+			getRootRequestMapper(), newExceptionMapper());
+
+		RequestCycle requestCycle = getRequestCycleProvider().get(context);
+		requestCycle.getListeners().add(requestCycleListeners);
+		requestCycle.getListeners().add(new AbstractRequestCycleListener()
+		{
+			@Override
+			public void onDetach(final RequestCycle requestCycle)
+			{
+				getPageManager().commitRequest();
+			}
+		});
+		return requestCycle;
+	}
+
+	/**
+	 * @return a mapper that knows what kind of error page to show when an exception occurs during
+	 *         page rendering
+	 */
+	protected IExceptionMapper newExceptionMapper()
+	{
+		return new DefaultExceptionMapper();
 	}
 
 	/**
@@ -1339,7 +1512,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @param headerResponseDecorator
 	 *            your custom decorator
 	 */
-	public void setHeaderResponseDecorator(IHeaderResponseDecorator headerResponseDecorator)
+	public void setHeaderResponseDecorator(final IHeaderResponseDecorator headerResponseDecorator)
 	{
 		this.headerResponseDecorator = headerResponseDecorator;
 	}
@@ -1357,10 +1530,12 @@ public abstract class Application implements UnboundListener, IEventSink
 	 *            the response Wicket created
 	 * @return the response Wicket should use in IHeaderContributor traversal
 	 */
-	public final IHeaderResponse decorateHeaderResponse(IHeaderResponse response)
+	public final IHeaderResponse decorateHeaderResponse(final IHeaderResponse response)
 	{
-		IHeaderResponse hr = headerResponseDecorator == null ? response
-			: headerResponseDecorator.decorate(response);
-		return hr;
+		if (headerResponseDecorator == null)
+		{
+			return response;
+		}
+		return headerResponseDecorator.decorate(response);
 	}
 }

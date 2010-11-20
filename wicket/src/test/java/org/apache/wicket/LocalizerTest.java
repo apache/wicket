@@ -109,8 +109,8 @@ public class LocalizerTest extends TestCase
 	public void testGetStringMissingStringReturnDefault()
 	{
 		settings.setUseDefaultOnMissingResource(true);
-		Assert.assertEquals("Default string should be returned", "DEFAULT", localizer.getString(
-			"unknown.string", null, null, "DEFAULT"));
+		Assert.assertEquals("Default string should be returned", "DEFAULT",
+			localizer.getString("unknown.string", null, null, "DEFAULT"));
 	}
 
 	/**
@@ -122,8 +122,8 @@ public class LocalizerTest extends TestCase
 		settings.setThrowExceptionOnMissingResource(false);
 
 		Assert.assertEquals("Wrapped key should be returned on no default",
-			"[Warning: Property for 'unknown.string' not found]", localizer.getString(
-				"unknown.string", null, null, null));
+			"[Warning: Property for 'unknown.string' not found]",
+			localizer.getString("unknown.string", null, null, null));
 	}
 
 	/**
@@ -134,8 +134,8 @@ public class LocalizerTest extends TestCase
 		settings.setUseDefaultOnMissingResource(false);
 		settings.setThrowExceptionOnMissingResource(false);
 		Assert.assertEquals("Wrapped key should be returned on not using default and no exception",
-			"[Warning: Property for 'unknown.string' not found]", localizer.getString(
-				"unknown.string", null, null, "DEFAULT"));
+			"[Warning: Property for 'unknown.string' not found]",
+			localizer.getString("unknown.string", null, null, "DEFAULT"));
 	}
 
 	/**
@@ -183,8 +183,10 @@ public class LocalizerTest extends TestCase
 	{
 		Session.get().setLocale(Locale.ENGLISH);
 		MyMockPage page = new MyMockPage();
-		Application.get().getResourceSettings().addStringResourceLoader(
-			new ComponentStringResourceLoader());
+		Application.get()
+			.getResourceSettings()
+			.getStringResourceLoaders()
+			.add(new ComponentStringResourceLoader());
 
 		Localizer localizer = Application.get().getResourceSettings().getLocalizer();
 		assertEquals("value 1", localizer.getString("null", page.drop1));

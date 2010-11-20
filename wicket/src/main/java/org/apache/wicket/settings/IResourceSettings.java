@@ -94,35 +94,11 @@ public interface IResourceSettings
 	void addResourceFolder(final String resourceFolder);
 
 	/**
-	 * Add a string resource loader to the chain of loaders.
-	 * 
-	 * @see #addStringResourceLoader(int, IStringResourceLoader)
-	 * @see #getStringResourceLoaders()
-	 * 
-	 * @param loader
-	 *            The loader to be added
-	 */
-	void addStringResourceLoader(final IStringResourceLoader loader);
-
-	/**
-	 * Add a string resource loader to the chain of loaders.
-	 * 
-	 * @see #addStringResourceLoader(IStringResourceLoader)
-	 * @see #getStringResourceLoaders()
-	 * 
-	 * @param index
-	 *            The position within the array to insert the loader
-	 * @param loader
-	 *            The loader to be added
-	 */
-	void addStringResourceLoader(final int index, final IStringResourceLoader loader);
-
-	/**
 	 * Get the the default cache duration for resources.
 	 * <p/>
-	 *
+	 * 
 	 * @return cache duration (Duration.NONE will be returned if caching is disabled)
-	 *
+	 * 
 	 * @see org.apache.wicket.util.time.Duration#NONE
 	 */
 	Duration getDefaultCacheDuration();
@@ -199,7 +175,7 @@ public interface IResourceSettings
 	 * @see #addStringResourceLoader(IStringResourceLoader)
 	 * @see #addStringResourceLoader(int, IStringResourceLoader)
 	 * 
-	 * @return an unmodifiable list of all available string resource loaders
+	 * @return list of all available string resource loaders
 	 */
 	List<IStringResourceLoader> getStringResourceLoaders();
 
@@ -216,11 +192,12 @@ public interface IResourceSettings
 	/**
 	 * Set the the default cache duration for resources.
 	 * <p/>
-	 * Based on RFC-2616 this should not exceed one year. If you set Duration.NONE caching will be disabled.
-	 *
+	 * Based on RFC-2616 this should not exceed one year. If you set Duration.NONE caching will be
+	 * disabled.
+	 * 
 	 * @param defaultDuration
 	 *            default cache duration in seconds
-	 *
+	 * 
 	 * @see org.apache.wicket.util.time.Duration#NONE
 	 * @see org.apache.wicket.request.http.WebResponse#MAX_CACHE_DURATION
 	 */
@@ -345,8 +322,8 @@ public interface IResourceSettings
 	 * Wicket-1992). In case you really need it, a good value for placeholder would e.g. be "$up$".
 	 * Resources additionally are protected by a
 	 * {@link org.apache.wicket.markup.html.IPackageResourceGuard IPackageResourceGuard}
-	 * implementation such as {@link org.apache.wicket.markup.html.PackageResourceGuard}
-	 * which you may use or extend based on your needs.
+	 * implementation such as {@link org.apache.wicket.markup.html.PackageResourceGuard} which you
+	 * may use or extend based on your needs.
 	 * 
 	 * @see #getParentFolderPlaceholder()
 	 * 
@@ -358,23 +335,24 @@ public interface IResourceSettings
 	/**
 	 * Control the usage of timestamps on resources
 	 * <p/>
-	 * Normally the resource names won't change when the resource ifself changes, for example when you add a new
-	 * style to your CSS sheet. This can be very annoying as browsers (and proxies) usally cache resources
-	 * in their cache based on the filename and therefore won't update. Unless you change the file name of the
-	 * resource, force a reload or clear the browser's cache the page will still render with your old CSS.
+	 * Normally the resource names won't change when the resource ifself changes, for example when
+	 * you add a new style to your CSS sheet. This can be very annoying as browsers (and proxies)
+	 * usally cache resources in their cache based on the filename and therefore won't update.
+	 * Unless you change the file name of the resource, force a reload or clear the browser's cache
+	 * the page will still render with your old CSS.
 	 * <p/>
 	 * Depending on HTTP response headers like 'Last-Modified' and 'Cache' automatic cache
 	 * invalidation can take very, very long or neven happen at all.
 	 * <p/>
 	 * Enabling timestamps on resources will inject the last modification time of the resource into
-	 * the filename (the name will look something like 'style-ts1282915831000.css' where the large number is
-	 * the last modified date in milliseconds and '-ts' is a prefix to avoid conflicts with
-	 * filenames that already contain a number before their extension.
-	 * *
+	 * the filename (the name will look something like 'style-ts1282915831000.css' where the large
+	 * number is the last modified date in milliseconds and '-ts' is a prefix to avoid conflicts
+	 * with filenames that already contain a number before their extension. *
 	 * <p/>
-	 * Since browsers and proxies use the filename of the resource as a cache key the changed filename will
-	 * not hit the cache and the page gets rendered with the changed file.
+	 * Since browsers and proxies use the filename of the resource as a cache key the changed
+	 * filename will not hit the cache and the page gets rendered with the changed file.
 	 * <p/>
+	 * 
 	 * @return <code>true</code> if timestamps are enabled
 	 */
 	boolean getUseTimestampOnResources();
@@ -382,25 +360,26 @@ public interface IResourceSettings
 	/**
 	 * Control the usage of timestamps on resources
 	 * <p/>
-	 * Normally the resource names won't change when the resource ifself changes, for example when you add a new
-	 * style to your CSS sheet. This can be very annoying as browsers (and proxies) usally cache resources
-	 * in their cache based on the filename and therefore won't update. Unless you change the file name of the
-	 * resource, force a reload or clear the browser's cache the page will still render with your old CSS.
+	 * Normally the resource names won't change when the resource ifself changes, for example when
+	 * you add a new style to your CSS sheet. This can be very annoying as browsers (and proxies)
+	 * usally cache resources in their cache based on the filename and therefore won't update.
+	 * Unless you change the file name of the resource, force a reload or clear the browser's cache
+	 * the page will still render with your old CSS.
 	 * <p/>
 	 * Depending on HTTP response headers like 'Last-Modified' and 'Cache' automatic cache
 	 * invalidation can take very, very long or neven happen at all.
 	 * <p/>
 	 * Enabling timestamps on resources will inject the last modification time of the resource into
-	 * the filename (the name will look something like 'style-ts1282915831000.css' where the large number is
-	 * the last modified date in milliseconds and '-ts' is a prefix to avoid conflicts with
-	 * filenames that already contain a number before their extension.
-	 * *
+	 * the filename (the name will look something like 'style-ts1282915831000.css' where the large
+	 * number is the last modified date in milliseconds and '-ts' is a prefix to avoid conflicts
+	 * with filenames that already contain a number before their extension. *
 	 * <p/>
-	 * Since browsers and proxies use the filename of the resource as a cache key the changed filename will
-	 * not hit the cache and the page gets rendered with the changed file.
+	 * Since browsers and proxies use the filename of the resource as a cache key the changed
+	 * filename will not hit the cache and the page gets rendered with the changed file.
 	 * <p/>
-	 *
-	 * @param enable <code>true</code> for using timestamps on resource names
+	 * 
+	 * @param enable
+	 *            <code>true</code> for using timestamps on resource names
 	 */
 	void setUseTimestampOnResources(boolean enable);
 }

@@ -56,8 +56,10 @@ public class StringResourceModelTest extends WicketTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		tester.getApplication().getResourceSettings().addStringResourceLoader(
-			new BundleStringResourceLoader("org.apache.wicket.model.StringResourceModelTest"));
+		tester.getApplication()
+			.getResourceSettings()
+			.getStringResourceLoaders()
+			.add(new BundleStringResourceLoader("org.apache.wicket.model.StringResourceModelTest"));
 		page = new MockPage();
 		ws = new WeatherStation();
 		wsModel = new Model<WeatherStation>(ws);

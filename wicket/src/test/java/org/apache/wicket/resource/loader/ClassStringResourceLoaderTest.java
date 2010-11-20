@@ -42,10 +42,10 @@ public class ClassStringResourceLoaderTest extends WicketTestCase
 	public void testValidator1()
 	{
 		ClassStringResourceLoader loader = new ClassStringResourceLoader(MyValidator.class);
-		tester.getApplication().getResourceSettings().addStringResourceLoader(loader);
+		tester.getApplication().getResourceSettings().getStringResourceLoaders().add(loader);
 
-		assertEquals("${label} is invalid", loader.loadStringResource((Component)null, "error",
-			null, null, null));
+		assertEquals("${label} is invalid",
+			loader.loadStringResource((Component)null, "error", null, null, null));
 	}
 
 	/**
