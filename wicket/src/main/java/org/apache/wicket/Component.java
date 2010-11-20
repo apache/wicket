@@ -463,9 +463,6 @@ public abstract class Component
 	/** Must only be used by auto components */
 	private transient IMarkupFragment markup;
 
-	/** 'id' attribute from the associated markup */
-	private transient String markupIdFromMarkup;
-
 	/**
 	 * The object that holds the component state.
 	 * <p>
@@ -753,9 +750,6 @@ public abstract class Component
 			log.debug("Markup available " + toString());
 		}
 
-		// get the markup ID from the markup if available
-		markupIdFromMarkup = getMarkupIdFromMarkup();
-
 		// move the component to its real parent if necessary
 // moveComponentToItsRealParent();
 	}
@@ -935,7 +929,6 @@ public abstract class Component
 	 */
 	protected void onConfigure()
 	{
-
 	}
 
 	/**
@@ -1486,9 +1479,10 @@ public abstract class Component
 	 */
 	public final Object getMarkupIdImpl()
 	{
-		if (markupIdFromMarkup != null)
+		String id = getMarkupIdFromMarkup();
+		if (id != null)
 		{
-			return markupIdFromMarkup;
+			return id;
 		}
 
 		if (generatedMarkupId != -1)
@@ -2776,6 +2770,8 @@ public abstract class Component
 
 		generatedMarkupId = -1;
 		setMetaData(MARKUP_ID_KEY, (String)markupId);
+
+		setOutputMarkupId(true);
 	}
 
 	/**
@@ -2806,7 +2802,6 @@ public abstract class Component
 		// on previous id
 
 		setMarkupIdImpl(markupId);
-
 		return this;
 	}
 
