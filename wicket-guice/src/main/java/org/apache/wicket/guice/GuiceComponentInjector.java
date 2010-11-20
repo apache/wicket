@@ -43,8 +43,8 @@ import com.google.inject.Stage;
  * @author Alastair Maw
  */
 public class GuiceComponentInjector extends org.apache.wicket.injection.Injector
-		implements
-			IComponentInstantiationListener
+	implements
+		IComponentInstantiationListener
 {
 	private final IFieldValueFactory fieldValueFactory;
 
@@ -72,9 +72,8 @@ public class GuiceComponentInjector extends org.apache.wicket.injection.Injector
 	 */
 	public GuiceComponentInjector(Application app, Module... modules)
 	{
-		this(app, Guice.createInjector(app.getConfigurationType().equals(Application.DEVELOPMENT)
-				? Stage.DEVELOPMENT
-				: Stage.PRODUCTION, modules), true);
+		this(app, Guice.createInjector(app.usesDeploymentConfig() ? Stage.PRODUCTION
+			: Stage.DEVELOPMENT, modules), true);
 	}
 
 	/**

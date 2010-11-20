@@ -1554,10 +1554,10 @@ public abstract class Component
 		}
 
 		String markupIdPrefix = "id";
-		if (!Application.get().getConfigurationType().equals(Application.DEPLOYMENT))
+		if (!getApplication().usesDeploymentConfig())
 		{
-			// in non-deployment mode we make the markup id include component id so it is easier to
-			// debug
+			// in non-deployment mode we make the markup id include component id
+			// so it is easier to debug
 			markupIdPrefix = getId();
 		}
 

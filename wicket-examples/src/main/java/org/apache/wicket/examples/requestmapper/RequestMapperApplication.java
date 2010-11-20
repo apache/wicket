@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.examples.requestmapper;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.Page;
+import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.examples.requestmapper.packageMount.PackageMountedPage;
 import org.apache.wicket.protocol.https.HttpsConfig;
@@ -69,10 +69,8 @@ public class RequestMapperApplication extends WicketExampleApplication
 	 * @see org.apache.wicket.protocol.http.WebApplication#getConfigurationType()
 	 */
 	@Override
-	public String getConfigurationType()
+	public RuntimeConfigurationType getConfigurationType()
 	{
-		return Application.DEVELOPMENT;
+		return RuntimeConfigurationType.DEVELOPMENT;
 	}
-
-
 }

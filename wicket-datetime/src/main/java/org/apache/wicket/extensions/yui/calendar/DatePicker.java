@@ -31,6 +31,7 @@ import java.util.Map.Entry;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
+import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -80,7 +81,7 @@ public class DatePicker extends AbstractBehavior
 		try
 		{
 			GETINSTANCEMETHOD = DateFormatSymbols.class.getMethod("getInstance",
-					new Class[] { Locale.class });
+				new Class[] { Locale.class });
 		}
 		catch (Exception e)
 		{
@@ -99,11 +100,11 @@ public class DatePicker extends AbstractBehavior
 		public UnableToDetermineFormatException()
 		{
 			super("This behavior can only be added to components that either implement " +
-					ITextFormatProvider.class.getName() +
-					" AND produce a non-null format, or that use" +
-					" converters that this datepicker can use to determine" +
-					" the pattern being used. Alternatively, you can extend " +
-					" the date picker and override getDatePattern to provide your own");
+				ITextFormatProvider.class.getName() +
+				" AND produce a non-null format, or that use" +
+				" converters that this datepicker can use to determine" +
+				" the pattern being used. Alternatively, you can extend " +
+				" the date picker and override getDatePattern to provide your own");
 		}
 	}
 
@@ -126,7 +127,7 @@ public class DatePicker extends AbstractBehavior
 	private static final ResourceReference YUI = new JavascriptResourceReference(YuiLib.class, "");
 
 	private static final ResourceReference WICKET_DATE = new JavascriptResourceReference(
-			DatePicker.class, "wicket-date.js");
+		DatePicker.class, "wicket-date.js");
 
 	private static final long serialVersionUID = 1L;
 
@@ -236,9 +237,9 @@ public class DatePicker extends AbstractBehavior
 		variables.put("showOnFieldClick", showOnFieldClick());
 		// variables for YUILoader
 		variables.put("basePath",
-				Strings.stripJSessionId(RequestCycle.get().urlFor(YUI, null).toString()) + "/");
+			Strings.stripJSessionId(RequestCycle.get().urlFor(YUI, null).toString()) + "/");
 		variables.put("wicketDatePath", RequestCycle.get().urlFor(WICKET_DATE, null));
-		if (Application.DEVELOPMENT.equals(Application.get().getConfigurationType()))
+		if (Application.get().usesDevelopmentConfig())
 		{
 			variables.put("filter", "filter: \"RAW\",");
 			variables.put("allowRollup", false);
@@ -253,7 +254,7 @@ public class DatePicker extends AbstractBehavior
 		if (script != null)
 		{
 			variables.put("additionalJavascript",
-					Strings.replaceAll(script, "${calendar}", "YAHOO.wicket." + widgetId + "DpJs"));
+				Strings.replaceAll(script, "${calendar}", "YAHOO.wicket." + widgetId + "DpJs"));
 		}
 		// print out the initialization properties
 		Map<String, Object> p = new HashMap<String, Object>();
@@ -264,10 +265,10 @@ public class DatePicker extends AbstractBehavior
 		}
 
 		if (enableMonthYearSelection() && p.containsKey("pages") &&
-				Objects.longValue(p.get("pages")) > 1)
+			Objects.longValue(p.get("pages")) > 1)
 		{
 			throw new IllegalStateException(
-					"You cannot use a CalendarGroup with month/year selection!");
+				"You cannot use a CalendarGroup with month/year selection!");
 		}
 
 		// ${calendarInit}
@@ -333,11 +334,11 @@ public class DatePicker extends AbstractBehavior
 		{
 			final String escapedComponentMarkupId = getEscapedComponentMarkupId();
 			final String javascript = "var e = Wicket.$('" + escapedComponentMarkupId + "Dp" +
-					"'); if (e != null && typeof(e.parentNode) != 'undefined' && " +
-					"typeof(e.parentNode.parentNode != 'undefined')) " +
-					"e.parentNode.parentNode.removeChild(e.parentNode);" + "YAHOO.wicket." +
-					escapedComponentMarkupId + "DpJs.destroy(); delete YAHOO.wicket." +
-					escapedComponentMarkupId + "DpJs;";
+				"'); if (e != null && typeof(e.parentNode) != 'undefined' && " +
+				"typeof(e.parentNode.parentNode != 'undefined')) " +
+				"e.parentNode.parentNode.removeChild(e.parentNode);" + "YAHOO.wicket." +
+				escapedComponentMarkupId + "DpJs.destroy(); delete YAHOO.wicket." +
+				escapedComponentMarkupId + "DpJs;";
 
 			response.renderJavascript(javascript, null);
 		}
@@ -483,8 +484,7 @@ public class DatePicker extends AbstractBehavior
 			{
 				converter = component.getConverter(Date.class);
 			}
-			format = ((SimpleDateFormat)((DateConverter)converter).getDateFormat(component
-					.getLocale())).toPattern();
+			format = ((SimpleDateFormat)((DateConverter)converter).getDateFormat(component.getLocale())).toPattern();
 		}
 
 		return format;
@@ -549,8 +549,8 @@ public class DatePicker extends AbstractBehavior
 	protected CharSequence getIconUrl()
 	{
 		return RequestCycle.get().urlFor(
-				new ResourceReferenceRequestHandler(new PackageResourceReference(DatePicker.class,
-						"icon1.gif")));
+			new ResourceReferenceRequestHandler(new PackageResourceReference(DatePicker.class,
+				"icon1.gif")));
 	}
 
 	/**
@@ -593,7 +593,7 @@ public class DatePicker extends AbstractBehavior
 			try
 			{
 				dfSymbols = (DateFormatSymbols)GETINSTANCEMETHOD.invoke(null,
-						new Object[] { getLocale() });
+					new Object[] { getLocale() });
 			}
 			catch (Exception e)
 			{
@@ -608,26 +608,26 @@ public class DatePicker extends AbstractBehavior
 		setWidgetProperty(widgetProperties, "MONTHS_SHORT", filterEmpty(dfSymbols.getShortMonths()));
 		setWidgetProperty(widgetProperties, "MONTHS_LONG", filterEmpty(dfSymbols.getMonths()));
 		setWidgetProperty(widgetProperties, "WEEKDAYS_MEDIUM",
-				filterEmpty(dfSymbols.getShortWeekdays()));
+			filterEmpty(dfSymbols.getShortWeekdays()));
 		setWidgetProperty(widgetProperties, "WEEKDAYS_LONG", filterEmpty(dfSymbols.getWeekdays()));
 
 		widgetProperties.put("START_WEEKDAY", new Integer(Calendar.getInstance(getLocale())
-				.getFirstDayOfWeek() - 1));
+			.getFirstDayOfWeek() - 1));
 
 		if (Locale.SIMPLIFIED_CHINESE.equals(getLocale()) ||
-				Locale.TRADITIONAL_CHINESE.equals(getLocale()))
+			Locale.TRADITIONAL_CHINESE.equals(getLocale()))
 		{
 			setWidgetProperty(widgetProperties, "WEEKDAYS_1CHAR",
-					filterEmpty(substring(dfSymbols.getShortWeekdays(), 2, 1)));
+				filterEmpty(substring(dfSymbols.getShortWeekdays(), 2, 1)));
 			widgetProperties.put("WEEKDAYS_SHORT",
-					filterEmpty(substring(dfSymbols.getShortWeekdays(), 2, 1)));
+				filterEmpty(substring(dfSymbols.getShortWeekdays(), 2, 1)));
 		}
 		else
 		{
 			setWidgetProperty(widgetProperties, "WEEKDAYS_1CHAR",
-					filterEmpty(substring(dfSymbols.getShortWeekdays(), 0, 1)));
+				filterEmpty(substring(dfSymbols.getShortWeekdays(), 0, 1)));
 			setWidgetProperty(widgetProperties, "WEEKDAYS_SHORT",
-					filterEmpty(substring(dfSymbols.getShortWeekdays(), 0, 2)));
+				filterEmpty(substring(dfSymbols.getShortWeekdays(), 0, 2)));
 		}
 	}
 
@@ -791,7 +791,7 @@ public class DatePicker extends AbstractBehavior
 	 * @param map
 	 * @param calendarInit
 	 */
-	private void appendMapping(Map<String, ? > map, StringBuffer calendarInit)
+	private void appendMapping(Map<String, ?> map, StringBuffer calendarInit)
 	{
 		boolean first = true;
 		calendarInit.append("{");
@@ -810,7 +810,7 @@ public class DatePicker extends AbstractBehavior
 			if (map.get(key) instanceof Map)
 			{
 				@SuppressWarnings("unchecked")
-				Map<String, ? > value = (Map<String, ? >)map.get(key);
+				Map<String, ?> value = (Map<String, ?>)map.get(key);
 				appendMapping(value, calendarInit);
 			}
 			else

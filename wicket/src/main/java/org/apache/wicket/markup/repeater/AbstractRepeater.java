@@ -119,7 +119,7 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	{
 		onPopulate();
 
-		if (Application.get().getConfigurationType().equals(Application.DEVELOPMENT))
+		if (getApplication().usesDevelopmentConfig())
 		{
 			Iterator<? extends Component> i = iterator();
 			while (i.hasNext())

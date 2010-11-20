@@ -18,6 +18,8 @@ package org.apache.wicket.jmx;
 
 import java.io.IOException;
 
+import org.apache.wicket.RuntimeConfigurationType;
+
 
 /**
  * Exposes Application related functionality for JMX.
@@ -57,7 +59,7 @@ public class Application implements ApplicationMBean
 	/**
 	 * @see org.apache.wicket.jmx.ApplicationMBean#getConfigurationType()
 	 */
-	public String getConfigurationType()
+	public RuntimeConfigurationType getConfigurationType()
 	{
 		return application.getConfigurationType();
 	}

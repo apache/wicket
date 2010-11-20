@@ -18,6 +18,7 @@ package org.apache.wicket.mock;
 
 import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.Page;
+import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.Session;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
@@ -27,7 +28,6 @@ import org.apache.wicket.util.IProvider;
 
 public class MockApplication extends WebApplication
 {
-
 	public MockApplication()
 	{
 	}
@@ -39,11 +39,10 @@ public class MockApplication extends WebApplication
 	}
 
 	@Override
-	public String getConfigurationType()
+	public RuntimeConfigurationType getConfigurationType()
 	{
-		return DEVELOPMENT;
+		return RuntimeConfigurationType.DEVELOPMENT;
 	}
-
 
 	public Session getSession()
 	{
@@ -67,22 +66,17 @@ public class MockApplication extends WebApplication
 
 	private static class MockSessionStoreProvider implements IProvider<ISessionStore>
 	{
-
 		public ISessionStore get()
 		{
 			return new MockSessionStore();
 		}
-
 	}
+
 	private static class MockPageManagerProvider implements IPageManagerProvider
 	{
-
 		public IPageManager get(IPageManagerContext pageManagerContext)
 		{
 			return new MockPageManager();
 		}
-
-
 	}
-
 }

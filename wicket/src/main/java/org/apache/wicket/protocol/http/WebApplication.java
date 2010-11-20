@@ -28,6 +28,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.wicket.Application;
 import org.apache.wicket.IPageRendererProvider;
 import org.apache.wicket.Page;
+import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -489,7 +490,7 @@ public abstract class WebApplication extends Application
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String getConfigurationType()
+	public RuntimeConfigurationType getConfigurationType()
 	{
 		String result = null;
 		try
@@ -528,10 +529,21 @@ public abstract class WebApplication extends Application
 		// as the default.
 		if (result != null)
 		{
-			return result;
+			try
+			{
+				return RuntimeConfigurationType.valueOf(result.toUpperCase());
+			}
+			catch (IllegalArgumentException e)
+			{
+				// Ignore : fall back to DEVELOPMENT mode
+				// log.warn("Unknown runtime configuration type '" + result +
+				// "', falling back to DEVELOPMENT mode.");
+				throw new IllegalArgumentException("Invalid configuration type: '" + result +
+					"'.  Must be \"development\" or \"deployment\".");
+			}
 		}
 
-		return Application.DEVELOPMENT;
+		return RuntimeConfigurationType.DEVELOPMENT;
 	}
 
 	/**
@@ -590,16 +602,20 @@ public abstract class WebApplication extends Application
 	 */
 	final void logStarted()
 	{
-		String version = getFrameworkSettings().getVersion();
-		StringBuffer b = new StringBuffer();
-		b.append("[").append(getName()).append("] Started Wicket ");
-		if (!"n/a".equals(version))
+		if (log.isInfoEnabled())
 		{
-			b.append("version ").append(version).append(" ");
+			String version = getFrameworkSettings().getVersion();
+			StringBuilder b = new StringBuilder();
+			b.append("[").append(getName()).append("] Started Wicket ");
+			if (!"n/a".equals(version))
+			{
+				b.append("version ").append(version).append(" ");
+			}
+			b.append("in ").append(getConfigurationType()).append(" mode");
+			log.info(b.toString());
 		}
-		b.append("in ").append(getConfigurationType()).append(" mode");
-		log.info(b.toString());
-		if (DEVELOPMENT.equalsIgnoreCase(getConfigurationType()))
+
+		if (usesDevelopmentConfig())
 		{
 			outputDevelopmentModeWarning();
 		}
@@ -625,12 +641,24 @@ public abstract class WebApplication extends Application
 	// TODO: Do this properly
 	private final Map<String, BufferedWebResponse> storedResponses = new ConcurrentHashMap<String, BufferedWebResponse>();
 
+	/**
+	 * 
+	 * @param sessionId
+	 * @param url
+	 * @return true if has buffered response
+	 */
 	public boolean hasBufferedResponse(String sessionId, Url url)
 	{
 		String key = sessionId + url.toString();
 		return storedResponses.containsKey(key);
 	}
 
+	/**
+	 * 
+	 * @param sessionId
+	 * @param url
+	 * @return buffered response
+	 */
 	public BufferedWebResponse getAndRemoveBufferedResponse(String sessionId, Url url)
 	{
 		String key = sessionId + url.toString();

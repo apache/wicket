@@ -121,7 +121,7 @@ public class WebSession extends Session
 
 			// see if any component related feedback messages were left unrendered and warn if in
 			// dev mode
-			if (Application.DEVELOPMENT.equals(getApplication().getConfigurationType()))
+			if (getApplication().usesDevelopmentConfig())
 			{
 				List<FeedbackMessage> messages = getFeedbackMessages().messages(
 					WebSession.MESSAGES_FOR_COMPONENTS);

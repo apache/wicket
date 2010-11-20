@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.MarkupType;
@@ -175,7 +174,7 @@ public class WebPage extends Page
 		super.onAfterRender();
 
 		// only in development mode validate the headers
-		if (Application.DEVELOPMENT.equals(getApplication().getConfigurationType()))
+		if (getApplication().usesDevelopmentConfig())
 		{
 			// Ignore if an exception and a redirect happened in between (e.g.
 			// RestartResponseAtInterceptPageException)

@@ -19,6 +19,7 @@ package org.apache.wicket.jmx;
 import java.io.IOException;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.RuntimeConfigurationType;
 
 
 /**
@@ -50,7 +51,7 @@ public interface ApplicationMBean
 	 * 
 	 * @return The configuration type
 	 */
-	String getConfigurationType();
+	RuntimeConfigurationType getConfigurationType();
 
 	/**
 	 * Gets the configured home page for this application.

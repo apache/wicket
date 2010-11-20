@@ -151,12 +151,6 @@ public abstract class Application implements UnboundListener, IEventSink
 	/** Configuration constant for the 2 types */
 	public static final String CONFIGURATION = "configuration";
 
-	/** Configuration type constant for deployment */
-	public static final String DEPLOYMENT = "deployment";
-
-	/** Configuration type constant for development */
-	public static final String DEVELOPMENT = "development";
-
 	/**
 	 * Applications keyed on the {@link #getApplicationKey()} so that they can be retrieved even
 	 * without being in a request/ being set in the thread local (we need that e.g. for when we are
@@ -291,38 +285,34 @@ public abstract class Application implements UnboundListener, IEventSink
 	 */
 	public final void configure()
 	{
-		final String configurationType = getConfigurationType();
-
 		// As long as this is public api the development and deployment mode
 		// should counter act each other for all properties.
-		if (DEVELOPMENT.equalsIgnoreCase(configurationType))
+		switch (getConfigurationType())
 		{
-			getResourceSettings().setResourcePollFrequency(Duration.ONE_SECOND);
-			getDebugSettings().setComponentUseCheck(true);
-			getMarkupSettings().setStripWicketTags(false);
-			getExceptionSettings().setUnexpectedExceptionDisplay(
-				IExceptionSettings.SHOW_EXCEPTION_PAGE);
-			getDebugSettings().setAjaxDebugModeEnabled(true);
-			getDebugSettings().setDevelopmentUtilitiesEnabled(true);
-			// getDebugSettings().setOutputMarkupContainerClassName(true);
-			getResourceSettings().setJavascriptCompressor(null);
-			getRequestCycleSettings().addResponseFilter(EmptySrcAttributeCheckFilter.INSTANCE);
-		}
-		else if (DEPLOYMENT.equalsIgnoreCase(configurationType))
-		{
-			getResourceSettings().setResourcePollFrequency(null);
-			getDebugSettings().setComponentUseCheck(false);
-			getMarkupSettings().setStripWicketTags(true);
-			getExceptionSettings().setUnexpectedExceptionDisplay(
-				IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
-			getDebugSettings().setAjaxDebugModeEnabled(false);
-			getDebugSettings().setDevelopmentUtilitiesEnabled(false);
-			getResourceSettings().setJavascriptCompressor(new DefaultJavascriptCompressor());
-		}
-		else
-		{
-			throw new IllegalArgumentException("Invalid configuration type: '" + configurationType +
-				"'.  Must be \"development\" or \"deployment\".");
+			case DEVELOPMENT : {
+				getResourceSettings().setResourcePollFrequency(Duration.ONE_SECOND);
+				getDebugSettings().setComponentUseCheck(true);
+				getMarkupSettings().setStripWicketTags(false);
+				getExceptionSettings().setUnexpectedExceptionDisplay(
+					IExceptionSettings.SHOW_EXCEPTION_PAGE);
+				getDebugSettings().setAjaxDebugModeEnabled(true);
+				getDebugSettings().setDevelopmentUtilitiesEnabled(true);
+				// getDebugSettings().setOutputMarkupContainerClassName(true);
+				getResourceSettings().setJavascriptCompressor(null);
+				getRequestCycleSettings().addResponseFilter(EmptySrcAttributeCheckFilter.INSTANCE);
+				break;
+			}
+			case DEPLOYMENT : {
+				getResourceSettings().setResourcePollFrequency(null);
+				getDebugSettings().setComponentUseCheck(false);
+				getMarkupSettings().setStripWicketTags(true);
+				getExceptionSettings().setUnexpectedExceptionDisplay(
+					IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
+				getDebugSettings().setAjaxDebugModeEnabled(false);
+				getDebugSettings().setDevelopmentUtilitiesEnabled(false);
+				getResourceSettings().setJavascriptCompressor(new DefaultJavascriptCompressor());
+				break;
+			}
 		}
 	}
 
@@ -386,7 +376,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @since 1.2.3 (function existed as a property getter)
 	 * @since 1.3.0 (abstract, used to configure things)
 	 */
-	public abstract String getConfigurationType();
+	public abstract RuntimeConfigurationType getConfigurationType();
 
 	/**
 	 * Application subclasses must specify a home page class by implementing this abstract method.
@@ -1537,5 +1527,23 @@ public abstract class Application implements UnboundListener, IEventSink
 			return response;
 		}
 		return headerResponseDecorator.decorate(response);
+	}
+
+	/**
+	 * 
+	 * @return true, of app is in Development mode
+	 */
+	public final boolean usesDevelopmentConfig()
+	{
+		return RuntimeConfigurationType.DEVELOPMENT.equals(getConfigurationType());
+	}
+
+	/**
+	 * 
+	 * @return true, of app is in Deployment mode
+	 */
+	public final boolean usesDeploymentConfig()
+	{
+		return RuntimeConfigurationType.DEPLOYMENT.equals(getConfigurationType());
 	}
 }
