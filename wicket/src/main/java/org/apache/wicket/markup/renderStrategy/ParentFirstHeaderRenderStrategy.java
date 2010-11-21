@@ -24,16 +24,13 @@ import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 
 /**
- * This is Wicket's default header render strategy which uses
+ * This has been Wicket's default header render strategy before WICKET 1.5 which uses
  * {@link MarkupContainer#visitChildren(org.apache.wicket.IVisitor)} to traverse the hierarchy to
  * render the children headers.
  * 
  * Since child contributions are added to the markup after the parent contributions, children may
- * replace / modify existing settings.
- * 
- * Note that in order to mix different render strategies, a "stop traversal" mechanism has been
- * implemented. It allows you to use strategy A for Wicket core components and strategy B for your
- * own.
+ * replace / modify existing settings. Which is not good. Instead the parent (container) should be
+ * in control. See {@link href https://issues.apache.org/jira/browse/WICKET-2693}
  * 
  * @author Juergen Donnerstag
  */
@@ -47,10 +44,8 @@ public class ParentFirstHeaderRenderStrategy extends AbstractHeaderRenderStrateg
 	}
 
 	/**
-	 * Render the child hierarchy headers.
-	 * 
-	 * @param headerContainer
-	 * @param rootComponent
+	 * @see org.apache.wicket.markup.renderStrategy.AbstractHeaderRenderStrategy#renderChildHeaders(org.apache.wicket.markup.html.internal.HtmlHeaderContainer,
+	 *      org.apache.wicket.Component)
 	 */
 	@Override
 	protected void renderChildHeaders(final HtmlHeaderContainer headerContainer,
@@ -59,8 +54,10 @@ public class ParentFirstHeaderRenderStrategy extends AbstractHeaderRenderStrateg
 		Args.notNull(headerContainer, "headerContainer");
 		Args.notNull(rootComponent, "rootComponent");
 
+		// Only MarkupContainer can have children. Component's don't
 		if (rootComponent instanceof MarkupContainer)
 		{
+			// Visit the children with parent first, than children
 			((MarkupContainer)rootComponent).visitChildren(new IVisitor<Component, Void>()
 			{
 				public void component(final Component component, final IVisit<Void> visit)

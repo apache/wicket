@@ -22,6 +22,7 @@ import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
+import org.apache.wicket.markup.renderStrategy.AbstractHeaderRenderStrategy;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
@@ -135,7 +136,7 @@ public class WebPage extends Page
 	{
 		if (getRequestCycle().getResponse() instanceof WebResponse)
 		{
-			final WebResponse response = (WebResponse)getRequestCycle().getResponse();
+			WebResponse response = (WebResponse)getRequestCycle().getResponse();
 			setHeaders(response);
 		}
 
@@ -227,21 +228,7 @@ public class WebPage extends Page
 				getRequestCycle().setResponse(response);
 
 				// Render all header sections of all components on the page
-				renderHead(header);
-
-				// Make sure all Components interested in contributing to the header
-				// and there attached behaviors are asked.
-				final HtmlHeaderContainer finalHeader = header;
-				visitChildren(new IVisitor<Component, Void>()
-				{
-					/**
-					 * @see org.apache.wicket.IVisitor#component(org.apache.wicket.Component)
-					 */
-					public void component(final Component component, final IVisit<Void> visit)
-					{
-						component.renderHead(finalHeader);
-					}
-				});
+				AbstractHeaderRenderStrategy.get().renderHeader(header, getPage());
 				response.close();
 
 				if (response.getBuffer().length() > 0)

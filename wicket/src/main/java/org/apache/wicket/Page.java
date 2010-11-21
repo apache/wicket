@@ -275,6 +275,12 @@ public abstract class Page extends MarkupContainer
 		init();
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param parameters
+	 * @param model
+	 */
 	private Page(final PageParameters parameters, IModel<?> model)
 	{
 		super(null, model);
@@ -312,9 +318,8 @@ public abstract class Page extends MarkupContainer
 	 *            the listener of that component that is to be called
 	 */
 	// TODO Post-1.3: We should create a listener on Application like
-	// IComponentInstantiationListener
-	// that forwards to IAuthorizationStrategy for RequestListenerInterface
-	// invocations.
+	// IComponentInstantiationListener that forwards to IAuthorizationStrategy for
+	// RequestListenerInterface invocations.
 	public void afterCallComponent(final Component component,
 		final RequestListenerInterface listener)
 	{
@@ -380,6 +385,9 @@ public abstract class Page extends MarkupContainer
 		super.detachModels();
 	}
 
+	/**
+	 * @see org.apache.wicket.Component#prepareForRender(boolean)
+	 */
 	@Override
 	public void prepareForRender(boolean setRenderingFlag)
 	{
@@ -446,7 +454,6 @@ public abstract class Page extends MarkupContainer
 	 * MarkupContainer</code> then the rendering for that container is checked.
 	 * 
 	 * @param component
-	 * 
 	 */
 	public final void endComponentRender(Component component)
 	{
@@ -490,6 +497,10 @@ public abstract class Page extends MarkupContainer
 		return getPageId();
 	}
 
+	/**
+	 * 
+	 * @return page class
+	 */
 	public final Class<? extends Page> getPageClass()
 	{
 		return getClass();
@@ -888,7 +899,6 @@ public abstract class Page extends MarkupContainer
 		setNumericId(getSession().nextPageId());
 	}
 
-
 	/**
 	 * This method will be called for all components that are changed on the page So also auto
 	 * components or components that are not versioned.
@@ -909,23 +919,24 @@ public abstract class Page extends MarkupContainer
 
 	/**
 	 * 
-	 * @param s
+	 * @param stream
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
-	void readPageObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
+	void readPageObject(java.io.ObjectInputStream stream) throws IOException,
+		ClassNotFoundException
 	{
-		int id = s.readShort();
-		String name = (String)s.readObject();
+		int id = stream.readShort();
+		String name = (String)stream.readObject();
 
 		IPageSerializer ps = serializer.get();
 		if (ps != null)
 		{
-			ps.deserializePage(id, name, this, s);
+			ps.deserializePage(id, name, this, stream);
 		}
 		else
 		{
-			s.defaultReadObject();
+			stream.defaultReadObject();
 		}
 	}
 
@@ -936,7 +947,6 @@ public abstract class Page extends MarkupContainer
 	 */
 	protected Object writeReplace() throws ObjectStreamException
 	{
-
 		IPageSerializer ps = serializer.get();
 
 		if (ps != null)
@@ -1024,7 +1034,6 @@ public abstract class Page extends MarkupContainer
 			}
 		});
 	}
-
 
 	/**
 	 * 
@@ -1196,7 +1205,6 @@ public abstract class Page extends MarkupContainer
 		}
 	}
 
-
 	/**
 	 * Set page stateless
 	 * 
@@ -1304,5 +1312,4 @@ public abstract class Page extends MarkupContainer
 		}
 		return (Page)session.getPageManager().getPage(id);
 	}
-
 }

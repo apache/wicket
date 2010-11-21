@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 
+ * @author juergen donnerstag
  */
 public class ChildFirstHeaderRenderStrategyTest extends WicketTestCase
 {
@@ -46,6 +47,13 @@ public class ChildFirstHeaderRenderStrategyTest extends WicketTestCase
 		executeCombinedTest(SimplePage2.class, "SimplePage2_ExpectedResult.html");
 	}
 
+	/**
+	 * 
+	 * @param <T>
+	 * @param pageClass
+	 * @param filename
+	 * @throws Exception
+	 */
 	private <T extends Page> void executeCombinedTest(final Class<T> pageClass,
 		final String filename) throws Exception
 	{
@@ -60,8 +68,7 @@ public class ChildFirstHeaderRenderStrategyTest extends WicketTestCase
 		log.error("=== CHILD first header render strategy ===");
 		System.setProperty("Wicket_HeaderRenderStrategy",
 			ChildFirstHeaderRenderStrategy.class.getName());
-		// tester.getApplication().getApplicationSettings().setHeaderRenderStrategy(
-		// new ChildFirstHeaderRenderStrategy());
+		tester = new WicketTester();
 		tester.startPage(pageClass);
 		tester.assertRenderedPage(pageClass);
 		tester.assertResultPage(getClass(), filename + "_2");

@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.renderStrategy;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,18 +24,19 @@ import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Generics;
 
 /**
  * An abstract implementation of a header render strategy which is only missing the code to traverse
  * the child hierarchy, since the sequence of that traversal is what will make the difference
  * between the different header render strategies.
  * 
- * Beside the child hierarchy the render sequence by default (may be changed via subclassing) is as
+ * Besides the child hierarchy the render sequence by default (may be changed via subclassing) is as
  * follows:
  * <ul>
  * <li>1. application level headers</li>
  * <li>2. the root component's headers</li>
- * <li>3. the childs hierarchy (to be implemented per subclass)</li>
+ * <li>3. the children hierarchy (to be implemented per subclass)</li>
  * </ul>
  * 
  * @author Juergen Donnerstag
@@ -46,56 +46,51 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 	/** Application level contributors */
 	private List<IHeaderContributor> renderHeadListeners;
 
-	/** It is not in IRenderSettings since it is highly experimental only */
-	private static IHeaderRenderStrategy strategy;
-
 	/**
 	 * @return Gets the strategy registered with the application
 	 */
 	public static IHeaderRenderStrategy get()
 	{
-		if (strategy == null)
+		// NOT OFFICIALLY SUPPORTED BY WICKET
+		// By purpose it is "difficult" to change to another render strategy.
+		// We don't want it to be modifiable by users, but we needed a way to easily test other
+		// strategies.
+		String className = System.getProperty("Wicket_HeaderRenderStrategy");
+		if (className != null)
 		{
-			// By purpose it is "difficult" to change to another render strategy.
-			// We don't want it to be modifiable by users, but we needed a way to easily test other
-			// strategies.
-			String className = System.getProperty("Wicket_HeaderRenderStrategy");
-			if (className != null)
+			Class<?> clazz = null;
+			try
 			{
-				Class<?> clazz = null;
-				try
-				{
-					clazz = Application.get()
-						.getApplicationSettings()
-						.getClassResolver()
-						.resolveClass(className);
+				clazz = Application.get()
+					.getApplicationSettings()
+					.getClassResolver()
+					.resolveClass(className);
 
-					if (clazz != null)
-					{
-						strategy = (IHeaderRenderStrategy)clazz.newInstance();
-					}
-				}
-				catch (ClassNotFoundException ex)
+				if (clazz != null)
 				{
-					// ignore
+					return (IHeaderRenderStrategy)clazz.newInstance();
 				}
-				catch (InstantiationException ex)
-				{
-					// ignore
-				}
-				catch (IllegalAccessException ex)
-				{
-					// ignore
-				}
+			}
+			catch (ClassNotFoundException ex)
+			{
+				// ignore
+			}
+			catch (InstantiationException ex)
+			{
+				// ignore
+			}
+			catch (IllegalAccessException ex)
+			{
+				// ignore
 			}
 		}
 
-		if (strategy == null)
-		{
-			strategy = new ParentFirstHeaderRenderStrategy();
-		}
+		// Our default header render strategy
+		// Pre 1.5
+		return new ParentFirstHeaderRenderStrategy();
 
-		return strategy;
+		// Since 1.5
+		// return new ChildFirstHeaderRenderStrategy();
 	}
 
 	/**
@@ -175,25 +170,8 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 	{
 		if (renderHeadListeners == null)
 		{
-			renderHeadListeners = new ArrayList<IHeaderContributor>();
+			renderHeadListeners = Generics.newArrayList();
 		}
 		renderHeadListeners.add(contributor);
-	}
-
-	/**
-	 * Remove an application level contributor
-	 * 
-	 * @param contributor
-	 */
-	public void removeListener(final IHeaderContributor contributor)
-	{
-		if (renderHeadListeners != null)
-		{
-			renderHeadListeners.remove(contributor);
-			if (renderHeadListeners.isEmpty())
-			{
-				renderHeadListeners = null;
-			}
-		}
 	}
 }

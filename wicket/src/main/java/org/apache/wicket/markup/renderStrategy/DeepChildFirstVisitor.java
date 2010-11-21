@@ -27,7 +27,7 @@ import org.apache.wicket.util.visit.Visit;
  * 
  * @author Juergen Donnerstag
  */
-public abstract class DeepChildFirstVisitor implements IVisitor<Component, Component>
+public abstract class DeepChildFirstVisitor implements IVisitor<Component, Void>
 {
 	/**
 	 * Construct.
@@ -42,132 +42,71 @@ public abstract class DeepChildFirstVisitor implements IVisitor<Component, Compo
 	 * @param rootComponent
 	 * @return The object return by component()
 	 */
-	public final Object visit(final Component rootComponent)
+	public final Visit<Void> visit(final Component rootComponent)
+	{
+		Visit<Void> visitor = new Visit<Void>();
+		return visit(rootComponent, visitor);
+	}
+
+	/**
+	 * Render the child hierarchy headers.
+	 * 
+	 * @param rootComponent
+	 * @param visit
+	 * @return The object return by component()
+	 */
+	public final Visit<Void> visit(final Component rootComponent, final Visit<Void> visit)
 	{
 		Args.notNull(rootComponent, "rootComponent");
+		Args.notNull(visit, "visit");
 
-		if (rootComponent instanceof MarkupContainer)
+		// Component's don't have children; only MarkupContainers do
+		if (!(rootComponent instanceof MarkupContainer))
 		{
-			final Visit<Component> visit = new Visit<Component>();
-			final Component[] lastComponent = new Component[1];
-			Object rtn = ((MarkupContainer)rootComponent).visitChildren(new IVisitor<Component, Component>()
-			{
-				public void component(final Component component, final IVisit<Component> visit)
-				{
-					// skip invisible components
-					if (component.isVisibleInHierarchy())
-					{
-						// In case it is a 'leaf' component, than ...
-						if (!(component instanceof MarkupContainer) ||
-							((MarkupContainer)component).size() == 0)
-						{
-							// Lets assume we rendered the 1st leaf already and we now reached
-							// the 2nd leaf. If the 2nd leave has the very same parent, than we
-							// don't do anything. If not, than we need to render the 1st component's
-							// parents until such a parent is equal to the 2nd component parent.
-							if (lastComponent[0] != null)
-							{
-								MarkupContainer parent = lastComponent[0].getParent();
-								while ((parent != null) && (parent != rootComponent) &&
-									isCommonParent(parent, lastComponent[0], component) == false)
-								{
-									// Render the container since all its children have been
-									// rendered by now
-									component(parent, visit);
-
-									// If visitor returns a non-null value, it halts the traversal
-									if (((Visit)visit).isStopped())
-									{
-										return;
-									}
-
-									parent = parent.getParent();
-								}
-							}
-
-							// The 'leafs' header
-							component(component, visit);
-
-							// If visitor returns a non-null value, it halts the traversal
-							if (((Visit)visit).isStopped())
-							{
-								return;
-							}
-
-							// Remember the current leaf, we need it for comparison later on
-							visit.stop(component);
-						}
-					}
-					else
-					{
-						// Remember the current leaf, we need it for comparison later on
-						lastComponent[0] = component;
-						visit.dontGoDeeper();
-					}
-				}
-
-				/**
-				 * 
-				 * @param parent
-				 * @param lastComponent
-				 * @param currentComponent
-				 * @return true, if parent is a common parent of both components
-				 */
-				private boolean isCommonParent(final MarkupContainer parent,
-					final Component lastComponent, final Component currentComponent)
-				{
-					MarkupContainer p = lastComponent.getParent();
-					while ((p != null) && (p != rootComponent) && (p != parent))
-					{
-						p = p.getParent();
-					}
-
-					if (p == parent)
-					{
-						p = currentComponent.getParent();
-						while ((p != null) && (p != rootComponent) && (p != parent))
-						{
-							p = p.getParent();
-						}
-
-						if (p == parent)
-						{
-							return true;
-						}
-					}
-
-					return false;
-				}
-			});
-
-			// We still need to render the remaining containers
-			if (lastComponent[0] != null)
-			{
-				MarkupContainer parent = lastComponent[0].getParent();
-				while ((parent != null) && (parent != rootComponent))
-				{
-					// Render the container since all its children have been
-					// rendered by now
-					component(parent, visit);
-
-					// If visitor returns a non-null value, it halts the traversal
-					if (visit.isStopped())
-					{
-						return rtn;
-					}
-
-					parent = parent.getParent();
-				}
-			}
-
-			return rtn;
+			// Call the visitor's callback method
+			component(rootComponent, visit);
+			return visit;
 		}
 
-		return null;
+		// while walking down, towards the deep child, we validate if the component is visible. If
+		// not, there is no need to go any deeper
+		if (preCheck(rootComponent) == false)
+		{
+			return visit;
+		}
+
+		if (visit.isContinue())
+		{
+			// Iterate over all children
+			for (Component child : (MarkupContainer)rootComponent)
+			{
+				// visit the child
+				visit(child, visit);
+				if (visit.isStopped())
+				{
+					return visit;
+				}
+			}
+		}
+
+		// visit "this"
+		component(rootComponent, visit);
+		return visit;
 	}
 
 	/**
 	 * @see org.apache.wicket.IVisitor#component(org.apache.wicket.Component)
 	 */
-	public abstract void component(Component component, IVisit<Component> visit);
+	public abstract void component(Component component, IVisit<Void> visit);
+
+	/**
+	 * In order to find the deepest component, we traverse downwards starting from the root (e.g.
+	 * Page). However, once a component is not disabled (preCheck() returns false), iteration will
+	 * stop and traversal continues with the sibling.
+	 * 
+	 * @param component
+	 *            The component to be tested
+	 * @return True, if component is enabled
+	 */
+	public abstract boolean preCheck(Component component);
 }

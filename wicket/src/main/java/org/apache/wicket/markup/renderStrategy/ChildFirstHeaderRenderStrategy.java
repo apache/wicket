@@ -23,16 +23,13 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.visit.IVisit;
 
 /**
- * THIS IS EXPERIMENTAL ONLY. YOU MUST NOT USE IT IN YOUR APPLICATION. SOME WICKET CORE COMPONENT
- * WILL NOT WORK PROPERLY. THIS CLASS MAY AS WELL BE REMOVED AGAIN.
- * 
- * This a header render strategy which sequence is child->parent->root, and thus inverse to Wicket's
- * default implementation. To your application it means, that parent containers can effectively
- * replace child contributions, since their contribution is added to the markup after the child
- * ones.
+ * This a header render strategy implements a child->parent->root sequence, which is inverse to how
+ * it was until Wicket 1.5. It now allows parent containers to replace child contributions, since
+ * their contribution is added to the markup after the child ones. See {@link href
+ * https://issues.apache.org/jira/browse/WICKET-2693}.
  * 
  * Please note that irrespective of the render strategy, if the same header content (e.g. CSS file)
- * gets added twice to the header, only the first will be rendered and the 2nd will skipped.
+ * gets added twice to the header, only the first will be rendered and the 2nd will be skipped.
  * 
  * @author Juergen Donnerstag
  */
@@ -84,39 +81,17 @@ public class ChildFirstHeaderRenderStrategy extends AbstractHeaderRenderStrategy
 			new DeepChildFirstVisitor()
 			{
 				@Override
-				public void component(final Component component, final IVisit<Component> visit)
+				public void component(final Component component, final IVisit<Void> visit)
 				{
 					component.renderHead(headerContainer);
 				}
+
+				@Override
+				public boolean preCheck(Component component)
+				{
+					return component.isVisibleInHierarchy();
+				}
 			}.visit(rootComponent);
 		}
-	}
-
-	/**
-	 * In case you need mixed strategies depending on the component, you can subclass this method
-	 * and return true when traversing shall stop of that specific component.
-	 * 
-	 * This check happens <b>before</b> the component's header gets rendered
-	 * 
-	 * @param component
-	 * @return true, if traversal shall stop with that component
-	 */
-	protected boolean stopTraversingBefore(final Component component)
-	{
-		return false;
-	}
-
-	/**
-	 * In case you need mixed strategies depending on the component, you can subclass this method
-	 * and return true when traversing shall stop of that specific component.
-	 * 
-	 * This check happens <b>after</b> the component's header gets rendered
-	 * 
-	 * @param component
-	 * @return true, if traversal shall stop with that component
-	 */
-	protected boolean stopTraversingAfter(final Component component)
-	{
-		return false;
 	}
 }
