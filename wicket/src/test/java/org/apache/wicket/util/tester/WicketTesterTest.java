@@ -21,6 +21,7 @@ import java.util.Locale;
 
 import javax.servlet.http.Cookie;
 
+import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 
 import org.apache.wicket.Component;
@@ -28,11 +29,13 @@ import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.MockPageWithOneComponent;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
@@ -246,6 +249,90 @@ public class WicketTesterTest extends TestCase
 			fail("Disabled link should not be clickable.");
 		}
 		catch (Exception _)
+		{
+			;
+		}
+	}
+
+	/**
+	 * WICKET-3152
+	 * 
+	 * @throws Exception
+	 */
+	public void testAssertEnabled() throws Exception
+	{
+		tester.startPage(LinkPage.class);
+		tester.assertRenderedPage(LinkPage.class);
+
+		tester.getComponentFromLastRenderedPage("ajaxLinkWithSetResponsePageClass").setEnabled(
+			false);
+		try
+		{
+			tester.assertEnabled("ajaxLinkWithSetResponsePageClass");
+			fail("The link must not be enabled.");
+		}
+		catch (AssertionFailedError _)
+		{
+			;
+		}
+	}
+
+	/**
+	 * WICKET-3152
+	 * 
+	 * @throws Exception
+	 */
+	public void testAssertDisabled() throws Exception
+	{
+		tester.startPage(LinkPage.class);
+		tester.assertRenderedPage(LinkPage.class);
+
+		tester.getComponentFromLastRenderedPage("ajaxLinkWithSetResponsePageClass")
+			.setEnabled(true);
+		try
+		{
+			tester.assertDisabled("ajaxLinkWithSetResponsePageClass");
+			fail("The link must not be disabled.");
+		}
+		catch (AssertionFailedError _)
+		{
+			;
+		}
+	}
+
+	/**
+	 * WICKET-3152
+	 * 
+	 * @throws Exception
+	 */
+	public void testAssertRequired() throws Exception
+	{
+		tester.startPage(CreateBook.class);
+		tester.assertRenderedPage(CreateBook.class);
+
+		// test #1: "id" is required by default
+		tester.assertRequired("createForm:id");
+
+		FormComponent<?> bookId = (FormComponent<?>)tester.getComponentFromLastRenderedPage("createForm:id");
+		try
+		{
+			// test #2: set it manually to not required
+			bookId.setRequired(false);
+			tester.assertRequired("createForm:id");
+			fail("Book ID component must not be required anymore!");
+		}
+		catch (AssertionFailedError _)
+		{
+			;
+		}
+
+
+		try
+		{
+			// test #3: "createForm" is not a FormComponent
+			tester.assertRequired("createForm");
+		}
+		catch (WicketRuntimeException _)
 		{
 			;
 		}

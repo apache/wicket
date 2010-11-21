@@ -483,6 +483,40 @@ public class WicketTester extends BaseWicketTester
 		assertResult(isVisible(path));
 	}
 
+	/**
+	 * assert component is enabled.
+	 * 
+	 * @param path
+	 *            path to component
+	 * 
+	 */
+	public void assertEnabled(String path)
+	{
+		assertResult(isEnabled(path));
+	}
+
+	/**
+	 * assert component is enabled.
+	 * 
+	 * @param path
+	 *            path to component
+	 */
+	public void assertDisabled(String path)
+	{
+		assertResult(isDisabled(path));
+	}
+
+	/**
+	 * assert form component is required.
+	 * 
+	 * @param path
+	 *            path to form component
+	 */
+	public void assertRequired(String path)
+	{
+		assertResult(isRequired(path));
+	}
+
 	private void assertResult(Result result)
 	{
 		if (result.wasFailed())
