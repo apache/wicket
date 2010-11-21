@@ -720,17 +720,7 @@ public class BaseWicketTester extends MockWebApplication
 	{
 		Component linkComponent = getComponentFromLastRenderedPage(path);
 
-		if (linkComponent.isVisibleInHierarchy() == false)
-		{
-			fail("The component is currently not visible in the hierarchy and thus you can not fire events on it." +
-				" Component: " + linkComponent);
-		}
-
-		if (linkComponent.isEnabledInHierarchy() == false)
-		{
-			fail("The component is currently not enabled in the hierarchy and thus you can not be clicked." +
-				" Component: " + linkComponent);
-		}
+		checkUsability(linkComponent);
 
 		// if the link is an AjaxLink, we process it differently
 		// than a normal link
@@ -1184,6 +1174,8 @@ public class BaseWicketTester extends MockWebApplication
 				{
 					if (b instanceof AjaxSelfUpdatingTimerBehavior)
 					{
+						checkUsability(component);
+
 						log.debug("Triggering AjaxSelfUpdatingTimerBehavior: " +
 							component.getClassRelativePath());
 						AjaxSelfUpdatingTimerBehavior abstractAjaxBehaviour = (AjaxSelfUpdatingTimerBehavior)b;
@@ -1245,17 +1237,7 @@ public class BaseWicketTester extends MockWebApplication
 		failMessage = "event must not be null";
 		notNull(failMessage, event);
 
-		if (component.isVisibleInHierarchy() == false)
-		{
-			fail("The component is currently not visible in the hierarchy and thus you can not fire events on it." +
-				" Component: " + component + "; Event: " + event);
-		}
-
-		if (component.isEnabledInHierarchy() == false)
-		{
-			fail("The component is currently not enabled in the hierarchy and thus you can not fire events on it." +
-				" Component: " + component + "; Event: " + event);
-		}
+		checkUsability(component);
 
 		// Run through all the behavior and select the LAST ADDED behavior which
 		// matches the event parameter.
@@ -1390,6 +1372,9 @@ public class BaseWicketTester extends MockWebApplication
 
 		String failMessage = "No form attached to the submitlink.";
 		notNull(failMessage, form);
+
+		checkUsability(form);
+
 		/*
 		 * Means that an button or an ajax link was clicked and needs to be added to the request
 		 * parameters to their form component correctly resolves the submit origin
@@ -1534,6 +1519,26 @@ public class BaseWicketTester extends MockWebApplication
 			return Result.fail(message);
 		}
 		return Result.pass();
+	}
+
+	/**
+	 * Checks whether a component is visible and/or enabled before usage
+	 * 
+	 * @param component
+	 */
+	private void checkUsability(final Component component)
+	{
+		if (component.isVisibleInHierarchy() == false)
+		{
+			fail("The component is currently not visible in the hierarchy and thus you can not be used." +
+				" Component: " + component);
+		}
+
+		if (component.isEnabledInHierarchy() == false)
+		{
+			fail("The component is currently not enabled in the hierarchy and thus you can not be used." +
+				" Component: " + component);
+		}
 	}
 
 	protected final void fail(String message)
