@@ -27,11 +27,11 @@ import org.apache.wicket.IClusterable;
  * Example
  * 
  * <pre>
- *    class UserDataProvider extends SortableDataProvider implements IFilterStateLocator {
+ *    class UserDataProvider extends SortableDataProvider implements IFilterStateLocator<User> {
  *      private User filterBean=new User;
  *      
- *      public getFilterState() { return filterBean; }
- *      public setFilterState(Object o) { filterBean=(User)o; }
+ *      public User getFilterState() { return filterBean; }
+ *      public void setFilterState(User user) { filterBean=user; }
  *      
  *      public Iterator iterate(int start, int count) {
  *        getUserDao().find(start, count, filterBean);
@@ -39,16 +39,17 @@ import org.apache.wicket.IClusterable;
  *    }
  * </pre>
  * 
- * 
+ * @param <T>
+ *            type of filter state object
  * @author igor
  * 
  */
-public interface IFilterStateLocator extends IClusterable
+public interface IFilterStateLocator<T> extends IClusterable
 {
 	/**
 	 * @return object that represents the state of the filter toolbar
 	 */
-	Object getFilterState();
+	T getFilterState();
 
 	/**
 	 * Setter for the filter state object
@@ -56,5 +57,5 @@ public interface IFilterStateLocator extends IClusterable
 	 * @param state
 	 *            filter state object
 	 */
-	void setFilterState(Object state);
+	void setFilterState(T state);
 }

@@ -31,15 +31,16 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 /**
  * A form with filter-related special functionality for its form components.
  * 
+ * @param <T>
+ *            type of filter state object
  * @author igor
- * 
  */
-public class FilterForm extends Form<Object>
+public class FilterForm<T> extends Form<T>
 {
 	private static final long serialVersionUID = 1L;
 
 	private final HiddenField<?> hidden;
-	private final IFilterStateLocator locator;
+	private final IFilterStateLocator<T> locator;
 
 	/**
 	 * @param id
@@ -47,9 +48,9 @@ public class FilterForm extends Form<Object>
 	 * @param locator
 	 *            filter state locator
 	 */
-	public FilterForm(String id, IFilterStateLocator locator)
+	public FilterForm(String id, IFilterStateLocator<T> locator)
 	{
-		super(id, new FilterStateModel(locator));
+		super(id, new FilterStateModel<T>(locator));
 
 		this.locator = locator;
 
@@ -96,7 +97,7 @@ public class FilterForm extends Form<Object>
 	/**
 	 * @return IFilterStateLocator passed to this form
 	 */
-	public final IFilterStateLocator getStateLocator()
+	public final IFilterStateLocator<T> getStateLocator()
 	{
 		return locator;
 	}
@@ -146,14 +147,15 @@ public class FilterForm extends Form<Object>
 	/**
 	 * Model that uses filter state locator as a passthrough for model objects
 	 * 
+	 * @param <T>
+	 *            type of filter state object
 	 * @author Igor Vaynberg (ivaynberg)
-	 * 
 	 */
-	private static class FilterStateModel implements IModel<Object>
+	private static class FilterStateModel<T> implements IModel<T>
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final IFilterStateLocator locator;
+		private final IFilterStateLocator<T> locator;
 
 		/**
 		 * Constructor
@@ -161,7 +163,7 @@ public class FilterForm extends Form<Object>
 		 * @param locator
 		 *            IFilterStateLocator implementation used to provide model object for this model
 		 */
-		public FilterStateModel(IFilterStateLocator locator)
+		public FilterStateModel(IFilterStateLocator<T> locator)
 		{
 			if (locator == null)
 			{
@@ -173,7 +175,7 @@ public class FilterForm extends Form<Object>
 		/**
 		 * @see org.apache.wicket.model.IModel#getObject()
 		 */
-		public Object getObject()
+		public T getObject()
 		{
 			return locator.getFilterState();
 		}
@@ -181,7 +183,7 @@ public class FilterForm extends Form<Object>
 		/**
 		 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
 		 */
-		public void setObject(Object object)
+		public void setObject(T object)
 		{
 			locator.setFilterState(object);
 		}

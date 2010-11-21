@@ -40,12 +40,12 @@ public interface IFilteredColumn<T> extends IColumn<T>
 	 *            component id for returned filter component
 	 * @param form
 	 *            FilterForm object for the toolbar. components can use this form's model to access
-	 *            properties of the state object (<code>PropertyModel(form.getModel(), "property"</code>)
-	 *            or retrieve the {@link IFilterStateLocator} object by using {@link
-	 *            FilterForm#getStateLocator()}
+	 *            properties of the state object (
+	 *            <code>PropertyModel(form.getModel(), "property"</code>) or retrieve the
+	 *            {@link IFilterStateLocator} object by using {@link FilterForm#getStateLocator()}
 	 * @return component that will be used to represent a filter for this column, or null if no such
 	 *         component is desired
 	 */
-	Component getFilter(String componentId, FilterForm form);
+	Component getFilter(String componentId, FilterForm<?> form);
 
 }

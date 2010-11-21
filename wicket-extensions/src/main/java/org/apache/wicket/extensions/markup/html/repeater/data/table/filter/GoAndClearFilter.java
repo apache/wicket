@@ -49,7 +49,7 @@ public class GoAndClearFilter extends GoFilter
 	 * @param form
 	 *            filter form of the filter toolbar
 	 */
-	public GoAndClearFilter(String id, FilterForm form)
+	public GoAndClearFilter(String id, FilterForm<?> form)
 	{
 		this(id, form, DEFAULT_GO_MODEL, DEFAULT_CLEAR_MODEL);
 	}
@@ -66,7 +66,7 @@ public class GoAndClearFilter extends GoFilter
 	 * @param clearModel
 	 *            model for the label of the 'clear' button
 	 */
-	public GoAndClearFilter(String id, FilterForm form, IModel<String> goModel,
+	public GoAndClearFilter(String id, FilterForm<?> form, IModel<String> goModel,
 		IModel<String> clearModel)
 	{
 		super(id, goModel);

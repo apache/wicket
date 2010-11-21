@@ -61,7 +61,7 @@ public class TextFilteredPropertyColumn<T, F> extends FilteredPropertyColumn<T>
 	 * @see org.apache.wicket.extensions.markup.html.repeater.data.table.filter.IFilteredColumn#getFilter(java.lang.String,
 	 *      org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterForm)
 	 */
-	public Component getFilter(String componentId, FilterForm form)
+	public Component getFilter(String componentId, FilterForm<?> form)
 	{
 		return new TextFilter<F>(componentId, getFilterModel(form), form);
 	}
@@ -74,7 +74,7 @@ public class TextFilteredPropertyColumn<T, F> extends FilteredPropertyColumn<T>
 	 *            filter form
 	 * @return model passed on to the text filter
 	 */
-	protected IModel<F> getFilterModel(FilterForm form)
+	protected IModel<F> getFilterModel(FilterForm<?> form)
 	{
 		return new PropertyModel<F>(form.getDefaultModel(), getPropertyExpression());
 	}

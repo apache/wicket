@@ -31,13 +31,15 @@ import org.apache.wicket.model.IModel;
  * Text field tf will now user the object that filter state locator locates as its underlying model.
  * </p>
  * 
+ * @param <T>
+ *            type of filter state object
  * @author Igor Vaynberg (ivaynberg)
  */
-class FilterStateModel implements IModel<Object>
+class FilterStateModel<T> implements IModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
-	private final IFilterStateLocator locator;
+	private final IFilterStateLocator<T> locator;
 
 	/**
 	 * Constructor
@@ -45,7 +47,7 @@ class FilterStateModel implements IModel<Object>
 	 * @param locator
 	 *            IFilterStateLocator implementation used to provide model object for this model
 	 */
-	public FilterStateModel(IFilterStateLocator locator)
+	public FilterStateModel(IFilterStateLocator<T> locator)
 	{
 		this.locator = locator;
 	}
@@ -53,7 +55,7 @@ class FilterStateModel implements IModel<Object>
 	/**
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
-	public Object getObject()
+	public T getObject()
 	{
 		return locator.getFilterState();
 	}
@@ -61,7 +63,7 @@ class FilterStateModel implements IModel<Object>
 	/**
 	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
 	 */
-	public void setObject(Object object)
+	public void setObject(T object)
 	{
 		locator.setFilterState(object);
 	}

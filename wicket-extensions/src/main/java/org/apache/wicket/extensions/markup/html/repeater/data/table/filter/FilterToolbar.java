@@ -29,7 +29,6 @@ import org.apache.wicket.markup.repeater.RepeatingView;
  * components are provided by columns that implement IFilteredColumn.
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
  */
 public class FilterToolbar extends AbstractToolbar
 {
@@ -45,9 +44,12 @@ public class FilterToolbar extends AbstractToolbar
 	 *            the filter form
 	 * @param stateLocator
 	 *            locator responsible for finding object used to store filter's state
+	 * @param <T>
+	 *            type of filter state object
+	 * 
 	 */
-	public FilterToolbar(final DataTable<?> table, final FilterForm form,
-		final IFilterStateLocator stateLocator)
+	public <T> FilterToolbar(final DataTable<?> table, final FilterForm<T> form,
+		final IFilterStateLocator<T> stateLocator)
 	{
 		super(table);
 

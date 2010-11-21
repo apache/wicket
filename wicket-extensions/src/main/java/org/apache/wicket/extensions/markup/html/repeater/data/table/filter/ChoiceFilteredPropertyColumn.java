@@ -85,7 +85,7 @@ public class ChoiceFilteredPropertyColumn<T, Y> extends FilteredPropertyColumn<T
 	 * @see org.apache.wicket.extensions.markup.html.repeater.data.table.filter.IFilteredColumn#getFilter(java.lang.String,
 	 *      org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterForm)
 	 */
-	public Component getFilter(String componentId, FilterForm form)
+	public Component getFilter(String componentId, FilterForm<?> form)
 	{
 		ChoiceFilter<Y> filter = new ChoiceFilter<Y>(componentId, getFilterModel(form), form,
 			filterChoices, enableAutoSubmit());
@@ -106,7 +106,7 @@ public class ChoiceFilteredPropertyColumn<T, Y> extends FilteredPropertyColumn<T
 	 *            filter form
 	 * @return model passed on to the text filter
 	 */
-	protected IModel<Y> getFilterModel(FilterForm form)
+	protected IModel<Y> getFilterModel(FilterForm<?> form)
 	{
 		return new PropertyModel<Y>(form.getDefaultModel(), getPropertyExpression());
 	}
