@@ -43,9 +43,9 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore;
+import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebResponse;
-import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.diff.DiffUtil;
 import org.slf4j.Logger;
@@ -85,11 +85,11 @@ import org.slf4j.LoggerFactory;
  * 
  * public void testRenderMyPage()
  * {
- * 	//start and render the test page
+ * 	// start and render the test page
  * 	tester.startPage(MyPage.class);
- * 	//assert rendered page class
+ * 	// assert rendered page class
  * 	tester.assertRenderedPage(MyPage.class);
- * 	//assert rendered label component
+ * 	// assert rendered label component
  * 	tester.assertLabel(&quot;myMessage&quot;, &quot;Hello!&quot;);
  * }
  * </pre>
@@ -108,11 +108,11 @@ import org.slf4j.LoggerFactory;
  * 	}
  * }
  * 
- * //test code
+ * // test code
  * public void testLinkToYourPage()
  * {
  * 	tester.startPage(MyPage.class);
- * 	//click link and render
+ * 	// click link and render
  * 	tester.clickLink(&quot;toYourPage&quot;);
  * 	tester.assertRenderedPage(YourPage.class);
  * 	tester.assertLabel(&quot;yourMessage&quot;, &quot;Hi!&quot;);
@@ -124,7 +124,7 @@ import org.slf4j.LoggerFactory;
  * <code>MyPage</code> is completed. Now we test <code>YourPage</code> standalone:
  * 
  * <pre>
- * //test code
+ * // test code
  * public void testRenderYourPage()
  * {
  * 	// provide page instance source for WicketTester
@@ -538,8 +538,9 @@ public class WicketTester extends BaseWicketTester
 	public void assertNoErrorMessage()
 	{
 		List<Serializable> messages = getMessages(FeedbackMessage.ERROR);
-		Assert.assertTrue("expect no error message, but contains\n" +
-			WicketTesterHelper.asLined(messages), messages.isEmpty());
+		Assert.assertTrue(
+			"expect no error message, but contains\n" + WicketTesterHelper.asLined(messages),
+			messages.isEmpty());
 	}
 
 	/**
@@ -548,8 +549,9 @@ public class WicketTester extends BaseWicketTester
 	public void assertNoInfoMessage()
 	{
 		List<Serializable> messages = getMessages(FeedbackMessage.INFO);
-		Assert.assertTrue("expect no info message, but contains\n" +
-			WicketTesterHelper.asLined(messages), messages.isEmpty());
+		Assert.assertTrue(
+			"expect no info message, but contains\n" + WicketTesterHelper.asLined(messages),
+			messages.isEmpty());
 	}
 
 	/**
@@ -649,6 +651,40 @@ public class WicketTester extends BaseWicketTester
 	public void assertVisible(String path)
 	{
 		assertResult(isVisible(path));
+	}
+
+	/**
+	 * assert component is enabled.
+	 * 
+	 * @param path
+	 *            path to component
+	 * 
+	 */
+	public void assertEnabled(String path)
+	{
+		assertResult(isEnabled(path));
+	}
+
+	/**
+	 * assert component is enabled.
+	 * 
+	 * @param path
+	 *            path to component
+	 */
+	public void assertDisabled(String path)
+	{
+		assertResult(isDisabled(path));
+	}
+
+	/**
+	 * assert form component is required.
+	 * 
+	 * @param path
+	 *            path to form component
+	 */
+	public void assertRequired(String path)
+	{
+		assertResult(isRequired(path));
 	}
 
 	private void assertResult(Result result)

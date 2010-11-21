@@ -648,6 +648,40 @@ public class BaseWicketTester extends MockWebApplication
 		return isFalse("component '" + path + "' is enabled", component.isEnabledInHierarchy());
 	}
 
+	/**
+	 * assert component required.
+	 * 
+	 * @param path
+	 *            path to component
+	 * @return a <code>Result</code>
+	 */
+	public Result isRequired(String path)
+	{
+		Component component = getLastRenderedPage().get(path);
+		if (component == null)
+		{
+			fail("path: '" + path + "' does no exist for page: " +
+				Classes.simpleName(getLastRenderedPage().getClass()));
+		}
+		else if (component instanceof FormComponent == false)
+		{
+			fail("path: '" + path + "' is not a form component");
+		}
+
+		return isRequired((FormComponent<?>)component);
+	}
+
+	/**
+	 * assert component required.
+	 * 
+	 * @param component
+	 *            a form component
+	 * @return a <code>Result</code>
+	 */
+	public Result isRequired(FormComponent<?> component)
+	{
+		return isTrue("component '" + component + "' is not required", component.isRequired());
+	}
 
 	/**
 	 * assert the content of last rendered page contains(matches) regex pattern.
