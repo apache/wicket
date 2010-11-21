@@ -87,10 +87,10 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 
 		// Our default header render strategy
 		// Pre 1.5
-		return new ParentFirstHeaderRenderStrategy();
+		// return new ParentFirstHeaderRenderStrategy();
 
 		// Since 1.5
-		// return new ChildFirstHeaderRenderStrategy();
+		return new ChildFirstHeaderRenderStrategy();
 	}
 
 	/**

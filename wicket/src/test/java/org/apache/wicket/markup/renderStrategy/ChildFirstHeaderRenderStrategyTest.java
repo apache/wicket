@@ -57,6 +57,23 @@ public class ChildFirstHeaderRenderStrategyTest extends WicketTestCase
 	private <T extends Page> void executeCombinedTest(final Class<T> pageClass,
 		final String filename) throws Exception
 	{
+		WicketTester tester = new WicketTester();
+		tester.startPage(pageClass);
+		tester.assertRenderedPage(pageClass);
+		tester.assertResultPage(getClass(), filename + "_2");
+		System.setProperty("Wicket_HeaderRenderStrategy", "");
+	}
+
+	/**
+	 * 
+	 * @param <T>
+	 * @param pageClass
+	 * @param filename
+	 * @throws Exception
+	 */
+	private <T extends Page> void executeCombinedTestPre1_5(final Class<T> pageClass,
+		final String filename) throws Exception
+	{
 		// Default Config: parent first header render strategy
 		log.error("=== PARENT first header render strategy ===");
 		WicketTester tester = new WicketTester();
