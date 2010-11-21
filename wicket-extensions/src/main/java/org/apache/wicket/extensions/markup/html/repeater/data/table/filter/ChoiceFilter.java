@@ -34,12 +34,10 @@ import org.apache.wicket.model.Model;
  * @author Igor Vaynberg (ivaynberg)
  * @param <T>
  *            The model object type
- * 
  */
 public class ChoiceFilter<T> extends AbstractFilter
 {
 	private static final long serialVersionUID = 1L;
-	private static final IChoiceRenderer defaultRenderer = new ChoiceRenderer();
 
 	private final DropDownChoice<T> choice;
 
@@ -50,10 +48,10 @@ public class ChoiceFilter<T> extends AbstractFilter
 	 * @param choices
 	 * @param autoSubmit
 	 */
-	public ChoiceFilter(String id, IModel<T> model, FilterForm form,
+	public ChoiceFilter(String id, IModel<T> model, FilterForm<?> form,
 		IModel<List<? extends T>> choices, boolean autoSubmit)
 	{
-		this(id, model, form, choices, defaultRenderer, autoSubmit);
+		this(id, model, form, choices, new ChoiceRenderer<T>(), autoSubmit);
 	}
 
 	/**
@@ -63,10 +61,10 @@ public class ChoiceFilter<T> extends AbstractFilter
 	 * @param choices
 	 * @param autoSubmit
 	 */
-	public ChoiceFilter(String id, IModel<T> model, FilterForm form, List<? extends T> choices,
+	public ChoiceFilter(String id, IModel<T> model, FilterForm<?> form, List<? extends T> choices,
 		boolean autoSubmit)
 	{
-		this(id, model, form, Model.ofList(choices), defaultRenderer, autoSubmit);
+		this(id, model, form, Model.ofList(choices), new ChoiceRenderer<T>(), autoSubmit);
 	}
 
 	/**
@@ -77,7 +75,7 @@ public class ChoiceFilter<T> extends AbstractFilter
 	 * @param renderer
 	 * @param autoSubmit
 	 */
-	public ChoiceFilter(String id, IModel<T> model, FilterForm form, List<? extends T> choices,
+	public ChoiceFilter(String id, IModel<T> model, FilterForm<?> form, List<? extends T> choices,
 		IChoiceRenderer<T> renderer, boolean autoSubmit)
 	{
 		this(id, model, form, Model.ofList(choices), renderer, autoSubmit);
@@ -98,7 +96,7 @@ public class ChoiceFilter<T> extends AbstractFilter
 	 *            if true this filter will submit the form on selection change
 	 * @see DropDownChoice
 	 */
-	public ChoiceFilter(String id, IModel<T> model, FilterForm form,
+	public ChoiceFilter(String id, IModel<T> model, FilterForm<?> form,
 		IModel<List<? extends T>> choices, IChoiceRenderer<T> renderer, boolean autoSubmit)
 	{
 		super(id, form);
