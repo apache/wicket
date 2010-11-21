@@ -1139,17 +1139,7 @@ public class BaseWicketTester
 	{
 		Component linkComponent = getComponentFromLastRenderedPage(path);
 
-		if (linkComponent.isVisibleInHierarchy() == false)
-		{
-			fail("The component is currently not visible in the hierarchy and thus you can not fire events on it." +
-				" Component: " + linkComponent);
-		}
-
-		if (linkComponent.isEnabledInHierarchy() == false)
-		{
-			fail("The component is currently not enabled in the hierarchy and thus you can not be clicked." +
-				" Component: " + linkComponent);
-		}
+		checkUsability(linkComponent);
 
 		// if the link is an AjaxLink, we process it differently
 		// than a normal link
@@ -1538,6 +1528,8 @@ public class BaseWicketTester
 				List<AbstractAjaxTimerBehavior> behaviors = component.getBehaviors(AbstractAjaxTimerBehavior.class);
 				for (IBehavior b : behaviors)
 				{
+					checkUsability(component);
+
 					log.debug("Triggering AjaxSelfUpdatingTimerBehavior: " +
 						component.getClassRelativePath());
 					AbstractAjaxTimerBehavior timer = (AbstractAjaxTimerBehavior)b;
@@ -1593,17 +1585,7 @@ public class BaseWicketTester
 		failMessage = "event must not be null";
 		notNull(failMessage, event);
 
-		if (component.isVisibleInHierarchy() == false)
-		{
-			fail("The component is currently not visible in the hierarchy and thus you can not fire events on it." +
-				" Component: " + component + "; Event: " + event);
-		}
-
-		if (component.isEnabledInHierarchy() == false)
-		{
-			fail("The component is currently not enabled in the hierarchy and thus you can not fire events on it." +
-				" Component: " + component + "; Event: " + event);
-		}
+		checkUsability(component);
 
 		AjaxEventBehavior ajaxEventBehavior = WicketTesterHelper.findAjaxEventBehavior(component,
 			event);
@@ -1666,6 +1648,8 @@ public class BaseWicketTester
 
 		String failMessage = "No form attached to the submitlink.";
 		notNull(failMessage, form);
+
+		checkUsability(form);
 
 		serializeFormToRequest(form);
 
@@ -1849,6 +1833,26 @@ public class BaseWicketTester
 			return Result.fail(message);
 		}
 		return Result.pass();
+	}
+
+	/**
+	 * Checks whether a component is visible and/or enabled before usage
+	 * 
+	 * @param component
+	 */
+	private void checkUsability(final Component component)
+	{
+		if (component.isVisibleInHierarchy() == false)
+		{
+			fail("The component is currently not visible in the hierarchy and thus you can not be used." +
+				" Component: " + component);
+		}
+
+		if (component.isEnabledInHierarchy() == false)
+		{
+			fail("The component is currently not enabled in the hierarchy and thus you can not be used." +
+				" Component: " + component);
+		}
 	}
 
 	/**
