@@ -76,11 +76,11 @@ import org.slf4j.LoggerFactory;
  * 
  * public void testRenderMyPage()
  * {
- * 	//start and render the test page
+ * 	// start and render the test page
  * 	tester.startPage(MyPage.class);
- * 	//assert rendered page class
+ * 	// assert rendered page class
  * 	tester.assertRenderedPage(MyPage.class);
- * 	//assert rendered label component
+ * 	// assert rendered label component
  * 	tester.assertLabel(&quot;myMessage&quot;, &quot;Hello!&quot;);
  * }
  * </pre>
@@ -99,11 +99,11 @@ import org.slf4j.LoggerFactory;
  * 	}
  * }
  * 
- * //test code
+ * // test code
  * public void testLinkToYourPage()
  * {
  * 	tester.startPage(MyPage.class);
- * 	//click link and render
+ * 	// click link and render
  * 	tester.clickLink(&quot;toYourPage&quot;);
  * 	tester.assertRenderedPage(YourPage.class);
  * 	tester.assertLabel(&quot;yourMessage&quot;, &quot;Hi!&quot;);
@@ -115,7 +115,7 @@ import org.slf4j.LoggerFactory;
  * <code>MyPage</code> is completed. Now we test <code>YourPage</code> standalone:
  * 
  * <pre>
- * //test code
+ * // test code
  * public void testRenderYourPage()
  * {
  * 	// provide page instance source for WicketTester
@@ -197,7 +197,7 @@ public class WicketTester extends BaseWicketTester
 	 * @param path
 	 *            the absolute path on disk to the web application's contents (e.g. war root) - may
 	 *            be <code>null</code>
-	 *
+	 * 
 	 * @see org.apache.wicket.mock.MockApplication#MockApplication()
 	 */
 	public WicketTester(final WebApplication application, final String path)
@@ -413,8 +413,9 @@ public class WicketTester extends BaseWicketTester
 	public void assertNoErrorMessage()
 	{
 		List<Serializable> messages = getMessages(FeedbackMessage.ERROR);
-		Assert.assertTrue("expect no error message, but contains\n" +
-			WicketTesterHelper.asLined(messages), messages.isEmpty());
+		Assert.assertTrue(
+			"expect no error message, but contains\n" + WicketTesterHelper.asLined(messages),
+			messages.isEmpty());
 	}
 
 	/**
@@ -423,8 +424,9 @@ public class WicketTester extends BaseWicketTester
 	public void assertNoInfoMessage()
 	{
 		List<Serializable> messages = getMessages(FeedbackMessage.INFO);
-		Assert.assertTrue("expect no info message, but contains\n" +
-			WicketTesterHelper.asLined(messages), messages.isEmpty());
+		Assert.assertTrue(
+			"expect no info message, but contains\n" + WicketTesterHelper.asLined(messages),
+			messages.isEmpty());
 	}
 
 	/**
@@ -531,8 +533,8 @@ public class WicketTester extends BaseWicketTester
 	}
 
 	/**
-	 * Asserts that that the BookmarkablePageLink<?> identified by "id" points to the page as expected
-	 * - including parameters.
+	 * Asserts that that the BookmarkablePageLink<?> identified by "id" points to the page as
+	 * expected - including parameters.
 	 * 
 	 * @param id
 	 * @param pageClass
@@ -589,8 +591,8 @@ public class WicketTester extends BaseWicketTester
 	 * @param filename
 	 * @throws Exception
 	 */
-	public void executeTest(final Class<?> testClass, final Page page,
-		final String filename) throws Exception
+	public void executeTest(final Class<?> testClass, final Page page, final String filename)
+		throws Exception
 	{
 		log.info("=== " + page.getClass().getName() + " ===");
 
