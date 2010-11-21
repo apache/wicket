@@ -339,7 +339,7 @@ public class Chunk extends ToString
 	{
 		if (count <= 0)
 		{
-			return new ArrayList<T>(seq.subList(pos, pos));
+			return new ArrayList<T>();
 		}
 		else
 		{
