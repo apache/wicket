@@ -72,7 +72,7 @@ import org.slf4j.LoggerFactory;
  * 
  * <pre>
  * add(new Label(&quot;amount&quot;, new Model&lt;String&gt;(&quot;$5.00&quot;)));
- * add(new BookmarkablePageLink<Void>(&quot;link&quot;, DetailsPage.class));
+ * add(new BookmarkablePageLink&lt;Void&gt;(&quot;link&quot;, DetailsPage.class));
  * </pre>
  * 
  * This will output
@@ -166,6 +166,8 @@ public class WicketMessageResolver implements IComponentResolver
 	{
 		private static final long serialVersionUID = 1L;
 
+		private static final String NOT_FOUND = "[Warning: Property for 'myKeyNotExsts' not found]";
+
 		/**
 		 * Construct.
 		 * 
@@ -232,6 +234,20 @@ public class WicketMessageResolver implements IComponentResolver
 				}
 
 				log.warn("No value found for wicket:message tag with key: {}", key);
+
+				// If open tag was open-close
+				if (markupStream.hasMore() == false)
+				{
+					getResponse().write(NOT_FOUND);
+				}
+// else if (markupStream.get() instanceof RawMarkup)
+// {
+// String text = markupStream.get().toString().trim();
+// if (Strings.isEmpty(text))
+// {
+// getResponse().write(NOT_FOUND);
+// }
+// }
 				super.onComponentTagBody(markupStream, openTag);
 			}
 		}
