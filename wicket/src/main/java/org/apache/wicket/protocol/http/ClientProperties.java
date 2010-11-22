@@ -1096,7 +1096,7 @@ public class ClientProperties implements IClusterable
 	@Override
 	public String toString()
 	{
-		StringBuffer b = new StringBuffer();
+	 StringBuilder b = new StringBuilder();
 
 		Field[] fields = ClientProperties.class.getDeclaredFields();
 

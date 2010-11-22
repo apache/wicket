@@ -516,7 +516,7 @@ public class Palette<T> extends Panel
 	 */
 	protected String buildJSCall(String funcName)
 	{
-		return new StringBuffer(funcName).append("('")
+		return new StringBuilder(funcName).append("('")
 			.append(getChoicesComponent().getMarkupId())
 			.append("','")
 			.append(getSelectionComponent().getMarkupId())

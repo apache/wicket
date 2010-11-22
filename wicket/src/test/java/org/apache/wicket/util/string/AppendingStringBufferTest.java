@@ -73,11 +73,11 @@ public class AppendingStringBufferTest extends TestCase
 	public void testEqualsToCharSequence() throws Exception
 	{
 		AppendingStringBuffer asb = new AppendingStringBuffer("123456789");
-		StringBuffer sb = new StringBuffer("123456789");
+		StringBuilder sb = new StringBuilder("123456789");
 		assertEquals(asb, sb);
 		assertEquals(asb, "123456789");
 
-		sb = new StringBuffer("01234567890");
+		sb = new StringBuilder("01234567890");
 		assertFalse(asb.equals(sb));
 		assertFalse(asb.equals("01234567890"));
 	}
@@ -88,12 +88,12 @@ public class AppendingStringBufferTest extends TestCase
 	public void testStartsWidth() throws Exception
 	{
 		AppendingStringBuffer asb = new AppendingStringBuffer("123456789");
-		StringBuffer sb = new StringBuffer("1234");
+		StringBuilder sb = new StringBuilder("1234");
 		assertTrue(asb.startsWith(sb));
 		assertTrue(asb.startsWith("1234"));
 		assertTrue(asb.startsWith(asb));
 
-		sb = new StringBuffer("01234");
+		sb = new StringBuilder("01234");
 		assertFalse(asb.startsWith(sb));
 		assertFalse(asb.startsWith("01234"));
 	}
@@ -104,12 +104,12 @@ public class AppendingStringBufferTest extends TestCase
 	public void testEndsWidth() throws Exception
 	{
 		AppendingStringBuffer asb = new AppendingStringBuffer("123456789");
-		StringBuffer sb = new StringBuffer("6789");
+		StringBuilder sb = new StringBuilder("6789");
 		assertTrue(asb.endsWith(sb));
 		assertTrue(asb.endsWith("6789"));
 		assertTrue(asb.endsWith(asb));
 
-		sb = new StringBuffer("67890");
+		sb = new StringBuilder("67890");
 		assertFalse(asb.endsWith(sb));
 		assertFalse(asb.endsWith("67890"));
 	}

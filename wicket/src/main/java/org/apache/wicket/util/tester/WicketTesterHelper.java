@@ -149,7 +149,7 @@ public class WicketTesterHelper
 	 */
 	public static String asLined(final Collection<?> objects)
 	{
-		StringBuffer lined = new StringBuffer();
+	 StringBuilder lined = new StringBuilder();
 		for (Iterator<?> iter = objects.iterator(); iter.hasNext();)
 		{
 			String objectString = iter.next().toString();

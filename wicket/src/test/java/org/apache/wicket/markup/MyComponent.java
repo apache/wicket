@@ -158,7 +158,7 @@ public class MyComponent extends WebMarkupContainer
 	@Override
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
-		StringBuffer str = new StringBuffer();
+	 StringBuilder str = new StringBuilder();
 
 		str.append("intParam: ").append(intParam).append("<br/>");
 		str.append("integerParam: ").append(integerParam.toString()).append("<br/>");

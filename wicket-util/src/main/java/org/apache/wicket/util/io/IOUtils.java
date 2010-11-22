@@ -579,7 +579,7 @@ public final class IOUtils
 	 *             if an I/O error occurs
 	 * @since 1.1
 	 */
-	public static void write(StringBuffer data, Writer output) throws IOException
+	public static void write(StringBuilder data, Writer output) throws IOException
 	{
 		if (data != null)
 		{
@@ -603,7 +603,7 @@ public final class IOUtils
 	 *             if an I/O error occurs
 	 * @since 1.1
 	 */
-	public static void write(StringBuffer data, OutputStream output) throws IOException
+	public static void write(StringBuilder data, OutputStream output) throws IOException
 	{
 		if (data != null)
 		{
@@ -632,7 +632,7 @@ public final class IOUtils
 	 *             if an I/O error occurs
 	 * @since 1.1
 	 */
-	public static void write(StringBuffer data, OutputStream output, String encoding)
+	public static void write(StringBuilder data, OutputStream output, String encoding)
 		throws IOException
 	{
 		if (data != null)

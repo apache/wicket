@@ -350,7 +350,7 @@ public abstract class AbstractMarkupParser
 		Pattern preBlock = Pattern.compile("<pre>.*?</pre>", Pattern.DOTALL | Pattern.MULTILINE);
 		Matcher m = preBlock.matcher(rawMarkup);
 		int lastend = 0;
-		StringBuffer sb = null;
+	 StringBuilder sb = null;
 		while (true)
 		{
 			boolean matched = m.find();
@@ -359,14 +359,14 @@ public abstract class AbstractMarkupParser
 			nonPre = nonPre.replaceAll("[ \\t]+", " ");
 			nonPre = nonPre.replaceAll("( ?[\\r\\n] ?)+", "\n");
 
-			// Don't create a StringBuffer if we don't actually need one.
+			// Don't create a StringBuilder if we don't actually need one.
 			// This optimizes the trivial common case where there is no <pre>
 			// tag at all down to just doing the replaceAlls above.
 			if (lastend == 0)
 			{
 				if (matched)
 				{
-					sb = new StringBuffer(rawMarkup.length());
+					sb = new StringBuilder(rawMarkup.length());
 				}
 				else
 				{

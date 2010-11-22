@@ -762,7 +762,7 @@ public class MultipartFormInputStream
 	@Override
 	public String toString()
 	{
-		StringBuffer sbTemp = new StringBuffer();
+	 StringBuilder sbTemp = new StringBuilder();
 		sbTemp.append("boundary='");
 		for (byte b : boundary)
 		{

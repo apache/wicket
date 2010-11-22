@@ -146,7 +146,7 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	@Override
 	public String toString()
 	{
-		StringBuffer sb = new StringBuffer(super.toString());
+	 StringBuilder sb = new StringBuilder(super.toString());
 		sb.append(":attached=").append(attached).append(":tempModelObject=[").append(
 			this.transientModelObject).append("]");
 		return sb.toString();

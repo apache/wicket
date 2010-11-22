@@ -61,7 +61,7 @@ public class Word implements IClusterable
 	 */
 	public String asString(final boolean hideUnguessed)
 	{
-		final StringBuffer buffer = new StringBuffer();
+		final StringBuilder buffer = new StringBuilder();
 		for (Letter letter : letters)
 		{
 			if (hideUnguessed)

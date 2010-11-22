@@ -325,7 +325,7 @@ public class MetaPattern implements IClusterable
 		}
 		else
 		{
-			final StringBuffer buffer = new StringBuffer();
+			final StringBuilder buffer = new StringBuilder();
 			for (int i = 0; i < patterns.size(); i++)
 			{
 				buffer.append(patterns.get(i));

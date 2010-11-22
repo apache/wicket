@@ -39,7 +39,7 @@ public class OnChangeAjaxBehaviorPage extends BasePage
 			return "";
 		}
 
-		StringBuffer buffer = new StringBuffer();
+	 StringBuilder buffer = new StringBuilder();
 
 		Locale[] locales = Locale.getAvailableLocales();
 

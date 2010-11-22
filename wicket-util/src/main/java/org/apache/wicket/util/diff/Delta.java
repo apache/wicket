@@ -201,11 +201,11 @@ public abstract class Delta extends ToString
 	 * Converts this delta into its Unix diff style string representation.
 	 * 
 	 * @param s
-	 *            a {@link StringBuffer StringBuffer} to which the string representation will be
+	 *            a {@link StringBuilder StringBuffer} to which the string representation will be
 	 *            appended.
 	 */
 	@Override
-	public void toString(StringBuffer s)
+	public void toString(StringBuilder s)
 	{
 		original.rangeString(s);
 		s.append("x");
@@ -221,12 +221,12 @@ public abstract class Delta extends ToString
 	 * Converts this delta into its RCS style string representation.
 	 * 
 	 * @param s
-	 *            a {@link StringBuffer StringBuffer} to which the string representation will be
+	 *            a {@link StringBuilder StringBuffer} to which the string representation will be
 	 *            appended.
 	 * @param EOL
 	 *            the string to use as line separator.
 	 */
-	public abstract void toRCSString(StringBuffer s, String EOL);
+	public abstract void toRCSString(StringBuilder s, String EOL);
 
 	/**
 	 * Converts this delta into its RCS style string representation.
@@ -237,7 +237,7 @@ public abstract class Delta extends ToString
 	 */
 	public String toRCSString(String EOL)
 	{
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 		toRCSString(s, EOL);
 		return s.toString();
 	}

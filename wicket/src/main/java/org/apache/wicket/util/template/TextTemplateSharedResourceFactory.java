@@ -150,7 +150,7 @@ public class TextTemplateSharedResourceFactory
 	 */
 	protected String sharedResourceName(final Map<String, ?> variables)
 	{
-		final StringBuffer buffer = new StringBuffer();
+		final StringBuilder buffer = new StringBuilder();
 		for (final Iterator<?> iterator = variables.values().iterator(); iterator.hasNext();)
 		{
 			final String value = iterator.next().toString();
@@ -173,7 +173,7 @@ public class TextTemplateSharedResourceFactory
 	 */
 	private String encodeValue(final String value)
 	{
-		final StringBuffer buffer = new StringBuffer(value.length() + 10);
+		final StringBuilder buffer = new StringBuilder(value.length() + 10);
 		for (int i = 0; i < value.length(); i++)
 		{
 			final char c = value.charAt(i);

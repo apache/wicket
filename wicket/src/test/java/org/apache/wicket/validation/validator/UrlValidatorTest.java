@@ -133,7 +133,7 @@ public class UrlValidatorTest extends TestCase
 		do
 		{
 			String output = "";
-			StringBuffer testBuffer = new StringBuffer();
+		 StringBuilder testBuffer = new StringBuilder();
 			boolean expected = true;
 			for (int testPartsIndexIndex = 0; testPartsIndexIndex < testPartsIndex.length; ++testPartsIndexIndex)
 			{
@@ -256,7 +256,7 @@ public class UrlValidatorTest extends TestCase
 	 */
 	private String testPartsIndextoString()
 	{
-		StringBuffer carryMsg = new StringBuffer("{");
+	 StringBuilder carryMsg = new StringBuilder("{");
 		for (int testPartsIndexIndex = 0; testPartsIndexIndex < testPartsIndex.length; ++testPartsIndexIndex)
 		{
 			carryMsg.append(testPartsIndex[testPartsIndexIndex]);

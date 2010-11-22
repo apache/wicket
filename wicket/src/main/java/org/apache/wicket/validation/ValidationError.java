@@ -228,7 +228,7 @@ public class ValidationError implements IValidationError, IClusterable
 	@Override
 	public String toString()
 	{
-		StringBuffer tostring = new StringBuffer();
+	 StringBuilder tostring = new StringBuilder();
 		tostring.append("[").append(Classes.simpleName(getClass()));
 
 		tostring.append(" message=[").append(message);

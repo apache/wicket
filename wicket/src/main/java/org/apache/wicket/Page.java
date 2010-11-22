@@ -533,7 +533,7 @@ public abstract class Page extends MarkupContainer
 	 */
 	public final String hierarchyAsString()
 	{
-		final StringBuffer buffer = new StringBuffer();
+		final StringBuilder buffer = new StringBuilder();
 		buffer.append("Page " + getId());
 		visitChildren(new IVisitor<Component, Void>()
 		{
@@ -764,7 +764,7 @@ public abstract class Page extends MarkupContainer
 		if (debugSettings.getComponentUseCheck())
 		{
 			final List<Component> unrenderedComponents = new ArrayList<Component>();
-			final StringBuffer buffer = new StringBuffer();
+			final StringBuilder buffer = new StringBuilder();
 			renderedContainer.visitChildren(new IVisitor<Component, Void>()
 			{
 				public void component(final Component component, final IVisit<Void> visit)

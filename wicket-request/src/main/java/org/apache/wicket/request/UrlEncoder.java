@@ -279,7 +279,7 @@ public class UrlEncoder
 	public String encode(String s, String enc)
 	{
 		boolean needToChange = false;
-		StringBuffer out = new StringBuffer(s.length());
+	 StringBuilder out = new StringBuilder(s.length());
 		Charset charset;
 		CharArrayWriter charArrayWriter = new CharArrayWriter();
 

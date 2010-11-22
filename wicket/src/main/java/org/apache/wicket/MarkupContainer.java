@@ -871,7 +871,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	@Override
 	public String toString(final boolean detailed)
 	{
-		final StringBuffer buffer = new StringBuffer();
+		final StringBuilder buffer = new StringBuilder();
 		buffer.append("[" + this.getClass().getSimpleName() + " ");
 		buffer.append(super.toString(detailed));
 		if (detailed)

@@ -117,7 +117,7 @@ public class ChangeDelta extends Delta
 	 * @see org.apache.wicket.util.diff.Delta#toString(java.lang.StringBuffer)
 	 */
 	@Override
-	public void toString(StringBuffer s)
+	public void toString(StringBuilder s)
 	{
 		original.rangeString(s);
 		s.append("c");
@@ -133,7 +133,7 @@ public class ChangeDelta extends Delta
 	 * @see org.apache.wicket.util.diff.Delta#toRCSString(java.lang.StringBuffer, java.lang.String)
 	 */
 	@Override
-	public void toRCSString(StringBuffer s, String EOL)
+	public void toRCSString(StringBuilder s, String EOL)
 	{
 		s.append("d");
 		s.append(original.rcsfrom());

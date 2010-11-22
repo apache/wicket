@@ -53,7 +53,7 @@ public final class YuiLib implements IClusterable
 	{
 		if (YUILOADER == null)
 		{
-			StringBuffer sb = new StringBuffer();
+		 StringBuilder sb = new StringBuilder();
 			sb.append("yuiloader");
 			if (Application.get().usesDeploymentConfig())
 			{

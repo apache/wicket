@@ -74,7 +74,7 @@ public class Page5 extends WicketExamplePage
 	 */
 	private String join(List<org.apache.wicket.util.string.StringValue> values)
 	{
-		StringBuffer sb = new StringBuffer();
+	 StringBuilder sb = new StringBuilder();
 		for (org.apache.wicket.util.string.StringValue sv : values)
 		{
 			if (sb.length() > 0)

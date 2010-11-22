@@ -533,7 +533,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	@Override
 	public String toString()
 	{
-		final StringBuffer buffer = new StringBuffer();
+		final StringBuilder buffer = new StringBuilder();
 		boolean first = true;
 		for (Map.Entry<String, Object> entry : entrySet())
 		{

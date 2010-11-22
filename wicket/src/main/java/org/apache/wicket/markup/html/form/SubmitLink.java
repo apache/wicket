@@ -192,7 +192,7 @@ public class SubmitLink extends AbstractSubmitLink
 		{
 			// find the root form - the one we are really going to submit
 			Form<?> root = getForm().getRootForm();
-			StringBuffer sb = new StringBuffer(100);
+		 StringBuilder sb = new StringBuilder(100);
 			sb.append("var e=document.getElementById('");
 			sb.append(root.getHiddenFieldId());
 			sb.append("'); e.name=\'");

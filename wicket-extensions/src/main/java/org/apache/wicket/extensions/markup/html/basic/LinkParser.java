@@ -37,10 +37,10 @@ public class LinkParser implements ILinkParser
 	 * Adds a render strategy to the parser.
 	 * 
 	 * @param pattern
-	 * 		the pattern to which the provided <code>renderStrategy</code> should be applied.
+	 *            the pattern to which the provided <code>renderStrategy</code> should be applied.
 	 * @param renderStrategy
-	 * 		the <code>ILinkRenderStrategy</code> which is applied to the text found by the provided
-	 * 		<code>pattern</code>.
+	 *            the <code>ILinkRenderStrategy</code> which is applied to the text found by the
+	 *            provided <code>pattern</code>.
 	 * @return this <code>ILinkParser</code>.
 	 */
 	public ILinkParser addLinkRenderStrategy(String pattern, ILinkRenderStrategy renderStrategy)

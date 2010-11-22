@@ -370,7 +370,7 @@ public final class FormInputModel implements IClusterable
 	@Override
 	public String toString()
 	{
-		StringBuffer b = new StringBuffer();
+	 StringBuilder b = new StringBuilder();
 		b.append("[TestInputObject stringProperty = '")
 			.append(stringProperty)
 			.append("', integerProperty = ")

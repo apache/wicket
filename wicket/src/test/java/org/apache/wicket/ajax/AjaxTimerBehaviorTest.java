@@ -201,7 +201,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 			return "\\Q" + s + "\\E";
 		}
 
-		StringBuffer sb = new StringBuffer(s.length() * 2);
+	 StringBuilder sb = new StringBuilder(s.length() * 2);
 		sb.append("\\Q");
 		slashEIndex = 0;
 		int current = 0;

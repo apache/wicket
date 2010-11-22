@@ -87,7 +87,7 @@ public abstract class GenericBaseModel<T> implements IModel<T>
 	@Override
 	public String toString()
 	{
-		StringBuffer sb = new StringBuffer("Model:classname=[");
+	 StringBuilder sb = new StringBuilder("Model:classname=[");
 		sb.append(getClass().getName()).append("]");
 		sb.append(":object=[").append(object).append("]");
 		return sb.toString();

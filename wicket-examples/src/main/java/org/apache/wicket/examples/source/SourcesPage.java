@@ -101,7 +101,7 @@ public class SourcesPage extends WebPage
 			String source = null;
 			try
 			{
-				StringBuffer sb = new StringBuffer();
+			 StringBuilder sb = new StringBuilder();
 				source = (name != null) ? name : getPage().getRequest()
 					.getRequestParameters()
 					.getParameterValue(SOURCE)

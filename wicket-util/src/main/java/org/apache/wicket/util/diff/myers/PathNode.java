@@ -138,7 +138,7 @@ public abstract class PathNode
 	@Override
 	public String toString()
 	{
-		StringBuffer buf = new StringBuffer("[");
+	 StringBuilder buf = new StringBuilder("[");
 		PathNode node = this;
 		while (node != null)
 		{

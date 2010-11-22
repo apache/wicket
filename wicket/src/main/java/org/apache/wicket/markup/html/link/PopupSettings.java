@@ -160,7 +160,7 @@ public class PopupSettings implements IClusterable
 			windowTitle = windowTitle.replaceAll("\\W", "_");
 		}
 
-		StringBuffer script = new StringBuffer("var w = window.open(" + target + ", '").append(
+	 StringBuilder script = new StringBuilder("var w = window.open(" + target + ", '").append(
 			windowTitle).append("', '");
 
 		script.append("scrollbars=").append(flagToString(SCROLLBARS));

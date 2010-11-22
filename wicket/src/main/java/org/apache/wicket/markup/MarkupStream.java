@@ -522,7 +522,7 @@ public class MarkupStream
 	 */
 	public String toHtmlDebugString()
 	{
-		final StringBuffer buffer = new StringBuffer();
+		final StringBuilder buffer = new StringBuilder();
 
 		for (int i = 0; i < markup.size(); i++)
 		{

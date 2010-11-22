@@ -92,7 +92,7 @@ public class WebXmlFileTest extends TestCase
 	 */
 	private String getWebXml(String filter, String url)
 	{
-		StringBuffer webxml = new StringBuffer();
+	 StringBuilder webxml = new StringBuilder();
 		webxml.append("<web-app>");
 		webxml.append("<" + filter + ">");
 		webxml.append(" <" + filter + "-name>HelloWorldApplication</" + filter + "-name>");

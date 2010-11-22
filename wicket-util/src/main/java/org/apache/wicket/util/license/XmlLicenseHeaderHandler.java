@@ -65,7 +65,7 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 			{
 				// Then only take the first 16 lines
 				String[] headers = header.split(LINE_ENDING);
-				StringBuffer sb = new StringBuffer();
+			 StringBuilder sb = new StringBuilder();
 				for (int i = 0; i < 16 && i < headers.length; i++)
 				{
 					if (sb.length() > 0)
@@ -102,7 +102,7 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		{
 			String content = new org.apache.wicket.util.file.File(file).readString();
 			String xml = "";
-			StringBuffer newContent = new StringBuffer();
+		 StringBuilder newContent = new StringBuilder();
 
 			Matcher mat = xmlHeader.matcher(content);
 			if (mat.matches())

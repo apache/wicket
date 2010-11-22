@@ -56,7 +56,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * This class delegates handling of the to a StringBuffer based version.
+ * This class delegates handling of the to a StringBuilder based version.
  * 
  * @version $Revision: 1.1 $ $Date: 2006/03/12 00:24:21 $
  * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
@@ -79,7 +79,7 @@ public class ToString
 	@Override
 	public String toString()
 	{
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 		toString(s);
 		return s.toString();
 	}
@@ -90,7 +90,7 @@ public class ToString
 	 * @param s
 	 *            the string buffer.
 	 */
-	public void toString(StringBuffer s)
+	public void toString(StringBuilder s)
 	{
 		s.append(super.toString());
 	}
@@ -145,7 +145,7 @@ public class ToString
 	 */
 	public static String arrayToString(Object[] o, String EOL)
 	{
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		for (int i = 0; i < o.length - 1; i++)
 		{
 			buf.append(o[i]);

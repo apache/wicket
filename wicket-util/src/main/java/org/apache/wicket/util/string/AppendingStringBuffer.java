@@ -37,7 +37,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	static final long serialVersionUID = 1L;
 
 	private static final AppendingStringBuffer NULL = new AppendingStringBuffer("null");
-	private static final StringBuffer SB_NULL = new StringBuffer("null");
+	private static final StringBuilder SB_NULL = new StringBuilder("null");
 
 	/**
 	 * The value is used for character storage.
@@ -173,8 +173,8 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * given by the <code>newLength</code> argument.
 	 * <p>
 	 * If the <code>newLength</code> argument is greater than or equal to the current length,
-	 * sufficient null characters (<code>'&#92;u0000'</code>) are appended to the string buffer so that length becomes
-	 * the <code>newLength</code> argument.
+	 * sufficient null characters (<code>'&#92;u0000'</code>) are appended to the string buffer so
+	 * that length becomes the <code>newLength</code> argument.
 	 * <p>
 	 * The <code>newLength</code> argument must be greater than or equal to <code>0</code>.
 	 * 
@@ -332,9 +332,13 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 		{
 			return append((AppendingStringBuffer)obj);
 		}
+		else if (obj instanceof StringBuilder)
+		{
+			return append((StringBuilder)obj);
+		}
 		else if (obj instanceof StringBuffer)
 		{
-			return append((StringBuffer)obj);
+			return append(obj.toString());
 		}
 		return append(String.valueOf(obj));
 	}
@@ -443,7 +447,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @return a reference to this <tt>AppendingStringBuffer</tt>.
 	 * @since 1.4
 	 */
-	public AppendingStringBuffer append(StringBuffer sb)
+	public AppendingStringBuffer append(StringBuilder sb)
 	{
 		if (sb == null)
 		{
@@ -490,7 +494,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *            The length that must be copied
 	 * @return a reference to this <tt>AppendingStringBuffer</tt>.
 	 */
-	public AppendingStringBuffer append(StringBuffer sb, int from, int length)
+	public AppendingStringBuffer append(StringBuilder sb, int from, int length)
 	{
 		if (sb == null)
 		{
@@ -989,7 +993,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 		}
 		else if (obj instanceof StringBuffer)
 		{
-			return insert(offset, (StringBuffer)obj);
+			return insert(offset, obj);
 		}
 		return insert(offset, String.valueOf(obj));
 	}
@@ -1081,7 +1085,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *                if the offset is invalid.
 	 * @see java.lang.StringBuffer#length()
 	 */
-	public AppendingStringBuffer insert(int offset, StringBuffer str)
+	public AppendingStringBuffer insert(int offset, StringBuilder str)
 	{
 		if ((offset < 0) || (offset > count))
 		{

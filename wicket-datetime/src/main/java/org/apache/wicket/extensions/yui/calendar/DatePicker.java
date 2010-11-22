@@ -272,7 +272,7 @@ public class DatePicker extends AbstractBehavior
 		}
 
 		// ${calendarInit}
-		StringBuffer calendarInit = new StringBuffer();
+	 StringBuilder calendarInit = new StringBuilder();
 		for (Iterator<Entry<String, Object>> i = p.entrySet().iterator(); i.hasNext();)
 		{
 			Entry<String, Object> entry = i.next();
@@ -791,7 +791,7 @@ public class DatePicker extends AbstractBehavior
 	 * @param map
 	 * @param calendarInit
 	 */
-	private void appendMapping(Map<String, ?> map, StringBuffer calendarInit)
+	private void appendMapping(Map<String, ?> map, StringBuilder calendarInit)
 	{
 		boolean first = true;
 		calendarInit.append("{");

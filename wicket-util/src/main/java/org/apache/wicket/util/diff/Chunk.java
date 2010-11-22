@@ -290,7 +290,7 @@ public class Chunk extends ToString
 	 * @param s
 	 */
 	@Override
-	public void toString(StringBuffer s)
+	public void toString(StringBuilder s)
 	{
 		toString(s, "", "");
 	}
@@ -304,9 +304,9 @@ public class Chunk extends ToString
 	 *            the text that should prefix each line.
 	 * @param postfix
 	 *            the text that should end each line.
-	 * @return StringBuffer
+	 * @return StringBuilder
 	 */
-	public StringBuffer toString(StringBuffer s, String prefix, String postfix)
+	public StringBuilder toString(StringBuilder s, String prefix, String postfix)
 	{
 		if (chunk != null)
 		{
@@ -370,7 +370,7 @@ public class Chunk extends ToString
 	 */
 	public String rangeString()
 	{
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		rangeString(result);
 		return result.toString();
 	}
@@ -381,7 +381,7 @@ public class Chunk extends ToString
 	 * @param s
 	 *            where the string representation should be appended.
 	 */
-	public void rangeString(StringBuffer s)
+	public void rangeString(StringBuilder s)
 	{
 		rangeString(s, ",");
 	}
@@ -394,7 +394,7 @@ public class Chunk extends ToString
 	 * @param separ
 	 *            what to use as line separator.
 	 */
-	public void rangeString(StringBuffer s, String separ)
+	public void rangeString(StringBuilder s, String separ)
 	{
 		if (size() <= 1)
 		{

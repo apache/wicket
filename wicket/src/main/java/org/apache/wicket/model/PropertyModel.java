@@ -109,7 +109,7 @@ public class PropertyModel<T> extends AbstractPropertyModel<T>
 	@Override
 	public String toString()
 	{
-		StringBuffer sb = new StringBuffer(super.toString());
+	 StringBuilder sb = new StringBuilder(super.toString());
 		sb.append(":expression=[").append(expression).append("]");
 		return sb.toString();
 	}

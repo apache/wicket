@@ -68,7 +68,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	@Override
 	public String asString()
 	{
-		StringBuffer b = new StringBuffer();
+	 StringBuilder b = new StringBuilder();
 		b.append(getBeforeTemplateContents());
 		b.append(decorated.asString());
 		b.append(getAfterTemplateContents());
@@ -85,7 +85,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	@Override
 	public String asString(Map<String, ?> variables)
 	{
-		StringBuffer b = new StringBuffer();
+	 StringBuilder b = new StringBuilder();
 		b.append(getBeforeTemplateContents());
 		b.append(decorated.asString(variables));
 		b.append(getAfterTemplateContents());

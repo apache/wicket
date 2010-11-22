@@ -582,7 +582,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	@Override
 	public String toString()
 	{
-		StringBuffer sb = new StringBuffer("StringResourceModel[");
+	 StringBuilder sb = new StringBuilder("StringResourceModel[");
 		sb.append("key:");
 		sb.append(resourceKey);
 		sb.append(",default:");

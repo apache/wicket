@@ -159,15 +159,15 @@ public final class RequestUtils
 	 */
 	public static String toAbsolutePath(final String requestPath, String relativePagePath)
 	{
-		final StringBuffer result;
+		final StringBuilder result;
 		if (requestPath.endsWith("/"))
 		{
-			result = new StringBuffer(requestPath);
+			result = new StringBuilder(requestPath);
 		}
 		else
 		{
 			// Remove everything after last slash (but not slash itself)
-			result = new StringBuffer(requestPath.substring(0, requestPath.lastIndexOf('/') + 1));
+			result = new StringBuilder(requestPath.substring(0, requestPath.lastIndexOf('/') + 1));
 		}
 
 		if (relativePagePath.startsWith("./"))
@@ -177,7 +177,7 @@ public final class RequestUtils
 
 		if (relativePagePath.startsWith("../"))
 		{
-			StringBuffer tempRelative = new StringBuffer(relativePagePath);
+		 StringBuilder tempRelative = new StringBuilder(relativePagePath);
 
 			// Go up through hierarchy until we find most common directory for both pathes.
 			while (tempRelative.indexOf("../") == 0)

@@ -102,7 +102,7 @@ public abstract class VariableInterpolator
 	public String toString()
 	{
 		// Result buffer
-		final StringBuffer buffer = new StringBuffer();
+		final StringBuilder buffer = new StringBuilder();
 
 		// For each occurrences of "${"or "$$"
 		int start;

@@ -3144,7 +3144,7 @@ public abstract class Component
 			final Page page = findPage();
 			if (page == null)
 			{
-				return new StringBuffer("[Component id = ").append(getId())
+				return new StringBuilder("[Component id = ").append(getId())
 					.append(", page = <No Page>, path = ")
 					.append(getPath())
 					.append(".")
@@ -3154,7 +3154,7 @@ public abstract class Component
 			}
 			else
 			{
-				return new StringBuffer("[Component id = ").append(getId())
+				return new StringBuilder("[Component id = ").append(getId())
 					.append(", page = ")
 					.append(getPage().getClass().getName())
 					.append(", path = ")

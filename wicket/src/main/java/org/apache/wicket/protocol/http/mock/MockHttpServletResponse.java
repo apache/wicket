@@ -643,7 +643,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 */
 	public static String formatDate(long l)
 	{
-		StringBuffer _dateBuffer = new StringBuffer(32);
+		StringBuilder _dateBuffer = new StringBuilder(32);
 		Calendar _calendar = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
 		_calendar.setTimeInMillis(l);
 		formatDate(_dateBuffer, _calendar, false);
@@ -663,7 +663,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * @param calendar
 	 * @param cookie
 	 */
-	public static void formatDate(StringBuffer buf, Calendar calendar, boolean cookie)
+	public static void formatDate(StringBuilder buf, Calendar calendar, boolean cookie)
 	{
 		// "EEE, dd MMM yyyy HH:mm:ss 'GMT'"
 		// "EEE, dd-MMM-yy HH:mm:ss 'GMT'", cookie
@@ -714,7 +714,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * @param buf
 	 * @param i
 	 */
-	public static void append2digits(StringBuffer buf, int i)
+	public static void append2digits(StringBuilder buf, int i)
 	{
 		if (i < 100)
 		{

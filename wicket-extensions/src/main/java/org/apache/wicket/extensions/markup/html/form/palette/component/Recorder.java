@@ -103,7 +103,7 @@ public class Recorder<T> extends HiddenField<Object>
 	{
 		// construct the model string based on selection collection
 		IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
-		StringBuffer modelStringBuffer = new StringBuffer();
+	 StringBuilder modelStringBuffer = new StringBuilder();
 		Collection<T> modelCollection = getPalette().getModelCollection();
 		if (modelCollection == null)
 		{

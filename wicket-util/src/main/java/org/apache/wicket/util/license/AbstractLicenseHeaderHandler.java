@@ -77,7 +77,7 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 				inputStreamReader = new InputStreamReader(inputStream);
 				lineNumberReader = new LineNumberReader(inputStreamReader);
 
-				StringBuffer header = new StringBuffer();
+			 StringBuilder header = new StringBuilder();
 				String line = lineNumberReader.readLine();
 				while (line != null)
 				{
@@ -132,7 +132,7 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 
 	protected String extractLicenseHeader(File file, int start, int length)
 	{
-		StringBuffer header = new StringBuffer();
+	 StringBuilder header = new StringBuilder();
 		LineNumberReader lineNumberReader = null;
 
 		try

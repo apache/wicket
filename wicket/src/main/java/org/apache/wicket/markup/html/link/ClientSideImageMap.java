@@ -70,7 +70,7 @@ public class ClientSideImageMap extends Panel
 
 	private String polygonCoordinates(int... coordinates)
 	{
-		final StringBuffer buffer = new StringBuffer();
+		final StringBuilder buffer = new StringBuilder();
 		for (int i = 0; i < coordinates.length; i++)
 		{
 			buffer.append(coordinates[i]);

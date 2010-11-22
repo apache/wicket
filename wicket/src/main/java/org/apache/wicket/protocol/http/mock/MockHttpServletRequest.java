@@ -728,7 +728,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		}
 		else
 		{
-			final StringBuffer buf = new StringBuffer();
+			final StringBuilder buf = new StringBuilder();
 			for (Iterator<String> iterator = parameters.keySet().iterator(); iterator.hasNext();)
 			{
 				final String name = iterator.next();
@@ -868,7 +868,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public StringBuffer getRequestURL()
 	{
-		final StringBuffer buf = new StringBuffer();
+		StringBuffer buf = new StringBuffer();
 		buf.append("http://localhost");
 		buf.append(getContextPath());
 		if (getPathInfo() != null)

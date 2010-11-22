@@ -557,7 +557,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 
 		if (message == null)
 		{
-			StringBuffer buffer = new StringBuffer();
+		 StringBuilder buffer = new StringBuilder();
 			buffer.append("Could not locate error message for component: ");
 			buffer.append(Classes.simpleName(getClass()));
 			buffer.append("@");

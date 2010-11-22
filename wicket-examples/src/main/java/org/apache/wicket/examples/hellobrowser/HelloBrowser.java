@@ -73,7 +73,7 @@ public class HelloBrowser extends WicketExamplePage
 					Locale locale = getLocale();
 					DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.LONG, locale);
 					String calAsString = dateFormat.format(cal.getTime());
-					StringBuffer b = new StringBuffer("Based on your settings, your time is: ");
+				 StringBuilder b = new StringBuilder("Based on your settings, your time is: ");
 					b.append(calAsString);
 					b.append(" (and your time zone is ");
 					b.append(timeZone.getDisplayName(getLocale()));

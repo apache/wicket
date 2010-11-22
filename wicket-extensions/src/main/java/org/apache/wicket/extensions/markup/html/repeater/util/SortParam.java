@@ -77,7 +77,7 @@ public class SortParam implements IClusterable
 	 */
 	public String toString()
 	{
-		return new StringBuffer().append("[SortParam property=").append(getProperty()).append(
+		return new StringBuilder().append("[SortParam property=").append(getProperty()).append(
 				" ascending=").append(asc).append("]").toString();
 	}
 }

@@ -190,7 +190,7 @@ public class StockQuote
 		InputStreamReader isr = new InputStreamReader(inputStream);
 		BufferedReader in = new BufferedReader(isr);
 
-		StringBuffer sb = new StringBuffer();
+	 StringBuilder sb = new StringBuilder();
 		String inputLine;
 		while ((inputLine = in.readLine()) != null)
 		{
@@ -210,7 +210,7 @@ public class StockQuote
 	 */
 	private String createMessage(String symbol)
 	{
-		StringBuffer message = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+	 StringBuilder message = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		message.append("<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">");
 		message.append("  <soap:Body>");
 		message.append("    <GetQuote xmlns=\"http://www.webserviceX.NET/\">");

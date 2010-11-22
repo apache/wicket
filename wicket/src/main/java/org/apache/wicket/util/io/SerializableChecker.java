@@ -646,9 +646,9 @@ public final class SerializableChecker extends ObjectOutputStream
 	/**
 	 * @return name from root to current node concatenated with slashes
 	 */
-	private StringBuffer currentPath()
+	private StringBuilder currentPath()
 	{
-		StringBuffer b = new StringBuffer();
+	 StringBuilder b = new StringBuilder();
 		for (Iterator<String> it = nameStack.iterator(); it.hasNext();)
 		{
 			b.append(it.next());
@@ -669,8 +669,8 @@ public final class SerializableChecker extends ObjectOutputStream
 	 */
 	private final String toPrettyPrintedStack(String type)
 	{
-		StringBuffer result = new StringBuffer();
-		StringBuffer spaces = new StringBuffer();
+	 StringBuilder result = new StringBuilder();
+	 StringBuilder spaces = new StringBuilder();
 		result.append("Unable to serialize class: ");
 		result.append(type);
 		result.append("\nField hierarchy is:");

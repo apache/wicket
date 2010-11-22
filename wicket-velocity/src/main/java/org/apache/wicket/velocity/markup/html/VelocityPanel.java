@@ -315,7 +315,7 @@ public abstract class VelocityPanel extends Panel
 		}
 
 		// evaluate the template and return a new StringResourceStream
-		StringBuffer sb = new StringBuffer();
+	 StringBuilder sb = new StringBuilder();
 		sb.append("<wicket:panel>");
 		sb.append(evaluateVelocityTemplate(reader));
 		sb.append("</wicket:panel>");

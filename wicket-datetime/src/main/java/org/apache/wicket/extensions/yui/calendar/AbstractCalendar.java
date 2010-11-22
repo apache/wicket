@@ -157,7 +157,7 @@ public abstract class AbstractCalendar extends WebComponent
 	 *            the buffer to append the script to
 	 */
 	protected void appendToInit(String markupId, String javascriptId, String javascriptWidgetId,
-			StringBuffer b)
+		 StringBuilder b)
 	{
 	}
 
@@ -188,7 +188,7 @@ public abstract class AbstractCalendar extends WebComponent
 		String markupId = AbstractCalendar.this.getMarkupId();
 		String javascriptId = getJavascriptId();
 		String javascriptWidgetId = getJavascriptWidgetId();
-		StringBuffer b = new StringBuffer();
+	 StringBuilder b = new StringBuilder();
 		b.append(JavascriptUtils.SCRIPT_OPEN_TAG);
 		// initialize wicket namespace and register the init function
 		// for the YUI widget

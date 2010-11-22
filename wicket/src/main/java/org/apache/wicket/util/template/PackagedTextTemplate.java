@@ -93,7 +93,7 @@ public class PackagedTextTemplate extends TextTemplate
 	};
 
 	/** contents */
-	private final StringBuffer buffer = new StringBuffer();
+	private final StringBuilder buffer = new StringBuilder();
 
 	/**
 	 * Constructor.

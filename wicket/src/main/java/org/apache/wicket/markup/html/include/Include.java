@@ -221,7 +221,7 @@ public class Include extends WebComponent
 	{
 		// make the url absolute
 		HttpServletRequest req = ((ServletWebRequest)getRequest()).getHttpServletRequest();
-		StringBuffer buildUrl = new StringBuffer(url.length());
+	 StringBuilder buildUrl = new StringBuilder(url.length());
 		String scheme = req.getScheme();
 		int port = req.getServerPort();
 		buildUrl.append(scheme); // http, https

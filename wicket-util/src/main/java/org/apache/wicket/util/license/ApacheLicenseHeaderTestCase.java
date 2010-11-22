@@ -304,7 +304,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 	{
 		if (files.size() > 0)
 		{
-			StringBuffer failString = new StringBuffer();
+		 StringBuilder failString = new StringBuilder();
 
 			for (Entry<ILicenseHeaderHandler, List<File>> entry : files.entrySet())
 			{

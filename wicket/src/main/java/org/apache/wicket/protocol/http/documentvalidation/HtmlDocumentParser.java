@@ -170,7 +170,7 @@ public class HtmlDocumentParser
 			else
 			{
 				bits[0] = bits[0].trim();
-				StringBuffer value = new StringBuffer();
+			 StringBuilder value = new StringBuilder();
 				for (int j = 1; j < bits.length; j++)
 				{
 					value.append(bits[j]);
@@ -269,7 +269,7 @@ public class HtmlDocumentParser
 	 */
 	private int processText()
 	{
-		StringBuffer buf = new StringBuffer();
+	 StringBuilder buf = new StringBuilder();
 		while (pos < document.length())
 		{
 			char ch = document.charAt(pos);

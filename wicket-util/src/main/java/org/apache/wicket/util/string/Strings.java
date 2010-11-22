@@ -632,7 +632,7 @@ public final class Strings
 		else
 		{
 			// two or more elements
-			StringBuffer buff = new StringBuffer(128);
+			StringBuilder buff = new StringBuilder(128);
 			if (fragments[0] != null)
 			{
 				buff.append(fragments[0]);
@@ -974,7 +974,7 @@ public final class Strings
 		}
 		int len = unicodeString.length();
 		int bufLen = len * 2;
-		StringBuffer outBuffer = new StringBuffer(bufLen);
+		StringBuilder outBuffer = new StringBuilder(bufLen);
 		for (int x = 0; x < len; x++)
 		{
 			char aChar = unicodeString.charAt(x);
@@ -1196,7 +1196,7 @@ public final class Strings
 		}
 		else if (s instanceof StringBuffer)
 		{
-			buffer.append((StringBuffer)s, from, to - from);
+			buffer.append((StringBuilder)s, from, to - from);
 		}
 		else
 		{
