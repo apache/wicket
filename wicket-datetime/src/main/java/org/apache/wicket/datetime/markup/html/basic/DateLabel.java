@@ -33,8 +33,8 @@ import org.joda.time.format.DateTimeFormat;
 
 
 /**
- * A label that is mapped to a <code>java.util.Date</code> object and that uses Joda time to
- * format values.
+ * A label that is mapped to a <code>java.util.Date</code> object and that uses Joda time to format
+ * values.
  * <p>
  * You can provide a date pattern in two of the constructors. When not provided,
  * {@link DateTimeFormat#shortDate()} will be used.
@@ -248,11 +248,17 @@ public class DateLabel extends Label
 	/**
 	 * Returns the specialized converter.
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public IConverter getConverter(Class clazz)
+	public <C> IConverter<C> getConverter(Class<C> clazz)
 	{
-		return converter;
+		if (Date.class.isAssignableFrom(clazz))
+		{
+			return (IConverter<C>)converter;
+		}
+		else
+		{
+			return super.getConverter(clazz);
+		}
 	}
 
 	/**

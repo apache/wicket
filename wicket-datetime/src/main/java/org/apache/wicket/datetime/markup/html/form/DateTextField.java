@@ -22,8 +22,8 @@ import java.util.Date;
 import org.apache.wicket.datetime.DateConverter;
 import org.apache.wicket.datetime.PatternDateConverter;
 import org.apache.wicket.datetime.StyleDateConverter;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.IConverter;
 import org.joda.time.DateTime;
@@ -219,9 +219,16 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public final IConverter getConverter(Class clazz)
+	public final <C> IConverter<C> getConverter(Class<C> clazz)
 	{
-		return converter;
+		if (Date.class.isAssignableFrom(clazz))
+		{
+			return (IConverter<C>)converter;
+		}
+		else
+		{
+			return super.getConverter(clazz);
+		}
 	}
 
 	/**

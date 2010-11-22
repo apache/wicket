@@ -131,15 +131,18 @@ public abstract class AbstractCalendar extends WebComponent
 
 	/**
 	 * add header contributions for packaged resources.
+	 * 
+	 * @param response
+	 *            the header response to contribute to
 	 */
 	private void contributeDependencies(IHeaderResponse response)
 	{
 		response.renderJavascriptReference(new PackageResourceReference(YuiLib.class,
-				"yahoodomevent/yahoo-dom-event.js"));
+			"yahoodomevent/yahoo-dom-event.js"));
 		response.renderJavascriptReference(new PackageResourceReference(AbstractCalendar.class,
-				"calendar-min.js"));
+			"calendar-min.js"));
 		response.renderCSSReference(new PackageResourceReference(AbstractCalendar.class,
-				"assets/skins/sam/calendar.css"));
+			"assets/skins/sam/calendar.css"));
 	}
 
 	/**
@@ -157,7 +160,7 @@ public abstract class AbstractCalendar extends WebComponent
 	 *            the buffer to append the script to
 	 */
 	protected void appendToInit(String markupId, String javascriptId, String javascriptWidgetId,
-		 StringBuilder b)
+		StringBuilder b)
 	{
 	}
 
@@ -188,7 +191,7 @@ public abstract class AbstractCalendar extends WebComponent
 		String markupId = AbstractCalendar.this.getMarkupId();
 		String javascriptId = getJavascriptId();
 		String javascriptWidgetId = getJavascriptWidgetId();
-	 StringBuilder b = new StringBuilder();
+		StringBuilder b = new StringBuilder();
 		b.append(JavascriptUtils.SCRIPT_OPEN_TAG);
 		// initialize wicket namespace and register the init function
 		// for the YUI widget

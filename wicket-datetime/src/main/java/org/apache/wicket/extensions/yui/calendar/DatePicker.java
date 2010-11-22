@@ -31,7 +31,6 @@ import java.util.Map.Entry;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -207,7 +206,7 @@ public class DatePicker extends AbstractBehavior
 	 * There may be cases when the user wants to use their own version of YUI contribution code, in
 	 * those cases this method should be overridden to return <code>false</code>.
 	 * 
-	 * @return
+	 * @return a flag whether to contribute YUI libraries to the page. {@code true} by default.
 	 */
 	protected boolean includeYUILibraries()
 	{
@@ -418,16 +417,6 @@ public class DatePicker extends AbstractBehavior
 	}
 
 	/**
-	 * @deprecated Please use {@link #configure(Map)} instead.
-	 */
-	// TODO remove this very ugly named method
-	@Deprecated
-	protected final void configureWidgetProperties(Map<String, Object> widgetProperties)
-	{
-		throw new UnsupportedOperationException("");
-	}
-
-	/**
 	 * Filter all empty elements (workaround for {@link DateFormatSymbols} returning arrays with
 	 * empty elements).
 	 * 
@@ -479,7 +468,7 @@ public class DatePicker extends AbstractBehavior
 
 		if (format == null)
 		{
-			IConverter converter = component.getConverter(DateTime.class);
+			IConverter<?> converter = component.getConverter(DateTime.class);
 			if (!(converter instanceof DateConverter))
 			{
 				converter = component.getConverter(Date.class);
@@ -732,12 +721,13 @@ public class DatePicker extends AbstractBehavior
 	}
 
 	/**
-	 * 
+	 * @param show
+	 *            a flag indicating whether to show the picker on click event
+	 * @return {@code this} instance to be able to chain calls
 	 * @see {@link #showOnFieldClick()}
 	 */
 	public DatePicker setShowOnFieldClick(boolean show)
 	{
-
 		showOnFieldClick = show;
 		return this;
 	}

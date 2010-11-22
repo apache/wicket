@@ -78,7 +78,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 		}
 	}
 
-	private static final IConverter MINUTES_CONVERTER = new ZeroPaddingIntegerConverter(2);
+	private static final IConverter<Integer> MINUTES_CONVERTER = new ZeroPaddingIntegerConverter(2);
 
 	private AM_PM amOrPm = AM_PM.AM;
 
@@ -121,25 +121,32 @@ public class DateTimeField extends FormComponentPanel<Date>
 		add(dateField = newDateTextField("date", dateFieldModel));
 		dateField.add(newDatePicker());
 		add(hoursField = new TextField<Integer>("hours", new PropertyModel<Integer>(this, "hours"),
-				Integer.class));
+			Integer.class));
 		hoursField.add(new HoursValidator());
 		hoursField.setLabel(new Model<String>("hours"));
 		add(minutesField = new TextField<Integer>("minutes", new PropertyModel<Integer>(this,
-				"minutes"), Integer.class)
+			"minutes"), Integer.class)
 		{
 			private static final long serialVersionUID = 1L;
 
 			@SuppressWarnings("unchecked")
 			@Override
-			public IConverter getConverter(Class type)
+			public <C> IConverter<C> getConverter(Class<C> type)
 			{
-				return MINUTES_CONVERTER;
+				if (Integer.class.isAssignableFrom(type))
+				{
+					return (IConverter<C>)MINUTES_CONVERTER;
+				}
+				else
+				{
+					return super.getConverter(type);
+				}
 			}
 		});
 		minutesField.add(new RangeValidator<Integer>(0, 59));
 		minutesField.setLabel(new Model<String>("minutes"));
 		add(amOrPmChoice = new DropDownChoice<AM_PM>("amOrPmChoice", new PropertyModel<AM_PM>(this,
-				"amOrPm"), Arrays.asList(AM_PM.values())));
+			"amOrPm"), Arrays.asList(AM_PM.values())));
 	}
 
 	/**
@@ -177,7 +184,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 * 
 	 * @param widgetProperties
 	 */
-	protected void configure(Map< ? , ? > widgetProperties)
+	protected void configure(Map<?, ?> widgetProperties)
 	{
 	}
 
@@ -237,7 +244,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 		{
 			boolean use12HourFormat = use12HourFormat();
 			this.date.set(DateTimeFieldType.hourOfDay(), hours.intValue() %
-					(use12HourFormat ? 12 : 24));
+				(use12HourFormat ? 12 : 24));
 
 			Integer minutes = getMinutes();
 			this.date.setMinuteOfHour((minutes != null) ? minutes.intValue() : 0);
@@ -313,7 +320,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 				if (hours != null)
 				{
 					date.set(DateTimeFieldType.hourOfDay(), hours.intValue() %
-							getMaximumHours(use12HourFormat));
+						getMaximumHours(use12HourFormat));
 					date.setMinuteOfHour((minutes != null) ? minutes.intValue() : 0);
 				}
 				if (use12HourFormat)
@@ -352,12 +359,14 @@ public class DateTimeField extends FormComponentPanel<Date>
 	private long getMillis(TimeZone to, TimeZone from, long instant)
 	{
 		return DateTimeZone.forTimeZone(from).getMillisKeepLocal(DateTimeZone.forTimeZone(to),
-				instant);
+			instant);
 	}
 
 	/**
 	 * create a new {@link DateTextField} instance to be added to this panel.
 	 * 
+	 * @param id
+	 *            the component id
 	 * @param dateFieldModel
 	 *            model that should be used by the {@link DateTextField}
 	 * @return a new date text field instance
@@ -434,7 +443,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 	{
 		String pattern = DateTimeFormat.patternForStyle("-S", getLocale());
 		return pattern.indexOf('a') != -1 || pattern.indexOf('h') != -1 ||
-				pattern.indexOf('K') != -1;
+			pattern.indexOf('K') != -1;
 	}
 
 	/**
@@ -489,6 +498,8 @@ public class DateTimeField extends FormComponentPanel<Date>
 	/**
 	 * The DatePicker that gets added to the DateTimeField component. Users may override this method
 	 * with a DatePicker of their choice.
+	 * 
+	 * @return a new {@link DatePicker} instance
 	 */
 	protected DatePicker newDatePicker()
 	{

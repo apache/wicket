@@ -130,8 +130,6 @@ public class DateField extends FormComponentPanel<Date>
 	 * have to override that anymore).
 	 * </p>
 	 * 
-	 * @return instance of {@link Date}, possibly null
-	 * 
 	 * @see org.apache.wicket.markup.html.form.FormComponent#convertInput()
 	 */
 	@Override
@@ -150,7 +148,7 @@ public class DateField extends FormComponentPanel<Date>
 	 * @return a new date text field instance
 	 */
 	protected DateTextField newDateTextField(final String id,
-			final PropertyModel<Date> dateFieldModel)
+		final PropertyModel<Date> dateFieldModel)
 	{
 		return DateTextField.forShortStyle(id, dateFieldModel);
 	}

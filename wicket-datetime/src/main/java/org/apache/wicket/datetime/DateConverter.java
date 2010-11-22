@@ -44,7 +44,7 @@ import org.joda.time.format.DateTimeFormatter;
  * 
  * @author eelcohillenius
  */
-public abstract class DateConverter implements IConverter
+public abstract class DateConverter implements IConverter<Date>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -109,7 +109,7 @@ public abstract class DateConverter implements IConverter
 				if (result < 0)
 				{
 					throw new ConversionException(new ParseException("unable to parse date " +
-							value, ~result));
+						value, ~result));
 				}
 			}
 			catch (RuntimeException e)
@@ -138,9 +138,9 @@ public abstract class DateConverter implements IConverter
 	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object,
 	 *      java.util.Locale)
 	 */
-	public String convertToString(Object value, Locale locale)
+	public String convertToString(Date value, Locale locale)
 	{
-		DateTime dt = new DateTime(((Date)value).getTime(), getTimeZone());
+		DateTime dt = new DateTime((value).getTime(), getTimeZone());
 		DateTimeFormatter format = getFormat();
 
 		if (applyTimeZoneDifference)
