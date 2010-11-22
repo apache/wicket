@@ -36,7 +36,7 @@ public class LongEncoderTest
 	public void defaultAlphabet()
 	{
 		Set<String> encoded = new HashSet<String>();
-		for (int i = 0; i < 10000; i++)
+		for (int i = -10000; i < 10000; i++)
 		{
 			String enc = LongEncoder.encode(i);
 			Assert.assertFalse("uniqueness: " + i, encoded.contains(enc));

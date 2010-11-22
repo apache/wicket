@@ -22,8 +22,9 @@ import org.apache.wicket.util.string.PrependingStringBuffer;
  * Encodes long values into the specified alphabet. Encoding is useful when long values need to be
  * represented in their string form and shorter values are preferred; by using alphabets of length
  * greater than ten shorter values can be obtained. For example, to encode values into their
- * hexadecimal representations the {@code 0123456789ABCDEF} can be used. Long values can be
- * shortened even further by using longer alphabets.
+ * hexadecimal representations the {@code 0123456789ABCDEF-} can be used. Long values can be
+ * shortened even further by using longer alphabets. The last character in the alphabet is used as
+ * the negative sign.
  * 
  * @author igor
  */
@@ -33,7 +34,7 @@ public class LongEncoder
 	 * default alphabet that should be safe to use in most circumstances, while still providing good
 	 * shortening of long values
 	 */
-	public static String DEFAULT = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	public static String DEFAULT = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 	private LongEncoder()
 	{
@@ -71,8 +72,13 @@ public class LongEncoder
 	 */
 	public static String encode(long value, String alphabet)
 	{
-		final int len = alphabet.length();
+		final int len = alphabet.length() - 1;
 		PrependingStringBuffer buff = new PrependingStringBuffer();
+		final boolean negative = value < 0;
+		if (negative)
+		{
+			value = -value;
+		}
 		do
 		{
 			int mod = (int)(value % len);
@@ -80,6 +86,10 @@ public class LongEncoder
 			value = value / len;
 		}
 		while (value > 0);
+		if (negative)
+		{
+			buff.prepend(alphabet.charAt(len));
+		}
 		return buff.toString();
 	}
 
@@ -92,11 +102,16 @@ public class LongEncoder
 	 */
 	public static long decode(String value, String alphabet)
 	{
-		final int factor = alphabet.length();
+		final int factor = alphabet.length() - 1;
+		final boolean negative = alphabet.charAt(factor) == value.charAt(0);
 		long num = 0;
-		for (int i = 0, len = value.length(); i < len; i++)
+		for (int i = (negative) ? 1 : 0, len = value.length(); i < len; i++)
 		{
 			num = num * factor + alphabet.indexOf(value.charAt(i));
+		}
+		if (negative)
+		{
+			num = -num;
 		}
 		return num;
 	}
