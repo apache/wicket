@@ -38,7 +38,9 @@ public class MoveChildToParentNodeMarkedForRecreationTest extends TestCase
 	public void test()
 	{
 		WicketTester tester = new WicketTester();
-		tester.startPage(MoveChildToParentNodeMarkedForRecreationTestPage.class);
+		MoveChildToParentNodeMarkedForRecreationTestPage testPage = new MoveChildToParentNodeMarkedForRecreationTestPage();
+		tester.startPage(testPage);
 		tester.clickLink("moveC3ToC2");
+		assertTrue(testPage.c2.isNodeChild(testPage.c3));
 	}
 }
