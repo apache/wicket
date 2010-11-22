@@ -82,6 +82,13 @@ public class UploadProgressBar extends Panel
 
 	private final Form<?> form;
 
+	private final WebMarkupContainer statusDiv;
+
+	private final WebMarkupContainer barDiv;
+
+	private final FileUploadField uploadField;
+
+
 	/**
 	 * Constructor that will display the upload progress bar for every submit of the given form.
 	 * 
@@ -111,6 +118,7 @@ public class UploadProgressBar extends Panel
 	public UploadProgressBar(String id, final Form<?> form, FileUploadField fileUploadField)
 	{
 		super(id);
+		uploadField = fileUploadField;
 		this.form = form;
 		form.setOutputMarkupId(true);
 		if (fileUploadField != null)
@@ -119,11 +127,11 @@ public class UploadProgressBar extends Panel
 		}
 		setRenderBodyOnly(true);
 
-		final WebMarkupContainer barDiv = new WebMarkupContainer("bar");
+		barDiv = new WebMarkupContainer("bar");
 		barDiv.setOutputMarkupId(true);
 		add(barDiv);
 
-		final WebMarkupContainer statusDiv = new WebMarkupContainer("status");
+		statusDiv = new WebMarkupContainer("status");
 		statusDiv.setOutputMarkupId(true);
 		add(statusDiv);
 
@@ -132,8 +140,13 @@ public class UploadProgressBar extends Panel
 		{
 			log.warn("UploadProgressBar will not work without an UploadWebRequest. See the javadoc for details.");
 		}
+	}
 
-		form.add(new FormEnabler(this, statusDiv, barDiv, fileUploadField));
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+		form.getRootForm().add(new FormEnabler(this, statusDiv, barDiv, uploadField));
 	}
 
 	/**
