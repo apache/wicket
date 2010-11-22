@@ -28,8 +28,8 @@ public class MoveChildToParentNodeMarkedForRecreationTestPage extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	private final Tree treeTable;
-	private DefaultMutableTreeNode c2;
-	private DefaultMutableTreeNode c3;
+	DefaultMutableTreeNode c2;
+	DefaultMutableTreeNode c3;
 
 	public MoveChildToParentNodeMarkedForRecreationTestPage()
 	{
