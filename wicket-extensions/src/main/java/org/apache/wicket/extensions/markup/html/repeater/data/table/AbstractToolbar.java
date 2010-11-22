@@ -36,6 +36,8 @@ public abstract class AbstractToolbar extends Panel
 	/**
 	 * Constructor
 	 * 
+	 * @param id
+	 *            the component id
 	 * @param model
 	 *            model
 	 * @param table
@@ -50,6 +52,8 @@ public abstract class AbstractToolbar extends Panel
 	/**
 	 * Constructor
 	 * 
+	 * @param id
+	 *            the component id
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 */
