@@ -862,7 +862,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 		 */
 		public Integer next()
 		{
-			return new Integer(nextEntry().getKey());
+			return nextEntry().getKey();
 		}
 	}
 

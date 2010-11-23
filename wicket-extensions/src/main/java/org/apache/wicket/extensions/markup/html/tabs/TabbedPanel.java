@@ -90,7 +90,7 @@ public class TabbedPanel extends Panel
 	 */
 	public TabbedPanel(String id, List<? extends ITab> tabs)
 	{
-		super(id, new Model<Integer>(new Integer(-1)));
+		super(id, new Model<Integer>(-1));
 
 		if (tabs == null)
 		{
@@ -342,7 +342,7 @@ public class TabbedPanel extends Panel
 			throw new IndexOutOfBoundsException();
 		}
 
-		setDefaultModelObject(new Integer(index));
+		setDefaultModelObject(index);
 
 		final Component component;
 

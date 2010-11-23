@@ -50,7 +50,7 @@ public class DoubleConverter extends AbstractDecimalConverter<Double>
 			return null;
 		}
 
-		return new Double(number.doubleValue());
+		return number.doubleValue();
 	}
 
 	/**

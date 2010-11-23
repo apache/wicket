@@ -71,7 +71,7 @@ public class ZeroPaddingIntegerConverter extends AbstractIntegerConverter<Intege
 			return null;
 		}
 
-		return new Integer(number.intValue());
+		return number.intValue();
 	}
 
 	/**

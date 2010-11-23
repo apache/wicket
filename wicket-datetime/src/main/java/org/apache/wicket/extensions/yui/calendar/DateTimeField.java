@@ -243,11 +243,10 @@ public class DateTimeField extends FormComponentPanel<Date>
 		if (hours != null)
 		{
 			boolean use12HourFormat = use12HourFormat();
-			this.date.set(DateTimeFieldType.hourOfDay(), hours.intValue() %
-				(use12HourFormat ? 12 : 24));
+			this.date.set(DateTimeFieldType.hourOfDay(), hours % (use12HourFormat ? 12 : 24));
 
 			Integer minutes = getMinutes();
-			this.date.setMinuteOfHour((minutes != null) ? minutes.intValue() : 0);
+			this.date.setMinuteOfHour((minutes != null) ? minutes : 0);
 		}
 
 		setDefaultModelObject(this.date.toDate());
@@ -319,9 +318,8 @@ public class DateTimeField extends FormComponentPanel<Date>
 				boolean use12HourFormat = use12HourFormat();
 				if (hours != null)
 				{
-					date.set(DateTimeFieldType.hourOfDay(), hours.intValue() %
-						getMaximumHours(use12HourFormat));
-					date.setMinuteOfHour((minutes != null) ? minutes.intValue() : 0);
+					date.set(DateTimeFieldType.hourOfDay(), hours % getMaximumHours(use12HourFormat));
+					date.setMinuteOfHour((minutes != null) ? minutes : 0);
 				}
 				if (use12HourFormat)
 				{
@@ -414,14 +412,14 @@ public class DateTimeField extends FormComponentPanel<Date>
 			if (use12HourFormat)
 			{
 				int hourOfHalfDay = date.get(DateTimeFieldType.hourOfHalfday());
-				hours = new Integer(hourOfHalfDay == 0 ? 12 : hourOfHalfDay);
+				hours = hourOfHalfDay == 0 ? 12 : hourOfHalfDay;
 			}
 			else
 			{
-				hours = new Integer(date.get(DateTimeFieldType.hourOfDay()));
+				hours = date.get(DateTimeFieldType.hourOfDay());
 			}
 			amOrPm = (date.get(DateTimeFieldType.halfdayOfDay()) == 0) ? AM_PM.AM : AM_PM.PM;
-			minutes = new Integer(date.getMinuteOfHour());
+			minutes = date.getMinuteOfHour();
 
 			// we don't really have to reset the date field to the server's
 			// timezone, as it's the same milliseconds from EPOCH anyway, and

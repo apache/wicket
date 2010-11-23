@@ -242,7 +242,7 @@ public class PagingNavigation extends Loop
 	@Override
 	protected void onBeforeRender()
 	{
-		setDefaultModel(new Model<Integer>(new Integer(pageable.getPageCount())));
+		setDefaultModel(new Model<Integer>(pageable.getPageCount()));
 		// PagingNavigation itself (as well as the PageableListView)
 		// may have pages.
 
@@ -392,7 +392,7 @@ public class PagingNavigation extends Loop
 	 */
 	private void setIterations(int i)
 	{
-		setDefaultModelObject(new Integer(i));
+		setDefaultModelObject(i);
 	}
 
 	/**

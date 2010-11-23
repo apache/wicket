@@ -48,7 +48,7 @@ public class ShortConverter extends AbstractIntegerConverter<Short>
 			return null;
 		}
 
-		return new Short(number.shortValue());
+		return number.shortValue();
 	}
 
 	/**

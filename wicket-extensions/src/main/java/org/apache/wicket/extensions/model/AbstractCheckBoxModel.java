@@ -59,7 +59,7 @@ public abstract class AbstractCheckBoxModel implements IModel<Boolean>
 	 */
 	public final Boolean getObject()
 	{
-		return Boolean.valueOf(isSelected());
+		return isSelected();
 	}
 
 	/**

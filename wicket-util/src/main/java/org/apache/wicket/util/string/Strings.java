@@ -929,7 +929,7 @@ public final class Strings
 	 */
 	public static Boolean toBoolean(final String s) throws StringValueConversionException
 	{
-		return Boolean.valueOf(isTrue(s));
+		return isTrue(s);
 	}
 
 	/**

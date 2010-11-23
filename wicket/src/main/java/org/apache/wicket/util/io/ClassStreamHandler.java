@@ -119,14 +119,14 @@ public final class ClassStreamHandler
 		{
 			classHandler = new ClassStreamHandler(cls);
 			handlesClasses.put(cls.getName(), classHandler);
-			handlesClasses.put(new Short(classHandler.getClassId()), classHandler);
+			handlesClasses.put(classHandler.getClassId(), classHandler);
 		}
 		return classHandler;
 	}
 
 	static ClassStreamHandler lookup(short s)
 	{
-		ClassStreamHandler classHandler = handlesClasses.get(new Short(s));
+		ClassStreamHandler classHandler = handlesClasses.get(s);
 		if (classHandler == null)
 		{
 			throw new RuntimeException("class not found for: " + s);

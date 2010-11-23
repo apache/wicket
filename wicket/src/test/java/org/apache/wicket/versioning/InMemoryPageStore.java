@@ -55,7 +55,7 @@ class InMemoryPageStore implements IDataStore
 		final Map<Integer, byte[]> sessionPages = store.get(sessionId);
 		if (sessionPages != null)
 		{
-			pageAsBytes = sessionPages.get(Integer.valueOf(pageId));
+			pageAsBytes = sessionPages.get(pageId);
 		}
 
 		return pageAsBytes;
@@ -69,7 +69,7 @@ class InMemoryPageStore implements IDataStore
 		final Map<Integer, byte[]> sessionPages = store.get(sessionId);
 		if (sessionPages != null)
 		{
-			sessionPages.remove(Integer.valueOf(pageId));
+			sessionPages.remove(pageId);
 		}
 	}
 
@@ -93,7 +93,7 @@ class InMemoryPageStore implements IDataStore
 			store.put(sessionId, sessionPages);
 		}
 
-		sessionPages.put(Integer.valueOf(pageId), pageAsBytes);
+		sessionPages.put(pageId, pageAsBytes);
 	}
 
 	/**

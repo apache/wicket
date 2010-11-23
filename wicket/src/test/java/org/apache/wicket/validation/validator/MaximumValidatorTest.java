@@ -37,19 +37,19 @@ public class MaximumValidatorTest extends TestCase
 	{
 		IValidator<Double> validator = new MaximumValidator<Double>(1.8);
 
-		Validatable<Double> validatable = new Validatable<Double>(new Double(-100.8));
+		Validatable<Double> validatable = new Validatable<Double>(-100.8);
 		validator.validate(validatable);
 		assertEquals(0, validatable.getErrors().size());
 
-		validatable = new Validatable<Double>(new Double(1));
+		validatable = new Validatable<Double>((double) 1);
 		validator.validate(validatable);
 		assertEquals(0, validatable.getErrors().size());
 
-		validatable = new Validatable<Double>(new Double(1.8));
+		validatable = new Validatable<Double>(1.8);
 		validator.validate(validatable);
 		assertEquals(0, validatable.getErrors().size());
 
-		validatable = new Validatable<Double>(new Double(2));
+		validatable = new Validatable<Double>((double) 2);
 		validator.validate(validatable);
 		assertEquals(1, validatable.getErrors().size());
 	}
@@ -62,19 +62,19 @@ public class MaximumValidatorTest extends TestCase
 	{
 		IValidator<Integer> validator = new MaximumValidator<Integer>(8);
 
-		Validatable<Integer> validatable = new Validatable<Integer>(new Integer(-100));
+		Validatable<Integer> validatable = new Validatable<Integer>(-100);
 		validator.validate(validatable);
 		assertEquals(0, validatable.getErrors().size());
 
-		validatable = new Validatable<Integer>(new Integer(1));
+		validatable = new Validatable<Integer>(1);
 		validator.validate(validatable);
 		assertEquals(0, validatable.getErrors().size());
 
-		validatable = new Validatable<Integer>(new Integer(8));
+		validatable = new Validatable<Integer>(8);
 		validator.validate(validatable);
 		assertEquals(0, validatable.getErrors().size());
 
-		validatable = new Validatable<Integer>(new Integer(9));
+		validatable = new Validatable<Integer>(9);
 		validator.validate(validatable);
 		assertEquals(1, validatable.getErrors().size());
 	}

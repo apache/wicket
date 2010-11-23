@@ -77,11 +77,11 @@ public class PropertyResolverTest extends WicketTestCase
 	public void testPrimitiveValue() throws Exception
 	{
 		Integer integer = (Integer)PropertyResolver.getValue("age", person);
-		assertTrue(integer.intValue() == 0);
+		assertTrue(integer == 0);
 
-		PropertyResolver.setValue("age", person, new Integer(10), CONVERTER);
+		PropertyResolver.setValue("age", person, 10, CONVERTER);
 		integer = (Integer)PropertyResolver.getValue("age", person);
-		assertTrue(integer.intValue() == 10);
+		assertTrue(integer == 10);
 
 		try
 		{
@@ -308,9 +308,9 @@ public class PropertyResolverTest extends WicketTestCase
 		addresses.add(new Address());
 		person.setAddressList(addresses);
 		Object size = PropertyResolver.getValue("addressList.size", person);
-		assertEquals(size, new Integer(2));
+		assertEquals(size, 2);
 		size = PropertyResolver.getValue("addressList.size()", person);
-		assertEquals(size, new Integer(2));
+		assertEquals(size, 2);
 	}
 
 
@@ -327,7 +327,7 @@ public class PropertyResolverTest extends WicketTestCase
 		Object addressFromMap = PropertyResolver.getValue("addressMap.size", person);
 		assertEquals(addressFromMap, address);
 		Object size = PropertyResolver.getValue("addressMap.size()", person);
-		assertEquals(size, new Integer(2));
+		assertEquals(size, 2);
 	}
 
 	/**
@@ -337,9 +337,9 @@ public class PropertyResolverTest extends WicketTestCase
 	{
 		person.setAddressArray(new Address[] { new Address(), new Address() });
 		Object size = PropertyResolver.getValue("addressArray.length", person);
-		assertEquals(size, new Integer(2));
+		assertEquals(size, 2);
 		size = PropertyResolver.getValue("addressArray.size", person);
-		assertEquals(size, new Integer(2));
+		assertEquals(size, 2);
 	}
 
 	/**
@@ -476,10 +476,10 @@ public class PropertyResolverTest extends WicketTestCase
 	{
 		Person person = new Person();
 
-		PropertyResolver.setValue("onlyGetterPrimitive", person, new Integer(1), CONVERTER);
+		PropertyResolver.setValue("onlyGetterPrimitive", person, 1, CONVERTER);
 
 		assertEquals(person.getOnlyGetterPrimitive(), 1);
-		assertEquals(PropertyResolver.getValue("onlyGetterPrimitive", person), new Integer(1));
+		assertEquals(PropertyResolver.getValue("onlyGetterPrimitive", person), 1);
 
 	}
 

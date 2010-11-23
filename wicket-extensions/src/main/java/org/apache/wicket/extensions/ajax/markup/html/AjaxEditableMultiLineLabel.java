@@ -141,7 +141,7 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 			@Override
 			public Integer getObject()
 			{
-				return new Integer(rows);
+				return rows;
 			}
 		}));
 		editor.add(new AttributeModifier("cols", new AbstractReadOnlyModel<Integer>()
@@ -151,7 +151,7 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 			@Override
 			public Integer getObject()
 			{
-				return new Integer(cols);
+				return cols;
 			}
 		}));
 		editor.setOutputMarkupId(true);

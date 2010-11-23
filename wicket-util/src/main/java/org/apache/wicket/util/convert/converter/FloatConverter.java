@@ -48,7 +48,7 @@ public class FloatConverter extends AbstractDecimalConverter<Float>
 			return null;
 		}
 
-		return new Float(number.floatValue());
+		return number.floatValue();
 	}
 
 	/**

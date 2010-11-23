@@ -193,14 +193,14 @@ public class FileChannelPool
 			// increase the usage count for this channel
 
 			Integer count = channelToUseCount.get(channel);
-			if (count == null || count.intValue() == 0)
+			if (count == null || count == 0)
 			{
-				channelToUseCount.put(channel, new Integer(1));
+				channelToUseCount.put(channel, 1);
 				idleChannels.remove(channel);
 			}
 			else
 			{
-				count = new Integer(count.intValue() + 1);
+				count = count + 1;
 				channelToUseCount.put(channel, count);
 			}
 		}
@@ -217,15 +217,15 @@ public class FileChannelPool
 	public synchronized void returnFileChannel(FileChannel channel)
 	{
 		Integer count = channelToUseCount.get(channel);
-		if (count == null || count.intValue() == 0)
+		if (count == null || count == 0)
 		{
 			throw new IllegalArgumentException("Trying to return unused channel");
 		}
 
-		count = new Integer(count.intValue() - 1);
+		count = count - 1;
 
 		// decrease the usage count
-		if (count.intValue() == 0)
+		if (count == 0)
 		{
 			channelToUseCount.remove(channel);
 			if (channelsToDeleteOnReturn.contains(channel))
@@ -285,7 +285,7 @@ public class FileChannelPool
 			nameToChannel.remove(name);
 
 			Integer count = channelToUseCount.get(channel);
-			if (count != null && count.intValue() > 0)
+			if (count != null && count > 0)
 			{
 				channelsToDeleteOnReturn.add(channel);
 			}

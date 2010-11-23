@@ -378,11 +378,10 @@ public final class SerializableChecker extends ObjectOutputStream
 		{
 			try
 			{
-				desc = (ObjectStreamClass)LOOKUP_METHOD.invoke(null, new Object[] { cls,
-						Boolean.TRUE });
+				desc = (ObjectStreamClass)LOOKUP_METHOD.invoke(null, cls, Boolean.TRUE);
 				Class<?> repCl;
-				if (!((Boolean)HAS_WRITE_REPLACE_METHOD_METHOD.invoke(desc, (Object[])null)).booleanValue() ||
-					(obj = INVOKE_WRITE_REPLACE_METHOD.invoke(desc, new Object[] { obj })) == null ||
+				if (!(Boolean) HAS_WRITE_REPLACE_METHOD_METHOD.invoke(desc, (Object[]) null) ||
+					(obj = INVOKE_WRITE_REPLACE_METHOD.invoke(desc, obj)) == null ||
 					(repCl = obj.getClass()) == cls)
 				{
 					break;
@@ -575,7 +574,7 @@ public final class SerializableChecker extends ObjectOutputStream
 		int numFields;
 		try
 		{
-			numFields = ((Integer)GET_NUM_OBJ_FIELDS_METHOD.invoke(desc, (Object[])null)).intValue();
+			numFields = (Integer) GET_NUM_OBJ_FIELDS_METHOD.invoke(desc, (Object[]) null);
 		}
 		catch (IllegalAccessException e)
 		{
@@ -594,7 +593,7 @@ public final class SerializableChecker extends ObjectOutputStream
 			numPrimFields = fields.length - objVals.length;
 			try
 			{
-				GET_OBJ_FIELD_VALUES_METHOD.invoke(desc, new Object[] { obj, objVals });
+				GET_OBJ_FIELD_VALUES_METHOD.invoke(desc, obj, objVals);
 			}
 			catch (IllegalAccessException e)
 			{

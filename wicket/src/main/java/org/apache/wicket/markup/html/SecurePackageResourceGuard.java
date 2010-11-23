@@ -130,7 +130,7 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 			Boolean rtn = cache.get(path);
 			if (rtn != null)
 			{
-				return rtn.booleanValue();
+				return rtn;
 			}
 		}
 

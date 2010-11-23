@@ -88,11 +88,11 @@ public final class FormInputModel implements Serializable
 
 	private Date dateProperty = new Date();
 
-	private Double doubleProperty = new Double(20.5);
+	private Double doubleProperty = 20.5;
 
-	private Integer integerInRangeProperty = new Integer(50);
+	private Integer integerInRangeProperty = 50;
 
-	private Integer integerProperty = new Integer(100);
+	private Integer integerProperty = 100;
 
 	private List<Line> lines = new ArrayList<Line>();
 

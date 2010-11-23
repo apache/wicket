@@ -55,11 +55,11 @@ public class ObjectsTest extends WicketTestCase
 		assertTrue(Objects.equal(null, null));
 
 		assertFalse(Objects.equal(new Object(), new Object()));
-		assertTrue(Objects.equal(new Integer(1), new Integer(1)));
-		assertFalse(Objects.equal("1", new Integer(1)));
-		assertFalse(Objects.equal(new Integer(1), "1"));
-		assertTrue(Objects.equal("1", new Integer(1).toString()));
-		assertTrue(Objects.equal(new Integer(1).toString(), "1"));
+		assertTrue(Objects.equal(1, 1));
+		assertFalse(Objects.equal("1", 1));
+		assertFalse(Objects.equal(1, "1"));
+		assertTrue(Objects.equal("1", Integer.toString(1)));
+		assertTrue(Objects.equal(Integer.toString(1), "1"));
 	}
 
 	/**

@@ -48,7 +48,7 @@ public class IntegerConverter extends AbstractIntegerConverter<Integer>
 			return null;
 		}
 
-		return new Integer(number.intValue());
+		return number.intValue();
 	}
 
 	/**

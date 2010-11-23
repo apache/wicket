@@ -61,7 +61,7 @@ public class RequestLogger implements RequestLoggerMBean
 		org.apache.wicket.protocol.http.IRequestLogger logger = getRequestLogger();
 		if (logger != null)
 		{
-			return Integer.valueOf(logger.getTotalCreatedSessions());
+			return logger.getTotalCreatedSessions();
 		}
 		return null;
 	}
@@ -74,7 +74,7 @@ public class RequestLogger implements RequestLoggerMBean
 		org.apache.wicket.protocol.http.IRequestLogger logger = getRequestLogger();
 		if (logger != null)
 		{
-			return Integer.valueOf(logger.getLiveSessions().length);
+			return logger.getLiveSessions().length;
 		}
 		return null;
 	}
@@ -87,7 +87,7 @@ public class RequestLogger implements RequestLoggerMBean
 		org.apache.wicket.protocol.http.IRequestLogger logger = getRequestLogger();
 		if (logger != null)
 		{
-			return Integer.valueOf(logger.getPeakSessions());
+			return logger.getPeakSessions();
 		}
 		return null;
 	}

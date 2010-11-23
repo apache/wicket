@@ -269,7 +269,7 @@ public interface IRequestLogger
 		 */
 		public Long getTimeTaken()
 		{
-			return new Long(timeTaken);
+			return timeTaken;
 		}
 
 		/**
@@ -411,7 +411,7 @@ public interface IRequestLogger
 		 */
 		public Long getSessionSize()
 		{
-			return new Long(totalSessionSize);
+			return totalSessionSize;
 		}
 
 		@Override

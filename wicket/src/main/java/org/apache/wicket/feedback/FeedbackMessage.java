@@ -61,12 +61,12 @@ public class FeedbackMessage implements IClusterable, IDetachable
 
 	static
 	{
-		levelStrings.put(new Integer(0), "UNDEFINED");
-		levelStrings.put(new Integer(100), "DEBUG");
-		levelStrings.put(new Integer(200), "INFO");
-		levelStrings.put(new Integer(300), "WARNING");
-		levelStrings.put(new Integer(400), "ERROR");
-		levelStrings.put(new Integer(500), "FATAL");
+		levelStrings.put(0, "UNDEFINED");
+		levelStrings.put(100, "DEBUG");
+		levelStrings.put(200, "INFO");
+		levelStrings.put(300, "WARNING");
+		levelStrings.put(400, "ERROR");
+		levelStrings.put(500, "FATAL");
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class FeedbackMessage implements IClusterable, IDetachable
 	 */
 	public String getLevelAsString()
 	{
-		return levelStrings.get(new Integer(getLevel()));
+		return levelStrings.get(getLevel());
 	}
 
 	/**

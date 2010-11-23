@@ -48,7 +48,7 @@ public class LongConverter extends AbstractIntegerConverter<Long>
 			return null;
 		}
 
-		return new Long(number.longValue());
+		return number.longValue();
 	}
 
 	/**

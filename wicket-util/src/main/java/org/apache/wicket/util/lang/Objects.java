@@ -79,13 +79,13 @@ public final class Objects
 	static
 	{
 		primitiveDefaults.put(Boolean.TYPE, Boolean.FALSE);
-		primitiveDefaults.put(Byte.TYPE, new Byte((byte)0));
-		primitiveDefaults.put(Short.TYPE, new Short((short)0));
-		primitiveDefaults.put(Character.TYPE, new Character((char)0));
-		primitiveDefaults.put(Integer.TYPE, new Integer(0));
-		primitiveDefaults.put(Long.TYPE, new Long(0L));
-		primitiveDefaults.put(Float.TYPE, new Float(0.0f));
-		primitiveDefaults.put(Double.TYPE, new Double(0.0));
+		primitiveDefaults.put(Byte.TYPE, (byte) 0);
+		primitiveDefaults.put(Short.TYPE, (short) 0);
+		primitiveDefaults.put(Character.TYPE, (char) 0);
+		primitiveDefaults.put(Integer.TYPE, 0);
+		primitiveDefaults.put(Long.TYPE, 0L);
+		primitiveDefaults.put(Float.TYPE, 0.0f);
+		primitiveDefaults.put(Double.TYPE, 0.0);
 		primitiveDefaults.put(BigInteger.class, new BigInteger("0"));
 		primitiveDefaults.put(BigDecimal.class, new BigDecimal(0.0));
 	}
@@ -120,7 +120,7 @@ public final class Objects
 		}
 		if (c == Boolean.class)
 		{
-			return BigDecimal.valueOf(((Boolean)value).booleanValue() ? 1 : 0);
+			return BigDecimal.valueOf((Boolean) value ? 1 : 0);
 		}
 		if (c == Character.class)
 		{
@@ -159,11 +159,11 @@ public final class Objects
 		}
 		if (c == Boolean.class)
 		{
-			return BigInteger.valueOf(((Boolean)value).booleanValue() ? 1 : 0);
+			return BigInteger.valueOf((Boolean) value ? 1 : 0);
 		}
 		if (c == Character.class)
 		{
-			return BigInteger.valueOf(((Character)value).charValue());
+			return BigInteger.valueOf((Character) value);
 		}
 		return new BigInteger(stringValue(value, true));
 	}
@@ -186,11 +186,11 @@ public final class Objects
 		Class<?> c = value.getClass();
 		if (c == Boolean.class)
 		{
-			return ((Boolean)value).booleanValue();
+			return (Boolean) value;
 		}
 		if (c == Character.class)
 		{
-			return ((Character)value).charValue() != 0;
+			return (Character) value != 0;
 		}
 		if (value instanceof Number)
 		{
@@ -312,11 +312,11 @@ public final class Objects
 			{
 				if ((toType == Integer.class) || (toType == Integer.TYPE))
 				{
-					result = new Integer((int)longValue(value));
+					result = (int) longValue(value);
 				}
 				if ((toType == Double.class) || (toType == Double.TYPE))
 				{
-					result = new Double(doubleValue(value));
+					result = doubleValue(value);
 				}
 				if ((toType == Boolean.class) || (toType == Boolean.TYPE))
 				{
@@ -324,19 +324,19 @@ public final class Objects
 				}
 				if ((toType == Byte.class) || (toType == Byte.TYPE))
 				{
-					result = new Byte((byte)longValue(value));
+					result = (byte) longValue(value);
 				}
 				if ((toType == Character.class) || (toType == Character.TYPE))
 				{
-					result = new Character((char)longValue(value));
+					result = (char) longValue(value);
 				}
 				if ((toType == Short.class) || (toType == Short.TYPE))
 				{
-					result = new Short((short)longValue(value));
+					result = (short) longValue(value);
 				}
 				if ((toType == Long.class) || (toType == Long.TYPE))
 				{
-					result = new Long(longValue(value));
+					result = longValue(value);
 				}
 				if ((toType == Float.class) || (toType == Float.TYPE))
 				{
@@ -388,11 +388,11 @@ public final class Objects
 		}
 		if (c == Boolean.class)
 		{
-			return ((Boolean)value).booleanValue() ? 1 : 0;
+			return (Boolean) value ? 1 : 0;
 		}
 		if (c == Character.class)
 		{
-			return ((Character)value).charValue();
+			return (Character) value;
 		}
 		String s = stringValue(value, true);
 
@@ -649,11 +649,11 @@ public final class Objects
 		}
 		if (c == Boolean.class)
 		{
-			return ((Boolean)value).booleanValue() ? 1 : 0;
+			return (Boolean) value ? 1 : 0;
 		}
 		if (c == Character.class)
 		{
-			return ((Character)value).charValue();
+			return (Character) value;
 		}
 		return Long.parseLong(stringValue(value, true));
 	}
@@ -677,22 +677,22 @@ public final class Objects
 			case BOOL :
 			case CHAR :
 			case INT :
-				return new Integer((int)value);
+				return (int) value;
 
 			case FLOAT :
-				return new Float(value);
+				return (float) value;
 
 			case DOUBLE :
-				return new Double(value);
+				return (double) value;
 
 			case LONG :
-				return new Long(value);
+				return value;
 
 			case BYTE :
-				return new Byte((byte)value);
+				return (byte) value;
 
 			case SHORT :
-				return new Short((short)value);
+				return (short) value;
 
 			default :
 				return BigInteger.valueOf(value);

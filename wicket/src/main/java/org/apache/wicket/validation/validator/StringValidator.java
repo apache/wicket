@@ -96,9 +96,8 @@ public abstract class StringValidator extends AbstractValidator<String>
 		protected Map<String, Object> variablesMap(IValidatable<String> validatable)
 		{
 			final Map<String, Object> map = super.variablesMap(validatable);
-			map.put("length", (validatable.getValue() != null) ? new Integer(
-				(validatable.getValue()).length()) : 0);
-			map.put("exact", new Integer(length));
+			map.put("length", (validatable.getValue() != null) ? (validatable.getValue()).length() : 0);
+			map.put("exact", length);
 			return map;
 		}
 
@@ -178,9 +177,9 @@ public abstract class StringValidator extends AbstractValidator<String>
 		protected Map<String, Object> variablesMap(IValidatable<String> validatable)
 		{
 			final Map<String, Object> map = super.variablesMap(validatable);
-			map.put("minimum", new Integer(minimum));
-			map.put("maximum", new Integer(maximum));
-			map.put("length", new Integer((validatable.getValue()).length()));
+			map.put("minimum", minimum);
+			map.put("maximum", maximum);
+			map.put("length", (validatable.getValue()).length());
 			return map;
 		}
 
@@ -244,8 +243,8 @@ public abstract class StringValidator extends AbstractValidator<String>
 		protected Map<String, Object> variablesMap(IValidatable<String> validatable)
 		{
 			final Map<String, Object> map = super.variablesMap(validatable);
-			map.put("maximum", new Integer(maximum));
-			map.put("length", new Integer((validatable.getValue()).length()));
+			map.put("maximum", maximum);
+			map.put("length", (validatable.getValue()).length());
 			return map;
 		}
 	}
@@ -308,8 +307,8 @@ public abstract class StringValidator extends AbstractValidator<String>
 		protected Map<String, Object> variablesMap(IValidatable<String> validatable)
 		{
 			final Map<String, Object> map = super.variablesMap(validatable);
-			map.put("minimum", new Integer(minimum));
-			map.put("length", new Integer((validatable.getValue()).length()));
+			map.put("minimum", minimum);
+			map.put("length", (validatable.getValue()).length());
 			return map;
 		}
 

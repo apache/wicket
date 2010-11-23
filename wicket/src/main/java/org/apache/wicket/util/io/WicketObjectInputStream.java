@@ -451,7 +451,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 				for (int i = 0; i < count; i++)
 				{
 					String key = (String)readObjectOverride();
-					values.put(key, new Byte(readByte()));
+					values.put(key, readByte());
 				}
 				token = readShort();
 				if (token == ClassStreamHandler.NULL)
@@ -466,7 +466,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 				for (int i = 0; i < count; i++)
 				{
 					String key = (String)readObjectOverride();
-					values.put(key, new Short(readShort()));
+					values.put(key, readShort());
 				}
 				token = readShort();
 				if (token == ClassStreamHandler.NULL)
@@ -481,7 +481,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 				for (int i = 0; i < count; i++)
 				{
 					String key = (String)readObjectOverride();
-					values.put(key, new Character(readChar()));
+					values.put(key, readChar());
 				}
 				token = readShort();
 				if (token == ClassStreamHandler.NULL)
@@ -496,7 +496,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 				for (int i = 0; i < count; i++)
 				{
 					String key = (String)readObjectOverride();
-					values.put(key, new Integer(readInt()));
+					values.put(key, readInt());
 				}
 				token = readShort();
 				if (token == ClassStreamHandler.NULL)
@@ -511,7 +511,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 				for (int i = 0; i < count; i++)
 				{
 					String key = (String)readObjectOverride();
-					values.put(key, new Long(readLong()));
+					values.put(key, readLong());
 				}
 				token = readShort();
 				if (token == ClassStreamHandler.NULL)
@@ -526,7 +526,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 				for (int i = 0; i < count; i++)
 				{
 					String key = (String)readObjectOverride();
-					values.put(key, new Float(readFloat()));
+					values.put(key, readFloat());
 				}
 				token = readShort();
 				if (token == ClassStreamHandler.NULL)
@@ -541,7 +541,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 				for (int i = 0; i < count; i++)
 				{
 					String key = (String)readObjectOverride();
-					values.put(key, new Double(readDouble()));
+					values.put(key, readDouble());
 				}
 				token = readShort();
 				if (token == ClassStreamHandler.NULL)
@@ -584,7 +584,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 			Object o = values.get(name);
 			if (o instanceof Byte)
 			{
-				return ((Byte)o).byteValue();
+				return (Byte) o;
 			}
 			return val;
 		}
@@ -598,7 +598,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 			Object o = values.get(name);
 			if (o instanceof Character)
 			{
-				return ((Character)o).charValue();
+				return (Character) o;
 			}
 			return val;
 		}
@@ -612,7 +612,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 			Object o = values.get(name);
 			if (o instanceof Double)
 			{
-				return ((Double)o).doubleValue();
+				return (Double) o;
 			}
 			return val;
 		}
@@ -626,7 +626,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 			Object o = values.get(name);
 			if (o instanceof Float)
 			{
-				return ((Float)o).floatValue();
+				return (Float) o;
 			}
 			return val;
 		}
@@ -640,7 +640,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 			Object o = values.get(name);
 			if (o instanceof Integer)
 			{
-				return ((Integer)o).intValue();
+				return (Integer) o;
 			}
 			return val;
 		}
@@ -654,7 +654,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 			Object o = values.get(name);
 			if (o instanceof Long)
 			{
-				return ((Long)o).longValue();
+				return (Long) o;
 			}
 			return val;
 		}
@@ -668,7 +668,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 			Object o = values.get(name);
 			if (o instanceof Short)
 			{
-				return ((Short)o).shortValue();
+				return (Short) o;
 			}
 			return val;
 		}
@@ -682,7 +682,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 			Object o = values.get(name);
 			if (o instanceof Boolean)
 			{
-				return ((Boolean)o).booleanValue();
+				return (Boolean) o;
 			}
 			return val;
 		}

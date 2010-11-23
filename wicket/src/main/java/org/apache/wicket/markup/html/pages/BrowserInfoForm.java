@@ -300,10 +300,8 @@ public class BrowserInfoForm extends Panel
 			properties.setNavigatorAppName(navigatorAppName);
 			properties.setNavigatorAppVersion(navigatorAppVersion);
 			properties.setNavigatorAppCodeName(navigatorAppCodeName);
-			properties.setCookiesEnabled((navigatorCookieEnabled != null)
-				? navigatorCookieEnabled.booleanValue() : false);
-			properties.setJavaEnabled((navigatorJavaEnabled != null)
-				? navigatorJavaEnabled.booleanValue() : false);
+			properties.setCookiesEnabled((navigatorCookieEnabled != null) ? navigatorCookieEnabled : false);
+			properties.setJavaEnabled((navigatorJavaEnabled != null) ? navigatorJavaEnabled : false);
 			properties.setNavigatorLanguage(navigatorLanguage);
 			properties.setNavigatorPlatform(navigatorPlatform);
 			properties.setNavigatorUserAgent(navigatorUserAgent);

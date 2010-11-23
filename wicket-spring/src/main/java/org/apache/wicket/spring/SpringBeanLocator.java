@@ -206,9 +206,9 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	{
 		if (singletonCache == null)
 		{
-			singletonCache = Boolean.valueOf(getSpringContext().isSingleton(getBeanName()));
+			singletonCache = getSpringContext().isSingleton(getBeanName());
 		}
-		return singletonCache.booleanValue();
+		return singletonCache;
 	}
 
 	/**

@@ -118,10 +118,10 @@ public class AjaxEditableLabel<T> extends Panel
 		protected void respond(AjaxRequestTarget target)
 		{
 			RequestCycle requestCycle = RequestCycle.get();
-			boolean save = Boolean.valueOf(requestCycle.getRequest()
-				.getRequestParameters()
-				.getParameterValue("save")
-				.toBoolean(false));
+			boolean save = requestCycle.getRequest()
+					.getRequestParameters()
+					.getParameterValue("save")
+					.toBoolean(false);
 
 			if (save)
 			{

@@ -600,8 +600,7 @@ public class DatePicker extends AbstractBehavior
 			filterEmpty(dfSymbols.getShortWeekdays()));
 		setWidgetProperty(widgetProperties, "WEEKDAYS_LONG", filterEmpty(dfSymbols.getWeekdays()));
 
-		widgetProperties.put("START_WEEKDAY", new Integer(Calendar.getInstance(getLocale())
-			.getFirstDayOfWeek() - 1));
+		widgetProperties.put("START_WEEKDAY", Calendar.getInstance(getLocale()).getFirstDayOfWeek() - 1);
 
 		if (Locale.SIMPLIFIED_CHINESE.equals(getLocale()) ||
 			Locale.TRADITIONAL_CHINESE.equals(getLocale()))

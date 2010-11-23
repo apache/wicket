@@ -51,7 +51,7 @@ public abstract class Loop extends AbstractRepeater
 	 */
 	public Loop(final String id, final int iterations)
 	{
-		super(id, new Model<Integer>(new Integer(iterations)));
+		super(id, new Model<Integer>(iterations));
 	}
 
 	/**
@@ -73,7 +73,7 @@ public abstract class Loop extends AbstractRepeater
 	 */
 	public final int getIterations()
 	{
-		return ((Integer)getDefaultModelObject()).intValue();
+		return (Integer) getDefaultModelObject();
 	}
 
 	/**

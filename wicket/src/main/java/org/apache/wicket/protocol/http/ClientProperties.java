@@ -1128,7 +1128,7 @@ public class ClientProperties implements IClusterable
 
 				if (field.getType().equals(Integer.TYPE))
 				{
-					if (((Integer)value).intValue() == -1)
+					if ((Integer) value == -1)
 					{
 						value = null;
 					}

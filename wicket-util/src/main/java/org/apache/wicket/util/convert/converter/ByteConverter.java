@@ -48,7 +48,7 @@ public class ByteConverter extends AbstractIntegerConverter<Byte>
 			return null;
 		}
 
-		return new Byte(number.byteValue());
+		return number.byteValue();
 	}
 
 	/**

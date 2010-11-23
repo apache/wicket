@@ -36,23 +36,23 @@ public class RangeValidatorTest extends TestCase
 	{
 		IValidator<Double> validator = new RangeValidator<Double>(1.1, 1.8);
 
-		Validatable<Double> validatable = new Validatable<Double>(new Double(1));
+		Validatable<Double> validatable = new Validatable<Double>((double) 1);
 		validator.validate(validatable);
 		assertEquals(1, validatable.getErrors().size());
 
-		validatable = new Validatable<Double>(new Double(1.1));
+		validatable = new Validatable<Double>(1.1);
 		validator.validate(validatable);
 		assertEquals(0, validatable.getErrors().size());
 
-		validatable = new Validatable<Double>(new Double(1.5));
+		validatable = new Validatable<Double>(1.5);
 		validator.validate(validatable);
 		assertEquals(0, validatable.getErrors().size());
 
-		validatable = new Validatable<Double>(new Double(1.8));
+		validatable = new Validatable<Double>(1.8);
 		validator.validate(validatable);
 		assertEquals(0, validatable.getErrors().size());
 
-		validatable = new Validatable<Double>(new Double(2));
+		validatable = new Validatable<Double>((double) 2);
 		validator.validate(validatable);
 		assertEquals(1, validatable.getErrors().size());
 	}
@@ -65,23 +65,23 @@ public class RangeValidatorTest extends TestCase
 	{
 		IValidator<Integer> validator = new RangeValidator<Integer>(1, 8);
 
-		Validatable<Integer> validatable = new Validatable<Integer>(new Integer(0));
+		Validatable<Integer> validatable = new Validatable<Integer>(0);
 		validator.validate(validatable);
 		assertEquals(1, validatable.getErrors().size());
 
-		validatable = new Validatable<Integer>(new Integer(1));
+		validatable = new Validatable<Integer>(1);
 		validator.validate(validatable);
 		assertEquals(0, validatable.getErrors().size());
 
-		validatable = new Validatable<Integer>(new Integer(5));
+		validatable = new Validatable<Integer>(5);
 		validator.validate(validatable);
 		assertEquals(0, validatable.getErrors().size());
 
-		validatable = new Validatable<Integer>(new Integer(8));
+		validatable = new Validatable<Integer>(8);
 		validator.validate(validatable);
 		assertEquals(0, validatable.getErrors().size());
 
-		validatable = new Validatable<Integer>(new Integer(9));
+		validatable = new Validatable<Integer>(9);
 		validator.validate(validatable);
 		assertEquals(1, validatable.getErrors().size());
 	}

@@ -32,7 +32,7 @@ import org.apache.wicket.validation.validator.MaximumValidator;
  */
 public class StatelessPage extends WebPage
 {
-	private final Integer number = new Integer(10);
+	private final Integer number = 10;
 
 	/**
 	 * Constructor

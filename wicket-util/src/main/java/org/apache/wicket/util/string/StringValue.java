@@ -417,7 +417,7 @@ public class StringValue implements IClusterable
 	 */
 	public final Character toCharacter() throws StringValueConversionException
 	{
-		return new Character(toChar());
+		return toChar();
 	}
 
 	/**
@@ -460,7 +460,7 @@ public class StringValue implements IClusterable
 	 */
 	public final Double toDoubleObject() throws StringValueConversionException
 	{
-		return new Double(toDouble());
+		return toDouble();
 	}
 
 	/**

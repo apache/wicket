@@ -1487,7 +1487,7 @@ public abstract class Component
 
 		if (generatedMarkupId != -1)
 		{
-			return new Integer(generatedMarkupId);
+			return generatedMarkupId;
 		}
 
 		return getMetaData(MARKUP_ID_KEY);
@@ -1546,11 +1546,11 @@ public abstract class Component
 		}
 
 		final int generatedMarkupId = storedMarkupId instanceof Integer
-			? ((Integer)storedMarkupId).intValue() : Session.get().nextSequenceValue();
+			? (Integer) storedMarkupId : Session.get().nextSequenceValue();
 
 		if (storedMarkupId == null)
 		{
-			setMarkupIdImpl(new Integer(generatedMarkupId));
+			setMarkupIdImpl(generatedMarkupId);
 		}
 
 		String markupIdPrefix = "id";
@@ -2763,7 +2763,7 @@ public abstract class Component
 
 		if (markupId instanceof Integer)
 		{
-			generatedMarkupId = ((Integer)markupId).intValue();
+			generatedMarkupId = (Integer) markupId;
 			setMetaData(MARKUP_ID_KEY, null);
 			return;
 		}

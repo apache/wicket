@@ -925,7 +925,7 @@ public final class PropertyResolver
 		 */
 		public Object getValue(Object object)
 		{
-			return new Integer(Array.getLength(object));
+			return Array.getLength(object);
 		}
 
 		/**
@@ -963,7 +963,7 @@ public final class PropertyResolver
 
 		ArrayPropertyGetSet(Method method, int index)
 		{
-			this.index = new Integer(index);
+			this.index = index;
 			getMethod = method;
 			getMethod.setAccessible(true);
 		}

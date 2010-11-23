@@ -48,7 +48,7 @@ public class CharacterConverter extends AbstractConverter<Character>
 		}
 		else if (length == 1)
 		{
-			return new Character(value.charAt(0));
+			return value.charAt(0);
 		}
 		throw newConversionException("Cannot convert '" + value + "' to Character", value, locale);
 	}

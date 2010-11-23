@@ -70,12 +70,9 @@ public final class ConvertersTest extends TestCase
 	public void testConversion()
 	{
 		final IConverterLocator converter = new ConverterLocator();
-		assertEquals("7", converter.getConverter(Integer.class).convertToString(new Integer(7),
-			Locale.US));
-		assertEquals("7.1", converter.getConverter(Double.class).convertToString(new Double(7.1),
-			Locale.US));
-		assertEquals("7,1", converter.getConverter(Double.class).convertToString(new Double(7.1),
-			DUTCH_LOCALE));
+		assertEquals("7", converter.getConverter(Integer.class).convertToString(7, Locale.US));
+		assertEquals("7.1", converter.getConverter(Double.class).convertToString(7.1, Locale.US));
+		assertEquals("7,1", converter.getConverter(Double.class).convertToString(7.1, DUTCH_LOCALE));
 
 		Calendar cal = Calendar.getInstance(DUTCH_LOCALE);
 		cal.clear();
@@ -110,7 +107,7 @@ public final class ConvertersTest extends TestCase
 		assertEquals(new BigDecimal(3000), bdc.convertToObject("3 000", Locale.FRENCH));
 
 		DoubleConverter dc = new DoubleConverter();
-		assertEquals(new Double(3000), dc.convertToObject("3 000", Locale.FRENCH));
+		assertEquals((double) 3000, dc.convertToObject("3 000", Locale.FRENCH));
 
 	}
 
@@ -149,7 +146,7 @@ public final class ConvertersTest extends TestCase
 	{
 		ByteConverter converter = new ByteConverter();
 		assertEquals(new Byte((byte)10), converter.convertToObject("10", Locale.US));
-		assertEquals("10", converter.convertToString(new Byte((byte)10), Locale.US));
+		assertEquals("10", converter.convertToString((byte) 10, Locale.US));
 		try
 		{
 			converter.convertToObject("whatever", Locale.US);
@@ -185,8 +182,8 @@ public final class ConvertersTest extends TestCase
 	public void testDoubleConversions()
 	{
 		DoubleConverter converter = new DoubleConverter();
-		assertEquals(new Double(1.1), converter.convertToObject("1.1", Locale.US));
-		assertEquals("1.1", converter.convertToString(new Double(1.1), Locale.US));
+		assertEquals(1.1, converter.convertToObject("1.1", Locale.US));
+		assertEquals("1.1", converter.convertToString(1.1, Locale.US));
 		try
 		{
 			converter.convertToObject("whatever", Locale.US);
@@ -242,7 +239,7 @@ public final class ConvertersTest extends TestCase
 	{
 		IntegerConverter converter = new IntegerConverter();
 		assertEquals(new Integer(10), converter.convertToObject("10", Locale.US));
-		assertEquals("10", converter.convertToString(new Integer(10), Locale.US));
+		assertEquals("10", converter.convertToString(10, Locale.US));
 		try
 		{
 			converter.convertToObject("whatever", Locale.US);
@@ -279,7 +276,7 @@ public final class ConvertersTest extends TestCase
 	{
 		LongConverter converter = new LongConverter();
 		assertEquals(new Long(10), converter.convertToObject("10", Locale.US));
-		assertEquals("10", converter.convertToString(new Long(10), Locale.US));
+		assertEquals("10", converter.convertToString((long) 10, Locale.US));
 		try
 		{
 			converter.convertToObject("whatever", Locale.US);
@@ -316,7 +313,7 @@ public final class ConvertersTest extends TestCase
 	{
 		ShortConverter converter = new ShortConverter();
 		assertEquals(new Short((short)10), converter.convertToObject("10", Locale.US));
-		assertEquals("10", converter.convertToString(new Short((short)10), Locale.US));
+		assertEquals("10", converter.convertToString((short) 10, Locale.US));
 		try
 		{
 			converter.convertToObject("whatever", Locale.US);

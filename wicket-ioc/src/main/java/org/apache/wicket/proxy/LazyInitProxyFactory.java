@@ -103,10 +103,10 @@ public class LazyInitProxyFactory
 	/**
 	 * Primitive java types and their object wrappers
 	 */
-	private static final List<?> PRIMITIVES = Arrays.asList(new Class[] { String.class, byte.class,
+	private static final List<?> PRIMITIVES = Arrays.asList(String.class, byte.class,
 			Byte.class, short.class, Short.class, int.class, Integer.class, long.class, Long.class,
 			float.class, Float.class, double.class, Double.class, char.class, Character.class,
-			boolean.class, Boolean.class });
+			boolean.class, Boolean.class);
 
 	/**
 	 * Create a lazy init proxy for the specified type. The target object will be located using the
@@ -297,7 +297,7 @@ public class LazyInitProxyFactory
 			}
 			else if (isHashCodeMethod(method))
 			{
-				return new Integer(hashCode());
+				return hashCode();
 			}
 			else if (isToStringMethod(method))
 			{
@@ -391,7 +391,7 @@ public class LazyInitProxyFactory
 			}
 			else if (isHashCodeMethod(method))
 			{
-				return new Integer(hashCode());
+				return hashCode();
 			}
 			else if (isToStringMethod(method))
 			{

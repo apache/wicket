@@ -49,7 +49,7 @@ public class CheckBoxPage extends WicketExamplePage
 			@Override
 			protected void onSubmit()
 			{
-				if (input.bool.booleanValue())
+				if (input.bool)
 				{
 					info("Ok, ok... we'll check it");
 				}

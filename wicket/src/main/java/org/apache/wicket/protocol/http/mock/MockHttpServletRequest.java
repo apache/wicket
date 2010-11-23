@@ -539,7 +539,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		{
 			return -1;
 		}
-		return Integer.valueOf(value).intValue();
+		return Integer.valueOf(value);
 	}
 
 	/**
