@@ -166,7 +166,7 @@ public class WicketMessageResolver implements IComponentResolver
 	{
 		private static final long serialVersionUID = 1L;
 
-		private static final String NOT_FOUND = "[Warning: Property for 'myKeyNotExsts' not found]";
+		private static final String NOT_FOUND = "[Warning: Property for '%s' not found]";
 
 		/**
 		 * Construct.
@@ -235,17 +235,18 @@ public class WicketMessageResolver implements IComponentResolver
 
 				log.warn("No value found for wicket:message tag with key: {}", key);
 
+				String formatedNotFound = String.format(NOT_FOUND, key);
 				// If open tag was open-close
 				if (markupStream.hasMore() == false)
 				{
-					getResponse().write(NOT_FOUND);
+					getResponse().write(formatedNotFound);
 				}
 // else if (markupStream.get() instanceof RawMarkup)
 // {
 // String text = markupStream.get().toString().trim();
 // if (Strings.isEmpty(text))
 // {
-// getResponse().write(NOT_FOUND);
+// getResponse().write(formatedNotFound);
 // }
 // }
 				super.onComponentTagBody(markupStream, openTag);
