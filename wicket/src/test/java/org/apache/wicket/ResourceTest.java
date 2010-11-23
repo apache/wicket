@@ -25,6 +25,8 @@ import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.util.resource.FileResourceStream;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +42,7 @@ public class ResourceTest extends WicketTestCase
 	/**
 	 * tests a resource that is not cacheable.
 	 */
-	public void testResource()
+	public void testFileResourceStream()
 	{
 		final File testFile;
 		try
@@ -54,19 +56,29 @@ public class ResourceTest extends WicketTestCase
 		{
 			throw new RuntimeException(e);
 		}
-
-		IResource file = new ResourceStreamResource(new FileResourceStream(
+		bindToApplicationAsResourceAndRequestIt(new FileResourceStream(
 			new org.apache.wicket.util.file.File(testFile)));
-		tester.getApplication().getSharedResources().add("file", file);
+		assertEquals(MockHttpServletResponse.formatDate(testFile.lastModified()),
+			tester.getLastModifiedFromResponseHeader());
+		assertEquals(TEST_STRING.length(), tester.getContentLengthFromResponseHeader());
+	}
+
+	public void testStringResourceStream()
+	{
+		StringResourceStream resourceStream = new StringResourceStream(TEST_STRING);
+		bindToApplicationAsResourceAndRequestIt(resourceStream);
+		assertEquals(TEST_STRING.length(), tester.getContentLengthFromResponseHeader());
+	}
+
+	private void bindToApplicationAsResourceAndRequestIt(IResourceStream iResourceStream)
+	{
+		IResource resource = new ResourceStreamResource(iResourceStream);
+		tester.getApplication().getSharedResources().add("resource", resource);
 		tester.getRequest().setUrl(
 			tester.getRequestCycle().mapUrlFor(
 				tester.getApplication()
 					.getSharedResources()
-					.get(Application.class, "file", null, null, null, true), null));
+					.get(Application.class, "resource", null, null, null, true), null));
 		tester.processRequest();
-
-		assertEquals(MockHttpServletResponse.formatDate(testFile.lastModified()),
-			tester.getLastModifiedFromResponseHeader());
-		assertEquals(TEST_STRING.length(), tester.getContentLengthFromResponseHeader());
 	}
 }
