@@ -35,7 +35,9 @@ import org.apache.wicket.util.time.Time;
  * 
  * @author Jonathan Locke
  */
-public abstract class AbstractStringResourceStream extends AbstractResourceStream implements IStringResourceStream
+public abstract class AbstractStringResourceStream extends AbstractResourceStream
+	implements
+		IStringResourceStream
 {
 	private static final long serialVersionUID = 1L;
 
@@ -69,6 +71,8 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 	{
 		// TODO null for contentType is allowed? or should the default be applied instead?
 		this.contentType = contentType;
+
+		setLastModified(Time.now());
 	}
 
 	/**
@@ -122,14 +126,14 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 
 	/**
 	 * Sets the character set used for reading this resource.
-	 *
+	 * 
 	 * @param charset
 	 *            Charset for component
 	 */
 	public void setCharset(final Charset charset)
 	{
 		// java.nio.Charset itself is not serializable so we can only store the name
-		this.charsetName = (charset != null) ? charset.name() : null;
+		charsetName = (charset != null) ? charset.name() : null;
 	}
 
 	/**
