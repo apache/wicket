@@ -152,9 +152,9 @@ public class ValidationError implements IValidationError, IClusterable
 		String errorMessage = null;
 
 		// try any message keys ...
-		for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();)
+		for (String key : keys)
 		{
-			errorMessage = messageSource.getMessage(iterator.next());
+			errorMessage = messageSource.getMessage(key);
 			if (errorMessage != null)
 			{
 				break;

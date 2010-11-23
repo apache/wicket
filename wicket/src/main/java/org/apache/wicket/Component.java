@@ -2223,9 +2223,9 @@ public abstract class Component
 			List<Component> feedbacks = getRequestCycle().getMetaData(FEEDBACK_LIST);
 			if (feedbacks != null)
 			{
-				for (int i = 0; i < feedbacks.size(); i++)
+				for (Component feedback : feedbacks)
 				{
-					feedbacks.get(i).internalBeforeRender();
+					feedback.internalBeforeRender();
 				}
 			}
 			getRequestCycle().setMetaData(FEEDBACK_LIST, null);

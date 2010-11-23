@@ -79,11 +79,9 @@ public final class RelativePathPrefixHandler extends BaseMarkupFilter implements
 		public void onComponentTag(Component component, ComponentTag tag)
 		{
 			// Modify all relevant attributes
-			for (int i = 0; i < attributeNames.length; i++)
+			for (String attrName : attributeNames)
 			{
-				String attrName = attributeNames[i];
 				String attrValue = tag.getAttributes().getString(attrName);
-
 
 				if ((attrValue != null) && (attrValue.startsWith("/") == false) &&
 					(attrValue.indexOf(":") < 0) && !(attrValue.startsWith("#")))
@@ -115,9 +113,8 @@ public final class RelativePathPrefixHandler extends BaseMarkupFilter implements
 
 		// Work out whether we have any attributes that require us to add a
 		// behavior that prepends the relative path.
-		for (int i = 0; i < attributeNames.length; i++)
+		for (String attrName : attributeNames)
 		{
-			String attrName = attributeNames[i];
 			String attrValue = tag.getAttributes().getString(attrName);
 			if ((attrValue != null) && (attrValue.startsWith("/") == false) &&
 				(attrValue.indexOf(":") < 0) && !(attrValue.startsWith("#")))

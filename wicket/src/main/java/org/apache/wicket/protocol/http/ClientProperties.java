@@ -323,9 +323,9 @@ public class ClientProperties implements IClusterable
 					{
 						int dstSaving = dstTimeZone.getRawOffset() - timeZone.getRawOffset();
 						String[] availableIDs = TimeZone.getAvailableIDs(timeZone.getRawOffset());
-						for (int i = 0; i < availableIDs.length; i++)
+						for (String availableID : availableIDs)
 						{
-							TimeZone zone = TimeZone.getTimeZone(availableIDs[i]);
+							TimeZone zone = TimeZone.getTimeZone(availableID);
 							if (zone.getDSTSavings() == dstSaving)
 							{
 								// this is a best guess... still the start and end of the DST should
@@ -1100,10 +1100,8 @@ public class ClientProperties implements IClusterable
 
 		Field[] fields = ClientProperties.class.getDeclaredFields();
 
-		for (int i = 0; i < fields.length; i++)
+		for (Field field : fields)
 		{
-			Field field = fields[i];
-
 			// Ignore these fields
 			if (field.getName().equals("serialVersionUID") == false &&
 				field.getName().startsWith("class$") == false &&

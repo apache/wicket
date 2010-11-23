@@ -108,9 +108,8 @@ final class MiddleColumnsView extends WebMarkupContainer
 
 		// go over all columns, check their alignment and count sum of their
 		// weights
-		for (Iterator<IColumn> i = columns.iterator(); i.hasNext();)
+		for (IColumn column : columns)
 		{
-			IColumn column = i.next();
 			// check if the unit is right
 			if (column.getLocation().getUnit() != Unit.PROPORTIONAL)
 			{
@@ -127,9 +126,8 @@ final class MiddleColumnsView extends WebMarkupContainer
 		int spanLeft = 0; // over how many columns does the spanning column
 		// span
 
-		for (Iterator<IColumn> i = columns.iterator(); i.hasNext();)
+		for (IColumn column : columns)
 		{
-			IColumn column = i.next();
 			int ix = index; // to which column should we append the size
 			if (spanLeft > 0) // is there a column spanning over current
 			// column?
@@ -164,9 +162,9 @@ final class MiddleColumnsView extends WebMarkupContainer
 		// count the sum
 		double together = 0d;
 
-		for (int i = 0; i < result.length; i++)
+		for (double value : result)
 		{
-			together += result[i];
+			together += value;
 		}
 
 		// is it bigger than 99.8? that can cause layout problems in IE

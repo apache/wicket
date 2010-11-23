@@ -1685,9 +1685,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 */
 	protected void writeParamsAsHiddenFields(String[] params, AppendingStringBuffer buffer)
 	{
-		for (int j = 0; j < params.length; j++)
+		for (String param : params)
 		{
-			String[] pair = params[j].split("=");
+			String[] pair = param.split("=");
 
 			buffer.append("<input type=\"hidden\" name=\"")
 				.append(recode(pair[0]))
@@ -1880,9 +1880,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 
 		if (dependents != null)
 		{
-			for (int j = 0; j < dependents.length; j++)
+			for (final FormComponent<?> dependent : dependents)
 			{
-				final FormComponent<?> dependent = dependents[j];
 				// check if the dependent component is valid
 				if (!dependent.isValid())
 				{

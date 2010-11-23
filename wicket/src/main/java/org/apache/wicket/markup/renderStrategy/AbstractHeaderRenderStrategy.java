@@ -152,9 +152,8 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 
 		if (renderHeadListeners != null)
 		{
-			for (Iterator<IHeaderContributor> iter = renderHeadListeners.iterator(); iter.hasNext();)
+			for (IHeaderContributor listener : renderHeadListeners)
 			{
-				IHeaderContributor listener = iter.next();
 				listener.renderHead(headerContainer.getHeaderResponse());
 			}
 		}

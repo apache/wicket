@@ -1737,11 +1737,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		try
 		{
 			// Loop through child components
-			for (int i = 0; i < children.length; i++)
+			for (final Component child : children)
 			{
 				// Get next child
-				final Component child = children[i];
-
 				// Call begin request on the child
 				// We need to check whether the child's wasn't removed from the
 				// component in the meanwhile (e.g. from another's child

@@ -96,10 +96,8 @@ public abstract class Injector
 			cache.put(clazz, fields);
 		}
 
-		for (int i = 0; i < fields.length; i++)
+		for (final Field field : fields)
 		{
-			final Field field = fields[i];
-
 			if (!field.isAccessible())
 			{
 				field.setAccessible(true);
@@ -145,10 +143,8 @@ public abstract class Injector
 		while (clazz != null)
 		{
 			Field[] fields = clazz.getDeclaredFields();
-			for (int i = 0; i < fields.length; i++)
+			for (final Field field : fields)
 			{
-				final Field field = fields[i];
-
 				if (factory.supportsField(field))
 				{
 					matched.add(field);

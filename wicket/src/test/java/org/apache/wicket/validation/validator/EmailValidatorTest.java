@@ -51,11 +51,9 @@ public class EmailValidatorTest extends TestCase
 		EmailAddressValidator test = new EmailAddressValidator();
 		String[] emails = new String[] { "b.blaat@topicus.nl", "blaat@hotmail.com",
 				"1.2.3.4@5.6.7.nl", "m@m.nl", "M@M.NL" };
-		for (int i = 0; i < emails.length; i++)
+		for (String email : emails)
 		{
-			assertTrue(emails[i] + " should be valid", test.getPattern()
-				.matcher(emails[i])
-				.matches());
+			assertTrue(email + " should be valid", test.getPattern().matcher(email).matches());
 		}
 	}
 
@@ -67,11 +65,9 @@ public class EmailValidatorTest extends TestCase
 		EmailAddressValidator test = new EmailAddressValidator();
 		String[] emails = new String[] { ".blaat@topicus.nl", "blaat.@hotmail.com", "blaat@nl",
 				"blaat@.nl" };
-		for (int i = 0; i < emails.length; i++)
+		for (String email : emails)
 		{
-			assertFalse(emails[i] + " should not be valid", test.getPattern()
-				.matcher(emails[i])
-				.matches());
+			assertFalse(email + " should not be valid", test.getPattern().matcher(email).matches());
 		}
 	}
 }

@@ -76,10 +76,8 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 			{
 				if (ignoreFile(pathname) == false)
 				{
-					for (int i = 0; i < suffixes.size(); i++)
+					for (String suffix : suffixes)
 					{
-						String suffix = suffixes.get(i);
-
 						if (pathname.getName().endsWith("." + suffix))
 						{
 							accept = true;
@@ -111,12 +109,10 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 					baseDirectory.getAbsolutePath() + System.getProperty("file.separator"), "")
 					.toString();
 
-				for (int i = 0; i < ignoreFiles.size(); i++)
+				for (String ignorePath : ignoreFiles)
 				{
-					String ignorePath = ignoreFiles.get(i);
 					// Will convert '/'s to '\\'s on Windows
-					ignorePath = Strings.replaceAll(ignorePath, "/",
-						System.getProperty("file.separator")).toString();
+					ignorePath = Strings.replaceAll(ignorePath, "/", System.getProperty("file.separator")).toString();
 					File ignoreFile = new File(baseDirectory, ignorePath);
 
 					// Directory ignore
@@ -166,9 +162,8 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 				if (relativePathname.equals("target") == false)
 				{
 					boolean found = false;
-					for (int i = 0; i < ignoreDirectory.length; i++)
+					for (String ignore : ignoreDirectory)
 					{
-						String ignore = ignoreDirectory[i];
 						if (pathname.getName().equals(ignore))
 						{
 							found = true;
@@ -354,9 +349,8 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 
 		if (files != null)
 		{
-			for (int i = 0; i < files.length; i++)
+			for (File file : files)
 			{
-				File file = files[i];
 				fileVisitor.visitFile(file);
 			}
 		}
@@ -366,9 +360,8 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 
 		if (files != null)
 		{
-			for (int i = 0; i < files.length; i++)
+			for (File childDirectory : files)
 			{
-				File childDirectory = files[i];
 				visitDirectory(suffixes, ignoreFiles, childDirectory, fileVisitor);
 			}
 		}

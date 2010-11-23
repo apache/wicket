@@ -117,18 +117,17 @@ public class Home extends WicketExamplePage
 	@SuppressWarnings("unchecked")
 	private void add(DefaultMutableTreeNode parent, List<Object> sub)
 	{
-		for (Iterator<Object> i = sub.iterator(); i.hasNext();)
+		for (Object obj : sub)
 		{
-			Object o = i.next();
-			if (o instanceof List)
+			if (obj instanceof List)
 			{
-				DefaultMutableTreeNode child = new DefaultMutableTreeNode(o);
+				DefaultMutableTreeNode child = new DefaultMutableTreeNode(obj);
 				parent.add(child);
-				add(child, (List<Object>)o);
+				add(child, (List<Object>) obj);
 			}
 			else
 			{
-				DefaultMutableTreeNode child = new DefaultMutableTreeNode(o);
+				DefaultMutableTreeNode child = new DefaultMutableTreeNode(obj);
 				parent.add(child);
 			}
 		}

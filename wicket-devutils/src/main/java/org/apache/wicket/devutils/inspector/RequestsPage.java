@@ -92,9 +92,8 @@ public class RequestsPage extends DevUtilsPage
 				if (sessionData != null)
 				{
 					ArrayList<RequestData> returnValues = new ArrayList<RequestData>();
-					for (int i = 0; i < requests.size(); i++)
+					for (RequestData data : requests)
 					{
-						RequestData data = requests.get(i);
 						if (sessionData.getSessionId().equals(data.getSessionId()))
 						{
 							returnValues.add(data);

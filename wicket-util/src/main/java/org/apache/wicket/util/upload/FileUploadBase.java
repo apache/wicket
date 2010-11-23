@@ -352,9 +352,8 @@ public abstract class FileUploadBase
 		}
 		catch (IOException e)
 		{
-			for (int i = 0; i < items.size(); i++)
+			for (FileItem item : items)
 			{
-				FileItem item = items.get(i);
 				item.delete();
 			}
 			throw new FileUploadException("Processing of " + MULTIPART_FORM_DATA +

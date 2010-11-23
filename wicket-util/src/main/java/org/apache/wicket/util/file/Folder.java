@@ -185,9 +185,9 @@ public class Folder extends File
 		final List<File> files = new ArrayList<File>();
 		files.addAll(Arrays.asList(getFiles(filter)));
 		final Folder[] folders = getFolders();
-		for (int i = 0; i < folders.length; i++)
+		for (Folder folder : folders)
 		{
-			files.addAll(Arrays.asList(folders[i].getNestedFiles(filter)));
+			files.addAll(Arrays.asList(folder.getNestedFiles(filter)));
 		}
 		return files.toArray(new File[files.size()]);
 	}
@@ -294,9 +294,9 @@ public class Folder extends File
 	{
 		final File[] files = getFiles();
 		boolean success = true;
-		for (int i = 0; i < files.length; i++)
+		for (File file : files)
 		{
-			success = files[i].remove() && success;
+			success = file.remove() && success;
 		}
 		return success;
 	}
@@ -312,9 +312,9 @@ public class Folder extends File
 	{
 		final Folder[] folders = getFolders();
 		boolean success = true;
-		for (int i = 0; i < folders.length; i++)
+		for (Folder subfolder : folders)
 		{
-			success = folders[i].remove() && success;
+			success = subfolder.remove() && success;
 		}
 		success = removeFiles() && success;
 		return folder.delete() && success;

@@ -141,20 +141,19 @@ public abstract class BaseTreePage extends BasePage
 
 	private void add(DefaultMutableTreeNode parent, List<Object> sub)
 	{
-		for (Iterator<Object> i = sub.iterator(); i.hasNext();)
+		for (Object obj : sub)
 		{
-			Object o = i.next();
-			if (o instanceof List)
+			if (obj instanceof List)
 			{
 				DefaultMutableTreeNode child = new DefaultMutableTreeNode(new ModelBean(
-					"subtree..."));
+						"subtree..."));
 				parent.add(child);
-				add(child, (List<Object>)o);
+				add(child, (List<Object>) obj);
 			}
 			else
 			{
 				DefaultMutableTreeNode child = new DefaultMutableTreeNode(new ModelBean(
-					o.toString()));
+						obj.toString()));
 				parent.add(child);
 			}
 		}

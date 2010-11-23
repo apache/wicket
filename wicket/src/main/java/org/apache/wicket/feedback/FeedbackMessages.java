@@ -249,9 +249,8 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 */
 	public final FeedbackMessage messageForComponent(final Component component)
 	{
-		for (Iterator<FeedbackMessage> iterator = messages.iterator(); iterator.hasNext();)
+		for (FeedbackMessage message : messages)
 		{
-			FeedbackMessage message = iterator.next();
 			if (message.getReporter() == component)
 			{
 				return message;
@@ -275,9 +274,8 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 		}
 
 		final List<FeedbackMessage> list = new ArrayList<FeedbackMessage>();
-		for (final Iterator<FeedbackMessage> iterator = messages.iterator(); iterator.hasNext();)
+		for (final FeedbackMessage message : messages)
 		{
-			final FeedbackMessage message = iterator.next();
 			if (filter == null || filter.accept(message))
 			{
 				list.add(message);
@@ -307,9 +305,8 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	public final int size(final IFeedbackMessageFilter filter)
 	{
 		int count = 0;
-		for (final Iterator<FeedbackMessage> iterator = messages.iterator(); iterator.hasNext();)
+		for (final FeedbackMessage message : messages)
 		{
-			final FeedbackMessage message = iterator.next();
 			if (filter == null || filter.accept(message))
 			{
 				count++;

@@ -47,9 +47,9 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 			throw new IllegalArgumentException("argument [factories] cannot be null");
 		}
 
-		for (int i = 0; i < factories.length; i++)
+		for (IFieldValueFactory factory : factories)
 		{
-			delegates.add(factories[i]);
+			delegates.add(factory);
 		}
 	}
 

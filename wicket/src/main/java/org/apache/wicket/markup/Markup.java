@@ -138,13 +138,12 @@ public class Markup implements IMarkupFragment
 	 */
 	final public void makeImmutable()
 	{
-		for (int i = 0; i < markupElements.size(); i++)
+		for (MarkupElement markupElement : markupElements)
 		{
-			MarkupElement elem = markupElements.get(i);
-			if (elem instanceof ComponentTag)
+			if (markupElement instanceof ComponentTag)
 			{
 				// Make the tag immutable
-				((ComponentTag)elem).makeImmutable();
+				((ComponentTag) markupElement).makeImmutable();
 			}
 		}
 

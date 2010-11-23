@@ -250,9 +250,8 @@ public class SourcesPage extends WebPage
 			final AppendingStringBuffer relativePath, final File dir)
 		{
 			File[] files = dir.listFiles();
-			for (int i = 0; i < files.length; i++)
+			for (File file : files)
 			{
-				File file = files[i];
 				if (file.isDirectory())
 				{
 					addResources(scope,
@@ -267,7 +266,6 @@ public class SourcesPage extends WebPage
 					{
 						resources.add(relativePath + name);
 					}
-
 				}
 			}
 		}

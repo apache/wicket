@@ -121,9 +121,8 @@ public class Select extends FormComponent
 		 * if the input is null we do not need to do anything since the model collection has already
 		 * been cleared
 		 */
-		for (int i = 0; i < paths.length; i++)
+		for (String path : paths)
 		{
-			String path = paths[i];
 			if (!Strings.isEmpty(path))
 			{
 				/*
@@ -133,7 +132,7 @@ public class Select extends FormComponent
 				path = path.substring(getPath().length() + 1);
 
 				// retrieve the selected option component
-				SelectOption option = (SelectOption)get(path);
+				SelectOption option = (SelectOption) get(path);
 
 				if (option == null)
 				{
@@ -148,7 +147,6 @@ public class Select extends FormComponent
 				}
 				converted.add(option.getDefaultModelObject());
 			}
-
 		}
 
 		if (converted.isEmpty())
@@ -212,9 +210,8 @@ public class Select extends FormComponent
 			String[] paths = getInputAsArray();
 			if (paths != null && paths.length > 0)
 			{
-				for (int i = 0; i < paths.length; i++)
+				for (String path : paths)
 				{
-					String path = paths[i];
 					if (path.equals(option.getPath()))
 					{
 						return true;

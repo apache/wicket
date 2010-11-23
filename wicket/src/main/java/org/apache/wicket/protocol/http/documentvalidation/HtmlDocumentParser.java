@@ -160,9 +160,9 @@ public class HtmlDocumentParser
 		attributeString = Strings.replaceAll(attributeString.trim(), "\t", " ").toString();
 		attributeString = Strings.replaceAll(attributeString, " = ", "=").toString();
 		String[] attributeElements = attributeString.split(" ");
-		for (int i = 0; i < attributeElements.length; i++)
+		for (String attributeElement : attributeElements)
 		{
-			String[] bits = attributeElements[i].split("=");
+			String[] bits = attributeElement.split("=");
 			if (bits.length == 1)
 			{
 				m.put(bits[0].trim().toLowerCase(), "");
@@ -170,7 +170,7 @@ public class HtmlDocumentParser
 			else
 			{
 				bits[0] = bits[0].trim();
-			 StringBuilder value = new StringBuilder();
+				StringBuilder value = new StringBuilder();
 				for (int j = 1; j < bits.length; j++)
 				{
 					value.append(bits[j]);

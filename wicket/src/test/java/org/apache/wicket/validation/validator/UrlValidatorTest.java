@@ -77,9 +77,8 @@ public class UrlValidatorTest extends TestCase
 		String[] schemes = { "http", "gopher" };
 		// UrlValidator urlVal = new UrlValidator(schemes,false,false,false);
 		UrlValidator urlVal = new UrlValidator(schemes, 0);
-		for (int sIndex = 0; sIndex < testScheme.length; sIndex++)
+		for (ResultPair testPair : testScheme)
 		{
-			ResultPair testPair = testScheme[sIndex];
 			boolean result = urlVal.isValidScheme(testPair.item);
 			assertEquals(testPair.item, testPair.valid, result);
 			if (printStatus)

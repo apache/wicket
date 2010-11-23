@@ -215,9 +215,9 @@ public class PageAccessSynchronizerTest
 			bots[i].start();
 		}
 
-		for (int i = 0; i < bots.length; i++)
+		for (Worker bot : bots)
 		{
-			bots[i].join();
+			bot.join();
 		}
 
 		monitor.stop = true;

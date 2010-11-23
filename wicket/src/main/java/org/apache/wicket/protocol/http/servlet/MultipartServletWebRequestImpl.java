@@ -161,11 +161,9 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		}
 
 		// Loop through items
-		for (Iterator<FileItem> i = items.iterator(); i.hasNext();)
+		for (final FileItem item : items)
 		{
 			// Get next item
-			final FileItem item = i.next();
-
 			// If item is a form field
 			if (item.isFormField())
 			{

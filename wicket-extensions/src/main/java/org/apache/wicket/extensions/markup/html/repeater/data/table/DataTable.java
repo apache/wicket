@@ -372,9 +372,9 @@ public class DataTable<T> extends Panel implements IPageable
 		super.onDetach();
 		if (columns != null)
 		{
-			for (int i = 0; i < columns.length; i++)
+			for (IColumn<?> column : columns)
 			{
-				columns[i].detach();
+				column.detach();
 			}
 		}
 	}

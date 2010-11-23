@@ -62,9 +62,9 @@ public final class Path implements IResourcePath
 	{
 		if (folders != null)
 		{
-			for (int i = 0; i < folders.length; i++)
+			for (Folder folder : folders)
 			{
-				add(folders[i]);
+				add(folder);
 			}
 		}
 	}
@@ -99,9 +99,8 @@ public final class Path implements IResourcePath
 	 */
 	public IResourceStream find(final Class<?> clazz, final String pathname)
 	{
-		for (int i = 0; i < folders.size(); i++)
+		for (Folder folder : folders)
 		{
-			Folder folder = folders.get(i);
 			final File file = new File(folder, pathname);
 
 			if (file.exists())

@@ -159,9 +159,9 @@ public abstract class AbstractDataGridView<T> extends DataViewBase<T>
 		super.onDetach();
 		if (populators != null)
 		{
-			for (int i = 0; i < populators.length; i++)
+			for (ICellPopulator<T> populator : populators)
 			{
-				populators[i].detach();
+				populator.detach();
 			}
 		}
 	}

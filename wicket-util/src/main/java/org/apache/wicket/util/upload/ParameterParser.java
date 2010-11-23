@@ -132,9 +132,9 @@ public class ParameterParser
 	private boolean isOneOf(char ch, final char[] charray)
 	{
 		boolean result = false;
-		for (int i = 0; i < charray.length; i++)
+		for (char character : charray)
 		{
-			if (ch == charray[i])
+			if (ch == character)
 			{
 				result = true;
 				break;

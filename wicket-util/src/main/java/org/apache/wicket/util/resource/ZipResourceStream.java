@@ -125,14 +125,14 @@ public class ZipResourceStream extends AbstractResourceStream
 		BufferedInputStream origin = null;
 		byte data[] = new byte[BUFFER];
 
-		for (int i = 0; i < files.length; i++)
+		for (String file : files)
 		{
 			if (log.isDebugEnabled())
 			{
-				log.debug("Adding: " + files[i]);
+				log.debug("Adding: " + file);
 			}
 
-			File f = new File(dir, files[i]);
+			File f = new File(dir, file);
 			if (f.isDirectory())
 			{
 				if (recursive == true)

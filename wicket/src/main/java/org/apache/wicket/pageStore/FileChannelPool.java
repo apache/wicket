@@ -307,9 +307,8 @@ public class FileChannelPool
 	public synchronized void destroy()
 	{
 		log.debug("Destroying FileChannel pool");
-		for (Iterator<FileChannel> i = channelToName.keySet().iterator(); i.hasNext();)
+		for (FileChannel channel : channelToName.keySet())
 		{
-			FileChannel channel = i.next();
 			try
 			{
 				channel.close();

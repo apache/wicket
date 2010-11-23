@@ -199,9 +199,9 @@ public class ConcurrentHashSet<E> extends AbstractSet<E>
 		s.defaultWriteObject();
 		s.writeInt(map.size());
 
-		for (Iterator<E> i = map.keySet().iterator(); i.hasNext();)
+		for (E key : map.keySet())
 		{
-			s.writeObject(i.next());
+			s.writeObject(key);
 		}
 	}
 

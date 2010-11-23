@@ -101,9 +101,9 @@ public class ResourceSettings implements ResourceSettingsMBean
 		if (loaders != null)
 		{
 			List list = new ArrayList();
-			for (Iterator iter = loaders.iterator(); iter.hasNext();)
+			for (Object loader : loaders)
 			{
-				list.add(iter.next().toString());
+				list.add(loader.toString());
 			}
 			return (String[])list.toArray(new String[loaders.size()]);
 		}

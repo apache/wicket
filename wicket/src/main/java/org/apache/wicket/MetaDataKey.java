@@ -66,12 +66,11 @@ public abstract class MetaDataKey<T> implements IClusterable
 	{
 		if (metaData != null)
 		{
-			for (int i = 0; i < metaData.length; i++)
+			for (MetaDataEntry entry : metaData)
 			{
-				MetaDataEntry m = metaData[i];
-				if (equals(m.key))
+				if (equals(entry.key))
 				{
-					return (T)m.object;
+					return (T) entry.object;
 				}
 			}
 		}

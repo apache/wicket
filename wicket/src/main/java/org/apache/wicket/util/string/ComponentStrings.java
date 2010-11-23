@@ -100,9 +100,9 @@ public class ComponentStrings
 
 	private static boolean shouldSkip(String text, String[] filters)
 	{
-		for (int i = 0; i < filters.length; i++)
+		for (String filter : filters)
 		{
-			if (text.indexOf(filters[i]) >= 0)
+			if (text.indexOf(filter) >= 0)
 			{
 				return true;
 			}

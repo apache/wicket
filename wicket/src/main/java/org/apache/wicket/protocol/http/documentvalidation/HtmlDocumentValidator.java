@@ -411,10 +411,8 @@ public class HtmlDocumentValidator
 					Map<String, String> actualAttributes = parser.getAttributes();
 
 					Map<String, String> expectedAttributes = workingTag.getExpectedAttributes();
-					for (Iterator<Map.Entry<String, String>> it = expectedAttributes.entrySet()
-						.iterator(); it.hasNext();)
+					for (Map.Entry<String, String> entry : expectedAttributes.entrySet())
 					{
-						Map.Entry<String, String> entry = it.next();
 						String name = entry.getKey();
 						String pattern = entry.getValue();
 						if (!actualAttributes.containsKey(name))
@@ -443,9 +441,8 @@ public class HtmlDocumentValidator
 						}
 					}
 
-					for (Iterator<String> it = workingTag.getIllegalAttributes().iterator(); it.hasNext();)
+					for (String name : workingTag.getIllegalAttributes())
 					{
-						String name = it.next();
 						if (actualAttributes.containsKey(name))
 						{
 							log.error("Tag <" + workingTag.getTag() +

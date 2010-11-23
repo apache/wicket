@@ -386,9 +386,9 @@ public class UrlValidator extends AbstractValidator<String>
 			// VALIDATOR-203
 			char[] chars = hostIP.toCharArray();
 			int size = 1;
-			for (int i = 0; i < chars.length; i++)
+			for (char ch : chars)
 			{
-				if (chars[i] == '.')
+				if (ch == '.')
 				{
 					size++;
 				}

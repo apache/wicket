@@ -67,9 +67,9 @@ public final class TimeMap implements Serializable
 	 */
 	public Object get(final Time time)
 	{
-		for (final Iterator<ITimeFrameSource> iterator = sources.keySet().iterator(); iterator.hasNext();)
+		for (ITimeFrameSource source : sources.keySet())
 		{
-			final TimeFrame current = iterator.next().getTimeFrame();
+			final TimeFrame current = source.getTimeFrame();
 			if (current.contains(time))
 			{
 				return sources.get(current);
@@ -93,14 +93,13 @@ public final class TimeMap implements Serializable
 	{
 		final TimeFrame timeframe = source.getTimeFrame();
 
-		for (final Iterator<ITimeFrameSource> iterator = sources.keySet().iterator(); iterator.hasNext();)
+		for (ITimeFrameSource tfs : sources.keySet())
 		{
-			final TimeFrame current = iterator.next().getTimeFrame();
+			final TimeFrame current = tfs.getTimeFrame();
 
 			if (timeframe.overlaps(current))
 			{
-				throw new IllegalArgumentException("Timeframe " + timeframe +
-					" overlaps timeframe " + current);
+				throw new IllegalArgumentException("Timeframe " + timeframe + " overlaps timeframe " + current);
 			}
 		}
 

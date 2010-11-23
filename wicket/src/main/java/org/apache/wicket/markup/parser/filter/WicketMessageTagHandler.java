@@ -122,9 +122,8 @@ public final class WicketMessageTagHandler extends BaseMarkupFilter implements I
 
 				String[] attrsAndKeys = expr.split(",");
 
-				for (int i = 0; i < attrsAndKeys.length; i++)
+				for (String attrAndKey : attrsAndKeys)
 				{
-					String attrAndKey = attrsAndKeys[i];
 					int colon = attrAndKey.lastIndexOf(":");
 					// make sure the attribute-key pair is valid
 					if (attrAndKey.length() < 3 || colon < 1 || colon > attrAndKey.length() - 2)

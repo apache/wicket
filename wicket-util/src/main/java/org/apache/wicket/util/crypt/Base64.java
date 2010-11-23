@@ -664,9 +664,9 @@ public class Base64
 	 */
 	public static boolean isArrayByteBase64(byte[] arrayOctet)
 	{
-		for (int i = 0; i < arrayOctet.length; i++)
+		for (byte octet : arrayOctet)
 		{
-			if (!isBase64(arrayOctet[i]) && !isWhiteSpace(arrayOctet[i]))
+			if (!isBase64(octet) && !isWhiteSpace(octet))
 			{
 				return false;
 			}
@@ -685,9 +685,9 @@ public class Base64
 	 */
 	private static boolean containsBase64Byte(byte[] arrayOctet)
 	{
-		for (int i = 0; i < arrayOctet.length; i++)
+		for (byte octet : arrayOctet)
 		{
-			if (isBase64(arrayOctet[i]))
+			if (isBase64(octet))
 			{
 				return true;
 			}

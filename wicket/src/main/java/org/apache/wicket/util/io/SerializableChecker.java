@@ -546,14 +546,14 @@ public final class SerializableChecker extends ObjectOutputStream
 				{
 					throw new RuntimeException(e);
 				}
-				for (int i = 0; i < slots.length; i++)
+				for (Object slot : slots)
 				{
 					ObjectStreamClass slotDesc;
 					try
 					{
-						Field descField = slots[i].getClass().getDeclaredField("desc");
+						Field descField = slot.getClass().getDeclaredField("desc");
 						descField.setAccessible(true);
-						slotDesc = (ObjectStreamClass)descField.get(slots[i]);
+						slotDesc = (ObjectStreamClass) descField.get(slot);
 					}
 					catch (Exception e)
 					{

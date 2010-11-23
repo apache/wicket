@@ -407,15 +407,15 @@ public class MockServletContext implements ServletContext
 		}
 
 		File current = webappRoot;
-		for (int i = 0; i < elements.length; i++)
+		for (String element : elements)
 		{
 			File[] files = current.listFiles();
 			boolean match = false;
-			for (int f = 0; f < files.length; f++)
+			for (File file : files)
 			{
-				if (files[f].getName().equals(elements[i]) && files[f].isDirectory())
+				if (file.getName().equals(element) && file.isDirectory())
 				{
-					current = files[f];
+					current = file;
 					match = true;
 					break;
 				}
@@ -429,10 +429,10 @@ public class MockServletContext implements ServletContext
 		File[] files = current.listFiles();
 		Set<String> result = new HashSet<String>();
 		int stripLength = webappRoot.getPath().length();
-		for (int f = 0; f < files.length; f++)
+		for (File file : files)
 		{
-			String s = files[f].getPath().substring(stripLength).replace('\\', '/');
-			if (files[f].isDirectory())
+			String s = file.getPath().substring(stripLength).replace('\\', '/');
+			if (file.isDirectory())
 			{
 				s = s + "/";
 			}

@@ -484,9 +484,8 @@ public class XmlTag extends MarkupElement
 	 */
 	public void putAll(final Map<String, Object> map)
 	{
-		for (final Iterator<Map.Entry<String, Object>> iterator = map.entrySet().iterator(); iterator.hasNext();)
+		for (final Map.Entry<String, Object> entry : map.entrySet())
 		{
-			final Map.Entry<String, Object> entry = iterator.next();
 			Object value = entry.getValue();
 			put(entry.getKey(), (value != null) ? value.toString() : null);
 		}

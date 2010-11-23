@@ -112,10 +112,8 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 
 		if (values != null && values.length > 0)
 		{
-			for (int i = 0; i < values.length; i++)
+			for (final String value : values)
 			{
-				final String value = values[i];
-
 				if (value != null)
 				{
 					Check<T> checkbox = visitChildren(Check.class,

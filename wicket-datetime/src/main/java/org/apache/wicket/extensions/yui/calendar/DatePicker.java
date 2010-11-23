@@ -420,22 +420,22 @@ public class DatePicker extends AbstractBehavior
 	 * Filter all empty elements (workaround for {@link DateFormatSymbols} returning arrays with
 	 * empty elements).
 	 * 
-	 * @param array
+	 * @param stringArray
 	 *            array to filter
 	 * @return filtered array (without null or empty string elements)
 	 */
-	protected final String[] filterEmpty(String[] array)
+	protected final String[] filterEmpty(String[] stringArray)
 	{
-		if (array == null)
+		if (stringArray == null)
 		{
 			return null;
 		}
-		List<String> l = new ArrayList<String>(array.length);
-		for (int i = 0; i < array.length; i++)
+		List<String> l = new ArrayList<String>(stringArray.length);
+		for (String string : stringArray)
 		{
-			if (!Strings.isEmpty(array[i]))
+			if (!Strings.isEmpty(string))
 			{
-				l.add(array[i]);
+				l.add(string);
 			}
 		}
 		return l.toArray(new String[l.size()]);

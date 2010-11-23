@@ -211,10 +211,8 @@ public final class AutoComponentResolver implements IComponentResolver
 		}
 
 		// Get all remaining attributes and invoke the component's setters
-		Iterator<Map.Entry<String, Object>> iter = tag.getAttributes().entrySet().iterator();
-		while (iter.hasNext())
+		for (Map.Entry<String, Object> entry : tag.getAttributes().entrySet())
 		{
-			final Map.Entry<String, Object> entry = iter.next();
 			final String key = entry.getKey();
 			final String value = entry.getValue().toString();
 
@@ -253,11 +251,11 @@ public final class AutoComponentResolver implements IComponentResolver
 		final String methodName = "set" + name;
 		final Method[] methods = object.getClass().getMethods();
 		Method method = null;
-		for (int i = 0; i < methods.length; i++)
+		for (Method methodTested : methods)
 		{
-			if (methods[i].getName().equalsIgnoreCase(methodName))
+			if (methodTested.getName().equalsIgnoreCase(methodName))
 			{
-				method = methods[i];
+				method = methodTested;
 			}
 		}
 

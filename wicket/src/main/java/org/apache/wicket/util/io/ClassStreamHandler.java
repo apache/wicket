@@ -56,14 +56,14 @@ public final class ClassStreamHandler
 		try
 		{
 			Class<?>[] classes = ObjectStreamClass.class.getDeclaredClasses();
-			for (int i = 0; i < classes.length; i++)
+			for (Class<?> clazz : classes)
 			{
-				if (classes[i].getName().equals("java.io.ObjectStreamClass$FieldReflector"))
+				if (clazz.getName().equals("java.io.ObjectStreamClass$FieldReflector"))
 				{
-					Field unsafeField = classes[i].getDeclaredField("unsafe");
+					Field unsafeField = clazz.getDeclaredField("unsafe");
 					unsafeField.setAccessible(true);
 
-					unsafe = (Unsafe)unsafeField.get(null);
+					unsafe = (Unsafe) unsafeField.get(null);
 					break;
 				}
 			}
@@ -316,12 +316,11 @@ public final class ClassStreamHandler
 			return;
 		}
 		Field[] fields = cls.getDeclaredFields();
-		for (int i = 0; i < fields.length; i++)
+		for (Field field : fields)
 		{
-			Field field = fields[i];
 			field.setAccessible(true);
 			if (!Modifier.isStatic(field.getModifiers()) &&
-				!Modifier.isTransient(field.getModifiers()))
+					!Modifier.isTransient(field.getModifiers()))
 			{
 				FieldAndIndex fai = null;
 				Class<?> clz = field.getType();
@@ -415,9 +414,9 @@ public final class ClassStreamHandler
 		FieldAndIndex fai = null;
 		try
 		{
-			for (int i = 0; i < fields.size(); i++)
+			for (FieldAndIndex field : fields)
 			{
-				fai = fields.get(i);
+				fai = field;
 				fai.readField(object, wois);
 			}
 		}

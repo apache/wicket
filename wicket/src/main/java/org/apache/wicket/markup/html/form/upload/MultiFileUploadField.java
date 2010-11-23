@@ -284,9 +284,9 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 
 			uploads = new ArrayList<FileUpload>(filenames.length);
 
-			for (int i = 0; i < filenames.length; i++)
+			for (String filename : filenames)
 			{
-				uploads.add(new FileUpload(request.getFile(filenames[i])));
+				uploads.add(new FileUpload(request.getFile(filename)));
 			}
 		}
 

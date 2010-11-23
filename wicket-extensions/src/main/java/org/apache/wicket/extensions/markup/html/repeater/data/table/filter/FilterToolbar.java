@@ -69,17 +69,16 @@ public class FilterToolbar extends AbstractToolbar
 		add(filters);
 
 		IColumn<?>[] cols = table.getColumns();
-		for (int i = 0; i < cols.length; i++)
+		for (IColumn<?> col : cols)
 		{
 			WebMarkupContainer item = new WebMarkupContainer(filters.newChildId());
 			item.setRenderBodyOnly(true);
 
-			IColumn<?> col = cols[i];
 			Component filter = null;
 
 			if (col instanceof IFilteredColumn)
 			{
-				IFilteredColumn<?> filteredCol = (IFilteredColumn<?>)col;
+				IFilteredColumn<?> filteredCol = (IFilteredColumn<?>) col;
 				filter = filteredCol.getFilter(id, form);
 			}
 

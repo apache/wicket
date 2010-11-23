@@ -335,10 +335,9 @@ public class IntHashMap<V> implements Cloneable, Serializable
 
 	void putAllForCreate(IntHashMap<V> m)
 	{
-		for (Iterator<Entry<V>> i = m.entrySet().iterator(); i.hasNext();)
+		for (Entry<V> entry : m.entrySet())
 		{
-			Entry<V> e = i.next();
-			putForCreate(e.getKey(), e.getValue());
+			putForCreate(entry.getKey(), entry.getValue());
 		}
 	}
 
@@ -440,10 +439,9 @@ public class IntHashMap<V> implements Cloneable, Serializable
 			}
 		}
 
-		for (Iterator<Entry<V>> i = m.entrySet().iterator(); i.hasNext();)
+		for (Entry<V> entry : m.entrySet())
 		{
-			Entry<V> e = i.next();
-			put(e.getKey(), e.getValue());
+			put(entry.getKey(), entry.getValue());
 		}
 	}
 
@@ -571,10 +569,9 @@ public class IntHashMap<V> implements Cloneable, Serializable
 			return containsNullValue();
 		}
 
-		Entry<V> tab[] = table;
-		for (int i = 0; i < tab.length; i++)
+		for (Entry<V> entry : table)
 		{
-			for (Entry<V> e = tab[i]; e != null; e = e.next)
+			for (Entry<V> e = entry; e != null; e = e.next)
 			{
 				if (value.equals(e.value))
 				{
@@ -593,9 +590,9 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	private boolean containsNullValue()
 	{
 		Entry<V> tab[] = table;
-		for (int i = 0; i < tab.length; i++)
+		for (Entry<V> tabEntry : tab)
 		{
-			for (Entry<V> e = tab[i]; e != null; e = e.next)
+			for (Entry<V> e = tabEntry; e != null; e = e.next)
 			{
 				if (e.value == null)
 				{
@@ -1123,11 +1120,10 @@ public class IntHashMap<V> implements Cloneable, Serializable
 		s.writeInt(size);
 
 		// Write out keys and values (alternating)
-		for (Iterator<Entry<V>> i = entrySet().iterator(); i.hasNext();)
+		for (Entry<V> entry : entrySet())
 		{
-			Entry<V> e = i.next();
-			s.writeInt(e.getKey());
-			s.writeObject(e.getValue());
+			s.writeInt(entry.getKey());
+			s.writeObject(entry.getValue());
 		}
 	}
 

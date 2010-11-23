@@ -291,13 +291,13 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 			final List<? extends T> choices = getChoices();
 
 			// Loop through selected indices
-			for (int i = 0; i < ids.length; i++)
+			for (String id : ids)
 			{
 				for (int index = 0; index < choices.size(); index++)
 				{
 					// Get next choice
 					final T choice = choices.get(index);
-					if (getChoiceRenderer().getIdValue(choice, index).equals(ids[i]))
+					if (getChoiceRenderer().getIdValue(choice, index).equals(id))
 					{
 						selectedValues.add(choice);
 						break;

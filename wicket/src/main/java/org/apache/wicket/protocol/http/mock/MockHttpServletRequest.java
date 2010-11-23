@@ -55,6 +55,7 @@ import org.apache.wicket.request.UrlDecoder;
 import org.apache.wicket.request.UrlEncoder;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.io.IOUtils;
+import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.upload.FileUploadBase;
 import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
@@ -1124,9 +1125,9 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public void setCookies(final Cookie[] theCookies)
 	{
 		cookies.clear();
-		for (int i = 0; i < theCookies.length; i++)
+		for (Cookie cookie : theCookies)
 		{
-			cookies.add(theCookies[i]);
+			cookies.add(cookie);
 		}
 	}
 
@@ -1449,13 +1450,12 @@ public class MockHttpServletRequest implements HttpServletRequest
 				return "".getBytes();
 			}
 			Url url = new Url();
-			for (Iterator<String> iterator = post.getParameterNames().iterator(); iterator.hasNext();)
+			for (final String parameterName : post.getParameterNames())
 			{
-				final String name = iterator.next();
-				List<org.apache.wicket.util.string.StringValue> values = post.getParameterValues(name);
-				for (org.apache.wicket.util.string.StringValue value : values)
+				List<StringValue> values = post.getParameterValues(parameterName);
+				for (StringValue value : values)
 				{
-					url.addQueryParameter(name, value.toString());
+					url.addQueryParameter(parameterName, value.toString());
 				}
 			}
 			String body = url.toString().substring(1);
@@ -1469,31 +1469,27 @@ public class MockHttpServletRequest implements HttpServletRequest
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 			// Add parameters
-			for (Iterator<String> iterator = post.getParameterNames().iterator(); iterator.hasNext();)
+			for (final String parameterName : post.getParameterNames())
 			{
-				final String name = iterator.next();
-				List<org.apache.wicket.util.string.StringValue> values = post.getParameterValues(name);
-				for (org.apache.wicket.util.string.StringValue value : values)
+				List<StringValue> values = post.getParameterValues(parameterName);
+				for (StringValue value : values)
 				{
 					newAttachment(out);
 					out.write("; name=\"".getBytes());
-					out.write(name.getBytes());
+					out.write(parameterName.getBytes());
 					out.write("\"".getBytes());
 					out.write(crlf.getBytes());
 					out.write(crlf.getBytes());
-					out.write(post.getParameterValue(name).toString().getBytes());
+					out.write(post.getParameterValue(parameterName).toString().getBytes());
 					out.write(crlf.getBytes());
 				}
-
 			}
 
 			// Add files
 			if (uploadedFiles != null)
 			{
-				for (Iterator<String> iterator = uploadedFiles.keySet().iterator(); iterator.hasNext();)
+				for (String fieldName : uploadedFiles.keySet())
 				{
-					String fieldName = iterator.next();
-
 					UploadedFile uf = uploadedFiles.get(fieldName);
 
 					newAttachment(out);

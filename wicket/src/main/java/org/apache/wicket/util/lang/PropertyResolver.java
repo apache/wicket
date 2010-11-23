@@ -530,12 +530,12 @@ public final class PropertyResolver
 			while (tmp != null && tmp != Object.class)
 			{
 				Field[] fields = tmp.getDeclaredFields();
-				for (int i = 0; i < fields.length; i++)
+				for (Field aField : fields)
 				{
-					if (fields[i].getName().equals(expression))
+					if (aField.getName().equals(expression))
 					{
-						fields[i].setAccessible(true);
-						return fields[i];
+						aField.setAccessible(true);
+						return aField;
 					}
 				}
 				tmp = tmp.getSuperclass();
@@ -1226,16 +1226,16 @@ public final class PropertyResolver
 			catch (NoSuchMethodException e)
 			{
 				Method[] methods = clz.getMethods();
-				for (int i = 0; i < methods.length; i++)
+				for (Method method : methods)
 				{
-					if (methods[i].getName().equals(name))
+					if (method.getName().equals(name))
 					{
-						Class<?>[] parameterTypes = methods[i].getParameterTypes();
+						Class<?>[] parameterTypes = method.getParameterTypes();
 						if (parameterTypes.length == 1)
 						{
 							if (parameterTypes[0].isAssignableFrom(getMethod.getReturnType()))
 							{
-								return methods[i];
+								return method;
 							}
 						}
 					}

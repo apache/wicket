@@ -477,10 +477,10 @@ public final class StringsTest extends TestCase
 	{
 		AppendingStringBuffer sb = new AppendingStringBuffer("[");
 		String komma = "";
-		for (int i = 0; i < arrayOfStrings.length; i++)
+		for (String str : arrayOfStrings)
 		{
 			sb.append(komma);
-			sb.append(arrayOfStrings[i]);
+			sb.append(str);
 			komma = ",";
 		}
 		sb.append("]");

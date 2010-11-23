@@ -201,9 +201,9 @@ public class ReloadingClassLoader extends URLClassLoader
 		// probably doubles from this class, but just in case
 		addClassLoaderUrls(parent);
 
-		for (Iterator<URL> iter = urls.iterator(); iter.hasNext();)
+		for (URL url : urls)
 		{
-			addURL(iter.next());
+			addURL(url);
 		}
 		watcher = new ModificationWatcher(pollFrequency);
 	}

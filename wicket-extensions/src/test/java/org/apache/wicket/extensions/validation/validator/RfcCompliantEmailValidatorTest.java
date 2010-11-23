@@ -39,9 +39,8 @@ public class RfcCompliantEmailValidatorTest extends TestCase
 				"firstname.middlename@lastname.dk", "buy@something.nu", "user@post.inet.tele.dk",
 				"read@my.info", "my @email.com", "my@ email.com", "\"John Doe\"@email.com",
 				"no@domain", "german@m�dchen.de", "another.german@�m��l.com" };
-		for (int i = 0; i < validEmails.length; i++)
+		for (String emailAddress : validEmails)
 		{
-			String emailAddress = validEmails[i];
 			Validatable validatable = new Validatable(emailAddress);
 			validator.validate(validatable);
 			assertTrue(emailAddress + " wasn't valid but should be", validatable.isValid());
@@ -60,9 +59,8 @@ public class RfcCompliantEmailValidatorTest extends TestCase
 				".dot.in.the.beginning.is.not.good@wicketframework.org", " space@front.com",
 				"space@back.com ", "\ttab@front.com", "tab@back.com\t" };
 
-		for (int i = 0; i < inValidEmails.length; i++)
+		for (String emailAddress : inValidEmails)
 		{
-			String emailAddress = inValidEmails[i];
 			Validatable validatable = new Validatable(emailAddress);
 			validator.validate(validatable);
 			assertFalse(emailAddress + " was valid but shouldn't be", validatable.isValid());

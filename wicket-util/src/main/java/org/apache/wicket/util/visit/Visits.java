@@ -127,11 +127,9 @@ public class Visits
 		}
 
 		// Iterate through children of this container
-		for (final Iterator<?> children = container.iterator(); children.hasNext();)
+		for (final Object child : container)
 		{
 			// Get next child component
-			final Object child = children.next();
-
 			// Is the child of the correct class (or was no class specified)?
 			if (filter.visitObject(child))
 			{
@@ -139,7 +137,7 @@ public class Visits
 
 				// Call visitor
 				@SuppressWarnings("unchecked")
-				S s = (S)child;
+				S s = (S) child;
 				visitor.component(s, childTraversal);
 
 				if (childTraversal.isStopped())
@@ -158,7 +156,7 @@ public class Visits
 				filter.visitChildren(child))
 			{
 				// visit the children in the container
-				visitChildren((Iterable<? super S>)child, visitor, filter, visit);
+				visitChildren((Iterable<? super S>) child, visitor, filter, visit);
 
 				if (visit.isStopped())
 				{
@@ -261,9 +259,8 @@ public class Visits
 			if (filter.visitChildren(container))
 			{
 				Visit<R> childTraversal = new Visit<R>();
-				for (final Iterator<?> iterator = ((Iterable<?>)component).iterator(); iterator.hasNext();)
+				for (final Object child : ((Iterable<?>) component))
 				{
-					final Object child = iterator.next();
 					visitPostOrderHelper(child, visitor, filter, childTraversal);
 					if (childTraversal.isStopped())
 					{
