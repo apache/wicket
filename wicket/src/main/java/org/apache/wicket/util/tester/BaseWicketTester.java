@@ -367,7 +367,7 @@ public class BaseWicketTester
 
 	/**
 	 * 
-	 * @return
+	 * @return session
 	 */
 	public Session getSession()
 	{
@@ -382,6 +382,16 @@ public class BaseWicketTester
 	public WebApplication getApplication()
 	{
 		return application;
+	}
+
+	/**
+	 * Returns the {@link ServletContext} for this environment
+	 * 
+	 * @return servlet context
+	 */
+	public org.apache.wicket.protocol.http.mock.MockServletContext getServletContext()
+	{
+		return servletContext;
 	}
 
 	/**
