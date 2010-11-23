@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -372,6 +373,16 @@ public class BaseWicketTester
 	public Session getSession()
 	{
 		return session;
+	}
+
+	/**
+	 * Returns {@link HttpSession} for this environment
+	 * 
+	 * @return session
+	 */
+	public MockHttpSession getHttpSession()
+	{
+		return hsession;
 	}
 
 	/**
