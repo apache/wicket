@@ -18,19 +18,24 @@ package org.apache.wicket.request.mapper;
 
 import java.util.Locale;
 
+import org.apache.wicket.ThreadContext;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.util.ValueProvider;
+import org.apache.wicket.util.time.Time;
+import org.mockito.Mockito;
 
 /**
  * @author Matej Knopp
  */
 public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTest
 {
-	private static final ValueProvider<Boolean> TIMESTAMPS = new ValueProvider<Boolean>(false);
+	private static final ValueProvider<Boolean> TIMESTAMPS_OFF = new ValueProvider<Boolean>(false);
+	private static final ValueProvider<Boolean> TIMESTAMPS_ON = new ValueProvider<Boolean>(true);
 
 	/**
 	 * Construct.
@@ -39,7 +44,18 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	{
 	}
 
-	private final BasicResourceReferenceMapper encoder = new BasicResourceReferenceMapper(new PageParametersEncoder(), TIMESTAMPS)
+	private final BasicResourceReferenceMapper encoder =
+		new BasicResourceReferenceMapper(new PageParametersEncoder(), TIMESTAMPS_OFF)
+	{
+		@Override
+		protected IMapperContext getContext()
+		{
+			return context;
+		}
+	};
+
+	private final BasicResourceReferenceMapper encoderWithTimestamps =
+		new BasicResourceReferenceMapper(new PageParametersEncoder(), TIMESTAMPS_ON)
 	{
 		@Override
 		protected IMapperContext getContext()
@@ -404,5 +420,59 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		Url url = encoder.mapHandler(handler);
 		assertEquals("wicket/resource/" + CLASS_NAME + "/reference4?en-style&p1=v1&p2=v2",
 			url.toString());
+	}
+
+	public void testLastModifiedTimestampIsPartOfUrl()
+	{
+		long millis = 12345678L;
+		final ResourceReferenceWithTimestamp reference = new ResourceReferenceWithTimestamp(Time.milliseconds(millis));
+		final IRequestHandler handler = new ResourceReferenceRequestHandler(reference, null);
+
+		// request url with timestamp
+		Url url = encoderWithTimestamps.mapHandler(handler);
+
+		// check that url contains timestamp
+		String timestampPart = BasicResourceReferenceMapper.TIMESTAMP_PREFIX + Long.toString(millis) + "?";
+		assertTrue(url.toString().contains(timestampPart));
+	}
+
+	@SuppressWarnings({"unchecked"})
+	public void testLastModifiedTimestampCache()
+	{
+		long millis = 87654321L;
+		final ResourceReferenceWithTimestamp reference = new ResourceReferenceWithTimestamp(Time.milliseconds(millis));
+		final IRequestHandler handler = new ResourceReferenceRequestHandler(reference, null);
+
+		// setup mock request cycle
+		RequestCycle cycle = Mockito.mock(RequestCycle.class);
+		ThreadContext.setRequestCycle(cycle);
+
+		// request url with timestamp
+		Url url1 = encoderWithTimestamps.mapHandler(handler);
+		assertNotNull(url1);
+		assertEquals(1, reference.lastModifiedInvocationCount);
+
+		// subsequent request should take timestamp from request cycle scoped cache
+		Url url2 = encoderWithTimestamps.mapHandler(handler);
+		assertNotNull(url2);
+
+		Url url3 = encoderWithTimestamps.mapHandler(handler);
+		assertNotNull(url3);
+		
+		assertEquals(1, reference.lastModifiedInvocationCount);
+
+		// urls should be equal
+		assertEquals(url1, url2);
+		assertEquals(url1, url3);
+
+		// clear cache
+		BasicResourceReferenceMapper.removeLastModifiedTimestampFromCache(reference);
+
+		// request url with timestamp (will force a lookup)
+		Url url4 = encoderWithTimestamps.mapHandler(handler);
+		assertNotNull(url4);
+		assertEquals(2, reference.lastModifiedInvocationCount);
+
+		assertEquals(url1, url4);
 	}
 }

@@ -16,16 +16,19 @@
  */
 package org.apache.wicket.request.mapper;
 
+import java.io.Serializable;
 import java.util.Locale;
 
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.time.Time;
 
 /**
  * @author Matej Knopp
  */
-public abstract class AbstractResourceReferenceMapperTest extends AbstractMapperTest
+public abstract class AbstractResourceReferenceMapperTest extends AbstractMapperTest implements Serializable
 {
+	public static final Time LAST_MODIFIED = Time.milliseconds(12345678L);
 
 	/**
 	 * Construct.
@@ -99,7 +102,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		public IResource getResource()
 		{
 			return resource1;
-		};
+		}
 	};
 
 	protected ResourceReference reference1_a = new ResourceReference(
@@ -111,7 +114,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		public IResource getResource()
 		{
 			return resource1;
-		};
+		}
 	};
 
 	protected ResourceReference reference1_b = new ResourceReference(
@@ -123,7 +126,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		public IResource getResource()
 		{
 			return resource1;
-		};
+		}
 	};
 
 	protected ResourceReference reference2 = new ResourceReference(
@@ -136,7 +139,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		public IResource getResource()
 		{
 			return resource2;
-		};
+		}
 	};
 
 	protected ResourceReference reference2_a = new ResourceReference(
@@ -149,7 +152,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		public IResource getResource()
 		{
 			return resource2;
-		};
+		}
 	};
 
 	protected ResourceReference reference3 = new ResourceReference(
@@ -161,7 +164,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		public IResource getResource()
 		{
 			return resource3;
-		};
+		}
 	};
 
 	protected ResourceReference reference4 = new ResourceReference(
@@ -173,7 +176,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		public IResource getResource()
 		{
 			return resource4;
-		};
+		}
 	};
 
 	protected ResourceReference reference5 = new ResourceReference(
@@ -185,7 +188,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		public IResource getResource()
 		{
 			return resource5;
-		};
+		}
 	};
 
 	protected ResourceReference reference6 = new ResourceReference(
@@ -198,7 +201,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		public IResource getResource()
 		{
 			return resource6;
-		};
+		}
 	};
 
 	@Override
@@ -215,5 +218,31 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		context.getResourceReferenceRegistry().registerResourceReference(reference4);
 		context.getResourceReferenceRegistry().registerResourceReference(reference5);
 		context.getResourceReferenceRegistry().registerResourceReference(reference6);
+	}
+
+	// resource reference that monitors and supports the last modified timestamp
+	protected class ResourceReferenceWithTimestamp extends ResourceReference
+	{
+		protected int lastModifiedInvocationCount = 0;
+		private final Time lastModified;
+
+		public ResourceReferenceWithTimestamp(Time lastModified)
+		{
+			super(AbstractResourceReferenceMapperTest.class, "timestamped", Locale.ENGLISH, "style", null);
+			this.lastModified = lastModified;
+		}
+
+		@Override
+		public IResource getResource()
+		{
+			return resource4;
+		}
+
+		@Override
+		public Time getLastModified()
+		{
+			lastModifiedInvocationCount++;
+			return lastModified;
+		}
 	}
 }
