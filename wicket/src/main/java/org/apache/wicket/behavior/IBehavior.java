@@ -107,7 +107,7 @@ public interface IBehavior extends IClusterable
 	 * @param exception
 	 *            the unexpected exception
 	 */
-	void exception(Component component, RuntimeException exception);
+	void onException(Component component, RuntimeException exception);
 
 	/**
 	 * This method returns false if the behavior generates a callback url (for example ajax

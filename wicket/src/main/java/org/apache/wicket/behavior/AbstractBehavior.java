@@ -56,7 +56,7 @@ public abstract class AbstractBehavior implements IBehavior
 
 	/**
 	 * This method is called either by {@link #onRendered(Component)} or
-	 * {@link #onException(Component, RuntimeException)} AFTER they called their respective template
+	 * {@link #onHandleException(Component, RuntimeException)} AFTER they called their respective template
 	 * methods. Override this template method to do any necessary cleanup.
 	 */
 	public void cleanup()
@@ -71,14 +71,14 @@ public abstract class AbstractBehavior implements IBehavior
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.IBehavior#exception(org.apache.wicket.Component,
+	 * @see org.apache.wicket.behavior.IBehavior#onException(org.apache.wicket.Component,
 	 *      java.lang.RuntimeException)
 	 */
-	public final void exception(Component component, RuntimeException exception)
+	public final void onException(Component component, RuntimeException exception)
 	{
 		try
 		{
-			onException(component, exception);
+			onHandleException(component, exception);
 		}
 		finally
 		{
@@ -112,7 +112,7 @@ public abstract class AbstractBehavior implements IBehavior
 	 * @param exception
 	 *            the unexpected exception
 	 */
-	public void onException(Component component, RuntimeException exception)
+	public void onHandleException(Component component, RuntimeException exception)
 	{
 	}
 

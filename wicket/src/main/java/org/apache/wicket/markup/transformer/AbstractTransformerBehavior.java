@@ -130,11 +130,11 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.AbstractBehavior#onException(org.apache.wicket.Component,
+	 * @see org.apache.wicket.behavior.AbstractBehavior#onHandleException(org.apache.wicket.Component,
 	 *      java.lang.RuntimeException)
 	 */
 	@Override
-	public void onException(Component component, RuntimeException exception)
+	public void onHandleException(Component component, RuntimeException exception)
 	{
 		if (webResponse != null)
 		{

@@ -2412,7 +2412,7 @@ public abstract class Component
 			{
 				try
 				{
-					behavior.exception(this, ex);
+					behavior.onException(this, ex);
 				}
 				catch (Throwable ex2)
 				{
