@@ -60,10 +60,8 @@ public class LinkParser implements ILinkParser
 		}
 
 		String work = text;
-		Iterator<String> iter = renderStrategies.keySet().iterator();
-		while (iter.hasNext())
+		for (String pattern : renderStrategies.keySet())
 		{
-			String pattern = iter.next();
 			ILinkRenderStrategy strategy = renderStrategies.get(pattern);
 
 			Matcher matcher = Pattern.compile(pattern, Pattern.DOTALL).matcher(work);

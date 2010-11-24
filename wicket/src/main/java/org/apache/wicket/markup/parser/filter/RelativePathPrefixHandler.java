@@ -84,7 +84,7 @@ public final class RelativePathPrefixHandler extends BaseMarkupFilter implements
 				String attrValue = tag.getAttributes().getString(attrName);
 
 				if ((attrValue != null) && (attrValue.startsWith("/") == false) &&
-					(attrValue.indexOf(":") < 0) && !(attrValue.startsWith("#")))
+					(!attrValue.contains(":")) && !(attrValue.startsWith("#")))
 				{
 					tag.getAttributes().put(attrName,
 						UrlUtils.rewriteToContextRelative(attrValue, RequestCycle.get()));
@@ -117,7 +117,7 @@ public final class RelativePathPrefixHandler extends BaseMarkupFilter implements
 		{
 			String attrValue = tag.getAttributes().getString(attrName);
 			if ((attrValue != null) && (attrValue.startsWith("/") == false) &&
-				(attrValue.indexOf(":") < 0) && !(attrValue.startsWith("#")))
+				(!attrValue.contains(":")) && !(attrValue.startsWith("#")))
 			{
 				if (tag.getId() == null)
 				{

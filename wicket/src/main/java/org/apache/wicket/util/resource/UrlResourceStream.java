@@ -139,7 +139,7 @@ public class UrlResourceStream extends AbstractResourceStream implements IFixedL
 	 */
 	private void testContentType()
 	{
-		if (contentType == null || contentType.indexOf("unknown") != -1)
+		if (contentType == null || contentType.contains("unknown"))
 		{
 			Application application = Application.get();
 			if (application instanceof WebApplication)
@@ -232,7 +232,7 @@ public class UrlResourceStream extends AbstractResourceStream implements IFixedL
 		}
 		catch (IOException e)
 		{
-			if (url.toString().indexOf(".jar!") >= 0)
+			if (url.toString().contains(".jar!"))
 			{
 				if (log.isDebugEnabled())
 				{

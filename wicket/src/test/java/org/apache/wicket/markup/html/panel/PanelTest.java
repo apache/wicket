@@ -57,8 +57,8 @@ public class PanelTest extends WicketTestCase
 			hit = true;
 
 			assertNotNull(mex.getMarkupStream());
-			assertTrue(mex.getMessage().indexOf("does not have a close tag") != -1);
-			assertTrue(mex.getMessage().indexOf("SimplePanel_1.html") != -1);
+			assertTrue(mex.getMessage().contains("does not have a close tag"));
+			assertTrue(mex.getMessage().contains("SimplePanel_1.html"));
 		}
 		assertTrue("Did expect a MarkupException", hit);
 	}
@@ -77,8 +77,8 @@ public class PanelTest extends WicketTestCase
 		{
 			hit = true;
 
-			assertTrue(mex.getMessage().indexOf("Expected to find <wicket:panel>") != -1);
-			assertTrue(mex.getMessage().indexOf("SimplePanel_2.html") != -1);
+			assertTrue(mex.getMessage().contains("Expected to find <wicket:panel>"));
+			assertTrue(mex.getMessage().contains("SimplePanel_2.html"));
 		}
 		assertTrue("Did expect a MarkupException", hit);
 	}

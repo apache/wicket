@@ -17,7 +17,6 @@
 package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.wicket.Application;
@@ -87,11 +86,8 @@ public final class WicketNamespaceHandler extends BaseMarkupFilter
 	{
 		// For all tags attributes
 		final IValueMap attributes = tag.getAttributes();
-		final Iterator<Map.Entry<String, Object>> it = attributes.entrySet().iterator();
-		while (it.hasNext())
+		for (Map.Entry<String, Object> entry : attributes.entrySet())
 		{
-			final Map.Entry<String, Object> entry = it.next();
-
 			// Find attributes with namespace "xmlns"
 			final String attributeName = entry.getKey();
 			if (attributeName.startsWith(XMLNS))

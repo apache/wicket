@@ -169,7 +169,7 @@ public class TagTester
 
 			if (value != null)
 			{
-				if (value.indexOf(partialValue) > -1)
+				if (value.contains(partialValue))
 				{
 					contains = true;
 				}

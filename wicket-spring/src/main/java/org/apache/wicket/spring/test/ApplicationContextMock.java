@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -53,7 +52,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	private final Map beans = new HashMap();
+	private final Map<String, Object> beans = new HashMap<String, Object>();
 
 	/**
 	 * puts bean with the given name into the context
@@ -114,10 +113,8 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	{
 		Map found = new HashMap();
 
-		Iterator it = beans.entrySet().iterator();
-		while (it.hasNext())
+		for (Entry entry : beans.entrySet())
 		{
-			final Map.Entry entry = (Entry)it.next();
 			if (type.isAssignableFrom(entry.getValue().getClass()))
 			{
 				found.put(entry.getKey(), entry.getValue());
@@ -192,16 +189,13 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	public String[] getBeanNamesForType(Class type)
 	{
 		ArrayList names = new ArrayList();
-		Iterator entries = beans.entrySet().iterator();
-		while (entries.hasNext())
+		for (Entry<String, Object> entry : beans.entrySet())
 		{
-			Entry entry = (Entry)entries.next();
 			Object bean = entry.getValue();
 
 			if (type.isAssignableFrom(bean.getClass()))
 			{
-				String name = (String)entry.getKey();
-				names.add(name);
+				names.add(entry.getKey());
 			}
 		}
 		return (String[])names.toArray(new String[names.size()]);

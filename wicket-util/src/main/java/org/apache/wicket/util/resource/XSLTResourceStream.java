@@ -20,7 +20,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -83,10 +82,8 @@ public class XSLTResourceStream extends AbstractResourceStream
 			Map<Object, Object> parameters = getParameters();
 			if (parameters != null)
 			{
-				Iterator<Entry<Object, Object>> it = parameters.entrySet().iterator();
-				while (it.hasNext())
+				for (Entry<Object, Object> e : parameters.entrySet())
 				{
-					Entry<Object, Object> e = it.next();
 					trans.setParameter(e.getKey().toString(), e.getValue().toString());
 				}
 			}

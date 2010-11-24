@@ -103,11 +103,11 @@ class JavaLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		String header = extractLicenseHeader(file, 0, 20);
 
 		// Check for some of the known license types:
-		if (header.indexOf("Apache License, Version 2.0") != -1)
+		if (header.contains("Apache License, Version 2.0"))
 		{
 			licenseType = "ASL2";
 		}
-		else if (header.indexOf("The Apache Software License, Version 1.1") != -1)
+		else if (header.contains("The Apache Software License, Version 1.1"))
 		{
 			licenseType = "ASL1.1";
 		}

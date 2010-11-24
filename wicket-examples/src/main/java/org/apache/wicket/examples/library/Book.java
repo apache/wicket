@@ -20,7 +20,6 @@ package org.apache.wicket.examples.library;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -98,10 +97,8 @@ public final class Book implements IClusterable
 	private void add(final Book book)
 	{
 		boolean hit = false;
-		final Iterator<Book> iter = idToBook.values().iterator();
-		while (iter.hasNext())
+		for (Book value : idToBook.values())
 		{
-			final Book value = iter.next();
 			if (value.toString().equals(book.toString()))
 			{
 				book.id = value.id;

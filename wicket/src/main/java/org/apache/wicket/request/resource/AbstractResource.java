@@ -469,7 +469,7 @@ public abstract class AbstractResource implements IResource
 		String mimeType = data.getContentType();
 		String encoding = null;
 
-		if (mimeType != null && mimeType.indexOf("text") != -1)
+		if (mimeType != null && mimeType.contains("text"))
 		{
 			encoding = data.getTextEncoding();
 		}

@@ -179,10 +179,8 @@ public class Recorder<T> extends HiddenField<Object>
 		}
 
 		List<T> unselected = new ArrayList<T>(Math.max(1, choices.size() - ids.length));
-		Iterator<? extends T> it = choices.iterator();
-		while (it.hasNext())
+		for (T choice : choices)
 		{
-			final T choice = it.next();
 			final String choiceId = renderer.getIdValue(choice, 0);
 			boolean selected = false;
 			for (String id : ids)

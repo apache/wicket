@@ -107,10 +107,8 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 	 */
 	public Object getFieldValue(Field field, Object fieldOwner)
 	{
-		Iterator<IFieldValueFactory> it = delegates.iterator();
-		while (it.hasNext())
+		for (IFieldValueFactory factory : delegates)
 		{
-			final IFieldValueFactory factory = it.next();
 			Object object = factory.getFieldValue(field, fieldOwner);
 			if (object != null)
 			{
@@ -125,10 +123,8 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 	 */
 	public boolean supportsField(Field field)
 	{
-		Iterator<IFieldValueFactory> it = delegates.iterator();
-		while (it.hasNext())
+		for (IFieldValueFactory factory : delegates)
 		{
-			final IFieldValueFactory factory = it.next();
 			if (factory.supportsField(field))
 			{
 				return true;

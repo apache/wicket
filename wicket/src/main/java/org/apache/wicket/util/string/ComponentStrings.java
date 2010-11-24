@@ -82,7 +82,7 @@ public class ComponentStrings
 			if (!(traceString.startsWith("sun.reflect.") && i > 1))
 			{
 				// filter out reflection API calls from the stack trace
-				if (traceString.indexOf("java.lang.reflect") < 0)
+				if (!traceString.contains("java.lang.reflect"))
 				{
 					sb.append("     at ");
 					sb.append(traceString);
@@ -102,7 +102,7 @@ public class ComponentStrings
 	{
 		for (String filter : filters)
 		{
-			if (text.indexOf(filter) >= 0)
+			if (text.contains(filter))
 			{
 				return true;
 			}

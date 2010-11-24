@@ -52,7 +52,6 @@ package org.apache.wicket.util.diff;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -277,10 +276,9 @@ public class Chunk extends ToString
 	 */
 	public void applyAdd(int start, List<Object> target)
 	{
-		Iterator<Object> i = chunk.iterator();
-		while (i.hasNext())
+		for (Object aChunk : chunk)
 		{
-			target.add(start++, i.next());
+			target.add(start++, aChunk);
 		}
 	}
 
@@ -310,11 +308,10 @@ public class Chunk extends ToString
 	{
 		if (chunk != null)
 		{
-			Iterator<?> i = chunk.iterator();
-			while (i.hasNext())
+			for (Object aChunk : chunk)
 			{
 				s.append(prefix);
-				s.append(i.next());
+				s.append(aChunk);
 				s.append(postfix);
 			}
 		}

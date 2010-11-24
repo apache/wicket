@@ -18,7 +18,6 @@ package org.apache.wicket.util.file;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -92,10 +91,8 @@ public final class WebApplicationPath implements IResourcePath
 	 */
 	public IResourceStream find(final Class<?> clazz, final String pathname)
 	{
-		Iterator<Folder> foldersIter = folders.iterator();
-		while (foldersIter.hasNext())
+		for (Folder folder : folders)
 		{
-			Folder folder = foldersIter.next();
 			final File file = new File(folder, pathname);
 			if (file.exists())
 			{
@@ -103,10 +100,8 @@ public final class WebApplicationPath implements IResourcePath
 			}
 		}
 
-		Iterator<String> webappPathsIter = webappPaths.iterator();
-		while (webappPathsIter.hasNext())
+		for (String path : webappPaths)
 		{
-			String path = webappPathsIter.next();
 			try
 			{
 				final URL url = servletContext.getResource(path + pathname);

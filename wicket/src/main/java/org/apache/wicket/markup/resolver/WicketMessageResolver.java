@@ -17,7 +17,6 @@
 package org.apache.wicket.markup.resolver;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.wicket.Application;
@@ -329,10 +328,8 @@ public class WicketMessageResolver implements IComponentResolver
 			getResponse().write(text);
 
 			// Make sure all of the children were rendered
-			Iterator<String> iter = childTags.keySet().iterator();
-			while (iter.hasNext())
+			for (String id : childTags.keySet())
 			{
-				String id = iter.next();
 				if (variablesReplaced.containsKey(id) == false)
 				{
 					String msg = "The <wicket:message key=\"" + key +

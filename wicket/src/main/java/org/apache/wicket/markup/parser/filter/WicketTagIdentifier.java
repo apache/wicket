@@ -18,7 +18,6 @@ package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.markup.ComponentTag;
@@ -157,10 +156,8 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	 */
 	private boolean isWellKnown(final XmlTag xmlTag)
 	{
-		final Iterator<String> iterator = wellKnownTagNames.iterator();
-		while (iterator.hasNext())
+		for (String name : wellKnownTagNames)
 		{
-			final String name = iterator.next();
 			if (xmlTag.getName().equalsIgnoreCase(name))
 			{
 				return true;

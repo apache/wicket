@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.util.watch;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -147,11 +146,8 @@ public class ModificationWatcher implements IModificationWatcher
 		{
 			public void run(final Logger log)
 			{
-				Iterator<Entry> iter = modifiableToEntry.values().iterator();
-				while (iter.hasNext())
+				for (Entry entry : modifiableToEntry.values())
 				{
-					final Entry entry = iter.next();
-
 					// If the modifiable has been modified after the last known
 					// modification time
 					final Time modifiableLastModified = entry.modifiable.lastModifiedTime();

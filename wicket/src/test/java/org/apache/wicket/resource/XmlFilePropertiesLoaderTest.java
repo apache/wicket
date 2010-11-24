@@ -18,7 +18,6 @@ package org.apache.wicket.resource;
 
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
@@ -48,10 +47,8 @@ public class XmlFilePropertiesLoaderTest
 
 		WicketTester tester = new WicketTester();
 
-		Iterator<Locale> iterator = EXPECTED_LOCALIZATIONS.keySet().iterator();
-		while (iterator.hasNext())
+		for (Locale locale : EXPECTED_LOCALIZATIONS.keySet())
 		{
-			Locale locale = iterator.next();
 			tester.getSession().setLocale(locale);
 			tester.startPage(PageWithXmlProperties.class);
 		}

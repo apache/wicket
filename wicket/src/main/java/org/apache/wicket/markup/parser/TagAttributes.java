@@ -93,10 +93,9 @@ public class TagAttributes extends ValueMap
 	@Override
 	public final void putAll(Map map)
 	{
-		Iterator<?> iter = map.keySet().iterator();
-		while (iter.hasNext())
+		for (Object o : map.keySet())
 		{
-			String key = (String)iter.next();
+			String key = (String)o;
 			checkIdAttribute(key);
 		}
 

@@ -66,7 +66,7 @@ public final class PropertyVariableInterpolator extends VariableInterpolator
 	public static String interpolate(final String string, final Object object)
 	{
 		// If there's any reason to go to the expense of property expressions
-		if (string.indexOf("${") != -1)
+		if (string.contains("${"))
 		{
 			// Do property expression interpolation
 			return new PropertyVariableInterpolator(string, object).toString();

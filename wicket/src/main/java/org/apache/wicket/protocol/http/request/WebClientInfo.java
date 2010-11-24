@@ -130,7 +130,7 @@ public class WebClientInfo extends ClientInfo
 		}
 		else
 		{
-			if (remoteAddr.indexOf(",") != -1)
+			if (remoteAddr.contains(","))
 			{
 				// sometimes the header is of form client ip,proxy 1 ip,proxy 2 ip,...,proxy n ip,
 				// we just want the client
@@ -147,9 +147,9 @@ public class WebClientInfo extends ClientInfo
 	{
 		String userAgent = (getUserAgent() != null) ? getUserAgent().toLowerCase() : "";
 
-		boolean browserChrome = userAgent.indexOf("chrome") != -1;
-		boolean browserOpera = userAgent.indexOf("opera") != -1;
-		boolean browserKonqueror = userAgent.indexOf("konqueror") != -1;
+		boolean browserChrome = userAgent.contains("chrome");
+		boolean browserOpera = userAgent.contains("opera");
+		boolean browserKonqueror = userAgent.contains("konqueror");
 
 		// Note deceptive user agent fields:
 		// - Konqueror and Chrome UA fields contain "like Gecko"
@@ -157,14 +157,14 @@ public class WebClientInfo extends ClientInfo
 		// - Chrome UA field contains "Safari"
 		boolean deceptiveUserAgent = browserOpera || browserKonqueror || browserChrome;
 
-		boolean browserSafari = !deceptiveUserAgent && userAgent.indexOf("safari") != -1;
+		boolean browserSafari = !deceptiveUserAgent && userAgent.contains("safari");
 
 		// -Safari UA fields contain "like Gecko"
 		deceptiveUserAgent = deceptiveUserAgent || browserSafari;
 
-		boolean browserMozilla = !deceptiveUserAgent && userAgent.indexOf("gecko") != -1;
-		boolean browserFireFox = userAgent.indexOf("firefox") != -1;
-		boolean browserInternetExplorer = !deceptiveUserAgent && userAgent.indexOf("msie") != -1;
+		boolean browserMozilla = !deceptiveUserAgent && userAgent.contains("gecko");
+		boolean browserFireFox = userAgent.contains("firefox");
+		boolean browserInternetExplorer = !deceptiveUserAgent && userAgent.contains("msie");
 
 		int majorVersion = -1, minorVersion = -1;
 

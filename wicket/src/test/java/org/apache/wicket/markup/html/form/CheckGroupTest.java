@@ -222,8 +222,7 @@ public class CheckGroupTest extends WicketTestCase
 		}
 		catch (WicketRuntimeException e)
 		{
-			if (e.getMessage().indexOf(
-				"Check component [4:form:check2] cannot find its parent CheckGroup") < 0)
+			if (!e.getMessage().contains("Check component [4:form:check2] cannot find its parent CheckGroup"))
 			{
 				fail("failed with wrong exception");
 			}

@@ -199,8 +199,7 @@ public class RadioGroupTest extends WicketTestCase
 		}
 		catch (WicketRuntimeException e)
 		{
-			if (e.getMessage().indexOf(
-				"Radio component [1:form:radio2] cannot find its parent RadioGroup") < 0)
+			if (!e.getMessage().contains("Radio component [1:form:radio2] cannot find its parent RadioGroup"))
 			{
 				fail("failed with wrong exception");
 			}

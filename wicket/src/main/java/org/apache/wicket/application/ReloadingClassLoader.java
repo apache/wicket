@@ -86,10 +86,8 @@ public class ReloadingClassLoader extends URLClassLoader
 		{
 			// See if it matches include patterns
 			tryHere = false;
-			Iterator<String> includesIterator = patterns.iterator();
-			while (includesIterator.hasNext())
+			for (String rawpattern : patterns)
 			{
-				String rawpattern = includesIterator.next();
 				if (rawpattern.length() <= 1)
 				{
 					continue;

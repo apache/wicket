@@ -16,8 +16,6 @@
  */
 package org.apache.wicket;
 
-import java.util.Iterator;
-
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 
@@ -49,10 +47,8 @@ public class MarkupContainerTest extends WicketTestCase
 			container.add(new WebComponent(Integer.toString(i)));
 		}
 		int i = 0;
-		Iterator iter = container.iterator();
-		while (iter.hasNext())
+		for (Component component : container)
 		{
-			Component component = (Component)iter.next();
 			assertEquals(Integer.toString(i++), component.getId());
 		}
 	}

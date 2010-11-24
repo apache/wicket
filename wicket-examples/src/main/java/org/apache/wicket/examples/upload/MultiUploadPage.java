@@ -134,10 +134,8 @@ public class MultiUploadPage extends WicketExamplePage
 		@Override
 		protected void onSubmit()
 		{
-			Iterator<FileUpload> it = uploads.iterator();
-			while (it.hasNext())
+			for (FileUpload upload : uploads)
 			{
-				final FileUpload upload = it.next();
 				// Create a new file
 				File newFile = new File(getUploadFolder(), upload.getClientFileName());
 

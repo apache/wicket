@@ -198,7 +198,7 @@ public class WicketLinkTagHandler extends BaseMarkupFilter implements IComponent
 	 */
 	private final boolean checkRef(String ref)
 	{
-		return (ref != null) && (ref.indexOf(":") == -1);
+		return (ref != null) && (!ref.contains(":"));
 	}
 
 	/**

@@ -290,10 +290,8 @@ public class PropertiesFactory implements IPropertiesFactory
 				clearCache();
 
 				// Inform all listeners
-				Iterator<IPropertiesChangeListener> iter = afterReloadListeners.iterator();
-				while (iter.hasNext())
+				for (IPropertiesChangeListener listener : afterReloadListeners)
 				{
-					IPropertiesChangeListener listener = iter.next();
 					try
 					{
 						listener.propertiesChanged(path);

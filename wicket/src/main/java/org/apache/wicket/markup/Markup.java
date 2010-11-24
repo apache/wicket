@@ -211,10 +211,9 @@ public class Markup implements IMarkupFragment
 			buf.append("\n");
 		}
 
-		final Iterator<MarkupElement> iter = markupElements.iterator();
-		while (iter.hasNext())
+		for (MarkupElement markupElement : markupElements)
 		{
-			buf.append(iter.next());
+			buf.append(markupElement);
 		}
 
 		return buf.toString();

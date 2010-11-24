@@ -25,7 +25,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.WildcardCollectionModel;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 
 /**
@@ -110,9 +109,8 @@ public class SelectOptions<T> extends RepeatingView
 				}
 
 				// iterator over model objects for SelectOption components
-				Iterator<? extends T> it = modelObject.iterator();
 
-				while (it.hasNext())
+				for (T value : modelObject)
 				{
 					// we need a container to represent a row in repeater
 					WebMarkupContainer row = new WebMarkupContainer(newChildId());
@@ -120,7 +118,6 @@ public class SelectOptions<T> extends RepeatingView
 					add(row);
 
 					// we add our actual SelectOption component to the row
-					T value = it.next();
 					String text = renderer.getDisplayValue(value);
 					IModel<T> model = renderer.getModel(value);
 					row.add(newOption(text, model));

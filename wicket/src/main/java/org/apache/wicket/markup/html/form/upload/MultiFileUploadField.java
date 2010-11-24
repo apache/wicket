@@ -38,7 +38,6 @@ import org.apache.wicket.util.upload.FileItem;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -234,12 +233,10 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 			{
 				// retrieve the filename->FileItem map from request
 				final Map<String, FileItem> itemNameToItem = ((IMultipartWebRequest)request).getFiles();
-				Iterator<Entry<String, FileItem>> it = itemNameToItem.entrySet().iterator();
-				while (it.hasNext())
+				for (Entry<String, FileItem> entry : itemNameToItem.entrySet())
 				{
 					// iterate over the map and build the list of filenames
 
-					final Entry<String, FileItem> entry = it.next();
 					final String name = entry.getKey();
 					final FileItem item = entry.getValue();
 
@@ -334,10 +331,8 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 		Collection<FileUpload> uploads = getConvertedInput();
 		if (uploads != null)
 		{
-			Iterator<FileUpload> it = uploads.iterator();
-			while (it.hasNext())
+			for (FileUpload upload : uploads)
 			{
-				final FileUpload upload = it.next();
 				upload.closeStreams();
 			}
 		}

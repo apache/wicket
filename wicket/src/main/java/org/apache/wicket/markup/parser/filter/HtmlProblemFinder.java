@@ -98,10 +98,8 @@ public final class HtmlProblemFinder extends BaseMarkupFilter
 
 		// Some people are using a dot "wicket.xxx" instead of a colon
 		// "wicket:xxx"
-		Iterator<String> iter = tag.getAttributes().keySet().iterator();
-		while (iter.hasNext())
+		for (String key : tag.getAttributes().keySet())
 		{
-			String key = iter.next();
 			if (key != null)
 			{
 				key = key.toLowerCase();

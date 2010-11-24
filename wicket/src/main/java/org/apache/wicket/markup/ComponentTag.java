@@ -688,10 +688,8 @@ public class ComponentTag extends MarkupElement
 
 		if (getAttributes().size() > 0)
 		{
-			final Iterator<String> iterator = getAttributes().keySet().iterator();
-			while (iterator.hasNext())
+			for (String key : getAttributes().keySet())
 			{
-				final String key = iterator.next();
 				if (key == null)
 				{
 					continue;
