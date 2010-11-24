@@ -154,26 +154,7 @@ public class FormInput extends WicketExamplePage
 				{
 					if (URL.class.isAssignableFrom(type))
 					{
-						return (IConverter<C>)new IConverter<URL>()
-						{
-							public URL convertToObject(String value, Locale locale)
-							{
-								try
-								{
-									return new URL(value.toString());
-								}
-								catch (MalformedURLException e)
-								{
-									throw new ConversionException("'" + value +
-										"' is not a valid URL");
-								}
-							}
-
-							public String convertToString(URL value, Locale locale)
-							{
-								return value != null ? value.toString() : null;
-							}
-						};
+						return (IConverter<C>)URLConverter.INSTANCE;
 					}
 					else
 					{
@@ -354,6 +335,28 @@ public class FormInput extends WicketExamplePage
 		if (locale != null)
 		{
 			getSession().setLocale(locale);
+		}
+	}
+
+	private static class URLConverter implements IConverter<URL>
+	{
+		public static final URLConverter INSTANCE = new URLConverter();
+
+		public URL convertToObject(String value, Locale locale)
+		{
+			try
+			{
+				return new URL(value);
+			}
+			catch (MalformedURLException e)
+			{
+				throw new ConversionException("'" + value + "' is not a valid URL");
+			}
+		}
+
+		public String convertToString(URL value, Locale locale)
+		{
+			return value != null ? value.toString() : null;
 		}
 	}
 }
