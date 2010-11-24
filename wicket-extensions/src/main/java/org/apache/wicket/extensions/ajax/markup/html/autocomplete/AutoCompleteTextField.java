@@ -63,7 +63,7 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 */
 	public AutoCompleteTextField(String id, Class<T> type)
 	{
-		this(id, (IModel<T>)null, type, new AutoCompleteSettings());
+		this(id, null, type, new AutoCompleteSettings());
 	}
 
 	/**
@@ -106,7 +106,7 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	@Deprecated
 	public AutoCompleteTextField(String id, IModel<T> object, boolean preselect)
 	{
-		this(id, object, (Class<T>)null, new AutoCompleteSettings().setPreselect(preselect));
+		this(id, object, null, new AutoCompleteSettings().setPreselect(preselect));
 	}
 
 	/**
@@ -118,7 +118,7 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 */
 	public AutoCompleteTextField(String id, IModel<T> object, AutoCompleteSettings settings)
 	{
-		this(id, object, (Class<T>)null, settings);
+		this(id, object, null, settings);
 	}
 
 
@@ -128,7 +128,7 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 */
 	public AutoCompleteTextField(String id, IModel<T> object)
 	{
-		this(id, object, (Class<T>)null, new AutoCompleteSettings());
+		this(id, object, null, new AutoCompleteSettings());
 	}
 
 	/**
@@ -140,7 +140,7 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	@Deprecated
 	public AutoCompleteTextField(String id, boolean preselect)
 	{
-		this(id, (IModel<T>)null, new AutoCompleteSettings().setPreselect(preselect));
+		this(id, null, new AutoCompleteSettings().setPreselect(preselect));
 	}
 
 	/**
@@ -151,7 +151,7 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 */
 	public AutoCompleteTextField(String id, AutoCompleteSettings settings)
 	{
-		this(id, (IModel<T>)null, settings);
+		this(id, null, settings);
 
 	}
 
@@ -160,7 +160,7 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 */
 	public AutoCompleteTextField(String id)
 	{
-		this(id, (IModel<T>)null, new AutoCompleteSettings());
+		this(id, null, new AutoCompleteSettings());
 
 	}
 
@@ -190,7 +190,7 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 */
 	public AutoCompleteTextField(String id, IModel<T> model, IAutoCompleteRenderer<T> renderer)
 	{
-		this(id, model, (Class<T>)null, renderer, new AutoCompleteSettings());
+		this(id, model, null, renderer, new AutoCompleteSettings());
 	}
 
 	/**

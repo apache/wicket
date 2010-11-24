@@ -317,8 +317,8 @@ public final class MarkupParserTest extends WicketTestCase
 
 		markup = new MarkupParser("<div><wicket:remove> <span id=\"test\"/> </wicket:remove></div>").parse();
 		assertEquals(2, markup.size());
-		assertEquals("<div>", ((RawMarkup)markup.get(0)).toString());
-		assertEquals("</div>", ((RawMarkup)markup.get(1)).toString());
+		assertEquals("<div>", markup.get(0).toString());
+		assertEquals("</div>", markup.get(1).toString());
 
 		try
 		{
@@ -388,8 +388,7 @@ public final class MarkupParserTest extends WicketTestCase
 		assertEquals("html", ((ComponentTag)markup.get(0)).getName());
 		assertEquals("html", ((ComponentTag)markup.get(2)).getName());
 		assertEquals(true, markup.get(1) instanceof RawMarkup);
-		assertEquals("<script language=\"JavaScript\">... <x a> ...</script>",
-			((RawMarkup)markup.get(1)).toString());
+		assertEquals("<script language=\"JavaScript\">... <x a> ...</script>", markup.get(1).toString());
 	}
 
 	/**

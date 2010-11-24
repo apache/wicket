@@ -167,7 +167,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 */
 	public Border(final String id)
 	{
-		this(id, (IModel<?>)null);
+		this(id, null);
 	}
 
 	/**

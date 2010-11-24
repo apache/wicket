@@ -79,7 +79,7 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 		noMoreWicketHeadTagsAllowed = false;
 		while (nextHeaderMarkup(markupStream) != -1)
 		{
-			Class<?> markupClass = ((WicketTag)markupStream.getTag()).getMarkupClass();
+			Class<?> markupClass = markupStream.getTag().getMarkupClass();
 			if (markupClass == null)
 			{
 				markupClass = markupStream.getContainerClass();

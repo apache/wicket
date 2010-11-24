@@ -126,7 +126,7 @@ public class RequestLogger implements RequestLoggerMBean
 	{
 		if (application instanceof WebApplication)
 		{
-			return ((WebApplication)application).getRequestLogger();
+			return application.getRequestLogger();
 		}
 		return null;
 	}

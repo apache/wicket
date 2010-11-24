@@ -70,7 +70,7 @@ public class VelocityContributor extends AbstractBehavior
 	{
 		if (model instanceof IDetachable)
 		{
-			((IDetachable)model).detach();
+			model.detach();
 		}
 	}
 

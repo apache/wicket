@@ -2828,7 +2828,7 @@ public abstract class Component
 		MetaDataEntry<?>[] metaDataArray = key.set(getMetaData(), object);
 		if (metaDataArray != null && metaDataArray.length > 0)
 		{
-			metaData = (metaDataArray.length > 1) ? (Object)metaDataArray : metaDataArray[0];
+			metaData = (metaDataArray.length > 1) ? metaDataArray : metaDataArray[0];
 		}
 
 		int index = getFlag(FLAG_MODEL_SET) ? 1 : 0;

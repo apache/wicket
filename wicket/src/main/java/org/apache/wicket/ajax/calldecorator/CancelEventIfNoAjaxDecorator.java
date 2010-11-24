@@ -43,7 +43,7 @@ public final class CancelEventIfNoAjaxDecorator extends AjaxPostprocessingCallDe
 	 */
 	public CancelEventIfNoAjaxDecorator()
 	{
-		this((IAjaxCallDecorator)null);
+		this(null);
 	}
 
 	/**

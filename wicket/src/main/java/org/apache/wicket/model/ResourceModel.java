@@ -73,8 +73,7 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 	public String getObject()
 	{
 		// this shouldn't be called always wrapped!
-		return Application.get().getResourceSettings().getLocalizer().getString(resourceKey,
-			(Component)null, defaultValue);
+		return Application.get().getResourceSettings().getLocalizer().getString(resourceKey, null, defaultValue);
 	}
 
 

@@ -193,7 +193,7 @@ public final class Streams
 			});
 			InputSource is = new InputSource(inputStream);
 			Document doc = db.parse(is);
-			NodeList entries = ((Element)doc.getChildNodes().item(1)).getChildNodes();
+			NodeList entries = doc.getChildNodes().item(1).getChildNodes();
 			int len = entries.getLength();
 			for (int i = (len > 0 && entries.item(0).getNodeName().equals("comment")) ? 1 : 0; i < len; i++)
 			{

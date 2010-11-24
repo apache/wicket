@@ -216,7 +216,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 */
 	public Class< ? > getBeanType()
 	{
-		Class< ? > clazz = beanTypeCache == null ? null : (Class< ? >)beanTypeCache.get();
+		Class< ? > clazz = beanTypeCache == null ? null : beanTypeCache.get();
 		if (clazz == null)
 		{
 			beanTypeCache = new WeakReference<Class< ? >>(clazz = WicketObjects

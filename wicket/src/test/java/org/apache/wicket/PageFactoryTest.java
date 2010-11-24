@@ -58,7 +58,7 @@ public class PageFactoryTest extends WicketTestCase
 
 		// MyPage2: PageParameter parameter constructor only
 		// will call PageParameter constructor with parameter = null
-		assertEquals(MyPage2.class, factory.newPage(MyPage2.class, (PageParameters)null).getClass());
+		assertEquals(MyPage2.class, factory.newPage(MyPage2.class, null).getClass());
 
 		// MyPage3: Page parameter constructor only
 		Exception e = null;
@@ -99,7 +99,7 @@ public class PageFactoryTest extends WicketTestCase
 	 */
 	public void testNewPageClassPageParameters()
 	{
-		assertEquals(MyPage0.class, factory.newPage(MyPage0.class, (PageParameters)null).getClass());
+		assertEquals(MyPage0.class, factory.newPage(MyPage0.class, null).getClass());
 
 		// MyPage0: no constructor at all
 		assertEquals(MyPage0.class, factory.newPage(MyPage0.class, new PageParameters()).getClass());

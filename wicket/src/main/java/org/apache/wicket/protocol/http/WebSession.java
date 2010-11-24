@@ -208,7 +208,7 @@ public class WebSession extends Session
 				// if we get here, the redirect already has been done; clear
 				// the meta data entry; we don't need it any longer is the client
 				// info object will be cached too
-				setMetaData(BROWSER_WAS_POLLED_KEY, (Boolean)null);
+				setMetaData(BROWSER_WAS_POLLED_KEY, null);
 			}
 			clientInfo = new WebClientInfo(requestCycle);
 		}

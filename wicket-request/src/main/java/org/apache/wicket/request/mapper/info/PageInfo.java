@@ -45,7 +45,7 @@ public class PageInfo
 	 */
 	public PageInfo()
 	{
-		this((Integer)null);
+		this(null);
 	}
 
 	/**
