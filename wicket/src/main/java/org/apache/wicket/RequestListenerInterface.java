@@ -27,6 +27,7 @@ import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.request.RequestHandlerStack.ReplaceHandlerException;
 import org.apache.wicket.request.component.IRequestableComponent;
+import org.apache.wicket.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.util.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -191,19 +192,25 @@ public class RequestListenerInterface
 	 * 
 	 * @param page
 	 *            The Page that contains the component
-	 * @param component
+	 * @param rcomponent
 	 *            The component
+	 * 
+	 * @throws ListenerInvocationNotAllowedException
+	 *             when listener invocation attempted on a component that does not allow it
 	 */
-	public final void invoke(final IRequestableComponent component)
+	public final void invoke(final IRequestableComponent rcomponent)
 	{
+		// we are in Wicket core land
+		final Component component = (Component)rcomponent;
+
 		if (!component.canCallListenerInterface())
 		{
 			// just return so that we have a silent fail and just re-render the
 			// page
 			log.info("component not enabled or visible; ignoring call. Component: " + component);
-			return;
+			throw new ListenerInvocationNotAllowedException(this, component, null,
+				"Component rejected interface invocation");
 		}
-
 
 		try
 		{
@@ -237,25 +244,23 @@ public class RequestListenerInterface
 	/**
 	 * Invokes a given interface on a component's behavior.
 	 * 
-	 * @param component
+	 * @param rcomponent
 	 *            The component
 	 * @param behavior
+	 * @throws ListenerInvocationNotAllowedException
+	 *             when listener invocation attempted on a component that does not allow it
 	 */
-	public final void invoke(final IRequestableComponent component, final IBehavior behavior)
+	public final void invoke(final IRequestableComponent rcomponent, final IBehavior behavior)
 	{
-		if (!component.canCallListenerInterface())
-		{
-			// just return so that we have a silent fail and just re-render the page
-			log.warn("component not enabled or visible; ignoring call. Component: " + component);
-			return;
-		}
+		// we are in Wicket core land
+		final Component component = (Component)rcomponent;
 
-		// XXX a bit of an ugly cast here from IRequestableComponent to Component
-		if (!behavior.isEnabled((Component)component))
+		if (!behavior.canCallListenerInterface(component))
 		{
 			log.warn("behavior not enabled; ignore call. Behavior {} at component {}", behavior,
 				component);
-			return;
+			throw new ListenerInvocationNotAllowedException(this, component, behavior,
+				"Behavior rejected interface invocation");
 		}
 
 		try

@@ -25,6 +25,7 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.handler.IPageRequestHandler;
+import org.apache.wicket.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.http.WebRequest;
@@ -85,7 +86,8 @@ public class DefaultExceptionMapper implements IExceptionMapper
 				.getApplicationSettings()
 				.getPageExpiredErrorPage()));
 		}
-		else if (e instanceof AuthorizationException)
+		else if (e instanceof AuthorizationException ||
+			e instanceof ListenerInvocationNotAllowedException)
 		{
 			return createPageRequestHandler(new PageProvider(Application.get()
 				.getApplicationSettings()

@@ -167,4 +167,16 @@ public abstract class AbstractBehavior implements IBehavior
 	public void renderHead(IHeaderResponse response)
 	{
 	}
+
+	/**
+	 * Checks if a listener can be invoked on this behavior. By checks that both
+	 * {@link Component#canCallListenerInterface()} and {@link #isEnabled(Component)} return true.
+	 * 
+	 * @param component
+	 * @return true if a listener interface can be invoked on this behavior
+	 */
+	public boolean canCallListenerInterface(Component component)
+	{
+		return component.canCallListenerInterface() && isEnabled(component);
+	}
 }

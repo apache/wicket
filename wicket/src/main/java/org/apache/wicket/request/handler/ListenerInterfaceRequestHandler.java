@@ -58,7 +58,7 @@ public class ListenerInterfaceRequestHandler
 
 		this.pageComponentProvider = pageComponentProvider;
 		this.listenerInterface = listenerInterface;
-		this.behaviorId = behaviorIndex;
+		behaviorId = behaviorIndex;
 	}
 
 	/**
@@ -200,7 +200,7 @@ public class ListenerInterfaceRequestHandler
 			}
 			catch (IndexOutOfBoundsException e)
 			{
-				throw new WicketRuntimeException("Couldn't find component behavior.");
+				throw new WicketRuntimeException("Couldn't find component behavior.", e);
 			}
 
 		}

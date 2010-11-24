@@ -150,4 +150,12 @@ public interface IBehavior extends IClusterable, IHeaderContributor
 	 * @return true if this behavior is temporary
 	 */
 	boolean isTemporary();
+
+	/**
+	 * Checks if a listener can be invoked on this behavior
+	 * 
+	 * @param component
+	 * @return true if a listener interface can be invoked on this behavior
+	 */
+	boolean canCallListenerInterface(Component component);
 }
