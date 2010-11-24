@@ -74,9 +74,9 @@ public class DefaultButtonImageResourceFactory implements IResourceFactory
 		private static final Group label = new Group(MetaPattern.ANYTHING);
 
 		/** Meta pattern. */
-		private static final MetaPattern pattern = new MetaPattern(new MetaPattern[] {
-				new OptionalMetaPattern(new MetaPattern[] { width, MetaPattern.COMMA, height,
-						MetaPattern.COLON }), label });
+		private static final MetaPattern pattern = new MetaPattern(
+			new OptionalMetaPattern(
+				new MetaPattern[] { width, MetaPattern.COMMA, height, MetaPattern.COLON }), label);
 
 		/**
 		 * Construct.

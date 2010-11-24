@@ -208,7 +208,7 @@ public class RequestListenerInterface
 		try
 		{
 			// Invoke the interface method on the component
-			method.invoke(component, new Object[] { });
+			method.invoke(component);
 		}
 		catch (InvocationTargetException e)
 		{
@@ -261,7 +261,7 @@ public class RequestListenerInterface
 		try
 		{
 			// Invoke the interface method on the component
-			method.invoke(behavior, new Object[] { });
+			method.invoke(behavior);
 		}
 		catch (InvocationTargetException e)
 		{

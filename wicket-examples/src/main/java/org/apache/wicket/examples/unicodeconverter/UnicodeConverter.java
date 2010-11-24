@@ -41,8 +41,7 @@ public class UnicodeConverter extends WicketExamplePage
 
 	private static final String TO_ESCAPED_UNICODE = "to escaped unicode";
 
-	private static List<String> translationTypes = Arrays.asList(new String[] { TO_ESCAPED_UNICODE,
-			FROM_ESCAPED_UNICODE });
+	private static List<String> translationTypes = Arrays.asList(TO_ESCAPED_UNICODE, FROM_ESCAPED_UNICODE);
 
 	private String source = "";
 

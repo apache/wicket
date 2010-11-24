@@ -34,9 +34,9 @@ public final class IntegerVariableAssignmentParser extends MetaPatternParser
 	private static final IntegerGroup value = new IntegerGroup();
 
 	/** Meta pattern. */
-	private static final MetaPattern pattern = new MetaPattern(new MetaPattern[] { variable,
-			MetaPattern.OPTIONAL_WHITESPACE, MetaPattern.EQUALS, MetaPattern.OPTIONAL_WHITESPACE,
-			value });
+	private static final MetaPattern pattern = new MetaPattern(variable,
+		MetaPattern.OPTIONAL_WHITESPACE, MetaPattern.EQUALS, MetaPattern.OPTIONAL_WHITESPACE,
+		value);
 
 	/**
 	 * Construct.

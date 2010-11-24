@@ -40,7 +40,7 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 			page.integerField.getInputName(), "foo");
 		tester.submitForm(page.form);
 
-		tester.assertErrorMessages(new String[] { "'foo' in veld 'integer' moet een geheel getal zijn. " });
+		tester.assertErrorMessages("'foo' in veld 'integer' moet een geheel getal zijn. ");
 		tester.getSession().setLocale(new Locale("us"));
 
 		tester.getSession().cleanupFeedbackMessages();
@@ -53,7 +53,7 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 
 		tester.submitForm(page.form);
 
-		tester.assertErrorMessages(new String[] { "'foo' is not a valid Integer." });
+		tester.assertErrorMessages("'foo' is not a valid Integer.");
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 
 		tester.submitForm(page.form);
 
-		tester.assertErrorMessages(new String[] { "'foo' ist kein g\u00FCltiger Wert f\u00FCr 'Integer'." });
+		tester.assertErrorMessages("'foo' ist kein g\u00FCltiger Wert f\u00FCr 'Integer'.");
 		tester.getSession().setLocale(new Locale("pl"));
 
 		tester.getSession().cleanupFeedbackMessages();
@@ -87,6 +87,6 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 			page.integerField.getInputName(), "foo");
 
 		tester.submitForm(page.form);
-		tester.assertErrorMessages(new String[] { "'foo' nie jest w\u0142a\u015Bciwym Integer." });
+		tester.assertErrorMessages("'foo' nie jest w\u0142a\u015Bciwym Integer.");
 	}
 }

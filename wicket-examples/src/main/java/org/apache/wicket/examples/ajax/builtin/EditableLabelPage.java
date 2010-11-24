@@ -36,8 +36,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 public class EditableLabelPage extends BasePage
 {
 	/** available sites for the multiple select. */
-	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side",
-			"Java Lobby", "Java.Net" });
+	private static final List<String> SITES = Arrays.asList("The Server Side", "Java Lobby", "Java.Net");
 	private String site = SITES.get(0);
 	private String text1 = "fox";
 	private String text2 = "dog";

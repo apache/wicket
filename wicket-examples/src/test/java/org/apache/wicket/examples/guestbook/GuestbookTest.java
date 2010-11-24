@@ -78,6 +78,6 @@ public class GuestbookTest extends TestCase
 		formTester.submit();
 		tester.assertModelValue("comments:0:text", "test-2");
 		tester.assertModelValue("comments:1:text", "test-1");
-		tester.assertErrorMessages(new String[] { "Caught a spammer!!!" });
+		tester.assertErrorMessages("Caught a spammer!!!");
 	}
 }

@@ -55,7 +55,7 @@ public class SimpleGetCommand extends AbstractGetCommand
 	 */
 	public SimpleGetCommand(String url, int iterations)
 	{
-		super(Arrays.asList(new String[] { url }), iterations);
+		super(Arrays.asList(url), iterations);
 	}
 
 	/**

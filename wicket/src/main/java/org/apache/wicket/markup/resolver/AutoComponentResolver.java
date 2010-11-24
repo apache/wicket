@@ -172,7 +172,7 @@ public final class AutoComponentResolver implements IComponentResolver
 				classname);
 
 			final Constructor<?> constructor = componentClass.getConstructor(new Class[] { String.class });
-			component = (Component)constructor.newInstance(new Object[] { componentId });
+			component = (Component)constructor.newInstance(componentId);
 		}
 		catch (ClassNotFoundException e)
 		{
@@ -286,7 +286,7 @@ public final class AutoComponentResolver implements IComponentResolver
 				throw new MarkupException("Unable to convert value '" + value + "' into " +
 					paramClass + ". May be there is no converter for that type registered?");
 			}
-			method.invoke(object, new Object[] { param });
+			method.invoke(object, param);
 		}
 		catch (IllegalAccessException ex)
 		{

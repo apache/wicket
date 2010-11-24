@@ -307,11 +307,10 @@ public class FormInput extends WicketExamplePage
 	}
 
 	/** available sites for the multiple select. */
-	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side",
-			"Java Lobby", "Java.Net" });
+	private static final List<String> SITES = Arrays.asList("The Server Side", "Java Lobby", "Java.Net");
 
 	/** available numbers for the radio selection. */
-	static final List<String> NUMBERS = Arrays.asList(new String[] { "1", "2", "3" });
+	static final List<String> NUMBERS = Arrays.asList("1", "2", "3");
 
 	/**
 	 * Constructor

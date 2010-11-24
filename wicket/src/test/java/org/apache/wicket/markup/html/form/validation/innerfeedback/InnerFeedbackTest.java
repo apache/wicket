@@ -66,25 +66,25 @@ public class InnerFeedbackTest
 		tester.startPage(HomePage.class);
 
 		// page's feedback
-		tester.assertInfoMessages(new String[] { "info on field", "page onbeforerender" });
+		tester.assertInfoMessages("info on field", "page onbeforerender");
 
 		FormTester formTester = tester.newFormTester("form");
 		formTester.submit();
 
 		// feedback message for LocalizedFeedbackBorder
 		// without the fix the same error message was reported for the page's feedback panel too
-		tester.assertErrorMessages(new String[] { "Field 'field' is required." });
+		tester.assertErrorMessages("Field 'field' is required.");
 
 		// page's feedback
-		tester.assertInfoMessages(new String[] { "page onbeforerender" });
+		tester.assertInfoMessages("page onbeforerender");
 
 		formTester = tester.newFormTester("form");
 		formTester.setValue("fieldborder:border:fieldborder_body:field", "some text");
 		formTester.submit();
 
-		tester.assertErrorMessages(new String[0]);
+		tester.assertErrorMessages();
 
 		// page's feedback
-		tester.assertInfoMessages(new String[] { "form submitted", "page onbeforerender" });
+		tester.assertInfoMessages("form submitted", "page onbeforerender");
 	}
 }

@@ -115,7 +115,7 @@ public class WicketTesterTest extends TestCase
 		tester.assertRenderedPage(CreateBook.class);
 
 		// assert error message from validation
-		tester.assertErrorMessages(new String[] { "id is required", "name is required" });
+		tester.assertErrorMessages("id is required", "name is required");
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class WicketTesterTest extends TestCase
 		tester.assertRenderedPage(SuccessPage.class);
 
 		// assert info message present.
-		tester.assertInfoMessages(new String[] { "book 'xxName' created" });
+		tester.assertInfoMessages("book 'xxName' created");
 
 		// assert previous page expired.
 		// TODO Post 1.2: General: No longer a valid test

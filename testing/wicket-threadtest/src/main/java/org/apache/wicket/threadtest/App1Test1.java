@@ -41,9 +41,9 @@ public class App1Test1
 	public static void main(String[] args) throws Exception
 	{
 
-		List<String> gets = Arrays.asList(new String[] {
-				"/app1/wicket/bookmarkable/org.apache.wicket.threadtest.apps.app1.Home",
-				"/app1/wicket/page?0-${iteration}.ILinkListener-link" });
+		List<String> gets = Arrays.asList(
+			"/app1/wicket/bookmarkable/org.apache.wicket.threadtest.apps.app1.Home",
+			"/app1/wicket/page?0-${iteration}.ILinkListener-link");
 
 		// you can turn this on if you e.g. want to attach to a profiler
 // Thread.sleep(5000);

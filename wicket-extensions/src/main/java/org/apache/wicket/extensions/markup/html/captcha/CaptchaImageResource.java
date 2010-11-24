@@ -124,8 +124,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 	private Integer challengeIdhashCode;
 	private List<CharAttributes> charAttsList;
 
-	private final List<String> fontNames = Arrays.asList(new String[] { "Helvetica", "Arial",
-			"Courier" });
+	private final List<String> fontNames = Arrays.asList("Helvetica", "Arial", "Courier");
 	private final int fontSize;
 	private final int fontStyle;
 

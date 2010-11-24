@@ -37,12 +37,11 @@ import org.apache.wicket.model.CompoundPropertyModel;
 public class ListMultipleChoicePage extends WicketExamplePage
 {
 	/** available sites for selection. */
-	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side",
-			"Java Lobby", "Java.Net" });
+	private static final List<String> SITES = Arrays.asList("The Server Side", "Java Lobby", "Java.Net");
 
 	/** available choices for large selection box. */
-	private static final List<String> MANY_CHOICES = Arrays.asList(new String[] { "Choice1",
-			"Choice2", "Choice3", "Choice4", "Choice5", "Choice6", "Choice7", "Choice8", "Choice9", });
+	private static final List<String> MANY_CHOICES = Arrays.asList(
+		"Choice1", "Choice2", "Choice3", "Choice4", "Choice5", "Choice6", "Choice7", "Choice8", "Choice9");
 
 	/**
 	 * Constructor

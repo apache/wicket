@@ -121,10 +121,11 @@ public final class LocalizedImageResource implements IClusterable
 		private static final Group specification = new Group(MetaPattern.ANYTHING_NON_EMPTY);
 
 		/** Meta pattern. */
-		private static final MetaPattern pattern = new MetaPattern(new MetaPattern[] { factoryName,
-				MetaPattern.COLON,
-				new OptionalMetaPattern(new MetaPattern[] { imageReferenceName }),
-				MetaPattern.COLON, specification });
+		private static final MetaPattern pattern = new MetaPattern(
+			factoryName,
+			MetaPattern.COLON,
+			new OptionalMetaPattern(new MetaPattern[] { imageReferenceName }),
+			MetaPattern.COLON, specification);
 
 		/**
 		 * Construct.

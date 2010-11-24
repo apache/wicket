@@ -36,11 +36,10 @@ import org.apache.wicket.model.CompoundPropertyModel;
 public class DropDownChoicePage extends WicketExamplePage
 {
 	/** available sites for selection. */
-	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side",
-			"Java Lobby", "Java.Net" });
+	private static final List<String> SITES = Arrays.asList("The Server Side", "Java Lobby", "Java.Net");
 
 	/** available numbers for selection. */
-	private static final List<Integer> INTEGERS = Arrays.asList(new Integer[] { 1, 2, 3 });
+	private static final List<Integer> INTEGERS = Arrays.asList(1, 2, 3);
 
 	/**
 	 * Constructor

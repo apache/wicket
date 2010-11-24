@@ -156,8 +156,7 @@ public class NewUserWizard extends Wizard
 	}
 
 	/** cheap ass roles database. */
-	private static final List<String> allRoles = Arrays.asList(new String[] { "admin", "user",
-			"moderator", "joker", "slacker" });
+	private static final List<String> allRoles = Arrays.asList("admin", "user", "moderator", "joker", "slacker");
 
 	/** Whether the assign roles step should be executed. */
 	private boolean assignRoles = false;

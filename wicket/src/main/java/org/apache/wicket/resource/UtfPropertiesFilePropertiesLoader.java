@@ -86,7 +86,7 @@ public class UtfPropertiesFilePropertiesLoader implements IPropertiesLoader
 
 		try
 		{
-			load.invoke(properties, new Object[] { reader });
+			load.invoke(properties, reader);
 		}
 		catch (IllegalArgumentException ex)
 		{

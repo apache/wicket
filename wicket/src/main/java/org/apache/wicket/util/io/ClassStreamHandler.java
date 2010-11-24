@@ -470,7 +470,7 @@ public final class ClassStreamHandler
 
 				try
 				{
-					method.invoke(obj, new Object[] { woos });
+					method.invoke(obj, woos);
 				}
 				catch (IllegalArgumentException ex)
 				{
@@ -504,7 +504,7 @@ public final class ClassStreamHandler
 				Method method = readObjectMethods.get(i);
 				try
 				{
-					method.invoke(obj, new Object[] { wois });
+					method.invoke(obj, wois);
 				}
 				catch (IllegalArgumentException ex)
 				{

@@ -37,15 +37,15 @@ import org.apache.wicket.markup.parser.XmlTag;
  */
 public class OpenCloseTagExpander extends AbstractMarkupFilter
 {
-	private static final List<String> replaceForTags = Arrays.asList(new String[] { "a", "q",
-			"sub", "sup", "abbr", "acronym", "cite", "code", "del", "dfn", "em", "ins", "kbd",
-			"samp", "var", "label", "textarea", "tr", "td", "th", "caption", "thead", "tbody",
-			"tfoot", "dl", "dt", "dd", "li", "ol", "ul", "h1", "h2", "h3", "h4", "h5", "h6", "pre",
-			"title", "div"
+	private static final List<String> replaceForTags = Arrays.asList("a", "q",
+		"sub", "sup", "abbr", "acronym", "cite", "code", "del", "dfn", "em", "ins", "kbd",
+		"samp", "var", "label", "textarea", "tr", "td", "th", "caption", "thead", "tbody",
+		"tfoot", "dl", "dt", "dd", "li", "ol", "ul", "h1", "h2", "h3", "h4", "h5", "h6", "pre",
+		"title", "div"
 
-			// tags from pre 1.5 days, shouldnt really be here but make this release more backwards
-			// compatible
-			, "span", "p", "strong", "b", "e", "select", "col" });
+		// tags from pre 1.5 days, shouldnt really be here but make this release more backwards
+		// compatible
+		, "span", "p", "strong", "b", "e", "select", "col");
 
 	private ComponentTag next = null;
 

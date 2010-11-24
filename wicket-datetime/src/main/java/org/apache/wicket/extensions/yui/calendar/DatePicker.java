@@ -581,8 +581,7 @@ public class DatePicker extends AbstractBehavior
 			// try to use JDK 6 DateFormatSymbols.getInstance(Locale)
 			try
 			{
-				dfSymbols = (DateFormatSymbols)GETINSTANCEMETHOD.invoke(null,
-					new Object[] { getLocale() });
+				dfSymbols = (DateFormatSymbols)GETINSTANCEMETHOD.invoke(null, getLocale());
 			}
 			catch (Exception e)
 			{

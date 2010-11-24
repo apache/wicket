@@ -74,7 +74,7 @@ public abstract class ExceptionTestBase extends TestCase
 	{
 		Class c = Class.forName(getExceptionClassName());
 		Constructor constructor = c.getConstructor(new Class[] { String.class });
-		Exception e = (Exception)constructor.newInstance(new Object[] { "test message" });
+		Exception e = (Exception)constructor.newInstance("test message");
 		Assert.assertNotNull("Exception should be created", e);
 		Assert.assertEquals("test message", e.getMessage());
 		Assert.assertNull(e.getCause());
@@ -91,7 +91,7 @@ public abstract class ExceptionTestBase extends TestCase
 		NullPointerException npe = new NullPointerException();
 		Class c = Class.forName(getExceptionClassName());
 		Constructor constructor = c.getConstructor(new Class[] { Throwable.class });
-		Exception e = (Exception)constructor.newInstance(new Object[] { npe });
+		Exception e = (Exception)constructor.newInstance(npe);
 		Assert.assertNotNull("Exception should be created", e);
 		Assert.assertSame(npe, e.getCause());
 	}
@@ -107,7 +107,7 @@ public abstract class ExceptionTestBase extends TestCase
 		NullPointerException npe = new NullPointerException();
 		Class c = Class.forName(getExceptionClassName());
 		Constructor constructor = c.getConstructor(new Class[] { String.class, Throwable.class });
-		Exception e = (Exception)constructor.newInstance(new Object[] { "test message", npe });
+		Exception e = (Exception)constructor.newInstance("test message", npe);
 		Assert.assertNotNull("Exception should be created", e);
 		Assert.assertEquals("test message", e.getMessage());
 		Assert.assertSame(npe, e.getCause());

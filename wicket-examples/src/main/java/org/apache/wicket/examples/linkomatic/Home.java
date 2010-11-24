@@ -117,8 +117,7 @@ public class Home extends WicketExamplePage
 		add(new ClientSideImageMap("imageMap", imageForMap).addRectangleArea(
 			new BookmarkablePageLink<Page1>("page1", Page1.class), 0, 0, 100, 100)
 			.addCircleArea(new BookmarkablePageLink<Page2>("page2", Page2.class), 160, 50, 35)
-			.addPolygonArea(new BookmarkablePageLink<Page3>("page3", Page3.class),
-				new int[] { 212, 79, 241, 4, 279, 54, 212, 79 })
+			.addPolygonArea(new BookmarkablePageLink<Page3>("page3", Page3.class), 212, 79, 241, 4, 279, 54, 212, 79)
 			.add(RelativePathPrefixHandler.RELATIVE_PATH_BEHAVIOR));
 
 		// Popup example

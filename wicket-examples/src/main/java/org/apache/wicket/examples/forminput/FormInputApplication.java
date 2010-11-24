@@ -39,10 +39,10 @@ import org.apache.wicket.request.Response;
 public class FormInputApplication extends WicketExampleApplication
 {
 	/** Relevant locales wrapped in a list. */
-	public static final List<Locale> LOCALES = Arrays.asList(new Locale[] { Locale.ENGLISH,
-			new Locale("nl", "NL"), Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.JAPANESE,
-			new Locale("pt", "BR"), new Locale("fa", "IR"), new Locale("da", "DK"),
-			new Locale("th", "TH"), new Locale("ru"), new Locale("ko", "KR") });
+	public static final List<Locale> LOCALES = Arrays.asList(Locale.ENGLISH,
+		new Locale("nl", "NL"), Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.JAPANESE,
+		new Locale("pt", "BR"), new Locale("fa", "IR"), new Locale("da", "DK"),
+		new Locale("th", "TH"), new Locale("ru"), new Locale("ko", "KR"));
 
 	/**
 	 * Constructor.

@@ -150,9 +150,9 @@ public final class DefaultPageFactory implements IPageFactory
 		try
 		{
 			if (argument != null)
-				return (Page)constructor.newInstance(new Object[] { argument });
+				return (Page)constructor.newInstance(argument);
 			else
-				return (Page)constructor.newInstance(new Object[] { });
+				return (Page)constructor.newInstance();
 		}
 		catch (InstantiationException e)
 		{

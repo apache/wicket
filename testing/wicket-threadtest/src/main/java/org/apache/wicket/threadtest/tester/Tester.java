@@ -133,7 +133,7 @@ public final class Tester implements CommandRunnerObserver
 	 */
 	public Tester(Command command, int numberOfThreads, boolean multipleSessions)
 	{
-		this(Arrays.asList(new Command[] { command }), numberOfThreads, multipleSessions);
+		this(Arrays.asList(command), numberOfThreads, multipleSessions);
 	}
 
 	/**

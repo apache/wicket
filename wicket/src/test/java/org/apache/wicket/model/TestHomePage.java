@@ -48,6 +48,6 @@ public class TestHomePage extends TestCase
 		FormTester formTester = tester.newFormTester("bookingForm");
 		formTester.submit();
 
-		tester.assertErrorMessages(new String[] { "Name is required" });
+		tester.assertErrorMessages("Name is required");
 	}
 }

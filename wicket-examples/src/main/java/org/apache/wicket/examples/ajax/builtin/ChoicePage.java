@@ -66,11 +66,9 @@ public class ChoicePage extends BasePage
 	 */
 	public ChoicePage()
 	{
-		modelsMap.put("AUDI", Arrays.asList(new String[] { "A4", "A6", "TT" }));
-		modelsMap.put("CADILLAC", Arrays.asList(new String[] { "CTS", "DTS", "ESCALADE", "SRX",
-				"DEVILLE" }));
-		modelsMap.put("FORD", Arrays.asList(new String[] { "CROWN", "ESCAPE", "EXPEDITION",
-				"EXPLORER", "F-150" }));
+		modelsMap.put("AUDI", Arrays.asList("A4", "A6", "TT"));
+		modelsMap.put("CADILLAC", Arrays.asList("CTS", "DTS", "ESCALADE", "SRX", "DEVILLE"));
+		modelsMap.put("FORD", Arrays.asList("CROWN", "ESCAPE", "EXPEDITION", "EXPLORER", "F-150"));
 
 		IModel<List<? extends String>> makeChoices = new AbstractReadOnlyModel<List<? extends String>>()
 		{

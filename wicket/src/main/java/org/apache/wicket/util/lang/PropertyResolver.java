@@ -991,7 +991,7 @@ public final class PropertyResolver
 			Object ret = null;
 			try
 			{
-				ret = getMethod.invoke(object, new Object[] { index });
+				ret = getMethod.invoke(object, index);
 			}
 			catch (InvocationTargetException ex)
 			{
@@ -1027,7 +1027,7 @@ public final class PropertyResolver
 				}
 				try
 				{
-					setMethod.invoke(object, new Object[] { index, converted });
+					setMethod.invoke(object, index, converted);
 				}
 				catch (InvocationTargetException ex)
 				{
@@ -1077,7 +1077,7 @@ public final class PropertyResolver
 			try
 			{
 				value = clz.newInstance();
-				setMethod.invoke(object, new Object[] { index, value });
+				setMethod.invoke(object, index, value);
 			}
 			catch (Exception e)
 			{
@@ -1170,7 +1170,7 @@ public final class PropertyResolver
 			{
 				try
 				{
-					setMethod.invoke(object, new Object[] { converted });
+					setMethod.invoke(object, converted);
 				}
 				catch (InvocationTargetException ex)
 				{
@@ -1265,7 +1265,7 @@ public final class PropertyResolver
 			try
 			{
 				value = clz.newInstance();
-				setMethod.invoke(object, new Object[] { value });
+				setMethod.invoke(object, value);
 			}
 			catch (Exception e)
 			{

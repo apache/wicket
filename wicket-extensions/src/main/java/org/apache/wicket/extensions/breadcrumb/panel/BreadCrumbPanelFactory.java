@@ -71,7 +71,7 @@ public final class BreadCrumbPanelFactory implements IBreadCrumbPanelFactory
 		Constructor<? extends BreadCrumbPanel> ctor = getConstructor();
 		try
 		{
-			return ctor.newInstance(new Object[] { componentId, breadCrumbModel });
+			return ctor.newInstance(componentId, breadCrumbModel);
 		}
 		catch (Exception e)
 		{

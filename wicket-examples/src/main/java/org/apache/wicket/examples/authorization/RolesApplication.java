@@ -40,8 +40,8 @@ public class RolesApplication extends WebApplication
 	/**
 	 * User DB.
 	 */
-	public static List<User> USERS = Arrays.asList(new User[] { new User("jon", "ADMIN"),
-			new User("kay", "USER"), new User("pam", "") });
+	public static List<User> USERS = Arrays.asList(
+		new User("jon", "ADMIN"), new User("kay", "USER"), new User("pam", ""));
 
 	/**
 	 * Construct.

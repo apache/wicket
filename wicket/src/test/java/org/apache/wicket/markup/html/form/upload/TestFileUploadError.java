@@ -62,7 +62,7 @@ public class TestFileUploadError extends TestCase
 	public void testSubmit_NoInput()
 	{
 		formTester.submit();
-		tester.assertErrorMessages(new String[] { "Field 'textField' is required.", });
+		tester.assertErrorMessages("Field 'textField' is required.");
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class TestFileUploadError extends TestCase
 		formTester.setFile(fileUploadId, new File(testUploadFilePath), "UTF-8");
 		formTester.submit();
 
-		tester.assertErrorMessages(new String[] { "Field 'textField' is required.", });
+		tester.assertErrorMessages("Field 'textField' is required.");
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class TestFileUploadError extends TestCase
 		formTester.setValue(textFieldId, "te");
 		formTester.submit();
 
-		tester.assertErrorMessages(new String[] { "'te' is not between 3 and 10 characters long.", });
+		tester.assertErrorMessages("'te' is not between 3 and 10 characters long.");
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class TestFileUploadError extends TestCase
 		formTester.setValue(textFieldId, "12345678901");
 		formTester.submit();
 
-		tester.assertErrorMessages(new String[] { "'12345678901' is not between 3 and 10 characters long.", });
+		tester.assertErrorMessages("'12345678901' is not between 3 and 10 characters long.");
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class TestFileUploadError extends TestCase
 		formTester.setFile(fileUploadId, new File(testUploadFilePath), "UTF-8");
 		formTester.submit();
 
-		tester.assertErrorMessages(new String[] { "'te' is not between 3 and 10 characters long.", });
+		tester.assertErrorMessages("'te' is not between 3 and 10 characters long.");
 	}
 
 	/**
@@ -162,6 +162,6 @@ public class TestFileUploadError extends TestCase
 		formTester.setValue(textFieldId, "test value");
 
 		formTester.submit();
-		tester.assertErrorMessages(new String[] { "Field 'fileUpload' is required.", });
+		tester.assertErrorMessages("Field 'fileUpload' is required.");
 	}
 }

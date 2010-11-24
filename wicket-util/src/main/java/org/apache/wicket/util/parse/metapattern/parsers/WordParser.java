@@ -34,8 +34,8 @@ public final class WordParser extends MetaPatternParser
 	private static final Group word = new Group(MetaPattern.WORD);
 
 	/** Parse word surrounded by whitespace */
-	private static final MetaPattern wordPattern = new MetaPattern(new MetaPattern[] {
-			MetaPattern.OPTIONAL_WHITESPACE, word, MetaPattern.OPTIONAL_WHITESPACE });
+	private static final MetaPattern wordPattern = new MetaPattern(
+		MetaPattern.OPTIONAL_WHITESPACE, word, MetaPattern.OPTIONAL_WHITESPACE);
 
 	/**
 	 * Construct.

@@ -95,7 +95,7 @@ public class AjaxRequestTargetTest extends WicketTestCase
 				{
 					Constructor<? extends Component> con = componentClass.getConstructor(new Class[] { String.class });
 
-					Component comp = con.newInstance(new Object[] { MockPageWithLinkAndComponent.COMPONENT_ID });
+					Component comp = con.newInstance(MockPageWithLinkAndComponent.COMPONENT_ID);
 					page.replace(comp);
 					comp.setOutputMarkupId(true);
 

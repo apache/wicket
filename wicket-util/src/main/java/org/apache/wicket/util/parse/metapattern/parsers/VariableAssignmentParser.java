@@ -34,8 +34,7 @@ public final class VariableAssignmentParser extends MetaPatternParser
 			MetaPattern.VARIABLE_NAME, MetaPattern.COLON });
 
 	/** The key (lvalue) like "name" or "namespace:name" */
-	private final Group key = new Group(new MetaPattern(new MetaPattern[] { namespace,
-			MetaPattern.XML_ATTRIBUTE_NAME }));
+	private final Group key = new Group(new MetaPattern(namespace, MetaPattern.XML_ATTRIBUTE_NAME));
 
 	/** The rvalue of the assignment */
 	private final Group value;
@@ -67,13 +66,13 @@ public final class VariableAssignmentParser extends MetaPatternParser
 		value = new Group(valuePattern);
 
 		// Pattern for =<value>
-		final MetaPattern variableAssignment = new MetaPattern(new MetaPattern[] {
-				MetaPattern.OPTIONAL_WHITESPACE, MetaPattern.EQUALS,
-				MetaPattern.OPTIONAL_WHITESPACE, value });
+		final MetaPattern variableAssignment = new MetaPattern(
+			MetaPattern.OPTIONAL_WHITESPACE, MetaPattern.EQUALS,
+			MetaPattern.OPTIONAL_WHITESPACE, value);
 
 		// Set parse pattern to <key>=<value>?
-		setPattern(new MetaPattern(new MetaPattern[] { MetaPattern.OPTIONAL_WHITESPACE, key,
-				new OptionalMetaPattern(variableAssignment), MetaPattern.OPTIONAL_WHITESPACE }));
+		setPattern(new MetaPattern(MetaPattern.OPTIONAL_WHITESPACE, key,
+			new OptionalMetaPattern(variableAssignment), MetaPattern.OPTIONAL_WHITESPACE));
 	}
 
 	/**
