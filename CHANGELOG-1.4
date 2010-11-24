@@ -1,5 +1,34 @@
 This file contains all changes done on the 1.4 version.
 
+Release Notes - Wicket - Version 1.4.14
+
+** Bug
+    * [WICKET-3134] - Commons logging must die
+    * [WICKET-3135] - Improve JavaScriptPackageResource#toString() to show filename instead of default Object#toString()
+    * [WICKET-3136] - JVM 1.6 crash caused by WicketObjectOutputStream, ClassStreamHandler, and Page.writePageObject
+    * [WICKET-3140] - Missing xml headers in localized SignIn pages
+    * [WICKET-3141] - On multipart form, sendRedirect() with PageParameters are not working
+    * [WICKET-3160] - Session causing memory leak after WICKET-3108
+    * [WICKET-3164] - executeAjaxEvent in WicketTester works although Component is not enabled
+    * [WICKET-3166] - isVisibleInHierarchy() possibly unnecessarily checks children whose parents are invisible?
+    * [WICKET-3171] - Form components that become visible during submit always set their model to null
+    * [WICKET-3173] - Fix for WICKET-2903 causes NPE when HttpsConfig is intentionally null
+    * [WICKET-3174] - SmartLinkLabel failing to process email with +
+    * [WICKET-3175] - Radio uuid is calculated wrongly for heavy instalations.
+    * [WICKET-3181] - UploadProgressBar does not show up on nested forms
+
+** Improvement
+    * [WICKET-1735] - Remove hard-coded text from the markup of PagingNavigator
+    * [WICKET-3152] - Wicket tester should allow testing for enabled/disabled status and for fields being required.
+    * [WICKET-3169] - Parametrize IFilterStateLocator
+    * [WICKET-3170] - ModalWindow moved event (besides resize)
+    * [WICKET-3179] - Default Component Behaviors
+    * [WICKET-3180] - DropDownChoice should use IAjaxIndicatorAware like AbstractDefaultAjaxBehavior.findIndicatorId()
+
+** New Feature
+    * [WICKET-3144] - Extra client-side scripting before closing modalwindow
+
+
 Release Notes - Wicket - Version 1.4.13
 
 ** Sub-task
