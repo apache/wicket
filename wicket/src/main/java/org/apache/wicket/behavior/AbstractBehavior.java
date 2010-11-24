@@ -150,9 +150,9 @@ public abstract class AbstractBehavior implements IBehavior
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.IBehavior#isTemporary()
+	 * @see org.apache.wicket.behavior.IBehavior#isTemporary(Component)
 	 */
-	public boolean isTemporary()
+	public boolean isTemporary(Component component)
 	{
 		return false;
 	}
@@ -164,7 +164,7 @@ public abstract class AbstractBehavior implements IBehavior
 	{
 	}
 
-	public void renderHead(IHeaderResponse response)
+	public void renderHead(Component component, IHeaderResponse response)
 	{
 	}
 

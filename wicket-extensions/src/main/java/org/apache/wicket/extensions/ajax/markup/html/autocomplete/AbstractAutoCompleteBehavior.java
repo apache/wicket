@@ -17,6 +17,7 @@
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -45,9 +46,9 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
 	@Override
-	public void renderHead(IHeaderResponse response)
+	public void renderHead(Component component, IHeaderResponse response)
 	{
-		super.renderHead(response);
+		super.renderHead(component, response);
 		renderAutocompleteHead(response);
 	}
 

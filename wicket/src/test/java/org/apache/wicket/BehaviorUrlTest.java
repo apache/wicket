@@ -78,7 +78,7 @@ public class BehaviorUrlTest extends TestCase
 	private static class TestTemporaryBehavior extends AbstractBehavior
 	{
 		@Override
-		public boolean isTemporary()
+		public boolean isTemporary(Component c)
 		{
 			return true;
 		}

@@ -1545,8 +1545,8 @@ public abstract class Component
 			return null;
 		}
 
-		final int generatedMarkupId = storedMarkupId instanceof Integer
-			? (Integer) storedMarkupId : Session.get().nextSequenceValue();
+		final int generatedMarkupId = storedMarkupId instanceof Integer ? (Integer)storedMarkupId
+			: Session.get().nextSequenceValue();
 
 		if (storedMarkupId == null)
 		{
@@ -2617,7 +2617,7 @@ public abstract class Component
 				{
 					if (response.wasRendered(behavior) == false)
 					{
-						behavior.renderHead(response);
+						behavior.renderHead(this, response);
 						response.markRendered(behavior);
 					}
 				}
@@ -2763,7 +2763,7 @@ public abstract class Component
 
 		if (markupId instanceof Integer)
 		{
-			generatedMarkupId = (Integer) markupId;
+			generatedMarkupId = (Integer)markupId;
 			setMetaData(MARKUP_ID_KEY, null);
 			return;
 		}

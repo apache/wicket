@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.renderStrategy;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -68,7 +69,7 @@ public class SimplePanel1 extends Panel
 		container.add(new AbstractBehavior()
 		{
 			@Override
-			public void renderHead(IHeaderResponse response)
+			public void renderHead(Component component, IHeaderResponse response)
 			{
 				response.renderCSSReference(id + ".css");
 			}

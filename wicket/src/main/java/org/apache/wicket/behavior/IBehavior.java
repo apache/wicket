@@ -19,7 +19,7 @@ package org.apache.wicket.behavior;
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
  * Behaviors are kind of plug-ins for Components. They allow functionality to be added to a
@@ -49,7 +49,7 @@ import org.apache.wicket.markup.html.IHeaderContributor;
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
  */
-public interface IBehavior extends IClusterable, IHeaderContributor
+public interface IBehavior extends IClusterable
 {
 	/**
 	 * Called when a component is about to render.
@@ -147,9 +147,11 @@ public interface IBehavior extends IClusterable, IHeaderContributor
 	 * rendering only when it renders next. Usecases include javascript effects, initial clientside
 	 * dom setup, etc.
 	 * 
+	 * @param component
+	 * 
 	 * @return true if this behavior is temporary
 	 */
-	boolean isTemporary();
+	boolean isTemporary(Component component);
 
 	/**
 	 * Checks if a listener can be invoked on this behavior
@@ -158,4 +160,14 @@ public interface IBehavior extends IClusterable, IHeaderContributor
 	 * @return true if a listener interface can be invoked on this behavior
 	 */
 	boolean canCallListenerInterface(Component component);
+
+	/**
+	 * Render to the web response whatever the component wants to contribute to the head section.
+	 * 
+	 * @param component
+	 * 
+	 * @param response
+	 *            Response object
+	 */
+	void renderHead(Component component, IHeaderResponse response);
 }

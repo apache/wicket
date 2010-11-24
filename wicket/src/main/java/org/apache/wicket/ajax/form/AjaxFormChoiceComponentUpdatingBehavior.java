@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajax.form;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -60,9 +61,9 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
 	@Override
-	public void renderHead(IHeaderResponse response)
+	public void renderHead(Component component, IHeaderResponse response)
 	{
-		super.renderHead(response);
+		super.renderHead(component, response);
 
 		AppendingStringBuffer asb = new AppendingStringBuffer();
 		asb.append("function attachChoiceHandlers(markupId, callbackScript) {\n");

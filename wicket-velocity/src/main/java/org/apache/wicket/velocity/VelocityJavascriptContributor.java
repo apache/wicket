@@ -19,13 +19,14 @@ package org.apache.wicket.velocity;
 import java.util.Map;
 
 import org.apache.velocity.runtime.resource.loader.FileResourceLoader;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Packages;
 
 /**
- * A derivation of VelocityContributor that uses {@link
- * org.apache.wicket.markup.html.IHeaderResponse#renderJavascript(CharSequence, String)}
+ * A derivation of VelocityContributor that uses
+ * {@link org.apache.wicket.markup.html.IHeaderResponse#renderJavascript(CharSequence, String)}
  */
 public class VelocityJavascriptContributor extends VelocityContributor
 {
@@ -42,8 +43,8 @@ public class VelocityJavascriptContributor extends VelocityContributor
 	 * @param model
 	 * @param id
 	 */
-	public VelocityJavascriptContributor(Class< ? > clazz, String templatePath,
-			IModel< ? extends Map< ? , ? >> model, String id)
+	public VelocityJavascriptContributor(Class<?> clazz, String templatePath,
+		IModel<? extends Map<?, ?>> model, String id)
 	{
 		super(Packages.absolutePath(clazz, templatePath), model);
 		this.id = id;
@@ -57,8 +58,8 @@ public class VelocityJavascriptContributor extends VelocityContributor
 	 * @param model
 	 * @param id
 	 */
-	public VelocityJavascriptContributor(String templatePath,
-			IModel< ? extends Map< ? , ? >> model, String id)
+	public VelocityJavascriptContributor(String templatePath, IModel<? extends Map<?, ?>> model,
+		String id)
 	{
 		super(templatePath, model);
 		this.id = id;
@@ -66,10 +67,10 @@ public class VelocityJavascriptContributor extends VelocityContributor
 
 	/**
 	 * @see org.apache.wicket.velocity.VelocityContributor#renderHead(org.apache.wicket.markup.html.
-	 * 	IHeaderResponse)
+	 *      IHeaderResponse)
 	 */
 	@Override
-	public void renderHead(IHeaderResponse response)
+	public void renderHead(Component component, IHeaderResponse response)
 	{
 		CharSequence s = evaluate();
 		if (s != null)

@@ -56,7 +56,7 @@ final class Behaviors implements IDetachable
 
 			internalAdd(behavior);
 
-			if (!behavior.isTemporary())
+			if (!behavior.isTemporary(component))
 			{
 				component.addStateChange();
 			}
@@ -106,7 +106,7 @@ final class Behaviors implements IDetachable
 
 		if (internalRemove(behavior))
 		{
-			if (!behavior.isTemporary())
+			if (!behavior.isTemporary(component))
 			{
 				component.addStateChange();
 			}
@@ -140,7 +140,7 @@ final class Behaviors implements IDetachable
 
 				behavior.detach(component);
 
-				if (behavior.isTemporary())
+				if (behavior.isTemporary(component))
 				{
 					internalRemove(behavior);
 				}

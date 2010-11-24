@@ -84,9 +84,9 @@ public abstract class AjaxLazyLoadPanel extends Panel
 			}
 
 			@Override
-			public void renderHead(IHeaderResponse response)
+			public void renderHead(Component component, IHeaderResponse response)
 			{
-				super.renderHead(response);
+				super.renderHead(component, response);
 				handleCallbackScript(response, getCallbackScript().toString());
 			}
 
@@ -150,8 +150,8 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	{
 		IRequestHandler handler = new ResourceReferenceRequestHandler(
 			AbstractDefaultAjaxBehavior.INDICATOR);
-		return new Label(markupId, "<img alt=\"Loading...\" src=\"" + RequestCycle.get().urlFor(handler) +
-			"\"/>").setEscapeModelStrings(false);
+		return new Label(markupId, "<img alt=\"Loading...\" src=\"" +
+			RequestCycle.get().urlFor(handler) + "\"/>").setEscapeModelStrings(false);
 	}
 
 }

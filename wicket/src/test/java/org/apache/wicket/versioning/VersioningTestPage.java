@@ -139,10 +139,10 @@ public class VersioningTestPage extends WebPage
 				{
 
 					/**
-					 * @see org.apache.wicket.behavior.AbstractBehavior#isTemporary()
+					 * @see org.apache.wicket.behavior.AbstractBehavior#isTemporary(Component)
 					 */
 					@Override
-					public boolean isTemporary()
+					public boolean isTemporary(Component c)
 					{
 						return true;
 					}
@@ -169,10 +169,10 @@ public class VersioningTestPage extends WebPage
 				{
 
 					/**
-					 * @see org.apache.wicket.behavior.AbstractBehavior#isTemporary()
+					 * @see org.apache.wicket.behavior.AbstractBehavior#isTemporary(Component)
 					 */
 					@Override
-					public boolean isTemporary()
+					public boolean isTemporary(Component c)
 					{
 						return false;
 					}

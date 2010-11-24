@@ -217,7 +217,7 @@ public class DatePicker extends AbstractBehavior
 	 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
 	@Override
-	public void renderHead(IHeaderResponse response)
+	public void renderHead(Component component, IHeaderResponse response)
 	{
 		if (includeYUILibraries())
 		{
@@ -271,7 +271,7 @@ public class DatePicker extends AbstractBehavior
 		}
 
 		// ${calendarInit}
-	 StringBuilder calendarInit = new StringBuilder();
+		StringBuilder calendarInit = new StringBuilder();
 		for (Iterator<Entry<String, Object>> i = p.entrySet().iterator(); i.hasNext();)
 		{
 			Entry<String, Object> entry = i.next();
@@ -599,7 +599,8 @@ public class DatePicker extends AbstractBehavior
 			filterEmpty(dfSymbols.getShortWeekdays()));
 		setWidgetProperty(widgetProperties, "WEEKDAYS_LONG", filterEmpty(dfSymbols.getWeekdays()));
 
-		widgetProperties.put("START_WEEKDAY", Calendar.getInstance(getLocale()).getFirstDayOfWeek() - 1);
+		widgetProperties.put("START_WEEKDAY",
+			Calendar.getInstance(getLocale()).getFirstDayOfWeek() - 1);
 
 		if (Locale.SIMPLIFIED_CHINESE.equals(getLocale()) ||
 			Locale.TRADITIONAL_CHINESE.equals(getLocale()))

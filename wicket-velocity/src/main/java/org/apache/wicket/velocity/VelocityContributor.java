@@ -24,7 +24,6 @@ import org.apache.velocity.app.Velocity;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.AbstractBehavior;
-import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.IModel;
@@ -42,7 +41,7 @@ public class VelocityContributor extends AbstractBehavior
 
 	private String encoding = "ISO-8859-1";
 
-	private final IModel< ? extends Map< ? , ? >> model;
+	private final IModel<? extends Map<?, ?>> model;
 
 	private final String templateName;
 
@@ -57,7 +56,7 @@ public class VelocityContributor extends AbstractBehavior
 	 * @param templateName
 	 * @param model
 	 */
-	public VelocityContributor(String templateName, final IModel< ? extends Map< ? , ? >> model)
+	public VelocityContributor(String templateName, final IModel<? extends Map<?, ?>> model)
 	{
 		this.templateName = templateName;
 		this.model = model;
@@ -87,7 +86,7 @@ public class VelocityContributor extends AbstractBehavior
 	 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
 	@Override
-	public void renderHead(final IHeaderResponse response)
+	public void renderHead(Component component, final IHeaderResponse response)
 	{
 		CharSequence s = evaluate();
 		if (null != s)

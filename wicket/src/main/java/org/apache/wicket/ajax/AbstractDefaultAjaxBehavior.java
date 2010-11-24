@@ -64,10 +64,10 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
+	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#renderHead(Component,org.apache.wicket.markup.html.IHeaderResponse)
 	 */
 	@Override
-	public void renderHead(IHeaderResponse response)
+	public void renderHead(Component component, IHeaderResponse response)
 	{
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 

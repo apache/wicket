@@ -235,7 +235,14 @@ public class WicketServlet extends HttpServlet
 
 		if (stream == null)
 		{
-			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			if (response.isCommitted())
+			{
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			}
+			else
+			{
+				response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			}
 		}
 		else
 		{

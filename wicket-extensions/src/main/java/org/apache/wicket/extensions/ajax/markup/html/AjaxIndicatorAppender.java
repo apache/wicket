@@ -61,7 +61,7 @@ public class AjaxIndicatorAppender extends AbstractBehavior
 	}
 
 	@Override
-	public void renderHead(IHeaderResponse response)
+	public void renderHead(Component component, IHeaderResponse response)
 	{
 		if (AjaxRequestTarget.get() != null)
 		{
