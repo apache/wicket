@@ -24,6 +24,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
@@ -45,6 +46,26 @@ public class BehaviorUrlTest extends TestCase
 		tester.startPage(page);
 
 		page = (TestPage)tester.getLastRenderedPage();
+		int indexAfterRender = page.container.getBehaviorId(page.callbackBehavior);
+
+		assertEquals("index of behavior in the raw list should not have changed",
+			indexBeforeRender, indexAfterRender);
+
+	}
+
+	/**
+	 * Asserting that the component model assigning don't affect the behavior data index
+	 * 
+	 * @see https://issues.apache.org/jira/browse/WICKET-3142
+	 */
+	public void testUrlRemainsStableAfterComponentReceiveAnModel()
+	{
+		TestPage page = new TestPage();
+
+		int indexBeforeRender = page.container.getBehaviorId(page.callbackBehavior);
+
+		page.container.setDefaultModel(Model.of(""));
+
 		int indexAfterRender = page.container.getBehaviorId(page.callbackBehavior);
 
 		assertEquals("index of behavior in the raw list should not have changed",
