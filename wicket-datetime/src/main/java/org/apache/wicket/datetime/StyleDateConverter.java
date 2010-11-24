@@ -105,6 +105,7 @@ public class StyleDateConverter extends DateConverter
 	 * 
 	 * @return datePattern
 	 */
+	@Override
 	public final String getDatePattern()
 	{
 		return DateTimeFormat.patternForStyle(dateStyle, getLocale());
@@ -113,6 +114,7 @@ public class StyleDateConverter extends DateConverter
 	/**
 	 * @return formatter The formatter for the current conversion
 	 */
+	@Override
 	protected DateTimeFormatter getFormat()
 	{
 		DateTimeFormatter dtf = DateTimeFormat.forPattern(getDatePattern()).withLocale(getLocale())

@@ -54,6 +54,7 @@ public class PageablesPage extends BasePage
 
 		PageableListView listview = new PageableListView("rows", Arrays.asList(names), 10)
 		{
+			@Override
 			protected void populateItem(ListItem item)
 			{
 				item.add(new Label("name", item.getDefaultModelObjectAsString()));

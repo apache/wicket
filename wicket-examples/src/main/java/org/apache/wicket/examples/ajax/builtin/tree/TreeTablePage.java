@@ -59,6 +59,7 @@ public class TreeTablePage extends BaseTreePage
 		tree.getTreeState().collapseAll();
 	}
 
+	@Override
 	protected AbstractTree getTree()
 	{
 		return tree;

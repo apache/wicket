@@ -31,6 +31,7 @@ public class SimpleTreePage extends BaseTreePage
 {
 	private BaseTree tree;
 
+	@Override
 	protected AbstractTree getTree()
 	{
 		return tree;

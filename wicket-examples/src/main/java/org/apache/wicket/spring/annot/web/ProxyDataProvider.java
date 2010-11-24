@@ -31,6 +31,7 @@ public class ProxyDataProvider extends ContactDataProvider
 		this.dao = dao;
 	}
 
+	@Override
 	protected ContactDao getContactDao()
 	{
 		return dao;

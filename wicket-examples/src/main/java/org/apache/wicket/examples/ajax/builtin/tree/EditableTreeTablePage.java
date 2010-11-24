@@ -67,6 +67,7 @@ public class EditableTreeTablePage extends BaseTreePage
 	/**
 	 * @see BaseTreePage#getTree()
 	 */
+	@Override
 	protected AbstractTree getTree()
 	{
 		return tree;

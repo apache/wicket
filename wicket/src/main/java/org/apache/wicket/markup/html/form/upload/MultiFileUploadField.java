@@ -204,6 +204,7 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
+	@Override
 	public void renderHead(IHeaderResponse response)
 	{
 		// initialize the javascript library

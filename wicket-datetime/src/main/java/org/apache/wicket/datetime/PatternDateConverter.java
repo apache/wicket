@@ -86,6 +86,7 @@ public class PatternDateConverter extends DateConverter
 	 * 
 	 * @return datePattern
 	 */
+	@Override
 	public final String getDatePattern()
 	{
 		return datePattern;
@@ -94,6 +95,7 @@ public class PatternDateConverter extends DateConverter
 	/**
 	 * @return formatter The formatter for the current conversion
 	 */
+	@Override
 	protected DateTimeFormatter getFormat()
 	{
 		return DateTimeFormat.forPattern(datePattern).withLocale(getLocale()).withPivotYear(2000);

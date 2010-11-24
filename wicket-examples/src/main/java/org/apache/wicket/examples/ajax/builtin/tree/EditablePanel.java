@@ -48,6 +48,7 @@ public class EditablePanel extends Panel
 
 		field.add(new AjaxFormComponentUpdatingBehavior("onblur")
 		{
+			@Override
 			protected void onUpdate(AjaxRequestTarget target)
 			{
 			}

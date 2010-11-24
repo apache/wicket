@@ -30,6 +30,7 @@ public class ProxyModel extends ContactDetachableModel
 		this.dao = dao;
 	}
 
+	@Override
 	protected ContactDao getContactDao()
 	{
 		return dao;

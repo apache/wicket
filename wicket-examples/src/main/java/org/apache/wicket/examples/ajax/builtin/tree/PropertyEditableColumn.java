@@ -50,6 +50,7 @@ public class PropertyEditableColumn extends PropertyRenderableColumn
 	/**
 	 * @see IColumn#newCell(MarkupContainer, String, TreeNode, int)
 	 */
+	@Override
 	public Component newCell(MarkupContainer parent, String id, TreeNode node, int level)
 	{
 		return new EditablePanel(id, new PropertyModel(node, getPropertyExpression()));
@@ -58,6 +59,7 @@ public class PropertyEditableColumn extends PropertyRenderableColumn
 	/**
 	 * @see IColumn#newCell(TreeNode, int)
 	 */
+	@Override
 	public IRenderable newCell(TreeNode node, int level)
 	{
 		if (getTreeTable().getTreeState().isNodeSelected(node))

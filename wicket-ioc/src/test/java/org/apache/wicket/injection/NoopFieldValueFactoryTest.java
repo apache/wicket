@@ -32,6 +32,7 @@ public class NoopFieldValueFactoryTest extends TestCase
 
 	private Field field;
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		Field field = NoopFieldValueFactoryTest.class.getDeclaredField("testField");

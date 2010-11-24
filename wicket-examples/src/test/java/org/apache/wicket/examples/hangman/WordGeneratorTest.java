@@ -50,11 +50,13 @@ public class WordGeneratorTest extends TestCase
 		super(message);
 	}
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		tester = new WicketTester();
 	}
 
+	@Override
 	protected void tearDown() throws Exception
 	{
 		tester.destroy();
