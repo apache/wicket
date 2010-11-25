@@ -30,15 +30,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.util.lang.Generics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -291,8 +292,8 @@ public final class SerializableChecker extends ObjectOutputStream
 	/** root object being analyzed. */
 	private Object root;
 
-	/** cache for classes - writeObject methods. */
-	private final Map<Class<?>, Object> writeObjectMethodCache = Generics.newHashMap();
+	/** set of classes that had no writeObject methods at lookup (to avoid repeated checking) */
+	private final Set<Class<?>> writeObjectMethodMissing = new HashSet<Class<?>>();
 
 	/** current simple field name. */
 	private String simpleName = "";
@@ -330,7 +331,7 @@ public final class SerializableChecker extends ObjectOutputStream
 		simpleName = null;
 		traceStack.clear();
 		nameStack.clear();
-		writeObjectMethodCache.clear();
+		writeObjectMethodMissing.clear();
 	}
 
 	private void check(Object obj)
@@ -457,15 +458,7 @@ public final class SerializableChecker extends ObjectOutputStream
 		else
 		{
 			Method writeObjectMethod = null;
-			Object o = writeObjectMethodCache.get(cls);
-			if (o != null)
-			{
-				if (o instanceof Method)
-				{
-					writeObjectMethod = (Method)o;
-				}
-			}
-			else
+			if (writeObjectMethodMissing.contains(cls) == false)
 			{
 				try
 				{
@@ -474,13 +467,13 @@ public final class SerializableChecker extends ObjectOutputStream
 				}
 				catch (SecurityException e)
 				{
-					// we can't access/ set accessible to true
-					writeObjectMethodCache.put(cls, Boolean.FALSE);
+					// we can't access / set accessible to true
+					writeObjectMethodMissing.add(cls);
 				}
 				catch (NoSuchMethodException e)
 				{
 					// cls doesn't have that method
-					writeObjectMethodCache.put(cls, Boolean.FALSE);
+					writeObjectMethodMissing.add(cls);
 				}
 			}
 
