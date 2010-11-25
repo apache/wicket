@@ -17,13 +17,10 @@
 package org.apache.wicket.extensions.ajax.markup.html.form.upload;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Component;
 import org.apache.wicket.IInitializer;
-import org.apache.wicket.behavior.AbstractBehavior;
-import org.apache.wicket.behavior.IBehavior;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.WicketEventReference;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -88,6 +85,12 @@ public class UploadProgressBar extends Panel
 
 	private final FileUploadField uploadField;
 
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+		form.getRootForm().setOutputMarkupId(true);
+	}
 
 	/**
 	 * Constructor that will display the upload progress bar for every submit of the given form.
@@ -142,13 +145,6 @@ public class UploadProgressBar extends Panel
 		}
 	}
 
-	@Override
-	protected void onInitialize()
-	{
-		super.onInitialize();
-		form.getRootForm().add(new FormEnabler(this, statusDiv, barDiv, uploadField));
-	}
-
 	/**
 	 * Override this to provide your own CSS, or return null to avoid including the default.
 	 * 
@@ -163,69 +159,24 @@ public class UploadProgressBar extends Panel
 	public void renderHead(IHeaderResponse response)
 	{
 		super.renderHead(response);
+		response.renderJavascriptReference(WicketEventReference.INSTANCE);
 		response.renderJavascriptReference(JS);
 		ResourceReference css = getCss();
 		if (css != null)
 		{
 			response.renderCSSReference(css);
 		}
-	}
 
-	/** {@inheritDoc} */
-	@Override
-	protected void onRemove()
-	{
-		// remove formenabler we added to the form
-		for (IBehavior behavior : form.getBehaviors())
-		{
-			if (behavior instanceof FormEnabler)
-			{
-				if (((FormEnabler)behavior).getUploadProgressBar() == this)
-				{
-					form.remove(behavior);
-					break;
-				}
-			}
-		}
-		super.onRemove();
-	}
+		ResourceReference ref = new SharedResourceReference(RESOURCE_NAME);
 
-	/**
-	 * Hooks into form onsubmit and triggers the progress bar updates
-	 * 
-	 * @author igor.vaynberg
-	 */
-	private static class FormEnabler extends AbstractBehavior
-	{
-		private static final long serialVersionUID = 1L;
+		final String uploadFieldId = (uploadField == null) ? "" : uploadField.getMarkupId();
 
-		private final Component status, bar, uploadField;
-		private final UploadProgressBar pbar;
-
-		public FormEnabler(UploadProgressBar pbar, Component status, Component bar,
-			Component uploadField)
-		{
-			this.pbar = pbar;
-			this.bar = bar;
-			this.status = status;
-			this.uploadField = uploadField;
-		}
-
-		@Override
-		public void onComponentTag(Component component, ComponentTag tag)
-		{
-			ResourceReference ref = new SharedResourceReference(RESOURCE_NAME);
-			final String uploadFieldId = (uploadField == null) ? "" : uploadField.getMarkupId();
-			tag.put("onsubmit", "var def=new Wicket.WUPB.Def('" + component.getMarkupId() + "', '" +
-				status.getMarkupId() + "', '" + bar.getMarkupId() + "', '" +
-				component.getPage().urlFor(ref, null) + "','" + uploadFieldId +
-				"'); Wicket.WUPB.start(def);");
-		}
-
-		public UploadProgressBar getUploadProgressBar()
-		{
-			return pbar;
-		}
+		response.renderOnDomReadyJavascript("Wicket.Event.add(document.getElementById('" +
+			form.getRootForm().getMarkupId() + "'), 'submit', function() {" +
+			"if (!document.getElementById('" + statusDiv.getMarkupId() + "')) return;" +
+			"var def=new Wicket.WUPB.Def('" + getMarkupId() + "', '" + statusDiv.getMarkupId() +
+			"', '" + barDiv.getMarkupId() + "', '" + urlFor(ref, null) + "','" + uploadFieldId +
+			"'); Wicket.WUPB.start(def);});");
 
 
 	}
