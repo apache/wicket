@@ -17,7 +17,6 @@
 package org.apache.wicket.util.io;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -25,12 +24,10 @@ import java.util.Locale;
 import junit.framework.Assert;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.PageMap;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.resource.DummyPage;
 import org.apache.wicket.session.ISessionStore;
 
 /**
@@ -142,17 +139,6 @@ public class WicketOutputStreamTest extends WicketTestCase
 		RequestCycle.get().detach();
 	}
 
-	public void testPageWithPageMapSerialization() throws IOException, ClassNotFoundException
-	{
-		DummyPage dummyPage = new DummyPage(PageMap.forName("test"));
-		woos.writeObject(dummyPage);
-		ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-
-		WicketObjectInputStream wois = new WicketObjectInputStream(bais);
-		DummyPage dummyPage2 = (DummyPage)wois.readObject();
-
-		Assert.assertEquals(dummyPage.getClass(), dummyPage2.getClass());
-	}
 
 	// public void testStringsEqualsAfterSerialization() throws Exception
 	// {

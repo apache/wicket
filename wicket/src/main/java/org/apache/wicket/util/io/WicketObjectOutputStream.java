@@ -28,18 +28,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Stack;
 
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.lang.Generics;
 
 
 /**
- * The Wicket ObjectOutputStream to enable back-button support for the reloading mechanism, be sure
- * to put <tt>Objects.setObjectStreamFactory(new WicketObjectStreamFactory());</tt> in your
- * application's {@link WebApplication#init()} method.
- * 
- * @see org.apache.wicket.protocol.http.ReloadingWicketFilter
  * @author jcompagner
  */
 public final class WicketObjectOutputStream extends ObjectOutputStream
@@ -452,7 +445,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	private final HandleArrayListStack<Object> defaultWrite = new HandleArrayListStack<Object>();
 	private final DataOutputStream out;
 
-	private final Stack<ClassStreamHandler> classHandlerStack = new Stack<ClassStreamHandler>();
+	private ClassStreamHandler classHandler;
 
 	private PutField curPut;
 
@@ -477,7 +470,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	@Override
 	public void close() throws IOException
 	{
-		classHandlerStack.clear();
+		classHandler = null;
 		curObject = null;
 		curPut = null;
 		handledObjects.clear();
@@ -494,7 +487,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		if (!defaultWrite.contains(curObject))
 		{
 			defaultWrite.add(curObject);
-			classHandlerStack.peek().writeFields(this, curObject);
+			classHandler.writeFields(this, curObject);
 		}
 	}
 
@@ -797,7 +790,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 				else
 				{
 					Class<?> realClz = cls;
-					ClassStreamHandler classHandler = ClassStreamHandler.lookup(realClz);
+					classHandler = ClassStreamHandler.lookup(realClz);
 
 					Object object = classHandler.writeReplace(obj);
 					if (object != null)
@@ -822,7 +815,6 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 						curObject = obj;
 						try
 						{
-							classHandlerStack.push(classHandler);
 							if (!classHandler.invokeWriteMethod(this, obj))
 							{
 								classHandler.writeFields(this, obj);
@@ -857,7 +849,6 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 						}
 						finally
 						{
-							classHandlerStack.pop();
 							curObject = oldObject;
 							curPut = old;
 						}

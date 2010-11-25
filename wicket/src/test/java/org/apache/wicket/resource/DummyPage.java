@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.resource;
 
-import org.apache.wicket.IPageMap;
 import org.apache.wicket.markup.html.WebPage;
 
 /**
@@ -35,12 +34,6 @@ public class DummyPage extends WebPage
 	public DummyPage()
 	{
 		super();
-	}
-
-
-	public DummyPage(IPageMap pageMap)
-	{
-		super(pageMap);
 	}
 
 }
