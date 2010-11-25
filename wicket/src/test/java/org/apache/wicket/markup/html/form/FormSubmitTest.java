@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.NestedFormsPage.NestableForm;
+import org.apache.wicket.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.util.tester.FormTester;
 
 /**
@@ -134,8 +135,15 @@ public class FormSubmitTest extends WicketTestCase
 		assertEnabledState(false, true, true);
 
 		FormTester formTester = tester.newFormTester("outerForm");
-		formTester.submit("submit");
-
+		try
+		{
+			formTester.submit("submit");
+			fail("Executing the listener on disabled component is not allowed.");
+		}
+		catch (ListenerInvocationNotAllowedException expected)
+		{
+			;
+		}
 		assertOnSubmitCalled(false, false, false);
 		assertOnErrorCalled(false, false, false);
 	}

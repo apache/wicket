@@ -22,6 +22,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
+import org.apache.wicket.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.tester.MockFormFileUploadPage.MockDomainObjectFileUpload;
@@ -185,7 +186,7 @@ public class FormTesterTest extends WicketTestCase
 	 */
 	public void testSubmitMultipartForm()
 	{
-		tester.startPage(MockFormFileUploadPage.class, new PageParameters().set("required" , false));
+		tester.startPage(MockFormFileUploadPage.class, new PageParameters().set("required", false));
 		MockFormFileUploadPage page = (MockFormFileUploadPage)tester.getLastRenderedPage();
 		MockDomainObjectFileUpload domainObject = page.getDomainObject();
 
@@ -229,6 +230,14 @@ public class FormTesterTest extends WicketTestCase
 		assertTrue(check.isEnabled());
 		assertFalse(check.isEnabledInHierarchy());
 		FormTester formTester = tester.newFormTester("form");
-		formTester.submit();
+		try
+		{
+			formTester.submit();
+			fail("Executing the listener on disabled component is not allowed.");
+		}
+		catch (ListenerInvocationNotAllowedException expected)
+		{
+			;
+		}
 	}
 }

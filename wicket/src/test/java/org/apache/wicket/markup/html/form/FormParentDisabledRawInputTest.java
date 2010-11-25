@@ -16,24 +16,25 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Before;
+import org.junit.Test;
 
-public class FormParentDisabledRawInputTest extends TestCase
+public class FormParentDisabledRawInputTest
 {
 	private WicketTester tester;
 
-	@Override
-	protected void setUp() throws Exception
+	@Before
+	public void setUp() throws Exception
 	{
-		super.setUp();
 		tester = new WicketTester();
 	}
 
@@ -59,6 +60,7 @@ public class FormParentDisabledRawInputTest extends TestCase
 		}
 	}
 
+	@Test(expected = ListenerInvocationNotAllowedException.class)
 	public void testDisabledParent() throws Exception
 	{
 		TestPage page = new TestPage();
@@ -72,10 +74,5 @@ public class FormParentDisabledRawInputTest extends TestCase
 
 		// nothing should change with a submit that changes no values
 		tester.newFormTester("container:form").submit();
-		check = tester.getComponentFromLastRenderedPage("container:form:check");
-		assertTrue(check.isEnabled());
-		assertFalse(check.isEnabledInHierarchy());
-		tester.assertContains("disabled=\"disabled\"");
-		tester.assertContains("checked=\"checked\"");
 	}
 }

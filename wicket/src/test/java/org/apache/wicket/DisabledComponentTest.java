@@ -17,6 +17,7 @@
 package org.apache.wicket;
 
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.request.handler.ListenerInvocationNotAllowedException;
 
 /**
  * @author jcompagner
@@ -52,6 +53,14 @@ public class DisabledComponentTest extends WicketTestCase
 		executeTest(DisabledComponentPage1.class, "DisabledComponentPage1a_result.html");
 		Link link = ((DisabledComponentPage1)tester.getLastRenderedPage()).link;
 		link.setEnabled(false);
-		executeListener(link, "DisabledComponentPage1b_result.html");
+		try
+		{
+			executeListener(link, "DisabledComponentPage1b_result.html");
+			fail("Executing the listener on disabled component is not allowed.");
+		}
+		catch (ListenerInvocationNotAllowedException expected)
+		{
+			;
+		}
 	}
 }
