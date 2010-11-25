@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - custom resource loading</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+    <p>
+	    This page was loaded from the web context. It was found by the custom resource stream locator,
+	    which is set in the application object of this example.
+	</p>
+	<p>
+	    This example differs from PageFromWebContext in that it is loaded without
+	    taking the path into account. This is not the preferred way of doing thing, but
+	    it is here to show you that you can do your own path interpretation.
+	</p>
+</body>
+</html>

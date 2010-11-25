@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Click Link Test Page</title>
+</head>
+<body>
+<h2>Link</h2>
+<p>
+	<a wicket:id="linkWithSetResponsePageClass">Standard Link which calls setResponsePage with page class</a>
+	<a wicket:id="linkWithSetResponsePage">Standard Link which calls setResponsePage with page instance</a>
+</p>
+
+<h2>Ajax link</h2>
+<p>
+	<a wicket:id="ajaxLinkWithSetResponsePageClass">Standard AjaxLink which calls setResponsePage with page class</a>
+	<a wicket:id="ajaxLinkWithSetResponsePage">Standard AjaxLink which calls setResponsePage with page instance</a>
+</p>
+
+<h2>Ajax fallback link</h2>
+<p>
+	<a wicket:id="ajaxFallbackLinkWithSetResponsePageClass">Standard AjaxFallbackLink which calls setResponsePage with page class</a>
+	<a wicket:id="ajaxFallbackLinkWithSetResponsePage">Standard AjaxFallbackLink which calls setResponsePage with page instance</a>
+</p>
+
+<h2>Ajax submit form</h2>
+<form wicket:id="form">
+	<a wicket:id="submit">submit</a>
+</form>
+</body>
+</html>

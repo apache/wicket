@@ -1,0 +1,29 @@
+<html>
+<head><script type="text/javascript" src="resources/org.apache.wicket.markup.html.WicketEventReference/wicket-event.js"></script>
+<script type="text/javascript" src="resources/org.apache.wicket.ajax.WicketAjaxReference/wicket-ajax.js"></script>
+<script type="text/javascript" src="resources/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug.js"></script>
+<script type="text/javascript" id="wicket-ajax-debug-enable"><!--/*--><![CDATA[/*><!--*/
+wicketAjaxDebugEnable=true;
+/*-->]]>*/</script>
+
+</head><body>
+  <span wicket:id="pageLayout"><wicket:border>
+        <table width = "0%" border = "0" cellspacing = "0" cellpadding = "1" bgcolor = "black">
+            <tr>
+                <td width = "100%" valign = "top">
+                    <table width = "100%" border = "0" cellspacing = "0" cellpadding = "4" bgcolor = "white">
+                        <tr>
+                            <td width = "100%">
+                                <wicket:body>
+	  <span wicket:id="ajaxLabel" id="ajaxLabel1">AAAAAAA</span>
+	  <a href="#" wicket:id="ajaxLink" id="ajaxLink2" onclick="var wcall=wicketAjaxGet('?wicket:interface=:0:ajaxLink::IBehaviorListener:0:',function() { }.bind(this),function() { }.bind(this), function() {return Wicket.$('ajaxLink2') != null;}.bind(this));return !wcall;">Update</a>
+  </wicket:body>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </wicket:border></span>
+</body>
+</html>

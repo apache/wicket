@@ -1,0 +1,6 @@
+<ul>
+#foreach( $field in $fields )
+  <wicket:message key="${field.fieldName}">Label</wicket:message>
+  <input wicket:id="${field.fieldName}" size="${field.fieldSize}"/><br/>
+#end
+</ul>

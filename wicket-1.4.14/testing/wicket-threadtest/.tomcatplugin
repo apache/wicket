@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tomcatProjectProperties>
+    <rootDir>/src/webapp</rootDir>
+    <exportSource>false</exportSource>
+    <reloadable>true</reloadable>
+    <redirectLogger>true</redirectLogger>
+    <updateXml>true</updateXml>
+    <warLocation></warLocation>
+    <extraInfo></extraInfo>
+    <webPath>/wicket</webPath>
+    <webClassPathEntries>
+        <webClassPathEntry>/wicket-examples/target/classes</webClassPathEntry>
+        <webClassPathEntry>/wicket-extensions/target/classes</webClassPathEntry>
+        <webClassPathEntry>/wicket/target/classes</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/com/ibm/icu/icu4j/2.6.1/icu4j-2.6.1.jar</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/commons-collections/commons-collections/2.1/commons-collections-2.1.jar</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/commons-lang/commons-lang/2.0/commons-lang-2.0.jar</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/jaxen/jaxen/1.1-beta-8/jaxen-1.1-beta-8.jar</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/jdom/jdom/1.0/jdom-1.0.jar</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13.jar</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/nekohtml/nekohtml/0.9.5/nekohtml-0.9.5.jar</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/org/ccil/cowan/tagsoup/tagsoup/0.9.7/tagsoup-0.9.7.jar</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/rhino/js/1.6R1/js-1.6R1.jar</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/xalan/xalan/2.6.0/xalan-2.6.0.jar</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2.jar</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/xerces/xmlParserAPIs/2.6.2/xmlParserAPIs-2.6.2.jar</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/xom/xom/1.0b3/xom-1.0b3.jar</webClassPathEntry>
+    </webClassPathEntries>
+</tomcatProjectProperties>

@@ -1,0 +1,14 @@
+<html>
+<head><title>CheckGroupTestPage4</title></head>
+<body>
+	<form wicket:id="form">
+		<!-- this check is outside the group and should fail -->
+		<input type="checkbox" wicket:id="check2">check2</input>
+		<span wicket:id="group">
+			<input type="checkbox" wicket:id="check1">check1</input>
+			<span wicket:id="container">
+			</span>
+		</span>
+	</form>
+</body>
+</html>

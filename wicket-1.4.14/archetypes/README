@@ -1,0 +1,57 @@
+Apache Wicket Archetypes
+========================
+
+This is the README file for the archetypes directory
+
+Wicket's archetypes directory is a collection of Apache Maven project 
+archetypes designed for Wicket.
+
+Contents
+--------
+ - Requirements
+ - Getting started
+ - Usage
+
+Requirements
+------------
+To install and use these archetypes Apache Maven (http://maven.apache.org)
+needs to be present.
+
+
+Getting started
+---------------
+Installation:
+>cd archetypes
+>cd <archetype-folder>
+>mvn install
+ 
+Usage
+-----
+Creating a maven project using one of the archetypes:
+>mvn archetype:create \
+  -DarchetypeGroupId=org.apache.wicket \
+  -DarchetypeArtifactId=<archetypeArtifactId> \
+  -DarchetypeVersion=<archetypeVersion> \
+  -DgroupId=<groupId> \
+  -DartifactId=<artifactId>
+e.g.:
+>mvn archetype:create \
+  -DarchetypeGroupId=org.apache.wicket\
+  -DarchetypeArtifactId=wicket-archetype-quickstart \
+  -DarchetypeVersion=1.3.0-SNAPSHOT \
+  -DgroupId=com.mycompany \
+  -DartifactId=myproject
+  
+Launching Generated Application Using Jetty
+-------------------------------------------
+>cd myproject
+>mvn jetty:run
+
+Browse to http://localhost:8080/
+
+Generated Eclipse Project From Generated Application
+----------------------------------------------------
+>cd myproject
+>mvn eclipse:eclipse -DdownloadSources=true
+
+Open Eclipse. Choose File/Import/Existing Project and point it to myproject directory

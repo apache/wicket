@@ -1,0 +1,47 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 3.2 Final//NL">
+<html>
+<head>
+<title>wicket.extensions.wizard package</title>
+</head>
+<body>
+<p>
+Package for working with Wizard components. Wizards are dialogs which take
+users through a number of steps to achieve something.
+<p>
+The main component is <tt>wicket.extensions.wizard</tt>, which serves as
+the panel on which the whole wizard is rendered. It is possible to implement</p>
+<p>
+<tt>wicket.extensions.wizard.IWizard</tt> directly, but it is not recommended.
+The wizard cooperates with an instance of <tt>wicket.extensions.wizard.IWizardModel</tt>,
+for which the default implementation <tt>wicket.extensions.wizard.WizardModel</tt> is
+provided. This model knows about the wizard's steps and the transitions between them,
+and it holds a reference to the currently active step. It might function as a generic
+state holder for the wizard too, though you might find it more convenient to use the
+wizard component itself for that, or even an external model. See the wizard example
+of the wicket-examples project for some examples of wizards.
+</p>
+<p>
+The <a href="https://wizard-framework.dev.java.net/">Swing Wizard Framework</a>
+served as a valueable source of inspiration as did discussions with 
+<a href="http://superinterface.com/easywizard.htm">Michael Jouravlev</a> and 
+<a href="http://weblogs.java.net/blog/timboudreau/">Tim Boudreau</a>.
+</p>
+
+</body>
+</html>

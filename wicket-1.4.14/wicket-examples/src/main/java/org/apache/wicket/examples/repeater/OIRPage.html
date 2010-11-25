@@ -1,0 +1,31 @@
+<wicket:extend>
+
+This example demonstrates the use of ReuseIfModelsEqualStrategy implementation of IItemReuseStrategy interface for the dataview.
+IItemReuseStrategy is responsible for how the child item components of the dataview are recycled between requests. The default strategy simply discards all previous items.
+The ReuseIfModelsEqualStrategy strategy will keep items if the model of the item matches one of the models  that is to be displayed in the current request - this allows reuse of items that did not leave the page. This is useful when there is a need to keep state across requests for items that are visible within the page.
+Notice that when you click the 'toggle highlite' link the item stays highlited until it leaves the page or you click the link again. If the default strategy would have been used instead, the item would not have been highlited because it would have been replaced by a new item and thus would not have known that it should be highlited.
+<br/><br/>
+
+
+<span wicket:id="navigator">[dataview navigator]</span>
+<table cellspacing="0" class="dataview">
+	<tr>
+		<th colspan="2">Actions</th>
+		<th>ID</th>
+		<th wicket:id="orderByFirstName">First Name</th>
+		<th wicket:id="orderByLastName">Last Name</th>
+		<th>Home Phone</th>
+		<th>Cell Phone</th>
+	</tr>
+	<tr wicket:id="oir">
+		<td><span wicket:id="actions">[actions]</span></td>
+		<td><a href="#" wicket:id="toggleHighlite">toggle highlite</a></td>
+		<td><span wicket:id="contactid">[contactid]</span> </td>
+		<td><span wicket:id="firstname">[firstname]</span></td>
+		<td><span wicket:id="lastname">[lastname]</span></td>
+		<td><span wicket:id="homephone">[homephone]</span></td>
+		<td><span wicket:id="cellphone">[cellphone]</span></td>
+	</tr>
+</table>
+
+</wicket:extend>

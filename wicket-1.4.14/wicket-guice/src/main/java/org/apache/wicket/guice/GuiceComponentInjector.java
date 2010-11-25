@@ -1,0 +1,252 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.wicket.guice;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+
+import org.apache.wicket.Application;
+import org.apache.wicket.Component;
+import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.application.IComponentInstantiationListener;
+import org.apache.wicket.injection.ConfigurableInjector;
+import org.apache.wicket.injection.IFieldValueFactory;
+import org.apache.wicket.injection.web.InjectorHolder;
+import org.apache.wicket.proxy.LazyInitProxyFactory;
+
+import com.google.inject.BindingAnnotation;
+import com.google.inject.Guice;
+import com.google.inject.ImplementedBy;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import com.google.inject.Stage;
+
+/**
+ * Injects fields/members of components using Guice.
+ * <p>
+ * Add this to your application in its {@link Application#init()} method like so:
+ * 
+ * <pre>
+ * addComponentInstantiationListener(new GuiceComponentInjector(this));
+ * </pre>
+ * 
+ * <p>
+ * There are different constructors for this object depending on how you want to wire things. See
+ * the javadoc for the constructors for more information.
+ * 
+ * @author Alastair Maw
+ */
+public class GuiceComponentInjector extends ConfigurableInjector
+		implements
+			IComponentInstantiationListener
+{
+	/**
+	 * Creates a new Wicket GuiceComponentInjector instance.
+	 * <p>
+	 * Internally this will create a new Guice {@link Injector} instance, with no {@link Module}
+	 * instances. This is only useful if your beans have appropriate {@link ImplementedBy}
+	 * annotations on them so that they can be automatically picked up with no extra configuration
+	 * code.
+	 * 
+	 * @param app
+	 */
+	public GuiceComponentInjector(Application app)
+	{
+		this(app, new Module[0]);
+	}
+
+	/**
+	 * Creates a new Wicket GuiceComponentInjector instance, using the supplied Guice {@link Module}
+	 * instances to create a new Guice {@link Injector} instance internally.
+	 * 
+	 * @param app
+	 * @param modules
+	 */
+	public GuiceComponentInjector(Application app, Module... modules)
+	{
+		this(app, Guice.createInjector(app.getConfigurationType().equals(Application.DEVELOPMENT)
+				? Stage.DEVELOPMENT
+				: Stage.PRODUCTION, modules));
+	}
+
+	/**
+	 * Creates a new Wicket GuiceComponentInjector instance, using the provided Guice
+	 * {@link Injector} instance.
+	 * 
+	 * @param app
+	 * @param injector
+	 */
+	public GuiceComponentInjector(Application app, Injector injector)
+	{
+		app.setMetaData(GuiceInjectorHolder.INJECTOR_KEY, new GuiceInjectorHolder(injector));
+		InjectorHolder.setInjector(this);
+	}
+
+	/**
+	 * @param object
+	 *            object to be injected
+	 * @return Object that was injected - used for chaining
+	 */
+	@Override
+	public Object inject(Object object)
+	{
+		Class< ? > current = object.getClass();
+		do
+		{
+			Field[] currentFields = current.getDeclaredFields();
+			for (final Field field : currentFields)
+			{
+				Inject injectAnnotation = field.getAnnotation(Inject.class);
+				if (!Modifier.isStatic(field.getModifiers()) && injectAnnotation != null)
+				{
+					try
+					{
+						Annotation bindingAnnotation = findBindingAnnotation(field.getAnnotations());
+						Object proxy = LazyInitProxyFactory.createProxy(field.getType(),
+								new GuiceProxyTargetLocator(field, bindingAnnotation,
+										injectAnnotation.optional()));
+
+						if (!field.isAccessible())
+						{
+							field.setAccessible(true);
+						}
+						field.set(object, proxy);
+					}
+					catch (IllegalAccessException e)
+					{
+						throw new WicketRuntimeException("Error Guice-injecting field " +
+								field.getName() + " in " + object, e);
+					}
+					catch (MoreThanOneBindingException e)
+					{
+						throw new RuntimeException(
+								"Can't have more than one BindingAnnotation on field " +
+										field.getName() + " of class " +
+										object.getClass().getName());
+					}
+				}
+			}
+			Method[] currentMethods = current.getDeclaredMethods();
+			for (final Method method : currentMethods)
+			{
+				Inject injectAnnotation = method.getAnnotation(Inject.class);
+				if (!Modifier.isStatic(method.getModifiers()) && injectAnnotation != null)
+				{
+					Annotation[][] paramAnnotations = method.getParameterAnnotations();
+					Class< ? >[] paramTypes = method.getParameterTypes();
+					Type[] genericParamTypes = method.getGenericParameterTypes();
+					Object[] args = new Object[paramTypes.length];
+					for (int i = 0; i < paramTypes.length; i++)
+					{
+						Type paramType;
+						if (genericParamTypes[i] instanceof ParameterizedType)
+						{
+							paramType = ((ParameterizedType)genericParamTypes[i]).getRawType();
+						}
+						else
+						{
+							paramType = paramTypes[i];
+						}
+						try
+						{
+							Annotation bindingAnnotation = findBindingAnnotation(paramAnnotations[i]);
+							args[i] = LazyInitProxyFactory.createProxy(paramTypes[i],
+									new GuiceProxyTargetLocator(method, i, bindingAnnotation,
+											injectAnnotation.optional()));
+						}
+						catch (MoreThanOneBindingException e)
+						{
+							throw new RuntimeException(
+									"Can't have more than one BindingAnnotation on parameter " + i +
+											"(" + paramType + ") of method " + method.getName() +
+											" of class " + object.getClass().getName());
+						}
+					}
+					try
+					{
+						method.invoke(object, args);
+					}
+					catch (IllegalAccessException e)
+					{
+						throw new WicketRuntimeException(e);
+					}
+					catch (InvocationTargetException e)
+					{
+						throw new WicketRuntimeException(e);
+					}
+				}
+			}
+			current = current.getSuperclass();
+		}
+		// Do a null check in case Object isn't in the current classloader.
+		while (current != null && current != Object.class);
+
+		return object;
+	}
+
+	public void onInstantiation(Component component)
+	{
+		inject(component);
+	}
+
+	/**
+	 * 
+	 * @param annotations
+	 * @return
+	 * @throws MoreThanOneBindingException
+	 */
+	public static Annotation findBindingAnnotation(final Annotation[] annotations)
+			throws MoreThanOneBindingException
+	{
+		Annotation bindingAnnotation = null;
+
+		// Work out if we have a BindingAnnotation on this parameter.
+		for (Annotation annotation : annotations)
+		{
+			if (annotation.annotationType().getAnnotation(BindingAnnotation.class) != null)
+			{
+				if (bindingAnnotation != null)
+				{
+					throw new MoreThanOneBindingException();
+				}
+				bindingAnnotation = annotation;
+			}
+		}
+		return bindingAnnotation;
+	}
+
+	public static class MoreThanOneBindingException extends Exception
+	{
+		private static final long serialVersionUID = 1L;
+	}
+
+	/**
+	 * @see org.apache.wicket.injection.ConfigurableInjector#getFieldValueFactory()
+	 */
+	@Override
+	protected IFieldValueFactory getFieldValueFactory()
+	{
+		// No need of {@link IFieldValueFactory}
+		return null;
+}
+}

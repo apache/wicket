@@ -1,0 +1,21 @@
+<html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd" >
+    <head>  
+        <title>Wicket Quickstart Archetype Homepage</title>
+    </head>
+    <body>
+        <strong>anyComponentError test</strong>
+        <br/><br/>
+        <b><span wicket:id="passFail"></span></b>
+        <form wicket:id="form">
+        	<div wicket:id="invalidPanel">[invalidPanel]</div>
+        	<input wicket:id="submitComponent" type="button" value="Click to test Panel" />
+        	<div>
+        		<input wicket:id="formComponent" type="checkbox" />
+        	</div>
+        	<input wicket:id="submitFormComponent" type="button" value="Click to test FormComponent" />
+        	<br />
+        	<input wicket:id="submitForm" type="button" value="Click to test Form" />
+        </form>
+        <div wicket:id="feedback">[feedback]</div>
+    </body>
+</html>

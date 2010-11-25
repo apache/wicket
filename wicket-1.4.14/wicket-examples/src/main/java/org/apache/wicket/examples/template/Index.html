@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/">
+<head>
+    <title>Wicket Examples - template</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+    <span wicket:id="mainNavigation" />
+
+	<h1>Template example</h1>
+
+	<p style="border: 2px dotted #fc0; width: 500px; padding: 5px;">
+	This example shows two different ways of building your page up from shared parts.
+	The first example uses what we commonly call 'markup inheritence',
+	and the second example shows how to achieve roughly the same
+	using borders.<br />
+	&nbsp;&nbsp;Compare the examples and decides what works best for you. You will find that markup
+	inheritance is usually easier to work with, and you'll rarely have the need to work with
+	borders. But in some cases borders make sense, and can be a little bit more flexible.<br />
+	&nbsp;&nbsp;Also note the use of panels and component replacement to switch the banner.
+	Component replacement can be a powerful alternative to navigating between pages.
+	</p>
+
+	<p>
+		<wicket:link>
+		<ul>
+		 <li><a href="pageinheritance/Page1.html">templating using markup inheritance</a></li>
+		 <li><a href="border/Page1.html">templating using a border</a></li>
+		</ul>
+		</wicket:link>
+	</p>
+
+</body>
+</html>

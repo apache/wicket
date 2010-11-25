@@ -1,0 +1,9 @@
+  base: before
+  <!-- note: extension and base can not have equals ids like e.g. "label" -->
+  extension: 1 <span wicket:id="label1">base label 1</span> extension: 2
+  <wicket:child><wicket:extend>
+  <!-- note: extension and base can not have equals ids like e.g. "label" -->
+  extension: 1 <span wicket:id="label3">extension label</span> extension: 2
+</wicket:extend></wicket:child>
+  extension: 1 <span wicket:id="label2">base label 2</span> extension: 2
+  base: after
