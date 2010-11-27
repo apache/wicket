@@ -191,6 +191,10 @@ public class BaseWicketTester
 	// Simulates the cookies maintained by the browser
 	private final List<Cookie> browserCookies = new ArrayList<Cookie>();
 
+	// The root component used for the start. Usually the Page, but can also be a Panel
+	// see https://issues.apache.org/jira/browse/WICKET-1214
+	private MarkupContainer startComponent;
+
 	/**
 	 * Creates <code>WicketTester</code> and automatically create a <code>WebApplication</code>, but
 	 * the tester will have no home page.
@@ -586,6 +590,7 @@ public class BaseWicketTester
 	 */
 	public Page startPage(IPageProvider pageProvider)
 	{
+		startComponent = null;
 		request = new MockHttpServletRequest(application, hsession, servletContext);
 		request.setURL(request.getContextPath() + request.getServletPath() + "/");
 		IRequestHandler handler = new RenderPageRequestHandler(pageProvider);
@@ -795,6 +800,7 @@ public class BaseWicketTester
 	 */
 	public final <C extends Page> Page startPage(Class<C> pageClass)
 	{
+		startComponent = null;
 		request.setUrl(application.getRootRequestMapper().mapHandler(
 			new BookmarkablePageRequestHandler(new PageProvider(pageClass))));
 		processRequest();
@@ -814,6 +820,7 @@ public class BaseWicketTester
 	 */
 	public final <C extends Page> Page startPage(Class<C> pageClass, PageParameters parameters)
 	{
+		startComponent = null;
 		request.setUrl(application.getRootRequestMapper().mapHandler(
 			new BookmarkablePageRequestHandler(new PageProvider(pageClass, parameters))));
 		processRequest();
@@ -873,7 +880,7 @@ public class BaseWicketTester
 	 */
 	public final Panel startPanel(final TestPanelSource testPanelSource)
 	{
-		return (Panel)startPage(new ITestPageSource()
+		Panel panel = (Panel)startPage(new ITestPageSource()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -882,6 +889,8 @@ public class BaseWicketTester
 				return new DummyPanelPage(testPanelSource);
 			}
 		}).get(DummyPanelPage.TEST_PANEL_ID);
+		startComponent = panel;
+		return panel;
 	}
 
 	/**
@@ -895,7 +904,7 @@ public class BaseWicketTester
 	 */
 	public final <C extends Panel> Panel startPanel(final Class<C> panelClass)
 	{
-		return (Panel)startPage(new ITestPageSource()
+		Panel panel = (Panel)startPage(new ITestPageSource()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -920,6 +929,8 @@ public class BaseWicketTester
 				});
 			}
 		}).get(DummyPanelPage.TEST_PANEL_ID);
+		startComponent = panel;
+		return panel;
 	}
 
 	/**
@@ -967,13 +978,11 @@ public class BaseWicketTester
 	 */
 	public Component getComponentFromLastRenderedPage(String path)
 	{
-		MarkupContainer root = getLastRenderedPage();
-		if (root instanceof DummyPanelPage)
+		if (startComponent != null)
 		{
-			root = (MarkupContainer)root.get(DummyPanelPage.TEST_PANEL_ID);
+			path = startComponent.getId() + ":" + path;
 		}
-
-		Component component = root.get(path);
+		Component component = getLastRenderedPage().get(path);
 		if (component == null)
 		{
 			fail("path: '" + path + "' does not exist for page: " +
@@ -1494,8 +1503,8 @@ public class BaseWicketTester
 	 * <code>Component</code> is on the Ajax response sent back to the client.
 	 * <p>
 	 * PLEASE NOTE! This method doesn't actually insert the <code>Component</code> in the client DOM
-	 * tree, using Javascript. But it shouldn't be needed because you have to trust that the Wicket
-	 * Ajax Javascript just works.
+	 * tree, using JavaScript. But it shouldn't be needed because you have to trust that the Wicket
+	 * Ajax JavaScript just works.
 	 * 
 	 * @param component
 	 *            the <code>Component</code> to test
@@ -1629,7 +1638,7 @@ public class BaseWicketTester
 	 * <code>Form</code> before executing the command.
 	 * <p>
 	 * PLEASE NOTE! This method doesn't actually insert the <code>Component</code> in the client DOM
-	 * tree, using Javascript.
+	 * tree, using JavaScript.
 	 * 
 	 * @param component
 	 *            the <code>Component</code> that has the <code>AjaxEventBehavior</code> we want to
