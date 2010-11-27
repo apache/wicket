@@ -106,13 +106,6 @@ public abstract class Panel extends WebMarkupContainerWithAssociatedMarkup
 			// <span wicket:id="myPanel">...</span>
 			tag.setType(XmlTag.OPEN);
 		}
-
-// IMarkupFragment markup = getMarkup(null);
-// ComponentTag panelTag = (ComponentTag)markup.get(0);
-// for (String key : panelTag.getAttributes().keySet())
-// {
-// tag.append(key, panelTag.getAttribute(key), ", ");
-// }
 		super.onComponentTag(tag);
 	}
 

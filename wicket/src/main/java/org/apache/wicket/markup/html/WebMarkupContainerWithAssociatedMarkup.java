@@ -54,6 +54,27 @@ public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
 	}
 
 	/**
+	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
+	 */
+	@Override
+	protected void onComponentTag(ComponentTag tag)
+	{
+		// Copy attributes from <wicket:panel> to the "calling" tag
+		IMarkupFragment markup = getMarkup(null);
+		ComponentTag panelTag = (ComponentTag)markup.get(0);
+		for (String key : panelTag.getAttributes().keySet())
+		{
+			// exclude "wicket:XX" attributes
+			if (key.startsWith(markup.getMarkupResourceStream().getWicketNamespace() + ":") == false)
+			{
+				tag.append(key, panelTag.getAttribute(key), ", ");
+			}
+		}
+
+		super.onComponentTag(tag);
+	}
+
+	/**
 	 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
 	 */
 	@Override
