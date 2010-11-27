@@ -92,6 +92,12 @@ public class PackagedTextTemplate extends TextTemplate
 		private static final long serialVersionUID = 1L;
 	};
 
+	/** The content type used if not provided in the constructor */
+	public static final String DEFAULT_CONTENT_TYPE = "text";
+
+	/** The encoding used if not provided in the constructor */
+	public static final String DEFAULT_ENCODING = null;
+
 	/** contents */
 	private final StringBuilder buffer = new StringBuilder();
 
@@ -106,7 +112,7 @@ public class PackagedTextTemplate extends TextTemplate
 	 */
 	public PackagedTextTemplate(final Class<?> clazz, final String fileName)
 	{
-		this(clazz, fileName, "text");
+		this(clazz, fileName, DEFAULT_CONTENT_TYPE);
 	}
 
 	/**
@@ -124,7 +130,7 @@ public class PackagedTextTemplate extends TextTemplate
 	public PackagedTextTemplate(final Class<?> clazz, final String fileName,
 		final String contentType)
 	{
-		this(clazz, fileName, contentType, null);
+		this(clazz, fileName, contentType, DEFAULT_ENCODING);
 	}
 
 	/**
@@ -152,8 +158,9 @@ public class PackagedTextTemplate extends TextTemplate
 		app.getMetaData(TEXT_TEMPLATE_CACHE_KEY);
 
 		// first try default class loading locator to find the resource
-		IResourceStream stream = app.getResourceSettings().getResourceStreamLocator().locate(clazz,
-			path);
+		IResourceStream stream = app.getResourceSettings()
+			.getResourceStreamLocator()
+			.locate(clazz, path);
 
 		if (stream == null)
 		{

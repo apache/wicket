@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.resource;
 
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.IClusterable;
@@ -63,10 +64,8 @@ public class TextTemplateResourceReference extends ResourceReference implements 
 	public TextTemplateResourceReference(final Class<?> scope, final String fileName,
 		IModel<Map<String, Object>> variablesModel)
 	{
-		super(scope, fileName);
-
-		textTemplate = new PackagedTextTemplate(scope, fileName);
-		this.variablesModel = variablesModel;
+		this(scope, fileName, PackagedTextTemplate.DEFAULT_CONTENT_TYPE,
+			PackagedTextTemplate.DEFAULT_ENCODING, variablesModel);
 	}
 
 	/**
@@ -86,10 +85,7 @@ public class TextTemplateResourceReference extends ResourceReference implements 
 	public TextTemplateResourceReference(final Class<?> scope, final String fileName,
 		final String contentType, IModel<Map<String, Object>> variablesModel)
 	{
-		super(scope, fileName);
-
-		textTemplate = new PackagedTextTemplate(scope, fileName, contentType);
-		this.variablesModel = variablesModel;
+		this(scope, fileName, contentType, PackagedTextTemplate.DEFAULT_ENCODING, variablesModel);
 	}
 
 	/**
@@ -111,7 +107,36 @@ public class TextTemplateResourceReference extends ResourceReference implements 
 	public TextTemplateResourceReference(final Class<?> scope, final String fileName,
 		final String contentType, final String encoding, IModel<Map<String, Object>> variablesModel)
 	{
-		super(scope, fileName);
+		this(scope, fileName, contentType, encoding, variablesModel, null, null, null);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param scope
+	 *            the <code>Class</code> to be used for retrieving the classloader for loading the
+	 *            <code>PackagedTextTemplate</code>
+	 * @param fileName
+	 *            the file name
+	 * @param contentType
+	 *            the mime type of this resource, such as "<code>image/jpeg</code>" or "
+	 *            <code>text/html</code>"
+	 * @param encoding
+	 *            the file's encoding, for example, "<code>UTF-8</code>"
+	 * @param variablesModel
+	 *            the template variables as a model
+	 * @param locale
+	 *            Preferred locale for the resource
+	 * @param style
+	 *            Preferred style for the resource
+	 * @param variation
+	 *            Preferred variation for the resource
+	 */
+	public TextTemplateResourceReference(final Class<?> scope, final String fileName,
+		final String contentType, final String encoding,
+		IModel<Map<String, Object>> variablesModel, Locale locale, String style, String variation)
+	{
+		super(scope, fileName, locale, style, variation);
 
 		textTemplate = new PackagedTextTemplate(scope, fileName, contentType, encoding);
 		this.variablesModel = variablesModel;
