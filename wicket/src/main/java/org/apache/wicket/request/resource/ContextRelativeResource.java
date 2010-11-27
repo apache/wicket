@@ -21,6 +21,7 @@ import java.io.InputStream;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.io.ByteArrayOutputStream;
+import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.WebExternalResourceStream;
@@ -96,33 +97,8 @@ public class ContextRelativeResource extends AbstractResource
 					}
 					finally
 					{
-						try
-						{
-							Streams.close(inputStream);
-						}
-						catch (IOException iox)
-						{
-							if (log.isDebugEnabled())
-							{
-								log.debug(
-									"An error occurred while closing the input stream to the external resource",
-									iox);
-							}
-						}
-
-						try
-						{
-							Streams.close(baos);
-						}
-						catch (IOException iox)
-						{
-							if (log.isDebugEnabled())
-							{
-								log.debug(
-									"An error occurred while closing the temporary output stream",
-									iox);
-							}
-						}
+						IOUtils.closeQuietly(inputStream);
+						IOUtils.closeQuietly(baos);
 					}
 				}
 			});
