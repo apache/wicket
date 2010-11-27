@@ -64,6 +64,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.IHierarchical;
 import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.string.ComponentStrings;
@@ -224,8 +225,6 @@ public abstract class Component
 		IEventSink,
 		IEventSource
 {
-
-
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Component.class);
 
@@ -2772,6 +2771,21 @@ public abstract class Component
 		setMetaData(MARKUP_ID_KEY, (String)markupId);
 
 		setOutputMarkupId(true);
+	}
+
+	/**
+	 * Copy markupId
+	 * 
+	 * @param comp
+	 */
+	final void setMarkupId(Component comp)
+	{
+		Args.notNull(comp, "comp");
+
+		generatedMarkupId = comp.generatedMarkupId;
+		setMetaData(MARKUP_ID_KEY, comp.getMetaData(MARKUP_ID_KEY));
+		setOutputMarkupId(comp.getOutputMarkupId());
+		return;
 	}
 
 	/**

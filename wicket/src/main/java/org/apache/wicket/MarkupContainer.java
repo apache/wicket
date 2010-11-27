@@ -804,7 +804,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			addedComponent(child);
 
 			// The generated markup id remains the same
-			child.setMarkupIdImpl(replaced.getMarkupIdImpl());
+			child.setMarkupId(replaced);
 		}
 
 		return this;
