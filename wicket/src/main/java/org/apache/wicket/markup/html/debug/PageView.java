@@ -98,25 +98,28 @@ public final class PageView extends Panel
 	{
 		super(id);
 
-		// Create an empty list. It'll be filled later
-		final List<ComponentData> data = new ArrayList<ComponentData>();
-
 		// Name of page
 		add(new Label("info", page == null ? "[Stateless Page]" : page.toString()));
 
-		// Get the components data and fill and sort the list
-		data.clear();
+		// Create an empty list. It'll be filled later
+		List<ComponentData> data = null;
+
 		if (page != null)
 		{
-			data.addAll(getComponentData(page));
-		}
-		Collections.sort(data, new Comparator<ComponentData>()
-		{
-			public int compare(ComponentData o1, ComponentData o2)
+			// Get the components data and fill and sort the list
+			data = new ArrayList<ComponentData>(getComponentData(page));
+			Collections.sort(data, new Comparator<ComponentData>()
 			{
-				return (o1).path.compareTo((o2).path);
-			}
-		});
+				public int compare(ComponentData o1, ComponentData o2)
+				{
+					return (o1).path.compareTo((o2).path);
+				}
+			});
+		}
+		else
+		{
+			data = Collections.emptyList();
+		}
 
 		// Create the table containing the list the components
 		add(new ListView<ComponentData>("components", data)
