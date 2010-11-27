@@ -24,6 +24,8 @@ import org.apache.wicket.util.io.ByteArrayOutputStream;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.WebExternalResourceStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Resource served from a file relative to the context root.
@@ -33,6 +35,8 @@ import org.apache.wicket.util.resource.WebExternalResourceStream;
 public class ContextRelativeResource extends AbstractResource
 {
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger log = LoggerFactory.getLogger(ContextRelativeResource.class);
 
 	private final String path;
 
@@ -74,10 +78,11 @@ public class ContextRelativeResource extends AbstractResource
 				@Override
 				public void writeData(final Attributes attributes)
 				{
+					InputStream inputStream = null;
+					ByteArrayOutputStream baos = new ByteArrayOutputStream();
 					try
 					{
-						InputStream inputStream = webExternalResourceStream.getInputStream();
-						ByteArrayOutputStream baos = new ByteArrayOutputStream();
+						inputStream = webExternalResourceStream.getInputStream();
 						Streams.copy(inputStream, baos);
 						attributes.getResponse().write(baos.toByteArray());
 					}
@@ -88,6 +93,36 @@ public class ContextRelativeResource extends AbstractResource
 					catch (IOException iox)
 					{
 						throw new WicketRuntimeException(iox);
+					}
+					finally
+					{
+						try
+						{
+							Streams.close(inputStream);
+						}
+						catch (IOException iox)
+						{
+							if (log.isDebugEnabled())
+							{
+								log.debug(
+									"An error occurred while closing the input stream to the external resource",
+									iox);
+							}
+						}
+
+						try
+						{
+							Streams.close(baos);
+						}
+						catch (IOException iox)
+						{
+							if (log.isDebugEnabled())
+							{
+								log.debug(
+									"An error occurred while closing the temporary output stream",
+									iox);
+							}
+						}
 					}
 				}
 			});
