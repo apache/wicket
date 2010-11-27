@@ -874,6 +874,9 @@ public class BaseWicketTester
 	 * });
 	 * </pre>
 	 * 
+	 * Note that when try to access a component, e.g. via accessLabel(), the 'path' parameter must
+	 * be relative to the panel. Not relative to the Page which will automatically be added for you.
+	 * 
 	 * @param testPanelSource
 	 *            a <code>Panel</code> factory that creates test <code>Panel</code> instances
 	 * @return a rendered <code>Panel</code>
@@ -895,6 +898,9 @@ public class BaseWicketTester
 
 	/**
 	 * Renders a <code>Panel</code> from a <code>Panel(String id)</code> constructor.
+	 * <p>
+	 * Note that when try to access a component, e.g. via accessLabel(), the 'path' parameter must
+	 * be relative to the panel. Not relative to the Page which will automatically be added for you.
 	 * 
 	 * @param <C>
 	 * 
