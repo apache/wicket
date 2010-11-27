@@ -16,8 +16,6 @@
  */
 package org.apache.wicket;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.behavior.IBehaviorListener;
 import org.apache.wicket.markup.ComponentTag;
@@ -27,18 +25,15 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.apache.wicket.util.tester.WicketTester;
 
 
-public class BehaviorUrlTest extends TestCase
+public class BehaviorUrlTest extends WicketTestCase
 {
 	/**
 	 * @see https://issues.apache.org/jira/browse/WICKET-3097
 	 */
 	public void testUrlRemainsStable()
 	{
-		WicketTester tester = new WicketTester();
-
 		TestPage page = new TestPage();
 
 		int indexBeforeRender = page.container.getBehaviorId(page.callbackBehavior);

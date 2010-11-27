@@ -16,8 +16,6 @@
  */
 package org.apache.wicket;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.behavior.IBehaviorListener;
@@ -30,21 +28,18 @@ import org.apache.wicket.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.apache.wicket.util.tester.WicketTester;
 
 
 /**
  * @see https://issues.apache.org/jira/browse/WICKET-3098
  */
-public class BehaviorRequestTest extends TestCase
+public class BehaviorRequestTest extends WicketTestCase
 {
-	private WicketTester tester;
 	private TestPage page;
 
 	@Override
 	protected void setUp() throws Exception
 	{
-		tester = new WicketTester();
 		page = new TestPage();
 		tester.startPage(page);
 	}
@@ -52,7 +47,7 @@ public class BehaviorRequestTest extends TestCase
 	public void testEnabledBehaviorRequest()
 	{
 		tester.executeUrl(urlForBehavior(page.enabledBehavior));
-		assertTrue(page.enabledBehavior.isCalled());
+		assertTrue(page.enabledBehavior.wasCalled());
 	}
 
 	public void testDisabledBehaviorRequest()
@@ -64,7 +59,7 @@ public class BehaviorRequestTest extends TestCase
 		}
 		catch (ListenerInvocationNotAllowedException expected)
 		{
-			assertTrue(!page.disabledBehavior.isCalled());
+			assertFalse(page.disabledBehavior.wasCalled());
 		}
 	}
 
@@ -130,7 +125,7 @@ public class BehaviorRequestTest extends TestCase
 			return component.isEnabledInHierarchy() && enabled;
 		}
 
-		public boolean isCalled()
+		public boolean wasCalled()
 		{
 			return called;
 		}
