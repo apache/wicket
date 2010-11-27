@@ -967,7 +967,13 @@ public class BaseWicketTester
 	 */
 	public Component getComponentFromLastRenderedPage(String path)
 	{
-		final Component component = getLastRenderedPage().get(path);
+		MarkupContainer root = getLastRenderedPage();
+		if (root instanceof DummyPanelPage)
+		{
+			root = (MarkupContainer)root.get(DummyPanelPage.TEST_PANEL_ID);
+		}
+
+		Component component = root.get(path);
 		if (component == null)
 		{
 			fail("path: '" + path + "' does not exist for page: " +

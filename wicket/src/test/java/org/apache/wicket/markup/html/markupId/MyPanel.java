@@ -27,6 +27,6 @@ public class MyPanel extends Panel
 
 		add(new Label("label", "text"));
 
-		addOrReplace(new Label("label", "text"));
+		addOrReplace(new Label("label", "Hello, World!"));
 	}
 }
