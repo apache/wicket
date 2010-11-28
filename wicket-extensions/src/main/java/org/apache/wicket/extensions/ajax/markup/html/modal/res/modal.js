@@ -1560,7 +1560,7 @@ Wicket.Window.Mask.prototype = {
  * Returns the height of visible area.
  */
 Wicket.Window.getViewportHeight = function() {
-	if (window.innerHeight != window.undefined) 
+	if (typeof(window.innerHeight) != "undefined") 
 		return window.innerHeight;
 	
 	if (document.compatMode == 'CSS1Compat') 
@@ -1569,14 +1569,14 @@ Wicket.Window.getViewportHeight = function() {
 	if (document.body) 
 		return document.body.clientHeight;
 		 
-	return window.undefined; 
+	return undefined; 
 }
 
 /**
  * Returns the width of visible area.
  */
 Wicket.Window.getViewportWidth =  function() {
-	if (window.innerWidth != window.undefined) 
+	if (typeof(window.innerWidth) != "undefined") 
 		return window.innerWidth;
 		 
 	if (document.compatMode == 'CSS1Compat') 
@@ -1585,7 +1585,7 @@ Wicket.Window.getViewportWidth =  function() {
 	if (document.body) 
 		return document.body.clientWidth;
 		 
-	return window.undefined;
+	return undefined;
 }
 
 /**
