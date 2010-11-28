@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 
 import org.apache.wicket.Session;
@@ -169,11 +168,6 @@ public class TimeField extends FormComponentPanel<Date>
 	public Integer getHours()
 	{
 		return hours;
-	}
-
-	protected void configure(Map widgetProperties)
-	{
-
 	}
 
 	/**
