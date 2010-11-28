@@ -40,6 +40,7 @@ public class BehaviorRequestTest extends WicketTestCase
 	@Override
 	protected void setUp() throws Exception
 	{
+		super.setUp();
 		page = new TestPage();
 		tester.startPage(page);
 	}
