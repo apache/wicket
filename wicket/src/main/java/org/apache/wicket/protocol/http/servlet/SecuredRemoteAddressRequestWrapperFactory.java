@@ -23,21 +23,17 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import org.apache.wicket.Application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <p>
  * Sets {@link RequestFacade#isSecure()} to <code>true</code> if
  * {@link ServletRequest#getRemoteAddr()} matches one of the <code>securedRemoteAddresses</code> of
  * this filter.
- * </p>
  * <p>
- * This filter is often preceded by the {@link XForwardedWicketFilterExtension} to get the remote
- * address of the client even if the request goes through load balancers (e.g. F5 Big IP, Nortel
- * Alteon) or proxies (e.g. Apache mod_proxy_http)
- * </p>
+ * This filter is often used in combination with {@link XForwardedRequestWrapperFactory} to get the
+ * remote address of the client even if the request goes through load balancers (e.g. F5 Big IP,
+ * Nortel Alteon) or proxies (e.g. Apache mod_proxy_http)
  * <p>
  * <strong>Configuration parameters:</strong>
  * <table border="1">
@@ -90,10 +86,10 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:cyrille@cyrilleleclerc.com">Cyrille Le Clerc</a>
  * @author Juergen Donnerstag
  */
-public class SecuredRemoteAddressRequestWrapper extends AbstractRequestWrapperFactory
+public class SecuredRemoteAddressRequestWrapperFactory extends AbstractRequestWrapperFactory
 {
 	/** Logger */
-	private static final Logger log = LoggerFactory.getLogger(SecuredRemoteAddressRequestWrapper.class);
+	private static final Logger log = LoggerFactory.getLogger(SecuredRemoteAddressRequestWrapperFactory.class);
 
 	private final static String SECURED_REMOTE_ADDRESSES_PARAMETER = "securedRemoteAddresses";
 
@@ -193,11 +189,9 @@ public class SecuredRemoteAddressRequestWrapper extends AbstractRequestWrapperFa
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.servlet.IRequestWrapperFactory#init(org.apache.wicket.Application,
-	 *      boolean, javax.servlet.FilterConfig)
+	 * @param filterConfig
 	 */
-	public void init(final Application application, final boolean isServlet,
-		final FilterConfig filterConfig)
+	public void init(final FilterConfig filterConfig)
 	{
 		String comaDelimitedSecuredRemoteAddresses = filterConfig.getInitParameter(SECURED_REMOTE_ADDRESSES_PARAMETER);
 		if (comaDelimitedSecuredRemoteAddresses != null)

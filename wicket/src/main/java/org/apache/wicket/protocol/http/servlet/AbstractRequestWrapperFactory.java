@@ -28,9 +28,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Abstract base class for HttpServletRequestWrapper
+ * 
  * @author Juergen Donnerstag
  */
-public abstract class AbstractRequestWrapperFactory implements IRequestWrapperFactory
+public abstract class AbstractRequestWrapperFactory
 {
 	/** Logger */
 	private static final Logger log = LoggerFactory.getLogger(AbstractRequestWrapperFactory.class);
@@ -62,29 +64,28 @@ public abstract class AbstractRequestWrapperFactory implements IRequestWrapperFa
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.servlet.IRequestWrapperFactory#getWrapper(javax.servlet.HttpServletRequest)
+	 * @param request
+	 * @return Either return the request itself, or if needed a wrapper for the request
 	 */
-	public HttpServletRequest getWrapper(final HttpServletRequest servletRequest)
+	public HttpServletRequest getWrapper(final HttpServletRequest request)
 	{
-		HttpServletRequest xRequest = servletRequest;
-		if (isEnabled() && needsWrapper(servletRequest))
+		HttpServletRequest xRequest = request;
+		if (isEnabled() && needsWrapper(request))
 		{
-			return newRequestWrapper(servletRequest);
+			return newRequestWrapper(request);
 		}
 		return xRequest;
 	}
 
 	/**
-	 * 
 	 * @param request
 	 * @return True, if a wrapper is needed
 	 */
 	abstract boolean needsWrapper(final HttpServletRequest request);
 
 	/**
-	 * 
 	 * @param request
-	 * @return Either the original request or a wrapper
+	 * @return Create a wrapper for the request
 	 */
 	abstract public HttpServletRequest newRequestWrapper(HttpServletRequest request);
 

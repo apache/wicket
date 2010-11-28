@@ -20,31 +20,26 @@ import java.util.LinkedList;
 import java.util.regex.Pattern;
 
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.Application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Servlet filter to integrate "X-Forwarded-For" and "X-Forwarded-Proto" HTTP headers. </p>
+ * Request wrapper factory to integrate "X-Forwarded-For" and "X-Forwarded-Proto" HTTP headers.
  * <p>
  * Most of the design of this Servlet Filter is a port of <a
  * href="http://httpd.apache.org/docs/trunk/mod/mod_remoteip.html">mod_remoteip</a>, this servlet
  * filter replaces the apparent client remote IP address and hostname for the request with the IP
  * address list presented by a proxy or a load balancer via a request headers (e.g.
  * "X-Forwarded-For").
- * </p>
  * <p>
  * Another feature of this servlet filter is to replace the apparent scheme (http/https) and server
  * port with the scheme presented by a proxy or a load balancer via a request header (e.g.
  * "X-Forwarded-Proto").
- * </p>
  * <p>
- * This servlet filter proceeds as follows:
- * </p>
+ * This wrapper proceeds as follows:
  * <p>
  * If the incoming <code>request.getRemoteAddr()</code> matches the servlet filter's list of
  * internal proxies :
@@ -655,6 +650,7 @@ public class XForwardedRequestWrapperFactory extends AbstractRequestWrapperFacto
 	public HttpServletRequest newRequestWrapper(final HttpServletRequest request)
 	{
 		String remoteIp = null;
+
 		// In java 6, proxiesHeaderValue should be declared as a java.util.Deque
 		LinkedList<String> proxiesHeaderValue = new LinkedList<String>();
 
@@ -755,14 +751,10 @@ public class XForwardedRequestWrapperFactory extends AbstractRequestWrapperFacto
 	}
 
 	/**
-	 * Get xforwarded specific config from web.xml filter config
 	 * 
-	 * @param isServlet
 	 * @param filterConfig
-	 * @throws ServletException
 	 */
-	public void init(final Application application, final boolean isServlet,
-		final FilterConfig filterConfig)
+	public void init(final FilterConfig filterConfig)
 	{
 		if (filterConfig.getInitParameter(INTERNAL_PROXIES_PARAMETER) != null)
 		{
