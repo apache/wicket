@@ -180,11 +180,17 @@ public class DateTimeField extends FormComponentPanel<Date>
 	}
 
 	/**
-	 * TODO comment
+	 * Gives overriding classes the option of adding (or even changing/ removing) configuration
+	 * properties for the javascript widget. See <a
+	 * href="http://developer.yahoo.com/yui/calendar/">the widget's documentation</a> for the
+	 * available options. If you want to override/ remove properties, you should call
+	 * super.configure(properties) first. If you don't call that, be aware that you will have to
+	 * call {@link #localize(Map)} manually if you like localized strings to be added.
 	 * 
 	 * @param widgetProperties
+	 *            the current widget properties
 	 */
-	protected void configure(Map<?, ?> widgetProperties)
+	protected void configure(Map<String, Object> widgetProperties)
 	{
 	}
 
@@ -318,7 +324,8 @@ public class DateTimeField extends FormComponentPanel<Date>
 				boolean use12HourFormat = use12HourFormat();
 				if (hours != null)
 				{
-					date.set(DateTimeFieldType.hourOfDay(), hours % getMaximumHours(use12HourFormat));
+					date.set(DateTimeFieldType.hourOfDay(), hours %
+						getMaximumHours(use12HourFormat));
 					date.setMinuteOfHour((minutes != null) ? minutes : 0);
 				}
 				if (use12HourFormat)
