@@ -24,7 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
@@ -46,6 +46,7 @@ import org.apache.wicket.util.lang.Bytes;
  * 
  * @author Eelco Hillenius
  */
+@SuppressWarnings("serial")
 public class UploadPage extends WicketExamplePage
 {
 	/**
@@ -74,7 +75,7 @@ public class UploadPage extends WicketExamplePage
 		{
 			final File file = listItem.getModelObject();
 			listItem.add(new Label("file", file.getName()));
-			listItem.add(new Link("delete")
+			listItem.add(new Link<Void>("delete")
 			{
 				@Override
 				public void onClick()
@@ -125,7 +126,7 @@ public class UploadPage extends WicketExamplePage
 				// Create a new file
 				File newFile = new File(getUploadFolder(), upload.getClientFileName());
 
-				// Check new file, delete if it allready existed
+				// Check new file, delete if it already existed
 				checkFileExists(newFile);
 				try
 				{
@@ -185,9 +186,7 @@ public class UploadPage extends WicketExamplePage
 		// Add upload form with ajax progress bar
 		final FileUploadForm ajaxSimpleUploadForm = new FileUploadForm("ajax-simpleUpload");
 
-		// TODO NG
-// ajaxSimpleUploadForm.add(new UploadProgressBar("progress", ajaxSimpleUploadForm));
-		ajaxSimpleUploadForm.add(new WebMarkupContainer("progress"));
+		ajaxSimpleUploadForm.add(new UploadProgressBar("progress", ajaxSimpleUploadForm));
 		add(ajaxSimpleUploadForm);
 
 
