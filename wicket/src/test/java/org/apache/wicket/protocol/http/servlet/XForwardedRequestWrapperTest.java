@@ -14,13 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.http;
+package org.apache.wicket.protocol.http.servlet;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.markup.html.basic.SimplePage;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
-import org.apache.wicket.protocol.http.servlet.XForwardedRequestWrapperFactory;
+import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
+import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * 
@@ -151,5 +155,61 @@ public class XForwardedRequestWrapperTest extends WicketTestCase
 		assertEquals("untrusted-proxy", resp.getRemoteAddr());
 		assertEquals("140.211.11.130", resp.getHeader("x-forwarded-for"));
 		assertEquals("proxy1", resp.getHeader("x-forwarded-by"));
+	}
+
+	private class MyApplication extends MockApplication
+	{
+		public XForwardedRequestWrapperFactory factory;
+
+		/**
+		 * @see org.apache.wicket.protocol.http.WebApplication#init()
+		 */
+		@Override
+		protected void init()
+		{
+			super.init();
+
+			factory = new XForwardedRequestWrapperFactory();
+			factory.init(getWicketFilter().getFilterConfig());
+		}
+
+		/**
+		 * @see org.apache.wicket.protocol.http.WebApplication#newWebRequest(javax.servlet.http.HttpServletRequest,
+		 *      java.lang.String)
+		 */
+		@Override
+		protected WebRequest newWebRequest(HttpServletRequest request, String filterPath)
+		{
+			HttpServletRequest xRequest = factory.getWrapper(request);
+			return super.newWebRequest(xRequest, filterPath);
+		}
+	}
+
+	/**
+	 * @throws Exception
+	 * 
+	 */
+	public void test7() throws Exception
+	{
+		MyApplication app = new MyApplication();
+		tester = new WicketTester(app);
+
+		app.factory.getConfig().setAllowedInternalProxies("192\\.168\\.0\\.10, 192\\.168\\.0\\.11");
+		app.factory.getConfig().setRemoteIPHeader("x-forwarded-for");
+		app.factory.getConfig().setProxiesHeader("x-forwarded-by");
+		app.factory.getConfig().setTrustedProxies("proxy1, proxy2");
+
+		request.setRemoteAddr("192.168.0.10");
+		request.addHeader("x-forwarded-for", "140.211.11.130, untrusted-proxy, proxy1");
+
+		tester.startPage(SimplePage.class);
+		tester.assertRenderedPage(SimplePage.class);
+		tester.assertResultPage(SimplePage.class, "SimplePageExpectedResult.html");
+
+		MockHttpServletResponse resp = tester.getResponse();
+
+		// @TODO should there be any header in the response ????
+		// assertEquals("140.211.11.130", resp.getHeader("x-forwarded-for"));
+		// assertEquals("proxy1", resp.getHeader("x-forwarded-by"));
 	}
 }
