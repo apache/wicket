@@ -27,6 +27,15 @@ stty -echo
 read passphrase
 stty $stty_orig
 
+# test the GPGP passphrase to fail-fast:
+echo "$passphrase" | gpg --passphrase-fd 0 --armor --output pom.xml.asc --detach-sig pom.xml
+gpg --verify pom.xml.asc
+if [ $? -ne 0 ]; then
+	echo "It appears that you fat-fingered your GPG passphrase"
+	exit $?
+fi
+rm pom.xml.asc
+
 # Clear the current NOTICE.txt file
 echo "Creating notice file."
 
