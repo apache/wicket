@@ -290,6 +290,12 @@ public class BaseWicketTester
 
 		// prepare session
 		setupNextRequestCycle();
+
+		// Remove comments to run all tests with filter extensions added
+// IWicketFilterExtension filter1 = new XForwardedWicketFilterExtension();
+// IWicketFilterExtension filter2 = new SecuredRemoteAddressWicketFilterExtension();
+// getApplication().getWicketFilter().addFilter(filter1);
+// getApplication().getWicketFilter().addFilter(filter2);
 	}
 
 	protected IPageManagerProvider newTestPageManagerProvider()

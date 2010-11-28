@@ -99,7 +99,6 @@ public class MockWebResponse extends WebResponse
 	{
 		contentLength = length;
 		setHeader("Content-Length", String.valueOf(length));
-
 	}
 
 	/**

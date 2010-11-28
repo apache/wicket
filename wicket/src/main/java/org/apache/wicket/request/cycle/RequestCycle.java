@@ -69,7 +69,6 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 
 	private interface IExecutor<T>
 	{
-
 		void execute(T object);
 	}
 

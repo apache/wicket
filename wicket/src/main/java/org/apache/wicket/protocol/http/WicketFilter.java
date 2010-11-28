@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.http;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -29,17 +30,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.protocol.http.filter.IWicketFilterExtension;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.file.WebXmlFile;
+import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Filter for initiating handling of Wicket requests.
- * 
  * <p>
  * The advantage of a filter is that, unlike a servlet, it can choose not to process the request and
  * let whatever is next in chain try. So when using a Wicket filter and a request comes in for
@@ -77,6 +79,8 @@ public class WicketFilter implements Filter
 	// filterPath length without trailing "/"
 	private int filterPathLength = -1;
 
+	private List<IWicketFilterExtension> filterChain;
+
 	/**
 	 * @return The class loader
 	 */
@@ -95,9 +99,18 @@ public class WicketFilter implements Filter
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	boolean processRequest(final ServletRequest request, final ServletResponse response,
+	boolean processRequest(ServletRequest request, final ServletResponse response,
 		final FilterChain chain) throws IOException, ServletException
 	{
+		// Add request wrappers if needed
+		if (filterChain != null)
+		{
+			for (IWicketFilterExtension filter : filterChain)
+			{
+				request = filter.getRequestWrapper(request);
+			}
+		}
+
 		// Assume we are able to handle the request
 		boolean res = true;
 
@@ -278,6 +291,14 @@ public class WicketFilter implements Filter
 		application.setName(filterConfig.getFilterName());
 		application.setWicketFilter(this);
 
+		if (filterChain != null)
+		{
+			for (IWicketFilterExtension filter : filterChain)
+			{
+				filter.init(application, isServlet, filterConfig);
+			}
+		}
+
 		// Allow the filterPath to tbe preset via setFilterPath()
 		if (filterPath == null)
 		{
@@ -374,6 +395,12 @@ public class WicketFilter implements Filter
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param isServlet
+	 * @param filterConfig
+	 * @return filter path from web.xml
+	 */
 	protected String getFilterPathFromWebXml(final boolean isServlet,
 		final FilterConfig filterConfig)
 	{
@@ -404,6 +431,11 @@ public class WicketFilter implements Filter
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param filterConfig
+	 * @return filter path
+	 */
 	protected String getFilterPathFromConfig(FilterConfig filterConfig)
 	{
 		String result = filterConfig.getInitParameter(FILTER_MAPPING_PARAM);
@@ -533,5 +565,19 @@ public class WicketFilter implements Filter
 					"'");
 		}
 		this.filterPath = filterPath;
+	}
+
+	/**
+	 * Sets the first element of the filter chain, which prepends Wicket's default processing
+	 * 
+	 * @param filter
+	 */
+	public final void addFilter(IWicketFilterExtension filter)
+	{
+		if (filterChain == null)
+		{
+			filterChain = Generics.newArrayList(2);
+		}
+		filterChain.add(filter);
 	}
 }

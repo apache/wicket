@@ -55,6 +55,7 @@ import org.slf4j.LoggerFactory;
  * {@link WebRequest} subclass that wraps a {@link HttpServletRequest} object.
  * 
  * @author Matej Knopp
+ * @author Juergen Donnerstag
  */
 public class ServletWebRequest extends WebRequest
 {
@@ -68,7 +69,6 @@ public class ServletWebRequest extends WebRequest
 	 * Construct.
 	 * 
 	 * @param httpServletRequest
-	 * 
 	 * @param filterPrefix
 	 *            contentPath + filterPath, used to extract the actual {@link Url}
 	 */
@@ -81,10 +81,8 @@ public class ServletWebRequest extends WebRequest
 	 * Construct.
 	 * 
 	 * @param httpServletRequest
-	 * 
 	 * @param filterPrefix
 	 *            contentPath + filterPath, used to extract the actual {@link Url}
-	 * 
 	 * @param url
 	 */
 	public ServletWebRequest(HttpServletRequest httpServletRequest, String filterPrefix, Url url)

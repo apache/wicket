@@ -177,6 +177,14 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	private boolean useMultiPartContentType;
 
+	private boolean secure = false;
+
+	private String remoteAddr = "127.0.0.1";
+
+	private String scheme = "http";
+
+	private int serverPort = 80;
+
 	/**
 	 * Create the request using the supplied session object. Note that in order for temporary
 	 * sessions to work, the supplied session must be an instance of {@link MockHttpSession}
@@ -788,7 +796,17 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public String getRemoteAddr()
 	{
-		return "127.0.0.1";
+		return remoteAddr;
+	}
+
+	/**
+	 * 
+	 * @param addr
+	 *            Format: "aaa.bbb.ccc.ddd"
+	 */
+	public void setRemoteAddr(String addr)
+	{
+		remoteAddr = addr;
 	}
 
 	/**
@@ -893,7 +911,16 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public String getScheme()
 	{
-		return "http";
+		return scheme;
+	}
+
+	/**
+	 * 
+	 * @param scheme
+	 */
+	public void setScheme(String scheme)
+	{
+		this.scheme = scheme;
 	}
 
 	/**
@@ -913,7 +940,16 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public int getServerPort()
 	{
-		return 80;
+		return serverPort;
+	}
+
+	/**
+	 * 
+	 * @param port
+	 */
+	public void setServerPort(int port)
+	{
+		serverPort = port;
 	}
 
 	/**
@@ -1053,7 +1089,16 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public boolean isSecure()
 	{
-		return false;
+		return secure;
+	}
+
+	/**
+	 * 
+	 * @param secure
+	 */
+	public void setSecure(boolean secure)
+	{
+		this.secure = secure;
 	}
 
 	/**
