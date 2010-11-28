@@ -484,7 +484,7 @@ public class UrlValidator extends AbstractValidator<String>
 		}
 
 		int slashCount = countToken("/", path);
-		int dot2Count = countToken("..", path);
+		int dot2Count = countToken("/..", path);
 		if (dot2Count > 0)
 		{
 			if ((slashCount - slash2Count - 1) <= dot2Count)

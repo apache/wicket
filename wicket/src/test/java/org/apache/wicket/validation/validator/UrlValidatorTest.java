@@ -132,7 +132,7 @@ public class UrlValidatorTest extends TestCase
 		do
 		{
 			String output = "";
-		 StringBuilder testBuffer = new StringBuilder();
+			StringBuilder testBuffer = new StringBuilder();
 			boolean expected = true;
 			for (int testPartsIndexIndex = 0; testPartsIndexIndex < testPartsIndex.length; ++testPartsIndexIndex)
 			{
@@ -255,7 +255,7 @@ public class UrlValidatorTest extends TestCase
 	 */
 	private String testPartsIndextoString()
 	{
-	 StringBuilder carryMsg = new StringBuilder("{");
+		StringBuilder carryMsg = new StringBuilder("{");
 		for (int testPartsIndexIndex = 0; testPartsIndexIndex < testPartsIndex.length; ++testPartsIndexIndex)
 		{
 			carryMsg.append(testPartsIndex[testPartsIndexIndex]);
@@ -312,7 +312,8 @@ public class UrlValidatorTest extends TestCase
 			new ResultPair("/$23", true), new ResultPair("/..", false),
 			new ResultPair("/../", false), new ResultPair("/test1/", true),
 			new ResultPair("", true), new ResultPair("/test1/file", true),
-			new ResultPair("/..//file", false), new ResultPair("/test1//file", false) };
+			new ResultPair("/..//file", false), new ResultPair("/test1//file", false),
+			new ResultPair("/this_one_is_tricky...but...still.....valid", true) };
 	// Test allow2slash, noFragment
 	ResultPair[] testUrlPathOptions = { new ResultPair("/test1", true),
 			new ResultPair("/t123", true), new ResultPair("/$23", true),
