@@ -95,8 +95,9 @@ import org.apache.wicket.util.string.Strings;
  * stored).
  * <li><code>{@link #setMinimalWidth(int)}</code> and <code>{@link #setMinimalHeight(int)}</code>
  * set the minimal dimensions of resizable window.
- * <li><code>{@link #setAutoSize(boolean)}</code> sets whether window size will be automatically adjusted 
- * on opening to fit content's width and height. Default is false.<span style="text-decoration: underline"> Doesn't work on IE 6.</span></li>
+ * <li><code>{@link #setAutoSize(boolean)}</code> sets whether window size will be automatically
+ * adjusted on opening to fit content's width and height. Default is false.<span
+ * style="text-decoration: underline"> Doesn't work on IE 6.</span></li>
  * <li>Modal window can chose between two colors of frame.
  * <code>{@link #setCssClassName(String)}</code> sets the dialog css class, possible values are
  * <code>{@link #CSS_CLASS_BLUE}</code> for blue frame and <code>{@link #CSS_CLASS_GRAY}</code> for
@@ -130,6 +131,9 @@ public class ModalWindow extends Panel
 
 	private static ResourceReference CSS = new CompressedResourceReference(ModalWindow.class,
 		"res/modal.css");
+
+	/** the default id of the content component */
+	public static final String CONTENT_ID = "content";
 
 	/** True while the ModalWindows is showing */
 	private boolean shown = false;
@@ -414,7 +418,7 @@ public class ModalWindow extends Panel
 	 */
 	public String getContentId()
 	{
-		return "content";
+		return CONTENT_ID;
 	}
 
 	/**
@@ -1160,10 +1164,11 @@ public class ModalWindow extends Panel
 			title.detach();
 		}
 	}
-	
+
 	/**
-	 * Sets whether window size will be automatically adjusted on opening to fit
-	 * content's width and height. <span style="text-decoration: underline">Doesn't work on IE 6.</span>
+	 * Sets whether window size will be automatically adjusted on opening to fit content's width and
+	 * height. <span style="text-decoration: underline">Doesn't work on IE 6.</span>
+	 * 
 	 * @param autoSize
 	 *            Whether window size will be automatically adjusted
 	 * @return this
