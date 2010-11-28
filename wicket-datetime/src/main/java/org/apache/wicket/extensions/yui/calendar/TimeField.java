@@ -74,7 +74,7 @@ public class TimeField extends FormComponentPanel<Date>
 		}
 	}
 
-	private static final IConverter MINUTES_CONVERTER = new ZeroPaddingIntegerConverter(2);
+	private static final IConverter<Integer> MINUTES_CONVERTER = new ZeroPaddingIntegerConverter(2);
 
 	private static final long serialVersionUID = 1L;
 
@@ -123,9 +123,16 @@ public class TimeField extends FormComponentPanel<Date>
 
 			@SuppressWarnings("unchecked")
 			@Override
-			public IConverter getConverter(Class type)
+			public <C> IConverter<C> getConverter(Class<C> type)
 			{
-				return MINUTES_CONVERTER;
+				if (Integer.class.isAssignableFrom(type))
+				{
+					return (IConverter<C>)MINUTES_CONVERTER;
+				}
+				else
+				{
+					return super.getConverter(type);
+				}
 			}
 		});
 		minutesField.add(new RangeValidator<Integer>(0, 59));
