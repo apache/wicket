@@ -134,6 +134,9 @@ public class ModalWindow extends Panel
 	private static ResourceReference CSS = new CompressedResourceReference(ModalWindow.class,
 		"res/modal.css");
 
+	/** the default id of the content component */
+	public static final String CONTENT_ID = "content";
+
 	private boolean deletePageMap = false;
 
 	/** True while the ModalWindows is showing */
@@ -438,7 +441,7 @@ public class ModalWindow extends Panel
 	 */
 	public String getContentId()
 	{
-		return "content";
+		return CONTENT_ID;
 	}
 
 	/**
