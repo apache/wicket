@@ -14,30 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.http.filter;
+package org.apache.wicket.protocol.http.servlet;
 
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Application;
 
 /**
- * Allows to pre-process requests
+ * Added to WicketFilter and allow to preprocess the request if needed. E.g. to replace the request
+ * object with a wrapper that manages XForwarded headers properly.
+ * 
+ * @author Juergen Donnerstag
  */
-public interface IWicketFilterExtension
+public interface IRequestWrapperFactory
 {
 	/**
-	 * Allows to return HttpServletRequestWrapper managed by Wicket
-	 * 
 	 * @param request
-	 * @return Either the original request or the wrapper
+	 * @return Either the original request or a wrapper
 	 */
-	ServletRequest getRequestWrapper(final ServletRequest request);
+	HttpServletRequest getWrapper(final HttpServletRequest request);
 
 	/**
 	 * Servlets and Filters are treated essentially the same with Wicket. This is the entry point
-	 * for both of them.
+	 * for both of them and allows to initialize the object.
 	 * 
 	 * @see #init(FilterConfig)
 	 * 
@@ -45,7 +45,6 @@ public interface IWicketFilterExtension
 	 * @param isServlet
 	 *            True if Servlet, false of Filter
 	 * @param filterConfig
-	 * @throws ServletException
 	 */
 	void init(Application application, boolean isServlet, FilterConfig filterConfig);
 }

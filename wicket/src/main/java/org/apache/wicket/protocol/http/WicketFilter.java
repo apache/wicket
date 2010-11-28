@@ -17,7 +17,6 @@
 package org.apache.wicket.protocol.http;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -30,12 +29,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.protocol.http.filter.IWicketFilterExtension;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.file.WebXmlFile;
-import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,8 +76,6 @@ public class WicketFilter implements Filter
 	// filterPath length without trailing "/"
 	private int filterPathLength = -1;
 
-	private List<IWicketFilterExtension> filterChain;
-
 	/**
 	 * @return The class loader
 	 */
@@ -102,15 +97,6 @@ public class WicketFilter implements Filter
 	boolean processRequest(ServletRequest request, final ServletResponse response,
 		final FilterChain chain) throws IOException, ServletException
 	{
-		// Add request wrappers if needed
-		if (filterChain != null)
-		{
-			for (IWicketFilterExtension filter : filterChain)
-			{
-				request = filter.getRequestWrapper(request);
-			}
-		}
-
 		// Assume we are able to handle the request
 		boolean res = true;
 
@@ -291,14 +277,6 @@ public class WicketFilter implements Filter
 		application.setName(filterConfig.getFilterName());
 		application.setWicketFilter(this);
 
-		if (filterChain != null)
-		{
-			for (IWicketFilterExtension filter : filterChain)
-			{
-				filter.init(application, isServlet, filterConfig);
-			}
-		}
-
 		// Allow the filterPath to tbe preset via setFilterPath()
 		if (filterPath == null)
 		{
@@ -353,7 +331,7 @@ public class WicketFilter implements Filter
 	 * Stub method that lets subclasses configure filter path from annotations.
 	 * 
 	 * @param isServlet
-	 * @return
+	 * @return Filter path from annotation
 	 */
 	protected String getFilterPathFromAnnotation(boolean isServlet)
 	{
@@ -565,19 +543,5 @@ public class WicketFilter implements Filter
 					"'");
 		}
 		this.filterPath = filterPath;
-	}
-
-	/**
-	 * Sets the first element of the filter chain, which prepends Wicket's default processing
-	 * 
-	 * @param filter
-	 */
-	public final void addFilter(IWicketFilterExtension filter)
-	{
-		if (filterChain == null)
-		{
-			filterChain = Generics.newArrayList(2);
-		}
-		filterChain.add(filter);
 	}
 }

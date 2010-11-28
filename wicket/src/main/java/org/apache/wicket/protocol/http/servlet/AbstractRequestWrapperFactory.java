@@ -14,13 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.http.filter;
+package org.apache.wicket.protocol.http.servlet;
 
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.util.lang.Generics;
@@ -31,10 +30,10 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Juergen Donnerstag
  */
-public abstract class AbstractWicketFilterExtension implements IWicketFilterExtension
+public abstract class AbstractRequestWrapperFactory implements IRequestWrapperFactory
 {
 	/** Logger */
-	private static final Logger log = LoggerFactory.getLogger(AbstractWicketFilterExtension.class);
+	private static final Logger log = LoggerFactory.getLogger(AbstractRequestWrapperFactory.class);
 
 	/**
 	 * {@link Pattern} for a comma delimited string that support whitespace characters
@@ -63,14 +62,14 @@ public abstract class AbstractWicketFilterExtension implements IWicketFilterExte
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.filter.IWicketFilterExtension#getRequestWrapper(javax.servlet.ServletRequest)
+	 * @see org.apache.wicket.protocol.http.servlet.IRequestWrapperFactory#getWrapper(javax.servlet.HttpServletRequest)
 	 */
-	public ServletRequest getRequestWrapper(final ServletRequest servletRequest)
+	public HttpServletRequest getWrapper(final HttpServletRequest servletRequest)
 	{
-		ServletRequest xRequest = servletRequest;
-		if (isEnabled() && (servletRequest instanceof HttpServletRequest))
+		HttpServletRequest xRequest = servletRequest;
+		if (isEnabled() && needsWrapper(servletRequest))
 		{
-			return getHttpRequestWrapper((HttpServletRequest)servletRequest);
+			return newRequestWrapper(servletRequest);
 		}
 		return xRequest;
 	}
@@ -78,9 +77,16 @@ public abstract class AbstractWicketFilterExtension implements IWicketFilterExte
 	/**
 	 * 
 	 * @param request
+	 * @return True, if a wrapper is needed
+	 */
+	abstract boolean needsWrapper(final HttpServletRequest request);
+
+	/**
+	 * 
+	 * @param request
 	 * @return Either the original request or a wrapper
 	 */
-	abstract public HttpServletRequest getHttpRequestWrapper(HttpServletRequest request);
+	abstract public HttpServletRequest newRequestWrapper(HttpServletRequest request);
 
 	/**
 	 * Convert a given comma delimited list of regular expressions into an array of compiled

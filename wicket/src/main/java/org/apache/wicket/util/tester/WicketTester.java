@@ -205,7 +205,6 @@ public class WicketTester extends BaseWicketTester
 		super(application, path);
 	}
 
-
 	/**
 	 * Asserts that the Ajax location header is present.
 	 */

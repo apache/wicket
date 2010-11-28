@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
  * 
  * @author Juergen Donnerstag
  */
-public class XForwardedRequest extends HttpServletRequestWrapper
+public class XForwardedRequestWrapper extends HttpServletRequestWrapper
 {
 	private final static ThreadLocal<SimpleDateFormat[]> threadLocalDateFormats = new ThreadLocal<SimpleDateFormat[]>()
 	{
@@ -67,7 +67,7 @@ public class XForwardedRequest extends HttpServletRequestWrapper
 	 * @param request
 	 */
 	@SuppressWarnings("unchecked")
-	public XForwardedRequest(final HttpServletRequest request)
+	public XForwardedRequestWrapper(final HttpServletRequest request)
 	{
 		super(request);
 

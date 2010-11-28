@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.http.filter;
+package org.apache.wicket.protocol.http.servlet;
 
 import java.util.regex.Pattern;
 
@@ -90,10 +90,10 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:cyrille@cyrilleleclerc.com">Cyrille Le Clerc</a>
  * @author Juergen Donnerstag
  */
-public class SecuredRemoteAddressWicketFilterExtension extends AbstractWicketFilterExtension
+public class SecuredRemoteAddressRequestWrapper extends AbstractRequestWrapperFactory
 {
 	/** Logger */
-	private static final Logger log = LoggerFactory.getLogger(SecuredRemoteAddressWicketFilterExtension.class);
+	private static final Logger log = LoggerFactory.getLogger(SecuredRemoteAddressRequestWrapper.class);
 
 	private final static String SECURED_REMOTE_ADDRESSES_PARAMETER = "securedRemoteAddresses";
 
@@ -145,10 +145,29 @@ public class SecuredRemoteAddressWicketFilterExtension extends AbstractWicketFil
 	}
 
 	/**
+	 * @see org.apache.wicket.protocol.http.servlet.AbstractRequestWrapperFactory#getWrapper(javax.servlet.http.HttpServletRequest)
+	 */
+	@Override
+	public HttpServletRequest getWrapper(final HttpServletRequest request)
+	{
+		HttpServletRequest xRequest = super.getWrapper(request);
+
+		if (log.isDebugEnabled())
+		{
+			log.debug("Incoming request uri=" + request.getRequestURI() + " with originalSecure='" +
+				request.isSecure() + "', remoteAddr='" + request.getRemoteAddr() +
+				"' will be seen with newSecure='" + request.isSecure() + "'");
+		}
+
+		return xRequest;
+	}
+
+	/**
 	 * 
 	 * @param request
 	 * @return True, if a wrapper is needed
 	 */
+	@Override
 	public boolean needsWrapper(final HttpServletRequest request)
 	{
 		return !request.isSecure() &&
@@ -161,34 +180,20 @@ public class SecuredRemoteAddressWicketFilterExtension extends AbstractWicketFil
 	 * <code>true</code>.
 	 */
 	@Override
-	public HttpServletRequest getHttpRequestWrapper(final HttpServletRequest request)
+	public HttpServletRequest newRequestWrapper(final HttpServletRequest request)
 	{
-		HttpServletRequest xRequest = request;
-		if (needsWrapper(request))
+		return new HttpServletRequestWrapper(request)
 		{
-			xRequest = new HttpServletRequestWrapper(request)
+			@Override
+			public boolean isSecure()
 			{
-				@Override
-				public boolean isSecure()
-				{
-					return true;
-				}
-			};
-		}
-
-		if (log.isDebugEnabled())
-		{
-			log.debug("Incoming request uri=" + (request).getRequestURI() +
-				" with originalSecure='" + request.isSecure() + "', remoteAddr='" +
-				request.getRemoteAddr() + "' will be seen with newSecure='" + xRequest.isSecure() +
-				"'");
-		}
-
-		return xRequest;
+				return true;
+			}
+		};
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.filter.IWicketFilterExtension#init(org.apache.wicket.Application,
+	 * @see org.apache.wicket.protocol.http.servlet.IRequestWrapperFactory#init(org.apache.wicket.Application,
 	 *      boolean, javax.servlet.FilterConfig)
 	 */
 	public void init(final Application application, final boolean isServlet,

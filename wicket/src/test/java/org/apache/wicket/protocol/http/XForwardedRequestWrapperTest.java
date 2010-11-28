@@ -19,32 +19,31 @@ package org.apache.wicket.protocol.http;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.protocol.http.filter.XForwardedWicketFilterExtension;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
+import org.apache.wicket.protocol.http.servlet.XForwardedRequestWrapperFactory;
 
 /**
  * 
  * @author Juergen Donnerstag
  */
-public class XForwardedWicketFilterExtensionTest extends WicketTestCase
+public class XForwardedRequestWrapperTest extends WicketTestCase
 {
 	MockHttpServletRequest request;
-	XForwardedWicketFilterExtension filter;
+	XForwardedRequestWrapperFactory filter;
 
 	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
 
-		filter = new XForwardedWicketFilterExtension();
-		tester.getApplication().getWicketFilter().addFilter(filter);
+		filter = new XForwardedRequestWrapperFactory();
 		request = tester.getRequest();
 	}
 
 	/** */
 	public void test1()
 	{
-		HttpServletRequest resp = (HttpServletRequest)filter.getRequestWrapper(request);
+		HttpServletRequest resp = filter.getWrapper(request);
 		assertEquals("127.0.0.1", resp.getRemoteAddr());
 		assertEquals(null, resp.getHeader("x-forwarded-for"));
 		assertEquals(null, resp.getHeader("x-forwarded-by"));
@@ -59,7 +58,7 @@ public class XForwardedWicketFilterExtensionTest extends WicketTestCase
 	{
 		filter.getConfig().setProtocolHeader("x-forwarded-proto");
 
-		HttpServletRequest resp = (HttpServletRequest)filter.getRequestWrapper(request);
+		HttpServletRequest resp = filter.getWrapper(request);
 		assertEquals("127.0.0.1", resp.getRemoteAddr());
 		assertEquals(null, resp.getHeader("x-forwarded-for"));
 		assertEquals(null, resp.getHeader("x-forwarded-by"));
@@ -87,7 +86,7 @@ public class XForwardedWicketFilterExtensionTest extends WicketTestCase
 		request.setSecure(false);
 		request.setServerPort(80);
 
-		HttpServletRequest resp = (HttpServletRequest)filter.getRequestWrapper(request);
+		HttpServletRequest resp = filter.getWrapper(request);
 		assertEquals("140.211.11.130", resp.getRemoteAddr());
 		assertEquals(null, resp.getHeader("x-forwarded-for"));
 		assertEquals(null, resp.getHeader("x-forwarded-by"));
@@ -110,7 +109,7 @@ public class XForwardedWicketFilterExtensionTest extends WicketTestCase
 		request.setRemoteAddr("192.168.0.10");
 		request.addHeader("x-forwarded-for", "140.211.11.130, proxy1, proxy2");
 
-		HttpServletRequest resp = (HttpServletRequest)filter.getRequestWrapper(request);
+		HttpServletRequest resp = filter.getWrapper(request);
 		assertEquals("140.211.11.130", resp.getRemoteAddr());
 		assertEquals(null, resp.getHeader("x-forwarded-for"));
 		assertEquals("proxy1, proxy2", resp.getHeader("x-forwarded-by"));
@@ -129,7 +128,7 @@ public class XForwardedWicketFilterExtensionTest extends WicketTestCase
 		request.setRemoteAddr("192.168.0.10");
 		request.addHeader("x-forwarded-for", "140.211.11.130, proxy1, proxy2, 192.168.0.10");
 
-		HttpServletRequest resp = (HttpServletRequest)filter.getRequestWrapper(request);
+		HttpServletRequest resp = filter.getWrapper(request);
 		assertEquals("140.211.11.130", resp.getRemoteAddr());
 		assertEquals(null, resp.getHeader("x-forwarded-for"));
 		assertEquals("proxy1, proxy2", resp.getHeader("x-forwarded-by"));
@@ -148,7 +147,7 @@ public class XForwardedWicketFilterExtensionTest extends WicketTestCase
 		request.setRemoteAddr("192.168.0.10");
 		request.addHeader("x-forwarded-for", "140.211.11.130, untrusted-proxy, proxy1");
 
-		HttpServletRequest resp = (HttpServletRequest)filter.getRequestWrapper(request);
+		HttpServletRequest resp = filter.getWrapper(request);
 		assertEquals("untrusted-proxy", resp.getRemoteAddr());
 		assertEquals("140.211.11.130", resp.getHeader("x-forwarded-for"));
 		assertEquals("proxy1", resp.getHeader("x-forwarded-by"));

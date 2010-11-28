@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.http.filter;
+package org.apache.wicket.protocol.http.servlet;
 
 import java.util.LinkedList;
 import java.util.regex.Pattern;
@@ -25,7 +25,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.protocol.http.servlet.XForwardedRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -418,10 +417,10 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:cyrille@cyrilleleclerc.com">Cyrille Le Clerc</a>
  * @author Juergen Donnerstag
  */
-public class XForwardedWicketFilterExtension extends AbstractWicketFilterExtension
+public class XForwardedRequestWrapperFactory extends AbstractRequestWrapperFactory
 {
 	/** Logger */
-	private static final Logger log = LoggerFactory.getLogger(XForwardedWicketFilterExtension.class);
+	private static final Logger log = LoggerFactory.getLogger(XForwardedRequestWrapperFactory.class);
 
 	protected static final String HTTP_SERVER_PORT_PARAMETER = "httpServerPort";
 
@@ -632,9 +631,19 @@ public class XForwardedWicketFilterExtension extends AbstractWicketFilterExtensi
 	 * @param request
 	 * @return True, if a wrapper is needed
 	 */
+	@Override
 	public boolean needsWrapper(final HttpServletRequest request)
 	{
-		return matchesOne(request.getRemoteAddr(), config.allowedInternalProxies);
+		boolean rtn = matchesOne(request.getRemoteAddr(), config.allowedInternalProxies);
+		if (rtn == false)
+		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("Skip XForwardedFilter for request " + request.getRequestURI() +
+					" with remote address " + request.getRemoteAddr());
+			}
+		}
+		return rtn;
 	}
 
 	/**
@@ -643,19 +652,8 @@ public class XForwardedWicketFilterExtension extends AbstractWicketFilterExtensi
 	 * @return Either the original request or the wrapper
 	 */
 	@Override
-	public HttpServletRequest getHttpRequestWrapper(final HttpServletRequest request)
+	public HttpServletRequest newRequestWrapper(final HttpServletRequest request)
 	{
-		if (needsWrapper(request) == false)
-		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("Skip XForwardedFilter for request " + request.getRequestURI() +
-					" with remote address " + request.getRemoteAddr());
-			}
-
-			return request;
-		}
-
 		String remoteIp = null;
 		// In java 6, proxiesHeaderValue should be declared as a java.util.Deque
 		LinkedList<String> proxiesHeaderValue = new LinkedList<String>();
@@ -690,7 +688,7 @@ public class XForwardedWicketFilterExtension extends AbstractWicketFilterExtensi
 			newRemoteIpHeaderValue.addFirst(currentRemoteIp);
 		}
 
-		XForwardedRequest xRequest = new XForwardedRequest(request);
+		XForwardedRequestWrapper xRequest = new XForwardedRequestWrapper(request);
 		if (remoteIp != null)
 		{
 			xRequest.setRemoteAddr(remoteIp);

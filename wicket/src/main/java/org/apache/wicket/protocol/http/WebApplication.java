@@ -146,7 +146,6 @@ public abstract class WebApplication extends Application
 	/** The WicketFilter that this application is attached to */
 	private WicketFilter wicketFilter;
 
-
 	/**
 	 * Constructor. <strong>Use {@link #init()} for any configuration of your application instead of
 	 * overriding the constructor.</strong>
