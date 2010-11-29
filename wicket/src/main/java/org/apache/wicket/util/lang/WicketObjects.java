@@ -24,6 +24,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 
 import org.apache.wicket.Application;
@@ -91,10 +92,10 @@ public class WicketObjects
 		 * size.
 		 * 
 		 * @param object
-		 *            Object to compute size of
+		 *            The serializable object to compute size of
 		 * @return The size of the object in bytes.
 		 */
-		long sizeOf(Object object);
+		long sizeOf(Serializable object);
 	}
 
 	/**
@@ -107,9 +108,9 @@ public class WicketObjects
 	public static final class SerializingObjectSizeOfStrategy implements IObjectSizeOfStrategy
 	{
 		/**
-		 * @see org.apache.wicket.util.lang.Objects.IObjectSizeOfStrategy#sizeOf(java.lang.Object)
+		 * @see org.apache.wicket.util.lang.WicketObjects.IObjectSizeOfStrategy#sizeOf(java.io.Serializable)
 		 */
-		public long sizeOf(Object object)
+		public long sizeOf(Serializable object)
 		{
 			if (object == null)
 			{
@@ -596,7 +597,7 @@ public class WicketObjects
 	 *            Object to compute size of
 	 * @return The size of the object in bytes
 	 */
-	public static long sizeof(final Object object)
+	public static long sizeof(final Serializable object)
 	{
 		return objectSizeOfStrategy.sizeOf(object);
 	}

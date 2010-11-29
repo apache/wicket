@@ -19,6 +19,7 @@ package org.apache.wicket.util.instrument;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.lang.instrument.Instrumentation;
 
 import org.apache.wicket.util.lang.WicketObjects.IObjectSizeOfStrategy;
@@ -103,9 +104,9 @@ public class InstrumentationObjectSizeOfStrategy implements IObjectSizeOfStrateg
 	 *            object to calculate size of
 	 * @return object size
 	 * 
-	 * @see org.apache.wicket.util.lang.Objects.IObjectSizeOfStrategy#sizeOf(java.lang.Object)
+	 * @see org.apache.wicket.util.lang.WicketObjects.IObjectSizeOfStrategy#sizeOf(java.io.Serializable) 
 	 */
-	public long sizeOf(Object obj)
+	public long sizeOf(Serializable obj)
 	{
 		if (obj == null)
 		{
