@@ -71,12 +71,12 @@ public class ComponentTag extends MarkupElement
 	private String id;
 
 	/** True, if attributes have been modified or added */
-	private transient boolean modified = false;
+	private boolean modified = false;
 
 	/**
 	 * If true, than the MarkupParser will ignore (remove) it. Temporary working variable
 	 */
-	private transient boolean ignore = false;
+	private boolean ignore = false;
 
 	/** If true, than the tag contain an automatically created wicket id */
 	private boolean autoComponent = false;

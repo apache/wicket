@@ -48,7 +48,7 @@ public final class Task
 	private boolean isStarted = false;
 
 	/** the <code>log</code> to give to the user's code */
-	private transient Logger log = null;
+	private Logger log = null;
 
 	/** the name of this <code>Task</code> */
 	private final String name;

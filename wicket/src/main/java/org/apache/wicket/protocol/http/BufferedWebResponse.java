@@ -38,7 +38,7 @@ import org.apache.wicket.util.lang.Args;
  */
 public class BufferedWebResponse extends WebResponse implements IMetaDataBufferingWebResponse
 {
-	private final transient WebResponse originalResponse;
+	private final WebResponse originalResponse;
 
 	/**
 	 * Construct.
