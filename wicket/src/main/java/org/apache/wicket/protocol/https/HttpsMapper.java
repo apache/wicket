@@ -119,12 +119,6 @@ public class HttpsMapper implements IRequestMapper
 	 */
 	public Url mapHandler(IRequestHandler requestHandler)
 	{
-		final IRequestHandler httpsHandler = checker.checkSecureOutgoing(requestHandler,
-			httpsConfig);
-
-		requestHandler = httpsHandler;
-
-		return delegate.mapHandler(requestHandler);
+		return delegate.mapHandler(checker.checkSecureOutgoing(requestHandler, httpsConfig));
 	}
-
 }

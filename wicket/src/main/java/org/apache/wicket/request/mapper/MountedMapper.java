@@ -103,8 +103,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		// to the mounted URL
 		if (redirectFromHomePage() && checkHomePage(url))
 		{
-			UrlInfo info = new UrlInfo(null, getContext().getHomePageClass(), newPageParameters());
-			return info;
+			return new UrlInfo(null, getContext().getHomePageClass(), newPageParameters());
 		}
 		// check if the URL is long enough and starts with the proper segments
 		else if (url.getSegments().size() >= mountSegments.length &&

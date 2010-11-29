@@ -91,28 +91,22 @@ public class DropDownChoicePage extends WicketExamplePage
 			 * 
 			 * @see org.apache.wicket.markup.html.form.IChoiceRenderer#getDisplayValue(java.lang.Object)
 			 */
-			public Object getDisplayValue(Integer object)
+			public Object getDisplayValue(Integer value)
 			{
 				// Use an ugly switch statement. Usually you would hide this in
 				// your business
 				// object or in a utility.
-				String stringrep;
-				int value = object;
 				switch (value)
 				{
 					case 1 :
-						stringrep = "One";
-						break;
+						return "One";
 					case 2 :
-						stringrep = "Two";
-						break;
+						return "Two";
 					case 3 :
-						stringrep = "Three";
-						break;
+						return "Three";
 					default :
 						throw new IllegalStateException(value + " is not mapped!");
 				}
-				return stringrep;
 			}
 
 			/**

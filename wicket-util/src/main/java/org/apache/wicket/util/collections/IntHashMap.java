@@ -870,8 +870,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 		 */
 		public Entry<V> next()
 		{
-			Entry<V> nextEntry = nextEntry();
-			return nextEntry;
+			return nextEntry();
 		}
 	}
 

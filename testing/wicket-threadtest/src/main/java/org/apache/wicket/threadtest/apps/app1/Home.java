@@ -295,11 +295,9 @@ public class Home extends WebPage
 		 * @see org.apache.wicket.markup.html.form.IChoiceRenderer#getDisplayValue(Object)
 		 */
 		@Override
-		public Object getDisplayValue(Locale object)
+		public Object getDisplayValue(Locale locale)
 		{
-			Locale locale = object;
-			String display = locale.getDisplayName(getLocale());
-			return display;
+			return locale.getDisplayName(getLocale());
 		}
 	}
 

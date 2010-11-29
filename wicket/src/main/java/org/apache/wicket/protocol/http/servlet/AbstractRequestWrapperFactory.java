@@ -24,8 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Abstract base class for HttpServletRequestWrapper
@@ -34,9 +32,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractRequestWrapperFactory
 {
-	/** Logger */
-	private static final Logger log = LoggerFactory.getLogger(AbstractRequestWrapperFactory.class);
-
 	/**
 	 * {@link Pattern} for a comma delimited string that support whitespace characters
 	 */
@@ -69,12 +64,11 @@ public abstract class AbstractRequestWrapperFactory
 	 */
 	public HttpServletRequest getWrapper(final HttpServletRequest request)
 	{
-		HttpServletRequest xRequest = request;
 		if (isEnabled() && needsWrapper(request))
 		{
 			return newRequestWrapper(request);
 		}
-		return xRequest;
+		return request;
 	}
 
 	/**
@@ -112,7 +106,7 @@ public abstract class AbstractRequestWrapperFactory
 				throw new IllegalArgumentException("Illegal pattern syntax '" + pattern + "'", e);
 			}
 		}
-		return patternsList.toArray(new Pattern[0]);
+		return patternsList.toArray(new Pattern[patternsList.size()]);
 	}
 
 	/**

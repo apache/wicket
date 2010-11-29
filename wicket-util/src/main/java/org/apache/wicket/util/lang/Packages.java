@@ -126,9 +126,7 @@ public final class Packages
 	 */
 	public static String extractPackageName(final Class<?> forClass)
 	{
-		String classname = forClass.getName();
-		String parent = parent(classname);
-		return parent;
+		return parent(forClass.getName());
 	}
 
 	/**

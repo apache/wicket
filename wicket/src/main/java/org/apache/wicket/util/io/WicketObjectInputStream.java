@@ -379,8 +379,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	@Override
 	public String readUTF() throws IOException
 	{
-		String s = in.readUTF();
-		return s;
+		return in.readUTF();
 	}
 
 	/**

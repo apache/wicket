@@ -61,9 +61,8 @@ public abstract class WicketWebTestCase extends TestCase
 
 		TestSuite suite = new TestSuite();
 		suite.addTestSuite(clazz);
-		JettyTestCaseDecorator deco = new JettyTestCaseDecorator(suite);
 
-		return deco;
+		return new JettyTestCaseDecorator(suite);
 	}
 
 	/**

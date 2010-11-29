@@ -37,9 +37,6 @@ public class CreditCardValidator extends AbstractValidator<String>
 {
 	private static final long serialVersionUID = 1L;
 
-	/** The credit card number, which should be validated. */
-	private String creditCardNumber = null;
-
 	/** The ID which represents the credit card institute. */
 	private int cardId = -1;
 
@@ -71,10 +68,11 @@ public class CreditCardValidator extends AbstractValidator<String>
 	@Override
 	protected void onValidate(IValidatable<String> validatable)
 	{
-		creditCardNumber = validatable.getValue();
+		final String value = validatable.getValue();
+
 		try
 		{
-			if (!isLengthAndPrefixCorrect(creditCardNumber))
+			if (!isLengthAndPrefixCorrect(value))
 			{
 				error(validatable);
 			}
@@ -591,8 +589,7 @@ public class CreditCardValidator extends AbstractValidator<String>
 	 */
 	private boolean isChecksumCorrect(String creditCardNumber)
 	{
-		String input = creditCardNumber;
-		String numberToCheck = input.replaceAll("[ -]", "");
+		String numberToCheck = creditCardNumber.replaceAll("[ -]", "");
 		int nulOffset = '0';
 		int sum = 0;
 		for (int i = 1; i <= numberToCheck.length(); i++)

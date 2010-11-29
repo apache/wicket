@@ -85,8 +85,7 @@ public class ContactsDatabase
 	 */
 	public List<Contact> find(int first, int count, String sortProperty, boolean sortAsc)
 	{
-		List<Contact> sublist = getIndex(sortProperty, sortAsc).subList(first, first + count);
-		return sublist;
+		return getIndex(sortProperty, sortAsc).subList(first, first + count);
 	}
 
 	/**

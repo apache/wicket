@@ -17,7 +17,6 @@
 package org.apache.wicket.extensions.markup.html;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanel;
@@ -36,8 +35,6 @@ import org.apache.wicket.util.tester.TestPanelSource;
 
 public class AjaxLazyLoadPanelTesterTest extends WicketTestCase
 {
-	private MarkupContainer ajaxLazyLoadPanel;
-
 	/**
 	 * Test
 	 */
@@ -49,7 +46,7 @@ public class AjaxLazyLoadPanelTesterTest extends WicketTestCase
 
 			public Panel getTestPanel(String panelId)
 			{
-				AjaxLazyLoadPanel ajaxLazyLoadPanel1 = new AjaxLazyLoadPanel(panelId)
+				return new AjaxLazyLoadPanel(panelId)
 				{
 					private static final long serialVersionUID = 1L;
 
@@ -59,8 +56,6 @@ public class AjaxLazyLoadPanelTesterTest extends WicketTestCase
 						return new Label(markupId, "lazy panel test").setRenderBodyOnly(true);
 					}
 				};
-				ajaxLazyLoadPanel = ajaxLazyLoadPanel1;
-				return (Panel)ajaxLazyLoadPanel;
 			}
 
 		});

@@ -60,9 +60,9 @@ public class SqlTimeConverter extends AbstractConverter<Time>
 	}
 
 	@Override
-	public String convertToString(final Time value, Locale locale)
+	public String convertToString(final Time time, Locale locale)
 	{
-		if (value == null)
+		if (time == null)
 		{
 			return null;
 		}
@@ -70,7 +70,6 @@ public class SqlTimeConverter extends AbstractConverter<Time>
 		{
 			locale = Locale.getDefault();
 		}
-		Time time = value;
 		DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
 		return format.format(time);
 	}

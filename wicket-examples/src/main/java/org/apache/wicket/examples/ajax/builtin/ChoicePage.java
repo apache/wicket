@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -75,9 +74,7 @@ public class ChoicePage extends BasePage
 			@Override
 			public List<String> getObject()
 			{
-				Set<String> keys = modelsMap.keySet();
-				List<String> list = new ArrayList<String>(keys);
-				return list;
+				return new ArrayList<String>(modelsMap.keySet());
 			}
 
 		};

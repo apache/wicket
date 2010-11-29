@@ -1492,9 +1492,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	{
 		visitChildren(Form.class, new IVisitor<Form<?>, Void>()
 		{
-			public void component(final Form<?> component, final IVisit<Void> visit)
+			public void component(final Form<?> form, final IVisit<Void> visit)
 			{
-				Form<?> form = component;
 				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 				{
 					form.internalMarkFormComponentsValid();

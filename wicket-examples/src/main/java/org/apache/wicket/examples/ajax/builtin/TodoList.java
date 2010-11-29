@@ -333,9 +333,8 @@ public class TodoList extends BasePage
 		void onRemoveCompletedTodos(AjaxRequestTarget target)
 		{
 			List<TodoItem> ready = new ArrayList<TodoItem>();
-			for (TodoItem todoItem : items)
+			for (TodoItem todo : items)
 			{
-				TodoItem todo = todoItem;
 				if (todo.isChecked())
 				{
 					ready.add(todo);

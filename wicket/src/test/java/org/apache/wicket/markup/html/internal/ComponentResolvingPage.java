@@ -51,7 +51,7 @@ public class ComponentResolvingPage extends WebPage implements IComponentResolve
 	{
 		if ("test".equals(tag.getId()))
 		{
-			Label label = new Label("test", "TEST")
+			return new Label("test", "TEST")
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -62,8 +62,6 @@ public class ComponentResolvingPage extends WebPage implements IComponentResolve
 					super.onDetach();
 				}
 			};
-
-			return label;
 		}
 		return null;
 	}

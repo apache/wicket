@@ -23,6 +23,8 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.handler.IPageAndComponentProvider;
 import org.apache.wicket.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
@@ -31,7 +33,7 @@ import org.apache.wicket.util.resource.StringResourceStream;
 
 
 /**
- * @see https://issues.apache.org/jira/browse/WICKET-3098
+ * See issue <a href="https://issues.apache.org/jira/browse/WICKET-3098">WICKET-3098</a>
  */
 public class BehaviorRequestTest extends WicketTestCase
 {
@@ -66,11 +68,12 @@ public class BehaviorRequestTest extends WicketTestCase
 
 	private String urlForBehavior(IBehavior behaviorUnderTest)
 	{
-		int index = page.container.getBehaviorId(behaviorUnderTest);
-		String enabledBehaviorUrl = tester.urlFor(
-			new ListenerInterfaceRequestHandler(new PageAndComponentProvider(page, page.container),
-				IBehaviorListener.INTERFACE, index)).toString();
-		return enabledBehaviorUrl;
+		final int index = page.container.getBehaviorId(behaviorUnderTest);
+		final IPageAndComponentProvider provider = new PageAndComponentProvider(page, page.container);
+		final IRequestHandler handler =
+			new ListenerInterfaceRequestHandler(provider, IBehaviorListener.INTERFACE, index);
+
+		return tester.urlFor(handler).toString();
 	}
 
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider

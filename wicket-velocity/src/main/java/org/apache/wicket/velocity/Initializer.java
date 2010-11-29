@@ -46,10 +46,6 @@ public class Initializer implements IInitializer
 {
 	private static final Logger log = LoggerFactory.getLogger(Initializer.class);
 
-	private String velocityPropertiesFile = "velocity.properties";
-
-	private String velocityPropertiesFolder;
-
 	/**
 	 * @see org.apache.wicket.IInitializer#init(org.apache.wicket.Application)
 	 */
@@ -77,12 +73,13 @@ public class Initializer implements IInitializer
 
 	private Properties getVelocityProperties(Application application)
 	{
+		String velocityPropertiesFile = "velocity.properties";
+
 		if (application instanceof WebApplication)
 		{
 			WebApplication webapp = (WebApplication)application;
 			ServletContext servletContext = webapp.getServletContext();
-			ServletContext sc = servletContext;
-			velocityPropertiesFolder = sc.getInitParameter("velocityPropertiesFolder");
+			String propertiesFolder = servletContext.getInitParameter("velocityPropertiesFolder");
 			String propsFile = servletContext.getInitParameter("velocity.properties");
 
 			if (null != propsFile)
@@ -90,10 +87,10 @@ public class Initializer implements IInitializer
 				velocityPropertiesFile = propsFile;
 			}
 
-			if (null != velocityPropertiesFolder)
+			if (null != propertiesFolder)
 			{
-				WebApplicationPath webPath = new WebApplicationPath(sc);
-				webPath.add(velocityPropertiesFolder);
+				WebApplicationPath webPath = new WebApplicationPath(servletContext);
+				webPath.add(propertiesFolder);
 				IResourceStream stream = webPath.find(Initializer.class, velocityPropertiesFile);
 				InputStream is = null;
 				try

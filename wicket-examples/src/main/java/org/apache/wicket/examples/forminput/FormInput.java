@@ -254,8 +254,7 @@ public class FormInput extends WicketExamplePage
 		@Override
 		public Object getDisplayValue(Locale locale)
 		{
-			String display = locale.getDisplayName(getLocale());
-			return display;
+			return locale.getDisplayName(getLocale());
 		}
 	}
 

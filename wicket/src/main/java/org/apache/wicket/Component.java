@@ -584,11 +584,10 @@ public abstract class Component
 		{
 			Object[] array = new Object[currentLength + 1];
 			Object[] current = (Object[])data;
-			int before = position;
 			int after = currentLength - position;
-			if (before > 0)
+			if (position > 0)
 			{
-				System.arraycopy(current, 0, array, 0, before);
+				System.arraycopy(current, 0, array, 0, position);
 			}
 			array[position] = object;
 			if (after > 0)
@@ -2460,9 +2459,6 @@ public abstract class Component
 	 * Renders the component at the current position in the given markup stream. The method
 	 * onComponentTag() is called to allow the component to mutate the start tag. The method
 	 * onComponentTagBody() is then called to permit the component to render its body.
-	 * 
-	 * @param markupStream
-	 *            The markup stream
 	 */
 	public final void renderComponent()
 	{
@@ -2681,12 +2677,11 @@ public abstract class Component
 	{
 		// Get the two models
 		IModel<?> thisModel = getDefaultModel();
-		IModel<?> thatModel = model;
 
 		// If both models are non-null they could be the same
-		if (thisModel != null && thatModel != null)
+		if (thisModel != null && model != null)
 		{
-			return getInnermostModel(thisModel) == getInnermostModel(thatModel);
+			return getInnermostModel(thisModel) == getInnermostModel(model);
 		}
 
 		return false;
@@ -2785,7 +2780,6 @@ public abstract class Component
 		generatedMarkupId = comp.generatedMarkupId;
 		setMetaData(MARKUP_ID_KEY, comp.getMetaData(MARKUP_ID_KEY));
 		setOutputMarkupId(comp.getOutputMarkupId());
-		return;
 	}
 
 	/**

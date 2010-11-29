@@ -185,8 +185,7 @@ public class PageAccessSynchronizer
 			public IManageablePage getPage(int id)
 			{
 				lockPage(id);
-				IManageablePage page = super.getPage(id);
-				return page;
+				return super.getPage(id);
 			}
 
 			@Override

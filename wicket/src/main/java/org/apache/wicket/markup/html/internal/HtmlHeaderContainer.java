@@ -252,7 +252,7 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 	 */
 	protected IHeaderResponse newHeaderResponse()
 	{
-		IHeaderResponse headerResponse = new HeaderResponse()
+		return new HeaderResponse()
 		{
 			@Override
 			protected Response getRealResponse()
@@ -260,7 +260,6 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 				return HtmlHeaderContainer.this.getResponse();
 			}
 		};
-		return headerResponse;
 	}
 
 	/**

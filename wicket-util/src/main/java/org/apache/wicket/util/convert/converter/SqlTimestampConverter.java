@@ -106,9 +106,9 @@ public class SqlTimestampConverter extends AbstractConverter<Timestamp>
 	 *      java.util.Locale)
 	 */
 	@Override
-	public String convertToString(final Timestamp value, Locale locale)
+	public String convertToString(final Timestamp timestamp, Locale locale)
 	{
-		if (value == null)
+		if (timestamp == null)
 		{
 			return null;
 		}
@@ -118,7 +118,6 @@ public class SqlTimestampConverter extends AbstractConverter<Timestamp>
 			locale = Locale.getDefault();
 		}
 
-		Timestamp timestamp = value;
 		DateFormat format = DateFormat.getDateTimeInstance(dateFormat, timeFormat, locale);
 		return format.format(timestamp);
 	}

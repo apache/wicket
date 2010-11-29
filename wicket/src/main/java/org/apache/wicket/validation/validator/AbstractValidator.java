@@ -198,7 +198,6 @@ public abstract class AbstractValidator<T> implements INullAcceptingValidator<T>
 	 */
 	protected Map<String, Object> variablesMap(IValidatable<T> validatable)
 	{
-		final Map<String, Object> resourceModel = new HashMap<String, Object>(1);
-		return resourceModel;
+		return new HashMap<String, Object>(1);
 	}
 }

@@ -321,9 +321,8 @@ public class TagTester
 	{
 		int openPos = openTag.getPos();
 		int closePos = closeTag.getPos() + closeTag.getLength();
-		String value = parser.getInput(openPos, closePos).toString();
 
-		return value;
+		return parser.getInput(openPos, closePos).toString();
 	}
 
 	/**
@@ -337,9 +336,8 @@ public class TagTester
 	{
 		int openPos = openTag.getPos() + openTag.getLength();
 		int closePos = closeTag.getPos();
-		String value = parser.getInput(openPos, closePos).toString();
 
-		return value;
+		return parser.getInput(openPos, closePos).toString();
 	}
 
 	/**

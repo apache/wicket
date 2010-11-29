@@ -28,8 +28,6 @@ import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MergedMarkup;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Merge the 2+ markups involved in markup inheritance. From a users perspective there is only one
@@ -39,9 +37,6 @@ import org.slf4j.LoggerFactory;
  */
 public class InheritedMarkupMarkupLoader implements IMarkupLoader
 {
-	/** Log for reporting. */
-	private static final Logger log = LoggerFactory.getLogger(InheritedMarkupMarkupLoader.class);
-
 	/**
 	 * Constructor.
 	 */
@@ -118,11 +113,11 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 	private Markup getBaseMarkup(final MarkupContainer container, final Markup markup,
 		final boolean enforceReload)
 	{
-		// get the base markup
-		Markup baseMarkup = MarkupFactory.get().getMarkup(container,
-			markup.getMarkupResourceStream().getMarkupClass().getSuperclass(), enforceReload);
 
-		return baseMarkup;
+		final Class<?> location = markup.getMarkupResourceStream().getMarkupClass().getSuperclass();
+
+		// get the base markup
+		return MarkupFactory.get().getMarkup(container, location, enforceReload);
 	}
 
 	/**

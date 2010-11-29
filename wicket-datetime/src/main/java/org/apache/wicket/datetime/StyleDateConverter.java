@@ -117,8 +117,6 @@ public class StyleDateConverter extends DateConverter
 	@Override
 	protected DateTimeFormatter getFormat()
 	{
-		DateTimeFormatter dtf = DateTimeFormat.forPattern(getDatePattern()).withLocale(getLocale())
-				.withPivotYear(2000);
-		return dtf;
+		return DateTimeFormat.forPattern(getDatePattern()).withLocale(getLocale()).withPivotYear(2000);
 	}
 }

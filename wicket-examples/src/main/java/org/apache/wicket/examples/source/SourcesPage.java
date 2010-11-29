@@ -405,10 +405,9 @@ public class SourcesPage extends WebPage
 						@Override
 						protected CharSequence getURL()
 						{
-							CharSequence url = urlFor(SourcesPage.class,
-								SourcesPage.generatePageParameters(getPageTargetClass(),
-									item.getModel().getObject()));
-							return url;
+							return urlFor(SourcesPage.class,
+								          SourcesPage.generatePageParameters(getPageTargetClass(),
+									      item.getModel().getObject()));
 						}
 
 						@Override

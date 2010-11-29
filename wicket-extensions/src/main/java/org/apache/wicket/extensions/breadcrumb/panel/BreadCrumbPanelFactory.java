@@ -88,9 +88,7 @@ public final class BreadCrumbPanelFactory implements IBreadCrumbPanelFactory
 	{
 		try
 		{
-			Constructor<? extends BreadCrumbPanel> ctor = panelClass.getConstructor(new Class[] {
-					String.class, IBreadCrumbModel.class });
-			return ctor;
+			return panelClass.getConstructor(String.class, IBreadCrumbModel.class);
 		}
 		catch (SecurityException e)
 		{

@@ -140,9 +140,8 @@ public class UploadInfo implements IClusterable
 
 		long totalTime = ((getElapsedSeconds() * 100) / Math.max(percentageComplete, 1));
 		long remainingTime = (totalTime - getElapsedSeconds());
-		long remainingTimeInMillis = remainingTime * 1000;
 
-		return remainingTimeInMillis;
+		return remainingTime * 1000; // convert seconds to milliseconds and return
 	}
 
 	/**
