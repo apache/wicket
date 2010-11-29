@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.URI;
 
 import org.apache.wicket.util.io.Streams;
@@ -220,10 +221,9 @@ public class File extends java.io.File implements IModifiable
 	/**
 	 * @param object
 	 *            Object to write to this file
-	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void writeObject(final Object object) throws FileNotFoundException, IOException
+	public void writeObject(final Serializable object) throws IOException
 	{
 		new ObjectOutputStream(outputStream()).writeObject(object);
 	}
@@ -269,14 +269,15 @@ public class File extends java.io.File implements IModifiable
 	 * 
 	 * @param file
 	 *            The file to copy
+	 * @returns number of bytes written
 	 * @throws IOException
 	 */
-	public void write(final File file) throws IOException
+	public int write(final File file) throws IOException
 	{
 		final InputStream in = new BufferedInputStream(new FileInputStream(file));
 		try
 		{
-			write(in);
+			return write(in);
 		}
 		finally
 		{
