@@ -34,7 +34,7 @@ import java.io.IOException;
 public final class AppendingStringBuffer implements java.io.Serializable, CharSequence
 {
 	/** use serialVersionUID from JDK 1.0.2 for interoperability */
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	private static final AppendingStringBuffer NULL = new AppendingStringBuffer("null");
 	private static final StringBuilder SB_NULL = new StringBuilder("null");
