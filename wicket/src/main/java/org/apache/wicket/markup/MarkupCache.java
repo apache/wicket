@@ -24,6 +24,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.settings.IMarkupSettings;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.listener.IChangeListener;
 import org.apache.wicket.util.watch.IModifiable;
 import org.apache.wicket.util.watch.IModificationWatcher;
@@ -67,7 +68,12 @@ public class MarkupCache implements IMarkupCache
 	private final Application application;
 
 	/**
-	 * @return The markup cache associated with the application
+	 * A convenient helper to get the markup cache registered with the application.
+	 * 
+	 * @see {@link Application#getMarkupSettings()}
+	 * @see {@link MarkupFactory#getMarkupCache()}
+	 * 
+	 * @return The markup cache registered with the {@link Application}
 	 */
 	public final static IMarkupCache get()
 	{
@@ -94,7 +100,7 @@ public class MarkupCache implements IMarkupCache
 	/**
 	 * @see org.apache.wicket.markup.IMarkupCache#clear()
 	 */
-	public final void clear()
+	public void clear()
 	{
 		markupCache.clear();
 		markupKeyCache.clear();
@@ -115,57 +121,46 @@ public class MarkupCache implements IMarkupCache
 	 */
 	public final IMarkupFragment removeMarkup(final String cacheKey)
 	{
-		if (cacheKey == null)
-		{
-			throw new IllegalArgumentException("Parameter 'cacheKey' must not be null");
-		}
+		Args.notNull(cacheKey, "cacheKey");
 
 		if (log.isDebugEnabled())
 		{
 			log.debug("Remove from cache: cacheKey=" + cacheKey);
 		}
 
-		// Remove the markup and any other markup which depends on it
-		// (inheritance)
-		String locationString = (String)markupKeyCache.get(cacheKey);
+		// Remove the markup from the cache
+		CharSequence locationString = markupKeyCache.get(cacheKey);
 		IMarkupFragment markup = markupCache.get(locationString);
 		if (markup != null)
 		{
 			markupCache.remove(locationString);
 
-			// In practice markup inheritance has probably not more than 3 or 4
-			// levels. And since markup reloading is only enabled in development
-			// mode, this max 4 iterations of the outer loop shouldn't be a
-			// problem.
+			// If a base markup file has been removed from the cache, than
+			// the derived markup should be removed as well.
+
+			// Repeat until all depend resources have been removed (count == 0)
 			int count;
 			do
 			{
 				count = 0;
 
-				// If a base markup file has been removed from the cache, than
-				// the derived markup should be removed as well.
+				// Iterate though all entries of the cache
 				Iterator<CharSequence> iter = markupCache.getKeys().iterator();
 				while (iter.hasNext())
 				{
-					Markup cacheMarkup = markupCache.get(iter.next());
-					MarkupResourceStream resourceData = cacheMarkup.getMarkupResourceStream()
-						.getBaseMarkupResourceStream();
-					if (resourceData != null)
-					{
-						String baseCacheKey = resourceData.getCacheKey();
-						String baseLocationString = (String)markupKeyCache.get(baseCacheKey);
-						if (baseLocationString != null &&
-							markupCache.get(baseLocationString) == null)
-						{
-							if (log.isDebugEnabled())
-							{
-								log.debug("Remove from cache: cacheKey=" +
-									cacheMarkup.getMarkupResourceStream().getCacheKey());
-							}
+					CharSequence key = iter.next();
 
-							iter.remove();
-							count++;
+					// Check if the markup associated with key has a base markup. And if yes, test
+					// if that is cached.
+					if (isBaseMarkupCached(key))
+					{
+						if (log.isDebugEnabled())
+						{
+							log.debug("Remove from cache: cacheKey=" + key);
 						}
+
+						iter.remove();
+						count++;
 					}
 				}
 			}
@@ -173,10 +168,10 @@ public class MarkupCache implements IMarkupCache
 
 			// And now remove all watcher entries associated with markup
 			// resources no longer in the cache. Note that you can not use
-			// Application.get() since removeMarkup() will be call from a
+			// Application.get() since removeMarkup() will be called from a
 			// ModificationWatcher thread which has no associated Application.
-			final IModificationWatcher watcher = application.getResourceSettings()
-				.getResourceWatcher(true);
+			IModificationWatcher watcher = application.getResourceSettings().getResourceWatcher(
+				true);
 			if (watcher != null)
 			{
 				Iterator<IModifiable> iter = watcher.getEntries().iterator();
@@ -185,11 +180,7 @@ public class MarkupCache implements IMarkupCache
 					IModifiable modifiable = iter.next();
 					if (modifiable instanceof MarkupResourceStream)
 					{
-						MarkupResourceStream resourceStream = (MarkupResourceStream)modifiable;
-						String resourceCacheKey = resourceStream.getCacheKey();
-						String resouceLocationString = (String)markupKeyCache.get(resourceCacheKey);
-						if (resouceLocationString != null &&
-							markupCache.containsKey(resouceLocationString) == false)
+						if (isMarkupCached((MarkupResourceStream)modifiable))
 						{
 							iter.remove();
 						}
@@ -198,6 +189,41 @@ public class MarkupCache implements IMarkupCache
 			}
 		}
 		return markup;
+	}
+
+	/**
+	 * @param key
+	 * @return True, if base markup for entry with cache 'key' is available in the cache as well.
+	 */
+	private boolean isBaseMarkupCached(final CharSequence key)
+	{
+		// Get the markup associated with key
+		Markup markup = markupCache.get(key);
+
+		// Get the base markup resource stream from the markup
+		MarkupResourceStream resourceStream = markup.getMarkupResourceStream()
+			.getBaseMarkupResourceStream();
+
+		// Is the base markup available in the cache?
+		return isMarkupCached(resourceStream);
+	}
+
+	/**
+	 * @param resourceStream
+	 * @return True if the markup is cached
+	 */
+	private boolean isMarkupCached(final MarkupResourceStream resourceStream)
+	{
+		if (resourceStream != null)
+		{
+			String key = resourceStream.getCacheKey();
+			CharSequence locationString = markupKeyCache.get(key);
+			if ((locationString != null) && (markupCache.get(locationString) == null))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

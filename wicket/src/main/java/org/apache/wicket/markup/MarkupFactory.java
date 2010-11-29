@@ -32,8 +32,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Markup loading essentially is an autark modul of Wicket. MarkupFactory provides all the means to
- * change defaults.
+ * Markup loading essentially is an self-sustaining modul of Wicket. MarkupFactory is the entry
+ * point into that modul and provides all the means to change defaults.
  * 
  * @author Juergen Donnerstag
  */
@@ -41,9 +41,6 @@ public class MarkupFactory
 {
 	/** Log for reporting. */
 	private static final Logger log = LoggerFactory.getLogger(MarkupFactory.class);
-
-	/** The markup loader instance */
-	private IMarkupLoader markupLoader;
 
 	/** A markup cache which will load the markup if required. */
 	private IMarkupCache markupCache;
@@ -67,28 +64,41 @@ public class MarkupFactory
 	}
 
 	/**
-	 * In case there is a need to extend the default chain of MarkupLoaders
+	 * MarkupLoaders are responsible to find and load the markup for a component. That may be a
+	 * single file, but e.g. like in markup inheritance it could also be that the markup from
+	 * different sources must be merged.
 	 * 
-	 * @return MarkupLoader
+	 * @return By default an instance of {@link DefaultMarkupLoader} will be returned. Via
+	 *         subclassing you may return your markup loader..
 	 */
 	public IMarkupLoader getMarkupLoader()
 	{
-		if (markupLoader == null)
-		{
-			markupLoader = new DefaultMarkupLoader();
-		}
-		return markupLoader;
+		return new DefaultMarkupLoader();
 	}
 
 	/**
-	 * Create a new markup parser.
+	 * Create a new markup parser. Markup parsers read the markup and dissect it in Wicket relevant
+	 * pieces {@link MarkupElement}'s (kind of Wicket's DOM).
 	 * <p>
-	 * In case you want to add you own markup filters, than subclass the method and call
-	 * {@link WicketMarkupParser#add(IMarkupFilter)} for your own filter on the markup parser
-	 * returned.
+	 * MarkupParser's can be extended by means of {@link IMarkupFilter}. You can add your own filter
+	 * as follows:
+	 * 
+	 * <pre>
+	 *    public MyMarkupFactory {
+	 *      ...
+	 *      public MarkupParser newMarkupParser(final MarkupResourceStream resource) {
+	 *         MarkupParser parser = super.newMarkupParser(resource);
+	 *         parser.add(new MyFilter());
+	 *         return parser;
+	 *      }
+	 *    }
+	 * </pre>
+	 * 
+	 * @see #onAppendMarkupFilter(IMarkupFilter)
 	 * 
 	 * @param resource
-	 * @return A new markup parser
+	 *            The resource containing the markup
+	 * @return A fresh instance of {@link MarkupParser}
 	 */
 	public MarkupParser newMarkupParser(final MarkupResourceStream resource)
 	{
@@ -96,7 +106,7 @@ public class MarkupFactory
 		return new MarkupParser(new XmlPullParser(), resource)
 		{
 			/**
-			 * @see org.apache.wicket.markup.WicketMarkupParser#onAppendMarkupFilter(org.apache.wicket.markup.parser.IMarkupFilter)
+			 * @see org.apache.wicket.markup.MarkupParser#onAppendMarkupFilter(org.apache.wicket.markup.parser.IMarkupFilter)
 			 */
 			@Override
 			protected IMarkupFilter onAppendMarkupFilter(final IMarkupFilter filter)
@@ -107,13 +117,19 @@ public class MarkupFactory
 	}
 
 	/**
-	 * a) Allow subclasses to configure individual Wicket filters
+	 * A callback method that is invoked prior to any {@link IMarkupFilter} being registered with
+	 * {@link MarkupParser}. Hence it allows to:
+	 * <ul>
+	 * <li>tweak the default configuration of a filter</li>
+	 * <li>replace a filter with another one</li>
+	 * <li>avoid filters being used by returning null</li>
+	 * </ul>
+	 * Note that a new {@link MarkupParser} instance is created for each markup resources being
+	 * loaded.
 	 * <p>
-	 * b) Allow to replace default filter with extended one
-	 * <p>
-	 * c) Allows to disable Wicket filters via returning false
 	 * 
 	 * @param filter
+	 *            The filter to be registered with the MarkupParser
 	 * @return The filter to be added. Null to ignore.
 	 */
 	protected IMarkupFilter onAppendMarkupFilter(final IMarkupFilter filter)
@@ -122,7 +138,12 @@ public class MarkupFactory
 	}
 
 	/**
-	 * The markup cache also loads the markup if not yet available in the cache.
+	 * Get the markup cache which is registered with the factory. Since the factory is registered
+	 * with the application, only one cache per application exists.
+	 * <p>
+	 * Please note that markup cache is a pull through cache. It'll invoke a factory method
+	 * {@link #getMarkupResourceStream(MarkupContainer, Class)} to load the markup if not yet
+	 * available in the cache.
 	 * 
 	 * @return Null, to disable caching.
 	 */
@@ -137,9 +158,8 @@ public class MarkupFactory
 	}
 
 	/**
-	 * return if markup cache has been initialized yet
-	 *
-	 * @return <code>true</code> if markup cache was already initialized, <code>false</code> otherwise
+	 * @return <code>true</code> if markup cache is available. Make sure you called
+	 *         {@link #getMarkupCache()} at least once before to initialize the cache.
 	 */
 	public boolean hasMarkupCache()
 	{
@@ -147,32 +167,31 @@ public class MarkupFactory
 	}
 
 	/**
-	 * Gets a fresh markup stream that contains the (immutable) markup resource for this class.
+	 * Get the markup associated with the container.
 	 * 
 	 * @param container
-	 *            The container the markup should be associated with
+	 *            The container to find the markup for
 	 * @param enforceReload
-	 *            The cache will be ignored and all, including inherited markup files, will be
-	 *            reloaded. Whatever is in the cache, it will be ignored
-	 * @return A stream of MarkupElement elements
+	 *            If true, the cache will be ignored and all, including inherited markup files, will
+	 *            be reloaded. Whatever is in the cache, it will be ignored
+	 * @return The markup associated with the container
 	 */
-	public final IMarkupFragment getMarkup(final MarkupContainer container,
-		final boolean enforceReload)
+	public final Markup getMarkup(final MarkupContainer container, final boolean enforceReload)
 	{
 		return getMarkup(container, container.getClass(), enforceReload);
 	}
 
 	/**
-	 * Gets a fresh markup stream that contains the (immutable) markup resource for this class.
+	 * Get the markup associated with the container.
 	 * 
 	 * @param container
-	 *            The container the markup should be associated with
+	 *            The container to find the markup for
 	 * @param clazz
 	 *            Must be the container class or any of its super classes.
 	 * @param enforceReload
 	 *            The cache will be ignored and all, including inherited markup files, will be
 	 *            reloaded. Whatever is in the cache, it will be ignored
-	 * @return A stream of MarkupElement elements
+	 * @return The markup associated with the container
 	 */
 	public final Markup getMarkup(final MarkupContainer container, final Class<?> clazz,
 		final boolean enforceReload)
@@ -195,7 +214,7 @@ public class MarkupFactory
 	 * Check if container has associated markup
 	 * 
 	 * @param container
-	 *            The container the markup should be associated with
+	 *            The container to find the markup for
 	 * @return True if this markup container has associated markup
 	 */
 	public final boolean hasAssociatedMarkup(final MarkupContainer container)
@@ -204,7 +223,11 @@ public class MarkupFactory
 	}
 
 	/**
-	 * Get the markup resource stream provider to be used
+	 * Get the markup resource stream provider registered with the factory.
+	 * <p>
+	 * If the 'container' implements {@link IMarkupResourceStreamProvider}, the container itself
+	 * will be asked to provide the resource stream. Else Wicket's default implementation will be
+	 * used.
 	 * 
 	 * @param container
 	 *            The MarkupContainer requesting the markup resource stream
@@ -227,8 +250,6 @@ public class MarkupFactory
 
 	/**
 	 * Create a new markup resource stream for the container.
-	 * <p>
-	 * Note: usually it will only called once, as the IResourceStream will be cached by MarkupCache.
 	 * 
 	 * @param container
 	 *            The MarkupContainer which requests to load the Markup resource stream
