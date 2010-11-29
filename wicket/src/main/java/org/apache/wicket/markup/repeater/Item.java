@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.repeater;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import org.apache.wicket.markup.html.list.ListItem;
@@ -80,7 +81,7 @@ public class Item<T> extends ListItem<T>
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	public static class IndexComparator implements Comparator<Item<?>>
+	public static class IndexComparator implements Comparator<Item<?>>, Serializable
 	{
 		private static final Comparator<Item<?>> instance = new IndexComparator();
 
@@ -99,5 +100,5 @@ public class Item<T> extends ListItem<T>
 		{
 			return lhs.getIndex() - rhs.getIndex();
 		}
-	};
+	}
 }
