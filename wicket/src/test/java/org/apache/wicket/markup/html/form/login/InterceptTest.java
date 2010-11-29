@@ -127,8 +127,6 @@ public class InterceptTest extends TestCase
 	 */
 	private static class MyMockWebApplication extends MockApplication
 	{
-		private static final long serialVersionUID = 1L;
-
 		@Override
 		public Class<? extends Page> getHomePage()
 		{

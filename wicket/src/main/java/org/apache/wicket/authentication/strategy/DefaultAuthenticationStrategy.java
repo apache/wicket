@@ -32,8 +32,6 @@ import org.slf4j.LoggerFactory;
  */
 public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 {
-	private static final long serialVersionUID = 1L;
-
 	private static final Logger logger = LoggerFactory.getLogger(DefaultAuthenticationStrategy.class);
 
 	/** The cookie name to store the username and password */

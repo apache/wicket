@@ -593,8 +593,6 @@ public class MarkupCache implements IMarkupCache
 	 */
 	public class DefaultCacheImplementation<K, V> implements ICache<K, V>
 	{
-		private static final long serialVersionUID = 1L;
-
 		private final ConcurrentHashMap<K, V> cache = new ConcurrentHashMap<K, V>();
 
 		/**

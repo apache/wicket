@@ -25,8 +25,6 @@ import org.apache.wicket.authentication.IAuthenticationStrategy;
  */
 public class NoOpAuthenticationStrategy implements IAuthenticationStrategy
 {
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * Constructor
 	 */

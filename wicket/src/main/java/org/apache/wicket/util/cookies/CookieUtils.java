@@ -37,8 +37,6 @@ import org.slf4j.LoggerFactory;
  */
 public class CookieUtils
 {
-	private static final long serialVersionUID = 1L;
-
 	private final static Logger log = LoggerFactory.getLogger(CookieUtils.class);
 
 	private final CookieDefaults settings;

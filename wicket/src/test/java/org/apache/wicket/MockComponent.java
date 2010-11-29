@@ -28,9 +28,6 @@ import org.apache.wicket.util.string.Strings;
  */
 public class MockComponent implements IRequestableComponent
 {
-
-	private static final long serialVersionUID = 1L;
-
 	private String markupId;
 	private String id;
 	private IRequestablePage page;

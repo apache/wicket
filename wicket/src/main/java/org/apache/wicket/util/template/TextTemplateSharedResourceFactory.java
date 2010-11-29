@@ -49,8 +49,6 @@ import org.apache.wicket.request.resource.ResourceReference;
 // TODO Should weak-ref regenerable resources like this in SharedResources!
 public class TextTemplateSharedResourceFactory
 {
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * Shared resource scope.
 	 */
