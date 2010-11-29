@@ -55,10 +55,10 @@ public final class Strings
 	public static final String LINE_SEPARATOR;
 
 	/** A table of hex digits */
-	private static final char[] hexDigit = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A',
-			'B', 'C', 'D', 'E', 'F' };
+	private static final char[] HEX_DIGIT =
+		{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
-	private static final Pattern htmlNumber = Pattern.compile("\\&\\#\\d+\\;");
+	private static final Pattern HTML_NUMBER_REGEX = Pattern.compile("&#\\d+;");
 
 	static
 	{
@@ -69,6 +69,13 @@ public final class Strings
 				return System.getProperty("line.separator");
 			}
 		});
+	}
+
+	/**
+	 * Private constructor prevents construction.
+	 */
+	private Strings()
+	{
 	}
 
 	/**
@@ -356,7 +363,7 @@ public final class Strings
 							{
 								// Not 7 Bit use the unicode system
 								buffer.append("&#");
-								buffer.append(new Integer(ci).toString());
+								buffer.append(Integer.toString(ci));
 								buffer.append(';');
 							}
 						}
@@ -416,9 +423,8 @@ public final class Strings
 		int off = 0;
 		char[] in = escapedUnicodeString.toCharArray();
 		int len = in.length;
-		char[] convtBuf = new char[len];
+		char[] out = new char[len];
 		char aChar;
-		char[] out = convtBuf;
 		int outLen = 0;
 		int end = off + len;
 
@@ -787,7 +793,7 @@ public final class Strings
 		{
 			return null;
 		}
-		Matcher matcher = htmlNumber.matcher(str);
+		Matcher matcher = HTML_NUMBER_REGEX.matcher(str);
 		while (matcher.find())
 		{
 			int pos = matcher.start();
@@ -795,7 +801,7 @@ public final class Strings
 			int number = Integer.parseInt(str.substring(pos + 2, end - 1));
 			char ch = (char)number;
 			str = str.substring(0, pos) + ch + str.substring(end);
-			matcher = htmlNumber.matcher(str);
+			matcher = HTML_NUMBER_REGEX.matcher(str);
 		}
 
 		return str;
@@ -1238,24 +1244,22 @@ public final class Strings
 
 	private static int search(final CharSequence s, String searchString, int pos)
 	{
-		int matchIndex = -1;
 		if (s instanceof String)
 		{
-			matchIndex = ((String)s).indexOf(searchString, pos);
+			return ((String)s).indexOf(searchString, pos);
 		}
 		else if (s instanceof StringBuffer)
 		{
-			matchIndex = ((StringBuffer)s).indexOf(searchString, pos);
+			return ((StringBuffer)s).indexOf(searchString, pos);
 		}
 		else if (s instanceof AppendingStringBuffer)
 		{
-			matchIndex = ((AppendingStringBuffer)s).indexOf(searchString, pos);
+			return ((AppendingStringBuffer)s).indexOf(searchString, pos);
 		}
 		else
 		{
-			matchIndex = s.toString().indexOf(searchString, pos);
+			return s.toString().indexOf(searchString, pos);
 		}
-		return matchIndex;
 	}
 
 	/**
@@ -1267,7 +1271,7 @@ public final class Strings
 	 */
 	private static char toHex(int nibble)
 	{
-		return hexDigit[(nibble & 0xF)];
+		return HEX_DIGIT[(nibble & 0xF)];
 	}
 
 	/**
@@ -1324,11 +1328,20 @@ public final class Strings
 	}
 
 	/**
-	 * Private constructor prevents construction.
+	 * returns the zero-based index of a character within a char sequence. this method mainly
+	 * exists as an faster alternative for <code>sequence.toString().indexOf(ch)</code>.
+	 *
+	 * @param sequence character sequence
+	 * @param ch character to search for
+	 * @return index of character within character sequence or <code>-1</code> if not found
 	 */
-	private Strings()
+	public static int indexOf(CharSequence sequence, char ch)
 	{
+		if (sequence != null)
+			for (int i = 0; i < sequence.length(); i++)
+				if (sequence.charAt(i) == ch)
+					return i;
+
+		return -1;
 	}
-
-
 }
