@@ -806,8 +806,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		 * but this improvement will only work if we write first and encode later instead of working
 		 * on fragments sent to write
 		 */
-		// TODO: Would be nice not to have to call tostring here
-		return str.toString().indexOf(']') >= 0;
+		return Strings.indexOf(str, ']') >= 0;
 	}
 
 	/**
@@ -818,8 +817,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	 * @param component
 	 *            component to render
 	 */
-	private void respondComponent(final Response response, final String markupId,
-		final Component component)
+	private void respondComponent(final Response response, final String markupId, final Component component)
 	{
 		if (component.getRenderBodyOnly() == true)
 		{
@@ -832,7 +830,6 @@ public class AjaxRequestTarget implements IPageRequestHandler
 
 		// substitute our encoding response for the real one so we can capture
 		// component's markup in a manner safe for transport inside CDATA block
-		final Response originalResponse = response; // TODO no substitution, so what is this for?
 		encodingBodyResponse.reset();
 		RequestCycle.get().setResponse(encodingBodyResponse);
 
@@ -871,7 +868,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 				// ignore this one could be a result off.
 			}
 			// Restore original response
-			RequestCycle.get().setResponse(originalResponse);
+			RequestCycle.get().setResponse(response);
 			encodingBodyResponse.reset();
 			throw e;
 		}
@@ -882,7 +879,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		}
 		catch (RuntimeException e)
 		{
-			RequestCycle.get().setResponse(originalResponse);
+			RequestCycle.get().setResponse(response);
 			encodingBodyResponse.reset();
 			throw e;
 		}
@@ -890,7 +887,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		page.endComponentRender(component);
 
 		// Restore original response
-		RequestCycle.get().setResponse(originalResponse);
+		RequestCycle.get().setResponse(response);
 
 		response.write("<component id=\"");
 		response.write(markupId);
