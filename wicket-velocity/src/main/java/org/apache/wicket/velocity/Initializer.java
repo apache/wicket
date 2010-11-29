@@ -28,13 +28,14 @@ import org.apache.wicket.IInitializer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.file.WebApplicationPath;
+import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An implementation of {@link wicket.IInitializer} for the Velocity Runtime Singleton. If
+ * An implementation of {@link org.apache.wicket.IInitializer} for the Velocity Runtime Singleton. If
  * Application is an instance of WebApplication, Initializer will retrieve
  * "velocityPropertiesFolder" as an initparam to point to the directory the properties file lives
  * in, and "velocity.properties" for the name of the properties file. If the params don't exist,
@@ -112,16 +113,13 @@ public class Initializer implements IInitializer
 				}
 				finally
 				{
-					if (is != null)
+					try
 					{
-						try
-						{
-							is.close();
-						}
-						catch (IOException e)
-						{
-							log.error(e.getMessage(), e);
-						}
+						IOUtils.close(is);
+					}
+					catch (IOException e)
+					{
+						log.error(e.getMessage(), e);
 					}
 				}
 			}
@@ -141,16 +139,13 @@ public class Initializer implements IInitializer
 		}
 		finally
 		{
-			if (is != null)
+			try
 			{
-				try
-				{
-					is.close();
-				}
-				catch (IOException e)
-				{
-					log.error(e.getMessage(), e);
-				}
+				IOUtils.close(is);
+			}
+			catch (IOException e)
+			{
+				log.error(e.getMessage(), e);
 			}
 		}
 	}

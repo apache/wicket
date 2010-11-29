@@ -24,10 +24,8 @@ import javax.servlet.ServletContext;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.time.Time;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * An {@link IResourceStream} that reads data from a file in the web application
@@ -36,14 +34,9 @@ import org.slf4j.LoggerFactory;
  */
 public class WebExternalResourceStream extends AbstractResourceStream
 {
-	InputStream in;
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	/** log. */
-	private static final Logger log = LoggerFactory.getLogger(WebExternalResourceStream.class);
+	transient InputStream in;
 
 	/** the relative url of the external resource. */
 	private final String url;
@@ -78,10 +71,7 @@ public class WebExternalResourceStream extends AbstractResourceStream
 	public void close() throws IOException
 	{
 		// getInputStream() is not always called (WICKET-790)
-		if (in != null)
-		{
-			in.close();
-		}
+		IOUtils.close(in);
 	}
 
 	@Override

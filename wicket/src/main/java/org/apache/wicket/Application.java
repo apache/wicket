@@ -99,6 +99,7 @@ import org.apache.wicket.settings.def.ResourceSettings;
 import org.apache.wicket.settings.def.SecuritySettings;
 import org.apache.wicket.settings.def.SessionSettings;
 import org.apache.wicket.util.IProvider;
+import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.lang.PropertyResolver;
@@ -495,10 +496,7 @@ public abstract class Application implements UnboundListener, IEventSink
 				}
 				finally
 				{
-					if (in != null)
-					{
-						in.close();
-					}
+					IOUtils.close(in);
 				}
 			}
 		}

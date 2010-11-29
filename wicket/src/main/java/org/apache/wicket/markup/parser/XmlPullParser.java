@@ -24,11 +24,11 @@ import java.text.ParseException;
 
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.util.io.FullyBufferedReader;
+import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.XmlReader;
 import org.apache.wicket.util.parse.metapattern.parsers.TagNameParser;
 import org.apache.wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
-
 
 /**
  * A fairly shallow markup pull parser which parses a markup string of a given type of markup (for
@@ -562,10 +562,13 @@ public final class XmlPullParser implements IXmlPullParser
 		}
 		finally
 		{
-			inputStream.close();
-			if (xmlReader != null)
+			try
 			{
-				xmlReader.close();
+				inputStream.close();
+			}
+			finally
+			{
+				IOUtils.close(xmlReader);
 			}
 		}
 	}

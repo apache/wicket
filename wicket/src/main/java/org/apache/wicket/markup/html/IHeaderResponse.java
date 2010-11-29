@@ -19,6 +19,8 @@ package org.apache.wicket.markup.html;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.ResourceReference;
 
+import java.io.Closeable;
+
 /**
  * Interface that is used to render header elements (usually javascript and CSS references).
  * 
@@ -27,7 +29,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  * 
  * @author Matej Knopp
  */
-public interface IHeaderResponse
+public interface IHeaderResponse extends Closeable
 {
 	/**
 	 * Writes a javascript reference, if the specified reference hasn't been rendered yet.

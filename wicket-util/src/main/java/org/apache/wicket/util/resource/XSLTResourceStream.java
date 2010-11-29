@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.time.Time;
 
 /**
@@ -96,15 +97,8 @@ public class XSLTResourceStream extends AbstractResourceStream
 		}
 		finally
 		{
-			try
-			{
-				xmlResource.close();
-				xsltResource.close();
-			}
-			catch (IOException e)
-			{
-				// ignore
-			}
+			IOUtils.closeQuietly(xmlResource);
+			IOUtils.closeQuietly(xsltResource);
 		}
 	}
 

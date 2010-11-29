@@ -142,7 +142,7 @@ public class ZipResourceStream extends AbstractResourceStream
 			}
 			else
 			{
-				out.putNextEntry(new ZipEntry(path.toString() + f.getName()));
+				out.putNextEntry(new ZipEntry(path + f.getName()));
 
 				FileInputStream fi = new FileInputStream(f);
 				origin = new BufferedInputStream(fi, BUFFER);

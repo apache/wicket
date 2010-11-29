@@ -1551,8 +1551,15 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 					// Load the file and put it into the the inputstream
 					FileInputStream fis = new FileInputStream(uf.getFile());
-					IOUtils.copy(fis, out);
-					fis.close();
+
+					try
+					{
+						IOUtils.copy(fis, out);
+					}
+					finally
+					{
+						fis.close();
+					}
 					out.write(crlf.getBytes());
 				}
 			}

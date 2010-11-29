@@ -33,6 +33,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.io.ByteCountingOutputStream;
+import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.IObjectStreamFactory;
 import org.apache.wicket.util.io.IObjectStreamFactory.DefaultObjectStreamFactory;
 import org.apache.wicket.util.string.Strings;
@@ -258,11 +259,14 @@ public class WicketObjects
 			}
 			finally
 			{
-				if (ois != null)
+				try
 				{
-					ois.close();
+					IOUtils.close(ois);
 				}
-				in.close();
+				finally
+				{
+					in.close();
+				}
 			}
 		}
 		catch (ClassNotFoundException e)
@@ -478,11 +482,14 @@ public class WicketObjects
 			}
 			finally
 			{
-				if (oos != null)
+				try
 				{
-					oos.close();
+					IOUtils.close(oos);
 				}
-				out.close();
+				finally
+				{
+					out.close();
+				}
 			}
 			return out.toByteArray();
 		}
@@ -522,11 +529,14 @@ public class WicketObjects
 			}
 			finally
 			{
-				if (oos != null)
+				try
 				{
-					oos.close();
+					IOUtils.close(oos);
 				}
-				out.close();
+				finally
+				{
+					out.close();
+				}
 			}
 			return out.toByteArray();
 		}

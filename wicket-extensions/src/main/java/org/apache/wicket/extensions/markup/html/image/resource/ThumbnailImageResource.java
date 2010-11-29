@@ -29,6 +29,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.response.ByteArrayResponse;
+import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,7 +98,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 	/**
 	 * get resized image instance.
 	 * 
-	 * @param attributes2
+	 * @param attributes
 	 * 
 	 * @return BufferedImage
 	 */
@@ -124,16 +125,13 @@ public class ThumbnailImageResource extends DynamicImageResource
 		}
 		finally
 		{
-			if (is != null)
+			try
 			{
-				try
-				{
-					is.close();
-				}
-				catch (IOException e)
-				{
-					log.error(e.getMessage(), e);
-				}
+				IOUtils.close(is);
+			}
+			catch (IOException e)
+			{
+				log.error(e.getMessage(), e);
 			}
 		}
 

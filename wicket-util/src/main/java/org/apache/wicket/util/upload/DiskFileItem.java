@@ -30,7 +30,7 @@ import java.util.Map;
 
 import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.io.DeferredFileOutputStream;
-
+import org.apache.wicket.util.io.IOUtils;
 
 /**
  * <p>
@@ -296,17 +296,7 @@ public class DiskFileItem implements FileItem
 		}
 		finally
 		{
-			if (fis != null)
-			{
-				try
-				{
-					fis.close();
-				}
-				catch (IOException e)
-				{
-					// ignore
-				}
-			}
+			IOUtils.closeQuietly(fis);
 		}
 
 		return fileData;
@@ -389,10 +379,7 @@ public class DiskFileItem implements FileItem
 			}
 			finally
 			{
-				if (fout != null)
-				{
-					fout.close();
-				}
+				IOUtils.close(fout);
 			}
 		}
 		else
@@ -421,28 +408,8 @@ public class DiskFileItem implements FileItem
 					}
 					finally
 					{
-						if (in != null)
-						{
-							try
-							{
-								in.close();
-							}
-							catch (IOException e)
-							{
-								// ignore
-							}
-						}
-						if (out != null)
-						{
-							try
-							{
-								out.close();
-							}
-							catch (IOException e)
-							{
-								// ignore
-							}
-						}
+						IOUtils.closeQuietly(in);
+						IOUtils.closeQuietly(out);
 					}
 				}
 			}

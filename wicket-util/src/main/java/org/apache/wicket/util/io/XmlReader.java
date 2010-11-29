@@ -228,8 +228,14 @@ public final class XmlReader extends Reader
 	@Override
 	public void close() throws IOException
 	{
-		reader.close();
-		inputStream.close();
+		try
+		{
+			reader.close();
+		}
+		finally
+		{
+			inputStream.close();
+		}
 	}
 
 	/**

@@ -104,14 +104,7 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 		finally
 		{
 			IOUtils.closeQuietly(reader);
-			try
-			{
-				close();
-			}
-			catch (IOException e)
-			{
-				// ignore
-			}
+			IOUtils.closeQuietly(this);
 		}
 	}
 

@@ -26,6 +26,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.string.Strings;
 
 
@@ -94,36 +95,9 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 			}
 			finally
 			{
-				if (lineNumberReader != null)
-				{
-					try
-					{
-						lineNumberReader.close();
-					}
-					catch (Exception e)
-					{ /* Ignore */
-					}
-				}
-				if (inputStream != null)
-				{
-					try
-					{
-						inputStream.close();
-					}
-					catch (Exception e)
-					{ /* Ignore */
-					}
-				}
-				if (inputStreamReader != null)
-				{
-					try
-					{
-						inputStreamReader.close();
-					}
-					catch (Exception e)
-					{ /* Ignore */
-					}
-				}
+				IOUtils.closeQuietly(lineNumberReader);
+				IOUtils.closeQuietly(inputStream);
+				IOUtils.closeQuietly(inputStreamReader);
 			}
 		}
 
@@ -152,16 +126,13 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 		}
 		finally
 		{
-			if (lineNumberReader != null)
+			try
 			{
-				try
-				{
-					lineNumberReader.close();
-				}
-				catch (IOException e)
-				{
-					Assert.fail(e.getMessage());
-				}
+				IOUtils.close(lineNumberReader);
+			}
+			catch (IOException e)
+			{
+				Assert.fail(e.getMessage());
 			}
 		}
 

@@ -27,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.settings.IResourceSettings;
+import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.listener.IChangeListener;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
@@ -243,26 +244,8 @@ public class PropertiesFactory implements IPropertiesFactory
 		}
 		finally
 		{
-			if (in != null)
-			{
-				try
-				{
-					in.close();
-				}
-				catch (IOException ex)
-				{
-					// ignore
-				}
-			}
-
-			try
-			{
-				resourceStream.close();
-			}
-			catch (IOException ex)
-			{
-				// ignore
-			}
+			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(resourceStream);
 		}
 
 		return null;
