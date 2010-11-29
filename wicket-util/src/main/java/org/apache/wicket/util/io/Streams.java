@@ -55,21 +55,15 @@ public final class Streams
 		+ " key CDATA #REQUIRED>";
 
 	/**
-	 * Closes a closeable. Guards against null closables.
-	 * 
-	 * @param closeable
-	 *            closeable to close
-	 * @throws IOException
-	 *             when close fails
+	 * @deprecated
+	 *
+	 * @see IOUtils#close(Closeable);
 	 */
+	@Deprecated
 	public static void close(Closeable closeable) throws IOException
 	{
-		if (closeable != null)
-		{
-			closeable.close();
-		}
+		IOUtils.close(closeable);
 	}
-
 
 	/**
 	 * Writes the input stream to the output stream. Input is done without a Reader object, meaning

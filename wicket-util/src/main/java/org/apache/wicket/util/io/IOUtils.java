@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.util.io;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 
 /**
@@ -56,6 +59,8 @@ import java.io.*;
  */
 public final class IOUtils
 {
+	private static final Logger log = LoggerFactory.getLogger(IOUtils.class);
+
 	// NOTE: This class is focused on InputStream, OutputStream, Reader and
 	// Writer. Each method should take at least one of these as a parameter.
 	// NOTE: This class should not depend on any other classes
@@ -73,6 +78,20 @@ public final class IOUtils
 	}
 
 	/**
+	 * Closes a closeable. Guards against null closables.
+	 *
+	 * @param closeable
+	 *            closeable to close
+	 * @throws IOException
+	 *             when close fails
+	 */
+	public static void close(Closeable closeable) throws IOException
+	{
+		if (closeable != null)
+			closeable.close();
+	}
+
+	/**
 	 * Unconditionally close a <code>Closeable</code>.
 	 * <p>
 	 * closeables can be input or output streams, reader, writers, and much more.
@@ -85,16 +104,13 @@ public final class IOUtils
 	 */
 	public static void closeQuietly(Closeable closeable)
 	{
-		if (closeable != null)
+		try
 		{
-			try
-			{
-				closeable.close();
-			}
-			catch (Exception e)
-			{
-				// ignore
-			}
+			close(closeable);
+		}
+		catch (IOException e)
+		{
+			log.debug("closing resource failed: " + e.getMessage(), e);
 		}
 	}
 
