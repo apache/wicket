@@ -24,7 +24,7 @@ import junit.framework.TestCase;
  */
 public class ModelDetachTest extends TestCase
 {
-	class Detachable implements IDetachable
+	static class Detachable implements IDetachable
 	{
 		private static final long serialVersionUID = 1L;
 

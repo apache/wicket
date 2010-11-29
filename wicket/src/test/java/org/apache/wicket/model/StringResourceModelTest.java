@@ -232,7 +232,7 @@ public class StringResourceModelTest extends WicketTestCase
 	/**
 	 * Inner class used for testing.
 	 */
-	public class WeatherStation implements Serializable
+	public static class WeatherStation implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
 

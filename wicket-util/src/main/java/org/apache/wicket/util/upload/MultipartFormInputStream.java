@@ -785,9 +785,8 @@ public class MultipartFormInputStream
 	/**
 	 * Thrown to indicate that the input stream fails to follow the required syntax.
 	 */
-	public class MalformedStreamException extends IOException
+	public static class MalformedStreamException extends IOException
 	{
-
 		private static final long serialVersionUID = 1L;
 
 		/**
@@ -814,9 +813,8 @@ public class MultipartFormInputStream
 	/**
 	 * Thrown upon attempt of setting an invalid boundary token.
 	 */
-	public class IllegalBoundaryException extends IOException
+	public static class IllegalBoundaryException extends IOException
 	{
-
 		private static final long serialVersionUID = 1L;
 
 		/**

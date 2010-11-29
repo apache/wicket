@@ -48,7 +48,7 @@ public class MarkupCacheTest extends WicketTestCase
 		assertEquals(Markup.NO_MARKUP, markup);
 	}
 
-	private class MarkupCachingAssumingComponent extends Panel
+	private static class MarkupCachingAssumingComponent extends Panel
 		implements
 			IMarkupResourceStreamProvider
 	{

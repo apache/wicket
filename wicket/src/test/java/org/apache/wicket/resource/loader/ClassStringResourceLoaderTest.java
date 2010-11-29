@@ -51,7 +51,7 @@ public class ClassStringResourceLoaderTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public class MyValidator extends AbstractValidator
+	public static class MyValidator extends AbstractValidator
 	{
 		private static final long serialVersionUID = 1L;
 
