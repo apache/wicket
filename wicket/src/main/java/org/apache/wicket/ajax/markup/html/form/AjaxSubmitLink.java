@@ -95,6 +95,12 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 					super.onComponentTag(tag);
 				}
 			}
+
+			@Override
+			public boolean getDefaultProcessing()
+			{
+				return AjaxSubmitLink.this.getDefaultFormProcessing();
+			}
 		});
 
 	}
@@ -136,6 +142,17 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 */
 	public final void onSubmit()
 	{
+	}
+
+	/**
+	 * Final implementation of the Button's onError. AjaxSubmitLinks have their own onError which is
+	 * called.
+	 * 
+	 * @see org.apache.wicket.markup.html.form.Button#onError()
+	 */
+	public final void onError()
+	{
+
 	}
 
 	/**

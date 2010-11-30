@@ -23,18 +23,8 @@ import org.apache.wicket.Component;
  * 
  * @author Matej Knopp
  */
-public interface IFormSubmittingComponent
+public interface IFormSubmittingComponent extends IFormSubmitter
 {
-	/**
-	 * Returns whether form should be processed the default way. When false (default is true), all
-	 * validation and form updating is bypassed and the onSubmit method of that button is called
-	 * directly, and the onSubmit method of the parent form is not called. A common use for this is
-	 * to create a cancel button.
-	 * 
-	 * @return defaultFormProcessing
-	 */
-	boolean getDefaultFormProcessing();
-
 	/**
 	 * Sets the defaultFormProcessing property. When false (default is true), all validation and
 	 * form updating is bypassed and the onSubmit method of that button is called directly, and the
@@ -47,22 +37,9 @@ public interface IFormSubmittingComponent
 	Component setDefaultFormProcessing(boolean defaultFormProcessing);
 
 	/**
-	 * Returns the form this component submits.
-	 * 
-	 * @return form submitted by this component
-	 */
-	Form<?> getForm();
-
-	/**
 	 * Returns the name that is unique to this component, at least within the form.
 	 * 
 	 * @return component name
 	 */
 	String getInputName();
-
-	/**
-	 * Override this method to provide special submit handling in a multi-button form. It is called
-	 * whenever the user clicks this particular button.
-	 */
-	void onSubmit();
 }

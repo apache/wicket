@@ -83,7 +83,7 @@ public class FormHasErrorPage extends WebPage
 			}
 
 			@Override
-			public void process(IFormSubmittingComponent submittingComponent)
+			public void process(IFormSubmitter submittingComponent)
 			{
 				// set the error based on which link submitted the form
 				if (submittingComponent == submitFormComponent)

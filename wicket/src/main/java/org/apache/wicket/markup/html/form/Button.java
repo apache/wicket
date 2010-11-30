@@ -206,4 +206,12 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	public void onSubmit()
 	{
 	}
+
+	/**
+	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onError()
+	 */
+	public void onError()
+	{
+
+	}
 }

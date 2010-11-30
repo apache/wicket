@@ -17,10 +17,11 @@
 package org.apache.wicket.ajax.form;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.IFormSubmitter;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
@@ -44,6 +45,8 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 * instead always use #getForm()
 	 */
 	private Form<?> __form;
+
+	private boolean defaultProcessing = true;
 
 	/**
 	 * Constructor. This constructor can only be used when the component this behavior is attached
@@ -117,7 +120,10 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		final CharSequence url = getCallbackUrl();
 
 		AppendingStringBuffer call = new AppendingStringBuffer("wicketSubmitFormById('").append(
-			formId).append("', '").append(url).append("', ");
+			formId)
+			.append("', '")
+			.append(url)
+			.append("', ");
 
 		if (getComponent() instanceof IFormSubmittingComponent)
 		{
@@ -137,30 +143,30 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 * @see org.apache.wicket.ajax.AjaxEventBehavior#onEvent(org.apache.wicket.ajax.AjaxRequestTarget)
 	 */
 	@Override
-	protected void onEvent(AjaxRequestTarget target)
+	protected void onEvent(final AjaxRequestTarget target)
 	{
-		getForm().getRootForm().onFormSubmitted();
-		if (!getForm().isSubmitted())
-		{ // only process the form submission if the form was actually submitted -> needs to be
-			// enabled and visible
-			return;
-		}
-		if (!getForm().hasError())
+		getForm().getRootForm().onFormSubmitted(new IFormSubmitter()
 		{
-			onSubmit(target);
-		}
-		if (getForm().findParent(Page.class) != null)
-		{
-			/*
-			 * there can be cases when a form is replaced with another component in the onsubmit()
-			 * handler of this behavior. in that case form no longer has a page and so calling
-			 * .hasError on it will cause an exception, thus the check above.
-			 */
-			if (getForm().hasError())
+			public Form<?> getForm()
 			{
-				onError(target);
+				return AjaxFormSubmitBehavior.this.getForm();
 			}
-		}
+
+			public boolean getDefaultFormProcessing()
+			{
+				return AjaxFormSubmitBehavior.this.getDefaultProcessing();
+			}
+
+			public void onSubmit()
+			{
+				AjaxFormSubmitBehavior.this.onSubmit(target);
+			}
+
+			public void onError()
+			{
+				AjaxFormSubmitBehavior.this.onError(target);
+			}
+		});
 	}
 
 	/**
@@ -185,5 +191,24 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	protected CharSequence getPreconditionScript()
 	{
 		return "return Wicket.$$(this)&&Wicket.$$('" + getForm().getMarkupId() + "')";
+	}
+
+	/**
+	 * @see Button#getDefaultFormProcessing()
+	 * 
+	 * @return {@code true} for default processing
+	 */
+	public boolean getDefaultProcessing()
+	{
+		return defaultProcessing;
+	}
+
+	/**
+	 * @see Button#setDefaultFormProcessing(boolean)
+	 * @param defaultProcessing
+	 */
+	public void setDefaultProcessing(boolean defaultProcessing)
+	{
+		this.defaultProcessing = defaultProcessing;
 	}
 }

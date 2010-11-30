@@ -91,6 +91,12 @@ public abstract class AjaxFallbackButton extends Button
 			{
 				return AjaxFallbackButton.this.getAjaxCallDecorator();
 			}
+
+			@Override
+			public boolean getDefaultProcessing()
+			{
+				return AjaxFallbackButton.this.getDefaultFormProcessing();
+			}
 		});
 	}
 

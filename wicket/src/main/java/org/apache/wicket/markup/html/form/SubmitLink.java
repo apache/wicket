@@ -192,7 +192,7 @@ public class SubmitLink extends AbstractSubmitLink
 		{
 			// find the root form - the one we are really going to submit
 			Form<?> root = getForm().getRootForm();
-		 StringBuilder sb = new StringBuilder(100);
+			StringBuilder sb = new StringBuilder(100);
 			sb.append("var e=document.getElementById('");
 			sb.append(root.getHiddenFieldId());
 			sb.append("'); e.name=\'");
@@ -228,6 +228,13 @@ public class SubmitLink extends AbstractSubmitLink
 	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onSubmit()
 	 */
 	public void onSubmit()
+	{
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onError()
+	 */
+	public void onError()
 	{
 	}
 

@@ -141,6 +141,12 @@ public abstract class AjaxButton extends Button
 			{
 				return AjaxButton.this.getAjaxCallDecorator();
 			}
+
+			@Override
+			public boolean getDefaultProcessing()
+			{
+				return AjaxButton.this.getDefaultFormProcessing();
+			}
 		});
 	}
 

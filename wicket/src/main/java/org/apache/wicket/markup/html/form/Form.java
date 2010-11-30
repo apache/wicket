@@ -484,7 +484,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 * @return The component which submitted this form, or null if the processing was not triggered
 	 *         by a registered IFormSubmittingComponent
 	 */
-	public final IFormSubmittingComponent findSubmittingButton()
+	public final IFormSubmitter findSubmittingButton()
 	{
 		IFormSubmittingComponent submittingComponent = getPage().visitChildren(
 			IFormSubmittingComponent.class, new IVisitor<Component, IFormSubmittingComponent>()
@@ -749,9 +749,26 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 * 
 	 * Handles form submissions.
 	 * 
-	 * @see Form#validate()
+	 * @see #onFormSubmitted(IFormSubmitter)
 	 */
 	public final void onFormSubmitted()
+	{
+		onFormSubmitted(null);
+	}
+
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET API. DO NOT ATTEMPT TO OVERRIDE OR CALL IT.
+	 * 
+	 * Handles form submissions.
+	 * 
+	 * @param submitter
+	 *            listener that will receive form processing events, if {@code null} the form will
+	 *            attempt to locate one
+	 * 
+	 * @see Form#validate()
+	 */
+	public final void onFormSubmitted(IFormSubmitter submitter)
 	{
 		markFormsSubmitted();
 
@@ -770,14 +787,17 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 			else
 			{
 				// First, see if the processing was triggered by a Wicket IFormSubmittingComponent
-				final IFormSubmittingComponent submittingComponent = findSubmittingButton();
+				if (submitter == null)
+				{
+					submitter = findSubmittingButton();
+				}
 
 				// When processing was triggered by a Wicket IFormSubmittingComponent and that
 				// component indicates it wants to be called immediately
 				// (without processing), call IFormSubmittingComponent.onSubmit() right away.
-				if (submittingComponent != null && !submittingComponent.getDefaultFormProcessing())
+				if (submitter != null && !submitter.getDefaultFormProcessing())
 				{
-					submittingComponent.onSubmit();
+					submitter.onSubmit();
 				}
 				else
 				{
@@ -785,13 +805,13 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 					Form<?> formToProcess = this;
 
 					// find out whether it was a nested form that was submitted
-					if (submittingComponent != null)
+					if (submitter != null)
 					{
-						formToProcess = submittingComponent.getForm();
+						formToProcess = submitter.getForm();
 					}
 
 					// process the form for this request
-					formToProcess.process(submittingComponent);
+					formToProcess.process(submitter);
 				}
 			}
 		}
@@ -799,7 +819,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 		// onError
 		else if (hasError())
 		{
-			callOnError();
+			callOnError(submitter);
 		}
 	}
 
@@ -817,22 +837,51 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 *            the form has been submitted via the enter key or javascript calling
 	 *            form.onsubmit())
 	 * 
-	 * @see #delegateSubmit(IFormSubmittingComponent) for an easy way to process submitting
-	 *      component in the default manner
+	 * @see #delegateSubmit(IFormSubmitter) for an easy way to process submitting component in the
+	 *      default manner
 	 */
-	public void process(IFormSubmittingComponent submittingComponent)
+	public void process(IFormSubmitter submittingComponent)
 	{
 		// save the page in case the component is removed during submit
 		final Page page = getPage();
 
-		// process the form for this request
-		if (process())
+
+		if (!isEnabledInHierarchy() || !isVisibleInHierarchy())
 		{
-			// let clients handle further processing
+			// since process() can be called outside of the default form workflow, an additional
+			// check is needed
+
+			// FIXME throw listener exception
+			return;
+		}
+
+		// run validation
+		validate();
+
+		// If a validation error occurred
+		if (hasError())
+		{
+			// mark all children as invalid
+			markFormComponentsInvalid();
+
+			// let subclass handle error
+			callOnError(submittingComponent);
+		}
+		else
+		{
+			// mark all children as valid
+			markFormComponentsValid();
+
+			// before updating, call the interception method for clients
+			beforeUpdateFormComponentModels();
+
+			// Update model using form data
+			updateFormComponentModels();
+
+			// Form has no error
 			delegateSubmit(submittingComponent);
 		}
 
-		// WICKET-1912
 		// If the form is stateless page parameters contain all form component
 		// values. We need to remove those otherwise they get appended to action URL
 		final PageParameters parameters = page.getPageParameters();
@@ -850,59 +899,15 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	}
 
 	/**
-	 * Process the form.
-	 * <p>
-	 * See the class documentation for further details on the form processing
-	 * </p>
-	 * 
-	 * @return False if the form had an error
-	 */
-	private boolean process()
-	{
-		if (!isEnabledInHierarchy() || !isVisibleInHierarchy())
-		{
-			// since process() can be called outside of the default form workflow, an additional
-			// check is needed
-			return false;
-		}
-
-		// run validation
-		validate();
-
-		// If a validation error occurred
-		if (hasError())
-		{
-			// mark all children as invalid
-			markFormComponentsInvalid();
-
-			// let subclass handle error
-			callOnError();
-
-			// Form has an error
-			return false;
-		}
-		else
-		{
-			// mark all children as valid
-			markFormComponentsValid();
-
-			// before updating, call the interception method for clients
-			beforeUpdateFormComponentModels();
-
-			// Update model using form data
-			updateFormComponentModels();
-
-			// Form has no error
-			return true;
-		}
-	}
-
-	/**
 	 * Calls onError on this {@link Form} and any enabled and visible nested form, if the respective
 	 * {@link Form} actually has errors.
 	 */
-	private void callOnError()
+	private void callOnError(IFormSubmitter submitter)
 	{
+		if (submitter != null)
+		{
+			submitter.onError();
+		}
 		onError();
 		// call onError on nested forms
 		visitChildren(Form.class, new IVisitor<Component, Void>()
@@ -1254,15 +1259,13 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 *            triggered by something else (like a non-Wicket submit button or a javascript
 	 *            execution)
 	 */
-	protected void delegateSubmit(IFormSubmittingComponent submittingComponent)
+	protected void delegateSubmit(IFormSubmitter submittingComponent)
 	{
 		// when the given submitting component is not null, it means that it was the
 		// submitting component
-		Form<?> formToProcess = this;
 		if (submittingComponent != null)
 		{
 			// use the form which the submittingComponent has submitted for further processing
-			formToProcess = submittingComponent.getForm();
 			submittingComponent.onSubmit();
 		}
 
