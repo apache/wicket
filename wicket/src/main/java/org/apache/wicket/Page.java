@@ -1301,15 +1301,4 @@ public abstract class Page extends MarkupContainer
 			setFreezePageId(false);
 		}
 	}
-
-	/** TODO WICKET-NG is this really needed? can we remove? */
-	public static Page getPage(int id)
-	{
-		Session session = Session.get();
-		if (session == null)
-		{
-			return null;
-		}
-		return (Page)session.getPageManager().getPage(id);
-	}
 }

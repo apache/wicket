@@ -17,6 +17,7 @@
 package org.apache.wicket;
 
 import org.apache.wicket.markup.MarkupParser;
+import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.IMapperContext;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -113,7 +114,13 @@ public class DefaultMapperContext implements IMapperContext
 	 */
 	public IRequestablePage getPageInstance(final int pageId)
 	{
-		return Page.getPage(pageId);
+		IManageablePage manageablePage = Application.get().getPageManager().getPage(pageId);
+		IRequestablePage requestablePage = null;
+		if (manageablePage instanceof IRequestablePage)
+		{
+			requestablePage = (IRequestablePage)manageablePage;
+		}
+		return requestablePage;
 	}
 
 	/**
