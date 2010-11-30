@@ -63,20 +63,11 @@ public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 	 * Set the component's visibility according to the existence (or not) of feedback messages
 	 */
 	@Override
-	public void onBeforeRender()
+	public void onConfigure()
 	{
-		super.onBeforeRender();
+		super.onConfigure();
 		// Get the messages for the current page
 		setVisible(Session.get().getFeedbackMessages().hasMessage(getFeedbackMessageFilter()));
-	}
-
-	/**
-	 * @see org.apache.wicket.Component#callOnBeforeRenderIfNotVisible()
-	 */
-	@Override
-	protected boolean callOnBeforeRenderIfNotVisible()
-	{
-		return true;
 	}
 
 	/**

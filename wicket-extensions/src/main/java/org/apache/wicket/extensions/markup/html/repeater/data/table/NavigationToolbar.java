@@ -83,20 +83,11 @@ public class NavigationToolbar extends AbstractToolbar
 		return new NavigatorLabel(navigatorId, table);
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#callOnBeforeRenderIfNotVisible()
-	 */
-	@Override
-	protected boolean callOnBeforeRenderIfNotVisible()
-	{
-		return true;
-	}
-
 	/** {@inheritDoc} */
 	@Override
-	protected void onBeforeRender()
+	protected void onConfigure()
 	{
+		super.onConfigure();
 		setVisible(table.getPageCount() > 1);
-		super.onBeforeRender();
 	}
 }

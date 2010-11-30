@@ -1038,8 +1038,8 @@ public abstract class Component
 	{
 		configure();
 
-		if ((determineVisibility() || callOnBeforeRenderIfNotVisible()) &&
-			!getFlag(FLAG_RENDERING) && !getFlag(FLAG_PREPARED_FOR_RENDER))
+		if ((determineVisibility()) && !getFlag(FLAG_RENDERING) &&
+			!getFlag(FLAG_PREPARED_FOR_RENDER))
 		{
 			setRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, false);
 
