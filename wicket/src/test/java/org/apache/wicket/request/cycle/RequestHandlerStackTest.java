@@ -127,7 +127,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 
 		stack.detach();
 
-		assertTrue(testFlag1);
+		assertFalse(testFlag1);
 		assertFalse(testFlag2);
 		assertFalse(testFlag3);
 
