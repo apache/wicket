@@ -37,14 +37,15 @@ public class MicroMapTest extends TestCase
 	 */
 	public void testMicroMap()
 	{
-		MicroMap m = new MicroMap();
+		MicroMap<Object, Object> m = new MicroMap<Object, Object>();
 		m.put(FOO, BAR);
 
 		// Test .keySet();
-		Set s = m.keySet();
+		Set<?> s = m.keySet();
 		assertEquals(1, m.size());
+		assertEquals(1, s.size());
 
-		Iterator i = s.iterator();
+		Iterator<?> i = s.iterator();
 		assertTrue(i.hasNext());
 		Object key = i.next();
 		assertEquals(FOO, key);
@@ -62,10 +63,11 @@ public class MicroMapTest extends TestCase
 		// Do approx the same again with the .entrySet()
 		s = m.entrySet();
 		assertEquals(1, m.size());
+		assertEquals(1, s.size());
 
 		i = s.iterator();
 		assertTrue(i.hasNext());
-		Map.Entry entry = (Map.Entry)i.next();
+		Map.Entry<Object, Object> entry = (Map.Entry<Object, Object>)i.next();
 		assertEquals(FOO, entry.getKey());
 		assertEquals(BAR, entry.getValue());
 		assertFalse(i.hasNext());
@@ -80,8 +82,9 @@ public class MicroMapTest extends TestCase
 		}
 
 		// Do approx the same again with the .values()
-		Collection v = m.values();
+		Collection<Object> v = m.values();
 		assertEquals(1, m.size());
+		assertEquals(1, v.size());
 
 		i = v.iterator();
 		assertTrue(i.hasNext());
