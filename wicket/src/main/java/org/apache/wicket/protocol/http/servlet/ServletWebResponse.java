@@ -158,32 +158,28 @@ public class ServletWebResponse extends WebResponse
 	@Override
 	public String encodeURL(CharSequence url)
 	{
-		if (url != null)
+		Args.notNull(url, "url");
+		if (url.length() > 0 && url.charAt(0) == '?')
 		{
-			if (url.length() > 0 && url.charAt(0) == '?')
-			{
-				// there is a bug in apache tomcat 5.5 where tomcat doesn't put sessionid to url
-				// when the URL starts with '?'. So we prepend the URL with ./ and remove it
-				// afterwards (unless some container prepends session id before './' or mangles
-				// the URL otherwise
+			// there is a bug in apache tomcat 5.5 where tomcat doesn't put sessionid to url
+			// when the URL starts with '?'. So we prepend the URL with ./ and remove it
+			// afterwards (unless some container prepends session id before './' or mangles
+			// the URL otherwise
 
-				String encoded = httpServletResponse.encodeURL("./" + url.toString());
-				if (encoded.startsWith("./"))
-				{
-					return encoded.substring(2);
-				}
-				else
-				{
-					return encoded;
-				}
+			String encoded = httpServletResponse.encodeURL("./" + url.toString());
+			if (encoded.startsWith("./"))
+			{
+				return encoded.substring(2);
 			}
 			else
 			{
-				return httpServletResponse.encodeURL(url.toString());
+				return encoded;
 			}
 		}
-		// FIXME NULL? Really?
-		return httpServletResponse.encodeURL(null);
+		else
+		{
+			return httpServletResponse.encodeURL(url.toString());
+		}
 	}
 
 	private String getAbsolutePrefix()

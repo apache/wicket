@@ -1360,8 +1360,6 @@ public class BaseWicketTester
 	/**
 	 * Asserts the last rendered <code>Page</code> class.
 	 * 
-	 * FIXME explain why the code is so complicated to compare two classes, or simplify
-	 * 
 	 * @param <C>
 	 * 
 	 * @param expectedRenderedPageClass
@@ -1377,8 +1375,7 @@ public class BaseWicketTester
 		}
 		if (!page.getClass().isAssignableFrom(expectedRenderedPageClass))
 		{
-			return isEqual(Classes.simpleName(expectedRenderedPageClass),
-				Classes.simpleName(page.getClass()));
+			return Result.fail("classes not the same");
 		}
 		return Result.pass();
 	}

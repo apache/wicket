@@ -3505,8 +3505,8 @@ public abstract class Component
 	}
 
 	/**
-	 * Gets the subset of the currently coupled {@link Behavior}s that are of the provided type as
-	 * a unmodifiable list. Returns an empty list rather than null if there are no behaviors coupled
+	 * Gets the subset of the currently coupled {@link Behavior}s that are of the provided type as a
+	 * unmodifiable list. Returns an empty list rather than null if there are no behaviors coupled
 	 * to this component.
 	 * 
 	 * @param type
@@ -3702,27 +3702,6 @@ public abstract class Component
 		setFlag(FLAG_PREPARED_FOR_RENDER, true);
 		onBeforeRenderChildren();
 		setRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, true);
-	}
-
-	/**
-	 * Override this method if you want onBeforeRender to be called even when your component is not
-	 * visible. default this returns false.
-	 * 
-	 * @return boolean, if true then onBeforeRender is called even for none visible components,
-	 *         default false.
-	 * 
-	 * @see Component#onBeforeRender()
-	 * 
-	 * 
-	 * @deprecated this was only useful for controlling visibility from inside
-	 *             {@link #onBeforeRender()}, with the addition of {@link #onConfigure()} this is
-	 *             now obsolete.
-	 */
-	// TODO remove in 1.5
-	@Deprecated
-	protected boolean callOnBeforeRenderIfNotVisible()
-	{
-		return false;
 	}
 
 	/**

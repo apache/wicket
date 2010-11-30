@@ -33,9 +33,9 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.parse.metapattern.Group;
 import org.apache.wicket.util.parse.metapattern.MetaPattern;
@@ -121,11 +121,9 @@ public final class LocalizedImageResource implements IClusterable
 		private static final Group specification = new Group(MetaPattern.ANYTHING_NON_EMPTY);
 
 		/** Meta pattern. */
-		private static final MetaPattern pattern = new MetaPattern(
-			factoryName,
-			MetaPattern.COLON,
-			new OptionalMetaPattern(new MetaPattern[] { imageReferenceName }),
-			MetaPattern.COLON, specification);
+		private static final MetaPattern pattern = new MetaPattern(factoryName, MetaPattern.COLON,
+			new OptionalMetaPattern(new MetaPattern[] { imageReferenceName }), MetaPattern.COLON,
+			specification);
 
 		/**
 		 * Construct.
@@ -296,9 +294,6 @@ public final class LocalizedImageResource implements IClusterable
 			resource = (IResource)modelObject;
 		}
 
-		// FIXME NG
-		// Not yet supported
-
 		// Need to load image resource for this component?
 		if (resource == null && resourceReference == null)
 		{
@@ -342,8 +337,11 @@ public final class LocalizedImageResource implements IClusterable
 		}
 
 		// Set the SRC attribute to point to the component or shared resource
-		tag.put("src", RequestCycle.get().getOriginalResponse().encodeURL(
-			Strings.replaceAll(url, "&", "&amp;")));
+		tag.put(
+			"src",
+			RequestCycle.get()
+				.getOriginalResponse()
+				.encodeURL(Strings.replaceAll(url, "&", "&amp;")));
 	}
 
 	/**

@@ -773,33 +773,6 @@ public abstract class Session implements IClusterable, IEventSink
 		}
 	}
 
-	// TODO remove after deprecation release
-
-	/**
-	 * INTERNAL API. The request cycle when detached will call this.
-	 * 
-	 * FIXME javadoc - does what?
-	 */
-	final void requestDetached()
-	{
-		// If state is dirty
-		if (dirty)
-		{
-			// State is no longer dirty
-			dirty = false;
-
-			// Set attribute.
-			setAttribute(SESSION_ATTRIBUTE_NAME, this);
-		}
-		else
-		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("update: Session not dirty.");
-			}
-		}
-	}
-
 	/**
 	 * Retrieves the next available session-unique value
 	 * 

@@ -75,8 +75,6 @@ public class RedirectRequestHandler implements IRequestHandler
 	}
 
 	/**
-	 * FIXME javadoc - what's special about this implementation?
-	 * 
 	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
 	 */
 	public void respond(IRequestCycle requestCycle)

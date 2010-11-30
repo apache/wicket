@@ -32,8 +32,8 @@ import org.apache.wicket.util.time.Time;
  * to the XSL stylesheet.
  * 
  * <p>
- * FIXME experimental feature, does not implement any kind of caching, use with care, running an XSL
- * transformation for every request is very expensive! Please have a look at
+ * NOTE: this is an experimental feature which does not implement any kind of caching, use with
+ * care, running an XSL transformation for every request is very expensive! Please have a look at
  * {@link ZipResourceStream} for an in-depth explanation of what needs to be done with respect to
  * caching.
  * </p>
