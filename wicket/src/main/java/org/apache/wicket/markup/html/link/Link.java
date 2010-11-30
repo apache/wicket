@@ -350,11 +350,6 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 		// Default handling for tag
 		super.onComponentTag(tag);
 
-		if (popupSettings != null)
-		{
-			// TODO (NG): Do this properly
-			// RequestCycle.get().setUrlForNewWindowEncoding();
-		}
 		// Set href to link to this link's linkClicked method
 		CharSequence url = getURL();
 
