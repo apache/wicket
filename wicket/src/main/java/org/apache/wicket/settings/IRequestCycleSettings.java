@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.response.filter.IResponseFilter;
 import org.apache.wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
 import org.apache.wicket.util.time.Duration;
@@ -62,12 +61,7 @@ import org.apache.wicket.util.time.Duration;
  * </ul>
  * </li>
  * </ul>
- * Note that this parameter sets the default behavior, but that you can manually set whether any
- * redirecting is done by calling method RequestCycle.setRedirect. Setting the redirect flag when
- * the application is configured to use ONE_PASS_RENDER, will result in a redirect of type
- * REDIRECT_TO_RENDER. When the application is configured to use REDIRECT_TO_RENDER or
- * REDIRECT_TO_BUFFER, setting the redirect flag to false, will result in that request begin
- * rendered and streamed in one pass.
+ * 
  * <p>
  * More documentation is available about each setting in the setter method for the property.
  * 
@@ -81,9 +75,7 @@ public interface IRequestCycleSettings
 	public enum RenderStrategy {
 		/**
 		 * All logical parts of a request (the action and render part) are handled within the same
-		 * request. To enable a client side redirect for a request, users can set the 'redirect'
-		 * property of {@link RequestCycle}to true (getRequestCycle.setRedirect(true)), after which
-		 * the behavior will be like RenderStragegy 'REDIRECT_TO_RENDER'.
+		 * request.
 		 * <p>
 		 * This strategy is more efficient than the 'REDIRECT_TO_RENDER' strategy, and doesn't have
 		 * some of the potential problems of it, it also does not solve the double submit problem.
@@ -106,9 +98,7 @@ public interface IRequestCycleSettings
 		 * construction of a bookmarkable page or the execution of a IRequestListener handler) is
 		 * handled by a separate request by issuing a redirect request to the browser. This is
 		 * commonly known as the 'redirect after submit' pattern, though in our case, we use it for
-		 * GET and POST requests instead of just the POST requests. To cancel the client side
-		 * redirect for a request, users can set the 'redirect' property of {@link RequestCycle}to
-		 * false (getRequestCycle.setRedirect(false)).
+		 * GET and POST requests instead of just the POST requests.
 		 * <p>
 		 * This pattern solves the 'refresh' problem. While it is a common feature of browsers to
 		 * refresh/ reload a web page, this results in problems in many dynamic web applications.
@@ -252,12 +242,6 @@ public interface IRequestCycleSettings
 	 * strategy, as it shields you from the double submit problem, while being more efficient and
 	 * less error prone regarding to detachable models.</li>
 	 * </ul>
-	 * Note that this parameter sets the default behavior, but that you can manually set whether any
-	 * redirecting is done by calling method RequestCycle.setRedirect. Setting the redirect flag
-	 * when the application is configured to use ONE_PASS_RENDER, will result in a redirect of type
-	 * REDIRECT_TO_RENDER. When the application is configured to use REDIRECT_TO_RENDER or
-	 * REDIRECT_TO_BUFFER, setting the redirect flag to false, will result in that request begin
-	 * rendered and streamed in one pass.
 	 * 
 	 * @param renderStrategy
 	 *            the render strategy that should be used by default.
