@@ -40,9 +40,12 @@ public final class Streams
 		+ " key CDATA #REQUIRED>";
 
 	/**
-	 * @deprecated
 	 * 
-	 * @see IOUtils#close(Closeable);
+	 * @param closeable
+	 * 
+	 * @deprecated
+	 * @see IOUtils#close(Closeable)
+	 * @throws IOException
 	 */
 	@Deprecated
 	public static void close(Closeable closeable) throws IOException
