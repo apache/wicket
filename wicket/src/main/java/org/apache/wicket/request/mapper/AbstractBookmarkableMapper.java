@@ -129,7 +129,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	 * Indicates whether hybrid {@link RenderPageRequestHandler} URL for page will be generated only
 	 * if page has been created with bookmarkable URL.
 	 * <p>
-	 * Generic bookmarkable encoders this method should return <code>true</code>. For explicit
+	 * For generic bookmarkable encoders this method should return <code>true</code>. For explicit
 	 * (mounted) encoders this method should return <code>false</code>
 	 * 
 	 * @return <code>true</code> if hybrid URL requires page created bookmarkable,
