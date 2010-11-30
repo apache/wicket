@@ -55,6 +55,7 @@ public class FileUpload implements IClusterable
 	 */
 	public FileUpload(final FileItem item)
 	{
+		Args.notNull(item, "item");
 		this.item = item;
 	}
 
@@ -217,7 +218,7 @@ public class FileUpload implements IClusterable
 	 */
 	public void writeTo(final File file) throws IOException
 	{
-		writeTo(file, 4096);
+		item.write(file);
 	}
 
 	/**

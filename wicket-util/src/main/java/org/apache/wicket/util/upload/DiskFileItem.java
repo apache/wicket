@@ -31,6 +31,8 @@ import java.util.Map;
 import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.io.DeferredFileOutputStream;
 import org.apache.wicket.util.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -52,7 +54,7 @@ import org.apache.wicket.util.io.IOUtils;
  */
 public class DiskFileItem implements FileItem
 {
-
+	private static final Logger log = LoggerFactory.getLogger(DiskFileItem.class);
 	private static final long serialVersionUID = 1L;
 
 	// ----------------------------------------------------- Manifest constants
@@ -126,7 +128,7 @@ public class DiskFileItem implements FileItem
 	/**
 	 * Output stream for this item.
 	 */
-	private DeferredFileOutputStream dfos;
+	private transient DeferredFileOutputStream dfos;
 
 
 	// ----------------------------------------------------------- Constructors
@@ -367,7 +369,7 @@ public class DiskFileItem implements FileItem
 	 * @exception Exception
 	 *                if an error occurs.
 	 */
-	public void write(File file) throws Exception
+	public void write(File file) throws IOException
 	{
 		if (isInMemory())
 		{
@@ -400,7 +402,7 @@ public class DiskFileItem implements FileItem
 						in = new BufferedInputStream(new FileInputStream(outputFile));
 						out = new BufferedOutputStream(new FileOutputStream(file));
 						byte[] bytes = new byte[WRITE_BUFFER_SIZE];
-						int s = 0;
+						int s;
 						while ((s = in.read(bytes)) != -1)
 						{
 							out.write(bytes, 0, s);
@@ -436,7 +438,8 @@ public class DiskFileItem implements FileItem
 		File outputFile = getStoreLocation();
 		if (outputFile != null && outputFile.exists())
 		{
-			outputFile.delete();
+			if(outputFile.delete())
+				log.debug("failed to delete file: " + outputFile.getAbsolutePath());
 		}
 	}
 
@@ -547,13 +550,16 @@ public class DiskFileItem implements FileItem
 	 * Removes the file contents from the temporary storage.
 	 */
 	@Override
-	protected void finalize()
+	protected void finalize() throws Throwable
 	{
+		super.finalize(); // currently empty but there for safer refactoring
+
 		File outputFile = dfos.getFile();
 
 		if (outputFile != null && outputFile.exists())
 		{
-			outputFile.delete();
+			if(outputFile.delete() == false)
+				log.debug("failed to delete file: " + outputFile.getAbsolutePath());
 		}
 	}
 
@@ -569,12 +575,12 @@ public class DiskFileItem implements FileItem
 	protected File getTempFile()
 	{
 		File tempDir = repository;
+
 		if (tempDir == null)
 		{
-			String systemTmp = null;
 			try
 			{
-				systemTmp = System.getProperty("java.io.tmpdir");
+				tempDir = new File(System.getProperty("java.io.tmpdir"));
 			}
 			catch (SecurityException e)
 			{
@@ -582,7 +588,6 @@ public class DiskFileItem implements FileItem
 					+ " for the current security settings. The repository location needs to be"
 					+ " set manually, or upgrade permissions to allow reading the tmpdir property.");
 			}
-			tempDir = new File(systemTmp);
 		}
 
 		String fileName = "upload_" + getUniqueId() + ".tmp";

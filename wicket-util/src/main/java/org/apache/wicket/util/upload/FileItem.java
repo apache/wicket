@@ -153,7 +153,7 @@ public interface FileItem extends IClusterable
 	 * @exception Exception
 	 *                if an error occurs.
 	 */
-	void write(File file) throws Exception;
+	void write(File file) throws IOException;
 
 
 	/**
