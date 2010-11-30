@@ -147,17 +147,15 @@ public class PropertyModelTest extends WicketTestCase
 	/**
 	 * Tests setting a value on a null, final property using a {@link PropertyModel}. This test
 	 * should pass when run using JDK 1.5 or newer.
-	 * 
-	 * TODO/FIXME enable test when Wicket is JDK 1.5 based.
 	 */
-// public void testSetWithNullPathFinalJdk15()
-// {
-// Person person = new Person();
-// PropertyModel model = new PropertyModel(person, "finalAddress.street");
-//
-// model.setObject("foo");
-// assertNotNull("finalAddress", person.finalAddress);
-// assertTrue(person.finalAddress instanceof ConcreteAddress);
-// assertEquals("foo", person.finalAddress.street);
-// }
+	public void testSetWithNullPathFinalJdk15()
+	{
+		Person person = new Person();
+		PropertyModel<String> model = new PropertyModel<String>(person, "finalAddress.street");
+
+		model.setObject("foo");
+		assertNotNull("finalAddress", person.finalAddress);
+		assertTrue(person.finalAddress instanceof ConcreteAddress);
+		assertEquals("foo", person.finalAddress.street);
+	}
 }
