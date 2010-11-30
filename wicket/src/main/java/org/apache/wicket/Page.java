@@ -262,17 +262,7 @@ public abstract class Page extends MarkupContainer
 	 */
 	protected Page(final PageParameters parameters)
 	{
-		super(null);
-
-		if (parameters == null)
-		{
-			pageParameters = new PageParameters();
-		}
-		else
-		{
-			pageParameters = parameters;
-		}
-		init();
+		this(parameters, null);
 	}
 
 	/**
@@ -284,6 +274,7 @@ public abstract class Page extends MarkupContainer
 	private Page(final PageParameters parameters, IModel<?> model)
 	{
 		super(null, model);
+
 		if (parameters == null)
 		{ // TODO WICKET-NG is this necessary or can we keep the field as null to save space?
 			pageParameters = new PageParameters();
