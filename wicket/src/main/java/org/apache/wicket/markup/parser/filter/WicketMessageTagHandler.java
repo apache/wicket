@@ -21,8 +21,7 @@ import java.text.ParseException;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.behavior.AbstractBehavior;
-import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupStream;
@@ -57,7 +56,7 @@ public final class WicketMessageTagHandler extends BaseMarkupFilter implements I
 	public final static String WICKET_MESSAGE_CONTAINER_ID = "_message_attr_";
 
 	/** singleton instance of {@link AttributeLocalizer} */
-	public static final IBehavior ATTRIBUTE_LOCALIZER = new AttributeLocalizer();
+	public static final Behavior ATTRIBUTE_LOCALIZER = new AttributeLocalizer();
 
 	/**
 	 * Construct.
@@ -104,7 +103,7 @@ public final class WicketMessageTagHandler extends BaseMarkupFilter implements I
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
-	public static class AttributeLocalizer extends AbstractBehavior
+	public static class AttributeLocalizer extends Behavior
 	{
 		private static final long serialVersionUID = 1L;
 

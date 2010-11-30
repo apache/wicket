@@ -18,6 +18,7 @@ package org.apache.wicket.behavior;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * A lightweight version of the attribute modifier. This is convenient for simpler situations where
@@ -25,7 +26,7 @@ import org.apache.wicket.markup.ComponentTag;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class SimpleAttributeModifier extends AbstractBehavior
+public class SimpleAttributeModifier extends Behavior
 {
 	private static final long serialVersionUID = 1L;
 
@@ -45,14 +46,8 @@ public class SimpleAttributeModifier extends AbstractBehavior
 	 */
 	public SimpleAttributeModifier(final String attribute, final CharSequence value)
 	{
-		if (attribute == null)
-		{
-			throw new IllegalArgumentException("Argument [attr] cannot be null");
-		}
-		if (value == null)
-		{
-			throw new IllegalArgumentException("Argument [value] cannot be null");
-		}
+		Args.notNull(attribute, "attribute");
+		Args.notNull(value, "value");
 		this.attribute = attribute;
 		this.value = value;
 	}

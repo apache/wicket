@@ -22,7 +22,7 @@ import javax.swing.tree.TreeNode;
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.extensions.markup.html.tree.DefaultAbstractTree;
 import org.apache.wicket.extensions.markup.html.tree.table.ColumnLocation.Alignment;
 import org.apache.wicket.markup.ComponentTag;
@@ -365,7 +365,7 @@ public class TreeTable extends DefaultAbstractTree
 		// do distinguish between selected and unselected rows we add an
 		// behavior
 		// that modifies row css class.
-		item.add(new AbstractBehavior()
+		item.add(new Behavior()
 		{
 			private static final long serialVersionUID = 1L;
 

@@ -18,7 +18,7 @@ package org.apache.wicket.request.handler;
 
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -195,7 +195,7 @@ public class ListenerInterfaceRequestHandler
 		{
 			try
 			{
-				IBehavior behavior = getComponent().getBehaviorById(behaviorId);
+				Behavior behavior = getComponent().getBehaviorById(behaviorId);
 				listenerInterface.invoke(getComponent(), behavior);
 			}
 			catch (IndexOutOfBoundsException e)

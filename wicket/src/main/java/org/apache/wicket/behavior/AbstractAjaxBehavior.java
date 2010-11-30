@@ -19,7 +19,6 @@ package org.apache.wicket.behavior;
 import org.apache.wicket.Component;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.request.Response;
 
 /**
  * Abstract class for handling Ajax roundtrips. This class serves as a base for javascript specific
@@ -29,7 +28,7 @@ import org.apache.wicket.request.Response;
  * @author Ralf Ebert
  * @author Igor Vaynberg
  */
-public abstract class AbstractAjaxBehavior extends AbstractBehavior implements IBehaviorListener
+public abstract class AbstractAjaxBehavior extends Behavior implements IBehaviorListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -91,7 +90,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior implements I
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.IBehavior#onComponentTag(org.apache.wicket.Component,
+	 * @see org.apache.wicket.behavior.Behavior#onComponentTag(org.apache.wicket.Component,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override
@@ -101,10 +100,10 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior implements I
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.AbstractBehavior#onRendered(org.apache.wicket.Component)
+	 * @see org.apache.wicket.behavior.AbstractBehavior#afterRender(org.apache.wicket.Component)
 	 */
 	@Override
-	public final void onRendered(final Component hostComponent)
+	public final void afterRender(final Component hostComponent)
 	{
 		onComponentRendered();
 	}
@@ -153,33 +152,5 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior implements I
 	public boolean getStatelessHint(Component component)
 	{
 		return false;
-	}
-
-	// TODO the next three methods will be removed with next commit. Here as
-	// final to help with refactoring
-
-	/**
-	 * 
-	 * @return unique implementation id
-	 */
-	protected final String getImplementationId()
-	{
-		return "foo";
-	}
-
-	/**
-	 * 
-	 * @param response
-	 */
-	protected final void onRenderHeadContribution(final Response response)
-	{
-	}
-
-	/**
-	 * 
-	 * @param response
-	 */
-	protected final void onRenderHeadInitContribution(final Response response)
-	{
 	}
 }

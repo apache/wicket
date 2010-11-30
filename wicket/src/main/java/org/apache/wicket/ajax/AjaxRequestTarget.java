@@ -32,7 +32,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
-import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.internal.HeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -715,7 +715,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	private String getAjaxRegionMarkupId(Component component)
 	{
 		String markupId = null;
-		for (IBehavior behavior : component.getBehaviors())
+		for (Behavior behavior : component.getBehaviors())
 		{
 			if (behavior instanceof IAjaxRegionMarkupIdProvider)
 			{

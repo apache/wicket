@@ -21,7 +21,7 @@ import javax.swing.tree.TreeNode;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -109,7 +109,7 @@ public class Tree extends DefaultAbstractTree
 		// do distinguish between selected and unselected rows we add an
 		// behavior
 		// that modifies row css class.
-		item.add(new AbstractBehavior()
+		item.add(new Behavior()
 		{
 			private static final long serialVersionUID = 1L;
 

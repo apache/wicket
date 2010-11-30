@@ -18,7 +18,7 @@ package org.apache.wicket.markup.renderStrategy;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -58,7 +58,7 @@ public class SimplePage2 extends WebPage
 	{
 		MarkupContainer container = new WebMarkupContainer(id);
 		parent.add(container);
-		container.add(new AbstractBehavior()
+		container.add(new Behavior()
 		{
 			@Override
 			public void renderHead(Component component, IHeaderResponse response)

@@ -18,7 +18,7 @@ package org.apache.wicket.validation;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
-import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
@@ -30,7 +30,7 @@ import org.apache.wicket.markup.html.form.validation.IFormValidator;
  * Implementation note: currently we keep this case simple, stupid, and non-generic. In future
  * versions we may revisit this and support removal events (<i>IF</i> removal of validators is ever
  * allowed, which justifies its own discussion). Also, we may look at whether this is a common event
- * to support for {@link IBehavior}s as well. This raises additional questions that need to be
+ * to support for {@link Behavior}s as well. This raises additional questions that need to be
  * answered, hence we'll start by supporting just the use case when validators are added to forms or
  * form components.
  * 

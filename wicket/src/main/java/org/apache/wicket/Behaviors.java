@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.behavior.InvalidBehaviorIdException;
 import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.util.lang.Args;
@@ -40,14 +40,14 @@ final class Behaviors implements IDetachable
 		this.component = component;
 	}
 
-	public void add(IBehavior... behaviors)
+	public void add(Behavior... behaviors)
 	{
 		if (behaviors == null)
 		{
 			throw new IllegalArgumentException("Argument may not be null");
 		}
 
-		for (IBehavior behavior : behaviors)
+		for (Behavior behavior : behaviors)
 		{
 			if (behavior == null)
 			{
@@ -66,13 +66,13 @@ final class Behaviors implements IDetachable
 		}
 	}
 
-	private void internalAdd(final IBehavior behavior)
+	private void internalAdd(final Behavior behavior)
 	{
 		component.data_add(behavior);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <M extends IBehavior> List<M> getBehaviors(Class<M> type)
+	public <M extends Behavior> List<M> getBehaviors(Class<M> type)
 	{
 		final int len = component.data_length();
 		final int start = component.data_start();
@@ -85,7 +85,7 @@ final class Behaviors implements IDetachable
 		for (int i = component.data_start(); i < len; i++)
 		{
 			Object obj = component.data_get(i);
-			if (obj != null && obj instanceof IBehavior)
+			if (obj != null && obj instanceof Behavior)
 			{
 				if (type == null || type.isAssignableFrom(obj.getClass()))
 				{
@@ -97,7 +97,7 @@ final class Behaviors implements IDetachable
 	}
 
 
-	public void remove(IBehavior behavior)
+	public void remove(Behavior behavior)
 	{
 		if (behavior == null)
 		{
@@ -134,9 +134,9 @@ final class Behaviors implements IDetachable
 		for (int i = component.data_start(); i < len; i++)
 		{
 			Object obj = component.data_get(i);
-			if (obj != null && obj instanceof IBehavior)
+			if (obj != null && obj instanceof Behavior)
 			{
-				final IBehavior behavior = (IBehavior)obj;
+				final Behavior behavior = (Behavior)obj;
 
 				behavior.detach(component);
 
@@ -148,7 +148,7 @@ final class Behaviors implements IDetachable
 		}
 	}
 
-	private boolean internalRemove(final IBehavior behavior)
+	private boolean internalRemove(final Behavior behavior)
 	{
 		final int len = component.data_length();
 		for (int i = component.data_start(); i < len; i++)
@@ -160,7 +160,7 @@ final class Behaviors implements IDetachable
 				behavior.unbind(component);
 
 				// remove behavior from behavior-ids
-				ArrayList<IBehavior> ids = getBehaviorsIdList(false);
+				ArrayList<Behavior> ids = getBehaviorsIdList(false);
 				if (ids != null)
 				{
 					int idx = ids.indexOf(behavior);
@@ -219,7 +219,7 @@ final class Behaviors implements IDetachable
 		return null;
 	}
 
-	private static class BehaviorIdList extends ArrayList<IBehavior>
+	private static class BehaviorIdList extends ArrayList<Behavior>
 	{
 		public BehaviorIdList()
 		{
@@ -228,7 +228,7 @@ final class Behaviors implements IDetachable
 	}
 
 	/** {@inheritDoc} */
-	public final int getBehaviorId(IBehavior behavior)
+	public final int getBehaviorId(Behavior behavior)
 	{
 		Args.notNull(behavior, "behavior");
 
@@ -248,7 +248,7 @@ final class Behaviors implements IDetachable
 					behavior + ", Component: " + this);
 		}
 
-		ArrayList<IBehavior> ids = getBehaviorsIdList(true);
+		ArrayList<Behavior> ids = getBehaviorsIdList(true);
 
 		int id = ids.indexOf(behavior);
 
@@ -277,11 +277,11 @@ final class Behaviors implements IDetachable
 		return id;
 	}
 
-	public final IBehavior getBehaviorById(int id)
+	public final Behavior getBehaviorById(int id)
 	{
-		IBehavior behavior = null;
+		Behavior behavior = null;
 
-		ArrayList<IBehavior> ids = getBehaviorsIdList(false);
+		ArrayList<Behavior> ids = getBehaviorsIdList(false);
 		if (ids != null)
 		{
 			if (id >= 0 && id < ids.size())

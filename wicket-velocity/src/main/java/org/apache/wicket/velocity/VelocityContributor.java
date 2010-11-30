@@ -23,7 +23,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.IModel;
@@ -35,7 +35,7 @@ import org.apache.wicket.util.string.Strings;
  * velocity.properties. If you do not have a velocity.properties for your app, it will default to a
  * directory "templates" in the root of your app.
  */
-public class VelocityContributor extends AbstractBehavior
+public class VelocityContributor extends Behavior
 {
 	private static final long serialVersionUID = 1L;
 

@@ -16,7 +16,7 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.behavior.IBehaviorListener;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
@@ -94,7 +94,7 @@ public class ComponentWithLazyModelCreationTest extends WicketTestCase
 		}
 	}
 
-	private static class TestCallbackBehavior extends AbstractBehavior implements IBehaviorListener
+	private static class TestCallbackBehavior extends Behavior implements IBehaviorListener
 	{
 		private boolean requested;
 		// simulating the callback URL generated for component aware behaviors

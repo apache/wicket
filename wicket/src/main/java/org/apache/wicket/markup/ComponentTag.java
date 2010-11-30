@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.XmlTag.Type;
 import org.apache.wicket.markup.parser.filter.HtmlHandler;
@@ -95,7 +95,7 @@ public class ComponentTag extends MarkupElement
 	private boolean hasNoCloseTag = false;
 
 	/** added behaviors */
-	private List<IBehavior> behaviors;
+	private List<Behavior> behaviors;
 
 	/** Filters and Handlers may add their own attributes to the tag */
 	private Map<String, Object> userData;
@@ -146,7 +146,7 @@ public class ComponentTag extends MarkupElement
 	 * 
 	 * @param behavior
 	 */
-	public final void addBehavior(final IBehavior behavior)
+	public final void addBehavior(final Behavior behavior)
 	{
 		if (behavior == null)
 		{
@@ -155,7 +155,7 @@ public class ComponentTag extends MarkupElement
 
 		if (behaviors == null)
 		{
-			behaviors = new ArrayList<IBehavior>();
+			behaviors = new ArrayList<Behavior>();
 		}
 		behaviors.add(behavior);
 	}
@@ -172,11 +172,11 @@ public class ComponentTag extends MarkupElement
 	 * @return read only iterator over added behaviors
 	 * @TODO change to return unmodifiable list which will never be null. See Component.getBehavior
 	 */
-	public final Iterator<? extends IBehavior> getBehaviors()
+	public final Iterator<? extends Behavior> getBehaviors()
 	{
 		if (behaviors == null)
 		{
-			List<IBehavior> lst = Collections.emptyList();
+			List<Behavior> lst = Collections.emptyList();
 			return lst.iterator();
 		}
 
@@ -438,7 +438,7 @@ public class ComponentTag extends MarkupElement
 		}
 		if (behaviors != null)
 		{
-			dest.behaviors = new ArrayList<IBehavior>(behaviors.size());
+			dest.behaviors = new ArrayList<Behavior>(behaviors.size());
 			dest.behaviors.addAll(behaviors);
 		}
 	}

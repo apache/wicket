@@ -19,7 +19,7 @@ package org.apache.wicket.versioning;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -135,7 +135,7 @@ public class VersioningTestPage extends WebPage
 			@Override
 			public void onClick()
 			{
-				targetComponent.add(new AbstractBehavior()
+				targetComponent.add(new Behavior()
 				{
 
 					/**
@@ -165,7 +165,7 @@ public class VersioningTestPage extends WebPage
 			@Override
 			public void onClick()
 			{
-				targetComponent.add(new AbstractBehavior()
+				targetComponent.add(new Behavior()
 				{
 
 					/**

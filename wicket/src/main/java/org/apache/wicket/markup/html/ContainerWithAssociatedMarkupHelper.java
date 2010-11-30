@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.markup.html;
 
+import org.apache.wicket.IClusterable;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
@@ -35,7 +35,7 @@ import org.apache.wicket.util.lang.Classes;
  * 
  * @author Juergen Donnerstag
  */
-public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
+public class ContainerWithAssociatedMarkupHelper implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

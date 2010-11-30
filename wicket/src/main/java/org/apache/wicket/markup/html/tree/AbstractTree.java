@@ -33,7 +33,7 @@ import javax.swing.tree.TreeModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -237,8 +237,8 @@ public abstract class AbstractTree extends Panel
 							item.onRender();
 
 							// go through the behaviors and invoke IBehavior.afterRender
-							List<? extends IBehavior> behaviors = item.getBehaviors();
-							for (IBehavior behavior : behaviors)
+							List<? extends Behavior> behaviors = item.getBehaviors();
+							for (Behavior behavior : behaviors)
 							{
 								behavior.afterRender(item);
 							}

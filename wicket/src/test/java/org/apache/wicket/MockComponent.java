@@ -16,7 +16,7 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.util.string.Strings;
@@ -143,12 +143,12 @@ public class MockComponent implements IRequestableComponent
 		return false;
 	}
 
-	public int getBehaviorId(IBehavior behavior)
+	public int getBehaviorId(Behavior behavior)
 	{
 		throw new IllegalArgumentException();
 	}
 
-	public IBehavior getBehaviorById(int id)
+	public Behavior getBehaviorById(int id)
 	{
 		return null;
 	}

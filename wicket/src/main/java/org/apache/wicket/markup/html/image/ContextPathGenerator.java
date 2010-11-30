@@ -17,7 +17,7 @@
 package org.apache.wicket.markup.html.image;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -31,7 +31,7 @@ import org.apache.wicket.util.string.UrlUtils;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class ContextPathGenerator extends AbstractBehavior
+public class ContextPathGenerator extends Behavior
 {
 	private static final long serialVersionUID = 1L;
 

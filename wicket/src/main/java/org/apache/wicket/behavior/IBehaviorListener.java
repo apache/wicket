@@ -20,7 +20,7 @@ import org.apache.wicket.IRequestListener;
 import org.apache.wicket.RequestListenerInterface;
 
 /**
- * Listens for requests to behaviors. When {@link org.apache.wicket.behavior.IBehavior}s are
+ * Listens for requests to behaviors. When {@link org.apache.wicket.behavior.Behavior}s are
  * 'enriched' with this interface, they can receive requests themselves. You can use this for
  * example to implement AJAX behavior, though you'll probably want to extend from
  * {@link org.apache.wicket.behavior.AbstractAjaxBehavior} directly instead in that case.

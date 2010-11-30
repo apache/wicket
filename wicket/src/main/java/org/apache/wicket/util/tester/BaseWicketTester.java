@@ -56,7 +56,7 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
-import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
@@ -1608,7 +1608,7 @@ public class BaseWicketTester
 				// get the AbstractAjaxBehaviour which is responsible for
 				// getting the contents of the lazy panel
 				List<AbstractAjaxTimerBehavior> behaviors = component.getBehaviors(AbstractAjaxTimerBehavior.class);
-				for (IBehavior b : behaviors)
+				for (Behavior b : behaviors)
 				{
 					checkUsability(component);
 

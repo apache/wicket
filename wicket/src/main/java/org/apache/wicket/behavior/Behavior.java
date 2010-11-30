@@ -29,16 +29,8 @@ import org.apache.wicket.markup.html.IHeaderResponse;
  * can have their own models as well, and they are notified when these are to be detached by the
  * component.
  * <p>
- * It is recommended that you extend from {@link org.apache.wicket.behavior.AbstractBehavior}
- * instead of directly implementing this interface.
- * </p>
- * 
- * <p>
- * Note that behavors are only called during render. They are not the same as events like link
- * listeners etc.
- * </p>
- * <p>
  * You also cannot modify a components model with a behavor.
+ * </p>
  * 
  * @see org.apache.wicket.behavior.IBehaviorListener
  * @see org.apache.wicket.markup.html.IHeaderContributor
@@ -49,15 +41,19 @@ import org.apache.wicket.markup.html.IHeaderResponse;
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
  */
-public interface IBehavior extends IClusterable
+public abstract class Behavior implements IClusterable
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Called when a component is about to render.
 	 * 
 	 * @param component
 	 *            the component that has this behavior coupled
 	 */
-	void beforeRender(Component component);
+	public void beforeRender(Component component)
+	{
+	};
 
 	/**
 	 * Called when a component that has this behavior coupled was rendered.
@@ -65,7 +61,9 @@ public interface IBehavior extends IClusterable
 	 * @param component
 	 *            the component that has this behavior coupled
 	 */
-	void afterRender(Component component);
+	public void afterRender(Component component)
+	{
+	};
 
 	/**
 	 * Bind this handler to the given component. This method is called by the host component
@@ -78,7 +76,9 @@ public interface IBehavior extends IClusterable
 	 * @param component
 	 *            the component to bind to
 	 */
-	void bind(Component component);
+	public void bind(Component component)
+	{
+	};
 
 	/**
 	 * Notifies the behavior it is removed from the specified component
@@ -86,7 +86,9 @@ public interface IBehavior extends IClusterable
 	 * @param component
 	 *            the component this behavior is unbound from
 	 */
-	void unbind(Component component);
+	public void unbind(Component component)
+	{
+	};
 
 	/**
 	 * Allows the behavior to detach any state it has attached during request processing.
@@ -94,7 +96,9 @@ public interface IBehavior extends IClusterable
 	 * @param component
 	 *            the component that initiates the detachment of this behavior
 	 */
-	void detach(Component component);
+	public void detach(Component component)
+	{
+	};
 
 	/**
 	 * In case an unexpected exception happened anywhere between onComponentTag() and rendered(),
@@ -107,7 +111,9 @@ public interface IBehavior extends IClusterable
 	 * @param exception
 	 *            the unexpected exception
 	 */
-	void onException(Component component, RuntimeException exception);
+	public void onException(Component component, RuntimeException exception)
+	{
+	};
 
 	/**
 	 * This method returns false if the behavior generates a callback url (for example ajax
@@ -118,7 +124,10 @@ public interface IBehavior extends IClusterable
 	 * 
 	 * @return boolean true or false.
 	 */
-	boolean getStatelessHint(Component component);
+	public boolean getStatelessHint(Component component)
+	{
+		return true;
+	}
 
 	/**
 	 * Called when a components is rendering and wants to render this behavior. If false is returned
@@ -129,7 +138,10 @@ public interface IBehavior extends IClusterable
 	 * 
 	 * @return true if this behavior must be executed/rendered
 	 */
-	boolean isEnabled(Component component);
+	public boolean isEnabled(Component component)
+	{
+		return true;
+	}
 
 	/**
 	 * Called any time a component that has this behavior registered is rendering the component tag.
@@ -139,7 +151,9 @@ public interface IBehavior extends IClusterable
 	 * @param tag
 	 *            the tag that is rendered
 	 */
-	void onComponentTag(Component component, ComponentTag tag);
+	public void onComponentTag(Component component, ComponentTag tag)
+	{
+	};
 
 	/**
 	 * Specifies whether or not this behavior is temporary. Temporary behaviors are removed at the
@@ -151,7 +165,10 @@ public interface IBehavior extends IClusterable
 	 * 
 	 * @return true if this behavior is temporary
 	 */
-	boolean isTemporary(Component component);
+	public boolean isTemporary(Component component)
+	{
+		return false;
+	};
 
 	/**
 	 * Checks if a listener can be invoked on this behavior
@@ -159,7 +176,10 @@ public interface IBehavior extends IClusterable
 	 * @param component
 	 * @return true if a listener interface can be invoked on this behavior
 	 */
-	boolean canCallListenerInterface(Component component);
+	public boolean canCallListenerInterface(Component component)
+	{
+		return isEnabled(component) && component.canCallListenerInterface();
+	};
 
 	/**
 	 * Render to the web response whatever the component wants to contribute to the head section.
@@ -169,5 +189,7 @@ public interface IBehavior extends IClusterable
 	 * @param response
 	 *            Response object
 	 */
-	void renderHead(Component component, IHeaderResponse response);
+	public void renderHead(Component component, IHeaderResponse response)
+	{
+	};
 }

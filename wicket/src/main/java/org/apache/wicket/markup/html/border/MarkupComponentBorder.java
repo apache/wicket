@@ -23,7 +23,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ContainerInfo;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupElement;
@@ -43,7 +43,7 @@ import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
  * 
  * @author jcompagner
  */
-public class MarkupComponentBorder extends AbstractBehavior
+public class MarkupComponentBorder extends Behavior
 {
 	static
 	{
@@ -121,10 +121,10 @@ public class MarkupComponentBorder extends AbstractBehavior
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.AbstractBehavior#onRendered(org.apache.wicket.Component)
+	 * @see org.apache.wicket.behavior.AbstractBehavior#afterRender(org.apache.wicket.Component)
 	 */
 	@Override
-	public void onRendered(final Component component)
+	public void afterRender(final Component component)
 	{
 		final MarkupStream stream = getMarkupStream(component);
 		final Response response = component.getResponse();

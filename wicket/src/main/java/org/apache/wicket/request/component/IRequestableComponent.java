@@ -17,7 +17,7 @@
 package org.apache.wicket.request.component;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.behavior.InvalidBehaviorIdException;
 import org.apache.wicket.model.IDetachable;
 
@@ -74,7 +74,7 @@ public interface IRequestableComponent
 	 * @param behavior
 	 * @return
 	 */
-	public int getBehaviorId(IBehavior behavior);
+	public int getBehaviorId(Behavior behavior);
 
 	/**
 	 * Gets the behavior for the specified id
@@ -84,7 +84,7 @@ public interface IRequestableComponent
 	 * @throws InvalidBehaviorIdException
 	 *             when behavior with this id cannot be found
 	 */
-	public IBehavior getBehaviorById(int id);
+	public Behavior getBehaviorById(int id);
 
 	/**
 	 * Detaches the component.

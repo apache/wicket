@@ -20,8 +20,7 @@ import java.text.ParseException;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.behavior.AbstractBehavior;
-import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupStream;
@@ -71,7 +70,7 @@ public final class RelativePathPrefixHandler extends BaseMarkupFilter implements
 	 * Behavior that adds a prefix to src, href and background attributes to make them
 	 * context-relative
 	 */
-	public static final IBehavior RELATIVE_PATH_BEHAVIOR = new AbstractBehavior()
+	public static final Behavior RELATIVE_PATH_BEHAVIOR = new Behavior()
 	{
 		private static final long serialVersionUID = 1L;
 

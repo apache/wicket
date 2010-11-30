@@ -24,7 +24,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -106,7 +106,7 @@ public abstract class BaseTree extends AbstractTree
 		item.add(nodeComponent);
 
 		// add behavior that conditionally adds the "selected" CSS class name
-		item.add(new AbstractBehavior()
+		item.add(new Behavior()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -189,7 +189,7 @@ public abstract class BaseTree extends AbstractTree
 	 * 
 	 * @author Matej Knopp
 	 */
-	private class JunctionBorder extends AbstractBehavior
+	private class JunctionBorder extends Behavior
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -213,7 +213,7 @@ public abstract class BaseTree extends AbstractTree
 		 * @see org.apache.wicket.behavior.AbstractBehavior#onRendered(org.apache.wicket.Component)
 		 */
 		@Override
-		public void onRendered(final Component component)
+		public void afterRender(final Component component)
 		{
 			component.getResponse().write("</td>");
 		}
@@ -294,7 +294,7 @@ public abstract class BaseTree extends AbstractTree
 					updateTree(target);
 				}
 			});
-			junctionLink.add(new AbstractBehavior()
+			junctionLink.add(new Behavior()
 			{
 				private static final long serialVersionUID = 1L;
 

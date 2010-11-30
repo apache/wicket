@@ -17,8 +17,7 @@
 package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.behavior.AbstractBehavior;
-import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.DataGridView;
 import org.apache.wicket.markup.ComponentTag;
@@ -74,17 +73,14 @@ import org.apache.wicket.util.string.Strings;
  */
 public class DataTable<T> extends Panel implements IPageable
 {
-	static abstract class CssAttributeBehavior extends AbstractBehavior
+	static abstract class CssAttributeBehavior extends Behavior
 	{
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 
 		protected abstract String getCssClass();
 
 		/**
-		 * @see IBehavior#onComponentTag(Component, ComponentTag)
+		 * @see Behavior#onComponentTag(Component, ComponentTag)
 		 */
 		@Override
 		public void onComponentTag(Component component, ComponentTag tag)

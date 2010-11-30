@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.wicket.authorization.AuthorizationException;
-import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.request.RequestHandlerStack.ReplaceHandlerException;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.handler.ListenerInvocationNotAllowedException;
@@ -250,7 +250,7 @@ public class RequestListenerInterface
 	 * @throws ListenerInvocationNotAllowedException
 	 *             when listener invocation attempted on a component that does not allow it
 	 */
-	public final void invoke(final IRequestableComponent rcomponent, final IBehavior behavior)
+	public final void invoke(final IRequestableComponent rcomponent, final Behavior behavior)
 	{
 		// we are in Wicket core land
 		final Component component = (Component)rcomponent;

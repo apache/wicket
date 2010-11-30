@@ -16,7 +16,7 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.behavior.IBehaviorListener;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
@@ -91,7 +91,7 @@ public class BehaviorUrlTest extends WicketTestCase
 		}
 	}
 
-	private static class TestTemporaryBehavior extends AbstractBehavior
+	private static class TestTemporaryBehavior extends Behavior
 	{
 		@Override
 		public boolean isTemporary(Component c)
@@ -100,7 +100,7 @@ public class BehaviorUrlTest extends WicketTestCase
 		}
 	}
 
-	private static class TestCallbackBehavior extends AbstractBehavior implements IBehaviorListener
+	private static class TestCallbackBehavior extends Behavior implements IBehaviorListener
 	{
 		@Override
 		public void onComponentTag(Component component, ComponentTag tag)

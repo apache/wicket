@@ -88,7 +88,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 			{
 				testFlag2 = false;
 
-				stack.replaceCurrentRequestHandler(handler3);
+				stack.replaceAllRequestHandlers(handler3);
 
 				// this code must not be executed
 				testFlag2 = true;

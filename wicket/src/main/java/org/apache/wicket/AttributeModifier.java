@@ -16,7 +16,7 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.model.IComponentAssignedModel;
@@ -61,7 +61,7 @@ import org.apache.wicket.util.value.IValueMap;
  * @author Martijn Dashorst
  * @author Ralf Ebert
  */
-public class AttributeModifier extends AbstractBehavior implements IClusterable
+public class AttributeModifier extends Behavior implements IClusterable
 {
 	/** Marker value to have an attribute without a value added. */
 	public static final String VALUELESS_ATTRIBUTE_ADD = "VA_ADD";
@@ -219,7 +219,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.IBehavior#onComponentTag(org.apache.wicket.Component,
+	 * @see org.apache.wicket.behavior.Behavior#onComponentTag(org.apache.wicket.Component,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override

@@ -18,7 +18,7 @@ package org.apache.wicket.markup.transformer;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -32,7 +32,7 @@ import org.apache.wicket.request.http.WebResponse;
  * 
  * @author Juergen Donnerstag
  */
-public abstract class AbstractTransformerBehavior extends AbstractBehavior implements ITransformer
+public abstract class AbstractTransformerBehavior extends Behavior implements ITransformer
 {
 	private static final long serialVersionUID = 1L;
 
@@ -59,7 +59,7 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.IBehavior#onComponentTag(org.apache.wicket.Component,
+	 * @see org.apache.wicket.behavior.Behavior#onComponentTag(org.apache.wicket.Component,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override
@@ -92,11 +92,8 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 		requestCycle.setResponse(response);
 	}
 
-	/**
-	 * @see org.apache.wicket.behavior.AbstractBehavior#onRendered(org.apache.wicket.Component)
-	 */
 	@Override
-	public void onRendered(final Component component)
+	public void afterRender(Component component)
 	{
 		final RequestCycle requestCycle = RequestCycle.get();
 
@@ -120,27 +117,12 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.behavior.AbstractBehavior#cleanup()
-	 */
+
 	@Override
-	public void cleanup()
+	public void detach(Component component)
 	{
 		webResponse = null;
-	}
-
-	/**
-	 * @see org.apache.wicket.behavior.AbstractBehavior#onHandleException(org.apache.wicket.Component,
-	 *      java.lang.RuntimeException)
-	 */
-	@Override
-	public void onHandleException(Component component, RuntimeException exception)
-	{
-		if (webResponse != null)
-		{
-			final RequestCycle requestCycle = RequestCycle.get();
-			requestCycle.setResponse(webResponse);
-		}
+		super.detach(component);
 	}
 
 	/**

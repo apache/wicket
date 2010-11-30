@@ -27,7 +27,7 @@ import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.UnauthorizedActionException;
-import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
@@ -470,7 +470,7 @@ public abstract class Component
 	 * <ul>
 	 * <li>Model (indicated by {@link #FLAG_MODEL_SET})
 	 * <li>MetaDataEntry (optionally {@link MetaDataEntry}[] if more metadata entries are present) *
-	 * <li>{@link IBehavior}(s) added to component. The behaviors are not stored in separate array,
+	 * <li>{@link Behavior}(s) added to component. The behaviors are not stored in separate array,
 	 * they are part of the {@link #data} array (this is in order to save the space of the pointer
 	 * to an empty array as most components have no behaviours). - FIXME - explain why - is this
 	 * correct?
@@ -2075,7 +2075,7 @@ public abstract class Component
 			return false;
 		}
 
-		for (IBehavior behavior : getBehaviors())
+		for (Behavior behavior : getBehaviors())
 		{
 			if (!behavior.getStatelessHint(this))
 			{
@@ -2404,7 +2404,7 @@ public abstract class Component
 	{
 		// Call each behaviors onException() to allow the
 		// behavior to clean up
-		for (IBehavior behavior : getBehaviors())
+		for (Behavior behavior : getBehaviors())
 		{
 			if (isBehaviorAccepted(behavior))
 			{
@@ -2606,7 +2606,7 @@ public abstract class Component
 			}
 
 			// Than ask all behaviors
-			for (IBehavior behavior : getBehaviors())
+			for (Behavior behavior : getBehaviors())
 			{
 				if (isBehaviorAccepted(behavior))
 				{
@@ -3214,7 +3214,7 @@ public abstract class Component
 	 *            The listener interface that the URL should call
 	 * @return The URL
 	 */
-	public final CharSequence urlFor(final IBehavior behaviour,
+	public final CharSequence urlFor(final Behavior behaviour,
 		final RequestListenerInterface listener)
 	{
 		PageAndComponentProvider provider = new PageAndComponentProvider(getPage(), this);
@@ -3336,12 +3336,12 @@ public abstract class Component
 	}
 
 	/**
-	 * {@link IBehavior#beforeRender(Component)} Notify all behaviors that are assigned to this
+	 * {@link Behavior#beforeRender(Component)} Notify all behaviors that are assigned to this
 	 * component that the component is about to be rendered.
 	 */
 	private void notifyBehaviorsComponentBeforeRender()
 	{
-		for (IBehavior behavior : getBehaviors())
+		for (Behavior behavior : getBehaviors())
 		{
 			if (isBehaviorAccepted(behavior))
 			{
@@ -3351,13 +3351,13 @@ public abstract class Component
 	}
 
 	/**
-	 * {@link IBehavior#afterRender(Component)} Notify all behaviors that are assigned to this
+	 * {@link Behavior#afterRender(Component)} Notify all behaviors that are assigned to this
 	 * component that the component has rendered.
 	 */
 	private void notifyBehaviorsComponentRendered()
 	{
 		// notify the behaviors that component has been rendered
-		for (IBehavior behavior : getBehaviors())
+		for (Behavior behavior : getBehaviors())
 		{
 			if (isBehaviorAccepted(behavior))
 			{
@@ -3505,7 +3505,7 @@ public abstract class Component
 	}
 
 	/**
-	 * Gets the subset of the currently coupled {@link IBehavior}s that are of the provided type as
+	 * Gets the subset of the currently coupled {@link Behavior}s that are of the provided type as
 	 * a unmodifiable list. Returns an empty list rather than null if there are no behaviors coupled
 	 * to this component.
 	 * 
@@ -3517,7 +3517,7 @@ public abstract class Component
 	 *            A class derived from IBehavior
 	 */
 	@SuppressWarnings("unchecked")
-	public <M extends IBehavior> List<M> getBehaviors(Class<M> type)
+	public <M extends Behavior> List<M> getBehaviors(Class<M> type)
 	{
 		return new Behaviors(this).getBehaviors(type);
 	}
@@ -3647,7 +3647,7 @@ public abstract class Component
 	 * @param behavior
 	 * @return False, if the component should not apply this behavior
 	 */
-	protected boolean isBehaviorAccepted(final IBehavior behavior)
+	protected boolean isBehaviorAccepted(final Behavior behavior)
 	{
 		// Ignore AttributeModifiers when FLAG_IGNORE_ATTRIBUTE_MODIFIER is set
 		if ((behavior instanceof AttributeModifier) &&
@@ -3821,13 +3821,13 @@ public abstract class Component
 		if (needToRenderTag(tag))
 		{
 			// Apply behavior modifiers
-			List<? extends IBehavior> behaviors = getBehaviors();
+			List<? extends Behavior> behaviors = getBehaviors();
 			if ((behaviors != null) && !behaviors.isEmpty() && !tag.isClose() &&
 				(isIgnoreAttributeModifier() == false))
 			{
 				tag = tag.mutable();
 
-				for (IBehavior behavior : behaviors)
+				for (Behavior behavior : behaviors)
 				{
 					// Components may reject some behavior components
 					if (isBehaviorAccepted(behavior))
@@ -3840,10 +3840,10 @@ public abstract class Component
 			// apply behaviors that are attached to the component tag.
 			if (tag.hasBehaviors())
 			{
-				Iterator<? extends IBehavior> tagBehaviors = tag.getBehaviors();
+				Iterator<? extends Behavior> tagBehaviors = tag.getBehaviors();
 				while (tagBehaviors.hasNext())
 				{
-					final IBehavior behavior = tagBehaviors.next();
+					final Behavior behavior = tagBehaviors.next();
 					if (behavior.isEnabled(this))
 					{
 						behavior.onComponentTag(this, tag);
@@ -4323,20 +4323,20 @@ public abstract class Component
 	 * 
 	 * @return this (to allow method call chaining)
 	 */
-	public Component remove(final IBehavior behavior)
+	public Component remove(final Behavior behavior)
 	{
 		new Behaviors(this).remove(behavior);
 		return this;
 	}
 
 	/** {@inheritDoc} */
-	public final IBehavior getBehaviorById(int id)
+	public final Behavior getBehaviorById(int id)
 	{
 		return new Behaviors(this).getBehaviorById(id);
 	}
 
 	/** {@inheritDoc} */
-	public final int getBehaviorId(IBehavior behavior)
+	public final int getBehaviorId(Behavior behavior)
 	{
 		return new Behaviors(this).getBehaviorId(behavior);
 	}
@@ -4354,21 +4354,21 @@ public abstract class Component
 	 *            The behavior modifier(s) to be added
 	 * @return this (to allow method call chaining)
 	 */
-	public Component add(final IBehavior... behaviors)
+	public Component add(final Behavior... behaviors)
 	{
 		new Behaviors(this).add(behaviors);
 		return this;
 	}
 
 	/**
-	 * Gets the currently coupled {@link IBehavior}s as a unmodifiable list. Returns an empty list
+	 * Gets the currently coupled {@link Behavior}s as a unmodifiable list. Returns an empty list
 	 * rather than null if there are no behaviors coupled to this component.
 	 * 
 	 * @return The currently coupled behaviors as a unmodifiable list
 	 */
-	public final List<? extends IBehavior> getBehaviors()
+	public final List<? extends Behavior> getBehaviors()
 	{
-		return getBehaviors(IBehavior.class);
+		return getBehaviors(Behavior.class);
 	}
 
 }

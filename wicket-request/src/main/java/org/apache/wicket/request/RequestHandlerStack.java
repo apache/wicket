@@ -144,34 +144,6 @@ public abstract class RequestHandlerStack
 	{
 		return scheduledAfterCurrent;
 	}
-	
-	/**
-	 * Replaces the currently executed {@link IRequestHandler} with new {@link IRequestHandler}. The
-	 * currently executed {@link IRequestHandler} is terminated and the new {@link IRequestHandler}
-	 * is executed.
-	 * 
-	 * @param handler
-	 */
-	// FIXME
-	// Is this method really useful for anything? To execute request handler
-	// after current
-	// #scheduleRequestHandlerAfterCurrent is better alternative because it
-	// doesn't terminate
-	// current request handler.
-	// To restart request processing #replaceAllRequestHandlers is better
-	// alternative because it
-	// unrolls entire stack and cancels all request handlers in stack
-	public void replaceCurrentRequestHandler(IRequestHandler handler)
-	{
-		if (requestHandlers.isEmpty())
-		{
-			executeRequestHandler(handler);
-		}
-		else
-		{
-			throw new ReplaceHandlerException(handler, false);
-		}
-	}
 
 	/**
 	 * Removes the whole {@link IRequestHandler} stack, terminates currently running

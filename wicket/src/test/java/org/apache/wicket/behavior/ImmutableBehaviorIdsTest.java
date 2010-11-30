@@ -46,12 +46,12 @@ public class ImmutableBehaviorIdsTest extends WicketTestCase
 	 */
 	public void testUrlIndexRendering()
 	{
-		IBehavior border = new SimpleAttributeModifier("class", "border");
-		IBehavior border2 = new SimpleAttributeModifier("class2", "border");
-		IBehavior auto = new SimpleAttributeModifier("autocomplete", "off");
-		IBehavior auto2 = new SimpleAttributeModifier("autocomplete2", "off");
-		IBehavior link = new LinkBehavior("href");
-		IBehavior link2 = new LinkBehavior("onclick");
+		Behavior border = new SimpleAttributeModifier("class", "border");
+		Behavior border2 = new SimpleAttributeModifier("class2", "border");
+		Behavior auto = new SimpleAttributeModifier("autocomplete", "off");
+		Behavior auto2 = new SimpleAttributeModifier("autocomplete2", "off");
+		Behavior link = new LinkBehavior("href");
+		Behavior link2 = new LinkBehavior("onclick");
 
 		MyPage page = new MyPage();
 
@@ -85,12 +85,12 @@ public class ImmutableBehaviorIdsTest extends WicketTestCase
 	 */
 	public void testBehaviorDataArrayCleanup()
 	{
-		IBehavior border = new SimpleAttributeModifier("class", "border");
-		IBehavior border2 = new SimpleAttributeModifier("class2", "border");
-		IBehavior auto = new SimpleAttributeModifier("autocomplete", "off");
-		IBehavior auto2 = new SimpleAttributeModifier("autocomplete2", "off");
-		IBehavior link = new LinkBehavior("href");
-		IBehavior link2 = new LinkBehavior("onclick");
+		Behavior border = new SimpleAttributeModifier("class", "border");
+		Behavior border2 = new SimpleAttributeModifier("class2", "border");
+		Behavior auto = new SimpleAttributeModifier("autocomplete", "off");
+		Behavior auto2 = new SimpleAttributeModifier("autocomplete2", "off");
+		Behavior link = new LinkBehavior("href");
+		Behavior link2 = new LinkBehavior("onclick");
 
 		MyPage page = new MyPage();
 		page.getContainer().add(border, auto, link, border2, link2, auto2);
@@ -102,7 +102,7 @@ public class ImmutableBehaviorIdsTest extends WicketTestCase
 		int linkId = page.container.getBehaviorId(link);
 		int link2Id = page.container.getBehaviorId(link2);
 
-		List<? extends IBehavior> behaviors = page.getContainer().getBehaviors();
+		List<? extends Behavior> behaviors = page.getContainer().getBehaviors();
 		assertEquals(6, behaviors.size());
 
 		// test removal of various behaviors and make sure they preserve indexes as long as there is
@@ -138,7 +138,7 @@ public class ImmutableBehaviorIdsTest extends WicketTestCase
 
 	}
 
-	private static class LinkBehavior extends AbstractBehavior implements IBehaviorListener
+	private static class LinkBehavior extends Behavior implements IBehaviorListener
 	{
 		private static final long serialVersionUID = 1L;
 

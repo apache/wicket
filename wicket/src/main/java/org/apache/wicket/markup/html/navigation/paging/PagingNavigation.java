@@ -19,7 +19,7 @@ package org.apache.wicket.markup.html.navigation.paging;
 import java.util.Map;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.AbstractLink;
@@ -400,7 +400,7 @@ public class PagingNavigation extends Loop
 	 * 
 	 * @author igor.vaynberg
 	 */
-	private final class TitleAppender extends AbstractBehavior
+	private final class TitleAppender extends Behavior
 	{
 		private static final long serialVersionUID = 1L;
 		/** resource key for the message */

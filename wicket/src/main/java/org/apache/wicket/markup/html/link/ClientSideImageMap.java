@@ -21,7 +21,7 @@ import java.awt.geom.PathIterator;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
-import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -234,7 +234,7 @@ public class ClientSideImageMap extends Panel
 	/**
 	 * Encapsulates the concept of an <area> within a <map>.
 	 */
-	private static class Area extends AbstractBehavior
+	private static class Area extends Behavior
 	{
 		private static final long serialVersionUID = 1L;
 

@@ -19,7 +19,7 @@ package org.apache.wicket.markup.html.border;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupElement;
@@ -236,7 +236,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 * @see #add(Component...)
 	 */
 	@Override
-	public Component add(final IBehavior... behaviors)
+	public Component add(final Behavior... behaviors)
 	{
 		return addToBorderBody(behaviors);
 	}
@@ -256,7 +256,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 * @param behaviors
 	 * @return this
 	 */
-	public Component addToBorder(final IBehavior... behaviors)
+	public Component addToBorder(final Behavior... behaviors)
 	{
 		return super.add(behaviors);
 	}
@@ -277,7 +277,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 * @param behaviors
 	 * @return this
 	 */
-	public Component addToBorderBody(final IBehavior... behaviors)
+	public Component addToBorderBody(final Behavior... behaviors)
 	{
 		super.add(behaviors);
 		return this;

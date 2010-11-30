@@ -34,7 +34,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.extensions.yui.YuiLib;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -71,7 +71,7 @@ import org.joda.time.DateTime;
  * 
  * @author eelcohillenius
  */
-public class DatePicker extends AbstractBehavior
+public class DatePicker extends Behavior
 {
 	private static Method GETINSTANCEMETHOD = null;
 
@@ -154,12 +154,12 @@ public class DatePicker extends AbstractBehavior
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.AbstractBehavior#onRendered(org.apache.wicket.Component)
+	 * @see org.apache.wicket.behavior.AbstractBehavior#afterRender(org.apache.wicket.Component)
 	 */
 	@Override
-	public void onRendered(Component component)
+	public void afterRender(Component component)
 	{
-		super.onRendered(component);
+		super.afterRender(component);
 		// Append the span and img icon right after the rendering of the
 		// component. Not as pretty as working with a panel etc, but works
 		// for behaviors and is more efficient

@@ -16,8 +16,7 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.behavior.AbstractBehavior;
-import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.behavior.IBehaviorListener;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
@@ -66,12 +65,13 @@ public class BehaviorRequestTest extends WicketTestCase
 		}
 	}
 
-	private String urlForBehavior(IBehavior behaviorUnderTest)
+	private String urlForBehavior(Behavior behaviorUnderTest)
 	{
 		final int index = page.container.getBehaviorId(behaviorUnderTest);
-		final IPageAndComponentProvider provider = new PageAndComponentProvider(page, page.container);
-		final IRequestHandler handler =
-			new ListenerInterfaceRequestHandler(provider, IBehaviorListener.INTERFACE, index);
+		final IPageAndComponentProvider provider = new PageAndComponentProvider(page,
+			page.container);
+		final IRequestHandler handler = new ListenerInterfaceRequestHandler(provider,
+			IBehaviorListener.INTERFACE, index);
 
 		return tester.urlFor(handler).toString();
 	}
@@ -101,7 +101,7 @@ public class BehaviorRequestTest extends WicketTestCase
 		}
 	}
 
-	private static class TestCallbackBehavior extends AbstractBehavior implements IBehaviorListener
+	private static class TestCallbackBehavior extends Behavior implements IBehaviorListener
 	{
 		private boolean enabled;
 		private boolean called;
