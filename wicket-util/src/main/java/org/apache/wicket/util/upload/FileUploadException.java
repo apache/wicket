@@ -16,14 +16,12 @@
  */
 package org.apache.wicket.util.upload;
 
-import java.io.IOException;
-
 /**
  * Exception for errors encountered while processing the request.
  * 
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  */
-public class FileUploadException extends IOException
+public class FileUploadException extends Exception
 {
 	private static final long serialVersionUID = 1L;
 

@@ -372,23 +372,14 @@ public class DiskFileItem implements FileItem
 		{
 			File outputFile = getStoreLocation();
 
-			if (outputFile != null)
+			if (outputFile == null)
+				throw new IllegalStateException("for a non-memory upload the file location must not be empty");
+
+			// The uploaded file is being stored on disk in a temporary location so move it to
+			// the desired file.
+			if (outputFile.renameTo(file) == false)
 			{
-				/*
-				 * The uploaded file is being stored on disk in a temporary location so move it to
-				 * the desired file.
-				 */
-				if (outputFile.renameTo(file) == false)
-				{
-					Files.copy(outputFile, file);
-				}
-			}
-			else
-			{
-				/*
-				 * For whatever reason we cannot write the file to disk.
-				 */
-				throw new FileUploadException("Cannot write uploaded file to disk!");
+				Files.copy(outputFile, file);
 			}
 		}
 	}
