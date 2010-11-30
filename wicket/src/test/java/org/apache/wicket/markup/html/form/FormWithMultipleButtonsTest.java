@@ -16,9 +16,15 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.TestCase;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxFallbackButton;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -46,10 +52,36 @@ public class FormWithMultipleButtonsTest extends TestCase
 	{
 		TestPage testPage = new TestPage();
 		tester.startPage(testPage);
-		tester.getRequest().getPostParameters().addParameterValue(testPage.b2.getInputName(), "");
+		tester.getRequest()
+			.getPostParameters()
+			.addParameterValue(testPage.ajaxFallbackButton.getInputName(), "");
 		tester.submitForm(testPage.form);
-		assertFalse(testPage.b1.submitted);
-		assertTrue(testPage.b2.submitted);
+		assertFalse(testPage.submitSequence.contains(testPage.button));
+		assertTrue(testPage.submitSequence.contains(testPage.ajaxFallbackButton));
+	}
+
+	/**
+	 * @see https://issues.apache.org/jira/browse/WICKET-1894
+	 */
+	public void testAjaxFallbackButtonInvokedFirst()
+	{
+		TestPage testPage = new TestPage();
+		tester.startPage(testPage);
+		tester.executeAjaxEvent(testPage.ajaxFallbackButton, "onclick");
+		assertEquals(0, testPage.submitSequence.indexOf(testPage.ajaxFallbackButton));
+		assertEquals(1, testPage.submitSequence.indexOf(testPage.form));
+	}
+
+	public void testButtonInvokedFirst()
+	{
+		TestPage testPage = new TestPage();
+		tester.startPage(testPage);
+		tester.getRequest()
+			.getPostParameters()
+			.addParameterValue(testPage.button.getInputName(), "");
+		tester.submitForm(testPage.form);
+		assertEquals(0, testPage.submitSequence.indexOf(testPage.button));
+		assertEquals(1, testPage.submitSequence.indexOf(testPage.form));
 	}
 
 	@Override
@@ -60,15 +92,42 @@ public class FormWithMultipleButtonsTest extends TestCase
 
 	private static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		List<Component> submitSequence = new ArrayList<Component>();
 		Form form;
-		TestButton b1;
-		TestButton b2;
+		Button button;
+		AjaxFallbackButton ajaxFallbackButton;
 
 		public TestPage()
 		{
-			add(form = new Form("form"));
-			form.add(b1 = new TestButton("b1"));
-			form.add(b2 = new TestButton("b2"));
+			add(form = new Form("form")
+			{
+				@Override
+				protected void onSubmit()
+				{
+					submitSequence.add(this);
+				};
+			});
+			form.add(button = new Button("b1")
+			{
+				@Override
+				public void onSubmit()
+				{
+					submitSequence.add(this);
+				};
+			});
+			form.add(ajaxFallbackButton = new AjaxFallbackButton("b2", form)
+			{
+				@Override
+				protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+				{
+					submitSequence.add(this);
+				}
+
+				@Override
+				protected void onError(AjaxRequestTarget target, Form<?> form)
+				{
+				}
+			});
 		}
 
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
@@ -79,19 +138,4 @@ public class FormWithMultipleButtonsTest extends TestCase
 		}
 	}
 
-	private static class TestButton extends Button
-	{
-		boolean submitted;
-
-		public TestButton(String id)
-		{
-			super(id);
-		}
-
-		@Override
-		public void onSubmit()
-		{
-			submitted = true;
-		}
-	}
 }
