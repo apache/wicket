@@ -16,10 +16,15 @@
  */
 package org.apache.wicket.util.file;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.string.Strings;
 
@@ -31,6 +36,13 @@ import org.apache.wicket.util.string.Strings;
  */
 public class Files
 {
+	/**
+	 * Private constructor to prevent instantiation.
+	 */
+	private Files()
+	{
+	}
+
 	/**
 	 * Strips off the given extension (probably returned from Files.extension()) from the path,
 	 * yielding a base pathname.
@@ -126,6 +138,27 @@ public class Files
 	}
 
 	/**
+	 * read binary file fully
+	 *
+	 * @param file file to read
+	 * @return byte array representing the content of the file
+	 * @throws IOException is something went wrong
+	 */
+	public static byte[] readBytes(File file) throws IOException
+	{
+		FileInputStream stream = new FileInputStream(file);
+
+		try
+		{
+			return IOUtils.toByteArray(stream);
+		}
+		finally
+		{
+			stream.close();
+		}
+	}
+
+	/**
 	 * Writes the given input stream to the given file
 	 * 
 	 * @param file
@@ -151,7 +184,7 @@ public class Files
 		}
 	}
 
-	private static String FORBIDDEN_IN_NAME = new String("\"*/:<>?\\|,");
+	private static String FORBIDDEN_IN_NAME = "\"*/:<>?\\|,";
 
 	/**
 	 * <p>
@@ -173,10 +206,38 @@ public class Files
 	}
 
 	/**
-	 * Private constructor to prevent instantiation.
+	 * make a copy of a file
+	 *
+	 * @param sourceFile
+	 *            source file that needs to be cloned
+	 * @param targetFile
+	 *            target file that should be a duplicate of source file
+	 * @throws IOException
+	 *            if something went wrong
 	 */
-	private Files()
+	public static void copy(File sourceFile, File targetFile) throws IOException
 	{
-	}
+		BufferedInputStream in = null;
+		BufferedOutputStream out = null;
 
+		try
+		{
+			in = new BufferedInputStream(new FileInputStream(sourceFile));
+			out = new BufferedOutputStream(new FileOutputStream(targetFile));
+
+			IOUtils.copy(in, out);
+		}
+		finally
+		{
+			try
+			{
+				IOUtils.close(in);
+
+			}
+			finally
+			{
+				IOUtils.close(out);
+			}
+		}
+	}
 }

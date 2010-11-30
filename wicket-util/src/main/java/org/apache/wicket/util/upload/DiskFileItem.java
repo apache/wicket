@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.util.upload;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,8 +27,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import org.apache.wicket.util.file.FileCleaner;
+import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.io.DeferredFileOutputStream;
-import org.apache.wicket.util.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,13 +64,6 @@ public class DiskFileItem implements FileItem
 	 * "ISO-8859-1" when received via HTTP.
 	 */
 	public static final String DEFAULT_CHARSET = "ISO-8859-1";
-
-
-	/**
-	 * Size of buffer to use when writing an item to disk.
-	 */
-	private static final int WRITE_BUFFER_SIZE = 2048;
-
 
 	// ----------------------------------------------------------- Data members
 
@@ -284,24 +275,17 @@ public class DiskFileItem implements FileItem
 			return cachedContent;
 		}
 
-		byte[] fileData = new byte[(int)getSize()];
-		FileInputStream fis = null;
+		File file = dfos.getFile();
 
 		try
 		{
-			fis = new FileInputStream(dfos.getFile());
-			fis.read(fileData);
+			return Files.readBytes(file);
 		}
 		catch (IOException e)
 		{
-			fileData = null;
+			log.debug("failed to read content of file: " + file.getAbsolutePath(), e);
+			return null;
 		}
-		finally
-		{
-			IOUtils.closeQuietly(fis);
-		}
-
-		return fileData;
 	}
 
 
@@ -373,46 +357,30 @@ public class DiskFileItem implements FileItem
 	{
 		if (isInMemory())
 		{
-			FileOutputStream fout = null;
+			FileOutputStream fout = new FileOutputStream(file);
+
 			try
 			{
-				fout = new FileOutputStream(file);
 				fout.write(get());
 			}
 			finally
 			{
-				IOUtils.close(fout);
+				fout.close();
 			}
 		}
 		else
 		{
 			File outputFile = getStoreLocation();
+
 			if (outputFile != null)
 			{
 				/*
 				 * The uploaded file is being stored on disk in a temporary location so move it to
 				 * the desired file.
 				 */
-				if (!outputFile.renameTo(file))
+				if (outputFile.renameTo(file) == false)
 				{
-					BufferedInputStream in = null;
-					BufferedOutputStream out = null;
-					try
-					{
-						in = new BufferedInputStream(new FileInputStream(outputFile));
-						out = new BufferedOutputStream(new FileOutputStream(file));
-						byte[] bytes = new byte[WRITE_BUFFER_SIZE];
-						int s;
-						while ((s = in.read(bytes)) != -1)
-						{
-							out.write(bytes, 0, s);
-						}
-					}
-					finally
-					{
-						IOUtils.closeQuietly(in);
-						IOUtils.closeQuietly(out);
-					}
+					Files.copy(outputFile, file);
 				}
 			}
 			else
@@ -438,7 +406,7 @@ public class DiskFileItem implements FileItem
 		File outputFile = getStoreLocation();
 		if (outputFile != null && outputFile.exists())
 		{
-			if(outputFile.delete())
+			if(Files.remove(outputFile) == false)
 				log.debug("failed to delete file: " + outputFile.getAbsolutePath());
 		}
 	}
@@ -558,7 +526,7 @@ public class DiskFileItem implements FileItem
 
 		if (outputFile != null && outputFile.exists())
 		{
-			if(outputFile.delete() == false)
+			if(Files.remove(outputFile) == false)
 				log.debug("failed to delete file: " + outputFile.getAbsolutePath());
 		}
 	}
