@@ -30,6 +30,7 @@ import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,17 +133,27 @@ public class PackageResource extends AbstractResource
 		// Convert resource path to absolute path relative to base package
 		absolutePath = Packages.absolutePath(scope, name);
 
-		if (!accept(scope, name))
+		final String parentEscape = Application.get()
+			.getResourceSettings()
+			.getParentFolderPlaceholder();
+
+		if (Strings.isEmpty(parentEscape) == false)
+		{
+			path = Strings.replaceAll(name, "../", parentEscape + "/").toString();
+		}
+		else
+		{
+			path = name;
+		}
+
+		if (!accept(scope, path))
 		{
 			throw new PackageResourceBlockedException(
 				"Access denied to (static) package resource " + absolutePath +
 					". See IPackageResourceGuard");
 		}
 
-		// TODO WICKET-NG: Check path for ../
-
 		scopeName = scope.getName();
-		path = name;
 		this.locale = locale;
 		this.style = style;
 		this.variation = variation;
