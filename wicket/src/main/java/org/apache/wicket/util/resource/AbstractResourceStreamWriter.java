@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
+import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.time.Time;
 
 /**
@@ -40,9 +41,9 @@ public abstract class AbstractResourceStreamWriter implements IResourceStreamWri
 	 * 
 	 * @see org.apache.wicket.util.resource.IResourceStream#length()
 	 */
-	public long length()
+	public Bytes length()
 	{
-		return -1;
+		return null;
 	}
 
 	/**

@@ -26,6 +26,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.wicket.util.file.File;
+import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -190,9 +191,9 @@ public class ZipResourceStream extends AbstractResourceStream
 	 * @see org.apache.wicket.util.resource.AbstractResourceStream#length()
 	 */
 	@Override
-	public long length()
+	public Bytes length()
 	{
-		return bytearray.size();
+		return Bytes.bytes(bytearray.size());
 	}
 
 	/**

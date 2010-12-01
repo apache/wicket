@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.util.Locale;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.resource.IFixedLocationResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -167,7 +168,7 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	 * 
 	 * @see org.apache.wicket.util.resource.IResourceStream#length()
 	 */
-	public long length()
+	public Bytes length()
 	{
 		return resourceStream.length();
 	}

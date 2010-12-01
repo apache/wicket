@@ -22,9 +22,9 @@ import java.io.InputStream;
 import javax.servlet.ServletContext;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.io.IOUtils;
+import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.time.Time;
 
 /**
@@ -58,14 +58,12 @@ public class WebExternalResourceStream extends AbstractResourceStream
 	}
 
 	/**
-	 * Not implemented, throws {@link WicketRuntimeException}
-	 * 
 	 * @see org.apache.wicket.util.resource.IResourceStream#length()
 	 */
 	@Override
-	public long length()
+	public Bytes length()
 	{
-		return -1;
+		return null;
 	}
 
 	public void close() throws IOException

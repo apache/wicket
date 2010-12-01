@@ -26,6 +26,7 @@ import java.net.URLConnection;
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.io.Connections;
+import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,13 +34,15 @@ import org.slf4j.LoggerFactory;
 
 /**
  * UrlResourceStream implements IResource for URLs.
- *
+ * 
  * @see org.apache.wicket.util.resource.IResourceStream
  * @see org.apache.wicket.util.watch.IModifiable
  * @author Jonathan Locke
  * @author Igor Vaynberg
  */
-public class UrlResourceStream extends AbstractResourceStream implements IFixedLocationResourceStream
+public class UrlResourceStream extends AbstractResourceStream
+	implements
+		IFixedLocationResourceStream
 {
 	private static final long serialVersionUID = 1L;
 
@@ -56,7 +59,7 @@ public class UrlResourceStream extends AbstractResourceStream implements IFixedL
 	private File file;
 
 	/** Length of stream. */
-	private int contentLength;
+	private Bytes contentLength;
 
 	/** Content type for stream. */
 	private String contentType;
@@ -66,7 +69,7 @@ public class UrlResourceStream extends AbstractResourceStream implements IFixedL
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param url
 	 *            URL of resource
 	 */
@@ -80,7 +83,7 @@ public class UrlResourceStream extends AbstractResourceStream implements IFixedL
 		try
 		{
 			connection = url.openConnection();
-			contentLength = connection.getContentLength();
+			contentLength = Bytes.bytes(connection.getContentLength());
 			contentType = connection.getContentType();
 		}
 		catch (IOException ex)
@@ -111,7 +114,7 @@ public class UrlResourceStream extends AbstractResourceStream implements IFixedL
 
 	/**
 	 * Closes this resource.
-	 *
+	 * 
 	 * @throws IOException
 	 */
 	public void close() throws IOException
@@ -252,7 +255,7 @@ public class UrlResourceStream extends AbstractResourceStream implements IFixedL
 	private void setContentLength() throws IOException
 	{
 		URLConnection connection = url.openConnection();
-		contentLength = connection.getContentLength();
+		contentLength = Bytes.bytes(connection.getContentLength());
 		Connections.close(connection);
 	}
 
@@ -269,7 +272,7 @@ public class UrlResourceStream extends AbstractResourceStream implements IFixedL
 	 * @see org.apache.wicket.util.resource.IResourceStream#length()
 	 */
 	@Override
-	public long length()
+	public Bytes length()
 	{
 		return contentLength;
 	}

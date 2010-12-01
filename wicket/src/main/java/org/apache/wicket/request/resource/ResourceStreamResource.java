@@ -22,6 +22,7 @@ import java.io.InputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.IResourceStreamWriter;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
@@ -89,7 +90,11 @@ public class ResourceStreamResource extends AbstractResource
 			}
 
 			data.setContentDisposition(contentDisposition);
-			data.setContentLength(stream.length());
+			Bytes length = stream.length();
+			if (length != null)
+			{
+				data.setContentLength(length.bytes());
+			}
 			data.setFileName(fileName);
 			data.setContentType(stream.getContentType());
 			data.setTextEncoding(textEncoding);

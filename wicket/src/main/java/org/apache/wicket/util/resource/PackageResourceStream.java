@@ -21,6 +21,7 @@ import java.io.InputStream;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.time.Time;
@@ -83,7 +84,7 @@ public class PackageResourceStream extends AbstractResourceStream
 	}
 
 	@Override
-	public long length()
+	public Bytes length()
 	{
 		return resourceStream.length();
 	}

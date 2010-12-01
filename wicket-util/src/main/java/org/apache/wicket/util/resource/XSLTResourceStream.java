@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.wicket.util.io.IOUtils;
+import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.time.Time;
 
 /**
@@ -132,9 +133,9 @@ public class XSLTResourceStream extends AbstractResourceStream
 	 * @see org.apache.wicket.util.resource.IResourceStream#length()
 	 */
 	@Override
-	public long length()
+	public Bytes length()
 	{
-		return out.size();
+		return Bytes.bytes(out.size());
 	}
 
 	/**

@@ -21,6 +21,8 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
+import org.apache.wicket.util.lang.Bytes;
+
 /**
  * 
  * @author Kent Tong
@@ -37,7 +39,7 @@ public class UrlResourceStreamTest extends TestCase
 		String anyClassInJarFile = "/java/lang/String.class";
 		URL url = getClass().getResource(anyClassInJarFile);
 		UrlResourceStream stream = new UrlResourceStream(url);
-		long length = stream.length();
+		Bytes length = stream.length();
 		stream.lastModifiedTime();
 		assertEquals(stream.length(), length);
 		stream.close();

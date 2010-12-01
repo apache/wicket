@@ -26,6 +26,7 @@ import java.nio.charset.Charset;
 
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
+import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 
@@ -193,8 +194,9 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 	protected abstract String getString();
 
 	@Override
-	public final long length()
+	public final Bytes length()
 	{
-		return Strings.lengthInBytes(getString(), getCharset());
+		int lengthInBytes = Strings.lengthInBytes(getString(), getCharset());
+		return Bytes.bytes(lengthInBytes);
 	}
 }
