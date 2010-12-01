@@ -19,6 +19,7 @@ package org.apache.wicket.examples;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.response.filter.IResponseFilter;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.JavascriptUtils;
@@ -81,10 +82,8 @@ public class ServerHostNameAndTimeFilter implements IResponseFilter
 	public AppendingStringBuffer filter(AppendingStringBuffer responseBuffer)
 	{
 		int index = responseBuffer.indexOf("<head>");
-// long timeTaken = System.currentTimeMillis() - RequestCycle.get().getStartTime();
+		long timeTaken = System.currentTimeMillis() - RequestCycle.get().getStartTime();
 
-		// TODO NG
-		long timeTaken = 0;
 		if (index != -1)
 		{
 			AppendingStringBuffer script = new AppendingStringBuffer(75);

@@ -62,8 +62,6 @@ public class Index extends WebPage
 			{
 				Session.get().invalidate();
 				setResponsePage(Index.class);
-				// TODO NG
-				// setRedirect(true);
 			}
 
 		});
