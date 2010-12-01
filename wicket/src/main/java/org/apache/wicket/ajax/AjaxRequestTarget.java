@@ -681,6 +681,11 @@ public class AjaxRequestTarget implements IPageRequestTarget
 				respondComponent(response, getAjaxRegionMarkupId(component), component);
 			}
 		}
+
+		if (header != null)
+		{
+			header.getHeaderResponse().close();
+		}
 	}
 
 	private String getAjaxRegionMarkupId(Component component)
@@ -1143,7 +1148,6 @@ public class AjaxRequestTarget implements IPageRequestTarget
 				}
 			});
 		}
-		header.getHeaderResponse().close();
 
 		// revert to old response
 
