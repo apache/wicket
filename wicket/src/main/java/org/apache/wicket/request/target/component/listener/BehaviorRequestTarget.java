@@ -18,13 +18,16 @@ package org.apache.wicket.request.target.component.listener;
 
 import java.util.List;
 
+import org.apache.wicket.AbortException;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.behavior.IBehaviorListener;
+import org.apache.wicket.behavior.IIgnoreDisabledComponentBehavior;
 import org.apache.wicket.protocol.http.PageExpiredException;
+import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.request.RequestParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,13 +88,6 @@ public class BehaviorRequestTarget extends AbstractListenerInterfaceRequestTarge
 		// Get the IBehavior for the component based on the request parameters
 		final Component component = getTarget();
 
-		if (!component.isVisibleInHierarchy() || !component.isEnabledInHierarchy())
-		{
-			// ignore this request
-			logger.warn("component not enabled or visible; ignoring call. Component: {}", component);
-			return;
-		}
-
 		final String id = getRequestParameters().getBehaviorId();
 		if (id == null)
 		{
@@ -124,6 +120,11 @@ public class BehaviorRequestTarget extends AbstractListenerInterfaceRequestTarge
 					logger.warn(
 						"behavior not enabled; ignoring call. behavior: {} at index: {} on component: {}",
 						new Object[] { behavior, idAsInt, component });
+					if (requestCycle.getRequest() instanceof WebRequest &&
+						((WebRequest)requestCycle.getRequest()).isAjax())
+					{
+						throw new AbortException();
+					}
 					return;
 				}
 
@@ -137,6 +138,20 @@ public class BehaviorRequestTarget extends AbstractListenerInterfaceRequestTarge
 			throw new PageExpiredException("No behavior listener found with behaviorId " + id +
 				"; Component: " + component.toString());
 		}
+
+		if (!component.isVisibleInHierarchy() ||
+			(!(behaviorListener instanceof IIgnoreDisabledComponentBehavior) && !component.isEnabledInHierarchy()))
+		{
+			// ignore this request
+			logger.warn("component not enabled or visible; ignoring call. Component: {}", component);
+			if (requestCycle.getRequest() instanceof WebRequest &&
+				((WebRequest)requestCycle.getRequest()).isAjax())
+			{
+				throw new AbortException();
+			}
+			return;
+		}
+
 
 		// Invoke the interface method
 		behaviorListener.onRequest();
