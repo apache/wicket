@@ -127,17 +127,8 @@ public class OrderByLink extends Link
 		}
 
 		ISortState state = stateLocator.getSortState();
-
-		int oldDir = state.getPropertySortOrder(property);
-
-		int newDir = ISortState.ASCENDING;
-
-		if (oldDir == ISortState.ASCENDING)
-		{
-			newDir = ISortState.DESCENDING;
-		}
-
-		state.setPropertySortOrder(property, newDir);
+		SortOrder order = state.getPropertySortOrder(property);
+		state.setPropertySortOrder(property, order.nextOrderInCycle());
 
 		return this;
 	}
@@ -191,7 +182,7 @@ public class OrderByLink extends Link
 		{
 			return getReplaceModel().getObject() != null;
 		}
-	};
+	}
 
 
 	/**
@@ -251,12 +242,12 @@ public class OrderByLink extends Link
 		 */
 		public String getClassAttributeValue(ISortState state, String property)
 		{
-			int dir = state.getPropertySortOrder(property);
-			if (dir == ISortState.ASCENDING)
+			SortOrder dir = state.getPropertySortOrder(property);
+			if (dir == SortOrder.ASCENDING)
 			{
 				return ascending;
 			}
-			else if (dir == ISortState.DESCENDING)
+			else if (dir == SortOrder.DESCENDING)
 			{
 				return descending;
 			}

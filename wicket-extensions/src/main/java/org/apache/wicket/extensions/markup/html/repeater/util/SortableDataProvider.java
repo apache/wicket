@@ -17,6 +17,7 @@
 package org.apache.wicket.extensions.markup.html.repeater.util;
 
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState;
+import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.ISortableDataProvider;
 
 
@@ -89,9 +90,9 @@ public abstract class SortableDataProvider<T> implements ISortableDataProvider<T
 	 * @param ascending
 	 *            sort direction
 	 */
-	public void setSort(String property, boolean ascending)
+	public void setSort(String property, SortOrder order)
 	{
-		setSort(new SortParam(property, ascending));
+		setSort(new SortParam(property, order));
 	}
 
 	/**

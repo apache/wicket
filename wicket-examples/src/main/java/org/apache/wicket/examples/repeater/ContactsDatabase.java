@@ -23,6 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
+import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
+
 /**
  * simple database for contacts
  * 
@@ -82,32 +85,32 @@ public class ContactsDatabase
 	 * 
 	 * @param first
 	 * @param count
-	 * @param sortProperty
-	 * @param sortAsc
+	 * @param sort
 	 * @return list of contacts
 	 */
-	public List<Contact> find(int first, int count, String sortProperty, boolean sortAsc)
+	public List<Contact> find(int first, int count, SortParam sort)
 	{
-		List<Contact> sublist = getIndex(sortProperty, sortAsc).subList(first, first + count);
-		return sublist;
+		return getIndex(sort).subList(first, first + count);
 	}
 
-	protected List<Contact> getIndex(String prop, boolean asc)
+	protected List<Contact> getIndex(SortParam sort)
 	{
-		if (prop == null)
+		if (sort == null)
 		{
 			return fnameIdx;
 		}
-		if (prop.equals("firstName"))
+		final String field = sort.getProperty();
+		final SortOrder order = sort.getOrder();
+
+		if (field.equals("firstName"))
 		{
-			return (asc) ? fnameIdx : fnameDescIdx;
+			return (order != SortOrder.DESCENDING) ? fnameIdx : fnameDescIdx;
 		}
-		else if (prop.equals("lastName"))
+		else if (field.equals("lastName"))
 		{
-			return (asc) ? lnameIdx : lnameDescIdx;
+			return (order != SortOrder.DESCENDING) ? lnameIdx : lnameDescIdx;
 		}
-		throw new RuntimeException("uknown sort option [" + prop +
-			"]. valid options: [firstName] , [lastName]");
+		throw new RuntimeException("unknown sort option [" + sort +	"]. valid fields: [firstName], [lastName]");
 	}
 
 	/**
@@ -145,7 +148,7 @@ public class ContactsDatabase
 	 */
 	public void delete(final Contact contact)
 	{
-		Contact c = map.remove(contact.getId());
+		map.remove(contact.getId());
 
 		fnameIdx.remove(contact);
 		lnameIdx.remove(contact);

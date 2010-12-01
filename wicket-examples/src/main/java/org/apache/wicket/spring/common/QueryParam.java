@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.spring.common;
 
+import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 
 /**
  * Encapsulates the Query Paramaters to be passed to daos
@@ -28,9 +29,7 @@ public class QueryParam
 
 	private int count;
 
-	private String sort;
-
-	private boolean sortAsc;
+	private SortParam sort;
 
 	/**
 	 * Set to return <tt>count</tt> elements, starting at the <tt>first</tt> element.
@@ -42,7 +41,7 @@ public class QueryParam
 	 */
 	public QueryParam(int first, int count)
 	{
-		this(first, count, null, true);
+		this(first, count, null);
 	}
 
 	/**
@@ -51,18 +50,14 @@ public class QueryParam
 	 * @param first
 	 *            First element to return.
 	 * @param count
-	 *            Number of elements to return.
+ *            Number of elements to return.
 	 * @param sort
-	 *            Column to sort on.
-	 * @param sortAsc
-	 *            Sort ascending or descending.
 	 */
-	public QueryParam(int first, int count, String sort, boolean sortAsc)
+	public QueryParam(int first, int count, SortParam sort)
 	{
 		this.first = first;
 		this.count = count;
 		this.sort = sort;
-		this.sortAsc = sortAsc;
 	}
 
 	public int getCount()
@@ -75,14 +70,9 @@ public class QueryParam
 		return first;
 	}
 
-	public String getSort()
+	public SortParam getSort()
 	{
 		return sort;
-	}
-
-	public boolean isSortAsc()
-	{
-		return sortAsc;
 	}
 
 	public boolean hasSort()

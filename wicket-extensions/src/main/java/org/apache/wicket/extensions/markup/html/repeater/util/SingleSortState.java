@@ -18,7 +18,8 @@ package org.apache.wicket.extensions.markup.html.repeater.util;
 
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState;
-
+import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Implementation of ISortState that can keep track of sort information for a single property.
@@ -33,42 +34,28 @@ public class SingleSortState implements ISortState, IClusterable
 	SortParam param;
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState#setPropertySortOrder(java.lang.String,
-	 *      int)
+	 * @see org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState#setPropertySortOrder(String, org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder)
 	 */
-	public void setPropertySortOrder(String property, int dir)
+	public void setPropertySortOrder(String property, SortOrder order)
 	{
-		if (property == null)
-		{
-			throw new IllegalArgumentException("argument [property] cannot be null");
-		}
+		Args.notNull(property, "property");
+		Args.notNull(order, "order");
 
-		param = new SortParam(property, dir == ISortState.ASCENDING);
+		param = new SortParam(property, order);
 	}
 
 	/**
 	 * @see org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState#getPropertySortOrder(java.lang.String)
 	 */
-	public int getPropertySortOrder(String property)
+	public SortOrder getPropertySortOrder(String property)
 	{
-		if (property == null)
-		{
-			throw new IllegalArgumentException("argument [property] cannot be null");
-		}
+		Args.notNull(property, "property");
 
-		if (param == null || !param.getProperty().equals(property))
+		if (param == null || param.getProperty().equals(property) == false)
 		{
-			return NONE;
+			return SortOrder.NONE;
 		}
-		else if (param.isAscending())
-		{
-			return ASCENDING;
-		}
-		else
-		{
-			return DESCENDING;
-		}
-
+		return param.getOrder();
 	}
 
 	/**

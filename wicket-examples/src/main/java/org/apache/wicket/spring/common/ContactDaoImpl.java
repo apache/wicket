@@ -24,6 +24,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
+import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
+
 /**
  * a dao implementation with an auto-generated embedded database. in a true application this dao
  * would interface with a real database, but because we want to keep dependencies to a minimum we
@@ -89,25 +92,28 @@ public class ContactDaoImpl implements ContactDao
 	 */
 	public Iterator<Contact> find(QueryParam qp)
 	{
-		List<Contact> sublist = getIndex(qp.getSort(), qp.isSortAsc()).subList(qp.getFirst(),
+		List<Contact> sublist = getIndex(qp.getSort()).subList(qp.getFirst(),
 			qp.getFirst() + qp.getCount());
 		return sublist.iterator();
 	}
 
-	protected List<Contact> getIndex(String prop, boolean asc)
+	protected List<Contact> getIndex(SortParam sort)
 	{
-		if (prop == null)
+		if (sort == null)
 			return fnameIdx;
-		if (prop.equals("firstName"))
+
+		final String field = sort.getProperty();
+		final SortOrder order = sort.getOrder();
+
+		if (field.equals("firstName"))
 		{
-			return (asc) ? fnameIdx : fnameDescIdx;
+			return (order != SortOrder.DESCENDING) ? fnameIdx : fnameDescIdx;
 		}
-		else if (prop.equals("lastName"))
+		else if (field.equals("lastName"))
 		{
-			return (asc) ? lnameIdx : lnameDescIdx;
+			return (order != SortOrder.DESCENDING) ? lnameIdx : lnameDescIdx;
 		}
-		throw new RuntimeException("uknown sort option [" + prop +
-			"]. valid options: [firstName] , [lastName]");
+		throw new RuntimeException("unknown sort option [" + sort + "]. valid fields: [firstName], [lastName]");
 	}
 
 	/**

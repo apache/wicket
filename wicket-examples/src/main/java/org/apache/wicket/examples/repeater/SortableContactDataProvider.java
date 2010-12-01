@@ -18,6 +18,7 @@ package org.apache.wicket.examples.repeater;
 
 import java.util.Iterator;
 
+import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.model.IModel;
@@ -37,7 +38,7 @@ public class SortableContactDataProvider extends SortableDataProvider<Contact>
 	public SortableContactDataProvider()
 	{
 		// set default sort
-		setSort("firstName", true);
+		setSort("firstName", SortOrder.ASCENDING);
 	}
 
 	protected ContactsDatabase getContactsDB()
@@ -50,8 +51,7 @@ public class SortableContactDataProvider extends SortableDataProvider<Contact>
 	 */
 	public Iterator<Contact> iterator(int first, int count)
 	{
-		SortParam sp = getSort();
-		return getContactsDB().find(first, count, sp.getProperty(), sp.isAscending()).iterator();
+		return getContactsDB().find(first, count, getSort()).iterator();
 	}
 
 	/**

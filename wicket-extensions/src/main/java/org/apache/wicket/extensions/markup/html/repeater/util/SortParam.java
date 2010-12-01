@@ -17,10 +17,11 @@
 package org.apache.wicket.extensions.markup.html.repeater.util;
 
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 
 /**
  * Represents sorting information of a property
- * 
+ *
  * @author Igor Vaynberg ( ivaynberg )
  */
 public class SortParam implements IClusterable
@@ -28,26 +29,28 @@ public class SortParam implements IClusterable
 	private static final long serialVersionUID = 1L;
 
 	private String property;
-	private boolean asc;
+	private SortOrder order;
 
 	/**
 	 * @param property
 	 *            sort property
-	 * @param asc
-	 *            sort direction
+	 * @param order
+	 *            sort order
 	 */
-	public SortParam(String property, boolean asc)
+	public SortParam(String property, SortOrder order)
 	{
 		this.property = property;
-		this.asc = asc;
+		this.order = order;
 	}
 
 	/**
-	 * @return true if sort dir is ascending, false otherwise
+	 * get sort order
+	 *
+	 * @return sort order
 	 */
-	public boolean isAscending()
+	public SortOrder getOrder()
 	{
-		return asc;
+		return order;
 	}
 
 	/**
@@ -58,18 +61,26 @@ public class SortParam implements IClusterable
 		return property;
 	}
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object rhs)
+	@Override
+	public boolean equals(Object o)
 	{
-		if (rhs instanceof SortParam)
-		{
-			SortParam param = (SortParam)rhs;
-			return getProperty().equals(param.getProperty()) &&
-					isAscending() == param.isAscending();
-		}
-		return false;
+		if (this == o)
+			return true;
+
+		if ((o instanceof SortParam) == false)
+			return false;
+
+		SortParam sortParam = (SortParam)o;
+
+		return order == sortParam.order && property.equals(sortParam.property);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		int result = property.hashCode();
+		result = 31 * result + order.hashCode();
+		return result;
 	}
 
 	/**
@@ -78,6 +89,6 @@ public class SortParam implements IClusterable
 	public String toString()
 	{
 		return new StringBuilder().append("[SortParam property=").append(getProperty()).append(
-				" ascending=").append(asc).append("]").toString();
+				" order=").append(order.name()).append("]").toString();
 	}
 }
