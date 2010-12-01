@@ -19,7 +19,7 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.navigation.paging.IPageableList;
+import org.apache.wicket.markup.html.navigation.paging.IPageableItems;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 
@@ -37,7 +37,7 @@ public class NavigatorLabel extends Label
 {
 	private static final long serialVersionUID = 1L;
 
-	public NavigatorLabel(final String id, final IPageableList pageable)
+	public NavigatorLabel(final String id, final IPageableItems pageable)
 	{
 		super(id);
 		setDefaultModel(new StringResourceModel("NavigatorLabel", this,
@@ -48,14 +48,14 @@ public class NavigatorLabel extends Label
 	private class LabelModelObject implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
-		private final IPageableList pageable;
+		private final IPageableItems pageable;
 
 		/**
 		 * Construct.
 		 * 
 		 * @param table
 		 */
-		public LabelModelObject(IPageableList table)
+		public LabelModelObject(IPageableItems table)
 		{
 			pageable = table;
 		}
@@ -77,7 +77,7 @@ public class NavigatorLabel extends Label
 			{
 				return 0;
 			}
-			return pageable.getItemOffset();
+			return pageable.getCurrentPage() * pageable.getItemsPerPage();
 		}
 
 		/**

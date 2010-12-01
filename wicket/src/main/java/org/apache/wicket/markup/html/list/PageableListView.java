@@ -18,7 +18,7 @@ package org.apache.wicket.markup.html.list;
 
 import java.util.List;
 
-import org.apache.wicket.markup.html.navigation.paging.IPageable;
+import org.apache.wicket.markup.html.navigation.paging.IPageableItems;
 import org.apache.wicket.model.IModel;
 
 
@@ -31,7 +31,7 @@ import org.apache.wicket.model.IModel;
  * @param <T>
  *            Model object type
  */
-public abstract class PageableListView<T> extends ListView<T> implements IPageable
+public abstract class PageableListView<T> extends ListView<T> implements IPageableItems
 {
 	private static final long serialVersionUID = 1L;
 
@@ -129,13 +129,13 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 		this.itemsPerPage = itemsPerPage;
 	}
 
-	public int getItemOffset()
+	public int getFirstItemOffset()
 	{
 		return getCurrentPage() * getItemsPerPage();
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.navigation.paging.IPageable#getItemCount()
+	 * @see org.apache.wicket.markup.html.navigation.paging.IPageableItems#getItemCount()
 	 */
 	public int getItemCount()
 	{
@@ -150,7 +150,7 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	{
 		if (getDefaultModelObject() != null)
 		{
-			super.setStartIndex(getItemOffset());
+			super.setStartIndex(getFirstItemOffset());
 			super.setViewSize(getItemsPerPage());
 		}
 

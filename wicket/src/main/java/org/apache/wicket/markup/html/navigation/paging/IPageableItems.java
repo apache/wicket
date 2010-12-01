@@ -17,10 +17,10 @@
 package org.apache.wicket.markup.html.navigation.paging;
 
 /**
- * An pageable interface that presents items in an page rather and need to provide items count an
- * offset meta data for pagination.
+ * represents a countable amount of items that can be paginated. 
+ * each page except the last one will contain an equal number of items.
  */
-public interface IPageableList extends IPageable
+public interface IPageableItems extends IPageable
 {
 	/**
 	 * Gets the total number of items this object has.
@@ -28,13 +28,6 @@ public interface IPageableList extends IPageable
 	 * @return The total number of items this object has.
 	 */
 	int getItemCount();
-
-	/**
-	 * gets the index of the first visible row
-	 * 
-	 * @return first visible row
-	 */
-	int getItemOffset();
 
 	/**
 	 * maximum number of visible items per page

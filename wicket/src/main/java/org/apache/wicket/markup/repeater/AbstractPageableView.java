@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.apache.wicket.markup.html.navigation.paging.IPageable;
+import org.apache.wicket.markup.html.navigation.paging.IPageableItems;
 import org.apache.wicket.model.IModel;
 
 
@@ -43,7 +43,7 @@ import org.apache.wicket.model.IModel;
  * @param <T>
  *            Model object type
  */
-public abstract class AbstractPageableView<T> extends RefreshingView<T> implements IPageable
+public abstract class AbstractPageableView<T> extends RefreshingView<T> implements IPageableItems
 {
 	/** */
 	private static final long serialVersionUID = 1L;
@@ -95,7 +95,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	@Override
 	protected Iterator<IModel<T>> getItemModels()
 	{
-		int offset = getItemOffset();
+		int offset = getFirstItemOffset();
 		int size = getViewSize();
 
 		Iterator<IModel<T>> models = getItemModels(offset, size);
@@ -293,9 +293,9 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	}
 
 	/**
-	 * @return the index of the first visible item
+	 * @return the index of the first visible item in the view
 	 */
-	public int getItemOffset()
+	public int getFirstItemOffset()
 	{
 		return getCurrentPage() * getItemsPerPage();
 	}
@@ -306,7 +306,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	 */
 	public int getViewSize()
 	{
-		return Math.min(getItemsPerPage(), getRowCount() - getItemOffset());
+		return Math.min(getItemsPerPage(), getRowCount() - getFirstItemOffset());
 	}
 
 	// /////////////////////////////////////////////////////////////////////////

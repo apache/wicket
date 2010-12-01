@@ -30,12 +30,12 @@ import org.apache.wicket.IClusterable;
 public interface IPageable extends IClusterable
 {
 	/**
-	 * @return The current page that is or will be rendered.
+	 * @return The current page that is or will be rendered (page number is zero-based)
 	 */
 	int getCurrentPage();
 
 	/**
-	 * Sets the a page that should be rendered.
+	 * Sets the a page that should be rendered (page number is zero-based)
 	 * 
 	 * @param page
 	 *            The page that should be rendered.

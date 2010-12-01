@@ -24,7 +24,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.list.AbstractItem;
-import org.apache.wicket.markup.html.navigation.paging.IPageableList;
+import org.apache.wicket.markup.html.navigation.paging.IPageableItems;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.IItemReuseStrategy;
 import org.apache.wicket.markup.repeater.Item;
@@ -71,7 +71,7 @@ import org.apache.wicket.util.string.Strings;
  *            The model object type
  * 
  */
-public class DataTable<T> extends Panel implements IPageableList
+public class DataTable<T> extends Panel implements IPageableItems
 {
 	static abstract class CssAttributeBehavior extends Behavior
 	{
@@ -311,15 +311,7 @@ public class DataTable<T> extends Panel implements IPageableList
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.navigation.paging.IPageable#getItemOffset()
-	 */
-	public int getItemOffset()
-	{
-		return datagrid.getItemOffset();
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.navigation.paging.IPageable#getItemCount()
+	 * @see org.apache.wicket.markup.html.navigation.paging.IPageableItems#getItemCount()
 	 */
 	public int getItemCount()
 	{
