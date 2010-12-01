@@ -17,7 +17,7 @@
 package org.apache.wicket.extensions.markup.html.repeater.util;
 
 import org.apache.wicket.IClusterable;
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Represents sorting information of a property
@@ -28,29 +28,20 @@ public class SortParam implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
-	private String property;
-	private SortOrder order;
+	private final String property;
+	private final boolean ascending;
 
 	/**
 	 * @param property
 	 *            sort property
-	 * @param order
-	 *            sort order
+	 * @param ascending
+	 *            <code>true<code> if sort order is ascending, <code>false</code> if sort order is descending
 	 */
-	public SortParam(String property, SortOrder order)
+	public SortParam(String property, boolean ascending)
 	{
+		Args.notNull(property, "property");
 		this.property = property;
-		this.order = order;
-	}
-
-	/**
-	 * get sort order
-	 *
-	 * @return sort order
-	 */
-	public SortOrder getOrder()
-	{
-		return order;
+		this.ascending = ascending;
 	}
 
 	/**
@@ -61,25 +52,34 @@ public class SortParam implements IClusterable
 		return property;
 	}
 
+	/**
+	 * check if sort order is ascending
+	 *
+	 * @return <code>true<code> if sort order is ascending, <code>false</code> if sort order is descending
+	 */
+	public boolean isAscending()
+	{
+		return ascending;
+	}
+
 	@Override
 	public boolean equals(Object o)
 	{
 		if (this == o)
 			return true;
-
-		if ((o instanceof SortParam) == false)
+		if (!(o instanceof SortParam))
 			return false;
 
 		SortParam sortParam = (SortParam)o;
 
-		return order == sortParam.order && property.equals(sortParam.property);
+		return ascending == sortParam.ascending && property.equals(sortParam.property);
 	}
 
 	@Override
 	public int hashCode()
 	{
 		int result = property.hashCode();
-		result = 31 * result + order.hashCode();
+		result = 31 * result + (ascending ? 1 : 0);
 		return result;
 	}
 
@@ -89,6 +89,6 @@ public class SortParam implements IClusterable
 	public String toString()
 	{
 		return new StringBuilder().append("[SortParam property=").append(getProperty()).append(
-				" order=").append(order.name()).append("]").toString();
+				" ascending=").append(ascending).append("]").toString();
 	}
 }

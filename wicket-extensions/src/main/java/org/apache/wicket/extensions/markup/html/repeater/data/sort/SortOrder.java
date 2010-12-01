@@ -18,26 +18,22 @@ package org.apache.wicket.extensions.markup.html.repeater.data.sort;
 
 /**
  * Sort order for columns
- * 
+ *
  * @author pete
- * 
+ *
  */
 public enum SortOrder
 {
-	NONE,
-	ASCENDING,
-	DESCENDING;
-
 	/**
-	 * return next sort order in cycle (will iterate through all
-	 * possible states, then start from the beginning)
-	 *
-	 * @return next sort order
+	 * unsorted
 	 */
-	public SortOrder nextOrderInCycle()
-	{
-		final int index = (ordinal() + 1) % values().length;
-		
-		return values()[index];
-	}
+	NONE,
+	/**
+	 * ascending sort order
+	 */
+	ASCENDING,
+	/**
+	 * descending sort order
+	 */
+	DESCENDING
 }

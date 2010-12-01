@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 
 /**
@@ -100,15 +99,14 @@ public class ContactsDatabase
 			return fnameIdx;
 		}
 		final String field = sort.getProperty();
-		final SortOrder order = sort.getOrder();
 
 		if (field.equals("firstName"))
 		{
-			return order != SortOrder.DESCENDING ? fnameIdx : fnameDescIdx;
+			return sort.isAscending() ? fnameIdx : fnameDescIdx;
 		}
 		else if (field.equals("lastName"))
 		{
-			return order != SortOrder.DESCENDING ? lnameIdx : lnameDescIdx;
+			return sort.isAscending() ? lnameIdx : lnameDescIdx;
 		}
 		throw new RuntimeException("unknown sort option [" + sort +	"]. valid fields: [firstName], [lastName]");
 	}

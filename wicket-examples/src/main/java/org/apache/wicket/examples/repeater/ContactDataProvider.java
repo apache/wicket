@@ -18,7 +18,6 @@ package org.apache.wicket.examples.repeater;
 
 import java.util.Iterator;
 
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
@@ -45,7 +44,7 @@ public class ContactDataProvider implements IDataProvider<Contact>
 	 */
 	public Iterator<Contact> iterator(int first, int count)
 	{
-		return getContactsDB().find(first, count, new SortParam("firstName", SortOrder.ASCENDING)).iterator();
+		return getContactsDB().find(first, count, new SortParam("firstName", true)).iterator();
 	}
 
 	/**

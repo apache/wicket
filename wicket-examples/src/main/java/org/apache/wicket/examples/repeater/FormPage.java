@@ -18,7 +18,6 @@ package org.apache.wicket.examples.repeater;
 
 import java.util.Iterator;
 
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.SubmitLink;
@@ -58,7 +57,7 @@ public class FormPage extends BasePage
 			protected Iterator<IModel<Contact>> getItemModels()
 			{
 				// for simplicity we only show the first 10 contacts
-				SortParam sort = new SortParam("firstName", SortOrder.ASCENDING);
+				SortParam sort = new SortParam("firstName", true);
 				Iterator<Contact> contacts = DatabaseLocator.getDatabase().find(0, 10, sort).iterator();
 
 				// the iterator returns contact objects, but we need it to

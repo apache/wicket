@@ -31,17 +31,17 @@ public interface ISortState extends IClusterable
 	 * 
 	 * @param property
 	 *            the name of the property to sort on
-	 * @param state
-	 *            new sort state of the property. must be one of ASCENDING, DESCENDING, or NONE
+	 * @param order
+	 *            sort order
 	 */
-	public void setPropertySortOrder(String property, SortOrder state);
+	public void setPropertySortOrder(String property, SortOrder order);
 
 	/**
 	 * Gets the sort order of a property
 	 * 
 	 * @param property
 	 *            sort property to be checked
-	 * @return one of ASCENDING, DESCENDING, or NONE
+	 * @return sort order
 	 */
 	public SortOrder getPropertySortOrder(String property);
 

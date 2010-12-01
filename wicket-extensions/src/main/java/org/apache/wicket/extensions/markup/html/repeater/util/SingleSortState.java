@@ -41,7 +41,17 @@ public class SingleSortState implements ISortState, IClusterable
 		Args.notNull(property, "property");
 		Args.notNull(order, "order");
 
-		param = new SortParam(property, order);
+		if(order == SortOrder.NONE)
+		{
+			if (param != null && property.equals(param.getProperty()))
+			{
+				param = null;
+			}
+		}
+		else
+		{
+			param = new SortParam(property, order == SortOrder.ASCENDING);
+		}
 	}
 
 	/**
@@ -55,7 +65,7 @@ public class SingleSortState implements ISortState, IClusterable
 		{
 			return SortOrder.NONE;
 		}
-		return param.getOrder();
+		return param.isAscending() ? SortOrder.ASCENDING : SortOrder.DESCENDING;
 	}
 
 	/**

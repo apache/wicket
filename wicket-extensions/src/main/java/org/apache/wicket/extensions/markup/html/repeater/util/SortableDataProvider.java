@@ -87,12 +87,12 @@ public abstract class SortableDataProvider<T> implements ISortableDataProvider<T
 	 * 
 	 * @param property
 	 *            sort property
-	 * @param ascending
-	 *            sort direction
+	 * @param order
+	 *            sort order
 	 */
 	public void setSort(String property, SortOrder order)
 	{
-		setSort(new SortParam(property, order));
+		state.setPropertySortOrder(property, order);
 	}
 
 	/**
