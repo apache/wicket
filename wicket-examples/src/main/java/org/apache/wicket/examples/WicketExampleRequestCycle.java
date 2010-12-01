@@ -16,8 +16,15 @@
  */
 package org.apache.wicket.examples;
 
+import org.apache.wicket.examples.source.SourcesPage;
+import org.apache.wicket.protocol.http.PageExpiredException;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleContext;
+import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
+import org.apache.wicket.util.lang.Exceptions;
 
 /**
  * Handles the PageExpiredException so that the SourcesPage can recover from a session expired.
@@ -38,63 +45,43 @@ public class WicketExampleRequestCycle extends RequestCycle
 	{
 		super(context);
 	}
-// /**
-// * Construct.
-// *
-// * @param application
-// * @param request
-// * @param response
-// */
-// public WicketExampleRequestCycle(WebApplication application, WebRequest request,
-// Response response)
-// {
-// super(application, request, response);
-// }
-//
-// /**
-// * @see org.apache.wicket.RequestCycle#onRuntimeException(org.apache.wicket.Page,
-// * java.lang.RuntimeException)
-// */
-// @Override
-// public Page onRuntimeException(final Page page, final RuntimeException e)
-// {
-// final Throwable cause;
-// if (e.getCause() != null)
-// {
-// cause = e.getCause();
-// }
-// else
-// {
-// cause = e;
-// }
-//
-// if (cause instanceof PageExpiredException)
-// {
-// handlePageExpiredException((PageExpiredException)cause);
-// }
-// return super.onRuntimeException(page, e);
-// }
-//
-// /**
-// * Checks to see if the request was ajax based. If so we send a 404 so that the
-// * org.apache.wicket.ajax.IAjaxCallDecorator failure script is executed.
-// *
-// * @param e
-// */
-// private void handlePageExpiredException(final PageExpiredException e)
-// {
-// Response response = getOriginalResponse();
-// if (response instanceof BufferedWebResponse)
-// {
-// BufferedWebResponse bufferedWebResponse = (BufferedWebResponse)response;
-// Request request = getRequest();
-// if (bufferedWebResponse.isAjax() &&
-// request.getParameter(SourcesPage.PAGE_CLASS) != null)
-// {
-// // If there is a better way to figure out if SourcesPage was the request, we should
-// // do that.
-// throw new AbortWithWebErrorCodeException(404);
-// }
-// }
-// }
+
+	/**
+	 * @see org.apache.wicket.RequestCycle#onRuntimeException(org.apache.wicket.Page,
+	 *      java.lang.RuntimeException)
+	 */
+	@Override
+	public IRequestHandler handleException(final Exception e)
+	{
+		PageExpiredException pageExpiredException = Exceptions.findCause(e,
+			PageExpiredException.class);
+		if (pageExpiredException != null)
+		{
+			handlePageExpiredException(pageExpiredException);
+		}
+		return super.handleException(e);
+	}
+
+	/**
+	 * Checks to see if the request was ajax based. If so we send a 404 so that the
+	 * org.apache.wicket.ajax.IAjaxCallDecorator failure script is executed.
+	 * 
+	 * @param e
+	 */
+	private void handlePageExpiredException(final PageExpiredException e)
+	{
+		Request request = getRequest();
+		if (request instanceof WebRequest)
+		{
+			WebRequest webRequest = (WebRequest)request;
+
+			if (webRequest.isAjax() &&
+				!request.getRequestParameters().getParameterValue(SourcesPage.PAGE_CLASS).isNull())
+			{
+				// If there is a better way to figure out if SourcesPage was the request, we should
+				// do that.
+				throw new AbortWithHttpErrorCodeException(404, "");
+			}
+		}
+	}
 }
