@@ -19,8 +19,7 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.list.PageableListView;
-import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.markup.html.navigation.paging.IPageableList;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 
@@ -38,147 +37,27 @@ public class NavigatorLabel extends Label
 {
 	private static final long serialVersionUID = 1L;
 
-	// TODO Factor this interface out and let dataview/datatable implement it
-	private static interface PageableComponent extends IClusterable
-	{
-		/**
-		 * @return total number of rows across all pages
-		 */
-		int getRowCount();
-
-		/**
-		 * @return current page
-		 */
-		int getCurrentPage();
-
-		/**
-		 * @return rows per page
-		 */
-		int getRowsPerPage();
-	}
-
-	/**
-	 * @param id
-	 *            component id
-	 * @param table
-	 *            table
-	 */
-	public NavigatorLabel(final String id, final DataTable<?> table)
-	{
-		this(id, new PageableComponent()
-		{
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			public int getCurrentPage()
-			{
-				return table.getCurrentPage();
-			}
-
-			public int getRowCount()
-			{
-				return table.getRowCount();
-			}
-
-			public int getRowsPerPage()
-			{
-				return table.getRowsPerPage();
-			}
-
-		});
-
-	}
-
-	/**
-	 * @param id
-	 *            component id
-	 * @param list
-	 *            listview
-	 */
-	public NavigatorLabel(final String id, final PageableListView<?> list)
-	{
-		this(id, new PageableComponent()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public int getCurrentPage()
-			{
-				return list.getCurrentPage();
-			}
-
-			public int getRowCount()
-			{
-				return list.getModelObject().size();
-			}
-
-			public int getRowsPerPage()
-			{
-				return list.getRowsPerPage();
-			}
-
-		});
-
-	}
-
-	/**
-	 * @param id
-	 *            component id
-	 * @param table
-	 *            pageable view
-	 */
-	public NavigatorLabel(final String id, final DataView<?> table)
-	{
-		this(id, new PageableComponent()
-		{
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			public int getCurrentPage()
-			{
-				return table.getCurrentPage();
-			}
-
-			public int getRowCount()
-			{
-				return table.getRowCount();
-			}
-
-			public int getRowsPerPage()
-			{
-				return table.getItemsPerPage();
-			}
-
-		});
-
-	}
-
-	private NavigatorLabel(final String id, final PageableComponent table)
+	public NavigatorLabel(final String id, final IPageableList pageable)
 	{
 		super(id);
 		setDefaultModel(new StringResourceModel("NavigatorLabel", this,
-			new Model<LabelModelObject>(new LabelModelObject(table)),
+			new Model<LabelModelObject>(new LabelModelObject(pageable)),
 			"Showing ${from} to ${to} of ${of}"));
 	}
 
 	private class LabelModelObject implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
-		private final PageableComponent table;
+		private final IPageableList pageable;
 
 		/**
 		 * Construct.
 		 * 
 		 * @param table
 		 */
-		public LabelModelObject(PageableComponent table)
+		public LabelModelObject(IPageableList table)
 		{
-			this.table = table;
+			pageable = table;
 		}
 
 		/**
@@ -186,7 +65,7 @@ public class NavigatorLabel extends Label
 		 */
 		public int getOf()
 		{
-			return table.getRowCount();
+			return pageable.getItemCount();
 		}
 
 		/**
@@ -198,7 +77,7 @@ public class NavigatorLabel extends Label
 			{
 				return 0;
 			}
-			return (table.getCurrentPage() * table.getRowsPerPage()) + 1;
+			return pageable.getItemOffset();
 		}
 
 		/**
@@ -210,7 +89,7 @@ public class NavigatorLabel extends Label
 			{
 				return 0;
 			}
-			return Math.min(getOf(), getFrom() + table.getRowsPerPage() - 1);
+			return Math.min(getOf(), getFrom() + pageable.getItemsPerPage() - 1);
 		}
 	}
 }

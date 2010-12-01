@@ -95,7 +95,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	@Override
 	protected Iterator<IModel<T>> getItemModels()
 	{
-		int offset = getViewOffset();
+		int offset = getItemOffset();
 		int size = getViewSize();
 
 		Iterator<IModel<T>> models = getItemModels(offset, size);
@@ -161,7 +161,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	/**
 	 * @return maximum number of items that will be shown per page
 	 */
-	protected final int internalGetRowsPerPage()
+	public int getItemsPerPage()
 	{
 		return itemsPerPage;
 	}
@@ -171,7 +171,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	 * 
 	 * @param items
 	 */
-	protected final void internalSetRowsPerPage(int items)
+	public final void setItemsPerPage(int items)
 	{
 		if (items < 1)
 		{
@@ -280,10 +280,10 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	public final int getPageCount()
 	{
 		int total = getRowCount();
-		int page = internalGetRowsPerPage();
-		int count = total / page;
+		int itemsPerPage = getItemsPerPage();
+		int count = total / itemsPerPage;
 
-		if (page * count < total)
+		if (itemsPerPage * count < total)
 		{
 			count++;
 		}
@@ -295,18 +295,18 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	/**
 	 * @return the index of the first visible item
 	 */
-	protected int getViewOffset()
+	public int getItemOffset()
 	{
-		return getCurrentPage() * internalGetRowsPerPage();
+		return getCurrentPage() * getItemsPerPage();
 	}
 
 
 	/**
 	 * @return the number of items visible
 	 */
-	protected int getViewSize()
+	public int getViewSize()
 	{
-		return Math.min(internalGetRowsPerPage(), getRowCount() - getViewOffset());
+		return Math.min(getItemsPerPage(), getRowCount() - getItemOffset());
 	}
 
 	// /////////////////////////////////////////////////////////////////////////
@@ -369,7 +369,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 			return delegate.next();
 		}
 
-	};
+	}
 
 	/**
 	 * @see org.apache.wicket.Component#onDetach()

@@ -36,6 +36,24 @@ public abstract class AbstractPagingNavigationTest extends WicketTestCase
 		/** expected page which is set by the link. */
 		private int expectedPage = 0;
 
+		// untested
+		public int getItemCount()
+		{
+			return 0;
+		}
+
+		// untested
+		public int getItemOffset()
+		{
+			return 0;
+		}
+
+		// untested
+		public int getItemsPerPage()
+		{
+			return 0;
+		}
+
 		/**
 		 * @see IPageable#getCurrentPage()
 		 */

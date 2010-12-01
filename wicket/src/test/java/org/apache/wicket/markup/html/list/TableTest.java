@@ -74,26 +74,26 @@ public class TableTest extends WicketTestCase
 	public void testTable()
 	{
 		PageableListView<?> table = createTable(20, 4);
-		assertEquals(4, table.getRowsPerPage());
+		assertEquals(4, table.getItemsPerPage());
 		assertEquals(0, table.getCurrentPage());
 		assertEquals(5, table.getPageCount());
 		assertEquals(4, table.getViewSize());
 
 		table = createTable(20, 6);
-		assertEquals(6, table.getRowsPerPage());
+		assertEquals(6, table.getItemsPerPage());
 		assertEquals(0, table.getCurrentPage());
 		assertEquals(4, table.getPageCount());
 		assertEquals(6, table.getViewSize());
 
 		table.setCurrentPage(1);
-		assertEquals(6, table.getRowsPerPage());
+		assertEquals(6, table.getItemsPerPage());
 		assertEquals(1, table.getCurrentPage());
 		assertEquals(4, table.getPageCount());
 		assertEquals(6, table.getViewSize());
 		assertEquals(6, table.getStartIndex());
 
 		table.setCurrentPage(3);
-		assertEquals(6, table.getRowsPerPage());
+		assertEquals(6, table.getItemsPerPage());
 		assertEquals(3, table.getCurrentPage());
 		assertEquals(4, table.getPageCount());
 		assertEquals(2, table.getViewSize());
@@ -106,7 +106,7 @@ public class TableTest extends WicketTestCase
 	public void testEmptyTable()
 	{
 		PageableListView<?> table = createTable(0, 4);
-		assertEquals(4, table.getRowsPerPage());
+		assertEquals(4, table.getItemsPerPage());
 		assertEquals(0, table.getCurrentPage());
 		assertEquals(0, table.getPageCount());
 		assertEquals(0, table.getViewSize());

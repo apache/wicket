@@ -24,7 +24,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.list.AbstractItem;
-import org.apache.wicket.markup.html.navigation.paging.IPageable;
+import org.apache.wicket.markup.html.navigation.paging.IPageableList;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.IItemReuseStrategy;
 import org.apache.wicket.markup.repeater.Item;
@@ -71,7 +71,7 @@ import org.apache.wicket.util.string.Strings;
  *            The model object type
  * 
  */
-public class DataTable<T> extends Panel implements IPageable
+public class DataTable<T> extends Panel implements IPageableList
 {
 	static abstract class CssAttributeBehavior extends Behavior
 	{
@@ -167,7 +167,7 @@ public class DataTable<T> extends Panel implements IPageable
 				return DataTable.this.newRowItem(id, index, model);
 			}
 		};
-		datagrid.setRowsPerPage(rowsPerPage);
+		datagrid.setItemsPerPage(rowsPerPage);
 		body.add(datagrid);
 		add(body);
 		topToolbars = new ToolbarsContainer("topToolbars");
@@ -267,9 +267,9 @@ public class DataTable<T> extends Panel implements IPageable
 	/**
 	 * @return number of rows per page
 	 */
-	public final int getRowsPerPage()
+	public final int getItemsPerPage()
 	{
-		return datagrid.getRowsPerPage();
+		return datagrid.getItemsPerPage();
 	}
 
 	/**
@@ -305,9 +305,25 @@ public class DataTable<T> extends Panel implements IPageable
 	 *            number of items to display per page
 	 * 
 	 */
-	public void setRowsPerPage(int items)
+	public void setItemsPerPage(int items)
 	{
-		datagrid.setRowsPerPage(items);
+		datagrid.setItemsPerPage(items);
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.html.navigation.paging.IPageable#getItemOffset()
+	 */
+	public int getItemOffset()
+	{
+		return datagrid.getItemOffset();
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.html.navigation.paging.IPageable#getItemCount()
+	 */
+	public int getItemCount()
+	{
+		return datagrid.getItemCount();
 	}
 
 	private void addToolbar(AbstractToolbar toolbar, RepeatingView container)

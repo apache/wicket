@@ -112,26 +112,6 @@ public class DataGridView<T> extends AbstractDataGridView<T>
 	}
 
 	/**
-	 * Sets the number of items to be displayed per page
-	 * 
-	 * @param items
-	 *            number of items to display per page
-	 * 
-	 */
-	public void setRowsPerPage(int items)
-	{
-		internalSetRowsPerPage(items);
-	}
-
-	/**
-	 * @return number of items displayed per page
-	 */
-	public int getRowsPerPage()
-	{
-		return internalGetRowsPerPage();
-	}
-
-	/**
 	 * Returns the data provider
 	 * 
 	 * @return data provider

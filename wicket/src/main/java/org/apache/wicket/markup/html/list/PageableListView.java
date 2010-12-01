@@ -39,7 +39,7 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	private int currentPage;
 
 	/** Number of rows per page of the list view. */
-	private int rowsPerPage;
+	private int itemsPerPage;
 
 	/**
 	 * Constructor
@@ -48,14 +48,14 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	 *            See Component
 	 * @param model
 	 *            See Component
-	 * @param rowsPerPage
+	 * @param itemsPerPage
 	 *            Number of rows to show on a page
 	 */
 	public PageableListView(final String id, final IModel<? extends List<? extends T>> model,
-		int rowsPerPage)
+		int itemsPerPage)
 	{
 		super(id, model);
-		this.rowsPerPage = rowsPerPage;
+		this.itemsPerPage = itemsPerPage;
 	}
 
 	/**
@@ -66,14 +66,14 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	 *            See Component
 	 * @param list
 	 *            See Component
-	 * @param rowsPerPage
+	 * @param itemsPerPage
 	 *            Number of rows to show on a page
 	 * @see ListView#ListView(String, List)
 	 */
-	public PageableListView(final String id, final List<? extends T> list, final int rowsPerPage)
+	public PageableListView(final String id, final List<? extends T> list, final int itemsPerPage)
 	{
 		super(id, list);
-		this.rowsPerPage = rowsPerPage;
+		this.itemsPerPage = itemsPerPage;
 	}
 
 	/**
@@ -84,7 +84,7 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	public final int getCurrentPage()
 	{
 		// If first cell is out of range, bring page back into range
-		while ((currentPage > 0) && ((currentPage * rowsPerPage) >= getList().size()))
+		while ((currentPage > 0) && ((currentPage * itemsPerPage) >= getItemCount()))
 		{
 			currentPage--;
 		}
@@ -99,7 +99,7 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	 */
 	public final int getPageCount()
 	{
-		return ((getList().size() + rowsPerPage) - 1) / rowsPerPage;
+		return ((getItemCount() + itemsPerPage) - 1) / itemsPerPage;
 	}
 
 	/**
@@ -107,26 +107,39 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	 * 
 	 * @return the maximum number of rows on each page.
 	 */
-	public final int getRowsPerPage()
+	public final int getItemsPerPage()
 	{
-		return rowsPerPage;
+		return itemsPerPage;
 	}
 
 	/**
 	 * Sets the maximum number of rows on each page.
 	 * 
-	 * @param rowsPerPage
+	 * @param itemsPerPage
 	 *            the maximum number of rows on each page.
 	 */
-	public final void setRowsPerPage(int rowsPerPage)
+	public final void setItemsPerPage(int itemsPerPage)
 	{
-		if (rowsPerPage < 0)
+		if (itemsPerPage < 0)
 		{
-			rowsPerPage = 0;
+			itemsPerPage = 0;
 		}
 
 		addStateChange();
-		this.rowsPerPage = rowsPerPage;
+		this.itemsPerPage = itemsPerPage;
+	}
+
+	public int getItemOffset()
+	{
+		return getCurrentPage() * getItemsPerPage();
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.html.navigation.paging.IPageable#getItemCount()
+	 */
+	public int getItemCount()
+	{
+		return getList().size();
 	}
 
 	/**
@@ -137,8 +150,8 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	{
 		if (getDefaultModelObject() != null)
 		{
-			super.setStartIndex(getCurrentPage() * getRowsPerPage());
-			super.setViewSize(getRowsPerPage());
+			super.setStartIndex(getItemOffset());
+			super.setViewSize(getItemsPerPage());
 		}
 
 		return super.getViewSize();

@@ -96,25 +96,6 @@ public abstract class DataView<T> extends DataViewBase<T>
 	}
 
 	/**
-	 * Sets the number of items to be displayed per page
-	 * 
-	 * @param items
-	 *            number of items to display per page
-	 */
-	public void setItemsPerPage(int items)
-	{
-		internalSetRowsPerPage(items);
-	}
-
-	/**
-	 * @return number of items displayed per page
-	 */
-	public int getItemsPerPage()
-	{
-		return internalGetRowsPerPage();
-	}
-
-	/**
 	 * @return data provider
 	 */
 	public IDataProvider<T> getDataProvider()

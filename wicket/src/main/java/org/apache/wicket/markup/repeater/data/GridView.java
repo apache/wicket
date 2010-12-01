@@ -159,9 +159,7 @@ public abstract class GridView<T> extends DataViewBase<T>
 		{
 			items = (int)result;
 		}
-
-		internalSetRowsPerPage(items);
-
+		setItemsPerPage(items);
 	}
 
 
