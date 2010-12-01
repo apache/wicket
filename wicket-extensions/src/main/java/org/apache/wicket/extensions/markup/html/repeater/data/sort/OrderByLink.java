@@ -127,22 +127,35 @@ public class OrderByLink extends Link
 		}
 
 		ISortState state = stateLocator.getSortState();
+
+		// get current sort order
 		SortOrder order = state.getPropertySortOrder(property);
 
-		// init / flip order
-		if(order == SortOrder.NONE)
-		{
-			order = SortOrder.ASCENDING;
-		}
-		else
-		{
-			order = order == SortOrder.ASCENDING ? SortOrder.DESCENDING : SortOrder.ASCENDING;
-		}
-		state.setPropertySortOrder(property, order);
+		// set next sort order
+		state.setPropertySortOrder(property, nextSortOrder(order));
 
 		return this;
 	}
 
+	/**
+	 * returns the next sort order when changing it
+	 *
+	 * @param order
+	 *          previous sort order
+	 * @return next sort order
+	 */
+	protected SortOrder nextSortOrder(SortOrder order)
+	{
+		// init / flip order
+		if(order == SortOrder.NONE)
+		{
+			return SortOrder.ASCENDING;
+		}
+		else
+		{
+			return order == SortOrder.ASCENDING ? SortOrder.DESCENDING : SortOrder.ASCENDING;
+		}
+	}
 
 	/**
 	 * Uses the specified ICssProvider to add css class attributes to the link.

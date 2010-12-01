@@ -38,25 +38,43 @@ public class OrderByBorder extends Border
 	/**
 	 * @param id
 	 *            see
-	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, OrderByLink.ICssProvider) }
+	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
 	 * @param property
 	 *            see
-	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, OrderByLink.ICssProvider) }
+	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
 	 * @param stateLocator
 	 *            see
-	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, OrderByLink.ICssProvider) }
+	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
 	 * @param cssProvider
 	 *            see
-	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, OrderByLink.ICssProvider) }
+	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
 	 */
 	public OrderByBorder(String id, String property, ISortStateLocator stateLocator,
 		OrderByLink.ICssProvider cssProvider)
 	{
 		super(id);
-		OrderByLink link = new OrderByLink("orderByLink", property, stateLocator,
-			OrderByLink.VoidCssProvider.getInstance())
-		{
 
+		OrderByLink link = newOrderByLink("orderByLink", property, stateLocator);
+		addToBorder(link);
+		addToBorder(new OrderByLink.CssModifier(link, cssProvider));
+		link.add(getBodyContainer());
+	}
+
+	/**
+	 * create new sort order toggling link
+	 *
+	 * @param id
+	 *            component id
+	 * @param property
+	 *            sort property
+	 * @param stateLocator
+	 *            sort state locator
+	 * @return link
+	 */
+	protected OrderByLink newOrderByLink(String id, String property, ISortStateLocator stateLocator)
+	{
+		return new OrderByLink(id, property, stateLocator, OrderByLink.VoidCssProvider.getInstance())
+		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -65,9 +83,6 @@ public class OrderByBorder extends Border
 				OrderByBorder.this.onSortChanged();
 			}
 		};
-		addToBorder(link);
-		addToBorder(new OrderByLink.CssModifier(link, cssProvider));
-		link.add(getBodyContainer());
 	}
 
 	/**
