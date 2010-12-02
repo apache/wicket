@@ -34,8 +34,8 @@ import org.apache.wicket.util.lang.Generics;
 /**
  * A factory that constructs Pages.
  * 
- * @see org.apache.wicket.settings.ISessionSettings#setPageFactory(PageFactory)
- * @see PageFactory
+ * @see org.apache.wicket.settings.ISessionSettings#setPageFactory(org.apache.wicket.IPageFactory)
+ * @see IPageFactory
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
@@ -46,7 +46,7 @@ public final class DefaultPageFactory implements IPageFactory
 	private final Map<Class<?>, Constructor<?>> constructorForClass = Generics.newConcurrentHashMap();
 
 	/**
-	 * @see PageFactory#newPage(Class)
+	 * @see IPageFactory#newPage(Class)
 	 */
 	public final <C extends IRequestablePage> Page newPage(final Class<C> pageClass)
 	{
@@ -76,7 +76,7 @@ public final class DefaultPageFactory implements IPageFactory
 	}
 
 	/**
-	 * @see PageFactory#newPage(Class, PageParameters)
+	 * @see IPageFactory#newPage(Class, PageParameters)
 	 */
 	public final <C extends IRequestablePage> Page newPage(final Class<C> pageClass,
 		final PageParameters parameters)

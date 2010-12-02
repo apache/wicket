@@ -131,8 +131,7 @@ public class HttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * @see org.apache.wicket.session.ISessionStore#getSessionId(org.apache.org.apache.wicket.request.Request,
-	 *      boolean)
+	 * @see org.apache.wicket.session.ISessionStore#getSessionId(org.apache.wicket.request.Request, boolean)
 	 */
 	public String getSessionId(final Request request, final boolean create)
 	{
@@ -171,7 +170,7 @@ public class HttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * @see org.apache.wicket.session.ISessionStore#lookup(org.apache.org.apache.wicket.request.Request)
+	 * @see org.apache.wicket.session.ISessionStore#lookup(org.apache.wicket.request.Request)
 	 */
 	public final Session lookup(final Request request)
 	{
@@ -186,7 +185,7 @@ public class HttpSessionStore implements ISessionStore
 	/**
 	 * Template method that is called when a session is being bound to the session store. It is
 	 * called <strong>before</strong> the session object itself is added to this store (which is
-	 * done by calling {@link ISessionStore#setAttribute(Request, String, Object)} with key
+	 * done by calling {@link ISessionStore#setAttribute(Request, String, Serializable)} with key
 	 * {@link Session#SESSION_ATTRIBUTE_NAME}.
 	 * 
 	 * @param request

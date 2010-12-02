@@ -139,7 +139,7 @@ public interface ISessionStore
 		 * @param sessionId
 		 */
 		void sessionUnbound(String sessionId);
-	};
+	}
 
 	/**
 	 * Registers listener invoked when session is unbound.
