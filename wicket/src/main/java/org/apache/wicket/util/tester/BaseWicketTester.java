@@ -353,8 +353,9 @@ public class BaseWicketTester
 	 */
 	private void createNewSession()
 	{
+		ThreadContext.setSession(null);
+		// the following will create a new session and put it in the thread context
 		session = Session.get();
-		ThreadContext.setSession(session);
 	}
 
 	/**

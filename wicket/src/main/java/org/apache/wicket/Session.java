@@ -446,7 +446,7 @@ public abstract class Session implements IClusterable, IEventSink
 				@Override
 				public void onDetach(final RequestCycle cycle)
 				{
-					destroy();
+					detach();
 				}
 			});
 		}
