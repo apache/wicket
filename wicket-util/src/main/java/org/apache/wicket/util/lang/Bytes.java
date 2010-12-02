@@ -105,6 +105,11 @@ public final class Bytes extends LongValue
 	private Bytes(final long bytes)
 	{
 		super(bytes);
+
+		if (bytes < 0)
+		{
+			throw new IllegalArgumentException("'bytes' cannot be negative.");
+		}
 	}
 
 	/**
@@ -379,34 +384,27 @@ public final class Bytes extends LongValue
 	 */
 	public String toString(final Locale locale)
 	{
-		if (value >= 0)
+		if (terabytes() >= 1.0)
 		{
-			if (terabytes() >= 1.0)
-			{
-				return unitString(terabytes(), "T", locale);
-			}
-
-			if (gigabytes() >= 1.0)
-			{
-				return unitString(gigabytes(), "G", locale);
-			}
-
-			if (megabytes() >= 1.0)
-			{
-				return unitString(megabytes(), "M", locale);
-			}
-
-			if (kilobytes() >= 1.0)
-			{
-				return unitString(kilobytes(), "K", locale);
-			}
-
-			return Long.toString(value) + " bytes";
+			return unitString(terabytes(), "T", locale);
 		}
-		else
+
+		if (gigabytes() >= 1.0)
 		{
-			return "N/A";
+			return unitString(gigabytes(), "G", locale);
 		}
+
+		if (megabytes() >= 1.0)
+		{
+			return unitString(megabytes(), "M", locale);
+		}
+
+		if (kilobytes() >= 1.0)
+		{
+			return unitString(kilobytes(), "K", locale);
+		}
+
+		return Long.toString(value) + " bytes";
 	}
 
 	/**

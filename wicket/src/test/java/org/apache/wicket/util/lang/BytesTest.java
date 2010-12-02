@@ -143,8 +143,23 @@ public class BytesTest extends TestCase
 		assertEquals("1G", Bytes.bytes(1024 * 1024 * 1024L).toString());
 		assertEquals("1T", Bytes.bytes(1024 * 1024 * 1024 * 1024L).toString());
 		assertEquals("1.5K", Bytes.bytes(1024 * 1.5).toString());
-		assertEquals("N/A", Bytes.bytes(-1).toString());
 
 		assertEquals("1 bytes", Bytes.bytes(1).toString(Locale.GERMAN));
+	}
+
+	/**
+	 * Negative values are not supported
+	 */
+	public void testNegative()
+	{
+		try
+		{
+			Bytes.bytes(-1);
+			fail("Bytes should not support negative values!");
+		}
+		catch (IllegalArgumentException iax)
+		{
+			;
+		}
 	}
 }
