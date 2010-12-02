@@ -23,6 +23,7 @@ import java.util.List;
 import org.apache.wicket.response.filter.IResponseFilter;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IRequestCycleSettings;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Duration;
 
 /**
@@ -179,9 +180,10 @@ public class RequestCycleSettings implements IRequestCycleSettings
 	/**
 	 * @see org.apache.wicket.settings.IRequestCycleSettings#setResponseRequestEncoding(java.lang.String)
 	 */
-	public void setResponseRequestEncoding(final String responseRequestEncoding)
+	public void setResponseRequestEncoding(final String encoding)
 	{
-		this.responseRequestEncoding = responseRequestEncoding;
+		Args.notNull(encoding, "encoding");
+		this.responseRequestEncoding = encoding;
 	}
 
 	/**

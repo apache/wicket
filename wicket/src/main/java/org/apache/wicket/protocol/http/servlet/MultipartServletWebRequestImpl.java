@@ -27,6 +27,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.StringValue;
@@ -125,9 +126,17 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 		// The encoding that will be used to decode the string parameters
 		// It should NOT be null at this point, but it may be
-		// if the older Servlet API 2.2 is used
+		// especially if the older Servlet API 2.2 is used
 		String encoding = request.getCharacterEncoding();
 
+		// The encoding can also be null when using multipart/form-data encoded forms.
+		// In that case we use the [application-encoding] which we always demand using
+		// the attribute 'accept-encoding' in wicket forms.
+		if(encoding == null)
+		{
+			encoding = Application.get().getRequestCycleSettings().getResponseRequestEncoding();
+		}
+		
 		// set encoding specifically when we found it
 		if (encoding != null)
 		{

@@ -1560,6 +1560,13 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 			if (isMultiPart())
 			{
 				tag.put("enctype", "multipart/form-data");
+				//
+				// require the application-encoding for multipart/form-data to be sure to
+				// get multipart-uploaded characters with the proper encoding on the following request.
+				//
+				// see http://stackoverflow.com/questions/546365/utf-8-text-is-garbled-when-form-is-posted-as-multipart-form-data
+				//
+				tag.put("accept-encoding", getApplication().getRequestCycleSettings().getResponseRequestEncoding());
 			}
 			else
 			{
