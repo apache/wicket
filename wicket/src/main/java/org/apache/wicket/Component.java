@@ -4297,14 +4297,18 @@ public abstract class Component
 	/**
 	 * Removes behavior from component
 	 * 
-	 * @param behavior
-	 *            behavior to remove
+	 * @param behaviors
+	 *            behaviors to remove
 	 * 
 	 * @return this (to allow method call chaining)
 	 */
-	public Component remove(final Behavior behavior)
+	public Component remove(final Behavior... behaviors)
 	{
-		new Behaviors(this).remove(behavior);
+		Behaviors helper = new Behaviors(this);
+		for (Behavior behavior : behaviors)
+		{
+			helper.remove(behavior);
+		}
 		return this;
 	}
 

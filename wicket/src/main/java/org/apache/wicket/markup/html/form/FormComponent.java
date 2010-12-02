@@ -34,11 +34,13 @@ import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.Localizer;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IPropertyReflectionAwareModel;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.string.PrependingStringBuffer;
@@ -55,8 +57,8 @@ import org.apache.wicket.validation.INullAcceptingValidator;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidationError;
 import org.apache.wicket.validation.IValidator;
-import org.apache.wicket.validation.IValidatorAddListener;
 import org.apache.wicket.validation.ValidationError;
+import org.apache.wicket.validation.ValidatorAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -407,12 +409,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	private String typeName;
 
 	/**
-	 * The list of validators for this form component as either an IValidator instance or an array
-	 * of IValidator instances.
-	 */
-	private Object validators = null;
-
-	/**
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
 	public FormComponent(final String id)
@@ -454,13 +450,59 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		{
 			throw new IllegalArgumentException("validator argument cannot be null");
 		}
-		// add the validator
-		validators_add(validator);
 
-		// see whether the validator listens for add events
-		if (validator instanceof IValidatorAddListener)
+		if (validator instanceof Behavior)
 		{
-			((IValidatorAddListener)validator).onAdded(this);
+			add((Behavior)validator);
+		}
+		else
+		{
+			add((Behavior)new ValidatorAdapter(validator));
+		}
+		return this;
+	}
+
+	/**
+	 * Removes a validator from the form component.
+	 * 
+	 * @param validator
+	 *            validator
+	 * @throws IllegalArgumentException
+	 *             if validator is null or not found
+	 * @see IValidator
+	 * @see #add(IValidator)
+	 * @return form component for chaining
+	 */
+	public final FormComponent<T> remove(final IValidator<? super T> validator)
+	{
+		Args.notNull(validator, "validator");
+		Behavior match = null;
+		for (Behavior behavior : getBehaviors())
+		{
+			if (behavior.equals(validator))
+			{
+				match = behavior;
+				break;
+			}
+			else if (behavior instanceof ValidatorAdapter)
+			{
+				if (((ValidatorAdapter<?>)behavior).getValidator().equals(validator))
+				{
+					match = behavior;
+					break;
+				}
+			}
+		}
+
+		if (match != null)
+		{
+			remove(match);
+		}
+		else
+		{
+			throw new IllegalStateException(
+				"Tried to remove validator that was not previously added. "
+					+ "Make sure your validator's equals() implementation is sufficient");
 		}
 		return this;
 	}
@@ -557,7 +599,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 
 		if (message == null)
 		{
-		 StringBuilder buffer = new StringBuilder();
+			StringBuilder buffer = new StringBuilder();
 			buffer.append("Could not locate error message for component: ");
 			buffer.append(Classes.simpleName(getClass()));
 			buffer.append("@");
@@ -756,22 +798,20 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * 
 	 * @return List of validators
 	 */
+	@SuppressWarnings("unchecked")
 	public final List<IValidator<? super T>> getValidators()
 	{
-		final int size = validators_size();
-		if (size == 0)
+		final List<IValidator<? super T>> list = new ArrayList<IValidator<? super T>>();
+
+		for (Behavior behavior : getBehaviors())
 		{
-			return Collections.emptyList();
-		}
-		else
-		{
-			final List<IValidator<? super T>> list = new ArrayList<IValidator<? super T>>(size);
-			for (int i = 0; i < size; i++)
+			if (behavior instanceof IValidator)
 			{
-				list.add(validators_get(i));
+				list.add((IValidator<? super T>)behavior);
 			}
-			return Collections.unmodifiableList(list);
 		}
+
+		return Collections.unmodifiableList(list);
 	}
 
 	/**
@@ -1043,79 +1083,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 				}
 			}
 		}
-	}
-
-	/**
-	 * @param validator
-	 *            The validator to add to the validators Object (which may be an array of
-	 *            IValidators or a single instance, for efficiency)
-	 */
-	@SuppressWarnings("unchecked")
-	private void validators_add(final IValidator<? super T> validator)
-	{
-		if (validators == null)
-		{
-			validators = validator;
-		}
-		else
-		{
-			// Get current list size
-			final int size = validators_size();
-
-			// Create array that holds size + 1 elements
-			final IValidator<? super T>[] validators = new IValidator[size + 1];
-
-			// Loop through existing validators copying them
-			for (int i = 0; i < size; i++)
-			{
-				validators[i] = validators_get(i);
-			}
-
-			// Add new validator to the end
-			validators[size] = validator;
-
-			// Save new validator list
-			this.validators = validators;
-		}
-	}
-
-	/**
-	 * Gets validator from validators Object (which may be an array of IValidators or a single
-	 * instance, for efficiency) at the given index
-	 * 
-	 * @param index
-	 *            The index of the validator to get
-	 * @return The validator
-	 */
-	@SuppressWarnings("unchecked")
-	private IValidator<T> validators_get(int index)
-	{
-		if (validators == null)
-		{
-			throw new IndexOutOfBoundsException();
-		}
-		if (validators instanceof IValidator[])
-		{
-			return ((IValidator[])validators)[index];
-		}
-		return (IValidator<T>)validators;
-	}
-
-	/**
-	 * @return The number of validators in the validators Object (which may be an array of
-	 *         IValidators or a single instance, for efficiency)
-	 */
-	private int validators_size()
-	{
-		if (validators == null)
-		{
-			return 0;
-		}
-		if (validators instanceof IValidator<?>[])
-		{
-			return ((IValidator[])validators).length;
-		}
-		return 1;
 	}
 
 	/**
@@ -1423,30 +1390,30 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	/**
 	 * Validates this component using the component's validators.
 	 */
+	@SuppressWarnings("unchecked")
 	protected final void validateValidators()
 	{
-		final int size = validators_size();
-
 		final IValidatable<T> validatable = newValidatable();
-
-		int i = 0;
-		IValidator<T> validator = null;
 
 		boolean isNull = getConvertedInput() == null;
 
+		IValidator<T> validator = null;
+
 		try
 		{
-			for (i = 0; i < size; i++)
+			for (Behavior behavior : getBehaviors())
 			{
-				validator = validators_get(i);
-
-				if (isNull == false || validator instanceof INullAcceptingValidator<?>)
+				if (behavior instanceof IValidator)
 				{
-					validator.validate(validatable);
-				}
-				if (!isValid())
-				{
-					break;
+					validator = (IValidator<T>)behavior;
+					if (isNull == false || validator instanceof INullAcceptingValidator<?>)
+					{
+						validator.validate(validatable);
+					}
+					if (!isValid())
+					{
+						break;
+					}
 				}
 			}
 		}

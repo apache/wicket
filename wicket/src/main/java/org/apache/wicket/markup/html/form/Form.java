@@ -26,12 +26,14 @@ import java.util.Map;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
+import org.apache.wicket.markup.html.form.validation.FormValidatorAdapter;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -58,7 +60,6 @@ import org.apache.wicket.util.visit.ClassVisitFilter;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.apache.wicket.util.visit.Visits;
-import org.apache.wicket.validation.IValidatorAddListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -262,9 +263,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 */
 	private IFormSubmittingComponent defaultSubmittingComponent;
 
-	/** multi-validators assigned to this form */
-	private Object formValidators = null;
-
 	/**
 	 * Maximum size of an upload in bytes. If null, the setting
 	 * {@link IApplicationSettings#getDefaultMaximumUploadSize()} is used.
@@ -328,13 +326,13 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 			throw new IllegalArgumentException("Argument `validator` cannot be null");
 		}
 
-		// add the validator
-		formValidators_add(validator);
-
-		// see whether the validator listens for add events
-		if (validator instanceof IValidatorAddListener)
+		if (validator instanceof Behavior)
 		{
-			((IValidatorAddListener)validator).onAdded(this);
+			add((Behavior)validator);
+		}
+		else
+		{
+			add(new FormValidatorAdapter(validator));
 		}
 	}
 
@@ -354,95 +352,36 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 			throw new IllegalArgumentException("Argument `validator` cannot be null");
 		}
 
-		IFormValidator removed = formValidators_remove(validator);
-		if (removed == null)
+		Behavior match = null;
+		for (Behavior behavior : getBehaviors())
 		{
+			if (behavior.equals(validator))
+			{
+				match = behavior;
+				break;
+			}
+			else if (behavior instanceof FormValidatorAdapter)
+			{
+				if (((FormValidatorAdapter)behavior).getValidator().equals(validator))
+				{
+					match = behavior;
+					break;
+				}
+			}
+		}
+
+		if (match != null)
+		{
+			remove(match);
+		}
+		else
+		{
+
 			throw new IllegalStateException(
 				"Tried to remove form validator that was not previously added. "
 					+ "Make sure your validator's equals() implementation is sufficient");
 		}
-		addStateChange();
 	}
-
-	private final int formValidators_indexOf(IFormValidator validator)
-	{
-		if (formValidators != null)
-		{
-			if (formValidators instanceof IFormValidator)
-			{
-				final IFormValidator v = (IFormValidator)formValidators;
-				if (v == validator || v.equals(validator))
-				{
-					return 0;
-				}
-			}
-			else
-			{
-				final IFormValidator[] validators = (IFormValidator[])formValidators;
-				for (int i = 0; i < validators.length; i++)
-				{
-					final IFormValidator v = validators[i];
-					if (v == validator || v.equals(validator))
-					{
-						return i;
-					}
-				}
-			}
-		}
-		return -1;
-	}
-
-	private final IFormValidator formValidators_remove(IFormValidator validator)
-	{
-		int index = formValidators_indexOf(validator);
-		if (index != -1)
-		{
-			return formValidators_remove(index);
-		}
-		return null;
-	}
-
-	private final IFormValidator formValidators_remove(int index)
-	{
-		if (formValidators instanceof IFormValidator)
-		{
-			if (index == 0)
-			{
-				final IFormValidator removed = (IFormValidator)formValidators;
-				formValidators = null;
-				return removed;
-			}
-			else
-			{
-				throw new IndexOutOfBoundsException();
-			}
-		}
-		else
-		{
-			final IFormValidator[] validators = (IFormValidator[])formValidators;
-			final IFormValidator removed = validators[index];
-			// check if we can collapse array of 1 element into a single object
-			if (validators.length == 2)
-			{
-				formValidators = validators[1 - index];
-			}
-			else
-			{
-				IFormValidator[] newValidators = new IFormValidator[validators.length - 1];
-				int j = 0;
-				for (int i = 0; i < validators.length; i++)
-				{
-					if (i != index)
-					{
-						newValidators[j++] = validators[i];
-					}
-				}
-				formValidators = newValidators;
-			}
-			return removed;
-		}
-	}
-
 
 	/**
 	 * Clears the input from the form's nested children of type {@link FormComponent}. This method
@@ -560,24 +499,16 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 */
 	public final Collection<IFormValidator> getFormValidators()
 	{
-		final int size = formValidators_size();
+		List<IFormValidator> validators = new ArrayList<IFormValidator>();
 
-		List<IFormValidator> validators = null;
-
-		if (size == 0)
+		for (Behavior behavior : getBehaviors())
 		{
-			// form has no validators, use empty collection
-			validators = Collections.emptyList();
-		}
-		else
-		{
-			// form has validators, copy all into collection
-			validators = new ArrayList<IFormValidator>(size);
-			for (int i = 0; i < size; i++)
+			if (behavior instanceof IFormValidator)
 			{
-				validators.add(formValidators_get(i));
+				validators.add((IFormValidator)behavior);
 			}
 		}
+
 		return Collections.unmodifiableCollection(validators);
 	}
 
@@ -1104,77 +1035,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	}
 
 	/**
-	 * @param validator
-	 *            The form validator to add to the formValidators Object (which may be an array of
-	 *            IFormValidators or a single instance, for efficiency)
-	 */
-	private void formValidators_add(final IFormValidator validator)
-	{
-		if (formValidators == null)
-		{
-			formValidators = validator;
-		}
-		else
-		{
-			// Get current list size
-			final int size = formValidators_size();
-
-			// Create array that holds size + 1 elements
-			final IFormValidator[] validators = new IFormValidator[size + 1];
-
-			// Loop through existing validators copying them
-			for (int i = 0; i < size; i++)
-			{
-				validators[i] = formValidators_get(i);
-			}
-
-			// Add new validator to the end
-			validators[size] = validator;
-
-			// Save new validator list
-			formValidators = validators;
-		}
-	}
-
-	/**
-	 * Gets form validator from formValidators Object (which may be an array of IFormValidators or a
-	 * single instance, for efficiency) at the given index
-	 * 
-	 * @param index
-	 *            The index of the validator to get
-	 * @return The form validator
-	 */
-	private IFormValidator formValidators_get(int index)
-	{
-		if (formValidators == null)
-		{
-			throw new IndexOutOfBoundsException();
-		}
-		if (formValidators instanceof IFormValidator[])
-		{
-			return ((IFormValidator[])formValidators)[index];
-		}
-		return (IFormValidator)formValidators;
-	}
-
-	/**
-	 * @return The number of form validators in the formValidators Object (which may be an array of
-	 *         IFormValidators or a single instance, for efficiency)
-	 */
-	private int formValidators_size()
-	{
-		if (formValidators == null)
-		{
-			return 0;
-		}
-		if (formValidators instanceof IFormValidator[])
-		{
-			return ((IFormValidator[])formValidators).length;
-		}
-		return 1;
-	}
-
-	/**
 	 * Visits the form's children FormComponents and inform them that a new user input is available
 	 * in the Request
 	 */
@@ -1562,11 +1422,14 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 				tag.put("enctype", "multipart/form-data");
 				//
 				// require the application-encoding for multipart/form-data to be sure to
-				// get multipart-uploaded characters with the proper encoding on the following request.
-				//
-				// see http://stackoverflow.com/questions/546365/utf-8-text-is-garbled-when-form-is-posted-as-multipart-form-data
-				//
-				tag.put("accept-encoding", getApplication().getRequestCycleSettings().getResponseRequestEncoding());
+				// get multipart-uploaded characters with the proper encoding on the following
+// request.
+//
+// see
+// http://stackoverflow.com/questions/546365/utf-8-text-is-garbled-when-form-is-posted-as-multipart-form-data
+//
+				tag.put("accept-encoding", getApplication().getRequestCycleSettings()
+					.getResponseRequestEncoding());
 			}
 			else
 			{
@@ -1925,10 +1788,12 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 */
 	protected final void validateFormValidators()
 	{
-		final int count = formValidators_size();
-		for (int i = 0; i < count; i++)
+		for (Behavior behavior : getBehaviors())
 		{
-			validateFormValidator(formValidators_get(i));
+			if (behavior instanceof IFormValidator)
+			{
+				validateFormValidator((IFormValidator)behavior);
+			}
 		}
 	}
 
