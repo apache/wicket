@@ -17,7 +17,6 @@
 package org.apache.wicket.extensions.yui;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.resource.CompressedResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -31,10 +30,8 @@ import org.apache.wicket.request.resource.ResourceReference;
  * 
  * @author eelcohillenius
  */
-public final class YuiLib implements IClusterable
+public final class YuiLib
 {
-	private static final long serialVersionUID = 1L;
-
 	private static ResourceReference YUILOADER;
 
 	/**
@@ -53,7 +50,7 @@ public final class YuiLib implements IClusterable
 	{
 		if (YUILOADER == null)
 		{
-		 StringBuilder sb = new StringBuilder();
+			StringBuilder sb = new StringBuilder();
 			sb.append("yuiloader");
 			if (Application.get().usesDeploymentConfig())
 			{
