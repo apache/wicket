@@ -161,10 +161,18 @@ public interface IRequestCycleSettings
 	List<IResponseFilter> getResponseFilters();
 
 	/**
-	 * In order to do proper form parameter decoding it is important that the response and the
-	 * following request have the same encoding. see
-	 * http://www.crazysquirrel.com/computing/general/form-encoding.jspx for additional information.
-	 * 
+	 * In order to do proper form parameter encoding it is important that the response and the
+	 * subsequent request stipulate a common character encoding.
+	 *
+	 * possible form encodings and their problems:
+	 *
+	 * <ul>
+	 * <li><a href="http://www.crazysquirrel.com/computing/general/form-encoding.jspx">application/x-www-form-urlencoded</a></li>
+	 * <li><a href="http://stackoverflow.com/questions/546365/utf-8-text-is-garbled-when-form-is-posted-as-multipart-form-data">multipart/form-data</a></li>
+	 * </ul>
+	 *
+	 * wicket now uses multipart/form-data for it's forms.
+	 *
 	 * @return The request and response encoding
 	 */
 	String getResponseRequestEncoding();
