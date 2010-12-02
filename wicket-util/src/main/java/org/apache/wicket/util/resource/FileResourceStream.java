@@ -160,7 +160,7 @@ public class FileResourceStream extends AbstractResourceStream
 		{
 			return Bytes.bytes(file.length());
 		}
-		return Bytes.bytes(0);
+		return null;
 	}
 
 	/**
