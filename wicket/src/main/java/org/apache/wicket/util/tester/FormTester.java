@@ -17,7 +17,6 @@
 package org.apache.wicket.util.tester;
 
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -80,7 +79,7 @@ public class FormTester
 			}
 
 			/**
-			 * @see org.apache.wicket.IVisitor#component(org.apache.wicket.Component)
+			 * @see org.apache.wicket.util.visit.IVisitor#component(Object, org.apache.wicket.util.visit.IVisit)
 			 */
 			public void component(final Component component, final IVisit<Component> visit)
 			{
@@ -303,8 +302,7 @@ public class FormTester
 			}
 			else
 			{
-				fail("Selecting on the component:'" + formComponent.getPath() +
-					"' is not supported.");
+				fail("Selecting on the component:'" + formComponent.getPath() + "' is not supported.");
 				return null;
 			}
 		}
@@ -687,34 +685,12 @@ public class FormTester
 		try
 		{
 			tester.getLastRenderedPage().getSession().cleanupFeedbackMessages();
+			tester.getRequest().setUseMultiPartContentType(workingForm.isMultiPart());
 			tester.submitForm(path);
-// servletRequest.setUseMultiPartContentType(isMultiPart());
 		}
 		finally
 		{
 			closed = true;
-		}
-	}
-
-	private boolean isMultiPart()
-	{
-		try
-		{
-			Field multiPart = Form.class.getDeclaredField("multiPart");
-			multiPart.setAccessible(true);
-			return multiPart.getShort(workingForm) != 0;
-		}
-		catch (SecurityException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (NoSuchFieldException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (IllegalAccessException e)
-		{
-			throw new RuntimeException(e);
 		}
 	}
 
