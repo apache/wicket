@@ -1321,7 +1321,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 		return false;
 	}
 
-	private boolean isMultiPart()
+	public boolean isMultiPart()
 	{
 		if (multiPart != 0)
 		{
