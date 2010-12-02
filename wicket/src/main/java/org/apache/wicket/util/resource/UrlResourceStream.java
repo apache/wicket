@@ -49,8 +49,10 @@ public class UrlResourceStream extends AbstractResourceStream
 	/** Logging. */
 	private static final Logger log = LoggerFactory.getLogger(UrlResourceStream.class);
 
-	/** Resource stream. */
-	private transient InputStream inputStream;
+	/**
+	 * The meta data for this stream. Lazy loaded on demand.
+	 */
+	private transient StreamData streamData;
 
 	/** The URL to this resource. */
 	private final URL url;
@@ -58,14 +60,23 @@ public class UrlResourceStream extends AbstractResourceStream
 	/** the handle to the file if it is a file resource */
 	private File file;
 
-	/** Length of stream. */
-	private Bytes contentLength;
+	/**
+	 * Meta data class for the stream attributes
+	 */
+	private static class StreamData
+	{
+		private URLConnection connection;
 
-	/** Content type for stream. */
-	private String contentType;
+		/** Length of stream. */
+		private long contentLength;
 
-	/** Last known time the stream was last modified. */
-	private long lastModified;
+		/** Content type for stream. */
+		private String contentType;
+
+		/** Last known time the stream was last modified. */
+		private long lastModified;
+
+	}
 
 	/**
 	 * Construct.
@@ -77,23 +88,6 @@ public class UrlResourceStream extends AbstractResourceStream
 	{
 		// save the url
 		this.url = url;
-
-		// retrieve the content type and length
-		URLConnection connection = null;
-		try
-		{
-			connection = url.openConnection();
-			contentLength = Bytes.bytes(connection.getContentLength());
-			contentType = connection.getContentType();
-		}
-		catch (IOException ex)
-		{
-			throw new IllegalArgumentException("Invalid URL parameter " + url, ex);
-		}
-		finally
-		{
-			Connections.closeQuietly(connection);
-		}
 
 		try
 		{
@@ -113,16 +107,69 @@ public class UrlResourceStream extends AbstractResourceStream
 	}
 
 	/**
+	 * Lazy loads the stream settings on demand
+	 * 
+	 * @param initialize
+	 *            a flag indicating whether to load the settings
+	 * @return the meta data with the stream settings
+	 */
+	private StreamData getData(boolean initialize)
+	{
+		if (streamData == null && initialize)
+		{
+			streamData = new StreamData();
+
+			try
+			{
+				streamData.connection = url.openConnection();
+				streamData.contentLength = streamData.connection.getContentLength();
+				streamData.contentType = streamData.connection.getContentType();
+
+				if (streamData.contentType == null ||
+					streamData.contentType.indexOf("unknown") != -1)
+				{
+					if (Application.exists() && Application.get() instanceof WebApplication)
+					{
+						// TODO Post 1.2: General: For non webapplication another method
+						// should be implemented (getMimeType on application?)
+						streamData.contentType = WebApplication.get()
+							.getServletContext()
+							.getMimeType(url.getFile());
+						if (streamData.contentType == null)
+						{
+							streamData.contentType = URLConnection.getFileNameMap()
+								.getContentTypeFor(url.getFile());
+						}
+					}
+					else
+					{
+						streamData.contentType = URLConnection.getFileNameMap().getContentTypeFor(
+							url.getFile());
+					}
+				}
+			}
+			catch (IOException ex)
+			{
+				throw new IllegalArgumentException("Invalid URL parameter " + url, ex);
+			}
+		}
+
+		return streamData;
+	}
+
+	/**
 	 * Closes this resource.
 	 * 
 	 * @throws IOException
 	 */
 	public void close() throws IOException
 	{
-		if (inputStream != null)
+		StreamData data = getData(false);
+
+		if (data != null)
 		{
-			inputStream.close();
-			inputStream = null;
+			Connections.closeQuietly(data.connection);
+			data.connection = null;
 		}
 	}
 
@@ -132,35 +179,7 @@ public class UrlResourceStream extends AbstractResourceStream
 	@Override
 	public String getContentType()
 	{
-		testContentType();
-		return contentType;
-	}
-
-	/**
-	 * Method to test the content type on null or unknown. if this is the case the content type is
-	 * tried to be resolved throw the servlet context
-	 */
-	private void testContentType()
-	{
-		if (contentType == null || contentType.contains("unknown"))
-		{
-			Application application = Application.get();
-			if (application instanceof WebApplication)
-			{
-				// TODO Post 1.2: General: For non webapplication another method
-				// should be implemented (getMimeType on application?)
-				contentType = ((WebApplication)application).getServletContext().getMimeType(
-					url.getFile());
-				if (contentType == null)
-				{
-					contentType = URLConnection.getFileNameMap().getContentTypeFor(url.getFile());
-				}
-			}
-			else
-			{
-				contentType = URLConnection.getFileNameMap().getContentTypeFor(url.getFile());
-			}
-		}
+		return getData(true).contentType;
 	}
 
 	/**
@@ -169,19 +188,15 @@ public class UrlResourceStream extends AbstractResourceStream
 	 */
 	public InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
-		if (inputStream == null)
+		InputStream inputStream;
+		try
 		{
-			try
-			{
-				inputStream = url.openStream();
-			}
-			catch (IOException e)
-			{
-				throw new ResourceStreamNotFoundException("Resource " + url +
-					" could not be opened", e);
-			}
+			inputStream = getData(true).connection.getInputStream();
 		}
-
+		catch (IOException e)
+		{
+			throw new ResourceStreamNotFoundException("Resource " + url + " could not be opened", e);
+		}
 		return inputStream;
 	}
 
@@ -202,6 +217,8 @@ public class UrlResourceStream extends AbstractResourceStream
 	{
 		try
 		{
+			StreamData data = getData(true);
+
 			if (file != null)
 			{
 				// in case the file has been removed by now
@@ -213,9 +230,9 @@ public class UrlResourceStream extends AbstractResourceStream
 				long lastModified = file.lastModified();
 
 				// if last modified changed update content length and last modified date
-				if (lastModified != this.lastModified)
+				if (lastModified != data.lastModified)
 				{
-					this.lastModified = lastModified;
+					data.lastModified = lastModified;
 					setContentLength();
 				}
 			}
@@ -224,14 +241,14 @@ public class UrlResourceStream extends AbstractResourceStream
 				long lastModified = Connections.getLastModified(url);
 
 				// if last modified changed update content length and last modified date
-				if (lastModified != this.lastModified)
+				if (lastModified != data.lastModified)
 				{
-					this.lastModified = lastModified;
+					data.lastModified = lastModified;
 
 					setContentLength();
 				}
 			}
-			return Time.milliseconds(lastModified);
+			return Time.milliseconds(data.lastModified);
 		}
 		catch (IOException e)
 		{
@@ -254,8 +271,9 @@ public class UrlResourceStream extends AbstractResourceStream
 
 	private void setContentLength() throws IOException
 	{
+		StreamData data = getData(true);
 		URLConnection connection = url.openConnection();
-		contentLength = Bytes.bytes(connection.getContentLength());
+		data.contentLength = connection.getContentLength();
 		Connections.close(connection);
 	}
 
@@ -274,7 +292,8 @@ public class UrlResourceStream extends AbstractResourceStream
 	@Override
 	public Bytes length()
 	{
-		return contentLength;
+		long contentLength = getData(true).contentLength;
+		return Bytes.bytes(contentLength);
 	}
 
 	/**

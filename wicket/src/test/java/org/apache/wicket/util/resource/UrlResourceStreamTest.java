@@ -18,6 +18,9 @@ package org.apache.wicket.util.resource;
 
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import junit.framework.TestCase;
 
@@ -45,4 +48,59 @@ public class UrlResourceStreamTest extends TestCase
 		stream.close();
 	}
 
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-3176
+	 * 
+	 * @throws IOException
+	 * @throws ResourceStreamNotFoundException
+	 */
+	public void testLoadJustOnce() throws IOException, ResourceStreamNotFoundException
+	{
+		String anyClassInJarFile = "/java/lang/String.class";
+		URL realURL = getClass().getResource(anyClassInJarFile);
+
+		final AtomicInteger counter = new AtomicInteger(0);
+		URL url = new URL(null, "test://anything", new CountingURLStreamHandler(realURL, counter));
+
+		UrlResourceStream countingStream = new UrlResourceStream(url);
+		// assert the call is not made yet
+		assertEquals(0, counter.get());
+		countingStream.length();
+		// assert the connection is loaded lazily
+		assertEquals(1, counter.get());
+
+		// assert the following calls do not make new connections
+		countingStream.getInputStream();
+		assertEquals(1, counter.get());
+		countingStream.getContentType();
+		assertEquals(1, counter.get());
+		countingStream.getInputStream();
+		assertEquals(1, counter.get());
+		countingStream.close();
+		assertEquals(1, counter.get());
+	}
+
+	/**
+	 * {@link URLStreamHandler} that counts the calls to {@link URL#openConnection()}
+	 */
+	private static final class CountingURLStreamHandler extends URLStreamHandler
+	{
+		private final AtomicInteger counter;
+
+		private final URL realURL;
+
+		public CountingURLStreamHandler(URL realURL, AtomicInteger counter)
+		{
+			this.counter = counter;
+			this.realURL = realURL;
+		}
+
+		@Override
+		protected URLConnection openConnection(URL u) throws IOException
+		{
+			counter.getAndIncrement();
+			return realURL.openConnection();
+		}
+
+	}
 }
