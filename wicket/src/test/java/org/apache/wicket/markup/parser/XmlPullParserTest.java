@@ -22,6 +22,7 @@ import java.text.ParseException;
 import junit.framework.TestCase;
 
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.parser.IXmlPullParser.ELEMENT_TYPE;
 import org.apache.wicket.util.resource.StringResourceStream;
 
 /**
@@ -347,21 +348,21 @@ public class XmlPullParserTest extends TestCase
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<!--[if IE]><a href='test.html'>my link</a><![endif]-->");
-		int type = parser.next();
-		assertEquals(type, XmlPullParser.CONDITIONAL_COMMENT);
+		ELEMENT_TYPE type = parser.next();
+		assertEquals(type, ELEMENT_TYPE.CONDITIONAL_COMMENT);
 		type = parser.next();
-		assertEquals(type, XmlPullParser.TAG);
+		assertEquals(type, ELEMENT_TYPE.TAG);
 		assertTrue(((XmlTag)parser.getElement()).isOpen());
 		type = parser.next();
-		assertEquals(type, XmlPullParser.BODY);
+		assertEquals(type, ELEMENT_TYPE.BODY);
 		type = parser.next();
-		assertEquals(type, XmlPullParser.TAG);
+		assertEquals(type, ELEMENT_TYPE.TAG);
 		assertEquals("a", ((XmlTag)parser.getElement()).getName());
 		assertTrue(((XmlTag)parser.getElement()).isClose());
 		type = parser.next();
-		assertEquals(type, XmlPullParser.CONDITIONAL_COMMENT);
+		assertEquals(type, ELEMENT_TYPE.CONDITIONAL_COMMENT);
 		type = parser.next();
-		assertEquals(0, type);
+		assertEquals(type, ELEMENT_TYPE.NOT_INITIALIZED);
 	}
 
 	/**
@@ -385,5 +386,18 @@ public class XmlPullParserTest extends TestCase
 		tag = (XmlTag)parser.nextTag();
 		assertTrue(tag.isOpen());
 		assertEquals("filter_mapping", tag.getName());
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	public final void testDoctype() throws Exception
+	{
+		final XmlPullParser parser = new XmlPullParser();
+		parser.parse("<!DOCTYPE html>");
+		ELEMENT_TYPE type = parser.next();
+		assertEquals(ELEMENT_TYPE.DOCTYPE, type);
+		assertEquals("!DOCTYPE html", parser.getDoctype());
 	}
 }

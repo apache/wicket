@@ -184,6 +184,7 @@ public abstract class AbstractMarkupParser
 
 		markupResourceStream.setEncoding(xmlParser.getEncoding());
 		markupResourceStream.setXmlDeclaration(xmlParser.getXmlDeclaration());
+		markupResourceStream.setDoctype(xmlParser.getDoctype());
 
 		if (xmlParser.getXmlDeclaration() == null)
 		{
@@ -285,6 +286,7 @@ public abstract class AbstractMarkupParser
 
 			markup.getMarkupResourceStream().setEncoding(xmlParser.getEncoding());
 			markup.getMarkupResourceStream().setXmlDeclaration(xmlParser.getXmlDeclaration());
+			markup.getMarkupResourceStream().setDoctype(xmlParser.getDoctype());
 
 			final MarkupStream markupStream = new MarkupStream(markup);
 			markupStream.setCurrentIndex(markup.size() - 1);
@@ -350,7 +352,7 @@ public abstract class AbstractMarkupParser
 		Pattern preBlock = Pattern.compile("<pre>.*?</pre>", Pattern.DOTALL | Pattern.MULTILINE);
 		Matcher m = preBlock.matcher(rawMarkup);
 		int lastend = 0;
-	 StringBuilder sb = null;
+		StringBuilder sb = null;
 		while (true)
 		{
 			boolean matched = m.find();

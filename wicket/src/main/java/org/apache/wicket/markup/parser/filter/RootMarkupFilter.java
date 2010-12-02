@@ -21,7 +21,7 @@ import java.text.ParseException;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.IXmlPullParser;
-import org.apache.wicket.markup.parser.XmlPullParser;
+import org.apache.wicket.markup.parser.IXmlPullParser.ELEMENT_TYPE;
 
 
 /**
@@ -48,10 +48,10 @@ public final class RootMarkupFilter implements IMarkupFilter
 	 */
 	public final MarkupElement nextTag() throws ParseException
 	{
-		int type;
-		while ((type = next()) != XmlPullParser.TAG)
+		ELEMENT_TYPE type;
+		while ((type = next()) != ELEMENT_TYPE.TAG)
 		{
-			if (type == 0)
+			if (type == ELEMENT_TYPE.NOT_INITIALIZED)
 			{
 				return null;
 			}
@@ -81,7 +81,7 @@ public final class RootMarkupFilter implements IMarkupFilter
 	 * @return The next XML element
 	 * @throws ParseException
 	 */
-	private int next() throws ParseException
+	private ELEMENT_TYPE next() throws ParseException
 	{
 		return parser.next();
 	}

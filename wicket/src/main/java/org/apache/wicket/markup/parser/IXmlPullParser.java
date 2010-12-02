@@ -32,6 +32,36 @@ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
  */
 public interface IXmlPullParser
 {
+	/** The last element found */
+	public enum ELEMENT_TYPE {
+		/** next() must be called at least once for the Type to be valid */
+		NOT_INITIALIZED,
+
+		/** <name ...> */
+		TAG,
+
+		/** Tag body in between two tags */
+		BODY,
+
+		/** <!-- ... --> */
+		COMMENT,
+
+		/** <!--[if ] ... --> */
+		CONDITIONAL_COMMENT,
+
+		/** <![CDATA[ .. ]]> */
+		CDATA,
+
+		/** <?...> */
+		PROCESSING_INSTRUCTION,
+
+		/** <!DOCTYPE ...> */
+		DOCTYPE,
+
+		/** all other tags which look like <!.. > */
+		SPECIAL_TAG,
+	}
+
 	/**
 	 * Return the encoding applied while reading the markup resource. The encoding is determined by
 	 * analyzing the &lt;?xml version=".." encoding=".." ?&gt; tag.
@@ -45,7 +75,14 @@ public interface IXmlPullParser
 	 * 
 	 * @return Null, if not found.
 	 */
-	String getXmlDeclaration();
+	CharSequence getXmlDeclaration();
+
+	/**
+	 * Gets the &lt;!DOCTYPE ...&gt; tag if found in the markup
+	 * 
+	 * @return Null, if not found
+	 */
+	CharSequence getDoctype();
 
 	/**
 	 * Wicket dissects the markup into Wicket relevant tags and raw markup, which is not further
@@ -119,7 +156,7 @@ public interface IXmlPullParser
 	 * @return o, if end of file. Else a TAG, COMMENT etc.
 	 * @throws ParseException
 	 */
-	int next() throws ParseException;
+	ELEMENT_TYPE next() throws ParseException;
 
 	/**
 	 * 

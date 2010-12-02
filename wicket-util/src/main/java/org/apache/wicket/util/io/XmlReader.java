@@ -24,8 +24,6 @@ import java.io.Reader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.wicket.util.string.AppendingStringBuffer;
-
 
 /**
  * This is a simple XmlReader. Its only purpose is to read the xml decl string from the input and
@@ -46,7 +44,7 @@ public final class XmlReader extends Reader
 	private String encoding;
 
 	/** Null or if found in the markup, the whole <?xml ...?> string */
-	private String xmlDeclarationString;
+	private CharSequence xmlDeclarationString;
 
 	/** The input stream to read the data from */
 	private final InputStream inputStream;
@@ -87,7 +85,7 @@ public final class XmlReader extends Reader
 	 * 
 	 * @return if null, then JVM default
 	 */
-	public String getEncoding()
+	public final String getEncoding()
 	{
 		return encoding;
 	}
@@ -97,7 +95,7 @@ public final class XmlReader extends Reader
 	 * 
 	 * @return Null, if not found.
 	 */
-	public String getXmlDeclaration()
+	public final CharSequence getXmlDeclaration()
 	{
 		return xmlDeclarationString;
 	}
@@ -150,7 +148,7 @@ public final class XmlReader extends Reader
 	 *            The xmlDecl string
 	 * @return The encoding. Null, if not found
 	 */
-	private final String determineEncoding(final String string)
+	private final String determineEncoding(final CharSequence string)
 	{
 		// Does the string match the <?xml .. ?> pattern
 		final Matcher matcher = encodingPattern.matcher(string);
@@ -192,7 +190,7 @@ public final class XmlReader extends Reader
 		throws IOException
 	{
 		// Max one line
-		final AppendingStringBuffer pushBack = new AppendingStringBuffer(readAheadSize);
+		final StringBuilder pushBack = new StringBuilder(readAheadSize);
 
 		// The current char from the markup file
 		int value;

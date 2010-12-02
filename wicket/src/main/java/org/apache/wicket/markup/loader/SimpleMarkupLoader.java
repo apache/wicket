@@ -21,12 +21,12 @@ import java.io.IOException;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupFactory;
+import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 
 /**
- * Load the markup via the MarkupParser, not more, not less. Caching is provided separately as well
- * as Inherited-Markup merging.
+ * Load the markup from the resource stream provided
  * 
  * @author Juergen Donnerstag
  */
@@ -40,6 +40,8 @@ public class SimpleMarkupLoader implements IMarkupLoader
 	}
 
 	/**
+	 * Uses {@link MarkupFactory#newMarkupParser(MarkupResourceStream)} and
+	 * {@link MarkupParser#parse()} to load the Markup.
 	 * 
 	 * @see org.apache.wicket.markup.loader.IMarkupLoader#loadMarkup(org.apache.wicket.MarkupContainer,
 	 *      org.apache.wicket.markup.MarkupResourceStream,

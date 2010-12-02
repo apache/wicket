@@ -39,30 +39,6 @@ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
  */
 public final class XmlPullParser implements IXmlPullParser
 {
-	/** next() must be called at least once for the Type to be valid */
-	public static final int NOT_INITIALIZED = 0;
-
-	/** <name ...> */
-	public static final int TAG = 1;
-
-	/** Tag body in between two tags */
-	public static final int BODY = 2;
-
-	/** <!-- ... --> */
-	public static final int COMMENT = 3;
-
-	/** <!--[if ] ... --> */
-	public static final int CONDITIONAL_COMMENT = 4;
-
-	/** <![CDATA[ .. ]]> */
-	public static final int CDATA = 5;
-
-	/** <?...> */
-	public static final int PROCESSING_INSTRUCTION = 6;
-
-	/** all other tags which look like <!.. > */
-	public static final int SPECIAL_TAG = 7;
-
 	/**
 	 * Reads the xml data from an input stream and converts the chars according to its encoding
 	 * (<?xml ... encoding="..." ?>)
@@ -81,8 +57,11 @@ public final class XmlPullParser implements IXmlPullParser
 	/** The last substring selected from the input */
 	private CharSequence lastText;
 
+	/** Everything in between &lt;!DOCTYPE ... &gt; */
+	private CharSequence doctype;
+
 	/** The type of what is in lastText */
-	private int lastType = NOT_INITIALIZED;
+	private ELEMENT_TYPE lastType = ELEMENT_TYPE.NOT_INITIALIZED;
 
 	/** If lastType == TAG, than ... */
 	private XmlTag lastTag;
@@ -98,7 +77,7 @@ public final class XmlPullParser implements IXmlPullParser
 	 * 
 	 * @see org.apache.wicket.markup.parser.IXmlPullParser#getEncoding()
 	 */
-	public String getEncoding()
+	public final String getEncoding()
 	{
 		return xmlReader.getEncoding();
 	}
@@ -107,9 +86,18 @@ public final class XmlPullParser implements IXmlPullParser
 	 * 
 	 * @see org.apache.wicket.markup.parser.IXmlPullParser#getXmlDeclaration()
 	 */
-	public String getXmlDeclaration()
+	public final CharSequence getXmlDeclaration()
 	{
 		return xmlReader.getXmlDeclaration();
+	}
+
+	/**
+	 * 
+	 * @see org.apache.wicket.markup.parser.IXmlPullParser#getDoctype()
+	 */
+	public final CharSequence getDoctype()
+	{
+		return doctype;
 	}
 
 	/**
@@ -161,7 +149,7 @@ public final class XmlPullParser implements IXmlPullParser
 
 		input.setPosition(pos);
 		lastText = input.getSubstring(startIndex, pos);
-		lastType = BODY;
+		lastType = ELEMENT_TYPE.BODY;
 
 		// Check that the tag is properly closed
 		lastPos = input.find('>', lastPos + tagNameLen);
@@ -187,12 +175,12 @@ public final class XmlPullParser implements IXmlPullParser
 	 * @return XXX
 	 * @throws ParseException
 	 */
-	public final int next() throws ParseException
+	public final ELEMENT_TYPE next() throws ParseException
 	{
 		// Reached end of markup file?
 		if (input.getPosition() >= input.size())
 		{
-			return NOT_INITIALIZED;
+			return ELEMENT_TYPE.NOT_INITIALIZED;
 		}
 
 		if (skipUntilText != null)
@@ -212,13 +200,13 @@ public final class XmlPullParser implements IXmlPullParser
 				// There is no next matching tag.
 				lastText = input.getSubstring(-1);
 				input.setPosition(input.size());
-				lastType = BODY;
+				lastType = ELEMENT_TYPE.BODY;
 				return lastType;
 			}
 
 			lastText = input.getSubstring(openBracketIndex);
 			input.setPosition(openBracketIndex);
-			lastType = BODY;
+			lastType = ELEMENT_TYPE.BODY;
 			return lastType;
 		}
 
@@ -306,7 +294,7 @@ public final class XmlPullParser implements IXmlPullParser
 
 			// Move to position after the tag
 			input.setPosition(closeBracketIndex + 1);
-			lastType = TAG;
+			lastType = ELEMENT_TYPE.TAG;
 			return lastType;
 		}
 		else
@@ -342,13 +330,13 @@ public final class XmlPullParser implements IXmlPullParser
 
 			pos += 3;
 			lastText = input.getSubstring(openBracketIndex, pos);
-			lastType = COMMENT;
+			lastType = ELEMENT_TYPE.COMMENT;
 
 			// Conditional comment? E.g. "<!--[if IE]><a href='test.html'>my link</a><![endif]-->"
 			if (tagText.startsWith("!--[if ") && tagText.endsWith("]") &&
 				lastText.toString().endsWith("<![endif]-->"))
 			{
-				lastType = CONDITIONAL_COMMENT;
+				lastType = ELEMENT_TYPE.CONDITIONAL_COMMENT;
 
 				// Actually it is no longer a comment. It is now
 				// up to the browser to select the section appropriate.
@@ -365,7 +353,7 @@ public final class XmlPullParser implements IXmlPullParser
 		// "<!--[if IE]><a href='test.html'>my link</a><![endif]-->"
 		if (tagText.equals("![endif]--"))
 		{
-			lastType = CONDITIONAL_COMMENT;
+			lastType = ELEMENT_TYPE.CONDITIONAL_COMMENT;
 			input.setPosition(closeBracketIndex + 1);
 			return;
 		}
@@ -401,14 +389,26 @@ public final class XmlPullParser implements IXmlPullParser
 				input.setPosition(closeBracketIndex + 1);
 
 				lastText = tagText;
-				lastType = CDATA;
+				lastType = ELEMENT_TYPE.CDATA;
 				return;
 			}
 		}
 
 		if (tagText.charAt(0) == '?')
 		{
-			lastType = PROCESSING_INSTRUCTION;
+			lastType = ELEMENT_TYPE.PROCESSING_INSTRUCTION;
+
+			// Move to position after the tag
+			input.setPosition(closeBracketIndex + 1);
+			return;
+		}
+
+		if (tagText.startsWith("!DOCTYPE"))
+		{
+			lastType = ELEMENT_TYPE.DOCTYPE;
+
+			// Get the tagtext between open and close brackets
+			doctype = input.getSubstring(openBracketIndex + 1, closeBracketIndex);
 
 			// Move to position after the tag
 			input.setPosition(closeBracketIndex + 1);
@@ -416,7 +416,7 @@ public final class XmlPullParser implements IXmlPullParser
 		}
 
 		// Move to position after the tag
-		lastType = SPECIAL_TAG;
+		lastType = ELEMENT_TYPE.SPECIAL_TAG;
 		input.setPosition(closeBracketIndex + 1);
 	}
 
@@ -442,7 +442,7 @@ public final class XmlPullParser implements IXmlPullParser
 	 */
 	public final MarkupElement nextTag() throws ParseException
 	{
-		while (next() != NOT_INITIALIZED)
+		while (next() != ELEMENT_TYPE.NOT_INITIALIZED)
 		{
 			switch (lastType)
 			{

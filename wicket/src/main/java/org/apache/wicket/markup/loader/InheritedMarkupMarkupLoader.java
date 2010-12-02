@@ -21,12 +21,11 @@ import java.io.IOException;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
-import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupFactory;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MergedMarkup;
-import org.apache.wicket.markup.WicketTag;
+import org.apache.wicket.markup.TagUtils;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 
 /**
@@ -45,6 +44,8 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 	}
 
 	/**
+	 * Load the markup from the resource stream with the base MarkupLoader provided, than check if
+	 * markup inheritance must be applied. If yes, than load the base markup and merge them.
 	 * 
 	 * @see org.apache.wicket.markup.loader.IMarkupLoader#loadMarkup(org.apache.wicket.MarkupContainer,
 	 *      org.apache.wicket.markup.MarkupResourceStream,
@@ -56,28 +57,7 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 	{
 		// read and parse the markup
 		Markup markup = baseLoader.loadMarkup(container, markupResourceStream, null, enforceReload);
-		markup = checkForMarkupInheritance(container, markup, enforceReload);
-		return markup;
-	}
 
-	/**
-	 * The markup has just been loaded and now we check if markup inheritance applies, which is if
-	 * <wicket:extend> is found in the markup. If yes, than load the base markups and merge the
-	 * markup elements to create an updated (merged) list of markup elements.
-	 * 
-	 * @param container
-	 *            The original requesting markup container
-	 * @param markup
-	 *            The markup to checked for inheritance
-	 * @param enforceReload
-	 *            The cache will be ignored and all, including inherited markup files, will be
-	 *            reloaded. Whatever is in the cache, it will be ignored
-	 * @return A markup object with the the base markup elements resolved.
-	 * @TODO move into IMarkupLoader
-	 */
-	private Markup checkForMarkupInheritance(final MarkupContainer container, final Markup markup,
-		final boolean enforceReload)
-	{
 		// Check if markup contains <wicket:extend> which tells us that
 		// we need to read the inherited markup as well.
 		int extendIndex = requiresBaseMarkup(markup);
@@ -87,8 +67,8 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 			return markup;
 		}
 
+		// Load the base markup
 		final Markup baseMarkup = getBaseMarkup(container, markup, enforceReload);
-
 		if (baseMarkup == Markup.NO_MARKUP)
 		{
 			throw new MarkupNotFoundException(
@@ -105,6 +85,8 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 	}
 
 	/**
+	 * Load the base markup
+	 * 
 	 * @param container
 	 * @param markup
 	 * @param enforceReload
@@ -113,7 +95,6 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 	private Markup getBaseMarkup(final MarkupContainer container, final Markup markup,
 		final boolean enforceReload)
 	{
-
 		final Class<?> location = markup.getMarkupResourceStream().getMarkupClass().getSuperclass();
 
 		// get the base markup
@@ -127,22 +108,16 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 	 * 
 	 * @param markup
 	 * @return == 0, if no wicket:extend was found
-	 * @TODO move into IMarkupLoader
 	 */
 	private int requiresBaseMarkup(final IMarkupFragment markup)
 	{
 		for (int i = 0; i < markup.size(); i++)
 		{
-			MarkupElement elem = markup.get(i);
-			if (elem instanceof WicketTag)
+			if (TagUtils.isExtendTag(markup, i))
 			{
-				WicketTag wtag = (WicketTag)elem;
-				if (wtag.isExtendTag())
-				{
-					// Ok, inheritance is on and we must get the
-					// inherited markup as well.
-					return i;
-				}
+				// Ok, inheritance is on and we must get the
+				// inherited markup as well.
+				return i;
 			}
 		}
 		return -1;

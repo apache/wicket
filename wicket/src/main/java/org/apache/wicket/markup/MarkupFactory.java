@@ -32,8 +32,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Markup loading essentially is an self-sustaining modul of Wicket. MarkupFactory is the entry
- * point into that modul and provides all the means to change defaults.
+ * Factory to load markup either from from cache or from a resource. In case of markup inheritance,
+ * merging the markup is managed transparently.
  * 
  * @author Juergen Donnerstag
  */

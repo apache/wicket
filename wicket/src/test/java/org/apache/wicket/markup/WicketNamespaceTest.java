@@ -81,4 +81,31 @@ public class WicketNamespaceTest extends WicketTestCase
 		executeTest(WicketNamespace_6.class, "WicketNamespaceExpectedResult_6.html");
 	}
 
+	/**
+	 * @throws Exception
+	 */
+	public void testDoctype_1() throws Exception
+	{
+		executeTest(Doctype_1.class, "DoctypeExpectedResult_1.html");
+		MarkupResourceStream rs = MarkupFactory.get()
+			.getMarkup(tester.getLastRenderedPage(), true)
+			.getMarkupResourceStream();
+		assertEquals("html", rs.getDoctype());
+		assertEquals(true, rs.isHtml5());
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testDoctype_2() throws Exception
+	{
+		executeTest(Doctype_2.class, "DoctypeExpectedResult_2.html");
+		MarkupResourceStream rs = MarkupFactory.get()
+			.getMarkup(tester.getLastRenderedPage(), true)
+			.getMarkupResourceStream();
+		assertEquals(
+			rs.getDoctype(),
+			"html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"");
+		assertEquals(false, rs.isHtml5());
+	}
 }

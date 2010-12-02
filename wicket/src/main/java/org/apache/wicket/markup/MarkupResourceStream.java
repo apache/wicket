@@ -19,6 +19,8 @@ package org.apache.wicket.markup;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.util.lang.Bytes;
@@ -26,6 +28,7 @@ import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.resource.IFixedLocationResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +44,8 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	private static final long serialVersionUID = 1846489965076612828L;
 
 	private static final Logger log = LoggerFactory.getLogger(MarkupResourceStream.class);
+
+	private static final Pattern DOCTYPE_REGEX = Pattern.compile("!DOCTYPE\\s+(.*)\\s*");
 
 	/** The associated markup resource stream */
 	private final IResourceStream resourceStream;
@@ -61,7 +66,7 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	private Markup baseMarkup;
 
 	/** If found in the markup, the <?xml ...?> string */
-	private String xmlDeclaration;
+	private CharSequence xmlDeclaration;
 
 	/** The encoding as found in <?xml ... encoding="" ?>. Null, else */
 	private String encoding;
@@ -74,6 +79,9 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 
 	/** == wicket namespace name + ":id" */
 	private String wicketId;
+
+	/** HTML5 http://www.w3.org/TR/html5-diff/#doctype */
+	private String doctype;
 
 	/**
 	 * Construct.
@@ -240,7 +248,7 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	 */
 	public String getXmlDeclaration()
 	{
-		return xmlDeclaration;
+		return (xmlDeclaration == null ? null : xmlDeclaration.toString());
 	}
 
 	/**
@@ -307,7 +315,7 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	 * @param xmlDeclaration
 	 *            xmlDeclaration
 	 */
-	final void setXmlDeclaration(final String xmlDeclaration)
+	final void setXmlDeclaration(final CharSequence xmlDeclaration)
 	{
 		this.xmlDeclaration = xmlDeclaration;
 	}
@@ -394,5 +402,45 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 		{
 			return "(unknown resource)";
 		}
+	}
+
+	/**
+	 * Gets doctype.
+	 * 
+	 * @return The doctype excluding 'DOCTYPE'
+	 */
+	public final String getDoctype()
+	{
+		return doctype;
+	}
+
+	/**
+	 * Sets doctype.
+	 * 
+	 * @param doctype
+	 *            doctype
+	 */
+	public final void setDoctype(final CharSequence doctype)
+	{
+		if (Strings.isEmpty(doctype) == false)
+		{
+			String doc = doctype.toString().replaceAll("[\n\r]+", "");
+			doc = doc.replaceAll("\\s+", " ");
+			Matcher matcher = DOCTYPE_REGEX.matcher(doc);
+			if (matcher.matches() == false)
+			{
+				throw new MarkupException("Invalid DOCTYPE: '" + doctype + "'");
+			}
+			this.doctype = matcher.group(1).trim();
+		}
+	}
+
+	/**
+	 * @see href http://www.w3.org/TR/html5-diff/#doctype
+	 * @return True, if doctype == &lt;!DOCTYPE html&gt;
+	 */
+	public boolean isHtml5()
+	{
+		return "html".equalsIgnoreCase(doctype);
 	}
 }

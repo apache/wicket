@@ -21,19 +21,23 @@ import java.io.IOException;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupCache;
+import org.apache.wicket.markup.MarkupFactory;
 import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 
 /**
- * IMarkupLoader are loading the actual markup for a specific Wicket container and resource stream.
- * In case of markup inheritance it means that 2+ markup files must be read and merged. In order to
- * be flexible the interface has been designed in a way that multiple IMarkupLoader can be chained
- * to easily build up more complex loaders.
+ * IMarkupLoader are loading the markup for a specific Wicket container and resource stream. By
+ * default that is a file. But e.g. in case of markup inheritance it means that 2+ markup files must
+ * be read and merged. In order to be flexible the interface has been designed in a way that
+ * multiple IMarkupLoader can be chained to easily build up more complex loaders.
+ * <p>
+ * As a Wicket user you should not need to use any markup loader directly. Instead use
+ * {@link MarkupFactory#getMarkup(MarkupContainer, boolean)}.
  * 
  * @see MarkupCache
  * @see MarkupParser
- * @see MarkupParserFactory
+ * @see MarkupFactory
  * 
  * @author Juergen Donnerstag
  */
@@ -55,7 +59,7 @@ public interface IMarkupLoader
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
 	 */
-	Markup loadMarkup(final MarkupContainer container,
-		final MarkupResourceStream markupResourceStream, final IMarkupLoader baseLoader,
-		final boolean enforceReload) throws IOException, ResourceStreamNotFoundException;
+	Markup loadMarkup(final MarkupContainer container, MarkupResourceStream markupResourceStream,
+		IMarkupLoader baseLoader, boolean enforceReload) throws IOException,
+		ResourceStreamNotFoundException;
 }

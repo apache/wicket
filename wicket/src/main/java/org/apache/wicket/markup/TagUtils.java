@@ -50,4 +50,33 @@ public class TagUtils
 	{
 		return ("head".equalsIgnoreCase(tag.getName()) && (tag.getNamespace() == null));
 	}
+
+	/**
+	 * 
+	 * @param markup
+	 * @param i
+	 * @return True if the markup element at index 'i' is a WicketTag
+	 */
+	public static final boolean isWicketTag(final IMarkupFragment markup, final int i)
+	{
+		MarkupElement elem = markup.get(i);
+		return elem instanceof WicketTag;
+	}
+
+	/**
+	 * 
+	 * @param markup
+	 * @param i
+	 * @return True if the markup element at index 'i' is a &lt;wicket:extend&gt; tag
+	 */
+	public static final boolean isExtendTag(final IMarkupFragment markup, final int i)
+	{
+		MarkupElement elem = markup.get(i);
+		if (elem instanceof WicketTag)
+		{
+			WicketTag wtag = (WicketTag)elem;
+			return wtag.isExtendTag();
+		}
+		return false;
+	}
 }
