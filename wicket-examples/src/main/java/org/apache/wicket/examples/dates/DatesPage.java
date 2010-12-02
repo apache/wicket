@@ -88,7 +88,6 @@ public class DatesPage extends WicketExamplePage
 				@Override
 				public List<Locale> getObject()
 				{
-					getSelectedLocale();
 					List<Locale> locales = new ArrayList<Locale>(LOCALES);
 					Collections.sort(locales, new Comparator<Locale>()
 					{
