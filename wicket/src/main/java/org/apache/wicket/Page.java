@@ -377,17 +377,17 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#prepareForRender(boolean)
+	 * @see org.apache.wicket.Component#internalPrepareForRender(boolean)
 	 */
 	@Override
-	public void prepareForRender(boolean setRenderingFlag)
+	public void internalPrepareForRender(boolean setRenderingFlag)
 	{
 		if (!getFlag(FLAG_INITIALIZED))
 		{
 			// initialize the page if not yet initialized
 			initialize();
 		}
-		super.prepareForRender(setRenderingFlag);
+		super.internalPrepareForRender(setRenderingFlag);
 	}
 
 	/**

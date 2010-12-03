@@ -100,12 +100,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	private Object children;
 
 	/**
-	 * The markup stream for this container. This variable is used only during the render phase to
-	 * provide access to the current element within the stream.
-	 */
-	private transient MarkupStream markupStream;
-
-	/**
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
 	public MarkupContainer(final String id)
@@ -447,16 +441,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * Get the markup stream set on this container.
-	 * 
-	 * @return Returns the markup stream set on this container.
-	 */
-	public final MarkupStream getMarkupStream()
-	{
-		return markupStream;
-	}
-
-	/**
 	 * Get the childs markup
 	 * 
 	 * @see Component#getMarkup()
@@ -691,8 +675,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * Renders the entire associated markup stream for a container such as a Border or Panel. Any
-	 * leading or trailing raw markup in the associated markup is skipped.
+	 * Renders the entire associated markup for a container such as a Border or Panel. Any leading
+	 * or trailing raw markup in the associated markup is skipped.
 	 * 
 	 * @param openTagName
 	 *            the tag to render the associated markup for
@@ -702,10 +686,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	public final void renderAssociatedMarkup(final String openTagName, final String exceptionMessage)
 	{
 		// Get markup associated with Border or Panel component
-		final MarkupStream originalMarkupStream = getMarkupStream();
 		final MarkupStream associatedMarkupStream = new MarkupStream(getMarkup(null));
-
-		setMarkupStream(associatedMarkupStream);
 
 		// Get open tag in associated markup of border component
 		MarkupElement elem = associatedMarkupStream.get();
@@ -753,7 +734,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			}
 
 			renderClosingComponentTag(associatedMarkupStream, associatedMarkupOpenTag, false);
-			setMarkupStream(originalMarkupStream);
 		}
 		finally
 		{
@@ -876,9 +856,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		buffer.append(super.toString(detailed));
 		if (detailed)
 		{
-			if (getMarkupStream() != null)
+			if (getMarkup() != null)
 			{
-				buffer.append(", markupStream = " + getMarkupStream());
+				buffer.append(", markup = " + new MarkupStream(getMarkup()).toString());
 			}
 
 			if (children_size() != 0)
@@ -912,7 +892,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * 
 	 * @param <S>
 	 *            The type that goes into the Visitor.component() method.
-	 * 
+	 * @param <R>
 	 * @param clazz
 	 *            The class of child to visit, or null to visit all children
 	 * @param visitor
@@ -920,7 +900,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @return The return value from a visitor which halted the traversal, or null if the entire
 	 *         traversal occurred
 	 */
-
 	public final <S extends Component, R> R visitChildren(final Class<?> clazz,
 		final IVisitor<S, R> visitor)
 	{
@@ -931,6 +910,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * Traverses all child components in this container, calling the visitor's visit method at each
 	 * one.
 	 * 
+	 * @param <R>
 	 * @param visitor
 	 *            The visitor to call back to
 	 * @return The return value from a visitor which halted the traversal, or null if the entire
@@ -1606,18 +1586,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					markupStream.toString());
 			}
 		}
-	}
-
-	/**
-	 * Set markup stream for this container.
-	 * 
-	 * @param markupStream
-	 *            The markup stream
-	 */
-	@Override
-	protected final void setMarkupStream(final MarkupStream markupStream)
-	{
-		this.markupStream = markupStream;
 	}
 
 	/**

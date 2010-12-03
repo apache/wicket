@@ -166,7 +166,6 @@ public class Fragment extends WebMarkupContainer
 	private void renderFragment(final ComponentTag openTag)
 	{
 		MarkupStream stream = new MarkupStream(getMarkup(null));
-		setMarkupStream(stream);
 
 		// Get the fragments open tag
 		ComponentTag fragmentOpenTag = stream.getTag();

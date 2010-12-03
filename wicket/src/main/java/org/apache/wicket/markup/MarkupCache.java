@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
  * version.
  * 
  * @see IMarkupSettings
+ * @see MarkupFactory
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
@@ -52,10 +53,10 @@ public class MarkupCache implements IMarkupCache
 	/** Log for reporting. */
 	private static final Logger log = LoggerFactory.getLogger(MarkupCache.class);
 
-	/** Map of markup tags by class (exactly what is in the file). */
+	/** The actual cache: location => Markup */
 	private final ICache<CharSequence, Markup> markupCache;
 
-	/** Map of markup tags by class (exactly what is in the file). */
+	/** Add extra indirection to the cache: key => location */
 	private final ICache<CharSequence, CharSequence> markupKeyCache;
 
 	/** The markup cache key provider used by MarkupCache */
@@ -378,7 +379,7 @@ public class MarkupCache implements IMarkupCache
 	{
 		if (cacheKey != null)
 		{
-			String locationString = (String)markupKeyCache.get(cacheKey);
+			CharSequence locationString = markupKeyCache.get(cacheKey);
 			if (locationString != null)
 			{
 				return markupCache.get(locationString);

@@ -2154,7 +2154,7 @@ public abstract class Component
 	 *            if this is false only the PREPARED_FOR_RENDER flag is removed from component, the
 	 *            RENDERING flag is not set.
 	 * 
-	 * @see #prepareForRender(boolean)
+	 * @see #internalPrepareForRender(boolean)
 	 */
 	public final void markRendering(boolean setRenderingFlag)
 	{
@@ -2194,19 +2194,14 @@ public abstract class Component
 	 * <p>
 	 * Prepares the component and it's children for rendering. On whole page render this method must
 	 * be called on the page. On AJAX request, this method must be called on updated component.
-	 * </p>
-	 * 
-	 * TODO this method is not part of public api, so rename to internalPrepareForRender
 	 * 
 	 * @param setRenderingFlag
 	 *            Whether to set the rendering flag. This must be true if the page is about to be
 	 *            rendered. However, there are usecases to call this method without an immediate
 	 *            render (e.g. on stateless listner request target to build the component
 	 *            hierarchy), in that case setRenderingFlag should be false
-	 * 
-	 * 
 	 */
-	public void prepareForRender(boolean setRenderingFlag)
+	public void internalPrepareForRender(boolean setRenderingFlag)
 	{
 		beforeRender();
 
@@ -2245,7 +2240,7 @@ public abstract class Component
 	 */
 	public final void prepareForRender()
 	{
-		prepareForRender(true);
+		internalPrepareForRender(true);
 	}
 
 	/**
@@ -2291,11 +2286,11 @@ public abstract class Component
 			MarkupContainer parent = getParent();
 			if ((parent == null) || (parent.getFlag(FLAG_RENDERING) == false) || isAuto())
 			{
-				prepareForRender(true);
+				internalPrepareForRender(true);
 			}
 
 			// Do the render
-			render_();
+			internalRender();
 		}
 		catch (final RuntimeException ex)
 		{
@@ -2329,20 +2324,19 @@ public abstract class Component
 	/**
 	 * Performs a render of this component as part of a Page level render process.
 	 */
-	private final void render_()
+	private final void internalRender()
 	{
-		// Step 1: Make sure there is a markup available for the Component
+		// Make sure there is a markup available for the Component
 		IMarkupFragment markup = getMarkup();
 		if (markup == null)
 		{
 			throw new MarkupNotFoundException("Markup not found for Component: " + toString());
 		}
 
-		// Step 2: A markup stream based on the markup should yield the same result.
-		// We want to use the new markup stream
+		// MarkupStream is an Iterator for the markup
 		MarkupStream markupStream = new MarkupStream(markup);
-		setMarkupStream(markupStream);
 
+		// Flag: we stated the render process
 		markRendering(true);
 
 		MarkupElement elem = markup.get(0);
@@ -3953,21 +3947,6 @@ public abstract class Component
 	{
 		setFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER, ignore);
 		return this;
-	}
-
-	/**
-	 * The markup stream will be assigned to the component at the beginning of the component render
-	 * phase. It is temporary working variable only.
-	 * 
-	 * @see #findMarkupStream()
-	 * @see MarkupContainer#getMarkupStream()
-	 * 
-	 * @param markupStream
-	 *            The current markup stream which should be applied by the component to render
-	 *            itself
-	 */
-	protected void setMarkupStream(final MarkupStream markupStream)
-	{
 	}
 
 	/**

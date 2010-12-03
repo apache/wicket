@@ -19,7 +19,6 @@ package org.apache.wicket.markup;
 import java.util.Locale;
 
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.util.string.AppendingStringBuffer;
 
 
 /**
@@ -40,7 +39,7 @@ public class DefaultMarkupCacheKeyProvider implements IMarkupCacheKeyProvider
 
 	/**
 	 * Construct a proper key value for the cache
-	 *
+	 * 
 	 * @param container
 	 *            The container requesting the markup
 	 * @param clazz
@@ -51,7 +50,7 @@ public class DefaultMarkupCacheKeyProvider implements IMarkupCacheKeyProvider
 	public String getCacheKey(final MarkupContainer container, final Class<?> clazz)
 	{
 		final String classname = clazz.getName();
-		final AppendingStringBuffer buffer = new AppendingStringBuffer(classname.length() + 64);
+		final StringBuilder buffer = new StringBuilder(classname.length() + 64);
 		buffer.append(classname);
 
 		final Locale locale = container.getLocale();
@@ -63,7 +62,7 @@ public class DefaultMarkupCacheKeyProvider implements IMarkupCacheKeyProvider
 			final boolean hasLocale = locale.getLanguage().length() != 0;
 			final boolean hasCountry = locale.getCountry().length() != 0;
 			final boolean hasVariant = locale.getVariant().length() != 0;
-			
+
 			if (hasCountry || (hasLocale && hasVariant))
 			{
 				buffer.append('_').append(locale.getCountry());
@@ -74,13 +73,16 @@ public class DefaultMarkupCacheKeyProvider implements IMarkupCacheKeyProvider
 			}
 		}
 		if (container.getStyle() != null)
+		{
 			buffer.append('_').append(container.getStyle());
+		}
 
 		if (container.getVariation() != null)
+		{
 			buffer.append('_').append(container.getVariation());
+		}
 
 		buffer.append('.').append(container.getMarkupType().getExtension());
-
 		return buffer.toString();
 	}
 }

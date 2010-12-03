@@ -47,8 +47,8 @@ import org.slf4j.LoggerFactory;
  * "autolink" by the MarkupParser for all tags with href attribute, such as anchor and link tags
  * with no explicit wicket id. E.g. &lt;a href="Home.html"&gt;
  * <p>
- * If href points to a *.html file, a BookmarkablePageLink<?> will automatically be created, except for
- * absolute paths, where an ExternalLink is created.
+ * If href points to a *.html file, a BookmarkablePageLink<?> will automatically be created, except
+ * for absolute paths, where an ExternalLink is created.
  * <p>
  * If href points to a *.html file, it resolves the given URL by searching for a page class, either
  * relative or absolute, specified by the href attribute of the tag. If relative the href URL must
@@ -90,22 +90,22 @@ public final class AutoLinkResolver implements IComponentResolver
 		{
 			if (!pathInfo.absolute && (pathInfo.path != null) && (pathInfo.path.length() > 0))
 			{
-				// Href is relative. Create a resource reference pointing at
-				// this file
+				// Href is relative. Create a resource reference pointing at this file
 
 				// <wicket:head> components are handled differently. We can
 				// not use the container, because it is the container the
 				// header has been added to (e.g. the Page). What we need
 				// however, is the component (e.g. a Panel) which
 				// contributed it.
-				Class<? extends Component> clazz = container.getMarkupStream().getContainerClass();
+				MarkupStream markupStream = new MarkupStream(container.getMarkup());
+				Class<? extends Component> clazz = markupStream.getContainerClass();
 
 				// However if the markup stream is a merged markup stream (inheritance), than we
 				// need the class of the markup file which contained the tag.
-				if ((container.getMarkupStream().get() instanceof ComponentTag) &&
-					(container.getMarkupStream().getTag().getMarkupClass() != null))
+				if ((markupStream.get() instanceof ComponentTag) &&
+					(markupStream.getTag().getMarkupClass() != null))
 				{
-					clazz = container.getMarkupStream().getTag().getMarkupClass();
+					clazz = markupStream.getTag().getMarkupClass();
 				}
 
 				// Create the component implementing the link
@@ -441,11 +441,10 @@ public final class AutoLinkResolver implements IComponentResolver
 					parentWithContainer = container.findParentWithAssociatedMarkup();
 				}
 				if ((parentWithContainer instanceof Page) && !pathInfo.path.startsWith("/") &&
-					page.getMarkupStream().isMergedMarkup())
+					new MarkupStream(page.getMarkup()).isMergedMarkup())
 				{
-					Class<? extends Page> clazz = (Class<? extends Page>)container.getMarkupStream()
-						.getTag()
-						.getMarkupClass();
+					Class<? extends Page> clazz = (Class<? extends Page>)new MarkupStream(
+						container.getMarkup()).getTag().getMarkupClass();
 					if (clazz != null)
 					{
 						// Href is relative. Resolve the url given relative to

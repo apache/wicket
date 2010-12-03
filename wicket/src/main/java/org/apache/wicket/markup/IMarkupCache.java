@@ -21,8 +21,8 @@ import org.apache.wicket.settings.IMarkupSettings;
 
 /**
  * Each Wicket application has a single IMarkupCache associated with it (see {@link IMarkupSettings}
- * ). The markup cache is used by every Component to get its associated markup stream. Note that it
- * is the markup caches responsibility to load the markup, if not yet done.
+ * ). Via {@link MarkupFactory} the markup cache is used by every Component to get its associated
+ * markup stream.
  * 
  * @author Juergen Donnerstag
  */

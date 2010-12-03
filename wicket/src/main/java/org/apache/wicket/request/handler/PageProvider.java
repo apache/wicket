@@ -260,7 +260,7 @@ public class PageProvider implements IPageProvider
 				freshCreated = true;
 				if (prepareForRenderNewPage() && page instanceof Page)
 				{
-					((Page)page).prepareForRender(false);
+					((Page)page).internalPrepareForRender(false);
 				}
 			}
 		}
