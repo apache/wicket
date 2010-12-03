@@ -590,14 +590,10 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         hideIndicator();
         
   		// hack for a focus issue in IE, WICKET-2279      
-        if(Wicket.Browser.isIE()) { 
-			Wicket.Focus.refocusLastFocusedComponentAfterResponse = true; 
-			var focusedElement = Wicket.$(elementId); 
-			var temponblur = focusedElement.onblur; 
-			focusedElement.onblur = null; 
-			focusedElement.blur(); 
-			setTimeout(function() { focusedElement.onblur = temponblur;}, 0); 
-			Wicket.Focus.requestFocus(); 
+        if(Wicket.Browser.isIE()) {
+        	var range = document.selection.createRange();
+			if (range != null)
+				range.select();
 		} 
         
     }
