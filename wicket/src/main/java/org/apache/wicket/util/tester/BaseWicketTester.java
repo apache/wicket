@@ -625,6 +625,10 @@ public class BaseWicketTester
 		return lastResponse;
 	}
 
+	/**
+	 * 
+	 * @return last response as String
+	 */
 	public String getLastResponseAsString()
 	{
 		return lastResponse.getDocument();
@@ -680,6 +684,10 @@ public class BaseWicketTester
 		return url;
 	}
 
+	/**
+	 * @param link
+	 * @return url for Link
+	 */
 	public String urlFor(Link link)
 	{
 		return link.urlFor(ILinkListener.INTERFACE).toString();
@@ -1320,7 +1328,7 @@ public class BaseWicketTester
 	 * 
 	 * @param form
 	 */
-	public void submitForm(Form form)
+	public void submitForm(Form<?> form)
 	{
 		submitForm(form.getPageRelativePath());
 	}

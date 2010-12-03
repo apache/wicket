@@ -53,6 +53,9 @@ public class ByteArrayResponse extends Response
 		this(null);
 	}
 
+	/**
+	 * @return bytes
+	 */
 	public byte[] getBytes()
 	{
 		return bytes.toByteArray();

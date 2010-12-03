@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.request.mapper;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
+
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.request.IRequestHandler;
@@ -31,32 +36,29 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.time.Time;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-
 /**
  * Generic {@link ResourceReference} encoder that encodes and decodes non-mounted
  * {@link ResourceReference}s.
  * <p>
  * Decodes and encodes the following URLs:
- *
+ * 
  * <pre>
  *    /wicket/resource/org.apache.wicket.ResourceScope/name
  *    /wicket/resource/org.apache.wicket.ResourceScope/name?en
  *    /wicket/resource/org.apache.wicket.ResourceScope/name?-style
  *    /wicket/resource/org.apache.wicket.ResourceScope/resource/name.xyz?en_EN-style
  * </pre>
- *
+ * 
  * @author Matej Knopp
  * @author igor.vaynberg
  */
 class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 {
 	// timestamp cache stored in request cycle meta data
-	protected static final MetaDataKey<Map<ResourceReference, Time>> TIMESTAMP_KEY =
-		new MetaDataKey<Map<ResourceReference, Time>>() {};
+	protected static final MetaDataKey<Map<ResourceReference, Time>> TIMESTAMP_KEY = new MetaDataKey<Map<ResourceReference, Time>>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
 
 	protected static final String TIMESTAMP_PREFIX = "-ts";
 
@@ -67,11 +69,12 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param pageParametersEncoder
 	 * @param timestamps
 	 */
-	public BasicResourceReferenceMapper(IPageParametersEncoder pageParametersEncoder, IProvider<Boolean> timestamps)
+	public BasicResourceReferenceMapper(IPageParametersEncoder pageParametersEncoder,
+		IProvider<Boolean> timestamps)
 	{
 		this.pageParametersEncoder = pageParametersEncoder;
 		this.timestamps = timestamps;
@@ -85,7 +88,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 		Url url = request.getUrl();
 
 		if (url.getSegments().size() >= 4 &&
-				urlStartsWith(url, getContext().getNamespace(), getContext().getResourceIdentifier()))
+			urlStartsWith(url, getContext().getNamespace(), getContext().getResourceIdentifier()))
 		{
 			String className = url.getSegments().get(2);
 			StringBuilder name = new StringBuilder();
@@ -140,7 +143,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 
 	/**
 	 * strip timestamp information from resource name
-	 *
+	 * 
 	 * @param resourceName
 	 * @return
 	 */
@@ -210,7 +213,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 			{
 				String token = tokens.nextToken();
 
-				// on the last component of the resource path add the timestamp 
+				// on the last component of the resource path add the timestamp
 				if (isTimestampsEnabled() && tokens.hasMoreTokens() == false)
 				{
 					// get last modification of resource (cached during the current request cycle)
@@ -224,7 +227,8 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 
 						// create timestamped version of filename:
 						//
-						//   filename := [basename][timestamp-prefix][last-modified-milliseconds](.extension)
+						// filename :=
+// [basename][timestamp-prefix][last-modified-milliseconds](.extension)
 						//
 						StringBuilder filename = new StringBuilder();
 						filename.append(extensionAt == -1 ? token : token.substring(0, extensionAt));
@@ -258,13 +262,12 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 	/**
 	 * That method gets the last modification timestamp from the specified resource reference.
 	 * <p/>
-	 * The timestamp is cached in the meta data of the current request cycle to
-	 * eliminate repeated lookups of the same resource reference
-	 * which will harm performance.
-	 *
+	 * The timestamp is cached in the meta data of the current request cycle to eliminate repeated
+	 * lookups of the same resource reference which will harm performance.
+	 * 
 	 * @param resourceReference
-	 *             resource reference
-	 *
+	 *            resource reference
+	 * 
 	 * @return last modification timestamp or <code>null</code> if no timestamp provided
 	 */
 	protected Time getLastModifiedTimestampUsingCache(ResourceReference resourceReference)
@@ -272,7 +275,8 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 		// try to lookup current request cycle
 		RequestCycle requestCycle = ThreadContext.getRequestCycle();
 
-		// no request cycle: this should not happen unless we e.g. run a plain test case without WicketTester
+		// no request cycle: this should not happen unless we e.g. run a plain test case without
+// WicketTester
 		if (requestCycle == null)
 			return resourceReference.getLastModified();
 
@@ -316,7 +320,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 		// lookup current request cycle
 		RequestCycle cycle = RequestCycle.get();
 
-		if(cycle != null)
+		if (cycle != null)
 		{
 			// retrieve cache
 			Map<ResourceReference, Time> cache = cycle.getMetaData(TIMESTAMP_KEY);

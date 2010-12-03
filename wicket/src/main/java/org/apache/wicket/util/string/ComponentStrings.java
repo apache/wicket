@@ -18,12 +18,16 @@ package org.apache.wicket.util.string;
 
 import org.apache.wicket.Component;
 
+/**
+ * 
+ */
 public class ComponentStrings
 {
-
+	/**
+	 * Construct.
+	 */
 	private ComponentStrings()
 	{
-
 	}
 
 	/**

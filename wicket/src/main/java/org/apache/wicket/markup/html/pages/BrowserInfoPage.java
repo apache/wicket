@@ -195,6 +195,8 @@ public class BrowserInfoPage extends WebPage
 			throw new IllegalArgumentException("continueTo url : " + continueTo +
 				" must be relative to the current server.")
 			{
+				private static final long serialVersionUID = 1L;
+
 				/**
 				 * No stack trace. We won't tell the hackers about the internals of wicket in case
 				 * stack traces are enabled

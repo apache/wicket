@@ -64,9 +64,6 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 	 */
 	public void testBookmarkableRequestWithInterceptWithParams() throws Exception
 	{
-		if (true)
-			return;
-
 		PageParameters pp = new PageParameters();
 		pp.set("test", "test");
 
@@ -76,7 +73,5 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 
 		tester.startPage(BookmarkableContinueToPage.class);
 		assertEquals(tester.getLastRenderedPage().getClass(), BookmarkableThrowsInterceptPage.class);
-
 	}
-
 }

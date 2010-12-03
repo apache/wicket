@@ -33,6 +33,7 @@ import org.apache.wicket.util.lang.Args;
  */
 final class Behaviors implements IDetachable
 {
+	private static final long serialVersionUID = 1L;
 	private final Component component;
 
 	public Behaviors(Component component)
@@ -221,13 +222,14 @@ final class Behaviors implements IDetachable
 
 	private static class BehaviorIdList extends ArrayList<Behavior>
 	{
+		private static final long serialVersionUID = 1L;
+
 		public BehaviorIdList()
 		{
 			super(1);
 		}
 	}
 
-	/** {@inheritDoc} */
 	public final int getBehaviorId(Behavior behavior)
 	{
 		Args.notNull(behavior, "behavior");

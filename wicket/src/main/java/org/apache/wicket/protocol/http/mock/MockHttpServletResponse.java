@@ -792,7 +792,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 
 	/**
 	 * @deprecated use {@link #getDocument()}
-	 * @return
+	 * @return response as String
 	 */
 	@Deprecated
 	public String getTextResponse()

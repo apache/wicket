@@ -31,6 +31,11 @@ import java.util.Map;
 public class MultiMap<K, V> extends HashMap<K, List<V>>
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Constructor
 	 * 
 	 * @see HashMap#HashMap()
@@ -46,7 +51,7 @@ public class MultiMap<K, V> extends HashMap<K, List<V>>
 	 * @param initialCapacity
 	 * @param loadFactor
 	 * 
-	 * @see HashMap#HashMap(int, float))
+	 * @see HashMap#HashMap(int, float)
 	 */
 	public MultiMap(int initialCapacity, float loadFactor)
 	{
@@ -134,7 +139,7 @@ public class MultiMap<K, V> extends HashMap<K, List<V>>
 	 * Gets the first value in the value list
 	 * 
 	 * @param key
-	 * @return
+	 * @return first value
 	 */
 	public V getFirstValue(K key)
 	{

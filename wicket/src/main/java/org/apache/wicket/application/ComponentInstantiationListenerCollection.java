@@ -19,9 +19,14 @@ package org.apache.wicket.application;
 import org.apache.wicket.Component;
 import org.apache.wicket.util.listener.ListenerCollection;
 
+/**
+ * 
+ */
 public class ComponentInstantiationListenerCollection extends
 	ListenerCollection<IComponentInstantiationListener> implements IComponentInstantiationListener
 {
+	private static final long serialVersionUID = 1L;
+
 	public void onInstantiation(final Component component)
 	{
 		notify(new INotifier<IComponentInstantiationListener>()

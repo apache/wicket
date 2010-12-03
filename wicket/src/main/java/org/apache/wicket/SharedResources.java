@@ -112,7 +112,7 @@ public class SharedResources
 	 * @param style
 	 * @param variation
 	 * @param strict
-	 * @return
+	 * @return resource reference
 	 */
 	public ResourceReference get(Class<?> scope, String name, Locale locale, String style,
 		String variation, boolean strict)

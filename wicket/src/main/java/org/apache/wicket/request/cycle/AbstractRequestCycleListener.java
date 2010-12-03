@@ -18,6 +18,9 @@ package org.apache.wicket.request.cycle;
 
 import org.apache.wicket.request.IRequestHandler;
 
+/**
+ * 
+ */
 public abstract class AbstractRequestCycleListener implements IRequestCycleListener
 {
 	public void onBeginRequest(final RequestCycle cycle)

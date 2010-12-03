@@ -29,6 +29,11 @@ public class ComponentRenderingRequestHandler implements IComponentRequestHandle
 {
 	private final Component component;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param component
+	 */
 	public ComponentRenderingRequestHandler(Component component)
 	{
 		this.component = component;

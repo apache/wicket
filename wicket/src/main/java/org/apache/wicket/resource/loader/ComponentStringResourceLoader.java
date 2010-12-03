@@ -227,9 +227,6 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 		// walk it downwards starting with Page down to the Component
 		List<Class<?>> searchStack = getComponentStack(component);
 
-		// TODO Should be changed to false in 1.5
-		final boolean old = true;
-
 		// Walk the component hierarchy down from page to the component
 		for (int i = searchStack.size() - 1; (i >= 0) && (string == null); i--)
 		{
@@ -249,7 +246,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 
 			// If not found, than check if a property with the 'key' provided by
 			// the user can be found.
-			if ((string == null) && old)
+			if (string == null)
 			{
 				string = loadStringResource(clazz, key, locale, style, variation);
 			}
@@ -257,7 +254,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 
 		// If not found, than check if a property with the 'key' provided by
 		// the user can be found.
-		if ((string == null) && !old)
+		if (string == null)
 		{
 			// Walk the component hierarchy down from page to the component
 			for (int i = searchStack.size() - 1; (i >= 0) && (string == null); i--)

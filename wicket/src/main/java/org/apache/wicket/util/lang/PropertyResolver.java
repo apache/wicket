@@ -28,6 +28,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.convert.ConversionException;
+import org.apache.wicket.util.lang.PropertyResolver.IClassCache;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,13 +63,14 @@ import org.slf4j.LoggerFactory;
  */
 public final class PropertyResolver
 {
+	/** Log. */
+	private static final Logger log = LoggerFactory.getLogger(PropertyResolver.class);
+
 	private final static int RETURN_NULL = 0;
 	private final static int CREATE_NEW_VALUE = 1;
 	private final static int RESOLVE_CLASS = 2;
 
 	private final static Map<Object, IClassCache> applicationToClassesToGetAndSetters = Generics.newConcurrentHashMap(2);
-	/** Log. */
-	private static final Logger log = LoggerFactory.getLogger(PropertyResolver.class);
 
 	/**
 	 * Looks up the value from the object with the given expression. If the expression, the object
@@ -1131,7 +1133,7 @@ public final class PropertyResolver
 		public final void setValue(final Object object, final Object value,
 			PropertyResolverConverter converter)
 		{
-			Class type = null;
+			Class<?> type = null;
 			if (setMethod != null)
 			{
 				// getMethod is always there and if the value will be set through a setMethod then

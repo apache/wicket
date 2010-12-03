@@ -37,7 +37,7 @@ public class ThreadContext
 	 * INTERNAL METHOD
 	 * 
 	 * @param createIfDoesNotExist
-	 * @return
+	 * @return ThreadContext
 	 */
 	public static ThreadContext get(boolean createIfDoesNotExist)
 	{

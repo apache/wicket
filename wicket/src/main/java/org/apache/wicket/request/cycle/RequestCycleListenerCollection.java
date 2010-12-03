@@ -25,11 +25,15 @@ import org.apache.wicket.util.listener.ListenerCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 
+ */
 public class RequestCycleListenerCollection extends ListenerCollection<IRequestCycleListener>
 	implements
 		IRequestCycleListener
 {
 	private static final Logger logger = LoggerFactory.getLogger(RequestCycleListenerCollection.class);
+	private static final long serialVersionUID = 1L;
 
 	public void onBeginRequest(final RequestCycle cycle)
 	{

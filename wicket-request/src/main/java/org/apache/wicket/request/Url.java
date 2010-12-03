@@ -623,6 +623,8 @@ public final class Url implements Serializable
 	 */
 	public final static class QueryParameter implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
+
 		private final String name;
 		private final String value;
 

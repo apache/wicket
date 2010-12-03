@@ -79,10 +79,10 @@ public class Item<T> extends ListItem<T>
 	 * Comparator that compares Items by their index property
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
-	 * 
 	 */
 	public static class IndexComparator implements Comparator<Item<?>>, Serializable
 	{
+		private static final long serialVersionUID = 1L;
 		private static final Comparator<Item<?>> instance = new IndexComparator();
 
 		/**

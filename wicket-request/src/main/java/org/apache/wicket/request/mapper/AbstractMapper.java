@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.request.mapper;
 
-
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
@@ -26,6 +25,9 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
+/**
+ * 
+ */
 public abstract class AbstractMapper implements IRequestMapper
 {
 
@@ -47,6 +49,9 @@ public abstract class AbstractMapper implements IRequestMapper
 		}
 	}
 
+	/**
+	 * Construct.
+	 */
 	public AbstractMapper()
 	{
 		super();

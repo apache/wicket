@@ -54,7 +54,7 @@ public class Mount
 
 	/**
 	 * 
-	 * @return
+	 * @return mount parameters
 	 */
 	public MountParameters getMountParameters()
 	{
@@ -63,7 +63,7 @@ public class Mount
 
 	/**
 	 * 
-	 * @return
+	 * @return Url
 	 */
 	public Url getUrl()
 	{
