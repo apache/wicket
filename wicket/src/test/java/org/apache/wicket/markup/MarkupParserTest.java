@@ -182,7 +182,8 @@ public final class MarkupParserTest extends WicketTestCase
 		final String extension)
 	{
 		final String path = cls.getName().replace('.', '/');
-		final IResourceStream resource = locator.locate(cls, path, style, variation, locale, extension, false);
+		final IResourceStream resource = locator.locate(cls, path, style, variation, locale,
+			extension, false);
 
 		return new MarkupResourceStream(resource, null, null);
 	}
@@ -388,7 +389,8 @@ public final class MarkupParserTest extends WicketTestCase
 		assertEquals("html", ((ComponentTag)markup.get(0)).getName());
 		assertEquals("html", ((ComponentTag)markup.get(2)).getName());
 		assertEquals(true, markup.get(1) instanceof RawMarkup);
-		assertEquals("<script language=\"JavaScript\">... <x a> ...</script>", markup.get(1).toString());
+		assertEquals("<script language=\"JavaScript\">... <x a> ...</script>", markup.get(1)
+			.toString());
 	}
 
 	/**
@@ -412,5 +414,21 @@ public final class MarkupParserTest extends WicketTestCase
 
 		t = (ComponentTag)markup.get(2);
 		assertEquals(t.getId(), "span2");
+	}
+
+	/**
+	 * 
+	 * @throws IOException
+	 * @throws ResourceStreamNotFoundException
+	 */
+	public final void testComments() throws IOException, ResourceStreamNotFoundException
+	{
+		tester.getApplication().getMarkupSettings().setStripComments(true);
+		final MarkupParser parser = new MarkupParser(
+			"<span><!-- c1 --> <!-- c2 --><!-- c3 --></span>");
+		IMarkupFragment markup = parser.parse();
+
+		RawMarkup raw = (RawMarkup)markup.get(0);
+		assertEquals("<span> </span>", raw.toString());
 	}
 }
