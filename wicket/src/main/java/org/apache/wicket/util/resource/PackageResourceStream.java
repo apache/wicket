@@ -36,11 +36,10 @@ import org.apache.wicket.util.time.Time;
  */
 public class PackageResourceStream extends AbstractResourceStream
 {
-	/**
-	 * 
-	 */
+	/** */
 	private static final long serialVersionUID = 1L;
-	IResourceStream resourceStream;
+
+	private IResourceStream resourceStream;
 
 	/**
 	 * Obtains an {@link IResourceStream} from the application's

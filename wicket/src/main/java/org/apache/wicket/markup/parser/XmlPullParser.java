@@ -73,46 +73,26 @@ public final class XmlPullParser implements IXmlPullParser
 	{
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.parser.IXmlPullParser#getEncoding()
-	 */
 	public final String getEncoding()
 	{
 		return xmlReader.getEncoding();
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.parser.IXmlPullParser#getXmlDeclaration()
-	 */
 	public final CharSequence getXmlDeclaration()
 	{
 		return xmlReader.getXmlDeclaration();
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.parser.IXmlPullParser#getDoctype()
-	 */
 	public final CharSequence getDoctype()
 	{
 		return doctype;
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.parser.IXmlPullParser#getInputFromPositionMarker(int)
-	 */
 	public final CharSequence getInputFromPositionMarker(final int toPos)
 	{
 		return input.getSubstring(toPos);
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.parser.IXmlPullParser#getInput(int, int)
-	 */
 	public final CharSequence getInput(final int fromPos, final int toPos)
 	{
 		return input.getSubstring(fromPos, toPos);
@@ -573,28 +553,16 @@ public final class XmlPullParser implements IXmlPullParser
 		}
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.parser.IXmlPullParser#setPositionMarker()
-	 */
 	public final void setPositionMarker()
 	{
 		input.setPositionMarker(input.getPosition());
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.parser.IXmlPullParser#setPositionMarker(int)
-	 */
 	public final void setPositionMarker(final int pos)
 	{
 		input.setPositionMarker(pos);
 	}
 
-	/**
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{

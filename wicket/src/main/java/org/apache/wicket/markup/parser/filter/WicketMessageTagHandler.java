@@ -65,9 +65,6 @@ public final class WicketMessageTagHandler extends BaseMarkupFilter implements I
 	{
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.parser.filter.BaseMarkupFilter#nextTag(org.apache.wicket.markup.ComponentTag)
-	 */
 	@Override
 	protected final MarkupElement nextTag(ComponentTag tag) throws ParseException
 	{
@@ -107,10 +104,6 @@ public final class WicketMessageTagHandler extends BaseMarkupFilter implements I
 	{
 		private static final long serialVersionUID = 1L;
 
-		/**
-		 * @see org.apache.wicket.behavior.AbstractBehavior#onComponentTag(org.apache.wicket.Component,
-		 *      org.apache.wicket.markup.ComponentTag)
-		 */
 		@Override
 		public void onComponentTag(final Component component, final ComponentTag tag)
 		{
@@ -152,11 +145,6 @@ public final class WicketMessageTagHandler extends BaseMarkupFilter implements I
 		}
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
-	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
-	 */
 	public Component resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
 		// localize any raw markup that has wicket:message attrs

@@ -81,9 +81,6 @@ public class MarkupParser extends AbstractMarkupParser
 		super(xmlParser, resource);
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.MarkupParser#getMarkupFilters()
-	 */
 	@Override
 	public MarkupFilterList getMarkupFilters()
 	{
@@ -194,9 +191,6 @@ public class MarkupParser extends AbstractMarkupParser
 	{
 		private static final long serialVersionUID = 1L;
 
-		/**
-		 * @see java.util.ArrayList#add(java.lang.Object)
-		 */
 		@Override
 		public boolean add(final IMarkupFilter filter)
 		{

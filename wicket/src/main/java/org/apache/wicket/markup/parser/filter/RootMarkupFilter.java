@@ -43,9 +43,6 @@ public final class RootMarkupFilter implements IMarkupFilter
 		this.parser = parser;
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
-	 */
 	public final MarkupElement nextTag() throws ParseException
 	{
 		ELEMENT_TYPE type;
@@ -60,17 +57,11 @@ public final class RootMarkupFilter implements IMarkupFilter
 		return parser.getElement();
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.parser.IMarkupFilter#getNextFilter()
-	 */
 	public IMarkupFilter getNextFilter()
 	{
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.parser.IMarkupFilter#setNextFilter(org.apache.wicket.markup.parser.IMarkupFilter)
-	 */
 	public void setNextFilter(final IMarkupFilter parent)
 	{
 		throw new IllegalArgumentException("You can not set the parent with RootMarkupFilter.");

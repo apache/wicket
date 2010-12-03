@@ -98,28 +98,18 @@ public class MarkupCache implements IMarkupCache
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.IMarkupCache#clear()
-	 */
 	public void clear()
 	{
 		markupCache.clear();
 		markupKeyCache.clear();
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.IMarkupCache#shutdown()
-	 */
 	public void shutdown()
 	{
 		markupCache.shutdown();
 		markupKeyCache.shutdown();
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.IMarkupCache#removeMarkup(java.lang.String)
-	 */
 	public final IMarkupFragment removeMarkup(final String cacheKey)
 	{
 		Args.notNull(cacheKey, "cacheKey");
@@ -227,9 +217,6 @@ public class MarkupCache implements IMarkupCache
 		return false;
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.IMarkupCache#size()
-	 */
 	public final int size()
 	{
 		return markupCache.size();
@@ -533,7 +520,6 @@ public class MarkupCache implements IMarkupCache
 	 * 
 	 * @param <K>
 	 * @param <V>
-	 * 
 	 * @return new instance of cache implementation
 	 */
 	protected <K, V> ICache<K, V> newCacheImplementation()
@@ -549,8 +535,6 @@ public class MarkupCache implements IMarkupCache
 	 *            The key type
 	 * @param <V>
 	 *            The value type
-	 * 
-	 * @see MarkupCache
 	 */
 	public interface ICache<K, V>
 	{
@@ -616,7 +600,6 @@ public class MarkupCache implements IMarkupCache
 	/**
 	 * @param <K>
 	 * @param <V>
-	 * 
 	 */
 	public class DefaultCacheImplementation<K, V> implements ICache<K, V>
 	{
@@ -629,17 +612,11 @@ public class MarkupCache implements IMarkupCache
 		{
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.MarkupCache.ICache#clear()
-		 */
 		public void clear()
 		{
 			cache.clear();
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.MarkupCache.ICache#containsKey(java.lang.Object)
-		 */
 		public boolean containsKey(Object key)
 		{
 			if (key == null)
@@ -649,9 +626,6 @@ public class MarkupCache implements IMarkupCache
 			return cache.containsKey(key);
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.MarkupCache.ICache#get(java.lang.Object)
-		 */
 		public V get(Object key)
 		{
 			if (key == null)
@@ -661,41 +635,26 @@ public class MarkupCache implements IMarkupCache
 			return cache.get(key);
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.MarkupCache.ICache#getKeys()
-		 */
 		public Collection<K> getKeys()
 		{
 			return cache.keySet();
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.MarkupCache.ICache#put(java.lang.Object, java.lang.Object)
-		 */
 		public void put(K key, V value)
 		{
 			cache.put(key, value);
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.MarkupCache.ICache#remove(java.lang.Object)
-		 */
 		public boolean remove(K key)
 		{
 			return cache.remove(key) == null;
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.MarkupCache.ICache#size()
-		 */
 		public int size()
 		{
 			return cache.size();
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.MarkupCache.ICache#shutdown()
-		 */
 		public void shutdown()
 		{
 			clear();

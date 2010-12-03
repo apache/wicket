@@ -18,10 +18,8 @@ package org.apache.wicket.markup;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-import org.apache.wicket.util.resource.IFixedLocationResourceStream;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -76,25 +74,17 @@ public class Markup implements IMarkupFragment
 		markupElements = new ArrayList<MarkupElement>();
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.IMarkupFragment#get(int)
-	 */
 	public final MarkupElement get(final int index)
 	{
 		return markupElements.get(index);
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.IMarkupFragment#getMarkupResourceStream()
-	 */
 	public final MarkupResourceStream getMarkupResourceStream()
 	{
 		return markupResourceStream;
 	}
 
 	/**
-	 * @see MarkupResourceStream#locationAsString()
-	 * @see IFixedLocationResourceStream#locationAsString()
 	 * 
 	 * @return The fixed location as a string, e.g. the file name or the URL. Return null to avoid
 	 *         caching the markup.
@@ -104,9 +94,6 @@ public class Markup implements IMarkupFragment
 		return markupResourceStream.locationAsString();
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.IMarkupFragment#size()
-	 */
 	public final int size()
 	{
 		return markupElements.size();
@@ -143,16 +130,13 @@ public class Markup implements IMarkupFragment
 			if (markupElement instanceof ComponentTag)
 			{
 				// Make the tag immutable
-				((ComponentTag) markupElement).makeImmutable();
+				((ComponentTag)markupElement).makeImmutable();
 			}
 		}
 
 		markupElements = Collections.unmodifiableList(markupElements);
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.IMarkupFragment#find(java.lang.String)
-	 */
 	public final IMarkupFragment find(final String id)
 	{
 		if (Strings.isEmpty(id))
@@ -188,9 +172,6 @@ public class Markup implements IMarkupFragment
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.IMarkupFragment#toString()
-	 */
 	@Override
 	public final String toString()
 	{

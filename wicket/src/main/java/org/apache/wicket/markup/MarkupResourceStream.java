@@ -115,9 +115,6 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 		setWicketNamespace(ComponentTag.DEFAULT_WICKET_NAMESPACE);
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.IFixedLocationResourceStream#locationAsString()
-	 */
 	public String locationAsString()
 	{
 		if (resourceStream instanceof IFixedLocationResourceStream)
@@ -127,64 +124,36 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 		return null;
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.util.resource.IResourceStream#close()
-	 */
 	public void close() throws IOException
 	{
 		resourceStream.close();
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.util.resource.IResourceStream#getContentType()
-	 */
 	public String getContentType()
 	{
 		return resourceStream.getContentType();
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.util.resource.IResourceStream#getInputStream()
-	 */
 	public InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
 		return resourceStream.getInputStream();
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.util.resource.IResourceStream#getLocale()
-	 */
 	public Locale getLocale()
 	{
 		return resourceStream.getLocale();
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.util.watch.IModifiable#lastModifiedTime()
-	 */
 	public Time lastModifiedTime()
 	{
 		return resourceStream.lastModifiedTime();
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.util.resource.IResourceStream#length()
-	 */
 	public Bytes length()
 	{
 		return resourceStream.length();
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.util.resource.IResourceStream#setLocale(java.util.Locale)
-	 */
 	public void setLocale(Locale locale)
 	{
 		resourceStream.setLocale(locale);
@@ -355,42 +324,26 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 		return baseMarkup;
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.IResourceStream#getStyle()
-	 */
 	public String getStyle()
 	{
 		return resourceStream.getStyle();
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.IResourceStream#getVariation()
-	 */
 	public String getVariation()
 	{
 		return resourceStream.getVariation();
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.IResourceStream#setStyle(java.lang.String)
-	 */
 	public void setStyle(String style)
 	{
 		resourceStream.setStyle(style);
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.IResourceStream#setVariation(java.lang.String)
-	 */
 	public void setVariation(String variation)
 	{
 		resourceStream.setVariation(variation);
 	}
 
-	/**
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{

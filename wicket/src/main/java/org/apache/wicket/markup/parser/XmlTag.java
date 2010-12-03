@@ -126,13 +126,9 @@ public class XmlTag extends MarkupElement
 	 */
 	public final boolean closes(final XmlTag open)
 	{
-// return (closes == open) || (closes == open.copyOf);
 		return (closes == open) || ((closes == open.copyOf) && (this != open));
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.MarkupElement#equalTo(org.apache.wicket.markup.MarkupElement)
-	 */
 	@Override
 	public final boolean equalTo(final MarkupElement element)
 	{
@@ -593,9 +589,6 @@ public class XmlTag extends MarkupElement
 		return toCharSequence().toString();
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.MarkupElement#toCharSequence()
-	 */
 	@Override
 	public CharSequence toCharSequence()
 	{
@@ -676,7 +669,6 @@ public class XmlTag extends MarkupElement
 		}
 
 		buffer.append('>');
-
 		return buffer;
 	}
 }

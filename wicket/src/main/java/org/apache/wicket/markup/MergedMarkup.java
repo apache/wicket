@@ -90,9 +90,6 @@ public class MergedMarkup extends Markup
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.Markup#locationAsString()
-	 */
 	@Override
 	public String locationAsString()
 	{

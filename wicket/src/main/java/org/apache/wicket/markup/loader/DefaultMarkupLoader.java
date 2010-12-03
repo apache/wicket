@@ -42,10 +42,6 @@ public class DefaultMarkupLoader implements IMarkupLoader
 	 * Uses {@link SimpleMarkupLoader} to load the resource(s), read it and check if markup
 	 * inheritance applies. If yes, load the required other markup and merge them using
 	 * {@link InheritedMarkupMarkupLoader}.
-	 * 
-	 * @see org.apache.wicket.markup.loader.IMarkupLoader#loadMarkup(org.apache.wicket.MarkupContainer,
-	 *      org.apache.wicket.markup.MarkupResourceStream,
-	 *      org.apache.wicket.markup.loader.IMarkupLoader, boolean)
 	 */
 	public final Markup loadMarkup(final MarkupContainer container,
 		final MarkupResourceStream markupResourceStream, final IMarkupLoader baseLoader,

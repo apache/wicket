@@ -89,9 +89,6 @@ public class WicketLinkTagHandler extends BaseMarkupFilter implements IComponent
 		autolinking = enable;
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.parser.filter.BaseMarkupFilter#nextTag(org.apache.wicket.markup.ComponentTag)
-	 */
 	@Override
 	protected final MarkupElement nextTag(ComponentTag tag) throws ParseException
 	{
@@ -201,10 +198,6 @@ public class WicketLinkTagHandler extends BaseMarkupFilter implements IComponent
 		return (ref != null) && (!ref.contains(":"));
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
-	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
-	 */
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{

@@ -70,9 +70,6 @@ public class HeadForceTagIdHandler extends BaseMarkupFilter
 		headElementIdPrefix = buffer.toString();
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.parser.filter.BaseMarkupFilter#nextTag(org.apache.wicket.markup.ComponentTag)
-	 */
 	@Override
 	protected final MarkupElement nextTag(ComponentTag tag) throws ParseException
 	{

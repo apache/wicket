@@ -38,25 +38,17 @@ public abstract class AbstractResourceStreamWriter implements IResourceStreamWri
 
 	/**
 	 * Default implementation to return -1. Do override this if you know the length up front.
-	 * 
-	 * @see org.apache.wicket.util.resource.IResourceStream#length()
 	 */
 	public Bytes length()
 	{
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.IResourceStream#getLocale()
-	 */
 	public Locale getLocale()
 	{
 		return locale;
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.IResourceStream#setLocale(java.util.Locale)
-	 */
 	public void setLocale(final Locale locale)
 	{
 		this.locale = locale;
@@ -64,8 +56,6 @@ public abstract class AbstractResourceStreamWriter implements IResourceStreamWri
 
 	/**
 	 * Just returns now.
-	 * 
-	 * @see org.apache.wicket.util.watch.IModifiable#lastModifiedTime()
 	 */
 	public Time lastModifiedTime()
 	{
@@ -74,9 +64,6 @@ public abstract class AbstractResourceStreamWriter implements IResourceStreamWri
 
 	/**
 	 * this method should not be used as it is not required for resource writers
-	 * 
-	 * @return input stream
-	 * @throws ResourceStreamNotFoundException
 	 */
 	public final InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
@@ -85,11 +72,9 @@ public abstract class AbstractResourceStreamWriter implements IResourceStreamWri
 
 	/**
 	 * this method should not be used as it is not required for resource writers
-	 * <p/>
+	 * <p>
 	 * resource write generate content directly, not using an input stream, so there's nothing to
 	 * close later.
-	 * 
-	 * @throws IOException
 	 */
 	public final void close() throws IOException
 	{

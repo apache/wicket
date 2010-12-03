@@ -46,10 +46,6 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 	/**
 	 * Load the markup from the resource stream with the base MarkupLoader provided, than check if
 	 * markup inheritance must be applied. If yes, than load the base markup and merge them.
-	 * 
-	 * @see org.apache.wicket.markup.loader.IMarkupLoader#loadMarkup(org.apache.wicket.MarkupContainer,
-	 *      org.apache.wicket.markup.MarkupResourceStream,
-	 *      org.apache.wicket.markup.loader.IMarkupLoader, boolean)
 	 */
 	public final Markup loadMarkup(final MarkupContainer container,
 		final MarkupResourceStream markupResourceStream, final IMarkupLoader baseLoader,

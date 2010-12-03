@@ -35,73 +35,46 @@ public abstract class AbstractResourceStream implements IResourceStream
 	private String style;
 	private String variation;
 
-	/**
-	 * @see org.apache.wicket.util.resource.IResourceStream#getLocale()
-	 */
 	public Locale getLocale()
 	{
 		return locale;
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.IResourceStream#setLocale(java.util.Locale)
-	 */
 	public void setLocale(Locale locale)
 	{
 		this.locale = locale;
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.IResourceStream#getStyle()
-	 */
 	public String getStyle()
 	{
 		return style;
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.IResourceStream#getVariation()
-	 */
 	public String getVariation()
 	{
 		return variation;
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.IResourceStream#setStyle(java.lang.String)
-	 */
 	public void setStyle(String style)
 	{
 		this.style = style;
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.IResourceStream#setVariation(java.lang.String)
-	 */
 	public void setVariation(String variation)
 	{
 		this.variation = variation;
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.IResourceStream#length()
-	 */
 	public Bytes length()
 	{
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.IResourceStream#getContentType()
-	 */
 	public String getContentType()
 	{
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.util.watch.IModifiable#lastModifiedTime()
-	 */
 	public Time lastModifiedTime()
 	{
 		return null;

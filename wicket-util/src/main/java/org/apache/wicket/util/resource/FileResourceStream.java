@@ -81,9 +81,6 @@ public class FileResourceStream extends AbstractResourceStream
 		}
 	}
 
-	/**
-	 * @see IResourceStream#getContentType()
-	 */
 	@Override
 	public String getContentType()
 	{
@@ -137,9 +134,6 @@ public class FileResourceStream extends AbstractResourceStream
 		return null;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
@@ -150,9 +144,6 @@ public class FileResourceStream extends AbstractResourceStream
 		return "";
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.IResourceStream#length()
-	 */
 	@Override
 	public Bytes length()
 	{
@@ -163,9 +154,6 @@ public class FileResourceStream extends AbstractResourceStream
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.IFixedLocationResourceStream#locationAsString()
-	 */
 	public String locationAsString()
 	{
 		if (file != null)

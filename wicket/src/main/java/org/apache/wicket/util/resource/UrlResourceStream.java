@@ -277,18 +277,12 @@ public class UrlResourceStream extends AbstractResourceStream
 		Connections.close(connection);
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
 		return url.toString();
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.IResourceStream#length()
-	 */
 	@Override
 	public Bytes length()
 	{
@@ -296,9 +290,6 @@ public class UrlResourceStream extends AbstractResourceStream
 		return Bytes.bytes(contentLength);
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.IFixedLocationResourceStream#locationAsString()
-	 */
 	public String locationAsString()
 	{
 		return url.toExternalForm();

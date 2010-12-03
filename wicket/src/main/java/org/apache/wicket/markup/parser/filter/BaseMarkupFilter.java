@@ -52,9 +52,6 @@ public abstract class BaseMarkupFilter extends AbstractMarkupFilter
 		super(parent);
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
-	 */
 	public final MarkupElement nextTag() throws ParseException
 	{
 		// Get the next tag from the next MarkupFilter in the chain.

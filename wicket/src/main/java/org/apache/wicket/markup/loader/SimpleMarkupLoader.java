@@ -42,10 +42,6 @@ public class SimpleMarkupLoader implements IMarkupLoader
 	/**
 	 * Uses {@link MarkupFactory#newMarkupParser(MarkupResourceStream)} and
 	 * {@link MarkupParser#parse()} to load the Markup.
-	 * 
-	 * @see org.apache.wicket.markup.loader.IMarkupLoader#loadMarkup(org.apache.wicket.MarkupContainer,
-	 *      org.apache.wicket.markup.MarkupResourceStream,
-	 *      org.apache.wicket.markup.loader.IMarkupLoader, boolean)
 	 */
 	public final Markup loadMarkup(final MarkupContainer container,
 		final MarkupResourceStream markupResourceStream, final IMarkupLoader baseLoader,

@@ -57,9 +57,6 @@ public class WebExternalResourceStream extends AbstractResourceStream
 		this.url = url;
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.IResourceStream#length()
-	 */
 	@Override
 	public Bytes length()
 	{

@@ -74,9 +74,6 @@ public final class EnclosureHandler extends BaseMarkupFilter implements ICompone
 	{
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.parser.filter.BaseMarkupFilter#nextTag(org.apache.wicket.markup.ComponentTag)
-	 */
 	@Override
 	protected final MarkupElement nextTag(ComponentTag tag) throws ParseException
 	{
@@ -152,11 +149,6 @@ public final class EnclosureHandler extends BaseMarkupFilter implements ICompone
 		return tag;
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
-	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
-	 */
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{

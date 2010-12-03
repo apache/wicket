@@ -127,9 +127,6 @@ public class MarkupFragment implements IMarkupFragment
 		size = endIndex - startIndex + 1;
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.IMarkupFragment#get(int)
-	 */
 	public final MarkupElement get(final int index)
 	{
 		if ((index < 0) || (index > size))
@@ -142,9 +139,6 @@ public class MarkupFragment implements IMarkupFragment
 		return markup.get(startIndex + index);
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.IMarkupFragment#find(java.lang.String)
-	 */
 	public final IMarkupFragment find(final String id)
 	{
 		if (Strings.isEmpty(id))
@@ -180,17 +174,11 @@ public class MarkupFragment implements IMarkupFragment
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.IMarkupFragment#getMarkupResourceStream()
-	 */
 	public final MarkupResourceStream getMarkupResourceStream()
 	{
 		return markup.getMarkupResourceStream();
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.IMarkupFragment#size()
-	 */
 	public final int size()
 	{
 		return size;
@@ -217,18 +205,12 @@ public class MarkupFragment implements IMarkupFragment
 		return (Markup)markup;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
 		return toString(false);
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.IMarkupFragment#toString(boolean)
-	 */
 	public String toString(boolean markupOnly)
 	{
 		final AppendingStringBuffer buf = new AppendingStringBuffer(400);

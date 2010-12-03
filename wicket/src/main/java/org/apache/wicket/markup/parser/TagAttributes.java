@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.markup.parser;
 
-import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 public class TagAttributes extends ValueMap
 {
 	/** Log. */
-	static final Logger log = LoggerFactory.getLogger(TagAttributes.class);
+	private static final Logger log = LoggerFactory.getLogger(TagAttributes.class);
 
 	private static final long serialVersionUID = 1L;
 
@@ -47,15 +47,12 @@ public class TagAttributes extends ValueMap
 	 * @param map
 	 *            the <code>ValueMap</code> to copy
 	 */
-	public TagAttributes(final Map map)
+	public TagAttributes(final IValueMap map)
 	{
 		super();
 		putAll(map);
 	}
 
-	/**
-	 * @see org.apache.wicket.util.value.ValueMap#put(java.lang.String, java.lang.Object)
-	 */
 	@Override
 	public final Object put(String key, Object value)
 	{
@@ -87,11 +84,8 @@ public class TagAttributes extends ValueMap
 		return super.put(key, value);
 	}
 
-	/**
-	 * @see org.apache.wicket.util.value.ValueMap#putAll(java.util.Map)
-	 */
 	@Override
-	public final void putAll(Map map)
+	public final void putAll(Map<? extends String, ? extends Object> map)
 	{
 		for (Object o : map.keySet())
 		{

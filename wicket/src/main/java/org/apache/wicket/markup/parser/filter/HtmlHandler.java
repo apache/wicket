@@ -65,9 +65,6 @@ public final class HtmlHandler extends AbstractMarkupFilter
 	{
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
-	 */
 	public MarkupElement nextTag() throws ParseException
 	{
 		// Get the next tag. If null, no more tags are available

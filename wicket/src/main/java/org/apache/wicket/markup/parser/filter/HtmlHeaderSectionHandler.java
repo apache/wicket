@@ -62,9 +62,6 @@ public final class HtmlHeaderSectionHandler extends BaseMarkupFilter
 		this.markup = markup;
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.parser.filter.BaseMarkupFilter#nextTag(org.apache.wicket.markup.ComponentTag)
-	 */
 	@Override
 	protected final MarkupElement nextTag(ComponentTag tag) throws ParseException
 	{

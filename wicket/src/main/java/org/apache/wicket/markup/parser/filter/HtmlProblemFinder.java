@@ -17,7 +17,6 @@
 package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
-import java.util.Iterator;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
@@ -79,9 +78,6 @@ public final class HtmlProblemFinder extends BaseMarkupFilter
 		this.problemEscalation = problemEscalation;
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.parser.filter.BaseMarkupFilter#nextTag(org.apache.wicket.markup.ComponentTag)
-	 */
 	@Override
 	protected final MarkupElement nextTag(ComponentTag tag) throws ParseException
 	{
