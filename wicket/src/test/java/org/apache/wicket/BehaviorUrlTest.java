@@ -30,7 +30,7 @@ import org.apache.wicket.util.resource.StringResourceStream;
 public class BehaviorUrlTest extends WicketTestCase
 {
 	/**
-	 * @see https://issues.apache.org/jira/browse/WICKET-3097
+	 * @see href https://issues.apache.org/jira/browse/WICKET-3097
 	 */
 	public void testUrlRemainsStable()
 	{
@@ -51,7 +51,7 @@ public class BehaviorUrlTest extends WicketTestCase
 	/**
 	 * Asserting that the component model assigning don't affect the behavior data index
 	 * 
-	 * @see https://issues.apache.org/jira/browse/WICKET-3142
+	 * @see href https://issues.apache.org/jira/browse/WICKET-3142
 	 */
 	public void testUrlRemainsStableAfterComponentReceiveAnModel()
 	{

@@ -31,7 +31,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 
 /**
- * @see https://issues.apache.org/jira/browse/WICKET3142
+ * @see href https://issues.apache.org/jira/browse/WICKET3142
  */
 public class ComponentWithLazyModelCreationTest extends WicketTestCase
 {

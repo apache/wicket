@@ -83,7 +83,7 @@ public class MarkupFragmentTest extends WicketTestCase
 	}
 
 	/**
-	 * @see WICKET-3111
+	 * @see href http://issues.apache.org/jira/browse/WICKET-3111
 	 * 
 	 * @throws Exception
 	 */

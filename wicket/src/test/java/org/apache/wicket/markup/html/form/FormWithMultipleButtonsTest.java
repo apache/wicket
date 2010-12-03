@@ -61,7 +61,7 @@ public class FormWithMultipleButtonsTest extends TestCase
 	}
 
 	/**
-	 * @see https://issues.apache.org/jira/browse/WICKET-1894
+	 * @see href https://issues.apache.org/jira/browse/WICKET-1894
 	 */
 	public void testAjaxFallbackButtonInvokedFirst()
 	{
