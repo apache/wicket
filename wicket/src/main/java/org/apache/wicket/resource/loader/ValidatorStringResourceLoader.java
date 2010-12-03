@@ -70,7 +70,6 @@ public class ValidatorStringResourceLoader extends ComponentStringResourceLoader
 	 *      java.lang.String, java.util.Locale, java.lang.String, java.lang.String)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
 	public String loadStringResource(final Component component, final String key,
 		final Locale locale, final String style, final String variation)
 	{

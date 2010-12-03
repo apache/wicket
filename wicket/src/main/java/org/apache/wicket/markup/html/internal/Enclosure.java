@@ -295,7 +295,6 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 		/**
 		 * @see org.apache.wicket.application.IComponentOnBeforeRenderListener#onBeforeRender(org.apache.wicket.Component)
 		 */
-		@SuppressWarnings("unchecked")
 		public void onAfterRender(final Component component)
 		{
 			if (log.isWarnEnabled())

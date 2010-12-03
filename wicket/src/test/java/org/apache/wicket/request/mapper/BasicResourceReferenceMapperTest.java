@@ -44,8 +44,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	{
 	}
 
-	private final BasicResourceReferenceMapper encoder =
-		new BasicResourceReferenceMapper(new PageParametersEncoder(), TIMESTAMPS_OFF)
+	private final BasicResourceReferenceMapper encoder = new BasicResourceReferenceMapper(
+		new PageParametersEncoder(), TIMESTAMPS_OFF)
 	{
 		@Override
 		protected IMapperContext getContext()
@@ -54,8 +54,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		}
 	};
 
-	private final BasicResourceReferenceMapper encoderWithTimestamps =
-		new BasicResourceReferenceMapper(new PageParametersEncoder(), TIMESTAMPS_ON)
+	private final BasicResourceReferenceMapper encoderWithTimestamps = new BasicResourceReferenceMapper(
+		new PageParametersEncoder(), TIMESTAMPS_ON)
 	{
 		@Override
 		protected IMapperContext getContext()
@@ -425,22 +425,25 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	public void testLastModifiedTimestampIsPartOfUrl()
 	{
 		long millis = 12345678L;
-		final ResourceReferenceWithTimestamp reference = new ResourceReferenceWithTimestamp(Time.milliseconds(millis));
+		final ResourceReferenceWithTimestamp reference = new ResourceReferenceWithTimestamp(
+			Time.milliseconds(millis));
 		final IRequestHandler handler = new ResourceReferenceRequestHandler(reference, null);
 
 		// request url with timestamp
 		Url url = encoderWithTimestamps.mapHandler(handler);
 
 		// check that url contains timestamp
-		String timestampPart = BasicResourceReferenceMapper.TIMESTAMP_PREFIX + Long.toString(millis) + "?";
+		String timestampPart = BasicResourceReferenceMapper.TIMESTAMP_PREFIX +
+			Long.toString(millis) + "?";
 		assertTrue(url.toString().contains(timestampPart));
 	}
 
-	@SuppressWarnings({"unchecked"})
+	@SuppressWarnings({ })
 	public void testLastModifiedTimestampCache()
 	{
 		long millis = 87654321L;
-		final ResourceReferenceWithTimestamp reference = new ResourceReferenceWithTimestamp(Time.milliseconds(millis));
+		final ResourceReferenceWithTimestamp reference = new ResourceReferenceWithTimestamp(
+			Time.milliseconds(millis));
 		final IRequestHandler handler = new ResourceReferenceRequestHandler(reference, null);
 
 		// setup mock request cycle
@@ -458,7 +461,7 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 
 		Url url3 = encoderWithTimestamps.mapHandler(handler);
 		assertNotNull(url3);
-		
+
 		assertEquals(1, reference.lastModifiedInvocationCount);
 
 		// urls should be equal

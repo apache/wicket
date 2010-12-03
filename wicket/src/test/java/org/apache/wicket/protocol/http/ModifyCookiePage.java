@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.protocol.http;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.http.WebResponse;

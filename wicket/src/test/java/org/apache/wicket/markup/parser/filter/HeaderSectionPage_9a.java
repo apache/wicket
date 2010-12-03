@@ -17,7 +17,6 @@
 package org.apache.wicket.markup.parser.filter;
 
 
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 
 

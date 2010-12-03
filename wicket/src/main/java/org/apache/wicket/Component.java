@@ -3510,7 +3510,6 @@ public abstract class Component
 	 * @param <M>
 	 *            A class derived from IBehavior
 	 */
-	@SuppressWarnings("unchecked")
 	public <M extends Behavior> List<M> getBehaviors(Class<M> type)
 	{
 		return new Behaviors(this).getBehaviors(type);
@@ -3593,7 +3592,6 @@ public abstract class Component
 	 * 
 	 * @return The model
 	 */
-	@SuppressWarnings("unchecked")
 	protected IModel<?> initModel()
 	{
 		IModel<?> foundModel = null;

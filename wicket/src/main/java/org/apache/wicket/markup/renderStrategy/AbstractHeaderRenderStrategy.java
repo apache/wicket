@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.renderStrategy;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.Application;

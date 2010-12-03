@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.html.WebMarkupContainer;

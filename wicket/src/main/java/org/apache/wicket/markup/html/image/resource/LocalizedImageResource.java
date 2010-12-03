@@ -399,7 +399,6 @@ public final class LocalizedImageResource implements IClusterable
 	 * @throws WicketRuntimeException
 	 *             Thrown if the image cannot be located
 	 */
-	@SuppressWarnings("unchecked")
 	private void loadStaticImage(final String path)
 	{
 		MarkupContainer parent = component.findParentWithAssociatedMarkup();

@@ -28,7 +28,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.convert.ConversionException;
-import org.apache.wicket.util.lang.PropertyResolver.IClassCache;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

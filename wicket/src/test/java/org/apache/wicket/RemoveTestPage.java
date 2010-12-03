@@ -38,7 +38,6 @@ public class RemoveTestPage extends WebPage
 	/**
 	 * Construct.
 	 */
-	@SuppressWarnings("unchecked")
 	public RemoveTestPage()
 	{
 		_1 = new MarkupContainer(COMPONENT)
