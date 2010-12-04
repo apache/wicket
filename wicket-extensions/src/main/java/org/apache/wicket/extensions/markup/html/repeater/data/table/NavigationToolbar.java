@@ -32,8 +32,6 @@ public class NavigationToolbar extends AbstractToolbar
 {
 	private static final long serialVersionUID = 1L;
 
-	private final DataTable<?> table;
-
 	/**
 	 * Constructor
 	 * 
@@ -43,7 +41,6 @@ public class NavigationToolbar extends AbstractToolbar
 	public NavigationToolbar(final DataTable<?> table)
 	{
 		super(table);
-		this.table = table;
 
 		WebMarkupContainer span = new WebMarkupContainer("span");
 		add(span);
@@ -96,7 +93,7 @@ public class NavigationToolbar extends AbstractToolbar
 	@Override
 	protected void onBeforeRender()
 	{
-		setVisible(table.getPageCount() > 1);
+		setVisible(getTable().getPageCount() > 1);
 		super.onBeforeRender();
 	}
 }
