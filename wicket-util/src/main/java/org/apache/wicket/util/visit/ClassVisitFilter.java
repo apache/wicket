@@ -31,19 +31,19 @@ public class ClassVisitFilter implements IVisitFilter
 	 * @param clazz
 	 *            class of objects that visitors should be restricted to
 	 */
-	public ClassVisitFilter(Class<?> clazz)
+	public ClassVisitFilter(final Class<?> clazz)
 	{
 		this.clazz = clazz;
 	}
 
 	/** {@inheritDoc} */
-	public boolean visitChildren(Object object)
+	public boolean visitChildren(final Object object)
 	{
 		return true;
 	}
 
 	/** {@inheritDoc} */
-	public boolean visitObject(Object object)
+	public boolean visitObject(final Object object)
 	{
 		return clazz.isAssignableFrom(object.getClass());
 	}

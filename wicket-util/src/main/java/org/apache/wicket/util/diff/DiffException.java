@@ -84,7 +84,7 @@ public class DiffException extends Exception
 	 * 
 	 * @param msg
 	 */
-	public DiffException(String msg)
+	public DiffException(final String msg)
 	{
 		super(msg);
 	}

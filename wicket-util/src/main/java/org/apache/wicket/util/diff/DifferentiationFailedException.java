@@ -87,7 +87,7 @@ public class DifferentiationFailedException extends DiffException
 	 * 
 	 * @param msg
 	 */
-	public DifferentiationFailedException(String msg)
+	public DifferentiationFailedException(final String msg)
 	{
 		super(msg);
 	}

@@ -81,7 +81,7 @@ public final class Snake extends PathNode
 	 * @param prev
 	 *            the previous node in the path.
 	 */
-	public Snake(int i, int j, PathNode prev)
+	public Snake(final int i, final int j, final PathNode prev)
 	{
 		super(i, j, prev);
 	}

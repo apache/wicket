@@ -26,7 +26,7 @@ class HtmlLicenseHeaderHandler extends XmlLicenseHeaderHandler
 	 * 
 	 * @param ignoreFiles
 	 */
-	public HtmlLicenseHeaderHandler(List<String> ignoreFiles)
+	public HtmlLicenseHeaderHandler(final List<String> ignoreFiles)
 	{
 		super(ignoreFiles);
 	}

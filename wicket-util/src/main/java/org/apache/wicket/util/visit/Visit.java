@@ -40,7 +40,7 @@ public class Visit<R> implements IVisit<R>
 	}
 
 	/** {@inheritDoc} */
-	public void stop(R result)
+	public void stop(final R result)
 	{
 		action = Action.STOP;
 		this.result = result;

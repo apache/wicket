@@ -205,7 +205,7 @@ public class Folder extends File
 			/**
 			 * @see java.io.FileFilter#accept(java.io.File)
 			 */
-			public boolean accept(java.io.File file)
+			public boolean accept(final java.io.File file)
 			{
 				return file.isFile() && filter.accept(new File(file));
 			}
@@ -254,7 +254,7 @@ public class Folder extends File
 			/**
 			 * @see java.io.FileFilter#accept(java.io.File)
 			 */
-			public boolean accept(java.io.File file)
+			public boolean accept(final java.io.File file)
 			{
 				return file.isDirectory() && filter.accept(new Folder(file.getPath()));
 			}

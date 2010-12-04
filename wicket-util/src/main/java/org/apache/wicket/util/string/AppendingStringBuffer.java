@@ -70,7 +70,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @exception NegativeArraySizeException
 	 *                if the <code>length</code> argument is less than <code>0</code>.
 	 */
-	public AppendingStringBuffer(int length)
+	public AppendingStringBuffer(final int length)
 	{
 		value = new char[length];
 	}
@@ -86,7 +86,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @exception NullPointerException
 	 *                if <code>str</code> is <code>null</code>
 	 */
-	public AppendingStringBuffer(CharSequence str)
+	public AppendingStringBuffer(final CharSequence str)
 	{
 		this(str.length() + 16);
 		append(str);
@@ -127,7 +127,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @param minimumCapacity
 	 *            the minimum desired capacity.
 	 */
-	public void ensureCapacity(int minimumCapacity)
+	public void ensureCapacity(final int minimumCapacity)
 	{
 		if (minimumCapacity > value.length)
 		{
@@ -143,7 +143,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * 
 	 * @see java.lang.StringBuffer#ensureCapacity(int)
 	 */
-	private void expandCapacity(int minimumCapacity)
+	private void expandCapacity(final int minimumCapacity)
 	{
 		int newCapacity = (value.length + 1) * 2;
 		if (newCapacity < 0)
@@ -184,7 +184,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *                if the <code>newLength</code> argument is negative.
 	 * @see java.lang.StringBuffer#length()
 	 */
-	public void setLength(int newLength)
+	public void setLength(final int newLength)
 	{
 		if (newLength < 0)
 		{
@@ -226,7 +226,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *                <code>length()</code>.
 	 * @see java.lang.StringBuffer#length()
 	 */
-	public char charAt(int index)
+	public char charAt(final int index)
 	{
 		if ((index < 0) || (index >= count))
 		{
@@ -270,7 +270,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *                </code> is greater than <code>dst.length</code>
 	 *                </ul>
 	 */
-	public void getChars(int srcBegin, int srcEnd, char dst[], int dstBegin)
+	public void getChars(final int srcBegin, final int srcEnd, final char dst[], final int dstBegin)
 	{
 		if (srcBegin < 0)
 		{
@@ -305,7 +305,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *                <code>length()</code>.
 	 * @see java.lang.StringBuffer#length()
 	 */
-	public void setCharAt(int index, char ch)
+	public void setCharAt(final int index, final char ch)
 	{
 		if ((index < 0) || (index >= count))
 		{
@@ -326,7 +326,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @see java.lang.String#valueOf(java.lang.Object)
 	 * @see java.lang.StringBuffer#append(java.lang.String)
 	 */
-	public AppendingStringBuffer append(Object obj)
+	public AppendingStringBuffer append(final Object obj)
 	{
 		if (obj instanceof AppendingStringBuffer)
 		{
@@ -494,7 +494,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *            The length that must be copied
 	 * @return a reference to this <tt>AppendingStringBuffer</tt>.
 	 */
-	public AppendingStringBuffer append(StringBuilder sb, int from, int length)
+	public AppendingStringBuffer append(StringBuilder sb, final int from, final int length)
 	{
 		if (sb == null)
 		{
@@ -526,7 +526,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *            the characters to be appended.
 	 * @return a reference to this <code>AppendingStringBuffer</code> object.
 	 */
-	public AppendingStringBuffer append(char str[])
+	public AppendingStringBuffer append(final char str[])
 	{
 		int len = str.length;
 		int newcount = count + len;
@@ -559,7 +559,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *            the number of characters to append.
 	 * @return a reference to this <code>AppendingStringBuffer</code> object.
 	 */
-	public AppendingStringBuffer append(char str[], int offset, int len)
+	public AppendingStringBuffer append(final char str[], final int offset, final int len)
 	{
 		int newcount = count + len;
 		if (newcount > value.length)
@@ -583,7 +583,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @see java.lang.String#valueOf(boolean)
 	 * @see java.lang.StringBuffer#append(java.lang.String)
 	 */
-	public AppendingStringBuffer append(boolean b)
+	public AppendingStringBuffer append(final boolean b)
 	{
 		if (b)
 		{
@@ -627,7 +627,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *            a <code>char</code>.
 	 * @return a reference to this <code>AppendingStringBuffer</code> object.
 	 */
-	public AppendingStringBuffer append(char c)
+	public AppendingStringBuffer append(final char c)
 	{
 		int newcount = count + 1;
 		if (newcount > value.length)
@@ -650,7 +650,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @see java.lang.String#valueOf(int)
 	 * @see java.lang.StringBuffer#append(java.lang.String)
 	 */
-	public AppendingStringBuffer append(int i)
+	public AppendingStringBuffer append(final int i)
 	{
 		return append(String.valueOf(i));
 	}
@@ -667,7 +667,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @see java.lang.String#valueOf(long)
 	 * @see java.lang.StringBuffer#append(java.lang.String)
 	 */
-	public AppendingStringBuffer append(long l)
+	public AppendingStringBuffer append(final long l)
 	{
 		return append(String.valueOf(l));
 	}
@@ -684,7 +684,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @see java.lang.String#valueOf(float)
 	 * @see java.lang.StringBuffer#append(java.lang.String)
 	 */
-	public AppendingStringBuffer append(float f)
+	public AppendingStringBuffer append(final float f)
 	{
 		return append(String.valueOf(f));
 	}
@@ -701,7 +701,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @see java.lang.String#valueOf(double)
 	 * @see java.lang.StringBuffer#append(java.lang.String)
 	 */
-	public AppendingStringBuffer append(double d)
+	public AppendingStringBuffer append(final double d)
 	{
 		return append(String.valueOf(d));
 	}
@@ -722,7 +722,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *                greater than <code>end</code>.
 	 * @since 1.2
 	 */
-	public AppendingStringBuffer delete(int start, int end)
+	public AppendingStringBuffer delete(final int start, int end)
 	{
 		if (start < 0)
 		{
@@ -758,7 +758,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *                <code>length()</code>.
 	 * @since 1.2
 	 */
-	public AppendingStringBuffer deleteCharAt(int index)
+	public AppendingStringBuffer deleteCharAt(final int index)
 	{
 		if ((index < 0) || (index >= count))
 		{
@@ -790,7 +790,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *                greater than <code>end</code>.
 	 * @since 1.2
 	 */
-	public AppendingStringBuffer replace(int start, int end, String str)
+	public AppendingStringBuffer replace(final int start, int end, final String str)
 	{
 		if (start < 0)
 		{
@@ -831,7 +831,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *                <code>AppendingStringBuffer</code>.
 	 * @since 1.2
 	 */
-	public String substring(int start)
+	public String substring(final int start)
 	{
 		return substring(start, count);
 	}
@@ -877,7 +877,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @since 1.4
 	 * @spec JSR-51
 	 */
-	public CharSequence subSequence(int start, int end)
+	public CharSequence subSequence(final int start, final int end)
 	{
 		return this.substring(start, end);
 	}
@@ -898,7 +898,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *                <code>length()</code>, or <code>start</code> is greater than <code>end</code>.
 	 * @since 1.2
 	 */
-	public String substring(int start, int end)
+	public String substring(final int start, final int end)
 	{
 		if (start < 0)
 		{
@@ -937,7 +937,8 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *                <code>(offset+len)</code> is greater than <code>str.length</code>.
 	 * @since 1.2
 	 */
-	public AppendingStringBuffer insert(int index, char str[], int offset, int len)
+	public AppendingStringBuffer insert(final int index, final char str[], final int offset,
+		final int len)
 	{
 		if ((index < 0) || (index > count))
 		{
@@ -984,7 +985,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @see AppendingStringBuffer#insert(int, java.lang.String)
 	 * @see AppendingStringBuffer#length()
 	 */
-	public AppendingStringBuffer insert(int offset, Object obj)
+	public AppendingStringBuffer insert(final int offset, final Object obj)
 	{
 		if (obj instanceof AppendingStringBuffer)
 		{
@@ -1030,7 +1031,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *                if the offset is invalid.
 	 * @see java.lang.StringBuffer#length()
 	 */
-	public AppendingStringBuffer insert(int offset, String str)
+	public AppendingStringBuffer insert(final int offset, String str)
 	{
 		if ((offset < 0) || (offset > count))
 		{
@@ -1085,7 +1086,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *                if the offset is invalid.
 	 * @see java.lang.StringBuffer#length()
 	 */
-	public AppendingStringBuffer insert(int offset, StringBuilder str)
+	public AppendingStringBuffer insert(final int offset, StringBuilder str)
 	{
 		if ((offset < 0) || (offset > count))
 		{
@@ -1129,7 +1130,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @exception StringIndexOutOfBoundsException
 	 *                if the offset is invalid.
 	 */
-	public AppendingStringBuffer insert(int offset, char str[])
+	public AppendingStringBuffer insert(final int offset, final char str[])
 	{
 		if ((offset < 0) || (offset > count))
 		{
@@ -1169,7 +1170,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @see java.lang.StringBuffer#insert(int, java.lang.String)
 	 * @see java.lang.StringBuffer#length()
 	 */
-	public AppendingStringBuffer insert(int offset, boolean b)
+	public AppendingStringBuffer insert(final int offset, final boolean b)
 	{
 		return insert(offset, String.valueOf(b));
 	}
@@ -1197,7 +1198,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *                if the offset is invalid.
 	 * @see java.lang.StringBuffer#length()
 	 */
-	public AppendingStringBuffer insert(int offset, char c)
+	public AppendingStringBuffer insert(final int offset, final char c)
 	{
 		int newcount = count + 1;
 		if (newcount > value.length)
@@ -1232,7 +1233,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @see java.lang.StringBuffer#insert(int, java.lang.String)
 	 * @see java.lang.StringBuffer#length()
 	 */
-	public AppendingStringBuffer insert(int offset, int i)
+	public AppendingStringBuffer insert(final int offset, final int i)
 	{
 		return insert(offset, String.valueOf(i));
 	}
@@ -1258,7 +1259,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @see java.lang.StringBuffer#insert(int, java.lang.String)
 	 * @see java.lang.StringBuffer#length()
 	 */
-	public AppendingStringBuffer insert(int offset, long l)
+	public AppendingStringBuffer insert(final int offset, final long l)
 	{
 		return insert(offset, String.valueOf(l));
 	}
@@ -1284,7 +1285,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @see java.lang.StringBuffer#insert(int, java.lang.String)
 	 * @see java.lang.StringBuffer#length()
 	 */
-	public AppendingStringBuffer insert(int offset, float f)
+	public AppendingStringBuffer insert(final int offset, final float f)
 	{
 		return insert(offset, String.valueOf(f));
 	}
@@ -1311,7 +1312,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @see java.lang.StringBuffer#insert(int, java.lang.String)
 	 * @see java.lang.StringBuffer#length()
 	 */
-	public AppendingStringBuffer insert(int offset, double d)
+	public AppendingStringBuffer insert(final int offset, final double d)
 	{
 		return insert(offset, String.valueOf(d));
 	}
@@ -1335,7 +1336,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *                if <code>str</code> is <code>null</code>.
 	 * @since 1.4
 	 */
-	public int indexOf(String str)
+	public int indexOf(final String str)
 	{
 		return indexOf(str, 0);
 	}
@@ -1361,13 +1362,13 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *                if <code>str</code> is <code>null</code>.
 	 * @since 1.4
 	 */
-	public int indexOf(String str, int fromIndex)
+	public int indexOf(final String str, final int fromIndex)
 	{
 		return indexOf(value, 0, count, str.toCharArray(), 0, str.length(), fromIndex);
 	}
 
-	static int indexOf(char[] source, int sourceOffset, int sourceCount, char[] target,
-		int targetOffset, int targetCount, int fromIndex)
+	static int indexOf(final char[] source, final int sourceOffset, final int sourceCount,
+		final char[] target, final int targetOffset, final int targetCount, int fromIndex)
 	{
 		if (fromIndex >= sourceCount)
 		{
@@ -1389,7 +1390,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 		startSearchForFirstChar : while (true)
 		{
 			/* Look for first character. */
-			while (i <= max && source[i] != first)
+			while ((i <= max) && (source[i] != first))
 			{
 				i++;
 			}
@@ -1436,7 +1437,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *                if <code>str</code> is <code>null</code>.
 	 * @since 1.4
 	 */
-	public int lastIndexOf(String str)
+	public int lastIndexOf(final String str)
 	{
 		return lastIndexOf(str, count);
 	}
@@ -1460,13 +1461,13 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *                if <code>str</code> is <code>null</code>.
 	 * @since 1.4
 	 */
-	public int lastIndexOf(String str, int fromIndex)
+	public int lastIndexOf(final String str, final int fromIndex)
 	{
 		return lastIndexOf(value, 0, count, str.toCharArray(), 0, str.length(), fromIndex);
 	}
 
-	static int lastIndexOf(char[] source, int sourceOffset, int sourceCount, char[] target,
-		int targetOffset, int targetCount, int fromIndex)
+	static int lastIndexOf(final char[] source, final int sourceOffset, final int sourceCount,
+		final char[] target, final int targetOffset, final int targetCount, int fromIndex)
 	{
 		/*
 		 * Check arguments; return immediately where possible. For consistency, don't check for null
@@ -1494,7 +1495,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 
 		startSearchForLastChar : while (true)
 		{
-			while (i >= min && source[i] != strLastChar)
+			while ((i >= min) && (source[i] != strLastChar))
 			{
 				i--;
 			}
@@ -1537,7 +1538,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * this.subString(toffset).startsWith(prefix)
 	 * </pre>
 	 */
-	public boolean startsWith(CharSequence prefix, int toffset)
+	public boolean startsWith(final CharSequence prefix, final int toffset)
 	{
 		char ta[] = value;
 		int to = toffset;
@@ -1571,7 +1572,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *         {@link #equals(Object)} method.
 	 * @since 1. 0
 	 */
-	public boolean startsWith(CharSequence prefix)
+	public boolean startsWith(final CharSequence prefix)
 	{
 		return startsWith(prefix, 0);
 	}
@@ -1587,7 +1588,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *         argument is the empty string or is equal to this <code>AppendingStringBuffer</code>
 	 *         object as determined by the {@link #equals(Object)} method.
 	 */
-	public boolean endsWith(CharSequence suffix)
+	public boolean endsWith(final CharSequence suffix)
 	{
 		return startsWith(suffix, count - suffix.length());
 	}
@@ -1632,7 +1633,8 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
+	private void readObject(final java.io.ObjectInputStream s) throws IOException,
+		ClassNotFoundException
 	{
 		s.defaultReadObject();
 		value = value.clone();
@@ -1650,7 +1652,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *         <code>false</code> otherwise.
 	 */
 	@Override
-	public boolean equals(Object anObject)
+	public boolean equals(final Object anObject)
 	{
 		if (this == anObject)
 		{

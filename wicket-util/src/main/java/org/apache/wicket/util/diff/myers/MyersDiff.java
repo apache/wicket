@@ -90,7 +90,8 @@ public class MyersDiff implements DiffAlgorithm
 	/**
 	 * {@inheritDoc}
 	 */
-	public Revision diff(Object[] orig, Object[] rev) throws DifferentiationFailedException
+	public Revision diff(final Object[] orig, final Object[] rev)
+		throws DifferentiationFailedException
 	{
 		PathNode path = buildPath(orig, rev);
 		return buildRevision(path, orig, rev);
@@ -108,7 +109,7 @@ public class MyersDiff implements DiffAlgorithm
 	 * @throws DifferentiationFailedException
 	 *             if a diff path could not be found.
 	 */
-	public static PathNode buildPath(Object[] orig, Object[] rev)
+	public static PathNode buildPath(final Object[] orig, final Object[] rev)
 		throws DifferentiationFailedException
 	{
 		if (orig == null)
@@ -140,7 +141,7 @@ public class MyersDiff implements DiffAlgorithm
 				PathNode prev = null;
 
 				int i;
-				if ((k == -d) || (k != d && diagonal[kminus].i < diagonal[kplus].i))
+				if ((k == -d) || ((k != d) && (diagonal[kminus].i < diagonal[kplus].i)))
 				{
 					i = diagonal[kplus].i;
 					prev = diagonal[kplus];
@@ -160,7 +161,7 @@ public class MyersDiff implements DiffAlgorithm
 				// orig and rev are zero-based
 				// but the algorithm is one-based
 				// that's why there's no +1 when indexing the sequences
-				while (i < N && j < M && orig[i].equals(rev[j]))
+				while ((i < N) && (j < M) && orig[i].equals(rev[j]))
 				{
 					i++;
 					j++;
@@ -172,7 +173,7 @@ public class MyersDiff implements DiffAlgorithm
 
 				diagonal[kmiddle] = node;
 
-				if (i >= N && j >= M)
+				if ((i >= N) && (j >= M))
 				{
 					return diagonal[kmiddle];
 				}
@@ -197,7 +198,7 @@ public class MyersDiff implements DiffAlgorithm
 	 * @throws DifferentiationFailedException
 	 *             if a {@link Revision} could not be built from the given path.
 	 */
-	public static Revision buildRevision(PathNode path, Object[] orig, Object[] rev)
+	public static Revision buildRevision(PathNode path, final Object[] orig, final Object[] rev)
 	{
 		if (path == null)
 		{
@@ -217,7 +218,7 @@ public class MyersDiff implements DiffAlgorithm
 		{
 			path = path.prev;
 		}
-		while (path != null && path.prev != null && path.prev.j >= 0)
+		while ((path != null) && (path.prev != null) && (path.prev.j >= 0))
 		{
 			if (path.isSnake())
 			{

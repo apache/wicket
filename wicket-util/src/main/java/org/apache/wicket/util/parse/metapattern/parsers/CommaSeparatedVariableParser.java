@@ -36,8 +36,7 @@ public final class CommaSeparatedVariableParser extends ListParser
 {
 	/** Pattern to use. */
 	private static final MetaPattern patternEntry = new MetaPattern(
-		MetaPattern.OPTIONAL_WHITESPACE, MetaPattern.STRING,
-		MetaPattern.OPTIONAL_WHITESPACE);
+		MetaPattern.OPTIONAL_WHITESPACE, MetaPattern.STRING, MetaPattern.OPTIONAL_WHITESPACE);
 
 	/**
 	 * Construct a new parser with parameter 'input' to be parsed. Base classes provide the method

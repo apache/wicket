@@ -103,7 +103,7 @@ public abstract class AbstractNumberConverter<N extends Number> extends Abstract
 	 * @see org.apache.wicket.util.convert.IConverter#convertToString(C, Locale)
 	 */
 	@Override
-	public String convertToString(final Number value, Locale locale)
+	public String convertToString(final Number value, final Locale locale)
 	{
 		NumberFormat fmt = getNumberFormat(locale);
 		if (fmt != null)

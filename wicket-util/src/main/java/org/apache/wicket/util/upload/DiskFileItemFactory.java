@@ -87,7 +87,7 @@ public class DiskFileItemFactory implements FileItemFactory
 	 *            The data repository, which is the directory in which files will be created, should
 	 *            the item size exceed the threshold.
 	 */
-	public DiskFileItemFactory(int sizeThreshold, File repository)
+	public DiskFileItemFactory(final int sizeThreshold, final File repository)
 	{
 		this.sizeThreshold = sizeThreshold;
 		this.repository = repository;
@@ -122,7 +122,7 @@ public class DiskFileItemFactory implements FileItemFactory
 	 * @see #getRepository()
 	 * 
 	 */
-	public void setRepository(File repository)
+	public void setRepository(final File repository)
 	{
 		this.repository = repository;
 	}
@@ -151,7 +151,7 @@ public class DiskFileItemFactory implements FileItemFactory
 	 * @see #getSizeThreshold()
 	 * 
 	 */
-	public void setSizeThreshold(int sizeThreshold)
+	public void setSizeThreshold(final int sizeThreshold)
 	{
 		this.sizeThreshold = sizeThreshold;
 	}
@@ -174,8 +174,8 @@ public class DiskFileItemFactory implements FileItemFactory
 	 * 
 	 * @return The newly created file item.
 	 */
-	public FileItem createItem(String fieldName, String contentType, boolean isFormField,
-		String fileName)
+	public FileItem createItem(final String fieldName, final String contentType,
+		final boolean isFormField, final String fileName)
 	{
 		return new DiskFileItem(fieldName, contentType, isFormField, fileName, sizeThreshold,
 			repository);

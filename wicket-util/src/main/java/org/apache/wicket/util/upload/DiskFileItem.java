@@ -144,8 +144,9 @@ public class DiskFileItem implements FileItem
 	 *            The data repository, which is the directory in which files will be created, should
 	 *            the item size exceed the threshold.
 	 */
-	public DiskFileItem(String fieldName, String contentType, boolean isFormField, String fileName,
-		int sizeThreshold, File repository)
+	public DiskFileItem(final String fieldName, final String contentType,
+		final boolean isFormField, final String fileName, final int sizeThreshold,
+		final File repository)
 	{
 		this.fieldName = fieldName;
 		this.contentType = contentType;
@@ -353,7 +354,7 @@ public class DiskFileItem implements FileItem
 	 * @exception Exception
 	 *                if an error occurs.
 	 */
-	public void write(File file) throws IOException
+	public void write(final File file) throws IOException
 	{
 		if (isInMemory())
 		{
@@ -373,7 +374,10 @@ public class DiskFileItem implements FileItem
 			File outputFile = getStoreLocation();
 
 			if (outputFile == null)
-				throw new IllegalStateException("for a non-memory upload the file location must not be empty");
+			{
+				throw new IllegalStateException(
+					"for a non-memory upload the file location must not be empty");
+			}
 
 			// The uploaded file is being stored on disk in a temporary location so move it to
 			// the desired file.
@@ -395,10 +399,12 @@ public class DiskFileItem implements FileItem
 	{
 		cachedContent = null;
 		File outputFile = getStoreLocation();
-		if (outputFile != null && outputFile.exists())
+		if ((outputFile != null) && outputFile.exists())
 		{
-			if(Files.remove(outputFile) == false)
+			if (Files.remove(outputFile) == false)
+			{
 				log.debug("failed to delete file: " + outputFile.getAbsolutePath());
+			}
 		}
 	}
 
@@ -426,7 +432,7 @@ public class DiskFileItem implements FileItem
 	 * @see #getFieldName()
 	 * 
 	 */
-	public void setFieldName(String fieldName)
+	public void setFieldName(final String fieldName)
 	{
 		this.fieldName = fieldName;
 	}
@@ -457,7 +463,7 @@ public class DiskFileItem implements FileItem
 	 * @see #isFormField()
 	 * 
 	 */
-	public void setFormField(boolean state)
+	public void setFormField(final boolean state)
 	{
 		isFormField = state;
 	}
@@ -515,10 +521,12 @@ public class DiskFileItem implements FileItem
 
 		File outputFile = dfos.getFile();
 
-		if (outputFile != null && outputFile.exists())
+		if ((outputFile != null) && outputFile.exists())
 		{
-			if(Files.remove(outputFile) == false)
+			if (Files.remove(outputFile) == false)
+			{
 				log.debug("failed to delete file: " + outputFile.getAbsolutePath());
+			}
 		}
 	}
 

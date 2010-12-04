@@ -41,7 +41,7 @@ public class BooleanConverter extends AbstractConverter<Boolean>
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
-	public Boolean convertToObject(final String value, Locale locale)
+	public Boolean convertToObject(final String value, final Locale locale)
 	{
 		try
 		{

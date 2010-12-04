@@ -66,13 +66,12 @@ public final class VariableAssignmentParser extends MetaPatternParser
 		value = new Group(valuePattern);
 
 		// Pattern for =<value>
-		final MetaPattern variableAssignment = new MetaPattern(
-			MetaPattern.OPTIONAL_WHITESPACE, MetaPattern.EQUALS,
-			MetaPattern.OPTIONAL_WHITESPACE, value);
+		final MetaPattern variableAssignment = new MetaPattern(MetaPattern.OPTIONAL_WHITESPACE,
+			MetaPattern.EQUALS, MetaPattern.OPTIONAL_WHITESPACE, value);
 
 		// Set parse pattern to <key>=<value>?
-		setPattern(new MetaPattern(MetaPattern.OPTIONAL_WHITESPACE, key,
-			new OptionalMetaPattern(variableAssignment), MetaPattern.OPTIONAL_WHITESPACE));
+		setPattern(new MetaPattern(MetaPattern.OPTIONAL_WHITESPACE, key, new OptionalMetaPattern(
+			variableAssignment), MetaPattern.OPTIONAL_WHITESPACE));
 	}
 
 	/**

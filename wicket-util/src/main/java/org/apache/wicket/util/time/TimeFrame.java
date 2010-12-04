@@ -225,7 +225,7 @@ public final class TimeFrame implements ITimeFrameSource
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(final Object obj)
 	{
 		if (this == obj)
 		{

@@ -66,7 +66,7 @@ public class ByteArrayOutputStream extends OutputStream
 	 * @exception IllegalArgumentException
 	 *                if size is negative.
 	 */
-	public ByteArrayOutputStream(int size)
+	public ByteArrayOutputStream(final int size)
 	{
 		if (size < 0)
 		{
@@ -151,7 +151,7 @@ public class ByteArrayOutputStream extends OutputStream
 	 * @return This as a string using the provided encoding
 	 * @throws UnsupportedEncodingException
 	 */
-	public String toString(String enc) throws UnsupportedEncodingException
+	public String toString(final String enc) throws UnsupportedEncodingException
 	{
 		return new String(toByteArray(), enc);
 	}
@@ -160,7 +160,7 @@ public class ByteArrayOutputStream extends OutputStream
 	 * @see java.io.OutputStream#write(byte[], int, int)
 	 */
 	@Override
-	public synchronized void write(byte[] b, int off, int len)
+	public synchronized void write(final byte[] b, final int off, final int len)
 	{
 		if ((off < 0) || (off > b.length) || (len < 0) || ((off + len) > b.length) ||
 			((off + len) < 0))
@@ -194,7 +194,7 @@ public class ByteArrayOutputStream extends OutputStream
 	 * @see java.io.OutputStream#write(int)
 	 */
 	@Override
-	public synchronized void write(int b)
+	public synchronized void write(final int b)
 	{
 		write(new byte[] { (byte)b }, 0, 1);
 	}
@@ -207,7 +207,7 @@ public class ByteArrayOutputStream extends OutputStream
 	 * @throws IOException
 	 * @see java.io.ByteArrayOutputStream#writeTo(OutputStream)
 	 */
-	public synchronized void writeTo(OutputStream out) throws IOException
+	public synchronized void writeTo(final OutputStream out) throws IOException
 	{
 		int remaining = count;
 		for (int i = 0; i < buffers.size(); i++)
@@ -223,12 +223,12 @@ public class ByteArrayOutputStream extends OutputStream
 		}
 	}
 
-	private byte[] getBuffer(int index)
+	private byte[] getBuffer(final int index)
 	{
 		return buffers.get(index);
 	}
 
-	private void needNewBuffer(int newcount)
+	private void needNewBuffer(final int newcount)
 	{
 		if (currentBufferIndex < buffers.size() - 1)
 		{

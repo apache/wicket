@@ -33,7 +33,7 @@ public class Visits
 	{
 		private final T singleton;
 
-		public SingletonIterable(T singleton)
+		public SingletonIterable(final T singleton)
 		{
 			this.singleton = singleton;
 		}
@@ -61,7 +61,8 @@ public class Visits
 	 *            the visitor
 	 * @return return value from the {@code visitor} or {@code null} if none
 	 */
-	public static final <S, R> R visit(Iterable<? super S> container, final IVisitor<S, R> visitor)
+	public static final <S, R> R visit(final Iterable<? super S> container,
+		final IVisitor<S, R> visitor)
 	{
 		return (R)visitChildren(new SingletonIterable(container), visitor, IVisitFilter.ANY);
 	}
@@ -85,8 +86,8 @@ public class Visits
 	 *            filter used to limit the types of objects that will be visited
 	 * @return return value from the {@code visitor} or {@code null} if none
 	 */
-	public static final <S, R> R visit(Iterable<? super S> container, final IVisitor<S, R> visitor,
-		IVisitFilter filter)
+	public static final <S, R> R visit(final Iterable<? super S> container,
+		final IVisitor<S, R> visitor, final IVisitFilter filter)
 	{
 		return (R)visitChildren(new SingletonIterable(container), visitor, filter);
 	}
@@ -110,16 +111,16 @@ public class Visits
 	 *            filter used to limit the types of objects that will be visited
 	 * @return return value from the {@code visitor} or {@code null} if none
 	 */
-	public static final <S, R> R visitChildren(Iterable<? super S> container,
-		final IVisitor<S, R> visitor, IVisitFilter filter)
+	public static final <S, R> R visitChildren(final Iterable<? super S> container,
+		final IVisitor<S, R> visitor, final IVisitFilter filter)
 	{
 		Visit<R> visit = new Visit<R>();
 		visitChildren(container, visitor, filter, visit);
 		return visit.getResult();
 	}
 
-	private static final <S, R> void visitChildren(Iterable<? super S> container,
-		final IVisitor<S, R> visitor, IVisitFilter filter, Visit<R> visit)
+	private static final <S, R> void visitChildren(final Iterable<? super S> container,
+		final IVisitor<S, R> visitor, final IVisitFilter filter, final Visit<R> visit)
 	{
 		if (visitor == null)
 		{
@@ -137,7 +138,7 @@ public class Visits
 
 				// Call visitor
 				@SuppressWarnings("unchecked")
-				S s = (S) child;
+				S s = (S)child;
 				visitor.component(s, childTraversal);
 
 				if (childTraversal.isStopped())
@@ -156,7 +157,7 @@ public class Visits
 				filter.visitChildren(child))
 			{
 				// visit the children in the container
-				visitChildren((Iterable<? super S>) child, visitor, filter, visit);
+				visitChildren((Iterable<? super S>)child, visitor, filter, visit);
 
 				if (visit.isStopped())
 				{
@@ -185,7 +186,7 @@ public class Visits
 	 *            the visitor
 	 * @return return value from the {@code visitor} or {@code null} if none
 	 */
-	public static final <S, R> R visitChildren(Iterable<? super S> container,
+	public static final <S, R> R visitChildren(final Iterable<? super S> container,
 		final IVisitor<S, R> visitor)
 	{
 		return visitChildren(container, visitor, IVisitFilter.ANY);
@@ -209,7 +210,7 @@ public class Visits
 	 *            the visitor
 	 * @return return value from the {@code visitor} or {@code null} if none
 	 */
-	public static final <S, R> R visitPostOrder(S root,
+	public static final <S, R> R visitPostOrder(final S root,
 		final org.apache.wicket.util.visit.IVisitor<S, R> visitor)
 	{
 		return visitPostOrder(root, visitor, IVisitFilter.ANY);
@@ -235,8 +236,8 @@ public class Visits
 	 *            filter used to limit the types of objects that will be visited
 	 * @return return value from the {@code visitor} or {@code null} if none
 	 */
-	public static final <S, R> R visitPostOrder(Object root,
-		final org.apache.wicket.util.visit.IVisitor<S, R> visitor, IVisitFilter filter)
+	public static final <S, R> R visitPostOrder(final Object root,
+		final org.apache.wicket.util.visit.IVisitor<S, R> visitor, final IVisitFilter filter)
 	{
 		if (visitor == null)
 		{
@@ -248,9 +249,9 @@ public class Visits
 		return visit.getResult();
 	}
 
-	private static final <S, R> void visitPostOrderHelper(Object component,
-		final org.apache.wicket.util.visit.IVisitor<S, R> visitor, IVisitFilter filter,
-		Visit<R> visit)
+	private static final <S, R> void visitPostOrderHelper(final Object component,
+		final org.apache.wicket.util.visit.IVisitor<S, R> visitor, final IVisitFilter filter,
+		final Visit<R> visit)
 	{
 
 		if (component instanceof Iterable<?>)
@@ -259,7 +260,7 @@ public class Visits
 			if (filter.visitChildren(container))
 			{
 				Visit<R> childTraversal = new Visit<R>();
-				for (final Object child : ((Iterable<?>) component))
+				for (final Object child : ((Iterable<?>)component))
 				{
 					visitPostOrderHelper(child, visitor, filter, childTraversal);
 					if (childTraversal.isStopped())

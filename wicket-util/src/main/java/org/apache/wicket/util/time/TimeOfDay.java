@@ -115,8 +115,9 @@ public final class TimeOfDay extends AbstractTime
 			throw new IllegalArgumentException("Second " + second + " is not valid");
 		}
 
-		return valueOf(Duration.hours(hour).add(Duration.minutes(minute)).add(
-			Duration.seconds(second)));
+		return valueOf(Duration.hours(hour)
+			.add(Duration.minutes(minute))
+			.add(Duration.seconds(second)));
 	}
 
 	/**

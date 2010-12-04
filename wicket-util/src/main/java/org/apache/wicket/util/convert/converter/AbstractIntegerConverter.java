@@ -40,7 +40,7 @@ public abstract class AbstractIntegerConverter<I extends Number> extends Abstrac
 	 * @return Returns the numberFormat.
 	 */
 	@Override
-	public NumberFormat getNumberFormat(Locale locale)
+	public NumberFormat getNumberFormat(final Locale locale)
 	{
 		NumberFormat numberFormat = numberFormats.get(locale);
 		if (numberFormat == null)

@@ -111,7 +111,7 @@ public class FileCleaner
 	 * @param marker
 	 *            The marker object used to track the file.
 	 */
-	public static void track(File file, Object marker)
+	public static void track(final File file, final Object marker)
 	{
 		trackers.add(new Tracker(file, marker, q));
 	}
@@ -125,7 +125,7 @@ public class FileCleaner
 	 * @param marker
 	 *            The marker object used to track the file.
 	 */
-	public static void track(String path, Object marker)
+	public static void track(final String path, final Object marker)
 	{
 		trackers.add(new Tracker(path, marker, q));
 	}
@@ -161,7 +161,7 @@ public class FileCleaner
 		 * @param queue
 		 *            The queue on to which the tracker will be pushed.
 		 */
-		public Tracker(File file, Object marker, ReferenceQueue queue)
+		public Tracker(final File file, final Object marker, final ReferenceQueue queue)
 		{
 			this(file.getPath(), marker, queue);
 		}
@@ -176,7 +176,7 @@ public class FileCleaner
 		 * @param queue
 		 *            The queue on to which the tracker will be pushed.
 		 */
-		public Tracker(String path, Object marker, ReferenceQueue queue)
+		public Tracker(final String path, final Object marker, final ReferenceQueue queue)
 		{
 			super(marker, queue);
 			this.path = path;

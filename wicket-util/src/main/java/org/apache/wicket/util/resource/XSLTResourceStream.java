@@ -66,7 +66,7 @@ public class XSLTResourceStream extends AbstractResourceStream
 	 * @param xmlResource
 	 *            the input XML document as an {@link IResourceStream}
 	 */
-	public XSLTResourceStream(IResourceStream xsltResource, IResourceStream xmlResource)
+	public XSLTResourceStream(final IResourceStream xsltResource, final IResourceStream xmlResource)
 	{
 		try
 		{

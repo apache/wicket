@@ -104,7 +104,7 @@ public final class DiffNode extends PathNode
 	 * @param prev
 	 *            the previous node in the path.
 	 */
-	public DiffNode(int i, int j, PathNode prev)
+	public DiffNode(final int i, final int j, final PathNode prev)
 	{
 		super(i, j, (prev == null ? null : prev.previousSnake()));
 	}

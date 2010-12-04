@@ -59,7 +59,7 @@ public class ServletFileUpload extends FileUpload
 	 * 
 	 * @return <code>true</code> if the request is multipart; <code>false</code> otherwise.
 	 */
-	public static final boolean isMultipartContent(HttpServletRequest request)
+	public static final boolean isMultipartContent(final HttpServletRequest request)
 	{
 		if (!"post".equals(request.getMethod().toLowerCase()))
 		{
@@ -88,7 +88,7 @@ public class ServletFileUpload extends FileUpload
 	 * 
 	 * @param fileItemFactory
 	 */
-	public ServletFileUpload(FileItemFactory fileItemFactory)
+	public ServletFileUpload(final FileItemFactory fileItemFactory)
 	{
 		super(fileItemFactory);
 	}
@@ -110,7 +110,7 @@ public class ServletFileUpload extends FileUpload
 	 * @exception FileUploadException
 	 *                if there are problems reading/parsing the request or storing files.
 	 */
-	public List<FileItem> parseRequest(HttpServletRequest request) throws FileUploadException
+	public List<FileItem> parseRequest(final HttpServletRequest request) throws FileUploadException
 	{
 		return parseRequest(new ServletRequestContext(request));
 	}

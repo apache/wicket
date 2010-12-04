@@ -39,7 +39,7 @@ public class LongConverter extends AbstractIntegerConverter<Long>
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
-	public Long convertToObject(final String value, Locale locale)
+	public Long convertToObject(final String value, final Locale locale)
 	{
 		final Number number = parse(value, Long.MIN_VALUE, Long.MAX_VALUE, locale);
 

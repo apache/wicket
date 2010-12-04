@@ -39,7 +39,7 @@ public class CharacterConverter extends AbstractConverter<Character>
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
-	public Character convertToObject(final String value, Locale locale)
+	public Character convertToObject(final String value, final Locale locale)
 	{
 		int length = value.length();
 		if (length == 0)

@@ -40,7 +40,7 @@ public abstract class AbstractResourceStream implements IResourceStream
 		return locale;
 	}
 
-	public void setLocale(Locale locale)
+	public void setLocale(final Locale locale)
 	{
 		this.locale = locale;
 	}
@@ -55,12 +55,12 @@ public abstract class AbstractResourceStream implements IResourceStream
 		return variation;
 	}
 
-	public void setStyle(String style)
+	public void setStyle(final String style)
 	{
 		this.style = style;
 	}
 
-	public void setVariation(String variation)
+	public void setVariation(final String variation)
 	{
 		this.variation = variation;
 	}

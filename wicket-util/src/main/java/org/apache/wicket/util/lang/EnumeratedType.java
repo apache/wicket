@@ -92,7 +92,7 @@ public abstract class EnumeratedType extends StringValue
 		{
 			for (EnumeratedType value : values)
 			{
-				if (value.toString() != null && value.toString().equals(this.toString()))
+				if ((value.toString() != null) && value.toString().equals(this.toString()))
 				{
 					result = value;
 					break;

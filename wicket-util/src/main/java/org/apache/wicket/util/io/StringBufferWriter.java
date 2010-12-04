@@ -48,7 +48,7 @@ public class StringBufferWriter extends Writer
 	/**
 	 * @param buffer
 	 */
-	public void setStringBuffer(AppendingStringBuffer buffer)
+	public void setStringBuffer(final AppendingStringBuffer buffer)
 	{
 		this.buffer = buffer;
 	}
@@ -58,7 +58,7 @@ public class StringBufferWriter extends Writer
 	 * 
 	 * @param ch
 	 */
-	public void write(char ch)
+	public void write(final char ch)
 	{
 		buffer.append(ch);
 	}
@@ -67,7 +67,7 @@ public class StringBufferWriter extends Writer
 	 * @see java.io.Writer#write(char[])
 	 */
 	@Override
-	public void write(char charArray[])
+	public void write(final char charArray[])
 	{
 		buffer.append(charArray);
 	}
@@ -76,7 +76,7 @@ public class StringBufferWriter extends Writer
 	 * @see java.io.Writer#write(char[], int, int)
 	 */
 	@Override
-	public void write(char charArray[], int offset, int length)
+	public void write(final char charArray[], final int offset, final int length)
 	{
 		buffer.append(charArray, offset, length);
 	}
@@ -85,7 +85,7 @@ public class StringBufferWriter extends Writer
 	 * @see java.io.Writer#write(java.lang.String)
 	 */
 	@Override
-	public void write(String string)
+	public void write(final String string)
 	{
 		buffer.append(string);
 	}
@@ -94,7 +94,7 @@ public class StringBufferWriter extends Writer
 	 * @see java.io.Writer#write(java.lang.String, int, int)
 	 */
 	@Override
-	public void write(String string, int offset, int length)
+	public void write(final String string, final int offset, final int length)
 	{
 		buffer.append(string.substring(offset, offset + length));
 	}

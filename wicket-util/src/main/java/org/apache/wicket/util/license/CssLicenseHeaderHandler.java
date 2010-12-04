@@ -32,7 +32,7 @@ class CssLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 	 * 
 	 * @param ignoreFiles
 	 */
-	public CssLicenseHeaderHandler(List<String> ignoreFiles)
+	public CssLicenseHeaderHandler(final List<String> ignoreFiles)
 	{
 		super(ignoreFiles);
 	}
@@ -43,7 +43,7 @@ class CssLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return "cssLicense.txt";
 	}
 
-	public boolean checkLicenseHeader(File file)
+	public boolean checkLicenseHeader(final File file)
 	{
 		Revision revision = null;
 
@@ -67,7 +67,7 @@ class CssLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 	}
 
 	@Override
-	public boolean addLicenseHeader(File file)
+	public boolean addLicenseHeader(final File file)
 	{
 		prependLicenseHeader(file);
 

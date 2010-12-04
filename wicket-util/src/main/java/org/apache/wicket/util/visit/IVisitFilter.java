@@ -45,13 +45,13 @@ public interface IVisitFilter
 	public static IVisitFilter ANY = new IVisitFilter()
 	{
 		/** {@inheritDoc} */
-		public boolean visitObject(Object object)
+		public boolean visitObject(final Object object)
 		{
 			return true;
 		}
 
 		/** {@inheritDoc} */
-		public boolean visitChildren(Object object)
+		public boolean visitChildren(final Object object)
 		{
 			return true;
 		}

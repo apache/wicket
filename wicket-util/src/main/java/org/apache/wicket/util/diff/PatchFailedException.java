@@ -85,7 +85,7 @@ public class PatchFailedException extends DiffException
 	 * 
 	 * @param msg
 	 */
-	public PatchFailedException(String msg)
+	public PatchFailedException(final String msg)
 	{
 		super(msg);
 	}

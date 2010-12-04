@@ -42,7 +42,7 @@ public class ClassMetaCache<T>
 	 *            the value that should be stored in cache
 	 * @return value previously stored in cache for this key, or {@code null} if none
 	 */
-	public T put(Class<?> key, T value)
+	public T put(final Class<?> key, final T value)
 	{
 		ConcurrentHashMap<String, T> container = getClassLoaderCache(key.getClassLoader(), true);
 		return container.put(key(key), value);
@@ -55,7 +55,7 @@ public class ClassMetaCache<T>
 	 *            the class that is the key for the value
 	 * @return value stored in cache or {@code null} if none
 	 */
-	public T get(Class<?> key)
+	public T get(final Class<?> key)
 	{
 		ConcurrentHashMap<String, T> container = getClassLoaderCache(key.getClassLoader(), false);
 		if (container == null)
@@ -74,7 +74,8 @@ public class ClassMetaCache<T>
 	 * @return a {@link ConcurrentHashMap} mapping class names to injectable fields, never
 	 *         <code>null</code>
 	 */
-	private ConcurrentHashMap<String, T> getClassLoaderCache(ClassLoader classLoader, boolean create)
+	private ConcurrentHashMap<String, T> getClassLoaderCache(final ClassLoader classLoader,
+		final boolean create)
 	{
 		ConcurrentHashMap<String, T> container = cache.get(classLoader);
 		if (container == null)
@@ -113,7 +114,7 @@ public class ClassMetaCache<T>
 	 * 
 	 * @return string representation of the clazz
 	 */
-	private static String key(Class<?> clazz)
+	private static String key(final Class<?> clazz)
 	{
 		return clazz.getName();
 	}

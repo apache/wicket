@@ -220,7 +220,8 @@ public class MultipartFormInputStream
 	 * @see #MultipartFormInputStream(InputStream, byte[])
 	 * 
 	 */
-	public MultipartFormInputStream(InputStream input, byte[] boundary, int bufSize)
+	public MultipartFormInputStream(final InputStream input, final byte[] boundary,
+		final int bufSize)
 	{
 		this.input = input;
 		this.bufSize = bufSize;
@@ -255,7 +256,7 @@ public class MultipartFormInputStream
 	 * @see #MultipartFormInputStream(InputStream, byte[], int)
 	 * 
 	 */
-	public MultipartFormInputStream(InputStream input, byte[] boundary)
+	public MultipartFormInputStream(final InputStream input, final byte[] boundary)
 	{
 		this(input, boundary, DEFAULT_BUFSIZE);
 	}
@@ -284,7 +285,7 @@ public class MultipartFormInputStream
 	 * @param encoding
 	 *            The encoding used to read part headers.
 	 */
-	public void setHeaderEncoding(String encoding)
+	public void setHeaderEncoding(final String encoding)
 	{
 		headerEncoding = encoding;
 	}
@@ -390,7 +391,7 @@ public class MultipartFormInputStream
 	 *                if the <code>boundary</code> has a different length than the one being
 	 *                currently parsed.
 	 */
-	public void setBoundary(byte[] boundary) throws IllegalBoundaryException
+	public void setBoundary(final byte[] boundary) throws IllegalBoundaryException
 	{
 		if (boundary.length != boundaryLength - 4)
 		{
@@ -494,7 +495,7 @@ public class MultipartFormInputStream
 	 * @exception IOException
 	 *                if an i/o error occurs.
 	 */
-	public int readBodyData(OutputStream output) throws MalformedStreamException, IOException
+	public int readBodyData(final OutputStream output) throws MalformedStreamException, IOException
 	{
 		boolean done = false;
 		int pad;
@@ -681,7 +682,7 @@ public class MultipartFormInputStream
 	 * @return <code>true</code> if <code>count</code> first bytes in arrays <code>a</code> and
 	 *         <code>b</code> are equal.
 	 */
-	public static boolean arrayequals(byte[] a, byte[] b, int count)
+	public static boolean arrayequals(final byte[] a, final byte[] b, final int count)
 	{
 		for (int i = 0; i < count; i++)
 		{
@@ -706,7 +707,7 @@ public class MultipartFormInputStream
 	 * @return The position of byte found, counting from beginning of the <code>buffer</code>, or
 	 *         <code>-1</code> if not found.
 	 */
-	protected int findByte(byte value, int pos)
+	protected int findByte(final byte value, final int pos)
 	{
 		for (int i = pos; i < tail; i++)
 		{
@@ -735,7 +736,7 @@ public class MultipartFormInputStream
 		for (first = head; (first <= maxpos) && (match != boundaryLength); first++)
 		{
 			first = findByte(boundary[0], first);
-			if (first == -1 || (first > maxpos))
+			if ((first == -1) || (first > maxpos))
 			{
 				return -1;
 			}
@@ -762,7 +763,7 @@ public class MultipartFormInputStream
 	@Override
 	public String toString()
 	{
-	 StringBuilder sbTemp = new StringBuilder();
+		StringBuilder sbTemp = new StringBuilder();
 		sbTemp.append("boundary='");
 		for (byte b : boundary)
 		{
@@ -803,7 +804,7 @@ public class MultipartFormInputStream
 		 * @param message
 		 *            The detail message.
 		 */
-		public MalformedStreamException(String message)
+		public MalformedStreamException(final String message)
 		{
 			super(message);
 		}
@@ -831,7 +832,7 @@ public class MultipartFormInputStream
 		 * @param message
 		 *            The detail message.
 		 */
-		public IllegalBoundaryException(String message)
+		public IllegalBoundaryException(final String message)
 		{
 			super(message);
 		}

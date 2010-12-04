@@ -98,7 +98,8 @@ public final class TimeMap implements Serializable
 
 			if (timeframe.overlaps(current))
 			{
-				throw new IllegalArgumentException("Timeframe " + timeframe + " overlaps timeframe " + current);
+				throw new IllegalArgumentException("Timeframe " + timeframe +
+					" overlaps timeframe " + current);
 			}
 		}
 

@@ -310,27 +310,27 @@ public class StringValue implements IClusterable
 			return toString();
 		}
 
-		if (type == Integer.TYPE || type == Integer.class)
+		if ((type == Integer.TYPE) || (type == Integer.class))
 		{
 			return toInteger();
 		}
 
-		if (type == Long.TYPE || type == Long.class)
+		if ((type == Long.TYPE) || (type == Long.class))
 		{
 			return toLongObject();
 		}
 
-		if (type == Boolean.TYPE || type == Boolean.class)
+		if ((type == Boolean.TYPE) || (type == Boolean.class))
 		{
 			return toBooleanObject();
 		}
 
-		if (type == Double.TYPE || type == Double.class)
+		if ((type == Double.TYPE) || (type == Double.class))
 		{
 			return toDoubleObject();
 		}
 
-		if (type == Character.TYPE || type == Character.class)
+		if ((type == Character.TYPE) || (type == Character.class))
 		{
 			return toCharacter();
 		}

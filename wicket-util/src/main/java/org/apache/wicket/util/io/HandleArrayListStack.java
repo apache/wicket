@@ -76,7 +76,7 @@ final class HandleArrayListStack<T> extends ArrayList<T>
 	 * @see java.util.ArrayList#indexOf(java.lang.Object)
 	 */
 	@Override
-	public int indexOf(Object elem)
+	public int indexOf(final Object elem)
 	{
 		int size = size();
 		if (elem == null)
@@ -106,7 +106,7 @@ final class HandleArrayListStack<T> extends ArrayList<T>
 	 * @see java.util.ArrayList#lastIndexOf(java.lang.Object)
 	 */
 	@Override
-	public int lastIndexOf(Object elem)
+	public int lastIndexOf(final Object elem)
 	{
 		if (elem == null)
 		{

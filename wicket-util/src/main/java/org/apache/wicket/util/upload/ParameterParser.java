@@ -89,7 +89,7 @@ public class ParameterParser
 	 *            <tt>true</tt> if quotation marks are expected, <tt>false</tt> otherwise.
 	 * @return the token
 	 */
-	private String getToken(boolean quoted)
+	private String getToken(final boolean quoted)
 	{
 		// Trim leading white spaces
 		while ((i1 < i2) && (Character.isWhitespace(chars[i1])))
@@ -129,7 +129,7 @@ public class ParameterParser
 	 * @return <tt>true</tt> if the character is present in the array of characters, <tt>false</tt>
 	 *         otherwise.
 	 */
-	private boolean isOneOf(char ch, final char[] charray)
+	private boolean isOneOf(final char ch, final char[] charray)
 	{
 		boolean result = false;
 		for (char character : charray)
@@ -194,11 +194,11 @@ public class ParameterParser
 			{
 				break;
 			}
-			if (!charEscaped && ch == '"')
+			if (!charEscaped && (ch == '"'))
 			{
 				quoted = !quoted;
 			}
-			charEscaped = (!charEscaped && ch == '\\');
+			charEscaped = (!charEscaped && (ch == '\\'));
 			i2++;
 			pos++;
 
@@ -226,7 +226,7 @@ public class ParameterParser
 	 *            <tt>true</tt> if parameter names are to be converted to lower case when name/value
 	 *            pairs are parsed. <tt>false</tt> otherwise.
 	 */
-	public void setLowerCaseNames(boolean b)
+	public void setLowerCaseNames(final boolean b)
 	{
 		lowerCaseNames = b;
 	}
@@ -241,7 +241,7 @@ public class ParameterParser
 	 * 
 	 * @return a map of name/value pairs
 	 */
-	public Map<String, String> parse(final String str, char separator)
+	public Map<String, String> parse(final String str, final char separator)
 	{
 		if (str == null)
 		{
@@ -261,7 +261,7 @@ public class ParameterParser
 	 * 
 	 * @return a map of name/value pairs
 	 */
-	public Map<String, String> parse(final char[] chars, char separator)
+	public Map<String, String> parse(final char[] chars, final char separator)
 	{
 		if (chars == null)
 		{
@@ -285,7 +285,8 @@ public class ParameterParser
 	 * 
 	 * @return a map of name/value pairs
 	 */
-	public Map<String, String> parse(final char[] chars, int offset, int length, char separator)
+	public Map<String, String> parse(final char[] chars, final int offset, final int length,
+		final char separator)
 	{
 
 		if (chars == null)

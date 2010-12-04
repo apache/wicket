@@ -42,7 +42,7 @@ public final class AttributeMap extends ValueMap
 	 * @param map
 	 *            a <code>Map</code> to be copied
 	 */
-	public AttributeMap(Map<String, Object> map)
+	public AttributeMap(final Map<String, Object> map)
 	{
 		super(map);
 	}

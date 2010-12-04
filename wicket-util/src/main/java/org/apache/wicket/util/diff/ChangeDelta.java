@@ -82,7 +82,7 @@ public class ChangeDelta extends Delta
 	 * @param orig
 	 * @param rev
 	 */
-	public ChangeDelta(Chunk orig, Chunk rev)
+	public ChangeDelta(final Chunk orig, final Chunk rev)
 	{
 		init(orig, rev);
 	}
@@ -91,7 +91,7 @@ public class ChangeDelta extends Delta
 	 * @see org.apache.wicket.util.diff.Delta#verify(java.util.List)
 	 */
 	@Override
-	public void verify(List<Object> target) throws PatchFailedException
+	public void verify(final List<Object> target) throws PatchFailedException
 	{
 		if (!original.verify(target))
 		{
@@ -107,7 +107,7 @@ public class ChangeDelta extends Delta
 	 * @see org.apache.wicket.util.diff.Delta#applyTo(java.util.List)
 	 */
 	@Override
-	public void applyTo(List<Object> target)
+	public void applyTo(final List<Object> target)
 	{
 		original.applyDelete(target);
 		revised.applyAdd(original.first(), target);
@@ -117,7 +117,7 @@ public class ChangeDelta extends Delta
 	 * @see org.apache.wicket.util.diff.Delta#toString(java.lang.StringBuffer)
 	 */
 	@Override
-	public void toString(StringBuilder s)
+	public void toString(final StringBuilder s)
 	{
 		original.rangeString(s);
 		s.append("c");
@@ -133,7 +133,7 @@ public class ChangeDelta extends Delta
 	 * @see org.apache.wicket.util.diff.Delta#toRCSString(java.lang.StringBuffer, java.lang.String)
 	 */
 	@Override
-	public void toRCSString(StringBuilder s, String EOL)
+	public void toRCSString(final StringBuilder s, final String EOL)
 	{
 		s.append("d");
 		s.append(original.rcsfrom());
@@ -152,7 +152,7 @@ public class ChangeDelta extends Delta
 	 * @see org.apache.wicket.util.diff.Delta#accept(org.apache.wicket.util.diff.RevisionVisitor)
 	 */
 	@Override
-	public void accept(RevisionVisitor visitor)
+	public void accept(final RevisionVisitor visitor)
 	{
 		visitor.visit(this);
 	}

@@ -44,7 +44,7 @@ public class Arrays
 	 *             if the original array is null
 	 * @since 1.6
 	 */
-	public static <T> T[] copyOf(T[] original, int newLength)
+	public static <T> T[] copyOf(final T[] original, final int newLength)
 	{
 		if (null == original)
 		{
@@ -82,9 +82,9 @@ public class Arrays
 	 * @since 1.6
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T[] copyOfRange(T[] original, int start, int end)
+	public static <T> T[] copyOfRange(final T[] original, final int start, final int end)
 	{
-		if (original.length >= start && 0 <= start)
+		if ((original.length >= start) && (0 <= start))
 		{
 			if (start <= end)
 			{

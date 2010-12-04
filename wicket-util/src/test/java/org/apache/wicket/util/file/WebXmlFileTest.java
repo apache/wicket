@@ -60,8 +60,8 @@ public class WebXmlFileTest extends TestCase
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	public void filterOrServlet(boolean servlet) throws ParserConfigurationException, SAXException,
-		IOException
+	public void filterOrServlet(final boolean servlet) throws ParserConfigurationException,
+		SAXException, IOException
 	{
 		String tag = servlet ? "servlet" : "filter";
 
@@ -90,9 +90,9 @@ public class WebXmlFileTest extends TestCase
 	 * @param url
 	 * @return webxml
 	 */
-	private String getWebXml(String filter, String url)
+	private String getWebXml(final String filter, final String url)
 	{
-	 StringBuilder webxml = new StringBuilder();
+		StringBuilder webxml = new StringBuilder();
 		webxml.append("<web-app>");
 		webxml.append("<" + filter + ">");
 		webxml.append(" <" + filter + "-name>HelloWorldApplication</" + filter + "-name>");

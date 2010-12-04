@@ -79,7 +79,7 @@ public class Chunk extends ToString
 	 * @param count
 	 *            the size of the chunk.
 	 */
-	public Chunk(int pos, int count)
+	public Chunk(final int pos, final int count)
 	{
 		anchor = pos;
 		this.count = (count >= 0 ? count : 0);
@@ -95,7 +95,7 @@ public class Chunk extends ToString
 	 * @param count
 	 *            the size of the chunk.
 	 */
-	public Chunk(Object[] iseq, int pos, int count)
+	public Chunk(final Object[] iseq, final int pos, final int count)
 	{
 		this(pos, count);
 		chunk = slice(iseq, pos, count);
@@ -114,7 +114,7 @@ public class Chunk extends ToString
 	 * @param offset
 	 *            the position the chunk should have in the resulting text.
 	 */
-	public Chunk(Object[] iseq, int pos, int count, int offset)
+	public Chunk(final Object[] iseq, final int pos, final int count, final int offset)
 	{
 		this(offset, count);
 		chunk = slice(iseq, pos, count);
@@ -130,7 +130,7 @@ public class Chunk extends ToString
 	 * @param count
 	 *            the size of the chunk.
 	 */
-	public Chunk(List<Object> iseq, int pos, int count)
+	public Chunk(final List<Object> iseq, final int pos, final int count)
 	{
 		this(pos, count);
 		chunk = slice(iseq, pos, count);
@@ -149,7 +149,7 @@ public class Chunk extends ToString
 	 * @param offset
 	 *            the position the chunk should have in the resulting text.
 	 */
-	public Chunk(List<Object> iseq, int pos, int count, int offset)
+	public Chunk(final List<Object> iseq, final int pos, final int count, final int offset)
 	{
 		this(offset, count);
 		chunk = slice(iseq, pos, count);
@@ -232,7 +232,7 @@ public class Chunk extends ToString
 	 *            the sequence to verify against.
 	 * @return true if the texts match.
 	 */
-	public boolean verify(List<Object> target)
+	public boolean verify(final List<Object> target)
 	{
 		if (chunk == null)
 		{
@@ -258,7 +258,7 @@ public class Chunk extends ToString
 	 * @param target
 	 *            the text to delete from.
 	 */
-	public void applyDelete(List<Object> target)
+	public void applyDelete(final List<Object> target)
 	{
 		for (int i = last(); i >= first(); i--)
 		{
@@ -274,7 +274,7 @@ public class Chunk extends ToString
 	 * @param target
 	 *            the text to add to.
 	 */
-	public void applyAdd(int start, List<Object> target)
+	public void applyAdd(int start, final List<Object> target)
 	{
 		for (Object aChunk : chunk)
 		{
@@ -288,7 +288,7 @@ public class Chunk extends ToString
 	 * @param s
 	 */
 	@Override
-	public void toString(StringBuilder s)
+	public void toString(final StringBuilder s)
 	{
 		toString(s, "", "");
 	}
@@ -304,7 +304,7 @@ public class Chunk extends ToString
 	 *            the text that should end each line.
 	 * @return StringBuilder
 	 */
-	public StringBuilder toString(StringBuilder s, String prefix, String postfix)
+	public StringBuilder toString(final StringBuilder s, final String prefix, final String postfix)
 	{
 		if (chunk != null)
 		{
@@ -332,7 +332,7 @@ public class Chunk extends ToString
 	 *            the number of items in the slice.
 	 * @return a {@link List List} containing the specified items.
 	 */
-	public static <T> List<T> slice(List<T> seq, int pos, int count)
+	public static <T> List<T> slice(final List<T> seq, final int pos, final int count)
 	{
 		if (count <= 0)
 		{
@@ -355,7 +355,7 @@ public class Chunk extends ToString
 	 *            the number of items in the slice.
 	 * @return a {@link List List} containing the specified items.
 	 */
-	public static List<Object> slice(Object[] seq, int pos, int count)
+	public static List<Object> slice(final Object[] seq, final int pos, final int count)
 	{
 		return slice(Arrays.asList(seq), pos, count);
 	}
@@ -378,7 +378,7 @@ public class Chunk extends ToString
 	 * @param s
 	 *            where the string representation should be appended.
 	 */
-	public void rangeString(StringBuilder s)
+	public void rangeString(final StringBuilder s)
 	{
 		rangeString(s, ",");
 	}
@@ -391,7 +391,7 @@ public class Chunk extends ToString
 	 * @param separ
 	 *            what to use as line separator.
 	 */
-	public void rangeString(StringBuilder s, String separ)
+	public void rangeString(final StringBuilder s, final String separ)
 	{
 		if (size() <= 1)
 		{

@@ -36,13 +36,13 @@ class JavaLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 	 * 
 	 * @param ignoreFiles
 	 */
-	public JavaLicenseHeaderHandler(List<String> ignoreFiles)
+	public JavaLicenseHeaderHandler(final List<String> ignoreFiles)
 	{
 		super(ignoreFiles);
 	}
 
 	@Override
-	public boolean addLicenseHeader(File file)
+	public boolean addLicenseHeader(final File file)
 	{
 		boolean added = false;
 
@@ -77,7 +77,7 @@ class JavaLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return added;
 	}
 
-	public boolean checkLicenseHeader(File file)
+	public boolean checkLicenseHeader(final File file)
 	{
 		String header = extractLicenseHeader(file, 0, 16);
 
@@ -96,7 +96,7 @@ class JavaLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 	}
 
 	@Override
-	public String getLicenseType(File file)
+	public String getLicenseType(final File file)
 	{
 		String licenseType = null;
 

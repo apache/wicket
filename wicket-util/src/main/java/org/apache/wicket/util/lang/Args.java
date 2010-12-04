@@ -64,11 +64,12 @@ public class Args
 	 * @param name
 	 * @throws IllegalargumentException
 	 */
-	public static <T extends Comparable<T>> void withinRange(T min, T max, T value, String name)
+	public static <T extends Comparable<T>> void withinRange(final T min, final T max,
+		final T value, final String name)
 	{
 		notNull(min, name);
 		notNull(max, name);
-		if (value.compareTo(min) < 0 || value.compareTo(max) > 0)
+		if ((value.compareTo(min) < 0) || (value.compareTo(max) > 0))
 		{
 			throw new IllegalArgumentException(
 				String.format("Argument '%s' must have a value within [%s,%s], but was %s", name,

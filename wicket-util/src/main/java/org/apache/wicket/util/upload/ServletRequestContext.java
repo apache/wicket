@@ -48,7 +48,7 @@ public class ServletRequestContext implements RequestContext
 	 * @param request
 	 *            The request to which this context applies.
 	 */
-	public ServletRequestContext(HttpServletRequest request)
+	public ServletRequestContext(final HttpServletRequest request)
 	{
 		this.request = request;
 	}

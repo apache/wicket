@@ -40,7 +40,7 @@ public class Connections
 	 * @return last modified timestamp
 	 * @throws IOException
 	 */
-	public static long getLastModified(URL url) throws IOException
+	public static long getLastModified(final URL url) throws IOException
 	{
 		URLConnection connection = url.openConnection();
 
@@ -76,7 +76,7 @@ public class Connections
 	 * 
 	 * @param connection
 	 */
-	public static void closeQuietly(URLConnection connection)
+	public static void closeQuietly(final URLConnection connection)
 	{
 		try
 		{
@@ -94,7 +94,7 @@ public class Connections
 	 * @param connection
 	 * @throws IOException
 	 */
-	public static void close(URLConnection connection) throws IOException
+	public static void close(final URLConnection connection) throws IOException
 	{
 		if (connection == null)
 		{

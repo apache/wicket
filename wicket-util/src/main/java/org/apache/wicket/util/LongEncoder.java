@@ -47,7 +47,7 @@ public class LongEncoder
 	 * @param value
 	 * @return encoded value
 	 */
-	public static String encode(long value)
+	public static String encode(final long value)
 	{
 		return encode(value, DEFAULT);
 	}
@@ -58,7 +58,7 @@ public class LongEncoder
 	 * @param value
 	 * @return decoded value
 	 */
-	public static long decode(String value)
+	public static long decode(final String value)
 	{
 		return decode(value, DEFAULT);
 	}
@@ -70,7 +70,7 @@ public class LongEncoder
 	 * @param alphabet
 	 * @return encoded value
 	 */
-	public static String encode(long value, String alphabet)
+	public static String encode(long value, final String alphabet)
 	{
 		final int len = alphabet.length() - 1;
 		PrependingStringBuffer buff = new PrependingStringBuffer();
@@ -100,7 +100,7 @@ public class LongEncoder
 	 * @param alphabet
 	 * @return decoded value
 	 */
-	public static long decode(String value, String alphabet)
+	public static long decode(final String value, final String alphabet)
 	{
 		final int factor = alphabet.length() - 1;
 		final boolean negative = alphabet.charAt(factor) == value.charAt(0);

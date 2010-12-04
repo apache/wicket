@@ -51,7 +51,7 @@ public class FileUploadException extends IOException
 	 * @param cause
 	 *            the cause.
 	 */
-	public FileUploadException(Throwable cause)
+	public FileUploadException(final Throwable cause)
 	{
 		super();
 		initCause(cause);
@@ -65,7 +65,7 @@ public class FileUploadException extends IOException
 	 * @param cause
 	 *            the cause.
 	 */
-	public FileUploadException(String message, Throwable cause)
+	public FileUploadException(final String message, final Throwable cause)
 	{
 		super(message);
 		initCause(cause);

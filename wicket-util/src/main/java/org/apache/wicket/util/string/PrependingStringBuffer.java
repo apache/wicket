@@ -43,7 +43,7 @@ public class PrependingStringBuffer
 	 * @param size
 	 *            The initial size of the buffer.
 	 */
-	public PrependingStringBuffer(int size)
+	public PrependingStringBuffer(final int size)
 	{
 		buffer = new char[size];
 		position = size;
@@ -56,7 +56,7 @@ public class PrependingStringBuffer
 	 * @param start
 	 *            The string that is directly inserted.
 	 */
-	public PrependingStringBuffer(String start)
+	public PrependingStringBuffer(final String start)
 	{
 		this(start.length() + 16);
 		prepend(start);
@@ -69,7 +69,7 @@ public class PrependingStringBuffer
 	 *            The char that will be prepended
 	 * @return this
 	 */
-	public PrependingStringBuffer prepend(char ch)
+	public PrependingStringBuffer prepend(final char ch)
 	{
 		int len = 1;
 		if (position < len)
@@ -89,7 +89,7 @@ public class PrependingStringBuffer
 	 *            The string that will be prepended
 	 * @return this
 	 */
-	public PrependingStringBuffer prepend(String str)
+	public PrependingStringBuffer prepend(final String str)
 	{
 		int len = str.length();
 		if (position < len)
@@ -102,7 +102,7 @@ public class PrependingStringBuffer
 		return this;
 	}
 
-	private void expandCapacity(int minimumCapacity)
+	private void expandCapacity(final int minimumCapacity)
 	{
 		int newCapacity = (buffer.length + 1) * 2;
 		if (newCapacity < 0)
@@ -140,7 +140,7 @@ public class PrependingStringBuffer
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(final Object obj)
 	{
 		if (obj == this)
 		{

@@ -32,7 +32,7 @@ class PropertiesLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 	 * 
 	 * @param ignoreFiles
 	 */
-	public PropertiesLicenseHeaderHandler(List<String> ignoreFiles)
+	public PropertiesLicenseHeaderHandler(final List<String> ignoreFiles)
 	{
 		super(ignoreFiles);
 	}
@@ -43,7 +43,7 @@ class PropertiesLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return "propertiesLicense.txt";
 	}
 
-	public boolean checkLicenseHeader(File file)
+	public boolean checkLicenseHeader(final File file)
 	{
 		Revision revision = null;
 
@@ -67,7 +67,7 @@ class PropertiesLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 	}
 
 	@Override
-	public boolean addLicenseHeader(File file)
+	public boolean addLicenseHeader(final File file)
 	{
 		prependLicenseHeader(file);
 

@@ -98,7 +98,7 @@ public class MaskConverter<C> implements IConverter<C>
 	 * @param maskFormatter
 	 *            The mask formatter to use for masking and unmasking values
 	 */
-	public MaskConverter(MaskFormatter maskFormatter)
+	public MaskConverter(final MaskFormatter maskFormatter)
 	{
 		if (maskFormatter == null)
 		{
@@ -115,7 +115,7 @@ public class MaskConverter<C> implements IConverter<C>
 	 *            The mask to use for this converter instance
 	 * @see MaskFormatter
 	 */
-	public MaskConverter(String mask)
+	public MaskConverter(final String mask)
 	{
 		this(mask, String.class);
 	}
@@ -129,7 +129,7 @@ public class MaskConverter<C> implements IConverter<C>
 	 *            The type to convert string values to.
 	 * @see MaskFormatter
 	 */
-	public MaskConverter(String mask, Class<?> type)
+	public MaskConverter(final String mask, final Class<?> type)
 	{
 		try
 		{
@@ -149,7 +149,7 @@ public class MaskConverter<C> implements IConverter<C>
 	 * 
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String, Locale)
 	 */
-	public C convertToObject(String value, Locale locale)
+	public C convertToObject(final String value, final Locale locale)
 	{
 		try
 		{
@@ -166,7 +166,7 @@ public class MaskConverter<C> implements IConverter<C>
 	 * 
 	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object, Locale)
 	 */
-	public String convertToString(C value, Locale locale)
+	public String convertToString(final C value, final Locale locale)
 	{
 		try
 		{

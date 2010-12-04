@@ -469,7 +469,7 @@ public class Duration extends AbstractTimeValue
 	 * @param object
 	 *            The monitor to wait on
 	 */
-	public void wait(Object object)
+	public void wait(final Object object)
 	{
 		try
 		{

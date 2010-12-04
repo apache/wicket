@@ -66,7 +66,7 @@ public class PackageName implements IClusterable
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object that)
+	public boolean equals(final Object that)
 	{
 		if (that instanceof PackageName)
 		{

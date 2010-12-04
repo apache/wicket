@@ -68,7 +68,7 @@ public abstract class ThresholdingOutputStream extends OutputStream
 	 * @param threshold
 	 *            The number of bytes at which to trigger an event.
 	 */
-	public ThresholdingOutputStream(int threshold)
+	public ThresholdingOutputStream(final int threshold)
 	{
 		this.threshold = threshold;
 	}
@@ -86,7 +86,7 @@ public abstract class ThresholdingOutputStream extends OutputStream
 	 *                if an error occurs.
 	 */
 	@Override
-	public void write(int b) throws IOException
+	public void write(final int b) throws IOException
 	{
 		checkThreshold(1);
 		getStream().write(b);
@@ -103,7 +103,7 @@ public abstract class ThresholdingOutputStream extends OutputStream
 	 *                if an error occurs.
 	 */
 	@Override
-	public void write(byte b[]) throws IOException
+	public void write(final byte b[]) throws IOException
 	{
 		checkThreshold(b.length);
 		getStream().write(b);
@@ -125,7 +125,7 @@ public abstract class ThresholdingOutputStream extends OutputStream
 	 *                if an error occurs.
 	 */
 	@Override
-	public void write(byte b[], int off, int len) throws IOException
+	public void write(final byte b[], final int off, final int len) throws IOException
 	{
 		checkThreshold(len);
 		getStream().write(b, off, len);
@@ -216,7 +216,7 @@ public abstract class ThresholdingOutputStream extends OutputStream
 	 * @exception IOException
 	 *                if an error occurs.
 	 */
-	protected void checkThreshold(int count) throws IOException
+	protected void checkThreshold(final int count) throws IOException
 	{
 		if (!thresholdExceeded && (written + count > threshold))
 		{

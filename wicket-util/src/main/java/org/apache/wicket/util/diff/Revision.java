@@ -97,7 +97,7 @@ public class Revision extends ToString
 	 * @param delta
 	 *            the {@link Delta Delta} to add.
 	 */
-	public synchronized void addDelta(Delta delta)
+	public synchronized void addDelta(final Delta delta)
 	{
 		if (delta == null)
 		{
@@ -112,7 +112,7 @@ public class Revision extends ToString
 	 * @param delta
 	 *            the {@link Delta Delta} to add.
 	 */
-	public synchronized void insertDelta(Delta delta)
+	public synchronized void insertDelta(final Delta delta)
 	{
 		if (delta == null)
 		{
@@ -128,7 +128,7 @@ public class Revision extends ToString
 	 *            the position of the delta to retrieve.
 	 * @return the specified delta
 	 */
-	public Delta getDelta(int i)
+	public Delta getDelta(final int i)
 	{
 		return deltas_.get(i);
 	}
@@ -152,7 +152,7 @@ public class Revision extends ToString
 	 * @throws PatchFailedException
 	 *             if any of the patches cannot be applied.
 	 */
-	public Object[] patch(Object[] src) throws PatchFailedException
+	public Object[] patch(final Object[] src) throws PatchFailedException
 	{
 		List<Object> target = new ArrayList<Object>(Arrays.asList(src));
 		applyTo(target);
@@ -167,7 +167,7 @@ public class Revision extends ToString
 	 * @throws PatchFailedException
 	 *             if any of the patches cannot be applied.
 	 */
-	public synchronized void applyTo(List<Object> target) throws PatchFailedException
+	public synchronized void applyTo(final List<Object> target) throws PatchFailedException
 	{
 		ListIterator<Delta> i = deltas_.listIterator(deltas_.size());
 		while (i.hasPrevious())
@@ -185,7 +185,7 @@ public class Revision extends ToString
 	 *            appended.
 	 */
 	@Override
-	public synchronized void toString(StringBuilder s)
+	public synchronized void toString(final StringBuilder s)
 	{
 		for (Delta delta : deltas_)
 		{
@@ -202,7 +202,7 @@ public class Revision extends ToString
 	 * @param EOL
 	 *            the string to use as line separator.
 	 */
-	public synchronized void toRCSString(StringBuilder s, String EOL)
+	public synchronized void toRCSString(final StringBuilder s, final String EOL)
 	{
 		for (Delta deltas : deltas_)
 		{
@@ -217,7 +217,7 @@ public class Revision extends ToString
 	 *            a {@link StringBuilder StringBuffer} to which the string representation will be
 	 *            appended.
 	 */
-	public void toRCSString(StringBuilder s)
+	public void toRCSString(final StringBuilder s)
 	{
 		toRCSString(s, Diff.NL);
 	}
@@ -229,7 +229,7 @@ public class Revision extends ToString
 	 *            the string to use as line separator.
 	 * @return String
 	 */
-	public String toRCSString(String EOL)
+	public String toRCSString(final String EOL)
 	{
 		StringBuilder s = new StringBuilder();
 		toRCSString(s, EOL);
@@ -253,7 +253,7 @@ public class Revision extends ToString
 	 * @param visitor
 	 *            the {@link RevisionVisitor} visiting this instance
 	 */
-	public void accept(RevisionVisitor visitor)
+	public void accept(final RevisionVisitor visitor)
 	{
 		visitor.visit(this);
 		for (Delta delta : deltas_)

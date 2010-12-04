@@ -33,12 +33,6 @@ import java.util.Properties;
  */
 public final class Streams
 {
-	private static final String XML_PROPERTIES_DTD = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-		+ "<!-- DTD for properties -->" + "<!ELEMENT properties ( comment?, entry* ) >"
-		+ "<!ATTLIST properties" + " version CDATA #FIXED \"1.0\">"
-		+ "<!ELEMENT comment (#PCDATA) >" + "<!ELEMENT entry (#PCDATA) >" + "<!ATTLIST entry "
-		+ " key CDATA #REQUIRED>";
-
 	/**
 	 * 
 	 * @param closeable
@@ -48,7 +42,7 @@ public final class Streams
 	 * @throws IOException
 	 */
 	@Deprecated
-	public static void close(Closeable closeable) throws IOException
+	public static void close(final Closeable closeable) throws IOException
 	{
 		IOUtils.close(closeable);
 	}
@@ -114,7 +108,7 @@ public final class Streams
 	 * @throws IOException
 	 *             When the input stream could not be read from
 	 */
-	public static void loadFromXml(Properties properties, InputStream inputStream)
+	public static void loadFromXml(final Properties properties, final InputStream inputStream)
 		throws IOException
 	{
 		if (properties == null)

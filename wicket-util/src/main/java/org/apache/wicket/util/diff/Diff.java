@@ -119,7 +119,7 @@ public class Diff extends ToString
 	 * @param original
 	 *            the original text that will be compared
 	 */
-	public Diff(Object[] original)
+	public Diff(final Object[] original)
 	{
 		this(original, null);
 	}
@@ -132,7 +132,7 @@ public class Diff extends ToString
 	 * @param algorithm
 	 *            the difference algorithm to use.
 	 */
-	public Diff(Object[] original, DiffAlgorithm algorithm)
+	public Diff(final Object[] original, final DiffAlgorithm algorithm)
 	{
 		if (original == null)
 		{
@@ -165,9 +165,10 @@ public class Diff extends ToString
 	 * @return a Revision describing the differences
 	 * @throws DifferentiationFailedException
 	 */
-	public static Revision diff(Object[] orig, Object[] rev) throws DifferentiationFailedException
+	public static Revision diff(final Object[] orig, final Object[] rev)
+		throws DifferentiationFailedException
 	{
-		if (orig == null || rev == null)
+		if ((orig == null) || (rev == null))
 		{
 			throw new IllegalArgumentException();
 		}
@@ -187,10 +188,10 @@ public class Diff extends ToString
 	 * @return a Revision describing the differences
 	 * @throws DifferentiationFailedException
 	 */
-	public static Revision diff(Object[] orig, Object[] rev, DiffAlgorithm algorithm)
-		throws DifferentiationFailedException
+	public static Revision diff(final Object[] orig, final Object[] rev,
+		final DiffAlgorithm algorithm) throws DifferentiationFailedException
 	{
-		if (orig == null || rev == null)
+		if ((orig == null) || (rev == null))
 		{
 			throw new IllegalArgumentException();
 		}
@@ -206,9 +207,9 @@ public class Diff extends ToString
 	 * @return a Revision describing the differences
 	 * @throws DifferentiationFailedException
 	 */
-	public Revision diff(Object[] rev) throws DifferentiationFailedException
+	public Revision diff(final Object[] rev) throws DifferentiationFailedException
 	{
-		if (orig.length == 0 && rev.length == 0)
+		if ((orig.length == 0) && (rev.length == 0))
 		{
 			return new Revision();
 		}
@@ -227,7 +228,7 @@ public class Diff extends ToString
 	 *            The revised sequence.
 	 * @return true if the sequences are identical. False otherwise.
 	 */
-	public static boolean compare(Object[] orig, Object[] rev)
+	public static boolean compare(final Object[] orig, final Object[] rev)
 	{
 		if (orig.length != rev.length)
 		{
@@ -254,7 +255,7 @@ public class Diff extends ToString
 	 *            the array of objects.
 	 * @return String
 	 */
-	public static String arrayToString(Object[] o)
+	public static String arrayToString(final Object[] o)
 	{
 		return arrayToString(o, Diff.NL);
 	}
@@ -267,7 +268,7 @@ public class Diff extends ToString
 	 * @return A sequence of the same length with all the lines differing from the corresponding
 	 *         ones in the input.
 	 */
-	public static Object[] editAll(Object[] text)
+	public static Object[] editAll(final Object[] text)
 	{
 		Object[] result = new String[text.length];
 
@@ -286,7 +287,7 @@ public class Diff extends ToString
 	 *            The input sequence.
 	 * @return The sequence with random edits performed.
 	 */
-	public static Object[] randomEdit(Object[] text)
+	public static Object[] randomEdit(final Object[] text)
 	{
 		return randomEdit(text, text.length);
 	}
@@ -300,7 +301,7 @@ public class Diff extends ToString
 	 *            A seed value for the randomizer.
 	 * @return The sequence with random edits performed.
 	 */
-	public static Object[] randomEdit(Object[] text, long seed)
+	public static Object[] randomEdit(final Object[] text, final long seed)
 	{
 		List<Object> result = new ArrayList<Object>(Arrays.asList(text));
 		Random r = new Random(seed);
@@ -310,7 +311,7 @@ public class Diff extends ToString
 			boolean del = r.nextBoolean();
 			int pos = r.nextInt(result.size() + 1);
 			int len = Math.min(result.size() - pos, 1 + r.nextInt(4));
-			if (del && result.size() > 0)
+			if (del && (result.size() > 0))
 			{ // delete
 				result.subList(pos, pos + len).clear();
 			}
@@ -332,7 +333,7 @@ public class Diff extends ToString
 	 *            the input sequence.
 	 * @return The shuffled sequence.
 	 */
-	public static Object[] shuffle(Object[] text)
+	public static Object[] shuffle(final Object[] text)
 	{
 		return shuffle(text, text.length);
 	}
@@ -346,7 +347,7 @@ public class Diff extends ToString
 	 *            a seed value for randomizing the generation.
 	 * @return The shuffled sequence.
 	 */
-	public static Object[] shuffle(Object[] text, long seed)
+	public static Object[] shuffle(final Object[] text, final long seed)
 	{
 		List<Object> result = new ArrayList<Object>(Arrays.asList(text));
 		Collections.shuffle(result);
@@ -360,7 +361,7 @@ public class Diff extends ToString
 	 *            the size of the sequence to generate.
 	 * @return The generated sequence.
 	 */
-	public static Object[] randomSequence(int size)
+	public static Object[] randomSequence(final int size)
 	{
 		return randomSequence(size, size);
 	}
@@ -374,7 +375,7 @@ public class Diff extends ToString
 	 *            a seed value for randomizing the generation.
 	 * @return The generated sequence.
 	 */
-	public static Object[] randomSequence(int size, long seed)
+	public static Object[] randomSequence(final int size, final long seed)
 	{
 		Integer[] result = new Integer[size];
 		Random r = new Random(seed);

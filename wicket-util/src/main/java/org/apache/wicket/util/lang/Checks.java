@@ -63,11 +63,12 @@ public class Checks
 	 * @param name
 	 * @throws IllegalStateException
 	 */
-	public static <T extends Comparable<T>> void withinRange(T min, T max, T value, String message)
+	public static <T extends Comparable<T>> void withinRange(final T min, final T max,
+		final T value, final String message)
 	{
 		notNull(min, message);
 		notNull(max, message);
-		if (value.compareTo(min) < 0 || value.compareTo(max) > 0)
+		if ((value.compareTo(min) < 0) || (value.compareTo(max) > 0))
 		{
 			throw new IllegalStateException(message);
 		}
@@ -109,7 +110,8 @@ public class Checks
 	 * @param name
 	 * @throws IllegalStateException
 	 */
-	public static <T extends Comparable<T>> void withinRangeShort(T min, T max, T value, String name)
+	public static <T extends Comparable<T>> void withinRangeShort(final T min, final T max,
+		final T value, final String name)
 	{
 		withinRange(min, max, value,
 			String.format("%s must have a value within [%s,%s], but was %s", name, min, max, value));

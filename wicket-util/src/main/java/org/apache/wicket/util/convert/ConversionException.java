@@ -58,7 +58,7 @@ public class ConversionException extends RuntimeException
 	 * @param message
 	 *            message
 	 */
-	public ConversionException(String message)
+	public ConversionException(final String message)
 	{
 		super(message);
 	}
@@ -71,7 +71,7 @@ public class ConversionException extends RuntimeException
 	 * @param cause
 	 *            cause
 	 */
-	public ConversionException(String message, Throwable cause)
+	public ConversionException(final String message, final Throwable cause)
 	{
 		super(message, cause);
 	}
@@ -82,7 +82,7 @@ public class ConversionException extends RuntimeException
 	 * @param cause
 	 *            cause
 	 */
-	public ConversionException(Throwable cause)
+	public ConversionException(final Throwable cause)
 	{
 		super(cause);
 	}
@@ -144,7 +144,7 @@ public class ConversionException extends RuntimeException
 	 *            the converter.
 	 * @return This
 	 */
-	public final ConversionException setConverter(IConverter converter)
+	public final ConversionException setConverter(final IConverter converter)
 	{
 		this.converter = converter;
 		return this;
@@ -157,7 +157,7 @@ public class ConversionException extends RuntimeException
 	 *            the used format.
 	 * @return This
 	 */
-	public final ConversionException setFormat(Format format)
+	public final ConversionException setFormat(final Format format)
 	{
 		this.format = format;
 		return this;
@@ -170,7 +170,7 @@ public class ConversionException extends RuntimeException
 	 *            the used locale.
 	 * @return This
 	 */
-	public final ConversionException setLocale(Locale locale)
+	public final ConversionException setLocale(final Locale locale)
 	{
 		this.locale = locale;
 		return this;
@@ -183,7 +183,7 @@ public class ConversionException extends RuntimeException
 	 *            the tried value.
 	 * @return This
 	 */
-	public final ConversionException setSourceValue(Object sourceValue)
+	public final ConversionException setSourceValue(final Object sourceValue)
 	{
 		this.sourceValue = sourceValue;
 		return this;
@@ -196,7 +196,7 @@ public class ConversionException extends RuntimeException
 	 *            sets the target property type
 	 * @return This
 	 */
-	public final ConversionException setTargetType(Class<?> targetType)
+	public final ConversionException setTargetType(final Class<?> targetType)
 	{
 		this.targetType = targetType;
 		return this;
@@ -219,7 +219,7 @@ public class ConversionException extends RuntimeException
 	 *            sets the resource key
 	 * @return This
 	 */
-	public ConversionException setResourceKey(String resourceKey)
+	public ConversionException setResourceKey(final String resourceKey)
 	{
 		this.resourceKey = resourceKey;
 		return this;
@@ -234,9 +234,9 @@ public class ConversionException extends RuntimeException
 	 *            variable value
 	 * @return this for chaining
 	 */
-	public ConversionException setVariable(String name, Object value)
+	public ConversionException setVariable(final String name, final Object value)
 	{
-		if (name == null || name.trim().length() == 0)
+		if ((name == null) || (name.trim().length() == 0))
 		{
 			throw new IllegalArgumentException(
 				"Argument [[name]] cannot be null or an empty string");

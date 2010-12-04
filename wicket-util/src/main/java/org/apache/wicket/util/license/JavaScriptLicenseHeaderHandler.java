@@ -27,7 +27,7 @@ class JavaScriptLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 	 * 
 	 * @param ignoreFiles
 	 */
-	public JavaScriptLicenseHeaderHandler(List<String> ignoreFiles)
+	public JavaScriptLicenseHeaderHandler(final List<String> ignoreFiles)
 	{
 		super(ignoreFiles);
 	}
@@ -38,7 +38,7 @@ class JavaScriptLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return "javaScriptLicense.txt";
 	}
 
-	public boolean checkLicenseHeader(File file)
+	public boolean checkLicenseHeader(final File file)
 	{
 		String header = extractLicenseHeader(file, 0, 16);
 
@@ -51,7 +51,7 @@ class JavaScriptLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 	}
 
 	@Override
-	public boolean addLicenseHeader(File file)
+	public boolean addLicenseHeader(final File file)
 	{
 		prependLicenseHeader(file);
 

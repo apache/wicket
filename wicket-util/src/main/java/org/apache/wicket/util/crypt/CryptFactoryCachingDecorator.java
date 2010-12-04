@@ -33,7 +33,7 @@ public class CryptFactoryCachingDecorator implements ICryptFactory
 	 * @param delegate
 	 *            the crypt factory whose {@link ICryptFactory#newCrypt()} call will be cached
 	 */
-	public CryptFactoryCachingDecorator(ICryptFactory delegate)
+	public CryptFactoryCachingDecorator(final ICryptFactory delegate)
 	{
 		if (delegate == null)
 		{

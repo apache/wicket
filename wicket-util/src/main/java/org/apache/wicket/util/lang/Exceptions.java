@@ -32,7 +32,7 @@ public class Exceptions
 	 * @param throwable
 	 * @return root cause
 	 */
-	public Throwable getRootCause(Throwable throwable)
+	public Throwable getRootCause(final Throwable throwable)
 	{
 		Throwable cursor = throwable;
 		while (cursor.getCause() != null)
@@ -50,12 +50,13 @@ public class Exceptions
 	 * @param causeType
 	 * @return matched {@link Throwable} in the chain or {@code null} if none
 	 */
-	public static <T extends Throwable> T findCause(Throwable throwable, final Class<T> causeType)
+	public static <T extends Throwable> T findCause(final Throwable throwable,
+		final Class<T> causeType)
 	{
 		return visit(throwable, new IThrowableVisitor<T>()
 		{
 			@SuppressWarnings("unchecked")
-			public void visit(Throwable throwable, Visit<T> visit)
+			public void visit(final Throwable throwable, final Visit<T> visit)
 			{
 				if (causeType.isAssignableFrom(throwable.getClass()))
 				{
@@ -82,7 +83,7 @@ public class Exceptions
 		 * 
 		 * @param result
 		 */
-		public void stop(T result)
+		public void stop(final T result)
 		{
 			this.result = result;
 			stop();
@@ -121,7 +122,7 @@ public class Exceptions
 	 * @param visitor
 	 * @return result set on visitor or {@code null} if none
 	 */
-	public static <T> T visit(Throwable throwable, IThrowableVisitor<T> visitor)
+	public static <T> T visit(final Throwable throwable, final IThrowableVisitor<T> visitor)
 	{
 		Visit<T> visit = new Visit<T>();
 		Throwable cursor = throwable;

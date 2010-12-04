@@ -16,18 +16,29 @@
  */
 package org.apache.wicket.util.io;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.CharArrayWriter;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.*;
 
 /**
  * General IO Stream manipulation.
  * <p>
  * This class provides static utility methods for input/output operations.
  * <ul>
- * <li>closeQuietly - these method closes any kind of closeable resource, e.g. an input/output stream
- * or reader/writer ignoring nulls and exceptions
+ * <li>closeQuietly - these method closes any kind of closeable resource, e.g. an input/output
+ * stream or reader/writer ignoring nulls and exceptions
  * <li>toXxx - these methods read data from a stream
  * <li>write - these methods write data to a stream
  * <li>copy - these methods copy all the data from one stream to another
@@ -79,30 +90,32 @@ public final class IOUtils
 
 	/**
 	 * Closes a closeable. Guards against null closables.
-	 *
+	 * 
 	 * @param closeable
 	 *            closeable to close
 	 * @throws IOException
 	 *             when close fails
 	 */
-	public static void close(Closeable closeable) throws IOException
+	public static void close(final Closeable closeable) throws IOException
 	{
 		if (closeable != null)
+		{
 			closeable.close();
+		}
 	}
 
 	/**
 	 * Unconditionally close a <code>Closeable</code>.
 	 * <p>
 	 * closeables can be input or output streams, reader, writers, and much more.
-	 *
+	 * 
 	 * Equivalent to {@link Closeable#close()}, except any exceptions will be ignored. This is
 	 * typically used in finally blocks.
 	 * 
 	 * @param closeable
 	 *            the Closeable to close, may be null or already closed
 	 */
-	public static void closeQuietly(Closeable closeable)
+	public static void closeQuietly(final Closeable closeable)
 	{
 		try
 		{
@@ -130,7 +143,7 @@ public final class IOUtils
 	 * @throws IOException
 	 *             if an I/O error occurs
 	 */
-	public static byte[] toByteArray(InputStream input) throws IOException
+	public static byte[] toByteArray(final InputStream input) throws IOException
 	{
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		copy(input, output);
@@ -152,7 +165,7 @@ public final class IOUtils
 	 * @throws IOException
 	 *             if an I/O error occurs
 	 */
-	public static byte[] toByteArray(Reader input) throws IOException
+	public static byte[] toByteArray(final Reader input) throws IOException
 	{
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		copy(input, output);
@@ -180,7 +193,7 @@ public final class IOUtils
 	 *             if an I/O error occurs
 	 * @since 1.1
 	 */
-	public static byte[] toByteArray(Reader input, String encoding) throws IOException
+	public static byte[] toByteArray(final Reader input, final String encoding) throws IOException
 	{
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		copy(input, output, encoding);
@@ -204,7 +217,7 @@ public final class IOUtils
 	 * @throws IOException
 	 *             if an I/O error occurs
 	 */
-	public static char[] toCharArray(InputStream is) throws IOException
+	public static char[] toCharArray(final InputStream is) throws IOException
 	{
 		CharArrayWriter output = new CharArrayWriter();
 		copy(is, output);
@@ -231,7 +244,8 @@ public final class IOUtils
 	 * @throws IOException
 	 *             if an I/O error occurs
 	 */
-	public static char[] toCharArray(InputStream is, String encoding) throws IOException
+	public static char[] toCharArray(final InputStream is, final String encoding)
+		throws IOException
 	{
 		CharArrayWriter output = new CharArrayWriter();
 		copy(is, output, encoding);
@@ -252,7 +266,7 @@ public final class IOUtils
 	 * @throws IOException
 	 *             if an I/O error occurs
 	 */
-	public static char[] toCharArray(Reader input) throws IOException
+	public static char[] toCharArray(final Reader input) throws IOException
 	{
 		CharArrayWriter sw = new CharArrayWriter();
 		copy(input, sw);
@@ -276,7 +290,7 @@ public final class IOUtils
 	 * @throws IOException
 	 *             if an I/O error occurs
 	 */
-	public static String toString(InputStream input) throws IOException
+	public static String toString(final InputStream input) throws IOException
 	{
 		StringWriter sw = new StringWriter();
 		copy(input, sw);
@@ -303,7 +317,8 @@ public final class IOUtils
 	 * @throws IOException
 	 *             if an I/O error occurs
 	 */
-	public static String toString(InputStream input, String encoding) throws IOException
+	public static String toString(final InputStream input, final String encoding)
+		throws IOException
 	{
 		StringWriter sw = new StringWriter();
 		copy(input, sw, encoding);
@@ -324,7 +339,7 @@ public final class IOUtils
 	 * @throws IOException
 	 *             if an I/O error occurs
 	 */
-	public static String toString(Reader input) throws IOException
+	public static String toString(final Reader input) throws IOException
 	{
 		StringWriter sw = new StringWriter();
 		copy(input, sw);
@@ -346,7 +361,7 @@ public final class IOUtils
 	 *             if an I/O error occurs
 	 * @since 1.1
 	 */
-	public static void write(byte[] data, OutputStream output) throws IOException
+	public static void write(final byte[] data, final OutputStream output) throws IOException
 	{
 		if (data != null)
 		{
@@ -370,7 +385,7 @@ public final class IOUtils
 	 *             if an I/O error occurs
 	 * @since 1.1
 	 */
-	public static void write(byte[] data, Writer output) throws IOException
+	public static void write(final byte[] data, final Writer output) throws IOException
 	{
 		if (data != null)
 		{
@@ -399,7 +414,8 @@ public final class IOUtils
 	 *             if an I/O error occurs
 	 * @since 1.1
 	 */
-	public static void write(byte[] data, Writer output, String encoding) throws IOException
+	public static void write(final byte[] data, final Writer output, final String encoding)
+		throws IOException
 	{
 		if (data != null)
 		{
@@ -430,7 +446,7 @@ public final class IOUtils
 	 *             if an I/O error occurs
 	 * @since 1.1
 	 */
-	public static void write(char[] data, Writer output) throws IOException
+	public static void write(final char[] data, final Writer output) throws IOException
 	{
 		if (data != null)
 		{
@@ -453,7 +469,7 @@ public final class IOUtils
 	 *             if an I/O error occurs
 	 * @since 1.1
 	 */
-	public static void write(char[] data, OutputStream output) throws IOException
+	public static void write(final char[] data, final OutputStream output) throws IOException
 	{
 		if (data != null)
 		{
@@ -482,7 +498,8 @@ public final class IOUtils
 	 *             if an I/O error occurs
 	 * @since 1.1
 	 */
-	public static void write(char[] data, OutputStream output, String encoding) throws IOException
+	public static void write(final char[] data, final OutputStream output, final String encoding)
+		throws IOException
 	{
 		if (data != null)
 		{
@@ -512,7 +529,7 @@ public final class IOUtils
 	 *             if an I/O error occurs
 	 * @since 1.1
 	 */
-	public static void write(String data, Writer output) throws IOException
+	public static void write(final String data, final Writer output) throws IOException
 	{
 		if (data != null)
 		{
@@ -536,7 +553,7 @@ public final class IOUtils
 	 *             if an I/O error occurs
 	 * @since 1.1
 	 */
-	public static void write(String data, OutputStream output) throws IOException
+	public static void write(final String data, final OutputStream output) throws IOException
 	{
 		if (data != null)
 		{
@@ -565,7 +582,8 @@ public final class IOUtils
 	 *             if an I/O error occurs
 	 * @since 1.1
 	 */
-	public static void write(String data, OutputStream output, String encoding) throws IOException
+	public static void write(final String data, final OutputStream output, final String encoding)
+		throws IOException
 	{
 		if (data != null)
 		{
@@ -595,7 +613,7 @@ public final class IOUtils
 	 *             if an I/O error occurs
 	 * @since 1.1
 	 */
-	public static void write(StringBuilder data, Writer output) throws IOException
+	public static void write(final StringBuilder data, final Writer output) throws IOException
 	{
 		if (data != null)
 		{
@@ -619,7 +637,8 @@ public final class IOUtils
 	 *             if an I/O error occurs
 	 * @since 1.1
 	 */
-	public static void write(StringBuilder data, OutputStream output) throws IOException
+	public static void write(final StringBuilder data, final OutputStream output)
+		throws IOException
 	{
 		if (data != null)
 		{
@@ -648,8 +667,8 @@ public final class IOUtils
 	 *             if an I/O error occurs
 	 * @since 1.1
 	 */
-	public static void write(StringBuilder data, OutputStream output, String encoding)
-		throws IOException
+	public static void write(final StringBuilder data, final OutputStream output,
+		final String encoding) throws IOException
 	{
 		if (data != null)
 		{
@@ -683,7 +702,7 @@ public final class IOUtils
 	 *             if an I/O error occurs
 	 * @since 1.1
 	 */
-	public static int copy(InputStream input, OutputStream output) throws IOException
+	public static int copy(final InputStream input, final OutputStream output) throws IOException
 	{
 		byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
 		int count = 0;
@@ -715,7 +734,7 @@ public final class IOUtils
 	 *             if an I/O error occurs
 	 * @since 1.1
 	 */
-	public static void copy(InputStream input, Writer output) throws IOException
+	public static void copy(final InputStream input, final Writer output) throws IOException
 	{
 		InputStreamReader in = new InputStreamReader(input);
 		copy(in, output);
@@ -745,7 +764,8 @@ public final class IOUtils
 	 *             if an I/O error occurs
 	 * @since 1.1
 	 */
-	public static void copy(InputStream input, Writer output, String encoding) throws IOException
+	public static void copy(final InputStream input, final Writer output, final String encoding)
+		throws IOException
 	{
 		if (encoding == null)
 		{
@@ -777,7 +797,7 @@ public final class IOUtils
 	 *             if an I/O error occurs
 	 * @since 1.1
 	 */
-	public static int copy(Reader input, Writer output) throws IOException
+	public static int copy(final Reader input, final Writer output) throws IOException
 	{
 		char[] buffer = new char[DEFAULT_BUFFER_SIZE];
 		int count = 0;
@@ -811,7 +831,7 @@ public final class IOUtils
 	 *             if an I/O error occurs
 	 * @since 1.1
 	 */
-	public static void copy(Reader input, OutputStream output) throws IOException
+	public static void copy(final Reader input, final OutputStream output) throws IOException
 	{
 		OutputStreamWriter out = new OutputStreamWriter(output);
 		copy(input, out);
@@ -844,7 +864,8 @@ public final class IOUtils
 	 *             if an I/O error occurs
 	 * @since 1.1
 	 */
-	public static void copy(Reader input, OutputStream output, String encoding) throws IOException
+	public static void copy(final Reader input, final OutputStream output, final String encoding)
+		throws IOException
 	{
 		if (encoding == null)
 		{

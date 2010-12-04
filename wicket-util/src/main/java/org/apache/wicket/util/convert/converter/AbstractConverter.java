@@ -48,7 +48,7 @@ public abstract class AbstractConverter<C> implements IConverter<C>
 	 * @throws ConversionException
 	 *             Thrown if parsing fails
 	 */
-	protected C parse(final Format format, final Object value, Locale locale)
+	protected C parse(final Format format, final Object value, final Locale locale)
 	{
 		final ParsePosition position = new ParsePosition(0);
 		final String stringValue = value.toString();
@@ -73,7 +73,7 @@ public abstract class AbstractConverter<C> implements IConverter<C>
 	 * @return The ConversionException
 	 */
 	protected ConversionException newConversionException(final String message, final Object value,
-		Locale locale)
+		final Locale locale)
 	{
 		return new ConversionException(message).setSourceValue(value)
 			.setTargetType(getTargetType())

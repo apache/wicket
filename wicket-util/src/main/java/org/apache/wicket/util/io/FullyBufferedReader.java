@@ -259,7 +259,7 @@ public final class FullyBufferedReader
 	 *            The position
 	 * @return char at position
 	 */
-	public final char charAt(int pos)
+	public final char charAt(final int pos)
 	{
 		return input.charAt(pos);
 	}

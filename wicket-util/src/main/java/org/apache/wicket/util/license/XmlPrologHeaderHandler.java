@@ -22,8 +22,6 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.apache.wicket.util.diff.Revision;
-
 class XmlPrologHeaderHandler extends XmlLicenseHeaderHandler
 {
 	/**
@@ -31,7 +29,7 @@ class XmlPrologHeaderHandler extends XmlLicenseHeaderHandler
 	 * 
 	 * @param ignoreFiles
 	 */
-	public XmlPrologHeaderHandler(List<String> ignoreFiles)
+	public XmlPrologHeaderHandler(final List<String> ignoreFiles)
 	{
 		super(ignoreFiles);
 	}
@@ -48,8 +46,6 @@ class XmlPrologHeaderHandler extends XmlLicenseHeaderHandler
 	@Override
 	public boolean checkLicenseHeader(final File file)
 	{
-		Revision revision = null;
-
 		try
 		{
 			String header = extractLicenseHeader(file, 0, 1);

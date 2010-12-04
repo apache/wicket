@@ -39,7 +39,7 @@ public class ByteConverter extends AbstractIntegerConverter<Byte>
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
-	public Byte convertToObject(final String value, Locale locale)
+	public Byte convertToObject(final String value, final Locale locale)
 	{
 		final Number number = parse(value, Byte.MIN_VALUE, Byte.MAX_VALUE, locale);
 

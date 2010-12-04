@@ -37,7 +37,7 @@ public class ZeroPaddingIntegerConverter extends AbstractIntegerConverter<Intege
 	 * @param zeroPadLength
 	 *            Minimum length of String to be outputted (will be zero-padded).
 	 */
-	public ZeroPaddingIntegerConverter(int zeroPadLength)
+	public ZeroPaddingIntegerConverter(final int zeroPadLength)
 	{
 		this.zeroPadLength = zeroPadLength;
 	}
@@ -47,7 +47,7 @@ public class ZeroPaddingIntegerConverter extends AbstractIntegerConverter<Intege
 	 *      java.util.Locale)
 	 */
 	@Override
-	public String convertToString(Integer value, Locale locale)
+	public String convertToString(final Integer value, final Locale locale)
 	{
 		String result = super.convertToString(value, locale);
 
@@ -62,7 +62,7 @@ public class ZeroPaddingIntegerConverter extends AbstractIntegerConverter<Intege
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
-	public Integer convertToObject(final String value, Locale locale)
+	public Integer convertToObject(final String value, final Locale locale)
 	{
 		final Number number = parse(value, Integer.MIN_VALUE, Integer.MAX_VALUE, locale);
 

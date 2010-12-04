@@ -47,7 +47,7 @@ public class StringUtils
 	 *      charsets</a>
 	 * @see #getBytesUnchecked(String, String)
 	 */
-	public static byte[] getBytesIso8859_1(String string)
+	public static byte[] getBytesIso8859_1(final String string)
 	{
 		return StringUtils.getBytesUnchecked(string, CharEncoding.ISO_8859_1);
 	}
@@ -66,7 +66,7 @@ public class StringUtils
 	 *      charsets</a>
 	 * @see #getBytesUnchecked(String, String)
 	 */
-	public static byte[] getBytesUsAscii(String string)
+	public static byte[] getBytesUsAscii(final String string)
 	{
 		return StringUtils.getBytesUnchecked(string, CharEncoding.US_ASCII);
 	}
@@ -85,7 +85,7 @@ public class StringUtils
 	 *      charsets</a>
 	 * @see #getBytesUnchecked(String, String)
 	 */
-	public static byte[] getBytesUtf16(String string)
+	public static byte[] getBytesUtf16(final String string)
 	{
 		return StringUtils.getBytesUnchecked(string, CharEncoding.UTF_16);
 	}
@@ -104,7 +104,7 @@ public class StringUtils
 	 *      charsets</a>
 	 * @see #getBytesUnchecked(String, String)
 	 */
-	public static byte[] getBytesUtf16Be(String string)
+	public static byte[] getBytesUtf16Be(final String string)
 	{
 		return StringUtils.getBytesUnchecked(string, CharEncoding.UTF_16BE);
 	}
@@ -123,7 +123,7 @@ public class StringUtils
 	 *      charsets</a>
 	 * @see #getBytesUnchecked(String, String)
 	 */
-	public static byte[] getBytesUtf16Le(String string)
+	public static byte[] getBytesUtf16Le(final String string)
 	{
 		return StringUtils.getBytesUnchecked(string, CharEncoding.UTF_16LE);
 	}
@@ -142,7 +142,7 @@ public class StringUtils
 	 *      charsets</a>
 	 * @see #getBytesUnchecked(String, String)
 	 */
-	public static byte[] getBytesUtf8(String string)
+	public static byte[] getBytesUtf8(final String string)
 	{
 		return StringUtils.getBytesUnchecked(string, CharEncoding.UTF_8);
 	}
@@ -167,7 +167,7 @@ public class StringUtils
 	 * @see CharEncoding
 	 * @see String#getBytes(String)
 	 */
-	public static byte[] getBytesUnchecked(String string, String charsetName)
+	public static byte[] getBytesUnchecked(final String string, final String charsetName)
 	{
 		if (string == null)
 		{
@@ -183,8 +183,8 @@ public class StringUtils
 		}
 	}
 
-	private static IllegalStateException newIllegalStateException(String charsetName,
-		UnsupportedEncodingException e)
+	private static IllegalStateException newIllegalStateException(final String charsetName,
+		final UnsupportedEncodingException e)
 	{
 		return new IllegalStateException(charsetName + ": " + e);
 	}
@@ -210,7 +210,7 @@ public class StringUtils
 	 * @see CharEncoding
 	 * @see String#String(byte[], String)
 	 */
-	public static String newString(byte[] bytes, String charsetName)
+	public static String newString(final byte[] bytes, final String charsetName)
 	{
 		if (bytes == null)
 		{
@@ -238,7 +238,7 @@ public class StringUtils
 	 *             Thrown when a {@link UnsupportedEncodingException} is caught, which should never
 	 *             happen since the charset is required.
 	 */
-	public static String newStringIso8859_1(byte[] bytes)
+	public static String newStringIso8859_1(final byte[] bytes)
 	{
 		return StringUtils.newString(bytes, CharEncoding.ISO_8859_1);
 	}
@@ -255,7 +255,7 @@ public class StringUtils
 	 *             Thrown when a {@link UnsupportedEncodingException} is caught, which should never
 	 *             happen since the charset is required.
 	 */
-	public static String newStringUsAscii(byte[] bytes)
+	public static String newStringUsAscii(final byte[] bytes)
 	{
 		return StringUtils.newString(bytes, CharEncoding.US_ASCII);
 	}
@@ -272,7 +272,7 @@ public class StringUtils
 	 *             Thrown when a {@link UnsupportedEncodingException} is caught, which should never
 	 *             happen since the charset is required.
 	 */
-	public static String newStringUtf16(byte[] bytes)
+	public static String newStringUtf16(final byte[] bytes)
 	{
 		return StringUtils.newString(bytes, CharEncoding.UTF_16);
 	}
@@ -289,7 +289,7 @@ public class StringUtils
 	 *             Thrown when a {@link UnsupportedEncodingException} is caught, which should never
 	 *             happen since the charset is required.
 	 */
-	public static String newStringUtf16Be(byte[] bytes)
+	public static String newStringUtf16Be(final byte[] bytes)
 	{
 		return StringUtils.newString(bytes, CharEncoding.UTF_16BE);
 	}
@@ -306,7 +306,7 @@ public class StringUtils
 	 *             Thrown when a {@link UnsupportedEncodingException} is caught, which should never
 	 *             happen since the charset is required.
 	 */
-	public static String newStringUtf16Le(byte[] bytes)
+	public static String newStringUtf16Le(final byte[] bytes)
 	{
 		return StringUtils.newString(bytes, CharEncoding.UTF_16LE);
 	}
@@ -323,7 +323,7 @@ public class StringUtils
 	 *             Thrown when a {@link UnsupportedEncodingException} is caught, which should never
 	 *             happen since the charset is required.
 	 */
-	public static String newStringUtf8(byte[] bytes)
+	public static String newStringUtf8(final byte[] bytes)
 	{
 		return StringUtils.newString(bytes, CharEncoding.UTF_8);
 	}

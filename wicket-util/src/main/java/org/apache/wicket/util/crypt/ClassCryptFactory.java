@@ -42,7 +42,7 @@ public class ClassCryptFactory implements ICryptFactory
 	 * @param encryptionKey
 	 *            encryption key
 	 */
-	public ClassCryptFactory(Class<?> cryptClass, String encryptionKey)
+	public ClassCryptFactory(final Class<?> cryptClass, final String encryptionKey)
 	{
 		if (cryptClass == null)
 		{

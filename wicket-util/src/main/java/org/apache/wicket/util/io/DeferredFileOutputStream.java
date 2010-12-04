@@ -73,7 +73,7 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 	 * @param outputFile
 	 *            The file to which data is saved beyond the threshold.
 	 */
-	public DeferredFileOutputStream(int threshold, File outputFile)
+	public DeferredFileOutputStream(final int threshold, final File outputFile)
 	{
 		super(threshold);
 		this.outputFile = outputFile;

@@ -139,12 +139,14 @@ public class Files
 
 	/**
 	 * read binary file fully
-	 *
-	 * @param file file to read
+	 * 
+	 * @param file
+	 *            file to read
 	 * @return byte array representing the content of the file
-	 * @throws IOException is something went wrong
+	 * @throws IOException
+	 *             is something went wrong
 	 */
-	public static byte[] readBytes(File file) throws IOException
+	public static byte[] readBytes(final File file) throws IOException
 	{
 		FileInputStream stream = new FileInputStream(file);
 
@@ -207,15 +209,15 @@ public class Files
 
 	/**
 	 * make a copy of a file
-	 *
+	 * 
 	 * @param sourceFile
 	 *            source file that needs to be cloned
 	 * @param targetFile
 	 *            target file that should be a duplicate of source file
 	 * @throws IOException
-	 *            if something went wrong
+	 *             if something went wrong
 	 */
-	public static void copy(File sourceFile, File targetFile) throws IOException
+	public static void copy(final File sourceFile, final File targetFile) throws IOException
 	{
 		BufferedInputStream in = null;
 		BufferedOutputStream out = null;

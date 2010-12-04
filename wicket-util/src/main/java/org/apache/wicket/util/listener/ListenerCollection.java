@@ -53,7 +53,7 @@ public abstract class ListenerCollection<T> implements Serializable
 	 */
 	public boolean add(final T listener)
 	{
-		if (listener == null && !isAllowingNulls())
+		if ((listener == null) && !isAllowingNulls())
 		{
 			return false;
 		}
@@ -71,7 +71,7 @@ public abstract class ListenerCollection<T> implements Serializable
 	 * @param notifier
 	 *            notifier used to notify each listener
 	 */
-	protected void notify(INotifier<T> notifier)
+	protected void notify(final INotifier<T> notifier)
 	{
 		for (T listener : listeners)
 		{
@@ -85,7 +85,7 @@ public abstract class ListenerCollection<T> implements Serializable
 	 * @param notifier
 	 *            notifier used to notify each listener
 	 */
-	protected void notifyIgnoringExceptions(INotifier<T> notifier)
+	protected void notifyIgnoringExceptions(final INotifier<T> notifier)
 	{
 		for (T listener : listeners)
 		{

@@ -35,8 +35,7 @@ public final class IntegerVariableAssignmentParser extends MetaPatternParser
 
 	/** Meta pattern. */
 	private static final MetaPattern pattern = new MetaPattern(variable,
-		MetaPattern.OPTIONAL_WHITESPACE, MetaPattern.EQUALS, MetaPattern.OPTIONAL_WHITESPACE,
-		value);
+		MetaPattern.OPTIONAL_WHITESPACE, MetaPattern.EQUALS, MetaPattern.OPTIONAL_WHITESPACE, value);
 
 	/**
 	 * Construct.

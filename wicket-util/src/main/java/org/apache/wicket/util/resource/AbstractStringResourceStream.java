@@ -183,7 +183,7 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 	 * @param lastModified
 	 *            The lastModified to set.
 	 */
-	public void setLastModified(Time lastModified)
+	public void setLastModified(final Time lastModified)
 	{
 		this.lastModified = lastModified;
 	}

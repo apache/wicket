@@ -431,9 +431,9 @@ public final class Bytes extends LongValue
 	 * @return <code>true</code> if this <code>Bytes</code> is greater than the given
 	 *         <code>Bytes</code> instance
 	 */
-	public boolean greaterThan(Bytes other)
+	public boolean greaterThan(final Bytes other)
 	{
-		if (this == other || other == null)
+		if ((this == other) || (other == null))
 		{
 			return false;
 		}

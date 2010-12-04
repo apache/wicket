@@ -67,7 +67,7 @@ public class FileUpload extends FileUploadBase
 	 * 
 	 * @see #FileUpload()
 	 */
-	public FileUpload(FileItemFactory fileItemFactory)
+	public FileUpload(final FileItemFactory fileItemFactory)
 	{
 		super();
 		this.fileItemFactory = fileItemFactory;
@@ -92,7 +92,7 @@ public class FileUpload extends FileUploadBase
 	 *            The factory class for new file items.
 	 */
 	@Override
-	public void setFileItemFactory(FileItemFactory factory)
+	public void setFileItemFactory(final FileItemFactory factory)
 	{
 		fileItemFactory = factory;
 	}

@@ -28,7 +28,7 @@ public final class ChangeListenerSet extends ListenerCollection<IChangeListener>
 {
 	private static final long serialVersionUID = 1L;
 
-	protected void notifyListener(IChangeListener listener)
+	protected void notifyListener(final IChangeListener listener)
 	{
 	}
 
@@ -40,7 +40,7 @@ public final class ChangeListenerSet extends ListenerCollection<IChangeListener>
 		notify(new INotifier<IChangeListener>()
 		{
 
-			public void notify(IChangeListener object)
+			public void notify(final IChangeListener object)
 			{
 				object.onChange();
 			}

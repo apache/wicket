@@ -101,7 +101,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 *             if the initial capacity is negative or the load factor is nonpositive.
 	 */
 	@SuppressWarnings("unchecked")
-	public IntHashMap(int initialCapacity, float loadFactor)
+	public IntHashMap(int initialCapacity, final float loadFactor)
 	{
 		if (initialCapacity < 0)
 		{
@@ -112,7 +112,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 		{
 			initialCapacity = MAXIMUM_CAPACITY;
 		}
-		if (loadFactor <= 0 || Float.isNaN(loadFactor))
+		if ((loadFactor <= 0) || Float.isNaN(loadFactor))
 		{
 			throw new IllegalArgumentException("Illegal load factor: " + //$NON-NLS-1$
 				loadFactor);
@@ -140,7 +140,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 * @throws IllegalArgumentException
 	 *             if the initial capacity is negative.
 	 */
-	public IntHashMap(int initialCapacity)
+	public IntHashMap(final int initialCapacity)
 	{
 		this(initialCapacity, DEFAULT_LOAD_FACTOR);
 	}
@@ -177,7 +177,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 * @param length
 	 * @return The index for the hash integer for the given length
 	 */
-	static int indexFor(int h, int length)
+	static int indexFor(final int h, final int length)
 	{
 		return h & (length - 1);
 	}
@@ -215,7 +215,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 *         contains no mapping for this key.
 	 * @see #put(int, Object)
 	 */
-	public V get(int key)
+	public V get(final int key)
 	{
 		int i = indexFor(key, table.length);
 		Entry<V> e = table[i];
@@ -240,7 +240,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 *            The key whose presence in this map is to be tested
 	 * @return <tt>true</tt> if this map contains a mapping for the specified key.
 	 */
-	public boolean containsKey(int key)
+	public boolean containsKey(final int key)
 	{
 		int i = indexFor(key, table.length);
 		Entry<V> e = table[i];
@@ -262,11 +262,11 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 * @param key
 	 * @return The Entry object for the given hash key
 	 */
-	Entry<V> getEntry(int key)
+	Entry<V> getEntry(final int key)
 	{
 		int i = indexFor(key, table.length);
 		Entry<V> e = table[i];
-		while (e != null && !(key == e.key))
+		while ((e != null) && !(key == e.key))
 		{
 			e = e.next;
 		}
@@ -285,7 +285,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 *         mapping for key. A <tt>null</tt> return can also indicate that the HashMap previously
 	 *         associated <tt>null</tt> with the specified key.
 	 */
-	public V put(int key, V value)
+	public V put(final int key, final V value)
 	{
 		int i = indexFor(key, table.length);
 
@@ -312,7 +312,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 * @param key
 	 * @param value
 	 */
-	private void putForCreate(int key, V value)
+	private void putForCreate(final int key, final V value)
 	{
 		int i = indexFor(key, table.length);
 
@@ -333,7 +333,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 		createEntry(key, value, i);
 	}
 
-	void putAllForCreate(IntHashMap<V> m)
+	void putAllForCreate(final IntHashMap<V> m)
 	{
 		for (Entry<V> entry : m.entrySet())
 		{
@@ -353,7 +353,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 *            unless current capacity is MAXIMUM_CAPACITY (in which case value is irrelevant).
 	 */
 	@SuppressWarnings("unchecked")
-	void resize(int newCapacity)
+	void resize(final int newCapacity)
 	{
 		Entry<V>[] oldTable = table;
 		int oldCapacity = oldTable.length;
@@ -374,7 +374,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 * 
 	 * @param newTable
 	 */
-	void transfer(Entry<V>[] newTable)
+	void transfer(final Entry<V>[] newTable)
 	{
 		Entry<V>[] src = table;
 		int newCapacity = newTable.length;
@@ -406,7 +406,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 * @throws NullPointerException
 	 *             if the specified map is null.
 	 */
-	public void putAll(IntHashMap<V> m)
+	public void putAll(final IntHashMap<V> m)
 	{
 		int numKeysToBeAdded = m.size();
 		if (numKeysToBeAdded == 0)
@@ -454,7 +454,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 *         mapping for key. A <tt>null</tt> return can also indicate that the map previously
 	 *         associated <tt>null</tt> with the specified key.
 	 */
-	public V remove(int key)
+	public V remove(final int key)
 	{
 		Entry<V> e = removeEntryForKey(key);
 		return (e == null ? null : e.value);
@@ -467,7 +467,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 * @param key
 	 * @return The Entry object that was removed
 	 */
-	Entry<V> removeEntryForKey(int key)
+	Entry<V> removeEntryForKey(final int key)
 	{
 		int i = indexFor(key, table.length);
 		Entry<V> prev = table[i];
@@ -504,7 +504,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 * @return The entry that was removed
 	 */
 	@SuppressWarnings("unchecked")
-	Entry<V> removeMapping(Object o)
+	Entry<V> removeMapping(final Object o)
 	{
 		if (!(o instanceof Entry))
 		{
@@ -520,7 +520,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 		while (e != null)
 		{
 			Entry<V> next = e.next;
-			if (e.key == key && e.equals(entry))
+			if ((e.key == key) && e.equals(entry))
 			{
 				modCount++;
 				size--;
@@ -562,7 +562,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 *            value whose presence in this map is to be tested.
 	 * @return <tt>true</tt> if this map maps one or more keys to the specified value.
 	 */
-	public boolean containsValue(Object value)
+	public boolean containsValue(final Object value)
 	{
 		if (value == null)
 		{
@@ -649,7 +649,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 		 * @param v
 		 * @param n
 		 */
-		Entry(int k, V v, Entry<V> n)
+		Entry(final int k, final V v, final Entry<V> n)
 		{
 			value = v;
 			next = n;
@@ -676,7 +676,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 		 * @param newValue
 		 * @return The previous value
 		 */
-		public V setValue(V newValue)
+		public V setValue(final V newValue)
 		{
 			V oldValue = value;
 			value = newValue;
@@ -688,7 +688,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 		 */
 		@SuppressWarnings("unchecked")
 		@Override
-		public boolean equals(Object o)
+		public boolean equals(final Object o)
 		{
 			if (!(o instanceof Entry))
 			{
@@ -701,7 +701,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 			{
 				Object v1 = getValue();
 				Object v2 = e.getValue();
-				if (v1 == v2 || (v1 != null && v1.equals(v2)))
+				if ((v1 == v2) || ((v1 != null) && v1.equals(v2)))
 				{
 					return true;
 				}
@@ -738,7 +738,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 * @param value
 	 * @param bucketIndex
 	 */
-	void addEntry(int key, V value, int bucketIndex)
+	void addEntry(final int key, final V value, final int bucketIndex)
 	{
 		table[bucketIndex] = new Entry<V>(key, value, table[bucketIndex]);
 		if (size++ >= threshold)
@@ -758,7 +758,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 * @param value
 	 * @param bucketIndex
 	 */
-	void createEntry(int key, V value, int bucketIndex)
+	void createEntry(final int key, final V value, final int bucketIndex)
 	{
 		table[bucketIndex] = new Entry<V>(key, value, table[bucketIndex]);
 		size++;
@@ -779,7 +779,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 			Entry<V> n = null;
 			if (size != 0)
 			{ // advance to first entry
-				while (i > 0 && (n = t[--i]) == null)
+				while ((i > 0) && ((n = t[--i]) == null))
 				{
 					/* NoOp */;
 				}
@@ -811,7 +811,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 			Entry<V> n = e.next;
 			Entry<V>[] t = table;
 			int i = index;
-			while (n == null && i > 0)
+			while ((n == null) && (i > 0))
 			{
 				n = t[--i];
 			}
@@ -934,7 +934,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 		 * @see java.util.AbstractCollection#contains(java.lang.Object)
 		 */
 		@Override
-		public boolean contains(Object o)
+		public boolean contains(final Object o)
 		{
 			if (o instanceof Number)
 			{
@@ -947,7 +947,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 		 * @see java.util.AbstractCollection#remove(java.lang.Object)
 		 */
 		@Override
-		public boolean remove(Object o)
+		public boolean remove(final Object o)
 		{
 			if (o instanceof Number)
 			{
@@ -1006,7 +1006,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 		 * @see java.util.AbstractCollection#contains(java.lang.Object)
 		 */
 		@Override
-		public boolean contains(Object o)
+		public boolean contains(final Object o)
 		{
 			return containsValue(o);
 		}
@@ -1054,7 +1054,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 		 */
 		@SuppressWarnings("unchecked")
 		@Override
-		public boolean contains(Object o)
+		public boolean contains(final Object o)
 		{
 			if (!(o instanceof Entry))
 			{
@@ -1062,14 +1062,14 @@ public class IntHashMap<V> implements Cloneable, Serializable
 			}
 			Entry<V> e = (Entry<V>)o;
 			Entry<V> candidate = getEntry(e.getKey());
-			return candidate != null && candidate.equals(e);
+			return (candidate != null) && candidate.equals(e);
 		}
 
 		/**
 		 * @see java.util.AbstractCollection#remove(java.lang.Object)
 		 */
 		@Override
-		public boolean remove(Object o)
+		public boolean remove(final Object o)
 		{
 			return removeMapping(o) != null;
 		}
@@ -1107,7 +1107,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 *             order that they are returned by <tt>entrySet().iterator()</tt>.
 	 * 
 	 */
-	private void writeObject(java.io.ObjectOutputStream s) throws IOException
+	private void writeObject(final java.io.ObjectOutputStream s) throws IOException
 	{
 		// Write out the threshold, loadfactor, and any hidden stuff
 		s.defaultWriteObject();
@@ -1136,7 +1136,8 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 * @throws ClassNotFoundException
 	 */
 	@SuppressWarnings("unchecked")
-	private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
+	private void readObject(final java.io.ObjectInputStream s) throws IOException,
+		ClassNotFoundException
 	{
 		// Read in the threshold, loadfactor, and any hidden stuff
 		s.defaultReadObject();

@@ -86,7 +86,7 @@ public abstract class PathNode
 	 * @param prev
 	 *            The previous node in the path.
 	 */
-	public PathNode(int i, int j, PathNode prev)
+	public PathNode(final int i, final int j, final PathNode prev)
 	{
 		this.i = i;
 		this.j = j;
@@ -109,7 +109,7 @@ public abstract class PathNode
 	 */
 	public boolean isBootstrap()
 	{
-		return i < 0 || j < 0;
+		return (i < 0) || (j < 0);
 	}
 
 	/**
@@ -125,7 +125,7 @@ public abstract class PathNode
 		{
 			return null;
 		}
-		if (!isSnake() && prev != null)
+		if (!isSnake() && (prev != null))
 		{
 			return prev.previousSnake();
 		}
@@ -138,7 +138,7 @@ public abstract class PathNode
 	@Override
 	public String toString()
 	{
-	 StringBuilder buf = new StringBuilder("[");
+		StringBuilder buf = new StringBuilder("[");
 		PathNode node = this;
 		while (node != null)
 		{

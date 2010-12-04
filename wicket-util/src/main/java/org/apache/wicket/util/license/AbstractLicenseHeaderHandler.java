@@ -41,7 +41,7 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 	 * 
 	 * @param ignoreFiles
 	 */
-	public AbstractLicenseHeaderHandler(List<String> ignoreFiles)
+	public AbstractLicenseHeaderHandler(final List<String> ignoreFiles)
 	{
 		this.ignoreFiles = ignoreFiles;
 	}
@@ -51,13 +51,13 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 		return ignoreFiles;
 	}
 
-	public boolean addLicenseHeader(File file)
+	public boolean addLicenseHeader(final File file)
 	{
 		System.out.println("Not supported yet.");
 		return false;
 	}
 
-	public String getLicenseType(File file)
+	public String getLicenseType(final File file)
 	{
 		return null;
 	}
@@ -78,7 +78,7 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 				inputStreamReader = new InputStreamReader(inputStream);
 				lineNumberReader = new LineNumberReader(inputStreamReader);
 
-			 StringBuilder header = new StringBuilder();
+				StringBuilder header = new StringBuilder();
 				String line = lineNumberReader.readLine();
 				while (line != null)
 				{
@@ -104,9 +104,9 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 		return licenseHeader;
 	}
 
-	protected String extractLicenseHeader(File file, int start, int length)
+	protected String extractLicenseHeader(final File file, final int start, final int length)
 	{
-	 StringBuilder header = new StringBuilder();
+		StringBuilder header = new StringBuilder();
 		LineNumberReader lineNumberReader = null;
 
 		try
@@ -146,7 +146,7 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 	 * @param file
 	 *            The file to add the license header to.
 	 */
-	protected void prependLicenseHeader(File file)
+	protected void prependLicenseHeader(final File file)
 	{
 		try
 		{

@@ -39,7 +39,7 @@ public class DoubleConverter extends AbstractDecimalConverter<Double>
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(String, java.util.Locale)
 	 */
-	public Double convertToObject(final String value, Locale locale)
+	public Double convertToObject(final String value, final Locale locale)
 	{
 		final Number number = parse(value, -Double.MAX_VALUE, Double.MAX_VALUE, locale);
 		// Double.MIN is the smallest nonzero positive number, not the largest

@@ -69,7 +69,7 @@ public abstract class FileUploadBase
 	 * 
 	 * @return <code>true</code> if the request is multipart; <code>false</code> otherwise.
 	 */
-	public static final boolean isMultipartContent(RequestContext ctx)
+	public static final boolean isMultipartContent(final RequestContext ctx)
 	{
 		String contentType = ctx.getContentType();
 		if (contentType == null)
@@ -192,7 +192,7 @@ public abstract class FileUploadBase
 	 * @see #getSizeMax()
 	 * 
 	 */
-	public void setSizeMax(long sizeMax)
+	public void setSizeMax(final long sizeMax)
 	{
 		this.sizeMax = sizeMax;
 	}
@@ -217,7 +217,7 @@ public abstract class FileUploadBase
 	 * @param encoding
 	 *            The encoding used to read part headers.
 	 */
-	public void setHeaderEncoding(String encoding)
+	public void setHeaderEncoding(final String encoding)
 	{
 		headerEncoding = encoding;
 	}
@@ -238,7 +238,7 @@ public abstract class FileUploadBase
 	 * @exception FileUploadException
 	 *                if there are problems reading/parsing the request or storing files.
 	 */
-	public List<FileItem> parseRequest(RequestContext ctx) throws FileUploadException
+	public List<FileItem> parseRequest(final RequestContext ctx) throws FileUploadException
 	{
 		if (ctx == null)
 		{
@@ -256,12 +256,12 @@ public abstract class FileUploadBase
 		}
 		int requestSize = ctx.getContentLength();
 
-		if (requestSize == -1 && getSizeMax() != Long.MAX_VALUE)
+		if ((requestSize == -1) && (getSizeMax() != Long.MAX_VALUE))
 		{
 			throw new UnknownSizeException("the request was rejected because its size is unknown");
 		}
 
-		if (sizeMax >= 0 && requestSize > sizeMax)
+		if ((sizeMax >= 0) && (requestSize > sizeMax))
 		{
 			throw new SizeLimitExceededException("the request was rejected because "
 				+ "its size exceeds allowed range");
@@ -293,7 +293,7 @@ public abstract class FileUploadBase
 				if (fieldName != null)
 				{
 					String subContentType = getHeader(headers, CONTENT_TYPE);
-					if (subContentType != null &&
+					if ((subContentType != null) &&
 						subContentType.toLowerCase().startsWith(MULTIPART_MIXED))
 					{
 						// Multiple files.
@@ -375,7 +375,7 @@ public abstract class FileUploadBase
 	 * 
 	 * @return The boundary, as a byte array.
 	 */
-	protected byte[] getBoundary(String contentType)
+	protected byte[] getBoundary(final String contentType)
 	{
 		ParameterParser parser = new ParameterParser();
 		parser.setLowerCaseNames(true);
@@ -408,7 +408,7 @@ public abstract class FileUploadBase
 	 * 
 	 * @return The file name for the current <code>encapsulation</code>.
 	 */
-	protected String getFileName(Map<String, String> headers)
+	protected String getFileName(final Map<String, String> headers)
 	{
 		String fileName = null;
 		String cd = getHeader(headers, CONTENT_DISPOSITION);
@@ -454,11 +454,11 @@ public abstract class FileUploadBase
 	 * 
 	 * @return The field name for the current <code>encapsulation</code>.
 	 */
-	protected String getFieldName(Map<String, String> headers)
+	protected String getFieldName(final Map<String, String> headers)
 	{
 		String fieldName = null;
 		String cd = getHeader(headers, CONTENT_DISPOSITION);
-		if (cd != null && cd.startsWith(FORM_DATA))
+		if ((cd != null) && cd.startsWith(FORM_DATA))
 		{
 
 			ParameterParser parser = new ParameterParser();
@@ -485,7 +485,7 @@ public abstract class FileUploadBase
 	 * 
 	 * @return A newly created <code>FileItem</code> instance.
 	 */
-	protected FileItem createItem(Map<String, String> headers, boolean isFormField)
+	protected FileItem createItem(final Map<String, String> headers, final boolean isFormField)
 	{
 		return getFileItemFactory().createItem(getFieldName(headers),
 			getHeader(headers, CONTENT_TYPE), isFormField, getFileName(headers));
@@ -505,7 +505,7 @@ public abstract class FileUploadBase
 	 * 
 	 * @return A <code>Map</code> containing the parsed HTTP request headers.
 	 */
-	protected Map<String, String> parseHeaders(String headerPart)
+	protected Map<String, String> parseHeaders(final String headerPart)
 	{
 		Map<String, String> headers = new HashMap<String, String>();
 		char[] buffer = new char[MAX_HEADER_SIZE];
@@ -520,7 +520,7 @@ public abstract class FileUploadBase
 				i = 0;
 				// Copy a single line of characters into the buffer,
 				// omitting trailing CRLF.
-				while (i < 2 || buffer[i - 2] != '\r' || buffer[i - 1] != '\n')
+				while ((i < 2) || (buffer[i - 2] != '\r') || (buffer[i - 1] != '\n'))
 				{
 					buffer[i++] = headerPart.charAt(j++);
 				}
@@ -572,7 +572,7 @@ public abstract class FileUploadBase
 	 * @return The value of specified header, or a comma-separated list if there were multiple
 	 *         headers of that name.
 	 */
-	protected final String getHeader(Map<String, String> headers, String name)
+	protected final String getHeader(final Map<String, String> headers, final String name)
 	{
 		return headers.get(name.toLowerCase());
 	}
@@ -600,7 +600,7 @@ public abstract class FileUploadBase
 		 * @param message
 		 *            The detail message.
 		 */
-		public InvalidContentTypeException(String message)
+		public InvalidContentTypeException(final String message)
 		{
 			super(message);
 		}
@@ -629,7 +629,7 @@ public abstract class FileUploadBase
 		 * @param message
 		 *            The detail message.
 		 */
-		public UnknownSizeException(String message)
+		public UnknownSizeException(final String message)
 		{
 			super(message);
 		}
@@ -658,7 +658,7 @@ public abstract class FileUploadBase
 		 * @param message
 		 *            The detail message.
 		 */
-		public SizeLimitExceededException(String message)
+		public SizeLimitExceededException(final String message)
 		{
 			super(message);
 		}

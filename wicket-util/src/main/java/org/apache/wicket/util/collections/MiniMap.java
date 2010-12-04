@@ -197,7 +197,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
-	public void putAll(Map<? extends K, ? extends V> map)
+	public void putAll(final Map<? extends K, ? extends V> map)
 	{
 		for (final Entry<? extends K, ? extends V> entry : map.entrySet())
 		{

@@ -226,7 +226,7 @@ public class LongValue implements Comparable<LongValue>, Serializable
 	 *             if either argument is {@code null}
 	 * @return max value
 	 */
-	public static <T extends LongValue> T max(T lhs, T rhs)
+	public static <T extends LongValue> T max(final T lhs, final T rhs)
 	{
 		Args.notNull(lhs, "lhs");
 		Args.notNull(rhs, "rhs");
@@ -246,7 +246,7 @@ public class LongValue implements Comparable<LongValue>, Serializable
 	 * @param rhs
 	 * @return max of two values or {@code null} if they are both null
 	 */
-	public static <T extends LongValue> T maxNullSafe(T lhs, T rhs)
+	public static <T extends LongValue> T maxNullSafe(final T lhs, final T rhs)
 	{
 		if (lhs == rhs)
 		{

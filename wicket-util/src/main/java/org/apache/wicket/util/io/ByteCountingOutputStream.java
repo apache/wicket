@@ -32,7 +32,7 @@ public final class ByteCountingOutputStream extends OutputStream
 	 * @see java.io.OutputStream#write(int)
 	 */
 	@Override
-	public void write(int b) throws IOException
+	public void write(final int b) throws IOException
 	{
 		size++;
 	}
@@ -41,7 +41,7 @@ public final class ByteCountingOutputStream extends OutputStream
 	 * @see java.io.OutputStream#write(byte[], int, int)
 	 */
 	@Override
-	public void write(byte b[], int off, int len) throws IOException
+	public void write(final byte b[], final int off, final int len) throws IOException
 	{
 		size += len;
 	}

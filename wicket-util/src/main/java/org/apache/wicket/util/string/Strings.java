@@ -55,8 +55,8 @@ public final class Strings
 	public static final String LINE_SEPARATOR;
 
 	/** A table of hex digits */
-	private static final char[] HEX_DIGIT =
-		{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+	private static final char[] HEX_DIGIT = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+			'A', 'B', 'C', 'D', 'E', 'F' };
 
 	private static final Pattern HTML_NUMBER_REGEX = Pattern.compile("&#\\d+;");
 
@@ -418,7 +418,7 @@ public final class Strings
 	 * 
 	 * @return The actual unicode. Can be used for instance with message bundles
 	 */
-	public static String fromEscapedUnicode(String escapedUnicodeString)
+	public static String fromEscapedUnicode(final String escapedUnicodeString)
 	{
 		int off = 0;
 		char[] in = escapedUnicodeString.toCharArray();
@@ -518,7 +518,8 @@ public final class Strings
 	 */
 	public static boolean isEmpty(final CharSequence string)
 	{
-		return string == null || string.length() == 0 || string.toString().trim().length() == 0;
+		return (string == null) || (string.length() == 0) ||
+			(string.toString().trim().length() == 0);
 	}
 
 	/**
@@ -540,7 +541,7 @@ public final class Strings
 		{
 			return true;
 		}
-		if (string1 == null || string2 == null)
+		if ((string1 == null) || (string2 == null))
 		{
 			return false;
 		}
@@ -606,7 +607,7 @@ public final class Strings
 	 * @param fragments
 	 * @return combined fragments
 	 */
-	public static String join(String separator, List<String> fragments)
+	public static String join(final String separator, final List<String> fragments)
 	{
 		if (fragments == null)
 		{
@@ -623,7 +624,7 @@ public final class Strings
 	 * @param fragments
 	 * @return combined fragments
 	 */
-	public static String join(String separator, String... fragments)
+	public static String join(final String separator, final String... fragments)
 	{
 		if ((fragments == null) || (fragments.length < 1))
 		{
@@ -723,7 +724,7 @@ public final class Strings
 
 		// If searchFor is null or the empty string, then there is nothing to
 		// replace, so returning s is the only option here.
-		if (searchFor == null || "".equals(searchFor))
+		if ((searchFor == null) || "".equals(searchFor))
 		{
 			return s;
 		}
@@ -861,7 +862,7 @@ public final class Strings
 
 		// Stripping a null or empty string from the end returns the
 		// original string.
-		if (ending == null || "".equals(ending))
+		if ((ending == null) || "".equals(ending))
 		{
 			return s;
 		}
@@ -972,7 +973,7 @@ public final class Strings
 	 *            The unicode string
 	 * @return The escaped unicode string, like '\u4F60\u597D'.
 	 */
-	public static String toEscapedUnicode(String unicodeString)
+	public static String toEscapedUnicode(final String unicodeString)
 	{
 		if ((unicodeString == null) || (unicodeString.length() == 0))
 		{
@@ -1134,7 +1135,7 @@ public final class Strings
 			return (String)object;
 		}
 
-		if (object instanceof String[] && ((String[])object).length == 1)
+		if ((object instanceof String[]) && (((String[])object).length == 1))
 		{
 			return ((String[])object)[0];
 		}
@@ -1157,7 +1158,7 @@ public final class Strings
 			List<Throwable> al = new ArrayList<Throwable>();
 			Throwable cause = throwable;
 			al.add(cause);
-			while (cause.getCause() != null && cause != cause.getCause())
+			while ((cause.getCause() != null) && (cause != cause.getCause()))
 			{
 				cause = cause.getCause();
 				al.add(cause);
@@ -1193,7 +1194,8 @@ public final class Strings
 		}
 	}
 
-	private static void append(AppendingStringBuffer buffer, CharSequence s, int from, int to)
+	private static void append(final AppendingStringBuffer buffer, final CharSequence s,
+		final int from, final int to)
 	{
 		if (s instanceof AppendingStringBuffer)
 		{
@@ -1219,8 +1221,8 @@ public final class Strings
 	 * @param sb
 	 * @param stopAtWicketServlet
 	 */
-	private static void outputThrowable(Throwable cause, AppendingStringBuffer sb,
-		boolean stopAtWicketServlet)
+	private static void outputThrowable(final Throwable cause, final AppendingStringBuffer sb,
+		final boolean stopAtWicketServlet)
 	{
 		sb.append(cause);
 		sb.append("\n");
@@ -1228,7 +1230,7 @@ public final class Strings
 		for (int i = 0; i < trace.length; i++)
 		{
 			String traceString = trace[i].toString();
-			if (!(traceString.startsWith("sun.reflect.") && i > 1))
+			if (!(traceString.startsWith("sun.reflect.") && (i > 1)))
 			{
 				sb.append("     at ");
 				sb.append(traceString);
@@ -1242,7 +1244,7 @@ public final class Strings
 		}
 	}
 
-	private static int search(final CharSequence s, String searchString, int pos)
+	private static int search(final CharSequence s, final String searchString, final int pos)
 	{
 		if (s instanceof String)
 		{
@@ -1269,7 +1271,7 @@ public final class Strings
 	 *            the nibble to convert.
 	 * @return hex character
 	 */
-	private static char toHex(int nibble)
+	private static char toHex(final int nibble)
 	{
 		return HEX_DIGIT[(nibble & 0xF)];
 	}
@@ -1282,7 +1284,7 @@ public final class Strings
 	 *            (optional) character set to use when converting string to bytes
 	 * @return length of string in bytes
 	 */
-	public static int lengthInBytes(String string, Charset charset)
+	public static int lengthInBytes(final String string, final Charset charset)
 	{
 		if (string == null)
 		{
@@ -1315,7 +1317,8 @@ public final class Strings
 	 * @param caseSensitive
 	 * @return <code>true</code> if <code>str</code> starts with <code>prefix</code>
 	 */
-	public static boolean startsWith(String str, String prefix, boolean caseSensitive)
+	public static boolean startsWith(final String str, final String prefix,
+		final boolean caseSensitive)
 	{
 		if (caseSensitive)
 		{
@@ -1328,19 +1331,27 @@ public final class Strings
 	}
 
 	/**
-	 * returns the zero-based index of a character within a char sequence. this method mainly
-	 * exists as an faster alternative for <code>sequence.toString().indexOf(ch)</code>.
-	 *
-	 * @param sequence character sequence
-	 * @param ch character to search for
+	 * returns the zero-based index of a character within a char sequence. this method mainly exists
+	 * as an faster alternative for <code>sequence.toString().indexOf(ch)</code>.
+	 * 
+	 * @param sequence
+	 *            character sequence
+	 * @param ch
+	 *            character to search for
 	 * @return index of character within character sequence or <code>-1</code> if not found
 	 */
-	public static int indexOf(CharSequence sequence, char ch)
+	public static int indexOf(final CharSequence sequence, final char ch)
 	{
 		if (sequence != null)
+		{
 			for (int i = 0; i < sequence.length(); i++)
+			{
 				if (sequence.charAt(i) == ch)
+				{
 					return i;
+				}
+			}
+		}
 
 		return -1;
 	}

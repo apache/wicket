@@ -41,7 +41,7 @@ public class Generics
 	 * @return <code>delegate</code> iterator cast to proper generics type
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Iterator<T> iterator(Iterator<?> delegate)
+	public static <T> Iterator<T> iterator(final Iterator<?> delegate)
 	{
 		return (Iterator<T>)delegate;
 	}
@@ -67,7 +67,7 @@ public class Generics
 	 *            initial capacity
 	 * @return new hash map
 	 */
-	public static <K, V> HashMap<K, V> newHashMap(int capacity)
+	public static <K, V> HashMap<K, V> newHashMap(final int capacity)
 	{
 		return new HashMap<K, V>(capacity);
 	}
@@ -80,7 +80,7 @@ public class Generics
 	 *            initial capacity
 	 * @return array list
 	 */
-	public static <T> ArrayList<T> newArrayList(int capacity)
+	public static <T> ArrayList<T> newArrayList(final int capacity)
 	{
 		return new ArrayList<T>(capacity);
 	}
@@ -117,7 +117,7 @@ public class Generics
 	 *            initial capacity
 	 * @return new hash map
 	 */
-	public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap(int initialCapacity)
+	public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap(final int initialCapacity)
 	{
 		return new ConcurrentHashMap<K, V>(initialCapacity);
 	}

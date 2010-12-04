@@ -59,8 +59,8 @@ public class MapVariableInterpolator extends VariableInterpolator
 	 *            <code>${varname}</code> string will be left in the <code>String</code> so that
 	 *            multiple interpolators can be chained
 	 */
-	public MapVariableInterpolator(String string, final Map<?, ?> variables,
-		boolean exceptionOnNullVarValue)
+	public MapVariableInterpolator(final String string, final Map<?, ?> variables,
+		final boolean exceptionOnNullVarValue)
 	{
 		super(string, exceptionOnNullVarValue);
 		this.variables = variables;
@@ -99,7 +99,7 @@ public class MapVariableInterpolator extends VariableInterpolator
 	 *            the variables to substitute
 	 * @return the interpolated <code>String</code>
 	 */
-	public static String interpolate(String string, Map<?, ?> variables)
+	public static String interpolate(final String string, final Map<?, ?> variables)
 	{
 		return new MapVariableInterpolator(string, variables).toString();
 	}

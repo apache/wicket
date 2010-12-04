@@ -53,7 +53,7 @@ public class MultiMap<K, V> extends HashMap<K, List<V>>
 	 * 
 	 * @see HashMap#HashMap(int, float)
 	 */
-	public MultiMap(int initialCapacity, float loadFactor)
+	public MultiMap(final int initialCapacity, final float loadFactor)
 	{
 		super(initialCapacity, loadFactor);
 	}
@@ -65,7 +65,7 @@ public class MultiMap<K, V> extends HashMap<K, List<V>>
 	 * 
 	 * @see HashMap#HashMap(int)
 	 */
-	public MultiMap(int initialCapacity)
+	public MultiMap(final int initialCapacity)
 	{
 		super(initialCapacity);
 	}
@@ -77,7 +77,7 @@ public class MultiMap<K, V> extends HashMap<K, List<V>>
 	 * 
 	 * @see HashMap#HashMap(Map)
 	 */
-	public MultiMap(Map<? extends K, ? extends List<V>> m)
+	public MultiMap(final Map<? extends K, ? extends List<V>> m)
 	{
 		super(m);
 	}
@@ -88,7 +88,7 @@ public class MultiMap<K, V> extends HashMap<K, List<V>>
 	 * @param key
 	 * @param value
 	 */
-	public void addValue(K key, V value)
+	public void addValue(final K key, final V value)
 	{
 		List<V> list = get(key);
 		if (list == null)
@@ -105,7 +105,7 @@ public class MultiMap<K, V> extends HashMap<K, List<V>>
 	 * @param key
 	 * @param value
 	 */
-	public void removeValue(K key, V value)
+	public void removeValue(final K key, final V value)
 	{
 		List<V> list = get(key);
 		if (list != null)
@@ -121,7 +121,7 @@ public class MultiMap<K, V> extends HashMap<K, List<V>>
 	 * @param key
 	 * @param value
 	 */
-	public void replaceValues(K key, V value)
+	public void replaceValues(final K key, final V value)
 	{
 		List<V> list = get(key);
 		if (list != null)
@@ -141,10 +141,10 @@ public class MultiMap<K, V> extends HashMap<K, List<V>>
 	 * @param key
 	 * @return first value
 	 */
-	public V getFirstValue(K key)
+	public V getFirstValue(final K key)
 	{
 		List<V> list = get(key);
-		if (list != null && !list.isEmpty())
+		if ((list != null) && !list.isEmpty())
 		{
 			return list.get(0);
 		}

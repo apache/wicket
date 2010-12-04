@@ -38,7 +38,7 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 	 * 
 	 * @param ignoreFiles
 	 */
-	public XmlLicenseHeaderHandler(List<String> ignoreFiles)
+	public XmlLicenseHeaderHandler(final List<String> ignoreFiles)
 	{
 		super(ignoreFiles);
 	}
@@ -49,7 +49,7 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return "xmlLicense.txt";
 	}
 
-	public boolean checkLicenseHeader(File file)
+	public boolean checkLicenseHeader(final File file)
 	{
 		Revision revision = null;
 
@@ -65,8 +65,8 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 			{
 				// Then only take the first 16 lines
 				String[] headers = header.split(LINE_ENDING);
-			 StringBuilder sb = new StringBuilder();
-				for (int i = 0; i < 16 && i < headers.length; i++)
+				StringBuilder sb = new StringBuilder();
+				for (int i = 0; (i < 16) && (i < headers.length); i++)
 				{
 					if (sb.length() > 0)
 					{
@@ -94,7 +94,7 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 	}
 
 	@Override
-	public boolean addLicenseHeader(File file)
+	public boolean addLicenseHeader(final File file)
 	{
 		boolean added = false;
 
@@ -102,7 +102,7 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		{
 			String content = new org.apache.wicket.util.file.File(file).readString();
 			String xml = "";
-		 StringBuilder newContent = new StringBuilder();
+			StringBuilder newContent = new StringBuilder();
 
 			Matcher mat = xmlHeader.matcher(content);
 			if (mat.matches())

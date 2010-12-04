@@ -57,18 +57,19 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 		private final List<String> suffixes;
 		private final List<String> ignoreFiles;
 
-		private SuffixAndIgnoreFileFilter(List<String> suffixes)
+		private SuffixAndIgnoreFileFilter(final List<String> suffixes)
 		{
 			this(suffixes, null);
 		}
 
-		private SuffixAndIgnoreFileFilter(List<String> suffixes, List<String> ignoreFiles)
+		private SuffixAndIgnoreFileFilter(final List<String> suffixes,
+			final List<String> ignoreFiles)
 		{
 			this.suffixes = suffixes;
 			this.ignoreFiles = ignoreFiles;
 		}
 
-		public boolean accept(File pathname)
+		public boolean accept(final File pathname)
 		{
 			boolean accept = false;
 
@@ -98,7 +99,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 			return accept;
 		}
 
-		private boolean ignoreFile(File pathname)
+		private boolean ignoreFile(final File pathname)
 		{
 			boolean ignore = false;
 
@@ -112,7 +113,8 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 				for (String ignorePath : ignoreFiles)
 				{
 					// Will convert '/'s to '\\'s on Windows
-					ignorePath = Strings.replaceAll(ignorePath, "/", System.getProperty("file.separator")).toString();
+					ignorePath = Strings.replaceAll(ignorePath, "/",
+						System.getProperty("file.separator")).toString();
 					File ignoreFile = new File(baseDirectory, ignorePath);
 
 					// Directory ignore
@@ -149,7 +151,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 	{
 		private final String[] ignoreDirectory = new String[] { ".svn" };
 
-		public boolean accept(File pathname)
+		public boolean accept(final File pathname)
 		{
 			boolean accept = false;
 
@@ -270,12 +272,12 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 			visitFiles(licenseHeaderHandler.getSuffixes(), licenseHeaderHandler.getIgnoreFiles(),
 				new FileVisitor()
 				{
-					public void visitFile(File file)
+					public void visitFile(final File file)
 					{
 						if (licenseHeaderHandler.checkLicenseHeader(file) == false)
 						{
-							if (addHeaders == false ||
-								licenseHeaderHandler.addLicenseHeader(file) == false)
+							if ((addHeaders == false) ||
+								(licenseHeaderHandler.addLicenseHeader(file) == false))
 							{
 								List<File> files = badFiles.get(licenseHeaderHandler);
 
@@ -295,11 +297,11 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 		failIncorrectLicenceHeaders(badFiles);
 	}
 
-	private void failIncorrectLicenceHeaders(Map<ILicenseHeaderHandler, List<File>> files)
+	private void failIncorrectLicenceHeaders(final Map<ILicenseHeaderHandler, List<File>> files)
 	{
 		if (files.size() > 0)
 		{
-		 StringBuilder failString = new StringBuilder();
+			StringBuilder failString = new StringBuilder();
 
 			for (Entry<ILicenseHeaderHandler, List<File>> entry : files.entrySet())
 			{
@@ -337,13 +339,14 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 		}
 	}
 
-	private void visitFiles(List<String> suffixes, List<String> ignoreFiles, FileVisitor fileVisitor)
+	private void visitFiles(final List<String> suffixes, final List<String> ignoreFiles,
+		final FileVisitor fileVisitor)
 	{
 		visitDirectory(suffixes, ignoreFiles, baseDirectory, fileVisitor);
 	}
 
-	private void visitDirectory(List<String> suffixes, List<String> ignoreFiles, File directory,
-		FileVisitor fileVisitor)
+	private void visitDirectory(final List<String> suffixes, final List<String> ignoreFiles,
+		final File directory, final FileVisitor fileVisitor)
 	{
 		File[] files = directory.listFiles(new SuffixAndIgnoreFileFilter(suffixes, ignoreFiles));
 

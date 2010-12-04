@@ -40,7 +40,7 @@ public abstract class AbstractDecimalConverter<N extends Number> extends Abstrac
 	 * @return Returns the numberFormat.
 	 */
 	@Override
-	public NumberFormat getNumberFormat(Locale locale)
+	public NumberFormat getNumberFormat(final Locale locale)
 	{
 		NumberFormat numberFormat = numberFormats.get(locale);
 		if (numberFormat == null)
@@ -58,7 +58,7 @@ public abstract class AbstractDecimalConverter<N extends Number> extends Abstrac
 	 * @param locale
 	 * @return number format
 	 */
-	protected NumberFormat newNumberFormat(Locale locale)
+	protected NumberFormat newNumberFormat(final Locale locale)
 	{
 		return NumberFormat.getInstance(locale);
 	}

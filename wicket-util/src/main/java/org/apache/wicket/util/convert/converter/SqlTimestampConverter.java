@@ -49,7 +49,7 @@ public class SqlTimestampConverter extends AbstractConverter<Timestamp>
 	 * @param dateFormat
 	 *            See java.text.DateFormat for details. Defaults to DateFormat.SHORT
 	 */
-	public SqlTimestampConverter(int dateFormat)
+	public SqlTimestampConverter(final int dateFormat)
 	{
 		this.dateFormat = dateFormat;
 		timeFormat = DateFormat.SHORT;
@@ -63,7 +63,7 @@ public class SqlTimestampConverter extends AbstractConverter<Timestamp>
 	 *            timeFormat See java.text.DateFormat for details. Defaults to DateFormat.SHORT
 	 * @param timeFormat
 	 */
-	public SqlTimestampConverter(int dateFormat, int timeFormat)
+	public SqlTimestampConverter(final int dateFormat, final int timeFormat)
 	{
 		this.dateFormat = dateFormat;
 		this.timeFormat = timeFormat;

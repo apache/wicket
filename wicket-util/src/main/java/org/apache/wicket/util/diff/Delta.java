@@ -110,7 +110,7 @@ public abstract class Delta extends ToString
 	 *            the chunk in the revised text.
 	 * @return Delta
 	 */
-	public static Delta newDelta(Chunk orig, Chunk rev)
+	public static Delta newDelta(final Chunk orig, final Chunk rev)
 	{
 		Class<?> c = DeltaClass[orig.size() > 0 ? 1 : 0][rev.size() > 0 ? 1 : 0];
 		Delta result;
@@ -139,7 +139,7 @@ public abstract class Delta extends ToString
 	 * @param orig
 	 * @param rev
 	 */
-	protected Delta(Chunk orig, Chunk rev)
+	protected Delta(final Chunk orig, final Chunk rev)
 	{
 		init(orig, rev);
 	}
@@ -150,7 +150,7 @@ public abstract class Delta extends ToString
 	 * @param orig
 	 * @param rev
 	 */
-	protected void init(Chunk orig, Chunk rev)
+	protected void init(final Chunk orig, final Chunk rev)
 	{
 		original = orig;
 		revised = rev;
@@ -174,7 +174,7 @@ public abstract class Delta extends ToString
 	 * @throws PatchFailedException
 	 *             if the patch cannot be applied.
 	 */
-	public final void patch(List<Object> target) throws PatchFailedException
+	public final void patch(final List<Object> target) throws PatchFailedException
 	{
 		verify(target);
 		try
@@ -205,7 +205,7 @@ public abstract class Delta extends ToString
 	 *            appended.
 	 */
 	@Override
-	public void toString(StringBuilder s)
+	public void toString(final StringBuilder s)
 	{
 		original.rangeString(s);
 		s.append("x");
@@ -235,7 +235,7 @@ public abstract class Delta extends ToString
 	 *            the string to use as line separator.
 	 * @return String
 	 */
-	public String toRCSString(String EOL)
+	public String toRCSString(final String EOL)
 	{
 		StringBuilder s = new StringBuilder();
 		toRCSString(s, EOL);

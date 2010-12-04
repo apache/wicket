@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
 
 /**
  * A utility class providing helper methods in dealing with web.xml
- *
+ * 
  * @author jcompagner
  * @author Juergen Donnerstag
  */
@@ -52,7 +52,7 @@ public class WebXmlFile
 
 	/**
 	 * Gets Wicket filter path via FilterConfig
-	 *
+	 * 
 	 * @param isServlet
 	 *            true if Servlet, false if Filter
 	 * @param filterConfig
@@ -66,7 +66,7 @@ public class WebXmlFile
 
 	/**
 	 * Gets Wicket filter path via ServletContext and the filter name
-	 *
+	 * 
 	 * @param isServlet
 	 *            true if Servlet, false if Filter
 	 * @param servletContext
@@ -110,7 +110,7 @@ public class WebXmlFile
 	 * web.xml file.
 	 * <p>
 	 * A typical Wicket web.xml entry looks like:
-	 *
+	 * 
 	 * <pre>
 	 * <code>
 	 * &lt;filter&gt;
@@ -121,7 +121,7 @@ public class WebXmlFile
 	 *     &lt;param-value&gt;org.apache.wicket.examples.helloworld.HelloWorldApplication&lt;/param-value&gt;
 	 *   &lt;/init-param&gt;
 	 * &lt;/filter&gt;
-	 *
+	 * 
 	 * &lt;filter-mapping&gt;
 	 *   &lt;filter-name&gt;HelloWorldApplication&lt;/filter-name&gt;
 	 *   &lt;url-pattern&gt;/helloworld/*&lt;/url-pattern&gt;
@@ -130,7 +130,7 @@ public class WebXmlFile
 	 * &lt;/filter-mapping&gt;
 	 * </code>
 	 * </pre>
-	 *
+	 * 
 	 * @param isServlet
 	 *            true if Servlet, false if Filter
 	 * @param filterName
@@ -146,7 +146,8 @@ public class WebXmlFile
 	{
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
-		builder.setEntityResolver(CustomEntityResolver.getPreloaded()); // try to pull DTD from local set of entities
+		builder.setEntityResolver(CustomEntityResolver.getPreloaded()); // try to pull DTD from
+// local set of entities
 		Document document = builder.parse(is);
 
 		String tag = (isServlet ? "servlet" : "filter");
@@ -175,7 +176,7 @@ public class WebXmlFile
 	/**
 	 * Iterate through all children of 'node' and search for a node with name "filterName". Return
 	 * the value of node "url-pattern" if "filterName" was found.
-	 *
+	 * 
 	 * @param filterName
 	 * @param name
 	 * @param node
@@ -217,7 +218,7 @@ public class WebXmlFile
 	/**
 	 * Find a node with name 'mapping' within 'nodeList' and if found continue to search amongst its
 	 * children for a node with 'filterName' and "url-pattern'
-	 *
+	 * 
 	 * @param filterName
 	 * @param mapping
 	 * @param name
