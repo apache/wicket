@@ -19,14 +19,15 @@ package org.apache.wicket.markup.html;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.TagUtils;
-import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.model.IModel;
 
 /**
- * WebMarkupContainer with it's own markup and possibly <wicket:head> tag.
+ * WebMarkupContainer with it's own markup and possibly &lt;wicket:head&gt; tag.
  * 
  * @author Juergen Donnerstag
  */
@@ -46,57 +47,47 @@ public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#Component(String, IModel)
+	 * @see Component#Component(String, IModel)
 	 */
-	public WebMarkupContainerWithAssociatedMarkup(final String id, IModel<?> model)
+	public WebMarkupContainerWithAssociatedMarkup(final String id, final IModel<?> model)
 	{
 		super(id, model);
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
-	 */
 	@Override
-	protected void onComponentTag(ComponentTag tag)
+	protected void onComponentTag(final ComponentTag tag)
 	{
 		// Copy attributes from <wicket:panel> to the "calling" tag
 		IMarkupFragment markup = getMarkup(null);
-		ComponentTag panelTag = (ComponentTag)markup.get(0);
-		for (String key : panelTag.getAttributes().keySet())
+		String namespace = markup.getMarkupResourceStream().getWicketNamespace() + ":";
+
+		MarkupElement elem = markup.get(0);
+		if (elem instanceof ComponentTag)
 		{
-			// exclude "wicket:XX" attributes
-			if (key.startsWith(markup.getMarkupResourceStream().getWicketNamespace() + ":") == false)
+			ComponentTag panelTag = (ComponentTag)elem;
+			for (String key : panelTag.getAttributes().keySet())
 			{
-				tag.append(key, panelTag.getAttribute(key), ", ");
+				// exclude "wicket:XX" attributes
+				if (key.startsWith(namespace) == false)
+				{
+					tag.append(key, panelTag.getAttribute(key), ", ");
+				}
 			}
+		}
+		else
+		{
+			throw new MarkupException(markup.getMarkupResourceStream(),
+				"Expected a Tag but found raw markup: " + elem.toString());
 		}
 
 		super.onComponentTag(tag);
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
+	 * Render the header from the associated markup file
 	 */
 	@Override
-	public void renderHead(HtmlHeaderContainer container)
-	{
-		renderHeadFromAssociatedMarkupFile(container);
-		super.renderHead(container);
-	}
-
-	/**
-	 * Called by components like Panel and Border which have associated Markup and which may have a
-	 * &lt;wicket:head&gt; tag.
-	 * <p>
-	 * Whereas 'this' might be a Panel or Border, the HtmlHeaderContainer parameter has been added
-	 * to the Page as a container for all headers any of its components might wish to contribute.
-	 * <p>
-	 * The headers contributed are rendered in the standard way.
-	 * 
-	 * @param container
-	 *            The HtmlHeaderContainer added to the Page
-	 */
-	protected final void renderHeadFromAssociatedMarkupFile(final HtmlHeaderContainer container)
+	public void renderHead(final HtmlHeaderContainer container)
 	{
 		if (markupHelper == null)
 		{
@@ -104,6 +95,8 @@ public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
 		}
 
 		markupHelper.renderHeadFromAssociatedMarkupFile(container);
+
+		super.renderHead(container);
 	}
 
 	/**
@@ -114,28 +107,30 @@ public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
 	 */
 	public IMarkupFragment findMarkupInAssociatedFileHeader(final Component child)
 	{
+		// Get the associated markup
 		IMarkupFragment markup = getAssociatedMarkup();
 		IMarkupFragment childMarkup = null;
+
+		// MarkupStream is good at searching markup
 		MarkupStream stream = new MarkupStream(markup);
 		while (stream.skipUntil(ComponentTag.class) && (childMarkup == null))
 		{
 			ComponentTag tag = stream.getTag();
-			if (tag instanceof WicketTag)
+			if (TagUtils.isWicketHeadTag(tag))
 			{
-				WicketTag wtag = (WicketTag)tag;
-				if (wtag.isHeadTag())
+				if (tag.getMarkupClass() == null)
 				{
-					if (tag.getMarkupClass() == null)
-					{
-						childMarkup = stream.getMarkupFragment().find(child.getId());
-					}
+					// find() can still fail an return null => continue the search
+					childMarkup = stream.getMarkupFragment().find(child.getId());
 				}
 			}
 			else if (TagUtils.isHeadTag(tag))
 			{
+				// find() can still fail an return null => continue the search
 				childMarkup = stream.getMarkupFragment().find(child.getId());
 			}
 
+			// Must be a direct child. We are not interested in grand children
 			if (tag.isOpen() && !tag.hasNoCloseTag())
 			{
 				stream.skipToMatchingCloseTag(tag);

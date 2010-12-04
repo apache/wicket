@@ -4144,7 +4144,7 @@ public abstract class Component
 	 * @param parent
 	 *            The parent container
 	 */
-	final void setParent(final MarkupContainer parent)
+	public final void setParent(final MarkupContainer parent)
 	{
 		if (this.parent != null && log.isDebugEnabled())
 		{

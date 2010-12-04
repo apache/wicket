@@ -42,7 +42,7 @@ public class WebMarkupContainer extends MarkupContainer
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#Component(String, IModel)
+	 * @see Component#Component(String, IModel)
 	 */
 	public WebMarkupContainer(final String id, IModel<?> model)
 	{

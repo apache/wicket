@@ -42,13 +42,21 @@ public class TagUtils
 	}
 
 	/**
-	 * @return True, if tag name equals '&lt;head ...&gt;'
 	 * 
-	 * @param tag
+	 * @param elem
+	 * @return True, if tag name equals '&lt;head ...&gt;'
 	 */
-	public static final boolean isHeadTag(final ComponentTag tag)
+	public static final boolean isHeadTag(final MarkupElement elem)
 	{
-		return ("head".equalsIgnoreCase(tag.getName()) && (tag.getNamespace() == null));
+		if (elem instanceof ComponentTag)
+		{
+			ComponentTag tag = (ComponentTag)elem;
+			if ("head".equalsIgnoreCase(tag.getName()) && (tag.getNamespace() == null))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -76,6 +84,24 @@ public class TagUtils
 		{
 			WicketTag wtag = (WicketTag)elem;
 			return wtag.isExtendTag();
+		}
+		return false;
+	}
+
+	/**
+	 * 
+	 * @param elem
+	 * @return True if the current markup element is a &lt;wicket:head&gt; tag
+	 */
+	public static final boolean isWicketHeadTag(final MarkupElement elem)
+	{
+		if (elem instanceof WicketTag)
+		{
+			WicketTag wtag = (WicketTag)elem;
+			if (wtag.isHeadTag())
+			{
+				return true;
+			}
 		}
 		return false;
 	}

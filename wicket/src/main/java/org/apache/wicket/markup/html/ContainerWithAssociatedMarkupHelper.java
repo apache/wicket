@@ -16,17 +16,17 @@
  */
 package org.apache.wicket.markup.html;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.TagUtils;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
-import org.apache.wicket.request.Response;
-import org.apache.wicket.response.NullResponse;
 import org.apache.wicket.util.lang.Classes;
 
 
@@ -58,7 +58,7 @@ public class ContainerWithAssociatedMarkupHelper implements IClusterable
 	 * &lt;wicket:head&gt; tag.
 	 * <p>
 	 * Whereas 'this' might be a Panel or Border, the HtmlHeaderContainer parameter has been added
-	 * to the Page as a container for all headers any of its components might wish to contribute.
+	 * to the Page as a container for all headers any of its components might wish to contribute to.
 	 * <p>
 	 * The headers contributed are rendered in the standard way.
 	 * 
@@ -79,14 +79,12 @@ public class ContainerWithAssociatedMarkupHelper implements IClusterable
 		noMoreWicketHeadTagsAllowed = false;
 		while (nextHeaderMarkup(markupStream) != -1)
 		{
-			Class<?> markupClass = markupStream.getTag().getMarkupClass();
-			if (markupClass == null)
-			{
-				markupClass = markupStream.getContainerClass();
-			}
+			// found <wicket:head>
+			String headerId = getHeaderId(container, markupStream);
+
 			// Create a HeaderPartContainer and associate the markup
-			final HeaderPartContainer headerPart = getHeaderPart(markupClass,
-				markupStream.getCurrentIndex());
+			HeaderPartContainer headerPart = getHeaderPart(headerId,
+				markupStream.getMarkupFragment());
 			if (headerPart != null)
 			{
 				// A component's header section must only be added once,
@@ -94,25 +92,9 @@ public class ContainerWithAssociatedMarkupHelper implements IClusterable
 				// to the page or any other container in the hierarchy.
 				if (htmlContainer.okToRenderComponent(headerPart.getScope(), headerPart.getId()))
 				{
-					htmlContainer.autoAdd(headerPart, null);
+					// make sure the Page is accessible
+					headerPart.setParent(htmlContainer);
 					headerPart.render();
-				}
-				else
-				{
-					// TODO Performance: I haven't found a more efficient solution yet.
-					// Already added but all the components in this header part
-					// must be touched (that they are rendered)
-					Response response = container.getRequestCycle().getResponse();
-					try
-					{
-						container.getRequestCycle().setResponse(NullResponse.getInstance());
-						htmlContainer.autoAdd(headerPart, null);
-						headerPart.render();
-					}
-					finally
-					{
-						container.getRequestCycle().setResponse(response);
-					}
 				}
 			}
 
@@ -122,51 +104,55 @@ public class ContainerWithAssociatedMarkupHelper implements IClusterable
 	}
 
 	/**
+	 * 
+	 * @param container
+	 * @param markupStream
+	 * @return The header id
+	 */
+	private String getHeaderId(final Component container, final MarkupStream markupStream)
+	{
+		Class<?> markupClass = markupStream.getTag().getMarkupClass();
+		if (markupClass == null)
+		{
+			markupClass = markupStream.getContainerClass();
+		}
+
+		// create a unique id for the HtmlHeaderContainer
+		StringBuilder builder = new StringBuilder(100);
+		builder.append("_");
+		builder.append(Classes.simpleName(markupClass));
+		if (container.getVariation() != null)
+		{
+			builder.append(container.getVariation());
+		}
+		builder.append("Header");
+		builder.append(markupStream.getCurrentIndex());
+		return builder.toString();
+	}
+
+	/**
 	 * Gets the header part of the Panel/Border. Returns null if it doesn't have a header tag.
 	 * 
-	 * @param index
-	 *            A unique index
-	 * @param markupClass
-	 *            The java class the wicket:head tag is directly associated with
+	 * @param id
+	 * @param markup
 	 * @return the header part for this panel/border or null if it doesn't have a wicket:head tag.
 	 */
-	private final HeaderPartContainer getHeaderPart(final Class<?> markupClass, final int index)
+	private final HeaderPartContainer getHeaderPart(final String id, final IMarkupFragment markup)
 	{
-		// Gracefully getAssociateMarkupStream. Throws no exception in case
-		// markup is not found
-		final MarkupStream markupStream = container.getAssociatedMarkupStream(false);
-
-		// Position markup stream at beginning of header tag
-		markupStream.setCurrentIndex(index);
-
 		// Create a HtmlHeaderContainer for the header tag found
-		final MarkupElement element = markupStream.get();
+		final MarkupElement element = markup.get(0);
 		if (element instanceof WicketTag)
 		{
 			final WicketTag wTag = (WicketTag)element;
 			if ((wTag.isHeadTag() == true) && (wTag.getNamespace() != null))
 			{
-				// found <wicket:head>
-				// create a unique id for the HtmlHeaderContainer to be created
-				final String headerId = "_" + Classes.simpleName(markupClass) +
-					(container.getVariation() == null ? "" : container.getVariation()) + "Header" +
-					index;
-
 				// Create the header container and associate the markup with it
-				String scope = wTag.getAttributes().getString(
-					markupStream.getWicketNamespace() + ":scope");
-				HeaderPartContainer headerContainer = new HeaderPartContainer(headerId, container,
-					scope);
-				headerContainer.setMarkup(markupStream.getMarkupFragment());
-				headerContainer.setRenderBodyOnly(true);
-
-				// The container does have a header component
-				return headerContainer;
+				return new HeaderPartContainer(id, container, markup);
 			}
 		}
 
 		throw new WicketRuntimeException("Programming error: expected a WicketTag: " +
-			markupStream.toString());
+			markup.toString());
 	}
 
 	/**
@@ -200,6 +186,7 @@ public class ContainerWithAssociatedMarkupHelper implements IClusterable
 					return associatedMarkupStream.getCurrentIndex();
 				}
 				// wicket:head must be before border, panel or extend
+				// @TODO why is that? Why can't it be anywhere? (except insight wicket:fragment
 				else if (tag.isOpen() &&
 					(tag.isPanelTag() || tag.isBorderTag() || tag.isExtendTag()))
 				{
@@ -210,11 +197,13 @@ public class ContainerWithAssociatedMarkupHelper implements IClusterable
 			{
 				ComponentTag tag = (ComponentTag)elem;
 				// wicket:head must be before </head>
+				// @TODO why??
 				if (tag.isClose() && TagUtils.isHeadTag(tag))
 				{
 					noMoreWicketHeadTagsAllowed = true;
 				}
 				// wicket:head must be before <body>
+				// @TODO why??
 				else if (tag.isOpen() && TagUtils.isBodyTag(tag))
 				{
 					noMoreWicketHeadTagsAllowed = true;

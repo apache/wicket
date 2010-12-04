@@ -19,8 +19,10 @@ package org.apache.wicket.markup.html;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.resolver.IComponentResolver;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * For each wicket:head tag a HeaderPartContainer is created and added to the HtmlHeaderContainer
@@ -43,14 +45,35 @@ public final class HeaderPartContainer extends WebMarkupContainer implements ICo
 	 *            The component id
 	 * @param container
 	 *            The Panel (or bordered page) the header part is associated with
-	 * @param scope
-	 *            The scope of the wicket:head tag
+	 * @param markup
 	 */
-	public HeaderPartContainer(final String id, final MarkupContainer container, final String scope)
+	public HeaderPartContainer(final String id, final MarkupContainer container,
+		final IMarkupFragment markup)
 	{
 		super(id);
+
+		Args.notNull(container, "container");
+		Args.notNull(markup, "markup");
+
+		setMarkup(markup);
+
 		this.container = container;
-		this.scope = scope;
+
+		scope = getScopeFromMarkup();
+
+		setRenderBodyOnly(true);
+	}
+
+	/**
+	 * 
+	 * @return get "wicket:scope" attribute from &lt;wicket:head&gt; tag
+	 */
+	private String getScopeFromMarkup()
+	{
+		IMarkupFragment markup = getMarkup();
+		String namespace = markup.getMarkupResourceStream().getWicketNamespace();
+		ComponentTag tag = (ComponentTag)markup.get(0);
+		return tag.getAttributes().getString(namespace + ":scope");
 	}
 
 	/**
@@ -64,7 +87,7 @@ public final class HeaderPartContainer extends WebMarkupContainer implements ICo
 	}
 
 	/**
-	 * @see IComponentResolver#resolve(MarkupContainer, MarkupStream, ComponentTag)
+	 * The tag must be resolved against the panel and not against the page
 	 */
 	public final Component resolve(final MarkupContainer container,
 		final MarkupStream markupStream, final ComponentTag tag)
