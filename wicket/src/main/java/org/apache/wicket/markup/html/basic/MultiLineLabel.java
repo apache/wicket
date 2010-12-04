@@ -72,23 +72,18 @@ public class MultiLineLabel extends WebComponent
 		super(id, model);
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
-	 */
 	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		final CharSequence body = Strings.toMultilineMarkup(getDefaultModelObjectAsString());
+		CharSequence body = Strings.toMultilineMarkup(getDefaultModelObjectAsString());
 		replaceComponentTagBody(markupStream, openTag, body);
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
-	 */
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
+
 		// always transform the tag to <span></span> so even labels defined as <span/> render
 		tag.setType(TagType.OPEN);
 	}

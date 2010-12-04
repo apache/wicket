@@ -148,7 +148,7 @@ public class Fragment extends WebMarkupContainer
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Skip the components body. It will be replaced by the fragment
-		if (((ComponentTag)markupStream.get(markupStream.getCurrentIndex() - 1)).isOpen())
+		if (markupStream.getPreviousTag().isOpen())
 		{
 			markupStream.skipRawMarkup();
 		}

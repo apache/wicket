@@ -363,9 +363,7 @@ public class WicketMessageResolver implements IComponentResolver
 			Map<String, CharSequence> childTags = new HashMap<String, CharSequence>();
 
 			// get original tag from markup because we modified openTag to always be open
-			markupStream.setCurrentIndex(markupStream.getCurrentIndex() - 1);
-			ComponentTag tag = markupStream.getTag();
-			markupStream.next();
+			ComponentTag tag = markupStream.getPreviousTag();
 
 			// if the tag is of form <wicket:message>{foo}</wicket:message> then scan for any
 			// child component and save their tag index

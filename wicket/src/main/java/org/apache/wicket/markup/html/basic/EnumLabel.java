@@ -73,10 +73,6 @@ public class EnumLabel<T extends Enum<T>> extends WebComponent
 		super(id, model);
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-	 *      org.apache.wicket.markup.ComponentTag)
-	 */
 	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
@@ -115,9 +111,6 @@ public class EnumLabel<T extends Enum<T>> extends WebComponent
 		return "";
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
-	 */
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{

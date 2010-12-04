@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.basic;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.util.lang.Args;
 
 
 /**
@@ -62,10 +63,7 @@ public class EnclosureContainer extends WebMarkupContainer
 	{
 		super(id);
 
-		if (child == null)
-		{
-			throw new NullPointerException("Parameter 'child' must not be null");
-		}
+		Args.notNull(child, "child");
 
 		this.child = child;
 
@@ -73,9 +71,6 @@ public class EnclosureContainer extends WebMarkupContainer
 		setRenderBodyOnly(true);
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#isVisible()
-	 */
 	@Override
 	public boolean isVisible()
 	{

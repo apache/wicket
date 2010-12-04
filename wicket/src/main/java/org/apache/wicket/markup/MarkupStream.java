@@ -506,6 +506,22 @@ public class MarkupStream
 	}
 
 	/**
+	 * Sometime its necessary to get the previous markup element versus the current one.
+	 * 
+	 * @return The previous element (currentIndex - 1)
+	 */
+	public final ComponentTag getPreviousTag()
+	{
+		MarkupElement elem = get(currentIndex - 1);
+		if ((elem instanceof ComponentTag) == false)
+		{
+			throwMarkupException("Tag expected");
+		}
+
+		return (ComponentTag)elem;
+	}
+
+	/**
 	 * Throws a new markup exception
 	 * 
 	 * @param message

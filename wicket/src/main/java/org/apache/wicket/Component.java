@@ -3851,9 +3851,7 @@ public abstract class Component
 		{
 			// Get what tag was in the markup; not what the user it might
 			// have changed it to.
-			markupStream.setCurrentIndex(markupStream.getCurrentIndex() - 1);
-			markupOpenTag = markupStream.getTag();
-			markupStream.next();
+			markupOpenTag = markupStream.getPreviousTag();
 
 			// If it was an open tag in the markup as well, than ...
 			if (markupOpenTag.isOpen())
