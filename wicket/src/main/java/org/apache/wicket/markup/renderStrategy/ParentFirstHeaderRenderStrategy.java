@@ -43,10 +43,6 @@ public class ParentFirstHeaderRenderStrategy extends AbstractHeaderRenderStrateg
 	{
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.renderStrategy.AbstractHeaderRenderStrategy#renderChildHeaders(org.apache.wicket.markup.html.internal.HtmlHeaderContainer,
-	 *      org.apache.wicket.Component)
-	 */
 	@Override
 	protected void renderChildHeaders(final HtmlHeaderContainer headerContainer,
 		final Component rootComponent)

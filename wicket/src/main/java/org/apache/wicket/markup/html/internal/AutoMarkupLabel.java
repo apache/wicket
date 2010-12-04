@@ -43,7 +43,6 @@ class AutoMarkupLabel extends WebComponent
 		setAuto(true);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{

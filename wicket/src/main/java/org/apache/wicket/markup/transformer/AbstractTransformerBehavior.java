@@ -58,19 +58,12 @@ public abstract class AbstractTransformerBehavior extends Behavior implements IT
 		return new BufferedWebResponse(originalResponse);
 	}
 
-	/**
-	 * @see org.apache.wicket.behavior.Behavior#onComponentTag(org.apache.wicket.Component,
-	 *      org.apache.wicket.markup.ComponentTag)
-	 */
 	@Override
 	public void onComponentTag(final Component component, final ComponentTag tag)
 	{
 		tag.put("xmlns:wicket", "http://wicket.apache.org");
 	}
 
-	/**
-	 * @see org.apache.wicket.behavior.AbstractBehavior#beforeRender(org.apache.wicket.Component)
-	 */
 	@Override
 	public void beforeRender(Component component)
 	{
@@ -93,7 +86,7 @@ public abstract class AbstractTransformerBehavior extends Behavior implements IT
 	}
 
 	@Override
-	public void afterRender(Component component)
+	public void afterRender(final Component component)
 	{
 		final RequestCycle requestCycle = RequestCycle.get();
 
@@ -117,7 +110,6 @@ public abstract class AbstractTransformerBehavior extends Behavior implements IT
 		}
 	}
 
-
 	@Override
 	public void detach(Component component)
 	{
@@ -125,11 +117,6 @@ public abstract class AbstractTransformerBehavior extends Behavior implements IT
 		super.detach(component);
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.transformer.ITransformer#transform(org.apache.wicket.Component,
-	 *      CharSequence)
-	 */
 	public abstract CharSequence transform(final Component component, final CharSequence output)
 		throws Exception;
 }

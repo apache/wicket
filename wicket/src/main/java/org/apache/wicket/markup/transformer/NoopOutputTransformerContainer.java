@@ -49,11 +49,6 @@ public class NoopOutputTransformerContainer extends AbstractOutputTransformerCon
 		super(id, model);
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.transformer.ITransformer#transform(org.apache.wicket.Component,
-	 *      CharSequence)
-	 */
 	@Override
 	public CharSequence transform(final Component component, final CharSequence output)
 	{

@@ -69,10 +69,6 @@ public final class AutoComponentResolver implements IComponentResolver
 	 */
 	private final Map<Component, MarkupContainer> nestedComponents = new HashMap<Component, MarkupContainer>();
 
-	/**
-	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
-	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
-	 */
 	public final Component resolve(final MarkupContainer container,
 		final MarkupStream markupStream, final ComponentTag tag)
 	{
@@ -279,7 +275,7 @@ public final class AutoComponentResolver implements IComponentResolver
 		final Class<?> paramClass = parameterClasses[0];
 		try
 		{
-			final IConverter converter = Application.get()
+			final IConverter<?> converter = Application.get()
 				.getConverterLocator()
 				.getConverter(paramClass);
 			final Object param = converter.convertToObject(value, locale);

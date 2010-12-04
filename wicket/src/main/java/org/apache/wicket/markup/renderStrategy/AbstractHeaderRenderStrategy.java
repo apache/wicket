@@ -99,10 +99,6 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 	{
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.renderStrategy.IHeaderRenderStrategy#renderHeader(org.apache.wicket.markup.html.internal.HtmlHeaderContainer,
-	 *      org.apache.wicket.Component)
-	 */
 	public void renderHeader(final HtmlHeaderContainer headerContainer,
 		final Component rootComponent)
 	{

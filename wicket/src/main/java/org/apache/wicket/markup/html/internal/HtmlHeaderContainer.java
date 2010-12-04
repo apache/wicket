@@ -105,9 +105,6 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 	 * First render the body of the component. And if it is the header component of a Page (compared
 	 * to a Panel or Border), than get the header sections from all component in the hierarchy and
 	 * render them as well.
-	 * 
-	 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override
 	protected final void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
@@ -232,10 +229,6 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 		return true;
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.Component#onDetach()
-	 */
 	@Override
 	protected void onDetach()
 	{
@@ -276,9 +269,6 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 		return headerResponse;
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#getMarkup()
-	 */
 	@Override
 	public IMarkupFragment getMarkup()
 	{

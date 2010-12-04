@@ -28,8 +28,9 @@ import org.apache.wicket.model.Model;
  * with an associated markup and must have a filename equal to the component's id.
  * <p>
  * The containers tag will be the root element of the xml data applied for transformation to ensure
- * the xml data are well formed (single root element). In addition the attribute <code>xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.3-strict.dtd</code>
- * is added to the root element to allow the XSL processor to handle the wicket namespace.
+ * the xml data are well formed (single root element). In addition the attribute
+ * <code>xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.3-strict.dtd</code> is added
+ * to the root element to allow the XSL processor to handle the wicket namespace.
  * <p>
  * Similar to this container, a <code>IBehavior</code> is available which does the same, but does
  * not require an additional Container.
@@ -102,21 +103,12 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 		this(id, null, null);
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.MarkupContainer#getMarkupType()
-	 */
 	@Override
 	public MarkupType getMarkupType()
 	{
 		return new MarkupType("xsl", null);
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.transformer.ITransformer#transform(org.apache.wicket.Component,
-	 *      CharSequence)
-	 */
 	@Override
 	public CharSequence transform(final Component component, final CharSequence output)
 		throws Exception

@@ -72,9 +72,6 @@ public abstract class Panel extends WebMarkupContainerWithAssociatedMarkup
 		WicketTagIdentifier.registerWellKnownTagName(PANEL);
 	}
 
-	/** If if tag was an open-close tag */
-	private transient boolean wasOpenCloseTag = false;
-
 	/**
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
@@ -91,29 +88,19 @@ public abstract class Panel extends WebMarkupContainerWithAssociatedMarkup
 		super(id, model);
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
-	 */
 	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		if (tag.isOpenClose())
 		{
-			wasOpenCloseTag = true;
-
 			// Convert <span wicket:id="myPanel" /> into
 			// <span wicket:id="myPanel">...</span>
 			tag.setType(TagType.OPEN);
+			tag.setModified(true);
 		}
 		super.onComponentTag(tag);
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-	 *      org.apache.wicket.markup.ComponentTag)
-	 */
 	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
@@ -121,7 +108,7 @@ public abstract class Panel extends WebMarkupContainerWithAssociatedMarkup
 		renderAssociatedMarkup(PANEL,
 			"Markup for a panel component has to contain part '<wicket:panel>'");
 
-		if (wasOpenCloseTag == false)
+		if (markupStream.getPreviousTag().isOpen())
 		{
 			// Skip any raw markup in the body
 			markupStream.skipRawMarkup();
@@ -133,9 +120,6 @@ public abstract class Panel extends WebMarkupContainerWithAssociatedMarkup
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.MarkupContainer#getMarkup(org.apache.wicket.Component)
-	 */
 	@Override
 	public IMarkupFragment getMarkup(final Component child)
 	{

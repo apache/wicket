@@ -33,13 +33,15 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 
 /**
  * This is a behavior implementation that can be used if you have markup that should be around a
  * component. It works just like {@link Border} so you have to have a <wicket:border>HTML
- * before<wicket:body/>HTML after</wicket:border> in the html of your subclass.
+ * before<wicket:body/>HTML after</wicket:border> in the html of your subclass. But different than
+ * Border you can not add components to the Border markup, only to the BorderBody.
  * 
  * @author jcompagner
  */
@@ -59,9 +61,6 @@ public class MarkupComponentBorder extends Behavior
 	// needed position because renderBefore has executed
 	private transient MarkupStream markupStream;
 
-	/**
-	 * @see org.apache.wicket.behavior.AbstractBehavior#beforeRender(org.apache.wicket.Component)
-	 */
 	@Override
 	public void beforeRender(final Component component)
 	{
@@ -72,14 +71,14 @@ public class MarkupComponentBorder extends Behavior
 		boolean insideBorderMarkup = false;
 		while (stream.hasMore())
 		{
-			MarkupElement e = stream.get();
+			MarkupElement elem = stream.get();
 			stream.next();
-			if (e instanceof WicketTag)
+			if (elem instanceof WicketTag)
 			{
-				WicketTag wt = (WicketTag)e;
+				WicketTag wTag = (WicketTag)elem;
 				if (!insideBorderMarkup)
 				{
-					if (wt.isBorderTag() && wt.isOpen())
+					if (wTag.isBorderTag() && wTag.isOpen())
 					{
 						insideBorderMarkup = true;
 						continue;
@@ -88,13 +87,13 @@ public class MarkupComponentBorder extends Behavior
 					{
 						throw new WicketRuntimeException(
 							"Unexpected tag encountered in markup of component border " +
-								getClass().getName() + ". Tag: " + wt.toString() +
+								getClass().getName() + ". Tag: " + wTag.toString() +
 								", expected tag: <wicket:border>");
 					}
 				}
 				else
 				{
-					if (wt.isBodyTag())
+					if (wTag.isBodyTag())
 					{
 						break;
 					}
@@ -102,14 +101,14 @@ public class MarkupComponentBorder extends Behavior
 					{
 						throw new WicketRuntimeException(
 							"Unexpected tag encountered in markup of component border " +
-								getClass().getName() + ". Tag: " + wt.toString() +
+								getClass().getName() + ". Tag: " + wTag.toString() +
 								", expected tag: <wicket:body> or </wicket:body>");
 					}
 				}
 			}
 			if (insideBorderMarkup)
 			{
-				response.write(e.toCharSequence());
+				response.write(elem.toCharSequence());
 			}
 		}
 
@@ -120,9 +119,6 @@ public class MarkupComponentBorder extends Behavior
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.behavior.AbstractBehavior#afterRender(org.apache.wicket.Component)
-	 */
 	@Override
 	public void afterRender(final Component component)
 	{
@@ -131,12 +127,12 @@ public class MarkupComponentBorder extends Behavior
 
 		while (stream.hasMore())
 		{
-			MarkupElement e = stream.get();
+			MarkupElement elem = stream.get();
 			stream.next();
-			if (e instanceof WicketTag)
+			if (elem instanceof WicketTag)
 			{
-				WicketTag wt = (WicketTag)e;
-				if (wt.isBorderTag() && wt.isClose())
+				WicketTag wTag = (WicketTag)elem;
+				if (wTag.isBorderTag() && wTag.isClose())
 				{
 					break;
 				}
@@ -144,11 +140,11 @@ public class MarkupComponentBorder extends Behavior
 				{
 					throw new WicketRuntimeException(
 						"Unexpected tag encountered in markup of component border " +
-							getClass().getName() + ". Tag: " + wt.toString() +
+							getClass().getName() + ". Tag: " + wTag.toString() +
 							", expected tag: </wicket:border>");
 				}
 			}
-			response.write(e.toCharSequence());
+			response.write(elem.toCharSequence());
 		}
 	}
 
@@ -250,7 +246,7 @@ public class MarkupComponentBorder extends Behavior
 	 * @param component
 	 * @return markup type
 	 */
-	private String getMarkupType(Component component)
+	private String getMarkupType(final Component component)
 	{
 		String extension;
 		if (component instanceof MarkupContainer)

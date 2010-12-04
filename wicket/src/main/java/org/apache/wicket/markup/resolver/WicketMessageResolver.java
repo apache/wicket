@@ -111,10 +111,6 @@ public class WicketMessageResolver implements IComponentResolver
 	 */
 	private static final String DEFAULT_VALUE = "DEFAULT_WICKET_MESSAGE_RESOLVER_VALUE";
 
-	/**
-	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
-	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
-	 */
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
@@ -182,19 +178,12 @@ public class WicketMessageResolver implements IComponentResolver
 			setEscapeModelStrings(false);
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
-		 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
-		 */
 		public Component resolve(MarkupContainer container, MarkupStream markupStream,
 			ComponentTag tag)
 		{
 			return getParent().get(tag.getId());
 		}
 
-		/**
-		 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
-		 */
 		@Override
 		protected void onComponentTag(final ComponentTag tag)
 		{
@@ -206,11 +195,6 @@ public class WicketMessageResolver implements IComponentResolver
 			super.onComponentTag(tag);
 		}
 
-		/**
-		 * 
-		 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-		 *      org.apache.wicket.markup.ComponentTag)
-		 */
 		@Override
 		protected void onComponentTagBody(final MarkupStream markupStream,
 			final ComponentTag openTag)
@@ -240,14 +224,6 @@ public class WicketMessageResolver implements IComponentResolver
 				{
 					getResponse().write(formatedNotFound);
 				}
-// else if (markupStream.get() instanceof RawMarkup)
-// {
-// String text = markupStream.get().toString().trim();
-// if (Strings.isEmpty(text))
-// {
-// getResponse().write(formatedNotFound);
-// }
-// }
 				super.onComponentTagBody(markupStream, openTag);
 			}
 		}
@@ -273,9 +249,6 @@ public class WicketMessageResolver implements IComponentResolver
 			// Replace all ${var} within the property value with real values
 			String text = new MapVariableInterpolator(value, childTags)
 			{
-				/**
-				 * @see org.apache.wicket.util.string.interpolator.MapVariableInterpolator#getValue(java.lang.String)
-				 */
 				@Override
 				protected String getValue(final String variableName)
 				{

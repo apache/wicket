@@ -90,18 +90,9 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 		return new StringResponse();
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.transformer.ITransformer#transform(org.apache.wicket.Component,
-	 *      CharSequence)
-	 */
 	public abstract CharSequence transform(final Component component, final CharSequence output)
 		throws Exception;
 
-	/**
-	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-	 *      org.apache.wicket.markup.ComponentTag)
-	 */
 	@Override
 	protected final void onComponentTagBody(final MarkupStream markupStream,
 		final ComponentTag openTag)
@@ -124,9 +115,6 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onRender()
-	 */
 	@Override
 	protected final void onRender()
 	{

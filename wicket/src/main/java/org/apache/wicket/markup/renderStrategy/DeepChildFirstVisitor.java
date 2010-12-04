@@ -94,9 +94,6 @@ public abstract class DeepChildFirstVisitor implements IVisitor<Component, Void>
 		return visit;
 	}
 
-	/**
-	 * @see org.apache.wicket.IVisitor#component(org.apache.wicket.Component)
-	 */
 	public abstract void component(Component component, IVisit<Void> visit);
 
 	/**

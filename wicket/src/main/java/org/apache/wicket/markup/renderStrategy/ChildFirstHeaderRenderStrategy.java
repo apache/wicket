@@ -42,10 +42,6 @@ public class ChildFirstHeaderRenderStrategy extends AbstractHeaderRenderStrategy
 	{
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.renderStrategy.AbstractHeaderRenderStrategy#renderHeader(org.apache.wicket.markup.html.internal.HtmlHeaderContainer,
-	 *      org.apache.wicket.Component)
-	 */
 	@Override
 	public void renderHeader(final HtmlHeaderContainer headerContainer,
 		final Component rootComponent)

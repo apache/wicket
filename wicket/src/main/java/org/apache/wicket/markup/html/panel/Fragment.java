@@ -126,8 +126,6 @@ public class Fragment extends WebMarkupContainer
 
 	/**
 	 * Make sure we open up open-close tags to open-body-close
-	 * 
-	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override
 	protected void onComponentTag(final ComponentTag tag)
@@ -135,15 +133,11 @@ public class Fragment extends WebMarkupContainer
 		if (tag.isOpenClose())
 		{
 			tag.setType(TagType.OPEN);
+			tag.setModified(true);
 		}
 		super.onComponentTag(tag);
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-	 *      org.apache.wicket.markup.ComponentTag)
-	 */
 	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
@@ -158,8 +152,6 @@ public class Fragment extends WebMarkupContainer
 
 	/**
 	 * Render the markup starting at the current position of the markup strean
-	 * 
-	 * @see #onComponentTagBody(MarkupStream, ComponentTag)
 	 * 
 	 * @param openTag
 	 */
@@ -204,9 +196,6 @@ public class Fragment extends WebMarkupContainer
 		return getMarkupProvider().getMarkup(null);
 	}
 
-	/**
-	 * @see org.apache.wicket.MarkupContainer#getMarkup(org.apache.wicket.Component)
-	 */
 	@Override
 	public IMarkupFragment getMarkup(final Component child)
 	{

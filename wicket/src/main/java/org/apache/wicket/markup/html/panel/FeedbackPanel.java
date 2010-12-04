@@ -62,10 +62,6 @@ public class FeedbackPanel extends Panel implements IFeedback
 			setDefaultModel(newFeedbackMessagesModel());
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.html.list.ListView#populateItem(org.apache.wicket.markup.html
-		 *      .list.ListItem)
-		 */
 		@Override
 		protected void populateItem(final ListItem<FeedbackMessage> listItem)
 		{
@@ -138,7 +134,6 @@ public class FeedbackPanel extends Panel implements IFeedback
 			setFilter(filter);
 		}
 	}
-
 
 	/**
 	 * Search messages that this panel will render, and see if there is any message of level ERROR

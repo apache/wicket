@@ -157,10 +157,6 @@ public class Include extends WebComponent
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-	 *      org.apache.wicket.markup.ComponentTag)
-	 */
 	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
@@ -221,7 +217,7 @@ public class Include extends WebComponent
 	{
 		// make the url absolute
 		HttpServletRequest req = ((ServletWebRequest)getRequest()).getHttpServletRequest();
-	 StringBuilder buildUrl = new StringBuilder(url.length());
+		StringBuilder buildUrl = new StringBuilder(url.length());
 		String scheme = req.getScheme();
 		int port = req.getServerPort();
 		buildUrl.append(scheme); // http, https

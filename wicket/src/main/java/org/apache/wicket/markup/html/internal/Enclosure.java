@@ -116,9 +116,6 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 		this.childId = childId;
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onInitialize()
-	 */
 	@Override
 	protected void onInitialize()
 	{
@@ -156,10 +153,6 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 		return parent;
 	}
 
-	/**
-	 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-	 *      org.apache.wicket.markup.ComponentTag)
-	 */
 	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
@@ -248,11 +241,6 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 		return controller;
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
-	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
-	 */
 	public Component resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
 		if (childId.equals(tag.getId()))
