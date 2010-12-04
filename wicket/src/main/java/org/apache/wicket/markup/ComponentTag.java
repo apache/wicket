@@ -747,7 +747,6 @@ public class ComponentTag extends MarkupElement
 		this.modified = modified;
 	}
 
-
 	/**
 	 * 
 	 * @return True, if the component tag has been marked modified

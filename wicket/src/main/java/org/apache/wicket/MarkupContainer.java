@@ -696,7 +696,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	public final void renderAssociatedMarkup(final String openTagName, final String exceptionMessage)
 	{
-		// Get markup associated with Border or Panel component
+		// Get associated markup file for the Border or Panel component
 		final MarkupStream associatedMarkupStream = new MarkupStream(getMarkup(null));
 
 		// Get open tag in associated markup of border component
@@ -722,7 +722,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 			String className = null;
 
-			if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
+			final boolean outputClassName = getApplication().getDebugSettings()
+				.isOutputMarkupContainerClassName();
+			if (outputClassName)
 			{
 				Class<?> klass = getClass();
 				while (klass.isAnonymousClass())
@@ -737,7 +739,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 			renderComponentTagBody(associatedMarkupStream, associatedMarkupOpenTag);
 
-			if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
+			if (outputClassName)
 			{
 				getResponse().write("<!-- MARKUP FOR ");
 				getResponse().write(className);

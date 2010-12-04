@@ -105,4 +105,40 @@ public class TagUtils
 		}
 		return false;
 	}
+
+	/**
+	 * 
+	 * @param elem
+	 * @return True if the current markup element is a &lt;wicket:body&gt; tag
+	 */
+	public static final boolean isWicketBodyTag(final MarkupElement elem)
+	{
+		if (elem instanceof WicketTag)
+		{
+			WicketTag wtag = (WicketTag)elem;
+			if (wtag.isBodyTag())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 
+	 * @param elem
+	 * @return True if the current markup element is a &lt;wicket:border&gt; tag
+	 */
+	public static final boolean isWicketBorderTag(final MarkupElement elem)
+	{
+		if (elem instanceof WicketTag)
+		{
+			WicketTag wtag = (WicketTag)elem;
+			if (wtag.isBorderTag())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }
