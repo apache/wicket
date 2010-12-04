@@ -27,7 +27,7 @@ import java.util.Map;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.parser.XmlTag;
-import org.apache.wicket.markup.parser.XmlTag.Type;
+import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.parser.filter.HtmlHandler;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -109,7 +109,7 @@ public class ComponentTag extends MarkupElement
 	 * @param type
 	 *            The type of tag
 	 */
-	public ComponentTag(final String name, final XmlTag.Type type)
+	public ComponentTag(final String name, final XmlTag.TagType type)
 	{
 		final XmlTag tag = new XmlTag();
 		tag.setName(name);
@@ -311,13 +311,9 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * 
-	 * @see org.apache.wicket.markup.parser.XmlTag#getType()
 	 * @return the tag type (OPEN, CLOSE or OPEN_CLOSE).
 	 */
-	public final Type getType()
+	public final TagType getType()
 	{
 		return xmlTag.getType();
 	}
@@ -611,7 +607,7 @@ public class ComponentTag extends MarkupElement
 	 * @param type
 	 *            The new type
 	 */
-	public final void setType(final Type type)
+	public final void setType(final TagType type)
 	{
 		xmlTag.setType(type);
 	}
@@ -667,7 +663,7 @@ public class ComponentTag extends MarkupElement
 	{
 		response.write("<");
 
-		if (getType() == XmlTag.CLOSE)
+		if (getType() == TagType.CLOSE)
 		{
 			response.write("/");
 		}
@@ -713,7 +709,7 @@ public class ComponentTag extends MarkupElement
 			}
 		}
 
-		if (getType() == XmlTag.OPEN_CLOSE)
+		if (getType() == TagType.OPEN_CLOSE)
 		{
 			response.write("/");
 		}

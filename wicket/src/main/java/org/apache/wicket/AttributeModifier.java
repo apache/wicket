@@ -18,7 +18,7 @@ package org.apache.wicket;
 
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.value.IValueMap;
@@ -225,7 +225,7 @@ public class AttributeModifier extends Behavior implements IClusterable
 	@Override
 	public final void onComponentTag(Component component, ComponentTag tag)
 	{
-		if (tag.getType() != XmlTag.CLOSE)
+		if (tag.getType() != TagType.CLOSE)
 		{
 			replaceAttributeValue(component, tag);
 		}

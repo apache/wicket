@@ -28,7 +28,7 @@ import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
-import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Response;
@@ -201,7 +201,7 @@ public class WicketMessageResolver implements IComponentResolver
 			// Convert <wicket:message /> into <wicket:message>...</wicket:message>
 			if (tag.isOpenClose())
 			{
-				tag.setType(XmlTag.OPEN);
+				tag.setType(TagType.OPEN);
 			}
 			super.onComponentTag(tag);
 		}

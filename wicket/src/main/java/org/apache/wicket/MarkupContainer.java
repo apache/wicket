@@ -1504,7 +1504,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	@Override
 	protected void onRender()
 	{
-		renderComponent();
+		internalRenderComponent();
 	}
 
 	/**

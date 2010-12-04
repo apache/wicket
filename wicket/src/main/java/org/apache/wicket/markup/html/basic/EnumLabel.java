@@ -19,15 +19,15 @@ package org.apache.wicket.markup.html.basic;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebComponent;
-import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 /**
  * A Label component that is used to render an enum value. The value renderered will be the result
- * of a i18n resource lookup of the following form: {@code
- * <value.getClass().getSimpleName()>.<value.name()>}, this format can be changed by overriding
- * {@link #resourceKey(Enum)}
+ * of a i18n resource lookup of the following form:
+ * {@code <value.getClass().getSimpleName()>.<value.name()>}, this format can be changed by
+ * overriding {@link #resourceKey(Enum)}
  * 
  * @author igor.vaynberg
  * @param <T>
@@ -123,7 +123,7 @@ public class EnumLabel<T extends Enum<T>> extends WebComponent
 	{
 		super.onComponentTag(tag);
 		// always transform the tag to <span></span> so even labels defined as <span/> render
-		tag.setType(XmlTag.OPEN);
+		tag.setType(TagType.OPEN);
 	}
 
 	/**

@@ -29,7 +29,6 @@ import org.apache.wicket.model.IModel;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
- * 
  */
 public class WebComponent extends Component
 {
@@ -51,12 +50,9 @@ public class WebComponent extends Component
 		super(id, model);
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onRender()
-	 */
 	@Override
 	protected void onRender()
 	{
-		renderComponent();
+		internalRenderComponent();
 	}
 }

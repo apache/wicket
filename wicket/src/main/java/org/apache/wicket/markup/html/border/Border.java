@@ -29,7 +29,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
-import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
@@ -437,9 +437,9 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		protected void onComponentTag(final ComponentTag tag)
 		{
 			// Convert open-close to open-body-close
-			if (tag.getType() == XmlTag.OPEN_CLOSE)
+			if (tag.getType() == TagType.OPEN_CLOSE)
 			{
-				tag.setType(XmlTag.OPEN);
+				tag.setType(TagType.OPEN);
 				tag.setModified(true);
 				wasOpenCloseTag = true;
 			}

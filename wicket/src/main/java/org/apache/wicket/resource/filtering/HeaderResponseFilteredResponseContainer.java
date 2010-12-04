@@ -19,7 +19,7 @@ package org.apache.wicket.resource.filtering;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.markup.parser.XmlTag.TagType;
 
 /**
  * A container that renders the content that was bucketed into a certain bucket by
@@ -55,7 +55,7 @@ public class HeaderResponseFilteredResponseContainer extends WebMarkupContainer
 	{
 		super.onComponentTag(tag);
 		// force this into an open-close tag rather than a self-closing tag
-		tag.setType(XmlTag.OPEN);
+		tag.setType(TagType.OPEN);
 	}
 
 	@Override

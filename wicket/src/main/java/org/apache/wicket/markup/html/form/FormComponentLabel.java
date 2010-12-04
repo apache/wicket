@@ -18,7 +18,7 @@ package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.markup.parser.XmlTag.TagType;
 
 /**
  * A component that represents html &lt;label&gt; tag. This component will automatically make the
@@ -62,7 +62,7 @@ public class FormComponentLabel extends WebMarkupContainer
 		checkComponentTag(tag, "label");
 		tag.put("for", component.getMarkupId());
 		// always transform the tag to <span></span> so even labels defined as <span/> render
-		tag.setType(XmlTag.OPEN);
+		tag.setType(TagType.OPEN);
 	}
 
 	/**

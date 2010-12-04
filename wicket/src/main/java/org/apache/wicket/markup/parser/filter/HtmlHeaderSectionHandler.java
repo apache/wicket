@@ -21,7 +21,7 @@ import java.text.ParseException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
-import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.markup.parser.XmlTag.TagType;
 
 
 /**
@@ -118,12 +118,12 @@ public final class HtmlHeaderSectionHandler extends BaseMarkupFilter
 	private void insertHeadTag()
 	{
 		// Note: only the open-tag must be a AutoComponentTag
-		final ComponentTag openTag = new ComponentTag(HEAD, XmlTag.OPEN);
+		final ComponentTag openTag = new ComponentTag(HEAD, TagType.OPEN);
 		openTag.setId(HEADER_ID);
 		openTag.setAutoComponentTag(true);
 		openTag.setModified(true);
 
-		final ComponentTag closeTag = new ComponentTag(HEAD, XmlTag.CLOSE);
+		final ComponentTag closeTag = new ComponentTag(HEAD, TagType.CLOSE);
 		closeTag.setOpenTag(openTag);
 		closeTag.setModified(true);
 

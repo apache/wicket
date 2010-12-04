@@ -19,7 +19,7 @@ package org.apache.wicket.markup.html.basic;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebComponent;
-import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -122,6 +122,6 @@ public class Label extends WebComponent
 	{
 		super.onComponentTag(tag);
 		// always transform the tag to <span></span> so even labels defined as <span/> render
-		tag.setType(XmlTag.OPEN);
+		tag.setType(TagType.OPEN);
 	}
 }

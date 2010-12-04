@@ -25,7 +25,7 @@ import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
-import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.model.IModel;
 
@@ -104,7 +104,7 @@ public abstract class Panel extends WebMarkupContainerWithAssociatedMarkup
 
 			// Convert <span wicket:id="myPanel" /> into
 			// <span wicket:id="myPanel">...</span>
-			tag.setType(XmlTag.OPEN);
+			tag.setType(TagType.OPEN);
 		}
 		super.onComponentTag(tag);
 	}

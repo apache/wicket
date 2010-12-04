@@ -19,7 +19,7 @@ package org.apache.wicket.markup.html.basic;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.markup.parser.XmlTag.TagType;
 
 
 /**
@@ -84,7 +84,7 @@ public class SimplePage_16 extends WebPage
 				tag.setName("test");
 				if (tag.isOpenClose())
 				{
-					tag.setType(XmlTag.OPEN);
+					tag.setType(TagType.OPEN);
 				}
 				super.onComponentTag(tag);
 			}

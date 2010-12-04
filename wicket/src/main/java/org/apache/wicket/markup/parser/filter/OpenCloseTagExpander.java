@@ -23,7 +23,7 @@ import java.util.List;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
-import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.markup.parser.XmlTag.TagType;
 
 /**
  * MarkupFilter that expands certain open-close tag as separate open and close tags. Firefox, unless
@@ -75,7 +75,7 @@ public class OpenCloseTagExpander extends AbstractMarkupFilter
 			{
 				if (onFound(tag))
 				{
-					next = new ComponentTag(tag.getName(), XmlTag.CLOSE);
+					next = new ComponentTag(tag.getName(), TagType.CLOSE);
 					next.setNamespace(tag.getNamespace());
 					next.setOpenTag(tag);
 					next.setModified(true);
@@ -94,7 +94,7 @@ public class OpenCloseTagExpander extends AbstractMarkupFilter
 	 */
 	protected boolean onFound(final ComponentTag tag)
 	{
-		tag.setType(XmlTag.OPEN);
+		tag.setType(TagType.OPEN);
 		tag.setModified(true);
 
 		return true;

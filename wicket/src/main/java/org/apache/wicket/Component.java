@@ -2454,7 +2454,7 @@ public abstract class Component
 	 * onComponentTag() is called to allow the component to mutate the start tag. The method
 	 * onComponentTagBody() is then called to permit the component to render its body.
 	 */
-	public final void renderComponent()
+	public final void internalRenderComponent()
 	{
 		final IMarkupFragment markup = getMarkup();
 		if (markup == null)

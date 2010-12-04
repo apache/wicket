@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.ContainerWithAssociatedMarkupHelper;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.panel.Panel.PanelMarkupHelper;
-import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.model.IModel;
 
@@ -191,7 +191,7 @@ public abstract class FormComponentPanel<T> extends FormComponent<T>
 
 			// Convert <span wicket:id="myPanel" /> into
 			// <span wicket:id="myPanel">...</span>
-			tag.setType(XmlTag.OPEN);
+			tag.setType(TagType.OPEN);
 		}
 		super.onComponentTag(tag);
 

@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.text.ParseException;
 
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.util.io.FullyBufferedReader;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.XmlReader;
@@ -221,24 +222,24 @@ public final class XmlPullParser implements IXmlPullParser
 		}
 
 		// Type of the tag, to be determined next
-		final XmlTag.Type type;
+		final TagType type;
 
 		// If the tag ends in '/', it's a "simple" tag like <foo/>
 		if (tagText.endsWith("/"))
 		{
-			type = XmlTag.OPEN_CLOSE;
+			type = TagType.OPEN_CLOSE;
 			tagText = tagText.substring(0, tagText.length() - 1);
 		}
 		else if (tagText.startsWith("/"))
 		{
 			// The tag text starts with a '/', it's a simple close tag
-			type = XmlTag.CLOSE;
+			type = TagType.CLOSE;
 			tagText = tagText.substring(1);
 		}
 		else
 		{
 			// It must be an open tag
-			type = XmlTag.OPEN;
+			type = TagType.OPEN;
 
 			// If open tag and starts with "s" like "script" or "style", than
 			// ...

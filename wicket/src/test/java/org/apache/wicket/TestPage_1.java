@@ -20,7 +20,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.markup.parser.XmlTag.TagType;
 
 
 /**
@@ -44,7 +44,7 @@ public class TestPage_1 extends WebPage
 			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
-				tag.setType(XmlTag.OPEN);
+				tag.setType(TagType.OPEN);
 				super.onComponentTag(tag);
 			}
 

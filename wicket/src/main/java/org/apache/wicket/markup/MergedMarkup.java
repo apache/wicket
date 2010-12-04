@@ -19,6 +19,7 @@ package org.apache.wicket.markup;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -168,7 +169,7 @@ public class MergedMarkup extends Markup
 						// <wicket:child /> => <wicket:child>...</wicket:child>
 						childTag = wtag;
 						WicketTag childOpenTag = (WicketTag)wtag.mutable();
-						childOpenTag.getXmlTag().setType(XmlTag.OPEN);
+						childOpenTag.getXmlTag().setType(TagType.OPEN);
 						childOpenTag.setMarkupClass(baseMarkup.getMarkupResourceStream()
 							.getMarkupClass());
 						addMarkupElement(childOpenTag);
@@ -313,7 +314,7 @@ public class MergedMarkup extends Markup
 			// And now all remaining elements from the derived markup.
 			// But first add </wicket:child>
 			WicketTag childCloseTag = (WicketTag)childTag.mutable();
-			childCloseTag.getXmlTag().setType(XmlTag.CLOSE);
+			childCloseTag.getXmlTag().setType(TagType.CLOSE);
 			childCloseTag.setMarkupClass(baseMarkup.getMarkupResourceStream().getMarkupClass());
 			addMarkupElement(childCloseTag);
 		}
@@ -374,14 +375,14 @@ public class MergedMarkup extends Markup
 			{
 				final XmlTag headOpenTag = new XmlTag();
 				headOpenTag.setName("head");
-				headOpenTag.setType(XmlTag.OPEN);
+				headOpenTag.setType(TagType.OPEN);
 				final ComponentTag openTag = new ComponentTag(headOpenTag);
 				openTag.setId(HtmlHeaderSectionHandler.HEADER_ID);
 				openTag.setAutoComponentTag(true);
 
 				final XmlTag headCloseTag = new XmlTag();
 				headCloseTag.setName(headOpenTag.getName());
-				headCloseTag.setType(XmlTag.CLOSE);
+				headCloseTag.setType(TagType.CLOSE);
 				final ComponentTag closeTag = new ComponentTag(headCloseTag);
 				closeTag.setOpenTag(openTag);
 				closeTag.setId(HtmlHeaderSectionHandler.HEADER_ID);

@@ -24,7 +24,7 @@ import junit.framework.Assert;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
-import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
@@ -80,7 +80,7 @@ public final class MarkupParserTest extends WicketTestCase
 
 		log.info("", boldOpen);
 		Assert.assertTrue(boldOpen.getName().equals("b"));
-		Assert.assertEquals(XmlTag.OPEN, boldOpen.getType());
+		Assert.assertEquals(TagType.OPEN, boldOpen.getType());
 
 		markupStream.next();
 
@@ -88,7 +88,7 @@ public final class MarkupParserTest extends WicketTestCase
 
 		log.info("", boldClose);
 		Assert.assertTrue(boldClose.getName().equals("b"));
-		Assert.assertEquals(XmlTag.CLOSE, boldClose.getType());
+		Assert.assertEquals(TagType.CLOSE, boldClose.getType());
 
 		markupStream.next();
 
@@ -98,7 +98,7 @@ public final class MarkupParserTest extends WicketTestCase
 		Assert.assertTrue(img.getName().equals("img"));
 		Assert.assertEquals(9, img.getAttributes().getInt("width"));
 		Assert.assertEquals(10, img.getAttributes().getInt("height"));
-		Assert.assertEquals(XmlTag.OPEN, img.getType());
+		Assert.assertEquals(TagType.OPEN, img.getType());
 
 		markupStream.next();
 
@@ -106,7 +106,7 @@ public final class MarkupParserTest extends WicketTestCase
 
 		log.info("", marker);
 		Assert.assertTrue(marker.getName().equals("marker"));
-		Assert.assertEquals(XmlTag.OPEN_CLOSE, marker.getType());
+		Assert.assertEquals(TagType.OPEN_CLOSE, marker.getType());
 
 		markupStream.next();
 
@@ -178,7 +178,7 @@ public final class MarkupParserTest extends WicketTestCase
 	}
 
 	private MarkupResourceStream newMarkupResourceStream(final IResourceStreamLocator locator,
-		final Class cls, final String style, final String variation, final Locale locale,
+		final Class<?> cls, final String style, final String variation, final Locale locale,
 		final String extension)
 	{
 		final String path = cls.getName().replace('.', '/');

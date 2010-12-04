@@ -24,7 +24,7 @@ import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Objects;
 
@@ -134,7 +134,7 @@ public class Fragment extends WebMarkupContainer
 	{
 		if (tag.isOpenClose())
 		{
-			tag.setType(XmlTag.OPEN);
+			tag.setType(TagType.OPEN);
 		}
 		super.onComponentTag(tag);
 	}
