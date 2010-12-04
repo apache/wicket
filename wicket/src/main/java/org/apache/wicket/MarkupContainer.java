@@ -401,7 +401,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	/**
 	 * Gets a fresh markup stream that contains the (immutable) markup resource for this class.
 	 * 
-	 * @return A stream of MarkupElement elements
+	 * @return A stream of MarkupElement elements. Null if not found.
 	 */
 	public IMarkupFragment getAssociatedMarkup()
 	{
@@ -512,7 +512,18 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	public MarkupType getMarkupType()
 	{
-		return getPage().getMarkupType();
+		try
+		{
+			return getPage().getMarkupType();
+		}
+		catch (Exception ex)
+		{
+			throw new WicketRuntimeException(
+				"Unable to determine the markup type which e.g. is used for the extension of the markup file. "
+					+ "Probably the component is not yet added to the Page. "
+					+ "You may defer markup access to a later point in time or subclass getMarkupType(). "
+					+ "Please see IModel, onMarkupAttached() or onInitialize()", ex);
+		}
 	}
 
 	/**
