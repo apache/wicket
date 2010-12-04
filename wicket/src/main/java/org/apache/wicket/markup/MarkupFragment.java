@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup;
 
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 
@@ -56,10 +57,7 @@ public class MarkupFragment implements IMarkupFragment
 	 */
 	public MarkupFragment(final IMarkupFragment markup, final int startIndex)
 	{
-		if (markup == null)
-		{
-			throw new IllegalArgumentException("Parameter 'markup' must not be null");
-		}
+		Args.notNull(markup, "markup");
 
 		if (startIndex < 0)
 		{
