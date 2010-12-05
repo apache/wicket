@@ -16,15 +16,14 @@
  */
 package org.apache.wicket.extensions.markup.html.form.select;
 
-import org.apache.wicket.WicketRuntimeException;
+import java.util.Collection;
+
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.WildcardCollectionModel;
-
-import java.util.Collection;
 
 
 /**
@@ -102,14 +101,6 @@ public class SelectOptions<T> extends RepeatingView
 
 			if (modelObject != null)
 			{
-				if (!(modelObject instanceof Collection))
-				{
-					throw new WicketRuntimeException("Model object " + modelObject +
-						" not a collection");
-				}
-
-				// iterator over model objects for SelectOption components
-
 				for (T value : modelObject)
 				{
 					// we need a container to represent a row in repeater
