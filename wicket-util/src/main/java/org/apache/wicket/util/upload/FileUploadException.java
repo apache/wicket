@@ -16,22 +16,33 @@
  */
 package org.apache.wicket.util.upload;
 
-import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+
 
 /**
  * Exception for errors encountered while processing the request.
  * 
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  */
-public class FileUploadException extends IOException
+public class FileUploadException extends Exception
 {
-	private static final long serialVersionUID = 1L;
+	/**
+	 * Serial version UID, being used, if the exception is serialized.
+	 */
+	private static final long serialVersionUID = 8881893724388807504L;
+	/**
+	 * The exceptions cause. We overwrite the cause of the super class, which isn't available in
+	 * Java 1.3.
+	 */
+	private final Throwable cause;
 
 	/**
 	 * Constructs a new <code>FileUploadException</code> without message.
 	 */
 	public FileUploadException()
 	{
+		this(null, null);
 	}
 
 	/**
@@ -42,32 +53,60 @@ public class FileUploadException extends IOException
 	 */
 	public FileUploadException(final String msg)
 	{
+		this(msg, null);
+	}
+
+	/**
+	 * Creates a new <code>FileUploadException</code> with the given detail message and cause.
+	 * 
+	 * @param msg
+	 *            The exceptions detail message.
+	 * @param cause
+	 *            The exceptions cause.
+	 */
+	public FileUploadException(String msg, Throwable cause)
+	{
 		super(msg);
+		this.cause = cause;
 	}
 
 	/**
-	 * Constructs a new <code>FileUploadException</code> with specified cause.
+	 * Prints this throwable and its backtrace to the specified print stream.
 	 * 
-	 * @param cause
-	 *            the cause.
+	 * @param stream
+	 *            <code>PrintStream</code> to use for output
 	 */
-	public FileUploadException(final Throwable cause)
+	@Override
+	public void printStackTrace(PrintStream stream)
 	{
-		super();
-		initCause(cause);
+		super.printStackTrace(stream);
+		if (cause != null)
+		{
+			stream.println("Caused by:");
+			cause.printStackTrace(stream);
 	}
+}
 
 	/**
-	 * Constructs a new <code>FileUploadException</code> with specified detail message and cause
+	 * Prints this throwable and its backtrace to the specified print writer.
 	 * 
-	 * @param message
-	 *            the error message.
-	 * @param cause
-	 *            the cause.
+	 * @param writer
+	 *            <code>PrintWriter</code> to use for output
 	 */
-	public FileUploadException(final String message, final Throwable cause)
+	@Override
+	public void printStackTrace(PrintWriter writer)
 	{
-		super(message);
-		initCause(cause);
+		super.printStackTrace(writer);
+		if (cause != null)
+		{
+			writer.println("Caused by:");
+			cause.printStackTrace(writer);
+		}
+	}
+
+	@Override
+	public Throwable getCause()
+	{
+		return cause;
 	}
 }

@@ -18,6 +18,7 @@ package org.apache.wicket.util.upload;
 
 import java.io.File;
 
+
 /**
  * <p>
  * The default {@link org.apache.wicket.util.upload.FileItemFactory} implementation. This
@@ -34,6 +35,16 @@ import java.io.File;
  * <li>Repository is the system default temp directory, as returned by
  * <code>System.getProperty("java.io.tmpdir")</code>.</li>
  * </ul>
+ * </p>
+ * 
+ * <p>
+ * When using the <code>DiskFileItemFactory</code>, then you should consider the following:
+ * Temporary files are automatically deleted as soon as they are no longer needed. (More precisely,
+ * when the corresponding instance of {@link java.io.File} is garbage collected.) Cleaning up those
+ * files is done by an instance of {@link FileCleaningTracker}, and an associated thread. In a
+ * complex environment, for example in a web application, you should consider terminating this
+ * thread, for example, when your web application ends. See the section on "Resource cleanup" in the
+ * users guide of commons-fileupload.
  * </p>
  * 
  * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
@@ -74,6 +85,7 @@ public class DiskFileItemFactory implements FileItemFactory
 	 */
 	public DiskFileItemFactory()
 	{
+		this(DEFAULT_SIZE_THRESHOLD, null);
 	}
 
 
@@ -92,7 +104,6 @@ public class DiskFileItemFactory implements FileItemFactory
 		this.sizeThreshold = sizeThreshold;
 		this.repository = repository;
 	}
-
 
 	// ------------------------------------------------------------- Properties
 
@@ -130,7 +141,7 @@ public class DiskFileItemFactory implements FileItemFactory
 
 	/**
 	 * Returns the size threshold beyond which files are written directly to disk. The default value
-	 * is 1024 bytes.
+	 * is 10240 bytes.
 	 * 
 	 * @return The size threshold, in bytes.
 	 * 
@@ -160,8 +171,8 @@ public class DiskFileItemFactory implements FileItemFactory
 	// --------------------------------------------------------- Public Methods
 
 	/**
-	 * Create a new {@link org.apache.wicket.util.upload.DiskFileItem} instance from the supplied
-	 * parameters and the local factory configuration.
+	 * Create a new {@link org.apache.wicket.util.upload.DiskFileItem} instance from the
+	 * supplied parameters and the local factory configuration.
 	 * 
 	 * @param fieldName
 	 *            The name of the form field.
@@ -180,4 +191,5 @@ public class DiskFileItemFactory implements FileItemFactory
 		return new DiskFileItem(fieldName, contentType, isFormField, fileName, sizeThreshold,
 			repository);
 	}
+
 }

@@ -20,8 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A simple parser intended to parse sequences of name/value pairs. Parameter values are expected to
- * be enclosed in quotes if they contain unsafe characters, such as '=' characters or separators.
+ * A simple parser intended to parse sequences of name/value pairs. Parameter values are exptected
+ * to be enclosed in quotes if they contain unsafe characters, such as '=' characters or separators.
  * Parameter values are optional and can be omitted.
  * 
  * <p>
@@ -122,7 +122,7 @@ public class ParameterParser
 	 * Tests if the given character is present in the array of characters.
 	 * 
 	 * @param ch
-	 *            the character to test for presence in the array of characters
+	 *            the character to test for presense in the array of characters
 	 * @param charray
 	 *            the array of characters to test against
 	 * 
@@ -229,6 +229,43 @@ public class ParameterParser
 	public void setLowerCaseNames(final boolean b)
 	{
 		lowerCaseNames = b;
+	}
+
+	/**
+	 * Extracts a map of name/value pairs from the given string. Names are expected to be unique.
+	 * Multiple separators may be specified and the earliest found in the input string is used.
+	 * 
+	 * @param str
+	 *            the string that contains a sequence of name/value pairs
+	 * @param separators
+	 *            the name/value pairs separators
+	 * 
+	 * @return a map of name/value pairs
+	 */
+	public Map<String, String> parse(final String str, char[] separators)
+	{
+		if (separators == null || separators.length == 0)
+		{
+			return new HashMap<String, String>();
+		}
+		char separator = separators[0];
+		if (str != null)
+		{
+			int idx = str.length();
+			for (int i = 0; i < separators.length; i++)
+			{
+				int tmp = str.indexOf(separators[i]);
+				if (tmp != -1)
+				{
+					if (tmp < idx)
+					{
+						idx = tmp;
+						separator = separators[i];
+					}
+				}
+			}
+		}
+		return parse(str, separator);
 	}
 
 	/**
