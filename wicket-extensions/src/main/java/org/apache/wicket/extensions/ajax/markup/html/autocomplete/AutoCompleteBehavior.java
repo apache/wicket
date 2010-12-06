@@ -78,16 +78,12 @@ public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavi
 	 */
 	public AutoCompleteBehavior(IAutoCompleteRenderer<T> renderer, AutoCompleteSettings settings)
 	{
+		super(settings);
 		if (renderer == null)
 		{
 			throw new IllegalArgumentException("renderer cannot be null");
 		}
-		if (settings == null)
-		{
-			settings = new AutoCompleteSettings();
-		}
 		this.renderer = renderer;
-		this.settings = settings;
 	}
 
 

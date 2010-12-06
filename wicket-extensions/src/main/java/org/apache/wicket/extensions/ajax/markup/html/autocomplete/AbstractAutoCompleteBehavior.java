@@ -37,9 +37,36 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Use {@link AutoCompleteSettings#setPreselect(boolean)}
+	 */
+	@Deprecated
 	protected boolean preselect = false;
 
-	protected AutoCompleteSettings settings = new AutoCompleteSettings();
+	protected AutoCompleteSettings settings;
+
+	/**
+	 * Constructor that creates an default {@link AutoCompleteSettings}
+	 */
+	public AbstractAutoCompleteBehavior()
+	{
+		this(new AutoCompleteSettings());
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param settings
+	 *            settings for the autocomplete list
+	 */
+	public AbstractAutoCompleteBehavior(AutoCompleteSettings settings)
+	{
+		if (settings == null)
+		{
+			settings = new AutoCompleteSettings();
+		}
+		this.settings = settings;
+	}
 
 	/**
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
@@ -79,7 +106,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	protected final String constructSettingsJS()
 	{
 		final StringBuilder sb = new StringBuilder();
-		sb.append("{preselect: ").append(settings.getPreselect());
+		sb.append("{preselect: ").append(settings.getPreselect() || preselect);
 		sb.append(",maxHeight: ").append(settings.getMaxHeightInPx());
 		sb.append(",adjustInputWidth: ").append(settings.isAdjustInputWidth());
 		sb.append(",useSmartPositioning: ").append(settings.getUseSmartPositioning());
