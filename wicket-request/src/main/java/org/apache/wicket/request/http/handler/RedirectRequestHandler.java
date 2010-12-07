@@ -67,16 +67,12 @@ public class RedirectRequestHandler implements IRequestHandler
 		this.status = status;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
-	 */
+	/** {@inheritDoc} */
 	public void detach(IRequestCycle requestCycle)
 	{
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
-	 */
+	/** {@inheritDoc} */
 	public void respond(IRequestCycle requestCycle)
 	{
 		final String location;

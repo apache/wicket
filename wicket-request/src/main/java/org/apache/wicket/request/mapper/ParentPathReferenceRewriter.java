@@ -82,9 +82,7 @@ public class ParentPathReferenceRewriter implements IRequestMapper
 		return chain.mapRequest(request.cloneWithUrl(url));
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestMapper#mapHandler(org.apache.org.apache.wicket.request.IRequestHandler)
-	 */
+	/** {@inheritDoc} */
 	public Url mapHandler(IRequestHandler requestHandler)
 	{
 		Url url = chain.mapHandler(requestHandler);
@@ -101,9 +99,7 @@ public class ParentPathReferenceRewriter implements IRequestMapper
 		return url;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestMapper#getCompatibilityScore(org.apache.wicket.request.Request)
-	 */
+	/** {@inheritDoc} */
 	public int getCompatibilityScore(Request request)
 	{
 		return chain.getCompatibilityScore(request);

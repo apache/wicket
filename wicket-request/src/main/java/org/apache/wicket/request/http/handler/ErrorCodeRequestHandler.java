@@ -68,7 +68,7 @@ public final class ErrorCodeRequestHandler implements IRequestHandler
 	/**
 	 * Respond by sending the set errorCode and optionally the message to the browser.
 	 * 
-	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.IRequestCycle)
 	 */
 	public void respond(IRequestCycle requestCycle)
 	{
@@ -96,9 +96,7 @@ public final class ErrorCodeRequestHandler implements IRequestHandler
 		return message;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
-	 */
+	/** {@inheritDoc} */
 	public void detach(IRequestCycle requestCycle)
 	{
 	}

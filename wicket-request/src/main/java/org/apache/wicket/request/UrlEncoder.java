@@ -32,7 +32,7 @@ import java.util.BitSet;
  * 
  * @author Doug Donohoe
  * @see java.net.URLEncoder
- * @see {@link "http://www.ietf.org/rfc/rfc2396.txt"}
+ * @see <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC-2396</a>
  */
 public class UrlEncoder
 {
@@ -51,7 +51,7 @@ public class UrlEncoder
 		/**
 		 * full path type
 		 */
-		FULL_PATH;
+		FULL_PATH
 	}
 
 	// list of what not to decode

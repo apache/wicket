@@ -86,7 +86,7 @@ public class TextRequestHandler implements IRequestHandler
 	/**
 	 * Responds by sending the string property.
 	 * 
-	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
+	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.IRequestCycle)
 	 */
 	public void respond(IRequestCycle requestCycle)
 	{
@@ -125,9 +125,7 @@ public class TextRequestHandler implements IRequestHandler
 		return encoding;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
-	 */
+	/** {@inheritDoc} */
 	public void detach(IRequestCycle requestCycle)
 	{
 	}

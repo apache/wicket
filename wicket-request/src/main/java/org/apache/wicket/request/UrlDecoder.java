@@ -28,7 +28,7 @@ import java.nio.charset.Charset;
  * 
  * @author Doug Donohoe
  * @see java.net.URLDecoder
- * @see {@link "http://www.ietf.org/rfc/rfc2396.txt"}
+ * @see <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC-2396</a>
  */
 public class UrlDecoder
 {
