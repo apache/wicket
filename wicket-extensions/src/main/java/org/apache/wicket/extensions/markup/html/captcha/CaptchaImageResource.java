@@ -122,21 +122,15 @@ public final class CaptchaImageResource extends DynamicImageResource
 
 	private final IModel<String> challengeId;
 	private Integer challengeIdhashCode;
-	private List<CharAttributes> charAttsList;
 
 	private final List<String> fontNames = Arrays.asList("Helvetica", "Arial", "Courier");
 	private final int fontSize;
 	private final int fontStyle;
 
-	private int height = 0;
-
 	/** Transient image data so that image only needs to be generated once per VM */
 	private transient SoftReference<byte[]> imageData;
 
 	private final int margin;
-
-	private int width = 0;
-
 
 	/**
 	 * Construct.
@@ -225,8 +219,6 @@ public final class CaptchaImageResource extends DynamicImageResource
 
 	/**
 	 * Causes the image to be redrawn the next time its requested.
-	 * 
-	 * @see org.apache.wicket.Resource#invalidate()
 	 */
 	public final void invalidate()
 	{
@@ -234,9 +226,6 @@ public final class CaptchaImageResource extends DynamicImageResource
 		imageData = null;
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.image.resource.DynamicImageResource#getImageData()
-	 */
 	@Override
 	protected final byte[] getImageData(Attributes attributes)
 	{
@@ -268,13 +257,14 @@ public final class CaptchaImageResource extends DynamicImageResource
 	 */
 	private final byte[] render()
 	{
-		width = margin * 2;
-		height = margin * 2;
+		int width = margin * 2;
+		int height = margin * 2;
 		char[] chars = challengeId.getObject().toCharArray();
-		charAttsList = new ArrayList<CharAttributes>();
+		List<CharAttributes> charAttsList = new ArrayList<CharAttributes>();
 		TextLayout text;
 		AffineTransform textAt;
 		Shape shape;
+
 		for (char ch : chars)
 		{
 			String fontName = fontNames.get(randomInt(0, fontNames.size()));
@@ -337,7 +327,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 				rstr.getPixel(x, y, oldColor);
 
 				// hard noise
-				vColor[0] = 0 + (int)(Math.floor(vRandom.nextFloat() * 1.03) * 255);
+				vColor[0] = (int)(Math.floor(vRandom.nextFloat() * 1.03) * 255);
 				// soft noise
 				vColor[0] = vColor[0] ^ (170 + (int)(vRandom.nextFloat() * 80));
 				// xor to image
