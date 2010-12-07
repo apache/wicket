@@ -296,60 +296,58 @@ public final class CaptchaImageResource extends DynamicImageResource
 				height = (int) shape.getBounds2D().getHeight() + rise;
 			}
 		}
-		while (true)
+
+		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		Graphics2D gfx = (Graphics2D)image.getGraphics();
+		gfx.setBackground(Color.WHITE);
+		int curWidth = margin;
+		for (CharAttributes cf : charAttsList)
 		{
-			final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-			Graphics2D gfx = (Graphics2D)image.getGraphics();
-			gfx.setBackground(Color.WHITE);
-			int curWidth = margin;
-			for (CharAttributes cf : charAttsList)
-			{
-				text = new TextLayout(cf.getChar() + "", getFont(cf.getName()), gfx.getFontRenderContext());
-				textAt = new AffineTransform();
-				textAt.translate(curWidth, height - cf.getRise());
-				textAt.rotate(cf.getRotation());
-				textAt.shear(cf.getShearX(), cf.getShearY());
-				shape = text.getOutline(textAt);
-				curWidth += shape.getBounds().getWidth();
-				gfx.setXORMode(Color.BLACK);
-				gfx.fill(shape);
-			}
-
-			// XOR circle
-			int dx = randomInt(width, 2 * width);
-			int dy = randomInt(width, 2 * height);
-			int x = randomInt(0, width / 2);
-			int y = randomInt(0, height / 2);
-
+			text = new TextLayout(cf.getChar() + "", getFont(cf.getName()), gfx.getFontRenderContext());
+			textAt = new AffineTransform();
+			textAt.translate(curWidth, height - cf.getRise());
+			textAt.rotate(cf.getRotation());
+			textAt.shear(cf.getShearX(), cf.getShearY());
+			shape = text.getOutline(textAt);
+			curWidth += shape.getBounds().getWidth();
 			gfx.setXORMode(Color.BLACK);
-			gfx.setStroke(new BasicStroke(randomInt(fontSize / 8, fontSize / 2)));
-			gfx.drawOval(x, y, dx, dy);
-
-			WritableRaster rstr = image.getRaster();
-			int[] vColor = new int[3];
-			int[] oldColor = new int[3];
-			Random vRandom = new Random(System.currentTimeMillis());
-
-			// noise
-			for (x = 0; x < width; x++)
-			{
-				for (y = 0; y < height; y++)
-				{
-					rstr.getPixel(x, y, oldColor);
-
-					// hard noise
-					vColor[0] = 0 + (int)(Math.floor(vRandom.nextFloat() * 1.03) * 255);
-					// soft noise
-					vColor[0] = vColor[0] ^ (170 + (int)(vRandom.nextFloat() * 80));
-					// xor to image
-					vColor[0] = vColor[0] ^ oldColor[0];
-					vColor[1] = vColor[0];
-					vColor[2] = vColor[0];
-
-					rstr.setPixel(x, y, vColor);
-				}
-			}
-			return toImageData(image);
+			gfx.fill(shape);
 		}
+
+		// XOR circle
+		int dx = randomInt(width, 2 * width);
+		int dy = randomInt(width, 2 * height);
+		int x = randomInt(0, width / 2);
+		int y = randomInt(0, height / 2);
+
+		gfx.setXORMode(Color.BLACK);
+		gfx.setStroke(new BasicStroke(randomInt(fontSize / 8, fontSize / 2)));
+		gfx.drawOval(x, y, dx, dy);
+
+		WritableRaster rstr = image.getRaster();
+		int[] vColor = new int[3];
+		int[] oldColor = new int[3];
+		Random vRandom = new Random(System.currentTimeMillis());
+
+		// noise
+		for (x = 0; x < width; x++)
+		{
+			for (y = 0; y < height; y++)
+			{
+				rstr.getPixel(x, y, oldColor);
+
+				// hard noise
+				vColor[0] = 0 + (int)(Math.floor(vRandom.nextFloat() * 1.03) * 255);
+				// soft noise
+				vColor[0] = vColor[0] ^ (170 + (int)(vRandom.nextFloat() * 80));
+				// xor to image
+				vColor[0] = vColor[0] ^ oldColor[0];
+				vColor[1] = vColor[0];
+				vColor[2] = vColor[0];
+
+				rstr.setPixel(x, y, vColor);
+			}
+		}
+		return toImageData(image);
 	}
 }
