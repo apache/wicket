@@ -115,8 +115,6 @@ public class PageWindowManager implements Serializable
 	 * Returns the index of the given page in the {@link #windows} list.
 	 * 
 	 * @param pageId
-	 * @param versionNumber
-	 * @param ajaxVersionNumber
 	 * @return window index
 	 */
 	private int getWindowIndex(int pageId)
@@ -351,8 +349,6 @@ public class PageWindowManager implements Serializable
 	 * Creates and returns a new page window for given page.
 	 * 
 	 * @param pageId
-	 * @param versionNumber
-	 * @param ajaxVersionNumber
 	 * @param size
 	 * @return page window
 	 */
@@ -386,8 +382,6 @@ public class PageWindowManager implements Serializable
 	 * Returns the page window for given page or null if no window was found.
 	 * 
 	 * @param pageId
-	 * @param versionNumber
-	 * @param ajaxVersionNumber
 	 * @return page window or null
 	 */
 	public PageWindow getPageWindow(int pageId)
@@ -404,8 +398,6 @@ public class PageWindowManager implements Serializable
 	 * Removes the page window for given page.
 	 * 
 	 * @param pageId
-	 * @param versionNumber
-	 * @param ajaxVersionNumber
 	 */
 	public void removePage(int pageId)
 	{

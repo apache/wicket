@@ -308,8 +308,8 @@ public interface IResourceSettings
 	 * Wicket-1992). In case you really need it, a good value for placeholder would e.g. be "$up$".
 	 * Resources additionally are protected by a
 	 * {@link org.apache.wicket.markup.html.IPackageResourceGuard IPackageResourceGuard}
-	 * implementation such as {@link org.apache.wicket.resource.resourceGuard.PackageResourceGuard
-	 * PackageResourceGuard} which you may use or extend based on your needs.
+	 * implementation such as {@link org.apache.wicket.markup.html.PackageResourceGuard}
+	 * which you may use or extend based on your needs.
 	 * 
 	 * @return placeholder
 	 */

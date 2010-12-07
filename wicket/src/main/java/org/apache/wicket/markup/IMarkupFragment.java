@@ -57,8 +57,6 @@ public interface IMarkupFragment
 	/**
 	 * Find the markup element index of the component with 'path'
 	 * 
-	 * @param path
-	 *            The component path expression
 	 * @param id
 	 *            The component's id to search for
 	 * @return -1, if not found

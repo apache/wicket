@@ -159,7 +159,7 @@ public abstract class AbstractPropertyModel<T>
 	 * 
 	 * @param object
 	 *            The object that will be used when setting a value on the model object
-	 * @see IModel#setObject(T)
+	 * @see IModel#setObject(Object)
 	 */
 	@SuppressWarnings("unchecked")
 	public void setObject(T object)

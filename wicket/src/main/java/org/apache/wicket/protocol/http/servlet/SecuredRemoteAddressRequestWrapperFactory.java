@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Sets {@link RequestFacade#isSecure()} to <code>true</code> if
+ * Sets {@link ServletRequest#isSecure()} to <code>true</code> if
  * {@link ServletRequest#getRemoteAddr()} matches one of the <code>securedRemoteAddresses</code> of
  * this filter.
  * <p>
@@ -96,7 +96,7 @@ public class SecuredRemoteAddressRequestWrapperFactory extends AbstractRequestWr
 	/** */
 	public static class Config
 	{
-		/** @see #setSecuredRemoteAddresses(String) */
+		/** @see #setSecuredRemoteAdresses(String) */
 		private Pattern[] securedRemoteAddresses = new Pattern[] {
 				Pattern.compile("10\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}"),
 				Pattern.compile("192\\.168\\.\\d{1,3}\\.\\d{1,3}"),

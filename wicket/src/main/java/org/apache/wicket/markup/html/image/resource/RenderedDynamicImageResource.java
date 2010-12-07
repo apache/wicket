@@ -114,8 +114,6 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 
 	/**
 	 * Causes the image to be redrawn the next time its requested.
-	 * 
-	 * @see org.apache.wicket.Resource#invalidate()
 	 */
 	public synchronized void invalidate()
 	{

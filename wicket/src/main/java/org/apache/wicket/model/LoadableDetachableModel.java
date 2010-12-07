@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.model;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Model that makes working with detachable models a breeze. LoadableDetachableModel holds a
- * temporary, transient model object, that is set when {@link #getObject(Component)} is called by
+ * temporary, transient model object, that is set when {@link #getObject()} is called by
  * calling abstract method 'load', and that will be reset/ set to null on {@link #detach()}.
  * 
  * A usage example:

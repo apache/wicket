@@ -25,12 +25,12 @@ import org.apache.wicket.util.visit.IVisitor;
 
 /**
  * This has been Wicket's default header render strategy before WICKET 1.5 which uses
- * {@link MarkupContainer#visitChildren(org.apache.wicket.IVisitor)} to traverse the hierarchy to
+ * {@link MarkupContainer#visitChildren(org.apache.wicket.util.visit.IVisitor)} to traverse the hierarchy to
  * render the children headers.
  * 
  * Since child contributions are added to the markup after the parent contributions, children may
  * replace / modify existing settings. Which is not good. Instead the parent (container) should be
- * in control. See {@link href https://issues.apache.org/jira/browse/WICKET-2693}
+ * in control (see <a href="https://issues.apache.org/jira/browse/WICKET-2693">WICKET-2693</a>).
  * 
  * @author Juergen Donnerstag
  */
