@@ -1093,7 +1093,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * <p>
 	 * Usually the user should do custom conversions by specifying an {@link IConverter} by
 	 * registering it with the application by overriding {@link Application#getConverterLocator()},
-	 * or at the component level by overriding {@link #getConverter()}.
+	 * or at the component level by overriding {@link #getConverter(Class)}}.
 	 * </p>
 	 * 
 	 * @see IConverterLocator

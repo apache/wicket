@@ -83,8 +83,6 @@ public class MarkupCache implements IMarkupCache
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param application
 	 */
 	protected MarkupCache()
 	{
@@ -239,8 +237,7 @@ public class MarkupCache implements IMarkupCache
 	 * I still don't like this method being part of the API but I didn't find a suitable other
 	 * solution.
 	 * 
-	 * @see org.apache.wicket.markup.IMarkupCache#getMarkup(org.apache.wicket.MarkupContainer,
-	 *      java.lang.Class, boolean)
+	 * @see org.apache.wicket.markup.IMarkupCache#getMarkup(org.apache.wicket.MarkupContainer, Class, boolean)
 	 */
 	public final Markup getMarkup(final MarkupContainer container, final Class<?> clazz,
 		final boolean enforceReload)

@@ -77,7 +77,7 @@ import org.apache.wicket.util.collections.ReadOnlyIterator;
  * instance itself does not correspond to any markup, however, the generated ListItems do.<br/>
  * 
  * This means that methods like {@link #setRenderBodyOnly(boolean)} and
- * {@link #add(org.apache.wicket.behavior.IBehavior[])} should be invoked on the {@link ListItem}
+ * {@link #add(org.apache.wicket.behavior.Behavior...)} should be invoked on the {@link ListItem}
  * that is given in {@link #populateItem(ListItem)} method.
  * </p>
  * 

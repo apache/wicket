@@ -62,7 +62,6 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 	/**
 	 * Construct.
 	 * 
-	 * @param <C>
 	 * @param <S>
 	 * 
 	 * @param securePageSuperType

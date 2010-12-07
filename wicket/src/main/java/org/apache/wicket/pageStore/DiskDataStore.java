@@ -348,7 +348,6 @@ public class DiskDataStore implements IDataStore
 		/**
 		 * Removes the page from pagemap file.
 		 * 
-		 * @param pageMapName
 		 * @param pageId
 		 */
 		public synchronized void removePage(int pageId)
@@ -364,7 +363,6 @@ public class DiskDataStore implements IDataStore
 		 * Loads the part of pagemap file specified by the given PageWindow.
 		 * 
 		 * @param window
-		 * @param pageMapFileName
 		 * @return serialized page data
 		 */
 		public byte[] loadPage(PageWindow window)
@@ -397,7 +395,6 @@ public class DiskDataStore implements IDataStore
 		/**
 		 * Loads the specified page data.
 		 * 
-		 * @param pageMapName
 		 * @param id
 		 * @return page data or null if the page is no longer in pagemap file
 		 */
@@ -436,7 +433,6 @@ public class DiskDataStore implements IDataStore
 	 * file) does not exist and createSessionFolder is true, the folder will be created.
 	 * 
 	 * @param sessionId
-	 * @param pageMapName
 	 * @param createSessionFolder
 	 * @return file name for pagemap
 	 */

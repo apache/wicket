@@ -208,7 +208,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 *   &lt;/wicket:border&gt;
 	 * </pre>
 	 * 
-	 * @param child
+	 * @param children
 	 * @return this
 	 */
 	@Override

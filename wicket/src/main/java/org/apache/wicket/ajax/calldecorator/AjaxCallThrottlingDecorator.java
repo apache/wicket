@@ -78,9 +78,6 @@ public final class AjaxCallThrottlingDecorator extends AjaxPostprocessingCallDec
 	}
 
 
-	/**
-	 * @see org.apache.wicket.ajax.calldecorator.AjaxPostprocessingCallDecorator#postDecorateScript(CharSequence)
-	 */
 	@Override
 	public final CharSequence postDecorateScript(Component c, CharSequence script)
 	{

@@ -57,9 +57,6 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 		super();
 	}
 
-	/**
-	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
-	 */
 	@Override
 	public void renderHead(Component component, IHeaderResponse response)
 	{

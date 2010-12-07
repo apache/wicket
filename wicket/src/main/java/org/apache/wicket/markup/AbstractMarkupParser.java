@@ -44,8 +44,7 @@ import org.slf4j.LoggerFactory;
  * @see IMarkupFilter
  * @see MarkupFactory
  * @see IMarkupSettings
- * @see MarkupResourceData
- * 
+ *
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */

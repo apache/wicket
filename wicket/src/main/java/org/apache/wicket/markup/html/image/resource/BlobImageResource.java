@@ -58,9 +58,6 @@ public abstract class BlobImageResource extends DynamicImageResource
 	{
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.image.resource.DynamicImageResource#getImageData()
-	 */
 	@Override
 	protected byte[] getImageData(Attributes attributes)
 	{

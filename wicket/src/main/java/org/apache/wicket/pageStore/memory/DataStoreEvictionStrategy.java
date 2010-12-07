@@ -25,7 +25,7 @@ public interface DataStoreEvictionStrategy
 {
 
 	/**
-	 * Called after each {@link DataStore#storeData()} call.
+	 * Called after each {@link org.apache.wicket.pageStore.IDataStore#storeData(String, int, byte[])} call.
 	 * 
 	 * @param pageTable
 	 *            the in-memory data store with <strong>all</strong> pages

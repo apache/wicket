@@ -22,7 +22,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.util.value.ValueMap;
 
 /**
  * A subclass of {@link Image} that adds random noise to the url every request to prevent the
@@ -52,9 +51,9 @@ public class NonCachingImage extends Image
 
 	/**
 	 * Construct.
-	 * 
-	 * @see Image#Image(String, Resource)
-	 * 
+	 *
+	 * @see Image#Image(String, org.apache.wicket.request.resource.IResource)
+	 *
 	 * @param id
 	 * @param imageResource
 	 */
@@ -66,7 +65,7 @@ public class NonCachingImage extends Image
 	/**
 	 * Construct.
 	 * 
-	 * @see Image#Image(String, ResourceReference, ValueMap)
+	 * @see Image#Image(String, org.apache.wicket.request.resource.ResourceReference, org.apache.wicket.request.mapper.parameter.PageParameters)
 	 * 
 	 * @param id
 	 * @param resourceReference

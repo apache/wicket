@@ -190,8 +190,6 @@ public class RequestListenerInterface
 	/**
 	 * Invokes a given interface on a component.
 	 * 
-	 * @param page
-	 *            The Page that contains the component
 	 * @param rcomponent
 	 *            The component
 	 * 
@@ -235,9 +233,6 @@ public class RequestListenerInterface
 			throw new WicketRuntimeException("Method " + method.getName() + " of " +
 				method.getDeclaringClass() + " targeted at component " + component +
 				" threw an exception", e);
-		}
-		finally
-		{
 		}
 	}
 

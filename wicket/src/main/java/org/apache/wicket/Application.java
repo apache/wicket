@@ -326,8 +326,8 @@ public abstract class Application implements UnboundListener, IEventSink
 	public abstract String getApplicationKey();
 
 	/**
-	 * Gets the configuration mode to use for configuring the app, either {@link #DEVELOPMENT} or
-	 * {@link #DEPLOYMENT}.
+	 * Gets the configuration mode to use for configuring the app, either
+	 * {@link RuntimeConfigurationType#DEVELOPMENT} or {@link RuntimeConfigurationType#DEPLOYMENT}.
 	 * <p>
 	 * The configuration type. Must currently be either DEVELOPMENT or DEPLOYMENT. Currently, if the
 	 * configuration type is DEVELOPMENT, resources are polled for changes, component usage is

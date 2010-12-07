@@ -56,9 +56,6 @@ public final class CancelEventIfNoAjaxDecorator extends AjaxPostprocessingCallDe
 		super(delegate);
 	}
 
-	/**
-	 * @see org.apache.wicket.ajax.calldecorator.AjaxPostprocessingCallDecorator#postDecorateScript(CharSequence)
-	 */
 	@Override
 	public final CharSequence postDecorateScript(Component c, CharSequence script)
 	{

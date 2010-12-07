@@ -45,9 +45,6 @@ public class AjaxPreprocessingCallDecorator implements IAjaxCallDecorator
 	}
 
 
-	/**
-	 * @see org.apache.wicket.ajax.IAjaxCallDecorator#decorateScript(CharSequence)
-	 */
 	public CharSequence decorateScript(Component c, CharSequence script)
 	{
 		CharSequence s = preDecorateScript(script);
@@ -55,18 +52,12 @@ public class AjaxPreprocessingCallDecorator implements IAjaxCallDecorator
 
 	}
 
-	/**
-	 * @see org.apache.wicket.ajax.IAjaxCallDecorator#decorateOnSuccessScript(CharSequence)
-	 */
 	public CharSequence decorateOnSuccessScript(Component c, CharSequence script)
 	{
 		CharSequence s = preDecorateOnSuccessScript(script);
 		return (delegate == null) ? s : delegate.decorateOnSuccessScript(c, s);
 	}
 
-	/**
-	 * @see org.apache.wicket.ajax.IAjaxCallDecorator#decorateOnFailureScript(CharSequence)
-	 */
 	public CharSequence decorateOnFailureScript(Component c, CharSequence script)
 	{
 		CharSequence s = preDecorateOnFailureScript(script);

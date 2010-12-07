@@ -42,7 +42,6 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 	 * Construct.
 	 * 
 	 * @param application
-	 * @param pageManagerContext
 	 */
 	public DefaultPageManagerProvider(Application application)
 	{

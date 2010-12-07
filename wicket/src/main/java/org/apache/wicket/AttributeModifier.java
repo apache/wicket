@@ -40,8 +40,8 @@ import org.apache.wicket.util.value.IValueMap;
  * </p>
  * <p>
  * Instances of this class should be added to components via the
- * {@link org.apache.wicket.Component#add(AttributeModifier)} method after the component has been
- * constructed.
+ * {@link org.apache.wicket.Component#add(org.apache.wicket.behavior.Behavior...)} }
+ * method after the component has been constructed.
  * <p>
  * It is possible to create new subclasses of AttributeModifier by overriding the newValue(String,
  * String) method. For example, you could create an AttributeModifier subclass which appends the
@@ -207,21 +207,12 @@ public class AttributeModifier extends Behavior implements IClusterable
 		return pattern;
 	}
 
-	/**
-	 * Made final to support the parameterless variant.
-	 * 
-	 * @see org.apache.wicket.behavior.AbstractBehavior#isEnabled(org.apache.wicket.Component)
-	 */
 	@Override
 	public boolean isEnabled(Component component)
 	{
 		return enabled;
 	}
 
-	/**
-	 * @see org.apache.wicket.behavior.Behavior#onComponentTag(org.apache.wicket.Component,
-	 *      org.apache.wicket.markup.ComponentTag)
-	 */
 	@Override
 	public final void onComponentTag(Component component, ComponentTag tag)
 	{

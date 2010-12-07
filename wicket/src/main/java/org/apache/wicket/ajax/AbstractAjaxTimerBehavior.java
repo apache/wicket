@@ -93,9 +93,6 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 		return updateInterval;
 	}
 
-	/**
-	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
-	 */
 	@Override
 	public void renderHead(Component component, IHeaderResponse response)
 	{

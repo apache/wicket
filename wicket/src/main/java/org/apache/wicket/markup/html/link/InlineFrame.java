@@ -48,8 +48,6 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 * 
 	 * @param id
 	 *            See Component
-	 * @param pageMap
-	 *            the pagemap where the page of the inline frame must be in
 	 * @param c
 	 *            Page class
 	 */
@@ -66,8 +64,6 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 * 
 	 * @param id
 	 *            See Component
-	 * @param pageMap
-	 *            the pagemap where the page of the inline frame must be in
 	 * @param c
 	 *            Page class
 	 * @param params
@@ -190,13 +186,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 */
 	public final void onLinkClicked()
 	{
-		try
-		{
-			setResponsePage(pageLink.getPage());
-		}
-		finally
-		{
-		}
+		setResponsePage(pageLink.getPage());
 	}
 
 

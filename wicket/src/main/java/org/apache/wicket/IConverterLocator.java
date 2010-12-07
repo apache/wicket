@@ -25,8 +25,7 @@ import org.apache.wicket.util.convert.IConverter;
  * {@link Application#newConverterLocator()}.
  * 
  * @see ConverterLocator
- * @see IConverterLocatorFactory
- * 
+ *
  * @author jcompagner
  * 
  *         The converter object type

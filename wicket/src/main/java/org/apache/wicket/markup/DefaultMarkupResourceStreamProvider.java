@@ -33,8 +33,10 @@ import org.slf4j.LoggerFactory;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public class DefaultMarkupResourceStreamProvider implements IMarkupResourceStreamProvider
+public class
+	DefaultMarkupResourceStreamProvider implements IMarkupResourceStreamProvider
 {
+
 	/** Log for reporting. */
 	private static final Logger log = LoggerFactory.getLogger(DefaultMarkupResourceStreamProvider.class);
 
@@ -53,7 +55,7 @@ public class DefaultMarkupResourceStreamProvider implements IMarkupResourceStrea
 	 * Note: IResourceStreamLocators should be used in case the strategy to find a markup resource
 	 * should be extended for ALL components of your application.
 	 * 
-	 * @see org.apache.wicket.util.resource.locator.IResourceStream
+	 * @see org.apache.wicket.util.resource.locator.IResourceStreamLocator
 	 * @see org.apache.wicket.markup.DefaultMarkupResourceStreamProvider
 	 * 
 	 * @param container

@@ -37,25 +37,16 @@ public abstract class AjaxCallDecorator implements IAjaxCallDecorator
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see org.apache.wicket.ajax.IAjaxCallDecorator#decorateScript(CharSequence)
-	 */
 	public CharSequence decorateScript(Component c, CharSequence script)
 	{
 		return script;
 	}
 
-	/**
-	 * @see org.apache.wicket.ajax.IAjaxCallDecorator#decorateOnSuccessScript(CharSequence)
-	 */
 	public CharSequence decorateOnSuccessScript(Component c, CharSequence script)
 	{
 		return script;
 	}
 
-	/**
-	 * @see org.apache.wicket.ajax.IAjaxCallDecorator#decorateOnFailureScript(CharSequence)
-	 */
 	public CharSequence decorateOnFailureScript(Component c, CharSequence script)
 	{
 		return script;
