@@ -25,8 +25,8 @@ import org.apache.wicket.util.visit.IVisit;
 /**
  * This a header render strategy implements a child->parent->root sequence, which is inverse to how
  * it was until Wicket 1.5. It now allows parent containers to replace child contributions, since
- * their contribution is added to the markup after the child ones. See {@link href
- * https://issues.apache.org/jira/browse/WICKET-2693}.
+ * their contribution is added to the markup after the child ones (see
+ * <a href="https://issues.apache.org/jira/browse/WICKET-2693">WICKET-2693</a>).
  * 
  * Please note that irrespective of the render strategy, if the same header content (e.g. CSS file)
  * gets added twice to the header, only the first will be rendered and the 2nd will be skipped.

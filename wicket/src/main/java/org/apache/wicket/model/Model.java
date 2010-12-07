@@ -149,7 +149,6 @@ public class Model<T extends Serializable> implements IModel<T>
 	 * <code>new Model<TypeOfObject>()</code>.
 	 * 
 	 * @param <T>
-	 * @param object
 	 * @return Model that contains <code>object</code>
 	 */
 	public static <T extends Serializable> Model<T> of()

@@ -272,7 +272,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 
 	/**
 	 * @see #addToBorderBody(Component...)
-	 * @set #get(String)
+	 * @see #get(String)
 	 * @param path
 	 * @return The component added to the border
 	 */

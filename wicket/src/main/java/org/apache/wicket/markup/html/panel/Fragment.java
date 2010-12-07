@@ -187,8 +187,6 @@ public class Fragment extends WebMarkupContainer
 	/**
 	 * Get the markup stream which shall be used to search for the fragment
 	 * 
-	 * @param markupStream
-	 *            The markup stream is associated with the component (not the fragment)
 	 * @return The markup stream to be used to find the fragment markup
 	 */
 	protected IMarkupFragment chooseMarkup()

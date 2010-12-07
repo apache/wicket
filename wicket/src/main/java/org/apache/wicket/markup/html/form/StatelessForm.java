@@ -55,18 +55,12 @@ public class StatelessForm<T> extends Form<T>
 		super(id, model);
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.form.Form#process(org.apache.wicket.markup.html.form.IFormSubmittingComponent)
-	 */
 	@Override
 	public void process(IFormSubmitter submittingComponent)
 	{
 		super.process(submittingComponent);
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.form.Form#getStatelessHint()
-	 */
 	@Override
 	protected boolean getStatelessHint()
 	{

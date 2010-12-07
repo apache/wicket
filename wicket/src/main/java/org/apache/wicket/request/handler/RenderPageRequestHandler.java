@@ -65,7 +65,7 @@ public class RenderPageRequestHandler implements IPageRequestHandler, IPageClass
 		 * </ul>
 		 */
 		AUTO_REDIRECT
-	};
+	}
 
 	/**
 	 * Construct. Renders the page with a redirect if necessary.
@@ -108,41 +108,31 @@ public class RenderPageRequestHandler implements IPageRequestHandler, IPageClass
 		return redirectPolicy;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.handler.IPageClassRequestHandler#getPageClass()
-	 */
+	/** {@inheritDoc} */
 	public Class<? extends IRequestablePage> getPageClass()
 	{
 		return pageProvider.getPageClass();
 	}
 
-	/**
-	 * @see org.apache.wicket.request.handler.IPageClassRequestHandler#getPageParameters()
-	 */
+	/** {@inheritDoc} */
 	public PageParameters getPageParameters()
 	{
 		return pageProvider.getPageParameters();
 	}
 
-	/**
-	 * @see org.apache.org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
-	 */
+	/** {@inheritDoc} */
 	public void detach(IRequestCycle requestCycle)
 	{
 		pageProvider.detach();
 	}
 
-	/**
-	 * @see org.apache.wicket.request.handler.IPageRequestHandler#getPage()
-	 */
+	/** {@inheritDoc} */
 	public IRequestablePage getPage()
 	{
 		return pageProvider.getPageInstance();
 	}
 
-	/**
-	 * @see org.apache.org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
-	 */
+	/** {@inheritDoc} */
 	public void respond(IRequestCycle requestCycle)
 	{
 		PageRenderer renderer = Application.get().getPageRendererProvider().get(this);

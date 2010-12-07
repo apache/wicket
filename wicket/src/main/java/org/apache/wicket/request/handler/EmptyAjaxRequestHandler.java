@@ -51,9 +51,7 @@ public final class EmptyAjaxRequestHandler implements IRequestHandler
 		return instance;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
-	 */
+	/** {@inheritDoc} */
 	public void respond(IRequestCycle requestCycle)
 	{
 		WebResponse response = (WebResponse)requestCycle.getResponse();
@@ -72,9 +70,7 @@ public final class EmptyAjaxRequestHandler implements IRequestHandler
 		response.write("\"?><ajax-response></ajax-response>");
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
-	 */
+	/** {@inheritDoc} */
 	public void detach(IRequestCycle requestCycle)
 	{
 	}
@@ -85,11 +81,7 @@ public final class EmptyAjaxRequestHandler implements IRequestHandler
 	@Override
 	public boolean equals(Object obj)
 	{
-		if (obj instanceof EmptyAjaxRequestHandler)
-		{
-			return true;
-		}
-		return false;
+		return obj instanceof EmptyAjaxRequestHandler;
 	}
 
 	/**

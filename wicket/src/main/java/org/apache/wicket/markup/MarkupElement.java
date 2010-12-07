@@ -27,7 +27,6 @@ package org.apache.wicket.markup;
  * <li>RawMarkup, which is a section of unparsed markup having no meaning to Wicket.
  * </ul>
  * 
- * @see MarkupResourceData
  * @see org.apache.wicket.markup.RawMarkup
  * @see ComponentTag
  * @author Jonathan Locke
