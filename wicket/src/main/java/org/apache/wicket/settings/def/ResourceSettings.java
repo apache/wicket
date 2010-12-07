@@ -32,6 +32,7 @@ import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.resource.loader.PackageStringResourceLoader;
 import org.apache.wicket.resource.loader.ValidatorStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
+import org.apache.wicket.util.file.IFileUploadCleaner;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.IResourcePath;
 import org.apache.wicket.util.file.Path;
@@ -83,6 +84,9 @@ public class ResourceSettings implements IResourceSettings
 
 	/** ModificationWatcher to watch for changes in markup files */
 	private IModificationWatcher resourceWatcher;
+
+	/** a cleaner for the temporary files created by FileUpload functionality */
+	private IFileUploadCleaner fileUploadCleaner;
 
 	/** Chain of string resource loaders to use */
 	private final List<IStringResourceLoader> stringResourceLoaders = Generics.newArrayList(4);
@@ -247,6 +251,16 @@ public class ResourceSettings implements IResourceSettings
 	public void setResourceWatcher(IModificationWatcher watcher)
 	{
 		resourceWatcher = watcher;
+	}
+
+	public IFileUploadCleaner getFileUploadCleaner()
+	{
+		return fileUploadCleaner;
+	}
+
+	public void setFileUploadCleaner(IFileUploadCleaner fileUploadCleaner)
+	{
+		this.fileUploadCleaner = fileUploadCleaner;
 	}
 
 	/**

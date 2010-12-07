@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.PackageResourceGuard;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.resource.IPropertiesFactory;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
+import org.apache.wicket.util.file.IFileUploadCleaner;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.time.Duration;
@@ -270,6 +271,20 @@ public interface IResourceSettings
 	 * @param watcher
 	 */
 	void setResourceWatcher(IModificationWatcher watcher);
+
+	/**
+	 * Sets a cleaner for the temporary files created by FileUpload functionality
+	 * 
+	 * @param fileUploadCleaner
+	 *            the actual cleaner implementation. Can be <code>null</code>
+	 */
+	void setFileUploadCleaner(IFileUploadCleaner fileUploadCleaner);
+
+	/**
+	 * @return the cleaner for the temporary files created by FileUpload functionality. Can be
+	 *         <code>null</code>
+	 */
+	IFileUploadCleaner getFileUploadCleaner();
 
 	/**
 	 * @param throwExceptionOnMissingResource

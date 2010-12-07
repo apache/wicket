@@ -18,6 +18,9 @@ package org.apache.wicket.util.upload;
 
 import java.io.File;
 
+import org.apache.wicket.util.file.FileCleaningTracker;
+import org.apache.wicket.util.file.IFileUploadCleaner;
+
 
 /**
  * <p>
@@ -75,6 +78,7 @@ public class DiskFileItemFactory implements FileItemFactory
 	 */
 	private int sizeThreshold = DEFAULT_SIZE_THRESHOLD;
 
+	private final IFileUploadCleaner fileUploadCleaner;
 
 	// ----------------------------------------------------------- Constructors
 
@@ -83,9 +87,9 @@ public class DiskFileItemFactory implements FileItemFactory
 	 * Constructs an unconfigured instance of this class. The resulting factory may be configured by
 	 * calling the appropriate setter methods.
 	 */
-	public DiskFileItemFactory()
+	public DiskFileItemFactory(final IFileUploadCleaner fileUploadCleaner)
 	{
-		this(DEFAULT_SIZE_THRESHOLD, null);
+		this(DEFAULT_SIZE_THRESHOLD, null, fileUploadCleaner);
 	}
 
 
@@ -99,10 +103,12 @@ public class DiskFileItemFactory implements FileItemFactory
 	 *            The data repository, which is the directory in which files will be created, should
 	 *            the item size exceed the threshold.
 	 */
-	public DiskFileItemFactory(final int sizeThreshold, final File repository)
+	public DiskFileItemFactory(final int sizeThreshold, final File repository,
+		final IFileUploadCleaner fileUploadCleaner)
 	{
 		this.sizeThreshold = sizeThreshold;
 		this.repository = repository;
+		this.fileUploadCleaner = fileUploadCleaner;
 	}
 
 	// ------------------------------------------------------------- Properties
@@ -171,8 +177,8 @@ public class DiskFileItemFactory implements FileItemFactory
 	// --------------------------------------------------------- Public Methods
 
 	/**
-	 * Create a new {@link org.apache.wicket.util.upload.DiskFileItem} instance from the
-	 * supplied parameters and the local factory configuration.
+	 * Create a new {@link org.apache.wicket.util.upload.DiskFileItem} instance from the supplied
+	 * parameters and the local factory configuration.
 	 * 
 	 * @param fieldName
 	 *            The name of the form field.
@@ -189,7 +195,7 @@ public class DiskFileItemFactory implements FileItemFactory
 		final boolean isFormField, final String fileName)
 	{
 		return new DiskFileItem(fieldName, contentType, isFormField, fileName, sizeThreshold,
-			repository);
+			repository, fileUploadCleaner);
 	}
 
 }

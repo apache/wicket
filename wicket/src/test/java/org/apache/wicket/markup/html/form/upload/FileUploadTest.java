@@ -21,6 +21,8 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.util.file.FileUploadCleaner;
+import org.apache.wicket.util.file.IFileUploadCleaner;
 import org.apache.wicket.util.upload.DiskFileItemFactory;
 import org.apache.wicket.util.upload.FileItem;
 
@@ -50,8 +52,10 @@ public class FileUploadTest extends WicketTestCase
 	 */
 	public void testGetInputStream() throws Exception
 	{
-		FileItem fileItem = new DiskFileItemFactory().createItem("dummyFieldName", "text/java",
-			false, "FileUploadTest.java");
+		IFileUploadCleaner fileUploadCleaner = new FileUploadCleaner();
+
+		FileItem fileItem = new DiskFileItemFactory(fileUploadCleaner).createItem("dummyFieldName",
+			"text/java", false, "FileUploadTest.java");
 		// Initialize the upload
 		fileItem.getOutputStream();
 
@@ -90,6 +94,8 @@ public class FileUploadTest extends WicketTestCase
 		inputStreams = (List)inputStreamsField.get(fileUpload);
 
 		assertNull(inputStreams);
+
+		fileUploadCleaner.destroy();
 	}
 
 }

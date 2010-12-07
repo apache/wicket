@@ -83,7 +83,9 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	public MultipartServletWebRequestImpl(HttpServletRequest request, String filterPrefix,
 		Bytes maxSize) throws FileUploadException
 	{
-		this(request, filterPrefix, maxSize, new DiskFileItemFactory());
+		this(request, filterPrefix, maxSize, new DiskFileItemFactory(Application.get()
+			.getResourceSettings()
+			.getFileUploadCleaner()));
 	}
 
 	/**
@@ -119,7 +121,6 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 				"ServletRequest does not contain multipart content. One possible solution is to explicitly call Form.setMultipart(true), Wicket tries its best to auto-detect multipart forms but there are certain situation where it cannot.");
 		}
 
-
 		// Configure the factory here, if desired.
 		ServletFileUpload upload = new ServletFileUpload(factory);
 
@@ -131,11 +132,11 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		// The encoding can also be null when using multipart/form-data encoded forms.
 		// In that case we use the [application-encoding] which we always demand using
 		// the attribute 'accept-encoding' in wicket forms.
-		if(encoding == null)
+		if (encoding == null)
 		{
 			encoding = Application.get().getRequestCycleSettings().getResponseRequestEncoding();
 		}
-		
+
 		// set encoding specifically when we found it
 		if (encoding != null)
 		{

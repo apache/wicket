@@ -32,8 +32,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
-import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.file.Files;
+import org.apache.wicket.util.file.IFileUploadCleaner;
 import org.apache.wicket.util.io.DeferredFileOutputStream;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
@@ -172,6 +172,8 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 */
 	private FileItemHeaders headers;
 
+	private final IFileUploadCleaner fileUploadCleaner;
+
 	// ----------------------------------------------------------- Constructors
 
 
@@ -196,7 +198,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 */
 	public DiskFileItem(final String fieldName, final String contentType,
 		final boolean isFormField, final String fileName, final int sizeThreshold,
-		final File repository)
+		final File repository, final IFileUploadCleaner fileUploadCleaner)
 	{
 		this.fieldName = fieldName;
 		this.contentType = contentType;
@@ -204,6 +206,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 		this.fileName = fileName;
 		this.sizeThreshold = sizeThreshold;
 		this.repository = repository;
+		this.fileUploadCleaner = fileUploadCleaner;
 	}
 
 
@@ -655,7 +658,10 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 				throw new RuntimeException("Could not create the temp file for upload", e);
 			}
 
-			FileCleaner.track(tempFile, this);
+			if (fileUploadCleaner != null)
+			{
+				fileUploadCleaner.track(tempFile, this);
+			}
 		}
 		return tempFile;
 	}

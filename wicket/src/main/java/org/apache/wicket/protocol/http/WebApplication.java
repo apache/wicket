@@ -55,7 +55,8 @@ import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.collections.MostRecentlyUsedMap;
-import org.apache.wicket.util.file.FileCleaner;
+import org.apache.wicket.util.file.FileUploadCleaner;
+import org.apache.wicket.util.file.IFileUploadCleaner;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.WebApplicationPath;
 import org.apache.wicket.util.lang.Args;
@@ -438,7 +439,13 @@ public abstract class WebApplication extends Application
 			resourceWatcher.destroy();
 		}
 		bufferedResponses.clear();
-		FileCleaner.destroy();
+
+		IFileUploadCleaner fileUploadCleaner = getResourceSettings().getFileUploadCleaner();
+		if (fileUploadCleaner != null)
+		{
+			fileUploadCleaner.destroy();
+		}
+
 		super.internalDestroy();
 
 	}
@@ -471,6 +478,8 @@ public abstract class WebApplication extends Application
 
 		// Set resource finder to web app path
 		getResourceSettings().setResourceFinder(getResourceFinder());
+
+		getResourceSettings().setFileUploadCleaner(new FileUploadCleaner());
 
 		// Add optional sourceFolder for resources.
 		String resourceFolder = getInitParameter("sourceFolder");
