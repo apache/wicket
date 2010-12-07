@@ -19,7 +19,6 @@ package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 import java.util.Iterator;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -80,16 +79,12 @@ public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavi
 	 */
 	public AutoCompleteBehavior(IAutoCompleteRenderer<T> renderer, AutoCompleteSettings settings)
 	{
+		super(settings);
 		if (renderer == null)
 		{
 			throw new IllegalArgumentException("renderer cannot be null");
 		}
-		if (settings == null)
-		{
-			settings = new AutoCompleteSettings();
-		}
 		this.renderer = renderer;
-		this.settings = settings;
 	}
 
 

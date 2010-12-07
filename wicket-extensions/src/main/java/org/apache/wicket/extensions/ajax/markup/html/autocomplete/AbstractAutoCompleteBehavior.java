@@ -38,9 +38,30 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 
 	private static final long serialVersionUID = 1L;
 
-	protected boolean preselect = false;
+	protected AutoCompleteSettings settings;
 
-	protected AutoCompleteSettings settings = new AutoCompleteSettings();
+	/**
+	 * Constructor that creates an default {@link AutoCompleteSettings}
+	 */
+	public AbstractAutoCompleteBehavior()
+	{
+		this(new AutoCompleteSettings());
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param settings
+	 *            settings for the autocomplete list
+	 */
+	public AbstractAutoCompleteBehavior(AutoCompleteSettings settings)
+	{
+		if (settings == null)
+		{
+			settings = new AutoCompleteSettings();
+		}
+		this.settings = settings;
+	}
 
 	/**
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
