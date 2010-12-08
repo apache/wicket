@@ -51,11 +51,13 @@ import org.apache.wicket.util.time.Time;
  * 
  * @author Matej Knopp
  * @author igor.vaynberg
+ * @author Peter Ertl
  */
 class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 {
-	// timestamp cache stored in request cycle meta data
-	protected static final MetaDataKey<Map<ResourceReference, Time>> TIMESTAMP_KEY = new MetaDataKey<Map<ResourceReference, Time>>()
+	/** timestamp cache stored in request cycle meta data */
+	protected static final MetaDataKey<Map<ResourceReference, Time>> TIMESTAMP_KEY =
+		new MetaDataKey<Map<ResourceReference, Time>>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -64,7 +66,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 
 	private final IPageParametersEncoder pageParametersEncoder;
 
-	// if true, timestamps should be added to resource names
+	/** if true, timestamps should be added to resource names */
 	private final IProvider<Boolean> timestamps;
 
 	/**
@@ -80,9 +82,6 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 		this.timestamps = timestamps;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestMapper#mapRequest(org.apache.wicket.request.Request)
-	 */
 	public IRequestHandler mapRequest(Request request)
 	{
 		Url url = request.getUrl();
@@ -147,7 +146,6 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 	 * @param resourceName
 	 * @return
 	 */
-
 	private String stripTimestampFromResourceName(final String resourceName)
 	{
 		int pos = resourceName.lastIndexOf('.');
@@ -190,9 +188,6 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 		return scope.getName();
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestMapper#mapHandler(org.apache.wicket.request.IRequestHandler)
-	 */
 	public Url mapHandler(IRequestHandler requestHandler)
 	{
 		if (requestHandler instanceof ResourceReferenceRequestHandler)
@@ -228,7 +223,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 						// create timestamped version of filename:
 						//
 						// filename :=
-// [basename][timestamp-prefix][last-modified-milliseconds](.extension)
+						// [basename][timestamp-prefix][last-modified-milliseconds](.extension)
 						//
 						StringBuilder filename = new StringBuilder();
 						filename.append(extensionAt == -1 ? token : token.substring(0, extensionAt));
@@ -276,7 +271,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 		RequestCycle requestCycle = ThreadContext.getRequestCycle();
 
 		// no request cycle: this should not happen unless we e.g. run a plain test case without
-// WicketTester
+		// WicketTester
 		if (requestCycle == null)
 			return resourceReference.getLastModified();
 
@@ -334,9 +329,6 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestMapper#getCompatibilityScore(org.apache.wicket.request.Request)
-	 */
 	public int getCompatibilityScore(Request request)
 	{
 		// always return 0 here so that the mounts have higher priority
