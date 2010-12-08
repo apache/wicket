@@ -55,7 +55,7 @@ public class PageParameters implements Serializable
 
 		private String key;
 		private String value;
-	};
+	}
 
 	private static final long serialVersionUID = 1L;
 
@@ -327,7 +327,7 @@ public class PageParameters implements Serializable
 		{
 			return value;
 		}
-	};
+	}
 
 	/**
 	 * @return All named parameters in exact order.
@@ -570,5 +570,37 @@ public class PageParameters implements Serializable
 	public boolean isEmpty()
 	{
 		return getIndexedCount() == 0 && getNamedKeys().isEmpty();
+	}
+
+	@Override
+	public String toString()
+	{
+		StringBuilder str = new StringBuilder();
+
+		for (int i = 0; i < indexedParameters.size(); i++)
+		{
+			if (i > 0)
+				str.append(", ");
+
+			str.append(i);
+			str.append('=');
+			str.append('[').append(indexedParameters.get(i)).append(']');
+		}
+
+		if (str.length() > 0)
+			str.append(", ");
+
+		for (int i = 0; i < namedParameters.size(); i++)
+		{
+			Entry entry = namedParameters.get(i);
+
+			if (i > 0)
+				str.append(", ");
+
+			str.append(entry.key);
+			str.append('=');
+			str.append('[').append(entry.value).append(']');
+		}
+		return str.toString();
 	}
 }
