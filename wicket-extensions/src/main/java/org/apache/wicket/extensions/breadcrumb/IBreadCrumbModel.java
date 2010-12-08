@@ -54,7 +54,7 @@ import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
  * currently active bread crumb participant.
  * </p>
  * <p>
- * A {@link IBreadCrumbParticipant bread crumb participant} is not an actual bread crump, but rather
+ * A {@link IBreadCrumbParticipant bread crumb participant} is not an actual bread crumb, but rather
  * a proxy to components that represent a certain location relative to other bread crumbs in this
  * model, and a means to get the bread crumb title, which is typically rendered as a link label of
  * the actual bread crumb. The actual bread crumbs are supposed to be rendered by a component that
@@ -77,8 +77,8 @@ public interface IBreadCrumbModel extends IClusterable
 	/**
 	 * Lists the bread crumb participants in this model.
 	 * 
-	 * @return The bread crumbs participants, as list with
-	 *         {@link IBreadCrumbParticipant bread crumb participants}.
+	 * @return The bread crumbs participants, as list with {@link IBreadCrumbParticipant bread crumb
+	 *         participants}.
 	 */
 	List<IBreadCrumbParticipant> allBreadCrumbParticipants();
 
@@ -99,11 +99,10 @@ public interface IBreadCrumbModel extends IClusterable
 
 	/**
 	 * Sets the {@link IBreadCrumbParticipant bread crumb} as the active one. Implementations should
-	 * call
-	 * {@link IBreadCrumbModelListener#breadCrumbAdded(IBreadCrumbParticipant) bread crumb added}
-	 * when the bread crumb was not yet part of the model, and
-	 * {@link IBreadCrumbModelListener#breadCrumbRemoved(IBreadCrumbParticipant) bread crumb removed}
-	 * for every crumb that was removed as the result of this call.
+	 * call {@link IBreadCrumbModelListener#breadCrumbAdded(IBreadCrumbParticipant) bread crumb
+	 * added} when the bread crumb was not yet part of the model, and
+	 * {@link IBreadCrumbModelListener#breadCrumbRemoved(IBreadCrumbParticipant) bread crumb
+	 * removed} for every crumb that was removed as the result of this call.
 	 * 
 	 * @param breadCrumbParticipant
 	 *            The bread crump that should be set as the currently active
