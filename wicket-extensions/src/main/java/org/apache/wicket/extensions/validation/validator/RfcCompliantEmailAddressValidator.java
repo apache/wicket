@@ -27,7 +27,7 @@ import org.apache.wicket.validation.validator.PatternValidator;
  * 
  * <p>
  * <b>PLEATE NOTE!</b> Only use this validator if you really need it. The regex used is very big and
- * generates a allocates 1-2Kb of memory per session.
+ * allocates 1-2Kb of memory per session.
  * 
  * <p>
  * Most users will be satisfied with the {@link EmailAddressValidator}
