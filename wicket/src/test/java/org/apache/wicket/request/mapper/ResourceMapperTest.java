@@ -39,6 +39,7 @@ public class ResourceMapperTest extends WicketTestCase
 	private static final String SHARED_NAME = "test-resource";
 
 	private IRequestMapper mapper;
+	private IRequestMapper mapperWithPlaceholder;
 	private TestResource resource;
 
 	@Override
@@ -50,6 +51,7 @@ public class ResourceMapperTest extends WicketTestCase
 		tester.getApplication().getSharedResources().add(SHARED_NAME, resource);
 		ResourceReference resourceReference = new SharedResourceReference(SHARED_NAME);
 		mapper = new ResourceMapper("/test/resource", resourceReference);
+		mapperWithPlaceholder = new ResourceMapper("/test2/${name}/resource", resourceReference);
 		tester.getApplication().getRootRequestMapperAsCompound().add(mapper);
 	}
 
@@ -158,6 +160,62 @@ public class ResourceMapperTest extends WicketTestCase
 
 		StringValue paramValue = params.get("value");
 		assertEquals(12, paramValue.toInt());
+	}
+
+	@Test
+	public void testPlaceholders()
+	{
+		Request request = createRequest("test2/image/resource/foo/bar?a=abc&b=123");
+		IRequestHandler requestHandler = mapperWithPlaceholder.mapRequest(request);
+		assertNotNull(requestHandler);
+		assertEquals(ResourceReferenceRequestHandler.class, requestHandler.getClass());
+		assertEquals(request.getUrl(), mapperWithPlaceholder.mapHandler(requestHandler));
+
+		tester.processRequest(requestHandler);
+		PageParameters params = resource.pageParameters;
+		assertNotNull(params);
+		assertEquals(3, params.getAllNamed().size());
+		assertEquals(2, params.getIndexedCount());
+
+		assertEquals("foo", params.get(0).toString());
+		assertEquals("bar", params.get(1).toString());
+
+		assertEquals("image", params.get("name").toString());
+		assertEquals("abc", params.get("a").toString());
+		assertEquals("123", params.get("b").toString());
+	}
+
+	@Test
+	public void testPlaceholdersWithQueryParamDuplicate()
+	{
+		// we have one named parameter that exists twice
+		Request request = createRequest("test2/image/resource/foo/bar?name=name-2&val=123");
+		IRequestHandler handler = mapperWithPlaceholder.mapRequest(request);
+		assertNotNull(handler);
+		assertEquals(ResourceReferenceRequestHandler.class, handler.getClass());
+
+		// the query part of the duplicate should be gone now
+		Url newUrl = mapperWithPlaceholder.mapHandler(handler);
+		assertEquals(Url.parse("test2/name-2/resource/foo/bar?val=123"), newUrl);
+
+		// create new request
+		request = createRequest(newUrl.toString());
+
+		// get handler again
+		handler = mapperWithPlaceholder.mapRequest(request);
+		assertNotNull(handler);
+
+		tester.processRequest(handler);
+		PageParameters params = resource.pageParameters;
+		assertNotNull(params);
+		assertEquals(2, params.getAllNamed().size());
+		assertEquals(2, params.getIndexedCount());
+
+		assertEquals("foo", params.get(0).toString());
+		assertEquals("bar", params.get(1).toString());
+
+		assertEquals("name-2", params.get("name").toString());
+		assertEquals("123", params.get("val").toString());
 	}
 
 	private static class TestResource implements IResource

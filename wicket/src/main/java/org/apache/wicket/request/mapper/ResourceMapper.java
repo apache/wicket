@@ -16,17 +16,14 @@
  */
 package org.apache.wicket.request.mapper;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
 
@@ -34,13 +31,13 @@ import org.apache.wicket.util.lang.Args;
  * mapper to mount resources to a custom mount path
  * <ul>
  * <li>maps indexed parameters to path segments</li>
- * <li>maps named parameters to query string arguments</li>
+ * <li>maps named parameters to query string arguments or placeholder path segments</li>
  * </ul>
  * 
- * <h4>sample structure of url</h4>
- * 
+ * <strong>sample structure of url</strong>
+ *
  * <pre>
- *    /articles/images/[indexed-param-0]/[indexed-param-1]?[named-param-1=value]&[named-param-2=value2]
+ *    /resources/${category}/images/[indexed-param-0]/[indexed-param-1]?[named-param-1=value]&[named-param-2=value2]
  * </pre>
  * 
  * <h4>sample usage</h4>
@@ -51,11 +48,16 @@ import org.apache.wicket.util.lang.Args;
  * <pre>
  * getRootRequestMapperAsCompound().add(new ResourceMapper(&quot;/images&quot;, new ImagesResourceReference()));
  * </pre>
- * 
+ *
+ * @see org.apache.wicket.protocol.http.WebApplication#mountSharedResource(String, org.apache.wicket.request.resource.ResourceReference)
+ *
  * @author Peter Ertl
  */
 public class ResourceMapper extends AbstractMapper implements IRequestMapper
 {
+	// encode parameters into url, decode parameters from url
+	private final IPageParametersEncoder parametersEncoder;
+
 	// path the resource is bound to
 	private final String[] mountSegments;
 
@@ -75,7 +77,28 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 		Args.notEmpty(path, "path");
 		Args.notNull(resourceReference, "resourceReference");
 		this.resourceReference = resourceReference;
-		mountSegments = getMountSegments(path);
+		this.mountSegments = getMountSegments(path);
+		this.parametersEncoder = new PageParametersEncoder();
+	}
+
+	/**
+	 * create a resource mapper for a resource
+	 *
+	 * @param path
+	 *            mount path for the resource
+	 * @param resourceReference
+	 *            resource reference that should be linked to the mount path
+	 * @param encoder
+	 *            encoder for url parameters
+	 */
+	public ResourceMapper(String path, ResourceReference resourceReference, IPageParametersEncoder encoder)
+	{
+		Args.notEmpty(path, "path");
+		Args.notNull(resourceReference, "resourceReference");
+		Args.notNull(encoder, "encoder");
+		this.resourceReference = resourceReference;
+		this.mountSegments = getMountSegments(path);
+		this.parametersEncoder = encoder;
 	}
 
 	/**
@@ -83,31 +106,30 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 	 */
 	public IRequestHandler mapRequest(final Request request)
 	{
-		Url url = request.getUrl();
-		Iterator<String> segments = url.getSegments().iterator();
+		final Url url = request.getUrl();
 
-		// see if url matches the path we are mounted at
-		for (String mountSegment : mountSegments)
-		{
-			if (segments.hasNext() == false)
-				return null; // given url is too short
-
-			if (mountSegment.equals(segments.next()) == false)
-				return null; // url does not fully match
-		}
+		// check if url matches mount path
+		if (urlStartsWith(url, mountSegments) == false)
+			return null;
 
 		// now extract the page parameters from the request url
-		PageParameters parameters = new PageParameters();
+		PageParameters parameters = extractPageParameters(request, mountSegments.length, parametersEncoder);
 
-		// extract indexed parameters
-		int index = 0;
-		while (segments.hasNext())
-			parameters.set(index++, segments.next());
+		// check if there are placeholders in mount segments
+		for (int i = 0; i < mountSegments.length; ++i)
+		{
+			String placeholder = getPlaceholder(mountSegments[i]);
 
-		// extract named parameters
-		for (Url.QueryParameter queryParameter : url.getQueryParameters())
-			parameters.add(queryParameter.getName(), queryParameter.getValue());
-
+			if (placeholder != null)
+			{
+				// extract the parameter from URL
+				if (parameters == null)
+				{
+					parameters = new PageParameters();
+				}
+				parameters.add(placeholder, url.getSegments().get(i));
+			}
+		}
 		return new ResourceReferenceRequestHandler(resourceReference, parameters);
 	}
 
@@ -133,29 +155,29 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 		if (resourceReference.getResource().equals(handler.getResource()) == false)
 			return null;
 
-		// create path to resource
-		List<String> path = new ArrayList<String>();
+		Url url = new Url();
 
-		// add mount segments
-		path.addAll(Arrays.asList(mountSegments));
+		// add mount path segments
+		for (String segment : mountSegments)
+		{
+			url.getSegments().add(segment);
+		}
 
-		// next we add the page parameters to the resulting path
-		PageParameters parameters = handler.getPageParameters();
+		// replace placeholder parameters
+		PageParameters parameters = new PageParameters(handler.getPageParameters());
 
-		// append indexed parameters as path segments
-		for (int index = 0; index < parameters.getIndexedCount(); index++)
-			path.add(parameters.get(index).toString());
+		for (int i = 0; i < mountSegments.length; ++i)
+		{
+			String placeholder = getPlaceholder(mountSegments[i]);
 
-		// append named parameters as query strings
-		List<PageParameters.NamedPair> namedParameters = parameters.getAllNamed();
-		List<Url.QueryParameter> queryParams = new ArrayList<Url.QueryParameter>(
-			namedParameters.size());
+			if (placeholder != null)
+			{
+				url.getSegments().set(i, parameters.get(placeholder).toString(""));
+				parameters.remove(placeholder);
+			}
+		}
 
-		for (PageParameters.NamedPair namedParameter : namedParameters)
-			queryParams.add(new Url.QueryParameter(namedParameter.getKey(),
-				namedParameter.getValue()));
-
-		// create and return url
-		return new Url(path, queryParams);
+		// create url
+		return encodePageParameters(url, parameters, parametersEncoder);
 	}
 }
