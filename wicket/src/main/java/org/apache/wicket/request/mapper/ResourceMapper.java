@@ -55,10 +55,10 @@ import org.apache.wicket.util.lang.Args;
  */
 public class ResourceMapper extends AbstractMapper implements IRequestMapper
 {
-	// encode parameters into url, decode parameters from url
+	// encode page parameters into url + decode page parameters from url
 	private final IPageParametersEncoder parametersEncoder;
 
-	// path the resource is bound to
+	// mount path (= segments) the resource is bound to
 	private final String[] mountSegments;
 
 	// resource that the mapper links to
@@ -71,14 +71,12 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 	 *            mount path for the resource
 	 * @param resourceReference
 	 *            resource reference that should be linked to the mount path
+	 *
+	 * @see #ResourceMapper(String, org.apache.wicket.request.resource.ResourceReference, org.apache.wicket.request.mapper.parameter.IPageParametersEncoder)
 	 */
 	public ResourceMapper(String path, ResourceReference resourceReference)
 	{
-		Args.notEmpty(path, "path");
-		Args.notNull(resourceReference, "resourceReference");
-		this.resourceReference = resourceReference;
-		this.mountSegments = getMountSegments(path);
-		this.parametersEncoder = new PageParametersEncoder();
+		this(path, resourceReference, new PageParametersEncoder());
 	}
 
 	/**
@@ -96,29 +94,29 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 		Args.notEmpty(path, "path");
 		Args.notNull(resourceReference, "resourceReference");
 		Args.notNull(encoder, "encoder");
+
 		this.resourceReference = resourceReference;
 		this.mountSegments = getMountSegments(path);
 		this.parametersEncoder = encoder;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestMapper#mapRequest(org.apache.wicket.request.Request)
-	 */
 	public IRequestHandler mapRequest(final Request request)
 	{
 		final Url url = request.getUrl();
 
 		// check if url matches mount path
 		if (urlStartsWith(url, mountSegments) == false)
+		{
 			return null;
+		}
 
 		// now extract the page parameters from the request url
 		PageParameters parameters = extractPageParameters(request, mountSegments.length, parametersEncoder);
 
 		// check if there are placeholders in mount segments
-		for (int i = 0; i < mountSegments.length; ++i)
+		for (int index = 0; index < mountSegments.length; ++index)
 		{
-			String placeholder = getPlaceholder(mountSegments[i]);
+			String placeholder = getPlaceholder(mountSegments[index]);
 
 			if (placeholder != null)
 			{
@@ -127,33 +125,31 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 				{
 					parameters = new PageParameters();
 				}
-				parameters.add(placeholder, url.getSegments().get(i));
+				parameters.add(placeholder, url.getSegments().get(index));
 			}
 		}
 		return new ResourceReferenceRequestHandler(resourceReference, parameters);
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestMapper#getCompatibilityScore(org.apache.wicket.request.Request)
-	 */
 	public int getCompatibilityScore(Request request)
 	{
 		return 0; // pages always have priority over resources
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestMapper#mapHandler(org.apache.wicket.request.IRequestHandler)
-	 */
 	public Url mapHandler(IRequestHandler requestHandler)
 	{
 		if ((requestHandler instanceof ResourceReferenceRequestHandler) == false)
+		{
 			return null;
+		}
 
 		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler)requestHandler;
 
 		// see if request handler addresses the resource we serve
 		if (resourceReference.getResource().equals(handler.getResource()) == false)
+		{
 			return null;
+		}
 
 		Url url = new Url();
 
@@ -166,13 +162,13 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 		// replace placeholder parameters
 		PageParameters parameters = new PageParameters(handler.getPageParameters());
 
-		for (int i = 0; i < mountSegments.length; ++i)
+		for (int index = 0; index < mountSegments.length; ++index)
 		{
-			String placeholder = getPlaceholder(mountSegments[i]);
+			String placeholder = getPlaceholder(mountSegments[index]);
 
 			if (placeholder != null)
 			{
-				url.getSegments().set(i, parameters.get(placeholder).toString(""));
+				url.getSegments().set(index, parameters.get(placeholder).toString(""));
 				parameters.remove(placeholder);
 			}
 		}
