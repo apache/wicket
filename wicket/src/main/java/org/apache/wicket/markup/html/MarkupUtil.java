@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.visit.IVisit;
@@ -48,16 +49,21 @@ public class MarkupUtil
 				container.toString());
 		}
 
+
 		final boolean rtn[] = new boolean[] { true };
 		page.visitChildren(MarkupContainer.class, new IVisitor<MarkupContainer, Void>()
 		{
 			public void component(final MarkupContainer comp, final IVisit<Void> visit)
 			{
-				MarkupResourceStream rs = comp.getAssociatedMarkup().getMarkupResourceStream();
-				if (rs.isHtml5() == false)
+				IMarkupFragment associatedMarkup = comp.getAssociatedMarkup();
+				if (associatedMarkup != null)
 				{
-					rtn[0] = false;
-					visit.stop();
+					MarkupResourceStream rs = associatedMarkup.getMarkupResourceStream();
+					if (rs.isHtml5() == false)
+					{
+						rtn[0] = false;
+						visit.stop();
+					}
 				}
 			}
 		});

@@ -97,6 +97,19 @@ public class WicketNamespaceTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
+	public void XXtestDoctype_InheritedPage() throws Exception
+	{
+		executeTest(Doctype_1_InheritedPage.class, "DoctypeExpectedResult_1_Inherited.html");
+		MarkupResourceStream rs = MarkupFactory.get()
+			.getMarkup(tester.getLastRenderedPage(), true)
+			.getMarkupResourceStream();
+		assertEquals("html", rs.getDoctype());
+		assertEquals(true, rs.isHtml5());
+	}
+
+	/**
+	 * @throws Exception
+	 */
 	public void testDoctype_2() throws Exception
 	{
 		executeTest(Doctype_2.class, "DoctypeExpectedResult_2.html");
