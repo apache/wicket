@@ -283,9 +283,31 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @param message
 	 *            The feedback message
 	 */
-	public final void error(final String message)
+	public final void error(final Serializable message)
 	{
 		addFeedbackMessage(message, FeedbackMessage.ERROR);
+	}
+
+	/**
+	 * Registers an fatal feedback message for this session
+	 * 
+	 * @param message
+	 *            The feedback message
+	 */
+	public final void fatal(final Serializable message)
+	{
+		addFeedbackMessage(message, FeedbackMessage.FATAL);
+	}
+
+	/**
+	 * Registers an debug feedback message for this session
+	 * 
+	 * @param message
+	 *            The feedback message
+	 */
+	public final void debug(final Serializable message)
+	{
+		addFeedbackMessage(message, FeedbackMessage.DEBUG);
 	}
 
 	/**
@@ -426,7 +448,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @param message
 	 *            The feedback message
 	 */
-	public final void info(final String message)
+	public final void info(final Serializable message)
 	{
 		addFeedbackMessage(message, FeedbackMessage.INFO);
 	}
@@ -587,7 +609,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @param message
 	 *            The feedback message
 	 */
-	public final void warn(final String message)
+	public final void warn(final Serializable message)
 	{
 		addFeedbackMessage(message, FeedbackMessage.WARNING);
 	}
@@ -599,7 +621,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @param level
 	 * 
 	 */
-	private void addFeedbackMessage(String message, int level)
+	private void addFeedbackMessage(Serializable message, int level)
 	{
 		getFeedbackMessages().add(null, message, level);
 		dirty();
