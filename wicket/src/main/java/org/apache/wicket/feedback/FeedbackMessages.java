@@ -66,7 +66,7 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 * @param message
 	 * @param level
 	 */
-	public final void add(Component reporter, String message, int level)
+	public final void add(Component reporter, Serializable message, int level)
 	{
 		add(new FeedbackMessage(reporter, message, level));
 	}
@@ -116,7 +116,7 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 * @param message
 	 *            the actual message
 	 */
-	public final void debug(Component reporter, String message)
+	public final void debug(Component reporter, Serializable message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.DEBUG));
 	}
@@ -142,7 +142,7 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 * @param message
 	 *            the actual message
 	 */
-	public final void fatal(Component reporter, String message)
+	public final void fatal(Component reporter, Serializable message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.FATAL));
 	}
@@ -212,7 +212,7 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 * @param message
 	 *            The actual message
 	 */
-	public final void info(Component reporter, String message)
+	public final void info(Component reporter, Serializable message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.INFO));
 	}
@@ -332,7 +332,7 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 * @param message
 	 *            the actual message
 	 */
-	public final void warn(Component reporter, String message)
+	public final void warn(Component reporter, Serializable message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.WARNING));
 	}
