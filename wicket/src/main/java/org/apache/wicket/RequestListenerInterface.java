@@ -25,9 +25,11 @@ import java.util.Map;
 
 import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.RequestHandlerStack.ReplaceHandlerException;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.handler.ListenerInvocationNotAllowedException;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -210,30 +212,7 @@ public class RequestListenerInterface
 				"Component rejected interface invocation");
 		}
 
-		try
-		{
-			// Invoke the interface method on the component
-			method.invoke(component);
-		}
-		catch (InvocationTargetException e)
-		{
-			// Honor redirect exception contract defined in IPageFactory
-			if (e.getTargetException() instanceof ReplaceHandlerException ||
-				e.getTargetException() instanceof AuthorizationException ||
-				e.getTargetException() instanceof WicketRuntimeException)
-			{
-				throw (RuntimeException)e.getTargetException();
-			}
-			throw new WicketRuntimeException("Method " + method.getName() + " of " +
-				method.getDeclaringClass() + " targeted at component " + component +
-				" threw an exception", e);
-		}
-		catch (Exception e)
-		{
-			throw new WicketRuntimeException("Method " + method.getName() + " of " +
-				method.getDeclaringClass() + " targeted at component " + component +
-				" threw an exception", e);
-		}
+		internalInvoke(component, component);
 	}
 
 	/**
@@ -258,10 +237,26 @@ public class RequestListenerInterface
 				"Behavior rejected interface invocation");
 		}
 
+		internalInvoke(component, behavior);
+	}
+
+	private void internalInvoke(final Component component, final Object target)
+	{
+		Boolean frozen = null;
+
+		// save a reference to the page because the component can be removed
+		// during the invocation of the listener and thus lose its parent
+		Page page = component.getPage();
+
+		if (isAjax(component))
+		{
+			// do not increment page id for ajax requests
+			frozen = page.setFreezePageId(true);
+		}
+
 		try
 		{
-			// Invoke the interface method on the component
-			method.invoke(behavior);
+			method.invoke(target);
 		}
 		catch (InvocationTargetException e)
 		{
@@ -272,16 +267,38 @@ public class RequestListenerInterface
 				throw (RuntimeException)e.getTargetException();
 			}
 			throw new WicketRuntimeException("Method " + method.getName() + " of " +
-				method.getDeclaringClass() + " targeted at behavior " + behavior +
-				" on component " + component + " threw an exception", e);
+				method.getDeclaringClass() + " targeted at " + target + " on component " +
+				component + " threw an exception", e);
 		}
 		catch (Exception e)
 		{
 			throw new WicketRuntimeException("Method " + method.getName() + " of " +
-				method.getDeclaringClass() + " targeted at behavior " + behavior +
-				" on component " + component + " threw an exception", e);
+				method.getDeclaringClass() + " targeted at " + target + " on component " +
+				component + " threw an exception", e);
+		}
+		finally
+		{
+			if (frozen != null)
+			{
+				page.setFreezePageId(frozen);
+			}
 		}
 	}
+
+	private boolean isAjax(Component component)
+	{
+		boolean isAjax = false;
+
+		Request request = component.getRequest();
+		if (request instanceof WebRequest)
+		{
+			WebRequest webRequest = (WebRequest)request;
+			isAjax = webRequest.isAjax();
+		}
+
+		return isAjax;
+	}
+
 
 	/**
 	 * Method to call to register this interface for use

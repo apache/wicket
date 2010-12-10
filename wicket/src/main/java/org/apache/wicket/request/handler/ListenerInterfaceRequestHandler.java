@@ -154,29 +154,8 @@ public class ListenerInterfaceRequestHandler
 					new PageProvider(getPage()), policy));
 			}
 
-			/*
-			 * FIXME WICKET-NG the handling of page id freezing should be generalized to
-			 * RequestListenerInterface, but we may have to refactor it to pass in the request cycle
-			 * into the invoke method so we can access the request and figure out if it is ajax or
-			 * not.
-			 */
-			Boolean frozen = null;
+			invokeListener();
 
-			if (isAjax)
-			{
-				// do not increment page id for ajax requests
-				frozen = page.setFreezePageId(true);
-			}
-
-			try
-			{
-				invokeListener();
-			}
-			finally
-			{
-				if (frozen != null)
-					page.setFreezePageId(frozen);
-			}
 		}
 		else
 		{
