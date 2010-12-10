@@ -364,6 +364,15 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	 */
 	public final String getDoctype()
 	{
+		if (doctype == null)
+		{
+			MarkupResourceStream baseMarkupResourceStream = getBaseMarkupResourceStream();
+			if (baseMarkupResourceStream != null)
+			{
+				doctype = baseMarkupResourceStream.getDoctype();
+			}
+		}
+
 		return doctype;
 	}
 
@@ -394,6 +403,6 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	 */
 	public boolean isHtml5()
 	{
-		return "html".equalsIgnoreCase(doctype);
+		return "html".equalsIgnoreCase(getDoctype());
 	}
 }
