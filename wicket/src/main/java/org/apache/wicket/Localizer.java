@@ -206,6 +206,13 @@ public class Localizer
 			if (resourceSettings.getUseDefaultOnMissingResource())
 			{
 				value = defaultValue;
+
+				// If a property value has been found, or a default value was given,
+				// than replace the placeholder and we are done
+				if (value != null)
+				{
+					return substitutePropertyExpressions(component, value, model);
+				}
 			}
 		}
 
@@ -213,7 +220,7 @@ public class Localizer
 		// than replace the placeholder and we are done
 		if (value != null)
 		{
-			return substitutePropertyExpressions(component, value, model);
+			return value;
 		}
 
 		if (resourceSettings.getThrowExceptionOnMissingResource())
