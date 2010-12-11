@@ -1350,14 +1350,7 @@ Wicket.Ajax.Call.prototype = {
 		steps.push(function(notify) {
 			// get the component id
 			var compId = node.getAttribute("id");
-			var text="";
-
-			// get the new component body
-			if (node.hasChildNodes()) {
-				for( i=0 ; i < node.childNodes.length; i++ ) {
-     				text = text + node.childNodes[i].nodeValue;
-   				} 
-			}
+			var text= Wicket._readTextNode(node);
 
 			// if the text was escaped, unascape it
 			// (escaping is done when the component body contains a CDATA section)
@@ -1384,7 +1377,7 @@ Wicket.Ajax.Call.prototype = {
 	processEvaluation: function(steps, node) {
 		steps.push(function(notify) {
 			// get the javascript body
-		    var text = node.firstChild.nodeValue;
+		    var text = Wicket._readTextNode(node);
 		    
 		    // unescape it if necessary
 		    var encoding = node.getAttribute("encoding");
@@ -1431,7 +1424,7 @@ Wicket.Ajax.Call.prototype = {
 
 	// Adds a closure that processes a redirect
 	processRedirect: function(steps, node) {
-		var text = node.firstChild.nodeValue;
+		var text = Wicket._readTextNode(node);
 		Wicket.Log.info("Redirecting to: "+text);
 		window.location=text;
 	},
@@ -1489,7 +1482,7 @@ Wicket.Head.Contributor.prototype = {
 		// need to replace that first
 		
 		// get the header contribution text and unescape it if necessary
-		var text = headerNode.firstChild.nodeValue;	
+		var text = Wicket._readTextNode(headerNode);	
 	    var encoding = headerNode.getAttribute("encoding");
 	    
 	    if (encoding != null && encoding != "") {
@@ -2411,4 +2404,16 @@ function wicketHide(id) {
 	if (e!=null) {
 	    e.style.display = "none";
 	}
+}
+
+// reads large text/cdata nodes. WICKET-2759/3244
+Wicket._readTextNode = function(node) {
+	var text = "";
+	// get the new component body
+	if (node.hasChildNodes()) {
+		for( i=0 ; i < node.childNodes.length; i++ ) {
+			text = text + node.childNodes[i].nodeValue;
+		}
+	}
+	return text;
 }
