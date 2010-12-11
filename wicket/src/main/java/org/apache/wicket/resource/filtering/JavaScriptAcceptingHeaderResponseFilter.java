@@ -22,16 +22,15 @@ package org.apache.wicket.resource.filtering;
  * @see CssAcceptingHeaderResponseFilter
  * @author Jeremy Thomerson
  */
-public class JavascriptAcceptingHeaderResponseFilter extends OppositeHeaderResponseFilter
+public class JavaScriptAcceptingHeaderResponseFilter extends OppositeHeaderResponseFilter
 {
-
 	/**
 	 * Construct.
 	 * 
 	 * @param name
 	 *            name of the filter (used by the container that renders these resources)
 	 */
-	public JavascriptAcceptingHeaderResponseFilter(String name)
+	public JavaScriptAcceptingHeaderResponseFilter(String name)
 	{
 		super(name, new CssAcceptingHeaderResponseFilter("NOT_USED"));
 	}

@@ -30,7 +30,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.response.NullResponse;
-import org.apache.wicket.util.string.JavascriptUtils;
+import org.apache.wicket.util.string.JavaScriptUtils;
 import org.apache.wicket.util.string.Strings;
 
 
@@ -207,7 +207,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 
 			if (token1Unused && token2Unused)
 			{
-				JavascriptUtils.writeJavascriptUrl(getResponse(), url, id);
+				JavaScriptUtils.writeJavascriptUrl(getResponse(), url, id);
 				markRendered(token1);
 				if (token2 != null)
 				{
@@ -232,7 +232,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 			List<String> token = Arrays.asList(javascript.toString(), id);
 			if (wasRendered(token) == false)
 			{
-				JavascriptUtils.writeJavascript(getResponse(), javascript, id);
+				JavaScriptUtils.writeJavascript(getResponse(), javascript, id);
 				markRendered(token);
 			}
 		}
@@ -309,7 +309,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 			if (wasRendered(token) == false)
 			{
 				renderJavascriptReference(WicketEventReference.INSTANCE);
-				JavascriptUtils.writeJavascript(getResponse(), "Wicket.Event.add(" + target +
+				JavaScriptUtils.writeJavascript(getResponse(), "Wicket.Event.add(" + target +
 					", \"" + event + "\", function(event) { " + javascript + ";});");
 				markRendered(token);
 			}

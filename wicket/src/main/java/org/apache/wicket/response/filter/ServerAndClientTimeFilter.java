@@ -23,7 +23,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.util.string.JavascriptUtils;
+import org.apache.wicket.util.string.JavaScriptUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,14 +68,14 @@ public class ServerAndClientTimeFilter implements IResponseFilter
 				.getString("ServerAndClientTimeFilter.statustext", null, Model.ofMap(map),
 					defaultValue.toString());
 			AppendingStringBuffer endScript = new AppendingStringBuffer(150);
-			endScript.append("\n").append(JavascriptUtils.SCRIPT_OPEN_TAG);
+			endScript.append("\n").append(JavaScriptUtils.SCRIPT_OPEN_TAG);
 			endScript.append("\nwindow.defaultStatus='");
 			endScript.append(txt);
-			endScript.append("';\n").append(JavascriptUtils.SCRIPT_CLOSE_TAG).append("\n");
+			endScript.append("';\n").append(JavaScriptUtils.SCRIPT_CLOSE_TAG).append("\n");
 			responseBuffer.insert(bodyIndex - 1, endScript);
-			responseBuffer.insert(headIndex + 6, "\n" + JavascriptUtils.SCRIPT_OPEN_TAG +
+			responseBuffer.insert(headIndex + 6, "\n" + JavaScriptUtils.SCRIPT_OPEN_TAG +
 				"\nvar clientTimeVariable = new Date().getTime();\n" +
-				JavascriptUtils.SCRIPT_CLOSE_TAG + "\n");
+				JavaScriptUtils.SCRIPT_CLOSE_TAG + "\n");
 		}
 		log.info(timeTaken + "ms server time taken for request " +
 			RequestCycle.get().getRequest().getUrl() + " response size: " + responseBuffer.length());

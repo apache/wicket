@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.javascript;
 
-import org.apache.wicket.util.string.JavascriptStripper;
+import org.apache.wicket.util.string.JavaScriptStripper;
 
 /**
  * Wicket default implementation of a javascript compressor
@@ -30,6 +30,6 @@ public class DefaultJavaScriptCompressor implements IJavaScriptCompressor
 	 */
 	public String compress(String original)
 	{
-		return new JavascriptStripper().stripCommentsAndWhitespace(original);
+		return new JavaScriptStripper().stripCommentsAndWhitespace(original);
 	}
 }

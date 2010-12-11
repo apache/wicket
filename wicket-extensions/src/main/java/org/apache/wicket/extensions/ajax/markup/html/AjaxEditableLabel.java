@@ -32,7 +32,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.convert.IConverter;
-import org.apache.wicket.util.string.JavascriptUtils;
+import org.apache.wicket.util.string.JavaScriptUtils;
 import org.apache.wicket.validation.IValidator;
 
 
@@ -457,7 +457,7 @@ public class AjaxEditableLabel<T> extends Panel
 		if (errorMessage instanceof String)
 		{
 			target.appendJavascript("window.status='" +
-				JavascriptUtils.escapeQuotes((String)errorMessage) + "';");
+				JavaScriptUtils.escapeQuotes((String)errorMessage) + "';");
 		}
 		target.appendJavascript("{var el=wicketGet('" + editor.getMarkupId() +
 			"'); el.select(); el.focus();}");

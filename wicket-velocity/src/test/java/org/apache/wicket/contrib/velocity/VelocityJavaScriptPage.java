@@ -21,26 +21,26 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.collections.MiniMap;
 import org.apache.wicket.util.lang.Packages;
-import org.apache.wicket.util.string.JavascriptUtils;
-import org.apache.wicket.velocity.VelocityJavascriptContributor;
+import org.apache.wicket.util.string.JavaScriptUtils;
+import org.apache.wicket.velocity.VelocityJavaScriptContributor;
 
 /**
  * Test page.
  */
-public class VelocityJavascriptPage extends WebPage
+public class VelocityJavaScriptPage extends WebPage
 {
 	static final String MSG1 = "Stoopid test 1";
 
 	/**
 	 * Construct.
 	 */
-	public VelocityJavascriptPage()
+	public VelocityJavaScriptPage()
 	{
 		String templateName = Packages.absolutePath(getClass(), "testTemplate.vm");
 
 		String id = "000001";
 		String javascript = "msg1: Stoopid test 1\nmsg2: Stooopid test 2";
-		JavascriptUtils.writeJavascript(getResponse(), javascript, id);
+		JavaScriptUtils.writeJavascript(getResponse(), javascript, id);
 
 		IModel<MiniMap<String, String>> model = new Model<MiniMap<String, String>>()
 		{
@@ -57,6 +57,6 @@ public class VelocityJavascriptPage extends WebPage
 
 		};
 
-		add(new VelocityJavascriptContributor(templateName, model, id));
+		add(new VelocityJavaScriptContributor(templateName, model, id));
 	}
 }

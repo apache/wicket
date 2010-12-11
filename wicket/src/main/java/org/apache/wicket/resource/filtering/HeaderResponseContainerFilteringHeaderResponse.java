@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @see HeaderResponseFilteredResponseContainer
  * @see CssAcceptingHeaderResponseFilter
- * @see JavascriptAcceptingHeaderResponseFilter
+ * @see JavaScriptAcceptingHeaderResponseFilter
  * @author Jeremy Thomerson
  */
 public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHeaderResponse

@@ -24,9 +24,8 @@ import org.apache.wicket.request.Response;
  * 
  * @author Juergen Donnerstag
  */
-public class JavascriptUtils
+public class JavaScriptUtils
 {
-
 	/** Script open tag */
 	public final static String SCRIPT_OPEN_TAG = "<script type=\"text/javascript\"><!--/*--><![CDATA[/*><!--*/\n";
 
@@ -56,7 +55,7 @@ public class JavascriptUtils
 	 *            The response object
 	 * @param id
 	 */
-	public JavascriptUtils(final Response response, String id)
+	public JavaScriptUtils(final Response response, String id)
 	{
 		this.response = response;
 		writeOpenTag(response, id);
@@ -68,7 +67,7 @@ public class JavascriptUtils
 	 * @param response
 	 *            The response object
 	 */
-	public JavascriptUtils(final Response response)
+	public JavaScriptUtils(final Response response)
 	{
 		this.response = response;
 		writeOpenTag(response);

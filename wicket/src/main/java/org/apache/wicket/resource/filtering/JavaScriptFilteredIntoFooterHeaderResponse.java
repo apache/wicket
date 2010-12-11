@@ -26,10 +26,9 @@ import org.apache.wicket.markup.html.IHeaderResponse;
  * 
  * @author Jeremy Thomerson
  */
-public final class JavascriptFilteredIntoFooterHeaderResponse extends
+public final class JavaScriptFilteredIntoFooterHeaderResponse extends
 	HeaderResponseContainerFilteringHeaderResponse
 {
-
 	private static final String HEADER_FILTER_NAME = "headerBucket";
 
 	/**
@@ -41,7 +40,7 @@ public final class JavascriptFilteredIntoFooterHeaderResponse extends
 	 *            the name of the bucket that you will use for your footer container (see the class
 	 *            javadocs for a reminder about putting this container in your footer)
 	 */
-	public JavascriptFilteredIntoFooterHeaderResponse(IHeaderResponse response,
+	public JavaScriptFilteredIntoFooterHeaderResponse(IHeaderResponse response,
 		String footerBucketName)
 	{
 		super(response, HEADER_FILTER_NAME, null);
@@ -55,9 +54,9 @@ public final class JavascriptFilteredIntoFooterHeaderResponse extends
 		return new IHeaderResponseFilter[] { header, footer };
 	}
 
-	protected JavascriptAcceptingHeaderResponseFilter createFooterFilter(String footerBucketName)
+	protected JavaScriptAcceptingHeaderResponseFilter createFooterFilter(String footerBucketName)
 	{
-		return new JavascriptAcceptingHeaderResponseFilter(footerBucketName);
+		return new JavaScriptAcceptingHeaderResponseFilter(footerBucketName);
 	}
 
 	protected CssAcceptingHeaderResponseFilter createHeaderFilter(String headerFilterName)

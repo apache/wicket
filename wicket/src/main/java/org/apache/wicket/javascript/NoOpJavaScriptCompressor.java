@@ -21,7 +21,7 @@ package org.apache.wicket.javascript;
  * 
  * @author Juergen Donnerstag
  */
-public class NoOpJavascriptCompressor implements IJavaScriptCompressor
+public class NoOpJavaScriptCompressor implements IJavaScriptCompressor
 {
 	/**
 	 * @see org.apache.wicket.javascript.IJavaScriptCompressor#compress(java.lang.String)

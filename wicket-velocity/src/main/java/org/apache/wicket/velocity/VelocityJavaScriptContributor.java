@@ -28,7 +28,7 @@ import org.apache.wicket.util.lang.Packages;
  * A derivation of VelocityContributor that uses
  * {@link org.apache.wicket.markup.html.IHeaderResponse#renderJavascript(CharSequence, String)}
  */
-public class VelocityJavascriptContributor extends VelocityContributor
+public class VelocityJavaScriptContributor extends VelocityContributor
 {
 	private static final long serialVersionUID = 1L;
 
@@ -43,7 +43,7 @@ public class VelocityJavascriptContributor extends VelocityContributor
 	 * @param model
 	 * @param id
 	 */
-	public VelocityJavascriptContributor(Class<?> clazz, String templatePath,
+	public VelocityJavaScriptContributor(Class<?> clazz, String templatePath,
 		IModel<? extends Map<?, ?>> model, String id)
 	{
 		super(Packages.absolutePath(clazz, templatePath), model);
@@ -58,7 +58,7 @@ public class VelocityJavascriptContributor extends VelocityContributor
 	 * @param model
 	 * @param id
 	 */
-	public VelocityJavascriptContributor(String templatePath, IModel<? extends Map<?, ?>> model,
+	public VelocityJavaScriptContributor(String templatePath, IModel<? extends Map<?, ?>> model,
 		String id)
 	{
 		super(templatePath, model);

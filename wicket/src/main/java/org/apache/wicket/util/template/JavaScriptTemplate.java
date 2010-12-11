@@ -18,7 +18,7 @@ package org.apache.wicket.util.template;
 
 import java.util.Map;
 
-import org.apache.wicket.util.string.JavascriptUtils;
+import org.apache.wicket.util.string.JavaScriptUtils;
 
 
 /**
@@ -48,7 +48,7 @@ public final class JavaScriptTemplate extends TextTemplateDecorator
 	@Override
 	public String getBeforeTemplateContents()
 	{
-		return JavascriptUtils.SCRIPT_OPEN_TAG;
+		return JavaScriptUtils.SCRIPT_OPEN_TAG;
 	}
 
 	/**
@@ -57,7 +57,7 @@ public final class JavaScriptTemplate extends TextTemplateDecorator
 	@Override
 	public String getAfterTemplateContents()
 	{
-		return JavascriptUtils.SCRIPT_CLOSE_TAG;
+		return JavaScriptUtils.SCRIPT_CLOSE_TAG;
 	}
 
 	/**

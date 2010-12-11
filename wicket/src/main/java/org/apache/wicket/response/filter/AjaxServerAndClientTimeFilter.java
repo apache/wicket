@@ -22,7 +22,7 @@ import java.util.Map;
 import org.apache.wicket.Application;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.util.string.JavascriptUtils;
+import org.apache.wicket.util.string.JavaScriptUtils;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,14 +56,14 @@ public class AjaxServerAndClientTimeFilter implements IResponseFilter
 		if (headIndex != -1 && bodyIndex != -1)
 		{
 			AppendingStringBuffer endScript = new AppendingStringBuffer(150);
-			endScript.append("\n").append(JavascriptUtils.SCRIPT_OPEN_TAG);
+			endScript.append("\n").append(JavaScriptUtils.SCRIPT_OPEN_TAG);
 			endScript.append("\nwindow.defaultStatus='");
 			endScript.append(getStatusString(timeTaken, "ServerAndClientTimeFilter.statustext"));
-			endScript.append("';\n").append(JavascriptUtils.SCRIPT_CLOSE_TAG).append("\n");
+			endScript.append("';\n").append(JavaScriptUtils.SCRIPT_CLOSE_TAG).append("\n");
 			responseBuffer.insert(bodyIndex - 1, endScript);
-			responseBuffer.insert(headIndex + 6, "\n" + JavascriptUtils.SCRIPT_OPEN_TAG +
+			responseBuffer.insert(headIndex + 6, "\n" + JavaScriptUtils.SCRIPT_OPEN_TAG +
 				"\nvar clientTimeVariable = new Date().getTime();\n" +
-				JavascriptUtils.SCRIPT_CLOSE_TAG + "\n");
+				JavaScriptUtils.SCRIPT_CLOSE_TAG + "\n");
 		}
 		else if (ajaxStart != -1 && ajaxEnd != -1)
 		{

@@ -27,7 +27,7 @@ import org.apache.wicket.extensions.yui.YuiLib;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.util.string.JavascriptUtils;
+import org.apache.wicket.util.string.JavaScriptUtils;
 
 
 /**
@@ -192,7 +192,7 @@ public abstract class AbstractCalendar extends WebComponent
 		String javascriptId = getJavascriptId();
 		String javascriptWidgetId = getJavascriptWidgetId();
 		StringBuilder b = new StringBuilder();
-		b.append(JavascriptUtils.SCRIPT_OPEN_TAG);
+		b.append(JavaScriptUtils.SCRIPT_OPEN_TAG);
 		// initialize wicket namespace and register the init function
 		// for the YUI widget
 		b.append("YAHOO.namespace(\"wicket\");\nfunction init");
@@ -267,7 +267,7 @@ public abstract class AbstractCalendar extends WebComponent
 		b.append("YAHOO.util.Event.addListener(window, \"load\", init");
 		b.append(javascriptId);
 		b.append(");");
-		b.append(JavascriptUtils.SCRIPT_CLOSE_TAG);
+		b.append(JavaScriptUtils.SCRIPT_CLOSE_TAG);
 
 		response.renderString(b);
 	}

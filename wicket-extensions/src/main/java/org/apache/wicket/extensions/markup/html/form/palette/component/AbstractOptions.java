@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.util.string.JavascriptUtils;
+import org.apache.wicket.util.string.JavaScriptUtils;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.IValueMap;
 
@@ -171,10 +171,10 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 	protected void avoidAjaxSerialization()
 	{
 		getResponse().write(
-			JavascriptUtils.SCRIPT_OPEN_TAG +
+			JavaScriptUtils.SCRIPT_OPEN_TAG +
 				"if (typeof(Wicket) != \"undefined\" && typeof(Wicket.Form) != \"undefined\")" +
 				"    Wicket.Form.excludeFromAjaxSerialization." + getMarkupId() + "='true';" +
-				JavascriptUtils.SCRIPT_CLOSE_TAG);
+				JavaScriptUtils.SCRIPT_CLOSE_TAG);
 	}
 
 	/**

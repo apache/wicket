@@ -22,7 +22,7 @@ package org.apache.wicket.util.string;
  * 
  * @author Matej Knopp
  */
-public class JavascriptStripper
+public class JavaScriptStripper
 {
 	/*
 	 * Determines the state of script processing.
