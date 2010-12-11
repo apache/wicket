@@ -67,17 +67,14 @@ import org.springframework.context.support.AbstractApplicationContext;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @author Istvan Devai
- * 
  */
 public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 {
 	private final ISpringContextLocator contextLocator;
 
-	private final ConcurrentHashMap<SpringBeanLocator, Object> cache = Generics
-			.newConcurrentHashMap();
+	private final ConcurrentHashMap<SpringBeanLocator, Object> cache = Generics.newConcurrentHashMap();
 
-	private final ConcurrentHashMap<Class< ? >, String> beanNameCache = Generics
-			.newConcurrentHashMap();
+	private final ConcurrentHashMap<Class<?>, String> beanNameCache = Generics.newConcurrentHashMap();
 
 	private final boolean wrapInProxies;
 
@@ -107,16 +104,12 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 		this.wrapInProxies = wrapInProxies;
 	}
 
-	/**
-	 * @see org.apache.wicket.injection.IFieldValueFactory#getFieldValue(java.lang.reflect.Field,
-	 *      java.lang.Object)
-	 */
 	public Object getFieldValue(Field field, Object fieldOwner)
 	{
 		if (supportsField(field))
 		{
 			SpringBeanLocator locator = new SpringBeanLocator(getBeanName(field), field.getType(),
-					contextLocator);
+				contextLocator);
 
 			// only check the cache if the bean is a singleton
 			Object cachedValue = cache.get(locator);
@@ -178,23 +171,23 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	 * @throws IllegalStateException
 	 * @return spring name of the bean
 	 */
-	private final String getBeanNameOfClass(ApplicationContext ctx, Class< ? > clazz)
+	private final String getBeanNameOfClass(ApplicationContext ctx, Class<?> clazz)
 	{
 		// get the list of all possible matching beans
-		List<String> names = new ArrayList<String>(Arrays.asList(BeanFactoryUtils
-				.beanNamesForTypeIncludingAncestors(ctx, clazz)));
+		List<String> names = new ArrayList<String>(
+			Arrays.asList(BeanFactoryUtils.beanNamesForTypeIncludingAncestors(ctx, clazz)));
 
 		// filter out beans that are not candidates for autowiring
-		Iterator<String> it = names.iterator();
-		while (it.hasNext())
+		if (ctx instanceof AbstractApplicationContext)
 		{
-			final String possibility = it.next();
-			if (ctx instanceof AbstractApplicationContext)
+			Iterator<String> it = names.iterator();
+			while (it.hasNext())
 			{
-				BeanDefinition beanDef = getBeanDefinition(((AbstractApplicationContext)ctx)
-						.getBeanFactory(), possibility);
+				final String possibility = it.next();
+				BeanDefinition beanDef = getBeanDefinition(
+					((AbstractApplicationContext)ctx).getBeanFactory(), possibility);
 				if (BeanFactoryUtils.isFactoryDereference(possibility) ||
-						possibility.startsWith("scopedTarget.") || !beanDef.isAutowireCandidate())
+					possibility.startsWith("scopedTarget.") || !beanDef.isAutowireCandidate())
 				{
 					it.remove();
 				}
@@ -212,8 +205,8 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 				List<String> primaries = new ArrayList<String>();
 				for (String name : names)
 				{
-					BeanDefinition beanDef = getBeanDefinition(((AbstractApplicationContext)ctx)
-							.getBeanFactory(), name);
+					BeanDefinition beanDef = getBeanDefinition(
+						((AbstractApplicationContext)ctx).getBeanFactory(), name);
 					if (beanDef instanceof AbstractBeanDefinition)
 					{
 						if (((AbstractBeanDefinition)beanDef).isPrimary())
@@ -243,7 +236,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	}
 
 	private BeanDefinition getBeanDefinition(ConfigurableListableBeanFactory beanFactory,
-			String name)
+		String name)
 	{
 		if (beanFactory.containsBeanDefinition(name))
 		{
