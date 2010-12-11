@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html;
 
-import org.apache.wicket.request.resource.JavascriptResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 
 /**
@@ -24,7 +24,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  * 
  * @author ivaynberg
  */
-public class WicketEventReference extends JavascriptResourceReference
+public class WicketEventReference extends JavaScriptResourceReference
 {
 	private static final long serialVersionUID = 1L;
 

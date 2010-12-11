@@ -22,7 +22,7 @@ import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.resource.JavascriptResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.string.Strings;
 
@@ -33,7 +33,7 @@ import org.apache.wicket.util.string.Strings;
  */
 public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBehavior
 {
-	private static final ResourceReference AUTOCOMPLETE_JS = new JavascriptResourceReference(
+	private static final ResourceReference AUTOCOMPLETE_JS = new JavaScriptResourceReference(
 		AutoCompleteBehavior.class, "wicket-autocomplete.js");
 
 	private static final long serialVersionUID = 1L;

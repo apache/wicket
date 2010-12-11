@@ -23,17 +23,17 @@ import java.util.Locale;
  * 
  * @author Matej
  */
-public class JavascriptResourceReference extends PackageResourceReference
+public class JavaScriptResourceReference extends PackageResourceReference
 {
 	private static final long serialVersionUID = 1L;
 
-	public JavascriptResourceReference(Class<?> scope, String name, Locale locale, String style,
+	public JavaScriptResourceReference(Class<?> scope, String name, Locale locale, String style,
 		String variation)
 	{
 		super(scope, name, locale, style, variation);
 	}
 
-	public JavascriptResourceReference(Class<?> scope, String name)
+	public JavaScriptResourceReference(Class<?> scope, String name)
 	{
 		super(scope, name);
 	}

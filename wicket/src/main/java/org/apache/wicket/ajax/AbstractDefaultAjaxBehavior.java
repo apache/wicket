@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WicketEventReference;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.resource.JavascriptResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.IDebugSettings;
@@ -49,7 +49,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		AbstractDefaultAjaxBehavior.class, "indicator.gif");
 
 	/** reference to the default ajax debug support javascript file. */
-	private static final ResourceReference JAVASCRIPT_DEBUG = new JavascriptResourceReference(
+	private static final ResourceReference JAVASCRIPT_DEBUG = new JavaScriptResourceReference(
 		AbstractDefaultAjaxBehavior.class, "wicket-ajax-debug.js");
 
 	/**

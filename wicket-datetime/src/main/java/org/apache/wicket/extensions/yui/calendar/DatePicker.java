@@ -42,7 +42,7 @@ import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvi
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
-import org.apache.wicket.request.resource.JavascriptResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.convert.IConverter;
@@ -123,9 +123,9 @@ public class DatePicker extends Behavior
 	// See wicket-2525: SimpleDateFormat consumes a lot of memory
 	public static String FORMAT_PAGEDATE = "MM/yyyy";
 
-	private static final ResourceReference YUI = new JavascriptResourceReference(YuiLib.class, "");
+	private static final ResourceReference YUI = new JavaScriptResourceReference(YuiLib.class, "");
 
-	private static final ResourceReference WICKET_DATE = new JavascriptResourceReference(
+	private static final ResourceReference WICKET_DATE = new JavaScriptResourceReference(
 		DatePicker.class, "wicket-date.js");
 
 	private static final long serialVersionUID = 1L;

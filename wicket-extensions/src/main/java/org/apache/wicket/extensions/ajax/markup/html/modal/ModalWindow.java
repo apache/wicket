@@ -36,7 +36,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.resource.CompressedResourceReference;
-import org.apache.wicket.request.resource.JavascriptResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.IPageSettings;
 import org.apache.wicket.util.lang.EnumeratedType;
@@ -126,7 +126,7 @@ public class ModalWindow extends Panel
 	/** CSS class for window with gray border. */
 	public final static String CSS_CLASS_GRAY = "w_silver";
 
-	private static ResourceReference JAVASCRIPT = new JavascriptResourceReference(
+	private static ResourceReference JAVASCRIPT = new JavaScriptResourceReference(
 		ModalWindow.class, "res/modal.js");
 
 	private static ResourceReference CSS = new CompressedResourceReference(ModalWindow.class,

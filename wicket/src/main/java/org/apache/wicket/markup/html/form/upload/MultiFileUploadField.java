@@ -29,7 +29,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.IMultipartWebRequest;
 import org.apache.wicket.request.Request;
-import org.apache.wicket.request.resource.JavascriptResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.string.Strings;
@@ -92,7 +92,7 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 	private static final String MAGIC_SEPARATOR = "_mf_";
 
 
-	private static final ResourceReference JS = new JavascriptResourceReference(
+	private static final ResourceReference JS = new JavaScriptResourceReference(
 		MultiFileUploadField.class, "MultiFileUploadField.js");
 
 

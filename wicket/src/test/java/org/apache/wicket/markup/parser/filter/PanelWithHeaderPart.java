@@ -19,7 +19,7 @@ package org.apache.wicket.markup.parser.filter;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.request.resource.JavascriptResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
@@ -45,7 +45,7 @@ public class PanelWithHeaderPart extends Panel
 	{
 		response.renderCSSReference(new PackageResourceReference(PanelWithHeaderPart.class,
 			"test.css"));
-		response.renderJavascriptReference(new JavascriptResourceReference(
+		response.renderJavascriptReference(new JavaScriptResourceReference(
 			PanelWithHeaderPart.class, "test.js"));
 	}
 

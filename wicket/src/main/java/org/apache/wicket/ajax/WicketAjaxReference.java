@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ajax;
 
-import org.apache.wicket.request.resource.JavascriptResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 
 /**
@@ -24,7 +24,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  * 
  * @author Matej Knopp
  */
-public class WicketAjaxReference extends JavascriptResourceReference
+public class WicketAjaxReference extends JavaScriptResourceReference
 {
 	private static final long serialVersionUID = 1L;
 

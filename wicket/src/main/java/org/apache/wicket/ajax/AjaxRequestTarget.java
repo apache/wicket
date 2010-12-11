@@ -110,7 +110,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		/**
 		 * Triggered after ajax request target is done with its response cycle. At this point only
 		 * additional javascript can be output to the response using the provided
-		 * {@link IJavascriptResponse} object
+		 * {@link IJavaScriptResponse} object
 		 * 
 		 * NOTE: During this stage of processing any calls to target that manipulate the response
 		 * (adding components, javascript) will have no effect
@@ -120,7 +120,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		 * @param response
 		 *            response object that can be used to output javascript
 		 */
-		public void onAfterRespond(Map<String, Component> map, IJavascriptResponse response);
+		public void onAfterRespond(Map<String, Component> map, IJavaScriptResponse response);
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	 * 
 	 * @author ivaynberg
 	 */
-	public static interface IJavascriptResponse
+	public static interface IJavaScriptResponse
 	{
 		/**
 		 * Adds more javascript to the ajax response that will be executed on the client side
@@ -137,7 +137,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		 * @param script
 		 *            javascript
 		 */
-		public void addJavascript(String script);
+		public void addJavaScript(String script);
 	}
 
 	/**
@@ -674,9 +674,9 @@ public class AjaxRequestTarget implements IPageRequestHandler
 
 			// create response that will be used by listeners to append
 			// javascript
-			final IJavascriptResponse jsresponse = new IJavascriptResponse()
+			final IJavaScriptResponse jsresponse = new IJavaScriptResponse()
 			{
-				public void addJavascript(String script)
+				public void addJavaScript(String script)
 				{
 					respondInvocation(response, script);
 				}
