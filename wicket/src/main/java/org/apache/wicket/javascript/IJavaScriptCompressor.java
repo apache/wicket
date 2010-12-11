@@ -21,7 +21,7 @@ package org.apache.wicket.javascript;
  * 
  * @author Juergen Donnerstag
  */
-public interface IJavascriptCompressor
+public interface IJavaScriptCompressor
 {
 	/**
 	 * Remove comments and whitespaces from the javascript

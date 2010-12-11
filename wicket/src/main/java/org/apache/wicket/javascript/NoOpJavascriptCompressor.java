@@ -21,10 +21,10 @@ package org.apache.wicket.javascript;
  * 
  * @author Juergen Donnerstag
  */
-public class NoOpJavascriptCompressor implements IJavascriptCompressor
+public class NoOpJavascriptCompressor implements IJavaScriptCompressor
 {
 	/**
-	 * @see org.apache.wicket.javascript.IJavascriptCompressor#compress(java.lang.String)
+	 * @see org.apache.wicket.javascript.IJavaScriptCompressor#compress(java.lang.String)
 	 */
 	public String compress(String original)
 	{

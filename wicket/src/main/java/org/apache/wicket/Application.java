@@ -35,7 +35,7 @@ import org.apache.wicket.application.IComponentInitializationListener;
 import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
-import org.apache.wicket.javascript.DefaultJavascriptCompressor;
+import org.apache.wicket.javascript.DefaultJavaScriptCompressor;
 import org.apache.wicket.markup.MarkupFactory;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.IHeaderResponseDecorator;
@@ -311,7 +311,7 @@ public abstract class Application implements UnboundListener, IEventSink
 					IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
 				getDebugSettings().setAjaxDebugModeEnabled(false);
 				getDebugSettings().setDevelopmentUtilitiesEnabled(false);
-				getResourceSettings().setJavascriptCompressor(new DefaultJavascriptCompressor());
+				getResourceSettings().setJavascriptCompressor(new DefaultJavaScriptCompressor());
 				break;
 			}
 		}

@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.apache.wicket.IResourceFactory;
 import org.apache.wicket.Localizer;
-import org.apache.wicket.javascript.IJavascriptCompressor;
+import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.PackageResourceGuard;
 import org.apache.wicket.model.IModel;
@@ -306,7 +306,7 @@ public interface IResourceSettings
 	 *            The implementation to be used
 	 * @return The old value
 	 */
-	IJavascriptCompressor setJavascriptCompressor(IJavascriptCompressor compressor);
+	IJavaScriptCompressor setJavascriptCompressor(IJavaScriptCompressor compressor);
 
 	/**
 	 * Get the javascript compressor to remove comments and whitespace characters from javascripts
@@ -314,7 +314,7 @@ public interface IResourceSettings
 	 * @return whether the comments and whitespace characters will be stripped from resources served
 	 *         through {@link JavascriptPackageResource}. Null is a valid value.
 	 */
-	IJavascriptCompressor getJavascriptCompressor();
+	IJavaScriptCompressor getJavascriptCompressor();
 
 	/**
 	 * Placeholder string for '..' within resource urls (which will be crippled by the browser and

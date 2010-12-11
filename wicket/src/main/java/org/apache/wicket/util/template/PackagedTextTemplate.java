@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
-import org.apache.wicket.javascript.IJavascriptCompressor;
+import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -212,7 +212,7 @@ public class PackagedTextTemplate extends TextTemplate
 	@Override
 	public String getString()
 	{
-		IJavascriptCompressor compressor = Application.get()
+		IJavaScriptCompressor compressor = Application.get()
 			.getResourceSettings()
 			.getJavascriptCompressor();
 

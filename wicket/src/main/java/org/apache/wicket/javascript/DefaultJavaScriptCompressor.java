@@ -23,10 +23,10 @@ import org.apache.wicket.util.string.JavascriptStripper;
  * 
  * @author Juergen Donnerstag
  */
-public class DefaultJavascriptCompressor implements IJavascriptCompressor
+public class DefaultJavaScriptCompressor implements IJavaScriptCompressor
 {
 	/**
-	 * @see org.apache.wicket.javascript.IJavascriptCompressor#compress(java.lang.String)
+	 * @see org.apache.wicket.javascript.IJavaScriptCompressor#compress(java.lang.String)
 	 */
 	public String compress(String original)
 	{
