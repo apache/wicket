@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * This header response allows you to separate things that are added to the IHeaderResponse into
  * different buckets. Then, you can render those different buckets in separate areas of the page
  * based on your filter logic. A typical use case for this header response is to move the loading of
- * Javascript files (and inline script tags) to the footer of the page.
+ * JavaScript files (and inline script tags) to the footer of the page.
  * 
  * @see HeaderResponseFilteredResponseContainer
  * @see CssAcceptingHeaderResponseFilter
@@ -72,16 +72,16 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 		boolean acceptReference(ResourceReference ref);
 
 		/**
-		 * Whenever a render*Javascript method on IHeaderResponse is called that is not a
-		 * ResourceReference (i.e. {@link IHeaderResponse#renderOnDomReadyJavascript(String)}), this
+		 * Whenever a render*JavaScript method on IHeaderResponse is called that is not a
+		 * ResourceReference (i.e. {@link IHeaderResponse#renderOnDomReadyJavaScript(String)}), this
 		 * method determines if the script should be bucketed with other things in this filter.
 		 * 
-		 * Note that calls to IHeaderResponse.renderJavascriptReference(String url) are also
+		 * Note that calls to IHeaderResponse.renderJavaScriptReference(String url) are also
 		 * filtered with this method since there is no actual ResourceReference to pass
 		 * 
 		 * @return true if javascript should be bucketed with other things in this filter
 		 */
-		boolean acceptOtherJavascript();
+		boolean acceptOtherJavaScript();
 
 		/**
 		 * Whenever a renderCSS* method on IHeaderResponse is called that is not a ResourceReference
@@ -165,61 +165,61 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 	}
 
 	@Override
-	public void renderJavascriptReference(final ResourceReference reference)
+	public void renderJavaScriptReference(final ResourceReference reference)
 	{
 		forReference(reference, new Runnable()
 		{
 			public void run()
 			{
-				getRealResponse().renderJavascriptReference(reference);
+				getRealResponse().renderJavaScriptReference(reference);
 			}
 		});
 	}
 
 	@Override
-	public void renderJavascriptReference(final ResourceReference reference, final String id)
+	public void renderJavaScriptReference(final ResourceReference reference, final String id)
 	{
 		forReference(reference, new Runnable()
 		{
 			public void run()
 			{
-				getRealResponse().renderJavascriptReference(reference, id);
+				getRealResponse().renderJavaScriptReference(reference, id);
 			}
 		});
 	}
 
 	@Override
-	public void renderJavascriptReference(final String url)
+	public void renderJavaScriptReference(final String url)
 	{
-		forJavascript(new Runnable()
+		forJavaScript(new Runnable()
 		{
 			public void run()
 			{
-				getRealResponse().renderJavascriptReference(url);
+				getRealResponse().renderJavaScriptReference(url);
 			}
 		});
 	}
 
 	@Override
-	public void renderJavascriptReference(final String url, final String id)
+	public void renderJavaScriptReference(final String url, final String id)
 	{
-		forJavascript(new Runnable()
+		forJavaScript(new Runnable()
 		{
 			public void run()
 			{
-				getRealResponse().renderJavascriptReference(url, id);
+				getRealResponse().renderJavaScriptReference(url, id);
 			}
 		});
 	}
 
 	@Override
-	public void renderJavascript(final CharSequence javascript, final String id)
+	public void renderJavaScript(final CharSequence javascript, final String id)
 	{
-		forJavascript(new Runnable()
+		forJavaScript(new Runnable()
 		{
 			public void run()
 			{
-				getRealResponse().renderJavascript(javascript, id);
+				getRealResponse().renderJavaScript(javascript, id);
 			}
 		});
 	}
@@ -273,38 +273,38 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 	}
 
 	@Override
-	public void renderOnDomReadyJavascript(final String javascript)
+	public void renderOnDomReadyJavaScript(final String javascript)
 	{
-		forJavascript(new Runnable()
+		forJavaScript(new Runnable()
 		{
 			public void run()
 			{
-				getRealResponse().renderOnDomReadyJavascript(javascript);
+				getRealResponse().renderOnDomReadyJavaScript(javascript);
 			}
 		});
 	}
 
 	@Override
-	public void renderOnLoadJavascript(final String javascript)
+	public void renderOnLoadJavaScript(final String javascript)
 	{
-		forJavascript(new Runnable()
+		forJavaScript(new Runnable()
 		{
 			public void run()
 			{
-				getRealResponse().renderOnLoadJavascript(javascript);
+				getRealResponse().renderOnLoadJavaScript(javascript);
 			}
 		});
 	}
 
 	@Override
-	public void renderOnEventJavascript(final String target, final String event,
+	public void renderOnEventJavaScript(final String target, final String event,
 		final String javascript)
 	{
-		forJavascript(new Runnable()
+		forJavaScript(new Runnable()
 		{
 			public void run()
 			{
-				getRealResponse().renderOnEventJavascript(target, event, javascript);
+				getRealResponse().renderOnEventJavaScript(target, event, javascript);
 			}
 		});
 	}
@@ -352,11 +352,11 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 		log.warn("a ResourceReference was rendered to the filtering header response, but did not match any filters, so it was effectively lost.  Make sure that you have filters that accept every possible case or else configure a default filter that returns true to all acceptance tests");
 	}
 
-	private void forJavascript(Runnable runnable)
+	private void forJavaScript(Runnable runnable)
 	{
 		for (IHeaderResponseFilter filter : filters)
 		{
-			if (filter.acceptOtherJavascript())
+			if (filter.acceptOtherJavaScript())
 			{
 				run(runnable, filter);
 				return;

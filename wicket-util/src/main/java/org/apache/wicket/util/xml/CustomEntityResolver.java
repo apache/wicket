@@ -139,6 +139,11 @@ public class CustomEntityResolver implements EntityResolver
 	 */
 	public static interface EntityLocator
 	{
+		/**
+		 * @return
+		 * @throws SAXException
+		 * @throws IOException
+		 */
 		InputSource locateInputSource() throws SAXException, IOException;
 	}
 

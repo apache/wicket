@@ -54,7 +54,7 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 		textValue = textValue.replaceAll("\\\"", "&quot;");
 
 		response.write("<li textvalue=\"" + textValue + "\"");
-		final CharSequence handler = getOnSelectJavascriptExpression(object);
+		final CharSequence handler = getOnSelectJavaScriptExpression(object);
 		if (handler != null)
 			response.write(" onselect=\"" + handler + '"');
 		response.write(">");
@@ -114,7 +114,7 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 	 * example 1:
 	 * 
 	 * <pre>
-	 * protected CharSequence getOnSelectJavascript(Address address)
+	 * protected CharSequence getOnSelectJavaScript(Address address)
 	 * {
 	 * 	final StringBuilder js = new StringBuilder();
 	 * 	js.append(&quot;wicketGet('street').value ='&quot; + address.getStreet() + &quot;';&quot;);
@@ -128,7 +128,7 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 	 * example 2:
 	 * 
 	 * <pre>
-	 * protected CharSequence getOnSelectJavascript(Currency currency)
+	 * protected CharSequence getOnSelectJavaScript(Currency currency)
 	 * {
 	 * 	final StringBuilder js = new StringBuilder();
 	 * 	js.append(&quot;val rate = ajaxGetExchangeRateForCurrency(currencySymbol);&quot;);
@@ -145,7 +145,7 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 	 * @return javascript to execute on selection or <code>null</code> if default behavior is
 	 *         intented
 	 */
-	protected CharSequence getOnSelectJavascriptExpression(T item)
+	protected CharSequence getOnSelectJavaScriptExpression(T item)
 	{
 		return null;
 	}

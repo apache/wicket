@@ -72,18 +72,18 @@ public class ResourceUtil
 		{
 			if (Strings.isEmpty(string))
 			{
-				resp.renderJavascriptReference(ref);
+				resp.renderJavaScriptReference(ref);
 			}
 			else
 			{
-				resp.renderJavascriptReference(ref, string);
+				resp.renderJavaScriptReference(ref, string);
 			}
 		}
 	}
 
 	/**
 	 * read string with platform default encoding from resource stream
-	 *
+	 * 
 	 * @see #readString(org.apache.wicket.util.resource.IResourceStream, java.nio.charset.Charset)
 	 */
 	public static String readString(IResourceStream resourceStream)
@@ -93,9 +93,11 @@ public class ResourceUtil
 
 	/**
 	 * read string with specified encoding from resource stream
-	 *
-	 * @param resourceStream string source
-	 * @param charset charset for the string encoding (use <code>null</code> for platform default)
+	 * 
+	 * @param resourceStream
+	 *            string source
+	 * @param charset
+	 *            charset for the string encoding (use <code>null</code> for platform default)
 	 * @return string read from resource stream
 	 */
 	public static String readString(IResourceStream resourceStream, Charset charset)

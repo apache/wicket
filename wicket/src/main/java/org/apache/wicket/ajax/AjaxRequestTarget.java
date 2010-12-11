@@ -74,7 +74,7 @@ import org.slf4j.LoggerFactory;
  * MarkupIdSetter )
  * <p>
  * Any javascript that needs to be evaluated on the client side can be added using
- * AjaxRequestTarget#append/prependJavascript(String). For example, this feature can be useful when
+ * AjaxRequestTarget#append/prependJavaScript(String). For example, this feature can be useful when
  * it is desirable to link component update with some javascript effects.
  * <p>
  * The target provides a listener interface {@link IListener} that can be used to add code that
@@ -226,9 +226,9 @@ public class AjaxRequestTarget implements IPageRequestHandler
 
 	private static final Logger LOG = LoggerFactory.getLogger(AjaxRequestTarget.class);
 
-	private final List<CharSequence> appendJavascripts = new ArrayList<CharSequence>();
+	private final List<CharSequence> appendJavaScripts = new ArrayList<CharSequence>();
 
-	private final List<CharSequence> domReadyJavascripts = new ArrayList<CharSequence>();
+	private final List<CharSequence> domReadyJavaScripts = new ArrayList<CharSequence>();
 
 	/**
 	 * Create a response for component body and javascript that will escape output to make it safe
@@ -246,7 +246,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	private final Map<String, Component> markupIdToComponent = new LinkedHashMap<String, Component>();
 
 	/** */
-	private final List<CharSequence> prependJavascripts = new ArrayList<CharSequence>();
+	private final List<CharSequence> prependJavaScripts = new ArrayList<CharSequence>();
 
 	/** a list of listeners */
 	private List<IListener> listeners = null;
@@ -325,7 +325,6 @@ public class AjaxRequestTarget implements IPageRequestHandler
 
 		parent.visitChildren(childCriteria, new IVisitor<Component, Void>()
 		{
-
 			public void component(final Component component, final IVisit<Void> visit)
 			{
 				add(component);
@@ -453,7 +452,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 					component.toString());
 		}
 		final String id = component != null ? ("'" + component.getMarkupId() + "'") : "null";
-		appendJavascript("Wicket.Focus.setFocusOnId(" + id + ");");
+		appendJavaScript("Wicket.Focus.setFocusOnId(" + id + ");");
 	}
 
 	/**
@@ -461,14 +460,14 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	 * 
 	 * @param javascript
 	 */
-	public final void appendJavascript(CharSequence javascript)
+	public final void appendJavaScript(CharSequence javascript)
 	{
 		if (javascript == null)
 		{
 			throw new IllegalArgumentException("javascript cannot be null");
 		}
 
-		appendJavascripts.add(javascript);
+		appendJavaScripts.add(javascript);
 	}
 
 	/**
@@ -498,8 +497,8 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		{
 			AjaxRequestTarget that = (AjaxRequestTarget)obj;
 			return markupIdToComponent.equals(that.markupIdToComponent) &&
-				prependJavascripts.equals(that.prependJavascripts) &&
-				appendJavascripts.equals(that.appendJavascripts);
+				prependJavaScripts.equals(that.prependJavaScripts) &&
+				appendJavaScripts.equals(that.appendJavaScripts);
 		}
 		return false;
 	}
@@ -512,8 +511,8 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	{
 		int result = "AjaxRequestTarget".hashCode();
 		result += markupIdToComponent.hashCode() * 17;
-		result += prependJavascripts.hashCode() * 17;
-		result += appendJavascripts.hashCode() * 17;
+		result += prependJavaScripts.hashCode() * 17;
+		result += appendJavaScripts.hashCode() * 17;
 		return result;
 	}
 
@@ -522,14 +521,14 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	 * 
 	 * @param javascript
 	 */
-	public final void prependJavascript(CharSequence javascript)
+	public final void prependJavaScript(CharSequence javascript)
 	{
 		if (javascript == null)
 		{
 			throw new IllegalArgumentException("javascript cannot be null");
 		}
 
-		prependJavascripts.add(javascript);
+		prependJavaScripts.add(javascript);
 	}
 
 	/**
@@ -610,7 +609,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 			fireOnBeforeRespondListeners();
 
 			// normal behavior
-			Iterator<CharSequence> it = prependJavascripts.iterator();
+			Iterator<CharSequence> it = prependJavaScripts.iterator();
 			while (it.hasNext())
 			{
 				CharSequence js = it.next();
@@ -624,13 +623,13 @@ public class AjaxRequestTarget implements IPageRequestHandler
 
 			// execute the dom ready javascripts as first javascripts
 			// after component replacement
-			it = domReadyJavascripts.iterator();
+			it = domReadyJavaScripts.iterator();
 			while (it.hasNext())
 			{
 				CharSequence js = it.next();
 				respondInvocation(response, js);
 			}
-			it = appendJavascripts.iterator();
+			it = appendJavaScripts.iterator();
 			while (it.hasNext())
 			{
 				CharSequence js = it.next();
@@ -768,8 +767,8 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	public String toString()
 	{
 		return "[AjaxRequestTarget@" + hashCode() + " markupIdToComponent [" + markupIdToComponent +
-			"], prependJavascript [" + prependJavascripts + "], appendJavascript [" +
-			appendJavascripts + "]";
+			"], prependJavaScript [" + prependJavaScripts + "], appendJavaScript [" +
+			appendJavaScripts + "]";
 	}
 
 	/**
@@ -922,7 +921,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		{
 			if (headerRendering == false)
 			{
-				LOG.debug("Only methods that can be called on IHeaderResponse outside renderHead() are renderOnLoadJavascript and renderOnDomReadyJavascript");
+				LOG.debug("Only methods that can be called on IHeaderResponse outside renderHead() are renderOnLoadJavaScript and renderOnDomReadyJavaScript");
 			}
 
 			return headerRendering;
@@ -956,11 +955,11 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		}
 
 		@Override
-		public void renderJavascript(CharSequence javascript, String id)
+		public void renderJavaScript(CharSequence javascript, String id)
 		{
 			if (checkHeaderRendering())
 			{
-				super.renderJavascript(javascript, id);
+				super.renderJavaScript(javascript, id);
 			}
 		}
 
@@ -974,38 +973,38 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		}
 
 		@Override
-		public void renderJavascriptReference(ResourceReference reference)
+		public void renderJavaScriptReference(ResourceReference reference)
 		{
 			if (checkHeaderRendering())
 			{
-				super.renderJavascriptReference(reference);
+				super.renderJavaScriptReference(reference);
 			}
 		}
 
 		@Override
-		public void renderJavascriptReference(ResourceReference reference, String id)
+		public void renderJavaScriptReference(ResourceReference reference, String id)
 		{
 			if (checkHeaderRendering())
 			{
-				super.renderJavascriptReference(reference, id);
+				super.renderJavaScriptReference(reference, id);
 			}
 		}
 
 		@Override
-		public void renderJavascriptReference(String url)
+		public void renderJavaScriptReference(String url)
 		{
 			if (checkHeaderRendering())
 			{
-				super.renderJavascriptReference(url);
+				super.renderJavaScriptReference(url);
 			}
 		}
 
 		@Override
-		public void renderJavascriptReference(String url, String id)
+		public void renderJavaScriptReference(String url, String id)
 		{
 			if (checkHeaderRendering())
 			{
-				super.renderJavascriptReference(url, id);
+				super.renderJavaScriptReference(url, id);
 			}
 		}
 
@@ -1027,31 +1026,31 @@ public class AjaxRequestTarget implements IPageRequestHandler
 
 		/**
 		 * 
-		 * @see org.apache.wicket.markup.html.internal.HeaderResponse#renderOnDomReadyJavascript(java.lang.String)
+		 * @see org.apache.wicket.markup.html.internal.HeaderResponse#renderOnDomReadyJavaScript(java.lang.String)
 		 */
 		@Override
-		public void renderOnDomReadyJavascript(String javascript)
+		public void renderOnDomReadyJavaScript(String javascript)
 		{
 			List<String> token = Arrays.asList("javascript-event", "window", "domready", javascript);
 			if (wasRendered(token) == false)
 			{
-				domReadyJavascripts.add(javascript);
+				domReadyJavaScripts.add(javascript);
 				markRendered(token);
 			}
 		}
 
 		/**
 		 * 
-		 * @see org.apache.wicket.markup.html.internal.HeaderResponse#renderOnLoadJavascript(java.lang.String)
+		 * @see org.apache.wicket.markup.html.internal.HeaderResponse#renderOnLoadJavaScript(java.lang.String)
 		 */
 		@Override
-		public void renderOnLoadJavascript(String javascript)
+		public void renderOnLoadJavaScript(String javascript)
 		{
 			List<String> token = Arrays.asList("javascript-event", "window", "load", javascript);
 			if (wasRendered(token) == false)
 			{
 				// execute the javascript after all other scripts are executed
-				appendJavascripts.add(javascript);
+				appendJavaScripts.add(javascript);
 				markRendered(token);
 			}
 		}
@@ -1076,7 +1075,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	/**
 	 * Returns the header response associated with current AjaxRequestTarget.
 	 * 
-	 * Beware that only renderOnDomReadyJavascript and renderOnLoadJavascript can be called outside
+	 * Beware that only renderOnDomReadyJavaScript and renderOnLoadJavaScript can be called outside
 	 * the renderHeader(IHeaderResponse response) method. Calls to other render** methods will
 	 * result in an exception being thrown.
 	 * 

@@ -263,7 +263,7 @@ public class ModalWindow extends Panel
 	public void renderHead(IHeaderResponse response)
 	{
 		super.renderHead(response);
-		response.renderJavascriptReference(JAVASCRIPT);
+		response.renderJavaScriptReference(JAVASCRIPT);
 		response.renderCSSReference(CSS);
 	}
 
@@ -331,7 +331,7 @@ public class ModalWindow extends Panel
 		{
 			getContent().setVisible(true);
 			target.add(this);
-			target.appendJavascript(getWindowOpenJavascript());
+			target.appendJavaScript(getWindowOpenJavaScript());
 			shown = true;
 		}
 	}
@@ -346,7 +346,7 @@ public class ModalWindow extends Panel
 	 */
 	public static final void closeCurrent(AjaxRequestTarget target)
 	{
-		target.appendJavascript(getCloseJavacriptInternal());
+		target.appendJavaScript(getCloseJavacriptInternal());
 	}
 
 	/**
@@ -362,7 +362,7 @@ public class ModalWindow extends Panel
 		{
 			target.add(getContent());
 		}
-		target.appendJavascript(getCloseJavacript());
+		target.appendJavaScript(getCloseJavacript());
 		shown = false;
 	}
 
@@ -371,7 +371,7 @@ public class ModalWindow extends Panel
 	 * 
 	 * @return the script that actually shows the window.
 	 */
-	protected CharSequence getShowJavascript()
+	protected CharSequence getShowJavaScript()
 	{
 		return "Wicket.Window.create(settings).show();\n";
 	}
@@ -989,7 +989,7 @@ public class ModalWindow extends Panel
 	 * 
 	 * @return javascript that opens the window
 	 */
-	protected final String getWindowOpenJavascript()
+	protected final String getWindowOpenJavaScript()
 	{
 		AppendingStringBuffer buffer = new AppendingStringBuffer(500);
 
@@ -1090,7 +1090,7 @@ public class ModalWindow extends Panel
 
 		postProcessSettings(buffer);
 
-		buffer.append(getShowJavascript());
+		buffer.append(getShowJavaScript());
 		return buffer.toString();
 	}
 

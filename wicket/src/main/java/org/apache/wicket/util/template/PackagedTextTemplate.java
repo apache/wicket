@@ -214,7 +214,7 @@ public class PackagedTextTemplate extends TextTemplate
 	{
 		IJavaScriptCompressor compressor = Application.get()
 			.getResourceSettings()
-			.getJavascriptCompressor();
+			.getJavaScriptCompressor();
 
 		if (compressor != null)
 		{

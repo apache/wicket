@@ -298,7 +298,7 @@ public interface IResourceSettings
 	void setUseDefaultOnMissingResource(final boolean useDefaultOnMissingResource);
 
 	/**
-	 * Set the javascript compressor implemententation use e.g. by {@link JavascriptPackageResource}
+	 * Set the javascript compressor implemententation use e.g. by {@link JavaScriptPackageResource}
 	 * . A typical implementation will remove comments and whitespace. But a no-op implementation is
 	 * available as well.
 	 * 
@@ -306,15 +306,15 @@ public interface IResourceSettings
 	 *            The implementation to be used
 	 * @return The old value
 	 */
-	IJavaScriptCompressor setJavascriptCompressor(IJavaScriptCompressor compressor);
+	IJavaScriptCompressor setJavaScriptCompressor(IJavaScriptCompressor compressor);
 
 	/**
 	 * Get the javascript compressor to remove comments and whitespace characters from javascripts
 	 * 
 	 * @return whether the comments and whitespace characters will be stripped from resources served
-	 *         through {@link JavascriptPackageResource}. Null is a valid value.
+	 *         through {@link JavaScriptPackageResource}. Null is a valid value.
 	 */
-	IJavaScriptCompressor getJavascriptCompressor();
+	IJavaScriptCompressor getJavaScriptCompressor();
 
 	/**
 	 * Placeholder string for '..' within resource urls (which will be crippled by the browser and

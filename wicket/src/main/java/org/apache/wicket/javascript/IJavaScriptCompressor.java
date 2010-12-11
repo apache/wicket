@@ -27,7 +27,7 @@ public interface IJavaScriptCompressor
 	 * Remove comments and whitespaces from the javascript
 	 * 
 	 * @param original
-	 * @return compressed Javascript
+	 * @return compressed JavaScript
 	 */
 	public String compress(String original);
 }

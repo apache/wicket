@@ -103,7 +103,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 		if (!stopped && (!headRendered || !request.isAjax()))
 		{
 			headRendered = true;
-			response.renderOnLoadJavascript(getJsTimeoutCall(updateInterval));
+			response.renderOnLoadJavaScript(getJsTimeoutCall(updateInterval));
 		}
 	}
 
@@ -157,7 +157,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 		if (!stopped && isEnabled(getComponent()))
 		{
-			target.getHeaderResponse().renderOnLoadJavascript(getJsTimeoutCall(updateInterval));
+			target.getHeaderResponse().renderOnLoadJavaScript(getJsTimeoutCall(updateInterval));
 		}
 	}
 

@@ -54,18 +54,18 @@ public class HomePage extends WicketExamplePage
 			{
 				if (!isSpamBot() && captcha.allKittensSelected())
 				{
-					target.appendJavascript("alert('you win! happy kittens!');");
+					target.appendJavaScript("alert('you win! happy kittens!');");
 				}
 				else
 				{
 					errors++;
 					if (isSpamBot())
 					{
-						target.appendJavascript("alert('spammer alert');");
+						target.appendJavaScript("alert('spammer alert');");
 					}
 					else
 					{
-						target.appendJavascript("alert('please try again');");
+						target.appendJavaScript("alert('please try again');");
 					}
 					target.add(captcha);
 				}

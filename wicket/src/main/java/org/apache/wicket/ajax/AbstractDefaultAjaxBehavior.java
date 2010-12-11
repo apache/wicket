@@ -71,17 +71,17 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	{
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 
-		response.renderJavascriptReference(WicketEventReference.INSTANCE);
-		response.renderJavascriptReference(WicketAjaxReference.INSTANCE);
+		response.renderJavaScriptReference(WicketEventReference.INSTANCE);
+		response.renderJavaScriptReference(WicketAjaxReference.INSTANCE);
 
 		if (debugSettings.isAjaxDebugModeEnabled())
 		{
-			response.renderJavascriptReference(JAVASCRIPT_DEBUG);
-			response.renderJavascript("wicketAjaxDebugEnable=true;", "wicket-ajax-debug-enable");
+			response.renderJavaScriptReference(JAVASCRIPT_DEBUG);
+			response.renderJavaScript("wicketAjaxDebugEnable=true;", "wicket-ajax-debug-enable");
 		}
 
 		// TODO NG Escape
-		response.renderJavascript("Wicket.Ajax.baseUrl=\"" +
+		response.renderJavaScript("Wicket.Ajax.baseUrl=\"" +
 			RequestCycle.get().getUrlRenderer().getBaseUrl() + "\";", "wicket-ajax-base-url");
 	}
 
@@ -152,7 +152,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * {@link AbstractDefaultAjaxBehavior#getAjaxCallDecorator()}.
 	 * 
 	 * @param partialCall
-	 *            Javascript of a partial call to the function performing the actual ajax callback.
+	 *            JavaScript of a partial call to the function performing the actual ajax callback.
 	 *            Must be in format <code>function(params,</code> with signature
 	 *            <code>function(params, onSuccessHandler, onFailureHandler</code>. Example:
 	 *            <code>wicketAjaxGet('callbackurl'</code>

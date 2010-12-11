@@ -24,7 +24,7 @@ import org.apache.wicket.util.string.Strings;
 /**
  * This filter accepts anything that appears to be CSS. All CSS that is not a resource reference (
  * {@link #acceptOtherCss()}) is accepted. All JS that is not a resource reference (
- * {@link #acceptOtherJavascript()}) is not accepted.
+ * {@link #acceptOtherJavaScript()}) is not accepted.
  * 
  * The references are accepted if they appear to be CSS. If the reference passed in is an instance
  * of {@link AbstractResourceDependentResourceReference}, we use the {@link ResourceType} from it to
@@ -62,7 +62,7 @@ public class CssAcceptingHeaderResponseFilter extends AbstractHeaderResponseFilt
 	}
 
 	@Override
-	public boolean acceptOtherJavascript()
+	public boolean acceptOtherJavaScript()
 	{
 		return false;
 	}

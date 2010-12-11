@@ -70,7 +70,7 @@ public class AjaxLinkTest extends WicketTestCase
 	 * Test that the onclick on ajax link has "return !wcall;" at the end. This ensures that
 	 * execution is not turned over to the href attribute, which would then append # to the url.
 	 */
-	public void testJavascriptEndsWithReturn()
+	public void testJavaScriptEndsWithReturn()
 	{
 		tester.startPage(AjaxLinkPage.class);
 

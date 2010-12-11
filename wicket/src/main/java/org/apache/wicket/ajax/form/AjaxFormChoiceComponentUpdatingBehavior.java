@@ -76,9 +76,9 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 		asb.append(" }\n");
 		asb.append("}\n");
 
-		response.renderJavascript(asb, "attachChoice");
+		response.renderJavaScript(asb, "attachChoice");
 
-		response.renderOnLoadJavascript("attachChoiceHandlers('" + getComponent().getMarkupId() +
+		response.renderOnLoadJavaScript("attachChoiceHandlers('" + getComponent().getMarkupId() +
 			"', function() {" + getEventHandler() + "});");
 
 	}

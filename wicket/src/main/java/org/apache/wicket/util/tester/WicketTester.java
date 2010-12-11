@@ -248,8 +248,8 @@ public class WicketTester extends BaseWicketTester
 	 * <code>Component</code> is on the Ajax response sent back to the client.
 	 * <p>
 	 * PLEASE NOTE! This method doesn't actually insert the <code>Component</code> in the client DOM
-	 * tree, using Javascript. But it shouldn't be needed because you just have to trust that Wicket
-	 * Ajax Javascript works.
+	 * tree, using JavaScript. But it shouldn't be needed because you just have to trust that Wicket
+	 * Ajax JavaScript works.
 	 * 
 	 * @param component
 	 *            a <code>Component</code> to be tested
@@ -266,8 +266,8 @@ public class WicketTester extends BaseWicketTester
 	 * <code>Component</code> is on the Ajax response sent back to the client.
 	 * <p>
 	 * PLEASE NOTE! This method doesn't actually insert the <code>Component</code> in the client DOM
-	 * tree, using Javascript. But it shouldn't be needed because you just have to trust that Wicket
-	 * Ajax Javascript works.
+	 * tree, using JavaScript. But it shouldn't be needed because you just have to trust that Wicket
+	 * Ajax JavaScript works.
 	 * 
 	 * @param componentPath
 	 *            a <code>Component</code> path to test

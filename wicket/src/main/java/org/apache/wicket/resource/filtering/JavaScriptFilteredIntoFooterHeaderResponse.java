@@ -20,9 +20,9 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
  * A header response that creates two buckets. The header bucket will contain all references to CSS.
- * The other bucket will contain all Javascript, and you will need to add a
+ * The other bucket will contain all JavaScript, and you will need to add a
  * HeaderResponseFilteredResponseContainer to the footer of your page (typically just before the end
- * body tag) to render the Javascript.
+ * body tag) to render the JavaScript.
  * 
  * @author Jeremy Thomerson
  */

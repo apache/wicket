@@ -34,7 +34,7 @@ import org.apache.wicket.IClusterable;
  * 
  * 	public void renderHead(IHeaderResponse response)
  * 	{
- * 		response.renderOnLoadJavascript(&quot;alert('page loaded!');&quot;);
+ * 		response.renderOnLoadJavaScript(&quot;alert('page loaded!');&quot;);
  * 	}
  * }
  * </pre>

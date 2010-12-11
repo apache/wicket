@@ -56,29 +56,29 @@ public abstract class DecoratingHeaderResponse implements IHeaderResponse
 		return realResponse;
 	}
 
-	public void renderJavascriptReference(ResourceReference reference)
+	public void renderJavaScriptReference(ResourceReference reference)
 	{
-		realResponse.renderJavascriptReference(reference);
+		realResponse.renderJavaScriptReference(reference);
 	}
 
-	public void renderJavascriptReference(ResourceReference reference, String id)
+	public void renderJavaScriptReference(ResourceReference reference, String id)
 	{
-		realResponse.renderJavascriptReference(reference, id);
+		realResponse.renderJavaScriptReference(reference, id);
 	}
 
-	public void renderJavascriptReference(String url)
+	public void renderJavaScriptReference(String url)
 	{
-		realResponse.renderJavascriptReference(url);
+		realResponse.renderJavaScriptReference(url);
 	}
 
-	public void renderJavascriptReference(String url, String id)
+	public void renderJavaScriptReference(String url, String id)
 	{
-		realResponse.renderJavascriptReference(url, id);
+		realResponse.renderJavaScriptReference(url, id);
 	}
 
-	public void renderJavascript(CharSequence javascript, String id)
+	public void renderJavaScript(CharSequence javascript, String id)
 	{
-		realResponse.renderJavascript(javascript, id);
+		realResponse.renderJavaScript(javascript, id);
 	}
 
 	public void renderCSSReference(ResourceReference reference)
@@ -121,19 +121,19 @@ public abstract class DecoratingHeaderResponse implements IHeaderResponse
 		return realResponse.getResponse();
 	}
 
-	public void renderOnDomReadyJavascript(String javascript)
+	public void renderOnDomReadyJavaScript(String javascript)
 	{
-		realResponse.renderOnDomReadyJavascript(javascript);
+		realResponse.renderOnDomReadyJavaScript(javascript);
 	}
 
-	public void renderOnLoadJavascript(String javascript)
+	public void renderOnLoadJavaScript(String javascript)
 	{
-		realResponse.renderOnLoadJavascript(javascript);
+		realResponse.renderOnLoadJavaScript(javascript);
 	}
 
-	public void renderOnEventJavascript(String target, String event, String javascript)
+	public void renderOnEventJavaScript(String target, String event, String javascript)
 	{
-		realResponse.renderOnEventJavascript(target, event, javascript);
+		realResponse.renderOnEventJavaScript(target, event, javascript);
 	}
 
 	public void close()
@@ -145,5 +145,4 @@ public abstract class DecoratingHeaderResponse implements IHeaderResponse
 	{
 		return realResponse.isClosed();
 	}
-
 }

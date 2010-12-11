@@ -31,7 +31,7 @@ import org.apache.wicket.IClusterable;
  * 
  * As a result, using double quotes in the script will break the link syntax and make it fail (or
  * fallback in the case of an AjaxFallbackLink). So, if single quotes have to be inserted in strings
- * contained in the scripts, they must be properly escaped to pass through Java and Javascript, for
+ * contained in the scripts, they must be properly escaped to pass through Java and JavaScript, for
  * example:
  * 
  * <pre>

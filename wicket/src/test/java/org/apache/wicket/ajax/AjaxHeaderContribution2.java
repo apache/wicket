@@ -38,8 +38,8 @@ class AjaxHeaderContribution2 extends Panel
 	{
 		super.renderHead(container);
 
-		container.getHeaderResponse().renderJavascriptReference("javascripturlB");
-		container.getHeaderResponse().renderOnDomReadyJavascript("domReadyB();");
-		container.getHeaderResponse().renderOnLoadJavascript("onLoadB();");
+		container.getHeaderResponse().renderJavaScriptReference("javascripturlB");
+		container.getHeaderResponse().renderOnDomReadyJavaScript("domReadyB();");
+		container.getHeaderResponse().renderOnLoadJavaScript("onLoadB();");
 	}
 }

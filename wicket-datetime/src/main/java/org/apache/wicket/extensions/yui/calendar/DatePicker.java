@@ -249,7 +249,7 @@ public class DatePicker extends Behavior
 			variables.put("allowRollup", true);
 		}
 
-		String script = getAdditionalJavascript();
+		String script = getAdditionalJavaScript();
 		if (script != null)
 		{
 			variables.put("additionalJavascript",
@@ -325,7 +325,7 @@ public class DatePicker extends Behavior
 		// render initialization script with the variables interpolated
 		TextTemplate datePickerJs = new PackagedTextTemplate(DatePicker.class, "DatePicker.js");
 		datePickerJs.interpolate(variables);
-		response.renderOnDomReadyJavascript(datePickerJs.asString());
+		response.renderOnDomReadyJavaScript(datePickerJs.asString());
 
 		// remove previously generated markup (see onRendered) via javascript in
 		// ajax requests to not render the yui calendar multiple times
@@ -339,7 +339,7 @@ public class DatePicker extends Behavior
 				escapedComponentMarkupId + "DpJs.destroy(); delete YAHOO.wicket." +
 				escapedComponentMarkupId + "DpJs;";
 
-			response.renderJavascript(javascript, null);
+			response.renderJavaScript(javascript, null);
 		}
 	}
 
@@ -621,7 +621,7 @@ public class DatePicker extends Behavior
 
 	/**
 	 * Whether to notify the associated component when a date is selected. Notifying is done by
-	 * calling the associated component's onchange Javascript event handler. You can for instance
+	 * calling the associated component's onchange JavaScript event handler. You can for instance
 	 * attach an {@link AjaxEventBehavior} to that component to get a call back to the server. The
 	 * default is true.
 	 * 
@@ -743,7 +743,7 @@ public class DatePicker extends Behavior
 	}
 
 	/**
-	 * Override this method to further customize the YUI Calendar with additional Javascript code.
+	 * Override this method to further customize the YUI Calendar with additional JavaScript code.
 	 * The code returned by this method is executed right after the Calendar has been constructed
 	 * and initialized. To refer to the actual Calendar DOM object, use <code>${calendar}</code> in
 	 * your code.<br/>
@@ -752,16 +752,16 @@ public class DatePicker extends Behavior
 	 * Example:
 	 * 
 	 * <pre>
-	 * protected String getAdditionalJavascript()
+	 * protected String getAdditionalJavaScript()
 	 * {
 	 * 	return &quot;${calendar}.addRenderer(\&quot;10/3\&quot;, ${calendar}.renderCellStyleHighlight1);&quot;;
 	 * }
 	 * </pre>
 	 * 
-	 * @return a String containing additional Javascript code
+	 * @return a String containing additional JavaScript code
 	 * 
 	 */
-	protected String getAdditionalJavascript()
+	protected String getAdditionalJavaScript()
 	{
 		return "";
 	}

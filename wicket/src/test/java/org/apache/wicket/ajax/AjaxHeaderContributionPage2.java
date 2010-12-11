@@ -52,14 +52,14 @@ public class AjaxHeaderContributionPage2 extends WebPage
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
-				target.prependJavascript("prepend();");
+				target.prependJavaScript("prepend();");
 				target.add(test1);
 				target.add(test2);
 				target.add(test3);
 				target.add(btest1);
 				target.add(btest2);
 				target.add(btest3);
-				target.appendJavascript("append();");
+				target.appendJavaScript("append();");
 			}
 		});
 	}

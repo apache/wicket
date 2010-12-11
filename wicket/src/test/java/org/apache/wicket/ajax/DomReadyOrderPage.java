@@ -54,8 +54,8 @@ public class DomReadyOrderPage extends WebPage
 		{
 			super.renderHead(container);
 
-			container.getHeaderResponse().renderOnDomReadyJavascript("test1();");
-			container.getHeaderResponse().renderOnDomReadyJavascript("test2();");
+			container.getHeaderResponse().renderOnDomReadyJavaScript("test1();");
+			container.getHeaderResponse().renderOnDomReadyJavaScript("test2();");
 		}
 
 		@Override

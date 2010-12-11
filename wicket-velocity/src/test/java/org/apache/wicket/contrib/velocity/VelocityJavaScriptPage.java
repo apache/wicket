@@ -40,7 +40,7 @@ public class VelocityJavaScriptPage extends WebPage
 
 		String id = "000001";
 		String javascript = "msg1: Stoopid test 1\nmsg2: Stooopid test 2";
-		JavaScriptUtils.writeJavascript(getResponse(), javascript, id);
+		JavaScriptUtils.writeJavaScript(getResponse(), javascript, id);
 
 		IModel<MiniMap<String, String>> model = new Model<MiniMap<String, String>>()
 		{

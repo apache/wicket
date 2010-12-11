@@ -45,7 +45,7 @@ public class PanelWithHeaderPart extends Panel
 	{
 		response.renderCSSReference(new PackageResourceReference(PanelWithHeaderPart.class,
 			"test.css"));
-		response.renderJavascriptReference(new JavaScriptResourceReference(
+		response.renderJavaScriptReference(new JavaScriptResourceReference(
 			PanelWithHeaderPart.class, "test.js"));
 	}
 

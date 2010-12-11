@@ -26,7 +26,7 @@ import org.apache.wicket.util.lang.Packages;
 
 /**
  * A derivation of VelocityContributor that uses
- * {@link org.apache.wicket.markup.html.IHeaderResponse#renderJavascript(CharSequence, String)}
+ * {@link org.apache.wicket.markup.html.IHeaderResponse#renderJavaScript(CharSequence, String)}
  */
 public class VelocityJavaScriptContributor extends VelocityContributor
 {
@@ -75,7 +75,7 @@ public class VelocityJavaScriptContributor extends VelocityContributor
 		CharSequence s = evaluate();
 		if (s != null)
 		{
-			response.renderJavascript(s, id);
+			response.renderJavaScript(s, id);
 		}
 	}
 }

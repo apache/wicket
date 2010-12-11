@@ -35,7 +35,6 @@ import org.apache.wicket.resource.dependencies.AbstractResourceDependentResource
  */
 public class ResourceReferenceDependencyInjectingHeaderResponse extends DecoratingHeaderResponse
 {
-
 	private final IResourceReferenceDependencyConfigurationService configurationService;
 
 	/**
@@ -97,13 +96,13 @@ public class ResourceReferenceDependencyInjectingHeaderResponse extends Decorati
 	}
 
 	@Override
-	public void renderJavascriptReference(ResourceReference reference)
+	public void renderJavaScriptReference(ResourceReference reference)
 	{
 		render(get(reference));
 	}
 
 	@Override
-	public void renderJavascriptReference(ResourceReference reference, String id)
+	public void renderJavaScriptReference(ResourceReference reference, String id)
 	{
 		AbstractResourceDependentResourceReference parent = get(reference);
 		parent.setUniqueId(id);

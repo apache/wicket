@@ -80,7 +80,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	 */
 	private void renderAutocompleteHead(IHeaderResponse response)
 	{
-		response.renderJavascriptReference(AUTOCOMPLETE_JS);
+		response.renderJavaScriptReference(AUTOCOMPLETE_JS);
 		final String id = getComponent().getMarkupId();
 
 		String indicatorId = findIndicatorId();
@@ -95,7 +95,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 
 		String initJS = String.format("new Wicket.AutoComplete('%s','%s',%s,%s);", id,
 			getCallbackUrl(), constructSettingsJS(), indicatorId);
-		response.renderOnDomReadyJavascript(initJS);
+		response.renderOnDomReadyJavaScript(initJS);
 	}
 
 	protected final String constructSettingsJS()

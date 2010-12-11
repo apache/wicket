@@ -203,13 +203,13 @@ public class KittenCaptchaPanel extends Panel
 					javascript.append((url.toString().indexOf('?') > -1 ? "&amp;" : "?") + "rand=" +
 						Math.random());
 					javascript.append("'");
-					target.appendJavascript(javascript.toString());
+					target.appendJavaScript(javascript.toString());
 				}
 				else
 				{
 					// The user didn't click on an animal, so hide the loading
 					// indicator
-					target.appendJavascript(" hideLoadingIndicator();");
+					target.appendJavaScript(" hideLoadingIndicator();");
 				}
 
 				// Update the selection label

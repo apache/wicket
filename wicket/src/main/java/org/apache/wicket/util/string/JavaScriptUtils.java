@@ -102,7 +102,7 @@ public class JavaScriptUtils
 	 * @param id
 	 *            Unique identifier of element
 	 */
-	public static void writeJavascriptUrl(final Response response, final CharSequence url,
+	public static void writeJavaScriptUrl(final Response response, final CharSequence url,
 		final String id)
 	{
 		response.write("<script type=\"text/javascript\" ");
@@ -124,9 +124,9 @@ public class JavaScriptUtils
 	 * @param url
 	 *            The javascript file URL
 	 */
-	public static void writeJavascriptUrl(final Response response, final CharSequence url)
+	public static void writeJavaScriptUrl(final Response response, final CharSequence url)
 	{
-		writeJavascriptUrl(response, url, null);
+		writeJavaScriptUrl(response, url, null);
 	}
 
 	/**
@@ -139,7 +139,7 @@ public class JavaScriptUtils
 	 * @param id
 	 *            Unique identifier of element
 	 */
-	public static void writeJavascript(final Response response, final CharSequence text, String id)
+	public static void writeJavaScript(final Response response, final CharSequence text, String id)
 	{
 		writeOpenTag(response, id);
 		response.write(text);
@@ -154,9 +154,9 @@ public class JavaScriptUtils
 	 * @param text
 	 *            The text to added in between the script tags
 	 */
-	public static void writeJavascript(final Response response, final CharSequence text)
+	public static void writeJavaScript(final Response response, final CharSequence text)
 	{
-		writeJavascript(response, text, null);
+		writeJavaScript(response, text, null);
 	}
 
 	/**

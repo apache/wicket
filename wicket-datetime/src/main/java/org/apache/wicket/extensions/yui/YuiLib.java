@@ -43,7 +43,7 @@ public final class YuiLib
 	 */
 	public static void load(IHeaderResponse response)
 	{
-		response.renderJavascriptReference(getYuiLoader());
+		response.renderJavaScriptReference(getYuiLoader());
 	}
 
 	private static ResourceReference getYuiLoader()

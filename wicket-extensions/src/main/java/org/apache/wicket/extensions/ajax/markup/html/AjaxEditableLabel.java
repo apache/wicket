@@ -438,7 +438,7 @@ public class AjaxEditableLabel<T> extends Panel
 		target.add(AjaxEditableLabel.this);
 		// put focus on the textfield and stupid explorer hack to move the
 		// caret to the end
-		target.appendJavascript("{ var el=wicketGet('" + editor.getMarkupId() + "');" +
+		target.appendJavaScript("{ var el=wicketGet('" + editor.getMarkupId() + "');" +
 			"   if (el.createTextRange) { " +
 			"     var v = el.value; var r = el.createTextRange(); " +
 			"     r.moveStart('character', v.length); r.select(); } }");
@@ -456,10 +456,10 @@ public class AjaxEditableLabel<T> extends Panel
 		Serializable errorMessage = editor.getFeedbackMessage().getMessage();
 		if (errorMessage instanceof String)
 		{
-			target.appendJavascript("window.status='" +
+			target.appendJavaScript("window.status='" +
 				JavaScriptUtils.escapeQuotes((String)errorMessage) + "';");
 		}
-		target.appendJavascript("{var el=wicketGet('" + editor.getMarkupId() +
+		target.appendJavaScript("{var el=wicketGet('" + editor.getMarkupId() +
 			"'); el.select(); el.focus();}");
 		target.add(editor);
 	}
@@ -478,7 +478,7 @@ public class AjaxEditableLabel<T> extends Panel
 		editor.setVisible(false);
 		target.add(AjaxEditableLabel.this);
 
-		target.appendJavascript("window.status='';");
+		target.appendJavaScript("window.status='';");
 	}
 
 	/**

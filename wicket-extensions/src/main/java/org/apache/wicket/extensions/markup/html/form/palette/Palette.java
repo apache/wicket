@@ -620,7 +620,7 @@ public class Palette<T> extends Panel
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{
-		response.renderJavascriptReference(JAVASCRIPT);
+		response.renderJavaScriptReference(JAVASCRIPT);
 		ResourceReference css = getCSS();
 		if (css != null)
 		{

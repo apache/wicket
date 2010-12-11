@@ -56,9 +56,9 @@ public class OppositeHeaderResponseFilter implements IHeaderResponseFilter
 		return !other.acceptReference(ref);
 	}
 
-	public boolean acceptOtherJavascript()
+	public boolean acceptOtherJavaScript()
 	{
-		return !other.acceptOtherJavascript();
+		return !other.acceptOtherJavaScript();
 	}
 
 	public boolean acceptOtherCss()

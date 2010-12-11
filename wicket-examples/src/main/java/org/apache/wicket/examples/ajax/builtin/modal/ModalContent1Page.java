@@ -88,7 +88,7 @@ public class ModalContent1Page extends WebPage
 		{
 			public boolean onCloseButtonClicked(AjaxRequestTarget target)
 			{
-				target.appendJavascript("alert('You can\\'t close this modal window using close button."
+				target.appendJavaScript("alert('You can\\'t close this modal window using close button."
 					+ " Use the link inside the window instead.');");
 				return false;
 			}

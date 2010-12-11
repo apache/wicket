@@ -108,12 +108,12 @@ public abstract class AbstractCalendar extends WebComponent
 	/**
 	 * Gets the id of the javascript widget. Note that this is the non-namespaced id, so depending
 	 * on what you want to do with it, you may need to prepend 'YAHOO.wicket.' to it. Or you can
-	 * call {@link #getJavascriptWidgetId()}.
+	 * call {@link #getJavaScriptWidgetId()}.
 	 * 
 	 * @return The javascript id
-	 * @see #getJavascriptWidgetId()
+	 * @see #getJavaScriptWidgetId()
 	 */
-	public final String getJavascriptId()
+	public final String getJavaScriptId()
 	{
 		return getMarkupId() + "Js";
 	}
@@ -122,11 +122,11 @@ public abstract class AbstractCalendar extends WebComponent
 	 * The name spaced id of the widget.
 	 * 
 	 * @return The widget id
-	 * @see #getJavascriptId()
+	 * @see #getJavaScriptId()
 	 */
-	public final String getJavascriptWidgetId()
+	public final String getJavaScriptWidgetId()
 	{
-		return "YAHOO.wicket." + getJavascriptId();
+		return "YAHOO.wicket." + getJavaScriptId();
 	}
 
 	/**
@@ -137,9 +137,9 @@ public abstract class AbstractCalendar extends WebComponent
 	 */
 	private void contributeDependencies(IHeaderResponse response)
 	{
-		response.renderJavascriptReference(new PackageResourceReference(YuiLib.class,
+		response.renderJavaScriptReference(new PackageResourceReference(YuiLib.class,
 			"yahoodomevent/yahoo-dom-event.js"));
-		response.renderJavascriptReference(new PackageResourceReference(AbstractCalendar.class,
+		response.renderJavaScriptReference(new PackageResourceReference(AbstractCalendar.class,
 			"calendar-min.js"));
 		response.renderCSSReference(new PackageResourceReference(AbstractCalendar.class,
 			"assets/skins/sam/calendar.css"));
@@ -189,8 +189,8 @@ public abstract class AbstractCalendar extends WebComponent
 
 		// not pretty to look at, but cheaper than using a template
 		String markupId = AbstractCalendar.this.getMarkupId();
-		String javascriptId = getJavascriptId();
-		String javascriptWidgetId = getJavascriptWidgetId();
+		String javascriptId = getJavaScriptId();
+		String javascriptWidgetId = getJavaScriptWidgetId();
 		StringBuilder b = new StringBuilder();
 		b.append(JavaScriptUtils.SCRIPT_OPEN_TAG);
 		// initialize wicket namespace and register the init function

@@ -51,7 +51,7 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	/**
 	 * Text components that implement this interface are know to be able to provide a pattern for
 	 * formatting output and parsing input. This can be used by for instance date picker components
-	 * which are based on Javascript and need some knowledge as to how to communicate properly via
+	 * which are based on JavaScript and need some knowledge as to how to communicate properly via
 	 * request parameters.
 	 */
 	public static interface ITextFormatProvider

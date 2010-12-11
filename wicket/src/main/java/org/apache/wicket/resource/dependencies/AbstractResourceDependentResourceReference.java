@@ -43,7 +43,7 @@ public abstract class AbstractResourceDependentResourceReference extends Resourc
 	 */
 	public enum ResourceType {
 		/**
-		 * Javascript reference
+		 * JavaScript reference
 		 */
 		JS,
 
@@ -94,7 +94,7 @@ public abstract class AbstractResourceDependentResourceReference extends Resourc
 
 	/**
 	 * A globally-unique (to your application(s)) ID for this resource reference. This is optional,
-	 * and is set for you if you call IHeaderResponse.renderJavascriptReference(yourReference,
+	 * and is set for you if you call IHeaderResponse.renderJavaScriptReference(yourReference,
 	 * "some-id").
 	 * 
 	 * @param uniqueId
@@ -106,7 +106,7 @@ public abstract class AbstractResourceDependentResourceReference extends Resourc
 
 	/**
 	 * A globally-unique (to your application(s)) ID for this resource reference. This is optional,
-	 * and is set for you if you call IHeaderResponse.renderJavascriptReference(yourReference,
+	 * and is set for you if you call IHeaderResponse.renderJavaScriptReference(yourReference,
 	 * "some-id").
 	 * 
 	 * @return globally-unique (to your application(s)) ID for this resource reference

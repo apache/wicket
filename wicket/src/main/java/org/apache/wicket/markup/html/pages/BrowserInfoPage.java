@@ -64,7 +64,7 @@ public class BrowserInfoPage extends WebPage
 
 	/**
 	 * Bookmarkable constructor. This is not for normal framework client use. It will be called
-	 * whenever Javascript is not supported, and the browser info page's meta refresh fires to this
+	 * whenever JavaScript is not supported, and the browser info page's meta refresh fires to this
 	 * page. Prior to this, the other constructor should already have been called.
 	 * 
 	 * @param parameters

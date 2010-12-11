@@ -106,7 +106,7 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	 */
 	protected void handleCallbackScript(final IHeaderResponse response, final String callbackScript)
 	{
-		response.renderOnDomReadyJavascript(callbackScript);
+		response.renderOnDomReadyJavaScript(callbackScript);
 	}
 
 	/**

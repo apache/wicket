@@ -828,11 +828,11 @@ public abstract class AbstractTree extends Panel
 			// its current children is in the event's list of children
 			boolean wasLeaf = true;
 			int nodeChildCount = getChildCount(parentNode);
-			for (int i = 0; wasLeaf && i < nodeChildCount; i++) 
+			for (int i = 0; wasLeaf && i < nodeChildCount; i++)
 			{
 				wasLeaf = eventChildren.contains(getChildAt(parentNode, i));
 			}
-			
+
 			if (wasLeaf)
 			{
 				// parentNode now has children for the first time, so we need to invalidate
@@ -992,10 +992,10 @@ public abstract class AbstractTree extends Panel
 			// remove DOM elements that need to be removed
 			if (deleteIds.length() != 0)
 			{
-				String js = getElementsDeleteJavascript();
+				String js = getElementsDeleteJavaScript();
 
 				// add the javascript to target
-				target.prependJavascript(js);
+				target.prependJavaScript(js);
 			}
 
 			// We have to repeat this as long as there are any dirty items to be
@@ -1035,7 +1035,7 @@ public abstract class AbstractTree extends Panel
 					{
 						// it's already in dom, so we can use it as point of
 						// insertion
-						target.prependJavascript("Wicket.Tree.createElement(\"" +
+						target.prependJavaScript("Wicket.Tree.createElement(\"" +
 							item.getMarkupId() + "\"," + "\"" + previous.getMarkupId() + "\")");
 
 						// remove the item so we don't process it again
@@ -1248,7 +1248,7 @@ public abstract class AbstractTree extends Panel
 	 * 
 	 * @return The javascript
 	 */
-	private String getElementsDeleteJavascript()
+	private String getElementsDeleteJavaScript()
 	{
 		// build the javascript call
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(100);
@@ -1692,6 +1692,6 @@ public abstract class AbstractTree extends Panel
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{
-		response.renderJavascriptReference(JAVASCRIPT);
+		response.renderJavaScriptReference(JAVASCRIPT);
 	}
 }

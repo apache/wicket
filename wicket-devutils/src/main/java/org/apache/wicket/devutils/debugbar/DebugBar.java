@@ -129,7 +129,7 @@ public class DebugBar extends DevUtilsPanel
     public void renderHead(IHeaderResponse response)
     {
         response.renderCSSReference(new CompressedResourceReference(DebugBar.class, "wicket-debugbar.css"));
-        response.renderJavascriptReference(new JavaScriptResourceReference(DebugBar.class, "wicket-debugbar.js"));
+        response.renderJavaScriptReference(new JavaScriptResourceReference(DebugBar.class, "wicket-debugbar.js"));
     }
 
     /**

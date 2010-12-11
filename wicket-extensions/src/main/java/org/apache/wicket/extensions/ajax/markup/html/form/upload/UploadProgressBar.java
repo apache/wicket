@@ -159,8 +159,8 @@ public class UploadProgressBar extends Panel
 	public void renderHead(IHeaderResponse response)
 	{
 		super.renderHead(response);
-		response.renderJavascriptReference(WicketEventReference.INSTANCE);
-		response.renderJavascriptReference(JS);
+		response.renderJavaScriptReference(WicketEventReference.INSTANCE);
+		response.renderJavaScriptReference(JS);
 		ResourceReference css = getCss();
 		if (css != null)
 		{
@@ -171,7 +171,7 @@ public class UploadProgressBar extends Panel
 
 		final String uploadFieldId = (uploadField == null) ? "" : uploadField.getMarkupId();
 
-		response.renderOnDomReadyJavascript("Wicket.Event.add(document.getElementById('" +
+		response.renderOnDomReadyJavaScript("Wicket.Event.add(document.getElementById('" +
 			form.getRootForm().getMarkupId() + "'), 'submit', function() {" +
 			"if (!document.getElementById('" + statusDiv.getMarkupId() + "')) return;" +
 			"var def=new Wicket.WUPB.Def('" + getMarkupId() + "', '" + statusDiv.getMarkupId() +

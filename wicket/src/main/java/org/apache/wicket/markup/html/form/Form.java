@@ -1892,8 +1892,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 		{
 			// register some metadata so we can later properly handle multipart ajax posts for
 			// embedded forms
-			registerJavascriptNamespaces(response);
-			response.renderJavascript("Wicket.Forms[\"" + getMarkupId() + "\"]={multipart:true};",
+			registerJavaScriptNamespaces(response);
+			response.renderJavaScript("Wicket.Forms[\"" + getMarkupId() + "\"]={multipart:true};",
 				Form.class.getName() + "." + getMarkupId() + ".metadata");
 		}
 	}
@@ -1903,9 +1903,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 * 
 	 * @param response
 	 */
-	protected void registerJavascriptNamespaces(IHeaderResponse response)
+	protected void registerJavaScriptNamespaces(IHeaderResponse response)
 	{
-		response.renderJavascript(
+		response.renderJavaScript(
 			"if (typeof(Wicket)=='undefined') { Wicket={}; } if (typeof(Wicket.Forms)=='undefined') { Wicket.Forms={}; }",
 			Form.class.getName());
 	}

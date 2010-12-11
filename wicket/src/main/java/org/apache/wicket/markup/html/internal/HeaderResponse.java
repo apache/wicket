@@ -72,7 +72,8 @@ public abstract class HeaderResponse implements IHeaderResponse
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderCSSReference(org.apache.wicket.request.resource.ResourceReference, String)
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderCSSReference(org.apache.wicket.request.resource.ResourceReference,
+	 *      String)
 	 */
 	public void renderCSSReference(ResourceReference reference, String media)
 	{
@@ -141,9 +142,9 @@ public abstract class HeaderResponse implements IHeaderResponse
 
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavascriptReference(org.apache.wicket.request.resource.ResourceReference)
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavaScriptReference(org.apache.wicket.request.resource.ResourceReference)
 	 */
-	public void renderJavascriptReference(ResourceReference reference)
+	public void renderJavaScriptReference(ResourceReference reference)
 	{
 		if (reference == null)
 		{
@@ -153,14 +154,15 @@ public abstract class HeaderResponse implements IHeaderResponse
 		{
 			IRequestHandler handler = new ResourceReferenceRequestHandler(reference);
 			CharSequence url = RequestCycle.get().urlFor(handler);
-			internalRenderJavascriptReference(url.toString(), null);
+			internalRenderJavaScriptReference(url.toString(), null);
 		}
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavascriptReference(org.apache.wicket.request.resource.ResourceReference, String)
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavaScriptReference(org.apache.wicket.request.resource.ResourceReference,
+	 *      String)
 	 */
-	public void renderJavascriptReference(ResourceReference reference, String id)
+	public void renderJavaScriptReference(ResourceReference reference, String id)
 	{
 		if (reference == null)
 		{
@@ -170,28 +172,28 @@ public abstract class HeaderResponse implements IHeaderResponse
 		{
 			IRequestHandler handler = new ResourceReferenceRequestHandler(reference);
 			CharSequence url = RequestCycle.get().urlFor(handler);
-			internalRenderJavascriptReference(url.toString(), id);
+			internalRenderJavaScriptReference(url.toString(), id);
 		}
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavascriptReference(java.lang.String)
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavaScriptReference(java.lang.String)
 	 */
-	public void renderJavascriptReference(String url)
+	public void renderJavaScriptReference(String url)
 	{
-		internalRenderJavascriptReference(relative(url), null);
+		internalRenderJavaScriptReference(relative(url), null);
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavascriptReference(java.lang.String,
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavaScriptReference(java.lang.String,
 	 *      java.lang.String)
 	 */
-	public void renderJavascriptReference(String url, String id)
+	public void renderJavaScriptReference(String url, String id)
 	{
-		internalRenderJavascriptReference(relative(url), id);
+		internalRenderJavaScriptReference(relative(url), id);
 	}
 
-	private void internalRenderJavascriptReference(String url, String id)
+	private void internalRenderJavaScriptReference(String url, String id)
 	{
 		if (Strings.isEmpty(url))
 		{
@@ -207,7 +209,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 
 			if (token1Unused && token2Unused)
 			{
-				JavaScriptUtils.writeJavascriptUrl(getResponse(), url, id);
+				JavaScriptUtils.writeJavaScriptUrl(getResponse(), url, id);
 				markRendered(token1);
 				if (token2 != null)
 				{
@@ -218,10 +220,10 @@ public abstract class HeaderResponse implements IHeaderResponse
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavascript(java.lang.CharSequence,
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavaScript(java.lang.CharSequence,
 	 *      java.lang.String)
 	 */
-	public void renderJavascript(CharSequence javascript, String id)
+	public void renderJavaScript(CharSequence javascript, String id)
 	{
 		if (javascript == null)
 		{
@@ -232,7 +234,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 			List<String> token = Arrays.asList(javascript.toString(), id);
 			if (wasRendered(token) == false)
 			{
-				JavaScriptUtils.writeJavascript(getResponse(), javascript, id);
+				JavaScriptUtils.writeJavaScript(getResponse(), javascript, id);
 				markRendered(token);
 			}
 		}
@@ -267,9 +269,9 @@ public abstract class HeaderResponse implements IHeaderResponse
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderOnDomReadyJavascript(java.lang.String)
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderOnDomReadyJavaScript(java.lang.String)
 	 */
-	public void renderOnDomReadyJavascript(String javascript)
+	public void renderOnDomReadyJavaScript(String javascript)
 	{
 		if (javascript == null)
 		{
@@ -277,14 +279,14 @@ public abstract class HeaderResponse implements IHeaderResponse
 		}
 		if (!closed)
 		{
-			renderOnEventJavascript("window", "domready", javascript);
+			renderOnEventJavaScript("window", "domready", javascript);
 		}
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderOnLoadJavascript(java.lang.String)
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderOnLoadJavaScript(java.lang.String)
 	 */
-	public void renderOnLoadJavascript(String javascript)
+	public void renderOnLoadJavaScript(String javascript)
 	{
 		if (javascript == null)
 		{
@@ -292,24 +294,24 @@ public abstract class HeaderResponse implements IHeaderResponse
 		}
 		if (!closed)
 		{
-			renderOnEventJavascript("window", "load", javascript);
+			renderOnEventJavaScript("window", "load", javascript);
 		}
 	}
 
 	/**
 	 * 
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderOnEventJavascript(java.lang.String,
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderOnEventJavaScript(java.lang.String,
 	 *      java.lang.String, java.lang.String)
 	 */
-	public void renderOnEventJavascript(String target, String event, String javascript)
+	public void renderOnEventJavaScript(String target, String event, String javascript)
 	{
 		if (!closed)
 		{
 			List<String> token = Arrays.asList("javascript-event", target, event, javascript);
 			if (wasRendered(token) == false)
 			{
-				renderJavascriptReference(WicketEventReference.INSTANCE);
-				JavaScriptUtils.writeJavascript(getResponse(), "Wicket.Event.add(" + target +
+				renderJavaScriptReference(WicketEventReference.INSTANCE);
+				JavaScriptUtils.writeJavaScript(getResponse(), "Wicket.Event.add(" + target +
 					", \"" + event + "\", function(event) { " + javascript + ";});");
 				markRendered(token);
 			}

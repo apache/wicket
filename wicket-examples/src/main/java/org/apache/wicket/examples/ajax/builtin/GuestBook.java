@@ -116,7 +116,7 @@ public class GuestBook extends BasePage
 				target.add(text);
 
 				// focus the textarea again
-				target.appendJavascript("document.getElementById('" + text.getMarkupId() +
+				target.appendJavaScript("document.getElementById('" + text.getMarkupId() +
 					"').focus();");
 			}
 

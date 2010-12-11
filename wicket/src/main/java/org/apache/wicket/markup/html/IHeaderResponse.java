@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.markup.html;
 
+import java.io.Closeable;
+
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.ResourceReference;
-
-import java.io.Closeable;
 
 /**
  * Interface that is used to render header elements (usually javascript and CSS references).
@@ -37,7 +37,7 @@ public interface IHeaderResponse extends Closeable
 	 * @param reference
 	 *            resource reference pointing to the javascript resource
 	 */
-	public void renderJavascriptReference(ResourceReference reference);
+	public void renderJavaScriptReference(ResourceReference reference);
 
 	/**
 	 * Writes a javascript reference, if the specified reference hasn't been rendered yet.
@@ -48,7 +48,7 @@ public interface IHeaderResponse extends Closeable
 	 *            id that will be used to filter duplicate reference (it's still filtered by URL
 	 *            too)
 	 */
-	public void renderJavascriptReference(ResourceReference reference, String id);
+	public void renderJavaScriptReference(ResourceReference reference, String id);
 
 	/**
 	 * Writes a javascript reference, if the specified reference hasn't been rendered yet.
@@ -56,7 +56,7 @@ public interface IHeaderResponse extends Closeable
 	 * @param url
 	 *            context-relative url of the the javascript resource
 	 */
-	public void renderJavascriptReference(String url);
+	public void renderJavaScriptReference(String url);
 
 	/**
 	 * Writes a javascript reference, if the specified reference hasn't been rendered yet.
@@ -67,8 +67,7 @@ public interface IHeaderResponse extends Closeable
 	 *            id that will be used to filter duplicate reference (it's still filtered by URL
 	 *            too)
 	 */
-	public void renderJavascriptReference(String url, String id);
-
+	public void renderJavaScriptReference(String url, String id);
 
 	/**
 	 * Renders javascript code to the response, if the javascript has not already been rendered.
@@ -82,7 +81,7 @@ public interface IHeaderResponse extends Closeable
 	 *            unique id for the javascript element. This can be null, however in that case the
 	 *            ajax header contribution can't detect duplicate script fragments.
 	 */
-	public void renderJavascript(CharSequence javascript, String id);
+	public void renderJavaScript(CharSequence javascript, String id);
 
 	/**
 	 * Writes a CSS reference, if the specified reference hasn't been rendered yet.
@@ -146,9 +145,9 @@ public interface IHeaderResponse extends Closeable
 	/**
 	 * Returns whether the given object has been marked as rendered.
 	 * <ul>
-	 * <li>Methods <code>renderJavascriptReference</code> and <code>renderCSSReference</code> mark
+	 * <li>Methods <code>renderJavaScriptReference</code> and <code>renderCSSReference</code> mark
 	 * the specified {@link ResourceReference} as rendered.
-	 * <li>Method <code>renderJavascript</code> marks List of two elements (first is javascript body
+	 * <li>Method <code>renderJavaScript</code> marks List of two elements (first is javascript body
 	 * CharSequence and second is id) as rendered.
 	 * <li>Method <code>renderString</code> marks the whole string as rendered.
 	 * <li>Method <code>markRendered</code> can be used to mark an arbitrary object as rendered
@@ -176,14 +175,14 @@ public interface IHeaderResponse extends Closeable
 	 * 
 	 * @param javascript
 	 */
-	public void renderOnDomReadyJavascript(String javascript);
+	public void renderOnDomReadyJavaScript(String javascript);
 
 	/**
 	 * Renders javascript that is executed after the entire page is loaded.
 	 * 
 	 * @param javascript
 	 */
-	public void renderOnLoadJavascript(String javascript);
+	public void renderOnLoadJavaScript(String javascript);
 
 	/**
 	 * Renders javascript that is executed after the given event happens on specified target
@@ -192,7 +191,7 @@ public interface IHeaderResponse extends Closeable
 	 * @param event
 	 * @param javascript
 	 */
-	public void renderOnEventJavascript(String target, String event, String javascript);
+	public void renderOnEventJavaScript(String target, String event, String javascript);
 
 	/**
 	 * Mark Header rendering is completed and subsequent usage will be ignored. If some kind of

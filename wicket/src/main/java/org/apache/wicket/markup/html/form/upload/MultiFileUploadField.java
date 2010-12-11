@@ -16,6 +16,12 @@
  */
 package org.apache.wicket.markup.html.form.upload;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -34,12 +40,6 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.upload.FileItem;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 
 /**
@@ -145,7 +145,7 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 	 *            max number of files a user can upload
 	 * 
 	 */
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	public MultiFileUploadField(String id, IModel<? extends Collection<FileUpload>> model, int max)
 	{
 		super(id, (IModel<Collection<FileUpload>>)model);
@@ -208,8 +208,8 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 	public void renderHead(IHeaderResponse response)
 	{
 		// initialize the javascript library
-		response.renderJavascriptReference(JS);
-		response.renderOnDomReadyJavascript("new MultiSelector('" + getInputName() +
+		response.renderJavaScriptReference(JS);
+		response.renderOnDomReadyJavaScript("new MultiSelector('" + getInputName() +
 			"', document.getElementById('" + container.getMarkupId() + "'), " + max + ",'" +
 			getString("org.apache.wicket.mfu.delete") + "').addElement(document.getElementById('" +
 			upload.getMarkupId() + "'));");

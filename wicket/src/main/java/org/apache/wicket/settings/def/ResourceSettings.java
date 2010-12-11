@@ -100,7 +100,7 @@ public class ResourceSettings implements IResourceSettings
 	/** Default cache duration */
 	private Duration defaultCacheDuration = Duration.hours(1);
 
-	/** The Javascript compressor */
+	/** The JavaScript compressor */
 	private IJavaScriptCompressor javascriptCompressor;
 
 	/** escape string for '..' within resource keys */
@@ -384,17 +384,17 @@ public class ResourceSettings implements IResourceSettings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IResourceSettings#getJavascriptCompressor()
+	 * @see org.apache.wicket.settings.IResourceSettings#getJavaScriptCompressor()
 	 */
-	public IJavaScriptCompressor getJavascriptCompressor()
+	public IJavaScriptCompressor getJavaScriptCompressor()
 	{
 		return javascriptCompressor;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IResourceSettings#setJavascriptCompressor(org.apache.wicket.javascript.IJavaScriptCompressor)
+	 * @see org.apache.wicket.settings.IResourceSettings#setJavaScriptCompressor(org.apache.wicket.javascript.IJavaScriptCompressor)
 	 */
-	public IJavaScriptCompressor setJavascriptCompressor(IJavaScriptCompressor compressor)
+	public IJavaScriptCompressor setJavaScriptCompressor(IJavaScriptCompressor compressor)
 	{
 		IJavaScriptCompressor old = javascriptCompressor;
 		javascriptCompressor = compressor;

@@ -299,7 +299,7 @@ public abstract class Application implements UnboundListener, IEventSink
 				getDebugSettings().setAjaxDebugModeEnabled(true);
 				getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 				// getDebugSettings().setOutputMarkupContainerClassName(true);
-				getResourceSettings().setJavascriptCompressor(null);
+				getResourceSettings().setJavaScriptCompressor(null);
 				getRequestCycleSettings().addResponseFilter(EmptySrcAttributeCheckFilter.INSTANCE);
 				break;
 			}
@@ -311,7 +311,7 @@ public abstract class Application implements UnboundListener, IEventSink
 					IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
 				getDebugSettings().setAjaxDebugModeEnabled(false);
 				getDebugSettings().setDevelopmentUtilitiesEnabled(false);
-				getResourceSettings().setJavascriptCompressor(new DefaultJavaScriptCompressor());
+				getResourceSettings().setJavaScriptCompressor(new DefaultJavaScriptCompressor());
 				break;
 			}
 		}

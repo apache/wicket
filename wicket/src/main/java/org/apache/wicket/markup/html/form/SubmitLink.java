@@ -176,7 +176,7 @@ public class SubmitLink extends AbstractSubmitLink
 	 * 
 	 * @return true if form's javascript onsubmit handler should be invoked, false otherwise
 	 */
-	protected boolean shouldInvokeJavascriptFormOnsubmit()
+	protected boolean shouldInvokeJavaScriptFormOnsubmit()
 	{
 		return true;
 	}
@@ -201,7 +201,7 @@ public class SubmitLink extends AbstractSubmitLink
 			sb.append("var f=document.getElementById('");
 			sb.append(root.getMarkupId());
 			sb.append("');");
-			if (shouldInvokeJavascriptFormOnsubmit())
+			if (shouldInvokeJavaScriptFormOnsubmit())
 			{
 				if (getForm() != root)
 				{

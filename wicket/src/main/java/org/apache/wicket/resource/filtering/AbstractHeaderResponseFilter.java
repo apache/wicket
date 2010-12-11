@@ -52,7 +52,7 @@ public abstract class AbstractHeaderResponseFilter implements IHeaderResponseFil
 		return true;
 	}
 
-	public boolean acceptOtherJavascript()
+	public boolean acceptOtherJavaScript()
 	{
 		return true;
 	}

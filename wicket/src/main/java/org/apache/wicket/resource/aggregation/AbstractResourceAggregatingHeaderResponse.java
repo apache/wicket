@@ -72,13 +72,13 @@ public abstract class AbstractResourceAggregatingHeaderResponse<R extends Resour
 	}
 
 	@Override
-	public void renderJavascriptReference(ResourceReference reference)
+	public void renderJavaScriptReference(ResourceReference reference)
 	{
 		topLevelReferences.add(new ResourceReferenceAndStringData(reference, null, false));
 	}
 
 	@Override
-	public void renderJavascriptReference(ResourceReference reference, String id)
+	public void renderJavaScriptReference(ResourceReference reference, String id)
 	{
 		topLevelReferences.add(new ResourceReferenceAndStringData(reference, id, false));
 	}
@@ -186,7 +186,7 @@ public abstract class AbstractResourceAggregatingHeaderResponse<R extends Resour
 	 * 
 	 * For instance, if you want to aggregate your groups into a single HTTP request, you can
 	 * override this method, create the URL to your aggregation servlet (or {@link Resource}), and
-	 * then call <tt>getRealResponse().renderJavascriptReference(yourUrl)</tt>, or the appropriate
+	 * then call <tt>getRealResponse().renderJavaScriptReference(yourUrl)</tt>, or the appropriate
 	 * method to render the URL for a group of CSS references.
 	 * 
 	 * @param alreadyRendered
@@ -247,7 +247,7 @@ public abstract class AbstractResourceAggregatingHeaderResponse<R extends Resour
 	 * rendered only a YUI constructor that loaded all the JS files for each group. Then, you need
 	 * to loop through the references again, and render any JS inside a sandboxed YUI.use()
 	 * statement. You would render those here by creating the YUI.use statement, and call
-	 * <tt>getHeaderResponse().renderJavascript(yourJS, null)</tt>
+	 * <tt>getHeaderResponse().renderJavaScript(yourJS, null)</tt>
 	 * 
 	 * @param allTopLevelReferences
 	 *            all the references that were rendered by the developers
@@ -260,17 +260,17 @@ public abstract class AbstractResourceAggregatingHeaderResponse<R extends Resour
 
 	/* other interface methods: */
 	@Override
-	public void renderJavascriptReference(String url)
+	public void renderJavaScriptReference(String url)
 	{
 		// TODO: can we aggregate this? probably shouldn't...
-		getRealResponse().renderJavascriptReference(url);
+		getRealResponse().renderJavaScriptReference(url);
 	}
 
 	@Override
-	public void renderJavascriptReference(String url, String id)
+	public void renderJavaScriptReference(String url, String id)
 	{
 		// TODO: can we aggregate this? probably shouldn't...
-		getRealResponse().renderJavascriptReference(url, id);
+		getRealResponse().renderJavaScriptReference(url, id);
 	}
 
 	@Override
