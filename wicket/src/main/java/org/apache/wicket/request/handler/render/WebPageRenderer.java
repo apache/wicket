@@ -18,6 +18,7 @@ package org.apache.wicket.request.handler.render;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
+import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
@@ -39,7 +40,7 @@ import org.slf4j.LoggerFactory;
  */
 public class WebPageRenderer extends PageRenderer
 {
-	private static Logger logger = LoggerFactory.getLogger(WebPageRenderer.class);
+	private static final Logger logger = LoggerFactory.getLogger(WebPageRenderer.class);
 
 	/**
 	 * Construct.
@@ -81,7 +82,12 @@ public class WebPageRenderer extends PageRenderer
 
 	private String getSessionId()
 	{
-		return Session.get().getId();
+		String sessionId = Session.get().getId();
+		if (sessionId == null)
+		{
+			sessionId = IManageablePage.STATELESS_SESSION_ID;
+		}
+		return sessionId;
 	}
 
 	private boolean isSessionTemporary()
@@ -284,7 +290,6 @@ public class WebPageRenderer extends PageRenderer
 	 */
 	protected boolean enableRedirectForStatelessPage()
 	{
-		// TODO Make sure this is a sane default value (if not make it configurable)
 		return true;
 	}
 }
