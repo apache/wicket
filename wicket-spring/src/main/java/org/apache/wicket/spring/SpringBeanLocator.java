@@ -48,7 +48,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	private static final long serialVersionUID = 1L;
 
 	// Weak reference so we don't hold up WebApp classloader garbage collection.
-	private transient WeakReference<Class< ? >> beanTypeCache;
+	private transient WeakReference<Class<?>> beanTypeCache;
 
 	private final String beanTypeName;
 
@@ -66,7 +66,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * @param locator
 	 *            spring context locator
 	 */
-	public SpringBeanLocator(final Class< ? > beanType, final ISpringContextLocator locator)
+	public SpringBeanLocator(final Class<?> beanType, final ISpringContextLocator locator)
 	{
 		this(null, beanType, locator);
 	}
@@ -81,8 +81,8 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * @param locator
 	 *            spring context locator
 	 */
-	public SpringBeanLocator(final String beanName, final Class< ? > beanType,
-			final ISpringContextLocator locator)
+	public SpringBeanLocator(final String beanName, final Class<?> beanType,
+		final ISpringContextLocator locator)
 	{
 		if (locator == null)
 		{
@@ -93,7 +93,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 			throw new IllegalArgumentException("[beanType] argument cannot be null");
 		}
 
-		beanTypeCache = new WeakReference<Class< ? >>(beanType);
+		beanTypeCache = new WeakReference<Class<?>>(beanType);
 		beanTypeName = beanType.getName();
 		springContextLocator = locator;
 		this.beanName = beanName;
@@ -111,23 +111,23 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * @throws IllegalStateException
 	 * @return spring name of the bean
 	 */
-	private final String getBeanNameOfClass(final ApplicationContext ctx, final Class< ? > clazz)
+	private final String getBeanNameOfClass(final ApplicationContext ctx, final Class<?> clazz)
 	{
 		// get the list of all possible matching beans
-		List<String> names = new ArrayList<String>(Arrays.asList(BeanFactoryUtils
-				.beanNamesForTypeIncludingAncestors(ctx, clazz)));
-		Iterator<String> it = names.iterator();
+		List<String> names = new ArrayList<String>(
+			Arrays.asList(BeanFactoryUtils.beanNamesForTypeIncludingAncestors(ctx, clazz)));
 
 		// filter out beans that are not candidates for autowiring
-		while (it.hasNext())
+		if (ctx instanceof AbstractApplicationContext)
 		{
-			final String possibility = it.next();
-			if (ctx instanceof AbstractApplicationContext)
+			Iterator<String> it = names.iterator();
+			while (it.hasNext())
 			{
-				BeanDefinition beanDef = getBeanDefinition(((AbstractApplicationContext)ctx)
-						.getBeanFactory(), possibility);
+				String possibility = it.next();
+				BeanDefinition beanDef = getBeanDefinition(
+					((AbstractApplicationContext)ctx).getBeanFactory(), possibility);
 				if (BeanFactoryUtils.isFactoryDereference(possibility) ||
-						possibility.startsWith("scopedTarget.") || !beanDef.isAutowireCandidate())
+					possibility.startsWith("scopedTarget.") || !beanDef.isAutowireCandidate())
 				{
 					it.remove();
 				}
@@ -145,8 +145,8 @@ public class SpringBeanLocator implements IProxyTargetLocator
 				List<String> primaries = new ArrayList<String>();
 				for (String name : names)
 				{
-					BeanDefinition beanDef = getBeanDefinition(((AbstractApplicationContext)ctx)
-							.getBeanFactory(), name);
+					BeanDefinition beanDef = getBeanDefinition(
+						((AbstractApplicationContext)ctx).getBeanFactory(), name);
 					if (beanDef instanceof AbstractBeanDefinition)
 					{
 						if (((AbstractBeanDefinition)beanDef).isPrimary())
@@ -176,8 +176,14 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		}
 	}
 
+	/**
+	 * 
+	 * @param beanFactory
+	 * @param name
+	 * @return BeanDefinition
+	 */
 	private BeanDefinition getBeanDefinition(ConfigurableListableBeanFactory beanFactory,
-			String name)
+		String name)
 	{
 		if (beanFactory.containsBeanDefinition(name))
 		{
@@ -214,18 +220,18 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	/**
 	 * @return bean class this locator is configured with
 	 */
-	public Class< ? > getBeanType()
+	public Class<?> getBeanType()
 	{
-		Class< ? > clazz = beanTypeCache == null ? null : beanTypeCache.get();
+		Class<?> clazz = beanTypeCache == null ? null : beanTypeCache.get();
 		if (clazz == null)
 		{
-			beanTypeCache = new WeakReference<Class< ? >>(clazz = WicketObjects
-					.resolveClass(beanTypeName));
+			beanTypeCache = new WeakReference<Class<?>>(
+				clazz = WicketObjects.resolveClass(beanTypeName));
 			if (clazz == null)
 			{
 				throw new RuntimeException("SpringBeanLocator could not find class [" +
-						beanTypeName + "] needed to locate the [" +
-						((beanName != null) ? (beanName) : ("bean name not specified")) + "] bean");
+					beanTypeName + "] needed to locate the [" +
+					((beanName != null) ? (beanName) : ("bean name not specified")) + "] bean");
 			}
 		}
 		return clazz;
@@ -248,6 +254,10 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		}
 	}
 
+	/**
+	 * 
+	 * @return ApplicationContext
+	 */
 	private ApplicationContext getSpringContext()
 	{
 		final ApplicationContext context = springContextLocator.getSpringContext();
@@ -291,7 +301,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * @throws IllegalStateException
 	 * @return found bean
 	 */
-	private final Object lookupSpringBean(ApplicationContext ctx, Class< ? > clazz)
+	private final Object lookupSpringBean(ApplicationContext ctx, Class<?> clazz)
 	{
 		return lookupSpringBean(ctx, getBeanNameOfClass(ctx, clazz), clazz);
 	}
@@ -309,7 +319,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * @throws IllegalStateException
 	 * @return found bean
 	 */
-	private static Object lookupSpringBean(ApplicationContext ctx, String name, Class< ? > clazz)
+	private static Object lookupSpringBean(ApplicationContext ctx, String name, Class<?> clazz)
 	{
 		try
 		{
@@ -318,7 +328,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		catch (NoSuchBeanDefinitionException e)
 		{
 			throw new IllegalStateException("bean with name [" + name + "] and class [" +
-					clazz.getName() + "] not found");
+				clazz.getName() + "] not found");
 		}
 	}
 
@@ -332,7 +342,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		{
 			SpringBeanLocator other = (SpringBeanLocator)obj;
 			return beanTypeName.equals(other.beanTypeName) &&
-					Objects.equal(beanName, other.beanName);
+				Objects.equal(beanName, other.beanName);
 		}
 		return false;
 	}
