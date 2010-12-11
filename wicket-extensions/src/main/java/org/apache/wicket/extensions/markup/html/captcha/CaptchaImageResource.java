@@ -121,7 +121,6 @@ public final class CaptchaImageResource extends DynamicImageResource
 	}
 
 	private final IModel<String> challengeId;
-	private Integer challengeIdhashCode;
 
 	private final List<String> fontNames = Arrays.asList("Helvetica", "Arial", "Courier");
 	private final int fontSize;
@@ -222,7 +221,6 @@ public final class CaptchaImageResource extends DynamicImageResource
 	 */
 	public final void invalidate()
 	{
-		challengeIdhashCode = null;
 		imageData = null;
 	}
 
@@ -231,8 +229,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 	{
 		// get image data is always called in sync block
 		byte[] data = null;
-		if (imageData != null && challengeIdhashCode != null &&
-			challengeIdhashCode.equals(challengeId.getObject().hashCode()))
+		if (imageData != null)
 		{
 			data = imageData.get();
 		}
@@ -275,15 +272,16 @@ public final class CaptchaImageResource extends DynamicImageResource
 			double shearY = ran.nextDouble() * 0.2;
 			CharAttributes cf = new CharAttributes(ch, fontName, rotation, rise, shearX, shearY);
 			charAttsList.add(cf);
-			text = new TextLayout(ch + "", getFont(fontName), new FontRenderContext(null, false, false));
+			text = new TextLayout(ch + "", getFont(fontName), new FontRenderContext(null, false,
+				false));
 			textAt = new AffineTransform();
 			textAt.rotate(rotation);
 			textAt.shear(shearX, shearY);
 			shape = text.getOutline(textAt);
-			width += (int) shape.getBounds2D().getWidth();
-			if (height < (int) shape.getBounds2D().getHeight() + rise)
+			width += (int)shape.getBounds2D().getWidth();
+			if (height < (int)shape.getBounds2D().getHeight() + rise)
 			{
-				height = (int) shape.getBounds2D().getHeight() + rise;
+				height = (int)shape.getBounds2D().getHeight() + rise;
 			}
 		}
 
@@ -293,7 +291,8 @@ public final class CaptchaImageResource extends DynamicImageResource
 		int curWidth = margin;
 		for (CharAttributes cf : charAttsList)
 		{
-			text = new TextLayout(cf.getChar() + "", getFont(cf.getName()), gfx.getFontRenderContext());
+			text = new TextLayout(cf.getChar() + "", getFont(cf.getName()),
+				gfx.getFontRenderContext());
 			textAt = new AffineTransform();
 			textAt.translate(curWidth, height - cf.getRise());
 			textAt.rotate(cf.getRotation());
