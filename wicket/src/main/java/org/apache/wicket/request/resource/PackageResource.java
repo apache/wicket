@@ -19,6 +19,8 @@ package org.apache.wicket.request.resource;
 import java.io.IOException;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
@@ -198,7 +200,8 @@ public class PackageResource extends AbstractResource
 
 			// bail out if resource stream could not be found
 			if (resourceStream == null)
-				return sendResourceError(resourceResponse, 404, "Unable to find resource");
+				return sendResourceError(resourceResponse, HttpServletResponse.SC_NOT_FOUND,
+					"Unable to find resource");
 
 			// set Content-Type (may be null)
 			resourceResponse.setContentType(resourceStream.getContentType());
