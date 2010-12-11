@@ -65,8 +65,10 @@ public class SelectPage extends WicketExamplePage
 		add(feedbackPanel);
 
 		// Add a form with an onSubmit implementation that sets a message
-		Form<?> form = new Form("form")
+		Form<?> form = new Form<Void>("form")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onSubmit()
 			{
@@ -75,17 +77,19 @@ public class SelectPage extends WicketExamplePage
 		};
 		add(form);
 
-		Select site = new Select("site");
+		Select<String> site = new Select<String>("site");
 		form.add(site);
 		site.add(new SelectOption<String>("site1", new Model<String>("tss")));
 		site.add(new SelectOption<String>("site2", new Model<String>("jl")));
 		site.add(new SelectOption<String>("site3", new Model<String>("sd")));
 		site.add(new SelectOption<String>("site4", new Model<String>("bn")));
 
-		Select choices = new Select("choices");
+		Select<List<String>> choices = new Select<List<String>>("choices");
 		form.add(choices);
 		IOptionRenderer<String> renderer = new IOptionRenderer<String>()
 		{
+			private static final long serialVersionUID = 1L;
+
 			public String getDisplayValue(String object)
 			{
 				return object;
@@ -106,6 +110,8 @@ public class SelectPage extends WicketExamplePage
 	/** Simple data class that acts as a model for the input fields. */
 	private static class Input implements IClusterable
 	{
+		private static final long serialVersionUID = 1L;
+
 		/** the selected sites. */
 		public String site = "sd";
 
@@ -131,7 +137,7 @@ public class SelectPage extends WicketExamplePage
 
 		private String listAsString(List<String> list)
 		{
-		 StringBuilder b = new StringBuilder();
+			StringBuilder b = new StringBuilder();
 			for (Iterator<String> i = list.iterator(); i.hasNext();)
 			{
 				b.append(i.next());
