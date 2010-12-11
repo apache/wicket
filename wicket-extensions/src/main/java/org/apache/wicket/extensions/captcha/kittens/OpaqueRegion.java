@@ -229,6 +229,7 @@ class OpaqueRegion
 						{
 							// Whole rectangle is obscured
 							workList.remove(i);
+							i -= 1;
 						}
 						else
 						{
