@@ -3826,7 +3826,8 @@ public abstract class Component
 				}
 			}
 
-			if ((tag instanceof WicketTag) && !tag.isClose())
+			if ((tag instanceof WicketTag) && !tag.isClose() &&
+				!getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER))
 			{
 				if (getFlag(FLAG_OUTPUT_MARKUP_ID))
 				{
