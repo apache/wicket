@@ -3797,7 +3797,6 @@ public abstract class Component
 				(isIgnoreAttributeModifier() == false))
 			{
 				tag = tag.mutable();
-
 				for (Behavior behavior : behaviors)
 				{
 					// Components may reject some behavior components
@@ -3820,6 +3819,23 @@ public abstract class Component
 						behavior.onComponentTag(this, tag);
 					}
 					behavior.detach(this);
+				}
+			}
+
+			if ((tag instanceof WicketTag) && !tag.isClose())
+			{
+				if (getFlag(FLAG_OUTPUT_MARKUP_ID))
+				{
+					log.warn(String.format(
+						"Markup id set on a component that is usually not rendered into markup. "
+							+ "Markup id: %s, component id: %s, component tag: %s.", getId(),
+						tag.getName()));
+				}
+				if (getFlag(FLAG_PLACEHOLDER))
+				{
+					log.warn(String.format(
+						"Placeholder tag set on a component that is usually not rendered into markup. "
+							+ "Component id: %s, component tag: %s.", getId(), tag.getName()));
 				}
 			}
 
