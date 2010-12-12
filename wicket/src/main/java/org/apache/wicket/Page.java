@@ -608,9 +608,9 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
-	 * Gets whether the page is stateless. Components on stateless page must not render any
-	 * statefull urls, and components on statefull page must not render any stateless urls.
-	 * Statefull urls are urls, which refer to a certain (current) page instance.
+	 * Gets whether the page is stateless. Components on stateless page must not render any stateful
+	 * urls, and components on stateful page must not render any stateless urls. Stateful urls are
+	 * urls, which refer to a certain (current) page instance.
 	 * 
 	 * @return Whether this page is stateless
 	 */
