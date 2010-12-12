@@ -328,14 +328,18 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * Visits any form components inside component if it is a container, or component itself if it
 	 * is itself a form component
 	 * 
+	 * @param <R>
+	 *            the type of the visitor's result
+	 * 
 	 * @param component
 	 *            starting point of the traversal
 	 * 
 	 * @param visitor
 	 *            The visitor to call
+	 * @return the visitor's result
 	 */
 	public static final <R> R visitFormComponentsPostOrder(Component component,
-		final IVisitor<? extends FormComponent, R> visitor)
+		final IVisitor<? extends FormComponent<?>, R> visitor)
 	{
 		return Visits.visitPostOrder(component, visitor, new IVisitFilter()
 		{
@@ -362,11 +366,14 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * Visits any form components inside component if it is a container, or component itself if it
 	 * is itself a form component
 	 * 
+	 * @param <R>
+	 *            the type of the visitor's result
 	 * @param component
 	 *            starting point of the traversal
 	 * 
 	 * @param visitor
 	 *            The visitor to call
+	 * @return the visitor's result
 	 */
 	public static final <R> R visitComponentsPostOrder(Component component,
 		final org.apache.wicket.util.visit.IVisitor<Component, R> visitor)
@@ -1093,7 +1100,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * <p>
 	 * Usually the user should do custom conversions by specifying an {@link IConverter} by
 	 * registering it with the application by overriding {@link Application#getConverterLocator()},
-	 * or at the component level by overriding {@link #getConverter(Class)}}.
+	 * or at the component level by overriding {@link #getConverter(Class)} .
 	 * </p>
 	 * 
 	 * @see IConverterLocator
