@@ -2346,6 +2346,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/**
 	 * Removes this component from its parent. It's important to remember that a component that is
 	 * removed cannot be referenced from the markup still.
+	 * <p/>
+	 * You must not use this method in your callback to any of the
+	 * {@link MarkupContainer#visitChildren(IVisitor)} methods. See {@link href
+	 * https://issues.apache.org/jira/browse/WICKET-3229}.
 	 */
 	public final void remove()
 	{
