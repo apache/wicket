@@ -4217,6 +4217,23 @@ public abstract class Component implements IClusterable, IConverterLocator
 		final boolean stripWicketTags = ajaxRequest ||
 			Application.get().getMarkupSettings().getStripWicketTags();
 
+		if (tag instanceof WicketTag)
+		{
+			if (getFlag(FLAG_OUTPUT_MARKUP_ID))
+			{
+				log.warn(String.format(
+					"Markup id set on a component that is usually not rendered into markup. "
+						+ "Markup id: %s, component id: %s, component tag: %s.", getMarkupId(),
+					getId(), tag.getName()));
+			}
+			if (getFlag(FLAG_PLACEHOLDER))
+			{
+				log.warn(String.format(
+					"Placeholder tag set on a component that is usually not rendered into markup. "
+						+ "Component id: %s, component tag: %s.", getId(), tag.getName()));
+			}
+		}
+		
 		if (!(tag instanceof WicketTag) || !stripWicketTags)
 		{
 			// Apply behavior modifiers
