@@ -111,7 +111,7 @@ public class TextField<T> extends AbstractTextComponent<T>
 
 	/**
 	 * Subclass should override this method if this textfield is mapped on a different input type as
-	 * text. Like PasswordField or HiddenField.
+	 * text. Like PasswordTextField or HiddenField.
 	 * 
 	 * @return The input type of this textfield, default is null
 	 */
