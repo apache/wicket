@@ -4217,7 +4217,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		final boolean stripWicketTags = ajaxRequest ||
 			Application.get().getMarkupSettings().getStripWicketTags();
 
-		if (tag instanceof WicketTag)
+		if ((tag instanceof WicketTag) && !tag.isClose())
 		{
 			if (getFlag(FLAG_OUTPUT_MARKUP_ID))
 			{
@@ -4233,7 +4233,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 						+ "Component id: %s, component tag: %s.", getId(), tag.getName()));
 			}
 		}
-		
+
 		if (!(tag instanceof WicketTag) || !stripWicketTags)
 		{
 			// Apply behavior modifiers
