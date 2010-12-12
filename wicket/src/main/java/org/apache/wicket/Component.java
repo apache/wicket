@@ -3832,8 +3832,8 @@ public abstract class Component
 				{
 					log.warn(String.format(
 						"Markup id set on a component that is usually not rendered into markup. "
-							+ "Markup id: %s, component id: %s, component tag: %s.", getId(),
-						tag.getName()));
+							+ "Markup id: %s, component id: %s, component tag: %s.", getMarkupId(),
+						getId(), tag.getName()));
 				}
 				if (getFlag(FLAG_PLACEHOLDER))
 				{
