@@ -21,12 +21,12 @@ import java.io.Serializable;
 import junit.framework.TestCase;
 
 /**
- * https://issues.apache.org/jira/browse/WICKET-2937
- * 
  * <p>
  * If AbstractPropertyModel has an target that implements the IObjectClassAwareModel interface then
  * the class of that target is used to infer the modeled property type.
+ * </p>
  * 
+ * @see <a href="https://issues.apache.org/jira/browse/WICKET-2937">WICKET-2937</a>
  * @author Pedro Santos
  */
 public class AbstractPropertyModelObjectClassTest extends TestCase
@@ -61,6 +61,24 @@ public class AbstractPropertyModelObjectClassTest extends TestCase
 	{
 		assertEquals(Integer.class, new PropertyModel<IModel<?>>(modelForCustomTypeObject,
 			"someProperty").getObjectClass());
+	}
+
+	/**
+	 * Asserting that there is no problem in working with an AbstractPropertyModel targeting an
+	 * IObjectClassAwareModel not initialized with an known class.
+	 * 
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3253">WICKET-3253</a>
+	 */
+	public void testLazyClassResolution()
+	{
+		Model<CustomBean> modelCustomBean = new Model<CustomBean>(null);
+		PropertyModel<CustomType> customTypeModel = new PropertyModel<CustomType>(modelCustomBean,
+			"customType");
+		PropertyModel<Integer> somePropertyModel = new PropertyModel<Integer>(customTypeModel,
+			"someProperty");
+		assertNull(somePropertyModel.getObjectClass());
+		modelCustomBean.setObject(new CustomBean());
+		assertEquals(Integer.class, somePropertyModel.getObjectClass());
 	}
 
 	private static class CustomType implements Serializable
