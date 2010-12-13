@@ -17,7 +17,6 @@
 package org.apache.wicket.request.mapper;
 
 import org.apache.wicket.Session;
-import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
@@ -42,17 +41,11 @@ public class BufferedResponseMapper implements IRequestMapper
 	}
 
 	/**
-	 * 
-	 * @return session id
+	 * @return the current session id for stateful pages and <code>null</code> for stateless pages
 	 */
 	protected String getSessionId()
 	{
-		String sessionId = Session.get().getId();
-		if (sessionId == null)
-		{
-			sessionId = IManageablePage.STATELESS_SESSION_ID;
-		}
-		return sessionId;
+		return Session.get().getId();
 	}
 
 

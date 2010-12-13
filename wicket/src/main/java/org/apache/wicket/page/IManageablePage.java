@@ -22,11 +22,6 @@ import org.apache.wicket.IClusterable;
 public interface IManageablePage extends IClusterable
 {
 	/**
-	 * A prefix used as session id replacement for stored responses for stateless pages
-	 */
-	String STATELESS_SESSION_ID = "stateless-";
-
-	/**
 	 * Gets whether the page is stateless. Components on stateless page must not render any stateful
 	 * urls. Stateful urls are urls, which refer to a certain (current) page instance and don't
 	 * contain enough information to reconstruct page if it's not available (page class).

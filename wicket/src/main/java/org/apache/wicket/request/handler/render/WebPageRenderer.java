@@ -18,7 +18,6 @@ package org.apache.wicket.request.handler.render;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
-import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
@@ -80,14 +79,12 @@ public class WebPageRenderer extends PageRenderer
 		getPage().renderPage();
 	}
 
+	/**
+	 * @return the current session id for stateful pages and <code>null</code> for stateless pages
+	 */
 	private String getSessionId()
 	{
-		String sessionId = Session.get().getId();
-		if (sessionId == null)
-		{
-			sessionId = IManageablePage.STATELESS_SESSION_ID;
-		}
-		return sessionId;
+		return Session.get().getId();
 	}
 
 	private boolean isSessionTemporary()
@@ -290,6 +287,6 @@ public class WebPageRenderer extends PageRenderer
 	 */
 	protected boolean enableRedirectForStatelessPage()
 	{
-		return true;
+		return false;
 	}
 }
