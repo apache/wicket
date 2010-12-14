@@ -53,23 +53,24 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		// We are authorized unless we are found not to be
 		boolean authorized = true;
 
-		// Check package annotation first
-		final Package componentPackage = componentClass.getPackage();
-		if (componentPackage != null)
-		{
-			final AuthorizeInstantiation packageAnnotation = componentPackage.getAnnotation(AuthorizeInstantiation.class);
-			if (packageAnnotation != null)
-			{
-				authorized = hasAny(new Roles(packageAnnotation.value()));
-			}
-		}
-
-		// Check class annotation
+		// Check class annotation first because it is more specific than package annotation
 		final AuthorizeInstantiation classAnnotation = componentClass.getAnnotation(AuthorizeInstantiation.class);
 		if (classAnnotation != null)
 		{
-			// If roles are defined for the class, that overrides the package
 			authorized = hasAny(new Roles(classAnnotation.value()));
+		}
+		else
+		{
+			// Check package annotation if there is no one on the the class
+			final Package componentPackage = componentClass.getPackage();
+			if (componentPackage != null)
+			{
+				final AuthorizeInstantiation packageAnnotation = componentPackage.getAnnotation(AuthorizeInstantiation.class);
+				if (packageAnnotation != null)
+				{
+					authorized = hasAny(new Roles(packageAnnotation.value()));
+				}
+			}
 		}
 
 		return authorized;
