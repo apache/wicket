@@ -655,7 +655,8 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 			}
 			catch (IOException e)
 			{
-				throw new RuntimeException("Could not create the temp file for upload", e);
+				throw new RuntimeException("Could not create the temp file for upload: " +
+					tempFile.getAbsolutePath(), e);
 			}
 
 			if (fileUploadCleaner != null)
