@@ -682,7 +682,8 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 			}
 			catch (IOException e)
 			{
-				throw new WicketRuntimeException("Could not create the temp file for upload", e);
+				throw new WicketRuntimeException("Could not create the temp file for upload: " +
+					tempFile.getAbsolutePath(), e);
 			}
 
 			FileCleaner.track(tempFile, this);
