@@ -34,7 +34,7 @@ public class MostRecentlyUsedMap<K, V> extends LinkedHashMap<K, V>
 	private static final long serialVersionUID = 1L;
 
 	/** Value most recently removed from map */
-	V removedValue;
+	protected V removedValue;
 
 	/** Maximum number of entries allowed in this map */
 	private final int maxEntries;

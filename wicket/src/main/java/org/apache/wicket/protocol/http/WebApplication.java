@@ -16,10 +16,6 @@
  */
 package org.apache.wicket.protocol.http;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -54,13 +50,12 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.IProvider;
-import org.apache.wicket.util.collections.MostRecentlyUsedMap;
 import org.apache.wicket.util.file.FileUploadCleaner;
 import org.apache.wicket.util.file.IFileUploadCleaner;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.WebApplicationPath;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.lang.Generics;
+import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,12 +126,6 @@ public abstract class WebApplication extends Application
 
 		return (WebApplication)application;
 	}
-
-	/**
-	 * Map of buffered responses that are in progress per session. Buffered responses are
-	 * temporarily stored
-	 */
-	private final ConcurrentHashMap<String, Map<String, BufferedHttpServletResponse>> bufferedResponses = Generics.newConcurrentHashMap();
 
 	/**
 	 * the prefix for storing variables in the actual session (typically {@link HttpSession} for
@@ -391,8 +380,6 @@ public abstract class WebApplication extends Application
 	{
 		super.sessionUnbound(sessionId);
 
-		bufferedResponses.remove(sessionId);
-
 		IRequestLogger logger = getRequestLogger();
 		if (logger != null)
 		{
@@ -438,7 +425,6 @@ public abstract class WebApplication extends Application
 		{
 			resourceWatcher.destroy();
 		}
-		bufferedResponses.clear();
 
 		IFileUploadCleaner fileUploadCleaner = getResourceSettings().getFileUploadCleaner();
 		if (fileUploadCleaner != null)
@@ -577,35 +563,6 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Add a buffered response to the redirect buffer.
-	 * 
-	 * @param sessionId
-	 *            the session id
-	 * @param bufferId
-	 *            the id that should be used for storing the buffer
-	 * @param renderedResponse
-	 *            the response to buffer
-	 */
-	final void addBufferedResponse(String sessionId, String bufferId,
-		BufferedHttpServletResponse renderedResponse)
-	{
-		Map<String, BufferedHttpServletResponse> responsesPerSession = bufferedResponses.get(sessionId);
-		if (responsesPerSession == null)
-		{
-			responsesPerSession = Collections.synchronizedMap(new MostRecentlyUsedMap<String, BufferedHttpServletResponse>(
-				4));
-			Map<String, BufferedHttpServletResponse> previousValue = bufferedResponses.putIfAbsent(
-				sessionId, responsesPerSession);
-			if (previousValue != null)
-			{
-				responsesPerSession = previousValue;
-			}
-		}
-		String bufferKey = bufferId.startsWith("/") ? bufferId.substring(1) : bufferId;
-		responsesPerSession.put(bufferKey, renderedResponse);
-	}
-
-	/**
 	 * Log that this application is started.
 	 */
 	final void logStarted()
@@ -646,8 +603,12 @@ public abstract class WebApplication extends Application
 			+ "********************************************************************\n");
 	}
 
-	// TODO: Do this properly
-	private final Map<String, BufferedWebResponse> storedResponses = new ConcurrentHashMap<String, BufferedWebResponse>();
+	/*
+	 * Can contain at most 1000 responses and each entry can live at most one minute for now there
+	 * is no need to configure these parameters externally
+	 */
+	private final StoredResponsesMap storedResponses = new StoredResponsesMap(1000,
+		Duration.seconds(60));
 
 	/**
 	 * 
@@ -683,35 +644,6 @@ public abstract class WebApplication extends Application
 	{
 		String key = sessionId + url.toString();
 		storedResponses.put(key, response);
-	}
-
-	// TODO remove after deprecation release
-
-	/**
-	 * Returns the redirect map where the buffered render pages are stored in and removes it
-	 * immediately.
-	 * 
-	 * @param sessionId
-	 *            the session id
-	 * 
-	 * @param bufferId
-	 *            the id of the buffer as passed in as a request parameter
-	 * @return the buffered response or null if not found (when this request is on a different box
-	 *         than the original request came in
-	 */
-	final BufferedHttpServletResponse popBufferedResponse(String sessionId, String bufferId)
-	{
-		Map<String, BufferedHttpServletResponse> responsesPerSession = bufferedResponses.get(sessionId);
-		if (responsesPerSession != null)
-		{
-			BufferedHttpServletResponse buffered = responsesPerSession.remove(bufferId);
-			if (responsesPerSession.size() == 0)
-			{
-				bufferedResponses.remove(sessionId);
-			}
-			return buffered;
-		}
-		return null;
 	}
 
 	@Override
