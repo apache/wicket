@@ -16,8 +16,14 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.form.upload;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.IInitializer;
+import org.apache.wicket.ajax.WicketAjaxReference;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WicketEventReference;
@@ -160,6 +166,7 @@ public class UploadProgressBar extends Panel
 	{
 		super.renderHead(response);
 		response.renderJavaScriptReference(WicketEventReference.INSTANCE);
+		response.renderJavaScriptReference(WicketAjaxReference.INSTANCE);
 		response.renderJavaScriptReference(JS);
 		ResourceReference css = getCss();
 		if (css != null)
@@ -171,13 +178,26 @@ public class UploadProgressBar extends Panel
 
 		final String uploadFieldId = (uploadField == null) ? "" : uploadField.getMarkupId();
 
-		response.renderOnDomReadyJavaScript("Wicket.Event.add(document.getElementById('" +
-			form.getRootForm().getMarkupId() + "'), 'submit', function() {" +
-			"if (!document.getElementById('" + statusDiv.getMarkupId() + "')) return;" +
-			"var def=new Wicket.WUPB.Def('" + getMarkupId() + "', '" + statusDiv.getMarkupId() +
-			"', '" + barDiv.getMarkupId() + "', '" + urlFor(ref, null) + "','" + uploadFieldId +
-			"'); Wicket.WUPB.start(def);});");
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		PrintStream js = new PrintStream(out);
 
+		js.printf("var formElement = Wicket.$('%s');", form.getRootForm().getMarkupId());
+		js.append("var originalCallback = formElement.onsubmit;");
+
+		js.append("var submitCallback = function() {");
+		js.printf("  if (!Wicket.$('%s')) return;", statusDiv.getMarkupId());
+		js.printf("  var def=new Wicket.WUPB.Def('%s', '%s', '%s', '%s','%s');", getMarkupId(),
+			statusDiv.getMarkupId(), barDiv.getMarkupId(), urlFor(ref, null), uploadFieldId);
+
+		js.append("  new Wicket.WUPB(def).start();");
+
+		js.append("  if(originalCallback)return originalCallback(); else return true;");
+		js.append("};");
+
+		js.append("formElement.onsubmit = submitCallback;");
+		js.close();
+
+		response.renderOnDomReadyJavaScript(new String(out.toByteArray()));
 
 	}
 }

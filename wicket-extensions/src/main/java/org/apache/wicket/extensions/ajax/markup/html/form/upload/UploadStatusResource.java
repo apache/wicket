@@ -39,7 +39,7 @@ class UploadStatusResource extends AbstractResource
 	protected ResourceResponse newResourceResponse(Attributes attributes)
 	{
 		ResourceResponse response = new ResourceResponse();
-		response.setContentType("text/plain");
+		response.setContentType("text/html");
 
 		final String content = getStatus(attributes);
 		response.setWriteCallback(new WriteCallback()
@@ -60,7 +60,8 @@ class UploadStatusResource extends AbstractResource
 
 	/**
 	 * @param attributes
-	 * @return
+	 * @return Status string with progress data that will feed the progressbar.js variables on
+	 *         browser to update the progress bar
 	 */
 	private String getStatus(Attributes attributes)
 	{
@@ -70,7 +71,7 @@ class UploadStatusResource extends AbstractResource
 		String status = null;
 		if (info == null || info.getTotalBytes() < 1)
 		{
-			status = "0|0|0|0";
+			status = "0|0|0|0|0";
 		}
 		else
 		{
@@ -78,7 +79,7 @@ class UploadStatusResource extends AbstractResource
 				info.getTotalBytesString() + "|" + info.getTransferRateString() + "|" +
 				info.getRemainingTimeString();
 		}
-		status = "<html>|" + status + "|</html>";
+		status = "<html><body>|" + status + "|</body></html>";
 		return status;
 	}
 

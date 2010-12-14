@@ -1138,17 +1138,7 @@ Wicket.Ajax.Call.prototype = {
 		
 		var iframeName="wicket-submit-"+(""+Math.random()).substr(2);
 		
-		try {
-    		var iframe = document.createElement("<iframe name='"+iframeName+"' id='"+iframeName+"' src='about:blank'/>");
-		} catch (ex) {
-		    var iframe = document.createElement("iframe");
-			iframe.name=iframeName;
-			iframe.id=iframe.name;
-			iframe.src="about:blank";
-		}
-		
-		iframe.style.display="none";
-		iframe.style.visibility="hidden";
+		iframe = Wicket._createIFrame(iframeName);
 		
 		document.body.appendChild(iframe);
 		
@@ -2392,4 +2382,19 @@ Wicket._readTextNode = function(node) {
 		}
 	}
 	return text;
+}
+
+Wicket._createIFrame = function(iframeName){
+	try {
+		var iframe = document.createElement("<iframe name='"+iframeName+"' id='"+iframeName+"' src='about:blank'/>");
+	} catch (ex) {
+	    var iframe = document.createElement("iframe");
+		iframe.name=iframeName;
+		iframe.id=iframe.name;
+		iframe.src="about:blank";
+	}
+	
+	iframe.style.display="none";
+	iframe.style.visibility="hidden";
+	return iframe;
 }
