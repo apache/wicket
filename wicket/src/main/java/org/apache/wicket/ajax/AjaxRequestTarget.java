@@ -684,7 +684,51 @@ public class AjaxRequestTarget implements IPageRequestTarget
 
 		if (header != null)
 		{
+			// some header responses buffer all calls to render*** until close is called.
+			// when they are closed, they do something (i.e. aggregate all JS resource urls to a
+			// single url), and then "flush" (by writing to the real response) before closing.
+			// to support this, we need to allow header contributions to be written in the close
+			// tag, which we do here:
+			headerRendering = true;
+			// save old response, set new
+			Response oldResponse = RequestCycle.get().setResponse(encodingHeaderResponse);
+			encodingHeaderResponse.reset();
+
+			// now, close the response (which may render things)
 			header.getHeaderResponse().close();
+
+			// revert to old response
+			RequestCycle.get().setResponse(oldResponse);
+
+			// write the XML tags and we're done
+			writeHeaderContribution(response);
+			headerRendering = false;
+		}
+	}
+
+	private void writeHeaderContribution(Response response)
+	{
+		if (encodingHeaderResponse.getContents().length() != 0)
+		{
+			response.write("<header-contribution");
+
+			if (encodingHeaderResponse.isContentsEncoded())
+			{
+				response.write(" encoding=\"");
+				response.write(getEncodingName());
+				response.write("\" ");
+			}
+
+			// we need to write response as CDATA and parse it on client,
+			// because
+			// konqueror crashes when there is a <script> element
+			response.write("><![CDATA[<head xmlns:wicket=\"http://wicket.apache.org\">");
+
+			response.write(encodingHeaderResponse.getContents());
+
+			response.write("</head>]]>");
+
+			response.write("</header-contribution>");
 		}
 	}
 
@@ -1057,7 +1101,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	 * 
 	 * Beware that only renderOnDomReadyJavascript and renderOnLoadJavascript can be called outside
 	 * the renderHeader(IHeaderResponse response) method. Calls to other render** methods will
-	 * result in an exception being thrown.
+	 * result in the call failing with a debug-level log statement to help you see why it failed.
 	 * 
 	 * @return header response
 	 */
@@ -1065,7 +1109,9 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	{
 		if (headerResponse == null)
 		{
-			headerResponse = Application.get().decorateHeaderResponse(new AjaxHeaderResponse());
+			// we don't need to decorate the header response here because this is called from
+			// within AjaxHtmlHeaderContainer, which decorates the response
+			headerResponse = new AjaxHeaderResponse();
 		}
 		return headerResponse;
 	}
@@ -1150,31 +1196,9 @@ public class AjaxRequestTarget implements IPageRequestTarget
 		}
 
 		// revert to old response
-
 		RequestCycle.get().setResponse(oldResponse);
 
-		if (encodingHeaderResponse.getContents().length() != 0)
-		{
-			response.write("<header-contribution");
-
-			if (encodingHeaderResponse.isContentsEncoded())
-			{
-				response.write(" encoding=\"");
-				response.write(getEncodingName());
-				response.write("\" ");
-			}
-
-			// we need to write response as CDATA and parse it on client,
-			// because
-			// konqueror crashes when there is a <script> element
-			response.write("><![CDATA[<head xmlns:wicket=\"http://wicket.apache.org\">");
-
-			response.write(encodingHeaderResponse.getContents());
-
-			response.write("</head>]]>");
-
-			response.write("</header-contribution>");
-		}
+		writeHeaderContribution(response);
 
 		headerRendering = false;
 	}
