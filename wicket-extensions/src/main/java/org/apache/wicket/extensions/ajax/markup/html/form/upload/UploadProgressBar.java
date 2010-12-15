@@ -16,17 +16,20 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.form.upload;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 import org.apache.wicket.Application;
-import org.apache.wicket.Component;
 import org.apache.wicket.IInitializer;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
-import org.apache.wicket.behavior.AbstractBehavior;
-import org.apache.wicket.behavior.IBehavior;
-import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.ajax.WicketAjaxReference;
 import org.apache.wicket.markup.html.CSSPackageResource;
+import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.JavascriptPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.WicketEventReference;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -41,7 +44,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Andrew Lombardi
  */
-public class UploadProgressBar extends Panel
+public class UploadProgressBar extends Panel implements IHeaderContributor
 {
 	private static final Logger log = LoggerFactory.getLogger(UploadProgressBar.class);
 
@@ -119,10 +122,11 @@ public class UploadProgressBar extends Panel
 		super(id);
 		uploadField = fileUploadField;
 		this.form = form;
-		setOutputMarkupId(true);
 		form.setOutputMarkupId(true);
 		setRenderBodyOnly(true);
 
+		add(JavascriptPackageResource.getHeaderContribution(WicketEventReference.INSTANCE));
+		add(JavascriptPackageResource.getHeaderContribution(WicketAjaxReference.INSTANCE));
 		add(JavascriptPackageResource.getHeaderContribution(JS));
 		ResourceReference css = getCss();
 		if (css != null)
@@ -149,7 +153,7 @@ public class UploadProgressBar extends Panel
 	protected void onInitialize()
 	{
 		super.onInitialize();
-		form.getRootForm().add(new FormEnabler(this, statusDiv, barDiv, uploadField));
+		form.getRootForm().setOutputMarkupId(true);
 	}
 
 	/**
@@ -162,62 +166,35 @@ public class UploadProgressBar extends Panel
 		return CSS;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	protected void onRemove()
-	{
-		// remove formenabler we added to the form
-		for (IBehavior behavior : form.getBehaviors())
-		{
-			if (behavior instanceof FormEnabler)
-			{
-				if (((FormEnabler)behavior).getUploadProgressBar() == this)
-				{
-					form.remove(behavior);
-					break;
-				}
-			}
-		}
-		super.onRemove();
-	}
-
 	/**
-	 * Hooks into form onsubmit and triggers the progress bar updates
 	 * 
-	 * @author igor.vaynberg
 	 */
-	private static class FormEnabler extends AbstractBehavior
+	public void renderHead(IHeaderResponse response)
 	{
-		private static final long serialVersionUID = 1L;
+		ResourceReference ref = new ResourceReference(RESOURCE_NAME);
 
-		private final Component status, bar, uploadField;
-		private final UploadProgressBar pbar;
+		final String uploadFieldId = (uploadField == null) ? "" : uploadField.getMarkupId();
 
-		public FormEnabler(UploadProgressBar pbar, Component status, Component bar,
-			Component uploadField)
-		{
-			this.pbar = pbar;
-			this.bar = bar;
-			this.status = status;
-			this.uploadField = uploadField;
-		}
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		PrintStream js = new PrintStream(out);
 
-		@Override
-		public void onComponentTag(Component component, ComponentTag tag)
-		{
-			ResourceReference ref = new ResourceReference(RESOURCE_NAME);
-			final String uploadFieldId = (uploadField == null) ? "" : uploadField.getMarkupId();
-			tag.put("onsubmit", "var def=new Wicket.WUPB.Def('" + component.getMarkupId() + "', '" +
-				status.getMarkupId() + "', '" + bar.getMarkupId() + "', '" +
-				component.getPage().urlFor(ref) + "','" + uploadFieldId +
-				"'); Wicket.WUPB.start(def);");
-		}
+		js.printf("var formElement = Wicket.$('%s');", form.getRootForm().getMarkupId());
+		js.append("var originalCallback = formElement.onsubmit;");
 
-		public UploadProgressBar getUploadProgressBar()
-		{
-			return pbar;
-		}
+		js.append("var submitCallback = function() {");
+		js.printf("  if (!Wicket.$('%s')) return;", statusDiv.getMarkupId());
+		js.printf("  var def=new Wicket.WUPB.Def('%s', '%s', '%s', '%s','%s');", getMarkupId(),
+			statusDiv.getMarkupId(), barDiv.getMarkupId(), urlFor(ref), uploadFieldId);
 
+		js.append("  new Wicket.WUPB(def).start();");
+
+		js.append("  if(originalCallback)return originalCallback(); else return true;");
+		js.append("};");
+
+		js.append("formElement.onsubmit = submitCallback;");
+		js.close();
+
+		response.renderOnDomReadyJavascript(new String(out.toByteArray()));
 
 	}
 }

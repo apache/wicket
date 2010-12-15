@@ -60,7 +60,7 @@ class UploadStatusResource extends DynamicWebResource
 
 			if (info == null || info.getTotalBytes() < 1)
 			{
-				status = "0|0|0|0";
+				status = "0|0|0|0|0";
 			}
 			else
 			{
@@ -68,7 +68,7 @@ class UploadStatusResource extends DynamicWebResource
 						"|" + info.getTotalBytesString() + "|" + info.getTransferRateString() +
 						"|" + info.getRemainingTimeString();
 			}
-			status = "<html>|" + status + "|</html>";
+			status = "<html><body>|" + status + "|</body></html>";
 		}
 
 		/**
