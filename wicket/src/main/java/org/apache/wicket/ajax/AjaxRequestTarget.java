@@ -33,6 +33,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.internal.HeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -590,6 +591,8 @@ public class AjaxRequestTarget implements IPageRequestHandler
 			}
 
 			final Application app = Application.get();
+
+			page.send(app, Broadcast.BREADTH, this);
 
 			// Determine encoding
 			final String encoding = app.getRequestCycleSettings().getResponseRequestEncoding();
