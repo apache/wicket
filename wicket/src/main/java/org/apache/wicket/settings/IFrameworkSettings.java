@@ -17,13 +17,14 @@
 package org.apache.wicket.settings;
 
 import org.apache.wicket.IDetachListener;
+import org.apache.wicket.IEventDispatcher;
 
 /**
  * Framework settings for retrieving and configuring framework settings.
  * 
  * @author Martijn Dashorst
  */
-public interface IFrameworkSettings
+public interface IFrameworkSettings extends IEventDispatcher
 {
 	/**
 	 * Gets the Wicket version. The Wicket version is in the same format as the version element in
@@ -52,4 +53,12 @@ public interface IFrameworkSettings
 	 *            listener or <code>null</code> to remove
 	 */
 	public void setDetachListener(IDetachListener listener);
+
+	/**
+	 * Registers a new event dispatcher
+	 * 
+	 * @param dispatcher
+	 */
+	public void add(IEventDispatcher dispatcher);
+
 }

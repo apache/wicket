@@ -33,16 +33,21 @@ import org.apache.wicket.util.visit.Visits;
 final class ComponentEventSender implements IEventSource
 {
 	private final Component source;
+	private final IEventDispatcher dispatcher;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param source
 	 *            component that originated the event
+	 * @param dispatcher
 	 */
-	public ComponentEventSender(Component source)
+	public ComponentEventSender(Component source, IEventDispatcher dispatcher)
 	{
+		Args.notNull(source, "source");
+		Args.notNull(dispatcher, "dispatcher");
 		this.source = source;
+		this.dispatcher = dispatcher;
 	}
 
 	/** {@inheritDoc} */
@@ -62,7 +67,7 @@ final class ComponentEventSender implements IEventSource
 				depth(event);
 				break;
 			case EXACT :
-				event.getSink().onEvent(event);
+				dispatcher.dispatchEvent(event.getSink(), event);
 				break;
 		}
 	}
@@ -83,13 +88,13 @@ final class ComponentEventSender implements IEventSource
 
 		if (!targetsComponent && !targetsCycle)
 		{
-			sink.onEvent(event);
+			dispatcher.dispatchEvent(sink, event);
 			return;
 		}
 
 		if (targetsApplication)
 		{
-			source.getApplication().onEvent(event);
+			dispatcher.dispatchEvent(source.getApplication(), event);
 		}
 		if (event.isStop())
 		{
@@ -97,7 +102,7 @@ final class ComponentEventSender implements IEventSource
 		}
 		if (targetsSession)
 		{
-			source.getSession().onEvent(event);
+			dispatcher.dispatchEvent(source.getSession(), event);
 		}
 		if (event.isStop())
 		{
@@ -105,7 +110,7 @@ final class ComponentEventSender implements IEventSource
 		}
 		if (targetsCycle)
 		{
-			source.getRequestCycle().onEvent(event);
+			dispatcher.dispatchEvent(source.getRequestCycle(), event);
 		}
 		if (event.isStop())
 		{
@@ -114,7 +119,7 @@ final class ComponentEventSender implements IEventSource
 
 		Component cursor = (targetsCycle) ? cursor = source.getPage() : (Component)sink;
 
-		cursor.onEvent(event);
+		dispatcher.dispatchEvent(cursor, event);
 
 		if (event.isStop())
 		{
@@ -125,7 +130,7 @@ final class ComponentEventSender implements IEventSource
 
 		if (cursor instanceof MarkupContainer)
 		{
-			((MarkupContainer)cursor).visitChildren(new ComponentEventVisitor(event));
+			((MarkupContainer)cursor).visitChildren(new ComponentEventVisitor(event, dispatcher));
 		}
 	}
 
@@ -146,7 +151,7 @@ final class ComponentEventSender implements IEventSource
 
 		if (!targetsComponnet && !targetsCycle)
 		{
-			sink.onEvent(event);
+			dispatcher.dispatchEvent(sink, event);
 			return;
 		}
 
@@ -154,7 +159,7 @@ final class ComponentEventSender implements IEventSource
 
 		if (cursor instanceof MarkupContainer)
 		{
-			Visits.visitPostOrder(cursor, new ComponentEventVisitor(event));
+			Visits.visitPostOrder(cursor, new ComponentEventVisitor(event, dispatcher));
 		}
 		if (event.isStop())
 		{
@@ -162,7 +167,7 @@ final class ComponentEventSender implements IEventSource
 		}
 		if (targetsCycle)
 		{
-			source.getRequestCycle().onEvent(event);
+			dispatcher.dispatchEvent(source.getRequestCycle(), event);
 		}
 		if (event.isStop())
 		{
@@ -170,7 +175,7 @@ final class ComponentEventSender implements IEventSource
 		}
 		if (targetsSession)
 		{
-			source.getSession().onEvent(event);
+			dispatcher.dispatchEvent(source.getSession(), event);
 		}
 		if (event.isStop())
 		{
@@ -178,7 +183,7 @@ final class ComponentEventSender implements IEventSource
 		}
 		if (targetsApplication)
 		{
-			source.getApplication().onEvent(event);
+			dispatcher.dispatchEvent(source.getApplication(), event);
 		}
 	}
 
@@ -199,19 +204,19 @@ final class ComponentEventSender implements IEventSource
 
 		if (!targetsApplication && !targetsComponent)
 		{
-			sink.onEvent(event);
+			dispatcher.dispatchEvent(sink, event);
 			return;
 		}
 
 		if (targetsComponent)
 		{
 			Component cursor = (Component)sink;
-			cursor.onEvent(event);
+			dispatcher.dispatchEvent(cursor, event);
 			if (event.isStop())
 			{
 				return;
 			}
-			cursor.visitParents(Component.class, new ComponentEventVisitor(event));
+			cursor.visitParents(Component.class, new ComponentEventVisitor(event, dispatcher));
 		}
 
 		if (event.isStop())
@@ -220,7 +225,7 @@ final class ComponentEventSender implements IEventSource
 		}
 		if (targetsCycle)
 		{
-			source.getRequestCycle().onEvent(event);
+			dispatcher.dispatchEvent(source.getRequestCycle(), event);
 		}
 		if (event.isStop())
 		{
@@ -228,7 +233,7 @@ final class ComponentEventSender implements IEventSource
 		}
 		if (targetsSession)
 		{
-			source.getSession().onEvent(event);
+			dispatcher.dispatchEvent(source.getSession(), event);
 		}
 		if (event.isStop())
 		{
@@ -236,7 +241,7 @@ final class ComponentEventSender implements IEventSource
 		}
 		if (targetsApplication)
 		{
-			source.getApplication().onEvent(event);
+			dispatcher.dispatchEvent(source.getApplication(), event);
 		}
 	}
 
@@ -248,6 +253,7 @@ final class ComponentEventSender implements IEventSource
 	private static class ComponentEventVisitor implements IVisitor<Component, Void>
 	{
 		private final ComponentEvent<?> e;
+		private final IEventDispatcher dispatcher;
 
 		/**
 		 * Constructor
@@ -255,15 +261,16 @@ final class ComponentEventSender implements IEventSource
 		 * @param event
 		 *            event to send
 		 */
-		private ComponentEventVisitor(ComponentEvent<?> event)
+		private ComponentEventVisitor(ComponentEvent<?> event, IEventDispatcher dispatcher)
 		{
 			e = event;
+			this.dispatcher = dispatcher;
 		}
 
 		/** {@inheritDoc} */
 		public void component(Component object, IVisit<Void> visit)
 		{
-			object.onEvent(e);
+			dispatcher.dispatchEvent(object, e);
 
 			if (e.isStop())
 			{

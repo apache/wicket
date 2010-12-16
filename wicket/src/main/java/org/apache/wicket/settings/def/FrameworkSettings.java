@@ -16,8 +16,15 @@
  */
 package org.apache.wicket.settings.def;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.wicket.IDetachListener;
+import org.apache.wicket.IEventDispatcher;
+import org.apache.wicket.event.IEvent;
+import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.settings.IFrameworkSettings;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -33,6 +40,7 @@ import org.apache.wicket.util.string.Strings;
 public class FrameworkSettings implements IFrameworkSettings
 {
 	private IDetachListener detachListener;
+	private List<IEventDispatcher> eventDispatchers = null;
 
 	/**
 	 * @see org.apache.wicket.settings.IFrameworkSettings#getVersion()
@@ -62,5 +70,37 @@ public class FrameworkSettings implements IFrameworkSettings
 	public void setDetachListener(IDetachListener detachListener)
 	{
 		this.detachListener = detachListener;
+	}
+
+	public void add(IEventDispatcher dispatcher)
+	{
+		Args.notNull(dispatcher, "dispatcher");
+		if (eventDispatchers == null)
+		{
+			eventDispatchers = new ArrayList<IEventDispatcher>();
+		}
+		if (!eventDispatchers.contains(dispatcher))
+		{
+			eventDispatchers.add(dispatcher);
+		}
+	}
+
+	/**
+	 * Dispatches event to registered dispatchers
+	 */
+	public void dispatchEvent(IEventSink sink, IEvent<?> event)
+	{
+		// direct delivery
+		sink.onEvent(event);
+
+		// additional dispatchers delivery
+		if (eventDispatchers == null)
+		{
+			return;
+		}
+		for (IEventDispatcher dispatcher : eventDispatchers)
+		{
+			dispatcher.dispatchEvent(sink, event);
+		}
 	}
 }
