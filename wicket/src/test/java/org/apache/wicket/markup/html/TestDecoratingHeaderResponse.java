@@ -18,6 +18,8 @@ package org.apache.wicket.markup.html;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ResourceReference;
@@ -25,6 +27,9 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.resource.aggregation.AbstractResourceAggregatingHeaderResponse;
+import org.apache.wicket.resource.aggregation.ResourceReferenceAndStringData;
+import org.apache.wicket.resource.aggregation.ResourceReferenceCollection;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -34,9 +39,6 @@ import org.apache.wicket.util.resource.StringResourceStream;
  */
 public class TestDecoratingHeaderResponse extends WicketTestCase
 {
-	private static final ResourceReference JS_REF = new ResourceReference("test.js");
-	private static final String TEST_JS_REF_ID = "test-resource";
-
 
 	/**
 	 * Basic IHeaderResponseDecorator, just prepending the DECORATED string to resource name.
@@ -70,15 +72,73 @@ public class TestDecoratingHeaderResponse extends WicketTestCase
 		boolean isDecorated = false;
 		do
 		{
-			if ("script".equals(tag.getName()) && TEST_JS_REF_ID.equals(tag.getString("id")))
+			if (tag.isOpen() && "script".equals(tag.getName()))
 			{
 				isDecorated = tag.getString("src").toString().contains("DECORATED");
+				if (!isDecorated)
+				{
+					fail();
+				}
 			}
 		}
 		while ((tag = (XmlTag)parser.nextTag()) != null);
 		assertTrue(isDecorated);
 	}
 
+	/**
+	 * Test even and odd resources id rendered grouped.
+	 * 
+	 * @throws ResourceStreamNotFoundException
+	 * @throws IOException
+	 * @throws ParseException
+	 * 
+	 */
+	public void testEvenOddResourceIdGroup() throws IOException, ResourceStreamNotFoundException,
+		ParseException
+	{
+		tester.getApplication().setHeaderResponseDecorator(new IHeaderResponseDecorator()
+		{
+
+			public IHeaderResponse decorate(IHeaderResponse response)
+			{
+				return new AbstractResourceAggregatingHeaderResponse<ResourceReferenceCollection, Integer>(
+					response)
+				{
+					@Override
+					protected Integer newGroupingKey(ResourceReferenceAndStringData ref)
+					{
+						return Integer.parseInt(ref.getString()) % 2;
+					}
+				};
+			}
+		});
+		tester.startPage(TestPage.class);
+		XmlPullParser parser = new XmlPullParser();
+		parser.parse(tester.getServletResponse().getDocument());
+		XmlTag tag = (XmlTag)parser.nextTag();
+		List<Integer> resourcesId = new ArrayList<Integer>();
+		do
+		{
+			if (tag.isOpen() && "script".equals(tag.getName()))
+			{
+				resourcesId.add(Integer.parseInt(tag.getString("id").toString()));
+			}
+		}
+		while ((tag = (XmlTag)parser.nextTag()) != null);
+		int oddEvenCanges = 0;
+		for (int i = 1; i < resourcesId.size(); i++)
+		{
+			if (resourcesId.get(i) % 2 != resourcesId.get(i - 1) % 2)
+			{
+				oddEvenCanges++;
+			}
+		}
+		assertEquals(1, oddEvenCanges);
+	}
+
+	/**
+	 * 
+	 */
 	public static class TestPage extends WebPage
 		implements
 			IHeaderContributor,
@@ -87,7 +147,11 @@ public class TestDecoratingHeaderResponse extends WicketTestCase
 
 		public void renderHead(IHeaderResponse response)
 		{
-			response.renderJavascriptReference(JS_REF, TEST_JS_REF_ID);
+			for (int i = 0; i < 10; i++)
+			{
+				response.renderJavascriptReference(new ResourceReference("res" + i),
+					Integer.toString(i));
+			}
 		}
 
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
@@ -96,5 +160,4 @@ public class TestDecoratingHeaderResponse extends WicketTestCase
 			return new StringResourceStream("<html><body></body></html>");
 		}
 	}
-
 }
