@@ -314,7 +314,8 @@ public class ServletWebRequest extends WebRequest
 		{
 			// If this is an error page, this will be /mount or /?wicket:foo
 			relativeUrl = forwardUrl.substring(1);
-			relativeUrl = relativeUrl.substring(filterPath.length());
+			relativeUrl = filterPath == null ? relativeUrl
+				: relativeUrl.substring(filterPath.length());
 		}
 		else if (!Strings.isEmpty(errorUrl))
 		{
@@ -322,7 +323,8 @@ public class ServletWebRequest extends WebRequest
 			errorUrl = errorUrl.substring(httpRequest.getContextPath().length());
 			// strip the leading slash
 			relativeUrl = errorUrl.substring(1);
-			relativeUrl = relativeUrl.substring(filterPath.length());
+			relativeUrl = filterPath == null ? relativeUrl
+				: relativeUrl.substring(filterPath.length());
 		}
 		else if (wicketRedirectUrl != null)
 		{
