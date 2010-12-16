@@ -247,7 +247,7 @@ public class WebResponse extends Response
 					}
 					else
 					{
-						httpServletResponse.sendRedirect(url);
+						sendRedirect(url);
 					}
 					redirect = true;
 				}
@@ -261,6 +261,42 @@ public class WebResponse extends Response
 		{
 			log.info("Already redirecting to an url current one ignored: " + url);
 		}
+	}
+
+	/**
+	 * Called when Wicket wants to send a redirect to the servlet response. By default, WebResponse
+	 * just calls <code>httpServletResponse.sendRedirect(url)</code>. However, certain servlet
+	 * containers do not treat relative URL redirects correctly (i.e. WebSphere). If you are using
+	 * one of these containers, you can override this method and convert the relative URL to an
+	 * absolute URL before sending the redirect to the servlet container.
+	 * 
+	 * Example of how to fix this for your buggy container (in your application):
+	 * 
+	 * <pre>
+	 * &#064;Override
+	 * protected WebResponse newWebResponse(HttpServletResponse servletResponse)
+	 * {
+	 * 	return new WebResponse(servletResponse)
+	 * 	{
+	 * 		&#064;Override
+	 * 		public void sendRedirect(String url) throws IOException
+	 * 		{
+	 * 			String reqUrl = ((WebRequest)RequestCycle.get().getRequest()).getHttpServletRequest()
+	 * 				.getRequestURI();
+	 * 			String absUrl = RequestUtils.toAbsolutePath(reqUrl, url);
+	 * 			getHttpServletResponse().sendRedirect(absUrl);
+	 * 		}
+	 * 	};
+	 * }
+	 * </pre>
+	 * 
+	 * @param url
+	 *            the URL to redirect to
+	 * @throws IOException
+	 */
+	protected void sendRedirect(String url) throws IOException
+	{
+		httpServletResponse.sendRedirect(url);
 	}
 
 	/**
