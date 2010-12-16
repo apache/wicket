@@ -76,7 +76,7 @@ class UploadStatusResource extends DynamicWebResource
 		 */
 		public String getContentType()
 		{
-			return "text/plain";
+			return "text/html";
 		}
 
 		/**
