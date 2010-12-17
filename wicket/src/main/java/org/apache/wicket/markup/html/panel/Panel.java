@@ -96,7 +96,6 @@ public abstract class Panel extends WebMarkupContainerWithAssociatedMarkup
 			// Convert <span wicket:id="myPanel" /> into
 			// <span wicket:id="myPanel">...</span>
 			tag.setType(TagType.OPEN);
-			tag.setModified(true);
 		}
 		super.onComponentTag(tag);
 	}

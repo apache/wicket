@@ -133,7 +133,6 @@ public class Fragment extends WebMarkupContainer
 		if (tag.isOpenClose())
 		{
 			tag.setType(TagType.OPEN);
-			tag.setModified(true);
 		}
 		super.onComponentTag(tag);
 	}
@@ -145,21 +144,15 @@ public class Fragment extends WebMarkupContainer
 		if (markupStream.getPreviousTag().isOpen())
 		{
 			markupStream.skipRawMarkup();
+			if (markupStream.get().closes(openTag) == false)
+			{
+				throw new MarkupException(markupStream, "close tag not found for tag: " +
+					openTag.toString() + ". Component: " + this.toString());
+			}
 		}
 
-		renderFragment(openTag);
-	}
-
-	/**
-	 * Render the markup starting at the current position of the markup strean
-	 * 
-	 * @param openTag
-	 */
-	private void renderFragment(final ComponentTag openTag)
-	{
-		MarkupStream stream = new MarkupStream(getMarkup(null));
-
 		// Get the fragments open tag
+		MarkupStream stream = new MarkupStream(getMarkup(null));
 		ComponentTag fragmentOpenTag = stream.getTag();
 
 		// if it is an open close tag, skip this fragment.
@@ -201,9 +194,8 @@ public class Fragment extends WebMarkupContainer
 		IMarkupFragment markup = chooseMarkup();
 		if (markup == null)
 		{
-			throw new MarkupException(
-				"chooseMarkup() returned null. No markup to search for fragment markup with id: " +
-					markupId);
+			throw new MarkupException("The fragments markup provider has no associated markup. " +
+				"No markup to search for fragment markup with id: " + markupId);
 		}
 
 		// Search for the fragment markup

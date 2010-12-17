@@ -17,7 +17,6 @@
 package org.apache.wicket.markup;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
 
@@ -62,7 +61,11 @@ public class MarkupStream
 	 */
 	public MarkupStream(final IMarkupFragment markup)
 	{
-		Args.notNull(markup, "markup");
+		if (markup == null)
+		{
+			throwMarkupException("Failed to find markup.");
+		}
+
 		this.markup = markup;
 
 		if (markup.size() > 0)

@@ -609,7 +609,11 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final void setType(final TagType type)
 	{
-		xmlTag.setType(type);
+		if (type != xmlTag.getType())
+		{
+			xmlTag.setType(type);
+			setModified(true);
+		}
 	}
 
 	/**
