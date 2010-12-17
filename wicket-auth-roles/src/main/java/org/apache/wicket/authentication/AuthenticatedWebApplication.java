@@ -91,7 +91,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 			if (!AuthenticatedWebSession.get().isSignedIn())
 			{
 				// Redirect to intercept page to let the user sign in
-				throw new RestartResponseAtInterceptPageException(getSignInPageClass());
+				restartResponseAtSignInPage();
 			}
 			else
 			{
@@ -106,6 +106,17 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	}
 
 	/**
+	 * Restarts response at sign in page.
+	 * 
+	 * NOTE: this method internally throws a restart response exception, so no code after a call to
+	 * this method will be executed
+	 */
+	public void restartResponseAtSignInPage()
+	{
+		throw new RestartResponseAtInterceptPageException(getSignInPageClass());
+	}
+
+	/**
 	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.request.Request,
 	 *      org.apache.wicket.request.Response)
 	 */
@@ -114,8 +125,9 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	{
 		try
 		{
-			return webSessionClassRef.get().getDeclaredConstructor(Request.class).newInstance(
-				request);
+			return webSessionClassRef.get()
+				.getDeclaredConstructor(Request.class)
+				.newInstance(request);
 		}
 		catch (Exception e)
 		{
