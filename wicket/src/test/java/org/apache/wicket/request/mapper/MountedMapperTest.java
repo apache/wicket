@@ -513,4 +513,32 @@ public class MountedMapperTest extends AbstractMapperTest
 		Url url = placeholderEncoder.mapHandler(handler);
 		assertEquals("some/p1/path/p2/i1/i2?a=b&b=c", url.toString());
 	}
+
+	/**
+	 * Test Url creation with {@link RenderPageRequestHandler}. Cheat that the page instance is not
+	 * new, this way the produced Url has version '1' in the page info parameter
+	 */
+	public void testPlaceholderEncode3()
+	{
+		PageParameters parameters = new PageParameters();
+		parameters.set(0, "i1");
+		parameters.set(1, "i2");
+		parameters.set("a", "b");
+		parameters.set("b", "c");
+		parameters.set("param1", "p1");
+		parameters.set("param2", "p2");
+
+		PageProvider provider = new PageProvider(MockPage.class, parameters)
+		{
+			@Override
+			public boolean isNewPageInstance()
+			{
+				return false;
+			}
+		};
+		provider.setPageSource(context);
+		IRequestHandler handler = new RenderPageRequestHandler(provider);
+		Url url = placeholderEncoder.mapHandler(handler);
+		assertEquals("some/p1/path/p2/i1/i2?1&a=b&b=c", url.toString());
+	}
 }
