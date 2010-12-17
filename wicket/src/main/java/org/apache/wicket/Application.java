@@ -192,6 +192,9 @@ public abstract class Application implements UnboundListener, IEventSink
 	/** request cycle provider */
 	private IRequestCycleProvider requestCycleProvider;
 
+    /** exception mapper provider */
+    private IProvider<IExceptionMapper> exceptionMapperProvider;
+
 	/** session store provider */
 	private IProvider<ISessionStore> sessionStoreProvider;
 
@@ -704,9 +707,26 @@ public abstract class Application implements UnboundListener, IEventSink
 		pageAccessSynchronizer = new PageAccessSynchronizer(getRequestCycleSettings().getTimeout());
 
 		requestCycleProvider = new DefaultRequestCycleProvider();
+        exceptionMapperProvider = new DefaultExceptionMapperProvider();
 	}
 
-	/**
+    /**
+     * @return the exception mapper provider
+     */
+    public IProvider<IExceptionMapper> getExceptionMapperProvider()
+    {
+        return exceptionMapperProvider;
+    }
+
+    /**
+     * @param exceptionMapperProvider the new exception mapper provider
+     */
+    public void setExceptionMapperProvider(IProvider<IExceptionMapper> exceptionMapperProvider)
+    {
+        this.exceptionMapperProvider = exceptionMapperProvider;
+    }
+
+    /**
 	 * 
 	 * @return Session state provider
 	 */
@@ -1449,6 +1469,14 @@ public abstract class Application implements UnboundListener, IEventSink
 		this.requestCycleProvider = requestCycleProvider;
 	}
 
+    private static class DefaultExceptionMapperProvider implements IProvider<IExceptionMapper>
+    {
+        public IExceptionMapper get()
+        {
+            return new DefaultExceptionMapper();
+        }
+    }
+
 	/**
 	 * 
 	 */
@@ -1469,7 +1497,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	public final RequestCycle createRequestCycle(final Request request, final Response response)
 	{
 		RequestCycleContext context = new RequestCycleContext(request, response,
-			getRootRequestMapper(), newExceptionMapper());
+			getRootRequestMapper(), getExceptionMapperProvider().get());
 
 		RequestCycle requestCycle = getRequestCycleProvider().get(context);
 		requestCycle.getListeners().add(requestCycleListeners);
@@ -1482,15 +1510,6 @@ public abstract class Application implements UnboundListener, IEventSink
 			}
 		});
 		return requestCycle;
-	}
-
-	/**
-	 * @return a mapper that knows what kind of error page to show when an exception occurs during
-	 *         page rendering
-	 */
-	protected IExceptionMapper newExceptionMapper()
-	{
-		return new DefaultExceptionMapper();
 	}
 
 	/**
