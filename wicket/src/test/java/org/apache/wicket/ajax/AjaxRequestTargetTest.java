@@ -26,6 +26,7 @@ import org.apache.wicket.MockPageWithLinkAndComponent;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.tester.ITestPageSource;
@@ -195,6 +196,52 @@ public class AjaxRequestTargetTest extends WicketTestCase
 			final String expectedContent = String.format(VarargsAddComponentPage.INITIAL_CONTENT, i) +
 				VarargsAddComponentPage.AJAX_APPENDED_SUFFIX;
 			tester.assertLabel(labelMarkupId, expectedContent);
+		}
+	}
+
+	/**
+	 * Testing the default event raised whenever Wicket begins to create an AJAX response
+	 */
+	public void testDefaultEventRaisedOnAjaxResponse()
+	{
+		tester.startPage(TestEventPage.class);
+		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID, true);
+		TestEventPage page = (TestEventPage)tester.getLastRenderedPage();
+		assertTrue(page.defaultEventRaised);
+	}
+
+	/**
+	 */
+	public static class TestEventPage extends MockPageWithLinkAndComponent
+	{
+		boolean defaultEventRaised = false;
+
+		/**
+		 */
+		public TestEventPage()
+		{
+			add(new AjaxLink<Void>(LINK_ID)
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void onClick(AjaxRequestTarget target)
+				{
+				}
+			});
+			add(new WebComponent(COMPONENT_ID)
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void onEvent(IEvent<?> event)
+				{
+					if (event.getPayload() instanceof AjaxRequestTarget)
+					{
+						defaultEventRaised = true;
+					}
+				}
+			});
 		}
 	}
 }
