@@ -28,13 +28,6 @@ public class PageWithXmlProperties extends DummyHomePage
 	/***/
 	public PageWithXmlProperties()
 	{
-	}
-
-	@Override
-	public void onInitialize()
-	{
-		super.onInitialize();
-
 		String expected = XmlFilePropertiesLoaderTest.EXPECTED_LOCALIZATIONS.get(getSession().getLocale());
 		String actual = getString("testProperty");
 		assertEquals(expected, actual);

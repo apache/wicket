@@ -42,6 +42,10 @@ public class WicketExamplePage extends WebPage
 	public WicketExamplePage(final PageParameters pageParameters)
 	{
 		super(pageParameters);
+
+		final String packageName = getClass().getPackage().getName();
+		add(new WicketExampleHeader("mainNavigation", Strings.afterLast(packageName, '.'), this));
+		explain();
 	}
 
 
@@ -53,19 +57,6 @@ public class WicketExamplePage extends WebPage
 	public WicketExamplePage(IModel<?> model)
 	{
 		super(model);
-	}
-
-	/**
-	 * @see org.apache.wicket.Component#onInitialize()
-	 */
-	@Override
-	protected void onInitialize()
-	{
-		super.onInitialize();
-
-		final String packageName = getClass().getPackage().getName();
-		add(new WicketExampleHeader("mainNavigation", Strings.afterLast(packageName, '.'), this));
-		explain();
 	}
 
 	/**

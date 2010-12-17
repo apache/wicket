@@ -24,10 +24,8 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Tests {@link Component#onInitialize()} contract
@@ -68,10 +66,6 @@ public class ComponentInitializationTest extends WicketTestCase
 		// test initialization when readding a component with uninitialized children
 		page.add(t1);
 		assertEquals(1, t4.getCount());
-
-		// test page was initialized
-		assertEquals(1, page.getCount());
-
 	}
 
 	public void testAtomicity()
@@ -101,18 +95,6 @@ public class ComponentInitializationTest extends WicketTestCase
 		page.add(t1);
 		assertEquals(1, t1.getCount());
 		assertEquals(1, t2.getCount());
-
-		// test page was only initialized once
-		assertEquals(1, page.getCount());
-	}
-
-	public void testPageInitialization()
-	{
-		WicketTester tester = new WicketTester();
-		tester.startPage(TestPage.class);
-		TestPage page = (TestPage)tester.getLastRenderedPage();
-
-		assertEquals(1, page.getCount());
 	}
 
 	public void testOnInitializeSuperVerified()
@@ -182,31 +164,14 @@ public class ComponentInitializationTest extends WicketTestCase
 
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
-		private int count = 0;
-
 		public TestPage()
 		{
-		}
-
-		@Override
-		protected void onInitialize()
-		{
-			super.onInitialize();
-			count++;
-			add(new Label("addedComponent",
-				"Testing addition of a component to show StackOverflowError"));
-		}
-
-		public int getCount()
-		{
-			return count;
 		}
 
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{
-			return new StringResourceStream(
-				"<html><body><span wicket:id=\"addedComponent\"></span></body></html>");
+			return new StringResourceStream("<html><body></body></html>");
 		}
 	}
 
