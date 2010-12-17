@@ -79,6 +79,7 @@ public class TestDecoratingHeaderResponse extends WicketTestCase
 				{
 					fail();
 				}
+				break;
 			}
 		}
 		while ((tag = (XmlTag)parser.nextTag()) != null);
