@@ -21,12 +21,14 @@ import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.RenderPageRequestHandler.RedirectPolicy;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.slf4j.Logger;
@@ -95,6 +97,20 @@ public class WebPageRenderer extends PageRenderer
 	private BufferedWebResponse getAndRemoveBufferedResponse(Url url)
 	{
 		return WebApplication.get().getAndRemoveBufferedResponse(getSessionId(), url);
+	}
+
+	private boolean isAjax(RequestCycle requestCycle)
+	{
+		boolean isAjax = false;
+
+		Request request = requestCycle.getRequest();
+		if (request instanceof WebRequest)
+		{
+			WebRequest webRequest = (WebRequest)request;
+			isAjax = webRequest.isAjax();
+		}
+
+		return isAjax;
 	}
 
 	/**
@@ -176,12 +192,14 @@ public class WebPageRenderer extends PageRenderer
 		Url targetUrl = requestCycle.mapUrlFor(getRenderPageRequestHandler());
 
 		//
-		// the code below is little hairy but we have to handle 3 redirect policies
-		// and 3 rendering strategies
+		// the code below is little hairy but we have to handle 3 redirect policies,
+		// 3 rendering strategies and two kind of requests (ajax and normal)
 		//
 
 		// try to get an already rendered buffered response for current URL
 		BufferedWebResponse bufferedResponse = getAndRemoveBufferedResponse(currentUrl);
+
+		boolean isAjax = isAjax(requestCycle);
 
 		if (bufferedResponse != null)
 		{
@@ -191,8 +209,12 @@ public class WebPageRenderer extends PageRenderer
 		}
 		else if (getRedirectPolicy() == RedirectPolicy.NEVER_REDIRECT || isOnePassRender() //
 			||
-			(targetUrl.equals(currentUrl) && !getPageProvider().isNewPageInstance() && !getPage().isPageStateless()) //
-			|| (targetUrl.equals(currentUrl) && isRedirectToRender()))
+			(!isAjax //
+				&&
+				(targetUrl.equals(currentUrl) && !getPageProvider().isNewPageInstance() && !getPage().isPageStateless()) //
+			|| (targetUrl.equals(currentUrl) && isRedirectToRender()) //
+			) //
+		) //
 		{
 			// if the policy is never to redirect
 			// or one pass render mode is on
@@ -205,8 +227,10 @@ public class WebPageRenderer extends PageRenderer
 				response.writeTo((WebResponse)requestCycle.getResponse());
 			}
 		}
-		else if (!targetUrl.equals(currentUrl) && //
-			(getRedirectPolicy() == RedirectPolicy.ALWAYS_REDIRECT || isRedirectToRender()))
+		else if ((!targetUrl.equals(currentUrl) && getRedirectPolicy() == RedirectPolicy.ALWAYS_REDIRECT) //
+			||
+			isRedirectToRender() //
+			|| (isAjax && targetUrl.equals(currentUrl)))
 		{
 			// if target URL is different
 			// and render policy is always-redirect or it's redirect-to-render

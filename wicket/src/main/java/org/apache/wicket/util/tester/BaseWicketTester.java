@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -71,6 +72,8 @@ import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.parser.XmlPullParser;
+import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.mock.MockPageManager;
 import org.apache.wicket.mock.MockRequestParameters;
@@ -105,6 +108,7 @@ import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.lang.Classes;
+import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
@@ -185,6 +189,8 @@ public class BaseWicketTester
 	private Page lastRenderedPage;
 
 	private boolean exposeExceptions = true;
+
+	private boolean useRequestUrlAsBase = true;
 
 	private IRequestHandler forcedHandler;
 
@@ -632,6 +638,30 @@ public class BaseWicketTester
 	public String getLastResponseAsString()
 	{
 		return lastResponse.getDocument();
+	}
+
+	/**
+	 * 
+	 * @return last Wicket-Ajax-BaseURL set on AJAX HTTP request header
+	 */
+	public String getWicketAjaxBaserUrlFromLastRequest() throws IOException,
+		ResourceStreamNotFoundException, ParseException
+	{
+		XmlPullParser parser = new XmlPullParser();
+		parser.parse(getLastResponseAsString());
+		XmlTag tag = null;
+		do
+		{
+			tag = (XmlTag)parser.nextTag();
+			if (tag.isOpen() && tag.getName().equals("script") &&
+				"wicket-ajax-base-url".equals(tag.getString("id")))
+			{
+				parser.next();
+				return parser.getString().toString().split("\\\"")[1];
+			}
+		}
+		while (tag != null);
+		return null;
 	}
 
 	/**
@@ -1841,7 +1871,10 @@ public class BaseWicketTester
 	{
 		ServletWebRequest req = createServletWebRequest();
 		requestCycle.setRequest(req);
-		requestCycle.getUrlRenderer().setBaseUrl(req.getUrl());
+		if (useRequestUrlAsBase)
+		{
+			requestCycle.getUrlRenderer().setBaseUrl(req.getUrl());
+		}
 
 	}
 
@@ -1995,6 +2028,22 @@ public class BaseWicketTester
 	public void setExposeExceptions(boolean exposeExceptions)
 	{
 		this.exposeExceptions = exposeExceptions;
+	}
+
+	/**
+	 * @return useRequestUrlAsBase
+	 */
+	public boolean isUseRequestUrlAsBase()
+	{
+		return useRequestUrlAsBase;
+	}
+
+	/**
+	 * @param useRequestUrlAsBase
+	 */
+	public void setUseRequestUrlAsBase(boolean setBaseUrl)
+	{
+		this.useRequestUrlAsBase = setBaseUrl;
 	}
 
 	/**
