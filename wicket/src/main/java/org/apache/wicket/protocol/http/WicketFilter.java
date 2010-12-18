@@ -173,7 +173,10 @@ public class WicketFilter implements Filter
 				Thread.currentThread().setContextClassLoader(previousClassLoader);
 			}
 
-			response.flushBuffer();
+			if (response.isCommitted())
+			{
+				response.flushBuffer();
+			}
 		}
 		return res;
 	}
