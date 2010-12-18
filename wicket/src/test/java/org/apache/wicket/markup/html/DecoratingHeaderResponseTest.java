@@ -37,7 +37,7 @@ import org.apache.wicket.util.resource.StringResourceStream;
 /**
  * @author Pedro Santos
  */
-public class TestDecoratingHeaderResponse extends WicketTestCase
+public class DecoratingHeaderResponseTest extends WicketTestCase
 {
 
 	/**
