@@ -523,24 +523,21 @@ public abstract class Component
 		}
 	}
 
-	final Object data_set(int index, Object object)
+	final void data_set(int index, Object object)
 	{
 		if (index > data_length() - 1)
 		{
-			throw new IndexOutOfBoundsException();
+			throw new IndexOutOfBoundsException("can not set data at " + index +
+				" when data_length() is " + data_length());
 		}
 		else if (index == 0 && !(data instanceof Object[] && !(data instanceof MetaDataEntry<?>[])))
 		{
-			Object old = data;
 			data = object;
-			return old;
 		}
 		else
 		{
 			Object[] array = (Object[])data;
-			Object old = array[index];
 			array[index] = object;
-			return old;
 		}
 	}
 
@@ -558,7 +555,8 @@ public abstract class Component
 		}
 		if (position > currentLength)
 		{
-			throw new IndexOutOfBoundsException();
+			throw new IndexOutOfBoundsException("can not insert data at " + position +
+				" when data_length() is " + currentLength);
 		}
 		if (currentLength == 0)
 		{
@@ -597,7 +595,7 @@ public abstract class Component
 		}
 	}
 
-	Object data_remove(int position)
+	final void data_remove(int position)
 	{
 		int currentLength = data_length();
 
@@ -607,9 +605,7 @@ public abstract class Component
 		}
 		else if (currentLength == 1)
 		{
-			Object old = data;
 			data = null;
-			return old;
 		}
 		else if (currentLength == 2)
 		{
@@ -617,12 +613,10 @@ public abstract class Component
 			if (position == 0)
 			{
 				data = current[1];
-				return current[0];
 			}
 			else
 			{
 				data = current[0];
-				return current[1];
 			}
 		}
 		else
@@ -639,8 +633,6 @@ public abstract class Component
 				final int left = currentLength - position - 1;
 				System.arraycopy(current, position + 1, data, position, left);
 			}
-
-			return current[position];
 		}
 	}
 
