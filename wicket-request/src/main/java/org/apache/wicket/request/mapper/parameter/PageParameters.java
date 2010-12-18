@@ -577,29 +577,35 @@ public class PageParameters implements Serializable
 	{
 		StringBuilder str = new StringBuilder();
 
-		for (int i = 0; i < indexedParameters.size(); i++)
+		if (indexedParameters != null)
 		{
-			if (i > 0)
-				str.append(", ");
+			for (int i = 0; i < indexedParameters.size(); i++)
+			{
+				if (i > 0)
+					str.append(", ");
 
-			str.append(i);
-			str.append('=');
-			str.append('[').append(indexedParameters.get(i)).append(']');
+				str.append(i);
+				str.append('=');
+				str.append('[').append(indexedParameters.get(i)).append(']');
+			}
 		}
 
 		if (str.length() > 0)
 			str.append(", ");
 
-		for (int i = 0; i < namedParameters.size(); i++)
+		if (namedParameters != null)
 		{
-			Entry entry = namedParameters.get(i);
+			for (int i = 0; i < namedParameters.size(); i++)
+			{
+				Entry entry = namedParameters.get(i);
 
-			if (i > 0)
-				str.append(", ");
+				if (i > 0)
+					str.append(", ");
 
-			str.append(entry.key);
-			str.append('=');
-			str.append('[').append(entry.value).append(']');
+				str.append(entry.key);
+				str.append('=');
+				str.append('[').append(entry.value).append(']');
+			}
 		}
 		return str.toString();
 	}
