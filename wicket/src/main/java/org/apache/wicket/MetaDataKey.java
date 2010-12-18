@@ -117,10 +117,10 @@ public abstract class MetaDataKey<T> implements IClusterable
 						else
 						{
 							metaData = null;
-							break;
 						}
 					}
 					set = true;
+					break;
 				}
 			}
 		}
