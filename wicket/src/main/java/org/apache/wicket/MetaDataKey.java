@@ -70,7 +70,7 @@ public abstract class MetaDataKey<T> implements IClusterable
 			{
 				if (equals(entry.key))
 				{
-					return (T) entry.object;
+					return (T)entry.object;
 				}
 			}
 		}
@@ -113,10 +113,10 @@ public abstract class MetaDataKey<T> implements IClusterable
 						else
 						{
 							metaData = null;
-							break;
 						}
 					}
 					set = true;
+					break;
 				}
 			}
 		}
