@@ -385,7 +385,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 
 		return Visits.visitPostOrder(component, visitor, new IVisitFilter()
 		{
-
 			public boolean visitObject(Object object)
 			{
 				return true;

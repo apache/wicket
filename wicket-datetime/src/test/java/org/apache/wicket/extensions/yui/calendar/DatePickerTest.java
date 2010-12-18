@@ -16,56 +16,73 @@
  */
 package org.apache.wicket.extensions.yui.calendar;
 
-import junit.framework.TestCase;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 
+import org.apache.wicket.Page;
+import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.util.tester.DiffUtil;
+import org.apache.wicket.util.tester.FormTester;
 
 /**
  * 
  */
-public class DatePickerTest extends TestCase
+public class DatePickerTest extends WicketTestCase
 {
-	// Disabled until we fixed the issue that WicketTestCase or WicketTester is not available in
-	// other projects. They are in src/test/java. Maven will create a compile error since in Maven
-	// the test folder is not exported, which is what we want. We don't want the test cases to be
-	// part of the Wicket distribution jar. In Eclipse it works since all source folders are
-	// exported and you can not disable specific ones.
-
-	public void testDummy()
+	/**
+	 * @throws Exception
+	 */
+	public void test1() throws Exception
 	{
+		myTestExecution(DatesPage1.class, "DatesPage1_ExpectedResult.html");
 	}
 
-// WicketTester tester = new WicketTester();
-//
-// /**
-// * @throws Exception
-// */
-// public void testRenderHomePage() throws Exception
-// {
-// myTestExecution(DatesPage.class, "DatesPage_1_ExpectedResult.html");
-// }
-//
-// /**
-// * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
-// * output file.
-// *
-// * @param <T>
-// *
-// * @param pageClass
-// * @param filename
-// * @throws Exception
-// */
-// protected <T extends Page> void myTestExecution(final Class<T> pageClass, final String filename)
-// throws Exception
-// {
-// System.out.println("=== " + pageClass.getName() + " ===");
-//
-// tester.startPage(pageClass);
-// tester.assertRenderedPage(pageClass);
-//
-// String document = tester.getServletResponse().getDocument();
-// document = document.replaceAll("\\d\\d\\.\\d\\d\\.\\d\\d", "xx.xx.xx");
-// document = document.replaceAll("\\d\\d/\\d\\d/\\d\\d\\d\\d", "xx.xx.xx");
-//
-// DiffUtil.validatePage(document, pageClass, filename, true);
-// }
+	/**
+	 * @throws Exception
+	 */
+	public void test2() throws Exception
+	{
+		Class<? extends Page> pageClass = DatesPage2.class;
+		Date date = new GregorianCalendar(2010, 10, 06, 0, 0).getTime();
+		tester.getSession().setLocale(Locale.GERMAN);
+		tester.startPage(pageClass);
+		tester.assertRenderedPage(pageClass);
+		FormTester formTester = tester.newFormTester("form");
+		formTester.setValue("dateTimeField:date", "06.11.2010");
+		formTester.setValue("dateTimeField:hours", "00");
+		formTester.setValue("dateTimeField:minutes", "00");
+		formTester.setValue("dateField:date", "06.11.2010");
+		formTester.submit();
+		DatesPage2 page = (DatesPage2)tester.getLastRenderedPage();
+		assertEquals(date, page.dateTime);
+		assertEquals(date, page.date);
+	}
+
+	/**
+	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
+	 * output file.
+	 * 
+	 * @param <T>
+	 * 
+	 * @param pageClass
+	 * @param filename
+	 * @throws Exception
+	 */
+	protected <T extends Page> void myTestExecution(final Class<T> pageClass, final String filename)
+		throws Exception
+	{
+		System.out.println("=== " + pageClass.getName() + " ===");
+
+		tester.getSession().setLocale(Locale.GERMAN);
+		tester.startPage(pageClass);
+		tester.assertRenderedPage(pageClass);
+
+		String document = tester.getLastResponseAsString();
+		document = document.replaceAll("\\d\\d\\.\\d\\d\\.\\d\\d", "xx.xx.xx");
+		document = document.replaceAll("\\d\\d/\\d\\d/\\d\\d\\d\\d", "xx.xx.xxxx");
+		document = document.replaceAll("\\d\\d/\\d\\d\\d\\d", "xx.xxxx");
+
+		DiffUtil.validatePage(document, pageClass, filename, true);
+	}
 }

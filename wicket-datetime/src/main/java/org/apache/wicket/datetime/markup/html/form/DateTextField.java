@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvi
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.lang.Args;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
@@ -52,7 +53,6 @@ import org.joda.time.format.DateTimeFormat;
  */
 public class DateTextField extends TextField<Date> implements ITextFormatProvider
 {
-
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -65,8 +65,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	 * @param datePattern
 	 *            The pattern to use. Must be not null. See {@link SimpleDateFormat} for available
 	 *            patterns.
-	 * 
-	 * @see org.apache.wicket.markup.html.form.TextField
+	 * @return DateTextField
 	 */
 	public static DateTextField forDatePattern(String id, IModel<Date> model, String datePattern)
 	{
@@ -81,8 +80,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	 * @param datePattern
 	 *            The pattern to use. Must be not null. See {@link SimpleDateFormat} for available
 	 *            patterns.
-	 * 
-	 * @see org.apache.wicket.markup.html.form.TextField
+	 * @return DateTextField
 	 */
 	public static DateTextField forDatePattern(String id, String datePattern)
 	{
@@ -101,8 +99,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	 *            is the time style. Specify a character of 'S' for short style, 'M' for medium, 'L'
 	 *            for long, and 'F' for full. A date or time may be ommitted by specifying a style
 	 *            character '-'. See {@link DateTimeFormat#forStyle(String)}.
-	 * 
-	 * @see org.apache.wicket.markup.html.form.TextField
+	 * @return DateTextField
 	 */
 	public static DateTextField forDateStyle(String id, IModel<Date> model, String dateStyle)
 	{
@@ -119,8 +116,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	 *            is the time style. Specify a character of 'S' for short style, 'M' for medium, 'L'
 	 *            for long, and 'F' for full. A date or time may be ommitted by specifying a style
 	 *            character '-'. See {@link DateTimeFormat#forStyle(String)}.
-	 * 
-	 * @see org.apache.wicket.markup.html.form.TextField
+	 * @return DateTextField
 	 */
 	public static DateTextField forDateStyle(String id, String dateStyle)
 	{
@@ -132,8 +128,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	 * 
 	 * @param id
 	 *            The id of the text field
-	 * 
-	 * @see org.apache.wicket.markup.html.form.TextField
+	 * @return DateTextField
 	 */
 	public static DateTextField forShortStyle(String id)
 	{
@@ -147,8 +142,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	 *            The id of the text field
 	 * @param model
 	 *            The model
-	 * 
-	 * @see org.apache.wicket.markup.html.form.TextField
+	 * @return DateTextField
 	 */
 	public static DateTextField forShortStyle(String id, IModel<Date> model)
 	{
@@ -162,8 +156,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	 *            The id of the text field
 	 * @param converter
 	 *            the date converter
-	 * 
-	 * @see org.apache.wicket.markup.html.form.TextField
+	 * @return DateTextField
 	 */
 	public static DateTextField withConverter(String id, DateConverter converter)
 	{
@@ -179,8 +172,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	 *            The model
 	 * @param converter
 	 *            the date converter
-	 * 
-	 * @see org.apache.wicket.markup.html.form.TextField
+	 * @return DateTextField
 	 */
 	public static DateTextField withConverter(String id, IModel<Date> model, DateConverter converter)
 	{
@@ -205,10 +197,8 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	public DateTextField(String id, IModel<Date> model, DateConverter converter)
 	{
 		super(id, model, Date.class);
-		if (converter == null)
-		{
-			throw new IllegalStateException("converter may not be null");
-		}
+
+		Args.notNull(converter, "converter");
 		converter.setComponent(this);
 		this.converter = converter;
 	}

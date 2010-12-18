@@ -51,8 +51,6 @@ import org.joda.time.MutableDateTime;
  * 
  * </p>
  * 
- * 
- * 
  * @author eelcohillenius
  */
 public class DateField extends FormComponentPanel<Date>
