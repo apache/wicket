@@ -46,10 +46,10 @@ import org.apache.wicket.resource.ResourceUtil;
  * @author Jeremy Thomerson
  * @param <R>
  *            the type of ResourceReferenceCollection returned by
- *            {@link #newResourceReferenceCollection()} and passed to all the methods that take a
- *            ResourceReferenceCollection. You will typically just use ResourceReferenceCollection
- *            for this param, unless you are returning a specific type of
- *            ResourceReferenceCollection from your subclass.
+ *            {@link #newResourceReferenceCollection(Object)} and passed to all the methods that
+ *            take a ResourceReferenceCollection. You will typically just use
+ *            ResourceReferenceCollection for this param, unless you are returning a specific type
+ *            of ResourceReferenceCollection from your subclass.
  * @param <K>
  *            the class of the key that you will create from
  *            {@link #newGroupingKey(ResourceReferenceAndStringData)}
@@ -107,7 +107,7 @@ public abstract class AbstractResourceAggregatingHeaderResponse<R extends Resour
 			R coll = map.get(key);
 			if (coll == null)
 			{
-				map.put(key, coll = newResourceReferenceCollection());
+				map.put(key, coll = newResourceReferenceCollection(key));
 			}
 			coll.add(ref);
 		}
@@ -135,10 +135,13 @@ public abstract class AbstractResourceAggregatingHeaderResponse<R extends Resour
 	 * parameter used when creating your subclass defining the type of ResourceReferenceCollection
 	 * this returns and is passed into all methods that take a ResourceReferenceCollection
 	 * 
+	 * @param key
+	 *            the grouping key that will be used for this collection. all references added to it
+	 *            will have the same key
 	 * @return a newly created collection to contain resource references
 	 */
 	@SuppressWarnings("unchecked")
-	protected R newResourceReferenceCollection()
+	protected R newResourceReferenceCollection(K key)
 	{
 		return (R)new ResourceReferenceCollection();
 	}

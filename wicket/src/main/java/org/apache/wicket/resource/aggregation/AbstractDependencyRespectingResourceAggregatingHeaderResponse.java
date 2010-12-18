@@ -66,7 +66,7 @@ public abstract class AbstractDependencyRespectingResourceAggregatingHeaderRespo
 			if (ref instanceof AbstractResourceDependentResourceReference)
 			{
 				AbstractResourceDependentResourceReference parent = (AbstractResourceDependentResourceReference)ref;
-				R childColl = newResourceReferenceCollection();
+				R childColl = newResourceReferenceCollection(key);
 				for (AbstractResourceDependentResourceReference child : parent.getDependentResourceReferences())
 				{
 					childColl.add(toData(child));
