@@ -101,7 +101,7 @@ public class PageProviderTest extends WicketTestCase
 	{
 		tester.getRequest().setUrl(url);
 		tester.getRequest().addHeader("Wicket-Ajax-BaseURL",
-			tester.getWicketAjaxBaserUrlFromLastRequest());
+			tester.getWicketAjaxBaseUrlFromLastRequest());
 		tester.getRequest().addHeader("Wicket-Ajax", "true");
 		tester.processRequest();
 	}

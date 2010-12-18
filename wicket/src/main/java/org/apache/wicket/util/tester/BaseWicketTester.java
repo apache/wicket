@@ -644,7 +644,7 @@ public class BaseWicketTester
 	 * 
 	 * @return last Wicket-Ajax-BaseURL set on AJAX HTTP request header
 	 */
-	public String getWicketAjaxBaserUrlFromLastRequest() throws IOException,
+	public String getWicketAjaxBaseUrlFromLastRequest() throws IOException,
 		ResourceStreamNotFoundException, ParseException
 	{
 		XmlPullParser parser = new XmlPullParser();
