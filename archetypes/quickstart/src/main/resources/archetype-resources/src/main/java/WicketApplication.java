@@ -8,20 +8,24 @@ import org.apache.wicket.protocol.http.WebApplication;
  * @see ${package}.Start#main(String[])
  */
 public class WicketApplication extends WebApplication
-{    
-    /**
-     * Constructor
-     */
-	public WicketApplication()
-	{
-	}
-	
+{    	
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
+	@Override
 	public Class<HomePage> getHomePage()
 	{
 		return HomePage.class;
 	}
 
+	/**
+	 * @see org.apache.wicket.Application#init()
+	 */
+	@Override
+	public void init()
+	{
+		super.init();
+
+		// add your configuration here
+	}
 }
