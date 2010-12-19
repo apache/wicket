@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.validation.validator.RangeValidator;
 
 /**
@@ -112,6 +114,32 @@ public class NumberTextField extends TextField<Double>
 
 		validator = new RangeValidator<Double>(min, max);
 		add(validator);
+	}
+
+	@Override
+	protected void onComponentTag(final ComponentTag tag)
+	{
+		super.onComponentTag(tag);
+
+		IValueMap attributes = tag.getAttributes();
+
+		if (minimum != null)
+		{
+			attributes.put("min", minimum);
+		}
+		else
+		{
+			attributes.remove("min");
+		}
+
+		if (maximum != null)
+		{
+			attributes.put("max", maximum);
+		}
+		else
+		{
+			attributes.remove("max");
+		}
 	}
 
 	@Override
