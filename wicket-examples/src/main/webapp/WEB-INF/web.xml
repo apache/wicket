@@ -418,6 +418,15 @@
             <param-value>org.apache.wicket.examples.requestmapper.RequestMapperApplication</param-value>
 		</init-param>
 	</filter>
+	
+	<filter>
+		<filter-name>wicket.resourceaggregation</filter-name>
+ 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>org.apache.wicket.examples.resourcedecoration.ResourceDecorationApplication</param-value>
+ 		</init-param>
+ 	</filter>
 
 	<!-- couple the session filter to the helloworld servlet -->
 
@@ -697,6 +706,10 @@
         <dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
+	<filter-mapping>
+ 		<filter-name>wicket.resourceaggregation</filter-name>
+		<url-pattern>/resourceaggregation/*</url-pattern>
+	</filter-mapping>
 
 	<!-- EVENTS APP -->
 	<filter>

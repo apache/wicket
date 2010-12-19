@@ -57,6 +57,10 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		 */
 		javaScriptIgnore.add("src/main/java/org/apache/wicket/examples/preview/behaviour.js");
 		/*
+		 * JQuery Dual licensed under the MIT or GPL Version 2 licenses.
+		 */
+		javaScriptIgnore.add("src/main/java/org/apache/wicket/examples/resourcedecoration/jquery-1.4.3.min.js");
+		/*
 		 * DOJO is dual licensed. We use the BSD license. See NOTICE.
 		 */
 		javaScriptIgnore.add("src/main/java/org/apache/wicket/examples/preview/dojo.js");
