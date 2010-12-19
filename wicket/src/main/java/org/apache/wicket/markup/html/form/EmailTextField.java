@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
 
 /**
@@ -53,9 +54,24 @@ public class EmailTextField extends TextField<String>
 	 */
 	public EmailTextField(String id, IModel<String> model)
 	{
+		this(id, model, EmailAddressValidator.getInstance());
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the input value
+	 * @param emailValidator
+	 *            the validator that will check the correctness of the input value
+	 */
+	public EmailTextField(String id, IModel<String> model, IValidator<String> emailValidator)
+	{
 		super(id, model, String.class);
 
-		add(EmailAddressValidator.getInstance());
+		add(emailValidator);
 	}
 
 	@Override
@@ -63,4 +79,5 @@ public class EmailTextField extends TextField<String>
 	{
 		return "email";
 	}
+
 }
