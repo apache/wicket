@@ -378,7 +378,39 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 		log.warn("css was rendered to the filtering header response, but did not match any filters, so it was effectively lost.  Make sure that you have filters that accept every possible case or else configure a default filter that returns true to all acceptance tests");
 	}
 
+	/**
+	 * If subclasses of this class have special cases where they force something into a particular
+	 * bucket, regardless of the filters, they can create a Runnable that renders to the real
+	 * response, and pass it to this method with the name of the filter (bucket) that they want it
+	 * to appear in.
+	 * 
+	 * Example: <code>
+	               public void renderJavascriptIntoHead(final String js, final String id) {
+	                       runWithFilter(new Runnable() {
+	                               public void run()
+	                               {
+	                                       getRealResponse().renderJavascript(js, id);
+	                               }
+	                       }, "headerBucket");
+	               }
+	        * </code>
+	 * 
+	 * @param runnable
+	 *            the runnable that renders to the real response.
+	 * @param filterName
+	 *            the name of the filter bucket that you want the runnable to render into
+	 */
+	protected final void runWithFilter(Runnable runnable, String filterName)
+	{
+		run(runnable, responseFilterMap.get(filterName));
+	}
+
 	private void run(Runnable runnable, IHeaderResponseFilter filter)
+	{
+		run(runnable, responseFilterMap.get(filter.getName()));
+	}
+
+	private void run(Runnable runnable, Response response)
 	{
 		if (AjaxRequestTarget.get() != null)
 		{
@@ -386,7 +418,7 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 			runnable.run();
 			return;
 		}
-		Response original = RequestCycle.get().setResponse(responseFilterMap.get(filter.getName()));
+		Response original = RequestCycle.get().setResponse(response);
 		try
 		{
 			runnable.run();
