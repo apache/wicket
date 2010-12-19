@@ -22,7 +22,7 @@ import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
 
 /**
- * A {@link TextField} for HTML5 &lt;input&gt; with type <strong>email</strong>.
+ * A {@link TextField} for HTML5 &lt;input&gt; with type <em>email</em>.
  * 
  * <p>
  * Automatically validates that the input is a valid email address.

@@ -22,7 +22,7 @@ import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.validation.validator.RangeValidator;
 
 /**
- * A {@link TextField} for HTML5 &lt;input&gt; with type <strong>number</strong>.
+ * A {@link TextField} for HTML5 &lt;input&gt; with type <em>number</em>.
  * 
  * <p>
  * Automatically validates the input against the configured {@link #setMinimum(Double) min} and
@@ -56,7 +56,7 @@ public class NumberTextField extends TextField<Double>
 	 * @param id
 	 *            see Component
 	 * @param model
-	 *            the model
+	 *            the input value
 	 */
 	public NumberTextField(String id, IModel<Double> model)
 	{
@@ -68,6 +68,8 @@ public class NumberTextField extends TextField<Double>
 	}
 
 	/**
+	 * Sets the minimum allowed value
+	 * 
 	 * @param minimum
 	 *            the minimum allowed value
 	 * @return this instance
@@ -79,6 +81,8 @@ public class NumberTextField extends TextField<Double>
 	}
 
 	/**
+	 * Sets the maximum allowed value
+	 * 
 	 * @param maximum
 	 *            the maximum allowed value
 	 * @return this instance

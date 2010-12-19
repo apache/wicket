@@ -21,7 +21,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.validation.validator.UrlValidator;
 
 /**
- * A {@link TextField} for HTML5 &lt;input&gt; with type <strong>url</strong>.
+ * A {@link TextField} for HTML5 &lt;input&gt; with type <em>url</em>.
  * 
  * <p>
  * Automatically validates the input that it is a valid Url.
@@ -47,16 +47,30 @@ public class UrlTextField extends TextField<String>
 	 * Construct.
 	 * 
 	 * @param id
-	 *            see Component
+	 *            the component id
 	 * @param model
-	 *            the model
+	 *            the input value
 	 */
 	public UrlTextField(String id, IModel<String> model)
 	{
+		this(id, model, new UrlValidator());
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the input value
+	 * @param urlValidator
+	 *            the validator that will check the correctness of the input value
+	 */
+	public UrlTextField(String id, IModel<String> model, UrlValidator urlValidator)
+	{
 		super(id, model, String.class);
 
-		// XXX does this validator needs UrlValidator#options ?!
-		add(new UrlValidator());
+		add(urlValidator);
 	}
 
 	@Override
