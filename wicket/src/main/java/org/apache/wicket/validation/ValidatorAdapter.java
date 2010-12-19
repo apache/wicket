@@ -17,6 +17,7 @@
 package org.apache.wicket.validation;
 
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Adapts {@link IValidator} to Behavior
@@ -39,6 +40,8 @@ public class ValidatorAdapter<T> extends Behavior implements IValidator<T>
 	 */
 	public ValidatorAdapter(IValidator<T> validator)
 	{
+		Args.notNull(validator, "validator");
+
 		this.validator = validator;
 	}
 
