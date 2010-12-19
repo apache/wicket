@@ -27,7 +27,7 @@ public interface IEventSource
 	 * Sends an event
 	 * 
 	 * @param <T>
-	 *            tyep of payload
+	 *            type of payload
 	 * 
 	 * @param sink
 	 *            object that will receive the event
