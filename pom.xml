@@ -293,8 +293,8 @@
 		<url>http://issues.apache.org/jira/browse/WICKET</url>
 	</issueManagement>
 	<ciManagement>
-		<system>bamboo</system>
-		<url>http://wicketstuff.org/bamboo</url>
+		<system>hudson</system>
+		<url>https://hudson.apache.org/hudson/job/Apache%20Wicket%201.5.x/</url>
 	</ciManagement>
 	<scm>
 		<connection>scm:svn:http://svn.apache.org/repos/asf/wicket/releases/1.5-SNAPSHOT</connection>
