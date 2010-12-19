@@ -26,6 +26,11 @@ import org.apache.wicket.validation.validator.EmailAddressValidator;
  * 
  * <p>
  * Automatically validates that the input is a valid email address.
+ * </p>
+ * <p>
+ * <strong>Note</strong>: This component does <strong>not</strong> support multiple values! That is
+ * &lt;input type=&quot;email&quot; multiple .../&gt; cannot be validated with the default email
+ * validator
  */
 public class EmailTextField extends TextField<String>
 {
