@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import org.apache.wicket.Session;
-import org.apache.wicket.datetime.StyleDateConverter;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
@@ -57,8 +56,12 @@ public class DateTimeField extends FormComponentPanel<Date>
 	/**
 	 * Enumerated type for different ways of handling the render part of requests.
 	 */
-	private static enum AM_PM {
-		AM("AM"), PM("PM");
+	public static enum AM_PM {
+		/** */
+		AM("AM"),
+
+		/** */
+		PM("PM");
 
 		/** */
 		private String value;
@@ -322,6 +325,10 @@ public class DateTimeField extends FormComponentPanel<Date>
 			try
 			{
 				boolean use12HourFormat = use12HourFormat();
+				if (hoursField.isVisibleInHierarchy() == false)
+				{
+					hours = 0;
+				}
 				if (hours != null)
 				{
 					date.set(DateTimeFieldType.hourOfDay(), hours %
@@ -378,7 +385,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 */
 	protected DateTextField newDateTextField(String id, PropertyModel<Date> dateFieldModel)
 	{
-		return new DateTextField(id, dateFieldModel, new StyleDateConverter(false));
+		return DateTextField.forShortStyle(id, dateFieldModel);
 	}
 
 	/**
