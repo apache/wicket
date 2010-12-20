@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html;
 import java.io.Closeable;
 
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 
 /**
@@ -49,6 +50,21 @@ public interface IHeaderResponse extends Closeable
 	 *            too)
 	 */
 	public void renderJavaScriptReference(ResourceReference reference, String id);
+
+	/**
+	 * Writes a javascript reference with query parameters, if the specified reference hasn't been
+	 * rendered yet.
+	 * 
+	 * @param reference
+	 *            resource reference pointing to the javascript resource
+	 * @param pageParameters
+	 *            the parameters for this Javascript resource reference
+	 * @param id
+	 *            id that will be used to filter duplicate reference (it's still filtered by URL
+	 *            too)
+	 */
+	public void renderJavaScriptReference(ResourceReference reference,
+		PageParameters pageParameters, String id);
 
 	/**
 	 * Writes a javascript reference, if the specified reference hasn't been rendered yet.
@@ -108,6 +124,20 @@ public interface IHeaderResponse extends Closeable
 	 *            the media type for this CSS ("print", "screen", etc.)
 	 */
 	public void renderCSSReference(ResourceReference reference, String media);
+
+	/**
+	 * Writes a CSS reference with query parameters, if the specified reference hasn't been rendered
+	 * yet.
+	 * 
+	 * @param reference
+	 *            resource reference pointing to the CSS resource
+	 * @param pageParameters
+	 *            the parameters for this CSS resource reference
+	 * @param media
+	 *            the media type for this CSS ("print", "screen", etc.)
+	 */
+	public void renderCSSReference(ResourceReference reference, PageParameters pageParameters,
+		String media);
 
 	/**
 	 * Writes a CSS reference, if the specified reference hasn't been rendered yet.

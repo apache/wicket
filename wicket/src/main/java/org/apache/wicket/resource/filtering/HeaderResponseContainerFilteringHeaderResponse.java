@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.DecoratingHeaderResponse;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.response.StringResponse;
 import org.slf4j.Logger;
@@ -179,11 +180,18 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 	@Override
 	public void renderJavaScriptReference(final ResourceReference reference, final String id)
 	{
+		renderJavaScriptReference(reference, null, id);
+	}
+
+	@Override
+	public void renderJavaScriptReference(final ResourceReference reference,
+		final PageParameters pageParameters, final String id)
+	{
 		forReference(reference, new Runnable()
 		{
 			public void run()
 			{
-				getRealResponse().renderJavaScriptReference(reference, id);
+				getRealResponse().renderJavaScriptReference(reference, pageParameters, id);
 			}
 		});
 	}
@@ -251,11 +259,18 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 	@Override
 	public void renderCSSReference(final ResourceReference reference, final String media)
 	{
+		renderCSSReference(reference, null, media);
+	}
+
+	@Override
+	public void renderCSSReference(final ResourceReference reference,
+		final PageParameters pageParameters, final String media)
+	{
 		forReference(reference, new Runnable()
 		{
 			public void run()
 			{
-				getRealResponse().renderCSSReference(reference, media);
+				getRealResponse().renderCSSReference(reference, pageParameters, media);
 			}
 		});
 	}

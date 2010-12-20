@@ -28,6 +28,7 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.response.NullResponse;
 import org.apache.wicket.util.string.JavaScriptUtils;
@@ -77,13 +78,19 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderCSSReference(ResourceReference reference, String media)
 	{
+		renderCSSReference(reference, null, media);
+	}
+
+	public void renderCSSReference(ResourceReference reference, PageParameters pageParameters,
+		String media)
+	{
 		if (reference == null)
 		{
 			throw new IllegalArgumentException("reference cannot be null");
 		}
 		if (!closed)
 		{
-			IRequestHandler handler = new ResourceReferenceRequestHandler(reference);
+			IRequestHandler handler = new ResourceReferenceRequestHandler(reference, pageParameters);
 			CharSequence url = RequestCycle.get().urlFor(handler);
 			internalRenderCSSReference(url.toString(), media);
 		}
@@ -164,13 +171,19 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderJavaScriptReference(ResourceReference reference, String id)
 	{
+		renderJavaScriptReference(reference, null, id);
+	}
+
+	public void renderJavaScriptReference(ResourceReference reference,
+		PageParameters pageParameters, String id)
+	{
 		if (reference == null)
 		{
 			throw new IllegalArgumentException("reference cannot be null");
 		}
 		if (!closed)
 		{
-			IRequestHandler handler = new ResourceReferenceRequestHandler(reference);
+			IRequestHandler handler = new ResourceReferenceRequestHandler(reference, pageParameters);
 			CharSequence url = RequestCycle.get().urlFor(handler);
 			internalRenderJavaScriptReference(url.toString(), id);
 		}

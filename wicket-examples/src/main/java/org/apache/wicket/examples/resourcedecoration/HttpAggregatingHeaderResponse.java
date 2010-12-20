@@ -23,7 +23,6 @@ import java.util.Set;
 import org.apache.wicket.examples.resourcedecoration.GroupedAndOrderedResourceReference.ResourceGroup;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WicketEventReference;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -70,7 +69,7 @@ public class HttpAggregatingHeaderResponse
 		}
 
 		// build an aggregated URL:
-		StringBuffer refs = new StringBuffer();
+		StringBuilder refs = new StringBuilder();
 		boolean first = true;
 		for (ResourceReferenceAndStringData data : coll)
 		{
@@ -87,14 +86,13 @@ public class HttpAggregatingHeaderResponse
 		parameters.add("refs", refs);
 		parameters.add("type", key.isCss() ? "css" : "js");
 		ResourceReference ref = new PackageResourceReference("merged-resources");
-		String url = RequestCycle.get().urlFor(ref, parameters).toString();
 		if (key.isCss())
 		{
-			getRealResponse().renderCSSReference(url);
+			getRealResponse().renderCSSReference(ref, parameters, null);
 		}
 		else
 		{
-			getRealResponse().renderJavaScriptReference(url);
+			getRealResponse().renderJavaScriptReference(ref, parameters, null);
 		}
 	}
 

@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html;
 
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 
 /**
@@ -66,6 +67,12 @@ public abstract class DecoratingHeaderResponse implements IHeaderResponse
 		realResponse.renderJavaScriptReference(reference, id);
 	}
 
+	public void renderJavaScriptReference(ResourceReference reference,
+		PageParameters pageParameters, String id)
+	{
+		realResponse.renderJavaScriptReference(reference, pageParameters, id);
+	}
+
 	public void renderJavaScriptReference(String url)
 	{
 		realResponse.renderJavaScriptReference(url);
@@ -94,6 +101,12 @@ public abstract class DecoratingHeaderResponse implements IHeaderResponse
 	public void renderCSSReference(ResourceReference reference, String media)
 	{
 		realResponse.renderCSSReference(reference, media);
+	}
+
+	public void renderCSSReference(ResourceReference reference, PageParameters pageParameters,
+		String media)
+	{
+		realResponse.renderCSSReference(reference, pageParameters, media);
 	}
 
 	public void renderCSSReference(String url, String media)
