@@ -1,5 +1,32 @@
 This file contains all changes done on the 1.4 version.
 
+Release Notes - Wicket - Version 1.4.15
+
+** Bug
+    * [WICKET-1894] - AjaxFallbackButton: inconsistent submit order
+    * [WICKET-3136] - JVM 1.6 crash caused by WicketObjectOutputStream, ClassStreamHandler, and Page.writePageObject
+    * [WICKET-3196] - UrlValidator failes to validate urls that containt multiple dots in path
+    * [WICKET-3202] - Form with UploadProgressBar and AjaxButton doesn't submit
+    * [WICKET-3215] - AutoCompleteTextField does not work in an iframe under IE 6, 7 or 8
+    * [WICKET-3229] - Removing Child in IVisitor affects traversal
+    * [WICKET-3244] - libxml2 splits large CData section. This breaks the processEvaluate js
+    * [WICKET-3253] - NPE with nested property models
+    * [WICKET-3255] - css/js files added as header contribution not added via ajax request
+    * [WICKET-3259] - Filter path is occasionally null when forwarding a request
+
+** Improvement
+    * [WICKET-3154] - test for undefined in the same manner throughtout the code.
+    * [WICKET-3184] - Make method getContentId of ModalWindow static
+    * [WICKET-3226] - NavigationToolbar has table instance variable but so does base-class AbstractToolbar
+    * [WICKET-3235] - AutoCompleteBehavior overwrites base class AbstractAutoCompleteBehavior settings variable
+    * [WICKET-3254] - Add file name to the exception in case of an error during temp file creation for upload
+    * [WICKET-3264] - MetaDataEntry set method traverses metaData even after key is found and data set/cleared
+    * [WICKET-3265] - Component data_remove returns Object which is never used
+
+** Wish
+    * [WICKET-3237] - Exception when calling setOutputMarkupId/PlaceholderTag on wicket:container
+
+
 Release Notes - Wicket - Version 1.4.14
 
 ** Bug
