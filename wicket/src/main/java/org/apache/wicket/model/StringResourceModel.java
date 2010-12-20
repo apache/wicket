@@ -262,43 +262,6 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	}
 
 	/**
-	 * Construct.
-	 * 
-	 * @param resourceKey
-	 *            The resource key for this string resource
-	 * @param component
-	 *            The component that the resource is relative to
-	 * @param model
-	 *            The model to use for property substitutions
-	 * @see #StringResourceModel(String, Component, IModel, Object[])
-	 */
-	public StringResourceModel(final String resourceKey, final Component component,
-		final IModel<?> model)
-	{
-		this(resourceKey, component, model, null, null);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param resourceKey
-	 *            The resource key for this string resource
-	 * @param component
-	 *            The component that the resource is relative to
-	 * @param model
-	 *            The model to use for property substitutions
-	 * @param defaultValue
-	 *            The default value if the resource key is not found.
-	 * 
-	 * @see #StringResourceModel(String, Component, IModel, Object[])
-	 */
-	public StringResourceModel(final String resourceKey, final Component component,
-		final IModel<?> model, final String defaultValue)
-	{
-		this(resourceKey, component, model, null, defaultValue);
-	}
-
-	/**
 	 * Creates a new string resource model using the supplied parameters.
 	 * <p>
 	 * The relative component parameter should generally be supplied, as without it resources can
@@ -310,7 +273,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	 * to take place on either the resource key or the actual resource strings.
 	 * <p>
 	 * The parameters parameter is also optional and is used for substitutions.
-	 * 
+	 *
 	 * @param resourceKey
 	 *            The resource key for this string resource
 	 * @param component
@@ -321,9 +284,9 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	 *            The parameters to substitute using a Java MessageFormat object
 	 */
 	public StringResourceModel(final String resourceKey, final Component component,
-		final IModel<?> model, final Object[] parameters)
+		final IModel<?> model, final Object... parameters)
 	{
-		this(resourceKey, component, model, parameters, null);
+		this(resourceKey, component, model, null, parameters);
 	}
 
 	/**
@@ -351,7 +314,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	 *            The default value if the resource key is not found.
 	 */
 	public StringResourceModel(final String resourceKey, final Component component,
-		final IModel<?> model, final Object[] parameters, final String defaultValue)
+		final IModel<?> model, final String defaultValue, final Object... parameters)
 	{
 		if (resourceKey == null)
 		{
@@ -360,40 +323,8 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 		this.resourceKey = resourceKey;
 		this.component = component;
 		this.model = model;
-		this.parameters = parameters;
 		this.defaultValue = defaultValue;
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param resourceKey
-	 *            The resource key for this string resource
-	 * @param model
-	 *            The model to use for property substitutions
-	 * @see #StringResourceModel(String, Component, IModel, Object[])
-	 */
-	public StringResourceModel(final String resourceKey, final IModel<?> model)
-	{
-		this(resourceKey, null, model, null, null);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param resourceKey
-	 *            The resource key for this string resource
-	 * @param model
-	 *            The model to use for property substitutions
-	 * @param defaultValue
-	 *            The default value if the resource key is not found.
-	 * 
-	 * @see #StringResourceModel(String, Component, IModel, Object[])
-	 */
-	public StringResourceModel(final String resourceKey, final IModel<?> model,
-		final String defaultValue)
-	{
-		this(resourceKey, null, model, null, defaultValue);
+		this.parameters = parameters;
 	}
 
 	/**
@@ -412,9 +343,9 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	 *            The parameters to substitute using a Java MessageFormat object
 	 */
 	public StringResourceModel(final String resourceKey, final IModel<?> model,
-		final Object[] parameters)
+		final Object... parameters)
 	{
-		this(resourceKey, null, model, parameters, null);
+		this(resourceKey, null, model, null, parameters);
 	}
 
 	/**
@@ -435,9 +366,9 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	 *            The default value if the resource key is not found.
 	 */
 	public StringResourceModel(final String resourceKey, final IModel<?> model,
-		final Object[] parameters, final String defaultValue)
+		final String defaultValue, final Object... parameters)
 	{
-		this(resourceKey, null, model, parameters, defaultValue);
+		this(resourceKey, null, model, defaultValue, parameters);
 	}
 
 
@@ -493,10 +424,11 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 			locale = Session.get().getLocale();
 		}
 
-		String value = null;
+		String value;
+
 		// Substitute any parameters if necessary
 		Object[] parameters = getParameters();
-		if (parameters == null)
+		if (parameters == null || parameters.length == 0)
 		{
 			// Get the string resource, doing any property substitutions as part
 			// of the get operation

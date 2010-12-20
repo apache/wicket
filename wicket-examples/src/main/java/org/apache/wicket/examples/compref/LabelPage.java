@@ -60,7 +60,7 @@ public class LabelPage extends WicketExamplePage
 		// for
 		// parameter substitution.
 		StringResourceModel stringResourceModel = new StringResourceModel("label.current.locale",
-			this, null, new Object[] { getLocale() });
+			this, null, getLocale());
 		add(new Label("resourceLabel", stringResourceModel));
 
 		// and here we add a label that contains markup. Normally, this markup

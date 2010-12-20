@@ -135,8 +135,8 @@ public class StringResourceModelTest extends WicketTestCase
 	public void testSubstitutedPropertyAndParameterResource()
 	{
 		StringResourceModel model = new StringResourceModel("weather.mixed", page, wsModel,
-			new Object[] { new PropertyModel<Double>(wsModel, "currentTemperature"),
-					new PropertyModel<String>(wsModel, "units") });
+			new PropertyModel<Double>(wsModel, "currentTemperature"),
+					new PropertyModel<String>(wsModel, "units"));
 		MessageFormat format = new MessageFormat(
 			"Weather station \"Europe''s main weather station\" reports that the temperature is {0} {1}");
 
@@ -161,9 +161,9 @@ public class StringResourceModelTest extends WicketTestCase
 			"The report for {0,date,medium}, shows the temperature as {2,number,###.##} {3} and the weather to be {1}",
 			page.getLocale());
 		StringResourceModel model = new StringResourceModel("weather.detail", page, wsModel,
-			new Object[] { cal.getTime(), "${currentStatus}",
+			        cal.getTime(), "${currentStatus}",
 					new PropertyModel<Double>(wsModel, "currentTemperature"),
-					new PropertyModel<String>(wsModel, "units") });
+					new PropertyModel<String>(wsModel, "units"));
 		String expected = format.format(new Object[] { cal.getTime(), "sunny", 25.7, "\u00B0C" });
 		Assert.assertEquals("Text should be as expected", expected, model.getString());
 		ws.setCurrentStatus("raining");
@@ -176,8 +176,7 @@ public class StringResourceModelTest extends WicketTestCase
 	public void testSubstitutionParametersResourceWithSingleQuote() throws Exception
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
-		StringResourceModel model = new StringResourceModel("with.quote", page, null, new Object[] {
-				10, 20 });
+		StringResourceModel model = new StringResourceModel("with.quote", page, null, 10, 20);
 		assertEquals("2010.00", model.getString());
 
 	}
