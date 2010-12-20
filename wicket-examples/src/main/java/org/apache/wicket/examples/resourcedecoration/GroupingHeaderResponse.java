@@ -29,8 +29,13 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.aggregation.AbstractResourceAggregatingHeaderResponse;
 import org.apache.wicket.resource.aggregation.ResourceReferenceAndStringData;
 
-
-public class HttpAggregatingHeaderResponse
+/**
+ * A {@link IHeaderResponse} decorator that groups the resources by type (css or js) and by
+ * {@link ResourceGroup custom groups}
+ * 
+ * @author jthomerson
+ */
+public class GroupingHeaderResponse
 	extends
 	AbstractResourceAggregatingHeaderResponse<HttpAggregatingResourceReferenceCollection, BasicGroupingKey>
 {
@@ -41,14 +46,14 @@ public class HttpAggregatingHeaderResponse
 		ResourceGroup.UNKNOWN, 0, false);
 
 	// holder for all javascript blocks so that we can render them *after* the script tags
-	private List<Runnable> javascriptResponse = new ArrayList<Runnable>();
+	private final List<Runnable> javascriptResponse = new ArrayList<Runnable>();
 
 	/**
 	 * Construct.
 	 * 
 	 * @param real
 	 */
-	public HttpAggregatingHeaderResponse(IHeaderResponse real)
+	public GroupingHeaderResponse(IHeaderResponse real)
 	{
 		super(real);
 	}
@@ -61,7 +66,7 @@ public class HttpAggregatingHeaderResponse
 		getRealResponse().renderString("<!-- " + key + " -->\n");
 
 		// TODO: I'm not sure why yet, but our aggregator fails on wicket-event.js, so for now, we
-// skip aggregating all "UNKNOWN" references
+		// skip aggregating all "UNKNOWN" references
 		if (ResourceGroup.UNKNOWN.equals(key.getGroup()))
 		{
 			super.renderCollection(alreadyRendered, key, coll);
@@ -102,13 +107,13 @@ public class HttpAggregatingHeaderResponse
 	{
 		super.onAllCollectionsRendered(allTopLevelReferences);
 
-		// TODO: you could also externalize these JS statements into a file that is loaded rather
-// than being inline in the HTML if you so desired
+		// you could also externalize these JS statements into a file that is loaded rather
+		// than being inline in the HTML if you so desired
 		for (Runnable runnable : javascriptResponse)
 		{
 			runnable.run();
 		}
-		javascriptResponse = null;
+		javascriptResponse.clear();
 	}
 
 	@Override
@@ -121,8 +126,8 @@ public class HttpAggregatingHeaderResponse
 	@Override
 	protected BasicGroupingKey newGroupingKey(ResourceReferenceAndStringData ref)
 	{
-		// THIS IS JUST A SIMPLE EXAMPLE. IN REALITY, YOU'LL ALMOST SURELY WANT TO ALSO GROUP BY
-// MEDIA TYPE FOR CSS.
+		// this is just a simple example. in reality, you'll almost surely want to also group by
+		// media type for CSS.
 		if (ref.getReference() instanceof GroupedAndOrderedResourceReference)
 		{
 			GroupedAndOrderedResourceReference ourRef = (GroupedAndOrderedResourceReference)ref.getReference();
@@ -186,12 +191,6 @@ public class HttpAggregatingHeaderResponse
 	private void toJsResponse(Runnable runnable)
 	{
 		javascriptResponse.add(runnable);
-// Response old = RequestCycle.get().setResponse(javascriptResponse);
-// try {
-// runnable.run();
-// } finally {
-// RequestCycle.get().setResponse(old);
-// }
 	}
 
 }

@@ -18,10 +18,13 @@ package org.apache.wicket.examples.resourcedecoration;
 
 import org.apache.wicket.resource.aggregation.ResourceReferenceCollection;
 
+/**
+ * @author jthomerson
+ */
 public class HttpAggregatingResourceReferenceCollection extends ResourceReferenceCollection
 {
 	private static final long serialVersionUID = 1L;
 
 	// you could customize this collection class to have code specific to the collection, like
-// creating or rendering URLs, etc..
+	// creating or rendering URLs, etc..
 }

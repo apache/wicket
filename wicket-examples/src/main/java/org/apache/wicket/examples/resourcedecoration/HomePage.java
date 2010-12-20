@@ -29,7 +29,11 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.time.Duration;
 
-/***/
+/**
+ * A demo page showing how to render grouped resources
+ * 
+ * @author jthomerson
+ */
 public class HomePage extends WicketExamplePage
 {
 	private static final long serialVersionUID = 1L;
@@ -77,16 +81,21 @@ public class HomePage extends WicketExamplePage
 	public void renderHead(IHeaderResponse response)
 	{
 		// example of things that may be shared for all your applications across your company,
-// etc...:
-		response.renderCSSReference(new GroupedAndOrderedResourceReference(ResourceGroup.GLOBAL, 0,
+
+		// two CSS resources in the same group. header.css is rendered first because has lower
+		// "order" number
+		response.renderCSSReference(new GroupedAndOrderedResourceReference(ResourceGroup.GLOBAL, 1,
 			HomePage.class, "footer.css"));
 		response.renderCSSReference(new GroupedAndOrderedResourceReference(ResourceGroup.GLOBAL, 0,
 			HomePage.class, "header.css"));
+
 		response.renderJavaScriptReference(new GroupedAndOrderedResourceReference(
 			ResourceGroup.GLOBAL, 0, HomePage.class, "jquery-1.4.3.min.js"));
+
 		// example of something that may be in this single application:
 		response.renderCSSReference(new GroupedAndOrderedResourceReference(
 			ResourceGroup.APPLICATION, 0, HomePage.class, "app.css"));
+
 		// example of something that may be limited to certain pages:
 		response.renderCSSReference(new GroupedAndOrderedResourceReference(ResourceGroup.PAGE, 0,
 			HomePage.class, "HomePage.css"));

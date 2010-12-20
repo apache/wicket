@@ -16,11 +16,21 @@
  */
 package org.apache.wicket.examples.resourcedecoration;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.IHeaderResponseDecorator;
 import org.apache.wicket.protocol.http.WebApplication;
 
-
+/**
+ * An application showing how to return several resources into a single http response.
+ * 
+ * <p>
+ * The key is to register a custom {@link IHeaderResponseDecorator} via
+ * {@link Application#setHeaderResponseDecorator(IHeaderResponseDecorator)} that will intercept all
+ * resource contributions.
+ * 
+ * @author jthomerson
+ */
 public class ResourceDecorationApplication extends WebApplication
 {
 
@@ -38,9 +48,8 @@ public class ResourceDecorationApplication extends WebApplication
 			{
 				// add one that aggregates http requests,
 				// but delegates writing of the scripts (or aggregated URL script and link tags) to
-// the real response
-
-				return new HttpAggregatingHeaderResponse(response);
+				// the real response
+				return new GroupingHeaderResponse(response);
 			}
 		});
 	}

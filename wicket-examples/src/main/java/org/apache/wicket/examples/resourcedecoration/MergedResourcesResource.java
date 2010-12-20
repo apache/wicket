@@ -24,6 +24,13 @@ import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.resource.PackageResourceStream;
 
+/**
+ * A shared resource that receives as query parameters a list of the names of grouped resources and
+ * their type, then it loads each resource and merges it with the others. At the end returns the
+ * merged resource.
+ * 
+ * @author jthomerson
+ */
 public class MergedResourcesResource extends AbstractResource
 {
 	private static final long serialVersionUID = 1L;

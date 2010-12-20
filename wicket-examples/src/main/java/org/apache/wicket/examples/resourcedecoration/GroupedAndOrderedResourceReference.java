@@ -18,11 +18,19 @@ package org.apache.wicket.examples.resourcedecoration;
 
 import org.apache.wicket.request.resource.PackageResourceReference;
 
+/**
+ * Assigns a group and order to load in that group to a {@link PackageResourceReference}.
+ * 
+ * @author jthomerson
+ */
 public class GroupedAndOrderedResourceReference extends PackageResourceReference
 {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Some demo groups
+	 */
 	public static enum ResourceGroup {
 		UNKNOWN, GLOBAL, APPLICATION, PAGE, COMPONENT
 	}
@@ -30,6 +38,14 @@ public class GroupedAndOrderedResourceReference extends PackageResourceReference
 	private final ResourceGroup group;
 	private final int loadOrder;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param group
+	 * @param loadOrder
+	 * @param scope
+	 * @param name
+	 */
 	public GroupedAndOrderedResourceReference(ResourceGroup group, int loadOrder, Class<?> scope,
 		String name)
 	{
@@ -38,6 +54,13 @@ public class GroupedAndOrderedResourceReference extends PackageResourceReference
 		this.loadOrder = loadOrder;
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param group
+	 * @param loadOrder
+	 * @param name
+	 */
 	public GroupedAndOrderedResourceReference(ResourceGroup group, int loadOrder, String name)
 	{
 		super(name);
@@ -45,11 +68,17 @@ public class GroupedAndOrderedResourceReference extends PackageResourceReference
 		this.loadOrder = loadOrder;
 	}
 
+	/**
+	 * @return the assigned group for this {@link PackageResourceReference}
+	 */
 	public ResourceGroup getGroup()
 	{
 		return group;
 	}
 
+	/**
+	 * @return the load order for this {@link PackageResourceReference}
+	 */
 	public int getLoadOrder()
 	{
 		return loadOrder;
