@@ -20,17 +20,17 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.examples.resourcedecoration.GroupedAndOrderedResourceReference.ResourceGroup;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.time.Duration;
 
 /***/
-public class HomePage extends WebPage implements IHeaderContributor
+public class HomePage extends WicketExamplePage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -41,6 +41,8 @@ public class HomePage extends WebPage implements IHeaderContributor
 	 */
 	public HomePage(final PageParameters parameters)
 	{
+		super(parameters);
+
 		final WebMarkupContainer jsPlaceholder = new WebMarkupContainer("jsProofPlaceholder");
 		jsPlaceholder.add(new Behavior()
 		{

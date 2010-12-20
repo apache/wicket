@@ -38,6 +38,8 @@ public class WicketExamplePage extends WebPage
 
 	/**
 	 * Constructor
+	 * 
+	 * @param pageParameters
 	 */
 	public WicketExamplePage(final PageParameters pageParameters)
 	{

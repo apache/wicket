@@ -1,18 +1,24 @@
 <html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd" >
     <wicket:head>  
         <title>Resource Aggregation Example Application</title>
+        <link rel="stylesheet" type="text/css" href="style.css"/>
     </wicket:head>
     <body>
-    	<h1 class="header">Resource Aggregation Example Application</h1>
-    	<p>If the body background is light grey, the app.css was loaded.</p>
-    	<p>If the h1 above has a dashed bottom border (and the one below has a dashed top border), header.css and footer.css were loaded.</p>
-    	<div wicket:id="jsProofPlaceholder" class="jsProofPlaceholder">
-    		placeholder that JS can do something with
-    	</div>
-    	<div wicket:id="ajaxProofPlaceholder" class="ajaxProofPlaceholder pending">
-    		after five seconds, you should see ajax update this container (to a green border)
-    	</div>
-    	<div class="complete">everything is done when all three boxes are green</div>
-    	<h1 class="footer">footer h1</h1>
+    	<div wicket:id="mainNavigation"></div>
+    
+    	<div class="bodyContent">
+	    	<h1 class="header">Resource Aggregation Example Application</h1>
+	    	<p style="font-size: 1.5em">If the background is light grey, then app.css was loaded.</p>
+	    	<p style="font-size: 1.5em">If the h1 above has a dashed bottom border (and the one below has a dashed top border), header.css and footer.css were loaded.
+	    	They are merged at the server side and delivered together to the browser</p>
+	    	<div wicket:id="jsProofPlaceholder" class="jsProofPlaceholder">
+	    		placeholder that JS can do something with
+	    	</div>
+	    	<div wicket:id="ajaxProofPlaceholder" class="ajaxProofPlaceholder pending">
+	    		after five seconds, you should see ajax update this container (to a green border)
+	    	</div>
+	    	<div class="complete">Everything is done when all three boxes are green</div>
+	    	<h1 class="footer">footer h1</h1>
+	    </div>
     </body>
 </html>
