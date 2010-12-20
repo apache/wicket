@@ -16,12 +16,19 @@
  */
 package org.apache.wicket.ajax.form;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.form.CheckBoxMultipleChoice;
+import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.RadioChoice;
+import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A behavior that updates the hosting FormComponent via ajax when an event it is attached to is
@@ -44,6 +51,8 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  */
 public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavior
 {
+	private static final Logger log = LoggerFactory.getLogger(AjaxFormComponentUpdatingBehavior.class);
+
 	/**
 	 * 
 	 */
@@ -73,6 +82,16 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		{
 			throw new WicketRuntimeException("Behavior " + getClass().getName() +
 				" can only be added to an instance of a FormComponent");
+		}
+		else if (Application.get().usesDevelopmentConfig() &&
+			((getComponent() instanceof RadioChoice) ||
+				(getComponent() instanceof CheckBoxMultipleChoice) ||
+				(getComponent() instanceof RadioGroup) || (getComponent() instanceof CheckGroup)))
+		{
+			log.warn(String.format(
+				"AjaxFormComponentUpdatingBehavior is not suposed to be added in the form component at path: \"%s\". "
+					+ "Use the AjaxFormChoiceComponentUpdatingBehavior instead, that is meant for choices/groups that are not one component in the html but many",
+				getComponent().getPageRelativePath()));
 		}
 	}
 
