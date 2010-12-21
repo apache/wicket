@@ -399,12 +399,12 @@
 				<version>${jetty.version}</version>
 				<scope>provided</scope>
 			</dependency>
-			<dependency>
-				<groupId>org.mortbay.jetty</groupId>
-				<artifactId>servlet-api-2.5</artifactId>
-				<version>${jetty.version}</version>
-				<scope>provided</scope>
-			</dependency>
+			<!--<dependency>-->
+				<!--<groupId>org.mortbay.jetty</groupId>-->
+				<!--<artifactId>servlet-api-2.5</artifactId>-->
+				<!--<version>${jetty.version}</version>-->
+				<!--<scope>provided</scope>-->
+			<!--</dependency>-->
 			<dependency>
 				<groupId>mx4j</groupId>
 				<artifactId>mx4j</artifactId>
