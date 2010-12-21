@@ -27,6 +27,7 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.resource.filtering.HeaderResponseFilteredResponseContainer;
 import org.apache.wicket.util.time.Duration;
 
 /**
@@ -75,6 +76,12 @@ public class HomePage extends WicketExamplePage
 				stop();
 			}
 		});
+
+		/*
+		 * a container for all collected JavaScript contributions that will be loaded at the page
+		 * footer (after </body>)
+		 */
+		add(new HeaderResponseFilteredResponseContainer("footerJS", "footerJS"));
 	}
 
 	@Override

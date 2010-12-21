@@ -20,6 +20,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.IHeaderResponseDecorator;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.resource.filtering.JavaScriptFilteredIntoFooterHeaderResponse;
 
 /**
  * An application showing how to return several resources into a single http response.
@@ -46,10 +47,19 @@ public class ResourceDecorationApplication extends WebApplication
 
 			public IHeaderResponse decorate(IHeaderResponse response)
 			{
-				// add one that aggregates http requests,
-				// but delegates writing of the scripts (or aggregated URL script and link tags) to
-				// the real response
-				return new GroupingHeaderResponse(response);
+				// use grouping header response for the CSS resources, this way we can load several
+				// .css files in one http request. See HomePage#renderHead() header.css and
+				// footer.css
+				GroupingHeaderResponse groupingHeaderResponse = new GroupingHeaderResponse(response);
+
+				// use this header resource decorator to load all JavaScript resources in the page
+				// footer (after </body>)
+				JavaScriptFilteredIntoFooterHeaderResponse javaScriptFooterResponse = new JavaScriptFilteredIntoFooterHeaderResponse(
+					response, "footerJS");
+
+				// finally use one that delegates to the two above
+				return new GroupingAndFilteringHeaderResponse(groupingHeaderResponse,
+					javaScriptFooterResponse);
 			}
 		});
 	}
