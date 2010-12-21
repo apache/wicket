@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.apache.wicket</groupId>
+    <artifactId>wicket-parent</artifactId>
+    <version>1.5-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+  <artifactId>wicket-core</artifactId>
+  <name>Wicket Core</name>
+  <description>
+	A module that creates a .jar from the classes in wicket, wicket-util and wicket-request modules.
+	This way all users - Maven and non-Maven ones can depend only on the artifact produced by this module without
+	bothering that Wicket core depends on other modules.
+  </description>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-util</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-request</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>1.4</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <artifactSet>
+                <includes>
+                  <include>org.apache.wicket:wicket</include>
+                  <include>org.apache.wicket:wicket-util</include>
+                  <include>org.apache.wicket:wicket-request</include>
+                </includes>
+              </artifactSet>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

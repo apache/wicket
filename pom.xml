@@ -63,6 +63,7 @@
 				<module>wicket-objectssizeof-agent</module>
 				<module>wicket-examples</module>
 				<module>archetypes/quickstart</module>
+				<module>wicket-core</module>
 			</modules>
 			<build>
 				<plugins>
@@ -138,6 +139,7 @@
 				<module>wicket-objectssizeof-agent</module>
 				<module>wicket-examples</module>
 				<module>archetypes/quickstart</module>
+				<module>wicket-core</module>
 			</modules>
 			<build>
 				<plugins>
@@ -197,6 +199,7 @@
 				<module>wicket-examples</module>
 				<module>archetypes/quickstart</module>
 				<module>testing/wicket-threadtest</module>
+				<module>wicket-core</module>
 			</modules>
 
 			<distributionManagement>
