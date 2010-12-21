@@ -20,13 +20,11 @@ import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.HiddenField;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * A form with filter-related special functionality for its form components.
@@ -38,8 +36,6 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 public class FilterForm<T> extends Form<T>
 {
 	private static final long serialVersionUID = 1L;
-
-	private final HiddenField<?> hidden;
 	private final IFilterStateLocator<T> locator;
 
 	/**
@@ -53,37 +49,26 @@ public class FilterForm<T> extends Form<T>
 		super(id, new FilterStateModel<T>(locator));
 
 		this.locator = locator;
+	}
 
-		// add hidden field used for managing current focus
-		hidden = new HiddenField<String>("focus-tracker", new Model<String>());
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		response.renderOnLoadJavaScript("_filter_focus_restore('" + getFocusTrackerFieldCssId() +
+			"');");
+	}
 
-		hidden.add(new Behavior()
-		{
-			private static final long serialVersionUID = 1L;
 
-			@Override
-			public void onComponentTag(Component component, ComponentTag tag)
-			{
-				tag.put("id", getFocusTrackerFieldCssId());
-				super.onComponentTag(component, tag);
-			}
-		});
-		add(hidden);
-
-		// add javascript to restore focus to a filter component
-		add(new WebMarkupContainer("focus-restore")
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
-			{
-				AppendingStringBuffer script = new AppendingStringBuffer(
-					"<script type=\"text/javascript\">_filter_focus_restore('").append(
-					getFocusTrackerFieldCssId()).append("');</script>");
-				replaceComponentTagBody(markupStream, openTag, script);
-			}
-		});
+	@Override
+	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+	{
+		super.onComponentTagBody(markupStream, openTag);
+		String id = Strings.escapeMarkup(getFocusTrackerFieldCssId()).toString();
+		String value = getRequest().getPostParameters().getParameterValue(id).toString("");
+		getResponse().write(
+			String.format("<input type=\"hidden\" name=\"%s\" id=\"%s\" value=\"%s\"/>", id, id,
+				value));
 	}
 
 	/**
@@ -91,7 +76,7 @@ public class FilterForm<T> extends Form<T>
 	 */
 	public final String getFocusTrackerFieldCssId()
 	{
-		return hidden.getPageRelativePath();
+		return getMarkupId() + "focus";
 	}
 
 	/**
