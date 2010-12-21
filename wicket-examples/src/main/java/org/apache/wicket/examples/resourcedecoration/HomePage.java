@@ -84,7 +84,7 @@ public class HomePage extends WicketExamplePage
 
 		// two CSS resources in the same group. header.css is rendered first because has lower
 		// "order" number
-		response.renderCSSReference(new GroupedAndOrderedResourceReference(ResourceGroup.GLOBAL, 1,
+		response.renderCSSReference(new GroupedAndOrderedResourceReference(ResourceGroup.GLOBAL, 0,
 			HomePage.class, "footer.css"));
 		response.renderCSSReference(new GroupedAndOrderedResourceReference(ResourceGroup.GLOBAL, 0,
 			HomePage.class, "header.css"));
