@@ -20,7 +20,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 
 /**
- * Just an exception that can be thrown if aa development utility is invoked,
+ * Just an exception that can be thrown if a development utility is invoked,
  * constructed, etc, and the setting in the application is not enabled.
  * 
  * Includes a static method that also does this check so that it is not carbon

@@ -86,16 +86,6 @@ public class DebugBar extends DevUtilsPanel
         add(new Image("removeImg", new PackageResourceReference(DebugBar.class, "remove.png")));
         List<IDebugBarContributor> contributors = getContributors();
         
-        // no longer necessary, registered from DebugBarInitializer
-        // if (contributors.isEmpty())
-        // {
-        // we do this so that if you have multiple applications running in
-        // the same container,
-        // each ends up registering its' own contributors (wicket-examples
-        // for example)
-        // registerStandardContributors(Application.get());
-        // contributors = getContributors();
-        // }
         add(new ListView<IDebugBarContributor>("contributors", contributors)
         {
             private static final long serialVersionUID = 1L;
@@ -176,14 +166,4 @@ public class DebugBar extends DevUtilsPanel
         return list == null ? new ArrayList<IDebugBarContributor>() : list;
     }
 
-
-    /**
-     * Called from {@link DebugBarInitializer}
-     */
-    static void registerStandardContributors(Application application)
-    {
-        registerContributor(VersionDebugContributor.DEBUG_BAR_CONTRIB, application);
-        registerContributor(InspectorDebugPanel.DEBUG_BAR_CONTRIB, application);
-        registerContributor(SessionSizeDebugPanel.DEBUG_BAR_CONTRIB, application);
-    }
 }
