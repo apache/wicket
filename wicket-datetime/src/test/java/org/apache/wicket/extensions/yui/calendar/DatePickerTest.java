@@ -37,6 +37,19 @@ public class DatePickerTest extends WicketTestCase
 	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(DatePickerTest.class);
 
+	private TimeZone defaultTz = TimeZone.getDefault();
+
+	/**
+	 * @see org.apache.wicket.WicketTestCase#tearDown()
+	 */
+	@Override
+	protected void tearDown() throws Exception
+	{
+		TimeZone.setDefault(defaultTz);
+
+		super.tearDown();
+	}
+
 	/**
 	 * 
 	 * @throws Exception
@@ -78,7 +91,7 @@ public class DatePickerTest extends WicketTestCase
 		TimeZone tzClient = TimeZone.getTimeZone("America/Los_Angeles");
 		TimeZone tzServer = TimeZone.getTimeZone("Europe/Berlin");
 
-		System.setProperty("user.timezone", tzServer.getDisplayName());
+		TimeZone.setDefault(tzServer);
 
 		Class<? extends Page> pageClass = DatesPage2.class;
 		GregorianCalendar gc = new GregorianCalendar(tzClient);
@@ -96,8 +109,6 @@ public class DatePickerTest extends WicketTestCase
 		formTester.setValue("dateTimeField:hours", "00");
 		formTester.setValue("dateTimeField:minutes", "00");
 		formTester.setValue("dateField:date", "06.11.2010");
-		formTester.setValue("dateField:hours", "00");
-		formTester.setValue("dateField:minutes", "00");
 		formTester.submit();
 
 		DatesPage2 page = (DatesPage2)tester.getLastRenderedPage();
