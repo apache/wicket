@@ -411,4 +411,20 @@ public final class MarkupParserTest extends WicketTestCase
 		assertEquals(t.getId(), "span2");
 		assertEquals(t.getPath(), "span");
 	}
+
+	/**
+	 * 
+	 * @throws IOException
+	 * @throws ResourceStreamNotFoundException
+	 */
+	public final void testComments() throws IOException, ResourceStreamNotFoundException
+	{
+		tester.getApplication().getMarkupSettings().setStripComments(true);
+		final MarkupParser parser = new MarkupParser(
+			"<span><!-- c1 --> <!-- c2 --><!-- c3 --></span>");
+		Markup markup = parser.parse();
+
+		RawMarkup raw = (RawMarkup)markup.get(0);
+		assertEquals("<span> </span>", raw.toString());
+	}
 }
