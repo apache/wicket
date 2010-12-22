@@ -48,6 +48,7 @@ import org.slf4j.LoggerFactory;
 public final class DiffUtil
 {
 	private static final Logger log = LoggerFactory.getLogger(DiffUtil.class);
+	private static final String ENCODING = "UTF-8";
 
 	/**
 	 * Replace the expected result file with the current output.
@@ -102,7 +103,7 @@ public final class DiffUtil
 			throw new IOException("File not found: " + filename);
 		}
 
-		String reference = Streams.readString(in);
+		String reference = Streams.readString(in, ENCODING);
 
 		// replace all line endings with unix style line ending
 		reference = reference.replaceAll("\n\r", "\n");
