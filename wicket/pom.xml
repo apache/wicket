@@ -65,6 +65,7 @@
 				<artifactId>maven-clover-plugin</artifactId>
 				<version>2.4</version>
 				<configuration>
+					<cloverOutputDirectory>${project.build.directory}/clover</cloverOutputDirectory>
 					<licenseLocation>${basedir}/../../../common/lib/clover.license</licenseLocation>
 				</configuration>
 			</plugin>
