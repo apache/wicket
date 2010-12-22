@@ -26,6 +26,8 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.tester.FormTester;
+import org.joda.time.DateTimeZone;
+import org.joda.time.MutableDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,9 +96,9 @@ public class DatePickerTest extends WicketTestCase
 		TimeZone.setDefault(tzServer);
 
 		Class<? extends Page> pageClass = DatesPage2.class;
-		GregorianCalendar gc = new GregorianCalendar(tzClient);
-		gc.set(2010, 10, 06, 0, 0, 0);
-		Date date = gc.getTime();
+		MutableDateTime dt = new MutableDateTime(DateTimeZone.forTimeZone(tzClient));
+		dt.setDateTime(2010, 11, 06, 0, 0, 0, 0);
+		Date date = new Date(dt.getMillis());
 
 		WebClientInfo clientInfo = (WebClientInfo)tester.getSession().getClientInfo();
 		clientInfo.getProperties().setTimeZone(tzClient);
@@ -113,9 +115,11 @@ public class DatePickerTest extends WicketTestCase
 
 		DatesPage2 page = (DatesPage2)tester.getLastRenderedPage();
 
+		log.error("orig: " + date.getTime() + "; date: " + page.date.getTime() + "; dateTime: " +
+			page.dateTime.getTime());
 		log.error("orig: " + date + "; date: " + page.date + "; dateTime: " + page.dateTime);
-		assertEquals(date.toString(), page.dateTime.toString());
-		assertEquals(date.toString(), page.date.toString());
+		assertEquals(0, date.compareTo(page.dateTime));
+		assertEquals(0, date.compareTo(page.date));
 	}
 
 	/**
