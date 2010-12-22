@@ -20,8 +20,6 @@ import java.lang.management.ManagementFactory;
 
 import javax.management.MBeanServer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.webapp.WebAppContext;
 import org.mortbay.management.MBeanContainer;
@@ -35,7 +33,6 @@ public class StartExamples
 	/**
 	 * Used for logging.
 	 */
-	private static final Log log = LogFactory.getLog(StartExamples.class);
 
 	/**
 	 * Main function, starts the jetty server.

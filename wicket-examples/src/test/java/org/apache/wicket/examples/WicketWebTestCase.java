@@ -20,9 +20,6 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.meterware.httpunit.HttpUnitOptions;
 import com.meterware.httpunit.WebConversation;
 import com.meterware.httpunit.WebResponse;
@@ -36,8 +33,6 @@ import com.meterware.httpunit.WebResponse;
  */
 public abstract class WicketWebTestCase extends TestCase
 {
-	private static final Log logger = LogFactory.getLog(WicketWebTestCase.class);
-
 	/** The base url used to connect the conversation to */
 	private String baseUrl = "http://localhost:8098/";
 

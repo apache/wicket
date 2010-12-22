@@ -20,8 +20,6 @@ import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
@@ -32,8 +30,6 @@ import org.apache.wicket.util.tester.WicketTester;
  */
 public class GuestbookTest extends TestCase
 {
-	private static final Log log = LogFactory.getLog(GuestbookTest.class);
-
 	/**
 	 * Sets up the test.
 	 * 
