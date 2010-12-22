@@ -27,13 +27,9 @@ import org.apache.wicket.validation.validator.StringValidator;
 /**
  * Validator for validating email addresses according to the RFC 822. This validator uses the
  * regular expression taken from the Perl implementation of RFC 822.
- * 
- * <p>
- * <b>PLEATE NOTE!</b> Only use this validator if you really need it. The regex used is very big and
- * allocates 1-2Kb of memory per session.
- * 
  * <p>
  * Most users will be satisfied with the {@link EmailAddressValidator}
+ * </p>
  * 
  * @see <a href="http://www.ex-parrot.com/~pdw/Mail-RFC822-Address.html">Perl Regex implementation *
  *      of RFC 822< /a>
