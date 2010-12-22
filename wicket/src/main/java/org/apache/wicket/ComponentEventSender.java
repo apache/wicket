@@ -117,7 +117,7 @@ final class ComponentEventSender implements IEventSource
 			return;
 		}
 
-		Component cursor = (targetsCycle) ? cursor = source.getPage() : (Component)sink;
+		Component cursor = targetsCycle ? source.getPage() : (Component)sink;
 
 		dispatcher.dispatchEvent(cursor, event);
 
