@@ -19,8 +19,6 @@ package org.apache.wicket.threadtest;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.threadtest.tester.SimpleGetCommand;
 import org.apache.wicket.threadtest.tester.Tester;
 import org.apache.wicket.util.io.WicketObjectStreamFactory;
@@ -31,9 +29,6 @@ import org.apache.wicket.util.lang.WicketObjects;
  */
 public class App1Test1
 {
-
-	private static final Log log = LogFactory.getLog(App1Test1.class);
-
 	/**
 	 * @param args
 	 * @throws Exception

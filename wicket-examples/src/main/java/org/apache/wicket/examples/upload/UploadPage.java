@@ -20,8 +20,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
@@ -39,7 +37,8 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.file.Folder;
 import org.apache.wicket.util.lang.Bytes;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Upload example.
@@ -145,7 +144,7 @@ public class UploadPage extends WicketExamplePage
 	}
 
 	/** Log. */
-	private static final Log log = LogFactory.getLog(UploadPage.class);
+	private static final Logger log = LoggerFactory.getLogger(UploadPage.class);
 
 	/** Reference to listview for easy access. */
 	private final FileListView fileListView;

@@ -33,8 +33,6 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
@@ -57,7 +55,8 @@ import org.apache.wicket.util.string.Strings;
 
 import com.uwyn.jhighlight.renderer.Renderer;
 import com.uwyn.jhighlight.renderer.XhtmlRendererFactory;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Displays the resources in a packages directory in a browsable format.
@@ -66,7 +65,7 @@ import com.uwyn.jhighlight.renderer.XhtmlRendererFactory;
  */
 public class SourcesPage extends WebPage
 {
-	private static final Log log = LogFactory.getLog(SourcesPage.class);
+	private static final Logger log = LoggerFactory.getLogger(SourcesPage.class);
 
 	/**
 	 * Model for retrieving the source code from the classpath of a packaged resource.

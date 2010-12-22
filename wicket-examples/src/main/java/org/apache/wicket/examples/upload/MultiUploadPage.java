@@ -20,11 +20,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -156,9 +153,6 @@ public class MultiUploadPage extends WicketExamplePage
 			}
 		}
 	}
-
-	/** Log. */
-	private static final Log log = LogFactory.getLog(MultiUploadPage.class);
 
 	/** Reference to listview for easy access. */
 	private final FileListView fileListView;

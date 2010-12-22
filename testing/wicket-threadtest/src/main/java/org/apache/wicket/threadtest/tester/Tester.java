@@ -24,20 +24,19 @@ import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpClientParams;
 import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.threadtest.tester.CommandRunner.CommandRunnerObserver;
 import org.apache.wicket.util.time.Duration;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.webapp.WebAppContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author eelcohillenius
  */
 public final class Tester implements CommandRunnerObserver
 {
-
-	private static final Log log = LogFactory.getLog(Tester.class);
+	private static final Logger log = LoggerFactory.getLogger(Tester.class);
 
 	private static HttpClientParams params;
 

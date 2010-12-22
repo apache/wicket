@@ -18,8 +18,6 @@ package org.apache.wicket.examples.encodings;
 
 import java.util.Locale;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -32,8 +30,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  */
 public class Home extends WicketExamplePage
 {
-	private static final Log log = LogFactory.getLog(Home.class);
-
 	/**
 	 * Constructor
 	 * 

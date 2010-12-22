@@ -19,8 +19,6 @@ package org.apache.wicket.examples.customresourceloading;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.examples.WicketExampleApplication;
@@ -30,7 +28,8 @@ import org.apache.wicket.util.resource.UrlResourceStream;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.util.string.Strings;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Application class for the custom resource loading example.
@@ -40,7 +39,7 @@ import org.apache.wicket.util.string.Strings;
 public class CustomResourceLoadingApplication extends WicketExampleApplication
 {
 	/** log. */
-	private static final Log log = LogFactory.getLog(CustomResourceLoadingApplication.class);
+	private static final Logger log = LoggerFactory.getLogger(CustomResourceLoadingApplication.class);
 
 	/**
 	 * Custom implementation of {@link IResourceStreamLocator}.

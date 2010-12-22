@@ -18,8 +18,8 @@ package org.apache.wicket.threadtest.apps.app2;
 
 import java.util.Stack;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Test pool.
@@ -28,10 +28,9 @@ import org.apache.commons.logging.LogFactory;
  */
 public class Pool
 {
-
 	private static Pool _instance = new Pool();
 
-	private static Log log = LogFactory.getLog(Pool.class);
+	private static final Logger log = LoggerFactory.getLogger(Pool.class);
 
 	/**
 	 * @return the connection

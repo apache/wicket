@@ -25,17 +25,11 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * Test filter
  */
 public class TestFilter implements Filter
 {
-
-	private static final Log log = LogFactory.getLog(TestFilter.class);
-
 	/**
 	 * @see javax.servlet.Filter#destroy()
 	 */

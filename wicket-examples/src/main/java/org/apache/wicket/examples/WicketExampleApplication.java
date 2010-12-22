@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.examples;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.util.crypt.ClassCryptFactory;
@@ -31,11 +29,6 @@ import org.apache.wicket.util.crypt.NoCrypt;
  */
 public abstract class WicketExampleApplication extends WebApplication
 {
-	/**
-	 * Used for logging.
-	 */
-	private static final Log log = LogFactory.getLog(WicketExampleApplication.class);
-
 	/**
 	 * prevent wicket from launching a java application window on the desktop
 	 * <br/> 
