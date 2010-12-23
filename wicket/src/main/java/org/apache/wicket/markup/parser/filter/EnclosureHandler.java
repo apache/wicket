@@ -92,7 +92,7 @@ public final class EnclosureHandler extends BaseMarkupFilter implements ICompone
 				}
 				stack.push(tag);
 			}
-			// If close tag, than remove the tag from the stack and update
+			// If close tag, then remove the tag from the stack and update
 			// the child attribute of the open tag if required
 			else if (tag.isClose())
 			{
@@ -105,7 +105,7 @@ public final class EnclosureHandler extends BaseMarkupFilter implements ICompone
 				ComponentTag lastEnclosure = stack.pop();
 
 				// If the child attribute has not been given by the user,
-				// than ...
+				// then ...
 				if (childId != null)
 				{
 					lastEnclosure.put(CHILD_ATTRIBUTE, childId);
@@ -128,7 +128,7 @@ public final class EnclosureHandler extends BaseMarkupFilter implements ICompone
 		{
 			ComponentTag lastEnclosure = stack.lastElement();
 
-			// If the enclosure tag has NO child attribute, than ...
+			// If the enclosure tag has NO child attribute, then ...
 			if (lastEnclosure.getString(CHILD_ATTRIBUTE) == null)
 			{
 				// We encountered more than one child component inside
