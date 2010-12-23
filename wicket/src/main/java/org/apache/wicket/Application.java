@@ -192,8 +192,8 @@ public abstract class Application implements UnboundListener, IEventSink
 	/** request cycle provider */
 	private IRequestCycleProvider requestCycleProvider;
 
-    /** exception mapper provider */
-    private IProvider<IExceptionMapper> exceptionMapperProvider;
+	/** exception mapper provider */
+	private IProvider<IExceptionMapper> exceptionMapperProvider;
 
 	/** session store provider */
 	private IProvider<ISessionStore> sessionStoreProvider;
@@ -707,26 +707,27 @@ public abstract class Application implements UnboundListener, IEventSink
 		pageAccessSynchronizer = new PageAccessSynchronizer(getRequestCycleSettings().getTimeout());
 
 		requestCycleProvider = new DefaultRequestCycleProvider();
-        exceptionMapperProvider = new DefaultExceptionMapperProvider();
+		exceptionMapperProvider = new DefaultExceptionMapperProvider();
 	}
 
-    /**
-     * @return the exception mapper provider
-     */
-    public IProvider<IExceptionMapper> getExceptionMapperProvider()
-    {
-        return exceptionMapperProvider;
-    }
+	/**
+	 * @return the exception mapper provider
+	 */
+	public IProvider<IExceptionMapper> getExceptionMapperProvider()
+	{
+		return exceptionMapperProvider;
+	}
 
-    /**
-     * @param exceptionMapperProvider the new exception mapper provider
-     */
-    public void setExceptionMapperProvider(IProvider<IExceptionMapper> exceptionMapperProvider)
-    {
-        this.exceptionMapperProvider = exceptionMapperProvider;
-    }
+	/**
+	 * @param exceptionMapperProvider
+	 *            the new exception mapper provider
+	 */
+	public void setExceptionMapperProvider(IProvider<IExceptionMapper> exceptionMapperProvider)
+	{
+		this.exceptionMapperProvider = exceptionMapperProvider;
+	}
 
-    /**
+	/**
 	 * 
 	 * @return Session state provider
 	 */
@@ -1469,13 +1470,13 @@ public abstract class Application implements UnboundListener, IEventSink
 		this.requestCycleProvider = requestCycleProvider;
 	}
 
-    private static class DefaultExceptionMapperProvider implements IProvider<IExceptionMapper>
-    {
-        public IExceptionMapper get()
-        {
-            return new DefaultExceptionMapper();
-        }
-    }
+	private static class DefaultExceptionMapperProvider implements IProvider<IExceptionMapper>
+	{
+		public IExceptionMapper get()
+		{
+			return new DefaultExceptionMapper();
+		}
+	}
 
 	/**
 	 * 
