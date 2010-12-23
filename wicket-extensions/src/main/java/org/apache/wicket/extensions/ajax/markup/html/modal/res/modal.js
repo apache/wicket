@@ -58,7 +58,7 @@ if (Wicket.Object.extend == null) {
  * The problem when dragging a div with an iframe is that when the mouse cursor
  * gets over an iframe, all mouse events are received by the iframe's document. (IE and FF)
  * 
- * This code can recursively traverse all iframes in document and temporatily forward
+ * This code can recursively traverse all iframes in document and temporarily forward
  * events from their documents to parent document. 
  */ 
 Wicket.Iframe = { 
@@ -101,7 +101,7 @@ Wicket.Iframe = {
 
 	/**
 	 * Forwards the events from iframe to the parent document (works recursively).
-	 * @param {Document} doc - document to which the events will be forwardeded   
+	 * @param {Document} doc - document to which the events will be forwarded   
 	 * @param {HTMLElement} iframe - source iframe 
 	 * @param {Array} revertList - list to which altered iframes will be added 
 	 */
@@ -208,7 +208,7 @@ Wicket.Window.create = function(settings) {
 	
 	// if it is an iframe window...
 	if (typeof(settings.src) != "undefined" && Wicket.Browser.isKHTML() == false) {
-		// attempt to get class crom parent
+		// attempt to get class from parent
 		try {		
 			win = window.parent.Wicket.Window;			
 		} catch (ignore) {		
@@ -244,7 +244,7 @@ Wicket.Window.get = function() {
 
 
 /**
- * Closes the current wicket open window. This method is supposed to 
+ * Closes the current open window. This method is supposed to 
  * be called from inside the window (therefore it checks window.parent).
  */
 Wicket.Window.close = function() {
@@ -397,7 +397,7 @@ Wicket.Window.prototype = {
 	},
 
 	/**
-	 * Creates the new uniqe id for window element.
+	 * Creates the new unique id for window element.
 	 */ 
 	newId: function() {
 		return "_wicket_window_" + Wicket.Window.idCounter++;
@@ -1260,11 +1260,11 @@ Wicket.Window.Mask.prototype = {
 	 */
 	show: function() {				
 		
-		// if the mask is not alrady shown...
+		// if the mask is not already shown...
 		if (typeof(Wicket.Window.Mask.element) == "undefined" ||
 			Wicket.Window.Mask.element == null) {		
 		
-			// crate the mask element and add  it to document
+			// create the mask element and add it to the document
 			var e = document.createElement("div");
 			document.body.appendChild(e);							
 			
