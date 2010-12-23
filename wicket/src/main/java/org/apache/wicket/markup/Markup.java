@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * The content of a markup file, consisting of aalist of markup elements.
+ * The content of a markup file, consisting of a list of markup elements.
  * 
  * @see MarkupResourceStream
  * @see MarkupElement
