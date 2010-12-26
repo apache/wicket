@@ -191,7 +191,7 @@ public class WicketLinkTagHandler extends BaseMarkupFilter implements IComponent
 	/**
 	 * 
 	 * @param ref
-	 * @return true if ref is not null and does nto contain namespace
+	 * @return true if ref is not null and does not contain namespace
 	 */
 	private final boolean checkRef(String ref)
 	{
