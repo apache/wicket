@@ -24,10 +24,13 @@ import java.util.List;
 
 import javax.servlet.http.Cookie;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.response.filter.IResponseFilter;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
  * Subclass of {@link WebResponse} that buffers the actions and performs those on another response.
@@ -117,6 +120,20 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		@Override
 		protected void invoke(WebResponse response)
 		{
+
+			AppendingStringBuffer responseBuffer = new AppendingStringBuffer(builder);
+
+			List<IResponseFilter> responseFilters = Application.get()
+				.getRequestCycleSettings()
+				.getResponseFilters();
+
+			if (responseFilters != null)
+			{
+				for (IResponseFilter filter : responseFilters)
+				{
+					filter.filter(responseBuffer);
+				}
+			}
 			response.write(builder);
 		}
 	};
@@ -534,4 +551,5 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	{
 		return charSequenceAction.builder.toString();
 	}
+
 }

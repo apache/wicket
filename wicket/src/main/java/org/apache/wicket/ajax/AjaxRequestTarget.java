@@ -51,6 +51,8 @@ import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.response.StringResponse;
+import org.apache.wicket.response.filter.IResponseFilter;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -603,47 +605,96 @@ public class AjaxRequestTarget implements IPageRequestHandler
 			// Make sure it is not cached by a client
 			response.disableCaching();
 
-			response.write("<?xml version=\"1.0\" encoding=\"");
-			response.write(encoding);
-			response.write("\"?>");
-			response.write("<ajax-response>");
-
-			// invoke onbeforerespond event on listeners
-			fireOnBeforeRespondListeners();
-
-			// normal behavior
-			Iterator<CharSequence> it = prependJavaScripts.iterator();
-			while (it.hasNext())
+			try
 			{
-				CharSequence js = it.next();
-				respondInvocation(response, js);
+				final StringResponse bodyResponse = new StringResponse();
+				contructResponseBody(bodyResponse, encoding);
+				invokeResponseFilters(bodyResponse);
+				response.write(bodyResponse.getBuffer());
 			}
-
-			// process added components
-			respondComponents(response);
-
-			fireOnAfterRespondListeners(response);
-
-			// execute the dom ready javascripts as first javascripts
-			// after component replacement
-			it = domReadyJavaScripts.iterator();
-			while (it.hasNext())
+			finally
 			{
-				CharSequence js = it.next();
-				respondInvocation(response, js);
+				// restore the original response
+				RequestCycle.get().setResponse(response);
 			}
-			it = appendJavaScripts.iterator();
-			while (it.hasNext())
-			{
-				CharSequence js = it.next();
-				respondInvocation(response, js);
-			}
-
-			response.write("</ajax-response>");
 		}
 		finally
 		{
 			page.setFreezePageId(frozen);
+		}
+	}
+
+	/**
+	 * Collects the response body (without the headers) so that it can be pre-processed before
+	 * written down to the original response.
+	 * 
+	 * @param bodyResponse
+	 *            the buffering response
+	 * @param encoding
+	 *            the encoding that should be used to encode the body
+	 */
+	private void contructResponseBody(final Response bodyResponse, final String encoding)
+	{
+		bodyResponse.write("<?xml version=\"1.0\" encoding=\"");
+		bodyResponse.write(encoding);
+		bodyResponse.write("\"?>");
+		bodyResponse.write("<ajax-response>");
+
+		// invoke onbeforerespond event on listeners
+		fireOnBeforeRespondListeners();
+
+		// normal behavior
+		Iterator<CharSequence> it = prependJavaScripts.iterator();
+		while (it.hasNext())
+		{
+			CharSequence js = it.next();
+			respondInvocation(bodyResponse, js);
+		}
+
+		// process added components
+		respondComponents(bodyResponse);
+
+		fireOnAfterRespondListeners(bodyResponse);
+
+		// execute the dom ready javascripts as first javascripts
+		// after component replacement
+		it = domReadyJavaScripts.iterator();
+		while (it.hasNext())
+		{
+			CharSequence js = it.next();
+			respondInvocation(bodyResponse, js);
+		}
+		it = appendJavaScripts.iterator();
+		while (it.hasNext())
+		{
+			CharSequence js = it.next();
+			respondInvocation(bodyResponse, js);
+		}
+
+		bodyResponse.write("</ajax-response>");
+	}
+
+	/**
+	 * Runs the configured {@link IResponseFilter}s over the constructed Ajax response
+	 * 
+	 * @param contentResponse
+	 *            the Ajax {@link Response} body
+	 */
+	private void invokeResponseFilters(final StringResponse contentResponse)
+	{
+		AppendingStringBuffer responseBuffer = new AppendingStringBuffer(
+			contentResponse.getBuffer());
+
+		List<IResponseFilter> responseFilters = Application.get()
+			.getRequestCycleSettings()
+			.getResponseFilters();
+
+		if (responseFilters != null)
+		{
+			for (IResponseFilter filter : responseFilters)
+			{
+				filter.filter(responseBuffer);
+			}
 		}
 	}
 
@@ -667,7 +718,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	 * 
 	 * @param response
 	 */
-	private void fireOnAfterRespondListeners(final WebResponse response)
+	private void fireOnAfterRespondListeners(final Response response)
 	{
 		// invoke onafterresponse event on listeners
 		if (listeners != null)
@@ -697,7 +748,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	 * 
 	 * @param response
 	 */
-	private void respondComponents(WebResponse response)
+	private void respondComponents(Response response)
 	{
 		// TODO: We might need to call prepareRender on all components upfront
 

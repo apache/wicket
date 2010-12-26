@@ -21,7 +21,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 /**
  * A response filter can be added to the
  * {@link org.apache.wicket.settings.IRequestCycleSettings#addResponseFilter(IResponseFilter)}
- * object The will be called from the Buffered Response objects right before they would send it to
+ * object. This will be called from the Buffered Response objects right before they would send it to
  * the real responses. You have to use the
  * {@link org.apache.wicket.settings.IRequestCycleSettings#setBufferResponse(boolean)}(to true which
  * is the default) for this filtering to work.
