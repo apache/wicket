@@ -23,7 +23,7 @@
 		<!--  WICKET DEPENDENCIES -->
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket</artifactId>
+			<artifactId>wicket-core</artifactId>
 			<version>${wicket.version}</version>
 		</dependency>
 		<!--

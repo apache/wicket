@@ -39,7 +39,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket</artifactId>
+			<artifactId>wicket-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>velocity</groupId>
