@@ -26,9 +26,9 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>wicket</artifactId>
+	<artifactId>wicket-core</artifactId>
 	<packaging>jar</packaging>
-	<name>Wicket</name>
+	<name>Wicket Core</name>
 	<description>
 		Wicket is a Java web application framework that takes simplicity, 
 		separation of concerns and ease of development to a whole new level. 

@@ -7,8 +7,8 @@
     <version>1.5-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <artifactId>wicket-core</artifactId>
-  <name>Wicket Core</name>
+  <artifactId>wicket</artifactId>
+  <name>Wicket</name>
   <description>
 	A module that creates a .jar from the classes in wicket, wicket-util and wicket-request modules.
 	This way all users - Maven and non-Maven ones can depend only on the artifact produced by this module without
@@ -17,7 +17,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.wicket</groupId>
-      <artifactId>wicket</artifactId>
+      <artifactId>wicket-core</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
     <dependency>
