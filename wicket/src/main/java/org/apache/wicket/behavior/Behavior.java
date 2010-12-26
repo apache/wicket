@@ -53,7 +53,7 @@ public abstract class Behavior implements IClusterable
 	 */
 	public void beforeRender(Component component)
 	{
-	};
+	}
 
 	/**
 	 * Called when a component that has this behavior coupled was rendered.
@@ -63,7 +63,7 @@ public abstract class Behavior implements IClusterable
 	 */
 	public void afterRender(Component component)
 	{
-	};
+	}
 
 	/**
 	 * Bind this handler to the given component. This method is called by the host component
@@ -78,7 +78,7 @@ public abstract class Behavior implements IClusterable
 	 */
 	public void bind(Component component)
 	{
-	};
+	}
 
 	/**
 	 * Notifies the behavior it is removed from the specified component
@@ -88,7 +88,7 @@ public abstract class Behavior implements IClusterable
 	 */
 	public void unbind(Component component)
 	{
-	};
+	}
 
 	/**
 	 * Allows the behavior to detach any state it has attached during request processing.
@@ -98,7 +98,7 @@ public abstract class Behavior implements IClusterable
 	 */
 	public void detach(Component component)
 	{
-	};
+	}
 
 	/**
 	 * In case an unexpected exception happened anywhere between onComponentTag() and rendered(),
@@ -113,7 +113,7 @@ public abstract class Behavior implements IClusterable
 	 */
 	public void onException(Component component, RuntimeException exception)
 	{
-	};
+	}
 
 	/**
 	 * This method returns false if the behavior generates a callback url (for example ajax
@@ -153,7 +153,7 @@ public abstract class Behavior implements IClusterable
 	 */
 	public void onComponentTag(Component component, ComponentTag tag)
 	{
-	};
+	}
 
 	/**
 	 * Specifies whether or not this behavior is temporary. Temporary behaviors are removed at the
@@ -168,7 +168,7 @@ public abstract class Behavior implements IClusterable
 	public boolean isTemporary(Component component)
 	{
 		return false;
-	};
+	}
 
 	/**
 	 * Checks if a listener can be invoked on this behavior
@@ -179,7 +179,7 @@ public abstract class Behavior implements IClusterable
 	public boolean canCallListenerInterface(Component component)
 	{
 		return isEnabled(component) && component.canCallListenerInterface();
-	};
+	}
 
 	/**
 	 * Render to the web response whatever the component wants to contribute to the head section.
@@ -191,5 +191,5 @@ public abstract class Behavior implements IClusterable
 	 */
 	public void renderHead(Component component, IHeaderResponse response)
 	{
-	};
+	}
 }
