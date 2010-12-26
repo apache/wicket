@@ -285,7 +285,7 @@ public class WebPageRenderer extends PageRenderer
 				// but for stateless page the redirect is not necessary
 				// also for listener interface on stateful page we want to redirect
 				// after the listener is invoked, but on stateless page the user
-				// must ask for redirect explicitely
+				// must ask for redirect explicitly
 				response.writeTo((WebResponse)requestCycle.getResponse());
 			}
 			else
