@@ -165,7 +165,8 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 			int index = getChoices().indexOf(object);
 			return getChoiceRenderer().getIdValue(object, index);
 		}
-		return getNoSelectionValue().toString();
+		Object noSelectionValue = getNoSelectionValue();
+		return noSelectionValue != null ? noSelectionValue.toString() : null;
 	}
 
 	/**
@@ -269,6 +270,9 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	@Override
 	protected CharSequence getDefaultChoice(final Object selected)
 	{
+
+		final Object noSelectionValue = getNoSelectionValue();
+
 		// Is null a valid selection value?
 		if (isNullValid())
 		{
@@ -287,19 +291,21 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 			buffer.append("\n<option");
 
 			// If null is selected, indicate that
-			if (selected == null)
+			if (selected == noSelectionValue)
 			{
 				buffer.append(" selected=\"selected\"");
 			}
 
 			// Add body of option tag
-			buffer.append(" value=\"\">").append(option).append("</option>");
+			buffer.append(" value=\"" + noSelectionValue + "\">")
+				.append(option)
+				.append("</option>");
 			return buffer;
 		}
 		else
 		{
 			// Null is not valid. Is it selected anyway?
-			if ((selected == null) || getNoSelectionValue().equals(selected) ||
+			if ((selected == null) || selected.equals(noSelectionValue) ||
 				selected.equals(EMPTY_STRING))
 			{
 				// Force the user to pick a non-null value
@@ -311,7 +317,8 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 					option = getLocalizer().getString("null", this, CHOOSE_ONE);
 				}
 
-				return "\n<option selected=\"selected\" value=\"\">" + option + "</option>";
+				return "\n<option selected=\"selected\" value=\"" + noSelectionValue + "\">" +
+					option + "</option>";
 			}
 		}
 		return "";
