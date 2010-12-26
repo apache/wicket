@@ -76,6 +76,6 @@ public class DateField extends DateTimeField
 
 		get("hours").setVisible(false);
 		get("minutes").setVisible(false);
-		get("amOrPmChoice").setVisible(false);
+		get("amOrPmChoice").setVisibilityAllowed(false);
 	}
 }
