@@ -24,6 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -256,7 +257,7 @@ public class DatePicker extends Behavior
 				Strings.replaceAll(script, "${calendar}", "YAHOO.wicket." + widgetId + "DpJs"));
 		}
 		// print out the initialization properties
-		Map<String, Object> p = new HashMap<String, Object>();
+		Map<String, Object> p = new LinkedHashMap<String, Object>();
 		configure(p);
 		if (!p.containsKey("navigator") && enableMonthYearSelection())
 		{
