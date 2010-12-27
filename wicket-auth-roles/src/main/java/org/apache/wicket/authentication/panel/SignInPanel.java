@@ -55,6 +55,8 @@ public class SignInPanel extends Panel
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(SignInPanel.class);
 
+	private static final String SIGN_IN_FORM = "signInForm";
+
 	/** True if the panel should display a remember-me checkbox */
 	private boolean includeRememberMe = true;
 
@@ -93,7 +95,16 @@ public class SignInPanel extends Panel
 
 		// Add sign-in form to page, passing feedback panel as
 		// validation error handler
-		add(new SignInForm("signInForm"));
+		add(new SignInForm(SIGN_IN_FORM));
+	}
+
+	/**
+	 * 
+	 * @return signin form
+	 */
+	protected SignInForm getForm()
+	{
+		return (SignInForm)get(SIGN_IN_FORM);
 	}
 
 	/**
