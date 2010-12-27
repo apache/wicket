@@ -354,7 +354,7 @@ public final class Strings
 						if (convertToHtmlUnicodeEscapes)
 						{
 							int ci = 0xffff & c;
-							if (ci < 160)
+							if (ci > 31 && ci < 160)
 							{
 								// nothing special only 7 Bit
 								buffer.append(c);
