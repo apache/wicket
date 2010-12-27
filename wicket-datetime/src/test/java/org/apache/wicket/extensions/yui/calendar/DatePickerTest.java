@@ -79,9 +79,11 @@ public class DatePickerTest extends WicketTestCase
 		formTester.submit();
 		DatesPage2 page = (DatesPage2)tester.getLastRenderedPage();
 
+		log.error("orig: " + date.getTime() + "; date: " + page.date.getTime() + "; dateTime: " +
+			page.dateTime.getTime());
 		log.error("orig: " + date + "; date: " + page.date + "; dateTime: " + page.dateTime);
-		assertEquals(date.toString(), page.dateTime.toString());
-		assertEquals(date.toString(), page.date.toString());
+		assertEquals(0, date.compareTo(page.dateTime));
+		assertEquals(0, date.compareTo(page.date));
 	}
 
 	/**
