@@ -35,6 +35,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
+import org.apache.wicket.markup.html.form.IOnChangeListener;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioChoice;
@@ -79,7 +80,8 @@ public class FormTester
 			}
 
 			/**
-			 * @see org.apache.wicket.util.visit.IVisitor#component(Object, org.apache.wicket.util.visit.IVisit)
+			 * @see org.apache.wicket.util.visit.IVisitor#component(Object,
+			 *      org.apache.wicket.util.visit.IVisit)
 			 */
 			public void component(final Component component, final IVisit<Component> visit)
 			{
@@ -302,7 +304,8 @@ public class FormTester
 			}
 			else
 			{
-				fail("Selecting on the component:'" + formComponent.getPath() + "' is not supported.");
+				fail("Selecting on the component:'" + formComponent.getPath() +
+					"' is not supported.");
 				return null;
 			}
 		}
@@ -535,22 +538,30 @@ public class FormTester
 
 		ChoiceSelector choiceSelector = choiceSelectorFactory.create(component);
 		choiceSelector.doSelect(index);
-		if (component instanceof DropDownChoice)
+
+		try
 		{
+			Method wantOnSelectionChangedNotificationsMethod = component.getClass()
+				.getDeclaredMethod("wantOnSelectionChangedNotifications");
+
 			try
 			{
-				Method wantOnSelectionChangedNotificationsMethod = DropDownChoice.class.getDeclaredMethod("wantOnSelectionChangedNotifications");
 				wantOnSelectionChangedNotificationsMethod.setAccessible(true);
 				boolean wantOnSelectionChangedNotifications = (Boolean)wantOnSelectionChangedNotificationsMethod.invoke(component);
 				if (wantOnSelectionChangedNotifications)
 				{
-					((DropDownChoice<?>)component).onSelectionChanged();
+					tester.executeListener(component, IOnChangeListener.INTERFACE);
 				}
 			}
-			catch (Exception e)
+			catch (final Exception x)
 			{
-				throw new RuntimeException(e);
+				throw new RuntimeException(x);
 			}
+
+		}
+		catch (final NoSuchMethodException ignored)
+		{
+			// this form component has no auto page reload mechanism
 		}
 	}
 
