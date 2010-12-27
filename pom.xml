@@ -48,6 +48,7 @@
 				the parent. 
 			-->
 			<modules>
+				<module>wicket</module>
 				<module>wicket-core</module>
                 <module>wicket-util</module>
 				<module>wicket-datetime</module>
@@ -123,6 +124,7 @@
 				<activeByDefault>false</activeByDefault>
 			</activation>
 			<modules>
+				<module>wicket</module>
 				<module>wicket-core</module>
                 <module>wicket-util</module>
 				<module>wicket-datetime</module>
@@ -181,6 +183,7 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<modules>
+				<module>wicket</module>
 				<module>wicket-core</module>
                 <module>wicket-util</module>
 				<module>wicket-datetime</module>
