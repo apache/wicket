@@ -36,7 +36,7 @@ initdateTextField1 = function() {
 	Wicket.DateTime.init( {
 		widgetId: "dateTextField1",
 		componentId: "dateTextField1",				
-		calendarInit: { START_WEEKDAY:1,selected:"xx.xx.xxxx",close:true,WEEKDAYS_MEDIUM:["So","Mo","Di","Mi","Do","Fr","Sa"],WEEKDAYS_SHORT:["So","Mo","Di","Mi","Do","Fr","Sa"],pagedate:"xx.xxxx",WEEKDAYS_1CHAR:["S","M","D","M","D","F","S"],WEEKDAYS_LONG:["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"],MONTHS_LONG:["Januar","Februar","M\u00E4rz","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],MONTHS_SHORT:["Jan","Feb","Mrz","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"] },
+		calendarInit: { close:true,MONTHS_SHORT:["Jan","Feb","Mrz","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"],MONTHS_LONG:["Januar","Februar","M\u00E4rz","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],WEEKDAYS_MEDIUM:["So","Mo","Di","Mi","Do","Fr","Sa"],WEEKDAYS_LONG:["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"],START_WEEKDAY:1,WEEKDAYS_1CHAR:["S","M","D","M","D","F","S"],WEEKDAYS_SHORT:["So","Mo","Di","Mi","Do","Fr","Sa"],selected:"xx.xx.xxxx",pagedate:"xx.xxxx" },
 		datePattern: "dd.MM.yy",
 		alignWithIcon: true,
 		fireChangeEvent: true,
@@ -85,141 +85,26 @@ if (typeof wicketYuiLoader == 'undefined')	{
 <body>
 <form wicket:id="localeForm" id="localeForm2" method="post" action="../page?0-1.IFormSubmitListener-localeForm"><div style="width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden"><input type="hidden" name="localeForm2_hf_0" id="localeForm2_hf_0" /></div>
 <p><select wicket:id="localeSelect" onchange="document.getElementById('localeForm2_hf_0').value='page?0-1.IOnChangeListener-localeForm-localeSelect';document.getElementById('localeForm2').submit();" name="localeSelect">
-<option value="0">Albanisch (Albanian)</option>
-<option value="1">Albanisch (Albanien) (Albanian (Albania))</option>
-<option value="2">Arabisch (Arabic)</option>
-<option value="3">Arabisch (Algerien) (Arabic (Algeria))</option>
-<option value="4">Arabisch (Bahrain) (Arabic (Bahrain))</option>
-<option value="5">Arabisch (Irak) (Arabic (Iraq))</option>
-<option value="6">Arabisch (Jemen) (Arabic (Yemen))</option>
-<option value="7">Arabisch (Jordanien) (Arabic (Jordan))</option>
-<option value="8">Arabisch (Katar) (Arabic (Qatar))</option>
-<option value="9">Arabisch (Kuwait) (Arabic (Kuwait))</option>
-<option value="10">Arabisch (Libanon) (Arabic (Lebanon))</option>
-<option value="11">Arabisch (Libyen) (Arabic (Libya))</option>
-<option value="12">Arabisch (Marokko) (Arabic (Morocco))</option>
-<option value="13">Arabisch (Oman) (Arabic (Oman))</option>
-<option value="14">Arabisch (Saudi-Arabien) (Arabic (Saudi Arabia))</option>
-<option value="15">Arabisch (Sudan) (Arabic (Sudan))</option>
-<option value="16">Arabisch (Syrien) (Arabic (Syria))</option>
-<option value="17">Arabisch (Tunesien) (Arabic (Tunisia))</option>
-<option value="18">Arabisch (Vereinigte Arabische Emirate) (Arabic (United Arab Emirates))</option>
-<option value="19">Arabisch (Ägypten) (Arabic (Egypt))</option>
-<option value="20">Belorussisch (Belarusian)</option>
-<option value="21">Belorussisch (Belarus) (Belarusian (Belarus))</option>
-<option value="22">Bulgarisch (Bulgarian)</option>
-<option value="23">Bulgarisch (Bulgarien) (Bulgarian (Bulgaria))</option>
-<option value="24">Chinesisch (Chinese)</option>
-<option value="25">Chinesisch (China) (Chinese (China))</option>
-<option value="26">Chinesisch (Hongkong) (Chinese (Hong Kong))</option>
-<option value="27">Chinesisch (Taiwan) (Chinese (Taiwan))</option>
-<option selected="selected" value="28">Deutsch (German)</option>
-<option value="29">Deutsch (Deutschland) (German (Germany))</option>
-<option value="30">Deutsch (Luxemburg) (German (Luxembourg))</option>
-<option value="31">Deutsch (Schweiz) (German (Switzerland))</option>
-<option value="32">Deutsch (Österreich) (German (Austria))</option>
-<option value="33">Dänisch (Danish)</option>
-<option value="34">Dänisch (Dänemark) (Danish (Denmark))</option>
-<option value="35">Englisch (English)</option>
-<option value="36">Englisch (Australien) (English (Australia))</option>
-<option value="37">Englisch (Indien) (English (India))</option>
-<option value="38">Englisch (Irland) (English (Ireland))</option>
-<option value="39">Englisch (Kanada) (English (Canada))</option>
-<option value="40">Englisch (Neuseeland) (English (New Zealand))</option>
-<option value="41">Englisch (Südafrika) (English (South Africa))</option>
-<option value="42">Englisch (Vereinigte Staaten von Amerika) (English (United States))</option>
-<option value="43">Englisch (Vereinigtes Königreich) (English (United Kingdom))</option>
-<option value="44">Estnisch (Estonian)</option>
-<option value="45">Estnisch (Estland) (Estonian (Estonia))</option>
-<option value="46">Finnisch (Finnish)</option>
-<option value="47">Finnisch (Finnland) (Finnish (Finland))</option>
-<option value="48">Französisch (French)</option>
-<option value="49">Französisch (Belgien) (French (Belgium))</option>
-<option value="50">Französisch (Frankreich) (French (France))</option>
-<option value="51">Französisch (Kanada) (French (Canada))</option>
-<option value="52">Französisch (Luxemburg) (French (Luxembourg))</option>
-<option value="53">Französisch (Schweiz) (French (Switzerland))</option>
-<option value="54">Griechisch (Greek)</option>
-<option value="55">Griechisch (Griechenland) (Greek (Greece))</option>
-<option value="56">Hebräisch (Hebrew)</option>
-<option value="57">Hebräisch (Israel) (Hebrew (Israel))</option>
-<option value="58">Hindi (Indien) (Hindi (India))</option>
-<option value="59">Isländisch (Icelandic)</option>
-<option value="60">Isländisch (Island) (Icelandic (Iceland))</option>
-<option value="61">Italienisch (Italian)</option>
-<option value="62">Italienisch (Italien) (Italian (Italy))</option>
-<option value="63">Italienisch (Schweiz) (Italian (Switzerland))</option>
-<option value="64">Japanisch (Japanese)</option>
-<option value="65">Japanisch (Japan) (Japanese (Japan))</option>
-<option value="66">Katalanisch (Catalan)</option>
-<option value="67">Katalanisch (Spanien) (Catalan (Spain))</option>
-<option value="68">Koreanisch (Korean)</option>
-<option value="69">Koreanisch (Südkorea) (Korean (South Korea))</option>
-<option value="70">Kroatisch (Croatian)</option>
-<option value="71">Kroatisch (Kroatien) (Croatian (Croatia))</option>
-<option value="72">Lettisch (Latvian)</option>
-<option value="73">Lettisch (Lettland) (Latvian (Latvia))</option>
-<option value="74">Litauisch (Lithuanian)</option>
-<option value="75">Litauisch (Litauen) (Lithuanian (Lithuania))</option>
-<option value="76">Mazedonisch (Macedonian)</option>
-<option value="77">Mazedonisch (Mazedonien) (Macedonian (Macedonia))</option>
-<option value="78">Niederländisch (Dutch)</option>
-<option value="79">Niederländisch (Belgien) (Dutch (Belgium))</option>
-<option value="80">Niederländisch (Niederlande) (Dutch (Netherlands))</option>
-<option value="81">Norwegisch (Norwegian)</option>
-<option value="82">Norwegisch (Norwegen) (Norwegian (Norway))</option>
-<option value="83">Norwegisch (Norwegen,Nynorsk) (Norwegian (Norway,Nynorsk))</option>
-<option value="84">Polnisch (Polish)</option>
-<option value="85">Polnisch (Polen) (Polish (Poland))</option>
-<option value="86">Portugiesisch (Portuguese)</option>
-<option value="87">Portugiesisch (Brasilien) (Portuguese (Brazil))</option>
-<option value="88">Portugiesisch (Portugal) (Portuguese (Portugal))</option>
-<option value="89">Rumänisch (Romanian)</option>
-<option value="90">Rumänisch (Rumänien) (Romanian (Romania))</option>
-<option value="91">Russisch (Russian)</option>
-<option value="92">Russisch (Russland) (Russian (Russia))</option>
-<option value="93">Schwedisch (Swedish)</option>
-<option value="94">Schwedisch (Schweden) (Swedish (Sweden))</option>
-<option value="95">Serbisch (Serbian)</option>
-<option value="96">Serbisch (Bosnien und Herzegowina) (Serbian (Bosnia and Herzegovina))</option>
-<option value="97">Serbisch (Serbien und Montenegro) (Serbian (Serbia and Montenegro))</option>
-<option value="98">Slowakisch (Slovak)</option>
-<option value="99">Slowakisch (Slowakei) (Slovak (Slovakia))</option>
-<option value="100">Slowenisch (Slovenian)</option>
-<option value="101">Slowenisch (Slowenien) (Slovenian (Slovenia))</option>
-<option value="102">Spanisch (Spanish)</option>
-<option value="103">Spanisch (Argentinien) (Spanish (Argentina))</option>
-<option value="104">Spanisch (Bolivien) (Spanish (Bolivia))</option>
-<option value="105">Spanisch (Chile) (Spanish (Chile))</option>
-<option value="106">Spanisch (Costa Rica) (Spanish (Costa Rica))</option>
-<option value="107">Spanisch (Dominikanische Republik) (Spanish (Dominican Republic))</option>
-<option value="108">Spanisch (Ecuador) (Spanish (Ecuador))</option>
-<option value="109">Spanisch (El Salvador) (Spanish (El Salvador))</option>
-<option value="110">Spanisch (Guatemala) (Spanish (Guatemala))</option>
-<option value="111">Spanisch (Honduras) (Spanish (Honduras))</option>
-<option value="112">Spanisch (Kolumbien) (Spanish (Colombia))</option>
-<option value="113">Spanisch (Mexiko) (Spanish (Mexico))</option>
-<option value="114">Spanisch (Nicaragua) (Spanish (Nicaragua))</option>
-<option value="115">Spanisch (Panama) (Spanish (Panama))</option>
-<option value="116">Spanisch (Paraguay) (Spanish (Paraguay))</option>
-<option value="117">Spanisch (Peru) (Spanish (Peru))</option>
-<option value="118">Spanisch (Puerto Rico) (Spanish (Puerto Rico))</option>
-<option value="119">Spanisch (Spanien) (Spanish (Spain))</option>
-<option value="120">Spanisch (Uruguay) (Spanish (Uruguay))</option>
-<option value="121">Spanisch (Venezuela) (Spanish (Venezuela))</option>
-<option value="122">Thai</option>
-<option value="123">Thai (Thailand)</option>
-<option value="124">Thai (Thailand,TH)</option>
-<option value="125">Tschechisch (Czech)</option>
-<option value="126">Tschechisch (Tschechische Republik) (Czech (Czech Republic))</option>
-<option value="127">Türkisch (Turkish)</option>
-<option value="128">Türkisch (Türkei) (Turkish (Turkey))</option>
-<option value="129">Ukrainisch (Ukrainian)</option>
-<option value="130">Ukrainisch (Ukraine) (Ukrainian (Ukraine))</option>
-<option value="131">Ungarisch (Hungarian)</option>
-<option value="132">Ungarisch (Ungarn) (Hungarian (Hungary))</option>
-<option value="133">Vietnamesisch (Vietnamese)</option>
-<option value="134">Vietnamesisch (Vietnam) (Vietnamese (Vietnam))</option>
+<option value="0">Chinesisch (China) (Chinese (China))</option>
+<option value="1">Chinesisch (China) (Chinese (China))</option>
+<option value="2">Chinesisch (China) (Chinese (China))</option>
+<option value="3">Chinesisch (Taiwan) (Chinese (Taiwan))</option>
+<option value="4">Chinesisch (Taiwan) (Chinese (Taiwan))</option>
+<option selected="selected" value="5">Deutsch (German)</option>
+<option value="6">Deutsch (Deutschland) (German (Germany))</option>
+<option value="7">Englisch (English)</option>
+<option value="8">Englisch (Kanada) (English (Canada))</option>
+<option value="9">Englisch (Vereinigte Staaten von Amerika) (English (United States))</option>
+<option value="10">Englisch (Vereinigtes Königreich) (English (United Kingdom))</option>
+<option value="11">Französisch (French)</option>
+<option value="12">Französisch (Frankreich) (French (France))</option>
+<option value="13">Französisch (Kanada) (French (Canada))</option>
+<option value="14">Italienisch (Italian)</option>
+<option value="15">Italienisch (Italien) (Italian (Italy))</option>
+<option value="16">Japanisch (Japanese)</option>
+<option value="17">Japanisch (Japan) (Japanese (Japan))</option>
+<option value="18">Koreanisch (Korean)</option>
+<option value="19">Koreanisch (Südkorea) (Korean (South Korea))</option>
 </select> [<a href="../page?0-1.ILinkListener-localeForm-localeUSLink" wicket:id="localeUSLink">set to english</a>]</p>
 </form>
 <p>

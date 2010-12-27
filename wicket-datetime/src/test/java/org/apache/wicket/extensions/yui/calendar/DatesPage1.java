@@ -84,7 +84,7 @@ public class DatesPage1 extends WebPage
 		{
 			super(id);
 			// sort locales on strings of selected locale
-			setChoices(new AbstractReadOnlyModel<List< ? extends Locale>>()
+			setChoices(new AbstractReadOnlyModel<List<? extends Locale>>()
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -98,7 +98,7 @@ public class DatesPage1 extends WebPage
 						public int compare(Locale o1, Locale o2)
 						{
 							return o1.getDisplayName(selectedLocale).compareTo(
-									o2.getDisplayName(selectedLocale));
+								o2.getDisplayName(selectedLocale));
 						}
 					});
 					return locales;
@@ -131,7 +131,11 @@ public class DatesPage1 extends WebPage
 	private static final List<Locale> LOCALES;
 	static
 	{
-		LOCALES = Arrays.asList(Locale.getAvailableLocales());
+		LOCALES = Arrays.asList(Locale.CANADA, Locale.CANADA_FRENCH, Locale.CHINA, Locale.ENGLISH,
+			Locale.FRANCE, Locale.FRENCH, Locale.GERMAN, Locale.GERMANY, Locale.ITALIAN,
+			Locale.ITALY, Locale.JAPAN, Locale.JAPANESE, Locale.KOREA, Locale.KOREAN, Locale.PRC,
+			Locale.SIMPLIFIED_CHINESE, Locale.TAIWAN, Locale.TRADITIONAL_CHINESE, Locale.UK,
+			Locale.US);
 	}
 
 	private final Date date = new Date();
@@ -144,7 +148,7 @@ public class DatesPage1 extends WebPage
 	public DatesPage1()
 	{
 		selectedLocale = Session.get().getLocale();
-		Form< ? > localeForm = new Form<Void>("localeForm");
+		Form<?> localeForm = new Form<Void>("localeForm");
 		localeForm.add(new LocaleDropDownChoice("localeSelect"));
 		localeForm.add(new Link<Void>("localeUSLink")
 		{
@@ -158,7 +162,7 @@ public class DatesPage1 extends WebPage
 		});
 		add(localeForm);
 		DateTextField dateTextField = new DateTextField("dateTextField", new PropertyModel<Date>(
-				this, "date"), new StyleDateConverter("S-", true))
+			this, "date"), new StyleDateConverter("S-", true))
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -168,7 +172,7 @@ public class DatesPage1 extends WebPage
 				return selectedLocale;
 			}
 		};
-		Form< ? > form = new Form<Void>("form")
+		Form<?> form = new Form<Void>("form")
 		{
 			private static final long serialVersionUID = 1L;
 
