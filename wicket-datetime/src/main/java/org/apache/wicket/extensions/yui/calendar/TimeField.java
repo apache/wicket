@@ -19,7 +19,6 @@ package org.apache.wicket.extensions.yui.calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -55,13 +54,13 @@ public class TimeField extends DateTimeField
 	{
 		super(id, model);
 
-		get("date").setVisibilityAllowed(false);
+		getDateTextField().setVisibilityAllowed(false);
 	}
 
 	@Override
 	protected void convertInput()
 	{
-		((FormComponent<Date>)get("date")).setConvertedInput(new Date());
+		getDateTextField().setConvertedInput(new Date());
 		super.convertInput();
 	}
 

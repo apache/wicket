@@ -74,8 +74,8 @@ public class DateField extends DateTimeField
 	{
 		super(id, model);
 
-		get("hours").setVisible(false);
-		get("minutes").setVisible(false);
-		get("amOrPmChoice").setVisibilityAllowed(false);
+		get(HOURS).setVisibilityAllowed(false);
+		get(MINUTES).setVisibilityAllowed(false);
+		get(AM_OR_PM_CHOICE).setVisibilityAllowed(false);
 	}
 }
