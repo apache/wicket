@@ -37,7 +37,6 @@ public class FilterToolbar extends AbstractToolbar
 	/**
 	 * Constructor
 	 * 
-	 * @param id
 	 * @param table
 	 *            data table this toolbar will be added to
 	 * @param form
@@ -48,10 +47,10 @@ public class FilterToolbar extends AbstractToolbar
 	 *            type of filter state object
 	 * 
 	 */
-	public <T> FilterToolbar(String id, final DataTable<?> table, final FilterForm<T> form,
+	public <T> FilterToolbar(final DataTable<?> table, final FilterForm<T> form,
 		final IFilterStateLocator<T> stateLocator)
 	{
-		super(id, table);
+		super(table);
 
 		if (table == null)
 		{
@@ -78,23 +77,23 @@ public class FilterToolbar extends AbstractToolbar
 
 			if (col instanceof IFilteredColumn)
 			{
-				IFilteredColumn<?> filteredCol = (IFilteredColumn<?>) col;
-				filter = filteredCol.getFilter(id, form);
+				IFilteredColumn<?> filteredCol = (IFilteredColumn<?>)col;
+				filter = filteredCol.getFilter(getId(), form);
 			}
 
 			if (filter == null)
 			{
-				filter = new NoFilter(id);
+				filter = new NoFilter(getId());
 			}
 			else
 			{
-				if (!filter.getId().equals(id))
+				if (!filter.getId().equals(getId()))
 				{
 					throw new IllegalStateException(
 						"filter component returned  with an invalid component id. invalid component id [" +
 							filter.getId() +
 							"] required component id [" +
-							id +
+							getId() +
 							"] generating column [" + col.toString() + "] ");
 				}
 			}

@@ -79,9 +79,9 @@ public class DefaultDataTable<T> extends DataTable<T>
 	{
 		super(id, columns, dataProvider, rowsPerPage);
 
-		addTopToolbar(new NavigationToolbar("navigationToolbar", this));
-		addTopToolbar(new HeadersToolbar("headersToolbar", this, dataProvider));
-		addBottomToolbar(new NoRecordsToolbar("noRecordsToolbar", this));
+		addTopToolbar(new NavigationToolbar(this));
+		addTopToolbar(new HeadersToolbar(this, dataProvider));
+		addBottomToolbar(new NoRecordsToolbar(this));
 	}
 
 	@Override

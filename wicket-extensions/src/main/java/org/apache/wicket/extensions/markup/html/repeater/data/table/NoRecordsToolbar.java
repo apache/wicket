@@ -47,9 +47,9 @@ public class NoRecordsToolbar extends AbstractToolbar
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 */
-	public NoRecordsToolbar(final String id, final DataTable<?> table)
+	public NoRecordsToolbar(final DataTable<?> table)
 	{
-		this(id, table, DEFAULT_MESSAGE_MODEL);
+		this(table, DEFAULT_MESSAGE_MODEL);
 	}
 
 	/**
@@ -58,9 +58,10 @@ public class NoRecordsToolbar extends AbstractToolbar
 	 * @param messageModel
 	 *            model that will be used to display the "no records found" message
 	 */
-	public NoRecordsToolbar(final String id, final DataTable<?> table, IModel<String> messageModel)
+	public NoRecordsToolbar(final DataTable<?> table, IModel<String> messageModel)
 	{
-		super(id, table);
+		super(table);
+
 		WebMarkupContainer td = new WebMarkupContainer("td");
 		add(td);
 

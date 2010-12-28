@@ -43,17 +43,14 @@ public class AjaxFallbackHeadersToolbar extends HeadersToolbar
 	 * @param table
 	 * @param stateLocator
 	 */
-	public AjaxFallbackHeadersToolbar(final String id, DataTable<?> table,
-		ISortStateLocator stateLocator)
+	public AjaxFallbackHeadersToolbar(DataTable<?> table, ISortStateLocator stateLocator)
 	{
-		super(id, table, stateLocator);
+		super(table, stateLocator);
 		table.setOutputMarkupId(true);
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.repeater.data.table.HeadersToolbar#newSortableHeader(java.lang.String,
-	 *      java.lang.String,
-	 *      org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator)
+	 * {@inheritDoc}
 	 */
 	@Override
 	protected WebMarkupContainer newSortableHeader(String borderId, String property,
@@ -75,7 +72,6 @@ public class AjaxFallbackHeadersToolbar extends HeadersToolbar
 				super.onSortChanged();
 				getTable().setCurrentPage(0);
 			}
-
 		};
 	}
 

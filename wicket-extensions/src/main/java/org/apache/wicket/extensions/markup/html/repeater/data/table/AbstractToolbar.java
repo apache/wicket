@@ -31,36 +31,33 @@ public abstract class AbstractToolbar extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
+	private static int counter = 0;
+
 	private final DataTable<?> table;
 
 	/**
 	 * Constructor
 	 * 
-	 * @param id
-	 *            the component id
 	 * @param model
 	 *            model
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 */
-	public AbstractToolbar(String id, IModel<?> model, DataTable<?> table)
+	public AbstractToolbar(IModel<?> model, DataTable<?> table)
 	{
-		super(id, model);
+		super("$toolbar$" + counter++, model);
 		this.table = table;
 	}
 
 	/**
 	 * Constructor
 	 * 
-	 * @param id
-	 *            the component id
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 */
-	public AbstractToolbar(String id, DataTable<?> table)
+	public AbstractToolbar(DataTable<?> table)
 	{
-		super(id);
-		this.table = table;
+		this(null, table);
 	}
 
 	/**

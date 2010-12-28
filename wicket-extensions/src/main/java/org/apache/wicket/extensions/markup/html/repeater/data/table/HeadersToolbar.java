@@ -44,10 +44,9 @@ public class HeadersToolbar extends AbstractToolbar
 	 * @param stateLocator
 	 *            locator for the ISortState implementation used by sortable headers
 	 */
-	public HeadersToolbar(final String id, final DataTable<?> table,
-		final ISortStateLocator stateLocator)
+	public HeadersToolbar(final DataTable<?> table, final ISortStateLocator stateLocator)
 	{
-		super(id, table);
+		super(table);
 
 		RepeatingView headers = new RepeatingView("headers");
 		add(headers);
