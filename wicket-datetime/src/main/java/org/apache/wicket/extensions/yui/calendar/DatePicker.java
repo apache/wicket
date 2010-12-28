@@ -80,6 +80,7 @@ public class DatePicker extends Behavior
 	{
 		try
 		{
+			// try to use JDK 6 DateFormatSymbols.getInstance(Locale)
 			GETINSTANCEMETHOD = DateFormatSymbols.class.getMethod("getInstance",
 				new Class[] { Locale.class });
 		}
@@ -102,9 +103,9 @@ public class DatePicker extends Behavior
 			super("This behavior can only be added to components that either implement " +
 				ITextFormatProvider.class.getName() +
 				" AND produce a non-null format, or that use" +
-				" converters that this datepicker can use to determine" +
+				" converters that this DatePicker can use to determine" +
 				" the pattern being used. Alternatively, you can extend " +
-				" the date picker and override getDatePattern to provide your own");
+				" the DatePicker and override getDatePattern to provide your own.");
 		}
 	}
 
@@ -144,10 +145,10 @@ public class DatePicker extends Behavior
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.AbstractBehavior#bind(org.apache.wicket.Component)
+	 * {@inheritDoc}
 	 */
 	@Override
-	public void bind(Component component)
+	public void bind(final Component component)
 	{
 		this.component = component;
 		checkComponentProvidesDateFormat(component);
@@ -155,17 +156,19 @@ public class DatePicker extends Behavior
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.AbstractBehavior#afterRender(org.apache.wicket.Component)
+	 * {@inheritDoc}
 	 */
 	@Override
-	public void afterRender(Component component)
+	public void afterRender(final Component component)
 	{
 		super.afterRender(component);
+
 		// Append the span and img icon right after the rendering of the
 		// component. Not as pretty as working with a panel etc, but works
 		// for behaviors and is more efficient
 		Response response = component.getResponse();
 		response.write("\n<span class=\"yui-skin-sam\">&nbsp;<span style=\"");
+
 		if (renderOnLoad())
 		{
 			response.write("display:block;");
@@ -175,6 +178,7 @@ public class DatePicker extends Behavior
 			response.write("display:none;");
 			response.write("position:absolute;");
 		}
+
 		response.write("z-index: 99999;\" id=\"");
 		response.write(getEscapedComponentMarkupId());
 		response.write("Dp\"></span><img style=\"");
@@ -191,7 +195,6 @@ public class DatePicker extends Behavior
 		CharSequence title = getIconTitle();
 		response.write(Strings.escapeMarkup((title != null) ? title.toString() : ""));
 		response.write("\"/>");
-
 
 		if (renderOnLoad())
 		{
@@ -215,7 +218,7 @@ public class DatePicker extends Behavior
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void renderHead(Component component, IHeaderResponse response)
@@ -224,6 +227,8 @@ public class DatePicker extends Behavior
 		{
 			YuiLib.load(response);
 		}
+
+		renderHeadInit(response);
 
 		// variables for the initialization script
 		Map<String, Object> variables = new HashMap<String, Object>();
@@ -235,20 +240,6 @@ public class DatePicker extends Behavior
 		variables.put("alignWithIcon", alignWithIcon());
 		variables.put("hideOnSelect", hideOnSelect());
 		variables.put("showOnFieldClick", showOnFieldClick());
-		// variables for YUILoader
-		variables.put("basePath",
-			Strings.stripJSessionId(RequestCycle.get().urlFor(YUI, null).toString()) + "/");
-		variables.put("wicketDatePath", RequestCycle.get().urlFor(WICKET_DATE, null));
-		if (Application.get().usesDevelopmentConfig())
-		{
-			variables.put("filter", "filter: \"RAW\",");
-			variables.put("allowRollup", false);
-		}
-		else
-		{
-			variables.put("filter", "");
-			variables.put("allowRollup", true);
-		}
 
 		String script = getAdditionalJavaScript();
 		if (script != null)
@@ -256,9 +247,10 @@ public class DatePicker extends Behavior
 			variables.put("additionalJavascript",
 				Strings.replaceAll(script, "${calendar}", "YAHOO.wicket." + widgetId + "DpJs"));
 		}
+
 		// print out the initialization properties
 		Map<String, Object> p = new LinkedHashMap<String, Object>();
-		configure(p);
+		configure(p, response, variables);
 		if (!p.containsKey("navigator") && enableMonthYearSelection())
 		{
 			p.put("navigator", Boolean.TRUE);
@@ -273,54 +265,7 @@ public class DatePicker extends Behavior
 
 		// ${calendarInit}
 		StringBuilder calendarInit = new StringBuilder();
-		for (Iterator<Entry<String, Object>> i = p.entrySet().iterator(); i.hasNext();)
-		{
-			Entry<String, Object> entry = i.next();
-			calendarInit.append(entry.getKey());
-			Object value = entry.getValue();
-			if (value instanceof CharSequence)
-			{
-				calendarInit.append(":\"");
-				calendarInit.append(Strings.toEscapedUnicode(value.toString()));
-				calendarInit.append("\"");
-			}
-			else if (value instanceof CharSequence[])
-			{
-				calendarInit.append(":[");
-				CharSequence[] valueArray = (CharSequence[])value;
-				for (int j = 0; j < valueArray.length; j++)
-				{
-					CharSequence tmpValue = valueArray[j];
-					if (j > 0)
-					{
-						calendarInit.append(",");
-					}
-					if (tmpValue != null)
-					{
-						calendarInit.append("\"");
-						calendarInit.append(Strings.toEscapedUnicode(tmpValue.toString()));
-						calendarInit.append("\"");
-					}
-				}
-				calendarInit.append("]");
-			}
-			else if (value instanceof Map)
-			{
-				calendarInit.append(":");
-				@SuppressWarnings("unchecked")
-				Map<String, Object> map = (Map<String, Object>)value;
-				appendMapping(map, calendarInit);
-			}
-			else
-			{
-				calendarInit.append(":");
-				calendarInit.append(Strings.toEscapedUnicode(String.valueOf(value)));
-			}
-			if (i.hasNext())
-			{
-				calendarInit.append(",");
-			}
-		}
+		appendMapping(p, calendarInit);
 		variables.put("calendarInit", calendarInit.toString());
 
 		// render initialization script with the variables interpolated
@@ -332,8 +277,8 @@ public class DatePicker extends Behavior
 		// ajax requests to not render the yui calendar multiple times
 		if (AjaxRequestTarget.get() != null)
 		{
-			final String escapedComponentMarkupId = getEscapedComponentMarkupId();
-			final String javascript = "var e = Wicket.$('" + escapedComponentMarkupId + "Dp" +
+			String escapedComponentMarkupId = getEscapedComponentMarkupId();
+			String javascript = "var e = Wicket.$('" + escapedComponentMarkupId + "Dp" +
 				"'); if (e != null && typeof(e.parentNode) != 'undefined' && " +
 				"typeof(e.parentNode.parentNode != 'undefined')) " +
 				"e.parentNode.parentNode.removeChild(e.parentNode);" + "YAHOO.wicket." +
@@ -342,6 +287,43 @@ public class DatePicker extends Behavior
 
 			response.renderJavaScript(javascript, null);
 		}
+	}
+
+	/**
+	 * Renders yui & wicket calendar js module loading. It is done only once per page.
+	 * 
+	 * @param response
+	 *            header response
+	 */
+	protected void renderHeadInit(IHeaderResponse response)
+	{
+		String key = "DatePickerInit.js";
+		if (response.wasRendered(key))
+		{
+			return;
+		}
+
+		// variables for YUILoader
+		Map<String, Object> variables = new HashMap<String, Object>();
+		variables.put("basePath",
+			Strings.stripJSessionId(RequestCycle.get().urlFor(YUI, null).toString()) + "/");
+		variables.put("wicketDatePath", RequestCycle.get().urlFor(WICKET_DATE, null));
+
+		if (Application.get().usesDevelopmentConfig())
+		{
+			variables.put("filter", "filter: \"RAW\",");
+			variables.put("allowRollup", false);
+		}
+		else
+		{
+			variables.put("filter", "");
+			variables.put("allowRollup", true);
+		}
+
+		TextTemplate template = new PackagedTextTemplate(DatePicker.class, key);
+		response.renderOnDomReadyJavaScript(template.asString(variables));
+
+		response.markRendered(key);
 	}
 
 	/**
@@ -354,7 +336,7 @@ public class DatePicker extends Behavior
 	 * @throws UnableToDetermineFormatException
 	 *             if this date picker is unable to determine a format.
 	 */
-	private final void checkComponentProvidesDateFormat(Component component)
+	private final void checkComponentProvidesDateFormat(final Component component)
 	{
 		if (getDatePattern() == null)
 		{
@@ -369,7 +351,8 @@ public class DatePicker extends Behavior
 	 * @param key
 	 * @param array
 	 */
-	private void setWidgetProperty(Map<String, Object> widgetProperties, String key, String[] array)
+	private void setWidgetProperty(final Map<String, Object> widgetProperties, final String key,
+		final String[] array)
 	{
 		if (array != null && array.length > 0)
 		{
@@ -399,13 +382,18 @@ public class DatePicker extends Behavior
 	 * 
 	 * @param widgetProperties
 	 *            the current widget properties
+	 * @param response
+	 *            the header response
+	 * @param initVariables
+	 *            variables passed to the Wicket.DateTime.init() js method
 	 */
-	protected void configure(Map<String, Object> widgetProperties)
+	protected void configure(final Map<String, Object> widgetProperties,
+		final IHeaderResponse response, final Map<String, Object> initVariables)
 	{
 		widgetProperties.put("close", true);
 
 		// localize date fields
-		localize(widgetProperties);
+		localize(widgetProperties, response, initVariables);
 
 		Object modelObject = component.getDefaultModelObject();
 		// null and cast check
@@ -431,15 +419,16 @@ public class DatePicker extends Behavior
 		{
 			return null;
 		}
-		List<String> l = new ArrayList<String>(stringArray.length);
+
+		List<String> list = new ArrayList<String>(stringArray.length);
 		for (String string : stringArray)
 		{
 			if (!Strings.isEmpty(string))
 			{
-				l.add(string);
+				list.add(string);
 			}
 		}
-		return l.toArray(new String[l.size()]);
+		return list.toArray(new String[list.size()]);
 	}
 
 	/**
@@ -573,16 +562,30 @@ public class DatePicker extends Behavior
 	 * 
 	 * @param widgetProperties
 	 *            the current widget properties
+	 * @param response
+	 *            the header response
+	 * @param initVariables
+	 *            variables passed to the Wicket.DateTime.init() js method
 	 */
-	protected void localize(Map<String, Object> widgetProperties)
+	protected void localize(Map<String, Object> widgetProperties, IHeaderResponse response,
+		Map<String, Object> initVariables)
 	{
+		Locale locale = getLocale();
+		String key = "wicketCalendarI18n[\"" + locale.toString() + "\"]";
+		initVariables.put("i18n", key);
+
+		if (response.wasRendered(key))
+		{
+			return;
+		}
+
 		DateFormatSymbols dfSymbols = null;
 		if (GETINSTANCEMETHOD != null)
 		{
 			// try to use JDK 6 DateFormatSymbols.getInstance(Locale)
 			try
 			{
-				dfSymbols = (DateFormatSymbols)GETINSTANCEMETHOD.invoke(null, getLocale());
+				dfSymbols = (DateFormatSymbols)GETINSTANCEMETHOD.invoke(null, locale);
 			}
 			catch (Exception e)
 			{
@@ -591,33 +594,41 @@ public class DatePicker extends Behavior
 		}
 		if (dfSymbols == null)
 		{
-			dfSymbols = new DateFormatSymbols(getLocale());
+			dfSymbols = new DateFormatSymbols(locale);
 		}
 
-		setWidgetProperty(widgetProperties, "MONTHS_SHORT", filterEmpty(dfSymbols.getShortMonths()));
-		setWidgetProperty(widgetProperties, "MONTHS_LONG", filterEmpty(dfSymbols.getMonths()));
-		setWidgetProperty(widgetProperties, "WEEKDAYS_MEDIUM",
+		Map<String, Object> i18nVariables = new HashMap<String, Object>();
+		setWidgetProperty(i18nVariables, "MONTHS_SHORT", filterEmpty(dfSymbols.getShortMonths()));
+		setWidgetProperty(i18nVariables, "MONTHS_LONG", filterEmpty(dfSymbols.getMonths()));
+		setWidgetProperty(i18nVariables, "WEEKDAYS_MEDIUM",
 			filterEmpty(dfSymbols.getShortWeekdays()));
-		setWidgetProperty(widgetProperties, "WEEKDAYS_LONG", filterEmpty(dfSymbols.getWeekdays()));
+		setWidgetProperty(i18nVariables, "WEEKDAYS_LONG", filterEmpty(dfSymbols.getWeekdays()));
 
-		widgetProperties.put("START_WEEKDAY",
-			Calendar.getInstance(getLocale()).getFirstDayOfWeek() - 1);
+		i18nVariables.put("START_WEEKDAY", Calendar.getInstance(locale).getFirstDayOfWeek() - 1);
 
-		if (Locale.SIMPLIFIED_CHINESE.equals(getLocale()) ||
-			Locale.TRADITIONAL_CHINESE.equals(getLocale()))
+		if (Locale.SIMPLIFIED_CHINESE.equals(locale) || Locale.TRADITIONAL_CHINESE.equals(locale))
 		{
-			setWidgetProperty(widgetProperties, "WEEKDAYS_1CHAR",
+			setWidgetProperty(i18nVariables, "WEEKDAYS_1CHAR",
 				filterEmpty(substring(dfSymbols.getShortWeekdays(), 2, 1)));
-			widgetProperties.put("WEEKDAYS_SHORT",
+			i18nVariables.put("WEEKDAYS_SHORT",
 				filterEmpty(substring(dfSymbols.getShortWeekdays(), 2, 1)));
 		}
 		else
 		{
-			setWidgetProperty(widgetProperties, "WEEKDAYS_1CHAR",
+			setWidgetProperty(i18nVariables, "WEEKDAYS_1CHAR",
 				filterEmpty(substring(dfSymbols.getShortWeekdays(), 0, 1)));
-			setWidgetProperty(widgetProperties, "WEEKDAYS_SHORT",
+			setWidgetProperty(i18nVariables, "WEEKDAYS_SHORT",
 				filterEmpty(substring(dfSymbols.getShortWeekdays(), 0, 2)));
 		}
+
+		StringBuilder i18n = new StringBuilder(key);
+		i18n.append('=');
+		appendMapping(i18nVariables, i18n);
+		i18n.append(';');
+
+		response.renderOnDomReadyJavaScript(i18n.toString());
+
+		response.wasRendered(key);
 	}
 
 	/**
@@ -760,7 +771,6 @@ public class DatePicker extends Behavior
 	 * </pre>
 	 * 
 	 * @return a String containing additional JavaScript code
-	 * 
 	 */
 	protected String getAdditionalJavaScript()
 	{
@@ -768,10 +778,10 @@ public class DatePicker extends Behavior
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.AbstractBehavior#isEnabled(org.apache.wicket.Component)
+	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean isEnabled(Component component)
+	public boolean isEnabled(final Component component)
 	{
 		return component.isEnabledInHierarchy();
 	}
@@ -779,38 +789,61 @@ public class DatePicker extends Behavior
 	/**
 	 * 
 	 * @param map
-	 * @param calendarInit
+	 *            the key-value pairs to be serialized
+	 * @param json
+	 *            the buffer holding the constructed json
 	 */
-	private void appendMapping(Map<String, ?> map, StringBuilder calendarInit)
+	private void appendMapping(final Map<String, Object> map, final StringBuilder json)
 	{
-		boolean first = true;
-		calendarInit.append("{");
-		for (String key : map.keySet())
+		json.append("{");
+		for (Iterator<Entry<String, Object>> i = map.entrySet().iterator(); i.hasNext();)
 		{
-			if (first)
+			Entry<String, Object> entry = i.next();
+			json.append(entry.getKey());
+			Object value = entry.getValue();
+			if (value instanceof CharSequence)
 			{
-				first = false;
+				json.append(":\"");
+				json.append(Strings.toEscapedUnicode(value.toString()));
+				json.append("\"");
 			}
-			else
+			else if (value instanceof CharSequence[])
 			{
-				calendarInit.append(",");
+				json.append(":[");
+				CharSequence[] valueArray = (CharSequence[])value;
+				for (int j = 0; j < valueArray.length; j++)
+				{
+					CharSequence tmpValue = valueArray[j];
+					if (j > 0)
+					{
+						json.append(",");
+					}
+					if (tmpValue != null)
+					{
+						json.append("\"");
+						json.append(Strings.toEscapedUnicode(tmpValue.toString()));
+						json.append("\"");
+					}
+				}
+				json.append("]");
 			}
-			calendarInit.append(Strings.toEscapedUnicode(key));
-			calendarInit.append(":");
-			if (map.get(key) instanceof Map)
+			else if (value instanceof Map)
 			{
+				json.append(":");
 				@SuppressWarnings("unchecked")
-				Map<String, ?> value = (Map<String, ?>)map.get(key);
-				appendMapping(value, calendarInit);
+				Map<String, Object> nmap = (Map<String, Object>)value;
+				appendMapping(nmap, json);
 			}
 			else
 			{
-				// calendarInit.append(map.get(key).toString());
-				calendarInit.append("\"");
-				calendarInit.append(Strings.toEscapedUnicode(map.get(key).toString()));
-				calendarInit.append("\"");
+				json.append(":");
+				json.append(Strings.toEscapedUnicode(String.valueOf(value)));
+			}
+			if (i.hasNext())
+			{
+				json.append(",");
 			}
 		}
-		calendarInit.append("}");
+		json.append("}");
 	}
 }

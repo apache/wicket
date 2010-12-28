@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 /*
  * Wicket Date parse function for the Calendar/ Date picker component.
  */
@@ -23,12 +23,12 @@
 
 if (typeof(Wicket) == "undefined")
 	Wicket = { };
-	
+
 Wicket.DateTime = { }
 
 /**
- * Parses date from simple date pattern. Only parses dates with yy, MM and dd like patterns, though 
- * it is safe to have time as long as it comes after the pattern (which should be the case 
+ * Parses date from simple date pattern. Only parses dates with yy, MM and dd like patterns, though
+ * it is safe to have time as long as it comes after the pattern (which should be the case
  * anyway 99.9% of the time).
  */
 Wicket.DateTime.parseDate = function(pattern, value) {
@@ -63,7 +63,7 @@ Wicket.DateTime.parseDate = function(pattern, value) {
 	return date;
 }
 
-/** 
+/**
  * Returns a string containing the value, with a leading zero if the value is < 10.
  */
 Wicket.DateTime.padDateFragment = function(value) {
@@ -72,21 +72,21 @@ Wicket.DateTime.padDateFragment = function(value) {
 
 /**
  * Gets the height of the displayed area of the window, as YAHOO.util.Dom.getViewportHeight()
- * has issues with Firefox. 
+ * has issues with Firefox.
  * See http://tech.groups.yahoo.com/group/ydn-javascript/message/5850
  * Implementation taken from: http://www.quirksmode.org/viewport/compatibility.html#link2
  */
-Wicket.DateTime.getViewportHeight = function() {	  
+Wicket.DateTime.getViewportHeight = function() {
 	if (window.innerHeight) // all browsers except IE
 		viewPortHeight = window.innerHeight;
 	else if (document.documentElement && document.documentElement.clientHeight) // IE 6 strict mode
-		viewPortHeight = document.documentElement.height;		
+		viewPortHeight = document.documentElement.height;
 	else if (document.body) // other IEs
 		viewPortHeight = document.body.clientHeight;
 	return viewPortHeight;
 }
 
-/** 
+/**
  * Position subject relative to target top-left by default.
  * If there is too little space on the right side/bottom,
  * the datepicker's position is corrected so that the right side/bottom
@@ -95,18 +95,18 @@ Wicket.DateTime.getViewportHeight = function() {
  * @param target id of the dom element to position relative to
  */
 Wicket.DateTime.positionRelativeTo = function(subject, target) {
-	
+
 	targetPos = YAHOO.util.Dom.getXY(target);
 	targetHeight = YAHOO.util.Dom.get(target).offsetHeight;
 	subjectHeight = YAHOO.util.Dom.get(subject).offsetHeight;
-	subjectWidth = YAHOO.util.Dom.get(subject).offsetWidth;		
-	
-	viewPortHeight = Wicket.DateTime.getViewportHeight();	
+	subjectWidth = YAHOO.util.Dom.get(subject).offsetWidth;
+
+	viewPortHeight = Wicket.DateTime.getViewportHeight();
 	viewPortWidth = YAHOO.util.Dom.getViewportWidth();
-	
+
 	// also take scroll position into account
 	scrollPos = [YAHOO.util.Dom.getDocumentScrollLeft(), YAHOO.util.Dom.getDocumentScrollTop()];
-	
+
 	// correct datepicker's position so that it isn't rendered off screen on the right side or bottom
 	if (targetPos[0] + subjectWidth > scrollPos[0] + viewPortWidth) {
 		// correct horizontal position
@@ -166,23 +166,23 @@ Wicket.DateTime.showCalendar = function(widget, date, datePattern) {
 Wicket.DateTime.init = function(cfg) {
 	cfg.dpJs = cfg.widgetId + "DpJs";
 	cfg.dp = cfg.widgetId + "Dp";
-	cfg.icon = cfg.widgetId +"Icon";	
+	cfg.icon = cfg.widgetId +"Icon";
 	YAHOO.namespace("wicket");
-	
+
 	if (cfg.calendarInit.pages && cfg.calendarInit.pages > 1) {
 		YAHOO.wicket[cfg.dpJs] = new YAHOO.widget.CalendarGroup(cfg.dpJs,cfg.dp, cfg.calendarInit);
 	} else {
 		YAHOO.wicket[cfg.dpJs] = new YAHOO.widget.Calendar(cfg.dpJs,cfg.dp, cfg.calendarInit);
-	}	
+	}
 	YAHOO.wicket[cfg.dpJs].isVisible = function() { return YAHOO.wicket[cfg.dpJs].oDomContainer.style.display == 'block'; }
-	
+
 	function showCalendar() {
 		Wicket.DateTime.showCalendar(YAHOO.wicket[cfg.dpJs], YAHOO.util.Dom.get(cfg.componentId).value, cfg.datePattern);
 		if (cfg.alignWithIcon) Wicket.DateTime.positionRelativeTo(YAHOO.wicket[cfg.dpJs].oDomContainer, cfg.icon);
 	}
 
 	YAHOO.util.Event.addListener(cfg.icon, "click", showCalendar, YAHOO.wicket[cfg.dpJs], true);
-	
+
 	if (cfg.showOnFieldClick) {
 		YAHOO.util.Event.addListener(cfg.widgetId, "click", showCalendar, YAHOO.wicket[cfg.dpJs], true);
 	}
@@ -198,9 +198,32 @@ Wicket.DateTime.init = function(cfg) {
 			}
 		}
 	}
- 
-	YAHOO.wicket[cfg.dpJs].selectEvent.subscribe(selectHandler,YAHOO.wicket[cfg.dpJs]);	 
+
+	YAHOO.wicket[cfg.dpJs].selectEvent.subscribe(selectHandler,YAHOO.wicket[cfg.dpJs]);
 	YAHOO.wicket[cfg.dpJs].render();
+}
+
+// init method variant that needs less character to invoke
+Wicket.DateTime.init2 = function(widgetId, componentId, calendarInit, datePattern,
+		alignWithIcon, fireChangeEvent, hideOnSelect, showOnFieldClick, i18n) {
+	calendarInit.MONTHS_SHORT = i18n.MONTHS_SHORT;
+	calendarInit.MONTHS_LONG = i18n.MONTHS_LONG;
+	calendarInit.WEEKDAYS_MEDIUM = i18n.WEEKDAYS_MEDIUM;
+	calendarInit.WEEKDAYS_LONG = i18n.WEEKDAYS_LONG;
+	calendarInit.START_WEEKDAY = i18n.START_WEEKDAY;
+	calendarInit.WEEKDAYS_1CHAR = i18n.WEEKDAYS_1CHAR;
+	calendarInit.WEEKDAYS_SHORT = i18n.WEEKDAYS_SHORT;
+
+	Wicket.DateTime.init({
+		widgetId: widgetId,
+		componentId: componentId,
+		calendarInit: calendarInit,
+		datePattern: datePattern,
+		alignWithIcon: alignWithIcon,
+		fireChangeEvent: fireChangeEvent,
+		hideOnSelect: hideOnSelect,
+		showOnFieldClick: showOnFieldClick
+	});
 }
 
 YAHOO.register("wicket-date", Wicket.DateTime, {version: "1.3.0", build: "rc1"});

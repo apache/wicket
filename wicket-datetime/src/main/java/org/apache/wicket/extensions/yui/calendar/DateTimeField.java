@@ -24,6 +24,7 @@ import java.util.TimeZone;
 
 import org.apache.wicket.Session;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.markup.html.form.TextField;
@@ -339,6 +340,9 @@ public class DateTimeField extends FormComponentPanel<Date>
 				date = new MutableDateTime();
 			}
 
+			// always set secs to 0
+			date.setSecondOfMinute(0);
+
 			// "Calculate" the date with the different input parameters
 
 			// The AM/PM field
@@ -523,9 +527,10 @@ public class DateTimeField extends FormComponentPanel<Date>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void configure(final Map<String, Object> widgetProperties)
+			protected void configure(final Map<String, Object> widgetProperties,
+				final IHeaderResponse response, final Map<String, Object> initVariables)
 			{
-				super.configure(widgetProperties);
+				super.configure(widgetProperties, response, initVariables);
 
 				DateTimeField.this.configure(widgetProperties);
 			}
