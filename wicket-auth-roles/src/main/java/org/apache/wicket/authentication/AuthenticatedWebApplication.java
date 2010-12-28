@@ -45,7 +45,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 		IUnauthorizedComponentInstantiationListener
 {
 	/** Subclass of authenticated web session to instantiate */
-	private final WeakReference<Class<? extends AuthenticatedWebSession>> webSessionClassRef;
+	private final WeakReference<Class<? extends AbstractAuthenticatedWebSession>> webSessionClassRef;
 
 	/**
 	 * Constructor
@@ -53,7 +53,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	public AuthenticatedWebApplication()
 	{
 		// Get web session class to instantiate
-		webSessionClassRef = new WeakReference<Class<? extends AuthenticatedWebSession>>(
+		webSessionClassRef = new WeakReference<Class<? extends AbstractAuthenticatedWebSession>>(
 			getWebSessionClass());
 	}
 
@@ -117,8 +117,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.request.Request,
-	 *      org.apache.wicket.request.Response)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Session newSession(final Request request, final Response response)
@@ -137,9 +136,9 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	}
 
 	/**
-	 * @return AuthenticatedWebSession subclass to use in this authenticated web application.
+	 * @return BaseAuthenticatedWebSession subclass to use in this authenticated web application.
 	 */
-	protected abstract Class<? extends AuthenticatedWebSession> getWebSessionClass();
+	protected abstract Class<? extends AbstractAuthenticatedWebSession> getWebSessionClass();
 
 	/**
 	 * @return Subclass of sign-in page

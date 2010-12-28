@@ -18,7 +18,6 @@ package org.apache.wicket.authentication;
 
 import org.apache.wicket.Session;
 import org.apache.wicket.authorization.strategies.role.Roles;
-import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
 
 
@@ -28,7 +27,7 @@ import org.apache.wicket.request.Request;
  * 
  * @author Jonathan Locke
  */
-public abstract class AuthenticatedWebSession extends WebSession
+public abstract class AuthenticatedWebSession extends AbstractAuthenticatedWebSession
 {
 	private static final long serialVersionUID = 1L;
 
@@ -55,8 +54,9 @@ public abstract class AuthenticatedWebSession extends WebSession
 	}
 
 	/**
-	 * @return Get the roles that this session can play
+	 * {@inheritDoc}
 	 */
+	@Override
 	public abstract Roles getRoles();
 
 	/**
@@ -92,6 +92,7 @@ public abstract class AuthenticatedWebSession extends WebSession
 	/**
 	 * @return true, if user is signed in
 	 */
+	@Override
 	public final boolean isSignedIn()
 	{
 		return signedIn;
@@ -108,8 +109,6 @@ public abstract class AuthenticatedWebSession extends WebSession
 	/**
 	 * Call signOut() and remove the logon data from where ever they have been persisted (e.g.
 	 * Cookies)
-	 * 
-	 * @see org.apache.wicket.Session#invalidate()
 	 */
 	@Override
 	public void invalidate()
