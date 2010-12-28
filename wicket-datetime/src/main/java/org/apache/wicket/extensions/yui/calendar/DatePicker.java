@@ -597,7 +597,7 @@ public class DatePicker extends Behavior
 			dfSymbols = new DateFormatSymbols(locale);
 		}
 
-		Map<String, Object> i18nVariables = new HashMap<String, Object>();
+		Map<String, Object> i18nVariables = new LinkedHashMap<String, Object>();
 		setWidgetProperty(i18nVariables, "MONTHS_SHORT", filterEmpty(dfSymbols.getShortMonths()));
 		setWidgetProperty(i18nVariables, "MONTHS_LONG", filterEmpty(dfSymbols.getMonths()));
 		setWidgetProperty(i18nVariables, "WEEKDAYS_MEDIUM",
