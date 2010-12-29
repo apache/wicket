@@ -28,6 +28,7 @@ import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.AjaxRequestTargetListenerCollection;
 import org.apache.wicket.markup.html.pages.AccessDeniedPage;
 import org.apache.wicket.markup.html.pages.InternalErrorPage;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
@@ -49,6 +50,7 @@ import org.apache.wicket.request.mapper.ResourceMapper;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.session.ISessionStore;
+import org.apache.wicket.util.IContextProvider;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.file.FileUploadCleaner;
 import org.apache.wicket.util.file.IFileUploadCleaner;
@@ -109,6 +111,10 @@ public abstract class WebApplication extends Application
 
 	private ServletContext servletContext;
 
+	private final AjaxRequestTargetListenerCollection ajaxRequestTargetListeners;
+
+	private IContextProvider<AjaxRequestTarget, Page> ajaxRequestTargetProvider;
+
 	/**
 	 * Covariant override for easy getting the current {@link WebApplication} without having to cast
 	 * it.
@@ -142,6 +148,7 @@ public abstract class WebApplication extends Application
 	 */
 	public WebApplication()
 	{
+		ajaxRequestTargetListeners = new AjaxRequestTargetListenerCollection();
 	}
 
 	/**
@@ -476,6 +483,7 @@ public abstract class WebApplication extends Application
 
 		setPageRendererProvider(new WebPageRendererProvider());
 		setSessionStoreProvider(new WebSessionStoreProvider());
+		setAjaxRequestTargetProvider(new DefaultAjaxRequestTargetProvider());
 		// Configure the app.
 		configure();
 	}
@@ -557,9 +565,14 @@ public abstract class WebApplication extends Application
 	 *            page on which ajax response is made
 	 * @return non-null ajax request target instance
 	 */
-	public AjaxRequestTarget newAjaxRequestTarget(final Page page)
+	public final AjaxRequestTarget newAjaxRequestTarget(final Page page)
 	{
-		return new AjaxRequestTarget(page);
+		AjaxRequestTarget target = getAjaxRequestTargetProvider().get(page);
+		for (AjaxRequestTarget.IListener listener : ajaxRequestTargetListeners)
+		{
+			target.addListener(listener);
+		}
+		return target;
 	}
 
 	/**
@@ -669,5 +682,47 @@ public abstract class WebApplication extends Application
 			return new HttpSessionStore();
 		}
 
+	}
+
+	/**
+	 * Returns the provider for {@link AjaxRequestTarget} objects.
+	 * 
+	 * @return the provider for {@link AjaxRequestTarget} objects.
+	 */
+	public IContextProvider<AjaxRequestTarget, Page> getAjaxRequestTargetProvider()
+	{
+		return ajaxRequestTargetProvider;
+	}
+
+	/**
+	 * Sets the provider for {@link AjaxRequestTarget} objects.
+	 * 
+	 * @param ajaxRequestTargetProvider
+	 *            the new provider
+	 */
+	public void setAjaxRequestTargetProvider(
+		IContextProvider<AjaxRequestTarget, Page> ajaxRequestTargetProvider)
+	{
+		this.ajaxRequestTargetProvider = ajaxRequestTargetProvider;
+	}
+
+	/**
+	 * Returns the registered {@link AjaxRequestTarget.IListener} objects.
+	 * 
+	 * @return the registered {@link AjaxRequestTarget.IListener} objects.
+	 */
+	public AjaxRequestTargetListenerCollection getAjaxRequestTargetListeners()
+	{
+		return ajaxRequestTargetListeners;
+	}
+
+	private static class DefaultAjaxRequestTargetProvider
+		implements
+			IContextProvider<AjaxRequestTarget, Page>
+	{
+		public AjaxRequestTarget get(Page context)
+		{
+			return new AjaxRequestTarget(context);
+		}
 	}
 }

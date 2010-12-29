@@ -17,6 +17,7 @@
 package org.apache.wicket.util.listener;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -35,7 +36,7 @@ import org.slf4j.LoggerFactory;
  * @param <T>
  *            type of listeners
  */
-public abstract class ListenerCollection<T> implements Serializable
+public abstract class ListenerCollection<T> implements Serializable, Iterable<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -143,4 +144,14 @@ public abstract class ListenerCollection<T> implements Serializable
 		void notify(T listener);
 	}
 
+	/**
+	 * Returns an iterator that can iterate the listeners.
+	 * 
+	 * @return an iterator that can iterate the listeners.
+	 */
+	public Iterator<T> iterator()
+	{
+		return listeners.iterator();
+
+	}
 }

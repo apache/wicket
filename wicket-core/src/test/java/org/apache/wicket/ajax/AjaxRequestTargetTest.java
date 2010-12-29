@@ -18,6 +18,7 @@ package org.apache.wicket.ajax;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -208,6 +209,40 @@ public class AjaxRequestTargetTest extends WicketTestCase
 		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID, true);
 		TestEventPage page = (TestEventPage)tester.getLastRenderedPage();
 		assertTrue(page.defaultEventRaised);
+	}
+
+	/**
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3263">WICKET-3263</a>
+	 */
+	public void testGlobalAjaxRequestTargetListeners()
+	{
+		final ValidatingAjaxRequestTargetListener listener = new ValidatingAjaxRequestTargetListener();
+
+		tester.getApplication().getAjaxRequestTargetListeners().add(listener);
+
+		tester.startPage(TestEventPage.class);
+		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID, true);
+
+		assertTrue(listener.onBeforeRespondExecuted);
+		assertTrue(listener.onAfterRespondExecuted);
+	}
+
+	private static class ValidatingAjaxRequestTargetListener implements AjaxRequestTarget.IListener
+	{
+		boolean onBeforeRespondExecuted = false;
+		boolean onAfterRespondExecuted = false;
+
+		public void onBeforeRespond(Map<String, Component> map, AjaxRequestTarget target)
+		{
+			onBeforeRespondExecuted = true;
+
+		}
+
+		public void onAfterRespond(Map<String, Component> map,
+			AjaxRequestTarget.IJavaScriptResponse response)
+		{
+			onAfterRespondExecuted = true;
+		}
 	}
 
 	/**
