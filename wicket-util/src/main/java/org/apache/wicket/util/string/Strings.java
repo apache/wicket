@@ -246,11 +246,11 @@ public final class Strings
 	 * non-breaking space entities (&lt;nbsp&gt;).
 	 * 
 	 * @param s
-	 *            The string to escape
+	 *            The characters to escape
 	 * @see Strings#escapeMarkup(String, boolean)
 	 * @return The escaped string
 	 */
-	public static CharSequence escapeMarkup(final String s)
+	public static CharSequence escapeMarkup(final CharSequence s)
 	{
 		return escapeMarkup(s, false);
 	}
@@ -262,12 +262,12 @@ public final class Strings
 	 * converted to &amp;lt; entities and greater than signs to &amp;gt; entities.
 	 * 
 	 * @param s
-	 *            The string to escape
+	 *            The characters to escape
 	 * @param escapeSpaces
 	 *            True to replace ' ' with nonbreaking space
 	 * @return The escaped string
 	 */
-	public static CharSequence escapeMarkup(final String s, final boolean escapeSpaces)
+	public static CharSequence escapeMarkup(final CharSequence s, final boolean escapeSpaces)
 	{
 		return escapeMarkup(s, escapeSpaces, false);
 	}
@@ -279,14 +279,14 @@ public final class Strings
 	 * converted to &amp;lt; entities and greater than signs to &amp;gt; entities.
 	 * 
 	 * @param s
-	 *            The string to escape
+	 *            The characters to escape
 	 * @param escapeSpaces
 	 *            True to replace ' ' with nonbreaking space
 	 * @param convertToHtmlUnicodeEscapes
 	 *            True to convert non-7 bit characters to unicode HTML (&#...)
 	 * @return The escaped string
 	 */
-	public static CharSequence escapeMarkup(final String s, final boolean escapeSpaces,
+	public static CharSequence escapeMarkup(final CharSequence s, final boolean escapeSpaces,
 		final boolean convertToHtmlUnicodeEscapes)
 	{
 		if (s == null)

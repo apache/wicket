@@ -23,6 +23,7 @@ import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WicketEventReference;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -80,9 +81,10 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			response.renderJavaScript("wicketAjaxDebugEnable=true;", "wicket-ajax-debug-enable");
 		}
 
-		// TODO NG Escape
-		response.renderJavaScript("Wicket.Ajax.baseUrl=\"" +
-			RequestCycle.get().getUrlRenderer().getBaseUrl() + "\";", "wicket-ajax-base-url");
+		Url baseUrl = RequestCycle.get().getUrlRenderer().getBaseUrl();
+		CharSequence ajaxBaseUrl = Strings.escapeMarkup(baseUrl.toString());
+		response.renderJavaScript("Wicket.Ajax.baseUrl=\"" + ajaxBaseUrl + "\";",
+			"wicket-ajax-base-url");
 	}
 
 	/**

@@ -643,7 +643,7 @@ public class XmlTag extends MarkupElement
 					if (value != null)
 					{
 						buffer.append("=\"");
-						value = Strings.replaceAll(value, "\"", "\\\"");
+						value = Strings.escapeMarkup(value);
 						buffer.append(value);
 						buffer.append("\"");
 					}
