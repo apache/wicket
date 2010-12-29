@@ -25,8 +25,11 @@ import org.apache.wicket.model.IModel;
  * Automatically validates the input against the configured {@link #setMinimum(Double) min} and
  * {@link #setMaximum(Double) max} attributes. If any of them is <code>null</code> then
  * {@link Double#MIN_VALUE} and {@link Double#MAX_VALUE} are used respectfully.
+ * 
+ * @param <N>
+ *            the number type
  */
-public class RangeTextField extends NumberTextField
+public class RangeTextField<N extends Number & Comparable<N>> extends NumberTextField<N>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -49,7 +52,7 @@ public class RangeTextField extends NumberTextField
 	 * @param model
 	 *            the model
 	 */
-	public RangeTextField(String id, IModel<Double> model)
+	public RangeTextField(String id, IModel<N> model)
 	{
 		super(id, model);
 	}

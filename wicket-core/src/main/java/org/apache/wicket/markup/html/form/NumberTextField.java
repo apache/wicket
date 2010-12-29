@@ -28,16 +28,21 @@ import org.apache.wicket.validation.validator.RangeValidator;
  * Automatically validates the input against the configured {@link #setMinimum(Double) min} and
  * {@link #setMaximum(Double) max} attributes. If any of them is <code>null</code> then
  * {@link Double#MIN_VALUE} and {@link Double#MAX_VALUE} are used respectfully.
+ * 
+ * Note: {@link #setType(Class)} must be called explicitly!
+ * 
+ * @param <N>
+ *            the number type
  */
-public class NumberTextField extends TextField<Double>
+public class NumberTextField<N extends Number & Comparable<N>> extends TextField<N>
 {
 	private static final long serialVersionUID = 1L;
 
-	private RangeValidator<Double> validator;
+	private RangeValidator<N> validator;
 
-	private Double minimum;
+	private N minimum;
 
-	private Double maximum;
+	private N maximum;
 
 	/**
 	 * Construct.
@@ -58,9 +63,9 @@ public class NumberTextField extends TextField<Double>
 	 * @param model
 	 *            the input value
 	 */
-	public NumberTextField(String id, IModel<Double> model)
+	public NumberTextField(String id, IModel<N> model)
 	{
-		super(id, model, Double.class);
+		super(id, model);
 
 		validator = null;
 		minimum = null;
@@ -74,7 +79,7 @@ public class NumberTextField extends TextField<Double>
 	 *            the minimum allowed value
 	 * @return this instance
 	 */
-	public NumberTextField setMinimum(final Double minimum)
+	public NumberTextField<N> setMinimum(final N minimum)
 	{
 		this.minimum = minimum;
 		return this;
@@ -87,7 +92,7 @@ public class NumberTextField extends TextField<Double>
 	 *            the maximum allowed value
 	 * @return this instance
 	 */
-	public NumberTextField setMaximum(final Double maximum)
+	public NumberTextField<N> setMaximum(final N maximum)
 	{
 		this.maximum = maximum;
 		return this;
@@ -103,20 +108,7 @@ public class NumberTextField extends TextField<Double>
 			remove(validator);
 		}
 
-		Double min = minimum;
-		Double max = maximum;
-
-		if (min == null)
-		{
-			min = Double.MIN_VALUE;
-		}
-
-		if (max == null)
-		{
-			max = Double.MAX_VALUE;
-		}
-
-		validator = new RangeValidator<Double>(min, max);
+		validator = new RangeValidator<N>(minimum, maximum);
 		add(validator);
 	}
 
