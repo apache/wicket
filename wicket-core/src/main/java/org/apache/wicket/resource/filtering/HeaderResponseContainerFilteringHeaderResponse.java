@@ -438,10 +438,6 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 		{
 			runnable.run();
 		}
-		catch (RuntimeException ex)
-		{
-			throw ex;
-		}
 		finally
 		{
 			RequestCycle.get().setResponse(original);

@@ -794,7 +794,6 @@ public abstract class Component
 												{
 													component.add(Component.this);
 													visit.stop();
-													return;
 												}
 											}
 										});
@@ -2532,7 +2531,7 @@ public abstract class Component
 	{
 		// If a open-close tag has been modified to be open-body-close than a
 		// synthetic close tag must be rendered.
-		boolean renderTag = (openTag == null ? false : !(openTag instanceof WicketTag));
+		boolean renderTag = (openTag != null && !(openTag instanceof WicketTag));
 		if (renderTag == false)
 		{
 			renderTag = !((getRequest() instanceof WebRequest) && ((WebRequest)getRequest()).isAjax());

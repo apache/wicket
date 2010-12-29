@@ -33,9 +33,6 @@ import org.apache.wicket.util.lang.Args;
  */
 public class MarkupSettings implements IMarkupSettings
 {
-	/** The application */
-	private final Application application;
-
 	/** Application default for automatically resolving hrefs */
 	private boolean automaticLinking = false;
 
@@ -70,12 +67,9 @@ public class MarkupSettings implements IMarkupSettings
 
 	/**
 	 * Construct
-	 * 
-	 * @param application
 	 */
-	public MarkupSettings(Application application)
+	public MarkupSettings()
 	{
-		this.application = application;
 	}
 
 	/**

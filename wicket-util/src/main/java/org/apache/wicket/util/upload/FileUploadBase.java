@@ -84,13 +84,8 @@ public abstract class FileUploadBase
 		{
 			return false;
 		}
-		if (contentType.toLowerCase().startsWith(MULTIPART))
-		{
-			return true;
-		}
-		return false;
+		return contentType.toLowerCase().startsWith(MULTIPART);
 	}
-
 
 	/**
 	 * Utility method that determines whether the request contains multipart content.

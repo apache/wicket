@@ -421,5 +421,5 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 			}
 			return rtn;
 		}
-	};
+	}
 }

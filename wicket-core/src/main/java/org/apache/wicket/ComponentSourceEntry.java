@@ -159,7 +159,7 @@ abstract class ComponentSourceEntry implements IClusterable
 		parseComponentInfo(parent, componentInfo, component);
 
 		return component;
-	};
+	}
 
 	/**
 	 * Returns the first part of string that belongs to a single component

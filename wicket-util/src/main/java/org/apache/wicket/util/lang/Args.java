@@ -75,7 +75,5 @@ public class Args
 				String.format("Argument '%s' must have a value within [%s,%s], but was %s", name,
 					min, max, value));
 		}
-
-		return;
 	}
 }

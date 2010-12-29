@@ -743,7 +743,7 @@ public class ModalWindow extends Panel
 		{
 			super(name);
 		}
-	};
+	}
 
 	/**
 	 * Sets the mask type of the window.
@@ -912,7 +912,7 @@ public class ModalWindow extends Panel
 		{
 			return super.getCallbackScript();
 		}
-	};
+	}
 
 	/**
 	 * @author Matej Knopp

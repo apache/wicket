@@ -110,7 +110,7 @@ public class DummyRequestLogger implements IRequestLogger
 
 	public SessionData[] getLiveSessions()
 	{
-		final SessionData[] sessions = liveSessions.values().toArray(new SessionData[0]);
+		final SessionData[] sessions = liveSessions.values().toArray(new SessionData[liveSessions.values().size()]);
 		Arrays.sort(sessions);
 		return sessions;
 	}

@@ -243,7 +243,7 @@ public class WildcardMatcherHelper
 				// skip to first non star character in the pattern
 				while (++ipat < lpat && apat[ipat] == STAR)
 				{
-					;
+					; // noop
 				}
 
 				// if we are at the end of the pattern we've matched and are finish scanning

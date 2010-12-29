@@ -132,7 +132,7 @@ public class TabbedPanelPage extends WicketExamplePage
 			return !TabbedPanelPage.this.getDefaultModelObjectAsString().equals(clazz);
 		}
 
-	};
+	}
 
 	/**
 	 * Panel representing the content panel for the first tab
@@ -154,7 +154,7 @@ public class TabbedPanelPage extends WicketExamplePage
 			super(id);
 		}
 
-	};
+	}
 
 	/**
 	 * Panel representing the content panel for the second tab
@@ -176,7 +176,7 @@ public class TabbedPanelPage extends WicketExamplePage
 			super(id);
 		}
 
-	};
+	}
 
 	/**
 	 * Panel representing the content panel for the third tab
@@ -198,8 +198,7 @@ public class TabbedPanelPage extends WicketExamplePage
 			super(id);
 		}
 
-	};
-
+	}
 
 	@Override
 	protected void explain()

@@ -135,11 +135,7 @@ public class XmlTag extends MarkupElement
 			{
 				return false;
 			}
-			if (!getAttributes().equals(that.getAttributes()))
-			{
-				return false;
-			}
-			return true;
+			return getAttributes().equals(that.getAttributes());
 		}
 		return false;
 	}

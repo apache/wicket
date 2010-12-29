@@ -46,7 +46,7 @@ public class XForwardedRequestWrapper extends HttpServletRequestWrapper
 					new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US),
 					new SimpleDateFormat("EEEEEE, dd-MMM-yy HH:mm:ss zzz", Locale.US),
 					new SimpleDateFormat("EEE MMMM d HH:mm:ss yyyy", Locale.US) };
-		};
+		}
 	};
 
 	private Map<String, List<String>> headers;
@@ -107,9 +107,9 @@ public class XForwardedRequestWrapper extends HttpServletRequestWrapper
 			{
 				date = dateFormat.parse(value);
 			}
-			catch (Exception ParseException)
+			catch (Exception ignored)
 			{
-				;
+				; // noop
 			}
 		}
 

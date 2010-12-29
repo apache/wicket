@@ -525,7 +525,7 @@ public abstract class Page extends MarkupContainer
 	public final String hierarchyAsString()
 	{
 		final StringBuilder buffer = new StringBuilder();
-		buffer.append("Page " + getId());
+		buffer.append("Page ").append(getId());
 		visitChildren(new IVisitor<Component, Void>()
 		{
 			public void component(final Component component, final IVisit<Void> visit)
@@ -535,8 +535,7 @@ public abstract class Page extends MarkupContainer
 				{
 					levels++;
 				}
-				buffer.append(StringValue.repeat(levels, "	") + component.getPageRelativePath() +
-					":" + Classes.simpleName(component.getClass()));
+				buffer.append(StringValue.repeat(levels, "	")).append(component.getPageRelativePath()).append(":").append(Classes.simpleName(component.getClass()));
 			}
 		});
 		return buffer.toString();
@@ -568,7 +567,7 @@ public abstract class Page extends MarkupContainer
 						bookmarkable = Boolean.TRUE;
 					}
 				}
-				catch (Exception ignore2)
+				catch (Exception ignored)
 				{
 				}
 			}
@@ -781,8 +780,7 @@ public abstract class Page extends MarkupContainer
 							unrenderedComponents.add(component);
 
 							// Add to explanatory string to buffer
-							buffer.append(Integer.toString(unrenderedComponents.size()) + ". " +
-								component + "\n");
+							buffer.append(Integer.toString(unrenderedComponents.size())).append(". ").append(component).append("\n");
 							String metadata = component.getMetaData(Component.CONSTRUCTED_AT_KEY);
 							if (metadata != null)
 							{

@@ -1141,7 +1141,7 @@ public abstract class Application implements UnboundListener, IEventSink
 		checkSettingsAvailable();
 		if (markupSettings == null)
 		{
-			markupSettings = new MarkupSettings(this);
+			markupSettings = new MarkupSettings();
 		}
 		return markupSettings;
 	}

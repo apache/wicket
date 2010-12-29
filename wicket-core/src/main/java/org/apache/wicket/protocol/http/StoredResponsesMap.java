@@ -126,7 +126,7 @@ class StoredResponsesMap extends MostRecentlyUsedMap<String, Object>
 	}
 
 	@Override
-	public void putAll(Map<? extends String, ? extends Object> m)
+	public void putAll(Map<? extends String, ?> m)
 	{
 		throw new UnsupportedOperationException();
 	}

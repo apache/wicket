@@ -178,7 +178,7 @@ public final class Url implements Serializable
 		}
 
 		return result;
-	};
+	}
 
 	public Charset getCharset()
 	{

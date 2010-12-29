@@ -150,7 +150,7 @@ public abstract class VariableInterpolator
 						// Leave variable uninterpolated, allowing multiple
 						// interpolators to
 						// do their work on the same string
-						buffer.append("${" + variableName + "}");
+						buffer.append("${").append(variableName).append("}");
 					}
 				}
 				else

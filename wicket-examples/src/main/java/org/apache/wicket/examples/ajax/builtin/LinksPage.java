@@ -156,7 +156,7 @@ public class LinksPage extends BasePage
 						return "alert('Before ajax call');" + script;
 					}
 				};
-			};
+			}
 		});
 
 		add(new AjaxLink<Void>("failure-link")
@@ -196,7 +196,7 @@ public class LinksPage extends BasePage
 						return "alert('Before ajax call');" + script;
 					}
 				};
-			};
+			}
 		});
 
 		add(new AjaxLink<Void>("set-response-page")

@@ -124,7 +124,7 @@ public class FormInput extends WicketExamplePage
 					radio.setLabel(item.getModel());
 					item.add(radio);
 					item.add(new SimpleFormComponentLabel("number", radio));
-				};
+				}
 			}.setReuseItems(true);
 			group.add(persons);
 
@@ -139,7 +139,7 @@ public class FormInput extends WicketExamplePage
 					check.setLabel(item.getModel());
 					item.add(check);
 					item.add(new SimpleFormComponentLabel("number", check));
-				};
+				}
 			}.setReuseItems(true);
 			checks.add(checksList);
 

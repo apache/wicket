@@ -286,7 +286,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	/**
 	 * @see java.util.Map#putAll(Map)
 	 */
-	public void putAll(final Map<? extends String, ? extends Object> map)
+	public void putAll(final Map<? extends String, ?> map)
 	{
 		checkAndCopy();
 		wrapped.putAll(map);

@@ -119,7 +119,7 @@ public class FileCleaningTracker
 	 */
 	public void track(String path, Object marker)
 	{
-		track(path, marker, (FileDeleteStrategy)null);
+		track(path, marker, null);
 	}
 
 	/**

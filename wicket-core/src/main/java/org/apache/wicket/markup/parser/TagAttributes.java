@@ -85,7 +85,7 @@ public class TagAttributes extends ValueMap
 	}
 
 	@Override
-	public final void putAll(Map<? extends String, ? extends Object> map)
+	public final void putAll(Map<? extends String, ?> map)
 	{
 		for (Object o : map.keySet())
 		{

@@ -39,7 +39,6 @@ import org.apache.wicket.validation.validator.StringValidator;
  */
 public class FormPage extends BasePage
 {
-	private final Bean bean = new Bean();
 
 	/**
 	 * Constructor
@@ -52,6 +51,7 @@ public class FormPage extends BasePage
 		add(feedback);
 
 		// add form with markup id setter so it can be updated via ajax
+		Bean bean=new Bean();
 		Form<Bean> form = new Form<Bean>("form", new CompoundPropertyModel<Bean>(bean));
 		add(form);
 		form.setOutputMarkupId(true);

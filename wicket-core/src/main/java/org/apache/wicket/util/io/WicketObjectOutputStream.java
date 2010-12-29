@@ -760,7 +760,6 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 								componentType.getName() + "[" + length + "]", e);
 						}
 					}
-					return;
 				}
 				else
 				{

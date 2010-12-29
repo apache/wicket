@@ -49,7 +49,7 @@ public class ServerHostNameAndTimeFilter implements IResponseFilter
 		{
 			hostId = System.getProperty("examples.hostname");
 		}
-		catch (SecurityException e)
+		catch (SecurityException ignored)
 		{
 		}
 		if (Strings.isEmpty(hostId))
@@ -117,7 +117,7 @@ public class ServerHostNameAndTimeFilter implements IResponseFilter
 			host = ((!Strings.isEmpty(hostName)) ? hostName + "/" + address : address) + "/" +
 				hostId;
 		}
-		catch (UnknownHostException e)
+		catch (UnknownHostException ignored)
 		{
 		}
 

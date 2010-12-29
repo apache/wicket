@@ -72,8 +72,6 @@ public class Checks
 		{
 			throw new IllegalStateException(message);
 		}
-
-		return;
 	}
 
 	/**

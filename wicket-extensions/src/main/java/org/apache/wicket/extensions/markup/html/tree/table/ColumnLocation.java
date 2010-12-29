@@ -99,9 +99,9 @@ public class ColumnLocation implements IClusterable
 		{
 			super(name);
 		}
-	};
+	}
 
-	private static final long serialVersionUID = 1L;;
+	private static final long serialVersionUID = 1L;
 
 	private Alignment alignment;
 	private int size;

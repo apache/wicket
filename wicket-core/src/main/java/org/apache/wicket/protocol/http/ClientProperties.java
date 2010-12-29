@@ -447,7 +447,7 @@ public class ClientProperties implements IClusterable
 		if (!cookiesEnabled && RequestCycle.get() != null)
 		{
 			Collection<Cookie> cookies = ((WebRequest)RequestCycle.get().getRequest()).getCookies();
-			cookiesEnabled = cookies != null ? cookies.size() > 0 : false;
+			cookiesEnabled = cookies != null && cookies.size() > 0;
 		}
 		return cookiesEnabled;
 	}

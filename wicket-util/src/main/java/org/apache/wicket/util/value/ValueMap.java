@@ -90,7 +90,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	 * @param map
 	 *            the <code>ValueMap</code> to copy
 	 */
-	public ValueMap(final Map<? extends String, ? extends Object> map)
+	public ValueMap(final Map<? extends String, ?> map)
 	{
 		super();
 
@@ -489,7 +489,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
 	@Override
-	public void putAll(final Map<? extends String, ? extends Object> map)
+	public void putAll(final Map<? extends String, ?> map)
 	{
 		checkMutability();
 		super.putAll(map);

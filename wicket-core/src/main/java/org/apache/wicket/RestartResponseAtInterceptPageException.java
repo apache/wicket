@@ -119,7 +119,7 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 		{
 			private static final long serialVersionUID = 1L;
 		};
-	};
+	}
 
 	static boolean continueToOriginalDestination()
 	{

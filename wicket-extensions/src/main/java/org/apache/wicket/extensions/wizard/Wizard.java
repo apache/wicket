@@ -235,7 +235,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 */
 	public void onCancel()
 	{
-	};
+	}
 
 	/**
 	 * Called when the wizard is finished.

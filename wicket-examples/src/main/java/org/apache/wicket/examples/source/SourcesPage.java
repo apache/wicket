@@ -344,7 +344,6 @@ public class SourcesPage extends WebPage
 				throw new WicketRuntimeException(e);
 			}
 			Collections.sort(resources);
-			return;
 		}
 
 		private void scanJarFile(Class<?> scope, String packageRef, JarFile jf)

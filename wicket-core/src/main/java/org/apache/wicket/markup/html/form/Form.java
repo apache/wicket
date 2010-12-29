@@ -167,12 +167,10 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 			}
 			if (formComponent.processChildren())
 			{
-				return;
 			}
 			else
 			{
 				visit.dontGoDeeper();
-				return;
 			}
 		}
 
@@ -456,7 +454,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 									component.getPageRelativePath() + ") is not enabled");
 							}
 							visit.stop(submittingComponent);
-							return;
 						}
 					}
 				}

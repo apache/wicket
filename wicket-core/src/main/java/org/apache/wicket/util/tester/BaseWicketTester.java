@@ -173,8 +173,6 @@ public class BaseWicketTester
 	private final List<MockHttpServletRequest> previousRequests = new ArrayList<MockHttpServletRequest>();
 	private final List<MockHttpServletResponse> previousResponses = new ArrayList<MockHttpServletResponse>();
 
-	private final ThreadContext oldThreadContext;
-
 	/** current request */
 	private MockHttpServletRequest request;
 	/** current response */
@@ -272,7 +270,7 @@ public class BaseWicketTester
 
 		hsession = new MockHttpSession(servletContext);
 
-		oldThreadContext = ThreadContext.detach();
+		ThreadContext oldThreadContext= ThreadContext.detach();
 
 		this.application = application;
 

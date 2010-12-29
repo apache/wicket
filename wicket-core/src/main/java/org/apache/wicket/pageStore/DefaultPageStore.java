@@ -348,7 +348,7 @@ public class DefaultPageStore implements IPageStore
 		{
 			return Objects.hashCode(getPageId(), getSessionId());
 		}
-	};
+	}
 
 	/**
 	 * 

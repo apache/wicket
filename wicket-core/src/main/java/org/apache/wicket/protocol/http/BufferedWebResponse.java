@@ -91,7 +91,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	private static abstract class Action
 	{
 		protected abstract void invoke(WebResponse response);
-	};
+	}
 
 	/**
 	 * Actions not related directly to the content of the response, eg setting cookies, headers.
@@ -100,8 +100,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	 */
 	private static abstract class MetaDataAction extends Action
 	{
-	};
-
+	}
 
 	private static class WriteCharSequenceAction extends Action
 	{
@@ -136,7 +135,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 			}
 			response.write(builder);
 		}
-	};
+	}
 
 	private static class WriteDataAction extends Action
 	{
@@ -173,7 +172,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		{
 			response.close();
 		}
-	};
+	}
 
 	private static class AddCookieAction extends MetaDataAction
 	{
@@ -189,7 +188,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		{
 			response.addCookie(cookie);
 		}
-	};
+	}
 
 	private static class ClearCookieAction extends MetaDataAction
 	{
@@ -205,7 +204,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		{
 			response.clearCookie(cookie);
 		}
-	};
+	}
 
 	private static class SetHeaderAction extends MetaDataAction
 	{
@@ -257,7 +256,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		{
 			response.setContentLength(contentLength);
 		}
-	};
+	}
 
 	private static class SetContentTypeAction extends Action
 	{
@@ -273,7 +272,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		{
 			response.setContentType(contentType);
 		}
-	};
+	}
 
 	private static class SetStatusAction extends MetaDataAction
 	{
@@ -289,7 +288,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		{
 			response.setStatus(sc);
 		}
-	};
+	}
 
 	private static class SendErrorAction extends Action
 	{
@@ -307,7 +306,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		{
 			response.sendError(sc, msg);
 		}
-	};
+	}
 
 	private static class SendRedirectAction extends Action
 	{
@@ -323,7 +322,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		{
 			response.sendRedirect(url);
 		}
-	};
+	}
 
 	private static class FlushAction extends Action
 	{
@@ -332,7 +331,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		{
 			response.flush();
 		}
-	};
+	}
 
 	private final List<Action> actions = new ArrayList<Action>();
 	private WriteCharSequenceAction charSequenceAction;

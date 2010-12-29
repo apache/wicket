@@ -18,7 +18,7 @@ package org.apache.wicket.injection;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -47,10 +47,7 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 			throw new IllegalArgumentException("argument [factories] cannot be null");
 		}
 
-		for (IFieldValueFactory factory : factories)
-		{
-			delegates.add(factory);
-		}
+		delegates.addAll(Arrays.asList(factories));
 	}
 
 	/**

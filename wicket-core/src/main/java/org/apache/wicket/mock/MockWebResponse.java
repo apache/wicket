@@ -256,7 +256,7 @@ public class MockWebResponse extends WebResponse
 		{
 			binaryResponse.write(array);
 		}
-		catch (IOException yeahRight)
+		catch (IOException ignored)
 		{
 		}
 	}

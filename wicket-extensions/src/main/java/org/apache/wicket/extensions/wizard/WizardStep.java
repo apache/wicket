@@ -17,6 +17,7 @@
 package org.apache.wicket.extensions.wizard;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -132,10 +133,7 @@ public class WizardStep extends Panel implements IWizardStep
 					if (dependentComponents != null)
 					{
 						int len = dependentComponents.length;
-						for (int j = 0; j < len; j++)
-						{
-							components.add(dependentComponents[j]);
-						}
+						components.addAll(Arrays.asList(dependentComponents).subList(0, len));
 					}
 				}
 				return components.toArray(new FormComponent[components.size()]);

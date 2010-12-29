@@ -218,7 +218,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 			List<String> token2 = (id != null) ? Arrays.asList("javascript", id) : null;
 
 			final boolean token1Unused = wasRendered(token1) == false;
-			final boolean token2Unused = (token2 != null) ? wasRendered(token2) == false : true;
+			final boolean token2Unused = (token2 == null) || wasRendered(token2) == false;
 
 			if (token1Unused && token2Unused)
 			{

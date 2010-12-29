@@ -167,7 +167,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 			msg.append("] found, you have to specify the name of the bean ");
 			msg.append("(@SpringBean(name=\"foo\")) in order to resolve this conflict. ");
 			msg.append("Matched beans: ");
-			msg.append(Strings.join(",", names.toArray(new String[0])));
+			msg.append(Strings.join(",", names.toArray(new String[names.size()])));
 			throw new IllegalStateException(msg.toString());
 		}
 		else

@@ -111,7 +111,7 @@ public class Files
 			{
 				Thread.sleep(100);
 			}
-			catch (InterruptedException e)
+			catch (InterruptedException ignored)
 			{
 			}
 

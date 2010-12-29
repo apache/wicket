@@ -30,5 +30,5 @@ public enum ContentDisposition {
 	/**
 	 * For attachment resources the browser should display a save dialog
 	 */
-	ATTACHMENT;
+	ATTACHMENT
 }

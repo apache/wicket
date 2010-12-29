@@ -388,7 +388,7 @@ public final class LocalizedImageResource implements IClusterable
 			return resource;
 		}
 
-	};
+	}
 
 	/**
 	 * Tries to load static image at the given path and throws an exception if the image cannot be

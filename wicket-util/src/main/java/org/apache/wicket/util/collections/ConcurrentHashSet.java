@@ -175,7 +175,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E>
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public Object clone()
+	public Object clone()throws CloneNotSupportedException
 	{
 		try
 		{

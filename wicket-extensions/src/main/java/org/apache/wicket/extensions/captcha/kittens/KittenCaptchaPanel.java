@@ -197,11 +197,10 @@ public class KittenCaptchaPanel extends Panel
 					// Instead of reload entire image just change the src
 					// attribute, this reduces the flicker
 					final StringBuilder javascript = new StringBuilder();
-					javascript.append("Wicket.$('" + image.getMarkupId() + "').src = '");
+					javascript.append("Wicket.$('").append(image.getMarkupId()).append("').src = '");
 					CharSequence url = image.urlFor(IResourceListener.INTERFACE);
 					javascript.append(url);
-					javascript.append((url.toString().indexOf('?') > -1 ? "&amp;" : "?") + "rand=" +
-						Math.random());
+					javascript.append(url.toString().indexOf('?') > -1 ? "&amp;" : "?").append("rand=").append(Math.random());
 					javascript.append("'");
 					target.appendJavaScript(javascript.toString());
 				}

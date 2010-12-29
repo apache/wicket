@@ -122,7 +122,7 @@ public class TestPage1 extends Page
 				PageParametersNg params = new PageParametersNg();
 				params.setNamedParameter("color", "red");
 				RequestCycle.get().setResponsePage(TestPage4.class, params);
-			};
+			}
 		};
 		l6.setLabel("Link 6 - Goto Test Page 4 - stateless, with mounted parameters");
 		add(l6);

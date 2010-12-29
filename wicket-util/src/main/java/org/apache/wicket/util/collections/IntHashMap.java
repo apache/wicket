@@ -781,7 +781,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 			{ // advance to first entry
 				while ((i > 0) && ((n = t[--i]) == null))
 				{
-					/* NoOp */;
+					/* NoOp */
 				}
 			}
 			next = n;

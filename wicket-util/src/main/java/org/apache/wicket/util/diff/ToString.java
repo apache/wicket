@@ -115,7 +115,7 @@ public class ToString
 				l.add(s);
 			}
 		}
-		catch (java.io.IOException e)
+		catch (java.io.IOException ignored)
 		{
 		}
 		return l.toArray(new String[l.size()]);

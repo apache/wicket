@@ -559,7 +559,7 @@ public final class PropertyResolver
 		{
 			method = clz.getMethod("get" + name, (Class[])null);
 		}
-		catch (Exception e)
+		catch (Exception ignored)
 		{
 		}
 		if (method == null)

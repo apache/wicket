@@ -84,7 +84,7 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 		{
 			ResourceStreamRequestHandler that = (ResourceStreamRequestHandler)obj;
 			return resourceStream.equals(that.resourceStream) &&
-				((fileName != null) ? fileName.equals(that.fileName) : true);
+				((fileName == null) || fileName.equals(that.fileName));
 		}
 		return false;
 	}

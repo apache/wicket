@@ -369,7 +369,6 @@ public final class ClassStreamHandler
 		{
 			fillFields(cls);
 		}
-		return;
 	}
 
 	/**

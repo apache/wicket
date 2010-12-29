@@ -29,6 +29,7 @@ import java.security.Principal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
@@ -1170,10 +1171,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public void setCookies(final Cookie[] theCookies)
 	{
 		cookies.clear();
-		for (Cookie cookie : theCookies)
-		{
-			cookies.add(cookie);
-		}
+		cookies.addAll(Arrays.asList(theCookies));
 	}
 
 	/**

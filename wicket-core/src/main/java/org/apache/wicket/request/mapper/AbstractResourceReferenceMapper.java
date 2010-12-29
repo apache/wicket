@@ -59,7 +59,7 @@ public abstract class AbstractResourceReferenceMapper extends AbstractComponentM
 			}
 			return res.toString();
 		}
-	};
+	}
 
 	private static String nonEmpty(String s)
 	{

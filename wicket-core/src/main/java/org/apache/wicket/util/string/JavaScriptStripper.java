@@ -218,7 +218,6 @@ public class JavaScriptStripper
 					state = REGULAR_TEXT;
 				}
 				result.append(c);
-				continue;
 			}
 		}
 

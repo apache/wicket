@@ -58,9 +58,8 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 		Class<T> componentClass)
 	{
 		int size = strategies.size();
-		for (int i = 0; i < size; i++)
+		for (IAuthorizationStrategy strategy : strategies)
 		{
-			IAuthorizationStrategy strategy = strategies.get(i);
 			if (!strategy.isInstantiationAuthorized(componentClass))
 			{
 				return false;

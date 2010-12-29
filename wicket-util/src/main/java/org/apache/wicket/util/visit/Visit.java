@@ -27,7 +27,7 @@ package org.apache.wicket.util.visit;
 public class Visit<R> implements IVisit<R>
 {
 	private static enum Action {
-		CONTINUE, CONTINUE_BUT_DONT_GO_DEEPER, STOP;
+		CONTINUE, CONTINUE_BUT_DONT_GO_DEEPER, STOP
 	}
 
 	private R result;

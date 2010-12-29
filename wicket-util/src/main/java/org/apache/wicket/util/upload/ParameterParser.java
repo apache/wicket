@@ -252,15 +252,15 @@ public class ParameterParser
 		if (str != null)
 		{
 			int idx = str.length();
-			for (int i = 0; i < separators.length; i++)
+			for (char sep : separators)
 			{
-				int tmp = str.indexOf(separators[i]);
+				int tmp = str.indexOf(sep);
 				if (tmp != -1)
 				{
 					if (tmp < idx)
 					{
 						idx = tmp;
-						separator = separators[i];
+						separator = sep;
 					}
 				}
 			}
