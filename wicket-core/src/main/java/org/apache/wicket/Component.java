@@ -58,7 +58,6 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.BookmarkableListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
-import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.IDebugSettings;
@@ -2534,8 +2533,7 @@ public abstract class Component
 		boolean renderTag = (openTag != null && !(openTag instanceof WicketTag));
 		if (renderTag == false)
 		{
-			renderTag = !((getRequest() instanceof WebRequest) && ((WebRequest)getRequest()).isAjax());
-			renderTag &= !getApplication().getMarkupSettings().getStripWicketTags();
+			renderTag = !getApplication().getMarkupSettings().getStripWicketTags();
 		}
 		return renderTag;
 	}
