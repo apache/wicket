@@ -54,7 +54,22 @@ public class RangeTextField<N extends Number & Comparable<N>> extends NumberText
 	 */
 	public RangeTextField(String id, IModel<N> model)
 	{
-		super(id, model);
+		this(id, model, null);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 *            component id
+	 * @param model
+	 *            the input value
+	 * @param type
+	 *            The type to use when updating the model for this text field
+	 */
+	public RangeTextField(String id, IModel<N> model, Class<N> type)
+	{
+		super(id, model, type);
 	}
 
 	@Override
