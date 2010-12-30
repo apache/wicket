@@ -50,8 +50,7 @@ public final class YuiLib
 	{
 		if (YUILOADER == null)
 		{
-			StringBuilder sb = new StringBuilder();
-			sb.append("yuiloader");
+			StringBuilder sb = new StringBuilder("yuiloader/yuiloader");
 			if (Application.get().usesDeploymentConfig())
 			{
 				sb.append("-min");

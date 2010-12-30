@@ -45,8 +45,8 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		/*
 		 * YUI lib. See NOTICE
 		 */
-		javaScriptIgnore.add("src/main/java/org/apache/wicket/extensions/yui/yuiloader.js");
-		javaScriptIgnore.add("src/main/java/org/apache/wicket/extensions/yui/yuiloader-min.js");
+		javaScriptIgnore.add("src/main/java/org/apache/wicket/extensions/yui/yuiloader/yuiloader.js");
+		javaScriptIgnore.add("src/main/java/org/apache/wicket/extensions/yui/yuiloader/yuiloader-min.js");
 		javaScriptIgnore.add("src/main/java/org/apache/wicket/extensions/yui/yahoo/yahoo.js");
 		javaScriptIgnore.add("src/main/java/org/apache/wicket/extensions/yui/yahoo/yahoo-min.js");
 		javaScriptIgnore.add("src/main/java/org/apache/wicket/extensions/yui/yahoodomevent/yahoo-dom-event.js");
