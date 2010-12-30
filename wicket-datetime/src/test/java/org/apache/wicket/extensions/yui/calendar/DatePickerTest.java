@@ -18,7 +18,6 @@ package org.apache.wicket.extensions.yui.calendar;
 
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -372,16 +371,21 @@ public class DatePickerTest extends WicketTestCase
 		}
 
 		// Get year, month and day ignoring any timezone of the Date object
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(dateFieldInput);
-		int year = cal.get(Calendar.YEAR);
-		int month = cal.get(Calendar.MONTH) + 1;
-		int day = cal.get(Calendar.DAY_OF_MONTH);
-		int iHours = (hours == null ? 0 : hours % 24);
-		int iMins = (minutes == null ? 0 : minutes);
+// Calendar cal = Calendar.getInstance();
+// cal.setTime(dateFieldInput);
+// int year = cal.get(Calendar.YEAR);
+// int month = cal.get(Calendar.MONTH) + 1;
+// int day = cal.get(Calendar.DAY_OF_MONTH);
+// int iHours = (hours == null ? 0 : hours % 24);
+// int iMins = (minutes == null ? 0 : minutes);
+//
+// // Use the input to create a date object with proper timezone
+// MutableDateTime date = new MutableDateTime(year, month, day, iHours, iMins, 0, 0,
+// DateTimeZone.forTimeZone(tzClient));
 
-		// Use the input to create a date object with proper timezone
-		MutableDateTime date = new MutableDateTime(year, month, day, iHours, iMins, 0, 0,
+		// Use the input to create a date object. Ignore the timezone provided by dateFieldInput and
+		// use tzClient instead. No re-calculation will happen. It should be the same as above.
+		MutableDateTime date = new MutableDateTime(dateFieldInput,
 			DateTimeZone.forTimeZone(tzClient));
 		log.error("1. date: " + date.getMillis() + "  " + date);
 
