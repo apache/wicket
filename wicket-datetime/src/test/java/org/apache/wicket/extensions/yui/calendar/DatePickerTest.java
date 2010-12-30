@@ -18,6 +18,7 @@ package org.apache.wicket.extensions.yui.calendar;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -186,21 +187,21 @@ public class DatePickerTest extends WicketTestCase
 		DateTimeZone.setDefault(DateTimeZone.forTimeZone(tzServer));
 		Locale.setDefault(Locale.GERMAN);
 
-		Date orig = convertDate("06.11.2010", null, null, null, false, tzClient);
-		Date origJoda = convertDateJoda("06.11.2010", null, null, null, false, tzClient);
+// Date orig = convertDate("06.11.2010", null, null, null, false, tzClient);
+// Date origJoda = convertDateJoda("06.11.2010", null, null, null, false, tzClient);
 		Date orig3 = convertDateNew("06.11.2010", null, null, null, false, tzClient);
 
 		MutableDateTime dt = new MutableDateTime(DateTimeZone.forTimeZone(tzClient));
 		dt.setDateTime(2010, 11, 06, 0, 0, 0, 0);
 		Date date = new Date(dt.getMillis());
 
-		log.error("actual: " + orig.getTime() + "; joda: " + origJoda.getTime() + "; origNew: " +
+		log.error(/* "actual: " + orig.getTime() + "; joda: " + origJoda.getTime() + */"; origNew: " +
 			orig3.getTime() + "; expected: " + date.getTime());
-		log.error("actual: " + orig + "; joda: " + origJoda + "; origNew: " + orig3 +
+		log.error(/* "actual: " + orig + "; joda: " + origJoda + */"; origNew: " + orig3 +
 			"; expected: " + date);
 		assertEquals(date.getTime(), orig3.getTime());
-		assertEquals(date.getTime(), orig.getTime());
-		assertEquals(origJoda.getTime(), orig.getTime());
+// assertEquals(date.getTime(), orig.getTime());
+// assertEquals(origJoda.getTime(), orig.getTime());
 	}
 
 	/**
@@ -217,21 +218,21 @@ public class DatePickerTest extends WicketTestCase
 		DateTimeZone.setDefault(DateTimeZone.forTimeZone(tzServer));
 		Locale.setDefault(Locale.GERMAN);
 
-		Date orig = convertDate("06.11.2010", 0, 0, AM_PM.AM, false, tzClient);
-		Date origJoda = convertDateJoda("06.11.2010", 0, 0, AM_PM.AM, false, tzClient);
+// Date orig = convertDate("06.11.2010", 0, 0, AM_PM.AM, false, tzClient);
+// Date origJoda = convertDateJoda("06.11.2010", 0, 0, AM_PM.AM, false, tzClient);
 		Date orig3 = convertDateNew("06.11.2010", 0, 0, AM_PM.AM, false, tzClient);
 
 		MutableDateTime dt = new MutableDateTime(DateTimeZone.forTimeZone(tzClient));
 		dt.setDateTime(2010, 11, 06, 0, 0, 0, 0);
 		Date date = new Date(dt.getMillis());
 
-		log.error("actual: " + orig.getTime() + "; joda: " + origJoda.getTime() + "; origNew: " +
+		log.error(/* "actual: " + orig.getTime() + "; joda: " + origJoda.getTime() + */"; origNew: " +
 			orig3.getTime() + "; expected: " + date.getTime());
-		log.error("actual: " + orig + "; joda: " + origJoda + "; origNew: " + orig3 +
+		log.error(/* "actual: " + orig + "; joda: " + origJoda + */"; origNew: " + orig3 +
 			"; expected: " + date);
 		assertEquals(date.getTime(), orig3.getTime());
-		assertEquals(date.getTime(), orig.getTime());
-		assertEquals(origJoda.getTime(), orig.getTime());
+// assertEquals(date.getTime(), orig.getTime());
+// assertEquals(origJoda.getTime(), orig.getTime());
 	}
 
 	/**
@@ -248,21 +249,21 @@ public class DatePickerTest extends WicketTestCase
 		DateTimeZone.setDefault(DateTimeZone.forTimeZone(tzServer));
 		Locale.setDefault(Locale.GERMAN);
 
-		Date orig = convertDate("06.11.2010", 12, 0, null, false, tzClient);
-		Date origJoda = convertDateJoda("06.11.2010", 12, 0, null, false, tzClient);
+// Date orig = convertDate("06.11.2010", 12, 0, null, false, tzClient);
+// Date origJoda = convertDateJoda("06.11.2010", 12, 0, null, false, tzClient);
 		Date orig3 = convertDateNew("06.11.2010", 12, 0, null, false, tzClient);
 
 		MutableDateTime dt = new MutableDateTime(DateTimeZone.forTimeZone(tzClient));
 		dt.setDateTime(2010, 11, 06, 12, 0, 0, 0);
 		Date date = new Date(dt.getMillis());
 
-		log.error("actual: " + orig.getTime() + "; joda: " + origJoda.getTime() + "; origNew: " +
+		log.error(/* "actual: " + orig.getTime() + "; joda: " + origJoda.getTime() + */"; origNew: " +
 			orig3.getTime() + "; expected: " + date.getTime());
-		log.error("actual: " + orig + "; joda: " + origJoda + "; origNew: " + orig3 +
+		log.error(/* "actual: " + orig + "; joda: " + origJoda + */"; origNew: " + orig3 +
 			"; expected: " + date);
 		assertEquals(date.getTime(), orig3.getTime());
-		assertEquals(date.getTime(), orig.getTime());
-		assertEquals(origJoda.getTime(), orig.getTime());
+// assertEquals(date.getTime(), orig.getTime());
+// assertEquals(origJoda.getTime(), orig.getTime());
 	}
 
 	/**
@@ -371,22 +372,22 @@ public class DatePickerTest extends WicketTestCase
 		}
 
 		// Get year, month and day ignoring any timezone of the Date object
-// Calendar cal = Calendar.getInstance();
-// cal.setTime(dateFieldInput);
-// int year = cal.get(Calendar.YEAR);
-// int month = cal.get(Calendar.MONTH) + 1;
-// int day = cal.get(Calendar.DAY_OF_MONTH);
-// int iHours = (hours == null ? 0 : hours % 24);
-// int iMins = (minutes == null ? 0 : minutes);
-//
-// // Use the input to create a date object with proper timezone
-// MutableDateTime date = new MutableDateTime(year, month, day, iHours, iMins, 0, 0,
-// DateTimeZone.forTimeZone(tzClient));
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(dateFieldInput);
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH) + 1;
+		int day = cal.get(Calendar.DAY_OF_MONTH);
+		int iHours = (hours == null ? 0 : hours % 24);
+		int iMins = (minutes == null ? 0 : minutes);
+
+		// Use the input to create a date object with proper timezone
+		MutableDateTime date = new MutableDateTime(year, month, day, iHours, iMins, 0, 0,
+			DateTimeZone.forTimeZone(tzClient));
 
 		// Use the input to create a date object. Ignore the timezone provided by dateFieldInput and
 		// use tzClient instead. No re-calculation will happen. It should be the same as above.
-		MutableDateTime date = new MutableDateTime(dateFieldInput,
-			DateTimeZone.forTimeZone(tzClient));
+// MutableDateTime date = new MutableDateTime(dateFieldInput,
+// DateTimeZone.forTimeZone(tzClient));
 		log.error("1. date: " + date.getMillis() + "  " + date);
 
 		// Adjust for halfday if needed

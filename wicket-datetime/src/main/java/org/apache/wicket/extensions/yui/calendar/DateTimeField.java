@@ -17,6 +17,7 @@
 package org.apache.wicket.extensions.yui.calendar;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
@@ -324,59 +325,35 @@ public class DateTimeField extends FormComponentPanel<Date>
 		{
 			// Get the converted input values
 			Date dateFieldInput = dateField.getConvertedInput();
-			Integer hours = hoursField.getConvertedInput();
-			Integer minutes = minutesField.getConvertedInput();
-			AM_PM amOrPm = amOrPmChoice.getConvertedInput();
+			Integer hoursInput = hoursField.getConvertedInput();
+			Integer minutesInput = minutesField.getConvertedInput();
+			AM_PM amOrPmInput = amOrPmChoice.getConvertedInput();
 
-			// Default to today, if date entry was invisible
-			final MutableDateTime date;
-			if (dateFieldInput != null)
+			// Default with "now"
+			if (dateFieldInput == null)
 			{
-				date = new MutableDateTime(dateFieldInput);
-			}
-			else
-			{
-				// Current date
-				date = new MutableDateTime();
+				dateFieldInput = new Date();
 			}
 
-			// always set secs to 0
-			date.setSecondOfMinute(0);
+			// Get year, month and day ignoring any timezone of the Date object
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(dateFieldInput);
+			int year = cal.get(Calendar.YEAR);
+			int month = cal.get(Calendar.MONTH) + 1;
+			int day = cal.get(Calendar.DAY_OF_MONTH);
+			int hours = (hoursInput == null ? 0 : hoursInput % 24);
+			int minutes = (minutesInput == null ? 0 : minutesInput);
 
-			// "Calculate" the date with the different input parameters
+			// Use the input to create a date object with proper timezone
+			MutableDateTime date = new MutableDateTime(year, month, day, hours, minutes, 0, 0,
+				DateTimeZone.forTimeZone(getClientTimeZone()));
 
-			// The AM/PM field
-			boolean use12HourFormat = use12HourFormat();
-			if (use12HourFormat)
+			// Adjust for halfday if needed
+			if (use12HourFormat())
 			{
-				date.set(DateTimeFieldType.halfdayOfDay(), amOrPm == AM_PM.PM ? 1 : 0);
-			}
-
-			// The hours
-			if ((hoursField.isVisibleInHierarchy() == false) || (hours == null))
-			{
-				date.setHourOfDay(0);
-			}
-			else
-			{
-				date.set(DateTimeFieldType.hourOfDay(), hours % getMaximumHours(use12HourFormat));
-			}
-
-			// The minutes
-			if ((minutesField.isVisibleInHierarchy() == false) || (minutes == null))
-			{
-				date.setMinuteOfHour(0);
-			}
-			else
-			{
-				date.setMinuteOfHour(minutes);
-			}
-
-			// Use the client timezone to properly calculate the millisecs
-			TimeZone zone = getClientTimeZone();
-			if (zone != null)
-			{
-				date.setZoneRetainFields(DateTimeZone.forTimeZone(zone));
+				int halfday = (amOrPm == AM_PM.PM ? 1 : 0);
+				date.set(DateTimeFieldType.halfdayOfDay(), halfday);
+				date.set(DateTimeFieldType.hourOfDay(), hours % 12);
 			}
 
 			// The date will be in the server's timezone
