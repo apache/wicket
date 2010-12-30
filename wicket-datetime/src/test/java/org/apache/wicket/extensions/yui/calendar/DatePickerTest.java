@@ -18,6 +18,7 @@ package org.apache.wicket.extensions.yui.calendar;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -54,6 +55,7 @@ public class DatePickerTest extends WicketTestCase
 	protected void tearDown() throws Exception
 	{
 		TimeZone.setDefault(defaultTz);
+		DateTimeZone.setDefault(DateTimeZone.forTimeZone(defaultTz));
 
 		super.tearDown();
 	}
@@ -105,6 +107,7 @@ public class DatePickerTest extends WicketTestCase
 		TimeZone tzServer = TimeZone.getTimeZone("Europe/Berlin");
 
 		TimeZone.setDefault(tzServer);
+		DateTimeZone.setDefault(DateTimeZone.forTimeZone(tzServer));
 
 		Class<? extends Page> pageClass = DatesPage2.class;
 		MutableDateTime dt = new MutableDateTime(DateTimeZone.forTimeZone(tzClient));
@@ -134,6 +137,43 @@ public class DatePickerTest extends WicketTestCase
 	}
 
 	/**
+	 * Tests joda & jvm default time zone handling
+	 */
+	public void testJodaTimeDefaultTimeZone()
+	{
+		TimeZone origJvmDef = TimeZone.getDefault();
+		DateTimeZone origJodaDef = DateTimeZone.getDefault();
+
+		// lets find a timezone different from current default
+		String newId = null;
+		for (String id : TimeZone.getAvailableIDs())
+		{
+			if (!id.equals(origJvmDef.getID()))
+			{
+				newId = id;
+				break;
+			}
+		}
+
+		assertNotNull(newId);
+
+		TimeZone.setDefault(TimeZone.getTimeZone(newId));
+
+		TimeZone newJvmDef = TimeZone.getDefault();
+		DateTimeZone newJodaDef = DateTimeZone.getDefault();
+
+		// if this fails we are under security manager
+		// and we have no right to set default timezone
+		assertNotSame(origJvmDef, newJvmDef);
+
+		// this should be true because joda caches the
+		// default timezone and even for the first
+		// lookup it uses a System property if possible
+		// for more info see org.joda.time.DateTimeZone.getDefault()
+		assertSame(origJodaDef, newJodaDef);
+	}
+
+	/**
 	 * 
 	 * @throws ParseException
 	 */
@@ -144,18 +184,22 @@ public class DatePickerTest extends WicketTestCase
 		TimeZone tzServer = TimeZone.getTimeZone("Europe/Berlin");
 
 		TimeZone.setDefault(tzServer);
+		DateTimeZone.setDefault(DateTimeZone.forTimeZone(tzServer));
 		Locale.setDefault(Locale.GERMAN);
 
 		Date orig = convertDate("06.11.2010", null, null, null, false, tzClient);
 		Date origJoda = convertDateJoda("06.11.2010", null, null, null, false, tzClient);
+		Date orig3 = convertDateNew("06.11.2010", null, null, null, false, tzClient);
 
 		MutableDateTime dt = new MutableDateTime(DateTimeZone.forTimeZone(tzClient));
 		dt.setDateTime(2010, 11, 06, 0, 0, 0, 0);
 		Date date = new Date(dt.getMillis());
 
-		log.error("actual: " + orig.getTime() + "; joda: " + origJoda.getTime() + "; expected: " +
-			date.getTime());
-		log.error("actual: " + orig + "; joda: " + origJoda + "; expected: " + date);
+		log.error("actual: " + orig.getTime() + "; joda: " + origJoda.getTime() + "; origNew: " +
+			orig3.getTime() + "; expected: " + date.getTime());
+		log.error("actual: " + orig + "; joda: " + origJoda + "; origNew: " + orig3 +
+			"; expected: " + date);
+		assertEquals(date.getTime(), orig3.getTime());
 		assertEquals(date.getTime(), orig.getTime());
 		assertEquals(origJoda.getTime(), orig.getTime());
 	}
@@ -171,18 +215,22 @@ public class DatePickerTest extends WicketTestCase
 		TimeZone tzServer = TimeZone.getTimeZone("Europe/Berlin");
 
 		TimeZone.setDefault(tzServer);
+		DateTimeZone.setDefault(DateTimeZone.forTimeZone(tzServer));
 		Locale.setDefault(Locale.GERMAN);
 
 		Date orig = convertDate("06.11.2010", 0, 0, AM_PM.AM, false, tzClient);
 		Date origJoda = convertDateJoda("06.11.2010", 0, 0, AM_PM.AM, false, tzClient);
+		Date orig3 = convertDateNew("06.11.2010", 0, 0, AM_PM.AM, false, tzClient);
 
 		MutableDateTime dt = new MutableDateTime(DateTimeZone.forTimeZone(tzClient));
 		dt.setDateTime(2010, 11, 06, 0, 0, 0, 0);
 		Date date = new Date(dt.getMillis());
 
-		log.error("actual: " + orig.getTime() + "; joda: " + origJoda.getTime() + "; expected: " +
-			date.getTime());
-		log.error("actual: " + orig + "; joda: " + origJoda + "; expected: " + date);
+		log.error("actual: " + orig.getTime() + "; joda: " + origJoda.getTime() + "; origNew: " +
+			orig3.getTime() + "; expected: " + date.getTime());
+		log.error("actual: " + orig + "; joda: " + origJoda + "; origNew: " + orig3 +
+			"; expected: " + date);
+		assertEquals(date.getTime(), orig3.getTime());
 		assertEquals(date.getTime(), orig.getTime());
 		assertEquals(origJoda.getTime(), orig.getTime());
 	}
@@ -198,18 +246,22 @@ public class DatePickerTest extends WicketTestCase
 		TimeZone tzServer = TimeZone.getTimeZone("Europe/Berlin");
 
 		TimeZone.setDefault(tzServer);
+		DateTimeZone.setDefault(DateTimeZone.forTimeZone(tzServer));
 		Locale.setDefault(Locale.GERMAN);
 
 		Date orig = convertDate("06.11.2010", 12, 0, null, false, tzClient);
 		Date origJoda = convertDateJoda("06.11.2010", 12, 0, null, false, tzClient);
+		Date orig3 = convertDateNew("06.11.2010", 12, 0, null, false, tzClient);
 
 		MutableDateTime dt = new MutableDateTime(DateTimeZone.forTimeZone(tzClient));
 		dt.setDateTime(2010, 11, 06, 12, 0, 0, 0);
 		Date date = new Date(dt.getMillis());
 
-		log.error("actual: " + orig.getTime() + "; joda: " + origJoda.getTime() + "; expected: " +
-			date.getTime());
-		log.error("actual: " + orig + "; joda: " + origJoda + "; expected: " + date);
+		log.error("actual: " + orig.getTime() + "; joda: " + origJoda.getTime() + "; origNew: " +
+			orig3.getTime() + "; expected: " + date.getTime());
+		log.error("actual: " + orig + "; joda: " + origJoda + "; origNew: " + orig3 +
+			"; expected: " + date);
+		assertEquals(date.getTime(), orig3.getTime());
 		assertEquals(date.getTime(), orig.getTime());
 		assertEquals(origJoda.getTime(), orig.getTime());
 	}
@@ -268,7 +320,7 @@ public class DatePickerTest extends WicketTestCase
 		{
 			date.set(DateTimeFieldType.hourOfDay(), hours % (use12HourFormat ? 12 : 24));
 		}
-		log.error("4. hours: " + date.getMillis() + "  " + date);
+		log.error("5. hours: " + date.getMillis() + "  " + date);
 
 		// The minutes
 		if (minutes == null)
@@ -279,17 +331,72 @@ public class DatePickerTest extends WicketTestCase
 		{
 			date.setMinuteOfHour(minutes);
 		}
-		log.error("5. minutes: " + date.getMillis() + "  " + date);
+		log.error("6. minutes: " + date.getMillis() + "  " + date);
 
 		// Use the client timezone to properly calculate the millisecs
 		if (tzClient != null)
 		{
 			date.setZoneRetainFields(DateTimeZone.forTimeZone(tzClient));
-			log.error("6. zone: " + date.getMillis() + "  " + date);
+			log.error("7. zone: " + date.getMillis() + "  " + date);
 		}
 
 		Date rtn = new Date(date.getMillis());
-		log.error("7. final date: " + rtn.getTime() + "  " + rtn);
+		log.error("8. final date: " + rtn.getTime() + "  " + rtn);
+		return rtn;
+	}
+
+	/**
+	 * Simulate what DateTimeField does
+	 * 
+	 * @param dateStr
+	 * @param hours
+	 * @param minutes
+	 * @param amOrPm
+	 * @param use12HourFormat
+	 * @param tzClient
+	 * @return Date
+	 * @throws ParseException
+	 */
+	public Date convertDateNew(final String dateStr, final Integer hours, final Integer minutes,
+		final AM_PM amOrPm, final boolean use12HourFormat, final TimeZone tzClient)
+		throws ParseException
+	{
+		log.error(">>> convertDateNew()");
+		// This is what I get from field.getConvertedInput()
+		Date dateFieldInput = (dateStr != null ? DateFormat.getDateInstance().parse(dateStr) : null);
+
+		// Default with "now"
+		if (dateFieldInput == null)
+		{
+			dateFieldInput = new Date();
+		}
+
+		// Get year, month and day ignoring any timezone of the Date object
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(dateFieldInput);
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH) + 1;
+		int day = cal.get(Calendar.DAY_OF_MONTH);
+		int iHours = (hours == null ? 0 : hours % 24);
+		int iMins = (minutes == null ? 0 : minutes);
+
+		// Use the input to create a date object with proper timezone
+		MutableDateTime date = new MutableDateTime(year, month, day, iHours, iMins, 0, 0,
+			DateTimeZone.forTimeZone(tzClient));
+		log.error("1. date: " + date.getMillis() + "  " + date);
+
+		// Adjust for halfday if needed
+		int halfday = 0;
+		if (use12HourFormat)
+		{
+			halfday = (amOrPm == AM_PM.PM ? 1 : 0);
+			date.set(DateTimeFieldType.halfdayOfDay(), halfday);
+			date.set(DateTimeFieldType.hourOfDay(), hours % 12);
+		}
+		log.error("2. halfday adjustments: " + date.getMillis() + "  " + date);
+
+		Date rtn = new Date(date.getMillis());
+		log.error("3. final date: " + rtn.getTime() + "  " + rtn);
 		return rtn;
 	}
 
