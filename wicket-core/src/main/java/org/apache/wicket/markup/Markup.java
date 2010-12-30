@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -28,12 +29,12 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The content of a markup file, consisting of a list of markup elements.
- * 
+ *
  * @see MarkupResourceStream
  * @see MarkupElement
  * @see ComponentTag
  * @see RawMarkup
- * 
+ *
  * @author Juergen Donnerstag
  */
 public class Markup implements IMarkupFragment
@@ -59,7 +60,18 @@ public class Markup implements IMarkupFragment
 
 	/**
 	 * Constructor
-	 * 
+	 *
+	 * @param markup
+	 *            The associated Markup
+	 */
+	public Markup(final CharSequence markup)
+	{
+		this(new MarkupResourceStream(new StringResourceStream(markup)));
+	}
+
+	/**
+	 * Constructor
+	 *
 	 * @param markupResourceStream
 	 *            The associated Markup
 	 */
@@ -85,7 +97,7 @@ public class Markup implements IMarkupFragment
 	}
 
 	/**
-	 * 
+	 *
 	 * @return The fixed location as a string, e.g. the file name or the URL. Return null to avoid
 	 *         caching the markup.
 	 */
@@ -101,7 +113,7 @@ public class Markup implements IMarkupFragment
 
 	/**
 	 * Add a MarkupElement
-	 * 
+	 *
 	 * @param markupElement
 	 */
 	final public void addMarkupElement(final MarkupElement markupElement)
@@ -111,7 +123,7 @@ public class Markup implements IMarkupFragment
 
 	/**
 	 * Add a MarkupElement
-	 * 
+	 *
 	 * @param pos
 	 * @param markupElement
 	 */
