@@ -81,8 +81,49 @@ public class CreditCardValidator extends AbstractValidator<String>
 	/** The ID which represents the credit card institute. */
 	private CreditCard cardId = CreditCard.INVALID;
 
+	private boolean failOnUnknown = true;
+
+	/**
+	 * Construct.
+	 */
+	public CreditCardValidator()
+	{
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param failOnUnkown
+	 */
+	public CreditCardValidator(final boolean failOnUnkown)
+	{
+		failOnUnknown = failOnUnkown;
+	}
+
+	/**
+	 * 
+	 * @return Credit card issuer
+	 */
+	public final CreditCard getCardId()
+	{
+		return cardId;
+	}
+
+	/**
+	 * Allow subclasses to set the card id
+	 * 
+	 * @param cardId
+	 */
+	protected void setCardId(final CreditCard cardId)
+	{
+		this.cardId = cardId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	protected void onValidate(IValidatable<String> validatable)
+	protected void onValidate(final IValidatable<String> validatable)
 	{
 		final String value = validatable.getValue();
 
@@ -93,7 +134,7 @@ public class CreditCardValidator extends AbstractValidator<String>
 				error(validatable);
 			}
 		}
-		catch (final NumberFormatException _)
+		catch (final NumberFormatException ex)
 		{
 			error(validatable);
 		}
@@ -107,76 +148,23 @@ public class CreditCardValidator extends AbstractValidator<String>
 	 * @return <code>TRUE</code> if the credit card number could be determined as a valid number,
 	 *         else <code>FALSE</code> is returned
 	 */
-	private boolean isLengthAndPrefixCorrect(String creditCardNumber)
+	protected boolean isLengthAndPrefixCorrect(String creditCardNumber)
 	{
-		if (creditCardNumber != null)
+		if (creditCardNumber == null)
 		{
-			// strip spaces and dashes
-			creditCardNumber = creditCardNumber.replaceAll("[ -]", "");
+			return false;
 		}
+
+		// strip spaces and dashes
+		creditCardNumber = creditCardNumber.replaceAll("[ -]", "");
 
 		// the length of the credit card number has to be between 12 and 19.
 		// else the number is invalid.
-		if (creditCardNumber != null && creditCardNumber.length() >= 12 &&
-			creditCardNumber.length() <= 19)
+		if ((creditCardNumber.length() >= 12) && (creditCardNumber.length() <= 19) &&
+			isChecksumCorrect(creditCardNumber))
 		{
-			if (isAmericanExpress(creditCardNumber))
-			{
-				return true;
-			}
-			else if (isChinaUnionPay(creditCardNumber))
-			{
-				return true;
-			}
-			else if (isDinersClubCarteBlanche(creditCardNumber))
-			{
-				return true;
-			}
-			else if (isDinersClubInternational(creditCardNumber))
-			{
-				return true;
-			}
-			else if (isDinersClubUsAndCanada(creditCardNumber))
-			{
-				return true;
-			}
-			else if (isDiscoverCard(creditCardNumber))
-			{
-				return true;
-			}
-			else if (isJCB(creditCardNumber))
-			{
-				return true;
-			}
-			else if (isLaser(creditCardNumber))
-			{
-				return true;
-			}
-			else if (isMaestro(creditCardNumber))
-			{
-				return true;
-			}
-			else if (isMastercard(creditCardNumber))
-			{
-				return true;
-			}
-			else if (isSolo(creditCardNumber))
-			{
-				return true;
-			}
-			else if (isSwitch(creditCardNumber))
-			{
-				return true;
-			}
-			else if (isVisa(creditCardNumber))
-			{
-				return true;
-			}
-			else if (isVisaElectron(creditCardNumber))
-			{
-				return true;
-			}
-			else if (isUnknown(creditCardNumber))
+			if ((failOnUnknown == false) ||
+				(determineCardId(creditCardNumber) != CreditCard.INVALID))
 			{
 				return true;
 			}
@@ -186,17 +174,105 @@ public class CreditCardValidator extends AbstractValidator<String>
 	}
 
 	/**
+	 * Checks if the credit card number can be determined as a valid number.
+	 * 
+	 * @param creditCardNumber
+	 *            the credit card number as a string
+	 * @return <code>TRUE</code> if the credit card number could be determined as a valid number,
+	 *         else <code>FALSE</code> is returned
+	 */
+	public final CreditCard determineCardId(String creditCardNumber)
+	{
+		if (creditCardNumber == null)
+		{
+			return CreditCard.INVALID;
+		}
+
+		// strip spaces and dashes
+		creditCardNumber = creditCardNumber.replaceAll("[ -]", "");
+
+		// the length of the credit card number has to be between 12 and 19.
+		// else the number is invalid.
+		if ((creditCardNumber.length() >= 12) && (creditCardNumber.length() <= 19) &&
+			isChecksumCorrect(creditCardNumber))
+		{
+			cardId = CreditCard.INVALID;
+			if (cardId == CreditCard.INVALID)
+			{
+				cardId = isAmericanExpress(creditCardNumber);
+			}
+			if (cardId == CreditCard.INVALID)
+			{
+				cardId = isChinaUnionPay(creditCardNumber);
+			}
+			if (cardId == CreditCard.INVALID)
+			{
+				cardId = isDinersClubCarteBlanche(creditCardNumber);
+			}
+			if (cardId == CreditCard.INVALID)
+			{
+				cardId = isDinersClubInternational(creditCardNumber);
+			}
+			if (cardId == CreditCard.INVALID)
+			{
+				cardId = isDinersClubUsAndCanada(creditCardNumber);
+			}
+			if (cardId == CreditCard.INVALID)
+			{
+				cardId = isDiscoverCard(creditCardNumber);
+			}
+			if (cardId == CreditCard.INVALID)
+			{
+				cardId = isJCB(creditCardNumber);
+			}
+			if (cardId == CreditCard.INVALID)
+			{
+				cardId = isLaser(creditCardNumber);
+			}
+			if (cardId == CreditCard.INVALID)
+			{
+				cardId = isMaestro(creditCardNumber);
+			}
+			if (cardId == CreditCard.INVALID)
+			{
+				cardId = isMastercard(creditCardNumber);
+			}
+			if (cardId == CreditCard.INVALID)
+			{
+				cardId = isSolo(creditCardNumber);
+			}
+			if (cardId == CreditCard.INVALID)
+			{
+				cardId = isSwitch(creditCardNumber);
+			}
+			if (cardId == CreditCard.INVALID)
+			{
+				cardId = isVisa(creditCardNumber);
+			}
+			if (cardId == CreditCard.INVALID)
+			{
+				cardId = isVisaElectron(creditCardNumber);
+			}
+		}
+		else
+		{
+			cardId = isUnknown(creditCardNumber);
+		}
+
+		return cardId;
+	}
+
+	/**
 	 * Can be used (subclassed) to extend the test with a credit card not yet known by the
 	 * validator.
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
-	 * @return <code>TRUE</code> if the credit card number seems to be a valid American Express
-	 *         number. Else <code>FALSE</code> will be returned
+	 * @return The credit card id of the issuer
 	 */
-	protected boolean isUnknown(String creditCardNumber)
+	protected CreditCard isUnknown(String creditCardNumber)
 	{
-		return false;
+		return CreditCard.INVALID;
 	}
 
 	/**
@@ -206,25 +282,17 @@ public class CreditCardValidator extends AbstractValidator<String>
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
-	 * @return <code>TRUE</code> if the credit card number seems to be a valid American Express
-	 *         number. Else <code>FALSE</code> will be returned
+	 * @return The credit card id of the issuer
 	 */
-	private boolean isAmericanExpress(String creditCardNumber)
+	private CreditCard isAmericanExpress(String creditCardNumber)
 	{
-		cardId = CreditCard.INVALID;
-		boolean returnValue = false;
-
 		if (creditCardNumber.length() == 15 &&
 			(creditCardNumber.startsWith("34") || creditCardNumber.startsWith("37")))
 		{
-			if (isChecksumCorrect(creditCardNumber))
-			{
-				cardId = CreditCard.AMERICAN_EXPRESS;
-				returnValue = true;
-			}
+			return CreditCard.AMERICAN_EXPRESS;
 		}
 
-		return returnValue;
+		return CreditCard.INVALID;
 	}
 
 	/**
@@ -235,26 +303,21 @@ public class CreditCardValidator extends AbstractValidator<String>
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
-	 * @return <code>TRUE</code> if the credit card number seems to be a valid China UnionPay
-	 *         number. Else <code>FALSE</code> will be returned.
+	 * @return The credit card id of the issuer
 	 */
-	private boolean isChinaUnionPay(String creditCardNumber)
+	private CreditCard isChinaUnionPay(String creditCardNumber)
 	{
-		cardId = CreditCard.INVALID;
-		boolean returnValue = false;
-
 		if ((creditCardNumber.length() >= 16 && creditCardNumber.length() <= 19) &&
 			(creditCardNumber.startsWith("622")))
 		{
 			int firstDigits = Integer.parseInt(creditCardNumber.substring(0, 5));
 			if (firstDigits >= 622126 && firstDigits <= 622925)
 			{
-				cardId = CreditCard.CHINA_UNIONPAY;
-				returnValue = true;
+				return CreditCard.CHINA_UNIONPAY;
 			}
 		}
 
-		return returnValue;
+		return CreditCard.INVALID;
 	}
 
 	/**
@@ -264,25 +327,20 @@ public class CreditCardValidator extends AbstractValidator<String>
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
-	 * @return <code>TRUE</code> if the credit card number seems to be a valid Diners Club Carte
-	 *         Blanche number. Else <code>FALSE</code> will be returned
+	 * @return The credit card id of the issuer
 	 */
-	private boolean isDinersClubCarteBlanche(String creditCardNumber)
+	private CreditCard isDinersClubCarteBlanche(String creditCardNumber)
 	{
-		cardId = CreditCard.INVALID;
-		boolean returnValue = false;
-
 		if (creditCardNumber.length() == 14 && creditCardNumber.startsWith("30"))
 		{
 			int firstDigits = Integer.parseInt(creditCardNumber.substring(0, 3));
-			if (firstDigits >= 300 && firstDigits <= 305 && isChecksumCorrect(creditCardNumber))
+			if (firstDigits >= 300 && firstDigits <= 305)
 			{
-				cardId = CreditCard.DINERS_CLUB_CARTE_BLANCHE;
-				returnValue = true;
+				return CreditCard.DINERS_CLUB_CARTE_BLANCHE;
 			}
 		}
 
-		return returnValue;
+		return CreditCard.INVALID;
 	}
 
 	/**
@@ -292,22 +350,16 @@ public class CreditCardValidator extends AbstractValidator<String>
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
-	 * @return <code>TRUE</code> if the credit card number seems to be a valid Diners Club
-	 *         International number. Else <code>FALSE</code> will be returned
+	 * @return The credit card id of the issuer
 	 */
-	private boolean isDinersClubInternational(String creditCardNumber)
+	private CreditCard isDinersClubInternational(String creditCardNumber)
 	{
-		cardId = CreditCard.INVALID;
-		boolean returnValue = false;
-
-		if (creditCardNumber.length() == 14 && creditCardNumber.startsWith("36") &&
-			isChecksumCorrect(creditCardNumber))
+		if (creditCardNumber.length() == 14 && creditCardNumber.startsWith("36"))
 		{
-			cardId = CreditCard.DINERS_CLUB_INTERNATIONAL;
-			returnValue = true;
+			return CreditCard.DINERS_CLUB_INTERNATIONAL;
 		}
 
-		return returnValue;
+		return CreditCard.INVALID;
 	}
 
 	/**
@@ -317,23 +369,17 @@ public class CreditCardValidator extends AbstractValidator<String>
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
-	 * @return <code>TRUE</code> if the credit card number seems to be a valid Diners Club US &
-	 *         Canada number. Else <code>FALSE</code> will be returned
+	 * @return The credit card id of the issuer
 	 */
-	private boolean isDinersClubUsAndCanada(String creditCardNumber)
+	private CreditCard isDinersClubUsAndCanada(String creditCardNumber)
 	{
-		cardId = CreditCard.INVALID;
-		boolean returnValue = false;
-
 		if (creditCardNumber.length() == 16 &&
-			(creditCardNumber.startsWith("54") || creditCardNumber.startsWith("55")) &&
-			isChecksumCorrect(creditCardNumber))
+			(creditCardNumber.startsWith("54") || creditCardNumber.startsWith("55")))
 		{
-			cardId = CreditCard.DINERS_CLUB_US_AND_CANADA;
-			returnValue = true;
+			return CreditCard.DINERS_CLUB_US_AND_CANADA;
 		}
 
-		return returnValue;
+		return CreditCard.INVALID;
 	}
 
 	/**
@@ -343,16 +389,11 @@ public class CreditCardValidator extends AbstractValidator<String>
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
-	 * @return <code>TRUE</code> if the credit card number seems to be a valid Discover Card number.
-	 *         Else <code>FALSE</code> will be returned
+	 * @return The credit card id of the issuer
 	 */
-	private boolean isDiscoverCard(String creditCardNumber)
+	private CreditCard isDiscoverCard(String creditCardNumber)
 	{
-		cardId = CreditCard.INVALID;
-		boolean returnValue = false;
-
-		if (creditCardNumber.length() == 16 && creditCardNumber.startsWith("6") &&
-			isChecksumCorrect(creditCardNumber))
+		if (creditCardNumber.length() == 16 && creditCardNumber.startsWith("6"))
 		{
 			int firstThreeDigits = Integer.parseInt(creditCardNumber.substring(0, 3));
 			int firstSixDigits = Integer.parseInt(creditCardNumber.substring(0, 6));
@@ -360,12 +401,11 @@ public class CreditCardValidator extends AbstractValidator<String>
 				(firstThreeDigits >= 644 && firstThreeDigits <= 649) ||
 				(firstSixDigits >= 622126 && firstSixDigits <= 622925))
 			{
-				cardId = CreditCard.DISCOVER_CARD;
-				returnValue = true;
+				return CreditCard.DISCOVER_CARD;
 			}
 		}
 
-		return returnValue;
+		return CreditCard.INVALID;
 	}
 
 	/**
@@ -374,25 +414,20 @@ public class CreditCardValidator extends AbstractValidator<String>
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
-	 * @return <code>TRUE</code> if the credit card number seems to be a valid JCB number. Else
-	 *         <code>FALSE</code> will be returned
+	 * @return The credit card id of the issuer
 	 */
-	private boolean isJCB(String creditCardNumber)
+	private CreditCard isJCB(String creditCardNumber)
 	{
-		cardId = CreditCard.INVALID;
-		boolean returnValue = false;
-
-		if (creditCardNumber.length() == 16 && isChecksumCorrect(creditCardNumber))
+		if (creditCardNumber.length() == 16)
 		{
 			int firstFourDigits = Integer.parseInt(creditCardNumber.substring(0, 4));
 			if (firstFourDigits >= 3528 && firstFourDigits <= 3589)
 			{
-				cardId = CreditCard.JCB;
-				returnValue = true;
+				return CreditCard.JCB;
 			}
 		}
 
-		return returnValue;
+		return CreditCard.INVALID;
 	}
 
 	/**
@@ -402,26 +437,20 @@ public class CreditCardValidator extends AbstractValidator<String>
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
-	 * @return <code>TRUE</code> if the credit card number seems to be a valid Laser number. Else
-	 *         <code>FALSE</code> will be returned
+	 * @return The credit card id of the issuer
 	 */
-	private boolean isLaser(String creditCardNumber)
+	private CreditCard isLaser(String creditCardNumber)
 	{
-		cardId = CreditCard.INVALID;
-		boolean returnValue = false;
-
-		if (creditCardNumber.length() >= 16 && creditCardNumber.length() <= 19 &&
-			isChecksumCorrect(creditCardNumber))
+		if (creditCardNumber.length() >= 16 && creditCardNumber.length() <= 19)
 		{
 			if (creditCardNumber.startsWith("6304") || creditCardNumber.startsWith("6706") ||
 				creditCardNumber.startsWith("6771") || creditCardNumber.startsWith("6709"))
 			{
-				cardId = CreditCard.LASER;
-				returnValue = true;
+				return CreditCard.LASER;
 			}
 		}
 
-		return returnValue;
+		return CreditCard.INVALID;
 	}
 
 	/**
@@ -431,28 +460,22 @@ public class CreditCardValidator extends AbstractValidator<String>
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
-	 * @return <code>TRUE</code> if the credit card number seems to be a valid Maestro number. Else
-	 *         <code>FALSE</code> will be returned
+	 * @return The credit card id of the issuer
 	 */
-	private boolean isMaestro(String creditCardNumber)
+	private CreditCard isMaestro(String creditCardNumber)
 	{
-		cardId = CreditCard.INVALID;
-		boolean returnValue = false;
-
-		if (creditCardNumber.length() >= 12 && creditCardNumber.length() <= 19 &&
-			isChecksumCorrect(creditCardNumber))
+		if (creditCardNumber.length() >= 12 && creditCardNumber.length() <= 19)
 		{
 			if (creditCardNumber.startsWith("5018") || creditCardNumber.startsWith("5020") ||
 				creditCardNumber.startsWith("5038") || creditCardNumber.startsWith("6304") ||
 				creditCardNumber.startsWith("6759") || creditCardNumber.startsWith("6761") ||
 				creditCardNumber.startsWith("6763"))
 			{
-				cardId = CreditCard.MAESTRO;
-				returnValue = true;
+				return CreditCard.MAESTRO;
 			}
 		}
 
-		return returnValue;
+		return CreditCard.INVALID;
 	}
 
 	/**
@@ -461,25 +484,20 @@ public class CreditCardValidator extends AbstractValidator<String>
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
-	 * @return <code>TRUE</code> if the credit card number seems to be a valid Solo number. Else
-	 *         <code>FALSE</code> will be returned
+	 * @return The credit card id of the issuer
 	 */
-	private boolean isSolo(String creditCardNumber)
+	private CreditCard isSolo(String creditCardNumber)
 	{
-		cardId = CreditCard.INVALID;
-		boolean returnValue = false;
-
-		if ((creditCardNumber.length() == 16 || creditCardNumber.length() == 18 || creditCardNumber.length() == 19) &&
-			isChecksumCorrect(creditCardNumber))
+		if ((creditCardNumber.length() == 16) || (creditCardNumber.length() == 18) ||
+			(creditCardNumber.length() == 19))
 		{
 			if (creditCardNumber.startsWith("6334") || creditCardNumber.startsWith("6767"))
 			{
-				cardId = CreditCard.SOLO;
-				returnValue = true;
+				return CreditCard.SOLO;
 			}
 		}
 
-		return returnValue;
+		return CreditCard.INVALID;
 	}
 
 	/**
@@ -489,28 +507,22 @@ public class CreditCardValidator extends AbstractValidator<String>
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
-	 * @return <code>TRUE</code> if the credit card number seems to be a valid Switch number. Else
-	 *         <code>FALSE</code> will be returned
+	 * @return The credit card id of the issuer
 	 */
-	private boolean isSwitch(String creditCardNumber)
+	private CreditCard isSwitch(String creditCardNumber)
 	{
-		cardId = CreditCard.INVALID;
-		boolean returnValue = false;
-
-		if ((creditCardNumber.length() == 16 || creditCardNumber.length() == 18 || creditCardNumber.length() == 19) &&
-			isChecksumCorrect(creditCardNumber))
+		if ((creditCardNumber.length() == 16 || creditCardNumber.length() == 18 || creditCardNumber.length() == 19))
 		{
 			if (creditCardNumber.startsWith("4903") || creditCardNumber.startsWith("4905") ||
 				creditCardNumber.startsWith("4911") || creditCardNumber.startsWith("4936") ||
 				creditCardNumber.startsWith("564182") || creditCardNumber.startsWith("633110") ||
 				creditCardNumber.startsWith("6333") || creditCardNumber.startsWith("6759"))
 			{
-				cardId = CreditCard.SWITCH;
-				returnValue = true;
+				return CreditCard.SWITCH;
 			}
 		}
 
-		return returnValue;
+		return CreditCard.INVALID;
 	}
 
 	/**
@@ -519,24 +531,19 @@ public class CreditCardValidator extends AbstractValidator<String>
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
-	 * @return <code>TRUE</code> if the credit card number seems to be a valid Visa number. Else
-	 *         <code>FALSE</code> will be returned
+	 * @return The credit card id of the issuer
 	 */
-	private boolean isVisa(String creditCardNumber)
+	private CreditCard isVisa(String creditCardNumber)
 	{
-		cardId = CreditCard.INVALID;
-		boolean returnValue = false;
-
 		if (creditCardNumber.length() == 13 || creditCardNumber.length() == 16)
 		{
 			if (creditCardNumber.startsWith("4"))
 			{
-				cardId = CreditCard.SWITCH;
-				returnValue = true;
+				return CreditCard.SWITCH;
 			}
 		}
 
-		return returnValue;
+		return CreditCard.INVALID;
 	}
 
 	/**
@@ -546,23 +553,18 @@ public class CreditCardValidator extends AbstractValidator<String>
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
-	 * @return <code>TRUE</code> if the credit card number seems to be a valid Visa Electron number.
-	 *         Else <code>FALSE</code> will be returned
+	 * @return The credit card id of the issuer
 	 */
-	private boolean isVisaElectron(String creditCardNumber)
+	private CreditCard isVisaElectron(String creditCardNumber)
 	{
-		cardId = CreditCard.INVALID;
-		boolean returnValue = false;
-
 		if (creditCardNumber.length() == 16 &&
 			(creditCardNumber.startsWith("417500") || creditCardNumber.startsWith("4917") ||
 				creditCardNumber.startsWith("4913") || creditCardNumber.startsWith("4508") || creditCardNumber.startsWith("4844")))
 		{
-			cardId = CreditCard.VISA_ELECTRON;
-			returnValue = true;
+			return CreditCard.VISA_ELECTRON;
 		}
 
-		return returnValue;
+		return CreditCard.INVALID;
 	}
 
 	/**
@@ -572,25 +574,20 @@ public class CreditCardValidator extends AbstractValidator<String>
 	 * 
 	 * @param creditCardNumber
 	 *            the credit card number as a string
-	 * @return <code>TRUE</code> if the credit card number seems to be a valid Mastercard number.
-	 *         Else <code>FALSE</code> will be returned
+	 * @return The credit card id of the issuer
 	 */
-	private boolean isMastercard(String creditCardNumber)
+	private CreditCard isMastercard(String creditCardNumber)
 	{
-		cardId = CreditCard.INVALID;
-		boolean returnValue = false;
-
-		if (creditCardNumber.length() == 16 && isChecksumCorrect(creditCardNumber))
+		if (creditCardNumber.length() == 16)
 		{
 			int firstTwoDigits = Integer.parseInt(creditCardNumber.substring(0, 2));
 			if (firstTwoDigits >= 51 && firstTwoDigits <= 55)
 			{
-				cardId = CreditCard.MASTERCARD;
-				returnValue = true;
+				return CreditCard.MASTERCARD;
 			}
 		}
 
-		return returnValue;
+		return CreditCard.INVALID;
 	}
 
 	/**
@@ -603,14 +600,13 @@ public class CreditCardValidator extends AbstractValidator<String>
 	 *         return <code>FALSE</code>
 	 * @see <a href="http://en.wikipedia.org/wiki/Luhn_algorithm">Wikipedie - Luhn algorithm</a>
 	 */
-	private boolean isChecksumCorrect(String creditCardNumber)
+	protected final boolean isChecksumCorrect(final String creditCardNumber)
 	{
-		String numberToCheck = creditCardNumber.replaceAll("[ -]", "");
 		int nulOffset = '0';
 		int sum = 0;
-		for (int i = 1; i <= numberToCheck.length(); i++)
+		for (int i = 1; i <= creditCardNumber.length(); i++)
 		{
-			int currentDigit = numberToCheck.charAt(numberToCheck.length() - i) - nulOffset;
+			int currentDigit = creditCardNumber.charAt(creditCardNumber.length() - i) - nulOffset;
 			if ((i % 2) == 0)
 			{
 				currentDigit *= 2;
