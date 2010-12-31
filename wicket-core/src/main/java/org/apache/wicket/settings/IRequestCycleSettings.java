@@ -36,9 +36,10 @@ import org.apache.wicket.util.time.Duration;
  * <i>renderStrategy </i>- Sets in what way the render part of a request is handled. Basically,
  * there are two different options:
  * <ul>
- * <li>Direct, ApplicationSettings.ONE_PASS_RENDER. Everything is handled in one physical request.
- * This is efficient, and is the best option if you want to do sophisticated clustering. It does not
- * however, shield you from what is commonly known as the <i>Double submit problem </i></li>
+ * <li>Direct, IRequestCycleSettings.RenderStrategy.ONE_PASS_RENDER. Everything is handled in one
+ * physical request. This is efficient, and is the best option if you want to do sophisticated
+ * clustering. It does not however, shield you from what is commonly known as the <i>Double submit
+ * problem </i></li>
  * <li>Using a redirect. This follows the pattern <a
  * href="http://www.theserverside.com/articles/article.tss?l=RedirectAfterPost" >as described at the
  * serverside </a> and that is commonly known as Redirect after post. Wicket takes it one step
@@ -46,20 +47,26 @@ import org.apache.wicket.util.time.Duration;
  * double submit problem, but also the IRequestListener handlers (that could be e.g. a link that
  * deletes a row). With this pattern, you have two options to choose from:
  * <ul>
- * <li>ApplicationSettings.REDIRECT_TO_RENDER. This option first handles the 'action' part of the
- * request, which is either page construction (bookmarkable pages or the home page) or calling a
- * IRequestListener handler, such as Link.onClick. When that part is done, a redirect is issued to
- * the render part, which does all the rendering of the page and its components. <strong>Be aware
- * </strong> that this may mean, depending on whether you access any models in the action part of
- * the request, that attachment and detachment of some models is done twice for a request.</li>
- * <li>ApplicationSettings.REDIRECT_TO_BUFFER. This option handles both the action- and the render
- * part of the request in one physical request, but instead of streaming the result to the browser
- * directly, it is kept in memory, and a redirect is issue to get this buffered result (after which
- * it is immediately removed). This option currently is the default render strategy, as it shields
- * you from the double submit problem, while being more efficient and less error prone regarding to
- * detachable models.</li>
+ * <li>IRequestCycleSettings.RenderStrategy.REDIRECT_TO_RENDER. This option first handles the
+ * 'action' part of the request, which is either page construction (bookmarkable pages or the home
+ * page) or calling a IRequestListener handler, such as Link.onClick. When that part is done, a
+ * redirect is issued to the render part, which does all the rendering of the page and its
+ * components. <strong>Be aware </strong> that this may mean, depending on whether you access any
+ * models in the action part of the request, that attachment and detachment of some models is done
+ * twice for a request.</li>
+ * <li>IRequestCycleSettings.RenderStrategy.REDIRECT_TO_BUFFER. This option handles both the action-
+ * and the render part of the request in one physical request, but instead of streaming the result
+ * to the browser directly, it is kept in memory, and a redirect is issue to get this buffered
+ * result (after which it is immediately removed). This option currently is the default render
+ * strategy, as it shields you from the double submit problem, while being more efficient and less
+ * error prone regarding to detachable models.</li>
  * </ul>
- * </li>
+ * Note: In rare cases the strategies involving redirect may lose session data! For example: if
+ * after the first phase of the strategy the server node fails without having the chance to
+ * replicate the session then the second phase will be executed on another node and the whole
+ * process will be restarted and thus anything stored in the first phase will be lost with the
+ * failure of the server node. For similar reasons it is recommended to use sticky sessions when
+ * using redirect strategies.</li>
  * </ul>
  * 
  * <p>
@@ -163,16 +170,20 @@ public interface IRequestCycleSettings
 	/**
 	 * In order to do proper form parameter encoding it is important that the response and the
 	 * subsequent request stipulate a common character encoding.
-	 *
+	 * 
 	 * possible form encodings and their problems:
-	 *
+	 * 
 	 * <ul>
-	 * <li><a href="http://www.crazysquirrel.com/computing/general/form-encoding.jspx">application/x-www-form-urlencoded</a></li>
-	 * <li><a href="http://stackoverflow.com/questions/546365/utf-8-text-is-garbled-when-form-is-posted-as-multipart-form-data">multipart/form-data</a></li>
+	 * <li><a
+	 * href="http://www.crazysquirrel.com/computing/general/form-encoding.jspx">application/x-
+	 * www-form-urlencoded</a></li>
+	 * <li><a href=
+	 * "http://stackoverflow.com/questions/546365/utf-8-text-is-garbled-when-form-is-posted-as-multipart-form-data"
+	 * >multipart/form-data</a></li>
 	 * </ul>
-	 *
+	 * 
 	 * wicket now uses multipart/form-data for it's forms.
-	 *
+	 * 
 	 * @return The request and response encoding
 	 */
 	String getResponseRequestEncoding();
