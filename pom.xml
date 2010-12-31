@@ -440,8 +440,8 @@
 			</dependency>
 			<dependency>
 				<groupId>cglib</groupId>
-				<artifactId>cglib-nodep</artifactId>
-				<version>2.1_3</version>
+				<artifactId>cglib</artifactId>
+				<version>2.2</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-httpclient</groupId>
@@ -453,11 +453,6 @@
 						<artifactId>commons-logging</artifactId>
 					</exclusion>
 				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>asm</groupId>
-				<artifactId>asm</artifactId>
-				<version>1.5.3</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.inject</groupId>
