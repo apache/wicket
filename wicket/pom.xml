@@ -46,7 +46,7 @@
             <configuration>
               <artifactSet>
                 <includes>
-                  <include>org.apache.wicket:wicket</include>
+                  <include>org.apache.wicket:wicket-core</include>
                   <include>org.apache.wicket:wicket-util</include>
                   <include>org.apache.wicket:wicket-request</include>
                 </includes>
