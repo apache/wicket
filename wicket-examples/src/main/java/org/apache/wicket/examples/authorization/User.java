@@ -17,7 +17,7 @@
 package org.apache.wicket.examples.authorization;
 
 import org.apache.wicket.IClusterable;
-import org.apache.wicket.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 
 
 /**
@@ -60,7 +60,7 @@ public class User implements IClusterable
 	 */
 	public boolean hasRole(String role)
 	{
-		return this.roles.hasRole(role);
+		return roles.hasRole(role);
 	}
 
 	/**

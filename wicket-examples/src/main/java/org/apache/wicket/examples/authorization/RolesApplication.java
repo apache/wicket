@@ -21,8 +21,8 @@ import java.util.List;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
-import org.apache.wicket.authorization.strategies.role.RoleAuthorizationStrategy;
-import org.apache.wicket.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
+import org.apache.wicket.authroles.authorization.strategies.role.RoleAuthorizationStrategy;
+import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
 import org.apache.wicket.examples.authorization.pages.AdminBookmarkablePage;
 import org.apache.wicket.examples.authorization.pages.AdminInternalPage;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -40,8 +40,8 @@ public class RolesApplication extends WebApplication
 	/**
 	 * User DB.
 	 */
-	public static List<User> USERS = Arrays.asList(
-		new User("jon", "ADMIN"), new User("kay", "USER"), new User("pam", ""));
+	public static List<User> USERS = Arrays.asList(new User("jon", "ADMIN"),
+		new User("kay", "USER"), new User("pam", ""));
 
 	/**
 	 * Construct.

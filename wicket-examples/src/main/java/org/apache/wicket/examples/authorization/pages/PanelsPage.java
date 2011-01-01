@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.examples.authorization.pages;
 
-import org.apache.wicket.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
+import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
 import org.apache.wicket.examples.authorization.BasePage;
 import org.apache.wicket.markup.html.panel.Panel;
 

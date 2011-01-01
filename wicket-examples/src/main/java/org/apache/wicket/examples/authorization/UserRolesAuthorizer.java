@@ -17,13 +17,14 @@
 package org.apache.wicket.examples.authorization;
 
 import org.apache.wicket.Session;
-import org.apache.wicket.authorization.strategies.role.IRoleCheckingStrategy;
-import org.apache.wicket.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.IRoleCheckingStrategy;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 
 
 /**
  * The authorizer we need to provide to the authorization strategy implementation
- * {@link org.apache.wicket.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy}.
+ * {@link org.apache.wicket.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy}
+ * .
  * 
  * @author Eelco Hillenius
  */

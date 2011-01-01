@@ -17,8 +17,8 @@
 package org.apache.wicket.examples.authentication3;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.authentication.AuthenticatedWebApplication;
-import org.apache.wicket.authentication.AbstractAuthenticatedWebSession;
+import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
+import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.markup.html.WebPage;
 
 
