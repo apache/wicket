@@ -46,7 +46,9 @@ import org.apache.wicket.request.handler.render.WebPageRenderer;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.MountedMapper;
+import org.apache.wicket.request.mapper.PackageMapper;
 import org.apache.wicket.request.mapper.ResourceMapper;
+import org.apache.wicket.request.mapper.mount.MountMapper;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.session.ISessionStore;
@@ -57,6 +59,7 @@ import org.apache.wicket.util.file.IFileUploadCleaner;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.WebApplicationPath;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.slf4j.Logger;
@@ -282,11 +285,8 @@ public abstract class WebApplication extends Application
 	 * 
 	 * @param mapper
 	 *            the encoder that will be used for this mount
-	 * 
-	 * @deprecated this is the same as {@code getRootRequestMapperAsCompound().add(mapper)}
 	 */
-	@Deprecated
-	public final void mount(IRequestMapper mapper)
+	public final void mount(final IRequestMapper mapper)
 	{
 		Args.notNull(mapper, "mapper");
 		getRootRequestMapperAsCompound().add(mapper);
@@ -305,7 +305,7 @@ public abstract class WebApplication extends Application
 	 */
 	public final <T extends Page> void mountPage(final String path, final Class<T> pageClass)
 	{
-		getRootRequestMapperAsCompound().add(new MountedMapper(path, pageClass));
+		mount(new MountedMapper(path, pageClass));
 	}
 
 	/**
@@ -319,9 +319,26 @@ public abstract class WebApplication extends Application
 	public final void mountSharedResource(final String path, final ResourceReference reference)
 	{
 		getResourceReferenceRegistry().registerResourceReference(reference);
-		getRootRequestMapperAsCompound().add(new ResourceMapper(path, reference));
+		mount(new ResourceMapper(path, reference));
 	}
 
+	/**
+	 * Mounts mounts all bookmarkable pages in a the pageClass's package to the given path.
+	 * 
+	 * @param <P>
+	 *            type of page
+	 * 
+	 * @param path
+	 *            the path to mount the page class on
+	 * @param pageClass
+	 *            the page class to be mounted
+	 */
+	public final <P extends Page> void mountPackage(final String path, final Class<P> pageClass)
+	{
+		PackageMapper packageMapper = new PackageMapper(PackageName.forClass(pageClass));
+		MountMapper mountMapper = new MountMapper(path, packageMapper);
+		mount(mountMapper);
+	}
 
 	/**
 	 * Partly unmounts/ignores a path that normally would map to another mount path. Like
@@ -334,7 +351,7 @@ public abstract class WebApplication extends Application
 	 */
 	public final void addIgnoreMountPath(String path)
 	{
-		// TODO how is this supposed to work :/
+		// WICKET-NG TODO how is this supposed to work :/
 		throw new UnsupportedOperationException();
 	}
 
