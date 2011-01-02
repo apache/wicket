@@ -131,9 +131,8 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		{
 			return new UrlInfo(null, getContext().getHomePageClass(), newPageParameters());
 		}
-		// check if the URL is long enough and starts with the proper segments
-		else if (url.getSegments().size() >= mountSegments.length &&
-			urlStartsWith(url, mountSegments))
+		// check if the URL starts with the proper segments
+		else if (urlStartsWith(url, mountSegments))
 		{
 			// try to extract page and component information from URL
 			PageComponentInfo info = getPageComponentInfo(url);
