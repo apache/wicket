@@ -187,7 +187,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	 */
 	public void testDecode7()
 	{
-		Url url = Url.parse("some/mount/path?15-ILinkListener.4-foo-bar");
+		Url url = Url.parse("some/mount/path?param1=value1&15-ILinkListener.4-foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertTrue(handler instanceof ListenerInterfaceRequestHandler);

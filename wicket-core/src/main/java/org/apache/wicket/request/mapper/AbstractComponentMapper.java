@@ -80,18 +80,24 @@ public abstract class AbstractComponentMapper extends AbstractMapper implements 
 	 * 
 	 * @return PageComponentInfo instance if one was encoded in URL, <code>null</code> otherwise.
 	 */
-	protected PageComponentInfo getPageComponentInfo(Url url)
+	protected PageComponentInfo getPageComponentInfo(final Url url)
 	{
 		if (url == null)
 		{
 			throw new IllegalStateException("Argument 'url' may not be null.");
 		}
-		if (url.getQueryParameters().size() > 0)
+		else
 		{
-			QueryParameter param = url.getQueryParameters().get(0);
-			if (Strings.isEmpty(param.getValue()))
+			for (QueryParameter queryParameter : url.getQueryParameters())
 			{
-				return PageComponentInfo.parse(param.getName());
+				if (Strings.isEmpty(queryParameter.getValue()))
+				{
+					PageComponentInfo pageComponentInfo = PageComponentInfo.parse(queryParameter.getName());
+					if (pageComponentInfo != null)
+					{
+						return pageComponentInfo;
+					}
+				}
 			}
 		}
 		return null;
