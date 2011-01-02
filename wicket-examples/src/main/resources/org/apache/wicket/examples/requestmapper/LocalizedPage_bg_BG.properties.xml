@@ -17,5 +17,5 @@
 -->
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-	<entry key="localizedLabel">Аз съм на български, защото първия сегмент в URL-а е 'bg_BG'</entry>
+	<entry key="localizedLabel">Тази страница е на български, защото първия сегмент в URL-а е 'bg_BG'</entry>
 </properties>	

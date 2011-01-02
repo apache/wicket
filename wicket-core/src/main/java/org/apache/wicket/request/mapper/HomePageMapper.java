@@ -16,90 +16,95 @@
  */
 package org.apache.wicket.request.mapper;
 
-import org.apache.wicket.Application;
-import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.handler.PageProvider;
-import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
-import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.ClassProvider;
 
 /**
- * Default mapper for rendering the configured {@link Application#getHomePage() home page}.
- * <p>
- * <strong>Note</strong>: Handles requests to '/' but does not produce {@link Url} for it, thus
- * {@link BookmarkableMapper} produces something like '/wicket/bookmarkable/com.example.MyHomePage'
- * for it. If the user application wants to preserve '/' then it should mount the home page
- * explicitly in MyApplication#init()
- * 
- * @author Matej Knopp
+ * A mapper that is used when a request to the home page ("/") is made
  */
-public class HomePageMapper extends AbstractComponentMapper
+public class HomePageMapper extends MountedMapper
 {
-	private final IPageParametersEncoder pageParametersEncoder;
 
 	/**
 	 * Construct.
+	 * 
+	 * @param pageClass
+	 *            the class of the page which should handle requests to "/"
 	 */
-	public HomePageMapper()
+	public HomePageMapper(final Class<? extends IRequestablePage> pageClass)
 	{
-		this(new PageParametersEncoder());
+		super("/", pageClass);
 	}
 
 	/**
 	 * Construct.
 	 * 
-	 * @param pageParametersEncoder
+	 * @param pageClassProvider
+	 *            the class of the page which should handle requests to "/"
 	 */
-	public HomePageMapper(IPageParametersEncoder pageParametersEncoder)
+	public HomePageMapper(ClassProvider<? extends IRequestablePage> pageClassProvider)
 	{
-		Args.notNull(pageParametersEncoder, "pageParametersEncoder");
-
-		this.pageParametersEncoder = pageParametersEncoder;
+		super("/", pageClassProvider);
 	}
 
-
-	public int getCompatibilityScore(Request request)
+	/**
+	 * Construct.
+	 * 
+	 * @param pageClass
+	 *            the class of the page which should handle requests to "/"
+	 * @param pageParametersEncoder
+	 *            the encoder that will be used to encode/decode the page parameters
+	 */
+	public HomePageMapper(Class<? extends IRequestablePage> pageClass,
+		IPageParametersEncoder pageParametersEncoder)
 	{
-		return 0;
+		super("/", pageClass, pageParametersEncoder);
 	}
 
-	public Url mapHandler(IRequestHandler requestHandler)
+	/**
+	 * Construct.
+	 * 
+	 * @param pageClassProvider
+	 *            the class of the page which should handle requests to "/"
+	 * @param pageParametersEncoder
+	 *            the encoder that will be used to encode/decode the page parameters
+	 */
+	public HomePageMapper(final ClassProvider<? extends IRequestablePage> pageClassProvider,
+		IPageParametersEncoder pageParametersEncoder)
 	{
-		return null;
+		super("/", pageClassProvider, pageParametersEncoder);
 	}
 
-	public IRequestHandler mapRequest(Request request)
+	/**
+	 * Matches only when there are no segments/indexed parameters
+	 * 
+	 * @see org.apache.wicket.request.mapper.AbstractBookmarkableMapper#parseRequest(org.apache.wicket.request.Request)
+	 */
+	@Override
+	protected UrlInfo parseRequest(Request request)
 	{
 		final Url url = request.getUrl();
-
-		if (url.getSegments().size() == 0)
+		if (url.getSegments().size() > 0)
 		{
-			final Class<? extends IRequestablePage> homePageClass = getContext().getHomePageClass();
-
-			final PageProvider pageProvider;
-
-			if (url.getQueryParameters().size() > 0)
-			{
-				PageParameters pageParameters = extractPageParameters(request, 0,
-					pageParametersEncoder);
-				pageProvider = new PageProvider(homePageClass, pageParameters);
-			}
-			else
-			{
-				pageProvider = new PageProvider(homePageClass);
-			}
-			pageProvider.setPageSource(getContext());
-
-			return new RenderPageRequestHandler(pageProvider);
-		}
-		else
-		{
+			// home page cannot have segments/indexed parameters
 			return null;
 		}
+
+		return super.parseRequest(request);
 	}
+
+	/**
+	 * Use this mapper as a last option. Let all other mappers to try to handle the request
+	 * 
+	 * @see org.apache.wicket.request.mapper.MountedMapper#getCompatibilityScore(org.apache.wicket.request.Request)
+	 */
+	@Override
+	public int getCompatibilityScore(Request request)
+	{
+		return Integer.MIN_VALUE + 1;
+	}
+
 }

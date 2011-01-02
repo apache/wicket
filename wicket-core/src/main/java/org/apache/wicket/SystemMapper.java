@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.BookmarkableMapper;
 import org.apache.wicket.request.mapper.BufferedResponseMapper;
 import org.apache.wicket.request.mapper.CompoundRequestMapper;
@@ -23,6 +24,7 @@ import org.apache.wicket.request.mapper.HomePageMapper;
 import org.apache.wicket.request.mapper.PageInstanceMapper;
 import org.apache.wicket.request.mapper.ResourceReferenceMapper;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
+import org.apache.wicket.util.ClassProvider;
 import org.apache.wicket.util.IProvider;
 
 /**
@@ -37,17 +39,18 @@ public class SystemMapper extends CompoundRequestMapper
 
 	/**
 	 * Constructor
+	 * 
+	 * @param application
 	 */
-	public SystemMapper(Application application)
+	public SystemMapper(final Application application)
 	{
 		this.application = application;
 		add(RestartResponseAtInterceptPageException.MAPPER);
-		add(new HomePageMapper());
 		add(new PageInstanceMapper());
 		add(new BookmarkableMapper());
+		add(new HomePageMapper(new HomePageProvider(application)));
 		add(new ResourceReferenceMapper(new PageParametersEncoder(),
-			                              new ParentFolderPlaceholderProvider(application),
-			                              useTimestampsProvider()));
+			new ParentFolderPlaceholderProvider(application), useTimestampsProvider()));
 		add(new BufferedResponseMapper());
 	}
 
@@ -75,7 +78,24 @@ public class SystemMapper extends CompoundRequestMapper
 		{
 			return application.getResourceSettings().getParentFolderPlaceholder();
 		}
+	}
 
+	private static class HomePageProvider<C extends IRequestablePage> extends ClassProvider<C>
+	{
+
+		private final Application application;
+
+		private HomePageProvider(final Application application)
+		{
+			super(null);
+			this.application = application;
+		}
+
+		@Override
+		public Class<C> get()
+		{
+			return (Class<C>)application.getHomePage();
+		}
 
 	}
 }

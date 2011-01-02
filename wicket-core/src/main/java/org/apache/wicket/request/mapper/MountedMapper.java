@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.request.mapper;
 
-import java.lang.ref.WeakReference;
-
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -25,6 +23,7 @@ import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
+import org.apache.wicket.util.ClassProvider;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -58,7 +57,31 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	private final String[] mountSegments;
 
 	/** bookmarkable page class. */
-	private final WeakReference<Class<? extends IRequestablePage>> pageClass;
+	private final ClassProvider<? extends IRequestablePage> pageClassProvider;
+
+	/**
+	 * Construct.
+	 * 
+	 * @param mountPath
+	 * @param pageClass
+	 */
+	public MountedMapper(String mountPath, Class<? extends IRequestablePage> pageClass)
+	{
+		this(mountPath, pageClass, new PageParametersEncoder());
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param mountPath
+	 * @param pageClassProvider
+	 */
+	public MountedMapper(String mountPath,
+		ClassProvider<? extends IRequestablePage> pageClassProvider)
+	{
+		this(mountPath, pageClassProvider, new PageParametersEncoder());
+	}
+
 
 	/**
 	 * Construct.
@@ -70,24 +93,27 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	public MountedMapper(String mountPath, Class<? extends IRequestablePage> pageClass,
 		IPageParametersEncoder pageParametersEncoder)
 	{
-		Args.notEmpty(mountPath, "mountPath");
-		Args.notNull(pageClass, "pageClass");
-		Args.notNull(pageParametersEncoder, "pageParametersEncoder");
-
-		this.pageParametersEncoder = pageParametersEncoder;
-		this.pageClass = new WeakReference<Class<? extends IRequestablePage>>(pageClass);
-		mountSegments = getMountSegments(mountPath);
+		this(mountPath, ClassProvider.of(pageClass), pageParametersEncoder);
 	}
 
 	/**
 	 * Construct.
 	 * 
 	 * @param mountPath
-	 * @param pageClass
+	 * @param pageClassProvider
+	 * @param pageParametersEncoder
 	 */
-	public MountedMapper(String mountPath, Class<? extends IRequestablePage> pageClass)
+	public MountedMapper(String mountPath,
+		ClassProvider<? extends IRequestablePage> pageClassProvider,
+		IPageParametersEncoder pageParametersEncoder)
 	{
-		this(mountPath, pageClass, new PageParametersEncoder());
+		Args.notEmpty(mountPath, "mountPath");
+		Args.notNull(pageClassProvider, "pageClassProvider");
+		Args.notNull(pageParametersEncoder, "pageParametersEncoder");
+
+		this.pageParametersEncoder = pageParametersEncoder;
+		this.pageClassProvider = pageClassProvider;
+		mountSegments = getMountSegments(mountPath);
 	}
 
 	/**
@@ -112,7 +138,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 			// try to extract page and component information from URL
 			PageComponentInfo info = getPageComponentInfo(url);
 
-			Class<? extends IRequestablePage> pageClass = this.pageClass.get();
+			Class<? extends IRequestablePage> pageClass = getPageClass();
 
 			// extract the PageParameters from URL if there are any
 			PageParameters pageParameters = extractPageParameters(request, mountSegments.length,
@@ -186,7 +212,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		if (url.getSegments().isEmpty() && url.getQueryParameters().isEmpty())
 		{
 			// this is home page
-			if (pageClass.get().equals(getContext().getHomePageClass()) && redirectFromHomePage())
+			if (getPageClass().equals(getContext().getHomePageClass()) && redirectFromHomePage())
 			{
 				return true;
 			}
@@ -238,6 +264,11 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	@Override
 	protected boolean checkPageClass(Class<? extends IRequestablePage> pageClass)
 	{
-		return pageClass.equals(this.pageClass.get());
+		return pageClass.equals(this.getPageClass());
+	}
+
+	private Class<? extends IRequestablePage> getPageClass()
+	{
+		return pageClassProvider.get();
 	}
 }

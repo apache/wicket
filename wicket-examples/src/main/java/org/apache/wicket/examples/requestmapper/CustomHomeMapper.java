@@ -27,6 +27,7 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.mapper.AbstractComponentMapper;
+import org.apache.wicket.request.mapper.HomePageMapper;
 
 /**
  * An {@link IRequestMapper} that handles requests to the home page ('/') and appends the string
@@ -92,7 +93,7 @@ public class CustomHomeMapper extends AbstractComponentMapper
 	 * valid locale
 	 * 
 	 * @param request
-	 * @return
+	 * @return <code>true</code> if the request is to the home page ("/")
 	 */
 	private boolean isHomeUrl(Request request)
 	{
