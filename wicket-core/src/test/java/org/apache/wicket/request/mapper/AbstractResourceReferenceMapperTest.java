@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.request.mapper;
 
-import java.io.Serializable;
 import java.util.Locale;
 
 import org.apache.wicket.request.resource.IResource;
@@ -26,10 +25,8 @@ import org.apache.wicket.util.time.Time;
 /**
  * @author Matej Knopp
  */
-public abstract class AbstractResourceReferenceMapperTest extends AbstractMapperTest implements Serializable
+public abstract class AbstractResourceReferenceMapperTest extends AbstractMapperTest
 {
-	public static final Time LAST_MODIFIED = Time.milliseconds(12345678L);
-
 	/**
 	 * Construct.
 	 */
@@ -228,7 +225,8 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 
 		public ResourceReferenceWithTimestamp(Time lastModified)
 		{
-			super(AbstractResourceReferenceMapperTest.class, "timestamped", Locale.ENGLISH, "style", null);
+			super(AbstractResourceReferenceMapperTest.class, "timestamped", Locale.ENGLISH,
+				"style", null);
 			this.lastModified = lastModified;
 		}
 
