@@ -422,6 +422,18 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 			url.toString());
 	}
 
+	/**
+	 * Tests request to url encoding when style is null but variation is not
+	 */
+	public void testEncode9()
+	{
+		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference5,
+			null);
+
+		Url url = encoder.mapHandler(handler);
+		assertEquals("wicket/resource/" + CLASS_NAME + "/reference5?en--variation", url.toString());
+	}
+
 	public void testLastModifiedTimestampIsPartOfUrl()
 	{
 		long millis = 12345678L;
