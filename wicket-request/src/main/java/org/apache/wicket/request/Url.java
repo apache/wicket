@@ -19,6 +19,7 @@ package org.apache.wicket.request;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -70,6 +71,7 @@ public final class Url implements Serializable
 	/**
 	 * 
 	 * @param qp
+	 * @param charset
 	 * @return query parameters
 	 */
 	private static QueryParameter parseQueryParameter(final String qp, Charset charset)
@@ -209,6 +211,11 @@ public final class Url implements Serializable
 	{
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param charset
+	 */
 	public Url(Charset charset)
 	{
 		setCharset(charset);
@@ -245,7 +252,19 @@ public final class Url implements Serializable
 	 * Construct.
 	 * 
 	 * @param segments
+	 * @param charset
+	 */
+	public Url(List<String> segments, Charset charset)
+	{
+		this(segments, Collections.<QueryParameter> emptyList(), charset);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param segments
 	 * @param parameters
+	 * @param charset
 	 */
 	public Url(List<String> segments, List<QueryParameter> parameters, Charset charset)
 	{
