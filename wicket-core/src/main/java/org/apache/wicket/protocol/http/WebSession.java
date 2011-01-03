@@ -49,6 +49,11 @@ public class WebSession extends Session
 
 	private static final Logger logger = LoggerFactory.getLogger(WebSession.class);
 
+	public static WebSession get()
+	{
+		return (WebSession)Session.get();
+	}
+
 	/**
 	 * Filter that returns all component scoped messages ({@link FeedbackMessage#getReporter()} !=
 	 * null).

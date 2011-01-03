@@ -137,6 +137,9 @@ public class Fragment extends WebMarkupContainer
 		super.onComponentTag(tag);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{

@@ -42,6 +42,8 @@ import org.apache.wicket.IClusterable;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  * 
+ * @param <C>
+ *            The object to convert from and to String
  */
 public interface IConverter<C> extends IClusterable
 {

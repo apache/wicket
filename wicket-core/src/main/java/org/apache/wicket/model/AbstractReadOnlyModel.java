@@ -17,7 +17,6 @@
 package org.apache.wicket.model;
 
 
-
 /**
  * AbstractReadOnlyModel is an adapter base class for implementing models which have no detach logic
  * and are read-only.
@@ -29,10 +28,6 @@ package org.apache.wicket.model;
  */
 public abstract class AbstractReadOnlyModel<T> implements IModel<T>
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -56,18 +51,18 @@ public abstract class AbstractReadOnlyModel<T> implements IModel<T>
 	}
 
 	/**
-	 * @see java.lang.Object#toString()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString()
 	{
-	 StringBuilder sb = new StringBuilder("Model:classname=[");
+		StringBuilder sb = new StringBuilder("Model:classname=[");
 		sb.append(getClass().getName()).append("]");
 		return sb.toString();
 	}
 
 	/**
-	 * @see org.apache.wicket.model.IDetachable#detach()
+	 * {@inheritDoc}
 	 */
 	public void detach()
 	{

@@ -201,7 +201,6 @@ public class ConverterLocator implements IConverterLocator
 			return (IConverter<C>)new DefaultConverter<String>(String.class);
 		}
 
-
 		// Get type converter for class
 		final IConverter<C> converter = get(type);
 		if (converter == null)

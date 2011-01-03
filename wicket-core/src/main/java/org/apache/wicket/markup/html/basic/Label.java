@@ -104,18 +104,27 @@ public class Label extends WebComponent
 		super(id, model);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		replaceComponentTagBody(markupStream, openTag, getDefaultModelObjectAsString());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
 
-		// always transform the tag to <span></span> so even labels defined as <span/> render
-		tag.setType(TagType.OPEN);
+		if (tag.isOpenClose())
+		{
+			// always transform the tag to <span></span> so even labels defined as <span/> render
+			tag.setType(TagType.OPEN);
+		}
 	}
 }

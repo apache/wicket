@@ -33,7 +33,7 @@ import org.apache.wicket.model.IModel;
  * A panel is a reusable component that holds markup and other components.
  * <p>
  * Whereas WebMarkupContainer is an inline container like
- * 
+ *
  * <pre>
  *  ...
  *  &lt;span wicket:id=&quot;xxx&quot;&gt;
@@ -42,20 +42,20 @@ import org.apache.wicket.model.IModel;
  *  &lt;/span&gt;
  *  ...
  * </pre>
- * 
+ *
  * a Panel has its own associated markup file and the container content is taken from that file,
  * like:
- * 
+ *
  * <pre>
  *  &lt;span wicket:id=&quot;mypanel&quot;/&gt;
- * 
+ *
  *  TestPanel.html
  *  &lt;wicket:panel&gt;
  *    &lt;span wicket:id=&quot;mylabel&quot;&gt;My label&lt;/span&gt;
  *    ....
  *  &lt;/wicket:panel&gt;
  * </pre>
- * 
+ *
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
@@ -133,13 +133,13 @@ public abstract class Panel extends WebMarkupContainerWithAssociatedMarkup
 
 	/**
 	 * Re-useable helper
-	 * 
+	 *
 	 */
 	public static class PanelMarkupHelper
 	{
 		/**
 		 * @see org.apache.wicket.MarkupContainer#getMarkup(org.apache.wicket.Component)
-		 * 
+		 *
 		 * @param parent
 		 * @param child
 		 * @return The markup associated with the child
@@ -174,9 +174,8 @@ public abstract class Panel extends WebMarkupContainerWithAssociatedMarkup
 
 		/**
 		 * Search for &lt;wicket:panel ...&gt; on the same level.
-		 * 
+		 *
 		 * @param markup
-		 * @param name
 		 * @return null, if not found
 		 */
 		private final static IMarkupFragment findPanelTag(final IMarkupFragment markup)
