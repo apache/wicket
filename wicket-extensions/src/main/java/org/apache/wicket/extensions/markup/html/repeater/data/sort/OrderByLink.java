@@ -16,11 +16,12 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.sort;
 
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * A component that represents a sort header. When the link is clicked it will toggle the state of a
@@ -139,15 +140,15 @@ public class OrderByLink extends Link
 
 	/**
 	 * returns the next sort order when changing it
-	 *
+	 * 
 	 * @param order
-	 *          previous sort order
+	 *            previous sort order
 	 * @return next sort order
 	 */
 	protected SortOrder nextSortOrder(SortOrder order)
 	{
 		// init / flip order
-		if(order == SortOrder.NONE)
+		if (order == SortOrder.NONE)
 		{
 			return SortOrder.ASCENDING;
 		}
@@ -163,10 +164,11 @@ public class OrderByLink extends Link
 	 * @author Igor Vaynberg ( ivaynberg )
 	 * 
 	 */
-	public static class CssModifier extends AttributeModifier
+	public static class CssModifier extends Behavior
 	{
 		private static final long serialVersionUID = 1L;
-
+		private final OrderByLink link;
+		private final ICssProvider provider;
 
 		/**
 		 * @param link
@@ -176,34 +178,22 @@ public class OrderByLink extends Link
 		 */
 		public CssModifier(final OrderByLink link, final ICssProvider provider)
 		{
-			super("class", true, new Model<String>()
-			{
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public String getObject()
-				{
-
-					final ISortState sortState = link.stateLocator.getSortState();
-					return provider.getClassAttributeValue(sortState, link.property);
-				}
-
-				@Override
-				public void setObject(String object)
-				{
-					throw new UnsupportedOperationException();
-				}
-
-			});
+			this.link = link;
+			this.provider = provider;
 		}
 
-		/**
-		 * @see org.apache.wicket.AttributeModifier#isEnabled(Component)
-		 */
 		@Override
-		public boolean isEnabled(Component component)
+		public void onComponentTag(Component component, ComponentTag tag)
 		{
-			return getReplaceModel().getObject() != null;
+			super.onComponentTag(component, tag);
+
+			final ISortState sortState = link.stateLocator.getSortState();
+			String cssClass = provider.getClassAttributeValue(sortState, link.property);
+			if (!Strings.isEmpty(cssClass))
+			{
+				tag.append("class", cssClass, " ");
+			}
+
 		}
 	}
 
