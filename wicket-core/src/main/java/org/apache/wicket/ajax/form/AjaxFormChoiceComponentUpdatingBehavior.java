@@ -118,9 +118,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 	{
 		super.onBind();
 
-		if (!(getComponent() instanceof RadioChoice) &&
-			!(getComponent() instanceof CheckBoxMultipleChoice) &&
-			!(getComponent() instanceof RadioGroup) && !(getComponent() instanceof CheckGroup))
+		if (!AjaxFormChoiceComponentUpdatingBehavior.appliesTo(getComponent()))
 		{
 			throw new WicketRuntimeException("Behavior " + getClass().getName() +
 				" can only be added to an instance of a RadioChoice/CheckboxChoice/RadioGroup/CheckGroup");
@@ -183,5 +181,16 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 			onError(target, e);
 
 		}
+	}
+
+	/**
+	 * @param component
+	 * @return if the component applies to the {@link AjaxFormChoiceComponentUpdatingBehavior}
+	 */
+	static boolean appliesTo(Component component)
+	{
+		return (component instanceof RadioChoice) ||
+			(component instanceof CheckBoxMultipleChoice) || (component instanceof RadioGroup) ||
+			(component instanceof CheckGroup);
 	}
 }
