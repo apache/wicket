@@ -20,11 +20,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.form.CheckBoxMultipleChoice;
-import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.RadioChoice;
-import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.persistence.IValuePersister;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -85,9 +81,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 				" can only be added to an instance of a FormComponent");
 		}
 		else if (Application.get().getConfigurationType().equals(Application.DEVELOPMENT) &&
-			((getComponent() instanceof RadioChoice) ||
-				(getComponent() instanceof CheckBoxMultipleChoice) ||
-				(getComponent() instanceof RadioGroup) || (getComponent() instanceof CheckGroup)))
+			AjaxFormChoiceComponentUpdatingBehavior.appliesTo(getComponent()))
 		{
 			log.warn(String.format(
 				"AjaxFormComponentUpdatingBehavior is not suposed to be added in the form component at path: \"%s\". "
