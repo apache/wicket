@@ -3293,39 +3293,49 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public String toString(final boolean detailed)
 	{
-		if (detailed)
+		try
 		{
-			final Page page = findPage();
-			if (page == null)
+			if (detailed)
 			{
-				return new StringBuffer("[Component id = ").append(getId())
-					.append(", page = <No Page>, path = ")
-					.append(getPath())
-					.append(".")
-					.append(Classes.simpleName(getClass()))
-					.append("]")
-					.toString();
+				final Page page = findPage();
+				if (page == null)
+				{
+					return new StringBuffer("[Component id = ").append(getId())
+						.append(", page = <No Page>, path = ")
+						.append(getPath())
+						.append(".")
+						.append(Classes.simpleName(getClass()))
+						.append("]")
+						.toString();
+				}
+				else
+				{
+					return new StringBuffer("[Component id = ").append(getId())
+						.append(", page = ")
+						.append(getPage().getClass().getName())
+						.append(", path = ")
+						.append(getPath())
+						.append(".")
+						.append(Classes.simpleName(getClass()))
+						.append(", isVisible = ")
+						.append((determineVisibility()))
+						.append(", isVersioned = ")
+						.append(isVersioned())
+						.append("]")
+						.toString();
+				}
 			}
 			else
 			{
-				return new StringBuffer("[Component id = ").append(getId())
-					.append(", page = ")
-					.append(getPage().getClass().getName())
-					.append(", path = ")
-					.append(getPath())
-					.append(".")
-					.append(Classes.simpleName(getClass()))
-					.append(", isVisible = ")
-					.append((determineVisibility()))
-					.append(", isVersioned = ")
-					.append(isVersioned())
-					.append("]")
-					.toString();
+				return "[Component id = " + getId() + "]";
 			}
 		}
-		else
+		catch (Exception e)
 		{
-			return "[Component id = " + getId() + "]";
+			log.warn("Error while building toString()", e);
+			return String.format(
+				"[Component id = %s <attributes are not available because exception %s was thrown during toString()>]",
+				getId(), e.getClass().getName());
 		}
 	}
 
