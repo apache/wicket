@@ -742,17 +742,24 @@ public class MockHttpServletRequest implements HttpServletRequest
 			for (Iterator<String> iterator = parameters.keySet().iterator(); iterator.hasNext();)
 			{
 				final String name = iterator.next();
-				final String value = getParameter(name);
-				if (name != null)
+				final String[] values = getParameterValues(name);
+				for (int i = 0; i < values.length; i++)
 				{
-					buf.append(UrlEncoder.QUERY_INSTANCE.encode(name,
-						Charset.forName(getCharacterEncoding())));
-				}
-				buf.append('=');
-				if (value != null)
-				{
-					buf.append(UrlEncoder.QUERY_INSTANCE.encode(value,
-						Charset.forName(getCharacterEncoding())));
+					if (name != null)
+					{
+						buf.append(UrlEncoder.QUERY_INSTANCE.encode(name,
+							Charset.forName(getCharacterEncoding())));
+					}
+					buf.append('=');
+					if (values[i] != null)
+					{
+						buf.append(UrlEncoder.QUERY_INSTANCE.encode(values[i],
+							Charset.forName(getCharacterEncoding())));
+					}
+					if (i + 1 < values.length)
+					{
+						buf.append('&');
+					}
 				}
 				if (iterator.hasNext())
 				{
@@ -1283,8 +1290,11 @@ public class MockHttpServletRequest implements HttpServletRequest
 			setPath(url.substring(0, index));
 
 			String queryString = url.substring(index + 1);
-
-			parameters.clear();
+/*
+ * We can't clear the parameters here because users may have set custom parameters in request. An
+ * better place to clear they is when tester setups the next request cycle
+ */
+// parameters.clear();
 			for (QueryParameter parameter : Url.parse("?" + queryString,
 				Charset.forName(getCharacterEncoding())).getQueryParameters())
 			{

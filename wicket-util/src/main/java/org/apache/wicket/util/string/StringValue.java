@@ -23,6 +23,7 @@ import java.text.ParseException;
 import java.util.Locale;
 
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.time.Time;
 
@@ -751,4 +752,24 @@ public class StringValue implements IClusterable
 		return Strings.isEmpty(text);
 	}
 
+	@Override
+	public int hashCode()
+	{
+		return Objects.hashCode(locale, text);
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof StringValue)
+		{
+			StringValue stringValue = (StringValue)obj;
+			return Objects.isEqual(text, stringValue.text) &&
+				Objects.isEqual(locale, stringValue.locale);
+		}
+		else
+		{
+			return false;
+		}
+	}
 }

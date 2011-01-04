@@ -310,9 +310,9 @@ public class BaseWicketTester
 	/**
 	 * @return last rendered page
 	 */
-	public Page getLastRenderedPage()
+	public <T extends Page> T getLastRenderedPage()
 	{
-		return lastRenderedPage;
+		return (T)lastRenderedPage;
 	}
 
 	/**

@@ -17,6 +17,7 @@
 package org.apache.wicket.util.tester;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.Cookie;
@@ -25,6 +26,7 @@ import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.MockPageParametersAware;
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.MockPageWithOneComponent;
 import org.apache.wicket.Page;
@@ -39,7 +41,15 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.IRequestParameters;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.handler.BookmarkablePageRequestHandler;
+import org.apache.wicket.request.handler.IPageProvider;
+import org.apache.wicket.request.handler.PageProvider;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResource.PackageResourceBlockedException;
+import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.MockPageParameterPage.MockInnerClassPage;
 import org.apache.wicket.util.tester.MockPageWithFormAndAjaxFormSubmitBehavior.Pojo;
 import org.apache.wicket.util.tester.apps_1.Book;
@@ -707,6 +717,108 @@ public class WicketTesterTest extends TestCase
 		// label should now have "1" in it because that's what comes
 		// from the page parameter.
 		tester.assertLabel("label", "1");
+	}
+
+	/**
+	 * Asserting that parameters set by user in request make part of the processed request
+	 * parameters
+	 */
+	public void testSetQueryParameter()
+	{
+		tester.getRequest().setParameter("p1", "v1");
+
+		tester.startPage(MockPageParametersAware.class);
+
+		MockPageParametersAware page = tester.getLastRenderedPage();
+		assertEquals("v1", page.getLastQueryParameters().getParameterValue("p1").toString());
+	}
+
+	/**
+	 * Asserting that parameters set in request get processed, even if the request URL already has
+	 * query parameters
+	 */
+	public void testSetQueryParameterWhenRequestHasAnQueryUrl()
+	{
+		PageParameters parameters = new PageParameters();
+		parameters.set("q_1", "q_1_value");
+		IPageProvider testPageProvider = new PageProvider(MockPageParametersAware.class, parameters);
+		IRequestHandler pageRequestHandler = new BookmarkablePageRequestHandler(testPageProvider);
+		Url url = tester.getApplication().getRootRequestMapper().mapHandler(pageRequestHandler);
+		tester.getRequest().setParameter("q_2", "q_2_value");
+		tester.getRequest().setUrl(url);
+
+		tester.processRequest();
+
+		MockPageParametersAware page = tester.getLastRenderedPage();
+		assertEquals("q_1_value", page.getLastQueryParameters().getParameterValue("q_1").toString());
+		assertEquals("q_2_value", page.getLastQueryParameters().getParameterValue("q_2").toString());
+	}
+
+	/**
+	 * Asserting that multiple parameters added in request and PageParameters get processed
+	 */
+	public void testSetMultiValueQueryParameter()
+	{
+		PageParameters parameters = new PageParameters();
+		parameters.add("q_1", "q_1_value_1");
+		parameters.add("q_1", "q_1_value_2");
+		IPageProvider testPageProvider = new PageProvider(MockPageParametersAware.class, parameters);
+		IRequestHandler pageRequestHandler = new BookmarkablePageRequestHandler(testPageProvider);
+		Url url = tester.getApplication().getRootRequestMapper().mapHandler(pageRequestHandler);
+		tester.getRequest().addParameter("q_2", "q_2_value_1");
+		tester.getRequest().addParameter("q_2", "q_2_value_2");
+		tester.getRequest().setUrl(url);
+
+		tester.processRequest();
+
+		MockPageParametersAware page = tester.getLastRenderedPage();
+		IRequestParameters lastQueryParameter = page.getLastQueryParameters();
+		List<StringValue> q1ParameterValues = lastQueryParameter.getParameterValues("q_1");
+		assertTrue(q1ParameterValues.contains(StringValue.valueOf("q_1_value_1")));
+		assertTrue(q1ParameterValues.contains(StringValue.valueOf("q_1_value_2")));
+		List<StringValue> q2ParameterValues = lastQueryParameter.getParameterValues("q_2");
+		assertTrue(q2ParameterValues.contains(StringValue.valueOf("q_2_value_1")));
+		assertTrue(q2ParameterValues.contains(StringValue.valueOf("q_2_value_2")));
+	}
+
+	/**
+	 * Asserting the parameters set by user in request get processed when submitting a form
+	 */
+	public void testParametersOnFormSubmit()
+	{
+		tester.startPage(MockPageParametersAware.class);
+
+		FormTester formTester = tester.newFormTester("form");
+		formTester.setValue("textfield", "v1");
+		tester.getRequest().getPostParameters().setParameterValue("p_1", "p_1_value");
+		tester.getRequest().setParameter("q_1", "q_1_value");
+
+		formTester.submit();
+
+		MockPageParametersAware page = tester.getLastRenderedPage();
+		assertEquals("v1", page.getLastPostParameters().getParameterValue("textfield").toString());
+		assertEquals("p_1_value", page.getLastPostParameters().getParameterValue("p_1").toString());
+		assertEquals("q_1_value", page.getLastQueryParameters().getParameterValue("q_1").toString());
+	}
+
+	/**
+	 * Asserting the parameters set by user on request get processed when submitting a form
+	 */
+	public void testMultiValueParametersOnFormSubmit()
+	{
+		tester.startPage(MockPageParametersAware.class);
+
+		FormTester formTester = tester.newFormTester("form");
+		formTester.setValue("textfield", "v1");
+		tester.getRequest().getPostParameters().setParameterValue("p_1", "p_1_value");
+		tester.getRequest().setParameter("q_1", "q_1_value");
+
+		formTester.submit();
+
+		MockPageParametersAware page = tester.getLastRenderedPage();
+		assertEquals("v1", page.getLastPostParameters().getParameterValue("textfield").toString());
+		assertEquals("p_1_value", page.getLastPostParameters().getParameterValue("p_1").toString());
+		assertEquals("q_1_value", page.getLastQueryParameters().getParameterValue("q_1").toString());
 	}
 
 	/**
