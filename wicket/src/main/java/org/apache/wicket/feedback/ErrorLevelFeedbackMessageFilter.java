@@ -29,10 +29,16 @@ public class ErrorLevelFeedbackMessageFilter implements IFeedbackMessageFilter
 	private final int minimumErrorLevel;
 
 	/**
-	 * Constructor
+	 * Filters messages with an greater or equals level than minimumErrorLevel.
 	 * 
 	 * @param minimumErrorLevel
-	 *            The component to filter on
+	 *            The component to filter on, the constraints can be: <br />
+	 *            {@link org.apache.wicket.feedback.FeedbackMessage#UNDEFINED} <br />
+	 *            {@link org.apache.wicket.feedback.FeedbackMessage#DEBUG} <br />
+	 *            {@link org.apache.wicket.feedback.FeedbackMessage#INFO} <br />
+	 *            {@link org.apache.wicket.feedback.FeedbackMessage#WARNING} <br />
+	 *            {@link org.apache.wicket.feedback.FeedbackMessage#ERROR} <br />
+	 *            {@link org.apache.wicket.feedback.FeedbackMessage#FATAL} <br />
 	 */
 	public ErrorLevelFeedbackMessageFilter(int minimumErrorLevel)
 	{
