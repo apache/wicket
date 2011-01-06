@@ -270,7 +270,7 @@ public class BaseWicketTester
 
 		hsession = new MockHttpSession(servletContext);
 
-		ThreadContext oldThreadContext= ThreadContext.detach();
+		ThreadContext oldThreadContext = ThreadContext.detach();
 
 		this.application = application;
 
@@ -310,9 +310,9 @@ public class BaseWicketTester
 	/**
 	 * @return last rendered page
 	 */
-	public <T extends Page> T getLastRenderedPage()
+	public Page getLastRenderedPage()
 	{
-		return (T)lastRenderedPage;
+		return lastRenderedPage;
 	}
 
 	/**
@@ -2041,7 +2041,7 @@ public class BaseWicketTester
 	 */
 	public void setUseRequestUrlAsBase(boolean setBaseUrl)
 	{
-		this.useRequestUrlAsBase = setBaseUrl;
+		useRequestUrlAsBase = setBaseUrl;
 	}
 
 	/**

@@ -729,7 +729,7 @@ public class WicketTesterTest extends TestCase
 
 		tester.startPage(MockPageParametersAware.class);
 
-		MockPageParametersAware page = tester.getLastRenderedPage();
+		MockPageParametersAware page = (MockPageParametersAware)tester.getLastRenderedPage();
 		assertEquals("v1", page.getLastQueryParameters().getParameterValue("p1").toString());
 	}
 
@@ -749,7 +749,7 @@ public class WicketTesterTest extends TestCase
 
 		tester.processRequest();
 
-		MockPageParametersAware page = tester.getLastRenderedPage();
+		MockPageParametersAware page = (MockPageParametersAware)tester.getLastRenderedPage();
 		assertEquals("q_1_value", page.getLastQueryParameters().getParameterValue("q_1").toString());
 		assertEquals("q_2_value", page.getLastQueryParameters().getParameterValue("q_2").toString());
 	}
@@ -771,7 +771,7 @@ public class WicketTesterTest extends TestCase
 
 		tester.processRequest();
 
-		MockPageParametersAware page = tester.getLastRenderedPage();
+		MockPageParametersAware page = (MockPageParametersAware)tester.getLastRenderedPage();
 		IRequestParameters lastQueryParameter = page.getLastQueryParameters();
 		List<StringValue> q1ParameterValues = lastQueryParameter.getParameterValues("q_1");
 		assertTrue(q1ParameterValues.contains(StringValue.valueOf("q_1_value_1")));
@@ -795,7 +795,7 @@ public class WicketTesterTest extends TestCase
 
 		formTester.submit();
 
-		MockPageParametersAware page = tester.getLastRenderedPage();
+		MockPageParametersAware page = (MockPageParametersAware)tester.getLastRenderedPage();
 		assertEquals("v1", page.getLastPostParameters().getParameterValue("textfield").toString());
 		assertEquals("p_1_value", page.getLastPostParameters().getParameterValue("p_1").toString());
 		assertEquals("q_1_value", page.getLastQueryParameters().getParameterValue("q_1").toString());
@@ -815,7 +815,7 @@ public class WicketTesterTest extends TestCase
 
 		formTester.submit();
 
-		MockPageParametersAware page = tester.getLastRenderedPage();
+		MockPageParametersAware page = (MockPageParametersAware)tester.getLastRenderedPage();
 		assertEquals("v1", page.getLastPostParameters().getParameterValue("textfield").toString());
 		assertEquals("p_1_value", page.getLastPostParameters().getParameterValue("p_1").toString());
 		assertEquals("q_1_value", page.getLastQueryParameters().getParameterValue("q_1").toString());
