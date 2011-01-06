@@ -21,7 +21,7 @@
     <parent>
 			<groupId>org.apache</groupId>
             <artifactId>apache</artifactId>
-            <version>7</version>	
+            <version>8</version>	
 	</parent>
 
 	<groupId>org.apache.wicket</groupId>
@@ -112,10 +112,6 @@
 					<id>local</id>
 					<url>file:target/site</url>
 				</site>
-				<repository>
-					<id>local</id>
-					<url>file:target/m2-repo</url>
-				</repository>
 			</distributionManagement>
 		</profile>
 		<profile>
@@ -202,16 +198,8 @@
 				<module>testing/wicket-threadtest</module>
 			</modules>
 
-			<distributionManagement>
-				<repository>
-					<id>local</id>
-					<url>file:target/m2-repo</url>
-				</repository>
-				<snapshotRepository>
-					<id>local</id>
-					<url>file:target/m2-repo</url>
-				</snapshotRepository>
-			</distributionManagement>
+
+			<!-- distribution management is inherited from the parent pom -->
 		</profile>
 	</profiles>
 	<url>http://wicket.apache.org/${project.artifactId}</url>
