@@ -69,6 +69,9 @@ public class WicketFilter implements Filter
 	// Wicket's Application object
 	private WebApplication application;
 
+	/** the factory used to create the web aplication instance */
+	private IWebApplicationFactory applicationFactory;
+
 	private FilterConfig filterConfig;
 
 	private String filterPath;
@@ -275,8 +278,8 @@ public class WicketFilter implements Filter
 	{
 		this.filterConfig = filterConfig;
 
-		IWebApplicationFactory factory = getApplicationFactory();
-		application = factory.createApplication(this);
+		applicationFactory = getApplicationFactory();
+		application = applicationFactory.createApplication(this);
 		application.setName(filterConfig.getFilterName());
 		application.setWicketFilter(this);
 
@@ -456,6 +459,14 @@ public class WicketFilter implements Filter
 			{
 				ThreadContext.detach();
 				application = null;
+			}
+		}
+
+		if (applicationFactory != null)
+		{
+			if (applicationFactory instanceof IDestroyableWebApplicationFactory)
+			{
+				((IDestroyableWebApplicationFactory)applicationFactory).destroy();
 			}
 		}
 	}

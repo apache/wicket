@@ -102,7 +102,4 @@ public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 		}
 	}
 
-	public void destroy()
-	{
-	}
 }

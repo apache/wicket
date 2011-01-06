@@ -177,7 +177,4 @@ public class GuiceWebApplicationFactory implements IWebApplicationFactory
 		return app;
 	}
 
-	public void destroy()
-	{
-	}
 }

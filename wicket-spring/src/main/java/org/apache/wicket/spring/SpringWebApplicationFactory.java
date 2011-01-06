@@ -20,6 +20,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.apache.wicket.protocol.http.IDestroyableWebApplicationFactory;
 import org.apache.wicket.protocol.http.IWebApplicationFactory;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
@@ -92,7 +93,7 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  * @author Janne Hietam&auml;ki (jannehietamaki)
  * 
  */
-public class SpringWebApplicationFactory implements IWebApplicationFactory
+public class SpringWebApplicationFactory implements IDestroyableWebApplicationFactory
 {
 
 	/** additional context created for this filter, if any */
@@ -147,23 +148,23 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 			if (application == null)
 			{
 				throw new IllegalArgumentException(
-						"Unable to find WebApplication bean with name [" + beanName + "]");
+					"Unable to find WebApplication bean with name [" + beanName + "]");
 			}
 			return application;
 		}
 		else
 		{
-			Map< ? , ? > beans = BeanFactoryUtils.beansOfTypeIncludingAncestors(ac,
-					WebApplication.class, false, false);
+			Map<?, ?> beans = BeanFactoryUtils.beansOfTypeIncludingAncestors(ac,
+				WebApplication.class, false, false);
 			if (beans.size() == 0)
 			{
 				throw new IllegalStateException("bean of type [" + WebApplication.class.getName() +
-						"] not found");
+					"] not found");
 			}
 			if (beans.size() > 1)
 			{
 				throw new IllegalStateException("More than one bean of type [" +
-						WebApplication.class.getName() + "] found, must have only one");
+					WebApplication.class.getName() + "] found, must have only one");
 			}
 			return (WebApplication)beans.values().iterator().next();
 		}
@@ -181,7 +182,7 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 	 * @throws BeansException
 	 */
 	protected final ConfigurableWebApplicationContext createWebApplicationContext(
-			WebApplicationContext parent, WicketFilter filter) throws BeansException
+		WebApplicationContext parent, WicketFilter filter) throws BeansException
 	{
 		ConfigurableWebApplicationContext wac = newApplicationContext();
 		wac.setParent(parent);
@@ -204,7 +205,7 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 	 *            wicket filter
 	 */
 	protected void postProcessWebApplicationContext(ConfigurableWebApplicationContext wac,
-			WicketFilter filter)
+		WicketFilter filter)
 	{
 		// noop
 	}
