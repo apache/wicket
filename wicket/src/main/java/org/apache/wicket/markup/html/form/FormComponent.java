@@ -728,7 +728,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * @param convertedInput
 	 *            the converted input
 	 */
-	protected final void setConvertedInput(T convertedInput)
+	public final void setConvertedInput(T convertedInput)
 	{
 		this.convertedInput = convertedInput;
 	}
