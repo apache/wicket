@@ -706,6 +706,13 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * Gets the converted input. The converted input is set earlier though the implementation of
 	 * {@link #convertInput()}.
 	 * 
+	 * {@link FormComponentPanel} often access this method when constructing their converted input
+	 * value which is often the combination of converted values of the embedded FormComponents
+	 * 
+	 * To access the model object resulted by the full form processing, use
+	 * {@link #getModelObject()} instead, that is an generified version of
+	 * {@link #getDefaultModelObject()}
+	 * 
 	 * @return value of input possibly converted into an appropriate type
 	 */
 	public final T getConvertedInput()
@@ -721,7 +728,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * @param convertedInput
 	 *            the converted input
 	 */
-	public final void setConvertedInput(T convertedInput)
+	protected final void setConvertedInput(T convertedInput)
 	{
 		this.convertedInput = convertedInput;
 	}
