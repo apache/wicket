@@ -21,7 +21,6 @@ import java.text.SimpleDateFormat;
 import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IObjectClassAwareModel;
-import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,6 +108,8 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	}
 
 	/**
+	 * Convert the input respecting the flag convertEmptyInputStringToNull. Subclasses that override
+	 * this method should test this flag also.
 	 * 
 	 * @see org.apache.wicket.markup.html.form.FormComponent#convertInput()
 	 */
@@ -118,7 +119,16 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 		// Stateless forms don't have to be rendered first, convertInput could be called before
 		// onBeforeRender calling resolve type here again to check if the type is correctly set.
 		resolveType();
-		super.convertInput();
+		String[] value = getInputAsArray();
+		String tmp = value != null && value.length > 0 ? value[0] : null;
+		if (getConvertEmptyInputStringToNull() && Strings.isEmpty(tmp))
+		{
+			setConvertedInput(null);
+		}
+		else
+		{
+			super.convertInput();
+		}
 	}
 
 	/**
@@ -140,13 +150,8 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	{
 		if (!getFlag(TYPE_RESOLVED) && getType() == null)
 		{
-			// Set the type, but only if it's not a String (see WICKET-606).
-			// Otherwise, getConvertEmptyInputStringToNull() won't work.
 			Class<?> type = getModelType(getDefaultModel());
-			if (!String.class.equals(type))
-			{
-				setType(type);
-			}
+			setType(type);
 			setFlag(TYPE_RESOLVED, true);
 		}
 	}
@@ -185,19 +190,5 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	{
 		setFlag(FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL, flag);
 		return this;
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#convertValue(String[])
-	 */
-	@Override
-	protected T convertValue(String[] value) throws ConversionException
-	{
-		String tmp = value != null && value.length > 0 ? value[0] : null;
-		if (getConvertEmptyInputStringToNull() && Strings.isEmpty(tmp))
-		{
-			return null;
-		}
-		return super.convertValue(value);
 	}
 }
