@@ -29,8 +29,6 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
@@ -62,10 +60,6 @@ public class WebPage extends Page
 	private static final Logger log = LoggerFactory.getLogger(WebPage.class);
 
 	private static final long serialVersionUID = 1L;
-
-	/** The resource references used for new window/tab support */
-	private static ResourceReference cookiesResource = new PackageResourceReference(WebPage.class,
-		"cookies.js");
 
 	/**
 	 * Constructor. Having this constructor public means that your page is 'bookmarkable' and hence
