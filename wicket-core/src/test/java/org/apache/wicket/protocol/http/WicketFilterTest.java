@@ -199,6 +199,11 @@ public class WicketFilterTest extends TestCase
 		{
 			return application;
 		}
+
+		/** {@inheritDoc} */
+		public void destroy(WicketFilter filter)
+		{
+		}
 	}
 
 	public void testCheckRedirect_1()

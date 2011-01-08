@@ -464,10 +464,7 @@ public class WicketFilter implements Filter
 
 		if (applicationFactory != null)
 		{
-			if (applicationFactory instanceof IDestroyableWebApplicationFactory)
-			{
-				((IDestroyableWebApplicationFactory)applicationFactory).destroy();
-			}
+			applicationFactory.destroy(this);
 		}
 	}
 

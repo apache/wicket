@@ -43,4 +43,13 @@ public interface IWebApplicationFactory
 	 * @return application object instance
 	 */
 	WebApplication createApplication(WicketFilter filter);
+
+	/**
+	 * Called when the filter instance that used this factory is destroyed
+	 * 
+	 * @param filter
+	 *            the wicket filter
+	 */
+	public void destroy(WicketFilter filter);
+
 }

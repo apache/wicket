@@ -102,4 +102,9 @@ public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 		}
 	}
 
+	/** {@inheritDoc} */
+	public void destroy(WicketFilter filter)
+	{
+	}
+
 }
