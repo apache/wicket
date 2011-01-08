@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * An immutable <code>Time</code> class that represents a specific point in time. The underlying
@@ -39,10 +40,12 @@ public final class Time extends AbstractTime
 	public static final Time START_OF_UNIX_TIME = milliseconds(0);
 
 	/** parser in 'yyyy.MM.dd' format. */
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd",
+		Locale.ENGLISH);
 
 	/** parser in 'yyyy.MM.dd-h.mma' format. */
-	private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy.MM.dd-h.mma");
+	private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy.MM.dd-h.mma",
+		Locale.ENGLISH);
 
 	/**
 	 * Retrieves a <code>Time</code> instance based on the given milliseconds.
@@ -202,7 +205,7 @@ public final class Time extends AbstractTime
 	 */
 	public static Time valueOf(final String string, final String pattern) throws ParseException
 	{
-		final SimpleDateFormat dateTimeFormat = new SimpleDateFormat(pattern);
+		final SimpleDateFormat dateTimeFormat = new SimpleDateFormat(pattern, Locale.ENGLISH);
 		dateTimeFormat.setCalendar(localtime);
 		return valueOf(dateTimeFormat.parse(string));
 	}
@@ -530,7 +533,7 @@ public final class Time extends AbstractTime
 	 */
 	public String toString(final Calendar calendar, final String format)
 	{
-		final SimpleDateFormat dateTimeFormat = new SimpleDateFormat(format);
+		final SimpleDateFormat dateTimeFormat = new SimpleDateFormat(format, Locale.ENGLISH);
 		dateTimeFormat.setCalendar(calendar == null ? localtime : calendar);
 		return dateTimeFormat.format(new Date(getMilliseconds()));
 	}

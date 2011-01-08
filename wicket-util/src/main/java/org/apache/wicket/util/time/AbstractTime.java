@@ -19,6 +19,7 @@ package org.apache.wicket.util.time;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Abstract base class for subclasses that represent a point in time (as opposed to a
@@ -35,7 +36,7 @@ abstract class AbstractTime extends AbstractTimeValue
 	static final Calendar localtime = Calendar.getInstance();
 
 	/** time format */
-	static final SimpleDateFormat timeFormat = new SimpleDateFormat("h.mma");
+	static final SimpleDateFormat timeFormat = new SimpleDateFormat("h.mma", Locale.ENGLISH);
 
 	/**
 	 * @param milliseconds
