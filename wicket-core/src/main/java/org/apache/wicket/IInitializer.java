@@ -35,10 +35,6 @@ import org.apache.wicket.request.resource.PackageResource;
  * property 'initializer=${initializer class name}'. You can have one such properties per jar file,
  * but the initializer that property denotes can delegate to other initializers of that library.
  * </p>
- * <p>
- * If an initializer also implements {@link IDestroyer}, the instance will be kept for destroying,
- * so that it may clean up whatever it did when initializing.
- * </p>
  * 
  * @author Jonathan Locke
  */
@@ -49,4 +45,12 @@ public interface IInitializer
 	 *            The application loading the component
 	 */
 	void init(Application application);
+
+
+	/**
+	 * @param application
+	 *            The application loading the component
+	 */
+	void destroy(Application application);
+
 }

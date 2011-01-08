@@ -52,4 +52,11 @@ public class Initializer implements IInitializer
 	{
 		return "Wicket core library initializer";
 	}
+
+	/**
+	 * @see org.apache.wicket.IInitializer#destroy(org.apache.wicket.Application)
+	 */
+	public void destroy(Application application)
+	{
+	}
 }

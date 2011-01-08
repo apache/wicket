@@ -587,11 +587,8 @@ public abstract class Application implements UnboundListener, IEventSink
 	{
 		for (IInitializer initializer : initializers)
 		{
-			if (initializer instanceof IDestroyer)
-			{
-				log.info("[" + getName() + "] destroy: " + initializer);
-				((IDestroyer)initializer).destroy(this);
-			}
+			log.info("[" + getName() + "] destroy: " + initializer);
+			initializer.destroy(this);
 		}
 	}
 
