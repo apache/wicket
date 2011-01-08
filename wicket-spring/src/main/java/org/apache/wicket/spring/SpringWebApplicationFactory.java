@@ -20,7 +20,6 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-import org.apache.wicket.protocol.http.IDestroyableWebApplicationFactory;
 import org.apache.wicket.protocol.http.IWebApplicationFactory;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
@@ -93,7 +92,7 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  * @author Janne Hietam&auml;ki (jannehietamaki)
  * 
  */
-public class SpringWebApplicationFactory implements IDestroyableWebApplicationFactory
+public class SpringWebApplicationFactory implements IWebApplicationFactory
 {
 
 	/** additional context created for this filter, if any */
@@ -211,7 +210,7 @@ public class SpringWebApplicationFactory implements IDestroyableWebApplicationFa
 	}
 
 	/** {@inheritDoc} */
-	public void destroy()
+	public void destroy(WicketFilter filter)
 	{
 		if (additionalContext != null)
 		{

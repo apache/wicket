@@ -43,4 +43,8 @@ public class DebugBarInitializer implements IInitializer
         return "DevUtils DebugBar Initializer";
     }
 
+    /** {@inheritDoc} */
+	public void destroy(Application application) {
+	}
+
 }

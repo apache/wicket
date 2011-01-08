@@ -69,6 +69,11 @@ public class UploadProgressBar extends Panel
 		{
 			return "Ajax UploadProgressBar initializer";
 		}
+
+		/** {@inheritDoc} */
+		public void destroy(Application application)
+		{
+		}
 	}
 
 	private static final ResourceReference JS = new PackageResourceReference(

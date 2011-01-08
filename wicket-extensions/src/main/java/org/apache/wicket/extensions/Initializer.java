@@ -39,8 +39,14 @@ public class Initializer implements IInitializer
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "Wicket extensions initializer";
+	}
+
+	/** {@inheritDoc} */
+	public void destroy(Application application)
+	{
 	}
 }

@@ -177,4 +177,8 @@ public class GuiceWebApplicationFactory implements IWebApplicationFactory
 		return app;
 	}
 
+	/** {@inheritDoc} */
+	public void destroy(WicketFilter filter)
+	{
+	}
 }
