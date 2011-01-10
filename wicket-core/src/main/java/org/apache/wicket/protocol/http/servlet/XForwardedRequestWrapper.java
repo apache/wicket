@@ -37,17 +37,10 @@ import javax.servlet.http.HttpServletRequestWrapper;
  */
 public class XForwardedRequestWrapper extends HttpServletRequestWrapper
 {
-	private final static ThreadLocal<SimpleDateFormat[]> threadLocalDateFormats = new ThreadLocal<SimpleDateFormat[]>()
-	{
-		@Override
-		protected SimpleDateFormat[] initialValue()
-		{
-			return new SimpleDateFormat[] {
-					new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US),
-					new SimpleDateFormat("EEEEEE, dd-MMM-yy HH:mm:ss zzz", Locale.US),
-					new SimpleDateFormat("EEE MMMM d HH:mm:ss yyyy", Locale.US) };
-		}
-	};
+	private SimpleDateFormat[] dateFormats = new SimpleDateFormat[] {
+			new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US),
+			new SimpleDateFormat("EEEEEE, dd-MMM-yy HH:mm:ss zzz", Locale.US),
+			new SimpleDateFormat("EEE MMMM d HH:mm:ss yyyy", Locale.US) };
 
 	private Map<String, List<String>> headers;
 
@@ -98,7 +91,6 @@ public class XForwardedRequestWrapper extends HttpServletRequestWrapper
 			return -1;
 		}
 
-		DateFormat[] dateFormats = threadLocalDateFormats.get();
 		Date date = null;
 		for (int i = 0; ((i < dateFormats.length) && (date == null)); i++)
 		{
