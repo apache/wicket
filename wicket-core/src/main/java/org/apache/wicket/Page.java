@@ -16,10 +16,6 @@
  */
 package org.apache.wicket;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.ObjectStreamException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -130,59 +126,6 @@ public abstract class Page extends MarkupContainer
 		IManageablePage,
 		IRequestablePage
 {
-	/**
-	 * You can set implementation of the interface in the {@link Page#serializer} then that
-	 * implementation will handle the serialization of this page. The serializePage method is called
-	 * from the writeObject method then the implementation override the default serialization.
-	 * 
-	 * @author jcompagner
-	 */
-	public static interface IPageSerializer
-	{
-		/**
-		 * Called when page is being deserialized
-		 * 
-		 * @param id
-		 *            TODO
-		 * @param name
-		 *            TODO
-		 * @param page
-		 * @param stream
-		 * @throws IOException
-		 * @throws ClassNotFoundException
-		 * 
-		 */
-		public void deserializePage(int id, String name, Page page, ObjectInputStream stream)
-			throws IOException, ClassNotFoundException;
-
-		/**
-		 * Called from the {@link Page#writeObject(java.io.ObjectOutputStream)} method.
-		 * 
-		 * @param page
-		 *            The page that must be serialized.
-		 * @param stream
-		 *            ObjectOutputStream
-		 * @throws IOException
-		 */
-
-		public void serializePage(Page page, ObjectOutputStream stream) throws IOException;
-
-		/**
-		 * Returns object to be serialized instead of given page (called from writeReplace).
-		 * 
-		 * @param serializedPage
-		 * @return object to be serialized instead of page (or the page instance itself)
-		 */
-		public Object getPageReplacementObject(Page serializedPage);
-	}
-
-	/**
-	 * This is a thread local that is used for serializing page references in this page.It stores a
-	 * {@link IPageSerializer} which can be set by the outside world to do the serialization of this
-	 * page.
-	 */
-	public static final ThreadLocal<IPageSerializer> serializer = new ThreadLocal<IPageSerializer>();
-
 	/** True if the page hierarchy has been modified in the current request. */
 	private static final int FLAG_IS_DIRTY = FLAG_RESERVED3;
 
@@ -535,7 +478,10 @@ public abstract class Page extends MarkupContainer
 				{
 					levels++;
 				}
-				buffer.append(StringValue.repeat(levels, "	")).append(component.getPageRelativePath()).append(":").append(Classes.simpleName(component.getClass()));
+				buffer.append(StringValue.repeat(levels, "	"))
+					.append(component.getPageRelativePath())
+					.append(":")
+					.append(Classes.simpleName(component.getClass()));
 			}
 		});
 		return buffer.toString();
@@ -780,7 +726,10 @@ public abstract class Page extends MarkupContainer
 							unrenderedComponents.add(component);
 
 							// Add to explanatory string to buffer
-							buffer.append(Integer.toString(unrenderedComponents.size())).append(". ").append(component).append("\n");
+							buffer.append(Integer.toString(unrenderedComponents.size()))
+								.append(". ")
+								.append(component)
+								.append("\n");
 							String metadata = component.getMetaData(Component.CONSTRUCTED_AT_KEY);
 							if (metadata != null)
 							{
@@ -914,48 +863,6 @@ public abstract class Page extends MarkupContainer
 		if (!component.isAuto())
 		{
 			dirty();
-		}
-	}
-
-	/**
-	 * 
-	 * @param stream
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 */
-	void readPageObject(java.io.ObjectInputStream stream) throws IOException,
-		ClassNotFoundException
-	{
-		int id = stream.readShort();
-		String name = (String)stream.readObject();
-
-		IPageSerializer ps = serializer.get();
-		if (ps != null)
-		{
-			ps.deserializePage(id, name, this, stream);
-		}
-		else
-		{
-			stream.defaultReadObject();
-		}
-	}
-
-	/**
-	 * 
-	 * @return serialized version of page
-	 * @throws ObjectStreamException
-	 */
-	protected Object writeReplace() throws ObjectStreamException
-	{
-		IPageSerializer ps = serializer.get();
-
-		if (ps != null)
-		{
-			return ps.getPageReplacementObject(this);
-		}
-		else
-		{
-			return this;
 		}
 	}
 
