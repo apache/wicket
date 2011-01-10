@@ -73,8 +73,6 @@ public class DummyRequestLogger implements IRequestLogger
 
 	private final Map<String, SessionData> liveSessions;
 
-	private final ThreadLocal<RequestData> currentRequest = new ThreadLocal<RequestData>();
-
 	private final AtomicInteger activeRequests = new AtomicInteger();
 
 	/**
@@ -110,7 +108,8 @@ public class DummyRequestLogger implements IRequestLogger
 
 	public SessionData[] getLiveSessions()
 	{
-		final SessionData[] sessions = liveSessions.values().toArray(new SessionData[liveSessions.values().size()]);
+		final SessionData[] sessions = liveSessions.values().toArray(
+			new SessionData[liveSessions.values().size()]);
 		Arrays.sort(sessions);
 		return sessions;
 	}
