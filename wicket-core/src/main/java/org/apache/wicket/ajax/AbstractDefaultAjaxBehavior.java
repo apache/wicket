@@ -258,7 +258,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 	/**
 	 * Finds the markup id of the indicator. The default search order is: component, behavior,
-	 * component's parent hieararchy.
+	 * component's parent hierarchy.
 	 * 
 	 * @return markup id or <code>null</code> if no indicator found
 	 */
