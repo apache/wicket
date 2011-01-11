@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html;
+package org.apache.wicket.markup.html.panel;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
@@ -26,31 +26,117 @@ import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.TagUtils;
 import org.apache.wicket.markup.WicketTag;
+import org.apache.wicket.markup.html.HeaderPartContainer;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.util.lang.Classes;
 
-
 /**
- * A Wicket internal helper class to handle wicket:head tags.
+ * Boiler plate for markup sourcing strategy which retrieve the markup from associated markup files.
  * 
  * @author Juergen Donnerstag
  */
-public class ContainerWithAssociatedMarkupHelper implements IClusterable
+public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSourcingStrategy
 {
-	private static final long serialVersionUID = 1L;
-
 	/** <wicket:head> is only allowed before <body>, </head>, <wicket:panel> etc. */
 	private boolean noMoreWicketHeadTagsAllowed = false;
 
-	/** The markup container the helper is associated with */
-	private final WebMarkupContainer container;
+	/**
+	 * Constructor.
+	 */
+	public AssociatedMarkupSourcingStrategy()
+	{
+	}
 
 	/**
-	 * @param container
+	 * {@inheritDoc}
 	 */
-	public ContainerWithAssociatedMarkupHelper(final WebMarkupContainer container)
+	@Override
+	public void onComponentTag(final Component component, final ComponentTag tag)
 	{
-		this.container = container;
+		super.onComponentTag(component, tag);
+
+		// Copy attributes from <wicket:XXX> to the "calling" tag
+		IMarkupFragment markup = ((MarkupContainer)component).getMarkup(null);
+		String namespace = markup.getMarkupResourceStream().getWicketNamespace() + ":";
+
+		MarkupElement elem = markup.get(0);
+		if (elem instanceof ComponentTag)
+		{
+			ComponentTag panelTag = (ComponentTag)elem;
+			for (String key : panelTag.getAttributes().keySet())
+			{
+				// exclude "wicket:XX" attributes
+				if (key.startsWith(namespace) == false)
+				{
+					tag.append(key, panelTag.getAttribute(key), ", ");
+				}
+			}
+		}
+		else
+		{
+			throw new MarkupException(markup.getMarkupResourceStream(),
+				"Expected a Tag but found raw markup: " + elem.toString());
+		}
+	}
+
+	/**
+	 * Search the child's markup in the header section of the markup
+	 * 
+	 * @param container
+	 * @param child
+	 * @return Null, if not found
+	 */
+	public IMarkupFragment findMarkupInAssociatedFileHeader(final MarkupContainer container,
+		final Component child)
+	{
+		// Get the associated markup
+		IMarkupFragment markup = container.getAssociatedMarkup();
+		IMarkupFragment childMarkup = null;
+
+		// MarkupStream is good at searching markup
+		MarkupStream stream = new MarkupStream(markup);
+		while (stream.skipUntil(ComponentTag.class) && (childMarkup == null))
+		{
+			ComponentTag tag = stream.getTag();
+			if (TagUtils.isWicketHeadTag(tag))
+			{
+				if (tag.getMarkupClass() == null)
+				{
+					// find() can still fail an return null => continue the search
+					childMarkup = stream.getMarkupFragment().find(child.getId());
+				}
+			}
+			else if (TagUtils.isHeadTag(tag))
+			{
+				// find() can still fail an return null => continue the search
+				childMarkup = stream.getMarkupFragment().find(child.getId());
+			}
+
+			// Must be a direct child. We are not interested in grand children
+			if (tag.isOpen() && !tag.hasNoCloseTag())
+			{
+				stream.skipToMatchingCloseTag(tag);
+			}
+			stream.next();
+		}
+
+		return childMarkup;
+	}
+
+	/**
+	 * Render the header from the associated markup file
+	 */
+	@Override
+	public void renderHead(final Component component, HtmlHeaderContainer container)
+	{
+		if (!(component instanceof WebMarkupContainer))
+		{
+			throw new WicketRuntimeException(component.getClass().getSimpleName() +
+				" can only be associated with WebMarkupContainer.");
+		}
+
+		renderHeadFromAssociatedMarkupFile((WebMarkupContainer)component, container);
 	}
 
 	/**
@@ -62,11 +148,16 @@ public class ContainerWithAssociatedMarkupHelper implements IClusterable
 	 * <p>
 	 * The headers contributed are rendered in the standard way.
 	 * 
+	 * @param container
 	 * @param htmlContainer
 	 *            The HtmlHeaderContainer added to the Page
 	 */
-	public final void renderHeadFromAssociatedMarkupFile(final HtmlHeaderContainer htmlContainer)
+	public final void renderHeadFromAssociatedMarkupFile(final WebMarkupContainer container,
+		final HtmlHeaderContainer htmlContainer)
 	{
+		// reset for each render in case the strategy is re-used
+		noMoreWicketHeadTagsAllowed = false;
+
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
 		final MarkupStream markupStream = container.getAssociatedMarkupStream(false);
@@ -83,7 +174,7 @@ public class ContainerWithAssociatedMarkupHelper implements IClusterable
 			String headerId = getHeaderId(container, markupStream);
 
 			// Create a HeaderPartContainer and associate the markup
-			HeaderPartContainer headerPart = getHeaderPart(headerId,
+			HeaderPartContainer headerPart = getHeaderPart(container, headerId,
 				markupStream.getMarkupFragment());
 			if (headerPart != null)
 			{
@@ -133,11 +224,13 @@ public class ContainerWithAssociatedMarkupHelper implements IClusterable
 	/**
 	 * Gets the header part of the Panel/Border. Returns null if it doesn't have a header tag.
 	 * 
+	 * @param container
 	 * @param id
 	 * @param markup
 	 * @return the header part for this panel/border or null if it doesn't have a wicket:head tag.
 	 */
-	private final HeaderPartContainer getHeaderPart(final String id, final IMarkupFragment markup)
+	private final HeaderPartContainer getHeaderPart(final WebMarkupContainer container,
+		final String id, final IMarkupFragment markup)
 	{
 		// Create a HtmlHeaderContainer for the header tag found
 		final MarkupElement element = markup.get(0);

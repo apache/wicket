@@ -147,7 +147,7 @@ public class NestedFormsPage extends WebPage
 		}
 
 		@Override
-		protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+		public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 		{
 			String state = form.isEnabled() ? "enabled" : "disabled";
 			replaceComponentTagBody(markupStream, openTag, "form is " + state);

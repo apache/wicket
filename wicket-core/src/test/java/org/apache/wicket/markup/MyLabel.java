@@ -68,7 +68,7 @@ public class MyLabel extends WebComponent
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override
-	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		replaceComponentTagBody(markupStream, openTag, text);
 	}

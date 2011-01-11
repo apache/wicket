@@ -107,7 +107,7 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 	 * render them as well.
 	 */
 	@Override
-	protected final void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+	public final void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		// We are able to automatically add <head> to the page if it is
 		// missing. But we only want to add it, if we have content to be

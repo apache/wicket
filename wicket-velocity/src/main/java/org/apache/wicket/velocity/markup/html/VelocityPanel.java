@@ -53,11 +53,10 @@ import org.apache.wicket.util.string.Strings;
  * {@link VelocityPanel }.
  * </p>
  */
-@SuppressWarnings("unchecked")
 public abstract class VelocityPanel extends Panel
-		implements
-			IMarkupResourceStreamProvider,
-			IMarkupCacheKeyProvider
+	implements
+		IMarkupResourceStreamProvider,
+		IMarkupCacheKeyProvider
 {
 	private static final long serialVersionUID = 1L;
 
@@ -73,8 +72,8 @@ public abstract class VelocityPanel extends Panel
 	 *            The template resource
 	 * @return an instance of {@link VelocityPanel}
 	 */
-	public static VelocityPanel forTemplateResource(String id, IModel< ? extends Map> model,
-			final IResourceStream templateResource)
+	public static VelocityPanel forTemplateResource(String id, IModel<? extends Map> model,
+		final IResourceStream templateResource)
 	{
 		if (templateResource == null)
 		{
@@ -94,6 +93,7 @@ public abstract class VelocityPanel extends Panel
 	}
 
 	private transient String stackTraceAsString;
+
 	private transient String evaluatedTemplate;
 
 	/**
@@ -106,7 +106,7 @@ public abstract class VelocityPanel extends Panel
 	 * @param model
 	 *            Model with variables that can be substituted by Velocity.
 	 */
-	public VelocityPanel(final String id, final IModel< ? extends Map> model)
+	public VelocityPanel(final String id, final IModel<? extends Map> model)
 	{
 		super(id, model);
 	}
@@ -134,18 +134,17 @@ public abstract class VelocityPanel extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.panel.Panel#onComponentTagBody(org.apache.wicket.markup.
-	 *      MarkupStream, org.apache.wicket.markup.ComponentTag)
+	 * {@inheritDoc}
 	 */
 	@Override
-	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+	public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		if (!Strings.isEmpty(stackTraceAsString))
 		{
 			// TODO: only display the velocity error/stacktrace in development
 			// mode?
-			replaceComponentTagBody(markupStream, openTag, Strings
-					.toMultilineMarkup(stackTraceAsString));
+			replaceComponentTagBody(markupStream, openTag,
+				Strings.toMultilineMarkup(stackTraceAsString));
 		}
 		else if (!parseGeneratedMarkup())
 		{
@@ -155,7 +154,7 @@ public abstract class VelocityPanel extends Panel
 			if (size() > 0)
 			{
 				throw new WicketRuntimeException(
-						"Components cannot be added if the generated markup should not be parsed.");
+					"Components cannot be added if the generated markup should not be parsed.");
 			}
 
 			if (evaluatedTemplate == null)
@@ -292,7 +291,6 @@ public abstract class VelocityPanel extends Panel
 	 * like applications, where 'normal' users are allowed to do basic scripting. On errors, you
 	 * want them to be able to have them correct them while the rest of the application keeps on
 	 * working.
-	 * </p>
 	 * 
 	 * @return Whether any velocity exceptions should be thrown or trapped. The default is false.
 	 */
@@ -302,11 +300,10 @@ public abstract class VelocityPanel extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.IMarkupResourceStreamProvider#getMarkupResourceStream(org.apache
-	 *      .wicket.MarkupContainer, java.lang.Class)
+	 * {@inheritDoc}
 	 */
 	public final IResourceStream getMarkupResourceStream(MarkupContainer container,
-			Class< ? > containerClass)
+		Class<?> containerClass)
 	{
 		Reader reader = getTemplateReader();
 		if (reader == null)
@@ -315,7 +312,7 @@ public abstract class VelocityPanel extends Panel
 		}
 
 		// evaluate the template and return a new StringResourceStream
-	 StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 		sb.append("<wicket:panel>");
 		sb.append(evaluateVelocityTemplate(reader));
 		sb.append("</wicket:panel>");
@@ -323,17 +320,16 @@ public abstract class VelocityPanel extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.IMarkupCacheKeyProvider#getCacheKey(org.apache.wicket.
-	 *      MarkupContainer, java.lang.Class)
+	 * {@inheritDoc}
 	 */
-	public final String getCacheKey(MarkupContainer container, Class< ? > containerClass)
+	public final String getCacheKey(MarkupContainer container, Class<?> containerClass)
 	{
 		// don't cache the evaluated template
 		return null;
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onDetach()
+	 * {@inheritDoc}
 	 */
 	@Override
 	protected void onDetach()

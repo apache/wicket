@@ -59,9 +59,11 @@ public class FilterForm<T> extends Form<T>
 			"');");
 	}
 
-
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+	public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		super.onComponentTagBody(markupStream, openTag);
 		String id = Strings.escapeMarkup(getFocusTrackerFieldCssId()).toString();

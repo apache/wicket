@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.panel;
 
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.html.WebPage;
 
@@ -58,7 +59,7 @@ public class InlinePanelPage_5 extends WebPage
 		}
 
 		@Override
-		protected IMarkupFragment chooseMarkup()
+		protected IMarkupFragment chooseMarkup(final MarkupContainer provider)
 		{
 			return getAssociatedMarkup();
 		}

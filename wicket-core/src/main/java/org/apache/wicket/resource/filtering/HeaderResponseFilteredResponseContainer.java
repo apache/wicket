@@ -59,7 +59,7 @@ public class HeaderResponseFilteredResponseContainer extends WebMarkupContainer
 	}
 
 	@Override
-	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+	public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		HeaderResponseContainerFilteringHeaderResponse response = HeaderResponseContainerFilteringHeaderResponse.get();
 		if (!response.isClosed())

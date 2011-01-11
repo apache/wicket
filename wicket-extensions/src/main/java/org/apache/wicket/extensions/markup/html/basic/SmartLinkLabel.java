@@ -65,16 +65,19 @@ public class SmartLinkLabel extends Label
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-	 *      org.apache.wicket.markup.ComponentTag)
+	 * {@inheritDoc}
 	 */
 	@Override
-	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		replaceComponentTagBody(markupStream, openTag,
 			getSmartLink(getDefaultModelObjectAsString()));
 	}
 
+	/**
+	 * 
+	 * @return link parser
+	 */
 	protected ILinkParser getLinkParser()
 	{
 		return new DefaultLinkParser();

@@ -108,7 +108,7 @@ public class Label extends WebComponent
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		replaceComponentTagBody(markupStream, openTag, getDefaultModelObjectAsString());
 	}

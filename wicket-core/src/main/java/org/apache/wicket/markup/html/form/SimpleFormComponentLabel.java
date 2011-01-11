@@ -54,7 +54,7 @@ public class SimpleFormComponentLabel extends FormComponentLabel
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override
-	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		replaceComponentTagBody(markupStream, openTag, getDefaultModelObjectAsString());
 	}

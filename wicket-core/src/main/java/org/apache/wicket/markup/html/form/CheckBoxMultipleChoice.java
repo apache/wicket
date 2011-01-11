@@ -298,8 +298,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override
-	protected final void onComponentTagBody(final MarkupStream markupStream,
-		final ComponentTag openTag)
+	public final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Iterate through choices
 		final List<? extends T> choices = getChoices();

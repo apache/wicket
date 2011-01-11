@@ -1502,7 +1502,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 *            The open tag for the body
 	 */
 	@Override
-	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		if (isRootForm())
 		{

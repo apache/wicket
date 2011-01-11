@@ -209,7 +209,7 @@ public class ExternalLink extends AbstractLink
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override
-	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Draw anything before the body?
 		if (!isLinkEnabled() && getBeforeDisabledLink() != null)

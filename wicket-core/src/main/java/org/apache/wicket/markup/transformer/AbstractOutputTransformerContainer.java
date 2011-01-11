@@ -94,8 +94,7 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 		throws Exception;
 
 	@Override
-	protected final void onComponentTagBody(final MarkupStream markupStream,
-		final ComponentTag openTag)
+	public final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		if (transformBodyOnly == true)
 		{

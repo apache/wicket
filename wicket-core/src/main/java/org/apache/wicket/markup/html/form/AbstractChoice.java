@@ -329,7 +329,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 *            The open tag for the body
 	 */
 	@Override
-	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		List<? extends E> choices = getChoices();
 		final AppendingStringBuffer buffer = new AppendingStringBuffer((choices.size() * 50) + 16);

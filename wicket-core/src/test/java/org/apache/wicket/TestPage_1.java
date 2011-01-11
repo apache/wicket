@@ -49,7 +49,7 @@ public class TestPage_1 extends WebPage
 			}
 
 			@Override
-			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+			public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 			{
 				replaceComponentTagBody(markupStream, openTag, "body");
 			}

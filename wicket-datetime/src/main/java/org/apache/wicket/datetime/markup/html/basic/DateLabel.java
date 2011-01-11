@@ -279,8 +279,11 @@ public class DateLabel extends Label
 		this.before = before;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+	public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		String s = getDefaultModelObjectAsString();
 		if (before != null)

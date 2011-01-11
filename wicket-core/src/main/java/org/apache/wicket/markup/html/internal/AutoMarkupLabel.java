@@ -44,7 +44,7 @@ class AutoMarkupLabel extends WebComponent
 	}
 
 	@Override
-	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+	public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		replaceComponentTagBody(markupStream, openTag, markup);
 	}

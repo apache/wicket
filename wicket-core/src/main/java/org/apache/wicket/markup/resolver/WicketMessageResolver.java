@@ -196,8 +196,7 @@ public class WicketMessageResolver implements IComponentResolver
 		}
 
 		@Override
-		protected void onComponentTagBody(final MarkupStream markupStream,
-			final ComponentTag openTag)
+		public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 		{
 			// Get the value from the properties file
 			final String key = getDefaultModelObjectAsString();

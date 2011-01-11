@@ -25,14 +25,11 @@ import org.apache.wicket.model.IModel;
  * @see ITab
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
  */
 public abstract class AbstractTab implements ITab
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
 	IModel<String> title;
 
 	/**
@@ -47,7 +44,7 @@ public abstract class AbstractTab implements ITab
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.tabs.ITab#getTitle()
+	 * {@inheritDoc}
 	 */
 	public IModel<String> getTitle()
 	{
@@ -55,7 +52,7 @@ public abstract class AbstractTab implements ITab
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.tabs.ITab#isVisible()
+	 * {@inheritDoc}
 	 */
 	public boolean isVisible()
 	{
@@ -63,7 +60,7 @@ public abstract class AbstractTab implements ITab
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.tabs.ITab#getPanel(String)
+	 * {@inheritDoc}
 	 */
 	public abstract Panel getPanel(final String panelId);
 }

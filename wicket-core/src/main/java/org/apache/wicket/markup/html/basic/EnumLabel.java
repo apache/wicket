@@ -74,7 +74,7 @@ public class EnumLabel<T extends Enum<T>> extends WebComponent
 	}
 
 	@Override
-	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		replaceComponentTagBody(markupStream, openTag, getStringValue());
 	}

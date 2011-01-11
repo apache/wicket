@@ -17,7 +17,7 @@
 package org.apache.wicket.markup;
 
 import org.apache.wicket.markup.html.border.Border;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.parser.filter.WicketLinkTagHandler;
@@ -154,7 +154,7 @@ public class WicketTag extends ComponentTag
 	 */
 	public final boolean isPanelTag()
 	{
-		return Panel.PANEL.equalsIgnoreCase(getName());
+		return PanelMarkupSourcingStrategy.PANEL.equalsIgnoreCase(getName());
 	}
 
 	/**

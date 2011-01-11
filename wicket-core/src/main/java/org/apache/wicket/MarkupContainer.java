@@ -35,6 +35,7 @@ import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.RawMarkup;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.border.Border;
+import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
@@ -452,6 +453,16 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	public IMarkupFragment getMarkup(final Component child)
 	{
+		IMarkupSourcingStrategy provider = getMarkupSourcingStrategy();
+		if (provider != null)
+		{
+			IMarkupFragment markup = provider.getMarkup(this, child);
+			if (markup != null)
+			{
+				return markup;
+			}
+		}
+
 		// Get the markup for the container
 		IMarkupFragment markup = getMarkup();
 		if (markup == null)
@@ -1506,7 +1517,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 *            The open tag for the body
 	 */
 	@Override
-	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		renderComponentTagBody(markupStream, openTag);
 	}

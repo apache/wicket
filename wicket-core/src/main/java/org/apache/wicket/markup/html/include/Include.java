@@ -158,7 +158,7 @@ public class Include extends WebComponent
 	}
 
 	@Override
-	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		String content = importAsString();
 		replaceComponentTagBody(markupStream, openTag, content);

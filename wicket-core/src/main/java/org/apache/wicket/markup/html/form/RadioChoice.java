@@ -337,8 +337,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
 	@Override
-	protected final void onComponentTagBody(final MarkupStream markupStream,
-		final ComponentTag openTag)
+	public final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Iterate through choices
 		final List<? extends T> choices = getChoices();

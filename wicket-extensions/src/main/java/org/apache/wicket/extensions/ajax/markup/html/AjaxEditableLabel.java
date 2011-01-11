@@ -81,7 +81,6 @@ public class AjaxEditableLabel<T> extends Panel
 
 	protected class EditorAjaxBehavior extends AbstractDefaultAjaxBehavior
 	{
-
 		private static final long serialVersionUID = 1L;
 
 		/**
@@ -91,6 +90,9 @@ public class AjaxEditableLabel<T> extends Panel
 		{
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		protected void onComponentTag(ComponentTag tag)
 		{
@@ -98,7 +100,6 @@ public class AjaxEditableLabel<T> extends Panel
 			final String saveCall = "{" +
 				generateCallbackScript("wicketAjaxGet('" + getCallbackUrl() +
 					"&save=true&'+this.name+'='+wicketEncode(this.value)") + "; return false;}";
-
 
 			final String cancelCall = "{" +
 				generateCallbackScript("wicketAjaxGet('" + getCallbackUrl() + "&save=false'") +
@@ -111,17 +112,19 @@ public class AjaxEditableLabel<T> extends Panel
 			tag.put("onblur", saveCall);
 			tag.put("onkeypress", "if (Wicket.Browser.isSafari()) { return; }; " + keypress);
 			tag.put("onkeydown", "if (!Wicket.Browser.isSafari()) { return; }; " + keypress);
-
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		protected void respond(AjaxRequestTarget target)
 		{
 			RequestCycle requestCycle = RequestCycle.get();
 			boolean save = requestCycle.getRequest()
-					.getRequestParameters()
-					.getParameterValue("save")
-					.toBoolean(false);
+				.getRequestParameters()
+				.getParameterValue("save")
+				.toBoolean(false);
 
 			if (save)
 			{
@@ -157,6 +160,9 @@ public class AjaxEditableLabel<T> extends Panel
 			super(event);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		protected void onEvent(AjaxRequestTarget target)
 		{
@@ -209,8 +215,6 @@ public class AjaxEditableLabel<T> extends Panel
 	 * they should use a converter like they normally would (when this method returns null), or
 	 * whether they should use a custom converter (when this method is overridden and returns not
 	 * null).
-	 * 
-	 * @see org.apache.wicket.Component#getConverter(java.lang.Class)
 	 */
 	@Override
 	public <C> IConverter<C> getConverter(Class<C> type)
@@ -232,7 +236,7 @@ public class AjaxEditableLabel<T> extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.MarkupContainer#setDefaultModel(org.apache.wicket.model.IModel)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public final AjaxEditableLabel<T> setDefaultModel(IModel<?> model)
@@ -336,8 +340,11 @@ public class AjaxEditableLabel<T> extends Panel
 				return c != null ? c : super.getConverter(type);
 			}
 
+			/**
+			 * {@inheritDoc}
+			 */
 			@Override
-			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+			public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 			{
 				Object modelObject = getDefaultModelObject();
 				if (modelObject == null || "".equals(modelObject))
@@ -396,7 +403,7 @@ public class AjaxEditableLabel<T> extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onBeforeRender()
+	 * {@inheritDoc}
 	 */
 	@Override
 	protected void onBeforeRender()
@@ -538,8 +545,6 @@ public class AjaxEditableLabel<T> extends Panel
 
 	/**
 	 * Dummy override to fix WICKET-1239
-	 * 
-	 * @see org.apache.wicket.Component#onModelChanged()
 	 */
 	@Override
 	protected void onModelChanged()
@@ -549,8 +554,6 @@ public class AjaxEditableLabel<T> extends Panel
 
 	/**
 	 * Dummy override to fix WICKET-1239
-	 * 
-	 * @see org.apache.wicket.Component#onModelChanging()
 	 */
 	@Override
 	protected void onModelChanging()

@@ -74,7 +74,6 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 */
 	public static final class LinkType extends EnumeratedType
 	{
-
 		/** partial updates with no fallback. */
 		public static final LinkType AJAX = new LinkType("AJAX");
 
@@ -292,11 +291,10 @@ public abstract class DefaultAbstractTree extends AbstractTree
 			private static final long serialVersionUID = 1L;
 
 			/**
-			 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-			 *      org.apache.wicket.markup.ComponentTag)
+			 * {@inheritDoc}
 			 */
 			@Override
-			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+			public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 			{
 				Response response = RequestCycle.get().getResponse();
 				TreeNode parent = node.getParent();
@@ -347,7 +345,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 			private static final long serialVersionUID = 1L;
 
 			/**
-			 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
+			 * {@inheritDoc}
 			 */
 			@Override
 			protected void onComponentTag(ComponentTag tag)
@@ -424,8 +422,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 				private static final long serialVersionUID = 1L;
 
 				/**
-				 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag
-				 *      )
+				 * {@inheritDoc}
 				 */
 				@Override
 				protected void onComponentTag(ComponentTag tag)
@@ -434,7 +431,6 @@ public abstract class DefaultAbstractTree extends AbstractTree
 					tag.put("onclick", "return false");
 				}
 			};
-
 		}
 
 		if (imageId != null)
@@ -467,7 +463,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 				private static final long serialVersionUID = 1L;
 
 				/**
-				 * @see org.apache.wicket.markup.html.link.Link#onClick()
+				 * {@inheritDoc}
 				 */
 				@Override
 				public void onClick()
@@ -483,7 +479,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 				private static final long serialVersionUID = 1L;
 
 				/**
-				 * @see org.apache.wicket.ajax.markup.html.AjaxLink#onClick(org.apache.wicket.ajax.AjaxRequestTarget)
+				 * {@inheritDoc}
 				 */
 				@Override
 				public void onClick(AjaxRequestTarget target)
@@ -499,7 +495,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 				private static final long serialVersionUID = 1L;
 
 				/**
-				 * @see org.apache.wicket.ajax.markup.html.AjaxFallbackLink#onClick(org.apache.wicket.ajax.AjaxRequestTarget)
+				 * {@inheritDoc}
 				 */
 				@Override
 				public void onClick(AjaxRequestTarget target)
@@ -528,16 +524,18 @@ public abstract class DefaultAbstractTree extends AbstractTree
 		{
 			private static final long serialVersionUID = 1L;
 
+			/**
+			 * {@inheritDoc}
+			 */
 			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
 				IRequestHandler handler = new ResourceReferenceRequestHandler(getNodeIcon(node));
-				tag.put("style",
-					"background-image: url('" + RequestCycle.get().urlFor(handler) + "')");
+				tag.put("style", "background-image: url('" + RequestCycle.get().urlFor(handler) +
+					"')");
 			}
 		};
-
 	}
 
 	/**
@@ -572,7 +570,6 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 * 
 	 * @param target
 	 *            Request target - may be null on non-ajax call
-	 * 
 	 * @param node
 	 *            Node for which this callback is relevant
 	 */
@@ -585,7 +582,6 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 * 
 	 * @param target
 	 *            Request target - may be null on non-ajax call
-	 * 
 	 * @param node
 	 *            Node for which this this callback is fired.
 	 */
@@ -613,6 +609,9 @@ public abstract class DefaultAbstractTree extends AbstractTree
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{

@@ -43,7 +43,9 @@ import org.apache.wicket.model.util.WildcardCollectionModel;
 public class SelectOptions<T> extends RepeatingView
 {
 	private static final long serialVersionUID = 1L;
+
 	private boolean recreateChoices = false;
+
 	private final IOptionRenderer<T> renderer;
 
 	/**
@@ -86,7 +88,7 @@ public class SelectOptions<T> extends RepeatingView
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onBeforeRender()
+	 * {@inheritDoc}
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -130,6 +132,10 @@ public class SelectOptions<T> extends RepeatingView
 		return new SimpleSelectOption<T>("option", model, text);
 	}
 
+	/**
+	 * 
+	 * @param <V>
+	 */
 	private static class SimpleSelectOption<V> extends SelectOption<V>
 	{
 		private static final long serialVersionUID = 1L;
@@ -147,8 +153,11 @@ public class SelectOptions<T> extends RepeatingView
 			this.text = text;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
-		protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+		public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 		{
 			replaceComponentTagBody(markupStream, openTag, text);
 		}

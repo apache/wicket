@@ -154,7 +154,7 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 	}
 
 	@Override
-	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// TODO this is where I wish we had something like "enum(TAG, BODY, NONE, ALL) isVisible()"
 		// set the enclosure visibility

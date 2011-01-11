@@ -27,7 +27,9 @@ import org.apache.wicket.markup.MarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.TagUtils;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
-import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.panel.BorderMarkupSourcingStrategy;
+import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.markup.resolver.IComponentResolver;
@@ -127,9 +129,7 @@ import org.apache.wicket.util.lang.Args;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
-	implements
-		IComponentResolver
+public abstract class Border extends WebMarkupContainer implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
@@ -281,6 +281,9 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		return getBodyContainer().get(path);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
@@ -298,27 +301,13 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		return null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	protected void onComponentTag(final ComponentTag tag)
+	protected IMarkupSourcingStrategy newMarkupSourcingStrategy()
 	{
-		if (tag.isOpen() == false)
-		{
-			throw new MarkupException(
-				"The border tag must be an open tag. Open-close is not allowed: " + tag.toString());
-		}
-
-		super.onComponentTag(tag);
-	}
-
-	@Override
-	protected final void onComponentTagBody(final MarkupStream markupStream,
-		final ComponentTag openTag)
-	{
-		// Render the associated markup
-		renderAssociatedMarkup("border",
-			"Markup for a border component must begin a tag like '<wicket:border>'");
-
-		markupStream.skipToMatchingCloseTag(openTag);
+		return new BorderMarkupSourcingStrategy();
 	}
 
 	/**
@@ -375,7 +364,8 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 			return childMarkup;
 		}
 
-		return findMarkupInAssociatedFileHeader(child);
+		return ((BorderMarkupSourcingStrategy)getMarkupSourcingStrategy()).findMarkupInAssociatedFileHeader(
+			this, child);
 	}
 
 	/**
@@ -415,8 +405,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		}
 
 		@Override
-		protected void onComponentTagBody(final MarkupStream markupStream,
-			final ComponentTag openTag)
+		public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 		{
 			// skip the <wicket:body> body
 			if (markupStream.getPreviousTag().isOpen())

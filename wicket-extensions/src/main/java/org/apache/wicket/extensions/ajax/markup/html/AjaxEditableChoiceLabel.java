@@ -158,10 +158,8 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 		this(id, model, Model.ofList(choices), renderer);
 	}
 
-
 	/**
-	 * @see org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel#newEditor(org.apache.wicket.MarkupContainer,
-	 *      java.lang.String, org.apache.wicket.model.IModel)
+	 * {@inheritDoc}
 	 */
 	@Override
 	protected FormComponent<T> newEditor(MarkupContainer parent, String componentId, IModel<T> model)
@@ -220,8 +218,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel#newLabel(org.apache.wicket.MarkupContainer,
-	 *      java.lang.String, org.apache.wicket.model.IModel)
+	 * {@inheritDoc}
 	 */
 	@Override
 	protected WebComponent newLabel(MarkupContainer parent, String componentId, IModel<T> model)
@@ -230,6 +227,9 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 		{
 			private static final long serialVersionUID = 1L;
 
+			/**
+			 * {@inheritDoc}
+			 */
 			@Override
 			public <C> IConverter<C> getConverter(Class<C> type)
 			{
@@ -237,9 +237,12 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 				return c != null ? c : super.getConverter(type);
 			}
 
+			/**
+			 * {@inheritDoc}
+			 */
 			@SuppressWarnings("unchecked")
 			@Override
-			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+			public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 			{
 				String displayValue = getDefaultModelObjectAsString();
 				if (renderer != null)
@@ -274,7 +277,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel#onModelChanged()
+	 * {@inheritDoc}
 	 */
 	@Override
 	protected void onModelChanged()
@@ -283,7 +286,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel#onModelChanging()
+	 * {@inheritDoc}
 	 */
 	@Override
 	protected void onModelChanging()
@@ -292,7 +295,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onDetach()
+	 * {@inheritDoc}
 	 */
 	@Override
 	protected void onDetach()

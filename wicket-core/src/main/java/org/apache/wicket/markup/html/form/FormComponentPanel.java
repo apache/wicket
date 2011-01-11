@@ -16,16 +16,9 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.IMarkupFragment;
-import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.html.ContainerWithAssociatedMarkupHelper;
-import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.panel.Panel.PanelMarkupHelper;
-import org.apache.wicket.markup.parser.XmlTag.TagType;
-import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
+import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
+import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -119,17 +112,6 @@ public abstract class FormComponentPanel<T> extends FormComponent<T>
 {
 	private static final long serialVersionUID = 1L;
 
-	static
-	{
-		// register "wicket:panel"
-		WicketTagIdentifier.registerWellKnownTagName(Panel.PANEL);
-	}
-
-	private ContainerWithAssociatedMarkupHelper markupHelper;
-
-	/** If if tag was an open-close tag */
-	private boolean wasOpenCloseTag = false;
-
 	/**
 	 * Construct.
 	 * 
@@ -152,7 +134,7 @@ public abstract class FormComponentPanel<T> extends FormComponent<T>
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#checkRequired()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean checkRequired()
@@ -161,70 +143,24 @@ public abstract class FormComponentPanel<T> extends FormComponent<T>
 	}
 
 	/**
-	 * Check the associated markup file for a wicket header tag
-	 * 
-	 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
+	 * {@inheritDoc}
 	 */
 	@Override
-	public void renderHead(HtmlHeaderContainer container)
+	protected IMarkupSourcingStrategy newMarkupSourcingStrategy()
 	{
-		if (markupHelper == null)
-		{
-			markupHelper = new ContainerWithAssociatedMarkupHelper(this);
-		}
-
-		markupHelper.renderHeadFromAssociatedMarkupFile(container);
-
-		super.renderHead(container);
+		return new PanelMarkupSourcingStrategy();
 	}
 
 	/**
-	 * 
-	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
+	 * {@inheritDoc}
 	 */
 	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
-		if (tag.isOpenClose())
-		{
-			wasOpenCloseTag = true;
-
-			// Convert <span wicket:id="myPanel" /> into
-			// <span wicket:id="myPanel">...</span>
-			tag.setType(TagType.OPEN);
-		}
 		super.onComponentTag(tag);
 
 		// remove unapplicable attributes that might have been set by the call to super
 		tag.remove("name");
 		tag.remove("disabled");
-	}
-
-	/**
-	 * 
-	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-	 *      org.apache.wicket.markup.ComponentTag)
-	 */
-	@Override
-	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
-	{
-		// Render the associated markup
-		renderAssociatedMarkup("panel",
-			"Markup for a panel component has to contain part '<wicket:panel>'");
-
-		if (wasOpenCloseTag == false)
-		{
-			// Skip any raw markup in the body
-			markupStream.skipRawMarkup();
-		}
-	}
-
-	/**
-	 * @see org.apache.wicket.MarkupContainer#getMarkup(org.apache.wicket.Component)
-	 */
-	@Override
-	public IMarkupFragment getMarkup(final Component child)
-	{
-		return PanelMarkupHelper.getMarkup(this, child);
 	}
 }

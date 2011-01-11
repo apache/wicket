@@ -273,7 +273,7 @@ public class Image extends WebComponent implements IResourceListener
 	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
 	@Override
-	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 	}
 }

@@ -157,7 +157,7 @@ public abstract class AbstractLink extends WebMarkupContainer
 	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
 	@Override
-	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Draw anything before the body?
 		if (!isLinkEnabled() && getBeforeDisabledLink() != null)

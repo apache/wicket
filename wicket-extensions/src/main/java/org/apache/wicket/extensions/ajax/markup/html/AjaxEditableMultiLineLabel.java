@@ -70,8 +70,7 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel#newLabel(org.apache.wicket.MarkupContainer,
-	 *      java.lang.String, org.apache.wicket.model.IModel)
+	 * {@inheritDoc}
 	 */
 	@Override
 	protected MultiLineLabel newLabel(MarkupContainer parent, String componentId, IModel<T> model)
@@ -80,8 +79,11 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 		{
 			private static final long serialVersionUID = 1L;
 
+			/**
+			 * {@inheritDoc}
+			 */
 			@Override
-			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+			public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 			{
 				Object modelObject = getDefaultModelObject();
 				if (modelObject == null || "".equals(modelObject))
@@ -112,8 +114,7 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel#newEditor(org.apache.wicket.MarkupContainer,
-	 *      java.lang.String, org.apache.wicket.model.IModel)
+	 * {@inheritDoc}
 	 */
 	@Override
 	protected FormComponent<T> newEditor(MarkupContainer parent, String componentId, IModel<T> model)
@@ -122,12 +123,18 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 		{
 			private static final long serialVersionUID = 1L;
 
+			/**
+			 * {@inheritDoc}
+			 */
 			@Override
 			protected void onModelChanged()
 			{
 				AjaxEditableMultiLineLabel.this.onModelChanged();
 			}
 
+			/**
+			 * {@inheritDoc}
+			 */
 			@Override
 			protected void onModelChanging()
 			{
@@ -161,7 +168,7 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 			private static final long serialVersionUID = 1L;
 
 			/**
-			 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#onComponentTag(org.apache.wicket.markup.ComponentTag)
+			 * {@inheritDoc}
 			 */
 			@Override
 			protected void onComponentTag(ComponentTag tag)
@@ -238,12 +245,18 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 		return "...";
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void onModelChanged()
 	{
 		super.onModelChanged();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void onModelChanging()
 	{

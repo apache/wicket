@@ -16,9 +16,14 @@
  */
 package org.apache.wicket.markup.parser.filter;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
+import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
 import org.apache.wicket.model.Model;
 
 
@@ -27,7 +32,7 @@ import org.apache.wicket.model.Model;
  * 
  * @author Chris Turner
  */
-public class HeaderSectionMyLabel extends WebMarkupContainerWithAssociatedMarkup
+public class HeaderSectionMyLabel extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
@@ -43,12 +48,33 @@ public class HeaderSectionMyLabel extends WebMarkupContainerWithAssociatedMarkup
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-	 *      org.apache.wicket.markup.ComponentTag)
+	 * {@inheritDoc}
 	 */
 	@Override
-	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		replaceComponentTagBody(markupStream, openTag, getDefaultModelObjectAsString());
+	}
+
+	@Override
+	protected IMarkupSourcingStrategy newMarkupSourcingStrategy()
+	{
+		return new PanelMarkupSourcingStrategy()
+		{
+			@Override
+			public IMarkupFragment getMarkup(final MarkupContainer parent, final Component child)
+			{
+				MarkupStream markup = parent.getAssociatedMarkupStream(true);
+				markup.skipRawMarkup();
+				return markup.getMarkupFragment();
+			}
+
+			@Override
+			public void onComponentTagBody(Component component, MarkupStream markupStream,
+				ComponentTag openTag)
+			{
+				HeaderSectionMyLabel.this.onComponentTagBody(markupStream, openTag);
+			}
+		};
 	}
 }

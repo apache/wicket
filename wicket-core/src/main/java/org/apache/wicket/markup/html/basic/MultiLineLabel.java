@@ -73,7 +73,7 @@ public class MultiLineLabel extends WebComponent
 	}
 
 	@Override
-	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		CharSequence body = Strings.toMultilineMarkup(getDefaultModelObjectAsString());
 		replaceComponentTagBody(markupStream, openTag, body);

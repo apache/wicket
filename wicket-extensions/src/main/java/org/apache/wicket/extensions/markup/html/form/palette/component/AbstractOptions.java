@@ -25,7 +25,6 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.util.convert.IConverter;
-import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.JavaScriptUtils;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.IValueMap;
@@ -65,21 +64,18 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 	protected abstract Iterator<T> getOptionsIterator();
 
 	/**
-	 * 
-	 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-	 *      org.apache.wicket.markup.ComponentTag)
+	 * {@inheritDoc}
 	 */
 	@Override
-	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+	public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
-		final AppendingStringBuffer buffer = new AppendingStringBuffer(128);
+		StringBuilder buffer = new StringBuilder(128);
 		Iterator<T> options = getOptionsIterator();
 		IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
 
 		while (options.hasNext())
 		{
 			final T choice = options.next();
-
 
 			final CharSequence id;
 			{
@@ -126,7 +122,6 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 			}
 
 			buffer.append(">").append(value).append("</option>");
-
 		}
 
 		buffer.append("\n");
@@ -144,7 +139,7 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#onComponentTag(org.apache.wicket.markup.ComponentTag)
+	 * {@inheritDoc}
 	 */
 	@Override
 	protected void onComponentTag(ComponentTag tag)
@@ -178,7 +173,7 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void updateModel()

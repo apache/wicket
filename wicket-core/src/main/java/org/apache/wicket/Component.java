@@ -44,6 +44,7 @@ import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
+import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
@@ -2490,7 +2491,15 @@ public abstract class Component
 			if (tag.isOpen())
 			{
 				// Render the body
-				onComponentTagBody(markupStream, tag);
+				IMarkupSourcingStrategy provider = getMarkupSourcingStrategy();
+				if (provider != null)
+				{
+					provider.onComponentTagBody(this, markupStream, tag);
+				}
+				else
+				{
+					onComponentTagBody(markupStream, tag);
+				}
 			}
 
 			// Render close tag
@@ -2560,6 +2569,41 @@ public abstract class Component
 		}
 	}
 
+	// Will be re-created instead of persisted when session is replicated.
+	// Markup sourcing strategy are meant to be stateless.
+	private transient IMarkupSourcingStrategy markupSourcingStrategy;
+
+	/**
+	 * Get the markup sourcing strategy for the component. If null,
+	 * {@link #newMarkupSourcingStrategy()} will be called. A return value of null indicates that no
+	 * specific strategy is attached to the Component, which is perfectly ok.
+	 * 
+	 * @return Markup sourcing strategy or null if no strategy is registered
+	 */
+	protected final IMarkupSourcingStrategy getMarkupSourcingStrategy()
+	{
+		if (markupSourcingStrategy == null)
+		{
+			markupSourcingStrategy = newMarkupSourcingStrategy();
+		}
+		return markupSourcingStrategy;
+	}
+
+	/**
+	 * If {@link #getMarkupSourcingStrategy()} return null, this method will be called. By default
+	 * it returns null, which means that no markup strategy is attached to the component.
+	 * 
+	 * Please note that markup source strategies are not persisted. Instead they get re-created by
+	 * calling this method again. That's ok since markup sourcing strategies usually do not maintain
+	 * a state.
+	 * 
+	 * @return Markup sourcing strategy
+	 */
+	protected IMarkupSourcingStrategy newMarkupSourcingStrategy()
+	{
+		return null;
+	}
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
 	 * 
@@ -2588,6 +2632,13 @@ public abstract class Component
 			if (response.wasRendered(this) == false)
 			{
 				renderHead(response);
+
+				IMarkupSourcingStrategy provider = getMarkupSourcingStrategy();
+				if (provider != null)
+				{
+					provider.renderHead(this, container);
+				}
+
 				response.markRendered(this);
 			}
 
@@ -3701,7 +3752,7 @@ public abstract class Component
 
 	/**
 	 * Processes the component tag.
-	 * <p/>
+	 * 
 	 * Overrides of this method most likely should call the super implementation.
 	 * 
 	 * @param tag
@@ -3725,6 +3776,12 @@ public abstract class Component
 			path = path.replace(":", "_");
 			tag.put("wicketpath", path);
 		}
+
+		IMarkupSourcingStrategy provider = getMarkupSourcingStrategy();
+		if (provider != null)
+		{
+			provider.onComponentTag(this, tag);
+		}
 	}
 
 	/**
@@ -3735,7 +3792,7 @@ public abstract class Component
 	 * @param openTag
 	 *            The open tag for the body
 	 */
-	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 	}
 
