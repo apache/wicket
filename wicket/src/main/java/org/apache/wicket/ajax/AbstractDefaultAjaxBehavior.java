@@ -232,7 +232,9 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				"if (");
 			if (precondition != null)
 			{
-				indicatorWithPrecondition.append("function(){").append(precondition).append("}()");
+				indicatorWithPrecondition.append("function(){")
+					.append(precondition)
+					.append("}.bind(this)()");
 			}
 			else
 			{
