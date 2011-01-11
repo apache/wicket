@@ -45,7 +45,7 @@ public class NavigationToolbar extends AbstractToolbar
 		WebMarkupContainer span = new WebMarkupContainer("span");
 		add(span);
 		span.add(new AttributeModifier("colspan", true, new Model<String>(
-			String.valueOf(table.getColumns().length))));
+			String.valueOf(table.getColumns().size()))));
 
 		span.add(newPagingNavigator("navigator", table));
 		span.add(newNavigatorLabel("navigatorLabel", table));

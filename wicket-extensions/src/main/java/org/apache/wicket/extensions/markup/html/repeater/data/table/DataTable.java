@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
+import java.util.List;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
@@ -52,10 +54,10 @@ import org.apache.wicket.util.string.Strings;
  * specified, the second column will not )
  * 
  * <pre>
- * IColumn[] columns = new IColumn[2];
+ * List&lt;IColumn&lt;T&gt;&gt; columns = new ArrayList&lt;IColumn&lt;T&gt;&gt;();
  * 
- * columns[0] = new PropertyColumn(new Model&lt;String&gt;(&quot;First Name&quot;), &quot;name.first&quot;, &quot;name.first&quot;);
- * columns[1] = new PropertyColumn(new Model&lt;String&gt;(&quot;Last Name&quot;), &quot;name.last&quot;);
+ * columns.add(new PropertyColumn(new Model&lt;String&gt;(&quot;First Name&quot;), &quot;name.first&quot;, &quot;name.first&quot;));
+ * columns.add(new PropertyColumn(new Model&lt;String&gt;(&quot;Last Name&quot;), &quot;name.last&quot;));
  * 
  * DataTable table = new DataTable(&quot;datatable&quot;, columns, new UserProvider(), 10);
  * table.addBottomToolbar(new NavigationToolbar(table));
@@ -107,7 +109,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 
 	private final WebMarkupContainer body;
 
-	private final IColumn<?>[] columns;
+	private final List<IColumn<T>> columns;
 
 	private final RepeatingView topToolbars;
 
@@ -125,11 +127,12 @@ public class DataTable<T> extends Panel implements IPageableItems
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DataTable(String id, IColumn<T>[] columns, IDataProvider<T> dataProvider, int rowsPerPage)
+	public DataTable(String id, List<IColumn<T>> columns, IDataProvider<T> dataProvider,
+		int rowsPerPage)
 	{
 		super(id);
 
-		if (columns == null || columns.length < 1)
+		if (columns == null || columns.size() < 1)
 		{
 			throw new IllegalArgumentException("Argument `columns` cannot be null or empty");
 		}
@@ -144,7 +147,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 			protected Item newCellItem(String id, int index, IModel model)
 			{
 				Item item = DataTable.this.newCellItem(id, index, model);
-				final IColumn<?> column = DataTable.this.columns[index];
+				final IColumn<T> column = DataTable.this.columns.get(index);
 				if (column instanceof IStyledColumn)
 				{
 					item.add(new DataTable.CssAttributeBehavior()
@@ -235,7 +238,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 	/**
 	 * @return array of column objects this table displays
 	 */
-	public final IColumn<?>[] getColumns()
+	public final List<IColumn<T>> getColumns()
 	{
 		return columns;
 	}

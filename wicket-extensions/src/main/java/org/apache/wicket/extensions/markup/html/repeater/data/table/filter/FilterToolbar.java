@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 
+import java.util.List;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
@@ -47,7 +49,7 @@ public class FilterToolbar extends AbstractToolbar
 	 *            type of filter state object
 	 * 
 	 */
-	public <T> FilterToolbar(final DataTable<?> table, final FilterForm<T> form,
+	public <T> FilterToolbar(final DataTable<T> table, final FilterForm<T> form,
 		final IFilterStateLocator<T> stateLocator)
 	{
 		super(table);
@@ -67,8 +69,8 @@ public class FilterToolbar extends AbstractToolbar
 		filters.setRenderBodyOnly(true);
 		add(filters);
 
-		IColumn<?>[] cols = table.getColumns();
-		for (IColumn<?> col : cols)
+		List<IColumn<T>> cols = table.getColumns();
+		for (IColumn<T> col : cols)
 		{
 			WebMarkupContainer item = new WebMarkupContainer(filters.newChildId());
 			item.setRenderBodyOnly(true);

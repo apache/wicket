@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.examples.repeater;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.DataGridView;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.PropertyPopulator;
@@ -34,14 +37,14 @@ public class DataGridPage extends BasePage
 	 */
 	public DataGridPage()
 	{
-		ICellPopulator[] columns = new ICellPopulator[5];
+		List<ICellPopulator<Contact>> columns = new ArrayList<ICellPopulator<Contact>>();
 
-		columns[0] = new PropertyPopulator("id");
-		columns[1] = new PropertyPopulator("firstName");
-		columns[2] = new PropertyPopulator("lastName");
-		columns[3] = new PropertyPopulator("homePhone");
-		columns[4] = new PropertyPopulator("cellPhone");
+		columns.add(new PropertyPopulator<Contact>("id"));
+		columns.add(new PropertyPopulator<Contact>("firstName"));
+		columns.add(new PropertyPopulator<Contact>("lastName"));
+		columns.add(new PropertyPopulator<Contact>("homePhone"));
+		columns.add(new PropertyPopulator<Contact>("cellPhone"));
 
-		add(new DataGridView("rows", columns, new SortableContactDataProvider()));
+		add(new DataGridView<Contact>("rows", columns, new SortableContactDataProvider()));
 	}
 }

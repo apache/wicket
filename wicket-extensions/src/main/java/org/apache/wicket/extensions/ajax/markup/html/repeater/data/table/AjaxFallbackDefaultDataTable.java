@@ -63,27 +63,7 @@ public class AjaxFallbackDefaultDataTable<T> extends DataTable<T>
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	@SuppressWarnings("unchecked")
 	public AjaxFallbackDefaultDataTable(String id, final List<IColumn<T>> columns,
-		ISortableDataProvider<T> dataProvider, int rowsPerPage)
-	{
-		this(id, columns.toArray((IColumn<T>[])new IColumn[columns.size()]), dataProvider,
-			rowsPerPage);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 *            component id
-	 * @param columns
-	 *            array of columns
-	 * @param dataProvider
-	 *            data provider
-	 * @param rowsPerPage
-	 *            number of rows per page
-	 */
-	public AjaxFallbackDefaultDataTable(String id, final IColumn<T>[] columns,
 		ISortableDataProvider<T> dataProvider, int rowsPerPage)
 	{
 		super(id, columns, dataProvider, rowsPerPage);

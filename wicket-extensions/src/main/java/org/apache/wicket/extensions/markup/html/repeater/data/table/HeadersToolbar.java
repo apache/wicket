@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
+import java.util.List;
+
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -39,20 +41,22 @@ public class HeadersToolbar extends AbstractToolbar
 	/**
 	 * Constructor
 	 * 
+	 * @param <T>
+	 *            the column data type
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 * @param stateLocator
 	 *            locator for the ISortState implementation used by sortable headers
 	 */
-	public HeadersToolbar(final DataTable<?> table, final ISortStateLocator stateLocator)
+	public <T> HeadersToolbar(final DataTable<T> table, final ISortStateLocator stateLocator)
 	{
 		super(table);
 
 		RepeatingView headers = new RepeatingView("headers");
 		add(headers);
 
-		final IColumn<?>[] columns = table.getColumns();
-		for (final IColumn<?> column : columns)
+		final List<IColumn<T>> columns = table.getColumns();
+		for (final IColumn<T> column : columns)
 		{
 			AbstractItem item = new AbstractItem(headers.newChildId());
 			headers.add(item);
