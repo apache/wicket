@@ -17,12 +17,9 @@
 package org.apache.wicket.util.template;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.javascript.IJavascriptCompressor;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Packages;
@@ -40,57 +37,12 @@ import org.slf4j.LoggerFactory;
  * @author Eelco Hillenius
  * @since 1.2.6
  */
-// TODO cache templates application scoped with a watch
 public class PackagedTextTemplate extends TextTemplate
 {
-	private static final class CachedTextTemplate implements Serializable
-	{
-		private static final long serialVersionUID = 1L;
-
-		CachedTextTemplate(String text)
-		{
-		}
-	}
-
-	private static final class CachedTextTemplateKey implements Serializable
-	{
-		private static final long serialVersionUID = 1L;
-
-		private final String className;
-
-		CachedTextTemplateKey(Class<?> clazz, String path)
-		{
-			className = clazz.getName();
-		}
-
-	}
-
-	private static final class TextTemplateCache implements Serializable
-	{
-		private static final long serialVersionUID = 1L;
-
-		private final Map<CachedTextTemplateKey, CachedTextTemplate> cache = new ConcurrentHashMap<CachedTextTemplateKey, CachedTextTemplate>();
-
-		CachedTextTemplate get(CachedTextTemplateKey key)
-		{
-			return cache.get(key);
-		}
-
-		void put(CachedTextTemplateKey key, CachedTextTemplate value)
-		{
-			cache.put(key, value);
-		}
-	}
-
 	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(PackagedTextTemplate.class);
 
 	private static final long serialVersionUID = 1L;
-
-	private static final MetaDataKey<TextTemplateCache> TEXT_TEMPLATE_CACHE_KEY = new MetaDataKey<TextTemplateCache>()
-	{
-		private static final long serialVersionUID = 1L;
-	};
 
 	/** contents */
 	private final StringBuffer buffer = new StringBuffer();
@@ -149,7 +101,6 @@ public class PackagedTextTemplate extends TextTemplate
 		String path = Packages.absolutePath(clazz, fileName);
 
 		Application app = Application.get();
-		app.getMetaData(TEXT_TEMPLATE_CACHE_KEY);
 
 		// first try default class loading locator to find the resource
 		IResourceStream stream = app.getResourceSettings().getResourceStreamLocator().locate(clazz,
