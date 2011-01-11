@@ -125,6 +125,8 @@ public class PackagedTextTemplate extends TextTemplate
 				clazz + " (path = " + path + ")");
 		}
 
+		setLastModified(stream.lastModifiedTime());
+
 		try
 		{
 			if (encoding != null)
