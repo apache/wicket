@@ -39,14 +39,20 @@ public class MockPageParametersAware extends WebPage
 
 	private IRequestParameters lastQueryParameters;
 	private IRequestParameters lastPostParameters;
+	private TextField<String> textField;
 
 	/** */
 	public MockPageParametersAware()
 	{
-		Form<Void> form = new Form<Void>("form");
-		TextField<String> textField = new TextField<String>("textfield", Model.of(""));
+		Form<Void> form = newForm("form");
+		textField = new TextField<String>("textfield", Model.of(""));
 		form.add(textField);
 		add(form);
+	}
+
+	protected Form<Void> newForm(String id)
+	{
+		return new Form<Void>(id);
 	}
 
 	@Override
@@ -89,6 +95,14 @@ public class MockPageParametersAware extends WebPage
 		}
 	}
 
+
+	/**
+	 * @return textField
+	 */
+	public TextField<String> getTextField()
+	{
+		return textField;
+	}
 
 	public IResourceStream getMarkupResourceStream(MarkupContainer container,
 		Class<?> containerClass)

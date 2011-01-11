@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import org.apache.wicket.MockPageParametersAware;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisitor;
 
 
@@ -58,5 +60,39 @@ public class FormTest extends WicketTestCase
 	public void testFormMethodGet() throws Exception
 	{
 		executeTest(FormMethodTestPage.class, "FormMethodTestPage_expected.html");
+	}
+
+	/**
+	 * 
+	 */
+	public void testActionUrlNotDoubleEscaped()
+	{
+		tester.startPage(TestPage.class);
+		String response = tester.getLastResponseAsString();
+		assertTrue(response.contains(Strings.escapeMarkup(TestPage.TEST_QUERY_STRING)));
+	}
+
+	/** */
+	public static class TestPage extends MockPageParametersAware
+	{
+		private static final long serialVersionUID = 1L;
+		/** */
+		public static final String TEST_QUERY_STRING = "&query_p_1=value_1";
+
+		@Override
+		protected Form<Void> newForm(String id)
+		{
+			return new Form<Void>(id)
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected CharSequence getActionUrl()
+				{
+					return super.getActionUrl() + TEST_QUERY_STRING;
+				}
+			};
+		}
+
 	}
 }

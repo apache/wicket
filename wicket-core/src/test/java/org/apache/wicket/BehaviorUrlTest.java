@@ -16,6 +16,8 @@
  */
 package org.apache.wicket;
 
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.behavior.IBehaviorListener;
 import org.apache.wicket.markup.ComponentTag;
@@ -23,8 +25,11 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.util.string.Strings;
 
 
 public class BehaviorUrlTest extends WicketTestCase
@@ -111,6 +116,52 @@ public class BehaviorUrlTest extends WicketTestCase
 
 		public void onRequest()
 		{
+		}
+	}
+
+
+	/**
+	 * 
+	 */
+	public void testBehaviorUrlNotDoubleEscaped()
+	{
+		tester.startPage(EscapeTestPage.class);
+
+		String response = tester.getLastResponseAsString();
+		assertTrue(response.contains(Strings.escapeMarkup(EscapeTestPage.TEST_QUERY_STRING)));
+
+		tester.executeAjaxEvent("form:textfield", "onchange");
+
+		EscapeTestPage testPage = (EscapeTestPage)tester.getLastRenderedPage();
+		IRequestParameters lastParameters = testPage.getLastQueryParameters();
+		assertEquals(StringValue.valueOf("value_1"), lastParameters.getParameterValue("query_p_1"));
+	}
+
+	/** */
+	public static class EscapeTestPage extends MockPageParametersAware
+	{
+		private static final long serialVersionUID = 1L;
+		/** */
+		public static final String TEST_QUERY_STRING = "&query_p_1=value_1";
+
+		/** */
+		public EscapeTestPage()
+		{
+			getTextField().add(new AjaxEventBehavior("onchange")
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public CharSequence getCallbackUrl()
+				{
+					return super.getCallbackUrl() + TEST_QUERY_STRING;
+				}
+
+				@Override
+				protected void onEvent(AjaxRequestTarget target)
+				{
+				}
+			});
 		}
 	}
 }

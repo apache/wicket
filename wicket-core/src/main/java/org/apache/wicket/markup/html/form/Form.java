@@ -1410,7 +1410,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 			}
 			else
 			{
-				tag.put("action", Strings.escapeMarkup(url));
+				tag.put("action", url);
 			}
 
 			if (isMultiPart())
