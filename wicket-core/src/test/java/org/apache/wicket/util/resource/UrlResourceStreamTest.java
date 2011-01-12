@@ -78,7 +78,12 @@ public class UrlResourceStreamTest extends TestCase
 		assertEquals(1, counter.get());
 		countingStream.close();
 		assertEquals(1, counter.get());
+
+		// assert the connection is re-opened (again lazily) second time
+		countingStream.length();
+		assertEquals(2, counter.get());
 	}
+
 
 	/**
 	 * {@link URLStreamHandler} that counts the calls to {@link URL#openConnection()}
