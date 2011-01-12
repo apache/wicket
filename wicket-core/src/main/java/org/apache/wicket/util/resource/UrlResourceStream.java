@@ -169,7 +169,7 @@ public class UrlResourceStream extends AbstractResourceStream
 		if (data != null)
 		{
 			Connections.closeQuietly(data.connection);
-			data.connection = null;
+			streamData = null;
 		}
 	}
 
