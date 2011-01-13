@@ -1,5 +1,162 @@
 This file contains all changes done on the 1.5 version.
 
+Release Notes - Wicket - Version 1.5-RC1
+
+** Bug
+    * [WICKET-1721] - FormTester doesnt support onSelectionChanged  for RadioChoice
+    * [WICKET-1732] - FormTester's DropDownChoice onSelectionChanged() behaviour doesn't reload page
+    * [WICKET-1894] - AjaxFallbackButton: inconsistent submit order
+    * [WICKET-1973] - Messages lost upon session failover with redirect_to_buffer
+    * [WICKET-2264] - Ajax xml response is not validated correct
+    * [WICKET-2467] - FilterForm requires focus-tracker and focus-restore be added as children in the markup
+    * [WICKET-3088] - "split-package" problem for wicket bundles started in an osgi container
+    * [WICKET-3139] - Fix comments for Form.process() to be consistent with method declaration
+    * [WICKET-3141] - On multipart form, sendRedirect() with PageParameters are not working
+    * [WICKET-3148] - Dropped support for Servlet 2.5 inadvertently
+    * [WICKET-3150] - Autolink already rendered problem
+    * [WICKET-3153] - Form Bytes getMaxSize never returns null and does not find maximum
+    * [WICKET-3161] - Can not create cookies
+    * [WICKET-3164] - executeAjaxEvent in WicketTester works although Component is not enabled
+    * [WICKET-3166] - isVisibleInHierarchy() possibly unnecessarily checks children whose parents are invisible?
+    * [WICKET-3168] - No Application in the thread when the web server destroys WicketFilter
+    * [WICKET-3174] - SmartLinkLabel failing to process email with +
+    * [WICKET-3175] - Radio uuid is calculated wrongly for heavy instalations.
+    * [WICKET-3178] - Correctness of tests is order dependent, ThreadContext.detach not always called
+    * [WICKET-3181] - UploadProgressBar does not show up on nested forms
+    * [WICKET-3187] - StringResourceStream has null lastModified time
+    * [WICKET-3191] - UploadProgressBar shows up on the wrong nested form
+    * [WICKET-3194] - IResourceSettings.setUseTimestampOnResources(true) and performance
+    * [WICKET-3196] - UrlValidator failes to validate urls that containt multiple dots in path
+    * [WICKET-3197] - getMarkupId() can be used only if the component's markup is attached
+    * [WICKET-3200] - Form, containing FileUploadField and UploadProgressBar throws an exception when removed from the parent
+    * [WICKET-3201] - icket/markup/html/debug/PageView clearing and possibly sorting empty list
+    * [WICKET-3202] - Form with UploadProgressBar and AjaxButton doesn't submit
+    * [WICKET-3207] - Localizer.substitutePropertyExpressions() is called twice when Localizer.getString() is called
+    * [WICKET-3208] - MicroMapTest.java tests map's size 3 times rather than keySet, entrySet, values size
+    * [WICKET-3209] - WebApplication MostRecentlyUsedMap based upon Key age not Value age
+    * [WICKET-3210] - Wrong text encoding when receiving multipart forms data
+    * [WICKET-3211] - FormTester fails if multipart form is not submitted with a file
+    * [WICKET-3212] - WicketTester can't create new sessions
+    * [WICKET-3213] - YuiLib private constructor but implements IClusterable and has serialVersionUID
+    * [WICKET-3215] - AutoCompleteTextField does not work in an iframe under IE 6, 7 or 8
+    * [WICKET-3218] - Component#onInitialize is broken for Pages
+    * [WICKET-3222] - AbstractMarkupParser doesn't remove Comments correctly
+    * [WICKET-3223] - OpaqueRegion subtract for-loop does not process all rectangles
+    * [WICKET-3224] - FileCleaner issues
+    * [WICKET-3225] - SelectOptions onPopulate method exception will never be thrown
+    * [WICKET-3229] - Removing Child in IVisitor affects traversal
+    * [WICKET-3231] - In extensions CaptchaImageResource, instance variable challengeIdhashCode is never set
+    * [WICKET-3232] - In extensons CaptchaImageResource render method, while loop does not loop
+    * [WICKET-3239] - for stateless pages wicket complains with "The Buffered response should be handled by BufferedResponseRequestHandler"
+    * [WICKET-3244] - libxml2 splits large CData section.  This breaks the processEvaluate js
+    * [WICKET-3249] - DateConverter improperly converts time, causing different results between DateField and DateTimeField
+    * [WICKET-3252] - StalePageException on non-versioned Page in Ajax request does not render ajax-response
+    * [WICKET-3253] - NPE with nested property models
+    * [WICKET-3267] - Error page mappings in web.xml not working in 1.5
+    * [WICKET-3268] - Can't generate 1.5-SNAPSHOT project with the quickstart command
+    * [WICKET-3270] - NPE in PageParameters toString method
+    * [WICKET-3272] - Set an request parameter on Wicket tester do not add it in the request URL
+    * [WICKET-3278] - DropDownChoice no selection value
+    * [WICKET-3279] - ModalWindow title not visible
+    * [WICKET-3280] - IResponseFilter doesn't work in 1.5
+    * [WICKET-3287] - Patch to update Hungarian localization
+    * [WICKET-3292] - CreditCardValidator will erroneously mark some exotic card types as invalid
+    * [WICKET-3297] - UrlAttributes are encoded incorrectly when style is null but variation is not
+    * [WICKET-3301] - SimpleDateFormat-s should be created with Locale defined in constructor
+    * [WICKET-3302] - Endless recursion if LoadableDetachableModel.load throws exception
+    * [WICKET-3304] - TextField ingnores convertEmptyInputStringToNull = true property when the String type is set
+    * [WICKET-3306] - OrderByBoder MArkup problem
+    * [WICKET-3309] - unable to add nodes to an empty rootless Tree (e.g. LinkTree)
+    * [WICKET-3311] - Delete unused IPageSerializer & co from o.a.w.Page class
+    * [WICKET-3312] - Tomcat complains about thread local memory leaking when using wickets XForwardedRequestWrapperFactory
+    * [WICKET-3315] - PackagedTextTemplate should set lastModifiedTime
+    * [WICKET-3316] - Unused private final ThreadLocal variable in DummyRequestLogger?
+    * [WICKET-3319] - AjaxEditableMultilineLabel generates invalid HTML
+
+** Improvement
+    * [WICKET-1214] - WicketTester#startPanel does not work (correctly)
+    * [WICKET-1358] - Make Application Class More Bean-ish
+    * [WICKET-1382] - Image could be made ajax aware..
+    * [WICKET-1432] - Detection of ajax transport type
+    * [WICKET-1568] - contribution for wicket 1.5 generics (IConverter)
+    * [WICKET-1735] - Remove hard-coded text from the markup of PagingNavigator
+    * [WICKET-1790] - DatePicker javaScript should be optimized. Currently DatePicker generates 3000 bytes of javascript for each date field.
+    * [WICKET-1945] - make wicket's configuration type an enum
+    * [WICKET-2555] - Replace implementations of StringBuffer with StringBuilder
+    * [WICKET-2693] - improve css/js contributions
+    * [WICKET-2713] - Locate .properties files using the same convention as markup files
+    * [WICKET-2786] - WicketMessageResolver: Render warning if getThrowExceptionOnMissingResource is false like Label does
+    * [WICKET-2798] - Hungarian translation for Multiupload
+    * [WICKET-2816] - Refactor / rework pageability
+    * [WICKET-2829] - Tag attributes values are not escaped properly during writeOutput
+    * [WICKET-2832] - Output wicket attributes even in ajax response
+    * [WICKET-2833] - FileUpload#writeTo copies the stream / a possible rename would be faster
+    * [WICKET-2896] - OrderByLink should support a ASCENDING -> DESCENDING -> NONE cycle
+    * [WICKET-2913] - o.a.w.markup.html.form.upload.FileUpload.writeTo(File) is not optimal
+    * [WICKET-2971] - Refactor AuthenticatedWebSession class, introduce DefaultAuthenticatedWebSession class
+    * [WICKET-2986] - Feedback messages should be Serializable not String
+    * [WICKET-3017] - Add support for forward and error filter mappings
+    * [WICKET-3126] - Improve HomePageMapper to keep "/" as Url after the redirect
+    * [WICKET-3147] - Servlet 3 Annotation @WebFilter is not supported
+    * [WICKET-3149] - Merge DecoratingHeaderResponse to trunk
+    * [WICKET-3152] - Wicket tester should allow testing for enabled/disabled status and for fields being required.
+    * [WICKET-3154] - test for undefined in the  same manner throughtout the code.
+    * [WICKET-3158] - DateField, DateTimeField classes available, but no TimeField
+    * [WICKET-3163] - support building wicket offline by resolving DTD references locally
+    * [WICKET-3169] - Parametrize IFilterStateLocator
+    * [WICKET-3170] - ModalWindow moved event (besides resize)
+    * [WICKET-3176] - URLResourceStream loads target content twice.
+    * [WICKET-3177] - Chunk.slice seq.subList(pos, pos) returns empty list so why bother
+    * [WICKET-3184] - Make method getContentId of ModalWindow static
+    * [WICKET-3199] - TextTemplateResourceReference should support Locale and Style
+    * [WICKET-3206] - Refactor IBehavior from interface into a concrete class
+    * [WICKET-3214] - Make IValidator a mixin for Behavior so validators can contribute to head and component tag
+    * [WICKET-3226] - NavigationToolbar has table instance variable but so does base-class AbstractToolbar
+    * [WICKET-3233] - In extensions, Select extends FormComponent but FormComponent has no type parameter
+    * [WICKET-3235] - AutoCompleteBehavior overwrites base class AbstractAutoCompleteBehavior settings variable
+    * [WICKET-3240] - AnnotationsRoleAuthorizationStrategy isInstantiationAuthorized package==false, class==true returns true
+    * [WICKET-3241] - Add support for the new HTML 5 input types
+    * [WICKET-3245] - SpringBeanLocator getBeanNameOfClass move if-test outside of while-loop
+    * [WICKET-3246] - AnnotProxyFieldValueFactory getBeanNameOfClass move if-test outside of while-loop
+    * [WICKET-3254] - Add file name to the exception in case of an error during temp file creation for upload
+    * [WICKET-3257] - Add restartResponseAtSignInPage() Method to AuthenticatedWebApplication
+    * [WICKET-3264] - MetaDataEntry set method traverses metaData even after key is found and data set/cleared
+    * [WICKET-3265] - Component data_remove returns Object which is never used
+    * [WICKET-3266] - introduce varargs for parameters in StringResourceModel
+    * [WICKET-3275] - Log a warn or throw an exception when an AjaxFormComponentUpdatingBehavior is added to an choice component
+    * [WICKET-3286] - DropDownChoice:  "data" or "choices?"
+    * [WICKET-3288] - Remove "id" from Toolbar constructors
+    * [WICKET-3289] - Patch to update yui to version 2.8.2r1 from 2.7.0
+    * [WICKET-3290] - Another patch to update Hungarian localization
+    * [WICKET-3295] - Please use lists instead of arrays
+    * [WICKET-3296] - Url should accept null parameters list
+    * [WICKET-3299] - Please un-deprecate WebApplication.mount
+    * [WICKET-3300] - Redundant test in MountedMapper
+    * [WICKET-3313] - WebPage cookiesResource is not used
+    * [WICKET-3324] - Markup NO_MARKUP can not call toString
+
+** New Feature
+    * [WICKET-701] - Allow wicket filter-mapping to use servlet-name instead of url-pattern
+    * [WICKET-982] - Add accessibility support
+    * [WICKET-1203] - Support JavaScript contributions that will insert includes at the bottom of markup instead of header
+    * [WICKET-1237] - Support for AlternateParent in containers
+    * [WICKET-2874] - Copy attributes from wicket:panel to source tag
+    * [WICKET-3138] - Wicket 1.5 and GAE
+    * [WICKET-3144] - Extra client-side scripting before closing modalwindow
+    * [WICKET-3256] - Use a Provider for IExceptionMapper
+    * [WICKET-3261] - Create wicket-core Maven module that contains wicket + wicket-util + wicket-request
+    * [WICKET-3263] - Allow AjaxRequestTarget.IListeners to be Registered at the WebApplication Level
+
+** Task
+    * [WICKET-715] - rename classes and methods from *Javascript* to *JavaScript*
+    * [WICKET-3283] - Update cglib to 2.2 from 2.1_3
+
+** Wish
+    * [WICKET-2963] - Add examples for the new request mappers in 1.5
+    * [WICKET-3015] - add (even more) support for front-end proxies (schema, client ip, ...)
+    * [WICKET-3237] - Exception when calling setOutputMarkupId/PlaceholderTag on wicket:container
+
+
 Release Notes - Wicket - Version 1.5-M3
 
 ** Sub-task
