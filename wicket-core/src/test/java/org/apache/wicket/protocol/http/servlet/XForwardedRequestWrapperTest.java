@@ -23,7 +23,6 @@ import org.apache.wicket.markup.html.basic.SimplePage;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
-import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
@@ -159,10 +158,10 @@ public class XForwardedRequestWrapperTest extends WicketTestCase
 
 	private class MyApplication extends MockApplication
 	{
-		public XForwardedRequestWrapperFactory factory;
+		XForwardedRequestWrapperFactory factory;
 
 		/**
-		 * @see org.apache.wicket.protocol.http.WebApplication#init()
+		 * {@inheritDoc}
 		 */
 		@Override
 		protected void init()
@@ -171,17 +170,8 @@ public class XForwardedRequestWrapperTest extends WicketTestCase
 
 			factory = new XForwardedRequestWrapperFactory();
 			factory.init(getWicketFilter().getFilterConfig());
-		}
 
-		/**
-		 * @see org.apache.wicket.protocol.http.WebApplication#newWebRequest(javax.servlet.http.HttpServletRequest,
-		 *      java.lang.String)
-		 */
-		@Override
-		protected WebRequest newWebRequest(HttpServletRequest request, String filterPath)
-		{
-			HttpServletRequest xRequest = factory.getWrapper(request);
-			return super.newWebRequest(xRequest, filterPath);
+			getFilterFactoryManager().add(factory);
 		}
 	}
 

@@ -123,6 +123,13 @@ public class SecuredRemoteAddressRequestWrapperFactory extends AbstractRequestWr
 	private Config config = new Config();
 
 	/**
+	 * Construct.
+	 */
+	public SecuredRemoteAddressRequestWrapperFactory()
+	{
+	}
+
+	/**
 	 * @return SecuredRemoteAddress and XForwarded filter specific config
 	 */
 	public final Config getConfig()
@@ -141,7 +148,7 @@ public class SecuredRemoteAddressRequestWrapperFactory extends AbstractRequestWr
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.servlet.AbstractRequestWrapperFactory#getWrapper(javax.servlet.http.HttpServletRequest)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public HttpServletRequest getWrapper(final HttpServletRequest request)
@@ -159,9 +166,7 @@ public class SecuredRemoteAddressRequestWrapperFactory extends AbstractRequestWr
 	}
 
 	/**
-	 * 
-	 * @param request
-	 * @return True, if a wrapper is needed
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean needsWrapper(final HttpServletRequest request)

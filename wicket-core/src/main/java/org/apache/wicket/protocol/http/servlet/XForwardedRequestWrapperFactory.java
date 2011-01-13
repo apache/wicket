@@ -604,6 +604,13 @@ public class XForwardedRequestWrapperFactory extends AbstractRequestWrapperFacto
 	private Config config = new Config();
 
 	/**
+	 * Construct.
+	 */
+	public XForwardedRequestWrapperFactory()
+	{
+	}
+
+	/**
 	 * @return XForwarded filter specific config
 	 */
 	public final Config getConfig()
@@ -622,9 +629,7 @@ public class XForwardedRequestWrapperFactory extends AbstractRequestWrapperFacto
 	}
 
 	/**
-	 * 
-	 * @param request
-	 * @return True, if a wrapper is needed
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean needsWrapper(final HttpServletRequest request)
@@ -655,9 +660,10 @@ public class XForwardedRequestWrapperFactory extends AbstractRequestWrapperFacto
 		LinkedList<String> proxiesHeaderValue = new LinkedList<String>();
 
 		String[] remoteIPHeaderValue = commaDelimitedListToStringArray(request.getHeader(config.remoteIPHeader));
-		int idx;
+
 		// loop on remoteIPHeaderValue to find the first trusted remote ip and to build the
 		// proxies chain
+		int idx;
 		for (idx = remoteIPHeaderValue.length - 1; idx >= 0; idx--)
 		{
 			String currentRemoteIp = remoteIPHeaderValue[idx];
@@ -676,6 +682,7 @@ public class XForwardedRequestWrapperFactory extends AbstractRequestWrapperFacto
 				break;
 			}
 		}
+
 		// continue to loop on remoteIPHeaderValue to build the new value of the remoteIPHeader
 		LinkedList<String> newRemoteIpHeaderValue = new LinkedList<String>();
 		for (; idx >= 0; idx--)
