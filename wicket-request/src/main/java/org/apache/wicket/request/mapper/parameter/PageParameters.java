@@ -115,7 +115,7 @@ public class PageParameters implements Serializable
 	 *            Delimiter string used to separate key/value pairs
 	 * @see ValueMap#ValueMap(String)
 	 * 
-	 * @deprecated use varios setter methods to set parameters
+	 * @deprecated use various setter methods to set parameters
 	 */
 	@Deprecated
 	public PageParameters(final String keyValuePairs, final String delimiter)
