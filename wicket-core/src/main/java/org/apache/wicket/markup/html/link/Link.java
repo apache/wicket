@@ -21,7 +21,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.util.string.Strings;
 
 /**
  * Implementation of a hyperlink component. A link can be used with an anchor (&lt;a href...)
@@ -368,7 +367,7 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 				tag.getName().equalsIgnoreCase("area"))
 			{
 				// generate the href attribute
-				tag.put("href", Strings.replaceAll(url, "&", "&amp;"));
+				tag.put("href", url);
 
 				// Add any popup script
 				if (popupSettings != null)
@@ -381,7 +380,7 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 			else if (tag.getName().equalsIgnoreCase("script") ||
 				tag.getName().equalsIgnoreCase("style"))
 			{
-				tag.put("src", Strings.replaceAll(url, "&", "&amp;"));
+				tag.put("src", url);
 			}
 			else
 			{
@@ -401,7 +400,8 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 						"onclick",
 						"var win = this.ownerDocument.defaultView || this.ownerDocument.parentWindow; " +
 							"if (win == window) { window.location.href='" +
-							Strings.replaceAll(url, "&", "&amp;") + "'; } ;return false");
+							url +
+							"'; } ;return false");
 				}
 			}
 
