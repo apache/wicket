@@ -36,7 +36,7 @@ public class TextField<T> extends AbstractTextComponent<T>
 	 */
 	public TextField(final String id)
 	{
-		super(id);
+		this(id, null, null);
 	}
 
 	/**
@@ -47,8 +47,7 @@ public class TextField<T> extends AbstractTextComponent<T>
 	 */
 	public TextField(final String id, final Class<T> type)
 	{
-		super(id);
-		setType(type);
+		this(id, null, type);
 	}
 
 	/**
@@ -58,7 +57,7 @@ public class TextField<T> extends AbstractTextComponent<T>
 	 */
 	public TextField(final String id, final IModel<T> model)
 	{
-		super(id, model);
+		this(id, model, null);
 	}
 
 	/**
@@ -74,6 +73,9 @@ public class TextField<T> extends AbstractTextComponent<T>
 	{
 		super(id, model);
 		setType(type);
+
+		// don't double encode the value. it is encoded by ComponentTag.writeOutput()
+		setEscapeModelStrings(false);
 	}
 
 	/**
