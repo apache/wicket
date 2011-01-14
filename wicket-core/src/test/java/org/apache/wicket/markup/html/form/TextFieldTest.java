@@ -20,13 +20,19 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.FormTester;
 
+/**
+ * @author Pedro Santos
+ */
 public class TextFieldTest extends WicketTestCase
 {
+	/** */
 	public void testEmptyInputConvertedToNull()
 	{
 		TestPage testPage = new TestPage();
@@ -39,15 +45,31 @@ public class TextFieldTest extends WicketTestCase
 		assertEquals(null, testPage.textField.getDefaultModelObject());
 	}
 
+	/**
+	 * Asserting that the value attribute on tag input is escaped once by default
+	 */
+	public void testValueAttribute()
+	{
+		TestPage testPage = new TestPage();
+		String text = "some text & another text";
+		testPage.textModel.setObject(text);
+		tester.startPage(testPage);
+		assertTrue(tester.getLastResponseAsString().contains(Strings.escapeMarkup(text)));
+	}
+
+	/** */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		private static final long serialVersionUID = 1L;
 		Form<Void> form;
 		TextField<String> textField;
+		IModel<String> textModel = Model.of((String)null);
 
+		/** */
 		public TestPage()
 		{
 			add(form = new Form<Void>("form"));
-			form.add(textField = new TextField<String>("text", Model.of((String)null)));
+			form.add(textField = new TextField<String>("text", textModel));
 		}
 
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
