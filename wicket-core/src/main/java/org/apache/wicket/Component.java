@@ -1727,7 +1727,7 @@ public abstract class Component
 				if (getFlag(FLAG_ESCAPE_MODEL_STRINGS))
 				{
 					// Escape HTML sensitive characters only. Not all none-ascii chars
-					return Strings.escapeMarkup(modelString, false, true).toString();
+					return Strings.escapeMarkup(modelString, false, false).toString();
 				}
 				return modelString;
 			}

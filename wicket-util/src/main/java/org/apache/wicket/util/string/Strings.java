@@ -351,27 +351,23 @@ public final class Strings
 
 					default :
 
-						if (convertToHtmlUnicodeEscapes)
+						int ci = 0xffff & c;
+
+						if (
+						// if this is non-printable and not whitespace (TAB, LF, CR)
+						(ci < 32 && ci != 9 && ci != 10 && ci != 13) ||
+						// or non-ASCII (XXX: why 160+ ?!) and need to UNICODE escape it
+							(convertToHtmlUnicodeEscapes && ci > 159))
 						{
-							int ci = 0xffff & c;
-							if (ci > 31 && ci < 160)
-							{
-								// nothing special only 7 Bit
-								buffer.append(c);
-							}
-							else
-							{
-								// Not 7 Bit use the unicode system
-								buffer.append("&#");
-								buffer.append(Integer.toString(ci));
-								buffer.append(';');
-							}
+							buffer.append("&#");
+							buffer.append(Integer.toString(ci));
+							buffer.append(';');
 						}
 						else
 						{
+							// ASCII or whitespace
 							buffer.append(c);
 						}
-
 						break;
 				}
 			}
