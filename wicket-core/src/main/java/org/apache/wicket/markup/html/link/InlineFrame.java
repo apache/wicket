@@ -21,7 +21,6 @@ import org.apache.wicket.Session;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.string.Strings;
 
 /**
  * Implementation of an <a href="http://www.w3.org/TR/REC-html40/present/frames.html#h-16.5">inline
@@ -176,7 +175,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 		CharSequence url = getURL();
 
 		// generate the src attribute
-		tag.put("src", Strings.replaceAll(url, "&", "&amp;"));
+		tag.put("src", url);
 
 		super.onComponentTag(tag);
 	}
