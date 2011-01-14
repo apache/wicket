@@ -416,8 +416,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 						// invalid JavaScript
 						buffer.append(" onclick=\"window.location.href='")
 							.append(url)
-							.append(
-								(url.toString().indexOf('?') > -1 ? "&amp;" : "?") + getInputName())
+							.append((url.toString().indexOf('?') > -1 ? "&" : "?") + getInputName())
 							.append("=")
 							.append(id)
 							.append("';\"");

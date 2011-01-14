@@ -253,7 +253,7 @@ public class Image extends WebComponent implements IResourceListener
 	protected final void addAntiCacheParameter(final ComponentTag tag)
 	{
 		String url = tag.getAttributes().getString("src");
-		url = url + (url.contains("?") ? "&amp;" : "?");
+		url = url + (url.contains("?") ? "&" : "?");
 		url = url + "wicket:antiCache=" + System.currentTimeMillis();
 
 		tag.put("src", url);

@@ -620,7 +620,7 @@ public final class AutoLinkResolver implements IComponentResolver
 				CharSequence url = getRequestCycle().urlFor(handler);
 
 				// generate the href attribute
-				tag.put(attribute, Strings.replaceAll(url, "&", "&amp;"));
+				tag.put(attribute, url);
 			}
 		}
 
