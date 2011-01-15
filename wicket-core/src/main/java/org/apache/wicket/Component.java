@@ -44,6 +44,7 @@ import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
+import org.apache.wicket.markup.html.panel.DefaultMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IComponentInheritedModel;
@@ -460,6 +461,12 @@ public abstract class Component
 
 	/** Must only be used by auto components */
 	private transient IMarkupFragment markup;
+
+	/**
+	 * Will be re-created instead of persisted when session is replicated. Markup sourcing strategy
+	 * are typically stateless (but don't have to).
+	 */
+	private transient IMarkupSourcingStrategy markupSourcingStrategy;
 
 	/**
 	 * The object that holds the component state.
@@ -2490,16 +2497,9 @@ public abstract class Component
 			// Render the body only if open-body-close. Do not render if open-close.
 			if (tag.isOpen())
 			{
-				// Render the body
-				IMarkupSourcingStrategy provider = getMarkupSourcingStrategy();
-				if (provider != null)
-				{
-					provider.onComponentTagBody(this, markupStream, tag);
-				}
-				else
-				{
-					onComponentTagBody(markupStream, tag);
-				}
+				// Render the body. The default strategy will simply call the component's
+				// onComponentTagBody() implementation.
+				getMarkupSourcingStrategy().onComponentTagBody(this, markupStream, tag);
 			}
 
 			// Render close tag
@@ -2569,30 +2569,32 @@ public abstract class Component
 		}
 	}
 
-	// Will be re-created instead of persisted when session is replicated.
-	// Markup sourcing strategy are meant to be stateless.
-	private transient IMarkupSourcingStrategy markupSourcingStrategy;
-
 	/**
 	 * Get the markup sourcing strategy for the component. If null,
-	 * {@link #newMarkupSourcingStrategy()} will be called. A return value of null indicates that no
-	 * specific strategy is attached to the Component, which is perfectly ok.
+	 * {@link #newMarkupSourcingStrategy()} will be called.
 	 * 
-	 * @return Markup sourcing strategy or null if no strategy is registered
+	 * @return Markup sourcing strategy
 	 */
 	protected final IMarkupSourcingStrategy getMarkupSourcingStrategy()
 	{
 		if (markupSourcingStrategy == null)
 		{
 			markupSourcingStrategy = newMarkupSourcingStrategy();
+
+			// If not strategy by provided, than we use a default one.
+			if (markupSourcingStrategy == null)
+			{
+				markupSourcingStrategy = DefaultMarkupSourcingStrategy.get();
+			}
 		}
 		return markupSourcingStrategy;
 	}
 
 	/**
-	 * If {@link #getMarkupSourcingStrategy()} return null, this method will be called. By default
-	 * it returns null, which means that no markup strategy is attached to the component.
-	 * 
+	 * If {@link #getMarkupSourcingStrategy()} returns null, this method will be called. By default
+	 * it returns null, which means that a default markup strategy will be attached to the
+	 * component.
+	 * <p>
 	 * Please note that markup source strategies are not persisted. Instead they get re-created by
 	 * calling this method again. That's ok since markup sourcing strategies usually do not maintain
 	 * a state.
@@ -2631,13 +2633,11 @@ public abstract class Component
 			// Allow component to contribute
 			if (response.wasRendered(this) == false)
 			{
+				// Let the component contribute something to the header
 				renderHead(response);
 
-				IMarkupSourcingStrategy provider = getMarkupSourcingStrategy();
-				if (provider != null)
-				{
-					provider.renderHead(this, container);
-				}
+				// Make sure the markup source strategy has been considered as well.
+				getMarkupSourcingStrategy().renderHead(this, container);
 
 				response.markRendered(this);
 			}
@@ -3777,11 +3777,8 @@ public abstract class Component
 			tag.put("wicketpath", path);
 		}
 
-		IMarkupSourcingStrategy provider = getMarkupSourcingStrategy();
-		if (provider != null)
-		{
-			provider.onComponentTag(this, tag);
-		}
+		// The markup sourcing strategy may also want to work on the tag
+		getMarkupSourcingStrategy().onComponentTag(this, tag);
 	}
 
 	/**
