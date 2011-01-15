@@ -96,18 +96,27 @@ public class MarkupCache implements IMarkupCache
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void clear()
 	{
 		markupCache.clear();
 		markupKeyCache.clear();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void shutdown()
 	{
 		markupCache.shutdown();
 		markupKeyCache.shutdown();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public final IMarkupFragment removeMarkup(final String cacheKey)
 	{
 		Args.notNull(cacheKey, "cacheKey");
@@ -188,6 +197,10 @@ public class MarkupCache implements IMarkupCache
 	{
 		// Get the markup associated with key
 		Markup markup = markupCache.get(key);
+		if (markup == null)
+		{
+			return false;
+		}
 
 		// Get the base markup resource stream from the markup
 		MarkupResourceStream resourceStream = markup.getMarkupResourceStream()
@@ -215,6 +228,9 @@ public class MarkupCache implements IMarkupCache
 		return false;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public final int size()
 	{
 		return markupCache.size();
@@ -610,11 +626,17 @@ public class MarkupCache implements IMarkupCache
 		{
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public void clear()
 		{
 			cache.clear();
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public boolean containsKey(Object key)
 		{
 			if (key == null)
@@ -624,6 +646,9 @@ public class MarkupCache implements IMarkupCache
 			return cache.containsKey(key);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public V get(Object key)
 		{
 			if (key == null)
@@ -633,26 +658,41 @@ public class MarkupCache implements IMarkupCache
 			return cache.get(key);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public Collection<K> getKeys()
 		{
 			return cache.keySet();
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public void put(K key, V value)
 		{
 			cache.put(key, value);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public boolean remove(K key)
 		{
 			return cache.remove(key) == null;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public int size()
 		{
 			return cache.size();
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public void shutdown()
 		{
 			clear();
