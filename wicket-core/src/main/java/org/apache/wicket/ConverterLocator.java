@@ -56,11 +56,11 @@ public class ConverterLocator implements IConverterLocator
 	/**
 	 * CoverterLocator that is to be used when no registered converter is found.
 	 */
-	private class DefaultConverter<C> implements IConverter<C>
+	private static class DefaultConverter<C> implements IConverter<C>
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final WeakReference<Class<C>> type;
+		private final transient WeakReference<Class<C>> type;
 
 		/**
 		 * Construct.

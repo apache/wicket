@@ -64,7 +64,7 @@ public class BrowserInfoForm extends Panel
 
 				RequestCycle requestCycle = getRequestCycle();
 				WebSession session = (WebSession)getSession();
-				ClientInfo clientInfo = session.getClientInfo();
+				WebClientInfo clientInfo = session.getClientInfo();
 
 				if (clientInfo == null)
 				{
@@ -72,16 +72,8 @@ public class BrowserInfoForm extends Panel
 					getSession().setClientInfo(clientInfo);
 				}
 
-				if (clientInfo instanceof WebClientInfo)
-				{
-					WebClientInfo info = (WebClientInfo)clientInfo;
-					ClientProperties properties = info.getProperties();
-					propertiesBean.merge(properties);
-				}
-				else
-				{
-					warnNotUsingWebClientInfo(clientInfo);
-				}
+				ClientProperties properties = clientInfo.getProperties();
+				propertiesBean.merge(properties);
 
 				afterSubmit();
 			}
@@ -290,6 +282,16 @@ public class BrowserInfoForm extends Panel
 		}
 
 		/**
+		 * Gets utcDSTOffset.
+		 * 
+		 * @return utcOffset
+		 */
+		public String getUtcDSTOffset()
+		{
+			return utcDSTOffset;
+		}
+
+		/**
 		 * Merge this with the given properties object.
 		 * 
 		 * @param properties
@@ -300,7 +302,8 @@ public class BrowserInfoForm extends Panel
 			properties.setNavigatorAppName(navigatorAppName);
 			properties.setNavigatorAppVersion(navigatorAppVersion);
 			properties.setNavigatorAppCodeName(navigatorAppCodeName);
-			properties.setCookiesEnabled((navigatorCookieEnabled != null) ? navigatorCookieEnabled : false);
+			properties.setCookiesEnabled((navigatorCookieEnabled != null) ? navigatorCookieEnabled
+				: false);
 			properties.setJavaEnabled((navigatorJavaEnabled != null) ? navigatorJavaEnabled : false);
 			properties.setNavigatorLanguage(navigatorLanguage);
 			properties.setNavigatorPlatform(navigatorPlatform);
@@ -484,6 +487,17 @@ public class BrowserInfoForm extends Panel
 		public void setUtcOffset(String utcOffset)
 		{
 			this.utcOffset = utcOffset;
+		}
+
+		/**
+		 * Sets utcDSTOffset.
+		 * 
+		 * @param utcDSTOffset
+		 *            utcDSTOffset
+		 */
+		public void setUtcDSTOffset(String utcDSTOffset)
+		{
+			this.utcDSTOffset = utcDSTOffset;
 		}
 
 		private int getInt(String value)

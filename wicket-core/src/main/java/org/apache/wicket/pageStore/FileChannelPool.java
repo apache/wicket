@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.wicket.util.file.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -266,7 +267,7 @@ public class FileChannelPool
 		}
 
 		File file = new File(name);
-		file.delete();
+		Files.remove(file);
 	}
 
 	/**
@@ -296,7 +297,7 @@ public class FileChannelPool
 		else
 		{
 			File file = new File(name);
-			file.delete();
+			Files.remove(file);
 		}
 	}
 

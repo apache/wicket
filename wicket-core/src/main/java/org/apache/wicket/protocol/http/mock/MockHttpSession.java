@@ -38,7 +38,7 @@ public class MockHttpSession implements HttpSession, Serializable
 
 	private final ValueMap attributes = new ValueMap();
 
-	private final ServletContext context;
+	private final transient ServletContext context;
 
 	private final long creationTime = System.currentTimeMillis();
 

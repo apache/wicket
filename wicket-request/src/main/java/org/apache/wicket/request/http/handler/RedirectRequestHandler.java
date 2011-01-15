@@ -83,15 +83,11 @@ public class RedirectRequestHandler implements IRequestHandler
 			location = requestCycle.getUrlRenderer().renderContextPathRelativeUrl(redirectUrl,
 				requestCycle.getRequest());
 		}
-		else if (redirectUrl.contains("://"))
-		{
-			// absolute url
-			location = redirectUrl;
-		}
 		else
 		{
-			// relative url, servlet container will translate to absolute as
+			// if relative url, servlet container will translate to absolute as
 			// per the servlet spec
+			// if absolute url still do the same
 			location = redirectUrl;
 		}
 

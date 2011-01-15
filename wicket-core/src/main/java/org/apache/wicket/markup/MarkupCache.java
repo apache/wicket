@@ -237,7 +237,8 @@ public class MarkupCache implements IMarkupCache
 	 * I still don't like this method being part of the API but I didn't find a suitable other
 	 * solution.
 	 * 
-	 * @see org.apache.wicket.markup.IMarkupCache#getMarkup(org.apache.wicket.MarkupContainer, Class, boolean)
+	 * @see org.apache.wicket.markup.IMarkupCache#getMarkup(org.apache.wicket.MarkupContainer,
+	 *      Class, boolean)
 	 */
 	public final Markup getMarkup(final MarkupContainer container, final Class<?> clazz,
 		final boolean enforceReload)
@@ -598,7 +599,7 @@ public class MarkupCache implements IMarkupCache
 	 * @param <K>
 	 * @param <V>
 	 */
-	public class DefaultCacheImplementation<K, V> implements ICache<K, V>
+	public static class DefaultCacheImplementation<K, V> implements ICache<K, V>
 	{
 		private final ConcurrentHashMap<K, V> cache = new ConcurrentHashMap<K, V>();
 

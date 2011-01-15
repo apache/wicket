@@ -600,7 +600,7 @@ public abstract class Page extends MarkupContainer
 			{
 				stateless = Boolean.TRUE;
 			}
-			else if (returnValue instanceof Boolean)
+			else
 			{
 				stateless = returnValue;
 			}

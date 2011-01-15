@@ -76,11 +76,6 @@ public class WebPageRenderer extends PageRenderer
 		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_BUFFER;
 	}
 
-	private void renderPage()
-	{
-		getPage().renderPage();
-	}
-
 	/**
 	 * @return the current session id for stateful pages and <code>null</code> for stateless pages
 	 */

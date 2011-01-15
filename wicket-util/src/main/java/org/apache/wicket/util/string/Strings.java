@@ -1198,7 +1198,7 @@ public final class Strings
 			AppendingStringBuffer asb = (AppendingStringBuffer)s;
 			buffer.append(asb.getValue(), from, to - from);
 		}
-		else if (s instanceof StringBuffer)
+		else if (s instanceof StringBuilder)
 		{
 			buffer.append((StringBuilder)s, from, to - from);
 		}

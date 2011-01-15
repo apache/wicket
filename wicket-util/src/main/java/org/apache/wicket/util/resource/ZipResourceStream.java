@@ -56,7 +56,7 @@ public class ZipResourceStream extends AbstractResourceStream
 
 	private static final Logger log = LoggerFactory.getLogger(ZipResourceStream.class);
 
-	private final ByteArrayOutputStream bytearray;
+	private final transient ByteArrayOutputStream bytearray;
 
 	/**
 	 * Construct.

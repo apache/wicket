@@ -270,7 +270,7 @@ public class BaseWicketTester
 
 		hsession = new MockHttpSession(servletContext);
 
-		ThreadContext oldThreadContext = ThreadContext.detach();
+		ThreadContext.detach();
 
 		this.application = application;
 
@@ -647,7 +647,7 @@ public class BaseWicketTester
 	{
 		XmlPullParser parser = new XmlPullParser();
 		parser.parse(getLastResponseAsString());
-		XmlTag tag = null;
+		XmlTag tag;
 		do
 		{
 			tag = (XmlTag)parser.nextTag();
@@ -2193,13 +2193,12 @@ public class BaseWicketTester
 	/**
 	 * 
 	 */
-	private class TestPageManagerProvider implements IPageManagerProvider
+	private static class TestPageManagerProvider implements IPageManagerProvider
 	{
 		public IPageManager get(IPageManagerContext pageManagerContext)
 		{
 			return new MockPageManager();
 		}
-
 	}
 
 	/**
@@ -2235,7 +2234,7 @@ public class BaseWicketTester
 		}
 	}
 
-	private class WicketTesterServletWebResponse extends ServletWebResponse
+	private static class WicketTesterServletWebResponse extends ServletWebResponse
 		implements
 			IMetaDataBufferingWebResponse
 	{

@@ -607,7 +607,7 @@ public abstract class FileUploadBase
 			{
 				break;
 			}
-			String header = headerPart.substring(start, end);
+			StringBuilder header = new StringBuilder(headerPart.substring(start, end));
 			start = end + 2;
 			while (start < len)
 			{
@@ -627,10 +627,10 @@ public abstract class FileUploadBase
 				}
 				// Continuation line found
 				end = parseEndOfLine(headerPart, nonWs);
-				header += " " + headerPart.substring(nonWs, end);
+				header.append(' ').append(headerPart.substring(nonWs, end));
 				start = end + 2;
 			}
-			parseHeaderLine(headers, header);
+			parseHeaderLine(headers, header.toString());
 		}
 		return headers;
 	}
@@ -668,12 +668,12 @@ public abstract class FileUploadBase
 		{
 			String headerName = (String)iter.next();
 			Iterator iter2 = headers.getHeaders(headerName);
-			String headerValue = (String)iter2.next();
+			StringBuilder headerValue = new StringBuilder((String)iter2.next());
 			while (iter2.hasNext())
 			{
-				headerValue += "," + iter2.next();
+				headerValue.append(',').append(iter2.next());
 			}
-			result.put(headerName, headerValue);
+			result.put(headerName, headerValue.toString());
 		}
 		return result;
 	}

@@ -50,7 +50,7 @@ public final class RawMarkup extends MarkupElement
 	@Override
 	public boolean equals(final Object o)
 	{
-		if (o instanceof String)
+		if (o instanceof CharSequence)
 		{
 			return string.equals(o);
 		}

@@ -214,12 +214,10 @@ abstract class ComponentSourceEntry implements IClusterable
 
 		final String id = parts[0];
 		final Object markupId;
-		final int markupIndex;
 
 		if (parts.length == 2)
 		{
 			markupId = null;
-			markupIndex = Integer.parseInt(parts[1]);
 		}
 		else if (parts.length == 3)
 		{
@@ -232,7 +230,6 @@ abstract class ComponentSourceEntry implements IClusterable
 			{
 				markupId = parts[1];
 			}
-			markupIndex = Integer.parseInt(parts[2]);
 		}
 		else
 		{

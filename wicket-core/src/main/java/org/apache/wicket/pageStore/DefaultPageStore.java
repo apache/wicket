@@ -192,7 +192,7 @@ public class DefaultPageStore implements IPageStore
 			return null;
 		}
 
-		String type = object != null ? object.getClass().getName() : null;
+		String type = object.getClass().getName();
 		throw new IllegalArgumentException("Unknown object type " + type);
 	}
 
@@ -290,7 +290,7 @@ public class DefaultPageStore implements IPageStore
 			return page;
 		}
 
-		String type = serializable != null ? serializable.getClass().getName() : null;
+		String type = serializable.getClass().getName();
 		throw new IllegalArgumentException("Unknown object type " + type);
 	}
 
@@ -385,7 +385,7 @@ public class DefaultPageStore implements IPageStore
 	 * 
 	 * @author Matej Knopp
 	 */
-	class SerializedPagesCache
+	static class SerializedPagesCache
 	{
 		private final int size;
 

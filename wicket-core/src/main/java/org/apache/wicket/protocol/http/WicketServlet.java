@@ -117,7 +117,7 @@ public class WicketServlet extends HttpServlet
 	private static final Logger log = LoggerFactory.getLogger(WicketServlet.class);
 
 	/** The WicketFilter where all the handling is done */
-	protected WicketFilter wicketFilter;
+	protected transient WicketFilter wicketFilter;
 
 	/**
 	 * Handles servlet page requests.

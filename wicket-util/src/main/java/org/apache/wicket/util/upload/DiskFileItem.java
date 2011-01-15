@@ -762,7 +762,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 		{
 			FileInputStream input = new FileInputStream(dfosFile);
 			Streams.copy(input, output);
-			dfosFile.delete();
+			Files.remove(dfosFile);
 			dfosFile = null;
 		}
 		output.close();

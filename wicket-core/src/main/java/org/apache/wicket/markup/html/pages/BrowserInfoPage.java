@@ -77,21 +77,16 @@ public class BrowserInfoPage extends WebPage
 		initComps();
 		RequestCycle requestCycle = getRequestCycle();
 		WebSession session = (WebSession)getSession();
-		ClientInfo clientInfo = session.getClientInfo();
+		WebClientInfo clientInfo = session.getClientInfo();
 		if (clientInfo == null)
 		{
 			clientInfo = new WebClientInfo(requestCycle);
 			getSession().setClientInfo(clientInfo);
 		}
-		else if (clientInfo instanceof WebClientInfo)
-		{
-			WebClientInfo info = (WebClientInfo)clientInfo;
-			ClientProperties properties = info.getProperties();
-			properties.setJavaEnabled(false);
-		}
 		else
 		{
-			warnNotUsingWebClientInfo(clientInfo);
+			ClientProperties properties = clientInfo.getProperties();
+			properties.setJavaEnabled(false);
 		}
 		continueToPrevious();
 	}

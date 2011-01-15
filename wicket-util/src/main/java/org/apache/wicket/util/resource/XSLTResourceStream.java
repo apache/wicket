@@ -47,7 +47,7 @@ public class XSLTResourceStream extends AbstractResourceStream
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	ByteArrayOutputStream out;
+	private final transient ByteArrayOutputStream out;
 
 	/**
 	 * @return a {@link Map} of XSLT parameters, appropriate for passing information to the XSL

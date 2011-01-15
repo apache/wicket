@@ -301,7 +301,8 @@ public class MultipartFormInputStream
 	@Deprecated
 	public MultipartFormInputStream()
 	{
-		this(null, null, null);
+		// boundary can not be null
+		this(null, new byte[0], null);
 	}
 
 	/**

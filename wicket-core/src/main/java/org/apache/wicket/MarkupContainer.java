@@ -1044,7 +1044,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			}
 			else
 			{
-				Object[] children = null;
+				Object[] children;
 				if (this.children instanceof ChildList)
 				{
 					// we have a list
@@ -1113,7 +1113,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 		else
 		{
-			Object[] children = null;
+			Object[] children;
 			int size = 0;
 			if (this.children instanceof ChildList)
 			{

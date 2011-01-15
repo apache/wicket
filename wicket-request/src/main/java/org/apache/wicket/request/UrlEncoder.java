@@ -279,7 +279,7 @@ public class UrlEncoder
 	public String encode(String s, String enc)
 	{
 		boolean needToChange = false;
-	 StringBuilder out = new StringBuilder(s.length());
+		StringBuilder out = new StringBuilder(s.length());
 		Charset charset;
 		CharArrayWriter charArrayWriter = new CharArrayWriter();
 
@@ -363,7 +363,7 @@ public class UrlEncoder
 
 				charArrayWriter.flush();
 				String str = new String(charArrayWriter.toCharArray());
-				byte[] ba = new byte[0];
+				byte[] ba;
 				try
 				{
 					ba = str.getBytes(charset.name());

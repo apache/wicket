@@ -152,7 +152,8 @@ public class PageParameters implements Serializable
 			else
 			{
 				final String key = pair.trim();
-				final String value = null;
+				// null value is not allowed by #add
+				final String value = "";
 
 				add(key, value);
 			}
