@@ -30,6 +30,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.MetaInfStaticResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.lang.Args;
@@ -56,8 +57,7 @@ import org.apache.wicket.util.time.Time;
 class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 {
 	/** timestamp cache stored in request cycle meta data */
-	protected static final MetaDataKey<Map<ResourceReference, Time>> TIMESTAMP_KEY =
-		new MetaDataKey<Map<ResourceReference, Time>>()
+	protected static final MetaDataKey<Map<ResourceReference, Time>> TIMESTAMP_KEY = new MetaDataKey<Map<ResourceReference, Time>>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -195,7 +195,20 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 			ResourceReferenceRequestHandler referenceRequestHandler = (ResourceReferenceRequestHandler)requestHandler;
 			ResourceReference reference = referenceRequestHandler.getResourceReference();
 
-			Url url = new Url();
+			Url url;
+
+			if (reference instanceof MetaInfStaticResourceReference)
+			{
+				url = ((MetaInfStaticResourceReference)reference).mapHandler(referenceRequestHandler);
+				// if running on Servlet 3.0 engine url is not null
+				if (url != null)
+				{
+					return url;
+				}
+				// otherwise it has to be served by the standard wicket way
+			}
+
+			url = new Url();
 
 			List<String> segments = url.getSegments();
 			segments.add(getContext().getNamespace());

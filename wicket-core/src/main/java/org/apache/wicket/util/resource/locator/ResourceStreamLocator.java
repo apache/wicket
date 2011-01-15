@@ -201,7 +201,13 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 		}
 
 		// Try loading path using classloader
-		final URL url = classLoader.getResource(path);
+		URL url = classLoader.getResource(path);
+		if (url == null)
+		{
+			// maybe it is in the Servlet 3.0 like directory
+			url = classLoader.getResource("META-INF/resources/" + path);
+		}
+
 		if (url != null)
 		{
 			return new UrlResourceStream(url);

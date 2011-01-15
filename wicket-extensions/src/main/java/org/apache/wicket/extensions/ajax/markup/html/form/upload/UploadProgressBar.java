@@ -94,13 +94,6 @@ public class UploadProgressBar extends Panel
 
 	private final FileUploadField uploadField;
 
-	@Override
-	protected void onInitialize()
-	{
-		super.onInitialize();
-		form.getRootForm().setOutputMarkupId(true);
-	}
-
 	/**
 	 * Constructor that will display the upload progress bar for every submit of the given form.
 	 * 
@@ -155,6 +148,16 @@ public class UploadProgressBar extends Panel
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+		form.getRootForm().setOutputMarkupId(true);
+	}
+
+	/**
 	 * Override this to provide your own CSS, or return null to avoid including the default.
 	 * 
 	 * @return ResourceReference for your CSS.
@@ -164,6 +167,9 @@ public class UploadProgressBar extends Panel
 		return CSS;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{
@@ -201,6 +207,5 @@ public class UploadProgressBar extends Panel
 		js.close();
 
 		response.renderOnDomReadyJavaScript(new String(out.toByteArray()));
-
 	}
 }
