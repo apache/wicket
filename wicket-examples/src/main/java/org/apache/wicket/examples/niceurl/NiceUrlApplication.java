@@ -27,8 +27,6 @@ import org.apache.wicket.util.lang.PackageName;
 /**
  * Application class for this example.
  * 
- * TODO NG
- * 
  * @author Eelco Hillenius
  */
 public class NiceUrlApplication extends WicketExampleApplication
@@ -49,11 +47,6 @@ public class NiceUrlApplication extends WicketExampleApplication
 	{
 		return Home.class;
 	}
-
-// private <C extends Page> void mountBookmarkablePageWithUrlCoding(String path, Class<C> pageClass)
-// {
-// mount(new QueryStringUrlCodingStrategy(path, pageClass));
-// }
 
 	/**
 	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
@@ -80,23 +73,4 @@ public class NiceUrlApplication extends WicketExampleApplication
 			new MountMapper("/my/mounted/package", new PackageMapper(
 				PackageName.forClass(Page3.class))));
 	}
-	/**
-	 * Sets up a request coding strategy that uses case-insensitive mounts
-	 * 
-	 * @see org.apache.wicket.protocol.http.WebApplication#newRequestCycleProcessor() //
-	 */
-// @Override
-// protected IRequestCycleProcessor newRequestCycleProcessor()
-// {
-// return new WebRequestCycleProcessor()
-// {
-// @Override
-// protected IRequestCodingStrategy newRequestCodingStrategy()
-// {
-// WebRequestCodingStrategy.Settings stratSettings = new WebRequestCodingStrategy.Settings();
-// stratSettings.setMountsCaseSensitive(false);
-// return new WebRequestCodingStrategy(stratSettings);
-// }
-// };
-// }
 }
