@@ -19,9 +19,6 @@ package org.apache.wicket.examples.niceurl;
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.examples.niceurl.mounted.Page3;
-import org.apache.wicket.request.mapper.PackageMapper;
-import org.apache.wicket.request.mapper.mount.MountMapper;
-import org.apache.wicket.util.lang.PackageName;
 
 
 /**
@@ -65,12 +62,10 @@ public class NiceUrlApplication extends WicketExampleApplication
 		// mount a whole package at once (all bookmarkable pages,
 		// the relative class name will be part of the url
 
-		// maybe not the neatest sight, but for package mounting it makes
-		// sense to use one of the (important) classes in your package, so
+		// for package mounting it makes sense to use one of
+		// the (important) classes in your package, so
 		// that any refactoring (like a package rename) will automatically
 		// be applied here.
-		getRootRequestMapperAsCompound().add(
-			new MountMapper("/my/mounted/package", new PackageMapper(
-				PackageName.forClass(Page3.class))));
+		mountPackage("/my/mounted/package", Page3.class);
 	}
 }
