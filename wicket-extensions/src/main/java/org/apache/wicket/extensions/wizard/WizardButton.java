@@ -52,6 +52,7 @@ public abstract class WizardButton extends Button
 	{
 		super(id, new ResourceModel(labelResourceKey));
 		this.wizard = wizard;
+		setEscapeModelStrings(false);
 	}
 
 	/**
