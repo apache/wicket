@@ -26,5 +26,12 @@
 				<include>**/*.xml</include>
 			</includes>
 		</fileSet>
+		<fileSet filtered="false" packaged="false" encoding="UTF-8">
+			<directory>src/main/webapp</directory>
+			<includes>
+				<include>**/*.css</include>
+				<include>**/*.png</include>
+			</includes>
+		</fileSet>
 	</fileSets>
 </archetype-descriptor>
