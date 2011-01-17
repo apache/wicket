@@ -19,8 +19,6 @@ package org.apache.wicket;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
@@ -38,21 +36,13 @@ import org.apache.wicket.util.tester.WicketTester;
 /**
  * https://issues.apache.org/jira/browse/WICKET-3108
  */
-public class PageMapTest extends TestCase
+public class PageMapTest extends WicketTestCase
 {
 	private static final String TO_REMOVE_PAGE_MAP = "test-0";
 	private static final String WORKING_PAGE_MAP = "test-1";
 	// just to have an test limit, can be any value
 	private static final int MAX_PAGE_MAPS = 2;
 	private static final long BIG_OBJECT_SIZE = 10000;
-
-	private WicketTester tester;
-
-	@Override
-	protected void setUp() throws Exception
-	{
-		tester = new WicketTester();
-	}
 
 	/**
 	 * Making sure that the TO_REMOVE_PAGEMAP doesn't get back to session after a call to
