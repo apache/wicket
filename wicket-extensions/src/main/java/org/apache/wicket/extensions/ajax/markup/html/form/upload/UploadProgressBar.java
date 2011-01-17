@@ -20,10 +20,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Component;
 import org.apache.wicket.IInitializer;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajax.WicketAjaxReference;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -33,6 +35,7 @@ import org.apache.wicket.markup.html.WicketEventReference;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -122,7 +125,6 @@ public class UploadProgressBar extends Panel implements IHeaderContributor
 		super(id);
 		uploadField = fileUploadField;
 		this.form = form;
-		form.setOutputMarkupId(true);
 		setRenderBodyOnly(true);
 
 		add(JavascriptPackageResource.getHeaderContribution(WicketEventReference.INSTANCE));
@@ -153,7 +155,7 @@ public class UploadProgressBar extends Panel implements IHeaderContributor
 	protected void onInitialize()
 	{
 		super.onInitialize();
-		form.getRootForm().setOutputMarkupId(true);
+		getCallbackForm().setOutputMarkupId(true);
 	}
 
 	/**
@@ -178,23 +180,38 @@ public class UploadProgressBar extends Panel implements IHeaderContributor
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		PrintStream js = new PrintStream(out);
 
-		js.printf("var formElement = Wicket.$('%s');", form.getRootForm().getMarkupId());
-		js.append("var originalCallback = formElement.onsubmit;");
-
-		js.append("var submitCallback = function() {");
-		js.printf("  if (!Wicket.$('%s')) return;", statusDiv.getMarkupId());
 		js.printf("  var def=new Wicket.WUPB.Def('%s', '%s', '%s', '%s','%s');", getMarkupId(),
 			statusDiv.getMarkupId(), barDiv.getMarkupId(), urlFor(ref), uploadFieldId);
-
-		js.append("  new Wicket.WUPB(def).start();");
-
-		js.append("  if(originalCallback)return originalCallback(); else return true;");
-		js.append("};");
-
-		js.append("formElement.onsubmit = submitCallback;");
-		js.close();
+		js.printf(" new Wicket.WUPB(def).bind('%s');", getCallbackForm().getMarkupId());
 
 		response.renderOnDomReadyJavascript(new String(out.toByteArray()));
+	}
 
+	/**
+	 * Form on where will be installed the JavaScript callback to present the progress bar.
+	 * {@link ModalWindow} is designed to hold nested forms and the progress bar callback JavaScript
+	 * needs to be add at the form inside the {@link ModalWindow} if one is used.
+	 * 
+	 * @return form
+	 */
+	private Form<?> getCallbackForm()
+	{
+		final Model<Boolean> insideModal = new Model<Boolean>(false);
+		form.visitParents(ModalWindow.class, new IVisitor<Component>()
+		{
+			public Object component(Component component)
+			{
+				insideModal.setObject(true);
+				return IVisitor.STOP_TRAVERSAL;
+			}
+		});
+		if (insideModal.getObject())
+		{
+			return form;
+		}
+		else
+		{
+			return form.getRootForm();
+		}
 	}
 }

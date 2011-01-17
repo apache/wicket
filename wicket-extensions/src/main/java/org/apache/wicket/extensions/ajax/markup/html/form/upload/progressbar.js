@@ -22,17 +22,36 @@ Wicket.WUPB.prototype = {
 		
 	initialize : function(def) {
 		this.def = def;
+	},
+
+	bind : function(formid) {
+		formElement = Wicket.$(formid);
+		this.originalCallback = formElement.onsubmit;
+		formElement.onsubmit = this.submitCallback.bind(this);
+	},
+
+	submitCallback : function() {
+		if (this.originalCallback && !this.originalCallback()) {
+			return false;
+		} else {
+			this.start();
+			return true;
+		}
+	},
+	
+	start : function(){
 		this.displayprogress = true;
-		if (def.fileid) {
-			var fileupload = Wicket.$(def.fileid);
+		if (this.def.fileid) {
+			var fileupload = Wicket.$(this.def.fileid);
 			this.displayprogress = fileupload && fileupload.value && fileupload.value != '';
 		}
 		if(this.displayprogress) {
 			this.setStatus('Upload starting...');
-			Wicket.$(def.barid).firstChild.firstChild.style.width='0%';
+			Wicket.$(this.def.barid).firstChild.firstChild.style.width='0%';
 
-			Wicket.$(def.statusid).style.display='block';
-			Wicket.$(def.barid).style.display='block';
+			Wicket.$(this.def.statusid).style.display='block';
+			Wicket.$(this.def.barid).style.display='block';
+			this.scheduleUpdate();
 		}
 	},
 	
@@ -46,16 +65,10 @@ Wicket.WUPB.prototype = {
 		Wicket.$(this.def.statusid).appendChild(label);		
 	},
 	
-	start : function(){
-		if(this.displayprogress) {
-			this.scheduleUpdate();
-		}
-	},
-	
 	scheduleUpdate : function(){
-		window.setTimeout(function() { this.ajax(); }.bind(this), 1000);
+		window.setTimeout(this.ajax.bind(this), 1000);
 	},
-	
+
 	ajax : function() {
 		var URL = this.def.url + '?anticache=' + Math.random();
 		
