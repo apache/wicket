@@ -65,6 +65,10 @@ do
 	echo >> $NOTICE
 done
 
+# workaround for javadoc generation problem
+mvn clean install -Dmaven.test.skip=true
+mvn javadoc:jar
+
 # clean all projects
 echo "Clean all projects"
 mvn5 clean -Pall
