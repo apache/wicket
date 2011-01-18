@@ -45,7 +45,7 @@ public class ExceptionErrorPage extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	/** Keep a reference to the root cause. WicketTester will use it */
-	private final transient Throwable throwable;
+	private final Throwable throwable;
 
 	/**
 	 * Constructor.
@@ -121,13 +121,13 @@ public class ExceptionErrorPage extends WebPage
 	{
 		if (throwable != null)
 		{
-			List<Throwable> al = convertToList(throwable);
-
 			AppendingStringBuffer sb = new AppendingStringBuffer(256);
 
 			// first print the last cause
+			List<Throwable> al = convertToList(throwable);
 			int length = al.size() - 1;
 			Throwable cause = al.get(length);
+			sb.append("Last cause: ").append(cause.getMessage()).append('\n');
 			if (throwable instanceof WicketRuntimeException)
 			{
 				String msg = throwable.getMessage();

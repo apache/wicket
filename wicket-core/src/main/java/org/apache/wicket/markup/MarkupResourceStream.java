@@ -51,7 +51,7 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	private final IResourceStream resourceStream;
 
 	/** Container info like Class, locale and style which were used to locate the resource */
-	private final ContainerInfo containerInfo;
+	private final transient ContainerInfo containerInfo;
 
 	/**
 	 * The actual component class the markup is directly associated with. It might be super class of
@@ -63,7 +63,7 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	private String cacheKey;
 
 	/** In case of the inherited markup, this is the base markup */
-	private Markup baseMarkup;
+	private transient Markup baseMarkup;
 
 	/** If found in the markup, the <?xml ...?> string */
 	private CharSequence xmlDeclaration;

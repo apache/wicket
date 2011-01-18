@@ -76,11 +76,6 @@ public class WebPageRenderer extends PageRenderer
 		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_BUFFER;
 	}
 
-	private void renderPage()
-	{
-		getPage().renderPage();
-	}
-
 	/**
 	 * @return the current session id for stateful pages and <code>null</code> for stateless pages
 	 */
@@ -182,8 +177,8 @@ public class WebPageRenderer extends PageRenderer
 		response.sendRedirect(relativeUrl);
 	}
 
-	/**
-	 * @see org.apache.wicket.request.handler.render.PageRenderer#respond(org.apache.wicket.request.cycle.RequestCycle)
+	/*
+	 * TODO: simplify the code below. See WICKET-3347
 	 */
 	@Override
 	public void respond(RequestCycle requestCycle)

@@ -2,6 +2,9 @@ This file contains all changes done on the 1.5 version.
 
 Release Notes - Wicket - Version 1.5-RC1
 
+** Sub-task
+    * [WICKET-3137] - error in 1.5-M3 in request mapper example
+
 ** Bug
     * [WICKET-1721] - FormTester doesnt support onSelectionChanged  for RadioChoice
     * [WICKET-1732] - FormTester's DropDownChoice onSelectionChanged() behaviour doesn't reload page
@@ -66,12 +69,22 @@ Release Notes - Wicket - Version 1.5-RC1
     * [WICKET-3302] - Endless recursion if LoadableDetachableModel.load throws exception
     * [WICKET-3304] - TextField ingnores convertEmptyInputStringToNull = true property when the String type is set
     * [WICKET-3306] - OrderByBoder MArkup problem
+    * [WICKET-3307] - UploadProgressbar doesn't work when nested in ModalWindow (using IE 8.0.7600)
     * [WICKET-3309] - unable to add nodes to an empty rootless Tree (e.g. LinkTree)
     * [WICKET-3311] - Delete unused IPageSerializer & co from o.a.w.Page class
     * [WICKET-3312] - Tomcat complains about thread local memory leaking when using wickets XForwardedRequestWrapperFactory
     * [WICKET-3315] - PackagedTextTemplate should set lastModifiedTime
     * [WICKET-3316] - Unused private final ThreadLocal variable in DummyRequestLogger?
     * [WICKET-3319] - AjaxEditableMultilineLabel generates invalid HTML
+    * [WICKET-3321] -  Ajax submit  link does not show busy indicator under IE
+    * [WICKET-3329] - Quickstart project should depend on slf4j 1.6.1
+    * [WICKET-3330] - TextField shows HTML entities instead of UTF-8 characters
+    * [WICKET-3331] - DropDownChoice with wantOnSelectionChangedNotifications fails without Form
+    * [WICKET-3333] - Links with multiple parameters are wrongly generated
+    * [WICKET-3336] - NPE when reloading updated markup in development mode
+    * [WICKET-3337] - Url to the home page is not correct when the current base url has only one segment
+    * [WICKET-3339] - Url interception doesn't work if the "intercepting" page is stateless
+    * [WICKET-3343] - Broken links in new Quickstart
 
 ** Improvement
     * [WICKET-1214] - WicketTester#startPanel does not work (correctly)
@@ -132,8 +145,11 @@ Release Notes - Wicket - Version 1.5-RC1
     * [WICKET-3296] - Url should accept null parameters list
     * [WICKET-3299] - Please un-deprecate WebApplication.mount
     * [WICKET-3300] - Redundant test in MountedMapper
+    * [WICKET-3303] - Use "META-INF/resources" (when available) to serve static resources
     * [WICKET-3313] - WebPage cookiesResource is not used
     * [WICKET-3324] - Markup NO_MARKUP can not call toString
+    * [WICKET-3342] - Upgrade maven-bundle-plugin
+    * [WICKET-3344] - Upgrade jetty version to 7.2
 
 ** New Feature
     * [WICKET-701] - Allow wicket filter-mapping to use servlet-name instead of url-pattern
@@ -146,6 +162,7 @@ Release Notes - Wicket - Version 1.5-RC1
     * [WICKET-3256] - Use a Provider for IExceptionMapper
     * [WICKET-3261] - Create wicket-core Maven module that contains wicket + wicket-util + wicket-request
     * [WICKET-3263] - Allow AjaxRequestTarget.IListeners to be Registered at the WebApplication Level
+    * [WICKET-3314] - Allow any Component to be a "Panel" or "Fragment" via configuration
 
 ** Task
     * [WICKET-715] - rename classes and methods from *Javascript* to *JavaScript*

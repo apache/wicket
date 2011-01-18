@@ -76,7 +76,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @author Frank Bille (billen)
 	 */
-	private class UploadedFile
+	private static class UploadedFile
 	{
 		private String fieldName;
 		private File file;

@@ -40,6 +40,13 @@ public abstract class AbstractRequestWrapperFactory
 	private boolean enabled = true;
 
 	/**
+	 * Construct.
+	 */
+	public AbstractRequestWrapperFactory()
+	{
+	}
+
+	/**
 	 * 
 	 * @return True, if filter is enabled
 	 */

@@ -69,8 +69,7 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	 */
 	public AbstractTextComponent(String id)
 	{
-		super(id);
-		setConvertEmptyInputStringToNull(true);
+		this(id, null);
 	}
 
 	/**

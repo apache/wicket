@@ -37,6 +37,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.pageStore.PageWindowManager.PageWindow;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.file.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -226,7 +227,7 @@ public class DiskDataStore implements IDataStore
 				log.error("Couldn't load DiskDataStore index from file " + index + ".", e);
 			}
 		}
-		index.delete();
+		Files.remove(index);
 	}
 
 	/**
@@ -238,7 +239,7 @@ public class DiskDataStore implements IDataStore
 		if (storeFolder.exists())
 		{
 			File index = new File(storeFolder, INDEX_FILE_NAME);
-			index.delete();
+			Files.remove(index);
 			try
 			{
 				OutputStream stream = new FileOutputStream(index);
@@ -422,7 +423,7 @@ public class DiskDataStore implements IDataStore
 			File sessionFolder = diskDataStore.getSessionFolder(sessionId, false);
 			if (sessionFolder.exists())
 			{
-				sessionFolder.delete();
+				Files.remove(sessionFolder);
 			}
 			unbound = true;
 		}

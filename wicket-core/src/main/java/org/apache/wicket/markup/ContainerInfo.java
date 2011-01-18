@@ -120,6 +120,8 @@ public class ContainerInfo
 	@Override
 	public String toString()
 	{
-		return containerClassRef.get().getName() + ":" + locale + ":" + style + ":" + fileExtension;
+		Class<?> classRef = containerClassRef.get();
+		return (classRef != null ? classRef.getName() : "null class") + ":" + locale + ":" + style +
+			":" + fileExtension;
 	}
 }

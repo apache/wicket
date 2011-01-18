@@ -21,7 +21,6 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.UrlUtils;
 
 /**
@@ -169,7 +168,7 @@ public class ExternalLink extends AbstractLink
 					tag.getName().equalsIgnoreCase("area"))
 				{
 					// generate the href attribute
-					tag.put("href", Strings.replaceAll(url, "&", "&amp;"));
+					tag.put("href", url);
 
 					// Add any popup script
 					if (popupSettings != null)

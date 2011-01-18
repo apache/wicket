@@ -31,6 +31,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.flow.ResetResponseException;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.request.http.handler.RedirectRequestHandler;
 import org.apache.wicket.util.string.StringValue;
 
@@ -40,13 +41,15 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 
 	public RestartResponseAtInterceptPageException(Page interceptPage)
 	{
-		super(new RenderPageRequestHandler(new PageProvider(interceptPage)));
+		super(new RenderPageRequestHandler(new PageProvider(interceptPage),
+			RedirectPolicy.ALWAYS_REDIRECT));
 		InterceptData.set();
 	}
 
 	public RestartResponseAtInterceptPageException(Class<? extends Page> interceptPageClass)
 	{
-		super(new RenderPageRequestHandler(new PageProvider(interceptPageClass)));
+		super(new RenderPageRequestHandler(new PageProvider(interceptPageClass),
+			RedirectPolicy.ALWAYS_REDIRECT));
 		InterceptData.set();
 	}
 

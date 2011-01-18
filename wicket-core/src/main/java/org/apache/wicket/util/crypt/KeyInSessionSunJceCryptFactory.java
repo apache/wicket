@@ -20,7 +20,6 @@ import java.util.UUID;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
-import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
  * Crypt factory that produces {@link SunJceCrypt} instances based on http session-specific
@@ -42,11 +41,8 @@ public class KeyInSessionSunJceCryptFactory implements ICryptFactory
 
 	public ICrypt newCrypt()
 	{
-		RequestCycle rc = RequestCycle.get();
-
 		Session session = Session.get();
 		session.bind();
-
 
 		// retrieve or generate encryption key from session
 		String key = session.getMetaData(KEY);

@@ -242,7 +242,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 			else
 			{
 				tag.put("onchange", "window.location.href='" + url +
-					(url.toString().indexOf('?') > -1 ? "&amp;" : "?") + getInputName() +
+					(url.toString().indexOf('?') > -1 ? "&" : "?") + getInputName() +
 					"=' + this.options[this.selectedIndex].value;");
 			}
 		}

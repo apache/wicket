@@ -57,7 +57,6 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 	public final <T extends IRequestableComponent> boolean isInstantiationAuthorized(
 		Class<T> componentClass)
 	{
-		int size = strategies.size();
 		for (IAuthorizationStrategy strategy : strategies)
 		{
 			if (!strategy.isInstantiationAuthorized(componentClass))

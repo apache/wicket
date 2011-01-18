@@ -67,7 +67,7 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	 */
 	protected boolean instanceOf(final Class<?> type, final Class<?> superType)
 	{
-		return superType.isAssignableFrom(type);
+		return superType != null && superType.isAssignableFrom(type);
 	}
 
 	/**

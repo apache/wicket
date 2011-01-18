@@ -35,7 +35,6 @@ import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.RawMarkup;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.border.Border;
-import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
@@ -453,63 +452,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	public IMarkupFragment getMarkup(final Component child)
 	{
-		IMarkupSourcingStrategy provider = getMarkupSourcingStrategy();
-		if (provider != null)
-		{
-			IMarkupFragment markup = provider.getMarkup(this, child);
-			if (markup != null)
-			{
-				return markup;
-			}
-		}
-
-		// Get the markup for the container
-		IMarkupFragment markup = getMarkup();
-		if (markup == null)
-		{
-			return null;
-		}
-
-		if (child == null)
-		{
-			return markup;
-		}
-
-		// Find the child's markup
-		markup = markup.find(child.getId());
-		if (markup != null)
-		{
-			return markup;
-		}
-
-		// This is to make migration for Items from 1.4 to 1.5 more easy
-		if (Character.isDigit(child.getId().charAt(0)))
-		{
-			String id = child.getId();
-			boolean miss = false;
-			for (int i = 1; i < id.length(); i++)
-			{
-				if (Character.isDigit(id.charAt(i)) == false)
-				{
-					miss = true;
-					break;
-				}
-			}
-
-			if (miss == false)
-			{
-				// The LoopItems markup is equal to the Loops markup
-				markup = getMarkup();
-
-				if (log.isWarnEnabled())
-				{
-					log.warn("1.4 to 1.5 migration issue: your item component should be derived from AbstractItem. Item=" +
-						child.toString());
-				}
-			}
-		}
-
-		return markup;
+		// Delegate request to attached markup sourcing strategy.
+		return getMarkupSourcingStrategy().getMarkup(this, child);
 	}
 
 	/**
@@ -1100,7 +1044,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			}
 			else
 			{
-				Object[] children = null;
+				Object[] children;
 				if (this.children instanceof ChildList)
 				{
 					// we have a list
@@ -1169,7 +1113,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 		else
 		{
-			Object[] children = null;
+			Object[] children;
 			int size = 0;
 			if (this.children instanceof ChildList)
 			{

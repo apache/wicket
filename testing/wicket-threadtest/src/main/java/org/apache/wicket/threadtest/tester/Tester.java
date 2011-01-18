@@ -26,8 +26,8 @@ import org.apache.commons.httpclient.params.HttpClientParams;
 import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
 import org.apache.wicket.threadtest.tester.CommandRunner.CommandRunnerObserver;
 import org.apache.wicket.util.time.Duration;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,7 +91,7 @@ public final class Tester implements CommandRunnerObserver
 		// start up server
 		server = new Server(port);
 		WebAppContext ctx = new WebAppContext("./src/main/webapp", "/");
-		server.addHandler(ctx);
+		server.setHandler(ctx);
 		try
 		{
 			server.start();

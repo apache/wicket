@@ -71,7 +71,7 @@ public class RequestEncodingTest extends TestCase
 		assertEquals("umlaut-\u00E4-\u00F6-\u00FC", file);
 
 		String document = tester.getLastResponseAsString();
-		assertTrue(document.contains("umlaut-&#228;-&#246;-&#252;"));
+		assertTrue(document.contains("umlaut-\u00E4-\u00F6-\u00FC"));
 	}
 
 

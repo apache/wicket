@@ -124,9 +124,18 @@ public class UrlRenderer
 				urlSegments.add(0, last);
 			}
 
-			for (int i = common + 1; i < baseUrlSegments.size(); ++i)
+			int baseUrlSize = baseUrlSegments.size();
+			if (common + 1 == baseUrlSize)
 			{
-				newSegments.add("..");
+				newSegments.add(".");
+			}
+			else
+			{
+
+				for (int i = common + 1; i < baseUrlSize; ++i)
+				{
+					newSegments.add("..");
+				}
 			}
 			newSegments.addAll(urlSegments);
 
@@ -151,7 +160,7 @@ public class UrlRenderer
 		}
 
 		PrependingStringBuffer buffer = new PrependingStringBuffer(url);
-		for (int i = 0; i < baseUrl.getSegments().size() - 1; ++i)
+		for (int i = 0; i < getBaseUrl().getSegments().size() - 1; ++i)
 		{
 			buffer.prepend("../");
 		}

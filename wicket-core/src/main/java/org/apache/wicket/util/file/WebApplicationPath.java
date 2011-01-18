@@ -58,6 +58,9 @@ public final class WebApplicationPath implements IResourcePath
 	public WebApplicationPath(final ServletContext servletContext)
 	{
 		this.servletContext = servletContext;
+
+		// adding root so servlet context resources are always checked
+		webappPaths.add("/");
 	}
 
 	/**

@@ -24,6 +24,7 @@ import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.UrlEncoder;
 import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.request.resource.ContentDisposition;
+import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
@@ -141,8 +142,8 @@ public class DownloadLink extends Link<File>
 			throw new IllegalStateException(getClass().getName() +
 				" failed to retrieve a File object from model");
 		}
-		final String fn = UrlEncoder.QUERY_INSTANCE.encode((fileName != null) ? fileName
-			: file.getName(), getRequest().getCharset());
+		final String fn = UrlEncoder.QUERY_INSTANCE.encode(
+			(fileName != null) ? fileName : file.getName(), getRequest().getCharset());
 
 
 		IResourceStream resourceStream = new FileResourceStream(
@@ -157,7 +158,7 @@ public class DownloadLink extends Link<File>
 
 					if (deleteAfter)
 					{
-						file.delete();
+						Files.remove(file);
 					}
 				}
 			}.setFileName(fn).setContentDisposition(ContentDisposition.ATTACHMENT));

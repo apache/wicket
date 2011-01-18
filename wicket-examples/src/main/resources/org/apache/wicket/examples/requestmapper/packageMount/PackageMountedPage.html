@@ -37,9 +37,7 @@
 		{
 			super.init();
 	
-			getRootRequestMapperAsCompound().add(
-				new MountMapper("pMount", new PackageMapper(
-					PackageName.forClass(PackageMountedPage.class))));
+			mountPackage("pMount", PackageMountedPage.class);
 		}
 	}	    		
 	    	</pre>

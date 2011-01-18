@@ -33,6 +33,8 @@ import org.apache.wicket.markup.html.pages.AccessDeniedPage;
 import org.apache.wicket.markup.html.pages.InternalErrorPage;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
 import org.apache.wicket.markup.resolver.AutoLinkResolver;
+import org.apache.wicket.protocol.http.servlet.AbstractRequestWrapperFactory;
+import org.apache.wicket.protocol.http.servlet.FilterFactoryManager;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
 import org.apache.wicket.request.IRequestHandler;
@@ -117,6 +119,8 @@ public abstract class WebApplication extends Application
 	private final AjaxRequestTargetListenerCollection ajaxRequestTargetListeners;
 
 	private IContextProvider<AjaxRequestTarget, Page> ajaxRequestTargetProvider;
+
+	private FilterFactoryManager filterFactoryManager;
 
 	/**
 	 * Covariant override for easy getting the current {@link WebApplication} without having to cast
@@ -364,9 +368,16 @@ public abstract class WebApplication extends Application
 	 *            the filter mapping read from web.xml
 	 * @return a WebRequest object
 	 */
-	protected WebRequest newWebRequest(final HttpServletRequest servletRequest,
-		final String filterPath)
+	protected WebRequest newWebRequest(HttpServletRequest servletRequest, final String filterPath)
 	{
+		if (hasFilterFactoryManager())
+		{
+			for (AbstractRequestWrapperFactory factory : getFilterFactoryManager())
+			{
+				servletRequest = factory.getWrapper(servletRequest);
+			}
+		}
+
 		return new ServletWebRequest(servletRequest, filterPath);
 	}
 
@@ -741,5 +752,25 @@ public abstract class WebApplication extends Application
 		{
 			return new AjaxRequestTarget(context);
 		}
+	}
+
+	/**
+	 * @return True if at least one filter factory has been added.
+	 */
+	public final boolean hasFilterFactoryManager()
+	{
+		return filterFactoryManager != null;
+	}
+
+	/**
+	 * @return The filter factory manager
+	 */
+	public final FilterFactoryManager getFilterFactoryManager()
+	{
+		if (filterFactoryManager == null)
+		{
+			filterFactoryManager = new FilterFactoryManager();
+		}
+		return filterFactoryManager;
 	}
 }

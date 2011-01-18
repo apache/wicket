@@ -507,9 +507,10 @@ public class TagTester
 						if (openTag == null)
 						{
 							IValueMap attributeMap = xmlTag.getAttributes();
-							for (String attr : attributeMap.keySet())
+							for (Map.Entry<String, Object> entry : attributeMap.entrySet())
 							{
-								if (attr.equals(attribute) && value.equals(attributeMap.get(attr)))
+								if (entry.getKey().equals(attribute) &&
+									value.equals(entry.getValue()))
 								{
 									if (xmlTag.isOpen())
 									{

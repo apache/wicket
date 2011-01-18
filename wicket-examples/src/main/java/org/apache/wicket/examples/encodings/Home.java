@@ -38,6 +38,7 @@ public class Home extends WicketExamplePage
 	 */
 	public Home(final PageParameters parameters)
 	{
+		// the non-printable characters are: &#65533;&#65533;&#65533;
 		add(new Label("message", "Hello world! Test: ���"));
 	}
 
