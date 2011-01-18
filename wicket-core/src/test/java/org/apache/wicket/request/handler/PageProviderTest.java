@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.text.ParseException;
 
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -31,16 +32,15 @@ import org.apache.wicket.request.mapper.StalePageException;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.junit.Test;
 
 /**
- * 
- * @see <a href="https://issues.apache.org/jira/browse/WICKET-3252">WICKET-3252</a>
  * @author pedro
  */
 public class PageProviderTest extends WicketTestCase
 {
-	@Test
+	/**
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3252">WICKET-3252</a>
+	 * */
 	public void testStalePageException()
 	{
 		tester.startPage(TestPage.class);
@@ -69,6 +69,11 @@ public class PageProviderTest extends WicketTestCase
 	/**
 	 * Request an old URL in an AJAX request and assert that we have an AJAX response.
 	 * 
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3252">WICKET-3252</a>
+	 * @throws ParseException
+	 * @throws ResourceStreamNotFoundException
+	 * @throws IOException
+	 * 
 	 */
 	public void testStalePageExceptionOnAjaxRequest() throws IOException,
 		ResourceStreamNotFoundException, ParseException
@@ -94,7 +99,10 @@ public class PageProviderTest extends WicketTestCase
 	}
 
 	/**
-	 * 
+	 * @param url
+	 * @throws ParseException
+	 * @throws ResourceStreamNotFoundException
+	 * @throws IOException
 	 */
 	private void executeAjaxUrlWithLastBaseUrl(Url url) throws IOException,
 		ResourceStreamNotFoundException, ParseException
@@ -106,15 +114,33 @@ public class PageProviderTest extends WicketTestCase
 		tester.processRequest();
 	}
 
+	/**
+	 * Asserting that an intercept is returned as result of an redirect response. Important to
+	 * prevent an resulting page with broken relative paths, as related in <a
+	 * href="https://issues.apache.org/jira/browse/WICKET-3339">WICKET-3339</a>
+	 */
+	public void test()
+	{
+		tester.setFollowRedirects(false);
+		tester.startPage(TestPage.class);
+		tester.clickLink("restartIntercept");
+		assertTrue(tester.getLastResponse().isRedirect());
+	}
+
+	/** */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		private static final long serialVersionUID = 1L;
 		Link<Void> link;
 		AjaxLink<Void> ajaxLink;
 
+		/** */
 		public TestPage()
 		{
 			add(link = new Link<Void>("link")
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public void onClick()
 				{
@@ -122,9 +148,21 @@ public class PageProviderTest extends WicketTestCase
 			});
 			add(ajaxLink = new AjaxLink<Void>("ajaxLink")
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public void onClick(AjaxRequestTarget target)
 				{
+				}
+			});
+			add(new Link<Void>("restartIntercept")
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void onClick()
+				{
+					throw new RestartResponseAtInterceptPageException(StatelessPageTest.class);
 				}
 			});
 		}
@@ -133,7 +171,20 @@ public class PageProviderTest extends WicketTestCase
 			Class<?> containerClass)
 		{
 			return new StringResourceStream(
-				"<html><body><a wicket:id=\"link\"></a><a wicket:id=\"ajaxLink\"></a></body></html>");
+				"<html><body><a wicket:id=\"link\"></a><a wicket:id=\"ajaxLink\"></a>"
+					+ "<a wicket:id=\"restartIntercept\"></a></body></html>");
+		}
+	}
+
+	/** just giving readability to tests */
+	public static class StatelessPageTest extends WebPage implements IMarkupResourceStreamProvider
+	{
+		private static final long serialVersionUID = 1L;
+
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream("<html><body></body></html>");
 		}
 	}
 }
