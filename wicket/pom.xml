@@ -19,16 +19,19 @@
       <groupId>org.apache.wicket</groupId>
       <artifactId>wicket-core</artifactId>
       <version>${project.parent.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.wicket</groupId>
       <artifactId>wicket-util</artifactId>
       <version>${project.parent.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.wicket</groupId>
       <artifactId>wicket-request</artifactId>
       <version>${project.parent.version}</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
   <build>
