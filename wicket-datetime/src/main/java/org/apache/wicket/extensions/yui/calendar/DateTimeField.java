@@ -351,9 +351,9 @@ public class DateTimeField extends FormComponentPanel<Date>
 			// Adjust for halfday if needed
 			if (use12HourFormat())
 			{
-				int halfday = (amOrPm == AM_PM.PM ? 1 : 0);
+				int halfday = (amOrPmInput == AM_PM.PM ? 1 : 0);
 				date.set(DateTimeFieldType.halfdayOfDay(), halfday);
-				date.set(DateTimeFieldType.hourOfDay(), hours % 12);
+				date.set(DateTimeFieldType.hourOfHalfday(), hours % 12);
 			}
 
 			// The date will be in the server's timezone
