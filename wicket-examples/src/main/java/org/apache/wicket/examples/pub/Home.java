@@ -122,5 +122,13 @@ public final class Home extends WicketExamplePage
 				getSession().setLocale(new Locale("ko", "KR"));
 			}
 		});
+		add(new Link("goHungarian")
+		{
+			@Override
+			public void onClick()
+			{
+				getSession().setLocale(new Locale("hu"));
+			}
+		});
 	}
 }
