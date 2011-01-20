@@ -40,7 +40,6 @@ import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.image.NonCachingImage;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
@@ -197,10 +196,14 @@ public class KittenCaptchaPanel extends Panel
 					// Instead of reload entire image just change the src
 					// attribute, this reduces the flicker
 					final StringBuilder javascript = new StringBuilder();
-					javascript.append("Wicket.$('").append(image.getMarkupId()).append("').src = '");
+					javascript.append("Wicket.$('")
+						.append(image.getMarkupId())
+						.append("').src = '");
 					CharSequence url = image.urlFor(IResourceListener.INTERFACE);
 					javascript.append(url);
-					javascript.append(url.toString().indexOf('?') > -1 ? "&amp;" : "?").append("rand=").append(Math.random());
+					javascript.append(url.toString().indexOf('?') > -1 ? "&amp;" : "?")
+						.append("rand=")
+						.append(Math.random());
 					javascript.append("'");
 					target.appendJavaScript(javascript.toString());
 				}
@@ -373,7 +376,7 @@ public class KittenCaptchaPanel extends Panel
 	/**
 	 * Resource which renders the actual captcha image
 	 */
-	private class CaptchaImageResource extends DynamicImageResource
+	private static class CaptchaImageResource extends DynamicImageResource
 	{
 		private static final long serialVersionUID = -1560784998742404278L;
 
@@ -472,7 +475,7 @@ public class KittenCaptchaPanel extends Panel
 	/**
 	 * An animal that has a location
 	 */
-	private class PlacedAnimal implements Serializable
+	private static class PlacedAnimal implements Serializable
 	{
 		private static final long serialVersionUID = -6703909440564862486L;
 

@@ -115,9 +115,13 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 			Map<String, String> additionalAttributesMap = getAdditionalAttributes(choice);
 			if (additionalAttributesMap != null)
 			{
-				for (String s : additionalAttributesMap.keySet())
+				for (Map.Entry<String, String> entry : additionalAttributesMap.entrySet())
 				{
-					buffer.append(" " + s + "=\"" + additionalAttributesMap.get(s) + "\"");
+					buffer.append(' ')
+						.append(entry.getKey())
+						.append("=\"")
+						.append(entry.getValue())
+						.append("\"");
 				}
 			}
 

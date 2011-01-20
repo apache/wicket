@@ -208,9 +208,6 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 				final String saveCall = "{wicketAjaxGet('" + getCallbackUrl() +
 					"&save=true&'+this.name+'='+wicketEncode(this.value)); return true;}";
 
-				final String cancelCall = "{wicketAjaxGet('" + getCallbackUrl() +
-					"&save=false'); return false;}";
-
 				tag.put("onchange", saveCall);
 			}
 		});

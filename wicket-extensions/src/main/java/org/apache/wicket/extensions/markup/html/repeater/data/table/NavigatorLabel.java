@@ -45,7 +45,7 @@ public class NavigatorLabel extends Label
 			"Showing ${from} to ${to} of ${of}"));
 	}
 
-	private class LabelModelObject implements IClusterable
+	private static class LabelModelObject implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 		private final IPageableItems pageable;
