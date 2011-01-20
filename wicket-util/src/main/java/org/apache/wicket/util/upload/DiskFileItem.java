@@ -172,7 +172,11 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 */
 	private FileItemHeaders headers;
 
-	private final IFileUploadCleaner fileUploadCleaner;
+	/**
+	 * This is transient because it is needed only for the upload request lifetime to add this file
+	 * item in the tracker. After that the cleaner is not needed anymore.
+	 */
+	private transient final IFileUploadCleaner fileUploadCleaner;
 
 	// ----------------------------------------------------------- Constructors
 

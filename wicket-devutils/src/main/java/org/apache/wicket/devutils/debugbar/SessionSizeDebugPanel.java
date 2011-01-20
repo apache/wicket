@@ -72,7 +72,13 @@ public class SessionSizeDebugPanel extends StandardDebugPanel {
 
 			@Override
 			public String getObject() {
-				return size.getObject() + " / " + totalSize.getObject();
+				Bytes sessionSizeInBytes = size.getObject();
+				String sessionSizeAsString = sessionSizeInBytes != null ? sessionSizeInBytes.toString() : "unknown";
+				
+				Bytes totalSizeInBytes = totalSize.getObject();
+				String totalSizeAsString = totalSizeInBytes != null ? totalSizeInBytes.toString() : "unknown";
+				
+				return sessionSizeAsString + " / " + totalSizeAsString;
 			}
 
 			@Override

@@ -33,7 +33,8 @@ public class SessionSizeModel extends LoadableDetachableModel<Bytes> {
 
 	@Override
 	protected Bytes load() {
-		return Bytes.bytes(WicketObjects.sizeof(session));
+		long sizeOfSession = WicketObjects.sizeof(session);
+		return sizeOfSession > -1 ? Bytes.bytes(sizeOfSession) : null;
 	}
 
 	@Override

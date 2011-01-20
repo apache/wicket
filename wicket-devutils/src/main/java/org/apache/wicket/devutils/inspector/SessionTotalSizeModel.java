@@ -32,7 +32,8 @@ public class SessionTotalSizeModel extends LoadableDetachableModel<Bytes> {
 
 	@Override
 	protected Bytes load() {
-		return Bytes.bytes(session.getSizeInBytes());
+		long sizeInBytes = session.getSizeInBytes();
+		return sizeInBytes > -1 ? Bytes.bytes(sizeInBytes) : null;
 	}
 
 	@Override
