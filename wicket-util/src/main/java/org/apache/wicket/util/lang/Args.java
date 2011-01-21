@@ -26,16 +26,19 @@ public class Args
 	/**
 	 * Checks argument is not null
 	 * 
+	 * @param <C>
 	 * @param argument
 	 * @param name
+	 * @return The 'argument' parameter
 	 * @throws IllegalargumentException
 	 */
-	public static void notNull(final Object argument, final String name)
+	public static <C> C notNull(final C argument, final String name)
 	{
 		if (argument == null)
 		{
 			throw new IllegalArgumentException("Argument '" + name + "' may not be null.");
 		}
+		return argument;
 	}
 
 	/**
@@ -43,15 +46,17 @@ public class Args
 	 * 
 	 * @param argument
 	 * @param name
+	 * @return The 'argument' parameter
 	 * @throws IllegalargumentException
 	 */
-	public static void notEmpty(final String argument, final String name)
+	public static String notEmpty(final String argument, final String name)
 	{
 		if (Strings.isEmpty(argument))
 		{
 			throw new IllegalArgumentException("Argument '" + name +
 				"' may not be null or empty string.");
 		}
+		return argument;
 	}
 
 	/**

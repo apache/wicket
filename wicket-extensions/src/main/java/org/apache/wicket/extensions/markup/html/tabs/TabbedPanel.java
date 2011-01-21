@@ -30,6 +30,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.lang.Args;
 
 
 /**
@@ -67,7 +68,6 @@ import org.apache.wicket.model.Model;
  * @see org.apache.wicket.extensions.markup.html.tabs.ITab
  * 
  * @author Igor Vaynberg (ivaynberg at apache dot org)
- * 
  */
 public class TabbedPanel extends Panel
 {
@@ -88,16 +88,11 @@ public class TabbedPanel extends Panel
 	 * @param tabs
 	 *            list of ITab objects used to represent tabs
 	 */
-	public TabbedPanel(String id, List<? extends ITab> tabs)
+	public TabbedPanel(final String id, final List<? extends ITab> tabs)
 	{
 		super(id, new Model<Integer>(-1));
 
-		if (tabs == null)
-		{
-			throw new IllegalArgumentException("argument [tabs] cannot be null");
-		}
-
-		this.tabs = tabs;
+		this.tabs = Args.notNull(tabs, "tabs");
 
 		final IModel<Integer> tabCount = new AbstractReadOnlyModel<Integer>()
 		{
@@ -119,10 +114,10 @@ public class TabbedPanel extends Panel
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void populateItem(LoopItem item)
+			protected void populateItem(final LoopItem item)
 			{
 				final int index = item.getIndex();
-				final ITab tab = (TabbedPanel.this.tabs.get(index));
+				final ITab tab = TabbedPanel.this.tabs.get(index);
 
 				final WebMarkupContainer titleLink = newLink("link", index);
 
@@ -146,14 +141,14 @@ public class TabbedPanel extends Panel
 	 *            container id
 	 * @return container
 	 */
-	protected WebMarkupContainer newTabsContainer(String id)
+	protected WebMarkupContainer newTabsContainer(final String id)
 	{
 		return new WebMarkupContainer(id)
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onComponentTag(ComponentTag tag)
+			protected void onComponentTag(final ComponentTag tag)
 			{
 				super.onComponentTag(tag);
 				tag.put("class", getTabContainerCssClass());
@@ -204,7 +199,7 @@ public class TabbedPanel extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onBeforeRender()
+	 * {@inheritDoc}
 	 */
 	@Override
 	protected void onBeforeRender()
@@ -331,11 +326,9 @@ public class TabbedPanel extends Panel
 	 * 
 	 * @param index
 	 *            index of the tab to select
-	 * 
 	 * @return this for chaining
-	 * 
 	 */
-	public TabbedPanel setSelectedTab(int index)
+	public TabbedPanel setSelectedTab(final int index)
 	{
 		if (index < 0 || (index >= tabs.size() && index > 0))
 		{
@@ -360,7 +353,6 @@ public class TabbedPanel extends Panel
 			{
 				throw new WicketRuntimeException("ITab.getPanel() returned null. TabbedPanel [" +
 					getPath() + "] ITab index [" + index + "]");
-
 			}
 		}
 
@@ -386,6 +378,11 @@ public class TabbedPanel extends Panel
 		return (Integer)getDefaultModelObject();
 	}
 
+	/**
+	 * 
+	 * @param tabIndex
+	 * @return visible
+	 */
 	private boolean isTabVisible(int tabIndex)
 	{
 		if (tabsVisibilityCache == null)
