@@ -57,6 +57,8 @@ public class RequestMapperApplication extends WicketExampleApplication
 
 		mountPackage("pMount", PackageMountedPage.class);
 
+		mountResource("/print/${sheet}/${format}", new MapperDemoResourceReference());
+
 		setRootRequestMapper(new HttpsMapper(getRootRequestMapper(), new HttpsConfig()));
 	}
 
