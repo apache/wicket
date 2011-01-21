@@ -320,9 +320,12 @@ public abstract class WebApplication extends Application
 	 * @param reference
 	 *            resource reference to be mounted
 	 */
-	public final void mountSharedResource(final String path, final ResourceReference reference)
+	public final void mountResource(final String path, final ResourceReference reference)
 	{
-		getResourceReferenceRegistry().registerResourceReference(reference);
+		if (reference.canBeRegistered())
+		{
+			getResourceReferenceRegistry().registerResourceReference(reference);
+		}
 		mount(new ResourceMapper(path, reference));
 	}
 

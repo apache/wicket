@@ -49,7 +49,7 @@ import org.apache.wicket.util.lang.Args;
  * getRootRequestMapperAsCompound().add(new ResourceMapper(&quot;/images&quot;, new ImagesResourceReference()));
  * </pre>
  *
- * @see org.apache.wicket.protocol.http.WebApplication#mountSharedResource(String, org.apache.wicket.request.resource.ResourceReference)
+ * @see org.apache.wicket.protocol.http.WebApplication#mountResource(String, org.apache.wicket.request.resource.ResourceReference)
  *
  * @author Peter Ertl
  */
