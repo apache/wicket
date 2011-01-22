@@ -22,7 +22,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.request.Url;
 import org.apache.wicket.request.Url.QueryParameter;
 
 /**
@@ -321,5 +320,41 @@ public class UrlTest extends TestCase
 		Url url = Url.parse("fff/abc/efg/xxx");
 		url.concatSegments(Arrays.asList("..", ".."));
 		assertEquals(Url.parse("fff/"), url);
+	}
+
+	/**
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3363">WICKET-3363</a>
+	 */
+	public void testResolveRelative1()
+	{
+		Url relative = Url.parse("./a/b?p1=v1");
+		Url baseUrl = Url.parse("c/d?p2=v2");
+		baseUrl.resolveRelative(relative);
+
+		assertEquals("c/a/b?p1=v1", baseUrl.toString());
+	}
+
+	/**
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3363">WICKET-3363</a>
+	 */
+	public void testResolveRelative2()
+	{
+		Url relative = Url.parse("a/b?p1=v1");
+		Url baseUrl = Url.parse("c/d?p2=v2");
+		baseUrl.resolveRelative(relative);
+
+		assertEquals("c/a/b?p1=v1", baseUrl.toString());
+	}
+
+	/**
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3363">WICKET-3363</a>
+	 */
+	public void testResolveRelative3()
+	{
+		Url relative = Url.parse("../a/b?p1=v1");
+		Url baseUrl = Url.parse("c/d");
+		baseUrl.resolveRelative(relative);
+
+		assertEquals("a/b?p1=v1", baseUrl.toString());
 	}
 }
