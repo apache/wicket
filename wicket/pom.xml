@@ -87,6 +87,16 @@
           </execution>
         </executions>
       </plugin>
-    </plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <configuration>
+          <!-- Do not deploy -sources.jar file.
+               This project has no .java files
+          -->
+          <attach>false</attach>
+        </configuration>
+      </plugin>
+	</plugins>
   </build>
 </project>
