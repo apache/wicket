@@ -43,7 +43,7 @@ public abstract class AbstractComponentMapper extends AbstractMapper implements 
 
 	protected IMapperContext getContext()
 	{
-		return Application.get().getEncoderContext();
+		return Application.get().getMapperContext();
 	}
 
 	/**

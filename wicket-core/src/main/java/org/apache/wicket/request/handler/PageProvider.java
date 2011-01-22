@@ -223,7 +223,7 @@ public class PageProvider implements IPageProvider
 		}
 		if (Application.exists())
 		{
-			return Application.get().getEncoderContext();
+			return Application.get().getMapperContext();
 		}
 		else
 		{

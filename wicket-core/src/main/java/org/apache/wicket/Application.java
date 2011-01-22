@@ -1356,7 +1356,7 @@ public abstract class Application implements UnboundListener, IEventSink
 
 	private IPageFactory pageFactory;
 
-	private final IMapperContext encoderContext = new DefaultMapperContext();
+	private IMapperContext encoderContext;
 
 	/**
 	 * Override to create custom {@link ResourceReferenceRegistry}.
@@ -1421,9 +1421,24 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @return mapper context
 	 */
-	public final IMapperContext getEncoderContext()
+	public final IMapperContext getMapperContext()
 	{
+		if (encoderContext == null)
+		{
+			encoderContext = newMapperContext();
+		}
 		return encoderContext;
+	}
+
+	/**
+	 * Factory method for {@link IMapperContext} implementations. {@link DefaultMapperContext} may
+	 * be a good starting point for custom implementations.
+	 * 
+	 * @return new instance of mapper context to be used in the application
+	 */
+	protected IMapperContext newMapperContext()
+	{
+		return new DefaultMapperContext();
 	}
 
 	/**
