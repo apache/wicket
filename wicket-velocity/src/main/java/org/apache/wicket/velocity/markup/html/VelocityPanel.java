@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.velocity.markup.html;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -24,9 +23,6 @@ import java.util.Map;
 
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
-import org.apache.velocity.exception.MethodInvocationException;
-import org.apache.velocity.exception.ParseErrorException;
-import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
@@ -250,19 +246,7 @@ public abstract class VelocityPanel extends Panel
 				}
 				return evaluatedTemplate;
 			}
-			catch (IOException e)
-			{
-				onException(e);
-			}
-			catch (ParseErrorException e)
-			{
-				onException(e);
-			}
-			catch (MethodInvocationException e)
-			{
-				onException(e);
-			}
-			catch (ResourceNotFoundException e)
+			catch (Exception e)
 			{
 				onException(e);
 			}
