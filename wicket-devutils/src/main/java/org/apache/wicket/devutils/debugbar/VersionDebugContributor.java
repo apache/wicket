@@ -22,23 +22,30 @@ import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 
-public class VersionDebugContributor implements IDebugBarContributor {
-
+/**
+ * 
+ */
+public class VersionDebugContributor implements IDebugBarContributor
+{
 	private static final long serialVersionUID = 1L;
 
+	/** */
 	public static final IDebugBarContributor DEBUG_BAR_CONTRIB = new VersionDebugContributor();
 
-	public Component createComponent(String id, DebugBar debugBar) {
-		Label label = new Label(id, new AbstractReadOnlyModel<String>() {
+	public Component createComponent(final String id, final DebugBar debugBar)
+	{
+		Label label = new Label(id, new AbstractReadOnlyModel<String>()
+		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public String getObject() {
+			public String getObject()
+			{
 				return Application.get().getFrameworkSettings().getVersion();
 			}
 		});
+
 		label.add(new SimpleAttributeModifier("class", "wicketversioncontrib"));
 		return label;
 	}
-
 }

@@ -27,36 +27,46 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 
 /**
- * A standard looking debug panel with an img (optional) and a string of data,
- * and the whole thing is a link.
+ * A standard looking debug panel with an img (optional) and a string of data, and the whole thing
+ * is a link.
  * 
  * @author Jeremy Thomerson <jthomerson@apache.org>
  */
-public abstract class StandardDebugPanel extends DevUtilsPanel {
-
+public abstract class StandardDebugPanel extends DevUtilsPanel
+{
 	private static final long serialVersionUID = 1L;
 
-	public StandardDebugPanel(String id) {
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 */
+	public StandardDebugPanel(final String id)
+	{
 		super(id);
 	}
 
 	@Override
-	protected void onInitialize() {
+	protected void onInitialize()
+	{
 		super.onInitialize();
 		BookmarkablePageLink<Void> link = createLink("link");
 		add(link);
 		ResourceReference img = getImageResourceReference();
-		if (img == null) {
+		if (img == null)
+		{
 			link.add(new WebMarkupContainer("img").setVisibilityAllowed(false));
-		} else {
+		}
+		else
+		{
 			link.add(new Image("img", img));
 		}
 		link.add(new Label("data", getDataModel()));
 	}
 
-	protected BookmarkablePageLink<Void> createLink(String id) {
-		return new BookmarkablePageLink<Void>(id, getLinkPageClass(),
-				getLinkPageParameters());
+	protected BookmarkablePageLink<Void> createLink(final String id)
+	{
+		return new BookmarkablePageLink<Void>(id, getLinkPageClass(), getLinkPageParameters());
 	}
 
 	protected abstract IModel<String> getDataModel();
@@ -65,8 +75,8 @@ public abstract class StandardDebugPanel extends DevUtilsPanel {
 
 	protected abstract Class<? extends Page> getLinkPageClass();
 
-	protected PageParameters getLinkPageParameters() {
+	protected PageParameters getLinkPageParameters()
+	{
 		return new PageParameters();
 	}
-
 }

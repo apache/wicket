@@ -20,8 +20,16 @@ import java.io.Serializable;
 
 import org.apache.wicket.Component;
 
-public interface IDebugBarContributor extends Serializable {
-
+/**
+ * 
+ */
+public interface IDebugBarContributor extends Serializable
+{
+	/**
+	 * 
+	 * @param id
+	 * @param debugBar
+	 * @return Component
+	 */
 	Component createComponent(String id, DebugBar debugBar);
-
 }

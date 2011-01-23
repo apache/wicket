@@ -28,16 +28,19 @@ import org.apache.wicket.util.tester.WicketTester;
 /**
  * @author Pedro Santos
  */
-public class SessionSizeModelTest extends TestCase {
+public class SessionSizeModelTest extends TestCase
+{
 
 	/**
-	 * @see <a
-	 *      href="https://issues.apache.org/jira/browse/WICKET-3355">WICKET-3355</a>
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3355">WICKET-3355</a>
 	 */
-	public void testTorelanceOnProblematicSessions() {
-		WicketTester tester = new WicketTester(new MockApplication() {
+	public void testTorelanceOnProblematicSessions()
+	{
+		WicketTester tester = new WicketTester(new MockApplication()
+		{
 			@Override
-			public Session newSession(Request request, Response response) {
+			public Session newSession(final Request request, final Response response)
+			{
 				return new TestSession(request);
 			}
 		});
@@ -45,11 +48,13 @@ public class SessionSizeModelTest extends TestCase {
 		assertEquals(null, model.getObject());
 	}
 
-	public static class TestSession extends WebSession {
+	public static class TestSession extends WebSession
+	{
 		private static final long serialVersionUID = 1L;
 		public Object nonSerializableObject = new Object();
 
-		public TestSession(Request request) {
+		public TestSession(final Request request)
+		{
 			super(request);
 		}
 

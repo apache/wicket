@@ -39,7 +39,6 @@ import org.apache.wicket.protocol.http.IRequestLogger.SessionData;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.lang.Bytes;
 
-
 /**
  * @author jcompagner
  */
@@ -110,7 +109,7 @@ public class RequestsPage extends DevUtilsPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void populateItem(ListItem<RequestData> item)
+			protected void populateItem(final ListItem<RequestData> item)
 			{
 				RequestData rd = item.getModelObject();
 				item.add(new Label("id", new Model<String>(rd.getSessionId())).setVisible(sessionData == null));

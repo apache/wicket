@@ -22,36 +22,54 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
- * All pages in the wicket-devutils package should extend this page so that they
- * automatically get checked to make sure that the utilities are enabled in the
- * application debug settings.
+ * All pages in the wicket-devutils package should extend this page so that they automatically get
+ * checked to make sure that the utilities are enabled in the application debug settings.
  * 
  * @author Jeremy Thomerson <jthomerson@apache.org>
  */
-public class DevUtilsPage extends WebPage {
+public class DevUtilsPage extends WebPage
+{
+	private static final long serialVersionUID = 1L;
 
-	public DevUtilsPage() {
+	/**
+	 * Construct.
+	 */
+	public DevUtilsPage()
+	{
 		super();
 		init();
 	}
 
-	public DevUtilsPage(IModel<?> model) {
+	/**
+	 * Construct.
+	 * 
+	 * @param model
+	 */
+	public DevUtilsPage(final IModel<?> model)
+	{
 		super(model);
 		init();
 	}
 
-	public DevUtilsPage(PageParameters parameters) {
+	/**
+	 * Construct.
+	 * 
+	 * @param parameters
+	 */
+	public DevUtilsPage(final PageParameters parameters)
+	{
 		super(parameters);
 		init();
 	}
 
 	private void init()
 	{
-		add(new DebugBar("debug"));	
+		add(new DebugBar("debug"));
 	}
-	
+
 	@Override
-	protected void onBeforeRender() {
+	protected void onBeforeRender()
+	{
 		super.onBeforeRender();
 		DevelopmentUtilitiesNotEnabledException.check();
 	}

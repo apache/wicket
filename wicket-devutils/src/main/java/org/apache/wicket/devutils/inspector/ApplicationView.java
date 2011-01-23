@@ -47,15 +47,12 @@ public final class ApplicationView extends DevUtilsPanel
 			application.getDebugSettings().getComponentUseCheck()));
 		add(new Label("compressWhitespace", "" +
 			application.getMarkupSettings().getCompressWhitespace()));
-		add(new Label("stripComments", "" +
-			application.getMarkupSettings().getStripComments()));
-		add(new Label("stripWicketTags", "" +
-			application.getMarkupSettings().getStripWicketTags()));
+		add(new Label("stripComments", "" + application.getMarkupSettings().getStripComments()));
+		add(new Label("stripWicketTags", "" + application.getMarkupSettings().getStripWicketTags()));
 		add(new Label("bufferResponse", "" +
 			application.getRequestCycleSettings().getBufferResponse()));
 		add(new Label("resourcePollFrequency", "" +
 			application.getResourceSettings().getResourcePollFrequency()));
-		add(new Label("versionPages", "" +
-			application.getPageSettings().getVersionPagesByDefault()));
+		add(new Label("versionPages", "" + application.getPageSettings().getVersionPagesByDefault()));
 	}
 }

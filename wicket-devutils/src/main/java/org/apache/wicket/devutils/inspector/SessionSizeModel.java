@@ -21,25 +21,36 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.lang.WicketObjects;
 
-public class SessionSizeModel extends LoadableDetachableModel<Bytes> {
-
+/**
+ * 
+ */
+public class SessionSizeModel extends LoadableDetachableModel<Bytes>
+{
 	private static final long serialVersionUID = 1L;
 
 	private Session session;
 
-	public SessionSizeModel(Session session) {
+	/**
+	 * Construct.
+	 * 
+	 * @param session
+	 */
+	public SessionSizeModel(final Session session)
+	{
 		this.session = session;
 	}
 
 	@Override
-	protected Bytes load() {
+	protected Bytes load()
+	{
 		long sizeOfSession = WicketObjects.sizeof(session);
 		return sizeOfSession > -1 ? Bytes.bytes(sizeOfSession) : null;
 	}
 
 	@Override
-	protected void onDetach() {
+	protected void onDetach()
+	{
 		super.onDetach();
-		this.session = null;
+		session = null;
 	}
 }

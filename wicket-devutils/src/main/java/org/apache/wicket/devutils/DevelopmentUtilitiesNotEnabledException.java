@@ -20,30 +20,31 @@ import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 
 /**
- * Just an exception that can be thrown if a development utility is invoked,
- * constructed, etc, and the setting in the application is not enabled.
+ * Just an exception that can be thrown if a development utility is invoked, constructed, etc, and
+ * the setting in the application is not enabled.
  * 
- * Includes a static method that also does this check so that it is not carbon
- * copied throughout the code.
+ * Includes a static method that also does this check so that it is not carbon copied throughout the
+ * code.
  * 
  * If you see this error in your application, you need to call:
  * <tt>Application.get().getDebugSettings().setDevelopmentUtilitiesEnabled(true)</tt>
  * 
  * @author Jeremy Thomerson
  */
-public class DevelopmentUtilitiesNotEnabledException extends
-		WicketRuntimeException {
+public class DevelopmentUtilitiesNotEnabledException extends WicketRuntimeException
+{
 
 	private static final long serialVersionUID = 1L;
 
-	public DevelopmentUtilitiesNotEnabledException() {
-		super(
-				"IDebugSettings.developmentUtilitiesEnabled must be enabled to use this feature");
+	public DevelopmentUtilitiesNotEnabledException()
+	{
+		super("IDebugSettings.developmentUtilitiesEnabled must be enabled to use this feature");
 	}
 
-	public static void check() {
-		if (Application.get().getDebugSettings()
-				.isDevelopmentUtilitiesEnabled() == false) {
+	public static void check()
+	{
+		if (Application.get().getDebugSettings().isDevelopmentUtilitiesEnabled() == false)
+		{
 			throw new DevelopmentUtilitiesNotEnabledException();
 		}
 	}

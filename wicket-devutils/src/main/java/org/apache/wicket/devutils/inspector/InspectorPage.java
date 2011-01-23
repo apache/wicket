@@ -61,9 +61,9 @@ public final class InspectorPage extends DevUtilsPage
 		}
 		catch (NullPointerException e)
 		{
-		        // Ignore
+			// Ignore
 		}
-		add(new PageView("page", (Page) page));
+		add(new PageView("page", (Page)page));
 		add(new Image("bug", new PackageResourceReference(InspectorPage.class, "bug.png")));
 		add(new BookmarkablePageLink<Void>("allsessions", LiveSessionsPage.class));
 		add(new Label("wicketVersion", getApplication().getFrameworkSettings().getVersion()));

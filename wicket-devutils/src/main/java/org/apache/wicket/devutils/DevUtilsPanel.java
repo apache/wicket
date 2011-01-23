@@ -20,28 +20,40 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
 /**
- * All panels in the wicket-devutils package should extend this panel so that
- * they automatically get checked to make sure that the utilities are enabled in
- * the application debug settings.
+ * All panels in the wicket-devutils package should extend this panel so that they automatically get
+ * checked to make sure that the utilities are enabled in the application debug settings.
  * 
  * @author Jeremy Thomerson <jthomerson@apache.org>
  */
-public class DevUtilsPanel extends Panel {
-
+public class DevUtilsPanel extends Panel
+{
 	private static final long serialVersionUID = 1L;
 
-	public DevUtilsPanel(String id, IModel<?> model) {
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 * @param model
+	 */
+	public DevUtilsPanel(final String id, final IModel<?> model)
+	{
 		super(id, model);
 	}
 
-	public DevUtilsPanel(String id) {
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 */
+	public DevUtilsPanel(final String id)
+	{
 		super(id);
 	}
 
 	@Override
-	protected void onBeforeRender() {
+	protected void onBeforeRender()
+	{
 		super.onBeforeRender();
 		DevelopmentUtilitiesNotEnabledException.check();
 	}
-
 }

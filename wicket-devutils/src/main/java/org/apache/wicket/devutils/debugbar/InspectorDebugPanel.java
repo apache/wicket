@@ -30,42 +30,55 @@ import org.apache.wicket.request.resource.ResourceReference;
  * 
  * @author Jeremy Thomerson <jthomerson@apache.org>
  */
-public class InspectorDebugPanel extends StandardDebugPanel {
+public class InspectorDebugPanel extends StandardDebugPanel
+{
 	private static final long serialVersionUID = 1L;
 
-	public static final IDebugBarContributor DEBUG_BAR_CONTRIB = new IDebugBarContributor() {
+	/** */
+	public static final IDebugBarContributor DEBUG_BAR_CONTRIB = new IDebugBarContributor()
+	{
 		private static final long serialVersionUID = 1L;
 
-		public Component createComponent(String id, DebugBar debugBar) {
+		public Component createComponent(final String id, final DebugBar debugBar)
+		{
 			return new InspectorDebugPanel(id);
 		}
 
 	};
 
-	public InspectorDebugPanel(String id) {
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 */
+	public InspectorDebugPanel(final String id)
+	{
 		super(id);
 	}
 
 	@Override
-	protected Class<? extends Page> getLinkPageClass() {
+	protected Class<? extends Page> getLinkPageClass()
+	{
 		return InspectorPage.class;
 	}
 
 	@Override
-	protected ResourceReference getImageResourceReference() {
+	protected ResourceReference getImageResourceReference()
+	{
 		return new PackageResourceReference(InspectorPage.class, "bug.png");
 	}
 
 	@Override
-	protected IModel<String> getDataModel() {
+	protected IModel<String> getDataModel()
+	{
 		return new Model<String>("Inspector");
 	}
 
 	@Override
-	protected PageParameters getLinkPageParameters() {
+	protected PageParameters getLinkPageParameters()
+	{
 		PageParameters params = new PageParameters();
 		params.add("pageId", getPage().getId());
 		return params;
 	}
-
 }

@@ -48,7 +48,7 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 	protected boolean mustCheck(final Component component)
 	{
 		final StatelessComponent ann = component.getClass().getAnnotation(StatelessComponent.class);
-		return ann != null && ann.enabled();
+		return (ann != null) && ann.enabled();
 	}
 
 	/**
@@ -60,15 +60,18 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 		{
 			final IVisitor<Component, Component> visitor = new IVisitor<Component, Component>()
 			{
-				public void component(final Component comp, final IVisit<Component> visit) 
+				public void component(final Component comp, final IVisit<Component> visit)
 				{
-					if (component instanceof Page && mustCheck(comp))
+					if ((component instanceof Page) && mustCheck(comp))
 					{
-						// Do not go deeper, because this component will be checked by checker
+						// Do not go deeper, because this component will be
+						// checked by checker
 						// itself.
-						// Actually we could go deeper but that would mean we traverse it twice
+						// Actually we could go deeper but that would mean we
+						// traverse it twice
 						// (for current component and for inspected one).
-						// We go deeper for Page because full tree will be inspected during
+						// We go deeper for Page because full tree will be
+						// inspected during
 						// isPageStateless call.
 						visit.dontGoDeeper();
 					}
@@ -96,7 +99,7 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 				final Object o = ((MarkupContainer)component).visitChildren(visitor);
 				if (o != null)
 				{
-				    throw new IllegalArgumentException(msg + " Offending component: " + o);
+					throw new IllegalArgumentException(msg + " Offending component: " + o);
 				}
 			}
 

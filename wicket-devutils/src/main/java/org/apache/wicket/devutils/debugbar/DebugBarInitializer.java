@@ -28,23 +28,24 @@ import org.apache.wicket.IInitializer;
 public class DebugBarInitializer implements IInitializer
 {
 
-    /** {@inheritDoc} */
-    public void init(Application application)
-    {
-        // register standard debug contributors
-        DebugBar.registerContributor(VersionDebugContributor.DEBUG_BAR_CONTRIB, application);
-        DebugBar.registerContributor(InspectorDebugPanel.DEBUG_BAR_CONTRIB, application);
-        DebugBar.registerContributor(SessionSizeDebugPanel.DEBUG_BAR_CONTRIB, application);
-    }
+	/** {@inheritDoc} */
+	public void init(final Application application)
+	{
+		// register standard debug contributors
+		DebugBar.registerContributor(VersionDebugContributor.DEBUG_BAR_CONTRIB, application);
+		DebugBar.registerContributor(InspectorDebugPanel.DEBUG_BAR_CONTRIB, application);
+		DebugBar.registerContributor(SessionSizeDebugPanel.DEBUG_BAR_CONTRIB, application);
+	}
 
-    @Override
-    public String toString()
-    {
-        return "DevUtils DebugBar Initializer";
-    }
+	@Override
+	public String toString()
+	{
+		return "DevUtils DebugBar Initializer";
+	}
 
-    /** {@inheritDoc} */
-	public void destroy(Application application) {
+	/** {@inheritDoc} */
+	public void destroy(final Application application)
+	{
 	}
 
 }

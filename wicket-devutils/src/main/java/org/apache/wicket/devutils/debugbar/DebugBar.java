@@ -57,113 +57,119 @@ import org.apache.wicket.request.resource.PackageResourceReference;
  */
 public class DebugBar extends DevUtilsPanel
 {
+	private static final long serialVersionUID = 1L;
 
-    private static final MetaDataKey<List<IDebugBarContributor>> CONTRIBS_META_KEY = new MetaDataKey<List<IDebugBarContributor>>()
-    {
-        private static final long serialVersionUID = 1L;
-    };
+	private static final MetaDataKey<List<IDebugBarContributor>> CONTRIBS_META_KEY = new MetaDataKey<List<IDebugBarContributor>>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
 
-    private static final long serialVersionUID = 1L;
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 */
+	public DebugBar(final String id)
+	{
+		super(id);
+		setMarkupId("wicketDebugBar");
+		setOutputMarkupId(true);
+		add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
+		{
+			private static final long serialVersionUID = 1L;
 
-    public DebugBar(String id)
-    {
-        super(id);
-        setMarkupId("wicketDebugBar");
-        setOutputMarkupId(true);
-        add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
-        {
-            private static final long serialVersionUID = 1L;
+			@Override
+			public String getObject()
+			{
+				return "wicketDebugBar" + (DebugBar.this.hasErrorMessage() ? "Error" : "");
+			}
 
-            @Override
-            public String getObject()
-            {
-                return "wicketDebugBar" + (DebugBar.this.hasErrorMessage() ? "Error" : "");
-            }
+		}));
 
-        }));
+		add(new Image("logo", new PackageResourceReference(DebugBar.class, "wicket.png")));
+		add(new Image("removeImg", new PackageResourceReference(DebugBar.class, "remove.png")));
+		List<IDebugBarContributor> contributors = getContributors();
 
-        add(new Image("logo", new PackageResourceReference(DebugBar.class, "wicket.png")));
-        add(new Image("removeImg", new PackageResourceReference(DebugBar.class, "remove.png")));
-        List<IDebugBarContributor> contributors = getContributors();
-        
-        add(new ListView<IDebugBarContributor>("contributors", contributors)
-        {
-            private static final long serialVersionUID = 1L;
+		add(new ListView<IDebugBarContributor>("contributors", contributors)
+		{
+			private static final long serialVersionUID = 1L;
 
-            @Override
-            protected void populateItem(ListItem<IDebugBarContributor> item)
-            {
-                IDebugBarContributor contrib = item.getModelObject();
-                Component comp = contrib.createComponent("contrib", DebugBar.this);
-                if (comp == null)
-                {
-                    // some contributors only add information to the debug bar
-                    // and don't actually create a contributed component
-                    item.setVisibilityAllowed(false);
-                }
-                else
-                {
-                    item.add(comp);
-                }
-            }
-        });
-    }
+			@Override
+			protected void populateItem(final ListItem<IDebugBarContributor> item)
+			{
+				IDebugBarContributor contrib = item.getModelObject();
+				Component comp = contrib.createComponent("contrib", DebugBar.this);
+				if (comp == null)
+				{
+					// some contributors only add information to the debug bar
+					// and don't actually create a contributed component
+					item.setVisibilityAllowed(false);
+				}
+				else
+				{
+					item.add(comp);
+				}
+			}
+		});
+	}
 
-    @Override
-    public boolean isVisible()
-    {
-        return getApplication().getDebugSettings().isDevelopmentUtilitiesEnabled();
-    }
+	@Override
+	public boolean isVisible()
+	{
+		return getApplication().getDebugSettings().isDevelopmentUtilitiesEnabled();
+	}
 
-    @Override
-    public void renderHead(IHeaderResponse response)
-    {
-        response.renderCSSReference(new CompressedResourceReference(DebugBar.class, "wicket-debugbar.css"));
-        response.renderJavaScriptReference(new JavaScriptResourceReference(DebugBar.class, "wicket-debugbar.js"));
-    }
+	@Override
+	public void renderHead(final IHeaderResponse response)
+	{
+		response.renderCSSReference(new CompressedResourceReference(DebugBar.class,
+			"wicket-debugbar.css"));
+		response.renderJavaScriptReference(new JavaScriptResourceReference(DebugBar.class,
+			"wicket-debugbar.js"));
+	}
 
-    /**
-     * Register your own custom contributor that will be part of the debug bar. You must have the
-     * context of an application for this thread at the time of calling this method.
-     * 
-     * @param application
-     * @param contrib
-     *            custom contributor - can not be null
-     */
-    public static void registerContributor(IDebugBarContributor contrib)
-    {
-        registerContributor(contrib, Application.get());
-    }
+	/**
+	 * Register your own custom contributor that will be part of the debug bar. You must have the
+	 * context of an application for this thread at the time of calling this method.
+	 * 
+	 * @param application
+	 * @param contrib
+	 *            custom contributor - can not be null
+	 */
+	public static void registerContributor(final IDebugBarContributor contrib)
+	{
+		registerContributor(contrib, Application.get());
+	}
 
-    /**
-     * Register your own custom contributor that will be part of the debug bar. You must have the
-     * context of an application for this thread at the time of calling this method.
-     * 
-     * @param application
-     * @param contrib
-     *            custom contributor - can not be null
-     */
-    public static void registerContributor(IDebugBarContributor contrib, Application application)
-    {
-        if (contrib == null)
-        {
-            throw new IllegalArgumentException("contrib can not be null");
-        }
+	/**
+	 * Register your own custom contributor that will be part of the debug bar. You must have the
+	 * context of an application for this thread at the time of calling this method.
+	 * 
+	 * @param application
+	 * @param contrib
+	 *            custom contributor - can not be null
+	 */
+	public static void registerContributor(final IDebugBarContributor contrib,
+		final Application application)
+	{
+		if (contrib == null)
+		{
+			throw new IllegalArgumentException("contrib can not be null");
+		}
 
-        List<IDebugBarContributor> contributors = getContributors(application);
-        contributors.add(contrib);
-        application.setMetaData(CONTRIBS_META_KEY, contributors);
-    }
+		List<IDebugBarContributor> contributors = getContributors(application);
+		contributors.add(contrib);
+		application.setMetaData(CONTRIBS_META_KEY, contributors);
+	}
 
-    private static List<IDebugBarContributor> getContributors()
-    {
-        return getContributors(Application.get());
-    }
+	private static List<IDebugBarContributor> getContributors()
+	{
+		return getContributors(Application.get());
+	}
 
-    private static List<IDebugBarContributor> getContributors(Application application)
-    {
-        List<IDebugBarContributor> list = application.getMetaData(CONTRIBS_META_KEY);
-        return list == null ? new ArrayList<IDebugBarContributor>() : list;
-    }
-
+	private static List<IDebugBarContributor> getContributors(final Application application)
+	{
+		List<IDebugBarContributor> list = application.getMetaData(CONTRIBS_META_KEY);
+		return list == null ? new ArrayList<IDebugBarContributor>() : list;
+	}
 }

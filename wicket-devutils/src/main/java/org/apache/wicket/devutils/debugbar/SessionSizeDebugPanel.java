@@ -29,60 +29,77 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Bytes;
 
 /**
- * A panel for the debug bar that shows the session size and links to the page
- * that shows more information about sessions.
+ * A panel for the debug bar that shows the session size and links to the page that shows more
+ * information about sessions.
  * 
  * @author Jeremy Thomerson <jthomerson@apache.org>
  */
-public class SessionSizeDebugPanel extends StandardDebugPanel {
+public class SessionSizeDebugPanel extends StandardDebugPanel
+{
 	private static final long serialVersionUID = 1L;
 
-	public static final IDebugBarContributor DEBUG_BAR_CONTRIB = new IDebugBarContributor() {
+	/** */
+	public static final IDebugBarContributor DEBUG_BAR_CONTRIB = new IDebugBarContributor()
+	{
 		private static final long serialVersionUID = 1L;
 
-		public Component createComponent(String id, DebugBar debugBar) {
+		public Component createComponent(final String id, final DebugBar debugBar)
+		{
 			return new SessionSizeDebugPanel(id);
 		}
 
 	};
 
-	public SessionSizeDebugPanel(String id) {
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 */
+	public SessionSizeDebugPanel(final String id)
+	{
 		super(id);
 	}
 
 	@Override
-	protected Class<? extends Page> getLinkPageClass() {
+	protected Class<? extends Page> getLinkPageClass()
+	{
 		return LiveSessionsPage.class;
 	}
-	
+
 	@Override
-	protected ResourceReference getImageResourceReference() {
+	protected ResourceReference getImageResourceReference()
+	{
 		// TODO: need better image for this:
 		return new PackageResourceReference(SessionSizeDebugPanel.class, "harddrive.png");
 	}
 
 	@Override
-	protected IModel<String> getDataModel() {
-		return new AbstractReadOnlyModel<String>() {
+	protected IModel<String> getDataModel()
+	{
+		return new AbstractReadOnlyModel<String>()
+		{
 			private static final long serialVersionUID = 1L;
 
-			private IModel<Bytes> size = new SessionSizeModel(Session.get());
-			private IModel<Bytes> totalSize = new SessionTotalSizeModel(Session
-					.get());
+			private final IModel<Bytes> size = new SessionSizeModel(Session.get());
+			private final IModel<Bytes> totalSize = new SessionTotalSizeModel(Session.get());
 
 			@Override
-			public String getObject() {
+			public String getObject()
+			{
 				Bytes sessionSizeInBytes = size.getObject();
-				String sessionSizeAsString = sessionSizeInBytes != null ? sessionSizeInBytes.toString() : "unknown";
-				
+				String sessionSizeAsString = sessionSizeInBytes != null
+					? sessionSizeInBytes.toString() : "unknown";
+
 				Bytes totalSizeInBytes = totalSize.getObject();
-				String totalSizeAsString = totalSizeInBytes != null ? totalSizeInBytes.toString() : "unknown";
-				
+				String totalSizeAsString = totalSizeInBytes != null ? totalSizeInBytes.toString()
+					: "unknown";
+
 				return sessionSizeAsString + " / " + totalSizeAsString;
 			}
 
 			@Override
-			public void detach() {
+			public void detach()
+			{
 				super.detach();
 				size.detach();
 				totalSize.detach();
