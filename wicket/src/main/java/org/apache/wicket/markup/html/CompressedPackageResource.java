@@ -131,6 +131,12 @@ public class CompressedPackageResource extends PackageResource
 			getOriginalResourceStream().setLocale(locale);
 		}
 
+		@Override
+		public String toString()
+		{
+			return getOriginalResourceStream().toString();
+		}
+
 		/**
 		 * @return compressed content
 		 */

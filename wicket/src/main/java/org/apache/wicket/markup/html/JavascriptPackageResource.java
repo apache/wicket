@@ -215,6 +215,12 @@ public class JavascriptPackageResource extends CompressedPackageResource
 			getOriginalResourceStream().setLocale(locale);
 		}
 
+		@Override
+		public String toString()
+		{
+			return getOriginalResourceStream().toString();
+		}
+
 		/**
 		 * @return compressed content
 		 */
