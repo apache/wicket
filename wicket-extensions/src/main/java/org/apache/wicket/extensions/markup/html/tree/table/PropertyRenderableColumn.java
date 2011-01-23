@@ -52,8 +52,8 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 	 * @param propertyExpression
 	 *            Expression for property access
 	 */
-	public PropertyRenderableColumn(ColumnLocation location, String header,
-		String propertyExpression)
+	public PropertyRenderableColumn(final ColumnLocation location, final String header,
+		final String propertyExpression)
 	{
 		super(location, header);
 		this.propertyExpression = propertyExpression;
@@ -83,7 +83,7 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 	 * @see AbstractRenderableColumn#getNodeValue(TreeNode)
 	 */
 	@Override
-	public String getNodeValue(TreeNode node)
+	public String getNodeValue(final TreeNode node)
 	{
 		Object result = PropertyResolver.getValue(propertyExpression, node);
 		if (converter != null)
@@ -108,7 +108,7 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 	 * @param converter
 	 *            any converter
 	 */
-	public void setConverter(IConverter converter)
+	public void setConverter(final IConverter converter)
 	{
 		this.converter = converter;
 	}
@@ -120,7 +120,7 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 	 * @param locale
 	 *            Any locale
 	 */
-	public void setLocale(Locale locale)
+	public void setLocale(final Locale locale)
 	{
 		this.locale = locale;
 	}

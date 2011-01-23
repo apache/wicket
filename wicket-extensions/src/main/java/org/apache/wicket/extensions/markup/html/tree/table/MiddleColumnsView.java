@@ -19,7 +19,6 @@ package org.apache.wicket.extensions.markup.html.tree.table;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -63,7 +62,7 @@ final class MiddleColumnsView extends WebMarkupContainer
 	 * @param treeHasLeftColumn
 	 *            Whether there is a column aligned to left in the tree table
 	 */
-	public MiddleColumnsView(String id, TreeNode node, boolean treeHasLeftColumn)
+	public MiddleColumnsView(final String id, final TreeNode node, final boolean treeHasLeftColumn)
 	{
 		super(id);
 		this.node = node;
@@ -80,7 +79,8 @@ final class MiddleColumnsView extends WebMarkupContainer
 	 * @param renderable
 	 *            The renderer
 	 */
-	public void addColumn(IColumn column, Component component, IRenderable renderable)
+	public void addColumn(final IColumn column, final Component component,
+		final IRenderable renderable)
 	{
 		if (column.isVisible())
 		{
@@ -142,7 +142,7 @@ final class MiddleColumnsView extends WebMarkupContainer
 
 			// wants this column to span and no other column is spanning over
 			// this column?
-			if (spanLeft == 0 && column.getSpan(node) > 1)
+			if ((spanLeft == 0) && (column.getSpan(node) > 1))
 			{
 				int maxSpan = columns.size() - columns.indexOf(column); // how
 				// many
@@ -208,10 +208,14 @@ final class MiddleColumnsView extends WebMarkupContainer
 			response.write("<span class=\"b_\" style=\"width:" + nf.format(widths[i]) + "%\">");
 
 			// determine whether we should render the left border
-			if (!treeHasLeftColumn && i == 0)
+			if (!treeHasLeftColumn && (i == 0))
+			{
 				response.write("<span class=\"d_\">");
+			}
 			else
+			{
 				response.write("<span class=\"c_\">");
+			}
 
 			if (component != null) // is there a component for current column?
 			{
@@ -242,7 +246,7 @@ final class MiddleColumnsView extends WebMarkupContainer
 				// render the component to null response (otherwise the
 				// component will
 				// complain that it hasn't been rendered
-				for (int j = 1; j < span && i < components.size(); ++j)
+				for (int j = 1; (j < span) && (i < components.size()); ++j)
 				{
 					++i;
 					if (components.get(i) != null)

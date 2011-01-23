@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Abstract wizard model that provides an implementation for handling
- * {@link IWizardModelListener wizard model listeners} and provides base implementations of many
- * methods. If you want to provide a custom implementation of {@link IWizardModel}, it is
- * recommended you start by overriding this class.
+ * Abstract wizard model that provides an implementation for handling {@link IWizardModelListener
+ * wizard model listeners} and provides base implementations of many methods. If you want to provide
+ * a custom implementation of {@link IWizardModel}, it is recommended you start by overriding this
+ * class.
  * 
  * @author eelcohillenius
  */
@@ -58,14 +58,14 @@ public abstract class AbstractWizardModel implements IWizardModel
 	 * @param listener
 	 *            The listener to add
 	 */
-	public final void addListener(IWizardModelListener listener)
+	public final void addListener(final IWizardModelListener listener)
 	{
 		wizardModelListeners.add(listener);
 	}
 
 	/**
-	 * This implementation just fires {@link IWizardModelListener#onCancel() a cancel event}.
-	 * Though this isn't a very strong contract, it gives all the power to the user of this model.
+	 * This implementation just fires {@link IWizardModelListener#onCancel() a cancel event}. Though
+	 * this isn't a very strong contract, it gives all the power to the user of this model.
 	 * 
 	 * @see IWizardModel#cancel()
 	 */
@@ -75,8 +75,8 @@ public abstract class AbstractWizardModel implements IWizardModel
 	}
 
 	/**
-	 * This implementation just fires {@link IWizardModelListener#onFinish() a finish event}.
-	 * Though this isn't a very strong contract, it gives all the power to the user of this model.
+	 * This implementation just fires {@link IWizardModelListener#onFinish() a finish event}. Though
+	 * this isn't a very strong contract, it gives all the power to the user of this model.
 	 * 
 	 * @see IWizardModel#finish()
 	 */
@@ -113,7 +113,7 @@ public abstract class AbstractWizardModel implements IWizardModel
 	 * @param listener
 	 *            The listener to remove
 	 */
-	public final void removeListener(IWizardModelListener listener)
+	public final void removeListener(final IWizardModelListener listener)
 	{
 		wizardModelListeners.remove(listener);
 	}
@@ -124,7 +124,7 @@ public abstract class AbstractWizardModel implements IWizardModel
 	 * @param cancelVisible
 	 *            Whether cancel functionality is available
 	 */
-	public void setCancelVisible(boolean cancelVisible)
+	public void setCancelVisible(final boolean cancelVisible)
 	{
 		this.cancelVisible = cancelVisible;
 	}
@@ -136,7 +136,7 @@ public abstract class AbstractWizardModel implements IWizardModel
 	 *            <tt>true</tt> to display the last button, <tt>false</tt> otherwise.
 	 * @see #isLastVisible
 	 */
-	public void setLastVisible(boolean lastVisible)
+	public void setLastVisible(final boolean lastVisible)
 	{
 		this.lastVisible = lastVisible;
 	}
@@ -147,7 +147,7 @@ public abstract class AbstractWizardModel implements IWizardModel
 	 * @param step
 	 *            The new step
 	 */
-	protected final void fireActiveStepChanged(IWizardStep step)
+	protected final void fireActiveStepChanged(final IWizardStep step)
 	{
 		for (IWizardModelListener listener : wizardModelListeners)
 		{

@@ -26,8 +26,8 @@ import org.apache.wicket.request.Response;
  * implementations of this interface should only be used when total control is required.
  * <p>
  * The autocompletion value is supplied via an attribute on the first html element named
- * <code>textvalue</code>, if no attribute is found the innerHtml property of the first element
- * will be used instead.
+ * <code>textvalue</code>, if no attribute is found the innerHtml property of the first element will
+ * be used instead.
  * 
  * For example:
  * 

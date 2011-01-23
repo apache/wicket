@@ -147,7 +147,7 @@ public class RfcCompliantEmailAddressValidator extends StringValidator
 	 *            the <code>IValidatable</code> to check
 	 */
 	@Override
-	protected Map<String, Object> variablesMap(IValidatable<String> validatable)
+	protected Map<String, Object> variablesMap(final IValidatable<String> validatable)
 	{
 		final Map<String, Object> map = super.variablesMap(validatable);
 		map.put("pattern", EMAIL_PATTERN);
@@ -155,7 +155,7 @@ public class RfcCompliantEmailAddressValidator extends StringValidator
 	}
 
 	@Override
-	protected void onValidate(IValidatable<String> validatable)
+	protected void onValidate(final IValidatable<String> validatable)
 	{
 		String email = validatable.getValue().toString();
 		if (email.length() != email.trim().length())

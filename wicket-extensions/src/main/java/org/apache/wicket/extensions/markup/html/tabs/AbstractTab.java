@@ -38,7 +38,7 @@ public abstract class AbstractTab implements ITab
 	 * @param title
 	 *            IModel used to represent the title of the tab. Must contain a string
 	 */
-	public AbstractTab(IModel<String> title)
+	public AbstractTab(final IModel<String> title)
 	{
 		this.title = title;
 	}

@@ -42,7 +42,7 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 	 * @see org.apache.wicket.extensions.ajax.markup.html.autocomplete.IAutoCompleteRenderer#render(java.lang.Object,
 	 *      org.apache.wicket.request.Response, String)
 	 */
-	public final void render(T object, Response response, String criteria)
+	public final void render(final T object, final Response response, final String criteria)
 	{
 		String textValue = getTextValue(object);
 		if (textValue == null)
@@ -56,7 +56,9 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 		response.write("<li textvalue=\"" + textValue + "\"");
 		final CharSequence handler = getOnSelectJavaScriptExpression(object);
 		if (handler != null)
+		{
 			response.write(" onselect=\"" + handler + '"');
+		}
 		response.write(">");
 		renderChoice(object, response, criteria);
 		response.write("</li>");
@@ -66,7 +68,7 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 	/**
 	 * @see org.apache.wicket.extensions.ajax.markup.html.autocomplete.IAutoCompleteRenderer#renderHeader(org.apache.wicket.request.Response)
 	 */
-	public final void renderHeader(Response response)
+	public final void renderHeader(final Response response)
 	{
 		response.write("<ul>");
 	}
@@ -74,7 +76,7 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 	/**
 	 * @see org.apache.wicket.extensions.ajax.markup.html.autocomplete.IAutoCompleteRenderer#renderFooter(org.apache.wicket.request.Response)
 	 */
-	public final void renderFooter(Response response)
+	public final void renderFooter(final Response response)
 	{
 		response.write("</ul>");
 	}
@@ -145,7 +147,7 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 	 * @return javascript to execute on selection or <code>null</code> if default behavior is
 	 *         intented
 	 */
-	protected CharSequence getOnSelectJavaScriptExpression(T item)
+	protected CharSequence getOnSelectJavaScriptExpression(final T item)
 	{
 		return null;
 	}

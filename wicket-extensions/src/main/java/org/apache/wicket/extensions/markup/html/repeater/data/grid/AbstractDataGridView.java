@@ -58,8 +58,8 @@ public abstract class AbstractDataGridView<T> extends DataViewBase<T>
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public AbstractDataGridView(String id, List<? extends ICellPopulator<T>> populators,
-		IDataProvider<T> dataProvider)
+	public AbstractDataGridView(final String id,
+		final List<? extends ICellPopulator<T>> populators, final IDataProvider<T> dataProvider)
 	{
 		super(id, dataProvider);
 
@@ -87,14 +87,14 @@ public abstract class AbstractDataGridView<T> extends DataViewBase<T>
 	 * 
 	 * @return DataItem created DataItem
 	 */
-	protected Item<ICellPopulator<T>> newCellItem(final String id, int index,
+	protected Item<ICellPopulator<T>> newCellItem(final String id, final int index,
 		final IModel<ICellPopulator<T>> model)
 	{
 		return new Item<ICellPopulator<T>>(id, index, model);
 	}
 
 	@Override
-	protected final Item<T> newItem(String id, int index, IModel<T> model)
+	protected final Item<T> newItem(final String id, final int index, final IModel<T> model)
 	{
 		return newRowItem(id, index, model);
 	}
@@ -114,7 +114,7 @@ public abstract class AbstractDataGridView<T> extends DataViewBase<T>
 	 * 
 	 * @return DataItem created DataItem
 	 */
-	protected Item<T> newRowItem(final String id, int index, final IModel<T> model)
+	protected Item<T> newRowItem(final String id, final int index, final IModel<T> model)
 	{
 		return new Item<T>(id, index, model);
 	}
@@ -140,7 +140,7 @@ public abstract class AbstractDataGridView<T> extends DataViewBase<T>
 	 * @see org.apache.wicket.markup.repeater.RefreshingView#populateItem(org.apache.wicket.markup.repeater.Item)
 	 */
 	@Override
-	protected final void populateItem(Item<T> item)
+	protected final void populateItem(final Item<T> item)
 	{
 		RepeatingView cells = new RepeatingView(CELL_REPEATER_ID);
 		item.add(cells);

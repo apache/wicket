@@ -68,7 +68,7 @@ public class Recorder<T> extends HiddenField<Object>
 	 * @param palette
 	 *            parent palette object
 	 */
-	public Recorder(String id, Palette<T> palette)
+	public Recorder(final String id, final Palette<T> palette)
 	{
 		super(id);
 		this.palette = palette;
@@ -103,7 +103,7 @@ public class Recorder<T> extends HiddenField<Object>
 	{
 		// construct the model string based on selection collection
 		IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
-	 StringBuilder modelStringBuffer = new StringBuilder();
+		StringBuilder modelStringBuffer = new StringBuilder();
 		Collection<T> modelCollection = getPalette().getModelCollection();
 		if (modelCollection == null)
 		{
@@ -135,7 +135,9 @@ public class Recorder<T> extends HiddenField<Object>
 	{
 		super.onValid();
 		if (attached)
+		{
 			updateIds();
+		}
 	}
 
 	/**
@@ -205,7 +207,9 @@ public class Recorder<T> extends HiddenField<Object>
 	{
 		super.onInvalid();
 		if (attached)
+		{
 			updateIds();
+		}
 	}
 
 	private void updateIds()
@@ -213,7 +217,7 @@ public class Recorder<T> extends HiddenField<Object>
 		updateIds(getValue());
 	}
 
-	private void updateIds(String value)
+	private void updateIds(final String value)
 	{
 		if (Strings.isEmpty(value))
 		{

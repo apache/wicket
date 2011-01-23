@@ -32,7 +32,8 @@ public final class BreadCrumbModelListenerSupport implements IClusterable
 	private static final long serialVersionUID = 1L;
 
 	/** listeners for bread crumb events. */
-	private final List<IBreadCrumbModelListener> listeners = new ArrayList<IBreadCrumbModelListener>(1);
+	private final List<IBreadCrumbModelListener> listeners = new ArrayList<IBreadCrumbModelListener>(
+		1);
 
 	/**
 	 * Adds a bread crumb model listener.
@@ -40,7 +41,7 @@ public final class BreadCrumbModelListenerSupport implements IClusterable
 	 * @param listener
 	 *            The listener to add
 	 */
-	public final void addListener(IBreadCrumbModelListener listener)
+	public final void addListener(final IBreadCrumbModelListener listener)
 	{
 		if (listener == null)
 		{
@@ -58,8 +59,8 @@ public final class BreadCrumbModelListenerSupport implements IClusterable
 	 * @param breadCrumbParticipant
 	 *            The activated bread crumb
 	 */
-	public final void fireBreadCrumbActivated(IBreadCrumbParticipant previousParticipant,
-			IBreadCrumbParticipant breadCrumbParticipant)
+	public final void fireBreadCrumbActivated(final IBreadCrumbParticipant previousParticipant,
+		final IBreadCrumbParticipant breadCrumbParticipant)
 	{
 		for (IBreadCrumbModelListener listener1 : listeners)
 		{
@@ -73,7 +74,7 @@ public final class BreadCrumbModelListenerSupport implements IClusterable
 	 * @param breadCrumbParticipant
 	 *            The newly added bread crumb
 	 */
-	public final void fireBreadCrumbAdded(IBreadCrumbParticipant breadCrumbParticipant)
+	public final void fireBreadCrumbAdded(final IBreadCrumbParticipant breadCrumbParticipant)
 	{
 		for (IBreadCrumbModelListener listener : listeners)
 		{
@@ -87,7 +88,7 @@ public final class BreadCrumbModelListenerSupport implements IClusterable
 	 * @param breadCrumbParticipant
 	 *            The removed bread crumb
 	 */
-	public final void fireBreadCrumbRemoved(IBreadCrumbParticipant breadCrumbParticipant)
+	public final void fireBreadCrumbRemoved(final IBreadCrumbParticipant breadCrumbParticipant)
 	{
 		for (IBreadCrumbModelListener listener : listeners)
 		{
@@ -101,7 +102,7 @@ public final class BreadCrumbModelListenerSupport implements IClusterable
 	 * @param listener
 	 *            The listener to remove
 	 */
-	public final void removeListener(IBreadCrumbModelListener listener)
+	public final void removeListener(final IBreadCrumbModelListener listener)
 	{
 		if (listener != null)
 		{

@@ -49,8 +49,8 @@ public class OrderByBorder extends Border
 	 *            see
 	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider) }
 	 */
-	public OrderByBorder(String id, String property, ISortStateLocator stateLocator,
-		OrderByLink.ICssProvider cssProvider)
+	public OrderByBorder(final String id, final String property,
+		final ISortStateLocator stateLocator, final OrderByLink.ICssProvider cssProvider)
 	{
 		super(id);
 
@@ -62,7 +62,7 @@ public class OrderByBorder extends Border
 
 	/**
 	 * create new sort order toggling link
-	 *
+	 * 
 	 * @param id
 	 *            component id
 	 * @param property
@@ -71,9 +71,11 @@ public class OrderByBorder extends Border
 	 *            sort state locator
 	 * @return link
 	 */
-	protected OrderByLink newOrderByLink(String id, String property, ISortStateLocator stateLocator)
+	protected OrderByLink newOrderByLink(final String id, final String property,
+		final ISortStateLocator stateLocator)
 	{
-		return new OrderByLink(id, property, stateLocator, OrderByLink.VoidCssProvider.getInstance())
+		return new OrderByLink(id, property, stateLocator,
+			OrderByLink.VoidCssProvider.getInstance())
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -101,7 +103,8 @@ public class OrderByBorder extends Border
 	 * @param stateLocator
 	 *            see {@link OrderByLink#OrderByLink(String, String, ISortStateLocator)}
 	 */
-	public OrderByBorder(String id, String property, ISortStateLocator stateLocator)
+	public OrderByBorder(final String id, final String property,
+		final ISortStateLocator stateLocator)
 	{
 		this(id, property, stateLocator, OrderByLink.DefaultCssProvider.getInstance());
 	}

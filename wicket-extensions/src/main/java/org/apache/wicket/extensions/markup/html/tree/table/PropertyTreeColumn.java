@@ -52,7 +52,8 @@ public class PropertyTreeColumn extends AbstractTreeColumn
 	 * @param propertyExpression
 	 *            Expression for property access
 	 */
-	public PropertyTreeColumn(ColumnLocation location, String header, String propertyExpression)
+	public PropertyTreeColumn(final ColumnLocation location, final String header,
+		final String propertyExpression)
 	{
 		super(location, header);
 		this.propertyExpression = propertyExpression;
@@ -82,7 +83,7 @@ public class PropertyTreeColumn extends AbstractTreeColumn
 	 * @see AbstractTreeColumn#renderNode(TreeNode)
 	 */
 	@Override
-	public String renderNode(TreeNode node)
+	public String renderNode(final TreeNode node)
 	{
 		Object result = PropertyResolver.getValue(propertyExpression, node);
 		if (converter != null)
@@ -107,7 +108,7 @@ public class PropertyTreeColumn extends AbstractTreeColumn
 	 * @param converter
 	 *            Any converter
 	 */
-	public void setConverter(IConverter converter)
+	public void setConverter(final IConverter converter)
 	{
 		this.converter = converter;
 	}
@@ -119,7 +120,7 @@ public class PropertyTreeColumn extends AbstractTreeColumn
 	 * @param locale
 	 *            The locale
 	 */
-	public void setLocale(Locale locale)
+	public void setLocale(final Locale locale)
 	{
 		this.locale = locale;
 	}

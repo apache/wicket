@@ -47,8 +47,8 @@ public class DataTablePage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
-			public void populateItem(Item<ICellPopulator<Contact>> cellItem, String componentId,
-				IModel<Contact> rowModel)
+			public void populateItem(final Item<ICellPopulator<Contact>> cellItem,
+				final String componentId, final IModel<Contact> rowModel)
 			{
 				cellItem.add(new WebMarkupContainer(componentId, rowModel));
 			}

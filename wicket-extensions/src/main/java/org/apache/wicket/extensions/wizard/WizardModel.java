@@ -105,12 +105,16 @@ public class WizardModel extends AbstractWizardModel
 	 * @param step
 	 *            the step to added.
 	 */
-	public void add(IWizardStep step)
+	public void add(final IWizardStep step)
 	{
 		if (step instanceof ICondition)
+		{
 			add(step, (ICondition)step);
+		}
 		else
+		{
 			add(step, TRUE);
+		}
 	}
 
 	/**
@@ -122,7 +126,7 @@ public class WizardModel extends AbstractWizardModel
 	 * @param condition
 	 *            the {@link ICondition} under which it should be included in the wizard.
 	 */
-	public void add(IWizardStep step, ICondition condition)
+	public void add(final IWizardStep step, final ICondition condition)
 	{
 		steps.add(step);
 		conditions.add(condition);
@@ -152,7 +156,7 @@ public class WizardModel extends AbstractWizardModel
 	/**
 	 * @see org.apache.wicket.extensions.wizard.IWizardModel#isLastStep(org.apache.wicket.extensions.wizard.IWizardStep)
 	 */
-	public boolean isLastStep(IWizardStep step)
+	public boolean isLastStep(final IWizardStep step)
 	{
 		return findLastStep().equals(step);
 	}
@@ -222,9 +226,9 @@ public class WizardModel extends AbstractWizardModel
 	 * @param step
 	 *            the new active step step.
 	 */
-	public void setActiveStep(IWizardStep step)
+	public void setActiveStep(final IWizardStep step)
 	{
-		if (activeStep != null && step != null && activeStep.equals(step))
+		if ((activeStep != null) && (step != null) && activeStep.equals(step))
 		{
 			return;
 		}

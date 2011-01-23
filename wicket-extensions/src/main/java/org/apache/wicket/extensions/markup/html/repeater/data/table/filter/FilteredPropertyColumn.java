@@ -47,8 +47,8 @@ public abstract class FilteredPropertyColumn<T> extends PropertyColumn<T>
 	 * @param propertyExpression
 	 *            wicket property expression for the column, see {@link PropertyModel} for details
 	 */
-	public FilteredPropertyColumn(IModel<String> displayModel, String sortProperty,
-		String propertyExpression)
+	public FilteredPropertyColumn(final IModel<String> displayModel, final String sortProperty,
+		final String propertyExpression)
 	{
 		super(displayModel, sortProperty, propertyExpression);
 	}
@@ -59,7 +59,7 @@ public abstract class FilteredPropertyColumn<T> extends PropertyColumn<T>
 	 * @param propertyExpression
 	 *            wicket property expression for the column, see {@link PropertyModel} for details
 	 */
-	public FilteredPropertyColumn(IModel<String> displayModel, String propertyExpression)
+	public FilteredPropertyColumn(final IModel<String> displayModel, final String propertyExpression)
 	{
 		super(displayModel, propertyExpression);
 	}

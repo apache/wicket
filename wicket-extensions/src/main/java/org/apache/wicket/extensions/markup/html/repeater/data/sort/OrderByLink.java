@@ -53,7 +53,7 @@ public class OrderByLink extends Link
 	 *            locator used to locate sort state object that this will use to read/write state of
 	 *            sorted properties
 	 */
-	public OrderByLink(String id, String property, ISortStateLocator stateLocator)
+	public OrderByLink(final String id, final String property, final ISortStateLocator stateLocator)
 	{
 		this(id, property, stateLocator, DefaultCssProvider.getInstance());
 	}
@@ -76,8 +76,8 @@ public class OrderByLink extends Link
 	 * @see OrderByLink.ICssProvider
 	 * 
 	 */
-	public OrderByLink(String id, String property, ISortStateLocator stateLocator,
-		ICssProvider cssProvider)
+	public OrderByLink(final String id, final String property,
+		final ISortStateLocator stateLocator, final ICssProvider cssProvider)
 	{
 		super(id);
 
@@ -145,7 +145,7 @@ public class OrderByLink extends Link
 	 *            previous sort order
 	 * @return next sort order
 	 */
-	protected SortOrder nextSortOrder(SortOrder order)
+	protected SortOrder nextSortOrder(final SortOrder order)
 	{
 		// init / flip order
 		if (order == SortOrder.NONE)
@@ -183,7 +183,7 @@ public class OrderByLink extends Link
 		}
 
 		@Override
-		public void onComponentTag(Component component, ComponentTag tag)
+		public void onComponentTag(final Component component, final ComponentTag tag)
 		{
 			super.onComponentTag(component, tag);
 
@@ -242,7 +242,7 @@ public class OrderByLink extends Link
 		 * @param none
 		 *            css class when not sorted
 		 */
-		public CssProvider(String ascending, String descending, String none)
+		public CssProvider(final String ascending, final String descending, final String none)
 		{
 			this.ascending = ascending;
 			this.descending = descending;
@@ -253,7 +253,7 @@ public class OrderByLink extends Link
 		 * @see org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink.ICssProvider#getClassAttributeValue(org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState,
 		 *      java.lang.String)
 		 */
-		public String getClassAttributeValue(ISortState state, String property)
+		public String getClassAttributeValue(final ISortState state, final String property)
 		{
 			SortOrder dir = state.getPropertySortOrder(property);
 

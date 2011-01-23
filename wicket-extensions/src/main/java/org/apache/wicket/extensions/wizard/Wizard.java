@@ -96,7 +96,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * @param id
 	 *            The component model
 	 */
-	public Wizard(String id)
+	public Wizard(final String id)
 	{
 		this(id, true);
 	}
@@ -117,7 +117,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * @param addDefaultCssStyle
 	 *            Whether to add the {@link #addDefaultCssStyle() default style}
 	 */
-	public Wizard(String id, boolean addDefaultCssStyle)
+	public Wizard(final String id, final boolean addDefaultCssStyle)
 	{
 		super(id);
 		this.addDefaultCssStyle = addDefaultCssStyle;
@@ -134,7 +134,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * @param wizardModel
 	 *            The transitions model
 	 */
-	public Wizard(String id, IWizardModel wizardModel)
+	public Wizard(final String id, final IWizardModel wizardModel)
 	{
 		this(id, wizardModel, true);
 	}
@@ -152,7 +152,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * @param addDefaultCssStyle
 	 *            Whether to add the {@link #addDefaultCssStyle() default style}
 	 */
-	public Wizard(String id, IWizardModel wizardModel, boolean addDefaultCssStyle)
+	public Wizard(final String id, final IWizardModel wizardModel, final boolean addDefaultCssStyle)
 	{
 		super(id);
 
@@ -165,13 +165,13 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * Will let the wizard contribute a CSS include to the page's header. It will add Wizard.css
 	 * from this package. This method is typically called by the class that creates the wizard.
 	 */
-	public void addDefaultCssStyle(IHeaderResponse response)
+	public void addDefaultCssStyle(final IHeaderResponse response)
 	{
 		response.renderCSSReference(new PackageResourceReference(Wizard.class, "Wizard.css"));
 	}
 
 	@Override
-	public void renderHead(IHeaderResponse response)
+	public void renderHead(final IHeaderResponse response)
 	{
 		super.renderHead(response);
 		if (addDefaultCssStyle)
@@ -224,7 +224,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	/**
 	 * @see org.apache.wicket.extensions.wizard.IWizardModelListener#onActiveStepChanged(org.apache.wicket.extensions.wizard.IWizardStep)
 	 */
-	public void onActiveStepChanged(IWizardStep newStep)
+	public void onActiveStepChanged(final IWizardStep newStep)
 	{
 		form.replace(newStep.getView(VIEW_ID, this, this));
 		form.replace(newStep.getHeader(HEADER_ID, this, this));
@@ -253,7 +253,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * 
 	 * @param wizardModel
 	 */
-	protected void init(IWizardModel wizardModel)
+	protected void init(final IWizardModel wizardModel)
 	{
 		if (wizardModel == null)
 		{
@@ -295,7 +295,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * 
 	 * @return A new button bar
 	 */
-	protected Component newButtonBar(String id)
+	protected Component newButtonBar(final String id)
 	{
 		return new WizardButtonBar(id, this);
 	}
@@ -309,7 +309,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * 
 	 * @return A new feedback panel
 	 */
-	protected FeedbackPanel newFeedbackPanel(String id)
+	protected FeedbackPanel newFeedbackPanel(final String id)
 	{
 		return new FeedbackPanel(id, new ContainerFeedbackMessageFilter(this));
 	}
@@ -324,7 +324,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 *            The id to be used to construct the component
 	 * @return a new form
 	 */
-	protected <E> Form<E> newForm(String id)
+	protected <E> Form<E> newForm(final String id)
 	{
 		return new Form<E>(id);
 	}
@@ -349,7 +349,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * 
 	 * @return A new overview bar
 	 */
-	protected Component newOverviewBar(String id)
+	protected Component newOverviewBar(final String id)
 	{
 		// return a dummy component by default as we don't have an overview
 		// component

@@ -47,7 +47,7 @@ public abstract class BreadCrumbLink extends Link<Void>
 	 * @param breadCrumbModel
 	 *            The bread crumb model
 	 */
-	public BreadCrumbLink(String id, IBreadCrumbModel breadCrumbModel)
+	public BreadCrumbLink(final String id, final IBreadCrumbModel breadCrumbModel)
 	{
 		super(id);
 		this.breadCrumbModel = breadCrumbModel;

@@ -164,7 +164,7 @@ public class KittenCaptchaPanel extends Panel
 			private static final long serialVersionUID = 7480352029955897654L;
 
 			@Override
-			protected CharSequence getCallbackScript(boolean onlyTargetActivePage)
+			protected CharSequence getCallbackScript(final boolean onlyTargetActivePage)
 			{
 				// Call-back script shows loading indicator and makes wicket
 				// ajax request passing in mouse co-ordinates
@@ -391,7 +391,8 @@ public class KittenCaptchaPanel extends Panel
 		private transient SoftReference<byte[]> data = null;
 
 		@Override
-		protected void configureResponse(ResourceResponse response, Attributes attributes)
+		protected void configureResponse(final ResourceResponse response,
+			final Attributes attributes)
 		{
 			super.configureResponse(response, attributes);
 			response.disableCaching();
@@ -411,7 +412,7 @@ public class KittenCaptchaPanel extends Panel
 		 * @return Rendered image data
 		 */
 		@Override
-		protected byte[] getImageData(Attributes attributes)
+		protected byte[] getImageData(final Attributes attributes)
 		{
 			// Handle caching
 			setLastModifiedTime(Time.now());
@@ -419,7 +420,7 @@ public class KittenCaptchaPanel extends Panel
 			response.setHeader("Cache-Control", "no-cache, must-revalidate, max-age=0, no-store");
 
 			// If we don't have data
-			if (data == null || data.get() == null)
+			if ((data == null) || (data.get() == null))
 			{
 				// Create the image and turn it into data
 				final BufferedImage composedImage = animals.createImage();
@@ -599,7 +600,7 @@ public class KittenCaptchaPanel extends Panel
 		 *            Maximum random value
 		 * @return A random value in the given range
 		 */
-		private float random(float min, float max)
+		private float random(final float min, final float max)
 		{
 			return min + Math.abs(random.nextFloat() * (max - min));
 		}

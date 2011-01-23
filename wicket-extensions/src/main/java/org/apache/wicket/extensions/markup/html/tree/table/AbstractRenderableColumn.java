@@ -49,7 +49,7 @@ public abstract class AbstractRenderableColumn extends AbstractColumn
 	 * @param header
 	 *            Header caption
 	 */
-	public AbstractRenderableColumn(ColumnLocation location, String header)
+	public AbstractRenderableColumn(final ColumnLocation location, final String header)
 	{
 		super(location, header);
 	}
@@ -86,7 +86,8 @@ public abstract class AbstractRenderableColumn extends AbstractColumn
 	/**
 	 * @see IColumn#newCell(MarkupContainer, String, TreeNode, int)
 	 */
-	public Component newCell(MarkupContainer parent, String id, TreeNode node, int level)
+	public Component newCell(final MarkupContainer parent, final String id, final TreeNode node,
+		final int level)
 	{
 		return null;
 	}
@@ -94,13 +95,13 @@ public abstract class AbstractRenderableColumn extends AbstractColumn
 	/**
 	 * @see IColumn#newCell(TreeNode, int)
 	 */
-	public IRenderable newCell(TreeNode node, int level)
+	public IRenderable newCell(final TreeNode node, final int level)
 	{
 		return new IRenderable()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public void render(TreeNode node, Response response)
+			public void render(final TreeNode node, final Response response)
 			{
 				String content = getNodeValue(node);
 
@@ -129,7 +130,7 @@ public abstract class AbstractRenderableColumn extends AbstractColumn
 	 * @param contentAsTooltip
 	 *            whether the content should also be visible as tooltip
 	 */
-	public void setContentAsTooltip(boolean contentAsTooltip)
+	public void setContentAsTooltip(final boolean contentAsTooltip)
 	{
 		this.contentAsTooltip = contentAsTooltip;
 	}
@@ -140,7 +141,7 @@ public abstract class AbstractRenderableColumn extends AbstractColumn
 	 * @param escapeContent
 	 *            Whether to espcape html characters
 	 */
-	public void setEscapeContent(boolean escapeContent)
+	public void setEscapeContent(final boolean escapeContent)
 	{
 		this.escapeContent = escapeContent;
 	}

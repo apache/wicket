@@ -94,7 +94,7 @@ public class AjaxEditableLabel<T> extends Panel
 		 * {@inheritDoc}
 		 */
 		@Override
-		protected void onComponentTag(ComponentTag tag)
+		protected void onComponentTag(final ComponentTag tag)
 		{
 			super.onComponentTag(tag);
 			final String saveCall = "{" +
@@ -118,7 +118,7 @@ public class AjaxEditableLabel<T> extends Panel
 		 * {@inheritDoc}
 		 */
 		@Override
-		protected void respond(AjaxRequestTarget target)
+		protected void respond(final AjaxRequestTarget target)
 		{
 			RequestCycle requestCycle = RequestCycle.get();
 			boolean save = requestCycle.getRequest()
@@ -155,7 +155,7 @@ public class AjaxEditableLabel<T> extends Panel
 		 * 
 		 * @param event
 		 */
-		public LabelAjaxBehavior(String event)
+		public LabelAjaxBehavior(final String event)
 		{
 			super(event);
 		}
@@ -164,7 +164,7 @@ public class AjaxEditableLabel<T> extends Panel
 		 * {@inheritDoc}
 		 */
 		@Override
-		protected void onEvent(AjaxRequestTarget target)
+		protected void onEvent(final AjaxRequestTarget target)
 		{
 			onEdit(target);
 		}
@@ -175,7 +175,7 @@ public class AjaxEditableLabel<T> extends Panel
 	 * 
 	 * @param id
 	 */
-	public AjaxEditableLabel(String id)
+	public AjaxEditableLabel(final String id)
 	{
 		super(id);
 		setOutputMarkupId(true);
@@ -187,7 +187,7 @@ public class AjaxEditableLabel<T> extends Panel
 	 * @param id
 	 * @param model
 	 */
-	public AjaxEditableLabel(String id, IModel<T> model)
+	public AjaxEditableLabel(final String id, final IModel<T> model)
 	{
 		super(id, model);
 		setOutputMarkupId(true);
@@ -203,7 +203,7 @@ public class AjaxEditableLabel<T> extends Panel
 	 *            The validator
 	 * @return This
 	 */
-	public final AjaxEditableLabel<T> add(IValidator<T> validator)
+	public final AjaxEditableLabel<T> add(final IValidator<T> validator)
 	{
 		getEditor().add(validator);
 		return this;
@@ -217,7 +217,7 @@ public class AjaxEditableLabel<T> extends Panel
 	 * null).
 	 */
 	@Override
-	public <C> IConverter<C> getConverter(Class<C> type)
+	public <C> IConverter<C> getConverter(final Class<C> type)
 	{
 		return null;
 	}
@@ -239,7 +239,7 @@ public class AjaxEditableLabel<T> extends Panel
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final AjaxEditableLabel<T> setDefaultModel(IModel<?> model)
+	public final AjaxEditableLabel<T> setDefaultModel(final IModel<?> model)
 	{
 		super.setDefaultModel(model);
 		getLabel().setDefaultModel(model);
@@ -266,7 +266,7 @@ public class AjaxEditableLabel<T> extends Panel
 	 * @param type
 	 * @return this for chaining
 	 */
-	public final AjaxEditableLabel<T> setType(Class<?> type)
+	public final AjaxEditableLabel<T> setType(final Class<?> type)
 	{
 		getEditor().setType(type);
 		return this;
@@ -283,14 +283,15 @@ public class AjaxEditableLabel<T> extends Panel
 	 *            The model
 	 * @return The editor
 	 */
-	protected FormComponent<T> newEditor(MarkupContainer parent, String componentId, IModel<T> model)
+	protected FormComponent<T> newEditor(final MarkupContainer parent, final String componentId,
+		final IModel<T> model)
 	{
 		TextField<T> editor = new TextField<T>(componentId, model)
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public <C> IConverter<C> getConverter(Class<C> type)
+			public <C> IConverter<C> getConverter(final Class<C> type)
 			{
 				IConverter<C> c = AjaxEditableLabel.this.getConverter(type);
 				return c != null ? c : super.getConverter(type);
@@ -327,14 +328,15 @@ public class AjaxEditableLabel<T> extends Panel
 	 *            The model
 	 * @return The editor
 	 */
-	protected Component newLabel(MarkupContainer parent, String componentId, IModel<T> model)
+	protected Component newLabel(final MarkupContainer parent, final String componentId,
+		final IModel<T> model)
 	{
 		Label label = new Label(componentId, model)
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public <C> IConverter<C> getConverter(Class<C> type)
+			public <C> IConverter<C> getConverter(final Class<C> type)
 			{
 				IConverter<C> c = AjaxEditableLabel.this.getConverter(type);
 				return c != null ? c : super.getConverter(type);
@@ -344,10 +346,11 @@ public class AjaxEditableLabel<T> extends Panel
 			 * {@inheritDoc}
 			 */
 			@Override
-			public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+			public void onComponentTagBody(final MarkupStream markupStream,
+				final ComponentTag openTag)
 			{
 				Object modelObject = getDefaultModelObject();
-				if (modelObject == null || "".equals(modelObject))
+				if ((modelObject == null) || "".equals(modelObject))
 				{
 					replaceComponentTagBody(markupStream, openTag, defaultNullLabel());
 				}
@@ -425,7 +428,7 @@ public class AjaxEditableLabel<T> extends Panel
 	 * @param target
 	 *            the ajax request target
 	 */
-	protected void onCancel(AjaxRequestTarget target)
+	protected void onCancel(final AjaxRequestTarget target)
 	{
 		label.setVisible(true);
 		editor.setVisible(false);
@@ -438,7 +441,7 @@ public class AjaxEditableLabel<T> extends Panel
 	 * @param target
 	 *            Ajax target
 	 */
-	public void onEdit(AjaxRequestTarget target)
+	public void onEdit(final AjaxRequestTarget target)
 	{
 		label.setVisible(false);
 		editor.setVisible(true);
@@ -458,7 +461,7 @@ public class AjaxEditableLabel<T> extends Panel
 	 * @param target
 	 *            the ajax request target
 	 */
-	protected void onError(AjaxRequestTarget target)
+	protected void onError(final AjaxRequestTarget target)
 	{
 		Serializable errorMessage = editor.getFeedbackMessage().getMessage();
 		if (errorMessage instanceof String)
@@ -479,7 +482,7 @@ public class AjaxEditableLabel<T> extends Panel
 	 * @param target
 	 *            The ajax request target
 	 */
-	protected void onSubmit(AjaxRequestTarget target)
+	protected void onSubmit(final AjaxRequestTarget target)
 	{
 		label.setVisible(true);
 		editor.setVisible(false);
@@ -494,7 +497,7 @@ public class AjaxEditableLabel<T> extends Panel
 	 * @param model
 	 *            The model for the label and editor
 	 */
-	private void initLabelAndEditor(IModel<T> model)
+	private void initLabelAndEditor(final IModel<T> model)
 	{
 		editor = newEditor(this, "editor", model);
 		label = newLabel(this, "label", model);

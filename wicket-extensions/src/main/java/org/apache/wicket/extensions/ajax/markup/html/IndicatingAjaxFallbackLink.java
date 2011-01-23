@@ -47,7 +47,7 @@ public abstract class IndicatingAjaxFallbackLink<T> extends AjaxFallbackLink<T>
 	 * 
 	 * @param id
 	 */
-	public IndicatingAjaxFallbackLink(String id)
+	public IndicatingAjaxFallbackLink(final String id)
 	{
 		this(id, null);
 	}
@@ -58,7 +58,7 @@ public abstract class IndicatingAjaxFallbackLink<T> extends AjaxFallbackLink<T>
 	 * @param id
 	 * @param model
 	 */
-	public IndicatingAjaxFallbackLink(String id, IModel<T> model)
+	public IndicatingAjaxFallbackLink(final String id, final IModel<T> model)
 	{
 		super(id, model);
 		add(indicatorAppender);

@@ -78,7 +78,7 @@ public class Select<T> extends FormComponent<T>
 	 * @param id
 	 *            component id
 	 */
-	public Select(String id)
+	public Select(final String id)
 	{
 		super(id);
 	}
@@ -88,7 +88,7 @@ public class Select<T> extends FormComponent<T>
 	 * @param model
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public Select(String id, IModel<T> model)
+	public Select(final String id, final IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -104,13 +104,13 @@ public class Select<T> extends FormComponent<T>
 		 */
 		String[] paths = getInputAsArray();
 
-		if (paths == null || paths.length == 0)
+		if ((paths == null) || (paths.length == 0))
 		{
 			setConvertedInput(null);
 			return;
 		}
 
-		if (!supportsMultiple && paths.length > 1)
+		if (!supportsMultiple && (paths.length > 1))
 		{
 			throw new WicketRuntimeException(
 				"The model of Select component [" +
@@ -205,13 +205,13 @@ public class Select<T> extends FormComponent<T>
 	 * @param option
 	 * @return true if the option is selected, false otherwise
 	 */
-	boolean isSelected(SelectOption<?> option)
+	boolean isSelected(final SelectOption<?> option)
 	{
 		// if the raw input is specified use that, otherwise use model
 		if (hasRawInput())
 		{
 			String[] paths = getInputAsArray();
-			if (paths != null && paths.length > 0)
+			if ((paths != null) && (paths.length > 0))
 			{
 				for (String path : paths)
 				{
@@ -227,9 +227,9 @@ public class Select<T> extends FormComponent<T>
 		return compareModels(getDefaultModelObject(), option.getDefaultModelObject());
 	}
 
-	private boolean compareModels(Object selected, Object value)
+	private boolean compareModels(final Object selected, final Object value)
 	{
-		if (selected != null && selected instanceof Collection)
+		if ((selected != null) && (selected instanceof Collection))
 		{
 			if (value instanceof Collection)
 			{

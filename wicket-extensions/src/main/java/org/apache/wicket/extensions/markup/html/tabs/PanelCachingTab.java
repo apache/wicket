@@ -42,7 +42,7 @@ public class PanelCachingTab implements ITab
 	 * @param delegate
 	 *            ITab implementation to decorate
 	 */
-	public PanelCachingTab(ITab delegate)
+	public PanelCachingTab(final ITab delegate)
 	{
 		this.delegate = delegate;
 	}

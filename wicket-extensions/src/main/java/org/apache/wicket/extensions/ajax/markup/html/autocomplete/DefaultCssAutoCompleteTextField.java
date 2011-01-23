@@ -39,13 +39,13 @@ public abstract class DefaultCssAutoCompleteTextField<T> extends AutoCompleteTex
 	 * @param string
 	 * @param model
 	 */
-	public DefaultCssAutoCompleteTextField(String string, IModel<T> model)
+	public DefaultCssAutoCompleteTextField(final String string, final IModel<T> model)
 	{
 		super(string, model);
 	}
 
 	@Override
-	public void renderHead(IHeaderResponse response)
+	public void renderHead(final IHeaderResponse response)
 	{
 		super.renderHead(response);
 

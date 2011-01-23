@@ -39,7 +39,7 @@ public class SelectOption<T> extends WebMarkupContainer
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String)
 	 */
-	public SelectOption(String id)
+	public SelectOption(final String id)
 	{
 		super(id);
 	}
@@ -49,7 +49,7 @@ public class SelectOption<T> extends WebMarkupContainer
 	 * @param model
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public SelectOption(String id, IModel<T> model)
+	public SelectOption(final String id, final IModel<T> model)
 	{
 		super(id, model);
 	}

@@ -35,7 +35,7 @@ public class LastButton extends WizardButton
 	 * @param wizard
 	 *            The wizard
 	 */
-	public LastButton(String id, IWizard wizard)
+	public LastButton(final String id, final IWizard wizard)
 	{
 		super(id, wizard, "org.apache.wicket.extensions.wizard.last");
 	}

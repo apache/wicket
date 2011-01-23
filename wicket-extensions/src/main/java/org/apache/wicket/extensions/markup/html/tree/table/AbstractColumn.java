@@ -47,7 +47,7 @@ public abstract class AbstractColumn implements IColumn
 	 * @param header
 	 *            Header caption
 	 */
-	public AbstractColumn(ColumnLocation location, String header)
+	public AbstractColumn(final ColumnLocation location, final String header)
 	{
 		this.location = location;
 		this.header = header;
@@ -64,7 +64,7 @@ public abstract class AbstractColumn implements IColumn
 	/**
 	 * @see IColumn#getSpan(TreeNode)
 	 */
-	public int getSpan(TreeNode node)
+	public int getSpan(final TreeNode node)
 	{
 		return 0;
 	}
@@ -80,7 +80,7 @@ public abstract class AbstractColumn implements IColumn
 	/**
 	 * @see IColumn#newHeader(MarkupContainer, String)
 	 */
-	public Component newHeader(MarkupContainer parent, String id)
+	public Component newHeader(final MarkupContainer parent, final String id)
 	{
 		return new Label(id, header);
 	}
@@ -88,9 +88,9 @@ public abstract class AbstractColumn implements IColumn
 	/**
 	 * @see IColumn#setTreeTable(TreeTable)
 	 */
-	public void setTreeTable(TreeTable treeTable)
+	public void setTreeTable(final TreeTable treeTable)
 	{
-		if (this.treeTable != null && this.treeTable != treeTable)
+		if ((this.treeTable != null) && (this.treeTable != treeTable))
 		{
 			throw new IllegalStateException("You can't add single IColumn to multiple tree tables.");
 		}

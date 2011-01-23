@@ -49,11 +49,12 @@ public class AjaxLazyLoadPanelTester
 	 * @param container
 	 *            contains the {@link AjaxLazyLoadPanel} to trigger
 	 */
-	public static void executeAjaxLazyLoadPanel(final WicketTester wt, MarkupContainer container)
+	public static void executeAjaxLazyLoadPanel(final WicketTester wt,
+		final MarkupContainer container)
 	{
 		container.visitChildren(AjaxLazyLoadPanel.class, new IVisitor<AjaxLazyLoadPanel, Void>()
 		{
-			public void component(AjaxLazyLoadPanel component, final IVisit<Void> visit)
+			public void component(final AjaxLazyLoadPanel component, final IVisit<Void> visit)
 			{
 				// get the AbstractAjaxBehaviour which is responsible for
 				// getting the contents of the lazy panel

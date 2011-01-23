@@ -23,9 +23,7 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.DataGridView;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.list.AbstractItem;
 import org.apache.wicket.markup.html.navigation.paging.IPageableItems;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.IItemReuseStrategy;
@@ -85,7 +83,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 		 * @see Behavior#onComponentTag(Component, ComponentTag)
 		 */
 		@Override
-		public void onComponentTag(Component component, ComponentTag tag)
+		public void onComponentTag(final Component component, final ComponentTag tag)
 		{
 			String className = getCssClass();
 			if (!Strings.isEmpty(className))
@@ -127,12 +125,12 @@ public class DataTable<T> extends Panel implements IPageableItems
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DataTable(String id, List<IColumn<T>> columns, IDataProvider<T> dataProvider,
-		int rowsPerPage)
+	public DataTable(final String id, final List<IColumn<T>> columns,
+		final IDataProvider<T> dataProvider, final int rowsPerPage)
 	{
 		super(id);
 
-		if (columns == null || columns.size() < 1)
+		if ((columns == null) || (columns.size() < 1))
 		{
 			throw new IllegalArgumentException("Argument `columns` cannot be null or empty");
 		}
@@ -144,7 +142,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected Item newCellItem(String id, int index, IModel model)
+			protected Item newCellItem(final String id, final int index, final IModel model)
 			{
 				Item item = DataTable.this.newCellItem(id, index, model);
 				final IColumn<T> column = DataTable.this.columns.get(index);
@@ -165,7 +163,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 			}
 
 			@Override
-			protected Item<T> newRowItem(String id, int index, IModel<T> model)
+			protected Item<T> newRowItem(final String id, final int index, final IModel<T> model)
 			{
 				return DataTable.this.newRowItem(id, index, model);
 			}
@@ -209,7 +207,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 	 * 
 	 * @see AbstractToolbar
 	 */
-	public void addBottomToolbar(AbstractToolbar toolbar)
+	public void addBottomToolbar(final AbstractToolbar toolbar)
 	{
 		addToolbar(toolbar, bottomToolbars);
 	}
@@ -222,7 +220,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 	 * 
 	 * @see AbstractToolbar
 	 */
-	public void addTopToolbar(AbstractToolbar toolbar)
+	public void addTopToolbar(final AbstractToolbar toolbar)
 	{
 		addToolbar(toolbar, topToolbars);
 	}
@@ -278,7 +276,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 	/**
 	 * @see org.apache.wicket.markup.html.navigation.paging.IPageable#setCurrentPage(int)
 	 */
-	public final void setCurrentPage(int page)
+	public final void setCurrentPage(final int page)
 	{
 		datagrid.setCurrentPage(page);
 		onPageChanged();
@@ -295,7 +293,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 	 *            item reuse strategy
 	 * @return this for chaining
 	 */
-	public final DataTable<T> setItemReuseStrategy(IItemReuseStrategy strategy)
+	public final DataTable<T> setItemReuseStrategy(final IItemReuseStrategy strategy)
 	{
 		datagrid.setItemReuseStrategy(strategy);
 		return this;
@@ -308,7 +306,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 	 *            number of items to display per page
 	 * 
 	 */
-	public void setItemsPerPage(int items)
+	public void setItemsPerPage(final int items)
 	{
 		datagrid.setItemsPerPage(items);
 	}
@@ -321,7 +319,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 		return datagrid.getItemCount();
 	}
 
-	private void addToolbar(AbstractToolbar toolbar, RepeatingView container)
+	private void addToolbar(final AbstractToolbar toolbar, final RepeatingView container)
 	{
 		if (toolbar == null)
 		{
@@ -365,7 +363,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 	 * 
 	 * @return DataItem created DataItem
 	 */
-	protected Item<T> newRowItem(final String id, int index, final IModel<T> model)
+	protected Item<T> newRowItem(final String id, final int index, final IModel<T> model)
 	{
 		return new Item<T>(id, index, model);
 	}
@@ -395,52 +393,6 @@ public class DataTable<T> extends Panel implements IPageableItems
 	}
 
 	/**
-	 * Acts as a repeater item with its container generated id. It essentially only forwards the
-	 * request to its (single) child component.
-	 * 
-	 * TODO 1.5 optimization: this can probably be removed and items can be added directly to the
-	 * toolbarcontainer
-	 * 
-	 * @author igor.vaynberg
-	 */
-	private static final class ToolbarContainer extends AbstractItem
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param id
-		 */
-		private ToolbarContainer(String id)
-		{
-			super(id);
-		}
-
-		/** {@inheritDoc} */
-		@Override
-		public boolean isVisible()
-		{
-			return (iterator().next()).isVisible();
-		}
-
-		@Override
-		protected void onRender()
-		{
-			get(0).render();
-		}
-
-		/**
-		 * @see org.apache.wicket.MarkupContainer#getMarkup(org.apache.wicket.Component)
-		 */
-		@Override
-		public IMarkupFragment getMarkup(Component child)
-		{
-			return getMarkup();
-		}
-	}
-
-	/**
 	 * This class acts as a repeater that will contain the toolbar.
 	 * 
 	 * @author igor.vaynberg
@@ -454,7 +406,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 		 * 
 		 * @param id
 		 */
-		private ToolbarsContainer(String id)
+		private ToolbarsContainer(final String id)
 		{
 			super(id);
 		}

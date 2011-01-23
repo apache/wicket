@@ -41,7 +41,7 @@ public abstract class HeaderlessColumn<T> extends AbstractColumn<T>
 	 * @see org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn#getHeader(java.lang.String)
 	 */
 	@Override
-	public Component getHeader(String componentId)
+	public Component getHeader(final String componentId)
 	{
 		Component header = super.getHeader(componentId);
 		return header.setEscapeModelStrings(false);

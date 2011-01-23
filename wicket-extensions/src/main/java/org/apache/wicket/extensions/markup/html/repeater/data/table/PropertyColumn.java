@@ -59,8 +59,8 @@ public class PropertyColumn<T> extends AbstractColumn<T>
 	 * @param propertyExpression
 	 *            wicket property expression used by PropertyModel
 	 */
-	public PropertyColumn(IModel<String> displayModel, String sortProperty,
-		String propertyExpression)
+	public PropertyColumn(final IModel<String> displayModel, final String sortProperty,
+		final String propertyExpression)
 	{
 		super(displayModel, sortProperty);
 		this.propertyExpression = propertyExpression;
@@ -75,7 +75,7 @@ public class PropertyColumn<T> extends AbstractColumn<T>
 	 *            wicket property expression
 	 * @see PropertyModel
 	 */
-	public PropertyColumn(IModel<String> displayModel, String propertyExpression)
+	public PropertyColumn(final IModel<String> displayModel, final String propertyExpression)
 	{
 		super(displayModel, null);
 		this.propertyExpression = propertyExpression;
@@ -87,7 +87,8 @@ public class PropertyColumn<T> extends AbstractColumn<T>
 	 * 
 	 * @see ICellPopulator#populateItem(Item, String, IModel)
 	 */
-	public void populateItem(Item<ICellPopulator<T>> item, String componentId, IModel<T> rowModel)
+	public void populateItem(final Item<ICellPopulator<T>> item, final String componentId,
+		final IModel<T> rowModel)
 	{
 		item.add(new Label(componentId, createLabelModel(rowModel)));
 	}
@@ -100,7 +101,7 @@ public class PropertyColumn<T> extends AbstractColumn<T>
 	 * @return model
 	 */
 	@SuppressWarnings("unchecked")
-	protected IModel<?> createLabelModel(IModel<T> rowModel)
+	protected IModel<?> createLabelModel(final IModel<T> rowModel)
 	{
 		return new PropertyModel(rowModel, propertyExpression);
 	}

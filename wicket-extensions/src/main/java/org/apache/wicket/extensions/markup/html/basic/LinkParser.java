@@ -17,7 +17,6 @@
 package org.apache.wicket.extensions.markup.html.basic;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,7 +42,8 @@ public class LinkParser implements ILinkParser
 	 *            provided <code>pattern</code>.
 	 * @return this <code>ILinkParser</code>.
 	 */
-	public ILinkParser addLinkRenderStrategy(String pattern, ILinkRenderStrategy renderStrategy)
+	public ILinkParser addLinkRenderStrategy(final String pattern,
+		final ILinkRenderStrategy renderStrategy)
 	{
 		renderStrategies.put(pattern, renderStrategy);
 		return this;
@@ -52,7 +52,7 @@ public class LinkParser implements ILinkParser
 	/**
 	 * @see ILinkParser#parse(String)
 	 */
-	public String parse(String text)
+	public String parse(final String text)
 	{
 		if ((text == null) || ("".equals(text)))
 		{

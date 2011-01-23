@@ -54,7 +54,7 @@ final class SideColumnsView extends WebMarkupContainer
 	 * @param node
 	 *            The tree node
 	 */
-	public SideColumnsView(String id, TreeNode node)
+	public SideColumnsView(final String id, final TreeNode node)
 	{
 		super(id);
 		setRenderBodyOnly(true);
@@ -71,7 +71,8 @@ final class SideColumnsView extends WebMarkupContainer
 	 * @param renderable
 	 *            The renderer
 	 */
-	public void addColumn(IColumn column, Component component, IRenderable renderable)
+	public void addColumn(final IColumn column, final Component component,
+		final IRenderable renderable)
 	{
 		if (column.isVisible())
 		{
@@ -114,7 +115,7 @@ final class SideColumnsView extends WebMarkupContainer
 
 			// write wrapping markup
 			response.write("<span class=\"b_\" style=\"" + renderColumnStyle(column) + "\">");
-			if (column.getLocation().getAlignment() == Alignment.LEFT && firstLeft == true)
+			if ((column.getLocation().getAlignment() == Alignment.LEFT) && (firstLeft == true))
 			{
 				// for the first left column we have different style class
 				// (without the left border)
@@ -151,7 +152,7 @@ final class SideColumnsView extends WebMarkupContainer
 	 *            The
 	 * @return The column as a string
 	 */
-	private String renderColumnFloat(IColumn column)
+	private String renderColumnFloat(final IColumn column)
 	{
 		ColumnLocation location = column.getLocation();
 		if (location.getAlignment() == Alignment.LEFT)
@@ -175,7 +176,7 @@ final class SideColumnsView extends WebMarkupContainer
 	 *            The column to render the style attribute from
 	 * @return The style as a string
 	 */
-	private String renderColumnStyle(IColumn column)
+	private String renderColumnStyle(final IColumn column)
 	{
 		return "width:" + renderColumnWidth(column) + ";float:" + renderColumnFloat(column);
 	}
@@ -187,7 +188,7 @@ final class SideColumnsView extends WebMarkupContainer
 	 *            The column to render as a string
 	 * @return The column as a string
 	 */
-	private String renderColumnWidth(IColumn column)
+	private String renderColumnWidth(final IColumn column)
 	{
 		ColumnLocation location = column.getLocation();
 		return "" + location.getSize() + renderUnit(location.getUnit());
@@ -200,7 +201,7 @@ final class SideColumnsView extends WebMarkupContainer
 	 *            The unit to render to a string
 	 * @return The unit as a string
 	 */
-	private String renderUnit(Unit unit)
+	private String renderUnit(final Unit unit)
 	{
 		if (unit == Unit.EM)
 		{

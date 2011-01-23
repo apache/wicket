@@ -50,7 +50,7 @@ public abstract class SortableDataProvider<T> implements ISortableDataProvider<T
 	/**
 	 * @see ISortableDataProvider#setSortState(org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState)
 	 */
-	public final void setSortState(ISortState state)
+	public final void setSortState(final ISortState state)
 	{
 		if (!(state instanceof SingleSortState))
 		{
@@ -77,7 +77,7 @@ public abstract class SortableDataProvider<T> implements ISortableDataProvider<T
 	 * @param param
 	 *            parameter containing new sorting information
 	 */
-	public void setSort(SortParam param)
+	public void setSort(final SortParam param)
 	{
 		state.setSort(param);
 	}
@@ -90,7 +90,7 @@ public abstract class SortableDataProvider<T> implements ISortableDataProvider<T
 	 * @param order
 	 *            sort order
 	 */
-	public void setSort(String property, SortOrder order)
+	public void setSort(final String property, final SortOrder order)
 	{
 		state.setPropertySortOrder(property, order);
 	}

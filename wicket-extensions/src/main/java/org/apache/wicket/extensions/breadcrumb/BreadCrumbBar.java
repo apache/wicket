@@ -69,9 +69,9 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		 * @param enableLink
 		 *            Whether the link should be enabled
 		 */
-		public BreadCrumbComponent(String id, String separatorMarkup, int index,
-			IBreadCrumbModel breadCrumbModel, final IBreadCrumbParticipant breadCrumbParticipant,
-			boolean enableLink)
+		public BreadCrumbComponent(final String id, final String separatorMarkup, final int index,
+			final IBreadCrumbModel breadCrumbModel,
+			final IBreadCrumbParticipant breadCrumbParticipant, final boolean enableLink)
 		{
 			super(id);
 			add(new Label("sep", (index > 0) ? separatorMarkup : "").setEscapeModelStrings(false)
@@ -81,7 +81,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				protected IBreadCrumbParticipant getParticipant(String componentId)
+				protected IBreadCrumbParticipant getParticipant(final String componentId)
 				{
 					return breadCrumbParticipant;
 				}
@@ -111,7 +111,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		 * @param id
 		 *            Component id
 		 */
-		public BreadCrumbsListView(String id)
+		public BreadCrumbsListView(final String id)
 		{
 			super(id);
 			setReuseItems(false);
@@ -135,8 +135,8 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener#breadCrumbActivated(org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant,
 		 *      org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant)
 		 */
-		public void breadCrumbActivated(IBreadCrumbParticipant previousParticipant,
-			IBreadCrumbParticipant breadCrumbParticipant)
+		public void breadCrumbActivated(final IBreadCrumbParticipant previousParticipant,
+			final IBreadCrumbParticipant breadCrumbParticipant)
 		{
 			signalModelChange();
 		}
@@ -144,14 +144,14 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		/**
 		 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener#breadCrumbAdded(org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant)
 		 */
-		public void breadCrumbAdded(IBreadCrumbParticipant breadCrumbParticipant)
+		public void breadCrumbAdded(final IBreadCrumbParticipant breadCrumbParticipant)
 		{
 		}
 
 		/**
 		 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener#breadCrumbRemoved(org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant)
 		 */
-		public void breadCrumbRemoved(IBreadCrumbParticipant breadCrumbParticipant)
+		public void breadCrumbRemoved(final IBreadCrumbParticipant breadCrumbParticipant)
 		{
 		}
 
@@ -183,7 +183,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		 * @see org.apache.wicket.markup.html.list.ListView#populateItem(org.apache.wicket.markup.html.list.ListItem)
 		 */
 		@Override
-		protected void populateItem(ListItem<IBreadCrumbParticipant> item)
+		protected void populateItem(final ListItem<IBreadCrumbParticipant> item)
 		{
 			int index = item.getIndex();
 			IBreadCrumbParticipant breadCrumbParticipant = (IBreadCrumbParticipant)item.getDefaultModelObject();
@@ -201,7 +201,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	 * @param id
 	 *            Component id
 	 */
-	public BreadCrumbBar(String id)
+	public BreadCrumbBar(final String id)
 	{
 		super(id);
 		decorated = new DefaultBreadCrumbsModel();
@@ -214,7 +214,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#addListener(org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener)
 	 */
-	public void addListener(IBreadCrumbModelListener listener)
+	public void addListener(final IBreadCrumbModelListener listener)
 	{
 		decorated.addListener(listener);
 	}
@@ -238,7 +238,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#removeListener(org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener)
 	 */
-	public void removeListener(IBreadCrumbModelListener listener)
+	public void removeListener(final IBreadCrumbModelListener listener)
 	{
 		decorated.removeListener(listener);
 	}
@@ -246,7 +246,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#setActive(org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant)
 	 */
-	public void setActive(IBreadCrumbParticipant breadCrumbParticipant)
+	public void setActive(final IBreadCrumbParticipant breadCrumbParticipant)
 	{
 		decorated.setActive(breadCrumbParticipant);
 	}
@@ -287,8 +287,8 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	 *            the bread crumb
 	 * @return A new bread crumb component
 	 */
-	protected Component newBreadCrumbComponent(String id, int index, int total,
-		IBreadCrumbParticipant breadCrumbParticipant)
+	protected Component newBreadCrumbComponent(final String id, final int index, final int total,
+		final IBreadCrumbParticipant breadCrumbParticipant)
 	{
 		boolean enableLink = getEnableLinkToCurrent() || (index < (total - 1));
 		return new BreadCrumbComponent(id, getSeparatorMarkup(), index, this,

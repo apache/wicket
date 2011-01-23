@@ -61,7 +61,7 @@ public class AjaxIndicatorAppender extends Behavior
 	}
 
 	@Override
-	public void renderHead(Component component, IHeaderResponse response)
+	public void renderHead(final Component component, final IHeaderResponse response)
 	{
 		if (AjaxRequestTarget.get() != null)
 		{
@@ -74,7 +74,7 @@ public class AjaxIndicatorAppender extends Behavior
 
 
 	@Override
-	public void afterRender(Component component)
+	public void afterRender(final Component component)
 	{
 		super.afterRender(component);
 		final Response r = component.getResponse();
@@ -124,7 +124,7 @@ public class AjaxIndicatorAppender extends Behavior
 	 * @see org.apache.wicket.behavior.AbstractBehavior#bind(org.apache.wicket.Component)
 	 */
 	@Override
-	public final void bind(Component component)
+	public final void bind(final Component component)
 	{
 		this.component = component;
 	}

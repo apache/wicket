@@ -73,8 +73,8 @@ public class UploadFormWithProgressBarTest extends TestCase
 			form.add(new UploadProgressBar("progress", form));
 		}
 
-		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-			Class<?> containerClass)
+		public IResourceStream getMarkupResourceStream(final MarkupContainer container,
+			final Class<?> containerClass)
 		{
 			return new StringResourceStream(
 				"<html><body><a wicket:id=\"re-create\"></a>"
@@ -85,10 +85,10 @@ public class UploadFormWithProgressBarTest extends TestCase
 	}
 	public static class TraceableForm extends Form
 	{
-		private int formInstance;
+		private final int formInstance;
 		private static int nextInstanceId;
 
-		public TraceableForm(String id)
+		public TraceableForm(final String id)
 		{
 			super(id);
 			formInstance = nextInstanceId++;

@@ -66,7 +66,8 @@ public final class BreadCrumbPanelFactory implements IBreadCrumbPanelFactory
 	 * @see org.apache.wicket.extensions.breadcrumb.panel.IBreadCrumbPanelFactory#create(java.lang.String,
 	 *      org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel)
 	 */
-	public final BreadCrumbPanel create(String componentId, IBreadCrumbModel breadCrumbModel)
+	public final BreadCrumbPanel create(final String componentId,
+		final IBreadCrumbModel breadCrumbModel)
 	{
 		Constructor<? extends BreadCrumbPanel> ctor = getConstructor();
 		try

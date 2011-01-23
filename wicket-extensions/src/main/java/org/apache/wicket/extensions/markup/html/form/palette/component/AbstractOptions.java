@@ -54,7 +54,7 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 	 * @param palette
 	 *            parent palette
 	 */
-	public AbstractOptions(String id, Palette<T> palette)
+	public AbstractOptions(final String id, final Palette<T> palette)
 	{
 		super(id);
 		this.palette = palette;
@@ -67,7 +67,7 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		StringBuilder buffer = new StringBuilder(128);
 		Iterator<T> options = getOptionsIterator();
@@ -137,7 +137,7 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 	 * @param choice
 	 * @return map of attribute/value pairs (String/String)
 	 */
-	protected Map<String, String> getAdditionalAttributes(T choice)
+	protected Map<String, String> getAdditionalAttributes(final T choice)
 	{
 		return null;
 	}
@@ -146,7 +146,7 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void onComponentTag(ComponentTag tag)
+	protected void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "select");
 

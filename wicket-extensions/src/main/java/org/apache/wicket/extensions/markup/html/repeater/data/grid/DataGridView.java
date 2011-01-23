@@ -78,8 +78,8 @@ public class DataGridView<T> extends AbstractDataGridView<T>
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public DataGridView(String id, List<? extends ICellPopulator<T>> populators,
-		IDataProvider<T> dataProvider)
+	public DataGridView(final String id, final List<? extends ICellPopulator<T>> populators,
+		final IDataProvider<T> dataProvider)
 	{
 		super(id, populators, dataProvider);
 	}

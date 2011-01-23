@@ -75,7 +75,7 @@ public abstract class AjaxLazyLoadPanel extends Panel
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void respond(AjaxRequestTarget target)
+			protected void respond(final AjaxRequestTarget target)
 			{
 				Component component = getLazyLoadComponent(LAZY_LOAD_COMPONENT_ID);
 				AjaxLazyLoadPanel.this.replace(component);
@@ -84,14 +84,14 @@ public abstract class AjaxLazyLoadPanel extends Panel
 			}
 
 			@Override
-			public void renderHead(Component component, IHeaderResponse response)
+			public void renderHead(final Component component, final IHeaderResponse response)
 			{
 				super.renderHead(component, response);
 				handleCallbackScript(response, getCallbackScript().toString());
 			}
 
 			@Override
-			public boolean isEnabled(Component component)
+			public boolean isEnabled(final Component component)
 			{
 				return state < 2;
 			}
@@ -127,7 +127,7 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	 * 
 	 * @param state
 	 */
-	private void setState(byte state)
+	private void setState(final byte state)
 	{
 		this.state = state;
 	}

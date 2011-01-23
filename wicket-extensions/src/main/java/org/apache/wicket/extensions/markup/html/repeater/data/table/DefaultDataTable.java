@@ -55,8 +55,8 @@ public class DefaultDataTable<T> extends DataTable<T>
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DefaultDataTable(String id, final List<IColumn<T>> columns,
-		ISortableDataProvider<T> dataProvider, int rowsPerPage)
+	public DefaultDataTable(final String id, final List<IColumn<T>> columns,
+		final ISortableDataProvider<T> dataProvider, final int rowsPerPage)
 	{
 		super(id, columns, dataProvider, rowsPerPage);
 
@@ -66,7 +66,7 @@ public class DefaultDataTable<T> extends DataTable<T>
 	}
 
 	@Override
-	protected Item<T> newRowItem(String id, int index, IModel<T> model)
+	protected Item<T> newRowItem(final String id, final int index, final IModel<T> model)
 	{
 		return new OddEvenItem<T>(id, index, model);
 	}

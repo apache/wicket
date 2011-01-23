@@ -114,7 +114,7 @@ public class WizardStep extends Panel implements IWizardStep
 		 * @param validator
 		 *            The validator to add
 		 */
-		public final void add(IFormValidator validator)
+		public final void add(final IFormValidator validator)
 		{
 			validators.add(validator);
 		}
@@ -144,7 +144,7 @@ public class WizardStep extends Panel implements IWizardStep
 		/**
 		 * @see org.apache.wicket.markup.html.form.validation.IFormValidator#validate(org.apache.wicket.markup.html.form.Form)
 		 */
-		public void validate(Form<?> form)
+		public void validate(final Form<?> form)
 		{
 			if (isActiveStep())
 			{
@@ -251,7 +251,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param summary
 	 *            a brief summary of this step or some usage guidelines.
 	 */
-	public WizardStep(IModel<String> title, IModel<String> summary)
+	public WizardStep(final IModel<String> title, final IModel<String> summary)
 	{
 		this(title, summary, null);
 	}
@@ -267,7 +267,8 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param model
 	 *            Any model which is to be used for this step
 	 */
-	public WizardStep(IModel<String> title, IModel<String> summary, IModel<?> model)
+	public WizardStep(final IModel<String> title, final IModel<String> summary,
+		final IModel<?> model)
 	{
 		super(Wizard.VIEW_ID, model);
 
@@ -284,7 +285,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param summary
 	 *            a brief summary of this step or some usage guidelines.
 	 */
-	public WizardStep(String title, String summary)
+	public WizardStep(final String title, final String summary)
 	{
 		this(title, summary, null);
 	}
@@ -300,7 +301,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param model
 	 *            Any model which is to be used for this step
 	 */
-	public WizardStep(String title, String summary, IModel<?> model)
+	public WizardStep(final String title, final String summary, final IModel<?> model)
 	{
 		this(new Model<String>(title), new Model<String>(summary), model);
 	}
@@ -310,7 +311,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * 
 	 * @param validator
 	 */
-	public final void add(IFormValidator validator)
+	public final void add(final IFormValidator validator)
 	{
 		if (onAttachAction == null)
 		{
@@ -330,7 +331,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @see org.apache.wicket.extensions.wizard.IWizardStep#getHeader(java.lang.String,
 	 *      org.apache.wicket.Component, org.apache.wicket.extensions.wizard.IWizard)
 	 */
-	public Component getHeader(String id, Component parent, IWizard wizard)
+	public Component getHeader(final String id, final Component parent, final IWizard wizard)
 	{
 		return new Header(id, wizard);
 	}
@@ -361,7 +362,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @see org.apache.wicket.extensions.wizard.IWizardStep#getView(java.lang.String,
 	 *      org.apache.wicket.Component, org.apache.wicket.extensions.wizard.IWizard)
 	 */
-	public Component getView(String id, Component parent, IWizard wizard)
+	public Component getView(final String id, final Component parent, final IWizard wizard)
 	{
 		return this;
 	}
@@ -383,7 +384,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param wizardModel
 	 *            the model to which the step belongs.
 	 */
-	public final void init(IWizardModel wizardModel)
+	public final void init(final IWizardModel wizardModel)
 	{
 		this.wizardModel = wizardModel;
 		onInit(wizardModel);
@@ -410,7 +411,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 *            <tt>true</tt> to allow the wizard to proceed, <tt>false</tt> otherwise.
 	 * @see #isComplete
 	 */
-	public void setComplete(boolean complete)
+	public void setComplete(final boolean complete)
 	{
 		this.complete = complete;
 	}
@@ -421,7 +422,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param summary
 	 *            summary
 	 */
-	public void setSummaryModel(IModel<String> summary)
+	public void setSummaryModel(final IModel<String> summary)
 	{
 		this.summary = wrap(summary);
 	}
@@ -432,7 +433,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param title
 	 *            title
 	 */
-	public void setTitleModel(IModel<String> title)
+	public void setTitleModel(final IModel<String> title)
 	{
 		this.title = wrap(title);
 	}
@@ -476,7 +477,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param wizardModel
 	 * @see #init(IWizardModel)
 	 */
-	protected void onInit(IWizardModel wizardModel)
+	protected void onInit(final IWizardModel wizardModel)
 	{
 	}
 

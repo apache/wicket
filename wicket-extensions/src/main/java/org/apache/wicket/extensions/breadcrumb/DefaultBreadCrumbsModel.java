@@ -32,7 +32,7 @@ public class DefaultBreadCrumbsModel implements IBreadCrumbModel
 	private IBreadCrumbParticipant activeParticipant = null;
 
 	/** Holds the current list of crumbs. */
-	private List<IBreadCrumbParticipant> crumbs = new ArrayList<IBreadCrumbParticipant>();
+	private final List<IBreadCrumbParticipant> crumbs = new ArrayList<IBreadCrumbParticipant>();
 
 	/** listeners utility. */
 	private final BreadCrumbModelListenerSupport listenerSupport = new BreadCrumbModelListenerSupport();
@@ -47,7 +47,7 @@ public class DefaultBreadCrumbsModel implements IBreadCrumbModel
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#addListener(org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener)
 	 */
-	public final void addListener(IBreadCrumbModelListener listener)
+	public final void addListener(final IBreadCrumbModelListener listener)
 	{
 		listenerSupport.addListener(listener);
 	}
@@ -71,7 +71,7 @@ public class DefaultBreadCrumbsModel implements IBreadCrumbModel
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#removeListener(org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener)
 	 */
-	public final void removeListener(IBreadCrumbModelListener listener)
+	public final void removeListener(final IBreadCrumbModelListener listener)
 	{
 		listenerSupport.removeListener(listener);
 	}

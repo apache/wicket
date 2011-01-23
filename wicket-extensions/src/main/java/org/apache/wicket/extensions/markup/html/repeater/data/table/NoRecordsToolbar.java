@@ -58,7 +58,7 @@ public class NoRecordsToolbar extends AbstractToolbar
 	 * @param messageModel
 	 *            model that will be used to display the "no records found" message
 	 */
-	public NoRecordsToolbar(final DataTable<?> table, IModel<String> messageModel)
+	public NoRecordsToolbar(final DataTable<?> table, final IModel<String> messageModel)
 	{
 		super(table);
 

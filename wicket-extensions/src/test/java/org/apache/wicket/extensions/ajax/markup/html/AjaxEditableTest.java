@@ -42,7 +42,7 @@ public class AjaxEditableTest extends WicketTestCase
 	/**
 	 * Tests default AjaxEditableLabel behavior
 	 */
-	@SuppressWarnings({"unchecked"})
+	@SuppressWarnings({ "unchecked" })
 	public void testAjaxEditableLabel()
 	{
 		Page page = tester.getLastRenderedPage();
@@ -70,7 +70,7 @@ public class AjaxEditableTest extends WicketTestCase
 	 * Tests whether disabling/enabling an AjaxEditableLabel also disables/enables the
 	 * <code>LabelBehavior</code>
 	 */
-	@SuppressWarnings({"unchecked"})
+	@SuppressWarnings({ "unchecked" })
 	public void testDisabledAjaxEditableLabel()
 	{
 		Page page = tester.getLastRenderedPage();

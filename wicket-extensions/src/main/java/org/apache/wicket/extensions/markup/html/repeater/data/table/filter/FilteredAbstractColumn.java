@@ -42,7 +42,7 @@ public abstract class FilteredAbstractColumn<T> extends AbstractColumn<T>
 	 * @param sortProperty
 	 *            sort property this column represents
 	 */
-	public FilteredAbstractColumn(IModel<String> displayModel, String sortProperty)
+	public FilteredAbstractColumn(final IModel<String> displayModel, final String sortProperty)
 	{
 		super(displayModel, sortProperty);
 	}
@@ -53,7 +53,7 @@ public abstract class FilteredAbstractColumn<T> extends AbstractColumn<T>
 	 * @param displayModel
 	 *            model used to display the header text of this column
 	 */
-	public FilteredAbstractColumn(IModel<String> displayModel)
+	public FilteredAbstractColumn(final IModel<String> displayModel)
 	{
 		super(displayModel);
 	}

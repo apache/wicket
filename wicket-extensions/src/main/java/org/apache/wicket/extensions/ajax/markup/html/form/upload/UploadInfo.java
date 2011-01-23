@@ -38,7 +38,7 @@ public class UploadInfo implements IClusterable
 	/**
 	 * @param totalBytes
 	 */
-	public UploadInfo(int totalBytes)
+	public UploadInfo(final int totalBytes)
 	{
 		timeStarted = System.currentTimeMillis();
 		this.totalBytes = totalBytes;
@@ -57,7 +57,7 @@ public class UploadInfo implements IClusterable
 	 * 
 	 * @param bytesUploaded
 	 */
-	public void setBytesUploaded(long bytesUploaded)
+	public void setBytesUploaded(final long bytesUploaded)
 	{
 		this.bytesUploaded = bytesUploaded;
 	}
@@ -125,7 +125,9 @@ public class UploadInfo implements IClusterable
 	public int getPercentageComplete()
 	{
 		if (totalBytes == 0)
+		{
 			return 100;
+		}
 		return (int)(((double)bytesUploaded / (double)totalBytes) * 100);
 
 	}

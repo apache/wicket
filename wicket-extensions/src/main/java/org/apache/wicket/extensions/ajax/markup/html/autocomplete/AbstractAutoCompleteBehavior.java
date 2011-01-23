@@ -67,7 +67,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
 	@Override
-	public void renderHead(Component component, IHeaderResponse response)
+	public void renderHead(final Component component, final IHeaderResponse response)
 	{
 		super.renderHead(component, response);
 		renderAutocompleteHead(response);
@@ -78,7 +78,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	 * 
 	 * @param response
 	 */
-	private void renderAutocompleteHead(IHeaderResponse response)
+	private void renderAutocompleteHead(final IHeaderResponse response)
 	{
 		response.renderJavaScriptReference(AUTOCOMPLETE_JS);
 		final String id = getComponent().getMarkupId();
@@ -112,7 +112,9 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		sb.append(",showCompleteListOnFocusGain: ").append(
 			settings.getShowCompleteListOnFocusGain());
 		if (settings.getCssClassName() != null)
+		{
 			sb.append(",className: '").append(settings.getCssClassName()).append('\'');
+		}
 		sb.append('}');
 		return sb.toString();
 	}
@@ -131,7 +133,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void respond(AjaxRequestTarget target)
+			protected void respond(final AjaxRequestTarget target)
 			{
 			}
 		});
@@ -152,7 +154,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(org.apache.wicket.ajax.AjaxRequestTarget)
 	 */
 	@Override
-	protected void respond(AjaxRequestTarget target)
+	protected void respond(final AjaxRequestTarget target)
 	{
 		final RequestCycle requestCycle = RequestCycle.get();
 		final String val = requestCycle.getRequest()

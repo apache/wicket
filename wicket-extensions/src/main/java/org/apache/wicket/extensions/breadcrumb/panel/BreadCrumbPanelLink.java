@@ -107,7 +107,7 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	 * @see org.apache.wicket.extensions.breadcrumb.BreadCrumbLink#getParticipant(java.lang.String)
 	 */
 	@Override
-	protected final IBreadCrumbParticipant getParticipant(String componentId)
+	protected final IBreadCrumbParticipant getParticipant(final String componentId)
 	{
 		return breadCrumbPanelFactory.create(componentId, breadCrumbModel);
 	}

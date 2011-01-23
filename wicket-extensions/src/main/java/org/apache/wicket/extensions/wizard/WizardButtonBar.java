@@ -25,9 +25,9 @@ import org.apache.wicket.markup.html.panel.Panel;
  * not, override {@link Wizard#newButtonBar(String)} and provide your own.
  * <p>
  * The button bar holds the {@link PreviousButton previous}, [@link NextButton next},
- * {@link LastButton last}, [@link CancelButton cancel} and {@link FinishButton finish} buttons.
- * The {@link LastButton last button} is off by default. You can turn it on by having the wizard
- * model return true for {@link IWizardModel#isLastVisible() the is last visible method}.
+ * {@link LastButton last}, [@link CancelButton cancel} and {@link FinishButton finish} buttons. The
+ * {@link LastButton last button} is off by default. You can turn it on by having the wizard model
+ * return true for {@link IWizardModel#isLastVisible() the is last visible method}.
  * </p>
  * 
  * @author Eelco Hillenius
@@ -44,7 +44,7 @@ public class WizardButtonBar extends Panel implements IDefaultButtonProvider
 	 * @param wizard
 	 *            The containing wizard
 	 */
-	public WizardButtonBar(String id, Wizard wizard)
+	public WizardButtonBar(final String id, final Wizard wizard)
 	{
 		super(id);
 		add(new PreviousButton("previous", wizard));
@@ -57,7 +57,7 @@ public class WizardButtonBar extends Panel implements IDefaultButtonProvider
 	/**
 	 * @see org.apache.wicket.extensions.wizard.IDefaultButtonProvider#getDefaultButton(org.apache.wicket.extensions.wizard.IWizardModel)
 	 */
-	public IFormSubmittingComponent getDefaultButton(IWizardModel model)
+	public IFormSubmittingComponent getDefaultButton(final IWizardModel model)
 	{
 		if (model.isNextAvailable())
 		{

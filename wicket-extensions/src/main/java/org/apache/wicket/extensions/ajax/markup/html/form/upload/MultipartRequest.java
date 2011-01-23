@@ -32,14 +32,14 @@ class MultipartRequest extends MultipartServletWebRequestImpl
 {
 
 
-	public MultipartRequest(HttpServletRequest request, String filterPrefix, Bytes maxSize,
-		FileItemFactory factory) throws FileUploadException
+	public MultipartRequest(final HttpServletRequest request, final String filterPrefix,
+		final Bytes maxSize, final FileItemFactory factory) throws FileUploadException
 	{
 		super(request, filterPrefix, maxSize, factory);
 	}
 
-	public MultipartRequest(HttpServletRequest request, String filterPrefix, Bytes maxSize)
-		throws FileUploadException
+	public MultipartRequest(final HttpServletRequest request, final String filterPrefix,
+		final Bytes maxSize) throws FileUploadException
 	{
 		super(request, filterPrefix, maxSize);
 	}
@@ -57,7 +57,7 @@ class MultipartRequest extends MultipartServletWebRequestImpl
 	 * @see org.apache.wicket.protocol.http.servlet.MultipartServletWebRequestImpl#onUploadStarted(int)
 	 */
 	@Override
-	protected void onUploadStarted(int totalBytes)
+	protected void onUploadStarted(final int totalBytes)
 	{
 		UploadInfo info = new UploadInfo(totalBytes);
 
@@ -69,7 +69,7 @@ class MultipartRequest extends MultipartServletWebRequestImpl
 	 *      int)
 	 */
 	@Override
-	protected void onUploadUpdate(int bytesUploaded, int total)
+	protected void onUploadUpdate(final int bytesUploaded, final int total)
 	{
 		HttpServletRequest request = getHttpServletRequest();
 		UploadInfo info = UploadWebRequest.getUploadInfo(request);

@@ -48,8 +48,9 @@ public class ChoiceFilteredPropertyColumn<T, Y> extends FilteredPropertyColumn<T
 	 * @param filterChoices
 	 *            collection choices used in the choice filter
 	 */
-	public ChoiceFilteredPropertyColumn(IModel<String> displayModel, String sortProperty,
-		String propertyExpression, IModel<List<? extends Y>> filterChoices)
+	public ChoiceFilteredPropertyColumn(final IModel<String> displayModel,
+		final String sortProperty, final String propertyExpression,
+		final IModel<List<? extends Y>> filterChoices)
 	{
 		super(displayModel, sortProperty, propertyExpression);
 		this.filterChoices = filterChoices;
@@ -61,8 +62,8 @@ public class ChoiceFilteredPropertyColumn<T, Y> extends FilteredPropertyColumn<T
 	 * @param filterChoices
 	 *            collection of choices used in the choice filter
 	 */
-	public ChoiceFilteredPropertyColumn(IModel<String> displayModel, String propertyExpression,
-		IModel<List<? extends Y>> filterChoices)
+	public ChoiceFilteredPropertyColumn(final IModel<String> displayModel,
+		final String propertyExpression, final IModel<List<? extends Y>> filterChoices)
 	{
 		super(displayModel, propertyExpression);
 		this.filterChoices = filterChoices;
@@ -85,7 +86,7 @@ public class ChoiceFilteredPropertyColumn<T, Y> extends FilteredPropertyColumn<T
 	 * @see org.apache.wicket.extensions.markup.html.repeater.data.table.filter.IFilteredColumn#getFilter(java.lang.String,
 	 *      org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterForm)
 	 */
-	public Component getFilter(String componentId, FilterForm<?> form)
+	public Component getFilter(final String componentId, final FilterForm<?> form)
 	{
 		ChoiceFilter<Y> filter = new ChoiceFilter<Y>(componentId, getFilterModel(form), form,
 			filterChoices, enableAutoSubmit());
@@ -106,7 +107,7 @@ public class ChoiceFilteredPropertyColumn<T, Y> extends FilteredPropertyColumn<T
 	 *            filter form
 	 * @return model passed on to the text filter
 	 */
-	protected IModel<Y> getFilterModel(FilterForm<?> form)
+	protected IModel<Y> getFilterModel(final FilterForm<?> form)
 	{
 		return new PropertyModel<Y>(form.getDefaultModel(), getPropertyExpression());
 	}

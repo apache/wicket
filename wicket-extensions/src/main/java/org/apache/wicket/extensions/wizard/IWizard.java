@@ -20,8 +20,8 @@ import org.apache.wicket.IClusterable;
 
 /**
  * Interface for the wizard component. This interface is here for ultimate flexibility, though it
- * doesn't guarantee much. Typically, you would extend from
- * {@link Wizard the default wizard component} instead of implementing this interface directly.
+ * doesn't guarantee much. Typically, you would extend from {@link Wizard the default wizard
+ * component} instead of implementing this interface directly.
  * 
  * <p>
  * Part of the contract of wizards is that {@link IWizardStep wizard steps} are initialized when the

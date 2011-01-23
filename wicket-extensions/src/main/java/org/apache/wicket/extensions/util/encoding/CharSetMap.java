@@ -135,14 +135,14 @@ public final class CharSetMap
 		return createMap(input);
 	}
 
-	private static Map<String, String> createMap(InputStream input) throws IOException
+	private static Map<String, String> createMap(final InputStream input) throws IOException
 	{
 		final Properties props = new Properties();
 		props.load(input);
 		return createMap(props);
 	}
 
-	private static Map<String, String> createMap(Properties props)
+	private static Map<String, String> createMap(final Properties props)
 	{
 		HashMap<String, String> map = new HashMap<String, String>();
 		for (Object key : props.keySet())

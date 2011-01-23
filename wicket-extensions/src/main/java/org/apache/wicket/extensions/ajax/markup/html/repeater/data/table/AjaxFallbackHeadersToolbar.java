@@ -43,7 +43,7 @@ public class AjaxFallbackHeadersToolbar extends HeadersToolbar
 	 * @param table
 	 * @param stateLocator
 	 */
-	public AjaxFallbackHeadersToolbar(DataTable<?> table, ISortStateLocator stateLocator)
+	public AjaxFallbackHeadersToolbar(final DataTable<?> table, final ISortStateLocator stateLocator)
 	{
 		super(table, stateLocator);
 		table.setOutputMarkupId(true);
@@ -53,15 +53,15 @@ public class AjaxFallbackHeadersToolbar extends HeadersToolbar
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected WebMarkupContainer newSortableHeader(String borderId, String property,
-		ISortStateLocator locator)
+	protected WebMarkupContainer newSortableHeader(final String borderId, final String property,
+		final ISortStateLocator locator)
 	{
 		return new AjaxFallbackOrderByBorder(borderId, property, locator, getAjaxCallDecorator())
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onAjaxClick(AjaxRequestTarget target)
+			protected void onAjaxClick(final AjaxRequestTarget target)
 			{
 				target.add(getTable());
 			}

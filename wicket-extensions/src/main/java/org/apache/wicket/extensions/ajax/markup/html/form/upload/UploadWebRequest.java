@@ -49,7 +49,7 @@ public class UploadWebRequest extends ServletWebRequest
 	 * @param httpServletRequest
 	 * @param filterPrefix
 	 */
-	public UploadWebRequest(HttpServletRequest httpServletRequest, String filterPrefix)
+	public UploadWebRequest(final HttpServletRequest httpServletRequest, final String filterPrefix)
 	{
 		this(httpServletRequest, filterPrefix, null);
 	}
@@ -61,7 +61,8 @@ public class UploadWebRequest extends ServletWebRequest
 	 * @param filterPrefix
 	 * @param url
 	 */
-	public UploadWebRequest(HttpServletRequest httpServletRequest, String filterPrefix, Url url)
+	public UploadWebRequest(final HttpServletRequest httpServletRequest, final String filterPrefix,
+		final Url url)
 	{
 		super(httpServletRequest, filterPrefix, url);
 	}
@@ -70,7 +71,7 @@ public class UploadWebRequest extends ServletWebRequest
 	 * @see org.apache.wicket.protocol.http.servlet.ServletWebRequest#newMultipartWebRequest(org.apache.wicket.util.lang.Bytes)
 	 */
 	@Override
-	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxsize)
+	public MultipartServletWebRequest newMultipartWebRequest(final Bytes maxsize)
 		throws FileUploadException
 	{
 		return new MultipartRequest(getHttpServletRequest(), getFilterPrefix(), maxsize);
@@ -84,7 +85,7 @@ public class UploadWebRequest extends ServletWebRequest
 	 * @param req
 	 * @return {@link UploadInfo} object from session, or null if not found
 	 */
-	static UploadInfo getUploadInfo(HttpServletRequest req)
+	static UploadInfo getUploadInfo(final HttpServletRequest req)
 	{
 		if (req == null)
 		{
@@ -99,7 +100,7 @@ public class UploadWebRequest extends ServletWebRequest
 	 * @param req
 	 * @param uploadInfo
 	 */
-	static void setUploadInfo(HttpServletRequest req, UploadInfo uploadInfo)
+	static void setUploadInfo(final HttpServletRequest req, final UploadInfo uploadInfo)
 	{
 		if (req == null)
 		{
@@ -117,7 +118,7 @@ public class UploadWebRequest extends ServletWebRequest
 	 * 
 	 * @param req
 	 */
-	static void clearUploadInfo(HttpServletRequest req)
+	static void clearUploadInfo(final HttpServletRequest req)
 	{
 		if (req == null)
 		{

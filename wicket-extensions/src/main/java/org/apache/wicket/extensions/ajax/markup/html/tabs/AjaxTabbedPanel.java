@@ -42,7 +42,7 @@ public class AjaxTabbedPanel extends TabbedPanel
 	 * @param id
 	 * @param tabs
 	 */
-	public AjaxTabbedPanel(String id, List<ITab> tabs)
+	public AjaxTabbedPanel(final String id, final List<ITab> tabs)
 	{
 		super(id, tabs);
 		setOutputMarkupId(true);
@@ -51,7 +51,7 @@ public class AjaxTabbedPanel extends TabbedPanel
 	}
 
 	@Override
-	protected WebMarkupContainer newLink(String linkId, final int index)
+	protected WebMarkupContainer newLink(final String linkId, final int index)
 	{
 		return new AjaxFallbackLink<Void>(linkId)
 		{
@@ -59,7 +59,7 @@ public class AjaxTabbedPanel extends TabbedPanel
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(final AjaxRequestTarget target)
 			{
 				setSelectedTab(index);
 				if (target != null)
@@ -84,7 +84,7 @@ public class AjaxTabbedPanel extends TabbedPanel
 	 * @param target
 	 *            ajax target used to update this component
 	 */
-	protected void onAjaxUpdate(AjaxRequestTarget target)
+	protected void onAjaxUpdate(final AjaxRequestTarget target)
 	{
 	}
 

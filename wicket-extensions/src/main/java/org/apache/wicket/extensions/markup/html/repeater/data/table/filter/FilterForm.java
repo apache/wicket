@@ -44,7 +44,7 @@ public class FilterForm<T> extends Form<T>
 	 * @param locator
 	 *            filter state locator
 	 */
-	public FilterForm(String id, IFilterStateLocator<T> locator)
+	public FilterForm(final String id, final IFilterStateLocator<T> locator)
 	{
 		super(id, new FilterStateModel<T>(locator));
 
@@ -52,7 +52,7 @@ public class FilterForm<T> extends Form<T>
 	}
 
 	@Override
-	public void renderHead(IHeaderResponse response)
+	public void renderHead(final IHeaderResponse response)
 	{
 		super.renderHead(response);
 		response.renderOnLoadJavaScript("_filter_focus_restore('" + getFocusTrackerFieldCssId() +
@@ -63,7 +63,7 @@ public class FilterForm<T> extends Form<T>
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		super.onComponentTagBody(markupStream, openTag);
 		String id = Strings.escapeMarkup(getFocusTrackerFieldCssId()).toString();
@@ -96,14 +96,14 @@ public class FilterForm<T> extends Form<T>
 	 * @param fc
 	 *            form component
 	 */
-	public final void enableFocusTracking(FormComponent<?> fc)
+	public final void enableFocusTracking(final FormComponent<?> fc)
 	{
 		fc.add(new Behavior()
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onComponentTag(Component component, ComponentTag tag)
+			public void onComponentTag(final Component component, final ComponentTag tag)
 			{
 				tag.put("id", component.getMarkupId());
 				tag.put("onfocus", getFocusTrackingHandler(component));
@@ -126,7 +126,7 @@ public class FilterForm<T> extends Form<T>
 	 * @return the javascript focus handler necessary to notify the form of focus tracking changes
 	 *         on the component
 	 */
-	public final String getFocusTrackingHandler(Component component)
+	public final String getFocusTrackingHandler(final Component component)
 	{
 		return ("_filter_focus(this, '" + getFocusTrackerFieldCssId() + "');");
 	}
@@ -150,7 +150,7 @@ public class FilterForm<T> extends Form<T>
 		 * @param locator
 		 *            IFilterStateLocator implementation used to provide model object for this model
 		 */
-		public FilterStateModel(IFilterStateLocator<T> locator)
+		public FilterStateModel(final IFilterStateLocator<T> locator)
 		{
 			if (locator == null)
 			{
@@ -170,7 +170,7 @@ public class FilterForm<T> extends Form<T>
 		/**
 		 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
 		 */
-		public void setObject(T object)
+		public void setObject(final T object)
 		{
 			locator.setFilterState(object);
 		}

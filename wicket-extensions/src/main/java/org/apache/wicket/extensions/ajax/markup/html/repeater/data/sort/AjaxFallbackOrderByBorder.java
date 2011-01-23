@@ -44,7 +44,8 @@ public abstract class AjaxFallbackOrderByBorder extends Border
 	 * @param property
 	 * @param stateLocator
 	 */
-	public AjaxFallbackOrderByBorder(String id, String property, ISortStateLocator stateLocator)
+	public AjaxFallbackOrderByBorder(final String id, final String property,
+		final ISortStateLocator stateLocator)
 	{
 		this(id, property, stateLocator, AjaxFallbackOrderByLink.DefaultCssProvider.getInstance(),
 			null);
@@ -59,8 +60,8 @@ public abstract class AjaxFallbackOrderByBorder extends Border
 	 * @param stateLocator
 	 * @param cssProvider
 	 */
-	public AjaxFallbackOrderByBorder(String id, String property, ISortStateLocator stateLocator,
-		AjaxFallbackOrderByLink.ICssProvider cssProvider)
+	public AjaxFallbackOrderByBorder(final String id, final String property,
+		final ISortStateLocator stateLocator, final AjaxFallbackOrderByLink.ICssProvider cssProvider)
 	{
 		this(id, property, stateLocator, cssProvider, null);
 	}
@@ -74,8 +75,8 @@ public abstract class AjaxFallbackOrderByBorder extends Border
 	 * @param stateLocator
 	 * @param decorator
 	 */
-	public AjaxFallbackOrderByBorder(String id, String property, ISortStateLocator stateLocator,
-		IAjaxCallDecorator decorator)
+	public AjaxFallbackOrderByBorder(final String id, final String property,
+		final ISortStateLocator stateLocator, final IAjaxCallDecorator decorator)
 	{
 		this(id, property, stateLocator, AjaxFallbackOrderByLink.DefaultCssProvider.getInstance(),
 			decorator);
@@ -91,8 +92,9 @@ public abstract class AjaxFallbackOrderByBorder extends Border
 	 * @param cssProvider
 	 * @param decorator
 	 */
-	public AjaxFallbackOrderByBorder(String id, String property, ISortStateLocator stateLocator,
-		AjaxFallbackOrderByLink.ICssProvider cssProvider, final IAjaxCallDecorator decorator)
+	public AjaxFallbackOrderByBorder(final String id, final String property,
+		final ISortStateLocator stateLocator,
+		final AjaxFallbackOrderByLink.ICssProvider cssProvider, final IAjaxCallDecorator decorator)
 	{
 		super(id);
 		AjaxFallbackOrderByLink link = new AjaxFallbackOrderByLink("orderByLink", property,
@@ -108,7 +110,7 @@ public abstract class AjaxFallbackOrderByBorder extends Border
 			}
 
 			@Override
-			protected void onAjaxClick(AjaxRequestTarget target)
+			protected void onAjaxClick(final AjaxRequestTarget target)
 			{
 				AjaxFallbackOrderByBorder.this.onAjaxClick(target);
 

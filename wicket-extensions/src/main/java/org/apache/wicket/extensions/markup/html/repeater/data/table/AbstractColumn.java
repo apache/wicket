@@ -38,7 +38,7 @@ public abstract class AbstractColumn<T> implements IStyledColumn<T>
 	 * @param sortProperty
 	 *            sort property this column represents
 	 */
-	public AbstractColumn(IModel<String> displayModel, String sortProperty)
+	public AbstractColumn(final IModel<String> displayModel, final String sortProperty)
 	{
 		this.displayModel = displayModel;
 		this.sortProperty = sortProperty;
@@ -48,7 +48,7 @@ public abstract class AbstractColumn<T> implements IStyledColumn<T>
 	 * @param displayModel
 	 *            model used to generate header text
 	 */
-	public AbstractColumn(IModel<String> displayModel)
+	public AbstractColumn(final IModel<String> displayModel)
 	{
 		this(displayModel, null);
 	}
@@ -80,7 +80,7 @@ public abstract class AbstractColumn<T> implements IStyledColumn<T>
 	/**
 	 * @see org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn#getHeader(java.lang.String)
 	 */
-	public Component getHeader(String componentId)
+	public Component getHeader(final String componentId)
 	{
 		return new Label(componentId, getDisplayModel());
 	}

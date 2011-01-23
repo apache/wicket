@@ -31,8 +31,8 @@ import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
  * 
  * In a {@link BreadCrumbPanel panel based implementation}, <tt>Home</tt>,
  * <tt>Products &amp; Solutions</tt> etc would be seperate panels that all are bread crumb
- * participants: for instance the <tt>Home</tt> participant's {@link #getTitle() title} would
- * return 'Home', and {@link #getComponent() the component} would be the corresponding panel.
+ * participants: for instance the <tt>Home</tt> participant's {@link #getTitle() title} would return
+ * 'Home', and {@link #getComponent() the component} would be the corresponding panel.
  * 
  * @author Eelco Hillenius
  */

@@ -95,7 +95,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 		 * 
 		 * @param name
 		 */
-		public LinkType(String name)
+		public LinkType(final String name)
 		{
 			super(name);
 		}
@@ -144,7 +144,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 * @param id
 	 *            The component id
 	 */
-	public DefaultAbstractTree(String id)
+	public DefaultAbstractTree(final String id)
 	{
 		super(id);
 	}
@@ -157,7 +157,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 * @param model
 	 *            The tree model
 	 */
-	public DefaultAbstractTree(String id, IModel<? extends TreeModel> model)
+	public DefaultAbstractTree(final String id, final IModel<? extends TreeModel> model)
 	{
 		super(id, model);
 	}
@@ -170,7 +170,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 * @param model
 	 *            The tree model
 	 */
-	public DefaultAbstractTree(String id, TreeModel model)
+	public DefaultAbstractTree(final String id, final TreeModel model)
 	{
 		super(id, new WicketTreeModel());
 		setModelObject(model);
@@ -193,7 +193,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 * @param linkType
 	 *            type of links
 	 */
-	public void setLinkType(LinkType linkType)
+	public void setLinkType(final LinkType linkType)
 	{
 		if (this.linkType != linkType)
 		{
@@ -249,7 +249,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 *            The node
 	 * @return The package resource reference
 	 */
-	protected ResourceReference getNodeIcon(TreeNode node)
+	protected ResourceReference getNodeIcon(final TreeNode node)
 	{
 		if (node.isLeaf() == true)
 		{
@@ -283,8 +283,8 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 *            The current level
 	 * @return The indentation component
 	 */
-	protected Component newIndentation(MarkupContainer parent, String id, final TreeNode node,
-		final int level)
+	protected Component newIndentation(final MarkupContainer parent, final String id,
+		final TreeNode node, final int level)
 	{
 		WebMarkupContainer result = new WebMarkupContainer(id)
 		{
@@ -294,7 +294,8 @@ public abstract class DefaultAbstractTree extends AbstractTree
 			 * {@inheritDoc}
 			 */
 			@Override
-			public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+			public void onComponentTagBody(final MarkupStream markupStream,
+				final ComponentTag openTag)
 			{
 				Response response = RequestCycle.get().getResponse();
 				TreeNode parent = node.getParent();
@@ -337,7 +338,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 *            The tree node
 	 * @return The component that represents a junction
 	 */
-	protected MarkupContainer newJunctionImage(MarkupContainer parent, final String id,
+	protected MarkupContainer newJunctionImage(final MarkupContainer parent, final String id,
 		final TreeNode node)
 	{
 		return (MarkupContainer)new WebMarkupContainer(id)
@@ -348,7 +349,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 			 * {@inheritDoc}
 			 */
 			@Override
-			protected void onComponentTag(ComponentTag tag)
+			protected void onComponentTag(final ComponentTag tag)
 			{
 				super.onComponentTag(tag);
 
@@ -389,7 +390,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 *            tree node for which the link should be created.
 	 * @return The link component
 	 */
-	protected Component newJunctionLink(MarkupContainer parent, final String id,
+	protected Component newJunctionLink(final MarkupContainer parent, final String id,
 		final String imageId, final TreeNode node)
 	{
 		final MarkupContainer junctionLink;
@@ -400,7 +401,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 			{
 				private static final long serialVersionUID = 1L;
 
-				public void onClick(AjaxRequestTarget target)
+				public void onClick(final AjaxRequestTarget target)
 				{
 					if (isNodeExpanded(node))
 					{
@@ -425,7 +426,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 				 * {@inheritDoc}
 				 */
 				@Override
-				protected void onComponentTag(ComponentTag tag)
+				protected void onComponentTag(final ComponentTag tag)
 				{
 					super.onComponentTag(tag);
 					tag.put("onclick", "return false");
@@ -453,7 +454,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 *            The link call back
 	 * @return The link component
 	 */
-	protected MarkupContainer newLink(MarkupContainer parent, String id,
+	protected MarkupContainer newLink(final MarkupContainer parent, final String id,
 		final ILinkCallback callback)
 	{
 		if (getLinkType() == LinkType.REGULAR)
@@ -482,7 +483,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 				 * {@inheritDoc}
 				 */
 				@Override
-				public void onClick(AjaxRequestTarget target)
+				public void onClick(final AjaxRequestTarget target)
 				{
 					callback.onClick(target);
 				}
@@ -498,7 +499,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 				 * {@inheritDoc}
 				 */
 				@Override
-				public void onClick(AjaxRequestTarget target)
+				public void onClick(final AjaxRequestTarget target)
 				{
 					callback.onClick(target);
 				}
@@ -518,7 +519,8 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 *            The tree node
 	 * @return The web component that represents the icon of the current node
 	 */
-	protected Component newNodeIcon(MarkupContainer parent, String id, final TreeNode node)
+	protected Component newNodeIcon(final MarkupContainer parent, final String id,
+		final TreeNode node)
 	{
 		return new WebMarkupContainer(id)
 		{
@@ -528,7 +530,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 			 * {@inheritDoc}
 			 */
 			@Override
-			protected void onComponentTag(ComponentTag tag)
+			protected void onComponentTag(final ComponentTag tag)
 			{
 				super.onComponentTag(tag);
 				IRequestHandler handler = new ResourceReferenceRequestHandler(getNodeIcon(node));
@@ -549,13 +551,14 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 *            The parent node
 	 * @return The component that represents the link
 	 */
-	protected MarkupContainer newNodeLink(MarkupContainer parent, String id, final TreeNode node)
+	protected MarkupContainer newNodeLink(final MarkupContainer parent, final String id,
+		final TreeNode node)
 	{
 		return newLink(parent, id, new ILinkCallback()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(final AjaxRequestTarget target)
 			{
 				getTreeState().selectNode(node, !getTreeState().isNodeSelected(node));
 				onNodeLinkClicked(target, node);
@@ -573,7 +576,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 * @param node
 	 *            Node for which this callback is relevant
 	 */
-	protected void onJunctionLinkClicked(AjaxRequestTarget target, TreeNode node)
+	protected void onJunctionLinkClicked(final AjaxRequestTarget target, final TreeNode node)
 	{
 	}
 
@@ -585,7 +588,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 * @param node
 	 *            Node for which this this callback is fired.
 	 */
-	protected void onNodeLinkClicked(AjaxRequestTarget target, TreeNode node)
+	protected void onNodeLinkClicked(final AjaxRequestTarget target, final TreeNode node)
 	{
 	}
 
@@ -596,7 +599,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 *            The node
 	 * @return whether the provided node is the last child
 	 */
-	private boolean isNodeLast(TreeNode node)
+	private boolean isNodeLast(final TreeNode node)
 	{
 		TreeNode parent = node.getParent();
 		if (parent == null)
@@ -613,7 +616,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void renderHead(IHeaderResponse response)
+	public void renderHead(final IHeaderResponse response)
 	{
 		super.renderHead(response);
 		ResourceReference css = getCSS();

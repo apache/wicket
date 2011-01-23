@@ -67,7 +67,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 	 * @param maxSize
 	 *            maximum size (width or height) for resize operation
 	 */
-	public ThumbnailImageResource(IResource unscaledImageResource, int maxSize)
+	public ThumbnailImageResource(final IResource unscaledImageResource, final int maxSize)
 	{
 		super();
 
@@ -84,7 +84,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 	 * @return The image data for this dynamic image
 	 */
 	@Override
-	protected byte[] getImageData(Attributes attributes)
+	protected byte[] getImageData(final Attributes attributes)
 	{
 		if (thumbnail == null)
 		{
@@ -102,7 +102,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 	 * 
 	 * @return BufferedImage
 	 */
-	protected final BufferedImage getScaledImageInstance(Attributes attributes)
+	protected final BufferedImage getScaledImageInstance(final Attributes attributes)
 	{
 		InputStream is = null;
 		BufferedImage originalImage = null;

@@ -47,7 +47,7 @@ public class PropertyPopulator<T> implements ICellPopulator<T>
 	 *            property whose value will be displayed in the cell. uses wicket's
 	 *            {@link PropertyModel} notation.
 	 */
-	public PropertyPopulator(String property)
+	public PropertyPopulator(final String property)
 	{
 		if (property == null)
 		{
@@ -67,8 +67,8 @@ public class PropertyPopulator<T> implements ICellPopulator<T>
 	 * @see org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator#populateItem(org.apache.wicket.markup.repeater.Item,
 	 *      java.lang.String, org.apache.wicket.model.IModel)
 	 */
-	public void populateItem(Item<ICellPopulator<T>> cellItem, String componentId,
-		IModel<T> rowModel)
+	public void populateItem(final Item<ICellPopulator<T>> cellItem, final String componentId,
+		final IModel<T> rowModel)
 	{
 		cellItem.add(new Label(componentId, new PropertyModel<T>(rowModel, property)));
 	}

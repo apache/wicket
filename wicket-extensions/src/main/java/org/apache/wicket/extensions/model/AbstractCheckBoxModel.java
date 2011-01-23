@@ -65,7 +65,7 @@ public abstract class AbstractCheckBoxModel implements IModel<Boolean>
 	/**
 	 * @see org.apache.wicket.model.IModel#setObject(Object)
 	 */
-	public final void setObject(Boolean object)
+	public final void setObject(final Boolean object)
 	{
 		if (Boolean.TRUE.equals(object))
 		{
@@ -82,28 +82,28 @@ public abstract class AbstractCheckBoxModel implements IModel<Boolean>
 
 	/** @deprecated replaced by {@link #getObject()} */
 	@Deprecated
-	public final Object getObject(Component component)
+	public final Object getObject(final Component component)
 	{
 		throw new UnsupportedOperationException();
 	}
 
 	/** @deprecated replaced by {@link #isSelected()} */
 	@Deprecated
-	public final boolean isSelected(Component component)
+	public final boolean isSelected(final Component component)
 	{
 		throw new UnsupportedOperationException();
 	}
 
 	/** @deprecated replaced by {@link #setObject(Object)} */
 	@Deprecated
-	public final void setObject(Component component, Object object)
+	public final void setObject(final Component component, final Object object)
 	{
 		throw new UnsupportedOperationException();
 	}
 
 	/** @deprecated replaced by {@link #select()} */
 	@Deprecated
-	public final void setSelected(Component component, boolean sel)
+	public final void setSelected(final Component component, final boolean sel)
 	{
 		throw new UnsupportedOperationException();
 	}

@@ -55,8 +55,8 @@ public class SelectOptions<T> extends RepeatingView
 	 * @param model
 	 * @param renderer
 	 */
-	public SelectOptions(String id, IModel<? extends Collection<? extends T>> model,
-		IOptionRenderer<T> renderer)
+	public SelectOptions(final String id, final IModel<? extends Collection<? extends T>> model,
+		final IOptionRenderer<T> renderer)
 	{
 		super(id, model);
 		this.renderer = renderer;
@@ -70,7 +70,8 @@ public class SelectOptions<T> extends RepeatingView
 	 * @param elements
 	 * @param renderer
 	 */
-	public SelectOptions(String id, Collection<? extends T> elements, IOptionRenderer<T> renderer)
+	public SelectOptions(final String id, final Collection<? extends T> elements,
+		final IOptionRenderer<T> renderer)
 	{
 		this(id, new WildcardCollectionModel<T>(elements), renderer);
 	}
@@ -81,7 +82,7 @@ public class SelectOptions<T> extends RepeatingView
 	 * @param refresh
 	 * @return this for chaining
 	 */
-	public SelectOptions<T> setRecreateChoices(boolean refresh)
+	public SelectOptions<T> setRecreateChoices(final boolean refresh)
 	{
 		recreateChoices = refresh;
 		return this;
@@ -94,7 +95,7 @@ public class SelectOptions<T> extends RepeatingView
 	@Override
 	protected final void onPopulate()
 	{
-		if (size() == 0 || recreateChoices)
+		if ((size() == 0) || recreateChoices)
 		{
 			// populate this repeating view with SelectOption components
 			removeAll();
@@ -127,7 +128,7 @@ public class SelectOptions<T> extends RepeatingView
 	 * @param model
 	 * @return a {@link SelectOption}
 	 */
-	protected SelectOption<T> newOption(String text, IModel<T> model)
+	protected SelectOption<T> newOption(final String text, final IModel<T> model)
 	{
 		return new SimpleSelectOption<T>("option", model, text);
 	}
@@ -147,7 +148,7 @@ public class SelectOptions<T> extends RepeatingView
 		 * @param model
 		 * @param text
 		 */
-		public SimpleSelectOption(String id, IModel<V> model, String text)
+		public SimpleSelectOption(final String id, final IModel<V> model, final String text)
 		{
 			super(id, model);
 			this.text = text;
@@ -157,7 +158,7 @@ public class SelectOptions<T> extends RepeatingView
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+		public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 		{
 			replaceComponentTagBody(markupStream, openTag, text);
 		}

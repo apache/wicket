@@ -47,7 +47,7 @@ class FilterStateModel<T> implements IModel<T>
 	 * @param locator
 	 *            IFilterStateLocator implementation used to provide model object for this model
 	 */
-	public FilterStateModel(IFilterStateLocator<T> locator)
+	public FilterStateModel(final IFilterStateLocator<T> locator)
 	{
 		this.locator = locator;
 	}
@@ -63,7 +63,7 @@ class FilterStateModel<T> implements IModel<T>
 	/**
 	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
 	 */
-	public void setObject(T object)
+	public void setObject(final T object)
 	{
 		locator.setFilterState(object);
 	}

@@ -43,7 +43,7 @@ public class TextFilter<T> extends AbstractFilter
 	 * @param form
 	 *            filter form this filter will be added to
 	 */
-	public TextFilter(String id, IModel<T> model, FilterForm<?> form)
+	public TextFilter(final String id, final IModel<T> model, final FilterForm<?> form)
 	{
 		super(id, form);
 		filter = new TextField<T>("filter", model);

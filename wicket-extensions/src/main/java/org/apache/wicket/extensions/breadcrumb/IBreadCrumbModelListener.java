@@ -40,7 +40,7 @@ public interface IBreadCrumbModelListener extends EventListener, IClusterable
 	 *            The bread crumb that was activated.
 	 */
 	void breadCrumbActivated(IBreadCrumbParticipant previousParticipant,
-			IBreadCrumbParticipant breadCrumbParticipant);
+		IBreadCrumbParticipant breadCrumbParticipant);
 
 	/**
 	 * Called when a bread crumb was added to the model.

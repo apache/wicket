@@ -34,16 +34,17 @@ public class SingleSortState implements ISortState, IClusterable
 	SortParam param;
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState#setPropertySortOrder(String, org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder)
+	 * @see org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState#setPropertySortOrder(String,
+	 *      org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder)
 	 */
-	public void setPropertySortOrder(String property, SortOrder order)
+	public void setPropertySortOrder(final String property, final SortOrder order)
 	{
 		Args.notNull(property, "property");
 		Args.notNull(order, "order");
 
-		if(order == SortOrder.NONE)
+		if (order == SortOrder.NONE)
 		{
-			if (param != null && property.equals(param.getProperty()))
+			if ((param != null) && property.equals(param.getProperty()))
 			{
 				param = null;
 			}
@@ -57,11 +58,11 @@ public class SingleSortState implements ISortState, IClusterable
 	/**
 	 * @see org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState#getPropertySortOrder(java.lang.String)
 	 */
-	public SortOrder getPropertySortOrder(String property)
+	public SortOrder getPropertySortOrder(final String property)
 	{
 		Args.notNull(property, "property");
 
-		if (param == null || param.getProperty().equals(property) == false)
+		if ((param == null) || (param.getProperty().equals(property) == false))
 		{
 			return SortOrder.NONE;
 		}
@@ -82,7 +83,7 @@ public class SingleSortState implements ISortState, IClusterable
 	 * @param param
 	 *            parameter containing new sorting information
 	 */
-	public void setSort(SortParam param)
+	public void setSort(final SortParam param)
 	{
 		this.param = param;
 	}
@@ -90,6 +91,7 @@ public class SingleSortState implements ISortState, IClusterable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[SingleSortState sort=" + ((param == null) ? "null" : param.toString()) + "]";

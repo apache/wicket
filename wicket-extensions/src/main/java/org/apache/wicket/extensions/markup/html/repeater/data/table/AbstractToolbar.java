@@ -43,7 +43,7 @@ public abstract class AbstractToolbar extends Panel
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 */
-	public AbstractToolbar(IModel<?> model, DataTable<?> table)
+	public AbstractToolbar(final IModel<?> model, final DataTable<?> table)
 	{
 		super("$toolbar$" + counter++, model);
 		this.table = table;
@@ -55,7 +55,7 @@ public abstract class AbstractToolbar extends Panel
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 */
-	public AbstractToolbar(DataTable<?> table)
+	public AbstractToolbar(final DataTable<?> table)
 	{
 		this(null, table);
 	}

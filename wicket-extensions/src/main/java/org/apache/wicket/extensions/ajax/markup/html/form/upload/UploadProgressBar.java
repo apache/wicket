@@ -59,7 +59,7 @@ public class UploadProgressBar extends Panel
 		/**
 		 * @see org.apache.wicket.IInitializer#init(org.apache.wicket.Application)
 		 */
-		public void init(Application application)
+		public void init(final Application application)
 		{
 			// register the upload status resource
 			Application.get().getSharedResources().add(RESOURCE_NAME, new UploadStatusResource());
@@ -75,7 +75,7 @@ public class UploadProgressBar extends Panel
 		}
 
 		/** {@inheritDoc} */
-		public void destroy(Application application)
+		public void destroy(final Application application)
 		{
 		}
 	}
@@ -106,7 +106,7 @@ public class UploadProgressBar extends Panel
 	 * @param form
 	 *            form that will be submitted (not null)
 	 */
-	public UploadProgressBar(String id, final Form<?> form)
+	public UploadProgressBar(final String id, final Form<?> form)
 	{
 		this(id, form, null);
 	}
@@ -124,7 +124,8 @@ public class UploadProgressBar extends Panel
 	 *            the file upload field to check for a file upload, or null to display the upload
 	 *            field for every submit of the given form
 	 */
-	public UploadProgressBar(String id, final Form<?> form, FileUploadField fileUploadField)
+	public UploadProgressBar(final String id, final Form<?> form,
+		final FileUploadField fileUploadField)
 	{
 		super(id);
 		uploadField = fileUploadField;
@@ -175,7 +176,7 @@ public class UploadProgressBar extends Panel
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void renderHead(IHeaderResponse response)
+	public void renderHead(final IHeaderResponse response)
 	{
 		super.renderHead(response);
 		response.renderJavaScriptReference(WicketEventReference.INSTANCE);
@@ -213,12 +214,12 @@ public class UploadProgressBar extends Panel
 		Boolean insideModal = form.visitParents(ModalWindow.class,
 			new IVisitor<Component, Boolean>()
 			{
-				public void component(Component object, IVisit<Boolean> visit)
+				public void component(final Component object, final IVisit<Boolean> visit)
 				{
 					visit.stop(true);
 				}
 			});
-		if (insideModal != null && insideModal)
+		if ((insideModal != null) && insideModal)
 		{
 			return form;
 		}

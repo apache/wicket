@@ -57,7 +57,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 * @param id
 	 *            The component id
 	 */
-	public AjaxEditableChoiceLabel(String id)
+	public AjaxEditableChoiceLabel(final String id)
 	{
 		super(id);
 	}
@@ -70,7 +70,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 * @param model
 	 *            The model
 	 */
-	public AjaxEditableChoiceLabel(String id, IModel<T> model)
+	public AjaxEditableChoiceLabel(final String id, final IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -83,7 +83,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 * @param choices
 	 *            The collection of choices in the dropdown
 	 */
-	public AjaxEditableChoiceLabel(String id, List<? extends T> choices)
+	public AjaxEditableChoiceLabel(final String id, final List<? extends T> choices)
 	{
 		this(id, null, choices);
 	}
@@ -98,8 +98,8 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 * @param choices
 	 *            The collection of choices in the dropdown
 	 */
-	public AjaxEditableChoiceLabel(String id, IModel<T> model,
-		IModel<? extends List<? extends T>> choices)
+	public AjaxEditableChoiceLabel(final String id, final IModel<T> model,
+		final IModel<? extends List<? extends T>> choices)
 	{
 		super(id, model);
 		this.choices = choices;
@@ -117,8 +117,8 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 * @param renderer
 	 *            The rendering engine
 	 */
-	public AjaxEditableChoiceLabel(String id, IModel<T> model,
-		IModel<? extends List<? extends T>> choices, IChoiceRenderer<T> renderer)
+	public AjaxEditableChoiceLabel(final String id, final IModel<T> model,
+		final IModel<? extends List<? extends T>> choices, final IChoiceRenderer<T> renderer)
 	{
 		super(id, model);
 		this.choices = choices;
@@ -135,7 +135,8 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 * @param choices
 	 *            The collection of choices in the dropdown
 	 */
-	public AjaxEditableChoiceLabel(String id, IModel<T> model, List<? extends T> choices)
+	public AjaxEditableChoiceLabel(final String id, final IModel<T> model,
+		final List<? extends T> choices)
 	{
 		this(id, model, Model.ofList(choices));
 	}
@@ -152,8 +153,8 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 * @param renderer
 	 *            The rendering engine
 	 */
-	public AjaxEditableChoiceLabel(String id, IModel<T> model, List<? extends T> choices,
-		IChoiceRenderer<T> renderer)
+	public AjaxEditableChoiceLabel(final String id, final IModel<T> model,
+		final List<? extends T> choices, final IChoiceRenderer<T> renderer)
 	{
 		this(id, model, Model.ofList(choices), renderer);
 	}
@@ -162,7 +163,8 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected FormComponent<T> newEditor(MarkupContainer parent, String componentId, IModel<T> model)
+	protected FormComponent<T> newEditor(final MarkupContainer parent, final String componentId,
+		final IModel<T> model)
 	{
 		IModel<List<? extends T>> choiceModel = new AbstractReadOnlyModel<List<? extends T>>()
 		{
@@ -202,7 +204,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onComponentTag(ComponentTag tag)
+			protected void onComponentTag(final ComponentTag tag)
 			{
 				super.onComponentTag(tag);
 				final String saveCall = "{wicketAjaxGet('" + getCallbackUrl() +
@@ -218,7 +220,8 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected WebComponent newLabel(MarkupContainer parent, String componentId, IModel<T> model)
+	protected WebComponent newLabel(final MarkupContainer parent, final String componentId,
+		final IModel<T> model)
 	{
 		Label label = new Label(componentId, model)
 		{
@@ -228,7 +231,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 			 * {@inheritDoc}
 			 */
 			@Override
-			public <C> IConverter<C> getConverter(Class<C> type)
+			public <C> IConverter<C> getConverter(final Class<C> type)
 			{
 				IConverter<C> c = AjaxEditableChoiceLabel.this.getConverter(type);
 				return c != null ? c : super.getConverter(type);
@@ -239,7 +242,8 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 			 */
 			@SuppressWarnings("unchecked")
 			@Override
-			public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+			public void onComponentTagBody(final MarkupStream markupStream,
+				final ComponentTag openTag)
 			{
 				String displayValue = getDefaultModelObjectAsString();
 				if (renderer != null)

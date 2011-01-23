@@ -44,7 +44,7 @@ public class GoFilter extends Panel
 	 * @param id
 	 *            component id
 	 */
-	public GoFilter(String id)
+	public GoFilter(final String id)
 	{
 		this(id, DEFAULT_GO_MODEL);
 	}
@@ -57,7 +57,7 @@ public class GoFilter extends Panel
 	 * @param goModel
 	 *            model for the button's text
 	 */
-	public GoFilter(String id, IModel<String> goModel)
+	public GoFilter(final String id, final IModel<String> goModel)
 	{
 		super(id);
 
@@ -89,7 +89,7 @@ public class GoFilter extends Panel
 	 *            filter state object by retrieving the form's model object
 	 * 
 	 */
-	protected void onGoSubmit(Button button)
+	protected void onGoSubmit(final Button button)
 	{
 	}
 

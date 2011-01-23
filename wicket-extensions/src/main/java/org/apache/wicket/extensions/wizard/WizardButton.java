@@ -48,7 +48,7 @@ public abstract class WizardButton extends Button
 	 * @param labelResourceKey
 	 *            The resource key of the button's label
 	 */
-	public WizardButton(String id, IWizard wizard, String labelResourceKey)
+	public WizardButton(final String id, final IWizard wizard, final String labelResourceKey)
 	{
 		super(id, new ResourceModel(labelResourceKey));
 		this.wizard = wizard;

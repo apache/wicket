@@ -40,7 +40,7 @@ public class DefaultLinkParser extends LinkParser
 	 */
 	public static final ILinkRenderStrategy EMAIL_RENDER_STRATEGY = new ILinkRenderStrategy()
 	{
-		public String buildLink(String linkTarget)
+		public String buildLink(final String linkTarget)
 		{
 			return "<a href=\"mailto:" + linkTarget + "\">" + linkTarget + "</a>";
 		}
@@ -52,7 +52,7 @@ public class DefaultLinkParser extends LinkParser
 	 */
 	public static final ILinkRenderStrategy ENCRYPTED_EMAIL_RENDER_STRATEGY = new ILinkRenderStrategy()
 	{
-		public String buildLink(String linkTarget)
+		public String buildLink(final String linkTarget)
 		{
 			AppendingStringBuffer cryptedEmail = new AppendingStringBuffer(64);
 			for (int i = 0; i < linkTarget.length(); i++)
@@ -79,7 +79,7 @@ public class DefaultLinkParser extends LinkParser
 	 */
 	public static final ILinkRenderStrategy URL_RENDER_STRATEGY = new ILinkRenderStrategy()
 	{
-		public String buildLink(String linkTarget)
+		public String buildLink(final String linkTarget)
 		{
 			return "<a href=\"" +
 				linkTarget +

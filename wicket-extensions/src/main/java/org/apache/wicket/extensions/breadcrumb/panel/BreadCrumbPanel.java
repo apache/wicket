@@ -80,7 +80,7 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 	 * @param breadCrumbModel
 	 *            The bread crumb model
 	 */
-	public BreadCrumbPanel(String id, IBreadCrumbModel breadCrumbModel)
+	public BreadCrumbPanel(final String id, final IBreadCrumbModel breadCrumbModel)
 	{
 		super(id);
 		this.breadCrumbModel = breadCrumbModel;
@@ -96,7 +96,8 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 	 * @param model
 	 *            The model
 	 */
-	public BreadCrumbPanel(String id, IBreadCrumbModel breadCrumbModel, IModel<?> model)
+	public BreadCrumbPanel(final String id, final IBreadCrumbModel breadCrumbModel,
+		final IModel<?> model)
 	{
 		super(id, model);
 		this.breadCrumbModel = breadCrumbModel;
@@ -109,7 +110,7 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 	 * 
 	 * @param breadCrumbPanelFactory
 	 */
-	public void activate(IBreadCrumbPanelFactory breadCrumbPanelFactory)
+	public void activate(final IBreadCrumbPanelFactory breadCrumbPanelFactory)
 	{
 		activate(breadCrumbPanelFactory.create(getId(), breadCrumbModel));
 	}
@@ -123,7 +124,7 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 	 * @param participant
 	 *            The participant to set as the active one
 	 */
-	public void activate(IBreadCrumbParticipant participant)
+	public void activate(final IBreadCrumbParticipant participant)
 	{
 		// get the currently active participant
 		final IBreadCrumbParticipant active = breadCrumbModel.getActive();
@@ -163,7 +164,7 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant#onActivate(org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant)
 	 */
-	public void onActivate(IBreadCrumbParticipant previous)
+	public void onActivate(final IBreadCrumbParticipant previous)
 	{
 		decorated.onActivate(previous);
 	}
@@ -174,7 +175,7 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 	 * @param breadCrumbModel
 	 *            The bread crumb panel
 	 */
-	public final void setBreadCrumbModel(IBreadCrumbModel breadCrumbModel)
+	public final void setBreadCrumbModel(final IBreadCrumbModel breadCrumbModel)
 	{
 		this.breadCrumbModel = breadCrumbModel;
 	}

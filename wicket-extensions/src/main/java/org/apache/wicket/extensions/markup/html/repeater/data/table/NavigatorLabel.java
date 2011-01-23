@@ -37,6 +37,12 @@ public class NavigatorLabel extends Label
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 * @param pageable
+	 */
 	public NavigatorLabel(final String id, final IPageableItems pageable)
 	{
 		super(id);
@@ -55,7 +61,7 @@ public class NavigatorLabel extends Label
 		 * 
 		 * @param table
 		 */
-		public LabelModelObject(IPageableItems table)
+		public LabelModelObject(final IPageableItems table)
 		{
 			pageable = table;
 		}

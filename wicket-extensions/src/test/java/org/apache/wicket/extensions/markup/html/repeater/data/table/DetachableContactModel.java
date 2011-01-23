@@ -38,7 +38,7 @@ public class DetachableContactModel extends LoadableDetachableModel<Contact>
 	/**
 	 * @param c
 	 */
-	public DetachableContactModel(Contact c)
+	public DetachableContactModel(final Contact c)
 	{
 		this(c.getId());
 	}
@@ -46,7 +46,7 @@ public class DetachableContactModel extends LoadableDetachableModel<Contact>
 	/**
 	 * @param id
 	 */
-	public DetachableContactModel(long id)
+	public DetachableContactModel(final long id)
 	{
 		if (id == 0)
 		{

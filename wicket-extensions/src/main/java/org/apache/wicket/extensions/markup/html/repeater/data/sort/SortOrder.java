@@ -18,12 +18,11 @@ package org.apache.wicket.extensions.markup.html.repeater.data.sort;
 
 /**
  * Sort order for columns
- *
+ * 
  * @author pete
- *
+ * 
  */
-public enum SortOrder
-{
+public enum SortOrder {
 	/**
 	 * unsorted
 	 */

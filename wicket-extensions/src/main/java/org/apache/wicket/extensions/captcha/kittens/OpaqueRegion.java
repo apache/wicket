@@ -225,7 +225,7 @@ class OpaqueRegion
 						int x2 = work.x + work.width;
 
 						// Compare left and right sides
-						if (rx1 <= x1 && rx2 >= x2)
+						if ((rx1 <= x1) && (rx2 >= x2))
 						{
 							// Whole rectangle is obscured
 							workList.remove(i);
@@ -234,8 +234,8 @@ class OpaqueRegion
 						else
 						{
 							// Check which sides are in
-							boolean leftIn = rx1 >= x1 && rx1 < x2;
-							boolean rightIn = rx2 > x1 && rx2 <= x2;
+							boolean leftIn = (rx1 >= x1) && (rx1 < x2);
+							boolean rightIn = (rx2 > x1) && (rx2 <= x2);
 
 							if (leftIn)
 							{

@@ -58,7 +58,7 @@ public class Contact implements IClusterable
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(final Object obj)
 	{
 		if (obj == this)
 		{
@@ -86,7 +86,7 @@ public class Contact implements IClusterable
 	/**
 	 * @param id
 	 */
-	public void setId(long id)
+	public void setId(final long id)
 	{
 		this.id = id;
 	}
@@ -105,7 +105,7 @@ public class Contact implements IClusterable
 	 * @param firstName
 	 * @param lastName
 	 */
-	public Contact(String firstName, String lastName)
+	public Contact(final String firstName, final String lastName)
 	{
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -122,7 +122,7 @@ public class Contact implements IClusterable
 	/**
 	 * @param cellPhone
 	 */
-	public void setCellPhone(String cellPhone)
+	public void setCellPhone(final String cellPhone)
 	{
 		this.cellPhone = cellPhone;
 	}
@@ -138,7 +138,7 @@ public class Contact implements IClusterable
 	/**
 	 * @param firstName
 	 */
-	public void setFirstName(String firstName)
+	public void setFirstName(final String firstName)
 	{
 		this.firstName = firstName;
 	}
@@ -154,7 +154,7 @@ public class Contact implements IClusterable
 	/**
 	 * @param homePhone
 	 */
-	public void setHomePhone(String homePhone)
+	public void setHomePhone(final String homePhone)
 	{
 		this.homePhone = homePhone;
 	}
@@ -170,7 +170,7 @@ public class Contact implements IClusterable
 	/**
 	 * @param lastName
 	 */
-	public void setLastName(String lastName)
+	public void setLastName(final String lastName)
 	{
 		this.lastName = lastName;
 	}

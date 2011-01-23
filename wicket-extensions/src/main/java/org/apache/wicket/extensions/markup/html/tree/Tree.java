@@ -44,7 +44,7 @@ public class Tree extends DefaultAbstractTree
 	 * @param id
 	 *            The component id
 	 */
-	public Tree(String id)
+	public Tree(final String id)
 	{
 		super(id);
 	}
@@ -57,7 +57,7 @@ public class Tree extends DefaultAbstractTree
 	 * @param model
 	 *            The tree model
 	 */
-	public Tree(String id, IModel<? extends TreeModel> model)
+	public Tree(final String id, final IModel<? extends TreeModel> model)
 	{
 		super(id, model);
 	}
@@ -70,7 +70,7 @@ public class Tree extends DefaultAbstractTree
 	 * @param model
 	 *            The tree model
 	 */
-	public Tree(String id, TreeModel model)
+	public Tree(final String id, final TreeModel model)
 	{
 		super(id, model);
 	}
@@ -82,7 +82,7 @@ public class Tree extends DefaultAbstractTree
 	 * @param level
 	 */
 	@Override
-	protected void populateTreeItem(WebMarkupContainer item, int level)
+	protected void populateTreeItem(final WebMarkupContainer item, final int level)
 	{
 		final TreeNode node = (TreeNode)item.getDefaultModelObject();
 
@@ -118,7 +118,7 @@ public class Tree extends DefaultAbstractTree
 			 *      Component, org.apache.wicket.markup.ComponentTag)
 			 */
 			@Override
-			public void onComponentTag(Component component, ComponentTag tag)
+			public void onComponentTag(final Component component, final ComponentTag tag)
 			{
 				super.onComponentTag(component, tag);
 				if (getTreeState().isNodeSelected(node))
@@ -140,7 +140,7 @@ public class Tree extends DefaultAbstractTree
 	 *            The tree node to get the string representation of
 	 * @return The string representation
 	 */
-	protected String renderNode(TreeNode node)
+	protected String renderNode(final TreeNode node)
 	{
 		return node.toString();
 	}

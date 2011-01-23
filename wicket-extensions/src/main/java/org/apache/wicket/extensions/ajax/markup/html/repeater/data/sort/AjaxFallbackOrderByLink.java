@@ -49,8 +49,8 @@ public abstract class AjaxFallbackOrderByLink extends OrderByLink
 	 * @param stateLocator
 	 * @param cssProvider
 	 */
-	public AjaxFallbackOrderByLink(String id, String property, ISortStateLocator stateLocator,
-			ICssProvider cssProvider)
+	public AjaxFallbackOrderByLink(final String id, final String property,
+		final ISortStateLocator stateLocator, final ICssProvider cssProvider)
 	{
 		this(id, property, stateLocator, cssProvider, null);
 	}
@@ -62,7 +62,8 @@ public abstract class AjaxFallbackOrderByLink extends OrderByLink
 	 * @param property
 	 * @param stateLocator
 	 */
-	public AjaxFallbackOrderByLink(String id, String property, ISortStateLocator stateLocator)
+	public AjaxFallbackOrderByLink(final String id, final String property,
+		final ISortStateLocator stateLocator)
 	{
 		this(id, property, stateLocator, DefaultCssProvider.getInstance(), null);
 	}
@@ -76,8 +77,8 @@ public abstract class AjaxFallbackOrderByLink extends OrderByLink
 	 * @param stateLocator
 	 * @param decorator
 	 */
-	public AjaxFallbackOrderByLink(String id, String property, ISortStateLocator stateLocator,
-			final IAjaxCallDecorator decorator)
+	public AjaxFallbackOrderByLink(final String id, final String property,
+		final ISortStateLocator stateLocator, final IAjaxCallDecorator decorator)
 	{
 		this(id, property, stateLocator, DefaultCssProvider.getInstance(), decorator);
 	}
@@ -91,8 +92,9 @@ public abstract class AjaxFallbackOrderByLink extends OrderByLink
 	 * @param cssProvider
 	 * @param decorator
 	 */
-	public AjaxFallbackOrderByLink(String id, String property, ISortStateLocator stateLocator,
-			ICssProvider cssProvider, final IAjaxCallDecorator decorator)
+	public AjaxFallbackOrderByLink(final String id, final String property,
+		final ISortStateLocator stateLocator, final ICssProvider cssProvider,
+		final IAjaxCallDecorator decorator)
 	{
 		super(id, property, stateLocator, cssProvider);
 
@@ -101,7 +103,7 @@ public abstract class AjaxFallbackOrderByLink extends OrderByLink
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onEvent(AjaxRequestTarget target)
+			protected void onEvent(final AjaxRequestTarget target)
 			{
 				onClick();
 				onAjaxClick(target);

@@ -41,7 +41,7 @@ public class AjaxEditableLabelPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(final AjaxRequestTarget target)
 			{
 				ajaxLabel.setEnabled(!ajaxLabel.isEnabled());
 				target.add(ajaxLabel);

@@ -51,7 +51,7 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 	 * @param id
 	 *            The component id
 	 */
-	public AjaxEditableMultiLineLabel(String id)
+	public AjaxEditableMultiLineLabel(final String id)
 	{
 		super(id);
 	}
@@ -64,7 +64,7 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 	 * @param model
 	 *            The model
 	 */
-	public AjaxEditableMultiLineLabel(String id, IModel<T> model)
+	public AjaxEditableMultiLineLabel(final String id, final IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -73,7 +73,8 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected MultiLineLabel newLabel(MarkupContainer parent, String componentId, IModel<T> model)
+	protected MultiLineLabel newLabel(final MarkupContainer parent, final String componentId,
+		final IModel<T> model)
 	{
 		MultiLineLabel label = new MultiLineLabel(componentId, model)
 		{
@@ -83,10 +84,11 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 			 * {@inheritDoc}
 			 */
 			@Override
-			public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+			public void onComponentTagBody(final MarkupStream markupStream,
+				final ComponentTag openTag)
 			{
 				Object modelObject = getDefaultModelObject();
-				if (modelObject == null || "".equals(modelObject))
+				if ((modelObject == null) || "".equals(modelObject))
 				{
 					replaceComponentTagBody(markupStream, openTag, defaultNullLabel());
 				}
@@ -117,7 +119,8 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected FormComponent<T> newEditor(MarkupContainer parent, String componentId, IModel<T> model)
+	protected FormComponent<T> newEditor(final MarkupContainer parent, final String componentId,
+		final IModel<T> model)
 	{
 		TextArea<T> editor = new TextArea<T>(componentId, model)
 		{
@@ -171,7 +174,7 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 			 * {@inheritDoc}
 			 */
 			@Override
-			protected void onComponentTag(ComponentTag tag)
+			protected void onComponentTag(final ComponentTag tag)
 			{
 				super.onComponentTag(tag);
 				final String saveCall = "{wicketAjaxPost('" + getCallbackUrl() + "&save=true', " +
@@ -207,7 +210,7 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 	 * @param cols
 	 *            text area's number of columns
 	 */
-	public final void setCols(int cols)
+	public final void setCols(final int cols)
 	{
 		this.cols = cols;
 	}
@@ -228,7 +231,7 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 	 * @param rows
 	 *            text area's number of rows
 	 */
-	public final void setRows(int rows)
+	public final void setRows(final int rows)
 	{
 		this.rows = rows;
 	}

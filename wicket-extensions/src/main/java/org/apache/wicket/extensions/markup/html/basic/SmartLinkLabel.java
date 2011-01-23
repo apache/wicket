@@ -43,7 +43,7 @@ public class SmartLinkLabel extends Label
 	/**
 	 * @see Label#Label(String, String)
 	 */
-	public SmartLinkLabel(String name, String label)
+	public SmartLinkLabel(final String name, final String label)
 	{
 		this(name, new Model<String>(label));
 	}
@@ -51,7 +51,7 @@ public class SmartLinkLabel extends Label
 	/**
 	 * @see Label#Label(String, IModel)
 	 */
-	public SmartLinkLabel(String name, IModel<String> model)
+	public SmartLinkLabel(final String name, final IModel<String> model)
 	{
 		super(name, model);
 	}
@@ -59,7 +59,7 @@ public class SmartLinkLabel extends Label
 	/**
 	 * @see Label#Label(String)
 	 */
-	public SmartLinkLabel(String name)
+	public SmartLinkLabel(final String name)
 	{
 		super(name);
 	}

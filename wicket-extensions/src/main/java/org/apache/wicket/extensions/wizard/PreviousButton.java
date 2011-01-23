@@ -34,7 +34,7 @@ public class PreviousButton extends WizardButton
 	 * @param wizard
 	 *            The wizard
 	 */
-	public PreviousButton(String id, IWizard wizard)
+	public PreviousButton(final String id, final IWizard wizard)
 	{
 		super(id, wizard, "org.apache.wicket.extensions.wizard.previous");
 		setDefaultFormProcessing(false);

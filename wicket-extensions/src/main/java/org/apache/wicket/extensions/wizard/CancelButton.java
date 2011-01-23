@@ -34,7 +34,7 @@ public class CancelButton extends WizardButton
 	 * @param wizard
 	 *            The wizard
 	 */
-	public CancelButton(String id, IWizard wizard)
+	public CancelButton(final String id, final IWizard wizard)
 	{
 		super(id, wizard, "org.apache.wicket.extensions.wizard.cancel");
 		setDefaultFormProcessing(false);

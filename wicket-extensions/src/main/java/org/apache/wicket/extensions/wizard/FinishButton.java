@@ -34,7 +34,7 @@ public class FinishButton extends WizardButton
 	 * @param wizard
 	 *            The wizard
 	 */
-	public FinishButton(String id, IWizard wizard)
+	public FinishButton(final String id, final IWizard wizard)
 	{
 		super(id, wizard, "org.apache.wicket.extensions.wizard.finish");
 	}
@@ -46,7 +46,7 @@ public class FinishButton extends WizardButton
 	public boolean isEnabled()
 	{
 		IWizardStep activeStep = getWizardModel().getActiveStep();
-		return (activeStep != null && getWizardModel().isLastStep(activeStep));
+		return ((activeStep != null) && getWizardModel().isLastStep(activeStep));
 	}
 
 	/**

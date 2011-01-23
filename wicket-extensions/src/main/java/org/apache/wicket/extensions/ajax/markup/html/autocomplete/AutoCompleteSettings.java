@@ -89,7 +89,7 @@ public final class AutoCompleteSettings implements IClusterable
 	 *            the flag
 	 * @return this {@link AutoCompleteSettings}
 	 */
-	public AutoCompleteSettings setPreselect(boolean preselect)
+	public AutoCompleteSettings setPreselect(final boolean preselect)
 	{
 		this.preselect = preselect;
 		return this;
@@ -103,7 +103,7 @@ public final class AutoCompleteSettings implements IClusterable
 	 *            The delay in milliseconds.
 	 * @return this {@link AutoCompleteSettings}
 	 */
-	public AutoCompleteSettings setThrottleDelay(int throttleDelay)
+	public AutoCompleteSettings setThrottleDelay(final int throttleDelay)
 	{
 		this.throttleDelay = throttleDelay;
 		return this;
@@ -147,7 +147,7 @@ public final class AutoCompleteSettings implements IClusterable
 	 *            the maximum height in pixels
 	 * @return this {@link AutoCompleteSettings}
 	 */
-	public AutoCompleteSettings setMaxHeightInPx(int maxHeightInPx)
+	public AutoCompleteSettings setMaxHeightInPx(final int maxHeightInPx)
 	{
 		this.maxHeightInPx = maxHeightInPx;
 		return this;
@@ -194,7 +194,7 @@ public final class AutoCompleteSettings implements IClusterable
 	 *            the flag
 	 * @return this {@link AutoCompleteSettings}
 	 */
-	public AutoCompleteSettings setShowListOnEmptyInput(boolean showListOnEmptyInput)
+	public AutoCompleteSettings setShowListOnEmptyInput(final boolean showListOnEmptyInput)
 	{
 		this.showListOnEmptyInput = showListOnEmptyInput;
 		return this;
@@ -273,7 +273,8 @@ public final class AutoCompleteSettings implements IClusterable
 	 *            the flag
 	 * @return this {@link AutoCompleteSettings}.
 	 */
-	public AutoCompleteSettings setShowCompleteListOnFocusGain(final boolean showCompleteListOnFocusGain)
+	public AutoCompleteSettings setShowCompleteListOnFocusGain(
+		final boolean showCompleteListOnFocusGain)
 	{
 		this.showCompleteListOnFocusGain = showCompleteListOnFocusGain;
 		return this;
@@ -304,8 +305,10 @@ public final class AutoCompleteSettings implements IClusterable
 	}
 
 	/**
-	 * Sets whether the popup positioning will take into account browser window visible area or not. (so always show popup bottom-right or not)<br>
-	 * THIS WILL PRODUCE UNWANTED BEHAVIOR WITH IE versions < 8 (probably because of unreliable clientWidth/clientHeight browser element properties).
+	 * Sets whether the popup positioning will take into account browser window visible area or not.
+	 * (so always show popup bottom-right or not)<br>
+	 * THIS WILL PRODUCE UNWANTED BEHAVIOR WITH IE versions < 8 (probably because of unreliable
+	 * clientWidth/clientHeight browser element properties).
 	 * 
 	 * @param useSmartPositioning
 	 *            the flag

@@ -49,7 +49,7 @@ public class DynamicWizardModel extends AbstractWizardModel
 	 * @param startStep
 	 *            first step in the wizard
 	 */
-	public DynamicWizardModel(IDynamicWizardStep startStep)
+	public DynamicWizardModel(final IDynamicWizardStep startStep)
 	{
 		this.startStep = startStep;
 	}
@@ -82,7 +82,7 @@ public class DynamicWizardModel extends AbstractWizardModel
 	/**
 	 * @see org.apache.wicket.extensions.wizard.IWizardModel#isLastStep(org.apache.wicket.extensions.wizard.IWizardStep)
 	 */
-	public boolean isLastStep(IWizardStep step)
+	public boolean isLastStep(final IWizardStep step)
 	{
 		return ((IDynamicWizardStep)step).isLastStep();
 	}
@@ -149,7 +149,7 @@ public class DynamicWizardModel extends AbstractWizardModel
 	 * @param step
 	 *            the new active step step.
 	 */
-	protected final void setActiveStep(IDynamicWizardStep step)
+	protected final void setActiveStep(final IDynamicWizardStep step)
 	{
 		if (step == null)
 		{

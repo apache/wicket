@@ -50,7 +50,7 @@ public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavi
 	 * @param renderer
 	 *            renderer that will be used to generate output
 	 */
-	public AutoCompleteBehavior(IAutoCompleteRenderer<T> renderer)
+	public AutoCompleteBehavior(final IAutoCompleteRenderer<T> renderer)
 	{
 		this(renderer, false);
 	}
@@ -64,7 +64,7 @@ public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavi
 	 * @param preselect
 	 *            highlight/preselect the first item in the autocomplete list automatically
 	 */
-	public AutoCompleteBehavior(IAutoCompleteRenderer<T> renderer, boolean preselect)
+	public AutoCompleteBehavior(final IAutoCompleteRenderer<T> renderer, final boolean preselect)
 	{
 		this(renderer, new AutoCompleteSettings().setPreselect(preselect));
 	}
@@ -77,7 +77,8 @@ public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavi
 	 * @param settings
 	 *            settings for the autocomplete list
 	 */
-	public AutoCompleteBehavior(IAutoCompleteRenderer<T> renderer, AutoCompleteSettings settings)
+	public AutoCompleteBehavior(final IAutoCompleteRenderer<T> renderer,
+		final AutoCompleteSettings settings)
 	{
 		super(settings);
 		if (renderer == null)
@@ -89,12 +90,12 @@ public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavi
 
 
 	@Override
-	protected final void onRequest(final String val, RequestCycle requestCycle)
+	protected final void onRequest(final String val, final RequestCycle requestCycle)
 	{
 		IRequestHandler target = new IRequestHandler()
 		{
 
-			public void respond(IRequestCycle requestCycle)
+			public void respond(final IRequestCycle requestCycle)
 			{
 
 				WebResponse r = (WebResponse)requestCycle.getResponse();
@@ -117,7 +118,7 @@ public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavi
 				renderer.renderFooter(r);
 			}
 
-			public void detach(IRequestCycle requestCycle)
+			public void detach(final IRequestCycle requestCycle)
 			{
 			}
 

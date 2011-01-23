@@ -79,7 +79,7 @@ public class TreeTable extends DefaultAbstractTree
 		 * @param renderNodeCallback
 		 *            The call back for rendering nodes
 		 */
-		public TreeFragment(String id, final TreeNode node, int level,
+		public TreeFragment(final String id, final TreeNode node, final int level,
 			final IRenderNodeCallback renderNodeCallback)
 		{
 			super(id, "fragment", TreeTable.this);
@@ -139,8 +139,9 @@ public class TreeTable extends DefaultAbstractTree
 	 * 
 	 * @return The tree cell
 	 */
-	public static Component newTreeCell(MarkupContainer parent, String id, TreeNode node,
-		int level, IRenderNodeCallback callback, TreeTable table)
+	public static Component newTreeCell(final MarkupContainer parent, final String id,
+		final TreeNode node, final int level, final IRenderNodeCallback callback,
+		final TreeTable table)
 	{
 		return table.newTreePanel(parent, id, node, level, callback);
 	}
@@ -154,7 +155,7 @@ public class TreeTable extends DefaultAbstractTree
 	 * @param id
 	 * @param columns
 	 */
-	public TreeTable(String id, IColumn columns[])
+	public TreeTable(final String id, final IColumn columns[])
 	{
 		super(id);
 		init(columns);
@@ -170,7 +171,8 @@ public class TreeTable extends DefaultAbstractTree
 	 * @param columns
 	 *            The columns
 	 */
-	public TreeTable(String id, IModel<? extends TreeModel> model, IColumn columns[])
+	public TreeTable(final String id, final IModel<? extends TreeModel> model,
+		final IColumn columns[])
 	{
 		super(id, model);
 		init(columns);
@@ -187,7 +189,7 @@ public class TreeTable extends DefaultAbstractTree
 	 * @param columns
 	 *            The columns
 	 */
-	public TreeTable(String id, TreeModel model, IColumn columns[])
+	public TreeTable(final String id, final TreeModel model, final IColumn columns[])
 	{
 		super(id, model);
 		init(columns);
@@ -196,8 +198,12 @@ public class TreeTable extends DefaultAbstractTree
 	private boolean hasLeftColumn()
 	{
 		for (IColumn column : columns)
+		{
 			if (column.getLocation().getAlignment().equals(Alignment.LEFT))
+			{
 				return true;
+			}
+		}
 
 		return false;
 	}
@@ -211,23 +217,26 @@ public class TreeTable extends DefaultAbstractTree
 		SideColumnsView sideColumns = new SideColumnsView("sideColumns", null);
 		add(sideColumns);
 		if (columns != null)
+		{
 			for (int i = 0; i < columns.length; i++)
 			{
 				IColumn column = columns[i];
-				if (column.getLocation().getAlignment() == Alignment.LEFT ||
-					column.getLocation().getAlignment() == Alignment.RIGHT)
+				if ((column.getLocation().getAlignment() == Alignment.LEFT) ||
+					(column.getLocation().getAlignment() == Alignment.RIGHT))
 				{
 					Component component = column.newHeader(sideColumns, "" + i);
 					sideColumns.add(component);
 					sideColumns.addColumn(column, component, null);
 				}
 			}
+		}
 
 		// create the view for middle columns
 		MiddleColumnsView middleColumns = new MiddleColumnsView("middleColumns", null,
 			hasLeftColumn());
 		add(middleColumns);
 		if (columns != null)
+		{
 			for (int i = 0; i < columns.length; i++)
 			{
 				IColumn column = columns[i];
@@ -238,6 +247,7 @@ public class TreeTable extends DefaultAbstractTree
 					middleColumns.addColumn(column, component, null);
 				}
 			}
+		}
 	}
 
 	/**
@@ -264,8 +274,8 @@ public class TreeTable extends DefaultAbstractTree
 	 *            The node call back
 	 * @return The tree panel
 	 */
-	protected Component newTreePanel(MarkupContainer parent, String id, final TreeNode node,
-		int level, IRenderNodeCallback renderNodeCallback)
+	protected Component newTreePanel(final MarkupContainer parent, final String id,
+		final TreeNode node, final int level, final IRenderNodeCallback renderNodeCallback)
 	{
 		return new TreeFragment(id, node, level, renderNodeCallback);
 	}
@@ -281,8 +291,12 @@ public class TreeTable extends DefaultAbstractTree
 		{
 			// no. initialize columns first
 			if (columns != null)
+			{
 				for (IColumn column : columns)
+				{
 					column.setTreeTable(this);
+				}
+			}
 
 			// add the tree table header
 			addHeader();
@@ -298,7 +312,7 @@ public class TreeTable extends DefaultAbstractTree
 	 *            the current level
 	 */
 	@Override
-	protected void populateTreeItem(WebMarkupContainer item, int level)
+	protected void populateTreeItem(final WebMarkupContainer item, final int level)
 	{
 		final TreeNode node = (TreeNode)item.getDefaultModelObject();
 
@@ -306,11 +320,12 @@ public class TreeTable extends DefaultAbstractTree
 		SideColumnsView sideColumns = new SideColumnsView("sideColumns", node);
 		item.add(sideColumns);
 		if (columns != null)
+		{
 			for (int i = 0; i < columns.length; i++)
 			{
 				IColumn column = columns[i];
-				if (column.getLocation().getAlignment() == Alignment.LEFT ||
-					column.getLocation().getAlignment() == Alignment.RIGHT)
+				if ((column.getLocation().getAlignment() == Alignment.LEFT) ||
+					(column.getLocation().getAlignment() == Alignment.RIGHT))
 				{
 					Component component;
 					// first try to create a renderable
@@ -331,11 +346,13 @@ public class TreeTable extends DefaultAbstractTree
 					sideColumns.addColumn(column, component, renderable);
 				}
 			}
+		}
 
 		// add middle columns
 		MiddleColumnsView middleColumns = new MiddleColumnsView("middleColumns", node,
 			hasLeftColumn());
 		if (columns != null)
+		{
 			for (int i = 0; i < columns.length; i++)
 			{
 				IColumn column = columns[i];
@@ -360,6 +377,7 @@ public class TreeTable extends DefaultAbstractTree
 					middleColumns.addColumn(column, component, renderable);
 				}
 			}
+		}
 		item.add(middleColumns);
 
 		// do distinguish between selected and unselected rows we add an
@@ -370,7 +388,7 @@ public class TreeTable extends DefaultAbstractTree
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onComponentTag(Component component, ComponentTag tag)
+			public void onComponentTag(final Component component, final ComponentTag tag)
 			{
 				super.onComponentTag(component, tag);
 				if (getTreeState().isNodeSelected(node))
@@ -392,7 +410,7 @@ public class TreeTable extends DefaultAbstractTree
 	 * @param columns
 	 *            The columns
 	 */
-	private void init(IColumn columns[])
+	private void init(final IColumn columns[])
 	{
 		boolean found = false;
 		if (columns != null)

@@ -126,7 +126,7 @@ public class TabbedPanel extends Panel
 			}
 
 			@Override
-			protected LoopItem newItem(int iteration)
+			protected LoopItem newItem(final int iteration)
 			{
 				return newTabContainer(iteration);
 			}
@@ -169,7 +169,7 @@ public class TabbedPanel extends Panel
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onComponentTag(ComponentTag tag)
+			protected void onComponentTag(final ComponentTag tag)
 			{
 				super.onComponentTag(tag);
 				String cssClass = (String)tag.getString("class");
@@ -209,7 +209,7 @@ public class TabbedPanel extends Panel
 			// force an empty container to be created every time if we have no tabs
 			setSelectedTab(0);
 		}
-		else if (getSelectedTab() == -1 || isTabVisible(getSelectedTab()) == false)
+		else if ((getSelectedTab() == -1) || (isTabVisible(getSelectedTab()) == false))
 		{
 			// find first visible selected tab
 			int selected = 0;
@@ -268,7 +268,7 @@ public class TabbedPanel extends Panel
 	 *            index of tab
 	 * @return title component
 	 */
-	protected Component newTitle(String titleId, IModel<?> titleModel, int index)
+	protected Component newTitle(final String titleId, final IModel<?> titleModel, final int index)
 	{
 		return new Label(titleId, titleModel);
 	}
@@ -307,7 +307,7 @@ public class TabbedPanel extends Panel
 	 *            {@link #setSelectedTab(int)}.
 	 * @return created link component
 	 */
-	protected WebMarkupContainer newLink(String linkId, final int index)
+	protected WebMarkupContainer newLink(final String linkId, final int index)
 	{
 		return new Link<Void>(linkId)
 		{
@@ -330,7 +330,7 @@ public class TabbedPanel extends Panel
 	 */
 	public TabbedPanel setSelectedTab(final int index)
 	{
-		if (index < 0 || (index >= tabs.size() && index > 0))
+		if ((index < 0) || ((index >= tabs.size()) && (index > 0)))
 		{
 			throw new IndexOutOfBoundsException();
 		}
@@ -339,7 +339,7 @@ public class TabbedPanel extends Panel
 
 		final Component component;
 
-		if (tabs.size() == 0 || !isTabVisible(index))
+		if ((tabs.size() == 0) || !isTabVisible(index))
 		{
 			// no tabs or the currently selected tab is not visible
 			component = new WebMarkupContainer(TAB_PANEL_ID);
@@ -383,7 +383,7 @@ public class TabbedPanel extends Panel
 	 * @param tabIndex
 	 * @return visible
 	 */
-	private boolean isTabVisible(int tabIndex)
+	private boolean isTabVisible(final int tabIndex)
 	{
 		if (tabsVisibilityCache == null)
 		{

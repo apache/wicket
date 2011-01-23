@@ -28,14 +28,14 @@ import org.apache.wicket.IClusterable;
  * 
  * <p>
  * {@link IWizardModelListener wizard model listeners} can be registered to be notified of important
- * events (changing the active step) using the
- * {@link #addListener(IWizardModelListener) add listener} method.
+ * events (changing the active step) using the {@link #addListener(IWizardModelListener) add
+ * listener} method.
  * </p>
  * 
  * <p>
- * Typically, you would use {@link WizardModel the default implementation of this interface}, but
- * if you need to do more sophisticated stuff, like branching etc, you can consider creating your
- * own implementation. In that case, it is recommended you start by extending from
+ * Typically, you would use {@link WizardModel the default implementation of this interface}, but if
+ * you need to do more sophisticated stuff, like branching etc, you can consider creating your own
+ * implementation. In that case, it is recommended you start by extending from
  * {@link AbstractWizardModel}.
  * </p>
  * 

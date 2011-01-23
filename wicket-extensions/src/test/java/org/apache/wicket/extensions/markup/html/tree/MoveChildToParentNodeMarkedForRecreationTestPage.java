@@ -41,7 +41,7 @@ public class MoveChildToParentNodeMarkedForRecreationTestPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(final AjaxRequestTarget target)
 			{
 				treeTable.modelChanging();
 				DefaultTreeModel model = (DefaultTreeModel)treeTable.getDefaultModelObject();

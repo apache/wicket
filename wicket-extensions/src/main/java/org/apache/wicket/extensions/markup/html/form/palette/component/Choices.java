@@ -39,14 +39,14 @@ public class Choices<T> extends AbstractOptions<T>
 	 * @param palette
 	 *            parent palette
 	 */
-	public Choices(String id, Palette<T> palette)
+	public Choices(final String id, final Palette<T> palette)
 	{
 		super(id, palette);
 	}
 
 
 	@Override
-	protected void onComponentTag(ComponentTag tag)
+	protected void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
 		IValueMap attrs = tag.getAttributes();

@@ -48,7 +48,7 @@ public final class StringAutoCompleteRenderer extends AbstractAutoCompleteTextRe
 	 * @see AbstractAutoCompleteTextRenderer#getTextValue(Object)
 	 */
 	@Override
-	protected String getTextValue(Object object)
+	protected String getTextValue(final Object object)
 	{
 		return object.toString();
 	}

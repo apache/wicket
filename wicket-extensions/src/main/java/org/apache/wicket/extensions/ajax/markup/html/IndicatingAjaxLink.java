@@ -39,7 +39,7 @@ public abstract class IndicatingAjaxLink<T> extends AjaxLink<T> implements IAjax
 	 * 
 	 * @param id
 	 */
-	public IndicatingAjaxLink(String id)
+	public IndicatingAjaxLink(final String id)
 	{
 		this(id, null);
 	}
@@ -50,7 +50,7 @@ public abstract class IndicatingAjaxLink<T> extends AjaxLink<T> implements IAjax
 	 * @param id
 	 * @param model
 	 */
-	public IndicatingAjaxLink(String id, IModel<T> model)
+	public IndicatingAjaxLink(final String id, final IModel<T> model)
 	{
 		super(id, model);
 		add(indicatorAppender);

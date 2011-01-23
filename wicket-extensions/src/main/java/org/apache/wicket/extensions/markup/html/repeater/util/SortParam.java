@@ -21,7 +21,7 @@ import org.apache.wicket.util.lang.Args;
 
 /**
  * Represents sorting information of a property
- *
+ * 
  * @author Igor Vaynberg ( ivaynberg )
  */
 public class SortParam implements IClusterable
@@ -35,9 +35,10 @@ public class SortParam implements IClusterable
 	 * @param property
 	 *            sort property
 	 * @param ascending
-	 *            <code>true<code> if sort order is ascending, <code>false</code> if sort order is descending
+	 *            <code>true<code> if sort order is ascending, <code>false</code> if sort order is
+	 *            descending
 	 */
-	public SortParam(String property, boolean ascending)
+	public SortParam(final String property, final boolean ascending)
 	{
 		Args.notNull(property, "property");
 		this.property = property;
@@ -54,8 +55,9 @@ public class SortParam implements IClusterable
 
 	/**
 	 * check if sort order is ascending
-	 *
-	 * @return <code>true<code> if sort order is ascending, <code>false</code> if sort order is descending
+	 * 
+	 * @return <code>true<code> if sort order is ascending, <code>false</code> if sort order is
+	 *         descending
 	 */
 	public boolean isAscending()
 	{
@@ -63,16 +65,20 @@ public class SortParam implements IClusterable
 	}
 
 	@Override
-	public boolean equals(Object o)
+	public boolean equals(final Object o)
 	{
 		if (this == o)
+		{
 			return true;
+		}
 		if (!(o instanceof SortParam))
+		{
 			return false;
+		}
 
 		SortParam sortParam = (SortParam)o;
 
-		return ascending == sortParam.ascending && property.equals(sortParam.property);
+		return (ascending == sortParam.ascending) && property.equals(sortParam.property);
 	}
 
 	@Override
@@ -86,9 +92,14 @@ public class SortParam implements IClusterable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
-		return new StringBuilder().append("[SortParam property=").append(getProperty()).append(
-				" ascending=").append(ascending).append("]").toString();
+		return new StringBuilder().append("[SortParam property=")
+			.append(getProperty())
+			.append(" ascending=")
+			.append(ascending)
+			.append("]")
+			.toString();
 	}
 }

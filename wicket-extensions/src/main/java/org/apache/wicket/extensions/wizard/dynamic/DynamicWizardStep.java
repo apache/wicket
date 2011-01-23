@@ -39,7 +39,7 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	 * @param previousStep
 	 *            The previous step. May be null if this is the first step in the wizard
 	 */
-	public DynamicWizardStep(IDynamicWizardStep previousStep)
+	public DynamicWizardStep(final IDynamicWizardStep previousStep)
 	{
 		super();
 		this.previousStep = previousStep;
@@ -56,8 +56,8 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	 * @param summary
 	 *            a brief summary of this step or some usage guidelines.
 	 */
-	public DynamicWizardStep(IDynamicWizardStep previousStep, IModel<String> title,
-		IModel<String> summary)
+	public DynamicWizardStep(final IDynamicWizardStep previousStep, final IModel<String> title,
+		final IModel<String> summary)
 	{
 		super(title, summary);
 		this.previousStep = previousStep;
@@ -76,8 +76,8 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	 * @param model
 	 *            Any model which is to be used for this step
 	 */
-	public DynamicWizardStep(IDynamicWizardStep previousStep, IModel<String> title,
-		IModel<String> summary, IModel<?> model)
+	public DynamicWizardStep(final IDynamicWizardStep previousStep, final IModel<String> title,
+		final IModel<String> summary, final IModel<?> model)
 	{
 		super(title, summary, model);
 		this.previousStep = previousStep;
@@ -94,7 +94,8 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	 * @param summary
 	 *            a brief summary of this step or some usage guidelines.
 	 */
-	public DynamicWizardStep(IDynamicWizardStep previousStep, String title, String summary)
+	public DynamicWizardStep(final IDynamicWizardStep previousStep, final String title,
+		final String summary)
 	{
 		super(title, summary);
 		this.previousStep = previousStep;
@@ -113,8 +114,8 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	 * @param model
 	 *            Any model which is to be used for this step
 	 */
-	public DynamicWizardStep(IDynamicWizardStep previousStep, String title, String summary,
-		IModel<?> model)
+	public DynamicWizardStep(final IDynamicWizardStep previousStep, final String title,
+		final String summary, final IModel<?> model)
 	{
 		super(title, summary, model);
 		this.previousStep = previousStep;

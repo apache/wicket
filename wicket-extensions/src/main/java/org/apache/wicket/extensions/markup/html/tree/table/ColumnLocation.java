@@ -28,15 +28,15 @@ import org.apache.wicket.util.lang.EnumeratedType;
  * <p>
  * Next two attributes are <b>size</b> and <b>unit</b>:
  * <ul>
- * <li> For columns aligned to the left and to the right, the <b>size</b> represents the actual
- * width of the column, according to chosen unit. Possible units for left and right aligned columns
- * are <em>PX</em>, <em>EM</em> and <em>PERCENT</em>. </li>
- * <li> For columns in the middle, the only valid unit is <em>PROPORTIONAL</em>. These columns
- * take all available space between columns on the left and columns on the right. How this space is
+ * <li>For columns aligned to the left and to the right, the <b>size</b> represents the actual width
+ * of the column, according to chosen unit. Possible units for left and right aligned columns are
+ * <em>PX</em>, <em>EM</em> and <em>PERCENT</em>.</li>
+ * <li>For columns in the middle, the only valid unit is <em>PROPORTIONAL</em>. These columns take
+ * all available space between columns on the left and columns on the right. How this space is
  * divided between middle columns is determined by the <b>size</b>. In this case the size can be
  * understand as weight. Columns with bigger size take more space than columns with smaller size.
  * For example, if there are three columns and their sizes are 2, 1, 1, the first column thakes 50%
- * of the space and the second two columns take 25% each. </li>
+ * of the space and the second two columns take 25% each.</li>
  * </ul>
  * 
  * @author Matej Knopp
@@ -64,7 +64,7 @@ public class ColumnLocation implements IClusterable
 		 * 
 		 * @param name
 		 */
-		public Alignment(String name)
+		public Alignment(final String name)
 		{
 			super(name);
 		}
@@ -95,7 +95,7 @@ public class ColumnLocation implements IClusterable
 		 * 
 		 * @param name
 		 */
-		public Unit(String name)
+		public Unit(final String name)
 		{
 			super(name);
 		}
@@ -103,9 +103,9 @@ public class ColumnLocation implements IClusterable
 
 	private static final long serialVersionUID = 1L;
 
-	private Alignment alignment;
-	private int size;
-	private Unit unit;
+	private final Alignment alignment;
+	private final int size;
+	private final Unit unit;
 
 	/**
 	 * Constructs the ColumnLocation object.
@@ -119,21 +119,21 @@ public class ColumnLocation implements IClusterable
 	 * @throws IllegalArgumentException
 	 *             if the unit does not matche the alignment
 	 */
-	public ColumnLocation(Alignment alignment, int size, Unit unit)
+	public ColumnLocation(final Alignment alignment, final int size, final Unit unit)
 	{
 		this.alignment = alignment;
 		this.size = size;
 		this.unit = unit;
 
-		if (alignment == Alignment.MIDDLE && unit != Unit.PROPORTIONAL)
+		if ((alignment == Alignment.MIDDLE) && (unit != Unit.PROPORTIONAL))
 		{
 			throw new IllegalArgumentException(
-					"For alignment MIDDLE the specified unit must be PROPORTIONAL.");
+				"For alignment MIDDLE the specified unit must be PROPORTIONAL.");
 		}
-		else if (alignment != Alignment.MIDDLE && unit == Unit.PROPORTIONAL)
+		else if ((alignment != Alignment.MIDDLE) && (unit == Unit.PROPORTIONAL))
 		{
 			throw new IllegalArgumentException(
-					"Unit PROPORTIONAL can be specified only for columns with alignment MIDDLE.");
+				"Unit PROPORTIONAL can be specified only for columns with alignment MIDDLE.");
 		}
 	}
 

@@ -33,7 +33,7 @@ public class NoFilter extends Panel
 	 * @param id
 	 *            component id
 	 */
-	public NoFilter(String id)
+	public NoFilter(final String id)
 	{
 		super(id);
 	}

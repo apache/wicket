@@ -36,7 +36,7 @@ class UploadStatusResource extends AbstractResource
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected ResourceResponse newResourceResponse(Attributes attributes)
+	protected ResourceResponse newResourceResponse(final Attributes attributes)
 	{
 		ResourceResponse response = new ResourceResponse();
 		response.setContentType("text/html");
@@ -45,7 +45,7 @@ class UploadStatusResource extends AbstractResource
 		response.setWriteCallback(new WriteCallback()
 		{
 			@Override
-			public void writeData(Attributes attributes)
+			public void writeData(final Attributes attributes)
 			{
 				attributes.getResponse().write(content);
 			}
@@ -63,13 +63,13 @@ class UploadStatusResource extends AbstractResource
 	 * @return Status string with progress data that will feed the progressbar.js variables on
 	 *         browser to update the progress bar
 	 */
-	private String getStatus(Attributes attributes)
+	private String getStatus(final Attributes attributes)
 	{
 		HttpServletRequest req = ((ServletWebRequest)attributes.getRequest()).getHttpServletRequest();
 		UploadInfo info = UploadWebRequest.getUploadInfo(req);
 
 		String status = null;
-		if (info == null || info.getTotalBytes() < 1)
+		if ((info == null) || (info.getTotalBytes() < 1))
 		{
 			status = "0|0|0|0|0";
 		}

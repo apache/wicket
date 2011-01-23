@@ -44,14 +44,14 @@ public class AjaxLazyLoadPanelTesterTest extends WicketTestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Panel getTestPanel(String panelId)
+			public Panel getTestPanel(final String panelId)
 			{
 				return new AjaxLazyLoadPanel(panelId)
 				{
 					private static final long serialVersionUID = 1L;
 
 					@Override
-					public Component getLazyLoadComponent(String markupId)
+					public Component getLazyLoadComponent(final String markupId)
 					{
 						return new Label(markupId, "lazy panel test").setRenderBodyOnly(true);
 					}

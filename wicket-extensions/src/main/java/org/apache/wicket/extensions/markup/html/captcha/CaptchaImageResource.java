@@ -63,7 +63,8 @@ public final class CaptchaImageResource extends DynamicImageResource
 		private final double shearX;
 		private final double shearY;
 
-		CharAttributes(char c, String name, double rotation, int rise, double shearX, double shearY)
+		CharAttributes(final char c, final String name, final double rotation, final int rise,
+			final double shearX, final double shearY)
 		{
 			this.c = c;
 			this.name = name;
@@ -106,17 +107,19 @@ public final class CaptchaImageResource extends DynamicImageResource
 
 	private static final long serialVersionUID = 1L;
 
-	private static int randomInt(int min, int max)
+	private static int randomInt(final int min, final int max)
 	{
 		return (int)(Math.random() * (max - min) + min);
 	}
 
-	private static String randomString(int min, int max)
+	private static String randomString(final int min, final int max)
 	{
 		int num = randomInt(min, max);
 		byte b[] = new byte[num];
 		for (int i = 0; i < num; i++)
+		{
 			b[i] = (byte)randomInt('a', 'z');
+		}
 		return new String(b);
 	}
 
@@ -145,7 +148,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 	 * @param challengeId
 	 *            The id of the challenge
 	 */
-	public CaptchaImageResource(String challengeId)
+	public CaptchaImageResource(final String challengeId)
 	{
 		this(new Model<String>(challengeId));
 	}
@@ -157,7 +160,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 	 * @param challengeId
 	 *            The id of the challenge
 	 */
-	public CaptchaImageResource(IModel<String> challengeId)
+	public CaptchaImageResource(final IModel<String> challengeId)
 	{
 		this(challengeId, 48, 30);
 	}
@@ -172,7 +175,8 @@ public final class CaptchaImageResource extends DynamicImageResource
 	 * @param margin
 	 *            The image's margin
 	 */
-	public CaptchaImageResource(IModel<String> challengeId, int fontSize, int margin)
+	public CaptchaImageResource(final IModel<String> challengeId, final int fontSize,
+		final int margin)
 	{
 		this.challengeId = challengeId;
 		fontStyle = 1;
@@ -191,7 +195,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 	 * @param margin
 	 *            The image's margin
 	 */
-	public CaptchaImageResource(String challengeId, int fontSize, int margin)
+	public CaptchaImageResource(final String challengeId, final int fontSize, final int margin)
 	{
 		this(new Model<String>(challengeId), fontSize, margin);
 	}
@@ -225,7 +229,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 	}
 
 	@Override
-	protected final byte[] getImageData(Attributes attributes)
+	protected final byte[] getImageData(final Attributes attributes)
 	{
 		// get image data is always called in sync block
 		byte[] data = null;
@@ -242,7 +246,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 		return data;
 	}
 
-	private Font getFont(String fontName)
+	private Font getFont(final String fontName)
 	{
 		return new Font(fontName, fontStyle, fontSize);
 	}

@@ -42,8 +42,8 @@ public class TextFilteredPropertyColumn<T, F> extends FilteredPropertyColumn<T>
 	 * @param sortProperty
 	 * @param propertyExpression
 	 */
-	public TextFilteredPropertyColumn(IModel<String> displayModel, String sortProperty,
-		String propertyExpression)
+	public TextFilteredPropertyColumn(final IModel<String> displayModel, final String sortProperty,
+		final String propertyExpression)
 	{
 		super(displayModel, sortProperty, propertyExpression);
 	}
@@ -52,7 +52,8 @@ public class TextFilteredPropertyColumn<T, F> extends FilteredPropertyColumn<T>
 	 * @param displayModel
 	 * @param propertyExpression
 	 */
-	public TextFilteredPropertyColumn(IModel<String> displayModel, String propertyExpression)
+	public TextFilteredPropertyColumn(final IModel<String> displayModel,
+		final String propertyExpression)
 	{
 		super(displayModel, propertyExpression);
 	}
@@ -61,7 +62,7 @@ public class TextFilteredPropertyColumn<T, F> extends FilteredPropertyColumn<T>
 	 * @see org.apache.wicket.extensions.markup.html.repeater.data.table.filter.IFilteredColumn#getFilter(java.lang.String,
 	 *      org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterForm)
 	 */
-	public Component getFilter(String componentId, FilterForm<?> form)
+	public Component getFilter(final String componentId, final FilterForm<?> form)
 	{
 		return new TextFilter<F>(componentId, getFilterModel(form), form);
 	}
@@ -74,7 +75,7 @@ public class TextFilteredPropertyColumn<T, F> extends FilteredPropertyColumn<T>
 	 *            filter form
 	 * @return model passed on to the text filter
 	 */
-	protected IModel<F> getFilterModel(FilterForm<?> form)
+	protected IModel<F> getFilterModel(final FilterForm<?> form)
 	{
 		return new PropertyModel<F>(form.getDefaultModel(), getPropertyExpression());
 	}

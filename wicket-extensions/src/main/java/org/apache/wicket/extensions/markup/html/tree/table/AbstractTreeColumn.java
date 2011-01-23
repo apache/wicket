@@ -45,7 +45,7 @@ public abstract class AbstractTreeColumn extends AbstractColumn
 	 *            Header caption
 	 * 
 	 */
-	public AbstractTreeColumn(ColumnLocation location, String header)
+	public AbstractTreeColumn(final ColumnLocation location, final String header)
 	{
 		super(location, header);
 	}
@@ -53,13 +53,14 @@ public abstract class AbstractTreeColumn extends AbstractColumn
 	/**
 	 * @see IColumn#newCell(MarkupContainer, String, TreeNode, int)
 	 */
-	public Component newCell(MarkupContainer parent, String id, TreeNode node, int level)
+	public Component newCell(final MarkupContainer parent, final String id, final TreeNode node,
+		final int level)
 	{
 		return TreeTable.newTreeCell(parent, id, node, level, new TreeTable.IRenderNodeCallback()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public String renderNode(TreeNode node)
+			public String renderNode(final TreeNode node)
 			{
 				return AbstractTreeColumn.this.renderNode(node);
 			}
@@ -69,7 +70,7 @@ public abstract class AbstractTreeColumn extends AbstractColumn
 	/**
 	 * @see IColumn#newCell(TreeNode, int)
 	 */
-	public IRenderable newCell(TreeNode node, int level)
+	public IRenderable newCell(final TreeNode node, final int level)
 	{
 		return null;
 	}
