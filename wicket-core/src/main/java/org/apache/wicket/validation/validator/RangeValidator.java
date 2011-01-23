@@ -18,6 +18,7 @@ package org.apache.wicket.validation.validator;
 
 import java.io.Serializable;
 
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
@@ -28,7 +29,9 @@ import org.apache.wicket.validation.ValidationError;
  * @param <Z>
  *            type of validatable
  */
-public class RangeValidator<Z extends Comparable<Z> & Serializable> implements IValidator<Z>
+public class RangeValidator<Z extends Comparable<Z> & Serializable> extends Behavior
+	implements
+		IValidator<Z>
 {
 	private static final long serialVersionUID = 1L;
 	private Z minimum;

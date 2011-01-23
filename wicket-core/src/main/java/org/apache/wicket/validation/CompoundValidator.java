@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.wicket.behavior.Behavior;
+
 /**
  * A compound {@link IValidator}. Once an error is reported against the {@link IValidatable} being
  * checked, the rest of the validator chain is ignored.
@@ -30,7 +32,7 @@ import java.util.List;
  *            type of validatable
  * @since 1.2.6
  */
-public class CompoundValidator<T> implements IValidator<T>
+public class CompoundValidator<T> extends Behavior implements IValidator<T>
 {
 	private static final long serialVersionUID = 1L;
 

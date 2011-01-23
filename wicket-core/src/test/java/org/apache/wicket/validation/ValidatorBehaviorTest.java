@@ -147,7 +147,7 @@ public class ValidatorBehaviorTest extends WicketTestCase
 		}
 	}
 
-	public static class MinLenValidator implements IValidator<String>
+	public static class MinLenValidator extends Behavior implements IValidator<String>
 	{
 
 		private int len = 5;

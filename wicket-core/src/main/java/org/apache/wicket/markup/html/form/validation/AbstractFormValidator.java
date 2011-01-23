@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.form.validation;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Classes;
@@ -31,7 +32,7 @@ import org.apache.wicket.validation.ValidationError;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class AbstractFormValidator implements IFormValidator
+public abstract class AbstractFormValidator extends Behavior implements IFormValidator
 {
 	private static final long serialVersionUID = 1L;
 
@@ -150,8 +151,10 @@ public abstract class AbstractFormValidator implements IFormValidator
 				}
 				else
 				{
-					args.put(arg, formComponent.getLocalizer().getString(formComponent.getId(),
-						formComponent.getParent(), formComponent.getId()));
+					args.put(
+						arg,
+						formComponent.getLocalizer().getString(formComponent.getId(),
+							formComponent.getParent(), formComponent.getId()));
 				}
 
 				args.put("input" + i, formComponent.getInput());

@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.validation.INullAcceptingValidator;
 import org.apache.wicket.validation.IValidatable;
@@ -43,7 +44,10 @@ import org.apache.wicket.validation.ValidationError;
  *            type of validatable
  * @since 1.2.6
  */
-public abstract class AbstractValidator<T> implements INullAcceptingValidator<T>, IClusterable
+public abstract class AbstractValidator<T> extends Behavior
+	implements
+		INullAcceptingValidator<T>,
+		IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
