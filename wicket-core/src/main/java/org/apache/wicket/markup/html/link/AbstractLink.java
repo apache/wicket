@@ -32,7 +32,7 @@ public abstract class AbstractLink extends WebMarkupContainer
 	private static final long serialVersionUID = 1L;
 
 	/** this link's label/body. */
-	private final IModel<?> label;
+	private IModel<?> bodyModel;
 
 	/**
 	 * Construct.
@@ -54,22 +54,7 @@ public abstract class AbstractLink extends WebMarkupContainer
 	 */
 	public AbstractLink(String id, IModel<?> model)
 	{
-		this(id, model, null);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param id
-	 *            the component id
-	 * @param model
-	 *            the link's model
-	 * @param labelModel
-	 */
-	public AbstractLink(String id, IModel<?> model, final IModel<?> labelModel)
-	{
 		super(id, model);
-		label = wrap(labelModel);
 	}
 
 	/**
@@ -185,10 +170,10 @@ public abstract class AbstractLink extends WebMarkupContainer
 			getResponse().write(getBeforeDisabledLink());
 		}
 
-		if ((label != null) && (label.getObject() != null))
+		if ((bodyModel != null) && (bodyModel.getObject() != null))
 		{
 			replaceComponentTagBody(markupStream, openTag,
-				getDefaultModelObjectAsString(label.getObject()));
+				getDefaultModelObjectAsString(bodyModel.getObject()));
 		}
 		else
 		{
@@ -233,10 +218,22 @@ public abstract class AbstractLink extends WebMarkupContainer
 	}
 
 	/**
-	 * @return the link's label/body
+	 * @return the link's body model
 	 */
-	public IModel<?> getLabel()
+	public IModel<?> getBodyModel()
 	{
-		return label;
+		return bodyModel;
+	}
+
+	/**
+	 * Sets the link's body model
+	 * 
+	 * @param bodyModel
+	 * @return <code>this</code> for method chaining
+	 */
+	public AbstractLink setBodyModel(final IModel<?> bodyModel)
+	{
+		this.bodyModel = bodyModel;
+		return this;
 	}
 }

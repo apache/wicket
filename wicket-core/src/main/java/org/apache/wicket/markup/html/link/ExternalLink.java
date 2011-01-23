@@ -52,9 +52,10 @@ public class ExternalLink extends AbstractLink
 	 */
 	public ExternalLink(final String id, final String href, final String label)
 	{
-		super(id, null, Model.of(label));
+		super(id);
 
 		setDefaultModel(href != null ? new Model<String>(href) : null);
+		setBodyModel(Model.of(label));
 	}
 
 	/**
@@ -66,6 +67,19 @@ public class ExternalLink extends AbstractLink
 	 *            the href attribute to set
 	 */
 	public ExternalLink(final String id, final String href)
+	{
+		this(id, Model.of(href));
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param id
+	 *            The name of this component
+	 * @param href
+	 *            the href attribute to set
+	 */
+	public ExternalLink(final String id, final IModel<String> href)
 	{
 		this(id, href, null);
 	}
@@ -82,22 +96,10 @@ public class ExternalLink extends AbstractLink
 	 */
 	public ExternalLink(final String id, final IModel<String> href, final IModel<?> label)
 	{
-		super(id, null, label);
+		super(id);
 
 		setDefaultModel(wrap(href));
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param id
-	 *            The name of this component
-	 * @param href
-	 *            the href attribute to set
-	 */
-	public ExternalLink(final String id, final IModel<String> href)
-	{
-		this(id, href, null);
+		setBodyModel(wrap(label));
 	}
 
 	/**
@@ -211,5 +213,15 @@ public class ExternalLink extends AbstractLink
 	{
 		this.contextRelative = contextRelative;
 		return this;
+	}
+
+	/**
+	 * @deprecated use {@link #getBodyModel()} instead
+	 * @return the model used for the link's body
+	 */
+	@Deprecated
+	public IModel<?> getLabel()
+	{
+		return getBodyModel();
 	}
 }
