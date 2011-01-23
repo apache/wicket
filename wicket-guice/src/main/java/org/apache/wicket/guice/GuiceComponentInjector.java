@@ -99,7 +99,7 @@ public class GuiceComponentInjector extends ConfigurableInjector
 	public GuiceComponentInjector(Application app, Injector injector)
 	{
 		app.setMetaData(GuiceInjectorHolder.INJECTOR_KEY, new GuiceInjectorHolder(injector));
-		InjectorHolder.setInjector(this);
+		InjectorHolder.setInjector(this, app);
 	}
 
 	/**
@@ -248,5 +248,5 @@ public class GuiceComponentInjector extends ConfigurableInjector
 	{
 		// No need of {@link IFieldValueFactory}
 		return null;
-}
+	}
 }

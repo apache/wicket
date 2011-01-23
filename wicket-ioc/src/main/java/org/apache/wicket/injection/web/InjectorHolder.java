@@ -40,8 +40,8 @@ import org.apache.wicket.injection.ConfigurableInjector;
  * 
  * InjectorHolder.setInjector(new MockSpringInjector());
  * 
- * //from this point on InjectableWebPage and InjectablePanel
- * //will be injected using the MockSpringInjector
+ * // from this point on InjectableWebPage and InjectablePanel
+ * // will be injected using the MockSpringInjector
  * </pre>
  * 
  * @author Igor Vaynberg (ivaynberg)
@@ -86,7 +86,23 @@ public class InjectorHolder
 	public static void setInjector(ConfigurableInjector newInjector)
 	{
 		Application application = Application.get();
+		setInjector(newInjector, application);
+	}
+
+	/**
+	 * Sets an injector
+	 * 
+	 * NOTICE this method is not thread safe.
+	 * 
+	 * @param newInjector
+	 *            new injector
+	 * @param application
+	 *            application instance to which the injector will be bound
+	 */
+	public static void setInjector(ConfigurableInjector newInjector, Application application)
+	{
 		application.setMetaData(INJECTOR_KEY, newInjector);
 	}
+
 
 }

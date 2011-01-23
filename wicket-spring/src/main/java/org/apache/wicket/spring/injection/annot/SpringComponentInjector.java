@@ -101,7 +101,8 @@ public class SpringComponentInjector extends ComponentInjector
 		webapp.setMetaData(CONTEXT_KEY, new ApplicationContextHolder(ctx));
 
 		// ... and create and register the annotation aware injector
-		InjectorHolder.setInjector(new AnnotSpringInjector(new ContextLocator(), wrapInProxies));
+		InjectorHolder.setInjector(new AnnotSpringInjector(new ContextLocator(), wrapInProxies),
+				webapp);
 	}
 
 	/**
