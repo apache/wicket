@@ -43,7 +43,6 @@ import org.apache.wicket.util.string.Strings;
  * {@link StringResourceStream} implementation, of which there are a number of convenient
  * implementations in the {@link org.apache.wicket.util} package. The model can be any normal
  * {@link Map}, which will be used to create the {@link VelocityContext}.
- * 
  * <p>
  * <b>Note:</b> Be sure to properly initialize the Velocity engine before using
  * {@link VelocityPanel }.
@@ -68,8 +67,9 @@ public abstract class VelocityPanel extends Panel
 	 *            The template resource
 	 * @return an instance of {@link VelocityPanel}
 	 */
-	public static VelocityPanel forTemplateResource(String id, IModel<? extends Map> model,
-		final IResourceStream templateResource)
+	@SuppressWarnings("rawtypes")
+	public static VelocityPanel forTemplateResource(final String id,
+		final IModel<? extends Map> model, final IResourceStream templateResource)
 	{
 		if (templateResource == null)
 		{
@@ -102,6 +102,7 @@ public abstract class VelocityPanel extends Panel
 	 * @param model
 	 *            Model with variables that can be substituted by Velocity.
 	 */
+	@SuppressWarnings("rawtypes")
 	public VelocityPanel(final String id, final IModel<? extends Map> model)
 	{
 		super(id, model);
@@ -133,20 +134,18 @@ public abstract class VelocityPanel extends Panel
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		if (!Strings.isEmpty(stackTraceAsString))
 		{
-			// TODO: only display the velocity error/stacktrace in development
-			// mode?
+			// TODO: only display the velocity error/stacktrace in development mode?
 			replaceComponentTagBody(markupStream, openTag,
 				Strings.toMultilineMarkup(stackTraceAsString));
 		}
 		else if (!parseGeneratedMarkup())
 		{
 			// check that no components have been added in case the generated
-			// markup should not be
-			// parsed
+			// markup should not be parsed
 			if (size() > 0)
 			{
 				throw new WicketRuntimeException(
@@ -214,11 +213,12 @@ public abstract class VelocityPanel extends Panel
 	 *            used to read the template
 	 * @return the result of evaluating the velocity template
 	 */
-	private String evaluateVelocityTemplate(Reader templateReader)
+	private String evaluateVelocityTemplate(final Reader templateReader)
 	{
 		if (evaluatedTemplate == null)
 		{
 			// Get model as a map
+			@SuppressWarnings("rawtypes")
 			final Map map = (Map)getDefaultModelObject();
 
 			// create a Velocity context object using the model if set
@@ -286,8 +286,8 @@ public abstract class VelocityPanel extends Panel
 	/**
 	 * {@inheritDoc}
 	 */
-	public final IResourceStream getMarkupResourceStream(MarkupContainer container,
-		Class<?> containerClass)
+	public final IResourceStream getMarkupResourceStream(final MarkupContainer container,
+		final Class<?> containerClass)
 	{
 		Reader reader = getTemplateReader();
 		if (reader == null)
@@ -306,7 +306,7 @@ public abstract class VelocityPanel extends Panel
 	/**
 	 * {@inheritDoc}
 	 */
-	public final String getCacheKey(MarkupContainer container, Class<?> containerClass)
+	public final String getCacheKey(final MarkupContainer container, final Class<?> containerClass)
 	{
 		// don't cache the evaluated template
 		return null;

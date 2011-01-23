@@ -42,9 +42,9 @@
 			<artifactId>wicket-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>velocity</groupId>
+			<groupId>org.apache.velocity</groupId>
 			<artifactId>velocity</artifactId>
-			<version>1.4</version>
+			<version>1.7</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -43,8 +43,8 @@ public class VelocityJavaScriptContributor extends VelocityContributor
 	 * @param model
 	 * @param id
 	 */
-	public VelocityJavaScriptContributor(Class<?> clazz, String templatePath,
-		IModel<? extends Map<?, ?>> model, String id)
+	public VelocityJavaScriptContributor(final Class<?> clazz, final String templatePath,
+		final IModel<? extends Map<?, ?>> model, final String id)
 	{
 		super(Packages.absolutePath(clazz, templatePath), model);
 		this.id = id;
@@ -58,19 +58,18 @@ public class VelocityJavaScriptContributor extends VelocityContributor
 	 * @param model
 	 * @param id
 	 */
-	public VelocityJavaScriptContributor(String templatePath, IModel<? extends Map<?, ?>> model,
-		String id)
+	public VelocityJavaScriptContributor(final String templatePath,
+		final IModel<? extends Map<?, ?>> model, final String id)
 	{
 		super(templatePath, model);
 		this.id = id;
 	}
 
 	/**
-	 * @see org.apache.wicket.velocity.VelocityContributor#renderHead(org.apache.wicket.markup.html.
-	 *      IHeaderResponse)
+	 * {@inheritDoc}
 	 */
 	@Override
-	public void renderHead(Component component, IHeaderResponse response)
+	public void renderHead(final Component component, final IHeaderResponse response)
 	{
 		CharSequence s = evaluate();
 		if (s != null)

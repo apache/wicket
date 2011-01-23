@@ -23,7 +23,6 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.IStringResourceStream;
 import org.apache.wicket.util.resource.UrlResourceStream;
 import org.apache.wicket.velocity.markup.html.VelocityPanel;
 
@@ -42,7 +41,7 @@ public class VelocityWithMarkupParsingPage extends WebPage
 		HashMap<String, String> values = new HashMap<String, String>();
 		values.put("labelId", "message");
 		VelocityPanel velocityPanel = new VelocityPanel("velocityPanel",
-				new Model<HashMap<String, String>>(values))
+			new Model<HashMap<String, String>>(values))
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -63,7 +62,7 @@ public class VelocityWithMarkupParsingPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onComponentTag(ComponentTag tag)
+			protected void onComponentTag(final ComponentTag tag)
 			{
 				super.onComponentTag(tag);
 				// check whether the markupstream can be located

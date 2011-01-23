@@ -47,9 +47,9 @@ public class Initializer implements IInitializer
 	private static final Logger log = LoggerFactory.getLogger(Initializer.class);
 
 	/**
-	 * @see org.apache.wicket.IInitializer#init(org.apache.wicket.Application)
+	 * {@inheritDoc}
 	 */
-	public void init(Application application)
+	public void init(final Application application)
 	{
 		Properties props = getVelocityProperties(application);
 
@@ -71,7 +71,7 @@ public class Initializer implements IInitializer
 		}
 	}
 
-	private Properties getVelocityProperties(Application application)
+	private Properties getVelocityProperties(final Application application)
 	{
 		String velocityPropertiesFile = "velocity.properties";
 
@@ -147,9 +147,10 @@ public class Initializer implements IInitializer
 		}
 	}
 
-	/** {@inheritDoc} */
-	public void destroy(Application application)
+	/**
+	 * {@inheritDoc}
+	 */
+	public void destroy(final Application application)
 	{
 	}
-
 }

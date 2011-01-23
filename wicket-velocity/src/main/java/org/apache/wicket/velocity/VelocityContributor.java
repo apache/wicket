@@ -52,21 +52,20 @@ public class VelocityContributor extends Behavior
 	 * "wicket/contrib/util/resource/foo.vm". Wicket provides a nice utility
 	 * {@link org.apache.wicket.util.lang.Packages} for this.
 	 * 
-	 * 
 	 * @param templateName
 	 * @param model
 	 */
-	public VelocityContributor(String templateName, final IModel<? extends Map<?, ?>> model)
+	public VelocityContributor(final String templateName, final IModel<? extends Map<?, ?>> model)
 	{
 		this.templateName = templateName;
 		this.model = model;
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.AbstractBehavior#detach(org.apache.wicket.Component)
+	 * {@inheritDoc}
 	 */
 	@Override
-	public void detach(Component c)
+	public void detach(final Component c)
 	{
 		if (model instanceof IDetachable)
 		{
@@ -83,10 +82,10 @@ public class VelocityContributor extends Behavior
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
+	 * {@inheritDoc}
 	 */
 	@Override
-	public void renderHead(Component component, final IHeaderResponse response)
+	public void renderHead(final Component component, final IHeaderResponse response)
 	{
 		CharSequence s = evaluate();
 		if (null != s)
@@ -99,7 +98,7 @@ public class VelocityContributor extends Behavior
 	 * @param encoding
 	 *            The encoding
 	 */
-	public void setEncoding(String encoding)
+	public void setEncoding(final String encoding)
 	{
 		this.encoding = encoding;
 	}
@@ -123,6 +122,7 @@ public class VelocityContributor extends Behavior
 		{
 			return null;
 		}
+
 		// create a Velocity context object using the model if set
 		final VelocityContext ctx = new VelocityContext(model.getObject());
 
@@ -150,7 +150,8 @@ public class VelocityContributor extends Behavior
 		}
 		catch (Exception e)
 		{
-			throw new WicketRuntimeException(e);
+			throw new WicketRuntimeException("Error while executing velocity script: " +
+				templateName, e);
 		}
 	}
 }
