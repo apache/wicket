@@ -88,12 +88,13 @@ import com.google.inject.Stage;
  */
 public class GuiceWebApplicationFactory implements IWebApplicationFactory
 {
+	/** */
 	public static final String STAGE_PARAMETER = "wicket-guice.stage";
 
 	/**
 	 * @see IWebApplicationFactory#createApplication(WicketFilter)
 	 */
-	public WebApplication createApplication(WicketFilter filter)
+	public WebApplication createApplication(final WicketFilter filter)
 	{
 		Injector injector;
 
@@ -178,7 +179,7 @@ public class GuiceWebApplicationFactory implements IWebApplicationFactory
 	}
 
 	/** {@inheritDoc} */
-	public void destroy(WicketFilter filter)
+	public void destroy(final WicketFilter filter)
 	{
 	}
 }

@@ -46,7 +46,7 @@ public class GuiceWebApplicationFactoryTest
 			bind(WebApplication.class).toInstance(new WebApplication()
 			{
 				@Override
-				public Class< ? extends Page> getHomePage()
+				public Class<? extends Page> getHomePage()
 				{
 					return null;
 				}
@@ -65,7 +65,7 @@ public class GuiceWebApplicationFactoryTest
 
 				return new FilterConfig()
 				{
-					public String getInitParameter(String param)
+					public String getInitParameter(final String param)
 					{
 						if ("module".equals(param))
 						{

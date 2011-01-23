@@ -28,29 +28,40 @@ import org.apache.wicket.proxy.LazyInitProxyFactory;
 import com.google.inject.BindingAnnotation;
 import com.google.inject.Inject;
 
+/**
+ * 
+ */
 public class GuiceFieldValueFactory implements IFieldValueFactory
 {
 	private final boolean wrapInProxies;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param wrapInProxies
+	 */
 	GuiceFieldValueFactory(final boolean wrapInProxies)
 	{
 		this.wrapInProxies = wrapInProxies;
 	}
 
-	public Object getFieldValue(Field field, Object fieldOwner)
+	/**
+	 * {@inheritDoc}
+	 */
+	public Object getFieldValue(final Field field, final Object fieldOwner)
 	{
 		Object target = null;
 
 		if (supportsField(field))
 		{
 			Inject injectAnnotation = field.getAnnotation(Inject.class);
-			if (!Modifier.isStatic(field.getModifiers()) && injectAnnotation != null)
+			if (!Modifier.isStatic(field.getModifiers()) && (injectAnnotation != null))
 			{
 				try
 				{
 					Annotation bindingAnnotation = findBindingAnnotation(field.getAnnotations());
 					final IProxyTargetLocator locator = new GuiceProxyTargetLocator(field,
-							bindingAnnotation, injectAnnotation.optional());
+						bindingAnnotation, injectAnnotation.optional());
 
 					if (wrapInProxies)
 					{
@@ -67,19 +78,17 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 					}
 
 					field.set(fieldOwner, target);
-
 				}
 				catch (IllegalAccessException e)
 				{
 					throw new WicketRuntimeException("Error Guice-injecting field " +
-							field.getName() + " in " + fieldOwner, e);
+						field.getName() + " in " + fieldOwner, e);
 				}
 				catch (MoreThanOneBindingException e)
 				{
 					throw new RuntimeException(
-							"Can't have more than one BindingAnnotation on field " +
-									field.getName() + " of class " +
-									fieldOwner.getClass().getName());
+						"Can't have more than one BindingAnnotation on field " + field.getName() +
+							" of class " + fieldOwner.getClass().getName());
 				}
 			}
 		}
@@ -87,13 +96,22 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 		return target;
 	}
 
-	public boolean supportsField(Field field)
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean supportsField(final Field field)
 	{
 		return field.isAnnotationPresent(Inject.class);
 	}
 
+	/**
+	 * 
+	 * @param annotations
+	 * @return Annotation
+	 * @throws MoreThanOneBindingException
+	 */
 	private Annotation findBindingAnnotation(final Annotation[] annotations)
-			throws MoreThanOneBindingException
+		throws MoreThanOneBindingException
 	{
 		Annotation bindingAnnotation = null;
 
@@ -112,6 +130,9 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 		return bindingAnnotation;
 	}
 
+	/**
+	 * 
+	 */
 	public static class MoreThanOneBindingException extends Exception
 	{
 		private static final long serialVersionUID = 1L;

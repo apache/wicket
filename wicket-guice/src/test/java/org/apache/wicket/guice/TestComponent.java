@@ -51,7 +51,7 @@ public class TestComponent extends Component
 
 	private final TestNoComponent noComponent;
 
-	public TestComponent(String id)
+	public TestComponent(final String id)
 	{
 		super(id);
 		noComponent = new TestNoComponent();

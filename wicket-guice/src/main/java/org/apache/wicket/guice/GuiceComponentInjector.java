@@ -58,7 +58,7 @@ public class GuiceComponentInjector extends org.apache.wicket.injection.Injector
 	 * 
 	 * @param app
 	 */
-	public GuiceComponentInjector(Application app)
+	public GuiceComponentInjector(final Application app)
 	{
 		this(app, new Module[0]);
 	}
@@ -70,16 +70,19 @@ public class GuiceComponentInjector extends org.apache.wicket.injection.Injector
 	 * @param app
 	 * @param modules
 	 */
-	public GuiceComponentInjector(Application app, Module... modules)
+	public GuiceComponentInjector(final Application app, final Module... modules)
 	{
 		this(app, Guice.createInjector(app.usesDeploymentConfig() ? Stage.PRODUCTION
 			: Stage.DEVELOPMENT, modules), true);
 	}
 
 	/**
-	 * @see GuiceComponentInjector(Application app, Injector injector, boolean wrapInProxies)
+	 * Constructor
+	 * 
+	 * @param app
+	 * @param injector
 	 */
-	public GuiceComponentInjector(Application app, Injector injector)
+	public GuiceComponentInjector(final Application app, final Injector injector)
 	{
 		this(app, injector, true);
 	}
@@ -94,20 +97,27 @@ public class GuiceComponentInjector extends org.apache.wicket.injection.Injector
 	 *            whether or not wicket should wrap dependencies with specialized proxies that can
 	 *            be safely serialized. in most cases this should be set to true.
 	 */
-	public GuiceComponentInjector(Application app, Injector injector, final boolean wrapInProxies)
+	public GuiceComponentInjector(final Application app, final Injector injector,
+		final boolean wrapInProxies)
 	{
 		app.setMetaData(GuiceInjectorHolder.INJECTOR_KEY, new GuiceInjectorHolder(injector));
 		fieldValueFactory = new GuiceFieldValueFactory(wrapInProxies);
 		bind(app);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public void inject(Object object)
+	public void inject(final Object object)
 	{
 		inject(object, fieldValueFactory);
 	}
 
-	public void onInstantiation(Component component)
+	/**
+	 * {@inheritDoc}
+	 */
+	public void onInstantiation(final Component component)
 	{
 		inject(component);
 	}
