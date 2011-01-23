@@ -78,7 +78,7 @@ public class FileCleaningTracker
 	 * @throws NullPointerException
 	 *             if the file is null
 	 */
-	public void track(File file, Object marker)
+	public void track(final File file, final Object marker)
 	{
 		track(file, marker, (FileDeleteStrategy)null);
 	}
@@ -96,7 +96,7 @@ public class FileCleaningTracker
 	 * @throws NullPointerException
 	 *             if the file is null
 	 */
-	public void track(File file, Object marker, FileDeleteStrategy deleteStrategy)
+	public void track(final File file, final Object marker, final FileDeleteStrategy deleteStrategy)
 	{
 		if (file == null)
 		{
@@ -117,7 +117,7 @@ public class FileCleaningTracker
 	 * @throws NullPointerException
 	 *             if the path is null
 	 */
-	public void track(String path, Object marker)
+	public void track(final String path, final Object marker)
 	{
 		track(path, marker, null);
 	}
@@ -135,7 +135,8 @@ public class FileCleaningTracker
 	 * @throws NullPointerException
 	 *             if the path is null
 	 */
-	public void track(String path, Object marker, FileDeleteStrategy deleteStrategy)
+	public void track(final String path, final Object marker,
+		final FileDeleteStrategy deleteStrategy)
 	{
 		if (path == null)
 		{
@@ -154,8 +155,8 @@ public class FileCleaningTracker
 	 * @param deleteStrategy
 	 *            the strategy to delete the file, null means normal
 	 */
-	private synchronized void addTracker(String path, Object marker,
-		FileDeleteStrategy deleteStrategy)
+	private synchronized void addTracker(final String path, final Object marker,
+		final FileDeleteStrategy deleteStrategy)
 	{
 		// synchronized block protects reaper
 		if (exitWhenFinished)
@@ -248,7 +249,7 @@ public class FileCleaningTracker
 		public void run()
 		{
 			// thread exits when exitWhenFinished is true and there are no more tracked objects
-			while (exitWhenFinished == false || trackers.size() > 0)
+			while ((exitWhenFinished == false) || (trackers.size() > 0))
 			{
 				try
 				{
@@ -270,12 +271,12 @@ public class FileCleaningTracker
 	}
 
 	// -----------------------------------------------------------------------
+
 	/**
 	 * Inner class which acts as the reference for a file pending deletion.
 	 */
 	private static final class Tracker extends PhantomReference<Object>
 	{
-
 		/**
 		 * The full path to the file being tracked.
 		 */
@@ -297,8 +298,8 @@ public class FileCleaningTracker
 		 * @param queue
 		 *            the queue on to which the tracker will be pushed, not null
 		 */
-		Tracker(String path, FileDeleteStrategy deleteStrategy, Object marker,
-			ReferenceQueue<? super Object> queue)
+		Tracker(final String path, final FileDeleteStrategy deleteStrategy, final Object marker,
+			final ReferenceQueue<? super Object> queue)
 		{
 			super(marker, queue);
 			this.path = path;
@@ -327,5 +328,4 @@ public class FileCleaningTracker
 			return deleteStrategy.deleteQuietly(new File(path));
 		}
 	}
-
 }

@@ -752,14 +752,20 @@ public class StringValue implements IClusterable
 		return Strings.isEmpty(text);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int hashCode()
 	{
 		return Objects.hashCode(locale, text);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(final Object obj)
 	{
 		if (obj instanceof StringValue)
 		{

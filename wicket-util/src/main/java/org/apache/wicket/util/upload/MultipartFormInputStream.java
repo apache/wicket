@@ -122,7 +122,7 @@ public class MultipartFormInputStream
 		 * @param pContentLength
 		 *            The expected content length.
 		 */
-		ProgressNotifier(ProgressListener pListener, long pContentLength)
+		ProgressNotifier(final ProgressListener pListener, final long pContentLength)
 		{
 			listener = pListener;
 			contentLength = pContentLength;
@@ -134,7 +134,7 @@ public class MultipartFormInputStream
 		 * @param pBytes
 		 *            Number of bytes, which have been read.
 		 */
-		void noteBytesRead(int pBytes)
+		void noteBytesRead(final int pBytes)
 		{
 			/*
 			 * Indicates, that the given number of bytes have been read from the input stream.
@@ -328,7 +328,8 @@ public class MultipartFormInputStream
 	 *             .
 	 */
 	@Deprecated
-	public MultipartFormInputStream(InputStream input, byte[] boundary, int bufSize)
+	public MultipartFormInputStream(final InputStream input, final byte[] boundary,
+		final int bufSize)
 	{
 		this(input, boundary, bufSize, null);
 	}
@@ -354,8 +355,8 @@ public class MultipartFormInputStream
 	 * @see #MultipartFormInputStream(InputStream, byte[],
 	 *      MultipartFormInputStream.ProgressNotifier)
 	 */
-	MultipartFormInputStream(InputStream input, byte[] boundary, int bufSize,
-		ProgressNotifier pNotifier)
+	MultipartFormInputStream(final InputStream input, final byte[] boundary, final int bufSize,
+		final ProgressNotifier pNotifier)
 	{
 		this.input = input;
 		this.bufSize = bufSize;
@@ -390,7 +391,8 @@ public class MultipartFormInputStream
 	 * @see #MultipartFormInputStream(InputStream, byte[], int,
 	 *      MultipartFormInputStream.ProgressNotifier)
 	 */
-	MultipartFormInputStream(InputStream input, byte[] boundary, ProgressNotifier pNotifier)
+	MultipartFormInputStream(final InputStream input, final byte[] boundary,
+		final ProgressNotifier pNotifier)
 	{
 		this(input, boundary, DEFAULT_BUFSIZE, pNotifier);
 	}
@@ -1002,7 +1004,7 @@ public class MultipartFormInputStream
 		 *             An I/O error occurred.
 		 */
 		@Override
-		public int read(byte[] b, int off, int len) throws IOException
+		public int read(final byte[] b, final int off, final int len) throws IOException
 		{
 			if (closed)
 			{
@@ -1048,7 +1050,7 @@ public class MultipartFormInputStream
 		 * @throws IOException
 		 *             An I/O error occurred.
 		 */
-		public void close(boolean pCloseUnderlying) throws IOException
+		public void close(final boolean pCloseUnderlying) throws IOException
 		{
 			if (closed)
 			{
@@ -1088,7 +1090,7 @@ public class MultipartFormInputStream
 		 *             An I/O error occurred.
 		 */
 		@Override
-		public long skip(long bytes) throws IOException
+		public long skip(final long bytes) throws IOException
 		{
 			if (closed)
 			{
@@ -1150,7 +1152,7 @@ public class MultipartFormInputStream
 				findSeparator();
 				int av = available();
 
-				if (av > 0 || pos != -1)
+				if ((av > 0) || (pos != -1))
 				{
 					return av;
 				}
@@ -1181,17 +1183,17 @@ public class MultipartFormInputStream
 		}
 
 		@Override
-		public void write(byte[] b)
+		public void write(final byte[] b)
 		{
 		}
 
 		@Override
-		public void write(byte[] b, int i, int l)
+		public void write(final byte[] b, final int i, final int l)
 		{
 		}
 
 		@Override
-		public void write(int b)
+		public void write(final int b)
 		{
 		}
 	}

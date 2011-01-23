@@ -64,7 +64,7 @@ public class FileUploadException extends Exception
 	 * @param cause
 	 *            The exceptions cause.
 	 */
-	public FileUploadException(String msg, Throwable cause)
+	public FileUploadException(final String msg, final Throwable cause)
 	{
 		super(msg);
 		this.cause = cause;
@@ -77,15 +77,15 @@ public class FileUploadException extends Exception
 	 *            <code>PrintStream</code> to use for output
 	 */
 	@Override
-	public void printStackTrace(PrintStream stream)
+	public void printStackTrace(final PrintStream stream)
 	{
 		super.printStackTrace(stream);
 		if (cause != null)
 		{
 			stream.println("Caused by:");
 			cause.printStackTrace(stream);
+		}
 	}
-}
 
 	/**
 	 * Prints this throwable and its backtrace to the specified print writer.
@@ -94,7 +94,7 @@ public class FileUploadException extends Exception
 	 *            <code>PrintWriter</code> to use for output
 	 */
 	@Override
-	public void printStackTrace(PrintWriter writer)
+	public void printStackTrace(final PrintWriter writer)
 	{
 		super.printStackTrace(writer);
 		if (cause != null)

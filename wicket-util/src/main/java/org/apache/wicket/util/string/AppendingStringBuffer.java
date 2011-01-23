@@ -30,7 +30,6 @@ import java.io.IOException;
  * @author Johan Compagner
  * @see java.lang.StringBuffer
  */
-
 public final class AppendingStringBuffer implements java.io.Serializable, CharSequence
 {
 	/** use serialVersionUID from JDK 1.0.2 for interoperability */

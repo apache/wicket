@@ -100,8 +100,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E>
 	}
 
 	/**
-	 * 
-	 * @see java.util.AbstractCollection#iterator()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Iterator<E> iterator()
@@ -110,8 +109,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E>
 	}
 
 	/**
-	 * 
-	 * @see java.util.AbstractCollection#size()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public int size()
@@ -120,8 +118,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E>
 	}
 
 	/**
-	 * 
-	 * @see java.util.AbstractCollection#isEmpty()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean isEmpty()
@@ -130,8 +127,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E>
 	}
 
 	/**
-	 * 
-	 * @see java.util.AbstractCollection#contains(java.lang.Object)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean contains(final Object o)
@@ -140,8 +136,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E>
 	}
 
 	/**
-	 * 
-	 * @see java.util.AbstractCollection#add(java.lang.Object)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean add(final E o)
@@ -150,8 +145,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E>
 	}
 
 	/**
-	 * 
-	 * @see java.util.AbstractCollection#remove(java.lang.Object)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean remove(final Object o)
@@ -160,8 +154,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E>
 	}
 
 	/**
-	 * 
-	 * @see java.util.AbstractCollection#clear()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void clear()
@@ -170,12 +163,11 @@ public class ConcurrentHashSet<E> extends AbstractSet<E>
 	}
 
 	/**
-	 * 
-	 * @see java.lang.Object#clone()
+	 * {@inheritDoc}
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public Object clone()throws CloneNotSupportedException
+	public Object clone() throws CloneNotSupportedException
 	{
 		try
 		{

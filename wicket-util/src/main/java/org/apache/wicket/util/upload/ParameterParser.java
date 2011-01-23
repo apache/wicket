@@ -242,9 +242,9 @@ public class ParameterParser
 	 * 
 	 * @return a map of name/value pairs
 	 */
-	public Map<String, String> parse(final String str, char[] separators)
+	public Map<String, String> parse(final String str, final char[] separators)
 	{
-		if (separators == null || separators.length == 0)
+		if ((separators == null) || (separators.length == 0))
 		{
 			return new HashMap<String, String>();
 		}

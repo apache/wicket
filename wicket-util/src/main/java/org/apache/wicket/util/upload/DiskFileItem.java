@@ -73,13 +73,11 @@ import org.slf4j.LoggerFactory;
 public class DiskFileItem implements FileItem, FileItemHeadersSupport
 {
 	private static final Logger log = LoggerFactory.getLogger(DiskFileItem.class);
-	// ----------------------------------------------------- Manifest constants
 
 	/**
 	 * The UID to use when serializing this instance.
 	 */
 	private static final long serialVersionUID = 2237570099615271025L;
-
 
 	/**
 	 * Default content charset to be used when no explicit charset parameter is provided by the
@@ -108,24 +106,20 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 */
 	private String fieldName;
 
-
 	/**
 	 * The content type passed by the browser, or <code>null</code> if not defined.
 	 */
 	private final String contentType;
-
 
 	/**
 	 * Whether or not this item is a simple form field.
 	 */
 	private boolean isFormField;
 
-
 	/**
 	 * The original filename in the user's filesystem.
 	 */
 	private final String fileName;
-
 
 	/**
 	 * The size of the item, in bytes. This is used to cache the size when a file item is moved from
@@ -133,24 +127,20 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 */
 	private long size = -1;
 
-
 	/**
 	 * The threshold above which uploads will be stored on disk.
 	 */
 	private final int sizeThreshold;
-
 
 	/**
 	 * The directory in which uploaded files will be stored, if stored on disk.
 	 */
 	private final File repository;
 
-
 	/**
 	 * Cached contents of the file.
 	 */
 	private byte[] cachedContent;
-
 
 	/**
 	 * Output stream for this item.
@@ -177,9 +167,6 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * item in the tracker. After that the cleaner is not needed anymore.
 	 */
 	private transient final IFileUploadCleaner fileUploadCleaner;
-
-	// ----------------------------------------------------------- Constructors
-
 
 	/**
 	 * Constructs a new <code>DiskFileItem</code> instance.
@@ -213,10 +200,6 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 		this.fileUploadCleaner = fileUploadCleaner;
 	}
 
-
-	// ------------------------------- Methods from javax.activation.DataSource
-
-
 	/**
 	 * Returns an {@link java.io.InputStream InputStream} that can be used to retrieve the contents
 	 * of the file.
@@ -241,7 +224,6 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 		return new ByteArrayInputStream(cachedContent);
 	}
 
-
 	/**
 	 * Returns the content type passed by the agent or <code>null</code> if not defined.
 	 * 
@@ -251,7 +233,6 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	{
 		return contentType;
 	}
-
 
 	/**
 	 * Returns the content charset passed by the agent or <code>null</code> if not defined.
@@ -267,7 +248,6 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 		return (String)params.get("charset");
 	}
 
-
 	/**
 	 * Returns the original filename in the client's filesystem.
 	 * 
@@ -277,10 +257,6 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	{
 		return fileName;
 	}
-
-
-	// ------------------------------------------------------- FileItem methods
-
 
 	/**
 	 * Provides a hint as to whether or not the file contents will be read from memory.
@@ -296,7 +272,6 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 		}
 		return dfos.isInMemory();
 	}
-
 
 	/**
 	 * Returns the size of the file.
@@ -724,7 +699,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * @throws IOException
 	 *             if an error occurs.
 	 */
-	private void writeObject(ObjectOutputStream out) throws IOException
+	private void writeObject(final ObjectOutputStream out) throws IOException
 	{
 		// Read the data
 		if (dfos.isInMemory())
@@ -752,7 +727,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * @throws ClassNotFoundException
 	 *             if class cannot be found.
 	 */
-	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+	private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
 		// read values
 		in.defaultReadObject();
@@ -790,7 +765,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * @param pHeaders
 	 *            The file items headers.
 	 */
-	public void setHeaders(FileItemHeaders pHeaders)
+	public void setHeaders(final FileItemHeaders pHeaders)
 	{
 		headers = pHeaders;
 	}

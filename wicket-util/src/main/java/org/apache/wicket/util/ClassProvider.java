@@ -27,7 +27,6 @@ import java.lang.ref.WeakReference;
  */
 public class ClassProvider<T> implements IProvider<Class<T>>
 {
-
 	private final WeakReference<Class<T>> classRef;
 
 	/**
@@ -35,11 +34,14 @@ public class ClassProvider<T> implements IProvider<Class<T>>
 	 * 
 	 * @param clazz
 	 */
-	public ClassProvider(Class<T> clazz)
+	public ClassProvider(final Class<T> clazz)
 	{
 		classRef = new WeakReference<Class<T>>(clazz);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Class<T> get()
 	{
 		return classRef.get();
@@ -54,9 +56,8 @@ public class ClassProvider<T> implements IProvider<Class<T>>
 	 *            the class to provide
 	 * @return provider
 	 */
-	public static <T> ClassProvider<T> of(Class<T> clazz)
+	public static <T> ClassProvider<T> of(final Class<T> clazz)
 	{
 		return new ClassProvider<T>(clazz);
 	}
-
 }

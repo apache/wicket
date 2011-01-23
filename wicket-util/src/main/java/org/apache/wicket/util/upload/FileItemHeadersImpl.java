@@ -45,7 +45,7 @@ public class FileItemHeadersImpl implements FileItemHeaders, Serializable
 	 */
 	private final List headerNameList = new ArrayList();
 
-	public String getHeader(String name)
+	public String getHeader(final String name)
 	{
 		String nameLower = name.toLowerCase();
 		List headerValueList = (List)headerNameToValueListMap.get(nameLower);
@@ -61,7 +61,7 @@ public class FileItemHeadersImpl implements FileItemHeaders, Serializable
 		return headerNameList.iterator();
 	}
 
-	public Iterator getHeaders(String name)
+	public Iterator getHeaders(final String name)
 	{
 		String nameLower = name.toLowerCase();
 		List headerValueList = (List)headerNameToValueListMap.get(nameLower);
@@ -80,7 +80,7 @@ public class FileItemHeadersImpl implements FileItemHeaders, Serializable
 	 * @param value
 	 *            value of this header
 	 */
-	public synchronized void addHeader(String name, String value)
+	public synchronized void addHeader(final String name, final String value)
 	{
 		String nameLower = name.toLowerCase();
 		List headerValueList = (List)headerNameToValueListMap.get(nameLower);

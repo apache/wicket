@@ -69,7 +69,7 @@ public class ServletFileUpload extends FileUpload
 		if (contentType == null)
 		{
 			return false;
-	}
+		}
 		if (contentType.toLowerCase().startsWith(MULTIPART))
 		{
 			return true;
@@ -121,8 +121,9 @@ public class ServletFileUpload extends FileUpload
 	 *         they were transmitted.
 	 * 
 	 * @throws FileUploadException
-	 *                if there are problems reading/parsing the request or storing files.
+	 *             if there are problems reading/parsing the request or storing files.
 	 */
+	@Override
 	public List<FileItem> parseRequest(final HttpServletRequest request) throws FileUploadException
 	{
 		return parseRequest(new ServletRequestContext(request));
@@ -145,9 +146,9 @@ public class ServletFileUpload extends FileUpload
 	 *             An I/O error occurred. This may be a network error while communicating with the
 	 *             client or a problem while storing the uploaded content.
 	 */
-	public FileItemIterator getItemIterator(HttpServletRequest request) throws FileUploadException,
-		IOException
+	public FileItemIterator getItemIterator(final HttpServletRequest request)
+		throws FileUploadException, IOException
 	{
 		return super.getItemIterator(new ServletRequestContext(request));
-}
+	}
 }

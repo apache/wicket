@@ -49,7 +49,7 @@ public abstract class LimitedInputStream extends FilterInputStream implements Cl
 	 *            The limit; no more than this number of bytes shall be returned by the source
 	 *            stream.
 	 */
-	public LimitedInputStream(InputStream pIn, long pSizeMax)
+	public LimitedInputStream(final InputStream pIn, final long pSizeMax)
 	{
 		super(pIn);
 		sizeMax = pSizeMax;
@@ -132,7 +132,7 @@ public abstract class LimitedInputStream extends FilterInputStream implements Cl
 	 * @see java.io.FilterInputStream#in
 	 */
 	@Override
-	public int read(byte[] b, int off, int len) throws IOException
+	public int read(final byte[] b, final int off, final int len) throws IOException
 	{
 		int res = super.read(b, off, len);
 		if (res > 0)

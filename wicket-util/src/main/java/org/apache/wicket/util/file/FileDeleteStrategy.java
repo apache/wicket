@@ -33,7 +33,6 @@ import java.io.IOException;
  */
 public class FileDeleteStrategy
 {
-
 	/**
 	 * The singleton instance for normal file deletion, which does not permit the deletion of
 	 * directories that are not empty.
@@ -50,7 +49,7 @@ public class FileDeleteStrategy
 	 * @param name
 	 *            the name by which the strategy is known
 	 */
-	protected FileDeleteStrategy(String name)
+	protected FileDeleteStrategy(final String name)
 	{
 		this.name = name;
 	}
@@ -67,9 +66,9 @@ public class FileDeleteStrategy
 	 *            the file to delete, null returns true
 	 * @return true if the file was deleted, or there was no such file
 	 */
-	public boolean deleteQuietly(File fileToDelete)
+	public boolean deleteQuietly(final File fileToDelete)
 	{
-		if (fileToDelete == null || fileToDelete.exists() == false)
+		if ((fileToDelete == null) || (fileToDelete.exists() == false))
 		{
 			return true;
 		}
@@ -96,9 +95,9 @@ public class FileDeleteStrategy
 	 * @throws IOException
 	 *             if an error occurs during file deletion
 	 */
-	public void delete(File fileToDelete) throws IOException
+	public void delete(final File fileToDelete) throws IOException
 	{
-		if (fileToDelete.exists() && doDelete(fileToDelete) == false)
+		if (fileToDelete.exists() && (doDelete(fileToDelete) == false))
 		{
 			throw new IOException("Deletion failed: " + fileToDelete);
 		}
@@ -122,7 +121,7 @@ public class FileDeleteStrategy
 	 * @throws IOException
 	 *             if an error occurs during file deletion
 	 */
-	protected boolean doDelete(File fileToDelete) throws IOException
+	protected boolean doDelete(final File fileToDelete) throws IOException
 	{
 		return fileToDelete.delete();
 	}
@@ -138,5 +137,4 @@ public class FileDeleteStrategy
 	{
 		return "FileDeleteStrategy[" + name + "]";
 	}
-
 }

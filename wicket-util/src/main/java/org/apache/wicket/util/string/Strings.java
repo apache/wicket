@@ -293,87 +293,85 @@ public final class Strings
 		{
 			return null;
 		}
-		else
+
+		int len = s.length();
+		final AppendingStringBuffer buffer = new AppendingStringBuffer((int)(len * 1.1));
+
+		for (int i = 0; i < len; i++)
 		{
-			int len = s.length();
-			final AppendingStringBuffer buffer = new AppendingStringBuffer((int)(len * 1.1));
+			final char c = s.charAt(i);
 
-			for (int i = 0; i < len; i++)
+			switch (c)
 			{
-				final char c = s.charAt(i);
+				case '\t' :
+					if (escapeSpaces)
+					{
+						// Assumption is four space tabs (sorry, but that's
+						// just how it is!)
+						buffer.append("&nbsp;&nbsp;&nbsp;&nbsp;");
+					}
+					else
+					{
+						buffer.append(c);
+					}
+					break;
 
-				switch (c)
-				{
-					case '\t' :
-						if (escapeSpaces)
-						{
-							// Assumption is four space tabs (sorry, but that's
-							// just how it is!)
-							buffer.append("&nbsp;&nbsp;&nbsp;&nbsp;");
-						}
-						else
-						{
-							buffer.append(c);
-						}
-						break;
+				case ' ' :
+					if (escapeSpaces)
+					{
+						buffer.append("&nbsp;");
+					}
+					else
+					{
+						buffer.append(c);
+					}
+					break;
 
-					case ' ' :
-						if (escapeSpaces)
-						{
-							buffer.append("&nbsp;");
-						}
-						else
-						{
-							buffer.append(c);
-						}
-						break;
+				case '<' :
+					buffer.append("&lt;");
+					break;
 
-					case '<' :
-						buffer.append("&lt;");
-						break;
+				case '>' :
+					buffer.append("&gt;");
+					break;
 
-					case '>' :
-						buffer.append("&gt;");
-						break;
+				case '&' :
 
-					case '&' :
+					buffer.append("&amp;");
+					break;
 
-						buffer.append("&amp;");
-						break;
+				case '"' :
+					buffer.append("&quot;");
+					break;
 
-					case '"' :
-						buffer.append("&quot;");
-						break;
+				case '\'' :
+					buffer.append("&#039;");
+					break;
 
-					case '\'' :
-						buffer.append("&#039;");
-						break;
+				default :
 
-					default :
+					int ci = 0xffff & c;
 
-						int ci = 0xffff & c;
-
-						if (
-						// if this is non-printable and not whitespace (TAB, LF, CR)
-						(ci < 32 && ci != 9 && ci != 10 && ci != 13) ||
-						// or non-ASCII (XXX: why 160+ ?!) and need to UNICODE escape it
-							(convertToHtmlUnicodeEscapes && ci > 159))
-						{
-							buffer.append("&#");
-							buffer.append(Integer.toString(ci));
-							buffer.append(';');
-						}
-						else
-						{
-							// ASCII or whitespace
-							buffer.append(c);
-						}
-						break;
-				}
+					if (
+					// if this is non-printable and not whitespace (TAB, LF, CR)
+					((ci < 32) && (ci != 9) && (ci != 10) && (ci != 13)) ||
+					// or non-ASCII (XXX: why 160+ ?!) and need to UNICODE escape it
+						(convertToHtmlUnicodeEscapes && (ci > 159)))
+					{
+						buffer.append("&#");
+						buffer.append(Integer.toString(ci));
+						buffer.append(';');
+					}
+					else
+					{
+						// ASCII or whitespace
+						buffer.append(c);
+					}
+					break;
 			}
-
-			return buffer;
 		}
+
+		return buffer;
 	}
 
 	/**
@@ -1302,7 +1300,6 @@ public final class Strings
 		{
 			return string.getBytes().length;
 		}
-
 	}
 
 	/**

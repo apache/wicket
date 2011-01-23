@@ -21,7 +21,6 @@ import java.io.File;
 /**
  * Default implementation of {@link IFileUploadCleaner} that uses Apache commons-io
  * {@link FileCleaningTracker} to track and clean the temporary created files.
- * 
  * <p>
  * Note: this implementation starts a daemon thread to do the actual work, so it may not be used in
  * some environments like Google AppEngine.
@@ -30,20 +29,27 @@ public class FileUploadCleaner implements IFileUploadCleaner
 {
 	private final FileCleaningTracker cleaner;
 
-	/***/
+	/**
+	 * Construct.
+	 */
 	public FileUploadCleaner()
 	{
 		cleaner = new FileCleaningTracker();
 	}
 
-	public void track(File file, Object marker)
+	/**
+	 * {@inheritDoc}
+	 */
+	public void track(final File file, final Object marker)
 	{
 		cleaner.track(file, marker);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void destroy()
 	{
 		cleaner.exitWhenFinished();
 	}
-
 }

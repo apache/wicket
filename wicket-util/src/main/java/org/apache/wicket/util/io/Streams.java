@@ -17,7 +17,6 @@
 package org.apache.wicket.util.io;
 
 import java.io.BufferedReader;
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -34,20 +33,6 @@ import java.util.Properties;
 public final class Streams
 {
 	/**
-	 * 
-	 * @param closeable
-	 * 
-	 * @deprecated
-	 * @see IOUtils#close(Closeable)
-	 * @throws IOException
-	 */
-	@Deprecated
-	public static void close(final Closeable closeable) throws IOException
-	{
-		IOUtils.close(closeable);
-	}
-
-	/**
 	 * Writes the input stream to the output stream. Input is done without a Reader object, meaning
 	 * that the input is copied in its raw form. After it is copied it will close the streams.
 	 * 
@@ -58,7 +43,8 @@ public final class Streams
 	 * @return Number of bytes copied from one stream to the other
 	 * @throws IOException
 	 */
-	public static long copyAndClose(InputStream in, OutputStream out) throws IOException
+	public static long copyAndClose(final InputStream in, final OutputStream out)
+		throws IOException
 	{
 		try
 		{
