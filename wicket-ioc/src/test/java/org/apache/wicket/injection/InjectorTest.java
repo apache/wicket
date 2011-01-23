@@ -36,12 +36,12 @@ public class InjectorTest extends TestCase
 	private static IFieldValueFactory factory = new IFieldValueFactory()
 	{
 
-		public Object getFieldValue(Field field, Object fieldOwner)
+		public Object getFieldValue(final Field field, final Object fieldOwner)
 		{
 			return dependency;
 		}
 
-		public boolean supportsField(Field field)
+		public boolean supportsField(final Field field)
 		{
 			return true;
 		}
@@ -52,7 +52,7 @@ public class InjectorTest extends TestCase
 	{
 
 		@Override
-		public void inject(Object object)
+		public void inject(final Object object)
 		{
 			inject(object, factory);
 		}

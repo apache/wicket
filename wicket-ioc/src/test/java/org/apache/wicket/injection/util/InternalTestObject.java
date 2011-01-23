@@ -27,7 +27,7 @@ public class InternalTestObject
 {
 	private MockDependency dependency1;
 
-	private MockDependency dependency2 = new MockDependency("dont-inject");
+	private final MockDependency dependency2 = new MockDependency("dont-inject");
 
 	/**
 	 * @return dependency1

@@ -39,7 +39,7 @@ public class ConcreteObject
 	 * 
 	 * @param message
 	 */
-	public ConcreteObject(String message)
+	public ConcreteObject(final String message)
 	{
 		this.message = message;
 	}

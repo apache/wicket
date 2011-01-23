@@ -25,7 +25,7 @@ package org.apache.wicket.injection.util;
  */
 public class TestObject extends InternalTestObject
 {
-	private MockDependency dependency3 = new MockDependency("dont-inject");
+	private final MockDependency dependency3 = new MockDependency("dont-inject");
 
 	private MockDependency dependency4;
 

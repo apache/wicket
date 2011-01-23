@@ -39,7 +39,7 @@ public class MockDependency
 	 * 
 	 * @param message
 	 */
-	public MockDependency(String message)
+	public MockDependency(final String message)
 	{
 		this.message = message;
 	}

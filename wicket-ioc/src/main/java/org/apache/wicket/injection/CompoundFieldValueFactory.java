@@ -40,7 +40,7 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 	 * 
 	 * @param factories
 	 */
-	public CompoundFieldValueFactory(IFieldValueFactory[] factories)
+	public CompoundFieldValueFactory(final IFieldValueFactory[] factories)
 	{
 		if (factories == null)
 		{
@@ -55,7 +55,7 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 	 * 
 	 * @param factories
 	 */
-	public CompoundFieldValueFactory(List<IFieldValueFactory> factories)
+	public CompoundFieldValueFactory(final List<IFieldValueFactory> factories)
 	{
 		if (factories == null)
 		{
@@ -70,7 +70,7 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 	 * @param f1
 	 * @param f2
 	 */
-	public CompoundFieldValueFactory(IFieldValueFactory f1, IFieldValueFactory f2)
+	public CompoundFieldValueFactory(final IFieldValueFactory f1, final IFieldValueFactory f2)
 	{
 		if (f1 == null)
 		{
@@ -89,7 +89,7 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 	 * 
 	 * @param factory
 	 */
-	public void addFactory(IFieldValueFactory factory)
+	public void addFactory(final IFieldValueFactory factory)
 	{
 		if (factory == null)
 		{
@@ -102,7 +102,7 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 	 * @see org.apache.wicket.injection.IFieldValueFactory#getFieldValue(java.lang.reflect.Field,
 	 *      java.lang.Object)
 	 */
-	public Object getFieldValue(Field field, Object fieldOwner)
+	public Object getFieldValue(final Field field, final Object fieldOwner)
 	{
 		for (IFieldValueFactory factory : delegates)
 		{
@@ -118,7 +118,7 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 	/**
 	 * @see org.apache.wicket.injection.IFieldValueFactory#supportsField(java.lang.reflect.Field)
 	 */
-	public boolean supportsField(Field field)
+	public boolean supportsField(final Field field)
 	{
 		for (IFieldValueFactory factory : delegates)
 		{

@@ -53,7 +53,8 @@ public class ObjectMethodTester implements IObjectMethodTester
 	/**
 	 * @see org.apache.wicket.proxy.util.IObjectMethodTester#equals(java.lang.Object)
 	 */
-	public boolean equals(Object obj)
+	@Override
+	public boolean equals(final Object obj)
 	{
 		valid = false;
 		return super.equals(obj);
@@ -62,6 +63,7 @@ public class ObjectMethodTester implements IObjectMethodTester
 	/**
 	 * @see org.apache.wicket.proxy.util.IObjectMethodTester#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		valid = false;
@@ -71,6 +73,7 @@ public class ObjectMethodTester implements IObjectMethodTester
 	/**
 	 * @see org.apache.wicket.proxy.util.IObjectMethodTester#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		valid = false;

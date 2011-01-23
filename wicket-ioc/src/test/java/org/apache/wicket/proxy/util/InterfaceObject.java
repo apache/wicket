@@ -24,12 +24,12 @@ package org.apache.wicket.proxy.util;
  */
 public class InterfaceObject implements IInterface
 {
-	private String message;
+	private final String message;
 
 	/**
 	 * @param message
 	 */
-	public InterfaceObject(String message)
+	public InterfaceObject(final String message)
 	{
 		this.message = message;
 	}

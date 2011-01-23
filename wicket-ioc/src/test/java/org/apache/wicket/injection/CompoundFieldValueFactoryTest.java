@@ -32,8 +32,6 @@ import org.easymock.MockControl;
  */
 public class CompoundFieldValueFactoryTest extends TestCase
 {
-	private Integer testField;
-
 	private Field field;
 
 	private final MockControl[] ctrl = new MockControl[4];
@@ -43,7 +41,7 @@ public class CompoundFieldValueFactoryTest extends TestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		Field field = CompoundFieldValueFactoryTest.class.getDeclaredField("testField");
+		CompoundFieldValueFactoryTest.class.getDeclaredField("testField");
 
 		for (int i = 0; i < 4; i++)
 		{
@@ -52,7 +50,7 @@ public class CompoundFieldValueFactoryTest extends TestCase
 		}
 	}
 
-	protected void prepare(int cnt)
+	protected void prepare(final int cnt)
 	{
 		for (int i = 0; i < cnt; i++)
 		{
@@ -61,7 +59,7 @@ public class CompoundFieldValueFactoryTest extends TestCase
 		}
 	}
 
-	protected void verify(int cnt)
+	protected void verify(final int cnt)
 	{
 		for (int i = 0; i < cnt; i++)
 		{
