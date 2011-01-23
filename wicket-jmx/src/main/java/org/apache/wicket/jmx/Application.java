@@ -35,7 +35,7 @@ public class Application implements ApplicationMBean
 	 * 
 	 * @param application
 	 */
-	public Application(org.apache.wicket.Application application)
+	public Application(final org.apache.wicket.Application application)
 	{
 		this.application = application;
 	}

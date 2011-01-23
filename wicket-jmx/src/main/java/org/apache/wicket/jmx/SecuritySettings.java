@@ -30,7 +30,7 @@ public class SecuritySettings implements SecuritySettingsMBean
 	 * 
 	 * @param application
 	 */
-	public SecuritySettings(org.apache.wicket.Application application)
+	public SecuritySettings(final org.apache.wicket.Application application)
 	{
 		this.application = application;
 	}
@@ -57,6 +57,6 @@ public class SecuritySettings implements SecuritySettingsMBean
 	public String getUnauthorizedComponentInstantiationListener()
 	{
 		return Stringz.className(application.getSecuritySettings()
-				.getUnauthorizedComponentInstantiationListener());
+			.getUnauthorizedComponentInstantiationListener());
 	}
 }

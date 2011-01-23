@@ -33,7 +33,7 @@ public class ApplicationSettings implements ApplicationSettingsMBean
 	 * 
 	 * @param application
 	 */
-	public ApplicationSettings(org.apache.wicket.Application application)
+	public ApplicationSettings(final org.apache.wicket.Application application)
 	{
 		this.application = application;
 	}
@@ -86,9 +86,9 @@ public class ApplicationSettings implements ApplicationSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.ApplicationSettingsMBean#setDefaultMaximumUploadSize(java.lang.String)
 	 */
-	public void setDefaultMaximumUploadSize(String defaultUploadSize)
+	public void setDefaultMaximumUploadSize(final String defaultUploadSize)
 	{
 		application.getApplicationSettings().setDefaultMaximumUploadSize(
-				Bytes.valueOf(defaultUploadSize));
+			Bytes.valueOf(defaultUploadSize));
 	}
 }

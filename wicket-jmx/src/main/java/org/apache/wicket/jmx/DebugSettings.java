@@ -30,7 +30,7 @@ public class DebugSettings implements DebugSettingsMBean
 	 * 
 	 * @param application
 	 */
-	public DebugSettings(org.apache.wicket.Application application)
+	public DebugSettings(final org.apache.wicket.Application application)
 	{
 		this.application = application;
 	}
@@ -54,7 +54,7 @@ public class DebugSettings implements DebugSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setAjaxDebugModeEnabled(boolean)
 	 */
-	public void setAjaxDebugModeEnabled(boolean enable)
+	public void setAjaxDebugModeEnabled(final boolean enable)
 	{
 		application.getDebugSettings().setAjaxDebugModeEnabled(enable);
 	}
@@ -62,7 +62,7 @@ public class DebugSettings implements DebugSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setComponentUseCheck(boolean)
 	 */
-	public void setComponentUseCheck(boolean check)
+	public void setComponentUseCheck(final boolean check)
 	{
 		application.getDebugSettings().setComponentUseCheck(check);
 	}
@@ -70,7 +70,7 @@ public class DebugSettings implements DebugSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setOutputComponentPath(boolean)
 	 */
-	public void setOutputComponentPath(boolean enabled)
+	public void setOutputComponentPath(final boolean enabled)
 	{
 		application.getDebugSettings().setOutputComponentPath(enabled);
 	}
@@ -87,7 +87,7 @@ public class DebugSettings implements DebugSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setOutputMarkupContainerClassName(boolean)
 	 */
-	public void setOutputMarkupContainerClassName(boolean enable)
+	public void setOutputMarkupContainerClassName(final boolean enable)
 	{
 		application.getDebugSettings().setOutputMarkupContainerClassName(enable);
 	}
@@ -111,7 +111,7 @@ public class DebugSettings implements DebugSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setLinePreciseReportingOnAddComponentEnabled(boolean)
 	 */
-	public void setLinePreciseReportingOnAddComponentEnabled(boolean enable)
+	public void setLinePreciseReportingOnAddComponentEnabled(final boolean enable)
 	{
 		application.getDebugSettings().setLinePreciseReportingOnAddComponentEnabled(enable);
 	}
@@ -127,7 +127,7 @@ public class DebugSettings implements DebugSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setLinePreciseReportingOnNewComponentEnabled(boolean)
 	 */
-	public void setLinePreciseReportingOnNewComponentEnabled(boolean enable)
+	public void setLinePreciseReportingOnNewComponentEnabled(final boolean enable)
 	{
 		application.getDebugSettings().setLinePreciseReportingOnNewComponentEnabled(enable);
 	}
@@ -135,7 +135,7 @@ public class DebugSettings implements DebugSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setDevelopmentUtilitiesEnabled(boolean)
 	 */
-	public void setDevelopmentUtilitiesEnabled(boolean enable)
+	public void setDevelopmentUtilitiesEnabled(final boolean enable)
 	{
 		application.getDebugSettings().setDevelopmentUtilitiesEnabled(enable);
 	}

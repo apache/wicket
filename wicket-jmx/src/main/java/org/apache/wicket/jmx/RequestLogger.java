@@ -38,18 +38,18 @@ public class RequestLogger implements RequestLoggerMBean
 	 * @param application
 	 *            The application
 	 */
-	public RequestLogger(org.apache.wicket.Application application)
+	public RequestLogger(final org.apache.wicket.Application application)
 	{
 		this.application = application;
 
 		// do this so that we don't have to cast all the time
 		if (application instanceof WebApplication)
 		{
-			this.webApplication = (WebApplication)application;
+			webApplication = (WebApplication)application;
 		}
 		else
 		{
-			this.webApplication = null;
+			webApplication = null;
 		}
 	}
 

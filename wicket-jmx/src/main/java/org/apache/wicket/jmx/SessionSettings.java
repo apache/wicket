@@ -30,7 +30,7 @@ public class SessionSettings implements SessionSettingsMBean
 	 * 
 	 * @param application
 	 */
-	public SessionSettings(org.apache.wicket.Application application)
+	public SessionSettings(final org.apache.wicket.Application application)
 	{
 		this.application = application;
 	}

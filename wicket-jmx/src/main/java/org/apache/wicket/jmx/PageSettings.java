@@ -31,7 +31,7 @@ public class PageSettings implements PageSettingsMBean
 	 * 
 	 * @param application
 	 */
-	public PageSettings(org.apache.wicket.Application application)
+	public PageSettings(final org.apache.wicket.Application application)
 	{
 		this.application = application;
 	}
@@ -47,7 +47,7 @@ public class PageSettings implements PageSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.PageSettingsMBean#setVersionPagesByDefault(boolean)
 	 */
-	public void setVersionPagesByDefault(boolean pagesVersionedByDefault)
+	public void setVersionPagesByDefault(final boolean pagesVersionedByDefault)
 	{
 		application.getPageSettings().setVersionPagesByDefault(pagesVersionedByDefault);
 	}

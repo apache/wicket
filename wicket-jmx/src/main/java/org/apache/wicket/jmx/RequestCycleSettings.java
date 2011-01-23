@@ -33,7 +33,7 @@ public class RequestCycleSettings implements RequestCycleSettingsMBean
 	 * 
 	 * @param application
 	 */
-	public RequestCycleSettings(org.apache.wicket.Application application)
+	public RequestCycleSettings(final org.apache.wicket.Application application)
 	{
 		this.application = application;
 	}
@@ -73,7 +73,7 @@ public class RequestCycleSettings implements RequestCycleSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.RequestCycleSettingsMBean#setBufferResponse(boolean)
 	 */
-	public void setBufferResponse(boolean bufferResponse)
+	public void setBufferResponse(final boolean bufferResponse)
 	{
 		application.getRequestCycleSettings().setBufferResponse(bufferResponse);
 	}
@@ -81,16 +81,16 @@ public class RequestCycleSettings implements RequestCycleSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.RequestCycleSettingsMBean#setGatherExtendedBrowserInfo(boolean)
 	 */
-	public void setGatherExtendedBrowserInfo(boolean gatherExtendedBrowserInfo)
+	public void setGatherExtendedBrowserInfo(final boolean gatherExtendedBrowserInfo)
 	{
 		application.getRequestCycleSettings().setGatherExtendedBrowserInfo(
-				gatherExtendedBrowserInfo);
+			gatherExtendedBrowserInfo);
 	}
 
 	/**
 	 * @see org.apache.wicket.jmx.RequestCycleSettingsMBean#setResponseRequestEncoding(java.lang.String)
 	 */
-	public void setResponseRequestEncoding(String responseRequestEncoding)
+	public void setResponseRequestEncoding(final String responseRequestEncoding)
 	{
 		application.getRequestCycleSettings().setResponseRequestEncoding(responseRequestEncoding);
 	}
@@ -98,7 +98,7 @@ public class RequestCycleSettings implements RequestCycleSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.RequestCycleSettingsMBean#setTimeout(java.lang.String)
 	 */
-	public void setTimeout(String timeout)
+	public void setTimeout(final String timeout)
 	{
 		application.getRequestCycleSettings().setTimeout(Duration.valueOf(timeout));
 	}

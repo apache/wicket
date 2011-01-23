@@ -65,7 +65,7 @@ public class Initializer implements IInitializer
 	/**
 	 * @see org.apache.wicket.IDestroyer#destroy(org.apache.wicket.Application)
 	 */
-	public void destroy(org.apache.wicket.Application application)
+	public void destroy(final org.apache.wicket.Application application)
 	{
 		for (ObjectName objectName : registered)
 		{
@@ -87,7 +87,7 @@ public class Initializer implements IInitializer
 	/**
 	 * @see org.apache.wicket.IInitializer#init(org.apache.wicket.Application)
 	 */
-	public void init(org.apache.wicket.Application application)
+	public void init(final org.apache.wicket.Application application)
 	{
 		try
 		{
@@ -232,8 +232,9 @@ public class Initializer implements IInitializer
 	 * @throws MBeanRegistrationException
 	 * @throws InstanceAlreadyExistsException
 	 */
-	private void register(Object o, ObjectName objectName) throws InstanceAlreadyExistsException,
-		MBeanRegistrationException, NotCompliantMBeanException
+	private void register(final Object o, final ObjectName objectName)
+		throws InstanceAlreadyExistsException, MBeanRegistrationException,
+		NotCompliantMBeanException
 	{
 		mbeanServer.registerMBean(o, objectName);
 		registered.add(objectName);

@@ -31,7 +31,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	 * 
 	 * @param application
 	 */
-	public MarkupSettings(org.apache.wicket.Application application)
+	public MarkupSettings(final org.apache.wicket.Application application)
 	{
 		this.application = application;
 	}
@@ -103,7 +103,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setAutomaticLinking(boolean)
 	 */
-	public void setAutomaticLinking(boolean automaticLinking)
+	public void setAutomaticLinking(final boolean automaticLinking)
 	{
 		application.getMarkupSettings().setAutomaticLinking(automaticLinking);
 	}
@@ -111,7 +111,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setCompressWhitespace(boolean)
 	 */
-	public void setCompressWhitespace(boolean compressWhitespace)
+	public void setCompressWhitespace(final boolean compressWhitespace)
 	{
 		application.getMarkupSettings().setCompressWhitespace(compressWhitespace);
 	}
@@ -119,7 +119,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setDefaultAfterDisabledLink(java.lang.String)
 	 */
-	public void setDefaultAfterDisabledLink(String defaultAfterDisabledLink)
+	public void setDefaultAfterDisabledLink(final String defaultAfterDisabledLink)
 	{
 		application.getMarkupSettings().setDefaultAfterDisabledLink(defaultAfterDisabledLink);
 	}
@@ -127,7 +127,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setDefaultBeforeDisabledLink(java.lang.String)
 	 */
-	public void setDefaultBeforeDisabledLink(String defaultBeforeDisabledLink)
+	public void setDefaultBeforeDisabledLink(final String defaultBeforeDisabledLink)
 	{
 		application.getMarkupSettings().setDefaultBeforeDisabledLink(defaultBeforeDisabledLink);
 	}
@@ -135,7 +135,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setDefaultMarkupEncoding(java.lang.String)
 	 */
-	public void setDefaultMarkupEncoding(String encoding)
+	public void setDefaultMarkupEncoding(final String encoding)
 	{
 		application.getMarkupSettings().setDefaultMarkupEncoding(encoding);
 	}
@@ -143,7 +143,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setStripComments(boolean)
 	 */
-	public void setStripComments(boolean stripComments)
+	public void setStripComments(final boolean stripComments)
 	{
 		application.getMarkupSettings().setStripComments(stripComments);
 	}
@@ -151,7 +151,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setStripWicketTags(boolean)
 	 */
-	public void setStripWicketTags(boolean stripWicketTags)
+	public void setStripWicketTags(final boolean stripWicketTags)
 	{
 		application.getMarkupSettings().setStripWicketTags(stripWicketTags);
 	}
@@ -159,7 +159,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setStripXmlDeclarationFromOutput(boolean)
 	 */
-	public void setStripXmlDeclarationFromOutput(boolean strip)
+	public void setStripXmlDeclarationFromOutput(final boolean strip)
 	{
 		application.getMarkupSettings().setStripXmlDeclarationFromOutput(strip);
 	}

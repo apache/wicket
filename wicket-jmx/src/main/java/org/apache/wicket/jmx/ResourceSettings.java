@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.jmx;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
+import org.apache.wicket.resource.loader.IStringResourceLoader;
+import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.time.Duration;
 
 
@@ -37,13 +37,13 @@ public class ResourceSettings implements ResourceSettingsMBean
 	 * 
 	 * @param application
 	 */
-	public ResourceSettings(org.apache.wicket.Application application)
+	public ResourceSettings(final org.apache.wicket.Application application)
 	{
 		this.application = application;
 	}
 
 	/**
-	 * @see org.apache.wicket.jmx.ResourceSettingsMBean#getLocalizer()
+	 * {@inheritDoc}
 	 */
 	public String getLocalizer()
 	{
@@ -51,7 +51,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	}
 
 	/**
-	 * @see org.apache.wicket.jmx.ResourceSettingsMBean#getPackageResourceGuard()
+	 * {@inheritDoc}
 	 */
 	public String getPackageResourceGuard()
 	{
@@ -59,7 +59,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	}
 
 	/**
-	 * @see org.apache.wicket.jmx.ResourceSettingsMBean#getPropertiesFactory()
+	 * {@inheritDoc}
 	 */
 	public String getPropertiesFactory()
 	{
@@ -67,7 +67,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	}
 
 	/**
-	 * @see org.apache.wicket.jmx.ResourceSettingsMBean#getResourceFinder()
+	 * {@inheritDoc}
 	 */
 	public String getResourceFinder()
 	{
@@ -75,7 +75,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	}
 
 	/**
-	 * @see org.apache.wicket.jmx.ResourceSettingsMBean#getResourcePollFrequency()
+	 * {@inheritDoc}
 	 */
 	public String getResourcePollFrequency()
 	{
@@ -84,7 +84,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	}
 
 	/**
-	 * @see org.apache.wicket.jmx.ResourceSettingsMBean#getResourceStreamLocator()
+	 * {@inheritDoc}
 	 */
 	public String getResourceStreamLocator()
 	{
@@ -92,26 +92,26 @@ public class ResourceSettings implements ResourceSettingsMBean
 	}
 
 	/**
-	 * @see org.apache.wicket.jmx.ResourceSettingsMBean#getStringResourceLoaders()
+	 * {@inheritDoc}
 	 */
-	@SuppressWarnings("unchecked")
 	public String[] getStringResourceLoaders()
 	{
-		List loaders = application.getResourceSettings().getStringResourceLoaders();
+		List<IStringResourceLoader> loaders = application.getResourceSettings()
+			.getStringResourceLoaders();
 		if (loaders != null)
 		{
-			List list = new ArrayList();
+			List<String> list = Generics.newArrayList();
 			for (Object loader : loaders)
 			{
 				list.add(loader.toString());
 			}
-			return (String[])list.toArray(new String[loaders.size()]);
+			return list.toArray(new String[loaders.size()]);
 		}
 		return null;
 	}
 
 	/**
-	 * @see org.apache.wicket.jmx.ResourceSettingsMBean#getThrowExceptionOnMissingResource()
+	 * {@inheritDoc}
 	 */
 	public boolean getThrowExceptionOnMissingResource()
 	{
@@ -119,7 +119,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	}
 
 	/**
-	 * @see org.apache.wicket.jmx.ResourceSettingsMBean#getUseDefaultOnMissingResource()
+	 * {@inheritDoc}
 	 */
 	public boolean getUseDefaultOnMissingResource()
 	{
@@ -127,20 +127,20 @@ public class ResourceSettings implements ResourceSettingsMBean
 	}
 
 	/**
-	 * @see org.apache.wicket.jmx.ResourceSettingsMBean#setThrowExceptionOnMissingResource(boolean)
+	 * {@inheritDoc}
 	 */
-	public void setThrowExceptionOnMissingResource(boolean throwExceptionOnMissingResource)
+	public void setThrowExceptionOnMissingResource(final boolean throwExceptionOnMissingResource)
 	{
 		application.getResourceSettings().setThrowExceptionOnMissingResource(
-				throwExceptionOnMissingResource);
+			throwExceptionOnMissingResource);
 	}
 
 	/**
-	 * @see org.apache.wicket.jmx.ResourceSettingsMBean#setUseDefaultOnMissingResource(boolean)
+	 * {@inheritDoc}
 	 */
-	public void setUseDefaultOnMissingResource(boolean useDefaultOnMissingResource)
+	public void setUseDefaultOnMissingResource(final boolean useDefaultOnMissingResource)
 	{
 		application.getResourceSettings().setUseDefaultOnMissingResource(
-				useDefaultOnMissingResource);
+			useDefaultOnMissingResource);
 	}
 }
