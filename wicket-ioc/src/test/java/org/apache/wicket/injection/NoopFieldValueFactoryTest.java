@@ -30,6 +30,9 @@ public class NoopFieldValueFactoryTest extends TestCase
 {
 	private Field field;
 
+	// Not used, but needed for the test. Do not delete.
+	private Integer testField;
+
 	@Override
 	protected void setUp() throws Exception
 	{
@@ -44,5 +47,4 @@ public class NoopFieldValueFactoryTest extends TestCase
 		NoopFieldValueFactory fact = new NoopFieldValueFactory();
 		assertNull(fact.getFieldValue(field, this));
 	}
-
 }

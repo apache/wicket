@@ -32,6 +32,8 @@ import org.easymock.MockControl;
  */
 public class CompoundFieldValueFactoryTest extends TestCase
 {
+	private Integer testField;
+
 	private Field field;
 
 	private final MockControl[] ctrl = new MockControl[4];
