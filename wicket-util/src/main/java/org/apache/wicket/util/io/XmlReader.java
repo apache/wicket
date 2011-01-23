@@ -16,13 +16,15 @@
  */
 package org.apache.wicket.util.io;
 
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.wicket.util.lang.Args;
 
 
 /**
@@ -69,13 +71,17 @@ public final class XmlReader extends Reader
 		// The xml parser does not have a parent filter
 		super();
 
-		this.inputStream = inputStream;
-		encoding = defaultEncoding;
+		Args.notNull(inputStream, "inputStream");
 
-		if (inputStream == null)
+		if (!inputStream.markSupported())
 		{
-			throw new IllegalArgumentException("Parameter 'inputStream' must not be null");
+			this.inputStream = new BufferedInputStream(inputStream);
 		}
+		else
+		{
+			this.inputStream = inputStream;
+		}
+		encoding = defaultEncoding;
 
 		init();
 	}
@@ -107,13 +113,7 @@ public final class XmlReader extends Reader
 	 */
 	public void init() throws IOException
 	{
-		if (!inputStream.markSupported())
-		{
-			throw new IOException("The InputStream must support mark/reset");
-		}
-
-		// read ahead buffer required for the first line of the markup
-		// (encoding)
+		// read ahead buffer required for the first line of the markup (encoding)
 		final int readAheadSize = 80;
 		inputStream.mark(readAheadSize);
 
@@ -132,12 +132,12 @@ public final class XmlReader extends Reader
 		if (encoding == null)
 		{
 			// Use JVM default
-			reader = new BufferedReader(new InputStreamReader(inputStream));
+			reader = new InputStreamReader(inputStream);
 		}
 		else
 		{
 			// Use the encoding provided
-			reader = new BufferedReader(new InputStreamReader(inputStream, encoding));
+			reader = new InputStreamReader(inputStream, encoding);
 		}
 	}
 
