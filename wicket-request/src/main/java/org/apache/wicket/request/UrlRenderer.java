@@ -118,7 +118,7 @@ public class UrlRenderer
 			}
 
 			// we want the new URL to have at least one segment (other than possible ../)
-			if (last != null && (urlSegments.isEmpty() || baseUrlSegments.size() == common))
+			if ((last != null) && (urlSegments.isEmpty() || (baseUrlSegments.size() == common)))
 			{
 				--common;
 				urlSegments.add(0, last);

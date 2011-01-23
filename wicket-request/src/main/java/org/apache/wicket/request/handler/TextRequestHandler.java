@@ -50,7 +50,7 @@ public class TextRequestHandler implements IRequestHandler
 	 * @param string
 	 *            the string for the response
 	 */
-	public TextRequestHandler(String string)
+	public TextRequestHandler(final String string)
 	{
 		this("text/plain", null, string);
 	}
@@ -66,7 +66,7 @@ public class TextRequestHandler implements IRequestHandler
 	 * @param string
 	 *            string for the response
 	 */
-	public TextRequestHandler(String contentType, String encoding, String string)
+	public TextRequestHandler(final String contentType, final String encoding, final String string)
 	{
 		if (string == null)
 		{
@@ -88,7 +88,7 @@ public class TextRequestHandler implements IRequestHandler
 	 * 
 	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.IRequestCycle)
 	 */
-	public void respond(IRequestCycle requestCycle)
+	public void respond(final IRequestCycle requestCycle)
 	{
 		String encoding = getEncoding(requestCycle);
 
@@ -111,7 +111,7 @@ public class TextRequestHandler implements IRequestHandler
 	 * @param requestCycle
 	 * @return the configured encoding or the request's one as default
 	 */
-	private String getEncoding(IRequestCycle requestCycle)
+	private String getEncoding(final IRequestCycle requestCycle)
 	{
 		String encoding = this.encoding;
 		if (Strings.isEmpty(encoding))
@@ -126,7 +126,7 @@ public class TextRequestHandler implements IRequestHandler
 	}
 
 	/** {@inheritDoc} */
-	public void detach(IRequestCycle requestCycle)
+	public void detach(final IRequestCycle requestCycle)
 	{
 	}
 

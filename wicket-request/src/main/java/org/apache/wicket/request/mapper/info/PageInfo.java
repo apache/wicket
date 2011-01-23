@@ -35,7 +35,7 @@ public class PageInfo
 	 * 
 	 * @param pageId
 	 */
-	public PageInfo(Integer pageId)
+	public PageInfo(final Integer pageId)
 	{
 		this.pageId = pageId;
 	}
@@ -77,7 +77,7 @@ public class PageInfo
 	 * @param src
 	 * @return page info instance or <code>null</code> if the string couldn't have been parsed
 	 */
-	public static PageInfo parse(String src)
+	public static PageInfo parse(final String src)
 	{
 		if (Strings.isEmpty(src))
 		{

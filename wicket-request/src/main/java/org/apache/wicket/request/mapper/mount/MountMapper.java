@@ -41,7 +41,7 @@ public class MountMapper extends AbstractMapper
 	 * @param mountPath
 	 * @param mapper
 	 */
-	public MountMapper(String mountPath, IMountedRequestMapper mapper)
+	public MountMapper(final String mountPath, final IMountedRequestMapper mapper)
 	{
 		Args.notEmpty(mountPath, "mountPath");
 		Args.notNull(mapper, "mapper");
@@ -56,7 +56,7 @@ public class MountMapper extends AbstractMapper
 	 * @param mountPath
 	 * @param mapper
 	 */
-	public MountMapper(String mountPath, IRequestMapper mapper)
+	public MountMapper(final String mountPath, final IRequestMapper mapper)
 	{
 		Args.notEmpty(mountPath, "mountPath");
 		Args.notNull(mapper, "mapper");
@@ -71,7 +71,7 @@ public class MountMapper extends AbstractMapper
 	 * @param mountPath
 	 * @param handler
 	 */
-	public MountMapper(String mountPath, IRequestHandler handler)
+	public MountMapper(final String mountPath, final IRequestHandler handler)
 	{
 		Args.notEmpty(mountPath, "mountPath");
 		Args.notNull(handler, "handler");
@@ -83,7 +83,7 @@ public class MountMapper extends AbstractMapper
 	/**
 	 * @see org.apache.wicket.request.IRequestMapper#getCompatibilityScore(org.apache.wicket.request.Request)
 	 */
-	public int getCompatibilityScore(Request request)
+	public int getCompatibilityScore(final Request request)
 	{
 		if (urlStartsWith(request.getUrl(), mountSegments))
 		{
@@ -102,7 +102,7 @@ public class MountMapper extends AbstractMapper
 	 *            delegated mapper
 	 * @return a {@link Request} with {@link Url} without the mount segments
 	 */
-	private Request dismountRequest(Request request)
+	private Request dismountRequest(final Request request)
 	{
 		Url dismountedUrl = new Url(request.getUrl());
 		dismountedUrl.removeLeadingSegments(mountSegments.length);
@@ -112,11 +112,11 @@ public class MountMapper extends AbstractMapper
 	/**
 	 * @see org.apache.wicket.request.IRequestMapper#mapRequest(org.apache.wicket.request.Request)
 	 */
-	public final IRequestHandler mapRequest(Request request)
+	public final IRequestHandler mapRequest(final Request request)
 	{
 		final Url url = request.getUrl();
 
-		if (url.getSegments().size() >= mountSegments.length && urlStartsWith(url, mountSegments))
+		if ((url.getSegments().size() >= mountSegments.length) && urlStartsWith(url, mountSegments))
 		{
 			MountParameters params = new MountParameters();
 			for (int i = 0; i < mountSegments.length; i++)
@@ -137,7 +137,7 @@ public class MountMapper extends AbstractMapper
 	/**
 	 * @see org.apache.wicket.request.IRequestMapper#mapHandler(org.apache.org.apache.wicket.request.IRequestHandler)
 	 */
-	public Url mapHandler(IRequestHandler handler)
+	public Url mapHandler(final IRequestHandler handler)
 	{
 		Mount mount = mapper.mapHandler(handler);
 		if (mount == null)

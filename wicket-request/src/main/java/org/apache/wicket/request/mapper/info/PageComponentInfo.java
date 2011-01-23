@@ -39,7 +39,7 @@ public class PageComponentInfo
 	 * @param pageInfo
 	 * @param componentInfo
 	 */
-	public PageComponentInfo(PageInfo pageInfo, ComponentInfo componentInfo)
+	public PageComponentInfo(final PageInfo pageInfo, final ComponentInfo componentInfo)
 	{
 		Args.notNull(pageInfo, "pageInfo");
 
@@ -89,7 +89,7 @@ public class PageComponentInfo
 	 * @param s
 	 * @return {@link PageComponentInfo} or <code>null</code> if the string is not in valid format.
 	 */
-	public static PageComponentInfo parse(String s)
+	public static PageComponentInfo parse(final String s)
 	{
 		if (Strings.isEmpty(s))
 		{

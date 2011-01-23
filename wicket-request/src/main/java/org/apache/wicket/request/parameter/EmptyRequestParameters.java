@@ -51,7 +51,7 @@ public class EmptyRequestParameters implements IRequestParameters
 	/**
 	 * @see org.apache.wicket.request.IRequestParameters#getParameterValue(java.lang.String)
 	 */
-	public StringValue getParameterValue(String name)
+	public StringValue getParameterValue(final String name)
 	{
 		return StringValue.valueOf((String)null);
 	}
@@ -59,7 +59,7 @@ public class EmptyRequestParameters implements IRequestParameters
 	/**
 	 * @see org.apache.wicket.request.IRequestParameters#getParameterValues(java.lang.String)
 	 */
-	public List<StringValue> getParameterValues(String name)
+	public List<StringValue> getParameterValues(final String name)
 	{
 		return null;
 	}

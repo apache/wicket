@@ -80,8 +80,8 @@ public class ComponentInfo
 	 * @param componentPath
 	 * @param behaviorId
 	 */
-	public ComponentInfo(Integer renderCount, String listenerInterface, String componentPath,
-		Integer behaviorId)
+	public ComponentInfo(final Integer renderCount, final String listenerInterface,
+		final String componentPath, final Integer behaviorId)
 	{
 		Args.notEmpty(listenerInterface, "listenerInterface");
 		Args.notNull(componentPath, "componentPath");
@@ -158,9 +158,9 @@ public class ComponentInfo
 	 * @param string
 	 * @return whether the string consists of digits only
 	 */
-	private static boolean isNumber(String string)
+	private static boolean isNumber(final String string)
 	{
-		if (string == null || string.length() == 0)
+		if ((string == null) || (string.length() == 0))
 		{
 			return false;
 		}
@@ -180,7 +180,7 @@ public class ComponentInfo
 	 * @param string
 	 * @return component info or <code>null</code> if the string is not in correct format.
 	 */
-	public static ComponentInfo parse(String string)
+	public static ComponentInfo parse(final String string)
 	{
 		if (Strings.isEmpty(string))
 		{

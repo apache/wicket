@@ -44,7 +44,7 @@ public final class ErrorCodeRequestHandler implements IRequestHandler
 	 *            {@link javax.servlet.http.HttpServletResponse} constants
 	 * @see javax.servlet.http.HttpServletResponse
 	 */
-	public ErrorCodeRequestHandler(int errorCode)
+	public ErrorCodeRequestHandler(final int errorCode)
 	{
 		this(errorCode, null);
 	}
@@ -59,7 +59,7 @@ public final class ErrorCodeRequestHandler implements IRequestHandler
 	 *            the optional message to send to the client
 	 * @see javax.servlet.http.HttpServletResponse
 	 */
-	public ErrorCodeRequestHandler(int errorCode, String message)
+	public ErrorCodeRequestHandler(final int errorCode, final String message)
 	{
 		this.errorCode = errorCode;
 		this.message = message;
@@ -70,7 +70,7 @@ public final class ErrorCodeRequestHandler implements IRequestHandler
 	 * 
 	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.IRequestCycle)
 	 */
-	public void respond(IRequestCycle requestCycle)
+	public void respond(final IRequestCycle requestCycle)
 	{
 		WebResponse webResponse = (WebResponse)requestCycle.getResponse();
 		webResponse.sendError(errorCode, message);
@@ -97,7 +97,7 @@ public final class ErrorCodeRequestHandler implements IRequestHandler
 	}
 
 	/** {@inheritDoc} */
-	public void detach(IRequestCycle requestCycle)
+	public void detach(final IRequestCycle requestCycle)
 	{
 	}
 }

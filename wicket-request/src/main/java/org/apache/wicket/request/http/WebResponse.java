@@ -92,7 +92,7 @@ public abstract class WebResponse extends Response
 	 * @param time
 	 *            The last modified time in milliseconds
 	 */
-	public void setLastModifiedTime(long time)
+	public void setLastModifiedTime(final long time)
 	{
 		setDateHeader("Last-Modified", time);
 	}
@@ -105,7 +105,7 @@ public abstract class WebResponse extends Response
 	 * @param filename
 	 *            file name of the attachment
 	 */
-	public void setAttachmentHeader(String filename)
+	public void setAttachmentHeader(final String filename)
 	{
 		setHeader("Content-Disposition", "attachment" +
 			((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename + "\"") : ""));
@@ -119,7 +119,7 @@ public abstract class WebResponse extends Response
 	 * @param filename
 	 *            file name of the attachment
 	 */
-	public void setInlineHeader(String filename)
+	public void setInlineHeader(final String filename)
 	{
 		setHeader("Content-Disposition", "inline" +
 			((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename + "\"") : ""));
@@ -184,14 +184,16 @@ public abstract class WebResponse extends Response
 	 * 
 	 * @see WebResponse#MAX_CACHE_DURATION
 	 */
-	public void enableCaching(Duration duration, WebResponse.CacheScope scope)
+	public void enableCaching(Duration duration, final WebResponse.CacheScope scope)
 	{
 		Args.notNull(duration, "duration");
 		Args.notNull(scope, "scope");
 
 		// do not exceed the maximum recommended value from RFC-2616
 		if (duration.compareTo(MAX_CACHE_DURATION) > 0)
+		{
 			duration = MAX_CACHE_DURATION;
+		}
 
 		// Get current time
 		long now = System.currentTimeMillis();
@@ -238,7 +240,7 @@ public abstract class WebResponse extends Response
 		// value for Cache-Control header
 		private final String cacheControl;
 
-		CacheScope(String cacheControl)
+		CacheScope(final String cacheControl)
 		{
 			this.cacheControl = cacheControl;
 		}

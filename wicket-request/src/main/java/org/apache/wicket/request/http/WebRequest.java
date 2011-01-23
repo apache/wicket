@@ -55,7 +55,7 @@ public abstract class WebRequest extends Request
 	 * @param cookieName
 	 * @return cookie with specified name or <code>null</code> if the cookie does not exist
 	 */
-	public Cookie getCookie(String cookieName)
+	public Cookie getCookie(final String cookieName)
 	{
 		for (Cookie cookie : getCookies())
 		{
@@ -156,7 +156,7 @@ public abstract class WebRequest extends Request
 			}
 
 			@Override
-			public long getDateHeader(String name)
+			public long getDateHeader(final String name)
 			{
 				return WebRequest.this.getDateHeader(name);
 			}
@@ -168,13 +168,13 @@ public abstract class WebRequest extends Request
 			}
 
 			@Override
-			public String getHeader(String name)
+			public String getHeader(final String name)
 			{
 				return WebRequest.this.getHeader(name);
 			}
 
 			@Override
-			public List<String> getHeaders(String name)
+			public List<String> getHeaders(final String name)
 			{
 				return WebRequest.this.getHeaders(name);
 			}

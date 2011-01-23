@@ -45,7 +45,7 @@ public class RedirectRequestHandler implements IRequestHandler
 	 * @param redirectUrl
 	 *            URL to redirect to.
 	 */
-	public RedirectRequestHandler(String redirectUrl)
+	public RedirectRequestHandler(final String redirectUrl)
 	{
 		this(redirectUrl, HttpServletResponse.SC_MOVED_TEMPORARILY);
 	}
@@ -56,10 +56,10 @@ public class RedirectRequestHandler implements IRequestHandler
 	 * @param status
 	 *            301 (Moved permanently) or 302 (Moved temporarily)
 	 */
-	public RedirectRequestHandler(String redirectUrl, int status)
+	public RedirectRequestHandler(final String redirectUrl, final int status)
 	{
-		if (status != HttpServletResponse.SC_MOVED_PERMANENTLY &&
-			status != HttpServletResponse.SC_MOVED_TEMPORARILY)
+		if ((status != HttpServletResponse.SC_MOVED_PERMANENTLY) &&
+			(status != HttpServletResponse.SC_MOVED_TEMPORARILY))
 		{
 			throw new IllegalStateException("Status must be either 301 or 302, but was: " + status);
 		}
@@ -68,12 +68,12 @@ public class RedirectRequestHandler implements IRequestHandler
 	}
 
 	/** {@inheritDoc} */
-	public void detach(IRequestCycle requestCycle)
+	public void detach(final IRequestCycle requestCycle)
 	{
 	}
 
 	/** {@inheritDoc} */
-	public void respond(IRequestCycle requestCycle)
+	public void respond(final IRequestCycle requestCycle)
 	{
 		final String location;
 

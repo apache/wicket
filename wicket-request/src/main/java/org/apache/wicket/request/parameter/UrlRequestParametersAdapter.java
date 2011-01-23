@@ -43,7 +43,7 @@ public class UrlRequestParametersAdapter implements IRequestParameters
 	 * 
 	 * @param url
 	 */
-	public UrlRequestParametersAdapter(Url url)
+	public UrlRequestParametersAdapter(final Url url)
 	{
 		Args.notNull(url, "url");
 
@@ -66,7 +66,7 @@ public class UrlRequestParametersAdapter implements IRequestParameters
 	/**
 	 * @see org.apache.wicket.request.IRequestParameters#getParameterValue(java.lang.String)
 	 */
-	public StringValue getParameterValue(String name)
+	public StringValue getParameterValue(final String name)
 	{
 		return url.getQueryParameterValue(name);
 	}
@@ -74,7 +74,7 @@ public class UrlRequestParametersAdapter implements IRequestParameters
 	/**
 	 * @see org.apache.wicket.request.IRequestParameters#getParameterValues(java.lang.String)
 	 */
-	public List<StringValue> getParameterValues(String name)
+	public List<StringValue> getParameterValues(final String name)
 	{
 		List<StringValue> values = null;
 		for (QueryParameter parameter : url.getQueryParameters())

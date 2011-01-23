@@ -37,9 +37,9 @@ public abstract class AbstractMapper implements IRequestMapper
 	 * @param s
 	 * @return placeholder key or <code>null</code> if string is not in right format
 	 */
-	protected static String getPlaceholder(String s)
+	protected static String getPlaceholder(final String s)
 	{
-		if (s == null || s.length() < 4 || !s.startsWith("${") || !s.endsWith("}"))
+		if ((s == null) || (s.length() < 4) || !s.startsWith("${") || !s.endsWith("}"))
 		{
 			return null;
 		}
@@ -66,7 +66,7 @@ public abstract class AbstractMapper implements IRequestMapper
 	 * @return <code>true</code> if the URL starts with the specified segments, <code>false</code>
 	 *         otherwise
 	 */
-	protected boolean urlStartsWith(Url url, String... segments)
+	protected boolean urlStartsWith(final Url url, final String... segments)
 	{
 		if (url == null)
 		{
@@ -82,8 +82,8 @@ public abstract class AbstractMapper implements IRequestMapper
 			{
 				for (int i = 0; i < segments.length; ++i)
 				{
-					if (segments[i].equals(url.getSegments().get(i)) == false &&
-						getPlaceholder(segments[i]) == null)
+					if ((segments[i].equals(url.getSegments().get(i)) == false) &&
+						(getPlaceholder(segments[i]) == null))
 					{
 						return false;
 					}
@@ -103,15 +103,15 @@ public abstract class AbstractMapper implements IRequestMapper
 	 * @param encoder
 	 * @return PageParameters instance
 	 */
-	protected PageParameters extractPageParameters(Request request, int segmentsToSkip,
-		IPageParametersEncoder encoder)
+	protected PageParameters extractPageParameters(final Request request, int segmentsToSkip,
+		final IPageParametersEncoder encoder)
 	{
 		Args.notNull(request, "request");
 		Args.notNull(encoder, "encoder");
 
 		// strip the segments and first query parameter from URL
 		Url urlCopy = new Url(request.getUrl());
-		while (segmentsToSkip > 0 && urlCopy.getSegments().isEmpty() == false)
+		while ((segmentsToSkip > 0) && (urlCopy.getSegments().isEmpty() == false))
 		{
 			urlCopy.getSegments().remove(0);
 			--segmentsToSkip;
@@ -150,7 +150,7 @@ public abstract class AbstractMapper implements IRequestMapper
 	 * @return URL with encoded parameters
 	 */
 	protected Url encodePageParameters(Url url, PageParameters pageParameters,
-		IPageParametersEncoder encoder)
+		final IPageParametersEncoder encoder)
 	{
 		Args.notNull(url, "url");
 		Args.notNull(encoder, "encoder");

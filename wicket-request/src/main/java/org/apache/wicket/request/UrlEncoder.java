@@ -96,7 +96,7 @@ public class UrlEncoder
 	 * @param stopChar
 	 *            stop encoding when stopChar found
 	 */
-	protected UrlEncoder(Type type, char stopChar)
+	protected UrlEncoder(final Type type, final char stopChar)
 	{
 		this.stopChar = stopChar;
 
@@ -262,11 +262,10 @@ public class UrlEncoder
 	 * @return encoded string
 	 * @see java.net.URLEncoder#encode(String, String)
 	 */
-	public String encode(String s, Charset enc)
+	public String encode(final String s, final Charset enc)
 	{
 		return encode(s, enc.name());
 	}
-
 
 	/**
 	 * @param s
@@ -276,7 +275,7 @@ public class UrlEncoder
 	 * @return encoded string
 	 * @see java.net.URLEncoder#encode(String, String)
 	 */
-	public String encode(String s, String enc)
+	public String encode(final String s, final String enc)
 	{
 		boolean needToChange = false;
 		StringBuilder out = new StringBuilder(s.length());
@@ -335,7 +334,7 @@ public class UrlEncoder
 					 * the surrogate pairs range occurs outside of a legal surrogate pair. For now,
 					 * just treat it as if it were any other character.
 					 */
-					if (c >= 0xD800 && c <= 0xDBFF)
+					if ((c >= 0xD800) && (c <= 0xDBFF))
 					{
 						/*
 						 * System.out.println(Integer.toHexString(c) + " is high surrogate");
@@ -346,7 +345,7 @@ public class UrlEncoder
 							/*
 							 * System.out.println("\tExamining " + Integer.toHexString(d));
 							 */
-							if (d >= 0xDC00 && d <= 0xDFFF)
+							if ((d >= 0xDC00) && (d <= 0xDFFF))
 							{
 								/*
 								 * System.out.println("\t" + Integer.toHexString(d) + " is low
@@ -359,7 +358,7 @@ public class UrlEncoder
 					}
 					i++;
 				}
-				while (i < s.length() && !dontNeedEncoding.get((c = s.charAt(i))));
+				while ((i < s.length()) && !dontNeedEncoding.get((c = s.charAt(i))));
 
 				charArrayWriter.flush();
 				String str = new String(charArrayWriter.toCharArray());

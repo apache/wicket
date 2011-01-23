@@ -46,13 +46,13 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 		private final IRequestMapper mapper;
 		private final int compatibilityScore;
 
-		public EncoderWithSegmentsCount(IRequestMapper encoder, int compatibilityScore)
+		public EncoderWithSegmentsCount(final IRequestMapper encoder, final int compatibilityScore)
 		{
 			mapper = encoder;
 			this.compatibilityScore = compatibilityScore;
 		}
 
-		public int compareTo(EncoderWithSegmentsCount o)
+		public int compareTo(final EncoderWithSegmentsCount o)
 		{
 			return o.compatibilityScore - compatibilityScore;
 		}
@@ -84,7 +84,7 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 	/**
 	 * @see org.apache.wicket.request.mapper.ICompoundRequestMapper#add(org.apache.wicket.request.IRequestMapper)
 	 */
-	public CompoundRequestMapper add(IRequestMapper encoder)
+	public CompoundRequestMapper add(final IRequestMapper encoder)
 	{
 		mappers.add(0, encoder);
 		return this;
@@ -93,7 +93,7 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 	/**
 	 * @see org.apache.wicket.request.mapper.ICompoundRequestMapper#remove(org.apache.wicket.request.IRequestMapper)
 	 */
-	public CompoundRequestMapper remove(IRequestMapper encoder)
+	public CompoundRequestMapper remove(final IRequestMapper encoder)
 	{
 		mappers.remove(encoder);
 		return this;
@@ -111,7 +111,7 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 	 * @return RequestHandler for the request or <code>null</code> if no encoder for the request is
 	 *         found.
 	 */
-	public IRequestHandler mapRequest(Request request)
+	public IRequestHandler mapRequest(final Request request)
 	{
 		List<EncoderWithSegmentsCount> list = new ArrayList<EncoderWithSegmentsCount>(
 			mappers.size());
@@ -148,7 +148,7 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 	 * @param handler
 	 * @return Url for the handler or <code>null</code> if no encoder for the handler is found.
 	 */
-	public Url mapHandler(IRequestHandler handler)
+	public Url mapHandler(final IRequestHandler handler)
 	{
 		for (IRequestMapper encoder : mappers)
 		{
@@ -166,7 +166,7 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 	 * 
 	 * {@inheritDoc}
 	 */
-	public int getCompatibilityScore(Request request)
+	public int getCompatibilityScore(final Request request)
 	{
 		int score = Integer.MIN_VALUE;
 		for (IRequestMapper mapper : mappers)

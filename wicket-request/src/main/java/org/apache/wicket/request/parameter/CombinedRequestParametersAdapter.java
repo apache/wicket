@@ -39,7 +39,7 @@ public class CombinedRequestParametersAdapter implements IRequestParameters
 	 * 
 	 * @param parameters
 	 */
-	public CombinedRequestParametersAdapter(IRequestParameters... parameters)
+	public CombinedRequestParametersAdapter(final IRequestParameters... parameters)
 	{
 		if (parameters == null)
 		{
@@ -64,7 +64,7 @@ public class CombinedRequestParametersAdapter implements IRequestParameters
 	/**
 	 * @see org.apache.wicket.request.IRequestParameters#getParameterValue(java.lang.String)
 	 */
-	public StringValue getParameterValue(String name)
+	public StringValue getParameterValue(final String name)
 	{
 		for (IRequestParameters p : parameters)
 		{
@@ -80,7 +80,7 @@ public class CombinedRequestParametersAdapter implements IRequestParameters
 	/**
 	 * @see org.apache.wicket.request.IRequestParameters#getParameterValues(java.lang.String)
 	 */
-	public List<StringValue> getParameterValues(String name)
+	public List<StringValue> getParameterValues(final String name)
 	{
 		List<StringValue> result = new ArrayList<StringValue>();
 		for (IRequestParameters p : parameters)

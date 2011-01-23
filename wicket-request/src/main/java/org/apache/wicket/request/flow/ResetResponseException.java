@@ -36,7 +36,7 @@ public abstract class ResetResponseException extends ReplaceHandlerException
 	/**
 	 * Construct.
 	 */
-	protected ResetResponseException(IRequestHandler handler)
+	protected ResetResponseException(final IRequestHandler handler)
 	{
 		super(new ResponseResettingDecorator(handler), true);
 	}
@@ -45,21 +45,20 @@ public abstract class ResetResponseException extends ReplaceHandlerException
 	{
 		private final IRequestHandler delegate;
 
-		public ResponseResettingDecorator(IRequestHandler delegate)
+		public ResponseResettingDecorator(final IRequestHandler delegate)
 		{
 			this.delegate = delegate;
 		}
 
-		public void detach(IRequestCycle requestCycle)
+		public void detach(final IRequestCycle requestCycle)
 		{
 			delegate.detach(requestCycle);
 		}
 
-		public void respond(IRequestCycle requestCycle)
+		public void respond(final IRequestCycle requestCycle)
 		{
 			requestCycle.getResponse().reset();
 			delegate.respond(requestCycle);
 		}
-
 	}
 }

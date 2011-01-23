@@ -37,7 +37,7 @@ class UnmountedMapperAdapter implements IMountedRequestMapper
 	 * 
 	 * @param mapper
 	 */
-	public UnmountedMapperAdapter(IRequestMapper mapper)
+	public UnmountedMapperAdapter(final IRequestMapper mapper)
 	{
 		super();
 		this.mapper = mapper;
@@ -46,7 +46,7 @@ class UnmountedMapperAdapter implements IMountedRequestMapper
 	/**
 	 * @see org.apache.wicket.request.mapper.mount.IMountedRequestMapper#getCompatibilityScore(org.apache.wicket.request.Request)
 	 */
-	public int getCompatibilityScore(Request request)
+	public int getCompatibilityScore(final Request request)
 	{
 		return mapper.getCompatibilityScore(request);
 	}
@@ -54,7 +54,7 @@ class UnmountedMapperAdapter implements IMountedRequestMapper
 	/**
 	 * @see org.apache.wicket.request.mapper.mount.IMountedRequestMapper#mapHandler(org.apache.org.apache.wicket.request.IRequestHandler)
 	 */
-	public Mount mapHandler(IRequestHandler requestHandler)
+	public Mount mapHandler(final IRequestHandler requestHandler)
 	{
 		Url url = mapper.mapHandler(requestHandler);
 		if (url != null)
@@ -68,7 +68,7 @@ class UnmountedMapperAdapter implements IMountedRequestMapper
 	 * @see org.apache.wicket.request.mapper.mount.IMountedRequestMapper#mapRequest(org.apache.wicket.request.Request,
 	 *      org.apache.wicket.request.mapper.mount.MountParameters)
 	 */
-	public IRequestHandler mapRequest(Request request, MountParameters mountParams)
+	public IRequestHandler mapRequest(final Request request, final MountParameters mountParams)
 	{
 		return mapper.mapRequest(request);
 	}

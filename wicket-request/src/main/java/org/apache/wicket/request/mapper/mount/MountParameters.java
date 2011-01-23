@@ -39,7 +39,7 @@ public class MountParameters
 	 * @return a StringValue which contains either the actual value if there is a placeholder with
 	 *         name <code>parameterName</code> or <code>null</code> otherwise
 	 */
-	public final StringValue getValue(String parameterName)
+	public final StringValue getValue(final String parameterName)
 	{
 		return StringValue.valueOf(map.get(parameterName));
 	}
@@ -50,7 +50,7 @@ public class MountParameters
 	 * @param parameterName
 	 * @param value
 	 */
-	public final void setValue(String parameterName, StringValue value)
+	public final void setValue(final String parameterName, final StringValue value)
 	{
 		map.put(parameterName, value.toString());
 	}
@@ -79,22 +79,32 @@ public class MountParameters
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(final Object obj)
 	{
 		if (this == obj)
+		{
 			return true;
+		}
 		if (obj == null)
+		{
 			return false;
+		}
 		if (getClass() != obj.getClass())
+		{
 			return false;
+		}
 		MountParameters other = (MountParameters)obj;
 		if (map == null)
 		{
 			if (other.map != null)
+			{
 				return false;
+			}
 		}
 		else if (!map.equals(other.map))
+		{
 			return false;
+		}
 		return true;
 	}
 

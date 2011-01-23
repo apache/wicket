@@ -176,7 +176,7 @@ public class PageParameters implements Serializable
 	 * @param object
 	 * @return this
 	 */
-	public PageParameters set(int index, Object object)
+	public PageParameters set(final int index, final Object object)
 	{
 		if (indexedParameters == null)
 		{
@@ -196,11 +196,11 @@ public class PageParameters implements Serializable
 	 * @param index
 	 * @return indexed parameter on given index
 	 */
-	public StringValue get(int index)
+	public StringValue get(final int index)
 	{
 		if (indexedParameters != null)
 		{
-			if (index >= 0 && index < indexedParameters.size())
+			if ((index >= 0) && (index < indexedParameters.size()))
 			{
 				return StringValue.valueOf(indexedParameters.get(index));
 			}
@@ -214,11 +214,11 @@ public class PageParameters implements Serializable
 	 * @param index
 	 * @return this
 	 */
-	public PageParameters remove(int index)
+	public PageParameters remove(final int index)
 	{
 		if (indexedParameters != null)
 		{
-			if (index >= 0 && index < indexedParameters.size())
+			if ((index >= 0) && (index < indexedParameters.size()))
 			{
 				indexedParameters.remove(index);
 			}
@@ -233,7 +233,7 @@ public class PageParameters implements Serializable
 	 */
 	public Set<String> getNamedKeys()
 	{
-		if (namedParameters == null || namedParameters.isEmpty())
+		if ((namedParameters == null) || namedParameters.isEmpty())
 		{
 			return Collections.emptySet();
 		}
@@ -307,7 +307,7 @@ public class PageParameters implements Serializable
 		private final String key;
 		private final String value;
 
-		private NamedPair(String key, String value)
+		private NamedPair(final String key, final String value)
 		{
 			this.key = key;
 			this.value = value;
@@ -425,7 +425,7 @@ public class PageParameters implements Serializable
 	 * @param index
 	 * @return this
 	 */
-	public PageParameters set(String name, Object value, int index)
+	public PageParameters set(final String name, final Object value, final int index)
 	{
 		remove(name);
 
@@ -443,7 +443,7 @@ public class PageParameters implements Serializable
 	 * @param value
 	 * @return this
 	 */
-	public PageParameters set(String name, Object value)
+	public PageParameters set(final String name, final Object value)
 	{
 		set(name, value, -1);
 		return this;
@@ -477,7 +477,7 @@ public class PageParameters implements Serializable
 	 * @param other
 	 * @return this
 	 */
-	public PageParameters overwriteWith(PageParameters other)
+	public PageParameters overwriteWith(final PageParameters other)
 	{
 		if (this != other)
 		{
@@ -491,14 +491,14 @@ public class PageParameters implements Serializable
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(final Object obj)
 	{
 		if (this == obj)
 		{
 			return true;
 		}
 
-		if (obj instanceof PageParameters == false)
+		if ((obj instanceof PageParameters) == false)
 		{
 			return false;
 		}
@@ -509,7 +509,7 @@ public class PageParameters implements Serializable
 			return false;
 		}
 
-		if (namedParameters == null || rhs.namedParameters == null)
+		if ((namedParameters == null) || (rhs.namedParameters == null))
 		{
 			return rhs.namedParameters == namedParameters;
 		}
@@ -548,17 +548,17 @@ public class PageParameters implements Serializable
 	 * @param p2
 	 * @return <code>true</code> if the objects are equal, <code>false</code> otherwise.
 	 */
-	public static boolean equals(PageParameters p1, PageParameters p2)
+	public static boolean equals(final PageParameters p1, final PageParameters p2)
 	{
 		if (Objects.equal(p1, p2))
 		{
 			return true;
 		}
-		if (p1 == null && p2.getIndexedCount() == 0 && p2.getNamedKeys().isEmpty())
+		if ((p1 == null) && (p2.getIndexedCount() == 0) && p2.getNamedKeys().isEmpty())
 		{
 			return true;
 		}
-		if (p2 == null && p1.getIndexedCount() == 0 && p1.getNamedKeys().isEmpty())
+		if ((p2 == null) && (p1.getIndexedCount() == 0) && p1.getNamedKeys().isEmpty())
 		{
 			return true;
 		}
@@ -570,7 +570,7 @@ public class PageParameters implements Serializable
 	 */
 	public boolean isEmpty()
 	{
-		return getIndexedCount() == 0 && getNamedKeys().isEmpty();
+		return (getIndexedCount() == 0) && getNamedKeys().isEmpty();
 	}
 
 	@Override
@@ -583,7 +583,9 @@ public class PageParameters implements Serializable
 			for (int i = 0; i < indexedParameters.size(); i++)
 			{
 				if (i > 0)
+				{
 					str.append(", ");
+				}
 
 				str.append(i);
 				str.append('=');
@@ -592,7 +594,9 @@ public class PageParameters implements Serializable
 		}
 
 		if (str.length() > 0)
+		{
 			str.append(", ");
+		}
 
 		if (namedParameters != null)
 		{
@@ -601,7 +605,9 @@ public class PageParameters implements Serializable
 				Entry entry = namedParameters.get(i);
 
 				if (i > 0)
+				{
 					str.append(", ");
+				}
 
 				str.append(entry.key);
 				str.append('=');

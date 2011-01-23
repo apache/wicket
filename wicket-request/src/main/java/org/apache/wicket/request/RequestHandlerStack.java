@@ -48,7 +48,7 @@ public abstract class RequestHandlerStack
 	 * 
 	 * @param response
 	 */
-	public RequestHandlerStack(Response response)
+	public RequestHandlerStack(final Response response)
 	{
 		this.response = response;
 	}
@@ -72,7 +72,7 @@ public abstract class RequestHandlerStack
 	 * 
 	 * @param handler
 	 */
-	public void executeRequestHandler(IRequestHandler handler)
+	public void executeRequestHandler(final IRequestHandler handler)
 	{
 		final boolean first = requestHandlers.isEmpty();
 		requestHandlers.add(handler);
@@ -129,7 +129,7 @@ public abstract class RequestHandlerStack
 	 * @param handler
 	 *            handler to be executed after current request handler finishes
 	 */
-	public void scheduleRequestHandlerAfterCurrent(IRequestHandler handler)
+	public void scheduleRequestHandlerAfterCurrent(final IRequestHandler handler)
 	{
 		scheduledAfterCurrent = handler;
 	}
@@ -151,7 +151,7 @@ public abstract class RequestHandlerStack
 	 * 
 	 * @param handler
 	 */
-	public void replaceAllRequestHandlers(IRequestHandler handler)
+	public void replaceAllRequestHandlers(final IRequestHandler handler)
 	{
 		if (requestHandlers.isEmpty())
 		{
@@ -181,7 +181,7 @@ public abstract class RequestHandlerStack
 	 * @param response
 	 * @return Response being replaced.
 	 */
-	public Response setResponse(Response response)
+	public Response setResponse(final Response response)
 	{
 		Response current = this.response;
 		this.response = response;
@@ -234,7 +234,8 @@ public abstract class RequestHandlerStack
 		 * @param replacementRequestHandler
 		 * @param removeAll
 		 */
-		public ReplaceHandlerException(IRequestHandler replacementRequestHandler, boolean removeAll)
+		public ReplaceHandlerException(final IRequestHandler replacementRequestHandler,
+			final boolean removeAll)
 		{
 			this.replacementRequestHandler = replacementRequestHandler;
 			this.removeAll = removeAll;

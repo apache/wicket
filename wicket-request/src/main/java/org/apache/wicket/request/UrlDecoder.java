@@ -56,38 +56,11 @@ public class UrlDecoder
 	 * @param decodePlus
 	 *            - whether to decode + to space
 	 */
-	private UrlDecoder(boolean decodePlus)
+	private UrlDecoder(final boolean decodePlus)
 	{
 		this.decodePlus = decodePlus;
 	}
 
-	// /**
-	// * Calls decode with the application response request encoding as returned
-	// by
-	// *
-	// Application.get().getRequestCycleSettings().getResponseRequestEncoding()
-	// *
-	// * @param s
-	// * Value to encode
-	// * @return String encoded using default Application request/respose
-	// encoding
-	// */
-	// public String decode(String s)
-	// {
-	// Application app = null;
-	//
-	// try
-	// {
-	// app = Application.get();
-	// }
-	// catch (WicketRuntimeException ignored)
-	// {
-	// log.warn("No current Application found - defaulting encoding to UTF-8");
-	// }
-	// return decode(s, app == null ? "UTF-8" : app.getRequestCycleSettings()
-	// .getResponseRequestEncoding());
-	// }
-
 	/**
 	 * @param s
 	 *            string to decode
@@ -96,12 +69,11 @@ public class UrlDecoder
 	 * @return decoded string
 	 * @see java.net.URLDecoder#decode(String, String)
 	 */
-	public String decode(String s, Charset enc)
+	public String decode(final String s, final Charset enc)
 	{
 		return decode(s, enc.name());
 	}
 
-
 	/**
 	 * @param s
 	 *            string to decode
@@ -110,7 +82,7 @@ public class UrlDecoder
 	 * @return decoded string
 	 * @see java.net.URLDecoder#decode(String, String)
 	 */
-	public String decode(String s, String enc)
+	public String decode(final String s, final String enc)
 	{
 		if (s == null)
 		{
@@ -119,7 +91,7 @@ public class UrlDecoder
 
 		boolean needToChange = false;
 		int numChars = s.length();
-	 StringBuilder sb = new StringBuilder(numChars > 500 ? numChars / 2 : numChars);
+		StringBuilder sb = new StringBuilder(numChars > 500 ? numChars / 2 : numChars);
 		int i = 0;
 
 		if (enc.length() == 0)

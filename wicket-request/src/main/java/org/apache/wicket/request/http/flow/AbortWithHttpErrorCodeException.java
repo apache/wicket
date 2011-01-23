@@ -43,7 +43,7 @@ public final class AbortWithHttpErrorCodeException extends ResetResponseExceptio
 	 *            {@link javax.servlet.http.HttpServletResponse} constants
 	 * @see javax.servlet.http.HttpServletResponse
 	 */
-	public AbortWithHttpErrorCodeException(int errorCode, String message)
+	public AbortWithHttpErrorCodeException(final int errorCode, final String message)
 	{
 		super(new ErrorCodeRequestHandler(errorCode, message));
 		this.errorCode = errorCode;
