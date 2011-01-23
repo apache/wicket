@@ -17,7 +17,6 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -32,9 +31,6 @@ import org.apache.wicket.util.string.UrlUtils;
 public class ExternalLink extends AbstractLink
 {
 	private static final long serialVersionUID = 1L;
-
-	/** this links' label. */
-	private final IModel<?> label;
 
 	private boolean contextRelative = false;
 
@@ -56,10 +52,9 @@ public class ExternalLink extends AbstractLink
 	 */
 	public ExternalLink(final String id, final String href, final String label)
 	{
-		super(id);
+		super(id, null, Model.of(label));
 
 		setDefaultModel(href != null ? new Model<String>(href) : null);
-		this.label = (label != null ? new Model<String>(label) : null);
 	}
 
 	/**
@@ -87,10 +82,9 @@ public class ExternalLink extends AbstractLink
 	 */
 	public ExternalLink(final String id, final IModel<String> href, final IModel<?> label)
 	{
-		super(id);
+		super(id, null, label);
 
 		setDefaultModel(wrap(href));
-		this.label = wrap(label);
 	}
 
 	/**
@@ -198,42 +192,6 @@ public class ExternalLink extends AbstractLink
 	}
 
 	/**
-	 * Handle the container's body.
-	 * 
-	 * @param markupStream
-	 *            The markup stream
-	 * @param openTag
-	 *            The open tag for the body
-	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-	 *      org.apache.wicket.markup.ComponentTag)
-	 */
-	@Override
-	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
-	{
-		// Draw anything before the body?
-		if (!isLinkEnabled() && getBeforeDisabledLink() != null)
-		{
-			getResponse().write(getBeforeDisabledLink());
-		}
-
-		if ((label != null) && (label.getObject() != null))
-		{
-			replaceComponentTagBody(markupStream, openTag,
-				getDefaultModelObjectAsString(label.getObject()));
-		}
-		else
-		{
-			super.onComponentTagBody(markupStream, openTag);
-		}
-
-		// Draw anything after the body?
-		if (!isLinkEnabled() && getAfterDisabledLink() != null)
-		{
-			getResponse().write(getAfterDisabledLink());
-		}
-	}
-
-	/**
 	 * @return True if this link is automatically prepended with ../ to make it relative to the
 	 *         context root.
 	 */
@@ -253,13 +211,5 @@ public class ExternalLink extends AbstractLink
 	{
 		this.contextRelative = contextRelative;
 		return this;
-	}
-
-	/**
-	 * @return label attribute
-	 */
-	public IModel<?> getLabel()
-	{
-		return label;
 	}
 }

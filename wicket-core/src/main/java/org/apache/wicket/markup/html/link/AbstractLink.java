@@ -31,16 +31,8 @@ public abstract class AbstractLink extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Construct.
-	 * 
-	 * @param id
-	 * @param model
-	 */
-	public AbstractLink(String id, IModel<?> model)
-	{
-		super(id, model);
-	}
+	/** this link's label/body. */
+	private final IModel<?> label;
 
 	/**
 	 * Construct.
@@ -49,7 +41,35 @@ public abstract class AbstractLink extends WebMarkupContainer
 	 */
 	public AbstractLink(String id)
 	{
-		super(id);
+		this(id, null);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the link's model
+	 */
+	public AbstractLink(String id, IModel<?> model)
+	{
+		this(id, model, null);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the link's model
+	 * @param labelModel
+	 */
+	public AbstractLink(String id, IModel<?> model, final IModel<?> labelModel)
+	{
+		super(id, model);
+		label = wrap(labelModel);
 	}
 
 	/**
@@ -165,9 +185,16 @@ public abstract class AbstractLink extends WebMarkupContainer
 			getResponse().write(getBeforeDisabledLink());
 		}
 
-		// Render the body of the link
-		super.onComponentTagBody(markupStream, openTag);
-
+		if ((label != null) && (label.getObject() != null))
+		{
+			replaceComponentTagBody(markupStream, openTag,
+				getDefaultModelObjectAsString(label.getObject()));
+		}
+		else
+		{
+			// Render the body of the link
+			super.onComponentTagBody(markupStream, openTag);
+		}
 		// Draw anything after the body?
 		if (!isLinkEnabled() && getAfterDisabledLink() != null)
 		{
@@ -203,5 +230,13 @@ public abstract class AbstractLink extends WebMarkupContainer
 		{
 			tag.put("disabled", "disabled");
 		}
+	}
+
+	/**
+	 * @return the link's label/body
+	 */
+	public IModel<?> getLabel()
+	{
+		return label;
 	}
 }
