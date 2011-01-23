@@ -182,8 +182,8 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * @param name
 	 * @return BeanDefinition
 	 */
-	private BeanDefinition getBeanDefinition(ConfigurableListableBeanFactory beanFactory,
-		String name)
+	private BeanDefinition getBeanDefinition(final ConfigurableListableBeanFactory beanFactory,
+		final String name)
 	{
 		if (beanFactory.containsBeanDefinition(name))
 		{
@@ -192,7 +192,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		else
 		{
 			BeanFactory parent = beanFactory.getParentBeanFactory();
-			if (parent != null && parent instanceof ConfigurableListableBeanFactory)
+			if ((parent != null) && (parent instanceof ConfigurableListableBeanFactory))
 			{
 				return getBeanDefinition((ConfigurableListableBeanFactory)parent, name);
 			}
@@ -244,7 +244,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	{
 		final ApplicationContext context = getSpringContext();
 
-		if (beanName != null && beanName.length() > 0)
+		if ((beanName != null) && (beanName.length() > 0))
 		{
 			return lookupSpringBean(context, beanName, getBeanType());
 		}
@@ -274,7 +274,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 */
 	public final String getBeanName()
 	{
-		if (beanName == null || "".equals(beanName))
+		if ((beanName == null) || "".equals(beanName))
 		{
 			beanName = getBeanNameOfClass(getSpringContext(), getBeanType());
 		}
@@ -301,7 +301,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * @throws IllegalStateException
 	 * @return found bean
 	 */
-	private final Object lookupSpringBean(ApplicationContext ctx, Class<?> clazz)
+	private final Object lookupSpringBean(final ApplicationContext ctx, final Class<?> clazz)
 	{
 		return lookupSpringBean(ctx, getBeanNameOfClass(ctx, clazz), clazz);
 	}
@@ -319,7 +319,8 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * @throws IllegalStateException
 	 * @return found bean
 	 */
-	private static Object lookupSpringBean(ApplicationContext ctx, String name, Class<?> clazz)
+	private static Object lookupSpringBean(final ApplicationContext ctx, final String name,
+		final Class<?> clazz)
 	{
 		try
 		{

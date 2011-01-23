@@ -67,12 +67,12 @@ public class SpringComponentInjector extends Injector implements IComponentInsta
 	 * @param webapp
 	 *            wicket web application
 	 */
-	public SpringComponentInjector(WebApplication webapp)
+	public SpringComponentInjector(final WebApplication webapp)
 	{
 		// locate application context through spring's default location
 		// mechanism and pass it on to the proper constructor
-		this(webapp, WebApplicationContextUtils.getRequiredWebApplicationContext(webapp
-				.getServletContext()));
+		this(webapp,
+			WebApplicationContextUtils.getRequiredWebApplicationContext(webapp.getServletContext()));
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class SpringComponentInjector extends Injector implements IComponentInsta
 	 * @param ctx
 	 *            spring's application context
 	 */
-	public SpringComponentInjector(WebApplication webapp, ApplicationContext ctx)
+	public SpringComponentInjector(final WebApplication webapp, final ApplicationContext ctx)
 	{
 		this(webapp, ctx, true);
 	}
@@ -100,8 +100,8 @@ public class SpringComponentInjector extends Injector implements IComponentInsta
 	 *            whether or not wicket should wrap dependencies with specialized proxies that can
 	 *            be safely serialized. in most cases this should be set to true.
 	 */
-	public SpringComponentInjector(WebApplication webapp, ApplicationContext ctx,
-			boolean wrapInProxies)
+	public SpringComponentInjector(final WebApplication webapp, final ApplicationContext ctx,
+		final boolean wrapInProxies)
 	{
 		if (webapp == null)
 		{
@@ -121,17 +121,16 @@ public class SpringComponentInjector extends Injector implements IComponentInsta
 
 	/** {@inheritDoc} */
 	@Override
-	public void inject(Object object)
+	public void inject(final Object object)
 	{
 		inject(object, fieldValueFactory);
 	}
 
 	/** {@inheritDoc} */
-	public void onInstantiation(Component component)
+	public void onInstantiation(final Component component)
 	{
 		inject(component);
 	}
-
 
 	/**
 	 * This is a holder for the application context. The reason we need a holder is that metadata
@@ -154,7 +153,7 @@ public class SpringComponentInjector extends Injector implements IComponentInsta
 		 * 
 		 * @param context
 		 */
-		public ApplicationContextHolder(ApplicationContext context)
+		public ApplicationContextHolder(final ApplicationContext context)
 		{
 			this.context = context;
 		}

@@ -33,7 +33,7 @@ public class SpringBeanLocatorTest extends TestCase
 	/**
 	 * @param name
 	 */
-	public SpringBeanLocatorTest(String name)
+	public SpringBeanLocatorTest(final String name)
 	{
 		super(name);
 	}
@@ -71,8 +71,8 @@ public class SpringBeanLocatorTest extends TestCase
 
 		ctx.putBean("bean", bean);
 
-		SpringBeanLocator locator = (SpringBeanLocator)WicketObjects
-				.cloneObject(new SpringBeanLocator(Bean.class, ctxLocator));
+		SpringBeanLocator locator = (SpringBeanLocator)WicketObjects.cloneObject(new SpringBeanLocator(
+			Bean.class, ctxLocator));
 
 		assertNotNull(locator.locateProxyTarget());
 	}
@@ -137,8 +137,8 @@ public class SpringBeanLocatorTest extends TestCase
 		Bean bean = new Bean();
 		ctx.putBean("bean", bean);
 
-		SpringBeanLocator locator = (SpringBeanLocator)WicketObjects
-				.cloneObject(new SpringBeanLocator("bean", Bean.class, ctxLocator));
+		SpringBeanLocator locator = (SpringBeanLocator)WicketObjects.cloneObject(new SpringBeanLocator(
+			"bean", Bean.class, ctxLocator));
 
 		assertNotNull(locator.locateProxyTarget());
 	}
@@ -167,7 +167,7 @@ public class SpringBeanLocatorTest extends TestCase
 	{
 		try
 		{
-			SpringBeanLocator locator = new SpringBeanLocator(null, ctxLocator);
+			new SpringBeanLocator(null, ctxLocator);
 			fail();
 		}
 		catch (IllegalArgumentException e)
@@ -177,7 +177,7 @@ public class SpringBeanLocatorTest extends TestCase
 
 		try
 		{
-			SpringBeanLocator locator = new SpringBeanLocator(Bean.class, null);
+			new SpringBeanLocator(Bean.class, null);
 			fail();
 		}
 		catch (IllegalArgumentException e)
@@ -210,7 +210,7 @@ public class SpringBeanLocatorTest extends TestCase
 	{
 		SpringBeanLocator a = new SpringBeanLocator("bean", SpringBeanLocator.class, ctxLocator);
 		SpringBeanLocator aprime = new SpringBeanLocator("bean", SpringBeanLocator.class,
-				ctxLocator);
+			ctxLocator);
 
 		SpringBeanLocator b = new SpringBeanLocator("bean2", SpringBeanLocator.class, ctxLocator);
 		SpringBeanLocator c = new SpringBeanLocator("bean", SpringBeanLocatorTest.class, ctxLocator);

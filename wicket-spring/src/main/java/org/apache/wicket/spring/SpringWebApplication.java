@@ -30,20 +30,21 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * Base class for spring aware wicket web application object. This class has helper methods to
- * create lazy init proxies based on spring beans, as well as an implementation of {@link
- * ISpringContextLocator}.
+ * create lazy init proxies based on spring beans, as well as an implementation of
+ * {@link ISpringContextLocator}.
  * 
  * @deprecated when using java5 it is preferrable to use {@link SpringBean} annotations for
- * 	injection rather then this spring-specific application subclass with its helpers. To setup
- * 	{@link SpringBean} add the following line to your {@link WebApplication} subclass init method
- * 	<code>addComponentInstantiationListener(new SpringComponentInjector(this));</code>
+ *             injection rather then this spring-specific application subclass with its helpers. To
+ *             setup {@link SpringBean} add the following line to your {@link WebApplication}
+ *             subclass init method
+ *             <code>addComponentInstantiationListener(new SpringComponentInjector(this));</code>
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
 @Deprecated
 public abstract class SpringWebApplication extends WebApplication
-		implements
-			ApplicationContextAware
+	implements
+		ApplicationContextAware
 {
 	private ApplicationContext applicationContext;
 
@@ -90,10 +91,10 @@ public abstract class SpringWebApplication extends WebApplication
 
 	/**
 	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.
-	 * 	springframework.context.ApplicationContext)
+	 *      springframework.context.ApplicationContext)
 	 */
-	public final void setApplicationContext(ApplicationContext applicationContext)
-			throws BeansException
+	public final void setApplicationContext(final ApplicationContext applicationContext)
+		throws BeansException
 	{
 		this.applicationContext = applicationContext;
 	}
@@ -125,28 +126,27 @@ public abstract class SpringWebApplication extends WebApplication
 	 * Creates a proxy for a spring bean that is safe to put into session and serialize
 	 * 
 	 * @param clazz
-	 * 		class of spring bean
+	 *            class of spring bean
 	 * @param beanName
-	 * 		name of spring bean
+	 *            name of spring bean
 	 * @return proxy representing the spring bean
 	 */
-	protected Object createSpringBeanProxy(Class< ? > clazz, String beanName)
+	protected Object createSpringBeanProxy(final Class<?> clazz, final String beanName)
 	{
 		return LazyInitProxyFactory.createProxy(clazz, new SpringBeanLocator(beanName, clazz,
-				getSpringContextLocator()));
+			getSpringContextLocator()));
 	}
 
 	/**
 	 * Creates a proxy for a spring bean that is safe to put into session and serialize
 	 * 
 	 * @param clazz
-	 * 		class of spring bean
+	 *            class of spring bean
 	 * @return proxy representing the spring bean
 	 */
-	protected Object createSpringBeanProxy(Class< ? > clazz)
+	protected Object createSpringBeanProxy(final Class<?> clazz)
 	{
 		return LazyInitProxyFactory.createProxy(clazz, new SpringBeanLocator(clazz,
-				getSpringContextLocator()));
+			getSpringContextLocator()));
 	}
-
 }

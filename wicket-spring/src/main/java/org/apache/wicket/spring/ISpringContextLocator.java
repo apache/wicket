@@ -36,7 +36,7 @@ import org.springframework.context.ApplicationContext;
  * {
  * 	public ApplicationContext getSpringContext()
  * 	{
- * 		//MyApplication is the subclass of WebApplication used by the application
+ * 		// MyApplication is the subclass of WebApplication used by the application
  * 		return ((MyApplication)Application.get()).getContext();
  * 	}
  * }

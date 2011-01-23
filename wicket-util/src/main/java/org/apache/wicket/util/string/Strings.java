@@ -1248,6 +1248,10 @@ public final class Strings
 		{
 			return ((StringBuffer)s).indexOf(searchString, pos);
 		}
+		else if (s instanceof StringBuilder)
+		{
+			return ((StringBuilder)s).indexOf(searchString, pos);
+		}
 		else if (s instanceof AppendingStringBuffer)
 		{
 			return ((AppendingStringBuffer)s).indexOf(searchString, pos);

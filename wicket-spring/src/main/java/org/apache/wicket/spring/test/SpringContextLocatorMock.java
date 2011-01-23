@@ -37,7 +37,7 @@ public class SpringContextLocatorMock implements ISpringContextLocator
 	 * 
 	 * @param context
 	 */
-	public SpringContextLocatorMock(ApplicationContext context)
+	public SpringContextLocatorMock(final ApplicationContext context)
 	{
 		this.context = context;
 	}

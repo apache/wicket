@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * @author Igor Vaynberg (ivaynberg)
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target( {/* ElementType.METHOD, */ElementType.FIELD })
+@Target({/* ElementType.METHOD, */ElementType.FIELD })
 @Documented
 public @interface SpringBean {
 	/**
