@@ -341,8 +341,22 @@ public final class SerializableChecker extends ObjectOutputStream
 			return;
 		}
 
-		if (stack.contains(obj))
+		try
 		{
+			if (stack.contains(obj))
+			{
+				return;
+			}
+		}
+		catch (RuntimeException e)
+		{
+			log.warn("Wasn't possible to check the object " + obj.getClass() +
+				" possible due an problematic implementation of equals method");
+			/*
+			 * Can't check if this obj were in stack, giving up because we don't want to throw an
+			 * invaluable exception to user. The main goal of this checker is to find non
+			 * serializable data
+			 */
 			return;
 		}
 
@@ -381,7 +395,7 @@ public final class SerializableChecker extends ObjectOutputStream
 			{
 				desc = (ObjectStreamClass)LOOKUP_METHOD.invoke(null, cls, Boolean.TRUE);
 				Class<?> repCl;
-				if (!(Boolean) HAS_WRITE_REPLACE_METHOD_METHOD.invoke(desc, (Object[]) null) ||
+				if (!(Boolean)HAS_WRITE_REPLACE_METHOD_METHOD.invoke(desc, (Object[])null) ||
 					(obj = INVOKE_WRITE_REPLACE_METHOD.invoke(desc, obj)) == null ||
 					(repCl = obj.getClass()) == cls)
 				{
@@ -546,7 +560,7 @@ public final class SerializableChecker extends ObjectOutputStream
 					{
 						Field descField = slot.getClass().getDeclaredField("desc");
 						descField.setAccessible(true);
-						slotDesc = (ObjectStreamClass) descField.get(slot);
+						slotDesc = (ObjectStreamClass)descField.get(slot);
 					}
 					catch (Exception e)
 					{
@@ -567,7 +581,7 @@ public final class SerializableChecker extends ObjectOutputStream
 		int numFields;
 		try
 		{
-			numFields = (Integer) GET_NUM_OBJ_FIELDS_METHOD.invoke(desc, (Object[]) null);
+			numFields = (Integer)GET_NUM_OBJ_FIELDS_METHOD.invoke(desc, (Object[])null);
 		}
 		catch (IllegalAccessException e)
 		{
@@ -640,7 +654,7 @@ public final class SerializableChecker extends ObjectOutputStream
 	 */
 	private StringBuilder currentPath()
 	{
-	 StringBuilder b = new StringBuilder();
+		StringBuilder b = new StringBuilder();
 		for (Iterator<String> it = nameStack.iterator(); it.hasNext();)
 		{
 			b.append(it.next());
@@ -661,8 +675,8 @@ public final class SerializableChecker extends ObjectOutputStream
 	 */
 	private final String toPrettyPrintedStack(String type)
 	{
-	 StringBuilder result = new StringBuilder();
-	 StringBuilder spaces = new StringBuilder();
+		StringBuilder result = new StringBuilder();
+		StringBuilder spaces = new StringBuilder();
 		result.append("Unable to serialize class: ");
 		result.append(type);
 		result.append("\nField hierarchy is:");
