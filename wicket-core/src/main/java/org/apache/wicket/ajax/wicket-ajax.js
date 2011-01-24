@@ -1711,8 +1711,11 @@ Wicket.Head.containsElement = function(element, mandatoryAttribute) {
 // Wicket.Head.containsElement is aware of that and takes also the underscored attributes into account.
 Wicket.Head.addJavascript = function(content, id, fakeSrc) {
 	var script = Wicket.Head.createElement("script");
-	script.id = id;
+	if (id) {
+		script.id = id;
+	}
 	script.setAttribute("src_", fakeSrc);
+	script.setAttribute("type", "text/javascript");
 	
 	// set the javascript as element content
 	if (null == script.canHaveChildren || script.canHaveChildren) {
