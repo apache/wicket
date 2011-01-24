@@ -18,8 +18,8 @@ package org.apache.wicket.request.mapper;
 
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.IRequestHandlerDelegate;
+import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;

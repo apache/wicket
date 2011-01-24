@@ -21,18 +21,22 @@ import java.net.URL;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wicket.MockPage;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.protocol.https.SwitchProtocolRequestHandler.Protocol;
 import org.apache.wicket.request.IRequestCycle;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.http.WebResponse;
-import org.junit.Test;
+import org.apache.wicket.request.mapper.AbstractMapperTest;
+import org.apache.wicket.request.mapper.IMapperContext;
+import org.apache.wicket.request.mapper.MountedMapper;
 import org.mockito.Mockito;
 
 /**
  * Test for SwitchProtocolRequestHandler
  */
-public class SwitchProtocolRequestHandlerTest
+public class SwitchProtocolRequestHandlerTest extends AbstractMapperTest
 {
 
 	/**
@@ -41,8 +45,7 @@ public class SwitchProtocolRequestHandlerTest
 	 * 
 	 * @throws MalformedURLException
 	 */
-	@Test
-	public void respond() throws MalformedURLException
+	public void testRespond() throws MalformedURLException
 	{
 		// the URL to redirect to
 		final URL httpsUrl = new URL("https://example.com:1443/app?param1=value1&param2=value2");
@@ -70,5 +73,35 @@ public class SwitchProtocolRequestHandlerTest
 		handler.respond(requestCycle);
 
 		Mockito.verify(webResponse).sendRedirect(httpsUrl.toString());
+	}
+
+	/**
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3380">WICKET-3380</a>
+	 */
+	public void testMapHandler()
+	{
+		final MountedMapper encoder = new MountedMapper("/securedPage", SecuredMockPage.class)
+		{
+			@Override
+			protected IMapperContext getContext()
+			{
+				return context;
+			}
+		};
+
+		Url originalUrl = Url.parse("securedPage");
+		IRequestHandler handler = encoder.mapRequest(getRequest(originalUrl));
+
+		SwitchProtocolRequestHandler switchProtocolRequestHandler = new SwitchProtocolRequestHandler(
+			Protocol.HTTPS, handler, new HttpsConfig());
+
+		Url mappedUrl = encoder.mapHandler(switchProtocolRequestHandler);
+		assertEquals(originalUrl, mappedUrl);
+	}
+
+	@RequireHttps
+	private static class SecuredMockPage extends MockPage
+	{
+		private static final long serialVersionUID = 1L;
 	}
 }
