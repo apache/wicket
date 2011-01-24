@@ -14,39 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.spring.common.web;
+package org.apache.wicket.examples.spring.annot.web;
 
-import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.examples.spring.common.Contact;
+import org.apache.wicket.examples.spring.common.ContactDao;
+import org.apache.wicket.examples.spring.common.web.ContactDataProvider;
+import org.apache.wicket.model.IModel;
 
-import org.apache.wicket.spring.common.Contact;
-import org.apache.wicket.spring.common.ContactDao;
-
-/**
- * Base class for contact detachable models. This class implements all necessary logic except
- * retrieval of the dao object, this way we can isolate that logic in our example implementations.
- * 
- * @author Igor Vaynberg (ivaynberg)
- * 
- */
-public abstract class ContactDetachableModel extends LoadableDetachableModel
+public class ProxyDataProvider extends ContactDataProvider
 {
+	private ContactDao dao;
 
-	private long id;
-
-	/**
-	 * @param contact
-	 */
-	public ContactDetachableModel(Contact contact)
+	public ProxyDataProvider(ContactDao dao)
 	{
-		super(contact);
-		this.id = contact.getId();
+		this.dao = dao;
 	}
-
-	protected abstract ContactDao getContactDao();
 
 	@Override
-	protected Contact load()
+	protected ContactDao getContactDao()
 	{
-		return getContactDao().get(id);
+		return dao;
 	}
+
+	public IModel model(Object object)
+	{
+		return new ProxyModel((Contact)object, dao);
+	}
+
 }

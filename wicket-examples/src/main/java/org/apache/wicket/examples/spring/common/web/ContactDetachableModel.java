@@ -14,23 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.spring.common.web;
+package org.apache.wicket.examples.spring.common.web;
 
-import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.examples.spring.common.Contact;
+import org.apache.wicket.examples.spring.common.ContactDao;
+import org.apache.wicket.model.LoadableDetachableModel;
 
 /**
- * Base page class. This is mainly here to provide some consistent look and feel
+ * Base class for contact detachable models. This class implements all necessary logic except
+ * retrieval of the dao object, this way we can isolate that logic in our example implementations.
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * 
  */
-public class BasePage extends WicketExamplePage
+public abstract class ContactDetachableModel extends LoadableDetachableModel
 {
+
+	private long id;
+
 	/**
-	 * Construct.
+	 * @param contact
 	 */
-	public BasePage()
+	public ContactDetachableModel(Contact contact)
 	{
-		add(new BookmarkablePageLink<Void>("home-link", HomePage.class));
+		super(contact);
+		id = contact.getId();
+	}
+
+	protected abstract ContactDao getContactDao();
+
+	@Override
+	protected Contact load()
+	{
+		return getContactDao().get(id);
 	}
 }

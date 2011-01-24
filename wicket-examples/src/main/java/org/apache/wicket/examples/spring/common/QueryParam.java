@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.spring.common;
+package org.apache.wicket.examples.spring.common;
 
 import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 
@@ -50,7 +50,7 @@ public class QueryParam
 	 * @param first
 	 *            First element to return.
 	 * @param count
- *            Number of elements to return.
+	 *            Number of elements to return.
 	 * @param sort
 	 */
 	public QueryParam(int first, int count, SortParam sort)

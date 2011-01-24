@@ -14,24 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.spring.common.web;
+package org.apache.wicket.examples.spring.common.web;
 
+import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.spring.annot.web.AnnotPage;
 
 /**
- * Home Page
+ * Base page class. This is mainly here to provide some consistent look and feel
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
  */
-public class HomePage extends BasePage
+public class BasePage extends WicketExamplePage
 {
 	/**
 	 * Construct.
 	 */
-	public HomePage()
+	public BasePage()
 	{
-		add(new BookmarkablePageLink<Void>("annot-link", AnnotPage.class));
+		add(new BookmarkablePageLink<Void>("home-link", HomePage.class));
 	}
 }

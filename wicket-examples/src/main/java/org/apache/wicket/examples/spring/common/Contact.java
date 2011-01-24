@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.spring.common;
+package org.apache.wicket.examples.spring.common;
 
 import org.apache.wicket.IClusterable;
 
@@ -47,16 +47,18 @@ public class Contact implements IClusterable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[Contact id=" + id + " firstName=" + firstName + " lastName=" + lastName +
-				" homePhone=" + homePhone + " cellPhone=" + cellPhone + "]";
+			" homePhone=" + homePhone + " cellPhone=" + cellPhone + "]";
 	}
 
 
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj == this)
@@ -67,9 +69,9 @@ public class Contact implements IClusterable
 		{
 			Contact other = (Contact)obj;
 			return other.getFirstName().equals(getFirstName()) &&
-					other.getLastName().equals(getLastName()) &&
-					other.getHomePhone().equals(getHomePhone()) &&
-					other.getCellPhone().equals(getCellPhone());
+				other.getLastName().equals(getLastName()) &&
+				other.getHomePhone().equals(getHomePhone()) &&
+				other.getCellPhone().equals(getCellPhone());
 
 		}
 		else

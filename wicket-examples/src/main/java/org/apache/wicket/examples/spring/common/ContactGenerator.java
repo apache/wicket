@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.spring.common;
+package org.apache.wicket.examples.spring.common;
 
 import java.util.Collection;
 
@@ -92,9 +92,15 @@ public class ContactGenerator
 
 	private String generatePhoneNumber()
 	{
-		return new StringBuilder().append(rint(2, 9)).append(rint(0, 9)).append(rint(0, 9)).append(
-				"-555-").append(rint(1, 9)).append(rint(0, 9)).append(rint(0, 9))
-				.append(rint(0, 9)).toString();
+		return new StringBuilder().append(rint(2, 9))
+			.append(rint(0, 9))
+			.append(rint(0, 9))
+			.append("-555-")
+			.append(rint(1, 9))
+			.append(rint(0, 9))
+			.append(rint(0, 9))
+			.append(rint(0, 9))
+			.toString();
 	}
 
 	private int rint(int min, int max)

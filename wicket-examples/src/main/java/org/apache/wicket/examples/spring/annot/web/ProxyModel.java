@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.spring.annot.web;
+package org.apache.wicket.examples.spring.annot.web;
 
-import org.apache.wicket.spring.common.Contact;
-import org.apache.wicket.spring.common.ContactDao;
-import org.apache.wicket.spring.common.web.ContactDetachableModel;
+import org.apache.wicket.examples.spring.common.Contact;
+import org.apache.wicket.examples.spring.common.ContactDao;
+import org.apache.wicket.examples.spring.common.web.ContactDetachableModel;
 
 public class ProxyModel extends ContactDetachableModel
 {

@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.spring.common.web;
+package org.apache.wicket.examples.spring.common.web;
 
+import org.apache.wicket.examples.spring.common.ContactDao;
+import org.apache.wicket.examples.spring.common.web.HomePage;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.spring.common.ContactDao;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 
 /**

@@ -14,40 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.spring.common.web;
+package org.apache.wicket.examples.spring.annot.web;
 
-import java.util.Iterator;
-
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
+import org.apache.wicket.examples.spring.common.ContactDao;
+import org.apache.wicket.examples.spring.common.web.ContactsDisplayPage;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
-import org.apache.wicket.spring.common.ContactDao;
-import org.apache.wicket.spring.common.QueryParam;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+
 
 /**
- * Base class for contact data provider implementations. This class implements everything except
- * retrieval of the dao object, this way we can isolate that for our examples.
- * 
- * @author Igor Vaynberg (ivaynerg)
- * 
  */
-public abstract class ContactDataProvider extends SortableDataProvider
+public class AnnotPage extends ContactsDisplayPage
 {
 
-	public ContactDataProvider()
+	@SpringBean
+	private ContactDao dao;
+
+	/**
+	 * Construct.
+	 */
+	public AnnotPage()
 	{
-		setSort("firstName", SortOrder.ASCENDING);
+
 	}
 
-	protected abstract ContactDao getContactDao();
-
-	public final Iterator iterator(int first, int count)
+	/**
+	 * @see org.apache.wicket.spring.common.web.ContactsDisplayPage#getDataProvider()
+	 */
+	@Override
+	protected SortableDataProvider<?> getDataProvider()
 	{
-		QueryParam qp = new QueryParam(first, count, getSort());
-		return getContactDao().find(qp);
-	}
-
-	public final int size()
-	{
-		return getContactDao().count();
+		return new ProxyDataProvider(dao);
 	}
 }

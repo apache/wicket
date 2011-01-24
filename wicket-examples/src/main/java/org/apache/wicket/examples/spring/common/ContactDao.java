@@ -14,32 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.spring.annot.web;
+package org.apache.wicket.examples.spring.common;
 
-import org.apache.wicket.model.IModel;
+import java.util.Iterator;
 
-import org.apache.wicket.spring.common.Contact;
-import org.apache.wicket.spring.common.ContactDao;
-import org.apache.wicket.spring.common.web.ContactDataProvider;
+import org.apache.wicket.examples.spring.common.QueryParam;
 
-public class ProxyDataProvider extends ContactDataProvider
+/**
+ * interface for retrieving contacts from a database
+ * 
+ * @author Igor Vaynberg (ivaynberg)
+ * 
+ */
+public interface ContactDao
 {
-	private ContactDao dao;
+	/**
+	 * @return total number of contacts available
+	 */
+	int count();
 
-	public ProxyDataProvider(ContactDao dao)
-	{
-		this.dao = dao;
-	}
+	/**
+	 * @param qp
+	 *            sorting and paging info
+	 * @return iterator over contacts
+	 */
+	Iterator find(QueryParam qp);
 
-	@Override
-	protected ContactDao getContactDao()
-	{
-		return dao;
-	}
-
-	public IModel model(Object object)
-	{
-		return new ProxyModel((Contact)object, dao);
-	}
-
+	/**
+	 * @param id
+	 *            contact id
+	 * @return contact with matching id
+	 */
+	Contact get(long id);
 }
