@@ -285,22 +285,6 @@ public final class Url implements Serializable
 	}
 
 	/**
-	 * 
-	 * @param base
-	 */
-	public void resolveRelativeTo(final Url base)
-	{
-		Url url = new Url(base);
-
-		while (!getSegments().isEmpty() && "..".equals(getSegments().get(0)))
-		{
-			removeLeadingSegments(0);
-			url.getSegments().remove(url.getSegments().size() - 1);
-		}
-		getSegments().addAll(url.getSegments());
-	}
-
-	/**
 	 * Returns segments of the URL. Segments form the part before query string.
 	 * 
 	 * @return mutable list of segments
