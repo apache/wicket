@@ -340,8 +340,22 @@ public final class SerializableChecker extends ObjectOutputStream
 			return;
 		}
 
-		if (stack.contains(obj))
+		try
 		{
+			if (stack.contains(obj))
+			{
+				return;
+			}
+		}
+		catch (RuntimeException e)
+		{
+			log.warn("Wasn't possible to check the object " + obj.getClass() +
+				" possible due an problematic implementation of equals method");
+			/*
+			 * Can't check if this obj were in stack, giving up because we don't want to throw an
+			 * invaluable exception to user. The main goal of this checker is to find non
+			 * serializable data
+			 */
 			return;
 		}
 
