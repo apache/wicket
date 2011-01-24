@@ -55,7 +55,7 @@ public class ExternalLink extends AbstractLink
 		super(id);
 
 		setDefaultModel(href != null ? new Model<String>(href) : null);
-		setBodyModel(Model.of(label));
+		setBody(Model.of(label));
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class ExternalLink extends AbstractLink
 		super(id);
 
 		setDefaultModel(wrap(href));
-		setBodyModel(wrap(label));
+		setBody(label);
 	}
 
 	/**
@@ -216,12 +216,12 @@ public class ExternalLink extends AbstractLink
 	}
 
 	/**
-	 * @deprecated use {@link #getBodyModel()} instead
+	 * @deprecated use {@link #getBody()} instead
 	 * @return the model used for the link's body
 	 */
 	@Deprecated
 	public IModel<?> getLabel()
 	{
-		return getBodyModel();
+		return getBody();
 	}
 }

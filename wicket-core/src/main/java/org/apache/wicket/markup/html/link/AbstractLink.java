@@ -220,7 +220,7 @@ public abstract class AbstractLink extends WebMarkupContainer
 	/**
 	 * @return the link's body model
 	 */
-	public IModel<?> getBodyModel()
+	public IModel<?> getBody()
 	{
 		return bodyModel;
 	}
@@ -231,9 +231,9 @@ public abstract class AbstractLink extends WebMarkupContainer
 	 * @param bodyModel
 	 * @return <code>this</code> for method chaining
 	 */
-	public AbstractLink setBodyModel(final IModel<?> bodyModel)
+	public AbstractLink setBody(final IModel<?> bodyModel)
 	{
-		this.bodyModel = bodyModel;
+		this.bodyModel = wrap(bodyModel);
 		return this;
 	}
 }

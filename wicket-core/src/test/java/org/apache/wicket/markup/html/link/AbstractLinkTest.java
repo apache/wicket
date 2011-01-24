@@ -60,7 +60,7 @@ public class AbstractLinkTest
 			private static final long serialVersionUID = 1L;
 		};
 		link.setMarkupId("link");
-		link.setBodyModel(Model.of(linkBody));
+		link.setBody(Model.of(linkBody));
 		mockPageWithLink.add(link);
 
 		wicketTester.startPage(mockPageWithLink);
