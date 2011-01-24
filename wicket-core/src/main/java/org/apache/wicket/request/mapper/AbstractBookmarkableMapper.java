@@ -19,6 +19,7 @@ package org.apache.wicket.request.mapper;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
+import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -245,10 +246,15 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	}
 
 	/**
-	 * @see org.apache.wicket.request.IRequestMapper#mapHandler(org.apache.org.apache.wicket.request.IRequestHandler)
+	 * {@inheritDoc}
 	 */
-	public Url mapHandler(final IRequestHandler requestHandler)
+	public Url mapHandler(IRequestHandler requestHandler)
 	{
+		if (requestHandler instanceof IRequestHandlerDelegate)
+		{
+			requestHandler = ((IRequestHandlerDelegate)requestHandler).getDelegateHandler();
+		}
+
 		if (requestHandler instanceof BookmarkablePageRequestHandler)
 		{
 			// simple bookmarkable URL with no page instance information

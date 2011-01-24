@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
@@ -29,7 +30,7 @@ import org.apache.wicket.util.lang.Args;
 /**
  * Request handler that performs redirects across http and https
  */
-class SwitchProtocolRequestHandler implements IRequestHandler
+class SwitchProtocolRequestHandler implements IRequestHandlerDelegate
 {
 
 	/**
@@ -208,4 +209,9 @@ class SwitchProtocolRequestHandler implements IRequestHandler
 	{
 	}
 
+	/** {@inheritDoc} */
+	public IRequestHandler getDelegateHandler()
+	{
+		return handler;
+	}
 }
