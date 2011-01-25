@@ -597,4 +597,30 @@ public class PropertyResolverTest extends WicketTestCase
 			return String.valueOf(value);
 		}
 	}
+
+	/**
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-1802">WICKET-1802</a>
+	 */
+	public void testConversionExceptionMessageContainsTheObjectPropertyBeingSet()
+	{
+		try
+		{
+			PropertyResolverConverter convertToNull = new PropertyResolverConverter(null, null)
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public Object convert(Object object, Class<?> clz)
+				{
+					return null;
+				}
+			};
+			PropertyResolver.setValue("name", person, "", convertToNull);
+			fail("Should have thrown an ConversionException");
+		}
+		catch (ConversionException e)
+		{
+			assertTrue(e.getMessage().toLowerCase().contains("name"));
+		}
+	}
 }
