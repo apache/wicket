@@ -123,7 +123,6 @@ import org.slf4j.LoggerFactory;
 public abstract class Page extends MarkupContainer
 	implements
 		IRedirectListener,
-		IManageablePage,
 		IRequestablePage
 {
 	/** True if the page hierarchy has been modified in the current request. */
