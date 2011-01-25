@@ -21,7 +21,7 @@ import java.io.InputStream;
 
 /**
  * <p>
- * Abstracts access to the request information needed for file uploads. This interfsace should be
+ * Abstracts access to the request information needed for file uploads. This interface should be
  * implemented for each type of request that may be handled by FileUpload, such as servlets and
  * portlets.
  * </p>
