@@ -38,7 +38,9 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-core</artifactId>
+			<artifactId>wicket</artifactId>
+			<version>${project.version}</version>
+			<type>pom</type>
 		</dependency>
 	</dependencies>
 </project>

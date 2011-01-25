@@ -8,95 +8,18 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>wicket</artifactId>
+  <packaging>pom</packaging>
   <name>Wicket</name>
   <description>
-	A module that creates a .jar from the classes in wicket, wicket-util and wicket-request modules.
-	This way all users - Maven and non-Maven ones can depend only on the artifact produced by this module without
-	bothering that Wicket core depends on other modules.
+	A module that provides dependencies to all core submodules
+	needed to run Wicket application. This way Maven users can
+	depend only on this module without bothering that Wicket core depends on several modules.
   </description>
   <dependencies>
     <dependency>
       <groupId>org.apache.wicket</groupId>
       <artifactId>wicket-core</artifactId>
       <version>${project.parent.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.wicket</groupId>
-      <artifactId>wicket-util</artifactId>
-      <version>${project.parent.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.wicket</groupId>
-      <artifactId>wicket-request</artifactId>
-      <version>${project.parent.version}</version>
-      <scope>provided</scope>
     </dependency>
   </dependencies>
-  <build>
-    <plugins>
-	<!--
-		How it works:
-		I) In 'prepare-package' phase do:
-			1) unpack the dependencies in target/classes so it looks like
-				all files (*.class, *.properties, ...) belong to this project
-			2) re-generate META-INF/MANIGEST.MF so that it contains all OSGi
-				headers for all packages
-
-		II) In 'package' phase maven-jar-plugin collects all that in the
-			final artifact
-	-->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>2.1</version>
-        <executions>
-          <execution>
-            <id>unpack-dependencies</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>unpack-dependencies</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-              <includes>**/*</includes>
-              <includeGroupIds>org.apache.wicket</includeGroupIds>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <version>2.1.0</version>
-        <executions>
-          <execution>
-            <id>bundle-manifest</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>manifest</goal>
-            </goals>
-            <configuration>
-              <instructions>
-                <Import-Package>org.apache.wicket*</Import-Package>
-                <DynamicImport-Package>*</DynamicImport-Package>
-                <_nouses>true</_nouses>
-              </instructions>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <configuration>
-          <!-- Do not deploy -sources.jar file.
-               This project has no .java files
-          -->
-          <attach>false</attach>
-        </configuration>
-      </plugin>
-	</plugins>
-  </build>
 </project>
