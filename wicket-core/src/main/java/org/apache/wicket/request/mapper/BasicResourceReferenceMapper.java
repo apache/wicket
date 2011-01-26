@@ -28,6 +28,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.MetaInfStaticResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
+import org.apache.wicket.request.resource.caching.ResourceUrl;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.string.Strings;
@@ -37,14 +38,14 @@ import org.apache.wicket.util.string.Strings;
  * {@link ResourceReference}s.
  * <p>
  * Decodes and encodes the following URLs:
- *
+ * 
  * <pre>
  *    /wicket/resource/org.apache.wicket.ResourceScope/name
  *    /wicket/resource/org.apache.wicket.ResourceScope/name?en
  *    /wicket/resource/org.apache.wicket.ResourceScope/name?-style
  *    /wicket/resource/org.apache.wicket.ResourceScope/resource/name.xyz?en_EN-style
  * </pre>
- *
+ * 
  * @author Matej Knopp
  * @author igor.vaynberg
  * @author Peter Ertl
@@ -58,7 +59,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param pageParametersEncoder
 	 * @param cachingStrategy
 	 */
@@ -74,8 +75,8 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 		Url url = request.getUrl();
 
 		// extract the PageParameters from URL if there are any
-		PageParameters pageParameters = extractPageParameters(request,
-			url.getSegments().size(), pageParametersEncoder);
+		PageParameters pageParameters = extractPageParameters(request, url.getSegments().size(),
+			pageParametersEncoder);
 
 		if (url.getSegments().size() >= 4 &&
 			urlStartsWith(url, getContext().getNamespace(), getContext().getResourceIdentifier()))
@@ -93,10 +94,13 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 				{
 					// The filename + parameters eventually contain caching
 					// related information which needs to be removed
-					segment = getCachingStrategy().sanitizeRequest(segment, pageParameters);
+					ResourceUrl resourceUrl = new ResourceUrl(segment, pageParameters);
+					getCachingStrategy().undecorateUrl(resourceUrl);
+					segment = resourceUrl.getFileName();
 
 					if (Strings.isEmpty(segment))
-						throw new NullPointerException("caching strategy must not return an empty filename");
+						throw new NullPointerException(
+							"caching strategy must not return an empty filename");
 				}
 				if (name.length() > 0)
 				{
@@ -186,13 +190,17 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 				// on the last component of the resource path add the timestamp
 				if (tokens.hasMoreTokens() == false)
 				{
-					token = getCachingStrategy().decorateRequest(token, parameters, reference);
+					ResourceUrl resourceUrl = new ResourceUrl(token, parameters);
+					getCachingStrategy().decorateUrl(resourceUrl, reference);
+					token = resourceUrl.getFileName();
 
 					if (Strings.isEmpty(token))
-						throw new NullPointerException("caching strategy must not return an empty filename");
+						throw new NullPointerException(
+							"caching strategy must not return an empty filename");
 
 					if (parameters.getIndexedCount() > 0)
-						throw new IllegalStateException("caching strategy must not add indexed parameters");
+						throw new IllegalStateException(
+							"caching strategy must not add indexed parameters");
 				}
 				segments.add(token);
 			}

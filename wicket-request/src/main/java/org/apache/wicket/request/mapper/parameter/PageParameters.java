@@ -47,7 +47,7 @@ import org.apache.wicket.util.value.ValueMap;
  * 
  * @author Matej Knopp
  */
-public class PageParameters implements Serializable
+public class PageParameters implements Serializable, IIndexedParameters, INamedParameters
 {
 	private static class Entry implements Serializable
 	{
@@ -170,11 +170,7 @@ public class PageParameters implements Serializable
 	}
 
 	/**
-	 * Sets the indexed parameter on given index
-	 * 
-	 * @param index
-	 * @param object
-	 * @return this
+	 * @see org.apache.wicket.request.mapper.parameter.IIndexedParameters#set(int, java.lang.Object)
 	 */
 	public PageParameters set(final int index, final Object object)
 	{
@@ -193,8 +189,7 @@ public class PageParameters implements Serializable
 	}
 
 	/**
-	 * @param index
-	 * @return indexed parameter on given index
+	 * @see org.apache.wicket.request.mapper.parameter.IIndexedParameters#get(int)
 	 */
 	public StringValue get(final int index)
 	{
@@ -209,10 +204,7 @@ public class PageParameters implements Serializable
 	}
 
 	/**
-	 * Removes indexed parameter on given index
-	 * 
-	 * @param index
-	 * @return this
+	 * @see org.apache.wicket.request.mapper.parameter.IIndexedParameters#remove(int)
 	 */
 	public PageParameters remove(final int index)
 	{
@@ -227,9 +219,7 @@ public class PageParameters implements Serializable
 	}
 
 	/**
-	 * Return set of all named parameter names.
-	 * 
-	 * @return named parameter names
+	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#getNamedKeys()
 	 */
 	public Set<String> getNamedKeys()
 	{
@@ -246,10 +236,7 @@ public class PageParameters implements Serializable
 	}
 
 	/**
-	 * Returns parameter value of named parameter with given name
-	 * 
-	 * @param name
-	 * @return parameter value
+	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#get(java.lang.String)
 	 */
 	public StringValue get(final String name)
 	{
@@ -269,10 +256,7 @@ public class PageParameters implements Serializable
 	}
 
 	/**
-	 * Return list of all values for named parameter with given name
-	 * 
-	 * @param name
-	 * @return list of parameter values
+	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#getValues(java.lang.String)
 	 */
 	public List<StringValue> getValues(final String name)
 	{
@@ -331,7 +315,7 @@ public class PageParameters implements Serializable
 	}
 
 	/**
-	 * @return All named parameters in exact order.
+	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#getAllNamed()
 	 */
 	public List<NamedPair> getAllNamed()
 	{
@@ -347,10 +331,7 @@ public class PageParameters implements Serializable
 	}
 
 	/**
-	 * Removes named parameter with given name.
-	 * 
-	 * @param name
-	 * @return this
+	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#remove(java.lang.String)
 	 */
 	public PageParameters remove(final String name)
 	{
@@ -371,11 +352,7 @@ public class PageParameters implements Serializable
 	}
 
 	/**
-	 * Adds value to named parameter with given name.
-	 * 
-	 * @param name
-	 * @param value
-	 * @return this
+	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#add(java.lang.String, java.lang.Object)
 	 */
 	public PageParameters add(final String name, final Object value)
 	{
@@ -384,13 +361,7 @@ public class PageParameters implements Serializable
 	}
 
 	/**
-	 * Adds named parameter to a specified position. The {@link IRequestMapper}s may or may not take
-	 * the order into account.
-	 * 
-	 * @param name
-	 * @param value
-	 * @param index
-	 * @return this
+	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#add(java.lang.String, java.lang.Object, int)
 	 */
 	public PageParameters add(final String name, final Object value, final int index)
 	{
@@ -417,13 +388,7 @@ public class PageParameters implements Serializable
 	}
 
 	/**
-	 * Sets the named parameter on specified position. The {@link IRequestMapper}s may or may not
-	 * take the order into account.
-	 * 
-	 * @param name
-	 * @param value
-	 * @param index
-	 * @return this
+	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#set(java.lang.String, java.lang.Object, int)
 	 */
 	public PageParameters set(final String name, final Object value, final int index)
 	{
@@ -437,11 +402,7 @@ public class PageParameters implements Serializable
 	}
 
 	/**
-	 * Sets the value for named parameter with given name.
-	 * 
-	 * @param name
-	 * @param value
-	 * @return this
+	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#set(java.lang.String, java.lang.Object)
 	 */
 	public PageParameters set(final String name, final Object value)
 	{
@@ -450,9 +411,7 @@ public class PageParameters implements Serializable
 	}
 
 	/**
-	 * Removes all indexed parameters.
-	 * 
-	 * @return this
+	 * @see org.apache.wicket.request.mapper.parameter.IIndexedParameters#clearIndexed()
 	 */
 	public PageParameters clearIndexed()
 	{
@@ -461,9 +420,7 @@ public class PageParameters implements Serializable
 	}
 
 	/**
-	 * Removes all named parameters.
-	 * 
-	 * @return this
+	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#clearaNamed()
 	 */
 	public PageParameters clearaNamed()
 	{

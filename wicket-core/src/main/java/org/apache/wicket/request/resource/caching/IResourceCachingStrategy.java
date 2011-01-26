@@ -16,51 +16,44 @@
  */
 package org.apache.wicket.request.resource.caching;
 
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * caching strategy for resources
  * <p/>
- * it can add and remove caching information to the filename
- * and query string parameters of the requested resource
- *
+ * it can add and remove caching information to the filename and query string parameters of the
+ * requested resource
+ * 
  * @author Peter Ertl
  */
 public interface IResourceCachingStrategy
 {
 	/**
 	 * add caching related information to filename + parameters
-	 *
-	 * @param filename
-	 *            original filename without a timestamp
-	 * @param parameters
-	 *            request parameters (<b>you are only allowed to add named
-	 *            parameters but not indexed parameters</b>)
+	 * 
+	 * @param url
+	 *            parameters to which caching information should be added and which will be used to
+	 *            construct the url to the resource
+	 * 
 	 * @param reference
 	 *            resource reference
-	 *
-	 * @return modified filename caching related information
 	 */
-	String decorateRequest(String filename, PageParameters parameters, ResourceReference reference);
+	void decorateUrl(ResourceUrl url, ResourceReference reference);
 
 	/**
-	 * removes caching related information from filename + parameters
-	 *
-	 *
-	 * @param filename
-	 *           original filename that eventually contains caching related information
-	 * @param parameters
-	 *           page parameters (must be sanitized of caching related parameters)
-	 *
-	 * @return sanitized filename without caching related information
+	 * Removes caching related information from filename + parameters. In essenese this method
+	 * undoes what {@link #decorateUrl(ResourceUrl, ResourceReference)} did.
+	 * 
+	 * @param url
+	 *            parameters that were used to construct the url to the resource and from which
+	 *            previously added caching information should be stripped
 	 */
-	String sanitizeRequest(String filename, PageParameters parameters);
+	void undecorateUrl(ResourceUrl url);
 
 	/**
 	 * decorate resource response
-	 *
+	 * 
 	 * @param response
 	 */
 	void decorateResponse(AbstractResource.ResourceResponse response);

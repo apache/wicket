@@ -31,23 +31,22 @@ import org.apache.wicket.util.time.Time;
  * <ul>
  * <li>provides cached access to the last-modified timestamp</li>
  * </ul>
- *
+ * 
  * @author Peter Ertl
  */
 public abstract class AbstractResourceCachingStrategy implements IResourceCachingStrategy
 {
 	/** timestamp cache stored in request cycle meta data (request-scoped) */
-	protected static final MetaDataKey<Map<ResourceReference, Time>> TIMESTAMP_KEY =
-		new MetaDataKey<Map<ResourceReference, Time>>()
-		{
-			private static final long serialVersionUID = 1L;
-		};
+	protected static final MetaDataKey<Map<ResourceReference, Time>> TIMESTAMP_KEY = new MetaDataKey<Map<ResourceReference, Time>>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
 
 	private boolean lastModifiedCacheEnabled = true;
 
 	/**
 	 * returns if caching if lastModified timestamp lookup is enabled
-	 *
+	 * 
 	 * @return <code>true</code> if enabled
 	 */
 	public boolean isLastModifiedCacheEnabled()
@@ -56,16 +55,13 @@ public abstract class AbstractResourceCachingStrategy implements IResourceCachin
 	}
 
 	/**
-	 * controls request-scoped caching of lookups to last modified time
-	 * of the resource reference
-	 *
+	 * controls request-scoped caching of lookups to last modified time of the resource reference
+	 * 
 	 * @param enabled
-	 *
-	 * @return <code>true</code> if enabled
 	 */
 	public void setLastModifiedCacheEnabled(boolean enabled)
 	{
-		this.lastModifiedCacheEnabled = enabled;
+		lastModifiedCacheEnabled = enabled;
 	}
 
 	/**
@@ -73,10 +69,10 @@ public abstract class AbstractResourceCachingStrategy implements IResourceCachin
 	 * <p/>
 	 * The timestamp is cached in the meta data of the current request cycle to eliminate repeated
 	 * lookups of the same resource reference which will harm performance.
-	 *
+	 * 
 	 * @param resourceReference
 	 *            resource reference
-	 *
+	 * 
 	 * @return last modification timestamp or <code>null</code> if no timestamp provided
 	 */
 	protected Time getLastModified(ResourceReference resourceReference)

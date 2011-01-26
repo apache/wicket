@@ -17,65 +17,67 @@
 package org.apache.wicket.request.resource.caching;
 
 import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Time;
 
 /**
- * resource caching strategy that adds a last-modified
- * timestamp to the query string of the resource (this is
- * similar to how wicket 1.4 does it when enabling timestamps
- * on resources).
- *
+ * resource caching strategy that adds a last-modified timestamp to the query string of the resource
+ * (this is similar to how wicket 1.4 does it when enabling timestamps on resources).
+ * 
  * @author Peter Ertl
  */
-public class QueryStringWithTimestampResourceCachingStrategy extends AbstractResourceCachingStrategy
+public class QueryStringWithTimestampResourceCachingStrategy extends
+	AbstractResourceCachingStrategy
 {
 	private static final String DEFAULT_TIMESTAMP_PARAMETER = "ts";
 
-	private String timestampParameter;
+	private final String timestampParameter;
 
+	/**
+	 * Constructor
+	 */
 	public QueryStringWithTimestampResourceCachingStrategy()
 	{
-		timestampParameter = DEFAULT_TIMESTAMP_PARAMETER;
+		this(DEFAULT_TIMESTAMP_PARAMETER);
 	}
 
-	public String getTimestampParameter()
-	{
-		return timestampParameter;
-	}
-
-	public void setTimestampParameter(String timestampParameter)
+	/**
+	 * Constructor
+	 * 
+	 * @param timestampParameter
+	 *            name of timestamp parameter which will be added to query string
+	 */
+	public QueryStringWithTimestampResourceCachingStrategy(String timestampParameter)
 	{
 		Args.notEmpty(timestampParameter, "timestampParameter");
 		this.timestampParameter = timestampParameter;
 	}
 
-	public String decorateRequest(final String filename, final PageParameters parameters,
-		final ResourceReference reference)
+	/**
+	 * @return name of timestamp parameter which will be added to query string
+	 */
+	public final String getTimestampParameter()
+	{
+		return timestampParameter;
+	}
+
+	public void decorateUrl(ResourceUrl url, final ResourceReference reference)
 	{
 		Time lastModified = getLastModified(reference);
 
 		if (lastModified != null)
 		{
-			parameters.add(timestampParameter, lastModified.getMilliseconds());
+			url.getParameters().set(timestampParameter, lastModified.getMilliseconds());
 		}
-		return filename;
 	}
 
-	public String sanitizeRequest(final String filename, PageParameters parameters)
+	public void undecorateUrl(ResourceUrl url)
 	{
-		parameters.remove(timestampParameter);
-		return filename;
+		url.getParameters().remove(timestampParameter);
 	}
 
-	/**
-	 * set resource caching to maximum and set cache-visibility to 'public'
-	 *
-	 * @param response
-	 */
 	public void decorateResponse(AbstractResource.ResourceResponse response)
 	{
 		response.setCacheDurationToMaximum();

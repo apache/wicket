@@ -16,27 +16,27 @@
  */
 package org.apache.wicket.request.resource.caching;
 
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * resource caching strategy that does nothing
- *
+ * 
  * @author Peter Ertl
  */
 public class NoOpResourceCachingStrategy implements IResourceCachingStrategy
 {
+	/**
+	 * Global instance of noop strategy
+	 */
 	public static final IResourceCachingStrategy INSTANCE = new NoOpResourceCachingStrategy();
 
-	public String decorateRequest(String filename, PageParameters parameters, ResourceReference reference)
+	public void decorateUrl(ResourceUrl url, ResourceReference reference)
 	{
-		return filename;
 	}
 
-	public String sanitizeRequest(String filename, PageParameters parameters)
+	public void undecorateUrl(ResourceUrl url)
 	{
-		return filename;
 	}
 
 	public void decorateResponse(AbstractResource.ResourceResponse response)
