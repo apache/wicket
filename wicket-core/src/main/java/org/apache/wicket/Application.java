@@ -559,7 +559,6 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	// TODO: Replace the Serializable type with Object for next wicket version
 	public final synchronized <T> void setMetaData(final MetaDataKey<T> key, final Object object)
 	{
 		metaData = key.set(metaData, object);
