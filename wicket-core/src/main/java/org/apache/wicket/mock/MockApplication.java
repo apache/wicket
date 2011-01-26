@@ -66,7 +66,7 @@ public class MockApplication extends WebApplication
 		setPageManagerProvider(new MockPageManagerProvider());
 
 		// for test cases we usually want stable resource names
-		getResourceSettings().setResourceCachingStrategy(NoOpResourceCachingStrategy.INSTANCE);
+		getResourceSettings().setCachingStrategy(NoOpResourceCachingStrategy.INSTANCE);
 	}
 
 	private static class MockSessionStoreProvider implements IProvider<ISessionStore>

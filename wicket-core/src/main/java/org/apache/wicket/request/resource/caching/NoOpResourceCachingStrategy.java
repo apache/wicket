@@ -39,7 +39,7 @@ public class NoOpResourceCachingStrategy implements IResourceCachingStrategy
 		return filename;
 	}
 
-	public void processResponse(AbstractResource.ResourceResponse response)
+	public void decorateResponse(AbstractResource.ResourceResponse response)
 	{
 	}
 }

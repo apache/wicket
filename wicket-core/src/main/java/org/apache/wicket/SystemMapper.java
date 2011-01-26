@@ -61,7 +61,7 @@ public class SystemMapper extends CompoundRequestMapper
 		{
 			public IResourceCachingStrategy get()
 			{
-				return application.getResourceSettings().getResourceCachingStrategy();
+				return application.getResourceSettings().getCachingStrategy();
 			}
 		};
 	}

@@ -63,5 +63,5 @@ public interface IResourceCachingStrategy
 	 *
 	 * @param response
 	 */
-	void processResponse(AbstractResource.ResourceResponse response);
+	void decorateResponse(AbstractResource.ResourceResponse response);
 }

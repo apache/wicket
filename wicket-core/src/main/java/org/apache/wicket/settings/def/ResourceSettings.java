@@ -422,17 +422,17 @@ public class ResourceSettings implements IResourceSettings
 	}
 
 	/**
-	 * @see IResourceSettings#getResourceCachingStrategy()
+	 * @see IResourceSettings#getCachingStrategy()
 	 */
-	public IResourceCachingStrategy getResourceCachingStrategy()
+	public IResourceCachingStrategy getCachingStrategy()
 	{
 		return resourceCachingStrategy;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IResourceSettings#setResourceCachingStrategy(org.apache.wicket.request.resource.caching.IResourceCachingStrategy)
+	 * @see org.apache.wicket.settings.IResourceSettings#setCachingStrategy(org.apache.wicket.request.resource.caching.IResourceCachingStrategy)
 	 */
-	public void setResourceCachingStrategy(IResourceCachingStrategy strategy)
+	public void setCachingStrategy(IResourceCachingStrategy strategy)
 	{
 		if (strategy == null)
 		{

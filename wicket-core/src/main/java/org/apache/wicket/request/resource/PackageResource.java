@@ -251,7 +251,7 @@ public class PackageResource extends AbstractResource
 		}
 
 		// modify the resource response depending on the current caching strategy needs
-		Application.get().getResourceSettings().getResourceCachingStrategy().processResponse(resourceResponse);
+		Application.get().getResourceSettings().getCachingStrategy().decorateResponse(resourceResponse);
 
 		return resourceResponse;
 	}

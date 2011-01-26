@@ -353,7 +353,7 @@ public interface IResourceSettings
 	 *
 	 * @return strategy
 	 */
-	IResourceCachingStrategy getResourceCachingStrategy();
+	IResourceCachingStrategy getCachingStrategy();
 
 	/**
 	 * sets the resource caching strategy
@@ -363,5 +363,5 @@ public interface IResourceSettings
 	 *
 	 * @see IResourceCachingStrategy
 	 */
-	void setResourceCachingStrategy(IResourceCachingStrategy strategy);
+	void setCachingStrategy(IResourceCachingStrategy strategy);
 }

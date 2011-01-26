@@ -76,7 +76,7 @@ public class QueryStringWithTimestampResourceCachingStrategy extends AbstractRes
 	 *
 	 * @param response
 	 */
-	public void processResponse(AbstractResource.ResourceResponse response)
+	public void decorateResponse(AbstractResource.ResourceResponse response)
 	{
 		response.setCacheDurationToMaximum();
 		response.setCacheScope(WebResponse.CacheScope.PUBLIC);
