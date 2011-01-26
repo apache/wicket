@@ -45,7 +45,7 @@ public abstract class AbstractToolbar extends Panel
 	 */
 	public AbstractToolbar(final IModel<?> model, final DataTable<?> table)
 	{
-		super("$toolbar$" + counter++, model);
+		super("" + (counter++), model);
 		this.table = table;
 	}
 
