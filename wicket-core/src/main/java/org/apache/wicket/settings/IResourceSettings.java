@@ -359,8 +359,7 @@ public interface IResourceSettings
 	 * sets the resource caching strategy
 	 *
 	 * @param strategy
-	 *           instance of resource caching strategy or
-	 *           <code>null</code> to not do any kind of caching strategy
+	 *           instance of resource caching strategy
 	 *
 	 * @see IResourceCachingStrategy
 	 */

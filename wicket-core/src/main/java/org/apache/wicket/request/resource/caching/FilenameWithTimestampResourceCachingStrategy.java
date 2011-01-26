@@ -68,6 +68,7 @@ public class FilenameWithTimestampResourceCachingStrategy extends AbstractResour
 
 	public void setTimestampPrefix(String timestampPrefix)
 	{
+		Args.notEmpty(timestampPrefix, "timestampPrefix");
 		this.timestampPrefix = timestampPrefix;
 	}
 
