@@ -72,8 +72,7 @@ public abstract class AbstractNumberConverter<N extends Number> extends Abstract
 			// Convert spaces to no-break space (U+00A0) to fix problems with
 			// browser conversions.
 			// Space is not valid thousands-separator, but no-br space is.
-			String v = (String)value;
-			value = v.replace(' ', '\u00A0');
+			value = ((String)value).replace(' ', '\u00A0');
 		}
 
 		final NumberFormat numberFormat = getNumberFormat(locale);

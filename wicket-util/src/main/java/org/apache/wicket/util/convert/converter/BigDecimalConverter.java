@@ -19,6 +19,8 @@ package org.apache.wicket.util.convert.converter;
 import java.math.BigDecimal;
 import java.util.Locale;
 
+import org.apache.wicket.util.string.Strings;
+
 /**
  * BigDecimal converter
  * 
@@ -41,20 +43,13 @@ public class BigDecimalConverter extends AbstractDecimalConverter<BigDecimal>
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
 	 *      java.util.Locale)
 	 */
-	public BigDecimal convertToObject(String value, final Locale locale)
+	public BigDecimal convertToObject(final String value, final Locale locale)
 	{
-		if (value == null)
-		{
+		if(Strings.isEmpty(value))
 			return null;
-		}
-
-		value = value.trim();
-		if (value.trim().equals(""))
-		{
-			return null;
-		}
 
 		final Number number = parse(value, -Double.MAX_VALUE, Double.MAX_VALUE, locale);
+
 		if (number instanceof BigDecimal)
 		{
 			return (BigDecimal)number;
