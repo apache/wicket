@@ -30,6 +30,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.lang.WicketObjects;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Generic {@link ResourceReference} encoder that encodes and decodes non-mounted
@@ -94,8 +95,8 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 					// related information which needs to be removed
 					segment = getCachingStrategy().sanitizeRequest(segment, pageParameters);
 
-					if (segment == null)
-						throw new NullPointerException("caching strategy must not return null for filename");
+					if (Strings.isEmpty(segment))
+						throw new NullPointerException("caching strategy must not return an empty filename");
 				}
 				if (name.length() > 0)
 				{
@@ -187,7 +188,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 				{
 					token = getCachingStrategy().decorateRequest(token, parameters, reference);
 
-					if (token == null)
+					if (Strings.isEmpty(token))
 						throw new NullPointerException("caching strategy must not return an empty filename");
 
 					if (parameters.getIndexedCount() > 0)
