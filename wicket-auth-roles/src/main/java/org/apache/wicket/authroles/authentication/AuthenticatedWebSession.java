@@ -17,7 +17,6 @@
 package org.apache.wicket.authroles.authentication;
 
 import org.apache.wicket.Session;
-import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.request.Request;
 
 
@@ -52,12 +51,6 @@ public abstract class AuthenticatedWebSession extends AbstractAuthenticatedWebSe
 	{
 		super(request);
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public abstract Roles getRoles();
 
 	/**
 	 * Try to logon the user. It'll call {@link #authenticate(String, String)} to do the real work

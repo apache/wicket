@@ -23,8 +23,8 @@ import org.apache.wicket.request.Request;
 
 
 /**
- * Authenticated web session. Subclasses must provide a method that gets a User object, a method
- * that gets User authentication status and a method that returns the Roles for current User.
+ * Authenticated web session. Subclasses must provide a method that gets User authentication status
+ * and a method that returns the Roles for current User.
  * 
  * @author Jonathan Locke
  * @author Leonid Bogdanov

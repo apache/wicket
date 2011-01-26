@@ -75,7 +75,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	 */
 	public final boolean hasAnyRole(final Roles roles)
 	{
-		final Roles sessionRoles = AuthenticatedWebSession.get().getRoles();
+		final Roles sessionRoles = AbstractAuthenticatedWebSession.get().getRoles();
 		return (sessionRoles != null) && sessionRoles.hasAnyRole(roles);
 	}
 
@@ -88,7 +88,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 		// component is a page, but it's not the sign in page
 		if (component instanceof Page)
 		{
-			if (!AuthenticatedWebSession.get().isSignedIn())
+			if (!AbstractAuthenticatedWebSession.get().isSignedIn())
 			{
 				// Redirect to intercept page to let the user sign in
 				restartResponseAtSignInPage();
