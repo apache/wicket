@@ -100,10 +100,10 @@ public abstract class AbstractNumberConverter<N extends Number> extends Abstract
 	}
 
 	/**
-	 * @see org.apache.wicket.util.convert.IConverter#convertToString(C, Locale)
+	 * @see org.apache.wicket.util.convert.IConverter#convertToString(Object, java.util.Locale)
 	 */
 	@Override
-	public String convertToString(final Number value, final Locale locale)
+	public String convertToString(final N value, final Locale locale)
 	{
 		NumberFormat fmt = getNumberFormat(locale);
 		if (fmt != null)
