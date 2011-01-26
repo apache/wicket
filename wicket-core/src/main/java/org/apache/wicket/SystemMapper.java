@@ -24,6 +24,7 @@ import org.apache.wicket.request.mapper.HomePageMapper;
 import org.apache.wicket.request.mapper.PageInstanceMapper;
 import org.apache.wicket.request.mapper.ResourceReferenceMapper;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
+import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.util.ClassProvider;
 import org.apache.wicket.util.IProvider;
 
@@ -50,17 +51,17 @@ public class SystemMapper extends CompoundRequestMapper
 		add(new BookmarkableMapper());
 		add(new HomePageMapper(new HomePageProvider(application)));
 		add(new ResourceReferenceMapper(new PageParametersEncoder(),
-			new ParentFolderPlaceholderProvider(application), useTimestampsProvider()));
+			new ParentFolderPlaceholderProvider(application), getResourceCachingStrategy()));
 		add(new BufferedResponseMapper());
 	}
 
-	private IProvider<Boolean> useTimestampsProvider()
+	private IProvider<IResourceCachingStrategy> getResourceCachingStrategy()
 	{
-		return new IProvider<Boolean>()
+		return new IProvider<IResourceCachingStrategy>()
 		{
-			public Boolean get()
+			public IResourceCachingStrategy get()
 			{
-				return application.getResourceSettings().getUseTimestampOnResources();
+				return application.getResourceSettings().getResourceCachingStrategy();
 			}
 		};
 	}

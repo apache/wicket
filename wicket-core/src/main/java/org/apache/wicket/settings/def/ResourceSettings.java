@@ -25,6 +25,9 @@ import org.apache.wicket.Localizer;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.PackageResourceGuard;
+import org.apache.wicket.request.resource.caching.FilenameWithTimestampResourceCachingStrategy;
+import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
+import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
 import org.apache.wicket.resource.PropertiesFactory;
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
@@ -106,8 +109,9 @@ public class ResourceSettings implements IResourceSettings
 	/** escape string for '..' within resource keys */
 	private String parentFolderPlaceholder = null;
 
-	// use timestamps on resource file names
-	private boolean useTimestampOnResourcesName = true;
+	// resource caching strategy
+	private IResourceCachingStrategy resourceCachingStrategy = new FilenameWithTimestampResourceCachingStrategy();
+
 
 	/**
 	 * Construct
@@ -418,18 +422,24 @@ public class ResourceSettings implements IResourceSettings
 	}
 
 	/**
-	 * @see IResourceSettings#getUseTimestampOnResources()
+	 * @see IResourceSettings#getResourceCachingStrategy()
 	 */
-	public boolean getUseTimestampOnResources()
+	public IResourceCachingStrategy getResourceCachingStrategy()
 	{
-		return useTimestampOnResourcesName;
+		return resourceCachingStrategy;
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IResourceSettings#setUseTimestampOnResources(boolean)
+	 * @see org.apache.wicket.settings.IResourceSettings#setResourceCachingStrategy(org.apache.wicket.request.resource.caching.IResourceCachingStrategy)
 	 */
-	public void setUseTimestampOnResources(boolean useTimestampOnResourcesName)
+	public void setResourceCachingStrategy(IResourceCachingStrategy strategy)
 	{
-		this.useTimestampOnResourcesName = useTimestampOnResourcesName;
+		if (strategy == null)
+		{
+			throw new NullPointerException(
+				"It is not allowed to set the resource caching strategy to value NULL. " +
+					"Please use " + NoOpResourceCachingStrategy.class.getName() + " instead.");
+		}
+		this.resourceCachingStrategy = strategy;
 	}
 }

@@ -17,6 +17,7 @@
 package org.apache.wicket.request.mapper;
 
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
+import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.IProvider;
 
@@ -42,12 +43,13 @@ public class ResourceReferenceMapper extends ParentPathReferenceRewriter
 	 * 
 	 * @param pageParametersEncoder
 	 * @param parentPathPartEscapeSequence
-	 * @param useTimestamps
+	 * @param cachingStrategy
 	 */
 	public ResourceReferenceMapper(IPageParametersEncoder pageParametersEncoder,
-		IProvider<String> parentPathPartEscapeSequence, IProvider<Boolean> useTimestamps)
+		IProvider<String> parentPathPartEscapeSequence,
+		IProvider<IResourceCachingStrategy> cachingStrategy)
 	{
-		super(new BasicResourceReferenceMapper(pageParametersEncoder, useTimestamps),
+		super(new BasicResourceReferenceMapper(pageParametersEncoder, cachingStrategy),
 			parentPathPartEscapeSequence);
 	}
 }

@@ -25,6 +25,10 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
+import org.apache.wicket.request.resource.caching.FilenameWithTimestampResourceCachingStrategy;
+import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
+import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
+import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.ValueProvider;
 import org.apache.wicket.util.time.Time;
 import org.mockito.Mockito;
@@ -34,8 +38,12 @@ import org.mockito.Mockito;
  */
 public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTest
 {
-	private static final ValueProvider<Boolean> TIMESTAMPS_OFF = new ValueProvider<Boolean>(false);
-	private static final ValueProvider<Boolean> TIMESTAMPS_ON = new ValueProvider<Boolean>(true);
+	private static final IProvider<IResourceCachingStrategy> NO_CACHING =
+		new ValueProvider<IResourceCachingStrategy>(NoOpResourceCachingStrategy.INSTANCE);
+
+	private static final IProvider<FilenameWithTimestampResourceCachingStrategy> CACHE_FILENAME_WITH_TIMESTAMP =
+		new ValueProvider<FilenameWithTimestampResourceCachingStrategy>(
+			new FilenameWithTimestampResourceCachingStrategy());
 
 	/**
 	 * Construct.
@@ -45,7 +53,7 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	}
 
 	private final BasicResourceReferenceMapper encoder = new BasicResourceReferenceMapper(
-		new PageParametersEncoder(), TIMESTAMPS_OFF)
+		new PageParametersEncoder(), NO_CACHING)
 	{
 		@Override
 		protected IMapperContext getContext()
@@ -55,7 +63,7 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	};
 
 	private final BasicResourceReferenceMapper encoderWithTimestamps = new BasicResourceReferenceMapper(
-		new PageParametersEncoder(), TIMESTAMPS_ON)
+		new PageParametersEncoder(), CACHE_FILENAME_WITH_TIMESTAMP)
 	{
 		@Override
 		protected IMapperContext getContext()
@@ -445,7 +453,7 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		Url url = encoderWithTimestamps.mapHandler(handler);
 
 		// check that url contains timestamp
-		String timestampPart = BasicResourceReferenceMapper.TIMESTAMP_PREFIX +
+		String timestampPart = CACHE_FILENAME_WITH_TIMESTAMP.get().getTimestampPrefix() +
 			Long.toString(millis) + "?";
 		assertTrue(url.toString().contains(timestampPart));
 	}
@@ -479,15 +487,5 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		// urls should be equal
 		assertEquals(url1, url2);
 		assertEquals(url1, url3);
-
-		// clear cache
-		BasicResourceReferenceMapper.removeLastModifiedTimestampFromCache(reference);
-
-		// request url with timestamp (will force a lookup)
-		Url url4 = encoderWithTimestamps.mapHandler(handler);
-		assertNotNull(url4);
-		assertEquals(2, reference.lastModifiedInvocationCount);
-
-		assertEquals(url1, url4);
 	}
 }

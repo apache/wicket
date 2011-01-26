@@ -25,7 +25,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
-import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Packages;
@@ -251,12 +250,8 @@ public class PackageResource extends AbstractResource
 			}
 		}
 
-		// if timestamps are enabled on resource we can maximize caching with no pain
-		if (Application.get().getResourceSettings().getUseTimestampOnResources())
-		{
-			resourceResponse.setCacheDurationToMaximum();
-			resourceResponse.setCacheScope(WebResponse.CacheScope.PUBLIC);
-		}
+		// modify the resource response depending on the current caching strategy needs
+		Application.get().getResourceSettings().getResourceCachingStrategy().processResponse(resourceResponse);
 
 		return resourceResponse;
 	}

@@ -23,6 +23,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.IProvider;
 
@@ -59,9 +60,13 @@ public class MockApplication extends WebApplication
 	protected void internalInit()
 	{
 		super.internalInit();
+
+		// set page and session store providers
 		setSessionStoreProvider(new MockSessionStoreProvider());
 		setPageManagerProvider(new MockPageManagerProvider());
-		getResourceSettings().setUseTimestampOnResources(false);
+
+		// for test cases we usually want stable resource names
+		getResourceSettings().setResourceCachingStrategy(NoOpResourceCachingStrategy.INSTANCE);
 	}
 
 	private static class MockSessionStoreProvider implements IProvider<ISessionStore>
