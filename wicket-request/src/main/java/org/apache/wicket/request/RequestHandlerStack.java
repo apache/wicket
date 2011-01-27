@@ -122,9 +122,8 @@ public abstract class RequestHandlerStack
 	/**
 	 * Schedules the request handler to be executed after current request handler finishes. If there
 	 * is already another request handler scheduled it will be discarded and overwritten by the new
-	 * one. If {@link #replaceCurrentRequestHandler(IRequestHandler)} or
-	 * {@link #replaceAllRequestHandlers(IRequestHandler)} is invoked during current request handler
-	 * execution the scheduled handler will be also discarded.
+	 * one. If {@link #replaceAllRequestHandlers(IRequestHandler)} is invoked during current request
+	 * handler execution the scheduled handler will be also discarded.
 	 * 
 	 * @param handler
 	 *            handler to be executed after current request handler finishes
