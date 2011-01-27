@@ -131,16 +131,33 @@ public class PopupSettings implements IClusterable
 	 *            separate page map as Wicket holds references to a limited number of pages/
 	 *            versions only. If you don't put your popup in a separate page map, the user might
 	 *            get page expired exceptions when getting back to the main window again.
+	 * 
+	 * @deprecated Use the {@link PopupSettings#PopupSettings(String)}
 	 */
+	@Deprecated
 	public PopupSettings(IPageMap pagemap)
 	{
-		this(pagemap, 0);
+		this(pagemap.getName(), 0);
 	}
 
 	/**
 	 * Construct.
 	 * 
-	 * @param pagemap
+	 * @param pageMapName
+	 *            The page map name where this popup must be in. Typically, you should put any popup
+	 *            in a separate page map as Wicket holds references to a limited number of pages/
+	 *            versions only. If you don't put your popup in a separate page map, the user might
+	 *            get page expired exceptions when getting back to the main window again.
+	 */
+	public PopupSettings(String pageMapName)
+	{
+		this(pageMapName, 0);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param pageMapName
 	 *            The pagemap where this popup must be in. Typically, you should put any popup in a
 	 *            separate page map as Wicket holds references to a limited number of pages/
 	 *            versions only. If you don't put your popup in a separate page map, the user might
@@ -148,14 +165,10 @@ public class PopupSettings implements IClusterable
 	 * @param displayFlags
 	 *            Display flags
 	 */
-	public PopupSettings(IPageMap pagemap, final int displayFlags)
+	public PopupSettings(String pageMapName, final int displayFlags)
 	{
 		this.displayFlags = displayFlags;
-		if (pagemap != null)
-		{
-			pageMapName = pagemap.getName();
-			windowName = pageMapName;
-		}
+		windowName = this.pageMapName = pageMapName;
 	}
 
 	/**
