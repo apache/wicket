@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.link;
 
-import org.apache.wicket.IPageMap;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -201,10 +200,10 @@ public class ExternalLink extends AbstractLink
 
 			if (popupSettings != null)
 			{
-				IPageMap popupPageMap = popupSettings.getPageMap(this);
-				if (popupPageMap != null && popupPageMap.getName() != null)
+				String popupPageMapName = popupSettings.getPageMapName(this);
+				if (popupPageMapName != null)
 				{
-					tag.put("target", popupPageMap.getName());
+					tag.put("target", popupPageMapName);
 				}
 			}
 		}

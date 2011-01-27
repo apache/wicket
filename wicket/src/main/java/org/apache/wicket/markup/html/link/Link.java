@@ -17,7 +17,6 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IPageMap;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.WicketRuntimeException;
@@ -217,8 +216,10 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 		// are created in the onClick are made in the wanted pagemap
 		if (popupSettings != null)
 		{
-			RequestCycle.get().getRequest().getRequestParameters().setPageMapName(
-				popupSettings.getPageMap(this).getName());
+			RequestCycle.get()
+				.getRequest()
+				.getRequestParameters()
+				.setPageMapName(popupSettings.getPageMapName(this));
 		}
 		// Invoke subclass handler
 		onClick();
@@ -469,10 +470,10 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 
 			if (popupSettings != null)
 			{
-				IPageMap popupPageMap = popupSettings.getPageMap(this);
-				if (popupPageMap != null && popupPageMap.getName() != null)
+				String popupPageMapName = popupSettings.getPageMapName(this);
+				if (popupPageMapName != null)
 				{
-					tag.put("target", popupPageMap.getName());
+					tag.put("target", popupPageMapName);
 				}
 			}
 		}

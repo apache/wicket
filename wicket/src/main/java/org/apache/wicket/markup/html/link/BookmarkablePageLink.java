@@ -25,6 +25,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.util.collections.MiniMap;
 import org.apache.wicket.util.lang.Classes;
 
@@ -269,7 +270,12 @@ public class BookmarkablePageLink<T> extends Link<T>
 
 		if (getPopupSettings() != null)
 		{
-			return urlFor(getPopupSettings().getPageMap(this), getPageClass(), parameters);
+			String pageMapName = getPopupSettings().getPageMapName(this);
+			if (pageMapName == null)
+			{
+				pageMapName = PageMap.DEFAULT_NAME;
+			}
+			return urlFor(new BookmarkablePageRequestTarget(pageMapName, getPageClass(), parameters));
 		}
 		else
 		{

@@ -18,10 +18,12 @@ package org.apache.wicket;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore;
 import org.apache.wicket.protocol.http.WebRequestCycle;
@@ -31,6 +33,7 @@ import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
@@ -162,7 +165,7 @@ public class PageMapTest extends WicketTestCase
 		assertEquals("1", tester.getWicketSession().getPageMaps().get(2).getName());
 	}
 
-	private void goToPage(Class pageClass, String pageMap)
+	private void goToPage(Class<?> pageClass, String pageMap)
 	{
 		WebRequestCycle cycle = tester.setupRequestAndResponse();
 		tester.getServletRequest().setParameter(
@@ -170,6 +173,30 @@ public class PageMapTest extends WicketTestCase
 			pageMap + ':' + pageClass.getName());
 		tester.processRequestCycle(cycle);
 		tester.assertRenderedPage(TestPage.class);
+	}
+
+	/**
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3109">WICKET-3109</a>
+	 */
+	public void testLazyPageMapCreationForPopup()
+	{
+		TestPage testPage = new TestPage();
+		PopupSettings popupSettings = new PopupSettings();
+		popupSettings.setWindowName(WORKING_PAGE_MAP);
+		testPage.dummyPageLink.setPopupSettings(popupSettings);
+
+		tester.startPage(testPage);
+
+		for (IPageMap pageMap : tester.getWicketSession().getPageMaps())
+		{
+			assertNotSame(WORKING_PAGE_MAP, pageMap.getName());
+		}
+
+		tester.clickLink(testPage.dummyPageLink.getId());
+
+		tester.assertRenderedPage(DummyHomePage.class);
+		List<IPageMap> pageMaps = tester.getWicketSession().getPageMaps();
+		assertTrue(pageMaps.contains(PageMap.forName(WORKING_PAGE_MAP)));
 	}
 
 	private void listPageMapsAtSession()
@@ -181,13 +208,18 @@ public class PageMapTest extends WicketTestCase
 		}
 	}
 
+	/** */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		private Link<Void> dummyPageLink;
+
+		/** */
 		public TestPage()
 		{
-			super();
-			add(new Link("removeTestPageMap")
+			add(new Link<Void>("removeTestPageMap")
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public void onClick()
 				{
@@ -201,13 +233,24 @@ public class PageMapTest extends WicketTestCase
 					}
 				}
 			});
+			add(dummyPageLink = new Link<Void>("dummyPage")
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void onClick()
+				{
+					setResponsePage(DummyHomePage.class);
+				}
+			});
+
 		}
 
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{
 			return new StringResourceStream(
-				"<html><body><a wicket:id=\"removeTestPageMap\"></a></body></html>");
+				"<html><body><a wicket:id=\"removeTestPageMap\"></a><a wicket:id=\"dummyPage\"></a></body></html>");
 		}
 	}
 }

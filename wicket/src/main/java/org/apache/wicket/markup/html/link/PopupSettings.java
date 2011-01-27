@@ -340,7 +340,11 @@ public class PopupSettings implements IClusterable
 	 * @param callee
 	 *            Calling component
 	 * @return The pagemap where the popup page must be created in
+	 * @deprecated Use getPageMapName instead. There is no need to eager create the pagemap object
+	 *             to create URLs. The pagemap will be created during the request cycle when user
+	 *             click on the link for this popup.
 	 */
+	@Deprecated
 	public IPageMap getPageMap(Component callee)
 	{
 		if (pageMapName != null)
@@ -363,6 +367,25 @@ public class PopupSettings implements IClusterable
 					"and added to a page");
 			}
 			return page.getPageMap();
+		}
+	}
+
+	/**
+	 * Gets the page map name. Used to create URLs referencing the popup on the defined page map.
+	 * 
+	 * @param callee
+	 * @return the page map name
+	 */
+	public String getPageMapName(Component callee)
+	{
+		if (pageMapName != null)
+		{
+			return pageMapName;
+		}
+		else
+		{
+			// TODO copy/past the relevant code from getPageMap if we remove it at some point
+			return getPageMap(callee).getName();
 		}
 	}
 }
