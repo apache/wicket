@@ -75,6 +75,12 @@ public abstract class AbstractMapperTest extends TestCase
 			{
 				return url;
 			}
+
+			@Override
+			public Object getContainerRequest()
+			{
+				return null;
+			}
 		};
 	}
 

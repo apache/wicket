@@ -82,6 +82,12 @@ public class ResourceMapperTest extends WicketTestCase
 			{
 				return getUrl();
 			}
+
+			@Override
+			public Object getContainerRequest()
+			{
+				return null;
+			}
 		};
 	}
 

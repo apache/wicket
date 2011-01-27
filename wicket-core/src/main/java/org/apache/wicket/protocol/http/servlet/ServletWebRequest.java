@@ -411,5 +411,11 @@ public class ServletWebRequest extends WebRequest
 		return RequestUtils.getCharset(httpServletRequest);
 	}
 
+	@Override
+	public Object getContainerRequest()
+	{
+		return httpServletRequest;
+	}
+
 
 }

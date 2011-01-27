@@ -190,6 +190,12 @@ public abstract class WebRequest extends Request
 			{
 				return WebRequest.this.getClientUrl();
 			}
+
+			@Override
+			public Object getContainerRequest()
+			{
+				return WebRequest.this.getContainerRequest();
+			}
 		};
 	}
 

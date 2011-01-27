@@ -256,4 +256,10 @@ public class MockWebRequest extends WebRequest
 	{
 		return new Url(url.getSegments(), Collections.<QueryParameter> emptyList());
 	}
+
+	@Override
+	public Object getContainerRequest()
+	{
+		return this;
+	}
 }

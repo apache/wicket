@@ -189,6 +189,12 @@ public abstract class Request
 			{
 				return getUrl();
 			}
+
+			@Override
+			public Object getContainerRequest()
+			{
+				return Request.this.getContainerRequest();
+			}
 		};
 	}
 
@@ -207,5 +213,19 @@ public abstract class Request
 		return "";
 	}
 
+	/**
+	 * Gets charset of the request
+	 * 
+	 * @return request charset
+	 */
 	public abstract Charset getCharset();
+
+	/**
+	 * Provides access to the low-level container request object that implementaion of this
+	 * {@link Request} delegate to. This allows users to access features provided by the container
+	 * requests but not by generalized Wicket {@link Request} objects.
+	 * 
+	 * @return low-level container request object, or {@code null} if none
+	 */
+	public abstract Object getContainerRequest();
 }
