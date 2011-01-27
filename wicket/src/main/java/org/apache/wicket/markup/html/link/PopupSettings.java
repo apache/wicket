@@ -120,7 +120,7 @@ public class PopupSettings implements IClusterable
 	 */
 	public PopupSettings(final int displayFlags)
 	{
-		this(null, displayFlags);
+		this((String)null, displayFlags);
 	}
 
 	/**
@@ -152,6 +152,15 @@ public class PopupSettings implements IClusterable
 	public PopupSettings(String pageMapName)
 	{
 		this(pageMapName, 0);
+	}
+
+	/**
+	 * @deprecated Use the {@link PopupSettings#PopupSettings(String, int)}
+	 */
+	@Deprecated
+	public PopupSettings(IPageMap pageMapName, final int displayFlags)
+	{
+		this(pageMapName.getName(), displayFlags);
 	}
 
 	/**
