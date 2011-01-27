@@ -283,6 +283,9 @@ public class PopupSettings implements IClusterable
 	 * already open and call window.open a second time using the same windowName, the first window
 	 * will be reused rather than opening a second window
 	 * 
+	 * An page map with popupWindowName will to be used when it is set, so this method also set the
+	 * page map name.
+	 * 
 	 * @param popupWindowName
 	 *            window name.
 	 * @return This
