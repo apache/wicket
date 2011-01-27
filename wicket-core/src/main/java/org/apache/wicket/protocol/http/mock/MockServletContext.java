@@ -229,11 +229,11 @@ public class MockServletContext implements ServletContext
 	}
 
 	/**
-	 * @return Always 3
+	 * @return Always 5
 	 */
 	public int getMinorVersion()
 	{
-		return 3;
+		return 5;
 	}
 
 	/**
