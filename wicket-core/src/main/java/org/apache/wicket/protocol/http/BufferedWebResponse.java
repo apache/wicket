@@ -551,4 +551,10 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		return charSequenceAction.builder.toString();
 	}
 
+	@Override
+	public Object getContainerResponse()
+	{
+		return originalResponse.getContainerResponse();
+	}
+
 }

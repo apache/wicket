@@ -69,4 +69,13 @@ public abstract class Response
 	public void reset()
 	{
 	}
+
+	/**
+	 * Provides access to the low-level container response object that implementaion of this
+	 * {@link Response} delegate to. This allows users to access features provided by the container
+	 * response but not by generalized Wicket {@link Response} objects.
+	 * 
+	 * @return low-level container response object, or {@code null} if none
+	 */
+	public abstract Object getContainerResponse();
 }

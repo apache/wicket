@@ -180,4 +180,10 @@ class HeaderBufferingWebResponse extends WebResponse implements IMetaDataBufferi
 	{
 		bufferedResponse.writeMetaData(webResponse);
 	}
+
+	@Override
+	public Object getContainerResponse()
+	{
+		return originalResponse.getContainerResponse();
+	}
 }

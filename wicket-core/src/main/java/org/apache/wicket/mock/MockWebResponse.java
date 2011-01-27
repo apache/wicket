@@ -329,4 +329,10 @@ public class MockWebResponse extends WebResponse
 		}
 
 	}
+
+	@Override
+	public Object getContainerResponse()
+	{
+		return null;
+	}
 }

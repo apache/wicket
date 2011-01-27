@@ -115,4 +115,10 @@ public class ByteArrayResponse extends Response
 			return url != null ? url.toString() : null;
 		}
 	}
+
+	@Override
+	public Object getContainerResponse()
+	{
+		return original.getContainerResponse();
+	}
 }

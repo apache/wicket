@@ -225,6 +225,12 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		{
 			throw new UnsupportedOperationException("Cannot write binary data.");
 		}
+
+		@Override
+		public Object getContainerResponse()
+		{
+			return originalResponse.getContainerResponse();
+		}
 	}
 
 	private static final Logger LOG = LoggerFactory.getLogger(AjaxRequestTarget.class);

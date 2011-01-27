@@ -45,6 +45,12 @@ public abstract class BaseRequestHandlerStackTest extends TestCase
 			{
 				return null;
 			}
+
+			@Override
+			public Object getContainerResponse()
+			{
+				return null;
+			}
 		};
 	}
 

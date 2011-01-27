@@ -63,4 +63,10 @@ public class NullResponse extends Response
 	{
 		return url != null ? url.toString() : null;
 	}
+
+	@Override
+	public Object getContainerResponse()
+	{
+		return null;
+	}
 }

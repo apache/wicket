@@ -289,4 +289,10 @@ public class ServletWebResponse extends WebResponse
 		httpServletResponse.reset();
 		redirect = false;
 	}
+
+	@Override
+	public Object getContainerResponse()
+	{
+		return httpServletResponse;
+	}
 }
