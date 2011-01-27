@@ -74,7 +74,7 @@ public class UploadWebRequest extends ServletWebRequest
 	public MultipartServletWebRequest newMultipartWebRequest(final Bytes maxsize)
 		throws FileUploadException
 	{
-		return new MultipartRequest(getHttpServletRequest(), getFilterPrefix(), maxsize);
+		return new MultipartRequest(getContainerRequest(), getFilterPrefix(), maxsize);
 	}
 
 	private static final String SESSION_KEY = UploadWebRequest.class.getName();

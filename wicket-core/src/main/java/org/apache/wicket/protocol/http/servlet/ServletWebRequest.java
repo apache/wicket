@@ -176,16 +176,6 @@ public class ServletWebRequest extends WebRequest
 		return filterPrefix;
 	}
 
-	/**
-	 * Returns the wrapped {@link HttpServletRequest} instance.
-	 * 
-	 * @return {@link HttpServletRequest} instance.
-	 */
-	public final HttpServletRequest getHttpServletRequest()
-	{
-		return httpServletRequest;
-	}
-
 	@Override
 	public List<Cookie> getCookies()
 	{
@@ -239,7 +229,7 @@ public class ServletWebRequest extends WebRequest
 	protected Map<String, List<StringValue>> generatePostParameters()
 	{
 		// Do not attempt to parse multipart request
-		if (isMultiPart(getHttpServletRequest()))
+		if (isMultiPart(getContainerRequest()))
 		{
 			return Collections.emptyMap();
 		}
@@ -247,7 +237,7 @@ public class ServletWebRequest extends WebRequest
 		Map<String, List<StringValue>> postParameters = new HashMap<String, List<StringValue>>();
 		try
 		{
-			final BufferedReader reader = getHttpServletRequest().getReader();
+			final BufferedReader reader = getContainerRequest().getReader();
 			final String value = Streams.readString(reader);
 
 			if (!Strings.isEmpty(value))
@@ -270,7 +260,7 @@ public class ServletWebRequest extends WebRequest
 			logger.warn(
 				"Error parsing request body for post parameters; Fallback to ServletRequest#getParameters().",
 				e);
-			for (final String name : (List<String>)Collections.list(getHttpServletRequest().getParameterNames()))
+			for (final String name : (List<String>)Collections.list(getContainerRequest().getParameterNames()))
 			{
 				List<StringValue> list = postParameters.get(name);
 				if (list == null)
@@ -278,7 +268,7 @@ public class ServletWebRequest extends WebRequest
 					list = new ArrayList<StringValue>();
 					postParameters.put(name, list);
 				}
-				for (final String value : getHttpServletRequest().getParameterValues(name))
+				for (final String value : getContainerRequest().getParameterValues(name))
 				{
 					list.add(StringValue.valueOf(value));
 				}
@@ -373,7 +363,7 @@ public class ServletWebRequest extends WebRequest
 	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize)
 		throws FileUploadException
 	{
-		return new MultipartServletWebRequestImpl(getHttpServletRequest(), filterPrefix, maxSize);
+		return new MultipartServletWebRequestImpl(getContainerRequest(), filterPrefix, maxSize);
 	}
 
 	/**
@@ -387,7 +377,7 @@ public class ServletWebRequest extends WebRequest
 	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, FileItemFactory factory)
 		throws FileUploadException
 	{
-		return new MultipartServletWebRequestImpl(getHttpServletRequest(), filterPrefix, maxSize,
+		return new MultipartServletWebRequestImpl(getContainerRequest(), filterPrefix, maxSize,
 			factory);
 	}
 
@@ -412,7 +402,7 @@ public class ServletWebRequest extends WebRequest
 	}
 
 	@Override
-	public Object getContainerRequest()
+	public HttpServletRequest getContainerRequest()
 	{
 		return httpServletRequest;
 	}

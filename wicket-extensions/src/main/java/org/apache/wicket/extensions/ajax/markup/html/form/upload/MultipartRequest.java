@@ -61,7 +61,7 @@ class MultipartRequest extends MultipartServletWebRequestImpl
 	{
 		UploadInfo info = new UploadInfo(totalBytes);
 
-		UploadWebRequest.setUploadInfo(getHttpServletRequest(), info);
+		UploadWebRequest.setUploadInfo(getContainerRequest(), info);
 	}
 
 	/**
@@ -71,7 +71,7 @@ class MultipartRequest extends MultipartServletWebRequestImpl
 	@Override
 	protected void onUploadUpdate(final int bytesUploaded, final int total)
 	{
-		HttpServletRequest request = getHttpServletRequest();
+		HttpServletRequest request = getContainerRequest();
 		UploadInfo info = UploadWebRequest.getUploadInfo(request);
 		if (info == null)
 		{
@@ -89,6 +89,6 @@ class MultipartRequest extends MultipartServletWebRequestImpl
 	@Override
 	protected void onUploadCompleted()
 	{
-		UploadWebRequest.clearUploadInfo(getHttpServletRequest());
+		UploadWebRequest.clearUploadInfo(getContainerRequest());
 	}
 }

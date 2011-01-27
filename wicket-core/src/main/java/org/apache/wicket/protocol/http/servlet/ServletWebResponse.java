@@ -55,16 +55,6 @@ public class ServletWebResponse extends WebResponse
 		this.webRequest = webRequest;
 	}
 
-	/**
-	 * Returns the wrapped response
-	 * 
-	 * @return wrapped response
-	 */
-	public final HttpServletResponse getHttpServletResponse()
-	{
-		return httpServletResponse;
-	}
-
 	@Override
 	public void addCookie(Cookie cookie)
 	{
@@ -184,7 +174,7 @@ public class ServletWebResponse extends WebResponse
 
 	private String getAbsolutePrefix()
 	{
-		HttpServletRequest httpServletRequest = webRequest.getHttpServletRequest();
+		HttpServletRequest httpServletRequest = webRequest.getContainerRequest();
 
 		String port = "";
 		if (("http".equals(httpServletRequest.getScheme()) && httpServletRequest.getServerPort() != 80) ||
@@ -207,7 +197,7 @@ public class ServletWebResponse extends WebResponse
 		}
 		else
 		{
-			HttpServletRequest httpServletRequest = webRequest.getHttpServletRequest();
+			HttpServletRequest httpServletRequest = webRequest.getContainerRequest();
 			Charset charset = RequestUtils.getCharset(httpServletRequest);
 
 			final Url current;
@@ -250,7 +240,7 @@ public class ServletWebResponse extends WebResponse
 					"<ajax-response><redirect><![CDATA[" + url + "]]></redirect></ajax-response>");
 
 				setContentType("text/xml;charset=" +
-					webRequest.getHttpServletRequest().getCharacterEncoding());
+					webRequest.getContainerRequest().getCharacterEncoding());
 			}
 			else
 			{
@@ -291,7 +281,7 @@ public class ServletWebResponse extends WebResponse
 	}
 
 	@Override
-	public Object getContainerResponse()
+	public HttpServletResponse getContainerResponse()
 	{
 		return httpServletResponse;
 	}

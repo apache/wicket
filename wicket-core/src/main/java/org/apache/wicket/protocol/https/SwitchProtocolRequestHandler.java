@@ -18,7 +18,6 @@ package org.apache.wicket.protocol.https;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestHandlerDelegate;
@@ -127,7 +126,7 @@ class SwitchProtocolRequestHandler implements IRequestHandlerDelegate
 	public void respond(IRequestCycle requestCycle)
 	{
 		WebRequest webRequest = (WebRequest)requestCycle.getRequest();
-		HttpServletRequest request = ((ServletWebRequest)webRequest).getHttpServletRequest();
+		HttpServletRequest request = (HttpServletRequest)webRequest.getContainerRequest();
 
 		Integer port = null;
 		if (protocol == Protocol.HTTP)
@@ -192,7 +191,7 @@ class SwitchProtocolRequestHandler implements IRequestHandlerDelegate
 	{
 		IRequestCycle requestCycle = RequestCycle.get();
 		WebRequest webRequest = (WebRequest)requestCycle.getRequest();
-		HttpServletRequest request = ((ServletWebRequest)webRequest).getHttpServletRequest();
+		HttpServletRequest request = (HttpServletRequest)webRequest.getContainerRequest();
 		if (protocol == null || protocol == Protocol.PRESERVE_CURRENT ||
 			request.getScheme().equals(protocol.toString().toLowerCase()))
 		{

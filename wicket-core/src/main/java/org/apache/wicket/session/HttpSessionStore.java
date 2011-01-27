@@ -34,7 +34,6 @@ import org.apache.wicket.Session;
 import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.http.WebRequest;
 import org.slf4j.Logger;
@@ -78,11 +77,12 @@ public class HttpSessionStore implements ISessionStore
 	 */
 	protected final HttpServletRequest getHttpServletRequest(final Request request)
 	{
-		if ((request instanceof ServletWebRequest) == false)
+		Object containerRequest = request.getContainerRequest();
+		if (containerRequest == null || (containerRequest instanceof HttpServletRequest) == false)
 		{
 			throw new IllegalArgumentException("Request must be ServletWebRequest");
 		}
-		return ((ServletWebRequest)request).getHttpServletRequest();
+		return (HttpServletRequest)containerRequest;
 	}
 
 	/**
@@ -131,7 +131,8 @@ public class HttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * @see org.apache.wicket.session.ISessionStore#getSessionId(org.apache.wicket.request.Request, boolean)
+	 * @see org.apache.wicket.session.ISessionStore#getSessionId(org.apache.wicket.request.Request,
+	 *      boolean)
 	 */
 	public String getSessionId(final Request request, final boolean create)
 	{

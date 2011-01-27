@@ -2275,7 +2275,7 @@ public class BaseWicketTester
 			super.sendRedirect(url);
 			try
 			{
-				getHttpServletResponse().sendRedirect(url);
+				getContainerResponse().sendRedirect(url);
 			}
 			catch (IOException e)
 			{

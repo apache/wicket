@@ -326,7 +326,7 @@ public class CookieUtils
 		}
 
 		ServletWebRequest request = (ServletWebRequest)getWebRequest();
-		String path = request.getHttpServletRequest().getContextPath() + "/" +
+		String path = request.getContainerRequest().getContextPath() + "/" +
 			request.getFilterPrefix();
 
 		cookie.setPath(path);

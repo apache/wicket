@@ -62,7 +62,7 @@ public class WebClientInfo extends ClientInfo
 	{
 		super();
 		ServletWebRequest request = (ServletWebRequest)requestCycle.getRequest();
-		HttpServletRequest httpServletRequest = request.getHttpServletRequest();
+		HttpServletRequest httpServletRequest = request.getContainerRequest();
 		userAgent = httpServletRequest.getHeader("User-Agent");
 		properties.setRemoteAddress(getRemoteAddr(requestCycle));
 		init();
@@ -122,7 +122,7 @@ public class WebClientInfo extends ClientInfo
 	protected String getRemoteAddr(RequestCycle requestCycle)
 	{
 		ServletWebRequest request = (ServletWebRequest)requestCycle.getRequest();
-		HttpServletRequest req = request.getHttpServletRequest();
+		HttpServletRequest req = request.getContainerRequest();
 		String remoteAddr = request.getHeader("X-Forwarded-For");
 		if (remoteAddr == null)
 		{
