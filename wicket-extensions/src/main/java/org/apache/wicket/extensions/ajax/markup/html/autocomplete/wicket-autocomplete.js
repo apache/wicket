@@ -135,7 +135,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
             	    if(selected==-1){
     	           	    hideAutoComplete();
                    	} else {
-	                    render(true);
+	                    render(true, false);
         	        }
             	    if(Wicket.Browser.isSafari())return killEvent(event);
                 	break;
@@ -146,7 +146,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     	            if(visible==0){
         	            updateChoices();
             	    } else {
-                	    render(true);
+                	    render(true, false);
                     	showAutoComplete();
 	                }
     	            if(Wicket.Browser.isSafari())return killEvent(event);
@@ -361,12 +361,6 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                 container.style.overflow = "scroll";
                 scrollbarSize = container.offsetWidth - container.clientWidth - containerBorderWidths[0];
             }
-            // although border is computed correctly, resizing needs 1 less px on FF for some dubious reason...
-            if (Wicket.Browser.isGecko() && containerBorderWidths[0] > 0 && containerBorderWidths[1] > 0) {
-                containerBorderWidths[0]--;
-                containerBorderWidths[1]--;
-            }
-            
             container.style.overflow = tmp;
         }
     }
@@ -560,7 +554,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 			
             var mouseOverFunc = function(event) {
                 setSelected(getElementIndex(this));
-                render(false); // don't scroll - breaks mouse weel scrolling
+                render(false, false); // don't scroll - breaks mouse weel scrolling
                 showAutoComplete();
             };
             var parentNode = element.firstChild; 
@@ -581,7 +575,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         } else {
             hideAutoComplete();
         }
-        render(false);
+        render(false, true);
         
         scheduleEmptyCheck();
         
@@ -641,7 +635,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 		}
     }
 
-    function render(adjustScroll){
+    function render(adjustScroll, adjustHeight) {
         var menu=getAutocompleteMenu();
         var height=0;
 		var node=menu.firstChild.childNodes[0];
@@ -675,7 +669,11 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                 menu.parentNode.style.height = (newH >= 0 ? newH : cfg.maxHeight) + "px";
                 sizeAffected = true;
             } else if (menu.parentNode.style.height != "auto") { // if height is limited
-                menu.parentNode.style.height = "auto"; // no limiting, let popup determine it's own height
+                // this also changes the scroll, in some cases we don't want that
+                if (adjustHeight)
+                {
+                    menu.parentNode.style.height = "auto"; // no limiting, let popup determine it's own height
+                }
                 sizeAffected = true;
             }
         }
