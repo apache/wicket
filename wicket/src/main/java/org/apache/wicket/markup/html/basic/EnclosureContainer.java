@@ -83,6 +83,7 @@ public class EnclosureContainer extends WebMarkupContainer
 	@Override
 	public boolean isVisible()
 	{
+		child.configure();
 		return child.isVisible();
 	}
 }
