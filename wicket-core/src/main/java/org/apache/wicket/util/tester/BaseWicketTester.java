@@ -86,6 +86,7 @@ import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.mock.MockHttpSession;
+import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
 import org.apache.wicket.request.IExceptionMapper;
@@ -159,7 +160,7 @@ public class BaseWicketTester
 		}
 	}
 
-	private org.apache.wicket.protocol.http.mock.MockServletContext servletContext;
+	private final MockServletContext servletContext;
 	private MockHttpSession hsession;
 
 	private final WebApplication application;
@@ -239,7 +240,7 @@ public class BaseWicketTester
 	 */
 	public BaseWicketTester(final WebApplication application)
 	{
-		this(application, null);
+		this(application, (MockServletContext)null);
 	}
 
 	/**
@@ -254,8 +255,22 @@ public class BaseWicketTester
 	 */
 	public BaseWicketTester(final WebApplication application, String servletContextBasePath)
 	{
-		servletContext = new org.apache.wicket.protocol.http.mock.MockServletContext(application,
-			servletContextBasePath);
+		this(application, new MockServletContext(application, servletContextBasePath));
+	}
+
+	/**
+	 * Creates a <code>WicketTester</code>.
+	 * 
+	 * @param application
+	 *            a <code>WicketTester</code> <code>WebApplication</code> object
+	 * 
+	 * @param servletCtx
+	 *            the mock servlet context used as backend
+	 */
+	public BaseWicketTester(final WebApplication application, MockServletContext servletCtx)
+	{
+		servletContext = servletCtx != null ? servletCtx
+			: new MockServletContext(application, null);
 
 		final FilterConfig filterConfig = new TestFilterConfig();
 		WicketFilter filter = new WicketFilter()
@@ -415,7 +430,7 @@ public class BaseWicketTester
 	 * 
 	 * @return servlet context
 	 */
-	public org.apache.wicket.protocol.http.mock.MockServletContext getServletContext()
+	public MockServletContext getServletContext()
 	{
 		return servletContext;
 	}
