@@ -1,4 +1,4 @@
-Apache Wicket 1.4
+Apache Wicket 1.5
 =================
 
 This is the readme file for the Apache Wicket project. 
@@ -20,7 +20,7 @@ Contents
  - Getting started
  - Dependencies
  - Building Wicket from source
- - Migrating from 1.3
+ - Migrating from 1.4
  - Getting help
  - Cryptographic Software Notice
 
@@ -35,31 +35,43 @@ Java/Application server requirements
 ------------------------------------
 
 Wicket requires at least Java 1.5. The application server for running your web
-application should adhere to the servlet specification version 2.3 or newer.
+application should adhere to the servlet specification version 2.5 or newer.
+Note that your Wicket application might run on containers based on servlet
+specification 2.4, but there are no guarantees.
 
 What is in this package
 -----------------------
 
 The archive you just downloaded and unpacked contains the source code and the
-jars of the core projects of Wicket. If you are just starting out, you probably
-only need to include wicket-x.jar, where x stands for the version. As a rule,
-use just the jars you need.
+jars of the core projects of Wicket. If you are just starting out, you
+probably only need to include wicket-x.jar, where x stands for the version. As
+a rule, use just the jars you need.
 
 You will find the source code here:
 
- - src/
-   - wicket
-   - wicket-extensions
-   - wicket-datetime
-   - wicket-ioc
-   - wicket-spring
-   - wicket-velocity
-   - wicket-quickstart
-   - wicket-examples
-   - wicket-auth-roles
-   - wicket-guice
-   - wicket-jmx
-   - wicket-objectssizeof-agent
+	|-- apidocs
+	|   |-- org
+	|   `-- resources
+	|-- lib
+	|-- licenses
+	`-- src
+	    |-- archetypes
+	    |-- testing
+	    |-- wicket
+	    |-- wicket-auth-roles
+	    |-- wicket-core
+	    |-- wicket-datetime
+	    |-- wicket-devutils
+	    |-- wicket-examples
+	    |-- wicket-extensions
+	    |-- wicket-guice
+	    |-- wicket-ioc
+	    |-- wicket-jmx
+	    |-- wicket-objectssizeof-agent
+	    |-- wicket-request
+	    |-- wicket-spring
+	    |-- wicket-util
+	    `-- wicket-velocity
 
 Here is a list of projects in this distribution and what they do.
 
