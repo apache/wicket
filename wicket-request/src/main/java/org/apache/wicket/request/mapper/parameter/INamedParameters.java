@@ -112,6 +112,6 @@ public interface INamedParameters
 	 * 
 	 * @return this
 	 */
-	PageParameters clearaNamed();
+	PageParameters clearNamed();
 
 }

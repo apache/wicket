@@ -420,9 +420,9 @@ public class PageParameters implements Serializable, IIndexedParameters, INamedP
 	}
 
 	/**
-	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#clearaNamed()
+	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#clearNamed()
 	 */
-	public PageParameters clearaNamed()
+	public PageParameters clearNamed()
 	{
 		namedParameters = null;
 		return this;
