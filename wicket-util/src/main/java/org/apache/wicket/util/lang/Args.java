@@ -26,13 +26,12 @@ public class Args
 	/**
 	 * Checks argument is not null
 	 * 
-	 * @param <C>
 	 * @param argument
 	 * @param name
 	 * @return The 'argument' parameter
 	 * @throws IllegalargumentException
 	 */
-	public static <C> C notNull(final C argument, final String name)
+	public static Object notNull(final Object argument, final String name)
 	{
 		if (argument == null)
 		{

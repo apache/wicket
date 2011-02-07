@@ -92,7 +92,7 @@ public class TabbedPanel extends Panel
 	{
 		super(id, new Model<Integer>(-1));
 
-		this.tabs = Args.notNull(tabs, "tabs");
+		this.tabs = (List<? extends ITab>)Args.notNull(tabs, "tabs");
 
 		final IModel<Integer> tabCount = new AbstractReadOnlyModel<Integer>()
 		{

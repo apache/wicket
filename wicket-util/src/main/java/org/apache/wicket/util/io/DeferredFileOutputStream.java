@@ -71,7 +71,7 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 	{
 		super(threshold);
 
-		this.outputFile = Args.notNull(outputFile, "outputFile");
+		this.outputFile = (File)Args.notNull(outputFile, "outputFile");
 		fileFactory = null;
 
 		memoryOutputStream = new ByteArrayOutputStream();
@@ -90,7 +90,7 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 	public DeferredFileOutputStream(final int threshold, final FileFactory fileFactory)
 	{
 		super(threshold);
-		this.fileFactory = Args.notNull(fileFactory, "fileFactory");
+		this.fileFactory = (FileFactory)Args.notNull(fileFactory, "fileFactory");
 
 		memoryOutputStream = new ByteArrayOutputStream();
 		currentOutputStream = memoryOutputStream;
