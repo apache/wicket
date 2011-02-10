@@ -280,10 +280,10 @@ public class DatePicker extends Behavior
 			String escapedComponentMarkupId = getEscapedComponentMarkupId();
 			String javascript = "var e = Wicket.$('" + escapedComponentMarkupId + "Dp" +
 				"'); if (e != null && typeof(e.parentNode) != 'undefined' && " +
-				"typeof(e.parentNode.parentNode != 'undefined')) " +
+				"typeof(e.parentNode.parentNode != 'undefined')) {" +
 				"e.parentNode.parentNode.removeChild(e.parentNode);" + "YAHOO.wicket." +
 				escapedComponentMarkupId + "DpJs.destroy(); delete YAHOO.wicket." +
-				escapedComponentMarkupId + "DpJs;";
+				escapedComponentMarkupId + "DpJs;}";
 
 			response.renderJavaScript(javascript, null);
 		}
