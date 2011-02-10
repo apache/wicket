@@ -24,6 +24,7 @@ import org.apache.wicket.AbortException;
 import org.apache.wicket.IRedirectListener;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
+import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.RestartResponseException;
@@ -113,6 +114,11 @@ public class WebRequestCycle extends RequestCycle
 	}
 
 	/**
+	 * Casts {@link Request} to a {@link WebRequest}
+	 * 
+	 * WARNING: Do not override this method. Use {@link #setRequest(Request)} if request
+	 * substitution is needed, or override {@link #getRequest()}.
+	 * 
 	 * @return Request as a WebRequest
 	 */
 	public WebRequest getWebRequest()
@@ -121,6 +127,11 @@ public class WebRequestCycle extends RequestCycle
 	}
 
 	/**
+	 * Casts {@link Response} to a {@link WebResponse}
+	 * 
+	 * WARNING: Do not override this method. Use {@link #setResponse(Response)} if response
+	 * substitution is needed, or override {@link #getResponse()}.
+	 * 
 	 * @return Response as a WebResponse
 	 */
 	public WebResponse getWebResponse()
@@ -129,6 +140,10 @@ public class WebRequestCycle extends RequestCycle
 	}
 
 	/**
+	 * Casts {@link Session} to a {@link WebSession}
+	 * 
+	 * WARNING: Do not override this method.
+	 * 
 	 * @return Session as a WebSession
 	 */
 	public WebSession getWebSession()
