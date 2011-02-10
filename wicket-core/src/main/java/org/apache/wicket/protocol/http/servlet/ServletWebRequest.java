@@ -17,7 +17,6 @@
 package org.apache.wicket.protocol.http.servlet;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -261,7 +260,7 @@ public class ServletWebRequest extends WebRequest
 				}
 			}
 		}
-		catch (final IOException e)
+		catch (final Exception e)
 		{
 			logger.warn(
 				"Error parsing request body for post parameters; Fallback to ServletRequest#getParameters().",
