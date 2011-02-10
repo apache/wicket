@@ -74,7 +74,7 @@ var WicketAjaxDebug = {
 		WicketAjaxDebug.init();
         WicketAjaxDebug.log(msg, "ERROR: ");
 
-        if (console && console.error && typeof(console.error) == 'function') {
+        if (typeof(console) != "undefined"&&typeof(console.error) == 'function') {
         	console.error('Wicket.Ajax: ' + msg);
         }
     },
