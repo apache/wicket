@@ -1588,7 +1588,17 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 */
 	public final String getHiddenFieldId()
 	{
-		return getInputNamePrefix() + getMarkupId() + "_hf_0";
+		String formId;
+		if (!getPage().isPageStateless())
+		{
+			// only assigned inside statefull pages WICKET-3438
+			formId = getMarkupId();
+		}
+		else
+		{
+			formId = getId();
+		}
+		return getInputNamePrefix() + formId + "_hf_0";
 	}
 
 	/**
