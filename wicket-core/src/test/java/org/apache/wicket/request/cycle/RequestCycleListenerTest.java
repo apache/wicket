@@ -273,6 +273,7 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 
 		public void onBeginRequest(final RequestCycle cycle)
 		{
+			assertNotNull(RequestCycle.get());
 			begins++;
 		}
 
