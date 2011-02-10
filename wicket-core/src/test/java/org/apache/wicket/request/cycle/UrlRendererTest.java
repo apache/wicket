@@ -35,7 +35,7 @@ public class UrlRendererTest extends TestCase
 	 */
 	public void test1()
 	{
-		UrlRenderer r1 = new UrlRenderer(Url.parse("foo/bar/baz?a=b"));
+		UrlRenderer r1 = new UrlRenderer(Url.parse("foo/bar/baz?a=b"), "");
 		assertEquals("./xyz?x=y", r1.renderUrl(Url.parse("foo/bar/xyz?x=y")));
 		assertEquals("./baz/xyz?x=y", r1.renderUrl(Url.parse("foo/bar/baz/xyz?x=y")));
 		assertEquals("../aaa/xyz?x=y", r1.renderUrl(Url.parse("foo/aaa/xyz?x=y")));
@@ -47,7 +47,7 @@ public class UrlRendererTest extends TestCase
 	 */
 	public void test2()
 	{
-		UrlRenderer r1 = new UrlRenderer(Url.parse("foo/bar/baz?a=b"));
+		UrlRenderer r1 = new UrlRenderer(Url.parse("foo/bar/baz?a=b"), "");
 		assertEquals("../../foo?x=y", r1.renderUrl(Url.parse("foo?x=y")));
 		assertEquals("../../aaa?x=y", r1.renderUrl(Url.parse("aaa?x=y")));
 	}
@@ -57,7 +57,7 @@ public class UrlRendererTest extends TestCase
 	 */
 	public void test3()
 	{
-		UrlRenderer r1 = new UrlRenderer(Url.parse("?a=b"));
+		UrlRenderer r1 = new UrlRenderer(Url.parse("?a=b"), "");
 		assertEquals("a/b/c?x=y", r1.renderUrl(Url.parse("a/b/c?x=y")));
 	}
 
@@ -66,7 +66,7 @@ public class UrlRendererTest extends TestCase
 	 */
 	public void test5()
 	{
-		UrlRenderer r1 = new UrlRenderer(Url.parse("url"));
+		UrlRenderer r1 = new UrlRenderer(Url.parse("url"), "");
 		assertEquals("./url?1", r1.renderUrl(Url.parse("url?1")));
 	}
 
@@ -75,7 +75,7 @@ public class UrlRendererTest extends TestCase
 	 */
 	public void test6()
 	{
-		UrlRenderer r1 = new UrlRenderer(Url.parse("url/"));
+		UrlRenderer r1 = new UrlRenderer(Url.parse("url/"), "");
 		assertEquals("./x?1", r1.renderUrl(Url.parse("url/x?1")));
 	}
 
@@ -85,7 +85,7 @@ public class UrlRendererTest extends TestCase
 	public void test7()
 	{
 		UrlRenderer r1 = new UrlRenderer(
-			Url.parse("MyTestPage/indexed1/indexed2/indexed3?10-27.ILinkListener-l2&p1=v1"));
+			Url.parse("MyTestPage/indexed1/indexed2/indexed3?10-27.ILinkListener-l2&p1=v1"), "");
 		assertEquals("../../../MyTestPage?10", r1.renderUrl(Url.parse("MyTestPage?10")));
 	}
 
@@ -94,7 +94,7 @@ public class UrlRendererTest extends TestCase
 	 */
 	public void test8()
 	{
-		UrlRenderer r1 = new UrlRenderer(Url.parse("en/first-test-page?16-1.ILinkListener-l1"));
+		UrlRenderer r1 = new UrlRenderer(Url.parse("en/first-test-page?16-1.ILinkListener-l1"), "");
 		assertEquals("./first-test-page/indexed1/indexed2/indexed3?p1=v1",
 			r1.renderUrl(Url.parse("en/first-test-page/indexed1/indexed2/indexed3?p1=v1")));
 	}
@@ -104,7 +104,7 @@ public class UrlRendererTest extends TestCase
 	 */
 	public void test9()
 	{
-		UrlRenderer r1 = new UrlRenderer(Url.parse("a/b/q/d/e"));
+		UrlRenderer r1 = new UrlRenderer(Url.parse("a/b/q/d/e"), "");
 		assertEquals("../../../q/c/d/e", r1.renderUrl(Url.parse("a/q/c/d/e")));
 	}
 
@@ -113,7 +113,6 @@ public class UrlRendererTest extends TestCase
 	 */
 	public void test10()
 	{
-		UrlRenderer r1 = new UrlRenderer(Url.parse("a/b/q/d/e"));
 
 		HttpServletRequest httpRequest = Mockito.mock(HttpServletRequest.class);
 		Mockito.when(httpRequest.getCharacterEncoding()).thenReturn("UTF-8");
@@ -121,15 +120,16 @@ public class UrlRendererTest extends TestCase
 		Mockito.when(httpRequest.getRequestURI()).thenReturn("/contextPath/filterPath/anything");
 
 		ServletWebRequest request = new ServletWebRequest(httpRequest, "filterPath/");
+		UrlRenderer r1 = new UrlRenderer(Url.parse("a/b/q/d/e"), request.getPrefixToContextPath());
 
-		assertEquals("../../../../../", r1.renderContextPathRelativeUrl("", request));
-		assertEquals("../../../../../", r1.renderContextPathRelativeUrl("/", request));
-		assertEquals("../../../../../f", r1.renderContextPathRelativeUrl("/f", request));
-		assertEquals("../../../../../../f", r1.renderContextPathRelativeUrl("../f", request));
+		assertEquals("../../../../../", r1.renderContextPathRelativeUrl(""));
+		assertEquals("../../../../../", r1.renderContextPathRelativeUrl("/"));
+		assertEquals("../../../../../f", r1.renderContextPathRelativeUrl("/f"));
+		assertEquals("../../../../../../f", r1.renderContextPathRelativeUrl("../f"));
 
 		try
 		{
-			r1.renderContextPathRelativeUrl(null, request);
+			r1.renderContextPathRelativeUrl(null);
 			fail("Null 'url' is not allowed!");
 		}
 		catch (IllegalArgumentException iax)
@@ -143,7 +143,7 @@ public class UrlRendererTest extends TestCase
 	 */
 	public void test11()
 	{
-		UrlRenderer r1 = new UrlRenderer(Url.parse("a"));
+		UrlRenderer r1 = new UrlRenderer(Url.parse("a"), "");
 		assertEquals(".", r1.renderUrl(Url.parse("")));
 	}
 }

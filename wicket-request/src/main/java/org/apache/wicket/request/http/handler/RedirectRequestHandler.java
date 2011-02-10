@@ -80,8 +80,7 @@ public class RedirectRequestHandler implements IRequestHandler
 		if (redirectUrl.startsWith("/"))
 		{
 			// context-absolute url
-			location = requestCycle.getUrlRenderer().renderContextPathRelativeUrl(redirectUrl,
-				requestCycle.getRequest());
+			location = requestCycle.getUrlRenderer().renderContextPathRelativeUrl(redirectUrl);
 		}
 		else
 		{

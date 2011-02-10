@@ -206,7 +206,7 @@ public class WebSession extends Session
 					IRequestHandler activeRequestHandler = requestCycle.getActiveRequestHandler();
 					String url = requestCycle.urlFor(activeRequestHandler).toString();
 					String relativeUrl = requestCycle.getUrlRenderer()
-						.renderContextPathRelativeUrl(url, request);
+						.renderContextPathRelativeUrl(url);
 					Page browserInfoPage = newBrowserInfoPage(relativeUrl);
 					throw new RestartResponseException(browserInfoPage);
 				}

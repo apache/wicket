@@ -32,18 +32,6 @@ import org.apache.wicket.util.lang.Args;
 class SwitchProtocolRequestHandler implements IRequestHandlerDelegate
 {
 
-	/**
-	 * Protocols
-	 */
-	public enum Protocol {
-		/*** HTTP */
-		HTTP,
-		/** HTTPS */
-		HTTPS,
-		/** CURRENT */
-		PRESERVE_CURRENT
-	}
-
 	/** the protocol this request handler is going to switch to */
 	private final Protocol protocol;
 

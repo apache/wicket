@@ -123,7 +123,7 @@ public class ServletWebRequest extends WebRequest
 	{
 		if (!isAjax())
 		{
-			return Url.parse(getUrl(httpServletRequest, filterPrefix).toString(), getCharset());
+			return getUrl(httpServletRequest, filterPrefix);
 		}
 		else
 		{
@@ -138,9 +138,16 @@ public class ServletWebRequest extends WebRequest
 
 			Checks.notNull(base, "Current ajax request is missing the base url header or parameter");
 
-			return Url.parse(base, getCharset());
+			return setParameters(Url.parse(base, getCharset()));
 		}
+	}
 
+	private Url setParameters(Url url)
+	{
+		url.setPort(httpServletRequest.getServerPort());
+		url.setHost(httpServletRequest.getServerName());
+		url.setProtocol(httpServletRequest.getScheme());
+		return url;
 	}
 
 	private Url getUrl(HttpServletRequest request, String filterPrefix)
@@ -162,9 +169,8 @@ public class ServletWebRequest extends WebRequest
 			url.append(query);
 		}
 
-		return Url.parse(url.toString(), getCharset());
+		return setParameters(Url.parse(url.toString(), getCharset()));
 	}
-
 
 	/**
 	 * Returns the prefix of Wicket filter (without the leading /)

@@ -69,6 +69,10 @@ public final class Url implements Serializable
 	private String charsetName;
 	private transient Charset _charset;
 
+	private String protocol;
+	private Integer port;
+	private String host;
+
 	/**
 	 * 
 	 * @param qp
@@ -804,4 +808,66 @@ public final class Url implements Serializable
 		parameters.clear();
 		parameters.addAll(relative.getQueryParameters());
 	}
+
+	/**
+	 * Gets the protocol of this url (http/https/etc)
+	 * 
+	 * @return protocol or {@code null} if none has been set
+	 */
+	public String getProtocol()
+	{
+		return protocol;
+	}
+
+	/**
+	 * Sets the protocol of this url (http/https/etc)
+	 * 
+	 * @param protocol
+	 */
+	public void setProtocol(String protocol)
+	{
+		this.protocol = protocol;
+	}
+
+	/**
+	 * Gets the port of this url
+	 * 
+	 * @return port or {@code null} if none has been set
+	 */
+	public Integer getPort()
+	{
+		return port;
+	}
+
+	/**
+	 * Sets the port of this url
+	 * 
+	 * @param port
+	 */
+	public void setPort(Integer port)
+	{
+		this.port = port;
+	}
+
+	/**
+	 * Gets the host name of this url
+	 * 
+	 * @return host name or {@code null} if none is seto
+	 */
+	public String getHost()
+	{
+		return host;
+	}
+
+	/**
+	 * Sets the host name of this url
+	 * 
+	 * @param host
+	 */
+	public void setHost(String host)
+	{
+		this.host = host;
+	}
+
+
 }

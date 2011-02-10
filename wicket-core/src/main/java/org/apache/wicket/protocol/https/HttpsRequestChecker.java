@@ -16,10 +16,8 @@
  */
 package org.apache.wicket.protocol.https;
 
-import org.apache.wicket.protocol.https.SwitchProtocolRequestHandler.Protocol;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.handler.BookmarkablePageRequestHandler;
-import org.apache.wicket.request.handler.IPageRequestHandler;
+import org.apache.wicket.request.handler.IPageClassRequestHandler;
 
 /**
  * A helper class which will replace the current {@link IRequestHandler request handler} with
@@ -72,44 +70,29 @@ class HttpsRequestChecker
 	}
 
 	/**
+	 * Figures out the protocol that should be used for a given request handler
+	 * 
 	 * @param requestHandler
-	 *            the original request handler
-	 * @param httpsConfig
-	 *            the https configuration
-	 * @return either {@link SwitchProtocolRequestHandler} if the page that is going to be rendered
-	 *         is annotated with @{@link RequireHttps} and the protocol of the current request is
-	 *         http, or will return the original handler if these conditions are not fulfilled
+	 * @return protocol
 	 */
-	IRequestHandler checkSecureOutgoing(IRequestHandler requestHandler, HttpsConfig httpsConfig)
+	public Protocol getProtocol(IRequestHandler requestHandler)
 	{
-
-		if (requestHandler != null && requestHandler instanceof SwitchProtocolRequestHandler)
-		{
-			return requestHandler;
-		}
-
 		Class<?> pageClass = getPageClass(requestHandler);
 		if (pageClass != null)
 		{
-			final IRequestHandler redirect;
-
 			if (hasSecureAnnotation(pageClass))
 			{
-				redirect = SwitchProtocolRequestHandler.requireProtocol(Protocol.HTTPS,
-					requestHandler, httpsConfig);
+				return Protocol.HTTPS;
 			}
 			else
 			{
-				redirect = SwitchProtocolRequestHandler.requireProtocol(Protocol.HTTP,
-					requestHandler, httpsConfig);
+				return Protocol.HTTP;
 			}
-			if (redirect != null)
-			{
-				return redirect;
-			}
-
 		}
-		return requestHandler;
+		else
+		{
+			return Protocol.PRESERVE_CURRENT;
+		}
 	}
 
 	/**
@@ -147,13 +130,9 @@ class HttpsRequestChecker
 	 */
 	private Class<?> getPageClass(IRequestHandler handler)
 	{
-		if (handler instanceof IPageRequestHandler)
+		if (handler instanceof IPageClassRequestHandler)
 		{
-			return ((IPageRequestHandler)handler).getPageClass();
-		}
-		else if (handler instanceof BookmarkablePageRequestHandler)
-		{
-			return ((BookmarkablePageRequestHandler)handler).getPageClass();
+			return ((IPageClassRequestHandler)handler).getPageClass();
 		}
 		else
 		{
