@@ -60,7 +60,7 @@ public class MostRecentlyUsedMap<K, V> extends LinkedHashMap<K, V>
 	/**
 	 * @return Returns the removedValue.
 	 */
-	public Object getRemovedValue()
+	public V getRemovedValue()
 	{
 		return removedValue;
 	}
