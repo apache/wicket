@@ -217,9 +217,44 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     }
 
     function handleSelection(input) {
-        var menu = getAutocompleteMenu();
-        var attr = menu.firstChild.childNodes[selected].attributes['onselect'];
+        var attr = getSelectableElement(selected).attributes['onselect'];
         return attr ? eval(attr.value) : input;
+    }
+
+    function getSelectableElements() {
+        var menu = getAutocompleteMenu();
+        var firstChild = menu.firstChild;
+        var selectableElements = [];
+        if (firstChild.tagName.toLowerCase() == 'table') {
+            var selectableInd=0;
+            for (var i = 0; i < firstChild.childNodes.length; i++) {
+                var tbody = firstChild.childNodes[i];
+                for (var j = 0; j < tbody.childNodes.length; j++) {
+                    selectableElements[selectableInd++]=tbody.childNodes[j];
+                }
+            }
+            return selectableElements;
+        } else {
+            return firstChild.childNodes;
+        }
+    }
+    function getSelectableElement(selected) {
+        var menu = getAutocompleteMenu();
+        var firstChild = menu.firstChild;
+        if (firstChild.tagName.toLowerCase() == 'table') {
+            var selectableInd=0;
+            for (var i = 0; i < firstChild.childNodes.length; i++) {
+                var tbody = firstChild.childNodes[i];
+                for (var j = 0; j < tbody.childNodes.length; j++) {
+                    if (selectableInd==selected) {
+                        return tbody.childNodes[j];
+                    }
+                    selectableInd++
+                }
+            }
+        } else {
+            return firstChild.childNodes[selected];
+        }
     }
 
     function getMenuId() {
@@ -534,8 +569,9 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
             selChSinceLastRender = true; // selected item will not have selected style until rendrered
         }
         element.innerHTML=resp;
-        if(element.firstChild && element.firstChild.childNodes) {
-		    elementCount=element.firstChild.childNodes.length;
+        var selectableElements = getSelectableElements();
+        if(selectableElements) {
+		    elementCount=selectableElements.length;
 
             var clickFunc = function(event) {
                 mouseactive = 0;
@@ -557,9 +593,8 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                 render(false, false); // don't scroll - breaks mouse weel scrolling
                 showAutoComplete();
             };
-            var parentNode = element.firstChild; 
             for(var i = 0;i < elementCount; i++) {
-                var node = parentNode.childNodes[i];
+                var node = selectableElements[i];
                 node.onclick = clickFunc;
                 node.onmouseover = mouseOverFunc;
             }
@@ -603,10 +638,11 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 
     function getSelectedValue(){
         var element=getAutocompleteMenu();
-        var attr=element.firstChild.childNodes[selected].attributes['textvalue'];
+        var selectableElement = getSelectableElement(selected);
+        var attr=selectableElement.attributes['textvalue'];
         var value;
         if (attr==undefined) {
-            value=element.firstChild.childNodes[selected].innerHTML;
+            value=selectableElement.innerHTML;
             } else {
             value=attr.value;
         }
@@ -614,8 +650,9 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     }
 
     function getElementIndex(element) {
-		for(var i=0;i<element.parentNode.childNodes.length;i++){
-	        var node=element.parentNode.childNodes[i];
+        var selectableElements = getSelectableElements();
+		for(var i=0;i<selectableElements.length;i++){
+	        var node=selectableElements[i];
 			if(node==element)return i;
 		}
 		return -1;
@@ -638,7 +675,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     function render(adjustScroll,adjustHeight){
         var menu=getAutocompleteMenu();
         var height=0;
-		var node=menu.firstChild.childNodes[0];
+		var node=getSelectableElement(0);
 		var re = /\bselected\b/gi;
 		var sizeAffected = false;
         for(var i=0;i<elementCount;i++)
