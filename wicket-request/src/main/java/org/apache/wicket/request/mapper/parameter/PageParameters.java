@@ -98,7 +98,7 @@ public class PageParameters implements Serializable, IIndexedParameters, INamedP
 	 * @param keyValuePairs
 	 *            List of key value pairs separated by commas. For example, "param1=foo,param2=bar"
 	 * @see ValueMap#ValueMap(String)
-	 * @deprecated use variuos setter methods to set parameters
+	 * @deprecated use various setter methods to set parameters
 	 */
 	@Deprecated
 	public PageParameters(final String keyValuePairs)
