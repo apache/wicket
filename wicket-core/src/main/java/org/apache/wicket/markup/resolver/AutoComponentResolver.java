@@ -253,6 +253,7 @@ public final class AutoComponentResolver implements IComponentResolver
 			if (methodTested.getName().equalsIgnoreCase(methodName))
 			{
 				method = methodTested;
+				break;
 			}
 		}
 
