@@ -107,10 +107,7 @@ public class CryptoMapper implements IRequestMapper
 		try
 		{
 			String urlString = getCrypt().decryptUrlSafe(encryptedUrlString);
-			if (!Strings.isEmpty(urlString))
-			{
-				url = Url.parse(urlString, request.getCharset());
-			}
+			url = Url.parse(urlString, request.getCharset());
 		}
 		catch (Exception e)
 		{
