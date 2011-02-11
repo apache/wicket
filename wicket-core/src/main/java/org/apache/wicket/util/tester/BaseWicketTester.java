@@ -2268,13 +2268,6 @@ public class BaseWicketTester
 			cookies.add(cookie);
 		}
 
-		@Override
-		public void clearCookie(Cookie cookie)
-		{
-			super.clearCookie(cookie);
-			cookies.add(cookie);
-		}
-
 		public void writeMetaData(WebResponse webResponse)
 		{
 			for (Cookie cookie : cookies)
