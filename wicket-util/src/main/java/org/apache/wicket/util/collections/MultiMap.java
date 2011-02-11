@@ -94,9 +94,9 @@ public class MultiMap<K, V> extends HashMap<K, List<V>>
 		if (list == null)
 		{
 			list = new ArrayList<V>(1);
+			put(key, list);
 		}
 		list.add(value);
-		put(key, list);
 	}
 
 	/**
