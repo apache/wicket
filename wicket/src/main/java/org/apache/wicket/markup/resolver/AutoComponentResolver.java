@@ -181,8 +181,9 @@ public final class AutoComponentResolver implements IComponentResolver
 			// the name might be a Groovy file.
 			// Note: Spring based components are not supported this way. May be we
 			// should provide a ComponentFactory like we provide a PageFactory.
-			final Class<?> componentClass = container.getSession().getClassResolver().resolveClass(
-				classname);
+			final Class<?> componentClass = container.getSession()
+				.getClassResolver()
+				.resolveClass(classname);
 
 			final Constructor<?> constructor = componentClass.getConstructor(new Class[] { String.class });
 			component = (Component)constructor.newInstance(new Object[] { componentId });
@@ -271,6 +272,7 @@ public final class AutoComponentResolver implements IComponentResolver
 			if (methods[i].getName().equalsIgnoreCase(methodName))
 			{
 				method = methods[i];
+				break;
 			}
 		}
 
@@ -293,8 +295,9 @@ public final class AutoComponentResolver implements IComponentResolver
 		final Class<?> paramClass = parameterClasses[0];
 		try
 		{
-			final IConverter converter = Application.get().getConverterLocator().getConverter(
-				paramClass);
+			final IConverter converter = Application.get()
+				.getConverterLocator()
+				.getConverter(paramClass);
 			final Object param = converter.convertToObject(value, locale);
 			if (param == null)
 			{
