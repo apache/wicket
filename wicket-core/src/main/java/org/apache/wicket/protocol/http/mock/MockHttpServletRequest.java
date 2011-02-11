@@ -798,9 +798,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * Get the remote address of the client.
-	 * 
-	 * @return Always 127.0.0.1
+	 * @return the remote address of the client
 	 */
 	public String getRemoteAddr()
 	{
@@ -915,7 +913,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * Get the scheme.
 	 * 
-	 * @return Always http
+	 * @return the scheme of this request
 	 */
 	public String getScheme()
 	{
@@ -923,6 +921,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
+	 * Sets the scheme of this request
 	 * 
 	 * @param scheme
 	 */
@@ -942,9 +941,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * Get the server port.
-	 * 
-	 * @return Always 80
+	 * @return the server port of this request
 	 */
 	public int getServerPort()
 	{
@@ -952,6 +949,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
+	 * Sets the server port for this request
 	 * 
 	 * @param port
 	 */
@@ -1091,9 +1089,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * Always returns false.
-	 * 
-	 * @return Always false
+	 * @return <code>true</code> if this request's scheme is 'https', <code>false</code> - otherwise
 	 */
 	public boolean isSecure()
 	{
