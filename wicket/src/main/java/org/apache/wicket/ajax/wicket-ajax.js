@@ -1353,7 +1353,7 @@ Wicket.Ajax.Call.prototype = {
 			var element = Wicket.$(compId);
 
 			if (element == null || typeof(element) == "undefined") {			
-				Wicket.Log.error("Wicket.Ajax.Call.processComponent: Component with id [["+compId+"]] a was not found while trying to perform markup update. Make sure you called component.setOutputMarkupId(true) on the component whose markup you are trying to update.");
+				Wicket.Log.error("Wicket.Ajax.Call.processComponent: Component with id [["+compId+"]] was not found while trying to perform markup update. Make sure you called component.setOutputMarkupId(true) on the component whose markup you are trying to update.");
 			} else {
 				// replace the component
 				Wicket.replaceOuterHtml(element, text);
