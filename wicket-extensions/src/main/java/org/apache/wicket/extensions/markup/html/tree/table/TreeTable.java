@@ -26,13 +26,13 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.extensions.markup.html.tree.DefaultAbstractTree;
 import org.apache.wicket.extensions.markup.html.tree.table.ColumnLocation.Alignment;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.tree.AbstractTree;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.CompressedResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 
@@ -438,15 +438,16 @@ public class TreeTable extends DefaultAbstractTree
 		// scroll together with body. The body contains vertical scrollbar. The
 		// header width must be same as body content width, so that the columns
 		// are properly aligned.
-		add(new Label("attachJavascript", new Model<String>()
+		add(new Behavior()
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public String getObject()
+			public void renderHead(final Component component, final IHeaderResponse response)
 			{
-				return "Wicket.TreeTable.attachUpdate(\"" + getMarkupId() + "\");";
+				response.renderOnDomReadyJavaScript("Wicket.TreeTable.attachUpdate(\"" +
+					getMarkupId() + "\")");
 			}
-		}).setEscapeModelStrings(false));
+		});
 	}
 }
