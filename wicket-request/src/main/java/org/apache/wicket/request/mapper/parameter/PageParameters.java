@@ -98,7 +98,7 @@ public class PageParameters implements Serializable, IIndexedParameters, INamedP
 	 * @param keyValuePairs
 	 *            List of key value pairs separated by commas. For example, "param1=foo,param2=bar"
 	 * @see ValueMap#ValueMap(String)
-	 * @deprecated use varios setter methods to set parameters
+	 * @deprecated use variuos setter methods to set parameters
 	 */
 	@Deprecated
 	public PageParameters(final String keyValuePairs)
@@ -352,7 +352,8 @@ public class PageParameters implements Serializable, IIndexedParameters, INamedP
 	}
 
 	/**
-	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#add(java.lang.String, java.lang.Object)
+	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#add(java.lang.String,
+	 *      java.lang.Object)
 	 */
 	public PageParameters add(final String name, final Object value)
 	{
@@ -361,7 +362,8 @@ public class PageParameters implements Serializable, IIndexedParameters, INamedP
 	}
 
 	/**
-	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#add(java.lang.String, java.lang.Object, int)
+	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#add(java.lang.String,
+	 *      java.lang.Object, int)
 	 */
 	public PageParameters add(final String name, final Object value, final int index)
 	{
@@ -388,7 +390,8 @@ public class PageParameters implements Serializable, IIndexedParameters, INamedP
 	}
 
 	/**
-	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#set(java.lang.String, java.lang.Object, int)
+	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#set(java.lang.String,
+	 *      java.lang.Object, int)
 	 */
 	public PageParameters set(final String name, final Object value, final int index)
 	{
@@ -402,7 +405,8 @@ public class PageParameters implements Serializable, IIndexedParameters, INamedP
 	}
 
 	/**
-	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#set(java.lang.String, java.lang.Object)
+	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#set(java.lang.String,
+	 *      java.lang.Object)
 	 */
 	public PageParameters set(final String name, final Object value)
 	{
