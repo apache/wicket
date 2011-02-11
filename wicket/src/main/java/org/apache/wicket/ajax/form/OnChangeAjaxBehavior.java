@@ -16,10 +16,9 @@
  */
 package org.apache.wicket.ajax.form;
 
-import org.apache.wicket.Response;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.util.string.JavascriptUtils;
 
 /**
  * A behavior that updates the hosting {@link FormComponent} via ajax when value of the component is
@@ -48,15 +47,14 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 	}
 
 	@Override
-	protected void onComponentRendered()
+	public void renderHead(final IHeaderResponse response)
 	{
+		super.renderHead(response);
+
 		if (getComponent() instanceof AbstractTextComponent)
 		{
-			Response response = getComponent().getResponse();
 			final String id = getComponent().getMarkupId();
-			response.write(JavascriptUtils.SCRIPT_OPEN_TAG);
-			response.write("new Wicket.ChangeHandler('" + id + "');");
-			response.write(JavascriptUtils.SCRIPT_CLOSE_TAG);
+			response.renderOnDomReadyJavascript("new Wicket.ChangeHandler('" + id + "');");
 		}
 	}
 }
