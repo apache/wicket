@@ -27,7 +27,7 @@ import org.eclipse.jetty.server.bio.SocketConnector;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 /**
- * Seperate startup class for people that want to run the examples directly. Use parameter
+ * Separate startup class for people that want to run the examples directly. Use parameter
  * -Dcom.sun.management.jmxremote to startup JMX (and e.g. connect with jconsole).
  */
 public class StartExamples
