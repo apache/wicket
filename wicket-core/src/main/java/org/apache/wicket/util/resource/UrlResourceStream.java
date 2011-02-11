@@ -125,8 +125,7 @@ public class UrlResourceStream extends AbstractResourceStream
 				streamData.contentLength = streamData.connection.getContentLength();
 				streamData.contentType = streamData.connection.getContentType();
 
-				if (streamData.contentType == null ||
-					streamData.contentType.indexOf("unknown") != -1)
+				if (streamData.contentType == null || streamData.contentType.contains("unknown"))
 				{
 					if (Application.exists() && Application.get() instanceof WebApplication)
 					{
