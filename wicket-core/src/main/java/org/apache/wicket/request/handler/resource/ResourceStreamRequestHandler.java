@@ -19,8 +19,9 @@ package org.apache.wicket.request.handler.resource;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.resource.ContentDisposition;
-import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.request.resource.IResource.Attributes;
+import org.apache.wicket.request.resource.ResourceStreamResource;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +54,7 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 	 */
 	public ResourceStreamRequestHandler(IResourceStream resourceStream)
 	{
-		this.resourceStream = resourceStream;
+		this(resourceStream, null);
 	}
 
 	/**
@@ -65,6 +66,8 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 	 */
 	public ResourceStreamRequestHandler(IResourceStream resourceStream, String fileName)
 	{
+		Args.notNull(resourceStream, "resourceStream");
+
 		this.resourceStream = resourceStream;
 		this.fileName = fileName;
 	}
@@ -72,21 +75,6 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 	public void detach(IRequestCycle requestCycle)
 	{
 
-	}
-
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (obj instanceof ResourceStreamRequestHandler)
-		{
-			ResourceStreamRequestHandler that = (ResourceStreamRequestHandler)obj;
-			return resourceStream.equals(that.resourceStream) &&
-				((fileName == null) || fileName.equals(that.fileName));
-		}
-		return false;
 	}
 
 	/**
@@ -109,18 +97,6 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 	}
 
 	/**
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode()
-	{
-		int result = "ResourceStreamRequestTarget".hashCode();
-		result += resourceStream.hashCode();
-		result += (fileName != null) ? fileName.hashCode() : 0;
-		return 17 * result;
-	}
-
-	/**
 	 * Responds by sending the contents of the resource stream.
 	 * 
 	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.IRequestCycle)
@@ -134,6 +110,42 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 		resource.setFileName(fileName);
 		resource.setContentDisposition(contentDisposition);
 		resource.respond(attributes);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result +
+			((contentDisposition == null) ? 0 : contentDisposition.hashCode());
+		result = prime * result + ((fileName == null) ? 0 : fileName.hashCode());
+		result = prime * result + resourceStream.hashCode();
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ResourceStreamRequestHandler other = (ResourceStreamRequestHandler)obj;
+		if (contentDisposition != other.contentDisposition)
+			return false;
+		if (fileName == null)
+		{
+			if (other.fileName != null)
+				return false;
+		}
+		else if (!fileName.equals(other.fileName))
+			return false;
+		if (!resourceStream.equals(other.resourceStream))
+			return false;
+		return true;
 	}
 
 	/**
