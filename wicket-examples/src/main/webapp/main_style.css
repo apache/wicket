@@ -61,6 +61,10 @@ a:hover {
 	width: 899px;
 }
 
+#header div.version {
+	text-align: right;
+	color: white;
+}
 #content {
 	height: auto;
 	width: 899px;

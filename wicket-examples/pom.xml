@@ -133,6 +133,15 @@
 							</includes>
 						</resource>
 					</webResources>
+					
+					<!--  include the manifest entries so that we can emit the version of the examples. -->
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+					</archive>
+            		
 				</configuration>
 			</plugin>
 			<plugin>

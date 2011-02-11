@@ -55,6 +55,14 @@
 	</context-param>
 
 	<filter>
+		<filter-name>HomePageApplication</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>org.apache.wicket.examples.homepage.HomePageApplication</param-value>
+		</init-param>
+	</filter>
+	<filter>
 		<filter-name>AjaxPrototypeApplication</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
@@ -430,6 +438,11 @@
 
 	<!-- couple the session filter to the helloworld servlet -->
 
+
+
+	
+
+
 	<filter-mapping>
 		<filter-name>WicketSessionFilter</filter-name>
 		<url-pattern>/helloworldservlet/*</url-pattern>
@@ -726,6 +739,13 @@
         <url-pattern>/events/*</url-pattern>
 	</filter-mapping>
 
+	<filter-mapping>
+		<filter-name>HomePageApplication</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>
+	
 	<!-- LISTENER -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -762,8 +782,4 @@
 		<session-timeout>5</session-timeout>
 	</session-config>
 	
-	<welcome-file-list>
-	<welcome-file>index.html</welcome-file>
-	</welcome-file-list>
-
 </web-app>
