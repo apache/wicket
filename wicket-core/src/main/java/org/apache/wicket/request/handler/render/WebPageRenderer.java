@@ -233,11 +233,14 @@ public class WebPageRenderer extends PageRenderer
 		}
 		else if (!targetUrl.equals(currentUrl) //
 			&&
-			isSessionTemporary() && getPage().isPageStateless())
+			(getPageProvider().isNewPageInstance() || (isSessionTemporary() && getPage().isPageStateless())))
 		{
 			// if target URL is different and session is temporary and page is stateless
 			// this is special case when page is stateless but there is no session so we can't
 			// render it to buffer
+
+			// alternatively if URLs are different and we have a page class and not an instance we
+			// can redirect to the url which will instantiate the instance of us
 
 			// note: if we had session here we would render the page to buffer and then redirect to
 			// URL generated *after* page has been rendered (the statelessness may change during
@@ -300,12 +303,18 @@ public class WebPageRenderer extends PageRenderer
 	 * When the page renders to buffer and it is still stateless after rendering, this flag
 	 * determines whether the redirect will take place or not.
 	 * <p>
-	 * Normally there is no reason for a stateless page to redirect
+	 * By default we will redirect. This is so we do not end up having the browser be on a listener
+	 * URL. A simple scenario is calling {@code setResponsePage(new StatelessPage())} inside form's
+	 * {@code onSubmit()} or link's {@code onClick()} callbacks, or any other listener interface
+	 * calback. What will happen is that the browser will be on URL like
+	 * {@code ./wicket/page?0-2.IFormSubmitListener-form}, and we will not redirect - leaving the
+	 * browser on such URL. This is a worse alternative then saving one redirect because it may
+	 * cause problems if user presses the refresh button in the browser.
 	 * 
-	 * @return boolean value
+	 * @return redirect flag
 	 */
 	protected boolean enableRedirectForStatelessPage()
 	{
-		return false;
+		return true;
 	}
 }
