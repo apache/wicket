@@ -32,7 +32,7 @@ public class StatelessComponentPage extends WebPage
 	 */
 	public StatelessComponentPage()
 	{
-		add(new StatelessLink("link")
+		add(new StatelessLink<Void>("link")
 		{
 			private static final long serialVersionUID = 1L;
 

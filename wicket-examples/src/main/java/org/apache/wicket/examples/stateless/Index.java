@@ -43,8 +43,10 @@ public class Index extends WebPage
 		add(new BookmarkablePageLink<Void>("linkToStatelessPage3", StatelessPage3.class));
 		// The second with a stateless link, so the onclick will be called but
 		// on a stateless page.
-		add(new StatelessLink("linkToStatefulPage")
+		add(new StatelessLink<Void>("linkToStatefulPage")
 		{
+			private static final long serialVersionUID = 1L;
+
 			/**
 			 * @see org.apache.wicket.markup.html.link.Link#onClick()
 			 */
@@ -54,8 +56,9 @@ public class Index extends WebPage
 				setResponsePage(StatefulPage.class);
 			}
 		});
-		add(new StatelessLink("invalidatesession")
+		add(new StatelessLink<Void>("invalidatesession")
 		{
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void onClick()

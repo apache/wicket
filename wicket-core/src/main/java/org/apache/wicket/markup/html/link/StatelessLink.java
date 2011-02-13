@@ -21,13 +21,13 @@ package org.apache.wicket.markup.html.link;
  * This link is stateless that means that the url to this link could generate a new page before the
  * link onClick is called. Because of this you can't depend on model data in the onClick method.
  * 
- * This Link component is the same as a normal link with the statelesshint to true.
+ * This Link component is the same as a normal link with the stateless hint to true.
  * 
  * @author jcompagner
  * 
  * 
  */
-public abstract class StatelessLink extends Link<Void>
+public abstract class StatelessLink<T> extends Link<T>
 {
 	private static final long serialVersionUID = 1L;
 

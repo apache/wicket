@@ -36,7 +36,7 @@ public class StatelessComponentPageWithParams extends WebPage
 	public StatelessComponentPageWithParams(PageParameters params)
 	{
 		super(params);
-		add(new StatelessLink("link")
+		add(new StatelessLink<Void>("link")
 		{
 			private static final long serialVersionUID = 1L;
 
