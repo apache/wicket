@@ -295,8 +295,6 @@ public class SignInPanel extends Panel
 
 			if (signIn(getUsername(), getPassword()))
 			{
-				onSignInSucceeded();
-
 				if (rememberMe == true)
 				{
 					strategy.save(username, password);
@@ -305,6 +303,8 @@ public class SignInPanel extends Panel
 				{
 					strategy.remove();
 				}
+
+				onSignInSucceeded();
 			}
 			else
 			{
