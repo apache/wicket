@@ -36,4 +36,11 @@ public class HomePageApplication extends WicketExampleApplication
 		return HomePage.class;
 	}
 
+	@Override
+	public void init()
+	{
+		super.init();
+
+		mountPage("index.html", HomePage.class);
+	}
 }
