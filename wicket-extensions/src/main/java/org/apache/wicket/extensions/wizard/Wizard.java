@@ -309,7 +309,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * 
 	 * @return A new feedback panel
 	 */
-	protected FeedbackPanel newFeedbackPanel(final String id)
+	protected Component newFeedbackPanel(final String id)
 	{
 		return new FeedbackPanel(id, new ContainerFeedbackMessageFilter(this));
 	}

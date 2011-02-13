@@ -44,7 +44,7 @@ public class WizardButtonBar extends Panel implements IDefaultButtonProvider
 	 * @param wizard
 	 *            The containing wizard
 	 */
-	public WizardButtonBar(final String id, final Wizard wizard)
+	public WizardButtonBar(final String id, final IWizard wizard)
 	{
 		super(id);
 		add(new PreviousButton("previous", wizard));
