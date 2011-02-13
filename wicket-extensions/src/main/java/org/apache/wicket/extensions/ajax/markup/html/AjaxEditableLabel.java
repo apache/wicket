@@ -471,7 +471,6 @@ public class AjaxEditableLabel<T> extends Panel
 		}
 		target.appendJavaScript("{var el=wicketGet('" + editor.getMarkupId() +
 			"'); el.select(); el.focus();}");
-		target.add(editor);
 	}
 
 	/**
