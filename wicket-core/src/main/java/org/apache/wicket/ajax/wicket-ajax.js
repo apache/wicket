@@ -848,10 +848,7 @@ Wicket.Ajax.Request.prototype = {
 				t.onreadystatechange = this.stateChangeCallback.bind(this);
 				// set a special flag to allow server distinguish between ajax and non-ajax requests
 				t.setRequestHeader("Wicket-Ajax", "true");
-				if (Wicket.Ajax.baseUrl === '') {
-					Wicket.Ajax.baseUrl = '.';
-				}
-				t.setRequestHeader("Wicket-Ajax-BaseURL", Wicket.Ajax.baseUrl);
+				t.setRequestHeader("Wicket-Ajax-BaseURL", Wicket._getAjaxBaseUrl());
 				if (typeof(Wicket.Focus.lastFocusId) != "undefined" && Wicket.Focus.lastFocusId != "" && Wicket.Focus.lastFocusId != null)
 				    t.setRequestHeader("Wicket-FocusedElementId", Wicket.Focus.lastFocusId);				
 				t.setRequestHeader("Accept", "text/xml");
@@ -901,7 +898,7 @@ Wicket.Ajax.Request.prototype = {
 				t.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 				// set a special flag to allow server distinguish between ajax and non-ajax requests
 				t.setRequestHeader("Wicket-Ajax", "true");
-				t.setRequestHeader("Wicket-Ajax-BaseURL", Wicket.Ajax.baseUrl);
+				t.setRequestHeader("Wicket-Ajax-BaseURL", Wicket._getAjaxBaseUrl());
 				if (typeof(Wicket.Focus.lastFocusId) != "undefined" && Wicket.Focus.lastFocusId != "" && Wicket.Focus.lastFocusId != null)
 				    t.setRequestHeader("Wicket-FocusedElementId", Wicket.Focus.lastFocusId);				
 				t.setRequestHeader("Accept", "text/xml");
@@ -1147,7 +1144,7 @@ Wicket.Ajax.Call.prototype = {
 		
 		// reconfigure the form
 		form.target=iframe.name;
-		form.action=this.request.url + "&wicket-ajax=true&wicket-ajax-baseurl=" + Wicket.Form.encode(Wicket.Ajax.baseUrl);
+		form.action=this.request.url + "&wicket-ajax=true&wicket-ajax-baseurl=" + Wicket.Form.encode(Wicket._getAjaxBaseUrl());
 		form.method="post";
 		form.enctype="multipart/form-data";
 		form.encoding="multipart/form-data";
@@ -2403,4 +2400,15 @@ Wicket._createIFrame = function(iframeName){
 	iframe.style.display="none";
 	iframe.style.visibility="hidden";
 	return iframe;
+}
+
+/**
+ * A safe getter for Wicket's Ajax base URL.
+ * If the value is not defined or is empty string then 
+ * return '.' (current folder) as base URL.
+ * Used for request header and parameter
+ */
+Wicket._getAjaxBaseUrl = function() {
+	var baseUrl = Wicket.Ajax.baseUrl || '.';
+	return baseUrl;
 }
