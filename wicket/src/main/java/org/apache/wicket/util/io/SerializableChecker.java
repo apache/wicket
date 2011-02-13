@@ -486,6 +486,7 @@ public final class SerializableChecker extends ObjectOutputStream
 				{
 					writeObjectMethod = cls.getDeclaredMethod("writeObject",
 						new Class[] { java.io.ObjectOutputStream.class });
+					writeObjectMethodCache.put(cls, writeObjectMethod);
 				}
 				catch (SecurityException e)
 				{
