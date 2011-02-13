@@ -16,12 +16,15 @@
  */
 package org.apache.wicket.examples.requestmapper;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.examples.requestmapper.packageMount.PackageMountedPage;
 import org.apache.wicket.protocol.https.HttpsConfig;
 import org.apache.wicket.protocol.https.HttpsMapper;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.MountedMapper;
 
 /**
@@ -59,7 +62,7 @@ public class RequestMapperApplication extends WicketExampleApplication
 
 		mountResource("/print/${sheet}/${format}", new MapperDemoResourceReference());
 
-		setRootRequestMapper(new HttpsMapper(getRootRequestMapper(), new HttpsConfig()));
+		setRootRequestMapper(new HttpsMapper(getRootRequestMapper(), new LazyHttpsConfig()));
 	}
 
 	/**
@@ -69,5 +72,43 @@ public class RequestMapperApplication extends WicketExampleApplication
 	public RuntimeConfigurationType getConfigurationType()
 	{
 		return RuntimeConfigurationType.DEVELOPMENT;
+	}
+
+	/**
+	 * HttpsConfig that extracts the <i>http</i> port out of the current servlet request's local
+	 * port. This way the demo can be used both with Jetty (port 8080) and at production (behind
+	 * Apache proxy)
+	 */
+	private static class LazyHttpsConfig extends HttpsConfig
+	{
+		@Override
+		public int getHttpPort()
+		{
+			int port = -1;
+
+			RequestCycle requestCycle = RequestCycle.get();
+			if (requestCycle != null)
+			{
+				HttpServletRequest containerRequest = (HttpServletRequest)requestCycle.getRequest()
+					.getContainerRequest();
+				if (containerRequest != null)
+				{
+					port = containerRequest.getLocalPort();
+				}
+			}
+
+			if (port == -1)
+			{
+				port = super.getHttpPort();
+			}
+
+			return port;
+		}
+
+		@Override
+		public int getHttpsPort()
+		{
+			return 443;
+		}
 	}
 }
