@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  * @author Matej Knopp
  * @author igor.vaynberg
  */
-public abstract class RequestHandlerStack implements IRequestHandlerExecutor
+public abstract class RequestHandlerStack
 {
 	private static final Logger log = LoggerFactory.getLogger(RequestHandlerStack.class);
 

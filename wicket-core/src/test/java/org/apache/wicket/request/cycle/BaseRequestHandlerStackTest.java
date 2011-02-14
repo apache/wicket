@@ -20,7 +20,6 @@ import junit.framework.TestCase;
 
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.IRequestHandlerExecutor;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.RequestHandlerStack;
 import org.apache.wicket.request.Response;
@@ -99,7 +98,7 @@ public abstract class BaseRequestHandlerStackTest extends TestCase
 
 	}
 
-	protected IRequestHandlerExecutor newStack(final IRequestCycle requestCycle)
+	protected RequestHandlerStack newStack(final IRequestCycle requestCycle)
 	{
 		return new RequestHandlerStack()
 		{

@@ -18,7 +18,7 @@ package org.apache.wicket.request.cycle;
 
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.IRequestHandlerExecutor;
+import org.apache.wicket.request.RequestHandlerStack;
 import org.apache.wicket.request.Response;
 
 /**
@@ -67,7 +67,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 
 		final Response originalResponse = newResponse();
 		final IRequestCycle requestCycle = newRequestCycle(originalResponse);
-		final IRequestHandlerExecutor stack = newStack(requestCycle);
+		final RequestHandlerStack stack = newStack(requestCycle);
 
 		final IRequestHandler handler3 = new IRequestHandler()
 		{
@@ -145,7 +145,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 
 		final Response originalResponse = newResponse();
 		final IRequestCycle requestCycle = newRequestCycle(originalResponse);
-		final IRequestHandlerExecutor stack = newStack(requestCycle);
+		final RequestHandlerStack stack = newStack(requestCycle);
 
 
 		final IRequestHandler handler4 = new IRequestHandler()
@@ -243,7 +243,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 
 		final Response originalResponse = newResponse();
 		final IRequestCycle requestCycle = newRequestCycle(originalResponse);
-		final IRequestHandlerExecutor stack = newStack(requestCycle);
+		final RequestHandlerStack stack = newStack(requestCycle);
 
 		final IRequestHandler handler4 = new IRequestHandler()
 		{

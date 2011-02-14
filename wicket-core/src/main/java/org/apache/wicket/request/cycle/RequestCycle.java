@@ -26,7 +26,6 @@ import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.IRequestHandlerExecutor;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.RequestHandlerStack;
@@ -111,7 +110,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	/** the time that this request cycle object was created. */
 	private final long startTime = System.currentTimeMillis();
 
-	private IRequestHandlerExecutor requestHandlerExecutor;
+	private RequestHandlerStack requestHandlerExecutor;
 
 	private Response activeResponse;
 
