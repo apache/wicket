@@ -2036,6 +2036,8 @@ Wicket.ChangeHandler=function(elementId){
     var KEY_SHIFT=16;
     var KEY_CTRL=17;
     var KEY_ALT=18;
+    var KEY_END=46;
+    var KEY_HOME=36;
 
 	var obj = Wicket.$(elementId);
 	obj.setAttribute("autocomplete", "off");
@@ -2056,6 +2058,8 @@ Wicket.ChangeHandler=function(elementId){
 				case KEY_SHIFT:
 				case KEY_ALT:
 				case KEY_CTRL:
+				case KEY_HOME:
+				case KEY_END:
 					return Wicket.stopEvent(event);
 					break;
 				default:
