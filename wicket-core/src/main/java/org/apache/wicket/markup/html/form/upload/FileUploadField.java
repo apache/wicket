@@ -17,9 +17,14 @@
 package org.apache.wicket.markup.html.form.upload;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.protocol.http.IMultipartWebRequest;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.util.convert.ConversionException;
@@ -39,11 +44,11 @@ import org.apache.wicket.util.upload.FileItem;
  * 
  * @author Eelco Hillenius
  */
-public class FileUploadField extends FormComponent<FileUpload>
+public class FileUploadField extends FormComponent<List<FileUpload>>
 {
 	private static final long serialVersionUID = 1L;
 
-	private transient FileUpload fileUpload;
+	private transient List<FileUpload> fileUploads;
 
 	/**
 	 * @see org.apache.wicket.Component#Component(String)
@@ -61,14 +66,37 @@ public class FileUploadField extends FormComponent<FileUpload>
 	 */
 	public FileUploadField(final String id, IModel<FileUpload> model)
 	{
-		super(id, model);
+		super(id, new ListModel<FileUpload>(Arrays.asList(model.getObject())));
 	}
 
 	/**
-	 * @return The uploaded file
+	 * @return the first uploaded file if HTML5 &lt;input type="file" <strong>multiple</strong>
+	 *         /&gt; is used and the browser supports <em>multiple</em>, otherwise returns the
+	 *         single uploaded file.
+	 * @see #getFileUploads()
 	 */
 	public FileUpload getFileUpload()
 	{
+		List<FileUpload> fileUploads = getFileUploads();
+
+		return (fileUploads != null && !fileUploads.isEmpty()) ? fileUploads.get(0) : null;
+	}
+
+	/**
+	 * @return a list of all uploaded files. It will return more than one files if:
+	 *         <ul>
+	 *         <li>HTML5 &lt;input type="file" <strong>multiple</strong> /&gt; is used</li>
+	 *         <li>the browser supports <em>multiple</em> attribute</li>
+	 *         <li>the user has selected more than one files from the <em>Select file</em> dialog</li>
+	 *         </ul>
+	 */
+	public List<FileUpload> getFileUploads()
+	{
+		if (fileUploads != null)
+		{
+			return fileUploads;
+		}
+
 		// Get request
 		final Request request = getRequest();
 
@@ -76,21 +104,26 @@ public class FileUploadField extends FormComponent<FileUpload>
 		if (request instanceof IMultipartWebRequest)
 		{
 			// Get the item for the path
-			final FileItem item = ((IMultipartWebRequest)request).getFile(getInputName());
+			final List<FileItem> fileItems = ((IMultipartWebRequest)request).getFile(getInputName());
 
-			// Only update the model when there is a file (larger than zero
-			// bytes)
-			if (item != null && item.getSize() > 0)
+			if (fileItems != null)
 			{
-				if (fileUpload == null)
+				for (FileItem item : fileItems)
 				{
-					fileUpload = new FileUpload(item);
+					// Only update the model when there is a file (larger than zero
+					// bytes)
+					if (item != null && item.getSize() > 0)
+					{
+						if (fileUploads == null)
+						{
+							fileUploads = new ArrayList<FileUpload>();
+						}
+						fileUploads.add(new FileUpload(item));
+					}
 				}
-
-				return fileUpload;
 			}
 		}
-		return null;
+		return fileUploads;
 	}
 
 	/**
@@ -120,10 +153,15 @@ public class FileUploadField extends FormComponent<FileUpload>
 	@Override
 	public String[] getInputAsArray()
 	{
-		FileUpload fu = getFileUpload();
-		if (fu != null)
+		List<FileUpload> fileUploads = getFileUploads();
+		if (fileUploads != null)
 		{
-			return new String[] { fu.getClientFileName() };
+			List<String> clientFileNames = new ArrayList<String>();
+			for (FileUpload fu : fileUploads)
+			{
+				clientFileNames.add(fu.getClientFileName());
+			}
+			return clientFileNames.toArray(new String[clientFileNames.size()]);
 		}
 		return null;
 	}
@@ -133,14 +171,14 @@ public class FileUploadField extends FormComponent<FileUpload>
 	 * @see org.apache.wicket.markup.html.form.FormComponent#convertValue(java.lang.String[])
 	 */
 	@Override
-	protected FileUpload convertValue(String[] value) throws ConversionException
+	protected List<FileUpload> convertValue(String[] value) throws ConversionException
 	{
 		final String[] filenames = getInputAsArray();
 		if (filenames == null)
 		{
 			return null;
 		}
-		return getFileUpload();
+		return getFileUploads();
 	}
 
 	/**
@@ -177,10 +215,13 @@ public class FileUploadField extends FormComponent<FileUpload>
 	@Override
 	protected void onDetach()
 	{
-		if ((fileUpload != null) && forceCloseStreamsOnDetach())
+		if ((fileUploads != null) && forceCloseStreamsOnDetach())
 		{
-			fileUpload.closeStreams();
-			fileUpload = null;
+			for (FileUpload fu : fileUploads)
+			{
+				fu.closeStreams();
+			}
+			fileUploads = null;
 
 			if (getModel() != null)
 			{

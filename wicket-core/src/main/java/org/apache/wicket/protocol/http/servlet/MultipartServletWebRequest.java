@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -64,12 +65,12 @@ public abstract class MultipartServletWebRequest extends ServletWebRequest
 	{
 		return new MultipartServletWebRequest(getContainerRequest(), getFilterPrefix(), url)
 		{
-			public FileItem getFile(String fieldName)
+			public List<FileItem> getFile(String fieldName)
 			{
 				return MultipartServletWebRequest.this.getFile(fieldName);
 			}
 
-			public Map<String, FileItem> getFiles()
+			public Map<String, List<FileItem>> getFiles()
 			{
 				return MultipartServletWebRequest.this.getFiles();
 			}

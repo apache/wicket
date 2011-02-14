@@ -119,25 +119,28 @@ public class UploadPage extends WicketExamplePage
 		@Override
 		protected void onSubmit()
 		{
-			final FileUpload upload = fileUploadField.getFileUpload();
-			if (upload != null)
+			final List<FileUpload> uploads = fileUploadField.getFileUploads();
+			if (uploads != null)
 			{
-				// Create a new file
-				File newFile = new File(getUploadFolder(), upload.getClientFileName());
-
-				// Check new file, delete if it already existed
-				checkFileExists(newFile);
-				try
+				for (FileUpload upload : uploads)
 				{
-					// Save to new file
-					newFile.createNewFile();
-					upload.writeTo(newFile);
+					// Create a new file
+					File newFile = new File(getUploadFolder(), upload.getClientFileName());
 
-					UploadPage.this.info("saved file: " + upload.getClientFileName());
-				}
-				catch (Exception e)
-				{
-					throw new IllegalStateException("Unable to write file");
+					// Check new file, delete if it already existed
+					checkFileExists(newFile);
+					try
+					{
+						// Save to new file
+						newFile.createNewFile();
+						upload.writeTo(newFile);
+
+						UploadPage.this.info("saved file: " + upload.getClientFileName());
+					}
+					catch (Exception e)
+					{
+						throw new IllegalStateException("Unable to write file", e);
+					}
 				}
 			}
 		}
@@ -188,7 +191,10 @@ public class UploadPage extends WicketExamplePage
 		ajaxSimpleUploadForm.add(new UploadProgressBar("progress", ajaxSimpleUploadForm));
 		add(ajaxSimpleUploadForm);
 
-
+		// Add upload form that uses HTML5 <input type="file" multiple />, so it can upload
+		// more than one file in browsers which support "multiple" attribute
+		final FileUploadForm html5UploadForm = new FileUploadForm("html5Upload");
+		add(html5UploadForm);
 	}
 
 	/**

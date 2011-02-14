@@ -22,7 +22,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.wicket.Page;
@@ -130,8 +132,9 @@ public class FileUploadFieldTest extends WicketTestCase
 			public void validate(IValidatable validatable)
 			{
 				validatedComponents.add(validatable);
-				assertEquals(FileUpload.class, validatable.getValue().getClass());
-				FileUpload upload = (FileUpload)validatable.getValue();
+				assertEquals(ArrayList.class, validatable.getValue().getClass());
+				List<FileUpload> uploads = (List<FileUpload>)validatable.getValue();
+				FileUpload upload = uploads.get(0);
 				assertEquals(tmpFile.getName(), upload.getClientFileName());
 				assertEquals(new String(read(tmpFile)), new String(upload.getBytes()));
 			}

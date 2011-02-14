@@ -51,7 +51,7 @@ import org.apache.wicket.util.value.ValueMap;
 public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 {
 	/** Map of file items. */
-	private final Map<String, FileItem> files = new HashMap<String, FileItem>();
+	private final Map<String, List<FileItem>> files = new HashMap<String, List<FileItem>>();
 
 	/** Map of parameters. */
 	private final ValueMap parameters = new ValueMap();
@@ -198,8 +198,14 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			}
 			else
 			{
+				List<FileItem> fileItems = files.get(item.getFieldName());
+				if (fileItems == null)
+				{
+					fileItems = new ArrayList<FileItem>();
+					files.put(item.getFieldName(), fileItems);
+				}
 				// Add to file list
-				files.put(item.getFieldName(), item);
+				fileItems.add(item);
 			}
 		}
 	}
@@ -236,7 +242,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	/**
 	 * @return Returns the files.
 	 */
-	public Map<String, FileItem> getFiles()
+	public Map<String, List<FileItem>> getFiles()
 	{
 		return files;
 	}
@@ -248,7 +254,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 *            the field name that was used for the upload
 	 * @return the upload with the given field name
 	 */
-	public FileItem getFile(final String fieldName)
+	public List<FileItem> getFile(final String fieldName)
 	{
 		return files.get(fieldName);
 	}

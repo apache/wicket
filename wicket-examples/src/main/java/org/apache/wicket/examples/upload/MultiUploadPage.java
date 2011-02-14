@@ -74,8 +74,10 @@ public class MultiUploadPage extends WicketExamplePage
 		{
 			final File file = listItem.getModelObject();
 			listItem.add(new Label("file", file.getName()));
-			listItem.add(new Link("delete")
+			listItem.add(new Link<Void>("delete")
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public void onClick()
 				{
@@ -114,7 +116,7 @@ public class MultiUploadPage extends WicketExamplePage
 		{
 			super(name);
 
-			// set this form to multipart mode (allways needed for uploads!)
+			// set this form to multipart mode (always needed for uploads!)
 			setMultiPart(true);
 
 			// Add one multi-file upload field

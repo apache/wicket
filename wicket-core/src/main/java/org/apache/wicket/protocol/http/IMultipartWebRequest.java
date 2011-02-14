@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.protocol.http;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.util.upload.FileItem;
@@ -31,14 +32,14 @@ public interface IMultipartWebRequest
 	/**
 	 * @return Returns the files.
 	 */
-	public Map<String, FileItem> getFiles();
+	public Map<String, List<FileItem>> getFiles();
 
 	/**
-	 * Gets the file that was uploaded using the given field name.
+	 * Gets the files that were uploaded using the given field name.
 	 * 
 	 * @param fieldName
 	 *            the field name that was used for the upload
-	 * @return the upload with the given field name
+	 * @return the uploads with the given field name
 	 */
-	public FileItem getFile(final String fieldName);
+	public List<FileItem> getFile(final String fieldName);
 }

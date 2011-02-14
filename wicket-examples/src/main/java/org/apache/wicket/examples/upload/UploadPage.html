@@ -17,7 +17,7 @@
 	  <legend>Upload form</legend>
     	<p>
 	    <label for="upload">File</label>
-	    <input wicket:id="fileInput" type="file"/>
+	    <input wicket:id="fileInput" type="file" />
 	    </p>
 	    <input type="submit" value="Upload!"/>
 	 </fieldset>
@@ -32,6 +32,18 @@
 	    </p>
 	    <input type="submit" value="Upload!"/>
 	    <span wicket:id="progress">[[ajax upload progressbar]]</span>
+	 </fieldset>
+    </form>
+
+	<form wicket:id="html5Upload">
+	 <fieldset>
+	  <legend>Upload form that uses HTML5 &lt;input type="file" <strong>multiple</strong> /&gt;, so it can upload
+		more than one file in browsers which support <em>multiple</em> attribute</legend>
+    	<p>
+	    <label>File</label>
+	    <input wicket:id="fileInput" type="file" multiple />
+	    </p>
+	    <input type="submit" value="Upload!"/>
 	 </fieldset>
     </form>
 

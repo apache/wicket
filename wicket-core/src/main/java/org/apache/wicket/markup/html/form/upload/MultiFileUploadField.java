@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.form.upload;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -233,17 +234,17 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 			if (request instanceof IMultipartWebRequest)
 			{
 				// retrieve the filename->FileItem map from request
-				final Map<String, FileItem> itemNameToItem = ((IMultipartWebRequest)request).getFiles();
-				for (Entry<String, FileItem> entry : itemNameToItem.entrySet())
+				final Map<String, List<FileItem>> itemNameToItem = ((IMultipartWebRequest)request).getFiles();
+				for (Entry<String, List<FileItem>> entry : itemNameToItem.entrySet())
 				{
 					// iterate over the map and build the list of filenames
 
 					final String name = entry.getKey();
-					final FileItem item = entry.getValue();
+					final List<FileItem> fileItems = entry.getValue();
 
 					if (!Strings.isEmpty(name) &&
-						name.startsWith(getInputName() + MAGIC_SEPARATOR) &&
-						!Strings.isEmpty(item.getName()))
+						name.startsWith(getInputName() + MAGIC_SEPARATOR) && !fileItems.isEmpty() &&
+						!Strings.isEmpty(fileItems.get(0).getName()))
 					{
 
 						// make sure the fileitem belongs to this component and
@@ -284,7 +285,11 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 
 			for (String filename : filenames)
 			{
-				uploads.add(new FileUpload(request.getFile(filename)));
+				List<FileItem> fileItems = request.getFile(filename);
+				for (FileItem fileItem : fileItems)
+				{
+					uploads.add(new FileUpload(fileItem));
+				}
 			}
 		}
 
