@@ -72,4 +72,24 @@ public interface IRequestCycleListener
 	 *            {@link RequestCycle#handleException(Exception)}
 	 */
 	IRequestHandler onException(RequestCycle cycle, Exception ex);
+
+	/**
+	 * Called when an {@link IRequestHandler} is resolved and will be executed.
+	 * 
+	 * @param handler
+	 */
+	void onRequestHandlerResolved(IRequestHandler handler);
+
+	/**
+	 * Called when an {@link IRequestHandler} is resolved for an exception and will be executed.
+	 * 
+	 * @param handler
+	 * @param exception
+	 */
+	void onExceptionRequestHandlerResolved(IRequestHandler handler, Exception exception);
+
+	/**
+	 * @param handler
+	 */
+	void onRequestHandlerScheduled(IRequestHandler handler);
 }

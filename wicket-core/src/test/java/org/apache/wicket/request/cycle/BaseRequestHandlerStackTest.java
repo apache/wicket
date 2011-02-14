@@ -18,8 +18,13 @@ package org.apache.wicket.request.cycle;
 
 import junit.framework.TestCase;
 
+import org.apache.wicket.request.IRequestCycle;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.IRequestHandlerExecutor;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.RequestHandlerStack;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.UrlRenderer;
 
 /**
  * @author Jeremy Thomerson
@@ -54,15 +59,63 @@ public abstract class BaseRequestHandlerStackTest extends TestCase
 		};
 	}
 
-	protected RequestHandlerStack newStack(Response response)
+	protected IRequestCycle newRequestCycle(Response response)
 	{
-		return new RequestHandlerStack(response)
+		return new MockRequestCycle(response);
+	}
+
+	private class MockRequestCycle implements IRequestCycle
+	{
+		Response response;
+
+		public MockRequestCycle(Response response)
 		{
+			this.response = response;
+		}
+
+		public Response getResponse()
+		{
+			return response;
+		}
+
+		public Response setResponse(Response response)
+		{
+			return response;
+		}
+
+		public Request getRequest()
+		{
+			return null;
+		}
+
+		public void scheduleRequestHandlerAfterCurrent(IRequestHandler handler)
+		{
+		}
+
+		public UrlRenderer getUrlRenderer()
+		{
+			return null;
+		}
+
+	}
+
+	protected IRequestHandlerExecutor newStack(final IRequestCycle requestCycle)
+	{
+		return new RequestHandlerStack()
+		{
+
 			@Override
-			protected RequestCycle getRequestCycle()
+			protected void respond(IRequestHandler handler)
 			{
-				return null;
+				handler.respond(requestCycle);
 			}
+
+			@Override
+			protected void detach(IRequestHandler handler)
+			{
+				handler.detach(requestCycle);
+			}
+
 		};
 	}
 

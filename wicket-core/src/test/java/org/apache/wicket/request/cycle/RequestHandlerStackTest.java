@@ -18,7 +18,7 @@ package org.apache.wicket.request.cycle;
 
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.RequestHandlerStack;
+import org.apache.wicket.request.IRequestHandlerExecutor;
 import org.apache.wicket.request.Response;
 
 /**
@@ -66,8 +66,8 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 		initFlags();
 
 		final Response originalResponse = newResponse();
-
-		final RequestHandlerStack stack = newStack(originalResponse);
+		final IRequestCycle requestCycle = newRequestCycle(originalResponse);
+		final IRequestHandlerExecutor stack = newStack(requestCycle);
 
 		final IRequestHandler handler3 = new IRequestHandler()
 		{
@@ -88,7 +88,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 			{
 				testFlag2 = false;
 
-				stack.replaceAllRequestHandlers(handler3);
+				stack.replaceAll(handler3);
 
 				// this code must not be executed
 				testFlag2 = true;
@@ -107,9 +107,9 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 				testFlag1 = false;
 
 				Response resp = newResponse();
-				stack.setResponse(resp);
-				stack.executeRequestHandler(handler2);
-				assertEquals(stack.getResponse(), resp);
+				requestCycle.setResponse(resp);
+				stack.execute(handler2);
+				assertEquals(requestCycle.getResponse(), resp);
 
 				// this code must be executed
 				testFlag1 = true;
@@ -121,9 +121,9 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 			}
 		};
 
-		stack.executeRequestHandler(handler1);
+		stack.execute(handler1);
 
-		assertEquals(stack.getResponse(), originalResponse);
+		assertEquals(requestCycle.getResponse(), originalResponse);
 
 		stack.detach();
 
@@ -144,7 +144,9 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 		initFlags();
 
 		final Response originalResponse = newResponse();
-		final RequestHandlerStack stack = newStack(originalResponse);
+		final IRequestCycle requestCycle = newRequestCycle(originalResponse);
+		final IRequestHandlerExecutor stack = newStack(requestCycle);
+
 
 		final IRequestHandler handler4 = new IRequestHandler()
 		{
@@ -152,9 +154,9 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 			{
 				testFlag4 = false;
 
-				assertEquals(stack.getResponse(), originalResponse);
+				assertEquals(requestCycle.getResponse(), originalResponse);
 
-				stack.setResponse(newResponse());
+				requestCycle.setResponse(newResponse());
 			}
 
 			public void detach(IRequestCycle requestCycle)
@@ -168,8 +170,8 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag3 = false;
-				stack.setResponse(newResponse());
-				stack.replaceAllRequestHandlers(handler4);
+				requestCycle.setResponse(newResponse());
+				stack.replaceAll(handler4);
 				// code must not be reached
 				testFlag3 = true;
 			}
@@ -185,8 +187,8 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag2 = false;
-				stack.setResponse(newResponse());
-				stack.executeRequestHandler(handler3);
+				requestCycle.setResponse(newResponse());
+				stack.execute(handler3);
 				// code must not be reached
 				testFlag2 = true;
 			}
@@ -202,8 +204,8 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag1 = false;
-				stack.setResponse(newResponse());
-				stack.executeRequestHandler(handler2);
+				requestCycle.setResponse(newResponse());
+				stack.execute(handler2);
 
 				// code must not be reached
 				testFlag1 = true;
@@ -215,9 +217,9 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 			}
 		};
 
-		stack.executeRequestHandler(handler1);
+		stack.execute(handler1);
 
-		assertEquals(stack.getResponse(), originalResponse);
+		assertEquals(requestCycle.getResponse(), originalResponse);
 
 		stack.detach();
 
@@ -240,7 +242,8 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 		initFlags();
 
 		final Response originalResponse = newResponse();
-		final RequestHandlerStack stack = newStack(originalResponse);
+		final IRequestCycle requestCycle = newRequestCycle(originalResponse);
+		final IRequestHandlerExecutor stack = newStack(requestCycle);
 
 		final IRequestHandler handler4 = new IRequestHandler()
 		{
@@ -248,7 +251,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 			{
 				testFlag4 = true;
 
-				stack.setResponse(newResponse());
+				requestCycle.setResponse(newResponse());
 			}
 
 			public void detach(IRequestCycle requestCycle)
@@ -262,7 +265,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag3 = false;
-				stack.scheduleRequestHandlerAfterCurrent(handler4);
+				stack.schedule(handler4);
 
 				// make sure that handler4's respond method is fired after this
 				// one ends
@@ -283,7 +286,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag2 = false;
-				stack.executeRequestHandler(handler3);
+				stack.execute(handler3);
 				// code must be reached
 				testFlag2 = true;
 			}
@@ -299,7 +302,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag1 = false;
-				stack.executeRequestHandler(handler2);
+				stack.execute(handler2);
 
 				// code must be reached
 				testFlag1 = true;
@@ -311,9 +314,9 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 			}
 		};
 
-		stack.executeRequestHandler(handler1);
+		stack.execute(handler1);
 
-		assertEquals(stack.getResponse(), originalResponse);
+		assertEquals(requestCycle.getResponse(), originalResponse);
 
 		stack.detach();
 

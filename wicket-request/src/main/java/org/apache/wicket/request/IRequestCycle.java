@@ -21,10 +21,33 @@ package org.apache.wicket.request;
  */
 public interface IRequestCycle
 {
+	/**
+	 * Get the active response at the request cycle.
+	 * 
+	 * @return response
+	 */
 	Response getResponse();
 
+	/**
+	 * Replaces current {@link Response} with new {@link Response} instance. The original response
+	 * is always restored after the {@link IRequestHandler#respond(IRequestCycle)} method is
+	 * finished.
+	 * 
+	 * @param response
+	 * @return Response being replaced.
+	 */
+	Response setResponse(Response response);
+
+	/**
+	 * @return the request that originated this cycle
+	 */
 	Request getRequest();
 
+	/**
+	 * Schedule the request handler to be executed after the current one.
+	 * 
+	 * @param handler
+	 */
 	void scheduleRequestHandlerAfterCurrent(IRequestHandler handler);
 
 	UrlRenderer getUrlRenderer();

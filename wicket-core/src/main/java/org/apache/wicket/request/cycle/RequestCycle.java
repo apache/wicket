@@ -26,6 +26,7 @@ import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.IRequestHandlerExecutor;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.RequestHandlerStack;
@@ -54,14 +55,14 @@ import org.slf4j.LoggerFactory;
  * schedule another {@link IRequestHandler} or replace all {@link IRequestHandler}s on stack with
  * another {@link IRequestHandler}.
  * 
- * @see #executeRequestHandler(IRequestHandler)
+ * @see #execute(IRequestHandler)
  * @see #scheduleRequestHandlerAfterCurrent(IRequestHandler)
  * @see #replaceAllRequestHandlers(IRequestHandler)
  * 
  * @author Matej Knopp
  * @author igor.vaynberg
  */
-public class RequestCycle extends RequestHandlerStack implements IRequestCycle, IEventSink
+public class RequestCycle implements IRequestCycle, IEventSink
 {
 	private static final Logger log = LoggerFactory.getLogger(RequestCycle.class);
 
@@ -110,6 +111,10 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 	/** the time that this request cycle object was created. */
 	private final long startTime = System.currentTimeMillis();
 
+	private IRequestHandlerExecutor requestHandlerExecutor;
+
+	private Response activeResponse;
+
 	/**
 	 * Construct.
 	 * 
@@ -117,7 +122,8 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 	 */
 	public RequestCycle(RequestCycleContext context)
 	{
-		super(context.getResponse());
+		requestHandlerExecutor = new HandlerExecutor();
+		activeResponse = context.getResponse();
 
 		Args.notNull(context, "context");
 
@@ -131,7 +137,6 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 		requestMapper = context.getRequestMapper();
 		exceptionMapper = context.getExceptionMapper();
 	}
-
 
 	/**
 	 * 
@@ -204,7 +209,8 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 			IRequestHandler handler = resolveRequestHandler();
 			if (handler != null)
 			{
-				executeRequestHandler(handler);
+				listeners.onRequestHandlerResolved(handler);
+				requestHandlerExecutor.execute(handler);
 				return true;
 			}
 
@@ -218,6 +224,7 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 			IRequestHandler handler = handleException(e);
 			if (handler != null)
 			{
+				listeners.onExceptionRequestHandlerResolved(handler, e);
 				executeExceptionRequestHandler(handler, getExceptionRetryCount());
 			}
 			else
@@ -264,7 +271,7 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 
 		try
 		{
-			executeRequestHandler(handler);
+			requestHandlerExecutor.execute(handler);
 		}
 		catch (Exception e)
 		{
@@ -319,15 +326,6 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 		// (in wicket filter)
 		// because only the form knows max upload size
 		this.request = request;
-	}
-
-	/**
-	 * @see org.apache.wicket.request.RequestHandlerStack#getRequestCycle()
-	 */
-	@Override
-	protected RequestCycle getRequestCycle()
-	{
-		return this;
 	}
 
 	/**
@@ -473,7 +471,6 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 	/**
 	 * @see org.apache.wicket.request.RequestHandlerStack#detach()
 	 */
-	@Override
 	public void detach()
 	{
 		set(this);
@@ -498,7 +495,7 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 
 		try
 		{
-			super.detach();
+			requestHandlerExecutor.detach();
 		}
 		finally
 		{
@@ -594,9 +591,97 @@ public class RequestCycle extends RequestHandlerStack implements IRequestCycle, 
 	{
 	}
 
+	/**
+	 * @return listeners
+	 */
 	public RequestCycleListenerCollection getListeners()
 	{
 		return listeners;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Response getResponse()
+	{
+		return activeResponse;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Response setResponse(final Response response)
+	{
+		Response current = activeResponse;
+		activeResponse = response;
+		return current;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void scheduleRequestHandlerAfterCurrent(IRequestHandler handler)
+	{
+		// just delegating the call to {@link IRequestHandlerExecutor} and invoking listeners
+		requestHandlerExecutor.schedule(handler);
+		listeners.onRequestHandlerScheduled(handler);
+	}
+
+	/**
+	 * @see RequestHandlerStack#getActive()
+	 * @return active handler on executor
+	 */
+	public IRequestHandler getActiveRequestHandler()
+	{
+		return requestHandlerExecutor.getActive();
+	}
+
+	/**
+	 * @see RequestHandlerStack#next()
+	 * @return the handler scheduled to be executed after current by the executor
+	 */
+	public IRequestHandler getRequestHandlerScheduledAfterCurrent()
+	{
+		return requestHandlerExecutor.next();
+	}
+
+	/**
+	 * @see RequestHandlerStack#replaceAll(IRequestHandler)
+	 * @param handler
+	 */
+	public void replaceAllRequestHandlers(final IRequestHandler handler)
+	{
+		requestHandlerExecutor.replaceAll(handler);
+	}
+
+	/**
+	 * Adapts {@link RequestHandlerStack} to this {@link RequestCycle}
+	 * 
+	 * @author Igor Vaynberg
+	 */
+	private class HandlerExecutor extends RequestHandlerStack
+	{
+
+		@Override
+		protected void respond(IRequestHandler handler)
+		{
+			Response originalResponse = getResponse();
+			try
+			{
+				handler.respond(RequestCycle.this);
+			}
+			finally
+			{
+				setResponse(originalResponse);
+			}
+		}
+
+		@Override
+		protected void detach(IRequestHandler handler)
+		{
+			handler.detach(RequestCycle.this);
+		}
+
 	}
 
 }

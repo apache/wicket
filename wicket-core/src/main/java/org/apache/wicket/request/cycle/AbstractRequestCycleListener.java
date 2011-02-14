@@ -39,4 +39,16 @@ public abstract class AbstractRequestCycleListener implements IRequestCycleListe
 	{
 		return null;
 	}
+
+	public void onRequestHandlerResolved(IRequestHandler handler)
+	{
+	}
+
+	public void onExceptionRequestHandlerResolved(IRequestHandler handler, Exception exception)
+	{
+	}
+
+	public void onRequestHandlerScheduled(IRequestHandler handler)
+	{
+	}
 }

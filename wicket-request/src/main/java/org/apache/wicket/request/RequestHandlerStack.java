@@ -25,12 +25,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Manages stack of {@link IRequestHandler}s.
+ * Manages stack of executions of {@link IRequestHandler}s.
  * 
  * @author Matej Knopp
  * @author igor.vaynberg
  */
-public abstract class RequestHandlerStack
+public abstract class RequestHandlerStack implements IRequestHandlerExecutor
 {
 	private static final Logger log = LoggerFactory.getLogger(RequestHandlerStack.class);
 
@@ -41,47 +41,26 @@ public abstract class RequestHandlerStack
 
 	private IRequestHandler scheduledAfterCurrent = null;
 
-	private Response response;
-
 	/**
-	 * Construct.
-	 * 
-	 * @param response
+	 * {@inheritDoc}
 	 */
-	public RequestHandlerStack(final Response response)
-	{
-		this.response = response;
-	}
-
-	protected abstract IRequestCycle getRequestCycle();
-
-	/**
-	 * Returns currently active {@link IRequestHandler}.
-	 * 
-	 * @return Active RequestHandler or <code>null</code> if no handler is active.
-	 */
-	public IRequestHandler getActiveRequestHandler()
+	public IRequestHandler getActive()
 	{
 		return requestHandlers.peek();
 	}
 
 	/**
-	 * Executes the specified {@link IRequestHandler}. When the specified {@link IRequestHandler}
-	 * finishes, the {@link IRequestHandler} that invoked this method continues (unless the new
-	 * {@link IRequestHandler} called {@link #replaceAllRequestHandlers(IRequestHandler)}.
-	 * 
-	 * @param handler
+	 * {@inheritDoc}
 	 */
-	public void executeRequestHandler(final IRequestHandler handler)
+	public void execute(final IRequestHandler handler)
 	{
 		final boolean first = requestHandlers.isEmpty();
 		requestHandlers.add(handler);
 
 		IRequestHandler replacementHandler = null;
-		Response originalResponse = response;
 		try
 		{
-			handler.respond(getRequestCycle());
+			respond(handler);
 		}
 		catch (RuntimeException exception)
 		{
@@ -101,7 +80,6 @@ public abstract class RequestHandlerStack
 		}
 		finally
 		{
-			response = originalResponse;
 			requestHandlers.poll();
 			inactiveRequestHandlers.add(handler);
 		}
@@ -111,50 +89,45 @@ public abstract class RequestHandlerStack
 
 		if (replacementHandler != null)
 		{
-			executeRequestHandler(replacementHandler);
+			execute(replacementHandler);
 		}
 		else if (scheduled != null)
 		{
-			executeRequestHandler(scheduled);
+			execute(scheduled);
 		}
 	}
 
 	/**
-	 * Schedules the request handler to be executed after current request handler finishes. If there
-	 * is already another request handler scheduled it will be discarded and overwritten by the new
-	 * one. If {@link #replaceAllRequestHandlers(IRequestHandler)} is invoked during current request
-	 * handler execution the scheduled handler will be also discarded.
+	 * Allows the request handler to response to the request
 	 * 
 	 * @param handler
-	 *            handler to be executed after current request handler finishes
 	 */
-	public void scheduleRequestHandlerAfterCurrent(final IRequestHandler handler)
+	protected abstract void respond(IRequestHandler handler);
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void schedule(final IRequestHandler handler)
 	{
 		scheduledAfterCurrent = handler;
 	}
 
 	/**
-	 * Returns the request handler scheduled after current request handler.
-	 * 
-	 * @see #scheduleRequestHandlerAfterCurrent(IRequestHandler)
-	 * @return handler or <code>null</code>
+	 * {@inheritDoc}
 	 */
-	public IRequestHandler getRequestHandlerScheduledAfterCurrent()
+	public IRequestHandler next()
 	{
 		return scheduledAfterCurrent;
 	}
 
 	/**
-	 * Removes the whole {@link IRequestHandler} stack, terminates currently running
-	 * {@link IRequestHandler} and executes the new {@link IRequestHandler}.
-	 * 
-	 * @param handler
+	 * {@inheritDoc}
 	 */
-	public void replaceAllRequestHandlers(final IRequestHandler handler)
+	public void replaceAll(final IRequestHandler handler)
 	{
 		if (requestHandlers.isEmpty())
 		{
-			executeRequestHandler(handler);
+			execute(handler);
 		}
 		else
 		{
@@ -163,32 +136,7 @@ public abstract class RequestHandlerStack
 	}
 
 	/**
-	 * Returns the active {@link Response}.
-	 * 
-	 * @return response object.
-	 */
-	public Response getResponse()
-	{
-		return response;
-	}
-
-	/**
-	 * Replaces current {@link Response} with new {@link Response} instance. The original response
-	 * is always restored after the {@link IRequestHandler#respond(IRequestCycle)} method is
-	 * finished.
-	 * 
-	 * @param response
-	 * @return Response being replaced.
-	 */
-	public Response setResponse(final Response response)
-	{
-		Response current = this.response;
-		this.response = response;
-		return current;
-	}
-
-	/**
-	 * Detaches all {@link IRequestHandler}s.
+	 * {@inheritDoc}
 	 */
 	public void detach()
 	{
@@ -205,7 +153,7 @@ public abstract class RequestHandlerStack
 		{
 			try
 			{
-				handler.detach(getRequestCycle());
+				detach(handler);
 			}
 			catch (Throwable exception)
 			{
@@ -213,6 +161,13 @@ public abstract class RequestHandlerStack
 			}
 		}
 	}
+
+	/**
+	 * Allows the request handler to detach
+	 * 
+	 * @param handler
+	 */
+	protected abstract void detach(IRequestHandler handler);
 
 	/**
 	 * Exception to stop current request handler and execute a new one.
