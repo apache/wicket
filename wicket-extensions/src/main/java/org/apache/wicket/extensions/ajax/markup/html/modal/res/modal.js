@@ -618,6 +618,15 @@ Wicket.Window.prototype = {
 		if (this.settings.title == null)
 			this.update = window.setInterval(this.updateTitle.bind(this), 100);
 		
+		// opera seems to have problem accessing contentWindow here
+		if (Wicket.Browser.isOpera()) {
+			this.content.onload = function() {
+				this.content.contentWindow.name = this.settings.iframeName;
+			}.bind(this);
+		} else {
+			this.content.contentWindow.name = this.settings.iframeName;
+		}
+		
 		try
 		{
 			this.content.contentWindow.location.replace(this.settings.src);
@@ -626,15 +635,6 @@ Wicket.Window.prototype = {
 		{
 			this.content.src = this.settings.src;
 		}		
-	
-		// opera seems to have problem accessing contentWindow here
-		if (Wicket.Browser.isOpera()) {
-			this.content.onload = function() {
-				this.content.contentWindow.name = this.settings.iframeName;
-			}
-		} else {
-			this.content.contentWindow.name = this.settings.iframeName;
-		}
 	},
 	
 	/**
