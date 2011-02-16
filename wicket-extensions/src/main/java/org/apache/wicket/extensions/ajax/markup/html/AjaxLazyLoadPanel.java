@@ -77,23 +77,24 @@ public abstract class AjaxLazyLoadPanel extends Panel
 			@Override
 			protected void respond(final AjaxRequestTarget target)
 			{
-				Component component = getLazyLoadComponent(LAZY_LOAD_COMPONENT_ID);
-				AjaxLazyLoadPanel.this.replace(component);
+				if (state < 2)
+				{
+					Component component = getLazyLoadComponent(LAZY_LOAD_COMPONENT_ID);
+					AjaxLazyLoadPanel.this.replace(component);
+					setState((byte)2);
+				}
 				target.add(AjaxLazyLoadPanel.this);
-				setState((byte)2);
+
 			}
 
 			@Override
 			public void renderHead(final Component component, final IHeaderResponse response)
 			{
 				super.renderHead(component, response);
-				handleCallbackScript(response, getCallbackScript().toString());
-			}
-
-			@Override
-			public boolean isEnabled(final Component component)
-			{
-				return state < 2;
+				if (state < 2)
+				{
+					handleCallbackScript(response, getCallbackScript().toString());
+				}
 			}
 		});
 	}
@@ -130,6 +131,7 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	private void setState(final byte state)
 	{
 		this.state = state;
+		getPage().dirty();
 	}
 
 	/**
