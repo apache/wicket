@@ -259,6 +259,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		return result;
 	}
 
+
 	/**
 	 * 
 	 * @param handler
@@ -468,11 +469,42 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	}
 
 	/**
-	 * @see org.apache.wicket.request.RequestHandlerStack#detach()
+	 * Detaches {@link RequestCycle} state. Called after request processing is complete
 	 */
-	public void detach()
+	public final void detach()
 	{
 		set(this);
+		try
+		{
+			onDetach();
+		}
+		finally
+		{
+			try
+			{
+				onInternalDetach();
+			}
+			finally
+			{
+				set(null);
+			}
+		}
+	}
+
+	private void onInternalDetach()
+	{
+		if (Session.exists())
+		{
+			Session.get().internalDetach();
+		}
+	}
+
+	/**
+	 * Called after request processing is complete, usually takes care of detaching state
+	 */
+	public void onDetach()
+	{
+
 
 		if (cleanupFeedbackMessagesOnDetach)
 		{
@@ -480,6 +512,11 @@ public class RequestCycle implements IRequestCycle, IEventSink
 			{
 				Session.get().cleanupFeedbackMessages();
 			}
+		}
+
+		if (Session.exists())
+		{
+			Session.get().detach();
 		}
 
 		try
@@ -499,7 +536,6 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		finally
 		{
 			listeners.onDetach(this);
-			set(null);
 		}
 	}
 

@@ -631,12 +631,27 @@ public abstract class Session implements IClusterable, IEventSink
 	 * Any detach logic for session subclasses. This is called on the end of handling a request,
 	 * when the RequestCycle is about to be detached from the current thread.
 	 */
-	protected void detach()
+	public void detach()
 	{
 		if (sessionInvalidated)
 		{
 			invalidateNow();
 		}
+	}
+
+	/**
+	 * NOT PART OF PUBLIC API, DO NOT CALL
+	 * 
+	 * Detaches internal state of {@link Session}
+	 */
+	public void internalDetach()
+	{
+		if (dirty)
+		{
+			Request request = RequestCycle.get().getRequest();
+			getSessionStore().flushSession(request, this);
+		}
+		dirty = false;
 	}
 
 	/**

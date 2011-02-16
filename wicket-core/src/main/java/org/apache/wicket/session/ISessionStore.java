@@ -123,6 +123,27 @@ public interface ISessionStore
 	 */
 	void bind(Request request, Session newSession);
 
+
+	/**
+	 * Flushes the session. Flushing the session generally means setting the attribute with the
+	 * value of the current session. Some servlet containers use the setAttribute() as a signal that
+	 * the value is dirty and needs to be replicated. Essentially this call comes down to:
+	 * 
+	 * <code>
+	 * String attr=getSessionAttributeName();
+	 * Session session=getAttribute(attr);
+	 * setAttribute(attr, session);
+	 * </code>
+	 * 
+	 * If the session is not yet bound it will be.
+	 * 
+	 * @param request
+	 *            current request
+	 * @param session
+	 *            session to be flushed
+	 */
+	void flushSession(Request request, Session session);
+
 	/**
 	 * Called when the WebApplication is destroyed.
 	 */

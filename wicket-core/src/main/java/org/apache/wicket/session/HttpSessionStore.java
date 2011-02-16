@@ -123,6 +123,19 @@ public class HttpSessionStore implements ISessionStore
 		}
 	}
 
+	public void flushSession(Request request, Session session)
+	{
+		if (getAttribute(request, getSessionAttribute()) != session)
+		{
+			// this session is not yet bound, bind it
+			bind(request, session);
+		}
+		else
+		{
+			setAttribute(request, getSessionAttribute(), session);
+		}
+	}
+
 	/**
 	 * @see org.apache.wicket.session.ISessionStore#destroy()
 	 */

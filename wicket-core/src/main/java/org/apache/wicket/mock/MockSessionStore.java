@@ -129,4 +129,9 @@ public class MockSessionStore implements ISessionStore
 		unboundListeners.remove(listener);
 	}
 
+	public void flushSession(Request request, Session session)
+	{
+		this.session = session;
+	}
+
 }
