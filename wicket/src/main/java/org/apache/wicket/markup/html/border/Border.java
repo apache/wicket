@@ -116,7 +116,7 @@ import org.apache.wicket.model.IModel;
  * 
  * <pre>
  * BoxBorder border=new BoxBorder("border");
- * border.getBodyContainer().add(new Label("label")); <== INVALID
+ * border.getBodyContainer().add(new Label("label")); <== VALID
  * </pre>
  * 
  * </p>
