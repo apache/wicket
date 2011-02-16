@@ -637,7 +637,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public String getParameter(final String name)
 	{
-		String[] param = parameters.get(name);
+		String[] param = getParameterMap().get(name);
 		if (param == null)
 		{
 			return null;
@@ -655,7 +655,29 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public Map<String, String[]> getParameterMap()
 	{
-		return Collections.unmodifiableMap(parameters);
+		Map<String, String[]> params = new HashMap<String, String[]>(parameters);
+
+		for (String name : post.getParameterNames())
+		{
+			List<StringValue> values = post.getParameterValues(name);
+			for (StringValue value : values)
+			{
+				String[] present = params.get(name);
+				if (present == null)
+				{
+					params.put(name, new String[] { value.toString() });
+				}
+				else
+				{
+					String[] newval = new String[present.length + 1];
+					System.arraycopy(present, 0, newval, 0, present.length);
+					newval[newval.length - 1] = value.toString();
+					params.put(name, newval);
+				}
+			}
+		}
+
+		return params;
 	}
 
 	/**
@@ -665,7 +687,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public Enumeration<String> getParameterNames()
 	{
-		return Collections.enumeration(parameters.keySet());
+		return Collections.enumeration(getParameterMap().keySet());
 	}
 
 	/**
@@ -677,7 +699,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public String[] getParameterValues(final String name)
 	{
-		Object value = parameters.get(name);
+		Object value = getParameterMap().get(name);
 		if (value == null)
 		{
 			return new String[0];
@@ -1046,6 +1068,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		characterEncoding = "UTF-8";
 		parameters.clear();
 		attributes.clear();
+		post.reset();
 	}
 
 	/**

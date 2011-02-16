@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
-import java.io.BufferedReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,9 +35,7 @@ import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.IWritableRequestParameters;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.request.Url.QueryParameter;
 import org.apache.wicket.request.http.WebRequest;
-import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.lang.Checks;
@@ -230,53 +227,50 @@ public class ServletWebRequest extends WebRequest
 		return contentType != null && contentType.toLowerCase().contains("multipart");
 	}
 
-	@SuppressWarnings("unchecked")
 	protected Map<String, List<StringValue>> generatePostParameters()
 	{
-		// Do not attempt to parse multipart request
-		if (isMultiPart(getContainerRequest()))
-		{
-			return Collections.emptyMap();
-		}
-
 		Map<String, List<StringValue>> postParameters = new HashMap<String, List<StringValue>>();
-		try
-		{
-			final BufferedReader reader = getContainerRequest().getReader();
-			final String value = Streams.readString(reader);
 
-			if (!Strings.isEmpty(value))
+		IRequestParameters queryParams = getQueryParameters();
+
+		Map<String, String[]> params = getContainerRequest().getParameterMap();
+		for (Map.Entry<String, String[]> param : params.entrySet())
+		{
+			final String name = param.getKey();
+			final String[] values = param.getValue();
+
+			// build a mutable list of query params that have the same name as the post param
+			List<StringValue> queryValues = queryParams.getParameterValues(name);
+			if (queryValues == null)
 			{
-				final Url url = Url.parse("?" + value, getCharset());
-				for (final QueryParameter q : url.getQueryParameters())
+				queryValues = Collections.emptyList();
+			}
+			else
+			{
+				queryValues = new ArrayList<StringValue>(queryValues);
+			}
+
+			// the list that will contain accepted post param values
+			List<StringValue> postValues = new ArrayList<StringValue>();
+
+			for (String value : values)
+			{
+				StringValue val = StringValue.valueOf(value);
+				if (queryValues.contains(val))
 				{
-					List<StringValue> list = postParameters.get(q.getName());
-					if (list == null)
-					{
-						list = new ArrayList<StringValue>();
-						postParameters.put(q.getName(), list);
-					}
-					list.add(StringValue.valueOf(q.getValue()));
+					// if a query param with this value exists remove it and continue
+					queryValues.remove(val);
+				}
+				else
+				{
+					// there is no query param with this value, assume post
+					postValues.add(val);
 				}
 			}
-		}
-		catch (final Exception e)
-		{
-			logger.warn(
-				"Error parsing request body for post parameters; Fallback to ServletRequest#getParameters().",
-				e);
-			for (final String name : (List<String>)Collections.list(getContainerRequest().getParameterNames()))
+
+			if (!postValues.isEmpty())
 			{
-				List<StringValue> list = postParameters.get(name);
-				if (list == null)
-				{
-					list = new ArrayList<StringValue>();
-					postParameters.put(name, list);
-				}
-				for (final String value : getContainerRequest().getParameterValues(name))
-				{
-					list.add(StringValue.valueOf(value));
-				}
+				postParameters.put(name, postValues);
 			}
 		}
 		return postParameters;
