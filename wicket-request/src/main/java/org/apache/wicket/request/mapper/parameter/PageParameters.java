@@ -18,6 +18,7 @@ package org.apache.wicket.request.mapper.parameter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -374,17 +375,31 @@ public class PageParameters implements Serializable, IIndexedParameters, INamedP
 		{
 			namedParameters = new ArrayList<Entry>(1);
 		}
-		Entry entry = new Entry();
-		entry.key = name;
-		entry.value = value.toString();
 
-		if (index == -1)
+		List<String> values = new ArrayList<String>();
+		if (value instanceof String[])
 		{
-			namedParameters.add(entry);
+			values.addAll(Arrays.asList((String[])value));
 		}
 		else
 		{
-			namedParameters.add(index, entry);
+			values.add(value.toString());
+		}
+
+		for (String val : values)
+		{
+			Entry entry = new Entry();
+			entry.key = name;
+			entry.value = val;
+
+			if (index == -1)
+			{
+				namedParameters.add(entry);
+			}
+			else
+			{
+				namedParameters.add(index, entry);
+			}
 		}
 		return this;
 	}
