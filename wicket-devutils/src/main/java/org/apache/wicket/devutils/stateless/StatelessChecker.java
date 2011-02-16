@@ -29,7 +29,7 @@ import org.apache.wicket.util.visit.IVisitor;
  * instance of this class to your application, it will check all components or pages marked with the
  * <tt>StatelessComponent</tt> annotation to make sure that they are stateless as you intended.
  * 
- * This is useful when trying to maintain stateless pages since it is very easy to inadvertantly add
+ * This is useful when trying to maintain stateless pages since it is very easy to inadvertently add
  * a component to a page that internally uses stateful links, etc.
  * 
  * @author Marat Radchenko
