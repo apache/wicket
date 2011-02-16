@@ -113,13 +113,16 @@ public class HttpSessionStore implements ISessionStore
 
 			HttpSession httpSession = getHttpSession(request, false);
 
-			// register an unbinding listener for cleaning up
-			String applicationKey = Application.get().getName();
-			httpSession.setAttribute("Wicket:SessionUnbindingListener-" + applicationKey,
-				new SessionBindingListener(applicationKey, httpSession.getId()));
+			if (httpSession != null)
+			{
+				// register an unbinding listener for cleaning up
+				String applicationKey = Application.get().getName();
+				httpSession.setAttribute("Wicket:SessionUnbindingListener-" + applicationKey,
+					new SessionBindingListener(applicationKey, httpSession.getId()));
 
-			// register the session object itself
-			setAttribute(request, getSessionAttribute(), newSession);
+				// register the session object itself
+				setAttribute(request, getSessionAttribute(), newSession);
+			}
 		}
 	}
 
