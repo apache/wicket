@@ -364,13 +364,14 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	protected void appendOptionHtml(AppendingStringBuffer buffer, E choice, int index,
 		String selected)
 	{
-		T objectValue = (T)renderer.getDisplayValue(choice);
-		Class<T> objectClass = (Class<T>)(objectValue == null ? null : objectValue.getClass());
+		Object objectValue = renderer.getDisplayValue(choice);
+		Class<?> objectClass = (objectValue == null ? null : objectValue.getClass());
 
 		String displayValue = "";
 		if (objectClass != null && objectClass != String.class)
 		{
-			IConverter<T> converter = getConverter(objectClass);
+			@SuppressWarnings("rawtypes")
+			IConverter converter = getConverter(objectClass);
 			displayValue = converter.convertToString(objectValue, getLocale());
 		}
 		else if (objectValue != null)
