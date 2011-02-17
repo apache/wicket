@@ -558,13 +558,9 @@ public class MockWebApplication
 			if (httpResponse.isRedirect())
 			{
 				lastRenderedPage = generateLastRenderedPage(cycle);
-
-				MockHttpServletRequest newHttpRequest = new MockHttpServletRequest(application,
-					servletSession, application.getServletContext());
-				newHttpRequest.setRequestToRedirectString(httpResponse.getRedirectLocation());
-				wicketRequest = application.newWebRequest(newHttpRequest);
-
-				cycle = createRequestCycle();
+				String redirectLocation = httpResponse.getRedirectLocation();
+				cycle = setupRequestAndResponse(false);
+				servletRequest.setRequestToRedirectString(redirectLocation);
 				cycle.request();
 			}
 			else

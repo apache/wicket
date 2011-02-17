@@ -40,6 +40,7 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.protocol.http.MockPage;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import org.apache.wicket.util.tester.MockPageParameterPage.MockInnerClassPage;
@@ -789,6 +790,30 @@ public class WicketTesterTest extends TestCase
 		cookie.setMaxAge(60);
 		tester.getWicketResponse().addCookie(cookie);
 		tester.setupRequestAndResponse();
+		assertEquals("value", tester.getWicketRequest().getCookie("name").getValue());
+	}
+
+	/**
+	 * @see WICKET-1886
+	 */
+	public void testCookiesIsFoundOnRedirectRequest()
+	{
+		MockPageWithLink testPage = new MockPageWithLink();
+		testPage.add(new Link<Void>(MockPageWithLink.LINK_ID)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick()
+			{
+				setResponsePage(MockPage.class);
+				setRedirect(true);
+			}
+		});
+		tester.startPage(testPage);
+		tester.getServletResponse().addCookie(new Cookie("name", "value"));
+		tester.clickLink(MockPageWithLink.LINK_ID);
+		tester.assertRenderedPage(MockPage.class);
 		assertEquals("value", tester.getWicketRequest().getCookie("name").getValue());
 	}
 
