@@ -83,11 +83,20 @@ public class CheckGroupSelector extends LabeledWebMarkupContainer
 			}
 		}
 
-		tag.put(
-			"onclick",
-			"var cb=this.form['" +
-				group.getInputName() +
-				"']; if (cb!=null) { if (!isNaN(cb.length)) { for(var i=0;i<cb.length;i++) { if (cb[i].disabled) continue; if (cb[i].checked != this.checked) {cb[i].click();} } } else { if (!cb.disabled&&cb.checked != this.checked) {cb.click();} } }");
+		final boolean groupEnabled = group.isEnabledInHierarchy() && group.isEnableAllowed();
+		final boolean selfEnabled = isEnabledInHierarchy() && isEnableAllowed();
+		if (groupEnabled && selfEnabled)
+		{
+			tag.put(
+				"onclick",
+				"var cb=this.form['" +
+					group.getInputName() +
+					"']; if (cb!=null) { if (!isNaN(cb.length)) { for(var i=0;i<cb.length;i++) { if (cb[i].disabled) continue; if (cb[i].checked != this.checked) {cb[i].click();} } } else { if (!cb.disabled&&cb.checked != this.checked) {cb.click();} } }");
+		}
+		else
+		{
+			tag.put("disabled", "disabled");
+		}
 
 		super.onComponentTag(tag);
 	}
