@@ -1200,7 +1200,7 @@ Wicket.Window.getMarkup = function(idWindow, idClassElement, idCaption, idConten
 					}
 				} else {
 					s+=
-										"<div id='"+idContent+"'></div>";
+										"<div id='"+idContent+"' class='w_content_container'></div>";
 				}
 					s+= 						
 									"</div>"+
