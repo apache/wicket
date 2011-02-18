@@ -16,11 +16,8 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.version.undo.Change;
 
 /**
@@ -162,28 +159,6 @@ public abstract class AbstractSubmitLink extends AbstractLink implements IFormSu
 	 */
 	public String getInputName()
 	{
-		// TODO: This is a copy & paste from the FormComponent class.
-		String id = getId();
-		final PrependingStringBuffer inputName = new PrependingStringBuffer(id.length());
-		Component c = this;
-		while (true)
-		{
-			inputName.prepend(id);
-			c = c.getParent();
-			if (c == null || (c instanceof Form && ((Form<?>)c).isRootForm()) || c instanceof Page)
-			{
-				break;
-			}
-			inputName.prepend(Component.PATH_SEPARATOR);
-			id = c.getId();
-		}
-
-		// having input name "submit" causes problems with javascript, so we
-		// create a unique string to replace it by prepending a path separator
-		if (inputName.equals("submit"))
-		{
-			inputName.prepend(Component.PATH_SEPARATOR);
-		}
-		return inputName.toString();
+		return Form.getRootFormRelativeId(this);
 	}
 }

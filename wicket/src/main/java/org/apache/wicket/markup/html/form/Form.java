@@ -56,6 +56,7 @@ import org.apache.wicket.request.target.component.listener.IListenerInterfaceReq
 import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.apache.wicket.util.upload.FileUploadBase.SizeLimitExceededException;
@@ -977,6 +978,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 				}
 			});
 			parameters.remove(getHiddenFieldId());
+			if (submittingComponent instanceof AbstractSubmitLink)
+			{
+				AbstractSubmitLink submitLink = (AbstractSubmitLink)submittingComponent;
+				parameters.remove(submitLink.getInputName());
+			}
 		}
 	}
 
@@ -1596,7 +1602,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 		}
 		else
 		{
-			formId = getId();
+			formId = Form.getRootFormRelativeId(this);
 		}
 		return getInputNamePrefix() + formId + "_hf_0";
 	}
@@ -2419,5 +2425,42 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 		response.renderJavascript(
 			"if (typeof(Wicket)=='undefined') { Wicket={}; } if (typeof(Wicket.Forms)=='undefined') { Wicket.Forms={}; }",
 			Form.class.getName());
+	}
+
+	/**
+	 * Utility method to assemble an id to distinct form components from diferent nesting levels.
+	 * Useful to generate input names attributes.
+	 * 
+	 * @param component
+	 * @return form relative identification string
+	 */
+	public static String getRootFormRelativeId(Component component)
+	{
+		String id = component.getId();
+		final PrependingStringBuffer inputName = new PrependingStringBuffer(id.length());
+		Component c = component;
+		while (true)
+		{
+			inputName.prepend(id);
+			c = c.getParent();
+			if (c == null || (c instanceof Form<?> && ((Form<?>)c).isRootForm()) ||
+				c instanceof Page)
+			{
+				break;
+			}
+			inputName.prepend(Component.PATH_SEPARATOR);
+			id = c.getId();
+		}
+
+		/*
+		 * having input name "submit" causes problems with JavaScript, so we create a unique string
+		 * to replace it by prepending a path separator, as this identification can be assigned to
+		 * an submit form component name
+		 */
+		if (inputName.equals("submit"))
+		{
+			inputName.prepend(Component.PATH_SEPARATOR);
+		}
+		return inputName.toString();
 	}
 }

@@ -33,7 +33,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.Localizer;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
@@ -41,7 +40,6 @@ import org.apache.wicket.model.IPropertyReflectionAwareModel;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Classes;
-import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
@@ -798,38 +796,16 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 */
 	public String getInputName()
 	{
-		// TODO: keep this in sync with AbstractSubmitLink#getInputName
-		String id = getId();
-		final PrependingStringBuffer inputName = new PrependingStringBuffer(id.length());
-		Component c = this;
-		while (true)
-		{
-			inputName.prepend(id);
-			c = c.getParent();
-			if (c == null || (c instanceof Form<?> && ((Form<?>)c).isRootForm()) ||
-				c instanceof Page)
-			{
-				break;
-			}
-			inputName.prepend(Component.PATH_SEPARATOR);
-			id = c.getId();
-		}
-
-		// having input name "submit" causes problems with javascript, so we
-		// create a unique string to replace it by prepending a path separator
-		if (inputName.equals("submit"))
-		{
-			inputName.prepend(Component.PATH_SEPARATOR);
-		}
+		final String inputName = Form.getRootFormRelativeId(this);
 		Form<?> form = findParent(Form.class);
 
 		if (form != null)
 		{
-			return form.getInputNamePrefix() + inputName.toString();
+			return form.getInputNamePrefix() + inputName;
 		}
 		else
 		{
-			return inputName.toString();
+			return inputName;
 		}
 	}
 
