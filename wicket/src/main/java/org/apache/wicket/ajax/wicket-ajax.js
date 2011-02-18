@@ -1500,14 +1500,37 @@ Wicket.Head.Contributor.prototype = {
 		return xmldoc;	
 	},
 	
+	// checks whether the passed node is the special "parsererror" 
+	// created by DOMParser if there is a error in XML parsing
+	_checkParserError: function(node) {
+		var result = false;
+		
+		if (node.tagName != null && node.tagName.toLowerCase() == "parsererror") {
+			Wicket.Log.error("Error in parsing: " + node.textContent);
+			result = true;
+		}
+		return result;
+	},
+	
 	// Processes the parsed header contribution
 	processContribution: function(steps, headerNode) {
 		var xmldoc = this.parse(headerNode);
 		var rootNode = xmldoc.documentElement;
 
+		// Firefox and Opera reports the error in the documentElement
+		if (this._checkParserError(rootNode)) {
+			return;
+		}
+
 		// go through the individual elements and process them according to their type
 		for (var i = 0; i < rootNode.childNodes.length; i++) {
 			var node = rootNode.childNodes[i];			
+		
+			// Chromium reports the error as a child node
+			if (this._checkParserError(node)) {
+				return;
+			}
+		
 			if (node.tagName != null) {
 				var name = node.tagName.toLowerCase();
 				
