@@ -24,7 +24,6 @@ import org.apache.wicket.WicketTestCase;
  */
 public class WicketMessageResolverTest extends WicketTestCase
 {
-
 	/**
 	 * @throws Exception
 	 */
@@ -76,7 +75,6 @@ public class WicketMessageResolverTest extends WicketTestCase
 			assertEquals(text, ex.getMessage().substring(0, text.length()));
 			return;
 		}
-
 	}
 
 	/**
