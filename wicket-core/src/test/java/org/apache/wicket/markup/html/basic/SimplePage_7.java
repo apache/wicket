@@ -17,6 +17,8 @@
 package org.apache.wicket.markup.html.basic;
 
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.model.Model;
 
 
 /**
@@ -35,5 +37,8 @@ public class SimplePage_7 extends WebPage
 	{
 		add(new Label("message", "here it goes"));
 		add(new Label("message2", "here it goes"));
+
+		add(new Label("amount", new Model<String>("$5.00")));
+		add(new BookmarkablePageLink<Void>("link", SimplePage_3.class));
 	}
 }
