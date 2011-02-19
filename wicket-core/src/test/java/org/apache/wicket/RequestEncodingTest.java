@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.redirect.encodingtest;
+package org.apache.wicket;
 
 import junit.framework.TestCase;
 
@@ -31,7 +31,7 @@ public class RequestEncodingTest extends TestCase
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(RequestEncodingTest.class);
 
-	private WicketApplication application;
+	private RedirectApplication application;
 	private WicketTester tester;
 
 	/**
@@ -40,10 +40,10 @@ public class RequestEncodingTest extends TestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		application = new WicketApplication();
+		application = new RedirectApplication();
 		tester = new WicketTester(application);
-		tester.startPage(HomePage.class);
-		tester.assertRenderedPage(HomePage.class);
+		tester.startPage(RedirectHomePage.class);
+		tester.assertRenderedPage(RedirectHomePage.class);
 	}
 
 	@Override
@@ -58,16 +58,16 @@ public class RequestEncodingTest extends TestCase
 	 */
 	public void testDefault()
 	{
-		tester.startPage(A.class, new PageParameters().set("file", "umlaut-\u00E4-\u00F6-\u00FC"));
-		tester.assertRenderedPage(B.class);
+		tester.startPage(RedirectA.class, new PageParameters().set("file", "umlaut-\u00E4-\u00F6-\u00FC"));
+		tester.assertRenderedPage(RedirectB.class);
 
-		String url2 = ((B)tester.getLastRenderedPage()).getInterceptContinuationURL();
+		String url2 = ((RedirectB)tester.getLastRenderedPage()).getInterceptContinuationURL();
 		assertTrue(url2.contains("umlaut-%C3%A4-%C3%B6-%C3%BC"));
 
 		tester.clickLink("link");
-		tester.assertRenderedPage(A.class);
+		tester.assertRenderedPage(RedirectA.class);
 
-		String file = ((A)tester.getLastRenderedPage()).getFileParameter();
+		String file = ((RedirectA)tester.getLastRenderedPage()).getFileParameter();
 		assertEquals("umlaut-\u00E4-\u00F6-\u00FC", file);
 
 		String document = tester.getLastResponseAsString();
@@ -80,7 +80,7 @@ public class RequestEncodingTest extends TestCase
 	 */
 	public void testUmlautsInRequestUri()
 	{
-		application.mountPage("Aparameter", A.class);
+		application.mountPage("Aparameter", RedirectA.class);
 		testDefault();
 	}
 }

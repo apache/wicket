@@ -14,25 +14,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.redirect.encodingtest;
+package org.apache.wicket;
 
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * Homepage
  */
-public class HomePage extends WebPage
+public class RedirectA extends WebPage
 {
-
 	private static final long serialVersionUID = 1L;
+
+	private final String file;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param parameters
 	 */
-	public HomePage(final PageParameters parameters)
+	public RedirectA(final PageParameters parameters)
 	{
+		((RedirectApplication)WebApplication.get()).intercept();
+
+		file = parameters.get("file").toString();
+
+		add(new Label("file", file));
+	}
+
+	/**
+	 * 
+	 * @return interceptContinuationURL
+	 */
+	public String getFileParameter()
+	{
+		return file;
 	}
 }

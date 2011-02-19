@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.redirect.encodingtest;
+package org.apache.wicket;
 
 import org.apache.wicket.RestartResponseAtInterceptPageException.InterceptData;
 import org.apache.wicket.markup.html.WebPage;
@@ -25,14 +25,14 @@ import org.apache.wicket.model.Model;
 /**
  * Homepage
  */
-public class B extends WebPage
+public class RedirectB extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
 	 */
-	public B()
+	public RedirectB()
 	{
 		add(new Label("interceptContinuationURL", new Model<String>(InterceptData.get()
 			.getOriginalUrl()

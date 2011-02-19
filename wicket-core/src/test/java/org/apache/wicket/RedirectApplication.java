@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.redirect.encodingtest;
+package org.apache.wicket;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
@@ -26,7 +26,7 @@ import org.apache.wicket.mock.MockApplication;
  * 
  * @see wicket.myproject.Start#main(String[])
  */
-public class WicketApplication extends MockApplication
+public class RedirectApplication extends MockApplication
 {
 	private boolean showIntercept = false;
 
@@ -36,7 +36,7 @@ public class WicketApplication extends MockApplication
 	@Override
 	public Class<? extends Page> getHomePage()
 	{
-		return HomePage.class;
+		return RedirectHomePage.class;
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class WicketApplication extends MockApplication
 		showIntercept = !showIntercept;
 		if (showIntercept)
 		{
-			throw new RestartResponseAtInterceptPageException(B.class);
+			throw new RestartResponseAtInterceptPageException(RedirectB.class);
 		}
 	}
 }

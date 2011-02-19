@@ -33,12 +33,22 @@ import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.request.http.handler.RedirectRequestHandler;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 
+/**
+ * Causes Wicket to interrupt current request processing and immediately redirect to an intercept
+ * page.
+ */
 public class RestartResponseAtInterceptPageException extends ResetResponseException
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Redirects to the specified {@code interceptPage}.
+	 * 
+	 * @param interceptPage
+	 */
 	public RestartResponseAtInterceptPageException(Page interceptPage)
 	{
 		super(new RenderPageRequestHandler(new PageProvider(interceptPage),
@@ -46,9 +56,26 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 		InterceptData.set();
 	}
 
+	/**
+	 * Redirects to the specified intercept page, this will result in a bookmarkable redirect.
+	 * 
+	 * @param interceptPageClass
+	 */
 	public RestartResponseAtInterceptPageException(Class<? extends Page> interceptPageClass)
 	{
-		super(new RenderPageRequestHandler(new PageProvider(interceptPageClass),
+		this(interceptPageClass, null);
+	}
+
+	/**
+	 * Redirects to the specified intercept page, this will result in a bookmarkable redirect.
+	 * 
+	 * @param interceptPageClass
+	 * @param parameters
+	 */
+	public RestartResponseAtInterceptPageException(Class<? extends Page> interceptPageClass,
+		PageParameters parameters)
+	{
+		super(new RenderPageRequestHandler(new PageProvider(interceptPageClass, parameters),
 			RedirectPolicy.ALWAYS_REDIRECT));
 		InterceptData.set();
 	}
@@ -56,12 +83,9 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 	/**
 	 * INTERNAL CLASS, DO NOT USE
 	 * 
-	 * TODO Public for now, need to move the test that is using this to this package and make it
-	 * package private
-	 * 
 	 * @author igor.vaynberg
 	 */
-	public static class InterceptData implements Serializable
+	static class InterceptData implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -137,7 +161,7 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 		return false;
 	}
 
-	public static IRequestMapper MAPPER = new IRequestMapper()
+	static IRequestMapper MAPPER = new IRequestMapper()
 	{
 		public int getCompatibilityScore(Request request)
 		{
