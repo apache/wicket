@@ -192,4 +192,29 @@ public abstract class Behavior implements IClusterable
 	public void renderHead(Component component, IHeaderResponse response)
 	{
 	}
+
+	/**
+	 * Called immediately before the onConfigure method in a component. Since this is before the
+	 * rendering cycle has begun, the behavior can modify the configuration of the component (i.e.
+	 * setVisible(false))
+	 * 
+	 * @param component
+	 *            the component being configured
+	 */
+	public void preConfigure(Component component)
+	{
+	}
+
+	/**
+	 * Called immediately after the onConfigure method in a component. Since this is before the
+	 * rendering cycle has begun, the behavior can modify the configuration of the component (i.e.
+	 * setVisible(false))
+	 * 
+	 * @param component
+	 *            the component being configured
+	 */
+	public void postConfigure(Component component)
+	{
+	}
+
 }
