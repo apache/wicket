@@ -170,16 +170,9 @@ public abstract class AbstractBehavior
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.IComponentConfigurationBehavior#preConfigure(org.apache.wicket.Component)
-	 */
-	public void preConfigure(Component component)
-	{
-	}
-
-	/**
 	 * @see org.apache.wicket.behavior.IComponentConfigurationBehavior#postConfigure(org.apache.wicket.Component)
 	 */
-	public void postConfigure(Component component)
+	public void onConfigure(Component component)
 	{
 	}
 

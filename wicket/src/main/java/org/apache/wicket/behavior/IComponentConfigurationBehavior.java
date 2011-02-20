@@ -30,16 +30,6 @@ public interface IComponentConfigurationBehavior extends IBehavior
 {
 
 	/**
-	 * Called immediately before the onConfigure method in a component. Since this is before the
-	 * rendering cycle has begun, the behavior can modify the configuration of the component (i.e.
-	 * setVisible(false))
-	 * 
-	 * @param component
-	 *            the component being configured
-	 */
-	void preConfigure(Component component);
-
-	/**
 	 * Called immediately after the onConfigure method in a component. Since this is before the
 	 * rendering cycle has begun, the behavior can modify the configuration of the component (i.e.
 	 * setVisible(false))
@@ -47,5 +37,5 @@ public interface IComponentConfigurationBehavior extends IBehavior
 	 * @param component
 	 *            the component being configured
 	 */
-	void postConfigure(Component component);
+	void onConfigure(Component component);
 }

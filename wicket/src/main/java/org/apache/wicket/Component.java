@@ -1159,24 +1159,14 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		if (!getFlag(FLAG_CONFIGURED))
 		{
-			// Apply behavior modifiers
+			onConfigure();
 			List<IComponentConfigurationBehavior> behaviors = getBehaviors(IComponentConfigurationBehavior.class);
 			for (IComponentConfigurationBehavior behavior : behaviors)
 			{
 				// Components may reject some behavior components
 				if (isBehaviorAccepted(behavior))
 				{
-					behavior.preConfigure(this);
-				}
-			}
-			onConfigure();
-			behaviors = getBehaviors(IComponentConfigurationBehavior.class);
-			for (IComponentConfigurationBehavior behavior : behaviors)
-			{
-				// Components may reject some behavior components
-				if (isBehaviorAccepted(behavior))
-				{
-					behavior.postConfigure(this);
+					behavior.onConfigure(this);
 				}
 			}
 			setFlag(FLAG_CONFIGURED, true);
