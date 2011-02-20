@@ -1142,19 +1142,12 @@ public abstract class Component
 		{
 			clearEnabledInHierarchyCache();
 			clearVisibleInHierarchyCache();
-			for (Behavior behavior : getBehaviors())
-			{
-				if (isBehaviorAccepted(behavior))
-				{
-					behavior.preConfigure(this);
-				}
-			}
 			onConfigure();
 			for (Behavior behavior : getBehaviors())
 			{
 				if (isBehaviorAccepted(behavior))
 				{
-					behavior.postConfigure(this);
+					behavior.onConfigure(this);
 				}
 			}
 			setRequestFlag(RFLAG_CONFIGURED, true);
