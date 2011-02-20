@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.ServletContext;
+
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 
@@ -203,6 +205,19 @@ public class WicketTester extends BaseWicketTester
 	public WicketTester(final WebApplication application, final String path)
 	{
 		super(application, path);
+	}
+
+	/**
+	 * Creates a <code>WicketTester</code> to help unit testing.
+	 * 
+	 * @param application
+	 *            a <code>WicketTester</code> <code>WebApplication</code> object
+	 * @param servletCtx
+	 *            the servlet context used as backend
+	 */
+	public WicketTester(WebApplication application, ServletContext servletCtx)
+	{
+		super(application, servletCtx);
 	}
 
 	/**
