@@ -160,7 +160,7 @@ public class BaseWicketTester
 		}
 	}
 
-	private final MockServletContext servletContext;
+	private final ServletContext servletContext;
 	private MockHttpSession hsession;
 
 	private final WebApplication application;
@@ -265,9 +265,9 @@ public class BaseWicketTester
 	 *            a <code>WicketTester</code> <code>WebApplication</code> object
 	 * 
 	 * @param servletCtx
-	 *            the mock servlet context used as backend
+	 *            the servlet context used as backend
 	 */
-	public BaseWicketTester(final WebApplication application, MockServletContext servletCtx)
+	public BaseWicketTester(final WebApplication application, ServletContext servletCtx)
 	{
 		servletContext = servletCtx != null ? servletCtx
 			: new MockServletContext(application, null);
@@ -430,7 +430,7 @@ public class BaseWicketTester
 	 * 
 	 * @return servlet context
 	 */
-	public MockServletContext getServletContext()
+	public ServletContext getServletContext()
 	{
 		return servletContext;
 	}
