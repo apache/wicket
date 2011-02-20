@@ -21,7 +21,7 @@
 	</licenses>
 	<properties>
 		<wicket.version>1.5-SNAPSHOT</wicket.version>
-		<jetty.version>7.2.2.v20101205</jetty.version>
+		<jetty.version>7.3.0.v20110203</jetty.version>
 	</properties>
 	<dependencies>
 		<!--  WICKET DEPENDENCIES -->
