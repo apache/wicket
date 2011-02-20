@@ -825,9 +825,9 @@ public class BaseWicketTester extends MockWebApplication
 			String failMessage = "No form submit behavior found on the submit link. Strange!!";
 			notNull(failMessage, ajaxFormSubmitBehavior);
 
+			setupAjaxSubmitRequestParameters(linkComponent, ajaxFormSubmitBehavior);
+			
 			WebRequestCycle requestCycle = setupRequestAndResponse(true);
-
-			submitAjaxFormSubmitBehavior(linkComponent, ajaxFormSubmitBehavior);
 
 			// Ok, finally we "click" the link
 			ajaxFormSubmitBehavior.onRequest();
@@ -1310,7 +1310,7 @@ public class BaseWicketTester extends MockWebApplication
 		if (ajaxEventBehavior instanceof AjaxFormSubmitBehavior)
 		{
 			AjaxFormSubmitBehavior ajaxFormSubmitBehavior = (AjaxFormSubmitBehavior)ajaxEventBehavior;
-			submitAjaxFormSubmitBehavior(component, ajaxFormSubmitBehavior);
+			setupAjaxSubmitRequestParameters(component, ajaxFormSubmitBehavior);
 		}
 
 		// process the event
@@ -1398,7 +1398,7 @@ public class BaseWicketTester extends MockWebApplication
 	 * @param behavior
 	 *            The <code>AjaxFormSubmitBehavior</code> with the <code>Form</code> to "submit"
 	 */
-	private void submitAjaxFormSubmitBehavior(final Component component,
+	private void setupAjaxSubmitRequestParameters(final Component component,
 		AjaxFormSubmitBehavior behavior)
 	{
 		// The form that needs to be "submitted".
