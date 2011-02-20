@@ -29,7 +29,11 @@ import org.apache.wicket.markup.html.IHeaderResponse;
  * @author Ralf Ebert
  * @author Eelco Hillenius
  */
-public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
+public abstract class AbstractBehavior
+	implements
+		IBehavior,
+		IHeaderContributor,
+		IComponentConfigurationBehavior
 {
 	/** */
 	private static final long serialVersionUID = 1L;
@@ -163,6 +167,20 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 	public boolean isTemporary()
 	{
 		return false;
+	}
+
+	/**
+	 * @see org.apache.wicket.behavior.IComponentConfigurationBehavior#preConfigure(org.apache.wicket.Component)
+	 */
+	public void preConfigure(Component component)
+	{
+	}
+
+	/**
+	 * @see org.apache.wicket.behavior.IComponentConfigurationBehavior#postConfigure(org.apache.wicket.Component)
+	 */
+	public void postConfigure(Component component)
+	{
 	}
 
 	// TODO remove these methods after compatibility release

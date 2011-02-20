@@ -30,6 +30,7 @@ import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.UnauthorizedActionException;
 import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.IComponentConfigurationBehavior;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.markup.ComponentTag;
@@ -1158,7 +1159,26 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		if (!getFlag(FLAG_CONFIGURED))
 		{
+			// Apply behavior modifiers
+			List<IComponentConfigurationBehavior> behaviors = getBehaviors(IComponentConfigurationBehavior.class);
+			for (IComponentConfigurationBehavior behavior : behaviors)
+			{
+				// Components may reject some behavior components
+				if (isBehaviorAccepted(behavior))
+				{
+					behavior.preConfigure(this);
+				}
+			}
 			onConfigure();
+			behaviors = getBehaviors(IComponentConfigurationBehavior.class);
+			for (IComponentConfigurationBehavior behavior : behaviors)
+			{
+				// Components may reject some behavior components
+				if (isBehaviorAccepted(behavior))
+				{
+					behavior.postConfigure(this);
+				}
+			}
 			setFlag(FLAG_CONFIGURED, true);
 		}
 	}
