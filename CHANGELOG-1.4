@@ -1,5 +1,48 @@
 This file contains all changes done on the 1.4 version.
 
+Release Notes - Wicket - Version 1.4.16
+
+** Bug
+    * [WICKET-1886] - WicketTester Cookie handling
+    * [WICKET-1973] - Messages lost upon session failover with redirect_to_buffer
+    * [WICKET-2056] - Modal CSS Overflow Auto Bug
+    * [WICKET-3109] - Using PopupSettings creates page maps early
+    * [WICKET-3135] - Improve JavaScriptPackageResource#toString() to show filename instead of default Object#toString()
+    * [WICKET-3277] - CLONE -AbstractMarkupParser doesn't remove Comments correctly
+    * [WICKET-3302] - Endless recursion if LoadableDetachableModel.load throws exception
+    * [WICKET-3306] - OrderByBoder MArkup problem
+    * [WICKET-3307] - UploadProgressbar doesn't work when nested in ModalWindow (using IE 8.0.7600)
+    * [WICKET-3309] - unable to add nodes to an empty rootless Tree (e.g. LinkTree)
+    * [WICKET-3315] - PackagedTextTemplate should set lastModifiedTime
+    * [WICKET-3318] - AjaxLazyLoadPanel doesn't render correctly after form submit
+    * [WICKET-3319] - AjaxEditableMultilineLabel generates invalid HTML
+    * [WICKET-3321] -  Ajax submit  link does not show busy indicator under IE
+    * [WICKET-3323] - TreeTable should call attachUpdate javascript on domready event.
+    * [WICKET-3346] - Wicket examples still show a Graduated logo
+    * [WICKET-3358] - Wicket-Guice integration fails - can't find application attached to current thread
+    * [WICKET-3361] - Validation Error on AjaxEditableLabel causes ajax calls in loop on Chrome Browser
+    * [WICKET-3383] - Strange writeObjectMethodCache in SerializableChecker
+    * [WICKET-3398] - EnclosureContainer: configure() should be called on the child component before calling isVisible on it
+    * [WICKET-3403] - Cannot convert 'this.content' to object in Opera
+    * [WICKET-3413] - FLAG_INHERITABLE_MODEL and default model change
+    * [WICKET-3416] - CheckGroupSelector does not inherit "disabled" property from parent form
+    * [WICKET-3418] - Incorrect setting of AjaxSubmitLink's request parameter in BaseWicketTester.submitAjaxFormSubmitBehavior
+    * [WICKET-3436] - OnChangeAjaxBehavior can render javascript before wicket-ajax.js is loaded
+    * [WICKET-3437] - onselect script is not called for AutoCompleteTextField
+    * [WICKET-3438] - 2xStatelessForm growing url when there is error validation 
+    * [WICKET-3444] - ChangeHandler fires in IE on POS1 and END
+    * [WICKET-3455] - onremove() in RefreshingView.onPopulate
+
+** Improvement
+    * [WICKET-1802] - Propertyresolver could be more informative
+    * [WICKET-3275] - Log a warn or throw an exception when an AjaxFormComponentUpdatingBehavior is added to an choice component
+    * [WICKET-3351] - Add class for span with text in wicket-extensions\treetable
+    * [WICKET-3354] - Improve SerializableChecker message
+    * [WICKET-3391] - Extensibility of the Wizard component
+    * [WICKET-3414] - Add break after finding Method in AutoComponentResolver invokeSetter
+    * [WICKET-3457] - Add methods to IBehavior to listen for configuration events
+
+
 Release Notes - Wicket - Version 1.4.15
 
 ** Bug
