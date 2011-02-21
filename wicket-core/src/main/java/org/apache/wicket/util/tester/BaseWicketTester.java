@@ -50,6 +50,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
+import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
@@ -654,18 +655,22 @@ public class BaseWicketTester
 	}
 
 	/**
+	 * This method tries to parse the last response to return the encoded base URL and will throw an
+	 * exception if there none was encoded.
 	 * 
-	 * @return last Wicket-Ajax-BaseURL set on AJAX HTTP request header
+	 * @return Wicket-Ajax-BaseURL set on last response by {@link AbstractDefaultAjaxBehavior}
+	 * @throws IOException
+	 * @throws ResourceStreamNotFoundException
+	 * @throws ParseException
 	 */
-	public String getWicketAjaxBaseUrlFromLastRequest() throws IOException,
+	public String getWicketAjaxBaseUrlEncodedInLastResponse() throws IOException,
 		ResourceStreamNotFoundException, ParseException
 	{
 		XmlPullParser parser = new XmlPullParser();
 		parser.parse(getLastResponseAsString());
 		XmlTag tag;
-		do
+		while ((tag = (XmlTag)parser.nextTag()) != null)
 		{
-			tag = (XmlTag)parser.nextTag();
 			if (tag.isOpen() && tag.getName().equals("script") &&
 				"wicket-ajax-base-url".equals(tag.getString("id")))
 			{
@@ -673,8 +678,8 @@ public class BaseWicketTester
 				return parser.getString().toString().split("\\\"")[1];
 			}
 		}
-		while (tag != null);
-		return null;
+		throw new WicketRuntimeException(
+			"Last response has no AJAX base URL set by AbstractDefaultAjaxBehavior.");
 	}
 
 	/**
