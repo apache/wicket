@@ -89,7 +89,7 @@
 	<moduleSets>
 		<moduleSet>
 			<includes>
-				<include>org.apache.wicket:wicket</include>
+				<include>org.apache.wicket:wicket-core</include>
                                 <include>org.apache.wicket:wicket-util</include>
                                 <include>org.apache.wicket:wicket-request</include>
 				<include>org.apache.wicket:wicket-auth-roles</include>
