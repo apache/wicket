@@ -1,5 +1,93 @@
 This file contains all changes done on the 1.5 version.
 
+Release Notes - Wicket - Version 1.5-RC2
+
+** Bug
+    * [WICKET-2056] - Modal CSS Overflow Auto Bug
+    * [WICKET-3298] - Session may not be replicated if the response page has not be modified
+    * [WICKET-3318] - AjaxLazyLoadPanel doesn't render correctly after form submit
+    * [WICKET-3323] - TreeTable should call attachUpdate javascript on domready event.
+    * [WICKET-3346] - Wicket examples still show a Graduated logo
+    * [WICKET-3348] - Am/pm support in DateTimeField is broken
+    * [WICKET-3349] - Patch to correct a few Findbugs warnings in extensions module
+    * [WICKET-3355] - Devutils breaks applications if session size is not available for any reason
+    * [WICKET-3356] - The password field in Authentication1 wicket example is not visible in html5 browsers 
+    * [WICKET-3357] - Resource getResourceStream called twice with single request
+    * [WICKET-3359] - ITab.getPanel() should be able to return Panel or Fragment; not just Panel
+    * [WICKET-3361] - Validation Error on AjaxEditableLabel causes ajax calls in loop on Chrome Browser
+    * [WICKET-3363] - forminput examle: switching locales does not have the desired effect.
+    * [WICKET-3365] - 1.5-RC1 sources seem to be missing in Maven repository
+    * [WICKET-3369] - Compile fails using java version "1.6.0_22"
+    * [WICKET-3372] - XmlReaderTest fail because getClass.getResourceAsStream is not markSupported
+    * [WICKET-3378] - Ajax headercontribution does not handle resourcereference id's
+    * [WICKET-3380] - HttpsMapper and BookmarkablePageLink
+    * [WICKET-3381] - Unable to see source of the spring examle
+    * [WICKET-3387] - Usage of DataTable gives Child component of repeater x has a non-safe child id of $toolbar$n
+    * [WICKET-3396] - MockServletContext should report major, minor version 2.5 instead of 2.3
+    * [WICKET-3397] - Some i18n xml-s have wrong name
+    * [WICKET-3398] - EnclosureContainer: configure() should be called on the child component before calling isVisible on it
+    * [WICKET-3399] - HttpServletResponse is No Longer Accessible via 1.5 API
+    * [WICKET-3400] - DatePicker renders errorenous JavaScript in AjaxRequest
+    * [WICKET-3403] - Cannot convert 'this.content' to object in Opera
+    * [WICKET-3405] - POST fails if request.getParameter called by ServletFilter
+    * [WICKET-3406] - Invoking getParameter() on HttpServletRequest throws IllegalStateException
+    * [WICKET-3407] - Switching from HttsRequired page to http page with forms in both pages
+    * [WICKET-3412] - RememberMe doesn't remember me
+    * [WICKET-3413] - FLAG_INHERITABLE_MODEL and default model change
+    * [WICKET-3415] - 1.5 equivalant of protected void WebRequestCycle.onRequestTargetSet(IRequestTarget requestTarget) is mising from AbstractRequestCycleListener
+    * [WICKET-3416] - CheckGroupSelector does not inherit "disabled" property from parent form
+    * [WICKET-3423] - org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler equals not Symmetric
+    * [WICKET-3425] - CryptoMapper jumping into directory
+    * [WICKET-3426] - FilterToolbar is broken in 1.5-SNAPSHOT
+    * [WICKET-3427] - Error in wicket-ajax.js when trying to log debug messages to js console
+    * [WICKET-3428] - IRequestCycleListener: RequestCycle.get() is null inside onBeginRequest
+    * [WICKET-3431] -  org/apache/wicket/util/tester/BaseWicketTester.java add cookie twice
+    * [WICKET-3436] - OnChangeAjaxBehavior can render javascript before wicket-ajax.js is loaded
+    * [WICKET-3437] - onselect script is not called for AutoCompleteTextField
+    * [WICKET-3439] - org.apache.wicket.markup.html.form.AbstractChoice renderer cast in method appendOptionHtml
+    * [WICKET-3440] - org.apache.wicket.util.collections.MostRecentlyUsedMap getRemovedValue method returns Object not V
+    * [WICKET-3442] - setResponsePage() to mounted Page fails to redirect correctly
+    * [WICKET-3444] - ChangeHandler fires in IE on POS1 and END
+    * [WICKET-3454] - Value exchange in a wicket:message throws an exception
+    * [WICKET-3455] - onremove() in RefreshingView.onPopulate
+
+
+** Improvement
+    * [WICKET-1802] - Propertyresolver could be more informative
+    * [WICKET-3338] - Provide a way to set Link's label/body without using Label child
+    * [WICKET-3350] - Patch to update Hungarian localization
+    * [WICKET-3351] - Add class for span with text in wicket-extensions\treetable
+    * [WICKET-3353] - 'wicket' Maven module brings the other three wicket modules as transitive dependencies
+    * [WICKET-3354] - Improve SerializableChecker message
+    * [WICKET-3362] - Rename WebApplication#mountSharedResource() to #mountResource()
+    * [WICKET-3364] - StatelessLink should not force the model type to Void
+    * [WICKET-3366] - Make all standard validators extend Behavior
+    * [WICKET-3368] - Open IMapperContext to extension
+    * [WICKET-3370] - Extend multiple file handling to IMultipartWebRequest
+    * [WICKET-3382] - JavaDoc: org/ap ache/wicket/util/upload/FileItem.java
+    * [WICKET-3384] - Comment: org.apache.wicket.util.upload.RequestContext interfsace to interface
+    * [WICKET-3386] - org/ap ache/wicket/util/io/Streams.java copy methods return long and/or int
+    * [WICKET-3389] - improve timestamps on resource filename by providing the possibility to add your own filename decorators
+    * [WICKET-3390] - org.apache.wicket.util.convert.converter.AbstractNumberConverter  convertToString method
+    * [WICKET-3391] - Extensibility of the Wizard component
+    * [WICKET-3393] - Remove ApplicationContextHolder from SpringComponentInjector
+    * [WICKET-3394] - org.apache.wicket.request.mapper.parameter.PageParameters Comment
+    * [WICKET-3395] - org.apache.wicket.request.RequestHandlerStack Comment
+    * [WICKET-3401] - Patch to add junit tests for MetaInfStaticResourceReference
+    * [WICKET-3408] - Add wicket version to initial page in wicket-examples
+    * [WICKET-3414] - Add break after finding Method in AutoComponentResolver invokeSetter
+    * [WICKET-3419] - org.apache.wicket.util.collection.MultiMap addValue 
+    * [WICKET-3421] - org/apache/wicket/protocol/http/mock/MockHttpServletRequest.java documentation 
+    * [WICKET-3429] - org/apache/wicket/util/resource/UrlResourceStream.java uses indexOf
+    * [WICKET-3452] - Remove commons-collections definition from pom and update httpclient to 3.1
+    * [WICKET-3457] - Add methods to IBehavior to listen for configuration events
+    * [WICKET-3459] - Update jetty to 7.3 and spring to 2.5.6.SEC02
+    * [WICKET-3460] - Relax BaseWicketTester's dependency on MockServletContext to ServletContext
+
+** New Feature
+    * [WICKET-1386] - Implement the FormComponentFragment
+
+
 Release Notes - Wicket - Version 1.5-RC1
 
 ** Sub-task
