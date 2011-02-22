@@ -1037,15 +1037,16 @@ public class BaseWicketTester
 
 	/**
 	 * Gets the component with the given path from last rendered page. This method fails in case the
-	 * component couldn't be found, and it will return null if the component was found, but is not
-	 * visible.
+	 * component couldn't be found.
 	 * 
 	 * @param path
 	 *            Path to component
+	 * @param wantVisibleInHierarchy
+	 *            if true component needs to be VisibleInHierarchy else null is returned
 	 * @return The component at the path
 	 * @see org.apache.wicket.MarkupContainer#get(String)
 	 */
-	public Component getComponentFromLastRenderedPage(String path)
+	public Component getComponentFromLastRenderedPage(String path, boolean wantVisibleInHierarchy)
 	{
 		if (startComponent != null)
 		{
@@ -1058,11 +1059,26 @@ public class BaseWicketTester
 				Classes.simpleName(getLastRenderedPage().getClass()));
 			return component;
 		}
-		if (component.isVisibleInHierarchy())
+		if (!wantVisibleInHierarchy || component.isVisibleInHierarchy())
 		{
 			return component;
 		}
 		return null;
+	}
+
+	/**
+	 * Gets the component with the given path from last rendered page. This method fails in case the
+	 * component couldn't be found, and it will return null if the component was found, but is not
+	 * visible.
+	 * 
+	 * @param path
+	 *            Path to component
+	 * @return The component at the path
+	 * @see org.apache.wicket.MarkupContainer#get(String)
+	 */
+	public Component getComponentFromLastRenderedPage(String path)
+	{
+		return getComponentFromLastRenderedPage(path, true);
 	}
 
 	/**
@@ -1112,14 +1128,21 @@ public class BaseWicketTester
 	 */
 	public Result isVisible(String path)
 	{
-		Component component = getLastRenderedPage().get(path);
+		Component component = getComponentFromLastRenderedPage(path, false);
+
+		final Result result;
 		if (component == null)
 		{
-			fail("path: '" + path + "' does no exist for page: " +
+			result = Result.fail("path: '" + path + "' does no exist for page: " +
 				Classes.simpleName(getLastRenderedPage().getClass()));
 		}
+		else
+		{
+			result = isTrue("component '" + path + "' is not visible",
+				component.isVisibleInHierarchy());
+		}
 
-		return isTrue("component '" + path + "' is not visible", component.isVisibleInHierarchy());
+		return result;
 	}
 
 	/**
@@ -1131,7 +1154,21 @@ public class BaseWicketTester
 	 */
 	public Result isInvisible(String path)
 	{
-		return isNull("component '" + path + "' is visible", getComponentFromLastRenderedPage(path));
+		Component component = getComponentFromLastRenderedPage(path, false);
+
+		final Result result;
+		if (component == null)
+		{
+			result = Result.fail("path: '" + path + "' does no exist for page: " +
+				Classes.simpleName(getLastRenderedPage().getClass()));
+		}
+		else
+		{
+			result = isFalse("component '" + path + "' is visible",
+				component.isVisibleInHierarchy());
+		}
+
+		return result;
 	}
 
 	/**
@@ -1143,7 +1180,7 @@ public class BaseWicketTester
 	 */
 	public Result isEnabled(String path)
 	{
-		Component component = getLastRenderedPage().get(path);
+		Component component = getComponentFromLastRenderedPage(path);
 		if (component == null)
 		{
 			fail("path: '" + path + "' does no exist for page: " +
@@ -1162,7 +1199,7 @@ public class BaseWicketTester
 	 */
 	public Result isDisabled(String path)
 	{
-		Component component = getLastRenderedPage().get(path);
+		Component component = getComponentFromLastRenderedPage(path);
 		if (component == null)
 		{
 			fail("path: '" + path + "' does no exist for page: " +
@@ -1181,7 +1218,7 @@ public class BaseWicketTester
 	 */
 	public Result isRequired(String path)
 	{
-		Component component = getLastRenderedPage().get(path);
+		Component component = getComponentFromLastRenderedPage(path);
 		if (component == null)
 		{
 			fail("path: '" + path + "' does no exist for page: " +
