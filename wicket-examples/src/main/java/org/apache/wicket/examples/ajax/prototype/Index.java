@@ -16,11 +16,13 @@
  */
 package org.apache.wicket.examples.ajax.prototype;
 
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.request.target.component.ComponentRequestTarget;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
@@ -47,7 +49,7 @@ public class Index extends WicketExamplePage
 	public Index()
 	{
 		// Add the Ajaxian link to the page...
-		add(new Link("link")
+		add(new Link<Void>("link")
 		{
 			/**
 			 * Handles a click on the link. This method is accessed normally using a standard http
@@ -60,7 +62,18 @@ public class Index extends WicketExamplePage
 				count++;
 
 				// The response should refresh the label displaying the counter.
-				getRequestCycle().setRequestTarget(new ComponentRequestTarget(counter));
+				getRequestCycle().setRequestTarget(new ComponentRequestTarget(counter)
+				{
+					@Override
+					public void respond(RequestCycle requestCycle)
+					{
+						super.respond(requestCycle);
+						WebResponse response = (WebResponse)requestCycle.getResponse();
+						response.setHeader("Pragma", "no-cache");
+						response.setHeader("Cache-Control",
+							"no-cache, no-store, max-age=0, must-revalidate");
+					}
+				});
 			}
 
 			/**
@@ -78,7 +91,7 @@ public class Index extends WicketExamplePage
 		});
 
 		// Add the label
-		add(counter = new Label("counter", new PropertyModel(this, "count")));
+		add(counter = new Label("counter", new PropertyModel<Integer>(this, "count")));
 	}
 
 	/**
