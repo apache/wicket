@@ -30,8 +30,7 @@ public class Result
 
 	private Result(boolean failed)
 	{
-		this.failed = failed;
-		message = "";
+		this(failed, "");
 	}
 
 	private Result(boolean failed, String message)
