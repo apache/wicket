@@ -396,7 +396,7 @@ public class DatePickerTest extends WicketTestCase
 		{
 			halfday = (amOrPm == AM_PM.PM ? 1 : 0);
 			date.set(DateTimeFieldType.halfdayOfDay(), halfday);
-			date.set(DateTimeFieldType.hourOfDay(), hours % 12);
+			date.set(DateTimeFieldType.hourOfDay(), iHours % 12);
 		}
 		log.error("2. halfday adjustments: " + date.getMillis() + "  " + date);
 
