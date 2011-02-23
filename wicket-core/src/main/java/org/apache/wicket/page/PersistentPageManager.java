@@ -99,8 +99,8 @@ public class PersistentPageManager extends AbstractPageManager
 			PersistentPageManager manager = managers.get(applicationName);
 			if (manager == null)
 			{
-				throw new IllegalStateException("PageManager for application " + applicationName +
-					" not registered.");
+				throw new IllegalStateException("PageManager for application '" + applicationName +
+					"' not registered.");
 			}
 			return manager.pageStore;
 		}
