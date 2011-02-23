@@ -20,11 +20,20 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.util.string.UrlUtils;
 
 /**
+ * <p>
  * A simple anchor link (&lt;a href="http://url"&gt;) pointing to any URL. Usually this is used for
  * links to destinations outside of Wicket.
+ * </p>
+ * 
+ * <p>
+ * <strong>Note</strong>: in the case when the support for cookies in the browser is disabled the
+ * user's jsessionid will leak in the 'Referrer' header after clicking this link. If this is a
+ * problem for the application then better use {@link Link} which redirects to the new URL using
+ * {@link RedirectToUrlException}.
  * 
  * @author Juergen Donnerstag
  */
