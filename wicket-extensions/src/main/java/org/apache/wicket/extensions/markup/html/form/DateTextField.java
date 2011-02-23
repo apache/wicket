@@ -54,7 +54,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	/**
 	 * The converter for the TextField
 	 */
-	private IConverter<?> converter = null;
+	private final IConverter<Date> converter;
 
 	/**
 	 * Creates a new DateTextField, without a specified pattern. This is the same as calling
@@ -150,13 +150,13 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	@Override
 	public <C> IConverter<C> getConverter(final Class<C> type)
 	{
-		if (converter == null)
+		if (Date.class.isAssignableFrom(type))
 		{
-			return super.getConverter(type);
+			return (IConverter<C>)converter;
 		}
 		else
 		{
-			return (IConverter<C>)converter;
+			return super.getConverter(type);
 		}
 	}
 
