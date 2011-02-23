@@ -73,7 +73,7 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 		// TODO null for contentType is allowed? or should the default be applied instead?
 		this.contentType = contentType;
 
-		setLastModified(Time.now());
+		lastModified = Time.now();
 	}
 
 	/**
