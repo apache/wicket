@@ -19,9 +19,11 @@ package org.apache.wicket.util.template;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.time.Time;
 
@@ -50,10 +52,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	 */
 	public TextTemplateDecorator(TextTemplate textTemplate)
 	{
-		if (textTemplate == null)
-		{
-			throw new IllegalArgumentException("argument textTemplate must be not null");
-		}
+		Args.notNull(textTemplate, "textTemplate");
 
 		decorated = textTemplate;
 	}
@@ -68,11 +67,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	@Override
 	public String asString()
 	{
-	 StringBuilder b = new StringBuilder();
-		b.append(getBeforeTemplateContents());
-		b.append(decorated.asString());
-		b.append(getAfterTemplateContents());
-		return b.toString();
+		return asString(Collections.<String, Object> emptyMap());
 	}
 
 	/**
@@ -85,7 +80,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	@Override
 	public String asString(Map<String, ?> variables)
 	{
-	 StringBuilder b = new StringBuilder();
+		StringBuilder b = new StringBuilder();
 		b.append(getBeforeTemplateContents());
 		b.append(decorated.asString(variables));
 		b.append(getAfterTemplateContents());
