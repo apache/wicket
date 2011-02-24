@@ -375,12 +375,10 @@ public class DataTable<T> extends Panel implements IPageableItems
 	protected void onDetach()
 	{
 		super.onDetach();
-		if (columns != null)
+
+		for (IColumn<?> column : columns)
 		{
-			for (IColumn<?> column : columns)
-			{
-				column.detach();
-			}
+			column.detach();
 		}
 	}
 
