@@ -25,8 +25,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -57,6 +57,8 @@ public class VelocityContributor extends Behavior
 	 */
 	public VelocityContributor(final String templateName, final IModel<? extends Map<?, ?>> model)
 	{
+		Args.notNull(model, "model");
+
 		this.templateName = templateName;
 		this.model = model;
 	}
@@ -67,10 +69,7 @@ public class VelocityContributor extends Behavior
 	@Override
 	public void detach(final Component c)
 	{
-		if (model instanceof IDetachable)
-		{
-			model.detach();
-		}
+		model.detach();
 	}
 
 	/**
