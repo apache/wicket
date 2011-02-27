@@ -297,7 +297,17 @@ public class WebRequestCycle extends RequestCycle
 	}
 
 	/**
-	 * @see org.apache.wicket.RequestCycle#newClientInfo()
+	 * {@inheritDoc}
+	 * 
+	 * <p>
+	 * To gather the client information this implementation redirects temporarily to a special page
+	 * ({@link BrowserInfoPage}).
+	 * <p>
+	 * Note: Do <strong>not</strong> call this method from your custom {@link Session} constructor
+	 * because the temporary page needs a constructed {@link Session} to be able to work.
+	 * <p>
+	 * If you need to set a default client info property then better use
+	 * {@link Session#setClientInfo(org.apache.wicket.request.ClientInfo)} directly.
 	 */
 	@Override
 	protected ClientInfo newClientInfo()
