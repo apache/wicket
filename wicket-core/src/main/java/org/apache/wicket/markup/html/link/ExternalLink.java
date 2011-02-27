@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.link;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.util.string.UrlUtils;
@@ -32,8 +33,12 @@ import org.apache.wicket.util.string.UrlUtils;
  * <p>
  * <strong>Note</strong>: in the case when the support for cookies in the browser is disabled the
  * user's jsessionid will leak in the 'Referrer' header after clicking this link. If this is a
- * problem for the application then better use {@link Link} which redirects to the new URL using
- * {@link RedirectToUrlException}.
+ * problem for the application then better use a {@link Link} which redirects to a shared resource
+ * (see
+ * {@link WebApplication#mountResource(String, org.apache.wicket.request.resource.ResourceReference)}
+ * , e.g. "/myapp/redirecting-resource?url=...") which on its side redirects to the new URL using
+ * {@link RedirectToUrlException}. Another option is to use <code>rel="noreferrer"</code> attribute
+ * in your markup but this will work only in the modern browsers (supporting HTML5 standard).
  * 
  * @author Juergen Donnerstag
  */
