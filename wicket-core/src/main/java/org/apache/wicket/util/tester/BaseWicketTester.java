@@ -944,7 +944,7 @@ public class BaseWicketTester
 	 *            a <code>Panel</code> factory that creates test <code>Panel</code> instances
 	 * @return a rendered <code>Panel</code>
 	 */
-	public final Panel startPanel(final TestPanelSource testPanelSource)
+	public final Panel startPanel(final ITestPanelSource testPanelSource)
 	{
 		Panel panel = (Panel)startPage(new ITestPageSource()
 		{
@@ -979,7 +979,7 @@ public class BaseWicketTester
 
 			public Page getTestPage()
 			{
-				return new DummyPanelPage(new TestPanelSource()
+				return new DummyPanelPage(new ITestPanelSource()
 				{
 					private static final long serialVersionUID = 1L;
 

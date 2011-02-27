@@ -24,7 +24,7 @@ import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanelTester;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.util.tester.DummyPanelPage;
-import org.apache.wicket.util.tester.TestPanelSource;
+import org.apache.wicket.util.tester.ITestPanelSource;
 
 /**
  * 
@@ -40,7 +40,7 @@ public class AjaxLazyLoadPanelTesterTest extends WicketTestCase
 	 */
 	public void test()
 	{
-		final Page dummyPanelPage = new DummyPanelPage(new TestPanelSource()
+		final Page dummyPanelPage = new DummyPanelPage(new ITestPanelSource()
 		{
 			private static final long serialVersionUID = 1L;
 

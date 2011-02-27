@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * @author Ingram Chen
  * @since 1.2.6
  */
-public interface TestPanelSource extends IClusterable
+public interface ITestPanelSource extends IClusterable
 {
 	/**
 	 * Defines a <code>Panel</code> instance source for <code>WicketTester</code>.

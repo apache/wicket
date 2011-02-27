@@ -35,9 +35,9 @@ public class DummyPanelPage extends WebPage
 	 * Constructor.
 	 * 
 	 * @param testPanelSource
-	 *            a <code>TestPanelSource</code>
+	 *            a <code>ITestPanelSource</code>
 	 */
-	public DummyPanelPage(final TestPanelSource testPanelSource)
+	public DummyPanelPage(final ITestPanelSource testPanelSource)
 	{
 		add(testPanelSource.getTestPanel(TEST_PANEL_ID));
 	}
