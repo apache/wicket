@@ -16,29 +16,24 @@
  */
 package org.apache.wicket.util.tester;
 
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.IClusterable;
+import org.apache.wicket.markup.html.panel.Panel;
 
 /**
- * A dummy <code>Panel</code> Component.
+ * A test <code>Panel</code> factory for <code>WicketTester</code>.
  * 
  * @author Ingram Chen
  * @since 1.2.6
  */
-public class DummyPanelPage extends WebPage
+public interface ITestPanelSource extends IClusterable
 {
-	private static final long serialVersionUID = 1L;
-
-	/** The dummy <code>Panel</code> <code>Component</code> id */
-	public static final String TEST_PANEL_ID = "panel";
-
 	/**
-	 * Constructor.
+	 * Defines a <code>Panel</code> instance source for <code>WicketTester</code>.
 	 * 
-	 * @param testPanelSource
-	 *            a <code>TestPanelSource</code>
+	 * @param panelId
+	 *            <code>Component</code> id of the test <code>Panel</code>
+	 * @return test <code>Panel</code> instance -- note that the test <code>Panel</code>'s
+	 *         <code>Component</code> id must use the given <code>panelId</code>.
 	 */
-	public DummyPanelPage(final ITestPanelSource testPanelSource)
-	{
-		add(testPanelSource.getTestPanel(TEST_PANEL_ID));
-	}
+	Panel getTestPanel(final String panelId);
 }

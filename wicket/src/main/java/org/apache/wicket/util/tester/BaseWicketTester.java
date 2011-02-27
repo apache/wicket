@@ -371,7 +371,7 @@ public class BaseWicketTester extends MockWebApplication
 	 *            a <code>Panel</code> factory that creates test <code>Panel</code> instances
 	 * @return a rendered <code>Panel</code>
 	 */
-	public final Panel startPanel(final TestPanelSource testPanelSource)
+	public final Panel startPanel(final ITestPanelSource testPanelSource)
 	{
 		return (Panel)startPage(new ITestPageSource()
 		{
@@ -401,7 +401,7 @@ public class BaseWicketTester extends MockWebApplication
 
 			public Page getTestPage()
 			{
-				return new DummyPanelPage(new TestPanelSource()
+				return new DummyPanelPage(new ITestPanelSource()
 				{
 					private static final long serialVersionUID = 1L;
 
@@ -826,7 +826,7 @@ public class BaseWicketTester extends MockWebApplication
 			notNull(failMessage, ajaxFormSubmitBehavior);
 
 			setupAjaxSubmitRequestParameters(linkComponent, ajaxFormSubmitBehavior);
-			
+
 			WebRequestCycle requestCycle = setupRequestAndResponse(true);
 
 			// Ok, finally we "click" the link

@@ -26,7 +26,7 @@ import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanelTester;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.util.tester.DummyPanelPage;
-import org.apache.wicket.util.tester.TestPanelSource;
+import org.apache.wicket.util.tester.ITestPanelSource;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
@@ -46,7 +46,7 @@ public class AjaxLazyLoadPanelTesterTest extends TestCase
 	public void test()
 	{
 		WicketTester wt = new WicketTester();
-		final Page dummyPanelPage = new DummyPanelPage(new TestPanelSource()
+		final Page dummyPanelPage = new DummyPanelPage(new ITestPanelSource()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -68,7 +68,8 @@ public class AjaxLazyLoadPanelTesterTest extends TestCase
 
 		});
 		wt.startPage(dummyPanelPage);
-		wt.assertLabel("panel:content",
+		wt.assertLabel(
+			"panel:content",
 			"<img alt=\"Loading...\" src=\"resources/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/indicator.gif\"/>");
 		AjaxLazyLoadPanelTester.executeAjaxLazyLoadPanel(wt, dummyPanelPage);
 		wt.debugComponentTrees();
