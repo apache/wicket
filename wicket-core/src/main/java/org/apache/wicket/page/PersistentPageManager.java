@@ -135,8 +135,9 @@ public class PersistentPageManager extends AbstractPageManager
 				{
 					return;
 				}
+
+				pages.add(page);
 			}
-			pages.add(page);
 		}
 
 		/**
