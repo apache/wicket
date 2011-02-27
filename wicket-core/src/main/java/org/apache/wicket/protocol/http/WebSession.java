@@ -186,6 +186,16 @@ public class WebSession extends Session
 
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * <p>
+	 * To gather the client information this implementation redirects temporarily to a special page
+	 * ({@link BrowserInfoPage}).
+	 * <p>
+	 * Note: Do <strong>not</strong> call this method from your custom {@link Session} constructor
+	 * because the temporary page needs a constructed {@link Session} to be able to work.
+	 * <p>
+	 * If you need to set a default client info property then better use
+	 * {@link #setClientInfo(org.apache.wicket.request.ClientInfo)} directly.
 	 */
 	@Override
 	public WebClientInfo getClientInfo()
@@ -204,7 +214,16 @@ public class WebSession extends Session
 					Request request = requestCycle.getRequest();
 
 					IRequestHandler activeRequestHandler = requestCycle.getActiveRequestHandler();
-					String url = requestCycle.urlFor(activeRequestHandler).toString();
+
+					final String url;
+					if (activeRequestHandler != null)
+					{
+						url = requestCycle.urlFor(activeRequestHandler).toString();
+					}
+					else
+					{
+						url = requestCycle.urlFor(getApplication().getHomePage(), null).toString();
+					}
 					String relativeUrl = requestCycle.getUrlRenderer()
 						.renderContextPathRelativeUrl(url);
 					Page browserInfoPage = newBrowserInfoPage(relativeUrl);
