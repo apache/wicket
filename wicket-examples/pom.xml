@@ -104,36 +104,46 @@
 		</dependency>
 	</dependencies>
 	<build>
+		<resources> 
+			<!-- include all these to be able to view their source -->
+			<resource> 
+				<filtering>false</filtering> 
+				<directory>${basedir}/src/main/java</directory> 
+				<includes>
+					<include>**/*.java</include>
+					<include>**/*.html</include>
+					<include>**/*.js</include>
+					<include>**/*.css</include>
+					<include>**/*.jpg</include>
+					<include>**/*.gif</include>
+					<include>**/*.png</include>
+					<include>**/*.txt</include>
+					<include>**/*.xml</include>
+					<include>**/*.properties</include>
+				</includes> 
+			</resource>
+			<resource>
+				<filtering>false</filtering>
+				<directory>${basedir}/src/main/resources</directory>
+				<includes>
+					<include>**/*.html</include>
+					<include>**/*.js</include>
+					<include>**/*.css</include>
+					<include>**/*.jpg</include>
+					<include>**/*.gif</include>
+					<include>**/*.png</include>
+					<include>**/*.txt</include>
+					<include>**/*.xml</include>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
+		</resources> 
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
-					<webResources>
-						<!--+
-							| Include Java source code in the examples
-							+-->
-						<resource>
-							<directory>${basedir}/src/main/java</directory>
-							<targetPath>WEB-INF/classes</targetPath>
-							<includes>
-								<include>**/*.java</include>
-							</includes>
-						</resource>
-						<resource>
-							<directory>${basedir}/src/main/resources</directory>
-							<targetPath>WEB-INF/classes</targetPath>
-							<includes>
-								<include>**/*.html</include>
-								<include>**/*.js</include>
-								<include>**/*.css</include>
-								<include>**/*.jpg</include>
-								<include>**/*.gif</include>
-								<include>**/*.png</include>
-							</includes>
-						</resource>
-					</webResources>
-					
+
 					<!--  include the manifest entries so that we can emit the version of the examples. -->
 					<archive>
 						<manifest>
