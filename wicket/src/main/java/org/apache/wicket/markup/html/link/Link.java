@@ -405,11 +405,6 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 		{
 			RequestCycle.get().setUrlForNewWindowEncoding();
 		}
-		// Set href to link to this link's linkClicked method
-		CharSequence url = getURL();
-
-		// append any anchor
-		url = appendAnchor(tag, url);
 
 		// If we're disabled
 		if (!isLinkEnabled())
@@ -418,6 +413,12 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 		}
 		else
 		{
+			// Set href to link to this link's linkClicked method
+			CharSequence url = getURL();
+
+			// append any anchor
+			url = appendAnchor(tag, url);
+
 			// if the tag is an anchor proper
 			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link") ||
 				tag.getName().equalsIgnoreCase("area"))
@@ -460,7 +461,6 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 				}
 			}
 
-
 			// If the subclass specified javascript, use that
 			final CharSequence onClickJavaScript = getOnClickScript(url);
 			if (onClickJavaScript != null)
@@ -477,7 +477,6 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 				}
 			}
 		}
-
 	}
 
 	/**
