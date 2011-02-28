@@ -349,12 +349,6 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 		// Default handling for tag
 		super.onComponentTag(tag);
 
-		// Set href to link to this link's linkClicked method
-		CharSequence url = getURL();
-
-		// append any anchor
-		url = appendAnchor(tag, url);
-
 		// If we're disabled
 		if (!isLinkEnabled())
 		{
@@ -362,6 +356,12 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 		}
 		else
 		{
+			// Set href to link to this link's linkClicked method
+			CharSequence url = getURL();
+
+			// append any anchor
+			url = appendAnchor(tag, url);
+
 			// if the tag is an anchor proper
 			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link") ||
 				tag.getName().equalsIgnoreCase("area"))
@@ -413,7 +413,6 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener
 				tag.put("onclick", onClickJavaScript);
 			}
 		}
-
 	}
 
 	/**
