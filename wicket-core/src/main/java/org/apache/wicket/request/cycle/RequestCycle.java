@@ -121,16 +121,14 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 */
 	public RequestCycle(RequestCycleContext context)
 	{
-		requestHandlerExecutor = new HandlerExecutor();
-		activeResponse = context.getResponse();
-
 		Args.notNull(context, "context");
-
 		Args.notNull(context.getRequest(), "context.request");
 		Args.notNull(context.getResponse(), "context.response");
 		Args.notNull(context.getRequestMapper(), "context.requestMapper");
 		Args.notNull(context.getExceptionMapper(), "context.exceptionMapper");
 
+		requestHandlerExecutor = new HandlerExecutor();
+		activeResponse = context.getResponse();
 		request = context.getRequest();
 		originalResponse = context.getResponse();
 		requestMapper = context.getRequestMapper();
