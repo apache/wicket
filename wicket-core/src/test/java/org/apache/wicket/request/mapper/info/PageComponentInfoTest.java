@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.request.mapper.info;
 
-import org.apache.wicket.request.mapper.info.PageComponentInfo;
-
 import junit.framework.TestCase;
 
 /**
@@ -42,13 +40,14 @@ public class PageComponentInfoTest extends TestCase
 		assertEquals(pageId, info.getPageInfo().getPageId());
 	}
 
-	private void testPageComponentInfo(PageComponentInfo info, Integer pageId, String listener, String componentPath)
+	private void testPageComponentInfo(PageComponentInfo info, Integer pageId, String listener,
+		String componentPath)
 	{
 		assertNotNull(info.getComponentInfo());
 		assertNotNull(info.getPageInfo());
 
 		assertEquals(pageId, info.getPageInfo().getPageId());
-		
+
 		assertEquals(listener, info.getComponentInfo().getListenerInterface());
 		assertEquals(componentPath, info.getComponentInfo().getComponentPath());
 	}
@@ -63,7 +62,7 @@ public class PageComponentInfoTest extends TestCase
 		testPageComponentInfo(info, 2, "click", "foo:bar:baz");
 		assertEquals(s, info.toString());
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -73,5 +72,14 @@ public class PageComponentInfoTest extends TestCase
 		PageComponentInfo info = PageComponentInfo.parse(s);
 		testPageInfoOnly(info, 2);
 		assertEquals(s, info.toString());
+	}
+
+	/**
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-3490">WICKET-3490</a>
+	 */
+	public void testParsePageInfo()
+	{
+		PageComponentInfo pageComponentInfo = PageComponentInfo.parse("99999999999999999999999999999999999999999999999999999999999999999999999");
+		assertNull(pageComponentInfo);
 	}
 }
