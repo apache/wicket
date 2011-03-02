@@ -37,6 +37,8 @@ import org.apache.wicket.request.target.component.PageRequestTarget;
 import org.apache.wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -676,6 +678,8 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 */
 	protected static class PageInfo
 	{
+		private static final Logger logger = LoggerFactory.getLogger(PageInfo.class);
+
 		private final Integer pageId;
 		private final Integer versionNumber;
 		private final String pageMapName;
@@ -854,7 +858,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 				return null;
 			}
 
-			// go trhough the segments to determine if they don't contains invalid characters
+			// go through the segments to determine if they don't contains invalid characters
 			for (int i = 0; i < segments.length; ++i)
 			{
 				for (int j = 0; j < segments[i].length(); ++j)
@@ -867,47 +871,55 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 				}
 			}
 
-			if ((segments.length == 1) && isNumber(segments[0]))
+			try
 			{
-				// pageId
-				return new PageInfo(Integer.valueOf(segments[0]), new Integer(0), null);
-			}
-			else if ((segments.length == 2) && isNumber(segments[0]) && isNumber(segments[1]))
-			{
-				// pageId:pageVersion
-				return new PageInfo(Integer.valueOf(segments[0]), Integer.valueOf(segments[1]),
-					null);
-			}
-			else if ((segments.length == 1) && !isNumber(segments[0]))
-			{
-				// pageMap (starts with letter)
-				return new PageInfo(null, null, segments[0]);
-			}
-			else if ((segments.length == 2) && (segments[0].length() == 0))
-			{
-				// .pageMap
-				return new PageInfo(null, null, segments[1]);
-			}
-			else if ((segments.length == 2) && !isNumber(segments[0]) && isNumber(segments[1]))
-			{
-				// pageMap.pageId (pageMap starts with letter)
-				return new PageInfo(Integer.valueOf(segments[1]), new Integer(0), segments[0]);
-			}
-			else if (segments.length == 3)
-			{
-				if ((segments[2].length() == 0) && isNumber(segments[1]))
+				if ((segments.length == 1) && isNumber(segments[0]))
 				{
-					// we don't encode it like this, but we still should be able
-					// to parse it
-					// pageMapName.pageId.
+					// pageId
+					return new PageInfo(Integer.valueOf(segments[0]), new Integer(0), null);
+				}
+				else if ((segments.length == 2) && isNumber(segments[0]) && isNumber(segments[1]))
+				{
+					// pageId:pageVersion
+					return new PageInfo(Integer.valueOf(segments[0]), Integer.valueOf(segments[1]),
+						null);
+				}
+				else if ((segments.length == 1) && !isNumber(segments[0]))
+				{
+					// pageMap (starts with letter)
+					return new PageInfo(null, null, segments[0]);
+				}
+				else if ((segments.length == 2) && (segments[0].length() == 0))
+				{
+					// .pageMap
+					return new PageInfo(null, null, segments[1]);
+				}
+				else if ((segments.length == 2) && !isNumber(segments[0]) && isNumber(segments[1]))
+				{
+					// pageMap.pageId (pageMap starts with letter)
 					return new PageInfo(Integer.valueOf(segments[1]), new Integer(0), segments[0]);
 				}
-				else if (isNumber(segments[1]) && isNumber(segments[2]))
+				else if (segments.length == 3)
 				{
-					// pageMapName.pageId.pageVersion
-					return new PageInfo(Integer.valueOf(segments[1]), Integer.valueOf(segments[2]),
-						segments[0]);
+					if ((segments[2].length() == 0) && isNumber(segments[1]))
+					{
+						// we don't encode it like this, but we still should be able
+						// to parse it
+						// pageMapName.pageId.
+						return new PageInfo(Integer.valueOf(segments[1]), new Integer(0),
+							segments[0]);
+					}
+					else if (isNumber(segments[1]) && isNumber(segments[2]))
+					{
+						// pageMapName.pageId.pageVersion
+						return new PageInfo(Integer.valueOf(segments[1]),
+							Integer.valueOf(segments[2]), segments[0]);
+					}
 				}
+			}
+			catch (NumberFormatException nfx)
+			{
+				logger.debug("Cannot parse PageInfo from '{}': {}", src, nfx.getMessage());
 			}
 
 			return null;
