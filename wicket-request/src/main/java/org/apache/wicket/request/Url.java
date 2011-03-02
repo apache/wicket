@@ -284,8 +284,13 @@ public final class Url implements Serializable
 		if (charset == null)
 		{
 			charsetName = "UTF-8";
+			_charset = null;
 		}
-		_charset = null;
+		else
+		{
+			charsetName = charset.name();
+			_charset = charset;
+		}
 	}
 
 	/**

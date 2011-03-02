@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.request;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.apache.wicket.request.Url.QueryParameter;
+import org.apache.wicket.util.lang.WicketObjects;
 
 /**
  * @author Matej Knopp
@@ -356,5 +358,35 @@ public class UrlTest extends TestCase
 		baseUrl.resolveRelative(relative);
 
 		assertEquals("a/b?p1=v1", baseUrl.toString());
+	}
+
+	/**
+	 * Tests that the default charset is UTF-8
+	 */
+	public void testCharset1()
+	{
+		Url url = new Url();
+		assertEquals(Charset.forName("UTF-8"), url.getCharset());
+	}
+
+	/**
+	 * Tests setting the charset explicitly in the constructor
+	 */
+	public void testCharset2()
+	{
+		Charset expected = Charset.forName("ISO-8859-2");
+		Url url = new Url(expected);
+		assertEquals(expected, url.getCharset());
+	}
+
+	/**
+	 * Tests that the charset is recovered after deserialization (from Url#charsetName)
+	 */
+	public void testCharset3()
+	{
+		Charset expected = Charset.forName("ISO-8859-1");
+		Url url = new Url(expected);
+		Url clonedUrl = (Url)WicketObjects.cloneObject(url);
+		assertEquals(expected, clonedUrl.getCharset());
 	}
 }
