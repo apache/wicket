@@ -411,6 +411,8 @@ public class DateTimeField extends FormComponentPanel<Date>
 				mDate.setZone(DateTimeZone.forTimeZone(zone));
 			}
 
+			date = mDate.toDate();
+
 			if (use12HourFormat)
 			{
 				int hourOfHalfDay = mDate.get(DateTimeFieldType.hourOfHalfday());
