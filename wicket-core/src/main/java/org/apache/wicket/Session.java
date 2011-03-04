@@ -339,10 +339,7 @@ public abstract class Session implements IClusterable, IEventSink
 	/**
 	 * Gets the client info object for this session. This method lazily gets the new agent info
 	 * object for this session. It uses any cached or set ({@link #setClientInfo(ClientInfo)})
-	 * client info object or uses {@link RequestCycle#newClientInfo()} to get the info object based
-	 * on the current request when no client info object was set yet, and then caches the returned
-	 * object; we can expect the client to stay the same for the whole session, and implementations
-	 * of {@link RequestCycle#newClientInfo()} might be relatively expensive.
+	 * client info object.
 	 * 
 	 * @return the client info object based on this request
 	 */
@@ -419,7 +416,7 @@ public abstract class Session implements IClusterable, IEventSink
 	/**
 	 * @return The page factory for this session
 	 */
-	public final IPageFactory getPageFactory()
+	public IPageFactory getPageFactory()
 	{
 		return getApplication().getSessionSettings().getPageFactory();
 	}
@@ -836,7 +833,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * 
 	 * @return {@link IPageManager} instance.
 	 */
-	public final IPageManager getPageManager()
+	public IPageManager getPageManager()
 	{
 		return getApplication().getPageManager();
 	}
