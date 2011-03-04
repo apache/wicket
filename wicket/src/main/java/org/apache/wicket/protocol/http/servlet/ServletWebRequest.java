@@ -77,22 +77,35 @@ public class ServletWebRequest extends WebRequest
 		this.httpServletRequest = httpServletRequest;
 
 		ajax = false;
-		String ajaxHeader = httpServletRequest.getHeader("Wicket-Ajax");
 
-		if (Strings.isEmpty(ajaxHeader))
-			ajaxHeader = httpServletRequest.getParameter("wicket:ajax");
-
-		if (Strings.isEmpty(ajaxHeader) == false)
+		try
 		{
-			try
+			String ajaxHeader = httpServletRequest.getHeader("Wicket-Ajax");
+
+			if (Strings.isEmpty(ajaxHeader))
 			{
-				ajax = Strings.isTrue(ajaxHeader);
+				ajaxHeader = httpServletRequest.getParameter("wicket:ajax");
 			}
-			catch (StringValueConversionException e)
+
+			if (Strings.isEmpty(ajaxHeader) == false)
 			{
-				// We are not interested in this exception but we log it anyway
-				log.debug("Couldn't convert the Wicket-Ajax header: " + ajaxHeader);
+				try
+				{
+					ajax = Strings.isTrue(ajaxHeader);
+				}
+				catch (StringValueConversionException e)
+				{
+					// We are not interested in this exception but we log it anyway
+					log.debug("Couldn't convert the Wicket-Ajax header: " + ajaxHeader);
+				}
 			}
+		}
+		catch (IllegalStateException isx)
+		{
+			// Log the exception and assume this is non-ajax request.
+			// Later if an error occurs again while reading headers/parameters
+			// it will be possible to redirect to the configured error pages
+			log.error("A problem occurred while reading 'wicket:ajax' header/parameter.", isx);
 		}
 	}
 
