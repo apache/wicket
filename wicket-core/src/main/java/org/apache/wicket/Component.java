@@ -4351,7 +4351,7 @@ public abstract class Component
 	}
 
 	/** {@inheritDoc} */
-	public final void send(IEventSink sink, Broadcast type, Object payload)
+	public final <T> void send(IEventSink sink, Broadcast type, T payload)
 	{
 		new ComponentEventSender(this, getApplication().getFrameworkSettings()).send(sink, type,
 			payload);
