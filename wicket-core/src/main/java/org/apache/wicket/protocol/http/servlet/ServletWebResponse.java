@@ -200,9 +200,7 @@ public class ServletWebResponse extends WebResponse
 			HttpServletRequest httpServletRequest = webRequest.getContainerRequest();
 			Charset charset = RequestUtils.getCharset(httpServletRequest);
 
-			final Url current;
-
-			current = webRequest.getClientUrl();
+			final Url current = webRequest.getClientUrl();
 
 			Url append = Url.parse(url, charset);
 			current.concatSegments(append.getSegments());
