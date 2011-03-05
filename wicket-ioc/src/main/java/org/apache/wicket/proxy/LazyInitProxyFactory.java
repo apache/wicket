@@ -34,6 +34,7 @@ import net.sf.cglib.proxy.MethodProxy;
 
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.WicketObjects;
 
 /**
  * A factory class that creates lazy init proxies given a type and a {@link IProxyTargetLocator}
@@ -228,16 +229,12 @@ public class LazyInitProxyFactory
 		private Object readResolve() throws ObjectStreamException
 		{
 			Class<?> clazz;
-			try
-			{
-				clazz = Class.forName(type);
-			}
-			catch (ClassNotFoundException e)
+			clazz = WicketObjects.resolveClass(type);
+			if (clazz == null)
 			{
 				throw new InvalidClassException(type, "could not resolve class [" + type +
 					"] when deserializing proxy");
 			}
-
 			return LazyInitProxyFactory.createProxy(clazz, locator);
 		}
 	}
