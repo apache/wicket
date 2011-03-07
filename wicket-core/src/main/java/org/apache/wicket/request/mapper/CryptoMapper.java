@@ -35,16 +35,19 @@ public class CryptoMapper implements IRequestMapper
 {
 	private final IRequestMapper wrappedMapper;
 	private final IProvider<ICrypt> cryptProvider;
+	private final Application application;
 
 	public CryptoMapper(IRequestMapper wrappedMapper, Application application)
 	{
-		this(wrappedMapper, new ApplicationCryptProvider(application));
+		this(wrappedMapper, application, new ApplicationCryptProvider(application));
 	}
 
-	public CryptoMapper(IRequestMapper wrappedMapper, IProvider<ICrypt> cryptProvider)
+	public CryptoMapper(IRequestMapper wrappedMapper, Application application,
+		IProvider<ICrypt> cryptProvider)
 	{
 		this.wrappedMapper = wrappedMapper;
 		this.cryptProvider = cryptProvider;
+		this.application = application;
 	}
 
 	public int getCompatibilityScore(Request request)
@@ -86,7 +89,7 @@ public class CryptoMapper implements IRequestMapper
 	{
 		Url encrypted = new Url();
 		String encryptedUrlString = getCrypt().encryptUrlSafe(url.toString());
-		encrypted.addQueryParameter("x", encryptedUrlString);
+		encrypted.addQueryParameter(getCryptParameterName(), encryptedUrlString);
 		return encrypted;
 	}
 
@@ -97,7 +100,8 @@ public class CryptoMapper implements IRequestMapper
 			return encryptedUrl;
 		}
 
-		String encryptedUrlString = encryptedUrl.getQueryParameterValue("x").toString();
+		String encryptedUrlString = encryptedUrl.getQueryParameterValue(getCryptParameterName())
+			.toString();
 		if (Strings.isEmpty(encryptedUrlString))
 		{
 			return null;
@@ -115,6 +119,14 @@ public class CryptoMapper implements IRequestMapper
 		}
 
 		return url;
+	}
+
+	/**
+	 * @return the name of the parameter that brings the encrypted url
+	 */
+	protected String getCryptParameterName()
+	{
+		return application.getMapperContext().getNamespace();
 	}
 
 	private static class ApplicationCryptProvider implements IProvider<ICrypt>
