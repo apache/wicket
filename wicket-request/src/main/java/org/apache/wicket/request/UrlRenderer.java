@@ -44,27 +44,19 @@ public class UrlRenderer
 		PROTO_TO_PORT.put("https", 443);
 	}
 
-
+	private final Request request;
 	private Url baseUrl;
-	private final Url originalBaseUrl;
-	private final String prefixToContextPath;
-
 
 	/**
 	 * Construct.
 	 * 
-	 * @param base
-	 *            base Url. All generated Urls will be relative to this Url.
-	 * @param prefixToContextPath
-	 *            prefix that when prepended to {@code base} will make it context-relative
+	 * @param request
+	 *            Request that serves as the base for rendering urls
 	 */
-	public UrlRenderer(final Url base, String prefixToContextPath)
+	public UrlRenderer(Request request)
 	{
-		Args.notNull(base, "base");
-		Args.notNull(prefixToContextPath, "prefixToContextPath");
-		baseUrl = base;
-		originalBaseUrl = baseUrl;
-		this.prefixToContextPath = prefixToContextPath;
+		this.request = request;
+		baseUrl = request.getClientUrl();
 	}
 
 	/**
@@ -118,26 +110,28 @@ public class UrlRenderer
 	 */
 	public String renderFullUrl(Url url)
 	{
-		StringBuilder render = new StringBuilder();
-
 		final String protocol = resolveProtocol(url);
 		final String host = resolveHost(url);
 		final Integer port = resolvePort(url);
 		final String path = url.toString();
 
-		render.append(protocol).append("://").append(host);
+		String render = protocol + "://" + host;
 
 		if (port != null && !port.equals(PROTO_TO_PORT.get(protocol)))
 		{
-			render.append(":").append(port);
+			render += ":" + port;
 		}
 
-		if (!path.startsWith("/"))
+		if (!Strings.isEmpty(request.getContextPath()))
 		{
-			render.append("/");
+			render += request.getContextPath();
+		}
+		if (!Strings.isEmpty(request.getFilterPath()))
+		{
+			render = Strings.join("/", render, request.getFilterPath());
 		}
 
-		render.append(path);
+		render = Strings.join("/", render, path);
 
 		return render.toString();
 	}
@@ -151,7 +145,7 @@ public class UrlRenderer
 	 */
 	protected Integer resolvePort(Url url)
 	{
-		return choose(url.getPort(), baseUrl.getPort(), originalBaseUrl.getPort());
+		return choose(url.getPort(), baseUrl.getPort(), request.getClientUrl().getPort());
 	}
 
 	/**
@@ -163,7 +157,7 @@ public class UrlRenderer
 	 */
 	protected String resolveHost(Url url)
 	{
-		return choose(url.getHost(), baseUrl.getHost(), originalBaseUrl.getHost());
+		return choose(url.getHost(), baseUrl.getHost(), request.getClientUrl().getHost());
 	}
 
 	/**
@@ -175,7 +169,8 @@ public class UrlRenderer
 	 */
 	protected String resolveProtocol(Url url)
 	{
-		return choose(url.getProtocol(), baseUrl.getProtocol(), originalBaseUrl.getProtocol());
+		return choose(url.getProtocol(), baseUrl.getProtocol(), request.getClientUrl()
+			.getProtocol());
 	}
 
 	/**
@@ -292,7 +287,7 @@ public class UrlRenderer
 			buffer.prepend("../");
 		}
 
-		buffer.prepend(prefixToContextPath);
+		buffer.prepend(request.getPrefixToContextPath());
 
 		return buffer.toString();
 	}

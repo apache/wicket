@@ -406,5 +406,15 @@ public class ServletWebRequest extends WebRequest
 		return httpServletRequest;
 	}
 
+	@Override
+	public String getContextPath()
+	{
+		return httpServletRequest.getContextPath();
+	}
 
+	@Override
+	public String getFilterPath()
+	{
+		return filterPrefix;
+	}
 }

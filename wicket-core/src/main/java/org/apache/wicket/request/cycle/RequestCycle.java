@@ -142,7 +142,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	protected UrlRenderer newUrlRenderer()
 	{
 		// All URLs will be rendered relative to current request (can be overridden afterwards)
-		return new UrlRenderer(getRequest().getClientUrl(), getRequest().getPrefixToContextPath());
+		return new UrlRenderer(getRequest());
 	}
 
 	/**

@@ -43,6 +43,9 @@ public class MockWebRequest extends WebRequest
 	private Map<String, List<Object>> headers = new HashMap<String, List<Object>>();
 	private MockRequestParameters postRequestParameters = new MockRequestParameters();
 	private Locale locale = Locale.getDefault();
+	private String contextPath;
+	private String filterPath;
+	private String prefixToContextPath;
 
 	/**
 	 * Construct.
@@ -52,6 +55,21 @@ public class MockWebRequest extends WebRequest
 	public MockWebRequest(Url url)
 	{
 		this.url = url;
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param url
+	 * @param contextPath
+	 * @param filterPath
+	 */
+	public MockWebRequest(Url url, String contextPath, String filterPath, String prefixToContextPath)
+	{
+		this.url = url;
+		this.contextPath = contextPath;
+		this.filterPath = filterPath;
+		this.prefixToContextPath = prefixToContextPath;
 	}
 
 	MockWebRequest(Url url, List<Cookie> cookies, Map<String, List<Object>> headers,
@@ -262,4 +280,42 @@ public class MockWebRequest extends WebRequest
 	{
 		return this;
 	}
+
+	@Override
+	public String getContextPath()
+	{
+		return contextPath;
+	}
+
+	public MockWebRequest setContextPath(String contextPath)
+	{
+		this.contextPath = contextPath;
+		return this;
+	}
+
+	@Override
+	public String getFilterPath()
+	{
+		return filterPath;
+	}
+
+	public MockWebRequest setFilterPath(String filterPath)
+	{
+		this.filterPath = filterPath;
+		return this;
+	}
+
+	@Override
+	public String getPrefixToContextPath()
+	{
+		return prefixToContextPath;
+	}
+
+	public MockWebRequest setPrefixToContextPath(String prefixToContextPath)
+	{
+		this.prefixToContextPath = prefixToContextPath;
+		return this;
+	}
+
+
 }

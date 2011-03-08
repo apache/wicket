@@ -214,6 +214,27 @@ public abstract class Request
 	}
 
 	/**
+	 * Returns the context path or an empty string if the application is running under root context.
+	 * 
+	 * @return context path
+	 */
+	public String getContextPath()
+	{
+		return "";
+	}
+
+	/**
+	 * Returns the path to which wicket Filter is mapped or an empty string if the filter is mapped
+	 * to {@code /*}
+	 * 
+	 * @return filter path
+	 */
+	public String getFilterPath()
+	{
+		return "";
+	}
+
+	/**
 	 * Gets charset of the request
 	 * 
 	 * @return request charset
