@@ -30,6 +30,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.Url.QueryParameter;
 import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.util.string.UrlUtils;
 
 /**
  * Mutable mock {@link WebRequest}.
@@ -284,7 +285,7 @@ public class MockWebRequest extends WebRequest
 	@Override
 	public String getContextPath()
 	{
-		return contextPath;
+		return UrlUtils.normalizePath(contextPath);
 	}
 
 	public MockWebRequest setContextPath(String contextPath)
@@ -296,7 +297,7 @@ public class MockWebRequest extends WebRequest
 	@Override
 	public String getFilterPath()
 	{
-		return filterPath;
+		return UrlUtils.normalizePath(filterPath);
 	}
 
 	public MockWebRequest setFilterPath(String filterPath)

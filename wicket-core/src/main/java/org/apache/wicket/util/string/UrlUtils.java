@@ -71,4 +71,30 @@ public class UrlUtils
 			return url;
 		}
 	}
+
+	/**
+	 * Makes sure the path starts with a slash and does not end with a slash. Empty or null paths
+	 * are normalized into an empty string.
+	 * 
+	 * @param path
+	 *            path to normalize
+	 * @return normalized path
+	 */
+	public static String normalizePath(String path)
+	{
+		if (Strings.isEmpty(path))
+		{
+			return "";
+		}
+		path = path.trim();
+		if (!path.startsWith("/"))
+		{
+			path = "/" + path;
+		}
+		if (path.endsWith("/"))
+		{
+			path = path.substring(0, path.length() - 1);
+		}
+		return path;
+	}
 }

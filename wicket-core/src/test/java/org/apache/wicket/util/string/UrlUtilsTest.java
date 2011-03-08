@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.string;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -35,5 +36,24 @@ public class UrlUtilsTest
 		assertFalse(UrlUtils.isRelative("http://example.com"));
 		assertFalse(UrlUtils.isRelative("https://example.com"));
 		assertFalse(UrlUtils.isRelative("ftp://example.com"));
+	}
+
+	@Test
+	public void normalizePath()
+	{
+		// test basic normalization
+		assertEquals("/foo/bar", UrlUtils.normalizePath("foo/bar"));
+		assertEquals("/foo/bar", UrlUtils.normalizePath("foo/bar/"));
+		assertEquals("/foo/bar", UrlUtils.normalizePath("/foo/bar"));
+		assertEquals("/foo/bar", UrlUtils.normalizePath("/foo/bar/"));
+
+		// test empty string normalization
+		assertEquals("", UrlUtils.normalizePath(null));
+		assertEquals("", UrlUtils.normalizePath(""));
+		assertEquals("", UrlUtils.normalizePath("/"));
+
+		// test trimming
+		assertEquals("", UrlUtils.normalizePath(" / "));
+		assertEquals("/foo/bar", UrlUtils.normalizePath("  foo/bar/  "));
 	}
 }

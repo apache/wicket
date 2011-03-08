@@ -122,15 +122,8 @@ public class UrlRenderer
 			render += ":" + port;
 		}
 
-		if (!Strings.isEmpty(request.getContextPath()))
-		{
-			render += request.getContextPath();
-		}
-		if (!Strings.isEmpty(request.getFilterPath()))
-		{
-			render = Strings.join("/", render, request.getFilterPath());
-		}
-
+		render += request.getContextPath();
+		render += request.getFilterPath();
 		render = Strings.join("/", render, path);
 
 		return render.toString();
@@ -250,15 +243,17 @@ public class UrlRenderer
 	 */
 	protected boolean shouldRenderAsFull(Url url)
 	{
-		if (!Strings.isEmpty(url.getProtocol()) && !url.getProtocol().equals(baseUrl.getProtocol()))
+		if (!Strings.isEmpty(url.getProtocol()) &&
+			!url.getProtocol().equals(request.getClientUrl().getProtocol()))
 		{
 			return true;
 		}
-		if (!Strings.isEmpty(url.getHost()) && !url.getHost().equals(baseUrl.getHost()))
+		if (!Strings.isEmpty(url.getHost()) &&
+			!url.getHost().equals(request.getClientUrl().getHost()))
 		{
 			return true;
 		}
-		if (url.getPort() != null && !url.getPort().equals(baseUrl.getPort()))
+		if (url.getPort() != null && !url.getPort().equals(request.getClientUrl().getPort()))
 		{
 			return true;
 		}

@@ -215,6 +215,8 @@ public abstract class Request
 
 	/**
 	 * Returns the context path or an empty string if the application is running under root context.
+	 * Returned path, unless an empty string, will always start with a slash and will never end with
+	 * a slash.
 	 * 
 	 * @return context path
 	 */
@@ -225,7 +227,8 @@ public abstract class Request
 
 	/**
 	 * Returns the path to which wicket Filter is mapped or an empty string if the filter is mapped
-	 * to {@code /*}
+	 * to {@code /*}. Returned path, unless an empty string, will always start with a slash and will
+	 * never end with a slash.
 	 * 
 	 * @return filter path
 	 */

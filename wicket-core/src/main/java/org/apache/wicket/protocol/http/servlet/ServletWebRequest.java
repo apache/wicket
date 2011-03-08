@@ -42,6 +42,7 @@ import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.string.UrlUtils;
 import org.apache.wicket.util.upload.FileItemFactory;
 import org.apache.wicket.util.upload.FileUploadException;
 import org.slf4j.Logger;
@@ -409,12 +410,12 @@ public class ServletWebRequest extends WebRequest
 	@Override
 	public String getContextPath()
 	{
-		return httpServletRequest.getContextPath();
+		return UrlUtils.normalizePath(httpServletRequest.getContextPath());
 	}
 
 	@Override
 	public String getFilterPath()
 	{
-		return filterPrefix;
+		return UrlUtils.normalizePath(filterPrefix);
 	}
 }
