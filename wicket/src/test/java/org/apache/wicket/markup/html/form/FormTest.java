@@ -17,7 +17,13 @@
 package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
 
 
 /**
@@ -84,5 +90,42 @@ public class FormTest extends WicketTestCase
 	public void testFormMethodGet() throws Exception
 	{
 		executeTest(FormMethodTestPage.class, "FormMethodTestPage_expected.html");
+	}
+
+	/**
+	 * WICKET-3488
+	 */
+	public void testFormReplacement()
+	{
+		tester.startPage(TestPage.class);
+		tester.newFormTester("form").submit();
+		tester.assertRenderedPage(TestPage.class);
+	}
+
+	/** */
+	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
+	{
+		/** */
+		public TestPage()
+		{
+			super(new PageParameters("test=value"));
+			add(new Form<Void>("form")
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected void onSubmit()
+				{
+					replaceWith(new Form<Void>("form"));
+				}
+			});
+		}
+
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream(
+				"<html><body><form wicket:id=\"form\"></form></body></html>");
+		}
 	}
 }
