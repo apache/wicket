@@ -35,7 +35,7 @@ import org.apache.wicket.util.lang.Args;
  * </ul>
  * 
  * <strong>sample structure of url</strong>
- *
+ * 
  * <pre>
  *    /resources/${category}/images/[indexed-param-0]/[indexed-param-1]?[named-param-1=value]&[named-param-2=value2]
  * </pre>
@@ -48,9 +48,10 @@ import org.apache.wicket.util.lang.Args;
  * <pre>
  * getRootRequestMapperAsCompound().add(new ResourceMapper(&quot;/images&quot;, new ImagesResourceReference()));
  * </pre>
- *
- * @see org.apache.wicket.protocol.http.WebApplication#mountResource(String, org.apache.wicket.request.resource.ResourceReference)
- *
+ * 
+ * @see org.apache.wicket.protocol.http.WebApplication#mountResource(String,
+ *      org.apache.wicket.request.resource.ResourceReference)
+ * 
  * @author Peter Ertl
  */
 public class ResourceMapper extends AbstractMapper implements IRequestMapper
@@ -71,8 +72,9 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 	 *            mount path for the resource
 	 * @param resourceReference
 	 *            resource reference that should be linked to the mount path
-	 *
-	 * @see #ResourceMapper(String, org.apache.wicket.request.resource.ResourceReference, org.apache.wicket.request.mapper.parameter.IPageParametersEncoder)
+	 * 
+	 * @see #ResourceMapper(String, org.apache.wicket.request.resource.ResourceReference,
+	 *      org.apache.wicket.request.mapper.parameter.IPageParametersEncoder)
 	 */
 	public ResourceMapper(String path, ResourceReference resourceReference)
 	{
@@ -81,7 +83,7 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 
 	/**
 	 * create a resource mapper for a resource
-	 *
+	 * 
 	 * @param path
 	 *            mount path for the resource
 	 * @param resourceReference
@@ -89,15 +91,16 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 	 * @param encoder
 	 *            encoder for url parameters
 	 */
-	public ResourceMapper(String path, ResourceReference resourceReference, IPageParametersEncoder encoder)
+	public ResourceMapper(String path, ResourceReference resourceReference,
+		IPageParametersEncoder encoder)
 	{
 		Args.notEmpty(path, "path");
 		Args.notNull(resourceReference, "resourceReference");
 		Args.notNull(encoder, "encoder");
 
 		this.resourceReference = resourceReference;
-		this.mountSegments = getMountSegments(path);
-		this.parametersEncoder = encoder;
+		mountSegments = getMountSegments(path);
+		parametersEncoder = encoder;
 	}
 
 	public IRequestHandler mapRequest(final Request request)
@@ -111,7 +114,8 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 		}
 
 		// now extract the page parameters from the request url
-		PageParameters parameters = extractPageParameters(request, mountSegments.length, parametersEncoder);
+		PageParameters parameters = extractPageParameters(request, mountSegments.length,
+			parametersEncoder);
 
 		// check if there are placeholders in mount segments
 		for (int index = 0; index < mountSegments.length; ++index)
@@ -146,7 +150,8 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler)requestHandler;
 
 		// see if request handler addresses the resource we serve
-		if (resourceReference.getResource().equals(handler.getResource()) == false)
+		if (resourceReference.equals(handler.getResourceReference()) == false &&
+			resourceReference.getResource().equals(handler.getResource()) == false)
 		{
 			return null;
 		}

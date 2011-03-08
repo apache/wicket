@@ -251,7 +251,10 @@ public class PackageResource extends AbstractResource
 		}
 
 		// modify the resource response depending on the current caching strategy needs
-		Application.get().getResourceSettings().getCachingStrategy().decorateResponse(resourceResponse);
+		Application.get()
+			.getResourceSettings()
+			.getCachingStrategy()
+			.decorateResponse(resourceResponse);
 
 		return resourceResponse;
 	}
@@ -357,4 +360,75 @@ public class PackageResource extends AbstractResource
 			.append(']');
 		return result.toString();
 	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((absolutePath == null) ? 0 : absolutePath.hashCode());
+		result = prime * result + ((locale == null) ? 0 : locale.hashCode());
+		result = prime * result + ((path == null) ? 0 : path.hashCode());
+		result = prime * result + ((scopeName == null) ? 0 : scopeName.hashCode());
+		result = prime * result + ((style == null) ? 0 : style.hashCode());
+		result = prime * result + ((variation == null) ? 0 : variation.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PackageResource other = (PackageResource)obj;
+		if (absolutePath == null)
+		{
+			if (other.absolutePath != null)
+				return false;
+		}
+		else if (!absolutePath.equals(other.absolutePath))
+			return false;
+		if (locale == null)
+		{
+			if (other.locale != null)
+				return false;
+		}
+		else if (!locale.equals(other.locale))
+			return false;
+		if (path == null)
+		{
+			if (other.path != null)
+				return false;
+		}
+		else if (!path.equals(other.path))
+			return false;
+		if (scopeName == null)
+		{
+			if (other.scopeName != null)
+				return false;
+		}
+		else if (!scopeName.equals(other.scopeName))
+			return false;
+		if (style == null)
+		{
+			if (other.style != null)
+				return false;
+		}
+		else if (!style.equals(other.style))
+			return false;
+		if (variation == null)
+		{
+			if (other.variation != null)
+				return false;
+		}
+		else if (!variation.equals(other.variation))
+			return false;
+		return true;
+	}
+
+
 }
