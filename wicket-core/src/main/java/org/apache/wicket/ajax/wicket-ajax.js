@@ -455,7 +455,7 @@ Wicket.Form.serializeInput = function(input) {
     } else if (type == "text" || type == "password" || type == "hidden" || type == "textarea" || type == "search"
     	|| type == "email" || type == "url" || type == "range" || type == "tel" 
     	|| type == "date" || type == "datetime" || type == "month" || type == "week" ||	type == "week"
-    	|| type == "datetimelocal" || type == "number" || type == "color") {
+    	|| type == "datetime-local" || type == "number" || type == "color") {
 		return Wicket.Form.encode(input.name) + "=" + Wicket.Form.encode(input.value) + "&";
 	} else {
 		return "";
