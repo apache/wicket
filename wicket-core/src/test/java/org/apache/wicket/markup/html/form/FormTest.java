@@ -63,6 +63,16 @@ public class FormTest extends WicketTestCase
 	}
 
 	/**
+	 * WICKET-3488
+	 */
+	public void testFormReplacement()
+	{
+		tester.startPage(TestPage.class);
+		tester.newFormTester("form").submit();
+		tester.assertRenderedPage(TestPage.class);
+	}
+
+	/**
 	 * 
 	 */
 	public void testActionUrlNotDoubleEscaped()

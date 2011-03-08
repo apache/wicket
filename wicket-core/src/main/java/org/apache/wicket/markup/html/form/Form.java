@@ -773,6 +773,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	{
 		// save the page in case the component is removed during submit
 		final Page page = getPage();
+		String hiddenFieldId = getHiddenFieldId();
 
 		if (!isEnabledInHierarchy() || !isVisibleInHierarchy())
 		{
@@ -822,7 +823,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 					parameters.remove(formComponent.getInputName());
 				}
 			});
-			parameters.remove(getHiddenFieldId());
+			parameters.remove(hiddenFieldId);
 			if (submittingComponent instanceof AbstractSubmitLink)
 			{
 				AbstractSubmitLink submitLink = (AbstractSubmitLink)submittingComponent;
