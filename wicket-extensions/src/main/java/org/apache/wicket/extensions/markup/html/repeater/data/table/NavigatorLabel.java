@@ -83,7 +83,7 @@ public class NavigatorLabel extends Label
 			{
 				return 0;
 			}
-			return pageable.getCurrentPage() * pageable.getItemsPerPage();
+			return pageable.getCurrentPage() * pageable.getItemsPerPage() + 1;
 		}
 
 		/**
