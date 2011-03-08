@@ -33,7 +33,6 @@ import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -120,10 +119,7 @@ import org.slf4j.LoggerFactory;
  * @author Johan Compagner
  * 
  */
-public abstract class Page extends MarkupContainer
-	implements
-		IRedirectListener,
-		IRequestablePage
+public abstract class Page extends MarkupContainer implements IRedirectListener, IRequestablePage
 {
 	/** True if the page hierarchy has been modified in the current request. */
 	private static final int FLAG_IS_DIRTY = FLAG_RESERVED3;
@@ -1119,13 +1115,6 @@ public abstract class Page extends MarkupContainer
 	void setPageStateless(Boolean stateless)
 	{
 		this.stateless = stateless;
-	}
-
-	/**
-	 * Called when the page is retrieved from Session.
-	 */
-	public void onPageAttached()
-	{
 	}
 
 	/**
