@@ -29,6 +29,7 @@ import org.apache.wicket.IClusterable;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.file.Files;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.upload.FileItem;
 
 
@@ -167,7 +168,14 @@ public class FileUpload implements IClusterable
 	 */
 	public String getClientFileName()
 	{
-		return item.getName();
+		String name = item.getName();
+
+		// when uploading from localhost some browsers will specify the entire path, we strip it
+		// down to just the file name
+		name = Strings.lastPathComponent(name, '/');
+		name = Strings.lastPathComponent(name, '\\');
+
+		return name;
 	}
 
 	/**
