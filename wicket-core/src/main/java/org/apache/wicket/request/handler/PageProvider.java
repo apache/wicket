@@ -17,7 +17,6 @@
 package org.apache.wicket.request.handler;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Page;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.IRequestHandler;
@@ -206,15 +205,6 @@ public class PageProvider implements IPageProvider
 		}
 	}
 
-	/**
-	 * 
-	 * @return always false
-	 */
-	protected boolean prepareForRenderNewPage()
-	{
-		return false;
-	}
-
 	protected IPageSource getPageSource()
 	{
 		if (pageSource != null)
@@ -258,10 +248,6 @@ public class PageProvider implements IPageProvider
 			{
 				page = getPageSource().newPageInstance(pageClass, pageParameters);
 				freshCreated = true;
-				if (prepareForRenderNewPage() && page instanceof Page)
-				{
-					((Page)page).internalPrepareForRender(false);
-				}
 			}
 		}
 
@@ -332,5 +318,10 @@ public class PageProvider implements IPageProvider
 		{
 			Application.get().getPageManager().touchPage(pageInstance);
 		}
+	}
+
+	public Integer getPageId()
+	{
+		return pageId;
 	}
 }

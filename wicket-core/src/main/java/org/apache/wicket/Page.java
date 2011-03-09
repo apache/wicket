@@ -323,7 +323,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		if (!getFlag(FLAG_INITIALIZED))
 		{
 			// initialize the page if not yet initialized
-			initialize();
+			internalInitialize();
 		}
 		super.internalPrepareForRender(setRenderingFlag);
 	}
@@ -1061,7 +1061,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		if (!getFlag(FLAG_INITIALIZED))
 		{
 			// initialize the page if not yet initialized
-			initialize();
+			internalInitialize();
 		}
 
 		if (!component.isAuto())

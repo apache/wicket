@@ -967,9 +967,11 @@ public abstract class Component
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE PUBLIC API, DO NOT CALL IT
+	 * 
 	 * Used to call {@link #onInitialize()}
 	 */
-	void initialize()
+	public void internalInitialize()
 	{
 		fireInitialize();
 	}

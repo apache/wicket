@@ -16,14 +16,15 @@
  */
 package org.apache.wicket.request.handler;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * Extension of {@link PageProvider} that is also capable of providing a Component belonging
- * to the page.
+ * Extension of {@link PageProvider} that is also capable of providing a Component belonging to the
+ * page.
  * 
  * @see PageProvider
  * 
@@ -134,15 +135,6 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 	}
 
 	/**
-	 * @see org.apache.wicket.request.handler.PageProvider#prepareForRenderNewPage()
-	 */
-	@Override
-	protected boolean prepareForRenderNewPage()
-	{
-		return true;
-	}
-
-	/**
 	 * @see org.apache.wicket.request.handler.IPageAndComponentProvider#getComponent()
 	 */
 	public IRequestableComponent getComponent()
@@ -151,6 +143,24 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 		{
 			IRequestablePage page = getPageInstance();
 			component = page.get(componentPath);
+			if (component == null)
+			{
+
+				/*
+				 * on stateless pages it is possible that the component may not yet exist because it
+				 * couldve been created in one of the lifecycle callbacks of this page. Lets invoke
+				 * the callbacks to give the page a chance to create the missing component.
+				 */
+
+				// make sure this page instance was just created so the page can be stateless
+				if (getPageId() == null)
+				{
+					Page p = (Page)page;
+					p.internalInitialize();
+					p.internalPrepareForRender(false);
+					component = page.get(componentPath);
+				}
+			}
 		}
 		if (component == null)
 		{

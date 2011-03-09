@@ -925,7 +925,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			page.componentAdded(child);
 
 			// initialie the component
-			child.initialize();
+			child.internalInitialize();
 		}
 
 		// if the PREPARED_FOR_RENDER flag is set, we have already called
@@ -937,13 +937,15 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * Overrides {@link Component#initialize()} to call {@link Component#fireInitialize()} for
-	 * itself and for all its children.
+	 * THIS METHOD IS NOT PART OF THE PUBLIC API, DO NOT CALL IT
+	 * 
+	 * Overrides {@link Component#internalInitialize()} to call {@link Component#fireInitialize()}
+	 * for itself and for all its children.
 	 * 
 	 * @see org.apache.wicket.Component#fireInitialize()
 	 */
 	@Override
-	final void initialize()
+	public final void internalInitialize()
 	{
 		super.fireInitialize();
 		visitChildren(new IVisitor<Component, Void>()
