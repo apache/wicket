@@ -377,7 +377,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 */
 	protected DateTextField newDateTextField(String id, PropertyModel<Date> dateFieldModel)
 	{
-		return DateTextField.forShortStyle(id, dateFieldModel);
+		return DateTextField.forShortStyle(id, dateFieldModel, false);
 	}
 
 	/**

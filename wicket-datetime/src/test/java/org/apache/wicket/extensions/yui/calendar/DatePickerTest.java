@@ -173,6 +173,49 @@ public class DatePickerTest extends WicketTestCase
 		assertSame(origJodaDef, newJodaDef);
 	}
 
+	public void testDifferentDateTimeZoneConversion() throws ParseException
+	{
+		log.error("=========== testDifferentDateTimeZoneConversion() =================");
+		TimeZone origJvmDef = TimeZone.getDefault();
+		DateTimeZone origJodaDef = DateTimeZone.getDefault();
+		TimeZone tzClient = TimeZone.getTimeZone("Australia/South");
+		TimeZone tzServer = TimeZone.getTimeZone("Europe/Berlin");
+
+		TimeZone.setDefault(tzServer);
+		DateTimeZone.setDefault(DateTimeZone.forTimeZone(tzServer));
+		// Locale.setDefault(Locale.GERMAN);
+
+		Class<? extends Page> pageClass = DatesPage2.class;
+		MutableDateTime dt = new MutableDateTime(DateTimeZone.forTimeZone(tzClient));
+		dt.setDateTime(2010, 11, 06, 0, 0, 0, 0);
+		Date date = new Date(dt.getMillis());
+
+		WebClientInfo clientInfo = (WebClientInfo)tester.getSession().getClientInfo();
+		clientInfo.getProperties().setTimeZone(tzClient);
+
+		tester.getSession().setLocale(Locale.GERMAN);
+		tester.startPage(pageClass);
+		tester.assertRenderedPage(pageClass);
+		FormTester formTester = tester.newFormTester("form");
+		formTester.setValue("dateTimeField:date", "06.11.2010");
+		formTester.setValue("dateTimeField:hours", "00");
+		formTester.setValue("dateTimeField:minutes", "00");
+		formTester.setValue("dateField:date", "06.11.2010");
+		formTester.submit();
+
+		DatesPage2 page = (DatesPage2)tester.getLastRenderedPage();
+
+		log.error("orig: " + date.getTime() + "; date: " + page.date.getTime() + "; dateTime: " +
+			page.dateTime.getTime());
+		log.error("orig: " + date + "; date: " + page.date + "; dateTime: " + page.dateTime);
+		assertEquals(0, date.compareTo(page.dateTime));
+		assertEquals(0, date.compareTo(page.date));
+
+		TimeZone.setDefault(origJvmDef);
+		DateTimeZone.setDefault(origJodaDef);
+	}
+
+
 	/**
 	 * 
 	 * @throws ParseException
