@@ -139,15 +139,6 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#setDefaultModel(org.apache.wicket.model.IModel)
-	 */
-	@Override
-	public FileUploadField setDefaultModel(IModel<?> model)
-	{
-		return (FileUploadField)super.setDefaultModel(model);
-	}
-
-	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#getInputAsArray()
 	 */
 	@Override
