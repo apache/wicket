@@ -19,6 +19,7 @@ package org.apache.wicket.markup;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Locale;
+import java.util.regex.Matcher;
 
 import junit.framework.Assert;
 
@@ -426,5 +427,53 @@ public final class MarkupParserTest extends WicketTestCase
 
 		RawMarkup raw = (RawMarkup)markup.get(0);
 		assertEquals("<span> </span>", raw.toString());
+	}
+
+	/**
+	 * 
+	 */
+	public void testOpenConditionalCommentPattern()
+	{
+		assertFalse(MarkupParser.CONDITIONAL_COMMENT_OPENING.matcher("<!--x--> <!--[if IE]>")
+			.find());
+
+		String markup = " <!--[if IE]> <![endif]--><!--[if IE]>--><!--<![endif]--><!--[if IE]><!--><!--<![endif]--><!--[if IE]><! --><!--<![endif]-->";
+		Matcher m = MarkupParser.CONDITIONAL_COMMENT_OPENING.matcher(markup);
+		assertTrue(m.find());
+		assertEquals(" <!--[if IE]>", m.group());
+		assertFalse(m.find());
+
+		markup = " <!--[if IE]>--> <![endif]--><!--[if IE]>--><!--<![endif]--><!--[if IE]><!--><!--<![endif]--><!--[if IE]><! --><!--<![endif]-->";
+		m = MarkupParser.CONDITIONAL_COMMENT_OPENING.matcher(markup);
+		assertTrue(m.find());
+		assertEquals(" <!--[if IE]>-->", m.group());
+		assertFalse(m.find());
+
+		markup = " <!--[if IE]><!--> <![endif]--><!--[if IE]>--><!--<![endif]--><!--[if IE]><!--><!--<![endif]--><!--[if IE]><! --><!--<![endif]-->";
+		m = MarkupParser.CONDITIONAL_COMMENT_OPENING.matcher(markup);
+		assertTrue(m.find());
+		assertEquals(" <!--[if IE]><!-->", m.group());
+		assertFalse(m.find());
+
+		markup = " <!--[if IE]><! --> <![endif]--><!--[if IE]>--><!--<![endif]--><!--[if IE]><!--><!--<![endif]--><!--[if IE]><! --><!--<![endif]-->";
+		m = MarkupParser.CONDITIONAL_COMMENT_OPENING.matcher(markup);
+		assertTrue(m.find());
+		assertEquals(" <!--[if IE]><! -->", m.group());
+		assertFalse(m.find());
+
+	}
+
+	/**
+	 * @throws IOException
+	 * @throws ResourceStreamNotFoundException
+	 */
+	public void testRawMakupParsingWithStripCommentsSetTrue() throws IOException,
+		ResourceStreamNotFoundException
+	{
+		tester.getApplication().getMarkupSettings().setStripComments(true);
+		String conditionalComment = "\r\n <!--[if IE 6]>\r\n<![endif]-->";
+		MarkupParser parser = new MarkupParser(conditionalComment);
+		Markup markup = parser.parse();
+		assertEquals(conditionalComment, markup.get(0).toString());
 	}
 }
