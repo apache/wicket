@@ -1603,7 +1603,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 		}
 		else
 		{
-			formId = Form.getRootFormRelativeId(this);
+			formId = Form.getRootFormRelativeId(this).replace(":", "_");
 		}
 		return getInputNamePrefix() + formId + "_hf_0";
 	}
