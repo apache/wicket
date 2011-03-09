@@ -79,7 +79,9 @@ public abstract class BaseRequestHandlerStackTest extends TestCase
 
 		public Response setResponse(Response response)
 		{
-			return response;
+			Response original = this.response;
+			this.response = response;
+			return original;
 		}
 
 		public Request getRequest()
@@ -102,11 +104,18 @@ public abstract class BaseRequestHandlerStackTest extends TestCase
 	{
 		return new RequestHandlerStack()
 		{
-
 			@Override
 			protected void respond(IRequestHandler handler)
 			{
-				handler.respond(requestCycle);
+				Response originalResponse = requestCycle.getResponse();
+				try
+				{
+					handler.respond(requestCycle);
+				}
+				finally
+				{
+					requestCycle.setResponse(originalResponse);
+				}
 			}
 
 			@Override
