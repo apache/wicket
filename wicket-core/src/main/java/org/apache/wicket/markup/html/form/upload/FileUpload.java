@@ -30,6 +30,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.upload.FileItem;
 
 
@@ -100,8 +101,9 @@ public class FileUpload implements IClusterable
 	/**
 	 * Get the MD5 checksum.
 	 * 
-	 * @param algorithm the digest algorithm, e.g. MD5, SHA-1, SHA-256, SHA-512
-	 *
+	 * @param algorithm
+	 *            the digest algorithm, e.g. MD5, SHA-1, SHA-256, SHA-512
+	 * 
 	 * @return The cryptographic digest of the file
 	 */
 	public byte[] getDigest(String algorithm)
@@ -122,7 +124,7 @@ public class FileUpload implements IClusterable
 			try
 			{
 				in = item.getInputStream();
-				byte[] buf = new byte[Math.min((int) item.getSize(), 4096 * 10)];
+				byte[] buf = new byte[Math.min((int)item.getSize(), 4096 * 10)];
 				int len;
 				while (-1 != (len = in.read(buf)))
 				{
@@ -132,7 +134,8 @@ public class FileUpload implements IClusterable
 			}
 			catch (IOException ex)
 			{
-				throw new WicketRuntimeException("Error while reading input data for " + algorithm + " checksum", ex);
+				throw new WicketRuntimeException("Error while reading input data for " + algorithm +
+					" checksum", ex);
 			}
 			finally
 			{
@@ -141,8 +144,10 @@ public class FileUpload implements IClusterable
 		}
 		catch (NoSuchAlgorithmException ex)
 		{
-			String error = String.format("Your java runtime does not support digest algorithm [%s]. " +
-					"Please see java.security.MessageDigest.getInstance(\"%s\")", algorithm, algorithm);
+			String error = String.format(
+				"Your java runtime does not support digest algorithm [%s]. "
+					+ "Please see java.security.MessageDigest.getInstance(\"%s\")", algorithm,
+				algorithm);
 
 			throw new WicketRuntimeException(error, ex);
 		}
@@ -150,7 +155,7 @@ public class FileUpload implements IClusterable
 
 	/**
 	 * Get the MD5 checksum.
-	 *
+	 * 
 	 * @return The MD5 checksum of the file
 	 */
 	public byte[] getMD5()
@@ -164,7 +169,14 @@ public class FileUpload implements IClusterable
 	 */
 	public String getClientFileName()
 	{
-		return item.getName();
+		String name = item.getName();
+
+		// when uploading from localhost some browsers will specify the entire path, we strip it
+		// down to just the file name
+		name = Strings.lastPathComponent(name, '/');
+		name = Strings.lastPathComponent(name, '\\');
+
+		return name;
 	}
 
 	/**
@@ -235,7 +247,8 @@ public class FileUpload implements IClusterable
 	 */
 	public final File writeToTempFile() throws IOException
 	{
-		File temp = File.createTempFile(Session.get().getId(), Files.cleanupFilename(item.getFieldName()));
+		File temp = File.createTempFile(Session.get().getId(),
+			Files.cleanupFilename(item.getFieldName()));
 		writeTo(temp);
 		return temp;
 	}
