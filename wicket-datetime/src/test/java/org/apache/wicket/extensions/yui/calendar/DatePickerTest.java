@@ -243,7 +243,7 @@ public class DatePickerTest extends WicketTestCase
 		cal.set(Calendar.MILLISECOND, 0);
 
 		Date dateRef = cal.getTime();
-		Date date = converter.convertToObject("11/05/2011", Locale.GERMAN);
+		Date date = converter.convertToObject("05.11.2011", Locale.GERMAN);
 		log.error("ref: " + dateRef.getTime() + "; converted: " + date.getTime());
 		log.error("ref: " + dateRef + "; date: " + date);
 		assertEquals(0, dateRef.compareTo(date));
