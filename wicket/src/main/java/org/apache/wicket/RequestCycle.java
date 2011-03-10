@@ -1444,8 +1444,8 @@ public abstract class RequestCycle
 					response.reset();
 					currentStep = RESPOND;
 
-					// wicket-2013: create a new session if invalidated
-					if (getSession().isSessionInvalidated())
+					// get rid of the session if its invalidated
+					if (Session.exists() && getSession().isSessionInvalidated())
 					{
 						session = null;
 						Session.unset();
