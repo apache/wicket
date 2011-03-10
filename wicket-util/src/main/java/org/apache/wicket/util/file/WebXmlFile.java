@@ -18,6 +18,8 @@ package org.apache.wicket.util.file;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
@@ -35,7 +37,7 @@ import org.xml.sax.SAXException;
 
 /**
  * A utility class providing helper methods in dealing with web.xml
- * 
+ *
  * @author jcompagner
  * @author Juergen Donnerstag
  */
@@ -51,29 +53,30 @@ public class WebXmlFile
 	}
 
 	/**
-	 * Gets Wicket filter path via FilterConfig
-	 * 
+	 * Gets unique Wicket filter path via FilterConfig
+	 *
 	 * @param isServlet
 	 *            true if Servlet, false if Filter
 	 * @param filterConfig
 	 * @return Filter path retrieved from "url-pattern". Null if not found or error occured
 	 */
-	public final String getFilterPath(final boolean isServlet, final FilterConfig filterConfig)
+	public final String getUniqueFilterPath(final boolean isServlet, final FilterConfig filterConfig)
 	{
-		return getFilterPath(isServlet, filterConfig.getServletContext(),
-			filterConfig.getFilterName());
+		String filterName = filterConfig.getFilterName();
+		Set<String> paths = getFilterPath(isServlet, filterConfig.getServletContext(), filterName);
+		return uniquePath(paths, isServlet, filterName);
 	}
 
 	/**
 	 * Gets Wicket filter path via ServletContext and the filter name
-	 * 
+	 *
 	 * @param isServlet
 	 *            true if Servlet, false if Filter
 	 * @param servletContext
 	 * @param filterName
 	 * @return Filter path retrieved from "url-pattern". Null if not found or error occured
 	 */
-	public final String getFilterPath(final boolean isServlet, final ServletContext servletContext,
+	public final Set<String> getFilterPath(final boolean isServlet, final ServletContext servletContext,
 		final String filterName)
 	{
 		InputStream is = servletContext.getResourceAsStream("/WEB-INF/web.xml");
@@ -106,11 +109,62 @@ public class WebXmlFile
 	}
 
 	/**
+	 * Returns unique mapping for filter / servlet.
+	 *
+	 * @param isServlet
+	 * @param filterName
+	 * @param is
+	 * @return
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 */
+
+	public final String getUniqueFilterPath(final boolean isServlet, final String filterName,
+		final InputStream is) throws ParserConfigurationException, SAXException, IOException
+	{
+		return uniquePath(getFilterPath(isServlet, filterName, is), isServlet, filterName);
+	}
+
+	/**
+	 * return unique path from set of paths
+	 *
+	 *
+	 * @param paths <code>null</code> if set was empty, unique path if set was of length == 1
+	 * @param isServlet
+	 *@param filterName  @return
+	 * @throws RuntimeException in case length > 1
+	 */
+	private String uniquePath(Set<String> paths, boolean isServlet, String filterName)
+	{
+		if(paths.size() > 1)
+		{
+			StringBuilder err = new StringBuilder();
+			err.append("web.xml: expected one ");
+			err.append(isServlet ? "servlet" : "filter");
+			err.append(" path for [");
+			err.append(filterName);
+			err.append("] but found multiple:");
+
+			for (String path : paths)
+			{
+				err.append(" [" + path + "]");
+			}
+			throw new RuntimeException(err.toString());
+		}
+		if(paths.size() == 1)
+		{
+			return paths.iterator().next();
+		}
+		return null;
+	}
+
+	/**
 	 * Gets Wicket filter path via filter name and InputStream. The InputStream is assumed to be an
 	 * web.xml file.
 	 * <p>
 	 * A typical Wicket web.xml entry looks like:
-	 * 
+	 *
 	 * <pre>
 	 * <code>
 	 * &lt;filter&gt;
@@ -121,7 +175,7 @@ public class WebXmlFile
 	 *     &lt;param-value&gt;org.apache.wicket.examples.helloworld.HelloWorldApplication&lt;/param-value&gt;
 	 *   &lt;/init-param&gt;
 	 * &lt;/filter&gt;
-	 * 
+	 *
 	 * &lt;filter-mapping&gt;
 	 *   &lt;filter-name&gt;HelloWorldApplication&lt;/filter-name&gt;
 	 *   &lt;url-pattern&gt;/helloworld/*&lt;/url-pattern&gt;
@@ -130,7 +184,7 @@ public class WebXmlFile
 	 * &lt;/filter-mapping&gt;
 	 * </code>
 	 * </pre>
-	 * 
+	 *
 	 * @param isServlet
 	 *            true if Servlet, false if Filter
 	 * @param filterName
@@ -141,7 +195,7 @@ public class WebXmlFile
 	 * @throws IOException
 	 * @throws SAXException
 	 */
-	public final String getFilterPath(final boolean isServlet, final String filterName,
+	public final Set<String> getFilterPath(final boolean isServlet, final String filterName,
 		final InputStream is) throws ParserConfigurationException, SAXException, IOException
 	{
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -154,42 +208,53 @@ public class WebXmlFile
 		String mapping = tag + "-mapping";
 		String name = tag + "-name";
 
-		String urlPattern = getFilterPath(filterName, mapping, name, document.getChildNodes());
-		if (urlPattern == null)
+		Set<String> urlPatterns = getFilterPaths(filterName, mapping, name, document.getChildNodes());
+
+		if (urlPatterns.size() == 0)
 		{
-			if (log.isWarnEnabled())
-			{
-				log.warn("web.xml: No url-pattern found for " + tag + " with name " + filterName);
-			}
-			return null;
-		}
-		else if (log.isInfoEnabled())
-		{
-			log.info("web.xml: found " + tag + " with name " + filterName + ". url-pattern=" +
-				urlPattern);
+			log.warn("web.xml: No url-pattern found for " + tag + " with name " + filterName);
 		}
 
-		// remove leading "/" and trailing "*"
-		return urlPattern.substring(1, urlPattern.length() - 1);
+		if(log.isInfoEnabled())
+		{
+			StringBuilder msg = new StringBuilder();
+			msg.append("web.xml: url mapping found for " + tag + " with name " + filterName + ':');
+			for (String urlPattern : urlPatterns)
+			{
+				msg.append(" [");
+				msg.append(urlPattern);
+				msg.append(']');
+			}
+			log.info(msg.toString());
+		}
+		Set<String> stripped = new HashSet<String>(urlPatterns.size());
+
+		for (String urlPattern : urlPatterns)
+		{
+			stripped.add(urlPattern.substring(1, urlPattern.length() - 1));
+		}
+		return stripped;
 	}
 
 	/**
 	 * Iterate through all children of 'node' and search for a node with name "filterName". Return
 	 * the value of node "url-pattern" if "filterName" was found.
-	 * 
+	 *
 	 * @param filterName
 	 * @param name
 	 * @param node
 	 * @return value of node "url-pattern"
 	 */
-	private String getFilterPath(final String filterName, final String name, final Node node)
+	private Set<String> getFilterPaths(final String filterName, final String name, final Node node)
 	{
+		Set<String> paths = new HashSet<String>();
 		String foundUrlPattern = null;
 		String foundFilterName = null;
 
 		for (int i = 0; i < node.getChildNodes().getLength(); ++i)
 		{
 			Node n = node.getChildNodes().item(i);
+
 			if (name.equals(n.getNodeName()))
 			{
 				foundFilterName = n.getTextContent();
@@ -198,49 +263,48 @@ public class WebXmlFile
 			{
 				foundUrlPattern = n.getTextContent();
 			}
+			if (foundFilterName != null)
+			{
+				foundFilterName = foundFilterName.trim();
+			}
+			if (filterName.equals(foundFilterName))
+			{
+				if (foundUrlPattern != null)
+					paths.add(foundUrlPattern.trim());
+			}
 		}
-
-		if (foundFilterName != null)
-		{
-			foundFilterName = foundFilterName.trim();
-		}
-
-		if (filterName.equals(foundFilterName))
-		{
-			return (foundUrlPattern != null) ? foundUrlPattern.trim() : null;
-		}
-		else
-		{
-			return null;
-		}
+		return paths;
 	}
 
 	/**
 	 * Find a node with name 'mapping' within 'nodeList' and if found continue to search amongst its
 	 * children for a node with 'filterName' and "url-pattern'
-	 * 
+	 *
+	 *
 	 * @param filterName
 	 * @param mapping
 	 * @param name
 	 * @param nodeList
 	 * @return The value assigned to node "url-pattern"
 	 */
-	private String getFilterPath(final String filterName, final String mapping, final String name,
+	private Set<String> getFilterPaths(final String filterName, final String mapping, final String name,
 		final NodeList nodeList)
 	{
-		String path = null;
-		for (int i = 0; (i < nodeList.getLength()) && (path == null); ++i)
+		Set<String> paths = new HashSet<String>(1);
+
+		for (int i = 0; i < nodeList.getLength(); ++i)
 		{
 			Node node = nodeList.item(i);
+
 			if (mapping.equals(node.getNodeName()))
 			{
-				path = getFilterPath(filterName, name, node);
+				paths.addAll(getFilterPaths(filterName, name, node));
 			}
 			else
 			{
-				path = getFilterPath(filterName, mapping, name, node.getChildNodes());
+				paths.addAll(getFilterPaths(filterName, mapping, name, node.getChildNodes()));
 			}
 		}
-		return path;
+		return paths;
 	}
 }

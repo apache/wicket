@@ -388,7 +388,7 @@ public class WicketFilter implements Filter
 	protected String getFilterPathFromWebXml(final boolean isServlet,
 		final FilterConfig filterConfig)
 	{
-		return new WebXmlFile().getFilterPath(isServlet, filterConfig);
+		return new WebXmlFile().getUniqueFilterPath(isServlet, filterConfig);
 	}
 
 	/**

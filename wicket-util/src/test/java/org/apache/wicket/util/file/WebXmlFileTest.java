@@ -66,21 +66,21 @@ public class WebXmlFileTest extends TestCase
 		String tag = servlet ? "servlet" : "filter";
 
 		String webxml = getWebXml(tag, "/*");
-		String path = new WebXmlFile().getFilterPath(servlet, "HelloWorldApplication",
-			new ByteArrayInputStream(webxml.toString().getBytes()));
+		String path = new WebXmlFile().getUniqueFilterPath(servlet, "HelloWorldApplication",
+			new ByteArrayInputStream(webxml.getBytes()));
 		assertEquals("", path);
 
 		webxml = getWebXml(tag, "/test/*");
-		path = new WebXmlFile().getFilterPath(servlet, "HelloWorldApplication",
-			new ByteArrayInputStream(webxml.toString().getBytes()));
+		path = new WebXmlFile().getUniqueFilterPath(servlet, "HelloWorldApplication",
+			new ByteArrayInputStream(webxml.getBytes()));
 		assertEquals("test/", path);
 
-		path = new WebXmlFile().getFilterPath(servlet, "xxx", new ByteArrayInputStream(
-			webxml.toString().getBytes()));
+		path = new WebXmlFile().getUniqueFilterPath(servlet, "xxx", new ByteArrayInputStream(
+			webxml.getBytes()));
 		assertNull(path);
 
-		path = new WebXmlFile().getFilterPath(!servlet, "HelloWorldApplication",
-			new ByteArrayInputStream(webxml.toString().getBytes()));
+		path = new WebXmlFile().getUniqueFilterPath(!servlet, "HelloWorldApplication",
+			new ByteArrayInputStream(webxml.getBytes()));
 		assertNull(path);
 	}
 

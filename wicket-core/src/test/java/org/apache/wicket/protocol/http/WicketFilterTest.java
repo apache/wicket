@@ -139,11 +139,11 @@ public class WicketFilterTest extends TestCase
 		request.addDateHeader("If-Modified-Since", nextWeek.getTimeInMillis());
 	}
 
-	private String getFilterPath(String string, InputStream in)
+	private String getFilterPath(String filterName, InputStream in)
 	{
 		try
 		{
-			return new WebXmlFile().getFilterPath(false, string, in);
+			return new WebXmlFile().getUniqueFilterPath(false, filterName, in);
 		}
 		catch (ParserConfigurationException ex)
 		{
