@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.wicket.Application;
 import org.apache.wicket.IResourceFactory;
 import org.apache.wicket.Localizer;
+import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.PackageResourceGuard;
@@ -41,6 +42,8 @@ import org.apache.wicket.util.file.IResourcePath;
 import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.locator.CachingResourceStreamLocator;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.util.time.Duration;
@@ -229,6 +232,10 @@ public class ResourceSettings implements IResourceSettings
 			// Create compound resource locator using source path from
 			// application settings
 			resourceStreamLocator = new ResourceStreamLocator(getResourceFinder());
+			if (Application.get().getConfigurationType() == RuntimeConfigurationType.DEPLOYMENT)
+			{
+				resourceStreamLocator = new CachingResourceStreamLocator(resourceStreamLocator);
+			}
 		}
 		return resourceStreamLocator;
 	}
@@ -347,7 +354,13 @@ public class ResourceSettings implements IResourceSettings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IResourceSettings#setResourceStreamLocator(org.apache.wicket.util.resource.locator.IResourceStreamLocator)
+	 * {@inheritDoc}
+	 * 
+	 * Consider wrapping <code>resourceStreamLocator</code> in {@link CachingResourceStreamLocator}.
+	 * This way the locator will not be asked more than once for {@link IResourceStream}s which do
+	 * not exist.
+	 * 
+	 * @see #getResourceStreamLocator()
 	 */
 	public void setResourceStreamLocator(IResourceStreamLocator resourceStreamLocator)
 	{
@@ -440,6 +453,6 @@ public class ResourceSettings implements IResourceSettings
 				"It is not allowed to set the resource caching strategy to value NULL. " +
 					"Please use " + NoOpResourceCachingStrategy.class.getName() + " instead.");
 		}
-		this.resourceCachingStrategy = strategy;
+		resourceCachingStrategy = strategy;
 	}
 }
