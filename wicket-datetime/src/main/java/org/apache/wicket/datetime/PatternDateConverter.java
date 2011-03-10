@@ -17,6 +17,7 @@
 package org.apache.wicket.datetime;
 
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.joda.time.DateTime;
@@ -96,8 +97,8 @@ public class PatternDateConverter extends DateConverter
 	 * @return formatter The formatter for the current conversion
 	 */
 	@Override
-	protected DateTimeFormatter getFormat()
+	protected DateTimeFormatter getFormat(Locale locale)
 	{
-		return DateTimeFormat.forPattern(datePattern).withLocale(getLocale()).withPivotYear(2000);
+		return DateTimeFormat.forPattern(datePattern).withLocale(locale).withPivotYear(2000);
 	}
 }

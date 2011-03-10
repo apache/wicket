@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.datetime;
 
-import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -28,10 +27,8 @@ import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.Strings;
-import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormatter;
 
 
@@ -85,7 +82,7 @@ public abstract class DateConverter implements IConverter<Date>
 			return null;
 		}
 
-		DateTimeFormatter format = getFormat();
+		DateTimeFormatter format = getFormat(locale);
 		if (format == null)
 		{
 			throw new IllegalStateException("format must be not null");
@@ -137,7 +134,7 @@ public abstract class DateConverter implements IConverter<Date>
 	public String convertToString(Date value, Locale locale)
 	{
 		DateTime dt = new DateTime((value).getTime(), getTimeZone());
-		DateTimeFormatter format = getFormat();
+		DateTimeFormatter format = getFormat(locale);
 
 		if (applyTimeZoneDifference)
 		{
@@ -208,9 +205,11 @@ public abstract class DateConverter implements IConverter<Date>
 	}
 
 	/**
+	 * @param locale
+	 *
 	 * @return formatter The formatter for the current conversion
 	 */
-	protected abstract DateTimeFormatter getFormat();
+	protected abstract DateTimeFormatter getFormat(Locale locale);
 
 	/**
 	 * Gets the locale to use.
