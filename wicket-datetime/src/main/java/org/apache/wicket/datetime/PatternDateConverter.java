@@ -88,7 +88,7 @@ public class PatternDateConverter extends DateConverter
 	 * @return datePattern
 	 */
 	@Override
-	public final String getDatePattern()
+	public final String getDatePattern(Locale locale)
 	{
 		return datePattern;
 	}

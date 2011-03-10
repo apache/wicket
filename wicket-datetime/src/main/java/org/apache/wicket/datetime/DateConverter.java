@@ -176,7 +176,7 @@ public abstract class DateConverter implements IConverter<Date>
 	/**
 	 * @return Gets the pattern that is used for printing and parsing
 	 */
-	public abstract String getDatePattern();
+	public abstract String getDatePattern(Locale locale);
 
 	/**
 	 * Sets component for getting the locale

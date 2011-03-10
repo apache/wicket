@@ -108,9 +108,9 @@ public class StyleDateConverter extends DateConverter
 	 * @return datePattern
 	 */
 	@Override
-	public final String getDatePattern()
+	public final String getDatePattern(Locale locale)
 	{
-		return DateTimeFormat.patternForStyle(dateStyle, getLocale());
+		return DateTimeFormat.patternForStyle(dateStyle, locale);
 	}
 
 	/**
@@ -119,6 +119,6 @@ public class StyleDateConverter extends DateConverter
 	@Override
 	protected DateTimeFormatter getFormat(Locale locale)
 	{
-		return DateTimeFormat.forPattern(getDatePattern()).withLocale(locale).withPivotYear(2000);
+		return DateTimeFormat.forPattern(getDatePattern(locale)).withPivotYear(2000);
 	}
 }
