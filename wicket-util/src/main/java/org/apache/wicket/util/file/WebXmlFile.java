@@ -18,6 +18,7 @@ package org.apache.wicket.util.file;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -74,7 +75,7 @@ public class WebXmlFile
 	 *            true if Servlet, false if Filter
 	 * @param servletContext
 	 * @param filterName
-	 * @return Filter path retrieved from "url-pattern". Null if not found or error occured
+	 * @return Filter paths retrieved from "url-pattern"
 	 */
 	public final Set<String> getFilterPath(final boolean isServlet, final ServletContext servletContext,
 		final String filterName)
@@ -105,21 +106,24 @@ public class WebXmlFile
 					e.getMessage());
 			}
 		}
-		return null;
+		return Collections.emptySet();
 	}
 
 	/**
-	 * Returns unique mapping for filter / servlet.
+	 * Gets unique filter path via filter name and InputStream.
 	 *
 	 * @param isServlet
+	 *            true if Servlet, false if Filter
 	 * @param filterName
 	 * @param is
-	 * @return
+	 *            The web.xml file
+	 * @return Filter path retrieved from "url-pattern". Null if not found.
 	 * @throws ParserConfigurationException
-	 * @throws SAXException
 	 * @throws IOException
+	 * @throws SAXException
+	 *
+	 * @see #getFilterPath(boolean, String, java.io.InputStream)
 	 */
-
 	public final String getUniqueFilterPath(final boolean isServlet, final String filterName,
 		final InputStream is) throws ParserConfigurationException, SAXException, IOException
 	{
@@ -190,7 +194,7 @@ public class WebXmlFile
 	 * @param filterName
 	 * @param is
 	 *            The web.xml file
-	 * @return Filter path retrieved from "url-pattern". Null if not found.
+	 * @return Filter paths retrieved from "url-pattern".
 	 * @throws ParserConfigurationException
 	 * @throws IOException
 	 * @throws SAXException
