@@ -94,31 +94,27 @@ public abstract class DateConverter implements IConverter<Date>
 		if (applyTimeZoneDifference)
 		{
 			TimeZone zone = getClientTimeZone();
-			// instantiate now/ current time
-			MutableDateTime dt = new MutableDateTime(new DateMidnight());
-			if (zone != null)
-			{
-				// set time zone for client
-				format = format.withZone(DateTimeZone.forTimeZone(zone));
-				dt.setZone(DateTimeZone.forTimeZone(zone));
-			}
+			DateTime dateTime = null;
+			
+			// set time zone for client
+			format = format.withZone(getTimeZone());				
+
 			try
 			{
 				// parse date retaining the time of the submission
-				int result = format.parseInto(dt, value, 0);
-				if (result < 0)
-				{
-					throw new ConversionException(new ParseException("unable to parse date " +
-						value, ~result));
-				}
+				dateTime = format.parseDateTime(value);				
 			}
 			catch (RuntimeException e)
 			{
 				throw new ConversionException(e);
 			}
 			// apply the server time zone to the parsed value
-			dt.setZone(getTimeZone());
-			return dt.toDate();
+			if (zone != null)
+			{
+				dateTime = dateTime.withZoneRetainFields(DateTimeZone.forTimeZone(zone));
+			}			
+			
+			return dateTime.toDate();
 		}
 		else
 		{

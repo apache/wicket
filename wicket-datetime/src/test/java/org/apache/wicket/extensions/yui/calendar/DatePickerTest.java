@@ -26,6 +26,7 @@ import java.util.TimeZone;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.datetime.StyleDateConverter;
 import org.apache.wicket.extensions.yui.calendar.DateTimeField.AM_PM;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.util.tester.DiffUtil;
@@ -172,7 +173,13 @@ public class DatePickerTest extends WicketTestCase
 		// for more info see org.joda.time.DateTimeZone.getDefault()
 		assertSame(origJodaDef, newJodaDef);
 	}
-
+	
+	/**
+	 * Test date conversion with the server having a different current date than the client time
+	 * zone.
+	 * 
+	 * @throws ParseException
+	 */
 	public void testDifferentDateTimeZoneConversion() throws ParseException
 	{
 		log.error("=========== testDifferentDateTimeZoneConversion() =================");
@@ -215,7 +222,35 @@ public class DatePickerTest extends WicketTestCase
 		DateTimeZone.setDefault(origJodaDef);
 	}
 
+	public void testStyleDateConverterTimeZoneDifference() throws ParseException
+	{
+		TimeZone origJvmDef = TimeZone.getDefault();
+		DateTimeZone origJodaDef = DateTimeZone.getDefault();
+		TimeZone tzClient = TimeZone.getTimeZone("Etc/GMT-14");
+		TimeZone tzServer = TimeZone.getTimeZone("Etc/GMT+12");
 
+		TimeZone.setDefault(tzServer);
+		DateTimeZone.setDefault(DateTimeZone.forTimeZone(tzServer));
+		Locale.setDefault(Locale.GERMAN);
+
+		WebClientInfo clientInfo = (WebClientInfo)tester.getSession().getClientInfo();
+		clientInfo.getProperties().setTimeZone(tzClient);
+
+		StyleDateConverter converter = new StyleDateConverter(true);
+
+		Calendar cal = Calendar.getInstance(tzClient);
+		cal.set(2011, 10, 5, 0, 0, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		Date dateRef = cal.getTime();
+		Date date = converter.convertToObject("11/05/2011", Locale.GERMAN);
+		log.error("ref: " + dateRef.getTime() + "; converted: " + date.getTime());
+		log.error("ref: " + dateRef + "; date: " + date);
+		assertEquals(0, dateRef.compareTo(date));
+
+		TimeZone.setDefault(origJvmDef);
+		DateTimeZone.setDefault(origJodaDef);
+	}
 	/**
 	 * 
 	 * @throws ParseException
