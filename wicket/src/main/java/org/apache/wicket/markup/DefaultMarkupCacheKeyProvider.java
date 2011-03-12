@@ -81,6 +81,10 @@ public class DefaultMarkupCacheKeyProvider implements IMarkupCacheKeyProvider
 			buffer.append(style);
 		}
 
+		// Without this dot, the file extension is not separated from
+		// the file name, causing many unit tests to fail
+		buffer.append(".");
+
 		buffer.append(markupType);
 		return buffer.toString();
 	}

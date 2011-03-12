@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<table border="1" cellpadding="1" cellspacing="1">
+<tr><th>Header row</th></tr>
+<tr><td><a wicket:id="link">Toggle</a></td></tr>
+<wicket:enclosure child="toggleable-placeholder:toggleable">
+<tr wicket:id="toggleable-placeholder" bgcolor="red"><td><input wicket:id="toggleable" type="button" 
+	value="This button (and red border) should appear and disappear by pressing toggle"  
+style="border: 1px solid black; background: lightblue;"/>
+			(Also this)</td></tr>
+</wicket:enclosure>
+</table>
+<br clear="all"/>
+<br clear="all"/>
+With ajax toggle is also possible, but it requires extra work: when component is invisible, we need to manually create a dummy placeholder.  
+
+</body>
+</html>

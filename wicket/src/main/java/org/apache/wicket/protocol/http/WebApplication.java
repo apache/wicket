@@ -698,7 +698,9 @@ public abstract class WebApplication extends Application
 	 */
 	public AjaxRequestTarget newAjaxRequestTarget(final Page page)
 	{
-		return new AjaxRequestTarget(page);
+		AjaxRequestTarget target = new AjaxRequestTarget(page);
+		target.addListener(new AjaxEnclosureListener());
+		return target;
 	}
 
 	/**

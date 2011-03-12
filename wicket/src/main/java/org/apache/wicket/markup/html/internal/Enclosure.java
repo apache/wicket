@@ -100,7 +100,6 @@ public class Enclosure extends WebMarkupContainer
 	{
 		super(id);
 
-
 		if (childId == null)
 		{
 			throw new MarkupException(
@@ -125,7 +124,7 @@ public class Enclosure extends WebMarkupContainer
 	 * 
 	 * @return enclosure's parent markup container
 	 */
-	private MarkupContainer getEnclosureParent()
+	protected MarkupContainer getEnclosureParent()
 	{
 		MarkupContainer parent = getParent();
 		while (parent != null)
@@ -192,13 +191,14 @@ public class Enclosure extends WebMarkupContainer
 		}
 	}
 
-	private void warnAboutFormComponentInsideEnclosure(FormComponent fc)
+	private void warnAboutFormComponentInsideEnclosure(FormComponent<?> fc)
 	{
 		log.warn(
 			"Found a form component {}/{} inside an enclosure. Form components do not work well inside wicket:enclosure tags, use EnclosureContainer instead",
 			fc.getClass().getSimpleName(), fc.getPageRelativePath());
 	}
 
+	@SuppressWarnings("rawtypes")
 	private void warnAboutFormComponentsInsideEnclosure(final MarkupContainer container,
 		final MarkupStream markupStream, ComponentTag enclosureOpenTag)
 	{

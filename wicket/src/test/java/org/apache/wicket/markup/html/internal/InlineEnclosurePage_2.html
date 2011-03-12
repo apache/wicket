@@ -1,0 +1,106 @@
+<html xmlns:wicket>
+<body>
+
+<!-- nested inline enclosures with separate child depths. -->
+<div wicket:enclosure="label1"><span wicket:id="label1">Test</span>
+	<div wicket:enclosure="label2">
+		<table>
+			<tr>
+				<td><span wicket:id="label2">Test</span></td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<!-- nested inline enclosures with same child depth. -->
+<div wicket:enclosure="label3"> 
+	<div wicket:enclosure="label4"> 
+		<span wicket:id="label3">Test</span>
+		<span wicket:id="label4">Test</span> 
+	</div> 
+</div>
+
+<!-- enclosure tag nested inside inline enclosure with separate child depths. -->
+<div wicket:enclosure="label5"> <span wicket:id="label5">Test</span>
+	<wicket:enclosure child="label6">
+		<table>
+			<tr>
+				<td>
+					<span wicket:id="label6">Test</span>
+				</td>
+			</tr>
+		</table>
+	</wicket:enclosure> 
+</div>
+
+<!-- enclosure tag nested inside inline enclosure with same child depth. -->
+<div wicket:enclosure="label7"> 
+	<wicket:enclosure child="label8">
+		<table>
+			<tr>
+				<td>
+					<span wicket:id="label7">Test</span>
+					<span wicket:id="label8">Test</span>
+				</td>
+			</tr>
+		</table>
+	</wicket:enclosure> 
+</div>
+
+<!--  inline enclosure nested inside enclosure tag with separate child depths. -->
+<wicket:enclosure child="label9">
+	<div wicket:enclosure="label10"> <span wicket:id="label9">Test</span>
+		<table>
+			<tr>
+				<td><span wicket:id="label10">Test</span></td>
+			</tr>
+		</table>
+	</div>
+</wicket:enclosure>
+
+<!--  inline enclosure nested inside enclosure tag with same child depth. -->
+<div wicket:enclosure="label11"> 
+	<wicket:enclosure child="label12">
+		<table>
+			<tr>
+				<td>
+					<span wicket:id="label11">Test</span>
+					<span wicket:id="label12">Test</span>
+				</td>
+			</tr>
+		</table>
+	</wicket:enclosure> 
+</div>
+
+<!--  inline enclosure nested inside enclosure tag with same child depth inside a wicket container. -->
+<wicket:enclosure child="container:label14">
+	<div wicket:enclosure="container:label13"> 
+		<div wicket:id="container">
+			<table>
+				<tr>
+					<td>
+						<span wicket:id="label13">Test</span>
+						<span wicket:id="label14">Test</span>
+					</td>
+				</tr>
+			</table>
+		</div> 
+	</div>
+</wicket:enclosure>
+
+
+<!-- nested inline enclosures without explicitly determining children -->
+<div wicket:enclosure=""> 
+	<div wicket:enclosure="">
+		<table>
+			<tr>
+				<td>
+					<span wicket:id="label15">Test</span>
+				</td>
+			</tr>
+		</table>
+	</div> 
+</div>
+
+</body>
+</html>

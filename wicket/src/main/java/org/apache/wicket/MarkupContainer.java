@@ -29,6 +29,7 @@ import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
+import org.apache.wicket.markup.html.internal.InlineEnclosure;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
@@ -79,7 +80,6 @@ import org.slf4j.LoggerFactory;
  * 
  * @see MarkupStream
  * @author Jonathan Locke
- * 
  */
 public abstract class MarkupContainer extends Component
 {
@@ -1680,7 +1680,10 @@ public abstract class MarkupContainer extends Component
 				Component component = (Component)child;
 				component.detach();
 
-				if (component.isAuto())
+				// We need to keep InlineEnclosures for Ajax request handling.
+				// TODO this is really ugly. Feature request for 1.5: change auto-component that
+				// they don't need to be removed anymore.
+				if (component.isAuto() && !(component instanceof InlineEnclosure))
 				{
 					children_remove(i);
 				}
@@ -1789,7 +1792,7 @@ public abstract class MarkupContainer extends Component
 	 * @see org.apache.wicket.Component#onAfterRenderChildren()
 	 */
 	@Override
-	void onAfterRenderChildren()
+	protected void onAfterRenderChildren()
 	{
 		// Loop through child components
 		final Iterator<? extends Component> iter = iterator();

@@ -1,0 +1,17 @@
+<html xmlns:wicket>
+<body>
+
+<a href="#" wicket:id="toggleLabel1Link">Toggle label1</a> 
+
+<!-- Inline enclosure's controlling child is not explicitly stated, 
+     it should use the only component inside.-->
+<div wicket:enclosure="">
+<table>
+	<tr>
+		<td><span wicket:id="label1">Test</span></td>
+	</tr>
+</table>
+</div>
+
+</body>
+</html>
