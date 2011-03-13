@@ -164,7 +164,7 @@ public class KittenCaptchaPanel extends Panel
 			private static final long serialVersionUID = 7480352029955897654L;
 
 			@Override
-			protected CharSequence getCallbackScript(final boolean onlyTargetActivePage)
+			protected CharSequence getCallbackScript()
 			{
 				// Call-back script shows loading indicator and makes wicket
 				// ajax request passing in mouse co-ordinates
