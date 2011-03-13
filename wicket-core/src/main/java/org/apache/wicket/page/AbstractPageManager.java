@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.page;
 
-import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,11 +40,7 @@ public abstract class AbstractPageManager implements IPageManager
 	 */
 	public AbstractPageManager(IPageManagerContext context)
 	{
-		if (context == null)
-		{
-			throw new WicketRuntimeException("Paramater 'context' must not be null");
-		}
-		this.context = context;
+		this.context = (IPageManagerContext)Args.notNull(context, "context");
 	}
 
 	/**
