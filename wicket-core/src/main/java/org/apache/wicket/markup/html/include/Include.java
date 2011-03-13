@@ -30,6 +30,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.resource.ResourceUtil;
 import org.apache.wicket.util.resource.UrlResourceStream;
+import org.apache.wicket.util.string.UrlUtils;
 
 
 /**
@@ -146,7 +147,7 @@ public class Include extends WebComponent
 		// relative url
 		String url = getDefaultModelObjectAsString();
 
-		if (!isAbsolute(url))
+		if (UrlUtils.isRelative(url))
 		{
 			return importRelativeUrl(url);
 		}
@@ -161,48 +162,6 @@ public class Include extends WebComponent
 	{
 		String content = importAsString();
 		replaceComponentTagBody(markupStream, openTag, content);
-	}
-
-	/**
-	 * Gets whether the given url is absolute (<tt>true</tt>) or relative (<tt>false</tt>).
-	 * 
-	 * @param url
-	 *            the url
-	 * @return whether the given url is absolute (<tt>true</tt>) or relative (<tt>false</tt>)
-	 */
-	protected final boolean isAbsolute(String url)
-	{
-		boolean absolute = false;
-
-		if (url != null && url.length() > 0)
-		{
-
-			// do a fast, simple check first
-			int colonPos = url.indexOf(":");
-
-			if (colonPos > 0)
-			{
-				// if we DO have a colon, make sure that every character
-				// leading up to it is a valid scheme character
-
-				absolute = true;
-				for (int i = 0; i < colonPos; i++)
-				{
-					if (VALID_SCHEME_CHARS.indexOf(url.charAt(i)) == -1)
-					{
-						absolute = false;
-						break;
-					}
-				}
-			}
-			else if (url.charAt(0) == '/')
-			{
-				// this is a url without a scheme, but starts with a /
-				absolute = true;
-			}
-		}
-
-		return absolute;
 	}
 
 	/**
