@@ -406,7 +406,7 @@ public class DefaultPageStore implements IPageStore
 		 * 
 		 * @param sessionId
 		 * @param id
-		 * @return
+		 * @return the removed {@link SerializedPage} or <code>null</code> - otherwise
 		 */
 		public SerializedPage removePage(final String sessionId, final int id)
 		{
@@ -432,6 +432,12 @@ public class DefaultPageStore implements IPageStore
 			return null;
 		}
 
+		/**
+		 * Removes all {@link SerializedPage}s for the session with <code>sessionId</code> from the
+		 * cache.
+		 * 
+		 * @param sessionId
+		 */
 		public void removePages(String sessionId)
 		{
 			Args.notNull(sessionId, "sessionId");
@@ -453,7 +459,16 @@ public class DefaultPageStore implements IPageStore
 			}
 		}
 
-		public SerializedPage getPage(String sessionId, int id)
+		/**
+		 * Returns a {@link SerializedPage} by looking it up by <code>sessionId</code> and
+		 * <code>pageId</code>. If there is a match then it is <i>touched</i>, i.e. it is moved at
+		 * the top of the cache.
+		 * 
+		 * @param sessionId
+		 * @param pageId
+		 * @return the found serialized page or <code>null</code> when not found
+		 */
+		public SerializedPage getPage(String sessionId, int pageId)
 		{
 			Args.notNull(sessionId, "sessionId");
 
@@ -466,7 +481,7 @@ public class DefaultPageStore implements IPageStore
 					{
 						SoftReference<SerializedPage> ref = i.next();
 						SerializedPage entry = ref.get();
-						if (entry != null && entry.getPageId() == id &&
+						if (entry != null && entry.getPageId() == pageId &&
 							entry.getSessionId().equals(sessionId))
 						{
 							i.remove();
@@ -490,7 +505,6 @@ public class DefaultPageStore implements IPageStore
 		 * 
 		 * @param sessionId
 		 * @param page
-		 * @param pagesList
 		 */
 		void storePage(SerializedPage page)
 		{
