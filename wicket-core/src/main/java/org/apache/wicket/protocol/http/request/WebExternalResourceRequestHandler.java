@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Request target that is not a Wicket resource. For example, such a resource could denote an image
  * in the web application directory (not mapped to a Wicket servlet). NOTE: this target can only be
- * used in a servlet environment with {@link org.apache.wicket.protocol.http.WebRequestCycle}s.
+ * used in a servlet environment with {@link org.apache.wicket.protocol.http.RequestCycle}s.
  * 
  * <p>
  * <b>NOTE:</b> this class is a wrapper around
