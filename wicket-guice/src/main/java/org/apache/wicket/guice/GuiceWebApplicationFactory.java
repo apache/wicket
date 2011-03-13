@@ -135,12 +135,14 @@ public class GuiceWebApplicationFactory implements IWebApplicationFactory
 			String paramValue = filter.getFilterConfig().getInitParameter("module");
 			String moduleNames[] = Strings.split(paramValue, ',');
 			Module modules[] = new Module[moduleNames.length];
+			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			for (int i = 0; i < moduleNames.length; i++)
 			{
 				String moduleName = moduleNames[i].trim();
 				try
 				{
-					Class<?> moduleClazz = Class.forName(moduleName);
+					// see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6500212
+					Class<?> moduleClazz = Class.forName(moduleName, false, classLoader);
 					Object moduleObject = moduleClazz.newInstance();
 					modules[i] = (Module)moduleObject;
 				}
