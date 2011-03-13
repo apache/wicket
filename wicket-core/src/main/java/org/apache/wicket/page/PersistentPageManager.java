@@ -22,8 +22,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.wicket.pageStore.IPageStore;
 
@@ -32,7 +32,11 @@ import org.apache.wicket.pageStore.IPageStore;
  */
 public class PersistentPageManager extends AbstractPageManager
 {
-	private static Map<String, PersistentPageManager> managers = new ConcurrentHashMap<String, PersistentPageManager>();
+	/**
+	 * A cache that holds all registered page managers. <br/>
+	 * applicationName -> page manager
+	 */
+	private static ConcurrentMap<String, PersistentPageManager> managers = new ConcurrentHashMap<String, PersistentPageManager>();
 
 	private final IPageStore pageStore;
 
