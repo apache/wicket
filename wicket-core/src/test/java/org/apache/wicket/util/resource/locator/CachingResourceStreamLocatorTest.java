@@ -25,6 +25,7 @@ import java.io.File;
 import java.net.URL;
 
 import org.apache.wicket.util.resource.FileResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.resource.UrlResourceStream;
 import org.junit.Test;
 
@@ -51,8 +52,9 @@ public class CachingResourceStreamLocatorTest
 		cachingLocator.locate(String.class, "path");
 		cachingLocator.locate(String.class, "path");
 
-		// there is no resource with that Key so expect two calls to the delegate
-		verify(resourceStreamLocator, times(2)).locate(String.class, "path");
+		// there is no resource with that Key so a "miss" will be cached and expect 1 call to the
+		// delegate
+		verify(resourceStreamLocator, times(1)).locate(String.class, "path");
 	}
 
 	/**
@@ -102,5 +104,32 @@ public class CachingResourceStreamLocatorTest
 
 		// there is a url resource with that Key so expect just one call to the delegate
 		verify(resourceStreamLocator, times(1)).locate(String.class, "path");
+	}
+
+	/**
+	 * Tests light weight resource streams (everything but FileResourceStream and
+	 * UrlResourceStream). These should <strong>not</strong> be cached.
+	 */
+	@Test
+	public void testLightweightResource()
+	{
+		IResourceStreamLocator resourceStreamLocator = mock(IResourceStreamLocator.class);
+
+		StringResourceStream srs = new StringResourceStream("anything");
+
+		when(
+			resourceStreamLocator.locate(String.class, "path", "style", "variation", null,
+				"extension", true)).thenReturn(srs);
+
+		CachingResourceStreamLocator cachingLocator = new CachingResourceStreamLocator(
+			resourceStreamLocator);
+
+		cachingLocator.locate(String.class, "path", "style", "variation", null, "extension", true);
+		cachingLocator.locate(String.class, "path", "style", "variation", null, "extension", true);
+
+		// lightweight resource streams should not be cached so expect just a call to the delegate
+		// for each call to the caching locator
+		verify(resourceStreamLocator, times(2)).locate(String.class, "path", "style", "variation",
+			null, "extension", true);
 	}
 }
