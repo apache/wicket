@@ -163,7 +163,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * The purpose of render count is to detect stale listener interface links. For example: there
 	 * is a page A rendered in tab 1. Then page A is opened also in tab 2. During render page state
-	 * changes (i.e. some repeater gets rebuilt). This makes all links on tab 2 stale - because they
+	 * changes (i.e. some repeater gets rebuilt). This makes all links on tab 1 stale - because they
 	 * no longer match the actual page state. This is done by incrementing render count. When link
 	 * is clicked Wicket checks if it's render count matches the render count value of page
 	 */
