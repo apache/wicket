@@ -88,8 +88,8 @@ public class WebPage extends Page
 	 * that tools such as IDEs will include it their list of suggested constructors for derived
 	 * classes.
 	 * 
-	 * Please call this constructor (or the one with the pagemap) if you want to remember the
-	 * pageparameters {@link #getPageParameters()}. So that they are reused for stateless links.
+	 * Please call this constructor if you want to remember the pageparameters
+	 * {@link #getPageParameters()}. So that they are reused for stateless links.
 	 * 
 	 * @param parameters
 	 *            Wrapped query string parameters.
