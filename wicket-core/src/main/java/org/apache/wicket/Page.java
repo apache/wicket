@@ -871,7 +871,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 
 		// Set response locale from session locale
-		// TODO: NG Is this really necessary
+		// TODO: WICKET NG Is this really necessary
 		// response.setLocale(getSession().getLocale());
 	}
 
