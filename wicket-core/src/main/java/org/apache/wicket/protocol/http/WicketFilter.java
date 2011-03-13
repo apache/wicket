@@ -408,11 +408,7 @@ public class WicketFilter implements Filter
 	 */
 	protected String getFilterPath(final HttpServletRequest request)
 	{
-		if (filterPath != null)
-		{
-			return filterPath;
-		}
-		return null;
+		return filterPath;
 	}
 
 	/**
