@@ -86,7 +86,7 @@ public class Enclosure extends WebMarkupContainer
 	private Component childComponent;
 
 	/** Id of the child component that will control visibility of the enclosure */
-	private final CharSequence childId;
+	protected final CharSequence childId;
 
 	private transient Map<Component, Boolean> changes;
 

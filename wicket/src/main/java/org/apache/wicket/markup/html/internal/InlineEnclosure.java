@@ -49,9 +49,6 @@ public class InlineEnclosure extends Enclosure
 
 	private static final Logger log = LoggerFactory.getLogger(InlineEnclosure.class);
 
-	/** Id of the child component that will control visibility of the enclosure */
-	private final CharSequence childId;
-
 	/**
 	 * This transient child list is filled only at onComponentTagBody. Therefore it is not
 	 * necessarily accurate at any given time.
@@ -68,8 +65,6 @@ public class InlineEnclosure extends Enclosure
 	public InlineEnclosure(final String id, final String childId)
 	{
 		super(id, childId);
-
-		this.childId = childId;
 	}
 
 	@Override
