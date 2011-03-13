@@ -47,7 +47,7 @@ import org.apache.wicket.util.lang.PropertyResolver;
  * <pre>
  *     Person person = getSomePerson();
  *     ...
- *     add(new Label(&quot;myLabel&quot;, new PopertyModel(person, &quot;name&quot;));
+ *     add(new Label(&quot;myLabel&quot;, new PropertyModel(person, &quot;name&quot;));
  * </pre>
  * 
  * Where 'myLabel' is the name of the component, and 'name' is the property expression to get the
@@ -109,7 +109,7 @@ public class PropertyModel<T> extends AbstractPropertyModel<T>
 	@Override
 	public String toString()
 	{
-	 StringBuilder sb = new StringBuilder(super.toString());
+		StringBuilder sb = new StringBuilder(super.toString());
 		sb.append(":expression=[").append(expression).append("]");
 		return sb.toString();
 	}
