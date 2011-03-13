@@ -30,7 +30,6 @@ import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.MarkupType;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.page.IPageManager;
@@ -233,46 +232,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	public PageParameters getPageParameters()
 	{
 		return pageParameters;
-	}
-
-	/**
-	 * Called right after a component's listener method (the provided method argument) was called.
-	 * This method may be used to clean up dependencies, do logging, etc. NOTE: this method will
-	 * also be called when {@link WebPage#beforeCallComponent(Component, RequestListenerInterface)}
-	 * or the method invocation itself failed.
-	 * 
-	 * @param component
-	 *            the component that is to be called
-	 * @param listener
-	 *            the listener of that component that is to be called
-	 */
-	// TODO Post-1.3: We should create a listener on Application like
-	// IComponentInstantiationListener that forwards to IAuthorizationStrategy for
-	// RequestListenerInterface invocations.
-	public void afterCallComponent(final Component component,
-		final RequestListenerInterface listener)
-	{
-	}
-
-	/**
-	 * Called just before a component's listener method (the provided method argument) is called.
-	 * This method may be used to set up dependencies, enforce authorization, etc. NOTE: if this
-	 * method fails, the method will not be executed. Method
-	 * {@link WebPage#afterCallComponent(Component, RequestListenerInterface)} will always be
-	 * called.
-	 * 
-	 * @param component
-	 *            the component that is to be called
-	 * @param listener
-	 *            the listener of that component that is to be called
-	 */
-	// TODO Post-1.3: We should create a listener on Application like
-	// IComponentInstantiationListener
-	// that forwards to IAuthorizationStrategy for RequestListenerInterface
-	// invocations.
-	public void beforeCallComponent(final Component component,
-		final RequestListenerInterface listener)
-	{
 	}
 
 	/**
