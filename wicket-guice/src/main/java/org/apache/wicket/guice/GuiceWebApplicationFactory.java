@@ -21,6 +21,7 @@ import javax.servlet.ServletContext;
 import org.apache.wicket.protocol.http.IWebApplicationFactory;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
+import org.apache.wicket.util.string.Strings;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -132,7 +133,7 @@ public class GuiceWebApplicationFactory implements IWebApplicationFactory
 		else if (filter.getFilterConfig().getInitParameter("module") != null)
 		{
 			String paramValue = filter.getFilterConfig().getInitParameter("module");
-			String moduleNames[] = paramValue.split(",");
+			String moduleNames[] = Strings.split(paramValue, ',');
 			Module modules[] = new Module[moduleNames.length];
 			for (int i = 0; i < moduleNames.length; i++)
 			{
