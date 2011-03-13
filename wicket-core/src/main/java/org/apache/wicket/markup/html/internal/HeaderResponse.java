@@ -31,6 +31,7 @@ import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandle
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.response.NullResponse;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.JavaScriptUtils;
 import org.apache.wicket.util.string.Strings;
 
@@ -60,16 +61,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderCSSReference(ResourceReference reference)
 	{
-		if (reference == null)
-		{
-			throw new IllegalArgumentException("reference cannot be null");
-		}
-		if (!closed)
-		{
-			IRequestHandler handler = new ResourceReferenceRequestHandler(reference);
-			CharSequence url = RequestCycle.get().urlFor(handler);
-			internalRenderCSSReference(url.toString(), null);
-		}
+		renderCSSReference(reference, null, null);
 	}
 
 	/**
@@ -101,14 +93,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderCSSReference(String url)
 	{
-		if (Strings.isEmpty(url))
-		{
-			throw new IllegalArgumentException("url cannot be empty or null");
-		}
-		if (!closed)
-		{
-			internalRenderCSSReference(relative(url), null);
-		}
+		renderCSSReference(url, null);
 	}
 
 	/**
@@ -153,16 +138,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderJavaScriptReference(ResourceReference reference)
 	{
-		if (reference == null)
-		{
-			throw new IllegalArgumentException("reference cannot be null");
-		}
-		if (!closed)
-		{
-			IRequestHandler handler = new ResourceReferenceRequestHandler(reference);
-			CharSequence url = RequestCycle.get().urlFor(handler);
-			internalRenderJavaScriptReference(url.toString(), null);
-		}
+		renderJavaScriptReference(reference, null);
 	}
 
 	/**
@@ -177,10 +153,8 @@ public abstract class HeaderResponse implements IHeaderResponse
 	public void renderJavaScriptReference(ResourceReference reference,
 		PageParameters pageParameters, String id)
 	{
-		if (reference == null)
-		{
-			throw new IllegalArgumentException("reference cannot be null");
-		}
+		Args.notNull(reference, "reference");
+
 		if (!closed)
 		{
 			IRequestHandler handler = new ResourceReferenceRequestHandler(reference, pageParameters);
@@ -238,10 +212,8 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderJavaScript(CharSequence javascript, String id)
 	{
-		if (javascript == null)
-		{
-			throw new IllegalArgumentException("javascript cannot be null");
-		}
+		Args.notNull(javascript, "javascript");
+
 		if (!closed)
 		{
 			List<String> token = Arrays.asList(javascript.toString(), id);
@@ -258,10 +230,8 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderString(CharSequence string)
 	{
-		if (string == null)
-		{
-			throw new IllegalArgumentException("string cannot be null");
-		}
+		Args.notNull(string, "string");
+
 		if (!closed)
 		{
 			String token = string.toString();
@@ -362,6 +332,8 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	private String relative(final String location)
 	{
+		Args.notEmpty(location, "location");
+
 		if (location.startsWith("http://") || location.startsWith("https://") ||
 			location.startsWith("/"))
 		{
