@@ -47,7 +47,7 @@ import org.apache.wicket.util.lang.PropertyResolver;
  * <pre>
  *     Person person = getSomePerson();
  *     ...
- *     add(new Label(&quot;myLabel&quot;, new PopertyModel(person, &quot;name&quot;));
+ *     add(new Label(&quot;myLabel&quot;, new PropertyModel(person, &quot;name&quot;));
  * </pre>
  * 
  * Where 'myLabel' is the name of the component, and 'name' is the property expression to get the
