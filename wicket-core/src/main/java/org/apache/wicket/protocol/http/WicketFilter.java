@@ -283,7 +283,7 @@ public class WicketFilter implements Filter
 		application.setName(filterConfig.getFilterName());
 		application.setWicketFilter(this);
 
-		// Allow the filterPath to tbe preset via setFilterPath()
+		// Allow the filterPath to be preset via setFilterPath()
 		if (filterPath == null)
 		{
 			filterPath = getFilterPathFromConfig(filterConfig);
@@ -488,7 +488,7 @@ public class WicketFilter implements Filter
 	 */
 	protected final String checkIfRedirectRequired(final String requestURI, final String contextPath)
 	{
-		// length without jesessionid (http://.../abc;jsessionid=...?param)
+		// length without jsessionid (http://.../abc;jsessionid=...?param)
 		int uriLength = requestURI.indexOf(';');
 		if (uriLength == -1)
 		{
@@ -506,9 +506,9 @@ public class WicketFilter implements Filter
 		}
 
 		// request.getContextPath() + "/" + filterPath. But without any trailing "/".
-		int homePathLenth = contextPath.length() +
+		int homePathLength = contextPath.length() +
 			(filterPathLength > 0 ? 1 + filterPathLength : 0);
-		if (uriLength != homePathLenth)
+		if (uriLength != homePathLength)
 		{
 			// requestURI and homePath are different (in length)
 			// => continue with standard request processing. No redirect.
