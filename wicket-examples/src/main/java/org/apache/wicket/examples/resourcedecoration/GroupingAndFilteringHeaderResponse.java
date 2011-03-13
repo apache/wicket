@@ -86,4 +86,10 @@ public class GroupingAndFilteringHeaderResponse extends DecoratingHeaderResponse
 		super.close();
 	}
 
+	@Override
+	public void renderCSS(CharSequence css, String id)
+	{
+		groupingHeaderResponse.renderCSS(css, id);
+	}
+
 }

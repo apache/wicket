@@ -93,6 +93,11 @@ public abstract class DecoratingHeaderResponse implements IHeaderResponse
 		realResponse.renderCSSReference(reference);
 	}
 
+	public void renderCSS(CharSequence css, String id)
+	{
+		realResponse.renderCSS(css, id);
+	}
+
 	public void renderCSSReference(String url)
 	{
 		realResponse.renderCSSReference(url);

@@ -32,6 +32,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.response.NullResponse;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.string.CssUtils;
 import org.apache.wicket.util.string.JavaScriptUtils;
 import org.apache.wicket.util.string.Strings;
 
@@ -54,6 +55,23 @@ public abstract class HeaderResponse implements IHeaderResponse
 	public final void markRendered(Object object)
 	{
 		rendered.add(object);
+	}
+
+	public void renderCSS(CharSequence css, String id)
+	{
+		if (css == null)
+		{
+			throw new IllegalArgumentException("css cannot be null");
+		}
+		if (!closed)
+		{
+			List<String> token = Arrays.asList(css.toString(), id);
+			if (wasRendered(token) == false)
+			{
+				renderString(CssUtils.INLINE_OPEN_TAG + css + CssUtils.INLINE_CLOSE_TAG);
+				markRendered(token);
+			}
+		}
 	}
 
 	/**

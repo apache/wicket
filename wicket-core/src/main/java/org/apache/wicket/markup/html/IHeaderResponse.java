@@ -100,6 +100,20 @@ public interface IHeaderResponse extends Closeable
 	public void renderJavaScript(CharSequence javascript, String id);
 
 	/**
+	 * Renders CSS code to the response, if the CSS has not already been rendered.
+	 * 
+	 * the necessary surrounding &lt;style&gt; tags will be added to the output.
+	 * 
+	 * @param css
+	 *            css content to be rendered.
+	 * 
+	 * @param id
+	 *            unique id for the &lt;style&gt; element. This can be <code>null</code>, however in
+	 *            that case the ajax header contribution can't detect duplicate CSS fragments.
+	 */
+	void renderCSS(CharSequence css, String id);
+
+	/**
 	 * Writes a CSS reference, if the specified reference hasn't been rendered yet.
 	 * 
 	 * @param reference
