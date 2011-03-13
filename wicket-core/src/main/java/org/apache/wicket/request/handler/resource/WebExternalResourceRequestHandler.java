@@ -14,10 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.http.request;
+package org.apache.wicket.request.handler.resource;
 
 import org.apache.wicket.request.IRequestCycle;
-import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.util.resource.WebExternalResourceStream;
 import org.slf4j.Logger;
