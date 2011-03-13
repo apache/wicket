@@ -56,12 +56,6 @@ public class StatelessForm<T> extends Form<T>
 	}
 
 	@Override
-	public void process(IFormSubmitter submittingComponent)
-	{
-		super.process(submittingComponent);
-	}
-
-	@Override
 	protected boolean getStatelessHint()
 	{
 		return true;
