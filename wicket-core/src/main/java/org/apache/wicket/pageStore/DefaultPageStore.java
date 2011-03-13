@@ -478,7 +478,7 @@ public class DefaultPageStore implements IPageStore
 					if (result != null)
 					{
 						// move to top
-						cache.add(new SoftReference<SerializedPage>(result));
+						storePage(result);
 					}
 				}
 			}
@@ -488,7 +488,6 @@ public class DefaultPageStore implements IPageStore
 		/**
 		 * Store the serialized page in cache
 		 * 
-		 * @return serialized page
 		 * @param sessionId
 		 * @param page
 		 * @param pagesList
@@ -508,6 +507,7 @@ public class DefaultPageStore implements IPageStore
 						if (entry != null && entry.equals(page))
 						{
 							i.remove();
+							break;
 						}
 					}
 
