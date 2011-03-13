@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.page;
 
-import java.util.Date;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -93,7 +92,8 @@ public class PageAccessSynchronizer
 
 		while (!locked && start.elapsedSince().lessThan(timeout))
 		{
-			logger.debug("{} attempting to acquire lock to page {}", thread.getName(), pageId);
+			logger.debug("'{}' attempting to acquire lock to page with id '{}'", thread.getName(),
+				pageId);
 
 			PageLock previous = locks.putIfAbsent(pageId, lock);
 			if (previous == null || previous.getThread() == thread)
@@ -220,9 +220,6 @@ public class PageAccessSynchronizer
 		/** page id */
 		private final int pageId;
 
-		/** timestamp when lock was created */
-		private final Date created;
-
 		/** thread that owns the lock */
 		private final Thread thread;
 
@@ -236,7 +233,6 @@ public class PageAccessSynchronizer
 		{
 			this.pageId = pageId;
 			this.thread = thread;
-			created = new Date();
 		}
 
 		/**
@@ -245,14 +241,6 @@ public class PageAccessSynchronizer
 		public int getPageId()
 		{
 			return pageId;
-		}
-
-		/**
-		 * @return timestamp lock was created
-		 */
-		public Date getCreated()
-		{
-			return created;
 		}
 
 		/**
