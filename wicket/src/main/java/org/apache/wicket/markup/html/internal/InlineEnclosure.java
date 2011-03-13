@@ -22,7 +22,6 @@ import java.util.List;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.parser.filter.InlineEnclosureHandler;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
@@ -69,12 +68,6 @@ public class InlineEnclosure extends Enclosure
 	public InlineEnclosure(final String id, final String childId)
 	{
 		super(id, childId);
-
-		if (childId == null)
-		{
-			throw new MarkupException(
-				"You most likely forgot to register the EnclosureHandler with the MarkupParserFactory");
-		}
 
 		this.childId = childId;
 	}
