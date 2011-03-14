@@ -1396,7 +1396,7 @@ public class BaseWicketTester
 				catch (Exception e)
 				{
 					fail("Internal error in WicketTester. "
-						+ "Please report this in Wickets Issue Tracker.");
+						+ "Please report this in Wicket's Issue Tracker.", e);
 				}
 
 			}
@@ -2037,7 +2037,17 @@ public class BaseWicketTester
 	 */
 	protected final void fail(String message)
 	{
-		throw new WicketRuntimeException(message);
+		fail(message, null);
+	}
+
+	/**
+	 * 
+	 * @param message
+	 * @param cause
+	 */
+	protected final void fail(String message, Throwable cause)
+	{
+		throw new WicketRuntimeException(message, cause);
 	}
 
 	/**
