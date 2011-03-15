@@ -163,9 +163,12 @@ public class WebSession extends Session
 	@Override
 	public void invalidate()
 	{
-		getApplication().getSecuritySettings().getAuthenticationStrategy().remove();
+		if (isSessionInvalidated() == false)
+		{
+			getApplication().getSecuritySettings().getAuthenticationStrategy().remove();
 
-		super.invalidate();
+			super.invalidate();
+		}
 	}
 
 	/**
