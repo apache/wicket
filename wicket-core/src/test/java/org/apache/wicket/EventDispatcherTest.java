@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
@@ -45,11 +46,12 @@ public class EventDispatcherTest extends WicketTestCase
 		page.add(testComponent);
 		page.send(page, Broadcast.DEPTH, null);
 		assertTrue(testComponent.callbackInvoked);
+		assertEquals(testComponent.getBehaviors(TestBehavior.class).get(0).invokationTimes, 2);
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.METHOD)
-	@interface EvenCallback {
+	@interface EventCallback {
 
 	}
 
@@ -61,7 +63,7 @@ public class EventDispatcherTest extends WicketTestCase
 			Method[] sinkMethods = sink.getClass().getMethods();
 			for (int i = 0; i < sinkMethods.length; i++)
 			{
-				if (sinkMethods[i].isAnnotationPresent(EvenCallback.class))
+				if (sinkMethods[i].isAnnotationPresent(EventCallback.class))
 				{
 					try
 					{
@@ -88,13 +90,34 @@ public class EventDispatcherTest extends WicketTestCase
 		public TestComponent(String id)
 		{
 			super(id);
+
+			add(new TestBehavior());
 		}
 
 		/** */
-		@EvenCallback
+		@EventCallback
 		public void testCallback()
 		{
 			callbackInvoked = true;
+		}
+	}
+
+	private static class TestBehavior extends Behavior implements IEventSink
+	{
+
+		private static final long serialVersionUID = 1;
+
+		int invokationTimes = 0;
+
+		public void onEvent(IEvent<?> event)
+		{
+			invokationTimes++;
+		}
+
+		@EventCallback
+		public void testCallback()
+		{
+			invokationTimes++;
 		}
 	}
 

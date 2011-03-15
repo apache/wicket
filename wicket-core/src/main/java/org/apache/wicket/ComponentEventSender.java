@@ -16,6 +16,9 @@
  */
 package org.apache.wicket;
 
+import java.util.List;
+
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.event.IEventSource;
@@ -276,6 +279,22 @@ final class ComponentEventSender implements IEventSource
 			{
 				visit.stop();
 			}
+
+			List<? extends Behavior> behaviors = object.getBehaviors();
+			for (Behavior behavior : behaviors)
+			{
+				if (behavior instanceof IEventSink)
+				{
+					IEventSink behaviorSink = (IEventSink)behavior;
+					dispatcher.dispatchEvent(behaviorSink, e);
+					if (e.isStop())
+					{
+						visit.stop();
+						break;
+					}
+				}
+			}
+
 
 			if (e.isShallow())
 			{
