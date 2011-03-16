@@ -39,6 +39,12 @@ public enum Broadcast {
 	 * <li>{@link Component}s</li>
 	 * </ol>
 	 * 
+	 * Components receive the event with a preorder breadth-first traversal, eg: Apply recursively:
+	 * <ol>
+	 * <li>The component receives the event</li>
+	 * <li>The component's children receive the event</li>
+	 * </ol>
+	 * 
 	 * Any sink along the path can be specified and traversal will start with the specified sink as
 	 * root, eg:
 	 * 
@@ -59,6 +65,12 @@ public enum Broadcast {
 	 * <li>{@link RequestCycle}</li>
 	 * <li>{@link Session}</li>
 	 * <li>{@link Application}</li>
+	 * </ol>
+	 * 
+	 * Components receive the event with a postorder depth-first traversal, eg: Apply recursively:
+	 * <ol>
+	 * <li>The component's children receive the event</li>
+	 * <li>The component receives the event</li>
 	 * </ol>
 	 * 
 	 * Any sink along the path can be specified and traversal will start with the specified sink as

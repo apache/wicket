@@ -133,11 +133,20 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testBreadth_Component()
+	public void testBreadth_Container()
 	{
 		page.send(c13, Broadcast.BREADTH, new Payload());
 		assertPath(c13, c134, c135);
 	}
+
+	/** */
+	@Test
+	public void testBreadth_Component()
+	{
+		page.send(c6, Broadcast.BREADTH, new Payload());
+		assertPath(c6);
+	}
+
 
 	/** */
 	@Test
@@ -219,11 +228,20 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testDepth_Component()
+	public void testDepth_Container()
 	{
 		page.send(c1, Broadcast.DEPTH, new Payload());
 		assertPath(c12, c134, c135, c13, c1);
 	}
+
+	/** */
+	@Test
+	public void testDepth_Component()
+	{
+		page.send(c6, Broadcast.DEPTH, new Payload());
+		assertPath(c6);
+	}
+
 
 	/** */
 	@Test
