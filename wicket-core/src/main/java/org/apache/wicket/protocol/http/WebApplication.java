@@ -123,6 +123,13 @@ public abstract class WebApplication extends Application
 	private FilterFactoryManager filterFactoryManager;
 
 	/**
+	 * Cached value of the parsed (from system properties or Servlet init/context parameter)
+	 * <code>wicket.configuration</code> setting. No need to re-read it because it wont change at
+	 * runtime.
+	 */
+	private RuntimeConfigurationType configurationType;
+
+	/**
 	 * Covariant override for easy getting the current {@link WebApplication} without having to cast
 	 * it.
 	 */
@@ -525,58 +532,66 @@ public abstract class WebApplication extends Application
 	@Override
 	public RuntimeConfigurationType getConfigurationType()
 	{
-		String result = null;
-		try
+		if (configurationType == null)
 		{
-			result = System.getProperty("wicket." + Application.CONFIGURATION);
-		}
-		catch (SecurityException e)
-		{
-			// Ignore - we're not allowed to read system properties.
-		}
-
-		// If no system parameter check filter/servlet <init-param> and <context-param>
-		if (result == null)
-		{
-			result = getInitParameter("wicket." + Application.CONFIGURATION);
-		}
-		if (result == null)
-		{
-			result = getServletContext().getInitParameter("wicket." + Application.CONFIGURATION);
-		}
-
-		// If no system parameter check filter/servlet specific <init-param>
-		if (result == null)
-		{
-			result = getInitParameter(Application.CONFIGURATION);
-		}
-
-		// If no system parameter and no <init-param>, then check
-		// <context-param>
-		if (result == null)
-		{
-			result = getServletContext().getInitParameter(Application.CONFIGURATION);
-		}
-
-		// Return result if we have found it, else fall back to DEVELOPMENT mode
-		// as the default.
-		if (result != null)
-		{
+			String result = null;
 			try
 			{
-				return RuntimeConfigurationType.valueOf(result.toUpperCase());
+				result = System.getProperty("wicket." + Application.CONFIGURATION);
 			}
-			catch (IllegalArgumentException e)
+			catch (SecurityException e)
 			{
-				// Ignore : fall back to DEVELOPMENT mode
-				// log.warn("Unknown runtime configuration type '" + result +
-				// "', falling back to DEVELOPMENT mode.");
-				throw new IllegalArgumentException("Invalid configuration type: '" + result +
-					"'.  Must be \"development\" or \"deployment\".");
+				// Ignore - we're not allowed to read system properties.
+			}
+
+			// If no system parameter check filter/servlet <init-param> and <context-param>
+			if (result == null)
+			{
+				result = getInitParameter("wicket." + Application.CONFIGURATION);
+			}
+			if (result == null)
+			{
+				result = getServletContext().getInitParameter("wicket." + Application.CONFIGURATION);
+			}
+
+			// If no system parameter check filter/servlet specific <init-param>
+			if (result == null)
+			{
+				result = getInitParameter(Application.CONFIGURATION);
+			}
+
+			// If no system parameter and no <init-param>, then check
+			// <context-param>
+			if (result == null)
+			{
+				result = getServletContext().getInitParameter(Application.CONFIGURATION);
+			}
+
+			// Return result if we have found it, else fall back to DEVELOPMENT mode
+			// as the default.
+			if (result != null)
+			{
+				try
+				{
+					configurationType = RuntimeConfigurationType.valueOf(result.toUpperCase());
+				}
+				catch (IllegalArgumentException e)
+				{
+					// Ignore : fall back to DEVELOPMENT mode
+					// log.warn("Unknown runtime configuration type '" + result +
+					// "', falling back to DEVELOPMENT mode.");
+					throw new IllegalArgumentException("Invalid configuration type: '" + result +
+						"'.  Must be \"development\" or \"deployment\".");
+				}
 			}
 		}
 
-		return RuntimeConfigurationType.DEVELOPMENT;
+		if (configurationType == null)
+		{
+			configurationType = RuntimeConfigurationType.DEVELOPMENT;
+		}
+
+		return configurationType;
 	}
 
 	/**
