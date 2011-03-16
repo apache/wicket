@@ -283,15 +283,12 @@ final class ComponentEventSender implements IEventSource
 			List<? extends Behavior> behaviors = object.getBehaviors();
 			for (Behavior behavior : behaviors)
 			{
-				if (behavior instanceof IEventSink)
+				IEventSink behaviorSink = behavior;
+				dispatcher.dispatchEvent(behaviorSink, e);
+				if (e.isStop())
 				{
-					IEventSink behaviorSink = (IEventSink)behavior;
-					dispatcher.dispatchEvent(behaviorSink, e);
-					if (e.isStop())
-					{
-						visit.stop();
-						break;
-					}
+					visit.stop();
+					break;
 				}
 			}
 

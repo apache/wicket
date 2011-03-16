@@ -18,6 +18,8 @@ package org.apache.wicket.behavior;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.event.IEvent;
+import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.IHeaderResponse;
 
@@ -41,7 +43,7 @@ import org.apache.wicket.markup.html.IHeaderResponse;
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class Behavior implements IClusterable
+public abstract class Behavior implements IClusterable, IEventSink
 {
 	private static final long serialVersionUID = 1L;
 
@@ -202,6 +204,10 @@ public abstract class Behavior implements IClusterable
 	 *            the component being configured
 	 */
 	public void onConfigure(Component component)
+	{
+	}
+
+	public void onEvent(IEvent<?> event)
 	{
 	}
 
