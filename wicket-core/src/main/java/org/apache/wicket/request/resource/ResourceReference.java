@@ -47,7 +47,7 @@ public abstract class ResourceReference implements Serializable
 	 * Creates new {@link ResourceReference} instance.
 	 * 
 	 * @param key
-	 *            The data makeing up the resource reference
+	 *            The data making up the resource reference
 	 */
 	public ResourceReference(final Key key)
 	{
