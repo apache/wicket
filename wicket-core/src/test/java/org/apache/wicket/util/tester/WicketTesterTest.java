@@ -34,6 +34,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.WicketAjaxReference;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
@@ -59,6 +60,7 @@ import org.apache.wicket.util.tester.apps_1.SuccessPage;
 import org.apache.wicket.util.tester.apps_1.ViewBook;
 import org.apache.wicket.util.tester.apps_6.LinkPage;
 import org.apache.wicket.util.tester.apps_6.ResultPage;
+import org.junit.Test;
 
 /**
  * 
@@ -955,5 +957,25 @@ public class WicketTesterTest extends TestCase
 	private Button getSubmitButton()
 	{
 		return (Button)tester.getComponentFromLastRenderedPage("form:submit");
+	}
+
+	/**
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-3543">WICKET-3543</a>
+	 */
+	@Test
+	public void testStartResourceReference()
+	{
+		tester.startResourceReference(WicketAjaxReference.INSTANCE);
+		tester.assertContains("wicketAjaxGet()");
+	}
+
+	/**
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-3543">WICKET-3543</a>
+	 */
+	@Test
+	public void testStartResource()
+	{
+		tester.startResource(WicketAjaxReference.INSTANCE.getResource());
+		tester.assertContains("wicketAjaxGet()");
 	}
 }

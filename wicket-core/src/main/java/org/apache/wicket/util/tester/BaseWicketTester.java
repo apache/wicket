@@ -104,8 +104,11 @@ import org.apache.wicket.request.handler.PageAndComponentProvider;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.render.PageRenderer;
+import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.apache.wicket.util.IProvider;
@@ -635,6 +638,58 @@ public class BaseWicketTester
 	public Page startPage(Page page)
 	{
 		return startPage(new PageProvider(page));
+	}
+
+	/**
+	 * Simulates a request to a mounted {@link IResource}
+	 * 
+	 * @param resource
+	 *            the resource to test
+	 * @return the used {@link ResourceReference} for the simulation
+	 */
+	public ResourceReference startResource(final IResource resource)
+	{
+		return startResourceReference(new ResourceReference("testResourceReference")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public IResource getResource()
+			{
+				return resource;
+			}
+		});
+	}
+
+	/**
+	 * Simulates a request to a mounted {@link ResourceReference}
+	 * 
+	 * @param reference
+	 *            the resource reference to test
+	 * @return the tested resource reference
+	 */
+	public ResourceReference startResourceReference(final ResourceReference reference)
+	{
+		return startResourceReference(reference, null);
+	}
+
+	/**
+	 * Simulates a request to a mounted {@link ResourceReference}
+	 * 
+	 * @param reference
+	 *            the resource reference to test
+	 * @param pageParameters
+	 *            the parameters passed to the resource reference
+	 * @return the tested resource reference
+	 */
+	public ResourceReference startResourceReference(final ResourceReference reference,
+		final PageParameters pageParameters)
+	{
+		request = new MockHttpServletRequest(application, hsession, servletContext);
+		request.setURL(request.getContextPath() + request.getServletPath() + "/");
+		IRequestHandler handler = new ResourceReferenceRequestHandler(reference, pageParameters);
+		processRequest(request, handler);
+		return reference;
 	}
 
 	/**
