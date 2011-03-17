@@ -992,7 +992,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		if (!required && getType() != null && getType().isPrimitive())
 		{
 			throw new WicketRuntimeException(
-				"FormComponent can't be not required when the type is primitive class: " + this);
+				"FormComponent can't be required when the type is primitive class: " + this);
 		}
 		if (required != isRequired())
 		{
