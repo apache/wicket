@@ -1610,7 +1610,7 @@ Wicket.Head.Contributor.prototype = {
 	// Process a script element (both inline and external)
 	processScript: function(steps, node) {
 		steps.push(function(notify) {		
-			// if element in same id is already in document, 
+			// if element with same id is already in document, 
 			// or element with same src attribute is in document, skip it
 			if (Wicket.DOM.containsElement(node) ||
 				Wicket.Head.containsElement(node, "src")) {
