@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * properly positioning and rewinding its markup stream so before each child renders it points to
  * the beginning of this component. Each child is rendered by a call to
  * {@link #renderChild(Component)}. A typical implementation simply does
- * <code>child.render(getMarkupStream());</code>.
+ * <code>child.render();</code>.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
