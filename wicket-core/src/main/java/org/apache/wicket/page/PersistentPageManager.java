@@ -101,11 +101,12 @@ public class PersistentPageManager extends AbstractPageManager
 		private IPageStore getPageStore()
 		{
 			PersistentPageManager manager = managers.get(applicationName);
+
 			if (manager == null)
 			{
-				throw new IllegalStateException("PageManager for application '" + applicationName +
-					"' not registered.");
+				return null;
 			}
+
 			return manager.pageStore;
 		}
 
@@ -213,9 +214,19 @@ public class PersistentPageManager extends AbstractPageManager
 
 			// prepare for serialization and store the pages
 			List<Serializable> l = new ArrayList<Serializable>();
+			IPageStore pageStore = getPageStore();
 			for (IManageablePage p : pages)
 			{
-				Serializable preparedPage = getPageStore().prepareForSerialization(sessionId, p);
+				Serializable preparedPage;
+				if (pageStore != null)
+				{
+					preparedPage = pageStore.prepareForSerialization(sessionId, p);
+				}
+				else
+				{
+					preparedPage = p;
+				}
+
 				if (preparedPage != null)
 				{
 					l.add(preparedPage);
@@ -242,9 +253,19 @@ public class PersistentPageManager extends AbstractPageManager
 
 			// convert to temporary state after deserialization (will need to be processed
 			// by convertAfterReadObject before the pages can be accessed)
+			IPageStore pageStore = getPageStore();
 			for (Serializable ser : l)
 			{
-				afterReadObject.add(getPageStore().restoreAfterSerialization(ser));
+				Object page;
+				if (pageStore != null)
+				{
+					page = pageStore.restoreAfterSerialization(ser);
+				}
+				else
+				{
+					page = ser;
+				}
+				afterReadObject.add(page);
 			}
 		}
 	}
