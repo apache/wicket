@@ -22,7 +22,6 @@ import java.util.Map;
 import org.apache.wicket.Application;
 import org.apache.wicket.IResourceFactory;
 import org.apache.wicket.Localizer;
-import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.PackageResourceGuard;
@@ -232,7 +231,7 @@ public class ResourceSettings implements IResourceSettings
 			// Create compound resource locator using source path from
 			// application settings
 			resourceStreamLocator = new ResourceStreamLocator(getResourceFinder());
-			if (Application.get().getConfigurationType() == RuntimeConfigurationType.DEPLOYMENT)
+			if (Application.get().usesDeploymentConfig())
 			{
 				resourceStreamLocator = new CachingResourceStreamLocator(resourceStreamLocator);
 			}
