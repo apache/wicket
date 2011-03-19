@@ -298,7 +298,7 @@ public final class LocalizedImageResource implements IClusterable
 		if (resource == null && resourceReference == null)
 		{
 			// Get SRC attribute of tag
-			final CharSequence src = tag.getString("src");
+			final CharSequence src = tag.getAttribute("src");
 			if (src != null)
 			{
 				// Try to load static image
@@ -307,7 +307,7 @@ public final class LocalizedImageResource implements IClusterable
 			else
 			{
 				// Get VALUE attribute of tag
-				final CharSequence value = tag.getString("value");
+				final CharSequence value = tag.getAttribute("value");
 				if (value != null)
 				{
 					// Try to generate an image using an image factory

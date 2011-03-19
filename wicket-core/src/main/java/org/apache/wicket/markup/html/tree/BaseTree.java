@@ -117,7 +117,7 @@ public abstract class BaseTree extends AbstractTree
 				String klass = getItemClass(node);
 				if (!Strings.isEmpty(klass))
 				{
-					CharSequence oldClass = tag.getString("class");
+					CharSequence oldClass = tag.getAttribute("class");
 					if (Strings.isEmpty(oldClass))
 					{
 						tag.put("class", klass);
