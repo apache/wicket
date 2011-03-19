@@ -727,7 +727,7 @@ public class BaseWicketTester
 		while ((tag = (XmlTag)parser.nextTag()) != null)
 		{
 			if (tag.isOpen() && tag.getName().equals("script") &&
-				"wicket-ajax-base-url".equals(tag.getString("id")))
+				"wicket-ajax-base-url".equals(tag.getAttribute("id")))
 			{
 				parser.next();
 				return parser.getString().toString().split("\\\"")[1];
