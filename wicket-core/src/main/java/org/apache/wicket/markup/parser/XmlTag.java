@@ -62,26 +62,16 @@ public class XmlTag extends MarkupElement
 		}
 	}
 
+	TextSegment text;
+
 	/** Attribute map. */
 	private IValueMap attributes;
-
-	/** Column number. */
-	int columnNumber;
-
-	/** Line number. */
-	int lineNumber;
 
 	/** Name of tag, such as "img" or "input". */
 	String name;
 
 	/** Namespace of the tag, if available, such as &lt;wicket:link ...&gt; */
 	String namespace;
-
-	/** Position of this tag in the input that was parsed. */
-	int pos;
-
-	/** Full text of tag. */
-	CharSequence text;
 
 	/** The tag type (OPEN, CLOSE or OPEN_CLOSE). */
 	TagType type;
@@ -170,7 +160,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public int getColumnNumber()
 	{
-		return columnNumber;
+		return (text != null ? text.columnNumber : 0);
 	}
 
 	/**
@@ -180,7 +170,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public int getLength()
 	{
-		return text.length();
+		return (text != null ? text.text.length() : 0);
 	}
 
 	/**
@@ -190,7 +180,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public int getLineNumber()
 	{
-		return lineNumber;
+		return (text != null ? text.lineNumber : 0);
 	}
 
 	/**
@@ -230,7 +220,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public int getPos()
 	{
-		return pos;
+		return (text != null ? text.pos : 0);
 	}
 
 	/**
@@ -367,7 +357,6 @@ public class XmlTag extends MarkupElement
 	{
 		dest.namespace = namespace;
 		dest.name = name;
-		dest.pos = pos;
 		dest.text = text;
 		dest.type = type;
 		dest.isMutable = true;
@@ -543,7 +532,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public String toDebugString()
 	{
-		return "[Tag name = " + name + ", pos = " + pos + ", line = " + lineNumber +
+		return "[Tag name = " + name + ", pos = " + text.pos + ", line = " + text.lineNumber +
 			", attributes = [" + getAttributes() + "], type = " + type + "]";
 	}
 
@@ -563,7 +552,7 @@ public class XmlTag extends MarkupElement
 	{
 		if (!isMutable && (text != null))
 		{
-			return text;
+			return text.text;
 		}
 
 		return toXmlString(null);
@@ -577,7 +566,8 @@ public class XmlTag extends MarkupElement
 	@Override
 	public String toUserDebugString()
 	{
-		return " '" + toString() + "' (line " + lineNumber + ", column " + columnNumber + ")";
+		return " '" + toString() + "' (line " + getLineNumber() + ", column " + getColumnNumber() +
+			")";
 	}
 
 	/**
@@ -639,5 +629,28 @@ public class XmlTag extends MarkupElement
 
 		buffer.append('>');
 		return buffer;
+	}
+
+	static class TextSegment
+	{
+		/** Column number. */
+		final int columnNumber;
+
+		/** Line number. */
+		final int lineNumber;
+
+		/** Position of this tag in the input that was parsed. */
+		final int pos;
+
+		/** Full text of tag. */
+		final CharSequence text;
+
+		TextSegment(CharSequence text, int pos, int line, int col)
+		{
+			this.text = text;
+			this.pos = pos;
+			lineNumber = line;
+			columnNumber = col;
+		}
 	}
 }

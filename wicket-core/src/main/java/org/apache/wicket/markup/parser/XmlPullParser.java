@@ -24,6 +24,7 @@ import java.text.ParseException;
 
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
+import org.apache.wicket.markup.parser.XmlTag.TextSegment;
 import org.apache.wicket.util.io.FullyBufferedReader;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.XmlReader;
@@ -273,10 +274,8 @@ public final class XmlPullParser implements IXmlPullParser
 		{
 			// Populate tag fields
 			lastTag.type = type;
-			lastTag.pos = openBracketIndex;
-			lastTag.text = lastText;
-			lastTag.lineNumber = input.getLineNumber();
-			lastTag.columnNumber = input.getColumnNumber();
+			lastTag.text = new TextSegment(lastText, openBracketIndex, input.getLineNumber(),
+				input.getColumnNumber());
 
 			// Move to position after the tag
 			input.setPosition(closeBracketIndex + 1);
