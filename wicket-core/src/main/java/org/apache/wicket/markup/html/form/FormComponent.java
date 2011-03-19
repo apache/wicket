@@ -448,6 +448,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * @see IValidatorAddListener
 	 * 
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public final FormComponent<T> add(final IValidator<? super T> validator)
 	{
 		if (validator == null)
@@ -1088,7 +1089,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * @see IConverterLocator
 	 * @see Application#newConverterLocator()
 	 */
-	@SuppressWarnings("unchecked")
 	protected void convertInput()
 	{
 		if (typeName == null)
