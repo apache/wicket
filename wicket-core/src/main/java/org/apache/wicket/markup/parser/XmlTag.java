@@ -68,9 +68,6 @@ public class XmlTag extends MarkupElement
 	/** Column number. */
 	int columnNumber;
 
-	/** Length of this tag in characters. */
-	int length;
-
 	/** Line number. */
 	int lineNumber;
 
@@ -186,7 +183,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public int getLength()
 	{
-		return length;
+		return text.length();
 	}
 
 	/**
@@ -384,7 +381,6 @@ public class XmlTag extends MarkupElement
 		dest.namespace = namespace;
 		dest.name = name;
 		dest.pos = pos;
-		dest.length = length;
 		dest.text = text;
 		dest.type = type;
 		dest.isMutable = true;
@@ -562,8 +558,8 @@ public class XmlTag extends MarkupElement
 	 */
 	public String toDebugString()
 	{
-		return "[Tag name = " + name + ", pos = " + pos + ", line = " + lineNumber + ", length = " +
-			length + ", attributes = [" + getAttributes() + "], type = " + type + "]";
+		return "[Tag name = " + name + ", pos = " + pos + ", line = " + lineNumber +
+			", attributes = [" + getAttributes() + "], type = " + type + "]";
 	}
 
 	/**

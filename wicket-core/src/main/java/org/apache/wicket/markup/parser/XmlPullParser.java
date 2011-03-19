@@ -274,7 +274,6 @@ public final class XmlPullParser implements IXmlPullParser
 			// Populate tag fields
 			lastTag.type = type;
 			lastTag.pos = openBracketIndex;
-			lastTag.length = lastText.length();
 			lastTag.text = lastText;
 			lastTag.lineNumber = input.getLineNumber();
 			lastTag.columnNumber = input.getColumnNumber();
