@@ -417,8 +417,8 @@ public abstract class FileUploadBase
 		ParameterParser parser = new ParameterParser();
 		parser.setLowerCaseNames(true);
 		// Parameter parser can handle null input
-		Map params = parser.parse(contentType, new char[] { ';', ',' });
-		String boundaryStr = (String)params.get("boundary");
+		Map<String, String> params = parser.parse(contentType, new char[] { ';', ',' });
+		String boundaryStr = params.get("boundary");
 
 		if (boundaryStr == null)
 		{
@@ -483,10 +483,10 @@ public abstract class FileUploadBase
 				ParameterParser parser = new ParameterParser();
 				parser.setLowerCaseNames(true);
 				// Parameter parser can handle null input
-				Map params = parser.parse(pContentDisposition, ';');
+				Map<String, String> params = parser.parse(pContentDisposition, ';');
 				if (params.containsKey("filename"))
 				{
-					fileName = (String)params.get("filename");
+					fileName = params.get("filename");
 					if (fileName != null)
 					{
 						fileName = fileName.trim();
@@ -534,8 +534,8 @@ public abstract class FileUploadBase
 			ParameterParser parser = new ParameterParser();
 			parser.setLowerCaseNames(true);
 			// Parameter parser can handle null input
-			Map params = parser.parse(pContentDisposition, ';');
-			fieldName = (String)params.get("name");
+			Map<String, String> params = parser.parse(pContentDisposition, ';');
+			fieldName = params.get("name");
 			if (fieldName != null)
 			{
 				fieldName = fieldName.trim();
@@ -1302,6 +1302,8 @@ public abstract class FileUploadBase
 	 */
 	protected abstract static class SizeException extends FileUploadException
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * The actual size of the request.
 		 */
