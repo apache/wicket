@@ -21,9 +21,13 @@ import java.io.InputStream;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ParentResourceEscapePathTest extends WicketTestCase
 {
+	private static final Logger log = LoggerFactory.getLogger(ParentResourceEscapePathTest.class);
+
 	public void testParentEscapeSequenceInRenderedHtml() throws Exception
 	{
 		tester.getApplication().getResourceSettings().setParentFolderPlaceholder("-updir-");
@@ -35,12 +39,11 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 
 	private void parentEscapeSequenceInRenderedHtml()
 	{
-
 		tester.startPage(ParentResourceEscapePathTestPage.class);
 		tester.assertRenderedPage(ParentResourceEscapePathTestPage.class);
 		tester.assertNoErrorMessage();
 
-		System.out.println(tester.getLastResponseAsString());
+		log.error(tester.getLastResponseAsString());
 
 		String html = tester.getLastResponseAsString();
 		assertContains(html, "<html><head><wicket:link><script ");
@@ -51,7 +54,8 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 
 	private void assertContains(String html, String expected)
 	{
-		assertTrue(html, html.contains(expected));
+		assertTrue("Expected to find \"" + expected + "\" in \"" + html + "\"",
+			html.contains(expected));
 	}
 
 	public void testResourceUrlGeneratedByResourceReference()
