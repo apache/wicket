@@ -256,7 +256,7 @@ public class XmlTag extends MarkupElement
 	 *            The key
 	 * @return The string value
 	 */
-	public CharSequence getString(final String key)
+	public CharSequence getAttribute(final String key)
 	{
 		return getAttributes().getCharSequence(key);
 	}
@@ -637,7 +637,7 @@ public class XmlTag extends MarkupElement
 				{
 					buffer.append(" ");
 					buffer.append(key);
-					CharSequence value = getString(key);
+					CharSequence value = getAttribute(key);
 
 					// Attributes without values are possible, e.g. 'disabled'
 					if (value != null)

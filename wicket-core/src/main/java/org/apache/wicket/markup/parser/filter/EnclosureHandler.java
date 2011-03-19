@@ -129,7 +129,7 @@ public final class EnclosureHandler extends BaseMarkupFilter implements ICompone
 			ComponentTag lastEnclosure = stack.lastElement();
 
 			// If the enclosure tag has NO child attribute, then ...
-			if (lastEnclosure.getString(CHILD_ATTRIBUTE) == null)
+			if (lastEnclosure.getAttribute(CHILD_ATTRIBUTE) == null)
 			{
 				// We encountered more than one child component inside
 				// the enclosure and are not able to automatically
@@ -155,7 +155,7 @@ public final class EnclosureHandler extends BaseMarkupFilter implements ICompone
 		if ((tag instanceof WicketTag) && ((WicketTag)tag).isEnclosureTag())
 		{
 			// Yes, we handled the tag
-			return new Enclosure(tag.getId(), tag.getString(EnclosureHandler.CHILD_ATTRIBUTE));
+			return new Enclosure(tag.getId(), tag.getAttribute(EnclosureHandler.CHILD_ATTRIBUTE));
 		}
 
 		// We were not able to handle the tag
