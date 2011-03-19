@@ -75,7 +75,7 @@ public class DecoratingHeaderResponseTest extends WicketTestCase
 		{
 			if (tag.isOpen() && "script".equals(tag.getName()))
 			{
-				isDecorated = tag.getString("src").toString().contains("DECORATED");
+				isDecorated = tag.getAttribute("src").toString().contains("DECORATED");
 				if (!isDecorated)
 				{
 					fail();
@@ -123,7 +123,7 @@ public class DecoratingHeaderResponseTest extends WicketTestCase
 		{
 			if (tag.isOpen() && "script".equals(tag.getName()))
 			{
-				resourcesId.add(Integer.parseInt(tag.getString("id").toString()));
+				resourcesId.add(Integer.parseInt(tag.getAttribute("id").toString()));
 			}
 		}
 		while ((tag = (XmlTag)parser.nextTag()) != null);
