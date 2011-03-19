@@ -40,6 +40,12 @@ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
  */
 public final class XmlPullParser implements IXmlPullParser
 {
+	/** */
+	public static final String STYLE = "style";
+
+	/** */
+	public static final String SCRIPT = "script";
+
 	/**
 	 * Reads the xml data from an input stream and converts the chars according to its encoding
 	 * (<?xml ... encoding="..." ?>)
@@ -136,7 +142,8 @@ public final class XmlPullParser implements IXmlPullParser
 		lastPos = input.find('>', lastPos + tagNameLen);
 		if (lastPos == -1)
 		{
-			throw new ParseException("Script tag not closed" + getLineAndColumnText(), startIndex);
+			throw new ParseException(skipUntilText + " tag not closed" + getLineAndColumnText(),
+				startIndex);
 		}
 
 		// Reset the state variable
@@ -241,21 +248,20 @@ public final class XmlPullParser implements IXmlPullParser
 			// It must be an open tag
 			type = TagType.OPEN;
 
-			// If open tag and starts with "s" like "script" or "style", than
-			// ...
-			if ((tagText.length() > 5) &&
+			// If open tag and starts with "s" like "script" or "style", than ...
+			if ((tagText.length() > STYLE.length()) &&
 				((tagText.charAt(0) == 's') || (tagText.charAt(0) == 'S')))
 			{
 				final String lowerCase = tagText.substring(0, 6).toLowerCase();
-				if (lowerCase.startsWith("script"))
+				if (lowerCase.startsWith(SCRIPT))
 				{
 					// prepare to skip everything between the open and close tag
-					skipUntilText = "script";
+					skipUntilText = SCRIPT;
 				}
-				else if (lowerCase.startsWith("style"))
+				else if (lowerCase.startsWith(STYLE))
 				{
 					// prepare to skip everything between the open and close tag
-					skipUntilText = "style";
+					skipUntilText = STYLE;
 				}
 			}
 		}
