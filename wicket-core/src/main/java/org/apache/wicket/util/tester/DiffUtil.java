@@ -30,6 +30,7 @@ import org.apache.wicket.util.diff.Diff;
 import org.apache.wicket.util.diff.DifferentiationFailedException;
 import org.apache.wicket.util.diff.Revision;
 import org.apache.wicket.util.io.Streams;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.string.StringList;
 import org.slf4j.Logger;
@@ -93,6 +94,8 @@ public final class DiffUtil
 	public static final boolean validatePage(String document, final Class<?> clazz,
 		final String file, boolean failWithAssert) throws IOException
 	{
+		Args.notNull(document, "document");
+
 		String filename = clazz.getPackage().getName();
 		filename = filename.replace('.', '/');
 		filename += "/" + file;
