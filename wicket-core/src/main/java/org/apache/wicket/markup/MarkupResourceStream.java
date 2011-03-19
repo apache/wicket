@@ -112,7 +112,7 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 			throw new IllegalArgumentException("Parameter 'resourceStream' must not be null");
 		}
 
-		setWicketNamespace(ComponentTag.DEFAULT_WICKET_NAMESPACE);
+		setWicketNamespace(MarkupParser.WICKET);
 	}
 
 	public String locationAsString()
@@ -272,7 +272,7 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 		this.wicketNamespace = wicketNamespace;
 		wicketId = wicketNamespace + ":id";
 
-		if (!ComponentTag.DEFAULT_WICKET_NAMESPACE.equals(wicketNamespace))
+		if (!MarkupParser.WICKET.equals(wicketNamespace))
 		{
 			log.info("You are using a non-standard component name: " + wicketNamespace);
 		}
