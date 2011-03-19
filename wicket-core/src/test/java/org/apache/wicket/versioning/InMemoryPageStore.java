@@ -27,7 +27,7 @@ import org.apache.wicket.pageStore.IDataStore;
  * 
  * @author martin-g
  */
-class InMemoryPageStore implements IDataStore
+public class InMemoryPageStore implements IDataStore
 {
 
 	/**
@@ -35,7 +35,7 @@ class InMemoryPageStore implements IDataStore
 	 */
 	private final Map<String, Map<Integer, byte[]>> store;
 
-	InMemoryPageStore()
+	public InMemoryPageStore()
 	{
 		store = new HashMap<String, Map<Integer, byte[]>>();
 	}

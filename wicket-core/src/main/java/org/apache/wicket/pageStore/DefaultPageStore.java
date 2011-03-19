@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.wicket.Page;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
@@ -275,7 +274,7 @@ public class DefaultPageStore implements IPageStore
 		{
 			return null;
 		}
-		else if (!storeAfterSessionReplication() || serializable instanceof Page)
+		else if (!storeAfterSessionReplication() || serializable instanceof IManageablePage)
 		{
 			return serializable;
 		}

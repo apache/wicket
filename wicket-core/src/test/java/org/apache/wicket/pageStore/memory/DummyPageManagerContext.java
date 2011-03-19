@@ -20,18 +20,22 @@ import java.io.Serializable;
 
 import org.apache.wicket.page.IPageManagerContext;
 
-class DummyPageManagerContext implements IPageManagerContext
+/**
+ */
+public class DummyPageManagerContext implements IPageManagerContext
 {
 
 	Serializable attribute = null;
+	Object requestData;
 
 	public void setRequestData(Object data)
 	{
+		requestData = data;
 	}
 
 	public Object getRequestData()
 	{
-		return null;
+		return requestData;
 	}
 
 	public void setSessionAttribute(String key, Serializable value)
@@ -50,7 +54,7 @@ class DummyPageManagerContext implements IPageManagerContext
 
 	public String getSessionId()
 	{
-		return null;
+		return "dummy_id";
 	}
 
 }
