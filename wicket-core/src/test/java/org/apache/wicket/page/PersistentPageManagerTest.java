@@ -51,7 +51,8 @@ public class PersistentPageManagerTest extends TestCase
 		// serializing the Wicket piece in servlet session
 		Serializable sessionEntry = pageManager.getContext().getSessionAttribute(null);
 		byte[] serializedSessionEntry = WicketObjects.objectToByteArray(sessionEntry);
-		assertTrue("ok, wicket was able to serialize the session entry", true);
+		assertNotNull("Wicket needs to be able to serialize the session entry",
+			serializedSessionEntry);
 
 		// testing if it is possible to deserialize the session entry
 		IPageManager newPageManager = newPersistentPageManager("test_app");
