@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.settings.def;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.markup.MarkupFactory;
 import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.util.lang.Args;
