@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -94,6 +95,24 @@ public class Markup implements IMarkupFragment
 	public final MarkupResourceStream getMarkupResourceStream()
 	{
 		return markupResourceStream;
+	}
+
+	/**
+	 * 
+	 * @param index
+	 * @param elem
+	 */
+	public final void replace(final int index, final MarkupElement elem)
+	{
+		Args.notNull(elem, "elem");
+
+		if ((index < 0) || (index >= size()))
+		{
+			throw new IndexOutOfBoundsException("'index' must be smaller than size(). Index:" +
+				index + "; size:" + size());
+		}
+
+		markupElements.set(index, elem);
 	}
 
 	/**
