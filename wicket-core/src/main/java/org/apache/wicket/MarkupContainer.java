@@ -32,7 +32,6 @@ import org.apache.wicket.markup.MarkupFactory;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.MarkupType;
-import org.apache.wicket.markup.RawMarkup;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
@@ -1385,8 +1384,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * 
 	 * @param markupStream
 	 *            The markup stream
+	 * @return true, if element was rendered as RawMarkup
 	 */
-	protected final void renderNext(final MarkupStream markupStream)
+	protected final boolean renderNext(final MarkupStream markupStream)
 	{
 		// Get the current markup element
 		final MarkupElement element = markupStream.get();
@@ -1415,6 +1415,12 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			if (component != null)
 			{
 				component.render();
+			}
+			else if (tag.getFlag(ComponentTag.RENDER_RAW))
+			{
+				// No component found, but "render as raw markup" flag found
+				getResponse().write(element.toCharSequence());
+				return true;
 			}
 			else
 			{
@@ -1446,12 +1452,11 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		else
 		{
 			// Render as raw markup
-			if (log.isDebugEnabled())
-			{
-				log.debug("Rendering raw markup");
-			}
 			getResponse().write(element.toCharSequence());
+			return true;
 		}
+
+		return false;
 	}
 
 	/**
@@ -1537,13 +1542,13 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			final int index = markupStream.getCurrentIndex();
 
 			// Render the markup element
-			renderNext(markupStream);
+			boolean rawMarkup = renderNext(markupStream);
 
 			// Go back to where we were and move the markup stream forward to whatever the next
 			// element is.
 			markupStream.setCurrentIndex(index);
 			MarkupElement elem = markupStream.get();
-			if (elem instanceof RawMarkup)
+			if (rawMarkup)
 			{
 				markupStream.next();
 			}

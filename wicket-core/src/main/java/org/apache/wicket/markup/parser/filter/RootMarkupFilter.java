@@ -18,6 +18,7 @@ package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
 
+import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.IXmlPullParser;
@@ -75,5 +76,9 @@ public final class RootMarkupFilter implements IMarkupFilter
 	private ELEMENT_TYPE next() throws ParseException
 	{
 		return parser.next();
+	}
+
+	public void postProcess(Markup markup)
+	{
 	}
 }

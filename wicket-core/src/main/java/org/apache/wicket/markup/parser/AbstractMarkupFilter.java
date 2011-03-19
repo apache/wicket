@@ -19,6 +19,7 @@ package org.apache.wicket.markup.parser;
 import java.text.ParseException;
 
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.Markup;
 
 
 /**
@@ -91,5 +92,9 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	protected int getCount()
 	{
 		return count++;
+	}
+
+	public void postProcess(final Markup markup)
+	{
 	}
 }

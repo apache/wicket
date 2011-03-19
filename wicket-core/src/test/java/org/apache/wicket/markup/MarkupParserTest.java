@@ -385,12 +385,10 @@ public final class MarkupParserTest extends WicketTestCase
 			"<html wicket:id=\"test\"><script language=\"JavaScript\">... <x a> ...</script></html>");
 
 		IMarkupFragment markup = parser.parse();
-		assertEquals(3, markup.size());
+		assertEquals(5, markup.size());
 		assertEquals("html", ((ComponentTag)markup.get(0)).getName());
-		assertEquals("html", ((ComponentTag)markup.get(2)).getName());
-		assertEquals(true, markup.get(1) instanceof RawMarkup);
-		assertEquals("<script language=\"JavaScript\">... <x a> ...</script>", markup.get(1)
-			.toString());
+		assertEquals("html", ((ComponentTag)markup.get(4)).getName());
+		assertEquals("<![CDATA[... <x a> ...]]>", markup.get(2).toString());
 	}
 
 	/**
@@ -430,5 +428,79 @@ public final class MarkupParserTest extends WicketTestCase
 
 		RawMarkup raw = (RawMarkup)markup.get(0);
 		assertEquals("<span> </span>", raw.toString());
+	}
+
+	/**
+	 * 
+	 * @throws IOException
+	 * @throws ResourceStreamNotFoundException
+	 */
+	public final void testScript1() throws IOException, ResourceStreamNotFoundException
+	{
+		IMarkupFragment markup = new MarkupParser("<script/>").parse();
+		assertEquals(1, markup.size());
+		MarkupElement tag = markup.get(0);
+		assertEquals("<script/>", tag.toString());
+
+		markup = new MarkupParser("<script></script>").parse();
+		assertEquals(2, markup.size());
+		tag = markup.get(0);
+		assertEquals("<script>", tag.toString());
+		tag = markup.get(1);
+		assertEquals("</script>", tag.toString());
+
+		markup = new MarkupParser("<script> text </script>").parse();
+		assertEquals(3, markup.size());
+		tag = markup.get(0);
+		assertEquals("<script>", tag.toString());
+		tag = markup.get(1);
+		assertEquals("<![CDATA[ text ]]>", tag.toString());
+		tag = markup.get(2);
+		assertEquals("</script>", tag.toString());
+
+		markup = new MarkupParser("<script><!-- text --></script>").parse();
+		assertEquals(3, markup.size());
+		tag = markup.get(0);
+		assertEquals("<script>", tag.toString());
+		tag = markup.get(1);
+		assertEquals("<!-- text -->", tag.toString());
+		tag = markup.get(2);
+		assertEquals("</script>", tag.toString());
+
+		markup = new MarkupParser("<script> <!-- text --> </script>").parse();
+		assertEquals(3, markup.size());
+		tag = markup.get(0);
+		assertEquals("<script>", tag.toString());
+		tag = markup.get(1);
+		assertEquals(" <!-- text --> ", tag.toString());
+		tag = markup.get(2);
+		assertEquals("</script>", tag.toString());
+
+		markup = new MarkupParser("<style><![CDATA[ text ]]></style>").parse();
+		assertEquals(3, markup.size());
+		tag = markup.get(0);
+		assertEquals("<style>", tag.toString());
+		tag = markup.get(1);
+		assertEquals("<![CDATA[ text ]]>", tag.toString());
+		tag = markup.get(2);
+		assertEquals("</style>", tag.toString());
+
+		markup = new MarkupParser("<html><script> text </script></html>").parse();
+		assertEquals(5, markup.size());
+		tag = markup.get(1);
+		assertEquals("<script>", tag.toString());
+		tag = markup.get(2);
+		assertEquals("<![CDATA[ text ]]>", tag.toString());
+		tag = markup.get(3);
+		assertEquals("</script>", tag.toString());
+
+		markup = new MarkupParser("<html wicket:id='xx'><script> text </script></html>").parse();
+		assertEquals(5, markup.size());
+		tag = markup.get(1);
+		assertEquals("<script>", tag.toString());
+		tag = markup.get(2);
+		assertEquals("<![CDATA[ text ]]>", tag.toString());
+		tag = markup.get(3);
+		assertEquals("</script>", tag.toString());
 	}
 }

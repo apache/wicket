@@ -30,6 +30,7 @@ import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.parser.filter.HtmlHandler;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
@@ -46,11 +47,26 @@ import org.apache.wicket.util.value.IValueMap;
  */
 public class ComponentTag extends MarkupElement
 {
-	/**
-	 * Standard component id attribute always available for components regardless of user
-	 * ApplicationSettings for id attribute; value == 'wicket'.
-	 */
-	public static final String DEFAULT_WICKET_NAMESPACE = MarkupParser.WICKET;
+	/** True if a href attribute is available and autolinking is on */
+	private final static int AUTOLINK = 0x0001;
+
+	/** True, if attributes have been modified or added */
+	private final static int MODIFIED = 0x0002;
+
+	/** If true, than the MarkupParser will ignore (remove) it. Temporary working variable */
+	private final static int IGNORE = 0x0004;
+
+	/** If true, than the tag contain an automatically created wicket id */
+	private final static int AUTO_COMPONENT = 0x0008;
+
+	/** Some HTML tags are allow to have no close tag, e.g. 'br' */
+	private final static int NO_CLOSE_TAG = 0x0010;
+
+	/** The component tag shall be added to the markup in any case */
+	public final static int ADD = 0x0020;
+
+	/** Render the tag as RawMarkup even if no Component can be found */
+	public final static int RENDER_RAW = 0x0040;
 
 	/**
 	 * Assuming this is a open (or open-close) tag, 'closes' refers to the ComponentTag which closes
@@ -61,8 +77,8 @@ public class ComponentTag extends MarkupElement
 	/** The underlying xml tag */
 	protected final XmlTag xmlTag;
 
-	/** True if a href attribute is available and autolinking is on */
-	private boolean autolink = false;
+	/** Boolean flags. See above */
+	private int flags = 0;
 
 	/**
 	 * By default this is equal to the wicket:id="xxx" attribute value, but may be provided e.g. for
@@ -70,29 +86,12 @@ public class ComponentTag extends MarkupElement
 	 */
 	private String id;
 
-	/** True, if attributes have been modified or added */
-	private boolean modified = false;
-
-	/**
-	 * If true, than the MarkupParser will ignore (remove) it. Temporary working variable
-	 */
-	private boolean ignore = false;
-
-	/** If true, than the tag contain an automatically created wicket id */
-	private boolean autoComponent = false;
-
 	/**
 	 * In case of inherited markup, the base and the extended markups are merged and the information
 	 * about the tags origin is lost. In some cases like wicket:head and wicket:link this
 	 * information however is required.
 	 */
 	private WeakReference<Class<? extends Component>> markupClassRef = null;
-
-	/**
-	 * Tags which are detected to have only an open tag, which is allowed with some HTML tags like
-	 * 'br' for example
-	 */
-	private boolean hasNoCloseTag = false;
 
 	/** added behaviors */
 	private List<Behavior> behaviors;
@@ -142,6 +141,38 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
+	 * 
+	 * @param flag
+	 *            The flag to set
+	 * @param set
+	 *            True to turn the flag on, false to turn it off
+	 */
+	public final void setFlag(final int flag, final boolean set)
+	{
+		if (set)
+		{
+			flags |= flag;
+		}
+		else
+		{
+			flags &= ~flag;
+		}
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
+	 * 
+	 * @param flag
+	 *            The flag to test
+	 * @return True if the flag is set
+	 */
+	public final boolean getFlag(final int flag)
+	{
+		return (flags & flag) != 0;
+	}
+
+	/**
 	 * Adds a behavior to this component tag.
 	 * 
 	 * @param behavior
@@ -155,7 +186,7 @@ public class ComponentTag extends MarkupElement
 
 		if (behaviors == null)
 		{
-			behaviors = new ArrayList<Behavior>();
+			behaviors = Generics.newArrayList();
 		}
 		behaviors.add(behavior);
 	}
@@ -210,7 +241,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final void enableAutolink(final boolean autolink)
 	{
-		this.autolink = autolink;
+		setFlag(AUTOLINK, autolink);
 	}
 
 	/**
@@ -231,6 +262,19 @@ public class ComponentTag extends MarkupElement
 	public final String getAttribute(String name)
 	{
 		return xmlTag.getAttributes().getString(name);
+	}
+
+	/**
+	 * Please use {@link #getAttribute(String)} instead
+	 * 
+	 * @param name
+	 * @return The attribute
+	 * @deprecated since 1.5
+	 */
+	@Deprecated
+	public final String getString(String name)
+	{
+		return getAttribute(name);
 	}
 
 	/**
@@ -300,17 +344,6 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.parser.XmlTag#getString(String)
-	 * @param key
-	 *            The key
-	 * @return The string value
-	 */
-	public final CharSequence getString(String key)
-	{
-		return xmlTag.getString(key);
-	}
-
-	/**
 	 * @return the tag type (OPEN, CLOSE or OPEN_CLOSE).
 	 */
 	public final TagType getType()
@@ -325,7 +358,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final boolean isAutolinkEnabled()
 	{
-		return autolink;
+		return getFlag(AUTOLINK);
 	}
 
 	/**
@@ -410,7 +443,7 @@ public class ComponentTag extends MarkupElement
 		}
 		else
 		{
-			final ComponentTag tag = new ComponentTag(xmlTag.mutable());
+			ComponentTag tag = new ComponentTag(xmlTag.mutable());
 			copyPropertiesTo(tag);
 			return tag;
 		}
@@ -426,8 +459,7 @@ public class ComponentTag extends MarkupElement
 	void copyPropertiesTo(final ComponentTag dest)
 	{
 		dest.id = id;
-		dest.setHasNoCloseTag(hasNoCloseTag);
-		dest.setAutoComponentTag(autoComponent);
+		dest.flags = flags;
 		if (markupClassRef != null)
 		{
 			dest.setMarkupClass(markupClassRef.get());
@@ -699,7 +731,7 @@ public class ComponentTag extends MarkupElement
 				{
 					response.write(" ");
 					response.write(key);
-					CharSequence value = getString(key);
+					CharSequence value = getAttribute(key);
 
 					// attributes without values are possible, e.g.' disabled'
 					if (value != null)
@@ -748,7 +780,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final void setModified(final boolean modified)
 	{
-		this.modified = modified;
+		setFlag(MODIFIED, modified);
 	}
 
 	/**
@@ -757,7 +789,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	final boolean isModified()
 	{
-		return modified;
+		return getFlag(MODIFIED);
 	}
 
 	/**
@@ -766,7 +798,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public boolean hasNoCloseTag()
 	{
-		return hasNoCloseTag;
+		return getFlag(NO_CLOSE_TAG);
 	}
 
 	/**
@@ -776,7 +808,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public void setHasNoCloseTag(boolean hasNoCloseTag)
 	{
-		this.hasNoCloseTag = hasNoCloseTag;
+		setFlag(NO_CLOSE_TAG, hasNoCloseTag);
 	}
 
 	/**
@@ -832,7 +864,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public boolean isIgnore()
 	{
-		return ignore;
+		return getFlag(IGNORE);
 	}
 
 	/**
@@ -843,7 +875,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public void setIgnore(boolean ignore)
 	{
-		this.ignore = ignore;
+		setFlag(IGNORE, ignore);
 	}
 
 	/**
@@ -851,7 +883,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public boolean isAutoComponentTag()
 	{
-		return autoComponent;
+		return getFlag(AUTO_COMPONENT);
 	}
 
 	/**
@@ -860,7 +892,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public void setAutoComponentTag(boolean auto)
 	{
-		autoComponent = auto;
+		setFlag(AUTO_COMPONENT, auto);
 	}
 
 	/**

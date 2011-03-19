@@ -27,6 +27,7 @@ import org.apache.wicket.markup.parser.filter.HtmlHandler;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.parser.filter.OpenCloseTagExpander;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
+import org.apache.wicket.markup.parser.filter.StyleAndScriptIdentifier;
 import org.apache.wicket.markup.parser.filter.WicketLinkTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketMessageTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketNamespaceHandler;
@@ -180,6 +181,7 @@ public class MarkupParser extends AbstractMarkupParser
 		filters.add(new OpenCloseTagExpander());
 		filters.add(new RelativePathPrefixHandler());
 		filters.add(new EnclosureHandler());
+		filters.add(new StyleAndScriptIdentifier(markup));
 
 		return filters;
 	}

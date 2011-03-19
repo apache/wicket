@@ -808,14 +808,10 @@ public class AjaxRequestTarget implements IPageRequestHandler
 			}
 
 			// we need to write response as CDATA and parse it on client,
-			// because
-			// konqueror crashes when there is a <script> element
+			// because konqueror crashes when there is a <script> element
 			response.write("><![CDATA[<head xmlns:wicket=\"http://wicket.apache.org\">");
-
 			response.write(encodingHeaderResponse.getContents());
-
 			response.write("</head>]]>");
-
 			response.write("</header-contribution>");
 		}
 	}

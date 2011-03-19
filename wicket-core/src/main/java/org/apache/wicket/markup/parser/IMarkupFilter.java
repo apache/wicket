@@ -18,6 +18,7 @@ package org.apache.wicket.markup.parser;
 
 import java.text.ParseException;
 
+import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
 
 
@@ -59,4 +60,11 @@ public interface IMarkupFilter
 	 *            The next element in the chain
 	 */
 	void setNextFilter(final IMarkupFilter parent);
+
+	/**
+	 * Called after all filters have been processed
+	 * 
+	 * @param markup
+	 */
+	void postProcess(final Markup markup);
 }

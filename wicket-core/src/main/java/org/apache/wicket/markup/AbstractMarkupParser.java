@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
  * @see IMarkupFilter
  * @see MarkupFactory
  * @see IMarkupSettings
- *
+ * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
@@ -228,7 +228,7 @@ public abstract class AbstractMarkupParser
 			ComponentTag tag;
 			while (null != (tag = getNextTag()))
 			{
-				boolean add = (tag.getId() != null);
+				boolean add = (tag.getId() != null) || tag.getFlag(ComponentTag.ADD);
 				if (!add && tag.getXmlTag().isClose())
 				{
 					add = ((tag.getOpenTag() != null) && (tag.getOpenTag().getId() != null));
@@ -302,8 +302,19 @@ public abstract class AbstractMarkupParser
 			markup.addMarkupElement(new RawMarkup(text));
 		}
 
+		postProcess(markup);
+
 		// Make all tags immutable and the list of elements unmodifiable
 		markup.makeImmutable();
+	}
+
+	/**
+	 * 
+	 * @param markup
+	 */
+	protected void postProcess(final Markup markup)
+	{
+		markupFilterChain.postProcess(markup);
 	}
 
 	/**
