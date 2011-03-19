@@ -298,7 +298,6 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.parser.XmlTag#getName()
 	 * @return The tag's name
 	 */
 	public final String getName()
@@ -307,16 +306,6 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.parser.XmlTag#getNameChanged()
-	 * @return Returns true if the name of this component tag was changed
-	 */
-	public final boolean getNameChanged()
-	{
-		return xmlTag.getNameChanged();
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.parser.XmlTag#getNamespace()
 	 * @return The tag's namespace
 	 */
 	public final String getNamespace()

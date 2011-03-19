@@ -1725,6 +1725,7 @@ public abstract class Component
 	 *            Model object to convert to string
 	 * @return The string
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public final String getDefaultModelObjectAsString(final Object modelObject)
 	{
 		if (modelObject != null)
@@ -3354,6 +3355,7 @@ public abstract class Component
 	 * Traverses all parent components of the given class in this container, calling the visitor's
 	 * visit method at each one.
 	 * 
+	 * @param <R>
 	 * @param c
 	 *            Class
 	 * @param visitor
@@ -4169,21 +4171,9 @@ public abstract class Component
 			if (markupStream.atCloseTag() && markupStream.getTag().closes(openTag))
 			{
 				// Render the close tag
-				if (renderBodyOnly == false)
+				if ((renderBodyOnly == false) && needToRenderTag(openTag))
 				{
-					// Get the close tag from the stream
-					ComponentTag closeTag = markupStream.getTag();
-
-					// If the open tag had its id changed
-					if (openTag.getNameChanged())
-					{
-						// change the id of the close tag
-						closeTag = closeTag.mutable();
-						closeTag.setName(openTag.getName());
-						closeTag.setNamespace(openTag.getNamespace());
-					}
-
-					renderComponentTag(closeTag);
+					getResponse().write(openTag.syntheticCloseTagString());
 				}
 			}
 			else if (openTag.requiresCloseTag())

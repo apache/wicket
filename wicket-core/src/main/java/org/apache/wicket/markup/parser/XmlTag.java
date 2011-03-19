@@ -95,9 +95,6 @@ public class XmlTag extends MarkupElement
 	/** True if this tag is mutable, false otherwise. */
 	private boolean isMutable = true;
 
-	/** True if the name of this tag was changed. */
-	private boolean nameChanged = false;
-
 	/**
 	 * Construct.
 	 */
@@ -204,16 +201,6 @@ public class XmlTag extends MarkupElement
 	public String getName()
 	{
 		return name;
-	}
-
-	/**
-	 * Get whether the name of this component tag was changed.
-	 * 
-	 * @return Returns true if the name of this component tag was changed
-	 */
-	public boolean getNameChanged()
-	{
-		return nameChanged;
 	}
 
 	/**
@@ -376,7 +363,7 @@ public class XmlTag extends MarkupElement
 	 * @param dest
 	 *            tag whose properties will be set
 	 */
-	void copyPropertiesTo(XmlTag dest)
+	void copyPropertiesTo(final XmlTag dest)
 	{
 		dest.namespace = namespace;
 		dest.name = name;
@@ -493,7 +480,6 @@ public class XmlTag extends MarkupElement
 		if (isMutable)
 		{
 			this.name = name;
-			nameChanged = true;
 		}
 		else
 		{
@@ -512,7 +498,6 @@ public class XmlTag extends MarkupElement
 		if (isMutable)
 		{
 			this.namespace = namespace;
-			nameChanged = true;
 		}
 		else
 		{
