@@ -84,7 +84,6 @@ public class AjaxRequestTargetTest extends WicketTestCase
 
 		page.add(new WebComponent(MockPageWithLinkAndComponent.COMPONENT_ID).setOutputMarkupId(true));
 
-
 		page.add(new AjaxLink<Void>(MockPageWithLinkAndComponent.LINK_ID)
 		{
 			private static final long serialVersionUID = 1L;
@@ -120,19 +119,17 @@ public class AjaxRequestTargetTest extends WicketTestCase
 			}
 		});
 
-// System.out.println(tester.getServletResponse().getDocument());
+		// System.out.println(tester.getServletResponse().getDocument());
 		tester.debugComponentTrees();
 
 		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
 
 		String document = tester.getLastResponseAsString();
-
-		Pattern pat = Pattern.compile(".*<header-contribution>(.*?)</header-contribution>.*",
-			Pattern.DOTALL);
-		Matcher mat = pat.matcher(document);
-
 		String headerContribution = null;
 
+		Pattern pat = Pattern.compile(".*<header-contribution.*?>(.*?)</header-contribution>.*",
+			Pattern.DOTALL);
+		Matcher mat = pat.matcher(document);
 		if (mat.matches())
 		{
 			headerContribution = mat.group(1);
@@ -143,8 +140,12 @@ public class AjaxRequestTargetTest extends WicketTestCase
 		// This means that it doesn't exist at all
 		if (expectedFile == null)
 		{
-			assertNull("There was a header contribution on the response: <" + headerContribution +
-				">", headerContribution);
+			assertNull("There was a header contribution on the response " +
+				"(though we didn't expect one): <" + headerContribution + ">", headerContribution);
+		}
+		else if (headerContribution == null)
+		{
+			fail("Failed to find header contribution: \n" + document);
 		}
 		else
 		{
@@ -249,6 +250,8 @@ public class AjaxRequestTargetTest extends WicketTestCase
 	 */
 	public static class TestEventPage extends MockPageWithLinkAndComponent
 	{
+		private static final long serialVersionUID = 1L;
+
 		boolean defaultEventRaised = false;
 
 		/**
