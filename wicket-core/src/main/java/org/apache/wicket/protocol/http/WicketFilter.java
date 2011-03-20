@@ -494,10 +494,13 @@ public class WicketFilter implements Filter
 		// We only need to determine it once. It'll not change.
 		if (filterPathLength == -1)
 		{
-			filterPathLength = filterPath.length();
 			if (filterPath.endsWith("/"))
 			{
-				filterPathLength -= 1;
+				filterPathLength = filterPath.length() - 1;
+			}
+			else
+			{
+				filterPathLength = filterPath.length();
 			}
 		}
 

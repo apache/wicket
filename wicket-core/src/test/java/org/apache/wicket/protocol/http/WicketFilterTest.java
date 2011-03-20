@@ -28,6 +28,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -213,5 +216,89 @@ public class WicketFilterTest extends TestCase
 		// Simulate url-pattern = "/*" and request = http://localhost:8080 => null == no redirect
 		filter.setFilterPath("");
 		assertNull("", filter.checkIfRedirectRequired("/", ""));
+	}
+
+	private static class CheckRedirectWorker implements Runnable
+	{
+		private final WicketFilter filter;
+		private final CountDownLatch startLatch;
+		private final CountDownLatch finishLatch;
+		private final AtomicInteger successCount;
+
+		public CheckRedirectWorker(WicketFilter filter, CountDownLatch startLatch,
+			CountDownLatch finishLatch, AtomicInteger successCount)
+		{
+			this.filter = filter;
+			this.startLatch = startLatch;
+			this.finishLatch = finishLatch;
+			this.successCount = successCount;
+		}
+
+		public void run()
+		{
+			try
+			{
+				try
+				{
+					startLatch.await(2, TimeUnit.SECONDS);
+				}
+				catch (InterruptedException e)
+				{
+					fail();
+				}
+				assertEquals("/filter/", filter.checkIfRedirectRequired("/filter", ""));
+				successCount.incrementAndGet();
+			}
+			finally
+			{
+				finishLatch.countDown();
+			}
+		}
+	}
+
+	/**
+	 * Starts {@code threadCount} threads which try to check whether a redirect is required and
+	 * initialize {@link WicketFilter#filterPathLength}
+	 * 
+	 * @param threadCount
+	 *            the number of simultaneous threads
+	 */
+	private void testParallelCheckRedirect(int threadCount)
+	{
+		WicketFilter filter = new WicketFilter();
+		filter.setFilterPath("filter/");
+		AtomicInteger successCount = new AtomicInteger(0);
+		CountDownLatch startLatch = new CountDownLatch(1);
+		CountDownLatch finishLatch = new CountDownLatch(threadCount);
+		for (int i = 0; i < threadCount; i++)
+		{
+			new Thread(new CheckRedirectWorker(filter, startLatch, finishLatch, successCount)).start();
+		}
+		startLatch.countDown();
+		try
+		{
+			finishLatch.await(2, TimeUnit.SECONDS);
+		}
+		catch (InterruptedException e)
+		{
+			fail();
+		}
+		assertEquals("all threads finished", 0, finishLatch.getCount());
+		assertEquals("all redirects correct", threadCount, successCount.get());
+	}
+
+	/**
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-3544">WICKET-3544</a>
+	 * <p>
+	 * Runs 1000 times 8 simultaneous threads which try to initialize WicketFilter#filterPathLength
+	 */
+	public void testRepeatedParallelCheckRedirect()
+	{
+		int threadCount = 8;
+		int repeatCount = 1000;
+		for (int i = 0; i < repeatCount; i++)
+		{
+			testParallelCheckRedirect(threadCount);
+		}
 	}
 }
