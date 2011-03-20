@@ -50,7 +50,7 @@ import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converter.DateConverter;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.template.PackagedTextTemplate;
+import org.apache.wicket.util.template.PackageTextTemplate;
 import org.apache.wicket.util.template.TextTemplate;
 import org.joda.time.DateTime;
 
@@ -269,7 +269,7 @@ public class DatePicker extends Behavior
 		variables.put("calendarInit", calendarInit.toString());
 
 		// render initialization script with the variables interpolated
-		TextTemplate datePickerJs = new PackagedTextTemplate(DatePicker.class, "DatePicker.js");
+		TextTemplate datePickerJs = new PackageTextTemplate(DatePicker.class, "DatePicker.js");
 		datePickerJs.interpolate(variables);
 		response.renderOnDomReadyJavaScript(datePickerJs.asString());
 
@@ -320,7 +320,7 @@ public class DatePicker extends Behavior
 			variables.put("allowRollup", true);
 		}
 
-		TextTemplate template = new PackagedTextTemplate(DatePicker.class, key);
+		TextTemplate template = new PackageTextTemplate(DatePicker.class, key);
 		response.renderOnDomReadyJavaScript(template.asString(variables));
 
 		response.markRendered(key);

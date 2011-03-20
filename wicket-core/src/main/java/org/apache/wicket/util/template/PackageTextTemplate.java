@@ -37,10 +37,10 @@ import org.slf4j.LoggerFactory;
  * @author Eelco Hillenius
  * @since 1.2.6
  */
-public class PackagedTextTemplate extends TextTemplate
+public class PackageTextTemplate extends TextTemplate
 {
 	/** log. */
-	private static final Logger log = LoggerFactory.getLogger(PackagedTextTemplate.class);
+	private static final Logger log = LoggerFactory.getLogger(PackageTextTemplate.class);
 
 	private static final long serialVersionUID = 1L;
 
@@ -62,7 +62,7 @@ public class PackagedTextTemplate extends TextTemplate
 	 * @param fileName
 	 *            the name of the file, relative to the <code>clazz</code> position
 	 */
-	public PackagedTextTemplate(final Class<?> clazz, final String fileName)
+	public PackageTextTemplate(final Class<?> clazz, final String fileName)
 	{
 		this(clazz, fileName, DEFAULT_CONTENT_TYPE);
 	}
@@ -79,7 +79,7 @@ public class PackagedTextTemplate extends TextTemplate
 	 *            the mime type of this resource, such as "<code>image/jpeg</code>" or "
 	 *            <code>text/html</code>"
 	 */
-	public PackagedTextTemplate(final Class<?> clazz, final String fileName,
+	public PackageTextTemplate(final Class<?> clazz, final String fileName,
 		final String contentType)
 	{
 		this(clazz, fileName, contentType, DEFAULT_ENCODING);
@@ -99,7 +99,7 @@ public class PackagedTextTemplate extends TextTemplate
 	 * @param encoding
 	 *            the file's encoding, for example, "<code>UTF-8</code>"
 	 */
-	public PackagedTextTemplate(final Class<?> clazz, final String fileName,
+	public PackageTextTemplate(final Class<?> clazz, final String fileName,
 		final String contentType, final String encoding)
 	{
 		super(contentType);

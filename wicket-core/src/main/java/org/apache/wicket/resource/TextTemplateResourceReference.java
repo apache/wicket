@@ -25,11 +25,11 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.apache.wicket.util.template.PackagedTextTemplate;
+import org.apache.wicket.util.template.PackageTextTemplate;
 import org.apache.wicket.util.template.TextTemplate;
 
 /**
- * A class which adapts a {@link PackagedTextTemplate} to a {@link ResourceReference}.
+ * A class which adapts a {@link PackageTextTemplate} to a {@link ResourceReference}.
  * 
  * @see {@link "https://cwiki.apache.org/WICKET/dynamically-generate-a-css-stylesheet.html"}
  * 
@@ -51,7 +51,7 @@ public class TextTemplateResourceReference extends ResourceReference implements 
 // **********************************************************************************************************************
 
 	/**
-	 * Creates a resource reference to a {@link PackagedTextTemplate}.
+	 * Creates a resource reference to a {@link PackageTextTemplate}.
 	 * 
 	 * @param scope
 	 *            the <code>Class</code> to be used for retrieving the classloader for loading the
@@ -64,12 +64,12 @@ public class TextTemplateResourceReference extends ResourceReference implements 
 	public TextTemplateResourceReference(final Class<?> scope, final String fileName,
 		IModel<Map<String, Object>> variablesModel)
 	{
-		this(scope, fileName, PackagedTextTemplate.DEFAULT_CONTENT_TYPE,
-			PackagedTextTemplate.DEFAULT_ENCODING, variablesModel);
+		this(scope, fileName, PackageTextTemplate.DEFAULT_CONTENT_TYPE,
+			PackageTextTemplate.DEFAULT_ENCODING, variablesModel);
 	}
 
 	/**
-	 * Creates a resource reference to a {@link PackagedTextTemplate}.
+	 * Creates a resource reference to a {@link PackageTextTemplate}.
 	 * 
 	 * @param scope
 	 *            the <code>Class</code> to be used for retrieving the classloader for loading the
@@ -85,11 +85,11 @@ public class TextTemplateResourceReference extends ResourceReference implements 
 	public TextTemplateResourceReference(final Class<?> scope, final String fileName,
 		final String contentType, IModel<Map<String, Object>> variablesModel)
 	{
-		this(scope, fileName, contentType, PackagedTextTemplate.DEFAULT_ENCODING, variablesModel);
+		this(scope, fileName, contentType, PackageTextTemplate.DEFAULT_ENCODING, variablesModel);
 	}
 
 	/**
-	 * Creates a resource reference to a {@link PackagedTextTemplate}.
+	 * Creates a resource reference to a {@link PackageTextTemplate}.
 	 * 
 	 * @param scope
 	 *            the <code>Class</code> to be used for retrieving the classloader for loading the
@@ -138,7 +138,7 @@ public class TextTemplateResourceReference extends ResourceReference implements 
 	{
 		super(scope, fileName, locale, style, variation);
 
-		textTemplate = new PackagedTextTemplate(scope, fileName, contentType, encoding);
+		textTemplate = new PackageTextTemplate(scope, fileName, contentType, encoding);
 		this.variablesModel = variablesModel;
 	}
 
