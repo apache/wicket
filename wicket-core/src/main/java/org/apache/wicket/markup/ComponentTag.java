@@ -62,11 +62,8 @@ public class ComponentTag extends MarkupElement
 	/** Some HTML tags are allow to have no close tag, e.g. 'br' */
 	private final static int NO_CLOSE_TAG = 0x0010;
 
-	/** The component tag shall be added to the markup in any case */
-	public final static int ADD = 0x0020;
-
 	/** Render the tag as RawMarkup even if no Component can be found */
-	public final static int RENDER_RAW = 0x0040;
+	public final static int RENDER_RAW = 0x0020;
 
 	/**
 	 * Assuming this is a open (or open-close) tag, 'closes' refers to the ComponentTag which closes
@@ -397,17 +394,6 @@ public class ComponentTag extends MarkupElement
 	public final boolean isOpenClose(String id)
 	{
 		return xmlTag.isOpenClose() && this.id.equals(id);
-	}
-
-	/**
-	 * Compare tag name including namespace
-	 * 
-	 * @param tag
-	 * @return true if name and namespace are equal
-	 */
-	public boolean hasEqualTagName(final ComponentTag tag)
-	{
-		return xmlTag.hasEqualTagName(tag.getXmlTag());
 	}
 
 	/**
@@ -756,7 +742,7 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @return Returns the underlying xml tag.
 	 */
-	final XmlTag getXmlTag()
+	public final XmlTag getXmlTag()
 	{
 		return xmlTag;
 	}

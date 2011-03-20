@@ -21,7 +21,6 @@ import java.text.ParseException;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.parser.IXmlPullParser.ELEMENT_TYPE;
 import org.apache.wicket.util.resource.StringResourceStream;
 
@@ -40,11 +39,11 @@ public class XmlPullParserTest extends TestCase
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("This is a text");
-		MarkupElement elem = parser.nextTag();
+		XmlTag elem = parser.nextTag();
 		assertNull(elem);
 
 		parser.parse("<tag/>");
-		XmlTag tag = (XmlTag)parser.nextTag();
+		XmlTag tag = parser.nextTag();
 		assertFalse(tag.isOpen());
 		// assertFalse(tag.isOpen("tag"));
 		// assertFalse(tag.isOpen("xxx"));
@@ -57,7 +56,7 @@ public class XmlPullParserTest extends TestCase
 
 		// extra spaces
 		parser.parse("<tag ></tag >");
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertTrue(tag.isOpen());
 		// assertTrue(tag.isOpen("tag"));
 		// assertFalse(tag.isOpen("xxx"));
@@ -68,7 +67,7 @@ public class XmlPullParserTest extends TestCase
 		assertNull(tag.getNamespace());
 		assertEquals(0, tag.getAttributes().size());
 
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertFalse(tag.isOpen());
 		// assertFalse(tag.isOpen("tag"));
 		// assertFalse(tag.isOpen("xxx"));
@@ -80,44 +79,44 @@ public class XmlPullParserTest extends TestCase
 		assertEquals(0, tag.getAttributes().size());
 
 		parser.parse("<tag>  </tag>");
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		// assertTrue(tag.isOpen("tag"));
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertTrue(tag.isClose());
 
 		parser.parse("xx <tag> yy </tag> zz");
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		// assertTrue(tag.isOpen("tag"));
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertTrue(tag.isClose());
 
 		// XmlPullParser does NOT check that tags get properly closed
 		parser.parse("<tag>");
-		tag = (XmlTag)parser.nextTag();
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
+		tag = parser.nextTag();
 		assertNull(elem);
 
 		parser.parse("<tag> <tag> <tag>");
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		// assertTrue(tag.isOpen("tag"));
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 // assertTrue(tag.isOpen("tag"));
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 // assertTrue(tag.isOpen("tag"));
 
 		parser.parse("<ns:tag/>");
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 // assertTrue(tag.isOpenClose("tag"));
 		assertEquals("ns", tag.getNamespace());
 		assertEquals("tag", tag.getName());
 
 		parser.parse("<ns:tag></ns:tag>");
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 // assertTrue(tag.isOpen("tag"));
 		assertEquals("ns", tag.getNamespace());
 		assertEquals("tag", tag.getName());
 
-		XmlTag closeTag = (XmlTag)parser.nextTag();
+		XmlTag closeTag = parser.nextTag();
 		assertTrue(closeTag.isClose());
 		assertEquals("ns", closeTag.getNamespace());
 		assertEquals("tag", closeTag.getName());
@@ -134,20 +133,20 @@ public class XmlPullParserTest extends TestCase
 			new StringResourceStream("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>").getInputStream(),
 			null);
 		assertEquals("iso-8859-1", parser.getEncoding());
-		XmlTag tag = (XmlTag)parser.nextTag();
+		XmlTag tag = parser.nextTag();
 		assertNull(tag);
 
 		parser.parse(new StringResourceStream(
 			"<?xml version=\"1.0\" encoding='iso-8859-1' ?> test test").getInputStream(), null);
 		assertEquals("iso-8859-1", parser.getEncoding());
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertNull(tag);
 
 		// re-order and move close (remove whitespaces
 		parser.parse(new StringResourceStream(
 			"   <?xml encoding='iso-8859-1'version=\"1.0\"?> test test").getInputStream(), null);
 		assertEquals("iso-8859-1", parser.getEncoding());
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertNull(tag);
 
 		// attribute value must be enclosed by ""
@@ -173,7 +172,7 @@ public class XmlPullParserTest extends TestCase
 		parser.parse(
 			new StringResourceStream("xxxx <?xml encoding='iso-8859-1' ?>").getInputStream(), null);
 		assertNull(parser.getEncoding());
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertNull(tag);
 
 		// no extra characters allowed before <?xml>
@@ -182,13 +181,13 @@ public class XmlPullParserTest extends TestCase
 			new StringResourceStream("<!-- Comment --> <?xml encoding='iso-8859-1' ?>").getInputStream(),
 			null);
 		assertNull(parser.getEncoding());
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertNull(tag);
 
 		// 'test' is not a valid attribut. But we currently don't test it.
 		parser.parse(new StringResourceStream("<?xml test='123' >").getInputStream(), null);
 		assertNull(parser.getEncoding());
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertNull(tag);
 	}
 
@@ -200,44 +199,44 @@ public class XmlPullParserTest extends TestCase
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<tag>");
-		XmlTag tag = (XmlTag)parser.nextTag();
+		XmlTag tag = parser.nextTag();
 		assertEquals(0, tag.getAttributes().size());
 		// assertTrue(tag.isOpen("tag"));
 		assertFalse(tag.getAttributes().containsKey("attr"));
 		assertNull(tag.getAttributes().getString("attr"));
 
 		parser.parse("<tag attr='1234'>");
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertEquals(1, tag.getAttributes().size());
 		assertTrue(tag.getAttributes().containsKey("attr"));
 		assertEquals("1234", tag.getAttributes().getString("attr"));
 
 		parser.parse("<tag attr=1234>");
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertEquals(1, tag.getAttributes().size());
 		assertTrue(tag.getAttributes().containsKey("attr"));
 		assertEquals("1234", tag.getAttributes().getString("attr"));
 
 		parser.parse("<tag attr=1234 >");
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertEquals(1, tag.getAttributes().size());
 		assertTrue(tag.getAttributes().containsKey("attr"));
 		assertEquals("1234", tag.getAttributes().getString("attr"));
 
 		parser.parse("<tag attr-withHypen=1234 >");
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertEquals(1, tag.getAttributes().size());
 		assertTrue(tag.getAttributes().containsKey("attr-withHypen"));
 		assertEquals("1234", tag.getAttributes().getString("attr-withHypen"));
 
 		parser.parse("<tag attr=\"1234\">");
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertEquals(1, tag.getAttributes().size());
 		assertTrue(tag.getAttributes().containsKey("attr"));
 		assertEquals("1234", tag.getAttributes().getString("attr"));
 
 		parser.parse("<tag attr='1234' test='23'>");
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertEquals(2, tag.getAttributes().size());
 		assertTrue(tag.getAttributes().containsKey("attr"));
 		assertEquals("1234", tag.getAttributes().getString("attr"));
@@ -248,7 +247,7 @@ public class XmlPullParserTest extends TestCase
 		Exception ex = null;
 		try
 		{
-			tag = (XmlTag)parser.nextTag();
+			tag = parser.nextTag();
 		}
 		catch (ParseException e)
 		{
@@ -265,24 +264,24 @@ public class XmlPullParserTest extends TestCase
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<!-- test --><tag>");
-		XmlTag tag = (XmlTag)parser.nextTag();
+		XmlTag tag = parser.nextTag();
 // assertTrue(tag.isOpen("tag"));
 
 		parser.parse("<!-- test --><tag> aaa <!-- test 1 --> bbb <tag> <!-- test --> </tag>");
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 // assertTrue(tag.isOpen("tag"));
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 // assertTrue(tag.isOpen("tag"));
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertTrue(tag.isClose());
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertNull(tag);
 
 		// As you can see, XmlPullParser is really a shallow parser only
 		parser.parse("<!-- test --><tag> aaa <?tag test 1 ?> bbb <tag> <!DOCTYPE test > </tag>");
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 // assertTrue(tag.isOpen("tag"));
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 // assertTrue(tag.isOpen("tag"));
 		tag = (XmlTag)parser.nextTag();
 		assertTrue(tag.isClose());

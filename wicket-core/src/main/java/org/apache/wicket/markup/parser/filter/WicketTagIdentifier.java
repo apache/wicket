@@ -26,7 +26,6 @@ import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.WicketParseException;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
-import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.util.string.Strings;
 
 
@@ -68,30 +67,22 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	 * or ComponentWicketTags. Both are subclasses of MarkupElement as well and both maintain a
 	 * reference to the XmlTag. But no XmlTag is returned.
 	 * 
-	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
+	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextElement()
 	 * @return The next tag from markup to be processed. If null, no more tags are available
 	 */
-	public MarkupElement nextTag() throws ParseException
+	@Override
+	protected MarkupElement onComponentTag(ComponentTag tag) throws ParseException
 	{
-		// Get the next tag from the markup.
-		// If null, no more tags are available
-		XmlTag xmlTag = (XmlTag)getNextFilter().nextTag();
-		if (xmlTag == null)
-		{
-			return xmlTag;
-		}
-
 		final String namespace = markup.getWicketNamespace();
 
 		// If the form <tag wicket:id = "value"> is used
-		final String wicketIdValue = xmlTag.getAttributes().getString(namespace + ":id");
+		final String wicketIdValue = tag.getAttributes().getString(namespace + ":id");
 
 		// Identify tags with Wicket namespace
-		ComponentTag tag;
-		if (namespace.equalsIgnoreCase(xmlTag.getNamespace()))
+		if (namespace.equalsIgnoreCase(tag.getNamespace()))
 		{
 			// It is <wicket:...>
-			tag = new WicketTag(xmlTag);
+			tag = new WicketTag(tag.getXmlTag());
 
 			if (Strings.isEmpty(wicketIdValue))
 			{
@@ -102,18 +93,13 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 			}
 
 			// If the tag is not a well-known wicket namespace tag
-			if (!isWellKnown(xmlTag))
+			if (!isWellKnown(tag))
 			{
 				// give up
 				throw new WicketParseException("Unknown tag name with Wicket namespace: '" +
-					xmlTag.getName() +
-					"'. Might be you haven't installed the appropriate resolver?", tag);
+					tag.getName() + "'. Might be you haven't installed the appropriate resolver?",
+					tag);
 			}
-		}
-		else
-		{
-			// Everything else, except tags with Wicket namespace
-			tag = new ComponentTag(xmlTag);
 		}
 
 		if (wicketIdValue != null)
@@ -151,14 +137,14 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 
 	/**
 	 * 
-	 * @param xmlTag
+	 * @param tag
 	 * @return true, if name is known
 	 */
-	private boolean isWellKnown(final XmlTag xmlTag)
+	private boolean isWellKnown(final ComponentTag tag)
 	{
 		for (String name : wellKnownTagNames)
 		{
-			if (xmlTag.getName().equalsIgnoreCase(name))
+			if (tag.getName().equalsIgnoreCase(name))
 			{
 				return true;
 			}

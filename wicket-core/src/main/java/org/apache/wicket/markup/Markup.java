@@ -18,6 +18,7 @@ package org.apache.wicket.markup;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.util.lang.Args;
@@ -240,5 +241,23 @@ public class Markup implements IMarkupFragment
 		}
 
 		return buf.toString();
+	}
+
+	/**
+	 * @see java.lang.Iterable#iterator()
+	 */
+	public final Iterator<MarkupElement> iterator()
+	{
+		return markupElements.iterator();
+	}
+
+	/**
+	 * @param startIndex
+	 * @param size
+	 * @return Iterator
+	 */
+	public final Iterator<MarkupElement> iterator(int startIndex, int size)
+	{
+		return markupElements.subList(startIndex, startIndex + size).iterator();
 	}
 }

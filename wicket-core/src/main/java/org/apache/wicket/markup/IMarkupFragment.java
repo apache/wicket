@@ -26,7 +26,7 @@ package org.apache.wicket.markup;
  * 
  * @author Juergen Donnerstag
  */
-public interface IMarkupFragment
+public interface IMarkupFragment extends Iterable<MarkupElement>
 {
 	/**
 	 * Get the MarkupElement at the index provided.

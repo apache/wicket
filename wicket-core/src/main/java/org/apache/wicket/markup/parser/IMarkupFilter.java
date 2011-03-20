@@ -26,32 +26,21 @@ import org.apache.wicket.markup.MarkupElement;
  * Wicket uses a streaming XML parser to read the markup. A chain of IMarkupFilters is used e.g. to
  * remove comments, allow for html typical markup (some tags don't need to be closed explicitly),
  * etc.
- * <p>
- * The streaming XML parser must implement IMarkupFilter itself and thus is usually the first
- * element of the chain.
  * 
  * @see org.apache.wicket.markup.MarkupParser
+ * @see org.apache.wicket.markup.MarkupFactory
+ * 
  * @author Juergen Donnerstag
  */
 public interface IMarkupFilter
 {
 	/**
-	 * IMarkupFilters are usually chained with the last filter being an XML parser. The getParent()
-	 * method returns the next filter in the chain.
+	 * IMarkupFilters are usually chained with the last filter retrieving the elements from the XML
+	 * parser.
 	 * 
 	 * @return The next filter in the chain, or null if the last one.
 	 */
 	IMarkupFilter getNextFilter();
-
-	/**
-	 * Get the next MarkupElement from the parent MarkupFilter and handle it if the specific filter
-	 * criteria are met. Depending on the filter, it may return the MarkupElement unchanged,
-	 * modified or remove it by asking the parent handler for the next tag.
-	 * 
-	 * @return Return the next eligible MarkupElement
-	 * @throws ParseException
-	 */
-	MarkupElement nextTag() throws ParseException;
 
 	/**
 	 * Set parent filter.
@@ -62,7 +51,17 @@ public interface IMarkupFilter
 	void setNextFilter(final IMarkupFilter parent);
 
 	/**
-	 * Called after all filters have been processed
+	 * Get the next MarkupElement from the parent MarkupFilter and handle it if the specific filter
+	 * criteria are met. Depending on the filter, it may return the MarkupElement unchanged,
+	 * modified or remove it by asking the parent handler for the next tag.
+	 * 
+	 * @return Return the next eligible MarkupElement. Null, if no more found.
+	 * @throws ParseException
+	 */
+	MarkupElement nextElement() throws ParseException;
+
+	/**
+	 * Called after all filters have been processed.
 	 * 
 	 * @param markup
 	 */

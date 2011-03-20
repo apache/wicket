@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup;
 
+import java.util.Iterator;
+
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -223,5 +225,13 @@ public class MarkupFragment implements IMarkupFragment
 			buf.append(get(i));
 		}
 		return buf.toString();
+	}
+
+	/**
+	 * @see java.lang.Iterable#iterator()
+	 */
+	public Iterator<MarkupElement> iterator()
+	{
+		return getRootMarkup().iterator(startIndex, size);
 	}
 }

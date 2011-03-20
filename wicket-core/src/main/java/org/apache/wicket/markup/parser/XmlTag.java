@@ -19,7 +19,6 @@ package org.apache.wicket.markup.parser;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.StringValue;
@@ -36,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Jonathan Locke
  */
-public class XmlTag extends MarkupElement
+public class XmlTag
 {
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(XmlTag.class);
@@ -105,23 +104,22 @@ public class XmlTag extends MarkupElement
 		return (closes == open) || ((closes == open.copyOf) && (this != open));
 	}
 
-	@Override
-	public final boolean equalTo(final MarkupElement element)
+	/**
+	 * @param element
+	 * @return true, if namespace, name and attributes are the same
+	 */
+	public final boolean equalTo(final XmlTag element)
 	{
-		if (element instanceof XmlTag)
+		final XmlTag that = element;
+		if (!Objects.equal(getNamespace(), that.getNamespace()))
 		{
-			final XmlTag that = (XmlTag)element;
-			if (!Objects.equal(getNamespace(), that.getNamespace()))
-			{
-				return false;
-			}
-			if (!getName().equals(that.getName()))
-			{
-				return false;
-			}
-			return getAttributes().equals(that.getAttributes());
+			return false;
 		}
-		return false;
+		if (!getName().equals(that.getName()))
+		{
+			return false;
+		}
+		return getAttributes().equals(that.getAttributes());
 	}
 
 	/**
@@ -282,32 +280,6 @@ public class XmlTag extends MarkupElement
 	public boolean isOpenClose()
 	{
 		return type == TagType.OPEN_CLOSE;
-	}
-
-	/**
-	 * Compare tag name including namespace
-	 * 
-	 * @param tag
-	 * @return true if name and namespace are equal
-	 */
-	public boolean hasEqualTagName(final XmlTag tag)
-	{
-		if (!getName().equalsIgnoreCase(tag.getName()))
-		{
-			return false;
-		}
-
-		if ((getNamespace() == null) && (tag.getNamespace() == null))
-		{
-			return true;
-		}
-
-		if ((getNamespace() != null) && (tag.getNamespace() != null))
-		{
-			return getNamespace().equalsIgnoreCase(tag.getNamespace());
-		}
-
-		return false;
 	}
 
 	/**
@@ -547,7 +519,9 @@ public class XmlTag extends MarkupElement
 		return toCharSequence().toString();
 	}
 
-	@Override
+	/**
+	 * @return The string representation of the tag
+	 */
 	public CharSequence toCharSequence()
 	{
 		if (!isMutable && (text != null))
@@ -559,11 +533,10 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
-	 * Converts this object to a string representation.
+	 * String representation with line and column number
 	 * 
 	 * @return String version of this object
 	 */
-	@Override
 	public String toUserDebugString()
 	{
 		return " '" + toString() + "' (line " + getLineNumber() + ", column " + getColumnNumber() +

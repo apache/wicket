@@ -27,6 +27,7 @@ import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebComponent;
+import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.util.string.Strings;
 
@@ -42,7 +43,9 @@ import org.apache.wicket.util.string.Strings;
  * @author Juergen Donnerstag
  * @author Igor Vaynberg
  */
-public final class WicketMessageTagHandler extends BaseMarkupFilter implements IComponentResolver
+public final class WicketMessageTagHandler extends AbstractMarkupFilter
+	implements
+		IComponentResolver
 {
 	/** */
 	private static final long serialVersionUID = 1L;
@@ -66,7 +69,7 @@ public final class WicketMessageTagHandler extends BaseMarkupFilter implements I
 	}
 
 	@Override
-	protected final MarkupElement nextTag(ComponentTag tag) throws ParseException
+	protected final MarkupElement onComponentTag(ComponentTag tag) throws ParseException
 	{
 		if (tag.isClose())
 		{

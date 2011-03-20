@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.util.string.Strings;
@@ -261,7 +260,7 @@ public class TagTester
 					p.parse(markup);
 
 					XmlTag tag = null;
-					while ((tag = (XmlTag)p.nextTag()) != null)
+					while ((tag = p.nextTag()) != null)
 					{
 						if (tagName.equalsIgnoreCase(tag.getName()))
 						{
@@ -366,7 +365,7 @@ public class TagTester
 				XmlPullParser parser = new XmlPullParser();
 				parser.parse(markup);
 
-				MarkupElement elm = null;
+				XmlTag elm = null;
 				XmlTag openTag = null;
 				XmlTag closeTag = null;
 				int level = 0;
@@ -374,7 +373,7 @@ public class TagTester
 				{
 					if (elm instanceof XmlTag)
 					{
-						XmlTag xmlTag = (XmlTag)elm;
+						XmlTag xmlTag = elm;
 
 						if (openTag == null)
 						{
@@ -495,7 +494,7 @@ public class TagTester
 				XmlPullParser parser = new XmlPullParser();
 				parser.parse(markup);
 
-				MarkupElement elm = null;
+				XmlTag elm = null;
 				XmlTag openTag = null;
 				XmlTag closeTag = null;
 				int level = 0;
@@ -503,7 +502,7 @@ public class TagTester
 				{
 					if (elm instanceof XmlTag)
 					{
-						XmlTag xmlTag = (XmlTag)elm;
+						XmlTag xmlTag = elm;
 						if (openTag == null)
 						{
 							IValueMap attributeMap = xmlTag.getAttributes();

@@ -20,7 +20,9 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.WicketParseException;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
@@ -65,36 +67,29 @@ public final class HtmlHandler extends AbstractMarkupFilter
 	{
 	}
 
-	public MarkupElement nextTag() throws ParseException
+	@Override
+	public void postProcess(final Markup markup)
 	{
-		// Get the next tag. If null, no more tags are available
-		final ComponentTag tag = (ComponentTag)getNextFilter().nextTag();
-		if (tag == null)
+		// If there's still a non-simple tag left, it's an error
+		while (stack.size() > 0)
 		{
-			// No more tags from the markup.
-			// If there's still a non-simple tag left, it's an error
-			while (stack.size() > 0)
+			final ComponentTag top = stack.peek();
+
+			if (!requiresCloseTag(top.getName()))
 			{
-				final ComponentTag top = stack.peek();
-
-				if (!requiresCloseTag(top.getName()))
-				{
-					stack.pop();
-				}
-				else
-				{
-					throw new WicketParseException("Tag does not have a close tag:", top);
-				}
+				stack.pop();
 			}
-
-			return tag;
+			else
+			{
+				throw new WicketRuntimeException(new WicketParseException(
+					"Tag does not have a close tag:", top));
+			}
 		}
+	}
 
-		if (log.isDebugEnabled())
-		{
-			log.debug("tag: " + tag.toUserDebugString() + ", stack: " + stack);
-		}
-
+	@Override
+	protected MarkupElement onComponentTag(final ComponentTag tag) throws ParseException
+	{
 		// Check tag type
 		if (tag.isOpen())
 		{
@@ -111,7 +106,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 
 				// If the name of the current close tag does not match the
 				// tag on the stack then we may have a mismatched close tag
-				boolean mismatch = !top.hasEqualTagName(tag);
+				boolean mismatch = !hasEqualTagName(top, tag);
 
 				if (mismatch)
 				{
@@ -130,7 +125,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 						top = stack.pop();
 
 						// Does new top of stack mismatch too?
-						mismatch = !top.hasEqualTagName(tag);
+						mismatch = !hasEqualTagName(top, tag);
 					}
 
 					// If adjusting for simple tags did not fix the problem,
@@ -170,5 +165,32 @@ public final class HtmlHandler extends AbstractMarkupFilter
 	public static boolean requiresCloseTag(final String name)
 	{
 		return doesNotRequireCloseTag.get(name.toLowerCase()) == null;
+	}
+
+	/**
+	 * Compare tag name including namespace
+	 * 
+	 * @param tag1
+	 * @param tag2
+	 * @return true if name and namespace are equal
+	 */
+	public static boolean hasEqualTagName(final ComponentTag tag1, final ComponentTag tag2)
+	{
+		if (!tag1.getName().equalsIgnoreCase(tag2.getName()))
+		{
+			return false;
+		}
+
+		if ((tag1.getNamespace() == null) && (tag2.getNamespace() == null))
+		{
+			return true;
+		}
+
+		if ((tag1.getNamespace() != null) && (tag2.getNamespace() != null))
+		{
+			return tag1.getNamespace().equalsIgnoreCase(tag2.getNamespace());
+		}
+
+		return false;
 	}
 }

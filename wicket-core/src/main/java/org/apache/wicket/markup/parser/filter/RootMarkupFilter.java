@@ -18,20 +18,22 @@ package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
 
-import org.apache.wicket.markup.Markup;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.IXmlPullParser;
 import org.apache.wicket.markup.parser.IXmlPullParser.ELEMENT_TYPE;
 
 
 /**
+ * This is the root of all filters, which retrieves the next xml element from the xml parser.
  * 
  * @author Juergen Donnerstag
  */
-public final class RootMarkupFilter implements IMarkupFilter
+public final class RootMarkupFilter extends AbstractMarkupFilter
 {
-	/**  */
+	/** The xml parser */
 	private final IXmlPullParser parser;
 
 	/**
@@ -44,10 +46,14 @@ public final class RootMarkupFilter implements IMarkupFilter
 		this.parser = parser;
 	}
 
-	public final MarkupElement nextTag() throws ParseException
+	/**
+	 * Skip all xml elements until the next tag.
+	 */
+	@Override
+	public final MarkupElement nextElement() throws ParseException
 	{
 		ELEMENT_TYPE type;
-		while ((type = next()) != ELEMENT_TYPE.TAG)
+		while ((type = parser.next()) != ELEMENT_TYPE.TAG)
 		{
 			if (type == ELEMENT_TYPE.NOT_INITIALIZED)
 			{
@@ -55,30 +61,33 @@ public final class RootMarkupFilter implements IMarkupFilter
 			}
 		}
 
-		return parser.getElement();
+		return new ComponentTag(parser.getElement());
 	}
 
-	public IMarkupFilter getNextFilter()
+	/**
+	 * @return null. This is the root filter.
+	 */
+	@Override
+	public final IMarkupFilter getNextFilter()
 	{
 		return null;
 	}
 
-	public void setNextFilter(final IMarkupFilter parent)
+	/**
+	 * This is the root filter. Operation not allowed. An exception will be thrown.
+	 */
+	@Override
+	public final void setNextFilter(final IMarkupFilter parent)
 	{
 		throw new IllegalArgumentException("You can not set the parent with RootMarkupFilter.");
 	}
 
 	/**
-	 * 
-	 * @return The next XML element
-	 * @throws ParseException
+	 * Noop
 	 */
-	private ELEMENT_TYPE next() throws ParseException
+	@Override
+	protected MarkupElement onComponentTag(ComponentTag tag) throws ParseException
 	{
-		return parser.next();
-	}
-
-	public void postProcess(Markup markup)
-	{
+		return tag;
 	}
 }

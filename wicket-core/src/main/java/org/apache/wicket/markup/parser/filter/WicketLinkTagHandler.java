@@ -27,6 +27,7 @@ import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
+import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.util.collections.ArrayListStack;
 import org.apache.wicket.util.string.StringValueConversionException;
@@ -48,7 +49,7 @@ import org.apache.wicket.util.value.IValueMap;
  * 
  * @author Juergen Donnerstag
  */
-public class WicketLinkTagHandler extends BaseMarkupFilter implements IComponentResolver
+public class WicketLinkTagHandler extends AbstractMarkupFilter implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
@@ -90,7 +91,7 @@ public class WicketLinkTagHandler extends BaseMarkupFilter implements IComponent
 	}
 
 	@Override
-	protected final MarkupElement nextTag(ComponentTag tag) throws ParseException
+	protected final MarkupElement onComponentTag(ComponentTag tag) throws ParseException
 	{
 		// Only xml tags not already identified as Wicket components will be
 		// considered for autolinking. This is because it is assumed that Wicket

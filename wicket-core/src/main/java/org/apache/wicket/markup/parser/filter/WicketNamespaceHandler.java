@@ -23,6 +23,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupResourceStream;
+import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.util.value.IValueMap;
 
 
@@ -34,7 +35,7 @@ import org.apache.wicket.util.value.IValueMap;
  * @see org.apache.wicket.markup.MarkupParser
  * @author Juergen Donnerstag
  */
-public final class WicketNamespaceHandler extends BaseMarkupFilter
+public final class WicketNamespaceHandler extends AbstractMarkupFilter
 {
 	/** Wicket URI */
 	private static final String WICKET_URI = "http://wicket.apache.org";
@@ -59,7 +60,7 @@ public final class WicketNamespaceHandler extends BaseMarkupFilter
 	}
 
 	@Override
-	protected final MarkupElement nextTag(ComponentTag tag) throws ParseException
+	protected final MarkupElement onComponentTag(ComponentTag tag) throws ParseException
 	{
 		if (tag.isOpen() && "html".equals(tag.getName().toLowerCase()))
 		{

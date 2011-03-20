@@ -59,7 +59,7 @@ public class PanelTest extends WicketTestCase
 			hit = true;
 
 			assertNotNull(mex.getMarkupStream());
-			assertTrue(mex.getMessage().contains("does not have a close tag"));
+			assertTrue(mex.getMessage().contains("Expected close tag for "));
 			assertTrue(mex.getMessage().contains("SimplePanel_1.html"));
 		}
 		assertTrue("Did expect a MarkupException", hit);

@@ -20,20 +20,21 @@ import java.text.ParseException;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.Markup;
+import org.apache.wicket.markup.MarkupElement;
 
 
 /**
  * Base class for markup filters
  * 
- * @see org.apache.wicket.markup.MarkupParser
- * 
  * @author Jonathan Locke
+ * @author Juergen Donnerstag
  */
 public abstract class AbstractMarkupFilter implements IMarkupFilter
 {
 	/** The next MarkupFilter in the chain */
 	private IMarkupFilter parent;
 
+	/** TODO Not sure this counter is sufficiently safe, since filters are created per markup file. */
 	private int count;
 
 	/**
@@ -44,20 +45,9 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	}
 
 	/**
-	 * Construct.
-	 * 
-	 * @param parent
-	 *            The parent of this component The next element in the chain.
-	 */
-	public AbstractMarkupFilter(final IMarkupFilter parent)
-	{
-		this.parent = parent;
-	}
-
-	/**
 	 * @return The next MarkupFilter in the chain
 	 */
-	public final IMarkupFilter getNextFilter()
+	public IMarkupFilter getNextFilter()
 	{
 		return parent;
 	}
@@ -68,22 +58,74 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	 * @param parent
 	 *            The parent of this component The next element in the chain
 	 */
-	public final void setNextFilter(final IMarkupFilter parent)
+	public void setNextFilter(final IMarkupFilter parent)
 	{
 		this.parent = parent;
 	}
 
 	/**
-	 * A convenience function to retrieve the next tag (same as nextTag()), however assuming that it
-	 * is a ComponentTag.
+	 * Get the next xml element from the markup. If eof, than retun null. Ignore raw markup. Invoke
+	 * nextTag(tag) if a tag was found.
+	 */
+	public MarkupElement nextElement() throws ParseException
+	{
+		MarkupElement elem = getNextFilter().nextElement();
+		if ((elem != null) && (elem instanceof ComponentTag))
+		{
+			elem = onComponentTag((ComponentTag)elem);
+		}
+		return elem;
+	}
+
+	/**
+	 * Invoked when a ComponentTag was found.
+	 * <p>
+	 * By default this method is also called for WicketTags.
 	 * 
-	 * @return ComponentTag
+	 * @param tag
+	 * @return Usually the same as the tag attribute
 	 * @throws ParseException
 	 */
-	protected final ComponentTag nextComponentTag() throws ParseException
-	{
-		return (ComponentTag)getNextFilter().nextTag();
-	}
+	protected abstract MarkupElement onComponentTag(ComponentTag tag) throws ParseException;
+
+	/**
+	 * Invoked when a WicketTag was found.
+	 * 
+	 * @param tag
+	 * @return Usually the same as the tag attribute
+	 * @throws ParseException
+	 */
+// Not yet used
+// protected MarkupElement onWicketTag(final WicketTag tag) throws ParseException
+// {
+// return onComponentTag(tag);
+// }
+
+	/**
+	 * Invoked when a tags (e.g. DOCTYPE, PROCESSING_INSTRUCTIION, etc. which have been identified
+	 * as special tags by the xml parser.
+	 * 
+	 * @param tag
+	 * @return Usually the same as the tag attribute
+	 * @throws ParseException
+	 */
+// Not yet used
+// protected MarkupElement onSpecialTag(final ComponentTag tag) throws ParseException
+// {
+// return tag;
+// }
+
+	/**
+	 * Invoked if current element is raw markup
+	 * 
+	 * @param rawMarkup
+	 * @return Usually the same as the tag attribute
+	 */
+// Not yet used
+// protected MarkupElement onRawMarkup(final MarkupElement rawMarkup)
+// {
+// return rawMarkup;
+// }
 
 	/**
 	 * 
@@ -94,6 +136,9 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 		return count++;
 	}
 
+	/**
+	 * Noop by default
+	 */
 	public void postProcess(final Markup markup)
 	{
 	}

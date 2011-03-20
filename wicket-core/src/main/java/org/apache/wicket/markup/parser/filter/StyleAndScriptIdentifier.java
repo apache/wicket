@@ -22,6 +22,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.RawMarkup;
+import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.XmlPullParser;
 
 
@@ -29,7 +30,7 @@ import org.apache.wicket.markup.parser.XmlPullParser;
  * 
  * @author Juergen Donnerstag
  */
-public final class StyleAndScriptIdentifier extends BaseMarkupFilter
+public final class StyleAndScriptIdentifier extends AbstractMarkupFilter
 {
 	private boolean found;
 
@@ -46,7 +47,7 @@ public final class StyleAndScriptIdentifier extends BaseMarkupFilter
 	}
 
 	@Override
-	protected final MarkupElement nextTag(final ComponentTag tag) throws ParseException
+	protected final MarkupElement onComponentTag(final ComponentTag tag) throws ParseException
 	{
 		if (tag.getNamespace() != null)
 		{
@@ -63,7 +64,6 @@ public final class StyleAndScriptIdentifier extends BaseMarkupFilter
 				tag.setModified(true);
 			}
 
-			tag.setFlag(ComponentTag.ADD, true);
 			tag.setFlag(ComponentTag.RENDER_RAW, true);
 			tag.setUserData("STYLE_OR_SCRIPT", Boolean.TRUE);
 		}

@@ -23,7 +23,6 @@ import org.apache.wicket.WicketTestCase;
  */
 public class OpenCloseTagExpanderTest extends WicketTestCase
 {
-
 	/**
 	 * @throws Exception
 	 */
@@ -32,5 +31,4 @@ public class OpenCloseTagExpanderTest extends WicketTestCase
 		executeTest(OpenCloseTagExpanderPage_1.class,
 			"OpenCloseTagExpanderPageExpectedResult_1.html");
 	}
-
 }

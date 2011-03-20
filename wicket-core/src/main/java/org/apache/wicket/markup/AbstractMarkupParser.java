@@ -211,7 +211,7 @@ public abstract class AbstractMarkupParser
 	 */
 	private ComponentTag getNextTag() throws ParseException
 	{
-		return (ComponentTag)markupFilterChain.nextTag();
+		return (ComponentTag)markupFilterChain.nextElement();
 	}
 
 	/**
@@ -228,8 +228,8 @@ public abstract class AbstractMarkupParser
 			ComponentTag tag;
 			while (null != (tag = getNextTag()))
 			{
-				boolean add = (tag.getId() != null) || tag.getFlag(ComponentTag.ADD);
-				if (!add && tag.getXmlTag().isClose())
+				boolean add = (tag.getId() != null);
+				if (!add && tag.isClose())
 				{
 					add = ((tag.getOpenTag() != null) && (tag.getOpenTag().getId() != null));
 				}
@@ -441,5 +441,14 @@ public abstract class AbstractMarkupParser
 			pos1 = rawMarkup.indexOf("<!--", pos1);
 		}
 		return rawMarkup;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return markup.toString();
 	}
 }

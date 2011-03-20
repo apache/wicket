@@ -21,6 +21,7 @@ import java.text.ParseException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.WicketParseException;
+import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +48,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Juergen Donnerstag
  */
-public final class HtmlProblemFinder extends BaseMarkupFilter
+public final class HtmlProblemFinder extends AbstractMarkupFilter
 {
 	/** Logging */
 	private static final Logger log = LoggerFactory.getLogger(HtmlProblemFinder.class);
@@ -79,7 +80,7 @@ public final class HtmlProblemFinder extends BaseMarkupFilter
 	}
 
 	@Override
-	protected final MarkupElement nextTag(ComponentTag tag) throws ParseException
+	protected final MarkupElement onComponentTag(ComponentTag tag) throws ParseException
 	{
 		// Make sure some typical and may be tricky problems are detected and
 		// logged.

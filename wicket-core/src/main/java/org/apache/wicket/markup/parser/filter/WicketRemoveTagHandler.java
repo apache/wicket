@@ -22,6 +22,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.WicketParseException;
 import org.apache.wicket.markup.WicketTag;
+import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 
 
 /**
@@ -31,7 +32,7 @@ import org.apache.wicket.markup.WicketTag;
  * 
  * @author Juergen Donnerstag
  */
-public final class WicketRemoveTagHandler extends BaseMarkupFilter
+public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 {
 	/** */
 	public static final String REMOVE = "remove";
@@ -50,7 +51,7 @@ public final class WicketRemoveTagHandler extends BaseMarkupFilter
 	}
 
 	@Override
-	protected final MarkupElement nextTag(ComponentTag tag) throws ParseException
+	protected final MarkupElement onComponentTag(ComponentTag tag) throws ParseException
 	{
 		// If it is not a remove tag, than we are finished
 		if (!(tag instanceof WicketTag) || !((WicketTag)tag).isRemoveTag())
@@ -66,7 +67,7 @@ public final class WicketRemoveTagHandler extends BaseMarkupFilter
 
 		// Find the corresponding close tag and remove all tags in between
 		ComponentTag closeTag;
-		while (null != (closeTag = (ComponentTag)getNextFilter().nextTag()))
+		while (null != (closeTag = (ComponentTag)getNextFilter().nextElement()))
 		{
 			// No Wicket component tags are allowed within the preview region.
 			// Wicket components will a component name assigned.

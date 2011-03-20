@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.RawMarkup;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 
@@ -48,21 +49,30 @@ public class OpenCloseTagExpander extends AbstractMarkupFilter
 
 	private ComponentTag next = null;
 
-	public MarkupElement nextTag() throws ParseException
+	@Override
+	public MarkupElement nextElement() throws ParseException
 	{
+		// Did we hold back an elem? Than return that first
 		if (next != null)
 		{
-			MarkupElement tmp = next;
+			MarkupElement rtn = next;
 			next = null;
-			return tmp;
+			return rtn;
 		}
 
-		ComponentTag tag = nextComponentTag();
-		if (tag == null)
+		// Find the next tag
+		MarkupElement elem;
+		do
 		{
-			return tag;
+			elem = getNextFilter().nextElement();
+			if (elem == null)
+			{
+				return null;
+			}
 		}
+		while (elem instanceof RawMarkup);
 
+		ComponentTag tag = (ComponentTag)elem;
 		if (tag.isOpenClose())
 		{
 			String name = tag.getName();
@@ -109,5 +119,14 @@ public class OpenCloseTagExpander extends AbstractMarkupFilter
 	protected boolean contains(final String name)
 	{
 		return replaceForTags.contains(name.toLowerCase());
+	}
+
+	/**
+	 * Noop
+	 */
+	@Override
+	protected MarkupElement onComponentTag(ComponentTag tag) throws ParseException
+	{
+		return tag;
 	}
 }

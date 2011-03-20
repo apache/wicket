@@ -26,6 +26,7 @@ import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
+import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.UrlUtils;
@@ -49,7 +50,9 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Al Maw
  */
-public final class RelativePathPrefixHandler extends BaseMarkupFilter implements IComponentResolver
+public final class RelativePathPrefixHandler extends AbstractMarkupFilter
+	implements
+		IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
@@ -93,7 +96,7 @@ public final class RelativePathPrefixHandler extends BaseMarkupFilter implements
 	};
 
 	@Override
-	protected final MarkupElement nextTag(ComponentTag tag) throws ParseException
+	protected final MarkupElement onComponentTag(ComponentTag tag) throws ParseException
 	{
 		if (tag.isClose())
 		{

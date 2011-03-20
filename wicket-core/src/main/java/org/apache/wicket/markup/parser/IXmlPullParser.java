@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 
-import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 
 
@@ -162,7 +161,12 @@ public interface IXmlPullParser
 	 * 
 	 * @return The current element
 	 */
-	MarkupElement getElement();
+	XmlTag getElement();
+
+	/**
+	 * @return The xml string from the last element
+	 */
+	CharSequence getString();
 
 	/**
 	 * Set the position marker of the markup at the current position.

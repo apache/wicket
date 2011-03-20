@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 
-import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.parser.XmlTag.TextSegment;
 import org.apache.wicket.util.io.FullyBufferedReader;
@@ -408,7 +407,7 @@ public final class XmlPullParser implements IXmlPullParser
 	/**
 	 * @return MarkupElement
 	 */
-	public final MarkupElement getElement()
+	public final XmlTag getElement()
 	{
 		return lastTag;
 	}
@@ -425,7 +424,7 @@ public final class XmlPullParser implements IXmlPullParser
 	 * @return The next XML tag
 	 * @throws ParseException
 	 */
-	public final MarkupElement nextTag() throws ParseException
+	public final XmlTag nextTag() throws ParseException
 	{
 		while (next() != ELEMENT_TYPE.NOT_INITIALIZED)
 		{
