@@ -28,7 +28,9 @@ import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.lang.WicketObjects;
 
 /**
- * Wicket's default page store
+ * The {@link IPageStore} that converts {@link IManageablePage} instances to {@link SerializedPage}s
+ * before passing them to the {@link IDataStore} to store them and the same in the opposite
+ * direction when loading {@link SerializedPage} from the data store.
  * 
  */
 public class DefaultPageStore implements IPageStore
@@ -44,7 +46,10 @@ public class DefaultPageStore implements IPageStore
 	 * 
 	 * @param applicationName
 	 * @param dataStore
+	 *            the {@link IDataStore} that actually stores the pages
 	 * @param cacheSize
+	 *            the number of pages to cache in memory before passing them to
+	 *            {@link IDataStore#storeData(String, int, byte[])}
 	 */
 	public DefaultPageStore(final String applicationName, final IDataStore dataStore,
 		final int cacheSize)
@@ -66,10 +71,10 @@ public class DefaultPageStore implements IPageStore
 	}
 
 	/**
-	 * 
 	 * @param sessionId
 	 * @param pageId
 	 * @return page data
+	 * @see IDataStore#getData(String, int)
 	 */
 	protected byte[] getPageData(final String sessionId, final int pageId)
 	{
@@ -77,9 +82,9 @@ public class DefaultPageStore implements IPageStore
 	}
 
 	/**
-	 * 
 	 * @param sessionId
 	 * @param pageId
+	 * @see IDataStore#removeData(String, int)
 	 */
 	protected void removePageData(final String sessionId, final int pageId)
 	{
@@ -87,8 +92,8 @@ public class DefaultPageStore implements IPageStore
 	}
 
 	/**
-	 * 
 	 * @param sessionId
+	 * @see IDataStore#removeData(String)
 	 */
 	protected void removePageData(final String sessionId)
 	{
@@ -96,10 +101,10 @@ public class DefaultPageStore implements IPageStore
 	}
 
 	/**
-	 * 
 	 * @param sessionId
 	 * @param pageId
 	 * @param data
+	 * @see IDataStore#storeData(String, int, byte[])
 	 */
 	protected void storePageData(final String sessionId, final int pageId, final byte[] data)
 	{
@@ -107,7 +112,6 @@ public class DefaultPageStore implements IPageStore
 	}
 
 	/**
-	 * 
 	 * @return application name
 	 */
 	public String getApplicationName()
@@ -115,9 +119,6 @@ public class DefaultPageStore implements IPageStore
 		return applicationName;
 	}
 
-	/**
-	 * @see org.apache.wicket.pageStore.IPageStore#getPage(java.lang.String, int)
-	 */
 	public IManageablePage getPage(final String sessionId, final int id)
 	{
 		SerializedPage fromCache = serializedPagesCache.getPage(sessionId, id);
@@ -134,19 +135,12 @@ public class DefaultPageStore implements IPageStore
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.pageStore.IPageStore#removePage(java.lang.String, int)
-	 */
 	public void removePage(final String sessionId, final int id)
 	{
 		serializedPagesCache.removePage(sessionId, id);
 		removePageData(sessionId, id);
 	}
 
-	/**
-	 * @see org.apache.wicket.pageStore.IPageStore#storePage(java.lang.String,
-	 *      org.apache.wicket.page.IManageablePage)
-	 */
 	public void storePage(final String sessionId, final IManageablePage page)
 	{
 		SerializedPage serialized = serializePage(sessionId, page);
@@ -154,18 +148,12 @@ public class DefaultPageStore implements IPageStore
 		storePageData(sessionId, serialized.getPageId(), serialized.getData());
 	}
 
-	/**
-	 * @see org.apache.wicket.pageStore.IPageStore#unbind(java.lang.String)
-	 */
 	public void unbind(final String sessionId)
 	{
 		removePageData(sessionId);
 		serializedPagesCache.removePages(sessionId);
 	}
 
-	/**
-	 * @see org.apache.wicket.pageStore.IPageStore#convertToPage(java.lang.Object)
-	 */
 	public IManageablePage convertToPage(final Object object)
 	{
 		if (object == null)
@@ -196,9 +184,12 @@ public class DefaultPageStore implements IPageStore
 	}
 
 	/**
+	 * Reloads the {@link SerializedPage} from the backing {@link IDataStore} if the
+	 * {@link SerializedPage#data} is stripped earlier
 	 * 
 	 * @param serializedPage
-	 * @return
+	 *            the {@link SerializedPage} with empty {@link SerializedPage#data} slot
+	 * @return the fully functional {@link SerializedPage}
 	 */
 	private SerializedPage restoreStrippedSerializedPage(final SerializedPage serializedPage)
 	{
@@ -213,10 +204,6 @@ public class DefaultPageStore implements IPageStore
 		return new SerializedPage(serializedPage.getSessionId(), serializedPage.getPageId(), data);
 	}
 
-	/**
-	 * @see org.apache.wicket.pageStore.IPageStore#prepareForSerialization(java.lang.String,
-	 *      java.lang.Object)
-	 */
 	public Serializable prepareForSerialization(final String sessionId, final Object object)
 	{
 		if (pageDataStore.isReplicated())
@@ -265,9 +252,6 @@ public class DefaultPageStore implements IPageStore
 		return true;
 	}
 
-	/**
-	 * @see org.apache.wicket.pageStore.IPageStore#restoreAfterSerialization(java.io.Serializable)
-	 */
 	public Object restoreAfterSerialization(final Serializable serializable)
 	{
 		if (serializable == null)
@@ -294,14 +278,27 @@ public class DefaultPageStore implements IPageStore
 	}
 
 	/**
-	 * 
+	 * A representation of {@link IManageablePage} that knows additionally the id of the http
+	 * session in which this {@link IManageablePage} instance is used. The {@link #sessionId} and
+	 * {@link #pageId} are used for better clustering in the {@link IDataStore} structures.
 	 */
 	protected static class SerializedPage implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * The id of the serialized {@link IManageablePage}
+		 */
 		private final int pageId;
+
+		/**
+		 * The id of the http session in which the serialized {@link IManageablePage} is used.
+		 */
 		private final String sessionId;
+
+		/**
+		 * The serialized {@link IManageablePage}
+		 */
 		private final byte[] data;
 
 		public SerializedPage(String sessionId, int pageId, byte[] data)

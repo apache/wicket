@@ -38,34 +38,50 @@ public class PersistentPageManagerTest extends TestCase
 	/**
 	 * WICKET-3470
 	 * 
+	 * Tests that a page already put in the session (in SessionEntry) can be serialized and later
+	 * deserialized without the need of {@link IPageStore}
+	 * 
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
 	public void testSerializationOutsideWicketLifecyle() throws IOException, ClassNotFoundException
 	{
+		// create IPageManager (with IPageStore) and store a page instance
 		IPageManager pageManager = newPersistentPageManager("test_app");
 		TestPage toSerializePage = new TestPage();
 		pageManager.touchPage(toSerializePage);
 		pageManager.commitRequest();
-		pageManager.destroy();
-		// serializing the Wicket piece in servlet session
+
+		// get the stored SessionEntry
 		Serializable sessionEntry = pageManager.getContext().getSessionAttribute(null);
+
+		// destroy the manager and the store
+		pageManager.destroy();
+
+		// simulate persisting of the http sessions initiated by the web container
 		byte[] serializedSessionEntry = WicketObjects.objectToByteArray(sessionEntry);
 		assertNotNull("Wicket needs to be able to serialize the session entry",
 			serializedSessionEntry);
 
-		// testing if it is possible to deserialize the session entry
-		IPageManager newPageManager = newPersistentPageManager("test_app");
+		// simulate loading of the persisted http session initiated by the web container
+		// when starting an application
 		ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(
 			serializedSessionEntry));
+
+		// WicketFilter is not initialized so there is no Application available yet
 		assertNull("Worker thread should be unaware of Wicket application", in.readObject());
+
+		// without available IPageStore the read SessionEntry holds
+		// the IManageablePage itself, not SerializedPage
 		Serializable loadedSessionEntry = (Serializable)in.readObject();
 		assertNotNull(
 			"Wicket needs to be able to deserialize the session entry regardless the application availability",
 			loadedSessionEntry);
 
+		// provide new IPageStore which will read IManageablePage's or SerializedPage's
+		// from the SessionEntry's
+		IPageManager newPageManager = newPersistentPageManager("test_app");
 		newPageManager.getContext().setSessionAttribute(null, loadedSessionEntry);
-
 
 		TestPage deserializedPage = (TestPage)newPageManager.getPage(toSerializePage.getPageId());
 		assertNotNull(deserializedPage);

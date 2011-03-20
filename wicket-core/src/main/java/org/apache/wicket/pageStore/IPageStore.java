@@ -21,7 +21,10 @@ import java.io.Serializable;
 import org.apache.wicket.page.IManageablePage;
 
 /**
- * Persist (read & write) Page data
+ * {@link IPageStore} role is to mediate the storing and loading of pages done by {@link IDataStore}
+ * s. {@link IPageStore} may pre-process the pages before passing them to
+ * {@link IDataStore#storeData(String, int, byte[])} and to post-process them after
+ * {@link IDataStore#getData(String, int)}.
  * 
  * @see IDataStore
  */
@@ -36,34 +39,39 @@ public interface IPageStore
 	 * Restores a page from the persistent layer.
 	 * 
 	 * @param sessionId
-	 * @param id
+	 *            The session of the page that must be removed
+	 * @param pageId
+	 *            The id of the page.
 	 * @return The page
 	 */
-	IManageablePage getPage(String sessionId, int id);
+	IManageablePage getPage(String sessionId, int pageId);
 
 	/**
 	 * Removes a page from the persistent layer.
 	 * 
 	 * @param sessionId
 	 *            The session of the page that must be removed
-	 * @param id
+	 * @param pageId
 	 *            The id of the page.
 	 */
-	void removePage(String sessionId, int id);
+	void removePage(String sessionId, int pageId);
 
 	/**
 	 * Stores the page to a persistent layer. The page should be stored under the id and the version
 	 * number.
 	 * 
 	 * @param sessionId
+	 *            The session of the page that must be removed
 	 * @param page
+	 *            The page to store
 	 */
 	void storePage(String sessionId, IManageablePage page);
 
 	/**
-	 * The pagestore should cleanup all the pages for that sessionid.
+	 * The page store should cleanup all the pages for that sessionid.
 	 * 
 	 * @param sessionId
+	 *            The session of the page that must be removed
 	 */
 	void unbind(String sessionId);
 
@@ -72,6 +80,7 @@ public interface IPageStore
 	 * object returned by {@link #restoreAfterSerialization(Serializable)}.
 	 * 
 	 * @param sessionId
+	 *            The session of the page that must be removed
 	 * @param page
 	 * @return The Page itself or a SerializedContainer for that page
 	 */
@@ -82,14 +91,17 @@ public interface IPageStore
 	 * to real page instance using {@link #convertToPage(Object)}.
 	 * 
 	 * @param sessionId
+	 *            The session of the page that must be removed
 	 * @param serializable
 	 * @return Page
 	 */
 	Object restoreAfterSerialization(Serializable serializable);
 
 	/**
+	 * Converts a page representation to an instance of {@link IManageablePage}
 	 * 
 	 * @param page
+	 *            some kind of page representation
 	 * @return page
 	 */
 	IManageablePage convertToPage(Object page);

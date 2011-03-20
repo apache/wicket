@@ -204,6 +204,11 @@ public class PersistentPageManager extends AbstractPageManager
 		}
 
 		/**
+		 * Serializes all pages in this {@link SessionEntry}. If this is http worker thread then
+		 * there is available {@link IPageStore} which will be asked to prepare the page for
+		 * serialization (see DefaultPageStore$SerializePage). If there is no {@link IPageStore}
+		 * available (session loading/persisting in application initialization/destruction thread)
+		 * then the pages are serialized without any pre-processing
 		 * 
 		 * @param s
 		 * @throws IOException
@@ -236,6 +241,11 @@ public class PersistentPageManager extends AbstractPageManager
 		}
 
 		/**
+		 * Deserializes the pages in this {@link SessionEntry}. If this is http worker thread then
+		 * there is available {@link IPageStore} which will be asked to restore the page from its
+		 * optimized state (see DefaultPageStore$SerializePage). If there is no {@link IPageStore}
+		 * available (session loading/persisting in application initialization/destruction thread)
+		 * then the pages are deserialized without any post-processing
 		 * 
 		 * @param s
 		 * @throws IOException
