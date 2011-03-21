@@ -64,6 +64,12 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 		// Render the component
 		try
 		{
+			// preventing the response to component from being cached
+			if (requestCycle.getResponse() instanceof WebResponse)
+			{
+				WebResponse response = (WebResponse)requestCycle.getResponse();
+				response.disableCaching();
+			}
 			// Let pages render itself
 			if (component instanceof Page)
 			{
@@ -74,12 +80,6 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 			{
 				// Render the component
 				component.renderComponent();
-			}
-			// preventing the response to component from being cached
-			if (requestCycle.getResponse() instanceof WebResponse)
-			{
-				WebResponse response = (WebResponse)requestCycle.getResponse();
-				response.disableCaching();
 			}
 		}
 		finally
