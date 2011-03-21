@@ -22,9 +22,9 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.request.target.component.ComponentRequestTarget;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.value.ValueMap;
 
 
 /**
@@ -60,20 +60,8 @@ public class Index extends WicketExamplePage
 			{
 				// Increment count
 				count++;
-
 				// The response should refresh the label displaying the counter.
-				getRequestCycle().setRequestTarget(new ComponentRequestTarget(counter)
-				{
-					@Override
-					public void respond(RequestCycle requestCycle)
-					{
-						super.respond(requestCycle);
-						WebResponse response = (WebResponse)requestCycle.getResponse();
-						response.setHeader("Pragma", "no-cache");
-						response.setHeader("Cache-Control",
-							"no-cache, no-store, max-age=0, must-revalidate");
-					}
-				});
+				getRequestCycle().setRequestTarget(new ComponentRequestTarget(counter));
 			}
 
 			/**
@@ -83,8 +71,10 @@ public class Index extends WicketExamplePage
 			@Override
 			protected String getOnClickScript(String url)
 			{
+				ValueMap valueMap = new ValueMap();
+				valueMap.add("anticache", "" + Math.random());
 				return new AppendingStringBuffer("new Ajax.Updater('counter', '").append(
-					urlFor(ILinkListener.INTERFACE))
+					RequestCycle.get().urlFor(this, ILinkListener.INTERFACE, valueMap))
 					.append("', {method:'get'}); return false;")
 					.toString();
 			}

@@ -19,6 +19,7 @@ package org.apache.wicket.request.target.component;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
+import org.apache.wicket.protocol.http.WebResponse;
 
 /**
  * Default implementation of
@@ -73,6 +74,12 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 			{
 				// Render the component
 				component.renderComponent();
+			}
+			// preventing the response to component from being cached
+			if (requestCycle.getResponse() instanceof WebResponse)
+			{
+				WebResponse response = (WebResponse)requestCycle.getResponse();
+				response.disableCaching();
 			}
 		}
 		finally

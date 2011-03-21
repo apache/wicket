@@ -497,4 +497,15 @@ public class WebResponse extends Response
 	{
 		this.ajax = ajax;
 	}
+
+	/**
+	 * Make this response non-cacheable
+	 */
+	public void disableCaching()
+	{
+		setDateHeader("Date", System.currentTimeMillis());
+		setDateHeader("Expires", 0);
+		setHeader("Pragma", "no-cache");
+		setHeader("Cache-Control", "no-cache, no-store");
+	}
 }
