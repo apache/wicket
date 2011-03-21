@@ -124,7 +124,7 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	 */
 	protected MarkupElement onSpecialTag(final HtmlSpecialTag tag) throws ParseException
 	{
-		log.error(tag.toString());
+		// log.error(tag.toString());
 		return tag;
 	}
 
