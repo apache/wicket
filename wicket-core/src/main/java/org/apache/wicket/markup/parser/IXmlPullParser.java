@@ -32,7 +32,7 @@ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 public interface IXmlPullParser
 {
 	/** The last element found */
-	public enum ELEMENT_TYPE {
+	public enum HttpTagType {
 		/** next() must be called at least once for the Type to be valid */
 		NOT_INITIALIZED,
 
@@ -47,6 +47,9 @@ public interface IXmlPullParser
 
 		/** <!--[if ] ... --> */
 		CONDITIONAL_COMMENT,
+
+		/** <![endif]--> */
+		CONDITIONAL_COMMENT_ENDIF,
 
 		/** <![CDATA[ .. ]]> */
 		CDATA,
@@ -155,7 +158,7 @@ public interface IXmlPullParser
 	 * @return o, if end of file. Else a TAG, COMMENT etc.
 	 * @throws ParseException
 	 */
-	ELEMENT_TYPE next() throws ParseException;
+	HttpTagType next() throws ParseException;
 
 	/**
 	 * 

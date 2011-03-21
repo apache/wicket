@@ -19,6 +19,7 @@ package org.apache.wicket.markup.parser;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.wicket.markup.parser.IXmlPullParser.HttpTagType;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.StringValue;
@@ -84,12 +85,26 @@ public class XmlTag
 	/** True if this tag is mutable, false otherwise. */
 	private boolean isMutable = true;
 
+	private HttpTagType httpTagType;
+
 	/**
 	 * Construct.
 	 */
 	public XmlTag()
 	{
 		super();
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param text
+	 * @param type
+	 */
+	public XmlTag(final TextSegment text, final TagType type)
+	{
+		this.text = text;
+		this.type = type;
 	}
 
 	/**
@@ -285,8 +300,10 @@ public class XmlTag
 	/**
 	 * Makes this tag object immutable by making the attribute map unmodifiable. Immutable tags
 	 * cannot be made mutable again. They can only be copied into new mutable tag objects.
+	 * 
+	 * @return this
 	 */
-	public void makeImmutable()
+	public XmlTag makeImmutable()
 	{
 		if (isMutable)
 		{
@@ -297,6 +314,7 @@ public class XmlTag
 				text = null;
 			}
 		}
+		return this;
 	}
 
 	/**
@@ -618,12 +636,30 @@ public class XmlTag
 		/** Full text of tag. */
 		final CharSequence text;
 
-		TextSegment(CharSequence text, int pos, int line, int col)
+		TextSegment(final CharSequence text, final int pos, final int line, final int col)
 		{
 			this.text = text;
 			this.pos = pos;
 			lineNumber = line;
 			columnNumber = col;
+		}
+
+		/**
+		 * 
+		 * @return The xml markup text
+		 */
+		public final CharSequence getText()
+		{
+			return text;
+		}
+
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		@Override
+		public String toString()
+		{
+			return text.toString();
 		}
 	}
 }

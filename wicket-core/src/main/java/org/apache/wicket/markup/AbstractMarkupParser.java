@@ -209,9 +209,9 @@ public abstract class AbstractMarkupParser
 	 * @return The next tag
 	 * @throws ParseException
 	 */
-	private ComponentTag getNextTag() throws ParseException
+	private MarkupElement getNextTag() throws ParseException
 	{
-		return (ComponentTag)markupFilterChain.nextElement();
+		return markupFilterChain.nextElement();
 	}
 
 	/**
@@ -225,52 +225,62 @@ public abstract class AbstractMarkupParser
 			int size = markup.size();
 
 			// Loop through tags
-			ComponentTag tag;
-			while (null != (tag = getNextTag()))
+			MarkupElement elem;
+			while (null != (elem = getNextTag()))
 			{
-				boolean add = (tag.getId() != null);
-				if (!add && tag.isClose())
+				if (elem instanceof HtmlSpecialTag)
 				{
-					add = ((tag.getOpenTag() != null) && (tag.getOpenTag().getId() != null));
+					elem = new ComponentTag(((HtmlSpecialTag)elem).getXmlTag());
 				}
 
-				// Add tag to list?
-				if (add || tag.isModified() || (markup.size() != size))
+				if (elem instanceof ComponentTag)
 				{
-					// Add text from last position to the current tag position
-					CharSequence text = xmlParser.getInputFromPositionMarker(tag.getPos());
-					if (text.length() > 0)
-					{
-						text = handleRawText(text.toString());
+					ComponentTag tag = (ComponentTag)elem;
 
-						// Make sure you add it at the correct location.
-						// IMarkupFilters might have added elements as well.
-						markup.addMarkupElement(size, new RawMarkup(text));
+					boolean add = (tag.getId() != null);
+					if (!add && tag.isClose())
+					{
+						add = ((tag.getOpenTag() != null) && (tag.getOpenTag().getId() != null));
 					}
 
-					xmlParser.setPositionMarker();
-
-					if (add)
+					// Add tag to list?
+					if (add || tag.isModified() || (markup.size() != size))
 					{
-						// Add to the markup unless the tag has been flagged as
-						// to be removed from the markup. (e.g. <wicket:remove>
-						if (tag.isIgnore() == false)
+						// Add text from last position to the current tag position
+						CharSequence text = xmlParser.getInputFromPositionMarker(tag.getPos());
+						if (text.length() > 0)
 						{
-							markup.addMarkupElement(tag);
+							text = handleRawText(text.toString());
+
+							// Make sure you add it at the correct location.
+							// IMarkupFilters might have added elements as well.
+							markup.addMarkupElement(size, new RawMarkup(text));
+						}
+
+						xmlParser.setPositionMarker();
+
+						if (add)
+						{
+							// Add to the markup unless the tag has been flagged as
+							// to be removed from the markup. (e.g. <wicket:remove>
+							if (tag.isIgnore() == false)
+							{
+								markup.addMarkupElement(tag);
+							}
+						}
+						else if (tag.isModified())
+						{
+							markup.addMarkupElement(new RawMarkup(tag.toCharSequence()));
+						}
+						else
+						{
+							xmlParser.setPositionMarker(tag.getPos());
 						}
 					}
-					else if (tag.isModified())
-					{
-						markup.addMarkupElement(new RawMarkup(tag.toCharSequence()));
-					}
-					else
-					{
-						xmlParser.setPositionMarker(tag.getPos());
-					}
-				}
 
-				// always remember the latest index (size)
-				size = markup.size();
+					// always remember the latest index (size)
+					size = markup.size();
+				}
 			}
 		}
 		catch (final ParseException ex)
@@ -314,7 +324,12 @@ public abstract class AbstractMarkupParser
 	 */
 	protected void postProcess(final Markup markup)
 	{
-		markupFilterChain.postProcess(markup);
+		IMarkupFilter filter = markupFilterChain;
+		while (filter != null)
+		{
+			filter.postProcess(markup);
+			filter = filter.getNextFilter();
+		}
 	}
 
 	/**

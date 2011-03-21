@@ -19,11 +19,13 @@ package org.apache.wicket.markup.parser.filter;
 import java.text.ParseException;
 
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.HtmlSpecialTag;
+import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.IXmlPullParser;
-import org.apache.wicket.markup.parser.IXmlPullParser.ELEMENT_TYPE;
+import org.apache.wicket.markup.parser.IXmlPullParser.HttpTagType;
 
 
 /**
@@ -52,16 +54,24 @@ public final class RootMarkupFilter extends AbstractMarkupFilter
 	@Override
 	public final MarkupElement nextElement() throws ParseException
 	{
-		ELEMENT_TYPE type;
-		while ((type = parser.next()) != ELEMENT_TYPE.TAG)
+		HttpTagType type;
+		while ((type = parser.next()) != HttpTagType.NOT_INITIALIZED)
 		{
-			if (type == ELEMENT_TYPE.NOT_INITIALIZED)
+			if (type == HttpTagType.BODY)
 			{
-				return null;
+				continue;
+			}
+			else if (type == HttpTagType.TAG)
+			{
+				return new ComponentTag(parser.getElement());
+			}
+			else
+			{
+				return new HtmlSpecialTag(parser.getElement(), type);
 			}
 		}
 
-		return new ComponentTag(parser.getElement());
+		return null;
 	}
 
 	/**
@@ -89,5 +99,22 @@ public final class RootMarkupFilter extends AbstractMarkupFilter
 	protected MarkupElement onComponentTag(ComponentTag tag) throws ParseException
 	{
 		return tag;
+	}
+
+	/**
+	 * Noop
+	 */
+	@Override
+	public final void postProcess(Markup markup)
+	{
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return parser.toString();
 	}
 }

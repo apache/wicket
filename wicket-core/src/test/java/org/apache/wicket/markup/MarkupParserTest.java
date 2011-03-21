@@ -23,6 +23,7 @@ import java.util.Locale;
 import junit.framework.Assert;
 
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
@@ -388,7 +389,8 @@ public final class MarkupParserTest extends WicketTestCase
 		assertEquals(5, markup.size());
 		assertEquals("html", ((ComponentTag)markup.get(0)).getName());
 		assertEquals("html", ((ComponentTag)markup.get(4)).getName());
-		assertEquals("<![CDATA[... <x a> ...]]>", markup.get(2).toString());
+		assertEquals("<!--/*--><![CDATA[/*><!--*/\n... <x a> ...\n/*-->]]>*/", markup.get(2)
+			.toString());
 	}
 
 	/**
@@ -454,7 +456,7 @@ public final class MarkupParserTest extends WicketTestCase
 		tag = markup.get(0);
 		assertEquals("<script>", tag.toString());
 		tag = markup.get(1);
-		assertEquals("<![CDATA[ text ]]>", tag.toString());
+		assertEquals("<!--/*--><![CDATA[/*><!--*/\n text \n/*-->]]>*/", tag.toString());
 		tag = markup.get(2);
 		assertEquals("</script>", tag.toString());
 
@@ -490,7 +492,7 @@ public final class MarkupParserTest extends WicketTestCase
 		tag = markup.get(1);
 		assertEquals("<script>", tag.toString());
 		tag = markup.get(2);
-		assertEquals("<![CDATA[ text ]]>", tag.toString());
+		assertEquals("<!--/*--><![CDATA[/*><!--*/\n text \n/*-->]]>*/", tag.toString());
 		tag = markup.get(3);
 		assertEquals("</script>", tag.toString());
 
@@ -499,8 +501,74 @@ public final class MarkupParserTest extends WicketTestCase
 		tag = markup.get(1);
 		assertEquals("<script>", tag.toString());
 		tag = markup.get(2);
-		assertEquals("<![CDATA[ text ]]>", tag.toString());
+		assertEquals("<!--/*--><![CDATA[/*><!--*/\n text \n/*-->]]>*/", tag.toString());
 		tag = markup.get(3);
 		assertEquals("</script>", tag.toString());
+	}
+
+
+	/**
+	 * @throws IOException
+	 * @throws ResourceStreamNotFoundException
+	 * @throws ParseException
+	 */
+	public void testParseConditionalComment() throws IOException, ResourceStreamNotFoundException,
+		ParseException
+	{
+		String x = "  <!--[if IE]>\r\n" + //
+			"    <a href=\"SimplePage_3.html\">Link</a>\r\n" + //
+			"  <![endif]-->";
+		MarkupParser parser = new MarkupParser(x);
+		Markup markup = parser.parse();
+		assertEquals(x, markup.toString(true));
+	}
+
+	/**
+	 * @throws IOException
+	 * @throws ResourceStreamNotFoundException
+	 */
+	public void testParseTagToBeExpanded() throws IOException, ResourceStreamNotFoundException
+	{
+		String x = "<html xmlns:wicket>\r\n<body>\r\n <span wicket:id=\"myPanel\"/>\r\n</body>\r\n</html>\r\n";
+		MarkupParser parser = new MarkupParser(x);
+		Markup markup = parser.parse();
+		assertEquals(
+			"<html xmlns:wicket>\r\n<body>\r\n <span wicket:id=\"myPanel\"></span>\r\n</body>\r\n</html>\r\n",
+			markup.toString(true));
+	}
+
+	/**
+	 * @throws IOException
+	 * @throws ResourceStreamNotFoundException
+	 */
+	public void testParseBorderSintax() throws IOException, ResourceStreamNotFoundException
+	{
+		tester.getApplication().getPageSettings().addComponentResolver(new Border("test_resolver")
+		{
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+		});
+		String x = "<wicket:border>before body - <wicket:body/> - after body</wicket:border>";
+		MarkupParser parser = new MarkupParser(x);
+		Markup markup = parser.parse();
+		assertEquals(x, markup.toString(true));
+	}
+
+	/**
+	 * WICKET-3500
+	 * 
+	 * @throws IOException
+	 * @throws ResourceStreamNotFoundException
+	 */
+	public void testRawMakupParsingWithStripCommentsSetTrue() throws IOException,
+		ResourceStreamNotFoundException
+	{
+		tester.getApplication().getMarkupSettings().setStripComments(true);
+		String conditionalComment = "\r\n <!--[if IE 6]>\r\n<![endif]-->";
+		MarkupParser parser = new MarkupParser(conditionalComment);
+		Markup markup = parser.parse();
+		assertEquals(conditionalComment, markup.get(0).toString());
 	}
 }

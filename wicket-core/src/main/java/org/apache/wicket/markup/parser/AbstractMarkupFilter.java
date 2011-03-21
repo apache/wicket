@@ -19,8 +19,11 @@ package org.apache.wicket.markup.parser;
 import java.text.ParseException;
 
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.HtmlSpecialTag;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -31,6 +34,9 @@ import org.apache.wicket.markup.MarkupElement;
  */
 public abstract class AbstractMarkupFilter implements IMarkupFilter
 {
+	/** Log. */
+	private static final Logger log = LoggerFactory.getLogger(AbstractMarkupFilter.class);
+
 	/** The next MarkupFilter in the chain */
 	private IMarkupFilter parent;
 
@@ -70,9 +76,16 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	public MarkupElement nextElement() throws ParseException
 	{
 		MarkupElement elem = getNextFilter().nextElement();
-		if ((elem != null) && (elem instanceof ComponentTag))
+		if (elem != null)
 		{
-			elem = onComponentTag((ComponentTag)elem);
+			if (elem instanceof ComponentTag)
+			{
+				elem = onComponentTag((ComponentTag)elem);
+			}
+			else if (elem instanceof HtmlSpecialTag)
+			{
+				elem = onSpecialTag((HtmlSpecialTag)elem);
+			}
 		}
 		return elem;
 	}
@@ -109,11 +122,11 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	 * @return Usually the same as the tag attribute
 	 * @throws ParseException
 	 */
-// Not yet used
-// protected MarkupElement onSpecialTag(final ComponentTag tag) throws ParseException
-// {
-// return tag;
-// }
+	protected MarkupElement onSpecialTag(final HtmlSpecialTag tag) throws ParseException
+	{
+		log.error(tag.toString());
+		return tag;
+	}
 
 	/**
 	 * Invoked if current element is raw markup
@@ -136,9 +149,6 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 		return count++;
 	}
 
-	/**
-	 * Noop by default
-	 */
 	public void postProcess(final Markup markup)
 	{
 	}

@@ -20,10 +20,10 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.WicketParseException;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.util.collections.ArrayListStack;
@@ -81,8 +81,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 			}
 			else
 			{
-				throw new WicketRuntimeException(new WicketParseException(
-					"Tag does not have a close tag:", top));
+				throw new MarkupException(markup, "Tag does not have a close tag", null);
 			}
 		}
 	}

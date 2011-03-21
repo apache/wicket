@@ -65,11 +65,8 @@ public class ComponentTag extends MarkupElement
 	/** Render the tag as RawMarkup even if no Component can be found */
 	public final static int RENDER_RAW = 0x0020;
 
-	/**
-	 * Assuming this is a open (or open-close) tag, 'closes' refers to the ComponentTag which closes
-	 * it.
-	 */
-	private ComponentTag closes;
+	/** If close tag, than reference to the corresponding close tag */
+	private ComponentTag openTag;
 
 	/** The underlying xml tag */
 	protected final XmlTag xmlTag;
@@ -223,7 +220,7 @@ public class ComponentTag extends MarkupElement
 	{
 		if (open instanceof ComponentTag)
 		{
-			return (closes == open) || getXmlTag().closes(((ComponentTag)open).getXmlTag());
+			return (openTag == open) || getXmlTag().closes(((ComponentTag)open).getXmlTag());
 		}
 
 		return false;
@@ -317,7 +314,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final ComponentTag getOpenTag()
 	{
-		return closes;
+		return openTag;
 	}
 
 	/**
@@ -604,7 +601,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final void setOpenTag(final ComponentTag tag)
 	{
-		closes = tag;
+		openTag = tag;
 		getXmlTag().setOpenTag(tag.getXmlTag());
 	}
 

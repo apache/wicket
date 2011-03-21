@@ -68,9 +68,9 @@ public final class XmlPullParser implements IXmlPullParser
 	private CharSequence doctype;
 
 	/** The type of what is in lastText */
-	private ELEMENT_TYPE lastType = ELEMENT_TYPE.NOT_INITIALIZED;
+	private HttpTagType lastType = HttpTagType.NOT_INITIALIZED;
 
-	/** If lastType == TAG, than ... */
+	/** The last tag found */
 	private XmlTag lastTag;
 
 	/**
@@ -136,7 +136,7 @@ public final class XmlPullParser implements IXmlPullParser
 
 		input.setPosition(pos);
 		lastText = input.getSubstring(startIndex, pos);
-		lastType = ELEMENT_TYPE.BODY;
+		lastType = HttpTagType.BODY;
 
 		// Check that the tag is properly closed
 		lastPos = input.find('>', lastPos + tagNameLen);
@@ -163,12 +163,12 @@ public final class XmlPullParser implements IXmlPullParser
 	 * @return XXX
 	 * @throws ParseException
 	 */
-	public final ELEMENT_TYPE next() throws ParseException
+	public final HttpTagType next() throws ParseException
 	{
 		// Reached end of markup file?
 		if (input.getPosition() >= input.size())
 		{
-			return ELEMENT_TYPE.NOT_INITIALIZED;
+			return HttpTagType.NOT_INITIALIZED;
 		}
 
 		if (skipUntilText != null)
@@ -183,18 +183,19 @@ public final class XmlPullParser implements IXmlPullParser
 		// Tag or Body?
 		if (input.charAt(input.getPosition()) != '<')
 		{
+			// It's a BODY
 			if (openBracketIndex == -1)
 			{
 				// There is no next matching tag.
 				lastText = input.getSubstring(-1);
 				input.setPosition(input.size());
-				lastType = ELEMENT_TYPE.BODY;
+				lastType = HttpTagType.BODY;
 				return lastType;
 			}
 
 			lastText = input.getSubstring(openBracketIndex);
 			input.setPosition(openBracketIndex);
-			lastType = ELEMENT_TYPE.BODY;
+			lastType = HttpTagType.BODY;
 			return lastType;
 		}
 
@@ -218,14 +219,6 @@ public final class XmlPullParser implements IXmlPullParser
 		{
 			throw new ParseException("Found empty tag: '<>' at" + getLineAndColumnText(),
 				input.getPosition());
-		}
-
-		// Handle special tags like <!-- and <![CDATA ...
-		final char firstChar = tagText.charAt(0);
-		if ((firstChar == '!') || (firstChar == '?'))
-		{
-			specialTagHandling(tagText, openBracketIndex, closeBracketIndex);
-			return lastType;
 		}
 
 		// Type of the tag, to be determined next
@@ -266,19 +259,31 @@ public final class XmlPullParser implements IXmlPullParser
 			}
 		}
 
-		// Parse remaining tag text, obtaining a tag object or null
-		// if it's invalid
-		lastTag = parseTagText(tagText);
-		if (lastTag != null)
+		// Handle special tags like <!-- and <![CDATA ...
+		final char firstChar = tagText.charAt(0);
+		if ((firstChar == '!') || (firstChar == '?'))
 		{
-			// Populate tag fields
-			lastTag.type = type;
-			lastTag.text = new TextSegment(lastText, openBracketIndex, input.getLineNumber(),
-				input.getColumnNumber());
+			specialTagHandling(tagText, openBracketIndex, closeBracketIndex);
 
+			input.countLinesTo(openBracketIndex);
+			TextSegment text = new TextSegment(lastText, openBracketIndex, input.getLineNumber(),
+				input.getColumnNumber());
+			lastTag = new XmlTag(text, type);
+
+			return lastType;
+		}
+
+		TextSegment text = new TextSegment(lastText, openBracketIndex, input.getLineNumber(),
+			input.getColumnNumber());
+		XmlTag tag = new XmlTag(text, type);
+		lastTag = tag;
+
+		// Parse the tag text and populate tag attributes
+		if (parseTagText(tag, tagText))
+		{
 			// Move to position after the tag
 			input.setPosition(closeBracketIndex + 1);
-			lastType = ELEMENT_TYPE.TAG;
+			lastType = HttpTagType.TAG;
 			return lastType;
 		}
 		else
@@ -301,43 +306,62 @@ public final class XmlPullParser implements IXmlPullParser
 		// Handle comments
 		if (tagText.startsWith("!--"))
 		{
-			// Normal comment section.
-			// Skip ahead to "-->". Note that you can not simply test for
-			// tagText.endsWith("--") as the comment might contain a '>'
-			// inside.
-			int pos = input.find("-->", openBracketIndex + 1);
-			if (pos == -1)
+			// downlevel-revealed conditional comments e.g.: <!--[if (gt IE9)|!(IE)]><!-->
+			if (tagText.contains("![endif]--"))
 			{
-				throw new ParseException("Unclosed comment beginning at" + getLineAndColumnText(),
-					openBracketIndex);
+				lastType = HttpTagType.CONDITIONAL_COMMENT_ENDIF;
+
+				// Move to position after the tag
+				input.setPosition(closeBracketIndex + 1);
+				return;
 			}
 
-			pos += 3;
-			lastText = input.getSubstring(openBracketIndex, pos);
-			lastType = ELEMENT_TYPE.COMMENT;
-
-			// Conditional comment? E.g. "<!--[if IE]><a href='test.html'>my link</a><![endif]-->"
-			if (tagText.startsWith("!--[if ") && tagText.endsWith("]") &&
-				lastText.toString().endsWith("<![endif]-->"))
+			// Conditional comment? E.g.
+			// "<!--[if IE]><a href='test.html'>my link</a><![endif]-->"
+			if (tagText.startsWith("!--[if ") && tagText.endsWith("]"))
 			{
-				lastType = ELEMENT_TYPE.CONDITIONAL_COMMENT;
+				int pos = input.find("]-->", openBracketIndex + 1);
+				if (pos == -1)
+				{
+					throw new ParseException("Unclosed conditional comment beginning at" +
+						getLineAndColumnText(), openBracketIndex);
+				}
+
+				pos += 4;
+				lastText = input.getSubstring(openBracketIndex, pos);
 
 				// Actually it is no longer a comment. It is now
 				// up to the browser to select the section appropriate.
 				input.setPosition(closeBracketIndex + 1);
+				lastType = HttpTagType.CONDITIONAL_COMMENT;
 			}
 			else
 			{
+				// Normal comment section.
+				// Skip ahead to "-->". Note that you can not simply test for
+				// tagText.endsWith("--") as the comment might contain a '>'
+				// inside.
+				int pos = input.find("-->", openBracketIndex + 1);
+				if (pos == -1)
+				{
+					throw new ParseException("Unclosed comment beginning at" +
+						getLineAndColumnText(), openBracketIndex);
+				}
+
+				pos += 3;
+				lastText = input.getSubstring(openBracketIndex, pos);
+				lastType = HttpTagType.COMMENT;
 				input.setPosition(pos);
 			}
 			return;
 		}
 
 		// The closing tag of a conditional comment, e.g.
-		// "<!--[if IE]><a href='test.html'>my link</a><![endif]-->"
+		// "<!--[if IE]><a href='test.html'>my link</a><![endif]-->
+		// and also <!--<![endif]-->"
 		if (tagText.equals("![endif]--"))
 		{
-			lastType = ELEMENT_TYPE.CONDITIONAL_COMMENT;
+			lastType = HttpTagType.CONDITIONAL_COMMENT;
 			input.setPosition(closeBracketIndex + 1);
 			return;
 		}
@@ -373,14 +397,14 @@ public final class XmlPullParser implements IXmlPullParser
 				input.setPosition(closeBracketIndex + 1);
 
 				lastText = tagText;
-				lastType = ELEMENT_TYPE.CDATA;
+				lastType = HttpTagType.CDATA;
 				return;
 			}
 		}
 
 		if (tagText.charAt(0) == '?')
 		{
-			lastType = ELEMENT_TYPE.PROCESSING_INSTRUCTION;
+			lastType = HttpTagType.PROCESSING_INSTRUCTION;
 
 			// Move to position after the tag
 			input.setPosition(closeBracketIndex + 1);
@@ -389,7 +413,7 @@ public final class XmlPullParser implements IXmlPullParser
 
 		if (tagText.startsWith("!DOCTYPE"))
 		{
-			lastType = ELEMENT_TYPE.DOCTYPE;
+			lastType = HttpTagType.DOCTYPE;
 
 			// Get the tagtext between open and close brackets
 			doctype = input.getSubstring(openBracketIndex + 1, closeBracketIndex);
@@ -400,7 +424,7 @@ public final class XmlPullParser implements IXmlPullParser
 		}
 
 		// Move to position after the tag
-		lastType = ELEMENT_TYPE.SPECIAL_TAG;
+		lastType = HttpTagType.SPECIAL_TAG;
 		input.setPosition(closeBracketIndex + 1);
 	}
 
@@ -426,7 +450,7 @@ public final class XmlPullParser implements IXmlPullParser
 	 */
 	public final XmlTag nextTag() throws ParseException
 	{
-		while (next() != ELEMENT_TYPE.NOT_INITIALIZED)
+		while (next() != HttpTagType.NOT_INITIALIZED)
 		{
 			switch (lastType)
 			{
@@ -576,12 +600,13 @@ public final class XmlPullParser implements IXmlPullParser
 	/**
 	 * Parses the text between tags. For example, "a href=foo.html".
 	 * 
+	 * @param tag
 	 * @param tagText
 	 *            The text between tags
-	 * @return A new Tag object or null if the tag is invalid
+	 * @return false in case of an error
 	 * @throws ParseException
 	 */
-	private XmlTag parseTagText(final String tagText) throws ParseException
+	private boolean parseTagText(final XmlTag tag, final String tagText) throws ParseException
 	{
 		// Get the length of the tagtext
 		final int tagTextLength = tagText.length();
@@ -590,8 +615,6 @@ public final class XmlPullParser implements IXmlPullParser
 		final TagNameParser tagnameParser = new TagNameParser(tagText);
 		if (tagnameParser.matcher().lookingAt())
 		{
-			final XmlTag tag = new XmlTag();
-
 			// Extract the tag from the pattern matcher
 			tag.name = tagnameParser.getName();
 			tag.namespace = tagnameParser.getNamespace();
@@ -601,7 +624,7 @@ public final class XmlPullParser implements IXmlPullParser
 			int pos = tagnameParser.matcher().end(0);
 			if (pos == tagTextLength)
 			{
-				return tag;
+				return true;
 			}
 
 			// Extract attributes
@@ -643,13 +666,13 @@ public final class XmlPullParser implements IXmlPullParser
 				// attributes)
 				if (pos == tagTextLength)
 				{
-					return tag;
+					return true;
 				}
 			}
 
-			return tag;
+			return true;
 		}
 
-		return null;
+		return false;
 	}
 }

@@ -21,7 +21,7 @@ import java.text.ParseException;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.markup.parser.IXmlPullParser.ELEMENT_TYPE;
+import org.apache.wicket.markup.parser.IXmlPullParser.HttpTagType;
 import org.apache.wicket.util.resource.StringResourceStream;
 
 /**
@@ -283,9 +283,9 @@ public class XmlPullParserTest extends TestCase
 // assertTrue(tag.isOpen("tag"));
 		tag = parser.nextTag();
 // assertTrue(tag.isOpen("tag"));
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertTrue(tag.isClose());
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertNull(tag);
 	}
 
@@ -307,16 +307,16 @@ public class XmlPullParserTest extends TestCase
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<html><script language=\"JavaScript\">... <x a> ...</script></html>");
-		XmlTag tag = (XmlTag)parser.nextTag();
+		XmlTag tag = parser.nextTag();
 		assertTrue(tag.isOpen());
 		assertEquals("html", tag.getName());
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertTrue(tag.isOpen());
 		assertEquals("script", tag.getName());
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertTrue(tag.isClose());
 		assertEquals("script", tag.getName());
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertTrue(tag.isClose());
 		assertEquals("html", tag.getName());
 	}
@@ -329,13 +329,13 @@ public class XmlPullParserTest extends TestCase
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<!--[if IE]><a href='test.html'>my link</a><![endif]-->");
-		XmlTag tag = (XmlTag)parser.nextTag();
+		XmlTag tag = parser.nextTag();
 		assertTrue(tag.isOpen());
 		assertEquals("a", tag.getName());
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertTrue(tag.isClose());
 		assertEquals("a", tag.getName());
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertNull(tag);
 	}
 
@@ -347,21 +347,21 @@ public class XmlPullParserTest extends TestCase
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<!--[if IE]><a href='test.html'>my link</a><![endif]-->");
-		ELEMENT_TYPE type = parser.next();
-		assertEquals(type, ELEMENT_TYPE.CONDITIONAL_COMMENT);
+		HttpTagType type = parser.next();
+		assertEquals(type, HttpTagType.CONDITIONAL_COMMENT);
 		type = parser.next();
-		assertEquals(type, ELEMENT_TYPE.TAG);
-		assertTrue(((XmlTag)parser.getElement()).isOpen());
+		assertEquals(type, HttpTagType.TAG);
+		assertTrue((parser.getElement()).isOpen());
 		type = parser.next();
-		assertEquals(type, ELEMENT_TYPE.BODY);
+		assertEquals(type, HttpTagType.BODY);
 		type = parser.next();
-		assertEquals(type, ELEMENT_TYPE.TAG);
-		assertEquals("a", ((XmlTag)parser.getElement()).getName());
-		assertTrue(((XmlTag)parser.getElement()).isClose());
+		assertEquals(type, HttpTagType.TAG);
+		assertEquals("a", (parser.getElement()).getName());
+		assertTrue((parser.getElement()).isClose());
 		type = parser.next();
-		assertEquals(type, ELEMENT_TYPE.CONDITIONAL_COMMENT);
+		assertEquals(type, HttpTagType.CONDITIONAL_COMMENT);
 		type = parser.next();
-		assertEquals(type, ELEMENT_TYPE.NOT_INITIALIZED);
+		assertEquals(type, HttpTagType.NOT_INITIALIZED);
 	}
 
 	/**
@@ -372,17 +372,17 @@ public class XmlPullParserTest extends TestCase
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<filter-mapping>");
-		XmlTag tag = (XmlTag)parser.nextTag();
+		XmlTag tag = parser.nextTag();
 		assertTrue(tag.isOpen());
 		assertEquals("filter-mapping", tag.getName());
 
 		parser.parse("<filter.mapping>");
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertTrue(tag.isOpen());
 		assertEquals("filter.mapping", tag.getName());
 
 		parser.parse("<filter_mapping>");
-		tag = (XmlTag)parser.nextTag();
+		tag = parser.nextTag();
 		assertTrue(tag.isOpen());
 		assertEquals("filter_mapping", tag.getName());
 	}
@@ -395,8 +395,30 @@ public class XmlPullParserTest extends TestCase
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<!DOCTYPE html>");
-		ELEMENT_TYPE type = parser.next();
-		assertEquals(ELEMENT_TYPE.DOCTYPE, type);
+		HttpTagType type = parser.next();
+		assertEquals(HttpTagType.DOCTYPE, type);
 		assertEquals("!DOCTYPE html", parser.getDoctype());
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public final void testDownlevelRevealedConditionalComments() throws Exception
+	{
+		final XmlPullParser parser = new XmlPullParser();
+		parser.parse("<!--[if (gt IE 9)|!(IE)]><!--><html lang=\"en\" class=\"no-js\"><!--<![endif]--> <span>test</span>");
+		HttpTagType type = parser.next();
+		assertEquals(HttpTagType.CONDITIONAL_COMMENT, type);
+
+		type = parser.next();
+		assertEquals(HttpTagType.COMMENT, type);
+
+		type = parser.next();
+		assertEquals(HttpTagType.TAG, type);
+		XmlTag componentTag = parser.getElement();
+		assertEquals("html", componentTag.getName());
+
+		type = parser.next();
+		assertEquals(HttpTagType.CONDITIONAL_COMMENT_ENDIF, type);
 	}
 }

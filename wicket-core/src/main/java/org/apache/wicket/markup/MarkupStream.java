@@ -340,11 +340,13 @@ public class MarkupStream
 	/**
 	 * @param currentIndex
 	 *            New current index in the stream
+	 * @return this
 	 */
-	public void setCurrentIndex(final int currentIndex)
+	public MarkupStream setCurrentIndex(final int currentIndex)
 	{
 		current = get(currentIndex);
 		this.currentIndex = currentIndex;
+		return this;
 	}
 
 	/**

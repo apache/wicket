@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.IXmlPullParser;
+import org.apache.wicket.markup.parser.filter.ConditionalCommentFilter;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.parser.filter.HeadForceTagIdHandler;
 import org.apache.wicket.markup.parser.filter.HtmlHandler;
@@ -182,6 +183,7 @@ public class MarkupParser extends AbstractMarkupParser
 		filters.add(new RelativePathPrefixHandler());
 		filters.add(new EnclosureHandler());
 		filters.add(new StyleAndScriptIdentifier(markup));
+		filters.add(new ConditionalCommentFilter());
 
 		return filters;
 	}
