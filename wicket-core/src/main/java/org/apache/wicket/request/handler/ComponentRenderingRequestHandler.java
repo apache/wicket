@@ -19,6 +19,7 @@ package org.apache.wicket.request.handler;
 import org.apache.wicket.Component;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestableComponent;
+import org.apache.wicket.request.http.WebResponse;
 
 /**
  * Request handler that renders a component
@@ -51,6 +52,12 @@ public class ComponentRenderingRequestHandler implements IComponentRequestHandle
 
 	public void respond(IRequestCycle requestCycle)
 	{
+		// preventing the response to component from being cached
+		if (requestCycle.getResponse() instanceof WebResponse)
+		{
+			WebResponse response = (WebResponse)requestCycle.getResponse();
+			response.disableCaching();
+		}
 		component.render();
 	}
 
