@@ -24,6 +24,7 @@ import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.RawMarkup;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.XmlPullParser;
+import org.apache.wicket.util.string.JavaScriptUtils;
 
 
 /**
@@ -95,7 +96,8 @@ public final class StyleAndScriptIdentifier extends AbstractMarkupFilter
 								String text = body.toString().trim();
 								if (!text.startsWith("<!--") && !text.startsWith("<![CDATA["))
 								{
-									text = "<![CDATA[" + body.toString() + "]]>";
+									text = JavaScriptUtils.SCRIPT_CONTENT_PREFIX + body.toString() +
+										JavaScriptUtils.SCRIPT_CONTENT_SUFFIX;
 									markup.replace(i + 1, new RawMarkup(text));
 								}
 							}
