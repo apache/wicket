@@ -65,10 +65,19 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 			throw new WicketParseException("Wicket remove tag must not be an open-close tag:", tag);
 		}
 
-		// Find the corresponding close tag and remove all tags in between
-		ComponentTag closeTag;
-		while (null != (closeTag = (ComponentTag)getNextFilter().nextElement()))
+		// fetch markup elements
+		MarkupElement markupElement;
+		while ((markupElement = getNextFilter().nextElement()) != null)
 		{
+			// skip non-component tags
+			if((markupElement instanceof ComponentTag) == false)
+			{
+				continue;
+			}
+
+			// find the corresponding close tag for the given tag
+			ComponentTag closeTag = (ComponentTag)markupElement;
+
 			// No Wicket component tags are allowed within the preview region.
 			// Wicket components will a component name assigned.
 			if (closeTag.getId() == null)
