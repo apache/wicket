@@ -458,7 +458,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	{
 		if (url != null)
 		{
-			return getResponse().encodeURL(getUrlRenderer().renderUrl(url));
+			return getOriginalResponse().encodeURL(getUrlRenderer().renderUrl(url));
 		}
 		else
 		{
