@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.request.cycle;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataEntry;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
@@ -23,6 +24,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
+import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
@@ -494,6 +496,15 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		if (Session.exists())
 		{
 			Session.get().internalDetach();
+		}
+
+		if (Application.exists())
+		{
+			IRequestLogger requestLogger = Application.get().getRequestLogger();
+			if (requestLogger != null)
+			{
+				requestLogger.requestTime((System.currentTimeMillis() - startTime));
+			}
 		}
 	}
 
