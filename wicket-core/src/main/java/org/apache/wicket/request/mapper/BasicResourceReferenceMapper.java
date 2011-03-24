@@ -172,7 +172,11 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 			// setup resource parameters
 			PageParameters parameters = referenceRequestHandler.getPageParameters();
 
-			if (parameters != null)
+			if (parameters == null)
+			{
+				parameters = new PageParameters();
+			}
+			else
 			{
 				parameters = new PageParameters(parameters);
 
