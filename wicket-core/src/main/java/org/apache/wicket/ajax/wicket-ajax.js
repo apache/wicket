@@ -645,7 +645,7 @@ Wicket.Channel.prototype = {
 		}
 			
 		if (c != null && typeof(c) != "undefined") {
-			Wicket.Log.info("Calling posponed function...");
+			Wicket.Log.info("Calling postponed function...");
 			// we can't call the callback from this call-stack
 			// therefore we set it on timer event
 			window.setTimeout(c, 1);			
