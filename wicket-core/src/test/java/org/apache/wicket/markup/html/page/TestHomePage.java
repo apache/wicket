@@ -23,7 +23,9 @@ import org.apache.wicket.WicketTestCase;
  */
 public class TestHomePage extends WicketTestCase
 {
-
+	/**
+	 * 
+	 */
 	public void testRenderMyPage()
 	{
 		// no exception should occur

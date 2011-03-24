@@ -16,18 +16,34 @@
  */
 package org.apache.wicket.markup.html.page;
 
+import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
+/**
+ * 
+ */
 public class SimplePanel extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 */
 	public SimplePanel(String id)
 	{
 		super(id);
 
 		add(new Label("label", Model.of("Label")));
+	}
+
+	@Override
+	public IMarkupFragment getMarkup()
+	{
+		return Markup.get("<wicket:panel><span wicket:id='label'></span></wicket:panel>");
 	}
 }

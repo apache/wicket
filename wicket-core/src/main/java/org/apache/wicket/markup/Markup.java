@@ -16,13 +16,14 @@
  */
 package org.apache.wicket.markup;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -53,22 +54,32 @@ public class Markup implements IMarkupFragment
 	private final MarkupResourceStream markupResourceStream;
 
 	/**
+	 * Take the markup string, parse it and return the Markup (list of MarkupElements).
+	 * @param markup
+	 * @return Markup
+	 */
+	public static Markup get(final String markup)
+	{
+		try
+		{
+			return new MarkupParser(markup).parse();
+		}
+		catch (IOException ex)
+		{
+			throw new RuntimeException(ex);
+		}
+		catch (ResourceStreamNotFoundException ex)
+		{
+			throw new RuntimeException(ex);
+		}
+	}
+
+	/**
 	 * Private Constructor for NO_MARKUP only
 	 */
 	private Markup()
 	{
 		markupResourceStream = null;
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param markup
-	 *            The associated Markup
-	 */
-	public Markup(final CharSequence markup)
-	{
-		this(new MarkupResourceStream(new StringResourceStream(markup)));
 	}
 
 	/**

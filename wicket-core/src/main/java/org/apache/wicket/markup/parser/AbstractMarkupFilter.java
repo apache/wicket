@@ -40,9 +40,6 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	/** The next MarkupFilter in the chain */
 	private IMarkupFilter parent;
 
-	/** TODO Not sure this counter is sufficiently safe, since filters are created per markup file. */
-	private int count;
-
 	/**
 	 * Construct.
 	 */
@@ -128,26 +125,17 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 		return tag;
 	}
 
-	/**
-	 * Invoked if current element is raw markup
-	 * 
-	 * @param rawMarkup
-	 * @return Usually the same as the tag attribute
-	 */
+// /**
+// * Invoked if current element is raw markup
+// *
+// * @param rawMarkup
+// * @return Usually the same as the tag attribute
+// */
 // Not yet used
 // protected MarkupElement onRawMarkup(final MarkupElement rawMarkup)
 // {
 // return rawMarkup;
 // }
-
-	/**
-	 * 
-	 * @return A unique count per instance
-	 */
-	protected int getCount()
-	{
-		return count++;
-	}
 
 	public void postProcess(final Markup markup)
 	{

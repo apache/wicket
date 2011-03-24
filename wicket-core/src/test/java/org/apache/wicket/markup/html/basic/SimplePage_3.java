@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.markup.html.basic;
 
+import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.Markup;
+
 
 /**
  * Mock page for testing.
@@ -36,5 +39,19 @@ public class SimplePage_3 extends SimplePage
 		get("myPanel").setVisible(false);
 		get("myBorder").setVisible(false);
 		get("myBorder2").setVisible(false);
+	}
+
+	/**
+	 * @see org.apache.wicket.Page#getMarkup()
+	 */
+	@Override
+	public IMarkupFragment getMarkup()
+	{
+		return Markup.get("<html xmlns:wicket><body>" //
+			+ "<span wicket:id='myLabel'>mein Label</span>" //
+			+ "<span wicket:id='test'>body</span>" //
+			+ "<span wicket:id='myPanel'>panel</span>" //
+			+ "<span wicket:id='myBorder'>border</span>" //
+			+ "</body></html>");
 	}
 }

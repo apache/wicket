@@ -87,7 +87,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 			if (Strings.isEmpty(wicketIdValue))
 			{
 				// Make it a Wicket component. Otherwise it would be RawMarkup
-				tag.setId("_" + tag.getName() + getCount());
+				tag.setId("_wicket_" + tag.getName());
 				tag.setAutoComponentTag(true);
 				tag.setModified(true);
 			}
