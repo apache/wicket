@@ -627,7 +627,12 @@ Wicket.Channel.prototype = {
 	schedule: function(callback) {
 		if (this.busy == false) {
 			this.busy = true;			
-			return callback();
+			try {		
+				return callback();
+			} catch (exception) {
+				this.busy = false;
+				Wicket.Log.error("An error occurred while executing Ajax request:" + exception);
+			}
 		} else {
 			Wicket.Log.info("Channel busy - postponing...");
 			if (this.type == 's') // stack 
