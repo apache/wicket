@@ -209,7 +209,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 				segments.add(token);
 			}
 
-			if (parameters != null)
+			if (parameters.isEmpty() == false)
 			{
 				url = encodePageParameters(url, parameters, pageParametersEncoder);
 			}
