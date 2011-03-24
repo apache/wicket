@@ -1,0 +1,177 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.wicket.markup.html;
+
+import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.MarkupException;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.border.Border;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
+
+/**
+ * @author Pedro Santos
+ */
+public class TransparentWebMarkupContainerTest extends WicketTestCase
+{
+
+	/**
+	 * WICKET-3512
+	 * 
+	 * @throws Exception
+	 */
+	public void testMarkupInheritanceResolver() throws Exception
+	{
+		executeTest(MarkupInheritanceResolverTestPage3.class,
+			"MarkupInheritanceResolverTestPage_expected.html");
+	}
+
+	/**
+	 * 
+	 */
+	public void testUnableToFindComponents()
+	{
+		try
+		{
+			tester.startPage(TestPage.class);
+			fail();
+		}
+		catch (MarkupException e)
+		{
+			assertTrue(e.getMessage(),
+				e.getMessage().contains("Unable to find component with id 'c1'"));
+		}
+	}
+
+	/**
+	 * Test if the render is OK even if users define its own component with the same id
+	 * WicketTagIdentifier is generation for internal components.
+	 */
+	public void testUsingGeneratedWicketIdAreSafe1()
+	{
+		tester.startPage(TestPage2.class);
+		assertTrue(tester.getLastResponseAsString().contains("test_message"));
+
+	}
+
+	/**
+	 * Same test in different scenario
+	 */
+	public void testUsingGeneratedWicketIdAreSafe2()
+	{
+		tester.startPage(TestPage3.class);
+		String expected = tester.getApplication()
+			.getResourceSettings()
+			.getLocalizer()
+			.getString("null", null);
+		assertTrue(tester.getLastResponseAsString().contains(expected));
+	}
+
+	/** */
+	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
+	{
+		private static final long serialVersionUID = 1L;
+
+		/** */
+		public TestPage()
+		{
+			add(new TestBorder("border"));
+		}
+
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream("" + //
+				"<html><body>" + //
+				"	<div wicket:id=\"border\">" + //
+				"		<div wicket:id=\"c1\"></div>" + // component is only at the markup
+				"	</div>" + //
+				"</body></html>");
+		}
+	}
+	private static class TestBorder extends Border implements IMarkupResourceStreamProvider
+	{
+		private static final long serialVersionUID = 1L;
+
+		private TestBorder(String id)
+		{
+			super(id);
+			addToBorder(new Label("c1", "some border title"));
+		}
+
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream(
+				"<wicket:border><div wicket:id=\"c1\"></div><wicket:body /></wicket:border>");
+		}
+	}
+
+	/** */
+	public static class TestPage2 extends WebPage implements IMarkupResourceStreamProvider
+	{
+		private static final long serialVersionUID = 1L;
+
+		/** */
+		public TestPage2()
+		{
+			add(new Label("_wicket_enclosure"));
+			add(new TransparentWebMarkupContainer("container").add(new Label("msg", "test_message")));
+		}
+
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream("" + //
+				"<html><body>" + //
+				"	<div wicket:id=\"_wicket_enclosure\"></div>" + //
+				"	<div wicket:id=\"container\">" + //
+				"		<wicket:enclosure child=\"msg\">" + //
+				"			<span wicket:id=\"msg\"></span>" + //
+				"		</wicket:enclosure>" + //
+				"	</div>" + //
+				"</body></html>");
+		}
+	}
+
+	/** */
+	public static class TestPage3 extends WebPage implements IMarkupResourceStreamProvider
+	{
+		private static final long serialVersionUID = 1L;
+
+		/** */
+		public TestPage3()
+		{
+			add(new WebComponent("_wicket_message"));
+			add(new TransparentWebMarkupContainer("container"));
+		}
+
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream("" + //
+				"<html><body>" + //
+				"	<div wicket:id=\"_wicket_message\"></div>" + //
+				"	<div wicket:id=\"container\">" + //
+				"		<wicket:message key=\"null\" />" + //
+				"	</div>" + //
+				"</body></html>");
+		}
+	}
+}

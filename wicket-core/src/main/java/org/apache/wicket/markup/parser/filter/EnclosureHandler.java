@@ -156,7 +156,8 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 		if ((tag instanceof WicketTag) && ((WicketTag)tag).isEnclosureTag())
 		{
 			// Yes, we handled the tag
-			return new Enclosure(tag.getId(), tag.getAttribute(EnclosureHandler.CHILD_ATTRIBUTE));
+			return new Enclosure(tag.getId() + container.getPage().getAutoIndex(),
+				tag.getAttribute(EnclosureHandler.CHILD_ATTRIBUTE));
 		}
 
 		// We were not able to handle the tag

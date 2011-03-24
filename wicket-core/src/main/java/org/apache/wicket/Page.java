@@ -1155,4 +1155,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			setFreezePageId(false);
 		}
 	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
+	 * 
+	 * @param component
+	 * @return if this component was render in this page
+	 */
+	public final boolean wasRendered(Component component)
+	{
+		return renderedComponents != null && renderedComponents.contains(component);
+	}
 }
