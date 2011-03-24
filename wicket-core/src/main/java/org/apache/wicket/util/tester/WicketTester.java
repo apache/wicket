@@ -541,6 +541,10 @@ public class WicketTester extends BaseWicketTester
 		}
 	}
 
+	/**
+	 * 
+	 * @param link
+	 */
 	public void clickLink(Component link)
 	{
 		clickLink(link.getPageRelativePath());
@@ -612,6 +616,24 @@ public class WicketTester extends BaseWicketTester
 
 		startPage(page);
 		assertRenderedPage(page.getClass());
+		assertResultPage(testClass, filename);
+	}
+
+	/**
+	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
+	 * output file.
+	 * 
+	 * @param testClass
+	 * @param component
+	 * @param filename
+	 * @throws Exception
+	 */
+	public void executeTest(final Class<?> testClass, final Component component,
+		final String filename) throws Exception
+	{
+		log.info("=== " + component.getClass().getName() + " ===");
+
+		startComponent(component);
 		assertResultPage(testClass, filename);
 	}
 

@@ -113,6 +113,7 @@ import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.lang.Classes;
+import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
@@ -175,12 +176,11 @@ public class BaseWicketTester
 	private MockHttpServletRequest lastRequest;
 	private MockHttpServletResponse lastResponse;
 
-	private final List<MockHttpServletRequest> previousRequests = new ArrayList<MockHttpServletRequest>();
-	private final List<MockHttpServletResponse> previousResponses = new ArrayList<MockHttpServletResponse>();
+	private final List<MockHttpServletRequest> previousRequests = Generics.newArrayList();
+	private final List<MockHttpServletResponse> previousResponses = Generics.newArrayList();
 
-	/** current request */
+	/** current request and response */
 	private MockHttpServletRequest request;
-	/** current response */
 	private MockHttpServletResponse response;
 
 	/** current session */
@@ -198,7 +198,7 @@ public class BaseWicketTester
 	private IRequestHandler forcedHandler;
 
 	// Simulates the cookies maintained by the browser
-	private final List<Cookie> browserCookies = new ArrayList<Cookie>();
+	private final List<Cookie> browserCookies = Generics.newArrayList();
 
 	// The root component used for the start. Usually the Page, but can also be a Panel
 	// see https://issues.apache.org/jira/browse/WICKET-1214
@@ -356,7 +356,8 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * @return
+	 * @param servletWebRequest
+	 * @return servlet web response
 	 */
 	private ServletWebResponse createServletWebResponse(ServletWebRequest servletWebRequest)
 	{
@@ -364,7 +365,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * @return
+	 * @return servlet web request
 	 */
 	private ServletWebRequest createServletWebRequest()
 	{
@@ -377,13 +378,13 @@ public class BaseWicketTester
 	private void createNewSession()
 	{
 		ThreadContext.setSession(null);
+
 		// the following will create a new session and put it in the thread context
 		session = Session.get();
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return request object
 	 */
 	public MockHttpServletRequest getRequest()
 	{
@@ -391,17 +392,15 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
 	 * @param request
 	 */
-	public void setRequest(MockHttpServletRequest request)
+	public void setRequest(final MockHttpServletRequest request)
 	{
 		this.request = request;
 		applyRequest();
 	}
 
 	/**
-	 * 
 	 * @return session
 	 */
 	public Session getSession()
@@ -450,8 +449,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return true, if process was executed successfully
 	 */
 	public boolean processRequest()
 	{
@@ -463,7 +461,6 @@ public class BaseWicketTester
 	 * 
 	 * @param request
 	 *            request to process
-	 * 
 	 */
 	public void processRequest(MockHttpServletRequest request)
 	{
@@ -475,10 +472,10 @@ public class BaseWicketTester
 	 * 
 	 * @param request
 	 *            request to process
-	 * 
 	 * @param forcedRequestHandler
 	 *            optional parameter to override parsing the request URL and force
 	 *            {@link IRequestHandler}
+	 * @return true, if process was executed successfully
 	 */
 	public boolean processRequest(MockHttpServletRequest request,
 		IRequestHandler forcedRequestHandler)
@@ -487,9 +484,8 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
 	 * @param forcedRequestHandler
-	 * @return
+	 * @return true, if process was executed successfully
 	 */
 	public boolean processRequest(IRequestHandler forcedRequestHandler)
 	{
@@ -501,10 +497,10 @@ public class BaseWicketTester
 	 * @param forcedRequest
 	 * @param forcedRequestHandler
 	 * @param redirect
-	 * @return
+	 * @return true, if process was executed successfully
 	 */
-	private boolean processRequest(MockHttpServletRequest forcedRequest,
-		IRequestHandler forcedRequestHandler, boolean redirect)
+	private boolean processRequest(final MockHttpServletRequest forcedRequest,
+		final IRequestHandler forcedRequestHandler, final boolean redirect)
 	{
 		if (forcedRequest != null)
 		{
@@ -634,6 +630,7 @@ public class BaseWicketTester
 	 * @see #startPage(IPageProvider)
 	 * 
 	 * @param page
+	 * @return Page
 	 */
 	public Page startPage(Page page)
 	{
@@ -724,7 +721,7 @@ public class BaseWicketTester
 		XmlPullParser parser = new XmlPullParser();
 		parser.parse(getLastResponseAsString());
 		XmlTag tag;
-		while ((tag = (XmlTag)parser.nextTag()) != null)
+		while ((tag = parser.nextTag()) != null)
 		{
 			if (tag.isOpen() && tag.getName().equals("script") &&
 				"wicket-ajax-base-url".equals(tag.getAttribute("id")))
@@ -791,7 +788,7 @@ public class BaseWicketTester
 	 * @param link
 	 * @return url for Link
 	 */
-	public String urlFor(Link link)
+	public String urlFor(Link<?> link)
 	{
 		return link.urlFor(ILinkListener.INTERFACE).toString();
 	}
@@ -831,7 +828,7 @@ public class BaseWicketTester
 	 * @param component
 	 * @param listener
 	 */
-	public void executeListener(Component component, RequestListenerInterface listener)
+	public void executeListener(final Component component, final RequestListenerInterface listener)
 	{
 		// there are two ways to do this. RequestCycle could be forced to call the handler
 		// directly but constructing and parsing the URL increases the chance of triggering bugs
@@ -852,7 +849,7 @@ public class BaseWicketTester
 	 * @param component
 	 *            the listener to invoke
 	 */
-	public void executeListener(Component component)
+	public void executeListener(final Component component)
 	{
 		for (RequestListenerInterface iface : RequestListenerInterface.getRegisteredInterfaces())
 		{
@@ -883,9 +880,9 @@ public class BaseWicketTester
 	/**
 	 * 
 	 * @param link
-	 * @return
+	 * @return Url
 	 */
-	public Url urlFor(AjaxLink<?> link)
+	public Url urlFor(final AjaxLink<?> link)
 	{
 		AbstractAjaxBehavior behavior = WicketTesterHelper.findAjaxEventBehavior(link, "onclick");
 		Url url = Url.parse(behavior.getCallbackUrl().toString(),
@@ -898,7 +895,7 @@ public class BaseWicketTester
 	 * 
 	 * @param url
 	 */
-	public void executeAjaxUrl(Url url)
+	public void executeAjaxUrl(final Url url)
 	{
 		transform(url);
 		request.setUrl(url);
@@ -911,12 +908,11 @@ public class BaseWicketTester
 	 * Renders a <code>Page</code> from its default constructor.
 	 * 
 	 * @param <C>
-	 * 
 	 * @param pageClass
 	 *            a test <code>Page</code> class with default constructor
 	 * @return the rendered <code>Page</code>
 	 */
-	public final <C extends Page> Page startPage(Class<C> pageClass)
+	public final <C extends Page> Page startPage(final Class<C> pageClass)
 	{
 		startComponent = null;
 		request.setUrl(application.getRootRequestMapper().mapHandler(
@@ -929,14 +925,14 @@ public class BaseWicketTester
 	 * Renders a <code>Page</code> from its default constructor.
 	 * 
 	 * @param <C>
-	 * 
 	 * @param pageClass
 	 *            a test <code>Page</code> class with default constructor
 	 * @param parameters
 	 *            the parameters to use for the class.
 	 * @return the rendered <code>Page</code>
 	 */
-	public final <C extends Page> Page startPage(Class<C> pageClass, PageParameters parameters)
+	public final <C extends Page> Page startPage(final Class<C> pageClass,
+		final PageParameters parameters)
 	{
 		startComponent = null;
 		request.setUrl(application.getRootRequestMapper().mapHandler(
@@ -1021,7 +1017,6 @@ public class BaseWicketTester
 	 * be relative to the panel. Not relative to the Page which will automatically be added for you.
 	 * 
 	 * @param <C>
-	 * 
 	 * @param panelClass
 	 *            a test <code>Panel</code> class with <code>Panel(String id)</code> constructor
 	 * @return a rendered <code>Panel</code>
@@ -1838,7 +1833,8 @@ public class BaseWicketTester
 	 * Modified version of BaseWicketTester#getTagByWicketId(String) that returns all matching tags
 	 * instead of just the first.
 	 * 
-	 * @see BaseWicketTester#getTagByWicketId(String)
+	 * @param wicketId
+	 * @return List of Tags
 	 */
 	public List<TagTester> getTagsByWicketId(String wicketId)
 	{
@@ -1992,7 +1988,7 @@ public class BaseWicketTester
 	 * 
 	 * @param message
 	 * @param condition
-	 * @return
+	 * @return fail with message if false
 	 */
 	private Result isTrue(String message, boolean condition)
 	{
@@ -2007,7 +2003,7 @@ public class BaseWicketTester
 	 * 
 	 * @param message
 	 * @param condition
-	 * @return
+	 * @return fail with message if true
 	 */
 	private Result isFalse(String message, boolean condition)
 	{
@@ -2022,7 +2018,7 @@ public class BaseWicketTester
 	 * 
 	 * @param expected
 	 * @param actual
-	 * @return
+	 * @return fail with message if not equal
 	 */
 	protected final Result isEqual(Object expected, Object actual)
 	{
@@ -2055,7 +2051,7 @@ public class BaseWicketTester
 	 * 
 	 * @param message
 	 * @param object
-	 * @return
+	 * @return fail with message if not null
 	 */
 	private Result isNull(String message, Object object)
 	{
@@ -2087,7 +2083,6 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
 	 * @param message
 	 */
 	protected final void fail(String message)
@@ -2106,8 +2101,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return request cycle
 	 */
 	public RequestCycle getRequestCycle()
 	{
@@ -2115,8 +2109,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return servlet response
 	 */
 	public MockHttpServletResponse getResponse()
 	{
@@ -2124,8 +2117,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return last request
 	 */
 	public MockHttpServletRequest getLastRequest()
 	{
@@ -2133,8 +2125,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return true, if exceptions are exposed
 	 */
 	public boolean isExposeExceptions()
 	{
@@ -2159,6 +2150,7 @@ public class BaseWicketTester
 	}
 
 	/**
+	 * @param setBaseUrl
 	 * @param useRequestUrlAsBase
 	 */
 	public void setUseRequestUrlAsBase(boolean setBaseUrl)
@@ -2170,7 +2162,7 @@ public class BaseWicketTester
 	 * 
 	 * @param _url
 	 */
-	public void executeUrl(String _url)
+	public void executeUrl(final String _url)
 	{
 		Url url = Url.parse(_url, Charset.forName(request.getCharacterEncoding()));
 		transform(url);
@@ -2285,7 +2277,6 @@ public class BaseWicketTester
 				return delegate.mapRequest(request);
 			}
 		}
-
 	}
 
 	/**
@@ -2381,7 +2372,6 @@ public class BaseWicketTester
 			{
 				webResponse.addCookie(cookie);
 			}
-
 		}
 
 		@Override
