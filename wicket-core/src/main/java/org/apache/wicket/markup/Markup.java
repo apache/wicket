@@ -55,10 +55,15 @@ public class Markup implements IMarkupFragment
 
 	/**
 	 * Take the markup string, parse it and return the Markup (list of MarkupElements).
+	 * <p>
+	 * Limitation: Please note that MarkupFactory is NOT used and thus no caching is used (which
+	 * doesn't matter for Strings anyway), but what might matter is that your own MarkupFilters are
+	 * not applied, which you might have registered with MarkupFactory.
+	 * 
 	 * @param markup
 	 * @return Markup
 	 */
-	public static Markup get(final String markup)
+	public static Markup of(final String markup)
 	{
 		try
 		{

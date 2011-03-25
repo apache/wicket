@@ -44,6 +44,6 @@ public class SimplePanel extends Panel
 	@Override
 	public IMarkupFragment getMarkup()
 	{
-		return Markup.get("<wicket:panel><span wicket:id='label'></span></wicket:panel>");
+		return Markup.of("<wicket:panel><span wicket:id='label'></span></wicket:panel>");
 	}
 }

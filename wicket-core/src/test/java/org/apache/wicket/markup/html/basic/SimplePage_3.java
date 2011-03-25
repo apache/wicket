@@ -47,7 +47,7 @@ public class SimplePage_3 extends SimplePage
 	@Override
 	public IMarkupFragment getMarkup()
 	{
-		return Markup.get("<html xmlns:wicket><body>" //
+		return Markup.of("<html xmlns:wicket><body>" //
 			+ "<span wicket:id='myLabel'>mein Label</span>" //
 			+ "<span wicket:id='test'>body</span>" //
 			+ "<span wicket:id='myPanel'>panel</span>" //

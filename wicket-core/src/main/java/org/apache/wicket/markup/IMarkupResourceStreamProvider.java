@@ -23,6 +23,9 @@ import org.apache.wicket.util.resource.IResourceStream;
  * To be implemented by MarkupContainer which wish to implement their own algorithms for loading the
  * markup resource stream.
  * <p>
+ * Since 1.5 you may also use Component.setMarkup() or getMarkup() to attach Markup to your
+ * component.
+ * <p>
  * Note: IResourceStreamLocators should be used in case the strategy to find a markup resource is
  * meant to be applied to ALL components of your application.
  * <p>
