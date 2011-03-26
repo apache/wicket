@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.proxy;
 
-import java.io.InvalidClassException;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
@@ -228,14 +227,16 @@ public class LazyInitProxyFactory
 
 		private Object readResolve() throws ObjectStreamException
 		{
-			Class<?> clazz;
-			clazz = WicketObjects.resolveClass(type);
-			if (clazz == null)
+			try
 			{
-				throw new InvalidClassException(type, "could not resolve class [" + type +
-					"] when deserializing proxy");
+				Class<?> clazz = WicketObjects.resolveClass(type);
+				return LazyInitProxyFactory.createProxy(clazz, locator);
 			}
-			return LazyInitProxyFactory.createProxy(clazz, locator);
+			catch (ClassNotFoundException e)
+			{
+				throw new RuntimeException("Could not resolve class [" + type +
+					"] when deserializing proxy", e);
+			}
 		}
 	}
 
