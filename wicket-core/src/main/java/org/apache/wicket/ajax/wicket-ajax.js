@@ -122,6 +122,7 @@ Wicket.Log = {
 	}
 },
 
+
 /**
  * Functions executer takes array of functions and executes them. Each function gets
  * the notify object, which needs to be called for the next function to be executed.
@@ -167,6 +168,12 @@ Wicket.FunctionsExecuter.prototype = {
 		this.processNext();
 	}
 }
+
+/*
+  WICKET-3473 Helper to proceed to next step, execution of notify needs to be delayed until the head contributions are loaded
+*/
+Wicket.functionExecuterSeq = 0;
+Wicket.functionExecuterCallbacks = {};
 
 Wicket.replaceOuterHtmlIE = function(element, text) {						
 
@@ -1630,12 +1637,13 @@ Wicket.Head.Contributor.prototype = {
 				// load the external javascript using Wicket.Ajax.Request
 				
 				// callback when script is loaded
-				var onLoad = function(content) {					
-					Wicket.Head.addJavascript(content, null, src);
-					Wicket.Ajax.invokePostCallHandlers();
-
-					// continue to next step
-					notify();
+                var callBackIdentifier = 'script' + (Wicket.functionExecuterSeq++);
+                var onLoad = function(content) {
+                    Wicket.functionExecuterCallbacks[callBackIdentifier] = function() {
+                        Wicket.Ajax.invokePostCallHandlers();
+                        notify();
+                    }
+					Wicket.Head.addJavascript(content+"; Wicket.functionExecuterCallbacks['"+callBackIdentifier+"'](); delete Wicket.functionExecuterCallbacks['"+callBackIdentifier+"']; ", null, src);
 				}
 				// we need to schedule the request as timeout
 				// calling xml http request from another request call stack doesn't work
