@@ -43,8 +43,15 @@ public class ComponentInitializationTest extends WicketTestCase
 		TestComponent t3 = new TestComponent("t3");
 		TestComponent t4 = new TestComponent("t4");
 
-		// as soon as we add to page child should be initialized
+		// component is not initialized until the page has been
 		page.add(t1);
+		assertEquals(0, page.getCount());
+		assertEquals(0, t1.getCount());
+
+		// initialize the page which will initialize t1 and make subsequent component
+		// initializations immediate on add
+		page.internalInitialize();
+		assertEquals(1, page.getCount());
 		assertEquals(1, t1.getCount());
 
 		// unless the page is available no initialization takes place
@@ -79,6 +86,7 @@ public class ComponentInitializationTest extends WicketTestCase
 		t1.add(t2);
 		t2.add(t3);
 
+		page.internalInitialize();
 		page.add(t1);
 
 		assertEquals(1, t1.getCount());
@@ -100,6 +108,8 @@ public class ComponentInitializationTest extends WicketTestCase
 	public void testOnInitializeSuperVerified()
 	{
 		TestPage page = new TestPage();
+		page.internalInitialize();
+
 		boolean illegalState = false;
 		try
 		{
@@ -122,6 +132,8 @@ public class ComponentInitializationTest extends WicketTestCase
 		WebPage page = new WebPage()
 		{
 		};
+		page.internalInitialize();
+
 		TestComponent t1 = new TestComponent("t1");
 		TestComponent t2 = new TestComponent("t2");
 
@@ -144,6 +156,9 @@ public class ComponentInitializationTest extends WicketTestCase
 		WebPage page = new WebPage()
 		{
 		};
+
+		page.internalInitialize();
+
 		TestComponent t1 = new TestComponent("t1");
 		TestComponent t2 = new TestComponent("t2");
 		TestComponent t3 = new TestComponent("t3");
@@ -164,14 +179,24 @@ public class ComponentInitializationTest extends WicketTestCase
 
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
-		public TestPage()
-		{
-		}
+		private int count;
 
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{
 			return new StringResourceStream("<html><body></body></html>");
+		}
+
+		@Override
+		protected void onInitialize()
+		{
+			super.onInitialize();
+			count++;
+		}
+
+		public int getCount()
+		{
+			return count;
 		}
 	}
 

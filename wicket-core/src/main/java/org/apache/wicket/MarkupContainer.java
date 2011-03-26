@@ -924,7 +924,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			page.componentAdded(child);
 
 			// initialie the component
-			child.internalInitialize();
+			if (page.getFlag(FLAG_INITIALIZED))
+			{
+				child.internalInitialize();
+			}
 		}
 
 		// if the PREPARED_FOR_RENDER flag is set, we have already called

@@ -572,17 +572,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		return stateless;
 	}
 
-	@Override
-	protected final void onInitialize()
-	{
-		/*
-		 * final in the page because: *** doesnt make sense for pages *** can be called from page's
-		 * constructor - which is bad *** if delayed can lead to page not being initialized after
-		 * its constructor call - which is bad
-		 */
-		super.onInitialize();
-	}
-
 	/**
 	 * Redirect to this page.
 	 * 
@@ -1017,12 +1006,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	final void componentAdded(final Component component)
 	{
-		if (!getFlag(FLAG_INITIALIZED))
-		{
-			// initialize the page if not yet initialized
-			internalInitialize();
-		}
-
 		if (!component.isAuto())
 		{
 			dirty();
