@@ -72,11 +72,13 @@ public class DatePickerTest extends WicketTestCase
 	}
 
 	/**
+	 * Tests conversion of input for DateTimeField and DateField.
+	 * 
 	 * @throws Exception
 	 */
-	public void test2() throws Exception
+	public void testDateFieldInput() throws Exception
 	{
-		log.debug("=========== test2() =================");
+		log.debug("=========== testDateFieldInput() =================");
 		Class<? extends Page> pageClass = DatesPage2.class;
 		Date date = new GregorianCalendar(2010, 10, 6, 0, 0).getTime();
 		tester.getSession().setLocale(Locale.GERMAN);
@@ -98,12 +100,14 @@ public class DatePickerTest extends WicketTestCase
 	}
 
 	/**
-	 *
+	 * Tests conversion of input for DateTimeField and DateField when the client and server are in
+	 * different time zones.
+	 * 
 	 * @throws Exception
 	 */
-	public void test3() throws Exception
+	public void testDateFieldInputTimezone() throws Exception
 	{
-		log.debug("=========== test3() =================");
+		log.debug("=========== testDateFieldInputTimezone() =================");
 		TimeZone tzClient = TimeZone.getTimeZone("America/Los_Angeles");
 		TimeZone tzServer = TimeZone.getTimeZone("Europe/Berlin");
 
@@ -175,9 +179,9 @@ public class DatePickerTest extends WicketTestCase
 	}
 
 	/**
-	 * Test date conversion with the server having a different current date than the client time
-	 * zone.
-	 *
+	 * Test date conversion with the server's time zone having a different current date than the
+	 * client time zone.
+	 * 
 	 * @throws ParseException
 	 */
 	public void testDifferentDateTimeZoneConversion() throws ParseException
@@ -185,12 +189,11 @@ public class DatePickerTest extends WicketTestCase
 		log.debug("=========== testDifferentDateTimeZoneConversion() =================");
 		TimeZone origJvmDef = TimeZone.getDefault();
 		DateTimeZone origJodaDef = DateTimeZone.getDefault();
-		TimeZone tzClient = TimeZone.getTimeZone("Australia/South");
-		TimeZone tzServer = TimeZone.getTimeZone("Europe/Berlin");
+		TimeZone tzClient = TimeZone.getTimeZone("GMT+14");
+		TimeZone tzServer = TimeZone.getTimeZone("GMT-12");
 
 		TimeZone.setDefault(tzServer);
 		DateTimeZone.setDefault(DateTimeZone.forTimeZone(tzServer));
-		// Locale.setDefault(Locale.GERMAN);
 
 		Class<? extends Page> pageClass = DatesPage2.class;
 		MutableDateTime dt = new MutableDateTime(DateTimeZone.forTimeZone(tzClient));
@@ -222,16 +225,112 @@ public class DatePickerTest extends WicketTestCase
 		DateTimeZone.setDefault(origJodaDef);
 	}
 
+	/**
+	 * Test date conversion with the server's time zone having a different current date than the
+	 * client time zone using a Locale with am/pm style time.
+	 */
+	public void testDifferentDateTimeZoneConversionAMPM()
+	{
+		TimeZone origJvmDef = TimeZone.getDefault();
+		DateTimeZone origJodaDef = DateTimeZone.getDefault();
+		TimeZone tzClient = TimeZone.getTimeZone("GMT+14");
+		TimeZone tzServer = TimeZone.getTimeZone("GMT-12");
+
+		TimeZone.setDefault(tzServer);
+		DateTimeZone.setDefault(DateTimeZone.forTimeZone(tzServer));
+
+		Class<? extends Page> pageClass = DatesPage2.class;
+		MutableDateTime dt = new MutableDateTime(DateTimeZone.forTimeZone(tzClient));
+		dt.setDateTime(2010, 11, 6, 22, 0, 0, 0);
+		Date date = new Date(dt.getMillis());
+
+		WebClientInfo clientInfo = (WebClientInfo)tester.getSession().getClientInfo();
+		clientInfo.getProperties().setTimeZone(tzClient);
+
+		tester.getSession().setLocale(Locale.US);
+		tester.startPage(pageClass);
+		tester.assertRenderedPage(pageClass);
+		FormTester formTester = tester.newFormTester("form");
+		formTester.setValue("dateTimeField:date", "11/06/2010");
+		formTester.setValue("dateTimeField:hours", "10");
+		formTester.setValue("dateTimeField:minutes", "00");
+		formTester.setValue("dateTimeField:amOrPmChoice", "1");
+		formTester.submit();
+
+		DatesPage2 page = (DatesPage2)tester.getLastRenderedPage();
+
+		log.debug("orig: " + date.getTime() + "; dateTime: " + page.dateTime.getTime());
+		log.debug("orig: " + date + "; dateTime: " + page.dateTime);
+		assertEquals(0, date.compareTo(page.dateTime));
+
+		TimeZone.setDefault(origJvmDef);
+		DateTimeZone.setDefault(origJodaDef);
+	}
+
+	/**
+	 * Test time conversion for TimeField. The day, month, year of the TimeField model should not be
+	 * changed. The hours and minutes should be converted to the server's time zone based on the
+	 * day, month and year of the Date model.
+	 */
+	public void testTimeFieldDST()
+	{
+		TimeZone origJvmDef = TimeZone.getDefault();
+		DateTimeZone origJodaDef = DateTimeZone.getDefault();
+		TimeZone tzClient = TimeZone.getTimeZone("Canada/Eastern");
+		TimeZone tzServer = TimeZone.getTimeZone("GMT");
+
+		TimeZone.setDefault(tzServer);
+		DateTimeZone.setDefault(DateTimeZone.forTimeZone(tzServer));
+		WebClientInfo clientInfo = (WebClientInfo)tester.getSession().getClientInfo();
+		clientInfo.getProperties().setTimeZone(tzClient);
+		tester.getSession().setLocale(Locale.GERMAN);
+
+		// Test with standard time (in client time zone)
+		MutableDateTime dt = new MutableDateTime(DateTimeZone.forTimeZone(tzClient));
+		dt.setDateTime(2010, 1, 15, 0, 0, 0, 0);
+		Date date = new Date(dt.getMillis());
+		DatesPage2 testPage = new DatesPage2();
+		testPage.time = date;
+		tester.startPage(testPage);
+		FormTester formTester = tester.newFormTester("form");
+		formTester.setValue("timeField:hours", "00");
+		formTester.setValue("timeField:minutes", "00");
+		formTester.submit();
+		assertEquals(date, testPage.time);
+
+		// Test with daylight savings time (in client time zone)
+		dt = new MutableDateTime(DateTimeZone.forTimeZone(tzClient));
+		dt.setDateTime(2010, 7, 15, 0, 0, 0, 0);
+		date = new Date(dt.getMillis());
+		testPage = new DatesPage2();
+		testPage.time = date;
+		tester.startPage(testPage);
+		formTester = tester.newFormTester("form");
+		formTester.setValue("timeField:hours", "00");
+		formTester.setValue("timeField:minutes", "00");
+		formTester.submit();
+		assertEquals(date, testPage.time);
+
+		TimeZone.setDefault(origJvmDef);
+		DateTimeZone.setDefault(origJodaDef);
+	}
+
+	/**
+	 * Test StyleDateConverter with the server's time zone having a different current date than the
+	 * client time zone.
+	 * 
+	 * @throws ParseException
+	 */
 	public void testStyleDateConverterTimeZoneDifference() throws ParseException
 	{
 		TimeZone origJvmDef = TimeZone.getDefault();
 		DateTimeZone origJodaDef = DateTimeZone.getDefault();
-		TimeZone tzClient = TimeZone.getTimeZone("Etc/GMT-14");
-		TimeZone tzServer = TimeZone.getTimeZone("Etc/GMT+12");
+
+		TimeZone tzClient = TimeZone.getTimeZone("GMT+14");
+		TimeZone tzServer = TimeZone.getTimeZone("GMT-12");
 
 		TimeZone.setDefault(tzServer);
 		DateTimeZone.setDefault(DateTimeZone.forTimeZone(tzServer));
-		Locale.setDefault(Locale.GERMANY);
 
 		WebClientInfo clientInfo = (WebClientInfo)tester.getSession().getClientInfo();
 		clientInfo.getProperties().setTimeZone(tzClient);
@@ -242,19 +341,83 @@ public class DatePickerTest extends WicketTestCase
 		cal.set(2011, 10, 5, 0, 0, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 
-		Locale.setDefault(Locale.US);
-
 		Date dateRef = cal.getTime();
 		Date date = converter.convertToObject("05.11.2011", Locale.GERMANY);
 		log.debug("ref: " + dateRef.getTime() + "; converted: " + date.getTime());
 		log.debug("ref: " + dateRef + "; date: " + date);
-		assertEquals(0, dateRef.compareTo(date));
+		assertEquals(dateRef, date);
 
 		TimeZone.setDefault(origJvmDef);
 		DateTimeZone.setDefault(origJodaDef);
 	}
+
 	/**
-	 *
+	 * Validates the "value" tags of the &ltinput&gt fields for DateTimeField, DateField and
+	 * TimeField when they are given Date models containing Date instances.
+	 */
+	public void testDateFieldsWithDateModels()
+	{
+		TimeZone origJvmDef = TimeZone.getDefault();
+		DateTimeZone origJodaDef = DateTimeZone.getDefault();
+
+		TimeZone tzClient = TimeZone.getTimeZone("GMT-12");
+		TimeZone tzServer = TimeZone.getTimeZone("GMT+14");
+
+		TimeZone.setDefault(tzServer);
+		DateTimeZone.setDefault(DateTimeZone.forTimeZone(tzServer));
+		WebClientInfo clientInfo = (WebClientInfo)tester.getSession().getClientInfo();
+		clientInfo.getProperties().setTimeZone(tzClient);
+
+		Calendar cal = Calendar.getInstance(tzServer);
+		cal.set(2011, 5, 15, 10, 30, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		Date date = cal.getTime();
+
+		DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN);
+		format.setTimeZone(tzClient);
+		String dateRefString = format.format(date);
+		cal.setTimeZone(tzClient);
+		String hoursRefString = Integer.toString(cal.get(Calendar.HOUR_OF_DAY));
+		String minutesRefString = Integer.toString(cal.get(Calendar.MINUTE));
+
+		DatesPage2 testPage = new DatesPage2();
+		testPage.dateTime = date;
+		testPage.date = date;
+		testPage.time = date;
+		tester.getSession().setLocale(Locale.GERMAN);
+		tester.startPage(testPage);
+
+		String dateTimeFieldDateValue = tester.getTagByWicketId("dateTimeField")
+			.getChild("wicket:id", "date")
+			.getAttribute("value");
+		assertEquals(dateRefString, dateTimeFieldDateValue);
+		String dateTimeFieldHoursValue = tester.getTagByWicketId("dateTimeField")
+			.getChild("wicket:id", "hours")
+			.getAttribute("value");
+		assertEquals(hoursRefString, dateTimeFieldHoursValue);
+		String dateTimeFieldMinutesValue = tester.getTagByWicketId("dateTimeField")
+			.getChild("wicket:id", "minutes")
+			.getAttribute("value");
+		assertEquals(minutesRefString, dateTimeFieldMinutesValue);
+		String dateFieldValue = tester.getTagByWicketId("dateField")
+			.getChild("wicket:id", "date")
+			.getAttribute("value");
+		assertEquals(dateRefString, dateFieldValue);
+		String timeFieldHoursValue = tester.getTagByWicketId("timeField")
+			.getChild("wicket:id", "hours")
+			.getAttribute("value");
+		assertEquals(hoursRefString, timeFieldHoursValue);
+		String timeFieldMinutesValue = tester.getTagByWicketId("timeField")
+			.getChild("wicket:id", "minutes")
+			.getAttribute("value");
+		assertEquals(minutesRefString, timeFieldMinutesValue);
+
+		TimeZone.setDefault(origJvmDef);
+		DateTimeZone.setDefault(origJodaDef);
+	}
+
+	/**
+	 * 
 	 * @throws ParseException
 	 */
 	public void testDates1() throws ParseException
@@ -285,7 +448,7 @@ public class DatePickerTest extends WicketTestCase
 	}
 
 	/**
-	 *
+	 * 
 	 * @throws ParseException
 	 */
 	public void testDates2() throws ParseException
@@ -316,7 +479,7 @@ public class DatePickerTest extends WicketTestCase
 	}
 
 	/**
-	 *
+	 * 
 	 * @throws ParseException
 	 */
 	public void testDates3() throws ParseException
@@ -348,7 +511,7 @@ public class DatePickerTest extends WicketTestCase
 
 	/**
 	 * Simulate what DateTimeField does
-	 *
+	 * 
 	 * @param dateStr
 	 * @param hours
 	 * @param minutes
@@ -427,7 +590,7 @@ public class DatePickerTest extends WicketTestCase
 
 	/**
 	 * Simulate what DateTimeField does
-	 *
+	 * 
 	 * @param dateStr
 	 * @param hours
 	 * @param minutes

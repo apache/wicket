@@ -27,11 +27,16 @@ import org.apache.wicket.model.PropertyModel;
  */
 public class DatesPage2 extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/** */
 	public Date dateTime;
 
 	/** */
 	public Date date;
+
+	/** */
+	public Date time;
 
 	/**
 	 * Constructor
@@ -43,5 +48,6 @@ public class DatesPage2 extends WebPage
 
 		form.add(new DateTimeField("dateTimeField", new PropertyModel<Date>(this, "dateTime")));
 		form.add(new DateField("dateField", new PropertyModel<Date>(this, "date")));
+		form.add(new TimeField("timeField", new PropertyModel<Date>(this, "time")));
 	}
 }

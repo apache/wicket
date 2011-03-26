@@ -60,7 +60,8 @@ public class TimeField extends DateTimeField
 	@Override
 	protected void convertInput()
 	{
-		getDateTextField().setConvertedInput(new Date());
+		Date modelObject = (Date)getDefaultModelObject();
+		getDateTextField().setConvertedInput(modelObject != null ? modelObject : new Date());
 		super.convertInput();
 	}
 

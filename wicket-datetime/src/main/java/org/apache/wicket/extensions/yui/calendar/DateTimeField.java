@@ -26,6 +26,7 @@ import java.util.TimeZone;
 import org.apache.wicket.Session;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.markup.html.form.TextField;
@@ -173,6 +174,16 @@ public class DateTimeField extends FormComponentPanel<Date>
 		// Create and add the "AM/PM" Listbox
 		add(amOrPmChoice = new DropDownChoice<AM_PM>(AM_OR_PM_CHOICE, new PropertyModel<AM_PM>(
 			this, AM_OR_PM), Arrays.asList(AM_PM.values())));
+		
+		add(new WebMarkupContainer("hoursSeparator"){
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isVisible()
+			{
+				return minutesField.determineVisibility();
+			}
+		});
 	}
 
 	/**
@@ -402,14 +413,14 @@ public class DateTimeField extends FormComponentPanel<Date>
 		}
 		else
 		{
-			MutableDateTime mDate = new MutableDateTime(modelObject);
-
 			// convert date to the client's time zone if we have that info
 			TimeZone zone = getClientTimeZone();
 			if (zone != null)
 			{
-				mDate.setZone(DateTimeZone.forTimeZone(zone));
+				modelObject = changeTimeZone(modelObject, zone);
 			}
+
+			MutableDateTime mDate = new MutableDateTime(modelObject);
 
 			date = mDate.toDate();
 
@@ -428,6 +439,32 @@ public class DateTimeField extends FormComponentPanel<Date>
 		}
 
 		super.onBeforeRender();
+	}
+
+	/**
+	 * Change a date in another timezone
+	 * 
+	 * @param date
+	 *            The input date.
+	 * @param zone
+	 *            The target timezone.
+	 * @return A new converted date.
+	 */
+	public static Date changeTimeZone(Date date, TimeZone zone)
+	{
+		Calendar first = Calendar.getInstance(zone);
+		first.setTimeInMillis(date.getTime());
+
+		Calendar output = Calendar.getInstance();
+		output.set(Calendar.YEAR, first.get(Calendar.YEAR));
+		output.set(Calendar.MONTH, first.get(Calendar.MONTH));
+		output.set(Calendar.DAY_OF_MONTH, first.get(Calendar.DAY_OF_MONTH));
+		output.set(Calendar.HOUR_OF_DAY, first.get(Calendar.HOUR_OF_DAY));
+		output.set(Calendar.MINUTE, first.get(Calendar.MINUTE));
+		output.set(Calendar.SECOND, first.get(Calendar.SECOND));
+		output.set(Calendar.MILLISECOND, first.get(Calendar.MILLISECOND));
+
+		return output.getTime();
 	}
 
 	/**
