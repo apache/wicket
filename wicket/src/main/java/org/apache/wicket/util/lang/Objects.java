@@ -1262,32 +1262,20 @@ public final class Objects
 	 * @param className
 	 *            Class to resolve
 	 * @return Resolved class
+	 * @throws ClassNotFoundException
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Class<T> resolveClass(final String className)
+	public static <T> Class<T> resolveClass(final String className) throws ClassNotFoundException
 	{
-		if (className == null)
+		if (Application.exists())
 		{
-			return null;
+			return (Class<T>)Application.get()
+				.getApplicationSettings()
+				.getClassResolver()
+				.resolveClass(className);
 		}
-		try
-		{
-			if (Application.exists())
-			{
-				return (Class<T>)Application.get()
-					.getApplicationSettings()
-					.getClassResolver()
-					.resolveClass(className);
-			}
-			return (Class<T>)Class.forName(className);
-		}
-		catch (ClassNotFoundException e)
-		{
-			log.warn("Could not resolve class: " + className);
-			return null;
-		}
+		return (Class<T>)Class.forName(className);
 	}
-
 
 	/**
 	 * Instantiation not allowed
