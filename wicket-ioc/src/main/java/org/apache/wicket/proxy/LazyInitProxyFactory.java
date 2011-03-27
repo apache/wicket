@@ -32,6 +32,7 @@ import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.WicketObjects;
 
@@ -228,6 +229,13 @@ public class LazyInitProxyFactory
 		private Object readResolve() throws ObjectStreamException
 		{
 			Class<?> clazz = WicketObjects.resolveClass(type);
+			if (clazz == null)
+			{
+				ClassNotFoundException cause = new ClassNotFoundException(
+					"Could not resolve type [" + type +
+						"] with the currently configured org.apache.wicket.application.IClassResolver");
+				throw new WicketRuntimeException(cause);
+			}
 			return LazyInitProxyFactory.createProxy(clazz, locator);
 		}
 	}

@@ -64,21 +64,24 @@ public class WicketObjects
 	@SuppressWarnings("unchecked")
 	public static <T> Class<T> resolveClass(final String className)
 	{
+		Class<T> resolved = null;
 		try
 		{
 			if (Application.exists())
 			{
-				return (Class<T>)Application.get()
+				resolved = (Class<T>)Application.get()
 					.getApplicationSettings()
 					.getClassResolver()
 					.resolveClass(className);
 			}
-			return (Class<T>)Class.forName(className);
+			resolved = (Class<T>)Class.forName(className, false, Thread.currentThread()
+				.getContextClassLoader());
 		}
 		catch (ClassNotFoundException cnfx)
 		{
-			throw new WicketRuntimeException("Could not resolve class [" + className + "]", cnfx);
+			log.warn("Could not resolve class [" + className + "]", cnfx);
 		}
+		return resolved;
 	}
 
 	/**
