@@ -18,6 +18,8 @@ package org.apache.wicket.util.string;
 
 import junit.framework.TestCase;
 
+import org.junit.Assert;
+
 /**
  * Tests {@link JavascriptStripper}
  * 
@@ -103,4 +105,34 @@ public class JavascriptStripperTest extends TestCase
 		String expected = "return this.__unbind__(type, fn);";
 		assertEquals(expected, after);
 	}
+
+
+	// @formatter:off
+	public static String TESTSTRING2 =
+         "   var test = function () {\n" +
+         "   var c = \"!=\";\n" +
+         "    /* from jquery 1.5.1 */\n" +
+         "    if ( !l.match.PSEUDO.test(c) && !/!=/.test(c)) {\n" +
+         "       alert(\"/something bad will happen */* \");\n" +
+         "   }\n" +
+         "\n" +
+         "     var importantFunction = function () {alert(\"really important function \")}\n" +
+         "   /*\n" +
+         "     This code will be stripped\n" +
+         "   */\n" +
+         "\n" +
+         "}" ;
+	// @formatter:on
+
+	public void testRegExThatStartsWithExclamationMark()
+	{
+		new JavascriptStripper();
+		String result = JavascriptStripper.stripCommentsAndWhitespace(TESTSTRING2);
+		Assert.assertFalse(result.contains("This code will be stripped"));
+		Assert.assertTrue(result.contains("something bad will happen"));
+		Assert.assertTrue(result.contains("really important function"));
+
+		System.out.println(result);
+	}
+
 }
