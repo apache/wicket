@@ -41,6 +41,9 @@ import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Object (de)serialization utilities.
+ */
 public class WicketObjects
 {
 	/** log. */
@@ -59,16 +62,23 @@ public class WicketObjects
 	 * @throws ClassNotFoundException
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Class<T> resolveClass(final String className) throws ClassNotFoundException
+	public static <T> Class<T> resolveClass(final String className)
 	{
-		if (Application.exists())
+		try
 		{
-			return (Class<T>)Application.get()
-				.getApplicationSettings()
-				.getClassResolver()
-				.resolveClass(className);
+			if (Application.exists())
+			{
+				return (Class<T>)Application.get()
+					.getApplicationSettings()
+					.getClassResolver()
+					.resolveClass(className);
+			}
+			return (Class<T>)Class.forName(className);
 		}
-		return (Class<T>)Class.forName(className);
+		catch (ClassNotFoundException cnfx)
+		{
+			throw new WicketRuntimeException("Could not resolve class [" + className + "]", cnfx);
+		}
 	}
 
 	/**

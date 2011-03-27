@@ -227,16 +227,8 @@ public class LazyInitProxyFactory
 
 		private Object readResolve() throws ObjectStreamException
 		{
-			try
-			{
-				Class<?> clazz = WicketObjects.resolveClass(type);
-				return LazyInitProxyFactory.createProxy(clazz, locator);
-			}
-			catch (ClassNotFoundException e)
-			{
-				throw new RuntimeException("Could not resolve class [" + type +
-					"] when deserializing proxy", e);
-			}
+			Class<?> clazz = WicketObjects.resolveClass(type);
+			return LazyInitProxyFactory.createProxy(clazz, locator);
 		}
 	}
 
