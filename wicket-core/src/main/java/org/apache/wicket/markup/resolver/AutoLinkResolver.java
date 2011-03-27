@@ -841,7 +841,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		{
 			tag.setAutoComponentTag(true);
 		}
-		tag.setId(autoId);
+		// tag.setId(autoId);
 
 		// get the reference resolver
 		ITagReferenceResolver referenceResolver = tagNameToTagReferenceResolvers.get(tagName);
