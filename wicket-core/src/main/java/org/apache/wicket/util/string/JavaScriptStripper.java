@@ -130,7 +130,7 @@ public class JavaScriptStripper
 							continue;
 						}
 						if (tmp == '=' || tmp == '(' || tmp == '{' || tmp == ':' || tmp == ',' ||
-							tmp == '[' || tmp == ';')
+							tmp == '[' || tmp == ';' || tmp == '!')
 						{
 							state = REG_EXP;
 							break;
