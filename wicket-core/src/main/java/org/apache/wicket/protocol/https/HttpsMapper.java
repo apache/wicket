@@ -38,7 +38,10 @@ import org.apache.wicket.util.lang.Args;
  * 		super.init();
  * 
  * 		getRootRequestMapperAsCompound().add(new MountedMapper(&quot;secured&quot;, HttpsPage.class));
+ * 		mountBookmarkablePage(SomeOtherPage.class);
  * 
+ * 		// notice that in most cases this should be done as the
+ * 		// last mounting-related operation because it replaces the root mapper
  * 		setRootRequestMapper(new HttpsMapper(getRootRequestMapper(), new HttpsConfig(80, 443)));
  * 	}
  * }
