@@ -20,6 +20,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.mock.MockWebRequest;
+import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
@@ -49,7 +50,12 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		ThreadContext.setApplication(new DummyApplication());
+
+		DummyApplication application = new DummyApplication();
+		application.setName("dummyTestApplication");
+		ThreadContext.setApplication(application);
+		application.setServletContext(new MockServletContext(application, "/"));
+		application.initApplication();
 		errorCode = 0;
 	}
 
@@ -57,6 +63,7 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 	protected void tearDown() throws Exception
 	{
 		super.tearDown();
+		ThreadContext.getApplication().internalDestroy();
 		ThreadContext.detach();
 	}
 
