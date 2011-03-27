@@ -57,8 +57,24 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink
 	public AjaxLink(final String id, final IModel<T> model)
 	{
 		super(id, model);
+	}
 
-		add(new AjaxEventBehavior("onclick")
+
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+		add(newAjaxEventBehavior("onclick"));
+	}
+
+	/**
+	 * @param event
+	 *            the name of the default event on which this link will listen to
+	 * @return the ajax behavior which will be executed when the user clicks the link
+	 */
+	protected AjaxEventBehavior newAjaxEventBehavior(String event)
+	{
+		return new AjaxEventBehavior(event)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -83,7 +99,7 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink
 					super.onComponentTag(tag);
 				}
 			}
-		});
+		};
 	}
 
 	@Override

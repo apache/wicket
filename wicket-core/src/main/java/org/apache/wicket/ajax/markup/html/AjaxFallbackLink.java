@@ -59,7 +59,23 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 	{
 		super(id, model);
 
-		add(new AjaxEventBehavior("onclick")
+	}
+
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+		add(newAjaxEventBehavior("onclick"));
+	}
+
+	/**
+	 * @param event
+	 *            the name of the default event on which this link will listen to
+	 * @return the ajax behavior which will be executed when the user clicks the link
+	 */
+	protected AjaxEventBehavior newAjaxEventBehavior(String event)
+	{
+		return new AjaxEventBehavior("onclick")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -97,7 +113,7 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 					super.onComponentTag(tag);
 				}
 			}
-		});
+		};
 	}
 
 	/**

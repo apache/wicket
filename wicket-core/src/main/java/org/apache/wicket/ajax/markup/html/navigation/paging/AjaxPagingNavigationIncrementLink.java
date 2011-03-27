@@ -62,9 +62,28 @@ public class AjaxPagingNavigationIncrementLink extends PagingNavigationIncrement
 		final int increment)
 	{
 		super(id, pageable, increment);
-		add(new AjaxPagingNavigationBehavior(this, pageable, "onclick"));
 
 		setOutputMarkupId(true);
+	}
+
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+		add(newAjaxPagingNavigationBehavior(pageable, "onclick"));
+	}
+
+	/**
+	 * @param pageable
+	 *            The pageable component the page links are referring to
+	 * @param event
+	 *            the name of the default event on which this link will listen to
+	 * @return the ajax behavior which will be executed when the user clicks the link
+	 */
+	protected AjaxPagingNavigationBehavior newAjaxPagingNavigationBehavior(IPageable pageable,
+		String event)
+	{
+		return new AjaxPagingNavigationBehavior(this, pageable, "onclick");
 	}
 
 	/**
