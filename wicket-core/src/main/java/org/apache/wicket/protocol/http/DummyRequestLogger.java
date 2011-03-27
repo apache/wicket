@@ -75,6 +75,8 @@ public class DummyRequestLogger implements IRequestLogger
 
 	private final AtomicInteger activeRequests = new AtomicInteger();
 
+	private final AtomicInteger peakActiveRequests = new AtomicInteger();
+
 	/**
 	 * Construct.
 	 */
@@ -104,6 +106,11 @@ public class DummyRequestLogger implements IRequestLogger
 	public int getCurrentActiveRequestCount()
 	{
 		return activeRequests.get();
+	}
+
+	public int getPeakActiveRequestCount()
+	{
+		return peakActiveRequests.get();
 	}
 
 	public SessionData[] getLiveSessions()
@@ -339,7 +346,12 @@ public class DummyRequestLogger implements IRequestLogger
 		{
 			rd = new RequestData();
 			requestCycle.setMetaData(REQUEST_DATA, rd);
-			activeRequests.incrementAndGet();
+			int activeCount = activeRequests.incrementAndGet();
+
+			if (activeCount > peakActiveRequests.get())
+			{
+				peakActiveRequests.set(activeCount);
+			}
 		}
 		return rd;
 	}

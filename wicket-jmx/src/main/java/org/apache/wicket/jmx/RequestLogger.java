@@ -93,6 +93,32 @@ public class RequestLogger implements RequestLoggerMBean
 	}
 
 	/**
+	 * @see org.apache.wicket.jmx.RequestLoggerMBean#getNumberOfCurrentActiveRequests()
+	 */
+	public Integer getNumberOfCurrentActiveRequests() throws IOException
+	{
+		org.apache.wicket.protocol.http.IRequestLogger logger = getRequestLogger();
+		if (logger != null)
+		{
+			return Integer.valueOf(logger.getCurrentActiveRequestCount());
+		}
+		return null;
+	}
+
+	/**
+	 * @see org.apache.wicket.jmx.RequestLoggerMBean#getPeakNumberOfActiveRequests()
+	 */
+	public Integer getPeakNumberOfActiveRequests() throws IOException
+	{
+		org.apache.wicket.protocol.http.IRequestLogger logger = getRequestLogger();
+		if (logger != null)
+		{
+			return Integer.valueOf(logger.getPeakActiveRequestCount());
+		}
+		return null;
+	}
+
+	/**
 	 * @see org.apache.wicket.jmx.RequestLoggerMBean#restart()
 	 */
 	public void restart() throws IOException

@@ -62,6 +62,23 @@ public interface RequestLoggerMBean
 	Integer getPeakNumberOfSessions() throws IOException;
 
 	/**
+	 * Gets the current active requests number
+	 * 
+	 * @return current (at the time of method invocation) number of concurrent request being
+	 *         processed
+	 * @throws IOException
+	 */
+	Integer getNumberOfCurrentActiveRequests() throws IOException;
+
+	/**
+	 * The high water mark for the number of requests being processed concurrently
+	 * 
+	 * @return the largest number of the concurrent requests being processed
+	 * @throws IOException
+	 */
+	Integer getPeakNumberOfActiveRequests() throws IOException;
+
+	/**
 	 * Registers a new request logger at the application. You need a request logger for some
 	 * functions of the session bean. Be aware that sessions will be logged from this time on, so
 	 * they may not reflect the actual number of sessions. Also, if one was registered, it will be

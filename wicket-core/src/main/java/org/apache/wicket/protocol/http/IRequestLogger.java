@@ -65,6 +65,11 @@ public interface IRequestLogger
 	public int getCurrentActiveRequestCount();
 
 	/**
+	 * @return The peak active requests
+	 */
+	public int getPeakActiveRequestCount();
+
+	/**
 	 * called when the session is created and has an id. (for http it means that the http session is
 	 * created)
 	 * 
