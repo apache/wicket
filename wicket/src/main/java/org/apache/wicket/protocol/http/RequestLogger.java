@@ -100,6 +100,8 @@ public class RequestLogger implements IRequestLogger
 
 	private final AtomicInteger active = new AtomicInteger();
 
+	private final AtomicInteger peakActive = new AtomicInteger();
+
 	/**
 	 * Construct.
 	 */
@@ -150,6 +152,14 @@ public class RequestLogger implements IRequestLogger
 	}
 
 	/**
+	 * @see org.apache.wicket.protocol.http.IRequestLogger#getPeakActiveRequestCount()
+	 */
+	public int getPeakActiveRequestCount()
+	{
+		return peakActive.get();
+	}
+
+	/**
 	 * @see org.apache.wicket.protocol.http.IRequestLogger#getRequests()
 	 */
 	public List<RequestData> getRequests()
@@ -194,7 +204,12 @@ public class RequestLogger implements IRequestLogger
 		{
 			rd = new RequestData();
 			requestCycle.setMetaData(REQUEST_DATA, rd);
-			active.incrementAndGet();
+			int activeCount = active.incrementAndGet();
+
+			if (activeCount > peakActive.get())
+			{
+				peakActive.set(activeCount);
+			}
 		}
 		return rd;
 	}

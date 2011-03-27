@@ -45,11 +45,11 @@ public class RequestLogger implements RequestLoggerMBean
 		// do this so that we don't have to cast all the time
 		if (application instanceof WebApplication)
 		{
-			this.webApplication = (WebApplication)application;
+			webApplication = (WebApplication)application;
 		}
 		else
 		{
-			this.webApplication = null;
+			webApplication = null;
 		}
 	}
 
@@ -88,6 +88,32 @@ public class RequestLogger implements RequestLoggerMBean
 		if (logger != null)
 		{
 			return Integer.valueOf(logger.getPeakSessions());
+		}
+		return null;
+	}
+
+	/**
+	 * @see org.apache.wicket.jmx.RequestLoggerMBean#getNumberOfCurrentActiveRequests()
+	 */
+	public Integer getNumberOfCurrentActiveRequests() throws IOException
+	{
+		org.apache.wicket.protocol.http.IRequestLogger logger = getRequestLogger();
+		if (logger != null)
+		{
+			return Integer.valueOf(logger.getCurrentActiveRequestCount());
+		}
+		return null;
+	}
+
+	/**
+	 * @see org.apache.wicket.jmx.RequestLoggerMBean#getPeakNumberOfActiveRequests()
+	 */
+	public Integer getPeakNumberOfActiveRequests() throws IOException
+	{
+		org.apache.wicket.protocol.http.IRequestLogger logger = getRequestLogger();
+		if (logger != null)
+		{
+			return Integer.valueOf(logger.getPeakActiveRequestCount());
 		}
 		return null;
 	}
