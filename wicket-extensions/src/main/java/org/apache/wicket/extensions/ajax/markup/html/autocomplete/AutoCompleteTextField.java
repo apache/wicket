@@ -262,7 +262,7 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 		// add auto complete behavior to this component if its not already there
 		if (behavior == null)
 		{
-			// we do this here instad of constructor so we can have an overridable factory method
+			// we do this here instead of constructor so we can have an overridable factory method
 			add(behavior = newAutoCompleteBehavior(renderer, settings));
 		}
 		super.onBeforeRender();
