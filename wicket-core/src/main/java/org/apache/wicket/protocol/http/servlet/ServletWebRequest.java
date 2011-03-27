@@ -53,6 +53,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Matej Knopp
  * @author Juergen Donnerstag
+ * @author Igor Vaynberg
  */
 public class ServletWebRequest extends WebRequest
 {
@@ -61,6 +62,8 @@ public class ServletWebRequest extends WebRequest
 	private final Url url;
 
 	private final String filterPrefix;
+
+	private final ErrorAttributes errorAttributes;
 
 	/**
 	 * Construct.
@@ -98,6 +101,8 @@ public class ServletWebRequest extends WebRequest
 		{
 			this.url = getUrl(httpServletRequest, filterPrefix);
 		}
+
+		errorAttributes = ErrorAttributes.of(httpServletRequest);
 	}
 
 	/**
@@ -112,13 +117,17 @@ public class ServletWebRequest extends WebRequest
 	 * the base url is wicket/bookmarkable/com.foo.Page
 	 * 
 	 * <pre>
-	 * wicket / bookmarkab
+	 * 
 	 * @see org.apache.wicket.request.Request#getClientUrl()
 	 */
 	@Override
 	public Url getClientUrl()
 	{
-		if (!isAjax())
+		if (errorAttributes != null && !Strings.isEmpty(errorAttributes.getRequestUri()))
+		{
+			return setParameters(Url.parse(errorAttributes.getRequestUri(), getCharset()));
+		}
+		else if (!isAjax())
 		{
 			return getUrl(httpServletRequest, filterPrefix);
 		}
@@ -417,5 +426,11 @@ public class ServletWebRequest extends WebRequest
 	public String getFilterPath()
 	{
 		return UrlUtils.normalizePath(filterPrefix);
+	}
+
+	@Override
+	public boolean shouldPreserveClientUrl()
+	{
+		return errorAttributes != null && !Strings.isEmpty(errorAttributes.getRequestUri());
 	}
 }

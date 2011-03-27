@@ -196,6 +196,8 @@ public class WebPageRenderer extends PageRenderer
 
 		boolean isAjax = isAjax(requestCycle);
 
+		boolean shouldPreserveClientUrl = ((WebRequest)requestCycle.getRequest()).shouldPreserveClientUrl();
+
 		if (bufferedResponse != null)
 		{
 			logger.warn("The Buffered response should be handled by BufferedResponseRequestHandler");
@@ -209,12 +211,13 @@ public class WebPageRenderer extends PageRenderer
 				(targetUrl.equals(currentUrl) && !getPageProvider().isNewPageInstance() && !getPage().isPageStateless()) //
 			|| (targetUrl.equals(currentUrl) && isRedirectToRender()) //
 			) //
-		) //
+			|| shouldPreserveClientUrl) //
 		{
 			// if the policy is never to redirect
 			// or one pass render mode is on
 			// or the targetUrl matches current url and the page is not stateless
 			// or the targetUrl matches current url, page is stateless but it's redirect-to-render
+			// or the request determines that the current url should be preserved
 			// just render the page
 			BufferedWebResponse response = renderPage(currentUrl, requestCycle);
 			if (response != null)

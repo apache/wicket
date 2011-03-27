@@ -126,6 +126,23 @@ public abstract class WebRequest extends Request
 	}
 
 	/**
+	 * Signals whether or not request processing should preserve the current client url - in other
+	 * words, handle this request without redirecting. By default, this method returns {@code false}
+	 * .
+	 * 
+	 * For example, this method can be used to preserve the url that caused a 404 in the browser if
+	 * Wicket is also responsible for rendering the 404 page. If this method returns the default
+	 * value of {@code false} then Wicket will redirect to the bookmarkable url of the error page,
+	 * instead of preserving the url that caused the 404 in the browser.
+	 * 
+	 * @return {@code true} if current client url should be preserved
+	 */
+	public boolean shouldPreserveClientUrl()
+	{
+		return false;
+	}
+
+	/**
 	 * Returns request with specified URL and same POST parameters as this request.
 	 * 
 	 * @param url
@@ -195,6 +212,12 @@ public abstract class WebRequest extends Request
 			public Object getContainerRequest()
 			{
 				return WebRequest.this.getContainerRequest();
+			}
+
+			@Override
+			public boolean shouldPreserveClientUrl()
+			{
+				return WebRequest.this.shouldPreserveClientUrl();
 			}
 		};
 	}
