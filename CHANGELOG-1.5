@@ -1,5 +1,76 @@
 This file contains all changes done on the 1.5 version.
 
+Release Notes - Wicket - Version 1.5-RC3
+
+** Sub-task
+    * [WICKET-3488] - Form can't be replaced when submitted
+
+** Bug
+    * [WICKET-3187] - StringResourceStream has null lastModified time
+    * [WICKET-3218] - Component#onInitialize is broken for Pages
+    * [WICKET-3420] - javascript with a less than character ("<") fails to execute when added through a header contribution in ajax response
+    * [WICKET-3463] - org/apache/wicket/extensions/yui/calendar/DatePickerTest convertDateNew hours param null 
+    * [WICKET-3465] - BaseWicketTester#isInvisible(String path)
+    * [WICKET-3466] - AJAX with prototype explample not working at IE
+    * [WICKET-3467] - Upload example failing at localhost on IE
+    * [WICKET-3469] - Referrer Leaking with ExternalLink
+    * [WICKET-3470] - Can't write session to disk with tomcat : Servlet is destroyed before serialization
+    * [WICKET-3473] - Inline Javascript evaluated is executed before head contributions are loaded
+    * [WICKET-3477] - Exception when setting session default timezone with GatherExtendedBrowserInfo
+    * [WICKET-3479] - Interface TestPanelSource isn't named correctly
+    * [WICKET-3482] - .java files do not show up in the "Source code" popup of the examples
+    * [WICKET-3483] - NullPointerException in PersistentPageManager's page cache
+    * [WICKET-3485] - Link tries to construct the URL when the link is disabled
+    * [WICKET-3486] - zero based NavigatorLabel
+    * [WICKET-3492] - Url.setCharset always set "UTF-8"
+    * [WICKET-3493] -  Login doesn't work if placing the SignInPanel on the HomePage.
+    * [WICKET-3494] - org/apache/wicket/markup/html/form/upload/MultiFileUploadField setDefaultModel type error
+    * [WICKET-3499] - org/apache/wicket/request/cycle/RequestCycleListenerTest MockRequestCycle setResponse
+    * [WICKET-3501] - DateTimeField and DateField do not set input tag "value"
+    * [WICKET-3503] - LazyInitProxyFactory using Class.forName(clazz) rather than Thread.currentThread().getContextClassLoader().loadClass(type)
+    * [WICKET-3506] - ResourceMapper doesn't work: mapHandler() always returns null
+    * [WICKET-3508] - HttpsMapper triggers rendering of incorrect absolute callback url for Link
+    * [WICKET-3510] - DateTimeField improperly converts time causing wrong dates when the server's current date is different from the client's date.
+    * [WICKET-3512] - <wicket:enclosure> results in MarkupException when used with multiple <wicket:child>
+    * [WICKET-3518] - Multiple filter mappings in web.xml cause request.getUrl() to break
+    * [WICKET-3519] - DefaultJavascriptCompressor broken jquery v1.5.1 minified file
+    * [WICKET-3528] - Javadoc typo in PropertyModel
+    * [WICKET-3537] - Wicket example "Library" - sign out not working
+    * [WICKET-3539] - Event broadcast type "Depth" does not work when the sink is a Component but not a MarkupContainer
+    * [WICKET-3544] - Race condition in WicketFilter startup with following StringIndexOutOfBoundsException
+    * [WICKET-3547] - Autocomplete component doesn't work if the cookies are disabled
+    * [WICKET-3548] - Wrong exception type when readResolve fails.
+    * [WICKET-3551] - Using web.xml <error-page> to render error pages via Wicket yields undesired behavior in Wicket 1.5
+    * [WICKET-3556] - RequestLogger doesn't dump its collected data at the end of the request
+    * [WICKET-3559] - Autolink (AutolinkBookmarkablePageLink) already rendered problem
+    * [WICKET-3560] - mounting @RequireHttps-annotated page after HttpsMapper instantiation ignores @RequireHttps annotation
+
+
+** Improvement
+    * [WICKET-1214] - WicketTester#startPanel does not work (correctly)
+    * [WICKET-3456] - Would like a renderCSS method in IHeaderResponse
+    * [WICKET-3458] - PackagedTextTemplate -> PackageTextTemplate
+    * [WICKET-3464] - Greek (el) Application.properties 
+    * [WICKET-3468] - org/apache/wicket/extensions/markup/html/form/DateTextField converter never null
+    * [WICKET-3476] - org/apache/wicket/extensions/markup/html/repeater/data/table/DataTable onDetach columns never null
+    * [WICKET-3481] - org/apache/wicket/velocity/VelocityContributor detach method
+    * [WICKET-3489] - org/apache/wicket/request/cycle/RequestCycle check context for null before using it
+    * [WICKET-3502] - Modify o.a.w.Component.send method signature to exactly match the one defined in superinterface
+    * [WICKET-3504] - Obfuscating url in Wicket 1.5
+    * [WICKET-3516] - Add behaviors to the event processing chain
+    * [WICKET-3522] - org.apache.wicket.ajax.AbstractDefaultAjaxBehavior getCallbackScript onlyTargetActivePage
+    * [WICKET-3536] - Cache the value from Application.getConfigurationType()
+    * [WICKET-3540] - Make AjaxLink's URL more configurable
+    * [WICKET-3543] - Add possibility to test Resources/ResourceReferences with WicketTester
+    * [WICKET-3553] - Reset the busy flag in Wicket.Channel if the execution of the callback fails for some reason
+    * [WICKET-3558] - Expose active requests via JMX
+
+** New Feature
+    * [WICKET-3509] - Allow use of HTML5 <input type="search"/> and <input type="date"/> fields
+
+** Task
+    * [WICKET-3545] - Slovak version of Application_sk.properties
+
 Release Notes - Wicket - Version 1.5-RC2
 
 ** Bug
