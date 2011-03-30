@@ -184,6 +184,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	private String scheme = "http";
 
+	private String serverName = "localhost";
+
 	private int serverPort = 80;
 
 	/**
@@ -840,7 +842,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * Get the remote host.
 	 * 
-	 * @return Always localhost
+	 * @return Return 'localhost' by default
 	 */
 	public String getRemoteHost()
 	{
@@ -955,11 +957,21 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * Get the server name.
 	 * 
-	 * @return Always localhost
+	 * @return by default returns 'localhost'
 	 */
 	public String getServerName()
 	{
-		return "localhost";
+		return serverName;
+	}
+
+	/**
+	 * Set the server name.
+	 * 
+	 *@param serverName content of 'Host' header
+	 */
+	public void setServerName(final String serverName)
+	{
+		this.serverName = serverName;
 	}
 
 	/**
