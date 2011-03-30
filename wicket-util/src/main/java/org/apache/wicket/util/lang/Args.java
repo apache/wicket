@@ -29,9 +29,9 @@ public class Args
 	 * @param argument
 	 * @param name
 	 * @return The 'argument' parameter
-	 * @throws IllegalargumentException
+	 * @throws IllegalArgumentException
 	 */
-	public static Object notNull(final Object argument, final String name)
+	public static <T> T notNull(final T argument, final String name)
 	{
 		if (argument == null)
 		{
@@ -46,7 +46,7 @@ public class Args
 	 * @param argument
 	 * @param name
 	 * @return The 'argument' parameter
-	 * @throws IllegalargumentException
+	 * @throws IllegalArgumentException
 	 */
 	public static String notEmpty(final String argument, final String name)
 	{
@@ -66,7 +66,7 @@ public class Args
 	 * @param max
 	 * @param value
 	 * @param name
-	 * @throws IllegalargumentException
+	 * @throws IllegalArgumentException
 	 */
 	public static <T extends Comparable<T>> void withinRange(final T min, final T max,
 		final T value, final String name)
