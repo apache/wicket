@@ -23,7 +23,6 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.crypt.ICrypt;
-import org.apache.wicket.util.crypt.ICryptFactory;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -37,11 +36,29 @@ public class CryptoMapper implements IRequestMapper
 	private final IProvider<ICrypt> cryptProvider;
 	private final Application application;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param wrappedMapper
+	 *            the non-crypted request mapper
+	 * @param application
+	 *            the current application
+	 */
 	public CryptoMapper(IRequestMapper wrappedMapper, Application application)
 	{
 		this(wrappedMapper, application, new ApplicationCryptProvider(application));
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param wrappedMapper
+	 *            the non-crypted request mapper
+	 * @param application
+	 *            the current application
+	 * @param cryptProvider
+	 *            the custom crypt provider
+	 */
 	public CryptoMapper(IRequestMapper wrappedMapper, Application application,
 		IProvider<ICrypt> cryptProvider)
 	{
@@ -81,9 +98,9 @@ public class CryptoMapper implements IRequestMapper
 
 	private ICrypt getCrypt()
 	{
-		ICryptFactory factory = Application.get().getSecuritySettings().getCryptFactory();
-		return factory.newCrypt();
+		return cryptProvider.get();
 	}
+
 
 	private Url encryptUrl(Url url)
 	{
