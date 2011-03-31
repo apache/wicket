@@ -35,6 +35,7 @@ public class DebugBarInitializer implements IInitializer
 		DebugBar.registerContributor(VersionDebugContributor.DEBUG_BAR_CONTRIB, application);
 		DebugBar.registerContributor(InspectorDebugPanel.DEBUG_BAR_CONTRIB, application);
 		DebugBar.registerContributor(SessionSizeDebugPanel.DEBUG_BAR_CONTRIB, application);
+		DebugBar.registerContributor(PageSizeDebugPanel.DEBUG_BAR_CONTRIB, application);
 	}
 
 	@Override

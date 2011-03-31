@@ -18,22 +18,21 @@ package org.apache.wicket.devutils.debugbar;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.Session;
-import org.apache.wicket.devutils.inspector.LiveSessionsPage;
-import org.apache.wicket.devutils.inspector.SessionSizeModel;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.lang.WicketObjects;
 
 /**
- * A panel for the debug bar that shows the session size and links to the page that shows more
- * information about sessions.
- * 
- * @author Jeremy Thomerson <jthomerson@apache.org>
+ * A panel for the debug bar that shows the size of the currently shown page.
+ * <p>
+ * <strong>Note</strong>: this size includes the size of the debug bar itself too!
  */
-public class SessionSizeDebugPanel extends StandardDebugPanel
+public class PageSizeDebugPanel extends StandardDebugPanel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -44,7 +43,7 @@ public class SessionSizeDebugPanel extends StandardDebugPanel
 
 		public Component createComponent(final String id, final DebugBar debugBar)
 		{
-			return new SessionSizeDebugPanel(id);
+			return new PageSizeDebugPanel(id);
 		}
 
 	};
@@ -54,7 +53,7 @@ public class SessionSizeDebugPanel extends StandardDebugPanel
 	 * 
 	 * @param id
 	 */
-	public SessionSizeDebugPanel(final String id)
+	public PageSizeDebugPanel(final String id)
 	{
 		super(id);
 	}
@@ -62,7 +61,17 @@ public class SessionSizeDebugPanel extends StandardDebugPanel
 	@Override
 	protected Class<? extends Page> getLinkPageClass()
 	{
-		return LiveSessionsPage.class;
+		// not used
+		return WebPage.class;
+	}
+
+	// Disable the link because there is no page with more detailed information
+	@Override
+	protected BookmarkablePageLink<Void> createLink(final String id)
+	{
+		BookmarkablePageLink<Void> bookmarkablePageLink = super.createLink(id);
+		bookmarkablePageLink.setEnabled(false);
+		return bookmarkablePageLink;
 	}
 
 	@Override
@@ -79,25 +88,17 @@ public class SessionSizeDebugPanel extends StandardDebugPanel
 		{
 			private static final long serialVersionUID = 1L;
 
-			private final IModel<Bytes> size = new SessionSizeModel(Session.get());
-
 			@Override
 			public String getObject()
 			{
-				Bytes sessionSizeInBytes = size.getObject();
-				String sessionSizeAsString = sessionSizeInBytes != null
-					? sessionSizeInBytes.toString() : "unknown";
+				Page enclosingPage = getPage();
+				long pageSize = WicketObjects.sizeof(enclosingPage);
+				Bytes pageSizeInBytes = (pageSize > -1 ? Bytes.bytes(pageSize) : null);
+				String pageSizeAsString = pageSizeInBytes != null ? pageSizeInBytes.toString()
+					: "unknown";
 
-				return "Session: " + sessionSizeAsString;
-			}
-
-			@Override
-			public void detach()
-			{
-				super.detach();
-				size.detach();
+				return "Page: " + pageSizeAsString;
 			}
 		};
 	}
-
 }

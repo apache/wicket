@@ -47,7 +47,6 @@ public final class SessionView extends DevUtilsPanel
 		add(new Label("locale", session.getLocale().toString()));
 		add(new Label("style", session.getStyle() == null ? "[None]" : session.getStyle()));
 		add(new Label("size", new SessionSizeModel(session)));
-		add(new Label("totalSize", new SessionTotalSizeModel(session)));
 	}
 
 }
