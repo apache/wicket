@@ -43,6 +43,7 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.util.file.File;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
@@ -172,7 +173,7 @@ public class FormTester
 		 * @return the id value at the selected index
 		 */
 		@SuppressWarnings("unchecked")
-		private String selectAbstractChoice(FormComponent<?> formComponent, final int index)
+		private String selectAbstractChoice(final FormComponent<?> formComponent, final int index)
 		{
 			try
 			{
@@ -238,11 +239,6 @@ public class FormTester
 				}
 			}
 
-			/**
-			 * 
-			 * @see org.apache.wicket.util.tester.FormTester.ChoiceSelector#assignValueToFormComponent(org.apache.wicket.markup.html.form.FormComponent,
-			 *      java.lang.String)
-			 */
 			@Override
 			protected void assignValueToFormComponent(FormComponent<?> formComponent, String value)
 			{
@@ -267,10 +263,6 @@ public class FormTester
 				super(formComponent);
 			}
 
-			/**
-			 * @see org.apache.wicket.util.tester.FormTester.ChoiceSelector#assignValueToFormComponent(org.apache.wicket.markup.html.form.FormComponent,
-			 *      java.lang.String)
-			 */
 			@Override
 			protected void assignValueToFormComponent(FormComponent<?> formComponent, String value)
 			{
@@ -379,8 +371,7 @@ public class FormTester
 			public void component(final FormComponent<?> formComponent, final IVisit<Void> visit)
 			{
 				// do nothing for invisible or disabled component -- the browser would not send any
-// parameter
-// for a disabled component
+				// parameter for a disabled component
 				if (!(formComponent.isVisibleInHierarchy() && formComponent.isEnabledInHierarchy()))
 				{
 					return;
@@ -507,7 +498,7 @@ public class FormTester
 	 *            <code>Component</code> id
 	 * @return the value of the text component
 	 */
-	public String getTextComponentValue(String id)
+	public String getTextComponentValue(final String id)
 	{
 		Component c = getForm().get(id);
 		if (c instanceof AbstractTextComponent)
@@ -530,8 +521,9 @@ public class FormTester
 	 *            <code>FormComponent</code>
 	 * @param index
 	 *            index of the selectable option, starting from 0
+	 * @return This
 	 */
-	public void select(String formComponentId, int index)
+	public FormTester select(final String formComponentId, int index)
 	{
 		checkClosed();
 		FormComponent<?> component = (FormComponent<?>)workingForm.get(formComponentId);
@@ -563,6 +555,8 @@ public class FormTester
 		{
 			// this form component has no auto page reload mechanism
 		}
+
+		return this;
 	}
 
 	/**
@@ -576,10 +570,11 @@ public class FormTester
 	 *            <code>FormComponent</code>
 	 * @param indexes
 	 *            index of the selectable option, starting from 0
+	 * @return This
 	 */
-	public void selectMultiple(String formComponentId, int[] indexes)
+	public FormTester selectMultiple(String formComponentId, int[] indexes)
 	{
-		selectMultiple(formComponentId, indexes, false);
+		return selectMultiple(formComponentId, indexes, false);
 	}
 
 	/**
@@ -596,8 +591,9 @@ public class FormTester
 	 * @param replace
 	 *            If true, than all previous selects are first reset, thus existing selects are
 	 *            replaced. If false, than the new indexes will be added.
+	 * @return This
 	 */
-	public void selectMultiple(String formComponentId, int[] indexes, final boolean replace)
+	public FormTester selectMultiple(String formComponentId, int[] indexes, final boolean replace)
 	{
 		checkClosed();
 
@@ -613,6 +609,8 @@ public class FormTester
 		{
 			choiceSelector.doSelect(index);
 		}
+
+		return this;
 	}
 
 	/**
@@ -623,39 +621,60 @@ public class FormTester
 	 *            <code>FormComponent</code> or <code>IFormSubmittingComponent</code>
 	 * @param value
 	 *            the field value
+	 * @return This
 	 */
-	public void setValue(final String formComponentId, final String value)
+	public FormTester setValue(final String formComponentId, final String value)
 	{
-		checkClosed();
-
 		Component component = workingForm.get(formComponentId);
 		if (component == null)
 		{
 			throw new IllegalArgumentException(
 				"Unable to set value. Couldn't find component with name: " + formComponentId);
 		}
-		if (component instanceof IFormSubmittingComponent)
+		return setValue(component, value);
+	}
+
+	/**
+	 * Simulates filling in a field on a <code>Form</code>.
+	 * 
+	 * @param formComponent
+	 *            relative path (from <code>Form</code>) to the selectable
+	 *            <code>FormComponent</code> or <code>IFormSubmittingComponent</code>
+	 * @param value
+	 *            the field value
+	 * @return This
+	 */
+	public FormTester setValue(final Component formComponent, final String value)
+	{
+		Args.notNull(formComponent, "formComponent");
+
+		checkClosed();
+
+		if (formComponent instanceof IFormSubmittingComponent)
 		{
-			setFormSubmittingComponentValue((IFormSubmittingComponent)component, value);
+			setFormSubmittingComponentValue((IFormSubmittingComponent)formComponent, value);
 		}
-		else if (component instanceof FormComponent)
+		else if (formComponent instanceof FormComponent)
 		{
-			setFormComponentValue((FormComponent<?>)component, value);
+			setFormComponentValue((FormComponent<?>)formComponent, value);
 		}
 		else
 		{
-			throw new IllegalArgumentException("Componet with id: " + formComponentId +
+			throw new IllegalArgumentException("Componet with id: " + formComponent.getId() +
 				" is not a FormComponent");
 		}
+
+		return this;
 	}
 
 	/**
 	 * @param checkBoxId
 	 * @param value
+	 * @return This
 	 */
-	public void setValue(String checkBoxId, boolean value)
+	public FormTester setValue(String checkBoxId, boolean value)
 	{
-		setValue(checkBoxId, Boolean.toString(value));
+		return setValue(checkBoxId, Boolean.toString(value));
 	}
 
 	/**
@@ -669,8 +688,10 @@ public class FormTester
 	 *            the <code>File</code> to upload.
 	 * @param contentType
 	 *            the content type of the file. Must be a valid mime type.
+	 * @return This
 	 */
-	public void setFile(final String formComponentId, final File file, final String contentType)
+	public FormTester setFile(final String formComponentId, final File file,
+		final String contentType)
 	{
 		checkClosed();
 
@@ -685,12 +706,16 @@ public class FormTester
 
 		MockHttpServletRequest servletRequest = tester.getRequest();
 		servletRequest.addFile(formComponent.getInputName(), file, contentType);
+
+		return this;
 	}
 
 	/**
 	 * Submits the <code>Form</code>. Note that <code>submit</code> can be executed only once.
+	 * 
+	 * @return This
 	 */
-	public void submit()
+	public FormTester submit()
 	{
 		checkClosed();
 		try
@@ -703,6 +728,8 @@ public class FormTester
 		{
 			closed = true;
 		}
+
+		return this;
 	}
 
 	/**
@@ -718,11 +745,35 @@ public class FormTester
 	 * 
 	 * @param buttonComponentId
 	 *            relative path (from <code>Form</code>) to the button
+	 * @return This
 	 */
-	public void submit(String buttonComponentId)
+	public FormTester submit(final String buttonComponentId)
 	{
 		setValue(buttonComponentId, "marked");
-		submit();
+		return submit();
+	}
+
+	/**
+	 * A convenience method for submitting the <code>Form</code> with an alternate button.
+	 * <p>
+	 * Note that if the button is associated with a model, it's better to use the
+	 * <code>setValue</code> method instead:
+	 * 
+	 * <pre>
+	 * formTester.setValue(myButton, &quot;value on the button&quot;);
+	 * formTester.submit();
+	 * </pre>
+	 * 
+	 * @param buttonComponent
+	 *            relative path (from <code>Form</code>) to the button
+	 * @return This
+	 */
+	public FormTester submit(final Component buttonComponent)
+	{
+		Args.notNull(buttonComponent, "buttonComponent");
+
+		setValue(buttonComponent, "marked");
+		return submit();
 	}
 
 	/**
@@ -735,8 +786,9 @@ public class FormTester
 	 *            if true, than the 'path' to the SubmitLink is relative to the page. Thus the link
 	 *            can be outside the form. If false, the path is relative to the form and thus the
 	 *            link is inside the form.
+	 * @return This
 	 */
-	public void submitLink(String path, final boolean pageRelative)
+	public FormTester submitLink(String path, final boolean pageRelative)
 	{
 		if (pageRelative)
 		{
@@ -747,6 +799,7 @@ public class FormTester
 			path = this.path + ":" + path;
 			tester.clickLink(path, false);
 		}
+		return this;
 	}
 
 	/**
@@ -757,8 +810,9 @@ public class FormTester
 	 *            a <code>FormComponent</code>
 	 * @param value
 	 *            a value to add
+	 * @return This
 	 */
-	private void addFormComponentValue(FormComponent<?> formComponent, String value)
+	private FormTester addFormComponentValue(FormComponent<?> formComponent, String value)
 	{
 		if (parameterExist(formComponent))
 		{
@@ -787,6 +841,8 @@ public class FormTester
 		{
 			setFormComponentValue(formComponent, value);
 		}
+
+		return this;
 	}
 
 	/**
@@ -809,12 +865,13 @@ public class FormTester
 	 *            a <code>FormComponent</code>
 	 * @return <code>true</code> if the parameter exists in the <code>FormComponent</code>
 	 */
-	private boolean parameterExist(FormComponent<?> formComponent)
+	private boolean parameterExist(final FormComponent<?> formComponent)
 	{
 		String parameter = tester.getRequest()
 			.getPostParameters()
 			.getParameterValue(formComponent.getInputName())
 			.toString();
+
 		return parameter != null && parameter.trim().length() > 0;
 	}
 
@@ -826,7 +883,7 @@ public class FormTester
 	 * @param value
 	 *            a value to add
 	 */
-	private void setFormComponentValue(FormComponent<?> formComponent, String value)
+	private void setFormComponentValue(final FormComponent<?> formComponent, final String value)
 	{
 		tester.getRequest()
 			.getPostParameters()
@@ -846,9 +903,12 @@ public class FormTester
 		tester.getRequest().getPostParameters().setParameterValue(component.getInputName(), value);
 	}
 
+	/**
+	 * 
+	 * @param message
+	 */
 	private void fail(String message)
 	{
 		throw new WicketRuntimeException(message);
 	}
-
 }

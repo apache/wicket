@@ -611,16 +611,6 @@ public abstract class ListView<T> extends AbstractRepeater
 	}
 
 	/**
-	 * 
-	 * @see org.apache.wicket.MarkupContainer#iterator()
-	 */
-	@Override
-	public Iterator<Component> iterator()
-	{
-		return super.iterator();
-	}
-
-	/**
 	 * Gets model
 	 * 
 	 * @return model
