@@ -320,6 +320,10 @@ public class PageProvider implements IPageProvider
 		}
 	}
 
+	/**
+	 * 
+	 * @return page id
+	 */
 	public Integer getPageId()
 	{
 		return pageId;

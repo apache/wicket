@@ -533,6 +533,10 @@ public class WicketTester extends BaseWicketTester
 		assertResult(isRequired(path));
 	}
 
+	/**
+	 * 
+	 * @param result
+	 */
 	private void assertResult(Result result)
 	{
 		if (result.wasFailed())

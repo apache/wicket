@@ -144,34 +144,8 @@ public class BaseWicketTester
 	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(BaseWicketTester.class);
 
-	/**
-	 * @author jcompagner
-	 */
-	@Deprecated
-	private static final class TestPageSource implements ITestPageSource
-	{
-		private final Page page;
-
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Constructor.
-		 * 
-		 * @param page
-		 */
-		private TestPageSource(Page page)
-		{
-			this.page = page;
-		}
-
-		public Page getTestPage()
-		{
-			return page;
-		}
-	}
-
 	private final ServletContext servletContext;
-	private MockHttpSession hsession;
+	private MockHttpSession httpSession;
 
 	private final WebApplication application;
 
@@ -222,7 +196,6 @@ public class BaseWicketTester
 	 * Creates <code>WicketTester</code> and automatically creates a <code>WebApplication</code>.
 	 * 
 	 * @param <C>
-	 * 
 	 * @param homePage
 	 *            a home page <code>Class</code>
 	 */
@@ -230,9 +203,6 @@ public class BaseWicketTester
 	{
 		this(new MockApplication()
 		{
-			/**
-			 * @see org.apache.wicket.Application#getHomePage()
-			 */
 			@Override
 			public Class<? extends Page> getHomePage()
 			{
@@ -257,7 +227,6 @@ public class BaseWicketTester
 	 * 
 	 * @param application
 	 *            a <code>WicketTester</code> <code>WebApplication</code> object
-	 * 
 	 * @param servletContextBasePath
 	 *            the absolute path on disk to the web application's contents (e.g. war root) - may
 	 *            be <code>null</code>
@@ -272,11 +241,10 @@ public class BaseWicketTester
 	 * 
 	 * @param application
 	 *            a <code>WicketTester</code> <code>WebApplication</code> object
-	 * 
 	 * @param servletCtx
 	 *            the servlet context used as backend
 	 */
-	public BaseWicketTester(final WebApplication application, ServletContext servletCtx)
+	public BaseWicketTester(final WebApplication application, final ServletContext servletCtx)
 	{
 		servletContext = servletCtx != null ? servletCtx
 			: new MockServletContext(application, null);
@@ -290,9 +258,10 @@ public class BaseWicketTester
 				return filterConfig;
 			}
 		};
+
 		application.setWicketFilter(filter);
 
-		hsession = new MockHttpSession(servletContext);
+		httpSession = new MockHttpSession(servletContext);
 
 		ThreadContext.detach();
 
@@ -300,13 +269,13 @@ public class BaseWicketTester
 
 		// FIXME some tests are leaking applications by not calling destroy on them or overriding
 		// teardown() without calling super, for now we work around by making each name unique
-		this.application.setName("WicketTesterApplication-" + UUID.randomUUID());
+		application.setName("WicketTesterApplication-" + UUID.randomUUID());
 		ThreadContext.setApplication(application);
 
 		application.setServletContext(servletContext);
 
 		// initialize the application
-		this.application.initApplication();
+		application.initApplication();
 
 		// reconfigure application for the test environment
 		application.setPageRendererProvider(new LastPageRecordingPageRendererProvider(
@@ -318,14 +287,12 @@ public class BaseWicketTester
 
 		// prepare session
 		setupNextRequestCycle();
-
-		// Remove comments to run all tests with filter extensions added
-// IWicketFilterExtension filter1 = new XForwardedWicketFilterExtension();
-// IWicketFilterExtension filter2 = new SecuredRemoteAddressWicketFilterExtension();
-// getApplication().getWicketFilter().addFilter(filter1);
-// getApplication().getWicketFilter().addFilter(filter2);
 	}
 
+	/**
+	 * 
+	 * @return page manager provider
+	 */
 	protected IPageManagerProvider newTestPageManagerProvider()
 	{
 		return new TestPageManagerProvider();
@@ -344,19 +311,19 @@ public class BaseWicketTester
 	 */
 	private void setupNextRequestCycle()
 	{
-		request = new MockHttpServletRequest(application, hsession, servletContext);
+		request = new MockHttpServletRequest(application, httpSession, servletContext);
 		request.setURL(request.getContextPath() + request.getServletPath() + "/");
 		response = new MockHttpServletResponse(request);
 
-		ServletWebRequest servletWebRequest = createServletWebRequest();
+		ServletWebRequest servletWebRequest = newServletWebRequest();
 		requestCycle = application.createRequestCycle(servletWebRequest,
-			createServletWebResponse(servletWebRequest));
+			newServletWebResponse(servletWebRequest));
 		requestCycle.setCleanupFeedbackMessagesOnDetach(false);
 		ThreadContext.setRequestCycle(requestCycle);
 
 		if (session == null)
 		{
-			createNewSession();
+			newSession();
 		}
 	}
 
@@ -364,7 +331,7 @@ public class BaseWicketTester
 	 * @param servletWebRequest
 	 * @return servlet web response
 	 */
-	private ServletWebResponse createServletWebResponse(ServletWebRequest servletWebRequest)
+	private ServletWebResponse newServletWebResponse(final ServletWebRequest servletWebRequest)
 	{
 		return new WicketTesterServletWebResponse(servletWebRequest, response);
 	}
@@ -372,7 +339,7 @@ public class BaseWicketTester
 	/**
 	 * @return servlet web request
 	 */
-	private ServletWebRequest createServletWebRequest()
+	private ServletWebRequest newServletWebRequest()
 	{
 		return new ServletWebRequest(request, request.getFilterPrefix());
 	}
@@ -380,7 +347,7 @@ public class BaseWicketTester
 	/**
 	 * 
 	 */
-	private void createNewSession()
+	private void newSession()
 	{
 		ThreadContext.setSession(null);
 
@@ -420,7 +387,7 @@ public class BaseWicketTester
 	 */
 	public MockHttpSession getHttpSession()
 	{
-		return hsession;
+		return httpSession;
 	}
 
 	/**
@@ -467,7 +434,7 @@ public class BaseWicketTester
 	 * @param request
 	 *            request to process
 	 */
-	public void processRequest(MockHttpServletRequest request)
+	public void processRequest(final MockHttpServletRequest request)
 	{
 		processRequest(request, null);
 	}
@@ -482,8 +449,8 @@ public class BaseWicketTester
 	 *            {@link IRequestHandler}
 	 * @return true, if process was executed successfully
 	 */
-	public boolean processRequest(MockHttpServletRequest request,
-		IRequestHandler forcedRequestHandler)
+	public boolean processRequest(final MockHttpServletRequest request,
+		final IRequestHandler forcedRequestHandler)
 	{
 		return processRequest(request, forcedRequestHandler, false);
 	}
@@ -492,7 +459,7 @@ public class BaseWicketTester
 	 * @param forcedRequestHandler
 	 * @return true, if process was executed successfully
 	 */
-	public boolean processRequest(IRequestHandler forcedRequestHandler)
+	public boolean processRequest(final IRequestHandler forcedRequestHandler)
 	{
 		return processRequest(null, forcedRequestHandler, false);
 	}
@@ -619,13 +586,20 @@ public class BaseWicketTester
 	 * @param pageProvider
 	 * @return last rendered page
 	 */
-	public Page startPage(IPageProvider pageProvider)
+	public Page startPage(final IPageProvider pageProvider)
 	{
+		// should be null for Pages
 		startComponent = null;
-		request = new MockHttpServletRequest(application, hsession, servletContext);
+
+		// prepare request
+		request = new MockHttpServletRequest(application, httpSession, servletContext);
 		request.setURL(request.getContextPath() + request.getServletPath() + "/");
 		IRequestHandler handler = new RenderPageRequestHandler(pageProvider);
+
+		// process request
 		processRequest(request, handler);
+
+		// The page rendered
 		return getLastRenderedPage();
 	}
 
@@ -637,7 +611,7 @@ public class BaseWicketTester
 	 * @param page
 	 * @return Page
 	 */
-	public Page startPage(Page page)
+	public Page startPage(final Page page)
 	{
 		return startPage(new PageProvider(page));
 	}
@@ -687,10 +661,15 @@ public class BaseWicketTester
 	public ResourceReference startResourceReference(final ResourceReference reference,
 		final PageParameters pageParameters)
 	{
-		request = new MockHttpServletRequest(application, hsession, servletContext);
+		// prepare request
+		request = new MockHttpServletRequest(application, httpSession, servletContext);
 		request.setURL(request.getContextPath() + request.getServletPath() + "/");
 		IRequestHandler handler = new ResourceReferenceRequestHandler(reference, pageParameters);
+
+		// execute request
 		processRequest(request, handler);
+
+		// the reference processed
 		return reference;
 	}
 
@@ -710,12 +689,14 @@ public class BaseWicketTester
 	public String getLastResponseAsString()
 	{
 		String response = lastResponse.getDocument();
+
+		// null, if a Page was rendered last
 		if (startComponent == null)
 		{
 			return response;
 		}
 
-		// Remove first and last tag
+		// Remove first and last tag of surrounding page
 		int pos1 = response.indexOf('>');
 		int pos2 = response.lastIndexOf('<');
 		return response.substring(pos1 + 1, pos2);
@@ -792,11 +773,10 @@ public class BaseWicketTester
 	 * @param handler
 	 * @return {@link Url} for handler.
 	 */
-	public Url urlFor(IRequestHandler handler)
+	public Url urlFor(final IRequestHandler handler)
 	{
 		Url url = application.getRootRequestMapper().mapHandler(handler);
-		transform(url);
-		return url;
+		return transform(url);
 	}
 
 	/**
@@ -805,6 +785,8 @@ public class BaseWicketTester
 	 */
 	public String urlFor(Link<?> link)
 	{
+		Args.notNull(link, "link");
+
 		return link.urlFor(ILinkListener.INTERFACE).toString();
 	}
 
@@ -832,6 +814,8 @@ public class BaseWicketTester
 	@Deprecated
 	public final Page startPage(final ITestPageSource testPageSource)
 	{
+		Args.notNull(testPageSource, "testPageResource");
+
 		return startPage(testPageSource.getTestPage());
 	}
 
@@ -847,15 +831,19 @@ public class BaseWicketTester
 	 */
 	public void executeListener(final Component component, final RequestListenerInterface listener)
 	{
+		Args.notNull(component, "component");
+
 		// there are two ways to do this. RequestCycle could be forced to call the handler
 		// directly but constructing and parsing the URL increases the chance of triggering bugs
 		IRequestHandler handler = new ListenerInterfaceRequestHandler(new PageAndComponentProvider(
 			component.getPage(), component), listener);
 
 		Url url = urlFor(handler);
-		MockHttpServletRequest request = new MockHttpServletRequest(application, hsession,
+		MockHttpServletRequest request = new MockHttpServletRequest(application, httpSession,
 			servletContext);
 		request.setUrl(url);
+
+		// Process the request
 		processRequest(request, null);
 	}
 
@@ -868,6 +856,8 @@ public class BaseWicketTester
 	 */
 	public void executeListener(final Component component)
 	{
+		Args.notNull(component, "component");
+
 		for (RequestListenerInterface iface : RequestListenerInterface.getRegisteredInterfaces())
 		{
 			if (iface.getListenerInterfaceClass().isAssignableFrom(component.getClass()))
@@ -885,12 +875,15 @@ public class BaseWicketTester
 	 */
 	public void executeBehavior(final AbstractAjaxBehavior behavior)
 	{
+		Args.notNull(behavior, "behavior");
+
 		Url url = Url.parse(behavior.getCallbackUrl().toString(),
 			Charset.forName(request.getCharacterEncoding()));
 		transform(url);
 		request.setUrl(url);
 		request.addHeader("Wicket-Ajax-BaseURL", url.toString());
 		request.addHeader("Wicket-Ajax", "true");
+
 		processRequest();
 	}
 
@@ -904,8 +897,7 @@ public class BaseWicketTester
 		AbstractAjaxBehavior behavior = WicketTesterHelper.findAjaxEventBehavior(link, "onclick");
 		Url url = Url.parse(behavior.getCallbackUrl().toString(),
 			Charset.forName(request.getCharacterEncoding()));
-		transform(url);
-		return url;
+		return transform(url);
 	}
 
 	/**
@@ -914,10 +906,13 @@ public class BaseWicketTester
 	 */
 	public void executeAjaxUrl(final Url url)
 	{
+		Args.notNull(url, "url");
+
 		transform(url);
 		request.setUrl(url);
 		request.addHeader("Wicket-Ajax-BaseURL", url.toString());
 		request.addHeader("Wicket-Ajax", "true");
+
 		processRequest();
 	}
 
@@ -931,11 +926,7 @@ public class BaseWicketTester
 	 */
 	public final <C extends Page> Page startPage(final Class<C> pageClass)
 	{
-		startComponent = null;
-		request.setUrl(application.getRootRequestMapper().mapHandler(
-			new BookmarkablePageRequestHandler(new PageProvider(pageClass))));
-		processRequest();
-		return getLastRenderedPage();
+		return startPage(pageClass, null);
 	}
 
 	/**
@@ -951,10 +942,19 @@ public class BaseWicketTester
 	public final <C extends Page> Page startPage(final Class<C> pageClass,
 		final PageParameters parameters)
 	{
+		Args.notNull(pageClass, "pageClass");
+
+		// must be null for Pages
 		startComponent = null;
+
+		// prepare the request
 		request.setUrl(application.getRootRequestMapper().mapHandler(
 			new BookmarkablePageRequestHandler(new PageProvider(pageClass, parameters))));
+
+		// process the request
 		processRequest();
+
+		// The last rendered page
 		return getLastRenderedPage();
 	}
 
@@ -967,7 +967,7 @@ public class BaseWicketTester
 	 * @return a <code>FormTester</code> instance for testing the <code>Form</code>
 	 * @see #newFormTester(String, boolean)
 	 */
-	public FormTester newFormTester(String path)
+	public FormTester newFormTester(final String path)
 	{
 		return newFormTester(path, true);
 	}
@@ -983,7 +983,7 @@ public class BaseWicketTester
 	 * @return a <code>FormTester</code> instance for testing the <code>Form</code>
 	 * @see FormTester
 	 */
-	public FormTester newFormTester(String path, boolean fillBlankString)
+	public FormTester newFormTester(final String path, final boolean fillBlankString)
 	{
 		return new FormTester(path, (Form<?>)getComponentFromLastRenderedPage(path), this,
 			fillBlankString);
@@ -1016,6 +1016,8 @@ public class BaseWicketTester
 	@Deprecated
 	public final Panel startPanel(final ITestPanelSource testPanelSource)
 	{
+		Args.notNull(testPanelSource, "testPanelSource");
+
 		return (Panel)startComponent(testPanelSource.getTestPanel(DummyPanelPage.TEST_PANEL_ID),
 			null);
 	}
@@ -1033,6 +1035,8 @@ public class BaseWicketTester
 	 */
 	public final <C extends Panel> Panel startPanel(final Class<C> panelClass)
 	{
+		Args.notNull(panelClass, "panelClass");
+
 		return (Panel)startComponent(panelClass, null);
 	}
 
@@ -1048,6 +1052,9 @@ public class BaseWicketTester
 	public final Component startComponent(final Class<? extends Component> componentClass,
 		final IMarkupFragment pageMarkup)
 	{
+		Args.notNull(componentClass, "componentClass");
+
+		// Create the component instance from the class
 		Component comp;
 		try
 		{
@@ -1059,6 +1066,7 @@ public class BaseWicketTester
 			throw convertoUnexpect(e);
 		}
 
+		// process the component
 		return startComponent(comp, pageMarkup);
 	}
 
@@ -1075,21 +1083,27 @@ public class BaseWicketTester
 	{
 		Args.notNull(component, "component");
 
+		// Automatically create the page markup if not provided
 		if (pageMarkup == null)
 		{
 			pageMarkup = Markup.of("<span wicket:id='" + component.getId() + "'></span>");
 		}
 
+		// Create a page object and assign the markup
 		Page page = new WebPage()
 		{
 			private static final long serialVersionUID = 1L;
 		};
 
 		page.setMarkup(pageMarkup);
+
+		// Add the child component
 		page.add(component);
 
+		// Process the page
 		startPage(page);
 
+		// Remember the "root" component processes and return it
 		return startComponent = component;
 	}
 
@@ -1106,7 +1120,7 @@ public class BaseWicketTester
 	 * 
 	 * @param component
 	 */
-	public void startComponent(Component component)
+	public void startComponent(final Component component)
 	{
 		if (component instanceof FormComponent)
 		{
@@ -1121,7 +1135,7 @@ public class BaseWicketTester
 	 * @param e
 	 * @return RuntimeException
 	 */
-	private RuntimeException convertoUnexpect(Exception e)
+	private RuntimeException convertoUnexpect(final Exception e)
 	{
 		return new WicketRuntimeException("tester: unexpected", e);
 	}
@@ -1137,12 +1151,14 @@ public class BaseWicketTester
 	 * @return The component at the path
 	 * @see org.apache.wicket.MarkupContainer#get(String)
 	 */
-	public Component getComponentFromLastRenderedPage(String path, boolean wantVisibleInHierarchy)
+	public Component getComponentFromLastRenderedPage(String path,
+		final boolean wantVisibleInHierarchy)
 	{
 		if (startComponent != null)
 		{
 			path = startComponent.getId() + ":" + path;
 		}
+
 		Component component = getLastRenderedPage().get(path);
 		if (component == null)
 		{
@@ -1150,10 +1166,13 @@ public class BaseWicketTester
 				Classes.simpleName(getLastRenderedPage().getClass()));
 			return component;
 		}
+
 		if (!wantVisibleInHierarchy || component.isVisibleInHierarchy())
 		{
 			return component;
 		}
+
+		// Not found or not visible
 		return null;
 	}
 
@@ -1205,6 +1224,7 @@ public class BaseWicketTester
 		{
 			return Result.fail("Component not found: " + path);
 		}
+
 		return isTrue("component '" + Classes.simpleName(component.getClass()) + "' is not type:" +
 			Classes.simpleName(expectedComponentClass),
 			expectedComponentClass.isAssignableFrom(component.getClass()));
@@ -1217,11 +1237,11 @@ public class BaseWicketTester
 	 *            path to component
 	 * @return a <code>Result</code>
 	 */
-	public Result isVisible(String path)
+	public Result isVisible(final String path)
 	{
-		Component component = getComponentFromLastRenderedPage(path, false);
-
 		final Result result;
+
+		Component component = getComponentFromLastRenderedPage(path, false);
 		if (component == null)
 		{
 			result = Result.fail("path: '" + path + "' does no exist for page: " +
@@ -1243,11 +1263,11 @@ public class BaseWicketTester
 	 *            path to component
 	 * @return a <code>Result</code>
 	 */
-	public Result isInvisible(String path)
+	public Result isInvisible(final String path)
 	{
-		Component component = getComponentFromLastRenderedPage(path, false);
-
 		final Result result;
+
+		Component component = getComponentFromLastRenderedPage(path, false);
 		if (component == null)
 		{
 			result = Result.fail("path: '" + path + "' does no exist for page: " +
@@ -1269,7 +1289,7 @@ public class BaseWicketTester
 	 *            path to component
 	 * @return a <code>Result</code>
 	 */
-	public Result isEnabled(String path)
+	public Result isEnabled(final String path)
 	{
 		Component component = getComponentFromLastRenderedPage(path);
 		if (component == null)
@@ -1288,7 +1308,7 @@ public class BaseWicketTester
 	 *            path to component
 	 * @return a <code>Result</code>
 	 */
-	public Result isDisabled(String path)
+	public Result isDisabled(final String path)
 	{
 		Component component = getComponentFromLastRenderedPage(path);
 		if (component == null)
@@ -1489,7 +1509,6 @@ public class BaseWicketTester
 					fail("Internal error in WicketTester. "
 						+ "Please report this in Wicket's Issue Tracker.", e);
 				}
-
 			}
 
 			executeListener(link, ILinkListener.INTERFACE);
@@ -1533,20 +1552,21 @@ public class BaseWicketTester
 	 * segments to make the url absolute
 	 * 
 	 * @param url
+	 * @return Url
 	 */
-	private void transform(Url url)
+	private Url transform(final Url url)
 	{
 		while (url.getSegments().size() > 0 && url.getSegments().get(0).equals(".."))
 		{
 			url.getSegments().remove(0);
 		}
+		return url;
 	}
 
 	/**
 	 * Asserts the last rendered <code>Page</code> class.
 	 * 
 	 * @param <C>
-	 * 
 	 * @param expectedRenderedPageClass
 	 *            expected class of last rendered page
 	 * @return a <code>Result</code>
@@ -1648,7 +1668,8 @@ public class BaseWicketTester
 				return message.getLevel() == level;
 			}
 		});
-		List<Serializable> actualMessages = new ArrayList<Serializable>();
+
+		List<Serializable> actualMessages = Generics.newArrayList();
 		for (FeedbackMessage message : allMessages)
 		{
 			actualMessages.add(message.getMessage());
@@ -1704,7 +1725,7 @@ public class BaseWicketTester
 	 *            the <code>Component</code> to test
 	 * @return a <code>Result</code>
 	 */
-	public Result isComponentOnAjaxResponse(Component component)
+	public Result isComponentOnAjaxResponse(final Component component)
 	{
 		String failMessage = "A component which is null could not have been added to the AJAX response";
 		notNull(failMessage, component);
@@ -1769,7 +1790,7 @@ public class BaseWicketTester
 	 *            the event which we simulate being fired. If <code>event</code> is
 	 *            <code>null</code>, the test will fail.
 	 */
-	public void executeAjaxEvent(String componentPath, String event)
+	public void executeAjaxEvent(final String componentPath, final String event)
 	{
 		Component component = getComponentFromLastRenderedPage(componentPath);
 		executeAjaxEvent(component, event);
@@ -1781,7 +1802,7 @@ public class BaseWicketTester
 	 * @param wt
 	 * @param container
 	 */
-	public void executeAllTimerBehaviors(MarkupContainer container)
+	public void executeAllTimerBehaviors(final MarkupContainer container)
 	{
 		container.visitChildren(MarkupContainer.class, new IVisitor<MarkupContainer, Void>()
 		{
@@ -1931,7 +1952,6 @@ public class BaseWicketTester
 	private void serializeFormToRequest(final Form<?> form)
 	{
 		final MockRequestParameters postParameters = request.getPostParameters();
-
 		final Set<String> currentParameterNamesSet = postParameters.getParameterNames();
 
 		form.visitFormComponents(new IVisitor<FormComponent<?>, Void>()
@@ -2016,13 +2036,12 @@ public class BaseWicketTester
 	 */
 	public void applyRequest()
 	{
-		ServletWebRequest req = createServletWebRequest();
+		ServletWebRequest req = newServletWebRequest();
 		requestCycle.setRequest(req);
 		if (useRequestUrlAsBase)
 		{
 			requestCycle.getUrlRenderer().setBaseUrl(req.getUrl());
 		}
-
 	}
 
 	/**
@@ -2329,7 +2348,7 @@ public class BaseWicketTester
 		public void invalidate(Request request)
 		{
 			super.invalidate(request);
-			createNewSession();
+			newSession();
 		}
 	}
 
