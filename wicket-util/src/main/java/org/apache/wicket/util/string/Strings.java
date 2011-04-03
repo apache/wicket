@@ -755,7 +755,7 @@ public final class Strings
 			int pos = 0;
 			do
 			{
-				// Append text up to the match`
+				// Append text up to the match
 				append(buffer, s, pos, matchIndex);
 
 				// Add replaceWith text
@@ -1195,10 +1195,6 @@ public final class Strings
 		{
 			AppendingStringBuffer asb = (AppendingStringBuffer)s;
 			buffer.append(asb.getValue(), from, to - from);
-		}
-		else if (s instanceof StringBuilder)
-		{
-			buffer.append((StringBuilder)s, from, to - from);
 		}
 		else
 		{

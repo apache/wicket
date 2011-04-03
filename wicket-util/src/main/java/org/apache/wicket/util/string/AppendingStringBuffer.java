@@ -464,52 +464,6 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 		return this;
 	}
 
-
-	/**
-	 * Appends the specified <tt>AppendingStringBuffer</tt> to this <tt>AppendingStringBuffer</tt>.
-	 * <p>
-	 * The characters of the <tt>AppendingStringBuffer</tt> argument are appended, in order, to the
-	 * contents of this <tt>AppendingStringBuffer</tt>, increasing the length of this
-	 * <tt>AppendingStringBuffer</tt> by the length of the argument. If <tt>sb</tt> is <tt>null</tt>
-	 * , then the four characters <tt>"null"</tt> are appended to this
-	 * <tt>AppendingStringBuffer</tt>.
-	 * <p>
-	 * Let <i>n</i> be the length of the old character sequence, the one contained in the
-	 * <tt>AppendingStringBuffer</tt> just prior to execution of the <tt>append</tt> method. Then
-	 * the character at index <i>k</i> in the new character sequence is equal to the character at
-	 * index <i>k</i> in the old character sequence, if <i>k</i> is less than <i>n</i>; otherwise,
-	 * it is equal to the character at index <i>k-n</i> in the argument <code>sb</code>.
-	 * <p>
-	 * The method <tt>ensureCapacity</tt> is first called on this <tt>AppendingStringBuffer</tt>
-	 * with the new buffer length as its argument. (This ensures that the storage of this
-	 * <tt>AppendingStringBuffer</tt> is adequate to contain the additional characters being
-	 * appended.)
-	 * 
-	 * @param sb
-	 *            the <tt>AppendingStringBuffer</tt> to append.
-	 * @param from
-	 *            The index where it must start from
-	 * @param length
-	 *            The length that must be copied
-	 * @return a reference to this <tt>AppendingStringBuffer</tt>.
-	 */
-	public AppendingStringBuffer append(StringBuilder sb, final int from, final int length)
-	{
-		if (sb == null)
-		{
-			sb = SB_NULL;
-		}
-
-		int newcount = count + length;
-		if (newcount > value.length)
-		{
-			expandCapacity(newcount);
-		}
-		sb.getChars(from, length, value, count);
-		count = newcount;
-		return this;
-	}
-
 	/**
 	 * Appends the string representation of the <code>char</code> array argument to this string
 	 * buffer.
