@@ -19,11 +19,9 @@ package org.apache.wicket.util.tester.apps_3;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.FormTester;
-import org.apache.wicket.util.tester.ITestPageSource;
 import org.apache.wicket.util.tester.apps_1.Book;
 
 
@@ -56,15 +54,7 @@ public class FormTesterTest extends WicketTestCase
 		books = new Book[] { new Book("1", "book1"), new Book("2", "book2"),
 				new Book("3", "book3"), new Book("4", "book4") };
 
-		choicePage = (ChoicePage)tester.startPage(new ITestPageSource()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public Page getTestPage()
-			{
-				return new ChoicePage(Arrays.asList(books));
-			}
-		});
+		choicePage = (ChoicePage)tester.startPage(new ChoicePage(Arrays.asList(books)));
 		formTester = tester.newFormTester("choiceForm");
 	}
 

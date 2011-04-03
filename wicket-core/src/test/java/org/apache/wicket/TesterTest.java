@@ -21,7 +21,6 @@ import junit.framework.TestCase;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.util.tester.ITestPageSource;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
@@ -49,15 +48,7 @@ public class TesterTest extends TestCase
 	 */
 	public void testAssert()
 	{
-		tester.startPage(new ITestPageSource()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public Page getTestPage()
-			{
-				return new MyPage();
-			}
-		});
+		tester.startPage(new MyPage());
 		tester.debugComponentTrees();
 		try
 		{

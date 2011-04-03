@@ -62,7 +62,7 @@ public final class StringResourceStream extends AbstractStringResourceStream
 	@Override
 	public String toString()
 	{
-		return string.toString();
+		return super.toString() + ": " + string.toString();
 	}
 
 	/**
@@ -71,7 +71,7 @@ public final class StringResourceStream extends AbstractStringResourceStream
 	@Override
 	protected String getString()
 	{
-		return toString();
+		return string.toString();
 	}
 
 	/**

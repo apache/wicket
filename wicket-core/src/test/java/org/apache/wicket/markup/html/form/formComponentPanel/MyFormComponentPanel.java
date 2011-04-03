@@ -14,27 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.markupId;
+package org.apache.wicket.markup.html.form.formComponentPanel;
 
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.Markup;
+import org.apache.wicket.markup.html.form.FormComponentPanel;
 
 /**
  * 
  */
-public class MyPanel extends Panel
+public class MyFormComponentPanel extends FormComponentPanel<Void>
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Construct.
+	 * 
 	 * @param id
 	 */
-	public MyPanel(String id)
+	public MyFormComponentPanel(final String id)
 	{
 		super(id);
+	}
 
-		add(new Label("label", "text"));
-
-		addOrReplace(new Label("label", "Hello, World!"));
+	@Override
+	public IMarkupFragment getAssociatedMarkup()
+	{
+		return Markup.of("<wicket:panel>test</wicket:panel>");
 	}
 }

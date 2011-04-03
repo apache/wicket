@@ -27,11 +27,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.tester.FormTester;
-import org.apache.wicket.util.tester.ITestPageSource;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.apache.wicket.validation.IValidatable;
@@ -149,16 +147,7 @@ public class FileUploadFieldTest extends WicketTestCase
 			}
 		});
 
-		tester.startPage(new ITestPageSource()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public Page getTestPage()
-			{
-				return page;
-			}
-		});
-
+		tester.startPage(page);
 		FormTester formtester = tester.newFormTester("form");
 		formtester.setFile("upload", tmpFile, "text/plain");
 		formtester.submit();

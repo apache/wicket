@@ -14,27 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.markupId;
+package org.apache.wicket.markup.html.form.formComponentPanel;
 
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.WicketTestCase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * 
  */
-public class MyPanel extends Panel
+public class SimplePageTest extends WicketTestCase
 {
-	private static final long serialVersionUID = 1L;
+	private static final Logger log = LoggerFactory.getLogger(SimplePageTest.class);
 
 	/**
-	 * @param id
+	 * @throws Exception
 	 */
-	public MyPanel(String id)
+	public void testRenderHomePage() throws Exception
 	{
-		super(id);
-
-		add(new Label("label", "text"));
-
-		addOrReplace(new Label("label", "Hello, World!"));
+		tester.startComponent(MyFormComponentPanel.class, null);
+		String doc = tester.getLastResponseAsString();
+		// log.error(doc);
+		assertEquals(doc, "<wicket:panel>test</wicket:panel>");
 	}
 }

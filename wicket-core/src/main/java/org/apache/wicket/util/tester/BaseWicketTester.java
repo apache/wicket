@@ -62,6 +62,9 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
+import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.Markup;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -112,6 +115,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.apache.wicket.util.IProvider;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
@@ -143,6 +147,7 @@ public class BaseWicketTester
 	/**
 	 * @author jcompagner
 	 */
+	@Deprecated
 	private static final class TestPageSource implements ITestPageSource
 	{
 		private final Page page;
@@ -202,7 +207,7 @@ public class BaseWicketTester
 
 	// The root component used for the start. Usually the Page, but can also be a Panel
 	// see https://issues.apache.org/jira/browse/WICKET-1214
-	private MarkupContainer startComponent;
+	private Component startComponent;
 
 	/**
 	 * Creates <code>WicketTester</code> and automatically create a <code>WebApplication</code>, but
@@ -699,11 +704,21 @@ public class BaseWicketTester
 
 	/**
 	 * 
-	 * @return last response as String
+	 * @return last response as String. In case the component processed was not a Page, than the
+	 *         automatically created page markup gets removed.
 	 */
 	public String getLastResponseAsString()
 	{
-		return lastResponse.getDocument();
+		String response = lastResponse.getDocument();
+		if (startComponent == null)
+		{
+			return response;
+		}
+
+		// Remove first and last tag
+		int pos1 = response.indexOf('>');
+		int pos2 = response.lastIndexOf('<');
+		return response.substring(pos1 + 1, pos2);
 	}
 
 	/**
@@ -812,7 +827,9 @@ public class BaseWicketTester
 	 * @param testPageSource
 	 *            a <code>Page</code> factory that creates a test page instance
 	 * @return the rendered Page
+	 * @deprecated since 1.5 use startPage(page) instead
 	 */
+	@Deprecated
 	public final Page startPage(final ITestPageSource testPageSource)
 	{
 		return startPage(testPageSource.getTestPage());
@@ -994,20 +1011,13 @@ public class BaseWicketTester
 	 * @param testPanelSource
 	 *            a <code>Panel</code> factory that creates test <code>Panel</code> instances
 	 * @return a rendered <code>Panel</code>
+	 * @deprecated since 1.5 use startPanel(panel) instead
 	 */
+	@Deprecated
 	public final Panel startPanel(final ITestPanelSource testPanelSource)
 	{
-		Panel panel = (Panel)startPage(new ITestPageSource()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public Page getTestPage()
-			{
-				return new DummyPanelPage(testPanelSource);
-			}
-		}).get(DummyPanelPage.TEST_PANEL_ID);
-		startComponent = panel;
-		return panel;
+		return (Panel)startComponent(testPanelSource.getTestPanel(DummyPanelPage.TEST_PANEL_ID),
+			null);
 	}
 
 	/**
@@ -1023,33 +1033,64 @@ public class BaseWicketTester
 	 */
 	public final <C extends Panel> Panel startPanel(final Class<C> panelClass)
 	{
-		Panel panel = (Panel)startPage(new ITestPageSource()
+		return (Panel)startComponent(panelClass, null);
+	}
+
+	/**
+	 * Process a component. The web page will automatically created with the pageMarkup provided. In
+	 * case pageMarkup is null, the markup will be automatically created.
+	 * 
+	 * @param componentClass
+	 * @param pageMarkup
+	 *            May be null
+	 * @return The component processed
+	 */
+	public final Component startComponent(final Class<? extends Component> componentClass,
+		final IMarkupFragment pageMarkup)
+	{
+		Component comp;
+		try
+		{
+			Constructor<? extends Component> c = componentClass.getConstructor(String.class);
+			comp = c.newInstance("testObject");
+		}
+		catch (Exception e)
+		{
+			throw convertoUnexpect(e);
+		}
+
+		return startComponent(comp, pageMarkup);
+	}
+
+	/**
+	 * Process a component. The web page will automatically created with the pageMarkup provided. In
+	 * case pageMarkup is null, the markup will be automatically created.
+	 * 
+	 * @param component
+	 * @param pageMarkup
+	 *            May be null
+	 * @return The component processed
+	 */
+	public final Component startComponent(final Component component, IMarkupFragment pageMarkup)
+	{
+		Args.notNull(component, "component");
+
+		if (pageMarkup == null)
+		{
+			pageMarkup = Markup.of("<span wicket:id='" + component.getId() + "'></span>");
+		}
+
+		Page page = new WebPage()
 		{
 			private static final long serialVersionUID = 1L;
+		};
 
-			public Page getTestPage()
-			{
-				return new DummyPanelPage(new ITestPanelSource()
-				{
-					private static final long serialVersionUID = 1L;
+		page.setMarkup(pageMarkup);
+		page.add(component);
 
-					public Panel getTestPanel(String panelId)
-					{
-						try
-						{
-							Constructor<? extends Panel> c = panelClass.getConstructor(String.class);
-							return c.newInstance(panelId);
-						}
-						catch (Exception e)
-						{
-							throw convertoUnexpect(e);
-						}
-					}
-				});
-			}
-		}).get(DummyPanelPage.TEST_PANEL_ID);
-		startComponent = panel;
-		return panel;
+		startPage(page);
+
+		return startComponent = component;
 	}
 
 	/**

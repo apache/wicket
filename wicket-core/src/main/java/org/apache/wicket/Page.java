@@ -377,15 +377,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	public int getNumericId()
-	{
-		return getPageId();
-	}
-
-	/**
 	 * 
 	 * @return page class
 	 */
@@ -1079,15 +1070,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		setStatelessHint(false);
 
 		return new PageReference(numericId);
-	}
-
-	/**
-	 * @see org.apache.wicket.Component#getMarkup()
-	 */
-	@Override
-	public IMarkupFragment getMarkup()
-	{
-		return getAssociatedMarkup();
 	}
 
 	/**

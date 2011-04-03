@@ -703,18 +703,33 @@ public abstract class Component
 	 */
 	public IMarkupFragment getMarkup()
 	{
+		// Markup already determined or preset?
 		if (markup != null)
 		{
 			return markup;
 		}
 
+		// No parent, than check associated markup files
 		if (parent == null)
 		{
-			throw new MarkupException(
+			// Must be a MarkupContainer to have associated markup file
+			if (this instanceof MarkupContainer)
+			{
+				MarkupContainer container = (MarkupContainer)this;
+				if (container.hasAssociatedMarkup())
+				{
+					markup = container.getAssociatedMarkup();
+					return markup;
+				}
+			}
+
+			// Don't know how to find the markup
+			throw new MarkupNotFoundException(
 				"Can not determine Markup. Component is not yet connected to a parent. " +
 					toString());
 		}
 
+		// Ask the parent for find the markup for me
 		markup = parent.getMarkup(this);
 		return markup;
 	}
@@ -747,7 +762,7 @@ public abstract class Component
 		}
 
 		// move the component to its real parent if necessary
-// moveComponentToItsRealParent();
+		// moveComponentToItsRealParent();
 	}
 
 	/**

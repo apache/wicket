@@ -90,18 +90,9 @@ public class WicketTesterTest extends TestCase
 	 */
 	public void testViewBook() throws Exception
 	{
-		// for WebPage without default constructor, I define a TestPageSource to
-		// let the page be instatiated lately.
-		tester.startPage(new ITestPageSource()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public Page getTestPage()
-			{
-				Book mockBook = new Book("xxId", "xxName");
-				return new ViewBook(mockBook);
-			}
-		});
+		Book mockBook = new Book("xxId", "xxName");
+		Page page = new ViewBook(mockBook);
+		tester.startPage(page);
 
 		// assertion
 		tester.assertRenderedPage(ViewBook.class);
@@ -161,16 +152,8 @@ public class WicketTesterTest extends TestCase
 	{
 		// for WebPage without default constructor, I define a TestPageSource to
 		// let the page be instatiated lately.
-		tester.startPage(new ITestPageSource()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public Page getTestPage()
-			{
-				Book mockBook = new Book("xxId", "xxName");
-				return new ViewBook(mockBook);
-			}
-		});
+		Book mockBook = new Book("xxId", "xxName");
+		tester.startPage(new ViewBook(mockBook));
 
 		// assertion
 		tester.assertRenderedPage(ViewBook.class);
@@ -470,16 +453,7 @@ public class WicketTesterTest extends TestCase
 
 		page.add(ajaxLink);
 
-		tester.startPage(new ITestPageSource()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public Page getTestPage()
-			{
-				return page;
-			}
-		});
-
+		tester.startPage(page);
 
 		// Click the link
 		tester.clickLink(MockPageWithLink.LINK_ID);
@@ -541,16 +515,7 @@ public class WicketTesterTest extends TestCase
 		page.add(ajaxLink);
 		ajaxLink.add(label);
 
-		tester.startPage(new ITestPageSource()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public Page getTestPage()
-			{
-				return page;
-			}
-		});
-
+		tester.startPage(page);
 
 		// Click the link
 		tester.clickLink(MockPageWithLinkAndLabel.LINK_ID);
@@ -586,15 +551,7 @@ public class WicketTesterTest extends TestCase
 		page.add(label);
 
 		// Start the page
-		tester.startPage(new ITestPageSource()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public Page getTestPage()
-			{
-				return page;
-			}
-		});
+		tester.startPage(page);
 
 // tester.setupRequestAndResponse();
 
@@ -690,6 +647,9 @@ public class WicketTesterTest extends TestCase
 		assertEquals("Mock name", pojo.getName());
 	}
 
+	/**
+	 * 
+	 */
 	public void testSubmittingFormWithAjaxEventSubmitsFormValues()
 	{
 		tester.startPage(MockPageWithFormAndAjaxFormSubmitBehavior.class);
@@ -897,12 +857,18 @@ public class WicketTesterTest extends TestCase
 		setTextFieldAndAssertSubmit(false);
 	}
 
+	/**
+	 * 
+	 */
 	public void testCookieIsFoundWhenAddedToRequest()
 	{
 		tester.getRequest().addCookie(new Cookie("name", "value"));
 		assertEquals("value", tester.getRequest().getCookie("name").getValue());
 	}
 
+	/**
+	 * 
+	 */
 	public void testCookieIsFoundWhenAddedToResponse()
 	{
 		tester.startPage(CreateBook.class);
@@ -911,6 +877,9 @@ public class WicketTesterTest extends TestCase
 		assertEquals(cookies.iterator().next().getValue(), "value");
 	}
 
+	/**
+	 * 
+	 */
 	public void testCookieIsFoundOnNextRequestWhenAddedToResponse()
 	{
 		// Test that maxAge == -1 (Default) works properly

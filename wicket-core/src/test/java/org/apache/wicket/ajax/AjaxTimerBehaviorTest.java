@@ -20,14 +20,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.MockPageWithLinkAndComponent;
-import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.util.tester.ITestPageSource;
 import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,16 +69,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 			}
 		});
 
-		tester.startPage(new ITestPageSource()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public Page getTestPage()
-			{
-				return page;
-			}
-		});
-
+		tester.startPage(page);
 		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
 
 		validate(timer, false);
@@ -111,15 +100,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		label.setOutputMarkupId(true);
 		label.add(timer);
 
-		tester.startPage(new ITestPageSource()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public Page getTestPage()
-			{
-				return page;
-			}
-		});
+		tester.startPage(page);
 
 		validate(timer, true);
 
@@ -201,7 +182,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 			return "\\Q" + s + "\\E";
 		}
 
-	 StringBuilder sb = new StringBuilder(s.length() * 2);
+		StringBuilder sb = new StringBuilder(s.length() * 2);
 		sb.append("\\Q");
 		slashEIndex = 0;
 		int current = 0;

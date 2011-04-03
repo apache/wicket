@@ -21,7 +21,6 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.util.tester.ITestPageSource;
 
 
 /**
@@ -74,22 +73,9 @@ public class AjaxLinkClickTest extends WicketTestCase
 			}
 		};
 
-		tester.startPage(new ITestPageSource()
-		{
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			public Page getTestPage()
-			{
-				Page page = new MockPageWithLink();
-				page.add(ajaxLink);
-
-				return page;
-			}
-		});
-
+		Page page = new MockPageWithLink();
+		page.add(ajaxLink);
+		tester.startPage(page);
 		tester.clickLink("ajaxLink");
 
 		assertTrue(linkClicked);
@@ -119,19 +105,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 			}
 		});
 
-		tester.startPage(new ITestPageSource()
-		{
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			public Page getTestPage()
-			{
-				return page;
-			}
-		});
-
+		tester.startPage(page);
 		tester.clickLink("ajaxLink");
 
 		assertTrue(linkClicked);
@@ -159,18 +133,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 			}
 		});
 
-		tester.startPage(new ITestPageSource()
-		{
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			public Page getTestPage()
-			{
-				return page;
-			}
-		});
+		tester.startPage(page);
 
 		// Click the link with ajax disabled
 		tester.clickLink("ajaxLink", false);

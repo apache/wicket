@@ -24,7 +24,9 @@ import org.apache.wicket.markup.html.panel.Panel;
  * 
  * @author Ingram Chen
  * @since 1.2.6
+ * @deprecated since 1.5 No longer needed
  */
+@Deprecated
 public interface ITestPanelSource extends IClusterable
 {
 	/**

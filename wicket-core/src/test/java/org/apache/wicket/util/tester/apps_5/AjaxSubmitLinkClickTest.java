@@ -16,12 +16,10 @@
  */
 package org.apache.wicket.util.tester.apps_5;
 
-import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.util.tester.ITestPageSource;
 import org.apache.wicket.util.tester.apps_5.MockPageWithFormAndLink.MockPojo;
 
 
@@ -74,8 +72,9 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 		tester.assertRenderedPage(MockPageWithFormAndContainedLink.class);
 
 		// Change the name in the textfield
-		tester.getRequest().getPostParameters().setParameterValue(
-			page.getNameField().getInputName(), "new mock value");
+		tester.getRequest()
+			.getPostParameters()
+			.setParameterValue(page.getNameField().getInputName(), "new mock value");
 
 		// Click the submit link
 		tester.clickLink("form:link");
@@ -114,21 +113,13 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 		};
 		page.add(link);
 
-		tester.startPage(new ITestPageSource()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public Page getTestPage()
-			{
-				return page;
-			}
-		});
-
+		tester.startPage(page);
 		tester.assertRenderedPage(MockPageWithFormAndLink.class);
 
 		// Change the name in the textfield
-		tester.getRequest().getPostParameters().setParameterValue(
-			page.getNameField().getInputName(), "new mock value");
+		tester.getRequest()
+			.getPostParameters()
+			.setParameterValue(page.getNameField().getInputName(), "new mock value");
 
 		// Click the submit link
 		tester.clickLink("link");
