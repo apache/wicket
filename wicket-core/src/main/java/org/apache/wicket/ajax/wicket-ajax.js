@@ -1038,6 +1038,7 @@ Wicket.Ajax.Request.prototype = {
  *   - javascript that should be invoked
  *   - body of components being replaced
  *   - header contributions of components
+ *   - a redirect location
  */
 Wicket.Ajax.Call = Wicket.Class.create();
 
