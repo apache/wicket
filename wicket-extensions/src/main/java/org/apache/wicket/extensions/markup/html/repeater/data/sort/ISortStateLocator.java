@@ -38,6 +38,8 @@ public interface ISortStateLocator extends IClusterable
 	 * 
 	 * @param state
 	 *            new sort state
+	 * @deprecated use {@link #getSortState()}.setPropertySortOrder(...) instead
 	 */
+	@Deprecated
 	void setSortState(ISortState state);
 }
