@@ -65,7 +65,7 @@ public class PopupCloseLink<T> extends Link<T>
 	@Override
 	public void onClick()
 	{
-		// Web page closes window using javascript code in PopupCloseLink$1.html
+		// Web page closes window using javascript code in PopupCloseLink$ClosePopupPage.html
 		setResponsePage(ClosePopupPage.class);
 	}
 }
