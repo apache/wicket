@@ -36,6 +36,10 @@ public abstract class AbstractResourceStreamWriter implements IResourceStreamWri
 
 	private Locale locale;
 
+	private String variation;
+
+	private String style;
+
 	/**
 	 * Default implementation to return -1. Do override this if you know the length up front.
 	 */
@@ -79,4 +83,30 @@ public abstract class AbstractResourceStreamWriter implements IResourceStreamWri
 	public final void close() throws IOException
 	{
 	}
+
+	public String getContentType()
+	{
+		return null;
+	}
+
+	public String getStyle()
+	{
+		return style;
+	}
+
+	public void setStyle(String style)
+	{
+		this.style = style;
+	}
+
+	public String getVariation()
+	{
+		return variation;
+	}
+
+	public void setVariation(String variation)
+	{
+		this.variation = variation;
+	}
+
 }
