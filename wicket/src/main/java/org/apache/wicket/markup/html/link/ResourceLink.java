@@ -106,7 +106,7 @@ public class ResourceLink<T> extends Link<T> implements IResourceListener
 	public final void onResourceRequested()
 	{
 		resource.onResourceRequested();
-		onClick();
+		onLinkClicked();
 	}
 
 	/**
