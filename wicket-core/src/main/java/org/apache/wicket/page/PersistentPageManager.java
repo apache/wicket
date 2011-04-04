@@ -340,7 +340,6 @@ public class PersistentPageManager extends AbstractPageManager
 			{
 				synchronized (entry)
 				{
-					setSessionAttribute(getAttributeName(), null);
 					setSessionAttribute(getAttributeName(), entry);
 				}
 			}
