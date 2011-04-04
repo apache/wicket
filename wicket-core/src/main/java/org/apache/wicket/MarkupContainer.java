@@ -923,8 +923,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			// tell the page a component has been added first, to allow it to initialize
 			page.componentAdded(child);
 
-			// initialie the component
-			if (page.getFlag(FLAG_INITIALIZED))
+			// initialize the component
+			if (page.isInitialized())
 			{
 				child.internalInitialize();
 			}

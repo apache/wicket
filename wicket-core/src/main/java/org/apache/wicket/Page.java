@@ -279,7 +279,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	@Override
 	public void internalPrepareForRender(boolean setRenderingFlag)
 	{
-		if (!getFlag(FLAG_INITIALIZED))
+		if (!isInitialized())
 		{
 			// initialize the page if not yet initialized
 			internalInitialize();
