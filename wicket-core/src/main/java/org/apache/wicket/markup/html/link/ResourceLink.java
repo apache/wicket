@@ -21,8 +21,8 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.IResource.Attributes;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * A link to any ResourceReference.
@@ -112,7 +112,7 @@ public class ResourceLink<T> extends Link<T> implements IResourceListener
 		Attributes a = new Attributes(RequestCycle.get().getRequest(), RequestCycle.get()
 			.getResponse(), null);
 		resource.respond(a);
-		onClick();
+		onLinkClicked();
 	}
 
 	/**
