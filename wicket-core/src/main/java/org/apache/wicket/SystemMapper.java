@@ -49,7 +49,7 @@ public class SystemMapper extends CompoundRequestMapper
 		add(RestartResponseAtInterceptPageException.MAPPER);
 		add(new PageInstanceMapper());
 		add(new BookmarkableMapper());
-		add(new HomePageMapper(new HomePageProvider(application)));
+		add(new HomePageMapper(new HomePageProvider<Page>(application)));
 		add(new ResourceReferenceMapper(new PageParametersEncoder(),
 			new ParentFolderPlaceholderProvider(application), getResourceCachingStrategy()));
 		add(new BufferedResponseMapper());
