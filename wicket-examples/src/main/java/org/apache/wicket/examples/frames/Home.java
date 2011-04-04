@@ -17,6 +17,9 @@
 package org.apache.wicket.examples.frames;
 
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.handler.BookmarkablePageRequestHandler;
+import org.apache.wicket.request.handler.PageProvider;
 
 /**
  * Home page for the frames example.
@@ -25,10 +28,22 @@ import org.apache.wicket.markup.html.WebPage;
  */
 public class Home extends WebPage
 {
+	/** */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor
 	 */
 	public Home()
 	{
+		IRequestHandler topFrameHandler = new BookmarkablePageRequestHandler(new PageProvider(
+			TopFrame.class));
+		ExampleFrame topFrame = new ExampleFrame("topFrame", topFrameHandler);
+		add(topFrame);
+
+		IRequestHandler bodyFrameHandler = new BookmarkablePageRequestHandler(new PageProvider(
+			BodyFrame.class));
+		ExampleFrame bodyFrame = new ExampleFrame("bodyFrame", bodyFrameHandler);
+		add(bodyFrame);
 	}
 }

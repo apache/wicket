@@ -16,13 +16,8 @@
  */
 package org.apache.wicket.examples.frames;
 
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 
@@ -34,32 +29,8 @@ import org.apache.wicket.request.handler.RenderPageRequestHandler;
  */
 public class BodyFrame extends WebPage
 {
-	/**
-	 * Model that returns the url to the bookmarkable page that is set in the current frame target.
-	 */
-	private final class FrameModel implements IModel<CharSequence>
-	{
-		public CharSequence getObject()
-		{
-			IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(
-				frameTarget.getFrameClass()));
-			return RequestCycle.get().urlFor(handler);
-		}
-
-		public void setObject(final CharSequence object)
-		{
-		}
-
-		/**
-		 * @see org.apache.wicket.model.IDetachable#detach()
-		 */
-		public void detach()
-		{
-		}
-	}
-
-	/** name for page map etc. */
-	public static final String RIGHT_FRAME_NAME = "right";
+	/** */
+	private static final long serialVersionUID = 1L;
 
 	private final FrameTarget frameTarget = new FrameTarget(Page1.class);
 
@@ -71,19 +42,23 @@ public class BodyFrame extends WebPage
 		// create a new page instance, passing this 'master page' as an argument
 		LeftFrame leftFrame = new LeftFrame(this);
 		// get the url to that page
-		IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(leftFrame));
-		String leftFrameSrc = RequestCycle.get().urlFor(handler).toString();
+		IRequestHandler leftFrameHandler = new RenderPageRequestHandler(new PageProvider(leftFrame));
 		// and create a simple component that modifies it's src attribute to
 		// hold the url to that frame
-		WebComponent leftFrameTag = new WebComponent("leftFrame");
-		leftFrameTag.add(new AttributeModifier("src", new Model<String>(leftFrameSrc)));
+		ExampleFrame leftFrameTag = new ExampleFrame("leftFrame", leftFrameHandler);
 		add(leftFrameTag);
 
-		// make a simple component for the right frame tag
-		WebComponent rightFrameTag = new WebComponent("rightFrame");
-		// and this time, set a model which retrieves the url to the currently
-		// set frame class in the frame target
-		rightFrameTag.add(new AttributeModifier("src", new FrameModel()));
+		ExampleFrame rightFrameTag = new ExampleFrame("rightFrame")
+		{
+			/** */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected CharSequence getUrl()
+			{
+				return frameTarget.getUrl();
+			}
+		};
 		add(rightFrameTag);
 	}
 

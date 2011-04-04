@@ -18,6 +18,9 @@ package org.apache.wicket.examples.frames;
 
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.Page;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.handler.BookmarkablePageRequestHandler;
+import org.apache.wicket.request.handler.PageProvider;
 
 /**
  * Simple struct for holding the class of the right frame.
@@ -71,5 +74,14 @@ public final class FrameTarget implements IClusterable
 	public <C extends Page> void setFrameClass(Class<C> frameClass)
 	{
 		this.frameClass = frameClass;
+	}
+
+	/**
+	 * @return URL to this frame class
+	 */
+	public CharSequence getUrl()
+	{
+		return RequestCycle.get().urlFor(
+			new BookmarkablePageRequestHandler(new PageProvider(frameClass)));
 	}
 }
