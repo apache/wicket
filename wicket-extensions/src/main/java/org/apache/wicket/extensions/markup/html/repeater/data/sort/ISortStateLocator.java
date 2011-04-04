@@ -32,12 +32,4 @@ public interface ISortStateLocator extends IClusterable
 	 * @return ISortState object
 	 */
 	ISortState getSortState();
-
-	/**
-	 * Setter for the sort state object
-	 * 
-	 * @param state
-	 *            new sort state
-	 */
-	void setSortState(ISortState state);
 }

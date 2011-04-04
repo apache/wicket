@@ -48,20 +48,6 @@ public abstract class SortableDataProvider<T> implements ISortableDataProvider<T
 	}
 
 	/**
-	 * @see ISortableDataProvider#setSortState(org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState)
-	 */
-	public final void setSortState(final ISortState state)
-	{
-		if (!(state instanceof SingleSortState))
-		{
-			throw new IllegalArgumentException(
-				"argument [state] must be an instance of SingleSortState, but it is [" +
-					state.getClass().getName() + "]:[" + state.toString() + "]");
-		}
-		this.state = (SingleSortState)state;
-	}
-
-	/**
 	 * Returns current sort state
 	 * 
 	 * @return current sort state
