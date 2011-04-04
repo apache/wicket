@@ -110,7 +110,7 @@ public abstract class AjaxFallbackOrderByBorder extends Border
 			}
 
 			@Override
-			protected void onAjaxClick(final AjaxRequestTarget target)
+			public void onClick(final AjaxRequestTarget target)
 			{
 				AjaxFallbackOrderByBorder.this.onAjaxClick(target);
 

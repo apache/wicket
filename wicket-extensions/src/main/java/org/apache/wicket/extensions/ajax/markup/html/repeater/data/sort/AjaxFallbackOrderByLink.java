@@ -20,6 +20,7 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
+import org.apache.wicket.ajax.markup.html.IAjaxLink;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
 
@@ -34,12 +35,14 @@ import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class AjaxFallbackOrderByLink extends OrderByLink
+public abstract class AjaxFallbackOrderByLink extends OrderByLink implements IAjaxLink
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	private final IAjaxCallDecorator decorator;
 
 	/**
 	 * Constructor
@@ -67,7 +70,6 @@ public abstract class AjaxFallbackOrderByLink extends OrderByLink
 	{
 		this(id, property, stateLocator, DefaultCssProvider.getInstance(), null);
 	}
-
 
 	/**
 	 * Constructor
@@ -98,7 +100,25 @@ public abstract class AjaxFallbackOrderByLink extends OrderByLink
 	{
 		super(id, property, stateLocator, cssProvider);
 
-		add(new AjaxEventBehavior("onclick")
+		this.decorator = decorator;
+	}
+
+	@Override
+	public void onInitialize()
+	{
+		super.onInitialize();
+
+		add(newAjaxEventBehavior("onclick"));
+	}
+
+	/**
+	 * @param event
+	 *            the name of the default event on which this link will listen to
+	 * @return the ajax behavior which will be executed when the user clicks the link
+	 */
+	protected AjaxEventBehavior newAjaxEventBehavior(final String event)
+	{
+		return new AjaxEventBehavior(event)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -106,7 +126,7 @@ public abstract class AjaxFallbackOrderByLink extends OrderByLink
 			protected void onEvent(final AjaxRequestTarget target)
 			{
 				onClick();
-				onAjaxClick(target);
+				onClick(target);
 			}
 
 			@Override
@@ -114,19 +134,17 @@ public abstract class AjaxFallbackOrderByLink extends OrderByLink
 			{
 				return new CancelEventIfNoAjaxDecorator(decorator);
 			}
-
-		});
+		};
 
 	}
 
 	/**
 	 * Callback method when an ajax click occurs. All the behavior of changing the sort, etc is
-	 * already performed bfore this is called so this method should primarily be used to configure
+	 * already performed before this is called so this method should primarily be used to configure
 	 * the target.
 	 * 
 	 * @param target
 	 */
-	protected abstract void onAjaxClick(AjaxRequestTarget target);
-
+	public abstract void onClick(AjaxRequestTarget target);
 
 }
