@@ -93,4 +93,9 @@ public abstract class AbstractResourceStreamWriter implements IResourceStreamWri
 	public final void close() throws IOException
 	{
 	}
+
+	public String getContentType()
+	{
+		return null;
+	}
 }
