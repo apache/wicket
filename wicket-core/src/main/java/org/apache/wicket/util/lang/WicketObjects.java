@@ -74,8 +74,12 @@ public class WicketObjects
 					.getClassResolver()
 					.resolveClass(className);
 			}
-			resolved = (Class<T>)Class.forName(className, false, Thread.currentThread()
-				.getContextClassLoader());
+
+			if (resolved == null)
+			{
+				resolved = (Class<T>)Class.forName(className, false, Thread.currentThread()
+					.getContextClassLoader());
+			}
 		}
 		catch (ClassNotFoundException cnfx)
 		{
