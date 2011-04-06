@@ -389,8 +389,7 @@ public final class MarkupParserTest extends WicketTestCase
 		assertEquals(5, markup.size());
 		assertEquals("html", ((ComponentTag)markup.get(0)).getName());
 		assertEquals("html", ((ComponentTag)markup.get(4)).getName());
-		assertEquals("<!--/*--><![CDATA[/*><!--*/\n... <x a> ...\n/*-->]]>*/", markup.get(2)
-			.toString());
+		assertEquals("\n/*<![CDATA[*/\n... <x a> ...\n/*]]>*/\n", markup.get(2).toString());
 	}
 
 	/**
@@ -456,7 +455,7 @@ public final class MarkupParserTest extends WicketTestCase
 		tag = markup.get(0);
 		assertEquals("<script>", tag.toString());
 		tag = markup.get(1);
-		assertEquals("<!--/*--><![CDATA[/*><!--*/\n text \n/*-->]]>*/", tag.toString());
+		assertEquals("\n/*<![CDATA[*/\n text \n/*]]>*/\n", tag.toString());
 		tag = markup.get(2);
 		assertEquals("</script>", tag.toString());
 
@@ -492,7 +491,7 @@ public final class MarkupParserTest extends WicketTestCase
 		tag = markup.get(1);
 		assertEquals("<script>", tag.toString());
 		tag = markup.get(2);
-		assertEquals("<!--/*--><![CDATA[/*><!--*/\n text \n/*-->]]>*/", tag.toString());
+		assertEquals("\n/*<![CDATA[*/\n text \n/*]]>*/\n", tag.toString());
 		tag = markup.get(3);
 		assertEquals("</script>", tag.toString());
 
@@ -501,7 +500,7 @@ public final class MarkupParserTest extends WicketTestCase
 		tag = markup.get(1);
 		assertEquals("<script>", tag.toString());
 		tag = markup.get(2);
-		assertEquals("<!--/*--><![CDATA[/*><!--*/\n text \n/*-->]]>*/", tag.toString());
+		assertEquals("\n/*<![CDATA[*/\n text \n/*]]>*/\n", tag.toString());
 		tag = markup.get(3);
 		assertEquals("</script>", tag.toString());
 	}

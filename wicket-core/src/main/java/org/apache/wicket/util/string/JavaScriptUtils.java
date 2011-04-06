@@ -27,22 +27,22 @@ import org.apache.wicket.request.Response;
 public class JavaScriptUtils
 {
 	/** Script open tag */
-	public final static String SCRIPT_OPEN_TAG = "<script type=\"text/javascript\"><!--/*--><![CDATA[/*><!--*/\n";
+	public final static String SCRIPT_OPEN_TAG = "<script type=\"text/javascript\">\n/*<![CDATA[*/\n";
 
 	/** Script close tag */
-	public final static String SCRIPT_CLOSE_TAG = "\n/*-->]]>*/</script>\n";
+	public final static String SCRIPT_CLOSE_TAG = "\n/*]]>*/\n</script>\n";
 
 	/**
 	 * Script open tag. If this tag is changed, also update Wicket.Head.Contributor.processScript()
 	 * function from wicket-ajax.js
 	 */
-	public final static String SCRIPT_CONTENT_PREFIX = "<!--/*--><![CDATA[/*><!--*/\n";
+	public final static String SCRIPT_CONTENT_PREFIX = "\n/*<![CDATA[*/\n";
 
 	/**
 	 * Script close tag. If this tag is changed, also update Wicket.Head.Contributor.processScript()
 	 * function from wicket-ajax.js
 	 */
-	public final static String SCRIPT_CONTENT_SUFFIX = "\n/*-->]]>*/";
+	public final static String SCRIPT_CONTENT_SUFFIX = "\n/*]]>*/\n";
 
 
 	/** The response object */

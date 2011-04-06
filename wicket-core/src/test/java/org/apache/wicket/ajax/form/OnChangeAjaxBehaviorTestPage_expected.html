@@ -2,15 +2,21 @@
 	<head><script type="text/javascript" src="../resource/org.apache.wicket.markup.html.WicketEventReference/wicket-event.js"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.WicketAjaxReference/wicket-ajax.js"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug.js"></script>
-<script type="text/javascript" id="wicket-ajax-debug-enable"><!--/*--><![CDATA[/*><!--*/
+<script type="text/javascript" id="wicket-ajax-debug-enable">
+/*<![CDATA[*/
 wicketAjaxDebugEnable=true;
-/*-->]]>*/</script>
-<script type="text/javascript" id="wicket-ajax-base-url"><!--/*--><![CDATA[/*><!--*/
+/*]]>*/
+</script>
+<script type="text/javascript" id="wicket-ajax-base-url">
+/*<![CDATA[*/
 Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.ajax.form.OnChangeAjaxBehaviorTestPage?0";
-/*-->]]>*/</script>
-<script type="text/javascript" ><!--/*--><![CDATA[/*><!--*/
+/*]]>*/
+</script>
+<script type="text/javascript" >
+/*<![CDATA[*/
 Wicket.Event.add(window, "domready", function(event) { new Wicket.ChangeHandler('field1');;});
-/*-->]]>*/</script>
+/*]]>*/
+</script>
 </head><body>
 		<form wicket:id="form" id="form2" method="post" action="../page?0-1.IFormSubmitListener-form"><div style="width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden"><input type="hidden" name="form2_hf_0" id="form2_hf_0" /></div>
 			<input type="text" wicket:id="field" value="" name="field" id="field1" onchange="var wcall=wicketAjaxPost(&#039;../page?0-1.IBehaviorListener.0-form-field&#039;, wicketSerialize(Wicket.$(&#039;field1&#039;)),function() { }.bind(this),function() { }.bind(this), function() {return Wicket.$(&#039;field1&#039;) != null;}.bind(this));"/>
