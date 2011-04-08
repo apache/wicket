@@ -26,6 +26,7 @@ import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.parser.filter.HeadForceTagIdHandler;
 import org.apache.wicket.markup.parser.filter.HtmlHandler;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
+import org.apache.wicket.markup.parser.filter.InlineEnclosureHandler;
 import org.apache.wicket.markup.parser.filter.OpenCloseTagExpander;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
 import org.apache.wicket.markup.parser.filter.StyleAndScriptIdentifier;
@@ -182,6 +183,7 @@ public class MarkupParser extends AbstractMarkupParser
 		filters.add(new OpenCloseTagExpander());
 		filters.add(new RelativePathPrefixHandler());
 		filters.add(new EnclosureHandler());
+		filters.add(new InlineEnclosureHandler());
 		filters.add(new StyleAndScriptIdentifier(markup));
 		filters.add(new ConditionalCommentFilter());
 

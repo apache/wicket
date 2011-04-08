@@ -522,6 +522,9 @@ public abstract class WebApplication extends Application
 		setPageRendererProvider(new WebPageRendererProvider());
 		setSessionStoreProvider(new WebSessionStoreProvider());
 		setAjaxRequestTargetProvider(new DefaultAjaxRequestTargetProvider());
+
+		getAjaxRequestTargetListeners().add(new AjaxEnclosureListener());
+
 		// Configure the app.
 		configure();
 	}

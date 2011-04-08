@@ -34,6 +34,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.border.Border;
+import org.apache.wicket.markup.html.internal.InlineEnclosure;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
@@ -1412,6 +1413,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				{
 					autoAdd(component, markupStream);
 				}
+				else if (component != null)
+				{
+					component.setMarkup(markupStream.getMarkupFragment());
+				}
 			}
 
 			// Failed to find it?
@@ -1606,11 +1611,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 	}
 
-
-	/**
-	 * 
-	 * @see org.apache.wicket.Component#detachChildren()
-	 */
 	@Override
 	void detachChildren()
 	{
@@ -1624,12 +1624,16 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				Component component = (Component)child;
 				component.detach();
 
-				if (component.isAuto())
+				// We need to keep InlineEnclosures for Ajax request handling.
+				// TODO this is really ugly. Feature request for 1.5: change auto-component that
+				// they don't need to be removed anymore.
+				if (component.isAuto() && !(component instanceof InlineEnclosure))
 				{
 					children_remove(i);
 				}
 			}
 		}
+
 		if (children instanceof ChildList)
 		{
 			ChildList lst = (ChildList)children;
@@ -1737,12 +1741,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		});
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.Component#onAfterRenderChildren()
-	 */
 	@Override
-	void onAfterRenderChildren()
+	protected void onAfterRenderChildren()
 	{
 		// Loop through child components
 		final Iterator<? extends Component> iter = iterator();

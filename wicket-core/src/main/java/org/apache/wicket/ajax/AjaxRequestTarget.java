@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.ajax;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -54,6 +53,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.response.filter.IResponseFilter;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
@@ -233,11 +233,11 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		}
 	}
 
-	private static final Logger LOG = LoggerFactory.getLogger(AjaxRequestTarget.class);
+	private static final Logger log = LoggerFactory.getLogger(AjaxRequestTarget.class);
 
-	private final List<CharSequence> appendJavaScripts = new ArrayList<CharSequence>();
+	private final List<CharSequence> appendJavaScripts = Generics.newArrayList();
 
-	private final List<CharSequence> domReadyJavaScripts = new ArrayList<CharSequence>();
+	private final List<CharSequence> domReadyJavaScripts = Generics.newArrayList();
 
 	/**
 	 * Create a response for component body and javascript that will escape output to make it safe
@@ -255,7 +255,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	private final Map<String, Component> markupIdToComponent = new LinkedHashMap<String, Component>();
 
 	/** */
-	private final List<CharSequence> prependJavaScripts = new ArrayList<CharSequence>();
+	private final List<CharSequence> prependJavaScripts = Generics.newArrayList();
 
 	/** a list of listeners */
 	private List<IListener> listeners = null;
@@ -265,15 +265,6 @@ public class AjaxRequestTarget implements IPageRequestHandler
 
 	/** The associated Page */
 	private final Page page;
-
-	/**
-	 * 
-	 * @see org.apache.wicket.request.handler.IPageRequestHandler#getPage()
-	 */
-	public Page getPage()
-	{
-		return page;
-	}
 
 	/**
 	 * Constructor
@@ -287,6 +278,14 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		Response response = RequestCycle.get().getResponse();
 		encodingBodyResponse = new AjaxResponse(response);
 		encodingHeaderResponse = new AjaxResponse(response);
+	}
+
+	/**
+	 * @see org.apache.wicket.request.handler.IPageRequestHandler#getPage()
+	 */
+	public Page getPage()
+	{
+		return page;
 	}
 
 	/**
@@ -366,10 +365,8 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	{
 		for (final Component component : components)
 		{
-			if (component == null)
-			{
-				throw new IllegalArgumentException("component cannot be null");
-			}
+			Args.notNull(component, "component");
+
 			if (component.getOutputMarkupId() == false)
 			{
 				throw new IllegalArgumentException(
@@ -402,21 +399,15 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	 * 
 	 * @param markupId
 	 *            id of client-side dom element that will be updated
-	 * 
 	 * @param component
 	 *            component to be rendered
 	 */
-	public final void add(Component component, String markupId)
+	public final void add(final Component component, final String markupId)
 	{
-		if (Strings.isEmpty(markupId))
-		{
-			throw new IllegalArgumentException("markupId cannot be empty");
-		}
-		if (component == null)
-		{
-			throw new IllegalArgumentException("component cannot be null");
-		}
-		else if (component instanceof Page)
+		Args.notEmpty(markupId, "markupId");
+		Args.notNull(component, "component");
+
+		if (component instanceof Page)
 		{
 			if (component != page)
 			{
@@ -428,7 +419,8 @@ public class AjaxRequestTarget implements IPageRequestHandler
 			throw new IllegalArgumentException(
 				"Component " +
 					component.getClass().getName() +
-					" has been added to the target. This component is a repeater and cannot be repainted via ajax directly. Instead add its parent or another markup container higher in the hierarchy.");
+					" has been added to the target. This component is a repeater and cannot be repainted via ajax directly. " +
+					"Instead add its parent or another markup container higher in the hierarchy.");
 		}
 
 		component.setMarkupId(markupId);
@@ -471,10 +463,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	 */
 	public final void appendJavaScript(CharSequence javascript)
 	{
-		if (javascript == null)
-		{
-			throw new IllegalArgumentException("javascript cannot be null");
-		}
+		Args.notNull(javascript, "javascript");
 
 		appendJavaScripts.add(javascript);
 	}
@@ -532,10 +521,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	 */
 	public final void prependJavaScript(CharSequence javascript)
 	{
-		if (javascript == null)
-		{
-			throw new IllegalArgumentException("javascript cannot be null");
-		}
+		Args.notNull(javascript, "javascript");
 
 		prependJavaScripts.add(javascript);
 	}
@@ -579,8 +565,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 
 		try
 		{
-			RequestCycle rc = (RequestCycle)requestCycle;
-
+			final RequestCycle rc = (RequestCycle)requestCycle;
 			final WebResponse response = (WebResponse)requestCycle.getResponse();
 
 			if (markupIdToComponent.values().contains(page))
@@ -943,12 +928,8 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		if (page == null)
 		{
 			// dont throw an exception but just ignore this component, somehow
-			// it got
-			// removed from the page.
-			// throw new IllegalStateException(
-			// "Ajax request attempted on a component that is not associated
-			// with a Page");
-			LOG.debug("component: " + component + " with markupid: " + markupId +
+			// it got removed from the page.
+			log.debug("component: " + component + " with markupid: " + markupId +
 				" not rendered because it was already removed from page");
 			return;
 		}
@@ -1021,7 +1002,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		{
 			if (headerRendering == false)
 			{
-				LOG.debug("Only methods that can be called on IHeaderResponse outside renderHead() are renderOnLoadJavaScript and renderOnDomReadyJavaScript");
+				log.debug("Only methods that can be called on IHeaderResponse outside renderHead() are renderOnLoadJavaScript and renderOnDomReadyJavaScript");
 			}
 
 			return headerRendering;
@@ -1356,6 +1337,4 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	{
 		return page.getPageParameters();
 	}
-
-
 }

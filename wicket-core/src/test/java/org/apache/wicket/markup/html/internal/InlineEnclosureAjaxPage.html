@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<table border="1" cellpadding="1" cellspacing="1">
+	<tr>
+		<th>Header row</th>
+	</tr>
+	<tr>
+		<td><a wicket:id="link">Toggle</a></td>
+	</tr>
+	<tr wicket:enclosure="toggleable" bgcolor="red">
+		<td><input wicket:id="toggleable" type="button"
+				value="This button (and red border) should appear and disappear by pressing toggle" 
+			style="border: 1px solid black; background: lightblue;" /> Also this
+		part should toggle</td>
+	</tr>
+</table>
+
+</body>
+</html>

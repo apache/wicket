@@ -4152,7 +4152,7 @@ public abstract class Component
 	/**
 	 * 
 	 */
-	void onAfterRenderChildren()
+	protected void onAfterRenderChildren()
 	{
 	}
 

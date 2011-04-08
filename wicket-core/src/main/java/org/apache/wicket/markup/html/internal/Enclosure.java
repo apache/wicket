@@ -116,20 +116,27 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 		this.childId = childId;
 	}
 
+	/**
+	 * 
+	 * @return child id
+	 */
+	public final String getChildId()
+	{
+		return childId.toString();
+	}
+
 	@Override
 	protected void onInitialize()
 	{
 		super.onInitialize();
 
-		// enclosure's parent container
-		MarkupContainer container = getEnclosureParent();
-
-		// clear the cache
-		childComponent = null;
-
 		// get Child Component. If not "added", ask a resolver to find it.
-		childComponent = getChildComponent(new MarkupStream(getMarkup()), container);
-		checkChildComponent(childComponent);
+		childComponent = getChildComponent(new MarkupStream(getMarkup()), getEnclosureParent());
+	}
+
+	protected final Component getChild()
+	{
+		return childComponent;
 	}
 
 	/**
@@ -137,7 +144,7 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 	 * 
 	 * @return enclosure's parent markup container
 	 */
-	private MarkupContainer getEnclosureParent()
+	protected MarkupContainer getEnclosureParent()
 	{
 		MarkupContainer parent = getParent();
 		while ((parent != null) && parent.isAuto())
@@ -202,7 +209,7 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 	 */
 	private Component getChildComponent(final MarkupStream markupStream, MarkupContainer container)
 	{
-		Component controller = container.get(childId.toString());
+		Component controller = getEnclosureParent().get(getChildId());
 		if (controller == null)
 		{
 			int orgIndex = markupStream.getCurrentIndex();
@@ -238,6 +245,8 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 				markupStream.setCurrentIndex(orgIndex);
 			}
 		}
+
+		checkChildComponent(controller);
 		return controller;
 	}
 
@@ -280,9 +289,6 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 			this.enclosure = enclosure;
 		}
 
-		/**
-		 * @see org.apache.wicket.application.IComponentOnBeforeRenderListener#onBeforeRender(org.apache.wicket.Component)
-		 */
 		public void onAfterRender(final Component component)
 		{
 			if (log.isWarnEnabled())
