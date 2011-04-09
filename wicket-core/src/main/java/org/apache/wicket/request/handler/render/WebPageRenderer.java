@@ -173,7 +173,7 @@ public class WebPageRenderer extends PageRenderer
 	{
 		WebResponse response = (WebResponse)requestCycle.getResponse();
 		String relativeUrl = requestCycle.getUrlRenderer().renderUrl(url);
-		response.reset();
+		// response.reset();
 		response.sendRedirect(relativeUrl);
 	}
 

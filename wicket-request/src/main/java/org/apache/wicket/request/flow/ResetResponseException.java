@@ -28,13 +28,12 @@ import org.apache.wicket.request.RequestHandlerStack.ReplaceHandlerException;
  */
 public abstract class ResetResponseException extends ReplaceHandlerException
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
+	 * 
+	 * @param handler
 	 */
 	protected ResetResponseException(final IRequestHandler handler)
 	{
@@ -45,6 +44,11 @@ public abstract class ResetResponseException extends ReplaceHandlerException
 	{
 		private final IRequestHandler delegate;
 
+		/**
+		 * Construct.
+		 * 
+		 * @param delegate
+		 */
 		public ResponseResettingDecorator(final IRequestHandler delegate)
 		{
 			this.delegate = delegate;

@@ -19,52 +19,43 @@ package org.apache.wicket.util.cookies;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 
 /**
- * Mock page for testing.
+ * Statefull form page which sets a cookie and calls setResponsePage()
  * 
- * @author Chris Turner
+ * @author Bertrand Guay-Paquet
  */
-public class CookieValuePersisterTestPage extends WebPage
+public class SetCookieAndRedirectStatefullTestPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
+
+	/**	 */
+	public static final String cookieName = "CookieValuePersisterStatelessTestPage";
+
+	private IModel<String> inputModel;
 
 	/**
 	 * Construct.
 	 */
-	public CookieValuePersisterTestPage()
+	public SetCookieAndRedirectStatefullTestPage()
 	{
-		// Create and add feedback panel to page
-		final FeedbackPanel feedback = new FeedbackPanel("feedback");
-		add(feedback);
-		add(new TestForm("form"));
-	}
-
-	/**
-	 * 
-	 */
-	public final class TestForm extends Form<Void>
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Constructor
-		 * 
-		 * @param id
-		 *            Name of form
-		 */
-		public TestForm(final String id)
+		inputModel = new Model<String>();
+		Form<Void> form = new Form<Void>("form")
 		{
-			super(id);
-			add(new TextField<String>("input", new Model<String>("test")));
-		}
+			private static final long serialVersionUID = 1L;
 
-		@Override
-		public final void onSubmit()
-		{
-		}
+			@Override
+			protected void onSubmit()
+			{
+				CookieUtils utils = new CookieUtils();
+				utils.save(cookieName, inputModel.getObject());
+				setResponsePage(getApplication().getHomePage());
+			}
+		};
+		add(form);
+		form.add(new TextField<String>("input", inputModel));
 	}
 }
