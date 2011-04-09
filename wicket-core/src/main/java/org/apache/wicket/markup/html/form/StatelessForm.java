@@ -25,7 +25,6 @@ import org.apache.wicket.model.IModel;
  * from the browser. So the model of the form or the formcomponents are updated with the submit
  * values.
  * 
- * 
  * @author jcompagner
  * @param <T>
  *            The type of the {@link Form}'s model object

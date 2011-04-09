@@ -75,6 +75,6 @@ public class EnclosureContainer extends WebMarkupContainer
 	public boolean isVisible()
 	{
 		child.configure();
-		return child.isVisible();
+		return child.determineVisibility();
 	}
 }

@@ -835,6 +835,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	/**
 	 * Calls onError on this {@link Form} and any enabled and visible nested form, if the respective
 	 * {@link Form} actually has errors.
+	 * 
+	 * @param submitter
 	 */
 	private void callOnError(IFormSubmitter submitter)
 	{
@@ -966,8 +968,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	/**
 	 * Convenient and typesafe way to visit all the form components on a form.
 	 * 
+	 * @param <R>
+	 *            return object type
 	 * @param visitor
 	 *            The visitor interface to call
+	 * @return user provided in callback
 	 */
 	public final <R> R visitFormComponents(final IVisitor<? extends FormComponent<?>, R> visitor)
 	{
@@ -978,8 +983,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 * Convenient and typesafe way to visit all the form components on a form postorder (deepest
 	 * first)
 	 * 
+	 * @param <R>
+	 *            Return object type
 	 * @param visitor
 	 *            The visitor interface to call
+	 * @return whatever you provided
 	 */
 	public final <R> R visitFormComponentsPostOrder(
 		final IVisitor<? extends FormComponent<?>, R> visitor)
@@ -1184,6 +1192,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 		return false;
 	}
 
+	/**
+	 * @return True if is multipart
+	 */
 	public boolean isMultiPart()
 	{
 		if (multiPart != 0)
