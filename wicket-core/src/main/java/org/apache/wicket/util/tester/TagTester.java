@@ -371,51 +371,48 @@ public class TagTester
 				int level = 0;
 				while ((elm = parser.nextTag()) != null && closeTag == null)
 				{
-					if (elm instanceof XmlTag)
+					XmlTag xmlTag = elm;
+
+					if (openTag == null)
 					{
-						XmlTag xmlTag = elm;
+						IValueMap attributeMap = xmlTag.getAttributes();
 
-						if (openTag == null)
+						for (Map.Entry<String, Object> entry : attributeMap.entrySet())
 						{
-							IValueMap attributeMap = xmlTag.getAttributes();
-
-							for (Map.Entry<String, Object> entry : attributeMap.entrySet())
+							String attr = entry.getKey();
+							if (attr.equals(attribute) && value.equals(entry.getValue()))
 							{
-								String attr = entry.getKey();
-								if (attr.equals(attribute) && value.equals(entry.getValue()))
+								if (xmlTag.isOpen())
 								{
-									if (xmlTag.isOpen())
-									{
-										openTag = xmlTag;
-									}
-									else if (xmlTag.isOpenClose())
-									{
-										openTag = xmlTag;
-										closeTag = xmlTag;
-									}
+									openTag = xmlTag;
+								}
+								else if (xmlTag.isOpenClose())
+								{
+									openTag = xmlTag;
+									closeTag = xmlTag;
 								}
 							}
 						}
-						else
+					}
+					else
+					{
+						if (xmlTag.isOpen() && xmlTag.getName().equals(openTag.getName()))
 						{
-							if (xmlTag.isOpen() && xmlTag.getName().equals(openTag.getName()))
-							{
-								level++;
-							}
+							level++;
+						}
 
-							if (xmlTag.isClose())
+						if (xmlTag.isClose())
+						{
+							if (xmlTag.getName().equals(openTag.getName()))
 							{
-								if (xmlTag.getName().equals(openTag.getName()))
+								if (level == 0)
 								{
-									if (level == 0)
-									{
-										closeTag = xmlTag;
-										closeTag.setOpenTag(openTag);
-									}
-									else
-									{
-										level--;
-									}
+									closeTag = xmlTag;
+									closeTag.setOpenTag(openTag);
+								}
+								else
+								{
+									level--;
 								}
 							}
 						}
