@@ -88,7 +88,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 			String className = getCssClass();
 			if (!Strings.isEmpty(className))
 			{
-				CharSequence oldClassName = tag.getString("class");
+				CharSequence oldClassName = tag.getAttribute("class");
 				if (Strings.isEmpty(oldClassName))
 				{
 					tag.put("class", className);
@@ -141,6 +141,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 		{
 			private static final long serialVersionUID = 1L;
 
+			@SuppressWarnings({ "rawtypes", "unchecked" })
 			@Override
 			protected Item newCellItem(final String id, final int index, final IModel model)
 			{
