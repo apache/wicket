@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import java.util.Locale;
+
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.value.IValueMap;
@@ -157,5 +159,16 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 	protected String getInputType()
 	{
 		return "number";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * WICKET-3591 Browsers support only formatting in English
+	 */
+	@Override
+	public Locale getLocale()
+	{
+		return Locale.ENGLISH;
 	}
 }
