@@ -93,6 +93,8 @@ public class ServletWebRequest extends WebRequest
 		this.httpServletRequest = httpServletRequest;
 		this.filterPrefix = filterPrefix;
 
+		errorAttributes = ErrorAttributes.of(httpServletRequest);
+
 		if (url != null)
 		{
 			this.url = url;
@@ -101,8 +103,6 @@ public class ServletWebRequest extends WebRequest
 		{
 			this.url = getUrl(httpServletRequest, filterPrefix);
 		}
-
-		errorAttributes = ErrorAttributes.of(httpServletRequest);
 	}
 
 	/**
@@ -168,11 +168,14 @@ public class ServletWebRequest extends WebRequest
 		final int start = request.getContextPath().length() + filterPrefix.length() + 1;
 		url.append(uri.substring(start));
 
-		String query = request.getQueryString();
-		if (!Strings.isEmpty(query))
+		if (errorAttributes == null)
 		{
-			url.append("?");
-			url.append(query);
+			String query = request.getQueryString();
+			if (!Strings.isEmpty(query))
+			{
+				url.append('?');
+				url.append(query);
+			}
 		}
 
 		return setParameters(Url.parse(url.toString(), getCharset()));
