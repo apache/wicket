@@ -924,7 +924,7 @@ public class BaseWicketTester
 	 *            a test <code>Page</code> class with default constructor
 	 * @return the rendered <code>Page</code>
 	 */
-	public final <C extends Page> Page startPage(final Class<C> pageClass)
+	public final <C extends Page> C startPage(final Class<C> pageClass)
 	{
 		return startPage(pageClass, null);
 	}
@@ -939,7 +939,7 @@ public class BaseWicketTester
 	 *            the parameters to use for the class.
 	 * @return the rendered <code>Page</code>
 	 */
-	public final <C extends Page> Page startPage(final Class<C> pageClass,
+	public final <C extends Page> C startPage(final Class<C> pageClass,
 		final PageParameters parameters)
 	{
 		Args.notNull(pageClass, "pageClass");
@@ -955,7 +955,7 @@ public class BaseWicketTester
 		processRequest();
 
 		// The last rendered page
-		return getLastRenderedPage();
+		return (C)getLastRenderedPage();
 	}
 
 	/**
