@@ -665,9 +665,10 @@ public class ComponentTag extends MarkupElement
 	 *            if true, wicket:id are removed from output
 	 * @param namespace
 	 *            Wicket's namespace to use
+	 * @param escapeAttributeValue
 	 */
 	public final void writeOutput(final Response response, final boolean stripWicketAttributes,
-		final String namespace)
+		final String namespace, final boolean escapeAttributeValue)
 	{
 		response.write("<");
 
@@ -709,7 +710,10 @@ public class ComponentTag extends MarkupElement
 					if (value != null)
 					{
 						response.write("=\"");
-						value = Strings.escapeMarkup(value);
+						if (escapeAttributeValue)
+						{
+							value = Strings.escapeMarkup(value);
+						}
 						response.write(value);
 						response.write("\"");
 					}
