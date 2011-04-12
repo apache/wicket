@@ -1710,7 +1710,7 @@ Wicket.Head.addElement = function(element) {
 // is an element in head that is of same type as myElement, and whose src
 // attribute is same as myElement.src.
 Wicket.Head.containsElement = function(element, mandatoryAttribute) {
-	var attr = element.getAttribute(mandatoryAttribute);
+	var attr = Wicket.Head.stripJSessionId(element.getAttribute(mandatoryAttribute));
 	if (attr == null || attr == "" || typeof(attr) == "undefined")
 		return false;
 
@@ -1727,13 +1727,53 @@ Wicket.Head.containsElement = function(element, mandatoryAttribute) {
 		// check node names and mandatory attribute values
 		// we also have to check for attribute name that is suffixed by "_".
 		// this is necessary for filtering script references
-		if (node.tagName.toLowerCase() == element.tagName.toLowerCase() &&
-			(node.getAttribute(mandatoryAttribute) == attr ||
-		     node.getAttribute(mandatoryAttribute+"_") == attr)) {
-		    return true;
+		if (node.tagName.toLowerCase() == element.tagName.toLowerCase()) {
+		
+			var loadedUrl = Wicket.Head.stripJSessionId(node.getAttribute(mandatoryAttribute));
+			var loadedUrl_ = Wicket.Head.stripJSessionId(node.getAttribute(mandatoryAttribute+"_"));
+			if (loadedUrl == attr || loadedUrl_ == attr) {
+			    return true;
+			}
 		}
 	}
 	return false;
+}
+
+/**
+ * Removes the optional ';jsessionid=...' from the passed url
+ * 
+ * @param {String} url the url to strip the jsessionid from
+ * @return {String} the url without the jsessionid and its value
+ */
+// WICKET-3596
+Wicket.Head.stripJSessionId = function(url) {
+	if (url == null)
+	{
+		return null;
+	}
+
+	// http://.../abc;jsessionid=...?param=...
+	var ixSemiColon = url.indexOf(";");
+	if (ixSemiColon == -1)
+	{
+		return url;
+	}
+
+	var ixQuestionMark = url.indexOf("?");
+	if (ixQuestionMark == -1)
+	{
+		// no query paramaters; cut off at ";"
+		// http://.../abc;jsession=...
+		return url.substring(0, ixSemiColon);
+	}
+
+	if (ixQuestionMark <= ixSemiColon)
+	{
+		// ? is before ; - no jsessionid in the url
+		return url;
+	}
+
+	return url.substring(0, ixSemiColon) + url.substring(ixQuestionMark);
 }
 
 // Adds a javascript element to page header. 
