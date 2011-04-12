@@ -206,6 +206,11 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 			Wicket.Log.error("Wicket.replaceOuterHtmlIE: " + e + ": eval -> " + script);
 		}
 		return;
+	} else if (element.tagName == "TITLE") {
+		// match the text between the tags 
+		var titleText = />(.*?)</.exec(text)[1];
+		document.title = titleText;
+		return;
 	}  
 	
 	var parent = element.parentNode;
