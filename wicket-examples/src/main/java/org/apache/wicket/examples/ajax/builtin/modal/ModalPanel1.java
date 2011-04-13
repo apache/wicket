@@ -39,9 +39,8 @@ public class ModalPanel1 extends Panel
 			/**
 			 * @see org.apache.wicket.extensions.yui.calendar.DateTimeField#configure(java.util.Map)
 			 */
-			@SuppressWarnings("unchecked")
 			@Override
-			protected void configure(Map widgetProperties)
+			protected void configure(Map<String, Object> widgetProperties)
 			{
 				super.configure(widgetProperties);
 				// IE 6 breaks layout with iframe - is that a YUI bug?
