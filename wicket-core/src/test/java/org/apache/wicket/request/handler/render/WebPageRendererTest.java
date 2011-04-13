@@ -224,6 +224,36 @@ public class WebPageRendererTest
 	}
 
 	/**
+	 * Tests that when {@link RenderPageRequestHandler#getRedirectPolicy()} is
+	 * {@link RedirectPolicy#ALWAYS_REDIRECT} there a redirect must be issued
+	 */
+	@Test
+	public void testRedirectPolicyAlways()
+	{
+
+		PageRenderer renderer = new TestPageRenderer(handler)
+		{
+			@Override
+			protected RedirectPolicy getRedirectPolicy()
+			{
+				return RedirectPolicy.ALWAYS_REDIRECT;
+			}
+
+		};
+
+		when(urlRenderer.getBaseUrl()).thenReturn(Url.parse("base"));
+
+		when(requestCycle.mapUrlFor(eq(handler))).thenReturn(Url.parse("base/a"));
+
+		when(request.shouldPreserveClientUrl()).thenReturn(false);
+
+		renderer.respond(requestCycle);
+
+		verify(response, never()).write(any(byte[].class));
+		verify(response).sendRedirect(anyString());
+	}
+
+	/**
 	 * Configures common methods which are used by all tests
 	 */
 	private static class TestPageRenderer extends WebPageRenderer
