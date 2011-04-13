@@ -212,6 +212,14 @@ public class RequestListenerInterface
 				"Component rejected interface invocation");
 		}
 
+		// initialization is required for stateless pages
+		final Page page = component.getPage();
+		
+		if(page.isStateless())
+		{
+			page.internalInitialize();
+		}
+				
 		internalInvoke(component, component);
 	}
 
