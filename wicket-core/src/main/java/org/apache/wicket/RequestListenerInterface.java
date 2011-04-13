@@ -248,18 +248,18 @@ public class RequestListenerInterface
 		// during the invocation of the listener and thus lose its parent
 		Page page = component.getPage();
 
-		// initialization is required for stateless pages
-		if(page.isStateless())
-		{
-			page.internalInitialize();
-		}
-		
 		if (isAjax(component))
 		{
 			// do not increment page id for ajax requests
 			frozen = page.setFreezePageId(true);
 		}
 
+		// initialization is required for stateless pages
+		if(page.isStateless())
+		{
+			page.internalInitialize();
+		}
+		
 		try
 		{
 			method.invoke(target);
