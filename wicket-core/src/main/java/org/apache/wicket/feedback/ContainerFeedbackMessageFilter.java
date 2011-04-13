@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.feedback;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.util.lang.Objects;
 
 /**
  * Filter for child-of relationship
@@ -50,14 +52,9 @@ public class ContainerFeedbackMessageFilter implements IFeedbackMessageFilter
 	 */
 	public boolean accept(FeedbackMessage message)
 	{
-		if (message.getReporter() == null)
-		{
-			return false;
-		}
-		else
-		{
-			return container.contains(message.getReporter(), true) ||
-				container == message.getReporter();
-		}
+		final Component reporter = message.getReporter();
+
+		return reporter != null && 
+		       (container.contains(reporter, true) || Objects.equal(container, reporter));
 	}
 }
