@@ -106,6 +106,24 @@ public abstract class PageRenderer
 		return Session.get().isTemporary();
 	}
 
+	/**
+	 * When the page renders to buffer and it is still stateless after rendering, this flag
+	 * determines whether the redirect will take place or not.
+	 * <p>
+	 * By default we will redirect. This is so we do not end up having the browser be on a listener
+	 * URL. A simple scenario is calling {@code setResponsePage(new StatelessPage())} inside form's
+	 * {@code onSubmit()} or link's {@code onClick()} callbacks, or any other listener interface
+	 * callback. What will happen is that the browser will be on URL like
+	 * {@code ./wicket/page?0-2.IFormSubmitListener-form}, and we will not redirect - leaving the
+	 * browser on such URL. This is a worse alternative then saving one redirect because it may
+	 * cause problems if user presses the refresh button in the browser.
+	 * 
+	 * @return redirect flag
+	 */
+	protected boolean enableRedirectForStatelessPage()
+	{
+		return true;
+	}
 
 	/**
 	 * Render the response using give {@link RequestCycle}.
