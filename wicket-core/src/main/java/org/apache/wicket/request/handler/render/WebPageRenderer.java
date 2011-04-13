@@ -16,21 +16,17 @@
  */
 package org.apache.wicket.request.handler.render;
 
-import org.apache.wicket.Application;
-import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,47 +47,6 @@ public class WebPageRenderer extends PageRenderer
 	public WebPageRenderer(RenderPageRequestHandler renderPageRequestHandler)
 	{
 		super(renderPageRequestHandler);
-	}
-
-	/**
-	 * @return page instance
-	 */
-	public IRequestablePage getPage()
-	{
-		return getPageProvider().getPageInstance();
-	}
-
-	private boolean isOnePassRender()
-	{
-		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.ONE_PASS_RENDER;
-	}
-
-	private boolean isRedirectToRender()
-	{
-		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_RENDER;
-	}
-
-	private boolean isRedirectToBuffer()
-	{
-		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_BUFFER;
-	}
-
-	/**
-	 * @return the current session id for stateful pages and <code>null</code> for stateless pages
-	 */
-	private String getSessionId()
-	{
-		return Session.get().getId();
-	}
-
-	private boolean isSessionTemporary()
-	{
-		return Session.get().isTemporary();
-	}
-
-	private BufferedWebResponse getAndRemoveBufferedResponse(Url url)
-	{
-		return WebApplication.get().getAndRemoveBufferedResponse(getSessionId(), url);
 	}
 
 	private boolean isAjax(RequestCycle requestCycle)
@@ -116,6 +71,11 @@ public class WebPageRenderer extends PageRenderer
 	protected void storeBufferedResponse(Url url, BufferedWebResponse response)
 	{
 		WebApplication.get().storeBufferedResponse(getSessionId(), url, response);
+	}
+
+	protected BufferedWebResponse getAndRemoveBufferedResponse(Url url)
+	{
+		return WebApplication.get().getAndRemoveBufferedResponse(getSessionId(), url);
 	}
 
 	/**
@@ -169,11 +129,10 @@ public class WebPageRenderer extends PageRenderer
 	 * @param url
 	 * @param requestCycle
 	 */
-	private void redirectTo(Url url, RequestCycle requestCycle)
+	protected void redirectTo(Url url, RequestCycle requestCycle)
 	{
 		WebResponse response = (WebResponse)requestCycle.getResponse();
 		String relativeUrl = requestCycle.getUrlRenderer().renderUrl(url);
-		// response.reset();
 		response.sendRedirect(relativeUrl);
 	}
 

@@ -16,10 +16,14 @@
  */
 package org.apache.wicket.request.handler.render;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.Session;
+import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.IPageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.RenderPageRequestHandler.RedirectPolicy;
+import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 
 /**
  * Delegate responsible for rendering the page. Depending on the implementation (web, test, portlet,
@@ -45,7 +49,7 @@ public abstract class PageRenderer
 	/**
 	 * @return page provider
 	 */
-	public IPageProvider getPageProvider()
+	protected IPageProvider getPageProvider()
 	{
 		return renderPageRequestHandler.getPageProvider();
 	}
@@ -53,7 +57,7 @@ public abstract class PageRenderer
 	/**
 	 * @return redirect policy
 	 */
-	public RedirectPolicy getRedirectPolicy()
+	protected RedirectPolicy getRedirectPolicy()
 	{
 		return renderPageRequestHandler.getRedirectPolicy();
 	}
@@ -61,10 +65,47 @@ public abstract class PageRenderer
 	/**
 	 * @return the request handler
 	 */
-	public RenderPageRequestHandler getRenderPageRequestHandler()
+	protected RenderPageRequestHandler getRenderPageRequestHandler()
 	{
 		return renderPageRequestHandler;
 	}
+
+	/**
+	 * @return page instance
+	 */
+	protected IRequestablePage getPage()
+	{
+		return getPageProvider().getPageInstance();
+	}
+
+	protected boolean isOnePassRender()
+	{
+		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.ONE_PASS_RENDER;
+	}
+
+	protected boolean isRedirectToRender()
+	{
+		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_RENDER;
+	}
+
+	protected boolean isRedirectToBuffer()
+	{
+		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_BUFFER;
+	}
+
+	/**
+	 * @return the current session id for stateful pages and <code>null</code> for stateless pages
+	 */
+	protected String getSessionId()
+	{
+		return Session.get().getId();
+	}
+
+	protected boolean isSessionTemporary()
+	{
+		return Session.get().isTemporary();
+	}
+
 
 	/**
 	 * Render the response using give {@link RequestCycle}.
