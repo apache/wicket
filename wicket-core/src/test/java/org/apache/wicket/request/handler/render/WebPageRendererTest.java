@@ -552,6 +552,8 @@ public class WebPageRendererTest
 			}
 		};
 
+		when(provider.isNewPageInstance()).thenReturn(true);
+
 		Url sameUrl = Url.parse("same");
 
 		// needed for earlier checks

@@ -235,8 +235,13 @@ public class WebPageRenderer extends PageRenderer
 				response = renderPage(targetUrl2, requestCycle);
 			}
 
+			if (currentUrl.equals(targetUrl2))
+			{
+				// no need to redirect when both urls are exactly the same
+				response.writeTo((WebResponse)requestCycle.getResponse());
+			}
 			// if page is still stateless after render
-			if (getPage().isPageStateless() && !enableRedirectForStatelessPage())
+			else if (getPage().isPageStateless() && !enableRedirectForStatelessPage())
 			{
 				// we don't want the redirect to happen for stateless page
 				// example:
