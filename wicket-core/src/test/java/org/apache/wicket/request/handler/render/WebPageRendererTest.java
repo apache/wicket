@@ -31,6 +31,7 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.IPageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.settings.IRequestCycleSettings;
@@ -82,28 +83,42 @@ public class WebPageRendererTest
 	public void testOnePassRender()
 	{
 
-		PageRenderer renderer = new WebPageRenderer(handler)
+		PageRenderer renderer = new TestPageRenderer(handler)
 		{
 			@Override
 			protected boolean isOnePassRender()
 			{
 				return true;
 			}
+		};
 
+		when(urlRenderer.getBaseUrl()).thenReturn(Url.parse("base"));
+
+		when(requestCycle.mapUrlFor(eq(handler))).thenReturn(Url.parse("base/a"));
+
+		when(request.shouldPreserveClientUrl()).thenReturn(false);
+
+		renderer.respond(requestCycle);
+
+		verify(response).write(any(byte[].class));
+		verify(response, never()).sendRedirect(anyString());
+	}
+
+	/**
+	 * Tests that when {@link RenderPageRequestHandler#getRedirectPolicy()} is
+	 * {@link RedirectPolicy#NEVER_REDIRECT} there wont be a redirect issued
+	 */
+	@Test
+	public void testRedirectPolicyNever()
+	{
+
+		PageRenderer renderer = new TestPageRenderer(handler)
+		{
 			@Override
-			protected BufferedWebResponse getAndRemoveBufferedResponse(Url url)
+			protected RedirectPolicy getRedirectPolicy()
 			{
-				return null;
+				return RedirectPolicy.NEVER_REDIRECT;
 			}
-
-			@Override
-			protected BufferedWebResponse renderPage(Url targetUrl, RequestCycle requestCycle)
-			{
-				BufferedWebResponse webResponse = super.renderPage(targetUrl, requestCycle);
-				webResponse.write("some response".getBytes());
-				return webResponse;
-			}
-
 
 		};
 
@@ -117,5 +132,31 @@ public class WebPageRendererTest
 
 		verify(response).write(any(byte[].class));
 		verify(response, never()).sendRedirect(anyString());
+	}
+
+	/**
+	 * Configures common methods which are used by all tests
+	 */
+	private static class TestPageRenderer extends WebPageRenderer
+	{
+		public TestPageRenderer(RenderPageRequestHandler renderPageRequestHandler)
+		{
+			super(renderPageRequestHandler);
+		}
+
+		@Override
+		protected BufferedWebResponse getAndRemoveBufferedResponse(Url url)
+		{
+			return null;
+		}
+
+		@Override
+		protected BufferedWebResponse renderPage(Url targetUrl, RequestCycle requestCycle)
+		{
+			BufferedWebResponse webResponse = super.renderPage(targetUrl, requestCycle);
+			webResponse.write("some response".getBytes());
+			return webResponse;
+		}
+
 	}
 }
