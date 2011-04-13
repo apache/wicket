@@ -135,6 +135,40 @@ public class WebPageRendererTest
 	}
 
 	/**
+	 * Tests that when the fromUrl and toUrl are the same and
+	 * {@link IRequestCycleSettings.RenderStrategy#REDIRECT_TO_RENDER} is configured there wont be a
+	 * redirect issued
+	 */
+	@Test
+	public void testSameUrlsAndRedirectToRender()
+	{
+
+		PageRenderer renderer = new TestPageRenderer(handler)
+		{
+			@Override
+			protected boolean isRedirectToRender()
+			{
+				return true;
+			}
+
+		};
+
+		Url sameUrl = Url.parse("anything");
+
+		when(urlRenderer.getBaseUrl()).thenReturn(sameUrl);
+
+		when(requestCycle.mapUrlFor(eq(handler))).thenReturn(sameUrl);
+
+		when(request.shouldPreserveClientUrl()).thenReturn(false);
+
+		renderer.respond(requestCycle);
+
+		verify(response).write(any(byte[].class));
+		verify(response, never()).sendRedirect(anyString());
+	}
+
+
+	/**
 	 * Configures common methods which are used by all tests
 	 */
 	private static class TestPageRenderer extends WebPageRenderer
@@ -157,6 +191,19 @@ public class WebPageRendererTest
 			webResponse.write("some response".getBytes());
 			return webResponse;
 		}
+
+		@Override
+		protected boolean isOnePassRender()
+		{
+			return false;
+		}
+
+		@Override
+		protected boolean isRedirectToRender()
+		{
+			return false;
+		}
+
 
 	}
 }
