@@ -167,6 +167,28 @@ public class WebPageRendererTest
 		verify(response, never()).sendRedirect(anyString());
 	}
 
+	/**
+	 * Tests that when {@link WebRequest#shouldPreserveClientUrl()} is <code>true</code> no redirect
+	 * should occur
+	 */
+	@Test
+	public void testShouldPreserveClientUrl()
+	{
+
+		PageRenderer renderer = new TestPageRenderer(handler);
+
+		when(urlRenderer.getBaseUrl()).thenReturn(Url.parse("something"));
+
+		when(requestCycle.mapUrlFor(eq(handler))).thenReturn(Url.parse("different"));
+
+		when(request.shouldPreserveClientUrl()).thenReturn(true);
+
+		renderer.respond(requestCycle);
+
+		verify(response).write(any(byte[].class));
+		verify(response, never()).sendRedirect(anyString());
+	}
+
 
 	/**
 	 * Configures common methods which are used by all tests
