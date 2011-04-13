@@ -35,10 +35,9 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
-import org.apache.wicket.request.resource.CompressedResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.settings.IPageSettings;
 import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -113,7 +112,6 @@ import org.apache.wicket.util.string.Strings;
  * in another form (nesting forms is legal in Wicket) and that the form on modal window is submitted
  * before the window get closed.
  * 
- * @see IPageSettings#setAutomaticMultiWindowSupport(boolean)
  * @author Matej Knopp
  */
 public class ModalWindow extends Panel
@@ -129,7 +127,7 @@ public class ModalWindow extends Panel
 	private static ResourceReference JAVASCRIPT = new JavaScriptResourceReference(
 		ModalWindow.class, "res/modal.js");
 
-	private static ResourceReference CSS = new CompressedResourceReference(ModalWindow.class,
+	private static ResourceReference CSS = new PackageResourceReference(ModalWindow.class,
 		"res/modal.css");
 
 	/** the default id of the content component */

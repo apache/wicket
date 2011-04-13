@@ -35,8 +35,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.request.resource.CompressedResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 
 
@@ -116,7 +116,7 @@ public class Palette<T> extends Panel
 		Palette.class, "palette.js");
 
 	/** reference to the palette's css resource */
-	private static final ResourceReference CSS = new CompressedResourceReference(Palette.class,
+	private static final ResourceReference CSS = new PackageResourceReference(Palette.class,
 		"palette.css");
 
 	/**

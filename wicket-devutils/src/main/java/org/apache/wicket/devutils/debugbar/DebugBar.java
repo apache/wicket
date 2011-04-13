@@ -29,7 +29,6 @@ import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.request.resource.CompressedResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
@@ -122,7 +121,7 @@ public class DebugBar extends DevUtilsPanel
 	@Override
 	public void renderHead(final IHeaderResponse response)
 	{
-		response.renderCSSReference(new CompressedResourceReference(DebugBar.class,
+		response.renderCSSReference(new PackageResourceReference(DebugBar.class,
 			"wicket-debugbar.css"));
 		response.renderJavaScriptReference(new JavaScriptResourceReference(DebugBar.class,
 			"wicket-debugbar.js"));

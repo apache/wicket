@@ -18,7 +18,7 @@ package org.apache.wicket.extensions.yui;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.request.resource.CompressedResourceReference;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 
 /**
@@ -56,7 +56,7 @@ public final class YuiLib
 				sb.append("-min");
 			}
 			sb.append(".js");
-			YUILOADER = new CompressedResourceReference(YuiLib.class, sb.toString());
+			YUILOADER = new PackageResourceReference(YuiLib.class, sb.toString());
 		}
 		return YUILOADER;
 	}

@@ -61,11 +61,6 @@ import org.apache.wicket.util.watch.ModificationWatcher;
  */
 public class ResourceSettings implements IResourceSettings
 {
-	/**
-	 * Whether we should disable gzip compression for resources.
-	 */
-	private boolean disableGZipCompression = false;
-
 	/** I18N support */
 	private Localizer localizer;
 
@@ -155,14 +150,6 @@ public class ResourceSettings implements IResourceSettings
 		// Cast to resource path and add folder
 		final IResourcePath path = (IResourcePath)finder;
 		path.add(resourceFolder);
-	}
-
-	/**
-	 * @see org.apache.wicket.settings.IResourceSettings#getDisableGZipCompression()
-	 */
-	public boolean getDisableGZipCompression()
-	{
-		return disableGZipCompression;
 	}
 
 	/**
@@ -295,14 +282,6 @@ public class ResourceSettings implements IResourceSettings
 	public boolean getUseDefaultOnMissingResource()
 	{
 		return useDefaultOnMissingResource;
-	}
-
-	/**
-	 * @see org.apache.wicket.settings.IResourceSettings#setDisableGZipCompression(boolean)
-	 */
-	public void setDisableGZipCompression(boolean disableGZipCompression)
-	{
-		this.disableGZipCompression = disableGZipCompression;
 	}
 
 	/**
