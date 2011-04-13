@@ -27,6 +27,9 @@ public class LoginPage extends WebPage
 
 	private static final long serialVersionUID = 1L;
 
+	private boolean pageInitialized = false;
+	private boolean panelInitialized = false;
+	
 
 	/**
 	 * Constructor.
@@ -38,15 +41,40 @@ public class LoginPage extends WebPage
 		newUserPasswordSignInPanel(panelId);
 	}
 
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+		pageInitialized = true;
+	}
+
+	public boolean isPageInitialized()
+	{
+		return pageInitialized;
+	}
+
+	public boolean isPanelInitialized()
+	{
+		return panelInitialized;
+	}
+
 	/**
 	 * Creates a sign in panel on institutions that rely solely on their authentication username /
 	 * password.
 	 * 
 	 * @param panelId
-	 * @param info
 	 */
 	private void newUserPasswordSignInPanel(String panelId)
 	{
-		add(new UsernamePasswordSignInPanel(panelId));
+		add(new UsernamePasswordSignInPanel(panelId)
+		{
+			@Override
+			protected void onInitialize()
+			{
+				super.onInitialize();
+				panelInitialized = true;
+				
+			}
+		});
 	}
 }

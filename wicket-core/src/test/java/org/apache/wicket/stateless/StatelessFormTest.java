@@ -24,8 +24,6 @@ import org.apache.wicket.stateless.pages.HomePage;
 import org.apache.wicket.stateless.pages.LoginPage;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -33,25 +31,28 @@ import org.slf4j.LoggerFactory;
  */
 public class StatelessFormTest extends TestCase
 {
-	private static final Logger log = LoggerFactory.getLogger(StatelessFormTest.class);
-
 	private final Class<? extends Page> HOME = HomePage.class;
 	private final Class<? extends Page> LOGIN = LoginPage.class;
+
+	private WicketTester createTester()
+	{
+		return new WicketTester(new MockApplication()
+			{
+				@Override
+				public Class<? extends Page> getHomePage()
+				{
+					return HOME;
+				}
+	
+			});
+	}
 
 	/**
 	 * Login through the login page.
 	 */
 	public void testLogin()
 	{
-		WicketTester tester = new WicketTester(new MockApplication()
-		{
-			@Override
-			public Class<? extends Page> getHomePage()
-			{
-				return HOME;
-			}
-
-		});
+		WicketTester tester = createTester();
 
 		try
 		{
@@ -62,6 +63,41 @@ public class StatelessFormTest extends TestCase
 			form.setValue("password", "test");
 			form.submit();
 			tester.assertRenderedPage(HOME);
+		}
+		finally
+		{
+			tester.destroy();
+		}
+	}
+
+	/**
+	 * test initialization of component on stateless components
+	 */
+	public void testOnInitializationForStatelessComponents()
+	{
+		WicketTester tester = createTester();
+
+		try
+		{
+			LoginPage page = new LoginPage();
+			assertFalse(page.isPageInitialized());
+			assertFalse(page.isPanelInitialized());
+
+			tester.startPage(LOGIN);
+			tester.assertRenderedPage(LOGIN);
+			page = (LoginPage)tester.getLastRenderedPage();
+			assertTrue(page.isPageInitialized());
+			assertTrue(page.isPanelInitialized());
+			
+			FormTester form = tester.newFormTester("signInPanel:signInForm");
+			form.setValue("username", "test");
+			form.setValue("password", "invalid");
+			form.submit();
+			
+			tester.assertRenderedPage(LOGIN);
+			page = (LoginPage)tester.getLastRenderedPage();
+			assertTrue(page.isPageInitialized());
+			assertTrue(page.isPanelInitialized());
 		}
 		finally
 		{

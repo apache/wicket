@@ -29,8 +29,6 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.util.value.ValueMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -41,9 +39,6 @@ public class UsernamePasswordSignInPanel extends Panel
 {
 	/** */
 	private static final long serialVersionUID = 1L;
-
-	/** */
-	private static final Logger log = LoggerFactory.getLogger(UsernamePasswordSignInPanel.class);
 
 	/**
 	 * Constructor.
@@ -67,7 +62,7 @@ public class UsernamePasswordSignInPanel extends Panel
 	 */
 	public boolean signIn(String username, String password)
 	{
-		return true;
+		return username.equals(password);
 	}
 
 	/**
@@ -107,9 +102,6 @@ public class UsernamePasswordSignInPanel extends Panel
 				"rememberMe")));
 		}
 
-		/**
-		 * @see wicket.markup.html.form.Form#onSubmit()
-		 */
 		@Override
 		public final void onSubmit()
 		{
