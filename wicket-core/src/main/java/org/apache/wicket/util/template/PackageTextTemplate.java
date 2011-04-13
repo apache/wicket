@@ -79,8 +79,7 @@ public class PackageTextTemplate extends TextTemplate
 	 *            the mime type of this resource, such as "<code>image/jpeg</code>" or "
 	 *            <code>text/html</code>"
 	 */
-	public PackageTextTemplate(final Class<?> clazz, final String fileName,
-		final String contentType)
+	public PackageTextTemplate(final Class<?> clazz, final String fileName, final String contentType)
 	{
 		this(clazz, fileName, contentType, DEFAULT_ENCODING);
 	}
@@ -115,7 +114,7 @@ public class PackageTextTemplate extends TextTemplate
 
 		if (stream == null)
 		{
-			// if default locator couldnt find the resource, than some fallback
+			// if the default locator didn't find the resource then fallback
 			stream = new ResourceStreamLocator().locate(clazz, path);
 		}
 
