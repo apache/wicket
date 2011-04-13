@@ -386,7 +386,7 @@ public class AjaxEditableLabel<T> extends Panel
 	{
 		if (editor == null)
 		{
-			initLabelAndEditor(getParentModel());
+			initLabelAndEditor(getDelegatingParentModel());
 		}
 		return editor;
 	}
@@ -400,7 +400,7 @@ public class AjaxEditableLabel<T> extends Panel
 	{
 		if (label == null)
 		{
-			initLabelAndEditor(getParentModel());
+			initLabelAndEditor(getDelegatingParentModel());
 		}
 		return label;
 	}
@@ -415,7 +415,7 @@ public class AjaxEditableLabel<T> extends Panel
 		// lazily add label and editor
 		if (editor == null)
 		{
-			initLabelAndEditor(getParentModel());
+			initLabelAndEditor(getDelegatingParentModel());
 		}
 		// obsolete with WICKET-1919
 		// label.setEnabled(isEnabledInHierarchy());
@@ -504,6 +504,34 @@ public class AjaxEditableLabel<T> extends Panel
 		add(editor);
 	}
 
+	/**
+	 * get a model that accesses the parent model lazily. this is required since we eventually request the parents
+	 * model before the component is added to the parent.
+	 * 
+	 * @return model
+	 */
+	private IModel<T> getDelegatingParentModel()
+	{
+		return new IModel<T>()
+		{
+			public T getObject()
+			{
+				return getParentModel().getObject();
+			}
+
+			public void setObject(final T object)
+			{
+				getParentModel().setObject(object);
+			}
+
+			public void detach()
+			{
+				getParentModel().detach();
+			}
+		};
+	}
+	
+	
 	/**
 	 * @return Gets the parent model in case no explicit model was specified.
 	 */
