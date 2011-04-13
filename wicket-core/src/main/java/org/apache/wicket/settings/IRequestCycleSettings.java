@@ -56,7 +56,7 @@ import org.apache.wicket.util.time.Duration;
  * twice for a request.</li>
  * <li>IRequestCycleSettings.RenderStrategy.REDIRECT_TO_BUFFER. This option handles both the action-
  * and the render part of the request in one physical request, but instead of streaming the result
- * to the browser directly, it is kept in memory, and a redirect is issue to get this buffered
+ * to the browser directly, it is kept in memory, and a redirect is issued to get this buffered
  * result (after which it is immediately removed). This option currently is the default render
  * strategy, as it shields you from the double submit problem, while being more efficient and less
  * error prone regarding to detachable models.</li>
