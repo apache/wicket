@@ -340,10 +340,9 @@ public class DateTimeField extends FormComponentPanel<Date>
 			Integer minutesInput = minutesField.getConvertedInput();
 			AM_PM amOrPmInput = amOrPmChoice.getConvertedInput();
 
-			// Default with "now"
 			if (dateFieldInput == null)
 			{
-				dateFieldInput = new Date();
+				return;
 			}
 
 			// Get year, month and day ignoring any timezone of the Date object
