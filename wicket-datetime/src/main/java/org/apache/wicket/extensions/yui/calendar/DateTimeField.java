@@ -347,10 +347,11 @@ public class DateTimeField extends FormComponentPanel<Date>
 			}
 
 			// Get year, month and day ignoring any timezone of the Date object
-			final LocalDate localDate = new LocalDate(dateFieldInput);
-			int year = localDate.getYear();
-			int month = localDate.getMonthOfYear();
-			int day = localDate.getDayOfMonth();
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(dateFieldInput);
+			int year = cal.get(Calendar.YEAR);
+			int month = cal.get(Calendar.MONTH) + 1;
+			int day = cal.get(Calendar.DAY_OF_MONTH);
 			int hours = (hoursInput == null ? 0 : hoursInput % 24);
 			int minutes = (minutesInput == null ? 0 : minutesInput);
 
