@@ -153,7 +153,7 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 				 */
 
 				// make sure this page instance was just created so the page can be stateless
-				if (getPageId() == null)
+				if (page.isPageStateless())
 				{
 					Page p = (Page)page;
 					p.internalInitialize();

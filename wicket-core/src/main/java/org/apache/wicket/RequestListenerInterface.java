@@ -255,11 +255,11 @@ public class RequestListenerInterface
 		}
 
 		// initialization is required for stateless pages
-		if(page.isStateless())
+		if (!page.isInitialized())
 		{
 			page.internalInitialize();
 		}
-		
+
 		try
 		{
 			method.invoke(target);
