@@ -173,6 +173,32 @@ public class WebPageRendererTest
 	}
 
 	/**
+	 * Tests that when the fromUrl and toUrl are the same and the page is not stateless there wont
+	 * be a redirect issued
+	 */
+	@Test
+	public void testSameUrlsAndStatefulPage()
+	{
+		when(provider.isNewPageInstance()).thenReturn(false);
+		when(page.isPageStateless()).thenReturn(false);
+
+		PageRenderer renderer = new TestPageRenderer(handler);
+
+		Url sameUrl = Url.parse("anything");
+
+		when(urlRenderer.getBaseUrl()).thenReturn(sameUrl);
+
+		when(requestCycle.mapUrlFor(eq(handler))).thenReturn(sameUrl);
+
+		when(request.shouldPreserveClientUrl()).thenReturn(false);
+
+		renderer.respond(requestCycle);
+
+		verify(response).write(any(byte[].class));
+		verify(response, never()).sendRedirect(anyString());
+	}
+
+	/**
 	 * Tests that when {@link WebRequest#shouldPreserveClientUrl()} is <code>true</code> no redirect
 	 * should occur
 	 */
@@ -599,6 +625,12 @@ public class WebPageRendererTest
 
 		@Override
 		protected boolean isRedirectToRender()
+		{
+			return false;
+		}
+
+		@Override
+		protected boolean isRedirectToBuffer()
 		{
 			return false;
 		}
