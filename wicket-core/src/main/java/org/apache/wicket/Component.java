@@ -3931,7 +3931,7 @@ public abstract class Component
 
 			// Write the tag
 			tag.writeOutput(getResponse(), !needToRenderTag(null),
-				getMarkup().getMarkupResourceStream().getWicketNamespace(), getEscapeModelStrings());
+				getMarkup().getMarkupResourceStream().getWicketNamespace());
 		}
 	}
 

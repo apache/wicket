@@ -668,7 +668,7 @@ public class ComponentTag extends MarkupElement
 	 * @param escapeAttributeValue
 	 */
 	public final void writeOutput(final Response response, final boolean stripWicketAttributes,
-		final String namespace, final boolean escapeAttributeValue)
+		final String namespace)
 	{
 		response.write("<");
 
@@ -710,10 +710,7 @@ public class ComponentTag extends MarkupElement
 					if (value != null)
 					{
 						response.write("=\"");
-						if (escapeAttributeValue)
-						{
-							value = Strings.escapeMarkup(value);
-						}
+						value = Strings.escapeMarkup(value);
 						response.write(value);
 						response.write("\"");
 					}
