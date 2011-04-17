@@ -1191,13 +1191,11 @@ Wicket.Window.getMarkup = function(idWindow, idClassElement, idCaption, idConten
 								"<div class=\"w_content_3\">"+
 		 							"<div class=\"w_content\">";
 				if (isFrame) {
-					if (Wicket.Browser.isIELessThan7() || !Wicket.Browser.isIE()) {												
-						s+= "<iframe src='\/\/:' frameborder=\"0\" id='"+idContent+"' allowtransparency=\"false\" style=\"height: 200px\" class=\"wicket_modal\">"+
-										"</iframe>";
-					} else {
-						s+= "<iframe src='about:blank' frameborder=\"0\" id='"+idContent+"' allowtransparency=\"false\" style=\"height: 200px\" class=\"wicket_modal\">"+
-						"</iframe>";
+					s+= "<iframe";
+					if (Wicket.Browser.isIELessThan7()) {
+						s+= " src=\"about:blank\""
 					}
+					s+= " frameborder=\"0\" id=\""+idContent+"\" allowtransparency=\"false\" style=\"height: 200px\" class=\"wicket_modal\"></iframe>";
 				} else {
 					s+=
 										"<div id='"+idContent+"' class='w_content_container'></div>";
