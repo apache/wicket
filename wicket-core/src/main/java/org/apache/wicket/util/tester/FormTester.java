@@ -24,6 +24,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;
@@ -626,11 +628,8 @@ public class FormTester
 	public FormTester setValue(final String formComponentId, final String value)
 	{
 		Component component = workingForm.get(formComponentId);
-		if (component == null)
-		{
-			throw new IllegalArgumentException(
-				"Unable to set value. Couldn't find component with name: " + formComponentId);
-		}
+		Assert.assertNotNull("Unable to set value. Couldn't find component with name: " +
+			formComponentId, component);
 		return setValue(component, value);
 	}
 
@@ -660,8 +659,7 @@ public class FormTester
 		}
 		else
 		{
-			throw new IllegalArgumentException("Componet with id: " + formComponent.getId() +
-				" is not a FormComponent");
+			fail("Componet with id: " + formComponent.getId() + " is not a FormComponent");
 		}
 
 		return this;
@@ -699,7 +697,7 @@ public class FormTester
 
 		if (formComponent instanceof FileUploadField == false)
 		{
-			throw new IllegalArgumentException("'" + formComponentId + "' is not " +
+			fail("'" + formComponentId + "' is not " +
 				"a FileUploadField. You can only attach a file to form " +
 				"component of this type.");
 		}
@@ -853,8 +851,8 @@ public class FormTester
 	{
 		if (closed)
 		{
-			throw new IllegalStateException("'" + path +
-				"' already submitted. Note that FormTester " + "is allowed to submit only once");
+			fail("'" + path + "' already submitted. Note that FormTester " +
+				"is allowed to submit only once");
 		}
 	}
 

@@ -31,7 +31,6 @@ import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.MockPageWithOneComponent;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.WicketAjaxReference;
@@ -218,9 +217,9 @@ public class WicketTesterTest extends TestCase
 		try
 		{
 			tester.clickLink("ajaxLinkWithSetResponsePageClass");
-			fail("Disabled link should not be clickable.");
+			throw new RuntimeException("Disabled link should not be clickable.");
 		}
-		catch (Exception _)
+		catch (AssertionFailedError _)
 		{
 			;
 		}
@@ -241,9 +240,9 @@ public class WicketTesterTest extends TestCase
 		try
 		{
 			tester.executeAjaxEvent("ajaxLinkWithSetResponsePageClass", "onclick");
-			fail("Disabled link should not be clickable.");
+			throw new RuntimeException("Disabled link should not be clickable.");
 		}
-		catch (Exception _)
+		catch (AssertionFailedError _)
 		{
 			;
 		}
@@ -321,13 +320,12 @@ public class WicketTesterTest extends TestCase
 			;
 		}
 
-
 		try
 		{
 			// test #3: "createForm" is not a FormComponent
 			tester.assertRequired("createForm");
 		}
-		catch (WicketRuntimeException _)
+		catch (AssertionFailedError _)
 		{
 			;
 		}

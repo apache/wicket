@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.util.tester;
 
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.fail;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
@@ -37,6 +40,8 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
+
+import junit.framework.AssertionFailedError;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -433,10 +438,11 @@ public class BaseWicketTester
 	 * 
 	 * @param request
 	 *            request to process
+	 * @return true, if process was executed successfully
 	 */
-	public void processRequest(final MockHttpServletRequest request)
+	public boolean processRequest(final MockHttpServletRequest request)
 	{
-		processRequest(request, null);
+		return processRequest(request, null);
 	}
 
 	/**
@@ -522,8 +528,7 @@ public class BaseWicketTester
 			{
 				if (redirectCount++ >= 100)
 				{
-					throw new IllegalStateException(
-						"Possible infinite redirect detected. Bailing out.");
+					fail("Possible infinite redirect detected. Bailing out.");
 				}
 
 				Url newUrl = Url.parse(lastResponse.getRedirectLocation(),
@@ -531,7 +536,7 @@ public class BaseWicketTester
 
 				if (newUrl.isAbsolute())
 				{
-					throw new WicketRuntimeException("Can not follow absolute redirect URL.");
+					fail("Can not follow absolute redirect URL.");
 				}
 
 				// append redirect URL to current URL (what browser would do)
@@ -726,8 +731,9 @@ public class BaseWicketTester
 				return parser.getString().toString().split("\\\"")[1];
 			}
 		}
-		throw new WicketRuntimeException(
-			"Last response has no AJAX base URL set by AbstractDefaultAjaxBehavior.");
+
+		fail("Last response has no AJAX base URL set by AbstractDefaultAjaxBehavior.");
+		return null;
 	}
 
 	/**
@@ -939,6 +945,7 @@ public class BaseWicketTester
 	 *            the parameters to use for the class.
 	 * @return the rendered <code>Page</code>
 	 */
+	@SuppressWarnings("unchecked")
 	public final <C extends Page> C startPage(final Class<C> pageClass,
 		final PageParameters parameters)
 	{
@@ -1055,7 +1062,7 @@ public class BaseWicketTester
 		Args.notNull(componentClass, "componentClass");
 
 		// Create the component instance from the class
-		Component comp;
+		Component comp = null;
 		try
 		{
 			Constructor<? extends Component> c = componentClass.getConstructor(String.class);
@@ -1063,7 +1070,7 @@ public class BaseWicketTester
 		}
 		catch (Exception e)
 		{
-			throw convertoUnexpect(e);
+			fail(e.getMessage());
 		}
 
 		// process the component
@@ -1130,17 +1137,6 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * Throw "standard" WicketRuntimeException
-	 * 
-	 * @param e
-	 * @return RuntimeException
-	 */
-	private RuntimeException convertoUnexpect(final Exception e)
-	{
-		return new WicketRuntimeException("tester: unexpected", e);
-	}
-
-	/**
 	 * Gets the component with the given path from last rendered page. This method fails in case the
 	 * component couldn't be found.
 	 * 
@@ -1164,7 +1160,7 @@ public class BaseWicketTester
 		{
 			fail("path: '" + path + "' does not exist for page: " +
 				Classes.simpleName(getLastRenderedPage().getClass()));
-			return component;
+			return null;
 		}
 
 		if (!wantVisibleInHierarchy || component.isVisibleInHierarchy())
@@ -1426,7 +1422,7 @@ public class BaseWicketTester
 	{
 		Component linkComponent = getComponentFromLastRenderedPage(path);
 
-		checkUsability(linkComponent);
+		checkUsability(linkComponent, true);
 
 		// if the link is an AjaxLink, we process it differently
 		// than a normal link
@@ -1506,7 +1502,7 @@ public class BaseWicketTester
 				}
 				catch (Exception e)
 				{
-					fail("Internal error in WicketTester. "
+					throw new WicketRuntimeException("Internal error in WicketTester. "
 						+ "Please report this in Wicket's Issue Tracker.", e);
 				}
 			}
@@ -1813,7 +1809,7 @@ public class BaseWicketTester
 				List<AbstractAjaxTimerBehavior> behaviors = component.getBehaviors(AbstractAjaxTimerBehavior.class);
 				for (Behavior b : behaviors)
 				{
-					checkUsability(component);
+					checkUsability(component, true);
 
 					log.debug("Triggering AjaxSelfUpdatingTimerBehavior: " +
 						component.getClassRelativePath());
@@ -1864,13 +1860,10 @@ public class BaseWicketTester
 	 */
 	public void executeAjaxEvent(final Component component, final String event)
 	{
-		String failMessage = "Can't execute event on a component which is null.";
-		notNull(failMessage, component);
+		Args.notNull(component, "component");
+		Args.notNull(event, "event");
 
-		failMessage = "event must not be null";
-		notNull(failMessage, event);
-
-		checkUsability(component);
+		checkUsability(component, true);
 
 		AjaxEventBehavior ajaxEventBehavior = WicketTesterHelper.findAjaxEventBehavior(component,
 			event);
@@ -1931,14 +1924,10 @@ public class BaseWicketTester
 	{
 		// The form that needs to be "submitted".
 		Form<?> form = behavior.getForm();
+		assertNotNull("No form attached to the submitlink.", form);
 
-		String failMessage = "No form attached to the submitlink.";
-		notNull(failMessage, form);
-
-		checkUsability(form);
-
+		checkUsability(form, true);
 		serializeFormToRequest(form);
-
 		executeBehavior(behavior);
 	}
 
@@ -1987,10 +1976,7 @@ public class BaseWicketTester
 	public String getContentTypeFromResponseHeader()
 	{
 		String contentType = getLastResponse().getContentType();
-		if (contentType == null)
-		{
-			throw new WicketRuntimeException("No Content-Type header found");
-		}
+		assertNotNull("No Content-Type header found", contentType);
 		return contentType;
 	}
 
@@ -2002,10 +1988,7 @@ public class BaseWicketTester
 	public int getContentLengthFromResponseHeader()
 	{
 		String contentLength = getLastResponse().getHeader("Content-Length");
-		if (contentLength == null)
-		{
-			throw new WicketRuntimeException("No Content-Length header found");
-		}
+		assertNotNull("No Content-Length header found", contentLength);
 		return Integer.parseInt(contentLength);
 	}
 
@@ -2126,38 +2109,30 @@ public class BaseWicketTester
 	 * Checks whether a component is visible and/or enabled before usage
 	 * 
 	 * @param component
+	 * @param throwException
+	 * @return result
 	 */
-	private void checkUsability(final Component component)
+	public final Result checkUsability(final Component component, boolean throwException)
 	{
+		Result res = Result.pass();
+
 		if (component.isVisibleInHierarchy() == false)
 		{
-			fail("The component is currently not visible in the hierarchy and thus you can not be used." +
+			res = Result.fail("The component is currently not visible in the hierarchy and thus you can not be used." +
 				" Component: " + component);
 		}
 
 		if (component.isEnabledInHierarchy() == false)
 		{
-			fail("The component is currently not enabled in the hierarchy and thus you can not be used." +
+			res = Result.fail("The component is currently not enabled in the hierarchy and thus you can not be used." +
 				" Component: " + component);
 		}
-	}
 
-	/**
-	 * @param message
-	 */
-	protected final void fail(String message)
-	{
-		fail(message, null);
-	}
-
-	/**
-	 * 
-	 * @param message
-	 * @param cause
-	 */
-	protected final void fail(String message, Throwable cause)
-	{
-		throw new WicketRuntimeException(message, cause);
+		if (throwException && res.wasFailed())
+		{
+			throw new AssertionFailedError(res.getMessage());
+		}
+		return res;
 	}
 
 	/**
@@ -2193,7 +2168,6 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
 	 * @param exposeExceptions
 	 */
 	public void setExposeExceptions(boolean exposeExceptions)
@@ -2407,6 +2381,9 @@ public class BaseWicketTester
 		}
 	}
 
+	/**
+	 * 
+	 */
 	private static class WicketTesterServletWebResponse extends ServletWebResponse
 		implements
 			IMetaDataBufferingWebResponse

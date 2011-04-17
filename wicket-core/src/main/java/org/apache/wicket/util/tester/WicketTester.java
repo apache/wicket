@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.util.tester;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +28,6 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
-import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 
 import org.apache.wicket.Component;
@@ -227,8 +231,7 @@ public class WicketTester extends BaseWicketTester
 	{
 		if (null != getLastResponse().getHeader("Location"))
 		{
-			throw new AssertionFailedError(
-				"Location header should *not* be present when using Ajax");
+			fail("Location header should *not* be present when using Ajax");
 		}
 
 		String ajaxLocation = getLastResponse().getHeader("Ajax-Location");
@@ -389,7 +392,7 @@ public class WicketTester extends BaseWicketTester
 	public void assertLabel(String path, String expectedLabelText)
 	{
 		Label label = (Label)getComponentFromLastRenderedPage(path);
-		Assert.assertEquals(expectedLabelText, label.getDefaultModelObjectAsString());
+		assertEquals(expectedLabelText, label.getDefaultModelObjectAsString());
 	}
 
 	/**
@@ -403,7 +406,7 @@ public class WicketTester extends BaseWicketTester
 	public void assertModelValue(String path, Object expectedValue)
 	{
 		Component component = getComponentFromLastRenderedPage(path);
-		Assert.assertEquals(expectedValue, component.getDefaultModelObject());
+		assertEquals(expectedValue, component.getDefaultModelObject());
 	}
 
 	/**
@@ -427,7 +430,7 @@ public class WicketTester extends BaseWicketTester
 	public void assertNoErrorMessage()
 	{
 		List<Serializable> messages = getMessages(FeedbackMessage.ERROR);
-		Assert.assertTrue(
+		assertTrue(
 			"expect no error message, but contains\n" + WicketTesterHelper.asLined(messages),
 			messages.isEmpty());
 	}
@@ -438,8 +441,7 @@ public class WicketTester extends BaseWicketTester
 	public void assertNoInfoMessage()
 	{
 		List<Serializable> messages = getMessages(FeedbackMessage.INFO);
-		Assert.assertTrue(
-			"expect no info message, but contains\n" + WicketTesterHelper.asLined(messages),
+		assertTrue("expect no info message, but contains\n" + WicketTesterHelper.asLined(messages),
 			messages.isEmpty());
 	}
 
@@ -485,7 +487,7 @@ public class WicketTester extends BaseWicketTester
 	{
 		// Validate the document
 		String document = getLastResponseAsString();
-		Assert.assertEquals(expectedDocument, document);
+		assertEquals(expectedDocument, document);
 	}
 
 	/**
@@ -546,6 +548,16 @@ public class WicketTester extends BaseWicketTester
 	}
 
 	/**
+	 * Checks whether a component is visible and/or enabled before usage
+	 * 
+	 * @param component
+	 */
+	public void assertUsability(final Component component)
+	{
+		checkUsability(component, true);
+	}
+
+	/**
 	 * 
 	 * @param link
 	 */
@@ -576,12 +588,11 @@ public class WicketTester extends BaseWicketTester
 				" is not a BookmarkablePageLink");
 		}
 
-		Assert.assertEquals("BookmarkablePageLink: " + id + " is pointing to the wrong page",
-			pageClass, pageLink.getPageClass());
+		assertEquals("BookmarkablePageLink: " + id + " is pointing to the wrong page", pageClass,
+			pageLink.getPageClass());
 
-		Assert.assertEquals(
-			"One or more of the parameters associated with the BookmarkablePageLink: " + id +
-				" do not match", parameters, pageLink.getPageParameters());
+		assertEquals("One or more of the parameters associated with the BookmarkablePageLink: " +
+			id + " do not match", parameters, pageLink.getPageParameters());
 	}
 
 	/**
@@ -672,7 +683,7 @@ public class WicketTester extends BaseWicketTester
 	public void executeListener(final Class<?> testClass, final Component component,
 		final String filename) throws Exception
 	{
-		Assert.assertNotNull(component);
+		assertNotNull(component);
 
 		log.info("=== " + testClass.getName() + " : " + component.getPageRelativePath() + " ===");
 
@@ -690,7 +701,7 @@ public class WicketTester extends BaseWicketTester
 	public void executeBehavior(final Class<?> testClass, final AbstractAjaxBehavior behavior,
 		final String filename) throws Exception
 	{
-		Assert.assertNotNull(behavior);
+		assertNotNull(behavior);
 
 		log.info("=== " + testClass.getName() + " : " + behavior.toString() + " ===");
 
