@@ -26,6 +26,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.wicket.util.file.File;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
@@ -69,16 +70,18 @@ public class ZipResourceStream extends AbstractResourceStream
 	 */
 	public ZipResourceStream(final File dir, final boolean recursive)
 	{
-		if ((dir == null) || !dir.isDirectory())
-		{
-			throw new IllegalArgumentException("Not a directory: " + dir);
-		}
+		Args.notNull(dir, "dir");
+		Args.isTrue(dir.isDirectory(), "Not a directory: '{}'", dir);
 
 		bytearray = new ByteArrayOutputStream();
 		try
 		{
 			ZipOutputStream out = new ZipOutputStream(bytearray);
 			zipDir(dir, out, "", recursive);
+		}
+		catch (RuntimeException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -115,10 +118,8 @@ public class ZipResourceStream extends AbstractResourceStream
 	private static void zipDir(final File dir, final ZipOutputStream out, final String path,
 		final boolean recursive) throws IOException
 	{
-		if (!dir.isDirectory())
-		{
-			throw new IllegalArgumentException("Not a directory: " + dir);
-		}
+		Args.notNull(dir, "dir");
+		Args.isTrue(dir.isDirectory(), "Not a directory: '{}'", dir);
 
 		String[] files = dir.list();
 
@@ -128,10 +129,7 @@ public class ZipResourceStream extends AbstractResourceStream
 
 		for (String file : files)
 		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("Adding: " + file);
-			}
+			log.debug("Adding: '{}'", file);
 
 			File f = new File(dir, file);
 			if (f.isDirectory())

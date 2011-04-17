@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
 
 /**
  * A utility class providing helper methods in dealing with web.xml
- *
+ * 
  * @author jcompagner
  * @author Juergen Donnerstag
  */
@@ -55,7 +55,7 @@ public class WebXmlFile
 
 	/**
 	 * Gets unique Wicket filter path via FilterConfig
-	 *
+	 * 
 	 * @param isServlet
 	 *            true if Servlet, false if Filter
 	 * @param filterConfig
@@ -70,15 +70,15 @@ public class WebXmlFile
 
 	/**
 	 * Gets Wicket filter path via ServletContext and the filter name
-	 *
+	 * 
 	 * @param isServlet
 	 *            true if Servlet, false if Filter
 	 * @param servletContext
 	 * @param filterName
 	 * @return Filter paths retrieved from "url-pattern"
 	 */
-	public final Set<String> getFilterPath(final boolean isServlet, final ServletContext servletContext,
-		final String filterName)
+	public final Set<String> getFilterPath(final boolean isServlet,
+		final ServletContext servletContext, final String filterName)
 	{
 		InputStream is = servletContext.getResourceAsStream("/WEB-INF/web.xml");
 		if (is != null)
@@ -111,7 +111,7 @@ public class WebXmlFile
 
 	/**
 	 * Gets unique filter path via filter name and InputStream.
-	 *
+	 * 
 	 * @param isServlet
 	 *            true if Servlet, false if Filter
 	 * @param filterName
@@ -121,7 +121,7 @@ public class WebXmlFile
 	 * @throws ParserConfigurationException
 	 * @throws IOException
 	 * @throws SAXException
-	 *
+	 * 
 	 * @see #getFilterPath(boolean, String, java.io.InputStream)
 	 */
 	public final String getUniqueFilterPath(final boolean isServlet, final String filterName,
@@ -132,16 +132,19 @@ public class WebXmlFile
 
 	/**
 	 * return unique path from set of paths
-	 *
-	 *
-	 * @param paths <code>null</code> if set was empty, unique path if set was of length == 1
+	 * 
+	 * @param paths
+	 *            <code>null</code> if set was empty, unique path if set was of length == 1
 	 * @param isServlet
-	 *@param filterName  @return
-	 * @throws RuntimeException in case length > 1
+	 * @param filterName
+	 * @return unique path
+	 * @throws RuntimeException
+	 *             in case length > 1
 	 */
-	private String uniquePath(Set<String> paths, boolean isServlet, String filterName)
+	private String uniquePath(final Set<String> paths, final boolean isServlet,
+		final String filterName)
 	{
-		if(paths.size() > 1)
+		if (paths.size() > 1)
 		{
 			StringBuilder err = new StringBuilder();
 			err.append("web.xml: expected one ");
@@ -156,7 +159,8 @@ public class WebXmlFile
 			}
 			throw new RuntimeException(err.toString());
 		}
-		if(paths.size() == 1)
+
+		if (paths.size() == 1)
 		{
 			return paths.iterator().next();
 		}
@@ -168,7 +172,7 @@ public class WebXmlFile
 	 * web.xml file.
 	 * <p>
 	 * A typical Wicket web.xml entry looks like:
-	 *
+	 * 
 	 * <pre>
 	 * <code>
 	 * &lt;filter&gt;
@@ -179,7 +183,7 @@ public class WebXmlFile
 	 *     &lt;param-value&gt;org.apache.wicket.examples.helloworld.HelloWorldApplication&lt;/param-value&gt;
 	 *   &lt;/init-param&gt;
 	 * &lt;/filter&gt;
-	 *
+	 * 
 	 * &lt;filter-mapping&gt;
 	 *   &lt;filter-name&gt;HelloWorldApplication&lt;/filter-name&gt;
 	 *   &lt;url-pattern&gt;/helloworld/*&lt;/url-pattern&gt;
@@ -188,7 +192,7 @@ public class WebXmlFile
 	 * &lt;/filter-mapping&gt;
 	 * </code>
 	 * </pre>
-	 *
+	 * 
 	 * @param isServlet
 	 *            true if Servlet, false if Filter
 	 * @param filterName
@@ -204,25 +208,32 @@ public class WebXmlFile
 	{
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
-		builder.setEntityResolver(CustomEntityResolver.getPreloaded()); // try to pull DTD from
-// local set of entities
+
+		// try to pull DTD from local set of entities
+		builder.setEntityResolver(CustomEntityResolver.getPreloaded());
 		Document document = builder.parse(is);
 
 		String tag = (isServlet ? "servlet" : "filter");
 		String mapping = tag + "-mapping";
 		String name = tag + "-name";
 
-		Set<String> urlPatterns = getFilterPaths(filterName, mapping, name, document.getChildNodes());
+		Set<String> urlPatterns = getFilterPaths(filterName, mapping, name,
+			document.getChildNodes());
 
 		if (urlPatterns.size() == 0)
 		{
-			log.warn("web.xml: No url-pattern found for " + tag + " with name " + filterName);
+			log.warn("web.xml: No url-pattern found for '{}' with name '{}'", tag, filterName);
 		}
 
-		if(log.isInfoEnabled())
+		if (log.isInfoEnabled())
 		{
 			StringBuilder msg = new StringBuilder();
-			msg.append("web.xml: url mapping found for " + tag + " with name " + filterName + ':');
+			msg.append("web.xml: url mapping found for ")
+				.append(tag)
+				.append(" with name ")
+				.append(filterName)
+				.append(':');
+
 			for (String urlPattern : urlPatterns)
 			{
 				msg.append(" [");
@@ -243,7 +254,7 @@ public class WebXmlFile
 	/**
 	 * Iterate through all children of 'node' and search for a node with name "filterName". Return
 	 * the value of node "url-pattern" if "filterName" was found.
-	 *
+	 * 
 	 * @param filterName
 	 * @param name
 	 * @param node
@@ -267,14 +278,18 @@ public class WebXmlFile
 			{
 				foundUrlPattern = n.getTextContent();
 			}
+
 			if (foundFilterName != null)
 			{
 				foundFilterName = foundFilterName.trim();
 			}
+
 			if (filterName.equals(foundFilterName))
 			{
 				if (foundUrlPattern != null)
+				{
 					paths.add(foundUrlPattern.trim());
+				}
 			}
 		}
 		return paths;
@@ -283,16 +298,16 @@ public class WebXmlFile
 	/**
 	 * Find a node with name 'mapping' within 'nodeList' and if found continue to search amongst its
 	 * children for a node with 'filterName' and "url-pattern'
-	 *
-	 *
+	 * 
+	 * 
 	 * @param filterName
 	 * @param mapping
 	 * @param name
 	 * @param nodeList
 	 * @return The value assigned to node "url-pattern"
 	 */
-	private Set<String> getFilterPaths(final String filterName, final String mapping, final String name,
-		final NodeList nodeList)
+	private Set<String> getFilterPaths(final String filterName, final String mapping,
+		final String name, final NodeList nodeList)
 	{
 		Set<String> paths = new HashSet<String>(1);
 

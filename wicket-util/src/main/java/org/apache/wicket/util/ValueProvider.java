@@ -38,7 +38,6 @@ public class ValueProvider<T> implements IProvider<T>
 		this.value = value;
 	}
 
-	/** {@inheritDoc} */
 	public T get()
 	{
 		return value;
@@ -57,5 +56,4 @@ public class ValueProvider<T> implements IProvider<T>
 	{
 		return new ValueProvider<T>(value);
 	}
-
 }

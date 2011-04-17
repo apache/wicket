@@ -61,5 +61,4 @@ public class BooleanConverter extends AbstractConverter<Boolean>
 	{
 		return Boolean.class;
 	}
-
 }

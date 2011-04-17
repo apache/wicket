@@ -21,6 +21,10 @@ import java.io.UnsupportedEncodingException;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.apache.wicket.util.lang.Args;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Tests for {@link Strings}
  * 
@@ -29,6 +33,37 @@ import junit.framework.TestCase;
  */
 public class StringsTest extends TestCase
 {
+	private static final Logger log = LoggerFactory.getLogger(StringsTest.class);
+
+	/**
+	 * 
+	 */
+	public void testLogger()
+	{
+		log.error("Test: '{}'", 1);
+
+		try
+		{
+			throw new IllegalArgumentException("meine Exception");
+		}
+		catch (Exception ex)
+		{
+			log.error("Test: '{}'", 1, ex);
+		}
+
+		try
+		{
+			Args.isTrue(false, "args error: %s", 123);
+		}
+		catch (Exception ex)
+		{
+			log.error("Test: '{}'", 321, ex);
+		}
+	}
+
+	/**
+	 * 
+	 */
 	public void testStripJSessionId()
 	{
 		String url = "http://localhost/abc";
@@ -206,7 +241,7 @@ public class StringsTest extends TestCase
 			Strings.replaceHtmlEscapeNumber("&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;"));
 	}
 
-	private String convertNonASCIIString(String str) throws UnsupportedEncodingException
+	private String convertNonASCIIString(final String str) throws UnsupportedEncodingException
 	{
 		return new String(str.getBytes(), "iso-8859-1");
 	}
@@ -476,7 +511,7 @@ public class StringsTest extends TestCase
 	 * @param actual
 	 *            the actual value
 	 */
-	private void assertEquals(String[] expected, String[] actual)
+	private void assertEquals(final String[] expected, final String[] actual)
 	{
 		if (expected == null)
 		{
@@ -492,7 +527,7 @@ public class StringsTest extends TestCase
 	 *            the array to convert
 	 * @return the array as a string.
 	 */
-	private String stringValue(String[] arrayOfStrings)
+	private String stringValue(final String[] arrayOfStrings)
 	{
 		AppendingStringBuffer sb = new AppendingStringBuffer("[");
 		String komma = "";

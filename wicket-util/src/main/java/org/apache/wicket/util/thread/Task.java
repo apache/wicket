@@ -106,7 +106,7 @@ public final class Task
 
 							if (log.isTraceEnabled())
 							{
-								log.trace("Run the job: " + code.toString());
+								log.trace("Run the job: '{}'", code.toString());
 							}
 
 							try
@@ -122,7 +122,7 @@ public final class Task
 
 							if (log.isTraceEnabled())
 							{
-								log.trace("Finished with job: " + code.toString());
+								log.trace("Finished with job: '{}'", code.toString());
 							}
 
 							// Sleep until the period is over (or not at all if it's
@@ -132,7 +132,7 @@ public final class Task
 					}
 					catch (Throwable t)
 					{
-						log.error("Task " + name + " terminated", t);
+						log.error("Task '{}' terminated", name, t);
 					}
 					finally
 					{

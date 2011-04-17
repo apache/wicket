@@ -30,9 +30,6 @@ import java.util.Map;
  */
 public class MultiMap<K, V> extends HashMap<K, List<V>>
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -42,7 +39,6 @@ public class MultiMap<K, V> extends HashMap<K, List<V>>
 	 */
 	public MultiMap()
 	{
-
 	}
 
 	/**

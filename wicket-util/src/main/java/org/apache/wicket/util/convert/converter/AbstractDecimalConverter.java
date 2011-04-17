@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Base class for all number converters.
  * 
  * @author Jonathan Locke
- * 
+ * @param <N>
  */
 public abstract class AbstractDecimalConverter<N extends Number> extends AbstractNumberConverter<N>
 {

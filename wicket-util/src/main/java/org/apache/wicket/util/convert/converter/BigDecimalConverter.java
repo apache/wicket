@@ -30,23 +30,18 @@ public class BigDecimalConverter extends AbstractDecimalConverter<BigDecimal>
 {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see org.apache.wicket.util.convert.converters.AbstractConverter#getTargetType()
-	 */
 	@Override
 	protected Class<BigDecimal> getTargetType()
 	{
 		return BigDecimal.class;
 	}
 
-	/**
-	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
-	 *      java.util.Locale)
-	 */
 	public BigDecimal convertToObject(final String value, final Locale locale)
 	{
-		if(Strings.isEmpty(value))
+		if (Strings.isEmpty(value))
+		{
 			return null;
+		}
 
 		final Number number = parse(value, -Double.MAX_VALUE, Double.MAX_VALUE, locale);
 

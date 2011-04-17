@@ -25,10 +25,8 @@ package org.apache.wicket.util;
  */
 public class NullProvider<T> implements IProvider<T>
 {
-
 	public T get()
 	{
 		return null;
 	}
-
 }

@@ -28,7 +28,7 @@ import org.apache.wicket.util.convert.IConverter;
  * Base class for locale aware type converters.
  * 
  * @author Eelco Hillenius
- * 
+ * @param <C>
  */
 public abstract class AbstractConverter<C> implements IConverter<C>
 {
@@ -48,11 +48,13 @@ public abstract class AbstractConverter<C> implements IConverter<C>
 	 * @throws ConversionException
 	 *             Thrown if parsing fails
 	 */
+	@SuppressWarnings("unchecked")
 	protected C parse(final Format format, final Object value, final Locale locale)
 	{
 		final ParsePosition position = new ParsePosition(0);
 		final String stringValue = value.toString();
 		final C result = (C)format.parseObject(stringValue, position);
+
 		if (position.getIndex() != stringValue.length())
 		{
 			throw newConversionException("Cannot parse '" + value + "' using format " + format,

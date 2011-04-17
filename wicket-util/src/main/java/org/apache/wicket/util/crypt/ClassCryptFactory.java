@@ -18,6 +18,7 @@ package org.apache.wicket.util.crypt;
 
 import java.lang.ref.WeakReference;
 
+import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +32,7 @@ import org.slf4j.LoggerFactory;
 public class ClassCryptFactory implements ICryptFactory
 {
 	private static final Logger log = LoggerFactory.getLogger(ClassCryptFactory.class);
+
 	private final WeakReference<Class<?>> cryptClass;
 	private final String encryptionKey;
 
@@ -44,10 +46,7 @@ public class ClassCryptFactory implements ICryptFactory
 	 */
 	public ClassCryptFactory(final Class<?> cryptClass, final String encryptionKey)
 	{
-		if (cryptClass == null)
-		{
-			throw new IllegalArgumentException("cryptClass cannot be null");
-		}
+		Args.notNull(cryptClass, "cryptClass");
 
 		if (!ICrypt.class.isAssignableFrom(cryptClass))
 		{
@@ -96,5 +95,4 @@ public class ClassCryptFactory implements ICryptFactory
 			return new NoCrypt();
 		}
 	}
-
 }

@@ -22,6 +22,8 @@ import java.util.Locale;
 
 import javax.swing.text.MaskFormatter;
 
+import org.apache.wicket.util.lang.Args;
+
 
 /**
  * A converter that takes a mask into account. It is specifically meant for overrides on individual
@@ -84,6 +86,7 @@ import javax.swing.text.MaskFormatter;
  * @see MaskFormatter
  * 
  * @author Eelco Hillenius
+ * @param <C>
  */
 public class MaskConverter<C> implements IConverter<C>
 {
@@ -100,10 +103,7 @@ public class MaskConverter<C> implements IConverter<C>
 	 */
 	public MaskConverter(final MaskFormatter maskFormatter)
 	{
-		if (maskFormatter == null)
-		{
-			throw new IllegalArgumentException("argument maskFormatter may not be null");
-		}
+		Args.notNull(maskFormatter, "maskFormatter");
 
 		this.maskFormatter = maskFormatter;
 	}
@@ -146,9 +146,8 @@ public class MaskConverter<C> implements IConverter<C>
 
 	/**
 	 * Converts a string to an object using {@link MaskFormatter#stringToValue(String)}.
-	 * 
-	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String, Locale)
 	 */
+	@SuppressWarnings("unchecked")
 	public C convertToObject(final String value, final Locale locale)
 	{
 		try
@@ -163,8 +162,6 @@ public class MaskConverter<C> implements IConverter<C>
 
 	/**
 	 * Converts the value to a string using {@link MaskFormatter#valueToString(Object)}.
-	 * 
-	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object, Locale)
 	 */
 	public String convertToString(final C value, final Locale locale)
 	{
@@ -177,5 +174,4 @@ public class MaskConverter<C> implements IConverter<C>
 			throw new ConversionException(e);
 		}
 	}
-
 }

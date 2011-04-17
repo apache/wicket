@@ -17,9 +17,11 @@
 package org.apache.wicket.util.convert;
 
 import java.text.Format;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Generics;
 
 
 /**
@@ -32,7 +34,7 @@ public class ConversionException extends RuntimeException
 	private static final long serialVersionUID = 1L;
 
 	/** The converter that was used. */
-	private IConverter converter;
+	private IConverter<?> converter;
 
 	/** Pattern that was used for conversion. */
 	private Format format;
@@ -92,7 +94,7 @@ public class ConversionException extends RuntimeException
 	 * 
 	 * @return the used converter.
 	 */
-	public final IConverter getConverter()
+	public final IConverter<?> getConverter()
 	{
 		return converter;
 	}
@@ -144,7 +146,7 @@ public class ConversionException extends RuntimeException
 	 *            the converter.
 	 * @return This
 	 */
-	public final ConversionException setConverter(final IConverter converter)
+	public final ConversionException setConverter(final IConverter<?> converter)
 	{
 		this.converter = converter;
 		return this;
@@ -236,23 +238,15 @@ public class ConversionException extends RuntimeException
 	 */
 	public ConversionException setVariable(final String name, final Object value)
 	{
-		if ((name == null) || (name.trim().length() == 0))
-		{
-			throw new IllegalArgumentException(
-				"Argument [[name]] cannot be null or an empty string");
-		}
-		if (value == null)
-		{
-			throw new IllegalArgumentException(
-				"Argument [[value]] cannot be null or an empty string");
-		}
+		Args.notEmpty(name, "name");
+		Args.notNull(value, "value");
 
 		if (vars == null)
 		{
-			vars = new HashMap<String, Object>(2);
+			vars = Generics.newHashMap(2);
 		}
-		vars.put(name, value);
 
+		vars.put(name, value);
 		return this;
 	}
 
@@ -265,5 +259,4 @@ public class ConversionException extends RuntimeException
 	{
 		return vars;
 	}
-
 }

@@ -37,6 +37,7 @@ import org.apache.wicket.util.file.IFileUploadCleaner;
 import org.apache.wicket.util.io.DeferredFileOutputStream;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
+import org.apache.wicket.util.lang.Checks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -186,6 +187,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * @param repository
 	 *            The data repository, which is the directory in which files will be created, should
 	 *            the item size exceed the threshold.
+	 * @param fileUploadCleaner
 	 */
 	public DiskFileItem(final String fieldName, final String contentType,
 		final boolean isFormField, final String fileName, final int sizeThreshold,
@@ -298,7 +300,6 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 		}
 	}
 
-
 	/**
 	 * Returns the contents of the file as an array of bytes. If the contents of the file were not
 	 * yet cached in memory, they will be loaded from the disk storage and cached.
@@ -346,7 +347,6 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	{
 		return new String(get(), charset);
 	}
-
 
 	/**
 	 * Returns the contents of the file as a String, using the default character encoding. This
@@ -412,12 +412,8 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 		else
 		{
 			File outputFile = getStoreLocation();
-
-			if (outputFile == null)
-			{
-				throw new IllegalStateException(
-					"for a non-memory upload the file location must not be empty");
-			}
+			Checks.notNull(outputFile,
+				"for a non-memory upload the file location must not be empty");
 
 			// Save the length of the file
 			size = outputFile.length();
@@ -444,7 +440,6 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 		}
 	}
 
-
 	/**
 	 * Deletes the underlying storage for a file item, including deleting any associated temporary
 	 * disk file. Although this storage will be deleted automatically when the <code>FileItem</code>
@@ -459,7 +454,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 		{
 			if (Files.remove(outputFile) == false)
 			{
-				log.debug("failed to delete file: " + outputFile.getAbsolutePath());
+				log.error("failed to delete file: " + outputFile.getAbsolutePath());
 			}
 		}
 	}
@@ -478,7 +473,6 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 		return fieldName;
 	}
 
-
 	/**
 	 * Sets the field name used to reference this file item.
 	 * 
@@ -492,7 +486,6 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	{
 		this.fieldName = fieldName;
 	}
-
 
 	/**
 	 * Determines whether or not a <code>FileItem</code> instance represents a simple form field.
@@ -587,7 +580,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 		{
 			if (Files.remove(outputFile) == false)
 			{
-				log.debug("failed to delete file: " + outputFile.getAbsolutePath());
+				log.error("failed to delete file: " + outputFile.getAbsolutePath());
 			}
 		}
 	}

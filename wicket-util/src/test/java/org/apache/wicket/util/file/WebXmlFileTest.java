@@ -75,8 +75,8 @@ public class WebXmlFileTest extends TestCase
 			new ByteArrayInputStream(webxml.getBytes()));
 		assertEquals("test/", path);
 
-		path = new WebXmlFile().getUniqueFilterPath(servlet, "xxx", new ByteArrayInputStream(
-			webxml.getBytes()));
+		path = new WebXmlFile().getUniqueFilterPath(servlet, "xxx",
+			new ByteArrayInputStream(webxml.getBytes()));
 		assertNull(path);
 
 		path = new WebXmlFile().getUniqueFilterPath(!servlet, "HelloWorldApplication",

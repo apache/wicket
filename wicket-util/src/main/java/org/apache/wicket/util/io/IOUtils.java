@@ -127,8 +127,6 @@ public final class IOUtils
 		}
 	}
 
-	// read toByteArray
-	// -----------------------------------------------------------------------
 	/**
 	 * Get the contents of an <code>InputStream</code> as a <code>byte[]</code>.
 	 * <p>
@@ -200,8 +198,6 @@ public final class IOUtils
 		return output.toByteArray();
 	}
 
-	// read char[]
-	// -----------------------------------------------------------------------
 	/**
 	 * Get the contents of an <code>InputStream</code> as a character array using the default
 	 * character encoding of the platform.
@@ -273,8 +269,6 @@ public final class IOUtils
 		return sw.toCharArray();
 	}
 
-	// read toString
-	// -----------------------------------------------------------------------
 	/**
 	 * Get the contents of an <code>InputStream</code> as a String using the default character
 	 * encoding of the platform.
@@ -346,8 +340,6 @@ public final class IOUtils
 		return sw.toString();
 	}
 
-	// write byte[]
-	// -----------------------------------------------------------------------
 	/**
 	 * Writes bytes from a <code>byte[]</code> to an <code>OutputStream</code>.
 	 * 
@@ -430,8 +422,6 @@ public final class IOUtils
 		}
 	}
 
-	// write char[]
-	// -----------------------------------------------------------------------
 	/**
 	 * Writes chars from a <code>char[]</code> to a <code>Writer</code> using the default character
 	 * encoding of the platform.
@@ -514,8 +504,6 @@ public final class IOUtils
 		}
 	}
 
-	// write String
-	// -----------------------------------------------------------------------
 	/**
 	 * Writes chars from a <code>String</code> to a <code>Writer</code>.
 	 * 
@@ -598,8 +586,6 @@ public final class IOUtils
 		}
 	}
 
-	// write AppendingStringBuffer
-	// -----------------------------------------------------------------------
 	/**
 	 * Writes chars from a <code>AppendingStringBuffer</code> to a <code>Writer</code>.
 	 * 
@@ -683,8 +669,6 @@ public final class IOUtils
 		}
 	}
 
-	// copy from InputStream
-	// -----------------------------------------------------------------------
 	/**
 	 * Copy bytes from an <code>InputStream</code> to an <code>OutputStream</code>.
 	 * <p>
@@ -778,8 +762,6 @@ public final class IOUtils
 		}
 	}
 
-	// copy from Reader
-	// -----------------------------------------------------------------------
 	/**
 	 * Copy chars from a <code>Reader</code> to a <code>Writer</code>.
 	 * <p>
@@ -879,8 +861,6 @@ public final class IOUtils
 		}
 	}
 
-	// content equals
-	// -----------------------------------------------------------------------
 	/**
 	 * Compare the contents of two Streams to determine if they are equal or not.
 	 * <p>
@@ -967,5 +947,4 @@ public final class IOUtils
 		int ch2 = input2.read();
 		return (ch2 == -1);
 	}
-
 }

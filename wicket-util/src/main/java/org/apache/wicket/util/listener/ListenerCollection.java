@@ -152,6 +152,5 @@ public abstract class ListenerCollection<T> implements Serializable, Iterable<T>
 	public Iterator<T> iterator()
 	{
 		return listeners.iterator();
-
 	}
 }

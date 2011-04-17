@@ -43,8 +43,7 @@ public final class Streams
 	 * @return Number of bytes copied from one stream to the other
 	 * @throws IOException
 	 */
-	public static int copyAndClose(final InputStream in, final OutputStream out)
-		throws IOException
+	public static int copyAndClose(final InputStream in, final OutputStream out) throws IOException
 	{
 		try
 		{

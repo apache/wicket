@@ -86,13 +86,13 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 						}
 						else
 						{
-							log.info("File ignored: " + pathname.toString());
+							log.info("File ignored: '{}'", pathname.toString());
 						}
 					}
 				}
 				else
 				{
-					log.info("File ignored: " + pathname.toString());
+					log.info("File ignored: '{}'", pathname.toString());
 				}
 			}
 

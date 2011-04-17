@@ -29,7 +29,6 @@ import java.util.HashMap;
  */
 public final class Objects
 {
-
 	/** Type tag meaning java.math.BigDecimal. */
 	private static final int BIGDEC = 9;
 
@@ -221,7 +220,7 @@ public final class Objects
 	 *             if the objects are both non-numeric yet of incompatible types or do not implement
 	 *             Comparable.
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static int compareWithConversion(final Object v1, final Object v2)
 	{
 		int result;

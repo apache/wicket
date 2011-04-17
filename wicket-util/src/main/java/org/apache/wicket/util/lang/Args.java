@@ -26,6 +26,7 @@ public class Args
 	/**
 	 * Checks argument is not null
 	 * 
+	 * @param <T>
 	 * @param argument
 	 * @param name
 	 * @return The 'argument' parameter
@@ -79,5 +80,52 @@ public class Args
 				String.format("Argument '%s' must have a value within [%s,%s], but was %s", name,
 					min, max, value));
 		}
+	}
+
+	/**
+	 * Check if argument is true
+	 * 
+	 * @param argument
+	 * @param msg
+	 * @param params
+	 * @return argument
+	 */
+	public static boolean isTrue(final boolean argument, final String msg, final Object... params)
+	{
+		if (argument == false)
+		{
+			throw new IllegalArgumentException(format(msg, params));
+		}
+		return argument;
+	}
+
+	/**
+	 * Check if argument is false
+	 * 
+	 * @param argument
+	 * @param msg
+	 * @param params
+	 * @return argument
+	 */
+	public static boolean isFalse(final boolean argument, final String msg, final Object... params)
+	{
+		if (argument == true)
+		{
+			throw new IllegalArgumentException(format(msg, params));
+		}
+		return argument;
+	}
+
+	/**
+	 * Format the message. Allow for "{}" as well as %s etc. (see Formatter).
+	 * 
+	 * @param msg
+	 * @param params
+	 * @return formatted message
+	 */
+	static String format(String msg, final Object... params)
+	{
+		msg = msg.replaceAll("\\{\\}", "%s");
+		return String.format(msg, params);
 	}
 }

@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Base class for all number converters.
  * 
  * @author Jonathan Locke
- * 
+ * @param <I>
  */
 public abstract class AbstractIntegerConverter<I extends Number> extends AbstractNumberConverter<I>
 {
@@ -52,5 +52,4 @@ public abstract class AbstractIntegerConverter<I extends Number> extends Abstrac
 		}
 		return (NumberFormat)numberFormat.clone();
 	}
-
 }

@@ -28,13 +28,14 @@ public class Checks
 	 * 
 	 * @param argument
 	 * @param message
+	 * @param params
 	 * @throws IllegalStateException
 	 */
-	public static void notNull(final Object argument, final String message)
+	public static void notNull(final Object argument, final String message, final Object... params)
 	{
 		if (argument == null)
 		{
-			throw new IllegalStateException(message);
+			throw new IllegalStateException(Args.format(message, params));
 		}
 	}
 
@@ -42,14 +43,16 @@ public class Checks
 	 * Checks argument is not empty (not null and has a non-whitespace character)
 	 * 
 	 * @param argument
+	 * @param message
+	 * @param params
 	 * @param name
 	 * @throws IllegalStateException
 	 */
-	public static void notEmpty(final String argument, final String message)
+	public static void notEmpty(final String argument, final String message, final Object... params)
 	{
 		if (Strings.isEmpty(argument))
 		{
-			throw new IllegalStateException(message);
+			throw new IllegalStateException(Args.format(message, params));
 		}
 	}
 
@@ -60,6 +63,7 @@ public class Checks
 	 * @param min
 	 * @param max
 	 * @param value
+	 * @param message
 	 * @param name
 	 * @throws IllegalStateException
 	 */
@@ -68,6 +72,7 @@ public class Checks
 	{
 		notNull(min, message);
 		notNull(max, message);
+
 		if ((value.compareTo(min) < 0) || (value.compareTo(max) > 0))
 		{
 			throw new IllegalStateException(message);

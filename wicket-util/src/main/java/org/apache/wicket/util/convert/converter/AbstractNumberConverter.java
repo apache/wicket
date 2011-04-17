@@ -26,13 +26,10 @@ import org.apache.wicket.util.convert.ConversionException;
  * Base class for all number converters.
  * 
  * @author Jonathan Locke
- * 
+ * @param <N>
  */
 public abstract class AbstractNumberConverter<N extends Number> extends AbstractConverter<N>
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -40,7 +37,6 @@ public abstract class AbstractNumberConverter<N extends Number> extends Abstract
 	 * @return Returns the numberFormat.
 	 */
 	public abstract NumberFormat getNumberFormat(Locale locale);
-
 
 	/**
 	 * Parses a value as a String and returns a Number.
@@ -98,9 +94,6 @@ public abstract class AbstractNumberConverter<N extends Number> extends Abstract
 		return number;
 	}
 
-	/**
-	 * @see org.apache.wicket.util.convert.IConverter#convertToString(Object, java.util.Locale)
-	 */
 	@Override
 	public String convertToString(final N value, final Locale locale)
 	{
@@ -111,5 +104,4 @@ public abstract class AbstractNumberConverter<N extends Number> extends Abstract
 		}
 		return value.toString();
 	}
-
 }
