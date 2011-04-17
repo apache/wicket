@@ -829,7 +829,7 @@ public final class Url implements Serializable
 	 * 
 	 * @param protocol
 	 */
-	public void setProtocol(String protocol)
+	public void setProtocol(final String protocol)
 	{
 		this.protocol = protocol;
 	}
@@ -849,7 +849,7 @@ public final class Url implements Serializable
 	 * 
 	 * @param port
 	 */
-	public void setPort(Integer port)
+	public void setPort(final Integer port)
 	{
 		this.port = port;
 	}
@@ -869,10 +869,8 @@ public final class Url implements Serializable
 	 * 
 	 * @param host
 	 */
-	public void setHost(String host)
+	public void setHost(final String host)
 	{
 		this.host = host;
 	}
-
-
 }

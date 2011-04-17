@@ -157,11 +157,8 @@ public class MountMapper extends AbstractMapper
 			if (placeholder != null)
 			{
 				replacement = mount.getMountParameters().getValue(placeholder).toString();
-				if (replacement == null)
-				{
-					throw new IllegalStateException(String.format(
-						"Cannot find a value for placeholder '%s'.", placeholder));
-				}
+				Checks.notNull(replacement, "Cannot find a value for placeholder '%s'.",
+					placeholder);
 			}
 
 			mount.getUrl().getSegments().add(0, replacement);

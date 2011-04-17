@@ -53,7 +53,7 @@ public class UrlRenderer
 	 * @param request
 	 *            Request that serves as the base for rendering urls
 	 */
-	public UrlRenderer(Request request)
+	public UrlRenderer(final Request request)
 	{
 		this.request = request;
 		baseUrl = request.getClientUrl();
@@ -108,7 +108,7 @@ public class UrlRenderer
 	 * @param url
 	 * @return rendered URL
 	 */
-	public String renderFullUrl(Url url)
+	public String renderFullUrl(final Url url)
 	{
 		final String protocol = resolveProtocol(url);
 		final String host = resolveHost(url);
@@ -117,7 +117,7 @@ public class UrlRenderer
 
 		String render = protocol + "://" + host;
 
-		if (port != null && !port.equals(PROTO_TO_PORT.get(protocol)))
+		if ((port != null) && !port.equals(PROTO_TO_PORT.get(protocol)))
 		{
 			render += ":" + port;
 		}
@@ -136,7 +136,7 @@ public class UrlRenderer
 	 *            url being rendered
 	 * @return port or {@code null} if none is set
 	 */
-	protected Integer resolvePort(Url url)
+	protected Integer resolvePort(final Url url)
 	{
 		return choose(url.getPort(), baseUrl.getPort(), request.getClientUrl().getPort());
 	}
@@ -148,7 +148,7 @@ public class UrlRenderer
 	 *            url being rendered
 	 * @return the host name or {@code null} if none is set
 	 */
-	protected String resolveHost(Url url)
+	protected String resolveHost(final Url url)
 	{
 		return choose(url.getHost(), baseUrl.getHost(), request.getClientUrl().getHost());
 	}
@@ -160,7 +160,7 @@ public class UrlRenderer
 	 *            url being rendered
 	 * @return the protocol or {@code null} if none is set
 	 */
-	protected String resolveProtocol(Url url)
+	protected String resolveProtocol(final Url url)
 	{
 		return choose(url.getProtocol(), baseUrl.getProtocol(), request.getClientUrl()
 			.getProtocol());
@@ -241,7 +241,7 @@ public class UrlRenderer
 	 * @param url
 	 * @return {@code true} if URL should be rendered in the full form
 	 */
-	protected boolean shouldRenderAsFull(Url url)
+	protected boolean shouldRenderAsFull(final Url url)
 	{
 		if (!Strings.isEmpty(url.getProtocol()) &&
 			!url.getProtocol().equals(request.getClientUrl().getProtocol()))
@@ -253,7 +253,7 @@ public class UrlRenderer
 		{
 			return true;
 		}
-		if (url.getPort() != null && !url.getPort().equals(request.getClientUrl().getPort()))
+		if ((url.getPort() != null) && !url.getPort().equals(request.getClientUrl().getPort()))
 		{
 			return true;
 		}
@@ -287,7 +287,7 @@ public class UrlRenderer
 		return buffer.toString();
 	}
 
-	private static String choose(String value, String fallback1, String fallback2)
+	private static String choose(String value, final String fallback1, final String fallback2)
 	{
 		if (Strings.isEmpty(value))
 		{
@@ -300,7 +300,7 @@ public class UrlRenderer
 		return value;
 	}
 
-	private static Integer choose(Integer value, Integer fallback1, Integer fallback2)
+	private static Integer choose(Integer value, final Integer fallback1, final Integer fallback2)
 	{
 		if (value == null)
 		{
