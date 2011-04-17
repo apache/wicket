@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
@@ -88,9 +89,14 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		}
 	}
 
-	private static abstract class Action
+	private static abstract class Action implements Comparable<Action>
 	{
 		protected abstract void invoke(WebResponse response);
+
+		public int compareTo(Action o)
+		{
+			return 0;
+		}
 	}
 
 	/**
@@ -100,6 +106,12 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	 */
 	private static abstract class MetaDataAction extends Action
 	{
+		@Override
+		public int compareTo(Action o)
+		{
+			// write first in response
+			return Integer.MIN_VALUE;
+		}
 	}
 
 	private static class WriteCharSequenceAction extends Action
@@ -135,6 +147,13 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 			}
 			response.write(builder);
 		}
+
+		@Override
+		public int compareTo(Action o)
+		{
+			// needs to be invoked after set header actions
+			return Integer.MAX_VALUE;
+		}
 	}
 
 	private static class WriteDataAction extends Action
@@ -162,6 +181,13 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		protected void invoke(WebResponse response)
 		{
 			writeStream(response, stream);
+		}
+
+		@Override
+		public int compareTo(Action o)
+		{
+			// needs to be invoked after set header actions
+			return Integer.MAX_VALUE;
 		}
 	}
 
@@ -242,7 +268,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		}
 	}
 
-	private static class SetContentLengthAction extends Action
+	private static class SetContentLengthAction extends MetaDataAction
 	{
 		private final long contentLength;
 
@@ -258,7 +284,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		}
 	}
 
-	private static class SetContentTypeAction extends Action
+	private static class SetContentTypeAction extends MetaDataAction
 	{
 		private final String contentType;
 
@@ -481,6 +507,8 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	public void writeTo(final WebResponse response)
 	{
 		Args.notNull(response, "response");
+
+		Collections.sort(actions);
 
 		for (Action action : actions)
 		{
