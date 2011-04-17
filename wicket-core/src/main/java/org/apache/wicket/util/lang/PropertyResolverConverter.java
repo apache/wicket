@@ -47,11 +47,15 @@ public class PropertyResolverConverter implements IClusterable
 	}
 
 	/**
+	 * @param <T>
+	 *            target type
+	 * @param <I>
+	 *            input object's type
 	 * @param object
 	 * @param clz
 	 * @return The converted object
 	 */
-	public Object convert(Object object, Class<?> clz)
+	public <T, I> Object convert(I object, Class<T> clz)
 	{
 		if (object == null)
 		{
@@ -61,14 +65,14 @@ public class PropertyResolverConverter implements IClusterable
 		{
 			return object;
 		}
-		IConverter converter = converterSupplier.getConverter(clz);
+		IConverter<T> converter = converterSupplier.getConverter(clz);
 		if (object instanceof String)
 		{
 			return converter.convertToObject((String)object, locale);
 		}
 		else if (clz == String.class)
 		{
-			return converter.convertToString(object, locale);
+			return convertToString(object, locale);
 		}
 		else
 		{
@@ -81,8 +85,17 @@ public class PropertyResolverConverter implements IClusterable
 				// ignore that try it the other way
 			}
 			// go through string to convert to the right object.
-			String tmp = converter.convertToString(object, locale);
+			String tmp = convertToString(object, locale);
 			return converter.convertToObject(tmp, locale);
 		}
+	}
+
+	protected <C> String convertToString(C object, Locale locale)
+	{
+		@SuppressWarnings("unchecked")
+		Class<C> type = (Class<C>)object.getClass();
+
+		IConverter<C> converterForObj = converterSupplier.getConverter(type);
+		return converterForObj.convertToString(object, locale);
 	}
 }

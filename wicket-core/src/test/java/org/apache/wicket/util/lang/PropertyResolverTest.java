@@ -19,6 +19,8 @@ package org.apache.wicket.util.lang;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -26,9 +28,12 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.apache.wicket.ConverterLocator;
+import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.convert.ConversionException;
+import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.convert.converter.AbstractConverter;
 
 /**
  * @author jcompagner
@@ -610,7 +615,7 @@ public class PropertyResolverTest extends WicketTestCase
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public Object convert(Object object, Class<?> clz)
+				public <T, I> Object convert(I object, java.lang.Class<T> clz)
 				{
 					return null;
 				}
@@ -622,5 +627,80 @@ public class PropertyResolverTest extends WicketTestCase
 		{
 			assertTrue(e.getMessage().toLowerCase().contains("name"));
 		}
+	}
+
+	/**
+	 * WICKET-3441
+	 */
+	public void testDateToStringConverting()
+	{
+		IConverterLocator converterLocator = new ConverterLocator();
+		Locale locale = Locale.GERMAN;
+		PropertyResolverConverter converter = new PropertyResolverConverter(converterLocator,
+			locale);
+
+		Calendar calDate = Calendar.getInstance();
+		calDate.clear();
+		calDate.set(2011, Calendar.APRIL, 17);
+		Date date = calDate.getTime();
+
+		Object actual = converter.convert(date, String.class);
+		String expected = converterLocator.getConverter(Date.class).convertToString(date, locale);
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * WICKET-3441
+	 */
+	public void testDateToLongConverting()
+	{
+		ConverterLocator converterLocator = new ConverterLocator();
+		final IConverter<Date> dateConverter = converterLocator.get(Date.class);
+		IConverter<Long> customLongConverter = new AbstractConverter<Long>()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public Long convertToObject(String value, Locale locale)
+			{
+				Date date = dateConverter.convertToObject(value, locale);
+				return date != null ? date.getTime() : null;
+			}
+
+			@Override
+			public String convertToString(Long value, Locale locale)
+			{
+				Date date;
+				if (value != null)
+				{
+					date = new Date();
+					date.setTime(value);
+				}
+				else
+				{
+					date = null;
+				}
+
+				return dateConverter.convertToString(date, locale);
+			}
+
+			@Override
+			protected Class<Long> getTargetType()
+			{
+				return Long.class;
+			}
+		};
+		converterLocator.set(Long.class, customLongConverter);
+		converterLocator.set(Long.TYPE, customLongConverter);
+
+		PropertyResolverConverter converter = new PropertyResolverConverter(converterLocator,
+			Locale.ENGLISH);
+
+		Calendar calDate = Calendar.getInstance();
+		calDate.clear();
+		calDate.set(2011, Calendar.APRIL, 17);
+		Date date = calDate.getTime();
+
+		Object actual = converter.convert(date, Long.class);
+		assertEquals(date.getTime(), actual);
 	}
 }
