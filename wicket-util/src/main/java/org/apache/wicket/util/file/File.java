@@ -269,7 +269,7 @@ public class File extends java.io.File implements IModifiable
 	 * 
 	 * @param file
 	 *            The file to copy
-	 * @returns number of bytes written
+	 * @return number of bytes written
 	 * @throws IOException
 	 */
 	public int write(final File file) throws IOException

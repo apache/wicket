@@ -149,8 +149,7 @@ public interface FileItem extends IClusterable
 	 * 
 	 * @param file
 	 *            The <code>File</code> into which the uploaded item should be stored.
-	 * 
-	 * @throws Exception
+	 * @throws IOException
 	 *             if an error occurs.
 	 */
 	void write(File file) throws IOException;

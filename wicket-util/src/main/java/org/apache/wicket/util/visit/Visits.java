@@ -19,6 +19,8 @@ package org.apache.wicket.util.visit;
 import java.util.Collections;
 import java.util.Iterator;
 
+import org.apache.wicket.util.lang.Args;
+
 /**
  * Utility class that contains visitor/traversal related code
  */
@@ -61,6 +63,7 @@ public class Visits
 	 *            the visitor
 	 * @return return value from the {@code visitor} or {@code null} if none
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static final <S, R> R visit(final Iterable<? super S> container,
 		final IVisitor<S, R> visitor)
 	{
@@ -86,6 +89,7 @@ public class Visits
 	 *            filter used to limit the types of objects that will be visited
 	 * @return return value from the {@code visitor} or {@code null} if none
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static final <S, R> R visit(final Iterable<? super S> container,
 		final IVisitor<S, R> visitor, final IVisitFilter filter)
 	{
@@ -119,6 +123,7 @@ public class Visits
 		return visit.getResult();
 	}
 
+	@SuppressWarnings("unchecked")
 	private static final <S, R> void visitChildren(final Iterable<? super S> container,
 		final IVisitor<S, R> visitor, final IVisitFilter filter, final Visit<R> visit)
 	{
@@ -137,7 +142,6 @@ public class Visits
 				Visit<R> childTraversal = new Visit<R>();
 
 				// Call visitor
-				@SuppressWarnings("unchecked")
 				S s = (S)child;
 				visitor.component(s, childTraversal);
 
@@ -237,21 +241,18 @@ public class Visits
 	public static final <S, R> R visitPostOrder(final Object root,
 		final org.apache.wicket.util.visit.IVisitor<S, R> visitor, final IVisitFilter filter)
 	{
-		if (visitor == null)
-		{
-			throw new IllegalArgumentException("Argument `visitor` cannot be null");
-		}
+		Args.notNull(visitor, "visitor");
 
 		Visit<R> visit = new Visit<R>();
 		visitPostOrderHelper(root, visitor, filter, visit);
 		return visit.getResult();
 	}
 
+	@SuppressWarnings("unchecked")
 	private static final <S, R> void visitPostOrderHelper(final Object component,
 		final org.apache.wicket.util.visit.IVisitor<S, R> visitor, final IVisitFilter filter,
 		final Visit<R> visit)
 	{
-
 		if (component instanceof Iterable<?>)
 		{
 			final Iterable<?> container = (Iterable<?>)component;
@@ -269,6 +270,7 @@ public class Visits
 				}
 			}
 		}
+
 		if (filter.visitObject(component))
 		{
 			visitor.component((S)component, visit);

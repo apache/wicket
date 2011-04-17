@@ -86,6 +86,8 @@ public class DiskFileItemFactory implements FileItemFactory
 	/**
 	 * Constructs an unconfigured instance of this class. The resulting factory may be configured by
 	 * calling the appropriate setter methods.
+	 * 
+	 * @param fileUploadCleaner
 	 */
 	public DiskFileItemFactory(final IFileUploadCleaner fileUploadCleaner)
 	{
@@ -102,6 +104,7 @@ public class DiskFileItemFactory implements FileItemFactory
 	 * @param repository
 	 *            The data repository, which is the directory in which files will be created, should
 	 *            the item size exceed the threshold.
+	 * @param fileUploadCleaner
 	 */
 	public DiskFileItemFactory(final int sizeThreshold, final File repository,
 		final IFileUploadCleaner fileUploadCleaner)

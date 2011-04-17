@@ -140,7 +140,7 @@ public class CustomEntityResolver implements EntityResolver
 	public static interface EntityLocator
 	{
 		/**
-		 * @return
+		 * @return input source
 		 * @throws SAXException
 		 * @throws IOException
 		 */
