@@ -45,6 +45,7 @@ import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -216,9 +217,14 @@ public abstract class AbstractTree extends Panel
 				// yes, write empty div with id
 				// this is necessary for createElement js to work correctly
 				String tagName = ((ComponentTag)getMarkup().get(0)).getName();
-				getResponse().write(
-					"<" + tagName + " style=\"display:none\" id=\"" + getMarkupId() + "\"></" +
-						tagName + ">");
+				Response response = getResponse();
+				response.write("<" + tagName + " style=\"display:none\" id=\"" + getMarkupId() +
+					"\">");
+				if ("table".equals(tagName))
+				{
+					response.write("<tbody><tr><td></td></tr></tbody>");
+				}
+				response.write("</" + tagName + ">");
 			}
 			else
 			{
