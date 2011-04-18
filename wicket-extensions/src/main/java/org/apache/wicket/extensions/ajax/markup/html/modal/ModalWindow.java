@@ -264,7 +264,22 @@ public class ModalWindow extends Panel
 		add(new WindowClosedBehavior());
 
 		add(JavascriptPackageResource.getHeaderContribution(JAVASCRIPT));
-		add(CSSPackageResource.getHeaderContribution(CSS));
+		ResourceReference CSS = newCssResource();
+		if (CSS != null)
+		{
+			add(CSSPackageResource.getHeaderContribution(CSS));
+		}
+	}
+
+	/**
+	 * Allows to override CSS contribution. Returning null means the CSS will be contributed via
+	 * other sources, e.g. a global CSS resource.
+	 * 
+	 * @return The CSS resource reference or null if CSS is contributed via other means.
+	 */
+	protected ResourceReference newCssResource()
+	{
+		return CSS;
 	}
 
 	/**
