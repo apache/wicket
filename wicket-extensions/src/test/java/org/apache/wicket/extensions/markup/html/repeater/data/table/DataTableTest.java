@@ -16,10 +16,27 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
 import junit.framework.TestCase;
 
+import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.repeater.data.IDataProvider;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +45,9 @@ import org.slf4j.LoggerFactory;
  */
 public class DataTableTest extends TestCase
 {
+	/** Log for reporting. */
+	private static final Logger log = LoggerFactory.getLogger(DataTableTest.class);
+
 	private WicketTester tester;
 
 	@Override
@@ -41,9 +61,6 @@ public class DataTableTest extends TestCase
 	{
 		tester.destroy();
 	}
-
-	/** Log for reporting. */
-	private static final Logger log = LoggerFactory.getLogger(DataTableTest.class);
 
 	/**
 	 * @throws Exception
@@ -73,6 +90,26 @@ public class DataTableTest extends TestCase
 		DiffUtil.validatePage(doc, getClass(), "DataTablePage_ExpectedResult.html", true);
 	}
 
+	/**
+	 * Tests that DataTable doesn't produce thead/tfoot if there are no top/bottom toolbars or if
+	 * their children components are all invisible
+	 */
+	public void testWicket3603()
+	{
+		PageParameters parameters = new PageParameters();
+		parameters.add("empty", Boolean.TRUE);
+		tester.startPage(Wicket3603Page.class, parameters);
+		System.err.println(tester.getLastResponseAsString());
+		Assert.assertTrue(tester.getLastResponseAsString().contains("thead"));
+		Assert.assertTrue(tester.getLastResponseAsString().contains("tfoot"));
+
+		parameters.set("empty", Boolean.FALSE);
+		tester.startPage(Wicket3603Page.class);
+		System.err.println(tester.getLastResponseAsString());
+		Assert.assertFalse(tester.getLastResponseAsString().contains("thead"));
+		Assert.assertFalse(tester.getLastResponseAsString().contains("tfoot"));
+	}
+
 	private String removeFillers(String doc)
 	{
 		doc = doc.replaceAll("(?s)<span .*?>.*?</span>", "<x/>");
@@ -83,5 +120,68 @@ public class DataTableTest extends TestCase
 		doc = doc.replaceAll("(<x/>)+", "<x/>");
 
 		return doc;
+	}
+
+	/**
+	 * A page with a DataTable that either has items (tbody) or header and footer (thead/tfoot)
+	 */
+	public static class Wicket3603Page extends WebPage implements IMarkupResourceStreamProvider
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param parameters
+		 */
+		public Wicket3603Page(PageParameters parameters)
+		{
+			super(parameters);
+
+			IDataProvider<Number> provider = new IDataProvider<Number>()
+			{
+				private static final long serialVersionUID = 1L;
+
+				private List<Integer> items = Arrays.asList(1, 3, 5);
+
+				public void detach()
+				{
+				}
+
+				public Iterator<? extends Number> iterator(int first, int count)
+				{
+					StringValue emptyValue = getPageParameters().get("empty");
+					return emptyValue.toBoolean() ? Collections.<Integer> emptyList().iterator()
+						: items.iterator();
+				}
+
+				public int size()
+				{
+					StringValue emptyValue = getPageParameters().get("empty");
+					return emptyValue.toBoolean() ? 0 : items.size();
+				}
+
+				public IModel<Number> model(Number object)
+				{
+					return Model.of(object);
+				}
+			};
+
+			List<IColumn<Number>> columns = new ArrayList<IColumn<Number>>();
+			columns.add(new PropertyColumn<Number>(Model.of("value"), "value"));
+
+			DataTable<Number> table = new DataTable<Number>("table", columns, provider, 10);
+			table.addBottomToolbar(new NoRecordsToolbar(table));
+			table.addTopToolbar(new NoRecordsToolbar(table));
+			add(table);
+		}
+
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream(
+				"<html><body><table wicket:id='table'></table></body></html>");
+		}
+
 	}
 }

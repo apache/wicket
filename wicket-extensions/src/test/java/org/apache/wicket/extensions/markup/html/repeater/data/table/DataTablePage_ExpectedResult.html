@@ -1,12 +1,12 @@
 <html xmlns:wicket>
 <body>
   <table class="dataview" cellspacing="0" wicket:id="table"><wicket:panel>
-<thead>
-	<wicket:container wicket:id="topToolbars"><wicket:panel>
+<thead wicket:id="topToolbars">
+	<wicket:container wicket:id="toolbars"><wicket:panel>
 	<tr class="navigation">
 		<td wicket:id="span" colspan="6">
 			<x/>
-			<x/></td><x/></tr><x/></wicket:panel></wicket:container><wicket:container wicket:id="topToolbars"><wicket:panel>
+			<x/></td><x/></tr><x/></wicket:panel></wicket:container><wicket:container wicket:id="toolbars"><wicket:panel>
 	<tr class="headers">
 			<th wicket:id="header"><x/></th>
 			<th wicket:id="header" class="numeric"><x/></th>
@@ -14,7 +14,6 @@
 			<th wicket:id="header" class="wicket_orderNone last-name"><wicket:border><x/></wicket:border></th>
 			<th wicket:id="header"><x/></th>
 			<th wicket:id="header"><x/></th><x/></tr><x/></wicket:panel></wicket:container><x/></thead>
-<tfoot><x/></tfoot>
 <tbody wicket:id="body">
 	<tr wicket:id="rows" class="even">
 		<td wicket:id="cells">
