@@ -260,7 +260,23 @@ public class ModalWindow extends Panel
 	{
 		super.renderHead(response);
 		response.renderJavaScriptReference(JAVASCRIPT);
-		response.renderCSSReference(CSS);
+
+		ResourceReference cssResource = newCssResource();
+		if (cssResource != null)
+		{
+			response.renderCSSReference(cssResource);
+		}
+	}
+
+	/**
+	 * Allows to override CSS contribution. Returning null means the CSS will be contributed via
+	 * other sources, e.g. a global CSS resource.
+	 * 
+	 * @return The CSS resource reference or null if CSS is contributed via other means.
+	 */
+	protected ResourceReference newCssResource()
+	{
+		return CSS;
 	}
 
 	/**
