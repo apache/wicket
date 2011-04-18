@@ -36,7 +36,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.Response;
-import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.internal.HeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -678,7 +677,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 
 			if (!containsAncestorFor(component))
 			{
-				respondComponent(response, getAjaxRegionMarkupId(component), component);
+				respondComponent(response, component.getAjaxRegionMarkupId(), component);
 			}
 		}
 
@@ -730,30 +729,6 @@ public class AjaxRequestTarget implements IPageRequestTarget
 
 			response.write("</header-contribution>");
 		}
-	}
-
-	private String getAjaxRegionMarkupId(Component component)
-	{
-		String markupId = null;
-		for (IBehavior behavior : component.getBehaviors())
-		{
-			if (behavior instanceof IAjaxRegionMarkupIdProvider)
-			{
-				markupId = ((IAjaxRegionMarkupIdProvider)behavior).getAjaxRegionMarkupId(component);
-			}
-		}
-		if (markupId == null)
-		{
-			if (component instanceof IAjaxRegionMarkupIdProvider)
-			{
-				markupId = ((IAjaxRegionMarkupIdProvider)component).getAjaxRegionMarkupId(component);
-			}
-		}
-		if (markupId == null)
-		{
-			markupId = component.getMarkupId();
-		}
-		return markupId;
 	}
 
 	/**
