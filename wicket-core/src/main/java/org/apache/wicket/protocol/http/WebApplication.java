@@ -403,8 +403,11 @@ public abstract class WebApplication extends Application
 	protected WebResponse newWebResponse(final WebRequest webRequest,
 		final HttpServletResponse httpServletResponse)
 	{
-		return new HeaderBufferingWebResponse(new ServletWebResponse((ServletWebRequest)webRequest,
-			httpServletResponse));
+		ServletWebResponse webResponse = new ServletWebResponse((ServletWebRequest)webRequest,
+			httpServletResponse);
+
+		boolean shouldBufferResponse = getRequestCycleSettings().getBufferResponse();
+		return shouldBufferResponse ? new HeaderBufferingWebResponse(webResponse) : webResponse;
 	}
 
 	/**
