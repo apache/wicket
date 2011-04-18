@@ -29,9 +29,9 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
- * Component that represents a <code>&lt;select&gt;</code> box. Elements are provided by one or
- * more <code>SelectChoice</code> or <code>SelectOptions</code> components in the hierarchy
- * below the <code>Select</code> component.
+ * Component that represents a <code>&lt;select&gt;</code> box. Elements are provided by one or more
+ * <code>SelectChoice</code> or <code>SelectOptions</code> components in the hierarchy below the
+ * <code>Select</code> component.
  * 
  * Advantages to the standard choice components is that the user has a lot more control over the
  * markup between the &lt;select&gt; tag and its children &lt;option&gt; tags: allowing for such
@@ -66,7 +66,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Igor Vaynberg
  */
-public class Select extends FormComponent
+public class Select<T> extends FormComponent<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -84,7 +84,7 @@ public class Select extends FormComponent
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public Select(String id, IModel model)
+	public Select(String id, IModel<T> model)
 	{
 		super(id, model);
 	}
@@ -114,7 +114,7 @@ public class Select extends FormComponent
 					"] is not of type java.util.Collection, but more then one SelectOption component has been selected. Either remove the multiple attribute from the select tag or make the model of the Select component a collection");
 		}
 
-		List converted = new ArrayList(paths.length);
+		List<Object> converted = new ArrayList<Object>(paths.length);
 
 		/*
 		 * if the input is null we do not need to do anything since the model collection has already
@@ -132,7 +132,7 @@ public class Select extends FormComponent
 				path = path.substring(getPath().length() + 1);
 
 				// retrieve the selected option component
-				SelectOption option = (SelectOption)get(path);
+				SelectOption<?> option = (SelectOption<?>)get(path);
 
 				if (option == null)
 				{
@@ -156,11 +156,11 @@ public class Select extends FormComponent
 		}
 		else if (!supportsMultiple)
 		{
-			setConvertedInput(converted.get(0));
+			setConvertedInput((T)converted.get(0));
 		}
 		else
 		{
-			setConvertedInput(converted);
+			setConvertedInput((T)converted);
 		}
 	}
 
@@ -171,7 +171,7 @@ public class Select extends FormComponent
 	@Override
 	public void updateModel()
 	{
-		Object object = getDefaultModelObject();
+		T object = getModelObject();
 		boolean supportsMultiple = object instanceof Collection;
 
 		Object converted = getConvertedInput();
@@ -203,7 +203,7 @@ public class Select extends FormComponent
 	 * @param option
 	 * @return true if the option is selected, false otherwise
 	 */
-	boolean isSelected(SelectOption option)
+	boolean isSelected(SelectOption<?> option)
 	{
 		// if the raw input is specified use that, otherwise use model
 		if (hasRawInput())
@@ -219,30 +219,30 @@ public class Select extends FormComponent
 						return true;
 					}
 				}
-                return false;
+				return false;
 			}
 		}
 
-        return compareModels(getDefaultModelObject(), option.getDefaultModelObject());
+		return compareModels(getDefaultModelObject(), option.getDefaultModelObject());
 	}
 
-    private boolean compareModels(Object selected, Object value)
-    {
-			if (selected != null && selected instanceof Collection)
+	private boolean compareModels(Object selected, Object value)
+	{
+		if (selected != null && selected instanceof Collection)
+		{
+			if (value instanceof Collection)
 			{
-				if (value instanceof Collection)
-				{
-					return ((Collection)selected).containsAll((Collection)value);
-				}
-				else
-				{
-					return ((Collection)selected).contains(value);
-				}
+				return ((Collection)selected).containsAll((Collection)value);
 			}
 			else
 			{
-				return Objects.equal(selected, value);
+				return ((Collection)selected).contains(value);
 			}
 		}
+		else
+		{
+			return Objects.equal(selected, value);
+		}
+	}
 
 }
