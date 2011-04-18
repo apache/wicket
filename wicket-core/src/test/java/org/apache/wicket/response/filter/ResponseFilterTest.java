@@ -21,7 +21,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import junit.framework.Assert;
+
 import org.apache.wicket.MockPageWithLink;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -64,6 +67,7 @@ public class ResponseFilterTest
 			{
 				super.init();
 				getRequestCycleSettings().addResponseFilter(responseFilter);
+				getRequestCycleSettings().addResponseFilter(AppendCommentFilter.INSTANCE);
 			}
 		};
 
@@ -74,6 +78,46 @@ public class ResponseFilterTest
 	public void after()
 	{
 		counter.set(0);
+	}
+
+	/**
+	 * WICKET-3620
+	 */
+	@Test
+	public void testFilterAddCommentFilter()
+	{
+		tester.startPage(DummyHomePage.class);
+		Assert.assertTrue(tester.getLastResponseAsString().contains(AppendCommentFilter.COMMENT));
+	}
+
+	/**
+	 * WICKET-3620
+	 */
+	@Test
+	public void testAddCommentFilterInAjaxResponse()
+	{
+		DummyHomePage testPage = new DummyHomePage();
+		testPage.getTestPageLink().add(new AjaxEventBehavior("event")
+		{
+			@Override
+			protected void onEvent(AjaxRequestTarget target)
+			{
+			}
+		});
+		tester.startPage(testPage);
+		tester.executeAjaxEvent(testPage.getTestPageLink(), "event");
+		Assert.assertTrue(tester.getLastResponseAsString().contains(AppendCommentFilter.COMMENT));
+	}
+
+	private static class AppendCommentFilter implements IResponseFilter
+	{
+		static final AppendCommentFilter INSTANCE = new AppendCommentFilter();
+		static final String COMMENT = "<!-- comment -->";
+
+		public AppendingStringBuffer filter(AppendingStringBuffer responseBuffer)
+		{
+			return new AppendingStringBuffer(responseBuffer).append(COMMENT);
+		}
 	}
 
 	@Test

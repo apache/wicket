@@ -600,8 +600,8 @@ public class AjaxRequestTarget implements IPageRequestHandler
 			{
 				final StringResponse bodyResponse = new StringResponse();
 				contructResponseBody(bodyResponse, encoding);
-				invokeResponseFilters(bodyResponse);
-				response.write(bodyResponse.getBuffer());
+				CharSequence filteredResponse = invokeResponseFilters(bodyResponse);
+				response.write(filteredResponse);
 			}
 			finally
 			{
@@ -670,8 +670,9 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	 * 
 	 * @param contentResponse
 	 *            the Ajax {@link Response} body
+	 * @return filtered response
 	 */
-	private void invokeResponseFilters(final StringResponse contentResponse)
+	private AppendingStringBuffer invokeResponseFilters(final StringResponse contentResponse)
 	{
 		AppendingStringBuffer responseBuffer = new AppendingStringBuffer(
 			contentResponse.getBuffer());
@@ -684,9 +685,10 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		{
 			for (IResponseFilter filter : responseFilters)
 			{
-				filter.filter(responseBuffer);
+				responseBuffer = filter.filter(responseBuffer);
 			}
 		}
+		return responseBuffer;
 	}
 
 	/**
