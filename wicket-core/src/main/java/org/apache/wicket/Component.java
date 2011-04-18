@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
 
+import org.apache.wicket.ajax.IAjaxRegionMarkupIdProvider;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
@@ -2463,7 +2464,7 @@ public abstract class Component
 		}
 		response.write(tag.getName());
 		response.write(" id=\"");
-		response.write(getMarkupId());
+		response.write(getAjaxRegionMarkupId());
 		response.write("\" style=\"display:none\"></");
 		if (ns != null)
 		{
@@ -2472,6 +2473,39 @@ public abstract class Component
 		response.write(tag.getName());
 		response.write(">");
 	}
+
+
+	/**
+	 * Returns the id of the markup region that will be updated via ajax. This can be different to
+	 * the markup id of the component if a {@link IAjaxRegionMarkupIdProvider} behavior has been
+	 * added.
+	 * 
+	 * @return the markup id of the region to be updated via ajax.
+	 */
+	public final String getAjaxRegionMarkupId()
+	{
+		String markupId = null;
+		for (Behavior behavior : getBehaviors())
+		{
+			if (behavior instanceof IAjaxRegionMarkupIdProvider)
+			{
+				markupId = ((IAjaxRegionMarkupIdProvider)behavior).getAjaxRegionMarkupId(this);
+			}
+		}
+		if (markupId == null)
+		{
+			if (this instanceof IAjaxRegionMarkupIdProvider)
+			{
+				markupId = ((IAjaxRegionMarkupIdProvider)this).getAjaxRegionMarkupId(this);
+			}
+		}
+		if (markupId == null)
+		{
+			markupId = getMarkupId();
+		}
+		return markupId;
+	}
+
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
