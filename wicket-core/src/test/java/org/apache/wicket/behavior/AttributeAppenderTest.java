@@ -34,7 +34,24 @@ public class AttributeAppenderTest extends TestCase
 		AttributeAppender appender = new AttributeAppender("", null, " ");
 		assertEquals("oldvalue newvalue", appender.newValue("oldvalue", "newvalue"));
 		assertEquals("newvalue", appender.newValue("", "newvalue"));
+		assertEquals("newvalue", appender.newValue(null, "newvalue"));
 		assertEquals("oldvalue", appender.newValue("oldvalue", ""));
+		assertEquals("oldvalue", appender.newValue("oldvalue", null));
+		assertEquals("", appender.newValue(null, null));
+	}
+
+	/**
+	 * Test
+	 */
+	public void testNewValue1Prepend()
+	{
+		AttributeAppender appender = new AttributeAppender("", null, " ", true);
+		assertEquals("newvalue oldvalue", appender.newValue("oldvalue", "newvalue"));
+		assertEquals("newvalue", appender.newValue("", "newvalue"));
+		assertEquals("newvalue", appender.newValue(null, "newvalue"));
+		assertEquals("oldvalue", appender.newValue("oldvalue", ""));
+		assertEquals("oldvalue", appender.newValue("oldvalue", null));
+		assertEquals("", appender.newValue(null, null));
 	}
 
 	/**
@@ -45,6 +62,23 @@ public class AttributeAppenderTest extends TestCase
 		AttributeAppender appender = new AttributeAppender("", null, ";");
 		assertEquals("oldvalue;newvalue", appender.newValue("oldvalue", "newvalue"));
 		assertEquals("newvalue", appender.newValue("", "newvalue"));
+		assertEquals("newvalue", appender.newValue(null, "newvalue"));
 		assertEquals("oldvalue", appender.newValue("oldvalue", ""));
+		assertEquals("oldvalue", appender.newValue("oldvalue", null));
+		assertEquals("", appender.newValue(null, null));
+	}
+
+	/**
+	 * Test
+	 */
+	public void testNewValue2Prepend()
+	{
+		AttributeAppender appender = new AttributeAppender("", null, ";", true);
+		assertEquals("newvalue;oldvalue", appender.newValue("oldvalue", "newvalue"));
+		assertEquals("newvalue", appender.newValue("", "newvalue"));
+		assertEquals("newvalue", appender.newValue(null, "newvalue"));
+		assertEquals("oldvalue", appender.newValue("oldvalue", ""));
+		assertEquals("oldvalue", appender.newValue("oldvalue", null));
+		assertEquals("", appender.newValue(null, null));
 	}
 }

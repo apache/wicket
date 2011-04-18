@@ -43,6 +43,21 @@ import org.apache.wicket.util.string.Strings;
  *     &lt;a href=&quot;#&quot; wicket:id=&quot;foo&quot; class=&quot;link hot&quot; onmouseover=&quot;doSomething();foo();return false;&quot;&gt;
  * </pre>
  * 
+ * AttributeAppenders can also be instructed to prepend the given value:
+ * 
+ * <pre>
+ * link.add(new AttributeAppender(&quot;class&quot;, new Model&lt;String&gt;(&quot;hot&quot;), &quot; &quot;, true));
+ * link.add(new AttributeAppender(&quot;onmouseover&quot;, new Model&lt;String&gt;(&quot;foo();return false;&quot;), &quot;;&quot;, true));
+ * </pre>
+ * 
+ * this will result in the following markup:
+ * 
+ * <pre>
+ *     &lt;a href=&quot;#&quot; wicket:id=&quot;foo&quot; class=&quot;hot link&quot; onmouseover=&quot;foo();return false;doSomething();&quot;&gt;
+ * </pre>
+ * 
+ * This is useful for instance to add a Javascript confirmation dialog before performing an action.
+ * 
  * @author Martijn Dashorst
  */
 public class AttributeAppender extends AttributeModifier
@@ -54,6 +69,11 @@ public class AttributeAppender extends AttributeModifier
 	 * Separates the existing attribute value and the append value.
 	 */
 	private final String separator;
+
+	/**
+	 * A flag indicating whether the new attribute value will be prepended
+	 */
+	private final boolean prepend;
 
 	/**
 	 * Creates an AttributeModifier that appends the appendModel's value to the current value of the
@@ -71,8 +91,30 @@ public class AttributeAppender extends AttributeModifier
 	public AttributeAppender(String attribute, boolean addAttributeIfNotPresent,
 		IModel<?> appendModel, String separator)
 	{
+		this(attribute, addAttributeIfNotPresent, appendModel, separator, false);
+	}
+
+	/**
+	 * Creates an AttributeModifier that appends the appendModel's value to the current value of the
+	 * attribute, and will add the attribute when addAttributeIfNotPresent is true.
+	 * 
+	 * @param attribute
+	 *            the attribute to append the appendModels value to
+	 * @param addAttributeIfNotPresent
+	 *            when true, adds the attribute to the tag
+	 * @param appendModel
+	 *            the model supplying the value to append
+	 * @param separator
+	 *            the separator string, comes between the original value and the append value
+	 * @param prepend
+	 *            if true, the attribute modifier will prepend the attribute with the appendModel
+	 */
+	public AttributeAppender(String attribute, boolean addAttributeIfNotPresent,
+		IModel<?> appendModel, String separator, boolean prepend)
+	{
 		super(attribute, addAttributeIfNotPresent, appendModel);
 		this.separator = separator;
+		this.prepend = prepend;
 	}
 
 	/**
@@ -88,9 +130,28 @@ public class AttributeAppender extends AttributeModifier
 	 */
 	public AttributeAppender(String attribute, IModel<?> appendModel, String separator)
 	{
-		super(attribute, true, appendModel);
-		this.separator = separator;
+		this(attribute, true, appendModel, separator, false);
 	}
+
+	/**
+	 * Creates an AttributeModifier that appends the appendModel's value to the current value of the
+	 * attribute, and will add the attribute when it is not there already.
+	 * 
+	 * @param attribute
+	 *            the attribute to append the appendModels value to
+	 * @param appendModel
+	 *            the model supplying the value to append
+	 * @param separator
+	 *            the separator string, comes between the original value and the append value
+	 * @param prepend
+	 *            if true, the attribute modifier will prepend the attribute with the appendModel
+	 */
+	public AttributeAppender(String attribute, IModel<?> appendModel, String separator,
+		boolean prepend)
+	{
+		this(attribute, true, appendModel, separator, prepend);
+	}
+
 
 	/**
 	 * @see org.apache.wicket.AttributeModifier#newValue(java.lang.String, java.lang.String)
@@ -98,30 +159,29 @@ public class AttributeAppender extends AttributeModifier
 	@Override
 	protected String newValue(String currentValue, String appendValue)
 	{
-		final int appendValueLen = (appendValue == null) ? 0 : appendValue.length();
-
-		final AppendingStringBuffer sb;
-		if (currentValue == null)
+		// Shortcut for empty values
+		if (Strings.isEmpty(currentValue))
 		{
-			sb = new AppendingStringBuffer(appendValueLen + separator.length());
+			return appendValue != null ? appendValue : "";
+		}
+		else if (Strings.isEmpty(appendValue))
+		{
+			return currentValue;
+		}
+
+		final AppendingStringBuffer sb = new AppendingStringBuffer(currentValue.length() +
+			appendValue.length() + separator.length());
+
+		if (prepend)
+		{
+			sb.append(appendValue);
+			sb.append(separator);
+			sb.append(currentValue);
 		}
 		else
 		{
-			sb = new AppendingStringBuffer(currentValue.length() + appendValueLen +
-				separator.length());
 			sb.append(currentValue);
-		}
-
-		// if the current value or the append value is empty, the separator is
-		// not needed.
-		if (!Strings.isEmpty(currentValue) && !Strings.isEmpty(appendValue))
-		{
 			sb.append(separator);
-		}
-
-		// only append the value when it is not empty.
-		if (!Strings.isEmpty(appendValue))
-		{
 			sb.append(appendValue);
 		}
 		return sb.toString();
