@@ -448,7 +448,7 @@ public class PageParameters implements Serializable, IIndexedParameters, INamedP
 	}
 
 	/**
-	 * Copy the paga parameters
+	 * Copy the page parameters
 	 * 
 	 * @param other
 	 * @return this
