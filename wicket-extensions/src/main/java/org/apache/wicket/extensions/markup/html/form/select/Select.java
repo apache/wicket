@@ -173,7 +173,7 @@ public class Select<T> extends FormComponent<T>
 	@Override
 	public void updateModel()
 	{
-		Object object = getDefaultModelObject();
+		T object = getModelObject();
 		boolean supportsMultiple = object instanceof Collection;
 
 		Object converted = getConvertedInput();
