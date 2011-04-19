@@ -24,15 +24,7 @@ import org.apache.wicket.request.IRequestHandler;
  */
 public abstract class AbstractRequestCycleListener implements IRequestCycleListener
 {
-	public void onRequestHandlerScheduled(IRequestHandler handler)
-	{
-	}
-
 	public void onBeginRequest(RequestCycle cycle)
-	{
-	}
-
-	public void onRequestHandlerResolved(IRequestHandler handler)
 	{
 	}
 
@@ -44,12 +36,20 @@ public abstract class AbstractRequestCycleListener implements IRequestCycleListe
 	{
 	}
 
-	public void onExceptionRequestHandlerResolved(IRequestHandler handler, Exception exception)
+	public void onRequestHandlerScheduled(IRequestHandler handler)
+	{
+	}
+
+	public void onRequestHandlerResolved(IRequestHandler handler)
 	{
 	}
 
 	public IRequestHandler onException(RequestCycle cycle, Exception ex)
 	{
 		return null;
+	}
+
+	public void onExceptionRequestHandlerResolved(IRequestHandler handler, Exception exception)
+	{
 	}
 }

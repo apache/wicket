@@ -32,47 +32,77 @@ import org.apache.wicket.request.IRequestHandler;
  * of multi-threading issues.
  * <p>
  * <h3>Call order</h3>
+ * <p>
  * The interface methods are ordered in the execution order as Wicket goes through the request
  * cycle:
+ * </p>
  * <ol>
- * <li>{@link #onRequestHandlerScheduled(IRequestHandler)}</li>
  * <li>{@link #onBeginRequest(RequestCycle)}</li>
- * <li>{@link #onRequestHandlerResolved(IRequestHandler)}</li>
  * <li>{@link #onEndRequest(RequestCycle)}</li>
  * <li>{@link #onDetach(RequestCycle)}</li>
  * </ol>
- * <h3>Exception handling</h3>
- * When an exception occurs during request processing, the following call sequence is maintained:
- * <ol>
- * <li>{@link #onExceptionRequestHandlerResolved(IRequestHandler, Exception)}</li>
- * <li>{@link #onException(RequestCycle, Exception)}</li>
- * </ol>
+ * <p>
+ * The previous call sequence is valid for any Wicket request passing through the Wicket filter.
+ * Additionally when a request handler was resolved, a new handler scheduled, or an unhandled
+ * exception occurred during the request processing, any of the following can be called:
+ * </p>
+ * <ul>
+ * <li>{@link #onRequestHandlerResolved(IRequestHandler)}</li>
+ * <li>{@link #onRequestHandlerScheduled(IRequestHandler)}</li>
+ * <li>{@link #onException(RequestCycle, Exception)}, followed by
+ * {@link #onExceptionRequestHandlerResolved(IRequestHandler, Exception)}</li>
+ * </ul>
+ * 
+ * <h3>Implementing your own</h3>
+ * <p>
+ * Use {@link AbstractRequestCycleListener} for a default, empty implementation as a base class.
+ * </p>
+ * 
+ * <h3>Example</h3>
+ * <p>
+ * A short example of a request counter.
+ * </p>
+ * 
+ * <pre>
+ * public class RequestCounter extends AbstractRequestCycleListener
+ * {
+ * 	private AtomicLong counter = new AtomicLong(0);
+ * 
+ * 	public void onBeginRequest(RequestCycle cycle)
+ * 	{
+ * 		counter.incrementAndGet();
+ * 	}
+ * 
+ * 	public long getRequestCount()
+ * 	{
+ * 		return counter.longValue();
+ * 	}
+ * }
+ * 
+ * public class MyApplication extends WebApplication
+ * {
+ * 	public void init()
+ * 	{
+ * 		super.init();
+ * 		getRequestCycleListeners().add(new RequestCounter());
+ * 	}
+ * }
+ * </pre>
  * 
  * @author Jeremy Thomerson
+ * @author Martijn Dashorst
+ * 
+ * @see AbstractRequestCycleListener
  * @see Application#addRequestCycleListener(IRequestCycleListener)
- * @see RequestCycle#register(IRequestCycleListener)
  */
 public interface IRequestCycleListener
 {
-	/**
-	 * @param handler
-	 */
-	void onRequestHandlerScheduled(IRequestHandler handler);
-
 	/**
 	 * Called when the request cycle object is beginning its response
 	 * 
 	 * @param cycle
 	 */
 	void onBeginRequest(RequestCycle cycle);
-
-	/**
-	 * Called when an {@link IRequestHandler} is resolved and will be executed.
-	 * 
-	 * @param handler
-	 */
-	void onRequestHandlerResolved(IRequestHandler handler);
-
 
 	/**
 	 * Called when the request cycle object has finished its response
@@ -89,12 +119,20 @@ public interface IRequestCycleListener
 	void onDetach(RequestCycle cycle);
 
 	/**
-	 * Called when an {@link IRequestHandler} is resolved for an exception and will be executed.
+	 * Called when an {@link IRequestHandler} is resolved and will be executed.
 	 * 
 	 * @param handler
-	 * @param exception
 	 */
-	void onExceptionRequestHandlerResolved(IRequestHandler handler, Exception exception);
+	void onRequestHandlerResolved(IRequestHandler handler);
+
+	/**
+	 * Called when a {@link IRequestHandler} has been scheduled. Can be called multiple times during
+	 * a request when new handlers get scheduled for processing.
+	 * 
+	 * @param handler
+	 * @see RequestCycle#scheduleRequestHandlerAfterCurrent(IRequestHandler)
+	 */
+	void onRequestHandlerScheduled(IRequestHandler handler);
 
 	/**
 	 * Called when there is an exception in the request cycle that would normally be handled by
@@ -105,7 +143,7 @@ public interface IRequestCycleListener
 	 * 
 	 * @param cycle
 	 * 
-	 * @return request handler that will be exectued or {@code null} if none. If a request handler
+	 * @return request handler that will be executed or {@code null} if none. If a request handler
 	 *         is returned, it will override any configured exception mapper
 	 * 
 	 * @param ex
@@ -114,4 +152,11 @@ public interface IRequestCycleListener
 	 */
 	IRequestHandler onException(RequestCycle cycle, Exception ex);
 
+	/**
+	 * Called when an {@link IRequestHandler} is resolved for an exception and will be executed.
+	 * 
+	 * @param handler
+	 * @param exception
+	 */
+	void onExceptionRequestHandlerResolved(IRequestHandler handler, Exception exception);
 }

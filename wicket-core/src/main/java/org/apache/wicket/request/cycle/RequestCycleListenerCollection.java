@@ -48,7 +48,7 @@ public class RequestCycleListenerCollection extends ListenerCollection<IRequestC
 
 	public void onEndRequest(final RequestCycle cycle)
 	{
-		notify(new INotifier<IRequestCycleListener>()
+		reversedNotify(new INotifier<IRequestCycleListener>()
 		{
 			public void notify(IRequestCycleListener listener)
 			{
@@ -90,7 +90,7 @@ public class RequestCycleListenerCollection extends ListenerCollection<IRequestC
 
 	public void onDetach(final RequestCycle cycle)
 	{
-		notify(new INotifier<IRequestCycleListener>()
+		reversedNotify(new INotifier<IRequestCycleListener>()
 		{
 			public void notify(IRequestCycleListener listener)
 			{

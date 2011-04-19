@@ -102,6 +102,27 @@ public abstract class ListenerCollection<T> implements Serializable, Iterable<T>
 	}
 
 	/**
+	 * Notifies each listener in this in reversed order
+	 * 
+	 * @param notifier
+	 *            notifier used to notify each listener
+	 */
+	protected void reversedNotify(final INotifier<T> notifier)
+	{
+		reversedNotify(iterator(), notifier);
+	}
+
+	private void reversedNotify(Iterator<T> iterator, final INotifier<T> notifier)
+	{
+		if (iterator.hasNext())
+		{
+			T listener = iterator.next();
+			reversedNotify(iterator, notifier);
+			notifier.notify(listener);
+		}
+	}
+
+	/**
 	 * Removes a listener from this set.
 	 * 
 	 * @param listener
