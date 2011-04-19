@@ -67,5 +67,9 @@ public class ResourceUrl
 		return parameters;
 	}
 
-
+	@Override
+	public String toString()
+	{
+		return "Name: " + fileName + "\n\tParameters: " + parameters;
+	}
 }
