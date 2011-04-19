@@ -24,9 +24,29 @@ import org.apache.wicket.request.IRequestHandler;
  * that needs to do something in this methods, rather than extending RequestCycle or one of its
  * subclasses, you should implement this callback and allow users to add your listener to their
  * custom request cycle.
- * 
+ * <p>
  * These listeners can be added directly to the request cycle when it is created or to the
- * {@link Application}
+ * {@link Application}.
+ * <p>
+ * <b>NOTE</b>: a listener implementation is a singleton and hence needs to ensure proper handling
+ * of multi-threading issues.
+ * <p>
+ * <h3>Call order</h3>
+ * The interface methods are ordered in the execution order as Wicket goes through the request
+ * cycle:
+ * <ol>
+ * <li>{@link #onRequestHandlerScheduled(IRequestHandler)}</li>
+ * <li>{@link #onBeginRequest(RequestCycle)}</li>
+ * <li>{@link #onRequestHandlerResolved(IRequestHandler)}</li>
+ * <li>{@link #onEndRequest(RequestCycle)}</li>
+ * <li>{@link #onDetach(RequestCycle)}</li>
+ * </ol>
+ * <h3>Exception handling</h3>
+ * When an exception occurs during request processing, the following call sequence is maintained:
+ * <ol>
+ * <li>{@link #onExceptionRequestHandlerResolved(IRequestHandler, Exception)}</li>
+ * <li>{@link #onException(RequestCycle, Exception)}</li>
+ * </ol>
  * 
  * @author Jeremy Thomerson
  * @see Application#addRequestCycleListener(IRequestCycleListener)
@@ -35,11 +55,24 @@ import org.apache.wicket.request.IRequestHandler;
 public interface IRequestCycleListener
 {
 	/**
+	 * @param handler
+	 */
+	void onRequestHandlerScheduled(IRequestHandler handler);
+
+	/**
 	 * Called when the request cycle object is beginning its response
 	 * 
 	 * @param cycle
 	 */
 	void onBeginRequest(RequestCycle cycle);
+
+	/**
+	 * Called when an {@link IRequestHandler} is resolved and will be executed.
+	 * 
+	 * @param handler
+	 */
+	void onRequestHandlerResolved(IRequestHandler handler);
+
 
 	/**
 	 * Called when the request cycle object has finished its response
@@ -54,6 +87,14 @@ public interface IRequestCycleListener
 	 * @param cycle
 	 */
 	void onDetach(RequestCycle cycle);
+
+	/**
+	 * Called when an {@link IRequestHandler} is resolved for an exception and will be executed.
+	 * 
+	 * @param handler
+	 * @param exception
+	 */
+	void onExceptionRequestHandlerResolved(IRequestHandler handler, Exception exception);
 
 	/**
 	 * Called when there is an exception in the request cycle that would normally be handled by
@@ -73,23 +114,4 @@ public interface IRequestCycleListener
 	 */
 	IRequestHandler onException(RequestCycle cycle, Exception ex);
 
-	/**
-	 * Called when an {@link IRequestHandler} is resolved and will be executed.
-	 * 
-	 * @param handler
-	 */
-	void onRequestHandlerResolved(IRequestHandler handler);
-
-	/**
-	 * Called when an {@link IRequestHandler} is resolved for an exception and will be executed.
-	 * 
-	 * @param handler
-	 * @param exception
-	 */
-	void onExceptionRequestHandlerResolved(IRequestHandler handler, Exception exception);
-
-	/**
-	 * @param handler
-	 */
-	void onRequestHandlerScheduled(IRequestHandler handler);
 }

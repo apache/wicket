@@ -19,28 +19,28 @@ package org.apache.wicket.request.cycle;
 import org.apache.wicket.request.IRequestHandler;
 
 /**
- * 
+ * Empty implementation of an {@link IRequestCycleListener} useful as a starting point for your own
+ * custom listener.
  */
 public abstract class AbstractRequestCycleListener implements IRequestCycleListener
 {
-	public void onBeginRequest(final RequestCycle cycle)
+	public void onRequestHandlerScheduled(IRequestHandler handler)
 	{
 	}
 
-	public void onDetach(final RequestCycle cycle)
+	public void onBeginRequest(RequestCycle cycle)
 	{
-	}
-
-	public void onEndRequest(final RequestCycle cycle)
-	{
-	}
-
-	public IRequestHandler onException(final RequestCycle cycle, Exception ex)
-	{
-		return null;
 	}
 
 	public void onRequestHandlerResolved(IRequestHandler handler)
+	{
+	}
+
+	public void onEndRequest(RequestCycle cycle)
+	{
+	}
+
+	public void onDetach(RequestCycle cycle)
 	{
 	}
 
@@ -48,7 +48,8 @@ public abstract class AbstractRequestCycleListener implements IRequestCycleListe
 	{
 	}
 
-	public void onRequestHandlerScheduled(IRequestHandler handler)
+	public IRequestHandler onException(RequestCycle cycle, Exception ex)
 	{
+		return null;
 	}
 }
