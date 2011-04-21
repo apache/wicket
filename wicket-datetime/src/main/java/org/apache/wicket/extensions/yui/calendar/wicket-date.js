@@ -27,24 +27,51 @@ if (typeof(Wicket) == "undefined")
 Wicket.DateTime = { }
 
 /**
- * Parses date from simple date pattern. Only parses dates with yy, MM and dd like patterns, though
- * it is safe to have time as long as it comes after the pattern (which should be the case
- * anyway 99.9% of the time).
+ * Parses date from simple date pattern.
+ * 
+ * Supports patterns built up from the following elements:
+ * yy OR yyyy for year
+ * M OR MM OR MMM OR MMMM for month
+ * d OR dd for day
+ * EEEE for weekday (optional)
  */
-Wicket.DateTime.parseDate = function(pattern, value) {
-	numbers = value.match(/(\d+)/g);
+Wicket.DateTime.parseDate = function(cfg, value) {
+	var numbers = value.match(/(\d+)/g);
+	var pattern = cfg.datePattern;
 	if (numbers == null) return Number.NaN;
 	var day, month, year;
-	arrayPos = 0;
-	for (i = 0; i < pattern.length; i++) {
-		c = pattern.charAt(i);
+	var arrayPos = 0;
+	for (var i = 0; i < pattern.length; i++) {
+		var c = pattern.charAt(i);
+		var len = 0;
 		while ((pattern.charAt(i) == c) && (i < pattern.length)) {
 			i++;
+			len++;
 		}
 		if (c == 'y') {
 			year = numbers[arrayPos++];
 		} else if (c == 'M') {
-			month = numbers[arrayPos++];
+			var nameArray;
+			switch (len) {
+			case 3:
+				nameArray = cfg.calendarInit.MONTHS_SHORT;
+				break;
+			case 4:
+				nameArray = cfg.calendarInit.MONTHS_LONG;
+				break;
+			default:
+				nameArray = null;
+			}
+			if (nameArray != null) {
+				for (var j = 0; j < nameArray.length; j++) {
+					if (value.indexOf(nameArray[j]) >= 0) {
+						month = j + 1;
+						break;
+					}
+				}
+			} else {
+				month = numbers[arrayPos++];
+			}
 		} else if (c == 'd') {
 			day = numbers[arrayPos++];
 		}
@@ -59,7 +86,12 @@ Wicket.DateTime.parseDate = function(pattern, value) {
 		}
 	}
 	var date = new Date();
+	date.setHours(0);
+	date.setMinutes(0);
+	date.setSeconds(0);
+	date.setMilliseconds(0);
 	date.setFullYear(year, (month - 1), day);
+
 	return date;
 }
 
@@ -124,32 +156,62 @@ Wicket.DateTime.positionRelativeTo = function(subject, target) {
 
 /**
  * Return the result of interpolating the value (date) argument with the date pattern.
- * The dateValue has to be an array, where year is in the first, month in the second
+ * The date has to be an array, where year is in the first, month in the second
  * and date (day of month) in the third slot.
  */
-Wicket.DateTime.substituteDate = function(datePattern, date) {
-	day = date[2];
-	month = date[1];
-	year = date[0];
+Wicket.DateTime.substituteDate = function(cfg, date) {
+	var day = date[2];
+	var month = date[1];
+	var year = date[0];
+
+	var date = new Date();
+	date.setHours(0);
+	date.setMinutes(0);
+	date.setSeconds(0);
+	date.setMilliseconds(0);
+	date.setFullYear(year, (month - 1), day);
+
+	var dayName = null;
+	var datePattern = cfg.datePattern;
+
 	// optionally do some padding to match the pattern
 	if(datePattern.match(/dd+/)) day = Wicket.DateTime.padDateFragment(day);
-	if(datePattern.match(/MM+/)) month = Wicket.DateTime.padDateFragment(month);
-  if(datePattern.match(/yyy+/)) {
-    year = Wicket.DateTime.padDateFragment(year);
-  } else if(datePattern.match(/yy+/)) {
-    year = Wicket.DateTime.padDateFragment(year % 100);
-  }
+	if (datePattern.match(/MMMM/)) month = cfg.calendarInit.MONTHS_LONG[month - 1];
+	else if (datePattern.match(/MMM/)) month = cfg.calendarInit.MONTHS_SHORT[month - 1];
+	else if(datePattern.match(/MM+/)) month = Wicket.DateTime.padDateFragment(month);
+	if(datePattern.match(/yyy+/)) {
+		year = Wicket.DateTime.padDateFragment(year);
+	} else if(datePattern.match(/yy+/)) {
+		year = Wicket.DateTime.padDateFragment(year % 100);
+	}
+	if (datePattern.match(/EEEE/)) {
+		// figure out which weekday it is...
+		var engDayName = date.toString().match(/(\S*)/)[0];
+		var engDayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+		for (var i = 0; i < engDayNames.length; i++) {
+			if (engDayName === engDayNames[i]) {
+				dayName = cfg.calendarInit.WEEKDAYS_LONG[i];
+				break;
+			}
+		}
+	}
 	// replace pattern with real values
-	return datePattern.replace(/d+/, day).replace(/M+/, month).replace(/y+/, year);
+	var result = datePattern.replace(/d+/, day).replace(/y+/, year).replace(/M+/, month);
+
+	if (dayName != null) {
+		result = result.replace(/EEEE/, dayName);
+	}
+
+	return result;
 }
 
 /**
  * Display the YUI calendar widget. If the date is not null (should be a string) then it is parsed
  * using the provided date pattern, and set as the current date on the widget.
  */
-Wicket.DateTime.showCalendar = function(widget, date, datePattern) {
+Wicket.DateTime.showCalendar = function(widget, date, cfg) {
 	if (date) {
-		date = Wicket.DateTime.parseDate(datePattern, date);
+		date = Wicket.DateTime.parseDate(cfg, date);
 		if (!isNaN(date)) {
 			widget.select(date);
 			firstDate = widget.getSelectedDates()[0];
@@ -177,7 +239,7 @@ Wicket.DateTime.init = function(cfg) {
 	YAHOO.wicket[cfg.dpJs].isVisible = function() { return YAHOO.wicket[cfg.dpJs].oDomContainer.style.display == 'block'; }
 
 	function showCalendar() {
-		Wicket.DateTime.showCalendar(YAHOO.wicket[cfg.dpJs], YAHOO.util.Dom.get(cfg.componentId).value, cfg.datePattern);
+		Wicket.DateTime.showCalendar(YAHOO.wicket[cfg.dpJs], YAHOO.util.Dom.get(cfg.componentId).value, cfg);
 		if (cfg.alignWithIcon) Wicket.DateTime.positionRelativeTo(YAHOO.wicket[cfg.dpJs].oDomContainer, cfg.icon);
 	}
 
@@ -188,7 +250,7 @@ Wicket.DateTime.init = function(cfg) {
 	}
 
 	function selectHandler(type, args, cal) {
-		YAHOO.util.Dom.get(cfg.componentId).value = Wicket.DateTime.substituteDate(cfg.datePattern, args[0][0]);
+		YAHOO.util.Dom.get(cfg.componentId).value = Wicket.DateTime.substituteDate(cfg, args[0][0]);
 		if (cal.isVisible()) {
 			if (cfg.hideOnSelect) cal.hide();
 			if (cfg.fireChangeEvent) {
@@ -226,4 +288,4 @@ Wicket.DateTime.init2 = function(widgetId, componentId, calendarInit, datePatter
 	});
 }
 
-YAHOO.register("wicket-date", Wicket.DateTime, {version: "1.3.0", build: "rc1"});
+YAHOO.register("wicket-date", Wicket.DateTime, {version: "1.5", build: "rc3"});
