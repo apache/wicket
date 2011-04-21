@@ -28,7 +28,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * mapper to mount resources to a custom mount path
+ * A {@link IRequestMapper} to mount resources to a custom mount path
  * <ul>
  * <li>maps indexed parameters to path segments</li>
  * <li>maps named parameters to query string arguments or placeholder path segments</li>
@@ -37,7 +37,7 @@ import org.apache.wicket.util.lang.Args;
  * <strong>sample structure of url</strong>
  * 
  * <pre>
- *    /resources/${category}/images/[indexed-param-0]/[indexed-param-1]?[named-param-1=value]&[named-param-2=value2]
+ *    /myresources/${category}/images/[indexed-param-0]/[indexed-param-1]?[named-param-1=value]&[named-param-2=value2]
  * </pre>
  * 
  * <h4>sample usage</h4>
@@ -46,8 +46,11 @@ import org.apache.wicket.util.lang.Args;
  * <p/>
  * 
  * <pre>
- * getRootRequestMapperAsCompound().add(new ResourceMapper(&quot;/images&quot;, new ImagesResourceReference()));
+ * mountResource(&quot;/images&quot;, new ImagesResourceReference()));
  * </pre>
+ * 
+ * Note: Mounted this way the resource reference has application scope, i.e. it is shared between
+ * all users of the application. It is recommended to not keep any state in it.
  * 
  * @see org.apache.wicket.protocol.http.WebApplication#mountResource(String,
  *      org.apache.wicket.request.resource.ResourceReference)
