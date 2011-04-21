@@ -102,7 +102,7 @@ public class ServletWebResponse extends WebResponse
 		}
 		catch (IOException e)
 		{
-			throw new WicketRuntimeException(e);
+			throw new ResponseIOException(e);
 		}
 	}
 
@@ -115,7 +115,7 @@ public class ServletWebResponse extends WebResponse
 		}
 		catch (IOException e)
 		{
-			throw new WicketRuntimeException(e);
+			throw new ResponseIOException(e);
 		}
 	}
 
@@ -266,7 +266,7 @@ public class ServletWebResponse extends WebResponse
 		}
 		catch (IOException e)
 		{
-			throw new WicketRuntimeException(e);
+			throw new ResponseIOException(e);
 		}
 	}
 

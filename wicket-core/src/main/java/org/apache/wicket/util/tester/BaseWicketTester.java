@@ -102,6 +102,7 @@ import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleContext;
@@ -336,7 +337,7 @@ public class BaseWicketTester
 	 * @param servletWebRequest
 	 * @return servlet web response
 	 */
-	private ServletWebResponse newServletWebResponse(final ServletWebRequest servletWebRequest)
+	protected Response newServletWebResponse(final ServletWebRequest servletWebRequest)
 	{
 		return new WicketTesterServletWebResponse(servletWebRequest, response);
 	}

@@ -19,6 +19,7 @@ package org.apache.wicket;
 import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.markup.html.pages.ExceptionErrorPage;
 import org.apache.wicket.protocol.http.PageExpiredException;
+import org.apache.wicket.protocol.http.servlet.ResponseIOException;
 import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
@@ -92,6 +93,11 @@ public class DefaultExceptionMapper implements IExceptionMapper
 			return createPageRequestHandler(new PageProvider(Application.get()
 				.getApplicationSettings()
 				.getAccessDeniedPage()));
+		}
+		else if (e instanceof ResponseIOException)
+		{
+			logger.error("Connection lost, give up responding.", e);
+			return new EmptyRequestHandler();
 		}
 		else
 		{
