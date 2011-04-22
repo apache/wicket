@@ -19,7 +19,7 @@ package org.apache.wicket.authentication;
 import org.apache.wicket.Application;
 
 /**
- * The interface of an authorization strategy which is accessible via
+ * The interface of an authentication strategy which is accessible via
  * {@link Application#getSecuritySettings()}. Implementations determine how logon data (username and
  * password) are persisted (e.g. Cookie), retrieved and removed.
  * 
