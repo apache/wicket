@@ -188,7 +188,8 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 				BeanDefinition beanDef = getBeanDefinition(
 					((AbstractApplicationContext)ctx).getBeanFactory(), possibility);
 				if (BeanFactoryUtils.isFactoryDereference(possibility) ||
-					possibility.startsWith("scopedTarget.") || !beanDef.isAutowireCandidate())
+					possibility.startsWith("scopedTarget.") ||
+					(beanDef != null && !beanDef.isAutowireCandidate()))
 				{
 					it.remove();
 				}
