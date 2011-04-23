@@ -82,7 +82,6 @@ public class LabelTree extends BaseTree
 			{
 				return super.newContentComponent(componentId, tree, getNodeTextModel(model));
 			}
-
 		};
 	}
 

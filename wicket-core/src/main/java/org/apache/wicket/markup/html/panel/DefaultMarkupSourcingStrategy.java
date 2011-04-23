@@ -94,33 +94,6 @@ public final class DefaultMarkupSourcingStrategy implements IMarkupSourcingStrat
 			return markup;
 		}
 
-		// This is to make migration for Items from 1.4 to 1.5 more easy
-		if (Character.isDigit(child.getId().charAt(0)))
-		{
-			String id = child.getId();
-			boolean miss = false;
-			for (int i = 1; i < id.length(); i++)
-			{
-				if (Character.isDigit(id.charAt(i)) == false)
-				{
-					miss = true;
-					break;
-				}
-			}
-
-			if (miss == false)
-			{
-				// The LoopItems markup is equal to the Loops markup
-				markup = container.getMarkup();
-
-				if (log.isWarnEnabled())
-				{
-					log.warn("1.4 to 1.5 migration issue: your item component should be derived from AbstractItem. Item=" +
-						child.toString());
-				}
-			}
-		}
-
 		return markup;
 	}
 

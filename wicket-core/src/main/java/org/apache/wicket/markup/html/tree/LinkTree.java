@@ -106,8 +106,5 @@ public class LinkTree extends LabelTree
 	 */
 	protected void onNodeLinkClicked(Object node, BaseTree tree, AjaxRequestTarget target)
 	{
-
 	}
-
-
 }
