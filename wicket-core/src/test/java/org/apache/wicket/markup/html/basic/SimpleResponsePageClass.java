@@ -33,7 +33,7 @@ public class SimpleResponsePageClass extends WebPage
 	 */
 	public SimpleResponsePageClass()
 	{
-		Form form = new Form("form")
+		Form<Void> form = new Form<Void>("form")
 		{
 			private static final long serialVersionUID = 1L;
 

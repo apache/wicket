@@ -33,7 +33,7 @@ public class SimpleResponsePageClassTest extends WicketTestCase
 		tester.startPage(SimpleResponsePageClass.class);
 		SimpleResponsePageClass manageBook = (SimpleResponsePageClass)tester.getLastRenderedPage();
 
-		Form form = (Form)manageBook.get("form");
+		Form<?> form = (Form<?>)manageBook.get("form");
 
 		tester.submitForm(form);
 

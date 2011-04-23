@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.properties;
 
+/**
+ */
 public class MyApplication extends MyTesterApplication
 {
 

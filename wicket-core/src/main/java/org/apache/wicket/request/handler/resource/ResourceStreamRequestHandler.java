@@ -171,11 +171,18 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 			fileName + ", contentDisposition=" + contentDisposition + "]";
 	}
 
+	/**
+	 * @return ContentDisposition
+	 */
 	public final ContentDisposition getContentDisposition()
 	{
 		return contentDisposition;
 	}
 
+	/**
+	 * @param contentDisposition
+	 * @return this
+	 */
 	public final ResourceStreamRequestHandler setContentDisposition(
 		ContentDisposition contentDisposition)
 	{

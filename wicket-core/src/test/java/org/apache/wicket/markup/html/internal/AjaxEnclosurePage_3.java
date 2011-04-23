@@ -48,26 +48,37 @@ public class AjaxEnclosurePage_3 extends WebPage
 	{
 		toggleLabel1Link = new AjaxLink<Void>("toggleLabel1Link")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				label1.setVisible(!label1.isVisible());
-				target.addComponent(label1);
+				target.add(label1);
 			}
 		};
 		add(toggleLabel1Link);
 	}
 
+	/**
+	 * @return serialVersionUID
+	 */
 	public static long getSerialversionuid()
 	{
 		return serialVersionUID;
 	}
 
+	/**
+	 * @return label1
+	 */
 	public Label getLabel1()
 	{
 		return label1;
 	}
 
+	/**
+	 * @return toggleLabel1Link
+	 */
 	public AjaxLink<Void> getToggleLabel1Link()
 	{
 		return toggleLabel1Link;

@@ -35,8 +35,8 @@ public class ViewBook extends WebPage
 	 */
 	public ViewBook(Book book)
 	{
-		add(new Label("id", new PropertyModel(book, "id")));
-		add(new Label("name", new PropertyModel(book, "name")));
+		add(new Label("id", new PropertyModel<String>(book, "id")));
+		add(new Label("name", new PropertyModel<String>(book, "name")));
 		add(new BookmarkablePageLink<Void>("link", CreateBook.class));
 	}
 }

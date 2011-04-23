@@ -33,8 +33,8 @@ public class InputTagVisibleWebPage extends WebPage
 	 */
 	public InputTagVisibleWebPage()
 	{
-		Form form = new Form("form");
-		form.add(new TextField("input").setVisible(true));
+		Form<Void> form = new Form<Void>("form");
+		form.add(new TextField<Object>("input").setVisible(true));
 		add(form);
 	}
 }

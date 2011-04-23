@@ -61,7 +61,7 @@ public class ValidatorPropertiesTest extends TestCase
 		// test English/ default
 
 		TestPage page = new TestPage();
-		Form form = (Form)page.get("form1");
+		Form<?> form = (Form<?>)page.get("form1");
 		assertNotNull(form);
 
 		page.getText1().setInput("");
@@ -160,7 +160,7 @@ public class ValidatorPropertiesTest extends TestCase
 
 		tester.getSession().setLocale(new Locale("nl"));
 		page = new TestPage();
-		form = (Form)page.get("form1");
+		form = (Form<?>)page.get("form1");
 		assertNotNull(form);
 
 		page.getText1().setInput("");
@@ -251,8 +251,10 @@ public class ValidatorPropertiesTest extends TestCase
 	{
 		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(false);
 
-		String str = tester.getApplication().getResourceSettings().getLocalizer().getString("XXX",
-			null);
+		String str = tester.getApplication()
+			.getResourceSettings()
+			.getLocalizer()
+			.getString("XXX", null);
 		assertEquals("[Warning: Property for 'XXX' not found]", str);
 	}
 

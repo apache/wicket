@@ -19,11 +19,17 @@ package org.apache.wicket.stateless.pages;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.StatelessForm;
 
+/**
+ */
 public class Page1 extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 */
 	public Page1()
 	{
-		add(new StatelessForm("form"));
+		add(new StatelessForm<Void>("form"));
 	}
 }

@@ -56,8 +56,8 @@ public abstract class ExceptionTestBase extends TestCase
 	 */
 	public final void testEmptyConstructor() throws Exception
 	{
-		Class c = Class.forName(getExceptionClassName());
-		Constructor constructor = c.getConstructor((Class[])null);
+		Class<?> c = Class.forName(getExceptionClassName());
+		Constructor<?> constructor = c.getConstructor((Class[])null);
 		Exception e = (Exception)constructor.newInstance((Object[])null);
 		Assert.assertNotNull("Exception should be created", e);
 		Assert.assertNull(e.getMessage());
@@ -72,8 +72,8 @@ public abstract class ExceptionTestBase extends TestCase
 	 */
 	public final void testMessageConstructor() throws Exception
 	{
-		Class c = Class.forName(getExceptionClassName());
-		Constructor constructor = c.getConstructor(new Class[] { String.class });
+		Class<?> c = Class.forName(getExceptionClassName());
+		Constructor<?> constructor = c.getConstructor(new Class[] { String.class });
 		Exception e = (Exception)constructor.newInstance("test message");
 		Assert.assertNotNull("Exception should be created", e);
 		Assert.assertEquals("test message", e.getMessage());
@@ -89,8 +89,8 @@ public abstract class ExceptionTestBase extends TestCase
 	public final void testCauseConstructor() throws Exception
 	{
 		NullPointerException npe = new NullPointerException();
-		Class c = Class.forName(getExceptionClassName());
-		Constructor constructor = c.getConstructor(new Class[] { Throwable.class });
+		Class<?> c = Class.forName(getExceptionClassName());
+		Constructor<?> constructor = c.getConstructor(new Class[] { Throwable.class });
 		Exception e = (Exception)constructor.newInstance(npe);
 		Assert.assertNotNull("Exception should be created", e);
 		Assert.assertSame(npe, e.getCause());
@@ -105,8 +105,8 @@ public abstract class ExceptionTestBase extends TestCase
 	public final void testMessageAndCauseConstructor() throws Exception
 	{
 		NullPointerException npe = new NullPointerException();
-		Class c = Class.forName(getExceptionClassName());
-		Constructor constructor = c.getConstructor(new Class[] { String.class, Throwable.class });
+		Class<?> c = Class.forName(getExceptionClassName());
+		Constructor<?> constructor = c.getConstructor(new Class[] { String.class, Throwable.class });
 		Exception e = (Exception)constructor.newInstance("test message", npe);
 		Assert.assertNotNull("Exception should be created", e);
 		Assert.assertEquals("test message", e.getMessage());

@@ -48,10 +48,10 @@ public class IncrementalTableNavigationTest extends WicketTestCase
 			"IncrementalTableNavigationPage_ExpectedResult_1.html");
 
 		Page page = tester.getLastRenderedPage();
-		Link link = (Link)page.get("nextNext");
+		Link<?> link = (Link<?>)page.get("nextNext");
 		executeListener(link, "IncrementalTableNavigationPage_ExpectedResult_1-1.html");
 
-		link = (Link)page.get("prev");
+		link = (Link<?>)page.get("prev");
 		executeListener(link, "IncrementalTableNavigationPage_ExpectedResult_1-2.html");
 	}
 }

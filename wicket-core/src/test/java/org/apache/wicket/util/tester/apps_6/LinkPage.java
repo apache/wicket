@@ -32,13 +32,15 @@ import org.apache.wicket.util.tester.WicketTester;
  */
 public class LinkPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 */
 	public LinkPage()
 	{
 		// Link
-		add(new Link("linkWithSetResponsePageClass")
+		add(new Link<Void>("linkWithSetResponsePageClass")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -49,7 +51,7 @@ public class LinkPage extends WebPage
 			}
 		});
 
-		add(new Link("linkWithSetResponsePage")
+		add(new Link<Void>("linkWithSetResponsePage")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -107,7 +109,7 @@ public class LinkPage extends WebPage
 		});
 
 		// AjaxSubmitLink
-		final Form form = new Form("form");
+		final Form<Void> form = new Form<Void>("form");
 		add(form);
 		final AjaxSubmitLink submit = new AjaxSubmitLink("submit")
 		{

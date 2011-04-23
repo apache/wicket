@@ -29,7 +29,7 @@ public class LoginPage extends WebPage
 
 	private boolean pageInitialized = false;
 	private boolean panelInitialized = false;
-	
+
 
 	/**
 	 * Constructor.
@@ -48,11 +48,17 @@ public class LoginPage extends WebPage
 		pageInitialized = true;
 	}
 
+	/**
+	 * @return pageInitialized
+	 */
 	public boolean isPageInitialized()
 	{
 		return pageInitialized;
 	}
 
+	/**
+	 * @return panelInitialized
+	 */
 	public boolean isPanelInitialized()
 	{
 		return panelInitialized;
@@ -68,12 +74,14 @@ public class LoginPage extends WebPage
 	{
 		add(new UsernamePasswordSignInPanel(panelId)
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onInitialize()
 			{
 				super.onInitialize();
 				panelInitialized = true;
-				
+
 			}
 		});
 	}

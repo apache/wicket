@@ -20,6 +20,9 @@ import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.render.PageRenderer;
 import org.apache.wicket.util.IContextProvider;
 
+/**
+ * Interface for {@link IContextProvider}&ltPageRenderer, RenderPageRequestHandler&gt
+ */
 public interface IPageRendererProvider
 	extends
 		IContextProvider<PageRenderer, RenderPageRequestHandler>

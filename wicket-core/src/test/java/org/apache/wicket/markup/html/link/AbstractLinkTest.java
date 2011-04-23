@@ -33,12 +33,18 @@ public class AbstractLinkTest
 
 	private WicketTester wicketTester;
 
+	/**
+	 * 
+	 */
 	@Before
 	public void before()
 	{
 		wicketTester = new WicketTester();
 	}
 
+	/**
+	 * 
+	 */
 	@After
 	public void after()
 	{

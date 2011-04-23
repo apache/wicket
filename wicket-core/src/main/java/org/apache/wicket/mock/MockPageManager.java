@@ -64,6 +64,9 @@ public class MockPageManager implements IPageManager
 		pages.clear();
 	}
 
+	/**
+	 * @param context
+	 */
 	public void setContext(IPageManagerContext context)
 	{
 	}

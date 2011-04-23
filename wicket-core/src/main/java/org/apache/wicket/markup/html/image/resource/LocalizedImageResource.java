@@ -190,6 +190,10 @@ public final class LocalizedImageResource implements IClusterable
 		}
 	}
 
+	/**
+	 * @param parameters
+	 *            page parameters
+	 */
 	public final void onResourceRequested(PageParameters parameters)
 	{
 		bind();

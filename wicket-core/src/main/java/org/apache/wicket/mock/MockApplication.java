@@ -27,8 +27,14 @@ import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.IProvider;
 
+/**
+ * {@link WebApplication} used for testing.
+ */
 public class MockApplication extends WebApplication
 {
+	/**
+	 * Construct.
+	 */
 	public MockApplication()
 	{
 	}
@@ -45,6 +51,9 @@ public class MockApplication extends WebApplication
 		return RuntimeConfigurationType.DEVELOPMENT;
 	}
 
+	/**
+	 * @return the session
+	 */
 	public Session getSession()
 	{
 		return getSessionStore().lookup(null);

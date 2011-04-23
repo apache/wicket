@@ -50,14 +50,16 @@ public class HomePage extends WebPage
 		add(new Label("message",
 			"If you see this message wicket is properly configured and running"));
 
-		Form f1 = new Form("form1");
-		Form f2 = new Form("form2");
+		Form<Void> f1 = new Form<Void>("form1");
+		Form<Void> f2 = new Form<Void>("form2");
 
-		TextField t1 = new TextField("text1", new PropertyModel(this, "text1"));
-		TextField t2 = new TextField("text2", new PropertyModel(this, "text2"));
+		TextField<String> t1 = new TextField<String>("text1", new PropertyModel<String>(this,
+			"text1"));
+		TextField<String> t2 = new TextField<String>("text2", new PropertyModel<String>(this,
+			"text2"));
 
-		Label l1 = new Label("out1", new PropertyModel(this, "text1"));
-		Label l2 = new Label("out2", new PropertyModel(this, "text2"));
+		Label l1 = new Label("out1", new PropertyModel<String>(this, "text1"));
+		Label l2 = new Label("out2", new PropertyModel<String>(this, "text2"));
 
 		add(f1.add(t1)).add(l1);
 		add(f2.add(t2)).add(l2);

@@ -36,18 +36,18 @@ public class SimpleTablePage_2 extends WebPage
 	public SimpleTablePage_2()
 	{
 		super();
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		list.add("one");
 		list.add("two");
 		list.add("three");
-		add(new ListView("table", list)
+		add(new ListView<String>("table", list)
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void populateItem(ListItem listItem)
+			protected void populateItem(ListItem<String> listItem)
 			{
-				String txt = (String)listItem.getDefaultModelObject();
+				String txt = listItem.getModelObject();
 				listItem.add(new Label("txt", txt));
 			}
 		});

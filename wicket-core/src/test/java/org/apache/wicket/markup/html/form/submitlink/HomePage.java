@@ -22,6 +22,8 @@ import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.PropertyModel;
 
+/**
+ */
 public class HomePage extends WebPage
 {
 	boolean submitted = false;
@@ -32,10 +34,13 @@ public class HomePage extends WebPage
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 */
 	public HomePage()
 	{
 		super();
-		Form form = new Form("form")
+		Form<Void> form = new Form<Void>("form")
 		{
 			/**
 			 * 
@@ -48,7 +53,7 @@ public class HomePage extends WebPage
 				submitted = true;
 			}
 		};
-		form.add(new TextField("text", new PropertyModel(HomePage.this, "text")));
+		form.add(new TextField<String>("text", new PropertyModel<String>(HomePage.this, "text")));
 		form.add(new SubmitLink("link")
 		{
 
@@ -68,21 +73,33 @@ public class HomePage extends WebPage
 		add(form);
 	}
 
+	/**
+	 * @return submitted
+	 */
 	public boolean isSubmitted()
 	{
 		return submitted;
 	}
 
+	/**
+	 * @return text
+	 */
 	public String getText()
 	{
 		return text;
 	}
 
+	/**
+	 * @param text
+	 */
 	public void setText(String text)
 	{
 		this.text = text;
 	}
 
+	/**
+	 * @return submittedViaLink
+	 */
 	public boolean isSubmittedViaLink()
 	{
 		return submittedViaLink;

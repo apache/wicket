@@ -18,6 +18,8 @@ package org.apache.wicket.properties;
 
 import org.apache.wicket.mock.MockApplication;
 
+/**
+ */
 public class MyTesterApplication extends MockApplication
 {
 

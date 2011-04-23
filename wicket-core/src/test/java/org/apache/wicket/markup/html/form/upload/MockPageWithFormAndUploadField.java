@@ -38,7 +38,7 @@ public class MockPageWithFormAndUploadField extends WebPage
 	 */
 	public MockPageWithFormAndUploadField()
 	{
-		form = new Form("form")
+		form = new Form<Void>("form")
 		{
 			/**
 			 * 

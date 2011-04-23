@@ -72,6 +72,9 @@ public class FormWithMultipleButtonsTest extends TestCase
 		assertEquals(1, testPage.submitSequence.indexOf(testPage.form));
 	}
 
+	/**
+	 * 
+	 */
 	public void testButtonInvokedFirst()
 	{
 		TestPage testPage = new TestPage();
@@ -90,17 +93,23 @@ public class FormWithMultipleButtonsTest extends TestCase
 		tester.destroy();
 	}
 
+	/**
+	 */
 	private static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		private static final long serialVersionUID = 1L;
+
 		List<Component> submitSequence = new ArrayList<Component>();
-		Form form;
+		Form<Void> form;
 		Button button;
 		AjaxFallbackButton ajaxFallbackButton;
 
 		public TestPage()
 		{
-			add(form = new Form("form")
+			add(form = new Form<Void>("form")
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				protected void onSubmit()
 				{
@@ -109,6 +118,8 @@ public class FormWithMultipleButtonsTest extends TestCase
 			});
 			form.add(button = new Button("b1")
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public void onSubmit()
 				{
@@ -117,6 +128,8 @@ public class FormWithMultipleButtonsTest extends TestCase
 			});
 			form.add(ajaxFallbackButton = new AjaxFallbackButton("b2", form)
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 				{

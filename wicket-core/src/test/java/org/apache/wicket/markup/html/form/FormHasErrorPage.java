@@ -31,10 +31,17 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  */
 public class FormHasErrorPage extends WebPage
 {
+	/**
+	 */
 	public static final class InvalidPanel extends Panel
 	{
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Construct.
+		 * 
+		 * @param id
+		 */
 		public InvalidPanel(String id)
 		{
 			super(id);
@@ -61,9 +68,9 @@ public class FormHasErrorPage extends WebPage
 		final SubmitLink submitForm = new SubmitLink("submitForm");
 
 		final InvalidPanel invalidPanel = new InvalidPanel("invalidPanel");
-		final CheckBox formComponent = new CheckBox("formComponent", new Model());
+		final CheckBox formComponent = new CheckBox("formComponent", new Model<Boolean>());
 
-		Form form = new Form("form")
+		Form<Void> form = new Form<Void>("form")
 		{
 			private static final long serialVersionUID = 1L;
 

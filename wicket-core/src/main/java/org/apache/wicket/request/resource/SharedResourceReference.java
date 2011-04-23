@@ -22,21 +22,52 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
 
+/**
+ * TODO javadoc
+ */
 public class SharedResourceReference extends ResourceReference
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param scope
+	 *            mandatory parameter
+	 * @param name
+	 *            mandatory parameter
+	 * @param locale
+	 *            resource locale
+	 * @param style
+	 *            resource style
+	 * @param variation
+	 *            resource variation
+	 */
 	public SharedResourceReference(Class<?> scope, String name, Locale locale, String style,
 		String variation)
 	{
 		super(scope, name, locale, style, variation);
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param scope
+	 *            mandatory parameter
+	 * @param name
+	 *            mandatory parameter
+	 */
 	public SharedResourceReference(Class<?> scope, String name)
 	{
 		super(scope, name);
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param name
+	 *            resource name
+	 */
 	public SharedResourceReference(String name)
 	{
 		super(name);

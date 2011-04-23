@@ -33,10 +33,10 @@ public class RadioGroupTestPage3 extends WebPage
 	 */
 	public RadioGroupTestPage3()
 	{
-		Form form = new Form("form");
-		RadioGroup radio = new RadioGroup("radio");
-		radio.add(new Radio("check1"));
-		radio.add(new Radio("check2"));
+		Form<Void> form = new Form<Void>("form");
+		RadioGroup<?> radio = new RadioGroup<Object>("radio");
+		radio.add(new Radio<Object>("check1"));
+		radio.add(new Radio<Object>("check2"));
 		form.add(radio);
 		add(form);
 	}

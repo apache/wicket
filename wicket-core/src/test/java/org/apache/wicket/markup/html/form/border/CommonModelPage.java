@@ -39,32 +39,44 @@ public class CommonModelPage extends WebPage
 		CommonBorder border = new CommonBorder("border");
 		add(border);
 
-		Form form1 = new Form("form1");
+		Form<Void> form1 = new Form<Void>("form1");
 		border.add(form1);
 
-		form1.add(new TextField("quantity1", new PropertyModel(this, "quantity1")));
+		form1.add(new TextField<Integer>("quantity1", new PropertyModel<Integer>(this, "quantity1")));
 
-		Form form2 = new Form("form2");
+		Form<Void> form2 = new Form<Void>("form2");
 		border.add(form2);
 
-		form2.add(new TextField("quantity2", new PropertyModel(this, "quantity2")));
+		form2.add(new TextField<Integer>("quantity2", new PropertyModel<Integer>(this, "quantity2")));
 	}
 
+	/**
+	 * @return quantity1
+	 */
 	public int getQuantity1()
 	{
 		return quantity1;
 	}
 
+	/**
+	 * @param quantity1
+	 */
 	public void setQuantity1(int quantity1)
 	{
 		this.quantity1 = quantity1;
 	}
 
+	/**
+	 * @return quantity2
+	 */
 	public int getQuantity2()
 	{
 		return quantity2;
 	}
 
+	/**
+	 * @param quantity2
+	 */
 	public void setQuantity2(int quantity2)
 	{
 		this.quantity2 = quantity2;

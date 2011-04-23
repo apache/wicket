@@ -19,6 +19,7 @@ package org.apache.wicket.util.collections;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -37,14 +38,14 @@ public class MiniMapTest extends TestCase
 	 */
 	public void testMiniMap()
 	{
-		MiniMap m = new MiniMap(3);
+		MiniMap<Object, Object> m = new MiniMap<Object, Object>(3);
 		m.put(FOO, BAR);
 
 		// Test .keySet();
-		Set s = m.keySet();
+		Set<Object> s = m.keySet();
 		assertEquals(1, m.size());
 
-		Iterator i = s.iterator();
+		Iterator<?> i = s.iterator();
 		assertTrue(i.hasNext());
 		Object key = i.next();
 		assertEquals(FOO, key);
@@ -60,12 +61,13 @@ public class MiniMapTest extends TestCase
 		}
 
 		// Do approx the same again with the .entrySet()
-		s = m.entrySet();
+		Set<Entry<Object, Object>> entrySet = m.entrySet();
 		assertEquals(1, m.size());
 
-		i = s.iterator();
+		i = entrySet.iterator();
 		assertTrue(i.hasNext());
-		Map.Entry entry = (Map.Entry)i.next();
+		@SuppressWarnings("unchecked")
+		Map.Entry<Object, Object> entry = (Map.Entry<Object, Object>)i.next();
 		assertEquals(FOO, entry.getKey());
 		assertEquals(BAR, entry.getValue());
 		assertFalse(i.hasNext());
@@ -80,7 +82,7 @@ public class MiniMapTest extends TestCase
 		}
 
 		// Do approx the same again with the .values()
-		Collection v = m.values();
+		Collection<Object> v = m.values();
 		assertEquals(1, m.size());
 
 		i = v.iterator();

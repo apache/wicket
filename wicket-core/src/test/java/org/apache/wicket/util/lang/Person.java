@@ -37,9 +37,9 @@ public class Person
 
 	private Country country;
 
-	private Map addressMap;
+	private Map<String, Address> addressMap;
 
-	private List addressList;
+	private List<Address> addressList;
 
 	private Address[] addressArray;
 
@@ -101,7 +101,7 @@ public class Person
 	/**
 	 * @return addresses
 	 */
-	public List getAddressList()
+	public List<Address> getAddressList()
 	{
 		return addressList;
 	}
@@ -109,7 +109,7 @@ public class Person
 	/**
 	 * @param addressList
 	 */
-	public void setAddressList(List addressList)
+	public void setAddressList(List<Address> addressList)
 	{
 		this.addressList = addressList;
 	}
@@ -122,7 +122,7 @@ public class Person
 	{
 		if (addressList == null)
 		{
-			addressList = new ArrayList();
+			addressList = new ArrayList<Address>();
 		}
 		while (addressList.size() < index)
 		{
@@ -137,13 +137,13 @@ public class Person
 	 */
 	public Address getAddressAt(int index)
 	{
-		return (Address)addressList.get(index);
+		return addressList.get(index);
 	}
 
 	/**
 	 * @return addresses
 	 */
-	public Map getAddressMap()
+	public Map<String, Address> getAddressMap()
 	{
 		return addressMap;
 	}
@@ -151,7 +151,7 @@ public class Person
 	/**
 	 * @param addressMap
 	 */
-	public void setAddressMap(Map addressMap)
+	public void setAddressMap(Map<String, Address> addressMap)
 	{
 		this.addressMap = addressMap;
 	}

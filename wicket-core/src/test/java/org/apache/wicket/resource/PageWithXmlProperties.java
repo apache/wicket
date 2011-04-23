@@ -25,6 +25,8 @@ import org.apache.wicket.util.tester.DummyHomePage;
  */
 public class PageWithXmlProperties extends DummyHomePage
 {
+	private static final long serialVersionUID = 1L;
+
 	/***/
 	public PageWithXmlProperties()
 	{

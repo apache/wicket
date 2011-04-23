@@ -30,9 +30,14 @@ import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
 
+/**
+ */
 public class AbstractTextComponentConvertEmptyStringsToNullTest extends TestCase
 {
 
+	/**
+	 * @throws Exception
+	 */
 	public void test() throws Exception
 	{
 		WicketTester tester = new WicketTester();
@@ -45,13 +50,21 @@ public class AbstractTextComponentConvertEmptyStringsToNullTest extends TestCase
 		assertEquals(0, page.array.length);
 	}
 
+	/**
+	 */
 	public static class StringArrayPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		private static final long serialVersionUID = 1L;
 
+		/**	 */
 		public String[] array = new String[0];
 
+		/**	 */
 		public Form<Void> form;
 
+		/**
+		 * Construct.
+		 */
 		public StringArrayPage()
 		{
 
@@ -60,6 +73,8 @@ public class AbstractTextComponentConvertEmptyStringsToNullTest extends TestCase
 
 			form.add(new TextField<String[]>("array", new PropertyModel<String[]>(this, "array"))
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				@SuppressWarnings("unchecked")
 				public <C> IConverter<C> getConverter(Class<C> type)
@@ -71,6 +86,8 @@ public class AbstractTextComponentConvertEmptyStringsToNullTest extends TestCase
 
 		private class StringArrayConverter implements IConverter<String[]>
 		{
+			private static final long serialVersionUID = 1L;
+
 			public String[] convertToObject(String value, Locale locale)
 			{
 				return Strings.split(value, ',');

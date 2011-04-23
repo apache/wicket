@@ -41,6 +41,7 @@ public class ResourceDependentResourceReference extends AbstractResourceDependen
 	 * @param name
 	 * @param locale
 	 * @param style
+	 * @param variation
 	 * @param dependencies
 	 */
 	public ResourceDependentResourceReference(Class<?> scope, String name, Locale locale,

@@ -44,10 +44,12 @@ public class SignInPanel extends Panel
 	public SignInPanel(String id)
 	{
 		super(id);
-		Form form = new Form("signInForm", new CompoundPropertyModel(new ValueMap()));
-		form.add(new TextField("username"));
+		Form<ValueMap> form = new Form<ValueMap>("signInForm", new CompoundPropertyModel<ValueMap>(
+			new ValueMap()));
+		form.add(new TextField<String>("username"));
 		form.add(new PasswordTextField("password"));
-		form.add(new DropDownChoice("domain", Arrays.asList("Wicket", "Tapestry", "JSF", ".Net")));
+		form.add(new DropDownChoice<String>("domain", Arrays.asList("Wicket", "Tapestry", "JSF",
+			".Net")));
 		form.add(new CheckBox("rememberMe"));
 		form.add(new WebMarkupContainer("loginZonderTokenContainer").add(new CheckBox(
 			"loginZonderToken")));

@@ -34,6 +34,11 @@ import org.apache.wicket.markup.html.WebPage;
  */
 public class EnclosurePage_8 extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Construct.
+	 */
 	public EnclosurePage_8()
 	{
 		add(new WebMarkupContainer("container"));

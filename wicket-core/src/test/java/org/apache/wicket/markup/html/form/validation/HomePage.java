@@ -35,15 +35,23 @@ public class HomePage extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	/** */
-	public String textfieldForm1, textfieldForm2;
+	public String textfieldForm1;
 
 	/** */
-	public String textfield1, textfield2;
+	public String textfieldForm2;
+
+	/** */
+	public String textfield1;
+
+	/** */
+	public String textfield2;
 
 	/** */
 	public int formSubmitted = 0;
 
+	/** */
 	public static int AJAX = 2;
+	/** */
 	public static int NORMAL = 4;
 
 	boolean hitOnSubmit = false;
@@ -121,7 +129,7 @@ public class HomePage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form form)
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
 				formSubmitted = formSubmitted | AJAX;
 				target.add(form);
@@ -146,6 +154,9 @@ public class HomePage extends WebPage
 		add(form3);
 	}
 
+	/**
+	 * @return formSubmitted
+	 */
 	public int getFormSubmitted()
 	{
 		return formSubmitted;

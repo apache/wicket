@@ -23,6 +23,7 @@ import org.apache.wicket.markup.html.WebPage;
  */
 public class MockPageWithLinkAndLabel extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Link wicket id

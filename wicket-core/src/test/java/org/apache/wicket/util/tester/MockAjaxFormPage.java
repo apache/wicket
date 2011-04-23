@@ -69,13 +69,14 @@ public class MockAjaxFormPage extends WebPage
 	 */
 	public MockAjaxFormPage()
 	{
-		Form form = new Form("form", new CompoundPropertyModel(new MockDomainObject()));
+		Form<MockDomainObject> form = new Form<MockDomainObject>("form",
+			new CompoundPropertyModel<MockDomainObject>(new MockDomainObject()));
 		add(form);
 		final Button submit = new Button("submit");
 		submit.setOutputMarkupId(true);
 		submit.setEnabled(false);
 		form.add(submit);
-		final TextField text = new TextField("text");
+		final TextField<String> text = new TextField<String>("text");
 		text.setRequired(true);
 		text.add(StringValidator.minimumLength(4));
 		text.add(new AjaxFormValidatingBehavior(form, "onkeyup")

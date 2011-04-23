@@ -35,6 +35,9 @@ public class InMemoryPageStore implements IDataStore
 	 */
 	private final Map<String, Map<Integer, byte[]>> store;
 
+	/**
+	 * Construct.
+	 */
 	public InMemoryPageStore()
 	{
 		store = new HashMap<String, Map<Integer, byte[]>>();

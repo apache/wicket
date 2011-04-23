@@ -31,6 +31,8 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
 
+/**
+ */
 public class FormValidatorBehaviorTest extends WicketTestCase
 {
 	/**
@@ -123,11 +125,19 @@ public class FormValidatorBehaviorTest extends WicketTestCase
 
 	}
 
+	/**
+	 */
 	public static class MaxLenValidator extends Behavior implements IFormValidator
 	{
+		private static final long serialVersionUID = 1L;
 		private final int len = 8;
 		private final TextField<String> field;
 
+		/**
+		 * Construct.
+		 * 
+		 * @param field
+		 */
 		public MaxLenValidator(TextField<String> field)
 		{
 			this.field = field;
@@ -154,12 +164,19 @@ public class FormValidatorBehaviorTest extends WicketTestCase
 		}
 	}
 
+	/**
+	 */
 	public static class MinLenValidator implements IFormValidator
 	{
-
+		private static final long serialVersionUID = 1L;
 		private int len = 5;
 		private final TextField<String> field;
 
+		/**
+		 * Construct.
+		 * 
+		 * @param field
+		 */
 		public MinLenValidator(TextField<String> field)
 		{
 			this.field = field;
@@ -180,14 +197,22 @@ public class FormValidatorBehaviorTest extends WicketTestCase
 		}
 	}
 
+	/**
+	 */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		private static final long serialVersionUID = 1L;
+		/**	 */
 		public TextField<String> name;
-		public Form form;
+		/**	 */
+		public Form<Void> form;
 
+		/**
+		 * Construct.
+		 */
 		public TestPage()
 		{
-			form = new Form("form");
+			form = new Form<Void>("form");
 			add(form);
 			name = new TextField<String>("name", Model.of(""));
 			form.add(name);

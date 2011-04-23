@@ -20,10 +20,17 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 
+/**
+ */
 public class EnclosurePage_7 extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Construct.
+	 */
 	public EnclosurePage_7()
 	{
-		this.add(new RadioGroup("group").add(new Radio<Void>("radio")));
+		this.add(new RadioGroup<Void>("group").add(new Radio<Void>("radio")));
 	}
 }

@@ -93,5 +93,9 @@ import org.apache.wicket.markup.html.form.TextField;
  */
 public interface IAjaxRegionMarkupIdProvider
 {
+	/**
+	 * @param component
+	 * @return the id of the markup region that will be updated via ajax.
+	 */
 	String getAjaxRegionMarkupId(Component component);
 }

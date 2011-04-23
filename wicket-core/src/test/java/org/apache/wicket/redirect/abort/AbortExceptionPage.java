@@ -36,6 +36,11 @@ public class AbortExceptionPage extends WebPage
 {
 	private static final long serialVersionUID = -5906071716129043859L;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param parameters
+	 */
 	public AbortExceptionPage(PageParameters parameters)
 	{
 		final boolean triggerError = parameters.get("trigger").toBoolean();

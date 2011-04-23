@@ -28,6 +28,7 @@ import org.junit.Test;
 public class UrlUtilsTest
 {
 
+	/**	 */
 	@Test
 	public void isRelative()
 	{
@@ -38,6 +39,7 @@ public class UrlUtilsTest
 		assertFalse(UrlUtils.isRelative("ftp://example.com"));
 	}
 
+	/**	 */
 	@Test
 	public void normalizePath()
 	{

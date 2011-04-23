@@ -109,7 +109,12 @@ public class ValueMapTest extends TestCase
 	 * Enumeration for testing
 	 */
 	public enum TestEnum {
-		one, two, three
+		/**	 */
+		one,
+		/**	 */
+		two,
+		/**	 */
+		three
 	}
 
 	/**

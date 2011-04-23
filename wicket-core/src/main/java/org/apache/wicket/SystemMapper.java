@@ -95,8 +95,9 @@ public class SystemMapper extends CompoundRequestMapper
 		@Override
 		public Class<C> get()
 		{
-			return (Class<C>)application.getHomePage();
+			@SuppressWarnings("unchecked")
+			Class<C> homePage = (Class<C>)application.getHomePage();
+			return homePage;
 		}
-
 	}
 }

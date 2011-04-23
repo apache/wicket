@@ -37,18 +37,18 @@ public class PagedTablePage extends WebPage
 	public PagedTablePage()
 	{
 		super();
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		list.add("one");
 		list.add("two");
 		list.add("three");
-		PageableListView table = new PageableListView("table", list, 2)
+		PageableListView<String> table = new PageableListView<String>("table", list, 2)
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void populateItem(ListItem listItem)
+			protected void populateItem(ListItem<String> listItem)
 			{
-				String txt = (String)listItem.getDefaultModelObject();
+				String txt = listItem.getModelObject();
 				listItem.add(new Label("txt", txt));
 			}
 		};

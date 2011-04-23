@@ -39,13 +39,13 @@ public class TestPage extends WebPage
 	{
 		add(new Label("label"));
 
-		Form form1 = new Form("form1");
+		Form<Void> form1 = new Form<Void>("form1");
 		add(form1);
 		form1.add(new MyTextField("text1", "input-1"));
 		form1.add(new MyTextField("text2", "input-2"));
 		form1.add(new MyTextField("text7", "input-3"));
 
-		Form form2 = new TestForm("form2");
+		Form<Void> form2 = new TestForm("form2");
 		add(form2);
 
 		Panel panel1 = new EmptyPanel("panel1");
@@ -63,7 +63,7 @@ public class TestPage extends WebPage
 		panel2.add(new MyTextField("text11", "input-11"));
 		panel2.add(new MyTextField("text12", "input-12"));
 
-		Form form3 = new TestForm("form3")
+		Form<Void> form3 = new TestForm("form3")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -211,7 +211,7 @@ public class TestPage extends WebPage
 	/**
 	 * 
 	 */
-	public static class MyTextField extends TextField
+	public static class MyTextField extends TextField<String>
 	{
 		private static final long serialVersionUID = 1L;
 

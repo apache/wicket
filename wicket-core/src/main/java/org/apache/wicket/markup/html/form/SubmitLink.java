@@ -148,7 +148,6 @@ public class SubmitLink extends AbstractSubmitLink
 	}
 
 	/**
-	 * @inheritDoc
 	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override

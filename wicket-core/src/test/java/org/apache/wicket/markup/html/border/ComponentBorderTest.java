@@ -76,7 +76,7 @@ public class ComponentBorderTest extends WicketTestCase
 		Page page = tester.getLastRenderedPage();
 		Border border = (Border)page.get("hideable");
 		assertNotNull(border);
-		AjaxLink link = (AjaxLink)border.get("hideLink");
+		AjaxLink<?> link = (AjaxLink<?>)border.get("hideLink");
 		assertNotNull(link);
 		WebMarkupContainer wrapper = (WebMarkupContainer)border.get("wrapper");
 		assertNotNull(wrapper);

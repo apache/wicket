@@ -45,6 +45,8 @@ public class WicketTesterSessionCreationTest
 	/***/
 	public static class LocalePage extends DummyHomePage
 	{
+		private static final long serialVersionUID = 1L;
+
 		/***/
 		public LocalePage()
 		{

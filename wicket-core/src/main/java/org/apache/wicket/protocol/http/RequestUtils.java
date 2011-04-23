@@ -53,7 +53,7 @@ public final class RequestUtils
 			if (bits.length == 2)
 			{
 				params.add(UrlDecoder.QUERY_INSTANCE.decode(bits[0], getCurrentCharset()),
-				                         UrlDecoder.QUERY_INSTANCE.decode(bits[1], getCurrentCharset()));
+					UrlDecoder.QUERY_INSTANCE.decode(bits[1], getCurrentCharset()));
 			}
 			else
 			{
@@ -61,49 +61,6 @@ public final class RequestUtils
 			}
 		}
 	}
-
-// TODO review
-// NO LONGER USED SINCE WE HAVE URL OBJECT
-// /**
-// * decores url parameters form <code>queryString</code> into <code>parameters</code> map
-// *
-// * @param queryString
-// * @param parameters
-// */
-// public static void decodeUrlParameters(String queryString, Map<String, String[]> parameters)
-// {
-// Map<String, List<String>> temp = new HashMap<String, List<String>>();
-// final String[] paramTuples = queryString.split("&");
-// for (int t = 0; t < paramTuples.length; t++)
-// {
-// final String[] bits = paramTuples[t].split("=");
-// final String key;
-// final String value;
-// key = WicketURLDecoder.QUERY_INSTANCE.decode(bits[0]);
-// if (bits.length == 2)
-// {
-// value = WicketURLDecoder.QUERY_INSTANCE.decode(bits[1]);
-// }
-// else
-// {
-// value = "";
-// }
-// List<String> l = temp.get(key);
-// if (l == null)
-// {
-// l = new ArrayList<String>();
-// temp.put(key, l);
-// }
-// l.add(value);
-// }
-//
-// for (Map.Entry<String, List<String>> entry : temp.entrySet())
-// {
-// String s[] = new String[entry.getValue().size()];
-// entry.getValue().toArray(s);
-// parameters.put(entry.getKey(), s);
-// }
-// }
 
 	/**
 	 * Remove occurrences of ".." from the path
@@ -177,7 +134,7 @@ public final class RequestUtils
 
 		if (relativePagePath.startsWith("../"))
 		{
-		 StringBuilder tempRelative = new StringBuilder(relativePagePath);
+			StringBuilder tempRelative = new StringBuilder(relativePagePath);
 
 			// Go up through hierarchy until we find most common directory for both pathes.
 			while (tempRelative.indexOf("../") == 0)
@@ -222,6 +179,10 @@ public final class RequestUtils
 		return RequestCycle.get().getRequest().getCharset();
 	}
 
+	/**
+	 * @param request
+	 * @return the request's charset
+	 */
 	public static Charset getCharset(HttpServletRequest request)
 	{
 		String charsetName = null;

@@ -22,10 +22,18 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 
+/**
+ * TODO javadoc
+ */
 public class SharedResources
 {
 	private final ResourceReferenceRegistry registry;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param registry
+	 */
 	public SharedResources(ResourceReferenceRegistry registry)
 	{
 		this.registry = registry;

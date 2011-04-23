@@ -41,7 +41,7 @@ public class PagedTableNavigatorWithLabelProviderPage extends WebPage
 	public PagedTableNavigatorWithLabelProviderPage()
 	{
 		super();
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		list.add("one");
 		list.add("two");
 		list.add("three");
@@ -58,14 +58,15 @@ public class PagedTableNavigatorWithLabelProviderPage extends WebPage
 		list.add("fourteen");
 
 		final int pageSize = 2;
-		final PageableListView listview = new PageableListView("table", list, pageSize)
+		final PageableListView<String> listview = new PageableListView<String>("table", list,
+			pageSize)
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void populateItem(ListItem listItem)
+			protected void populateItem(ListItem<String> listItem)
 			{
-				String txt = (String)listItem.getDefaultModelObject();
+				String txt = listItem.getModelObject();
 				listItem.add(new Label("txt", txt));
 			}
 		};

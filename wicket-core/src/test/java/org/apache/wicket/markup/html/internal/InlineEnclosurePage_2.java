@@ -73,9 +73,11 @@ public class InlineEnclosurePage_2 extends WebPage
 		add(label15);
 	}
 
+	/**
+	 * @return serialVersionUID
+	 */
 	public static long getSerialversionuid()
 	{
 		return serialVersionUID;
 	}
-
 }

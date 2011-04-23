@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.form.Form;
  * 
  * @author Juergen Donnerstag
  */
-public class TestForm extends Form
+public class TestForm extends Form<Void>
 {
 	private static final long serialVersionUID = 1L;
 

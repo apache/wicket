@@ -76,6 +76,7 @@ public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecora
 	/**
 	 * Decorates ajax call script
 	 * 
+	 * @param component
 	 * @param script
 	 * @return decorated script
 	 */
@@ -87,6 +88,7 @@ public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecora
 	/**
 	 * Decorates the success handling script
 	 * 
+	 * @param component
 	 * @param script
 	 * @return decorated script
 	 */
@@ -98,6 +100,7 @@ public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecora
 	/**
 	 * Decorates the failure handling script
 	 * 
+	 * @param component
 	 * @param script
 	 * @return decorated script
 	 */
@@ -105,6 +108,4 @@ public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecora
 	{
 		return script;
 	}
-
-
 }

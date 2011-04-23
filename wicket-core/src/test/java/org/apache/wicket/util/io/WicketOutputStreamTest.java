@@ -74,6 +74,9 @@ public class WicketOutputStreamTest extends WicketTestCase
 	}
 
 
+	/**
+	 * @throws Exception
+	 */
 	public void testNotSerializeable() throws Exception
 	{
 		WebApplication app = new WebApplication()
@@ -96,6 +99,9 @@ public class WicketOutputStreamTest extends WicketTestCase
 		}
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public void testLocale() throws Exception
 	{
 		Locale locale = new Locale("nl", "NL");
@@ -110,6 +116,9 @@ public class WicketOutputStreamTest extends WicketTestCase
 
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public void testPageReference() throws Exception
 	{
 		PageB b = new PageB("test");

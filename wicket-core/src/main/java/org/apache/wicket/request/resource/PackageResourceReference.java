@@ -27,6 +27,9 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.time.Time;
 
+/**
+ * TODO javadoc
+ */
 public class PackageResourceReference extends ResourceReference
 {
 	private static final long serialVersionUID = 1L;

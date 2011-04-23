@@ -28,7 +28,7 @@ import org.apache.wicket.util.visit.IVisitor;
  */
 public class FormTest extends WicketTestCase
 {
-	private IVisitor visitor;
+	private IVisitor<?, ?> visitor;
 
 	/**
 	 * Construct.
@@ -47,7 +47,7 @@ public class FormTest extends WicketTestCase
 		visitor = new Form.ValidationVisitor()
 		{
 			@Override
-			public void validate(FormComponent formComponent)
+			public void validate(FormComponent<?> formComponent)
 			{
 			}
 		};

@@ -30,6 +30,8 @@ import org.apache.wicket.markup.html.basic.Label;
  */
 public class InlineEnclosureWithAdditionalAjaxTargetPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	private final Label label1 = new Label("label1", "Test Label 1");
 	private final Label label2 = new Label("label2", "Test Label 2");
 	private final AjaxLink<Void> toggleLink;
@@ -47,12 +49,12 @@ public class InlineEnclosureWithAdditionalAjaxTargetPage extends WebPage
 			public void onClick(AjaxRequestTarget target)
 			{
 				label1.setVisible(!label1.isVisible());
-				target.addComponent(label1);
+				target.add(label1);
 				label2.setVisible(!label2.isVisible());
-				target.addComponent(label2);
+				target.add(label2);
 			}
-
 		};
+
 		add(toggleLink);
 		label1.setOutputMarkupId(true);
 		label2.setOutputMarkupId(true);

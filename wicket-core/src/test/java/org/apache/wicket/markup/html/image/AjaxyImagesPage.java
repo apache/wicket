@@ -21,10 +21,18 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
+/**
+ */
 public final class AjaxyImagesPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
+	/**	 */
 	public final Image image;
 
+	/**
+	 * Construct.
+	 */
 	public AjaxyImagesPage()
 	{
 		image = new Image("image", new PackageResourceReference(AjaxyImagesPage.class, "Beer.gif"));
@@ -34,6 +42,8 @@ public final class AjaxyImagesPage extends WebPage
 
 		AjaxLink<Void> link = new AjaxLink<Void>("link")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{

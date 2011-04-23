@@ -18,6 +18,9 @@ package org.apache.wicket.page;
 
 import org.apache.wicket.util.time.Duration;
 
+/**
+ * TODO javadoc
+ */
 public class CouldNotLockPageException extends RuntimeException
 {
 	private static final long serialVersionUID = 1L;
@@ -26,6 +29,13 @@ public class CouldNotLockPageException extends RuntimeException
 	private final Duration timeout;
 	private final String threadName;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param page
+	 * @param threadName
+	 * @param timeout
+	 */
 	public CouldNotLockPageException(int page, String threadName, Duration timeout)
 	{
 		super("Could not lock page " + page + ". Attempt lasted " + timeout);
@@ -34,20 +44,27 @@ public class CouldNotLockPageException extends RuntimeException
 		this.threadName = threadName;
 	}
 
+	/**
+	 * @return page
+	 */
 	public int getPage()
 	{
 		return page;
 	}
 
+	/**
+	 * @return timeout
+	 */
 	public Duration getTimeout()
 	{
 		return timeout;
 	}
 
+	/**
+	 * @return threadName
+	 */
 	public String getThreadName()
 	{
 		return threadName;
 	}
-
-
 }

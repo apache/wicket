@@ -61,6 +61,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author jcompagner
  */
+@SuppressWarnings("unused")
 public final class PropertyResolver
 {
 	/** Log. */

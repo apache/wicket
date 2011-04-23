@@ -51,7 +51,7 @@ public class ClassStringResourceLoaderTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public static class MyValidator extends AbstractValidator
+	public static class MyValidator extends AbstractValidator<String>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -60,7 +60,7 @@ public class ClassStringResourceLoaderTest extends WicketTestCase
 		 * @see org.apache.wicket.validation.validator.AbstractValidator#onValidate(org.apache.wicket.validation.IValidatable)
 		 */
 		@Override
-		protected void onValidate(IValidatable v)
+		protected void onValidate(IValidatable<String> v)
 		{
 			error(v);
 		}

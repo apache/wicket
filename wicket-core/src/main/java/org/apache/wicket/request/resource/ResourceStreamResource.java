@@ -30,6 +30,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+/**
+ * TODO javadoc
+ */
 public class ResourceStreamResource extends AbstractResource
 {
 	private static final long serialVersionUID = 1L;
@@ -42,24 +45,41 @@ public class ResourceStreamResource extends AbstractResource
 	private String textEncoding;
 	private String mimeType;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param stream
+	 */
 	public ResourceStreamResource(IResourceStream stream)
 	{
 		Args.notNull(stream, "stream");
 		this.stream = stream;
 	}
 
+	/**
+	 * @param fileName
+	 * @return this
+	 */
 	public ResourceStreamResource setFileName(String fileName)
 	{
 		this.fileName = fileName;
 		return this;
 	}
 
+	/**
+	 * @param contentDisposition
+	 * @return thsi
+	 */
 	public ResourceStreamResource setContentDisposition(ContentDisposition contentDisposition)
 	{
 		this.contentDisposition = contentDisposition;
 		return this;
 	}
 
+	/**
+	 * @param textEncoding
+	 * @return this
+	 */
 	public ResourceStreamResource setTextEncoding(String textEncoding)
 	{
 		this.textEncoding = textEncoding;

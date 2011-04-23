@@ -39,7 +39,7 @@ public class HomePage extends WebPage
 	public HomePage()
 	{
 		add(new Label("welcome", "Welcome"));
-		add(new Link("link")
+		add(new Link<Void>("link")
 		{
 			private static final long serialVersionUID = 1L;
 

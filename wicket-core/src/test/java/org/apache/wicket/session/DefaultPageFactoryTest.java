@@ -126,12 +126,20 @@ public class DefaultPageFactoryTest extends WicketTestCase
 
 	}
 
+	/**
+	 */
 	public static class PageThrowingCheckedException extends Page
 	{
 		private static final long serialVersionUID = 1L;
 
+		/**	 */
 		public static final Exception EXCEPTION = new Exception("a checked exception");
 
+		/**
+		 * Construct.
+		 * 
+		 * @throws Exception
+		 */
 		public PageThrowingCheckedException() throws Exception
 		{
 			throw EXCEPTION;

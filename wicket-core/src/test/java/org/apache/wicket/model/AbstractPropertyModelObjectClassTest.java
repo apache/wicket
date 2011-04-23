@@ -32,12 +32,18 @@ import junit.framework.TestCase;
 public class AbstractPropertyModelObjectClassTest extends TestCase
 {
 
+	/**
+	 * 
+	 */
 	public void testCompoundPropertyModel()
 	{
 		assertPropertyModelTargetTypeIsInteger(new CompoundPropertyModel<CustomType>(
 			new CustomType()));
 	}
 
+	/**
+	 * 
+	 */
 	public void testCompoundPropertyModelBind()
 	{
 		CompoundPropertyModel<CustomBean> compoundPropertyModel = new CompoundPropertyModel<CustomBean>(
@@ -46,6 +52,9 @@ public class AbstractPropertyModelObjectClassTest extends TestCase
 		assertPropertyModelTargetTypeIsInteger(modelForCustomTypeObject);
 	}
 
+	/**
+	 * 
+	 */
 	public void testModel()
 	{
 		assertPropertyModelTargetTypeIsInteger(new Model<CustomType>(new CustomType()));
@@ -83,6 +92,7 @@ public class AbstractPropertyModelObjectClassTest extends TestCase
 
 	private static class CustomType implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
 		private Integer someProperty;
 
 		public void setSomeProperty(Integer someProperty)
@@ -98,6 +108,7 @@ public class AbstractPropertyModelObjectClassTest extends TestCase
 
 	private static class CustomBean implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
 		private CustomType customType;
 
 		public CustomType getCustomType()

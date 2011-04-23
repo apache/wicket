@@ -41,6 +41,9 @@ public class PageVersioningTest
 {
 	WicketTester wicketTester;
 
+	/**
+	 * setup()
+	 */
 	@Before
 	public void setup()
 	{
@@ -74,6 +77,9 @@ public class PageVersioningTest
 		};
 	}
 
+	/**
+	 * versionPage()
+	 */
 	@Test
 	public void versionPage()
 	{

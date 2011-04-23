@@ -187,7 +187,9 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 	{
 		if (Boolean.class.equals(type))
 		{
-			return (IConverter<C>)CheckBoxConverter.INSTANCE;
+			@SuppressWarnings("unchecked")
+			IConverter<C> converter = (IConverter<C>)CheckBoxConverter.INSTANCE;
+			return converter;
 		}
 		else
 		{

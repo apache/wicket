@@ -72,8 +72,8 @@ public class TraditionalEnclosureAjaxPage extends WebPage
 	 */
 	private void ajaxRepaintOnlyToggleableComponentsContainer(AjaxRequestTarget target)
 	{
-		target.addComponent(traditionalAjaxVisibilityToggleRequiresPlaceholder); // This is what we
-// repaint and toggleable is inside it
+		target.add(traditionalAjaxVisibilityToggleRequiresPlaceholder); // This is what we
+		// repaint and toggleable is inside it
 	}
 
 	/**

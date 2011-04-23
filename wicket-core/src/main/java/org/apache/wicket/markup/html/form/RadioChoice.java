@@ -336,6 +336,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	/**
 	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
@@ -362,6 +363,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 
 			if (objectClass != null && objectClass != String.class)
 			{
+				@SuppressWarnings("rawtypes")
 				final IConverter converter = getConverter(objectClass);
 				label = converter.convertToString(displayValue, getLocale());
 			}

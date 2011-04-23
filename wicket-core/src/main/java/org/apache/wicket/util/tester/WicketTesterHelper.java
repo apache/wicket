@@ -149,7 +149,7 @@ public class WicketTesterHelper
 	 */
 	public static String asLined(final Collection<?> objects)
 	{
-	 StringBuilder lined = new StringBuilder();
+		StringBuilder lined = new StringBuilder();
 		for (Iterator<?> iter = objects.iterator(); iter.hasNext();)
 		{
 			String objectString = iter.next().toString();
@@ -163,6 +163,11 @@ public class WicketTesterHelper
 		return lined.toString();
 	}
 
+	/**
+	 * @param component
+	 * @param event
+	 * @return AjaxEventBehavior or null
+	 */
 	public static AjaxEventBehavior findAjaxEventBehavior(Component component, String event)
 	{
 		for (Behavior behavior : component.getBehaviors())
@@ -178,8 +183,12 @@ public class WicketTesterHelper
 		return null;
 	}
 
-	public static Behavior findBehavior(Component component,
-		Class<? extends Behavior> behaviorClass)
+	/**
+	 * @param component
+	 * @param behaviorClass
+	 * @return Behavior or null
+	 */
+	public static Behavior findBehavior(Component component, Class<? extends Behavior> behaviorClass)
 	{
 		for (Behavior behavior : component.getBehaviors())
 		{

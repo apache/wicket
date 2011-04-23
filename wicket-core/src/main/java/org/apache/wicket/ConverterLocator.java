@@ -55,6 +55,9 @@ public class ConverterLocator implements IConverterLocator
 {
 	/**
 	 * CoverterLocator that is to be used when no registered converter is found.
+	 * 
+	 * @param <C>
+	 *            The object to convert from and to String
 	 */
 	private static class DefaultConverter<C> implements IConverter<C>
 	{
@@ -173,6 +176,8 @@ public class ConverterLocator implements IConverterLocator
 	/**
 	 * Gets the type converter that is registered for class c.
 	 * 
+	 * @param <C>
+	 *            The object to convert from and to String
 	 * @param c
 	 *            The class to get the type converter for
 	 * @return The type converter that is registered for class c or null if no type converter was
@@ -180,7 +185,9 @@ public class ConverterLocator implements IConverterLocator
 	 */
 	public final <C> IConverter<C> get(Class<C> c)
 	{
-		return (IConverter<C>)classToConverter.get(c.getName());
+		@SuppressWarnings("unchecked")
+		IConverter<C> converter = (IConverter<C>)classToConverter.get(c.getName());
+		return converter;
 	}
 
 	/**
@@ -198,7 +205,9 @@ public class ConverterLocator implements IConverterLocator
 		// Null is always converted to null
 		if (type == null)
 		{
-			return (IConverter<C>)new DefaultConverter<String>(String.class);
+			@SuppressWarnings("unchecked")
+			IConverter<C> converter = (IConverter<C>)new DefaultConverter<String>(String.class);
+			return converter;
 		}
 
 		// Get type converter for class

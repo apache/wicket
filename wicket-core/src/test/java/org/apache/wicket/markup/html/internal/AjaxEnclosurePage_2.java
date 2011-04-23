@@ -61,11 +61,13 @@ public class AjaxEnclosurePage_2 extends WebPage
 	{
 		toggleLabel1Link = new AjaxLink<Void>("toggleLabel1Link")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				label1.setVisible(!label1.isVisible());
-				target.addComponent(label1);
+				target.add(label1);
 			}
 
 		};
@@ -73,42 +75,62 @@ public class AjaxEnclosurePage_2 extends WebPage
 
 		toggleLabel2Link = new AjaxLink<Void>("toggleLabel2Link")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				label2.setVisible(!label2.isVisible());
-				target.addComponent(label2);
+				target.add(label2);
 			}
 		};
 		add(toggleLabel2Link);
 	}
 
 
+	/**
+	 * @return serialVersionUID
+	 */
 	public static long getSerialversionuid()
 	{
 		return serialVersionUID;
 	}
 
+	/**
+	 * @return label1
+	 */
 	public Label getLabel1()
 	{
 		return label1;
 	}
 
+	/**
+	 * @return label2
+	 */
 	public Label getLabel2()
 	{
 		return label2;
 	}
 
+	/**
+	 * @return toggleLabel1Link
+	 */
 	public AjaxLink<Void> getToggleLabel1Link()
 	{
 		return toggleLabel1Link;
 	}
 
+	/**
+	 * @return toggleLabel2Link
+	 */
 	public AjaxLink<Void> getToggleLabel2Link()
 	{
 		return toggleLabel2Link;
 	}
 
+	/**
+	 * @return enclosure2Marker
+	 */
 	public Label getEnclosure2Marker()
 	{
 		return enclosure2Marker;

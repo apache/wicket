@@ -46,12 +46,18 @@ public class BehaviorRequestTest extends WicketTestCase
 		tester.startPage(page);
 	}
 
+	/**
+	 * 
+	 */
 	public void testEnabledBehaviorRequest()
 	{
 		tester.executeUrl(urlForBehavior(page.enabledBehavior));
 		assertTrue(page.enabledBehavior.wasCalled());
 	}
 
+	/**
+	 * 
+	 */
 	public void testDisabledBehaviorRequest()
 	{
 		try
@@ -76,12 +82,19 @@ public class BehaviorRequestTest extends WicketTestCase
 		return tester.urlFor(handler).toString();
 	}
 
+	/**
+	 */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		private static final long serialVersionUID = 1L;
+
 		private WebMarkupContainer container;
 		private TestCallbackBehavior enabledBehavior;
 		private TestCallbackBehavior disabledBehavior;
 
+		/**
+		 * Construct.
+		 */
 		public TestPage()
 		{
 			enabledBehavior = new TestCallbackBehavior();
@@ -101,8 +114,12 @@ public class BehaviorRequestTest extends WicketTestCase
 		}
 	}
 
+	/**
+	 */
 	private static class TestCallbackBehavior extends Behavior implements IBehaviorListener
 	{
+		private static final long serialVersionUID = 1L;
+
 		private boolean enabled;
 		private boolean called;
 

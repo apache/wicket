@@ -32,11 +32,17 @@ public class AjaxFormSubmitBehaviorTestPage extends WebPage
 	private static final long serialVersionUID = 1L;
 	private final TestForm form;
 
+	/**
+	 * Construct.
+	 */
 	public AjaxFormSubmitBehaviorTestPage()
 	{
 		add(form = new TestForm("form"));
 	}
 
+	/**
+	 * @return form
+	 */
 	public TestForm getForm()
 	{
 		return form;
@@ -47,15 +53,17 @@ class TestForm extends Form<Void>
 {
 	private static final long serialVersionUID = 1L;
 	private final Button submitButton;
-	private final TextField textField;
+	private final TextField<String> textField;
 	private boolean submitedByAjaxBehavior;
 
 	public TestForm(String id)
 	{
 		super(id);
-		textField = new TextField("textField", new Model());
+		textField = new TextField<String>("textField", new Model<String>());
 		textField.add(new AjaxFormSubmitBehavior("onchange")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onError(AjaxRequestTarget target)
 			{
@@ -70,6 +78,8 @@ class TestForm extends Form<Void>
 		add(textField);
 		add(new SubmitLink("ajaxSubmitLink")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onSubmit()
 			{
@@ -79,6 +89,7 @@ class TestForm extends Form<Void>
 
 		add((submitButton = new Button("submit")
 		{
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void onSubmit()
@@ -92,7 +103,7 @@ class TestForm extends Form<Void>
 	/**
 	 * @return the textField
 	 */
-	public TextField getTextField()
+	public TextField<String> getTextField()
 	{
 		return textField;
 	}

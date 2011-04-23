@@ -333,6 +333,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 * @param selected
 	 *            The currently selected string value
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void appendOptionHtml(final AppendingStringBuffer buffer, final T choice, int index,
 		final String selected)
@@ -343,6 +344,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 		String label = "";
 		if (objectClass != null && objectClass != String.class)
 		{
+			@SuppressWarnings("rawtypes")
 			IConverter converter = getConverter(objectClass);
 			label = converter.convertToString(displayValue, getLocale());
 		}

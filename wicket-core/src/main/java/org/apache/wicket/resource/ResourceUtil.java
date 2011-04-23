@@ -84,6 +84,9 @@ public class ResourceUtil
 	/**
 	 * read string with platform default encoding from resource stream
 	 * 
+	 * @param resourceStream
+	 * @return string read from resource stream
+	 * 
 	 * @see #readString(org.apache.wicket.util.resource.IResourceStream, java.nio.charset.Charset)
 	 */
 	public static String readString(IResourceStream resourceStream)

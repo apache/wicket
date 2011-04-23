@@ -60,7 +60,7 @@ public class PageB extends WebPage
 	}
 
 	/**
-	 * @return
+	 * @return PageA
 	 */
 	public PageA getA()
 	{

@@ -25,7 +25,8 @@ package org.apache.wicket.markup.html.link;
  * 
  * @author jcompagner
  * 
- * 
+ * @param <T>
+ *            type of model object
  */
 public abstract class StatelessLink<T> extends Link<T>
 {

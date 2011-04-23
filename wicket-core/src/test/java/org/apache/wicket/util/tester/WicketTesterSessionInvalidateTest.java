@@ -28,6 +28,8 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.Test;
 
+/**
+ */
 public class WicketTesterSessionInvalidateTest
 {
 
@@ -53,15 +55,24 @@ public class WicketTesterSessionInvalidateTest
 		assertNull(tester.getSession().getStyle());
 	}
 
+	/**
+	 */
 	public static class MyPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Construct.
+		 * 
+		 * @param pageParameters
+		 */
 		public MyPage(PageParameters pageParameters)
 		{
 			super(pageParameters);
 
 			add(new Link<Void>("link")
 			{
+				private static final long serialVersionUID = 1L;
 
 				@Override
 				public void onClick()

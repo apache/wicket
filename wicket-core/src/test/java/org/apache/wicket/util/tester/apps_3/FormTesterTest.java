@@ -158,7 +158,7 @@ public class FormTesterTest extends WicketTestCase
 		assertBooksEquals(new Book[] { books[0], books[2], books[3] }, choicePage.checkGroup);
 	}
 
-	private void assertBooksEquals(Book[] expectBooks, List actualBooks)
+	private void assertBooksEquals(Book[] expectBooks, List<Book> actualBooks)
 	{
 		assertEquals(expectBooks.length, actualBooks.size());
 		assertTrue(Arrays.asList(expectBooks).containsAll(actualBooks));

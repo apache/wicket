@@ -35,6 +35,7 @@ public class AjaxFormSubmitBehaviorTest extends TestCase
 		tester = new WicketTester();
 	}
 
+	/**	 */
 	public void testAjaxFormSubmitBehavior()
 	{
 		// start and render the test page

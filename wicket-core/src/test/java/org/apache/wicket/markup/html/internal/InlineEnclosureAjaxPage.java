@@ -55,7 +55,7 @@ public class InlineEnclosureAjaxPage extends WebPage
 	 */
 	private void ajaxRepaintOnlyToggleableComponentsContainer(AjaxRequestTarget target)
 	{
-		target.addComponent(toggleable);
+		target.add(toggleable);
 	}
 
 	/**

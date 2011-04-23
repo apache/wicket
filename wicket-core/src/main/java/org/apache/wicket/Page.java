@@ -1088,7 +1088,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		return renderCount;
 	}
 
-	/** TODO WICKET-NG javadoc */
+	/**
+	 * TODO WICKET-NG javadoc
+	 * 
+	 * @param wasCreatedBookmarkable
+	 */
 	public final void setWasCreatedBookmarkable(boolean wasCreatedBookmarkable)
 	{
 		setFlag(FLAG_WAS_CREATED_BOOKMARKABLE, wasCreatedBookmarkable);

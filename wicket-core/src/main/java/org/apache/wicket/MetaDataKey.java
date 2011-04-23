@@ -62,11 +62,11 @@ public abstract class MetaDataKey<T> implements IClusterable
 	 * @return The entry value
 	 */
 	@SuppressWarnings("unchecked")
-	public T get(MetaDataEntry[] metaData)
+	public T get(MetaDataEntry<?>[] metaData)
 	{
 		if (metaData != null)
 		{
-			for (MetaDataEntry entry : metaData)
+			for (MetaDataEntry<?> entry : metaData)
 			{
 				if (equals(entry.key))
 				{

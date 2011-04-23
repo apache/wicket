@@ -34,10 +34,10 @@ public class OnChangeAjaxBehaviorTestPage extends WebPage
 	 */
 	public OnChangeAjaxBehaviorTestPage()
 	{
-		Form form = new Form("form");
+		Form<Void> form = new Form<Void>("form");
 		add(form);
 
-		TextField field = new TextField("field");
+		TextField<String> field = new TextField<String>("field");
 		field.add(new OnChangeAjaxBehavior()
 		{
 			private static final long serialVersionUID = 1L;
@@ -50,7 +50,7 @@ public class OnChangeAjaxBehaviorTestPage extends WebPage
 		});
 		form.add(field);
 
-		DropDownChoice choice = new DropDownChoice("dropDown");
+		DropDownChoice<?> choice = new DropDownChoice<Object>("dropDown");
 		choice.add(new OnChangeAjaxBehavior()
 		{
 			private static final long serialVersionUID = 1L;

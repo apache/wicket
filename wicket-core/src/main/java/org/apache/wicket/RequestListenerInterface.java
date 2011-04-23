@@ -130,6 +130,9 @@ public class RequestListenerInterface
 	}
 
 
+	/**
+	 * @return The interface class, which must extend IRequestListener.
+	 */
 	public Class<? extends IRequestListener> getListenerInterfaceClass()
 	{
 		return listenerInterfaceClass;

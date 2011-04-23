@@ -27,14 +27,20 @@ public class LocalizedMessagePage extends WebPage
 	/** */
 	private static final long serialVersionUID = 1L;
 
-	public Form form;
-	public TextField integerField;
+	/** */
+	public Form<Void> form;
+	/** */
+	public TextField<Integer> integerField;
+	/** */
 	public FeedbackPanel feedback;
 
+	/**
+	 * Construct.
+	 */
 	public LocalizedMessagePage()
 	{
-		add(form = new Form("form"));
-		form.add(integerField = new TextField("integer", Integer.class));
+		add(form = new Form<Void>("form"));
+		form.add(integerField = new TextField<Integer>("integer", Integer.class));
 		form.add(feedback = new FeedbackPanel("feedback"));
 	}
 }

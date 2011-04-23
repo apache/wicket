@@ -38,6 +38,9 @@ public class AjaxHeaderContributionTest extends WicketTestCase
 
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public void testDoubleAjaxHeaderContribution() throws Exception
 	{
 		tester.startPage(AjaxHeaderContributionPage2.class);

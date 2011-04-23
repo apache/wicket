@@ -28,6 +28,7 @@ public class Country2 extends Country
 	 * Construct.
 	 * 
 	 * @param name
+	 * @param country
 	 */
 	public Country2(String name, Country country)
 	{
@@ -36,7 +37,7 @@ public class Country2 extends Country
 	}
 
 	/**
-	 * @return
+	 * @return Country
 	 */
 	public Country getSubCountry()
 	{

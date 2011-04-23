@@ -292,6 +292,9 @@ public class MockWebResponse extends WebResponse
 		errorMessage = msg;
 	}
 
+	/**
+	 * @return error message
+	 */
 	public String getErrorMessage()
 	{
 		return errorMessage;

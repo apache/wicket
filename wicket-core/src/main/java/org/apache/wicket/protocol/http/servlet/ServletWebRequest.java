@@ -246,6 +246,7 @@ public class ServletWebRequest extends WebRequest
 
 		IRequestParameters queryParams = getQueryParameters();
 
+		@SuppressWarnings("unchecked")
 		Map<String, String[]> params = getContainerRequest().getParameterMap();
 		for (Map.Entry<String, String[]> param : params.entrySet())
 		{

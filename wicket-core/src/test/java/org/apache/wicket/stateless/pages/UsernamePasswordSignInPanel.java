@@ -58,7 +58,7 @@ public class UsernamePasswordSignInPanel extends Panel
 	 * 
 	 * @param username
 	 * @param password
-	 * @return
+	 * @return whether signin is successful
 	 */
 	public boolean signIn(String username, String password)
 	{
@@ -132,9 +132,7 @@ public class UsernamePasswordSignInPanel extends Panel
 		}
 
 		/**
-		 * Returns whether the values of the form should be kept or not.
-		 * 
-		 * @return
+		 * @return whether the values of the form should be kept or not.
 		 */
 		public boolean getRememberMe()
 		{

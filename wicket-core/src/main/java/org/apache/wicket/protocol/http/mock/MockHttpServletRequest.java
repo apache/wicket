@@ -219,6 +219,9 @@ public class MockHttpServletRequest implements HttpServletRequest
 		cookies.add(cookie);
 	}
 
+	/**
+	 * @param cookies
+	 */
 	public void addCookies(Iterable<Cookie> cookies)
 	{
 		for (Cookie cookie : cookies)
@@ -226,7 +229,6 @@ public class MockHttpServletRequest implements HttpServletRequest
 			addCookie(cookie);
 		}
 	}
-
 
 	/**
 	 * Add an uploaded file to the request. Use this to simulate a file that has been uploaded to a
@@ -400,6 +402,10 @@ public class MockHttpServletRequest implements HttpServletRequest
 		return "/context";
 	}
 
+	/**
+	 * @param name
+	 * @return Cookie
+	 */
 	public Cookie getCookie(String name)
 	{
 		Cookie[] cookies = getCookies();
@@ -967,7 +973,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * Set the server name.
 	 * 
-	 *@param serverName content of 'Host' header
+	 * @param serverName
+	 *            content of 'Host' header
 	 */
 	public void setServerName(final String serverName)
 	{
@@ -1243,6 +1250,10 @@ public class MockHttpServletRequest implements HttpServletRequest
 		}
 	}
 
+	/**
+	 * @param name
+	 * @param value
+	 */
 	public void addParameter(final String name, final String value)
 	{
 		if (value == null)
@@ -1647,11 +1658,17 @@ public class MockHttpServletRequest implements HttpServletRequest
 		return 80;
 	}
 
+	/**
+	 * @param url
+	 */
 	public void setUrl(Url url)
 	{
 		setURL(url.toString());
 	}
 
+	/**
+	 * @return request url
+	 */
 	public Url getUrl()
 	{
 		String url = getRequestURI();
@@ -1659,12 +1676,17 @@ public class MockHttpServletRequest implements HttpServletRequest
 		return Url.parse(url, Charset.forName(getCharacterEncoding()));
 	}
 
+	/**
+	 * @return post parameters
+	 */
 	public MockRequestParameters getPostParameters()
 	{
 		return post;
 	}
 
-
+	/**
+	 * @return filter prefix
+	 */
 	public String getFilterPrefix()
 	{
 		return getServletPath().substring(1);
@@ -1672,6 +1694,9 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	private final MockRequestParameters post = new MockRequestParameters();
 
+	/**
+	 * @return ServletContext
+	 */
 	public ServletContext getServletContext()
 	{
 		return context;

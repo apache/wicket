@@ -46,6 +46,7 @@ public class AjaxBehaviorAndMetaDataTest extends TestCase
 		tester.destroy();
 	}
 
+	/**	 */
 	public void testRender()
 	{
 		tester.startPage(AjaxBehaviorAndMetaDataPage.class);

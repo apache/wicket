@@ -64,6 +64,7 @@ public class MockWebRequest extends WebRequest
 	 * @param url
 	 * @param contextPath
 	 * @param filterPath
+	 * @param prefixToContextPath
 	 */
 	public MockWebRequest(Url url, String contextPath, String filterPath, String prefixToContextPath)
 	{
@@ -89,6 +90,9 @@ public class MockWebRequest extends WebRequest
 		return new MockWebRequest(url, cookies, headers, postRequestParameters, locale);
 	}
 
+	/**
+	 * @param url
+	 */
 	public void setUrl(Url url)
 	{
 		this.url = url;
@@ -117,6 +121,9 @@ public class MockWebRequest extends WebRequest
 		this.cookies.addAll(cookies);
 	}
 
+	/**
+	 * @param cookie
+	 */
 	public void addCookie(Cookie cookie)
 	{
 		cookies.add(cookie);
@@ -288,6 +295,10 @@ public class MockWebRequest extends WebRequest
 		return UrlUtils.normalizePath(contextPath);
 	}
 
+	/**
+	 * @param contextPath
+	 * @return this
+	 */
 	public MockWebRequest setContextPath(String contextPath)
 	{
 		this.contextPath = contextPath;
@@ -300,6 +311,10 @@ public class MockWebRequest extends WebRequest
 		return UrlUtils.normalizePath(filterPath);
 	}
 
+	/**
+	 * @param filterPath
+	 * @return this
+	 */
 	public MockWebRequest setFilterPath(String filterPath)
 	{
 		this.filterPath = filterPath;
@@ -312,11 +327,13 @@ public class MockWebRequest extends WebRequest
 		return prefixToContextPath;
 	}
 
+	/**
+	 * @param prefixToContextPath
+	 * @return this
+	 */
 	public MockWebRequest setPrefixToContextPath(String prefixToContextPath)
 	{
 		this.prefixToContextPath = prefixToContextPath;
 		return this;
 	}
-
-
 }

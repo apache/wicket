@@ -32,6 +32,8 @@ import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 
 
+/**
+ */
 public class BehaviorUrlTest extends WicketTestCase
 {
 	/**
@@ -73,11 +75,18 @@ public class BehaviorUrlTest extends WicketTestCase
 
 	}
 
+	/**
+	 */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		private static final long serialVersionUID = 1L;
+
 		private WebMarkupContainer container;
 		private TestCallbackBehavior callbackBehavior;
 
+		/**
+		 * Construct.
+		 */
 		public TestPage()
 		{
 			callbackBehavior = new TestCallbackBehavior();
@@ -96,8 +105,12 @@ public class BehaviorUrlTest extends WicketTestCase
 		}
 	}
 
+	/**
+	 */
 	private static class TestTemporaryBehavior extends Behavior
 	{
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public boolean isTemporary(Component c)
 		{
@@ -105,8 +118,12 @@ public class BehaviorUrlTest extends WicketTestCase
 		}
 	}
 
+	/**
+	 */
 	private static class TestCallbackBehavior extends Behavior implements IBehaviorListener
 	{
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public void onComponentTag(Component component, ComponentTag tag)
 		{

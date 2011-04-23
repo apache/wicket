@@ -38,7 +38,7 @@ public class EnclosurePage_3 extends WebPage
 		Border border = new MyBorder("border");
 		add(border);
 
-		border.addToBorderBody(new Link("newLink")
+		border.addToBorderBody(new Link<Void>("newLink")
 		{
 			private static final long serialVersionUID = 1L;
 

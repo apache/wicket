@@ -18,6 +18,8 @@ package org.apache.wicket.resource;
 
 import org.apache.wicket.mock.MockApplication;
 
+/**
+ */
 public class DummyApplication extends MockApplication
 {
 

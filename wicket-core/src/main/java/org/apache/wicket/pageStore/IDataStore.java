@@ -72,7 +72,7 @@ public interface IDataStore
 
 	/**
 	 * 
-	 * @return
+	 * @return whether the data store is replicated
 	 */
 	boolean isReplicated();
 }

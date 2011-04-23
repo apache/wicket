@@ -128,7 +128,12 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List)
+	 * 
+	 * @param id
+	 * @param object
+	 * @param choices
 	 */
+	@SuppressWarnings("unchecked")
 	public ListMultipleChoice(final String id, IModel<? extends Collection<T>> object,
 		final List<? extends T> choices)
 	{
@@ -138,7 +143,13 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
 	 *      List,IChoiceRenderer)
+	 * 
+	 * @param id
+	 * @param object
+	 * @param choices
+	 * @param renderer
 	 */
+	@SuppressWarnings("unchecked")
 	public ListMultipleChoice(final String id, IModel<? extends Collection<T>> object,
 		final List<? extends T> choices, final IChoiceRenderer<? super T> renderer)
 	{
@@ -155,7 +166,12 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
+	 * 
+	 * @param id
+	 * @param model
+	 * @param choices
 	 */
+	@SuppressWarnings("unchecked")
 	public ListMultipleChoice(String id, IModel<? extends Collection<T>> model,
 		IModel<? extends List<? extends T>> choices)
 	{
@@ -176,13 +192,18 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	/**
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
 	 *      IModel,IChoiceRenderer)
+	 * 
+	 * @param id
+	 * @param model
+	 * @param choices
+	 * @param renderer
 	 */
+	@SuppressWarnings("unchecked")
 	public ListMultipleChoice(String id, IModel<? extends Collection<T>> model,
 		IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer)
 	{
 		super(id, (IModel<Collection<T>>)model, choices, renderer);
 	}
-
 
 	/**
 	 * Sets the number of visible rows in the listbox.

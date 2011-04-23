@@ -48,6 +48,9 @@ public class ResponseFilterTest
 
 	private WicketTester tester;
 
+	/**
+	 * before()
+	 */
 	@Before
 	public void before()
 	{
@@ -74,6 +77,9 @@ public class ResponseFilterTest
 		tester = new WicketTester(application);
 	}
 
+	/**
+	 * after()
+	 */
 	@After
 	public void after()
 	{
@@ -120,6 +126,9 @@ public class ResponseFilterTest
 		}
 	}
 
+	/**
+	 * normalRequest()
+	 */
 	@Test
 	public void normalRequest()
 	{
@@ -128,6 +137,9 @@ public class ResponseFilterTest
 		assertEquals(1, counter.get());
 	}
 
+	/**
+	 * ajaxRequest()
+	 */
 	@Test
 	public void ajaxRequest()
 	{

@@ -72,7 +72,7 @@ public interface IRequestableComponent
 	 * is first called for the behavior until the behavior has been removed from the component
 	 * 
 	 * @param behavior
-	 * @return
+	 * @return a stable id for the specified behavior
 	 */
 	public int getBehaviorId(Behavior behavior);
 

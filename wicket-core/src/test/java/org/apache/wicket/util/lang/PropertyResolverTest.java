@@ -184,7 +184,7 @@ public class PropertyResolverTest extends WicketTestCase
 	public void testMapLookup() throws Exception
 	{
 		Address address = new Address();
-		PropertyResolver.setValue("addressMap", person, new HashMap(), CONVERTER);
+		PropertyResolver.setValue("addressMap", person, new HashMap<String, Address>(), CONVERTER);
 		PropertyResolver.setValue("addressMap.address", person, address, CONVERTER);
 		PropertyResolver.setValue("addressMap.address.street", person, "wicket-street", CONVERTER);
 		String street = (String)PropertyResolver.getValue("addressMap.address.street", person);
@@ -197,7 +197,7 @@ public class PropertyResolverTest extends WicketTestCase
 	public void testMapWithDotLookup() throws Exception
 	{
 		Address address = new Address();
-		HashMap hm = new HashMap();
+		HashMap<String, Address> hm = new HashMap<String, Address>();
 		PropertyResolver.setValue("addressMap", person, hm, CONVERTER);
 		PropertyResolver.setValue("addressMap[address.test]", person, address, CONVERTER);
 		assertNotNull(hm.get("address.test"));
@@ -212,7 +212,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 */
 	public void testListLookup() throws Exception
 	{
-		PropertyResolver.setValue("addressList", person, new ArrayList(), CONVERTER);
+		PropertyResolver.setValue("addressList", person, new ArrayList<Address>(), CONVERTER);
 		PropertyResolver.setValue("addressList.0", person, new Address(), CONVERTER);
 		PropertyResolver.setValue("addressList.10", person, new Address(), CONVERTER);
 		PropertyResolver.setValue("addressList.1", person, new Address(), CONVERTER);
@@ -284,7 +284,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 */
 	public void testGetPropertyByNotExistingIndexListLookup() throws Exception
 	{
-		PropertyResolver.setValue("addressList", person, new ArrayList(), CONVERTER);
+		PropertyResolver.setValue("addressList", person, new ArrayList<Address>(), CONVERTER);
 		String street = (String)PropertyResolver.getValue("addressList.0.street", person);
 		assertNull(street);
 		street = (String)PropertyResolver.getValue("addressList[0].street", person);
@@ -308,7 +308,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 */
 	public void testListSizeLookup() throws Exception
 	{
-		List/* <Address> */addresses = new ArrayList/* <Address> */();
+		List<Address> addresses = new ArrayList<Address>();
 		addresses.add(new Address());
 		addresses.add(new Address());
 		person.setAddressList(addresses);
@@ -324,7 +324,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 */
 	public void testMapSizeLookup() throws Exception
 	{
-		Map/* <String, Address> */addresses = new HashMap/* <String, Address> */();
+		Map<String, Address> addresses = new HashMap<String, Address>();
 		Address address = new Address();
 		addresses.put("size", address);
 		addresses.put("test", new Address());
@@ -409,7 +409,7 @@ public class PropertyResolverTest extends WicketTestCase
 	{
 		Address address = new Address();
 
-		Class clazz = PropertyResolver.getPropertyClass("number", address);
+		Class<?> clazz = PropertyResolver.getPropertyClass("number", address);
 		assertEquals(int.class, clazz);
 
 		Person person = new Person();
@@ -564,7 +564,7 @@ public class PropertyResolverTest extends WicketTestCase
 	/**
 	 * Used for models in testing.
 	 */
-	private static class InnerVectorPOJO extends Vector
+	private static class InnerVectorPOJO extends Vector<Void>
 	{
 		private static final long serialVersionUID = 1L;
 

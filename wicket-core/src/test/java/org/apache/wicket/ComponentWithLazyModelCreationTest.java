@@ -45,7 +45,8 @@ public class ComponentWithLazyModelCreationTest extends WicketTestCase
 	 */
 	public void testUrlReferingSomeBehavior()
 	{
-		TestPage page = new TestPage(new CompoundPropertyModel(this));
+		TestPage page = new TestPage(new CompoundPropertyModel<ComponentWithLazyModelCreationTest>(
+			this));
 		tester.startPage(page);
 
 		tester.executeUrl(page.mainCallbackBehavior.statefullUrl);
@@ -60,7 +61,8 @@ public class ComponentWithLazyModelCreationTest extends WicketTestCase
 	 */
 	public void testUrlDontCallOtherBehavior()
 	{
-		TestPage page = new TestPage(new CompoundPropertyModel(this));
+		TestPage page = new TestPage(new CompoundPropertyModel<ComponentWithLazyModelCreationTest>(
+			this));
 		tester.startPage(page);
 
 		tester.executeUrl(page.brotherCallbackBehavior.statefullUrl);
@@ -70,12 +72,20 @@ public class ComponentWithLazyModelCreationTest extends WicketTestCase
 		assertFalse("mainCallbackBehavior was not requested", page.mainCallbackBehavior.requested);
 	}
 
+	/**
+	 */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		private static final long serialVersionUID = 1L;
 		private TestCallbackBehavior mainCallbackBehavior;
 		private TestCallbackBehavior brotherCallbackBehavior;
 
-		public TestPage(IModel model)
+		/**
+		 * Construct.
+		 * 
+		 * @param model
+		 */
+		public TestPage(IModel<ComponentWithLazyModelCreationTest> model)
 		{
 			super(model);
 			mainCallbackBehavior = new TestCallbackBehavior();
@@ -96,6 +106,7 @@ public class ComponentWithLazyModelCreationTest extends WicketTestCase
 
 	private static class TestCallbackBehavior extends Behavior implements IBehaviorListener
 	{
+		private static final long serialVersionUID = 1L;
 		private boolean requested;
 		// simulating the callback URL generated for component aware behaviors
 		private String statefullUrl;

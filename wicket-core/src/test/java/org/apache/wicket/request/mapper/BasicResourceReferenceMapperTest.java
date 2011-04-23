@@ -38,12 +38,11 @@ import org.mockito.Mockito;
  */
 public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTest
 {
-	private static final IProvider<IResourceCachingStrategy> NO_CACHING =
-		new ValueProvider<IResourceCachingStrategy>(NoOpResourceCachingStrategy.INSTANCE);
+	private static final IProvider<IResourceCachingStrategy> NO_CACHING = new ValueProvider<IResourceCachingStrategy>(
+		NoOpResourceCachingStrategy.INSTANCE);
 
-	private static final IProvider<FilenameWithTimestampResourceCachingStrategy> CACHE_FILENAME_WITH_TIMESTAMP =
-		new ValueProvider<FilenameWithTimestampResourceCachingStrategy>(
-			new FilenameWithTimestampResourceCachingStrategy());
+	private static final IProvider<FilenameWithTimestampResourceCachingStrategy> CACHE_FILENAME_WITH_TIMESTAMP = new ValueProvider<FilenameWithTimestampResourceCachingStrategy>(
+		new FilenameWithTimestampResourceCachingStrategy());
 
 	/**
 	 * Construct.
@@ -442,6 +441,9 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		assertEquals("wicket/resource/" + CLASS_NAME + "/reference5?en--variation", url.toString());
 	}
 
+	/**
+	 * 
+	 */
 	public void testLastModifiedTimestampIsPartOfUrl()
 	{
 		long millis = 12345678L;
@@ -458,6 +460,9 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		assertTrue(url.toString().contains(timestampPart));
 	}
 
+	/**
+	 * 
+	 */
 	@SuppressWarnings({ })
 	public void testLastModifiedTimestampCache()
 	{

@@ -31,8 +31,8 @@ public class FormMethodTestPage extends WebPage
 	 */
 	public FormMethodTestPage()
 	{
-		add(new Form("formpost"));
-		add(new Form("formget")
+		add(new Form<Void>("formpost"));
+		add(new Form<Void>("formget")
 		{
 			/** Serialization */
 			private static final long serialVersionUID = 1L;

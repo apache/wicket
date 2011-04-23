@@ -35,12 +35,12 @@ public class SimpleTableTest extends WicketTestCase
 		executeTest(SimpleTablePage_1.class, "SimpleTablePageExpectedResult_1.html");
 		String document = tester.getLastResponseAsString();
 		// Does re-render do as well ??
-		ListView view = (ListView)tester.getLastRenderedPage().get("table");
+		ListView<?> view = (ListView<?>)tester.getLastRenderedPage().get("table");
 		assertNotNull(view);
 		assertTrue(document.contains("<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>"));
 
 		// Does re-render do as well ??
-		ListItem item = (ListItem)tester.getLastRenderedPage().get("table:0");
+		ListItem<?> item = (ListItem<?>)tester.getLastRenderedPage().get("table:0");
 		assertTrue(document.contains("<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li>"));
 
 		// Does re-render do as well ??
@@ -59,12 +59,12 @@ public class SimpleTableTest extends WicketTestCase
 		executeTest(SimpleTablePage_2.class, "SimpleTablePageExpectedResult_2.html");
 		String document = tester.getLastResponseAsString();
 		// Does re-render do as well ??
-		ListView view = (ListView)tester.getLastRenderedPage().get("table");
+		ListView<?> view = (ListView<?>)tester.getLastRenderedPage().get("table");
 		assertNotNull(view);
 		assertTrue(document.contains("<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>"));
 
 		// Does re-render do as well ??
-		view = (ListView)tester.getLastRenderedPage().get("table");
+		view = (ListView<?>)tester.getLastRenderedPage().get("table");
 		assertNotNull(view);
 		assertTrue(document.contains("<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>"));
 	}

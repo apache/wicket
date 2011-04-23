@@ -125,8 +125,11 @@ public class ValidatorBehaviorTest extends WicketTestCase
 		assertEquals(0, tester.getSession().getFeedbackMessages().size());
 	}
 
+	/**
+	 */
 	public static class MaxLenValidator extends Behavior implements IValidator<String>
 	{
+		private static final long serialVersionUID = 1L;
 		private final int len = 8;
 
 		public void validate(IValidatable<String> validatable)
@@ -147,9 +150,11 @@ public class ValidatorBehaviorTest extends WicketTestCase
 		}
 	}
 
+	/**
+	 */
 	public static class MinLenValidator extends Behavior implements IValidator<String>
 	{
-
+		private static final long serialVersionUID = 1L;
 		private int len = 5;
 
 		public void validate(IValidatable<String> validatable)
@@ -166,13 +171,19 @@ public class ValidatorBehaviorTest extends WicketTestCase
 
 	}
 
+	/**
+	 */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		private static final long serialVersionUID = 1L;
 		private TextField<String> name;
 
+		/**
+		 * Construct.
+		 */
 		public TestPage()
 		{
-			Form form = new Form("form");
+			Form<Void> form = new Form<Void>("form");
 			add(form);
 			name = new TextField<String>("name", Model.of(""));
 			form.add(name);

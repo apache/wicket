@@ -800,6 +800,9 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 		return getDocument();
 	}
 
+	/**
+	 * @return binary response
+	 */
 	public String getBinaryResponse()
 	{
 		String ctheader = getHeader("Content-Length");
@@ -813,6 +816,10 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 		}
 	}
 
+	/**
+	 * @param name
+	 * @return headers with given name
+	 */
 	public Collection<String> getHeaders(String name)
 	{
 		return Collections.singletonList(headers.get(name).toString());

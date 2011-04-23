@@ -129,6 +129,9 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 		this.itemsPerPage = itemsPerPage;
 	}
 
+	/**
+	 * @return offset of first item
+	 */
 	public int getFirstItemOffset()
 	{
 		return getCurrentPage() * getItemsPerPage();

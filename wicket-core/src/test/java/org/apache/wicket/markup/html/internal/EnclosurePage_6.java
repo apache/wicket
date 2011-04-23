@@ -34,7 +34,7 @@ public class EnclosurePage_6 extends WebPage
 	 */
 	public EnclosurePage_6()
 	{
-		add(new Link("link")
+		add(new Link<Void>("link")
 		{
 			private static final long serialVersionUID = 1L;
 

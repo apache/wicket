@@ -218,7 +218,7 @@ public class UrlValidatorTest extends TestCase
 	 * 
 	 * @param testPartsIndex
 	 * @param testParts
-	 * @return
+	 * @return boolean
 	 */
 	static boolean incrementTestPartsIndex(int[] testPartsIndex, Object[] testParts)
 	{
@@ -251,7 +251,7 @@ public class UrlValidatorTest extends TestCase
 
 	/**
 	 * 
-	 * @return
+	 * @return String
 	 */
 	private String testPartsIndextoString()
 	{

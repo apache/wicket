@@ -53,10 +53,11 @@ public class FormValidatorAdapter extends Behavior implements IFormValidator
 		validator.validate(form);
 	}
 
+	/**
+	 * @return form validator
+	 */
 	public IFormValidator getValidator()
 	{
 		return validator;
 	}
-
-
 }

@@ -27,17 +27,22 @@ import org.apache.wicket.model.PropertyModel;
  */
 public class FormPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	private final Integer somevalue = 1;
 
 	private boolean formSubmitted;
 
 	private boolean submitLinkSubmitted;
 
-	private final Form form;
+	private final Form<Void> form;
 
+	/**
+	 * Construct.
+	 */
 	public FormPage()
 	{
-		form = new Form("form")
+		form = new Form<Void>("form")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -49,7 +54,7 @@ public class FormPage extends WebPage
 		};
 		add(form);
 
-		form.add(new TextField("field", new PropertyModel(this, "somevalue")));
+		form.add(new TextField<Integer>("field", new PropertyModel<Integer>(this, "somevalue")));
 
 		add(new SubmitLink("link", form)
 		{
@@ -63,11 +68,17 @@ public class FormPage extends WebPage
 		});
 	}
 
+	/**
+	 * @return formSubmitted
+	 */
 	public boolean isFormSubmitted()
 	{
 		return formSubmitted;
 	}
 
+	/**
+	 * @return submitLinkSubmitted
+	 */
 	public boolean isSubmitLinkSubmitted()
 	{
 		return submitLinkSubmitted;

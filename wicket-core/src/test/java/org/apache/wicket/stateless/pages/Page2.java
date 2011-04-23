@@ -15,11 +15,19 @@
  * limitations under the License.
  */
 package org.apache.wicket.stateless.pages;
+
 import org.apache.wicket.markup.html.WebPage;
 
 
+/**
+ */
 public class Page2 extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Construct.
+	 */
 	public Page2()
 	{
 		setStatelessHint(false);

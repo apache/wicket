@@ -267,6 +267,8 @@ final class ComponentEventSender implements IEventSource
 		 * 
 		 * @param event
 		 *            event to send
+		 * @param dispatcher
+		 *            event dispatcher
 		 */
 		private ComponentEventVisitor(ComponentEvent<?> event, IEventDispatcher dispatcher)
 		{

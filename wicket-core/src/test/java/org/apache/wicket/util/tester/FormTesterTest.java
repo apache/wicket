@@ -70,6 +70,7 @@ public class FormTesterTest extends WicketTestCase
 		assertTrue(domainObject.isCheckbox());
 	}
 
+	/**	 */
 	public void testCheckboxValuesCanBeSelectedWithBoolean()
 	{
 		tester.startPage(MockFormPage.class);

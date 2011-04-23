@@ -58,7 +58,7 @@ public class AjaxFormSubmitTestPage extends WebPage
 	public AjaxFormSubmitTestPage()
 	{
 		super(new CompoundPropertyModel<ValueMap>(new ValueMap("txt1=foo,txt2=bar")));
-		Form<?> form = new Form("form")
+		Form<?> form = new Form<Void>("form")
 		{
 			private static final long serialVersionUID = 1L;
 

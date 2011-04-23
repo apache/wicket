@@ -25,17 +25,18 @@ import org.apache.wicket.util.convert.IConverter;
  * {@link Application#newConverterLocator()}.
  * 
  * @see ConverterLocator
- *
+ * 
  * @author jcompagner
  * 
  *         The converter object type
  */
 public interface IConverterLocator extends IClusterable
 {
-
 	/**
 	 * Returns the Converter for the class that is given.
 	 * 
+	 * @param <C>
+	 *            The object to convert from and to String
 	 * @param type
 	 * @return The converter for the given type.
 	 */

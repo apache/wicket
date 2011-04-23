@@ -21,9 +21,15 @@ import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 
+/**
+ */
 public class BasePage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 */
 	public BasePage()
 	{
 	}
@@ -36,6 +42,8 @@ public class BasePage extends WebPage
 		{
 			add(new FeedbackPanel("pagefbp", new IFeedbackMessageFilter()
 			{
+				private static final long serialVersionUID = 1L;
+
 				public boolean accept(FeedbackMessage message)
 				{
 					return !message.isRendered();

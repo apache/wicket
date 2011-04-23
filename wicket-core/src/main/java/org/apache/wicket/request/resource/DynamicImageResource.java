@@ -26,6 +26,9 @@ import javax.imageio.ImageIO;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.time.Time;
 
+/**
+ * Base class for dynamically generated ImageResources.
+ */
 public abstract class DynamicImageResource extends AbstractResource
 {
 	private static final long serialVersionUID = 1L;
@@ -37,6 +40,9 @@ public abstract class DynamicImageResource extends AbstractResource
 	private Time lastModifiedTime;
 
 
+	/**
+	 * Construct.
+	 */
 	public DynamicImageResource()
 	{
 	}

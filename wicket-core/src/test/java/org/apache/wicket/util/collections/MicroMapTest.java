@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import junit.framework.TestCase;
 
@@ -41,7 +42,7 @@ public class MicroMapTest extends TestCase
 		m.put(FOO, BAR);
 
 		// Test .keySet();
-		Set<?> s = m.keySet();
+		Set<Object> s = m.keySet();
 		assertEquals(1, m.size());
 		assertEquals(1, s.size());
 
@@ -61,12 +62,13 @@ public class MicroMapTest extends TestCase
 		}
 
 		// Do approx the same again with the .entrySet()
-		s = m.entrySet();
+		Set<Entry<Object, Object>> entrySet = m.entrySet();
 		assertEquals(1, m.size());
-		assertEquals(1, s.size());
+		assertEquals(1, entrySet.size());
 
-		i = s.iterator();
+		i = entrySet.iterator();
 		assertTrue(i.hasNext());
+		@SuppressWarnings("unchecked")
 		Map.Entry<Object, Object> entry = (Map.Entry<Object, Object>)i.next();
 		assertEquals(FOO, entry.getKey());
 		assertEquals(BAR, entry.getValue());

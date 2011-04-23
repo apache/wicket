@@ -26,16 +26,13 @@ import java.util.ArrayList;
  */
 public class CheckGroupTestPage1 extends AbstractCheckGroupTestPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * constructor
 	 */
 	public CheckGroupTestPage1()
 	{
-		super(new ArrayList());
-
+		super(new ArrayList<String>());
 	}
-
-	private static final long serialVersionUID = 1L;
-
-
 }

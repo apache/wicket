@@ -27,36 +27,42 @@ import org.junit.Assert;
  */
 public class JavaScriptStripperTest extends TestCase
 {
+	/**	 */
 	public void testUNIXWICKET501()
 	{
 		String s = new JavaScriptStripper().stripCommentsAndWhitespace("    // Handle the common XPath // expression\n    if ( !t.indexOf(\"//\") ) {");
 		assertEquals("  if ( !t.indexOf(\"//\") ) {", s);
 	}
 
+	/**	 */
 	public void testDOSWICKET501()
 	{
 		String s = new JavaScriptStripper().stripCommentsAndWhitespace("    // Handle the common XPath // expression\r\n    if ( !t.indexOf(\"//\") ) {");
 		assertEquals(" \nif ( !t.indexOf(\"//\") ) {", s);
 	}
 
+	/**	 */
 	public void testMACWICKET501()
 	{
 		String s = new JavaScriptStripper().stripCommentsAndWhitespace("    // Handle the common XPath // expression\r    if ( !t.indexOf(\"//\") ) {");
 		assertEquals("  if ( !t.indexOf(\"//\") ) {", s);
 	}
 
+	/**	 */
 	public void testRegexp()
 	{
 		String s = new JavaScriptStripper().stripCommentsAndWhitespace("    t = jQuery.trim(t).replace( /^\\/\\//i, \"\" );");
 		assertEquals(" t = jQuery.trim(t).replace( /^\\/\\//i, \"\" );", s);
 	}
 
+	/**	 */
 	public void testRegexp2()
 	{
 		String s = new JavaScriptStripper().stripCommentsAndWhitespace("foo.replace(/\"//*strip me*/, \"\"); // strip me\rdoFoo();");
 		assertEquals("foo.replace(/\"/, \"\"); doFoo();", s);
 	}
 
+	/**	 */
 	public void testRegexp3()
 	{
 		String s = new JavaScriptStripper().stripCommentsAndWhitespace("parseFloat( elem.filter.match(/alpha\\(opacity=(.*)\\)/)[1] ) / 100 : 1;\r//foo");
@@ -64,6 +70,7 @@ public class JavaScriptStripperTest extends TestCase
 			s);
 	}
 
+	/**	 */
 	public void testRegexp4()
 	{
 		String before = " attr: /**/ //xyz\n /\\[((?:[\\w-]*:)?[\\w-]+)\\s*(?:([!^$*~|]?=)\\s*((['\"])([^\\4]*?)\\4|([^'\"][^\\]]*?)))?\\]/    after     regex";
@@ -73,6 +80,7 @@ public class JavaScriptStripperTest extends TestCase
 		System.out.println(after);
 	}
 
+	/**	 */
 	public void testWICKET1806()
 	{
 		String before = "a = [ /^(\\[) *@?([\\w-]+) *([!*$^~=]*) *('?\"?)(.*?)\\4 *\\]/ ];    b()";
@@ -82,6 +90,7 @@ public class JavaScriptStripperTest extends TestCase
 		assertEquals(expected, after);
 	}
 
+	/**	 */
 	public void testWICKET2060_1()
 	{
 		String before = "   a   b   c";
@@ -90,6 +99,7 @@ public class JavaScriptStripperTest extends TestCase
 		assertEquals(expected, after);
 	}
 
+	/**	 */
 	public void testWICKET2060_2()
 	{
 		String before = "   a \n  b   c\n\n";
@@ -98,6 +108,7 @@ public class JavaScriptStripperTest extends TestCase
 		assertEquals(expected, after);
 	}
 
+	/**	 */
 	public void testWICKET2060_3()
 	{
 		String before = "return  this.__unbind__(type, fn);";
@@ -106,6 +117,7 @@ public class JavaScriptStripperTest extends TestCase
 		assertEquals(expected, after);
 	}
 
+	/**	 */
 	// @formatter:off
 	public static String TESTSTRING2 =
          "   var test = function () {\n" +
@@ -123,6 +135,7 @@ public class JavaScriptStripperTest extends TestCase
          "}" ;
 	// @formatter:on
 
+	/**	 */
 	public void testRegExThatStartsWithExclamationMark()
 	{
 		String result = new JavaScriptStripper().stripCommentsAndWhitespace(TESTSTRING2);

@@ -50,6 +50,9 @@ public class StatelessFormTest extends WicketTestCase
 		});
 	}
 
+	/**
+	 * testBug()
+	 */
 	public void testBug()
 	{
 		{
