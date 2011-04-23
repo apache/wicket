@@ -63,6 +63,9 @@ public class ResourceTest extends WicketTestCase
 		assertEquals(TEST_STRING.length(), tester.getContentLengthFromResponseHeader());
 	}
 
+	/**
+	 * testStringResourceStream()
+	 */
 	public void testStringResourceStream()
 	{
 		StringResourceStream resourceStream = new StringResourceStream(TEST_STRING);

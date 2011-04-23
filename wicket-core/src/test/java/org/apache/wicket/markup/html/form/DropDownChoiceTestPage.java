@@ -29,6 +29,8 @@ import org.apache.wicket.model.PropertyModel;
  */
 public class DropDownChoiceTestPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/** */
 	public class DocumentType
 	{
@@ -93,7 +95,7 @@ public class DropDownChoiceTestPage extends WebPage
 	/**
 	 * 
 	 */
-	public enum MyEnum {
+	enum MyEnum {
 		A("a"), B("b"), C("c"), D("d"), E("e");
 
 		MyEnum(String text)
@@ -101,9 +103,9 @@ public class DropDownChoiceTestPage extends WebPage
 		}
 	}
 
-	public DocumentType dtype;
+	DocumentType dtype;
 
-	public String myDate;
+	String myDate;
 
 	/**
 	 * Construct.
@@ -129,10 +131,12 @@ public class DropDownChoiceTestPage extends WebPage
 		// List<DocumentType> allDocumentTypes = Arrays.asList(docTypes);
 		List<MyEnum> allDocumentTypes = Arrays.asList(MyEnum.values());
 
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		final DropDownChoice ddc = new DropDownChoice("dropdown", new PropertyModel(this, "dtype"),
 			allDocumentTypes, new ChoiceRenderer("name"));
 
-		TextField expiryDate = new TextField("text", new PropertyModel(this, "myDate"), Date.class)
+		TextField<Date> expiryDate = new TextField<Date>("text", new PropertyModel<Date>(this,
+			"myDate"), Date.class)
 		{
 			private static final long serialVersionUID = 1L;
 

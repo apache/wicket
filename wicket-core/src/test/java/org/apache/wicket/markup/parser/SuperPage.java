@@ -18,6 +18,9 @@ package org.apache.wicket.markup.parser;
 
 import org.apache.wicket.markup.html.WebPage;
 
+/**
+ */
 public class SuperPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 }

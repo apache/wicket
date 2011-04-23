@@ -88,12 +88,11 @@ public class TabbedPanel extends Panel
 	 * @param tabs
 	 *            list of ITab objects used to represent tabs
 	 */
-	@SuppressWarnings("unchecked")
 	public TabbedPanel(final String id, final List<? extends ITab> tabs)
 	{
 		super(id, new Model<Integer>(-1));
 
-		this.tabs = (List<? extends ITab>)Args.notNull(tabs, "tabs");
+		this.tabs = Args.notNull(tabs, "tabs");
 
 		final IModel<Integer> tabCount = new AbstractReadOnlyModel<Integer>()
 		{

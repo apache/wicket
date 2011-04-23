@@ -33,6 +33,9 @@ public class TestHomePage extends TestCase
 		tester = new WicketTester(new WicketApplication());
 	}
 
+	/**
+	 * testRenderMyPage()
+	 */
 	public void testRenderMyPage()
 	{
 		// start and render the test page

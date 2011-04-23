@@ -163,6 +163,7 @@ public class ImmutableBehaviorIdsTest extends WicketTestCase
 
 	private static class MyPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		private static final long serialVersionUID = 1L;
 		private final WebMarkupContainer container;
 
 		public MyPage()

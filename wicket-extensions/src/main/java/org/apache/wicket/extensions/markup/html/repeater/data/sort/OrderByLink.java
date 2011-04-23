@@ -30,7 +30,7 @@ import org.apache.wicket.util.string.Strings;
  * @author Phil Kulak
  * @author Igor Vaynberg (ivaynberg)
  */
-public class OrderByLink extends Link
+public class OrderByLink extends Link<Void>
 {
 	private static final long serialVersionUID = 1L;
 

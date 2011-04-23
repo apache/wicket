@@ -53,6 +53,8 @@ import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.util.file.WebXmlFile;
 import org.xml.sax.SAXException;
 
+/**
+ */
 public class WicketFilterTest extends TestCase
 {
 	private static WebApplication application;
@@ -65,6 +67,9 @@ public class WicketFilterTest extends TestCase
 		application = null;
 	}
 
+	/**
+	 * testFilterPath1()
+	 */
 	public void testFilterPath1()
 	{
 		InputStream in = WicketFilterTest.class.getResourceAsStream("web1.xml");
@@ -72,6 +77,9 @@ public class WicketFilterTest extends TestCase
 		assertEquals("filtertest/", filterPath);
 	}
 
+	/**
+	 * testFilterPath2()
+	 */
 	public void testFilterPath2()
 	{
 		InputStream in = WicketFilterTest.class.getResourceAsStream("web2.xml");
@@ -79,6 +87,11 @@ public class WicketFilterTest extends TestCase
 		assertEquals("filtertest/", filterPath);
 	}
 
+	/**
+	 * @throws IOException
+	 * @throws ServletException
+	 * @throws ParseException
+	 */
 	public void testNotModifiedResponseIncludesExpiresHeader() throws IOException,
 		ServletException, ParseException
 	{
@@ -196,6 +209,8 @@ public class WicketFilterTest extends TestCase
 		}
 	}
 
+	/**
+	 */
 	public static class FilterTestingApplicationFactory implements IWebApplicationFactory
 	{
 		public WebApplication createApplication(WicketFilter filter)
@@ -209,6 +224,9 @@ public class WicketFilterTest extends TestCase
 		}
 	}
 
+	/**
+	 * testCheckRedirect_1()
+	 */
 	public void testCheckRedirect_1()
 	{
 		WicketFilter filter = new WicketFilter();

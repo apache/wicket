@@ -36,8 +36,8 @@ public class MarkupInheritanceBase_7 extends WebPage
 	 */
 	public MarkupInheritanceBase_7()
 	{
-		add(new Label("label1", new PropertyModel(this, "counter")));
-		add(new Link("link")
+		add(new Label("label1", new PropertyModel<Integer>(this, "counter")));
+		add(new Link<Void>("link")
 		{
 			private static final long serialVersionUID = 1L;
 

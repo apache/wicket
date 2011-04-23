@@ -253,6 +253,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 
 					if ((objectClass != null) && (objectClass != String.class))
 					{
+						@SuppressWarnings("rawtypes")
 						final IConverter converter = getConverter(objectClass);
 						displayValue = converter.convertToString(displayObject, getLocale());
 					}

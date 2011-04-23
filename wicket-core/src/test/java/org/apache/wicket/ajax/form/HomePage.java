@@ -45,7 +45,7 @@ public class HomePage extends WebPage
 	 * @param enableInputField
 	 * @param newPageId
 	 */
-	@SuppressWarnings("serial")
+	@SuppressWarnings({ "serial", "rawtypes", "unchecked" })
 	public HomePage(boolean enableInputField, int newPageId)
 	{
 		add(new Label("message",

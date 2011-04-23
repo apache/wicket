@@ -40,7 +40,6 @@ import org.apache.wicket.util.convert.converter.ZeroPaddingIntegerConverter;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.joda.time.DateTimeFieldType;
 import org.joda.time.DateTimeZone;
-import org.joda.time.LocalDate;
 import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 
@@ -175,8 +174,9 @@ public class DateTimeField extends FormComponentPanel<Date>
 		// Create and add the "AM/PM" Listbox
 		add(amOrPmChoice = new DropDownChoice<AM_PM>(AM_OR_PM_CHOICE, new PropertyModel<AM_PM>(
 			this, AM_OR_PM), Arrays.asList(AM_PM.values())));
-		
-		add(new WebMarkupContainer("hoursSeparator"){
+
+		add(new WebMarkupContainer("hoursSeparator")
+		{
 			private static final long serialVersionUID = 1L;
 
 			@Override

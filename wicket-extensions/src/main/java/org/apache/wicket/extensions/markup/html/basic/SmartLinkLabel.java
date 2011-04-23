@@ -49,6 +49,8 @@ public class SmartLinkLabel extends Label
 	}
 
 	/**
+	 * @param name
+	 * @param model
 	 * @see Label#Label(String, IModel)
 	 */
 	public SmartLinkLabel(final String name, final IModel<String> model)

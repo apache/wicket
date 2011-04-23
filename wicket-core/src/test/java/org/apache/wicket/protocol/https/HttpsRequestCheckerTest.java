@@ -37,9 +37,9 @@ public class HttpsRequestCheckerTest
 
 	/**
 	 * Asserts that
-	 * {@link HttpsRequestChecker#checkSecureIncoming(org.apache.wicket.request.IRequestHandler, HttpsConfig)} returns
-	 * {@link SwitchProtocolRequestHandler} for pages annotated with {@link RequireHttps} or returns
-	 * the original {@link IRequestHandler} for pages that are not annotated with
+	 * {@link HttpsRequestChecker#checkSecureIncoming(org.apache.wicket.request.IRequestHandler, HttpsConfig)}
+	 * returns {@link SwitchProtocolRequestHandler} for pages annotated with {@link RequireHttps} or
+	 * returns the original {@link IRequestHandler} for pages that are not annotated with
 	 * {@link RequireHttps}
 	 */
 	@Test
@@ -73,9 +73,11 @@ public class HttpsRequestCheckerTest
 	@RequireHttps
 	private static class HttpsPage extends WebPage
 	{
+		private static final long serialVersionUID = 1L;
 	}
 
 	private static class HttpPage extends WebPage
 	{
+		private static final long serialVersionUID = 1L;
 	}
 }

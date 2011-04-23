@@ -55,7 +55,8 @@ public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationT
 	 */
 	public void testGetPageNumberPositive()
 	{
-		PagingNavigationIncrementLink link = new PagingNavigationIncrementLink("xx", mock, 1);
+		PagingNavigationIncrementLink<Void> link = new PagingNavigationIncrementLink<Void>("xx",
+			mock, 1);
 		assertEquals(0, link.getPageNumber());
 		pagecount = 1;
 		assertEquals(0, link.getPageNumber());
@@ -70,7 +71,8 @@ public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationT
 	 */
 	public void testGetPageNumberNegative()
 	{
-		PagingNavigationIncrementLink link = new PagingNavigationIncrementLink("xx", mock, -1);
+		PagingNavigationIncrementLink<Void> link = new PagingNavigationIncrementLink<Void>("xx",
+			mock, -1);
 		assertEquals(0, link.getPageNumber());
 		pagecount = 1;
 		assertEquals(0, link.getPageNumber());
@@ -88,7 +90,8 @@ public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationT
 	 */
 	public void testGetPageNumberTwo()
 	{
-		PagingNavigationIncrementLink link = new PagingNavigationIncrementLink("xx", mock, 2);
+		PagingNavigationIncrementLink<Void> link = new PagingNavigationIncrementLink<Void>("xx",
+			mock, 2);
 		assertEquals(0, link.getPageNumber());
 		pagecount = 1;
 		assertEquals(0, link.getPageNumber());
@@ -109,7 +112,8 @@ public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationT
 	 */
 	public void testIsFirstLastPage()
 	{
-		PagingNavigationIncrementLink link = new PagingNavigationIncrementLink("xx", mock, 0);
+		PagingNavigationIncrementLink<Void> link = new PagingNavigationIncrementLink<Void>("xx",
+			mock, 0);
 
 		pagecount = 0;
 		currentpage = 0;

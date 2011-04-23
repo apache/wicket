@@ -505,8 +505,8 @@ public class AjaxEditableLabel<T> extends Panel
 	}
 
 	/**
-	 * get a model that accesses the parent model lazily. this is required since we eventually request the parents
-	 * model before the component is added to the parent.
+	 * get a model that accesses the parent model lazily. this is required since we eventually
+	 * request the parents model before the component is added to the parent.
 	 * 
 	 * @return model
 	 */
@@ -514,6 +514,8 @@ public class AjaxEditableLabel<T> extends Panel
 	{
 		return new IModel<T>()
 		{
+			private static final long serialVersionUID = 1L;
+
 			public T getObject()
 			{
 				return getParentModel().getObject();
@@ -530,8 +532,8 @@ public class AjaxEditableLabel<T> extends Panel
 			}
 		};
 	}
-	
-	
+
+
 	/**
 	 * @return Gets the parent model in case no explicit model was specified.
 	 */

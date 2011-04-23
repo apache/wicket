@@ -78,10 +78,11 @@ public class HomePageTest extends WicketTestCase
 	 */
 	public void testWithBorder2()
 	{
-		TextField textfield = (TextField)tester.getLastRenderedPage().get(
+		TextField<?> textfield = (TextField<?>)tester.getLastRenderedPage().get(
 			"border:form2:border_body:textfield1");
-		tester.getRequest().getPostParameters().setParameterValue(textfield.getInputName(),
-			"abcde");
+		tester.getRequest()
+			.getPostParameters()
+			.setParameterValue(textfield.getInputName(), "abcde");
 		tester.executeAjaxEvent("border:form2:submit", "onclick");
 		tester.assertNoErrorMessage();
 		assertFalse(((MyBorder)tester.getLastRenderedPage().get("border")).hitOnError);
@@ -109,6 +110,9 @@ public class HomePageTest extends WicketTestCase
 		assertFalse((page.getFormSubmitted() & HomePage.NORMAL) == HomePage.NORMAL);
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public void test_2589() throws Exception
 	{
 		tester = new WicketTester();

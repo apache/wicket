@@ -33,6 +33,9 @@ public class CheckGroupDisabledTestPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 */
 	public CheckGroupDisabledTestPage()
 	{
 		Form<Void> form = new Form<Void>("form");

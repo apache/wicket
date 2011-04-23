@@ -23,5 +23,5 @@ package org.apache.wicket.markup;
  */
 public class Doctype_1_InheritedPage extends Doctype_1
 {
-
+	private static final long serialVersionUID = 1L;
 }

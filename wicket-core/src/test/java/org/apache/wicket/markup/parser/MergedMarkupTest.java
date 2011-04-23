@@ -28,6 +28,9 @@ import org.apache.wicket.util.tester.WicketTester;
  */
 public class MergedMarkupTest extends TestCase
 {
+	/**
+	 * test1()
+	 */
 	public void test1()
 	{
 		WicketTester tester = new WicketTester();
@@ -39,6 +42,9 @@ public class MergedMarkupTest extends TestCase
 		assertEquals(MarkupParser.WICKET, markup.getWicketNamespace());
 	}
 
+	/**
+	 * test2()
+	 */
 	public void test2()
 	{
 		WicketTester tester = new WicketTester();

@@ -29,12 +29,14 @@ import org.junit.Test;
  * Checks whether multiple registered requestcycle listeners are called in the right order:
  * similarly to servlet filters.
  */
-@SuppressWarnings("javadoc")
 public class MultiRequestCycleListenerCallOrderTest
 {
 	private WicketTester tester;
 	private MultiRequestCycleListenerCallOrderApplication application;
 
+	/**
+	 * setUp()
+	 */
 	@Before
 	public void setUp()
 	{
@@ -42,6 +44,9 @@ public class MultiRequestCycleListenerCallOrderTest
 		tester = new WicketTester(application);
 	}
 
+	/**
+	 * callSequenceIsFirstInLastOut()
+	 */
 	@Test
 	public void callSequenceIsFirstInLastOut()
 	{

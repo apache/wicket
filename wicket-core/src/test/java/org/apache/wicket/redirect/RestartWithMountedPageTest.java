@@ -18,6 +18,8 @@ package org.apache.wicket.redirect;
 
 import org.apache.wicket.WicketTestCase;
 
+/**
+ */
 public class RestartWithMountedPageTest extends WicketTestCase
 {
 

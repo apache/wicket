@@ -80,28 +80,44 @@ public abstract class AbstractCheckBoxModel implements IModel<Boolean>
 
 	// TODO Remove methods after deprecation release is done
 
-	/** @deprecated replaced by {@link #getObject()} */
+	/**
+	 * @param component
+	 * @return throws UnsupportedOperationException
+	 * @deprecated replaced by {@link #getObject()}
+	 */
 	@Deprecated
 	public final Object getObject(final Component component)
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	/** @deprecated replaced by {@link #isSelected()} */
+	/**
+	 * @param component
+	 * @return throws UnsupportedOperationException
+	 * @deprecated replaced by {@link #isSelected()}
+	 */
 	@Deprecated
 	public final boolean isSelected(final Component component)
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	/** @deprecated replaced by {@link #setObject(Object)} */
+	/**
+	 * @param component
+	 * @param object
+	 * @deprecated replaced by {@link #setObject(Object)}
+	 */
 	@Deprecated
 	public final void setObject(final Component component, final Object object)
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	/** @deprecated replaced by {@link #select()} */
+	/**
+	 * @param component
+	 * @param sel
+	 * @deprecated replaced by {@link #select()}
+	 */
 	@Deprecated
 	public final void setSelected(final Component component, final boolean sel)
 	{

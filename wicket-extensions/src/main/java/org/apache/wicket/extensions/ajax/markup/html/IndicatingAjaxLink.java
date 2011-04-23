@@ -27,6 +27,7 @@ import org.apache.wicket.model.IModel;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
  * 
  */
 public abstract class IndicatingAjaxLink<T> extends AjaxLink<T> implements IAjaxIndicatorAware

@@ -36,11 +36,17 @@ public class DevelopmentUtilitiesNotEnabledException extends WicketRuntimeExcept
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 */
 	public DevelopmentUtilitiesNotEnabledException()
 	{
 		super("IDebugSettings.developmentUtilitiesEnabled must be enabled to use this feature");
 	}
 
+	/**
+	 * Verifies that development utilities are enabled.
+	 */
 	public static void check()
 	{
 		if (Application.get().getDebugSettings().isDevelopmentUtilitiesEnabled() == false)

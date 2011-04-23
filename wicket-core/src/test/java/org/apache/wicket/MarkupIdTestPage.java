@@ -19,9 +19,15 @@ package org.apache.wicket;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 
+/**
+ */
 public class MarkupIdTestPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 */
 	public MarkupIdTestPage()
 	{
 		Label label = new Label("foo bar", "test");

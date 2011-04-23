@@ -29,14 +29,21 @@ import org.junit.Test;
 
 import com.google.inject.AbstractModule;
 
+/**
+ */
 public class GuiceWebApplicationFactoryTest
 {
+	/**
+	 * testWebAppCreation()
+	 */
 	@Test
 	public void testWebAppCreation()
 	{
 		new GuiceWebApplicationFactory().createApplication(createFilter());
 	}
 
+	/**
+	 */
 	public static class TestModule extends AbstractModule
 	{
 
@@ -79,7 +86,7 @@ public class GuiceWebApplicationFactoryTest
 						return new MockServletContext(null, null);
 					}
 
-					public Enumeration getInitParameterNames()
+					public Enumeration<?> getInitParameterNames()
 					{
 						return null;
 					}

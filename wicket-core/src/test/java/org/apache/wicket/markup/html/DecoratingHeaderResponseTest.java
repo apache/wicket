@@ -69,7 +69,7 @@ public class DecoratingHeaderResponseTest extends WicketTestCase
 		tester.startPage(TestPage.class);
 		XmlPullParser parser = new XmlPullParser();
 		parser.parse(tester.getLastResponseAsString());
-		XmlTag tag = (XmlTag)parser.nextTag();
+		XmlTag tag = parser.nextTag();
 		boolean isDecorated = false;
 		do
 		{
@@ -83,7 +83,7 @@ public class DecoratingHeaderResponseTest extends WicketTestCase
 				break;
 			}
 		}
-		while ((tag = (XmlTag)parser.nextTag()) != null);
+		while ((tag = parser.nextTag()) != null);
 		assertTrue(isDecorated);
 	}
 
@@ -117,7 +117,7 @@ public class DecoratingHeaderResponseTest extends WicketTestCase
 		tester.startPage(TestPage.class);
 		XmlPullParser parser = new XmlPullParser();
 		parser.parse(tester.getLastResponseAsString());
-		XmlTag tag = (XmlTag)parser.nextTag();
+		XmlTag tag = parser.nextTag();
 		List<Integer> resourcesId = new ArrayList<Integer>();
 		do
 		{
@@ -126,7 +126,7 @@ public class DecoratingHeaderResponseTest extends WicketTestCase
 				resourcesId.add(Integer.parseInt(tag.getAttribute("id").toString()));
 			}
 		}
-		while ((tag = (XmlTag)parser.nextTag()) != null);
+		while ((tag = parser.nextTag()) != null);
 		int oddEvenCanges = 0;
 		for (int i = 1; i < resourcesId.size(); i++)
 		{
@@ -146,6 +146,7 @@ public class DecoratingHeaderResponseTest extends WicketTestCase
 			IHeaderContributor,
 			IMarkupResourceStreamProvider
 	{
+		private static final long serialVersionUID = 1L;
 
 		@Override
 		public void renderHead(IHeaderResponse response)

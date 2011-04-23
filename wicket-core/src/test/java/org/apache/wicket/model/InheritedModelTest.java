@@ -40,11 +40,11 @@ public class InheritedModelTest extends WicketTestCase
 		InheritedTestPage page = new InheritedTestPage();
 
 
-		page.setDefaultModel(new CompoundPropertyModel(data1));
+		page.setDefaultModel(new CompoundPropertyModel<ValueMap>(data1));
 		tester.startPage(page);
 		tester.assertLabel("label", "foo");
 
-		page.setDefaultModel(new CompoundPropertyModel(data2));
+		page.setDefaultModel(new CompoundPropertyModel<ValueMap>(data2));
 		tester.startPage(page);
 		tester.assertLabel("label", "bar");
 	}
@@ -64,10 +64,10 @@ public class InheritedModelTest extends WicketTestCase
 		Label label = new Label("label");
 		parent.add(label);
 
-		parent.setDefaultModel(new CompoundPropertyModel(data1));
+		parent.setDefaultModel(new CompoundPropertyModel<ValueMap>(data1));
 		assertEquals("foo", label.getDefaultModelObject());
 
-		parent.setDefaultModel(new CompoundPropertyModel(data2));
+		parent.setDefaultModel(new CompoundPropertyModel<ValueMap>(data2));
 		assertEquals("bar", label.getDefaultModelObject());
 
 		data2.put("label", "foo");
@@ -87,11 +87,11 @@ public class InheritedModelTest extends WicketTestCase
 
 		InheritedTestPage page = new InheritedTestPage();
 
-		page.setDefaultModel(new CompoundPropertyModel(data1));
+		page.setDefaultModel(new CompoundPropertyModel<ValueMap>(data1));
 		tester.startPage(page);
 		assertEquals("foo", page.label.getDefaultModelObject());
 
-		page.label.setDefaultModel(new PropertyModel(data2, "value"));
+		page.label.setDefaultModel(new PropertyModel<String>(data2, "value"));
 		tester.startPage(page);
 		assertEquals("bar", page.label.getDefaultModelObject());
 

@@ -32,7 +32,7 @@ public class TestExpirePage extends WebPage
 	public TestExpirePage()
 	{
 
-		add(new Link("link")
+		add(new Link<Void>("link")
 		{
 			private static final long serialVersionUID = 1L;
 

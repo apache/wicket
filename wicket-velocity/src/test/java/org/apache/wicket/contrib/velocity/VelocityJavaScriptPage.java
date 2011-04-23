@@ -29,6 +29,7 @@ import org.apache.wicket.velocity.VelocityJavaScriptContributor;
  */
 public class VelocityJavaScriptPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 	static final String MSG1 = "Stoopid test 1";
 
 	/**

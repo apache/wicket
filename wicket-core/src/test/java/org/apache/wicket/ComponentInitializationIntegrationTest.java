@@ -28,23 +28,34 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ */
 public class ComponentInitializationIntegrationTest
 {
 	WicketTester tester;
 
 
+	/**
+	 * setup()
+	 */
 	@Before
 	public void setup()
 	{
 		tester = new WicketTester();
 	}
 
+	/**
+	 * destroy()
+	 */
 	@After
 	public void destroy()
 	{
 		tester.destroy();
 	}
 
+	/**
+	 * initialization()
+	 */
 	@Test
 	public void initialization()
 	{
@@ -60,8 +71,10 @@ public class ComponentInitializationIntegrationTest
 	}
 
 
-	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
+	static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		private static final long serialVersionUID = 1L;
+
 		private int count;
 
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,

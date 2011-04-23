@@ -30,6 +30,8 @@ public class SimplePage_10 extends WebPage
 
 	/**
 	 * Construct.
+	 * 
+	 * @param visible
 	 */
 	public SimplePage_10(boolean visible)
 	{

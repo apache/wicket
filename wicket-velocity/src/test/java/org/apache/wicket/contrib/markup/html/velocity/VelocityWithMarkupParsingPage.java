@@ -33,6 +33,8 @@ import org.apache.wicket.velocity.markup.html.VelocityPanel;
  */
 public class VelocityWithMarkupParsingPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Adds a VelocityPanel to the page with markup parsing
 	 */

@@ -33,6 +33,7 @@ public class StatelessCheckerTest extends TestCase
 	@StatelessComponent
 	public static class StatelessPage extends DummyHomePage
 	{
+		private static final long serialVersionUID = 1L;
 	}
 
 	/**

@@ -217,9 +217,12 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		context.getResourceReferenceRegistry().registerResourceReference(reference6);
 	}
 
-	// resource reference that monitors and supports the last modified timestamp
+	/**
+	 * resource reference that monitors and supports the last modified timestamp
+	 */
 	protected class ResourceReferenceWithTimestamp extends ResourceReference
 	{
+		private static final long serialVersionUID = 1L;
 		protected int lastModifiedInvocationCount = 0;
 		private final Time lastModified;
 

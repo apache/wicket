@@ -20,11 +20,17 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebPage;
 
+/**
+ */
 public final class InternalErrorCallsAjaxOnFailurePage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 
 	static final String ERROR_MESSAGE = "Failure link clicked";
 
+	/**
+	 * Construct.
+	 */
 	public InternalErrorCallsAjaxOnFailurePage()
 	{
 		add(new AjaxLink<Void>("failure-link")

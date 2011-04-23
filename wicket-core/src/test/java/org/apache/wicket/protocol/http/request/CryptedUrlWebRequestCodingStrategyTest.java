@@ -64,6 +64,9 @@ public class CryptedUrlWebRequestCodingStrategyTest extends TestCase
 		assertEquals(page.getClass(), p.getClass());
 	}
 
+	/**
+	 * testRenderMyPagePost()
+	 */
 	public void testRenderMyPagePost()
 	{
 		// start and render the test page
@@ -75,6 +78,9 @@ public class CryptedUrlWebRequestCodingStrategyTest extends TestCase
 		tester.assertRenderedPage(HomePage.class);
 	}
 
+	/**
+	 * testRenderMyPageGet()
+	 */
 	public void testRenderMyPageGet()
 	{
 		// start and render the test page

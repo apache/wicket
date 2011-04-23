@@ -490,6 +490,8 @@ public class ComponentEventsTest
 
 	private class TestPage extends WebPage implements Testable
 	{
+		private static final long serialVersionUID = 1L;
+
 		int sequence = -1;
 
 		public TestPage()

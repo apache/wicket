@@ -100,10 +100,11 @@ public class PropertyColumn<T> extends AbstractColumn<T>
 	 * @param rowModel
 	 * @return model
 	 */
-	@SuppressWarnings("unchecked")
 	protected IModel<?> createLabelModel(final IModel<T> rowModel)
 	{
-		return new PropertyModel(rowModel, propertyExpression);
+		@SuppressWarnings("rawtypes")
+		PropertyModel<?> propertyModel = new PropertyModel(rowModel, propertyExpression);
+		return propertyModel;
 	}
 
 	/**

@@ -75,6 +75,7 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 * @deprecated use the constructor {@link AutoCompleteTextField}
 	 *             {@link #AutoCompleteTextField(String, IModel, Class, AutoCompleteSettings)}
 	 */
+	@SuppressWarnings("unchecked")
 	@Deprecated
 	public AutoCompleteTextField(final String id, final IModel<T> model, final Class<T> type,
 		final boolean preselect)
@@ -91,6 +92,7 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	 * @param type
 	 * @param settings
 	 */
+	@SuppressWarnings("unchecked")
 	public AutoCompleteTextField(final String id, final IModel<T> model, final Class<T> type,
 		final AutoCompleteSettings settings)
 	{

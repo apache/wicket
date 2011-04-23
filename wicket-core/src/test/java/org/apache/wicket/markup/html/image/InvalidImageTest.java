@@ -18,8 +18,13 @@ package org.apache.wicket.markup.html.image;
 
 import org.apache.wicket.WicketTestCase;
 
+/**
+ */
 public class InvalidImageTest extends WicketTestCase
 {
+	/**
+	 * testInvalidImage()
+	 */
 	public void testInvalidImage()
 	{
 		tester.startPage(InvalidImagePage.class);

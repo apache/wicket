@@ -28,14 +28,14 @@ import org.apache.wicket.markup.html.link.Link;
 public class DisabledComponentPage1 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	Link link;
+	Link<Void> link;
 
 	/**
 	 * Construct.
 	 */
 	public DisabledComponentPage1()
 	{
-		link = new Link("link")
+		link = new Link<Void>("link")
 		{
 			private static final long serialVersionUID = 1L;
 

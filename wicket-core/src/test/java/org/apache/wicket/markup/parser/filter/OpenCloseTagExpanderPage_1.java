@@ -23,4 +23,5 @@ import org.apache.wicket.markup.html.WebPage;
  */
 public class OpenCloseTagExpanderPage_1 extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 }

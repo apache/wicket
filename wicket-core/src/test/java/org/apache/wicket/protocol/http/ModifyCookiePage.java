@@ -22,14 +22,22 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.http.WebResponse;
 
+/**
+ */
 public class ModifyCookiePage extends WebPage
 {
 	private static final long serialVersionUID = 3884508803470168634L;
 
+	/**	 */
 	public static final String CREATE_COOKIE_ID = "createCookie";
+	/**	 */
 	public static final String COOKIE_NAME = "wicketTest";
+	/**	 */
 	public static final String COOKIE_VALUE = "1";
 
+	/**
+	 * Construct.
+	 */
 	public ModifyCookiePage()
 	{
 		add(new Link<Void>(CREATE_COOKIE_ID)

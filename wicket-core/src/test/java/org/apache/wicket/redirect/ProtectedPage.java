@@ -29,6 +29,9 @@ public class ProtectedPage extends WebPage
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 */
 	public ProtectedPage()
 	{
 		throw new RestartResponseAtInterceptPageException(LoginPage.class);

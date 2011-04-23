@@ -87,7 +87,7 @@ public class MockPageWithForm extends WebPage
 	}
 
 	/**
-	 * @return
+	 * @return selected
 	 */
 	public boolean isSelected()
 	{
@@ -95,7 +95,7 @@ public class MockPageWithForm extends WebPage
 	}
 
 	/**
-	 * @return
+	 * @return submitted
 	 */
 	public boolean isSubmitted()
 	{

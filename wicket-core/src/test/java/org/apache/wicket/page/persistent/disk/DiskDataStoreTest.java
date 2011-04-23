@@ -33,9 +33,14 @@ import org.apache.wicket.pageStore.DiskDataStore;
 import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.util.lang.Args;
 
+/**
+ */
 public class DiskDataStoreTest extends TestCase
 {
 
+	/**
+	 * Construct.
+	 */
 	public DiskDataStoreTest()
 	{
 
@@ -310,6 +315,9 @@ public class DiskDataStoreTest extends TestCase
 		}
 	}
 
+	/**
+	 * test1()
+	 */
 	public void test1()
 	{
 		generateFiles();

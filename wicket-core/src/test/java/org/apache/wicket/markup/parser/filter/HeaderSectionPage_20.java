@@ -36,8 +36,17 @@ public class HeaderSectionPage_20 extends WebPage
 		add(new MyLabel("label2"));
 	}
 
+	/**
+	 */
 	public static class MyLabel extends Label
 	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param id
+		 */
 		public MyLabel(final String id)
 		{
 			super(id);

@@ -158,18 +158,22 @@ public class Select<T> extends FormComponent<T>
 		}
 		else if (!supportsMultiple)
 		{
-			setConvertedInput((T)converted.get(0));
+			@SuppressWarnings("unchecked")
+			T convertedInput = (T)converted.get(0);
+			setConvertedInput(convertedInput);
 		}
 		else
 		{
-			setConvertedInput((T)converted);
+			@SuppressWarnings("unchecked")
+			T convertedInput = (T)converted;
+			setConvertedInput(convertedInput);
 		}
 	}
-
 
 	/**
 	 * @see FormComponent#updateModel()
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void updateModel()
 	{

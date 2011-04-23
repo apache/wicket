@@ -85,6 +85,10 @@ public class MockComponent implements IRequestableComponent
 		return this;
 	}
 
+	/**
+	 * @param createIfDoesNotExist
+	 * @return markupId
+	 */
 	public String getMarkupId(boolean createIfDoesNotExist)
 	{
 		return markupId;
@@ -133,11 +137,17 @@ public class MockComponent implements IRequestableComponent
 		return true;
 	}
 
+	/**
+	 * @return false
+	 */
 	public boolean isEnabledInHierarchy()
 	{
 		return false;
 	}
 
+	/**
+	 * @return false
+	 */
 	public boolean isVisibleInHierarchy()
 	{
 		return false;

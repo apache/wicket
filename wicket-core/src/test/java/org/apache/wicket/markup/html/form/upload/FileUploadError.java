@@ -30,7 +30,7 @@ import org.apache.wicket.validation.validator.StringValidator;
 public class FileUploadError extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	public static final String THIS_VALUE_SHOULD_THROW_EXCEPTION = "test ex";
+	static final String THIS_VALUE_SHOULD_THROW_EXCEPTION = "test ex";
 
 	/**
 	 */

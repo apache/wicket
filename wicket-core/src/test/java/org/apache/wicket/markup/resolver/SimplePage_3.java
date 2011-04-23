@@ -41,8 +41,7 @@ public class SimplePage_3 extends WebPage
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return my value
 	 */
 	public String getMyValue()
 	{

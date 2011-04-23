@@ -62,6 +62,9 @@ public class DefaultLinkParserTest extends TestCase
 			parser.parse("line 1 http://www.test.com/test/murx.jsp \nline2 murx@email.de \r\nline3"));
 	}
 
+	/**
+	 * testEmailWithPlusChar()
+	 */
 	public void testEmailWithPlusChar()
 	{
 		final String testEmailAddress = "my+test@example.com";

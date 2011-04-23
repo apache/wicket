@@ -24,10 +24,15 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ */
 public class ParentResourceEscapePathTest extends WicketTestCase
 {
 	private static final Logger log = LoggerFactory.getLogger(ParentResourceEscapePathTest.class);
 
+	/**
+	 * @throws Exception
+	 */
 	public void testParentEscapeSequenceInRenderedHtml() throws Exception
 	{
 		tester.getApplication().getResourceSettings().setParentFolderPlaceholder("-updir-");
@@ -58,6 +63,9 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 			html.contains(expected));
 	}
 
+	/**
+	 * testResourceUrlGeneratedByResourceReference()
+	 */
 	public void testResourceUrlGeneratedByResourceReference()
 	{
 		tester.getApplication().getResourceSettings().setParentFolderPlaceholder("-updir-");
@@ -76,6 +84,9 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 			expectedResourceUrl());
 	}
 
+	/**
+	 * testRequestHandlingOfResourceUrlWithEscapeStringInside()
+	 */
 	public void testRequestHandlingOfResourceUrlWithEscapeStringInside()
 	{
 		tester.getApplication().getResourceSettings().setParentFolderPlaceholder("-updir-");

@@ -24,6 +24,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
 
+/**
+ */
 public class TestComponent extends Component
 {
 	private static final long serialVersionUID = 1L;
@@ -51,27 +53,44 @@ public class TestComponent extends Component
 
 	private final TestNoComponent noComponent;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 */
 	public TestComponent(final String id)
 	{
 		super(id);
 		noComponent = new TestNoComponent();
 	}
 
+	/**
+	 * @return injectedField
+	 */
 	public ITestService getInjectedField()
 	{
 		return injectedField;
 	}
 
+	/**
+	 * @return injectedFieldBlue
+	 */
 	public ITestService getInjectedFieldBlue()
 	{
 		return injectedFieldBlue;
 	}
 
+	/**
+	 * @return injectedFieldRed
+	 */
 	public ITestService getInjectedFieldRed()
 	{
 		return injectedFieldRed;
 	}
 
+	/**
+	 * @return injectedFieldProvider
+	 */
 	public Provider<ITestService> getInjectedFieldProvider()
 	{
 		return injectedFieldProvider;
@@ -87,6 +106,9 @@ public class TestComponent extends Component
 		return injectedOptionalField;
 	}
 
+	/**
+	 * @return injectedTypeLiteralField
+	 */
 	public Map<String, String> getInjectedTypeLiteralField()
 	{
 		return injectedTypeLiteralField;
@@ -98,6 +120,9 @@ public class TestComponent extends Component
 		// Do nothing.
 	}
 
+	/**
+	 * @return String for noComponent
+	 */
 	public String getNoComponentString()
 	{
 		return noComponent.getString();

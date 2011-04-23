@@ -17,6 +17,7 @@
 package org.apache.wicket.redirect.intercept;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
 
@@ -35,7 +36,7 @@ public class InterceptPage extends WebPage
 	 */
 	public InterceptPage()
 	{
-		add(new Link("link")
+		add(new Link<Void>("link")
 		{
 
 			private static final long serialVersionUID = 1L;

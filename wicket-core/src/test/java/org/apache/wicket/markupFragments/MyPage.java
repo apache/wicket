@@ -25,6 +25,8 @@ import org.apache.wicket.markup.html.basic.Label;
  */
 public class MyPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 */

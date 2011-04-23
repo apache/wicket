@@ -39,6 +39,9 @@ public class MarkupCacheTest extends WicketTestCase
 		tester.startComponent(component);
 	}
 
+	/**
+	 * testMarkupNotFoundInformationIsCachedInDeploymentMode()
+	 */
 	public void testMarkupNotFoundInformationIsCachedInDeploymentMode()
 	{
 		IMarkupFragment markup = cache.getMarkup(component, null, false);

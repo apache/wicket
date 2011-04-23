@@ -127,7 +127,7 @@ public class NestedFormsPage extends WebPage
 		}
 	}
 
-	private class ToggleLink extends Link
+	private class ToggleLink extends Link<Void>
 	{
 		private static final long serialVersionUID = 1L;
 

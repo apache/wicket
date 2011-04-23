@@ -54,6 +54,9 @@ public class ImageTest extends WicketTestCase
 		tester.assertContains("resource/org.apache.wicket.markup.html.image.Home/Beer.gif\"");
 	}
 
+	/**
+	 * testParentRelativeImage()
+	 */
 	public void testParentRelativeImage()
 	{
 		tester.getApplication().getResourceSettings().setParentFolderPlaceholder("$up$");

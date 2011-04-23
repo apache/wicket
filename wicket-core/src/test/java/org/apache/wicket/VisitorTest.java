@@ -40,6 +40,9 @@ import org.apache.wicket.util.visit.Visits;
  */
 public class VisitorTest extends WicketTestCase
 {
+	/**
+	 * testVisit()
+	 */
 	public void testVisit()
 	{
 		final StringBuilder path = new StringBuilder();
@@ -58,6 +61,9 @@ public class VisitorTest extends WicketTestCase
 	}
 
 
+	/**
+	 * testContinueTraversal()
+	 */
 	public void testContinueTraversal()
 	{
 		final StringBuilder path = new StringBuilder();
@@ -75,6 +81,9 @@ public class VisitorTest extends WicketTestCase
 		Assert.assertEquals("BCDEFGH", path.toString());
 	}
 
+	/**
+	 * testContinuePostOrder()
+	 */
 	public void testContinuePostOrder()
 	{
 		final StringBuilder path = new StringBuilder();
@@ -91,6 +100,9 @@ public class VisitorTest extends WicketTestCase
 		Assert.assertEquals("BDFECHGA", path.toString());
 	}
 
+	/**
+	 * testStop()
+	 */
 	public void testStop()
 	{
 		final StringBuilder path = new StringBuilder();
@@ -111,6 +123,9 @@ public class VisitorTest extends WicketTestCase
 		Assert.assertEquals("RESULT", result);
 	}
 
+	/**
+	 * testDoNotGoDeeper1()
+	 */
 	public void testDoNotGoDeeper1()
 	{
 		final StringBuilder path = new StringBuilder();
@@ -130,6 +145,9 @@ public class VisitorTest extends WicketTestCase
 		Assert.assertEquals("BCGH", path.toString());
 	}
 
+	/**
+	 * testDoNotGoDeeper2()
+	 */
 	public void testDoNotGoDeeper2()
 	{
 		final StringBuilder path = new StringBuilder();

@@ -23,6 +23,8 @@ import org.apache.wicket.markup.html.WebPage;
  */
 public class MyBorderPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 */

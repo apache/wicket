@@ -65,7 +65,7 @@ public class MetaDataTest extends TestCase
 	 */
 	public void testMetaDataKey()
 	{
-		MetaDataEntry[] md = KEY1.set(null, "1");
+		MetaDataEntry<?>[] md = KEY1.set(null, "1");
 		assertNotNull(md);
 		assertEquals(1, md.length);
 		md = KEY1.set(md, null);

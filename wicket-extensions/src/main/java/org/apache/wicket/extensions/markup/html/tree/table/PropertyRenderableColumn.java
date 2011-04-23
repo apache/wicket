@@ -34,6 +34,7 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 {
 	private static final long serialVersionUID = 1L;
 
+	@SuppressWarnings("rawtypes")
 	private IConverter converter;
 
 	private Locale locale;
@@ -64,7 +65,7 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 	 * 
 	 * @return The converter or null
 	 */
-	public IConverter getConverter()
+	public IConverter<?> getConverter()
 	{
 		return converter;
 	}
@@ -93,7 +94,9 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 			{
 				locale = Session.get().getLocale();
 			}
-			return converter.convertToString(result, locale);
+			@SuppressWarnings("unchecked")
+			String string = converter.convertToString(result, locale);
+			return string;
 		}
 		else
 		{
@@ -108,7 +111,7 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 	 * @param converter
 	 *            any converter
 	 */
-	public void setConverter(final IConverter converter)
+	public void setConverter(final IConverter<?> converter)
 	{
 		this.converter = converter;
 	}

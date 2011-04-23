@@ -28,6 +28,9 @@ import org.apache.wicket.request.Url;
  */
 public class WebSessionTest extends TestCase
 {
+	/**
+	 * testReadsLocaleFromRequestOnConstruction()
+	 */
 	public void testReadsLocaleFromRequestOnConstruction()
 	{
 		final Locale locale = Locale.TRADITIONAL_CHINESE;

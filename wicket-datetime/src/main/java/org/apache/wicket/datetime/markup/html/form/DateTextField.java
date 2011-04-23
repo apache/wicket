@@ -142,6 +142,8 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	 *            The id of the text field
 	 * @param model
 	 *            The model
+	 * @param applyTimeZoneDifference
+	 *            Whether to apply the time zone difference between client and server
 	 * @return DateTextField
 	 */
 	public static DateTextField forShortStyle(String id, IModel<Date> model,

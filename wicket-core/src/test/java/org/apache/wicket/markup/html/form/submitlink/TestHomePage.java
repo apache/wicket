@@ -19,8 +19,13 @@ package org.apache.wicket.markup.html.form.submitlink;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.FormTester;
 
+/**
+ */
 public class TestHomePage extends WicketTestCase
 {
+	/**
+	 * testSubmitLinkByClickingLink()
+	 */
 	public void testSubmitLinkByClickingLink()
 	{
 		tester.startPage(HomePage.class);
@@ -33,6 +38,9 @@ public class TestHomePage extends WicketTestCase
 		assertTrue("SubmitLink.onSubmit() has not been called!", home.isSubmittedViaLink());
 	}
 
+	/**
+	 * testSubmitLinkBySubmittingForm()
+	 */
 	public void testSubmitLinkBySubmittingForm()
 	{
 		tester.startPage(HomePage.class);
@@ -47,6 +55,9 @@ public class TestHomePage extends WicketTestCase
 		assertTrue("SubmitLink.onSubmit() has not been called!", home.isSubmittedViaLink());
 	}
 
+	/**
+	 * testSubmitLinkByUsingFormTester()
+	 */
 	public void testSubmitLinkByUsingFormTester()
 	{
 		tester.startPage(HomePage.class);

@@ -16,14 +16,18 @@
  */
 package org.apache.wicket.protocol.http;
 
+import java.util.List;
+
+import javax.servlet.http.Cookie;
+
 import junit.framework.TestCase;
+
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
 
-import javax.servlet.http.Cookie;
-import java.util.List;
-
+/**
+ */
 public class ModifyCookiePageTest extends TestCase
 {
 	private WicketTester tester;
@@ -34,6 +38,9 @@ public class ModifyCookiePageTest extends TestCase
 		tester = new WicketTester();
 	}
 
+	/**
+	 * testSetCookieWithinLinkListener()
+	 */
 	@Test
 	public void testSetCookieWithinLinkListener()
 	{

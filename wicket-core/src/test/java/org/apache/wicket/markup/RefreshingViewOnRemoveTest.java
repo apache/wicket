@@ -44,6 +44,9 @@ public class RefreshingViewOnRemoveTest extends WicketTestCase
 	private final List<TestComponent> components = new ArrayList<TestComponent>();
 	private int round = 1;
 
+	/**
+	 * test()
+	 */
 	public void test()
 	{
 		tester.startPage(new TestPage());
@@ -92,9 +95,9 @@ public class RefreshingViewOnRemoveTest extends WicketTestCase
 		return c;
 	}
 
-	public static class TestComponent extends Label
+	static class TestComponent extends Label
 	{
-
+		private static final long serialVersionUID = 1L;
 		public boolean detached = false;
 		public boolean removed = false;
 		public final int round;
@@ -120,12 +123,16 @@ public class RefreshingViewOnRemoveTest extends WicketTestCase
 		}
 	}
 
-	public class TestPage extends WebPage implements IMarkupResourceStreamProvider
+	class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		private static final long serialVersionUID = 1L;
+
 		public TestPage()
 		{
 			add(new RefreshingView<Integer>("repeater")
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				protected Iterator<IModel<Integer>> getItemModels()
 				{

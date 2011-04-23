@@ -388,6 +388,8 @@ public class Palette<T> extends Panel
 	}
 
 	/**
+	 * @param choice
+	 * @return null
 	 * @see org.apache.wicket.extensions.markup.html.form.palette.component.Selection#getAdditionalAttributes(Object)
 	 */
 	protected Map<String, String> getAdditionalAttributesForSelection(final Object choice)
@@ -415,6 +417,8 @@ public class Palette<T> extends Panel
 	}
 
 	/**
+	 * @param choice
+	 * @return null
 	 * @see org.apache.wicket.extensions.markup.html.form.palette.component.Selection#getAdditionalAttributes(Object)
 	 */
 	protected Map<String, String> getAdditionalAttributesForChoices(final Object choice)
@@ -504,7 +508,9 @@ public class Palette<T> extends Panel
 		modelChanged();
 
 		// call model.setObject()
-		((IModel<Object>)getDefaultModel()).setObject(model);
+		@SuppressWarnings("unchecked")
+		IModel<Object> defaultModel = (IModel<Object>)getDefaultModel();
+		defaultModel.setObject(model);
 	}
 
 	/**

@@ -74,7 +74,7 @@ public class PropertyModelTest extends WicketTestCase
 	public void testSetWithNullPathInterface()
 	{
 		Person person = new Person();
-		PropertyModel model = new PropertyModel(person, "interfaceAddress.street");
+		PropertyModel<String> model = new PropertyModel<String>(person, "interfaceAddress.street");
 		try
 		{
 			model.setObject("foo");
@@ -94,7 +94,7 @@ public class PropertyModelTest extends WicketTestCase
 	public void testSetWithNullPathAbstract()
 	{
 		Person person = new Person();
-		PropertyModel model = new PropertyModel(person, "abstractAddress.street");
+		PropertyModel<String> model = new PropertyModel<String>(person, "abstractAddress.street");
 		try
 		{
 			model.setObject("foo");
@@ -114,7 +114,7 @@ public class PropertyModelTest extends WicketTestCase
 	public void testSetWithNullPathConcrete()
 	{
 		Person person = new Person();
-		PropertyModel model = new PropertyModel(person, "concreteAddress.street");
+		PropertyModel<String> model = new PropertyModel<String>(person, "concreteAddress.street");
 		model.setObject("foo");
 		assertNotNull("concreteAddress", person.concreteAddress);
 		assertTrue(person.concreteAddress instanceof ConcreteAddress);

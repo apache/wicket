@@ -28,25 +28,38 @@ import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ */
 public class FormParentDisabledRawInputTest
 {
 	private WicketTester tester;
 
+	/**
+	 * @throws Exception
+	 */
 	@Before
 	public void setUp() throws Exception
 	{
 		tester = new WicketTester();
 	}
 
+	/**
+	 */
 	public static class TestPage extends WebPage
 	{
-		public boolean property = true;
-		public boolean enabled = true;
+		private static final long serialVersionUID = 1L;
+		boolean property = true;
+		boolean enabled = true;
 
+		/**
+		 * Construct.
+		 */
 		public TestPage()
 		{
 			WebMarkupContainer container = new WebMarkupContainer("container")
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public boolean isEnabled()
 				{
@@ -60,6 +73,9 @@ public class FormParentDisabledRawInputTest
 		}
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	@Test(expected = ListenerInvocationNotAllowedException.class)
 	public void testDisabledParent() throws Exception
 	{

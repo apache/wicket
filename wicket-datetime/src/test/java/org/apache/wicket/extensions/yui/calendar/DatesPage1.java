@@ -41,6 +41,8 @@ import org.apache.wicket.model.PropertyModel;
  */
 public class DatesPage1 extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Choice for a locale.
 	 */

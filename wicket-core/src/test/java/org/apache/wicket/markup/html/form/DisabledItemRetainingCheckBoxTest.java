@@ -41,9 +41,12 @@ public class DisabledItemRetainingCheckBoxTest extends TestCase
 		tester = new WicketTester();
 	}
 
+	/**
+	 * testRenderMyPage()
+	 */
 	public void testRenderMyPage()
 	{
-		TestPage page = (TestPage)tester.startPage(TestPage.class);
+		TestPage page = tester.startPage(TestPage.class);
 		tester.assertRenderedPage(TestPage.class);
 		tester.debugComponentTrees();
 		assertTrue(page.selection.contains(1));
@@ -51,9 +54,12 @@ public class DisabledItemRetainingCheckBoxTest extends TestCase
 		assertEquals(2, page.selection.size());
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public void testRetainDisabledSelected_On() throws Exception
 	{
-		TestPage page = (TestPage)tester.startPage(TestPage.class);
+		TestPage page = tester.startPage(TestPage.class);
 		FormTester form = tester.newFormTester("form");
 		form.selectMultiple("choices", new int[] { 0 }, true);
 		form.submit();
@@ -62,9 +68,12 @@ public class DisabledItemRetainingCheckBoxTest extends TestCase
 		assertEquals(2, page.selection.size());
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public void testRetainDisabledSelected_Off() throws Exception
 	{
-		TestPage page = (TestPage)tester.startPage(TestPage.class);
+		TestPage page = tester.startPage(TestPage.class);
 		FormTester form = tester.newFormTester("form");
 		form.selectMultiple("choices2", new int[] { 0 }, true);
 		form.submit();
@@ -73,9 +82,12 @@ public class DisabledItemRetainingCheckBoxTest extends TestCase
 		assertEquals(1, page.selection2.size());
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public void testRetainDisabledSelected_NoSelection() throws Exception
 	{
-		TestPage page = (TestPage)tester.startPage(TestPage.class);
+		TestPage page = tester.startPage(TestPage.class);
 		FormTester form = tester.newFormTester("form");
 		form.selectMultiple("choices", new int[] { }, true);
 		form.submit();
@@ -83,23 +95,33 @@ public class DisabledItemRetainingCheckBoxTest extends TestCase
 		assertEquals(1, page.selection.size());
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public void testRetainDisabledSelected_Off_NoSelection() throws Exception
 	{
-		TestPage page = (TestPage)tester.startPage(TestPage.class);
+		TestPage page = tester.startPage(TestPage.class);
 		FormTester form = tester.newFormTester("form");
 		form.selectMultiple("choices2", new int[] { }, true);
 		form.submit();
 		assertEquals(0, page.selection2.size());
 	}
 
+	/**
+	 */
 	public static class TestPage extends WebPage
 	{
 
 		private static final long serialVersionUID = 1L;
 
-		public Collection<Integer> selection = new ArrayList<Integer>(Arrays.asList(1, 2));
-		public Collection<Integer> selection2 = new ArrayList<Integer>(Arrays.asList(1, 2));
+		Collection<Integer> selection = new ArrayList<Integer>(Arrays.asList(1, 2));
+		Collection<Integer> selection2 = new ArrayList<Integer>(Arrays.asList(1, 2));
 
+		/**
+		 * Construct.
+		 * 
+		 * @param parameters
+		 */
 		public TestPage(final PageParameters parameters)
 		{
 

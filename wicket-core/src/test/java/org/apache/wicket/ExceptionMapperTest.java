@@ -110,6 +110,8 @@ public class ExceptionMapperTest extends WicketTestCase
 	 */
 	public static class TestExceptionPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		private static final long serialVersionUID = 1L;
+
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{
@@ -121,6 +123,8 @@ public class ExceptionMapperTest extends WicketTestCase
 	 */
 	public static class TestPage extends MockPageWithLink
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 */
 		public TestPage()

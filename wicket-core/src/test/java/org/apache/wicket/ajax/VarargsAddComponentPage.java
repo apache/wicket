@@ -31,6 +31,7 @@ import org.apache.wicket.model.Model;
  */
 public class VarargsAddComponentPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 	static final String INITIAL_CONTENT = "Initial content [%d] ";
 
 	static final String AJAX_APPENDED_SUFFIX = " Ajax updated";

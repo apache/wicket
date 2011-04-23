@@ -28,6 +28,11 @@ import org.apache.wicket.request.resource.PackageResourceReference;
  */
 public class ClientSideImageMapPage_1 extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Construct.
+	 */
 	public ClientSideImageMapPage_1()
 	{
 		final Image image = new Image("image", new PackageResourceReference(ImageTest.class,

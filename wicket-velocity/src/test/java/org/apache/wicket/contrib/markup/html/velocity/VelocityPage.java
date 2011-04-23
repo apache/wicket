@@ -30,6 +30,7 @@ import org.apache.wicket.velocity.markup.html.VelocityPanel;
  */
 public class VelocityPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 	protected static final String TEST_STRING = "Hello, World!";
 
 	/**

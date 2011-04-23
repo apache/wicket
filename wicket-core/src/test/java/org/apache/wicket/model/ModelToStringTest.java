@@ -87,7 +87,8 @@ public class ModelToStringTest extends WicketTestCase
 
 		Properties properties = new Properties();
 		properties.put("name", "foo");
-		CompoundPropertyModel<Properties> stringProperty = new CompoundPropertyModel<Properties>(properties);
+		CompoundPropertyModel<Properties> stringProperty = new CompoundPropertyModel<Properties>(
+			properties);
 
 		expected = "Model:classname=[org.apache.wicket.model.CompoundPropertyModel]:nestedModel=[{name=foo}]";
 		assertEquals(expected, stringProperty.toString());
@@ -173,7 +174,7 @@ public class ModelToStringTest extends WicketTestCase
 	 */
 	public void testPropertyModel()
 	{
-		PropertyModel emptyModel = new PropertyModel("", null);
+		PropertyModel<Void> emptyModel = new PropertyModel<Void>("", null);
 		String expected = "Model:classname=[org.apache.wicket.model.PropertyModel]:nestedModel=[]:expression=[null]";
 		assertEquals(expected, emptyModel.toString());
 

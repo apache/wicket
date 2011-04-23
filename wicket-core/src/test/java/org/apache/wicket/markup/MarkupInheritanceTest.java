@@ -103,7 +103,7 @@ public class MarkupInheritanceTest extends WicketTestCase
 
 		MarkupInheritanceExtension_4 page = (MarkupInheritanceExtension_4)tester.getLastRenderedPage();
 
-		Link link = (Link)page.get("link");
+		Link<?> link = (Link<?>)page.get("link");
 		tester.clickLink(link.getPageRelativePath());
 
 		assertEquals(MarkupInheritanceExtension_4.class, tester.getLastRenderedPage().getClass());

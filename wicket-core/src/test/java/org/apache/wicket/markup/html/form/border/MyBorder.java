@@ -22,10 +22,17 @@ import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.form.Form;
 
 
+/**
+ */
 public class MyBorder extends Border
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 */
 	public MyBorder(String id)
 	{
 		super(id);

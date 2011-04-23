@@ -31,10 +31,13 @@ import org.apache.wicket.util.tester.WicketTester;
  * 
  * - c3
  * 
- * @see http://issues.apache.org/jira/browse/WICKET-2888
+ * @see "http://issues.apache.org/jira/browse/WICKET-2888"
  */
 public class MoveChildToParentNodeMarkedForRecreationTest extends TestCase
 {
+	/**
+	 * test()
+	 */
 	public void test()
 	{
 		WicketTester tester = new WicketTester();

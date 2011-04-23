@@ -34,6 +34,9 @@ import org.apache.wicket.util.resource.StringResourceStream;
  */
 public class ComponentInitializationTest extends WicketTestCase
 {
+	/**
+	 * testPropagation()
+	 */
 	public void testPropagation()
 	{
 		TestPage page = new TestPage();
@@ -75,6 +78,9 @@ public class ComponentInitializationTest extends WicketTestCase
 		assertEquals(1, t4.getCount());
 	}
 
+	/**
+	 * testAtomicity()
+	 */
 	public void testAtomicity()
 	{
 		TestPage page = new TestPage();
@@ -105,6 +111,9 @@ public class ComponentInitializationTest extends WicketTestCase
 		assertEquals(1, t2.getCount());
 	}
 
+	/**
+	 * testOnInitializeSuperVerified()
+	 */
 	public void testOnInitializeSuperVerified()
 	{
 		TestPage page = new TestPage();
@@ -122,6 +131,9 @@ public class ComponentInitializationTest extends WicketTestCase
 		assertTrue(illegalState);
 	}
 
+	/**
+	 * testInitListeners()
+	 */
 	public void testInitListeners()
 	{
 		TestInitListener listener1 = new TestInitListener();
@@ -131,6 +143,7 @@ public class ComponentInitializationTest extends WicketTestCase
 
 		WebPage page = new WebPage()
 		{
+			private static final long serialVersionUID = 1L;
 		};
 		page.internalInitialize();
 
@@ -148,6 +161,9 @@ public class ComponentInitializationTest extends WicketTestCase
 		assertTrue(listener2.getComponents().contains(t2));
 	}
 
+	/**
+	 * testInitializationOrder()
+	 */
 	public void testInitializationOrder()
 	{
 		TestInitListener listener1 = new TestInitListener();
@@ -155,6 +171,7 @@ public class ComponentInitializationTest extends WicketTestCase
 
 		WebPage page = new WebPage()
 		{
+			private static final long serialVersionUID = 1L;
 		};
 
 		page.internalInitialize();
@@ -177,8 +194,10 @@ public class ComponentInitializationTest extends WicketTestCase
 	}
 
 
-	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
+	static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		private static final long serialVersionUID = 1L;
+
 		private int count;
 
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
@@ -228,6 +247,7 @@ public class ComponentInitializationTest extends WicketTestCase
 
 	private static class InvalidComponent extends WebComponent
 	{
+		private static final long serialVersionUID = 1L;
 		private final boolean initialized = false;
 
 		public InvalidComponent(String id)

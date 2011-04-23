@@ -96,7 +96,8 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	/**
 	 * @see org.springframework.beans.factory.BeanFactory#getBean(java.lang.String, java.lang.Class)
 	 */
-	public Object getBean(final String name, final Class requiredType) throws BeansException
+	public Object getBean(final String name, @SuppressWarnings("rawtypes") final Class requiredType)
+		throws BeansException
 	{
 		Object bean = getBean(name);
 		if (!(requiredType.isAssignableFrom(bean.getClass())))
@@ -109,11 +110,12 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	/**
 	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeansOfType(java.lang.Class)
 	 */
+	@SuppressWarnings("rawtypes")
 	public Map getBeansOfType(final Class type) throws BeansException
 	{
 		Map found = new HashMap();
 
-		for (Entry entry : beans.entrySet())
+		for (Entry<String, Object> entry : beans.entrySet())
 		{
 			if (type.isAssignableFrom(entry.getValue().getClass()))
 			{
@@ -186,9 +188,9 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	 * @see org.springframework.beans.factory.ListableBeanFactory#
 	 *      getBeanNamesForType(java.lang.Class)
 	 */
-	public String[] getBeanNamesForType(final Class type)
+	public String[] getBeanNamesForType(@SuppressWarnings("rawtypes") final Class type)
 	{
-		ArrayList names = new ArrayList();
+		ArrayList<String> names = new ArrayList<String>();
 		for (Entry<String, Object> entry : beans.entrySet())
 		{
 			Object bean = entry.getValue();
@@ -198,13 +200,14 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 				names.add(entry.getKey());
 			}
 		}
-		return (String[])names.toArray(new String[names.size()]);
+		return names.toArray(new String[names.size()]);
 	}
 
 	/**
 	 * @see org.springframework.beans.factory.ListableBeanFactory#
 	 *      getBeanNamesForType(java.lang.Class, boolean, boolean)
 	 */
+	@SuppressWarnings("rawtypes")
 	public String[] getBeanNamesForType(final Class type, final boolean includePrototypes,
 		final boolean includeFactoryBeans)
 	{
@@ -215,6 +218,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeansOfType(java.lang.Class,
 	 *      boolean, boolean)
 	 */
+	@SuppressWarnings("rawtypes")
 	public Map getBeansOfType(final Class type, final boolean includePrototypes,
 		final boolean includeFactoryBeans) throws BeansException
 	{
@@ -240,6 +244,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	/**
 	 * @see org.springframework.beans.factory.BeanFactory#getType(java.lang.String)
 	 */
+	@SuppressWarnings("rawtypes")
 	public Class getType(final String name) throws NoSuchBeanDefinitionException
 	{
 		throw new UnsupportedOperationException();
@@ -364,6 +369,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	 * @see org.springframework.beans.factory.BeanFactory#isTypeMatch(java.lang.String,
 	 *      java.lang.Class)
 	 */
+	@SuppressWarnings("rawtypes")
 	public boolean isTypeMatch(final String name, final Class targetType)
 		throws NoSuchBeanDefinitionException
 	{

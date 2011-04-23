@@ -41,7 +41,7 @@ public class DisabledComponentTest extends WicketTestCase
 	public void testEnabled() throws Exception
 	{
 		executeTest(DisabledComponentPage1.class, "DisabledComponentPage1a_result.html");
-		Link link = ((DisabledComponentPage1)tester.getLastRenderedPage()).link;
+		Link<?> link = ((DisabledComponentPage1)tester.getLastRenderedPage()).link;
 		executeListener(link, "DisabledComponentPage2_result.html");
 	}
 
@@ -51,7 +51,7 @@ public class DisabledComponentTest extends WicketTestCase
 	public void testDisabled() throws Exception
 	{
 		executeTest(DisabledComponentPage1.class, "DisabledComponentPage1a_result.html");
-		Link link = ((DisabledComponentPage1)tester.getLastRenderedPage()).link;
+		Link<?> link = ((DisabledComponentPage1)tester.getLastRenderedPage()).link;
 		link.setEnabled(false);
 		try
 		{

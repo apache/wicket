@@ -33,6 +33,8 @@ import org.apache.wicket.request.resource.SharedResourceReference;
 import org.apache.wicket.util.string.StringValue;
 import org.junit.Test;
 
+/**
+ */
 public class ResourceMapperTest extends WicketTestCase
 {
 	private static final Charset CHARSET = Charset.forName("UTF-8");
@@ -91,6 +93,9 @@ public class ResourceMapperTest extends WicketTestCase
 		};
 	}
 
+	/**
+	 * testInvalidPathIsEmpty()
+	 */
 	@Test
 	public void testInvalidPathIsEmpty()
 	{
@@ -98,6 +103,9 @@ public class ResourceMapperTest extends WicketTestCase
 		assertNull(requestHandler);
 	}
 
+	/**
+	 * testInvalidPathIsMismatch()
+	 */
 	@Test
 	public void testInvalidPathIsMismatch()
 	{
@@ -105,6 +113,9 @@ public class ResourceMapperTest extends WicketTestCase
 		assertNull(requestHandler);
 	}
 
+	/**
+	 * testInvalidPathIsTooShort()
+	 */
 	@Test
 	public void testInvalidPathIsTooShort()
 	{
@@ -112,6 +123,9 @@ public class ResourceMapperTest extends WicketTestCase
 		assertNull(requestHandler);
 	}
 
+	/**
+	 * testValidPathWithParams()
+	 */
 	@Test
 	public void testValidPathWithParams()
 	{
@@ -136,6 +150,9 @@ public class ResourceMapperTest extends WicketTestCase
 		assertEquals("fred", paramName.toString());
 	}
 
+	/**
+	 * testValidPathWithParamsAndQueryPath()
+	 */
 	@Test
 	public void testValidPathWithParamsAndQueryPath()
 	{
@@ -168,6 +185,9 @@ public class ResourceMapperTest extends WicketTestCase
 		assertEquals(12, paramValue.toInt());
 	}
 
+	/**
+	 * testPlaceholders()
+	 */
 	@Test
 	public void testPlaceholders()
 	{
@@ -191,6 +211,9 @@ public class ResourceMapperTest extends WicketTestCase
 		assertEquals("123", params.get("b").toString());
 	}
 
+	/**
+	 * testPlaceholdersWithQueryParamDuplicate()
+	 */
 	@Test
 	public void testPlaceholdersWithQueryParamDuplicate()
 	{

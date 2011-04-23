@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.guice;
 
+/**
+ */
 public class TestServiceRed implements ITestService
 {
 	public String getString()

@@ -33,13 +33,19 @@ import org.junit.rules.Timeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ */
 public class PageAccessSynchronizerTest
 {
 	private static final Logger logger = LoggerFactory.getLogger(PageAccessSynchronizer.class);
 
+	/**	 */
 	@Rule
 	public MethodRule globalTimeout = new Timeout((int)Duration.seconds(30).getMilliseconds());
 
+	/**
+	 * @throws Exception
+	 */
 	@Test
 	public void testReentrant() throws Exception
 	{
@@ -49,6 +55,9 @@ public class PageAccessSynchronizerTest
 		sync.lockPage(0);
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	@Test
 	public void testBlocking() throws Exception
 	{
@@ -94,6 +103,12 @@ public class PageAccessSynchronizerTest
 		assertTrue(!t2locks[0].before(t1locks[0].add(hold)));
 	}
 
+	/**
+	 * @param pages
+	 * @param workers
+	 * @param duration
+	 * @throws Exception
+	 */
 	public void runContentionTest(final int pages, final int workers, final Duration duration)
 		throws Exception
 	{
@@ -227,12 +242,18 @@ public class PageAccessSynchronizerTest
 		assertTrue(hits.get() >= counts.length);
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	@Test
 	public void testConcurrency() throws Exception
 	{
 		runContentionTest(20, 10, Duration.seconds(10));
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	@Test
 	public void testContention() throws Exception
 	{

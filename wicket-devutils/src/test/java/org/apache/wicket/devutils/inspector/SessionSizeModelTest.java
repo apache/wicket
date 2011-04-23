@@ -48,11 +48,20 @@ public class SessionSizeModelTest extends TestCase
 		assertEquals(null, model.getObject());
 	}
 
+	/**
+	 * TestSession
+	 */
 	public static class TestSession extends WebSession
 	{
 		private static final long serialVersionUID = 1L;
+		/**	 */
 		public Object nonSerializableObject = new Object();
 
+		/**
+		 * Construct.
+		 * 
+		 * @param request
+		 */
 		public TestSession(final Request request)
 		{
 			super(request);

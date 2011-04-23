@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.markup.parser;
 
+/**
+ */
 public class SubPageWithoutMarkup extends SuperPage
 {
+	private static final long serialVersionUID = 1L;
 }

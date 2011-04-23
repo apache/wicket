@@ -25,6 +25,11 @@ import org.apache.wicket.WicketTestCase;
  */
 public class ClientSideImageMapTest extends WicketTestCase
 {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @throws Exception
+	 */
 	public void testRenderClientSideImageMapPage_1() throws Exception
 	{
 		tester.getSession().setLocale(Locale.US);

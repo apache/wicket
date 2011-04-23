@@ -65,17 +65,17 @@ public class FileUploadTest extends WicketTestCase
 
 		FileUpload fileUpload = new FileUpload(fileItem);
 
-		List inputStreams = (List)inputStreamsField.get(fileUpload);
+		List<?> inputStreams = (List<?>)inputStreamsField.get(fileUpload);
 
 		assertNull(inputStreams);
 
 		InputStream is1 = fileUpload.getInputStream();
-		inputStreams = (List)inputStreamsField.get(fileUpload);
+		inputStreams = (List<?>)inputStreamsField.get(fileUpload);
 
 		assertEquals(1, inputStreams.size());
 
 		InputStream is2 = fileUpload.getInputStream();
-		inputStreams = (List)inputStreamsField.get(fileUpload);
+		inputStreams = (List<?>)inputStreamsField.get(fileUpload);
 
 		assertEquals(2, inputStreams.size());
 
@@ -91,7 +91,7 @@ public class FileUploadTest extends WicketTestCase
 			fail();
 		}
 
-		inputStreams = (List)inputStreamsField.get(fileUpload);
+		inputStreams = (List<?>)inputStreamsField.get(fileUpload);
 
 		assertNull(inputStreams);
 

@@ -53,6 +53,9 @@ public class MarkupContainerTest extends WicketTestCase
 		}
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public void testMarkupId() throws Exception
 	{
 		executeTest(MarkupIdTestPage.class, "MarkupIdTestPageExpectedResult.html");

@@ -18,6 +18,8 @@ package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.markup.html.WebPage;
 
+/**
+ */
 public class ExternalLinkPage_1 extends WebPage
 {
 	private static final long serialVersionUID = 1L;

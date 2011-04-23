@@ -75,6 +75,7 @@ public abstract class IndicatingAjaxButton extends AjaxButton implements IAjaxIn
 	 * Constructor
 	 * 
 	 * @param id
+	 * @param model
 	 * @param form
 	 */
 	public IndicatingAjaxButton(final String id, final IModel<String> model, final Form<?> form)

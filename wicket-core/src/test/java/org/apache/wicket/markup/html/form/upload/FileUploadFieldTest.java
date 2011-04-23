@@ -54,6 +54,8 @@ public class FileUploadFieldTest extends WicketTestCase
 
 	/**
 	 * Test that detach closes the streams
+	 * 
+	 * @throws Exception
 	 */
 	public void testInternalDetach() throws Exception
 	{
@@ -116,22 +118,25 @@ public class FileUploadFieldTest extends WicketTestCase
 		}
 	}
 
+	/**
+	 * @throws IOException
+	 */
 	public void testFileUploadCanBeValidated() throws IOException
 	{
-		final Set<IValidatable> validatedComponents = new HashSet<IValidatable>();
+		final Set<IValidatable<?>> validatedComponents = new HashSet<IValidatable<?>>();
 
 		final File tmpFile = writeTestFile(1);
 		tmpFile.deleteOnExit();
 
-		final IValidator testValidator = new IValidator()
+		final IValidator<List<FileUpload>> testValidator = new IValidator<List<FileUpload>>()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public void validate(IValidatable validatable)
+			public void validate(IValidatable<List<FileUpload>> validatable)
 			{
 				validatedComponents.add(validatable);
 				assertEquals(ArrayList.class, validatable.getValue().getClass());
-				List<FileUpload> uploads = (List<FileUpload>)validatable.getValue();
+				List<FileUpload> uploads = validatable.getValue();
 				FileUpload upload = uploads.get(0);
 				assertEquals(tmpFile.getName(), upload.getClientFileName());
 				assertEquals(new String(read(tmpFile)), new String(upload.getBytes()));

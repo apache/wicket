@@ -57,6 +57,8 @@ public class AjaxFormSubmitTest extends WicketTestCase
 	/**
 	 * Test that onclick handler is generated with the proper XHTML entities for special characters,
 	 * notably ampersand. See WICKET-2033.
+	 * 
+	 * @throws Exception
 	 */
 	public void testEventJavaScriptEscaped() throws Exception
 	{

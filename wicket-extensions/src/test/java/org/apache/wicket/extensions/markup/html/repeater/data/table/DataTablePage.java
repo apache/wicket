@@ -36,6 +36,8 @@ import org.apache.wicket.model.Model;
  */
 public class DataTablePage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * constructor
 	 */
@@ -83,6 +85,9 @@ public class DataTablePage extends WebPage
 		columns.add(new PropertyColumn<String>(new Model<String>("Home Phone"), "homePhone"));
 		columns.add(new PropertyColumn<String>(new Model<String>("Cell Phone"), "cellPhone"));
 
-		add(new DefaultDataTable("table", columns, new SortableContactDataProvider(), 8));
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		DefaultDataTable defaultDataTable = new DefaultDataTable("table", columns,
+			new SortableContactDataProvider(), 8);
+		add(defaultDataTable);
 	}
 }

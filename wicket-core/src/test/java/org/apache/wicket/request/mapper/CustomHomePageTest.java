@@ -83,5 +83,6 @@ public class CustomHomePageTest
 	/***/
 	public static class CustomHomePage extends DummyHomePage
 	{
+		private static final long serialVersionUID = 1L;
 	}
 }

@@ -58,6 +58,8 @@ public class SimplePage1 extends WebPage
 		parent.add(container);
 		container.add(new Behavior()
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void renderHead(Component component, IHeaderResponse response)
 			{

@@ -35,8 +35,13 @@ import com.google.inject.Module;
 import com.google.inject.Provider;
 import com.google.inject.TypeLiteral;
 
+/**
+ */
 public class GuiceInjectorTest extends TestCase
 {
+	/**
+	 * testInjectionAndSerialization()
+	 */
 	public void testInjectionAndSerialization()
 	{
 		MockApplication app = new MockApplication();

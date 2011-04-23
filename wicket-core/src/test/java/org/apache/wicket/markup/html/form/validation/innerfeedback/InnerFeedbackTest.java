@@ -31,6 +31,9 @@ public class InnerFeedbackTest
 {
 	private WicketTester tester;
 
+	/**
+	 * before()
+	 */
 	@Before
 	public void before()
 	{

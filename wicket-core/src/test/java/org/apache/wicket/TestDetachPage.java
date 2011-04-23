@@ -51,17 +51,17 @@ public class TestDetachPage extends WebPage
 	 * 
 	 * @author dashorst
 	 */
-	private class DetachModel implements IModel
+	private class DetachModel implements IModel<String>
 	{
 		/** for serialization. */
 		private static final long serialVersionUID = 1L;
 
-		public Object getObject()
+		public String getObject()
 		{
 			return "body";
 		}
 
-		public void setObject(Object object)
+		public void setObject(String object)
 		{
 		}
 

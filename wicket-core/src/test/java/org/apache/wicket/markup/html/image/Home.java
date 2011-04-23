@@ -46,7 +46,7 @@ public final class Home extends WebPage
 
 		// Add a couple of links to be able to play around with the session
 		// locale
-		add(new Link("goCanadian")
+		add(new Link<Void>("goCanadian")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -56,7 +56,7 @@ public final class Home extends WebPage
 				getSession().setLocale(Locale.CANADA);
 			}
 		});
-		add(new Link("goUS")
+		add(new Link<Void>("goUS")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -66,7 +66,7 @@ public final class Home extends WebPage
 				getSession().setLocale(Locale.US);
 			}
 		});
-		add(new Link("goDutch")
+		add(new Link<Void>("goDutch")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -76,7 +76,7 @@ public final class Home extends WebPage
 				getSession().setLocale(new Locale("nl", "NL"));
 			}
 		});
-		add(new Link("goGerman")
+		add(new Link<Void>("goGerman")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -86,7 +86,7 @@ public final class Home extends WebPage
 				getSession().setLocale(new Locale("de", "DE"));
 			}
 		});
-		add(new Link("goChinese")
+		add(new Link<Void>("goChinese")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -96,7 +96,7 @@ public final class Home extends WebPage
 				getSession().setLocale(new Locale("zh", "CN"));
 			}
 		});
-		add(new Link("goDanish")
+		add(new Link<Void>("goDanish")
 		{
 			private static final long serialVersionUID = 1L;
 

@@ -31,6 +31,9 @@ import org.apache.wicket.util.tester.WicketTester;
  */
 public class ComponentConfigurationTest extends WicketTestCase
 {
+	/**
+	 * testOnlyOncePerRequest()
+	 */
 	public void testOnlyOncePerRequest()
 	{
 		TestComponent t1 = new TestComponent("t1");
@@ -50,6 +53,9 @@ public class ComponentConfigurationTest extends WicketTestCase
 
 	}
 
+	/**
+	 * testConfiguration()
+	 */
 	public void testConfiguration()
 	{
 		WicketTester tester = new WicketTester();
@@ -75,12 +81,19 @@ public class ComponentConfigurationTest extends WicketTestCase
 
 	}
 
+	/**
+	 */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		private static final long serialVersionUID = 1L;
+
 		private final TestComponent t1;
 		private final TestComponent t2;
 		private final Link<?> link;
 
+		/**
+		 * Construct.
+		 */
 		public TestPage()
 		{
 			add(t1 = new TestComponent("t1"));
@@ -97,17 +110,17 @@ public class ComponentConfigurationTest extends WicketTestCase
 			});
 		}
 
-		public TestComponent getT1()
+		TestComponent getT1()
 		{
 			return t1;
 		}
 
-		public TestComponent getT2()
+		TestComponent getT2()
 		{
 			return t2;
 		}
 
-		public Link<?> getLink()
+		Link<?> getLink()
 		{
 			return link;
 		}

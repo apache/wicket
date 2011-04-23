@@ -96,6 +96,7 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 				Object displayValue = renderer.getDisplayValue(choice);
 				Class<?> displayClass = displayValue == null ? null : displayValue.getClass();
 
+				@SuppressWarnings("unchecked")
 				IConverter<Object> converter = (IConverter<Object>)getConverter(displayClass);
 				String displayString = converter.convertToString(displayValue, getLocale());
 				displayString = getLocalizer().getString(displayString, this, displayString);

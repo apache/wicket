@@ -29,10 +29,12 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
 
+/**
+ */
 public class UploadFormWithProgressBarTest extends TestCase
 {
 	/**
-	 * @see https://issues.apache.org/jira/browse/WICKET-3200
+	 * @see "https://issues.apache.org/jira/browse/WICKET-3200"
 	 */
 	public void testReCreateTheForm()
 	{
@@ -46,17 +48,26 @@ public class UploadFormWithProgressBarTest extends TestCase
 		assertNotSame(oldFormInstanceId, testPage.form.getFormInstance());
 	}
 
+	/**
+	 */
 	public static class UploadFormWithProgressBarTestPage extends WebPage
 		implements
 			IMarkupResourceStreamProvider
 	{
+		private static final long serialVersionUID = 1L;
+		/**	 */
 		public TraceableForm form;
 
+		/**
+		 * Construct.
+		 */
 		public UploadFormWithProgressBarTestPage()
 		{
 			addForm();
 			add(new Link<Void>("re-create")
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public void onClick()
 				{
@@ -83,17 +94,28 @@ public class UploadFormWithProgressBarTest extends TestCase
 		}
 
 	}
-	public static class TraceableForm extends Form
+	/**
+	 */
+	public static class TraceableForm extends Form<Void>
 	{
+		private static final long serialVersionUID = 1L;
 		private final int formInstance;
 		private static int nextInstanceId;
 
+		/**
+		 * Construct.
+		 * 
+		 * @param id
+		 */
 		public TraceableForm(final String id)
 		{
 			super(id);
 			formInstance = nextInstanceId++;
 		}
 
+		/**
+		 * @return formInstance
+		 */
 		public int getFormInstance()
 		{
 			return formInstance;

@@ -24,6 +24,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ */
 public class HttpSessionDataStoreTest
 {
 	final String sessionId = "anything";
@@ -35,18 +37,27 @@ public class HttpSessionDataStoreTest
 
 	HttpSessionDataStore store;
 
+	/**
+	 * before()
+	 */
 	@Before
 	public void before()
 	{
 		store = new HttpSessionDataStore(new DummyPageManagerContext(), new NoopEvictionStrategy());
 	}
 
+	/**
+	 * after()
+	 */
 	@After
 	public void after()
 	{
 		store.destroy();
 	}
 
+	/**
+	 * storePage()
+	 */
 	@Test
 	public void storePage()
 	{
@@ -56,6 +67,9 @@ public class HttpSessionDataStoreTest
 		assertArrayEquals(PAGE1, store.getData(sessionId, pageId));
 	}
 
+	/**
+	 * removePage1()
+	 */
 	@Test
 	public void removePage1()
 	{
@@ -70,6 +84,9 @@ public class HttpSessionDataStoreTest
 		assertNull(store.getData(sessionId, pageId));
 	}
 
+	/**
+	 * removePage2()
+	 */
 	@Test
 	public void removePage2()
 	{

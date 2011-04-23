@@ -19,6 +19,8 @@ package org.apache.wicket.markup.html.image;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
 
+/**
+ */
 public class InvalidImagePage extends WebPage
 {
 	/**
@@ -26,6 +28,9 @@ public class InvalidImagePage extends WebPage
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 */
 	public InvalidImagePage()
 	{
 		add(new Image("invalidImage", new Model<String>("toto.gif")));

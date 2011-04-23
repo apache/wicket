@@ -51,7 +51,7 @@ public class RemoveTestPage extends WebPage
 				super.onRemove();
 			}
 		};
-		_1.add(new Link(LINK)
+		_1.add(new Link<Void>(LINK)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -73,7 +73,7 @@ public class RemoveTestPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 		};
-		_2.add(new Link(LINK)
+		_2.add(new Link<Void>(LINK)
 		{
 			private static final long serialVersionUID = 1L;
 

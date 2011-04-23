@@ -23,6 +23,8 @@ import org.apache.wicket.markup.html.WebPage;
  */
 public class SecondPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 */

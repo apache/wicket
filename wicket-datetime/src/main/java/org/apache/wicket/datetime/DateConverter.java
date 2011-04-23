@@ -92,14 +92,14 @@ public abstract class DateConverter implements IConverter<Date>
 		{
 			TimeZone zone = getClientTimeZone();
 			DateTime dateTime = null;
-			
+
 			// set time zone for client
-			format = format.withZone(getTimeZone());				
+			format = format.withZone(getTimeZone());
 
 			try
 			{
 				// parse date retaining the time of the submission
-				dateTime = format.parseDateTime(value);				
+				dateTime = format.parseDateTime(value);
 			}
 			catch (RuntimeException e)
 			{
@@ -109,8 +109,8 @@ public abstract class DateConverter implements IConverter<Date>
 			if (zone != null)
 			{
 				dateTime = dateTime.withZoneRetainFields(DateTimeZone.forTimeZone(zone));
-			}			
-			
+			}
+
 			return dateTime.toDate();
 		}
 		else
@@ -174,6 +174,7 @@ public abstract class DateConverter implements IConverter<Date>
 	}
 
 	/**
+	 * @param locale
 	 * @return Gets the pattern that is used for printing and parsing
 	 */
 	public abstract String getDatePattern(Locale locale);
@@ -206,7 +207,7 @@ public abstract class DateConverter implements IConverter<Date>
 
 	/**
 	 * @param locale
-	 *
+	 * 
 	 * @return formatter The formatter for the current conversion
 	 */
 	protected abstract DateTimeFormatter getFormat(Locale locale);

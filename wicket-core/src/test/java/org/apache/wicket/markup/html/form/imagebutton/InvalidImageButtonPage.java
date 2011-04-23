@@ -20,6 +20,8 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.ImageButton;
 import org.apache.wicket.model.Model;
 
+/**
+ */
 public class InvalidImageButtonPage extends WebPage
 {
 	/**
@@ -27,6 +29,9 @@ public class InvalidImageButtonPage extends WebPage
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 */
 	public InvalidImageButtonPage()
 	{
 		add(new ImageButton("invalidImage", new Model<String>("toto.gif")));
