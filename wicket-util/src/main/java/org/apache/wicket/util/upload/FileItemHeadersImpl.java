@@ -17,12 +17,12 @@
 package org.apache.wicket.util.upload;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.wicket.util.lang.Generics;
 
 /**
  * Default implementation of the {@link FileItemHeaders} interface.
@@ -37,37 +37,37 @@ public class FileItemHeadersImpl implements FileItemHeaders, Serializable
 	/**
 	 * Map of <code>String</code> keys to a <code>List</code> of <code>String</code> instances.
 	 */
-	private final Map headerNameToValueListMap = new HashMap();
+	private final Map<String, List<String>> headerNameToValueListMap = Generics.newHashMap();
 
 	/**
 	 * List to preserve order of headers as added. This would not be needed if a
 	 * <code>LinkedHashMap</code> could be used, but don't want to depend on 1.4.
 	 */
-	private final List headerNameList = new ArrayList();
+	private final List<String> headerNameList = Generics.newArrayList();
 
 	public String getHeader(final String name)
 	{
 		String nameLower = name.toLowerCase();
-		List headerValueList = (List)headerNameToValueListMap.get(nameLower);
+		List<String> headerValueList = headerNameToValueListMap.get(nameLower);
 		if (null == headerValueList)
 		{
 			return null;
 		}
-		return (String)headerValueList.get(0);
+		return headerValueList.get(0);
 	}
 
-	public Iterator getHeaderNames()
+	public Iterator<String> getHeaderNames()
 	{
 		return headerNameList.iterator();
 	}
 
-	public Iterator getHeaders(final String name)
+	public Iterator<String> getHeaders(final String name)
 	{
 		String nameLower = name.toLowerCase();
-		List headerValueList = (List)headerNameToValueListMap.get(nameLower);
+		List<String> headerValueList = headerNameToValueListMap.get(nameLower);
 		if (null == headerValueList)
 		{
-			return Collections.EMPTY_LIST.iterator();
+			headerValueList = Collections.emptyList();
 		}
 		return headerValueList.iterator();
 	}
@@ -83,10 +83,10 @@ public class FileItemHeadersImpl implements FileItemHeaders, Serializable
 	public synchronized void addHeader(final String name, final String value)
 	{
 		String nameLower = name.toLowerCase();
-		List headerValueList = (List)headerNameToValueListMap.get(nameLower);
+		List<String> headerValueList = headerNameToValueListMap.get(nameLower);
 		if (null == headerValueList)
 		{
-			headerValueList = new ArrayList();
+			headerValueList = Generics.newArrayList();
 			headerNameToValueListMap.put(nameLower, headerValueList);
 			headerNameList.add(nameLower);
 		}
