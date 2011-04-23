@@ -23,11 +23,17 @@ import org.apache.wicket.request.http.WebResponse;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+/**
+ * RedirectRequestHandlerTest
+ */
 public class RedirectRequestHandlerTest
 {
 
 	private static final String REDIRECT_URL = "redirectUrl";
 
+	/**
+	 * permenanentlyMovedShouldSetLocationHeader()
+	 */
 	@Test
 	public void permenanentlyMovedShouldSetLocationHeader()
 	{
@@ -45,6 +51,9 @@ public class RedirectRequestHandlerTest
 		Mockito.verify(webResponse).setHeader("Location", REDIRECT_URL);
 	}
 
+	/**
+	 * tempMovedShouldRedirect()
+	 */
 	@Test
 	public void tempMovedShouldRedirect()
 	{

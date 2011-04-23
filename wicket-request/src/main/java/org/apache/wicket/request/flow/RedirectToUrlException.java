@@ -34,11 +34,25 @@ public class RedirectToUrlException extends ReplaceHandlerException
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param redirectUrl
+	 *            URL to redirect to.
+	 */
 	public RedirectToUrlException(final String redirectUrl)
 	{
 		this(redirectUrl, HttpServletResponse.SC_MOVED_TEMPORARILY);
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param redirectUrl
+	 *            URL to redirect to.
+	 * @param statusCode
+	 *            301 (Moved permanently) or 302 (Moved temporarily)
+	 */
 	public RedirectToUrlException(final String redirectUrl, final int statusCode)
 	{
 		super(new RedirectRequestHandler(redirectUrl, statusCode), true);

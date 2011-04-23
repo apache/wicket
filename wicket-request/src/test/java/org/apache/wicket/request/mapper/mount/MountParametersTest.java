@@ -22,9 +22,15 @@ import static org.junit.Assert.assertTrue;
 import org.apache.wicket.util.string.StringValue;
 import org.junit.Test;
 
+/**
+ * MountParametersTest
+ */
 public class MountParametersTest
 {
 
+	/**
+	 * getNonExistingPlaceholder()
+	 */
 	@Test
 	public void getNonExistingPlaceholder()
 	{
@@ -34,6 +40,9 @@ public class MountParametersTest
 		assertTrue(value.isNull());
 	}
 
+	/**
+	 * getExistingPlaceholder()
+	 */
 	@Test
 	public void getExistingPlaceholder()
 	{
@@ -47,6 +56,9 @@ public class MountParametersTest
 		assertEquals(originalValue.toString(), actualValue.toString());
 	}
 
+	/**
+	 * cannotModifyByNamesSet()
+	 */
 	@Test(expected = UnsupportedOperationException.class)
 	public void cannotModifyByNamesSet()
 	{

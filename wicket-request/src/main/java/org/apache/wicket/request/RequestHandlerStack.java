@@ -42,7 +42,7 @@ public abstract class RequestHandlerStack
 	private IRequestHandler scheduledAfterCurrent = null;
 
 	/**
-	 * {@inheritDoc}
+	 * @return active handler
 	 */
 	public IRequestHandler getActive()
 	{
@@ -50,7 +50,7 @@ public abstract class RequestHandlerStack
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @param handler
 	 */
 	public void execute(final IRequestHandler handler)
 	{
@@ -98,14 +98,16 @@ public abstract class RequestHandlerStack
 	}
 
 	/**
-	 * Allows the request handler to response to the request
+	 * Allows the request handler to respond to the request
 	 * 
 	 * @param handler
 	 */
 	protected abstract void respond(IRequestHandler handler);
 
 	/**
-	 * {@inheritDoc}
+	 * Schedules the handler after the current one
+	 * 
+	 * @param handler
 	 */
 	public void schedule(final IRequestHandler handler)
 	{
@@ -113,7 +115,7 @@ public abstract class RequestHandlerStack
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @return scheduled request handler after the current one
 	 */
 	public IRequestHandler next()
 	{
@@ -121,7 +123,7 @@ public abstract class RequestHandlerStack
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @param handler
 	 */
 	public void replaceAll(final IRequestHandler handler)
 	{
@@ -136,7 +138,7 @@ public abstract class RequestHandlerStack
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Detaches all request handlers
 	 */
 	public void detach()
 	{

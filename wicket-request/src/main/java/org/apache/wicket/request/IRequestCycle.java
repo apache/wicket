@@ -50,5 +50,10 @@ public interface IRequestCycle
 	 */
 	void scheduleRequestHandlerAfterCurrent(IRequestHandler handler);
 
+	/**
+	 * Returns {@link UrlRenderer} for this {@link IRequestCycle}.
+	 * 
+	 * @return UrlRenderer instance.
+	 */
 	UrlRenderer getUrlRenderer();
 }

@@ -41,6 +41,8 @@ public final class AbortWithHttpErrorCodeException extends ResetResponseExceptio
 	 * @param errorCode
 	 *            the servlet error code; use one of the
 	 *            {@link javax.servlet.http.HttpServletResponse} constants
+	 * @param message
+	 *            the optional message to send to the client
 	 * @see javax.servlet.http.HttpServletResponse
 	 */
 	public AbortWithHttpErrorCodeException(final int errorCode, final String message)
