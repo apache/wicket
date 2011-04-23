@@ -47,6 +47,8 @@ public class ApplicationSettings implements IApplicationSettings
 
 	private Bytes defaultMaximumUploadSize = Bytes.MAX;
 
+	private boolean uploadProgressUpdatesEnabled = false;
+
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#getAccessDeniedPage()
 	 */
@@ -82,6 +84,14 @@ public class ApplicationSettings implements IApplicationSettings
 	public Class<? extends Page> getPageExpiredErrorPage()
 	{
 		return pageExpiredErrorPage.get();
+	}
+
+	/**
+	 * @see org.apache.wicket.settings.IApplicationSettings#isUploadProgressUpdatesEnabled()
+	 */
+	public boolean isUploadProgressUpdatesEnabled()
+	{
+		return uploadProgressUpdatesEnabled;
 	}
 
 	/**
@@ -140,6 +150,14 @@ public class ApplicationSettings implements IApplicationSettings
 		checkPageClass(pageExpiredErrorPage);
 
 		this.pageExpiredErrorPage = new WeakReference<Class<? extends Page>>(pageExpiredErrorPage);
+	}
+
+	/**
+	 * @see org.apache.wicket.settings.IApplicationSettings#setUploadProgressUpdatesEnabled(boolean)
+	 */
+	public void setUploadProgressUpdatesEnabled(boolean uploadProgressUpdatesEnabled)
+	{
+		this.uploadProgressUpdatesEnabled = uploadProgressUpdatesEnabled;
 	}
 
 	/**

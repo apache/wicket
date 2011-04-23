@@ -30,7 +30,6 @@ import org.apache.wicket.markup.html.WicketEventReference;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.SharedResourceReference;
@@ -42,8 +41,22 @@ import org.slf4j.LoggerFactory;
 /**
  * A panel to show the progress of an HTTP upload.
  * <p>
- * NB: For this to work, you *must* use an {@link UploadWebRequest}. See the javadoc in that class
- * for details.
+ * Note: For this to work upload progress monitoring must be enabled in the wicket application.
+ * Example:
+ * 
+ * <pre>
+ * <code>
+ *  public class App extends WebApplication {
+ * 
+ * 	&#64;Override
+ * 	protected void init() {
+ * 		super.init();
+ * 
+ * 		<b>getApplicationSettings().setUploadProgressUpdatesEnabled(true);</b> // <--
+ * 	}
+ * }
+ * </code>
+ * </pre>
  * 
  * @author Andrew Lombardi
  */
@@ -144,12 +157,6 @@ public class UploadProgressBar extends Panel
 		statusDiv = new WebMarkupContainer("status");
 		statusDiv.setOutputMarkupId(true);
 		add(statusDiv);
-
-		if (!(RequestCycle.get().getRequest() instanceof UploadWebRequest) &&
-			!(RequestCycle.get().getRequest() instanceof MultipartRequest))
-		{
-			log.warn("UploadProgressBar will not work without an UploadWebRequest. See the javadoc for details.");
-		}
 	}
 
 	/**

@@ -47,7 +47,7 @@ public interface IApplicationSettings
 	Class<? extends Page> getAccessDeniedPage();
 
 	/**
-	 * Gets the default resolver to use when finding classes and resources
+	 * Gets the default resolver to use when finding classes and resources.
 	 * 
 	 * @return Default class resolver
 	 */
@@ -78,6 +78,13 @@ public interface IApplicationSettings
 	Class<? extends Page> getPageExpiredErrorPage();
 
 	/**
+	 * Gets whether wicket is providing updates about the upload progress or not.
+	 * 
+	 * @return if true upload progress monitoring is enabled
+	 */
+	boolean isUploadProgressUpdatesEnabled();
+
+	/**
 	 * Sets the access denied page class. The class must be bookmarkable and must extend Page.
 	 * 
 	 * @param accessDeniedPage
@@ -86,7 +93,7 @@ public interface IApplicationSettings
 	void setAccessDeniedPage(final Class<? extends Page> accessDeniedPage);
 
 	/**
-	 * Sets the default class resolver to use when finding classes and resources
+	 * Sets the default class resolver to use when finding classes and resources.
 	 * 
 	 * @param defaultClassResolver
 	 *            The default class resolver
@@ -117,4 +124,12 @@ public interface IApplicationSettings
 	 *            The pageExpiredErrorPage to set.
 	 */
 	void setPageExpiredErrorPage(final Class<? extends Page> pageExpiredErrorPage);
+
+	/**
+	 * Sets whether wicket should provide updates about the upload progress or not.
+	 * 
+	 * @param uploadProgressUpdatesEnabled
+	 *            if true upload progress monitoring is enabled
+	 */
+	void setUploadProgressUpdatesEnabled(boolean uploadProgressUpdatesEnabled);
 }

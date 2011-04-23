@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.settings.IApplicationSettings;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.upload.DiskFileItemFactory;
@@ -280,13 +282,14 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	}
 
 	/**
-	 * Subclasses that want to receive upload notifications should return true
+	 * Subclasses that want to receive upload notifications should return true. By default it takes
+	 * the value from {@link IApplicationSettings#isUploadProgressUpdatesEnabled()}.
 	 * 
 	 * @return true if upload status update event should be invoked
 	 */
 	protected boolean wantUploadProgressUpdates()
 	{
-		return false;
+		return Application.get().getApplicationSettings().isUploadProgressUpdatesEnabled();
 	}
 
 	/**
@@ -296,7 +299,9 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 */
 	protected void onUploadStarted(int totalBytes)
 	{
+		UploadInfo info = new UploadInfo(totalBytes);
 
+		setUploadInfo(getContainerRequest(), info);
 	}
 
 	/**
@@ -307,7 +312,16 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 */
 	protected void onUploadUpdate(int bytesUploaded, int total)
 	{
+		HttpServletRequest request = getContainerRequest();
+		UploadInfo info = getUploadInfo(request);
+		if (info == null)
+		{
+			throw new IllegalStateException(
+				"could not find UploadInfo object in session which should have been set when uploaded started");
+		}
+		info.setBytesUploaded(bytesUploaded);
 
+		setUploadInfo(request, info);
 	}
 
 	/**
@@ -315,7 +329,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 */
 	protected void onUploadCompleted()
 	{
-
+		clearUploadInfo(getContainerRequest());
 	}
 
 	/**
@@ -389,5 +403,47 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		throws FileUploadException
 	{
 		return this;
+	}
+
+	private static final String SESSION_KEY = MultipartServletWebRequestImpl.class.getName();
+
+	/**
+	 * Retrieves {@link UploadInfo} from session, null if not found.
+	 * 
+	 * @param req
+	 *            http servlet request, not null
+	 * @return {@link UploadInfo} object from session, or null if not found
+	 */
+	public static UploadInfo getUploadInfo(final HttpServletRequest req)
+	{
+		Args.notNull(req, "req");
+		return (UploadInfo)req.getSession().getAttribute(SESSION_KEY);
+	}
+
+	/**
+	 * Sets the {@link UploadInfo} object into session.
+	 * 
+	 * @param req
+	 *            http servlet request, not null
+	 * @param uploadInfo
+	 *            {@link UploadInfo} object to be put into session, not null
+	 */
+	public static void setUploadInfo(final HttpServletRequest req, final UploadInfo uploadInfo)
+	{
+		Args.notNull(req, "req");
+		Args.notNull(uploadInfo, "uploadInfo");
+		req.getSession().setAttribute(SESSION_KEY, uploadInfo);
+	}
+
+	/**
+	 * Clears the {@link UploadInfo} object from session if one exists.
+	 * 
+	 * @param req
+	 *            http servlet request, not null
+	 */
+	public static void clearUploadInfo(final HttpServletRequest req)
+	{
+		Args.notNull(req, "req");
+		req.getSession().removeAttribute(SESSION_KEY);
 	}
 }

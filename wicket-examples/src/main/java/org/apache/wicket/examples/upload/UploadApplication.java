@@ -16,12 +16,8 @@
  */
 package org.apache.wicket.examples.upload;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
-import org.apache.wicket.extensions.ajax.markup.html.form.upload.UploadWebRequest;
-import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.MountedMapper;
 import org.apache.wicket.util.file.Folder;
 
@@ -77,15 +73,6 @@ public class UploadApplication extends WicketExampleApplication
 		getRootRequestMapperAsCompound().add(new MountedMapper("/multi", MultiUploadPage.class));
 		getRootRequestMapperAsCompound().add(new MountedMapper("/single", UploadPage.class));
 
-	}
-
-	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#newWebRequest(javax.servlet.http.HttpServletRequest,
-	 *      String)
-	 */
-	@Override
-	protected WebRequest newWebRequest(HttpServletRequest servletRequest, String filterPath)
-	{
-		return new UploadWebRequest(servletRequest, filterPath);
+		getApplicationSettings().setUploadProgressUpdatesEnabled(true);
 	}
 }
