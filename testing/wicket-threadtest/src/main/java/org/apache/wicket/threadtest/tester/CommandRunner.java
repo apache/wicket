@@ -30,11 +30,21 @@ import org.slf4j.LoggerFactory;
 public class CommandRunner implements Runnable
 {
 
+	/**
+	 * TODO javadoc
+	 */
 	public static interface CommandRunnerObserver
 	{
 
+		/**
+		 * @param runner
+		 */
 		void onDone(CommandRunner runner);
 
+		/**
+		 * @param runner
+		 * @param e
+		 */
 		void onError(CommandRunner runner, Exception e);
 	}
 
@@ -51,6 +61,7 @@ public class CommandRunner implements Runnable
 	 * 
 	 * @param commands
 	 * @param client
+	 * @param observer
 	 */
 	public CommandRunner(List<Command> commands, HttpClient client, CommandRunnerObserver observer)
 	{
@@ -66,7 +77,7 @@ public class CommandRunner implements Runnable
 	 */
 	public HttpClient getClient()
 	{
-		return this.client;
+		return client;
 	}
 
 	/**
@@ -83,7 +94,8 @@ public class CommandRunner implements Runnable
 			}
 			catch (Exception e)
 			{
-				log.error("execution of command " + command + ", thread " + Thread.currentThread() + " failed", e);
+				log.error("execution of command " + command + ", thread " + Thread.currentThread() +
+					" failed", e);
 				observer.onError(this, e);
 				return;
 			}

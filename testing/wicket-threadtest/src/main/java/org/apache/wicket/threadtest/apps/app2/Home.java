@@ -25,6 +25,7 @@ import org.apache.wicket.model.IModel;
  */
 public class Home extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.

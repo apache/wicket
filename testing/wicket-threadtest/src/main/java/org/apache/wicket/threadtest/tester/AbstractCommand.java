@@ -18,6 +18,9 @@ package org.apache.wicket.threadtest.tester;
 
 import java.util.List;
 
+/**
+ * TODO javadoc
+ */
 public abstract class AbstractCommand implements Command
 {
 

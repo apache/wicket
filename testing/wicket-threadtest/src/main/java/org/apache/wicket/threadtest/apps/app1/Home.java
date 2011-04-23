@@ -63,6 +63,7 @@ import org.apache.wicket.validation.validator.RangeValidator;
  */
 public class Home extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 
 	private class ActionPanel extends Panel
 	{
@@ -339,12 +340,13 @@ public class Home extends WebPage
 	}
 
 	/** Relevant locales wrapped in a list. */
-	private static final List<Locale> LOCALES = Arrays.asList(Locale.ENGLISH,
-		new Locale("nl"), Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.JAPANESE,
-		new Locale("pt", "BR"), new Locale("fa", "IR"), new Locale("da", "DK"));
+	private static final List<Locale> LOCALES = Arrays.asList(Locale.ENGLISH, new Locale("nl"),
+		Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.JAPANESE, new Locale("pt", "BR"),
+		new Locale("fa", "IR"), new Locale("da", "DK"));
 
 	/** available sites for the multiple select. */
-	private static final List<String> SITES = Arrays.asList("The Server Side", "Java Lobby", "Java.Net");
+	private static final List<String> SITES = Arrays.asList("The Server Side", "Java Lobby",
+		"Java.Net");
 
 	/** available numbers for the radio selection. */
 	static final List<String> NUMBERS = Arrays.asList("1", "2", "3");

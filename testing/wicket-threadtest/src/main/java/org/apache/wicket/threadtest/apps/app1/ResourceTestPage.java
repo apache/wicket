@@ -41,6 +41,7 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  */
 public class ResourceTestPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Defines the number of images per page
 	 */

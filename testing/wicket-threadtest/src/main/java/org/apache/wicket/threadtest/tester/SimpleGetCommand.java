@@ -25,6 +25,9 @@ import org.apache.wicket.util.io.Streams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * TODO javadoc
+ */
 public class SimpleGetCommand extends AbstractGetCommand
 {
 	private static final Logger log = LoggerFactory.getLogger(SimpleGetCommand.class);
@@ -79,7 +82,8 @@ public class SimpleGetCommand extends AbstractGetCommand
 	}
 
 	/**
-	 * @see org.apache.wicket.threadtest.tester.AbstractGetCommand#doGet(org.apache.commons.httpclient.HttpClient, String)
+	 * @see org.apache.wicket.threadtest.tester.AbstractGetCommand#doGet(org.apache.commons.httpclient.HttpClient,
+	 *      String)
 	 */
 	@Override
 	protected void doGet(HttpClient client, String url) throws Exception

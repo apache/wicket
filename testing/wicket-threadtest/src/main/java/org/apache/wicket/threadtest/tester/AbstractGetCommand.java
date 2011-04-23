@@ -21,6 +21,9 @@ import java.util.List;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.wicket.util.string.Strings;
 
+/**
+ * TODO javadoc
+ */
 public abstract class AbstractGetCommand extends AbstractCommand
 {
 
