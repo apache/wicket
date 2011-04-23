@@ -274,7 +274,7 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 
 		if (!MarkupParser.WICKET.equals(wicketNamespace))
 		{
-			log.info("You are using a non-standard component name: " + wicketNamespace);
+			log.debug("You are using a non-standard namespace name: '{}'", wicketNamespace);
 		}
 	}
 
