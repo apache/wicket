@@ -35,6 +35,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -425,6 +426,13 @@ public abstract class AbstractTree extends Panel
 				// visit item and it's children
 				visitItemAndChildren(rootItem, callback);
 			}
+		}
+
+		@Override
+		public IMarkupFragment getMarkup(final Component child)
+		{
+			// The childs markup is always equal to the parents markup.
+			return getMarkup();
 		}
 	}
 

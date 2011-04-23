@@ -70,6 +70,8 @@ public class TreeTest extends WicketTestCase
 	/** */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		private static final long serialVersionUID = 1L;
+
 		AbstractTree tree;
 		DefaultTreeModel treeModel;
 		DefaultMutableTreeNode rootNode;
