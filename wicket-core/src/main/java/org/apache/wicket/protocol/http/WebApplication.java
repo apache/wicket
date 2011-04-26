@@ -16,11 +16,6 @@
  */
 package org.apache.wicket.protocol.http;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.IPageRendererProvider;
 import org.apache.wicket.Page;
@@ -66,6 +61,13 @@ import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.UnsupportedEncodingException;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -380,6 +382,16 @@ public abstract class WebApplication extends Application
 	 */
 	protected WebRequest newWebRequest(HttpServletRequest servletRequest, final String filterPath)
 	{
+		String requestEncoding = getRequestCycleSettings().getResponseRequestEncoding();
+		try
+		{
+			servletRequest.setCharacterEncoding(requestEncoding);
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			throw new RuntimeException(e);
+		}
+
 		if (hasFilterFactoryManager())
 		{
 			for (AbstractRequestWrapperFactory factory : getFilterFactoryManager())
