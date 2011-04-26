@@ -217,7 +217,7 @@ public class UrlRenderer
 			}
 
 			int baseUrlSize = baseUrlSegments.size();
-			if (common + 1 == baseUrlSize)
+			if (common + 1 == baseUrlSize && urlSegments.isEmpty())
 			{
 				newSegments.add(".");
 			}
