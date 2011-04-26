@@ -29,6 +29,7 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.request.handler.IPageRequestHandler;
@@ -193,6 +194,13 @@ public class DummyRequestLogger implements IRequestLogger
 			sb.append("ResourceReference[");
 			sb.append(resourceRefenceHandler.getResourceReference());
 			sb.append("]");
+		}
+		else if (requestHandler instanceof IRequestHandlerDelegate)
+		{
+			sb.append(requestHandler.getClass().getSimpleName())
+				.append(".")
+				.append(
+					getRequestHandlerString(((IRequestHandlerDelegate)requestHandler).getDelegateHandler()));
 		}
 		else
 		{

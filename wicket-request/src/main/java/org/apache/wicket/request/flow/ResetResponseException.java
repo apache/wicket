@@ -18,6 +18,7 @@ package org.apache.wicket.request.flow;
 
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.RequestHandlerStack.ReplaceHandlerException;
 
 /**
@@ -40,7 +41,10 @@ public abstract class ResetResponseException extends ReplaceHandlerException
 		super(new ResponseResettingDecorator(handler), true);
 	}
 
-	private static class ResponseResettingDecorator implements IRequestHandler
+	private static class ResponseResettingDecorator
+		implements
+			IRequestHandler,
+			IRequestHandlerDelegate
 	{
 		private final IRequestHandler delegate;
 
@@ -63,6 +67,11 @@ public abstract class ResetResponseException extends ReplaceHandlerException
 		{
 			requestCycle.getResponse().reset();
 			delegate.respond(requestCycle);
+		}
+
+		public IRequestHandler getDelegateHandler()
+		{
+			return delegate;
 		}
 	}
 }
