@@ -88,5 +88,11 @@ class MultiRequestCycleListenerCallOrderApplication extends WebApplication
 			callSequence.add(name + ".onException");
 			return null;
 		}
+
+		@Override
+		public String toString()
+		{
+			return "Listener " + name;
+		}
 	}
 }

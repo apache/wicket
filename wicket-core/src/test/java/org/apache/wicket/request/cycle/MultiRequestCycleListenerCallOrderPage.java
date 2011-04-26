@@ -16,13 +16,40 @@
  */
 package org.apache.wicket.request.cycle;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.Link;
 
-class MultiRequestCycleListenerCallOrderPage extends WebPage
+/**
+ */
+public class MultiRequestCycleListenerCallOrderPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 */
 	public MultiRequestCycleListenerCallOrderPage()
 	{
+		add(new Link<Void>("link")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick()
+			{
+			}
+		});
+
+		add(new AjaxLink<Void>("ajax")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+			}
+		});
 	}
 }

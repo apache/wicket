@@ -197,7 +197,7 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 
 		assertEquals(401, errorCode);
 		assertEquals(1, incrementingListener.exceptionResolutions);
-		assertEquals(1, incrementingListener.schedules);
+		assertEquals(0, incrementingListener.schedules);
 
 		// two listeners that return a request handler should cause an exception
 		Application.get().getRequestCycleListeners().add(new ErrorCodeListener(401));

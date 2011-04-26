@@ -17,9 +17,10 @@
 package org.apache.wicket.request.cycle;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
@@ -35,30 +36,114 @@ public class MultiRequestCycleListenerCallOrderTest
 	private MultiRequestCycleListenerCallOrderApplication application;
 
 	/**
-	 * setUp()
 	 */
 	@Before
 	public void setUp()
 	{
 		application = new MultiRequestCycleListenerCallOrderApplication();
 		tester = new WicketTester(application);
+		application.callSequence.clear();
 	}
 
 	/**
-	 * callSequenceIsFirstInLastOut()
 	 */
 	@Test
-	public void callSequenceIsFirstInLastOut()
+	public void bookmarkableCallSequenceIsFirstInLastOut()
+	{
+		// start and render the test page
+		tester.startPage(MultiRequestCycleListenerCallOrderPage.class);
+
+		// assert rendered page class
+		tester.assertRenderedPage(MultiRequestCycleListenerCallOrderPage.class);
+
+		List<String> primaryRequest = asList("first.onBeginRequest", "second.onBeginRequest",
+			"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
+			"second.onEndRequest", "first.onEndRequest", "second.onDetach", "first.onDetach");
+		List<String> redirectRequest = asList("first.onBeginRequest", "second.onBeginRequest",
+			"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
+			"second.onEndRequest", "first.onEndRequest", "second.onDetach", "first.onDetach");
+
+		List<String> expected = new ArrayList<String>();
+		expected.addAll(primaryRequest);
+		expected.addAll(redirectRequest);
+		assertEquals(expected.toString(), application.callSequence.toString());
+	}
+
+	/**
+	 */
+	@Test
+	public void sessionRelativePageRequestCallSequenceIsFirstInLastOut()
 	{
 		// start and render the test page
 		tester.startPage(new MultiRequestCycleListenerCallOrderPage());
 		// assert rendered page class
 		tester.assertRenderedPage(MultiRequestCycleListenerCallOrderPage.class);
 
-		assertThat(
-			application.callSequence,
-			is(equalTo(asList("first.onBeginRequest", "second.onBeginRequest",
-				"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
-				"second.onEndRequest", "first.onEndRequest", "second.onDetach", "first.onDetach"))));
+		List<String> primaryRequest = asList("first.onBeginRequest", "second.onBeginRequest",
+			"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
+			"second.onEndRequest", "first.onEndRequest", "second.onDetach", "first.onDetach");
+		List<String> redirectRequest = asList("first.onBeginRequest", "second.onBeginRequest",
+			"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
+			"second.onEndRequest", "first.onEndRequest", "second.onDetach", "first.onDetach");
+
+		List<String> expected = new ArrayList<String>();
+		expected.addAll(primaryRequest);
+		expected.addAll(redirectRequest);
+		assertEquals(expected.toString(), application.callSequence.toString());
+	}
+
+	/**
+	 */
+	@Test
+	public void linkListenerCallSequenceIsFirstInLastOut()
+	{
+		// start and render the test page
+		tester.startPage(new MultiRequestCycleListenerCallOrderPage());
+		// assert rendered page class
+		tester.assertRenderedPage(MultiRequestCycleListenerCallOrderPage.class);
+
+		application.callSequence.clear();
+
+		tester.clickLink("link");
+
+		List<String> primaryRequest = asList("first.onBeginRequest", "second.onBeginRequest",
+			"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
+			"first.onRequestHandlerScheduled", "second.onRequestHandlerScheduled",
+			"second.onEndRequest", "first.onEndRequest", "second.onDetach", "first.onDetach");
+		List<String> redirectRequest = asList("first.onBeginRequest", "second.onBeginRequest",
+			"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
+			"second.onEndRequest", "first.onEndRequest", "second.onDetach", "first.onDetach");
+
+		List<String> expected = new ArrayList<String>();
+		expected.addAll(primaryRequest);
+		expected.addAll(redirectRequest);
+
+		assertEquals(expected.toString(), application.callSequence.toString());
+	}
+
+	/**
+	 */
+	@Test
+	public void ajaxlinkListenerCallSequenceIsFirstInLastOut()
+	{
+		// start and render the test page
+		tester.startPage(new MultiRequestCycleListenerCallOrderPage());
+		// assert rendered page class
+		tester.assertRenderedPage(MultiRequestCycleListenerCallOrderPage.class);
+
+		application.callSequence.clear();
+
+		tester.clickLink("ajax", true);
+
+		List<String> primaryRequest = asList("first.onBeginRequest", "second.onBeginRequest",
+			"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
+			"first.onRequestHandlerScheduled", "second.onRequestHandlerScheduled",
+			"second.onEndRequest", "first.onEndRequest", "second.onDetach", "first.onDetach");
+
+		// with ajax requests we don't expect a redirect
+		List<String> expected = new ArrayList<String>();
+		expected.addAll(primaryRequest);
+
+		assertEquals(expected.toString(), application.callSequence.toString());
 	}
 }
