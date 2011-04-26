@@ -84,12 +84,17 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 		});
 
 		tester.assertRenderedPage(MockPageWithFormAndContainedLink.class);
+		// Change the name in the textfield
+		page.getNameField().setModelValue(new String[] { "new mock value" });
 
 		// Click the submit link
 		tester.clickLink("form:link");
 
 		// Has it really been clicked?
 		assertTrue(linkClicked);
+
+		// And has the form been "submitted"
+		assertEquals("new mock value", mockPojo.getName());
 	}
 
 	/**
@@ -126,10 +131,16 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 
 		tester.assertRenderedPage(MockPageWithFormAndLink.class);
 
+		// Change the name in the textfield
+		page.getNameField().setModelValue(new String[] { "new mock value" });
+
 		// Click the submit link
 		tester.clickLink("link");
 
 		// Has it really been clicked?
 		assertTrue(linkClicked);
+
+		// And has the form been "submitted"
+		assertEquals("new mock value", mockPojo.getName());
 	}
 }

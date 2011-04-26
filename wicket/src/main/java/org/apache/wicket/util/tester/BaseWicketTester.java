@@ -1409,6 +1409,7 @@ public class BaseWicketTester extends MockWebApplication
 
 		checkUsability(form);
 
+		final Map<String, String[]> requestParams = getParametersForNextRequest();
 		/*
 		 * Means that an button or an ajax link was clicked and needs to be added to the request
 		 * parameters to their form component correctly resolves the submit origin
@@ -1421,7 +1422,6 @@ public class BaseWicketTester extends MockWebApplication
 		else if (component instanceof AjaxSubmitLink)
 		{
 			String inputName = ((IFormSubmittingComponent)component).getInputName();
-			Map<String, String[]> requestParams = getParametersForNextRequest();
 			requestParams.put(inputName, new String[] { "x" });
 		}
 
@@ -1446,9 +1446,9 @@ public class BaseWicketTester extends MockWebApplication
 
 						// Set request parameter with the field value, but do not modify an existing
 						// request parameter explicitly set using FormTester.setValue()
-						if (getServletRequest().getParameterMap().get(name) == null)
+						if (requestParams.get(name) == null)
 						{
-							getServletRequest().setParameter(name, value);
+							requestParams.put(name, new String[] { value });
 						}
 					}
 				}
