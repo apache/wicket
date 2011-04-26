@@ -169,12 +169,6 @@ Wicket.FunctionsExecuter.prototype = {
 	}
 }
 
-/*
-  WICKET-3473 Helper to proceed to next step, execution of notify needs to be delayed until the head contributions are loaded
-*/
-Wicket.functionExecuterSeq = 0;
-Wicket.functionExecuterCallbacks = {};
-
 Wicket.replaceOuterHtmlIE = function(element, text) {						
 
 	// replaces all <iframe references with <__WICKET_JS_REMOVE_X9F4A__iframe text
@@ -1643,13 +1637,12 @@ Wicket.Head.Contributor.prototype = {
 				// load the external javascript using Wicket.Ajax.Request
 				
 				// callback when script is loaded
-                var callBackIdentifier = 'script' + (Wicket.functionExecuterSeq++);
                 var onLoad = function(content) {
-                    Wicket.functionExecuterCallbacks[callBackIdentifier] = function() {
+					Wicket.Head.addJavascript(content, null, src);
+					setTimeout(function() {
                         Wicket.Ajax.invokePostCallHandlers();
                         notify();
-                    }
-					Wicket.Head.addJavascript(content+"; Wicket.functionExecuterCallbacks['"+callBackIdentifier+"'](); delete Wicket.functionExecuterCallbacks['"+callBackIdentifier+"']; ", null, src);
+                    }, 0);
 				}
 				// we need to schedule the request as timeout
 				// calling xml http request from another request call stack doesn't work
@@ -1789,6 +1782,7 @@ Wicket.Head.stripJSessionId = function(url) {
 // also a src value. Therefore we put the url to the src_ (notice the underscore)  attribute.
 // Wicket.Head.containsElement is aware of that and takes also the underscored attributes into account.
 Wicket.Head.addJavascript = function(content, id, fakeSrc) {
+	content = 'try{'+content+'}catch(e){WicketAjaxDebug.logError(e);}';
 	var script = Wicket.Head.createElement("script");
 	if (id) {
 		script.id = id;
