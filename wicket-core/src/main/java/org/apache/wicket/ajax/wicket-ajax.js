@@ -1467,14 +1467,14 @@ Wicket.Head.Contributor.prototype = {
 	    
 	    if (encoding != null && encoding != "") {
 	        text = Wicket.decode(encoding, text);        
-	    }       
+	    }
 	    
 	    if (Wicket.Browser.isKHTML()) {
 			// konqueror crashes if there is a <script element in the xml, but <SCRIPT is fine. 
 			text = text.replace(/<script/g,"<SCRIPT");
 			text = text.replace(/<\/script>/g,"</SCRIPT>");	
 		}
-				
+
 		// build a DOM tree of the contribution
 		var xmldoc;
 		if (window.ActiveXObject) {
@@ -1485,8 +1485,8 @@ Wicket.Head.Contributor.prototype = {
 		} else {
 		    var parser = new DOMParser();    
 		    xmldoc = parser.parseFromString(text, "text/xml");	
-		}	
-		
+		}
+
 		return xmldoc;	
 	},
 	
@@ -1546,10 +1546,12 @@ Wicket.Head.Contributor.prototype = {
 				} else if (name == "style") {
 					this.processStyle(steps, node);
 				}
+			} else if (node.nodeType === 8) { // comment type
+				this.processComment(steps, node);
 			}
 		}	
 	},
-	
+
 	// Process an external stylesheet element
 	processLink: function(steps, node) {		
 		steps.push(function(notify) {
@@ -1680,6 +1682,15 @@ Wicket.Head.Contributor.prototype = {
 				notify();
 			}
 		});					
+	},
+
+	// process (conditional) comments
+	processComment: function(steps, node) {
+		steps.push(function(notify) {
+			var comment = document.createComment(node.nodeValue);
+			Wicket.Head.addElement(comment);
+			notify();
+		});
 	}
 };
 
