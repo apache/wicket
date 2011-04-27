@@ -16,12 +16,6 @@
  */
 package org.apache.wicket.markup;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.Locale;
-
-import junit.framework.Assert;
-
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
@@ -34,6 +28,12 @@ import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.Locale;
+
+import junit.framework.Assert;
 
 
 /**
@@ -429,6 +429,29 @@ public final class MarkupParserTest extends WicketTestCase
 
 		RawMarkup raw = (RawMarkup)markup.get(0);
 		assertEquals("<span> </span>", raw.toString());
+	}
+
+	/**
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-3648">WICKET-3648</a>
+	 * 
+	 * @throws IOException
+	 * @throws ResourceStreamNotFoundException
+	 */
+	public final void wicket3648testCommentsWithNestedElements() throws IOException,
+		ResourceStreamNotFoundException
+	{
+		tester.getApplication().getMarkupSettings().setStripComments(true);
+		final MarkupParser parser = new MarkupParser(
+// @formatter:off
+			"<span><!--[if lt IE 8 ]>\n"
+			+ "<script src='js/ie7.js'></script>\n" + 
+			"<![endif]--></span>"
+			// @formatter:on
+		);
+		IMarkupFragment markup = parser.parse();
+
+		RawMarkup raw = (RawMarkup)markup.get(0);
+		assertEquals("<span></span>", raw.toString());
 	}
 
 	/**
