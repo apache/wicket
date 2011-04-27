@@ -16,25 +16,21 @@
  */
 package org.apache.wicket.request.cycle;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.RequestHandlerStack;
 import org.apache.wicket.request.Response;
+import org.junit.Test;
 
 /**
- * 
  * @author Matej Knopp
  */
 public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 {
-
-	/**
-	 * Construct.
-	 */
-	public RequestHandlerStackTest()
-	{
-	}
-
 	private boolean testFlag1;
 	private boolean testFlag2;
 	private boolean testFlag3;
@@ -58,9 +54,8 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 		detachedFlag4 = false;
 	}
 
-	/**
-	 * 
-	 */
+	/** */
+	@Test
 	public void test1()
 	{
 		initFlags();
@@ -136,9 +131,8 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 		assertTrue(detachedFlag3);
 	}
 
-	/**
-	 * 
-	 */
+	/** */
+	@Test
 	public void test2()
 	{
 		initFlags();
@@ -234,9 +228,8 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 		assertTrue(detachedFlag4);
 	}
 
-	/**
-	 * 
-	 */
+	/** */
+	@Test
 	public void test3()
 	{
 		initFlags();

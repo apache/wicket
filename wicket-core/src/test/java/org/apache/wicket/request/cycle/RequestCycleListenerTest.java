@@ -16,9 +16,11 @@
  */
 package org.apache.wicket.request.cycle;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.ThreadContext;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.mock.MockWebRequest;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.request.IExceptionMapper;
@@ -29,13 +31,15 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.resource.DummyApplication;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Jeremy Thomerson
  */
 public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 {
-
 	private IRequestHandler handler;
 
 	private int errorCode;
@@ -46,11 +50,10 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 
 	private int exceptionsMapped;
 
-	@Override
-	protected void setUp() throws Exception
+	/** */
+	@Before
+	public void setUp()
 	{
-		super.setUp();
-
 		DummyApplication application = new DummyApplication();
 		application.setName("dummyTestApplication");
 		ThreadContext.setApplication(application);
@@ -59,10 +62,10 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 		errorCode = 0;
 	}
 
-	@Override
-	protected void tearDown() throws Exception
+	/** */
+	@After
+	public void tearDown()
 	{
-		super.tearDown();
 		ThreadContext.getApplication().internalDestroy();
 		ThreadContext.detach();
 	}
@@ -129,7 +132,8 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 	/**
 	 * @throws Exception
 	 */
-	public void testBasicOperations() throws Exception
+	@Test
+	public void basicOperations() throws Exception
 	{
 		IncrementingListener incrementingListener = new IncrementingListener();
 		Application.get().getRequestCycleListeners().add(incrementingListener);
@@ -183,10 +187,9 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 		assertValues(1, 2, 3);
 	}
 
-	/**
-	 * @throws Exception
-	 */
-	public void testExceptionRequestHandlers() throws Exception
+	/** */
+	@Test
+	public void exceptionIsHandledByRegisteredHandler()
 	{
 		IncrementingListener incrementingListener = new IncrementingListener();
 		Application.get().getRequestCycleListeners().add(incrementingListener);
@@ -198,29 +201,28 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 		assertEquals(401, errorCode);
 		assertEquals(1, incrementingListener.exceptionResolutions);
 		assertEquals(0, incrementingListener.schedules);
+	}
 
-		// two listeners that return a request handler should cause an exception
+	/** */
+	@Test
+	public void exceptionIsHandledByFirstAvailableHandler()
+	{
+		// when two listeners return a handler
 		Application.get().getRequestCycleListeners().add(new ErrorCodeListener(401));
-		cycle = newRequestCycle(true);
-		try
-		{
-			cycle.processRequestAndDetach();
-			fail("expected an exception because two request cycle listeners returned a request handler");
-		}
-		catch (WicketRuntimeException e)
-		{
-			/*
-			 * expected, the second handler was resolved but thrown an exception handling the
-			 * request
-			 */
-			assertEquals(2, incrementingListener.resolutions);
-		}
+		Application.get().getRequestCycleListeners().add(new ErrorCodeListener(402));
+
+		RequestCycle cycle = newRequestCycle(true);
+		cycle.processRequestAndDetach();
+
+		// the first handler returned is used to handle the exception
+		assertEquals(401, errorCode);
 	}
 
 	/**
 	 * @throws Exception
 	 */
-	public void testExceptionHandingInOnDetach() throws Exception
+	@Test
+	public void exceptionHandingInOnDetach() throws Exception
 	{
 		// this test is a little flaky because it depends on the ordering of listeners which is not
 		// guaranteed
@@ -278,7 +280,6 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 		}
 	}
 
-
 	private class IncrementingListener implements IRequestCycleListener
 	{
 
@@ -330,6 +331,4 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 			assertEquals(detachesnotified, this.detachesnotified);
 		}
 	}
-
-
 }

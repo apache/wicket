@@ -19,14 +19,13 @@ package org.apache.wicket.request.cycle;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.util.listener.ListenerCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 
+ * Special, Wicket internal composite {@link IRequestCycleListener} that
  */
 public class RequestCycleListenerCollection extends ListenerCollection<IRequestCycleListener>
 	implements
@@ -57,6 +56,13 @@ public class RequestCycleListenerCollection extends ListenerCollection<IRequestC
 		});
 	}
 
+	/**
+	 * Notifies all registered listeners of the exception and calls the first handler that was
+	 * returned by the listeners.
+	 * 
+	 * @see org.apache.wicket.request.cycle.IRequestCycleListener#onException(org.apache.wicket.request.cycle.RequestCycle,
+	 *      java.lang.Exception)
+	 */
 	public IRequestHandler onException(final RequestCycle cycle, final Exception ex)
 	{
 		final List<IRequestHandler> handlers = new ArrayList<IRequestHandler>();
@@ -77,14 +83,12 @@ public class RequestCycleListenerCollection extends ListenerCollection<IRequestC
 		{
 			return null;
 		}
-
 		if (handlers.size() > 1)
 		{
-			throw new WicketRuntimeException(
-				"More than one request cycle listener returned a request handler while handling the exception.",
-				ex);
+			logger.debug(
+				"{} exception handlers available for exception {}, using the first handler",
+				handlers.size(), ex);
 		}
-
 		return handlers.get(0);
 	}
 

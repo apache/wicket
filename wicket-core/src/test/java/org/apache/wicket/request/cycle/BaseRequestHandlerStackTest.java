@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.request.cycle;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
@@ -28,7 +26,7 @@ import org.apache.wicket.request.UrlRenderer;
 /**
  * @author Jeremy Thomerson
  */
-public abstract class BaseRequestHandlerStackTest extends TestCase
+public abstract class BaseRequestHandlerStackTest
 {
 	protected Response newResponse()
 	{
@@ -126,5 +124,4 @@ public abstract class BaseRequestHandlerStackTest extends TestCase
 
 		};
 	}
-
 }
