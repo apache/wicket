@@ -825,9 +825,9 @@ public class BaseWicketTester extends MockWebApplication
 			String failMessage = "No form submit behavior found on the submit link. Strange!!";
 			notNull(failMessage, ajaxFormSubmitBehavior);
 
-			setupAjaxSubmitRequestParameters(linkComponent, ajaxFormSubmitBehavior);
-
 			WebRequestCycle requestCycle = setupRequestAndResponse(true);
+
+			setupAjaxSubmitRequestParameters(linkComponent, ajaxFormSubmitBehavior);
 
 			// Ok, finally we "click" the link
 			ajaxFormSubmitBehavior.onRequest();
@@ -1409,7 +1409,8 @@ public class BaseWicketTester extends MockWebApplication
 
 		checkUsability(form);
 
-		final Map<String, String[]> requestParams = getParametersForNextRequest();
+		final Map<String, Object> requestParameters = getServletRequest().getParameterMap();
+
 		/*
 		 * Means that an button or an ajax link was clicked and needs to be added to the request
 		 * parameters to their form component correctly resolves the submit origin
@@ -1422,7 +1423,7 @@ public class BaseWicketTester extends MockWebApplication
 		else if (component instanceof AjaxSubmitLink)
 		{
 			String inputName = ((IFormSubmittingComponent)component).getInputName();
-			requestParams.put(inputName, new String[] { "x" });
+			requestParameters.put(inputName, new String[] { "x" });
 		}
 
 		form.visitFormComponents(new FormComponent.AbstractVisitor()
@@ -1446,9 +1447,9 @@ public class BaseWicketTester extends MockWebApplication
 
 						// Set request parameter with the field value, but do not modify an existing
 						// request parameter explicitly set using FormTester.setValue()
-						if (requestParams.get(name) == null)
+						if (requestParameters.containsKey(name) == false)
 						{
-							requestParams.put(name, new String[] { value });
+							requestParameters.put(name, new String[] { value });
 						}
 					}
 				}
