@@ -25,7 +25,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Special, Wicket internal composite {@link IRequestCycleListener} that
+ * Composite {@link IRequestCycleListener} that notifies all registered listeners with each
+ * IRequestCycleListener event.
+ * <p>
+ * <h3>Order of notification</h3>
+ * <p>
+ * {@link #onBeginRequest(RequestCycle)}, {@link #onRequestHandlerScheduled(IRequestHandler)} and
+ * {@link #onRequestHandlerResolved(IRequestHandler)} are notified in first in, first out order.
+ * <p>
+ * {@link #onEndRequest(RequestCycle)} and {@link #onDetach(RequestCycle)} are notified in last in
+ * first out order (i.e. reversed order). So for these events the collection functions as a stack.
+ * <p>
+ * <h3>Exception handling</h3>
+ * <p>
+ * The {@code RequestCycleListenerCollection} will use the first exception handler that is returned
+ * from all listeners in {@link #onException(RequestCycle, Exception)}
  */
 public class RequestCycleListenerCollection extends ListenerCollection<IRequestCycleListener>
 	implements
@@ -34,6 +48,11 @@ public class RequestCycleListenerCollection extends ListenerCollection<IRequestC
 	private static final Logger logger = LoggerFactory.getLogger(RequestCycleListenerCollection.class);
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Notifies all registered listeners of the onBeginRequest event in first in first out order,
+	 * i.e. the listener that is the first element of this collection is the first listener to be
+	 * notified of {@code onBeginRequest}.
+	 */
 	public void onBeginRequest(final RequestCycle cycle)
 	{
 		notify(new INotifier<IRequestCycleListener>()
@@ -45,6 +64,13 @@ public class RequestCycleListenerCollection extends ListenerCollection<IRequestC
 		});
 	}
 
+	/**
+	 * Notifies all registered listeners of the {@code onEndRequest} event in first in last out
+	 * order (i.e. the last listener that received an {@code #onBeginRequest} will be the first to
+	 * get notified of an {@code onEndRequest}.
+	 * 
+	 * @see IRequestCycleListener#onEndRequest(RequestCycle)
+	 */
 	public void onEndRequest(final RequestCycle cycle)
 	{
 		reversedNotify(new INotifier<IRequestCycleListener>()
@@ -57,11 +83,35 @@ public class RequestCycleListenerCollection extends ListenerCollection<IRequestC
 	}
 
 	/**
+	 * Notifies all registered listeners of the {@code onDetach} event in first in last out order
+	 * (i.e. the last listener that received an {@code #onBeginRequest} will be the first to get
+	 * notified of an {@code onDetach}.
+	 * 
+	 * @see IRequestCycleListener#onDetach(RequestCycle)
+	 */
+	public void onDetach(final RequestCycle cycle)
+	{
+		reversedNotify(new INotifier<IRequestCycleListener>()
+		{
+			public void notify(IRequestCycleListener listener)
+			{
+				try
+				{
+					listener.onDetach(cycle);
+				}
+				catch (Exception e)
+				{
+					logger.error("Error detaching request cycle listener: " + listener, e);
+				}
+			}
+		});
+	}
+
+	/**
 	 * Notifies all registered listeners of the exception and calls the first handler that was
 	 * returned by the listeners.
 	 * 
-	 * @see org.apache.wicket.request.cycle.IRequestCycleListener#onException(org.apache.wicket.request.cycle.RequestCycle,
-	 *      java.lang.Exception)
+	 * @see IRequestCycleListener#onException(RequestCycle, Exception)
 	 */
 	public IRequestHandler onException(final RequestCycle cycle, final Exception ex)
 	{
@@ -90,24 +140,6 @@ public class RequestCycleListenerCollection extends ListenerCollection<IRequestC
 				handlers.size(), ex);
 		}
 		return handlers.get(0);
-	}
-
-	public void onDetach(final RequestCycle cycle)
-	{
-		reversedNotify(new INotifier<IRequestCycleListener>()
-		{
-			public void notify(IRequestCycleListener listener)
-			{
-				try
-				{
-					listener.onDetach(cycle);
-				}
-				catch (Exception e)
-				{
-					logger.error("Error detaching request cycle listener: " + listener, e);
-				}
-			}
-		});
 	}
 
 	public void onRequestHandlerResolved(final IRequestHandler handler)
@@ -143,5 +175,4 @@ public class RequestCycleListenerCollection extends ListenerCollection<IRequestC
 			}
 		});
 	}
-
 }
