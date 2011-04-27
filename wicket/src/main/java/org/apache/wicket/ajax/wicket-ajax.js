@@ -1573,6 +1573,8 @@ Wicket.Head.Contributor.prototype = {
 				} else if (name == "style") {
 					this.processStyle(steps, node);
 				}
+			} else if (node.nodeType === 8) { // comment type
+				this.processComment(steps, node);
 			}
 		}	
 	},
@@ -1708,7 +1710,16 @@ Wicket.Head.Contributor.prototype = {
 				notify();
 			}
 		});					
-	}	
+	},
+	
+	// process (conditional) comments
+	processComment: function(steps, node) {
+		steps.push(function(notify) {
+			var comment = document.createComment(node.nodeValue);
+			Wicket.Head.addElement(comment);
+			notify();
+        	});
+	}
 };
 
 /**
