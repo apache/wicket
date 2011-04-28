@@ -37,7 +37,7 @@ import org.apache.wicket.util.string.Strings;
  */
 public class UrlRenderer
 {
-	private static Map<String, Integer> PROTO_TO_PORT = new HashMap<String, Integer>();
+	private static final Map<String, Integer> PROTO_TO_PORT = new HashMap<String, Integer>();
 	static
 	{
 		PROTO_TO_PORT.put("http", 80);
@@ -115,18 +115,20 @@ public class UrlRenderer
 		final Integer port = resolvePort(url);
 		final String path = url.toString();
 
-		String render = protocol + "://" + host;
-
+		StringBuilder render = new StringBuilder();
+		render.append(protocol);
+		render.append("://");
+		render.append(host);
+		
 		if ((port != null) && !port.equals(PROTO_TO_PORT.get(protocol)))
 		{
-			render += ":" + port;
+			render.append(':');
+			render.append(port);
 		}
 
-		render += request.getContextPath();
-		render += request.getFilterPath();
-		render = Strings.join("/", render, path);
-
-		return render.toString();
+		render.append(request.getContextPath());
+		render.append(request.getFilterPath());
+		return Strings.join("/", render.toString(), path);
 	}
 
 	/**
@@ -172,7 +174,7 @@ public class UrlRenderer
 	 * This method is only intended for Wicket URLs, because the {@link Url} object represents part
 	 * of URL after Wicket Filter.
 	 * 
-	 * For general URLs within context use {@link #renderContextPathRelativeUrl(String, Request)}
+	 * For general URLs within context use {@link #renderContextPathRelativeUrl(String)}
 	 * 
 	 * @param url
 	 * @return Url rendered as string
@@ -264,7 +266,6 @@ public class UrlRenderer
 	 * Renders the URL within context relative to current base URL.
 	 * 
 	 * @param url
-	 * @param request
 	 * @return relative URL
 	 */
 	public String renderContextPathRelativeUrl(String url)
