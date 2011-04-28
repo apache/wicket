@@ -1362,7 +1362,7 @@ public class BaseWicketTester
 	public Result ifContains(String pattern)
 	{
 		return isTrue("pattern '" + pattern + "' not found in:\n" + getLastResponseAsString(),
-			getLastResponseAsString().toString().matches("(?s).*" + pattern + ".*"));
+		              getLastResponseAsString().matches("(?s).*" + pattern + ".*"));
 	}
 
 	/**

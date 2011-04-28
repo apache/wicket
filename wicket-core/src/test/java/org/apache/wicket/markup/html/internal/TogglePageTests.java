@@ -37,7 +37,7 @@ public class TogglePageTests extends WicketTestCase
 	{
 		{
 			// On
-			FullReloadPage noAjaxPage = (FullReloadPage)tester.startPage(FullReloadPage.class);
+			FullReloadPage noAjaxPage = tester.startPage(FullReloadPage.class);
 			assertVisible(noAjaxPage.getToggleable());
 			tester.clickLink(noAjaxPage.getLink().getPageRelativePath());
 		}
@@ -67,7 +67,7 @@ public class TogglePageTests extends WicketTestCase
 	{
 		{
 			// On
-			TraditionalEnclosureAjaxPage ajaxPage = (TraditionalEnclosureAjaxPage)tester.startPage(TraditionalEnclosureAjaxPage.class);
+			TraditionalEnclosureAjaxPage ajaxPage = tester.startPage(TraditionalEnclosureAjaxPage.class);
 			assertVisible(ajaxPage.getToggleable());
 			tester.clickLink(ajaxPage.getLink().getPageRelativePath(), true);
 		}
@@ -100,7 +100,8 @@ public class TogglePageTests extends WicketTestCase
 	{
 		{
 			// On
-			InlineEnclosureWithAdditionalAjaxTargetPage ajaxPage = (InlineEnclosureWithAdditionalAjaxTargetPage)tester.startPage(InlineEnclosureWithAdditionalAjaxTargetPage.class);
+			InlineEnclosureWithAdditionalAjaxTargetPage ajaxPage =
+				tester.startPage(InlineEnclosureWithAdditionalAjaxTargetPage.class);
 			assertVisible(ajaxPage.getLabel1());
 			assertVisible(ajaxPage.getLabel2());
 			tester.clickLink(ajaxPage.getLink().getPageRelativePath(), true);
@@ -146,7 +147,7 @@ public class TogglePageTests extends WicketTestCase
 
 		{
 			// On
-			InlineEnclosureAjaxPage ajaxPage = (InlineEnclosureAjaxPage)tester.startPage(InlineEnclosureAjaxPage.class);
+			InlineEnclosureAjaxPage ajaxPage = tester.startPage(InlineEnclosureAjaxPage.class);
 			assertVisible(ajaxPage.getToggleable());
 			tester.clickLink(ajaxPage.getLink().getPageRelativePath(), true);
 		}

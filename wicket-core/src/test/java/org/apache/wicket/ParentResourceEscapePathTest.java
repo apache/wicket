@@ -105,7 +105,7 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 		tester.processRequest();
 		tester.assertNoErrorMessage();
 
-		String res = new String(tester.getLastResponse().getBinaryResponse());
+		String res = tester.getLastResponse().getBinaryResponse();
 		assertEquals("// ParentResourceTest.js", res);
 	}
 

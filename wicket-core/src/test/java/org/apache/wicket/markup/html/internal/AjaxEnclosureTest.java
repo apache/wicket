@@ -45,7 +45,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 	{
 		{
 			// enclosure On
-			AjaxEnclosurePage_1 ajaxPage = (AjaxEnclosurePage_1)tester.startPage(AjaxEnclosurePage_1.class);
+			AjaxEnclosurePage_1 ajaxPage = tester.startPage(AjaxEnclosurePage_1.class);
 			assertVisible(ajaxPage.getLabel1(), true);
 			assertVisible(ajaxPage.getLabel2(), true);
 			String doc = tester.getLastResponseAsString();
@@ -88,7 +88,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 		final String enclosurePath = "InlineEnclosure-1";
 		{
 			// label 2 On
-			AjaxEnclosurePage_1 ajaxPage = (AjaxEnclosurePage_1)tester.startPage(AjaxEnclosurePage_1.class);
+			AjaxEnclosurePage_1 ajaxPage = tester.startPage(AjaxEnclosurePage_1.class);
 			ensureEnclosureIsVisible(enclosurePath, ajaxPage);
 			assertVisible(ajaxPage.getLabel1(), true);
 			assertVisible(ajaxPage.getLabel2(), true);
@@ -130,7 +130,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 		{
 			// 1. test that enclosure1, enclosure2, label1, label2 are visible, click link1,
 			// hiding label1 and the whole enclosure
-			AjaxEnclosurePage_2 ajaxPage = (AjaxEnclosurePage_2)tester.startPage(AjaxEnclosurePage_2.class);
+			AjaxEnclosurePage_2 ajaxPage = tester.startPage(AjaxEnclosurePage_2.class);
 			ensureEnclosureIsVisible(enclosure1Path, ajaxPage);
 			assertVisible(ajaxPage.getEnclosure2Marker(), true);
 			assertVisible(ajaxPage.getLabel1(), true);
