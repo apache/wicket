@@ -16,11 +16,11 @@
  */
 package org.apache.wicket.markup.html;
 
-import java.io.Closeable;
-
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
+
+import java.io.Closeable;
 
 /**
  * Interface that is used to render header elements (usually javascript and CSS references).
@@ -154,7 +154,23 @@ public interface IHeaderResponse extends Closeable
 		String media);
 
 	/**
-	 * Writes a CSS reference, if the specified reference hasn't been rendered yet.
+	 * Writes a conditional IE comment with a CSS reference with query parameters, if the specified
+	 * reference hasn't been rendered yet.
+	 * 
+	 * @param reference
+	 *            resource reference pointing to the CSS resource
+	 * @param pageParameters
+	 *            the parameters for this CSS resource reference
+	 * @param media
+	 *            the media type for this CSS ("print", "screen", etc.)
+	 * @param condition
+	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
+	 */
+	public void renderCSSReference(ResourceReference reference, PageParameters pageParameters,
+		String media, String condition);
+
+	/**
+	 * Writes a link to a CSS resource, if the specified url hasn't been rendered yet.
 	 * 
 	 * @param url
 	 *            context-relative url of the CSS resource
@@ -163,6 +179,21 @@ public interface IHeaderResponse extends Closeable
 	 */
 	// TODO make media an enum
 	public void renderCSSReference(String url, String media);
+
+	/**
+	 * Writes a conditional IE comment for a link to a CSS resource, if the specified url hasn't
+	 * been rendered yet.
+	 * 
+	 * @param url
+	 *            context-relative url of the CSS resource
+	 * @param media
+	 *            the media type for this CSS ("print", "screen", etc.)
+	 * @param condition
+	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
+	 */
+	// TODO make media an enum
+	public void renderCSSReference(String url, String media, String condition);
+
 
 	/**
 	 * Renders an arbitrary string to the header. The string is only rendered if the same string

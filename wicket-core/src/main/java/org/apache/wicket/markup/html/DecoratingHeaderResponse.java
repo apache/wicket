@@ -114,9 +114,20 @@ public abstract class DecoratingHeaderResponse implements IHeaderResponse
 		realResponse.renderCSSReference(reference, pageParameters, media);
 	}
 
+	public void renderCSSReference(ResourceReference reference, PageParameters pageParameters,
+		String media, String condition)
+	{
+		realResponse.renderCSSReference(reference, pageParameters, media, condition);
+	}
+
 	public void renderCSSReference(String url, String media)
 	{
 		realResponse.renderCSSReference(url, media);
+	}
+
+	public void renderCSSReference(String url, String media, String condition)
+	{
+		realResponse.renderCSSReference(url, media, condition);
 	}
 
 	public void renderString(CharSequence string)

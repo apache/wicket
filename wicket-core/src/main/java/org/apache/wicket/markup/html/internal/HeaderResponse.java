@@ -16,11 +16,6 @@
  */
 package org.apache.wicket.markup.html.internal;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WicketEventReference;
 import org.apache.wicket.request.IRequestHandler;
@@ -35,6 +30,11 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.CssUtils;
 import org.apache.wicket.util.string.JavaScriptUtils;
 import org.apache.wicket.util.string.Strings;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -94,6 +94,12 @@ public abstract class HeaderResponse implements IHeaderResponse
 	public void renderCSSReference(ResourceReference reference, PageParameters pageParameters,
 		String media)
 	{
+		renderCSSReference(reference, pageParameters, media, null);
+	}
+
+	public void renderCSSReference(ResourceReference reference, PageParameters pageParameters,
+		String media, String condition)
+	{
 		if (reference == null)
 		{
 			throw new IllegalArgumentException("reference cannot be null");
@@ -102,7 +108,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 		{
 			IRequestHandler handler = new ResourceReferenceRequestHandler(reference, pageParameters);
 			CharSequence url = RequestCycle.get().urlFor(handler);
-			internalRenderCSSReference(url.toString(), media);
+			internalRenderCSSReference(url.toString(), media, condition);
 		}
 	}
 
@@ -114,16 +120,18 @@ public abstract class HeaderResponse implements IHeaderResponse
 		renderCSSReference(url, null);
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderCSSReference(java.lang.String,
-	 *      java.lang.String)
-	 */
 	public void renderCSSReference(String url, String media)
 	{
-		internalRenderCSSReference(relative(url), media);
+		renderCSSReference(url, media, null);
 	}
 
-	private void internalRenderCSSReference(String url, String media)
+	public void renderCSSReference(String url, String media, String condition)
+	{
+		internalRenderCSSReference(relative(url), media, condition);
+	}
+
+	private void internalRenderCSSReference(final String url, final String media,
+		final String condition)
 	{
 		if (Strings.isEmpty(url))
 		{
@@ -134,6 +142,12 @@ public abstract class HeaderResponse implements IHeaderResponse
 			List<String> token = Arrays.asList("css", url, media);
 			if (wasRendered(token) == false)
 			{
+				if (Strings.isEmpty(condition) == false)
+				{
+					getResponse().write("<!--[if ");
+					getResponse().write(condition);
+					getResponse().write("]>");
+				}
 				getResponse().write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
 				getResponse().write(url);
 				getResponse().write("\"");
@@ -144,6 +158,10 @@ public abstract class HeaderResponse implements IHeaderResponse
 					getResponse().write("\"");
 				}
 				getResponse().write(" />");
+				if (Strings.isEmpty(condition) == false)
+				{
+					getResponse().write("<![endif]-->");
+				}
 				getResponse().write("\n");
 				markRendered(token);
 			}
