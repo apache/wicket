@@ -16,12 +16,6 @@
  */
 package org.apache.wicket.markup;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.IXmlPullParser;
@@ -32,6 +26,12 @@ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This is a base MarkupParser specifically for (X)HTML. It makes use of a streaming XML parser to
@@ -53,8 +53,8 @@ public abstract class AbstractMarkupParser
 	/** Log for reporting. */
 	private static final Logger log = LoggerFactory.getLogger(AbstractMarkupParser.class);
 
-	/** Conditional comment section, which is NOT treated as a comment section */
-	private static final Pattern CONDITIONAL_COMMENT = Pattern.compile("\\[if .+\\]>((?s).*)<!\\[endif\\]");
+	/** Opening a conditional comment section, which is NOT treated as a comment section */
+	public static final Pattern CONDITIONAL_COMMENT_OPENING = Pattern.compile("(s?)^[^>]*?<!--\\[if.*?\\]>(-->)?(<!.*?-->)?");
 
 	/** The XML parser to use */
 	private final IXmlPullParser xmlParser;
@@ -413,45 +413,34 @@ public abstract class AbstractMarkupParser
 		return sb.toString();
 	}
 
+
 	/**
 	 * Remove all comment sections (&lt;!-- .. --&gt;) from the raw markup.
 	 * 
 	 * @param rawMarkup
 	 * @return raw markup
 	 */
-	private String removeComment(String rawMarkup)
+	private static String removeComment(String rawMarkup)
 	{
-		// For reasons I don't understand, the following regex <code>"<!--(.|\n|\r)*?-->"<code>
-		// causes a stack overflow in some circumstances (jdk 1.5)
-		// See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=5050507
-		// See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6337993
 		int pos1 = rawMarkup.indexOf("<!--");
 		while (pos1 != -1)
 		{
-			int pos2 = rawMarkup.indexOf("-->", pos1 + 4);
-
 			final StringBuilder buf = new StringBuilder(rawMarkup.length());
-			if (pos2 != -1)
+			final String possibleComment = rawMarkup.substring(pos1);
+			Matcher matcher = CONDITIONAL_COMMENT_OPENING.matcher(possibleComment);
+			if (matcher.find())
 			{
-				final String comment = rawMarkup.substring(pos1 + 4, pos2);
-
-				// See wicket-2105 for an example where this rather simple regex throws an exception
-				// CONDITIONAL_COMMENT = Pattern.compile("\\[if .+\\]>(.|\n|\r)*<!\\[endif\\]");
-				// See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=5050507
-				// See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6337993
-				if (CONDITIONAL_COMMENT.matcher(comment).matches() == false)
+				pos1 = pos1 + matcher.end();
+			}
+			else
+			{
+				int pos2 = rawMarkup.indexOf("-->", pos1 + 4);
+				buf.append(rawMarkup.substring(0, pos1));
+				if (rawMarkup.length() >= pos2 + 3)
 				{
-					buf.append(rawMarkup.substring(0, pos1));
-					if (rawMarkup.length() >= pos2 + 3)
-					{
-						buf.append(rawMarkup.substring(pos2 + 3));
-					}
-					rawMarkup = buf.toString();
+					buf.append(rawMarkup.substring(pos2 + 3));
 				}
-				else
-				{
-					pos1 = pos2;
-				}
+				rawMarkup = buf.toString();
 			}
 			pos1 = rawMarkup.indexOf("<!--", pos1);
 		}

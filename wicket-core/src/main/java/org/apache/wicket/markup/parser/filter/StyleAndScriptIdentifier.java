@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.markup.parser.filter;
 
-import java.text.ParseException;
-
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
@@ -25,6 +23,8 @@ import org.apache.wicket.markup.RawMarkup;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.util.string.JavaScriptUtils;
+
+import java.text.ParseException;
 
 
 /**
@@ -94,7 +94,8 @@ public final class StyleAndScriptIdentifier extends AbstractMarkupFilter
 							if (close.closes(open))
 							{
 								String text = body.toString().trim();
-								if (!text.startsWith("<!--") && !text.startsWith("<![CDATA["))
+								if (!text.startsWith("<!--") && !text.startsWith("<![CDATA[") &&
+									!text.startsWith("/*<![CDATA[*/"))
 								{
 									text = JavaScriptUtils.SCRIPT_CONTENT_PREFIX + body.toString() +
 										JavaScriptUtils.SCRIPT_CONTENT_SUFFIX;

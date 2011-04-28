@@ -21,6 +21,7 @@ import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
+import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
@@ -32,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Locale;
+import java.util.regex.Matcher;
 
 import junit.framework.Assert;
 
@@ -437,21 +439,22 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
 	 */
-	public final void wicket3648testCommentsWithNestedElements() throws IOException,
+	public final void testCommentsWithNestedElements() throws IOException,
 		ResourceStreamNotFoundException
 	{
 		tester.getApplication().getMarkupSettings().setStripComments(true);
 		final MarkupParser parser = new MarkupParser(
 // @formatter:off
 			"<span><!--[if lt IE 8 ]>\n"
-			+ "<script src='js/ie7.js'></script>\n" + 
+			+ "<script src=\"js/ie7.js\"></script>\n" + 
 			"<![endif]--></span>"
 			// @formatter:on
 		);
 		IMarkupFragment markup = parser.parse();
 
-		RawMarkup raw = (RawMarkup)markup.get(0);
-		assertEquals("<span></span>", raw.toString());
+		String parsedMarkup = markup.toString(true);
+		assertEquals("<span><!--[if lt IE 8 ]>\n" + "<script src=\"js/ie7.js\"></script>\n"
+			+ "<![endif]--></span>", parsedMarkup);
 	}
 
 	/**
@@ -592,5 +595,65 @@ public final class MarkupParserTest extends WicketTestCase
 		MarkupParser parser = new MarkupParser(conditionalComment);
 		Markup markup = parser.parse();
 		assertEquals(conditionalComment, markup.get(0).toString());
+	}
+
+	/**
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3500">WICKET-3500</a>
+	 */
+	public void testOpenConditionalCommentPattern()
+	{
+		assertFalse(MarkupParser.CONDITIONAL_COMMENT_OPENING.matcher("<!--x--> <!--[if IE]>")
+			.find());
+
+		String markup = " <!--[if IE]> <![endif]--><!--[if IE]>--><!--<![endif]--><!--[if IE]><!--><!--<![endif]--><!--[if IE]><! --><!--<![endif]-->";
+		Matcher m = MarkupParser.CONDITIONAL_COMMENT_OPENING.matcher(markup);
+		assertTrue(m.find());
+		assertEquals(" <!--[if IE]>", m.group());
+		assertFalse(m.find());
+
+		markup = " <!--[if IE]>--> <![endif]--><!--[if IE]>--><!--<![endif]--><!--[if IE]><!--><!--<![endif]--><!--[if IE]><! --><!--<![endif]-->";
+		m = MarkupParser.CONDITIONAL_COMMENT_OPENING.matcher(markup);
+		assertTrue(m.find());
+		assertEquals(" <!--[if IE]>-->", m.group());
+		assertFalse(m.find());
+
+		markup = " <!--[if IE]><!--> <![endif]--><!--[if IE]>--><!--<![endif]--><!--[if IE]><!--><!--<![endif]--><!--[if IE]><! --><!--<![endif]-->";
+		m = MarkupParser.CONDITIONAL_COMMENT_OPENING.matcher(markup);
+		assertTrue(m.find());
+		assertEquals(" <!--[if IE]><!-->", m.group());
+		assertFalse(m.find());
+
+		markup = " <!--[if IE]><! --> <![endif]--><!--[if IE]>--><!--<![endif]--><!--[if IE]><!--><!--<![endif]--><!--[if IE]><! --><!--<![endif]-->";
+		m = MarkupParser.CONDITIONAL_COMMENT_OPENING.matcher(markup);
+		assertTrue(m.find());
+		assertEquals(" <!--[if IE]><! -->", m.group());
+		assertFalse(m.find());
+
+	}
+
+	/**
+	 * Tests that IE conditional comments are properly preserved when
+	 * {@link IMarkupSettings#setStripComments(boolean)} is set to true
+	 * 
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3648">WICKET-3648</a>
+	 * 
+	 * @throws Exception
+	 */
+	public void testIEConditionalComments() throws Exception
+	{
+
+		boolean stripComments = tester.getApplication().getMarkupSettings().getStripComments();
+		try
+		{
+			tester.getApplication().getMarkupSettings().setStripComments(false);
+			executeTest(IEConditionalCommentsPage.class, "IEConditionalCommentsPage.html");
+
+			tester.getApplication().getMarkupSettings().setStripComments(true);
+			executeTest(IEConditionalCommentsPage.class, "IEConditionalCommentsPage.html");
+		}
+		finally
+		{
+			tester.getApplication().getMarkupSettings().setStripComments(stripComments);
+		}
 	}
 }
