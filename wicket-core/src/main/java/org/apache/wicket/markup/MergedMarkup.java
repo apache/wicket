@@ -360,7 +360,7 @@ public class MergedMarkup extends Markup
 					hasCloseWicketHead = i;
 				}
 				else if ((hasHead == -1) && (element instanceof ComponentTag) &&
-					TagUtils.isHeadTag((ComponentTag)element))
+					TagUtils.isHeadTag(element))
 				{
 					hasHead = i;
 				}

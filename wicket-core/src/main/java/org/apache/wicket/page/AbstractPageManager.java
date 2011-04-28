@@ -40,7 +40,7 @@ public abstract class AbstractPageManager implements IPageManager
 	 */
 	public AbstractPageManager(IPageManagerContext context)
 	{
-		this.context = (IPageManagerContext)Args.notNull(context, "context");
+		this.context = Args.notNull(context, "context");
 	}
 
 	/**

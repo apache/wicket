@@ -99,7 +99,7 @@ public class MetaInfStaticResourceReference extends PackageResourceReference
 			META_INF_RESOURCES_SUPPORTED = majorVersion >= 3;
 		}
 
-		return META_INF_RESOURCES_SUPPORTED.booleanValue();
+		return META_INF_RESOURCES_SUPPORTED;
 	}
 
 }

@@ -112,7 +112,7 @@ public class HtmlDocumentParser
 	 */
 	public int getNextToken()
 	{
-		while (pos < document.length())
+		if (pos < document.length())
 		{
 			char ch = document.charAt(pos);
 			if (ch == '<')

@@ -61,13 +61,13 @@ public class EventDispatcherTest extends WicketTestCase
 		public void dispatchEvent(IEventSink sink, IEvent<?> event)
 		{
 			Method[] sinkMethods = sink.getClass().getMethods();
-			for (int i = 0; i < sinkMethods.length; i++)
+			for (Method sinkMethod : sinkMethods)
 			{
-				if (sinkMethods[i].isAnnotationPresent(EventCallback.class))
+				if (sinkMethod.isAnnotationPresent(EventCallback.class))
 				{
 					try
 					{
-						sinkMethods[i].invoke(sink);
+						sinkMethod.invoke(sink);
 					}
 					catch (Exception e)
 					{

@@ -36,7 +36,7 @@ public class AjaxUpdatedImageTest
 	public void wicket1382()
 	{
 		WicketTester tester = new WicketTester();
-		AjaxyImagesPage page = (AjaxyImagesPage)tester.startPage(AjaxyImagesPage.class);
+		AjaxyImagesPage page = tester.startPage(AjaxyImagesPage.class);
 
 		TagTester tagTester = tester.getTagById(page.image.getMarkupId());
 		final String srcAttr = tagTester.getAttribute("src");

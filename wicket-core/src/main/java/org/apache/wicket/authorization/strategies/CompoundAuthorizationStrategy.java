@@ -73,10 +73,8 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 	 */
 	public final boolean isActionAuthorized(Component component, Action action)
 	{
-		int size = strategies.size();
-		for (int i = 0; i < size; i++)
+		for (IAuthorizationStrategy strategy : strategies)
 		{
-			IAuthorizationStrategy strategy = strategies.get(i);
 			if (!strategy.isActionAuthorized(component, action))
 			{
 				return false;
