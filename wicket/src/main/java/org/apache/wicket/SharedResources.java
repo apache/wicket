@@ -67,15 +67,17 @@ public class SharedResources
 	public static String resourceKey(final String path, final Locale locale, final String style)
 	{
 		// escape sequence for '..' (prevents crippled urls in browser)
-		final CharSequence parentEscape = Application.get()
+		final CharSequence parentEscapeSequence = Application.get()
 			.getResourceSettings()
 			.getParentFolderPlaceholder();
 
 		final String extension = Files.extension(path);
 		String basePath = Files.basePath(path, extension);
 
-		if (Strings.isEmpty(parentEscape) &&
-			(Application.get().getConfigurationType() == Application.DEVELOPMENT) &&
+		boolean parentEscape = Strings.isEmpty(parentEscapeSequence) == false;
+		
+		if (parentEscape == false &&
+			(Application.DEVELOPMENT.equals(Application.get().getConfigurationType())) &&
 			basePath.contains("../"))
 		{
 			log.error("----------------------------------------------------------------------------------------");
@@ -84,9 +86,13 @@ public class SharedResources
 			log.error("IResourceSettings.getParentFolderPlaceholder() and PackageResourceGuard for more details");
 			log.error("----------------------------------------------------------------------------------------");
 		}
+		// replace parent folder sequence with escape sequence (if feature is enabled)
+		if (parentEscape)
+		{
+			// get relative path to resource, replace '..' with escape sequence
+			basePath = basePath.replace("../", parentEscapeSequence + "/");
+		}
 
-		// get relative path to resource, replace '..' with escape sequence
-		basePath = basePath.replace("../", parentEscape + "/");
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(basePath.length() + 16);
 		buffer.append(basePath);
 
