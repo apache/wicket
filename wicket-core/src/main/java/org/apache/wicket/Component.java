@@ -2674,7 +2674,7 @@ public abstract class Component
 	 * Make sure that all attached behaviors are asked as well.
 	 * <p>
 	 * NOT intended for overriding by framework clients. Rather, use
-	 * {@link IHeaderContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)}
+	 * {@link Component#renderHead(org.apache.wicket.markup.html.IHeaderResponse)}}
 	 * </p>
 	 * 
 	 * @param container

@@ -29,7 +29,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
@@ -139,7 +138,7 @@ import org.slf4j.LoggerFactory;
  * @param <T>
  *            The model object type
  */
-public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, IHeaderContributor
+public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 {
 	private static final String HIDDEN_DIV_START = "<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\">";
 

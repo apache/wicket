@@ -22,7 +22,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.examples.resourcedecoration.GroupedAndOrderedResourceReference.ResourceGroup;
-import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -111,8 +110,6 @@ public class HomePage extends WicketExamplePage
 	}
 
 	private static class AjaxProofContainer extends WebMarkupContainer
-		implements
-			IHeaderContributor
 	{
 		private static final long serialVersionUID = 1L;
 

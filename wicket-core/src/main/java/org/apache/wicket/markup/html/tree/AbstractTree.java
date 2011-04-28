@@ -36,7 +36,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
-import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -65,8 +64,7 @@ public abstract class AbstractTree extends Panel
 	implements
 		ITreeStateListener,
 		TreeModelListener,
-		AjaxRequestTarget.ITargetRespondListener,
-		IHeaderContributor
+		AjaxRequestTarget.ITargetRespondListener
 {
 
 	/**
