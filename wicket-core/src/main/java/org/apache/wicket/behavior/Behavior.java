@@ -21,6 +21,7 @@ import org.apache.wicket.IClusterable;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
@@ -43,7 +44,7 @@ import org.apache.wicket.markup.html.IHeaderResponse;
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class Behavior implements IClusterable, IEventSink
+public abstract class Behavior implements IClusterable, IEventSink, IHeaderContributor
 {
 	private static final long serialVersionUID = 1L;
 

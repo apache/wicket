@@ -149,7 +149,7 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 		{
 			for (IHeaderContributor listener : renderHeadListeners)
 			{
-				listener.renderHead(headerContainer.getHeaderResponse());
+				listener.renderHead(headerContainer, headerContainer.getHeaderResponse());
 			}
 		}
 	}

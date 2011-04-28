@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 
 /**
@@ -47,11 +48,8 @@ public interface IHeaderContributor extends IClusterable
 	/**
 	 * Render to the web response whatever the component wants to contribute to the head section.
 	 * 
-	 * TODO: Post 1.3, add component parameter, so that the behaviors dont' have to track component
-	 * instances
-	 * 
 	 * @param response
 	 *            Response object
 	 */
-	void renderHead(final IHeaderResponse response);
+	void renderHead(Component component, IHeaderResponse response);
 }

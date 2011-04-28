@@ -4382,6 +4382,20 @@ public abstract class Component
 		return isEnabledInHierarchy() && isVisibleInHierarchy();
 	}
 
+	/**
+	 * CAUTION: this method is not meant to be overridden like it was in wicket 1.4 when implementing 
+	 * {@link IHeaderContributor}. overload 
+	 * {@link Component#renderHead(org.apache.wicket.markup.html.IHeaderResponse)} 
+	 * instead to contribute to the response header.
+	 * 
+	 * @param component
+	 * @param response
+	 */
+	public final void renderHead(Component component, IHeaderResponse response)
+	{
+		renderHead(response);
+	}
+
 	/** {@inheritDoc} */
 	public void renderHead(IHeaderResponse response)
 	{
