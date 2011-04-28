@@ -20,6 +20,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
+import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WicketEventReference;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -70,6 +71,16 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	@Override
 	public void renderHead(Component component, IHeaderResponse response)
 	{
+		super.renderHead(component, response);
+
+		IAjaxCallDecorator ajaxCallDecorator = getAjaxCallDecorator();
+
+		if (ajaxCallDecorator instanceof IHeaderContributor)
+		{
+			IHeaderContributor contributor = (IHeaderContributor)ajaxCallDecorator;
+			contributor.renderHead(component, response);
+		}
+
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 
 		response.renderJavaScriptReference(WicketEventReference.INSTANCE);
