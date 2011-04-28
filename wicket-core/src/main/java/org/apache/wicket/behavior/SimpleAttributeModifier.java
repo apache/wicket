@@ -69,7 +69,7 @@ public class SimpleAttributeModifier extends Behavior
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.AbstractBehavior#onComponentTag(org.apache.wicket.Component,
+	 * @see org.apache.wicket.behavior.Behavior#onComponentTag(org.apache.wicket.Component,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override

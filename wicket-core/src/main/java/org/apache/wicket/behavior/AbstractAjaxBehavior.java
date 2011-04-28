@@ -100,7 +100,7 @@ public abstract class AbstractAjaxBehavior extends Behavior implements IBehavior
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.AbstractBehavior#afterRender(org.apache.wicket.Component)
+	 * @see org.apache.wicket.behavior.Behavior#afterRender(org.apache.wicket.Component)
 	 */
 	@Override
 	public final void afterRender(final Component hostComponent)
@@ -146,7 +146,7 @@ public abstract class AbstractAjaxBehavior extends Behavior implements IBehavior
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.AbstractBehavior#getStatelessHint(Component)
+	 * @see org.apache.wicket.behavior.Behavior#getStatelessHint(Component)
 	 */
 	@Override
 	public boolean getStatelessHint(Component component)
