@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.settings;
 
-import java.util.List;
-
 import org.apache.wicket.IResourceFactory;
 import org.apache.wicket.Localizer;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
@@ -32,6 +30,8 @@ import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.watch.IModificationWatcher;
+
+import java.util.List;
 
 
 /**
@@ -301,13 +301,13 @@ public interface IResourceSettings
 
 	/**
 	 * Placeholder string for '..' within resource urls (which will be crippled by the browser and
-	 * not work anymore). Note that by default the placeholder string is empty '' and thus will not
-	 * allow to access parent folders. That is by purpose and for security reasons (see
+	 * not work anymore). Note that by default the placeholder string is <code>null</code> and thus
+	 * will not allow to access parent folders. That is by purpose and for security reasons (see
 	 * Wicket-1992). In case you really need it, a good value for placeholder would e.g. be "$up$".
 	 * Resources additionally are protected by a
 	 * {@link org.apache.wicket.markup.html.IPackageResourceGuard IPackageResourceGuard}
-	 * implementation such as {@link org.apache.wicket.markup.html.PackageResourceGuard}
-	 * which you may use or extend based on your needs.
+	 * implementation such as {@link org.apache.wicket.markup.html.PackageResourceGuard} which you
+	 * may use or extend based on your needs.
 	 * 
 	 * @return placeholder
 	 */
@@ -332,17 +332,17 @@ public interface IResourceSettings
 
 	/**
 	 * gets the resource caching strategy
-	 *
+	 * 
 	 * @return strategy
 	 */
 	IResourceCachingStrategy getCachingStrategy();
 
 	/**
 	 * sets the resource caching strategy
-	 *
+	 * 
 	 * @param strategy
-	 *           instance of resource caching strategy
-	 *
+	 *            instance of resource caching strategy
+	 * 
 	 * @see IResourceCachingStrategy
 	 */
 	void setCachingStrategy(IResourceCachingStrategy strategy);
