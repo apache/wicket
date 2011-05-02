@@ -252,7 +252,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	{
 		// TODO see if we can refactor this to remove dependency on instanceof checks below and
 		// eliminate the need for IRequestHandlerDelegate
-		if (requestHandler instanceof IRequestHandlerDelegate)
+		while (requestHandler instanceof IRequestHandlerDelegate)
 		{
 			requestHandler = ((IRequestHandlerDelegate)requestHandler).getDelegateHandler();
 		}
