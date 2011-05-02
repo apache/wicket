@@ -73,19 +73,10 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	{
 		super.renderHead(component, response);
 
-		IAjaxCallDecorator ajaxCallDecorator = getAjaxCallDecorator();
-
-		if (ajaxCallDecorator instanceof IHeaderContributor)
-		{
-			IHeaderContributor contributor = (IHeaderContributor)ajaxCallDecorator;
-			contributor.renderHead(component, response);
-		}
-
-		final IDebugSettings debugSettings = Application.get().getDebugSettings();
-
 		response.renderJavaScriptReference(WicketEventReference.INSTANCE);
 		response.renderJavaScriptReference(WicketAjaxReference.INSTANCE);
 
+		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.isAjaxDebugModeEnabled())
 		{
 			response.renderJavaScriptReference(JAVASCRIPT_DEBUG);
@@ -96,6 +87,13 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		CharSequence ajaxBaseUrl = Strings.escapeMarkup(baseUrl.toString());
 		response.renderJavaScript("Wicket.Ajax.baseUrl=\"" + ajaxBaseUrl + "\";",
 			"wicket-ajax-base-url");
+
+		final IAjaxCallDecorator ajaxCallDecorator = getAjaxCallDecorator();
+		if (ajaxCallDecorator instanceof IHeaderContributor)
+		{
+			IHeaderContributor contributor = (IHeaderContributor)ajaxCallDecorator;
+			contributor.renderHead(component, response);
+		}
 	}
 
 	/**
