@@ -39,7 +39,33 @@ public abstract class AbstractMapper implements IRequestMapper
 	 */
 	protected static String getPlaceholder(final String s)
 	{
-		if ((s == null) || (s.length() < 4) || !s.startsWith("${") || !s.endsWith("}"))
+		return getPlaceholder(s, '$');
+	}
+
+	/**
+	 * If the string is in an optional parameter placeholder format #{key} this method returns the
+	 * key.
+	 * 
+	 * @param s
+	 * @return placeholder key or <code>null</code> if string is not in right format
+	 */
+	protected static String getOptionalPlaceholder(final String s)
+	{
+		return getPlaceholder(s, '#');
+	}
+
+	/**
+	 * If the string is in a placeholder format x{key}, where 'x' can be specified, this method
+	 * returns the key.
+	 * 
+	 * @param s
+	 * @param startChar
+	 *            the character used to indicate the start of the placeholder
+	 * @return placeholder key or <code>null</code> if string is not in right format
+	 */
+	protected static String getPlaceholder(final String s, char startChar)
+	{
+		if ((s == null) || (s.length() < 4) || !s.startsWith(startChar + "{") || !s.endsWith("}"))
 		{
 			return null;
 		}

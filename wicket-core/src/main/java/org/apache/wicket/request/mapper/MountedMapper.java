@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.request.mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -31,6 +34,10 @@ import org.apache.wicket.util.lang.Args;
  * <code>/mount/${foo}/path</code>. In that case the appropriate segment from the URL will be
  * accessible as named parameter "foo" in the {@link PageParameters}. Similarly when the URL is
  * constructed, the second segment will contain the value of the "foo" named page parameter.
+ * Optional parameters are denoted by using a # instead of $: <code>/mount/#{foo}/path/${bar}</code>
+ * has an optional {@code foo} parameter, a fixed {@code /path/} part and a required {@code bar}
+ * parameter. When in doubt, parameters are matched from left to right, where required parameters
+ * are matched before optional parameters, and optional parameters eager (from left to right).
  * <p>
  * Decodes and encodes the following URLs:
  * 
@@ -54,6 +61,72 @@ public class MountedMapper extends AbstractBookmarkableMapper
 {
 	private final IPageParametersEncoder pageParametersEncoder;
 
+	private static class MountPathSegment
+	{
+		private int segmentIndex;
+		private String fixedPart;
+		private int minParameters;
+		private int optionalParameters;
+
+		public MountPathSegment(int segmentIndex)
+		{
+			this.segmentIndex = segmentIndex;
+		}
+
+		public void setFixedPart(String fixedPart)
+		{
+			this.fixedPart = fixedPart;
+		}
+
+		public void addRequiredParameter()
+		{
+			minParameters++;
+		}
+
+		public void addOptionalParameter()
+		{
+			optionalParameters++;
+		}
+
+		public int getSegmentIndex()
+		{
+			return segmentIndex;
+		}
+
+		public String getFixedPart()
+		{
+			return fixedPart;
+		}
+
+		public int getMinParameters()
+		{
+			return minParameters;
+		}
+
+		public int getOptionalParameters()
+		{
+			return optionalParameters;
+		}
+
+		public int getMaxParameters()
+		{
+			return getOptionalParameters() + getMinParameters();
+		}
+
+		public int getFixedPartSize()
+		{
+			return getFixedPart() == null ? 0 : 1;
+		}
+
+		@Override
+		public String toString()
+		{
+			return "(" + getSegmentIndex() + ") " + getMinParameters() + "-" + getMaxParameters() +
+				" " + (getFixedPart() == null ? "(end)" : getFixedPart());
+		}
+	}
+
+	private final List<MountPathSegment> pathSegments;
 	private final String[] mountSegments;
 
 	/** bookmarkable page class. */
@@ -81,7 +154,6 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	{
 		this(mountPath, pageClassProvider, new PageParametersEncoder());
 	}
-
 
 	/**
 	 * Construct.
@@ -114,6 +186,39 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		this.pageParametersEncoder = pageParametersEncoder;
 		this.pageClassProvider = pageClassProvider;
 		mountSegments = getMountSegments(mountPath);
+		pathSegments = getPathSegments(mountSegments);
+	}
+
+	private List<MountPathSegment> getPathSegments(String[] segments)
+	{
+		List<MountPathSegment> ret = new ArrayList<MountPathSegment>();
+		int segmentIndex = 0;
+		MountPathSegment curPathSegment = new MountPathSegment(segmentIndex);
+		ret.add(curPathSegment);
+		for (String curSegment : segments)
+		{
+			if (isFixedSegment(curSegment))
+			{
+				curPathSegment.setFixedPart(curSegment);
+				curPathSegment = new MountPathSegment(segmentIndex + 1);
+				ret.add(curPathSegment);
+			}
+			else if (getPlaceholder(curSegment) != null)
+			{
+				curPathSegment.addRequiredParameter();
+			}
+			else
+			{
+				curPathSegment.addOptionalParameter();
+			}
+			segmentIndex++;
+		}
+		return ret;
+	}
+
+	private boolean isFixedSegment(String segment)
+	{
+		return getOptionalPlaceholder(segment) == null && getPlaceholder(segment) == null;
 	}
 
 	/**
@@ -136,27 +241,8 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		{
 			// try to extract page and component information from URL
 			PageComponentInfo info = getPageComponentInfo(url);
-
 			Class<? extends IRequestablePage> pageClass = getPageClass();
-
-			// extract the PageParameters from URL if there are any
-			PageParameters pageParameters = extractPageParameters(request, mountSegments.length,
-				pageParametersEncoder);
-
-			// check if there are placeholders in mount segments
-			for (int i = 0; i < mountSegments.length; ++i)
-			{
-				String placeholder = getPlaceholder(mountSegments[i]);
-				if (placeholder != null)
-				{
-					// extract the parameter from URL
-					if (pageParameters == null)
-					{
-						pageParameters = new PageParameters();
-					}
-					pageParameters.add(placeholder, url.getSegments().get(i));
-				}
-			}
+			PageParameters pageParameters = extractPageParameters(request, url);
 
 			return new UrlInfo(info, pageClass, pageParameters);
 		}
@@ -164,6 +250,102 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		{
 			return null;
 		}
+	}
+
+	/*
+	 * extract the PageParameters from URL if there are any
+	 */
+	private PageParameters extractPageParameters(Request request, Url url)
+	{
+		int[] matchedParameters = getMatchedSegmentSizes(url);
+		int total = 0;
+		for (int curMatchSize : matchedParameters)
+			total += curMatchSize;
+		PageParameters pageParameters = extractPageParameters(request, total, pageParametersEncoder);
+
+		int skippedParameters = 0;
+		for (int pathSegmentIndex = 0; pathSegmentIndex < pathSegments.size(); pathSegmentIndex++)
+		{
+			MountPathSegment curPathSegment = pathSegments.get(pathSegmentIndex);
+			int matchSize = matchedParameters[pathSegmentIndex] - curPathSegment.getFixedPartSize();
+			int optionalParameterMatch = matchSize - curPathSegment.getMinParameters();
+			for (int matchSegment = 0; matchSegment < matchSize; matchSegment++)
+			{
+				if (pageParameters == null)
+				{
+					pageParameters = new PageParameters();
+				}
+
+				int curSegmentIndex = matchSegment + curPathSegment.getSegmentIndex();
+				String curSegment = mountSegments[curSegmentIndex];
+				String placeholder = getPlaceholder(curSegment);
+				String optionalPlaceholder = getOptionalPlaceholder(curSegment);
+				// extract the parameter from URL
+				if (placeholder != null)
+				{
+					pageParameters.add(placeholder,
+						url.getSegments().get(curSegmentIndex - skippedParameters));
+				}
+				else if (optionalPlaceholder != null && optionalParameterMatch > 0)
+				{
+					pageParameters.add(optionalPlaceholder,
+						url.getSegments().get(curSegmentIndex - skippedParameters));
+					optionalParameterMatch--;
+				}
+			}
+			skippedParameters += curPathSegment.getMaxParameters() - matchSize;
+		}
+		return pageParameters;
+	}
+
+	@Override
+	protected boolean urlStartsWith(Url url, String... segments)
+	{
+		if (url == null)
+		{
+			return false;
+		}
+		else
+		{
+			return getMatchedSegmentSizes(url) != null;
+		}
+	}
+
+	private int[] getMatchedSegmentSizes(Url url)
+	{
+		int[] ret = new int[pathSegments.size()];
+		int segmentIndex = 0;
+		int pathSegmentIndex = 0;
+		for (MountPathSegment curPathSegment : pathSegments.subList(0, pathSegments.size() - 1))
+		{
+			boolean foundFixedPart = false;
+			segmentIndex += curPathSegment.getMinParameters();
+			int max = Math.min(curPathSegment.getOptionalParameters() + 1,
+				url.getSegments().size() - segmentIndex);
+
+			for (int count = max - 1; count >= 0; count--)
+			{
+				if (url.getSegments()
+					.get(segmentIndex + count)
+					.equals(curPathSegment.getFixedPart()))
+				{
+					foundFixedPart = true;
+					segmentIndex += count + 1;
+					ret[pathSegmentIndex] = count + curPathSegment.getMinParameters() + 1;
+					break;
+				}
+			}
+			if (!foundFixedPart)
+				return null;
+			pathSegmentIndex++;
+		}
+		MountPathSegment lastSegment = pathSegments.get(pathSegments.size() - 1);
+		segmentIndex += lastSegment.getMinParameters();
+		if (segmentIndex > url.getSegments().size())
+			return null;
+		ret[pathSegmentIndex] = Math.min(lastSegment.getMaxParameters(), url.getSegments().size() -
+			segmentIndex + lastSegment.getMinParameters());
+		return ret;
 	}
 
 	protected PageParameters newPageParameters()
@@ -186,13 +368,28 @@ public class MountedMapper extends AbstractBookmarkableMapper
 
 		PageParameters copy = new PageParameters(info.getPageParameters());
 
+		int dropped = 0;
 		for (int i = 0; i < mountSegments.length; ++i)
 		{
 			String placeholder = getPlaceholder(mountSegments[i]);
+			String optionalPlaceholder = getOptionalPlaceholder(mountSegments[i]);
 			if (placeholder != null)
 			{
-				url.getSegments().set(i, copy.get(placeholder).toString(""));
+				url.getSegments().set(i - dropped, copy.get(placeholder).toString(""));
 				copy.remove(placeholder);
+			}
+			else if (optionalPlaceholder != null)
+			{
+				if (copy.getNamedKeys().contains(optionalPlaceholder))
+				{
+					url.getSegments().set(i - dropped, copy.get(optionalPlaceholder).toString(""));
+					copy.remove(optionalPlaceholder);
+				}
+				else
+				{
+					url.getSegments().remove(i - dropped);
+					dropped++;
+				}
 			}
 		}
 

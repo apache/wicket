@@ -65,6 +65,16 @@ public class MountedMapperTest extends AbstractMapperTest
 		}
 	};
 
+	private final MountedMapper optionPlaceholderEncoder = new MountedMapper(
+		"/some/#{param1}/path/${param2}/#{param3}", MockPage.class)
+	{
+		@Override
+		protected IMapperContext getContext()
+		{
+			return context;
+		}
+	};
+
 	/**
 	 * 
 	 */
@@ -493,6 +503,23 @@ public class MountedMapperTest extends AbstractMapperTest
 		assertEquals("p2", page.getPageParameters().get("param2").toString());
 	}
 
+	/**	 */
+	public void testPlaceholderDecodeWithIndexedParameters()
+	{
+		Url url = Url.parse("some/p1/path/p2/p3/p4");
+		IRequestHandler handler = placeholderEncoder.mapRequest(getRequest(url));
+
+		assertTrue(handler instanceof RenderPageRequestHandler);
+		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
+
+		assertEquals(2, page.getPageParameters().getIndexedCount());
+		assertTrue(page.getPageParameters().getNamedKeys().size() == 2);
+		assertEquals("p1", page.getPageParameters().get("param1").toString());
+		assertEquals("p2", page.getPageParameters().get("param2").toString());
+		assertEquals("p3", page.getPageParameters().get(0).toString());
+		assertEquals("p4", page.getPageParameters().get(1).toString());
+	}
+
 	/**
 	 * 
 	 */
@@ -540,5 +567,129 @@ public class MountedMapperTest extends AbstractMapperTest
 		IRequestHandler handler = new RenderPageRequestHandler(provider);
 		Url url = placeholderEncoder.mapHandler(handler);
 		assertEquals("some/p1/path/p2/i1/i2?1&a=b&b=c", url.toString());
+	}
+
+	/** */
+	public void testOptionPlaceholderDecode1()
+	{
+		Url url = Url.parse("some/p1/path/p2/p3");
+		IRequestHandler handler = optionPlaceholderEncoder.mapRequest(getRequest(url));
+
+		assertTrue(handler instanceof RenderPageRequestHandler);
+		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
+
+		assertEquals(0, page.getPageParameters().getIndexedCount());
+		assertTrue(page.getPageParameters().getNamedKeys().size() == 3);
+		assertEquals("p1", page.getPageParameters().get("param1").toString());
+		assertEquals("p2", page.getPageParameters().get("param2").toString());
+		assertEquals("p3", page.getPageParameters().get("param3").toString());
+	}
+
+	/** */
+	public void testOptionPlaceholderDecodeEagerMatchParameters()
+	{
+		Url url = Url.parse("some/path/path/path");
+		IRequestHandler handler = optionPlaceholderEncoder.mapRequest(getRequest(url));
+
+		assertTrue(handler instanceof RenderPageRequestHandler);
+		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
+
+		assertEquals(0, page.getPageParameters().getIndexedCount());
+		assertTrue(page.getPageParameters().getNamedKeys().size() == 2);
+		assertEquals("path", page.getPageParameters().get("param1").toString());
+		assertEquals("path", page.getPageParameters().get("param2").toString());
+		assertFalse("param3 should not be set",
+			page.getPageParameters().getNamedKeys().contains("param3"));
+	}
+
+	/** */
+	public void testOptionPlaceholderDecode2()
+	{
+		Url url = Url.parse("some/p1/path/p2");
+		IRequestHandler handler = optionPlaceholderEncoder.mapRequest(getRequest(url));
+
+		assertTrue(handler instanceof RenderPageRequestHandler);
+		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
+
+		assertEquals(0, page.getPageParameters().getIndexedCount());
+		assertTrue(page.getPageParameters().getNamedKeys().size() == 2);
+		assertEquals("p1", page.getPageParameters().get("param1").toString());
+		assertEquals("p2", page.getPageParameters().get("param2").toString());
+		assertFalse("param3 should not be set",
+			page.getPageParameters().getNamedKeys().contains("param3"));
+	}
+
+	/** */
+	public void testOptionPlaceholderDecode3()
+	{
+		Url url = Url.parse("some/path/p2");
+		IRequestHandler handler = optionPlaceholderEncoder.mapRequest(getRequest(url));
+
+		assertTrue(handler instanceof RenderPageRequestHandler);
+		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
+
+		assertEquals(0, page.getPageParameters().getIndexedCount());
+		assertTrue(page.getPageParameters().getNamedKeys().size() == 1);
+		assertFalse("param1 should not be set",
+			page.getPageParameters().getNamedKeys().contains("param1"));
+		assertEquals("p2", page.getPageParameters().get("param2").toString());
+		assertFalse("param3 should not be set",
+			page.getPageParameters().getNamedKeys().contains("param3"));
+	}
+
+	/** */
+	public void testOptionPlaceholderDecodeWithIndexParams()
+	{
+		Url url = Url.parse("some/path/p2/p3/p4");
+		IRequestHandler handler = optionPlaceholderEncoder.mapRequest(getRequest(url));
+
+		assertTrue(handler instanceof RenderPageRequestHandler);
+		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
+
+		assertEquals(1, page.getPageParameters().getIndexedCount());
+		assertTrue(page.getPageParameters().getNamedKeys().size() == 2);
+		assertFalse("param1 should not be set",
+			page.getPageParameters().getNamedKeys().contains("param1"));
+		assertEquals("p2", page.getPageParameters().get("param2").toString());
+		assertEquals("p3", page.getPageParameters().get("param3").toString());
+		assertEquals("p4", page.getPageParameters().get(0).toString());
+	}
+
+	/** */
+	public void testOptionPlaceholderEncode1()
+	{
+		PageParameters parameters = new PageParameters();
+		parameters.set(0, "i1");
+		parameters.set(1, "i2");
+		parameters.set("a", "b");
+		parameters.set("b", "c");
+		parameters.set("param1", "p1");
+		parameters.set("param2", "p2");
+
+
+		PageProvider provider = new PageProvider(MockPage.class, parameters);
+		provider.setPageSource(context);
+		IRequestHandler handler = new BookmarkablePageRequestHandler(provider);
+		Url url = optionPlaceholderEncoder.mapHandler(handler);
+		assertEquals("some/p1/path/p2/i1/i2?a=b&b=c", url.toString());
+	}
+
+	/** */
+	public void testOptionPlaceholderEncode2()
+	{
+		PageParameters parameters = new PageParameters();
+		parameters.set(0, "i1");
+		parameters.set(1, "i2");
+		parameters.set("a", "b");
+		parameters.set("b", "c");
+		parameters.set("param2", "p2");
+		parameters.set("param3", "p3");
+
+
+		PageProvider provider = new PageProvider(MockPage.class, parameters);
+		provider.setPageSource(context);
+		IRequestHandler handler = new BookmarkablePageRequestHandler(provider);
+		Url url = optionPlaceholderEncoder.mapHandler(handler);
+		assertEquals("some/path/p2/p3/i1/i2?a=b&b=c", url.toString());
 	}
 }
