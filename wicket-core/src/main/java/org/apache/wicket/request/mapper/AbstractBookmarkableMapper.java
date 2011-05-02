@@ -143,7 +143,14 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	 */
 	public abstract int getCompatibilityScore(Request request);
 
-	private IRequestHandler processBookmarkable(Class<? extends IRequestablePage> pageClass,
+	/**
+	 * Creates a {@code IRequestHandler} that processes a bookmarkable request.
+	 * 
+	 * @param pageClass
+	 * @param pageParameters
+	 * @return a {@code IRequestHandler} capable of processing the bookmarkable request.
+	 */
+	protected IRequestHandler processBookmarkable(Class<? extends IRequestablePage> pageClass,
 		PageParameters pageParameters)
 	{
 		PageProvider provider = new PageProvider(pageClass, pageParameters);
@@ -151,7 +158,18 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		return new RenderPageRequestHandler(provider);
 	}
 
-	private IRequestHandler processHybrid(PageInfo pageInfo,
+	/**
+	 * Creates a {@code IRequestHandler} that processes a hybrid request. When the page identified
+	 * by {@code pageInfo} was not available, the request should be treated as a bookmarkable
+	 * request.
+	 * 
+	 * @param pageInfo
+	 * @param pageClass
+	 * @param pageParameters
+	 * @param renderCount
+	 * @return a {@code IRequestHandler} capable of processing the hybrid request.
+	 */
+	protected IRequestHandler processHybrid(PageInfo pageInfo,
 		Class<? extends IRequestablePage> pageClass, PageParameters pageParameters,
 		Integer renderCount)
 	{
@@ -161,7 +179,15 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		return new RenderPageRequestHandler(provider);
 	}
 
-	private IRequestHandler processListener(PageComponentInfo pageComponentInfo,
+	/**
+	 * Creates a {@code IRequestHandler} that processes a listener request.
+	 * 
+	 * @param pageComponentInfo
+	 * @param pageClass
+	 * @param pageParameters
+	 * @return a {@code IRequestHandler} that invokes the listener interface
+	 */
+	protected IRequestHandler processListener(PageComponentInfo pageComponentInfo,
 		Class<? extends IRequestablePage> pageClass, PageParameters pageParameters)
 	{
 		PageInfo pageInfo = pageComponentInfo.getPageInfo();
