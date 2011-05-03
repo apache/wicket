@@ -209,7 +209,7 @@ public class PackageResource extends AbstractResource
 			final Time lastModified = resourceStream.lastModifiedTime();
 
 			if (lastModified != null)
-				resourceResponse.setLastModified(lastModified.toDate());
+				resourceResponse.setLastModified(lastModified);
 
 			try
 			{

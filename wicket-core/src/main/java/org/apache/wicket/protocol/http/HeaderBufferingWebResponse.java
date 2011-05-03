@@ -20,6 +20,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.time.Time;
 
 /**
  * Response that keeps headers in buffers but writes the content directly to the response.
@@ -126,8 +128,9 @@ class HeaderBufferingWebResponse extends WebResponse implements IMetaDataBufferi
 	}
 
 	@Override
-	public void setDateHeader(String name, long date)
+	public void setDateHeader(String name, Time date)
 	{
+		Args.notNull(date, "date");
 		checkHeader();
 		bufferedResponse.setDateHeader(name, date);
 	}

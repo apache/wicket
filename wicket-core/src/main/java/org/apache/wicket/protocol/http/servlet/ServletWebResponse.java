@@ -29,6 +29,7 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.time.Time;
 
 /**
  * WebResponse that wraps a {@link ServletWebResponse}.
@@ -82,9 +83,10 @@ public class ServletWebResponse extends WebResponse
 	}
 
 	@Override
-	public void setDateHeader(String name, long date)
+	public void setDateHeader(String name, Time date)
 	{
-		httpServletResponse.setDateHeader(name, date);
+		Args.notNull(date, "date");
+		httpServletResponse.setDateHeader(name, date.getMilliseconds());
 	}
 
 	@Override

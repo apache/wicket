@@ -24,6 +24,7 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.util.time.Time;
 
 /**
  * Base class for web-related responses.
@@ -66,7 +67,7 @@ public abstract class WebResponse extends Response
 	 * @param name
 	 * @param date
 	 */
-	public abstract void setDateHeader(String name, long date);
+	public abstract void setDateHeader(String name, Time date);
 
 	/**
 	 * Set the content length on the response, if appropriate in the subclass. This default
@@ -90,9 +91,9 @@ public abstract class WebResponse extends Response
 	 * Set the contents last modified time, if appropriate in the subclass.
 	 * 
 	 * @param time
-	 *            The last modified time in milliseconds
+	 *            The last modified time
 	 */
-	public void setLastModifiedTime(final long time)
+	public void setLastModifiedTime(final Time time)
 	{
 		setDateHeader("Last-Modified", time);
 	}
@@ -166,8 +167,8 @@ public abstract class WebResponse extends Response
 	 */
 	public void disableCaching()
 	{
-		setDateHeader("Date", System.currentTimeMillis());
-		setDateHeader("Expires", 0);
+		setDateHeader("Date", Time.now());
+		setDateHeader("Expires", Time.START_OF_UNIX_TIME);
 		setHeader("Pragma", "no-cache");
 		setHeader("Cache-Control", "no-cache, no-store");
 	}
@@ -196,13 +197,13 @@ public abstract class WebResponse extends Response
 		}
 
 		// Get current time
-		long now = System.currentTimeMillis();
+		Time now = Time.now();
 
 		// Time of message generation
 		setDateHeader("Date", now);
 
 		// Time for cache expiry = now + duration
-		setDateHeader("Expires", now + duration.getMilliseconds());
+		setDateHeader("Expires", now.add(duration));
 
 		// Enable caching and set max age
 		setHeader("Cache-Control", scope.cacheControl + ", max-age=" + duration.getMilliseconds());

@@ -29,6 +29,8 @@ import javax.servlet.http.Cookie;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.time.Time;
 
 /**
  * Mocked {@link WebResponse}.
@@ -128,8 +130,9 @@ public class MockWebResponse extends WebResponse
 	private final Map<String, Object> headers = new HashMap<String, Object>();
 
 	@Override
-	public void setDateHeader(String name, long date)
+	public void setDateHeader(String name, Time date)
 	{
+		Args.notNull(date, "date");
 		headers.put(name, date);
 	}
 
@@ -138,20 +141,20 @@ public class MockWebResponse extends WebResponse
 	 * 
 	 * @return date header with specified name
 	 */
-	public long getDateHeader(String name)
+	public Time getDateHeader(String name)
 	{
 		Object value = headers.get(name);
 		if (value == null)
 		{
 			throw new WicketRuntimeException("Date header '" + name + "' is not set.");
 		}
-		else if (value instanceof Long == false)
+		else if (value instanceof Time == false)
 		{
 			throw new WicketRuntimeException("Header '" + name + "' is not date type.");
 		}
 		else
 		{
-			return (Long)value;
+			return (Time)value;
 		}
 	}
 

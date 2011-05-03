@@ -72,7 +72,7 @@ public class ContextRelativeResource extends AbstractResource
 				path);
 
 			resourceResponse.setContentType(webExternalResourceStream.getContentType());
-			resourceResponse.setLastModified(webExternalResourceStream.lastModifiedTime().toDate());
+			resourceResponse.setLastModified(webExternalResourceStream.lastModifiedTime());
 			resourceResponse.setFileName(path);
 			resourceResponse.setWriteCallback(new WriteCallback()
 			{

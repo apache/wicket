@@ -19,7 +19,6 @@ package org.apache.wicket.request.resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Date;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,6 +31,7 @@ import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.util.time.Time;
 
 /**
  * Convenience resource implementation. The subclass must implement
@@ -73,7 +73,7 @@ public abstract class AbstractResource implements IResource
 		private String contentType = null;
 		private String textEncoding;
 		private long contentLength = -1;
-		private Date lastModified = null;
+		private Time lastModified = null;
 		private WriteCallback writeCallback;
 		private Duration cacheDuration;
 		private WebResponse.CacheScope cacheScope;
@@ -246,17 +246,17 @@ public abstract class AbstractResource implements IResource
 		 * to client.
 		 * 
 		 * @param lastModified
-		 *            last modification date
+		 *            last modification timestamp
 		 */
-		public void setLastModified(Date lastModified)
+		public void setLastModified(Time lastModified)
 		{
 			this.lastModified = lastModified;
 		}
 
 		/**
-		 * @return last modified date
+		 * @return last modification timestamp
 		 */
-		public Date getLastModified()
+		public Time getLastModified()
 		{
 			return lastModified;
 		}
@@ -264,7 +264,7 @@ public abstract class AbstractResource implements IResource
 		/**
 		 * Check to determine if the resource data needs to be written. This method checks the
 		 * <code>If-Modified-Since</code> request header and compares it to lastModified property.
-		 * In order for this method to work {@link #setLastModified(Date)} has to be called first.
+		 * In order for this method to work {@link #setLastModified(Time)} has to be called first.
 		 * 
 		 * @param attributes
 		 *            request attributes
@@ -274,19 +274,18 @@ public abstract class AbstractResource implements IResource
 		public boolean dataNeedsToBeWritten(Attributes attributes)
 		{
 			WebRequest request = (WebRequest)attributes.getRequest();
-			Date ifModifiedSince = request.getIfModifiedSinceHeader();
-			Date lastModified = getLastModified();
+			Time ifModifiedSince = request.getIfModifiedSinceHeader();
 
-			if (ifModifiedSince != null && lastModified != null)
+			if (ifModifiedSince != null && this.lastModified != null)
 			{
 				// [Last-Modified] headers have a maximum precision of one second
 				// so we have to truncate the milliseconds part for a proper compare.
 				// that's stupid, since changes within one second will not be reliably
 				// detected by the client ... any hint or clarification to improve this
 				// situation will be appreciated...
-				long modified = this.lastModified.getTime() / 1000 * 1000;
+				Time roundedLastModified = Time.valueOf(this.lastModified.getMilliseconds() / 1000 * 1000);
 
-				return ifModifiedSince.getTime() < modified;
+				return ifModifiedSince.before(roundedLastModified);
 			}
 			else
 			{
@@ -437,10 +436,10 @@ public abstract class AbstractResource implements IResource
 		WebResponse response = (WebResponse)attributes.getResponse();
 
 		// 1. Last Modified
-		Date lastModified = data.getLastModified();
+		Time lastModified = data.getLastModified();
 		if (lastModified != null)
 		{
-			response.setLastModifiedTime(lastModified.getTime());
+			response.setLastModifiedTime(lastModified);
 		}
 
 		// 2. Caching
@@ -521,7 +520,7 @@ public abstract class AbstractResource implements IResource
 	 * 
 	 * @author Matej Knopp
 	 */
-	public static abstract class WriteCallback
+	public abstract static class WriteCallback
 	{
 		/**
 		 * Write the resource data to response.
@@ -565,7 +564,7 @@ public abstract class AbstractResource implements IResource
 					}
 					else
 					{
-						byte copy[] = new byte[len];
+						byte[] copy = new byte[len];
 						System.arraycopy(b, off, copy, 0, len);
 						write(copy);
 					}

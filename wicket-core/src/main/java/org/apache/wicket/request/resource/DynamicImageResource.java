@@ -135,11 +135,11 @@ public abstract class DynamicImageResource extends AbstractResource
 
 		if (lastModifiedTime != null)
 		{
-			response.setLastModified(lastModifiedTime.toDate());
+			response.setLastModified(lastModifiedTime);
 		}
 		else
 		{
-			response.setLastModified(new Date());
+			response.setLastModified(Time.now());
 		}
 
 		if (response.dataNeedsToBeWritten(attributes))

@@ -31,6 +31,7 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.Url.QueryParameter;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.string.UrlUtils;
+import org.apache.wicket.util.time.Time;
 
 /**
  * Mutable mock {@link WebRequest}.
@@ -137,22 +138,22 @@ public class MockWebRequest extends WebRequest
 
 
 	@Override
-	public long getDateHeader(String name)
+	public Time getDateHeader(String name)
 	{
 		List<Object> dates = headers.get(name);
 		if (dates == null || dates.isEmpty())
 		{
-			return -1;
+			return null;
 		}
 
 		Object date = dates.get(0);
 
-		if (date instanceof Long == false)
+		if (date instanceof Time == false)
 		{
 			throw new WicketRuntimeException("Date header with name '" + name +
-				"' is not a valid long.");
+				"' is not a valid Time.");
 		}
-		return (Long)date;
+		return (Time)date;
 	}
 
 	private void addHeaderObject(String name, Object value)
@@ -172,7 +173,7 @@ public class MockWebRequest extends WebRequest
 	 * @param name
 	 * @param value
 	 */
-	public void setDateHeader(String name, long value)
+	public void setDateHeader(String name, Time value)
 	{
 		removeHeader(name);
 		addHeaderObject(name, value);
@@ -184,7 +185,7 @@ public class MockWebRequest extends WebRequest
 	 * @param name
 	 * @param value
 	 */
-	public void addDateHeader(String name, long value)
+	public void addDateHeader(String name, Time value)
 	{
 		addHeaderObject(name, value);
 	}

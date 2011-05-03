@@ -94,7 +94,7 @@ public class ResourceStreamResource extends AbstractResource
 		Time lastModifiedTime = stream.lastModifiedTime();
 		if (lastModifiedTime != null)
 		{
-			data.setLastModified(lastModifiedTime.toDate());
+			data.setLastModified(lastModifiedTime);
 		}
 
 		// performance check; don't bother to do anything if the resource is still cached by client

@@ -43,6 +43,7 @@ import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.UrlUtils;
+import org.apache.wicket.util.time.Time;
 import org.apache.wicket.util.upload.FileItemFactory;
 import org.apache.wicket.util.upload.FileUploadException;
 import org.slf4j.Logger;
@@ -208,9 +209,9 @@ public class ServletWebRequest extends WebRequest
 	}
 
 	@Override
-	public long getDateHeader(String name)
+	public Time getDateHeader(String name)
 	{
-		return httpServletRequest.getDateHeader(name);
+		return Time.valueOf(httpServletRequest.getDateHeader(name));
 	}
 
 	@Override

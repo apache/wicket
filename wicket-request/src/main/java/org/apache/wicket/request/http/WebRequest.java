@@ -17,7 +17,6 @@
 package org.apache.wicket.request.http;
 
 import java.nio.charset.Charset;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -27,7 +26,7 @@ import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.string.Strings;
-
+import org.apache.wicket.util.time.Time;
 
 /**
  * Base class for request that provides additional web-related information.
@@ -89,26 +88,18 @@ public abstract class WebRequest extends Request
 	 * as <code>If-Modified-Since</code>.
 	 * 
 	 * @param name
-	 * @return date value of request header
+	 * @return date value of request header or <code>null</code> if not found
 	 */
-	public abstract long getDateHeader(String name);
+	public abstract Time getDateHeader(String name);
 
 	/**
 	 * Convenience method for retrieving If-Modified-Since header.
 	 * 
 	 * @return date representing the header or <code>null</code> if not set
 	 */
-	public final Date getIfModifiedSinceHeader()
+	public final Time getIfModifiedSinceHeader()
 	{
-		final long header = getDateHeader("If-Modified-Since");
-		if (header >= 0)
-		{
-			return new Date(header);
-		}
-		else
-		{
-			return null;
-		}
+		return getDateHeader("If-Modified-Since");
 	}
 
 
@@ -173,7 +164,7 @@ public abstract class WebRequest extends Request
 			}
 
 			@Override
-			public long getDateHeader(final String name)
+			public Time getDateHeader(final String name)
 			{
 				return WebRequest.this.getDateHeader(name);
 			}

@@ -32,6 +32,7 @@ import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.response.filter.IResponseFilter;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.time.Time;
 
 /**
  * Subclass of {@link WebResponse} that buffers the actions and performs those on another response.
@@ -253,9 +254,9 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	private static class SetDateHeaderAction extends MetaDataAction
 	{
 		private final String name;
-		private final long value;
+		private final Time value;
 
-		public SetDateHeaderAction(String name, long value)
+		public SetDateHeaderAction(String name, Time value)
 		{
 			this.name = name;
 			this.value = value;
@@ -397,9 +398,9 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	}
 
 	@Override
-	public void setDateHeader(String name, long date)
+	public void setDateHeader(String name, Time date)
 	{
-		actions.add(new SetDateHeaderAction(name, date));
+		actions.add(new SetDateHeaderAction(name, Args.notNull(date, "date")));
 	}
 
 	@Override

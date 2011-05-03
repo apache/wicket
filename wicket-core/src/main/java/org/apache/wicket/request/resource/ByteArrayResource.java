@@ -101,7 +101,7 @@ public class ByteArrayResource extends AbstractResource
 		final ResourceResponse response = new ResourceResponse();
 
 		response.setContentType(contentType);
-		response.setLastModified(lastModified.toDate());
+		response.setLastModified(lastModified);
 
 		if (response.dataNeedsToBeWritten(attributes))
 		{
