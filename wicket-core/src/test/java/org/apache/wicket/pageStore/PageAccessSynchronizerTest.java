@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PageAccessSynchronizerTest
 {
-	private static final Logger logger = LoggerFactory.getLogger(PageAccessSynchronizer.class);
+	private static final Logger logger = LoggerFactory.getLogger(PageAccessSynchronizerTest.class);
 
 	/**	 */
 	@Rule
