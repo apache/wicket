@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.markup.html.internal;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WicketEventReference;
 import org.apache.wicket.request.IRequestHandler;
@@ -30,11 +35,6 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.CssUtils;
 import org.apache.wicket.util.string.JavaScriptUtils;
 import org.apache.wicket.util.string.Strings;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -189,34 +189,38 @@ public abstract class HeaderResponse implements IHeaderResponse
 	public void renderJavaScriptReference(ResourceReference reference,
 		PageParameters pageParameters, String id)
 	{
+		renderJavaScriptReference(reference, pageParameters, id, false);
+	}
+
+	public void renderJavaScriptReference(ResourceReference reference,
+		PageParameters pageParameters, String id, boolean defer)
+	{
 		Args.notNull(reference, "reference");
 
 		if (!closed)
 		{
 			IRequestHandler handler = new ResourceReferenceRequestHandler(reference, pageParameters);
 			CharSequence url = RequestCycle.get().urlFor(handler);
-			internalRenderJavaScriptReference(url.toString(), id);
+			internalRenderJavaScriptReference(url.toString(), id, defer);
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavaScriptReference(java.lang.String)
-	 */
 	public void renderJavaScriptReference(String url)
 	{
-		internalRenderJavaScriptReference(relative(url), null);
+		renderJavaScriptReference(url, null);
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavaScriptReference(java.lang.String,
-	 *      java.lang.String)
-	 */
 	public void renderJavaScriptReference(String url, String id)
 	{
-		internalRenderJavaScriptReference(relative(url), id);
+		renderJavaScriptReference(url, id, false);
 	}
 
-	private void internalRenderJavaScriptReference(String url, String id)
+	public void renderJavaScriptReference(String url, String id, boolean defer)
+	{
+		internalRenderJavaScriptReference(relative(url), id, defer);
+	}
+
+	private void internalRenderJavaScriptReference(String url, String id, boolean defer)
 	{
 		if (Strings.isEmpty(url))
 		{
@@ -232,7 +236,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 
 			if (token1Unused && token2Unused)
 			{
-				JavaScriptUtils.writeJavaScriptUrl(getResponse(), url, id);
+				JavaScriptUtils.writeJavaScriptUrl(getResponse(), url, id, defer);
 				markRendered(token1);
 				if (token2 != null)
 				{

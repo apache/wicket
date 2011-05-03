@@ -105,10 +105,33 @@ public class JavaScriptUtils
 	public static void writeJavaScriptUrl(final Response response, final CharSequence url,
 		final String id)
 	{
+		writeJavaScriptUrl(response, url, id, false);
+	}
+
+	/**
+	 * Write a reference to a javascript file to the response object
+	 * 
+	 * @param response
+	 *            The HTTP response
+	 * @param url
+	 *            The javascript file URL
+	 * @param id
+	 *            Unique identifier of element
+	 * @param defer
+	 *            specifies that the execution of a script should be deferred (delayed) until after
+	 *            the page has been loaded.
+	 */
+	public static void writeJavaScriptUrl(final Response response, final CharSequence url,
+		final String id, boolean defer)
+	{
 		response.write("<script type=\"text/javascript\" ");
 		if (id != null)
 		{
 			response.write("id=\"" + id + "\" ");
+		}
+		if (defer)
+		{
+			response.write("defer=\"defer\" ");
 		}
 		response.write("src=\"");
 		response.write(url);

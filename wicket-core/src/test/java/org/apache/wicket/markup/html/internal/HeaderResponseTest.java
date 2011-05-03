@@ -20,6 +20,10 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.nio.charset.Charset;
+
+import junit.framework.Assert;
+
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.IRequestHandler;
@@ -35,16 +39,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.nio.charset.Charset;
-
-import junit.framework.Assert;
-
 /**
  * Tests for {@link IHeaderResponse}'s methods
  */
 public class HeaderResponseTest
 {
-	private static final String RESOURCE_NAME = "resource.css";
+	private static final String RESOURCE_NAME = "resource.name";
 
 	private IHeaderResponse headerResponse;
 
@@ -126,4 +126,37 @@ public class HeaderResponseTest
 		String actual = headerResponse.getResponse().toString();
 		Assert.assertEquals(expected, actual);
 	}
+
+	/**
+	 * Tests setting of 'defer' attribute
+	 * <p>
+	 * WICKET-3661
+	 */
+	@Test
+	public void testDeferJavaScriptReference()
+	{
+		boolean defer = true;
+		headerResponse.renderJavaScriptReference("js-resource.js", "some-id", defer);
+		String expected = "<script type=\"text/javascript\" id=\"some-id\" defer=\"defer\" src=\"" +
+			RESOURCE_NAME + "\"></script>\n";
+		String actual = headerResponse.getResponse().toString();
+		Assert.assertEquals(expected, actual);
+	}
+
+	/**
+	 * Tests non-setting of 'defer' attribute
+	 * <p>
+	 * WICKET-3661
+	 */
+	@Test
+	public void testDeferFalseJavaScriptReference()
+	{
+		boolean defer = false;
+		headerResponse.renderJavaScriptReference("js-resource.js", "some-id", defer);
+		String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"" + RESOURCE_NAME +
+			"\"></script>\n";
+		String actual = headerResponse.getResponse().toString();
+		Assert.assertEquals(expected, actual);
+	}
+
 }

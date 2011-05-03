@@ -16,11 +16,11 @@
  */
 package org.apache.wicket.markup.html;
 
+import java.io.Closeable;
+
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
-
-import java.io.Closeable;
 
 /**
  * Interface that is used to render header elements (usually javascript and CSS references).
@@ -67,6 +67,24 @@ public interface IHeaderResponse extends Closeable
 		PageParameters pageParameters, String id);
 
 	/**
+	 * Writes a javascript reference with query parameters, if the specified reference hasn't been
+	 * rendered yet.
+	 * 
+	 * @param reference
+	 *            resource reference pointing to the javascript resource
+	 * @param pageParameters
+	 *            the parameters for this Javascript resource reference
+	 * @param id
+	 *            id that will be used to filter duplicate reference (it's still filtered by URL
+	 *            too)
+	 * @param defer
+	 *            specifies that the execution of a script should be deferred (delayed) until after
+	 *            the page has been loaded.
+	 */
+	public void renderJavaScriptReference(ResourceReference reference,
+		PageParameters pageParameters, String id, boolean defer);
+
+	/**
 	 * Writes a javascript reference, if the specified reference hasn't been rendered yet.
 	 * 
 	 * @param url
@@ -84,6 +102,20 @@ public interface IHeaderResponse extends Closeable
 	 *            too)
 	 */
 	public void renderJavaScriptReference(String url, String id);
+
+	/**
+	 * Writes a javascript reference, if the specified reference hasn't been rendered yet.
+	 * 
+	 * @param url
+	 *            context-relative url of the the javascript resource
+	 * @param id
+	 *            id that will be used to filter duplicate reference (it's still filtered by URL
+	 *            too)
+	 * @param defer
+	 *            specifies that the execution of a script should be deferred (delayed) until after
+	 *            the page has been loaded.
+	 */
+	public void renderJavaScriptReference(String url, String id, boolean defer);
 
 	/**
 	 * Renders javascript code to the response, if the javascript has not already been rendered.
