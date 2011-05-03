@@ -61,6 +61,10 @@ public class BookmarkablePageLink<T> extends Link<T>
 	 */
 	public PageParameters getPageParameters()
 	{
+		if (parameters == null)
+		{
+			parameters = new PageParameters();
+		}
 		return parameters;
 	}
 
@@ -140,11 +144,7 @@ public class BookmarkablePageLink<T> extends Link<T>
 
 	private void setParameterImpl(String key, Object value)
 	{
-		if (parameters == null)
-		{
-			parameters = new PageParameters();
-		}
-		parameters.set(key, value);
+		getPageParameters().set(key, value);
 	}
 
 	/**
@@ -155,7 +155,9 @@ public class BookmarkablePageLink<T> extends Link<T>
 	 * @param value
 	 *            The value
 	 * @return This
+	 * @deprecated Use {@link #getPageParameters()}.set() instead
 	 */
+	@Deprecated
 	public BookmarkablePageLink<T> setParameter(final String property, final int value)
 	{
 		setParameterImpl(property, Integer.toString(value));
@@ -170,7 +172,9 @@ public class BookmarkablePageLink<T> extends Link<T>
 	 * @param value
 	 *            The value
 	 * @return This
+	 * @deprecated Use {@link #getPageParameters()}.set() instead
 	 */
+	@Deprecated
 	public BookmarkablePageLink<T> setParameter(final String property, final long value)
 	{
 		setParameterImpl(property, Long.toString(value));
@@ -185,7 +189,9 @@ public class BookmarkablePageLink<T> extends Link<T>
 	 * @param value
 	 *            The value
 	 * @return This
+	 * @deprecated Use {@link #getPageParameters()}.set() instead
 	 */
+	@Deprecated
 	public BookmarkablePageLink<T> setParameter(final String property, final String value)
 	{
 		setParameterImpl(property, value);
