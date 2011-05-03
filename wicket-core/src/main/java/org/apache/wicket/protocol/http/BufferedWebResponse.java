@@ -259,7 +259,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		public SetDateHeaderAction(String name, Time value)
 		{
 			this.name = name;
-			this.value = value;
+			this.value = Args.notNull(value, "value");
 		}
 
 		@Override
@@ -400,7 +400,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	@Override
 	public void setDateHeader(String name, Time date)
 	{
-		actions.add(new SetDateHeaderAction(name, Args.notNull(date, "date")));
+		actions.add(new SetDateHeaderAction(name, date));
 	}
 
 	@Override
