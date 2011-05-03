@@ -18,6 +18,7 @@ package org.apache.wicket;
 
 import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -28,6 +29,7 @@ import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converter.BigDecimalConverter;
 import org.apache.wicket.util.convert.converter.BooleanConverter;
 import org.apache.wicket.util.convert.converter.ByteConverter;
+import org.apache.wicket.util.convert.converter.CalendarConverter;
 import org.apache.wicket.util.convert.converter.CharacterConverter;
 import org.apache.wicket.util.convert.converter.DateConverter;
 import org.apache.wicket.util.convert.converter.DoubleConverter;
@@ -167,6 +169,7 @@ public class ConverterLocator implements IConverterLocator
 		set(Short.TYPE, ShortConverter.INSTANCE);
 		set(Short.class, ShortConverter.INSTANCE);
 		set(Date.class, new DateConverter());
+		set(Calendar.class, new CalendarConverter());
 		set(java.sql.Date.class, new SqlDateConverter());
 		set(java.sql.Time.class, new SqlTimeConverter());
 		set(java.sql.Timestamp.class, new SqlTimestampConverter());

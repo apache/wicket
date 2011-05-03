@@ -29,6 +29,7 @@ import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.converter.BigDecimalConverter;
 import org.apache.wicket.util.convert.converter.BooleanConverter;
 import org.apache.wicket.util.convert.converter.ByteConverter;
+import org.apache.wicket.util.convert.converter.CalendarConverter;
 import org.apache.wicket.util.convert.converter.DateConverter;
 import org.apache.wicket.util.convert.converter.DoubleConverter;
 import org.apache.wicket.util.convert.converter.FloatConverter;
@@ -79,10 +80,10 @@ public final class ConvertersTest extends TestCase
 		cal.set(2002, Calendar.OCTOBER, 24);
 		Date date = cal.getTime();
 
-		assertEquals(date, converter.getConverter(Date.class).convertToObject("24-10-02",
-			DUTCH_LOCALE));
-		assertEquals("24-10-02", converter.getConverter(Date.class).convertToString(date,
-			DUTCH_LOCALE));
+		assertEquals(date,
+			converter.getConverter(Date.class).convertToObject("24-10-02", DUTCH_LOCALE));
+		assertEquals("24-10-02",
+			converter.getConverter(Date.class).convertToString(date, DUTCH_LOCALE));
 
 		// empty strings should return null, NOT throw NPEs
 		assertNull(converter.getConverter(Integer.class).convertToObject("", Locale.US));
@@ -93,8 +94,8 @@ public final class ConvertersTest extends TestCase
 		assertNull(converter.getConverter(Short.class).convertToObject("", Locale.US));
 		assertNull(converter.getConverter(Date.class).convertToObject("", Locale.US));
 		assertNull(converter.getConverter(Double.class).convertToObject("", Locale.US));
-		assertEquals(Boolean.FALSE, converter.getConverter(Boolean.class).convertToObject("",
-			Locale.US));
+		assertEquals(Boolean.FALSE,
+			converter.getConverter(Boolean.class).convertToObject("", Locale.US));
 		assertNotNull(converter.getConverter(String.class).convertToObject("", Locale.US));
 	}
 
@@ -107,7 +108,7 @@ public final class ConvertersTest extends TestCase
 		assertEquals(new BigDecimal(3000), bdc.convertToObject("3 000", Locale.FRENCH));
 
 		DoubleConverter dc = new DoubleConverter();
-		assertEquals((double) 3000, dc.convertToObject("3 000", Locale.FRENCH));
+		assertEquals((double)3000, dc.convertToObject("3 000", Locale.FRENCH));
 
 	}
 
@@ -146,7 +147,7 @@ public final class ConvertersTest extends TestCase
 	{
 		ByteConverter converter = new ByteConverter();
 		assertEquals(new Byte((byte)10), converter.convertToObject("10", Locale.US));
-		assertEquals("10", converter.convertToString((byte) 10, Locale.US));
+		assertEquals("10", converter.convertToString((byte)10, Locale.US));
 		try
 		{
 			converter.convertToObject("whatever", Locale.US);
@@ -276,7 +277,7 @@ public final class ConvertersTest extends TestCase
 	{
 		LongConverter converter = new LongConverter();
 		assertEquals(new Long(10), converter.convertToObject("10", Locale.US));
-		assertEquals("10", converter.convertToString((long) 10, Locale.US));
+		assertEquals("10", converter.convertToString((long)10, Locale.US));
 		try
 		{
 			converter.convertToObject("whatever", Locale.US);
@@ -313,7 +314,7 @@ public final class ConvertersTest extends TestCase
 	{
 		ShortConverter converter = new ShortConverter();
 		assertEquals(new Short((short)10), converter.convertToObject("10", Locale.US));
-		assertEquals("10", converter.convertToString((short) 10, Locale.US));
+		assertEquals("10", converter.convertToString((short)10, Locale.US));
 		try
 		{
 			converter.convertToObject("whatever", Locale.US);
@@ -373,6 +374,46 @@ public final class ConvertersTest extends TestCase
 		try
 		{
 			converter.convertToObject("10/24/02whatever", Locale.US);
+			fail("Conversion should have thrown an exception");
+		}
+		catch (ConversionException e)
+		{
+			// this is correct
+		}
+	}
+
+	/**
+	 * Test calendar locale conversions.
+	 */
+	public void testCalendarConverter()
+	{
+		CalendarConverter converter = new CalendarConverter();
+
+		Calendar cal = Calendar.getInstance(DUTCH_LOCALE);
+		cal.clear();
+		cal.set(2011, Calendar.MAY, 1);
+
+		assertEquals("1-5-11", converter.convertToString(cal, DUTCH_LOCALE));
+		assertEquals(cal, converter.convertToObject("1-5-11", DUTCH_LOCALE));
+
+		cal = Calendar.getInstance(Locale.US);
+		cal.clear();
+		cal.set(2011, Calendar.MAY, 1);
+		assertEquals("5/1/11", converter.convertToString(cal, Locale.US));
+		assertEquals(cal, converter.convertToObject("5/1/11", Locale.US));
+
+		try
+		{
+			converter.convertToObject("whatever", Locale.US);
+			fail("Conversion should have thrown an exception");
+		}
+		catch (ConversionException e)
+		{
+			// this is correct
+		}
+		try
+		{
+			converter.convertToObject("5/1/11whatever", Locale.US);
 			fail("Conversion should have thrown an exception");
 		}
 		catch (ConversionException e)
