@@ -194,9 +194,9 @@ import org.slf4j.LoggerFactory;
  * The getApplicationSettings() method is equivalent to getApplication().getSettings(). The
  * getApplicationPages is equivalent to getApplication().getPages().
  * 
- * <li><b>Feedback Messages </b>- The {@link Component#debug(String)},
- * {@link Component#info(String)}, {@link Component#warn(String)},
- * {@link Component#error(java.io.Serializable)} and {@link Component#fatal(String)} methods
+ * <li><b>Feedback Messages </b>- The {@link Component#debug(Serializable)},
+ * {@link Component#info(Serializable)}, {@link Component#warn(Serializable)},
+ * {@link Component#error(java.io.Serializable)} and {@link Component#fatal(Serializable)} methods
  * associate feedback messages with a Component. It is generally not necessary to use these methods
  * directly since Wicket validators automatically register feedback messages on Components. Any
  * feedback message for a given Component can be retrieved with {@link Component#getFeedbackMessage}.
@@ -1717,9 +1717,9 @@ public abstract class Component
 	 * component, the string is either HTML escaped or not. "HTML escaped" meaning that only HTML
 	 * sensitive chars are escaped but not all none-ascii chars. Proper HTML encoding should be used
 	 * instead. In case you really need a fully escaped model string you may call
-	 * {@link Strings#escapeMarkup(String, boolean, boolean)} on the model string returned.
+	 * {@link Strings#escapeMarkup(CharSequence, boolean, boolean)} on the model string returned.
 	 * 
-	 * @see Strings#escapeMarkup(String, boolean, boolean)
+	 * @see Strings#escapeMarkup(CharSequence, boolean, boolean)
 	 * @see #getEscapeModelStrings()
 	 * 
 	 * @return Model object for this component as a string
@@ -1734,9 +1734,9 @@ public abstract class Component
 	 * component, the string is either HTML escaped or not. "HTML escaped" meaning that only HTML
 	 * sensitive chars are escaped but not all none-ascii chars. Proper HTML encoding should be used
 	 * instead. In case you really need a fully escaped model string you may call
-	 * {@link Strings#escapeMarkup(String, boolean, boolean)} on the model string returned.
+	 * {@link Strings#escapeMarkup(CharSequence, boolean, boolean)} on the model string returned.
 	 * 
-	 * @see Strings#escapeMarkup(String, boolean, boolean)
+	 * @see Strings#escapeMarkup(CharSequence, boolean, boolean)
 	 * @see #getEscapeModelStrings()
 	 * 
 	 * @param modelObject
@@ -2289,8 +2289,8 @@ public abstract class Component
 	 * removed cannot be referenced from the markup still.
 	 * <p>
 	 * You must not use this method in your callback to any of the
-	 * {@link MarkupContainer#visitChildren(IVisitor)} methods. See {@link href
-	 * https://issues.apache.org/jira/browse/WICKET-3229}.
+	 * {@link MarkupContainer#visitChildren(IVisitor)} methods. See
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-3229">WICKET-3329</a>.
 	 */
 	public final void remove()
 	{
@@ -2457,7 +2457,7 @@ public abstract class Component
 	 */
 	protected void renderPlaceholderTag(final ComponentTag tag, final Response response)
 	{
-		String ns = Strings.isEmpty(tag.getNamespace()) ? null : tag.getNamespace() + ":";
+		String ns = Strings.isEmpty(tag.getNamespace()) ? null : tag.getNamespace() + ':';
 
 		response.write("<");
 		if (ns != null)
@@ -3262,9 +3262,9 @@ public abstract class Component
 					return new StringBuilder("[Component id = ").append(getId())
 						.append(", page = <No Page>, path = ")
 						.append(getPath())
-						.append(".")
+						.append('.')
 						.append(Classes.simpleName(getClass()))
-						.append("]")
+						.append(']')
 						.toString();
 				}
 				else
@@ -3274,19 +3274,19 @@ public abstract class Component
 						.append(getPage().getClass().getName())
 						.append(", path = ")
 						.append(getPath())
-						.append(".")
+						.append('.')
 						.append(Classes.simpleName(getClass()))
 						.append(", isVisible = ")
 						.append((determineVisibility()))
 						.append(", isVersioned = ")
 						.append(isVersioned())
-						.append("]")
+						.append(']')
 						.toString();
 				}
 			}
 			else
 			{
-				return "[Component id = " + getId() + "]";
+				return "[Component id = " + getId() + ']';
 			}
 		}
 		catch (Exception e)
@@ -3808,8 +3808,6 @@ public abstract class Component
 	 * Because this method is responsible for cascading {@link #onBeforeRender()} call to its
 	 * children it is strongly recommended that super call is made at the end of the override.
 	 * </p>
-	 * 
-	 * @see Component#callOnBeforeRenderIfNotVisible()
 	 */
 	protected void onBeforeRender()
 	{
@@ -4127,7 +4125,7 @@ public abstract class Component
 	public Component get(final String path)
 	{
 		// Path to this component is an empty path
-		if (path.equals(""))
+		if (path.length() == 0)
 		{
 			return this;
 		}
