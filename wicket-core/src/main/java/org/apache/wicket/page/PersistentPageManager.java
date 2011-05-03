@@ -36,7 +36,7 @@ public class PersistentPageManager extends AbstractPageManager
 	 * A cache that holds all registered page managers. <br/>
 	 * applicationName -> page manager
 	 */
-	private static ConcurrentMap<String, PersistentPageManager> managers = new ConcurrentHashMap<String, PersistentPageManager>();
+	private static final ConcurrentMap<String, PersistentPageManager> managers = new ConcurrentHashMap<String, PersistentPageManager>();
 
 	private final IPageStore pageStore;
 

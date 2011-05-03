@@ -35,7 +35,8 @@ import org.slf4j.LoggerFactory;
  * Thread safe pool of {@link FileChannel} objects.
  * <p>
  * Opening and closing file is an expensive operation and under certain circumstances this can
- * significantly harm performances, because on every close the file system cache might be flushed.
+ * significantly harm the performance, because on every close the file system cache might be
+ * flushed.
  * <p>
  * To minimize the negative impact opened files can be pooled, which is a responsibility of
  * {@link FileChannelPool} class.
@@ -43,7 +44,7 @@ import org.slf4j.LoggerFactory;
  * {@link FileChannelPool} allows to specify maximum number of opened {@link FileChannel}s.
  * <p>
  * Note that under certain circumstances (when there are no empty slots in pool) the initial
- * capacity can be exceeded (more files are opened then the specified capacity is). If this happens,
+ * capacity can be exceeded (more files are opened than the specified capacity is). If this happens,
  * a warning is written to log, as this probably means that there is a problem with page store.
  * 
  * @author Matej Knopp

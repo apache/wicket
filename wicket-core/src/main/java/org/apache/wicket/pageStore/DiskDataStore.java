@@ -75,7 +75,6 @@ public class DiskDataStore implements IDataStore
 		this.fileStoreFolder = fileStoreFolder;
 		maxSizePerPageSession = maxSizePerSession;
 
-
 		try
 		{
 			fileChannelPool = new FileChannelPool(fileChannelPoolCapacity);
@@ -86,9 +85,8 @@ public class DiskDataStore implements IDataStore
 		catch (SecurityException e)
 		{
 			throw new WicketRuntimeException(
-				// TODO improve the message by explaining where in the API the disk store can be
-				// changed
-				"SecurityException occurred while creating DiskDataStore. Consider using a non-disk based IDataStore implementation.",
+				"SecurityException occurred while creating DiskDataStore. Consider using a non-disk based IDataStore implementation. "
+					+ "See org.apache.wicket.Application.setPageManagerProvider(IPageManagerProvider)",
 				e);
 		}
 	}
