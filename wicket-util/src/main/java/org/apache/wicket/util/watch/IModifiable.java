@@ -29,7 +29,8 @@ public interface IModifiable
 	/**
 	 * Gets the last time this modifiable thing changed.
 	 * 
-	 * @return the last modification <code>Time</code>
+	 * @return the last modification <code>Time</code> or 
+	 * <code>null</code> if that information is not available
 	 */
 	Time lastModifiedTime();
 }
