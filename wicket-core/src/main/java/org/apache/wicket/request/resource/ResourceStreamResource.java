@@ -26,6 +26,7 @@ import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.IResourceStreamWriter;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,7 +91,11 @@ public class ResourceStreamResource extends AbstractResource
 	protected ResourceResponse newResourceResponse(Attributes attributes)
 	{
 		ResourceResponse data = new ResourceResponse();
-		data.setLastModified(stream.lastModifiedTime().toDate());
+		Time lastModifiedTime = stream.lastModifiedTime();
+		if (lastModifiedTime != null)
+		{
+			data.setLastModified(lastModifiedTime.toDate());
+		}
 
 		// performance check; don't bother to do anything if the resource is still cached by client
 		if (data.dataNeedsToBeWritten(attributes))
