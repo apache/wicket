@@ -1441,7 +1441,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 // see
 // http://stackoverflow.com/questions/546365/utf-8-text-is-garbled-when-form-is-posted-as-multipart-form-data
 //
-				tag.put("accept-encoding", getApplication().getRequestCycleSettings()
+				tag.put("accept-charset", getApplication().getRequestCycleSettings()
 					.getResponseRequestEncoding());
 			}
 			else
