@@ -153,7 +153,7 @@ public class Palette<T> extends Panel
 	 * @param allowOrder
 	 *            Allow user to move selections up and down
 	 */
-	public Palette(final String id, final IModel<List<T>> model,
+	public Palette(final String id, final IModel<? extends List<? extends T>> model,
 		final IModel<? extends Collection<? extends T>> choicesModel,
 		final IChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder)
 	{
