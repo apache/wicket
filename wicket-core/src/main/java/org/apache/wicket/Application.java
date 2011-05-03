@@ -1514,7 +1514,6 @@ public abstract class Application implements UnboundListener, IEventSink
 			getRootRequestMapper(), getExceptionMapperProvider().get());
 
 		RequestCycle requestCycle = getRequestCycleProvider().get(context);
-		requestCycle.getListeners().add(requestCycleListeners);
 		requestCycle.getListeners().add(new AbstractRequestCycleListener()
 		{
 			@Override
@@ -1523,6 +1522,7 @@ public abstract class Application implements UnboundListener, IEventSink
 				getPageManager().commitRequest();
 			}
 		});
+		requestCycle.getListeners().add(requestCycleListeners);
 		return requestCycle;
 	}
 
