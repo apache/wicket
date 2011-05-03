@@ -211,7 +211,14 @@ public class ServletWebRequest extends WebRequest
 	@Override
 	public Time getDateHeader(String name)
 	{
-		return Time.valueOf(httpServletRequest.getDateHeader(name));
+		long value = httpServletRequest.getDateHeader(name);
+
+		if (value == -1)
+		{
+			return null;
+		}
+
+		return Time.valueOf(value);
 	}
 
 	@Override
