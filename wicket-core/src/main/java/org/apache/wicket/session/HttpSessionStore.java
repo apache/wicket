@@ -411,7 +411,7 @@ public class HttpSessionStore implements ISessionStore
 			Application application = Application.get(applicationKey);
 			if (application == null)
 			{
-				log.error("Wicket application with name '" + applicationKey + "' not found.");
+				log.debug("Wicket application with name '" + applicationKey + "' not found.");
 				return;
 			}
 
