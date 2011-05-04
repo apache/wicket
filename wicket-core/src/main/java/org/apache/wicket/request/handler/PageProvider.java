@@ -162,7 +162,6 @@ public class PageProvider implements IPageProvider
 		{
 			throw new PageExpiredException("Page expired.");
 		}
-		touchPageInstance();
 		return pageInstance;
 	}
 
@@ -305,19 +304,6 @@ public class PageProvider implements IPageProvider
 	private void setPageParameters(PageParameters pageParameters)
 	{
 		this.pageParameters = pageParameters;
-	}
-
-	/**
-	 * 
-	 */
-	private void touchPageInstance()
-	{
-		// If there is application accessible from current thread touch
-		// the page instance
-		if (Application.exists())
-		{
-			Application.get().getPageManager().touchPage(pageInstance);
-		}
 	}
 
 	/**

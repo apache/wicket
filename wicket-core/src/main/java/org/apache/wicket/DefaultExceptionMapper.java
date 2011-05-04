@@ -23,6 +23,7 @@ import org.apache.wicket.protocol.http.servlet.ResponseIOException;
 import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
+import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.handler.IPageRequestHandler;
@@ -136,6 +137,8 @@ public class DefaultExceptionMapper implements IExceptionMapper
 				"there is no current request cycle attached to this thread");
 		}
 
+		touchPageInstance(pageProvider.getPageInstance());
+
 		/*
 		 * Use NEVER_REDIRECT policy to preserve the original page's URL for non-Ajax requests and
 		 * always redirect for ajax requests
@@ -148,6 +151,17 @@ public class DefaultExceptionMapper implements IExceptionMapper
 		}
 
 		return new RenderPageRequestHandler(pageProvider, redirect);
+	}
+
+	/**
+	 * Mark the error page as candidate for storing
+	 */
+	private void touchPageInstance(IRequestablePage page)
+	{
+		if (Application.exists())
+		{
+			Application.get().getPageManager().touchPage(page);
+		}
 	}
 
 	private boolean isProcessingAjaxRequest()
