@@ -29,6 +29,7 @@ import java.util.Set;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -905,6 +906,25 @@ public abstract class AbstractTree extends Panel
 		Object parentNode = removalEvent.getTreePath().getLastPathComponent();
 		TreeItem parentItem = nodeToItemMap.get(parentNode);
 
+		// unselect all removed items
+		List<Object> selection = new ArrayList<Object>(getTreeState().getSelectedNodes());
+		List<Object> removed = Arrays.asList(removalEvent.getChildren());
+		for (Object selectedNode : selection)
+		{
+			Object cursor = selectedNode;
+			while (cursor != null)
+			{
+				if (removed.contains(cursor))
+				{
+					getTreeState().selectNode(selectedNode, false);
+				}
+				if (cursor instanceof TreeNode)
+				{
+					cursor = ((TreeNode)cursor).getParent();
+				}
+			}
+		}
+
 		if (parentItem != null && isNodeVisible(parentNode))
 		{
 			if (isNodeExpanded(parentNode))
@@ -923,13 +943,11 @@ public abstract class AbstractTree extends Panel
 							public void visitItem(TreeItem item)
 							{
 								removeItem(item);
-								getTreeState().selectNode(item.getModelObject(), false);
 							}
 						});
 
 						parentItem.getChildren().remove(itemToDelete);
 						removeItem(itemToDelete);
-						getTreeState().selectNode(itemToDelete.getModelObject(), false);
 					}
 				}
 			}
