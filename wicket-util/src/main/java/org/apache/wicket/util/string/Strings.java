@@ -375,6 +375,19 @@ public final class Strings
 	}
 
 	/**
+	 * Unescapes the escaped entities in the <code>markup</code> passed.
+	 * 
+	 * @param markup
+	 *            The source <code>String</code> to unescape.
+	 * @return the unescaped markup or <code>null</null> if the input is <code>null</code>
+	 */
+	public static CharSequence unescapeMarkup(final String markup)
+	{
+		String unescapedMarkup = StringEscapeUtils.unescapeHtml(markup);
+		return unescapedMarkup;
+	}
+
+	/**
 	 * Gets the first path component of a path using a given separator. If the separator cannot be
 	 * found, the path itself is returned.
 	 * <p>

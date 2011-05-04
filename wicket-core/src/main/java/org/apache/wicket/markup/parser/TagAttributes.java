@@ -18,6 +18,7 @@ package org.apache.wicket.markup.parser;
 
 import java.util.Map;
 
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
@@ -57,7 +58,7 @@ public class TagAttributes extends ValueMap
 	public final Object put(String key, Object value)
 	{
 		checkIdAttribute(key);
-		return super.put(key, value);
+		return putInternal(key, value);
 	}
 
 	/**
@@ -81,7 +82,7 @@ public class TagAttributes extends ValueMap
 	 */
 	public final Object putInternal(String key, Object value)
 	{
-		return super.put(key, value);
+		return super.put(key, unescapeHtml(value));
 	}
 
 	@Override
@@ -94,5 +95,25 @@ public class TagAttributes extends ValueMap
 		}
 
 		super.putAll(map);
+	}
+
+	/**
+	 * Unescapes the HTML entities from the <code>value</code> if it is a {@link CharSequence} and
+	 * there are any
+	 * 
+	 * @param value
+	 *            the attribute value
+	 * @return the HTML unescaped value or the non-modified input
+	 */
+	private static final Object unescapeHtml(Object value)
+	{
+		if (value instanceof CharSequence)
+		{
+			return Strings.unescapeMarkup(value.toString());
+		}
+		else
+		{
+			return value;
+		}
 	}
 }
