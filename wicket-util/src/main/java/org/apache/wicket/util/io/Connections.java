@@ -79,7 +79,7 @@ public class Connections
 			}
 			
 			// return UNIX timestamp
-			return Time.valueOf(milliseconds);
+			return Time.millis(milliseconds);
 			
 		}
 		finally

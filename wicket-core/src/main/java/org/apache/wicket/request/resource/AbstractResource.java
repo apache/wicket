@@ -283,7 +283,7 @@ public abstract class AbstractResource implements IResource
 				// that's stupid, since changes within one second will not be reliably
 				// detected by the client ... any hint or clarification to improve this
 				// situation will be appreciated...
-				Time roundedLastModified = Time.valueOf(this.lastModified.getMilliseconds() / 1000 * 1000);
+				Time roundedLastModified = Time.millis(this.lastModified.getMilliseconds() / 1000 * 1000);
 
 				return ifModifiedSince.before(roundedLastModified);
 			}

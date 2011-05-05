@@ -218,7 +218,7 @@ public class ServletWebRequest extends WebRequest
 			return null;
 		}
 
-		return Time.valueOf(value);
+		return Time.millis(value);
 	}
 
 	@Override

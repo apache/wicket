@@ -37,7 +37,7 @@ public final class Time extends AbstractTime
 	private static final long serialVersionUID = 1L;
 
 	/** the beginning of UNIX time: January 1, 1970, 0:00 GMT. */
-	public static final Time START_OF_UNIX_TIME = valueOf(0);
+	public static final Time START_OF_UNIX_TIME = millis(0);
 
 	/** parser in 'yyyy.MM.dd' format. */
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd",
@@ -54,7 +54,19 @@ public final class Time extends AbstractTime
 	 */
 	public static Time now()
 	{
-		return valueOf(System.currentTimeMillis());
+		return millis(System.currentTimeMillis());
+	}
+
+	/**
+	 * Retrieves a <code>Time</code> instance based on the given milliseconds.
+	 * 
+	 * @param time
+	 *            the <code>Time</code> value in milliseconds since START_OF_UNIX_TIME
+	 * @return a corresponding immutable <code>Time</code> object
+	 */
+	public static Time millis(final long time)
+	{
+		return new Time(time);
 	}
 
 	/**
@@ -95,6 +107,21 @@ public final class Time extends AbstractTime
 		return parseDate(localtime, string);
 	}
 
+
+	/**
+	 * Retrieves a <code>Time</code> instance based on the given milliseconds.
+	 * 
+	 * @param time
+	 *            the <code>Time</code> value in milliseconds since START_OF_UNIX_TIME
+	 * @return a corresponding immutable <code>Time</code> object
+	 * 
+	 * @deprecated use {@link Time#millis(long)} instead
+	 */
+	public static Time valueOf(final long time)
+	{
+		return millis(time);
+	}
+	
 	/**
 	 * Retrieves a <code>Time</code> instance by parsing 'yyyy.MM.dd-h.mma' format.
 	 * 
@@ -140,7 +167,7 @@ public final class Time extends AbstractTime
 			calendar.set(Calendar.MILLISECOND, 0); // WICKET-1670
 
 			// Add time of day milliseconds to midnight
-			return valueOf(calendar.getTimeInMillis() + timeOfDay.getMilliseconds());
+			return millis(calendar.getTimeInMillis() + timeOfDay.getMilliseconds());
 		}
 	}
 
@@ -154,18 +181,6 @@ public final class Time extends AbstractTime
 	public static Time valueOf(final Date date)
 	{
 		return new Time(date.getTime());
-	}
-
-	/**
-	 * Retrieves a <code>Time</code> instance based on the given milliseconds.
-	 * 
-	 * @param time
-	 *            the <code>Time</code> value in milliseconds since START_OF_UNIX_TIME
-	 * @return a corresponding immutable <code>Time</code> object
-	 */
-	public static Time valueOf(final long time)
-	{
-		return new Time(time);
 	}
 
 	/**
@@ -231,7 +246,7 @@ public final class Time extends AbstractTime
 	 */
 	public Time add(final Duration duration)
 	{
-		return valueOf(getMilliseconds() + duration.getMilliseconds());
+		return millis(getMilliseconds() + duration.getMilliseconds());
 	}
 
 	/**
@@ -437,7 +452,7 @@ public final class Time extends AbstractTime
 	 */
 	public Time subtract(final Duration duration)
 	{
-		return valueOf(getMilliseconds() - duration.getMilliseconds());
+		return millis(getMilliseconds() - duration.getMilliseconds());
 	}
 
 	/**

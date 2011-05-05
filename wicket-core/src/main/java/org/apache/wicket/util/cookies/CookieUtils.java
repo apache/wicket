@@ -365,6 +365,6 @@ public class CookieUtils
 	{
 		return "[Cookie " + " name = " + cookie.getName() + ", value = " + cookie.getValue() +
 			", domain = " + cookie.getDomain() + ", path = " + cookie.getPath() + ", maxAge = " +
-			Time.valueOf(cookie.getMaxAge()).toDateString() + "(" + cookie.getMaxAge() + ")" + "]";
+			Time.millis(cookie.getMaxAge()).toDateString() + "(" + cookie.getMaxAge() + ")" + "]";
 	}
 }

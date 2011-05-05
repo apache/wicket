@@ -448,7 +448,7 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	{
 		long millis = 12345678L;
 		final ResourceReferenceWithTimestamp reference = new ResourceReferenceWithTimestamp(
-			Time.valueOf(millis));
+			Time.millis(millis));
 		final IRequestHandler handler = new ResourceReferenceRequestHandler(reference, null);
 
 		// request url with timestamp
@@ -468,7 +468,7 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	{
 		long millis = 87654321L;
 		final ResourceReferenceWithTimestamp reference = new ResourceReferenceWithTimestamp(
-			Time.valueOf(millis));
+			Time.millis(millis));
 		final IRequestHandler handler = new ResourceReferenceRequestHandler(reference, null);
 
 		// setup mock request cycle
