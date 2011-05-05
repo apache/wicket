@@ -26,7 +26,9 @@ import java.net.URLConnection;
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.io.Connections;
+import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +76,7 @@ public class UrlResourceStream extends AbstractResourceStream
 		private String contentType;
 
 		/** Last known time the stream was last modified. */
-		private long lastModified;
+		private Time lastModified;
 
 	}
 
@@ -218,36 +220,26 @@ public class UrlResourceStream extends AbstractResourceStream
 		{
 			StreamData data = getData(true);
 
+			final Time lastModified;
+
 			if (file != null)
 			{
-				// in case the file has been removed by now
-				if (file.exists() == false)
-				{
-					return null;
-				}
-
-				long lastModified = file.lastModified();
-
-				// if last modified changed update content length and last modified date
-				if (lastModified != data.lastModified)
-				{
-					data.lastModified = lastModified;
-					setContentLength();
-				}
+				// get file modification timestamp
+				lastModified = IOUtils.getLastModified(file);
 			}
 			else
 			{
-				long lastModified = Connections.getLastModified(url);
-
-				// if last modified changed update content length and last modified date
-				if (lastModified != data.lastModified)
-				{
-					data.lastModified = lastModified;
-
-					setContentLength();
-				}
+				// get url modification timestamp
+				lastModified = Connections.getLastModified(url);
 			}
-			return Time.milliseconds(data.lastModified);
+
+			// if timestamp changed: update content length and last modified date
+			if (Objects.equal(lastModified, data.lastModified) == false)
+			{
+				data.lastModified = lastModified;
+				setContentLength();
+			}
+			return data.lastModified;
 		}
 		catch (IOException e)
 		{

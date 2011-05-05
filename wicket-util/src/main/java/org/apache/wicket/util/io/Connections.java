@@ -22,6 +22,8 @@ import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.apache.wicket.util.time.Time;
+
 /**
  * {@link URLConnection} related utilities
  * 
@@ -37,13 +39,15 @@ public class Connections
 	 * Gets last modified date of the given {@link URL}
 	 * 
 	 * @param url
-	 * @return last modified timestamp
+	 * @return last modified timestamp or <code>null</code> if not available
 	 * @throws IOException
 	 */
-	public static long getLastModified(final URL url) throws IOException
+	public static Time getLastModified(final URL url) throws IOException
 	{
 		URLConnection connection = url.openConnection();
 
+		final long milliseconds;
+		
 		try
 		{
 			if (connection instanceof JarURLConnection)
@@ -51,9 +55,11 @@ public class Connections
 				JarURLConnection jarUrlConnection = (JarURLConnection)connection;
 				URL jarFileUrl = jarUrlConnection.getJarFileURL();
 				URLConnection jarFileConnection = jarFileUrl.openConnection();
+				
 				try
 				{
-					return jarFileConnection.getLastModified();
+					// get timestamp from JAR
+					milliseconds = jarFileConnection.getLastModified();
 				}
 				finally
 				{
@@ -62,8 +68,19 @@ public class Connections
 			}
 			else
 			{
-				return connection.getLastModified();
+				// get timestamp from URL
+				milliseconds = connection.getLastModified();
 			}
+			
+			// return null if timestamp is unavailable
+			if (milliseconds == 0)
+			{
+				return null;
+			}
+			
+			// return UNIX timestamp
+			return Time.milliseconds(milliseconds);
+			
 		}
 		finally
 		{
