@@ -167,7 +167,7 @@ public class File extends java.io.File implements IModifiable
 	 */
 	public Time lastModifiedTime()
 	{
-		return Time.milliseconds(lastModified());
+		return Time.valueOf(lastModified());
 	}
 
 	/**

@@ -37,7 +37,7 @@ public final class Time extends AbstractTime
 	private static final long serialVersionUID = 1L;
 
 	/** the beginning of UNIX time: January 1, 1970, 0:00 GMT. */
-	public static final Time START_OF_UNIX_TIME = milliseconds(0);
+	public static final Time START_OF_UNIX_TIME = valueOf(0);
 
 	/** parser in 'yyyy.MM.dd' format. */
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd",
@@ -48,25 +48,13 @@ public final class Time extends AbstractTime
 		Locale.ENGLISH);
 
 	/**
-	 * Retrieves a <code>Time</code> instance based on the given milliseconds.
-	 * 
-	 * @param time
-	 *            the time value in milliseconds since START_OF_UNIX_TIME
-	 * @return the given <code>Time</code>
-	 */
-	public static Time milliseconds(final long time)
-	{
-		return new Time(time);
-	}
-
-	/**
 	 * Retrieves a <code>Time</code> instance based on the current time.
 	 * 
 	 * @return the current <code>Time</code>
 	 */
 	public static Time now()
 	{
-		return new Time(System.currentTimeMillis());
+		return valueOf(System.currentTimeMillis());
 	}
 
 	/**
@@ -243,7 +231,7 @@ public final class Time extends AbstractTime
 	 */
 	public Time add(final Duration duration)
 	{
-		return milliseconds(getMilliseconds() + duration.getMilliseconds());
+		return valueOf(getMilliseconds() + duration.getMilliseconds());
 	}
 
 	/**
@@ -449,7 +437,7 @@ public final class Time extends AbstractTime
 	 */
 	public Time subtract(final Duration duration)
 	{
-		return milliseconds(getMilliseconds() - duration.getMilliseconds());
+		return valueOf(getMilliseconds() - duration.getMilliseconds());
 	}
 
 	/**

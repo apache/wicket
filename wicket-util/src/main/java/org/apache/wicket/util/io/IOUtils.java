@@ -975,6 +975,6 @@ public final class IOUtils
 		}
 
 		// last file modification timestamp
-		return Time.milliseconds(millis);
+		return Time.valueOf(millis);
 	}
 }
