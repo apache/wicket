@@ -44,6 +44,8 @@ import org.apache.wicket.IClusterable;
  * 
  * @param <C>
  *            The object to convert from and to String
+ * @see org.apache.wicket.Component#getConverter(Class)
+ * @see org.apache.wicket.Application#getConverterLocator()
  */
 public interface IConverter<C> extends IClusterable
 {
