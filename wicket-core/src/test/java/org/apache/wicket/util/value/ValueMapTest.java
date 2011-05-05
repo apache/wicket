@@ -176,14 +176,14 @@ public class ValueMapTest extends TestCase
 		Integer integerValue = 42;
 		Long longValue = integerValue * 1L;
 		Double doubleValue = integerValue * 1.0D;
-		Time timeValue = Time.milliseconds(System.currentTimeMillis());
+		Time timeValue = Time.now();
 		Duration durationValue = Duration.hours(1);
 
 		boolean defBoolean = !booleanValue;
 		int defInteger = 10101;
 		long defLong = defInteger * 1L;
 		double defDouble = defInteger * 1.0D;
-		Time defTime = Time.milliseconds(System.currentTimeMillis());
+		Time defTime = Time.now();
 		Duration defDuration = Duration.hours(42);
 
 		vm.put("num", integerValue.toString());
