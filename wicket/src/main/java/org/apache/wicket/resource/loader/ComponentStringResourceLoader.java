@@ -27,6 +27,8 @@ import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.list.Loop;
+import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.resource.IPropertiesFactory;
 import org.apache.wicket.resource.Properties;
 import org.apache.wicket.util.resource.locator.ResourceNameIterator;
@@ -225,7 +227,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 
 		// The key prefix is equal to the component path relative to the
 		// current component on the top of the stack.
-		String prefix = Strings.replaceAll(component.getPageRelativePath(), ":", ".").toString();
+		String prefix = getResourcePath(component);
 
 		// The reason why we need to create that stack is because we need to
 		// walk it downwards starting with Page down to the Component
@@ -274,6 +276,40 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 		return string;
 	}
 
+	/**
+	 * get path for resource lookup
+	 * 
+	 * @param component
+	 * @return path
+	 */
+	protected String getResourcePath(final Component component)
+	{
+		Component current = component;
+
+		if (current == null)
+		{
+			throw new NullPointerException("component must not be null");
+		}
+
+		final StringBuilder buffer = new StringBuilder();
+		
+		while (current.getParent() != null)
+		{
+			final boolean skip = current.getParent() instanceof AbstractRepeater;
+
+			if (skip == false)
+			{
+				if (buffer.length() > 0)
+				{
+					buffer.insert(0, '.');
+				}
+				buffer.insert(0, current.getId());
+			}
+			current = current.getParent();
+		}
+		return buffer.toString();
+	}
+	
 	/**
 	 * Traverse the component hierarchy up to the Page and add each component class to the list
 	 * (stack) returned
