@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.apache.wicket.markup.repeater.AbstractRepeater;
+import org.apache.wicket.markup.html.list.LoopItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
@@ -45,9 +45,9 @@ import org.slf4j.LoggerFactory;
  * strategy for the properties. E.g. string resource loaders which load the properties from a
  * database. There should be hardly any need to extend Localizer.
  * 
- * @see org.apache.wicket.settings.Settings#getLocalizer()
+ * @see org.apache.wicket.settings.IResourceSettings#getLocalizer()
  * @see org.apache.wicket.resource.loader.IStringResourceLoader
- * @see org.apache.wicket.settings.Settings#getStringResourceLoaders()
+ * @see org.apache.wicket.settings.IResourceSettings#getStringResourceLoaders()
  * 
  * @author Chris Turner
  * @author Juergen Donnerstag
@@ -348,7 +348,7 @@ public class Localizer
 			{
 				log.debug("Property found in cache: '" + key + "'; Component: '" +
 					(component != null ? component.toString(false) : null) + "'; value: '" + value +
-					"'");
+					'\'');
 			}
 		}
 		else
@@ -356,7 +356,7 @@ public class Localizer
 			if (log.isDebugEnabled())
 			{
 				log.debug("Locate property: key: '" + key + "'; Component: '" +
-					(component != null ? component.toString(false) : null) + "'");
+					(component != null ? component.toString(false) : null) + '\'');
 			}
 
 			// Iterate over all registered string resource loaders until the property has been found
@@ -377,7 +377,7 @@ public class Localizer
 			if ((value == null) && log.isDebugEnabled())
 			{
 				log.debug("Property not found; key: '" + key + "'; Component: '" +
-					(component != null ? component.toString(false) : null) + "'");
+					(component != null ? component.toString(false) : null) + '\'');
 			}
 		}
 
@@ -446,7 +446,7 @@ public class Localizer
 		final String value = cache.get(cacheKey);
 
 		// ConcurrentHashMap does not allow null values
-		if (value == NULL_VALUE)
+		if (NULL_VALUE.equals(value))
 		{
 			return null;
 		}
@@ -467,16 +467,16 @@ public class Localizer
 	protected String getCacheKey(final String key, final Component component, final Locale locale,
 		final String style, final String variation)
 	{
-		String cacheKey = key;
 		if (component != null)
 		{
-			AppendingStringBuffer buffer = new AppendingStringBuffer(200);
+			StringBuilder buffer = new StringBuilder(200);
 			buffer.append(key);
 
 			Component cursor = component;
+			
 			while (cursor != null)
 			{
-				buffer.append("-").append(metaDatabase.id(cursor.getClass()));
+				buffer.append('-').append(metaDatabase.id(cursor.getClass()));
 
 				if (cursor instanceof Page)
 				{
@@ -484,31 +484,31 @@ public class Localizer
 				}
 
 				/*
-				 * only append component id if parent is not a repeater because (a) these ids are
+				 * only append component id if component is not a loop item because (a) these ids are
 				 * irrelevant when generating resource cache keys (b) they cause a lot of redundant
 				 * keys to be generated
 				 */
-				if (cursor.getParent() != null && !(cursor.getParent() instanceof AbstractRepeater))
+				final boolean skip = cursor instanceof LoopItem;
+
+				if (skip == false)
 				{
-					buffer.append(":").append(cursor.getId());
+					buffer.append(':').append(cursor.getId());
 				}
 
 				cursor = cursor.getParent();
 			}
 
-			buffer.append("-").append(locale);
-			buffer.append("-").append(style);
-			buffer.append("-").append(variation);
-			cacheKey = buffer.toString();
+			buffer.append('-').append(locale);
+			buffer.append('-').append(style);
+			buffer.append('-').append(variation);
+			
+			return buffer.toString();
 		}
 		else
 		{
 			// locale is guaranteed to be != null
-			cacheKey += "-" + locale.toString();
-			cacheKey += "-" + style;
+			return key + '-' + locale.toString() + '-' + style;
 		}
-
-		return cacheKey;
 	}
 
 	/**

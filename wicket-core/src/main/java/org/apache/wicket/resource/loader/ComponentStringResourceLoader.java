@@ -27,8 +27,10 @@ import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.list.LoopItem;
 import org.apache.wicket.resource.IPropertiesFactory;
 import org.apache.wicket.resource.Properties;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.resource.locator.ResourceNameIterator;
 import org.apache.wicket.util.string.Strings;
@@ -121,7 +123,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 		if (log.isDebugEnabled())
 		{
 			log.debug("key: '" + key + "'; class: '" + clazz.getName() + "'; locale: '" + locale +
-				"'; Style: '" + style + "'; Variation: '" + variation + "'");
+				"'; Style: '" + style + "'; Variation: '" + variation + '\'');
 		}
 
 		// Load the properties associated with the path
@@ -213,7 +215,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 
 		if (log.isDebugEnabled())
 		{
-			log.debug("component: '" + component.toString(false) + "'; key: '" + key + "'");
+			log.debug("component: '" + component.toString(false) + "'; key: '" + key + '\'');
 		}
 
 		// The return value
@@ -221,7 +223,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 
 		// The key prefix is equal to the component path relative to the
 		// current component on the top of the stack.
-		String prefix = Strings.replaceAll(component.getPageRelativePath(), ":", ".").toString();
+		String prefix = getResourcePath(component);
 
 		// The reason why we need to create that stack is because we need to
 		// walk it downwards starting with Page down to the Component
@@ -265,6 +267,35 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 		}
 
 		return string;
+	}
+
+	/**
+	 * get path for resource lookup
+	 * 
+	 * @param component
+	 * @return path
+	 */
+	protected String getResourcePath(final Component component)
+	{
+		Component current = Args.notNull(component, "component");
+
+		final StringBuilder buffer = new StringBuilder();
+		
+		while (current.getParent() != null)
+		{
+			final boolean skip = current instanceof LoopItem;
+
+			if (skip == false)
+			{
+				if (buffer.length() > 0)
+				{
+					buffer.insert(0, '.');
+				}
+				buffer.insert(0, current.getId());
+			}
+			current = current.getParent();
+		}
+		return buffer.toString();
 	}
 
 	/**
