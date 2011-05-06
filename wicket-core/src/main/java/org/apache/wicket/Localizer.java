@@ -446,7 +446,7 @@ public class Localizer
 		final String value = cache.get(cacheKey);
 
 		// ConcurrentHashMap does not allow null values
-		if (NULL_VALUE.equals(value))
+		if (NULL_VALUE == value)
 		{
 			return null;
 		}
@@ -473,7 +473,7 @@ public class Localizer
 			buffer.append(key);
 
 			Component cursor = component;
-			
+
 			while (cursor != null)
 			{
 				buffer.append('-').append(metaDatabase.id(cursor.getClass()));
@@ -484,9 +484,9 @@ public class Localizer
 				}
 
 				/*
-				 * only append component id if component is not a loop item because (a) these ids are
-				 * irrelevant when generating resource cache keys (b) they cause a lot of redundant
-				 * keys to be generated
+				 * only append component id if component is not a loop item because (a) these ids
+				 * are irrelevant when generating resource cache keys (b) they cause a lot of
+				 * redundant keys to be generated
 				 */
 				final boolean skip = cursor instanceof LoopItem;
 
@@ -501,7 +501,7 @@ public class Localizer
 			buffer.append('-').append(locale);
 			buffer.append('-').append(style);
 			buffer.append('-').append(variation);
-			
+
 			return buffer.toString();
 		}
 		else
