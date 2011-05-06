@@ -86,8 +86,8 @@ public class SubmitLink extends AbstractSubmitLink
 	 * With this constructor the SubmitLink will submit the {@link Form} that is given when the link
 	 * is clicked on.
 	 * 
-	 * The SubmitLink doesn't have to be in inside the {@link Form}. But currently if it is outside
-	 * the {@link Form} and the SubmitLink will be rendered first. Then the {@link Form} will have a
+	 * The SubmitLink doesn't have to be inside the {@link Form}. But currently if it is outside the
+	 * {@link Form} and the SubmitLink is rendered first, then the {@link Form} will have a
 	 * generated javascript/css id. The markup javascript/css id that can exist will be overridden.
 	 * 
 	 * @param id
