@@ -225,7 +225,7 @@ public class PackageResource extends AbstractResource
 					resourceStream.close();
 				}
 
-				final byte[] processed = processResponse(bytes);
+				final byte[] processed = processResponse(attributes, bytes);
 
 				// send Content-Length header
 				resourceResponse.setContentLength(processed.length);
@@ -264,11 +264,13 @@ public class PackageResource extends AbstractResource
 	/**
 	 * Gives a chance to modify the resource going to be written in the response
 	 * 
+	 * @param attributes
+	 *            current request attributes from client
 	 * @param original
 	 *            the original response
 	 * @return the processed response
 	 */
-	protected byte[] processResponse(byte[] original)
+	protected byte[] processResponse(final Attributes attributes, final byte[] original)
 	{
 		return original;
 	}

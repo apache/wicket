@@ -48,9 +48,9 @@ public class CssPackageResource extends PackageResource
 	}
 
 	@Override
-	protected byte[] processResponse(byte[] bytes)
+	protected byte[] processResponse(final Attributes attributes, final byte[] bytes)
 	{
-		final byte[] processedResponse = super.processResponse(bytes);
+		final byte[] processedResponse = super.processResponse(attributes, bytes);
 
 		ICssCompressor compressor = Application.get().getResourceSettings().getCssCompressor();
 

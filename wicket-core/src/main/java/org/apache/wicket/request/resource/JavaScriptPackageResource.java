@@ -48,9 +48,9 @@ public class JavaScriptPackageResource extends PackageResource
 	}
 
 	@Override
-	protected byte[] processResponse(byte[] bytes)
+	protected byte[] processResponse(final Attributes attributes, byte[] bytes)
 	{
-		final byte[] processedResponse = super.processResponse(bytes);
+		final byte[] processedResponse = super.processResponse(attributes, bytes);
 
 		ITextResourceCompressor compressor = Application.get()
 			.getResourceSettings()
