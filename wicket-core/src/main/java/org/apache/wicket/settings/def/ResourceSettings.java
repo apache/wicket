@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.wicket.Application;
 import org.apache.wicket.IResourceFactory;
 import org.apache.wicket.Localizer;
+import org.apache.wicket.css.ICssCompressor;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.PackageResourceGuard;
@@ -102,6 +103,9 @@ public class ResourceSettings implements IResourceSettings
 
 	/** The JavaScript compressor */
 	private IJavaScriptCompressor javascriptCompressor;
+
+	/** The Css compressor */
+	private ICssCompressor cssCompressor;
 
 	/** escape string for '..' within resource keys */
 	private String parentFolderPlaceholder = null;
@@ -378,23 +382,30 @@ public class ResourceSettings implements IResourceSettings
 		defaultCacheDuration = duration;
 	}
 
-	/**
-	 * @see org.apache.wicket.settings.IResourceSettings#getJavaScriptCompressor()
-	 */
 	public IJavaScriptCompressor getJavaScriptCompressor()
 	{
 		return javascriptCompressor;
 	}
 
-	/**
-	 * @see org.apache.wicket.settings.IResourceSettings#setJavaScriptCompressor(org.apache.wicket.javascript.IJavaScriptCompressor)
-	 */
 	public IJavaScriptCompressor setJavaScriptCompressor(IJavaScriptCompressor compressor)
 	{
 		IJavaScriptCompressor old = javascriptCompressor;
 		javascriptCompressor = compressor;
 		return old;
 	}
+
+	public ICssCompressor getCssCompressor()
+	{
+		return cssCompressor;
+	}
+
+	public ICssCompressor setCssCompressor(ICssCompressor compressor)
+	{
+		ICssCompressor old = cssCompressor;
+		cssCompressor = compressor;
+		return old;
+	}
+
 
 	/**
 	 * @see org.apache.wicket.settings.IResourceSettings#getParentFolderPlaceholder()

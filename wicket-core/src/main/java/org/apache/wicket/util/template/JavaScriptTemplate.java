@@ -18,6 +18,8 @@ package org.apache.wicket.util.template;
 
 import java.util.Map;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.resource.ITextResourceCompressor;
 import org.apache.wicket.util.string.JavaScriptUtils;
 
 
@@ -72,5 +74,25 @@ public final class JavaScriptTemplate extends TextTemplateDecorator
 	public TextTemplate interpolate(final Map<String, ?> variables)
 	{
 		return this;
+	}
+
+	@Override
+	public String getString()
+	{
+		String nonCompressed = super.getString();
+
+		ITextResourceCompressor compressor = Application.get()
+			.getResourceSettings()
+			.getJavaScriptCompressor();
+
+		if (compressor != null)
+		{
+			return compressor.compress(nonCompressed);
+		}
+		else
+		{
+			// don't strip the comments
+			return nonCompressed;
+		}
 	}
 }

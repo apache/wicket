@@ -16,18 +16,13 @@
  */
 package org.apache.wicket.javascript;
 
+import org.apache.wicket.resource.ITextResourceCompressor;
+
 /**
  * Allow for different implementation of a javascript compressor
  * 
  * @author Juergen Donnerstag
  */
-public interface IJavaScriptCompressor
+public interface IJavaScriptCompressor extends ITextResourceCompressor
 {
-	/**
-	 * Remove comments and whitespaces from the javascript
-	 * 
-	 * @param original
-	 * @return compressed JavaScript
-	 */
-	public String compress(String original);
 }

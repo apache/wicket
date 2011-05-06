@@ -18,56 +18,63 @@ package org.apache.wicket.request.resource;
 
 import java.util.Locale;
 
-import org.apache.wicket.settings.IResourceSettings;
+import org.apache.wicket.Application;
+import org.apache.wicket.resource.ITextResourceCompressor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Static resource reference for javascript resources. The resources are filtered (stripped comments
- * and whitespace) if there is a registered compressor.
- * 
- * @see IResourceSettings#getJavaScriptCompressor()
- * @author Matej
+ * Package resource for javascript files. It strips comments and whitespace from javascript.
  */
-public class JavaScriptResourceReference extends PackageResourceReference
+public class JavaScriptPackageResource extends PackageResource
 {
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger log = LoggerFactory.getLogger(JavaScriptPackageResource.class);
 
 	/**
 	 * Construct.
 	 * 
 	 * @param scope
-	 *            mandatory parameter
 	 * @param name
-	 *            mandatory parameter
 	 * @param locale
-	 *            resource locale
 	 * @param style
-	 *            resource style
 	 * @param variation
-	 *            resource variation
 	 */
-	public JavaScriptResourceReference(Class<?> scope, String name, Locale locale, String style,
+	public JavaScriptPackageResource(Class<?> scope, String name, Locale locale, String style,
 		String variation)
 	{
 		super(scope, name, locale, style, variation);
 	}
 
-	/**
-	 * Construct.
-	 * 
-	 * @param scope
-	 *            mandatory parameter
-	 * @param name
-	 *            mandatory parameter
-	 */
-	public JavaScriptResourceReference(Class<?> scope, String name)
+	@Override
+	protected byte[] processResponse(byte[] bytes)
 	{
-		super(scope, name);
+		final byte[] processedResponse = super.processResponse(bytes);
+
+		ITextResourceCompressor compressor = Application.get()
+			.getResourceSettings()
+			.getJavaScriptCompressor();
+
+		if (compressor != null)
+		{
+			try
+			{
+				String nonCompressed = new String(processedResponse, "UTF-8");
+				return compressor.compress(nonCompressed).getBytes();
+			}
+			catch (Exception e)
+			{
+				log.error("Error while filtering content", e);
+				return processedResponse;
+			}
+		}
+		else
+		{
+			// don't strip the comments
+			return processedResponse;
+		}
 	}
 
-	@Override
-	public IResource getResource()
-	{
-		return new JavaScriptPackageResource(getScope(), getName(), getLocale(), getStyle(),
-			getVariation());
-	}
+
 }

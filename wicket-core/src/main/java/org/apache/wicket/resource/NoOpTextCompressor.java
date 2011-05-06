@@ -14,18 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.javascript;
+package org.apache.wicket.resource;
+
+import org.apache.wicket.css.ICssCompressor;
+import org.apache.wicket.javascript.IJavaScriptCompressor;
+
 
 /**
- * A no-op javascript compressor
+ * A no-op text compressor
  * 
  * @author Juergen Donnerstag
  */
-public class NoOpJavaScriptCompressor implements IJavaScriptCompressor
+public class NoOpTextCompressor implements IJavaScriptCompressor, ICssCompressor
 {
-	/**
-	 * @see org.apache.wicket.javascript.IJavaScriptCompressor#compress(java.lang.String)
-	 */
 	public String compress(String original)
 	{
 		return original;

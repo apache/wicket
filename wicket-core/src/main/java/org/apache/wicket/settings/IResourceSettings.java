@@ -16,8 +16,11 @@
  */
 package org.apache.wicket.settings;
 
+import java.util.List;
+
 import org.apache.wicket.IResourceFactory;
 import org.apache.wicket.Localizer;
+import org.apache.wicket.css.ICssCompressor;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.PackageResourceGuard;
@@ -30,8 +33,6 @@ import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.watch.IModificationWatcher;
-
-import java.util.List;
 
 
 /**
@@ -315,8 +316,8 @@ public interface IResourceSettings
 
 	/**
 	 * Placeholder string for '..' within resource urls (which will be crippled by the browser and
-	 * not work anymore). Note that by default the placeholder string is <code>null</code> and thus will not
-	 * allow to access parent folders. That is by purpose and for security reasons (see
+	 * not work anymore). Note that by default the placeholder string is <code>null</code> and thus
+	 * will not allow to access parent folders. That is by purpose and for security reasons (see
 	 * Wicket-1992). In case you really need it, a good value for placeholder would e.g. be "$up$".
 	 * Resources additionally are protected by a
 	 * {@link org.apache.wicket.markup.html.IPackageResourceGuard IPackageResourceGuard}
@@ -346,4 +347,23 @@ public interface IResourceSettings
 	 * @see IResourceCachingStrategy
 	 */
 	void setCachingStrategy(IResourceCachingStrategy strategy);
+
+	/**
+	 * Set the Css compressor implemententation use e.g. by {@link CssPackageResource} . A typical
+	 * implementation will remove comments and whitespace. But a no-op implementation is available
+	 * as well.
+	 * 
+	 * @param compressor
+	 *            The implementation to be used
+	 * @return The old value
+	 */
+	ICssCompressor setCssCompressor(ICssCompressor compressor);
+
+	/**
+	 * Get the Css compressor to remove comments and whitespace characters from css resources
+	 * 
+	 * @return whether the comments and whitespace characters will be stripped from resources served
+	 *         through {@link CssPackageResource}. Null is a valid value.
+	 */
+	ICssCompressor getCssCompressor();
 }

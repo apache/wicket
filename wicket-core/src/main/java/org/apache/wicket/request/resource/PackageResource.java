@@ -234,6 +234,7 @@ public class PackageResource extends AbstractResource
 					@Override
 					public void writeData(Attributes attributes)
 					{
+						byte[] processed = processResponse(bytes);
 						attributes.getResponse().write(bytes);
 					}
 				});
@@ -257,6 +258,18 @@ public class PackageResource extends AbstractResource
 			.decorateResponse(resourceResponse);
 
 		return resourceResponse;
+	}
+
+	/**
+	 * Gives a chance to modify the resource going to be written in the response
+	 * 
+	 * @param original
+	 *            the original response
+	 * @return the processed response
+	 */
+	protected byte[] processResponse(byte[] original)
+	{
+		return original;
 	}
 
 	/**

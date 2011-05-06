@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -164,19 +163,7 @@ public class PackageTextTemplate extends TextTemplate
 	@Override
 	public String getString()
 	{
-		IJavaScriptCompressor compressor = Application.get()
-			.getResourceSettings()
-			.getJavaScriptCompressor();
-
-		if (compressor != null)
-		{
-			return compressor.compress(buffer.toString());
-		}
-		else
-		{
-			// don't strip the comments
-			return buffer.toString();
-		}
+		return buffer.toString();
 	}
 
 	/**

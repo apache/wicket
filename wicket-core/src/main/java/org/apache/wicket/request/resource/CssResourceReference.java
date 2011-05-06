@@ -21,13 +21,12 @@ import java.util.Locale;
 import org.apache.wicket.settings.IResourceSettings;
 
 /**
- * Static resource reference for javascript resources. The resources are filtered (stripped comments
- * and whitespace) if there is a registered compressor.
+ * Static resource reference for css resources. The resources are filtered (stripped comments and
+ * whitespace) if there is registered compressor.
  * 
- * @see IResourceSettings#getJavaScriptCompressor()
- * @author Matej
+ * @see IResourceSettings#getCssCompressor()
  */
-public class JavaScriptResourceReference extends PackageResourceReference
+public class CssResourceReference extends PackageResourceReference
 {
 	private static final long serialVersionUID = 1L;
 
@@ -45,7 +44,7 @@ public class JavaScriptResourceReference extends PackageResourceReference
 	 * @param variation
 	 *            resource variation
 	 */
-	public JavaScriptResourceReference(Class<?> scope, String name, Locale locale, String style,
+	public CssResourceReference(Class<?> scope, String name, Locale locale, String style,
 		String variation)
 	{
 		super(scope, name, locale, style, variation);
@@ -59,7 +58,7 @@ public class JavaScriptResourceReference extends PackageResourceReference
 	 * @param name
 	 *            mandatory parameter
 	 */
-	public JavaScriptResourceReference(Class<?> scope, String name)
+	public CssResourceReference(Class<?> scope, String name)
 	{
 		super(scope, name);
 	}
@@ -67,7 +66,8 @@ public class JavaScriptResourceReference extends PackageResourceReference
 	@Override
 	public IResource getResource()
 	{
-		return new JavaScriptPackageResource(getScope(), getName(), getLocale(), getStyle(),
+		return new CssPackageResource(getScope(), getName(), getLocale(), getStyle(),
 			getVariation());
 	}
+
 }
