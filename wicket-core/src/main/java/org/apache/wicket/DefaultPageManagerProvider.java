@@ -36,7 +36,7 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 
 	private static final int DEFAULT_MAX_SIZE_PER_SESSION = 1000000;
 
-	private final Application application;
+	protected final Application application;
 
 	/**
 	 * Construct.
@@ -50,12 +50,21 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 
 	public IPageManager get(IPageManagerContext pageManagerContext)
 	{
-		IDataStore dataStore = new DiskDataStore(application.getName(), getMaxSizePerSession(),
-			getFileChannelPoolCapacity());
-		IPageStore pageStore = new DefaultPageStore(application.getName(), dataStore,
-			getCacheSize());
+		IDataStore dataStore = newDataStore();
+		IPageStore pageStore = newPageStore(dataStore);
 		return new PersistentPageManager(application.getName(), pageStore, pageManagerContext);
 
+	}
+
+	protected IPageStore newPageStore(IDataStore dataStore)
+	{
+		return new DefaultPageStore(application.getName(), dataStore, getCacheSize());
+	}
+
+	protected IDataStore newDataStore()
+	{
+		return new DiskDataStore(application.getName(), getMaxSizePerSession(),
+			getFileChannelPoolCapacity());
 	}
 
 	protected int getMaxSizePerSession()
