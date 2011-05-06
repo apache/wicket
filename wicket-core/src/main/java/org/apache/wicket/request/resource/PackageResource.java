@@ -225,8 +225,10 @@ public class PackageResource extends AbstractResource
 					resourceStream.close();
 				}
 
+				final byte[] processed = processResponse(bytes);
+
 				// send Content-Length header
-				resourceResponse.setContentLength(bytes.length);
+				resourceResponse.setContentLength(processed.length);
 
 				// send response body with resource data
 				resourceResponse.setWriteCallback(new WriteCallback()
@@ -234,8 +236,7 @@ public class PackageResource extends AbstractResource
 					@Override
 					public void writeData(Attributes attributes)
 					{
-						byte[] processed = processResponse(bytes);
-						attributes.getResponse().write(bytes);
+						attributes.getResponse().write(processed);
 					}
 				});
 			}
