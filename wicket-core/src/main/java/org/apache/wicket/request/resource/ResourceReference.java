@@ -129,16 +129,28 @@ public abstract class ResourceReference implements Serializable
 	 */
 	public final String getExtension()
 	{
-		final String name = getName();
+		String name = getName();
+
+		final int queryAt = name.indexOf('?');
+
+		// remove query string part
+		if (queryAt != -1)
+		{
+			name = name.substring(0, queryAt);
+		}
+
+		// get start of extension
 		final int extPos = name.lastIndexOf('.');
-		
-		if(extPos == -1)
+
+		if (extPos == -1)
 		{
 			return null;
 		}
+
+		// return extension
 		return name.substring(extPos + 1).toLowerCase();
 	}
-	
+
 	/**
 	 * @return scope
 	 */
