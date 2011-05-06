@@ -26,6 +26,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.wicket.markup.html.list.LoopItem;
+import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
@@ -488,14 +489,15 @@ public class Localizer
 				 * are irrelevant when generating resource cache keys (b) they cause a lot of
 				 * redundant keys to be generated
 				 */
-				final boolean skip = cursor instanceof LoopItem;
+				final Component parent = cursor.getParent();
+				final boolean skip = parent instanceof AbstractRepeater;
 
 				if (skip == false)
 				{
 					buffer.append(':').append(cursor.getId());
 				}
 
-				cursor = cursor.getParent();
+				cursor = parent;
 			}
 
 			buffer.append('-').append(locale);

@@ -27,7 +27,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.list.LoopItem;
+import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.resource.IPropertiesFactory;
 import org.apache.wicket.resource.Properties;
 import org.apache.wicket.util.lang.Args;
@@ -283,7 +283,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 		
 		while (current.getParent() != null)
 		{
-			final boolean skip = current instanceof LoopItem;
+			final boolean skip = current.getParent() instanceof AbstractRepeater;
 
 			if (skip == false)
 			{
