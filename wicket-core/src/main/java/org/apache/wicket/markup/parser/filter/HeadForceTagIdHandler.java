@@ -22,7 +22,6 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
-import org.apache.wicket.markup.parser.TagAttributes;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 
@@ -88,8 +87,7 @@ public class HeadForceTagIdHandler extends AbstractMarkupFilter
 			{
 				if (tag.getAttributes().get("id") == null)
 				{
-					((TagAttributes)tag.getAttributes()).putInternal("id", headElementIdPrefix +
-						nextValue());
+					tag.getAttributes().put("id", headElementIdPrefix + nextValue());
 					tag.setModified(true);
 				}
 			}

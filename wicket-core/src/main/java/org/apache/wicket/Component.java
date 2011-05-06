@@ -2289,8 +2289,8 @@ public abstract class Component
 	 * removed cannot be referenced from the markup still.
 	 * <p>
 	 * You must not use this method in your callback to any of the
-	 * {@link MarkupContainer#visitChildren(IVisitor)} methods. See
-	 * <a href="https://issues.apache.org/jira/browse/WICKET-3229">WICKET-3329</a>.
+	 * {@link MarkupContainer#visitChildren(IVisitor)} methods. See <a
+	 * href="https://issues.apache.org/jira/browse/WICKET-3229">WICKET-3329</a>.
 	 */
 	public final void remove()
 	{
@@ -2674,7 +2674,7 @@ public abstract class Component
 	 * Make sure that all attached behaviors are asked as well.
 	 * <p>
 	 * NOT intended for overriding by framework clients. Rather, use
-	 * {@link Component#renderHead(org.apache.wicket.markup.html.IHeaderResponse)}}
+	 * {@link Component#renderHead(org.apache.wicket.markup.html.IHeaderResponse)}
 	 * </p>
 	 * 
 	 * @param container
@@ -3832,7 +3832,7 @@ public abstract class Component
 		// component <-> markup relation)
 		if (getFlag(FLAG_OUTPUT_MARKUP_ID))
 		{
-			tag.put(MARKUP_ID_ATTR_NAME, getMarkupId());
+			tag.putInternal(MARKUP_ID_ATTR_NAME, getMarkupId());
 		}
 
 		if (getApplication().getDebugSettings().isOutputComponentPath())
@@ -4381,10 +4381,10 @@ public abstract class Component
 	}
 
 	/**
-	 * CAUTION: this method is not meant to be overridden like it was in wicket 1.4 when implementing 
-	 * {@link IHeaderContributor}. overload 
-	 * {@link Component#renderHead(org.apache.wicket.markup.html.IHeaderResponse)} 
-	 * instead to contribute to the response header.
+	 * CAUTION: this method is not meant to be overridden like it was in wicket 1.4 when
+	 * implementing {@link IHeaderContributor}. overload
+	 * {@link Component#renderHead(org.apache.wicket.markup.html.IHeaderResponse)} instead to
+	 * contribute to the response header.
 	 * 
 	 * @param component
 	 * @param response

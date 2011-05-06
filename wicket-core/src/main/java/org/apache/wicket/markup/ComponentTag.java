@@ -35,6 +35,8 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.IValueMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -47,6 +49,9 @@ import org.apache.wicket.util.value.IValueMap;
  */
 public class ComponentTag extends MarkupElement
 {
+	/** Log. */
+	private static final Logger log = LoggerFactory.getLogger(ComponentTag.class);
+
 	/** True if a href attribute is available and autolinking is on */
 	private final static int AUTOLINK = 0x0001;
 
@@ -478,8 +483,34 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final void put(String key, CharSequence value)
 	{
+		checkIdAttribute(key);
+		putInternal(key, value);
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE PUBLIC API, DO NOT CALL IT
+	 * 
+	 * @see org.apache.wicket.markup.parser.XmlTag#put(String, CharSequence)
+	 * @param key
+	 *            The key
+	 * @param value
+	 *            The value
+	 */
+	public final void putInternal(String key, CharSequence value)
+	{
 		xmlTag.put(key, value);
 		setModified(true);
+	}
+
+	/**
+	 * @param key
+	 */
+	private void checkIdAttribute(String key)
+	{
+		if ((key != null) && (key.equalsIgnoreCase("id")))
+		{
+			log.warn("Please use component.setMarkupId(String) to change the tag's 'id' attribute.");
+		}
 	}
 
 	/**

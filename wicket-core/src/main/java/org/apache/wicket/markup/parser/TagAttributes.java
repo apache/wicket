@@ -21,16 +21,12 @@ import java.util.Map;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.util.value.ValueMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 
  */
 public class TagAttributes extends ValueMap
 {
-	/** Log. */
-	private static final Logger log = LoggerFactory.getLogger(TagAttributes.class);
 
 	private static final long serialVersionUID = 1L;
 
@@ -57,31 +53,7 @@ public class TagAttributes extends ValueMap
 	@Override
 	public final Object put(String key, Object value)
 	{
-		checkIdAttribute(key);
-		return putInternal(key, value);
-	}
 
-	/**
-	 * @param key
-	 */
-	private void checkIdAttribute(String key)
-	{
-		if ((key != null) && (key.equalsIgnoreCase("id")))
-		{
-			log.warn("WARNING: Please use component.setMarkupId(String) to change the tag's 'id' attribute.");
-		}
-	}
-
-	/**
-	 * Modifying the 'id' attribute should be made via Component.setMarkupId(). But the markup
-	 * parser must still be able to add the 'id' attribute without warning.
-	 * 
-	 * @param key
-	 * @param value
-	 * @return The old value
-	 */
-	public final Object putInternal(String key, Object value)
-	{
 		return super.put(key, unescapeHtml(value));
 	}
 
@@ -91,7 +63,6 @@ public class TagAttributes extends ValueMap
 		for (Object o : map.keySet())
 		{
 			String key = (String)o;
-			checkIdAttribute(key);
 		}
 
 		super.putAll(map);
