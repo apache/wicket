@@ -34,6 +34,9 @@ public class PackageResourceReference extends ResourceReference
 {
 	private static final long serialVersionUID = 1L;
 
+	private static final String CSS_EXTENSION = "css";
+	private static final String JAVASCRIPT_EXTENSION = "js";
+
 	private transient ConcurrentMap<UrlAttributes, UrlAttributes> urlAttributesCacheMap;
 
 	/**
@@ -88,7 +91,20 @@ public class PackageResourceReference extends ResourceReference
 	@Override
 	public IResource getResource()
 	{
-		return new PackageResource(getScope(), getName(), getLocale(), getStyle(), getVariation());
+		final String extension = getExtension();
+
+		if (CSS_EXTENSION.equals(extension))
+		{
+			return new CssPackageResource(getScope(), getName(), getLocale(), getStyle(), getVariation());
+		}
+		else if (JAVASCRIPT_EXTENSION.equals(extension))
+		{
+			return new JavaScriptPackageResource(getScope(), getName(), getLocale(), getStyle(), getVariation());
+		}
+		else
+		{
+			return new PackageResource(getScope(), getName(), getLocale(), getStyle(), getVariation());
+		}
 	}
 
 	private StreamInfo lookupStream(IResourceStreamLocator locator, Locale locale, String style,

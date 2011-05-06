@@ -122,6 +122,24 @@ public abstract class ResourceReference implements Serializable
 	}
 
 	/**
+	 * returns extension of the resource reference
+	 * 
+	 * @return extension of the resource's name in lower-case 
+	 * or <code>null</code> if there is no extension
+	 */
+	public final String getExtension()
+	{
+		final String name = getName();
+		final int extPos = name.lastIndexOf('.');
+		
+		if(extPos == -1)
+		{
+			return null;
+		}
+		return name.substring(extPos + 1).toLowerCase();
+	}
+	
+	/**
 	 * @return scope
 	 */
 	public Class<?> getScope()
