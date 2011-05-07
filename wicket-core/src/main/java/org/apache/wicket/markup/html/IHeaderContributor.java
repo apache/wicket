@@ -33,7 +33,7 @@ import org.apache.wicket.IClusterable;
  * 		super(id);
  * 	}
  * 
- * 	public void renderHead(IHeaderResponse response)
+ * 	public void renderHead(Component component, IHeaderResponse response)
  * 	{
  * 		response.renderOnLoadJavaScript(&quot;alert('page loaded!');&quot;);
  * 	}
@@ -47,6 +47,11 @@ public interface IHeaderContributor extends IClusterable
 {
 	/**
 	 * Render to the web response whatever the component wants to contribute to the head section.
+	 * 
+	 * @param component
+	 *            component which is contributing to the response. This parameter is here to give
+	 *            the component as the context for behaviors implementing this interface, when
+	 *            invoked on a component instance the parameter is simply {@code this}.
 	 * 
 	 * @param response
 	 *            Response object

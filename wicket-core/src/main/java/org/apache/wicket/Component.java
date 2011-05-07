@@ -2695,7 +2695,7 @@ public abstract class Component
 			if (response.wasRendered(this) == false)
 			{
 				// Let the component contribute something to the header
-				renderHead(response);
+				renderHead(this, response);
 
 				// Make sure the markup source strategy has been considered as well.
 				getMarkupSourcingStrategy().renderHead(this, container);
@@ -4391,10 +4391,20 @@ public abstract class Component
 	 */
 	public final void renderHead(Component component, IHeaderResponse response)
 	{
+		if (component != this)
+		{
+			throw new IllegalStateException(
+				"This method is only meant to be invoked on the component where the parameter component==this");
+		}
 		renderHead(response);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Render to the web response whatever the component wants to contribute to the head section.
+	 * 
+	 * @param response
+	 *            Response object
+	 */
 	public void renderHead(IHeaderResponse response)
 	{
 		// noop
