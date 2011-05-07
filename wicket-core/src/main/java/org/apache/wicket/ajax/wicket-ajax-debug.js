@@ -230,24 +230,25 @@ var WicketAjaxDebug = {
 	doInnerHTML: function(elem, html) {
  
         try {
-            var children = elem.childNodes;
- 
-            for (var i = 0; i < children.length; i++) {
-                elem.removeChild(children[i]);
-            }
- 
-            var nodes = new DOMParser().parseFromString(html, 'text/xml');
-            var range = document.createRange();
-            range.selectNodeContents(elem);
-            range.deleteContents();
- 
-            for (var i = 0; i < nodes.childNodes.length; i++) {
-                elem.appendChild(nodes.childNodes[i]);
-            }
+            elem.innerHTML = html;
             return true;
         } catch (e) {
             try {
-                elem.innerHTML = html;
+                var children = elem.childNodes;
+     
+                for (var i = 0; i < children.length; i++) {
+                    elem.removeChild(children[i]);
+                }
+     
+                var nodes = new DOMParser().parseFromString(html, 'text/xml');
+                var range = document.createRange();
+                range.selectNodeContents(elem);
+                range.deleteContents();
+     
+                for (var i = 0; i < nodes.childNodes.length; i++) {
+                    elem.appendChild(nodes.childNodes[i]);
+                }
+     
                 return true;
             }
             catch(ee) {
