@@ -20,7 +20,7 @@
 		</license>
 	</licenses>
 	<properties>
-		<wicket.version>1.5-RC4</wicket.version>
+		<wicket.version>1.5-SNAPSHOT</wicket.version>
 		<jetty.version>7.3.0.v20110203</jetty.version>
 	</properties>
 	<dependencies>
