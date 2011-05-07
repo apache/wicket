@@ -18,6 +18,7 @@ package org.apache.wicket.ajax;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.markup.html.IHeaderContributor;
 
 /**
  * Interface used to decorate a wicket generated javascript that performs an ajax callback
@@ -51,6 +52,11 @@ import org.apache.wicket.IClusterable;
  * return &quot;alert('Before ajax call');&quot;; // missing to append the script
  * return &quot;alert('Before ajax call')&quot; + script; // missing &quot;;&quot;
  * </pre>
+ * 
+ * <p>
+ * Ajax call decorators are potential contributors to the page header by implementing
+ * {@link IHeaderContributor}. E.g. the decoration may depend on some JavaScript library, by
+ * implementing {@link IHeaderContributor} interface they can assure it will be loaded.
  * 
  * @since 1.2
  * 
