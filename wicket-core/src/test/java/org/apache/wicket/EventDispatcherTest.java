@@ -25,7 +25,6 @@ import java.lang.reflect.Method;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.markup.html.WebComponent;
 
 /**
@@ -46,7 +45,7 @@ public class EventDispatcherTest extends WicketTestCase
 		page.add(testComponent);
 		page.send(page, Broadcast.DEPTH, null);
 		assertTrue(testComponent.callbackInvoked);
-		assertEquals(testComponent.getBehaviors(TestBehavior.class).get(0).invokationTimes, 2);
+		assertEquals(testComponent.getBehaviors(TestBehavior.class).get(0).invocationTimes, 2);
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
@@ -58,7 +57,7 @@ public class EventDispatcherTest extends WicketTestCase
 	/** */
 	public static class DispatchToAnnotatedMethod implements IEventDispatcher
 	{
-		public void dispatchEvent(IEventSink sink, IEvent<?> event)
+		public void dispatchEvent(Object sink, IEvent<?> event, Component component)
 		{
 			Method[] sinkMethods = sink.getClass().getMethods();
 			for (Method sinkMethod : sinkMethods)
@@ -102,22 +101,23 @@ public class EventDispatcherTest extends WicketTestCase
 		}
 	}
 
-	private static class TestBehavior extends Behavior implements IEventSink
+	private static class TestBehavior extends Behavior
 	{
 
 		private static final long serialVersionUID = 1;
 
-		int invokationTimes = 0;
+		int invocationTimes = 0;
 
-		public void onEvent(IEvent<?> event)
+		@Override
+		public void onEvent(Component component, IEvent<?> event)
 		{
-			invokationTimes++;
+			invocationTimes++;
 		}
 
 		@EventCallback
 		public void testCallback()
 		{
-			invokationTimes++;
+			invocationTimes++;
 		}
 	}
 

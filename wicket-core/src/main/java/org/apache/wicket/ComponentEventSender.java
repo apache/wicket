@@ -70,7 +70,8 @@ final class ComponentEventSender implements IEventSource
 				depth(event);
 				break;
 			case EXACT :
-				dispatcher.dispatchEvent(event.getSink(), event);
+				dispatcher.dispatchEvent(event.getSink(), event, ((sink instanceof Component)
+					? (Component)sink : null));
 				break;
 		}
 	}
@@ -91,13 +92,13 @@ final class ComponentEventSender implements IEventSource
 
 		if (!targetsComponent && !targetsCycle)
 		{
-			dispatcher.dispatchEvent(sink, event);
+			dispatcher.dispatchEvent(sink, event, null);
 			return;
 		}
 
 		if (targetsApplication)
 		{
-			dispatcher.dispatchEvent(source.getApplication(), event);
+			dispatcher.dispatchEvent(source.getApplication(), event, null);
 		}
 		if (event.isStop())
 		{
@@ -105,7 +106,7 @@ final class ComponentEventSender implements IEventSource
 		}
 		if (targetsSession)
 		{
-			dispatcher.dispatchEvent(source.getSession(), event);
+			dispatcher.dispatchEvent(source.getSession(), event, null);
 		}
 		if (event.isStop())
 		{
@@ -113,7 +114,7 @@ final class ComponentEventSender implements IEventSource
 		}
 		if (targetsCycle)
 		{
-			dispatcher.dispatchEvent(source.getRequestCycle(), event);
+			dispatcher.dispatchEvent(source.getRequestCycle(), event, null);
 		}
 		if (event.isStop())
 		{
@@ -122,7 +123,7 @@ final class ComponentEventSender implements IEventSource
 
 		Component cursor = targetsCycle ? source.getPage() : (Component)sink;
 
-		dispatcher.dispatchEvent(cursor, event);
+		dispatchToComponent(dispatcher, cursor, event);
 
 		if (event.isStop())
 		{
@@ -150,11 +151,11 @@ final class ComponentEventSender implements IEventSource
 		boolean targetsApplication = sink instanceof Application;
 		boolean targetsSession = targetsApplication || sink instanceof Session;
 		boolean targetsCycle = targetsSession || sink instanceof RequestCycle;
-		boolean targetsComponnet = sink instanceof Component;
+		boolean targetsComponent = sink instanceof Component;
 
-		if (!targetsComponnet && !targetsCycle)
+		if (!targetsComponent && !targetsCycle)
 		{
-			dispatcher.dispatchEvent(sink, event);
+			dispatcher.dispatchEvent(sink, event, null);
 			return;
 		}
 
@@ -166,7 +167,7 @@ final class ComponentEventSender implements IEventSource
 		}
 		else
 		{
-			dispatcher.dispatchEvent(cursor, event);
+			dispatchToComponent(dispatcher, cursor, event);
 		}
 		if (event.isStop())
 		{
@@ -174,7 +175,7 @@ final class ComponentEventSender implements IEventSource
 		}
 		if (targetsCycle)
 		{
-			dispatcher.dispatchEvent(source.getRequestCycle(), event);
+			dispatcher.dispatchEvent(source.getRequestCycle(), event, null);
 		}
 		if (event.isStop())
 		{
@@ -182,7 +183,7 @@ final class ComponentEventSender implements IEventSource
 		}
 		if (targetsSession)
 		{
-			dispatcher.dispatchEvent(source.getSession(), event);
+			dispatcher.dispatchEvent(source.getSession(), event, null);
 		}
 		if (event.isStop())
 		{
@@ -190,7 +191,7 @@ final class ComponentEventSender implements IEventSource
 		}
 		if (targetsApplication)
 		{
-			dispatcher.dispatchEvent(source.getApplication(), event);
+			dispatcher.dispatchEvent(source.getApplication(), event, null);
 		}
 	}
 
@@ -211,14 +212,14 @@ final class ComponentEventSender implements IEventSource
 
 		if (!targetsApplication && !targetsComponent)
 		{
-			dispatcher.dispatchEvent(sink, event);
+			dispatcher.dispatchEvent(sink, event, null);
 			return;
 		}
 
 		if (targetsComponent)
 		{
 			Component cursor = (Component)sink;
-			dispatcher.dispatchEvent(cursor, event);
+			dispatchToComponent(dispatcher, cursor, event);
 			if (event.isStop())
 			{
 				return;
@@ -232,7 +233,7 @@ final class ComponentEventSender implements IEventSource
 		}
 		if (targetsCycle)
 		{
-			dispatcher.dispatchEvent(source.getRequestCycle(), event);
+			dispatcher.dispatchEvent(source.getRequestCycle(), event, null);
 		}
 		if (event.isStop())
 		{
@@ -240,7 +241,7 @@ final class ComponentEventSender implements IEventSource
 		}
 		if (targetsSession)
 		{
-			dispatcher.dispatchEvent(source.getSession(), event);
+			dispatcher.dispatchEvent(source.getSession(), event, null);
 		}
 		if (event.isStop())
 		{
@@ -248,9 +249,31 @@ final class ComponentEventSender implements IEventSource
 		}
 		if (targetsApplication)
 		{
-			dispatcher.dispatchEvent(source.getApplication(), event);
+			dispatcher.dispatchEvent(source.getApplication(), event, null);
 		}
 	}
+
+	private static void dispatchToComponent(IEventDispatcher dispatcher, Component object,
+		ComponentEvent<?> e)
+	{
+		dispatcher.dispatchEvent(object, e, null);
+
+		if (e.isStop())
+		{
+			return;
+		}
+
+		List<? extends Behavior> behaviors = object.getBehaviors();
+		for (Behavior behavior : behaviors)
+		{
+			dispatcher.dispatchEvent(behavior, e, object);
+			if (e.isStop())
+			{
+				break;
+			}
+		}
+	}
+
 
 	/**
 	 * Visitor used to broadcast events to components
@@ -279,25 +302,12 @@ final class ComponentEventSender implements IEventSource
 		/** {@inheritDoc} */
 		public void component(Component object, IVisit<Void> visit)
 		{
-			dispatcher.dispatchEvent(object, e);
+			dispatchToComponent(dispatcher, object, e);
 
 			if (e.isStop())
 			{
 				visit.stop();
 			}
-
-			List<? extends Behavior> behaviors = object.getBehaviors();
-			for (Behavior behavior : behaviors)
-			{
-				IEventSink behaviorSink = behavior;
-				dispatcher.dispatchEvent(behaviorSink, e);
-				if (e.isStop())
-				{
-					visit.stop();
-					break;
-				}
-			}
-
 
 			if (e.isShallow())
 			{

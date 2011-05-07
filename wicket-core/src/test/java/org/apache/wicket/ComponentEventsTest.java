@@ -16,10 +16,13 @@
  */
 package org.apache.wicket;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebComponent;
@@ -359,6 +362,42 @@ public class ComponentEventsTest
 		assertPath(c135, c13, c1, page, cycle, session);
 	}
 
+	@Test
+	public void testBehavior()
+	{
+		TestComponent c = new TestComponent("c");
+		TestBehavior b1 = new TestBehavior();
+		TestBehavior b2 = new TestBehavior();
+		c.add(b1, b2);
+
+		c.send(c, Broadcast.BREADTH, new Payload());
+		assertEquals(0, c.sequence);
+		assertEquals(1, b1.sequence);
+		assertEquals(2, b2.sequence);
+	}
+
+	@Test
+	public void testBehavior_stop()
+	{
+		TestComponent c = new TestComponent("c");
+		TestBehavior b1 = new TestBehavior()
+		{
+			@Override
+			public void onEvent(Component component, IEvent<?> event)
+			{
+				super.onEvent(component, event);
+				event.stop();
+			}
+		};
+		TestBehavior b2 = new TestBehavior();
+		c.add(b1, b2);
+
+		c.send(c, Broadcast.BREADTH, new Payload());
+		assertEquals(0, c.sequence);
+		assertEquals(1, b1.sequence);
+		assertEquals(-1, b2.sequence);
+	}
+
 
 	private void assertPath(Testable... testables)
 	{
@@ -581,6 +620,36 @@ public class ComponentEventsTest
 			return sequence;
 		}
 	}
+
+
+	private class TestBehavior extends Behavior implements Testable
+	{
+		private static final long serialVersionUID = 1L;
+
+		int sequence = -1;
+		Component component;
+
+		@Override
+		public void onEvent(Component component, IEvent<?> event)
+		{
+			super.onEvent(component, event);
+			Payload payload = (Payload)event.getPayload();
+			sequence = payload.next();
+			this.component = component;
+			// System.out.println(getId());
+			if (stop == this)
+			{
+				event.stop();
+			}
+		}
+
+
+		public int getSequence()
+		{
+			return sequence;
+		}
+	}
+
 
 	private static class Payload
 	{

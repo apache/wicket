@@ -19,6 +19,8 @@ package org.apache.wicket.settings.def;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.IComponentAwareEventSink;
 import org.apache.wicket.IDetachListener;
 import org.apache.wicket.IEventDispatcher;
 import org.apache.wicket.event.IEvent;
@@ -87,11 +89,24 @@ public class FrameworkSettings implements IFrameworkSettings
 
 	/**
 	 * Dispatches event to registered dispatchers
+	 * 
+	 * @see IEventDispatcher#dispatchEvent(Object, IEvent, Component)
+	 * 
+	 * @param sink
+	 * @param event
+	 * @param component
 	 */
-	public void dispatchEvent(IEventSink sink, IEvent<?> event)
+	public void dispatchEvent(Object sink, IEvent<?> event, Component component)
 	{
 		// direct delivery
-		sink.onEvent(event);
+		if (component != null && sink instanceof IComponentAwareEventSink)
+		{
+			((IComponentAwareEventSink)sink).onEvent(component, event);
+		}
+		else if (sink instanceof IEventSink)
+		{
+			((IEventSink)sink).onEvent(event);
+		}
 
 		// additional dispatchers delivery
 		if (eventDispatchers == null)
@@ -100,7 +115,7 @@ public class FrameworkSettings implements IFrameworkSettings
 		}
 		for (IEventDispatcher dispatcher : eventDispatchers)
 		{
-			dispatcher.dispatchEvent(sink, event);
+			dispatcher.dispatchEvent(sink, event, component);
 		}
 	}
 }
