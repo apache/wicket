@@ -59,9 +59,18 @@ public final class FullyBufferedReader
 	 */
 	public FullyBufferedReader(final Reader reader) throws IOException
 	{
-		super();
+		this(Streams.readString(reader));
+	}
 
-		input = Streams.readString(reader);
+	/**
+	 * Construct.
+	 * 
+	 * @param input
+	 *            The source string
+	 */
+	public FullyBufferedReader(String input)
+	{
+		this.input = input;
 	}
 
 	/**
