@@ -162,7 +162,19 @@ public class PageProvider implements IPageProvider
 		{
 			throw new PageExpiredException("Page expired.");
 		}
+		touchPageInstance(pageInstance);
 		return pageInstance;
+	}
+
+	/**
+	 * Mark the error page as candidate for storing
+	 */
+	private void touchPageInstance(IRequestablePage page)
+	{
+		if (Application.exists())
+		{
+			Application.get().getPageManager().touchPage(page);
+		}
 	}
 
 	/**
