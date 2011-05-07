@@ -96,5 +96,5 @@ echo "$passphrase" | gpg --passphrase-fd 0 --armor --output $filename.asc --deta
 echo "Uploading release"
 svn export http://svn.apache.org/repos/asf/wicket/common/KEYS target/dist/KEYS
 ssh people.apache.org mkdir public_html/wicket-$version
-scp -r target/dist target/m2-repo people.apache.org:public_html/wicket-$version
+scp -r target/dist people.apache.org:public_html/wicket-$version
 
