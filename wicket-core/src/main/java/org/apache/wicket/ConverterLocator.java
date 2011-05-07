@@ -99,10 +99,10 @@ public class ConverterLocator implements IConverterLocator
 
 			try
 			{
-				Object converted = Objects.convertValue(value, theType);
-				if (theType.isAssignableFrom(converted.getClass()))
+				C converted = Objects.convertValue(value, theType);
+				if (converted != null)
 				{
-					return theType.cast(converted);
+					return converted;
 				}
 				else
 				{
@@ -129,9 +129,9 @@ public class ConverterLocator implements IConverterLocator
 
 			try
 			{
-				return (String)Objects.convertValue(value, String.class);
+				return Objects.convertValue(value, String.class);
 			}
-			catch (Exception e)
+			catch (RuntimeException e)
 			{
 				throw new ConversionException("Could not convert object of type: " +
 					value.getClass() + " to string. Possible its #toString() returned null. " +

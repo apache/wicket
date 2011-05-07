@@ -283,14 +283,16 @@ public final class Objects
 	 * This method also detects when arrays are being converted and converts the components of one
 	 * array to the type of the other.
 	 * 
+	 * @param <T>
+	 *            target type
 	 * @param value
 	 *            an object to be converted to the given type
 	 * @param toType
 	 *            class type to be converted to
-	 * @return converted value of the type given, or value if the value cannot be converted to the
+	 * @return converted value of the type given, or null if the value cannot be converted to the
 	 *         given type.
 	 */
-	public static Object convertValue(final Object value, final Class<?> toType)
+	public static <T> T convertValue(final Object value, final Class<T> toType)
 	{
 		Object result = null;
 
@@ -362,7 +364,9 @@ public final class Objects
 				result = primitiveDefaults.get(toType);
 			}
 		}
-		return (result != null) ? result : value;
+		@SuppressWarnings("unchecked")
+		T finalResult = (T)result;
+		return finalResult;
 	}
 
 	/**

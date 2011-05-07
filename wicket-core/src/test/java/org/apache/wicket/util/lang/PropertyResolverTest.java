@@ -615,7 +615,7 @@ public class PropertyResolverTest extends WicketTestCase
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public <T, I> Object convert(I object, java.lang.Class<T> clz)
+				public <T> T convert(Object object, java.lang.Class<T> clz)
 				{
 					return null;
 				}
