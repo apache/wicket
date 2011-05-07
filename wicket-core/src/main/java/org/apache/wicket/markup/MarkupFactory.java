@@ -24,6 +24,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.loader.DefaultMarkupLoader;
 import org.apache.wicket.markup.loader.IMarkupLoader;
 import org.apache.wicket.markup.parser.IMarkupFilter;
+import org.apache.wicket.markup.parser.IXmlPullParser;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -103,7 +104,7 @@ public class MarkupFactory
 	public MarkupParser newMarkupParser(final MarkupResourceStream resource)
 	{
 		// Markup parsers can not be re-used
-		return new MarkupParser(new XmlPullParser(), resource)
+		return new MarkupParser(newXmlPullParser(), resource)
 		{
 			/**
 			 * @see org.apache.wicket.markup.MarkupParser#onAppendMarkupFilter(org.apache.wicket.markup.parser.IMarkupFilter)
@@ -114,6 +115,16 @@ public class MarkupFactory
 				return MarkupFactory.this.onAppendMarkupFilter(filter);
 			}
 		};
+	}
+
+	/**
+	 * Subclasses can override this to use custom parsers.
+	 * 
+	 * @return parser instance used by {@link MarkupParser} to parse markup.
+	 */
+	protected IXmlPullParser newXmlPullParser()
+	{
+		return new XmlPullParser();
 	}
 
 	/**
