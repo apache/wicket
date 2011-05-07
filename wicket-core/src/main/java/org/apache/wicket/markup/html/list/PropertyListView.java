@@ -23,8 +23,8 @@ import org.apache.wicket.model.IModel;
 
 
 /**
- * Simple ListVew subclass that wraps its item models in a CompoundPropertyModel. Useful for lists
- * where the item components will be mapped through property expressions.
+ * Simple ListVew subclass that wraps its item models in a {@link CompoundPropertyModel}. Useful for
+ * lists where the item components will be mapped through property expressions.
  * 
  * @author Nathan Hamblen
  * 
