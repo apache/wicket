@@ -30,7 +30,7 @@ public class CalendarConverter implements IConverter<Calendar>
 {
 	private static final long serialVersionUID = 1L;
 
-	private final DateConverter dateConverter;
+	private final IConverter<Date> dateConverter;
 
 	/**
 	 * Construct.
@@ -46,7 +46,7 @@ public class CalendarConverter implements IConverter<Calendar>
 	 * @param dateConverter
 	 *            delegated converter, not null
 	 */
-	public CalendarConverter(DateConverter dateConverter)
+	public CalendarConverter(IConverter<Date> dateConverter)
 	{
 		Args.notNull(dateConverter, "dateConverter");
 

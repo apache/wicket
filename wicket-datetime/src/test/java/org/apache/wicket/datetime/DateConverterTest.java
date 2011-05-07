@@ -19,6 +19,7 @@ package org.apache.wicket.datetime;
 import java.util.Calendar;
 import java.util.Locale;
 
+import org.apache.wicket.util.convert.converter.CalendarConverter;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Assert;
 import org.junit.Test;
@@ -55,5 +56,31 @@ public class DateConverterTest
 		String expected = patternDateConverter.convertToString(now.getTime(), locale);
 
 		Assert.assertEquals(expected, actual);
+	}
+
+	/**
+	 * WICKET-3658
+	 */
+	@Test
+	public void testCalendarConverterWithDelegate()
+	{
+		Locale locale = Locale.GERMAN;
+
+		Calendar input = Calendar.getInstance(locale);
+		input.clear();
+		input.set(2011, Calendar.MAY, 7);
+
+		StyleDateConverter styleDateConverter = new StyleDateConverter("F-", false);
+
+		CalendarConverter calendarConverter = new CalendarConverter(styleDateConverter);
+
+		String expected = styleDateConverter.convertToString(input.getTime(), locale);
+		String actual = calendarConverter.convertToString(input, locale);
+
+		Assert.assertEquals(expected, actual);
+
+		Calendar revert = calendarConverter.convertToObject(actual, locale);
+
+		Assert.assertEquals(input, revert);
 	}
 }
