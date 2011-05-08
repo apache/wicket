@@ -17,10 +17,10 @@
 package org.apache.wicket.markup.repeater.data;
 
 import org.apache.wicket.markup.html.navigation.paging.IPageable;
-
+import org.apache.wicket.markup.repeater.AbstractPageableView;
 
 /**
- * DataView is a basic implementation of AbstractDataView.
+ * DataView is a basic implementation of {@link AbstractPageableView}.
  * 
  * Data views aim to make it very simple to populate your repeating view from a database by
  * utilizing {@link IDataProvider} to act as an interface between the database and the dataview.
