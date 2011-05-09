@@ -218,26 +218,29 @@ public class PersistentPageManager extends AbstractPageManager
 			s.defaultWriteObject();
 
 			// prepare for serialization and store the pages
-			List<Serializable> l = new ArrayList<Serializable>();
-			IPageStore pageStore = getPageStore();
-			for (IManageablePage p : pages)
+			List<Serializable> serializedPages = new ArrayList<Serializable>();
+			if (pages != null)
 			{
-				Serializable preparedPage;
-				if (pageStore != null)
+				IPageStore pageStore = getPageStore();
+				for (IManageablePage p : pages)
 				{
-					preparedPage = pageStore.prepareForSerialization(sessionId, p);
-				}
-				else
-				{
-					preparedPage = p;
-				}
+					Serializable preparedPage;
+					if (pageStore != null)
+					{
+						preparedPage = pageStore.prepareForSerialization(sessionId, p);
+					}
+					else
+					{
+						preparedPage = p;
+					}
 
-				if (preparedPage != null)
-				{
-					l.add(preparedPage);
+					if (preparedPage != null)
+					{
+						serializedPages.add(preparedPage);
+					}
 				}
 			}
-			s.writeObject(l);
+			s.writeObject(serializedPages);
 		}
 
 		/**
