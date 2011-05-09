@@ -31,12 +31,14 @@ import org.apache.wicket.application.ComponentInitializationListenerCollection;
 import org.apache.wicket.application.ComponentInstantiationListenerCollection;
 import org.apache.wicket.application.ComponentOnAfterRenderListenerCollection;
 import org.apache.wicket.application.ComponentOnBeforeRenderListenerCollection;
+import org.apache.wicket.application.HeaderContributorListenerCollection;
 import org.apache.wicket.application.IComponentInitializationListener;
 import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.javascript.DefaultJavaScriptCompressor;
 import org.apache.wicket.markup.MarkupFactory;
+import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.IHeaderResponseDecorator;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
@@ -903,6 +905,17 @@ public abstract class Application implements UnboundListener, IEventSink
 
 	/** list of {@link IComponentInitializationListener}s. */
 	private final ComponentInitializationListenerCollection componentInitializationListeners = new ComponentInitializationListenerCollection();
+
+	/** list of {@link IHeaderContributor}s. */
+	private final HeaderContributorListenerCollection headerContributorListenerCollection = new HeaderContributorListenerCollection();
+
+	/**
+	 * @return Gets the application's {@link HeaderContributorListenerCollection}
+	 */
+	public final HeaderContributorListenerCollection getHeaderContributorListenerCollection()
+	{
+		return headerContributorListenerCollection;
+	}
 
 	/**
 	 * @return Gets the application's ComponentInstantiationListenerCollection
