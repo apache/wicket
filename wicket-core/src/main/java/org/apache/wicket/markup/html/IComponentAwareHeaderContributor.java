@@ -16,21 +16,20 @@
  */
 package org.apache.wicket.markup.html;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.ajax.IAjaxCallDecorator;
+import org.apache.wicket.behavior.Behavior;
 
 /**
- * An interface to be implemented by components or application level listeners that wish to
+ * An interface to be implemented by {@link Behavior}s or {@link IAjaxCallDecorator}s that wish to
  * contribute to the header section of the page.
  * 
  * Example:
  * 
  * <pre>
- * class MyPanel extends Panel implements IHeaderContributor
+ * class MyAjaxCallDecorator implements IAjaxCallDecorator, IHeaderContributor
  * {
- * 	public MyPanel(String id)
- * 	{
- * 		super(id);
- * 	}
  * 
  * 	public void renderHead(Component component, IHeaderResponse response)
  * 	{
@@ -38,17 +37,19 @@ import org.apache.wicket.IClusterable;
  * 	}
  * }
  * </pre>
- * 
- * @author Juergen Donnerstag
- * @author Matej Knopp
  */
-public interface IHeaderContributor extends IClusterable
+public interface IComponentAwareHeaderContributor extends IClusterable
 {
 	/**
-	 * Render to the web response whatever the component wants to contribute to the head section.
+	 * Render to the web response whatever the component-aware wants to contribute to the head
+	 * section.
+	 * 
+	 * @param component
+	 *            component which is contributing to the response. This parameter is here to give
+	 *            the component as the context for component-awares implementing this interface
 	 * 
 	 * @param response
 	 *            Response object
 	 */
-	void renderHead(IHeaderResponse response);
+	void renderHead(Component component, IHeaderResponse response);
 }

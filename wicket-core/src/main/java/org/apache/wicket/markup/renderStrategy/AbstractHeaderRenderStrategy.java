@@ -16,14 +16,11 @@
  */
 package org.apache.wicket.markup.renderStrategy;
 
-import java.util.List;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.lang.Generics;
 
 /**
  * An abstract implementation of a header render strategy which is only missing the code to traverse
@@ -42,9 +39,6 @@ import org.apache.wicket.util.lang.Generics;
  */
 public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrategy
 {
-	/** Application level contributors */
-	private List<IHeaderContributor> renderHeadListeners;
-
 	/**
 	 * @return Gets the strategy registered with the application
 	 */
@@ -145,27 +139,13 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 	{
 		Args.notNull(headerContainer, "headerContainer");
 
-		if (renderHeadListeners != null)
+		if (Application.exists())
 		{
-			for (IHeaderContributor listener : renderHeadListeners)
+			for (IHeaderContributor listener : Application.get()
+				.getHeaderContributorListenerCollection())
 			{
-				listener.renderHead(headerContainer, headerContainer.getHeaderResponse());
+				listener.renderHead(headerContainer.getHeaderResponse());
 			}
 		}
-	}
-
-	/**
-	 * Add an application level contributor who's content will be added to any page or ajax
-	 * response.
-	 * 
-	 * @param contributor
-	 */
-	public final void addListener(final IHeaderContributor contributor)
-	{
-		if (renderHeadListeners == null)
-		{
-			renderHeadListeners = Generics.newArrayList();
-		}
-		renderHeadListeners.add(contributor);
 	}
 }

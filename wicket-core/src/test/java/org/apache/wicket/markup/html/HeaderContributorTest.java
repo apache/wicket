@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -28,8 +30,6 @@ import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Tests that {@link Component}, {@link Behavior} and {@link IAjaxCallDecorator} that implements
@@ -117,7 +117,7 @@ public class HeaderContributorTest
 	public static class HeaderContributingCallDecorator
 		implements
 			IAjaxCallDecorator,
-			IHeaderContributor
+			IComponentAwareHeaderContributor
 	{
 		private static final long serialVersionUID = 1L;
 

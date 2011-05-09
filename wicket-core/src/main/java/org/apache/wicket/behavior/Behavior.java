@@ -21,7 +21,7 @@ import org.apache.wicket.IClusterable;
 import org.apache.wicket.IComponentAwareEventSink;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IComponentAwareHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
@@ -48,7 +48,7 @@ public abstract class Behavior
 	implements
 		IClusterable,
 		IComponentAwareEventSink,
-		IHeaderContributor
+		IComponentAwareHeaderContributor
 {
 	private static final long serialVersionUID = 1L;
 
