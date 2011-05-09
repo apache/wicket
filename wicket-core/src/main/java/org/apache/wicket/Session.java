@@ -633,6 +633,7 @@ public abstract class Session implements IClusterable, IEventSink
 		if (sessionInvalidated)
 		{
 			invalidateNow();
+			sessionInvalidated = false;
 		}
 	}
 
