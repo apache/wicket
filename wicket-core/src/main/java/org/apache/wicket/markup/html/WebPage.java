@@ -191,6 +191,8 @@ public class WebPage extends Page
 	 */
 	private void validateHeaders()
 	{
+		// search for HtmlHeaderContainer in the first level of children or deeper
+		// or more if there are transparent resolvers used
 		HtmlHeaderContainer header = visitChildren(new IVisitor<Component, HtmlHeaderContainer>()
 		{
 			public void component(final Component component, final IVisit<HtmlHeaderContainer> visit)
@@ -199,7 +201,7 @@ public class WebPage extends Page
 				{
 					visit.stop((HtmlHeaderContainer)component);
 				}
-				else
+				else if (component instanceof TransparentWebMarkupContainer == false)
 				{
 					visit.dontGoDeeper();
 				}
