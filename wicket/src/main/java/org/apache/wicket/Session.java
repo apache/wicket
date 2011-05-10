@@ -810,6 +810,18 @@ public abstract class Session implements IClusterable
 				list.add((IPageMap)getAttribute(attribute));
 			}
 		}
+
+		// there is a small chance another thread removes the pagemap while we are iterating the
+		// attributes and we end up with null in our list
+		Iterator<IPageMap> maps = list.iterator();
+		while (maps.hasNext())
+		{
+			if (maps.next() == null)
+			{
+				maps.remove();
+			}
+		}
+
 		Collections.sort(list, new LruComparator());
 		return list;
 	}
