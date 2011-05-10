@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.request.resource;
 
-import java.util.Locale;
-
 import org.apache.wicket.util.time.Time;
 
 /**
@@ -48,9 +46,7 @@ public class ByteArrayResource extends AbstractResource
 	 */
 	public ByteArrayResource(final String contentType, final byte[] array)
 	{
-		this.contentType = contentType;
-		this.array = array;
-		filename = null;
+		this(contentType, array, null);
 	}
 
 	/**
@@ -70,24 +66,6 @@ public class ByteArrayResource extends AbstractResource
 		this.filename = filename;
 	}
 
-	/**
-	 * Creates a Resource from the given byte array with its content type and the locale for which
-	 * it is valid.
-	 * 
-	 * @param contentType
-	 *            The Content type of the array.
-	 * @param array
-	 *            The binary content.
-	 * @param locale
-	 *            The locale of this resource
-	 */
-	public ByteArrayResource(final String contentType, final byte[] array, final Locale locale)
-	{
-		this.contentType = contentType;
-		this.array = array;
-		filename = null;
-	}
-
 	protected void configureResponse(final ResourceResponse response, final Attributes attributes)
 	{
 	}
@@ -102,6 +80,7 @@ public class ByteArrayResource extends AbstractResource
 
 		response.setContentType(contentType);
 		response.setLastModified(lastModified);
+		response.setContentLength(array.length);
 
 		if (response.dataNeedsToBeWritten(attributes))
 		{
