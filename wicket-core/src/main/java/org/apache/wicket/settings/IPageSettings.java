@@ -18,7 +18,6 @@ package org.apache.wicket.settings;
 
 import java.util.List;
 
-import org.apache.wicket.markup.resolver.AutoComponentResolver;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 
 
@@ -41,7 +40,6 @@ public interface IPageSettings
 	/**
 	 * Get the (modifiable) list of IComponentResolvers.
 	 * 
-	 * @see AutoComponentResolver for an example
 	 * @return List of ComponentResolvers
 	 */
 	List<IComponentResolver> getComponentResolvers();

@@ -238,12 +238,12 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * This method allows a component to be added by an auto-resolver such as AutoComponentResolver
-	 * or AutoLinkResolver. While the component is being added, the component's FLAG_AUTO boolean is
-	 * set. The isAuto() method of Component returns true if a component or any of its parents has
-	 * this bit set. When a component is added via autoAdd(), the logic in Page that normally (a)
-	 * checks for modifications during the rendering process, and (b) versions components, is
-	 * bypassed if Component.isAuto() returns true.
+	 * This method allows a component to be added by an auto-resolver such as AutoLinkResolver.
+	 * While the component is being added, the component's FLAG_AUTO boolean is set. The isAuto()
+	 * method of Component returns true if a component or any of its parents has this bit set. When
+	 * a component is added via autoAdd(), the logic in Page that normally (a) checks for
+	 * modifications during the rendering process, and (b) versions components, is bypassed if
+	 * Component.isAuto() returns true.
 	 * <p>
 	 * The result of all this is that components added with autoAdd() are free from versioning and
 	 * can add their own children without the usual exception that would normally be thrown when the

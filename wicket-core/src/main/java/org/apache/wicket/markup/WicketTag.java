@@ -22,7 +22,6 @@ import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.parser.filter.WicketLinkTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketRemoveTagHandler;
-import org.apache.wicket.markup.resolver.AutoComponentResolver;
 import org.apache.wicket.markup.resolver.FragmentResolver;
 import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
 import org.apache.wicket.markup.resolver.MarkupInheritanceResolver;
@@ -75,14 +74,6 @@ public class WicketTag extends ComponentTag
 	public final String getNameAttribute()
 	{
 		return getAttributes().getString("name");
-	}
-
-	/**
-	 * @return True, if tag name equals 'wicket:component'
-	 */
-	public final boolean isComponentTag()
-	{
-		return AutoComponentResolver.COMPONENT.equalsIgnoreCase(getName());
 	}
 
 	/**
