@@ -204,7 +204,7 @@
 		</profile>
 	</profiles>
 	<url>http://wicket.apache.org/${project.artifactId}</url>
-	<inceptionYear>2004</inceptionYear>
+	<inceptionYear>2006</inceptionYear>
 	<organization>
 		<name>Apache Software Foundation</name>
 		<url>http://apache.org</url>

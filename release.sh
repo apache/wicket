@@ -42,7 +42,7 @@ echo "Creating notice file."
 NOTICE=NOTICE
 > $NOTICE 
 echo "Apache Wicket" >> $NOTICE
-echo "Copyright 2008 The Apache Software Foundation" >> $NOTICE
+echo "Copyright 2006-$(date +%Y) The Apache Software Foundation" >> $NOTICE
 echo "" >> $NOTICE
 echo "This product includes software developed at" >> $NOTICE
 echo "The Apache Software Foundation (http://www.apache.org/)." >> $NOTICE
