@@ -267,7 +267,12 @@ Wicket.replaceOuterHtmlIE = function(element, text) {
 	// place all newly created elements before the old element	
 	while(tempParent.childNodes.length > 0) {
 		var tempElement = tempParent.childNodes[0];
-		parent.insertBefore(tempElement, element);
+		if (tempElement.tagName != 'SCRIPT') {
+			parent.insertBefore(tempElement, element);
+		} else {
+			// ignore <script> elements. they are handled separately    
+			tempParent.removeChild(tempElement);
+		}
 		tempElement = null;
 	}
 
