@@ -337,7 +337,7 @@ public abstract class AbstractResource implements IResource
 				duration = Application.get().getResourceSettings().getDefaultCacheDuration();
 			}
 
-			return cacheDuration;
+			return duration;
 		}
 
 		/**
