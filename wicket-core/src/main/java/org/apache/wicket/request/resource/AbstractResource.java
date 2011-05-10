@@ -83,8 +83,6 @@ public abstract class AbstractResource implements IResource
 		 */
 		public ResourceResponse()
 		{
-			cacheDuration = Application.get().getResourceSettings().getDefaultCacheDuration();
-
 			// disallow caching for public caches. this behavior is similar to wicket 1.4:
 			// setting it to [PUBLIC] seems to be sexy but could potentially cache confidential
 			// data on public proxies for users migrating to 1.5
@@ -333,6 +331,12 @@ public abstract class AbstractResource implements IResource
 		 */
 		public Duration getCacheDuration()
 		{
+			Duration duration = cacheDuration;
+			if (duration == null && Application.exists())
+			{
+				duration = Application.get().getResourceSettings().getDefaultCacheDuration();
+			}
+
 			return cacheDuration;
 		}
 
