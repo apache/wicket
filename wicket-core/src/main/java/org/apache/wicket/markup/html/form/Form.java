@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.Component;
@@ -1412,7 +1413,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 
 		if (isRootForm())
 		{
-			String method = getMethod().toLowerCase();
+			String method = getMethod().toLowerCase(Locale.ENGLISH);
 			tag.put("method", method);
 			String url = getActionUrl().toString();
 			if (encodeUrlInHiddenFields())
@@ -1432,6 +1433,16 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 
 			if (isMultiPart())
 			{
+				if (METHOD_GET.equalsIgnoreCase(method))
+				{
+					if (log.isWarnEnabled())
+					{
+						log.warn(String.format(
+							"Form with id '%s' is multipart. It should use method 'POST'!", getId()));
+					}
+					tag.put("method", METHOD_POST.toLowerCase(Locale.ENGLISH));
+				}
+
 				tag.put("enctype", "multipart/form-data");
 				//
 				// require the application-encoding for multipart/form-data to be sure to
