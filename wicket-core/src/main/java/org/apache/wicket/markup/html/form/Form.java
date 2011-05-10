@@ -1435,11 +1435,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			{
 				if (METHOD_GET.equalsIgnoreCase(method))
 				{
-					if (log.isWarnEnabled())
-					{
-						log.warn(String.format(
-							"Form with id '%s' is multipart. It should use method 'POST'!", getId()));
-					}
+					log.warn("Form with id '{}' is multipart. It should use method 'POST'!",
+						getId());
 					tag.put("method", METHOD_POST.toLowerCase(Locale.ENGLISH));
 				}
 
