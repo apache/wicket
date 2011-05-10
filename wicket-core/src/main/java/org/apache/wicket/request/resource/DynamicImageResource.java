@@ -19,11 +19,11 @@ package org.apache.wicket.request.resource;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Date;
 
 import javax.imageio.ImageIO;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Time;
 
 /**
@@ -74,6 +74,7 @@ public abstract class DynamicImageResource extends AbstractResource
 	 */
 	public synchronized final void setFormat(String format)
 	{
+		Args.notNull(format, "format");
 		this.format = format;
 	}
 
@@ -113,10 +114,11 @@ public abstract class DynamicImageResource extends AbstractResource
 
 	/**
 	 * Get image data for our dynamic image resource. If the subclass regenerates the data, it
-	 * should set the lastModifiedTime when it does so. This ensures that image caching works
-	 * correctly.
+	 * should set the {@link DynamicImageResource#setLastModifiedTime(Time)} when it does so. This
+	 * ensures that image caching works correctly.
 	 * 
 	 * @param attributes
+	 *            the context bringing the request, response and the parameters
 	 * 
 	 * @return The image data for this dynamic image
 	 */

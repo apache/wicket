@@ -16,9 +16,14 @@
  */
 package org.apache.wicket.request.resource;
 
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.time.Time;
 
 /**
+ * An {@link IResource} for byte arrays. The byte array can be static - passed to the constructor,
+ * or dynamic - by overriding
+ * {@link #getData(org.apache.wicket.request.resource.IResource.Attributes)}
+ * 
  * @author Matej Knopp
  */
 public class ByteArrayResource extends AbstractResource
@@ -28,13 +33,25 @@ public class ByteArrayResource extends AbstractResource
 	/** the content type. */
 	private final String contentType;
 
-	/** binary data. */
-	private final byte[] array;
+	/** the binary data. */
+	private byte[] array;
 
 	/** the time that this resource was last modified; same as construction time. */
 	private final Time lastModified = Time.now();
 
 	private final String filename;
+
+	/**
+	 * Creates a {@link ByteArrayResource} which will provide its data dynamically with
+	 * {@link #getData(org.apache.wicket.request.resource.IResource.Attributes)}
+	 * 
+	 * @param contentType
+	 *            The Content type of the array.
+	 */
+	public ByteArrayResource(final String contentType)
+	{
+		this(contentType, null, null);
+	}
 
 	/**
 	 * Creates a Resource from the given byte array with its content type
@@ -80,7 +97,13 @@ public class ByteArrayResource extends AbstractResource
 
 		response.setContentType(contentType);
 		response.setLastModified(lastModified);
-		response.setContentLength(array.length);
+
+		final byte[] data = getData(attributes);
+		if (data == null)
+		{
+			throw new WicketRuntimeException("ByteArrayResource's data cannot be 'null'.");
+		}
+		response.setContentLength(data.length);
 
 		if (response.dataNeedsToBeWritten(attributes))
 		{
@@ -99,7 +122,7 @@ public class ByteArrayResource extends AbstractResource
 				@Override
 				public void writeData(final Attributes attributes)
 				{
-					attributes.getResponse().write(array);
+					attributes.getResponse().write(data);
 				}
 			});
 
@@ -107,5 +130,18 @@ public class ByteArrayResource extends AbstractResource
 		}
 
 		return response;
+	}
+
+	/**
+	 * Gets the data for this resource.
+	 * 
+	 * @param attributes
+	 *            the context bringing the request, response and the parameters
+	 * 
+	 * @return The byte array data for this resource
+	 */
+	protected byte[] getData(final Attributes attributes)
+	{
+		return array;
 	}
 }
