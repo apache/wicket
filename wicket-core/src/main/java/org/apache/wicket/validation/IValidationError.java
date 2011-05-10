@@ -16,13 +16,15 @@
  */
 package org.apache.wicket.validation;
 
+import org.apache.wicket.IClusterable;
+
 /**
  * Interface representing a validation error.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @since 1.2.6
  */
-public interface IValidationError
+public interface IValidationError extends IClusterable
 {
 	/**
 	 * Retrieves the error message (usually user-facing).
