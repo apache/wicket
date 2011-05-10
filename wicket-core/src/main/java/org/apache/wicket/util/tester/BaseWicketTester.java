@@ -583,7 +583,7 @@ public class BaseWicketTester
 
 	/**
 	 * Renders the page specified by given {@link IPageProvider}. After render the page instance can
-	 * be retreived using {@link #getLastRenderedPage()} and the rendered document will be available
+	 * be retrieved using {@link #getLastRenderedPage()} and the rendered document will be available
 	 * in {@link #getLastResponse()}.
 	 * 
 	 * Depending on {@link RenderStrategy} invoking this method can mean that a redirect will happen
@@ -1019,7 +1019,7 @@ public class BaseWicketTester
 	 * @param testPanelSource
 	 *            a <code>Panel</code> factory that creates test <code>Panel</code> instances
 	 * @return a rendered <code>Panel</code>
-	 * @deprecated since 1.5 use startPanel(panel) instead
+	 * @deprecated since 1.5 use {@link #startComponent(Class, IMarkupFragment)} instead
 	 */
 	@Deprecated
 	public final Panel startPanel(final ITestPanelSource testPanelSource)
@@ -1079,8 +1079,8 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * Process a component. The web page will automatically created with the pageMarkup provided. In
-	 * case pageMarkup is null, the markup will be automatically created.
+	 * Process a component. The web page will be automatically created with the pageMarkup provided.
+	 * In case <code>pageMarkup</code> is null, the markup will be automatically created.
 	 * 
 	 * @param component
 	 * @param pageMarkup
@@ -1362,7 +1362,7 @@ public class BaseWicketTester
 	public Result ifContains(String pattern)
 	{
 		return isTrue("pattern '" + pattern + "' not found in:\n" + getLastResponseAsString(),
-		              getLastResponseAsString().matches("(?s).*" + pattern + ".*"));
+			getLastResponseAsString().matches("(?s).*" + pattern + ".*"));
 	}
 
 	/**
