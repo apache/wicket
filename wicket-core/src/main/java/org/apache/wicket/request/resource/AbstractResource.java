@@ -276,14 +276,14 @@ public abstract class AbstractResource implements IResource
 			WebRequest request = (WebRequest)attributes.getRequest();
 			Time ifModifiedSince = request.getIfModifiedSinceHeader();
 
-			if (ifModifiedSince != null && this.lastModified != null)
+			if (ifModifiedSince != null && lastModified != null)
 			{
 				// [Last-Modified] headers have a maximum precision of one second
 				// so we have to truncate the milliseconds part for a proper compare.
 				// that's stupid, since changes within one second will not be reliably
 				// detected by the client ... any hint or clarification to improve this
 				// situation will be appreciated...
-				Time roundedLastModified = Time.millis(this.lastModified.getMilliseconds() / 1000 * 1000);
+				Time roundedLastModified = Time.millis(lastModified.getMilliseconds() / 1000 * 1000);
 
 				return ifModifiedSince.before(roundedLastModified);
 			}
@@ -311,23 +311,23 @@ public abstract class AbstractResource implements IResource
 
 		/**
 		 * Controls how long this response may be cached
-		 *
+		 * 
 		 * @param duration
 		 *            caching duration in seconds
 		 */
 		public void setCacheDuration(Duration duration)
 		{
 			Args.notNull(duration, "duration");
-			this.cacheDuration = duration;
+			cacheDuration = duration;
 		}
 
 		/**
 		 * returns how long this resource may be cached
 		 * <p/>
 		 * The special value Duration.NONE means caching is disabled.
-		 *
+		 * 
 		 * @return duration for caching
-		 *
+		 * 
 		 * @see IResourceSettings#setDefaultCacheDuration(org.apache.wicket.util.time.Duration)
 		 * @see IResourceSettings#getDefaultCacheDuration()
 		 */
@@ -340,9 +340,9 @@ public abstract class AbstractResource implements IResource
 		 * returns what kind of caches are allowed to cache the resource response
 		 * <p/>
 		 * resources are only cached at all if caching is enabled by setting a cache duration.
-		 *
+		 * 
 		 * @return cache scope
-		 *
+		 * 
 		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#getCacheDuration()
 		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#setCacheDuration(org.apache.wicket.util.time.Duration)
 		 * @see org.apache.wicket.request.http.WebResponse.CacheScope
@@ -356,10 +356,10 @@ public abstract class AbstractResource implements IResource
 		 * controls what kind of caches are allowed to cache the response
 		 * <p/>
 		 * resources are only cached at all if caching is enabled by setting a cache duration.
-		 *
+		 * 
 		 * @param scope
 		 *            scope for caching
-		 *
+		 * 
 		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#getCacheDuration()
 		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#setCacheDuration(org.apache.wicket.util.time.Duration)
 		 * @see org.apache.wicket.request.http.WebResponse.CacheScope
@@ -367,7 +367,7 @@ public abstract class AbstractResource implements IResource
 		public void setCacheScope(WebResponse.CacheScope scope)
 		{
 			Args.notNull(scope, "scope");
-			this.cacheScope = scope;
+			cacheScope = scope;
 		}
 
 		/**
@@ -399,27 +399,27 @@ public abstract class AbstractResource implements IResource
 	/**
 	 * Configure the web response header for client cache control.
 	 * 
-	 * @param request
-	 *            web request
-	 * @param response
-	 *            web response
 	 * @param data
 	 *            resource data
 	 * @param attributes
 	 *            request attributes
 	 */
-	protected void configureCache(final WebRequest request, final WebResponse response,
-		final ResourceResponse data, final Attributes attributes)
+	protected void configureCache(final ResourceResponse data, final Attributes attributes)
 	{
-	    Duration duration = data.getCacheDuration();
+		Duration duration = data.getCacheDuration();
+		Response response = attributes.getResponse();
 
-		if(duration.compareTo(Duration.NONE) > 0)
+		if (response instanceof WebResponse)
 		{
-			response.enableCaching(duration, data.getCacheScope());
-		}
-		else
-		{
-			response.disableCaching();
+			WebResponse webResponse = (WebResponse)response;
+			if (duration.compareTo(Duration.NONE) > 0)
+			{
+				webResponse.enableCaching(duration, data.getCacheScope());
+			}
+			else
+			{
+				webResponse.disableCaching();
+			}
 		}
 	}
 
@@ -432,7 +432,6 @@ public abstract class AbstractResource implements IResource
 		// Get a "new" ResourceResponse to write a response
 		ResourceResponse data = newResourceResponse(attributes);
 
-		WebRequest request = (WebRequest)attributes.getRequest();
 		WebResponse response = (WebResponse)attributes.getResponse();
 
 		// 1. Last Modified
@@ -443,7 +442,7 @@ public abstract class AbstractResource implements IResource
 		}
 
 		// 2. Caching
-		configureCache(request, response, data, attributes);
+		configureCache(data, attributes);
 
 		if (!data.dataNeedsToBeWritten(attributes))
 		{
