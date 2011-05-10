@@ -18,12 +18,10 @@ package org.apache.wicket.markup.html.form.upload;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.protocol.http.IMultipartWebRequest;
 import org.apache.wicket.request.Request;
@@ -62,11 +60,11 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 	 * @param id
 	 *            See Component
 	 * @param model
-	 *            See Component
+	 *            the model holding the uploaded {@link FileUpload}s
 	 */
-	public FileUploadField(final String id, IModel<FileUpload> model)
+	public FileUploadField(final String id, ListModel<FileUpload> model)
 	{
-		super(id, new ListModel<FileUpload>(Arrays.asList(model.getObject())));
+		super(id, model);
 	}
 
 	/**

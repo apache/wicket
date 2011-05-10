@@ -22,6 +22,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.validation.validator.StringValidator;
 
 /**
@@ -75,7 +76,7 @@ public class FileUploadError extends WebPage
 		form.add(inputField);
 
 		// file upload
-		form.add(new FileUploadField("fileUpload", new Model<FileUpload>()));
+		form.add(new FileUploadField("fileUpload", new ListModel<FileUpload>()));
 		// feedback
 		form.add(new FeedbackPanel("feedback"));
 	}

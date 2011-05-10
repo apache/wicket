@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.StringValue;
@@ -105,7 +105,7 @@ public class MockFormFileUploadPage extends WebPage
 		form.setMultiPart(true);
 		form.setMaxSize(Bytes.kilobytes(100));
 		form.add(new TextField<String>("text"));
-		fileUploadField = new FileUploadField("file", new Model<FileUpload>());
+		fileUploadField = new FileUploadField("file", new ListModel<FileUpload>());
 		StringValue requiredParam = param.get("required");
 		boolean required = requiredParam.toBoolean();
 		fileUploadField.setRequired(required);
