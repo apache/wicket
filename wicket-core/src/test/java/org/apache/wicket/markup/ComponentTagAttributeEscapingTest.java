@@ -42,7 +42,7 @@ public class ComponentTagAttributeEscapingTest extends TestCase
 		String response = tester.getLastResponseAsString();
 		System.out.println(response);
 		assertTrue("One of the pound entity representations is missing: &pound; or &#163;",
-			response.contains("££"));
+			response.contains("\u00a3\u00a3"));
 		assertTrue("must not be double escaped", response.contains("Watch escaped value: &gt;&gt;"));
 		assertTrue("following the last assert logic, this one would true",
 			response.contains("alerting: &amp;"));

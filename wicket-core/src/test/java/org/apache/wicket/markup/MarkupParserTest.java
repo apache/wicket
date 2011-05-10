@@ -16,6 +16,13 @@
  */
 package org.apache.wicket.markup;
 
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.Locale;
+import java.util.regex.Matcher;
+
+import junit.framework.Assert;
+
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
@@ -29,13 +36,6 @@ import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.Locale;
-import java.util.regex.Matcher;
-
-import junit.framework.Assert;
 
 
 /**
@@ -338,12 +338,6 @@ public final class MarkupParserTest extends WicketTestCase
 					"Markup remove regions must not contain Wicket component tags: '<wicket:remove>' (line 1, column 17)"));
 		}
 
-		new MarkupParser(
-			"<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\"/>").parse();
-		new MarkupParser(
-			"<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">    </wicket:component>").parse();
-		new MarkupParser(
-			"<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">  <span wicket:id=\"msg\">hello world!</span></wicket:component>").parse();
 		new MarkupParser(
 			"<wicket:panel><div id=\"definitionsContentBox\"><span wicket:id=\"contentPanel\"/></div></wicket:panel>").parse();
 	}
