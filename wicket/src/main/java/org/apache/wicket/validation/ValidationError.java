@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.util.lang.Classes;
 
 /**
@@ -44,7 +43,7 @@ import org.apache.wicket.util.lang.Classes;
  * @author Igor Vaynberg (ivaynberg)
  * @since 1.2.6
  */
-public class ValidationError implements IValidationError, IClusterable
+public class ValidationError implements IValidationError
 {
 	private static final long serialVersionUID = 1L;
 
