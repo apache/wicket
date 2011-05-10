@@ -288,7 +288,7 @@ public class PersistentPageManager extends AbstractPageManager
 	 * 
 	 * @author Matej Knopp
 	 */
-	protected class PersitentRequestAdapter extends RequestAdapter
+	protected class PersistentRequestAdapter extends RequestAdapter
 	{
 		private static final String ATTRIBUTE_NAME = "wicket:persistentPageManagerData";
 
@@ -302,7 +302,7 @@ public class PersistentPageManager extends AbstractPageManager
 		 * 
 		 * @param context
 		 */
-		public PersitentRequestAdapter(IPageManagerContext context)
+		public PersistentRequestAdapter(IPageManagerContext context)
 		{
 			super(context);
 		}
@@ -386,7 +386,7 @@ public class PersistentPageManager extends AbstractPageManager
 	@Override
 	protected RequestAdapter newRequestAdapter(IPageManagerContext context)
 	{
-		return new PersitentRequestAdapter(context);
+		return new PersistentRequestAdapter(context);
 	}
 
 	/**
