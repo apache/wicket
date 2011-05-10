@@ -148,7 +148,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
-	public static abstract class ValidationVisitor implements IVisitor<FormComponent<?>, Void>
+	public abstract static class ValidationVisitor implements IVisitor<FormComponent<?>, Void>
 	{
 		public void component(final FormComponent<?> formComponent, final IVisit<Void> visit)
 		{
@@ -316,7 +316,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 * @throws IllegalArgumentException
 	 *             if validator is null
 	 * @see IFormValidator
-	 * @see IValidatorAddListener
 	 */
 	public void add(IFormValidator validator)
 	{
@@ -564,7 +563,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		 * method.
 		 */
 
-		final Bytes[] maxSize = new Bytes[] { this.maxSize };
+		final Bytes[] maxSize = { this.maxSize };
 		if (maxSize[0] == null)
 		{
 			visitChildren(Form.class, new IVisitor<Form<?>, Bytes>()
@@ -1298,7 +1297,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			// Resource key should be <form-id>.uploadTooLarge to
 			// override default message
 			final String defaultValue = "Upload must be less than " + getMaxSize();
-			String msg = getString(getId() + "." + UPLOAD_TOO_LARGE_RESOURCE_KEY,
+			String msg = getString(getId() + '.' + UPLOAD_TOO_LARGE_RESOURCE_KEY,
 				Model.ofMap(model), defaultValue);
 			error(msg);
 		}
@@ -1307,7 +1306,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			// Resource key should be <form-id>.uploadFailed to override
 			// default message
 			final String defaultValue = "Upload failed: " + e.getLocalizedMessage();
-			String msg = getString(getId() + "." + UPLOAD_FAILED_RESOURCE_KEY, Model.ofMap(model),
+			String msg = getString(getId() + '.' + UPLOAD_FAILED_RESOURCE_KEY, Model.ofMap(model),
 				defaultValue);
 			error(msg);
 
@@ -1444,11 +1443,10 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 				//
 				// require the application-encoding for multipart/form-data to be sure to
 				// get multipart-uploaded characters with the proper encoding on the following
-// request.
-//
-// see
-// http://stackoverflow.com/questions/546365/utf-8-text-is-garbled-when-form-is-posted-as-multipart-form-data
-//
+				// request.
+				//
+				// for details see: http://stackoverflow.com/questions/546365
+				//
 				tag.put("accept-charset", getApplication().getRequestCycleSettings()
 					.getResponseRequestEncoding());
 			}
@@ -1580,7 +1578,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	{
 		for (String param : params)
 		{
-			String[] pair = param.split("=");
+			String[] pair = Strings.split(param, '=');
 
 			buffer.append("<input type=\"hidden\" name=\"")
 				.append(recode(pair[0]))
@@ -1915,7 +1913,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			// embedded forms
 			registerJavaScriptNamespaces(response);
 			response.renderJavaScript("Wicket.Forms[\"" + getMarkupId() + "\"]={multipart:true};",
-				Form.class.getName() + "." + getMarkupId() + ".metadata");
+				Form.class.getName() + '.' + getMarkupId() + ".metadata");
 		}
 	}
 
