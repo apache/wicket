@@ -33,7 +33,6 @@ import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.request.Request;
-import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.lang.Objects;
@@ -458,18 +457,6 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public void invalidate()
 	{
-		if (sessionInvalidated == false)
-		{
-			RequestCycle.get().getListeners().add(new AbstractRequestCycleListener()
-			{
-				@Override
-				public void onDetach(final RequestCycle cycle)
-				{
-					detach();
-				}
-			});
-		}
-
 		sessionInvalidated = true;
 	}
 
@@ -633,7 +620,6 @@ public abstract class Session implements IClusterable, IEventSink
 		if (sessionInvalidated)
 		{
 			invalidateNow();
-			sessionInvalidated = false;
 		}
 	}
 

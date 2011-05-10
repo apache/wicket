@@ -513,19 +513,12 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 */
 	public void onDetach()
 	{
-
-
 		if (cleanupFeedbackMessagesOnDetach)
 		{
 			if (Session.exists())
 			{
 				Session.get().cleanupFeedbackMessages();
 			}
-		}
-
-		if (Session.exists())
-		{
-			Session.get().detach();
 		}
 
 		try
@@ -546,6 +539,12 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		{
 			listeners.onDetach(this);
 		}
+
+		if (Session.exists())
+		{
+			Session.get().detach();
+		}
+
 	}
 
 	/**
