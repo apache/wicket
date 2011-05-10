@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.extensions.markup.html.tabs;
 
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -62,5 +62,5 @@ public abstract class AbstractTab implements ITab
 	/**
 	 * {@inheritDoc}
 	 */
-	public abstract Panel getPanel(final String panelId);
+	public abstract WebMarkupContainer getPanel(final String panelId);
 }
