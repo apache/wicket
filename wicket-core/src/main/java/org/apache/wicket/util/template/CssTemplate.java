@@ -19,7 +19,7 @@ package org.apache.wicket.util.template;
 import java.util.Map;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.resource.ITextResourceCompressor;
+import org.apache.wicket.css.ICssCompressor;
 import org.apache.wicket.util.string.CssUtils;
 
 
@@ -81,9 +81,11 @@ public final class CssTemplate extends TextTemplateDecorator
 	{
 		String nonCompressed = super.getString();
 
-		ITextResourceCompressor compressor = Application.get()
-			.getResourceSettings()
-			.getCssCompressor();
+		ICssCompressor compressor = null;
+		if (Application.exists())
+		{
+			compressor = Application.get().getResourceSettings().getCssCompressor();
+		}
 
 		if (compressor != null)
 		{

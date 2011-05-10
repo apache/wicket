@@ -81,9 +81,11 @@ public final class JavaScriptTemplate extends TextTemplateDecorator
 	{
 		String nonCompressed = super.getString();
 
-		ITextResourceCompressor compressor = Application.get()
-			.getResourceSettings()
-			.getJavaScriptCompressor();
+		ITextResourceCompressor compressor = null;
+		if (Application.exists())
+		{
+			compressor = Application.get().getResourceSettings().getJavaScriptCompressor();
+		}
 
 		if (compressor != null)
 		{

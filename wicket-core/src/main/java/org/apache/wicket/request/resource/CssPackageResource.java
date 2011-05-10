@@ -52,7 +52,7 @@ public class CssPackageResource extends PackageResource
 	{
 		final byte[] processedResponse = super.processResponse(attributes, bytes);
 
-		ICssCompressor compressor = Application.get().getResourceSettings().getCssCompressor();
+		ICssCompressor compressor = getCompressor();
 
 		if (compressor != null)
 		{
@@ -74,4 +74,20 @@ public class CssPackageResource extends PackageResource
 		}
 	}
 
+	/**
+	 * Gets the {@link ICssCompressor} to be used. By default returns the configured compressor on
+	 * application level, but can be overriden by the user application to provide compressor
+	 * specific to the resource.
+	 * 
+	 * @return the configured application level Css compressor. May be {@code null}.
+	 */
+	protected ICssCompressor getCompressor()
+	{
+		ICssCompressor compressor = null;
+		if (Application.exists())
+		{
+			compressor = Application.get().getResourceSettings().getCssCompressor();
+		}
+		return compressor;
+	}
 }

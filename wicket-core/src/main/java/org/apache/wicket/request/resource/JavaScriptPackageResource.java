@@ -19,7 +19,7 @@ package org.apache.wicket.request.resource;
 import java.util.Locale;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.resource.ITextResourceCompressor;
+import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,9 +52,7 @@ public class JavaScriptPackageResource extends PackageResource
 	{
 		final byte[] processedResponse = super.processResponse(attributes, bytes);
 
-		ITextResourceCompressor compressor = Application.get()
-			.getResourceSettings()
-			.getJavaScriptCompressor();
+		IJavaScriptCompressor compressor = getCompressor();
 
 		if (compressor != null)
 		{
@@ -76,5 +74,21 @@ public class JavaScriptPackageResource extends PackageResource
 		}
 	}
 
+	/**
+	 * Gets the {@link IJavaScriptCompressor} to be used. By default returns the configured
+	 * compressor on application level, but can be overriden by the user application to provide
+	 * compressor specific to the resource.
+	 * 
+	 * @return the configured application level JavaScript compressor. May be {@code null}.
+	 */
+	protected IJavaScriptCompressor getCompressor()
+	{
+		IJavaScriptCompressor compressor = null;
+		if (Application.exists())
+		{
+			compressor = Application.get().getResourceSettings().getJavaScriptCompressor();
+		}
+		return compressor;
+	}
 
 }
