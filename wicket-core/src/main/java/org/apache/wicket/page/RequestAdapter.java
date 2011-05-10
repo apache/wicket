@@ -36,8 +36,6 @@ public abstract class RequestAdapter
 
 	private final List<IManageablePage> touchedPages = new ArrayList<IManageablePage>();
 
-	private final List<IManageablePage> pages = new ArrayList<IManageablePage>();
-
 	/**
 	 * Construct.
 	 * 
@@ -119,7 +117,7 @@ public abstract class RequestAdapter
 	 */
 	private IManageablePage findPage(final int id)
 	{
-		for (IManageablePage page : pages)
+		for (IManageablePage page : touchedPages)
 		{
 			if (page.getPageId() == id)
 			{
@@ -137,17 +135,8 @@ public abstract class RequestAdapter
 	{
 		if (findPage(page.getPageId()) == null)
 		{
-			pages.add(page);
+			touchedPages.add(page);
 		}
-
-		for (IManageablePage p : touchedPages)
-		{
-			if (p.getPageId() == page.getPageId())
-			{
-				return;
-			}
-		}
-		touchedPages.add(page);
 	}
 
 	/**
@@ -155,18 +144,6 @@ public abstract class RequestAdapter
 	 */
 	protected void commitRequest()
 	{
-		for (IManageablePage page : pages)
-		{
-			try
-			{
-				page.detach();
-			}
-			catch (Exception e)
-			{
-				log.error("Error detaching page", e);
-			}
-		}
-
 		// store pages that are not stateless
 		if (touchedPages.isEmpty() == false)
 		{
@@ -174,6 +151,15 @@ public abstract class RequestAdapter
 				touchedPages.size());
 			for (IManageablePage page : touchedPages)
 			{
+				try
+				{
+					page.detach();
+				}
+				catch (Exception e)
+				{
+					log.error("Error detaching page", e);
+				}
+
 				if (!page.isPageStateless())
 				{
 					statefulPages.add(page);
