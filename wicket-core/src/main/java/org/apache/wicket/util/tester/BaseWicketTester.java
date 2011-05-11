@@ -132,7 +132,6 @@ import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
-import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1159,8 +1158,7 @@ public class BaseWicketTester
 
 			// set a ContainerInfo to be able to use HtmlHeaderContainer so header contribution
 			// still work. WICKET-3700
-			ContainerInfo containerInfo = Mockito.mock(ContainerInfo.class);
-			Mockito.when(containerInfo.getContainerClass()).thenReturn(page.getClass());
+			ContainerInfo containerInfo = new ContainerInfo(page);
 			MarkupResourceStream markupResourceStream = new MarkupResourceStream(
 				new StringResourceStream(markup), containerInfo, page.getClass());
 			try
