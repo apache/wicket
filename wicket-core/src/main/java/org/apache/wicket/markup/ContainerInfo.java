@@ -72,7 +72,7 @@ public class ContainerInfo
 	 * 
 	 * @return The container class
 	 */
-	public Class<?> getContainerClass()
+	public Class getContainerClass()
 	{
 		return containerClassRef.get();
 	}
