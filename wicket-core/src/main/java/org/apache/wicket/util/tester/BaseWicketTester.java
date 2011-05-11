@@ -816,7 +816,7 @@ public class BaseWicketTester
 	 * @param testPageSource
 	 *            a <code>Page</code> factory that creates a test page instance
 	 * @return the rendered Page
-	 * @deprecated since 1.5 use startPage(page) instead
+	 * @deprecated since 1.5 use {@link #startPage(Page)} instead
 	 */
 	@Deprecated
 	public final Page startPage(final ITestPageSource testPageSource)
@@ -1019,14 +1019,14 @@ public class BaseWicketTester
 	 * @param testPanelSource
 	 *            a <code>Panel</code> factory that creates test <code>Panel</code> instances
 	 * @return a rendered <code>Panel</code>
-	 * @deprecated since 1.5 use {@link #startComponent(Class, IMarkupFragment)} instead
+	 * @deprecated since 1.5 use {@link #startComponentInPage(Class, IMarkupFragment)} instead
 	 */
 	@Deprecated
 	public final Panel startPanel(final ITestPanelSource testPanelSource)
 	{
 		Args.notNull(testPanelSource, "testPanelSource");
 
-		return (Panel)startComponent(testPanelSource.getTestPanel(DummyPanelPage.TEST_PANEL_ID),
+		return startComponentInPage(testPanelSource.getTestPanel(DummyPanelPage.TEST_PANEL_ID),
 			null);
 	}
 
@@ -1037,36 +1037,57 @@ public class BaseWicketTester
 	 * be relative to the panel. Not relative to the Page which will automatically be added for you.
 	 * 
 	 * @param <C>
+	 *            the type of the component
 	 * @param panelClass
 	 *            a test <code>Panel</code> class with <code>Panel(String id)</code> constructor
 	 * @return a rendered <code>Panel</code>
 	 */
-	public final <C extends Panel> Panel startPanel(final Class<C> panelClass)
+	public final <C extends Panel> C startPanel(final Class<C> panelClass)
 	{
 		Args.notNull(panelClass, "panelClass");
 
-		return (Panel)startComponent(panelClass, null);
+		return startComponentInPage(panelClass, null);
 	}
 
 	/**
-	 * Process a component. The web page will automatically created with the pageMarkup provided. In
-	 * case pageMarkup is null, the markup will be automatically created.
+	 * Process a component. A web page will be automatically created with the markup created in
+	 * {@link #createPageMarkup(String)}.
 	 * 
+	 * @param <C>
+	 *            the type of the component
 	 * @param componentClass
-	 * @param pageMarkup
-	 *            May be null
+	 *            the class of the component to be tested
 	 * @return The component processed
 	 */
-	public final Component startComponent(final Class<? extends Component> componentClass,
+	public final <C extends Component> C startComponentInPage(final Class<C> componentClass)
+	{
+		return startComponentInPage(componentClass, null);
+	}
+
+	/**
+	 * Process a component. A web page will be automatically created with the {@code pageMarkup}
+	 * provided. In case pageMarkup is null, the markup will be automatically created with
+	 * {@link #createPageMarkup(String)}.
+	 * 
+	 * @param <C>
+	 *            the type of the component
+	 * 
+	 * @param componentClass
+	 *            the class of the component to be tested
+	 * @param pageMarkup
+	 *            the markup for the Page that will be automatically created. May be {@code null}.
+	 * @return The component processed
+	 */
+	public final <C extends Component> C startComponentInPage(final Class<C> componentClass,
 		final IMarkupFragment pageMarkup)
 	{
 		Args.notNull(componentClass, "componentClass");
 
 		// Create the component instance from the class
-		Component comp = null;
+		C comp = null;
 		try
 		{
-			Constructor<? extends Component> c = componentClass.getConstructor(String.class);
+			Constructor<C> c = componentClass.getConstructor(String.class);
 			comp = c.newInstance("testObject");
 		}
 		catch (Exception e)
@@ -1075,33 +1096,44 @@ public class BaseWicketTester
 		}
 
 		// process the component
-		return startComponent(comp, pageMarkup);
+		return startComponentInPage(comp, pageMarkup);
 	}
 
 	/**
-	 * Process a component. The web page will be automatically created with the pageMarkup provided.
-	 * In case <code>pageMarkup</code> is null, the markup will be automatically created.
+	 * Process a component. A web page will be automatically created with the {@code pageMarkup}
+	 * provided. In case {@code pageMarkup} is null, the markup will be automatically created with
+	 * {@link #createPageMarkup(String)}.
 	 * 
+	 * @param <C>
+	 *            the type of the component
 	 * @param component
+	 *            the component to be tested
 	 * @param pageMarkup
-	 *            May be null
+	 *            the markup for the Page that will be automatically created. May be {@code null}.
 	 * @return The component processed
 	 */
-	public final Component startComponent(final Component component, IMarkupFragment pageMarkup)
+	public final <C extends Component> C startComponentInPage(final C component,
+		IMarkupFragment pageMarkup)
 	{
 		Args.notNull(component, "component");
 
 		// Automatically create the page markup if not provided
 		if (pageMarkup == null)
 		{
-			pageMarkup = Markup.of("<span wicket:id='" + component.getId() + "'></span>");
+			String markup = createPageMarkup(component.getId());
+			if (markup == null)
+			{
+				fail("The markup for the automatically created page should not be null.");
+			}
+			pageMarkup = Markup.of(markup);
 		}
 
 		// Create a page object and assign the markup
-		Page page = new WebPage()
+		Page page = createPage();
+		if (page == null)
 		{
-			private static final long serialVersionUID = 1L;
-		};
+			fail("The automatically created page should not be null.");
+		}
 
 		page.setMarkup(pageMarkup);
 
@@ -1112,7 +1144,36 @@ public class BaseWicketTester
 		startPage(page);
 
 		// Remember the "root" component processes and return it
-		return startComponent = component;
+		startComponent = component;
+
+		return component;
+	}
+
+	/**
+	 * Creates the markup that will be used for the automatically created {@link Page} that will be
+	 * used to test a component with {@link #startComponentInPage(Class, IMarkupFragment)}
+	 * 
+	 * @param componentId
+	 *            the id of the component to be tested
+	 * @return the markup for the {@link Page} as {@link String}. Cannot be {@code null}.
+	 */
+	protected String createPageMarkup(final String componentId)
+	{
+		return "<span wicket:id='" + componentId + "'></span>";
+	}
+
+	/**
+	 * Creates a {@link Page} to test a component with
+	 * {@link #startComponentInPage(Component, IMarkupFragment)}
+	 * 
+	 * @return a {@link Page} which will contain the component under test as a single child
+	 */
+	protected Page createPage()
+	{
+		return new WebPage()
+		{
+			private static final long serialVersionUID = 1L;
+		};
 	}
 
 	/**
