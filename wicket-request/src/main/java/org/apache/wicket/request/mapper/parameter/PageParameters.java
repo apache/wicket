@@ -463,57 +463,40 @@ public class PageParameters implements Serializable, IIndexedParameters, INamedP
 		return this;
 	}
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
-	public boolean equals(final Object obj)
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((indexedParameters == null) ? 0 : indexedParameters.hashCode());
+		result = prime * result + ((namedParameters == null) ? 0 : namedParameters.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
 	{
 		if (this == obj)
-		{
 			return true;
-		}
-
-		if ((obj instanceof PageParameters) == false)
-		{
+		if (obj == null)
 			return false;
-		}
-
-		PageParameters rhs = (PageParameters)obj;
-		if (!Objects.equal(indexedParameters, rhs.indexedParameters))
-		{
+		if (getClass() != obj.getClass())
 			return false;
-		}
-
-		if ((namedParameters == null) || (rhs.namedParameters == null))
+		PageParameters other = (PageParameters)obj;
+		if (indexedParameters == null)
 		{
-			return rhs.namedParameters == namedParameters;
-		}
-
-		if (namedParameters.size() != rhs.namedParameters.size())
-		{
-			return false;
-		}
-
-		for (String key : getNamedKeys())
-		{
-			List<StringValue> values1 = getValues(key);
-			Set<String> v1 = new TreeSet<String>();
-			List<StringValue> values2 = rhs.getValues(key);
-			Set<String> v2 = new TreeSet<String>();
-			for (StringValue sv : values1)
-			{
-				v1.add(sv.toString());
-			}
-			for (StringValue sv : values2)
-			{
-				v2.add(sv.toString());
-			}
-			if (v1.equals(v2) == false)
-			{
+			if (other.indexedParameters != null)
 				return false;
-			}
 		}
+		else if (!indexedParameters.equals(other.indexedParameters))
+			return false;
+		if (namedParameters == null)
+		{
+			if (other.namedParameters != null)
+				return false;
+		}
+		else if (!namedParameters.equals(other.namedParameters))
+			return false;
 		return true;
 	}
 
