@@ -1152,11 +1152,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			processingForm = this;
 		}
 		
-		// invoke submit on top-level form
+		// always invoke onSubmit for top-level form
 		processingForm.onSubmit();
 		
-		// process active child forms
-		Visits.visitChildren(processingForm, new IVisitor<Form<?>, Void>()
+		// invoke onSubmit on active child forms
+		processingForm.visitChildren(Form.class, new IVisitor<Form<?>, Void>()
 		{
 			public void component(Form<?> form, IVisit<Void> visit)
 			{
@@ -1165,7 +1165,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 					form.onSubmit();
 				}
 			}
-		}, new ClassVisitFilter(Form.class));
+		});
 	}
 
 	/**
