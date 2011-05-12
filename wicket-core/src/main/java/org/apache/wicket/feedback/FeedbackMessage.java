@@ -66,7 +66,7 @@ public class FeedbackMessage implements IDetachable
 		levelStrings.put(UNDEFINED, "UNDEFINED");
 		levelStrings.put(DEBUG, "DEBUG");
 		levelStrings.put(INFO, "INFO");
-		levelStrings.put(SUCCESS, "INFO");
+		levelStrings.put(SUCCESS, "SUCCESS");
 		levelStrings.put(WARNING, "WARNING");
 		levelStrings.put(ERROR, "ERROR");
 		levelStrings.put(FATAL, "FATAL");

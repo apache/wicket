@@ -450,6 +450,17 @@ public abstract class Session implements IClusterable, IEventSink
 	}
 
 	/**
+	 * Registers an success feedback message for this session
+	 * 
+	 * @param message
+	 *            The feedback message
+	 */
+	public final void success(final Serializable message)
+	{
+		addFeedbackMessage(message, FeedbackMessage.SUCCESS);
+	}
+
+	/**
 	 * Invalidates this session at the end of the current request. If you need to invalidate the
 	 * session immediately, you can do this by calling invalidateNow(), however this will remove all
 	 * Wicket components from this session, which means that you will no longer be able to work with

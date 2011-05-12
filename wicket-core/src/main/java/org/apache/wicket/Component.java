@@ -2037,6 +2037,18 @@ public abstract class Component
 	}
 
 	/**
+	 * Registers an success feedback message for this component
+	 * 
+	 * @param message
+	 *            The feedback message
+	 */
+	public final void success(final Serializable message)
+	{
+		Session.get().getFeedbackMessages().success(this, message);
+		Session.get().dirty();
+	}
+
+	/**
 	 * Authorizes an action for a component.
 	 * 
 	 * @param action
