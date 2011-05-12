@@ -47,7 +47,7 @@ public class SimplePageTest extends WicketTestCase
 	{
 		tester.startComponentInPage(MyFormComponentPanel.class);
 		String doc = tester.getLastResponse().getDocument();
-		log.error(doc);
+		// log.error(doc);
 		assertTrue(doc.contains("<link rel=\"stylesheet\" type=\"text/css\" href=\"../some.css\" />"));
 	}
 }
