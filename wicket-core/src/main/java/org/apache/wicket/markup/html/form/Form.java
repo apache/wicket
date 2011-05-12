@@ -1131,23 +1131,37 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected void delegateSubmit(IFormSubmitter submittingComponent)
 	{
-		// when the given submitting component is not null, it means that it was the
-		// submitting component
+		final Form<?> processingForm;
+
+		// process submitting component (if specified)
 		if (submittingComponent != null)
 		{
-			// use the form which the submittingComponent has submitted for further processing
+			// use form of submitting component for processing
+			processingForm = submittingComponent.getForm();
+			
+			if(processingForm == null)
+			{
+				throw new IllegalStateException("submitting component must not return 'null' on getForm()");
+			}
+			
+			// invoke submit on component
 			submittingComponent.onSubmit();
 		}
-
-		// Model was successfully updated with valid data
-
-		Visits.visitPostOrder(this, new IVisitor<Form<?>, Void>()
+		else
+		{
+			processingForm = this;
+		}
+		
+		// invoke submit on top-level form
+		processingForm.onSubmit();
+		
+		// process active child forms
+		Visits.visitChildren(processingForm, new IVisitor<Form<?>, Void>()
 		{
 			public void component(Form<?> form, IVisit<Void> visit)
 			{
 				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 				{
-
 					form.onSubmit();
 				}
 			}
