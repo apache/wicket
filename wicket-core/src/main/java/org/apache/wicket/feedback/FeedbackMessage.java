@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IClusterable;
 import org.apache.wicket.model.IDetachable;
 
 
@@ -31,21 +30,9 @@ import org.apache.wicket.model.IDetachable;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class FeedbackMessage implements IClusterable, IDetachable
+public class FeedbackMessage implements IDetachable
 {
 	private static final long serialVersionUID = 1L;
-
-	/** Constant for debug level. */
-	public static final int DEBUG = 100;
-
-	/** Constant for error level. */
-	public static final int ERROR = 400;
-
-	/** Constant for fatal level. */
-	public static final int FATAL = 500;
-
-	/** Constant for info level. */
-	public static final int INFO = 200;
 
 	/**
 	 * Constant for an undefined level; note that components might decide not to render anything
@@ -53,8 +40,20 @@ public class FeedbackMessage implements IClusterable, IDetachable
 	 */
 	public static final int UNDEFINED = 0;
 
+	/** Constant for debug level. */
+	public static final int DEBUG = 100;
+
+	/** Constant for info level. */
+	public static final int INFO = 200;
+
 	/** Constant for warning level. */
 	public static final int WARNING = 300;
+
+	/** Constant for error level. */
+	public static final int ERROR = 400;
+
+	/** Constant for fatal level. */
+	public static final int FATAL = 500;
 
 	/** Levels as strings for debugging. */
 	private static final Map<Integer, String> levelStrings = new HashMap<Integer, String>();
@@ -178,6 +177,26 @@ public class FeedbackMessage implements IClusterable, IDetachable
 	}
 
 	/**
+	 * Gets whether the current level is INFO or up.
+	 * 
+	 * @return whether the current level is INFO or up.
+	 */
+	public final boolean isInfo()
+	{
+		return isLevel(INFO);
+	}
+
+	/**
+	 * Gets whether the current level is WARNING or up.
+	 * 
+	 * @return whether the current level is WARNING or up.
+	 */
+	public final boolean isWarning()
+	{
+		return isLevel(WARNING);
+	}
+
+	/**
 	 * Gets whether the current level is ERROR or up.
 	 * 
 	 * @return whether the current level is ERROR or up.
@@ -195,16 +214,6 @@ public class FeedbackMessage implements IClusterable, IDetachable
 	public final boolean isFatal()
 	{
 		return isLevel(FATAL);
-	}
-
-	/**
-	 * Gets whether the current level is INFO or up.
-	 * 
-	 * @return whether the current level is INFO or up.
-	 */
-	public final boolean isInfo()
-	{
-		return isLevel(INFO);
 	}
 
 	/**
@@ -230,16 +239,6 @@ public class FeedbackMessage implements IClusterable, IDetachable
 	}
 
 	/**
-	 * Gets whether the current level is WARNING or up.
-	 * 
-	 * @return whether the current level is WARNING or up.
-	 */
-	public final boolean isWarning()
-	{
-		return isLevel(WARNING);
-	}
-
-	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -247,7 +246,7 @@ public class FeedbackMessage implements IClusterable, IDetachable
 	{
 		return "[FeedbackMessage message = \"" + getMessage() + "\", reporter = " +
 			((getReporter() == null) ? "null" : getReporter().getId()) + ", level = " +
-			getLevelAsString() + "]";
+			getLevelAsString() + ']';
 	}
 
 	/** {@inheritDoc} */

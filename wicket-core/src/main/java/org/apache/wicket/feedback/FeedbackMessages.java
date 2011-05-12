@@ -60,6 +60,21 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	}
 
 	/**
+	 * Adds a message.
+	 * 
+	 * @param message
+	 *            the message
+	 */
+	public final void add(FeedbackMessage message)
+	{
+		if (log.isDebugEnabled())
+		{
+			log.debug("Adding feedback message " + message);
+		}
+		messages.add(message);
+	}
+	
+	/**
 	 * Adds a message
 	 * 
 	 * @param reporter
@@ -69,43 +84,6 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	public final void add(Component reporter, Serializable message, int level)
 	{
 		add(new FeedbackMessage(reporter, message, level));
-	}
-
-	/**
-	 * Clears any existing messages.
-	 * 
-	 * @return The number of messages deleted
-	 */
-	public final int clear()
-	{
-		return clear(null);
-	}
-
-	/**
-	 * Clears all messages that are accepted by the filter.
-	 * 
-	 * @param filter
-	 *            Filter for selecting messages. If null, all messages will be returned
-	 * @return The number of messages deleted
-	 */
-	public final int clear(final IFeedbackMessageFilter filter)
-	{
-		if (messages.size() == 0)
-		{
-			return 0;
-		}
-
-		List<FeedbackMessage> toDelete = messages(filter);
-
-
-		for (FeedbackMessage message : toDelete)
-		{
-			message.detach();
-		}
-
-		messages.removeAll(toDelete);
-
-		return toDelete.size();
 	}
 
 	/**
@@ -119,6 +97,32 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	public final void debug(Component reporter, Serializable message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.DEBUG));
+	}
+
+	/**
+	 * Adds a new ui message with level INFO to the current messages.
+	 * 
+	 * @param reporter
+	 *            The reporting component
+	 * @param message
+	 *            The actual message
+	 */
+	public final void info(Component reporter, Serializable message)
+	{
+		add(new FeedbackMessage(reporter, message, FeedbackMessage.INFO));
+	}
+
+	/**
+	 * Adds a new ui message with level WARNING to the current messages.
+	 * 
+	 * @param reporter
+	 *            the reporting component
+	 * @param message
+	 *            the actual message
+	 */
+	public final void warn(Component reporter, Serializable message)
+	{
+		add(new FeedbackMessage(reporter, message, FeedbackMessage.WARNING));
 	}
 
 	/**
@@ -148,16 +152,40 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	}
 
 	/**
-	 * Convenience method that looks up whether the given component registered a message with this
-	 * list with the level ERROR.
+	 * Clears any existing messages.
 	 * 
-	 * @param component
-	 *            the component to look up whether it registered a message
-	 * @return whether the given component registered a message with this list with level ERROR
+	 * @return The number of messages deleted
 	 */
-	public final boolean hasErrorMessageFor(Component component)
+	public final int clear()
 	{
-		return hasMessageFor(component, FeedbackMessage.ERROR);
+		return clear(null);
+	}
+
+	/**
+	 * Clears all messages that are accepted by the filter.
+	 * 
+	 * @param filter
+	 *            Filter for selecting messages. If null, all messages will be returned
+	 * @return The number of messages deleted
+	 */
+	public final int clear(final IFeedbackMessageFilter filter)
+	{
+		if (messages.isEmpty())
+		{
+			return 0;
+		}
+
+		List<FeedbackMessage> toDelete = messages(filter);
+
+
+		for (FeedbackMessage message : toDelete)
+		{
+			message.detach();
+		}
+
+		messages.removeAll(toDelete);
+
+		return toDelete.size();
 	}
 
 	/**
@@ -167,7 +195,7 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 */
 	public final boolean hasMessage(final IFeedbackMessageFilter filter)
 	{
-		return messages(filter).size() != 0;
+		return messages(filter).isEmpty() == false;
 	}
 
 	/**
@@ -205,26 +233,16 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	}
 
 	/**
-	 * Adds a new ui message with level INFO to the current messages.
+	 * Convenience method that looks up whether the given component registered a message with this
+	 * list with the level ERROR.
 	 * 
-	 * @param reporter
-	 *            The reporting component
-	 * @param message
-	 *            The actual message
+	 * @param component
+	 *            the component to look up whether it registered a message
+	 * @return whether the given component registered a message with this list with level ERROR
 	 */
-	public final void info(Component reporter, Serializable message)
+	public final boolean hasErrorMessageFor(Component component)
 	{
-		add(new FeedbackMessage(reporter, message, FeedbackMessage.INFO));
-	}
-
-	/**
-	 * Gets whether there are no messages.
-	 * 
-	 * @return True when there are no messages
-	 */
-	public final boolean isEmpty()
-	{
-		return messages.isEmpty();
+		return hasMessageFor(component, FeedbackMessage.ERROR);
 	}
 
 	/**
@@ -235,6 +253,31 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	public final Iterator<FeedbackMessage> iterator()
 	{
 		return messages.iterator();
+	}
+
+	/**
+	 * Gets a list of messages from the page using a filter.
+	 * 
+	 * @param filter
+	 *            Filter for selecting messages. If null, all messages will be returned
+	 * @return The messages or an empty list if no messages are found
+	 */
+	public final List<FeedbackMessage> messages(final IFeedbackMessageFilter filter)
+	{
+		if (messages.isEmpty())
+		{
+			return Collections.emptyList();
+		}
+
+		final List<FeedbackMessage> list = new ArrayList<FeedbackMessage>();
+		for (final FeedbackMessage message : messages)
+		{
+			if (filter == null || filter.accept(message))
+			{
+				list.add(message);
+			}
+		}
+		return list;
 	}
 
 	/**
@@ -260,28 +303,13 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	}
 
 	/**
-	 * Gets a list of messages from the page using a filter.
+	 * Gets whether there are no messages.
 	 * 
-	 * @param filter
-	 *            Filter for selecting messages. If null, all messages will be returned
-	 * @return The messages or an empty list if no messages are found
+	 * @return True when there are no messages
 	 */
-	public final List<FeedbackMessage> messages(final IFeedbackMessageFilter filter)
+	public final boolean isEmpty()
 	{
-		if (messages.size() == 0)
-		{
-			return Collections.emptyList();
-		}
-
-		final List<FeedbackMessage> list = new ArrayList<FeedbackMessage>();
-		for (final FeedbackMessage message : messages)
-		{
-			if (filter == null || filter.accept(message))
-			{
-				list.add(message);
-			}
-		}
-		return list;
+		return messages.isEmpty();
 	}
 
 	/**
@@ -321,34 +349,6 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	@Override
 	public String toString()
 	{
-		return "[feedbackMessages = " + StringList.valueOf(messages) + "]";
-	}
-
-	/**
-	 * Adds a new ui message with level WARNING to the current messages.
-	 * 
-	 * @param reporter
-	 *            the reporting component
-	 * @param message
-	 *            the actual message
-	 */
-	public final void warn(Component reporter, Serializable message)
-	{
-		add(new FeedbackMessage(reporter, message, FeedbackMessage.WARNING));
-	}
-
-	/**
-	 * Adds a message.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	public final void add(FeedbackMessage message)
-	{
-		if (log.isDebugEnabled())
-		{
-			log.debug("Adding feedback message " + message);
-		}
-		messages.add(message);
+		return "[feedbackMessages = " + StringList.valueOf(messages) + ']';
 	}
 }
