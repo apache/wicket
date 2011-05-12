@@ -113,6 +113,19 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	}
 
 	/**
+	 * Adds a new ui message with level SUCCESS to the current messages.
+	 * 
+	 * @param reporter
+	 *            The reporting component
+	 * @param message
+	 *            The actual message
+	 */
+	public final void success(Component reporter, Serializable message)
+	{
+		add(new FeedbackMessage(reporter, message, FeedbackMessage.SUCCESS));
+	}
+
+	/**
 	 * Adds a new ui message with level WARNING to the current messages.
 	 * 
 	 * @param reporter

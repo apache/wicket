@@ -46,6 +46,9 @@ public class FeedbackMessage implements IDetachable
 	/** Constant for info level. */
 	public static final int INFO = 200;
 
+	/** Constant for success level (it indicates the outcome of an operation) */
+	public static final int SUCCESS = 250;
+
 	/** Constant for warning level. */
 	public static final int WARNING = 300;
 
@@ -60,12 +63,13 @@ public class FeedbackMessage implements IDetachable
 
 	static
 	{
-		levelStrings.put(0, "UNDEFINED");
-		levelStrings.put(100, "DEBUG");
-		levelStrings.put(200, "INFO");
-		levelStrings.put(300, "WARNING");
-		levelStrings.put(400, "ERROR");
-		levelStrings.put(500, "FATAL");
+		levelStrings.put(UNDEFINED, "UNDEFINED");
+		levelStrings.put(DEBUG, "DEBUG");
+		levelStrings.put(INFO, "INFO");
+		levelStrings.put(SUCCESS, "INFO");
+		levelStrings.put(WARNING, "WARNING");
+		levelStrings.put(ERROR, "ERROR");
+		levelStrings.put(FATAL, "FATAL");
 	}
 
 	/**
@@ -184,6 +188,16 @@ public class FeedbackMessage implements IDetachable
 	public final boolean isInfo()
 	{
 		return isLevel(INFO);
+	}
+
+	/**
+	 * Gets whether the current level is SUCCESS or up.
+	 * 
+	 * @return whether the current level is SUCCESS or up.
+	 */
+	public final boolean isSuccess()
+	{
+		return isLevel(SUCCESS);
 	}
 
 	/**
