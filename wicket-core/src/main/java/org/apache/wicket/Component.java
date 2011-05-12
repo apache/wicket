@@ -2512,6 +2512,7 @@ public abstract class Component
 			if (behavior instanceof IAjaxRegionMarkupIdProvider)
 			{
 				markupId = ((IAjaxRegionMarkupIdProvider)behavior).getAjaxRegionMarkupId(this);
+				break;
 			}
 		}
 		if (markupId == null)
