@@ -38,4 +38,16 @@ public class SimplePageTest extends WicketTestCase
 		// log.error(doc);
 		assertEquals("<wicket:panel>test</wicket:panel>", doc);
 	}
+
+	/**
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3670">WICKET-3670</a>
+	 * @throws Exception
+	 */
+	public void testRenderHomePageWithHeaderContribution() throws Exception
+	{
+		tester.startComponentInPage(MyFormComponentPanel.class);
+		String doc = tester.getLastResponse().getDocument();
+		log.error(doc);
+		assertTrue(doc.contains("<link rel=\"stylesheet\" type=\"text/css\" href=\"../some.css\" />"));
+	}
 }

@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form.formComponentPanel;
 
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
 
 /**
@@ -41,5 +42,13 @@ public class MyFormComponentPanel extends FormComponentPanel<Void>
 	public IMarkupFragment getAssociatedMarkup()
 	{
 		return Markup.of("<wicket:panel>test</wicket:panel>");
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+
+		response.renderCSSReference("some.css");
 	}
 }
