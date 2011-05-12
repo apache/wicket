@@ -25,6 +25,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.StringList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -208,7 +209,14 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 */
 	public final boolean hasMessage(final IFeedbackMessageFilter filter)
 	{
-		return messages(filter).isEmpty() == false;
+		for (final FeedbackMessage message : messages)
+		{
+			if (filter == null || filter.accept(message))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -220,7 +228,7 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 */
 	public final boolean hasMessageFor(Component component)
 	{
-		return messagesForComponent(component).isEmpty() == false;
+		return hasMessage(new ComponentFeedbackMessageFilter(component));
 	}
 
 	/**
@@ -233,16 +241,15 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 *            The level of the message
 	 * @return Whether the given component registered a message with this list with the given level
 	 */
-	public final boolean hasMessageFor(Component component, int level)
+	public final boolean hasMessageFor(final Component component, final int level)
 	{
-		for (FeedbackMessage message : messages)
+		return hasMessage(new IFeedbackMessageFilter()
 		{
-			if (message.getReporter() == component && message.isLevel(level))
+			public boolean accept(FeedbackMessage message)
 			{
-				return true;
+				return Objects.equal(message.getReporter(), component) && message.isLevel(level);
 			}
-		}
-		return false;
+		});
 	}
 
 	/**
