@@ -130,6 +130,7 @@ import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
@@ -291,6 +292,8 @@ public class BaseWicketTester
 		// initialize the application
 		application.initApplication();
 
+		application.getResourceSettings().setResourcePollFrequency(getResourcePollFrequency());
+
 		// reconfigure application for the test environment
 		application.setPageRendererProvider(new LastPageRecordingPageRendererProvider(
 			application.getPageRendererProvider()));
@@ -301,6 +304,16 @@ public class BaseWicketTester
 
 		// prepare session
 		setupNextRequestCycle();
+	}
+
+	/**
+	 * By default Modification Watcher is disabled by default for the tests.
+	 * 
+	 * @return the duration between two checks for changes in the resources
+	 */
+	protected Duration getResourcePollFrequency()
+	{
+		return null;
 	}
 
 	/**
