@@ -198,8 +198,8 @@ import org.slf4j.LoggerFactory;
  * {@link Component#info(Serializable)}, {@link Component#warn(Serializable)},
  * {@link Component#error(java.io.Serializable)} and {@link Component#fatal(Serializable)} methods
  * associate feedback messages with a Component. It is generally not necessary to use these methods
- * directly since Wicket validators automatically register feedback messages on Components. Any
- * feedback message for a given Component can be retrieved with {@link Component#getFeedbackMessage}.
+ * directly since Wicket validators automatically register feedback messages on Components. 
+ * Feedback message for a given Component can be retrieved with {@link Component#getFeedbackMessages}.
  * 
  * <li><b>Versioning </b>- Pages are the unit of versioning in Wicket, but fine-grained control of
  * which Components should participate in versioning is possible via the
@@ -1400,6 +1400,14 @@ public abstract class Component
 	public final FeedbackMessage getFeedbackMessage()
 	{
 		return Session.get().getFeedbackMessages().messageForComponent(this);
+	}
+
+	/**
+	 * @return All feedback messages for this component
+	 */
+	public final List<FeedbackMessage> getFeedbackMessages()
+	{
+		return Session.get().getFeedbackMessages().messagesForComponent(this);
 	}
 
 	/**

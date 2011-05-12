@@ -294,7 +294,7 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	}
 
 	/**
-	 * Looks up a message for the given component.
+	 * Looks up a single message for the given component.
 	 * 
 	 * @param component
 	 *            the component to look up the message for
@@ -305,14 +305,9 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 */
 	public final FeedbackMessage messageForComponent(final Component component)
 	{
-		for (FeedbackMessage message : messages)
-		{
-			if (message.getReporter() == component)
-			{
-				return message;
-			}
-		}
-		return null;
+		final List<FeedbackMessage> list = messagesForComponent(component);
+
+		return list.isEmpty() ? null : list.get(0);
 	}
 
 	/**
