@@ -220,7 +220,7 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 */
 	public final boolean hasMessageFor(Component component)
 	{
-		return messageForComponent(component) != null;
+		return messagesForComponent(component).isEmpty() == false;
 	}
 
 	/**
@@ -296,12 +296,12 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	/**
 	 * Looks up a message for the given component.
 	 * 
-	 * TODO: 1.5 This should be deprecated and return a Collection.
-	 * 
 	 * @param component
 	 *            the component to look up the message for
 	 * @return the message that is found for the given component (first match) or null if none was
 	 *         found
+	 *         
+	 * @deprecated use {@link FeedbackMessages#messagesForComponent(org.apache.wicket.Component)} instead
 	 */
 	public final FeedbackMessage messageForComponent(final Component component)
 	{
@@ -313,6 +313,18 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Looks up the messages for the given component.
+	 * 
+	 * @param component
+	 *            the component to look up the message for
+	 * @return the messages that were found for the given component
+	 */
+	public final List<FeedbackMessage> messagesForComponent(final Component component)
+	{
+		return messages(new ComponentFeedbackMessageFilter(component)); 
 	}
 
 	/**
