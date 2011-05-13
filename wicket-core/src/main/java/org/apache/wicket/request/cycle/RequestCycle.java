@@ -528,7 +528,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		}
 		catch (RuntimeException e)
 		{
-			log.error("Exception occurred during onAfterRequest", e);
+			log.error("Exception occurred during onEndRequest", e);
 		}
 
 		try
