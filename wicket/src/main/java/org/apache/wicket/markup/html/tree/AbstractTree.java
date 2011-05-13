@@ -935,6 +935,10 @@ public abstract class AbstractTree extends Panel
 				{
 					cursor = ((TreeNode)cursor).getParent();
 				}
+				else
+				{
+					cursor = null;
+				}
 			}
 		}
 
