@@ -139,4 +139,13 @@ public class UrlRendererTest extends TestCase
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("a")));
 		assertEquals(".", r1.renderUrl(Url.parse("")));
 	}
+
+	/**
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-3567">WICKET-3567</a>
+	 */
+	public void test12()
+	{
+		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("?0")));
+		assertEquals(".", r1.renderUrl(Url.parse("")));
+	}
 }

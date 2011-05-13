@@ -119,7 +119,7 @@ public class UrlRenderer
 		render.append(protocol);
 		render.append("://");
 		render.append(host);
-		
+
 		if ((port != null) && !port.equals(PROTO_TO_PORT.get(protocol)))
 		{
 			render.append(':');
@@ -233,7 +233,8 @@ public class UrlRenderer
 			}
 			newSegments.addAll(urlSegments);
 
-			return new Url(newSegments, url.getQueryParameters()).toString();
+			String renderedUrl = new Url(newSegments, url.getQueryParameters()).toString();
+			return Strings.isEmpty(renderedUrl) ? "." : renderedUrl;
 		}
 	}
 
