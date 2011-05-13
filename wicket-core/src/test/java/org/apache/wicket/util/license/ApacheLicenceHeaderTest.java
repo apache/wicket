@@ -36,6 +36,7 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		 * See NOTICE.txt
 		 */
 		htmlIgnore.add("src/main/java/org/apache/wicket/util/diff");
+		htmlIgnore.add("src/main/java/org/apache/wicket/markup/html/pages");
 
 		/*
 		 * See NOTICE.txt
