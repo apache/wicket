@@ -91,7 +91,7 @@ public class PanelMarkupSourcingStrategy extends AssociatedMarkupSourcingStrateg
 
 		// Find the markup for the child component
 		markup = panelMarkup.find(child.getId());
-		if ((child == null) || (markup != null))
+		if (markup != null)
 		{
 			return markup;
 		}
