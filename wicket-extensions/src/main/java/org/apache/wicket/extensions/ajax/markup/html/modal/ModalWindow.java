@@ -28,6 +28,7 @@ import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
+import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.JavascriptPackageResource;
@@ -261,7 +262,7 @@ public class ModalWindow extends Panel
 		add(empty = new WebMarkupContainer(getContentId()));
 
 		add(newCloseButtonBehavior());
-		add(new WindowClosedBehavior());
+		add(newWindowClosedBehavior());
 
 		add(JavascriptPackageResource.getHeaderContribution(JAVASCRIPT));
 		ResourceReference CSS = newCssResource();
@@ -950,40 +951,62 @@ public class ModalWindow extends Panel
 	}
 
 	/**
+	 * @author Russell Morrisey
+	 */
+	protected interface IWindowClosedBehavior extends IBehavior
+	{
+		CharSequence getCallbackScript();
+	}
+
+	/**
+	 * Handles the work that the window closed behavior is expected to perform; may be called by
+	 * alternate implementors of IWindowClosedBehavior.
+	 * 
+	 * @param target
+	 *            The current AjaxRequestTarget
+	 */
+	protected final void respondOnWindowClosed(AjaxRequestTarget target)
+	{
+		shown = false;
+
+		// should we cleanup the pagemap?
+		if (deletePageMap == true)
+		{
+			// get the pagemap
+			Session session = Session.get();
+			IPageMap pageMap = session.pageMapForName(getPageMapName(), false);
+
+			// if there is any remove it
+			if (pageMap != null)
+			{
+				session.removePageMap(pageMap);
+				deletePageMap = false;
+			}
+		}
+
+		if (windowClosedCallback != null)
+		{
+			windowClosedCallback.onClose(target);
+		}
+	}
+
+	/**
 	 * @author Matej Knopp
 	 */
 	private class WindowClosedBehavior extends AbstractDefaultAjaxBehavior
+		implements
+			IWindowClosedBehavior
 	{
 		private static final long serialVersionUID = 1L;
 
 		@Override
 		protected void respond(AjaxRequestTarget target)
 		{
-			shown = false;
-
-			// should we cleanup the pagemap?
-			if (deletePageMap == true)
-			{
-				// get the pagemap
-				Session session = Session.get();
-				IPageMap pageMap = session.pageMapForName(getPageMapName(), false);
-
-				// if there is any remove it
-				if (pageMap != null)
-				{
-					session.removePageMap(pageMap);
-					deletePageMap = false;
-				}
-			}
-
-			if (windowClosedCallback != null)
-			{
-				windowClosedCallback.onClose(target);
-			}
+			respondOnWindowClosed(target);
 		}
 
 		@Override
-		protected CharSequence getCallbackScript()
+		public CharSequence getCallbackScript()
 		{
 			return super.getCallbackScript();
 		}
@@ -1147,7 +1170,7 @@ public class ModalWindow extends Panel
 		// notification request
 		if ((isCustomComponent() == false && deletePageMap) || windowClosedCallback != null)
 		{
-			WindowClosedBehavior behavior = getBehaviors(WindowClosedBehavior.class).get(0);
+			IWindowClosedBehavior behavior = getBehaviors(IWindowClosedBehavior.class).get(0);
 			buffer.append("settings.onClose = function() { ");
 			buffer.append(behavior.getCallbackScript());
 			buffer.append(" };\n");
@@ -1248,5 +1271,15 @@ public class ModalWindow extends Panel
 	protected CloseButtonBehavior newCloseButtonBehavior()
 	{
 		return new CloseButtonBehavior();
+	}
+
+	/**
+	 * Gives the possibility to provide custom {@link IAjaxCallDecorator}
+	 * 
+	 * @return the behavior that should be used for the window close event
+	 */
+	protected IWindowClosedBehavior newWindowClosedBehavior()
+	{
+		return new WindowClosedBehavior();
 	}
 }
