@@ -42,9 +42,9 @@ enum UserAgent {
 	KONQUEROR(Arrays.asList("Konqueror"));
 
 	/**
-	 * Comma separated list with values which are not allowed in the user agent.
+	 * The values which are not allowed in the user agent.
 	 */
-	private final String notAllowed;
+	private final String[] notAllowedList;
 
 	/**
 	 * A list with strings which has to be in the user agent string.
@@ -61,7 +61,7 @@ enum UserAgent {
 	 */
 	UserAgent(String notAllowed, List<String>... detectionStrings)
 	{
-		this.notAllowed = notAllowed;
+		notAllowedList = Strings.split(notAllowed, ',');
 		this.detectionStrings = detectionStrings;
 	}
 
@@ -83,9 +83,8 @@ enum UserAgent {
 	 */
 	public boolean matches(String userAgent)
 	{
-		if (Strings.isEmpty(notAllowed) == false)
+		if (notAllowedList != null)
 		{
-			String[] notAllowedList = Strings.split(notAllowed, ',');
 			for (String value : notAllowedList)
 			{
 				if (userAgent.contains(value))
