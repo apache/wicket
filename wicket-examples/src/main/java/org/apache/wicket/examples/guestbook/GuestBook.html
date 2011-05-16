@@ -1,4 +1,4 @@
-<html xmlns:wicket="http://wicket.apache.org/">
+<html xmlns:wicket="http://wicket.apache.org">
 <head>
 	<title>Wicket Examples - guestbook</title>
 	<link rel="stylesheet" type="text/css" href="style.css"/>
@@ -10,14 +10,15 @@
     Add your comment here:
     <p>
     <textarea wicket:id = "text">This is a comment</textarea>
+    </p>
     <input type="text" wicket:id="comment" class="nospam" onfocus="getElementById('formsubmit').focus();"/>
-    <p>
+    <br />
     <input type = "submit" value = "Submit" id="formsubmit"/>
   </form>
   <p/>
   <span wicket:id = "comments" id="comments">
     <p>
-	    <span wicket:id="date">1/1/2004</span><br>
+	    <span wicket:id="date">1/1/2004</span><br />
 	    <span wicket:id="text">Comment text goes here.</span>
 	</p>
   </span>

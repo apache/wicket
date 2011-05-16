@@ -1,4 +1,4 @@
-<wicket:extend>
+<wicket:extend xmlns:wicket="http://wicket.apache.org">
   <span wicket:id = "feedback"/>
   <p>
   <form wicket:id = "editBookForm">        
@@ -35,7 +35,7 @@
 	  <tr>
 	    <td align="right" valign="top">Styles:</td>
 	    <td>
-			<select multiple wicket:id = "writingStyles">
+			<select multiple="multiple" wicket:id = "writingStyles">
 			<option>Foo</option>
 			<option>Bar</option>
 			</select>
@@ -45,9 +45,9 @@
 	    <td align="right" valign="top">Related book:</td>
 	    <td valign="top">
 	    	<span valign="top" wicket:id = "relatedBook">
-	    		<input type="radio">A
-				<input type="radio">B
-				<input type="radio">C
+	    		<input type="radio" value="A" />A
+				<input type="radio" value="B" />B
+				<input type="radio" value="C" />C
 			</span>
 	    </td>
 	  </tr>
@@ -56,7 +56,7 @@
 	    </td>
 	    <td>
 	      <p>
-	      <br>
+	      <br />
           <input type="submit" value="Save Changes"/>
           </p>
         </td>

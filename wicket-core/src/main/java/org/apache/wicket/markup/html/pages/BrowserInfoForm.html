@@ -16,15 +16,15 @@
    limitations under the License.
 -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html xmlns:wicket="http://wicket.apache.org">
 	<wicket:head>
-		<script language="JavaScript">
+		<script type="text/javascript">
 		function submitform() {
 		  document.postback.navigatorAppName.value = window.navigator.appName;
 		  document.postback.navigatorAppVersion.value = window.navigator.appVersion;
 		  document.postback.navigatorAppCodeName.value = window.navigator.appCodeName;
 		  var cookieEnabled = (window.navigator.cookieEnabled)? true : false;
-		  if (typeof window.navigator.cookieEnabled == "undefined" && !cookieEnabled) { 
+		  if (typeof window.navigator.cookieEnabled == "undefined" &amp;&amp; !cookieEnabled) { 
 		    document.cookie = "wickettestcookie";
 		    cookieEnabled = (document.cookie.indexOf("wickettestcookie")!=-1)? true : false;
 		  }

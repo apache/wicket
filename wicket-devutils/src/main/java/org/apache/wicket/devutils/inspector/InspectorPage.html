@@ -15,7 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<html xmlns:wicket>
+<html xmlns:wicket="http://wicket.apache.org">
 <head>
 <style type="text/css">
 body {margin-left : 2em;font-family: 'Lucida Sans', 'Helvetica', 'Sans-serif', 'sans';font-size: 9pt;line-height: 1.8em;}
@@ -32,13 +32,13 @@ pre { border : 1px solid #ddd; margin-left : 2em; }
 <body>
   <wicket:extend>
   <p>
-  <h1><img valign="center" border=0 wicket:id="bug" src="bug.png"/> Wicket Inspector (Wicket Version: <span wicket:id="wicketVersion">1.2</span>)</h1>
+  <h1><img valign="center" border="0" wicket:id="bug" src="bug.png"/> Wicket Inspector (Wicket Version: <span wicket:id="wicketVersion">1.2</span>)</h1>
 	<a href="javascript:history.go(-1)">Go Back</a><br/>
 	<a wicket:id="allsessions" href="#">All Sessions</a>
   <span wicket:id="application">Application view here</span>
   <span wicket:id="session">Session view here</span>
   <span wicket:id="page">Page view here</span>
-  <p/>
+  </p>
   <br/>
   </wicket:extend>
 </body>

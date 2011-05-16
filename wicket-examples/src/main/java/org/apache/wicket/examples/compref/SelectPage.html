@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml" >
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <head>
     <title>Wicket Examples - component reference</title>
     <link rel="stylesheet" type="text/css" href="style.css"/>
@@ -35,7 +35,7 @@
 		 <tr>
 		  <td valign="top">Select some of these excellent choices</td>
 		  <td>
-		    <select wicket:id="choices" multiple size="5">
+		    <select wicket:id="choices" multiple="multiple" size="5">
 				<!-- the only trick here is that the wicket id of the option tag is fixed to "option" -->
 		        <span wicket:id="manychoices"><option wicket:id="option"></option></span>
 		    </select>

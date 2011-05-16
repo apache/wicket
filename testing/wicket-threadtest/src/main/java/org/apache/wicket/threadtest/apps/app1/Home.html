@@ -15,7 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<html>
+<html xmlns:wicket="http://wicket.apache.org">
 <body>
 <a href="#" wicket:id="link">go</a>
 <span style="display: block; border: 1px solid black;"> Selected
@@ -93,10 +93,11 @@ Contact: <span wicket:id="selectedLabel">[selected contact]</span> </span>
   <tr>
     <td colspan="2"><input wicket:id="saveButton" type="submit"
       value="Save" /> <a wicket:id="resetButtonLink"
-      src="">reset</a></td>
+      href="">reset</a></td>
   </tr>
 </table>
 </fieldset>
+</p>
 </form>
 
 <div id="feedbackPanel"><span wicket:id="feedback" /></div>
