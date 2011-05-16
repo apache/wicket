@@ -16,8 +16,10 @@
  */
 package org.apache.wicket.markup.html.link;
 
+import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.junit.Assert;
 
 /**
  * @author jcompagner
@@ -73,5 +75,22 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 
 		tester.startPage(BookmarkableContinueToPage.class);
 		assertEquals(tester.getLastRenderedPage().getClass(), BookmarkableThrowsInterceptPage.class);
+	}
+
+	/**
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3721">WICKET-3721</a>
+	 */
+	public void bug_testCustomParametersWithSpecialCharacters()
+	{
+		BookmarkablePageLink<MockPageWithLink> link = new BookmarkablePageLink<MockPageWithLink>(
+			"link", MockPageWithLink.class);
+		link.getPageParameters().set("urlEscapeNeeded", "someone's ^b%a&d pa\"rameter");
+
+		tester.startComponentInPage(link, null);
+		String response = tester.getLastResponse().getDocument();
+		Assert.assertEquals(
+			"<html><body><span wicket:id=\"link\" onclick=\"var win = this.ownerDocument.defaultView || this.ownerDocument.parentWindow; if (win == window) { window.location.href=&#039;bookmarkable/org.apache.wicket.MockPageWithLink?urlEscapeNeeded=someone%27s+%5Eb%25a%26d+pa%22rameter&#039;; } ;return false\"></span></body></html>",
+			response);
+
 	}
 }
