@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form.upload;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.model.Model;
 
 /**
@@ -30,7 +31,7 @@ public class MockPageWithFormAndUploadField extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	private final Form<?> form;
-	private final FileUploadField fileUploadField;
+	protected final FileUploadField fileUploadField;
 	private FileUpload fileUpload;
 
 	/**
@@ -38,7 +39,7 @@ public class MockPageWithFormAndUploadField extends WebPage
 	 */
 	public MockPageWithFormAndUploadField()
 	{
-		form = new Form("form")
+		form = new StatelessForm<Void>("form")
 		{
 			/**
 			 * 
@@ -48,12 +49,24 @@ public class MockPageWithFormAndUploadField extends WebPage
 			@Override
 			protected void onSubmit()
 			{
-				fileUpload = fileUploadField.getFileUpload();
+				try
+				{
+					handleFormSubmit();
+				}
+				catch (Exception e)
+				{
+					throw new RuntimeException(e);
+				}
 			}
 		};
 		fileUploadField = new FileUploadField("upload", new Model<FileUpload>());
 		form.add(fileUploadField);
 		add(form);
+	}
+
+	protected void handleFormSubmit() throws Exception
+	{
+		fileUpload = fileUploadField.getFileUpload();
 	}
 
 	/**

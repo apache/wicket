@@ -22,17 +22,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashSet;
-import java.util.Set;
 
-import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.tester.FormTester;
-import org.apache.wicket.util.tester.ITestPageSource;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
+import org.apache.wicket.validation.ValidationError;
 
 
 /**
@@ -42,6 +38,7 @@ import org.apache.wicket.validation.IValidator;
  */
 public class FileUploadFieldTest extends WicketTestCase
 {
+	private static final String TEST_FILE_NAME = FileUploadFieldTest.class.getName();
 
 	/**
 	 * Construct.
@@ -53,20 +50,13 @@ public class FileUploadFieldTest extends WicketTestCase
 
 	/**
 	 * Test that detach closes the streams
+	 * 
+	 * @throws IOException
+	 *             '
 	 */
-	public void testInternalDetach() throws Exception
+	public void testInternalDetach() throws IOException
 	{
-		final MockPageWithFormAndUploadField page = new MockPageWithFormAndUploadField();
-
-		tester.startPage(new ITestPageSource()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public Page getTestPage()
-			{
-				return page;
-			}
-		});
+		tester.startPage(MockPageWithFormAndUploadField.class);
 
 		File tmp = null;
 		try
@@ -87,6 +77,7 @@ public class FileUploadFieldTest extends WicketTestCase
 			formtester.submit();
 
 			// Get the file upload
+			MockPageWithFormAndUploadField page = (MockPageWithFormAndUploadField)tester.getLastRenderedPage();
 			FileUpload fileUpload = page.getFileUpload();
 
 			assertNotNull(fileUpload);
@@ -123,55 +114,78 @@ public class FileUploadFieldTest extends WicketTestCase
 		}
 	}
 
+	/**
+	 * @throws IOException
+	 */
 	public void testFileUploadCanBeValidated() throws IOException
 	{
-		final Set<IValidatable> validatedComponents = new HashSet<IValidatable>();
-
-		final File tmpFile = writeTestFile(1);
+		tester.startPage(TestValidationPage.class);
+		// creating the file expected by form validators
+		File tmpFile = writeTestFile(1);
 		tmpFile.deleteOnExit();
-
-		final IValidator testValidator = new IValidator()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public void validate(IValidatable validatable)
-			{
-				validatedComponents.add(validatable);
-				assertEquals(FileUpload.class, validatable.getValue().getClass());
-				FileUpload upload = (FileUpload)validatable.getValue();
-				assertEquals(tmpFile.getName(), upload.getClientFileName());
-				assertEquals(new String(read(tmpFile)), new String(upload.getBytes()));
-			}
-		};
-		final MockPageWithFormAndUploadField page = new MockPageWithFormAndUploadField();
-		page.getForm().visitChildren(FileUploadField.class, new IVisitor<FileUploadField>()
-		{
-			public Object component(FileUploadField uploadField)
-			{
-				uploadField.add(testValidator);
-				return STOP_TRAVERSAL;
-			}
-		});
-
-		tester.startPage(new ITestPageSource()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public Page getTestPage()
-			{
-				return page;
-			}
-		});
-
 		FormTester formtester = tester.newFormTester("form");
 		formtester.setFile("upload", tmpFile, "text/plain");
 		formtester.submit();
-		assertEquals(validatedComponents.size(), 1);
+		TestValidationPage page = (TestValidationPage)tester.getLastRenderedPage();
+		assertFalse(page.getForm().hasError());
 	}
 
-	private File writeTestFile(int numberOfowsToCreate) throws IOException
+	/** */
+	public static class TestValidationPage extends MockPageWithFormAndUploadField
 	{
-		File tmp = new File(java.io.File.createTempFile(getClass().getName(), ".txt"));
+		/** */
+		public TestValidationPage()
+		{
+			fileUploadField.add(new TestValidator());
+		}
+	}
+	private static class TestValidator implements IValidator<FileUpload>
+	{
+		/** */
+		private static final long serialVersionUID = 1L;
+
+		public void validate(IValidatable<FileUpload> validatable)
+		{
+			if (!FileUpload.class.equals(validatable.getValue().getClass()))
+			{
+				validatable.error(new ValidationError().addMessageKey("validatable value type not expected"));
+			}
+			FileUpload upload = validatable.getValue();
+			if (!upload.getClientFileName().contains(TEST_FILE_NAME))
+			{
+				validatable.error(new ValidationError().addMessageKey("uploaded file name not expected"));
+			}
+			File tmpFile = null;
+			try
+			{
+				tmpFile = writeTestFile(1);
+				if (!new String(read(tmpFile)).equals(new String(upload.getBytes())))
+				{
+					validatable.error(new ValidationError().addMessageKey("uploaded content not expected"));
+				}
+			}
+			catch (IOException e)
+			{
+				throw new RuntimeException(e);
+			}
+			finally
+			{
+				if (tmpFile != null && tmpFile.exists())
+				{
+					tmpFile.delete();
+				}
+			}
+		}
+	}
+
+	/**
+	 * @param numberOfowsToCreate
+	 * @return test file
+	 * @throws IOException
+	 */
+	public static File writeTestFile(int numberOfowsToCreate) throws IOException
+	{
+		File tmp = new File(java.io.File.createTempFile(TEST_FILE_NAME, ".txt"));
 		OutputStream os = new BufferedOutputStream(new FileOutputStream(tmp));
 		for (int i = 0; i < numberOfowsToCreate; i++)
 		{
@@ -181,7 +195,7 @@ public class FileUploadFieldTest extends WicketTestCase
 		return tmp;
 	}
 
-	private byte[] read(File file)
+	private static byte[] read(File file)
 	{
 		try
 		{
@@ -193,7 +207,7 @@ public class FileUploadFieldTest extends WicketTestCase
 		}
 	}
 
-	private byte[] readFile(File file) throws IOException
+	private static byte[] readFile(File file) throws IOException
 	{
 		InputStream stream = null;
 		byte[] bytes = new byte[0];

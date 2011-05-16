@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.file.Files;
@@ -268,8 +269,10 @@ public class FileUpload implements IClusterable
 	 */
 	public final File writeToTempFile() throws IOException
 	{
-		File temp = File.createTempFile(Session.get().getId(),
-			Files.cleanupFilename(item.getFieldName()));
+		Session.get();
+		String sessionId = Session.exists() ? Session.get().getId() : "";
+		String tempFileName = sessionId + "_" + RequestCycle.get().getStartTime();
+		File temp = File.createTempFile(tempFileName, Files.cleanupFilename(item.getFieldName()));
 		writeTo(temp);
 		return temp;
 	}
