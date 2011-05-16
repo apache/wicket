@@ -30,5 +30,6 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 	public ApacheLicenceHeaderTest()
 	{
 		// addHeaders = true;
+		htmlIgnore.add("src/main/java/org/apache/wicket/authroles/authentication/pages");
 	}
 }
