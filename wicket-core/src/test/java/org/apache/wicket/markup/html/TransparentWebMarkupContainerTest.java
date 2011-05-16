@@ -17,13 +17,16 @@
 package org.apache.wicket.markup.html;
 
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.border.Border;
+import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * @author Pedro Santos
@@ -81,6 +84,28 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 			.getLocalizer()
 			.getString("null", null);
 		assertTrue(tester.getLastResponseAsString().contains(expected));
+	}
+
+	/**
+	 * Test case for <a href="https://issues.apache.org/jira/browse/WICKET-3719">WICKET-3719</a>
+	 */
+	public void bug_testAjaxUpdate()
+	{
+		WicketTester wicketTester = new WicketTester()
+		{
+			@Override
+			public Page getLastRenderedPage()
+			{
+				// emulate serialization of the page so the components
+				// loose their "private transient Markup markup" and Component.getMarkup() use
+				// the respective MarkupSourcingStrategy
+				Page lastRenderedPage = super.getLastRenderedPage();
+				return (Page)WicketObjects.cloneObject(lastRenderedPage);
+			}
+		};
+
+		wicketTester.startPage(TransparentWithAjaxUpdatePage.class);
+		wicketTester.clickLink("link", true);
 	}
 
 	/** */
