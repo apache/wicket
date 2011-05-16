@@ -88,15 +88,12 @@ public abstract class EnumeratedType extends StringValue
 	{
 		EnumeratedType result = this;
 		List<EnumeratedType> values = getValues(getClass());
-		if (values != null)
+		for (EnumeratedType value : values)
 		{
-			for (EnumeratedType value : values)
+			if ((value.toString() != null) && value.toString().equals(this.toString()))
 			{
-				if ((value.toString() != null) && value.toString().equals(this.toString()))
-				{
-					result = value;
-					break;
-				}
+				result = value;
+				break;
 			}
 		}
 		return result;
