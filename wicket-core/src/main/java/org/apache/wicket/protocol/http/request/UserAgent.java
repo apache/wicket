@@ -96,15 +96,19 @@ enum UserAgent {
 
 		for (List<String> detectionGroup : detectionStrings)
 		{
+			boolean groupPassed = true;
 			for (String detectionString : detectionGroup)
 			{
 				if (!userAgent.contains(detectionString))
 				{
-					return false;
+					groupPassed = false;
+					break;
 				}
 			}
-
-			return true;
+			if (groupPassed)
+			{
+				return true;
+			}
 		}
 
 		return false;
