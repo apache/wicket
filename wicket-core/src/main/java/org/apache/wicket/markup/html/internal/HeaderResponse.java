@@ -139,7 +139,8 @@ public abstract class HeaderResponse implements IHeaderResponse
 		}
 		if (!closed)
 		{
-			List<String> token = Arrays.asList("css", url, media);
+			String urlWoSessionId = Strings.stripJSessionId(url);
+			List<String> token = Arrays.asList("css", urlWoSessionId, media);
 			if (wasRendered(token) == false)
 			{
 				if (Strings.isEmpty(condition) == false)
@@ -149,7 +150,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 					getResponse().write("]>");
 				}
 				getResponse().write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
-				getResponse().write(url);
+				getResponse().write(urlWoSessionId);
 				getResponse().write("\"");
 				if (media != null)
 				{
@@ -228,7 +229,9 @@ public abstract class HeaderResponse implements IHeaderResponse
 		}
 		if (!closed)
 		{
-			List<String> token1 = Arrays.asList("javascript", url);
+			String urlWoSessionId = Strings.stripJSessionId(url);
+
+			List<String> token1 = Arrays.asList("javascript", urlWoSessionId);
 			List<String> token2 = (id != null) ? Arrays.asList("javascript", id) : null;
 
 			final boolean token1Unused = wasRendered(token1) == false;
@@ -236,7 +239,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 
 			if (token1Unused && token2Unused)
 			{
-				JavaScriptUtils.writeJavaScriptUrl(getResponse(), url, id, defer);
+				JavaScriptUtils.writeJavaScriptUrl(getResponse(), urlWoSessionId, id, defer);
 				markRendered(token1);
 				if (token2 != null)
 				{
