@@ -26,6 +26,7 @@ import org.apache.wicket.css.ICssCompressor;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.PackageResourceGuard;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.resource.caching.FilenameWithTimestampResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
@@ -99,7 +100,7 @@ public class ResourceSettings implements IResourceSettings
 	private boolean useDefaultOnMissingResource = true;
 
 	/** Default cache duration */
-	private Duration defaultCacheDuration = Duration.hours(1);
+	private Duration defaultCacheDuration = WebResponse.MAX_CACHE_DURATION;
 
 	/** The JavaScript compressor */
 	private IJavaScriptCompressor javascriptCompressor;
