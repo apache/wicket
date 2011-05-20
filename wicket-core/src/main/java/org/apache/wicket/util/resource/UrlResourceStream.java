@@ -236,7 +236,14 @@ public class UrlResourceStream extends AbstractResourceStream
 	@Override
 	public Bytes length()
 	{
-		return Bytes.bytes(getData(true).contentLength);
+		long length = getData(true).contentLength;
+
+		if (length == -1)
+		{
+			return null;
+		}
+
+		return Bytes.bytes(length);
 	}
 
 	public String locationAsString()
