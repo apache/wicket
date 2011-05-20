@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.io;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.JarURLConnection;
@@ -44,6 +45,16 @@ public class Connections
 	 */
 	public static Time getLastModified(final URL url) throws IOException
 	{
+		// check if url points to a local file
+		final File file = IOUtils.getLocalFileFromUrl(url);
+		
+		if(file != null)
+		{
+			// in that case we can get the timestamp faster
+			return IOUtils.getLastModified(file);
+		}
+
+		// otherwise open the url and proceed
 		URLConnection connection = url.openConnection();
 
 		final long milliseconds;

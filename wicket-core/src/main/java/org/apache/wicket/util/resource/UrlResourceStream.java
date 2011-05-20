@@ -59,8 +59,9 @@ public class UrlResourceStream extends AbstractResourceStream
 	/** The URL to this resource. */
 	private final URL url;
 
-	/** the handle to the file if it is a file resource */
-	private File file;
+	/** the handle to the file if it is a file resource 
+	 * (only for checking last modified timestamp) */
+	private File fileForLastModified;
 
 	/**
 	 * Meta data class for the stream attributes
@@ -91,21 +92,27 @@ public class UrlResourceStream extends AbstractResourceStream
 		// save the url
 		this.url = url;
 
-		try
-		{
-			file = new File(new URI(url.toExternalForm()));
+		// try to retrieve local file from url
+		this.fileForLastModified = IOUtils.getLocalFileFromUrl(url);
 
-			if (file != null && !file.exists())
+		// try to retrieve file location otherwise
+		if (this.fileForLastModified == null)
+		{
+
+			try
 			{
-				file = null;
+				fileForLastModified = new File(new URI(url.toExternalForm()));
+			}
+			catch (Exception e)
+			{
+				log.debug("cannot convert url: " + url + " to file (" + e.getMessage() +
+				          "), falling back to the inputstream for polling");
 			}
 		}
-		catch (Exception e)
+		if (fileForLastModified != null && !fileForLastModified.exists())
 		{
-			log.debug("cannot convert url: " + url + " to file (" + e.getMessage() +
-				"), falling back to the inputstream for polling");
+			fileForLastModified = null;
 		}
-
 	}
 
 	/**
@@ -222,10 +229,10 @@ public class UrlResourceStream extends AbstractResourceStream
 
 			final Time lastModified;
 
-			if (file != null)
+			if (fileForLastModified != null)
 			{
 				// get file modification timestamp
-				lastModified = IOUtils.getLastModified(file);
+				lastModified = IOUtils.getLastModified(fileForLastModified);
 			}
 			else
 			{
