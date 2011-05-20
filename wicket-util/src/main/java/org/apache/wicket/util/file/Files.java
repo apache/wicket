@@ -29,7 +29,7 @@ import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
-
+import org.apache.wicket.util.time.Time;
 
 /**
  * File utility methods.
@@ -301,5 +301,27 @@ public class Files
 		{
 			return null;
 		}
+	}
+
+	/**
+	 * get last modification timestamp for file
+	 * 
+	 * @param file
+	 * 
+	 * @return timestamp
+	 */
+	public static Time getLastModified(File file)
+	{
+		// get file modification timestamp
+		long millis = file.lastModified();
+
+		// zero indicates the timestamp could not be retrieved or the file does not exist
+		if (millis == 0)
+		{
+			return null;
+		}
+
+		// last file modification timestamp
+		return Time.millis(millis);
 	}
 }

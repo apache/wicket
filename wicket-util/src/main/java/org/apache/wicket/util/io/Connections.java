@@ -52,7 +52,7 @@ public class Connections
 		if(file != null)
 		{
 			// in that case we can get the timestamp faster
-			return IOUtils.getLastModified(file);
+			return Files.getLastModified(file);
 		}
 
 		// otherwise open the url and proceed

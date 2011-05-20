@@ -27,7 +27,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.io.Connections;
-import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.time.Time;
@@ -229,7 +228,7 @@ public class UrlResourceStream extends AbstractResourceStream
 			if (fileForLastModified != null)
 			{
 				// get file modification timestamp
-				lastModified = IOUtils.getLastModified(fileForLastModified);
+				lastModified = Files.getLastModified(fileForLastModified);
 			}
 			else
 			{

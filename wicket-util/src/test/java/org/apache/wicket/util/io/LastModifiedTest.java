@@ -18,10 +18,7 @@ package org.apache.wicket.util.io;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.rmi.ConnectIOException;
 
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.time.Time;
@@ -36,7 +33,7 @@ public class LastModifiedTest extends Assert
 	public void getTimestampForMissingFile() throws IOException
 	{
 		File file = new File("/does/not/exists/4iorp4opergere.txt");
-		assertNull(IOUtils.getLastModified(file));
+		assertNull(Files.getLastModified(file));
 		assertNull(Connections.getLastModified(new URL("file:" + file.getAbsolutePath())));
 	}
 
@@ -67,7 +64,7 @@ public class LastModifiedTest extends Assert
 			if (lm != 0)
 			{
 				final Time expected = Time.millis(lm);
-				assertEquals(expected, IOUtils.getLastModified(file));
+				assertEquals(expected, Files.getLastModified(file));
 				assertEquals(expected, Connections.getLastModified(new URL("file:" + file.getAbsolutePath())));
 			}
 		}

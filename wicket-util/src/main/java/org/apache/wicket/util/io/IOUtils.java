@@ -20,7 +20,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.CharArrayWriter;
 import java.io.Closeable;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,10 +28,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.net.URL;
 
-import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -950,27 +946,5 @@ public final class IOUtils
 
 		int ch2 = input2.read();
 		return (ch2 == -1);
-	}
-
-	/**
-	 * get last modification timestamp for file
-	 * 
-	 * @param file
-	 * 
-	 * @return timestamp
-	 */
-	public static Time getLastModified(File file)
-	{
-		// get file modification timestamp
-		long millis = file.lastModified();
-
-		// zero indicates the timestamp could not be retrieved or the file does not exist
-		if (millis == 0)
-		{
-			return null;
-		}
-
-		// last file modification timestamp
-		return Time.millis(millis);
 	}
 }
