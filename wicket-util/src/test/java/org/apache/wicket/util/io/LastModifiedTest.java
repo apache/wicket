@@ -17,30 +17,56 @@
 package org.apache.wicket.util.io;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.wicket.util.file.Files;
+import org.apache.wicket.util.time.Time;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class IOUtilsTest extends Assert
+public class LastModifiedTest extends Assert
 {
 	private static final String FILE = "/some/folder/file.jar";
-	
+
 	@Test
 	public void getLocalFileFromUrl() throws MalformedURLException
 	{
 		URL url = new URL("file:" + FILE);
-		File file = IOUtils.getLocalFileFromUrl(url);
+		File file = Files.getLocalFileFromUrl(url);
 		assertEquals(file.getAbsolutePath(), FILE);
 
 		url = new URL("jar:file:" + FILE + "!/internal/resource/bla/foo/bar/baz");
-		file = IOUtils.getLocalFileFromUrl(url);
+		file = Files.getLocalFileFromUrl(url);
 		assertEquals(file.getAbsolutePath(), FILE);
 
 		url = new URL("http://bla.de");
-		file = IOUtils.getLocalFileFromUrl(url);
+		file = Files.getLocalFileFromUrl(url);
 		assertNull(file);
+	}
 
+	@Test
+	public void getLastModified() throws IOException
+	{
+		File file = File.createTempFile("wicket-io-utils-test", "lastmodified");
+		assertTrue(file.exists());
+
+		try
+		{
+			long lm = file.lastModified();
+
+			// it could be the case that the current system does not support last-modified at all
+			if (lm != 0)
+			{
+				final Time expected = Time.millis(lm);
+				assertEquals(expected, IOUtils.getLastModified(file));
+				assertEquals(expected, Connections.getLastModified(new URL("file:" + file.getAbsolutePath())));
+			}
+		}
+		finally
+		{
+			Files.remove(file);
+		}
 	}
 }

@@ -23,9 +23,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 
@@ -36,6 +38,11 @@ import org.apache.wicket.util.string.Strings;
  */
 public class Files
 {
+	// protocols for urls
+	private static final String URL_FILE_PREFIX = "file:";
+	private static final String URL_LOCAL_JAR_FILE_PREFIX = "jar:file:";
+
+
 	/**
 	 * Private constructor to prevent instantiation.
 	 */
@@ -240,6 +247,40 @@ public class Files
 			{
 				IOUtils.close(out);
 			}
+		}
+	}
+	
+	/**
+	 * for urls that point to local files (e.g. 'file:' or 'jar:file:') this
+	 * methods returns a reference to the local file
+	 * 
+	 * @return reference to a local file if url contains one, <code>null</code> otherwise
+	 */
+	public static File getLocalFileFromUrl(URL url)
+	{
+		final String location = Args.notNull(url.toExternalForm(), "url");
+
+		// check for 'file:'
+		if (location.startsWith(URL_FILE_PREFIX))
+		{
+			return new File(location.substring(URL_FILE_PREFIX.length()));
+		}
+		// check for 'jar:file:'
+		else if (location.startsWith(URL_LOCAL_JAR_FILE_PREFIX))
+		{
+			final String path = location.substring(URL_LOCAL_JAR_FILE_PREFIX.length());
+			final int resourceAt = path.indexOf('!');
+
+			// for jar:file: the '!' is mandatory
+			if (resourceAt == -1)
+			{
+				return null;
+			}
+			return new File(path.substring(0, resourceAt));
+		}
+		else
+		{
+			return null;
 		}
 	}
 }

@@ -23,6 +23,7 @@ import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.time.Time;
 
 /**
@@ -46,7 +47,7 @@ public class Connections
 	public static Time getLastModified(final URL url) throws IOException
 	{
 		// check if url points to a local file
-		final File file = IOUtils.getLocalFileFromUrl(url);
+		final File file = Files.getLocalFileFromUrl(url);
 		
 		if(file != null)
 		{

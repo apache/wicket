@@ -25,6 +25,7 @@ import java.net.URLConnection;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.io.Connections;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Bytes;
@@ -93,7 +94,7 @@ public class UrlResourceStream extends AbstractResourceStream
 		this.url = url;
 
 		// try to retrieve local file from url
-		this.fileForLastModified = IOUtils.getLocalFileFromUrl(url);
+		this.fileForLastModified = Files.getLocalFileFromUrl(url);
 
 		// try to retrieve file location otherwise
 		if (this.fileForLastModified == null)
