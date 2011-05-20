@@ -233,10 +233,12 @@ public interface IResourceSettings
 	/**
 	 * Sets the resource polling frequency. This is the duration of time between checks of resource
 	 * modification times. If a resource, such as an HTML file, has changed, it will be reloaded.
-	 * Default is for no resource polling to occur.
+	 * The default is one second in 'development' mode and 'never' in deployment mode.
 	 * 
 	 * @param resourcePollFrequency
-	 *            Frequency at which to poll resources
+	 *            Frequency at which to poll resources or 
+	 *            <code>null</code> if polling should be disabled
+	 *            
 	 * @see IResourceSettings#setResourceFinder(IResourceFinder)
 	 */
 	void setResourcePollFrequency(final Duration resourcePollFrequency);
