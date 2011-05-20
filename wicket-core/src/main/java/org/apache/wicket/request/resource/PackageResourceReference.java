@@ -95,15 +95,18 @@ public class PackageResourceReference extends ResourceReference
 
 		if (CSS_EXTENSION.equals(extension))
 		{
-			return new CssPackageResource(getScope(), getName(), getLocale(), getStyle(), getVariation());
+			return new CssPackageResource(getScope(), getName(), getLocale(), getStyle(),
+				getVariation());
 		}
 		else if (JAVASCRIPT_EXTENSION.equals(extension))
 		{
-			return new JavaScriptPackageResource(getScope(), getName(), getLocale(), getStyle(), getVariation());
+			return new JavaScriptPackageResource(getScope(), getName(), getLocale(), getStyle(),
+				getVariation());
 		}
 		else
 		{
-			return new PackageResource(getScope(), getName(), getLocale(), getStyle(), getVariation());
+			return new PackageResource(getScope(), getName(), getLocale(), getStyle(),
+				getVariation());
 		}
 	}
 
@@ -117,7 +120,7 @@ public class PackageResourceReference extends ResourceReference
 		if (stream == null)
 			return null;
 
-		return new StreamInfo(stream, locale, style, variation);
+		return new StreamInfo(stream);
 	}
 
 	private StreamInfo lookupStream(Locale locale, String style, String variation)
@@ -217,12 +220,12 @@ public class PackageResourceReference extends ResourceReference
 		public final String style;
 		public final String variation;
 
-		public StreamInfo(IResourceStream stream, Locale locale, String style, String variation)
+		public StreamInfo(IResourceStream stream)
 		{
 			this.stream = stream;
-			this.locale = locale;
-			this.style = style;
-			this.variation = variation;
+			locale = stream.getLocale();
+			style = stream.getStyle();
+			variation = stream.getVariation();
 		}
 	}
 }
