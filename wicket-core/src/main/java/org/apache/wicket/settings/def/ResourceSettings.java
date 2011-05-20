@@ -44,9 +44,9 @@ import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.locator.CachingResourceStreamLocator;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
+import org.apache.wicket.util.resource.locator.caching.CachingResourceStreamLocator;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.apache.wicket.util.watch.ModificationWatcher;
@@ -223,10 +223,7 @@ public class ResourceSettings implements IResourceSettings
 			// Create compound resource locator using source path from
 			// application settings
 			resourceStreamLocator = new ResourceStreamLocator(getResourceFinder());
-			if (Application.get().usesDeploymentConfig())
-			{
-				resourceStreamLocator = new CachingResourceStreamLocator(resourceStreamLocator);
-			}
+			resourceStreamLocator = new CachingResourceStreamLocator(resourceStreamLocator);
 		}
 		return resourceStreamLocator;
 	}

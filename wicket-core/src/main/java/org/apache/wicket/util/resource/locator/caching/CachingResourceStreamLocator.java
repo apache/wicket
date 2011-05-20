@@ -14,21 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.resource.locator;
+package org.apache.wicket.util.resource.locator.caching;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.resource.ResourceReference.Key;
-import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.UrlResourceStream;
+import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
+import org.apache.wicket.util.resource.locator.ResourceNameIterator;
 
 
 /**
@@ -45,74 +43,6 @@ import org.apache.wicket.util.resource.UrlResourceStream;
  */
 public class CachingResourceStreamLocator implements IResourceStreamLocator
 {
-	/**
-	 * Lightweight reference to the cached {@link IResourceStream}
-	 */
-	private static interface IResourceStreamReference
-	{
-		IResourceStream getReference();
-	}
-
-	/**
-	 * A singleton reference that is used for resource streams which do not exists. I.e. if there is
-	 * a key in the cache which value is NullResourceStreamReference.INSTANCE then there is no need
-	 * to lookup again for this key anymore.
-	 */
-	private static class NullResourceStreamReference implements IResourceStreamReference
-	{
-		private final static NullResourceStreamReference INSTANCE = new NullResourceStreamReference();
-
-		public IResourceStream getReference()
-		{
-			return null;
-		}
-	}
-
-	/**
-	 * A reference which can be used to recreate {@link FileResourceStream}
-	 */
-	private static class FileResourceStreamReference implements IResourceStreamReference
-	{
-		private final String fileName;
-
-		private FileResourceStreamReference(final String fileName)
-		{
-			this.fileName = fileName;
-		}
-
-		public FileResourceStream getReference()
-		{
-			return new FileResourceStream(new File(fileName));
-		}
-	}
-
-	/**
-	 * A reference which may be used to recreate {@link UrlResourceStream}
-	 */
-	private static class UrlResourceStreamReference implements IResourceStreamReference
-	{
-		private final String url;
-
-		private UrlResourceStreamReference(final String url)
-		{
-			this.url = url;
-		}
-
-		public UrlResourceStream getReference()
-		{
-			try
-			{
-				return new UrlResourceStream(new URL(url));
-			}
-			catch (MalformedURLException e)
-			{
-				// should not ever happen. The cached url is created by previously existing URL
-				// instance
-				throw new WicketRuntimeException(e);
-			}
-		}
-	}
-
 	private final ConcurrentMap<Key, IResourceStreamReference> cache;
 
 	private final IResourceStreamLocator delegate;
@@ -169,14 +99,12 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 		else if (stream instanceof FileResourceStream)
 		{
 			FileResourceStream fileResourceStream = (FileResourceStream)stream;
-			String absolutePath = fileResourceStream.getFile().getAbsolutePath();
-			cache.put(key, new FileResourceStreamReference(absolutePath));
+			cache.put(key, new FileResourceStreamReference(fileResourceStream));
 		}
 		else if (stream instanceof UrlResourceStream)
 		{
 			UrlResourceStream urlResourceStream = (UrlResourceStream)stream;
-			String url = urlResourceStream.getURL().toExternalForm();
-			cache.put(key, new UrlResourceStreamReference(url));
+			cache.put(key, new UrlResourceStreamReference(urlResourceStream));
 		}
 	}
 
