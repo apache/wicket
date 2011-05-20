@@ -49,6 +49,7 @@ import org.apache.wicket.request.handler.IPageProvider;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResource.PackageResourceBlockedException;
+import org.apache.wicket.resource.DummyPage;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.MockPageParameterPage.MockInnerClassPage;
 import org.apache.wicket.util.tester.MockPageWithFormAndAjaxFormSubmitBehavior.Pojo;
@@ -944,5 +945,19 @@ public class WicketTesterTest extends TestCase
 	{
 		tester.startResource(WicketAjaxReference.INSTANCE.getResource());
 		tester.assertContains("wicketAjaxGet()");
+	}
+
+	/**
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-3716">WICKET-3716</a>
+	 */
+	@Test
+	public void testAssertRenderedPageErrorMessage() throws Exception
+	{
+		tester.startPage(MockPageParametersAware.class);
+		tester.assertRenderedPage(MockPageParametersAware.class);
+		// assure false assertion
+		Result result = tester.isRenderedPage(DummyPage.class);
+		assertEquals(String.format("classes not the same, expected '%s', current '%s'",
+			DummyPage.class, MockPageParametersAware.class), result.getMessage());
 	}
 }

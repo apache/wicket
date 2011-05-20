@@ -1686,7 +1686,8 @@ public class BaseWicketTester
 		}
 		if (!page.getClass().isAssignableFrom(expectedRenderedPageClass))
 		{
-			return Result.fail("classes not the same");
+			return Result.fail(String.format("classes not the same, expected '%s', current '%s'",
+				expectedRenderedPageClass, page.getClass()));
 		}
 		return Result.pass();
 	}
