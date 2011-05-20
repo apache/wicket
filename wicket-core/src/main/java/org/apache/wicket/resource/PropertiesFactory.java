@@ -279,7 +279,7 @@ public class PropertiesFactory implements IPropertiesFactory
 					{
 						listener.propertiesChanged(path);
 					}
-					catch (Throwable ex)
+					catch (Exception ex)
 					{
 						PropertiesFactory.log.error("PropertiesReloadListener has thrown an exception: " +
 							ex.getMessage());
