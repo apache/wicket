@@ -253,12 +253,31 @@ public class Files
 	/**
 	 * for urls that point to local files (e.g. 'file:' or 'jar:file:') this
 	 * methods returns a reference to the local file
+	 *
+	 * @param url url of the resource
 	 * 
 	 * @return reference to a local file if url contains one, <code>null</code> otherwise
+	 * 
+	 * @see #getLocalFileFromUrl(String) 
 	 */
 	public static File getLocalFileFromUrl(URL url)
 	{
-		final String location = Args.notNull(url.toExternalForm(), "url");
+		return getLocalFileFromUrl(Args.notNull(url, "url").toExternalForm());
+	}
+
+	/**
+	 * for urls that point to local files (e.g. 'file:' or 'jar:file:') this
+	 * methods returns a reference to the local file
+	 *
+	 * @param url url of the resource
+	 * 
+	 * @return reference to a local file if url contains one, <code>null</code> otherwise
+	 * 
+	 * @see #getLocalFileFromUrl(URL) 
+	 */
+	public static File getLocalFileFromUrl(String url)
+	{
+		final String location = Args.notNull(url, "url");
 
 		// check for 'file:'
 		if (location.startsWith(URL_FILE_PREFIX))

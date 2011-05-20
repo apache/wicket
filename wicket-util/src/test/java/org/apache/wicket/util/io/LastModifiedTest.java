@@ -31,18 +31,15 @@ public class LastModifiedTest extends Assert
 	private static final String FILE = "/some/folder/file.jar";
 
 	@Test
-	public void getLocalFileFromUrl() throws MalformedURLException
+	public void getLocalFileFromUrl()
 	{
-		URL url = new URL("file:" + FILE);
-		File file = Files.getLocalFileFromUrl(url);
+		File file = Files.getLocalFileFromUrl("file:" + FILE);
 		assertEquals(file.getAbsolutePath(), FILE);
 
-		url = new URL("jar:file:" + FILE + "!/internal/resource/bla/foo/bar/baz");
-		file = Files.getLocalFileFromUrl(url);
+		file = Files.getLocalFileFromUrl("jar:file:" + FILE + "!/internal/resource/bla/foo/bar/baz");
 		assertEquals(file.getAbsolutePath(), FILE);
 
-		url = new URL("http://bla.de");
-		file = Files.getLocalFileFromUrl(url);
+		file = Files.getLocalFileFromUrl("http://bla.de");
 		assertNull(file);
 	}
 
