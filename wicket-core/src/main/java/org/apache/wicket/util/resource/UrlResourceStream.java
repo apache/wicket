@@ -16,17 +16,15 @@
  */
 package org.apache.wicket.util.resource;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.io.Connections;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.time.Time;
@@ -59,10 +57,9 @@ public class UrlResourceStream extends AbstractResourceStream
 	/** The URL to this resource. */
 	private final URL url;
 
-	/** the handle to the file if it is a file resource 
-	 * (only for checking last modified timestamp) */
-	private File fileForLastModified;
-
+	/** Last known time the stream was last modified. */
+	private Time lastModified;
+	
 	/**
 	 * Meta data class for the stream attributes
 	 */
@@ -76,9 +73,6 @@ public class UrlResourceStream extends AbstractResourceStream
 		/** Content type for stream. */
 		private String contentType;
 
-		/** Last known time the stream was last modified. */
-		private Time lastModified;
-
 	}
 
 	/**
@@ -90,25 +84,7 @@ public class UrlResourceStream extends AbstractResourceStream
 	public UrlResourceStream(final URL url)
 	{
 		// save the url
-		this.url = url;
-
-		// try to retrieve local file from url
-		this.fileForLastModified = Files.getLocalFileFromUrl(url);
-
-		// try to retrieve file location otherwise
-		if (this.fileForLastModified == null)
-		{
-
-			try
-			{
-				fileForLastModified = new File(new URI(url.toExternalForm()));
-			}
-			catch (Exception e)
-			{
-				log.debug("cannot convert url: " + url + " to file (" + e.getMessage() +
-				          "), falling back to the inputstream for polling");
-			}
-		}
+		this.url = Args.notNull(url, "url");
 	}
 
 	/**
@@ -178,30 +154,19 @@ public class UrlResourceStream extends AbstractResourceStream
 	}
 
 	/**
-	 * @return The content type of this resource, such as "image/jpeg" or "text/html"
-	 */
-	@Override
-	public String getContentType()
-	{
-		return getData(true).contentType;
-	}
-
-	/**
 	 * @return A readable input stream for this resource.
 	 * @throws ResourceStreamNotFoundException
 	 */
 	public InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
-		InputStream inputStream;
 		try
 		{
-			inputStream = getData(true).connection.getInputStream();
+			return getData(true).connection.getInputStream();
 		}
 		catch (IOException e)
 		{
 			throw new ResourceStreamNotFoundException("Resource " + url + " could not be opened", e);
 		}
-		return inputStream;
 	}
 
 	/**
@@ -221,54 +186,36 @@ public class UrlResourceStream extends AbstractResourceStream
 	{
 		try
 		{
-			StreamData data = getData(true);
-
-			final Time lastModified;
-
-			if (fileForLastModified != null)
-			{
-				// get file modification timestamp
-				lastModified = Files.getLastModified(fileForLastModified);
-			}
-			else
-			{
-				// get url modification timestamp
-				lastModified = Connections.getLastModified(url);
-			}
+			// get url modification timestamp
+			final Time time = Connections.getLastModified(url);
 
 			// if timestamp changed: update content length and last modified date
-			if (Objects.equal(lastModified, data.lastModified) == false)
+			if (Objects.equal(time, lastModified) == false)
 			{
-				data.lastModified = lastModified;
-				setContentLength();
+				lastModified = time;
+				this.updateContentLength();
 			}
-			return data.lastModified;
+			return lastModified;
 		}
 		catch (IOException e)
 		{
-			if (url.toString().contains(".jar!"))
-			{
-				if (log.isDebugEnabled())
-				{
-					log.debug("getLastModified for " + url + " failed: " + e.getMessage());
-				}
-			}
-			else
-			{
-				log.warn("getLastModified for " + url + " failed: " + e.getMessage());
-			}
+			log.warn("getLastModified for " + url + " failed: " + e.getMessage());
 
 			// allow modification watcher to detect the problem
 			return null;
 		}
 	}
 
-	private void setContentLength() throws IOException
+	private void updateContentLength() throws IOException
 	{
-		StreamData data = getData(true);
-		URLConnection connection = url.openConnection();
-		data.contentLength = connection.getContentLength();
-		Connections.close(connection);
+		StreamData data = getData(false);
+
+		if(data != null)
+		{
+			URLConnection connection = url.openConnection();
+			data.contentLength = connection.getContentLength();
+			Connections.close(connection);
+		}
 	}
 
 	@Override
@@ -277,11 +224,19 @@ public class UrlResourceStream extends AbstractResourceStream
 		return url.toString();
 	}
 
+	/**
+	 * @return The content type of this resource, such as "image/jpeg" or "text/html"
+	 */
+	@Override
+	public String getContentType()
+	{
+		return getData(true).contentType;
+	}
+
 	@Override
 	public Bytes length()
 	{
-		long contentLength = getData(true).contentLength;
-		return Bytes.bytes(contentLength);
+		return Bytes.bytes(getData(true).contentLength);
 	}
 
 	public String locationAsString()
