@@ -297,26 +297,26 @@ public abstract class Application implements UnboundListener, IEventSink
 		{
 			case DEVELOPMENT : {
 				getResourceSettings().setResourcePollFrequency(Duration.ONE_SECOND);
-				getDebugSettings().setComponentUseCheck(true);
+				getResourceSettings().setJavaScriptCompressor(null);
 				getMarkupSettings().setStripWicketTags(false);
 				getExceptionSettings().setUnexpectedExceptionDisplay(
 					IExceptionSettings.SHOW_EXCEPTION_PAGE);
+				getDebugSettings().setComponentUseCheck(true);
 				getDebugSettings().setAjaxDebugModeEnabled(true);
 				getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 				// getDebugSettings().setOutputMarkupContainerClassName(true);
-				getResourceSettings().setJavaScriptCompressor(null);
 				getRequestCycleSettings().addResponseFilter(EmptySrcAttributeCheckFilter.INSTANCE);
 				break;
 			}
 			case DEPLOYMENT : {
 				getResourceSettings().setResourcePollFrequency(null);
-				getDebugSettings().setComponentUseCheck(false);
+				getResourceSettings().setJavaScriptCompressor(new DefaultJavaScriptCompressor());
 				getMarkupSettings().setStripWicketTags(true);
 				getExceptionSettings().setUnexpectedExceptionDisplay(
 					IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
+				getDebugSettings().setComponentUseCheck(false);
 				getDebugSettings().setAjaxDebugModeEnabled(false);
 				getDebugSettings().setDevelopmentUtilitiesEnabled(false);
-				getResourceSettings().setJavaScriptCompressor(new DefaultJavaScriptCompressor());
 				break;
 			}
 		}
