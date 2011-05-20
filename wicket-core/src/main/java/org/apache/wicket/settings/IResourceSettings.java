@@ -109,8 +109,9 @@ public interface IResourceSettings
 	/**
 	 * Get the application's localizer.
 	 * 
-	 * @see IResourceSettings#addStringResourceLoader(org.apache.wicket.resource.loader.IStringResourceLoader)
-	 *      for means of extending the way Wicket resolves keys to localized messages.
+	 * to modify the way Wicket resolves keys to localized messages you can 
+	 * add custom resource loaders to the list returned by 
+	 * {@link org.apache.wicket.settings.IResourceSettings#getStringResourceLoaders()}.
 	 * 
 	 * @return The application wide localizer instance
 	 */
@@ -166,10 +167,7 @@ public interface IResourceSettings
 	IModificationWatcher getResourceWatcher(boolean start);
 
 	/**
-	 * @see #addStringResourceLoader(IStringResourceLoader)
-	 * @see #addStringResourceLoader(int, IStringResourceLoader)
-	 * 
-	 * @return list of all available string resource loaders
+	 * @return mutable list of all available string resource loaders
 	 */
 	List<IStringResourceLoader> getStringResourceLoaders();
 
@@ -284,8 +282,9 @@ public interface IResourceSettings
 	void setUseDefaultOnMissingResource(final boolean useDefaultOnMissingResource);
 
 	/**
-	 * Set the javascript compressor implemententation use e.g. by {@link JavaScriptPackageResource}
-	 * . A typical implementation will remove comments and whitespace. But a no-op implementation is
+	 * Set the javascript compressor implemententation use e.g. by 
+	 * {@link org.apache.wicket.request.resource.JavaScriptPackageResource JavaScriptPackageResource}. 
+	 * A typical implementation will remove comments and whitespace. But a no-op implementation is
 	 * available as well.
 	 * 
 	 * @param compressor
@@ -297,8 +296,10 @@ public interface IResourceSettings
 	/**
 	 * Get the javascript compressor to remove comments and whitespace characters from javascripts
 	 * 
-	 * @return whether the comments and whitespace characters will be stripped from resources served
-	 *         through {@link JavaScriptPackageResource}. Null is a valid value.
+	 * @return whether the comments and whitespace characters will be stripped from 
+	 *         resources served through 
+	 *         {@link org.apache.wicket.request.resource.JavaScriptPackageResource JavaScriptPackageResource}. 
+	 *         Null is a valid value.
 	 */
 	IJavaScriptCompressor getJavaScriptCompressor();
 
@@ -351,9 +352,10 @@ public interface IResourceSettings
 	void setCachingStrategy(IResourceCachingStrategy strategy);
 
 	/**
-	 * Set the Css compressor implemententation use e.g. by {@link CssPackageResource} . A typical
-	 * implementation will remove comments and whitespace. But a no-op implementation is available
-	 * as well.
+	 * Set the CSS compressor implemententation use e.g. by 
+	 * {@link org.apache.wicket.request.resource.CssPackageResource CssPackageResource}. 
+	 * A typical implementation will remove comments and whitespace. But a no-op implementation 
+	 * is available as well.
 	 * 
 	 * @param compressor
 	 *            The implementation to be used
@@ -362,10 +364,11 @@ public interface IResourceSettings
 	ICssCompressor setCssCompressor(ICssCompressor compressor);
 
 	/**
-	 * Get the Css compressor to remove comments and whitespace characters from css resources
+	 * Get the CSS compressor to remove comments and whitespace characters from css resources
 	 * 
 	 * @return whether the comments and whitespace characters will be stripped from resources served
-	 *         through {@link CssPackageResource}. Null is a valid value.
+	 *         through {@link org.apache.wicket.request.resource.CssPackageResource CssPackageResource}. 
+	 *         Null is a valid value.
 	 */
 	ICssCompressor getCssCompressor();
 }
