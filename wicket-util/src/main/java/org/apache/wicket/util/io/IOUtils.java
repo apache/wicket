@@ -1006,14 +1006,12 @@ public final class IOUtils
 			final String path = location.substring(URL_LOCAL_JAR_FILE_PREFIX.length());
 			final int resourceAt = path.indexOf('!');
 
-			if (resourceAt != -1)
+			// for jar:file: the '!' is mandatory
+			if (resourceAt == -1)
 			{
-				return new File(path.substring(0, resourceAt));
+				return null;
 			}
-			else
-			{
-				return new File(path);
-			}
+			return new File(path.substring(0, resourceAt));
 		}
 		else
 		{
