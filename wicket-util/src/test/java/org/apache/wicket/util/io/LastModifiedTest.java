@@ -18,7 +18,10 @@ package org.apache.wicket.util.io;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.rmi.ConnectIOException;
 
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.time.Time;
@@ -28,6 +31,14 @@ import org.junit.Test;
 public class LastModifiedTest extends Assert
 {
 	private static final String FILE = "/some/folder/file.jar";
+
+	@Test
+	public void getTimestampForMissingFile() throws IOException
+	{
+		File file = new File("/does/not/exists/4iorp4opergere.txt");
+		assertNull(IOUtils.getLastModified(file));
+		assertNull(Connections.getLastModified(new URL("file:" + file.getAbsolutePath())));
+	}
 
 	@Test
 	public void getLocalFileFromUrl()

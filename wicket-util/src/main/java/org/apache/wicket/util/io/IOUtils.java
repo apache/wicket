@@ -961,16 +961,10 @@ public final class IOUtils
 	 */
 	public static Time getLastModified(File file)
 	{
-		// in case the file has been removed by now
-		if (file.exists() == false)
-		{
-			return null;
-		}
-
 		// get file modification timestamp
 		long millis = file.lastModified();
 
-		// zero indicates the timestamp could not be retrieved
+		// zero indicates the timestamp could not be retrieved or the file does not exist
 		if (millis == 0)
 		{
 			return null;

@@ -110,10 +110,6 @@ public class UrlResourceStream extends AbstractResourceStream
 				          "), falling back to the inputstream for polling");
 			}
 		}
-		if (fileForLastModified != null && !fileForLastModified.exists())
-		{
-			fileForLastModified = null;
-		}
 	}
 
 	/**
