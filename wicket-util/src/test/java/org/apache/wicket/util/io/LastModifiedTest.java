@@ -18,7 +18,6 @@ package org.apache.wicket.util.io;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.wicket.util.file.Files;
