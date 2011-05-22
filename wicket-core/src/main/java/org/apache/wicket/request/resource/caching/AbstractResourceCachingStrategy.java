@@ -113,8 +113,8 @@ public abstract class AbstractResourceCachingStrategy implements IResourceCachin
 			// create it on first call
 			if (cache == null)
 			{
-				// use concurrent map for better performance. two puts are not really a problem
-				cache = Generics.newConcurrentHashMap();
+				// TODO can this have synchronization issues ?!
+				cache = Generics.newHashMap();
 				application.setMetaData(TIMESTAMP_KEY, cache);
 			}
 		}
