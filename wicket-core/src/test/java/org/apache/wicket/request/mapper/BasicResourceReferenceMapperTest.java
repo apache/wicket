@@ -30,6 +30,7 @@ import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.ValueProvider;
+import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.time.Time;
 import org.mockito.Mockito;
 
@@ -463,13 +464,14 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	@SuppressWarnings({ })
 	public void testLastModifiedTimestampCache()
 	{
 		long millis = 87654321L;
 		final ResourceReferenceWithTimestamp reference = new ResourceReferenceWithTimestamp(
 			Time.millis(millis));
 		final IRequestHandler handler = new ResourceReferenceRequestHandler(reference, null);
+
+		WicketTester tester = new WicketTester();
 
 		// setup mock request cycle
 		RequestCycle cycle = Mockito.mock(RequestCycle.class);

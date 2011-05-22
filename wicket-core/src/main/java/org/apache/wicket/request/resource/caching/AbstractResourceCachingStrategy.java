@@ -16,13 +16,14 @@
  */
 package org.apache.wicket.request.resource.caching;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.time.Time;
 
 /**
@@ -65,10 +66,14 @@ public abstract class AbstractResourceCachingStrategy implements IResourceCachin
 	}
 
 	/**
-	 * That method gets the last modification timestamp from the specified resource reference.
-	 * <p/>
-	 * The timestamp is cached in the meta data of the current request cycle to eliminate repeated
-	 * lookups of the same resource reference which will harm performance.
+	 * That method gets the last modification timestamp for the specified resource reference.
+	 * <p>
+	 * The timestamp is cached in the meta data of the application to eliminate repeated lookups of
+	 * the same resource reference which will harm performance.<br/>
+	 * In Development mode the cache is preserved in the current {@link RequestCycle}'s meta data so
+	 * the benefit is only if the same resource is used more than once in the same page. But after
+	 * eventual modification of the resource the new modification time will be used for the next
+	 * requests.
 	 * 
 	 * @param resourceReference
 	 *            resource reference
@@ -77,22 +82,41 @@ public abstract class AbstractResourceCachingStrategy implements IResourceCachin
 	 */
 	protected Time getLastModified(ResourceReference resourceReference)
 	{
-		// try to lookup current request cycle
-		RequestCycle requestCycle = ThreadContext.getRequestCycle();
-
-		// no request cycle: this should not happen unless we e.g.
-		// run a plain test case without WicketTester
-		if (requestCycle == null)
-			return resourceReference.getLastModified();
-
-		// retrieve cache from current request cycle
-		Map<ResourceReference, Time> cache = requestCycle.getMetaData(TIMESTAMP_KEY);
-
-		// create it on first call
-		if (cache == null)
+		Application application = ThreadContext.getApplication();
+		if (application == null)
 		{
-			cache = new HashMap<ResourceReference, Time>();
-			requestCycle.setMetaData(TIMESTAMP_KEY, cache);
+			// no application: test case without WicketTester
+			return resourceReference.getLastModified();
+		}
+
+		Map<ResourceReference, Time> cache;
+		if (application.usesDevelopmentConfig())
+		{
+			// try to lookup current request cycle
+			RequestCycle requestCycle = ThreadContext.getRequestCycle();
+
+			// retrieve cache from current request cycle
+			cache = requestCycle.getMetaData(TIMESTAMP_KEY);
+
+			// create it on first call
+			if (cache == null)
+			{
+				cache = Generics.newHashMap();
+				requestCycle.setMetaData(TIMESTAMP_KEY, cache);
+			}
+		}
+		else
+		{
+			// in deployment mode put the cache in the application's meta data
+			cache = application.getMetaData(TIMESTAMP_KEY);
+
+			// create it on first call
+			if (cache == null)
+			{
+				// use concurrent map for better performance. two puts are not really a problem
+				cache = Generics.newConcurrentHashMap();
+				application.setMetaData(TIMESTAMP_KEY, cache);
+			}
 		}
 
 		// lookup timestamp from cache (may contain NULL values which are valid)
