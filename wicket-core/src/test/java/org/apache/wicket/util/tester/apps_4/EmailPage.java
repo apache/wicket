@@ -37,7 +37,7 @@ public class EmailPage extends WebPage
 	 */
 	public EmailPage()
 	{
-		Form<Void> form = new Form<Void>("form");
+		Form<EmailPage> form = new Form<EmailPage>("form");
 		form.setDefaultModel(new CompoundPropertyModel<EmailPage>(this));
 		add(form);
 
