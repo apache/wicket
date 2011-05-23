@@ -29,13 +29,14 @@ import org.apache.wicket.util.lang.PropertyResolver;
  * Lightweight column that uses a property expression to get the value from the node.
  * 
  * @author Matej Knopp
+ * @param <T>
+ *            the type of the property that is rendered in this column
  */
-public class PropertyRenderableColumn extends AbstractRenderableColumn
+public class PropertyRenderableColumn<T> extends AbstractRenderableColumn
 {
 	private static final long serialVersionUID = 1L;
 
-	@SuppressWarnings("rawtypes")
-	private IConverter converter;
+	private IConverter<T> converter;
 
 	private Locale locale;
 
@@ -65,7 +66,7 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 	 * 
 	 * @return The converter or null
 	 */
-	public IConverter<?> getConverter()
+	public IConverter<T> getConverter()
 	{
 		return converter;
 	}
@@ -94,8 +95,9 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 			{
 				locale = Session.get().getLocale();
 			}
+
 			@SuppressWarnings("unchecked")
-			String string = converter.convertToString(result, locale);
+			String string = converter.convertToString((T)result, locale);
 			return string;
 		}
 		else
@@ -111,7 +113,7 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 	 * @param converter
 	 *            any converter
 	 */
-	public void setConverter(final IConverter<?> converter)
+	public void setConverter(final IConverter<T> converter)
 	{
 		this.converter = converter;
 	}

@@ -29,13 +29,14 @@ import org.apache.wicket.util.lang.PropertyResolver;
  * TreeColumn class that uses a property expression to get the value from the node.
  * 
  * @author Matej Knopp
+ * @param <T>
+ *            the type of the property that is rendered in this column
  */
-public class PropertyTreeColumn extends AbstractTreeColumn
+public class PropertyTreeColumn<T> extends AbstractTreeColumn
 {
 	private static final long serialVersionUID = 1L;
 
-	@SuppressWarnings("rawtypes")
-	private IConverter converter;
+	private IConverter<T> converter;
 
 	private Locale locale;
 
@@ -95,7 +96,7 @@ public class PropertyTreeColumn extends AbstractTreeColumn
 				locale = Session.get().getLocale();
 			}
 			@SuppressWarnings("unchecked")
-			String string = converter.convertToString(result, locale);
+			String string = converter.convertToString((T)result, locale);
 			return string;
 		}
 		else
@@ -111,7 +112,7 @@ public class PropertyTreeColumn extends AbstractTreeColumn
 	 * @param converter
 	 *            Any converter
 	 */
-	public void setConverter(final IConverter<?> converter)
+	public void setConverter(final IConverter<T> converter)
 	{
 		this.converter = converter;
 	}
