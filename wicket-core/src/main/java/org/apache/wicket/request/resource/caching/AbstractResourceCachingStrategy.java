@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.resource.caching;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.wicket.Application;
@@ -113,8 +115,8 @@ public abstract class AbstractResourceCachingStrategy implements IResourceCachin
 			// create it on first call
 			if (cache == null)
 			{
-				// TODO can this have synchronization issues ?!
-				cache = Generics.newHashMap();
+				// use Collections.synchronizedMap() because j.u.CHM doesn't support null values
+				cache = Collections.<ResourceReference, Time> synchronizedMap(new HashMap<ResourceReference, Time>());
 				application.setMetaData(TIMESTAMP_KEY, cache);
 			}
 		}
