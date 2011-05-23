@@ -32,9 +32,13 @@ import org.apache.wicket.model.PropertyModel;
  * row is selected.
  * 
  * @author Matej Knopp
+ * @param <T>
+ *            the type of the property that is rendered in this column
  */
-public class PropertyEditableColumn extends PropertyRenderableColumn
+public class PropertyEditableColumn<T> extends PropertyRenderableColumn<T>
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Column constructor.
 	 * 
@@ -53,7 +57,7 @@ public class PropertyEditableColumn extends PropertyRenderableColumn
 	@Override
 	public Component newCell(MarkupContainer parent, String id, TreeNode node, int level)
 	{
-		return new EditablePanel(id, new PropertyModel(node, getPropertyExpression()));
+		return new EditablePanel(id, new PropertyModel<T>(node, getPropertyExpression()));
 	}
 
 	/**

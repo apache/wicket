@@ -26,6 +26,8 @@ import java.io.Serializable;
  */
 public class ModelBean implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	private String property1;
 	private String property2;
 	private String property3;

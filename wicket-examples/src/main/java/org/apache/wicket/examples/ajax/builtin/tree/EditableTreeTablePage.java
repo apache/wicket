@@ -17,11 +17,11 @@
 package org.apache.wicket.examples.ajax.builtin.tree;
 
 import org.apache.wicket.extensions.markup.html.tree.table.ColumnLocation;
+import org.apache.wicket.extensions.markup.html.tree.table.ColumnLocation.Alignment;
+import org.apache.wicket.extensions.markup.html.tree.table.ColumnLocation.Unit;
 import org.apache.wicket.extensions.markup.html.tree.table.IColumn;
 import org.apache.wicket.extensions.markup.html.tree.table.PropertyTreeColumn;
 import org.apache.wicket.extensions.markup.html.tree.table.TreeTable;
-import org.apache.wicket.extensions.markup.html.tree.table.ColumnLocation.Alignment;
-import org.apache.wicket.extensions.markup.html.tree.table.ColumnLocation.Unit;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.tree.AbstractTree;
 
@@ -33,7 +33,9 @@ import org.apache.wicket.markup.html.tree.AbstractTree;
  */
 public class EditableTreeTablePage extends BaseTreePage
 {
-	private TreeTable tree;
+	private static final long serialVersionUID = 1L;
+
+	private final TreeTable tree;
 
 	/**
 	 * Page constructor.
@@ -41,22 +43,22 @@ public class EditableTreeTablePage extends BaseTreePage
 	public EditableTreeTablePage()
 	{
 		IColumn columns[] = new IColumn[] {
-				new PropertyTreeColumn(new ColumnLocation(Alignment.LEFT, 18, Unit.EM),
-						"Tree Column", "userObject.property1"),
-				new PropertyEditableColumn(new ColumnLocation(Alignment.LEFT, 12, Unit.EM), "L2",
-						"userObject.property2"),
-				new PropertyEditableColumn(new ColumnLocation(Alignment.MIDDLE, 2,
-						Unit.PROPORTIONAL), "M1", "userObject.property3"),
-				new PropertyEditableColumn(new ColumnLocation(Alignment.MIDDLE, 2,
-						Unit.PROPORTIONAL), "M2", "userObject.property4"),
-				new PropertyEditableColumn(new ColumnLocation(Alignment.MIDDLE, 3,
-						Unit.PROPORTIONAL), "M3", "userObject.property5"),
-				new PropertyEditableColumn(new ColumnLocation(Alignment.RIGHT, 8, Unit.EM), "R1",
-						"userObject.property6"),
+				new PropertyTreeColumn<String>(new ColumnLocation(Alignment.LEFT, 18, Unit.EM),
+					"Tree Column", "userObject.property1"),
+				new PropertyEditableColumn<String>(new ColumnLocation(Alignment.LEFT, 12, Unit.EM),
+					"L2", "userObject.property2"),
+				new PropertyEditableColumn<String>(new ColumnLocation(Alignment.MIDDLE, 2,
+					Unit.PROPORTIONAL), "M1", "userObject.property3"),
+				new PropertyEditableColumn<String>(new ColumnLocation(Alignment.MIDDLE, 2,
+					Unit.PROPORTIONAL), "M2", "userObject.property4"),
+				new PropertyEditableColumn<String>(new ColumnLocation(Alignment.MIDDLE, 3,
+					Unit.PROPORTIONAL), "M3", "userObject.property5"),
+				new PropertyEditableColumn<String>(new ColumnLocation(Alignment.RIGHT, 8, Unit.EM),
+					"R1", "userObject.property6"),
 
 		};
 
-		Form form = new Form("form");
+		Form<Void> form = new Form<Void>("form");
 		add(form);
 
 		tree = new TreeTable("treeTable", createTreeModel(), columns);
