@@ -25,6 +25,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.IAjaxLink;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -105,15 +106,8 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 * 
 	 * @author Matej Knopp
 	 */
-	protected interface ILinkCallback extends IClusterable
+	protected interface ILinkCallback extends IAjaxLink, IClusterable
 	{
-		/**
-		 * Called when the click is executed.
-		 * 
-		 * @param target
-		 *            The ajax request target
-		 */
-		void onClick(AjaxRequestTarget target);
 	}
 
 	/**

@@ -24,6 +24,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.IAjaxLink;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -397,15 +398,8 @@ public abstract class BaseTree extends AbstractTree
 	 * 
 	 * @author Matej Knopp
 	 */
-	public interface ILinkCallback extends IClusterable
+	public interface ILinkCallback extends IAjaxLink, IClusterable
 	{
-		/**
-		 * Called when the click is executed.
-		 * 
-		 * @param target
-		 *            The ajax request target
-		 */
-		void onClick(AjaxRequestTarget target);
 	}
 
 	/**
@@ -415,7 +409,8 @@ public abstract class BaseTree extends AbstractTree
 	 * @param id
 	 *            The component id
 	 * @param callback
-	 *            The link call back
+	 *            The link call back. {@code null} is passed for its onClick(AjaxRequestTarget) for
+	 *            {@link LinkType#REGULAR} and eventually for {@link LinkType#AJAX_FALLBACK}.
 	 * @return The link component
 	 */
 	public MarkupContainer newLink(String id, final ILinkCallback callback)
