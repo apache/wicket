@@ -108,8 +108,8 @@ import org.apache.wicket.util.lang.Args;
  * The component "someContainer" in the previous example must be added to the border, and not the
  * body, which is achieved via {@link #addToBorder(Component...)}.
  * <p/>
- * {@link #add(Component...)} or {@link #addToBorderBody(Component...)} will add a child component
- * to the border body as shown in the example below.
+ * {@link #add(Component...)} is an alias to {@link #addToBorderBody(Component...)} and will add a
+ * child component to the border body as shown in the example below.
  * 
  * <pre>
  *   &lt;html&gt;
@@ -125,6 +125,9 @@ import org.apache.wicket.util.lang.Args;
  * simple. But everything you can do with a MarkupContainer or Component, you can do with a Border
  * or its Body as well.
  * <p/>
+ * 
+ * Other methods like {@link #remove()}, {@link #get(int)}, {@link #iterator()}, etc. are not
+ * aliased to work on the border's body and attention must be paid when they need to be used.
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
