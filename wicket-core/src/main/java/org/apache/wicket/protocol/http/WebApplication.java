@@ -16,6 +16,13 @@
  */
 package org.apache.wicket.protocol.http;
 
+import java.io.UnsupportedEncodingException;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.IPageRendererProvider;
 import org.apache.wicket.Page;
@@ -61,13 +68,6 @@ import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.UnsupportedEncodingException;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 
 /**
@@ -681,8 +681,8 @@ public abstract class WebApplication extends Application
 	}
 
 	/*
-	 * Can contain at most 1000 responses and each entry can live at most one minute for now there
-	 * is no need to configure these parameters externally
+	 * Can contain at most 1000 responses and each entry can live at most one minute. For now there
+	 * is no need to configure these parameters externally.
 	 */
 	private final StoredResponsesMap storedResponses = new StoredResponsesMap(1000,
 		Duration.seconds(60));

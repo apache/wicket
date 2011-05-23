@@ -70,11 +70,14 @@ class StoredResponsesMap extends MostRecentlyUsedMap<String, Object>
 		if (removed == false)
 		{
 			Value value = (Value)eldest.getValue();
-			Duration elapsedTime = Time.now().subtract(value.creationTime);
-			if (lifetime.lessThanOrEqual(elapsedTime))
+			if (value != null)
 			{
-				removedValue = value.response;
-				removed = true;
+				Duration elapsedTime = Time.now().subtract(value.creationTime);
+				if (lifetime.lessThanOrEqual(elapsedTime))
+				{
+					removedValue = value.response;
+					removed = true;
+				}
 			}
 		}
 		return removed;

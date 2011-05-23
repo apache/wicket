@@ -20,10 +20,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.wicket.util.time.Duration;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 /**
  * @see <a href="https://issues.apache.org/jira/browse/WICKET-3209">WICKET-3209</a>
@@ -74,5 +80,63 @@ public class StoredResponsesMapTest
 	{
 		StoredResponsesMap map = new StoredResponsesMap(1000, Duration.days(1));
 		map.put("1", new Object());
+	}
+
+	/**
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-3736">WICKET-3736</a>
+	 * 
+	 * Tries to simulate heavy load on the {@link StoredResponsesMap} by putting many entries and
+	 * removing randomly them.
+	 * 
+	 * The test is disabled by default because it is slow (~ 30secs). Enable it when we have
+	 * categorized tests ({@link Category}) and run slow ones only at Apache CI servers
+	 * 
+	 * @throws InterruptedException
+	 */
+	@Test
+	@Ignore
+	public void heavyLoad() throws InterruptedException
+	{
+		int numberOfThreads = 100;
+		final int iterations = 10000;
+		final CountDownLatch startLatch = new CountDownLatch(numberOfThreads);
+		final CountDownLatch endLatch = new CountDownLatch(numberOfThreads);
+		final SecureRandom rnd = new SecureRandom();
+		final StoredResponsesMap map = new StoredResponsesMap(1000, Duration.seconds(60));
+		final List<String> keys = new ArrayList<String>();
+
+		Runnable r = new Runnable()
+		{
+			public void run()
+			{
+				startLatch.countDown();
+				try
+				{
+					// wait all threads before starting the test
+					startLatch.await();
+				}
+				catch (InterruptedException e)
+				{
+					throw new RuntimeException(e);
+				}
+
+				for (int i = 0; i < iterations; i++)
+				{
+					String key = "abc" + (rnd.nextDouble() * iterations);
+					keys.add(key);
+					map.put(key, new BufferedWebResponse(null));
+
+					String key2 = keys.get(rnd.nextInt(keys.size() - 1));
+					map.remove(key2);
+				}
+				endLatch.countDown();
+			}
+		};
+
+		for (int t = 0; t < numberOfThreads; t++)
+		{
+			new Thread(r).start();
+		}
+		endLatch.await();
 	}
 }
