@@ -16,6 +16,8 @@
  */
 package org.apache.wicket;
 
+import java.io.File;
+
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.page.PersistentPageManager;
@@ -23,6 +25,7 @@ import org.apache.wicket.pageStore.DefaultPageStore;
 import org.apache.wicket.pageStore.DiskDataStore;
 import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.pageStore.IPageStore;
+import org.apache.wicket.settings.IStoreSettings;
 
 /**
  * {@link IPageManagerProvider} implementation that creates new instance of {@link IPageManager}
@@ -30,12 +33,6 @@ import org.apache.wicket.pageStore.IPageStore;
  */
 public class DefaultPageManagerProvider implements IPageManagerProvider
 {
-	private static final int DEFAULT_CACHE_SIZE = 40;
-
-	private static final int DEFAULT_FILE_CHANNEL_POOL_CAPACITY = 50;
-
-	private static final int DEFAULT_MAX_SIZE_PER_SESSION = 1000000;
-
 	protected final Application application;
 
 	/**
@@ -58,27 +55,23 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 
 	protected IPageStore newPageStore(IDataStore dataStore)
 	{
-		return new DefaultPageStore(application.getName(), dataStore, getCacheSize());
+		int inmemoryCacheSize = getStoreSettings().getInmemoryCacheSize();
+		return new DefaultPageStore(application.getName(), dataStore, inmemoryCacheSize);
 	}
 
 	protected IDataStore newDataStore()
 	{
-		return new DiskDataStore(application.getName(), getMaxSizePerSession(),
-			getFileChannelPoolCapacity());
+		IStoreSettings storeSettings = getStoreSettings();
+		int maxSizePerSession = storeSettings.getMaxSizePerSession();
+		int fileChannelPoolCapacity = storeSettings.getFileChannelPoolCapacity();
+		File fileStoreFolder = storeSettings.getFileStoreFolder();
+
+		return new DiskDataStore(application.getName(), fileStoreFolder, maxSizePerSession,
+			fileChannelPoolCapacity);
 	}
 
-	protected int getMaxSizePerSession()
+	IStoreSettings getStoreSettings()
 	{
-		return DEFAULT_MAX_SIZE_PER_SESSION;
-	}
-
-	protected int getCacheSize()
-	{
-		return DEFAULT_CACHE_SIZE;
-	}
-
-	protected int getFileChannelPoolCapacity()
-	{
-		return DEFAULT_FILE_CHANNEL_POOL_CAPACITY;
+		return Application.get().getStoreSettings();
 	}
 }

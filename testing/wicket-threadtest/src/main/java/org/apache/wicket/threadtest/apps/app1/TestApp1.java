@@ -78,7 +78,8 @@ public class TestApp1 extends WebApplication
 			{
 				IDataStore dataStore = new HttpSessionDataStore(pageManagerContext,
 					new PageNumberEvictionStrategy(100));
-				IPageStore pageStore = new DefaultPageStore(getName(), dataStore, getCacheSize());
+				IPageStore pageStore = new DefaultPageStore(getName(), dataStore,
+					getStoreSettings().getInmemoryCacheSize());
 				return new PersistentPageManager(getName(), pageStore, pageManagerContext);
 
 			}

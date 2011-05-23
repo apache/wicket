@@ -33,10 +33,8 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.pageStore.PageWindowManager.PageWindow;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.file.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,20 +87,6 @@ public class DiskDataStore implements IDataStore
 					+ "See org.apache.wicket.Application.setPageManagerProvider(IPageManagerProvider)",
 				e);
 		}
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param applicationName
-	 * @param maxSizePerSession
-	 * @param fileChannelPoolCapacity
-	 */
-	public DiskDataStore(final String applicationName, final int maxSizePerSession,
-		final int fileChannelPoolCapacity)
-	{
-		this(applicationName, getDefaultFileStoreFolder(), maxSizePerSession,
-			fileChannelPoolCapacity);
 	}
 
 	/**
@@ -439,35 +423,6 @@ public class DiskDataStore implements IDataStore
 	{
 		File sessionFolder = getSessionFolder(sessionId, createSessionFolder);
 		return new File(sessionFolder, "data").getAbsolutePath();
-	}
-
-	/**
-	 * 
-	 * @return folder
-	 */
-	private static File getDefaultFileStoreFolder()
-	{
-		File dir = null;
-
-		if (Application.exists())
-		{
-			dir = (File)((WebApplication)Application.get()).getServletContext().getAttribute(
-				"javax.servlet.context.tempdir");
-		}
-
-		if (dir != null)
-		{
-			return dir;
-		}
-
-		try
-		{
-			return File.createTempFile("file-prefix", null).getParentFile();
-		}
-		catch (IOException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
 	}
 
 	/**

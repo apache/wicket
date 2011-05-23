@@ -56,6 +56,8 @@ import org.apache.wicket.page.DefaultPageManagerContext;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.page.PageAccessSynchronizer;
+import org.apache.wicket.pageStore.IDataStore;
+import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.protocol.http.DummyRequestLogger;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -89,6 +91,7 @@ import org.apache.wicket.settings.IRequestLoggerSettings;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.settings.ISessionSettings;
+import org.apache.wicket.settings.IStoreSettings;
 import org.apache.wicket.settings.def.ApplicationSettings;
 import org.apache.wicket.settings.def.DebugSettings;
 import org.apache.wicket.settings.def.ExceptionSettings;
@@ -100,6 +103,7 @@ import org.apache.wicket.settings.def.RequestLoggerSettings;
 import org.apache.wicket.settings.def.ResourceSettings;
 import org.apache.wicket.settings.def.SecuritySettings;
 import org.apache.wicket.settings.def.SessionSettings;
+import org.apache.wicket.settings.def.StoreSettings;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
@@ -1006,6 +1010,9 @@ public abstract class Application implements UnboundListener, IEventSink
 	/** The Session Settings */
 	private ISessionSettings sessionSettings;
 
+	/** The settings for {@link IPageStore}, {@link IDataStore} and {@link IPageManager} */
+	private IStoreSettings storeSettings;
+
 	/** can the settings object be set/used. */
 	private boolean settingsAccessible;
 
@@ -1250,6 +1257,28 @@ public abstract class Application implements UnboundListener, IEventSink
 	public final void setSessionSettings(final ISessionSettings sessionSettings)
 	{
 		this.sessionSettings = sessionSettings;
+	}
+
+	/**
+	 * @return Application's stores related settings
+	 */
+	public final IStoreSettings getStoreSettings()
+	{
+		checkSettingsAvailable();
+		if (storeSettings == null)
+		{
+			storeSettings = new StoreSettings(this);
+		}
+		return storeSettings;
+	}
+
+	/**
+	 * 
+	 * @param storeSettings
+	 */
+	public final void setStoreSettings(final IStoreSettings storeSettings)
+	{
+		this.storeSettings = storeSettings;
 	}
 
 	/**

@@ -31,6 +31,8 @@ import junit.framework.TestCase;
 import org.apache.wicket.pageStore.AsynchronousDataStore;
 import org.apache.wicket.pageStore.DiskDataStore;
 import org.apache.wicket.pageStore.IDataStore;
+import org.apache.wicket.settings.IStoreSettings;
+import org.apache.wicket.settings.def.StoreSettings;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -322,7 +324,10 @@ public class DiskDataStoreTest extends TestCase
 	{
 		generateFiles();
 
-		dataStore = new DiskDataStore("app1", MAX_SIZE_PER_SESSION, FILE_CHANNEL_POOL_CAPACITY);
+		IStoreSettings storeSettings = new StoreSettings(null);
+		java.io.File fileStoreFolder = storeSettings.getFileStoreFolder();
+		dataStore = new DiskDataStore("app1", fileStoreFolder, MAX_SIZE_PER_SESSION,
+			FILE_CHANNEL_POOL_CAPACITY);
 		dataStore = new AsynchronousDataStore(dataStore);
 
 		doTestDataStore();
