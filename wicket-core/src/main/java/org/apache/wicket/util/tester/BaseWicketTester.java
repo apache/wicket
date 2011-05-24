@@ -49,6 +49,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.IPageRendererProvider;
 import org.apache.wicket.IRequestCycleProvider;
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestListenerInterface;
@@ -2304,8 +2305,11 @@ public class BaseWicketTester
 	}
 
 	/**
+	 * Starts a page, a shared resource or a {@link IRequestListener} depending on what the
+	 * {@link IRequestMapper}s resolve for the passed url.
 	 * 
 	 * @param _url
+	 *            the url to resolve and execute
 	 */
 	public void executeUrl(final String _url)
 	{
