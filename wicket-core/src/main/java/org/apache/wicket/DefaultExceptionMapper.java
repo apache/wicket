@@ -121,7 +121,7 @@ public class DefaultExceptionMapper implements IExceptionMapper
 			else
 			{
 				// IExceptionSettings.SHOW_NO_EXCEPTION_PAGE
-				return new EmptyRequestHandler();
+				return new ErrorCodeRequestHandler(500);
 			}
 		}
 	}
