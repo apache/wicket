@@ -23,6 +23,8 @@ import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.BitSet;
 
+import org.apache.wicket.util.lang.Args;
+
 /**
  * Adapted from java.net.URLEncoder, but defines instances for query string encoding versus URL path
  * component encoding.
@@ -166,9 +168,8 @@ public class UrlEncoder
 		dontNeedEncoding.set('-');
 		dontNeedEncoding.set('.');
 		dontNeedEncoding.set('_');
-		dontNeedEncoding.set('~'); // tilde encoded by java.net.URLEncoder
-		// version, but RFC is
-		// clear on this
+		// tilde encoded by java.net.URLEncoder version, but RFC is clear on this
+		dontNeedEncoding.set('~');
 
 		// sub-delims
 		dontNeedEncoding.set('!');
@@ -192,14 +193,12 @@ public class UrlEncoder
 		{
 			// this code consistent with java.net.URLEncoder version
 			case QUERY :
-				dontNeedEncoding.set(' '); /*
-											 * encoding a space to a + is done in the encode()
-											 * method
-											 */
-				dontNeedEncoding.set('/'); // to allow direct passing of URL in
-				// query
-				dontNeedEncoding.set('?'); // to allow direct passing of URL in
-				// query
+				// encoding a space to a + is done in the encode() method
+				dontNeedEncoding.set(' ');
+				// to allow direct passing of URL in query
+				dontNeedEncoding.set('/');
+				// to allow direct passing of URL in query
+				dontNeedEncoding.set('?');
 				break;
 
 			// this added to deal with encoding a PATH component
@@ -229,47 +228,44 @@ public class UrlEncoder
 	/**
 	 * @param s
 	 *            string to encode
-	 * @param enc
+	 * @param charsetName
 	 *            encoding to use
 	 * @return encoded string
 	 * @see java.net.URLEncoder#encode(String, String)
 	 */
-	public String encode(final String s, final Charset enc)
+	public String encode(final String s, final Charset charsetName)
 	{
-		return encode(s, enc.name());
+		return encode(s, charsetName.name());
 	}
 
 	/**
 	 * @param s
 	 *            string to encode
-	 * @param enc
+	 * @param charsetName
 	 *            encoding to use
 	 * @return encoded string
 	 * @see java.net.URLEncoder#encode(String, String)
 	 */
-	public String encode(final String s, final String enc)
+	public String encode(final String s, final String charsetName)
 	{
 		boolean needToChange = false;
 		StringBuilder out = new StringBuilder(s.length());
 		Charset charset;
 		CharArrayWriter charArrayWriter = new CharArrayWriter();
 
-		if (enc == null)
-		{
-			throw new NullPointerException("charsetName");
-		}
+		Args.notNull(charsetName, "charsetName");
 
 		try
 		{
-			charset = Charset.forName(enc);
+			charset = Charset.forName(charsetName);
 		}
 		catch (IllegalCharsetNameException e)
 		{
-			throw new RuntimeException(new UnsupportedEncodingException(enc));
+			throw new RuntimeException(new UnsupportedEncodingException(charsetName));
 		}
 		catch (UnsupportedCharsetException e)
 		{
-			throw new RuntimeException(new UnsupportedEncodingException(enc));
+			throw new RuntimeException(new UnsupportedEncodingException(charsetName));
 		}
 
 		boolean stopEncoding = false;
