@@ -293,7 +293,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			if (label == null)
 			{
 
-				label = fc.getLocalizer().getString(fc.getId(), fc.getParent(), fc.getId());
+				label = fc.getDefaultLabel();
 			}
 			return label;
 		}
@@ -553,6 +553,19 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		// the form decides whether form components are versioned or not
 		// see Form.setVersioned
 		setVersioned(false);
+	}
+
+	/**
+	 * Gets the string the component would use as a label when one was requested but no label model
+	 * was set via {@link #getLabel()}. The value of this string is usually set in a property file;
+	 * if the value is not set the default value equivalent to component id will be returned.
+	 * 
+	 * @param fc
+	 * @return
+	 */
+	public final String getDefaultLabel()
+	{
+		return getLocalizer().getString(getId(), getParent(), getId());
 	}
 
 	/**
@@ -1347,7 +1360,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			error.getVariables().putAll(variables);
 		}
 
-		error((IValidationError)error);
+		error(error);
 	}
 
 	/**
@@ -1567,7 +1580,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 */
 	private void reportRequiredError()
 	{
-		error((IValidationError)new ValidationError().addMessageKey("Required"));
+		error(new ValidationError().addMessageKey("Required"));
 	}
 
 	/**

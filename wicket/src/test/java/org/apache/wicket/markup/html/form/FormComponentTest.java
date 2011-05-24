@@ -19,6 +19,11 @@ package org.apache.wicket.markup.html.form;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
@@ -56,11 +61,41 @@ public class FormComponentTest extends TestCase
 		Assert.assertSame(boolean[].class, fc.getType());
 	}
 
+	public void testGetDefaultlabel()
+	{
+		wicketTester.startPage(TestPage1.class);
+		TestPage1 page = (TestPage1)wicketTester.getLastRenderedPage();
+		assertEquals("set", page.field1.getDefaultLabel());
+		assertEquals("field2", page.field2.getDefaultLabel());
+	}
+
 	@Override
 	protected void tearDown() throws Exception
 	{
 		wicketTester.destroy();
 		wicketTester = null;
 		super.tearDown();
+	}
+
+	public static class TestPage1 extends WebPage implements IMarkupResourceStreamProvider
+	{
+		public final TextField field1, field2;
+
+		public TestPage1()
+		{
+			Form form = new Form("form");
+			add(form);
+			form.add(field1 = new TextField("field1"));
+			form.add(field2 = new TextField("field2"));
+		}
+
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream(
+				"<html><body><form wicket:id='form'><input wicket:id='field1' type='text'/><input wicket:id='field2' type='text'/></form></body></html>");
+		}
+
+
 	}
 }
