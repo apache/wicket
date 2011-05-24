@@ -226,33 +226,6 @@ public class UrlEncoder
 		}
 	}
 
-	// /**
-	// * Calls encode with the application response request encoding as returned
-	// by
-	// *
-	// Application.get().getRequestCycleSettings().getResponseRequestEncoding()
-	// *
-	// * @param s
-	// * Value to encode
-	// * @return String encoded using default Application request/respose
-	// encoding
-	// */
-	// public String encode(String s)
-	// {
-	// Application app = null;
-	//
-	// try
-	// {
-	// app = Application.get();
-	// }
-	// catch (WicketRuntimeException ignored)
-	// {
-	// log.warn("No current Application found - defaulting encoding to UTF-8");
-	// }
-	// return encode(s, app == null ? "UTF-8" : app.getRequestCycleSettings()
-	// .getResponseRequestEncoding());
-	// }
-
 	/**
 	 * @param s
 	 *            string to encode
