@@ -3222,7 +3222,20 @@ Calendar.prototype = {
 		html = this.renderFooter(html);
 		html[html.length] = '</table>';
 
-		this.oDomContainer.innerHTML = html.join("\n");
+		try {
+			this.oDomContainer.innerHTML = html.join("\n");
+		} catch (e) {
+			// attempt workaround when innerHTML replacement fails
+			var c=this.oDomContainer;
+			if (c.childNodes&&c.childNodes.length&&c.childNodes.length>0) {
+				while (c.childNodes.length>0) {
+					c.removeChild(c.childNodes[0]);
+				}
+			}
+			var a=document.createElement("div");
+			a.innerHTML = html.join("\n");
+			c.appendChild(a);
+		}
 
 		this.applyListeners();
 		this.cells = this.oDomContainer.getElementsByTagName("td");
