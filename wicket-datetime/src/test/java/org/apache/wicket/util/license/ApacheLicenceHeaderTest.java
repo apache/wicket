@@ -48,7 +48,7 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		 */
 		cssIgnore = new String[] {
 				"src/main/java/org/apache/wicket/extensions/yui/calendar/assets/skins/sam/calendar.css",
-				"src/main/java/org/apache/wicket/extensions/yui/calendar/assets/skins/sam/calendar.css" };
+				"src/main/java/org/apache/wicket/extensions/yui/calendar/assets/skins/sam/calendar-skin.css" };
 
 		/*
 		 * YUI lib. See NOTICE
