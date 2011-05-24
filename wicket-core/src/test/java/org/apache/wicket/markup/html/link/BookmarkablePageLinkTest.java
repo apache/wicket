@@ -80,7 +80,7 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 	/**
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3721">WICKET-3721</a>
 	 */
-	public void bug_testCustomParametersWithSpecialCharacters()
+	public void testCustomParametersWithSpecialCharacters()
 	{
 		BookmarkablePageLink<MockPageWithLink> link = new BookmarkablePageLink<MockPageWithLink>(
 			"link", MockPageWithLink.class);
