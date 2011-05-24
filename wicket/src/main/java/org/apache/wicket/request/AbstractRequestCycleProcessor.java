@@ -177,6 +177,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 		}
 		else if (requestCycle.getResponse() instanceof WebResponse)
 		{
+			requestCycle.setRedirect(false);
 			((WebResponse)requestCycle.getResponse()).getHttpServletResponse().setStatus(
 				HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
