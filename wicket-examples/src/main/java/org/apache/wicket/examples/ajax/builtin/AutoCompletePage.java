@@ -97,7 +97,6 @@ public class AutoCompletePage extends BasePage
 					new PageProvider(Index.class));
 				RequestCycle requestCycle = RequestCycle.get();
 				CharSequence urlFor = requestCycle.urlFor(bookmarkablePageRequestHandler);
-				System.err.println("index:  " + urlFor);
 				target.add(label);
 			}
 
