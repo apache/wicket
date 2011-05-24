@@ -163,7 +163,8 @@ public class WebPageRenderer extends PageRenderer
 			// if there is saved response for this URL render it
 			bufferedResponse.writeTo((WebResponse)requestCycle.getResponse());
 		}
-		else if (getRedirectPolicy() == RedirectPolicy.NEVER_REDIRECT || isOnePassRender() //
+		else if (getRedirectPolicy() == RedirectPolicy.NEVER_REDIRECT ||
+			(isOnePassRender() && isAjax == false) //
 			||
 			(!isAjax //
 				&&
