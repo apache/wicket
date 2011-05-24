@@ -556,7 +556,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     
     	// check if the input hasn't been cleared in the meanwhile
     	var input=wicketGet(elementId);
-   		if ((Wicket.Focus.getFocusedElement() != input) || !cfg.showListOnEmptyInput && (input.value==null || input.value=="")) {
+   		if ((document.activeElement != input) || !cfg.showListOnEmptyInput && (input.value==null || input.value=="")) {
    			hideAutoComplete();
    			Wicket.Ajax.invokePostCallHandlers();
    			hideIndicator();
@@ -582,7 +582,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                   if(typeof objonchange=="function") objonchange.apply(input,[event]);
                 }
                 hideAutoComplete();
-                if (Wicket.Focus.getFocusedElement() != input) {
+                if (document.activeElement != input) {
                     ignoreOneFocusGain = true;
                     input.focus();
                 }
