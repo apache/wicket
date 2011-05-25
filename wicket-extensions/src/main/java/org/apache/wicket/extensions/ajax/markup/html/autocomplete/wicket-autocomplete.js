@@ -553,18 +553,15 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     }
     
     function doUpdateChoices(resp){
-    	console.info("updating choices");
+    
     	// check if the input hasn't been cleared in the meanwhile
     	var input=wicketGet(elementId);
    		if ((Wicket.Focus.getFocusedElement() != input) || !cfg.showListOnEmptyInput && (input.value==null || input.value=="")) {
    			hideAutoComplete();
    			Wicket.Ajax.invokePostCallHandlers();
    			hideIndicator();
-   			console.info("aborting update choices", (Wicket.Focus.getFocusedElement() != input) ,cfg.showListOnEmptyInput ,input.value==null , input.value=="");
    			return;
    		}
-   		
-   		console.info("updating choices2");
 
         var element = getAutocompleteMenu();
         if (!cfg.adjustInputWidth && element.parentNode && element.parentNode.style.width != "auto") {
@@ -577,7 +574,6 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 		    elementCount=selectableElements.length;
 
             var clickFunc = function(event) {
-                console.info("selection made!");
                 mouseactive = 0;
                 var value = getSelectedValue();
                 var input = wicketGet(elementId);
