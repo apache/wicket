@@ -149,14 +149,5 @@ public class PageVersioningTest
 		{
 			return VersioningTestPage.class;
 		}
-
-		/**
-		 * @see org.apache.wicket.Application#getPageManagerContext()
-		 */
-		@Override
-		public IPageManagerContext getPageManagerContext()
-		{
-			return super.getPageManagerContext();
-		}
 	};
 }
