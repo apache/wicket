@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.util;
 
-import java.io.Serializable;
+import org.apache.wicket.IClusterable;
 
 /**
  * An abstraction for lazy-initializing values. Guarantees only a single instance of the value is
@@ -29,7 +29,7 @@ import java.io.Serializable;
  * @param <T>
  *            type of value
  */
-public abstract class LazyInitializer<T> implements IProvider<T>, Serializable
+public abstract class LazyInitializer<T> implements IProvider<T>, IClusterable
 {
 	private transient volatile T instance = null;
 

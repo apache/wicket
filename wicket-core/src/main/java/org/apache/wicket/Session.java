@@ -841,7 +841,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public final IPageManager getPageManager()
 	{
-		IPageManager pageManager = Application.get().getPageManager();
+		IPageManager pageManager = Application.get().internalGetPageManager();
 		return pageAccessSynchronizer.get().adapt(pageManager);
 	}
 

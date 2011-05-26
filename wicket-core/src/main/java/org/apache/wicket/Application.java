@@ -470,7 +470,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 */
 	public void sessionUnbound(final String sessionId)
 	{
-		getPageManager().sessionExpired(sessionId);
+		internalGetPageManager().sessionExpired(sessionId);
 	}
 
 
@@ -656,7 +656,7 @@ public abstract class Application implements UnboundListener, IEventSink
 
 		callDestroyers();
 
-		getPageManager().destroy();
+		internalGetPageManager().destroy();
 		getSessionStore().destroy();
 
 		applicationKeyToApplication.remove(getApplicationKey());
@@ -1322,10 +1322,11 @@ public abstract class Application implements UnboundListener, IEventSink
 	private final IPageManagerContext pageManagerContext = new DefaultPageManagerContext();
 
 	/**
+	 * Returns an unsynchronized version of page manager
 	 * 
 	 * @return the page manager
 	 */
-	final IPageManager getPageManager()
+	final IPageManager internalGetPageManager()
 	{
 		if (pageManager == null)
 		{
@@ -1490,7 +1491,7 @@ public abstract class Application implements UnboundListener, IEventSink
 		{
 			session = newSession(requestCycle.getRequest(), requestCycle.getResponse());
 			ThreadContext.setSession(session);
-			getPageManager().newSessionCreated();
+			internalGetPageManager().newSessionCreated();
 		}
 		else
 		{
