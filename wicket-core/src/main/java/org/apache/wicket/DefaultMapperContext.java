@@ -114,7 +114,7 @@ public class DefaultMapperContext implements IMapperContext
 	 */
 	public IRequestablePage getPageInstance(final int pageId)
 	{
-		IManageablePage manageablePage = Application.get().getPageManager().getPage(pageId);
+		IManageablePage manageablePage = Session.get().getPageManager().getPage(pageId);
 		IRequestablePage requestablePage = null;
 		if (manageablePage instanceof IRequestablePage)
 		{
