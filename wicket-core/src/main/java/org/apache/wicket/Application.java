@@ -55,7 +55,6 @@ import org.apache.wicket.markup.resolver.WicketMessageResolver;
 import org.apache.wicket.page.DefaultPageManagerContext;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
-import org.apache.wicket.page.PageAccessSynchronizer;
 import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.protocol.http.DummyRequestLogger;
@@ -191,9 +190,6 @@ public abstract class Application implements UnboundListener, IEventSink
 
 	/** page renderer provider */
 	private IPageRendererProvider pageRendererProvider;
-
-	/** */
-	private PageAccessSynchronizer pageAccessSynchronizer;
 
 	/** request cycle provider */
 	private IRequestCycleProvider requestCycleProvider;
@@ -705,8 +701,6 @@ public abstract class Application implements UnboundListener, IEventSink
 		setRootRequestMapper(new SystemMapper(this));
 
 		pageFactory = newPageFactory();
-
-		pageAccessSynchronizer = new PageAccessSynchronizer(getRequestCycleSettings().getTimeout());
 
 		requestCycleProvider = new DefaultRequestCycleProvider();
 		exceptionMapperProvider = new DefaultExceptionMapperProvider();
@@ -1331,7 +1325,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @return the page manager
 	 */
-	public final IPageManager getPageManager()
+	final IPageManager getPageManager()
 	{
 		if (pageManager == null)
 		{
@@ -1339,7 +1333,7 @@ public abstract class Application implements UnboundListener, IEventSink
 			{
 				if (pageManager == null)
 				{
-					pageManager = pageAccessSynchronizer.adapt(pageManagerProvider.get(getPageManagerContext()));
+					pageManager = pageManagerProvider.get(getPageManagerContext());
 				}
 			}
 		}
@@ -1559,7 +1553,7 @@ public abstract class Application implements UnboundListener, IEventSink
 			@Override
 			public void onDetach(final RequestCycle requestCycle)
 			{
-				getPageManager().commitRequest();
+				Session.get().getPageManager().commitRequest();
 			}
 		});
 		requestCycle.getListeners().add(requestCycleListeners);

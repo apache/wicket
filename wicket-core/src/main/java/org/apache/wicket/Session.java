@@ -31,12 +31,16 @@ import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.page.IPageManager;
+import org.apache.wicket.page.PageAccessSynchronizer;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.session.ISessionStore;
+import org.apache.wicket.util.IProvider;
+import org.apache.wicket.util.LazyInitializer;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.lang.WicketObjects;
+import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -124,6 +128,8 @@ public abstract class Session implements IClusterable, IEventSink
 	/** a sequence used for generating page IDs */
 	private int pageId = 0;
 
+	/** synchronize page's access by session */
+	private final IProvider<PageAccessSynchronizer> pageAccessSynchronizer;
 
 	/**
 	 * Checks if the <code>Session</code> threadlocal is set in this thread
@@ -212,6 +218,8 @@ public abstract class Session implements IClusterable, IEventSink
 			throw new IllegalStateException(
 				"Request#getLocale() cannot return null, request has to have a locale set on it");
 		}
+
+		pageAccessSynchronizer = new PageAccessSynchronizerProvider();
 	}
 
 	/**
@@ -831,13 +839,37 @@ public abstract class Session implements IClusterable, IEventSink
 	 * 
 	 * @return {@link IPageManager} instance.
 	 */
-	public IPageManager getPageManager()
+	public final IPageManager getPageManager()
 	{
-		return getApplication().getPageManager();
+		IPageManager pageManager = Application.get().getPageManager();
+		return pageAccessSynchronizer.get().adapt(pageManager);
 	}
 
 	/** {@inheritDoc} */
 	public void onEvent(IEvent<?> event)
 	{
 	}
+
+	private static final class PageAccessSynchronizerProvider extends
+		LazyInitializer<PageAccessSynchronizer>
+	{
+		@Override
+		protected PageAccessSynchronizer createInstance()
+		{
+			final Duration timeout;
+			if (Application.exists())
+			{
+				timeout = Application.get().getRequestCycleSettings().getTimeout();
+			}
+			else
+			{
+				timeout = Duration.minutes(1);
+				log.warn(
+					"PageAccessSynchronizer created outside of application thread, using default timeout: {}",
+					timeout);
+			}
+			return new PageAccessSynchronizer(timeout);
+		}
+	}
+
 }

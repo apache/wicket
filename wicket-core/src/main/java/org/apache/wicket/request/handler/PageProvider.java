@@ -17,6 +17,7 @@
 package org.apache.wicket.request.handler;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Session;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.IRequestHandler;
@@ -168,12 +169,15 @@ public class PageProvider implements IPageProvider
 
 	/**
 	 * Mark the error page as candidate for storing
+	 * 
+	 * @param page
+	 *            the page to store
 	 */
 	private void touchPageInstance(IRequestablePage page)
 	{
-		if (Application.exists())
+		if (Session.exists())
 		{
-			Application.get().getPageManager().touchPage(page);
+			Session.get().getPageManager().touchPage(page);
 		}
 	}
 

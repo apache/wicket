@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.page.CouldNotLockPageException;
 import org.apache.wicket.page.PageAccessSynchronizer;
+import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.time.Time;
 import org.junit.Rule;
@@ -258,5 +259,45 @@ public class PageAccessSynchronizerTest
 	public void testContention() throws Exception
 	{
 		runContentionTest(10, 20, Duration.seconds(10));
+	}
+
+	@Test
+	public void testSerialization() throws Exception
+	{
+		// a simple worker that acquires a lock on page 5
+		class Locker extends Thread
+		{
+			private final PageAccessSynchronizer sync;
+
+			public Locker(PageAccessSynchronizer sync)
+			{
+				this.sync = sync;
+			}
+
+			@Override
+			public void run()
+			{
+				sync.lockPage(5);
+			}
+		}
+
+		// set up a synchronizer and lock page 5 with locker1
+		final Duration timeout = Duration.seconds(30);
+		final PageAccessSynchronizer sync = new PageAccessSynchronizer(timeout);
+		Locker locker1 = new Locker(sync);
+
+		final long start = System.currentTimeMillis();
+		locker1.run();
+
+		// make sure we can serialize the synchronizer
+
+		final PageAccessSynchronizer sync2 = (PageAccessSynchronizer)WicketObjects.cloneObject(sync);
+		assertTrue(sync != sync2);
+
+		// make sure the clone does not retain locks by attempting to lock page locked by locker1 in
+		// locker2
+		Locker locker2 = new Locker(sync2);
+		locker2.run();
+		assertTrue(Duration.milliseconds(System.currentTimeMillis() - start).lessThan(timeout));
 	}
 }

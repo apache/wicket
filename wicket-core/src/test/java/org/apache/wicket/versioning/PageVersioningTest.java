@@ -131,7 +131,7 @@ public class PageVersioningTest
 	 */
 	private void checkPageVersionsAreStored(Page versioningPage)
 	{
-		IPageManager pageManager = wicketTester.getApplication().getPageManager();
+		IPageManager pageManager = wicketTester.getSession().getPageManager();
 
 		int lastPageId = versioningPage.getPageId();
 		while (lastPageId >= 0)
