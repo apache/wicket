@@ -1563,7 +1563,7 @@ public class BaseWicketTester extends MockWebApplication
 	 * 
 	 * @param component
 	 */
-	private void checkUsability(final Component component)
+	protected void checkUsability(final Component component)
 	{
 		if (component.isVisibleInHierarchy() == false)
 		{
