@@ -21,6 +21,7 @@ import org.apache.wicket.request.flow.ResetResponseException;
 import org.apache.wicket.request.handler.IPageProvider;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
@@ -61,7 +62,7 @@ public class RestartResponseException extends ResetResponseException
 	public <C extends Page> RestartResponseException(final Class<C> pageClass,
 		final PageParameters params)
 	{
-		this(new PageProvider(pageClass, params));
+		this(new PageProvider(pageClass, params), RedirectPolicy.AUTO_REDIRECT);
 	}
 
 	/**
@@ -72,11 +73,22 @@ public class RestartResponseException extends ResetResponseException
 	 */
 	public RestartResponseException(final IRequestablePage page)
 	{
-		this(new PageProvider(page));
+		this(new PageProvider(page), RedirectPolicy.AUTO_REDIRECT);
 	}
 
-	private RestartResponseException(final IPageProvider pageProvider)
+	/**
+	 * Redirects to the page provided by the passed {@code pageProvider} using the explicit
+	 * {@code redirectPolicy}
+	 * 
+	 * @param pageProvider
+	 *            the provider for the page
+	 * @param redirectPolicy
+	 *            the redirect policy to use
+	 */
+	public RestartResponseException(final IPageProvider pageProvider,
+		final RedirectPolicy redirectPolicy)
 	{
-		super(new RenderPageRequestHandler(pageProvider));
+		super(new RenderPageRequestHandler(pageProvider, redirectPolicy));
 	}
+
 }
