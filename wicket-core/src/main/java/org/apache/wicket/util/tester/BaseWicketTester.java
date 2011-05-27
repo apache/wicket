@@ -1135,6 +1135,21 @@ public class BaseWicketTester
 	}
 
 	/**
+	 * Process a component. A web page will be automatically created with markup created by the
+	 * {@link #createPageMarkup(String)}.
+	 * 
+	 * @param <C>
+	 *            the type of the component
+	 * @param component
+	 *            the component to be tested
+	 * @return The component processed
+	 */
+	public final <C extends Component> C startComponentInPage(final C component)
+	{
+		return startComponentInPage(component, null);
+	}
+
+	/**
 	 * Process a component. A web page will be automatically created with the {@code pageMarkup}
 	 * provided. In case {@code pageMarkup} is null, the markup will be automatically created with
 	 * {@link #createPageMarkup(String)}.
