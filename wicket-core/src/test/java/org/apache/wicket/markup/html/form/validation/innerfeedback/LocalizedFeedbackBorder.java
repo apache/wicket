@@ -54,7 +54,7 @@ class LocalizedFeedbackBorder extends FormComponentFeedbackBorder
 				return "border: 1px solid " + (error ? "red" : "green");
 			}
 		}));
-		addToBorder(brdr);
+		add(brdr);
 	}
 
 	@Override

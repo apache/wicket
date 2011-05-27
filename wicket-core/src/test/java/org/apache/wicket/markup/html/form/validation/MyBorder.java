@@ -44,7 +44,7 @@ public class MyBorder extends Border
 
 		form = new Form<Void>("form2");
 		form.setOutputMarkupId(true);
-		addToBorder(form);
+		add(form);
 
 		form.add(new FeedbackPanel("feedback"));
 

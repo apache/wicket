@@ -80,7 +80,7 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 	public FormComponentFeedbackBorder(final String id)
 	{
 		super(id);
-		addToBorder(new ErrorIndicator("errorIndicator"));
+		add(new ErrorIndicator("errorIndicator"));
 	}
 
 	/**

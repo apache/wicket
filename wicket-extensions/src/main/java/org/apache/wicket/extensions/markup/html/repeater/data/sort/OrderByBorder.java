@@ -55,8 +55,8 @@ public class OrderByBorder extends Border
 		super(id);
 
 		OrderByLink link = newOrderByLink("orderByLink", property, stateLocator);
-		addToBorder(link);
-		addToBorder(new OrderByLink.CssModifier(link, cssProvider));
+		add(link);
+		add(new OrderByLink.CssModifier(link, cssProvider));
 		link.add(getBodyContainer());
 	}
 

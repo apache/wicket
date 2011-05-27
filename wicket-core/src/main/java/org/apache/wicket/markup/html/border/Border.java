@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.border;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupElement;
@@ -106,7 +105,7 @@ import org.apache.wicket.util.lang.Args;
  * </pre>
  * 
  * The component "someContainer" in the previous example must be added to the border, and not the
- * body, which is achieved via {@link #addToBorder(Component...)}.
+ * body, which is achieved via {@link #add(Component...)}.
  * <p/>
  * {@link #add(Component...)} is an alias to {@link #addToBody(Component...)} and will add a child
  * component to the border body as shown in the example below.
@@ -168,7 +167,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		super(id, model);
 
 		body = new BorderBodyContainer(id + "_" + BODY);
-		addToBorder(body);
+		add(body);
 	}
 
 	/**
@@ -179,31 +178,10 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		return body;
 	}
 
-	/**
-	 * @see #add(Component...)
-	 * @param children
-	 * @return this
-	 */
-	public Border addToBorder(final Component... children)
-	{
-		super.add(children);
-		return this;
-	}
 
 	/**
-	 * @see #add(Behavior...)
-	 * @param children
-	 * @return this
-	 */
-	public Border addToBorder(final Behavior... children)
-	{
-		super.add(children);
-		return this;
-	}
-
-
-	/**
-	 * @see #add(Component...)
+	 * A shortcut for {@code getBodyContainer().add(child)}
+	 * 
 	 * @param child
 	 * @return this
 	 */

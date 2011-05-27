@@ -116,8 +116,8 @@ public abstract class AjaxFallbackOrderByBorder extends Border
 
 			}
 		};
-		addToBorder(link);
-		addToBorder(new AjaxFallbackOrderByLink.CssModifier(link, cssProvider));
+		add(link);
+		add(new AjaxFallbackOrderByLink.CssModifier(link, cssProvider));
 		link.add(getBodyContainer());
 	}
 
