@@ -110,7 +110,7 @@ public class MockWebApplication
 	private WebRequest wicketRequest;
 
 	/** Parameters to be set on the next request. */
-	private Map<String, String[]> parametersForNextRequest = new HashMap<String, String[]>();
+	private Map<String, String[]> parametersForNextRequest;
 
 	/** Response. */
 	private WebResponse wicketResponse;
@@ -144,6 +144,7 @@ public class MockWebApplication
 	 */
 	public MockWebApplication(final WebApplication application, final String path)
 	{
+		parametersForNextRequest = new HashMap<String, String[]>();
 		this.application = application;
 
 		context = newServletContext(path);
@@ -532,6 +533,8 @@ public class MockWebApplication
 			}
 			cycle.detach();
 			createRequestCycle();
+			parametersForNextRequest.clear();
+			servletRequest.getParameterMap().clear();
 		}
 		finally
 		{

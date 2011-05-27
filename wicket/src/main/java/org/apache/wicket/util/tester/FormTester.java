@@ -831,6 +831,8 @@ public class FormTester
 	 */
 	private void setFormComponentValue(FormComponent<?> formComponent, String value)
 	{
+		baseWicketTester.getParametersForNextRequest().put(formComponent.getInputName(),
+			new String[] { value });
 		baseWicketTester.getServletRequest().setParameter(formComponent.getInputName(), value);
 	}
 
