@@ -26,6 +26,7 @@ import org.apache.wicket.pageStore.DiskDataStore;
 import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.settings.IStoreSettings;
+import org.apache.wicket.util.lang.Bytes;
 
 /**
  * {@link IPageManagerProvider} implementation that creates new instance of {@link IPageManager}
@@ -62,7 +63,7 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 	protected IDataStore newDataStore()
 	{
 		IStoreSettings storeSettings = getStoreSettings();
-		int maxSizePerSession = storeSettings.getMaxSizePerSession();
+		Bytes maxSizePerSession = storeSettings.getMaxSizePerSession();
 		int fileChannelPoolCapacity = storeSettings.getFileChannelPoolCapacity();
 		File fileStoreFolder = storeSettings.getFileStoreFolder();
 

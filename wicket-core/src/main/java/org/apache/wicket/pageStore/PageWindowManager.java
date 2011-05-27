@@ -73,7 +73,7 @@ public class PageWindowManager implements Serializable
 	 * Maximum page size. After this size is exceeded, the pages will be saved starting at the
 	 * beginning of file.
 	 */
-	private final int maxSize;
+	private final long maxSize;
 
 	/**
 	 * 
@@ -464,7 +464,7 @@ public class PageWindowManager implements Serializable
 	 *            maximum page size. After this size is exceeded, the pages will be saved starting
 	 *            at the beginning of file
 	 */
-	public PageWindowManager(int maxSize)
+	public PageWindowManager(long maxSize)
 	{
 		this.maxSize = maxSize;
 	}

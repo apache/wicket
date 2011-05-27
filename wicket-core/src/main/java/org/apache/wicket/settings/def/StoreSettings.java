@@ -24,6 +24,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.settings.IStoreSettings;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Bytes;
 
 /**
  * The implementation of {@link IStoreSettings}
@@ -34,13 +35,13 @@ public class StoreSettings implements IStoreSettings
 
 	private static final int DEFAULT_FILE_CHANNEL_POOL_CAPACITY = 50;
 
-	private static final int DEFAULT_MAX_SIZE_PER_SESSION = 1000000;
+	private static final Bytes DEFAULT_MAX_SIZE_PER_SESSION = Bytes.megabytes(10);
 
 	private int fileChannelPoolCapacity = DEFAULT_FILE_CHANNEL_POOL_CAPACITY;
 
 	private int inmemoryCacheSize = DEFAULT_CACHE_SIZE;
 
-	private int maxSizePerSession = DEFAULT_MAX_SIZE_PER_SESSION;
+	private Bytes maxSizePerSession = DEFAULT_MAX_SIZE_PER_SESSION;
 
 	private File fileStoreFolder = null;
 
@@ -78,14 +79,14 @@ public class StoreSettings implements IStoreSettings
 		this.inmemoryCacheSize = inmemoryCacheSize;
 	}
 
-	public int getMaxSizePerSession()
+	public Bytes getMaxSizePerSession()
 	{
 		return maxSizePerSession;
 	}
 
-	public void setMaxSizePerSession(int maxSizePerSession)
+	public void setMaxSizePerSession(final Bytes maxSizePerSession)
 	{
-		this.maxSizePerSession = maxSizePerSession;
+		this.maxSizePerSession = Args.notNull(maxSizePerSession, "maxSizePerSession");
 	}
 
 	public File getFileStoreFolder()

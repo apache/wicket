@@ -22,6 +22,7 @@ import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.pageStore.DiskDataStore;
 import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.pageStore.IPageStore;
+import org.apache.wicket.util.lang.Bytes;
 
 /**
  * An interface for settings related to the the storages where page instances are persisted -
@@ -62,7 +63,7 @@ public interface IStoreSettings
 	 * @return maximum page size. After this size is exceeded, the {@link DiskDataStore} will start
 	 *         saving the pages at the beginning of file.
 	 */
-	int getMaxSizePerSession();
+	Bytes getMaxSizePerSession();
 
 	/**
 	 * Sets the maximum size of the {@link File} where page instances per session are stored. After
@@ -73,7 +74,7 @@ public interface IStoreSettings
 	 *            the maximum size of the file where page instances are stored per session. In
 	 *            bytes.
 	 */
-	void setMaxSizePerSession(int maxSizePerSession);
+	void setMaxSizePerSession(Bytes maxSizePerSession);
 
 	/**
 	 * @return the location of the folder where {@link DiskDataStore} will store the files with page

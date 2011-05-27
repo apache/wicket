@@ -36,6 +36,8 @@ import java.util.concurrent.ConcurrentMap;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.pageStore.PageWindowManager.PageWindow;
 import org.apache.wicket.util.file.Files;
+import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Bytes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +52,7 @@ public class DiskDataStore implements IDataStore
 
 	private final String applicationName;
 
-	private final int maxSizePerPageSession;
+	private final Bytes maxSizePerPageSession;
 
 	private final FileChannelPool fileChannelPool;
 
@@ -67,11 +69,11 @@ public class DiskDataStore implements IDataStore
 	 * @param fileChannelPoolCapacity
 	 */
 	public DiskDataStore(final String applicationName, final File fileStoreFolder,
-		final int maxSizePerSession, final int fileChannelPoolCapacity)
+		final Bytes maxSizePerSession, final int fileChannelPoolCapacity)
 	{
 		this.applicationName = applicationName;
 		this.fileStoreFolder = fileStoreFolder;
-		maxSizePerPageSession = maxSizePerSession;
+		maxSizePerPageSession = Args.notNull(maxSizePerSession, "maxSizePerSession");
 
 		try
 		{
@@ -268,7 +270,7 @@ public class DiskDataStore implements IDataStore
 		{
 			if (manager == null)
 			{
-				manager = new PageWindowManager(diskDataStore.maxSizePerPageSession);
+				manager = new PageWindowManager(diskDataStore.maxSizePerPageSession.bytes());
 			}
 			return manager;
 		}
