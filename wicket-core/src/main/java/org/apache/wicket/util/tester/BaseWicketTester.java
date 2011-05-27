@@ -2239,7 +2239,7 @@ public class BaseWicketTester
 	 * @param throwException
 	 * @return result
 	 */
-	public final Result checkUsability(final Component component, boolean throwException)
+	protected Result checkUsability(final Component component, boolean throwException)
 	{
 		Result res = Result.pass();
 
