@@ -18,12 +18,13 @@ package org.apache.wicket;
 
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.flow.ResetResponseException;
+import org.apache.wicket.request.handler.IPageProvider;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
- * Causes wicket to interrupt current request processing and immediately respond with the specified
+ * Causes Wicket to interrupt current request processing and immediately respond with the specified
  * page.
  * 
  * @author Igor Vaynberg (ivaynberg)
@@ -41,7 +42,7 @@ public class RestartResponseException extends ResetResponseException
 	 * @param pageClass
 	 *            class of bookmarkable page
 	 */
-	public <C extends Page> RestartResponseException(Class<C> pageClass)
+	public <C extends Page> RestartResponseException(final Class<C> pageClass)
 	{
 		this(pageClass, null);
 	}
@@ -57,9 +58,10 @@ public class RestartResponseException extends ResetResponseException
 	 * @param params
 	 *            bookmarkable page parameters
 	 */
-	public <C extends Page> RestartResponseException(Class<C> pageClass, PageParameters params)
+	public <C extends Page> RestartResponseException(final Class<C> pageClass,
+		final PageParameters params)
 	{
-		super(new RenderPageRequestHandler(new PageProvider(pageClass, params)));
+		this(new PageProvider(pageClass, params));
 	}
 
 	/**
@@ -68,8 +70,13 @@ public class RestartResponseException extends ResetResponseException
 	 * @param page
 	 *            redirect page
 	 */
-	public RestartResponseException(IRequestablePage page)
+	public RestartResponseException(final IRequestablePage page)
 	{
-		super(new RenderPageRequestHandler(new PageProvider(page)));
+		this(new PageProvider(page));
+	}
+
+	private RestartResponseException(final IPageProvider pageProvider)
+	{
+		super(new RenderPageRequestHandler(pageProvider));
 	}
 }
