@@ -1023,7 +1023,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * @param type
 	 * @return this for chaining
 	 */
-	public final FormComponent<T> setType(Class<?> type)
+	public FormComponent<T> setType(Class<?> type)
 	{
 		typeName = type == null ? null : type.getName();
 		if (type != null && type.isPrimitive())
@@ -1174,7 +1174,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 			error.getVariables().putAll(variables);
 		}
 
-		error((IValidationError)error);
+		error(error);
 	}
 
 	/**
@@ -1386,7 +1386,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 */
 	private void reportRequiredError()
 	{
-		error((IValidationError)new ValidationError().addMessageKey("Required"));
+		error(new ValidationError().addMessageKey("Required"));
 	}
 
 	/**

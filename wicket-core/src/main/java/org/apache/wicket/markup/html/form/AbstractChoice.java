@@ -432,4 +432,12 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	{
 		return false;
 	}
+
+	@Override
+	public final FormComponent<T> setType(Class<?> type)
+	{
+		throw new UnsupportedOperationException(
+			"This class does not support type-conversion because it is performed "
+				+ "exclusively by the IChoiceRenderer assigned to this component");
+	}
 }
