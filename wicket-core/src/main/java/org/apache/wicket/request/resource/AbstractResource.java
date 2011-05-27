@@ -315,8 +315,7 @@ public abstract class AbstractResource implements IResource
 		 */
 		public void setCacheDuration(Duration duration)
 		{
-			Args.notNull(duration, "duration");
-			cacheDuration = duration;
+			cacheDuration = Args.notNull(duration, "duration");
 		}
 
 		/**
@@ -370,8 +369,7 @@ public abstract class AbstractResource implements IResource
 		 */
 		public void setCacheScope(WebResponse.CacheScope scope)
 		{
-			Args.notNull(scope, "scope");
-			cacheScope = scope;
+			cacheScope = Args.notNull(scope, "scope");
 		}
 
 		/**
@@ -410,11 +408,11 @@ public abstract class AbstractResource implements IResource
 	 */
 	protected void configureCache(final ResourceResponse data, final Attributes attributes)
 	{
-		Duration duration = data.getCacheDuration();
 		Response response = attributes.getResponse();
 
 		if (response instanceof WebResponse)
 		{
+			Duration duration = data.getCacheDuration();
 			WebResponse webResponse = (WebResponse)response;
 			if (duration.compareTo(Duration.NONE) > 0)
 			{
@@ -435,85 +433,100 @@ public abstract class AbstractResource implements IResource
 	{
 		// Get a "new" ResourceResponse to write a response
 		ResourceResponse data = newResourceResponse(attributes);
-
-		WebResponse response = (WebResponse)attributes.getResponse();
-
-		// 1. Last Modified
-		Time lastModified = data.getLastModified();
-		if (lastModified != null)
-		{
-			response.setLastModifiedTime(lastModified);
-		}
-
-		// 2. Caching
-		configureCache(data, attributes);
+		setResponseHeaders(data, attributes);
 
 		if (!data.dataNeedsToBeWritten(attributes))
 		{
-			response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-			return;
-		}
-
-		if (data.getErrorCode() != null)
-		{
-			response.sendError(data.getErrorCode(), data.getErrorMessage());
 			return;
 		}
 
 		if (data.getWriteCallback() == null)
 		{
-			throw new IllegalStateException(
-				"ResourceData#setWriteCallback must be called for AbstractResource.");
+			throw new IllegalStateException("ResourceResponse#setWriteCallback() must be set.");
 		}
 
-		String fileName = data.getFileName();
-		ContentDisposition disposition = data.getContentDisposition();
-		String mimeType = data.getContentType();
-		String encoding = null;
-
-		if (mimeType != null && mimeType.contains("text"))
-		{
-			encoding = data.getTextEncoding();
-		}
-
-		long contentLength = data.getContentLength();
-
-		// 3. Content Disposition
-		if (ContentDisposition.ATTACHMENT == disposition)
-		{
-			response.setAttachmentHeader(fileName);
-		}
-		else if (ContentDisposition.INLINE == disposition)
-		{
-			response.setInlineHeader(fileName);
-		}
-
-		// 4. Mime Type (+ encoding)
-		if (mimeType != null)
-		{
-			if (encoding == null)
-			{
-				response.setContentType(mimeType);
-			}
-			else
-			{
-				response.setContentType(mimeType + "; charset=" + encoding);
-			}
-		}
-
-		// 5. Content Length
-		if (contentLength != -1)
-		{
-			response.setContentLength(contentLength);
-		}
-
-		// 6. Flush the response
-		// This is necessary for firefox if this resource is an image, otherwise it messes up
-		// other images on page
-		response.flush();
-
-		// 7. Write Data
 		data.getWriteCallback().writeData(attributes);
+	}
+
+	/**
+	 * @param data
+	 * @param attributes
+	 */
+	protected void setResponseHeaders(final ResourceResponse data, final Attributes attributes)
+	{
+		Response response = attributes.getResponse();
+		if (response instanceof WebResponse)
+		{
+			WebResponse webResponse = (WebResponse)response;
+
+			// 1. Last Modified
+			Time lastModified = data.getLastModified();
+			if (lastModified != null)
+			{
+				webResponse.setLastModifiedTime(lastModified);
+			}
+
+			// 2. Caching
+			configureCache(data, attributes);
+
+			if (!data.dataNeedsToBeWritten(attributes))
+			{
+				webResponse.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+				return;
+			}
+
+			if (data.getErrorCode() != null)
+			{
+				webResponse.sendError(data.getErrorCode(), data.getErrorMessage());
+				return;
+			}
+
+			String fileName = data.getFileName();
+			ContentDisposition disposition = data.getContentDisposition();
+			String mimeType = data.getContentType();
+			String encoding = null;
+
+			if (mimeType != null && mimeType.contains("text"))
+			{
+				encoding = data.getTextEncoding();
+			}
+
+			long contentLength = data.getContentLength();
+
+			// 3. Content Disposition
+			if (ContentDisposition.ATTACHMENT == disposition)
+			{
+				webResponse.setAttachmentHeader(fileName);
+			}
+			else if (ContentDisposition.INLINE == disposition)
+			{
+				webResponse.setInlineHeader(fileName);
+			}
+
+			// 4. Mime Type (+ encoding)
+			if (mimeType != null)
+			{
+				if (encoding == null)
+				{
+					webResponse.setContentType(mimeType);
+				}
+				else
+				{
+					webResponse.setContentType(mimeType + "; charset=" + encoding);
+				}
+			}
+
+			// 5. Content Length
+			if (contentLength != -1)
+			{
+				webResponse.setContentLength(contentLength);
+			}
+
+			// 6. Flush the response
+			// This is necessary for firefox if this resource is an image, otherwise it messes up
+			// other images on page
+			webResponse.flush();
+		}
 	}
 
 	/**
