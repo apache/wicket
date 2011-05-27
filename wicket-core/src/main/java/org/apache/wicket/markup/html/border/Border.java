@@ -108,8 +108,8 @@ import org.apache.wicket.util.lang.Args;
  * The component "someContainer" in the previous example must be added to the border, and not the
  * body, which is achieved via {@link #addToBorder(Component...)}.
  * <p/>
- * {@link #add(Component...)} is an alias to {@link #addToBorderBody(Component...)} and will add a
- * child component to the border body as shown in the example below.
+ * {@link #add(Component...)} is an alias to {@link #addToBody(Component...)} and will add a child
+ * component to the border body as shown in the example below.
  * 
  * <pre>
  *   &lt;html&gt;
@@ -167,7 +167,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	{
 		super(id, model);
 
-		body = newBorderBodyContainer(id + "_" + BODY);
+		body = new BorderBodyContainer(id + "_" + BODY);
 		addToBorder(body);
 	}
 
@@ -180,108 +180,37 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	}
 
 	/**
-	 * Create a new BorderBodyContainer
-	 * 
-	 * @param id
-	 * @return A new instance
-	 */
-	BorderBodyContainer newBorderBodyContainer(final String id)
-	{
-		return new BorderBodyContainer(id);
-	}
-
-	/**
-	 * This is for all components which have been added to the markup like this:
-	 * 
-	 * <pre>
-	 *   &lt;span wicket:id="myBorder"&gt;
-	 *     &lt;input wicket:id="text1" .. /&gt;
-	 *     ...
-	 *   &lt;/span&gt;
-	 * </pre>
-	 * 
-	 * Whereas {@link #addToBorder(Component...)} will add a component associated with the following
-	 * markup:
-	 * 
-	 * <pre>
-	 *   &lt;wicket:border&gt;
-	 *     &lt;form wicket:id="myForm" .. &gt;
-	 *        &lt;body/&gt;
-	 *     &lt;/form&gt;
-	 *   &lt;/wicket:border&gt;
-	 * </pre>
-	 * 
-	 * @param children
-	 * @return this
-	 */
-	@Override
-	public MarkupContainer add(final Component... children)
-	{
-		return addToBorderBody(children);
-	}
-
-	/**
-	 * Add a behavior to the border's body.
-	 * 
-	 * @see #add(Component...)
-	 */
-	@Override
-	public Component add(final Behavior... behaviors)
-	{
-		return addToBorderBody(behaviors);
-	}
-
-	/**
 	 * @see #add(Component...)
 	 * @param children
 	 * @return this
 	 */
-	public MarkupContainer addToBorder(final Component... children)
+	public Border addToBorder(final Component... children)
 	{
-		return super.add(children);
+		super.add(children);
+		return this;
 	}
 
 	/**
-	 * @see #add(Component...)
-	 * @param behaviors
+	 * @see #add(Behavior...)
+	 * @param children
 	 * @return this
 	 */
-	public Component addToBorder(final Behavior... behaviors)
+	public Border addToBorder(final Behavior... children)
 	{
-		return super.add(behaviors);
+		super.add(children);
+		return this;
 	}
+
 
 	/**
 	 * @see #add(Component...)
 	 * @param child
 	 * @return this
 	 */
-	public Border addToBorderBody(final Component... child)
+	public Border addToBody(final Component... child)
 	{
 		getBodyContainer().add(child);
 		return this;
-	}
-
-	/**
-	 * @see #add(Component...)
-	 * @param behaviors
-	 * @return this
-	 */
-	public Component addToBorderBody(final Behavior... behaviors)
-	{
-		super.add(behaviors);
-		return this;
-	}
-
-	/**
-	 * @see #addToBorderBody(Component...)
-	 * @see #get(String)
-	 * @param path
-	 * @return The component added to the border
-	 */
-	public final Component getFromBorderBody(final String path)
-	{
-		return getBodyContainer().get(path);
 	}
 
 	/**

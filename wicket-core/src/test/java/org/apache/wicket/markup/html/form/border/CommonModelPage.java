@@ -40,12 +40,12 @@ public class CommonModelPage extends WebPage
 		add(border);
 
 		Form<Void> form1 = new Form<Void>("form1");
-		border.add(form1);
+		border.addToBody(form1);
 
 		form1.add(new TextField<Integer>("quantity1", new PropertyModel<Integer>(this, "quantity1")));
 
 		Form<Void> form2 = new Form<Void>("form2");
-		border.add(form2);
+		border.addToBody(form2);
 
 		form2.add(new TextField<Integer>("quantity2", new PropertyModel<Integer>(this, "quantity2")));
 	}

@@ -36,7 +36,7 @@ public class FeedbackFormPage extends WebPage
 	{
 		final TextField<String> tf = new TextField<String>("input", new Model<String>());
 		final FormComponentFeedbackBorder feedback = new FormComponentFeedbackBorder("feedback");
-		feedback.addToBorderBody(tf);
+		feedback.addToBody(tf);
 
 		Form<Void> form = new Form<Void>("form")
 		{
