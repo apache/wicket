@@ -40,6 +40,7 @@ public class ThumbnailImageResourceTest extends WicketTestCase
 	public void testThumbnailImageResource() throws IOException
 	{
 		DefaultButtonImageResource unscaled = new DefaultButtonImageResource(60, 60, "");
+		unscaled.setFormat("jpg");
 		ThumbnailImageResource scaledImageResource = new ThumbnailImageResource(unscaled, 30);
 
 		tester.startResource(scaledImageResource);
