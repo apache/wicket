@@ -121,18 +121,21 @@ public interface IRequestCycleListener
 	/**
 	 * Called when an {@link IRequestHandler} is resolved and will be executed.
 	 * 
+	 * @param cycle
+	 * 
 	 * @param handler
 	 */
-	void onRequestHandlerResolved(IRequestHandler handler);
+	void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler);
 
 	/**
 	 * Called when a {@link IRequestHandler} has been scheduled. Can be called multiple times during
 	 * a request when new handlers get scheduled for processing.
 	 * 
+	 * @param cycle
 	 * @param handler
 	 * @see RequestCycle#scheduleRequestHandlerAfterCurrent(IRequestHandler)
 	 */
-	void onRequestHandlerScheduled(IRequestHandler handler);
+	void onRequestHandlerScheduled(RequestCycle cycle, IRequestHandler handler);
 
 	/**
 	 * Called when there is an exception in the request cycle that would normally be handled by
@@ -155,8 +158,10 @@ public interface IRequestCycleListener
 	/**
 	 * Called when an {@link IRequestHandler} is resolved for an exception and will be executed.
 	 * 
+	 * @param cycle
 	 * @param handler
 	 * @param exception
 	 */
-	void onExceptionRequestHandlerResolved(IRequestHandler handler, Exception exception);
+	void onExceptionRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler,
+		Exception exception);
 }

@@ -36,11 +36,11 @@ public abstract class AbstractRequestCycleListener implements IRequestCycleListe
 	{
 	}
 
-	public void onRequestHandlerScheduled(IRequestHandler handler)
+	public void onRequestHandlerScheduled(RequestCycle cycle, IRequestHandler handler)
 	{
 	}
 
-	public void onRequestHandlerResolved(IRequestHandler handler)
+	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
 	{
 	}
 
@@ -49,7 +49,8 @@ public abstract class AbstractRequestCycleListener implements IRequestCycleListe
 		return null;
 	}
 
-	public void onExceptionRequestHandlerResolved(IRequestHandler handler, Exception exception)
+	public void onExceptionRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler,
+		Exception exception)
 	{
 	}
 }

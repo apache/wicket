@@ -57,13 +57,13 @@ class MultiRequestCycleListenerCallOrderApplication extends WebApplication
 			callSequence.add(name + ".onBeginRequest");
 		}
 
-		public void onRequestHandlerScheduled(IRequestHandler handler)
+		public void onRequestHandlerScheduled(final RequestCycle cycle, IRequestHandler handler)
 		{
 			if (handler != null)
 				callSequence.add(name + ".onRequestHandlerScheduled");
 		}
 
-		public void onRequestHandlerResolved(IRequestHandler handler)
+		public void onRequestHandlerResolved(final RequestCycle cycle, IRequestHandler handler)
 		{
 			callSequence.add(name + ".onRequestHandlerResolved");
 		}
@@ -78,7 +78,8 @@ class MultiRequestCycleListenerCallOrderApplication extends WebApplication
 			callSequence.add(name + ".onDetach");
 		}
 
-		public void onExceptionRequestHandlerResolved(IRequestHandler handler, Exception exception)
+		public void onExceptionRequestHandlerResolved(final RequestCycle cycle,
+			IRequestHandler handler, Exception exception)
 		{
 			callSequence.add(name + ".onExceptionRequestHandlerResolved");
 		}

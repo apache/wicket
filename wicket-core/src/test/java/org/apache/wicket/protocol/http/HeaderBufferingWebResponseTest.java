@@ -28,6 +28,7 @@ import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -78,7 +79,8 @@ public class HeaderBufferingWebResponseTest extends TestCase
 		IRequestHandler lastExceptionRquestHandlerResolved;
 
 		@Override
-		public void onExceptionRequestHandlerResolved(IRequestHandler handler, Exception exception)
+		public void onExceptionRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler,
+			Exception exception)
 		{
 			lastExceptionRquestHandlerResolved = handler;
 		}

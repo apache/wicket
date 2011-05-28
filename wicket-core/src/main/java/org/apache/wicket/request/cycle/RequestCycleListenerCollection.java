@@ -142,36 +142,36 @@ public class RequestCycleListenerCollection extends ListenerCollection<IRequestC
 		return handlers.get(0);
 	}
 
-	public void onRequestHandlerResolved(final IRequestHandler handler)
+	public void onRequestHandlerResolved(final RequestCycle cycle, final IRequestHandler handler)
 	{
 		notify(new INotifier<IRequestCycleListener>()
 		{
 			public void notify(IRequestCycleListener listener)
 			{
-				listener.onRequestHandlerResolved(handler);
+				listener.onRequestHandlerResolved(cycle, handler);
 			}
 		});
 	}
 
-	public void onExceptionRequestHandlerResolved(final IRequestHandler handler,
-		final Exception exception)
+	public void onExceptionRequestHandlerResolved(final RequestCycle cycle,
+		final IRequestHandler handler, final Exception exception)
 	{
 		notify(new INotifier<IRequestCycleListener>()
 		{
 			public void notify(IRequestCycleListener listener)
 			{
-				listener.onExceptionRequestHandlerResolved(handler, exception);
+				listener.onExceptionRequestHandlerResolved(cycle, handler, exception);
 			}
 		});
 	}
 
-	public void onRequestHandlerScheduled(final IRequestHandler handler)
+	public void onRequestHandlerScheduled(final RequestCycle cycle, final IRequestHandler handler)
 	{
 		notify(new INotifier<IRequestCycleListener>()
 		{
 			public void notify(IRequestCycleListener listener)
 			{
-				listener.onRequestHandlerScheduled(handler);
+				listener.onRequestHandlerScheduled(cycle, handler);
 			}
 		});
 	}

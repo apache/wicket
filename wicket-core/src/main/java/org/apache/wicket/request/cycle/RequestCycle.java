@@ -208,7 +208,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 			IRequestHandler handler = resolveRequestHandler();
 			if (handler != null)
 			{
-				listeners.onRequestHandlerResolved(handler);
+				listeners.onRequestHandlerResolved(this, handler);
 				requestHandlerExecutor.execute(handler);
 				return true;
 			}
@@ -223,7 +223,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 			IRequestHandler handler = handleException(e);
 			if (handler != null)
 			{
-				listeners.onExceptionRequestHandlerResolved(handler, e);
+				listeners.onExceptionRequestHandlerResolved(this, handler, e);
 				executeExceptionRequestHandler(handler, getExceptionRetryCount());
 			}
 			else
@@ -670,7 +670,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 
 		// only forward calls to the listeners when handler is null
 		if (handler != null)
-			listeners.onRequestHandlerScheduled(handler);
+			listeners.onRequestHandlerScheduled(this, handler);
 	}
 
 	/**

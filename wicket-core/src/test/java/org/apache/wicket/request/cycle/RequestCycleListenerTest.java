@@ -308,17 +308,18 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 			detachesnotified++;
 		}
 
-		public void onRequestHandlerResolved(IRequestHandler handler)
+		public void onRequestHandlerResolved(final RequestCycle cycle, IRequestHandler handler)
 		{
 			resolutions++;
 		}
 
-		public void onExceptionRequestHandlerResolved(IRequestHandler handler, Exception exception)
+		public void onExceptionRequestHandlerResolved(final RequestCycle cycle,
+			IRequestHandler handler, Exception exception)
 		{
 			exceptionResolutions++;
 		}
 
-		public void onRequestHandlerScheduled(IRequestHandler handler)
+		public void onRequestHandlerScheduled(final RequestCycle cycle, IRequestHandler handler)
 		{
 			schedules++;
 		}
