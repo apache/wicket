@@ -1252,14 +1252,18 @@ public class BaseWicketTester
 	 * tester.startComponent(view); assertEquals(4, view.size());
 	 * 
 	 * @param component
+	 * @return the processed component
+	 * @see #startComponentInPage(Class)
 	 */
-	public void startComponent(final Component component)
+	public Component startComponent(final Component component)
 	{
 		if (component instanceof FormComponent)
 		{
 			((FormComponent<?>)component).processInput();
 		}
 		component.beforeRender();
+
+		return component;
 	}
 
 	/**
