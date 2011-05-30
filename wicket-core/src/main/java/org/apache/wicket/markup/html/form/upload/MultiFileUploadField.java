@@ -183,7 +183,6 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 	{
 		super.onBeforeRender();
 
-		// auto toggle form's multipart property
 		Form<?> form = findParent(Form.class);
 		if (form == null)
 		{
