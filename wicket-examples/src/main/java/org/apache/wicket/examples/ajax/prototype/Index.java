@@ -40,6 +40,8 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  */
 public class Index extends WicketExamplePage
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Click count. */
 	private int count = 0;
 
@@ -52,8 +54,10 @@ public class Index extends WicketExamplePage
 	public Index()
 	{
 		// Add the Ajaxian link to the page...
-		add(new Link("link")
+		add(new Link<Void>("link")
 		{
+			private static final long serialVersionUID = 1L;
+
 			/**
 			 * Handles a click on the link. This method is accessed normally using a standard http
 			 * request, but in this example, we use Ajax to perform the call.
@@ -88,7 +92,7 @@ public class Index extends WicketExamplePage
 		});
 
 		// Add the label
-		add(counter = new Label("counter", new PropertyModel(this, "count")));
+		add(counter = new Label("counter", new PropertyModel<Integer>(this, "count")));
 	}
 
 	/**
