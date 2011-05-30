@@ -22,6 +22,7 @@ import java.nio.charset.Charset;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 
@@ -59,7 +60,7 @@ public class TextRequestHandler implements IRequestHandler
 	 * Constructor
 	 * 
 	 * @param contentType
-	 *            content type of the data the string represents eg
+	 *            content type of the data the string represents, e.g.
 	 *            <code>text/html; charset=utf-8</code>
 	 * @param encoding
 	 *            charset to use
@@ -68,17 +69,8 @@ public class TextRequestHandler implements IRequestHandler
 	 */
 	public TextRequestHandler(final String contentType, final String encoding, final String string)
 	{
-		if (string == null)
-		{
-			throw new IllegalArgumentException("Argument string must be not null");
-		}
-		if (Strings.isEmpty(contentType))
-		{
-			throw new IllegalArgumentException("Argument contentType must not be null or empty");
-		}
-
-		this.contentType = contentType;
-		this.string = string;
+		this.contentType = Args.notEmpty(contentType, "contentType");
+		this.string = Args.notNull(string, "string");
 		this.encoding = encoding;
 	}
 
