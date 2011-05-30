@@ -322,7 +322,7 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Mounts a shared resource class to the given path.
+	 * Mounts a shared resource to the given path.
 	 * 
 	 * @param path
 	 *            the path to mount the resource reference on

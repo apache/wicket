@@ -23,7 +23,14 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 
 /**
- * TODO javadoc
+ * Class which holds shared resources. Resources can be shared by name. An optional scope can be
+ * given to prevent naming conflicts and a locale and/or style can be given as well.
+ * 
+ * <p>
+ * Unlike component hosted resources, shared resources have stable URLs, which makes them suitable
+ * for indexing by web crawlers and caching by web browsers. As they are also not synchronised on
+ * the {@link Session}, they can be loaded asynchronously, which is important with images and
+ * resources such as JavaScript and CSS.
  */
 public class SharedResources
 {
