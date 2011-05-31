@@ -99,7 +99,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 */
 	public void testPageParameters()
 	{
-		String expectedEncrypted = "ywKWg-Qpk7YQBiYCmj9MaAJSIV1gtssNinjiALijtet62VMQc2-sMK_RchttkidUpYM_cplXKeZSfGxBkvWzH_E_zWv4Ii7MNSm5nXKno7o/ywK6c/MK_c0/nji3c/Qpk1b/XKnba/c2-cd?namedKey1=namedValue1&namedKey2=namedValue2";
+		String expectedEncrypted = "ywKWg-Qpk7YQBiYCmj9MaAJSIV1gtssNinjiALijtet62VMQc2-sMK_RchttkidUpYM_cplXKeZSfGxBkvWzH_E_zWv4Ii7MNSm5nXKno7o/ywK6c/MK_c0/nji3c/Qpk1b/XKnba/c2-cd";
 
 		PageParameters expectedParameters = new PageParameters();
 		expectedParameters.add("namedKey1", "namedValue1");
