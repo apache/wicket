@@ -598,7 +598,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 			try
 			{
 				final StringResponse bodyResponse = new StringResponse();
-				contructResponseBody(bodyResponse, encoding);
+				constructResponseBody(bodyResponse, encoding);
 				CharSequence filteredResponse = invokeResponseFilters(bodyResponse);
 				response.write(filteredResponse);
 			}
@@ -623,7 +623,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	 * @param encoding
 	 *            the encoding that should be used to encode the body
 	 */
-	private void contructResponseBody(final Response bodyResponse, final String encoding)
+	private void constructResponseBody(final Response bodyResponse, final String encoding)
 	{
 		bodyResponse.write("<?xml version=\"1.0\" encoding=\"");
 		bodyResponse.write(encoding);
