@@ -73,7 +73,11 @@ public class WicketFilterTest extends TestCase
 	@Override
 	protected void tearDown() throws Exception
 	{
-		application = null;
+		if (application != null)
+		{
+			application.internalDestroy();
+			application = null;
+		}
 	}
 
 	/**
