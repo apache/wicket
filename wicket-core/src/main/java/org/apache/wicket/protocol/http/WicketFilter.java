@@ -17,6 +17,8 @@
 package org.apache.wicket.protocol.http;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -66,6 +68,11 @@ public class WicketFilter implements Filter
 	/** The name of the context parameter that specifies application factory class */
 	public static final String APP_FACT_PARAM = "applicationFactoryClassName";
 
+	/**
+	 * Name of parameter used to express a comma separated list of paths that should be ignored
+	 */
+	public static final String IGNORE_PATHS_PARAM = "ignorePaths";
+
 	// Wicket's Application object
 	private WebApplication application;
 
@@ -78,6 +85,14 @@ public class WicketFilter implements Filter
 
 	// filterPath length without trailing "/"
 	private int filterPathLength = -1;
+
+	/** set of paths that should be ignored by the wicket filter */
+	private final Set<String> ignorePaths = new HashSet<String>();
+
+	/**
+	 * A flag indicating whether WicketFilter is used directly or through WicketServlet
+	 */
+	private boolean isServlet = false;
 
 	/**
 	 * @return The class loader
@@ -122,6 +137,13 @@ public class WicketFilter implements Filter
 			if (filterPath == null)
 			{
 				throw new IllegalStateException("filter path was not configured");
+			}
+
+			if (shouldIgnorePath(httpServletRequest))
+			{
+				log.debug("Ignoring request {}", httpServletRequest.getRequestURL());
+				chain.doFilter(request, response);
+				return false;
 			}
 
 			String redirectURL = checkIfRedirectRequired(httpServletRequest);
@@ -269,7 +291,7 @@ public class WicketFilter implements Filter
 	 * @see #init(FilterConfig)
 	 * 
 	 * @param isServlet
-	 *            True if Servlet, false of Filter
+	 *            True if Servlet, false if Filter
 	 * @param filterConfig
 	 * @throws ServletException
 	 */
@@ -277,6 +299,8 @@ public class WicketFilter implements Filter
 		throws ServletException
 	{
 		this.filterConfig = filterConfig;
+		this.isServlet = isServlet;
+		initIgnorePaths(filterConfig);
 
 		applicationFactory = getApplicationFactory();
 		application = applicationFactory.createApplication(this);
@@ -553,5 +577,100 @@ public class WicketFilter implements Filter
 					"'");
 		}
 		this.filterPath = filterPath;
+	}
+
+	/**
+	 * Returns a relative path to the filter path and context root from an HttpServletRequest - use
+	 * this to resolve a Wicket request.
+	 * 
+	 * @param request
+	 * @return Path requested, minus query string, context path, and filterPath. Relative, no
+	 *         leading '/'.
+	 */
+	public String getRelativePath(HttpServletRequest request)
+	{
+		String path = Strings.stripJSessionId(request.getRequestURI());
+		String contextPath = request.getContextPath();
+		path = path.substring(contextPath.length());
+		if (isServlet)
+		{
+			String servletPath = request.getServletPath();
+			path = path.substring(servletPath.length());
+		}
+
+		if (path.length() > 0)
+		{
+			path = path.substring(1);
+		}
+
+		// We should always be under the rootPath, except
+		// for the special case of someone landing on the
+		// home page without a trailing slash.
+		if (!path.startsWith(filterPath))
+		{
+			if (filterPath.equals(path + "/"))
+			{
+				path += "/";
+			}
+		}
+		if (path.startsWith(filterPath))
+		{
+			path = path.substring(filterPath.length());
+		}
+
+		return path;
+
+	}
+
+	/**
+	 * Checks whether this is a request to an ignored path
+	 * 
+	 * @param request
+	 *            the current http request
+	 * @return {@code true} when the request should be ignored, {@code false} - otherwise
+	 */
+	private boolean shouldIgnorePath(final HttpServletRequest request)
+	{
+		boolean ignore = false;
+		if (ignorePaths.size() > 0)
+		{
+			String relativePath = getRelativePath(request);
+			if (Strings.isEmpty(relativePath) == false)
+			{
+				for (String path : ignorePaths)
+				{
+					if (relativePath.startsWith(path))
+					{
+						ignore = true;
+						break;
+					}
+				}
+			}
+		}
+
+		return ignore;
+	}
+
+	/**
+	 * initializes the ignore paths parameter
+	 * 
+	 * @param filterConfig
+	 */
+	private void initIgnorePaths(final FilterConfig filterConfig)
+	{
+		String paths = filterConfig.getInitParameter(IGNORE_PATHS_PARAM);
+		if (Strings.isEmpty(paths) == false)
+		{
+			String[] parts = Strings.split(paths, ',');
+			for (String path : parts)
+			{
+				path = path.trim();
+				if (path.startsWith("/"))
+				{
+					path = path.substring(1);
+				}
+				ignorePaths.add(path);
+			}
+		}
 	}
 }

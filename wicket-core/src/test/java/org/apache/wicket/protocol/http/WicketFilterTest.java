@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.protocol.http;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
@@ -38,6 +43,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -49,8 +55,11 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.util.file.WebXmlFile;
+import org.mockito.Matchers;
+import org.mockito.Mockito;
 import org.xml.sax.SAXException;
 
 /**
@@ -186,6 +195,7 @@ public class WicketFilterTest extends TestCase
 			initParameters.put(WicketFilter.FILTER_MAPPING_PARAM, "/servlet/*");
 			initParameters.put(ContextParamWebApplicationFactory.APP_CLASS_PARAM,
 				MockApplication.class.getName());
+			initParameters.put(WicketFilter.IGNORE_PATHS_PARAM, "/css,/js,images");
 		}
 
 		public String getFilterName()
@@ -318,5 +328,46 @@ public class WicketFilterTest extends TestCase
 		{
 			testParallelCheckRedirect(threadCount);
 		}
+	}
+
+	/**
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-3750">WICKET-3750</a>
+	 * 
+	 * @throws Exception
+	 */
+	public void testIgnorePaths() throws Exception
+	{
+		application = spy(new MockApplication());
+		WicketFilter filter = new WicketFilter();
+		filter.init(new FilterTestingConfig());
+
+		HttpServletRequest request = mock(HttpServletRequest.class);
+		when(request.getRequestURI()).thenReturn("/contextPath/js/bla.js")
+			.thenReturn("/contextPath/css/bla.css")
+			.thenReturn("/contextPath/images/bla.img")
+			.thenReturn("/contextPath/something/real");
+		when(request.getContextPath()).thenReturn("/contextPath");
+		HttpServletResponse response = mock(HttpServletResponse.class);
+		FilterChain chain = mock(FilterChain.class);
+
+		// execute 3 requests - 1 for bla.js, 1 for bla.css and 1 for bla.img
+		for (int i = 0; i < 3; i++)
+		{
+			boolean isProcessed = filter.processRequest(request, response, chain);
+			assertFalse(isProcessed);
+			verify(application, Mockito.never()).newWebRequest(Matchers.eq(request),
+				Matchers.anyString());
+			verify(application, Mockito.never()).newWebResponse(Matchers.any(WebRequest.class),
+				Matchers.eq(response));
+			verify(chain, Mockito.times(i + 1)).doFilter(request, response);
+		}
+
+		// execute the request to /something/real
+		boolean isProcessed = filter.processRequest(request, response, chain);
+		assertTrue(isProcessed);
+		verify(application).newWebRequest(Matchers.eq(request), Matchers.anyString());
+		verify(application).newWebResponse(Matchers.any(WebRequest.class), Matchers.eq(response));
+		// the request is processed so the chain is not executed
+		verify(chain, Mockito.times(3)).doFilter(request, response);
 	}
 }
