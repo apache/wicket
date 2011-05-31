@@ -57,7 +57,7 @@ import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.pageStore.IPageStore;
-import org.apache.wicket.protocol.http.DummyRequestLogger;
+import org.apache.wicket.protocol.http.RequestLogger;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebSession;
@@ -759,7 +759,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 */
 	protected IRequestLogger newRequestLogger()
 	{
-		return new DummyRequestLogger();
+		return new RequestLogger();
 	}
 
 	/**

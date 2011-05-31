@@ -32,9 +32,9 @@ import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.DummyRequestLogger;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.IRequestLogger.SessionData;
+import org.apache.wicket.protocol.http.RequestLogger;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.lang.Bytes;
 
@@ -173,16 +173,10 @@ public class LiveSessionsPage extends DevUtilsPage
 	IRequestLogger getRequestLogger()
 	{
 		WebApplication webApplication = (WebApplication)Application.get();
-		final IRequestLogger requestLogger;
-		if (webApplication.getRequestLogger() == null)
-		{
-			// make default one.
-			requestLogger = new DummyRequestLogger();
-		}
-		else
-		{
-			requestLogger = webApplication.getRequestLogger();
-		}
+		IRequestLogger requestLogger = webApplication.getRequestLogger();
+
+		if (requestLogger == null)
+			requestLogger = new RequestLogger();
 		return requestLogger;
 	}
 }

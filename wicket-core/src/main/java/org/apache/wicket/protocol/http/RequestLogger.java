@@ -56,10 +56,10 @@ import org.slf4j.LoggerFactory;
  * 
  * @since 1.2
  */
-public class DummyRequestLogger implements IRequestLogger
+public class RequestLogger implements IRequestLogger
 {
 	/** log. */
-	protected static Logger log = LoggerFactory.getLogger(DummyRequestLogger.class);
+	protected static Logger log = LoggerFactory.getLogger(RequestLogger.class);
 
 	private static MetaDataKey<RequestData> REQUEST_DATA = new MetaDataKey<RequestData>()
 	{
@@ -81,7 +81,7 @@ public class DummyRequestLogger implements IRequestLogger
 	/**
 	 * Construct.
 	 */
-	public DummyRequestLogger()
+	public RequestLogger()
 	{
 		requests = Collections.synchronizedList(new LinkedList<RequestData>()
 		{
