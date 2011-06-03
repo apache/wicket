@@ -25,10 +25,18 @@ import org.apache.wicket.util.time.Time;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * @author pertl
+ */
 public class LastModifiedTest extends Assert
 {
 	private static final String FILE = "/some/folder/file.jar";
 
+	/**
+	 * XXX: DOC ME
+	 * 
+	 * @throws IOException
+	 */
 	@Test
 	public void getTimestampForMissingFile() throws IOException
 	{
@@ -37,19 +45,29 @@ public class LastModifiedTest extends Assert
 		assertNull(Connections.getLastModified(new URL("file:" + file.getAbsolutePath())));
 	}
 
+	/**
+	 * XXX: DOC ME
+	 * 
+	 * @throws IOException
+	 */
 	@Test
 	public void getLocalFileFromUrl()
 	{
 		File file = Files.getLocalFileFromUrl("file:" + FILE);
-		assertEquals(file.getAbsolutePath(), FILE);
+		assertEquals(file.getAbsolutePath(), new File(FILE).getAbsolutePath());
 
 		file = Files.getLocalFileFromUrl("jar:file:" + FILE + "!/internal/resource/bla/foo/bar/baz");
-		assertEquals(file.getAbsolutePath(), FILE);
+		assertEquals(file.getAbsolutePath(), new File(FILE).getAbsolutePath());
 
 		file = Files.getLocalFileFromUrl("http://bla.de");
 		assertNull(file);
 	}
 
+	/**
+	 * XXX: DOC ME
+	 * 
+	 * @throws IOException
+	 */
 	@Test
 	public void getLastModified() throws IOException
 	{
@@ -65,7 +83,8 @@ public class LastModifiedTest extends Assert
 			{
 				final Time expected = Time.millis(lm);
 				assertEquals(expected, Files.getLastModified(file));
-				assertEquals(expected, Connections.getLastModified(new URL("file:" + file.getAbsolutePath())));
+				assertEquals(expected,
+					Connections.getLastModified(new URL("file:" + file.getAbsolutePath())));
 			}
 		}
 		finally
