@@ -55,7 +55,7 @@ public interface IMarkupFragment extends Iterable<MarkupElement>
 	int size();
 
 	/**
-	 * Find the markup element index of the component with 'path'
+	 * Find the markup fragment of the component with 'path'
 	 * 
 	 * @param id
 	 *            The component's id to search for
