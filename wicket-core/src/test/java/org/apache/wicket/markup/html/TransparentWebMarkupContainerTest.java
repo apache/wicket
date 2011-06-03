@@ -89,7 +89,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	/**
 	 * Test case for <a href="https://issues.apache.org/jira/browse/WICKET-3719">WICKET-3719</a>
 	 */
-	public void bug_testAjaxUpdate()
+	public void testAjaxUpdate()
 	{
 		WicketTester wicketTester = new WicketTester()
 		{
