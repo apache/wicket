@@ -116,6 +116,7 @@ public class StringResourceModelTest extends WicketTestCase
 	 */
 	public void testGetPropertySubstitutedResource()
 	{
+		tester.getSession().setLocale(Locale.ENGLISH);
 		StringResourceModel model = new StringResourceModel("weather.message", page, wsModel);
 		Assert.assertEquals(
 			"Text should be as expected",
@@ -138,7 +139,8 @@ public class StringResourceModelTest extends WicketTestCase
 			new PropertyModel<Double>(wsModel, "currentTemperature"), new PropertyModel<String>(
 				wsModel, "units"));
 		MessageFormat format = new MessageFormat(
-			"Weather station \"Europe''s main weather station\" reports that the temperature is {0} {1}");
+			"Weather station \"Europe''s main weather station\" reports that the temperature is {0} {1}",
+			tester.getSession().getLocale());
 
 		ws.setCurrentTemperature(25.7);
 		String expected = format.format(new Object[] { 25.7, "\u00B0C" });
