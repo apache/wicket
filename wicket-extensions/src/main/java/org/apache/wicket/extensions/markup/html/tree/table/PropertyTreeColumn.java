@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import javax.swing.tree.TreeNode;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.PropertyResolver;
@@ -88,6 +89,11 @@ public class PropertyTreeColumn<T> extends AbstractTreeColumn
 	public String renderNode(final TreeNode node)
 	{
 		Object result = PropertyResolver.getValue(propertyExpression, node);
+		IConverter converter = getConverter();
+		if (converter == null && result != null)
+		{
+			converter = Application.get().getConverterLocator().getConverter(result.getClass());
+		}
 		if (converter != null)
 		{
 			Locale locale = this.locale;
@@ -95,8 +101,8 @@ public class PropertyTreeColumn<T> extends AbstractTreeColumn
 			{
 				locale = Session.get().getLocale();
 			}
-			@SuppressWarnings("unchecked")
-			String string = converter.convertToString((T)result, locale);
+
+			String string = converter.convertToString(result, locale);
 			return string;
 		}
 		else
