@@ -372,8 +372,11 @@ public abstract class Session implements IClusterable, IEventSink
 	{
 		if (id == null)
 		{
-			id = getSessionStore().getSessionId(RequestCycle.get().getRequest(), false);
-
+			RequestCycle requestCycle = RequestCycle.get();
+			if (requestCycle != null)
+			{
+				id = getSessionStore().getSessionId(requestCycle.getRequest(), false);
+			}
 			// we have one?
 			if (id != null)
 			{
