@@ -34,9 +34,6 @@ public class BookmarkablePageLink<T> extends Link<T>
 	/** The page class that this link links to. */
 	private final String pageClassName;
 
-	/** Any page map for this link */
-	private final String pageMapName = null;
-
 	/** The parameters to pass to the class constructor when instantiated. */
 	protected PageParameters parameters;
 
@@ -207,11 +204,6 @@ public class BookmarkablePageLink<T> extends Link<T>
 	@Override
 	protected CharSequence getURL()
 	{
-		if (pageMapName != null && getPopupSettings() != null)
-		{
-			throw new IllegalStateException("You cannot specify popup settings and a page map");
-		}
-
 		PageParameters parameters = getPageParameters();
 
 		return urlFor(getPageClass(), parameters);
