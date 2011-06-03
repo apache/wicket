@@ -170,7 +170,6 @@ public abstract class WebApplication extends Application
 	/**
 	 * @see org.apache.wicket.Application#getApplicationKey()
 	 */
-	@Deprecated
 	@Override
 	public final String getApplicationKey()
 	{
@@ -249,7 +248,8 @@ public abstract class WebApplication extends Application
 				// According to the ServletSpec, the filter might not yet been initialized
 				filterName = getWicketFilter().getFilterConfig().getFilterName();
 			}
-			sessionAttributePrefix = "wicket:" + filterName + ":";
+			String namespace = getMapperContext().getNamespace();
+			sessionAttributePrefix = namespace + ':' + filterName + ':';
 		}
 
 		// Namespacing for session attributes is provided by

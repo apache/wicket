@@ -52,9 +52,6 @@ public class HttpSessionStore implements ISessionStore
 	/** log. */
 	private static Logger log = LoggerFactory.getLogger(HttpSessionStore.class);
 
-	/** Name of session attribute under which this session is stored */
-	public static final String SESSION_ATTRIBUTE_NAME = "session";
-
 	/** */
 	private final Set<UnboundListener> unboundListeners = new CopyOnWriteArraySet<UnboundListener>();
 
@@ -63,11 +60,6 @@ public class HttpSessionStore implements ISessionStore
 	 */
 	public HttpSessionStore()
 	{
-	}
-
-	private String getSessionAttribute()
-	{
-		return SESSION_ATTRIBUTE_NAME + Application.get().getApplicationKey();
 	}
 
 	/**
@@ -106,7 +98,7 @@ public class HttpSessionStore implements ISessionStore
 	 */
 	public final void bind(final Request request, final Session newSession)
 	{
-		if (getAttribute(request, getSessionAttribute()) != newSession)
+		if (getAttribute(request, Session.SESSION_ATTRIBUTE_NAME) != newSession)
 		{
 			// call template method
 			onBind(request, newSession);
@@ -121,21 +113,21 @@ public class HttpSessionStore implements ISessionStore
 					new SessionBindingListener(applicationKey, httpSession.getId()));
 
 				// register the session object itself
-				setAttribute(request, getSessionAttribute(), newSession);
+				setAttribute(request, Session.SESSION_ATTRIBUTE_NAME, newSession);
 			}
 		}
 	}
 
 	public void flushSession(Request request, Session session)
 	{
-		if (getAttribute(request, getSessionAttribute()) != session)
+		if (getAttribute(request, Session.SESSION_ATTRIBUTE_NAME) != session)
 		{
 			// this session is not yet bound, bind it
 			bind(request, session);
 		}
 		else
 		{
-			setAttribute(request, getSessionAttribute(), session);
+			setAttribute(request, Session.SESSION_ATTRIBUTE_NAME, session);
 		}
 	}
 
@@ -194,7 +186,7 @@ public class HttpSessionStore implements ISessionStore
 		String sessionId = getSessionId(request, false);
 		if (sessionId != null)
 		{
-			return (Session)getAttribute(request, getSessionAttribute());
+			return (Session)getAttribute(request, Session.SESSION_ATTRIBUTE_NAME);
 		}
 		return null;
 	}
