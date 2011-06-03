@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.util.string.interpolator;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.IConverterLocator;
+import org.apache.wicket.Session;
+import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.PropertyResolver;
 
 /**
@@ -36,6 +40,8 @@ import org.apache.wicket.util.lang.PropertyResolver;
  * @since 1.2.6
  */
 public final class PropertyVariableInterpolator extends VariableInterpolator
+	implements
+		IConverterLocator
 {
 	/** The model to introspect on */
 	private final Object model;
@@ -87,6 +93,31 @@ public final class PropertyVariableInterpolator extends VariableInterpolator
 	protected String getValue(final String variableName)
 	{
 		Object value = PropertyResolver.getValue(variableName, model);
-		return (value != null) ? value.toString() : null;
+
+		if (value != null)
+		{
+			final IConverter converter = getConverter(value.getClass());
+			if (converter != null)
+			{
+				return converter.convertToString(value, Session.get().getLocale());
+			}
+			else
+			{
+				return value.toString();
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public <C> IConverter<C> getConverter(Class<C> type)
+	{
+		if (Application.exists())
+		{
+			return Application.get().getConverterLocator().getConverter(type);
+		}
+		return null;
 	}
 }
