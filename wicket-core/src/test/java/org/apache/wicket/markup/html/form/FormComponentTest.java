@@ -25,6 +25,8 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.validation.INullAcceptingValidator;
+import org.apache.wicket.validation.IValidatable;
 
 /**
  * 
@@ -67,6 +69,27 @@ public class FormComponentTest extends TestCase
 		TestPage1 page = (TestPage1)wicketTester.getLastRenderedPage();
 		assertEquals("set", page.field1.getDefaultLabel());
 		assertEquals("field2", page.field2.getDefaultLabel());
+	}
+
+	public void testNullAcceptingValidators()
+	{
+		class MyValidator implements INullAcceptingValidator
+		{
+			boolean called = false;
+
+			public void validate(IValidatable validatable)
+			{
+				called = true;
+			}
+		}
+
+		MyValidator validator = new MyValidator();
+
+		FormComponent fc = new TextField("fc");
+		fc.add(validator);
+		fc.validate();
+
+		assertTrue(validator.called);
 	}
 
 	@Override

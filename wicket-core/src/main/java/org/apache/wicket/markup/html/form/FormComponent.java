@@ -1405,9 +1405,17 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		{
 			for (Behavior behavior : getBehaviors())
 			{
-				if (behavior instanceof IValidator)
+				validator = null;
+				if (behavior instanceof ValidatorAdapter)
+				{
+					validator = ((ValidatorAdapter<T>)behavior).getValidator();
+				}
+				else if (behavior instanceof IValidator)
 				{
 					validator = (IValidator<T>)behavior;
+				}
+				if (validator != null)
+				{
 					if (isNull == false || validator instanceof INullAcceptingValidator<?>)
 					{
 						validator.validate(validatable);
