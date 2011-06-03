@@ -86,12 +86,13 @@ public class MockSessionStore implements ISessionStore
 
 	public void invalidate(Request request)
 	{
+		String sessId = sessionId;
+		cleanup();
 		for (UnboundListener l : unboundListeners)
 		{
-			l.sessionUnbound(sessionId);
+			l.sessionUnbound(sessId);
 		}
 
-		cleanup();
 	}
 
 	public Session lookup(Request request)

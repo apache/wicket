@@ -90,7 +90,6 @@ import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.mock.MockPageManager;
 import org.apache.wicket.mock.MockRequestParameters;
-import org.apache.wicket.mock.MockSessionStore;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.protocol.http.IMetaDataBufferingWebResponse;
@@ -122,9 +121,8 @@ import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.session.ISessionStore;
+import org.apache.wicket.session.ISessionStore.UnboundListener;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
-import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
@@ -300,8 +298,16 @@ public class BaseWicketTester
 			application.getPageRendererProvider()));
 		application.setRequestCycleProvider(new TestRequestCycleProvider(
 			application.getRequestCycleProvider()));
-		application.setSessionStoreProvider(new TestSessionStoreProvider());
 		application.setPageManagerProvider(newTestPageManagerProvider());
+
+		// create a new session when the old one is invalidated
+		application.getSessionStore().registerUnboundListener(new UnboundListener()
+		{
+			public void sessionUnbound(String sessionId)
+			{
+				newSession();
+			}
+		});
 
 		// prepare session
 		setupNextRequestCycle();
@@ -2450,26 +2456,6 @@ public class BaseWicketTester
 	/**
 	 * 
 	 */
-	private class TestSessionStore extends MockSessionStore
-	{
-		@Override
-		public void invalidate(Request request)
-		{
-			super.invalidate(request);
-			newSession();
-		}
-	}
-
-	/**
-	 * 
-	 */
-	private class TestSessionStoreProvider implements IProvider<ISessionStore>
-	{
-		public ISessionStore get()
-		{
-			return new TestSessionStore();
-		}
-	}
 
 	/**
 	 * 
