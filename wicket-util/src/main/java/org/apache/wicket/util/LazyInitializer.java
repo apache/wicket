@@ -31,6 +31,8 @@ import org.apache.wicket.IClusterable;
  */
 public abstract class LazyInitializer<T> implements IProvider<T>, IClusterable
 {
+	private static final long serialVersionUID = 1L;
+
 	private transient volatile T instance = null;
 
 	public T get()

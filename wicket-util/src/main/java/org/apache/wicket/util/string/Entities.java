@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.wicket.util.collections.IntHashMap;
+import org.apache.wicket.util.lang.Generics;
 
 /**
  * <p>
@@ -459,13 +460,10 @@ class Entities
 
 	static class PrimitiveEntityMap implements EntityMap
 	{
-		private final Map mapNameToValue = new HashMap();
+		private final Map<String, Integer> mapNameToValue = Generics.newHashMap();
 
-		private final IntHashMap mapValueToName = new IntHashMap();
+		private final IntHashMap<String> mapValueToName = new IntHashMap<String>();
 
-		/**
-		 * {@inheritDoc}
-		 */
 		// TODO not thread-safe as there is a window between changing the two maps
 		public void add(String name, int value)
 		{
@@ -473,33 +471,27 @@ class Entities
 			mapValueToName.put(value, name);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		public String name(int value)
 		{
-			return (String)mapValueToName.get(value);
+			return mapValueToName.get(value);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		public int value(String name)
 		{
-			Object value = mapNameToValue.get(name);
+			Integer value = mapNameToValue.get(name);
 			if (value == null)
 			{
 				return -1;
 			}
-			return ((Integer)value).intValue();
+			return value.intValue();
 		}
 	}
 
 	static abstract class MapIntMap implements Entities.EntityMap
 	{
-		protected final Map mapNameToValue;
+		protected final Map<String, Integer> mapNameToValue;
 
-		protected final Map mapValueToName;
+		protected final Map<Integer, String> mapValueToName;
 
 		/**
 		 * Construct a new instance with specified maps.
@@ -509,27 +501,21 @@ class Entities
 		 * @param valueToName
 		 *            value to namee map
 		 */
-		MapIntMap(Map nameToValue, Map valueToName)
+		MapIntMap(Map<String, Integer> nameToValue, Map<Integer, String> valueToName)
 		{
 			mapNameToValue = nameToValue;
 			mapValueToName = valueToName;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		public void add(String name, int value)
 		{
 			mapNameToValue.put(name, new Integer(value));
 			mapValueToName.put(new Integer(value), name);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		public String name(int value)
 		{
-			return (String)mapValueToName.get(new Integer(value));
+			return mapValueToName.get(new Integer(value));
 		}
 
 		/**
@@ -537,12 +523,12 @@ class Entities
 		 */
 		public int value(String name)
 		{
-			Object value = mapNameToValue.get(name);
+			Integer value = mapNameToValue.get(name);
 			if (value == null)
 			{
 				return -1;
 			}
-			return ((Integer)value).intValue();
+			return value.intValue();
 		}
 	}
 
@@ -553,7 +539,7 @@ class Entities
 		 */
 		public HashEntityMap()
 		{
-			super(new HashMap(), new HashMap());
+			super(new HashMap<String, Integer>(), new HashMap<Integer, String>());
 		}
 	}
 
@@ -564,7 +550,7 @@ class Entities
 		 */
 		public TreeEntityMap()
 		{
-			super(new TreeMap(), new TreeMap());
+			super(new TreeMap<String, Integer>(), new TreeMap<Integer, String>());
 		}
 	}
 
@@ -575,9 +561,6 @@ class Entities
 
 		private static final int LOOKUP_TABLE_SIZE = 256;
 
-		/**
-		 * {@inheritDoc}
-		 */
 		public String name(int value)
 		{
 			if (value < LOOKUP_TABLE_SIZE)
@@ -588,10 +571,8 @@ class Entities
 		}
 
 		/**
-		 * <p>
 		 * Returns the lookup table for this entity map. The lookup table is created if it has not
 		 * been previously.
-		 * </p>
 		 * 
 		 * @return the lookup table
 		 */
@@ -605,10 +586,8 @@ class Entities
 		}
 
 		/**
-		 * <p>
 		 * Creates an entity lookup table of LOOKUP_TABLE_SIZE elements, initialized with entity
 		 * names.
-		 * </p>
 		 */
 		private void createLookupTable()
 		{
