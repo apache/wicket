@@ -76,7 +76,7 @@ public class RangeValidator<Z extends Comparable<Z> & Serializable> extends Beha
 		Z value = validatable.getValue();
 		final Z min = getMinimum();
 		final Z max = getMaximum();
-		if (value.compareTo(min) < 0 || value.compareTo(max) > 0)
+		if ((min != null && value.compareTo(min) < 0) || (max != null && value.compareTo(max) > 0))
 		{
 			ValidationError error = new ValidationError();
 			error.addMessageKey("RangeValidator");
