@@ -20,7 +20,6 @@ import java.util.Iterator;
 
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.util.string.Strings;
 
 /**
  * Represents a portion of a markup file, but always spans a complete tag. E.g.
@@ -141,10 +140,7 @@ public class MarkupFragment implements IMarkupFragment
 
 	public final IMarkupFragment find(final String id)
 	{
-		if (Strings.isEmpty(id))
-		{
-			throw new IllegalArgumentException("Parameter 'id' must not be null or empty");
-		}
+		Args.notEmpty(id, "id");
 
 		MarkupStream stream = new MarkupStream(this);
 		stream.setCurrentIndex(1);
@@ -160,8 +156,7 @@ public class MarkupFragment implements IMarkupFragment
 					{
 						return stream.getMarkupFragment();
 					}
-					if (tag.isOpen() && !tag.hasNoCloseTag() && !(tag instanceof WicketTag) &&
-						(tag.isAutoComponentTag() == false))
+					if (tag.isOpen() && !tag.hasNoCloseTag() && !tag.isAutoComponentTag())
 					{
 						stream.skipToMatchingCloseTag(tag);
 					}
