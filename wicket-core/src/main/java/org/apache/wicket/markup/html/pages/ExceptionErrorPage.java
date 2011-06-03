@@ -26,7 +26,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.debug.PageView;
@@ -40,7 +39,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * 
  * @author Jonathan Locke
  */
-public class ExceptionErrorPage extends WebPage
+public class ExceptionErrorPage extends AbstractErrorPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -269,21 +268,4 @@ public class ExceptionErrorPage extends WebPage
 		return throwable;
 	}
 
-	/**
-	 * @see org.apache.wicket.Page#isErrorPage()
-	 */
-	@Override
-	public boolean isErrorPage()
-	{
-		return true;
-	}
-
-	/**
-	 * @see org.apache.wicket.Component#isVersioned()
-	 */
-	@Override
-	public boolean isVersioned()
-	{
-		return false;
-	}
 }

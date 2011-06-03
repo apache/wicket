@@ -158,12 +158,14 @@ public class PageProvider implements IPageProvider
 		if (pageInstance == null)
 		{
 			pageInstance = getPageInstance(pageId, pageClass, pageParameters, renderCount);
+
+			if (pageInstance == null)
+			{
+				throw new PageExpiredException("Page expired.");
+			}
+
+			touchPageInstance(pageInstance);
 		}
-		if (pageInstance == null)
-		{
-			throw new PageExpiredException("Page expired.");
-		}
-		touchPageInstance(pageInstance);
 		return pageInstance;
 	}
 

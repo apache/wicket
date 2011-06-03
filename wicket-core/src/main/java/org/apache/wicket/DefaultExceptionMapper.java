@@ -54,6 +54,12 @@ public class DefaultExceptionMapper implements IExceptionMapper
 		}
 		catch (RuntimeException e2)
 		{
+			if (logger.isDebugEnabled())
+			{
+				logger.error(
+					"An error occurred while handling a previous error: " + e2.getMessage(), e2);
+			}
+
 			// hmmm, we were already handling an exception! give up
 			logger.error("unexpected exception when handling another exception: " + e.getMessage(),
 				e);
@@ -144,7 +150,7 @@ public class DefaultExceptionMapper implements IExceptionMapper
 
 		if (isProcessingAjaxRequest())
 		{
-			redirect = RenderPageRequestHandler.RedirectPolicy.ALWAYS_REDIRECT;
+			redirect = RenderPageRequestHandler.RedirectPolicy.AUTO_REDIRECT;
 		}
 
 		return new RenderPageRequestHandler(pageProvider, redirect);

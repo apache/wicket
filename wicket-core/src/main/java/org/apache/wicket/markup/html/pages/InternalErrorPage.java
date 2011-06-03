@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.pages;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 
@@ -28,7 +27,7 @@ import org.apache.wicket.request.http.WebResponse;
  * 
  * @author Jonathan Locke
  */
-public class InternalErrorPage extends WebPage
+public class InternalErrorPage extends AbstractErrorPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -49,23 +48,5 @@ public class InternalErrorPage extends WebPage
 		super.configureResponse();
 		WebResponse response = (WebResponse)RequestCycle.get().getResponse();
 		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-	}
-
-	/**
-	 * @see org.apache.wicket.Component#isVersioned()
-	 */
-	@Override
-	public boolean isVersioned()
-	{
-		return false;
-	}
-
-	/**
-	 * @see org.apache.wicket.Page#isErrorPage()
-	 */
-	@Override
-	public boolean isErrorPage()
-	{
-		return true;
 	}
 }

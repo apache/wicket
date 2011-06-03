@@ -16,37 +16,42 @@
  */
 package org.apache.wicket.markup.html.pages;
 
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.http.WebResponse;
-
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
- * Page expired error page.
- * 
- * @author Jonathan Locke
+ * A parent page for all pages that are used to show an error to the user. Setups the common
+ * settings for an error page.
  */
-public class PageExpiredErrorPage extends AbstractErrorPage
+public abstract class AbstractErrorPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Constructor.
-	 */
-	public PageExpiredErrorPage()
+	protected AbstractErrorPage()
 	{
-		add(homePageLink("homePageLink"));
+		super();
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.WebPage#configureResponse()
-	 */
-	@Override
-	protected void configureResponse()
+	protected AbstractErrorPage(final IModel<?> model)
 	{
-		super.configureResponse();
-		WebResponse response = (WebResponse)RequestCycle.get().getResponse();
-		response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+		super(model);
+	}
+
+	protected AbstractErrorPage(final PageParameters parameters)
+	{
+		super(parameters);
+	}
+
+	@Override
+	public boolean isErrorPage()
+	{
+		return true;
+	}
+
+	@Override
+	public boolean isVersioned()
+	{
+		return false;
 	}
 }
