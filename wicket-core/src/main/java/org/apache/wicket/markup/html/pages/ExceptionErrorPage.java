@@ -45,7 +45,7 @@ public class ExceptionErrorPage extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	/** Keep a reference to the root cause. WicketTester will use it */
-	private final Throwable throwable;
+	private final transient Throwable throwable;
 
 	/**
 	 * Constructor.
