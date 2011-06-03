@@ -120,6 +120,7 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 
 		try
 		{
+			// Create a (string) response for all headers contributed by any component on the Page.
 			final StringResponse response = new StringResponse();
 			getRequestCycle().setResponse(response);
 
@@ -129,51 +130,33 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 				getRequestCycle().setResponse(headerResponse.getResponse());
 			}
 
-			// In any case, first render the header section directly associated
-			// with the markup
+			// Render the header sections of all components on the page
+			AbstractHeaderRenderStrategy.get().renderHeader(this, getPage());
+
+			// Close the header response before rendering the header container itself
+			// See https://issues.apache.org/jira/browse/WICKET-3728
+			headerResponse.close();
+
+			// Create a separate (string) response for the header container itself
+			final StringResponse bodyResponse = new StringResponse();
+			getRequestCycle().setResponse(bodyResponse);
+
+			// render the header section directly associated with the markup
 			super.onComponentTagBody(markupStream, openTag);
 
-			// Render all header sections of all components on the page
-			AbstractHeaderRenderStrategy.get().renderHeader(this, getPage());
-			getHeaderResponse().close();
+			// Cleanup extraneous CR and LF from the response
+			CharSequence output = getCleanResponse(response);
+			CharSequence bodyOutput = getCleanResponse(bodyResponse);
 
 			// Automatically add <head> if necessary
-			CharSequence output = response.getBuffer();
-			if (output.length() > 0)
-			{
-				if (output.charAt(0) == '\r')
-				{
-					for (int i = 2; i < output.length(); i += 2)
-					{
-						char ch = output.charAt(i);
-						if (ch != '\r')
-						{
-							output = output.subSequence(i - 2, output.length());
-							break;
-						}
-					}
-				}
-				else if (output.charAt(0) == '\n')
-				{
-					for (int i = 1; i < output.length(); i++)
-					{
-						char ch = output.charAt(i);
-						if (ch != '\n')
-						{
-							output = output.subSequence(i - 1, output.length());
-							break;
-						}
-					}
-				}
-			}
-
-			if (output.length() > 0)
+			if ((output.length() > 0) || (bodyOutput.length() > 0))
 			{
 				if (renderOpenAndCloseTags())
 				{
 					webResponse.write("<head>");
 				}
 
+				webResponse.write(bodyOutput);
 				webResponse.write(output);
 
 				if (renderOpenAndCloseTags())
@@ -187,6 +170,44 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 			// Restore the original response
 			getRequestCycle().setResponse(webResponse);
 		}
+	}
+
+	/**
+	 * 
+	 * @param response
+	 * @return Cleaned up response
+	 */
+	private CharSequence getCleanResponse(final StringResponse response)
+	{
+		CharSequence output = response.getBuffer();
+		if (output.length() > 0)
+		{
+			if (output.charAt(0) == '\r')
+			{
+				for (int i = 2; i < output.length(); i += 2)
+				{
+					char ch = output.charAt(i);
+					if (ch != '\r')
+					{
+						output = output.subSequence(i - 2, output.length());
+						break;
+					}
+				}
+			}
+			else if (output.charAt(0) == '\n')
+			{
+				for (int i = 1; i < output.length(); i++)
+				{
+					char ch = output.charAt(i);
+					if (ch != '\n')
+					{
+						output = output.subSequence(i - 1, output.length());
+						break;
+					}
+				}
+			}
+		}
+		return output;
 	}
 
 	/**
