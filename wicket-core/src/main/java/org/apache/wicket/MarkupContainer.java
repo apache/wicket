@@ -40,6 +40,7 @@ import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
 import org.apache.wicket.settings.IDebugSettings;
+import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.ComponentStrings;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.ClassVisitFilter;
@@ -1450,11 +1451,24 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					}
 				}
 
+				List<String> names = findSimilarComponents(id);
+
 				// No one was able to handle the component id
-				markupStream.throwMarkupException("Unable to find component with id '" + id +
-					"' in " + this + ". This means that you declared wicket:id=" + id +
-					" in your markup, but that you either did not add the " +
-					"component to your page at all, or that the hierarchy does not match.");
+				StringBuffer msg = new StringBuffer(500);
+				msg.append("Unable to find component with id '");
+				msg.append(id);
+				msg.append("' in ");
+				msg.append(this.toString());
+				msg.append("\n\tExpected: '");
+				msg.append(getPageRelativePath());
+				msg.append(".");
+				msg.append(id);
+				msg.append("'.\n\tFound with similar names: '");
+				msg.append(Strings.join("', ", names));
+				msg.append("'");
+
+				log.error(msg.toString());
+				markupStream.throwMarkupException(msg.toString());
 			}
 		}
 		else
@@ -1465,6 +1479,29 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 
 		return false;
+	}
+
+	private List<String> findSimilarComponents(final String id)
+	{
+		final List<String> names = Generics.newArrayList();
+
+		Page page = findPage();
+		if (page != null)
+		{
+			page.visitChildren(new IVisitor<Component, Void>()
+			{
+				public void component(Component component, IVisit<Void> visit)
+				{
+					if (Strings.getLevenshteinDistance(id.toLowerCase(), component.getId()
+						.toLowerCase()) < 3)
+					{
+						names.add(component.getPageRelativePath());
+					}
+				}
+			});
+		}
+
+		return names;
 	}
 
 	/**
