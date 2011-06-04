@@ -125,7 +125,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 *             Thrown if a child with the same id is replaced by the add operation.
 	 * @return This
 	 */
-	public MarkupContainer add(final Component... childs)
+	public final MarkupContainer add(final Component... childs)
 	{
 		for (Component child : childs)
 		{
