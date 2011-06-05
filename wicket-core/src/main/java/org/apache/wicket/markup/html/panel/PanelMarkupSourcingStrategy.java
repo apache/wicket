@@ -23,7 +23,6 @@ import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
-import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 
 /**
  * 
@@ -31,15 +30,6 @@ import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
  */
 public class PanelMarkupSourcingStrategy extends AssociatedMarkupSourcingStrategy
 {
-	/** */
-	public static final String PANEL = "panel";
-
-	static
-	{
-		// register "wicket:panel"
-		WicketTagIdentifier.registerWellKnownTagName(PANEL);
-	}
-
 	/**
 	 * Constructor.
 	 */
@@ -57,7 +47,7 @@ public class PanelMarkupSourcingStrategy extends AssociatedMarkupSourcingStrateg
 		super.onComponentTagBody(component, markupStream, openTag);
 
 		// Render the associated markup
-		((MarkupContainer)component).renderAssociatedMarkup(PANEL,
+		((MarkupContainer)component).renderAssociatedMarkup(Panel.PANEL,
 			"Markup for a panel component has to contain part '<wicket:panel>'");
 	}
 

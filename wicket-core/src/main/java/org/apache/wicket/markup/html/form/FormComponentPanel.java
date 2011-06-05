@@ -18,7 +18,9 @@ package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
+import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -111,6 +113,12 @@ import org.apache.wicket.model.IModel;
 public abstract class FormComponentPanel<T> extends FormComponent<T>
 {
 	private static final long serialVersionUID = 1L;
+
+	static
+	{
+		// register "wicket:panel"
+		WicketTagIdentifier.registerWellKnownTagName(Panel.PANEL);
+	}
 
 	/**
 	 * Construct.

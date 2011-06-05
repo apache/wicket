@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.panel;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -52,6 +53,15 @@ import org.apache.wicket.model.IModel;
 public abstract class Panel extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
+
+	/** */
+	public static final String PANEL = "panel";
+
+	static
+	{
+		// register "wicket:panel"
+		WicketTagIdentifier.registerWellKnownTagName(PANEL);
+	}
 
 	/**
 	 * @see org.apache.wicket.Component#Component(String)
