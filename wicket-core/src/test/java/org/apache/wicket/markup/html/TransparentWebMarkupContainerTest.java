@@ -23,15 +23,14 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.border.Border;
-import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.mock.MockPageManager;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * @author Pedro Santos
@@ -96,21 +95,12 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	 */
 	public void bug_testAjaxUpdate()
 	{
-		tester.startPage(TransparentWithAjaxUpdatePage.class);
-		tester.clickLink("link", true);
-	}
-
-
-	@Override
-	protected WebApplication newApplication()
-	{
-		return new MockApplication()
+		WicketTester wicketTester = new WicketTester()
 		{
 			@Override
-			protected void internalInit()
+			protected IPageManagerProvider newTestPageManagerProvider()
 			{
-				super.internalInit();
-				setPageManagerProvider(new IPageManagerProvider()
+				return new IPageManagerProvider()
 				{
 					public IPageManager get(IPageManagerContext context)
 					{
@@ -124,11 +114,15 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 							}
 						};
 					}
-				});
+				};
 			}
-		};
-	}
 
+		};
+
+		wicketTester.startPage(TransparentWithAjaxUpdatePage.class);
+		wicketTester.clickLink("link", true);
+		wicketTester.destroy();
+	}
 
 	/** */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider

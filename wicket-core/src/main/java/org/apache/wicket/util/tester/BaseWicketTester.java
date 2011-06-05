@@ -298,7 +298,12 @@ public class BaseWicketTester
 			application.getPageRendererProvider()));
 		application.setRequestCycleProvider(new TestRequestCycleProvider(
 			application.getRequestCycleProvider()));
-// application.setPageManagerProvider(newTestPageManagerProvider());
+
+		IPageManagerProvider pageManagerProvider = newTestPageManagerProvider();
+		if (pageManagerProvider != null)
+		{
+			application.setPageManagerProvider(pageManagerProvider);
+		}
 
 		// create a new session when the old one is invalidated
 		application.getSessionStore().registerUnboundListener(new UnboundListener()
