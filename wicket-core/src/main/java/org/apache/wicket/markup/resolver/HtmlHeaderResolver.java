@@ -34,13 +34,13 @@ import org.apache.wicket.util.resource.IResourceStream;
 /**
  * This is a tag resolver which handles &lt;head&gt; and &lt;wicket:head&gt;tags. It must be
  * registered (with the application) and assumes that a ComponentTag respectively a WicketTag has
- * already been created (see HtmlheaderSectionHandler and WicketTagIdentifier).
+ * already been created (see {@link HtmlHeaderSectionHandler} and {@link WicketTagIdentifier}).
  * <p>
- * Provided the current tag is a &lt;head&gt;, a HtmlHeaderContainer component is created, (auto)
- * added to the component hierarchie and immediately rendered. Please see the javadoc for
- * HtmlHeaderContainer on how it treats the tag.
+ * Provided the current tag is a &lt;head&gt;, a {@link HtmlHeaderContainer} component is created,
+ * (auto) added to the component hierarchy and immediately rendered. Please see the javadoc for
+ * {@link HtmlHeaderContainer} on how it treats the tag.
  * <p>
- * In case of &lt;wicket:head&gt; a simple WebMarkupContainer handles the tag.
+ * In case of &lt;wicket:head&gt; a simple {@link WebMarkupContainer} handles the tag.
  * 
  * @author Juergen Donnerstag
  */
