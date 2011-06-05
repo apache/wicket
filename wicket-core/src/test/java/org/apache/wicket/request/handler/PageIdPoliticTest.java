@@ -70,27 +70,7 @@ public class PageIdPoliticTest extends TestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		application = new MockApplication()
-		{
-
-			@Override
-			protected void init()
-			{
-				super.init();
-
-				setPageManagerProvider(new IPageManagerProvider()
-				{
-					public IPageManager get(IPageManagerContext pageManagerContext)
-					{
-						IPageStore pageStore = new DefaultPageStore(application.getName(),
-							dataStore, 4);
-						return new PersistentPageManager(application.getName(), pageStore,
-							pageManagerContext);
-					}
-				});
-			}
-
-		};
+		application = new MockApplication();
 		dataStore = new InMemoryPageStore()
 		{
 			@Override
@@ -100,7 +80,23 @@ public class PageIdPoliticTest extends TestCase
 				storeCount++;
 			}
 		};
-		tester = new WicketTester(application);
+		tester = new WicketTester(application)
+		{
+			@Override
+			protected IPageManagerProvider newTestPageManagerProvider()
+			{
+				return new IPageManagerProvider()
+				{
+					public IPageManager get(IPageManagerContext pageManagerContext)
+					{
+						IPageStore pageStore = new DefaultPageStore(application.getName(),
+							dataStore, 4);
+						return new PersistentPageManager(application.getName(), pageStore,
+							pageManagerContext);
+					}
+				};
+			}
+		};
 	}
 
 	@Override
