@@ -33,11 +33,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Factory to load markup either from from cache or from a resource. In case of markup inheritance,
- * merging the markup is managed transparently.
+ * Factory to load markup either from cache or from a resource.
  * <p>
  * This class is the main entry point to load markup. Nothing else should be required by Components.
- * It managed caching markup as well as loading and merging (inheritance) of markup.
+ * It manages caching markup as well as loading and merging (inheritance) of markup.
  * <p>
  * The markup returned is immutable as it gets re-used across multiple Component instances.
  * 
@@ -48,14 +47,14 @@ public class MarkupFactory
 	/** Log for reporting. */
 	private static final Logger log = LoggerFactory.getLogger(MarkupFactory.class);
 
-	/** A markup cache which will load the markup if required. */
+	/** A markup cache */
 	private IMarkupCache markupCache;
 
 	/** The markup resource stream provider used by MarkupCache */
 	private IMarkupResourceStreamProvider markupResourceStreamProvider;
 
 	/**
-	 * @return The markup factory associated with the application
+	 * @return Gets the markup factory registered with the Wicket application
 	 */
 	public final static MarkupFactory get()
 	{
@@ -75,7 +74,7 @@ public class MarkupFactory
 	 * different sources must be merged.
 	 * 
 	 * @return By default an instance of {@link DefaultMarkupLoader} will be returned. Via
-	 *         subclassing you may return your markup loader..
+	 *         subclassing you may return your own markup loader (chain).
 	 */
 	public IMarkupLoader getMarkupLoader()
 	{
@@ -180,8 +179,7 @@ public class MarkupFactory
 	}
 
 	/**
-	 * Get the markup associated with the container. This is mostly likely what you need to get the
-	 * markup for a component.
+	 * Get the markup associated with the container.
 	 * 
 	 * @param container
 	 *            The container to find the markup for
@@ -202,7 +200,7 @@ public class MarkupFactory
 	 * <p>
 	 * The clazz parameter usually can be null, except for base (inherited) markup.
 	 * <p>
-	 * There several means to disable markup caching. Caching can be disabled alltogether -
+	 * There are several means to disable markup caching. Caching can be disabled alltogether -
 	 * getMarkupCache() return null -, or individually (cacheKey == null).
 	 * 
 	 * @param container
@@ -222,6 +220,8 @@ public class MarkupFactory
 
 		if (checkMarkupType(container) == false)
 		{
+			// TODO improve: Result { boolean success, enum FailureReason {not found, not yet
+			// available}, Markup markup }
 			return null;
 		}
 
@@ -232,7 +232,7 @@ public class MarkupFactory
 		{
 			// MarkupCache acts as pull-through cache. It'll call the same loadMarkup() method as
 			// below, if needed.
-			// @TODO may that can be changed. I don't like it too much.
+			// @TODO may be that can be changed. I don't like it too much.
 			return cache.getMarkup(container, containerClass, enforceReload);
 		}
 
@@ -327,6 +327,8 @@ public class MarkupFactory
 
 		if (checkMarkupType(container) == false)
 		{
+			// TODO improve: Result { boolean success, enum FailureReason {not found, not yet
+			// available}, Markup markup }
 			return null;
 		}
 
@@ -340,6 +342,8 @@ public class MarkupFactory
 		// Found markup?
 		if (resourceStream == null)
 		{
+			// TODO improve: Result { boolean success, enum FailureReason {not found, not yet
+			// available}, Markup markup }
 			return null;
 		}
 
@@ -403,14 +407,16 @@ public class MarkupFactory
 
 		if (checkMarkupType(container) == false)
 		{
+			// TODO improve: Result { boolean success, enum FailureReason {not found, not yet
+			// available}, Markup markup }
 			return null;
 		}
 
 		try
 		{
 			// The InheritedMarkupMarkupLoader needs to load the base markup. It'll do it via
-			// MarkupFactory.getMarkup() as main entry point, which in tern allows to choose between
-			// use or ignore the cache. That's via we need to propagate enforceReload to the markup
+			// MarkupFactory.getMarkup() as main entry point, which in turn allows to choose between
+			// use or ignore the cache. That's why we need to propagate enforceReload to the markup
 			// loader as well.
 
 			// Markup loader is responsible to load the full markup for the container. In case of
