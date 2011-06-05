@@ -45,10 +45,10 @@ public class MarkupCacheTest extends WicketTestCase
 	public void testMarkupNotFoundInformationIsCachedInDeploymentMode()
 	{
 		IMarkupFragment markup = cache.getMarkup(component, null, false);
-		assertEquals(Markup.NO_MARKUP, markup);
+		assertNull(markup);
 
 		markup = cache.getMarkup(component, null, false);
-		assertEquals(Markup.NO_MARKUP, markup);
+		assertNull(markup);
 	}
 
 	private static class MarkupCachingAssumingComponent extends Panel

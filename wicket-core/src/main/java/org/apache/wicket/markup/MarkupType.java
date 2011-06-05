@@ -65,4 +65,10 @@ public class MarkupType implements Serializable
 	{
 		return mimeType;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "MarkupType [extension=" + extension + ", mimeType=" + mimeType + "]";
+	}
 }

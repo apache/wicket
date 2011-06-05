@@ -635,7 +635,6 @@ public final class MarkupParserTest extends WicketTestCase
 	 */
 	public void testIEConditionalComments() throws Exception
 	{
-
 		boolean stripComments = tester.getApplication().getMarkupSettings().getStripComments();
 		try
 		{

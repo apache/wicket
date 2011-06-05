@@ -23,6 +23,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Facade for {@link IDataStore} that does the actual saving in worker thread.
  * 
@@ -30,6 +33,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class AsynchronousDataStore implements IDataStore
 {
+	/** Log for reporting. */
+	private static final Logger log = LoggerFactory.getLogger(AsynchronousDataStore.class);
+
 	private static final Object WRITE_LOCK = new Object();
 
 	private final AtomicBoolean destroy = new AtomicBoolean(false);
@@ -74,7 +80,7 @@ public class AsynchronousDataStore implements IDataStore
 		}
 		catch (InterruptedException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 
 		dataStore.destroy();
@@ -257,7 +263,7 @@ public class AsynchronousDataStore implements IDataStore
 					}
 					catch (InterruptedException e)
 					{
-						e.printStackTrace();
+						log.error(e.getMessage(), e);
 					}
 				}
 
@@ -279,7 +285,7 @@ public class AsynchronousDataStore implements IDataStore
 			}
 			catch (InterruptedException e)
 			{
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 			}
 
 			synchronized (destroy)

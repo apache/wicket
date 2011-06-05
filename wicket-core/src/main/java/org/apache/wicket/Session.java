@@ -856,6 +856,8 @@ public abstract class Session implements IClusterable, IEventSink
 	private static final class PageAccessSynchronizerProvider extends
 		LazyInitializer<PageAccessSynchronizer>
 	{
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		protected PageAccessSynchronizer createInstance()
 		{

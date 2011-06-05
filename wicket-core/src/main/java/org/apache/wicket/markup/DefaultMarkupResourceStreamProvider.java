@@ -33,8 +33,7 @@ import org.slf4j.LoggerFactory;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public class
-	DefaultMarkupResourceStreamProvider implements IMarkupResourceStreamProvider
+public class DefaultMarkupResourceStreamProvider implements IMarkupResourceStreamProvider
 {
 
 	/** Log for reporting. */
@@ -74,7 +73,9 @@ public class
 		String style = container.getStyle();
 		String variation = container.getVariation();
 		Locale locale = container.getLocale();
-		String ext = container.getMarkupType().getExtension();
+
+		MarkupType markupType = container.getMarkupType();
+		String ext = (markupType != null ? markupType.getExtension() : null);
 
 		// Markup is associated with the containers class. Walk up the class
 		// hierarchy up to MarkupContainer to find the containers markup

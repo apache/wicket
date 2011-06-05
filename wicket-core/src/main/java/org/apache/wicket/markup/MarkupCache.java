@@ -39,8 +39,8 @@ import org.slf4j.LoggerFactory;
  * If the application is in development mode and a markup file changes, it'll automatically be
  * removed from the cache and reloaded when needed.
  * <p>
- * MarkupCache is registered with {@link IMarkupSettings} and thus can be replaced with a subclassed
- * version.
+ * MarkupCache is registered with {@link MarkupFactory} which in turn is registered with
+ * {@link IMarkupSettings} and thus can be replaced with a subclassed version.
  * 
  * @see IMarkupSettings
  * @see MarkupFactory
@@ -54,16 +54,21 @@ public class MarkupCache implements IMarkupCache
 	private static final Logger log = LoggerFactory.getLogger(MarkupCache.class);
 
 	/** The actual cache: location => Markup */
-	private final ICache<CharSequence, Markup> markupCache;
+	private final ICache<String, Markup> markupCache;
 
-	/** Add extra indirection to the cache: key => location */
-	private final ICache<CharSequence, CharSequence> markupKeyCache;
+	/**
+	 * Add extra indirection to the cache: key => location
+	 * <p>
+	 * Since ConcurrentHashMap does not allow to store null values, we are using Markup.NO_MARKUP
+	 * instead.
+	 */
+	private final ICache<String, String> markupKeyCache;
 
 	/** The markup cache key provider used by MarkupCache */
 	private IMarkupCacheKeyProvider markupCacheKeyProvider;
 
 	/**
-	 * Note that you can not use Application.get() since removeMarkup() will be call from a
+	 * Note that you can not use Application.get() since removeMarkup() will be called from a
 	 * ModificationWatcher thread which has no associated Application.
 	 */
 	private final Application application;
@@ -89,25 +94,20 @@ public class MarkupCache implements IMarkupCache
 		application = Application.get();
 
 		markupCache = newCacheImplementation();
-		markupKeyCache = newCacheImplementation();
 		if (markupCache == null)
 		{
 			throw new WicketRuntimeException("The map used to cache markup must not be null");
 		}
+
+		markupKeyCache = newCacheImplementation();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void clear()
 	{
 		markupCache.clear();
 		markupKeyCache.clear();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void shutdown()
 	{
 		markupCache.shutdown();
@@ -115,7 +115,8 @@ public class MarkupCache implements IMarkupCache
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Note that this method will be called from a "cleanup" thread which might not have a thread
+	 * local application.
 	 */
 	public final IMarkupFragment removeMarkup(final String cacheKey)
 	{
@@ -127,26 +128,29 @@ public class MarkupCache implements IMarkupCache
 		}
 
 		// Remove the markup from the cache
-		CharSequence locationString = markupKeyCache.get(cacheKey);
-		IMarkupFragment markup = markupCache.get(locationString);
+		String locationString = markupKeyCache.get(cacheKey);
+		IMarkupFragment markup = (locationString != null ? markupCache.get(locationString) : null);
 		if (markup != null)
 		{
+			// Found an entry: actual markup or Markup.NO_MARKUP. Null values are not possible
+			// because of ConcurrentHashMap.
 			markupCache.remove(locationString);
 
 			// If a base markup file has been removed from the cache, than
 			// the derived markup should be removed as well.
 
-			// Repeat until all depend resources have been removed (count == 0)
-			int count;
-			do
+			// Repeat until all dependent resources have been removed (count == 0)
+			int count = 1;
+			while (count > 0)
 			{
+				// Reset prior to next round
 				count = 0;
 
 				// Iterate though all entries of the cache
-				Iterator<CharSequence> iter = markupCache.getKeys().iterator();
+				Iterator<String> iter = markupCache.getKeys().iterator();
 				while (iter.hasNext())
 				{
-					CharSequence key = iter.next();
+					String key = iter.next();
 
 					// Check if the markup associated with key has a base markup. And if yes, test
 					// if that is cached.
@@ -162,14 +166,14 @@ public class MarkupCache implements IMarkupCache
 					}
 				}
 			}
-			while (count > 0);
 
 			// And now remove all watcher entries associated with markup
 			// resources no longer in the cache. Note that you can not use
 			// Application.get() since removeMarkup() will be called from a
 			// ModificationWatcher thread which has no associated Application.
+
 			IModificationWatcher watcher = application.getResourceSettings().getResourceWatcher(
-				true);
+				false);
 			if (watcher != null)
 			{
 				Iterator<IModifiable> iter = watcher.getEntries().iterator();
@@ -186,6 +190,7 @@ public class MarkupCache implements IMarkupCache
 				}
 			}
 		}
+
 		return markup;
 	}
 
@@ -193,11 +198,18 @@ public class MarkupCache implements IMarkupCache
 	 * @param key
 	 * @return True, if base markup for entry with cache 'key' is available in the cache as well.
 	 */
-	private boolean isBaseMarkupCached(final CharSequence key)
+	private boolean isBaseMarkupCached(final String key)
 	{
-		// Get the markup associated with key
+		// Get the markup associated with key. Null in case the key has no associated value. A null
+		// value is not possible because of ConcurrentHashMap.
 		Markup markup = markupCache.get(key);
 		if (markup == null)
+		{
+			return false;
+		}
+
+		// NO_MARKUP does not have an associated resource stream
+		if (markup == Markup.NO_MARKUP)
 		{
 			return false;
 		}
@@ -219,18 +231,18 @@ public class MarkupCache implements IMarkupCache
 		if (resourceStream != null)
 		{
 			String key = resourceStream.getCacheKey();
-			CharSequence locationString = markupKeyCache.get(key);
-			if ((locationString != null) && (markupCache.get(locationString) == null))
+			if (key != null)
 			{
-				return true;
+				String locationString = markupKeyCache.get(key);
+				if ((locationString != null) && (markupCache.get(locationString) != null))
+				{
+					return true;
+				}
 			}
 		}
 		return false;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public final int size()
 	{
 		return markupCache.size();
@@ -239,43 +251,34 @@ public class MarkupCache implements IMarkupCache
 	/**
 	 * Get a unmodifiable map which contains the cached data. The map key is of type String and the
 	 * value is of type Markup.
+	 * <p>
+	 * May be used to debug or iterate the cache content.
 	 * 
 	 * @return cache implementation
 	 */
-	protected final ICache<CharSequence, Markup> getMarkupCache()
+	public final ICache<String, Markup> getMarkupCache()
 	{
 		return markupCache;
 	}
 
-	/**
-	 * THIS IS NOT PART OF WICKET'S PUBLIC API. DO NOT USE IT.
-	 * 
-	 * I still don't like this method being part of the API but I didn't find a suitable other
-	 * solution.
-	 * 
-	 * @see org.apache.wicket.markup.IMarkupCache#getMarkup(org.apache.wicket.MarkupContainer,
-	 *      Class, boolean)
-	 */
 	public final Markup getMarkup(final MarkupContainer container, final Class<?> clazz,
 		final boolean enforceReload)
 	{
-		Class<?> containerClass = clazz;
-		if (clazz == null)
-		{
-			containerClass = container.getClass();
-		}
-		else if (!clazz.isAssignableFrom(container.getClass()))
-		{
-			throw new WicketRuntimeException("Parameter clazz must be an instance of " +
-				container.getClass().getName() + ", but is a " + clazz.getName());
-		}
+		Class<?> containerClass = MarkupFactory.get().getContainerClass(container, clazz);
 
-		// Get the cache key to be associated with the markup resource stream
+		// Get the cache key to be associated with the markup resource stream.
+		// If the cacheKey returned == null, than caching is disabled for the resource stream.
 		final String cacheKey = getMarkupCacheKeyProvider(container).getCacheKey(container,
 			containerClass);
 
 		// Is the markup already in the cache?
-		Markup markup = (enforceReload == false ? getMarkupFromCache(cacheKey, container) : null);
+		Markup markup = null;
+		if ((enforceReload == false) && (cacheKey != null))
+		{
+			markup = getMarkupFromCache(cacheKey, container);
+		}
+
+		// If markup not found in cache or cache disabled, than ...
 		if (markup == null)
 		{
 			if (log.isDebugEnabled())
@@ -283,8 +286,7 @@ public class MarkupCache implements IMarkupCache
 				log.debug("Load markup: cacheKey=" + cacheKey);
 			}
 
-			// Who is going to provide the markup resource stream?
-			// And ask the provider to locate the markup resource stream
+			// Get the markup resource stream for the container
 			final MarkupResourceStream resourceStream = MarkupFactory.get()
 				.getMarkupResourceStream(container, containerClass);
 
@@ -298,33 +300,49 @@ public class MarkupCache implements IMarkupCache
 			}
 			else
 			{
-				markup = onMarkupNotFound(cacheKey, container);
+				markup = onMarkupNotFound(cacheKey, container, Markup.NO_MARKUP);
 			}
 		}
+
+		// NO_MARKUP should only be used insight the Cache.
+		if (markup == Markup.NO_MARKUP)
+		{
+			markup = null;
+		}
+
 		return markup;
 	}
 
 	/**
-	 * Will be called if the markup was not in the cache yet but could not be found either.
+	 * Will be called if the markup was not in the cache yet and could not be found either.
 	 * <p>
-	 * Subclasses may change the default implementation. E.g. they might choose not update the cache
-	 * to enforce reloading of any markup not found. This might be useful in very dynamic
+	 * Subclasses may change the default implementation. E.g. they might choose not to update the
+	 * cache to enforce reloading of any markup not found. This might be useful in very dynamic
 	 * environments.
 	 * 
 	 * @param cacheKey
 	 * @param container
-	 * @return Markup.NO_MARKUP
+	 * @param markup
+	 *            Markup.NO_MARKUP
+	 * @return Same as parameter "markup"
 	 */
-	protected Markup onMarkupNotFound(final String cacheKey, final MarkupContainer container)
+	protected Markup onMarkupNotFound(final String cacheKey, final MarkupContainer container,
+		final Markup markup)
 	{
 		if (log.isDebugEnabled())
 		{
 			log.debug("Markup not found: " + cacheKey);
 		}
 
-		// flag markup as non-existent
-		markupKeyCache.put(cacheKey, cacheKey);
-		return putIntoCache(cacheKey, container, Markup.NO_MARKUP);
+		// If cacheKey == null, than caching is disabled for the component
+		if (cacheKey != null)
+		{
+			// flag markup as non-existent
+			markupKeyCache.put(cacheKey, cacheKey);
+			putIntoCache(cacheKey, container, markup);
+		}
+
+		return markup;
 	}
 
 	/**
@@ -342,13 +360,20 @@ public class MarkupCache implements IMarkupCache
 	 * @return markup The markup provided, except if the cacheKey already existed in the cache, than
 	 *         the markup from the cache is provided.
 	 */
-	protected Markup putIntoCache(final String locationString, MarkupContainer container,
+	protected Markup putIntoCache(final String locationString, final MarkupContainer container,
 		Markup markup)
 	{
 		if (locationString != null)
 		{
 			if (markupCache.containsKey(locationString) == false)
 			{
+				// The default cache implementation is a ConcurrentHashMap. Thus neither the key nor
+				// the value can be null.
+				if (markup == null)
+				{
+					markup = Markup.NO_MARKUP;
+				}
+
 				markupCache.put(locationString, markup);
 			}
 			else
@@ -376,11 +401,11 @@ public class MarkupCache implements IMarkupCache
 	 * @param container
 	 * @return null, if not found or to enforce reloading the markup
 	 */
-	protected Markup getMarkupFromCache(final CharSequence cacheKey, final MarkupContainer container)
+	protected Markup getMarkupFromCache(final String cacheKey, final MarkupContainer container)
 	{
 		if (cacheKey != null)
 		{
-			CharSequence locationString = markupKeyCache.get(cacheKey);
+			String locationString = markupKeyCache.get(cacheKey);
 			if (locationString != null)
 			{
 				return markupCache.get(locationString);
@@ -399,7 +424,7 @@ public class MarkupCache implements IMarkupCache
 	 * @param enforceReload
 	 *            The cache will be ignored and all, including inherited markup files, will be
 	 *            reloaded. Whatever is in the cache, it will be ignored
-	 * @return The markup
+	 * @return The markup. Markup.NO_MARKUP, if not found.
 	 */
 	private final Markup loadMarkup(final MarkupContainer container,
 		final MarkupResourceStream markupResourceStream, final boolean enforceReload)
@@ -432,7 +457,7 @@ public class MarkupCache implements IMarkupCache
 			return markup;
 		}
 
-		// In case of an error, remove the cache entry
+		// In case the markup could not be loaded (without exception), than ..
 		if (cacheKey != null)
 		{
 			removeMarkup(cacheKey);
@@ -458,6 +483,8 @@ public class MarkupCache implements IMarkupCache
 	private final Markup loadMarkupAndWatchForChanges(final MarkupContainer container,
 		final MarkupResourceStream markupResourceStream, final boolean enforceReload)
 	{
+		// @TODO the following code sequence looks very much like in loadMarkup. Can it be
+		// optimized?
 		final String cacheKey = markupResourceStream.getCacheKey();
 		if (cacheKey != null)
 		{
@@ -477,8 +504,7 @@ public class MarkupCache implements IMarkupCache
 			}
 
 			// Watch file in the future
-			final IModificationWatcher watcher = Application.get()
-				.getResourceSettings()
+			final IModificationWatcher watcher = application.getResourceSettings()
 				.getResourceWatcher(true);
 			if (watcher != null)
 			{
@@ -599,9 +625,9 @@ public class MarkupCache implements IMarkupCache
 		 * Put an entry into the cache
 		 * 
 		 * @param key
-		 *            The reference key to find the element
+		 *            The reference key to find the element. Must not be null.
 		 * @param value
-		 *            The element to be cached
+		 *            The element to be cached. Must not be null.
 		 */
 		void put(K key, V value);
 
@@ -617,6 +643,7 @@ public class MarkupCache implements IMarkupCache
 	 */
 	public static class DefaultCacheImplementation<K, V> implements ICache<K, V>
 	{
+		// Neither key nor value are allowed to be null with ConcurrentHashMap
 		private final ConcurrentHashMap<K, V> cache = new ConcurrentHashMap<K, V>();
 
 		/**
@@ -626,18 +653,12 @@ public class MarkupCache implements IMarkupCache
 		{
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		public void clear()
 		{
 			cache.clear();
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
-		public boolean containsKey(Object key)
+		public boolean containsKey(final Object key)
 		{
 			if (key == null)
 			{
@@ -646,10 +667,7 @@ public class MarkupCache implements IMarkupCache
 			return cache.containsKey(key);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
-		public V get(Object key)
+		public V get(final Object key)
 		{
 			if (key == null)
 			{
@@ -658,41 +676,31 @@ public class MarkupCache implements IMarkupCache
 			return cache.get(key);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		public Collection<K> getKeys()
 		{
 			return cache.keySet();
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		public void put(K key, V value)
 		{
+			// Note that neither key nor value are allowed to be null with ConcurrentHashMap
 			cache.put(key, value);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		public boolean remove(K key)
 		{
+			if (key == null)
+			{
+				return false;
+			}
 			return cache.remove(key) == null;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		public int size()
 		{
 			return cache.size();
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		public void shutdown()
 		{
 			clear();

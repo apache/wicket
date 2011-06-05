@@ -34,7 +34,7 @@ public class ContainerInfo
 	private final Locale locale;
 	private final String style;
 	private final String variation;
-	private final String fileExtension;
+	private final MarkupType markupType;
 
 	/**
 	 * Construct.
@@ -45,7 +45,7 @@ public class ContainerInfo
 	public ContainerInfo(final MarkupContainer container)
 	{
 		this(container.getClass(), container.getLocale(), container.getStyle(),
-			container.getVariation(), container.getMarkupType().getExtension());
+			container.getVariation(), container.getMarkupType());
 	}
 
 	/**
@@ -55,24 +55,24 @@ public class ContainerInfo
 	 * @param locale
 	 * @param style
 	 * @param variation
-	 * @param fileExtension
+	 * @param markupType
 	 */
 	public ContainerInfo(final Class<?> containerClass, final Locale locale, final String style,
-		final String variation, final String fileExtension)
+		final String variation, final MarkupType markupType)
 	{
 		super();
 		containerClassRef = new WeakReference<Class<?>>(containerClass);
 		this.locale = locale;
 		this.style = style;
 		this.variation = variation;
-		this.fileExtension = fileExtension;
+		this.markupType = markupType;
 	}
 
 	/**
 	 * 
 	 * @return The container class
 	 */
-	public Class getContainerClass()
+	public Class<?> getContainerClass()
 	{
 		return containerClassRef.get();
 	}
@@ -83,7 +83,7 @@ public class ContainerInfo
 	 */
 	public String getFileExtension()
 	{
-		return fileExtension;
+		return markupType != null ? markupType.getExtension() : null;
 	}
 
 	/**
@@ -122,6 +122,6 @@ public class ContainerInfo
 	{
 		Class<?> classRef = containerClassRef.get();
 		return (classRef != null ? classRef.getName() : "null class") + ":" + locale + ":" + style +
-			":" + fileExtension;
+			":" + markupType;
 	}
 }

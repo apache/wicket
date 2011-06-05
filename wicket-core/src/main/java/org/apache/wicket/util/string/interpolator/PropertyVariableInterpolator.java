@@ -43,6 +43,8 @@ public final class PropertyVariableInterpolator extends VariableInterpolator
 	implements
 		IConverterLocator
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The model to introspect on */
 	private final Object model;
 

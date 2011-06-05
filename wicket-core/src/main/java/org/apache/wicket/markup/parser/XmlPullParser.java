@@ -27,6 +27,7 @@ import org.apache.wicket.markup.parser.XmlTag.TextSegment;
 import org.apache.wicket.util.io.FullyBufferedReader;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.XmlReader;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.parse.metapattern.parsers.TagNameParser;
 import org.apache.wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
@@ -558,11 +559,11 @@ public final class XmlPullParser implements IXmlPullParser
 	 * @param encoding
 	 *            The default character encoding of the input
 	 * @throws IOException
-	 * @throws ResourceStreamNotFoundException
 	 */
-	public void parse(final InputStream inputStream, final String encoding) throws IOException,
-		ResourceStreamNotFoundException
+	public void parse(final InputStream inputStream, final String encoding) throws IOException
 	{
+		Args.notNull(inputStream, "inputStream");
+
 		try
 		{
 			xmlReader = new XmlReader(new BufferedInputStream(inputStream, 4000), encoding);
@@ -570,14 +571,8 @@ public final class XmlPullParser implements IXmlPullParser
 		}
 		finally
 		{
-			try
-			{
-				inputStream.close();
-			}
-			finally
-			{
-				IOUtils.close(xmlReader);
-			}
+			IOUtils.closeQuietly(inputStream);
+			IOUtils.closeQuietly(xmlReader);
 		}
 	}
 

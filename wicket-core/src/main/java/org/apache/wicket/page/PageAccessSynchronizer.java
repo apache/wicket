@@ -35,11 +35,15 @@ import org.slf4j.LoggerFactory;
  */
 public class PageAccessSynchronizer implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	private static final Logger logger = LoggerFactory.getLogger(PageAccessSynchronizer.class);
 
 	/** map of which pages are owned by which threads */
 	private IProvider<ConcurrentMap<Integer, PageLock>> locks = new LazyInitializer<ConcurrentMap<Integer, PageLock>>()
 	{
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		protected ConcurrentMap<Integer, PageLock> createInstance()
 		{

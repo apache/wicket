@@ -146,11 +146,8 @@ public interface IXmlPullParser
 	 *            Use null to apply JVM/OS default
 	 * @throws IOException
 	 *             Error while reading the resource
-	 * @throws ResourceStreamNotFoundException
-	 *             Resource not found
 	 */
-	void parse(InputStream inputStream, final String encoding) throws IOException,
-		ResourceStreamNotFoundException;
+	void parse(InputStream inputStream, final String encoding) throws IOException;
 
 	/**
 	 * Move to the next XML element

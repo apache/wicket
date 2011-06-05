@@ -442,7 +442,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * if the value is not set the default value equivalent to component id will be returned.
 	 * 
 	 * @param fc
-	 * @return
+	 * @return Localized label string
 	 */
 	public final String getDefaultLabel()
 	{

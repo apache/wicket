@@ -35,6 +35,11 @@ import org.slf4j.LoggerFactory;
 /**
  * Factory to load markup either from from cache or from a resource. In case of markup inheritance,
  * merging the markup is managed transparently.
+ * <p>
+ * This class is the main entry point to load markup. Nothing else should be required by Components.
+ * It managed caching markup as well as loading and merging (inheritance) of markup.
+ * <p>
+ * The markup returned is immutable as it gets re-used across multiple Component instances.
  * 
  * @author Juergen Donnerstag
  */
@@ -106,9 +111,6 @@ public class MarkupFactory
 		// Markup parsers can not be re-used
 		return new MarkupParser(newXmlPullParser(), resource)
 		{
-			/**
-			 * @see org.apache.wicket.markup.MarkupParser#onAppendMarkupFilter(org.apache.wicket.markup.parser.IMarkupFilter)
-			 */
 			@Override
 			protected IMarkupFilter onAppendMarkupFilter(final IMarkupFilter filter)
 			{
@@ -178,14 +180,16 @@ public class MarkupFactory
 	}
 
 	/**
-	 * Get the markup associated with the container.
+	 * Get the markup associated with the container. This is mostly likely what you need to get the
+	 * markup for a component.
 	 * 
 	 * @param container
 	 *            The container to find the markup for
 	 * @param enforceReload
 	 *            If true, the cache will be ignored and all, including inherited markup files, will
 	 *            be reloaded. Whatever is in the cache, it will be ignored
-	 * @return The markup associated with the container
+	 * @return The markup associated with the container. Null, if the markup was not found or could
+	 *         not yet be loaded (e.g. getMarkupType() == null). Wicket Exception in case of errors.
 	 */
 	public final Markup getMarkup(final MarkupContainer container, final boolean enforceReload)
 	{
@@ -193,32 +197,75 @@ public class MarkupFactory
 	}
 
 	/**
-	 * Get the markup associated with the container.
+	 * Get the markup associated with the container. Check the cache first. If not found, than load
+	 * the markup and update the cache.
+	 * <p>
+	 * The clazz parameter usually can be null, except for base (inherited) markup.
+	 * <p>
+	 * There several means to disable markup caching. Caching can be disabled alltogether -
+	 * getMarkupCache() return null -, or individually (cacheKey == null).
 	 * 
 	 * @param container
 	 *            The container to find the markup for
 	 * @param clazz
-	 *            Must be the container class or any of its super classes.
+	 *            Must be the container class or any of its super classes. May be null.
 	 * @param enforceReload
 	 *            The cache will be ignored and all, including inherited markup files, will be
 	 *            reloaded. Whatever is in the cache, it will be ignored
-	 * @return The markup associated with the container
+	 * @return The markup associated with the container. Null, if the markup was not found or could
+	 *         not yet be loaded (e.g. getMarkupType() == null). Wicket Exception in case of errors.
 	 */
 	public final Markup getMarkup(final MarkupContainer container, final Class<?> clazz,
 		final boolean enforceReload)
 	{
 		Args.notNull(container, "container");
-		Args.notNull(clazz, "clazz");
+
+		if (checkMarkupType(container) == false)
+		{
+			return null;
+		}
+
+		Class<?> containerClass = getContainerClass(container, clazz);
 
 		IMarkupCache cache = getMarkupCache();
 		if (cache != null)
 		{
 			// MarkupCache acts as pull-through cache. It'll call the same loadMarkup() method as
 			// below, if needed.
-			return cache.getMarkup(container, clazz, enforceReload);
+			// @TODO may that can be changed. I don't like it too much.
+			return cache.getMarkup(container, containerClass, enforceReload);
 		}
 
-		return loadMarkup(container, null, enforceReload);
+		// Get the markup resource stream for the container (and super class)
+		MarkupResourceStream markupResourceStream = getMarkupResourceStream(container,
+			containerClass);
+
+		return loadMarkup(container, markupResourceStream, enforceReload);
+	}
+
+	/**
+	 * Without a markup type we can not search for a file and we can not construct the cacheKey. We
+	 * can not even load associated markup as required for Panels. Though every MarkupContainer can
+	 * provide it's own type, by default they refer to the Page. Hence, no markup type is an
+	 * indicator, that the component or any of its parents, has not yet been added.
+	 * 
+	 * @param container
+	 * @return true, if container.getMarkupType() != null
+	 */
+	protected final boolean checkMarkupType(final MarkupContainer container)
+	{
+		if (container.getMarkupType() == null)
+		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("Markup file not loaded, since the markup type is not yet available: " +
+					container.toString());
+			}
+
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -227,10 +274,13 @@ public class MarkupFactory
 	 * @param container
 	 *            The container to find the markup for
 	 * @return True if this markup container has associated markup
+	 * @deprecated please use {@link #getMarkup(MarkupContainer, boolean)} instead
 	 */
+	@Deprecated
 	public final boolean hasAssociatedMarkup(final MarkupContainer container)
 	{
-		return getMarkup(container, false) != Markup.NO_MARKUP;
+		Markup markup = getMarkup(container, false);
+		return markup != null && markup != Markup.NO_MARKUP;
 	}
 
 	/**
@@ -260,27 +310,27 @@ public class MarkupFactory
 	}
 
 	/**
-	 * Create a new markup resource stream for the container.
+	 * Create a new markup resource stream for the container and optionally the Class. The Class
+	 * must be provided in case of base (inherited) markup. Else it might be null (standard use
+	 * case).
 	 * 
 	 * @param container
 	 *            The MarkupContainer which requests to load the Markup resource stream
 	 * @param clazz
-	 *            Either the container class or any super class
+	 *            Either the container class or any super class. Might be null.
 	 * @return A IResourceStream if the resource was found
 	 */
 	public final MarkupResourceStream getMarkupResourceStream(final MarkupContainer container,
 		Class<?> clazz)
 	{
-		Class<?> containerClass = clazz;
-		if (clazz == null)
+		Args.notNull(container, "container");
+
+		if (checkMarkupType(container) == false)
 		{
-			containerClass = container.getClass();
+			return null;
 		}
-		else if (!clazz.isAssignableFrom(container.getClass()))
-		{
-			throw new WicketRuntimeException("Parameter clazz must be an instance of " +
-				container.getClass().getName() + ", but is a " + clazz.getName());
-		}
+
+		Class<?> containerClass = getContainerClass(container, clazz);
 
 		// Who is going to provide the markup resource stream?
 		// And ask the provider to locate the markup resource stream
@@ -292,47 +342,128 @@ public class MarkupFactory
 		{
 			return null;
 		}
+
 		if (resourceStream instanceof MarkupResourceStream)
 		{
 			return (MarkupResourceStream)resourceStream;
 		}
+
 		return new MarkupResourceStream(resourceStream, new ContainerInfo(container),
 			containerClass);
 	}
 
 	/**
-	 * Loads markup from a resource stream.
+	 * Gets and checks the container class
+	 * 
+	 * @param container
+	 * @param clazz
+	 *            Either null, or a super class of container
+	 * @return The container class to be used
+	 */
+	public final Class<?> getContainerClass(final MarkupContainer container, final Class<?> clazz)
+	{
+		Args.notNull(container, "container");
+
+		Class<?> containerClass = clazz;
+		if (clazz == null)
+		{
+			containerClass = container.getClass();
+		}
+		else if (!clazz.isAssignableFrom(container.getClass()))
+		{
+			throw new IllegalArgumentException("Parameter clazz must be an instance of " +
+				container.getClass().getName() + ", but is a " + clazz.getName());
+		}
+		return containerClass;
+	}
+
+	/**
+	 * Loads markup from a resource stream. It'll call the registered markup loader to load the
+	 * markup.
+	 * <p>
+	 * Though the 'enforceReload' attribute seem to imply that the cache is consulted to retrieve
+	 * the markup, the cache in fact is only checked for retrieving the base (inherited) markup.
+	 * Please see {@link #getMarkup(MarkupContainer, boolean)} as well.
 	 * 
 	 * @param container
 	 *            The original requesting markup container
 	 * @param markupResourceStream
-	 *            The markup resource stream to load. May be null.
+	 *            The markup resource stream to load, if already known.
 	 * @param enforceReload
 	 *            The cache will be ignored and all, including inherited markup files, will be
 	 *            reloaded. Whatever is in the cache, it will be ignored
-	 * @return The markup
+	 * @return The markup. Null, if the markup was not found. Wicket Exception in case of errors.
 	 */
 	public final Markup loadMarkup(final MarkupContainer container,
-		MarkupResourceStream markupResourceStream, final boolean enforceReload)
+		final MarkupResourceStream markupResourceStream, final boolean enforceReload)
 	{
-		if (markupResourceStream == null)
+		// @TODO can markupResourceStream be replace with clazz???
+		Args.notNull(container, "container");
+		Args.notNull(markupResourceStream, "markupResourceStream");
+
+		if (checkMarkupType(container) == false)
 		{
-			markupResourceStream = getMarkupResourceStream(container, null);
+			return null;
 		}
 
 		try
 		{
+			// The InheritedMarkupMarkupLoader needs to load the base markup. It'll do it via
+			// MarkupFactory.getMarkup() as main entry point, which in tern allows to choose between
+			// use or ignore the cache. That's via we need to propagate enforceReload to the markup
+			// loader as well.
+
+			// Markup loader is responsible to load the full markup for the container. In case of
+			// markup inheritance, the markup must be merged from different markup files. It is the
+			// merged markup which eventually will be cached, thus avoiding repetitive merge
+			// operations, which always result in the same outcome.
+			// The base markup will still be cached though, in order to avoid any unnecessary
+			// reloads. The base markup itself might be merged as it might inherit from its base
+			// class.
+
 			return getMarkupLoader().loadMarkup(container, markupResourceStream, null,
 				enforceReload);
 		}
+		catch (MarkupNotFoundException e)
+		{
+			// InheritedMarkupMarkupLoader will throw a MarkupNotFoundException in case the
+			// <b>base</b> markup can not be found.
+
+			log.error("Markup not found: " + e.getMessage(), e);
+
+			// Catch exception and ignore => return null (markup not found)
+		}
 		catch (ResourceStreamNotFoundException e)
 		{
-			log.error("Unable to find markup from " + markupResourceStream, e);
+			log.error("Markup not found: " + markupResourceStream, e);
+
+			// Catch exception and ignore => return null (markup not found)
 		}
 		catch (IOException e)
 		{
-			log.error("Unable to read markup from " + markupResourceStream, e);
+			log.error("Error while reading the markup " + markupResourceStream, e);
+
+			// Wrap with wicket exception and re-throw
+			throw new MarkupException(markupResourceStream, "IO error while readin markup: " +
+				e.getMessage(), e);
 		}
+		catch (WicketRuntimeException e)
+		{
+			log.error("Error while reading the markup " + markupResourceStream, e);
+
+			// re-throw
+			throw e;
+		}
+		catch (RuntimeException e)
+		{
+			log.error("Error while reading the markup " + markupResourceStream, e);
+
+			// Wrap with wicket exception and re-throw
+			throw new MarkupException(markupResourceStream, "Error while reading the markup: " +
+				e.getMessage(), e);
+		}
+
+		// Markup not found. Errors should throw a Wicket exception
 		return null;
 	}
 }

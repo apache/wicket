@@ -30,6 +30,7 @@ import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupFactory;
 import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.request.Response;
@@ -168,7 +169,11 @@ public class MarkupComponentBorder extends Behavior
 	 */
 	private MarkupStream findMarkupStream(final Component owner)
 	{
-		final String markupType = getMarkupType(owner);
+		final MarkupType markupType = getMarkupType(owner);
+		if (markupType == null)
+		{
+			return null;
+		}
 
 		// TODO we need to expose this functionality for any class not just for
 		// markupcontainers in markupcache so we don't have to replicate this
@@ -190,7 +195,7 @@ public class MarkupComponentBorder extends Behavior
 		{
 			String path = containerClass.getName().replace('.', '/');
 			IResourceStream resourceStream = locator.locate(containerClass, path, style, variation,
-				locale, markupType, false);
+				locale, markupType.getExtension(), false);
 
 			// Did we find it already?
 			if (resourceStream != null)
@@ -245,17 +250,17 @@ public class MarkupComponentBorder extends Behavior
 	 * @param component
 	 * @return markup type
 	 */
-	private String getMarkupType(final Component component)
+	private MarkupType getMarkupType(final Component component)
 	{
-		String extension;
+		final MarkupType markupType;
 		if (component instanceof MarkupContainer)
 		{
-			extension = ((MarkupContainer)component).getMarkupType().getExtension();
+			markupType = ((MarkupContainer)component).getMarkupType();
 		}
 		else
 		{
-			extension = component.getParent().getMarkupType().getExtension();
+			markupType = component.getParent().getMarkupType();
 		}
-		return extension;
+		return markupType;
 	}
 }

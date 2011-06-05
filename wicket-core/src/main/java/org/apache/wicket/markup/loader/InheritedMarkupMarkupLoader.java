@@ -59,13 +59,12 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 		int extendIndex = requiresBaseMarkup(markup);
 		if (extendIndex == -1)
 		{
-			// return a MarkupStream for the markup
 			return markup;
 		}
 
 		// Load the base markup
 		final Markup baseMarkup = getBaseMarkup(container, markup, enforceReload);
-		if (baseMarkup == Markup.NO_MARKUP)
+		if ((baseMarkup == null) || (baseMarkup == Markup.NO_MARKUP))
 		{
 			throw new MarkupNotFoundException(
 				"Base markup of inherited markup not found. Component class: " +
