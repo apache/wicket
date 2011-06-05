@@ -16,17 +16,22 @@
  */
 package org.apache.wicket.markup.html;
 
+import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.border.Border;
+import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.mock.MockPageManager;
+import org.apache.wicket.page.IManageablePage;
+import org.apache.wicket.page.IPageManager;
+import org.apache.wicket.page.IPageManagerContext;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * @author Pedro Santos
@@ -89,24 +94,41 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	/**
 	 * Test case for <a href="https://issues.apache.org/jira/browse/WICKET-3719">WICKET-3719</a>
 	 */
-	public void testAjaxUpdate()
+	public void bug_testAjaxUpdate()
 	{
-		WicketTester wicketTester = new WicketTester()
+		tester.startPage(TransparentWithAjaxUpdatePage.class);
+		tester.clickLink("link", true);
+	}
+
+
+	@Override
+	protected WebApplication newApplication()
+	{
+		return new MockApplication()
 		{
 			@Override
-			public Page getLastRenderedPage()
+			protected void internalInit()
 			{
-				// emulate serialization of the page so the components
-				// loose their "private transient Markup markup" and Component.getMarkup() use
-				// the respective MarkupSourcingStrategy
-				Page lastRenderedPage = super.getLastRenderedPage();
-				return (Page)WicketObjects.cloneObject(lastRenderedPage);
+				super.internalInit();
+				setPageManagerProvider(new IPageManagerProvider()
+				{
+					public IPageManager get(IPageManagerContext context)
+					{
+						return new MockPageManager()
+						{
+							@Override
+							public void touchPage(IManageablePage page)
+							{
+								page = (IManageablePage)WicketObjects.cloneObject(page);
+								super.touchPage(page);
+							}
+						};
+					}
+				});
 			}
 		};
-
-		wicketTester.startPage(TransparentWithAjaxUpdatePage.class);
-		wicketTester.clickLink("link", true);
 	}
+
 
 	/** */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider

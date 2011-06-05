@@ -23,6 +23,8 @@ import junit.framework.TestCase;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markupFragments.MyPage;
+import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.tester.WicketTester;
@@ -61,7 +63,16 @@ public abstract class WicketTestCase extends TestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		tester = new WicketTester();
+		WebApplication application = newApplication();
+		tester = new WicketTester(application);
+	}
+
+	/**
+	 * @return the application that should be used for the test
+	 */
+	protected WebApplication newApplication()
+	{
+		return new MockApplication();
 	}
 
 	/**
