@@ -54,7 +54,7 @@ public class DiskDataStoreTest extends TestCase
 	private static final Random random = new Random();
 	private static final int FILE_SIZE_MIN = 1024 * 200;
 	private static final int FILE_SIZE_MAX = 1024 * 300;
-	private static final Bytes MAX_SIZE_PER_SESSION = Bytes.bytes(1000000);
+	private static final Bytes MAX_SIZE_PER_SESSION = Bytes.megabytes(10);
 	private static final int FILE_CHANNEL_POOL_CAPACITY = 100;
 	private static final int SESSION_COUNT = 50;
 	private static final int FILES_COUNT = 1000;
