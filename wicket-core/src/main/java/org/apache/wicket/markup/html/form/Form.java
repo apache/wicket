@@ -1138,12 +1138,13 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		{
 			// use form of submitting component for processing
 			processingForm = submittingComponent.getForm();
-			
-			if(processingForm == null)
+
+			if (processingForm == null)
 			{
-				throw new IllegalStateException("submitting component must not return 'null' on getForm()");
+				throw new IllegalStateException(
+					"submitting component must not return 'null' on getForm()");
 			}
-			
+
 			// invoke submit on component
 			submittingComponent.onSubmit();
 		}
@@ -1151,7 +1152,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		{
 			processingForm = this;
 		}
-		
+
 		// invoke Form#onSubmit(..) going from innermost to outermost
 		Visits.visitPostOrder(processingForm, new IVisitor<Form<?>, Void>()
 		{
@@ -1709,13 +1710,13 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected final void validate()
 	{
+		// since this method can be called directly by users, this additional check is needed
 		if (isEnabledInHierarchy() && isVisibleInHierarchy())
 		{
-			// since this method can be called directly by users, this additional check is needed
+			validateNestedForms();
 			validateComponents();
 			validateFormValidators();
 			onValidate();
-			validateNestedForms();
 		}
 	}
 
@@ -1835,22 +1836,25 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	private void validateNestedForms()
 	{
-		visitChildren(Form.class, new IVisitor<Form<?>, Void>()
+		Visits.visitPostOrder(this, new IVisitor<Form<?>, Void>()
 		{
 			public void component(final Form<?> form, final IVisit<Void> visit)
 			{
+				if (form == Form.this)
+				{
+					// skip self, only process children
+					visit.stop();
+					return;
+				}
+
 				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 				{
 					form.validateComponents();
 					form.validateFormValidators();
 					form.onValidate();
 				}
-				else
-				{
-					visit.dontGoDeeper();
-				}
 			}
-		});
+		}, new ClassVisitFilter(Form.class));
 	}
 
 
