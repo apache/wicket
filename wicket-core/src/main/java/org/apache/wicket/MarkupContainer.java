@@ -167,40 +167,46 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					child.getId() + "' already exists"));
 			}
 
-			// Check if the markup is available after the child has been added to the parent
-			try
+			// One of the key pre-requisites to successfully load markup, is the availability of the
+			// file extension. Which in turn is part of MarkupType which by default requires the
+			// Page.
+			if (getMarkupType() != null)
 			{
-				// If not yet triggered, than do now (e.g. Pages)
-				if (getMarkup() != null)
+				// Check if the markup is available after the child has been added to the parent
+				try
 				{
-					internalOnMarkupAttached();
-				}
-
-				if (child.getMarkup() != null)
-				{
-					child.internalOnMarkupAttached();
-
-					// Tell all children of "component" as well
-					if (child instanceof MarkupContainer)
+					// If not yet triggered, than do now (e.g. Pages)
+					if (getMarkup() != null)
 					{
-						MarkupContainer container = (MarkupContainer)child;
-						container.visitChildren(new IVisitor<Component, Void>()
+						internalOnMarkupAttached();
+					}
+
+					if (child.getMarkup() != null)
+					{
+						child.internalOnMarkupAttached();
+
+						// Tell all children of "component" as well
+						if (child instanceof MarkupContainer)
 						{
-							public void component(final Component component,
-								final IVisit<Void> visit)
+							MarkupContainer container = (MarkupContainer)child;
+							container.visitChildren(new IVisitor<Component, Void>()
 							{
-								if (component.internalOnMarkupAttached())
+								public void component(final Component component,
+									final IVisit<Void> visit)
 								{
-									visit.dontGoDeeper();
+									if (component.internalOnMarkupAttached())
+									{
+										visit.dontGoDeeper();
+									}
 								}
-							}
-						});
+							});
+						}
 					}
 				}
-			}
-			catch (WicketRuntimeException exception)
-			{
-				// ignore
+				catch (WicketRuntimeException exception)
+				{
+					// ignore
+				}
 			}
 		}
 		return this;
@@ -464,22 +470,17 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 *         "vxml"). The markup type for a component is independent of whether or not the
 	 *         component actually has an associated markup resource file (which is determined at
 	 *         runtime). If there is no markup type for a component, null may be returned, but this
-	 *         means that no markup can be loaded for the class.
+	 *         means that no markup can be loaded for the class. Null is also returned if the
+	 *         component, or any of its parents, has not been added to a Page.
 	 */
 	public MarkupType getMarkupType()
 	{
-		try
+		MarkupContainer parent = getParent();
+		if (parent != null)
 		{
-			return getPage().getMarkupType();
+			return parent.getMarkupType();
 		}
-		catch (Exception ex)
-		{
-			throw new WicketRuntimeException(
-				"Unable to determine the markup type which e.g. is used for the extension of the markup file. "
-					+ "Probably the component is not yet added to the Page. "
-					+ "You may defer markup access to a later point in time or subclass getMarkupType(). "
-					+ "Please see IModel, onMarkupAttached() or onInitialize()", ex);
-		}
+		return null;
 	}
 
 	/**
