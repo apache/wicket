@@ -33,20 +33,22 @@ import org.apache.wicket.pageStore.DiskDataStore;
 import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.settings.IStoreSettings;
 import org.apache.wicket.settings.def.StoreSettings;
-import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  */
 public class DiskDataStoreTest extends TestCase
 {
+	/** Log for reporting. */
+	private static final Logger log = LoggerFactory.getLogger(DiskDataStoreTest.class);
 
 	/**
 	 * Construct.
 	 */
 	public DiskDataStoreTest()
 	{
-
 	}
 
 	private static final Random random = new Random();
@@ -97,17 +99,24 @@ public class DiskDataStoreTest extends TestCase
 
 		public boolean checkData(byte data[])
 		{
-			Args.notNull(data, "data");
+			if (data == null)
+			{
+				log.error("data[] should never be null");
+				return false;
+			}
 			if (data.length != length)
 			{
+				log.error("data.length != length");
 				return false;
 			}
 			if (first != data[0])
 			{
+				log.error("first != data[0]");
 				return false;
 			}
 			if (last != data[data.length - 1])
 			{
+				log.error("last != data[data.length - 1]");
 				return false;
 			}
 			return true;
@@ -161,11 +170,11 @@ public class DiskDataStoreTest extends TestCase
 			long duration = System.nanoTime() - now;
 			saveTime.addAndGet((int)duration);
 		}
-
 	}
 
 	private IDataStore dataStore;
 
+	// Store/Save data in DataStore
 	private class SaveRunnable implements Runnable
 	{
 		public void run()
@@ -201,6 +210,7 @@ public class DiskDataStoreTest extends TestCase
 		}
 	};
 
+	// Read data from DataStore
 	private class Read1Runnable implements Runnable
 	{
 		public void run()
@@ -214,6 +224,7 @@ public class DiskDataStoreTest extends TestCase
 					if (file.checkData(bytes) == false)
 					{
 						failures.incrementAndGet();
+						log.error("Detected error number: " + failures.get());
 					}
 					filesToRead2.add(file);
 					read1Count.incrementAndGet();
@@ -234,7 +245,6 @@ public class DiskDataStoreTest extends TestCase
 		}
 	};
 
-
 	private class Read2Runnable implements Runnable
 	{
 		public void run()
@@ -248,6 +258,7 @@ public class DiskDataStoreTest extends TestCase
 					if (file.checkData(bytes) == false)
 					{
 						failures.incrementAndGet();
+						log.error("Detected error number: " + failures.get());
 					}
 					read2Count.incrementAndGet();
 					bytesRead.addAndGet(bytes.length);
@@ -269,7 +280,7 @@ public class DiskDataStoreTest extends TestCase
 
 	private void doTestDataStore()
 	{
-		System.out.println("Starting...");
+		log.error("Starting...");
 		long start = System.currentTimeMillis();
 
 		for (int i = 0; i < THREAD_COUNT; ++i)
@@ -301,14 +312,12 @@ public class DiskDataStoreTest extends TestCase
 
 		long duration = System.currentTimeMillis() - start;
 
-		System.out.println("Took: " + duration + " ms");
-		System.out.println("Save: " + saveCount.intValue() + " files, " + bytesWritten.get() +
+		log.error("Took: " + duration + " ms");
+		log.error("Save: " + saveCount.intValue() + " files, " + bytesWritten.get() + " bytes");
+		log.error("Read: " + (read1Count.get() + read2Count.get()) + " files, " + bytesRead.get() +
 			" bytes");
-		System.out.println("Read: " + (read1Count.get() + read2Count.get()) + " files, " +
-			bytesRead.get() + " bytes");
 
-		System.out.println("Average save time (ns): " + (double)saveTime.get() /
-			(double)saveCount.get());
+		log.error("Average save time (ns): " + (double)saveTime.get() / (double)saveCount.get());
 
 		assertEquals(0, failures.get());
 
@@ -327,6 +336,7 @@ public class DiskDataStoreTest extends TestCase
 
 		IStoreSettings storeSettings = new StoreSettings(null);
 		java.io.File fileStoreFolder = storeSettings.getFileStoreFolder();
+
 		dataStore = new DiskDataStore("app1", fileStoreFolder, MAX_SIZE_PER_SESSION,
 			FILE_CHANNEL_POOL_CAPACITY);
 		dataStore = new AsynchronousDataStore(dataStore);
@@ -335,6 +345,4 @@ public class DiskDataStoreTest extends TestCase
 
 		dataStore.destroy();
 	}
-
-
 }
