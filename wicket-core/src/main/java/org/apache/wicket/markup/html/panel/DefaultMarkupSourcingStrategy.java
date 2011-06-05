@@ -23,6 +23,7 @@ import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.list.AbstractItem;
+import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,6 +94,24 @@ public final class DefaultMarkupSourcingStrategy implements IMarkupSourcingStrat
 		if (markup != null)
 		{
 			return markup;
+		}
+
+		// If the child has not been directly added to the container, but via a
+		// TransparentWebMarkupContainer, than we are in trouble. In general Wicket iterates over
+		// the markup elements and searches for associated components, not the other way around.
+		// Because of TransparentWebMarkupContainer (or more generally resolvers), there is no
+		// "synchronous" search possible.
+		for (Component ch : container)
+		{
+			if ((ch != child) && (ch instanceof MarkupContainer) &&
+				(ch instanceof IComponentResolver))
+			{
+				markup = ((MarkupContainer)ch).getMarkup(child);
+				if (markup != null)
+				{
+					return markup;
+				}
+			}
 		}
 
 		// This is to make migration for Items from 1.4 to 1.5 more easy

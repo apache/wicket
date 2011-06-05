@@ -37,7 +37,6 @@ import org.apache.wicket.util.tester.WicketTester;
  */
 public class TransparentWebMarkupContainerTest extends WicketTestCase
 {
-
 	/**
 	 * WICKET-3512
 	 * 
@@ -93,7 +92,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	/**
 	 * Test case for <a href="https://issues.apache.org/jira/browse/WICKET-3719">WICKET-3719</a>
 	 */
-	public void bug_testAjaxUpdate()
+	public void testAjaxUpdate()
 	{
 		WicketTester wicketTester = new WicketTester()
 		{
@@ -146,6 +145,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 				"</body></html>");
 		}
 	}
+
 	private static class TestBorder extends Border implements IMarkupResourceStreamProvider
 	{
 		private static final long serialVersionUID = 1L;

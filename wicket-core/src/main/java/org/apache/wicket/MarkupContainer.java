@@ -40,6 +40,7 @@ import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
 import org.apache.wicket.settings.IDebugSettings;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.ComponentStrings;
 import org.apache.wicket.util.string.Strings;
@@ -129,10 +130,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	{
 		for (Component child : childs)
 		{
-			if (child == null)
-			{
-				throw new IllegalArgumentException("argument child may not be null");
-			}
+			Args.notNull(child, "child");
 
 			MarkupContainer parent = getParent();
 			while (parent != null)
@@ -141,14 +139,17 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				{
 					String msg = "You can not add a component's parent as child to the component (loop): Component: " +
 						this.toString(false) + "; parent == child: " + parent.toString(false);
+
 					if (child instanceof Border.BorderBodyContainer)
 					{
 						msg += ". Please consider using Border.addToBorder(new " +
 							this.getClass().getSimpleName() + "(\"" + this.getId() +
 							"\", ...) instead of add(...)";
 					}
+
 					throw new WicketRuntimeException(msg);
 				}
+
 				parent = parent.getParent();
 			}
 
@@ -899,10 +900,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	private final void addedComponent(final Component child)
 	{
 		// Check for degenerate case
-		if (child == this)
-		{
-			throw new IllegalArgumentException("Component can't be added to itself");
-		}
+		Args.notNull(child, "child");
 
 		MarkupContainer parent = child.getParent();
 		if (parent != null)
