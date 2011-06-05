@@ -64,7 +64,7 @@ public class HeaderSectionMyLabel extends WebMarkupContainer
 			@Override
 			public IMarkupFragment getMarkup(final MarkupContainer parent, final Component child)
 			{
-				MarkupStream markup = parent.getAssociatedMarkupStream(true);
+				MarkupStream markup = new MarkupStream(parent.getAssociatedMarkup());
 				markup.skipRawMarkup();
 				return markup.getMarkupFragment();
 			}

@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.form.formComponentPanel;
 
-import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
@@ -39,7 +38,7 @@ public class MyFormComponentPanel extends FormComponentPanel<Void>
 	}
 
 	@Override
-	public IMarkupFragment getAssociatedMarkup()
+	public Markup getAssociatedMarkup()
 	{
 		return Markup.of("<wicket:panel>test</wicket:panel>");
 	}

@@ -410,11 +410,11 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * 
 	 * @return A stream of MarkupElement elements. Null if not found.
 	 */
-	public IMarkupFragment getAssociatedMarkup()
+	public Markup getAssociatedMarkup()
 	{
 		try
 		{
-			IMarkupFragment markup = MarkupFactory.get().getMarkup(this, false);
+			Markup markup = MarkupFactory.get().getMarkup(this, false);
 
 			// If we found markup for this container
 			if ((markup != null) && (markup != Markup.NO_MARKUP))
@@ -1800,7 +1800,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	public boolean hasAssociatedMarkup()
 	{
-		return MarkupFactory.get().hasAssociatedMarkup(this);
+		return getAssociatedMarkup() != null;
 	}
 
 	/**
