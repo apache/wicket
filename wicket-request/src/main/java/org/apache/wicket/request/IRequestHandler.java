@@ -18,7 +18,7 @@ package org.apache.wicket.request;
 
 /**
  * A request handler is the base entity that is the subject of a request. Different types of request
- * have different request targets. For instance a request for a bookmarkable page differs from a
+ * have different request handlers. For instance a request for a bookmarkable page differs from a
  * request for a link on a previously rendered page, which in turn differs from a request for a
  * shared resource.
  * 
