@@ -141,11 +141,6 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 		return precondition;
 	}
 
-	protected boolean onlyTargetActivePage()
-	{
-		return true;
-	}
-
 	/**
 	 * 
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(org.apache.wicket.ajax.AjaxRequestTarget)
