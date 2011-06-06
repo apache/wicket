@@ -42,23 +42,6 @@ public class ResourceModelTest extends WicketTestCase
 	}
 
 	/**
-	 * Construct.
-	 */
-	public ResourceModelTest()
-	{
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public ResourceModelTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * Tests a simple {@link ResourceModel} on a test page.
 	 * 
 	 * @throws Exception

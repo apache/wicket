@@ -16,20 +16,18 @@
  */
 package org.apache.wicket.markup;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * @author Pedro Santos
  */
-public class ComponentTagAttributeEscapingTest extends TestCase
+public class ComponentTagAttributeEscapingTest extends WicketTestCase
 {
 
 	/**
@@ -37,7 +35,6 @@ public class ComponentTagAttributeEscapingTest extends TestCase
 	 */
 	public void testComponentAttributesNotDoubleEscaped() throws Exception
 	{
-		WicketTester tester = new WicketTester();
 		tester.startPage(ButtonValuePage.class);
 		String response = tester.getLastResponseAsString();
 		System.out.println(response);

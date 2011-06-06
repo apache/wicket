@@ -16,21 +16,19 @@
  */
 package org.apache.wicket.markup.html.markupId;
 
-import junit.framework.TestCase;
-
-import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.protocol.http.WebApplication;
 
 /**
  * Simple test using the WicketTester
  */
-public class TestHomePage extends TestCase
+public class TestHomePage extends WicketTestCase
 {
-	private WicketTester tester;
 
 	@Override
-	public void setUp()
+	protected WebApplication newApplication()
 	{
-		tester = new WicketTester(new WicketApplication());
+		return new WicketApplication();
 	}
 
 	/**

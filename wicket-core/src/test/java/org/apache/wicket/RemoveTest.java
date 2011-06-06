@@ -16,33 +16,16 @@
  */
 package org.apache.wicket;
 
-import junit.framework.TestCase;
-
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Test the {@link Component#onRemove()}. Test if it gets called and propagated to the Components
  * children.
  */
-public class RemoveTest extends TestCase
+public class RemoveTest extends WicketTestCase
 {
 
 	static final String PATH = RemoveTestPage.COMPONENT + Component.PATH_SEPARATOR +
 		RemoveTestPage.LINK;
-
-	WicketTester tester;
-
-	@Override
-	protected void setUp() throws Exception
-	{
-		tester = new WicketTester();
-	}
-
-	@Override
-	protected void tearDown() throws Exception
-	{
-		tester.destroy();
-	}
 
 	/**
 	 * The test

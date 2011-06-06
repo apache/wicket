@@ -17,12 +17,10 @@
 package org.apache.wicket;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.apache.wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import org.apache.wicket.protocol.http.documentvalidation.Tag;
 import org.apache.wicket.protocol.http.documentvalidation.TextContent;
-import org.apache.wicket.util.tester.WicketTester;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,11 +33,9 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Chris Turner
  */
-public class AttributeModifierComponentTest extends TestCase
+public class AttributeModifierComponentTest extends WicketTestCase
 {
 	private static final Logger log = LoggerFactory.getLogger(AttributeModifierComponentTest.class);
-
-	private WicketTester tester;
 
 	/**
 	 * Create a test case instance.
@@ -56,14 +52,7 @@ public class AttributeModifierComponentTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		tester = new WicketTester();
 		tester.startPage(AttributeModifierComponentPage.class);
-	}
-
-	@Override
-	protected void tearDown() throws Exception
-	{
-		tester.destroy();
 	}
 
 	/**

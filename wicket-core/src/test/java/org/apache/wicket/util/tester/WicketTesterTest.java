@@ -23,7 +23,6 @@ import java.util.Locale;
 import javax.servlet.http.Cookie;
 
 import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MockPageParametersAware;
@@ -31,6 +30,7 @@ import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.MockPageWithOneComponent;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.WicketAjaxReference;
@@ -41,6 +41,7 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Url;
@@ -66,22 +67,22 @@ import org.junit.Test;
  * 
  * @author Juergen Donnerstag
  */
-public class WicketTesterTest extends TestCase
+public class WicketTesterTest extends WicketTestCase
 {
 	private boolean eventExecuted;
-	private WicketTester tester;
 
 	@Override
 	protected void setUp() throws Exception
 	{
+		super.setUp();
+
 		eventExecuted = false;
-		tester = new WicketTester(new MyMockApplication());
 	}
 
 	@Override
-	protected void tearDown() throws Exception
+	protected WebApplication newApplication()
 	{
-		tester.destroy();
+		return new MyMockApplication();
 	}
 
 	/**

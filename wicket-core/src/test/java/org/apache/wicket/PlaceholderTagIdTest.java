@@ -23,13 +23,12 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
 
 /**
  * Test for <a href="https://issues.apache.org/jira/browse/WICKET-3563">WICKET-3563</a>
  */
-public class PlaceholderTagIdTest
+public class PlaceholderTagIdTest extends WicketTestCase
 {
 
 	/**
@@ -40,7 +39,6 @@ public class PlaceholderTagIdTest
 	@Test
 	public void wicket3563()
 	{
-		WicketTester tester = new WicketTester();
 		tester.startPage(TestPage.class);
 
 		tester.assertContains("<form id=\"form1_region\" style=\"display:none\">");

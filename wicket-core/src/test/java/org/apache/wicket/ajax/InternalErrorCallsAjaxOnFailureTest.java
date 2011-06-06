@@ -16,9 +16,7 @@
  */
 package org.apache.wicket.ajax;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.pages.ExceptionErrorPage;
 import org.apache.wicket.markup.html.pages.InternalErrorPage;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
@@ -38,7 +36,7 @@ import org.junit.Test;
  * See WICKET-3143 No Exception page are rendered when using ajax
  * 
  */
-public class InternalErrorCallsAjaxOnFailureTest
+public class InternalErrorCallsAjaxOnFailureTest extends WicketTestCase
 {
 
 	/**
@@ -49,7 +47,6 @@ public class InternalErrorCallsAjaxOnFailureTest
 	public void showsInternalErrorPage()
 	{
 
-		WicketTester tester = new WicketTester();
 		tester.setExposeExceptions(false);
 		tester.startPage(InternalErrorCallsAjaxOnFailurePage.class);
 
@@ -101,5 +98,6 @@ public class InternalErrorCallsAjaxOnFailureTest
 
 		// assert that the original page is still the last rendered one
 		tester.assertRenderedPage(InternalErrorCallsAjaxOnFailurePage.class);
+		tester.destroy();
 	}
 }

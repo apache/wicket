@@ -16,10 +16,11 @@
  */
 package org.apache.wicket;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
@@ -34,13 +35,14 @@ import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.settings.def.FrameworkSettings;
 import org.apache.wicket.settings.def.ResourceSettings;
 import org.junit.After;
+import org.junit.Test;
 
 /**
  * Test cases for the <code>ApplicationSettings</code> class.
  * 
  * @author Chris Turner
  */
-public class ApplicationSettingsTest extends TestCase
+public class ApplicationSettingsTest
 {
 
 	/**
@@ -55,6 +57,7 @@ public class ApplicationSettingsTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void testFrameworkVersion()
 	{
 		IFrameworkSettings settings = new FrameworkSettings();
@@ -64,6 +67,7 @@ public class ApplicationSettingsTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void testExceptionOnMissingResourceDefaultValue() throws Exception
 	{
 		IResourceSettings settings = new ResourceSettings(new MockApplication());
@@ -74,6 +78,7 @@ public class ApplicationSettingsTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void testExceptionOnMissingResourceSetsCorrectly() throws Exception
 	{
 		IResourceSettings settings = new ResourceSettings(new MockApplication());
@@ -85,6 +90,7 @@ public class ApplicationSettingsTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void testUseDefaultOnMissingResourceDefaultValue() throws Exception
 	{
 		IResourceSettings settings = new ResourceSettings(new MockApplication());
@@ -95,6 +101,7 @@ public class ApplicationSettingsTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void testUseDefaultOnMissingResourceSetsCorrectly() throws Exception
 	{
 		IResourceSettings settings = new ResourceSettings(new MockApplication());
@@ -106,6 +113,7 @@ public class ApplicationSettingsTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void testDefaultStringResourceLoaderSetup()
 	{
 		IResourceSettings settings = new ResourceSettings(new MockApplication());
@@ -124,6 +132,7 @@ public class ApplicationSettingsTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void testOverrideStringResourceLoaderSetup()
 	{
 		IResourceSettings settings = new ResourceSettings(new MockApplication());
@@ -142,6 +151,7 @@ public class ApplicationSettingsTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void testLocalizer()
 	{
 		MockApplication dummy = new MockApplication();

@@ -46,5 +46,6 @@ public class LibraryTest extends TestCase
 		tester.assertRenderedPage(Home.class);
 		tester.assertContains("Wicket Examples - library");
 		tester.assertLabel("books:0:author", "Effective Java (Joshua Bloch)");
+		tester.destroy();
 	}
 }

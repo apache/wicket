@@ -494,5 +494,6 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		// urls should be equal
 		assertEquals(url1, url2);
 		assertEquals(url1, url3);
+		tester.destroy();
 	}
 }

@@ -16,35 +16,34 @@
  */
 package org.apache.wicket.stateless;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.Page;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.stateless.pages.HomePage;
 import org.apache.wicket.stateless.pages.LoginPage;
 import org.apache.wicket.util.tester.FormTester;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * 
  * @author marrink
  */
-public class StatelessFormTest extends TestCase
+public class StatelessFormTest extends WicketTestCase
 {
 	private final Class<? extends Page> HOME = HomePage.class;
 	private final Class<? extends Page> LOGIN = LoginPage.class;
 
-	private WicketTester createTester()
+	@Override
+	protected WebApplication newApplication()
 	{
-		return new WicketTester(new MockApplication()
+		return new MockApplication()
+		{
+			@Override
+			public Class<? extends Page> getHomePage()
 			{
-				@Override
-				public Class<? extends Page> getHomePage()
-				{
-					return HOME;
-				}
-	
-			});
+				return HOME;
+			}
+		};
 	}
 
 	/**
@@ -52,22 +51,13 @@ public class StatelessFormTest extends TestCase
 	 */
 	public void testLogin()
 	{
-		WicketTester tester = createTester();
-
-		try
-		{
-			tester.startPage(LOGIN);
-			tester.assertRenderedPage(LOGIN);
-			FormTester form = tester.newFormTester("signInPanel:signInForm");
-			form.setValue("username", "test");
-			form.setValue("password", "test");
-			form.submit();
-			tester.assertRenderedPage(HOME);
-		}
-		finally
-		{
-			tester.destroy();
-		}
+		tester.startPage(LOGIN);
+		tester.assertRenderedPage(LOGIN);
+		FormTester form = tester.newFormTester("signInPanel:signInForm");
+		form.setValue("username", "test");
+		form.setValue("password", "test");
+		form.submit();
+		tester.assertRenderedPage(HOME);
 	}
 
 	/**
@@ -75,34 +65,25 @@ public class StatelessFormTest extends TestCase
 	 */
 	public void testOnInitializationForStatelessComponents()
 	{
-		WicketTester tester = createTester();
+		LoginPage page = new LoginPage();
+		assertFalse(page.isPageInitialized());
+		assertFalse(page.isPanelInitialized());
 
-		try
-		{
-			LoginPage page = new LoginPage();
-			assertFalse(page.isPageInitialized());
-			assertFalse(page.isPanelInitialized());
+		tester.startPage(LOGIN);
+		tester.assertRenderedPage(LOGIN);
+		page = (LoginPage)tester.getLastRenderedPage();
+		assertTrue(page.isPageInitialized());
+		assertTrue(page.isPanelInitialized());
 
-			tester.startPage(LOGIN);
-			tester.assertRenderedPage(LOGIN);
-			page = (LoginPage)tester.getLastRenderedPage();
-			assertTrue(page.isPageInitialized());
-			assertTrue(page.isPanelInitialized());
-			
-			FormTester form = tester.newFormTester("signInPanel:signInForm");
-			form.setValue("username", "test");
-			form.setValue("password", "invalid");
-			form.submit();
-			
-			tester.assertRenderedPage(LOGIN);
-			page = (LoginPage)tester.getLastRenderedPage();
-			assertTrue(page.isPageInitialized());
-			assertTrue(page.isPanelInitialized());
-		}
-		finally
-		{
-			tester.destroy();
-		}
+		FormTester form = tester.newFormTester("signInPanel:signInForm");
+		form.setValue("username", "test");
+		form.setValue("password", "invalid");
+		form.submit();
+
+		tester.assertRenderedPage(LOGIN);
+		page = (LoginPage)tester.getLastRenderedPage();
+		assertTrue(page.isPageInitialized());
+		assertTrue(page.isPanelInitialized());
 	}
 
 }

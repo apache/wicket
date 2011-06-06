@@ -16,43 +16,17 @@
  */
 package org.apache.wicket;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
  */
-public class ComponentInitializationIntegrationTest
+public class ComponentInitializationIntegrationTest extends WicketTestCase
 {
-	WicketTester tester;
-
-
-	/**
-	 * setup()
-	 */
-	@Before
-	public void setup()
-	{
-		tester = new WicketTester();
-	}
-
-	/**
-	 * destroy()
-	 */
-	@After
-	public void destroy()
-	{
-		tester.destroy();
-	}
-
 	/**
 	 * initialization()
 	 */

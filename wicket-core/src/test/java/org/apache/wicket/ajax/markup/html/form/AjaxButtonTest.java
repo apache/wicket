@@ -16,23 +16,13 @@
  */
 package org.apache.wicket.ajax.markup.html.form;
 
-import junit.framework.TestCase;
-
-import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.WicketTestCase;
 
 /**
  * Simple test using the WicketTester
  */
-public class AjaxButtonTest extends TestCase
+public class AjaxButtonTest extends WicketTestCase
 {
-	private WicketTester tester;
-
-	@Override
-	public void setUp()
-	{
-		tester = new WicketTester();
-	}
-
 	/**
 	 * 
 	 */
@@ -50,8 +40,9 @@ public class AjaxButtonTest extends TestCase
 		HomePage homePage = (HomePage)tester.getLastRenderedPage();
 		TestForm testForm = homePage.getForm();
 
-		tester.getRequest().getPostParameters().setParameterValue(
-			homePage.getForm().getSubmitButton().getInputName(), "x");
+		tester.getRequest()
+			.getPostParameters()
+			.setParameterValue(homePage.getForm().getSubmitButton().getInputName(), "x");
 		tester.executeAjaxEvent(testForm.getSubmitButton(), "onclick");
 	}
 }

@@ -18,26 +18,23 @@ package org.apache.wicket.markup.html.form.validation.innerfeedback;
 
 import java.util.Locale;
 
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.FormTester;
-import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
  * Test for Wicket-2974
  */
-public class InnerFeedbackTest
+public class InnerFeedbackTest extends WicketTestCase
 {
-	private WicketTester tester;
 
-	/**
-	 * before()
-	 */
-	@Before
-	public void before()
+
+	@Override
+	protected WebApplication newApplication()
 	{
-		tester = new WicketTester(new MockApplication()
+		return new MockApplication()
 		{
 			@Override
 			protected void init()
@@ -56,8 +53,9 @@ public class InnerFeedbackTest
 			{
 				return HomePage.class;
 			}
-		});
+		};
 	}
+
 
 	/**
 	 * 

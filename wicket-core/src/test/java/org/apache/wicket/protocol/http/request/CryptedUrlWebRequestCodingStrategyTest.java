@@ -16,30 +16,28 @@
  */
 package org.apache.wicket.protocol.http.request;
 
-import junit.framework.TestCase;
-
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.SimplePage;
 import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.mapper.CompoundRequestMapper;
 import org.apache.wicket.request.mapper.CryptoMapper;
 import org.apache.wicket.util.crypt.Base64;
 import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.crypt.ICryptFactory;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Simple test using the WicketTester
  */
-public class CryptedUrlWebRequestCodingStrategyTest extends TestCase
+public class CryptedUrlWebRequestCodingStrategyTest extends WicketTestCase
 {
-	private WicketTester tester;
 
 
 	@Override
-	public void setUp()
+	protected WebApplication newApplication()
 	{
-		tester = new WicketTester(new MockApplication()
+		return new MockApplication()
 		{
 			@Override
 			protected void init()
@@ -51,7 +49,7 @@ public class CryptedUrlWebRequestCodingStrategyTest extends TestCase
 				root.add(new CryptoMapper(getRootRequestMapper(), this));
 				setRootRequestMapper(root);
 			}
-		});
+		};
 	}
 
 	/**

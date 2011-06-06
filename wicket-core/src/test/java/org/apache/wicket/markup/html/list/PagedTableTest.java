@@ -29,26 +29,6 @@ import org.apache.wicket.util.tester.DiffUtil;
  */
 public class PagedTableTest extends WicketTestCase
 {
-
-	/**
-	 * Construct.
-	 */
-	public PagedTableTest()
-	{
-		super();
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 *            name of test
-	 */
-	public PagedTableTest(String name)
-	{
-		super(name);
-	}
-
 	/**
 	 * Test simple table behavior.
 	 * 

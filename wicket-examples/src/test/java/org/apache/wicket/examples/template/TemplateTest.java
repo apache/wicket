@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
- * jWebUnit test for Hello World.
+ * Test for Template application
  */
 public class TemplateTest extends TestCase
 {
@@ -48,5 +48,6 @@ public class TemplateTest extends TestCase
 		doc = tester.getLastResponse().getDocument();
 		tester.assertContains("Template example, page 1 - border");
 		tester.assertContains("contents here");
+		tester.destroy();
 	}
 }

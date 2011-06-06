@@ -16,23 +16,13 @@
  */
 package org.apache.wicket.markup.parser;
 
-import junit.framework.TestCase;
-
-import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.WicketTestCase;
 
 /**
  * 
  */
-public class TestHomePage extends TestCase
+public class TestHomePage extends WicketTestCase
 {
-	private WicketTester tester;
-
-	@Override
-	public void setUp()
-	{
-		tester = new WicketTester();
-	}
-
 	/**
 	 * Wicket-2105
 	 */

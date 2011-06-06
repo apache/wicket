@@ -18,17 +18,15 @@ package org.apache.wicket.markup.html.list;
 
 import java.util.ArrayList;
 
-import junit.framework.TestCase;
-
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.model.util.ListModel;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Test for ListView
  * 
  * @author Juergen Donnerstag
  */
-public class ListViewTest extends TestCase
+public class ListViewTest extends WicketTestCase
 {
 	/**
 	 * Create a predefined ListView
@@ -62,8 +60,6 @@ public class ListViewTest extends TestCase
 	 */
 	public void testListView()
 	{
-		new WicketTester();
-
 		ListView<Integer> lv = createListView(4);
 		assertEquals(4, lv.getList().size());
 		assertEquals(4, lv.getViewSize());
@@ -100,8 +96,6 @@ public class ListViewTest extends TestCase
 	 */
 	public void testEmptyListView()
 	{
-		new WicketTester();
-
 		// Empty tables
 		ListView<?> lv = createListView(0);
 		assertEquals(0, lv.getStartIndex());

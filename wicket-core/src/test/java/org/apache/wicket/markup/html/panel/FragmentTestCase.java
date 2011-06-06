@@ -16,31 +16,13 @@
  */
 package org.apache.wicket.markup.html.panel;
 
-import junit.framework.TestCase;
-
-import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.WicketTestCase;
 
 /**
  * 
  */
-public class FragmentTestCase extends TestCase
+public class FragmentTestCase extends WicketTestCase
 {
-	private WicketTester tester;
-
-	@Override
-	protected void setUp() throws Exception
-	{
-		super.setUp();
-		tester = new WicketTester();
-	}
-
-	@Override
-	protected void tearDown() throws Exception
-	{
-		super.tearDown();
-		tester = null;
-	}
-
 	/**
 	 * 
 	 */

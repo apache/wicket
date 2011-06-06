@@ -33,7 +33,9 @@ import junit.framework.AssertionFailedError;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.IProvider;
@@ -44,17 +46,13 @@ import org.junit.Test;
 /**
  * Tests for {@link WicketSessionFilter}
  */
-public class WicketSessionFilterTest
+public class WicketSessionFilterTest extends WicketTestCase
 {
-	/**
-	 * <a href="https://issues.apache.org/jira/browse/WICKET-3769">WICKET-3769</a>
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void applicationAndSessionAreExported() throws Exception
+
+	@Override
+	protected WebApplication newApplication()
 	{
-		final WicketTester tester = new WicketTester(new MockApplication()
+		return new MockApplication()
 		{
 			@Override
 			protected void init()
@@ -70,7 +68,17 @@ public class WicketSessionFilterTest
 					}
 				});
 			}
-		});
+		};
+	}
+
+	/**
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-3769">WICKET-3769</a>
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void applicationAndSessionAreExported() throws Exception
+	{
 		// bind the session so it can be found in TestSessionFilter
 		tester.getSession().bind();
 

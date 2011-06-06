@@ -16,14 +16,13 @@
  */
 package org.apache.wicket.examples.compref;
 
-import junit.framework.TestCase;
+import org.apache.wicket.examples.WicketTestCase;
 
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * jWebUnit test for Hello World.
  */
-public class ComprefTest extends TestCase
+public class ComprefTest extends WicketTestCase
 {
 	/**
 	 * Test page.
@@ -32,7 +31,6 @@ public class ComprefTest extends TestCase
 	 */
 	public void test_1() throws Exception
 	{
-		WicketTester tester = new WicketTester();
 		tester.startPage(Index.class);
 
 		tester.assertContains("Wicket Examples - component reference");

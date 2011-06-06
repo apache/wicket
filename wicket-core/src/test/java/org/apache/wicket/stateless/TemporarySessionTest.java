@@ -16,15 +16,14 @@
  */
 package org.apache.wicket.stateless;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.stateless.pages.HomePage;
 import org.apache.wicket.stateless.pages.LoginPage;
 import org.apache.wicket.util.tester.FormTester;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * A test to detect temporary sessions. However since the http stack has been mocked for this test,
@@ -33,17 +32,12 @@ import org.apache.wicket.util.tester.WicketTester;
  * 
  * @author marrink
  */
-public class TemporarySessionTest extends TestCase
+public class TemporarySessionTest extends WicketTestCase
 {
-	private WicketTester tester;
-
-	/**
-	 * @see junit.framework.TestCase#setUp()
-	 */
 	@Override
-	protected void setUp() throws Exception
+	protected WebApplication newApplication()
 	{
-		tester = new WicketTester(new MockApplication()
+		return new MockApplication()
 		{
 
 			@Override
@@ -51,18 +45,7 @@ public class TemporarySessionTest extends TestCase
 			{
 				return HomePage.class;
 			}
-
-		});
-	}
-
-
-	/**
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	@Override
-	protected void tearDown() throws Exception
-	{
-		tester.destroy();
+		};
 	}
 
 	/**

@@ -20,24 +20,14 @@ import java.util.List;
 
 import javax.servlet.http.Cookie;
 
-import junit.framework.TestCase;
-
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
-import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
 
 /**
  */
-public class ModifyCookiePageTest extends TestCase
+public class ModifyCookiePageTest extends WicketTestCase
 {
-	private WicketTester tester;
-
-	@Override
-	public void setUp()
-	{
-		tester = new WicketTester();
-	}
-
 	/**
 	 * testSetCookieWithinLinkListener()
 	 */

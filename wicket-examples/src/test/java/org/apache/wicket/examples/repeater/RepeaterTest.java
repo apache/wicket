@@ -18,10 +18,11 @@ package org.apache.wicket.examples.repeater;
 
 import junit.framework.TestCase;
 
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
- * jWebUnit test for Hello World.
+ * Test for Repeater application
  */
 public class RepeaterTest extends TestCase
 {
@@ -46,9 +47,10 @@ public class RepeaterTest extends TestCase
 		checkPage(tester, DataGridPage.class);
 		checkPage(tester, GridViewPage.class);
 // checkPage(tester, AjaxDataTablePage.class);
+		tester.destroy();
 	}
 
-	private void checkPage(WicketTester tester, Class page)
+	private void checkPage(WicketTester tester, Class<? extends WebPage> page)
 	{
 		tester.startPage(page);
 		tester.assertContains("Wicket Examples - repeater views");

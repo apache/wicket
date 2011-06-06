@@ -16,49 +16,33 @@
  */
 package org.apache.wicket.markup.html.form.login;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.FormTester;
-import org.apache.wicket.util.tester.WicketTester;
 
 
 /**
  * @author marrink
  * 
  */
-public class InterceptTest extends TestCase
+public class InterceptTest extends WicketTestCase
 {
-	private WicketTester application;
-
-
-	/**
-	 * @see TestCase#setUp()
-	 */
 	@Override
-	protected void setUp() throws Exception
+	protected WebApplication newApplication()
 	{
-		application = new WicketTester(new MyMockWebApplication());
-	}
-
-	/**
-	 * @see TestCase#tearDown()
-	 */
-	@Override
-	protected void tearDown() throws Exception
-	{
-		application.destroy();
+		return new MyMockWebApplication();
 	}
 
 	/**
@@ -67,15 +51,14 @@ public class InterceptTest extends TestCase
 	public void testFormSubmit()
 	{
 		// same as above but uses different technique to login
-		application.startPage(application.getApplication().getHomePage());
-		MockLoginPage loginPage = (MockLoginPage)application.getLastRenderedPage();
-		assertEquals(((MyMockWebApplication)application.getApplication()).getLoginPage(),
+		tester.startPage(tester.getApplication().getHomePage());
+		MockLoginPage loginPage = (MockLoginPage)tester.getLastRenderedPage();
+		assertEquals(((MyMockWebApplication)tester.getApplication()).getLoginPage(),
 			loginPage.getClass());
-		FormTester form = application.newFormTester("form");
+		FormTester form = tester.newFormTester("form");
 		form.setValue("username", "admin");
 		form.submit();
-		assertEquals(application.getApplication().getHomePage(), application.getLastRenderedPage()
-			.getClass());
+		assertEquals(tester.getApplication().getHomePage(), tester.getLastRenderedPage().getClass());
 	}
 
 	/**
@@ -83,20 +66,19 @@ public class InterceptTest extends TestCase
 	 */
 	public void testClickLink()
 	{
-		application.startPage(application.getApplication().getHomePage());
-		MockLoginPage loginPage = (MockLoginPage)application.getLastRenderedPage();
-		assertEquals(((MyMockWebApplication)application.getApplication()).getLoginPage(),
+		tester.startPage(tester.getApplication().getHomePage());
+		MockLoginPage loginPage = (MockLoginPage)tester.getLastRenderedPage();
+		assertEquals(((MyMockWebApplication)tester.getApplication()).getLoginPage(),
 			loginPage.getClass());
 
-		FormTester form = application.newFormTester("form");
+		FormTester form = tester.newFormTester("form");
 		form.setValue("username", "admin");
 		form.submit();
 
-		assertEquals(application.getApplication().getHomePage(), application.getLastRenderedPage()
-			.getClass());
+		assertEquals(tester.getApplication().getHomePage(), tester.getLastRenderedPage().getClass());
 
-		application.clickLink(application.getLastRenderedPage().get("link"));
-		assertEquals(PageA.class, application.getLastRenderedPage().getClass());
+		tester.clickLink(tester.getLastRenderedPage().get("link"));
+		assertEquals(PageA.class, tester.getLastRenderedPage().getClass());
 	}
 
 	/**
@@ -105,20 +87,19 @@ public class InterceptTest extends TestCase
 	public void testClickLink2()
 	{
 		// same as above but uses different technique to login
-		application.startPage(application.getApplication().getHomePage());
-		MockLoginPage loginPage = (MockLoginPage)application.getLastRenderedPage();
-		assertEquals(((MyMockWebApplication)application.getApplication()).getLoginPage(),
+		tester.startPage(tester.getApplication().getHomePage());
+		MockLoginPage loginPage = (MockLoginPage)tester.getLastRenderedPage();
+		assertEquals(((MyMockWebApplication)tester.getApplication()).getLoginPage(),
 			loginPage.getClass());
 
 		// bypass form completely to login but continue to intercept page
-		assertTrue(((MockLoginPage)application.getLastRenderedPage()).login("admin"));
-		application.startPage(application.getApplication().getHomePage());
+		assertTrue(((MockLoginPage)tester.getLastRenderedPage()).login("admin"));
+		tester.startPage(tester.getApplication().getHomePage());
 
-		assertEquals(application.getApplication().getHomePage(), application.getLastRenderedPage()
-			.getClass());
+		assertEquals(tester.getApplication().getHomePage(), tester.getLastRenderedPage().getClass());
 
-		application.clickLink(application.getLastRenderedPage().get("link"));
-		assertEquals(PageA.class, application.getLastRenderedPage().getClass());
+		tester.clickLink(tester.getLastRenderedPage().get("link"));
+		assertEquals(PageA.class, tester.getLastRenderedPage().getClass());
 	}
 
 	/**
@@ -171,7 +152,7 @@ public class InterceptTest extends TestCase
 		private String username;
 
 		/**
-		 * @param application
+		 * @param tester
 		 * @param request
 		 */
 		protected MySession(Request request)

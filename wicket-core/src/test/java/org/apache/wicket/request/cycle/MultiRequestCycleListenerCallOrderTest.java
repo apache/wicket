@@ -17,12 +17,12 @@
 package org.apache.wicket.request.cycle;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,19 +30,27 @@ import org.junit.Test;
  * Checks whether multiple registered requestcycle listeners are called in the right order:
  * similarly to servlet filters.
  */
-public class MultiRequestCycleListenerCallOrderTest
+public class MultiRequestCycleListenerCallOrderTest extends WicketTestCase
 {
-	private WicketTester tester;
 	private MultiRequestCycleListenerCallOrderApplication application;
 
 	/**
+	 * @throws Exception
 	 */
+	@Override
 	@Before
-	public void setUp()
+	public void setUp() throws Exception
 	{
-		application = new MultiRequestCycleListenerCallOrderApplication();
-		tester = new WicketTester(application);
+		super.setUp();
+
+		application = (MultiRequestCycleListenerCallOrderApplication)tester.getApplication();
 		application.callSequence.clear();
+	}
+
+	@Override
+	protected WebApplication newApplication()
+	{
+		return new MultiRequestCycleListenerCallOrderApplication();
 	}
 
 	/**

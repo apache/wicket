@@ -16,16 +16,15 @@
  */
 package org.apache.wicket.util.tester;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.Locale;
 
+import org.apache.wicket.WicketTestCase;
 import org.junit.Test;
 
 /**
  * WICKET-1215
  */
-public class WicketTesterSessionCreationTest
+public class WicketTesterSessionCreationTest extends WicketTestCase
 {
 
 	private static Locale EXPECTED = Locale.FRENCH;
@@ -36,7 +35,6 @@ public class WicketTesterSessionCreationTest
 	@Test
 	public void wicket1215()
 	{
-		WicketTester tester = new WicketTester();
 		tester.getSession().setLocale(EXPECTED);
 		tester.startPage(LocalePage.class);
 		assertEquals(EXPECTED, tester.getSession().getLocale());

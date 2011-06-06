@@ -18,28 +18,19 @@ package org.apache.wicket.properties;
 
 import java.util.Locale;
 
-import junit.framework.TestCase;
-
-import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.protocol.http.WebApplication;
 
 /**
  * 
  * @author Juergen Donnerstag
  */
-public class PropertiesTest extends TestCase
+public class PropertiesTest extends WicketTestCase
 {
-	private WicketTester tester;
-
 	@Override
-	public void setUp()
+	protected WebApplication newApplication()
 	{
-		tester = new WicketTester(new MyApplication());
-	}
-
-	@Override
-	public void tearDown()
-	{
-		tester.destroy();
+		return new MyApplication();
 	}
 
 	/**

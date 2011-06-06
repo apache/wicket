@@ -42,6 +42,7 @@ public class CustomHomePageTest
 		requestHomePage(tester);
 
 		tester.assertRenderedPage(dummyApplication.getHomePage());
+		tester.destroy();
 	}
 
 	/**
@@ -70,6 +71,7 @@ public class CustomHomePageTest
 		requestHomePage(tester);
 
 		tester.assertRenderedPage(CustomHomePage.class);
+		tester.destroy();
 	}
 
 	private void requestHomePage(final WicketTester tester)

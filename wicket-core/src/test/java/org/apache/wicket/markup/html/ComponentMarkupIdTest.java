@@ -19,24 +19,22 @@ package org.apache.wicket.markup.html;
 import junit.framework.Assert;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
 
 /**
  * Unit test to ensure that calling {@link Component#getMarkupId()} still works as advertised in
  * Wicket 1.4.
  */
-public class ComponentMarkupIdTest
+public class ComponentMarkupIdTest extends WicketTestCase
 {
 	/** */
 	@Test
 	public void idGeneratedWhenComponentNotAddedToPage()
 	{
-		WicketTester tester = new WicketTester();
-
 		// In wicket 1.4 the following sequence would not cause an exception
 		Label label = new Label("bla", "Hello, World!");
 
@@ -51,8 +49,6 @@ public class ComponentMarkupIdTest
 	@Test
 	public void idGeneratedWhenPanelNotAddedToPage()
 	{
-		WicketTester tester = new WicketTester();
-
 		// In wicket 1.4 the following sequence would not cause an exception
 		Panel panel = new EmptyPanel("bla");
 
@@ -71,8 +67,6 @@ public class ComponentMarkupIdTest
 	@Test
 	public void idFromMarkupRetrievedWhenPanelAddedToPage()
 	{
-		WicketTester tester = new WicketTester();
-
 		ComponentMarkupIdTestPage page = new ComponentMarkupIdTestPage();
 		tester.startPage(page);
 		tester.assertRenderedPage(ComponentMarkupIdTestPage.class);
@@ -87,8 +81,6 @@ public class ComponentMarkupIdTest
 	@Test
 	public void idFromMarkupRetrievedWhenLabelAddedToPage()
 	{
-		WicketTester tester = new WicketTester();
-
 		ComponentMarkupIdTestPage page = new ComponentMarkupIdTestPage();
 		tester.startPage(page);
 		tester.assertRenderedPage(ComponentMarkupIdTestPage.class);
@@ -102,8 +94,6 @@ public class ComponentMarkupIdTest
 	@Test
 	public void generatedIdOverridesIdFromMarkupWhenLabelAddedToPage()
 	{
-		WicketTester tester = new WicketTester();
-
 		ComponentMarkupIdTestPage page = new ComponentMarkupIdTestPage();
 		tester.startPage(page);
 		tester.assertRenderedPage(ComponentMarkupIdTestPage.class);
@@ -118,8 +108,6 @@ public class ComponentMarkupIdTest
 	@Test
 	public void generatedIdOverridesIdFromMarkup()
 	{
-		WicketTester tester = new WicketTester();
-
 		ComponentMarkupIdTestPage page = new ComponentMarkupIdTestPage();
 		tester.startPage(page);
 		tester.assertRenderedPage(ComponentMarkupIdTestPage.class);
@@ -135,8 +123,6 @@ public class ComponentMarkupIdTest
 	@Test
 	public void fixedIdFromJavaForLabelOverridesIdFromMarkup()
 	{
-		WicketTester tester = new WicketTester();
-
 		ComponentMarkupIdTestPage page = new ComponentMarkupIdTestPage();
 		tester.startPage(page);
 		tester.assertRenderedPage(ComponentMarkupIdTestPage.class);
@@ -151,8 +137,6 @@ public class ComponentMarkupIdTest
 	@Test
 	public void fixedIdFromJavaForPanelOverridesIdFromMarkup()
 	{
-		WicketTester tester = new WicketTester();
-
 		ComponentMarkupIdTestPage page = new ComponentMarkupIdTestPage();
 		tester.startPage(page);
 		tester.assertRenderedPage(ComponentMarkupIdTestPage.class);

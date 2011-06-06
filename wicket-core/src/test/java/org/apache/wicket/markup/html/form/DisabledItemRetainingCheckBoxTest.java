@@ -20,27 +20,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import junit.framework.TestCase;
-
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.FormTester;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Test for the retainDisabledSelected flag on ListMultipleChoice.
  */
-public class DisabledItemRetainingCheckBoxTest extends TestCase
+public class DisabledItemRetainingCheckBoxTest extends WicketTestCase
 {
-	private WicketTester tester;
-
-	@Override
-	public void setUp()
-	{
-		tester = new WicketTester();
-	}
-
 	/**
 	 * testRenderMyPage()
 	 */

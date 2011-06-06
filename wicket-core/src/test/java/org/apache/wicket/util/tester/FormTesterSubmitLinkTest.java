@@ -16,8 +16,7 @@
  */
 package org.apache.wicket.util.tester;
 
-import junit.framework.TestCase;
-
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.SubmitLink;
@@ -27,17 +26,8 @@ import org.apache.wicket.model.Model;
 /**
  * <a href="https://issues.apache.org/jira/browse/WICKET-3711">WICKET-3711</a>
  */
-public class FormTesterSubmitLinkTest extends TestCase
+public class FormTesterSubmitLinkTest extends WicketTestCase
 {
-	private WicketTester tester;
-
-	@Override
-	protected void setUp() throws Exception
-	{
-		super.setUp();
-		tester = new WicketTester();
-	}
-
 	/**
 	 * Submit via SubmitLink.
 	 * <p>
@@ -66,13 +56,6 @@ public class FormTesterSubmitLinkTest extends TestCase
 		form.submit();
 		assertEquals("some test text", tester.getComponentFromLastRenderedPage("form:text")
 			.getDefaultModelObjectAsString());
-	}
-
-	@Override
-	protected void tearDown() throws Exception
-	{
-		tester.destroy();
-		super.tearDown();
 	}
 
 	/**

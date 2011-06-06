@@ -16,23 +16,17 @@
  */
 package org.apache.wicket.protocol.https;
 
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-
-import org.apache.wicket.ThreadContext;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.mock.MockApplication;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.handler.IPageRequestHandler;
-import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
  * Test for {@link HttpsRequestChecker}
  */
-public class HttpsRequestCheckerTest
+public class HttpsRequestCheckerTest extends WicketTestCase
 {
 
 	/**
@@ -45,12 +39,6 @@ public class HttpsRequestCheckerTest
 	@Test
 	public void checkSecureIncoming()
 	{
-		final WebApplication application = new MockApplication();
-
-		// needed to be able to call new WebPage()
-		final WicketTester tester = new WicketTester(application);
-		ThreadContext.setApplication(application);
-
 		HttpsRequestChecker checker = new HttpsRequestChecker();
 
 		IPageRequestHandler httpsPageRequestHandler = Mockito.mock(IPageRequestHandler.class);

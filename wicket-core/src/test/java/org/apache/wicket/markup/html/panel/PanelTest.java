@@ -22,7 +22,6 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.html.markupId.MyPanel;
-import org.apache.wicket.util.tester.WicketTester;
 
 
 /**
@@ -186,7 +185,6 @@ public class PanelTest extends WicketTestCase
 	 */
 	public void testStartPanel()
 	{
-		WicketTester tester = new WicketTester();
 		tester.startPanel(MyPanel.class);
 		tester.assertLabel("label", "Hello, World!");
 	}

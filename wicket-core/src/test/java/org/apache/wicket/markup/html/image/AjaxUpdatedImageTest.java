@@ -16,17 +16,14 @@
  */
 package org.apache.wicket.markup.html.image;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.TagTester;
-import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
 
 /**
  * Test for WICKET-1382
  */
-public class AjaxUpdatedImageTest
+public class AjaxUpdatedImageTest extends WicketTestCase
 {
 	/**
 	 * Tests that Image re-rendered in Ajax request have 'wicket:antiCache' parameter in its 'src'
@@ -35,7 +32,6 @@ public class AjaxUpdatedImageTest
 	@Test
 	public void wicket1382()
 	{
-		WicketTester tester = new WicketTester();
 		AjaxyImagesPage page = tester.startPage(AjaxyImagesPage.class);
 
 		TagTester tagTester = tester.getTagById(page.image.getMarkupId());

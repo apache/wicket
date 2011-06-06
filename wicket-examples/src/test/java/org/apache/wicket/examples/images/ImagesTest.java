@@ -35,5 +35,6 @@ public class ImagesTest extends TestCase
 		WicketTester tester = new WicketTester(new ImagesApplication());
 		tester.startPage(Home.class);
 		tester.assertContains("Wicket Examples - images");
+		tester.destroy();
 	}
 }

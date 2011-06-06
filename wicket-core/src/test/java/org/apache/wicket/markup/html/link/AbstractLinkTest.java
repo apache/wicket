@@ -17,40 +17,17 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.MockPageWithLink;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.TagTester;
-import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
  * Tests for {@link AbstractLink}
  */
-public class AbstractLinkTest
+public class AbstractLinkTest extends WicketTestCase
 {
-
-	private WicketTester wicketTester;
-
-	/**
-	 * 
-	 */
-	@Before
-	public void before()
-	{
-		wicketTester = new WicketTester();
-	}
-
-	/**
-	 * 
-	 */
-	@After
-	public void after()
-	{
-		wicketTester.destroy();
-	}
-
 	/**
 	 * 
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3338">WICKET-3338</a>
@@ -69,8 +46,8 @@ public class AbstractLinkTest
 		link.setBody(Model.of(linkBody));
 		mockPageWithLink.add(link);
 
-		wicketTester.startPage(mockPageWithLink);
-		TagTester tagTester = wicketTester.getTagById("link");
+		tester.startPage(mockPageWithLink);
+		TagTester tagTester = tester.getTagById("link");
 		Assert.assertEquals(linkBody, tagTester.getValue());
 	}
 

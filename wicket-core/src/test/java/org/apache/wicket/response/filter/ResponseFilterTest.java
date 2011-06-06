@@ -16,14 +16,12 @@
  */
 package org.apache.wicket.response.filter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.util.concurrent.atomic.AtomicInteger;
 
 import junit.framework.Assert;
 
 import org.apache.wicket.MockPageWithLink;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -31,9 +29,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.resource.DummyApplication;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.tester.DummyHomePage;
-import org.apache.wicket.util.tester.WicketTester;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -42,17 +38,12 @@ import org.junit.Test;
  * {@link IResponseFilter}s must be called for both Ajax and non-Ajax responses
  */
 @SuppressWarnings("serial")
-public class ResponseFilterTest
+public class ResponseFilterTest extends WicketTestCase
 {
 	private final AtomicInteger counter = new AtomicInteger(0);
 
-	private WicketTester tester;
-
-	/**
-	 * before()
-	 */
-	@Before
-	public void before()
+	@Override
+	protected WebApplication newApplication()
 	{
 		final IResponseFilter responseFilter = new IResponseFilter()
 		{
@@ -74,7 +65,7 @@ public class ResponseFilterTest
 			}
 		};
 
-		tester = new WicketTester(application);
+		return application;
 	}
 
 	/**

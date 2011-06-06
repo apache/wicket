@@ -16,21 +16,18 @@
  */
 package org.apache.wicket.examples.linkomatic;
 
-import junit.framework.TestCase;
-
-import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.examples.WicketTestCase;
 
 /**
  * jWebUnit test for Hello World.
  */
-public class LinkomaticTest extends TestCase
+public class LinkomaticTest extends WicketTestCase
 {
 	/**
 	 * Test page.
 	 */
 	public void testLinkomatic()
 	{
-		WicketTester tester = new WicketTester();
 		tester.startPage(Home.class);
 		tester.assertContains("Wicket Examples - linkomatic");
 	}

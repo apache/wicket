@@ -22,26 +22,23 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * Tests for {@link DefaultExceptionMapper}
  */
-public class DefaultExceptionMapperTest
+public class DefaultExceptionMapperTest extends WicketTestCase
 {
-	/**
-	 * <a href="https://issues.apache.org/jira/browse/WICKET-3520">WICKET-3520</a>
-	 */
-	@Test
-	public void showNoExceptionPage()
+	@Override
+	protected WebApplication newApplication()
 	{
-		MockApplication application = new MockApplication()
+		return new MockApplication()
 		{
 			@Override
 			protected void init()
@@ -50,8 +47,14 @@ public class DefaultExceptionMapperTest
 					IExceptionSettings.SHOW_NO_EXCEPTION_PAGE);
 			}
 		};
+	}
 
-		WicketTester tester = new WicketTester(application);
+	/**
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-3520">WICKET-3520</a>
+	 */
+	@Test
+	public void showNoExceptionPage()
+	{
 		tester.setExposeExceptions(false);
 
 		ShowNoExceptionPage page = new ShowNoExceptionPage(null);

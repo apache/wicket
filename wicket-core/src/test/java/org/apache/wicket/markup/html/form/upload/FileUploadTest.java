@@ -22,12 +22,10 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.file.FileUploadCleaner;
 import org.apache.wicket.util.file.IFileUploadCleaner;
 import org.apache.wicket.util.tester.FormTester;
-import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.upload.DiskFileItemFactory;
 import org.apache.wicket.util.upload.FileItem;
 
@@ -46,14 +44,6 @@ public class FileUploadTest extends WicketTestCase
 	public FileUploadTest()
 	{
 		super("Test of FileUpload");
-	}
-
-	@Override
-	protected void setUp() throws Exception
-	{
-		tester = new WicketTester(new MockApplication())
-		{
-		};
 	}
 
 	/**

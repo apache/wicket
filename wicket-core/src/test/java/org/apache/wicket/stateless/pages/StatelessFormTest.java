@@ -19,8 +19,8 @@ package org.apache.wicket.stateless.pages;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * User: Anatoly Kupriyanov (kan.izh@gmail.com) Date: 12-Feb-2009 Time: 22:27:08 Bugfix for
@@ -29,9 +29,9 @@ import org.apache.wicket.util.tester.WicketTester;
 public class StatelessFormTest extends WicketTestCase
 {
 	@Override
-	protected void setUp() throws Exception
+	protected WebApplication newApplication()
 	{
-		tester = new WicketTester(new MockApplication()
+		return new MockApplication()
 		{
 			@Override
 			protected void init()
@@ -47,7 +47,7 @@ public class StatelessFormTest extends WicketTestCase
 				return Page1.class;
 			}
 
-		});
+		};
 	}
 
 	/**

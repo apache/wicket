@@ -17,31 +17,21 @@
 package org.apache.wicket.markup.html.form;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.validation.INullAcceptingValidator;
 import org.apache.wicket.validation.IValidatable;
 
 /**
  * 
  */
-public class FormComponentTest extends TestCase
+public class FormComponentTest extends WicketTestCase
 {
-	private WicketTester wicketTester;
-
-	@Override
-	protected void setUp() throws Exception
-	{
-		super.setUp();
-		wicketTester = new WicketTester();
-	}
-
 	public void testArrayType()
 	{
 		final FormComponent<?> fc = new TextField<String>("foo");
@@ -65,8 +55,8 @@ public class FormComponentTest extends TestCase
 
 	public void testGetDefaultlabel()
 	{
-		wicketTester.startPage(TestPage1.class);
-		TestPage1 page = (TestPage1)wicketTester.getLastRenderedPage();
+		tester.startPage(TestPage1.class);
+		TestPage1 page = (TestPage1)tester.getLastRenderedPage();
 		assertEquals("set", page.field1.getDefaultLabel());
 		assertEquals("field2", page.field2.getDefaultLabel());
 	}
@@ -90,14 +80,6 @@ public class FormComponentTest extends TestCase
 		fc.validate();
 
 		assertTrue(validator.called);
-	}
-
-	@Override
-	protected void tearDown() throws Exception
-	{
-		wicketTester.destroy();
-		wicketTester = null;
-		super.tearDown();
 	}
 
 	public static class TestPage1 extends WebPage implements IMarkupResourceStreamProvider

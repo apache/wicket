@@ -19,7 +19,6 @@ package org.apache.wicket.markup.html.internal;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.util.tester.WicketTester;
 
 
 /**
@@ -53,10 +52,11 @@ public class InlineEnclosureTest extends WicketTestCase
 		executeTest(InlineEnclosurePanelPage.class, "InlineEnclosurePanelPageExpectedResult.html");
 	}
 
+
 	@Override
-	protected void setUp() throws Exception
+	protected WebApplication newApplication()
 	{
-		WebApplication app = new WebApplication()
+		return new WebApplication()
 		{
 			@Override
 			public Class<? extends Page> getHomePage()
@@ -70,6 +70,6 @@ public class InlineEnclosureTest extends WicketTestCase
 				getMarkupSettings().setStripWicketTags(true);
 			}
 		};
-		tester = new WicketTester(app);
 	}
+
 }

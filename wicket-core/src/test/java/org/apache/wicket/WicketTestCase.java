@@ -28,6 +28,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.runner.RunWith;
 
 /**
  * Base class for tests which require comparing wicket response with a file.
@@ -35,6 +36,7 @@ import org.apache.wicket.util.tester.WicketTester;
  * To create/replace the expected result file with the new content, define the system property like
  * -Dwicket.replace.expected.results=true
  */
+@RunWith(WicketJUnitRunner.class)
 public abstract class WicketTestCase extends TestCase
 {
 	/** */

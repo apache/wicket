@@ -165,6 +165,7 @@ public class HangManTest extends TestCase
 		clickLetter(tester, 'g');
 		clickLetter(tester, 'm');
 		tester.assertRenderedPage(Win.class);
+		tester.destroy();
 	}
 
 	/**
@@ -189,6 +190,7 @@ public class HangManTest extends TestCase
 		tester.assertLabel("guessesRemaining", "1");
 		clickLetter(tester, 'z');
 		tester.assertRenderedPage(Lose.class);
+		tester.destroy();
 	}
 
 	/**

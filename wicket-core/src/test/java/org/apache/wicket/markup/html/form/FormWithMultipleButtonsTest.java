@@ -19,31 +19,21 @@ package org.apache.wicket.markup.html.form;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxFallbackButton;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * @author Pedro Santos
  */
-public class FormWithMultipleButtonsTest extends TestCase
+public class FormWithMultipleButtonsTest extends WicketTestCase
 {
-	private WicketTester tester;
-
-	@Override
-	protected void setUp() throws Exception
-	{
-		tester = new WicketTester();
-	}
-
 	/**
 	 * Testing if the correct submit button is invoked in an form with multiple submit buttons. The
 	 * browser set the clicked button input name as parameter on the HTTP request.

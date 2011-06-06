@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
@@ -27,7 +28,6 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -35,7 +35,7 @@ import org.junit.Test;
  * Tests that {@link Component}, {@link Behavior} and {@link IAjaxCallDecorator} that implements
  * {@link IHeaderContributor} actually contributes to the header
  */
-public class HeaderContributorTest
+public class HeaderContributorTest extends WicketTestCase
 {
 
 	/**
@@ -44,8 +44,6 @@ public class HeaderContributorTest
 	@Test
 	public void testHeaderContribution()
 	{
-		WicketTester tester = new WicketTester();
-
 		HeaderContributorTestPage page = new HeaderContributorTestPage();
 		tester.startPage(page);
 

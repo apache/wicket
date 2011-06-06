@@ -16,24 +16,14 @@
  */
 package org.apache.wicket.model;
 
-import junit.framework.TestCase;
-
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.FormTester;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Simple test for CompoundPropertyModel and id's like "A.B"
  */
-public class TestHomePage extends TestCase
+public class TestHomePage extends WicketTestCase
 {
-	private WicketTester tester;
-
-	@Override
-	public void setUp()
-	{
-		tester = new WicketTester();
-	}
-
 	/**
 	 * 
 	 */

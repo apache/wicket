@@ -23,8 +23,8 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.component.IRequestableComponent;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Testcase for bug WICKET-1292.
@@ -35,13 +35,10 @@ import org.apache.wicket.util.tester.WicketTester;
 public class InterceptTest extends WicketTestCase
 {
 
-	/**
-	 * @see org.apache.wicket.WicketTestCase#setUp()
-	 */
 	@Override
-	protected void setUp() throws Exception
+	protected WebApplication newApplication()
 	{
-		tester = new WicketTester(new MockApplication()
+		return new MockApplication()
 		{
 			@Override
 			protected void init()
@@ -76,7 +73,7 @@ public class InterceptTest extends WicketTestCase
 			{
 				return HomePage.class;
 			}
-		});
+		};
 	}
 
 	/**

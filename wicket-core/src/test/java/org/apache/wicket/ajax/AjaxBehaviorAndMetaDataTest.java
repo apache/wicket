@@ -16,9 +16,7 @@
  */
 package org.apache.wicket.ajax;
 
-import junit.framework.TestCase;
-
-import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.WicketTestCase;
 
 /**
  * 
@@ -29,23 +27,8 @@ import org.apache.wicket.util.tester.WicketTester;
  * @author Rüdiger Schulz <rue@darkprophet.de>
  * @version $Revision$
  */
-public class AjaxBehaviorAndMetaDataTest extends TestCase
+public class AjaxBehaviorAndMetaDataTest extends WicketTestCase
 {
-
-	WicketTester tester;
-
-	@Override
-	protected void setUp() throws Exception
-	{
-		tester = new WicketTester();
-	}
-
-	@Override
-	protected void tearDown() throws Exception
-	{
-		tester.destroy();
-	}
-
 	/**	 */
 	public void testRender()
 	{

@@ -16,25 +16,15 @@
  */
 package org.apache.wicket.ajax.form;
 
-import junit.framework.TestCase;
-
-import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.WicketTestCase;
 
 /**
  * Test case for WICKET-1743
  * 
  * @see <a href="https://issues.apache.org/jira/browse/WICKET-1743">WICKET-1743</a>
  */
-public class AjaxFormSubmitBehaviorTest extends TestCase
+public class AjaxFormSubmitBehaviorTest extends WicketTestCase
 {
-	private WicketTester tester;
-
-	@Override
-	public void setUp()
-	{
-		tester = new WicketTester();
-	}
-
 	/**	 */
 	public void testAjaxFormSubmitBehavior()
 	{

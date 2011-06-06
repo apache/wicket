@@ -26,24 +26,6 @@ import org.apache.wicket.util.tester.DiffUtil;
  */
 public class PagedTableNavigatorWithMarginTest extends WicketTestCase
 {
-	/**
-	 * Construct.
-	 */
-	public PagedTableNavigatorWithMarginTest()
-	{
-		super();
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 *            name of test
-	 */
-	public PagedTableNavigatorWithMarginTest(String name)
-	{
-		super(name);
-	}
 
 	/**
 	 * Test simple table behavior.

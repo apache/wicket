@@ -16,24 +16,28 @@
  */
 package org.apache.wicket.page;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 
-import junit.framework.TestCase;
-
+import org.apache.wicket.Application;
 import org.apache.wicket.pageStore.DefaultPageStore;
 import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.pageStore.memory.DummyPageManagerContext;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.versioning.InMemoryPageStore;
+import org.junit.Test;
 
 /**
  * @author Pedro Santos
  */
-public class PersistentPageManagerTest extends TestCase
+public class PersistentPageManagerTest
 {
 	/**
 	 * WICKET-3470
@@ -44,7 +48,8 @@ public class PersistentPageManagerTest extends TestCase
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	public void testSerializationOutsideWicketLifecyle() throws IOException, ClassNotFoundException
+	@Test
+	public void serializationOutsideWicketLifecyle() throws IOException, ClassNotFoundException
 	{
 		// create IPageManager (with IPageStore) and store a page instance
 		IPageManager pageManager = newPersistentPageManager("test_app");
@@ -69,6 +74,10 @@ public class PersistentPageManagerTest extends TestCase
 			serializedSessionEntry));
 
 		// WicketFilter is not initialized so there is no Application available yet
+		if (Application.exists())
+		{
+			System.err.println("==================DEBUG  ==========" + Application.get().getName());
+		}
 		assertNull("Worker thread should be unaware of Wicket application", in.readObject());
 
 		// without available IPageStore the read SessionEntry holds

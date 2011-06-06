@@ -29,13 +29,12 @@ import org.apache.wicket.pageStore.DefaultPageStore;
 import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * A test for page versioning
- * 
- * @author martin-g
  */
 public class PageVersioningTest
 {
@@ -75,6 +74,14 @@ public class PageVersioningTest
 			}
 
 		};
+	}
+
+	/**
+	 */
+	@After
+	public void after()
+	{
+		wicketTester.destroy();
 	}
 
 	/**

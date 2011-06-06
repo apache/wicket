@@ -18,17 +18,15 @@ package org.apache.wicket.examples.guestbook;
 
 import java.util.ArrayList;
 
-import junit.framework.TestCase;
-
+import org.apache.wicket.examples.WicketTestCase;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.util.tester.FormTester;
-import org.apache.wicket.util.tester.WicketTester;
 
 
 /**
  * jWebUnit test for Hello World.
  */
-public class GuestbookTest extends TestCase
+public class GuestbookTest extends WicketTestCase
 {
 	/**
 	 * Sets up the test.
@@ -38,6 +36,7 @@ public class GuestbookTest extends TestCase
 	@Override
 	public void setUp() throws Exception
 	{
+		super.setUp();
 		GuestBook.clear();
 	}
 
@@ -48,8 +47,6 @@ public class GuestbookTest extends TestCase
 	 */
 	public void test_1() throws Exception
 	{
-		WicketTester tester = new WicketTester();
-
 		tester.startPage(GuestBook.class);
 		tester.assertContains("Wicket Examples - guestbook");
 

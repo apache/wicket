@@ -16,33 +16,18 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.apache.wicket.Component;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.handler.ListenerInvocationNotAllowedException;
-import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
  */
-public class FormParentDisabledRawInputTest
+public class FormParentDisabledRawInputTest extends WicketTestCase
 {
-	private WicketTester tester;
-
-	/**
-	 * @throws Exception
-	 */
-	@Before
-	public void setUp() throws Exception
-	{
-		tester = new WicketTester();
-	}
-
 	/**
 	 */
 	public static class TestPage extends WebPage

@@ -18,28 +18,26 @@ package org.apache.wicket.markup.html.form.upload;
 
 import java.util.Locale;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.tester.FormTester;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * see WICKET-2015
  */
-public class TestFileUploadError extends TestCase
+public class TestFileUploadError extends WicketTestCase
 {
-	private WicketTester tester;
 	private FormTester formTester;
 	private final String textFieldId = "textField";
 	private final String fileUploadId = "fileUpload";
 	private final String testUploadFilePath = "src/test/java/org/apache/wicket/markup/html/form/upload/testfile.txt";
 
 	@Override
-	public void setUp()
+	public void setUp() throws Exception
 	{
-		tester = new WicketTester();
+		super.setUp();
+
 		// Start and render the test page
 		tester.startPage(FileUploadError.class);
 		tester.assertRenderedPage(FileUploadError.class);
@@ -48,12 +46,6 @@ public class TestFileUploadError extends TestCase
 		//
 		formTester = tester.newFormTester("form");
 		tester.getRequest().setUseMultiPartContentType(true);
-	}
-
-	@Override
-	protected void tearDown() throws Exception
-	{
-		tester.destroy();
 	}
 
 	/**

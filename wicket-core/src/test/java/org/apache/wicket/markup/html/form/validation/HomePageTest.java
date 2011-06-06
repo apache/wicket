@@ -20,7 +20,6 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.util.tester.FormTester;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Simple test using the WicketTester
@@ -115,7 +114,6 @@ public class HomePageTest extends WicketTestCase
 	 */
 	public void test_2589() throws Exception
 	{
-		tester = new WicketTester();
 		tester.startPage(HomePage1.class);
 		tester.assertRenderedPage(HomePage1.class);
 		tester.assertResultPage(getClass(), "HomePage1_ExpectedResult.html");

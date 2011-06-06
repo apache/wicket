@@ -16,21 +16,19 @@
  */
 package org.apache.wicket.examples.forminput;
 
-import junit.framework.TestCase;
+import org.apache.wicket.examples.WicketTestCase;
 
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * jWebUnit test for Hello World.
  */
-public class FormInputTest extends TestCase
+public class FormInputTest extends WicketTestCase
 {
 	/**
 	 * Test page.
 	 */
 	public void test_1()
 	{
-		WicketTester tester = new WicketTester();
 		tester.startPage(FormInput.class);
 
 		tester.assertContains("Wicket Examples - forminput");

@@ -16,32 +16,27 @@
  */
 package org.apache.wicket.request.resource;
 
-import static org.junit.Assert.assertEquals;
-
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.html.PackageResourceTest;
 import org.apache.wicket.mock.MockApplication;
-import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Before;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.junit.Test;
 
 /**
  * 
  */
-public class JavaScriptPackageResourceTest
+public class JavaScriptPackageResourceTest extends WicketTestCase
 {
 	private static final String APP_COMPRESSED = "APP_COMPRESSED";
 
 	private static final String RESOURCE_COMPRESSED = "RESOURCE_COMPRESSED";
 
-	private WicketTester tester;
-
-	@Before
-	public void before()
+	@Override
+	protected WebApplication newApplication()
 	{
-		MockApplication application = new MockApplication()
+		return new MockApplication()
 		{
-
 			@Override
 			protected void init()
 			{
@@ -56,7 +51,6 @@ public class JavaScriptPackageResourceTest
 				});
 			}
 		};
-		tester = new WicketTester(application);
 	}
 
 	/**

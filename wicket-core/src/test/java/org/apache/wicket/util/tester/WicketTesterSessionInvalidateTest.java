@@ -16,10 +16,8 @@
  */
 package org.apache.wicket.util.tester;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
@@ -30,7 +28,7 @@ import org.junit.Test;
 
 /**
  */
-public class WicketTesterSessionInvalidateTest
+public class WicketTesterSessionInvalidateTest extends WicketTestCase
 {
 
 	/**
@@ -39,8 +37,6 @@ public class WicketTesterSessionInvalidateTest
 	@Test
 	public void sessionInvalidate()
 	{
-		WicketTester tester = new WicketTester();
-
 		tester.startPage(MyPage.class);
 
 		assertNull(tester.getSession().getStyle());

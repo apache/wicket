@@ -83,5 +83,6 @@ public class Signin2Test extends TestCase
 
 		tester.startPage(Home.class);
 		tester.assertRenderedPage(SignIn2.class);
+		tester.destroy();
 	}
 }

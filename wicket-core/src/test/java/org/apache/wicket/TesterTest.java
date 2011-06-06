@@ -17,32 +17,15 @@
 package org.apache.wicket;
 
 import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * @author jcompagner
  */
-public class TesterTest extends TestCase
+public class TesterTest extends WicketTestCase
 {
-
-	WicketTester tester;
-
-	@Override
-	protected void setUp() throws Exception
-	{
-		tester = new WicketTester();
-	}
-
-	@Override
-	protected void tearDown() throws Exception
-	{
-		tester.destroy();
-	}
-
 	/**
 	 * 
 	 */

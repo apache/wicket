@@ -16,24 +16,21 @@
  */
 package org.apache.wicket.util.tester.apps_2;
 
-import junit.framework.TestCase;
-
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * 
  * @author Juergen Donnerstag
  */
-public class Test extends TestCase
+public class Test extends WicketTestCase
 {
 	/**
 	 * 
 	 */
 	public void testRedirect()
 	{
-		final WicketTester tester = new WicketTester();
 		final IAuthorizationStrategy authorizationStrategy = new SimplePageAuthorizationStrategy(
 			RedirectPage.class, LoginPage.class)
 		{
@@ -44,8 +41,9 @@ public class Test extends TestCase
 			}
 		};
 
-		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(
-			authorizationStrategy);
+		tester.getApplication()
+			.getSecuritySettings()
+			.setAuthorizationStrategy(authorizationStrategy);
 
 		tester.startPage(RedirectPage.class);
 		tester.assertRenderedPage(LoginPage.class);

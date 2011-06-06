@@ -16,14 +16,12 @@
  */
 package org.apache.wicket.examples.helloworld;
 
-import junit.framework.TestCase;
-
-import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.examples.WicketTestCase;
 
 /**
  * jWebUnit test for Hello World.
  */
-public class HelloWorldTest extends TestCase
+public class HelloWorldTest extends WicketTestCase
 {
 	/**
 	 * Test page.
@@ -32,7 +30,6 @@ public class HelloWorldTest extends TestCase
 	 */
 	public void testHelloWorld() throws Exception
 	{
-		WicketTester tester = new WicketTester();
 		tester.startPage(HelloWorld.class);
 		tester.assertContains("Wicket Examples - helloworld");
 		tester.assertLabel("message", "Hello World!");

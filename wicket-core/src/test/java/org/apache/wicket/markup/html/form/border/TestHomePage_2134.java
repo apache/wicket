@@ -16,24 +16,14 @@
  */
 package org.apache.wicket.markup.html.form.border;
 
-import junit.framework.TestCase;
-
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.FormTester;
-import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Simple test using the WicketTester
  */
-public class TestHomePage_2134 extends TestCase
+public class TestHomePage_2134 extends WicketTestCase
 {
-	private WicketTester tester;
-
-	@Override
-	public void setUp()
-	{
-		tester = new WicketTester();
-	}
-
 	/**
 	 * WICKET-2134: two forms inside a border throw a ConversionException error
 	 */
