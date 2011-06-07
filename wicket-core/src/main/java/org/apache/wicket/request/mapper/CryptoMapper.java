@@ -51,7 +51,6 @@ public class CryptoMapper implements IRequestMapper
 
 	private final IRequestMapper wrappedMapper;
 	private final IProvider<ICrypt> cryptProvider;
-	private final Application application;
 
 	/**
 	 * Construct.
@@ -63,7 +62,7 @@ public class CryptoMapper implements IRequestMapper
 	 */
 	public CryptoMapper(final IRequestMapper wrappedMapper, final Application application)
 	{
-		this(wrappedMapper, application, new ApplicationCryptProvider(application));
+		this(wrappedMapper, new ApplicationCryptProvider(application));
 	}
 
 	/**
@@ -71,17 +70,13 @@ public class CryptoMapper implements IRequestMapper
 	 * 
 	 * @param wrappedMapper
 	 *            the non-crypted request mapper
-	 * @param application
-	 *            the current application
 	 * @param cryptProvider
 	 *            the custom crypt provider
 	 */
-	public CryptoMapper(final IRequestMapper wrappedMapper, final Application application,
-		final IProvider<ICrypt> cryptProvider)
+	public CryptoMapper(final IRequestMapper wrappedMapper, final IProvider<ICrypt> cryptProvider)
 	{
 		this.wrappedMapper = wrappedMapper;
 		this.cryptProvider = cryptProvider;
-		this.application = application;
 	}
 
 	public int getCompatibilityScore(final Request request)
