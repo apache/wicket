@@ -198,8 +198,8 @@ import org.slf4j.LoggerFactory;
  * {@link Component#info(Serializable)}, {@link Component#warn(Serializable)},
  * {@link Component#error(java.io.Serializable)} and {@link Component#fatal(Serializable)} methods
  * associate feedback messages with a Component. It is generally not necessary to use these methods
- * directly since Wicket validators automatically register feedback messages on Components. 
- * Feedback message for a given Component can be retrieved with {@link Component#getFeedbackMessages}.
+ * directly since Wicket validators automatically register feedback messages on Components. Feedback
+ * message for a given Component can be retrieved with {@link Component#getFeedbackMessages}.
  * 
  * <li><b>Versioning </b>- Pages are the unit of versioning in Wicket, but fine-grained control of
  * which Components should participate in versioning is possible via the
@@ -2715,11 +2715,12 @@ public abstract class Component
 			// Allow component to contribute
 			if (response.wasRendered(this) == false)
 			{
-				// Let the component contribute something to the header
-				renderHead(this, response);
-
-				// Make sure the markup source strategy has been considered as well.
+				// Make sure the markup source strategy contributes to the header first
+				// to be backward compatible. WICKET-3761
 				getMarkupSourcingStrategy().renderHead(this, container);
+
+				// Then let the component itself to contribute to the header
+				renderHead(this, response);
 
 				response.markRendered(this);
 			}
