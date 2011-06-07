@@ -58,7 +58,7 @@ public class DiskDataStore implements IDataStore
 
 	private final File fileStoreFolder;
 
-	private final ConcurrentMap<String, SessionEntry> sessionEntryMap = new ConcurrentHashMap<String, SessionEntry>();
+	private final ConcurrentMap<String, SessionEntry> sessionEntryMap;
 
 	/**
 	 * Construct.
@@ -74,6 +74,7 @@ public class DiskDataStore implements IDataStore
 		this.applicationName = applicationName;
 		this.fileStoreFolder = fileStoreFolder;
 		maxSizePerPageSession = Args.notNull(maxSizePerSession, "maxSizePerSession");
+		sessionEntryMap = new ConcurrentHashMap<String, SessionEntry>();
 
 		try
 		{
@@ -96,8 +97,10 @@ public class DiskDataStore implements IDataStore
 	 */
 	public void destroy()
 	{
+		log.debug("Destroying...");
 		saveIndex();
 		fileChannelPool.destroy();
+		log.debug("Destroyed.");
 	}
 
 	/**
@@ -105,13 +108,16 @@ public class DiskDataStore implements IDataStore
 	 */
 	public byte[] getData(final String sessionId, final int id)
 	{
+		byte[] pageData = null;
 		SessionEntry sessionEntry = getSessionEntry(sessionId, false);
-		if (sessionEntry == null)
+		if (sessionEntry != null)
 		{
-			return null;
+			pageData = sessionEntry.loadPage(id);
 		}
 
-		return sessionEntry.loadPage(id);
+		log.debug("Returning data{} for page with id '{}' in session with id '{}'", new Object[] {
+				pageData != null ? "" : "(null)", id, sessionId });
+		return pageData;
 	}
 
 	/**
@@ -130,6 +136,8 @@ public class DiskDataStore implements IDataStore
 		SessionEntry sessionEntry = getSessionEntry(sessionId, false);
 		if (sessionEntry != null)
 		{
+			log.debug("Removing data for page with id '{}' in session with id '{}'", new Object[] {
+					id, sessionId });
 			sessionEntry.removePage(id);
 		}
 	}
@@ -142,6 +150,7 @@ public class DiskDataStore implements IDataStore
 		SessionEntry sessionEntry = getSessionEntry(sessionId, false);
 		if (sessionEntry != null)
 		{
+			log.debug("Removing data for pages in session with id '{}'", sessionId);
 			synchronized (sessionEntry)
 			{
 				sessionEntryMap.remove(sessionEntry.sessionId);
@@ -158,6 +167,8 @@ public class DiskDataStore implements IDataStore
 		SessionEntry sessionEntry = getSessionEntry(sessionId, true);
 		if (sessionEntry != null)
 		{
+			log.debug("Stroing data for page with id '{}' in session with id '{}'", new Object[] {
+					id, sessionId });
 			sessionEntry.savePage(id, data);
 		}
 	}
