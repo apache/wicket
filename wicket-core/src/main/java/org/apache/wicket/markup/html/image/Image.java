@@ -239,10 +239,24 @@ public class Image extends WebComponent implements IResourceListener
 		}
 		localizedImageResource.setSrcAttribute(tag);
 
-		if (AjaxRequestTarget.get() != null)
+		if (shouldAddAntiCacheParameter())
 		{
 			addAntiCacheParameter(tag);
 		}
+	}
+
+	/**
+	 * Adding an image to {@link AjaxRequestTarget} most of the times mean that the image has
+	 * changes and must be re-rendered.
+	 * <p>
+	 * With this method the user may change this default behavior for some of her images.
+	 * </p>
+	 * 
+	 * @return {@code true} to add the anti cache request parameter, {@code false} - otherwise
+	 */
+	protected boolean shouldAddAntiCacheParameter()
+	{
+		return AjaxRequestTarget.get() != null;
 	}
 
 	/**
