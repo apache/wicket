@@ -347,9 +347,21 @@ public final class Strings
 
 					default :
 
+						int ci = 0xffff & c;
+						if (ci < 0x20)
+						{
+							// http://en.wikipedia.org/wiki/Valid_characters_in_XML
+							if (ci != 0x09 && ci != 0x0A && ci != 0x0D)
+							{
+								buffer.append("&#");
+								buffer.append(new Integer(ci).toString());
+								buffer.append(';');
+								break;
+							}
+						}
+
 						if (convertToHtmlUnicodeEscapes)
 						{
-							int ci = 0xffff & c;
 							if (ci < 160)
 							{
 								// nothing special only 7 Bit

@@ -51,8 +51,8 @@ public final class StringsTest extends TestCase
 		Assert.assertEquals("foo", Strings.afterLast("bar.baz.foo", '.'));
 		Assert.assertEquals("", Strings.afterLast("bar", '.'));
 		Assert.assertEquals("foo", Strings.replaceAll("afaooaaa", "a", "").toString());
-		Assert.assertEquals("fuzzyffuzzyoofuzzyfuzzyfuzzy", Strings.replaceAll("afaooaaa", "a",
-			"fuzzy").toString());
+		Assert.assertEquals("fuzzyffuzzyoofuzzyfuzzyfuzzy",
+			Strings.replaceAll("afaooaaa", "a", "fuzzy").toString());
 	}
 
 	/**
@@ -139,10 +139,28 @@ public final class StringsTest extends TestCase
 		assertEquals("&amp;", Strings.escapeMarkup("&").toString());
 
 		assertEquals("&amp;amp;", Strings.escapeMarkup("&amp;").toString());
-		assertEquals("&lt; &gt;&amp;&quot;&#039;?:;{}[]-_+=()*^%$#@!~`", Strings.escapeMarkup(
-			"< >&\"'?:;{}[]-_+=()*^%$#@!~`").toString());
-		assertEquals("&lt;&nbsp;&gt;&amp;&quot;&#039;?:;{}[]-_+=()*^%$#@!~`", Strings.escapeMarkup(
-			"< >&\"'?:;{}[]-_+=()*^%$#@!~`", true).toString());
+		assertEquals("&lt; &gt;&amp;&quot;&#039;?:;{}[]-_+=()*^%$#@!~`",
+			Strings.escapeMarkup("< >&\"'?:;{}[]-_+=()*^%$#@!~`").toString());
+		assertEquals("&lt;&nbsp;&gt;&amp;&quot;&#039;?:;{}[]-_+=()*^%$#@!~`",
+			Strings.escapeMarkup("< >&\"'?:;{}[]-_+=()*^%$#@!~`", true).toString());
+
+		StringBuilder controlCharacters = new StringBuilder();
+		StringBuilder controlCharactersEscaped = new StringBuilder();
+		for (int i = 0; i < 0x20; i++)
+		{
+			controlCharacters.append((char)i);
+			if (i == 0x09 || i == 0x0a || i == 0x0d)
+			{
+				controlCharactersEscaped.append((char)i);
+			}
+			else
+			{
+				controlCharactersEscaped.append("&#").append(i).append(";");
+			}
+		}
+		assertEquals(controlCharactersEscaped.toString(),
+			Strings.escapeMarkup(controlCharacters.toString()).toString());
+
 	}
 
 	/**
@@ -171,7 +189,8 @@ public final class StringsTest extends TestCase
 		assertEquals("", Strings.escapeMarkup("", true, true).toString());
 
 		// The escaped unicode is ����������"
-		assertEquals("&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;",
+		assertEquals(
+			"&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;",
 			Strings.escapeMarkup("\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb",
 				false, true).toString());
 
@@ -405,12 +424,12 @@ public final class StringsTest extends TestCase
 		assertEquals("<p>abc<br/>def<br/>ghi</p>", Strings.toMultilineMarkup("abc\ndef\nghi")
 			.toString());
 
-		assertEquals("<p>abc</p><p>def</p><p>ghi</p>", Strings.toMultilineMarkup(
-			"abc\n\ndef\n\nghi").toString());
-		assertEquals("<p>abc</p><p>def</p><p>ghi</p>", Strings.toMultilineMarkup(
-			"abc\r\n\r\ndef\r\n\r\nghi").toString());
-		assertEquals("<p>abc</p><p>def</p><p>ghi</p><p></p>", Strings.toMultilineMarkup(
-			"abc\r\n\r\ndef\r\n\r\nghi\n\n").toString());
+		assertEquals("<p>abc</p><p>def</p><p>ghi</p>",
+			Strings.toMultilineMarkup("abc\n\ndef\n\nghi").toString());
+		assertEquals("<p>abc</p><p>def</p><p>ghi</p>",
+			Strings.toMultilineMarkup("abc\r\n\r\ndef\r\n\r\nghi").toString());
+		assertEquals("<p>abc</p><p>def</p><p>ghi</p><p></p>",
+			Strings.toMultilineMarkup("abc\r\n\r\ndef\r\n\r\nghi\n\n").toString());
 
 		assertEquals("<p>\\n</p>", Strings.toMultilineMarkup("\\n").toString());
 		assertEquals("<p>a\\nbc</p>", Strings.toMultilineMarkup("a\\nbc").toString());
