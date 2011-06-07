@@ -190,6 +190,23 @@ public class StringsTest extends TestCase
 			Strings.escapeMarkup("< >&\"'?:;{}[]-_+=()*^%$#@!~`").toString());
 		assertEquals("&lt;&nbsp;&gt;&amp;&quot;&#039;?:;{}[]-_+=()*^%$#@!~`",
 			Strings.escapeMarkup("< >&\"'?:;{}[]-_+=()*^%$#@!~`", true).toString());
+
+		StringBuilder controlCharacters = new StringBuilder();
+		StringBuilder controlCharactersEscaped = new StringBuilder();
+		for (int i = 0; i < 0x20; i++)
+		{
+			controlCharacters.append((char)i);
+			if (i == 0x09 || i == 0x0a || i == 0x0d)
+			{
+				controlCharactersEscaped.append((char)i);
+			}
+			else
+			{
+				controlCharactersEscaped.append("&#").append(i).append(";");
+			}
+		}
+		assertEquals(controlCharactersEscaped.toString(),
+			Strings.escapeMarkup(controlCharacters.toString()).toString());
 	}
 
 	/**
