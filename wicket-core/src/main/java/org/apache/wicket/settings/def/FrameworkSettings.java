@@ -19,12 +19,15 @@ package org.apache.wicket.settings.def;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IComponentAwareEventSink;
 import org.apache.wicket.IDetachListener;
 import org.apache.wicket.IEventDispatcher;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
+import org.apache.wicket.serialize.ISerializer;
+import org.apache.wicket.serialize.java.JavaSerializer;
 import org.apache.wicket.settings.IFrameworkSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
@@ -42,7 +45,23 @@ import org.apache.wicket.util.string.Strings;
 public class FrameworkSettings implements IFrameworkSettings
 {
 	private IDetachListener detachListener;
+
 	private List<IEventDispatcher> eventDispatchers = null;
+
+	/**
+	 * The {@link ISerializer} that will be used to convert the pages to/from byte arrays
+	 */
+	private ISerializer pageSerializer;
+
+	/**
+	 * Construct.
+	 * 
+	 * @param application
+	 */
+	public FrameworkSettings(final Application application)
+	{
+		pageSerializer = new JavaSerializer(application.getApplicationKey());
+	}
 
 	/**
 	 * @see org.apache.wicket.settings.IFrameworkSettings#getVersion()
@@ -117,5 +136,16 @@ public class FrameworkSettings implements IFrameworkSettings
 		{
 			dispatcher.dispatchEvent(sink, event, component);
 		}
+	}
+
+
+	public void setSerializer(ISerializer pageSerializer)
+	{
+		this.pageSerializer = Args.notNull(pageSerializer, "pageSerializer");
+	}
+
+	public ISerializer getSerializer()
+	{
+		return pageSerializer;
 	}
 }

@@ -23,9 +23,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.page.IManageablePage;
+import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
-import org.apache.wicket.util.lang.WicketObjects;
 
 /**
  * The {@link IPageStore} that converts {@link IManageablePage} instances to {@link SerializedPage}s
@@ -35,29 +35,33 @@ import org.apache.wicket.util.lang.WicketObjects;
  */
 public class DefaultPageStore implements IPageStore
 {
-	private final String applicationName;
-
 	private final SerializedPagesCache serializedPagesCache;
 
 	private final IDataStore pageDataStore;
 
 	/**
+	 * The {@link ISerializer} that will be used to convert pages from/to byte arrays
+	 */
+	private final ISerializer pageSerializer;
+
+	/**
 	 * Construct.
 	 * 
-	 * @param applicationName
+	 * @param pageSerializer
+	 *            the {@link ISerializer} that will be used to convert pages from/to byte arrays
 	 * @param dataStore
 	 *            the {@link IDataStore} that actually stores the pages
 	 * @param cacheSize
 	 *            the number of pages to cache in memory before passing them to
 	 *            {@link IDataStore#storeData(String, int, byte[])}
 	 */
-	public DefaultPageStore(final String applicationName, final IDataStore dataStore,
+	public DefaultPageStore(final ISerializer pageSerializer, final IDataStore dataStore,
 		final int cacheSize)
 	{
-		Args.notNull(applicationName, "applicationName");
+		Args.notNull(pageSerializer, "pageSerializer");
 		Args.notNull(dataStore, "DataStore");
 
-		this.applicationName = applicationName;
+		this.pageSerializer = pageSerializer;
 		pageDataStore = dataStore;
 		serializedPagesCache = new SerializedPagesCache(cacheSize);
 	}
@@ -109,14 +113,6 @@ public class DefaultPageStore implements IPageStore
 	protected void storePageData(final String sessionId, final int pageId, final byte[] data)
 	{
 		pageDataStore.storeData(sessionId, pageId, data);
-	}
-
-	/**
-	 * @return application name
-	 */
-	public String getApplicationName()
-	{
-		return applicationName;
 	}
 
 	public IManageablePage getPage(final String sessionId, final int id)
@@ -357,7 +353,7 @@ public class DefaultPageStore implements IPageStore
 		Args.notNull(sessionId, "sessionId");
 		Args.notNull(page, "page");
 
-		byte data[] = WicketObjects.objectToByteArray(page, applicationName);
+		byte[] data = pageSerializer.serialize(page);
 		return new SerializedPage(sessionId, page.getPageId(), data);
 	}
 
@@ -366,9 +362,10 @@ public class DefaultPageStore implements IPageStore
 	 * @param data
 	 * @return page data deserialized
 	 */
-	protected IManageablePage deserializePage(final byte data[])
+	protected IManageablePage deserializePage(final byte[] data)
 	{
-		return (IManageablePage)WicketObjects.byteArrayToObject(data);
+		IManageablePage page = (IManageablePage)pageSerializer.deserialize(data);
+		return page;
 	}
 
 	/**

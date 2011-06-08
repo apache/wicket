@@ -50,7 +50,7 @@ public class StoreSettings implements IStoreSettings
 	 * 
 	 * @param application
 	 */
-	public StoreSettings(Application application)
+	public StoreSettings(final Application application)
 	{
 	}
 

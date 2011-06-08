@@ -30,6 +30,7 @@ import org.apache.wicket.pageStore.DefaultPageStore;
 import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.pageStore.memory.DummyPageManagerContext;
+import org.apache.wicket.serialize.java.JavaSerializer;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.versioning.InMemoryPageStore;
 import org.junit.Test;
@@ -102,7 +103,7 @@ public class PersistentPageManagerTest
 	private PersistentPageManager newPersistentPageManager(String appName)
 	{
 		IDataStore dataStore = new InMemoryPageStore();
-		IPageStore pageStore = new DefaultPageStore(appName, dataStore, 4);
+		IPageStore pageStore = new DefaultPageStore(new JavaSerializer(appName), dataStore, 4);
 		IPageManagerContext pageManagerContext = new DummyPageManagerContext();
 		return new PersistentPageManager(appName, pageStore, pageManagerContext);
 	}

@@ -34,6 +34,7 @@ import org.apache.wicket.page.PersistentPageManager;
 import org.apache.wicket.pageStore.DefaultPageStore;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.serialize.java.JavaSerializer;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
@@ -89,8 +90,8 @@ public class PageIdPoliticTest extends TestCase
 				{
 					public IPageManager get(IPageManagerContext pageManagerContext)
 					{
-						IPageStore pageStore = new DefaultPageStore(application.getName(),
-							dataStore, 4);
+						IPageStore pageStore = new DefaultPageStore(new JavaSerializer(
+							application.getApplicationKey()), dataStore, 4);
 						return new PersistentPageManager(application.getName(), pageStore,
 							pageManagerContext);
 					}

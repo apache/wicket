@@ -18,6 +18,7 @@ package org.apache.wicket.settings;
 
 import org.apache.wicket.IDetachListener;
 import org.apache.wicket.IEventDispatcher;
+import org.apache.wicket.serialize.ISerializer;
 
 /**
  * Framework settings for retrieving and configuring framework settings.
@@ -61,4 +62,17 @@ public interface IFrameworkSettings extends IEventDispatcher
 	 */
 	public void add(IEventDispatcher dispatcher);
 
+
+	/**
+	 * Sets the {@link ISerializer} that will be used to convert objects to/from byte arrays
+	 * 
+	 * @param serializer
+	 *            the {@link ISerializer} to use
+	 */
+	void setSerializer(ISerializer serializer);
+
+	/**
+	 * @return the {@link ISerializer} that will be used to convert objects to/from byte arrays
+	 */
+	ISerializer getSerializer();
 }

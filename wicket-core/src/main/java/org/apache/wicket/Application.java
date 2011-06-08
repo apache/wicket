@@ -1085,7 +1085,7 @@ public abstract class Application implements UnboundListener, IEventSink
 		checkSettingsAvailable();
 		if (frameworkSettings == null)
 		{
-			frameworkSettings = new FrameworkSettings();
+			frameworkSettings = new FrameworkSettings(this);
 		}
 		return frameworkSettings;
 	}

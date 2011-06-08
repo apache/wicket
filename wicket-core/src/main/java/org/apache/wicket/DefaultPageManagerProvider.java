@@ -25,6 +25,7 @@ import org.apache.wicket.pageStore.DefaultPageStore;
 import org.apache.wicket.pageStore.DiskDataStore;
 import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.pageStore.IPageStore;
+import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.settings.IStoreSettings;
 import org.apache.wicket.util.lang.Bytes;
 
@@ -57,7 +58,8 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 	protected IPageStore newPageStore(IDataStore dataStore)
 	{
 		int inmemoryCacheSize = getStoreSettings().getInmemoryCacheSize();
-		return new DefaultPageStore(application.getName(), dataStore, inmemoryCacheSize);
+		ISerializer pageSerializer = application.getFrameworkSettings().getSerializer();
+		return new DefaultPageStore(pageSerializer, dataStore, inmemoryCacheSize);
 	}
 
 	protected IDataStore newDataStore()

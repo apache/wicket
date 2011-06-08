@@ -60,7 +60,7 @@ public class ApplicationSettingsTest
 	@Test
 	public void testFrameworkVersion()
 	{
-		IFrameworkSettings settings = new FrameworkSettings();
+		IFrameworkSettings settings = new FrameworkSettings(new MockApplication());
 		assertEquals("n/a", settings.getVersion());
 	}
 

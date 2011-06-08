@@ -29,6 +29,7 @@ import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.pageStore.memory.HttpSessionDataStore;
 import org.apache.wicket.pageStore.memory.PageNumberEvictionStrategy;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.serialize.java.JavaSerializer;
 
 /**
  * Test application
@@ -78,7 +79,8 @@ public class TestApp1 extends WebApplication
 			{
 				IDataStore dataStore = new HttpSessionDataStore(pageManagerContext,
 					new PageNumberEvictionStrategy(100));
-				IPageStore pageStore = new DefaultPageStore(getName(), dataStore,
+				IPageStore pageStore = new DefaultPageStore(
+					new JavaSerializer(getApplicationKey()), dataStore,
 					getStoreSettings().getInmemoryCacheSize());
 				return new PersistentPageManager(getName(), pageStore, pageManagerContext);
 
