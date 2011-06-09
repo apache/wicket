@@ -72,7 +72,7 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 						.getContainerInfo()
 						.getContainerClass()
 						.getName() +
-					" Enable debug messages for org.apache.wicket.util.resource.Resource to get a list of all filenames tried.");
+					". Enable debug messages for org.apache.wicket.util.resource.locator.ResourceStreamLocator to get a list of all filenames tried.");
 		}
 
 		// Merge base and derived markup
