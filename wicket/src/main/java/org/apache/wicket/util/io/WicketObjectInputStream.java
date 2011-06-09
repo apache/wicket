@@ -33,7 +33,10 @@ import org.apache.wicket.util.lang.Generics;
 
 /**
  * @author jcompagner
+ * @deprecated in Wicket 1.5 the (de)serializator is a pluggable piece, if some customization is
+ *             needed see the new framework settings
  */
+@Deprecated
 public final class WicketObjectInputStream extends ObjectInputStream
 {
 

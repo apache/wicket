@@ -41,7 +41,10 @@ import org.slf4j.LoggerFactory;
  * @see Objects#byteArrayToObject(byte[])
  * 
  * @author eelcohillenius
+ * @deprecated replaced by ISerializer. In Wicket 1.5 the (de)serializator is a pluggable piece,and
+ *             can be coded regardless of the java.io API.
  */
+@Deprecated
 public interface IObjectStreamFactory
 {
 	/**
