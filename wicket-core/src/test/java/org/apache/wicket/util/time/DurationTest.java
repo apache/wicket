@@ -17,71 +17,68 @@
 package org.apache.wicket.util.time;
 
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
-
 import org.apache.wicket.util.string.StringValueConversionException;
+import org.junit.Test;
 
 /**
  * Test cases for this object
  * 
  * @author Jonathan Locke
  */
-public final class DurationTest extends TestCase
+public final class DurationTest
 {
 	/**
-	 * 
 	 * @throws StringValueConversionException
 	 */
-	public void testValues() throws StringValueConversionException
+	@Test
+	public void values() throws StringValueConversionException
 	{
-		Assert.assertEquals(Duration.milliseconds(3000), Duration.seconds(3));
-		Assert.assertEquals(Duration.seconds(120), Duration.minutes(2));
-		Assert.assertEquals(Duration.minutes(1440), Duration.hours(24));
-		Assert.assertEquals(Duration.hours(48), Duration.days(2));
-		Assert.assertEquals(Duration.minutes(90), Duration.valueOf("90 minutes"));
-		Assert.assertEquals(Duration.days(9), Duration.valueOf("9 days"));
-		Assert.assertEquals(Duration.hours(1), Duration.valueOf("1 hour"));
-		Assert.assertTrue(9 == Duration.days(9).days());
-		Assert.assertTrue(11 == Duration.hours(11).hours());
-		Assert.assertTrue(21 == Duration.minutes(21).minutes());
-		Assert.assertTrue(51 == Duration.seconds(51).seconds());
+		assertEquals(Duration.milliseconds(3000), Duration.seconds(3));
+		assertEquals(Duration.seconds(120), Duration.minutes(2));
+		assertEquals(Duration.minutes(1440), Duration.hours(24));
+		assertEquals(Duration.hours(48), Duration.days(2));
+		assertEquals(Duration.minutes(90), Duration.valueOf("90 minutes"));
+		assertEquals(Duration.days(9), Duration.valueOf("9 days"));
+		assertEquals(Duration.hours(1), Duration.valueOf("1 hour"));
+		assertTrue(9 == Duration.days(9).days());
+		assertTrue(11 == Duration.hours(11).hours());
+		assertTrue(21 == Duration.minutes(21).minutes());
+		assertTrue(51 == Duration.seconds(51).seconds());
 	}
 
-	/**
-	 * 
-	 * 
-	 */
-	public void testOperations()
+	/** */
+	@Test
+	public void operations()
 	{
-		Assert.assertTrue(Duration.milliseconds(3001).greaterThan(Duration.seconds(3)));
-		Assert.assertTrue(Duration.milliseconds(3001).greaterThanOrEqual(Duration.seconds(3)));
-		Assert.assertTrue(Duration.milliseconds(3000).greaterThanOrEqual(Duration.seconds(3)));
-		Assert.assertTrue(Duration.milliseconds(2999).lessThan(Duration.seconds(3)));
-		Assert.assertTrue(Duration.milliseconds(2999).lessThanOrEqual(Duration.seconds(3)));
-		Assert.assertTrue(Duration.milliseconds(3000).lessThanOrEqual(Duration.seconds(3)));
-		Assert.assertEquals(-1, Duration.milliseconds(2999).compareTo(Duration.seconds(3)));
-		Assert.assertEquals(1, Duration.milliseconds(3001).compareTo(Duration.seconds(3)));
-		Assert.assertEquals(0, Duration.milliseconds(3000).compareTo(Duration.seconds(3)));
-		Assert.assertEquals(Duration.minutes(10), Duration.minutes(4).add(Duration.minutes(6)));
-		Assert.assertEquals(Duration.ONE_HOUR, Duration.minutes(90).subtract(Duration.minutes(30)));
+		assertTrue(Duration.milliseconds(3001).greaterThan(Duration.seconds(3)));
+		assertTrue(Duration.milliseconds(3001).greaterThanOrEqual(Duration.seconds(3)));
+		assertTrue(Duration.milliseconds(3000).greaterThanOrEqual(Duration.seconds(3)));
+		assertTrue(Duration.milliseconds(2999).lessThan(Duration.seconds(3)));
+		assertTrue(Duration.milliseconds(2999).lessThanOrEqual(Duration.seconds(3)));
+		assertTrue(Duration.milliseconds(3000).lessThanOrEqual(Duration.seconds(3)));
+		assertEquals(-1, Duration.milliseconds(2999).compareTo(Duration.seconds(3)));
+		assertEquals(1, Duration.milliseconds(3001).compareTo(Duration.seconds(3)));
+		assertEquals(0, Duration.milliseconds(3000).compareTo(Duration.seconds(3)));
+		assertEquals(Duration.minutes(10), Duration.minutes(4).add(Duration.minutes(6)));
+		assertEquals(Duration.ONE_HOUR, Duration.minutes(90).subtract(Duration.minutes(30)));
 
 		String value = NumberFormat.getNumberInstance().format(1.5);
 
-		Assert.assertEquals(value + " minutes", Duration.seconds(90).toString());
-		Assert.assertEquals("12 hours", Duration.days(0.5).toString());
+		assertEquals(value + " minutes", Duration.seconds(90).toString());
+		assertEquals("12 hours", Duration.days(0.5).toString());
 	}
 
-	/**
-	 * 
-	 * 
-	 */
+	/** */
+	@Test
 	public void testSleep()
 	{
-		Assert.assertTrue(Duration.seconds(0.5).lessThan(Duration.benchmark(new Runnable()
+		assertTrue(Duration.seconds(0.5).lessThan(Duration.benchmark(new Runnable()
 		{
 			public void run()
 			{
@@ -89,7 +86,7 @@ public final class DurationTest extends TestCase
 			}
 		})));
 
-		Assert.assertTrue(Duration.seconds(1).greaterThan(Duration.benchmark(new Runnable()
+		assertTrue(Duration.seconds(1).greaterThan(Duration.benchmark(new Runnable()
 		{
 			public void run()
 			{
@@ -99,15 +96,15 @@ public final class DurationTest extends TestCase
 	}
 
 	/**
-	 * 
 	 * @throws StringValueConversionException
 	 */
-	public void testLocale() throws StringValueConversionException
+	@Test
+	public void locale() throws StringValueConversionException
 	{
-		Assert.assertEquals(Duration.minutes(90), Duration.valueOf("90 minutes"));
-		Assert.assertEquals(Duration.hours(1.5), Duration.valueOf("1.5 hour", Locale.US));
-		Assert.assertEquals(Duration.hours(1.5), Duration.valueOf("1,5 hour", Locale.GERMAN));
-		Assert.assertEquals("1.5 hours", Duration.hours(1.5).toString(Locale.US));
-		Assert.assertEquals("1,5 hours", Duration.hours(1.5).toString(Locale.GERMAN));
+		assertEquals(Duration.minutes(90), Duration.valueOf("90 minutes"));
+		assertEquals(Duration.hours(1.5), Duration.valueOf("1.5 hour", Locale.US));
+		assertEquals(Duration.hours(1.5), Duration.valueOf("1,5 hour", Locale.GERMAN));
+		assertEquals("1.5 hours", Duration.hours(1.5).toString(Locale.US));
+		assertEquals("1,5 hours", Duration.hours(1.5).toString(Locale.GERMAN));
 	}
 }
