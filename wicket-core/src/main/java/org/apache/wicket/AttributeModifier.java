@@ -16,11 +16,17 @@
  */
 package org.apache.wicket;
 
+import java.io.Serializable;
+
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.model.IComponentAssignedModel;
+import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.value.IValueMap;
 
 /**
@@ -31,29 +37,26 @@ import org.apache.wicket.util.value.IValueMap;
  * localization. The replacement occurs as the component tag is rendered to the response.
  * <p>
  * The attribute whose value is to be modified must be given on construction of the instance of this
- * class along with the model containing the value to replace with. Optionally a pattern can be
- * supplied that is a regular expression that the existing value must match before the replacement
- * can be carried out.
+ * class along with the model containing the value to replace with.
  * <p>
- * If an attribute is not in the markup, this modifier will add an attribute to the tag only if
- * addAttributeIfNotPresent is true and the replacement value is not null.
- * </p>
+ * If an attribute is not in the markup, this modifier will add an attribute.
  * <p>
- * Instances of this class should be added to components via the
- * {@link org.apache.wicket.Component#add(org.apache.wicket.behavior.Behavior...)} }
+ * Instances of this class should be added to components via the {@link Component#add(Behavior...)}
  * method after the component has been constructed.
  * <p>
- * It is possible to create new subclasses of AttributeModifier by overriding the newValue(String,
- * String) method. For example, you could create an AttributeModifier subclass which appends the
- * replacement value like this: <code>
- * 	new AttributeModifier("myAttribute", model)
- *  {
- * 		protected String newValue(final String currentValue, final String replacementValue)
- *      {
- *      	return currentValue + replacementValue;
- *      }
- *  };
- * </code>
+ * It is possible to create new subclasses of {@code AttributeModifier} by overriding the
+ * {@link #newValue(String, String)} method. For example, you could create an
+ * {@code AttributeModifier} subclass which appends the replacement value like this:
+ * 
+ * <pre>
+ * new AttributeModifier(&quot;myAttribute&quot;, model)
+ * {
+ * 	protected String newValue(final String currentValue, final String replacementValue)
+ * 	{
+ * 		return currentValue + replacementValue;
+ * 	}
+ * };
+ * </pre>
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
@@ -71,17 +74,11 @@ public class AttributeModifier extends Behavior implements IClusterable
 
 	private static final long serialVersionUID = 1L;
 
-	/** Whether to add the attribute if it is not an attribute in the markup. */
-	private final boolean addAttributeIfNotPresent;
+	/** Flag for en/disabling the modifier. */
+	private boolean enabled = true;
 
 	/** Attribute specification. */
 	private final String attribute;
-
-	/** Modification information. */
-	private boolean enabled;
-
-	/** The pattern. */
-	private final String pattern;
 
 	/** The model that is to be used for the replacement. */
 	private final IModel<?> replaceModel;
@@ -96,16 +93,20 @@ public class AttributeModifier extends Behavior implements IClusterable
 	 *            Whether to add the attribute if it is not present
 	 * @param replaceModel
 	 *            The model to replace the value with
+	 * @deprecated AttributeModifier will now always add the attribute if not present, use
+	 *             {@link #AttributeModifier(String, IModel)} instead
 	 */
+	@Deprecated
 	public AttributeModifier(final String attribute, final boolean addAttributeIfNotPresent,
 		final IModel<?> replaceModel)
 	{
-		this(attribute, null, addAttributeIfNotPresent, replaceModel);
+		this(attribute, replaceModel);
 	}
 
 	/**
 	 * Create a new attribute modifier with the given attribute name and model to replace with. The
-	 * attribute will not be added if it is not present.
+	 * attribute will be added with the model value or the value will be replaced with the model
+	 * value if the attribute is already present.
 	 * 
 	 * @param attribute
 	 *            The attribute name to replace the value for
@@ -114,61 +115,30 @@ public class AttributeModifier extends Behavior implements IClusterable
 	 */
 	public AttributeModifier(final String attribute, final IModel<?> replaceModel)
 	{
-		this(attribute, null, false, replaceModel);
-	}
-
-	/**
-	 * Create a new attribute modifier with the given attribute name and expected pattern to match
-	 * plus the model to replace with. A null pattern will match the attribute regardless of its
-	 * value. The additional boolean flag specifies whether to add the attribute if it is not
-	 * present.
-	 * 
-	 * @param attribute
-	 *            The attribute name to replace the value for
-	 * @param pattern
-	 *            The pattern of the current attribute value to match
-	 * @param addAttributeIfNotPresent
-	 *            Whether to add the attribute if it is not present and the replacement value is not
-	 *            null
-	 * @param replaceModel
-	 *            The model to replace the value with
-	 */
-	public AttributeModifier(final String attribute, final String pattern,
-		final boolean addAttributeIfNotPresent, final IModel<?> replaceModel)
-	{
-		if (attribute == null)
-		{
-			throw new IllegalArgumentException("Attribute parameter cannot be null");
-		}
+		Args.notNull(attribute, "attribute");
 
 		this.attribute = attribute;
-		this.pattern = pattern;
-		enabled = true;
-		this.addAttributeIfNotPresent = addAttributeIfNotPresent;
 		this.replaceModel = replaceModel;
 	}
 
 	/**
-	 * Create a new attribute modifier with the given attribute name and expected pattern to match
-	 * plus the model to replace with. A null pattern will match the attribute regardless of its
-	 * value. The attribute will not be added if it is not present.
+	 * Create a new attribute modifier with the given attribute name and model to replace with. The
+	 * attribute will be added with the model value or the value will be replaced with the value if
+	 * the attribute is already present.
 	 * 
 	 * @param attribute
 	 *            The attribute name to replace the value for
-	 * @param pattern
-	 *            The pattern of the current attribute value to match
-	 * @param replaceModel
-	 *            The model to replace the value with
+	 * @param value
+	 *            The value for the attribute
 	 */
-	public AttributeModifier(final String attribute, final String pattern,
-		final IModel<?> replaceModel)
+	public AttributeModifier(String attribute, Serializable value)
 	{
-		this(attribute, pattern, false, replaceModel);
+		this(attribute, Model.of(value));
 	}
 
 	/**
-	 * Detach the model if it was a IDetachableModel Internal method. shouldn't be called from the
-	 * outside. If the attribute modifier is shared, the detach method will be called multiple
+	 * Detach the value if it was a {@link IDetachable}. Internal method, shouldn't be called from
+	 * the outside. If the attribute modifier is shared, the detach method will be called multiple
 	 * times.
 	 * 
 	 * @param component
@@ -178,17 +148,7 @@ public class AttributeModifier extends Behavior implements IClusterable
 	public final void detach(Component component)
 	{
 		if (replaceModel != null)
-		{
 			replaceModel.detach();
-		}
-	}
-
-	/**
-	 * @return whether to add the attribute if it is not an attribute in the markup
-	 */
-	public final boolean getAddAttributeIfNotPresent()
-	{
-		return addAttributeIfNotPresent;
 	}
 
 	/**
@@ -197,14 +157,6 @@ public class AttributeModifier extends Behavior implements IClusterable
 	public final String getAttribute()
 	{
 		return attribute;
-	}
-
-	/**
-	 * @return the pattern of the current attribute value to match
-	 */
-	public final String getPattern()
-	{
-		return pattern;
 	}
 
 	@Override
@@ -217,9 +169,7 @@ public class AttributeModifier extends Behavior implements IClusterable
 	public final void onComponentTag(Component component, ComponentTag tag)
 	{
 		if (tag.getType() != TagType.CLOSE)
-		{
 			replaceAttributeValue(component, tag);
-		}
 	}
 
 	/**
@@ -249,25 +199,11 @@ public class AttributeModifier extends Behavior implements IClusterable
 			}
 			else
 			{
-				if (attributes.containsKey(attribute))
+				final String value = toStringOrNull(attributes.get(attribute));
+				final String newValue = newValue(value, toStringOrNull(replacementValue));
+				if (newValue != null)
 				{
-					final String value = toStringOrNull(attributes.get(attribute));
-					if (pattern == null || value.matches(pattern))
-					{
-						final String newValue = newValue(value, toStringOrNull(replacementValue));
-						if (newValue != null)
-						{
-							attributes.put(attribute, newValue);
-						}
-					}
-				}
-				else if (addAttributeIfNotPresent)
-				{
-					final String newValue = newValue(null, toStringOrNull(replacementValue));
-					if (newValue != null)
-					{
-						attributes.put(attribute, newValue);
-					}
+					attributes.put(attribute, newValue);
 				}
 			}
 		}
@@ -278,10 +214,12 @@ public class AttributeModifier extends Behavior implements IClusterable
 	 * 
 	 * @param enabled
 	 *            Whether enabled or not
+	 * @return this
 	 */
-	public final void setEnabled(final boolean enabled)
+	public final AttributeModifier setEnabled(final boolean enabled)
 	{
 		this.enabled = enabled;
+		return this;
 	}
 
 	/**
@@ -290,8 +228,8 @@ public class AttributeModifier extends Behavior implements IClusterable
 	@Override
 	public String toString()
 	{
-		return "[AttributeModifier attribute=" + attribute + ", enabled=" + enabled + ", pattern=" +
-			pattern + ", replacementModel=" + replaceModel + "]";
+		return "[AttributeModifier attribute=" + attribute + ", enabled=" + enabled +
+			", replaceModel=" + replaceModel + "]";
 	}
 
 	/**
@@ -346,5 +284,101 @@ public class AttributeModifier extends Behavior implements IClusterable
 	protected String newValue(final String currentValue, final String replacementValue)
 	{
 		return replacementValue;
+	}
+
+	/**
+	 * Creates a attribute modifier that replaces the current value with the given value.
+	 * 
+	 * @param attribute
+	 * @param value
+	 * @return the attribute modifier
+	 * @since 1.5
+	 */
+	public static AttributeModifier replace(String attribute, IModel<?> value)
+	{
+		return new AttributeModifier(attribute, value);
+	}
+
+	/**
+	 * Creates a attribute modifier that replaces the current value with the given value.
+	 * 
+	 * @param attribute
+	 * @param value
+	 * @return the attribute modifier
+	 * @since 1.5
+	 */
+	public static AttributeModifier replace(String attribute, Serializable value)
+	{
+		return new AttributeModifier(attribute, value);
+	}
+
+	/**
+	 * Creates a attribute modifier that appends the current value with the given {@code value}
+	 * using a default space character (' ') separator.
+	 * 
+	 * @param attribute
+	 * @param value
+	 * @return the attribute modifier
+	 * @since 1.5
+	 * @see AttributeAppender
+	 */
+	public static AttributeAppender append(String attribute, IModel<?> value)
+	{
+		return new AttributeAppender(attribute, value).setSeparator(" ");
+	}
+
+	/**
+	 * Creates a attribute modifier that appends the current value with the given {@code value}
+	 * using a default space character (' ') separator.
+	 * 
+	 * @param attribute
+	 * @param value
+	 * @return the attribute modifier
+	 * @since 1.5
+	 * @see AttributeAppender
+	 */
+	public static AttributeAppender append(String attribute, Serializable value)
+	{
+		return append(attribute, Model.of(value));
+	}
+
+	/**
+	 * Creates a attribute modifier that prepends the current value with the given {@code value}
+	 * using a default space character (' ') separator.
+	 * 
+	 * @param attribute
+	 * @param value
+	 * @return the attribute modifier
+	 * @since 1.5
+	 * @see AttributeAppender
+	 */
+	public static AttributeAppender prepend(String attribute, IModel<?> value)
+	{
+		return new AttributeAppender(attribute, value)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected String newValue(String currentValue, String replacementValue)
+			{
+				// swap currentValue and replacementValue in the call to the concatenator
+				return super.newValue(replacementValue, currentValue);
+			}
+		}.setSeparator(" ");
+	}
+
+	/**
+	 * Creates a attribute modifier that prepends the current value with the given {@code value}
+	 * using a default space character (' ') separator.
+	 * 
+	 * @param attribute
+	 * @param value
+	 * @return the attribute modifier
+	 * @since 1.5
+	 * @see AttributeAppender
+	 */
+	public static AttributeAppender prepend(String attribute, Serializable value)
+	{
+		return prepend(attribute, Model.of(value));
 	}
 }

@@ -20,7 +20,6 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 
 /**
@@ -65,8 +64,7 @@ public class NoRecordsToolbar extends AbstractToolbar
 		WebMarkupContainer td = new WebMarkupContainer("td");
 		add(td);
 
-		td.add(new AttributeModifier("colspan", true, new Model<String>(
-			String.valueOf(table.getColumns().size()))));
+		td.add(AttributeModifier.replace("colspan", String.valueOf(table.getColumns().size())));
 		td.add(new Label("msg", messageModel));
 	}
 

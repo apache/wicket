@@ -27,8 +27,6 @@ import org.apache.wicket.markup.repeater.ReuseIfModelsEqualStrategy;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-
 
 /**
  * page that demonstrates dataview with ReuseIfModelsEqualStrategy
@@ -37,8 +35,12 @@ import org.apache.wicket.model.Model;
  */
 public class OIRPage extends BasePage
 {
+	private static final long serialVersionUID = 1L;
+
 	private static class HighlitableDataItem<T> extends Item<T>
 	{
+		private static final long serialVersionUID = 1L;
+
 		private boolean highlite = false;
 
 		/**
@@ -59,8 +61,10 @@ public class OIRPage extends BasePage
 		public HighlitableDataItem(String id, int index, IModel<T> model)
 		{
 			super(id, index, model);
-			add(new AttributeModifier("style", true, new Model<String>("background-color:#80b6ed;"))
+			add(new AttributeModifier("style", "background-color:#80b6ed;")
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public boolean isEnabled(Component component)
 				{
@@ -79,13 +83,17 @@ public class OIRPage extends BasePage
 
 		final DataView<Contact> dataView = new DataView<Contact>("oir", dp)
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void populateItem(final Item<Contact> item)
 			{
 				Contact contact = item.getModelObject();
 				item.add(new ActionPanel("actions", item.getModel()));
-				item.add(new Link("toggleHighlite")
+				item.add(new Link<Void>("toggleHighlite")
 				{
+					private static final long serialVersionUID = 1L;
+
 					@Override
 					public void onClick()
 					{
@@ -99,8 +107,10 @@ public class OIRPage extends BasePage
 				item.add(new Label("homephone", contact.getHomePhone()));
 				item.add(new Label("cellphone", contact.getCellPhone()));
 
-				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
+				item.add(AttributeModifier.replace("class", new AbstractReadOnlyModel<String>()
 				{
+					private static final long serialVersionUID = 1L;
+
 					@Override
 					public String getObject()
 					{
@@ -121,6 +131,8 @@ public class OIRPage extends BasePage
 
 		add(new OrderByBorder("orderByFirstName", "firstName", dp)
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onSortChanged()
 			{
@@ -130,6 +142,8 @@ public class OIRPage extends BasePage
 
 		add(new OrderByBorder("orderByLastName", "lastName", dp)
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onSortChanged()
 			{

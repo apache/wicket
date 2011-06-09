@@ -32,6 +32,8 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
  */
 public class PagingPage extends BasePage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * constructor
 	 */
@@ -39,6 +41,8 @@ public class PagingPage extends BasePage
 	{
 		DataView<Contact> dataView = new DataView<Contact>("pageable", new ContactDataProvider())
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void populateItem(final Item<Contact> item)
 			{
@@ -50,8 +54,10 @@ public class PagingPage extends BasePage
 				item.add(new Label("homephone", contact.getHomePhone()));
 				item.add(new Label("cellphone", contact.getCellPhone()));
 
-				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
+				item.add(AttributeModifier.replace("class", new AbstractReadOnlyModel<String>()
 				{
+					private static final long serialVersionUID = 1L;
+
 					@Override
 					public String getObject()
 					{

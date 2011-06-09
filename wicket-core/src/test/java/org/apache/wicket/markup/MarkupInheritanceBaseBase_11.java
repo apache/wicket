@@ -22,7 +22,6 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 
-
 /**
  */
 public class MarkupInheritanceBaseBase_11 extends WebPage
@@ -31,12 +30,11 @@ public class MarkupInheritanceBaseBase_11 extends WebPage
 
 	/**
 	 * Construct.
-	 * 
 	 */
 	public MarkupInheritanceBaseBase_11()
 	{
 		WebMarkupContainer css = new WebMarkupContainer("css");
-		css.add(new AttributeModifier("src", true, new Model<String>("myStyle.css")));
+		css.add(AttributeModifier.replace("src", Model.of("myStyle.css")));
 		add(css);
 
 		add(new Label("label1", "base label 1"));

@@ -56,8 +56,8 @@ public class ClientSideImageMap extends Panel
 	{
 		super(id);
 		setOutputMarkupId(true);
-		add(new AttributeModifier("name", true, new PropertyModel<String>(this, "markupId")));
-		image.add(new AttributeModifier("usemap", true, new UsemapModel()));
+		add(AttributeModifier.replace("name", new PropertyModel<String>(this, "markupId")));
+		image.add(AttributeModifier.replace("usemap", new UsemapModel()));
 
 		areas = new RepeatingView("area");
 		add(areas);

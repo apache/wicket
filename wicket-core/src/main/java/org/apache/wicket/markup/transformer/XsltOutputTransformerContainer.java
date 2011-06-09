@@ -73,8 +73,8 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 
 		// Make the XSLT processor happy and allow him to handle the wicket
 		// tags and attributes which are in the wicket namespace
-		add(new AttributeModifier("xmlns:wicket", true, new Model<String>(
-			"http://wicket.apache.org/dtds.data/wicket-xhtml1.3-strict.dtd")));
+		add(AttributeModifier.replace("xmlns:wicket",
+			Model.of("http://wicket.apache.org/dtds.data/wicket-xhtml1.3-strict.dtd")));
 	}
 
 	/**

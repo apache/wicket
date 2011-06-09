@@ -106,8 +106,7 @@ public class ChoiceFilter<T> extends AbstractFilter
 
 		if (autoSubmit)
 		{
-			choice.add(new AttributeModifier("onchange", true, new Model<String>(
-				"this.form.submit();")));
+			choice.add(AttributeModifier.replace("onchange", "this.form.submit();"));
 		}
 		enableFocusTracking(choice);
 

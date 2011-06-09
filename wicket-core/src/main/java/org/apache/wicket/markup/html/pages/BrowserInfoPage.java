@@ -125,10 +125,10 @@ public class BrowserInfoPage extends WebPage
 		CharSequence url = urlFor(new BookmarkablePageRequestHandler(new PageProvider(
 			BrowserInfoPage.class, parameters)));
 
-		meta.add(new AttributeModifier("content", true, new Model<String>("0; url=" + url)));
+		meta.add(AttributeModifier.replace("content", Model.of("0; url=" + url)));
 		add(meta);
 		WebMarkupContainer link = new WebMarkupContainer("link");
-		link.add(new AttributeModifier("href", true, new Model<Serializable>((Serializable)url)));
+		link.add(AttributeModifier.replace("href", Model.of((Serializable)url)));
 		add(link);
 		add(new BrowserInfoForm("postback")
 		{

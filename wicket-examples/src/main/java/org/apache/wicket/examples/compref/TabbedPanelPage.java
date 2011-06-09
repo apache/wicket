@@ -39,6 +39,8 @@ import org.apache.wicket.model.Model;
  */
 public class TabbedPanelPage extends WicketExamplePage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor
 	 */
@@ -53,6 +55,7 @@ public class TabbedPanelPage extends WicketExamplePage
 		List<ITab> tabs = new ArrayList<ITab>();
 		tabs.add(new AbstractTab(new Model<String>("first tab"))
 		{
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			public Panel getPanel(String panelId)
@@ -64,6 +67,7 @@ public class TabbedPanelPage extends WicketExamplePage
 
 		tabs.add(new AbstractTab(new Model<String>("second tab"))
 		{
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			public Panel getPanel(String panelId)
@@ -75,6 +79,7 @@ public class TabbedPanelPage extends WicketExamplePage
 
 		tabs.add(new AbstractTab(new Model<String>("third tab"))
 		{
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			public Panel getPanel(String panelId)
@@ -86,7 +91,7 @@ public class TabbedPanelPage extends WicketExamplePage
 
 		// add the new tabbed panel, attribute modifier only used to switch
 		// between different css variations
-		add(new TabbedPanel("tabs", tabs).add(new AttributeModifier("class", true,
+		add(new TabbedPanel("tabs", tabs).add(AttributeModifier.replace("class",
 			TabbedPanelPage.this.getDefaultModel())));
 
 	}
@@ -100,8 +105,10 @@ public class TabbedPanelPage extends WicketExamplePage
 		add(new CssSwitchingLink("var4", "tabpanel4"));
 	}
 
-	protected class CssSwitchingLink extends Link
+	protected class CssSwitchingLink extends Link<Void>
 	{
+		private static final long serialVersionUID = 1L;
+
 		private final String clazz;
 
 		/**
@@ -142,6 +149,7 @@ public class TabbedPanelPage extends WicketExamplePage
 	 */
 	private static class TabPanel1 extends Panel
 	{
+		private static final long serialVersionUID = 1L;
 
 		/**
 		 * Constructor
@@ -164,6 +172,7 @@ public class TabbedPanelPage extends WicketExamplePage
 	 */
 	private static class TabPanel2 extends Panel
 	{
+		private static final long serialVersionUID = 1L;
 
 		/**
 		 * Constructor
@@ -186,6 +195,7 @@ public class TabbedPanelPage extends WicketExamplePage
 	 */
 	private static class TabPanel3 extends Panel
 	{
+		private static final long serialVersionUID = 1L;
 
 		/**
 		 * Constructor

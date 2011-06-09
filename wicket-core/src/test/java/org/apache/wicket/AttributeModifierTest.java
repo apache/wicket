@@ -16,14 +16,16 @@
  */
 package org.apache.wicket;
 
-import java.util.Map;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import java.util.Map;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.model.Model;
+import org.junit.Test;
 
 /**
  * Test case for the component tag attribute modifer test.
@@ -31,49 +33,31 @@ import org.apache.wicket.model.Model;
  * @author Chris Turner
  * @author Eelco Hillenius
  */
-public class AttributeModifierTest extends TestCase
+public class AttributeModifierTest
 {
-
 	/**
-	 * Create a test case instance.
-	 * 
-	 * @param name
-	 *            The test name
+	 * Test constructors.
 	 */
-	public AttributeModifierTest(final String name)
+	@Test(expected = IllegalArgumentException.class)
+	public void nullAttributeFailsConstruction()
 	{
-		super(name);
+		new AttributeModifier(null, new Model<String>("model"));
 	}
 
 	/**
-	 * Test constructors
+	 * Test constructors.
 	 */
-	public void testConstructor()
+	@Test
+	public void nullValueDoesntFailConstruction()
 	{
-		try
-		{
-			new AttributeModifier(null, new Model<String>("model"));
-			Assert.fail("IllegalArgumentException should be thrown on null attribute name");
-		}
-		catch (IllegalArgumentException e)
-		{
-			// Expected result
-		}
-
-		try
-		{
-			new AttributeModifier("test", null);
-		}
-		catch (IllegalArgumentException e)
-		{
-			Assert.fail("IllegalArgumentException should not be thrown on null replace model");
-		}
+		new AttributeModifier("test", null);
 	}
 
 	/**
 	 * Test that a null model does not throw null pointers.
 	 */
-	public void testNullModel()
+	@Test
+	public void nullModelDoesNotThrowNullPointerExceptions()
 	{
 		AttributeModifier modifier = new AttributeModifier("test", null);
 		XmlTag xmlTag = new XmlTag();
@@ -88,9 +72,10 @@ public class AttributeModifierTest extends TestCase
 	/**
 	 * Test overriding newValue (and using a null model).
 	 */
+	@Test
 	public void testNewValue()
 	{
-		AttributeModifier modifier = new AttributeModifier("test", true, null)
+		AttributeModifier modifier = new AttributeModifier("test", null)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -115,10 +100,10 @@ public class AttributeModifierTest extends TestCase
 	/**
 	 * Test simple model replacement.
 	 */
+	@Test
 	public void testModelReplacement()
 	{
-		AttributeModifier modifier = new AttributeModifier("test", true, new Model<String>(
-			"Ellioth Smith Rocks"));
+		AttributeModifier modifier = new AttributeModifier("test", Model.of("Ellioth Smith Rocks"));
 		XmlTag xmlTag = new XmlTag();
 		ComponentTag tag = new ComponentTag(xmlTag);
 		tag.setId("test");
@@ -132,28 +117,12 @@ public class AttributeModifierTest extends TestCase
 	}
 
 	/**
-	 * Test that an attribute is not added if we didn't want that (addAttributeIfNotPresent).
-	 */
-	public void testNoModelReplacementForNonExistingAttributeValue()
-	{
-		AttributeModifier modifier = new AttributeModifier("test", false, new Model<String>(
-			"Ellioth Smith Rocks"));
-		XmlTag xmlTag = new XmlTag();
-		ComponentTag tag = new ComponentTag(xmlTag);
-		tag.setId("test");
-		tag.setName("id");
-		modifier.replaceAttributeValue(null, tag);
-		Map<String, Object> attributes = tag.getAttributes();
-		assertTrue("attribute should not be added, as it didn't exist yet", attributes.isEmpty());
-	}
-
-	/**
 	 * Test that the current attribute is overwritten by the one that the model provides.
 	 */
+	@Test
 	public void testModelReplacementOverwritingExistingAttributeValue()
 	{
-		AttributeModifier modifier = new AttributeModifier("test", new Model<String>(
-			"Ellioth Smith Rocks"));
+		AttributeModifier modifier = new AttributeModifier("test", Model.of("Ellioth Smith Rocks"));
 		XmlTag xmlTag = new XmlTag();
 		ComponentTag tag = new ComponentTag(xmlTag);
 		tag.setId("test");
@@ -169,10 +138,10 @@ public class AttributeModifierTest extends TestCase
 	/**
 	 * Test that that the attribute modifier does nothing with not enabled.
 	 */
+	@Test
 	public void testNoNewValueWhenNotEnabled()
 	{
-		AttributeModifier modifier = new AttributeModifier("test", new Model<String>(
-			"Ellioth Smith Rocks"));
+		AttributeModifier modifier = new AttributeModifier("test", Model.of("Ellioth Smith Rocks"));
 		modifier.setEnabled(false);
 		XmlTag xmlTag = new XmlTag();
 		ComponentTag tag = new ComponentTag(xmlTag);
@@ -189,9 +158,10 @@ public class AttributeModifierTest extends TestCase
 	/**
 	 * Test using newValue for appending to the model value.
 	 */
+	@Test
 	public void testNewValueForModelValue()
 	{
-		AttributeModifier modifier = new AttributeModifier("test", true, new Model<String>("happy"))
+		AttributeModifier modifier = new AttributeModifier("test", Model.of("happy"))
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -216,6 +186,7 @@ public class AttributeModifierTest extends TestCase
 	/**
 	 * Test using newValue for appending to the current attribute value.
 	 */
+	@Test
 	public void testNewValueForAttributeValue()
 	{
 		AttributeModifier modifier = new AttributeModifier("test", null)
@@ -238,5 +209,65 @@ public class AttributeModifierTest extends TestCase
 		String replacement = (String)attributes.get("test");
 		assertNotNull(replacement);
 		assertEquals("one two", replacement);
+	}
+
+	/**
+	 * Test
+	 */
+	@Test
+	public void testNewValue1Append()
+	{
+		AttributeModifier appender = AttributeModifier.append("", null);
+		assertEquals("oldvalue newvalue", appender.newValue("oldvalue", "newvalue"));
+		assertEquals("newvalue", appender.newValue("", "newvalue"));
+		assertEquals("newvalue", appender.newValue(null, "newvalue"));
+		assertEquals("oldvalue", appender.newValue("oldvalue", ""));
+		assertEquals("oldvalue", appender.newValue("oldvalue", null));
+		assertEquals("", appender.newValue(null, null));
+	}
+
+	/**
+	 * Test
+	 */
+	@Test
+	public void testNewValue1Prepend()
+	{
+		AttributeModifier prepender = AttributeModifier.prepend("", null);
+		assertEquals("newvalue oldvalue", prepender.newValue("oldvalue", "newvalue"));
+		assertEquals("newvalue", prepender.newValue("", "newvalue"));
+		assertEquals("newvalue", prepender.newValue(null, "newvalue"));
+		assertEquals("oldvalue", prepender.newValue("oldvalue", ""));
+		assertEquals("oldvalue", prepender.newValue("oldvalue", null));
+		assertEquals("", prepender.newValue(null, null));
+	}
+
+	/**
+	 * Test
+	 */
+	@Test
+	public void testNewValue2Append()
+	{
+		AttributeModifier appender = AttributeModifier.append("", null).setSeparator(";");
+		assertEquals("oldvalue;newvalue", appender.newValue("oldvalue", "newvalue"));
+		assertEquals("newvalue", appender.newValue("", "newvalue"));
+		assertEquals("newvalue", appender.newValue(null, "newvalue"));
+		assertEquals("oldvalue", appender.newValue("oldvalue", ""));
+		assertEquals("oldvalue", appender.newValue("oldvalue", null));
+		assertEquals("", appender.newValue(null, null));
+	}
+
+	/**
+	 * Test
+	 */
+	@Test
+	public void testNewValue2Prepend()
+	{
+		AttributeModifier appender = AttributeModifier.prepend("", null).setSeparator(";");
+		assertEquals("newvalue;oldvalue", appender.newValue("oldvalue", "newvalue"));
+		assertEquals("newvalue", appender.newValue("", "newvalue"));
+		assertEquals("newvalue", appender.newValue(null, "newvalue"));
+		assertEquals("oldvalue", appender.newValue("oldvalue", ""));
+		assertEquals("oldvalue", appender.newValue("oldvalue", null));
+		assertEquals("", appender.newValue(null, null));
 	}
 }

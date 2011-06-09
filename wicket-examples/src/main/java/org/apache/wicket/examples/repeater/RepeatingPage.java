@@ -32,6 +32,8 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
  */
 public class RepeatingPage extends BasePage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor
 	 */
@@ -58,8 +60,10 @@ public class RepeatingPage extends BasePage
 			item.add(new Label("cellphone", contact.getCellPhone()));
 
 			final int idx = index;
-			item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
+			item.add(AttributeModifier.replace("class", new AbstractReadOnlyModel<String>()
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public String getObject()
 				{

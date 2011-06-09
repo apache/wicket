@@ -73,7 +73,7 @@ public class DebugBar extends DevUtilsPanel
 		super(id);
 		setMarkupId("wicketDebugBar");
 		setOutputMarkupId(true);
-		add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
+		add(AttributeModifier.replace("class", new AbstractReadOnlyModel<String>()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -82,7 +82,6 @@ public class DebugBar extends DevUtilsPanel
 			{
 				return "wicketDebugBar" + (DebugBar.this.hasErrorMessage() ? "Error" : "");
 			}
-
 		}));
 
 		add(new Image("logo", new PackageResourceReference(DebugBar.class, "wicket.png")));

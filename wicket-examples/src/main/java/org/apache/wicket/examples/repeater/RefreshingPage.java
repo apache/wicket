@@ -38,6 +38,8 @@ import org.apache.wicket.model.IModel;
  */
 public class RefreshingPage extends BasePage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor
 	 */
@@ -56,6 +58,8 @@ public class RefreshingPage extends BasePage
 		// create the refreshing view
 		RefreshingView<Contact> view = new RefreshingView<Contact>("view")
 		{
+			private static final long serialVersionUID = 1L;
+
 			/**
 			 * Return an iterator over models for items in the view
 			 */
@@ -77,8 +81,10 @@ public class RefreshingPage extends BasePage
 				item.add(new Label("homephone", contact.getHomePhone()));
 				item.add(new Label("cellphone", contact.getCellPhone()));
 
-				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
+				item.add(AttributeModifier.replace("class", new AbstractReadOnlyModel<String>()
 				{
+					private static final long serialVersionUID = 1L;
+
 					@Override
 					public String getObject()
 					{
@@ -90,8 +96,10 @@ public class RefreshingPage extends BasePage
 
 		add(view);
 
-		add(new Link("refreshLink")
+		add(new Link<Void>("refreshLink")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onClick()
 			{

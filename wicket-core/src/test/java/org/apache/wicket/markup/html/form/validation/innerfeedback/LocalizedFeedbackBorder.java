@@ -28,7 +28,6 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 @SuppressWarnings("serial")
 class LocalizedFeedbackBorder extends FormComponentFeedbackBorder
 {
-
 	private final FeedbackPanel feedback;
 
 	public LocalizedFeedbackBorder(String id)
@@ -37,7 +36,7 @@ class LocalizedFeedbackBorder extends FormComponentFeedbackBorder
 		WebMarkupContainer brdr = new WebMarkupContainer("border");
 		brdr.add(feedback = new FeedbackPanel("feedback", getMessagesFilter()));
 		brdr.add(getBodyContainer());
-		brdr.add(new AttributeModifier("style", true, new AbstractReadOnlyModel<String>()
+		brdr.add(AttributeModifier.replace("style", new AbstractReadOnlyModel<String>()
 		{
 			@Override
 			public String getObject()
@@ -62,5 +61,4 @@ class LocalizedFeedbackBorder extends FormComponentFeedbackBorder
 	{
 		super.onBeforeRender();
 	}
-
 }

@@ -33,8 +33,6 @@ public class AttributeModifierComponentPage extends WebPage
 
 	/**
 	 * Construct.
-	 * 
-	 * 
 	 */
 	public AttributeModifierComponentPage()
 	{
@@ -50,7 +48,7 @@ public class AttributeModifierComponentPage extends WebPage
 
 		// Label with attribute inserter
 		Label label3 = new Label("label3", new Model<String>("Label 3"));
-		label3.add(new AttributeModifier("class", true, new LoadableDetachableModel<String>()
+		label3.add(AttributeModifier.replace("class", new LoadableDetachableModel<String>()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -59,8 +57,6 @@ public class AttributeModifierComponentPage extends WebPage
 			{
 				return "insertLabel";
 			}
-
-
 		}));
 		add(label3);
 	}

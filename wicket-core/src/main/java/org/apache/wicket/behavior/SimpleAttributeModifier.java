@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.behavior;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.util.lang.Args;
@@ -25,7 +26,9 @@ import org.apache.wicket.util.lang.Args;
  * you know the value upfront and you do not need a pull-based model.
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @deprecated use {@link AttributeModifier#replace(String, java.util.Serializable)} instead
  */
+@Deprecated
 public class SimpleAttributeModifier extends Behavior
 {
 	private static final long serialVersionUID = 1L;

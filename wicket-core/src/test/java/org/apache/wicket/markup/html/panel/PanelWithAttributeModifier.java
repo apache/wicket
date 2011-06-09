@@ -17,7 +17,6 @@
 package org.apache.wicket.markup.html.panel;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.model.Model;
 
 /**
  * Panel that tests setting an attribute modifier on a panel.
@@ -36,6 +35,6 @@ public class PanelWithAttributeModifier extends Panel
 	public PanelWithAttributeModifier(final String id)
 	{
 		super(id);
-		add(new AttributeModifier("class", true, new Model<String>("test")));
+		add(AttributeModifier.replace("class", "test"));
 	}
 }

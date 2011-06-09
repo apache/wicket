@@ -21,8 +21,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.Model;
-
 
 /**
  * Mock page for testing.
@@ -55,7 +53,7 @@ public class SimplePage extends WebPage
 
 		Border border2 = new SimpleBorder("myBorder2");
 		border2.setRenderBodyOnly(false);
-		border2.add(new AttributeModifier("testAttr", true, new Model<String>("myValue")));
+		border2.add(AttributeModifier.replace("testAttr", "myValue"));
 		add(border2);
 	}
 }

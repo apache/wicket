@@ -24,7 +24,6 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 
-
 /**
  * page that demonstrates dataview and sorting
  * 
@@ -33,6 +32,8 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
  */
 public class SortingPage extends BasePage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * constructor
 	 */
@@ -41,6 +42,8 @@ public class SortingPage extends BasePage
 		SortableContactDataProvider dp = new SortableContactDataProvider();
 		final DataView<Contact> dataView = new DataView<Contact>("sorting", dp)
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void populateItem(final Item<Contact> item)
 			{
@@ -52,8 +55,10 @@ public class SortingPage extends BasePage
 				item.add(new Label("homephone", contact.getHomePhone()));
 				item.add(new Label("cellphone", contact.getCellPhone()));
 
-				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
+				item.add(AttributeModifier.replace("class", new AbstractReadOnlyModel<String>()
 				{
+					private static final long serialVersionUID = 1L;
+
 					@Override
 					public String getObject()
 					{
@@ -67,6 +72,8 @@ public class SortingPage extends BasePage
 
 		add(new OrderByBorder("orderByFirstName", "firstName", dp)
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onSortChanged()
 			{
@@ -76,6 +83,8 @@ public class SortingPage extends BasePage
 
 		add(new OrderByBorder("orderByLastName", "lastName", dp)
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onSortChanged()
 			{

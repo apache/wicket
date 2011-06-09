@@ -27,8 +27,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.transformer.AbstractOutputTransformerContainer;
 import org.apache.wicket.markup.transformer.NoopOutputTransformerContainer;
 import org.apache.wicket.markup.transformer.XsltTransformerBehavior;
-import org.apache.wicket.model.Model;
-
 
 /**
  * Mock page for testing.
@@ -41,7 +39,6 @@ public class Page_2 extends WebPage
 
 	/**
 	 * Construct.
-	 * 
 	 */
 	public Page_2()
 	{
@@ -87,7 +84,7 @@ public class Page_2 extends WebPage
 
 		Border border2 = new SimpleBorder("myBorder2");
 		border2.setRenderBodyOnly(false);
-		border2.add(new AttributeModifier("testAttr", true, new Model<String>("myValue")));
+		border2.add(AttributeModifier.replace("testAttr", "myValue"));
 		add(border2);
 
 		border2.add(new XsltTransformerBehavior());
