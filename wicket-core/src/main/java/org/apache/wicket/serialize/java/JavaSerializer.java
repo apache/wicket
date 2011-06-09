@@ -16,19 +16,39 @@
  */
 package org.apache.wicket.serialize.java;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.NotSerializableException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamClass;
+import java.io.OutputStream;
+
+import org.apache.wicket.Application;
+import org.apache.wicket.ThreadContext;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.serialize.ISerializer;
-import org.apache.wicket.util.io.IObjectStreamFactory;
-import org.apache.wicket.util.lang.WicketObjects;
+import org.apache.wicket.settings.IApplicationSettings;
+import org.apache.wicket.util.io.IOUtils;
+import org.apache.wicket.util.io.SerializableChecker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An implementation of {@link ISerializer} based on Java Serialization (ObjectOutputStream,
  * ObjectInputStream)
  * 
+ * Requires the application key to enable serialization and deserialisation outside thread in which
+ * application thread local is set
+ * 
  * @see IObjectStreamFactory
  */
 public class JavaSerializer implements ISerializer
 {
+	private static final Logger log = LoggerFactory.getLogger(JavaSerializer.class);
 	/**
 	 * The key of the application which can be used later to find the proper {@link IClassResolver}
 	 */
@@ -44,14 +64,189 @@ public class JavaSerializer implements ISerializer
 		this.applicationKey = applicationKey;
 	}
 
-	public byte[] serialize(final Object page)
+	public byte[] serialize(final Object object)
 	{
-		return WicketObjects.objectToByteArray(page, applicationKey);
+		try
+		{
+			final ByteArrayOutputStream out = new ByteArrayOutputStream();
+			ObjectOutputStream oos = null;
+			try
+			{
+				oos = new CheckerObjectOutputStream(out);
+				oos.writeObject(applicationKey);
+				oos.writeObject(object);
+			}
+			finally
+			{
+				try
+				{
+					IOUtils.close(oos);
+				}
+				finally
+				{
+					out.close();
+				}
+			}
+			return out.toByteArray();
+		}
+		catch (Exception e)
+		{
+			log.error("Error serializing object " + object.getClass() + " [object=" + object + "]",
+				e);
+		}
+		return null;
 	}
 
 	public Object deserialize(final byte[] data)
 	{
-		return WicketObjects.byteArrayToObject(data);
+		ThreadContext old = ThreadContext.get(false);
+		try
+		{
+			final ByteArrayInputStream in = new ByteArrayInputStream(data);
+			ObjectInputStream ois = null;
+			try
+			{
+				ois = new ClassResolverObjectInputStream(in);
+				String applicationName = (String)ois.readObject();
+				if (applicationName != null && !Application.exists())
+				{
+					Application app = Application.get(applicationName);
+					if (app != null)
+					{
+						ThreadContext.setApplication(app);
+					}
+				}
+				return ois.readObject();
+			}
+			finally
+			{
+				try
+				{
+					IOUtils.close(ois);
+				}
+				finally
+				{
+					in.close();
+				}
+			}
+		}
+		catch (ClassNotFoundException e)
+		{
+			throw new RuntimeException("Could not deserialize object using JavaSerializer", e);
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException("Could not deserialize object using JavaSerializer", e);
+		}
+		finally
+		{
+			ThreadContext.restore(old);
+		}
 	}
 
+	/**
+	 * Extend {@link ObjectInputStream} to add framework class resolution logic.
+	 */
+	private static class ClassResolverObjectInputStream extends ObjectInputStream
+	{
+		public ClassResolverObjectInputStream(InputStream in) throws IOException
+		{
+			super(in);
+		}
+
+		// This override is required to resolve classes inside in different bundle, i.e.
+		// The classes can be resolved by OSGI classresolver implementation
+		@Override
+		protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException,
+			ClassNotFoundException
+		{
+			String className = desc.getName();
+
+			try
+			{
+				return super.resolveClass(desc);
+			}
+			catch (ClassNotFoundException ex1)
+			{
+				// ignore this exception.
+				log.debug("Class not found by the object outputstream itself, trying the IClassResolver");
+			}
+
+
+			Class<?> candidate = null;
+			try
+			{
+				// Can the application always be taken??
+				// Should be if serialization happened in thread with application set
+				// (WICKET-2195)
+				Application application = Application.get();
+				IApplicationSettings applicationSettings = application.getApplicationSettings();
+				IClassResolver classResolver = applicationSettings.getClassResolver();
+
+				candidate = classResolver.resolveClass(className);
+				if (candidate == null)
+				{
+					candidate = super.resolveClass(desc);
+				}
+			}
+			catch (WicketRuntimeException ex)
+			{
+				if (ex.getCause() instanceof ClassNotFoundException)
+				{
+					throw (ClassNotFoundException)ex.getCause();
+				}
+			}
+			return candidate;
+		}
+	}
+	/**
+	 * Write objects to the wrapped output stream and log a meaningful message for serialization
+	 * problems
+	 */
+	private static class CheckerObjectOutputStream extends ObjectOutputStream
+	{
+		public CheckerObjectOutputStream(OutputStream out) throws IOException
+		{
+			super(out);
+		}
+
+		@Override
+		protected final void writeObjectOverride(final Object obj) throws IOException
+		{
+			try
+			{
+				super.writeObject(obj);
+			}
+			catch (IOException e)
+			{
+				if (SerializableChecker.isAvailable())
+				{
+					// trigger serialization again, but this time gather
+					// some more info
+					new SerializableChecker((NotSerializableException)e).writeObject(obj);
+					// if we get here, we didn't fail, while we
+					// should;
+					throw e;
+				}
+				throw e;
+			}
+			catch (RuntimeException e)
+			{
+				log.error("error writing object " + obj + ": " + e.getMessage(), e);
+				throw e;
+			}
+		}
+
+		@Override
+		public void flush() throws IOException
+		{
+			super.flush();
+		}
+
+		@Override
+		public void close() throws IOException
+		{
+			super.close();
+		}
+	}
 }

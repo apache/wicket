@@ -29,14 +29,10 @@ import java.util.HashMap;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.io.ByteCountingOutputStream;
-import org.apache.wicket.util.io.IOUtils;
-import org.apache.wicket.util.io.IObjectStreamFactory;
-import org.apache.wicket.util.io.IObjectStreamFactory.DefaultObjectStreamFactory;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -237,62 +233,6 @@ public class WicketObjects
 	}
 
 	/**
-	 * De-serializes an object from a byte array.
-	 * 
-	 * @param data
-	 *            The serialized object
-	 * @return The object
-	 */
-	public static Object byteArrayToObject(final byte[] data)
-	{
-		ThreadContext old = ThreadContext.get(false);
-		try
-		{
-			final ByteArrayInputStream in = new ByteArrayInputStream(data);
-			ObjectInputStream ois = null;
-			try
-			{
-				ois = objectStreamFactory.newObjectInputStream(in);
-				String applicationName = (String)ois.readObject();
-				if (applicationName != null && !Application.exists())
-				{
-					Application app = Application.get(applicationName);
-					if (app != null)
-					{
-						ThreadContext.setApplication(app);
-					}
-				}
-				return ois.readObject();
-			}
-			finally
-			{
-				try
-				{
-					IOUtils.close(ois);
-				}
-				finally
-				{
-					in.close();
-				}
-			}
-		}
-		catch (ClassNotFoundException e)
-		{
-			throw new RuntimeException("Could not deserialize object using `" +
-				objectStreamFactory.getClass().getName() + "` object factory", e);
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException("Could not deserialize object using `" +
-				objectStreamFactory.getClass().getName() + "` object factory", e);
-		}
-		finally
-		{
-			ThreadContext.restore(old);
-		}
-	}
-
-	/**
 	 * Makes a deep clone of an object by serializing and deserializing it. The object must be fully
 	 * serializable to be cloned. This method will not clone wicket Components, it will just reuse
 	 * those instances so that the complete component tree is not copied over only the model data.
@@ -329,13 +269,6 @@ public class WicketObjects
 			}
 		}
 	}
-
-	/**
-	 * The default object stream factory to use. Keep this as a static here opposed to in
-	 * Application, as the Application most likely isn't available in the threads we'll be using
-	 * this with.
-	 */
-	private static IObjectStreamFactory objectStreamFactory = new IObjectStreamFactory.DefaultObjectStreamFactory();
 
 	/**
 	 * Strategy for calculating sizes of objects. Note: I didn't make this an application setting as
@@ -452,98 +385,6 @@ public class WicketObjects
 	}
 
 	/**
-	 * Serializes an object into a byte array.
-	 * 
-	 * @param object
-	 *            The object
-	 * 
-	 * @param applicationName
-	 *            The name of application - required when serialization and deserialisation happen
-	 *            outside thread in which application thread local is set
-	 * 
-	 * @return The serialized object
-	 */
-	public static byte[] objectToByteArray(final Object object, String applicationName)
-	{
-		try
-		{
-			final ByteArrayOutputStream out = new ByteArrayOutputStream();
-			ObjectOutputStream oos = null;
-			try
-			{
-				oos = objectStreamFactory.newObjectOutputStream(out);
-				oos.writeObject(applicationName);
-				oos.writeObject(object);
-			}
-			finally
-			{
-				try
-				{
-					IOUtils.close(oos);
-				}
-				finally
-				{
-					out.close();
-				}
-			}
-			return out.toByteArray();
-		}
-		catch (Exception e)
-		{
-			log.error("Error serializing object " + object.getClass() + " [object=" + object + "]",
-				e);
-		}
-		return null;
-	}
-
-	/**
-	 * Serializes an object into a byte array.
-	 * 
-	 * @param object
-	 *            The object
-	 * @return The serialized object
-	 */
-	public static byte[] objectToByteArray(final Object object)
-	{
-		try
-		{
-			final ByteArrayOutputStream out = new ByteArrayOutputStream();
-			ObjectOutputStream oos = null;
-			try
-			{
-				oos = objectStreamFactory.newObjectOutputStream(out);
-				if (Application.exists())
-				{
-					oos.writeObject(Application.get().getApplicationKey());
-				}
-				else
-				{
-					oos.writeObject(null);
-				}
-				oos.writeObject(object);
-			}
-			finally
-			{
-				try
-				{
-					IOUtils.close(oos);
-				}
-				finally
-				{
-					out.close();
-				}
-			}
-			return out.toByteArray();
-		}
-		catch (Exception e)
-		{
-			log.error("Error serializing object " + object.getClass() + " [object=" + object + "]",
-				e);
-		}
-		return null;
-	}
-
-	/**
 	 * Sets the strategy for determining the sizes of objects.
 	 * 
 	 * @param objectSizeOfStrategy
@@ -560,27 +401,6 @@ public class WicketObjects
 			WicketObjects.objectSizeOfStrategy = objectSizeOfStrategy;
 		}
 		log.info("using " + objectSizeOfStrategy + " for calculating object sizes");
-	}
-
-	/**
-	 * Configure this utility class to use the provided {@link IObjectStreamFactory} instance.
-	 * 
-	 * @param objectStreamFactory
-	 *            The factory instance to use. If you pass in null, the
-	 *            {@link DefaultObjectStreamFactory default} will be set (again). Pass null to reset
-	 *            to the default.
-	 */
-	public static void setObjectStreamFactory(IObjectStreamFactory objectStreamFactory)
-	{
-		if (objectStreamFactory == null)
-		{
-			WicketObjects.objectStreamFactory = new IObjectStreamFactory.DefaultObjectStreamFactory();
-		}
-		else
-		{
-			WicketObjects.objectStreamFactory = objectStreamFactory;
-		}
-		log.info("using " + WicketObjects.objectStreamFactory + " for creating object streams");
 	}
 
 	/**
