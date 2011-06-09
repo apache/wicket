@@ -21,8 +21,6 @@ import java.util.List;
 
 import org.apache.wicket.threadtest.tester.SimpleGetCommand;
 import org.apache.wicket.threadtest.tester.Tester;
-import org.apache.wicket.util.io.WicketObjectStreamFactory;
-import org.apache.wicket.util.lang.WicketObjects;
 
 /**
  * @author eelcohillenius
@@ -43,7 +41,6 @@ public class App1Test1
 		// you can turn this on if you e.g. want to attach to a profiler
 // Thread.sleep(5000);
 
-		WicketObjects.setObjectStreamFactory(new WicketObjectStreamFactory());
 		SimpleGetCommand getCmd = new SimpleGetCommand(gets, 10);
 		// getCmd.setPrintResponse(true);
 		Tester tester = new Tester(getCmd, 100, true);
