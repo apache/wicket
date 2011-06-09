@@ -74,9 +74,6 @@ public class AttributeModifier extends Behavior implements IClusterable
 
 	private static final long serialVersionUID = 1L;
 
-	/** Flag for en/disabling the modifier. */
-	private boolean enabled = true;
-
 	/** Attribute specification. */
 	private final String attribute;
 
@@ -160,12 +157,6 @@ public class AttributeModifier extends Behavior implements IClusterable
 	}
 
 	@Override
-	public boolean isEnabled(Component component)
-	{
-		return enabled;
-	}
-
-	@Override
 	public final void onComponentTag(Component component, ComponentTag tag)
 	{
 		if (tag.getType() != TagType.CLOSE)
@@ -210,26 +201,12 @@ public class AttributeModifier extends Behavior implements IClusterable
 	}
 
 	/**
-	 * Sets whether this attribute modifier is enabled or not.
-	 * 
-	 * @param enabled
-	 *            Whether enabled or not
-	 * @return this
-	 */
-	public final AttributeModifier setEnabled(final boolean enabled)
-	{
-		this.enabled = enabled;
-		return this;
-	}
-
-	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString()
 	{
-		return "[AttributeModifier attribute=" + attribute + ", enabled=" + enabled +
-			", replaceModel=" + replaceModel + "]";
+		return "[AttributeModifier attribute=" + attribute + ", replaceModel=" + replaceModel + "]";
 	}
 
 	/**

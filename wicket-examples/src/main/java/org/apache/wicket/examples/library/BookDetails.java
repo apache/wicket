@@ -18,6 +18,7 @@ package org.apache.wicket.examples.library;
 
 
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.examples.library.Book.WritingStyle;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -57,10 +58,10 @@ public final class BookDetails extends AuthenticatedWebPage
 		add(new Label("title", book.getTitle()));
 		add(new Label("author", book.getAuthor()));
 		add(new Label("fiction", Boolean.toString(book.getFiction())));
-		add(BookDetails.link("companion", book.getCompanionBook(), getLocalizer().getString(
-			"noBookTitle", this)));
-		add(BookDetails.link("related", book.getRelatedBook(), getLocalizer().getString(
-			"noBookTitle", this)));
+		add(BookDetails.link("companion", book.getCompanionBook(),
+			getLocalizer().getString("noBookTitle", this)));
+		add(BookDetails.link("related", book.getRelatedBook(),
+			getLocalizer().getString("noBookTitle", this)));
 
 		String writingStyles;
 		final boolean hasStyles = (book.getWritingStyles() != null) &&
@@ -84,8 +85,14 @@ public final class BookDetails extends AuthenticatedWebPage
 
 		Label writingStylesLabel = new Label("writingStyles", writingStyles);
 
-		final AttributeModifier italic = new AttributeModifier("class", new Model<String>("italic"));
-		italic.setEnabled(!hasStyles);
+		final AttributeModifier italic = new AttributeModifier("class", new Model<String>("italic"))
+		{
+			@Override
+			public boolean isEnabled(Component component)
+			{
+				return !hasStyles;
+			}
+		};
 
 		add(writingStylesLabel.add(italic));
 		add(EditBook.link("edit", book.getId()));

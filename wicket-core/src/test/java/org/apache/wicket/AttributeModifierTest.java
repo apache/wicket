@@ -141,8 +141,15 @@ public class AttributeModifierTest
 	@Test
 	public void testNoNewValueWhenNotEnabled()
 	{
-		AttributeModifier modifier = new AttributeModifier("test", Model.of("Ellioth Smith Rocks"));
-		modifier.setEnabled(false);
+		AttributeModifier modifier = new AttributeModifier("test", Model.of("Ellioth Smith Rocks"))
+		{
+			@Override
+			public boolean isEnabled(Component component)
+			{
+				return false;
+			}
+		};
+
 		XmlTag xmlTag = new XmlTag();
 		ComponentTag tag = new ComponentTag(xmlTag);
 		tag.setId("test");
