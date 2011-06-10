@@ -60,10 +60,9 @@ public class AttributeModifierComponentTest extends WicketTestCase
 	 */
 	public void testComponentTagAttributeModification() throws Exception
 	{
-		// Validate the document
 		String document = tester.getLastResponseAsString();
-		log.info(document);
-		Assert.assertTrue(validateDocument(document));
+		// log.info(document);
+		Assert.assertTrue(document, validateDocument(document));
 	}
 
 	/**
@@ -103,5 +102,4 @@ public class AttributeModifierComponentTest extends WicketTestCase
 		validator.addRootElement(html);
 		return validator.isDocumentValid(document);
 	}
-
 }

@@ -156,7 +156,7 @@ public final class DiffUtil
 				throw new RuntimeException(e);
 			}
 
-			System.out.println(r.toString());
+			// System.out.println(r.toString());
 
 			if (failWithAssert)
 			{

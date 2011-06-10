@@ -61,9 +61,6 @@ public class MarkupSettings implements IMarkupSettings
 	 */
 	private boolean stripWicketTags = false;
 
-	/** In order to remove <?xml?> from output as required by IE quirks mode */
-	private boolean stripXmlDeclarationFromOutput;
-
 	/**
 	 * Construct
 	 */
@@ -140,14 +137,6 @@ public class MarkupSettings implements IMarkupSettings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IMarkupSettings#getStripXmlDeclarationFromOutput()
-	 */
-	public boolean getStripXmlDeclarationFromOutput()
-	{
-		return stripXmlDeclarationFromOutput;
-	}
-
-	/**
 	 * @see org.apache.wicket.settings.IMarkupSettings#getThrowExceptionOnMissingXmlDeclaration()
 	 */
 	public boolean getThrowExceptionOnMissingXmlDeclaration()
@@ -218,14 +207,6 @@ public class MarkupSettings implements IMarkupSettings
 	public void setStripWicketTags(boolean stripWicketTags)
 	{
 		this.stripWicketTags = stripWicketTags;
-	}
-
-	/**
-	 * @see org.apache.wicket.settings.IMarkupSettings#setStripXmlDeclarationFromOutput(boolean)
-	 */
-	public void setStripXmlDeclarationFromOutput(final boolean strip)
-	{
-		stripXmlDeclarationFromOutput = strip;
 	}
 
 	/**

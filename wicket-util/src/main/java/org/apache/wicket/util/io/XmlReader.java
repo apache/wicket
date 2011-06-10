@@ -25,6 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -44,9 +45,6 @@ public final class XmlReader extends Reader
 
 	/** Null, if JVM default. Else from <?xml encoding=""> */
 	private String encoding;
-
-	/** Null or if found in the markup, the whole <?xml ...?> string */
-	private CharSequence xmlDeclarationString;
 
 	/** The input stream to read the data from */
 	private final InputStream inputStream;
@@ -68,9 +66,6 @@ public final class XmlReader extends Reader
 	public XmlReader(final InputStream inputStream, final String defaultEncoding)
 		throws IOException
 	{
-		// The xml parser does not have a parent filter
-		super();
-
 		Args.notNull(inputStream, "inputStream");
 
 		if (!inputStream.markSupported())
@@ -97,16 +92,6 @@ public final class XmlReader extends Reader
 	}
 
 	/**
-	 * Return the XML declaration string, in case if found in the markup.
-	 * 
-	 * @return Null, if not found.
-	 */
-	public final CharSequence getXmlDeclaration()
-	{
-		return xmlDeclarationString;
-	}
-
-	/**
 	 * Reads and parses markup from a resource such as file.
 	 * 
 	 * @throws IOException
@@ -118,10 +103,11 @@ public final class XmlReader extends Reader
 		inputStream.mark(readAheadSize);
 
 		// read-ahead the input stream and check if it starts with <?xml..?>.
-		if (getXmlDeclaration(inputStream, readAheadSize))
+		String xmlDeclaration = getXmlDeclaration(inputStream, readAheadSize);
+		if (!Strings.isEmpty(xmlDeclaration))
 		{
 			// If yes than determine the encoding from the xml decl
-			encoding = determineEncoding(xmlDeclarationString);
+			encoding = determineEncoding(xmlDeclaration);
 		}
 		else
 		{
@@ -186,7 +172,7 @@ public final class XmlReader extends Reader
 	 * @return true, if &lt;?xml ..?&gt; has been found
 	 * @throws IOException
 	 */
-	private final boolean getXmlDeclaration(final InputStream in, final int readAheadSize)
+	private final String getXmlDeclaration(final InputStream in, final int readAheadSize)
 		throws IOException
 	{
 		// Max one line
@@ -212,12 +198,11 @@ public final class XmlReader extends Reader
 		if (!matcher.matches())
 		{
 			// No
-			return false;
+			return null;
 		}
 
 		// Save the whole <?xml ..> string for later
-		xmlDeclarationString = pushBack.toString().trim();
-		return true;
+		return pushBack.toString().trim();
 	}
 
 	/**

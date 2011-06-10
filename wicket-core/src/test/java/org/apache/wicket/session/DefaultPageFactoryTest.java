@@ -17,9 +17,9 @@
 package org.apache.wicket.session;
 
 import org.apache.wicket.IPageFactory;
-import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.flow.ResetResponseException;
 import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -35,7 +35,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 	/**
 	 * @author ivaynberg
 	 */
-	public static class AbortAndRespondPage1 extends Page
+	public static class AbortAndRespondPage1 extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -46,12 +46,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		{
 			throw new ResetResponseException(new EmptyRequestHandler())
 			{
-
-				/**
-				 * 
-				 */
 				private static final long serialVersionUID = 1L;
-
 			};
 		}
 	}
@@ -59,7 +54,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 	/**
 	 * @author ivaynberg
 	 */
-	public static class AbortAndRespondPage2 extends Page
+	public static class AbortAndRespondPage2 extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -72,21 +67,15 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		{
 			throw new ResetResponseException(new EmptyRequestHandler())
 			{
-
-				/**
-				 * 
-				 */
 				private static final long serialVersionUID = 1L;
-
 			};
 		}
-
 	}
 
 	/**
 	 * @author ivaynberg
 	 */
-	public static class AbortAndRespondPage3 extends Page
+	public static class AbortAndRespondPage3 extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -97,12 +86,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		{
 			throw new ResetResponseException(new EmptyRequestHandler())
 			{
-
-				/**
-				 * 
-				 */
 				private static final long serialVersionUID = 1L;
-
 			};
 		}
 
@@ -115,12 +99,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		{
 			throw new ResetResponseException(new EmptyRequestHandler())
 			{
-
-				/**
-				 * 
-				 */
 				private static final long serialVersionUID = 1L;
-
 			};
 		}
 
@@ -128,7 +107,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 
 	/**
 	 */
-	public static class PageThrowingCheckedException extends Page
+	public static class PageThrowingCheckedException extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 

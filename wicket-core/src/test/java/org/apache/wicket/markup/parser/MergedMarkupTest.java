@@ -40,7 +40,6 @@ public class MergedMarkupTest extends TestCase
 		Page page = new SubPageWithoutMarkup();
 		Markup markup = page.getAssociatedMarkup();
 		MarkupResourceStream stream = markup.getMarkupResourceStream();
-		assertEquals("<?xml version=\"1.0\" encoding=\"utf-8\"?>", stream.getXmlDeclaration());
 		assertEquals("utf-8", stream.getEncoding());
 		assertEquals(MarkupParser.WICKET, stream.getWicketNamespace());
 	}
@@ -54,7 +53,6 @@ public class MergedMarkupTest extends TestCase
 
 		Page page = new SubPageWithMarkup();
 		MarkupStream markup = page.getAssociatedMarkupStream(true);
-		assertEquals("<?xml version=\"1.0\" encoding=\"utf-8\"?>", markup.getXmlDeclaration());
 		assertEquals("utf-8", markup.getEncoding());
 		assertEquals(MarkupParser.WICKET, markup.getWicketNamespace());
 	}

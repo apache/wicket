@@ -271,16 +271,6 @@ public class MarkupStream
 	}
 
 	/**
-	 * Return the XML declaration string, in case if found in the markup.
-	 * 
-	 * @return Null, if not found.
-	 */
-	public String getXmlDeclaration()
-	{
-		return markup.getMarkupResourceStream().getXmlDeclaration();
-	}
-
-	/**
 	 * @return True if this markup stream has more MarkupElement elements
 	 */
 	public boolean hasMore()

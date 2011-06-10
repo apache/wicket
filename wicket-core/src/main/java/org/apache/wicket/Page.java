@@ -26,7 +26,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.UnauthorizedActionException;
 import org.apache.wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
-import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.MarkupType;
@@ -36,7 +35,6 @@ import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IDebugSettings;
@@ -801,61 +799,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Set-up response with appropriate content type, locale and encoding. The locale is set equal
-	 * to the session's locale. The content type header contains information about the markup type
-	 * (@see #getMarkupType()) and the encoding. The response (and request) encoding is determined
-	 * by an application setting (@see ApplicationSettings#getResponseRequestEncoding()). In
-	 * addition, if the page's markup contains a xml declaration like &lt?xml ... ?&gt; an xml
-	 * declaration with proper encoding information is written to the output as well, provided it is
-	 * not disabled by an application setting (@see
-	 * ApplicationSettings#getStripXmlDeclarationFromOutput()).
-	 * <p>
-	 * Note: Prior to Wicket 1.1 the output encoding was determined by the page's markup encoding.
-	 * Because this caused uncertainties about the /request/ encoding, it has been changed in favor
-	 * of the new, much safer, approach. Please see the Wiki for more details.
-	 */
-	protected void configureResponse()
-	{
-		// Get the response and application
-		final RequestCycle cycle = getRequestCycle();
-		final Application application = Application.get();
-		final WebResponse response = (WebResponse)cycle.getResponse();
-
-		// Determine encoding
-		final String encoding = application.getRequestCycleSettings().getResponseRequestEncoding();
-
-		// Set content type based on markup type for page
-		response.setContentType(getMarkupType().getMimeType() + "; charset=" + encoding);
-
-		// Write out an xml declaration if the markup stream and settings allow
-		final IMarkupFragment markup = getMarkup();
-		if ((markup != null) && (markup.getMarkupResourceStream().getXmlDeclaration() != null) &&
-			(application.getMarkupSettings().getStripXmlDeclarationFromOutput() == false))
-		{
-			// Gwyn - Wed, 21 May 2008 12:23:41
-			// If the xml declaration in the markup used double-quotes, use them in the output too
-			// Whether it should be or not, sometimes it's significant...
-			final String quoteChar = (markup.getMarkupResourceStream()
-				.getXmlDeclaration()
-				.indexOf('\"') == -1) ? "'" : "\"";
-
-			response.write("<?xml version=");
-			response.write(quoteChar);
-			response.write("1.0");
-			response.write(quoteChar);
-			response.write(" encoding=");
-			response.write(quoteChar);
-			response.write(encoding);
-			response.write(quoteChar);
-			response.write("?>");
-		}
-
-		// Set response locale from session locale
-		// TODO: WICKET NG Is this really necessary
-		// response.setLocale(getSession().getLocale());
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE.
 	 * 
 	 * @see org.apache.wicket.Component#internalOnModelChanged()
@@ -981,9 +924,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	@Override
 	protected void onRender()
 	{
-		// Configure response object with locale and content type
-		configureResponse();
-
 		// Loop through the markup in this container
 		MarkupStream markupStream = new MarkupStream(getMarkup());
 		renderAll(markupStream, null);

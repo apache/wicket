@@ -181,22 +181,21 @@ public abstract class AbstractMarkupParser
 		parseMarkup();
 
 		markupResourceStream.setEncoding(xmlParser.getEncoding());
-		markupResourceStream.setXmlDeclaration(xmlParser.getXmlDeclaration());
 		markupResourceStream.setDoctype(xmlParser.getDoctype());
 
-		if (xmlParser.getXmlDeclaration() == null)
+		if (xmlParser.getEncoding() == null)
 		{
+			String a = "The markup file does not have a XML declaration prolog with 'encoding' attribute";
+			String b = ". E.g. <?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
+
 			if (markupSettings.getThrowExceptionOnMissingXmlDeclaration())
 			{
-				throw new MarkupException(markupResourceStream.getResource(),
-					"The markup file does not have a XML declaration prolog. "
-						+ ". E.g. <?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
+				throw new MarkupException(markupResourceStream.getResource(), a + b);
 			}
 			else
 			{
-				log.debug("The markup file does not have a XML declaration prolog: " +
-					markupResourceStream.getResource() +
-					". It is more save to use it. E.g. <?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
+				log.debug(a + ":" + markupResourceStream.getResource() +
+					". It is more save to use it" + b);
 			}
 		}
 
@@ -293,7 +292,6 @@ public abstract class AbstractMarkupParser
 			}
 
 			markup.getMarkupResourceStream().setEncoding(xmlParser.getEncoding());
-			markup.getMarkupResourceStream().setXmlDeclaration(xmlParser.getXmlDeclaration());
 			markup.getMarkupResourceStream().setDoctype(xmlParser.getDoctype());
 
 			final MarkupStream markupStream = new MarkupStream(markup);

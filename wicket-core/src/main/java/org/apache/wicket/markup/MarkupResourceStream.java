@@ -65,9 +65,6 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	/** In case of the inherited markup, this is the base markup */
 	private transient Markup baseMarkup;
 
-	/** If found in the markup, the <?xml ...?> string */
-	private CharSequence xmlDeclaration;
-
 	/** The encoding as found in <?xml ... encoding="" ?>. Null, else */
 	private String encoding;
 
@@ -211,16 +208,6 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	}
 
 	/**
-	 * Return the XML declaration string, in case if found in the markup.
-	 * 
-	 * @return Null, if not found.
-	 */
-	public String getXmlDeclaration()
-	{
-		return (xmlDeclaration == null ? null : xmlDeclaration.toString());
-	}
-
-	/**
 	 * Gets the markup encoding. A markup encoding may be specified in a markup file with an XML
 	 * encoding specifier of the form &lt;?xml ... encoding="..." ?&gt;.
 	 * 
@@ -276,17 +263,6 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 		{
 			log.debug("You are using a non-standard namespace name: '{}'", wicketNamespace);
 		}
-	}
-
-	/**
-	 * Sets xmlDeclaration.
-	 * 
-	 * @param xmlDeclaration
-	 *            xmlDeclaration
-	 */
-	final void setXmlDeclaration(final CharSequence xmlDeclaration)
-	{
-		this.xmlDeclaration = xmlDeclaration;
 	}
 
 	/**

@@ -78,13 +78,6 @@ public interface IMarkupSettings
 	boolean getStripWicketTags();
 
 	/**
-	 * 
-	 * @since 1.1
-	 * @return if true, xml declaration will be removed.
-	 */
-	boolean getStripXmlDeclarationFromOutput();
-
-	/**
 	 * @since 1.3
 	 * @return if true, an exception is thrown if the markup file does not contain a xml declaration
 	 */
@@ -155,14 +148,6 @@ public interface IMarkupSettings
 	 *            whether to remove wicket tags from the output
 	 */
 	void setStripWicketTags(boolean stripWicketTags);
-
-	/**
-	 * 
-	 * @since 1.1
-	 * @param strip
-	 *            if true, xml declaration will be stripped from output
-	 */
-	void setStripXmlDeclarationFromOutput(final boolean strip);
 
 	/**
 	 * If true, an exception is thrown if the markup file does not contain a xml declaration

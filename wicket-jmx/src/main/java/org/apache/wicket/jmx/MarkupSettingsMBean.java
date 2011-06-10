@@ -71,11 +71,6 @@ public interface MarkupSettingsMBean
 	boolean getStripWicketTags();
 
 	/**
-	 * @return if true, xml declaration will be removed.
-	 */
-	boolean getStripXmlDeclarationFromOutput();
-
-	/**
 	 * Application default for automatic link resolution. Please
 	 * 
 	 * @see org.apache.wicket.markup.resolver.AutoLinkResolver and
@@ -139,10 +134,4 @@ public interface MarkupSettingsMBean
 	 *            whether to remove wicket tags from the output
 	 */
 	void setStripWicketTags(boolean stripWicketTags);
-
-	/**
-	 * @param strip
-	 *            if true, xml declaration will be stripped from output
-	 */
-	void setStripXmlDeclarationFromOutput(final boolean strip);
 }

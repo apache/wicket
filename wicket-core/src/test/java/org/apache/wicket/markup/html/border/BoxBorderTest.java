@@ -58,7 +58,7 @@ public class BoxBorderTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	@SuppressWarnings( { "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	public void test3() throws Exception
 	{
 		executeTest(BoxBorderTestPage_3.class, "BoxBorderTestPage_ExpectedResult_3.html");
@@ -71,8 +71,7 @@ public class BoxBorderTest extends WicketTestCase
 			"border:myForm:border_body:name");
 		assertEquals("", input.getDefaultModelObjectAsString());
 
-		tester.getRequest().getPostParameters().setParameterValue(input.getInputName(),
-			"jdo");
+		tester.getRequest().getPostParameters().setParameterValue(input.getInputName(), "jdo");
 		tester.submitForm(form.getPageRelativePath());
 
 		input = (TextField<String>)tester.getLastRenderedPage().get(
@@ -148,7 +147,6 @@ public class BoxBorderTest extends WicketTestCase
 		markupSettings.setCompressWhitespace(true);
 		markupSettings.setStripComments(true);
 		markupSettings.setStripWicketTags(true);
-		markupSettings.setStripXmlDeclarationFromOutput(true);
 
 		executeTest(BoxBorderTestPage_1.class, "BoxBorderTestPage_ExpectedResult_7.html");
 	}

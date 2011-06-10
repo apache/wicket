@@ -86,11 +86,6 @@ public final class XmlPullParser implements IXmlPullParser
 		return xmlReader.getEncoding();
 	}
 
-	public final CharSequence getXmlDeclaration()
-	{
-		return xmlReader.getXmlDeclaration();
-	}
-
 	public final CharSequence getDoctype()
 	{
 		return doctype;

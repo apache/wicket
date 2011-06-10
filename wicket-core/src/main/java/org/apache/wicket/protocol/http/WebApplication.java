@@ -31,6 +31,8 @@ import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxRequestTargetListenerCollection;
+import org.apache.wicket.markup.MarkupType;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.pages.AccessDeniedPage;
 import org.apache.wicket.markup.html.pages.InternalErrorPage;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
@@ -44,6 +46,7 @@ import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.render.PageRenderer;
 import org.apache.wicket.request.handler.render.WebPageRenderer;
@@ -64,6 +67,7 @@ import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.WebApplicationPath;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.PackageName;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.slf4j.Logger;
@@ -493,7 +497,6 @@ public abstract class WebApplication extends Application
 		}
 
 		super.internalDestroy();
-
 	}
 
 	/**
@@ -610,6 +613,55 @@ public abstract class WebApplication extends Application
 		}
 
 		return configurationType;
+	}
+
+	/**
+	 * The rules if and when to insert an xml decl in the response are a bit tricky. Hence, we allow
+	 * the user to replace the default implementation per page and per application.
+	 * <p>
+	 * Default implementation: the page mime type must be "application/xhtml+xml" and request
+	 * HTTP_ACCEPT header must include "application/xhtml+xml" to automatically include the xml
+	 * decl. Please see {@linkplain here 
+	 * http://developer.mozilla.org/en/Writing_JavaScript_for_XHTML#Finally.3a_Content_Negotiation}
+	 * for details.
+	 * <p>
+	 * Please note that xml decls in Wicket's markup are only used for reading the markup. The
+	 * markup's xml decl will always be removed and never be used to configure the response.
+	 * 
+	 * @param page
+	 *            The page currently being rendered
+	 * @param insert
+	 *            If false, than the rules are applied. If true, it'll always be written. In order
+	 *            to never insert it, than subclass renderXmlDecl() with an empty implementation.
+	 */
+	public void renderXmlDecl(final WebPage page, boolean insert)
+	{
+		if (insert || MarkupType.XML_MIME.equalsIgnoreCase(page.getMarkupType().getMimeType()))
+		{
+			final RequestCycle cycle = RequestCycle.get();
+
+			if (insert == false)
+			{
+				WebRequest request = (WebRequest)cycle.getRequest();
+
+				String accept = request.getHeader("HTTP_ACCEPT");
+				insert = ((accept == null) || (accept.indexOf(MarkupType.XML_MIME) != -1));
+			}
+
+			if (insert)
+			{
+				WebResponse response = (WebResponse)cycle.getResponse();
+				response.write("<?xml version='1.0'");
+				String encoding = getRequestCycleSettings().getResponseRequestEncoding();
+				if (Strings.isEmpty(encoding) == false)
+				{
+					response.write(" encoding='");
+					response.write(encoding);
+					response.write("'");
+				}
+				response.write(" ?>");
+			}
+		}
 	}
 
 	/**
@@ -740,12 +792,10 @@ public abstract class WebApplication extends Application
 
 	private static class WebSessionStoreProvider implements IProvider<ISessionStore>
 	{
-
 		public ISessionStore get()
 		{
 			return new HttpSessionStore();
 		}
-
 	}
 
 	/**

@@ -24,12 +24,15 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.renderStrategy.AbstractHeaderRenderStrategy;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.response.StringResponse;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
@@ -122,19 +125,58 @@ public class WebPage extends Page
 		// so far a noop
 	}
 
-	/**
-	 * @see org.apache.wicket.Page#configureResponse()
-	 */
 	@Override
+	protected void onRender()
+	{
+		// Configure the response such as headers etc.
+		configureResponse();
+
+		// The rules if and when to insert an xml decl in the response are a it tricky. Allow the
+		// user to replace the default per page and per application.
+		renderXmlDecl();
+
+		super.onRender();
+	}
+
+	/**
+	 * The rules if and when to insert an xml decl in the response are a it tricky. Allow the user
+	 * to replace the default per page and per application.
+	 */
+	protected void renderXmlDecl()
+	{
+		WebApplication.get().renderXmlDecl(this, false);
+	}
+
+	/**
+	 * Set-up response with appropriate content type, locale and encoding. The locale is set equal
+	 * to the session's locale. The content type header contains information about the markup type
+	 * (@see #getMarkupType()) and the encoding. The response (and request) encoding is determined
+	 * by an application setting (@see ApplicationSettings#getResponseRequestEncoding()). If null,
+	 * no xml decl will be written.
+	 */
 	protected void configureResponse()
 	{
-		if (getRequestCycle().getResponse() instanceof WebResponse)
+		final RequestCycle cycle = getRequestCycle();
+		final WebApplication application = WebApplication.get();
+		final WebResponse response = (WebResponse)cycle.getResponse();
+
+		// Users may sublcass setHeader() to set there own headers
+		setHeaders(response);
+
+		// The response encoding is an application setting
+		final String encoding = application.getRequestCycleSettings().getResponseRequestEncoding();
+		final boolean validEncoding = (Strings.isEmpty(encoding) == false);
+		final String contentType;
+		if (validEncoding)
 		{
-			WebResponse response = (WebResponse)getRequestCycle().getResponse();
-			setHeaders(response);
+			contentType = getMarkupType().getMimeType() + "; charset=" + encoding;
+		}
+		else
+		{
+			contentType = getMarkupType().getMimeType();
 		}
 
-		super.configureResponse();
+		response.setContentType(contentType);
 	}
 
 	/**

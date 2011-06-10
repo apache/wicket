@@ -73,13 +73,6 @@ public interface IXmlPullParser
 	String getEncoding();
 
 	/**
-	 * Return the XML declaration string, in case if found in the markup.
-	 * 
-	 * @return Null, if not found.
-	 */
-	CharSequence getXmlDeclaration();
-
-	/**
 	 * Gets the &lt;!DOCTYPE ...&gt; tag if found in the markup
 	 * 
 	 * @return Null, if not found

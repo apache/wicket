@@ -63,7 +63,6 @@ public class XmlReaderTest extends TestCase
 	{
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_3.html"), null);
 		assertNull(reader.getEncoding());
-		assertEquals("<?xml?>", reader.getXmlDeclaration());
 
 		BufferedReader bufReader = new BufferedReader(reader);
 		assertEquals("", bufReader.readLine().trim());
@@ -79,7 +78,6 @@ public class XmlReaderTest extends TestCase
 	{
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_4.html"), null);
 		assertNull(reader.getEncoding());
-		assertEquals("<?xml version=\"1.0\" ?>", reader.getXmlDeclaration());
 
 		BufferedReader bufReader = new BufferedReader(reader);
 		assertEquals("", bufReader.readLine().trim());
@@ -94,7 +92,6 @@ public class XmlReaderTest extends TestCase
 	public void test_5() throws Exception
 	{
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_5.html"), null);
-		assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", reader.getXmlDeclaration());
 		assertEquals("UTF-8", reader.getEncoding());
 
 		BufferedReader bufReader = new BufferedReader(reader);
@@ -110,7 +107,6 @@ public class XmlReaderTest extends TestCase
 	public void test_6() throws Exception
 	{
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_6.html"), null);
-		assertEquals("<?xml version=\"1.0\" encoding='UTF-8'?>", reader.getXmlDeclaration());
 		assertEquals("UTF-8", reader.getEncoding());
 
 		BufferedReader bufReader = new BufferedReader(reader);
@@ -126,7 +122,6 @@ public class XmlReaderTest extends TestCase
 	public void test_7() throws Exception
 	{
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_7.html"), null);
-		assertEquals("<?xml version=\"1.0\" encoding=UTF-8?>", reader.getXmlDeclaration());
 		assertEquals("UTF-8", reader.getEncoding());
 
 		BufferedReader bufReader = new BufferedReader(reader);

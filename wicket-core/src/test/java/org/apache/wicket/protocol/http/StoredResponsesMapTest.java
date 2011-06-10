@@ -69,6 +69,7 @@ public class StoredResponsesMapTest
 		assertEquals(1, map.size());
 		TimeUnit.MILLISECONDS.sleep(51);
 		Object value = map.get("1");
+		// TODO This test sometimes fails on XP and java 1.6 (not reproduceable)
 		assertNull(value);
 	}
 

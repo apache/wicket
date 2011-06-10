@@ -26,8 +26,14 @@ public class MarkupType implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
+	/** Mime string for XHTML */
+	public static final String XML_MIME = "application/xhtml+xml";
+
+	/** Mime string for XHTML */
+	public static final String HTML_MIME = "text/html";
+
 	/** A HTML markup type for web pages */
-	public final static MarkupType HTML_MARKUP_TYPE = new MarkupType("html", "text/html");
+	public final static MarkupType HTML_MARKUP_TYPE = new MarkupType("html", HTML_MIME);
 
 	private final String extension;
 

@@ -138,21 +138,7 @@ public class MarkupParser extends AbstractMarkupParser
 	protected MarkupFilterList initializeMarkupFilters(final Markup markup)
 	{
 		// MarkupFilterList is a simple extension of ArrayList providing few additional helpers
-		final MarkupFilterList filters = new MarkupFilterList()
-		{
-			private static final long serialVersionUID = 1L;
-
-			/**
-			 * @see org.apache.wicket.markup.MarkupFactory.MarkupFilterList#onAdd(org.apache.wicket.markup.parser.IMarkupFilter)
-			 */
-			@Override
-			protected IMarkupFilter onAdd(final IMarkupFilter filter)
-			{
-				// a) allow users to configure wicket filters
-				// b) if return value == null, the filter will not be added
-				return MarkupParser.this.onAppendMarkupFilter(filter);
-			}
-		};
+		final MarkupFilterList filters = new MarkupFilterList();
 
 		MarkupResourceStream markupResourceStream = markup.getMarkupResourceStream();
 
@@ -193,7 +179,7 @@ public class MarkupParser extends AbstractMarkupParser
 	/**
 	 * A simple extension to ArrayList to manage Wicket MarkupFilter's more easily
 	 */
-	public static class MarkupFilterList extends ArrayList<IMarkupFilter>
+	public class MarkupFilterList extends ArrayList<IMarkupFilter>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -239,7 +225,7 @@ public class MarkupParser extends AbstractMarkupParser
 		 */
 		protected IMarkupFilter onAdd(final IMarkupFilter filter)
 		{
-			return filter;
+			return onAppendMarkupFilter(filter);
 		}
 	}
 }

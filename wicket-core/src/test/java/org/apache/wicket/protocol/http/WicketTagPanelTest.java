@@ -40,10 +40,9 @@ public class WicketTagPanelTest extends WicketTestCase
 	public void testRenderHomePage() throws Exception
 	{
 		tester.startPage(WicketPanelPage.class);
-		// Validate the document
 		String document = tester.getLastResponseAsString();
-		log.info(document);
-		assertTrue(validatePage1(document));
+		// log.info(document);
+		assertTrue(document, validatePage1(document));
 	}
 
 	/**
@@ -82,7 +81,7 @@ public class WicketTagPanelTest extends WicketTestCase
 
 		// Validate the document
 		String document = tester.getLastResponseAsString();
-		log.info(document);
+		// log.info(document);
 		assertTrue("Document with Wicket tags stripped did not match", validatePage2(document));
 	}
 

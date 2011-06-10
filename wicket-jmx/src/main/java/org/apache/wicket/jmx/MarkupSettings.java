@@ -93,14 +93,6 @@ public class MarkupSettings implements MarkupSettingsMBean
 	}
 
 	/**
-	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#getStripXmlDeclarationFromOutput()
-	 */
-	public boolean getStripXmlDeclarationFromOutput()
-	{
-		return application.getMarkupSettings().getStripXmlDeclarationFromOutput();
-	}
-
-	/**
 	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setAutomaticLinking(boolean)
 	 */
 	public void setAutomaticLinking(final boolean automaticLinking)
@@ -154,13 +146,5 @@ public class MarkupSettings implements MarkupSettingsMBean
 	public void setStripWicketTags(final boolean stripWicketTags)
 	{
 		application.getMarkupSettings().setStripWicketTags(stripWicketTags);
-	}
-
-	/**
-	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setStripXmlDeclarationFromOutput(boolean)
-	 */
-	public void setStripXmlDeclarationFromOutput(final boolean strip)
-	{
-		application.getMarkupSettings().setStripXmlDeclarationFromOutput(strip);
 	}
 }
