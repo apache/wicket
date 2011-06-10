@@ -424,12 +424,9 @@ public class DataTable<T> extends Panel implements IPageableItems
 		}
 
 		@Override
-		public boolean isVisible()
+		public void onConfigure()
 		{
-			if (!super.isVisible())
-			{
-				return false;
-			}
+			super.onConfigure();
 
 			toolbars.configure();
 
@@ -448,7 +445,11 @@ public class DataTable<T> extends Panel implements IPageableItems
 					}
 				}
 			});
-			return visible == Boolean.TRUE;
+			if (visible == null)
+			{
+				visible = false;
+			}
+			setVisible(visible);
 		}
 	}
 }
