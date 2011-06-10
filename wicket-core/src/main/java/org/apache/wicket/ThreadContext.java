@@ -51,6 +51,16 @@ public class ThreadContext
 	}
 
 	/**
+	 * Checks if {@link ThreadContext} exists for the current thread
+	 * 
+	 * @return {@code true} if {@link ThreadContext} exists for the current thread
+	 */
+	public static boolean exists()
+	{
+		return get(false) != null;
+	}
+
+	/**
 	 * @return {@link Application} bound to current thread
 	 */
 	public static Application getApplication()
