@@ -78,7 +78,7 @@ public final class MarkupException extends WicketRuntimeException
 	 */
 	public MarkupException(final MarkupStream markupStream, final String message)
 	{
-		super(message + "\n" + markupStream.toString());
+		super(message);
 		this.markupStream = markupStream;
 	}
 
@@ -93,7 +93,7 @@ public final class MarkupException extends WicketRuntimeException
 	public MarkupException(final MarkupStream markupStream, final String message,
 		final Throwable cause)
 	{
-		super(message + "\n" + markupStream.toString(), cause);
+		super(message, cause);
 		this.markupStream = markupStream;
 	}
 
@@ -125,5 +125,12 @@ public final class MarkupException extends WicketRuntimeException
 	public void setMarkupStream(final MarkupStream markupStream)
 	{
 		this.markupStream = markupStream;
+	}
+
+	@Override
+	public String toString()
+	{
+		return getMessage() + "\n MarkupStream: " +
+			(markupStream == null ? "[unknown]" : markupStream.toString());
 	}
 }

@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 
@@ -47,12 +48,12 @@ public class Home extends WicketExamplePage
 	 * descriptors, this is a workaround for servlet 2.3
 	 */
 	@Override
-	protected void configureResponse()
+	protected void configureResponse(final WebResponse response)
 	{
 		final Locale originalLocale = getSession().getLocale();
 		getSession().setLocale(Locale.GERMANY);
 
-		super.configureResponse();
+		super.configureResponse(response);
 
 		// This is no longer useful in many cases, since we now forward the
 		// <?xml ..encoding=".." ?> from the Page's markup and use it explicitly

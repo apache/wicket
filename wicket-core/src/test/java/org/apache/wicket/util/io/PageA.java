@@ -17,6 +17,7 @@
 package org.apache.wicket.util.io;
 
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.http.WebResponse;
 
 /**
  * @author jcompagner
@@ -42,9 +43,9 @@ public class PageA extends WebPage
 	}
 
 	@Override
-	protected void configureResponse()
+	protected void configureResponse(final WebResponse response)
 	{
-		super.configureResponse();
+		super.configureResponse(response);
 	}
 
 	/**

@@ -229,7 +229,7 @@ public class SimplePageTest extends WicketTestCase
 
 			assertNotNull(mex.getMarkupStream());
 			assertTrue(mex.getMessage().contains("<span>"));
-			assertTrue(mex.getMessage().contains("SimplePage_4.html"));
+			assertTrue(mex.toString().contains("SimplePage_4.html"));
 		}
 		assertTrue("Did expect a MarkupException", hit);
 	}

@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.pages;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 
 
@@ -39,14 +38,9 @@ public class PageExpiredErrorPage extends AbstractErrorPage
 		add(homePageLink("homePageLink"));
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.WebPage#configureResponse()
-	 */
 	@Override
-	protected void configureResponse()
+	protected void setHeaders(final WebResponse response)
 	{
-		super.configureResponse();
-		WebResponse response = (WebResponse)RequestCycle.get().getResponse();
 		response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 	}
 }

@@ -129,7 +129,7 @@ public class WebPage extends Page
 	protected void onRender()
 	{
 		// Configure the response such as headers etc.
-		configureResponse();
+		configureResponse((WebResponse)RequestCycle.get().getResponse());
 
 		// The rules if and when to insert an xml decl in the response are a it tricky. Allow the
 		// user to replace the default per page and per application.
@@ -153,12 +153,14 @@ public class WebPage extends Page
 	 * (@see #getMarkupType()) and the encoding. The response (and request) encoding is determined
 	 * by an application setting (@see ApplicationSettings#getResponseRequestEncoding()). If null,
 	 * no xml decl will be written.
+	 * 
+	 * @param response
+	 *            The WebResponse object
 	 */
-	protected void configureResponse()
+	protected void configureResponse(final WebResponse response)
 	{
 		final RequestCycle cycle = getRequestCycle();
 		final WebApplication application = WebApplication.get();
-		final WebResponse response = (WebResponse)cycle.getResponse();
 
 		// Users may sublcass setHeader() to set there own headers
 		setHeaders(response);

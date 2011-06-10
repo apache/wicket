@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.pages;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -31,7 +30,7 @@ import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.debug.PageView;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.lang.Generics;
 
 
 /**
@@ -120,7 +119,7 @@ public class ExceptionErrorPage extends AbstractErrorPage
 	{
 		if (throwable != null)
 		{
-			AppendingStringBuffer sb = new AppendingStringBuffer(256);
+			StringBuilder sb = new StringBuilder(256);
 
 			// first print the last cause
 			List<Throwable> al = convertToList(throwable);
@@ -130,22 +129,25 @@ public class ExceptionErrorPage extends AbstractErrorPage
 			if (throwable instanceof WicketRuntimeException)
 			{
 				String msg = throwable.getMessage();
-				if (throwable instanceof MarkupException)
+				if ((msg != null) && (msg.equals(cause.getMessage()) == false))
 				{
-					MarkupStream stream = ((MarkupException)throwable).getMarkupStream();
-					if (stream != null)
+					if (throwable instanceof MarkupException)
 					{
-						String text = "\n" + stream.toString();
-						if (msg.endsWith(text))
+						MarkupStream stream = ((MarkupException)throwable).getMarkupStream();
+						if (stream != null)
 						{
-							msg = msg.substring(0, msg.length() - text.length());
+							String text = "\n" + stream.toString();
+							if (msg.endsWith(text))
+							{
+								msg = msg.substring(0, msg.length() - text.length());
+							}
 						}
 					}
-				}
 
-				sb.append("WicketMessage: ");
-				sb.append(msg);
-				sb.append("\n\n");
+					sb.append("WicketMessage: ");
+					sb.append(msg);
+					sb.append("\n\n");
+				}
 			}
 			return sb.toString();
 		}
@@ -168,7 +170,7 @@ public class ExceptionErrorPage extends AbstractErrorPage
 		{
 			List<Throwable> al = convertToList(throwable);
 
-			AppendingStringBuffer sb = new AppendingStringBuffer(256);
+			StringBuilder sb = new StringBuilder(256);
 
 			// first print the last cause
 			int length = al.size() - 1;
@@ -200,10 +202,10 @@ public class ExceptionErrorPage extends AbstractErrorPage
 	 */
 	private List<Throwable> convertToList(final Throwable throwable)
 	{
-		List<Throwable> al = new ArrayList<Throwable>();
+		List<Throwable> al = Generics.newArrayList();
 		Throwable cause = throwable;
 		al.add(cause);
-		while (cause.getCause() != null && cause != cause.getCause())
+		while ((cause.getCause() != null) && (cause != cause.getCause()))
 		{
 			cause = cause.getCause();
 			al.add(cause);
@@ -220,8 +222,7 @@ public class ExceptionErrorPage extends AbstractErrorPage
 	 * @param sb
 	 * @param stopAtWicketServlet
 	 */
-	private void outputThrowable(Throwable cause, AppendingStringBuffer sb,
-		boolean stopAtWicketServlet)
+	private void outputThrowable(Throwable cause, StringBuilder sb, boolean stopAtWicketServlet)
 	{
 		sb.append(cause);
 		sb.append("\n");
@@ -243,19 +244,10 @@ public class ExceptionErrorPage extends AbstractErrorPage
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.WebPage#configureResponse()
-	 */
 	@Override
-	protected void configureResponse()
+	protected void setHeaders(final WebResponse response)
 	{
-		super.configureResponse();
-
-		if (getRequestCycle().getResponse() instanceof WebResponse)
-		{
-			WebResponse response = (WebResponse)getRequestCycle().getResponse();
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
+		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 	}
 
 	/**
@@ -267,5 +259,4 @@ public class ExceptionErrorPage extends AbstractErrorPage
 	{
 		return throwable;
 	}
-
 }
