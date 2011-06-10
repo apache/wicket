@@ -70,6 +70,10 @@ final class Behaviors implements IDetachable
 	private void internalAdd(final Behavior behavior)
 	{
 		component.data_add(behavior);
+		if (behavior.isStateless(component))
+		{
+			getBehaviorId(behavior);
+		}
 	}
 
 	@SuppressWarnings("unchecked")

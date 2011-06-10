@@ -178,6 +178,23 @@ public abstract class Behavior
 	}
 
 	/**
+	 * Returns whether or not this behavior is stateless. Most behaviors should either not override
+	 * this method or return {@code false} because most behavior are not stateless.
+	 * 
+	 * A small subset of behaviors are made specifically to be stateless and as such should override
+	 * this method and return {@code true}. One sideeffect of this method is that the behavior id
+	 * will be generated eagerly when the behavior is added to the component instead of before
+	 * render when a method to create the url is called - this allows for stateless callback urls.
+	 * 
+	 * @param component
+	 * @return whether or not this behavior is stateless
+	 */
+	public boolean isStateless(Component component)
+	{
+		return false;
+	}
+
+	/**
 	 * Checks if a listener can be invoked on this behavior
 	 * 
 	 * @param component
