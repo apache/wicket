@@ -629,7 +629,7 @@ public abstract class Session implements IClusterable
 	 * @return The metadata
 	 * @see MetaDataKey
 	 */
-	public final <M extends Serializable> M getMetaData(final MetaDataKey<M> key)
+	public final synchronized <M extends Serializable> M getMetaData(final MetaDataKey<M> key)
 	{
 		return key.get(metaData);
 	}
@@ -1074,9 +1074,10 @@ public abstract class Session implements IClusterable
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final void setMetaData(final MetaDataKey<?> key, final Serializable object)
+	public final synchronized void setMetaData(final MetaDataKey<?> key, final Serializable object)
 	{
 		metaData = key.set(metaData, object);
+		dirty();
 	}
 
 	/**
