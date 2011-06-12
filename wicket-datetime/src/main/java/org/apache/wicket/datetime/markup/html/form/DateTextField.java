@@ -207,6 +207,19 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	}
 
 	/**
+	 * Construct with a converter, and a null model.
+	 * 
+	 * @param id
+	 *            The component id
+	 * @param converter
+	 *            The converter to use
+	 */
+	public DateTextField(String id, DateConverter converter)
+	{
+		this(id, null, converter);
+	}
+
+	/**
 	 * @return The specialized converter.
 	 * @see org.apache.wicket.Component#getConverter(java.lang.Class)
 	 */
