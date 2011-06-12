@@ -265,6 +265,11 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	/** The associated Page */
 	private final Page page;
 
+	/** see https://issues.apache.org/jira/browse/WICKET-3564 */
+	private transient boolean componentsFrozen;
+	private transient boolean listenersFrozen;
+	private transient boolean respondersFrozen;
+
 	/**
 	 * Constructor
 	 * 
@@ -287,6 +292,30 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		return page;
 	}
 
+	private void assertNotFrozen(boolean frozen, Class<?> clazz)
+	{
+		if (frozen)
+		{
+			throw new IllegalStateException(clazz.getSimpleName() + "s can no " +
+				" longer be added");
+		}
+	}
+
+	private void assertListenersNotFrozen()
+	{
+		assertNotFrozen(listenersFrozen, IListener.class);
+	}
+
+	private void assertComponentsNotFrozen()
+	{
+		assertNotFrozen(componentsFrozen, Component.class);
+	}
+
+	private void assertRespondersNotFrozen()
+	{
+		assertNotFrozen(respondersFrozen, ITargetRespondListener.class);
+	}
+
 	/**
 	 * Adds a listener to this target
 	 * 
@@ -294,15 +323,14 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	 */
 	public void addListener(IListener listener)
 	{
-		if (listener == null)
-		{
-			throw new IllegalArgumentException("Argument `listener` cannot be null");
-		}
+		Args.notNull(listener, "listener");
 
 		if (listeners == null)
 		{
 			listeners = new LinkedList<IListener>();
 		}
+
+		assertListenersNotFrozen();
 
 		if (!listeners.contains(listener))
 		{
@@ -315,20 +343,15 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	 * of same type as <code>childCriteria</code>
 	 * 
 	 * @param parent
+	 *            Must not be null.
 	 * @param childCriteria
+	 *            Must not be null. If you want to traverse all components use ` Component.class as
+	 *            the value for this argument.
 	 */
 	public final void addChildren(MarkupContainer parent, Class<?> childCriteria)
 	{
-		if (parent == null)
-		{
-			throw new IllegalArgumentException("Argument `parent` cannot be null");
-		}
-		if (childCriteria == null)
-		{
-			throw new IllegalArgumentException(
-				"Argument `childCriteria` cannot be null. If you want to traverse all components use `" +
-					Component.class.getName() + ".class` as the value for this argument");
-		}
+		Args.notNull(parent, "parent");
+		Args.notNull(childCriteria, "childCriteria");
 
 		parent.visitChildren(childCriteria, new IVisitor<Component, Void>()
 		{
@@ -421,6 +444,8 @@ public class AjaxRequestTarget implements IPageRequestHandler
 					" has been added to the target. This component is a repeater and cannot be repainted via ajax directly. " +
 					"Instead add its parent or another markup container higher in the hierarchy.");
 		}
+
+		assertComponentsNotFrozen();
 
 		component.setMarkupId(markupId);
 		markupIdToComponent.put(markupId, component);
@@ -551,6 +576,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	 */
 	public void registerRespondListener(ITargetRespondListener listener)
 	{
+		assertRespondersNotFrozen();
 		respondListeners.add(listener);
 	}
 
@@ -576,6 +602,8 @@ public class AjaxRequestTarget implements IPageRequestHandler
 				response.sendRedirect(url);
 				return;
 			}
+
+			listenersFrozen = true;
 
 			for (ITargetRespondListener listener : respondListeners)
 			{
@@ -630,6 +658,8 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		bodyResponse.write("\"?>");
 		bodyResponse.write("<ajax-response>");
 
+		respondersFrozen = true;
+
 		// invoke onbeforerespond event on listeners
 		fireOnBeforeRespondListeners();
 
@@ -640,6 +670,8 @@ public class AjaxRequestTarget implements IPageRequestHandler
 			CharSequence js = it.next();
 			respondInvocation(bodyResponse, js);
 		}
+
+		componentsFrozen = true;
 
 		// process added components
 		respondComponents(bodyResponse);
