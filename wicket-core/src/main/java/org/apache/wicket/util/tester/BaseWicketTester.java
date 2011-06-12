@@ -197,6 +197,10 @@ public class BaseWicketTester
 	// see https://issues.apache.org/jira/browse/WICKET-1214
 	private Component startComponent;
 
+	// User may provide request header value any time. They get applied (and reset) upon next
+	// invocation of processRequest()
+	private Map<String, String> preHeader;
+
 	/**
 	 * Creates <code>WicketTester</code> and automatically create a <code>WebApplication</code>, but
 	 * the tester will have no home page.
@@ -291,6 +295,8 @@ public class BaseWicketTester
 		// initialize the application
 		application.initApplication();
 
+		// We don't expect any changes during testing. In addition we avoid creating
+		// ModificationWatcher threads tests.
 		application.getResourceSettings().setResourcePollFrequency(getResourcePollFrequency());
 
 		// reconfigure application for the test environment
@@ -505,13 +511,20 @@ public class BaseWicketTester
 	}
 
 	/**
+	 * Process the request. This is a fairly central function and is almost always invoked for
+	 * executing the request.
+	 * <p>
+	 * You may subclass processRequest it, to monitor or change any pre-configured value. Request
+	 * headers can be configured more easily by calling {@link #addRequestHeader(String, String)}.
 	 * 
 	 * @param forcedRequest
+	 *            Can be null.
 	 * @param forcedRequestHandler
+	 *            Can be null.
 	 * @param redirect
 	 * @return true, if process was executed successfully
 	 */
-	private boolean processRequest(final MockHttpServletRequest forcedRequest,
+	protected boolean processRequest(final MockHttpServletRequest forcedRequest,
 		final IRequestHandler forcedRequestHandler, final boolean redirect)
 	{
 		if (forcedRequest != null)
@@ -524,6 +537,21 @@ public class BaseWicketTester
 		if (!redirect && getRequest().getHeader("Wicket-Ajax") == null)
 		{
 			lastRenderedPage = null;
+		}
+
+		// Add or replace any system provided header entry with the user provided.
+		if ((request != null) && (preHeader != null))
+		{
+			for (Map.Entry<String, String> entry : preHeader.entrySet())
+			{
+				if (Strings.isEmpty(entry.getKey()) == false)
+				{
+					request.addHeader(entry.getKey(), entry.getValue());
+				}
+			}
+
+			// Reset the user provided headers
+			preHeader = null;
 		}
 
 		try
@@ -590,6 +618,30 @@ public class BaseWicketTester
 		{
 			redirectCount = 0;
 		}
+	}
+
+	/**
+	 * Allows to set Request header value any time. They'll be applied (add/modify) on process
+	 * execution {@link #processRequest(MockHttpServletRequest, IRequestHandler, boolean)}. They are
+	 * reset immediately after and thus are not re-used for a sequence of requests.
+	 * <p>
+	 * Deletion (not replace) of pre-configured header value can be achieved by subclassing
+	 * {@link #processRequest(MockHttpServletRequest, IRequestHandler, boolean)} and modifying the
+	 * request header directly.
+	 * 
+	 * @param key
+	 * @param value
+	 */
+	public final void addRequestHeader(final String key, final String value)
+	{
+		Args.notEmpty(key, "key");
+
+		if (preHeader == null)
+		{
+			preHeader = Generics.newHashMap();
+		}
+
+		preHeader.put(key, value);
 	}
 
 	/**

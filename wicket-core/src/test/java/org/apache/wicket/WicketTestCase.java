@@ -66,7 +66,7 @@ public abstract class WicketTestCase extends TestCase
 	protected void setUp() throws Exception
 	{
 		WebApplication application = newApplication();
-		tester = new WicketTester(application);
+		tester = newWicketTester(application);
 	}
 
 	/**
@@ -75,6 +75,18 @@ public abstract class WicketTestCase extends TestCase
 	protected WebApplication newApplication()
 	{
 		return new MockApplication();
+	}
+
+	/**
+	 * In case you need to subclass WicketTester and want to be independent on possible changes in
+	 * setUp().
+	 * 
+	 * @param app
+	 * @return WIcketTester
+	 */
+	protected WicketTester newWicketTester(final WebApplication app)
+	{
+		return new WicketTester(app);
 	}
 
 	/**
