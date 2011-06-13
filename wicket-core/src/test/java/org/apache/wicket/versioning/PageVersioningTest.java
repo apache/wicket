@@ -23,7 +23,7 @@ import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.Page;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
-import org.apache.wicket.page.PersistentPageManager;
+import org.apache.wicket.page.PageStoreManager;
 import org.apache.wicket.pageStore.AsynchronousDataStore;
 import org.apache.wicket.pageStore.DefaultPageStore;
 import org.apache.wicket.pageStore.IDataStore;
@@ -68,7 +68,7 @@ public class PageVersioningTest
 						final AsynchronousDataStore asyncDS = new AsynchronousDataStore(dataStore);
 						final DefaultPageStore pageStore = new DefaultPageStore(new JavaSerializer(
 							application.getApplicationKey()), asyncDS, 40);
-						return new PersistentPageManager(application.getName(), pageStore,
+						return new PageStoreManager(application.getName(), pageStore,
 							pageManagerContext);
 					}
 				};

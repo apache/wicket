@@ -100,12 +100,12 @@ public class PersistentPageManagerTest
 		newPageManager.destroy();
 	}
 
-	private PersistentPageManager newPersistentPageManager(String appName)
+	private PageStoreManager newPersistentPageManager(String appName)
 	{
 		IDataStore dataStore = new InMemoryPageStore();
 		IPageStore pageStore = new DefaultPageStore(new JavaSerializer(appName), dataStore, 4);
 		IPageManagerContext pageManagerContext = new DummyPageManagerContext();
-		return new PersistentPageManager(appName, pageStore, pageManagerContext);
+		return new PageStoreManager(appName, pageStore, pageManagerContext);
 	}
 
 	private static class TestPage implements IManageablePage

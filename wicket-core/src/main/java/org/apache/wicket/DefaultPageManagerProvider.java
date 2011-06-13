@@ -20,7 +20,7 @@ import java.io.File;
 
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
-import org.apache.wicket.page.PersistentPageManager;
+import org.apache.wicket.page.PageStoreManager;
 import org.apache.wicket.pageStore.DefaultPageStore;
 import org.apache.wicket.pageStore.DiskDataStore;
 import org.apache.wicket.pageStore.IDataStore;
@@ -51,7 +51,7 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 	{
 		IDataStore dataStore = newDataStore();
 		IPageStore pageStore = newPageStore(dataStore);
-		return new PersistentPageManager(application.getName(), pageStore, pageManagerContext);
+		return new PageStoreManager(application.getName(), pageStore, pageManagerContext);
 
 	}
 

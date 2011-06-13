@@ -30,13 +30,13 @@ import org.apache.wicket.pageStore.IPageStore;
 /**
  * 
  */
-public class PersistentPageManager extends AbstractPageManager
+public class PageStoreManager extends AbstractPageManager
 {
 	/**
 	 * A cache that holds all registered page managers. <br/>
 	 * applicationName -> page manager
 	 */
-	private static final ConcurrentMap<String, PersistentPageManager> managers = new ConcurrentHashMap<String, PersistentPageManager>();
+	private static final ConcurrentMap<String, PageStoreManager> managers = new ConcurrentHashMap<String, PageStoreManager>();
 
 	private final IPageStore pageStore;
 
@@ -49,7 +49,7 @@ public class PersistentPageManager extends AbstractPageManager
 	 * @param pageStore
 	 * @param context
 	 */
-	public PersistentPageManager(final String applicationName, final IPageStore pageStore,
+	public PageStoreManager(final String applicationName, final IPageStore pageStore,
 		final IPageManagerContext context)
 	{
 		super(context);
@@ -79,7 +79,7 @@ public class PersistentPageManager extends AbstractPageManager
 
 		private final String sessionId;
 
-		private transient List<IManageablePage> pages;
+		private transient List<IManageablePage> sessionCache;
 		private transient List<Object> afterReadObject;
 
 		/**
@@ -100,7 +100,7 @@ public class PersistentPageManager extends AbstractPageManager
 		 */
 		private IPageStore getPageStore()
 		{
-			PersistentPageManager manager = managers.get(applicationName);
+			PageStoreManager manager = managers.get(applicationName);
 
 			if (manager == null)
 			{
@@ -117,7 +117,7 @@ public class PersistentPageManager extends AbstractPageManager
 		 */
 		private IManageablePage findPage(int id)
 		{
-			for (IManageablePage p : pages)
+			for (IManageablePage p : sessionCache)
 			{
 				if (p.getPageId() == id)
 				{
@@ -141,7 +141,7 @@ public class PersistentPageManager extends AbstractPageManager
 					return;
 				}
 
-				pages.add(page);
+				sessionCache.add(page);
 			}
 		}
 
@@ -151,9 +151,9 @@ public class PersistentPageManager extends AbstractPageManager
 		 */
 		private void convertAfterReadObjects()
 		{
-			if (pages == null)
+			if (sessionCache == null)
 			{
-				pages = new ArrayList<IManageablePage>();
+				sessionCache = new ArrayList<IManageablePage>();
 			}
 
 			for (Object o : afterReadObject)
@@ -179,7 +179,7 @@ public class PersistentPageManager extends AbstractPageManager
 			}
 
 			// try to find page with same id
-			if (pages != null)
+			if (sessionCache != null)
 			{
 				IManageablePage page = findPage(id);
 				if (page != null)
@@ -197,9 +197,9 @@ public class PersistentPageManager extends AbstractPageManager
 		 * 
 		 * @param pages
 		 */
-		public synchronized void setPages(final List<IManageablePage> pages)
+		public synchronized void setSessionCache(final List<IManageablePage> pages)
 		{
-			this.pages = new ArrayList<IManageablePage>(pages);
+			this.sessionCache = new ArrayList<IManageablePage>(pages);
 			afterReadObject = null;
 		}
 
@@ -219,10 +219,10 @@ public class PersistentPageManager extends AbstractPageManager
 
 			// prepare for serialization and store the pages
 			List<Serializable> serializedPages = new ArrayList<Serializable>();
-			if (pages != null)
+			if (sessionCache != null)
 			{
 				IPageStore pageStore = getPageStore();
-				for (IManageablePage p : pages)
+				for (IManageablePage p : sessionCache)
 				{
 					Serializable preparedPage;
 					if (pageStore != null)
@@ -284,7 +284,7 @@ public class PersistentPageManager extends AbstractPageManager
 	}
 
 	/**
-	 * {@link RequestAdapter} for {@link PersistentPageManager}
+	 * {@link RequestAdapter} for {@link PageStoreManager}
 	 * 
 	 * @author Matej Knopp
 	 */
@@ -371,7 +371,7 @@ public class PersistentPageManager extends AbstractPageManager
 			if (!touchedPages.isEmpty())
 			{
 				SessionEntry entry = getSessionEntry(true);
-				entry.setPages(touchedPages);
+				entry.setSessionCache(touchedPages);
 				for (IManageablePage page : touchedPages)
 				{
 					pageStore.storePage(getSessionId(), page);

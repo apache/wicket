@@ -30,7 +30,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
-import org.apache.wicket.page.PersistentPageManager;
+import org.apache.wicket.page.PageStoreManager;
 import org.apache.wicket.pageStore.DefaultPageStore;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.request.Url;
@@ -92,7 +92,7 @@ public class PageIdPoliticTest extends TestCase
 					{
 						IPageStore pageStore = new DefaultPageStore(new JavaSerializer(
 							application.getApplicationKey()), dataStore, 4);
-						return new PersistentPageManager(application.getName(), pageStore,
+						return new PageStoreManager(application.getName(), pageStore,
 							pageManagerContext);
 					}
 				};
