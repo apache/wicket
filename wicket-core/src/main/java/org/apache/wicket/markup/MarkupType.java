@@ -29,7 +29,7 @@ public class MarkupType implements Serializable
 	/** Mime string for XHTML */
 	public static final String XML_MIME = "application/xhtml+xml";
 
-	/** Mime string for XHTML */
+	/** Mime string for HTML */
 	public static final String HTML_MIME = "text/html";
 
 	/** A HTML markup type for web pages */
