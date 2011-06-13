@@ -48,7 +48,11 @@ if (typeof(Wicket.Browser) == "undefined") {
 		},
 		
 		isSafari: function() {
-			return /KHTML/.test(navigator.userAgent) && /Apple/.test(navigator.userAgent);
+			return !/Chrome/.test(navigator.userAgent) && /KHTML/.test(navigator.userAgent) && /Apple/.test(navigator.userAgent);
+		},
+		
+		isChrome: function() {
+			return /KHTML/.test(navigator.userAgent) && /Apple/.test(navigator.userAgent) && /Chrome/.test(navigator.userAgent);
 		},
 		
 		isOpera: function() {
@@ -180,8 +184,12 @@ if (typeof(Wicket.Event) == "undefined") {
 					Wicket.Event.fireDomReadyHandlers();
 				}.bind(this);
 				
-				if (document.readyState && (Wicket.Browser.isKHTML() || Wicket.Browser.isSafari())) { 
-				  //safari and konqueror don't support the event - simulate it through a timeout
+				if (document.readyState && 
+				    (Wicket.Browser.isKHTML() || 
+				    Wicket.Browser.isSafari() ||
+				    Wicket.Browser.isChrome())
+				) { 
+				  // chrome, safari and konqueror don't support the event - simulate it through a timeout
 					var domCheck = function() {
 						if (document.readyState == "loaded" ||
 						    document.readyState == "complete") {
