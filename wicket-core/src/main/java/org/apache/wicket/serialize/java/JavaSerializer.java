@@ -72,7 +72,7 @@ public class JavaSerializer implements ISerializer
 			ObjectOutputStream oos = null;
 			try
 			{
-				oos = new CheckerObjectOutputStream(out);
+				oos = newObjectOutputStream(out);
 				oos.writeObject(applicationKey);
 				oos.writeObject(object);
 			}
@@ -100,13 +100,13 @@ public class JavaSerializer implements ISerializer
 	public Object deserialize(final byte[] data)
 	{
 		ThreadContext old = ThreadContext.get(false);
+		final ByteArrayInputStream in = new ByteArrayInputStream(data);
+		ObjectInputStream ois = null;
 		try
 		{
-			final ByteArrayInputStream in = new ByteArrayInputStream(data);
-			ObjectInputStream ois = null;
 			try
 			{
-				ois = new ClassResolverObjectInputStream(in);
+				ois = newObjectInputStream(in);
 				String applicationName = (String)ois.readObject();
 				if (applicationName != null && !Application.exists())
 				{
@@ -132,16 +132,44 @@ public class JavaSerializer implements ISerializer
 		}
 		catch (ClassNotFoundException e)
 		{
-			throw new RuntimeException("Could not deserialize object using JavaSerializer", e);
+			throw new RuntimeException("Could not deserialize object using: " + ois.getClass(), e);
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException("Could not deserialize object using JavaSerializer", e);
+			throw new RuntimeException("Could not deserialize object using: " + ois.getClass(), e);
 		}
 		finally
 		{
 			ThreadContext.restore(old);
 		}
+	}
+
+	/**
+	 * Gets a new instance of an {@link ObjectInputStream} with the provided {@link InputStream}.
+	 * 
+	 * @param in
+	 *            The input stream that should be used for the reading
+	 * @return a new object input stream instance
+	 * @throws IOException
+	 *             if an I/O error occurs while reading stream header
+	 */
+	protected ObjectInputStream newObjectInputStream(InputStream in) throws IOException
+	{
+		return new ClassResolverObjectInputStream(in);
+	}
+
+	/**
+	 * Gets a new instance of an {@link ObjectOutputStream} with the provided {@link OutputStream}.
+	 * 
+	 * @param out
+	 *            The output stream that should be used for the writing
+	 * @return a new object output stream instance
+	 * @throws IOException
+	 *             if an I/O error occurs while writing stream header
+	 */
+	protected ObjectOutputStream newObjectOutputStream(OutputStream out) throws IOException
+	{
+		return new CheckerObjectOutputStream(out);
 	}
 
 	/**
