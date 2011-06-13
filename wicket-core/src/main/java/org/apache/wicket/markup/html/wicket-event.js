@@ -218,6 +218,73 @@ if (typeof(Wicket.Event) == "undefined") {
 			} else {
 				window.addEventListener("domready", fn, false);
 			}
-		}
+		},
+       
+		/**
+		* A hash of subscribers per topic.
+		* String -> Array[Function].
+		*/
+		subscribers : {},
+
+		/**
+		* Adds a subscriber for the passed topic.
+		* 
+		* @param String topic - the channel name for which this subscriber will be notified
+		*        If '*' then it will be notified for all topics
+		* @param Function subscriber - the callback to call when an event with this type is published
+		*/    
+		subscribe: function(topic, subscriber) {
+		   if (typeof(topic) === 'undefined' || topic === null) {
+			   return;
+		   }
+		   
+		   var subscribers;
+		   
+		   subscribers = Wicket.Event.subscribers[topic];
+		   if (typeof(subscribers) === 'undefined' || subscribers === null) {
+			   subscribers = [];
+			   Wicket.Event.subscribers[topic] = subscribers;
+		   }
+		   
+		   subscribers.push(subscriber);
+		},
+
+		/**
+		* Sends a notification to all subscribers for the given topic.
+		* Subscribers for topic '*' receive the actual topic as first parameter,
+		* otherwise the topic is not passed to subscribers which listen for specific 
+		* event types.
+		*
+		* @param String topic - the channel name for which all subscribers will be notified.
+		*/
+		publish: function(topic) {
+		   if (typeof(topic) === 'undefined' || topic === null) {
+			   return;
+		   }
+		   
+		   var subscribers, subscriberArguments;
+
+		   // notify all subscribers for this specific event type            
+		   subscribers = Wicket.Event.subscribers[topic];
+		   if (subscribers instanceof Array) {
+
+			   // cut the topic argument
+			   subscriberArguments = Array.prototype.slice.call(arguments).slice(1);
+		   
+			   for (var i = 0; i < subscribers.length; ++i) {
+				   subscribers[i].apply(this, subscriberArguments);
+			   }
+		   }
+		   
+		   // notify all subscribers which listen for any kind of events
+		   // and pass them the event type as first parameter
+		   subscribers = Wicket.Event.subscribers['*'];
+		   if (subscribers instanceof Array) {
+
+			   for (var i = 0; i < subscribers.length; ++i) {
+				   subscribers[i].apply(this, arguments);
+			   }
+		   }
+		}           
 	};
 }

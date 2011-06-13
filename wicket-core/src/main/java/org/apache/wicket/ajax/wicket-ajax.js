@@ -354,6 +354,8 @@ Wicket.replaceOuterHtmlSafari = function(element, text) {
  */
 Wicket.replaceOuterHtml = function(element, text) {	
 
+    Wicket.Event.publish('/dom/node/removing', element);
+
 	if (Wicket.Browser.isIE() || Wicket.Browser.isOpera()) {		
 		Wicket.replaceOuterHtmlIE(element, text);				
     } else if (Wicket.Browser.isSafari()) {
@@ -364,8 +366,11 @@ Wicket.replaceOuterHtml = function(element, text) {
         range.selectNode(element);
 		var fragment = range.createContextualFragment(text);
 		
-        element.parentNode.replaceChild(fragment, element);        
-    }		
+        element.parentNode.replaceChild(fragment, element);
+    }
+    
+    var newElement = Wicket.$(element.id);
+    Wicket.Event.publish('/dom/node/added', newElement);
 }	
 
 /**
