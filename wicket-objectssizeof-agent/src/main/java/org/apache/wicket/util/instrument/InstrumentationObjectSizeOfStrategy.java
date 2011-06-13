@@ -33,7 +33,7 @@ public class InstrumentationObjectSizeOfStrategy implements IObjectSizeOfStrateg
 {
 
 	/**
-	 * Records the size of an object and it's dependants as if they were serialized but using the
+	 * Records the size of an object and it's dependents as if they were serialized but using the
 	 * instrumentation API to calculate.
 	 */
 	private final class SizeRecodingOuputStream extends ObjectOutputStream
@@ -104,7 +104,7 @@ public class InstrumentationObjectSizeOfStrategy implements IObjectSizeOfStrateg
 	 *            object to calculate size of
 	 * @return object size
 	 * 
-	 * @see org.apache.wicket.util.lang.WicketObjects.IObjectSizeOfStrategy#sizeOf(java.io.Serializable) 
+	 * @see org.apache.wicket.util.lang.WicketObjects.IObjectSizeOfStrategy#sizeOf(java.io.Serializable)
 	 */
 	public long sizeOf(Serializable obj)
 	{
