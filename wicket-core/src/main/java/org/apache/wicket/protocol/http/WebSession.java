@@ -20,8 +20,7 @@ import java.util.List;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
-import org.apache.wicket.Page;
-import org.apache.wicket.RestartResponseException;
+import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.feedback.FeedbackMessage;
@@ -29,7 +28,6 @@ import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
-import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
@@ -216,21 +214,9 @@ public class WebSession extends Session
 					setMetaData(BROWSER_WAS_POLLED_KEY, Boolean.TRUE);
 					Request request = requestCycle.getRequest();
 
-					IRequestHandler activeRequestHandler = requestCycle.getActiveRequestHandler();
-
-					final String url;
-					if (activeRequestHandler != null)
-					{
-						url = requestCycle.urlFor(activeRequestHandler).toString();
-					}
-					else
-					{
-						url = requestCycle.urlFor(getApplication().getHomePage(), null).toString();
-					}
-					String relativeUrl = requestCycle.getUrlRenderer()
-						.renderContextPathRelativeUrl(url);
-					Page browserInfoPage = newBrowserInfoPage(relativeUrl);
-					throw new RestartResponseException(browserInfoPage);
+					WebPage browserInfoPage = newBrowserInfoPage();
+					getPageManager().touchPage(browserInfoPage);
+					throw new RestartResponseAtInterceptPageException(browserInfoPage);
 				}
 				// if we get here, the redirect already has been done; clear
 				// the meta data entry; we don't need it any longer is the client
@@ -247,12 +233,10 @@ public class WebSession extends Session
 	 * information.<br/>
 	 * The easiest way is just to extend {@link BrowserInfoPage} and provide your own markup file
 	 * 
-	 * @param url
-	 *            the url to redirect to when the browser info is handled
 	 * @return the {@link WebPage} which should be used while gathering browser info
 	 */
-	protected WebPage newBrowserInfoPage(String url)
+	protected WebPage newBrowserInfoPage()
 	{
-		return new BrowserInfoPage(url);
+		return new BrowserInfoPage();
 	}
 }

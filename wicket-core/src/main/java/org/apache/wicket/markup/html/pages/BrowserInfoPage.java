@@ -16,22 +16,17 @@
  */
 package org.apache.wicket.markup.html.pages;
 
-import java.io.Serializable;
-
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
-import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.handler.BookmarkablePageRequestHandler;
-import org.apache.wicket.request.handler.PageProvider;
-import org.apache.wicket.request.http.handler.RedirectRequestHandler;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.settings.IRequestCycleSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,9 +54,6 @@ public class BrowserInfoPage extends WebPage
 
 	private static final long serialVersionUID = 1L;
 
-	/** the url to continue to after this page. */
-	private String continueTo;
-
 	/**
 	 * Bookmarkable constructor. This is not for normal framework client use. It will be called
 	 * whenever JavaScript is not supported, and the browser info page's meta refresh fires to this
@@ -70,10 +62,8 @@ public class BrowserInfoPage extends WebPage
 	 * @param parameters
 	 *            page parameters with the original url in it
 	 */
-	public BrowserInfoPage(PageParameters parameters)
+	public BrowserInfoPage()
 	{
-		String to = parameters.get("cto").toString();
-		setContinueTo(to);
 		initComps();
 		RequestCycle requestCycle = getRequestCycle();
 		WebSession session = (WebSession)getSession();
@@ -88,20 +78,8 @@ public class BrowserInfoPage extends WebPage
 			ClientProperties properties = clientInfo.getProperties();
 			properties.setJavaEnabled(false);
 		}
-		continueToPrevious();
-	}
 
-	/**
-	 * Constructor. The page will redirect to the given url after waiting for the given number of
-	 * seconds.
-	 * 
-	 * @param continueTo
-	 *            the url to redirect to when the browser info is handled
-	 */
-	public BrowserInfoPage(final String continueTo)
-	{
-		setContinueTo(continueTo);
-		initComps();
+		continueToOriginalDestination();
 	}
 
 	/**
@@ -119,16 +97,33 @@ public class BrowserInfoPage extends WebPage
 	private final void initComps()
 	{
 		WebComponent meta = new WebComponent("meta");
-		PageParameters parameters = new PageParameters();
-		parameters.set("cto", continueTo);
 
-		CharSequence url = urlFor(new BookmarkablePageRequestHandler(new PageProvider(
-			BrowserInfoPage.class, parameters)));
+		final IModel<String> urlModel = new LoadableDetachableModel<String>()
+		{
+			private static final long serialVersionUID = 1L;
 
-		meta.add(AttributeModifier.replace("content", Model.of("0; url=" + url)));
+			@Override
+			protected String load()
+			{
+				CharSequence url = urlFor(BrowserInfoPage.class, null);
+				return url.toString();
+			}
+		};
+
+		meta.add(AttributeModifier.replace("content", new AbstractReadOnlyModel<String>()
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public String getObject()
+			{
+				return "0; url=" + urlModel.getObject();
+			}
+
+		}));
 		add(meta);
 		WebMarkupContainer link = new WebMarkupContainer("link");
-		link.add(AttributeModifier.replace("href", Model.of((Serializable)url)));
+		link.add(AttributeModifier.replace("href", urlModel));
 		add(link);
 		add(new BrowserInfoForm("postback")
 		{
@@ -140,71 +135,8 @@ public class BrowserInfoPage extends WebPage
 			@Override
 			protected void afterSubmit()
 			{
-				continueToPrevious();
+				continueToOriginalDestination();
 			}
 		});
-	}
-
-	/**
-	 * Continue to the location previous to this interception.
-	 */
-	protected final void continueToPrevious()
-	{
-		// continue to original destination
-		RequestCycle.get().scheduleRequestHandlerAfterCurrent(
-			new RedirectRequestHandler(continueTo));
-	}
-
-	/**
-	 * Log a warning that for in order to use this page, you should really be using
-	 * {@link WebClientInfo}.
-	 * 
-	 * @param clientInfo
-	 *            the actual client info object
-	 */
-	void warnNotUsingWebClientInfo(ClientInfo clientInfo)
-	{
-		log.warn("using " + getClass().getName() + " makes no sense if you are not using " +
-			WebClientInfo.class.getName() + " (you are using " + clientInfo.getClass().getName() +
-			" instead)");
-	}
-
-	/**
-	 * Set the url to continue to after this page.
-	 * 
-	 * @param continueTo
-	 *            the url
-	 */
-	protected final void setContinueTo(String continueTo)
-	{
-		if (continueTo == null)
-		{
-			throw new IllegalArgumentException("Argument continueTo must not be null");
-		}
-		else if (continueTo.contains("://"))
-		{
-			// prevent attackers from redirecting to any url by appending &cto=http://<someurl> to
-			// the query string, eg
-			// http://wicketstuff.org/wicket14/compref/?wicket:bookmarkablePage=:org.apache.wicket.markup.html.pages.BrowserInfoPage&cto=http://www.google.de
-			// WICKET-3106
-			throw new IllegalArgumentException("continueTo url : " + continueTo +
-				" must be relative to the current server.")
-			{
-				private static final long serialVersionUID = 1L;
-
-				/**
-				 * No stack trace. We won't tell the hackers about the internals of wicket in case
-				 * stack traces are enabled
-				 * 
-				 * @see java.lang.Throwable#getStackTrace()
-				 */
-				@Override
-				public StackTraceElement[] getStackTrace()
-				{
-					return new StackTraceElement[0];
-				}
-			};
-		}
-		this.continueTo = continueTo;
 	}
 }
