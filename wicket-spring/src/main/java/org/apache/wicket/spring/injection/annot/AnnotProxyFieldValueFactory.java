@@ -40,7 +40,7 @@ import org.springframework.context.support.AbstractApplicationContext;
 /**
  * {@link IFieldValueFactory} that uses {@link LazyInitProxyFactory} to create proxies for Spring
  * dependencies based on the {@link SpringBean} annotation applied to a field. This class is usually
- * used by the {@link AnnotSpringInjector} to inject objects with lazy init proxies. However, this
+ * used by the {@link SpringComponentInjector} to inject objects with lazy init proxies. However, this
  * class can be used on its own to create proxies for any field decorated with a {@link SpringBean}
  * annotation.
  * <p>
@@ -211,7 +211,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 						((AbstractApplicationContext)ctx).getBeanFactory(), name);
 					if (beanDef instanceof AbstractBeanDefinition)
 					{
-						if (((AbstractBeanDefinition)beanDef).isPrimary())
+						if (beanDef.isPrimary())
 						{
 							primaries.add(name);
 						}

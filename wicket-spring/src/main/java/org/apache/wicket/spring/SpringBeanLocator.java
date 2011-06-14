@@ -149,7 +149,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 						((AbstractApplicationContext)ctx).getBeanFactory(), name);
 					if (beanDef instanceof AbstractBeanDefinition)
 					{
-						if (((AbstractBeanDefinition)beanDef).isPrimary())
+						if (beanDef.isPrimary())
 						{
 							primaries.add(name);
 						}
