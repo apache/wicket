@@ -17,7 +17,7 @@
 package org.apache.wicket.examples.stateless;
 
 import org.apache.wicket.Session;
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.StatelessLink;
@@ -27,8 +27,13 @@ import org.apache.wicket.markup.html.link.StatelessLink;
  * 
  * @author Eelco Hillenius
  */
-public class Index extends WebPage
+public class Index extends WicketExamplePage
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor
 	 */

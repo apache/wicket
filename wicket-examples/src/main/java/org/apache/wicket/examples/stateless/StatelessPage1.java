@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.examples.stateless;
 
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.form.TextField;
@@ -30,8 +30,13 @@ import org.apache.wicket.validation.validator.MaximumValidator;
  * 
  * @author Eelco Hillenius
  */
-public class StatelessPage1 extends WebPage
+public class StatelessPage1 extends WicketExamplePage
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private final Integer number = 10;
 
 	/**
