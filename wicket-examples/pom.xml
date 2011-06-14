@@ -135,6 +135,7 @@
 					<include>**/*.txt</include>
 					<include>**/*.xml</include>
 					<include>**/*.properties</include>
+					<include>**/*.vm</include>
 				</includes>
 			</resource>
 		</resources> 
