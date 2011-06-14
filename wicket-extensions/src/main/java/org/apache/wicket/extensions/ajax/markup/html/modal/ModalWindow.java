@@ -1045,9 +1045,17 @@ public class ModalWindow extends Panel
 			{
 				throw new WicketRuntimeException("Error creating page for modal dialog.");
 			}
-
-			IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(page));
-			appendAssignment(buffer, "settings.src", RequestCycle.get().urlFor(handler));
+			CharSequence pageUrl = null;
+			if (page.isPageStateless())
+			{
+				pageUrl = RequestCycle.get().urlFor(page.getClass(), page.getPageParameters());
+			}
+			else
+			{
+				IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(page));
+				pageUrl = RequestCycle.get().urlFor(handler);
+			}
+			appendAssignment(buffer, "settings.src", pageUrl);
 		}
 		else
 		{
