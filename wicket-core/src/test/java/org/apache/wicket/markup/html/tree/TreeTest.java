@@ -29,9 +29,6 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 
 /**
- * Test cases preventing the two related bugs at:
- * 
- * @see <a href="https://issues.apache.org/jira/browse/WICKET-3309">WICKET-3309</a>
  * @author Pedro Santos
  */
 public class TreeTest extends WicketTestCase
@@ -41,6 +38,8 @@ public class TreeTest extends WicketTestCase
 	 * Asserting that {@link AbstractTree#treeNodesInserted(javax.swing.event.TreeModelEvent)} adds
 	 * the new item to the dirtyItemsCreateDOM, since there is no parent node at client to be
 	 * recreated.
+	 * 
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3309">WICKET-3309</a>
 	 */
 	public void testAddChildOnRootAtAnOnRootLessTree()
 	{
@@ -54,6 +53,8 @@ public class TreeTest extends WicketTestCase
 	/**
 	 * Asserting that {@link AbstractTree#treeNodesInserted(javax.swing.event.TreeModelEvent)} don't
 	 * add and not presented node to the AJAX response by invalidating it.
+	 * 
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3309">WICKET-3309</a>
 	 */
 	public void testAddGrandchildOnRootAtAnRootLessTree()
 	{
@@ -65,6 +66,19 @@ public class TreeTest extends WicketTestCase
 		tester.startPage(testPage);
 		tester.clickLink("addChildToSelected", true);
 		assertTrue(tester.getLastResponseAsString().contains("newNode"));
+	}
+
+	/**
+	 * Asserting the old leaf root node gets a junction link when adding its first child
+	 * 
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3449">WICKET-3449</a>
+	 */
+	public void testJunctionLinkRendered()
+	{
+		TestPage testPage = new TestPage();
+		tester.startPage(testPage);
+		tester.clickLink("addToRoot", true);
+		assertTrue(tester.getLastResponseAsString().contains("junctionLink"));
 	}
 
 	/** */

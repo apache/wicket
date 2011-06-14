@@ -846,16 +846,27 @@ public abstract class AbstractTree extends Panel
 			{
 				wasLeaf = eventChildren.contains(getChildAt(parentNode, i));
 			}
-			// if parent was a leaf, testing if wasn't an not presented root
-			if (wasLeaf && !(parentItem.getParentItem() == null && isRootLess()))
+
+			boolean addingToHiddedRoot = parentItem.getParentItem() == null && isRootLess();
+			// if parent was a presented leaf
+			if (wasLeaf && !addingToHiddedRoot)
 			{
 				// parentNode now has children for the first time, so we may need to invalidate
 				// grandparent so that parentNode's junctionLink gets rebuilt with a plus/minus link
 				Object grandparentNode = getParentNode(parentNode);
-				// not invalidating if the grandparent is a not presented root
-				if (!(getParentNode(grandparentNode) == null && isRootLess()))
+				boolean addingToHiddedRootSon = grandparentNode != null &&
+					getParentNode(grandparentNode) == null && isRootLess();
+				// if visible, invalidate the grandparent
+				if (grandparentNode != null && !addingToHiddedRootSon)
 				{
 					invalidateNodeWithChildren(grandparentNode);
+				}
+				else
+				{
+					// if not, simply invalidating the parent node
+					// OBS.: forcing rebuild since unlike the grandparent, the old
+					// leaf parent needs to rebuild with plus/minus link
+					invalidateNode(parentNode, true);
 				}
 				getTreeState().expandNode(parentNode);
 			}
