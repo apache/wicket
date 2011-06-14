@@ -519,6 +519,7 @@
 				</includes>
 				<excludes>
 					<exclude>**/*.java</exclude>
+					<exclude>**/package.html</exclude>
 				</excludes>
 			</resource>
 			<resource>
@@ -529,6 +530,7 @@
 				</includes>
 				<excludes>
 					<exclude>**/*.java</exclude>
+					<exclude>**/package.html</exclude>
 				</excludes>
 			</resource>
 		</resources>
@@ -541,6 +543,7 @@
 				</includes>
 				<excludes>
 					<exclude>**/*.java</exclude>
+					<exclude>**/package.html</exclude>
 				</excludes>
 			</testResource>
 		</testResources>
