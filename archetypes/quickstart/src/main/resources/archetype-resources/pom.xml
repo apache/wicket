@@ -29,7 +29,6 @@
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-core</artifactId>
 			<version>${wicket.version}</version>
-			<type>pom</type>
 		</dependency>
 		<!-- OPTIONAL DEPENDENCY
 		<dependency>
