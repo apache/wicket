@@ -22,7 +22,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
-import org.apache.wicket.page.PersistentPageManager;
+import org.apache.wicket.page.PageStoreManager;
 import org.apache.wicket.pageStore.DefaultPageStore;
 import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.pageStore.IPageStore;
@@ -82,7 +82,7 @@ public class TestApp1 extends WebApplication
 				IPageStore pageStore = new DefaultPageStore(
 					new JavaSerializer(getApplicationKey()), dataStore,
 					getStoreSettings().getInmemoryCacheSize());
-				return new PersistentPageManager(getName(), pageStore, pageManagerContext);
+				return new PageStoreManager(getName(), pageStore, pageManagerContext);
 
 			}
 		});
