@@ -39,8 +39,7 @@ public class BoxBorderTestPage_2 extends WebPage
 		BoxBorder border = new BoxBorder("box");
 		add(border);
 
-		border.addToBody(new TextField<String>("text"));
-		border.addToBody(new Image("img", new PackageResourceReference(BoxBorder.class,
-			"test.png")));
+		border.add(new TextField<String>("text"));
+		border.add(new Image("img", new PackageResourceReference(BoxBorder.class, "test.png")));
 	}
 }

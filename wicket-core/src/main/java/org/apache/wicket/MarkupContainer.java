@@ -126,7 +126,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 *             Thrown if a child with the same id is replaced by the add operation.
 	 * @return This
 	 */
-	public final MarkupContainer add(final Component... childs)
+	public MarkupContainer add(final Component... childs)
 	{
 		for (Component child : childs)
 		{
@@ -221,7 +221,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 *            The child(s) to be added or replaced
 	 * @return This
 	 */
-	public final MarkupContainer addOrReplace(final Component... childs)
+	public MarkupContainer addOrReplace(final Component... childs)
 	{
 		for (Component child : childs)
 		{
@@ -302,7 +302,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 *            True if all descendents should be considered
 	 * @return True if the component is contained in this container
 	 */
-	public final boolean contains(final Component component, final boolean recurse)
+	public boolean contains(final Component component, final boolean recurse)
 	{
 		if (component == null)
 		{
@@ -571,8 +571,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	/**
 	 * @param component
 	 *            Component to remove from this container
+	 * @return {@code this} for chaining
 	 */
-	public void remove(final Component component)
+	public MarkupContainer remove(final Component component)
 	{
 		checkHierarchyChange(component);
 
@@ -583,6 +584,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 		children_remove(component);
 		removedComponent(component);
+
+		return this;
 	}
 
 	/**
@@ -590,8 +593,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * 
 	 * @param id
 	 *            The id of the component to remove
+	 * @return {@code this} for chaining
 	 */
-	public final void remove(final String id)
+	public MarkupContainer remove(final String id)
 	{
 		if (id == null)
 		{
@@ -608,6 +612,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			throw new WicketRuntimeException("Unable to find a component with id '" + id +
 				"' to remove");
 		}
+
+		return this;
 	}
 
 	/**
@@ -615,8 +621,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * <p>
 	 * Note: implementation does not call {@link MarkupContainer#remove(Component) } for each
 	 * component.
+	 * 
+	 * @return {@code this} for method chaining
 	 */
-	public final void removeAll()
+	public MarkupContainer removeAll()
 	{
 		if (children != null)
 		{
@@ -642,6 +650,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 			children = null;
 		}
+
+		return this;
 	}
 
 	/**
@@ -722,7 +732,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 *             Thrown if there was no child with the same id.
 	 * @return This
 	 */
-	public final MarkupContainer replace(final Component child)
+	public MarkupContainer replace(final Component child)
 	{
 		checkHierarchyChange(child);
 
@@ -801,7 +811,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * 
 	 * @return Number of children in this container
 	 */
-	public final int size()
+	public int size()
 	{
 		return children_size();
 	}

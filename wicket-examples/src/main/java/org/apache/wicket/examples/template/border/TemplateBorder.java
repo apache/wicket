@@ -41,8 +41,8 @@ public class TemplateBorder extends Border
 	public TemplateBorder(String id)
 	{
 		super(id);
-		add(currentBanner = new Banner1("ad"));
-		add(new Link("changeAdLink")
+		addToBorder(currentBanner = new Banner1("ad"));
+		addToBorder(new Link("changeAdLink")
 		{
 			/**
 			 * @see org.apache.wicket.markup.html.link.Link#onClick()
@@ -60,7 +60,7 @@ public class TemplateBorder extends Border
 				}
 			}
 		});
-		add(new BookmarkablePageLink<Void>("page1Link", Page1.class));
-		add(new BookmarkablePageLink<Void>("page2Link", Page2.class));
+		addToBorder(new BookmarkablePageLink<Void>("page1Link", Page1.class));
+		addToBorder(new BookmarkablePageLink<Void>("page2Link", Page2.class));
 	}
 }

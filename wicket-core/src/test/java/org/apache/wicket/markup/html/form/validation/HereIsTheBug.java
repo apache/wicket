@@ -45,8 +45,8 @@ public class HereIsTheBug extends Panel
 		FormComponentFeedbackBorder border = new FormComponentFeedbackBorder("border");
 		TextField<String> textField = new TextField<String>("name");
 		textField.setRequired(true);
-		border.addToBody(textField);
-		border.addToBody(new FeedbackPanel("feedback"));
+		border.add(textField);
+		border.add(new FeedbackPanel("feedback"));
 		form.add(border);
 		add(form);
 	}

@@ -38,7 +38,7 @@ public class BorderRenderWrappedTestPage_1 extends WebPage
 
 		add(border);
 
-		border.getBodyContainer().add(new TextField<String>("text"));
-		border.getBodyContainer().add(new WebMarkupContainer("img"));
+		border.add(new TextField<String>("text"));
+		border.add(new WebMarkupContainer("img"));
 	}
 }

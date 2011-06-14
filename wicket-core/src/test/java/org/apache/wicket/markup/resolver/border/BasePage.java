@@ -66,6 +66,6 @@ public class BasePage extends WebPage
 
 	private void addToBorder(final Component child)
 	{
-		border.addToBody(child);
+		border.add(child);
 	}
 }

@@ -50,7 +50,7 @@ public class HomePage extends BasePage
 		LocalizedFeedbackBorder brdr = new LocalizedFeedbackBorder("fieldborder");
 		TextField<String> field = new TextField<String>("field", new Model<String>(""));
 		field.info("info on field");
-		brdr.addToBody(field.setRequired(true));
+		brdr.add(field.setRequired(true));
 		form.add(brdr);
 		add(form);
 	}

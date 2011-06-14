@@ -167,7 +167,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		super(id, model);
 
 		body = new BorderBodyContainer(id + "_" + BODY);
-		add(body);
+		addToBorder(body);
 	}
 
 	/**
@@ -178,16 +178,107 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		return body;
 	}
 
+	/**
+	 * This is for all components which have been added to the markup like this:
+	 * 
+	 * <pre>
+	 * 	&lt;span wicket:id="myBorder"&gt;
+	 * 		&lt;input wicket:id="text1" .. /&gt;
+	 * 		...
+	 * 	&lt;/span&gt;
+	 * 
+	 * </pre>
+	 * 
+	 * Whereas {@link #addToBorder(Component...)} will add a component associated with the following
+	 * markup:
+	 * 
+	 * <pre>
+	 * 	&lt;wicket:border&gt;
+	 * 		&lt;form wicket:id="myForm" .. &gt;
+	 * 			&lt;wicket:body/&gt;
+	 * 		&lt;/form&gt;
+	 * 	&lt;/wicket:border&gt;
+	 * 
+	 * </pre>
+	 * 
+	 * @see org.apache.wicket.MarkupContainer#add(org.apache.wicket.Component[])
+	 */
+	@Override
+	public Border add(final Component... children)
+	{
+		getBodyContainer().add(children);
+		return this;
+	}
+
+	@Override
+	public Border addOrReplace(final Component... children)
+	{
+		getBodyContainer().addOrReplace(children);
+		return this;
+	}
+
+	@Override
+	public Border remove(final Component component)
+	{
+		getBodyContainer().remove(component);
+		return this;
+	}
+
+	@Override
+	public Border remove(final String id)
+	{
+		getBodyContainer().remove(id);
+		return this;
+	}
+
+	@Override
+	public Border removeAll()
+	{
+		getBodyContainer().removeAll();
+		return this;
+	}
+
+	@Override
+	public Border replace(final Component replacement)
+	{
+		getBodyContainer().replace(replacement);
+		return this;
+	}
 
 	/**
-	 * A shortcut for {@code getBodyContainer().add(child)}
+	 * Adds children components to the Border itself
 	 * 
-	 * @param child
+	 * @param children
+	 *            the children components to add
 	 * @return this
 	 */
-	public Border addToBody(final Component... child)
+	public Border addToBorder(final Component... children)
 	{
-		getBodyContainer().add(child);
+		super.add(children);
+		return this;
+	}
+
+	/**
+	 * Removes child from the Border itself
+	 * 
+	 * @param child
+	 * @return {@code this}
+	 */
+	public Border removeFromBorder(final Component child)
+	{
+		super.remove(child);
+		return this;
+	}
+
+	/**
+	 * Replaces component in the Border itself
+	 * 
+	 * @param component
+	 * @return {@code this}
+	 */
+	public Border replaceInBorder(final Component component)
+	{
+		super.replace(component);
 		return this;
 	}
 

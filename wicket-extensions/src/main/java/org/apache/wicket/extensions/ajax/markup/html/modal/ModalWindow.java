@@ -865,13 +865,15 @@ public class ModalWindow extends Panel
 	 * @see org.apache.wicket.MarkupContainer#remove(org.apache.wicket.Component)
 	 */
 	@Override
-	public void remove(final Component component)
+	public ModalWindow remove(final Component component)
 	{
 		super.remove(component);
 		if (component.getId().equals(getContentId()))
 		{
 			add(empty = new WebMarkupContainer(getContentId()));
 		}
+
+		return this;
 	}
 
 	/**

@@ -153,7 +153,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 		private TestBorder(String id)
 		{
 			super(id);
-			add(new Label("c1", "some border title"));
+			addToBorder(new Label("c1", "some border title"));
 		}
 
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,

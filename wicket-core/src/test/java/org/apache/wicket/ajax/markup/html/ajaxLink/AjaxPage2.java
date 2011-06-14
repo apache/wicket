@@ -44,9 +44,9 @@ public class AjaxPage2 extends WebPage
 
 		ajaxLabel = new Label("ajaxLabel", "AAAAAAA");
 		ajaxLabel.setOutputMarkupId(true);
-		myBorder.addToBody(ajaxLabel);
+		myBorder.add(ajaxLabel);
 
-		myBorder.addToBody(new AjaxLink<Void>("ajaxLink")
+		myBorder.add(new AjaxLink<Void>("ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 

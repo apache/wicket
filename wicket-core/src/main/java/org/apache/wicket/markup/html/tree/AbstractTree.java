@@ -393,7 +393,7 @@ public abstract class AbstractTree extends Panel
 		 * @see org.apache.wicket.MarkupContainer#remove(org.apache.wicket.Component)
 		 */
 		@Override
-		public void remove(Component component)
+		public TreeItemContainer remove(Component component)
 		{
 			// when a treeItem is removed, remove reference to it from
 			// nodeToItemMAp
@@ -402,6 +402,7 @@ public abstract class AbstractTree extends Panel
 				nodeToItemMap.remove(((TreeItem)component).getModelObject());
 			}
 			super.remove(component);
+			return this;
 		}
 
 		/**

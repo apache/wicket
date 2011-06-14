@@ -64,7 +64,7 @@ public class HomePage extends WebPage
 
 			FormComponentFeedbackBorder nameBorder = new FormComponentFeedbackBorder("nameBorder");
 			add(nameBorder);
-			nameBorder.addToBody(name);
+			nameBorder.add(name);
 		}
 	}
 

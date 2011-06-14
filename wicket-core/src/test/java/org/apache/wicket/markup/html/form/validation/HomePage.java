@@ -109,15 +109,13 @@ public class HomePage extends WebPage
 		MyBorder border = new MyBorder("border");
 		add(border);
 
-		border.addToBody(new TextField<String>("textfield1", new PropertyModel<String>(this,
-			"textfield1")).setRequired(true));
-		border.addToBody(new Label("lbltextfield1", new PropertyModel<String>(this,
-			"textfield1")));
+		border.add(new TextField<String>("textfield1",
+			new PropertyModel<String>(this, "textfield1")).setRequired(true));
+		border.add(new Label("lbltextfield1", new PropertyModel<String>(this, "textfield1")));
 
-		border.addToBody(new TextField<String>("textfield2", new PropertyModel<String>(this,
-			"textfield2")));
-		border.addToBody(new Label("lbltextfield2", new PropertyModel<String>(this,
-			"textfield2")));
+		border.add(new TextField<String>("textfield2",
+			new PropertyModel<String>(this, "textfield2")));
+		border.add(new Label("lbltextfield2", new PropertyModel<String>(this, "textfield2")));
 
 		// --------------------
 
