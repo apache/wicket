@@ -185,11 +185,11 @@ public final class DiffUtil
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 		catch (ResourceStreamNotFoundException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 		return false;
 	}

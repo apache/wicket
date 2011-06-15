@@ -29,7 +29,8 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.util.tester.DiffUtil;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Test the {@link AjaxRequestTarget}.
@@ -38,6 +39,8 @@ import org.apache.wicket.util.tester.DiffUtil;
  */
 public class AjaxRequestTargetTest extends WicketTestCase
 {
+	private static final Logger log = LoggerFactory.getLogger(AjaxRequestTargetTest.class);
+	
 	/**
 	 * Test that a normal <style> header contribution is added correctly.
 	 * 
@@ -102,7 +105,7 @@ public class AjaxRequestTargetTest extends WicketTestCase
 				}
 				catch (Exception e)
 				{
-					e.printStackTrace();
+					log.error(e.getMessage(), e);
 				}
 			}
 		});

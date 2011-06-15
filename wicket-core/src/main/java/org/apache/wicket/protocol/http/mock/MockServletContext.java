@@ -367,7 +367,7 @@ public class MockServletContext implements ServletContext
 			}
 			catch (FileNotFoundException e)
 			{
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 				return null;
 			}
 		}

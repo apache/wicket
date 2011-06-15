@@ -202,7 +202,7 @@ public class DiskDataStoreTest extends TestCase
 				}
 				catch (InterruptedException e)
 				{
-					e.printStackTrace();
+					log.error(e.getMessage(), e);
 				}
 			}
 
@@ -237,7 +237,7 @@ public class DiskDataStoreTest extends TestCase
 				}
 				catch (InterruptedException e)
 				{
-					e.printStackTrace();
+					log.error(e.getMessage(), e);
 				}
 			}
 
@@ -270,13 +270,13 @@ public class DiskDataStoreTest extends TestCase
 				}
 				catch (InterruptedException e)
 				{
-					e.printStackTrace();
+					log.error(e.getMessage(), e);
 				}
 			}
 
 			read2Done.set(true);
 		}
-	};
+	}
 
 	private void doTestDataStore()
 	{
@@ -306,7 +306,7 @@ public class DiskDataStoreTest extends TestCase
 			}
 			catch (InterruptedException e)
 			{
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 			}
 		}
 
