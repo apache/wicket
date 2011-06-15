@@ -110,53 +110,21 @@ public class PackageResourceReference extends ResourceReference
 		}
 	}
 
-	private StreamInfo lookupStream(IResourceStreamLocator locator, Locale locale, String style,
-		String variation)
-	{
-		String absolutePath = Packages.absolutePath(getScope(), getName());
-		IResourceStream stream = locator.locate(getScope(), absolutePath, style, variation, locale,
-			null, true);
-
-		if (stream == null)
-			return null;
-
-		return new StreamInfo(stream);
-	}
-
 	private StreamInfo lookupStream(Locale locale, String style, String variation)
 	{
 		IResourceStreamLocator locator = Application.get()
 			.getResourceSettings()
 			.getResourceStreamLocator();
 
-		StreamInfo info;
+		String absolutePath = Packages.absolutePath(getScope(), getName());
 
-		info = lookupStream(locator, locale, style, variation);
-		if (info == null)
-		{
-			info = lookupStream(locator, locale, style, null);
-		}
-		if (info == null)
-		{
-			info = lookupStream(locator, locale, null, variation);
-		}
-		if (info == null)
-		{
-			info = lookupStream(locator, null, style, variation);
-		}
-		if (info == null)
-		{
-			info = lookupStream(locator, locale, null, null);
-		}
-		if (info == null)
-		{
-			info = lookupStream(locator, null, style, null);
-		}
-		if (info == null)
-		{
-			info = lookupStream(locator, null, null, variation);
-		}
-		return info;
+		IResourceStream stream = locator.locate(getScope(), absolutePath, style, variation, locale,
+			null, false);
+
+		if (stream == null)
+			return null;
+
+		return new StreamInfo(stream);
 	}
 
 	private UrlAttributes getUrlAttributes(Locale locale, String style, String variation)
@@ -193,8 +161,8 @@ public class PackageResourceReference extends ResourceReference
 	@Override
 	public UrlAttributes getUrlAttributes()
 	{
-		Locale locale = getLocale() != null ? getLocale() : Session.get().getLocale();
-		String style = getStyle() != null ? getStyle() : Session.get().getStyle();
+		Locale locale = getCurrentLocale();
+		String style = getCurrentStyle();
 		String variation = getVariation();
 
 		UrlAttributes key = new UrlAttributes(locale, style, variation);
