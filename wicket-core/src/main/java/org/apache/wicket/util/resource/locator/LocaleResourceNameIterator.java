@@ -98,37 +98,38 @@ public class LocaleResourceNameIterator implements Iterator<String>
 			return "";
 		}
 
-		// 1. Apply Locale default toString() implementation. See Locale.
-		if (state == 0)
-		{
-			state++;
-			return '_' + locale.toString();
-		}
-
 		// Get language and country, either of which may be the empty string
 		final String language = locale.getLanguage();
 		final String country = locale.getCountry();
+		final String variant = locale.getVariant();
 
-		// 2. If country and language are available
+		// 1. If variant are available
+		if (state == 0)
+		{
+			state++;
+			if (!Strings.isEmpty(variant))
+			{
+				return '_' + language + '_' + country + '_' + variant;
+			}
+		}
+
+
+		// 2. If country available
 		if (state == 1)
 		{
 			state++;
 
-			if (!Strings.isEmpty(language) && !Strings.isEmpty(country))
+			if (!Strings.isEmpty(country))
 			{
-				String newPath = '_' + language + '_' + country;
-				if (locale.toString().equals(newPath) == false)
-				{
-					return newPath;
-				}
+				return '_' + language + '_' + country;
 			}
 		}
 
-		// 3. If language is available
+
+		// 4. If language is available
 		if (state == 2)
 		{
 			state++;
-
 			if (!Strings.isEmpty(language))
 			{
 				return '_' + language;
