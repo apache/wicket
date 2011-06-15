@@ -228,14 +228,14 @@ public class UrlEncoder
 	/**
 	 * @param s
 	 *            string to encode
-	 * @param charsetName
-	 *            encoding to use
+	 * @param charset
+	 *            charset to use for encoding
 	 * @return encoded string
 	 * @see java.net.URLEncoder#encode(String, String)
 	 */
-	public String encode(final String s, final Charset charsetName)
+	public String encode(final String s, final Charset charset)
 	{
-		return encode(s, charsetName.name());
+		return encode(s, charset.name());
 	}
 
 	/**
