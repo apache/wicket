@@ -65,7 +65,8 @@ public class PageVersioningTest
 					{
 
 						final IDataStore dataStore = new InMemoryPageStore();
-						final AsynchronousDataStore asyncDS = new AsynchronousDataStore(dataStore);
+						final AsynchronousDataStore asyncDS = new AsynchronousDataStore(dataStore,
+							100);
 						final DefaultPageStore pageStore = new DefaultPageStore(new JavaSerializer(
 							application.getApplicationKey()), asyncDS, 40);
 						return new PageStoreManager(application.getName(), pageStore,

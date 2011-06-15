@@ -302,7 +302,7 @@ public class DiskDataStoreTest extends TestCase
 		{
 			try
 			{
-				Thread.sleep(5);
+				Thread.sleep(50);
 			}
 			catch (InterruptedException e)
 			{
@@ -339,7 +339,7 @@ public class DiskDataStoreTest extends TestCase
 
 		dataStore = new DiskDataStore("app1", fileStoreFolder, MAX_SIZE_PER_SESSION,
 			FILE_CHANNEL_POOL_CAPACITY);
-		dataStore = new AsynchronousDataStore(dataStore);
+		dataStore = new AsynchronousDataStore(dataStore, 100);
 
 		doTestDataStore();
 
