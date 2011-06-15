@@ -114,8 +114,10 @@ public class PackageResourceReference extends ResourceReference
 		String variation)
 	{
 		String absolutePath = Packages.absolutePath(getScope(), getName());
+		// strict only if an attribute was specified
+		boolean strict = getLocale() != null || getStyle() != null || getVariation() != null;
 		IResourceStream stream = locator.locate(getScope(), absolutePath, style, variation, locale,
-			null, true);
+			null, strict);
 
 		if (stream == null)
 			return null;
