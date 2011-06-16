@@ -188,6 +188,8 @@ public class Initializer implements IInitializer
 				":type=Application,name=SecuritySettings"));
 			register(new SessionSettings(application), new ObjectName(domain +
 				":type=Application,name=SessionSettings"));
+			register(new StoreSettings(application), new ObjectName(domain +
+				":type=Application,name=StoreSettings"));
 
 			RequestLogger sessionsBean = new RequestLogger(application);
 			ObjectName sessionsBeanName = new ObjectName(domain + ":type=RequestLogger");
