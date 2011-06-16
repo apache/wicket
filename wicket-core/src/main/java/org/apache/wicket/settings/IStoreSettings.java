@@ -19,6 +19,7 @@ package org.apache.wicket.settings;
 import java.io.File;
 
 import org.apache.wicket.page.IPageManager;
+import org.apache.wicket.pageStore.AsynchronousDataStore;
 import org.apache.wicket.pageStore.DiskDataStore;
 import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.pageStore.IPageStore;
@@ -27,6 +28,8 @@ import org.apache.wicket.util.lang.Bytes;
 /**
  * An interface for settings related to the the storages where page instances are persisted -
  * {@link IPageStore}, {@link IDataStore} and {@link IPageManager}.
+ * 
+ * @since 1.5
  */
 public interface IStoreSettings
 {
@@ -90,4 +93,19 @@ public interface IStoreSettings
 	 *            the new location
 	 */
 	void setFileStoreFolder(File fileStoreFolder);
+
+	/**
+	 * @return the capacity of the queue used to store the pages which will be stored asynchronously
+	 * @see AsynchronousDataStore
+	 */
+	int getAsynchronousQueueCapacity();
+
+	/**
+	 * Sets the capacity of the queue used to store the pages which will be stored asynchronously
+	 * 
+	 * @param capacity
+	 *            the capacity of the queue
+	 * @see AsynchronousDataStore
+	 */
+	void setAsynchronousQueueCapacity(int capacity);
 }

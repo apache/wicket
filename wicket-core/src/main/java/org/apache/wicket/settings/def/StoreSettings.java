@@ -37,6 +37,8 @@ public class StoreSettings implements IStoreSettings
 
 	private static final Bytes DEFAULT_MAX_SIZE_PER_SESSION = Bytes.megabytes(10);
 
+	private static final int DEFAULT_ASYNCHRONOUS_QUEUE_CAPACITY = 100;
+
 	private int fileChannelPoolCapacity = DEFAULT_FILE_CHANNEL_POOL_CAPACITY;
 
 	private int inmemoryCacheSize = DEFAULT_CACHE_SIZE;
@@ -44,6 +46,8 @@ public class StoreSettings implements IStoreSettings
 	private Bytes maxSizePerSession = DEFAULT_MAX_SIZE_PER_SESSION;
 
 	private File fileStoreFolder = null;
+
+	private int asynchronousQueueCapacity = DEFAULT_ASYNCHRONOUS_QUEUE_CAPACITY;
 
 	/**
 	 * Construct.
@@ -119,5 +123,20 @@ public class StoreSettings implements IStoreSettings
 	public void setFileStoreFolder(final File fileStoreFolder)
 	{
 		this.fileStoreFolder = Args.notNull(fileStoreFolder, "fileStoreFolder");
+	}
+
+	public int getAsynchronousQueueCapacity()
+	{
+		return asynchronousQueueCapacity;
+	}
+
+	public void setAsynchronousQueueCapacity(int queueCapacity)
+	{
+		if (queueCapacity < 1)
+		{
+			throw new IllegalArgumentException(
+				"The capacity of the asynchronous queue should be at least 1.");
+		}
+		asynchronousQueueCapacity = queueCapacity;
 	}
 }

@@ -339,7 +339,8 @@ public class DiskDataStoreTest extends TestCase
 
 		dataStore = new DiskDataStore("app1", fileStoreFolder, MAX_SIZE_PER_SESSION,
 			FILE_CHANNEL_POOL_CAPACITY);
-		dataStore = new AsynchronousDataStore(dataStore, 100);
+		int asynchronousQueueCapacity = storeSettings.getAsynchronousQueueCapacity();
+		dataStore = new AsynchronousDataStore(dataStore, asynchronousQueueCapacity);
 
 		doTestDataStore();
 

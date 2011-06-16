@@ -16,10 +16,7 @@
  */
 package org.apache.wicket.jmx;
 
-import java.io.File;
-
 import org.apache.wicket.Application;
-import org.apache.wicket.util.lang.Bytes;
 
 /**
  * Exposes Application's StoreSettings for JMX.
@@ -43,19 +40,9 @@ public class StoreSettings implements StoreSettingsMBean
 		return application.getStoreSettings().getFileChannelPoolCapacity();
 	}
 
-	public void setFileChannelPoolCapacity(int capacity)
-	{
-		application.getStoreSettings().setFileChannelPoolCapacity(capacity);
-	}
-
 	public int getInmemoryCacheSize()
 	{
 		return application.getStoreSettings().getInmemoryCacheSize();
-	}
-
-	public void setInmemoryCacheSize(int inmemoryCacheSize)
-	{
-		application.getStoreSettings().setInmemoryCacheSize(inmemoryCacheSize);
 	}
 
 	public long getMaxSizePerSession()
@@ -63,21 +50,14 @@ public class StoreSettings implements StoreSettingsMBean
 		return application.getStoreSettings().getMaxSizePerSession().bytes();
 	}
 
-	public void setMaxSizePerSession(long maxSizePerSession)
-	{
-		Bytes bytes = Bytes.bytes(maxSizePerSession);
-		application.getStoreSettings().setMaxSizePerSession(bytes);
-	}
-
 	public String getFileStoreFolder()
 	{
 		return application.getStoreSettings().getFileStoreFolder().getAbsolutePath();
 	}
 
-	public void setFileStoreFolder(String fileStoreFolder)
+	public int getAsynchronousQueueCapacity()
 	{
-		File storeFolder = new File(fileStoreFolder);
-		application.getStoreSettings().setFileStoreFolder(storeFolder);
+		return application.getStoreSettings().getAsynchronousQueueCapacity();
 	}
 
 }

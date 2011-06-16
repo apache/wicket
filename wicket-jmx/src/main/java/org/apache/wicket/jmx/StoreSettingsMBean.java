@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.jmx;
 
-import java.io.File;
-
 import org.apache.wicket.pageStore.DiskDataStore;
 
 /**
@@ -32,27 +30,10 @@ public interface StoreSettingsMBean
 	int getFileChannelPoolCapacity();
 
 	/**
-	 * Sets the number of maximum opened file channels by {@link DiskDataStore}
-	 * 
-	 * @param capacity
-	 *            the new maximum number of opened file channels
-	 */
-	void setFileChannelPoolCapacity(int capacity);
-
-	/**
 	 * @return the number of page instances which will be stored in the http session for faster
 	 *         retrieval
 	 */
 	int getInmemoryCacheSize();
-
-	/**
-	 * Sets the maximum number of page instances which will be stored in the http session for faster
-	 * retrieval
-	 * 
-	 * @param inmemoryCacheSize
-	 *            the maximum number of page instances which will be held in the http session
-	 */
-	void setInmemoryCacheSize(int inmemoryCacheSize);
 
 	/**
 	 * @return maximum page size. After this size is exceeded, the {@link DiskDataStore} will start
@@ -61,28 +42,13 @@ public interface StoreSettingsMBean
 	long getMaxSizePerSession();
 
 	/**
-	 * Sets the maximum size of the {@link File} where page instances per session are stored. After
-	 * reaching this size the {@link DiskDataStore} will start overriding the oldest pages at the
-	 * beginning of the file.
-	 * 
-	 * @param maxSizePerSession
-	 *            the maximum size of the file where page instances are stored per session. In
-	 *            bytes.
-	 */
-	void setMaxSizePerSession(long maxSizePerSession);
-
-	/**
 	 * @return the location of the folder where {@link DiskDataStore} will store the files with page
 	 *         instances per session
 	 */
 	String getFileStoreFolder();
 
 	/**
-	 * Sets the folder where {@link DiskDataStore} will store the files with page instances per
-	 * session
-	 * 
-	 * @param fileStoreFolder
-	 *            the new location
+	 * @return the capacity of the queue used to store the pages which will be stored asynchronously
 	 */
-	void setFileStoreFolder(String fileStoreFolder);
+	int getAsynchronousQueueCapacity();
 }
