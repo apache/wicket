@@ -49,7 +49,7 @@ public class Args
 	 * @return The 'argument' parameter
 	 * @throws IllegalArgumentException
 	 */
-	public static String notEmpty(final String argument, final String name)
+	public static CharSequence notEmpty(final CharSequence argument, final String name)
 	{
 		if (Strings.isEmpty(argument))
 		{

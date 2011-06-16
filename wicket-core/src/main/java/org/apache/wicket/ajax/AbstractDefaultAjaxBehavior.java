@@ -30,6 +30,7 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.IDebugSettings;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
@@ -329,20 +330,9 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	public static CharSequence throttleScript(CharSequence script, String throttleId,
 		Duration throttleDelay)
 	{
-		if (Strings.isEmpty(script))
-		{
-			throw new IllegalArgumentException("script cannot be empty");
-		}
-
-		if (Strings.isEmpty(throttleId))
-		{
-			throw new IllegalArgumentException("throttleId cannot be empty");
-		}
-
-		if (throttleDelay == null)
-		{
-			throw new IllegalArgumentException("throttleDelay cannot be null");
-		}
+		Args.notEmpty(script, "script");
+		Args.notEmpty(throttleId, "throttleId");
+		Args.notNull(throttleDelay, "throttleDelay");
 
 		return new AppendingStringBuffer("wicketThrottler.throttle( '").append(throttleId)
 			.append("', ")
