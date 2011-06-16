@@ -27,9 +27,11 @@ import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.lang.Exceptions;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.junit.Ignore;
 
 /**
  */
+@Ignore
 public class ExceptionMapperTest extends WicketTestCase
 {
 	/**
@@ -39,11 +41,12 @@ public class ExceptionMapperTest extends WicketTestCase
 	 * 
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3256">WICKET-3256</a>
 	 */
-	public void testExceptionMapper()
+	public void exceptionMapper()
 	{
 		Application app = tester.getApplication();
 		WrapperProvider wrapper = new WrapperProvider(app.getExceptionMapperProvider());
-		app.setExceptionMapperProvider(wrapper);
+		// martin-g: WICKET-3806 IRequestCycleListener#onException() should be used by clients
+// app.setExceptionMapperProvider(wrapper);
 		tester.setExposeExceptions(false);
 		tester.startPage(TestPage.class);
 		tester.clickLink(MockPageWithLink.LINK_ID);

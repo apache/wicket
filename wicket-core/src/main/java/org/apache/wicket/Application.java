@@ -715,15 +715,6 @@ public abstract class Application implements UnboundListener, IEventSink
 	}
 
 	/**
-	 * @param exceptionMapperProvider
-	 *            the new exception mapper provider
-	 */
-	public void setExceptionMapperProvider(IProvider<IExceptionMapper> exceptionMapperProvider)
-	{
-		this.exceptionMapperProvider = exceptionMapperProvider;
-	}
-
-	/**
 	 * 
 	 * @return Session state provider
 	 */
