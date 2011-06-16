@@ -66,15 +66,6 @@ public class RequestMapperApplication extends WicketExampleApplication
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#getConfigurationType()
-	 */
-	@Override
-	public RuntimeConfigurationType getConfigurationType()
-	{
-		return RuntimeConfigurationType.DEVELOPMENT;
-	}
-
-	/**
 	 * HttpsConfig that extracts the <i>http</i> port out of the current servlet request's local
 	 * port. This way the demo can be used both with Jetty (port 8080) and at production (behind
 	 * Apache proxy)
