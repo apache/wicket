@@ -80,10 +80,7 @@ public class FileChannelPool
 			throw new IllegalArgumentException("Capacity must be at least one.");
 		}
 
-		if (log.isDebugEnabled())
-		{
-			log.debug("Starting file channel pool with capacity of " + capacity + " channels");
-		}
+		log.debug("Starting file channel pool with capacity of '{}' channels", capacity);
 	}
 
 	/**
@@ -126,11 +123,10 @@ public class FileChannelPool
 		// channels left
 		while (channelsToReduce > 0 && idleChannels.isEmpty() == false)
 		{
-			FileChannel channel = idleChannels.getFirst();
+			FileChannel channel = idleChannels.removeFirst();
 			String channelName = channelToName.get(channel);
 
 			// remove oldest idle channel
-			idleChannels.removeFirst();
 			nameToChannel.remove(channelName);
 			channelToName.remove(channel);
 
@@ -162,7 +158,7 @@ public class FileChannelPool
 	 * Returns a channel for given file. If the file doesn't exist, the createIfDoesNotExit
 	 * attribute specifies if the file should be created.
 	 * 
-	 * Do NOT call close on the returned chanel. Instead call
+	 * Do NOT call close on the returned channel. Instead call
 	 * {@link #returnFileChannel(FileChannel)}
 	 * 
 	 * @param fileName
@@ -273,7 +269,7 @@ public class FileChannelPool
 
 	/**
 	 * Closes the file channel with given name and removes it from pool. Also removes the file from
-	 * file system. If the channel is in use, the pool first waits until the chanel is returned to
+	 * file system. If the channel is in use, the pool first waits until the channel is returned to
 	 * the pool and then closes it.
 	 * 
 	 * @param name
