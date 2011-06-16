@@ -18,8 +18,11 @@ package org.apache.wicket.pageStore.memory;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.wicket.Session;
 import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.pageStore.IDataStore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A {@link DataStore} which stores the pages in the {@link HttpSession}. Uses
@@ -48,6 +51,7 @@ import org.apache.wicket.pageStore.IDataStore;
  */
 public class HttpSessionDataStore implements IDataStore
 {
+	private static final Logger log = LoggerFactory.getLogger(HttpSessionDataStore.class);
 
 	/** the session attribute key. auto-prefixed with application.getSessionAttributePrefix() */
 	private static final String PAGE_TABLE_KEY = "page:store:memory";
@@ -106,9 +110,16 @@ public class HttpSessionDataStore implements IDataStore
 	public void storeData(String sessionId, int pageId, byte[] pageAsBytes)
 	{
 		PageTable pageTable = getPageTable(true);
-		pageTable.storePage(pageId, pageAsBytes);
-
-		evictionStrategy.evict(pageTable);
+		if (pageTable != null)
+		{
+			pageTable.storePage(pageId, pageAsBytes);
+			evictionStrategy.evict(pageTable);
+		}
+		else
+		{
+			log.error("Cannot store the data for page with id '{}' in session with id '{}'",
+				pageId, sessionId);
+		}
 	}
 
 	public void destroy()
@@ -125,13 +136,16 @@ public class HttpSessionDataStore implements IDataStore
 
 	private PageTable getPageTable(boolean create)
 	{
-		PageTable pageTable = (PageTable)pageManagerContext.getSessionAttribute(PAGE_TABLE_KEY);
-		if (pageTable == null && create)
+		PageTable pageTable = null;
+		if (Session.exists())
 		{
-			pageTable = new PageTable();
-			pageManagerContext.setSessionAttribute(PAGE_TABLE_KEY, pageTable);
+			pageTable = (PageTable)pageManagerContext.getSessionAttribute(PAGE_TABLE_KEY);
+			if (pageTable == null && create)
+			{
+				pageTable = new PageTable();
+				pageManagerContext.setSessionAttribute(PAGE_TABLE_KEY, pageTable);
+			}
 		}
-
 		return pageTable;
 	}
 
