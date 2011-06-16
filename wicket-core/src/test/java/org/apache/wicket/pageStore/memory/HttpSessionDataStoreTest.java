@@ -17,16 +17,15 @@
 package org.apache.wicket.pageStore.memory;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
+import org.apache.wicket.WicketTestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  */
-public class HttpSessionDataStoreTest
+public class HttpSessionDataStoreTest extends WicketTestCase
 {
 	final String sessionId = "anything";
 
