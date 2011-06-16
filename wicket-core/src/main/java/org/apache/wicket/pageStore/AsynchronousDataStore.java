@@ -24,7 +24,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,14 +47,14 @@ public class AsynchronousDataStore implements IDataStore
 	private static final Logger log = LoggerFactory.getLogger(AsynchronousDataStore.class);
 
 	/**
-	 * The time to wait when adding an {@link Entry} into the entries
+	 * The time to wait when adding an {@link Entry} into the entries. In millis.
 	 */
-	private static final Duration OFFER_WAIT = Duration.milliseconds(100);
+	private static final long OFFER_WAIT = 30L;
 
 	/**
-	 * The time to wait for an entry to save with the wrapped {@link IDataStore}
+	 * The time to wait for an entry to save with the wrapped {@link IDataStore}. In millis.
 	 */
-	private static final Duration POLL_WAIT = Duration.milliseconds(1000);
+	private static final long POLL_WAIT = 1000L;
 
 	/**
 	 * A flag indicating that this {@link IDataStore} should stop
@@ -209,11 +208,11 @@ public class AsynchronousDataStore implements IDataStore
 		Entry entry = new Entry(sessionId, id, data);
 		try
 		{
-			boolean added = entries.offer(entry, OFFER_WAIT.getMilliseconds(),
-				TimeUnit.MILLISECONDS);
+			boolean added = entries.offer(entry, OFFER_WAIT, TimeUnit.MILLISECONDS);
 
 			if (added == false)
 			{
+				log.debug("Storing synchronously page with id '{}' in session '{}'", id, sessionId);
 				dataStore.storeData(sessionId, id, data);
 			}
 			else
@@ -351,7 +350,7 @@ public class AsynchronousDataStore implements IDataStore
 				Entry entry = null;
 				try
 				{
-					entry = entries.poll(POLL_WAIT.getMilliseconds(), TimeUnit.MILLISECONDS);
+					entry = entries.poll(POLL_WAIT, TimeUnit.MILLISECONDS);
 				}
 				catch (InterruptedException e)
 				{
