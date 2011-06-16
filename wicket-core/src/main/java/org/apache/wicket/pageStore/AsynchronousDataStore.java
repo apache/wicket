@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.pageStore;
 
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -90,7 +90,7 @@ public class AsynchronousDataStore implements IDataStore
 	{
 		this.dataStore = dataStore;
 		destroy = new AtomicBoolean(false);
-		entries = new ArrayBlockingQueue<Entry>(capacity);
+		entries = new LinkedBlockingQueue<Entry>(capacity);
 		entryMap = new ConcurrentHashMap<String, Entry>();
 
 		PageSavingRunnable savingRunnable = new PageSavingRunnable(dataStore, entries, entryMap,
