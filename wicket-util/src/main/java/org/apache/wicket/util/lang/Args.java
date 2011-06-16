@@ -44,17 +44,22 @@ public class Args
 	/**
 	 * Checks argument is not empty (not null and has a non-whitespace character)
 	 * 
+	 * @param <T>
+	 *            the type of the argument to check for emptiness
+	 * 
 	 * @param argument
+	 *            the argument to check for emptiness
 	 * @param name
-	 * @return The 'argument' parameter
+	 *            the name to use in the error message
+	 * @return The {@code argument} parameter if not empty
 	 * @throws IllegalArgumentException
+	 *             when the passed {@code argument} is empty
 	 */
-	public static CharSequence notEmpty(final CharSequence argument, final String name)
+	public static <T extends CharSequence> T notEmpty(final T argument, final String name)
 	{
 		if (Strings.isEmpty(argument))
 		{
-			throw new IllegalArgumentException("Argument '" + name +
-				"' may not be null or empty string.");
+			throw new IllegalArgumentException("Argument '" + name + "' may not be null or empty.");
 		}
 		return argument;
 	}
