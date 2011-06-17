@@ -46,12 +46,12 @@ public interface ApplicationMBean
 	String getApplicationClass() throws IOException;
 
 	/**
-	 * The configuration type, either {@link org.apache.wicket.Application#DEVELOPMENT} or
-	 * {@link Application#DEPLOYMENT}.
+	 * The configuration type, either {@link RuntimeConfigurationType#DEVELOPMENT} or
+	 * {@link RuntimeConfigurationType#DEPLOYMENT}.
 	 * 
 	 * @return The configuration type
 	 */
-	RuntimeConfigurationType getConfigurationType();
+	String getConfigurationType();
 
 	/**
 	 * Gets the configured home page for this application.
