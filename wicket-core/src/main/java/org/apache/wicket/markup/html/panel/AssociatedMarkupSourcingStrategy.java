@@ -56,7 +56,18 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 	{
 		super.onComponentTag(component, tag);
 
-		// Copy attributes from <wicket:XXX> to the "calling" tag
+		// Can be explicitly called
+		copyAttributes(component, tag);
+	}
+
+	/**
+	 * Copy attributes from <wicket:XXX> to the "calling" tag
+	 * 
+	 * @param component
+	 * @param tag
+	 */
+	public void copyAttributes(final Component component, final ComponentTag tag)
+	{
 		IMarkupFragment markup = ((MarkupContainer)component).getMarkup(null);
 		String namespace = markup.getMarkupResourceStream().getWicketNamespace() + ":";
 
