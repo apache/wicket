@@ -97,9 +97,9 @@ public class GenericWebPage<T> extends WebPage
 	 * @return the model
 	 */
 	@SuppressWarnings("unchecked")
-	public final T getModel()
+	public final IModel<T> getModel()
 	{
-		return (T)getDefaultModel();
+		return (IModel<T>)getDefaultModel();
 	}
 
 	/**
