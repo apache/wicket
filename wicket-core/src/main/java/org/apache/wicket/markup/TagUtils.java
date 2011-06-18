@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.markup;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
+
 
 /**
  * Some utils to handle tags which otherwise would bloat the Tag AP.
@@ -140,5 +143,39 @@ public class TagUtils
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Copy attributes from e.g. &lt;wicket:panel&gt; (or border) to the "calling" tag.
+	 * 
+	 * @see <a href="http://issues.apache.org/jira/browse/WICKET-2874">WICKET-2874</a>
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3812">WICKET-3812</a>
+	 * 
+	 * @param component
+	 * @param tag
+	 */
+	public static void copyAttributes(final Component component, final ComponentTag tag)
+	{
+		IMarkupFragment markup = ((MarkupContainer)component).getMarkup(null);
+		String namespace = markup.getMarkupResourceStream().getWicketNamespace() + ":";
+
+		MarkupElement elem = markup.get(0);
+		if (elem instanceof ComponentTag)
+		{
+			ComponentTag panelTag = (ComponentTag)elem;
+			for (String key : panelTag.getAttributes().keySet())
+			{
+				// exclude "wicket:XX" attributes
+				if (key.startsWith(namespace) == false)
+				{
+					tag.append(key, panelTag.getAttribute(key), ", ");
+				}
+			}
+		}
+		else
+		{
+			throw new MarkupException(markup.getMarkupResourceStream(),
+				"Expected a Tag but found raw markup: " + elem.toString());
+		}
 	}
 }

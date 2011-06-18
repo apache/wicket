@@ -48,47 +48,13 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 	{
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void onComponentTag(final Component component, final ComponentTag tag)
 	{
 		super.onComponentTag(component, tag);
 
-		// Can be explicitly called
-		copyAttributes(component, tag);
-	}
-
-	/**
-	 * Copy attributes from <wicket:XXX> to the "calling" tag
-	 * 
-	 * @param component
-	 * @param tag
-	 */
-	public void copyAttributes(final Component component, final ComponentTag tag)
-	{
-		IMarkupFragment markup = ((MarkupContainer)component).getMarkup(null);
-		String namespace = markup.getMarkupResourceStream().getWicketNamespace() + ":";
-
-		MarkupElement elem = markup.get(0);
-		if (elem instanceof ComponentTag)
-		{
-			ComponentTag panelTag = (ComponentTag)elem;
-			for (String key : panelTag.getAttributes().keySet())
-			{
-				// exclude "wicket:XX" attributes
-				if (key.startsWith(namespace) == false)
-				{
-					tag.append(key, panelTag.getAttribute(key), ", ");
-				}
-			}
-		}
-		else
-		{
-			throw new MarkupException(markup.getMarkupResourceStream(),
-				"Expected a Tag but found raw markup: " + elem.toString());
-		}
+		// In case you want to copy attributes from <wicket:panel> tag to the "calling" tag, you
+		// may subclass onComponentTag of your component and call TagUtils.copyAttributes().
 	}
 
 	/**

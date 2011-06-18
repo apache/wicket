@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.markup.html.panel;
 
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.TagUtils;
+
 
 /**
  * Mock page for testing.
@@ -34,5 +37,14 @@ public class SimplePanel_4 extends Panel
 	public SimplePanel_4(final String id)
 	{
 		super(id);
+	}
+
+	@Override
+	protected void onComponentTag(ComponentTag tag)
+	{
+		super.onComponentTag(tag);
+
+		// WICKET-2874, WICKET-3812
+		TagUtils.copyAttributes(this, tag);
 	}
 }
