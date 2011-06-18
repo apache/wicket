@@ -68,7 +68,7 @@ public class Localizer
 	/**
 	 * @return Same as Application.get().getResourceSettings().getLocalizer()
 	 */
-	public Localizer get()
+	public static Localizer get()
 	{
 		return Application.get().getResourceSettings().getLocalizer();
 	}
