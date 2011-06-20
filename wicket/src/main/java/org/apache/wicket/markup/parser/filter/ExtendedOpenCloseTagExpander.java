@@ -63,6 +63,6 @@ public class ExtendedOpenCloseTagExpander extends OpenCloseTagExpander
 	@Override
 	protected boolean contains(String name)
 	{
-		return replaceForTags.contains(name.toLowerCase());
+		return replaceForTags.contains(name.toLowerCase()) || super.contains(name);
 	}
 }
