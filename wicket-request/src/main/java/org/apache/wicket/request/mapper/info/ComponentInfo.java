@@ -32,19 +32,20 @@ import org.apache.wicket.util.string.Strings;
 public class ComponentInfo
 {
 	private static final char BEHAVIOR_INDEX_SEPARATOR = '.';
-	private static final char SEPARATOR = '-';
+	private static final String SEPARATOR = "-";
+	private static final String COMPONENT_SEPARATOR = ":";
 
 	private static final String TMP_PLACEHOLDER = "[[[[[[[WICKET[[TMP]]DASH]]" + Math.random() +
 		"]]]]";
 
-	private static String encodeComponentPath(String path)
+	private static String encodeComponentPath(CharSequence path)
 	{
 		if (path != null)
 		{
-			path = path.replace("" + SEPARATOR, TMP_PLACEHOLDER);
-			path = path.replace(':', SEPARATOR);
-			path = path.replace(TMP_PLACEHOLDER, "" + SEPARATOR + SEPARATOR);
-			return path;
+			path = Strings.replaceAll(path, SEPARATOR, TMP_PLACEHOLDER);
+			path = Strings.replaceAll(path, COMPONENT_SEPARATOR, SEPARATOR);
+			path = Strings.replaceAll(path, TMP_PLACEHOLDER, SEPARATOR + SEPARATOR);
+			return path.toString();
 		}
 		else
 		{
@@ -52,14 +53,14 @@ public class ComponentInfo
 		}
 	}
 
-	private static String decodeComponentPath(String path)
+	private static String decodeComponentPath(CharSequence path)
 	{
 		if (path != null)
 		{
-			path = path.replace("" + SEPARATOR + SEPARATOR, TMP_PLACEHOLDER);
-			path = path.replace(SEPARATOR, ':');
-			path = path.replace(TMP_PLACEHOLDER, "" + SEPARATOR);
-			return path;
+			path = Strings.replaceAll(path, SEPARATOR + SEPARATOR, TMP_PLACEHOLDER).toString();
+			path = Strings.replaceAll(path, SEPARATOR, COMPONENT_SEPARATOR);
+			path = Strings.replaceAll(path, TMP_PLACEHOLDER, SEPARATOR).toString();
+			return path.toString();
 		}
 		else
 		{
