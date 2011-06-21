@@ -209,7 +209,6 @@ public interface IHeaderResponse extends Closeable
 	 * @param media
 	 *            the media type for this CSS ("print", "screen", etc.)
 	 */
-	// TODO make media an enum
 	public void renderCSSReference(String url, String media);
 
 	/**
@@ -223,7 +222,6 @@ public interface IHeaderResponse extends Closeable
 	 * @param condition
 	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
 	 */
-	// TODO make media an enum
 	public void renderCSSReference(String url, String media, String condition);
 
 
