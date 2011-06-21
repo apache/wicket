@@ -320,17 +320,19 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	 * Adds a listener to this target
 	 * 
 	 * @param listener
+	 * @throws IllegalStateException
+	 *             if {@link IListener}'s events are currently being fired or have both been fired
+	 *             already
 	 */
-	public void addListener(IListener listener)
+	public void addListener(IListener listener) throws IllegalStateException
 	{
 		Args.notNull(listener, "listener");
+		assertListenersNotFrozen();
 
 		if (listeners == null)
 		{
 			listeners = new LinkedList<IListener>();
 		}
-
-		assertListenersNotFrozen();
 
 		if (!listeners.contains(listener))
 		{
@@ -378,7 +380,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	}
 
 	/**
-	 * Adds components to the list of components to be rendered
+	 * Adds components to the list of components to be rendered.
 	 * 
 	 * @param components
 	 *            components to be rendered
@@ -423,8 +425,13 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	 *            id of client-side dom element that will be updated
 	 * @param component
 	 *            component to be rendered
+	 * @throws IllegalArgumentException
+	 *             if the component is a {@link Page} or an {@link AbstractRepeater}
+	 * @throws IllegalStateException
+	 *             if the components are currently being rendered, or have already been rendered
 	 */
 	public final void add(final Component component, final String markupId)
+		throws IllegalArgumentException, IllegalStateException
 	{
 		Args.notEmpty(markupId, "markupId");
 		Args.notNull(component, "component");
@@ -603,7 +610,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 				return;
 			}
 
-			listenersFrozen = true;
+			respondersFrozen = true;
 
 			for (ITargetRespondListener listener : respondListeners)
 			{
@@ -658,8 +665,6 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		bodyResponse.write("\"?>");
 		bodyResponse.write("<ajax-response>");
 
-		respondersFrozen = true;
-
 		// invoke onbeforerespond event on listeners
 		fireOnBeforeRespondListeners();
 
@@ -670,8 +675,6 @@ public class AjaxRequestTarget implements IPageRequestHandler
 			CharSequence js = it.next();
 			respondInvocation(bodyResponse, js);
 		}
-
-		componentsFrozen = true;
 
 		// process added components
 		respondComponents(bodyResponse);
@@ -723,10 +726,13 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	}
 
 	/**
-	 * 
+	 * Freezes the {@link #listeners} before firing the event and un-freezes them afterwards to
+	 * allow components to add more {@link IListener}s for the second event.
 	 */
 	private void fireOnBeforeRespondListeners()
 	{
+		listenersFrozen = true;
+
 		if (listeners != null)
 		{
 			final Map<String, Component> components = Collections.unmodifiableMap(markupIdToComponent);
@@ -736,14 +742,20 @@ public class AjaxRequestTarget implements IPageRequestHandler
 				listener.onBeforeRespond(components, this);
 			}
 		}
+
+		listenersFrozen = false;
 	}
 
 	/**
+	 * Freezes the {@link #listeners}, and does not un-freeze them as the events will have been
+	 * fired by now.
 	 * 
 	 * @param response
 	 */
 	private void fireOnAfterRespondListeners(final Response response)
 	{
+		listenersFrozen = true;
+
 		// invoke onafterresponse event on listeners
 		if (listeners != null)
 		{
@@ -774,6 +786,7 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	 */
 	private void respondComponents(Response response)
 	{
+		componentsFrozen = true;
 		// TODO: We might need to call prepareRender on all components upfront
 
 		// process component markup
