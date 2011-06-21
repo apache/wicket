@@ -18,6 +18,7 @@ package org.apache.wicket.jmx;
 
 import java.util.List;
 
+import org.apache.wicket.ThreadContext;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.time.Duration;
@@ -63,7 +64,16 @@ public class ResourceSettings implements ResourceSettingsMBean
 	 */
 	public String getPropertiesFactory()
 	{
-		return Stringz.className(application.getResourceSettings().getPropertiesFactory());
+		ThreadContext.setApplication(application);
+		
+		try
+		{
+			return Stringz.className(application.getResourceSettings().getPropertiesFactory());
+		}
+		finally
+		{
+			ThreadContext.detach();
+		}
 	}
 
 	/**

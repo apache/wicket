@@ -18,6 +18,8 @@ package org.apache.wicket.jmx;
 
 import java.io.IOException;
 
+import org.apache.wicket.ThreadContext;
+
 /**
  * Exposes Application related functionality for JMX.
  * 
@@ -74,7 +76,16 @@ public class Application implements ApplicationMBean
 	 */
 	public int getMarkupCacheSize() throws IOException
 	{
-		return application.getMarkupSettings().getMarkupFactory().getMarkupCache().size();
+		ThreadContext.setApplication(application);
+		
+		try
+		{
+			return application.getMarkupSettings().getMarkupFactory().getMarkupCache().size();
+		}
+		finally
+		{
+			ThreadContext.detach();
+		}
 	}
 
 	/**
