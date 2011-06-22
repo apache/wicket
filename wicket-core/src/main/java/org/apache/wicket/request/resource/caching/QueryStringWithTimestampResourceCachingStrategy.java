@@ -17,6 +17,7 @@
 package org.apache.wicket.request.resource.caching;
 
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
@@ -75,7 +76,12 @@ public class QueryStringWithTimestampResourceCachingStrategy extends
 
 	public void undecorateUrl(ResourceUrl url)
 	{
-		url.getParameters().remove(timestampParameter);
+		final INamedParameters parameters = url.getParameters();
+		
+		if (parameters != null)
+		{
+			parameters.remove(timestampParameter);
+		}
 	}
 
 	public void decorateResponse(AbstractResource.ResourceResponse response)

@@ -92,13 +92,6 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 				// should be stripped of timestamps
 				if (i + 1 == segmentsSize)
 				{
-					// since we need mutable page parameters for 
-					// the caching strategy ensure they are not null 
-					if (pageParameters == null)
-					{
-						pageParameters = new PageParameters();
-					}
-					
 					// The filename + parameters eventually contain caching
 					// related information which needs to be removed
 					ResourceUrl resourceUrl = new ResourceUrl(segment, pageParameters);
