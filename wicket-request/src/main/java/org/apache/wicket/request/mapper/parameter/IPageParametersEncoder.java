@@ -41,7 +41,7 @@ public interface IPageParametersEncoder
 	 * {@link IRequestHandler} specified segments/parameters stripped.
 	 * 
 	 * @param request
-	 * @return {@link PageParameters} instance
+	 * @return {@link PageParameters} instance or <code>null</code> if empty
 	 */
 	PageParameters decodePageParameters(Request request);
 }
