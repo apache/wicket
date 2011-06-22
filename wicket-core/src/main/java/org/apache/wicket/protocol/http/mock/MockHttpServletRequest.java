@@ -920,6 +920,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * Try to build a rough URL.
 	 * 
 	 * @return The url
+	 * @see javax.servlet.http.HttpServletRequest#getRequestURL()
 	 */
 	public StringBuffer getRequestURL()
 	{
@@ -931,12 +932,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 			buf.append(getPathInfo());
 		}
 
-		final String query = getQueryString();
-		if (query != null)
-		{
-			buf.append('?');
-			buf.append(query);
-		}
+		// No query parameter. See
+		// http://download.oracle.com/javaee/5/api/javax/servlet/http/HttpServletRequest.html#getRequestURL()
 		return buf;
 	}
 
