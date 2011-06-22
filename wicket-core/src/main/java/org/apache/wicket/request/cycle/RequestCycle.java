@@ -67,12 +67,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 {
 	private static final Logger log = LoggerFactory.getLogger(RequestCycle.class);
 
-	private boolean cleanupFeedbackMessagesOnDetach = true;
-
-	private interface IExecutor<T>
-	{
-		void execute(T object);
-	}
+	private boolean cleanupFeedbackMessagesOnDetach;
 
 	/**
 	 * Returns request cycle associated with current thread.
@@ -102,7 +97,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 
 	private final IExceptionMapper exceptionMapper;
 
-	private final RequestCycleListenerCollection listeners = new RequestCycleListenerCollection();
+	private final RequestCycleListenerCollection listeners;
 
 	private UrlRenderer urlRenderer;
 
@@ -110,9 +105,9 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	private MetaDataEntry<?>[] metaData;
 
 	/** the time that this request cycle object was created. */
-	private final long startTime = System.currentTimeMillis();
+	private final long startTime;
 
-	private RequestHandlerStack requestHandlerExecutor;
+	private final RequestHandlerStack requestHandlerExecutor;
 
 	private Response activeResponse;
 
@@ -129,6 +124,9 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		Args.notNull(context.getRequestMapper(), "context.requestMapper");
 		Args.notNull(context.getExceptionMapper(), "context.exceptionMapper");
 
+		cleanupFeedbackMessagesOnDetach = true;
+		listeners = new RequestCycleListenerCollection();
+		startTime = System.currentTimeMillis();
 		requestHandlerExecutor = new HandlerExecutor();
 		activeResponse = context.getResponse();
 		request = context.getRequest();
