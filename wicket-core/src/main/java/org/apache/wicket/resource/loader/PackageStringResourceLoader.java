@@ -21,7 +21,6 @@ import java.util.Locale;
 import org.apache.wicket.Application;
 import org.apache.wicket.resource.IPropertiesFactory;
 import org.apache.wicket.resource.Properties;
-import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.resource.locator.ResourceNameIterator;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -146,25 +145,5 @@ public class PackageStringResourceLoader extends ComponentStringResourceLoader
 	public void setFilename(String filename)
 	{
 		this.filename = filename;
-	}
-
-	/**
-	 * @see IResourceStreamLocator#newResourceNameIterator(String, Locale, String, String, String,
-	 *      boolean)
-	 * 
-	 * @param locale
-	 * @param style
-	 * @param variation
-	 * @param path
-	 * @return resource name iterator
-	 */
-	@Override
-	protected ResourceNameIterator newResourceNameIterator(final String path, final Locale locale,
-		final String style, final String variation)
-	{
-		return Application.get()
-			.getResourceSettings()
-			.getResourceStreamLocator()
-			.newResourceNameIterator(path, locale, style, variation, null, false);
 	}
 }
