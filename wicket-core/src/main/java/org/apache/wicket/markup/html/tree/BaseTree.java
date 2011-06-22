@@ -34,7 +34,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -348,49 +347,6 @@ public abstract class BaseTree extends AbstractTree
 	 */
 	protected void onJunctionLinkClicked(AjaxRequestTarget target, Object node)
 	{
-	}
-
-	/**
-	 * The type of junction links and node selection links.
-	 * <dl>
-	 * <dt>Regular link</dt>
-	 * <dd>Non-ajax link, always refreshes the whole page. Works with javascript disabled.</dd>
-	 * <dt>Ajax link</dt>
-	 * <dd>Links that supports partial updates. Doesn't work with javascript disabled</dd>
-	 * <dt>Ajax fallback link</dt>
-	 * <dd>Link that supports partial updates. With javascript disabled acts like regular link. The
-	 * drawback is that generated url (thus the entire html) is larger then using the other two</dd>
-	 * </dl>
-	 */
-	public static final class LinkType extends EnumeratedType
-	{
-
-		/** partial updates with no fallback. */
-		public static final LinkType AJAX = new LinkType("AJAX");
-
-		/**
-		 * partial updates that falls back to a regular link in case the client does not support
-		 * javascript.
-		 */
-		public static final LinkType AJAX_FALLBACK = new LinkType("AJAX_FALLBACK");
-
-		/**
-		 * non-ajax version that always re-renders the whole page.
-		 */
-		public static final LinkType REGULAR = new LinkType("REGULAR");
-
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param name
-		 *            the name of the type of the link
-		 */
-		public LinkType(String name)
-		{
-			super(name);
-		}
 	}
 
 	/**
