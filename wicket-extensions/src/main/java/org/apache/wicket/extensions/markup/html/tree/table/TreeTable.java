@@ -72,7 +72,6 @@ public class TreeTable extends DefaultAbstractTree
 		/**
 		 * Constructor.
 		 * 
-		 * 
 		 * @param id
 		 * @param node
 		 * @param level
@@ -333,9 +332,9 @@ public class TreeTable extends DefaultAbstractTree
 
 					if (renderable == null)
 					{
-						// if renderable failed, try to create a regular
-						// component
-						component = column.newCell(sideColumns, "" + i, node, level);
+						// if renderable failed, try to create a regular component.
+						// Id's shall not be number except for ListItems etc.
+						component = column.newCell(sideColumns, "r" + i, node, level);
 						sideColumns.add(component);
 					}
 					else
