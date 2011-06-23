@@ -29,6 +29,8 @@ import org.apache.wicket.request.RequestHandlerStack.ReplaceHandlerException;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Generics;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -42,19 +44,19 @@ import org.apache.wicket.util.lang.Generics;
  */
 public final class DefaultPageFactory implements IPageFactory
 {
+	/** Log for reporting. */
+	private static final Logger log = LoggerFactory.getLogger(DefaultPageFactory.class);
+
 	/** Map of Constructors for Page subclasses */
 	private final Map<Class<?>, Constructor<?>> constructorForClass = Generics.newConcurrentHashMap();
 
-	/**
-	 * @see IPageFactory#newPage(Class)
-	 */
 	public final <C extends IRequestablePage> Page newPage(final Class<C> pageClass)
 	{
 		try
 		{
 			// throw an exception in case default constructor is missing
 			// => improved error message
-			final Constructor<? extends IRequestablePage> constructor = pageClass.getConstructor((Class[])null);
+			Constructor<? extends IRequestablePage> constructor = pageClass.getConstructor((Class[])null);
 
 			return processPage(newPage(constructor, null), null);
 		}
@@ -70,14 +72,11 @@ public final class DefaultPageFactory implements IPageFactory
 			else
 			{
 				throw new WicketRuntimeException("Unable to create page from " + pageClass +
-					". Class does not have a default contructor", e);
+					". Class does not have a visible default contructor.", e);
 			}
 		}
 	}
 
-	/**
-	 * @see IPageFactory#newPage(Class, PageParameters)
-	 */
 	public final <C extends IRequestablePage> Page newPage(final Class<C> pageClass,
 		final PageParameters parameters)
 	{
@@ -123,9 +122,22 @@ public final class DefaultPageFactory implements IPageFactory
 
 				// Store it in the cache
 				constructorForClass.put(pageClass, constructor);
+
+				if (log.isDebugEnabled())
+				{
+					log.debug("Found constructor for Page of type '{}' and argument of type '{}'.",
+						pageClass, argumentType);
+				}
 			}
 			catch (NoSuchMethodException e)
 			{
+				if (log.isDebugEnabled())
+				{
+					log.debug(
+						"Page of type '{}' has not visible constructor with an argument of type '{}'.",
+						pageClass, argumentType);
+				}
+
 				return null;
 			}
 		}
@@ -150,9 +162,13 @@ public final class DefaultPageFactory implements IPageFactory
 		try
 		{
 			if (argument != null)
+			{
 				return (Page)constructor.newInstance(argument);
+			}
 			else
+			{
 				return (Page)constructor.newInstance();
+			}
 		}
 		catch (InstantiationException e)
 		{
@@ -174,11 +190,11 @@ public final class DefaultPageFactory implements IPageFactory
 		}
 	}
 
-	private Page processPage(Page page, PageParameters pageParameters)
+	private Page processPage(final Page page, final PageParameters pageParameters)
 	{
 		// the page might have not propagate page parameters from constructor. if that's the case
 		// we force the parameters
-		if (pageParameters != null && page.getPageParameters() != pageParameters)
+		if ((pageParameters != null) && (page.getPageParameters() != pageParameters))
 		{
 			page.getPageParameters().overwriteWith(pageParameters);
 		}
@@ -188,12 +204,19 @@ public final class DefaultPageFactory implements IPageFactory
 		return page;
 	}
 
-	private String createDescription(Constructor<?> constructor, Object argument)
+	private String createDescription(final Constructor<?> constructor, final Object argument)
 	{
+		String msg;
 		if (argument != null)
-			return "Can't instantiate page using constructor " + constructor + " and argument " +
+		{
+			msg = "Can't instantiate page using constructor '" + constructor + "' and argument '" +
 				argument;
+		}
 		else
-			return "Can't instantiate page using constructor " + constructor;
+		{
+			msg = "Can't instantiate page using constructor '" + constructor;
+		}
+
+		return msg + "'. Might be it doesn't exist, may be it is not visible (public).";
 	}
 }
