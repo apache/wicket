@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -24,10 +23,14 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.util.convert.ConversionException;
+import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -58,6 +61,8 @@ import org.apache.wicket.util.visit.IVisit;
 public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger log = LoggerFactory.getLogger(CheckGroup.class);
 
 	/**
 	 * Constructor that will create a default model collection
@@ -97,13 +102,10 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 		setRenderBodyOnly(true);
 	}
 
-	/**
-	 * @see FormComponent#convertValue(String[])
-	 */
 	@Override
 	protected Collection<T> convertValue(String[] values) throws ConversionException
 	{
-		List<T> collection = new ArrayList<T>();
+		List<T> collection = Generics.newArrayList();
 
 		/*
 		 * if the input is null we do not need to do anything since the model collection has already
@@ -150,7 +152,14 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	}
 
 	/**
+	 * If the model object exists, it is assumed to be a Collection, and it is modified in-place.
+	 * Then {@link Model#setObject(Object)} is called with the same instance: it allows the Model to
+	 * be notified of changes even when {@link Model#getObject()} returns a different
+	 * {@link Collection} at every invocation.
+	 * 
 	 * @see FormComponent#updateModel()
+	 * @throws UnsupportedOperationException
+	 *             if the model object Collection cannot be modified
 	 */
 	@Override
 	public void updateModel()
@@ -167,16 +176,26 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 			collection.clear();
 			collection.addAll(getConvertedInput());
 			modelChanged();
+
+			// call model.setObject()
+			try
+			{
+				getModel().setObject(collection);
+			}
+			catch (Exception e)
+			{
+				// ignore this exception because it could be that there
+				// is not setter for this collection.
+				log.info("no setter for the property attached to " + this);
+			}
 		}
 	}
 
-	/**
-	 * @see FormComponent#onComponentTag(ComponentTag)
-	 */
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
+
 		// No longer applicable, breaks XHTML validation.
 		tag.remove("disabled");
 		tag.remove("name");
@@ -219,9 +238,6 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 		return false;
 	}
 
-	/**
-	 * @see org.apache.wicket.MarkupContainer#getStatelessHint()
-	 */
 	@Override
 	protected boolean getStatelessHint()
 	{
@@ -231,5 +247,4 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 		}
 		return super.getStatelessHint();
 	}
-
 }
