@@ -323,7 +323,12 @@ Wicket.replaceOuterHtmlSafari = function(element, text) {
 	}
 	var parent = element.parentNode;
 	var next = element.nextSibling;
-	
+
+	while (next !== null && next.nodeType == 3) {
+		// ignore text nodes
+		next = next.nextSibling;
+	}
+
 	var index = 0;
 	while (parent.childNodes[index] != element) {
 		++index;
