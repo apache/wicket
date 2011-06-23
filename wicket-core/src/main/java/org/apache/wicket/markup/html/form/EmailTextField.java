@@ -66,6 +66,17 @@ public class EmailTextField extends TextField<String>
 	 * Construct.
 	 * 
 	 * @param id
+	 *            see Component
+	 */
+	public EmailTextField(String id)
+	{
+		this(id, null, EmailAddressValidator.getInstance());
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
 	 *            the component id
 	 * @param model
 	 *            the input value
@@ -84,5 +95,4 @@ public class EmailTextField extends TextField<String>
 	{
 		return "email";
 	}
-
 }
