@@ -236,6 +236,32 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	}
 
 	/**
+	 * @param index
+	 *            index of the choice
+	 * @param choice
+	 *            the choice itself
+	 * @return Prefix to use before choice. The default implementation just returns
+	 *         {@link #getPrefix()}. Override to have a prefix dependent on the choice item.
+	 */
+	protected String getPrefix(int index, T choice)
+	{
+		return getPrefix();
+	}
+
+	/**
+	 * @param index
+	 *            index of the choice
+	 * @param choice
+	 *            the choice itself
+	 * @return Separator to use between radio options. The default implementation just returns
+	 *         {@link #getSuffix()}. Override to have a prefix dependent on the choice item.
+	 */
+	protected String getSuffix(int index, T choice)
+	{
+		return getSuffix();
+	}
+
+	/**
 	 * @param prefix
 	 *            Prefix to use before choice
 	 * @return this
@@ -360,7 +386,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 		if (label != null)
 		{
 			// Append option suffix
-			buffer.append(getPrefix());
+			buffer.append(getPrefix(index, choice));
 
 			String id = getChoiceRenderer().getIdValue(choice, index);
 			final String idAttr = getCheckBoxMarkupId(id);
@@ -399,7 +425,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 			buffer.append("\">").append(escaped).append("</label>");
 
 			// Append option suffix
-			buffer.append(getSuffix());
+			buffer.append(getSuffix(index, choice));
 		}
 	}
 
