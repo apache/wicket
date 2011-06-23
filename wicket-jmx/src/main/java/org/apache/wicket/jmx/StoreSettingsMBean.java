@@ -25,11 +25,6 @@ public interface StoreSettingsMBean
 {
 
 	/**
-	 * @return the maximum number of opened file channels by {@link DiskDataStore}.
-	 */
-	int getFileChannelPoolCapacity();
-
-	/**
 	 * @return the number of page instances which will be stored in the http session for faster
 	 *         retrieval
 	 */

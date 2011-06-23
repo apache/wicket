@@ -18,12 +18,14 @@ package org.apache.wicket.pageStore;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.RandomAccessFile;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -36,6 +38,7 @@ import java.util.concurrent.ConcurrentMap;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.pageStore.PageWindowManager.PageWindow;
 import org.apache.wicket.util.file.Files;
+import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 import org.slf4j.Logger;
@@ -54,8 +57,6 @@ public class DiskDataStore implements IDataStore
 
 	private final Bytes maxSizePerPageSession;
 
-	private final FileChannelPool fileChannelPool;
-
 	private final File fileStoreFolder;
 
 	private final ConcurrentMap<String, SessionEntry> sessionEntryMap;
@@ -69,7 +70,7 @@ public class DiskDataStore implements IDataStore
 	 * @param fileChannelPoolCapacity
 	 */
 	public DiskDataStore(final String applicationName, final File fileStoreFolder,
-		final Bytes maxSizePerSession, final int fileChannelPoolCapacity)
+		final Bytes maxSizePerSession)
 	{
 		this.applicationName = applicationName;
 		this.fileStoreFolder = fileStoreFolder;
@@ -78,8 +79,6 @@ public class DiskDataStore implements IDataStore
 
 		try
 		{
-			fileChannelPool = new FileChannelPool(fileChannelPoolCapacity);
-
 			this.fileStoreFolder.mkdirs();
 			loadIndex();
 		}
@@ -99,7 +98,6 @@ public class DiskDataStore implements IDataStore
 	{
 		log.debug("Destroying...");
 		saveIndex();
-		fileChannelPool.destroy();
 		log.debug("Destroyed.");
 	}
 
@@ -321,9 +319,7 @@ public class DiskDataStore implements IDataStore
 				// allocate window for page
 				PageWindow window = getManager().createPageWindow(pageId, data.length);
 
-				// take the filechannel from the pool
-				FileChannel channel = diskDataStore.fileChannelPool.getFileChannel(getFileName(),
-					true);
+				FileChannel channel = getFileChannel(true);
 				try
 				{
 					// write the content
@@ -335,8 +331,7 @@ public class DiskDataStore implements IDataStore
 				}
 				finally
 				{
-					// return the "borrowed" file channel
-					diskDataStore.fileChannelPool.returnFileChannel(channel);
+					IOUtils.closeQuietly(channel);
 				}
 			}
 		}
@@ -364,7 +359,7 @@ public class DiskDataStore implements IDataStore
 		public byte[] loadPage(PageWindow window)
 		{
 			byte[] result = null;
-			FileChannel channel = diskDataStore.fileChannelPool.getFileChannel(getFileName(), false);
+			FileChannel channel = getFileChannel(false);
 			if (channel != null)
 			{
 				ByteBuffer buffer = ByteBuffer.allocate(window.getFilePartSize());
@@ -382,10 +377,31 @@ public class DiskDataStore implements IDataStore
 				}
 				finally
 				{
-					diskDataStore.fileChannelPool.returnFileChannel(channel);
+					IOUtils.closeQuietly(channel);
 				}
 			}
 			return result;
+		}
+
+		private FileChannel getFileChannel(boolean create)
+		{
+			FileChannel channel = null;
+			File file = new File(getFileName());
+			if (create || file.exists())
+			{
+				String mode = create ? "rw" : "r";
+				try
+				{
+					RandomAccessFile randomAccessFile = new RandomAccessFile(file, mode);
+					channel = randomAccessFile.getChannel();
+				}
+				catch (FileNotFoundException fnfx)
+				{
+					// should not happen. we check explicitly earlier
+					log.error(fnfx.getMessage(), fnfx);
+				}
+			}
+			return channel;
 		}
 
 		/**
@@ -414,7 +430,6 @@ public class DiskDataStore implements IDataStore
 		 */
 		public synchronized void unbind()
 		{
-			diskDataStore.fileChannelPool.closeAndDeleteFileChannel(getFileName());
 			File sessionFolder = diskDataStore.getSessionFolder(sessionId, false);
 			if (sessionFolder.exists())
 			{

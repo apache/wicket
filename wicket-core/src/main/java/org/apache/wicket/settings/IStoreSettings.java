@@ -33,20 +33,6 @@ import org.apache.wicket.util.lang.Bytes;
  */
 public interface IStoreSettings
 {
-
-	/**
-	 * @return the maximum number of opened file channels by {@link DiskDataStore}.
-	 */
-	int getFileChannelPoolCapacity();
-
-	/**
-	 * Sets the number of maximum opened file channels by {@link DiskDataStore}
-	 * 
-	 * @param capacity
-	 *            the new maximum number of opened file channels
-	 */
-	void setFileChannelPoolCapacity(int capacity);
-
 	/**
 	 * @return the number of page instances which will be stored in the http session for faster
 	 *         retrieval

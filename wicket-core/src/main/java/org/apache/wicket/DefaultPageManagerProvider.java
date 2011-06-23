@@ -66,11 +66,9 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 	{
 		IStoreSettings storeSettings = getStoreSettings();
 		Bytes maxSizePerSession = storeSettings.getMaxSizePerSession();
-		int fileChannelPoolCapacity = storeSettings.getFileChannelPoolCapacity();
 		File fileStoreFolder = storeSettings.getFileStoreFolder();
 
-		return new DiskDataStore(application.getName(), fileStoreFolder, maxSizePerSession,
-			fileChannelPoolCapacity);
+		return new DiskDataStore(application.getName(), fileStoreFolder, maxSizePerSession);
 	}
 
 	IStoreSettings getStoreSettings()

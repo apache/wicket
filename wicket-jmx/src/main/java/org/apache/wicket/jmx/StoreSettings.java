@@ -35,11 +35,6 @@ public class StoreSettings implements StoreSettingsMBean
 		this.application = application;
 	}
 
-	public int getFileChannelPoolCapacity()
-	{
-		return application.getStoreSettings().getFileChannelPoolCapacity();
-	}
-
 	public int getInmemoryCacheSize()
 	{
 		return application.getStoreSettings().getInmemoryCacheSize();

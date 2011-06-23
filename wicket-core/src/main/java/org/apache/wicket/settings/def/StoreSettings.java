@@ -33,13 +33,9 @@ public class StoreSettings implements IStoreSettings
 {
 	private static final int DEFAULT_CACHE_SIZE = 40;
 
-	private static final int DEFAULT_FILE_CHANNEL_POOL_CAPACITY = 50;
-
 	private static final Bytes DEFAULT_MAX_SIZE_PER_SESSION = Bytes.megabytes(10);
 
 	private static final int DEFAULT_ASYNCHRONOUS_QUEUE_CAPACITY = 100;
-
-	private int fileChannelPoolCapacity = DEFAULT_FILE_CHANNEL_POOL_CAPACITY;
 
 	private int inmemoryCacheSize = DEFAULT_CACHE_SIZE;
 
@@ -56,21 +52,6 @@ public class StoreSettings implements IStoreSettings
 	 */
 	public StoreSettings(final Application application)
 	{
-	}
-
-	public int getFileChannelPoolCapacity()
-	{
-		return fileChannelPoolCapacity;
-	}
-
-	public void setFileChannelPoolCapacity(int capacity)
-	{
-		if (capacity < 0)
-		{
-			throw new IllegalArgumentException(
-				"File channel pool capacity must be a positive number.");
-		}
-		fileChannelPoolCapacity = capacity;
 	}
 
 	public int getInmemoryCacheSize()
