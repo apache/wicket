@@ -2812,7 +2812,10 @@ public abstract class Component
 
 		generatedMarkupId = comp.generatedMarkupId;
 		setMetaData(MARKUP_ID_KEY, comp.getMetaData(MARKUP_ID_KEY));
-		setOutputMarkupId(comp.getOutputMarkupId());
+		if (comp.getOutputMarkupId())
+		{
+			setOutputMarkupId(true);
+		}
 	}
 
 	/**
