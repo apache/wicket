@@ -23,6 +23,7 @@ import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.util.lang.Args;
 
 
 /**
@@ -55,7 +56,6 @@ public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavi
 		this(renderer, false);
 	}
 
-
 	/**
 	 * Constructor
 	 * 
@@ -81,48 +81,44 @@ public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavi
 		final AutoCompleteSettings settings)
 	{
 		super(settings);
-		if (renderer == null)
-		{
-			throw new IllegalArgumentException("renderer cannot be null");
-		}
-		this.renderer = renderer;
-	}
 
+		this.renderer = Args.notNull(renderer, "renderer");
+	}
 
 	@Override
 	protected final void onRequest(final String val, final RequestCycle requestCycle)
 	{
 		IRequestHandler target = new IRequestHandler()
 		{
-
 			public void respond(final IRequestCycle requestCycle)
 			{
-
 				WebResponse r = (WebResponse)requestCycle.getResponse();
 
 				// Determine encoding
 				final String encoding = Application.get()
 					.getRequestCycleSettings()
 					.getResponseRequestEncoding();
-				r.setContentType("text/xml; charset=" + encoding);
 
+				r.setContentType("text/xml; charset=" + encoding);
 				r.disableCaching();
 
 				Iterator<T> comps = getChoices(val);
+				int count = 0;
 				renderer.renderHeader(r);
 				while (comps.hasNext())
 				{
 					final T comp = comps.next();
 					renderer.render(comp, r, val);
+					count += 1;
 				}
-				renderer.renderFooter(r);
+				renderer.renderFooter(r, count);
 			}
 
 			public void detach(final IRequestCycle requestCycle)
 			{
 			}
-
 		};
+
 		requestCycle.scheduleRequestHandlerAfterCurrent(target);
 	}
 

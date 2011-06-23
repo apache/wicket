@@ -63,9 +63,6 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		this.settings = settings;
 	}
 
-	/**
-	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
-	 */
 	@Override
 	public void renderHead(final Component component, final IHeaderResponse response)
 	{
@@ -98,6 +95,10 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		response.renderOnDomReadyJavaScript(initJS);
 	}
 
+	/**
+	 * 
+	 * @return JS settings
+	 */
 	protected final String constructSettingsJS()
 	{
 		final StringBuilder sb = new StringBuilder();
@@ -119,9 +120,6 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		return sb.toString();
 	}
 
-	/**
-	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#onBind()
-	 */
 	@Override
 	protected void onBind()
 	{
@@ -150,9 +148,6 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	 */
 	protected abstract void onRequest(String input, RequestCycle requestCycle);
 
-	/**
-	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(org.apache.wicket.ajax.AjaxRequestTarget)
-	 */
 	@Override
 	protected void respond(final AjaxRequestTarget target)
 	{
@@ -161,6 +156,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 			.getRequestParameters()
 			.getParameterValue("q")
 			.toOptionalString();
+
 		onRequest(val, requestCycle);
 	}
 }

@@ -44,7 +44,6 @@ import org.apache.wicket.model.IModel;
  */
 public abstract class AutoCompleteTextField<T> extends TextField<T>
 {
-
 	private static final long serialVersionUID = 1L;
 
 	/** auto complete behavior attached to this textfield */
@@ -55,7 +54,6 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 
 	/** settings */
 	private final AutoCompleteSettings settings;
-
 
 	/**
 	 * @param id
@@ -125,7 +123,6 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 		this(id, object, null, settings);
 	}
 
-
 	/**
 	 * @param id
 	 * @param object
@@ -156,7 +153,6 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	public AutoCompleteTextField(final String id, final AutoCompleteSettings settings)
 	{
 		this(id, null, settings);
-
 	}
 
 	/**
@@ -165,7 +161,6 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	public AutoCompleteTextField(final String id)
 	{
 		this(id, null, new AutoCompleteSettings());
-
 	}
 
 	/**
@@ -232,7 +227,6 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 		this.settings = settings;
 	}
 
-
 	/**
 	 * Factory method for autocomplete behavior that will be added to this textfield
 	 * 
@@ -270,7 +264,6 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 		super.onBeforeRender();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{

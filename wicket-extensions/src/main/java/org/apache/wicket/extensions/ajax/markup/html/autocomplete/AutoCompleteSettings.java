@@ -334,5 +334,4 @@ public final class AutoCompleteSettings implements IClusterable
 		this.useHideShowCoveredIEFix = useHideShowCoveredIEFix;
 		return this;
 	}
-
 }

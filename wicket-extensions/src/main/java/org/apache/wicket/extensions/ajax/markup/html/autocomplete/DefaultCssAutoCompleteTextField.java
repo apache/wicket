@@ -52,5 +52,4 @@ public abstract class DefaultCssAutoCompleteTextField<T> extends AutoCompleteTex
 		response.renderCSSReference(new PackageResourceReference(
 			DefaultCssAutoCompleteTextField.class, "DefaultCssAutoCompleteTextField.css"));
 	}
-
 }

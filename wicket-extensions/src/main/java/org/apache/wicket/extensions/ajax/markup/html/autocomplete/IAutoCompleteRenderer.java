@@ -89,7 +89,9 @@ public interface IAutoCompleteRenderer<T> extends IClusterable
 	 * calling {@link Response#write(CharSequence)}.
 	 * 
 	 * @param response
+	 * @param count
+	 *            The number of choices rendered
 	 */
-	void renderFooter(Response response);
+	void renderFooter(Response response, int count);
 
 }

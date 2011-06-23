@@ -44,9 +44,6 @@ public final class StringAutoCompleteRenderer extends AbstractAutoCompleteTextRe
 		return INSTANCE;
 	}
 
-	/**
-	 * @see AbstractAutoCompleteTextRenderer#getTextValue(Object)
-	 */
 	@Override
 	protected String getTextValue(final Object object)
 	{

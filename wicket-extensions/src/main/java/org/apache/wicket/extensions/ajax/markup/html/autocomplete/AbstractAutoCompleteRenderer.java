@@ -28,20 +28,11 @@ import org.apache.wicket.request.Response;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
  */
 public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRenderer<T>
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see org.apache.wicket.extensions.ajax.markup.html.autocomplete.IAutoCompleteRenderer#render(java.lang.Object,
-	 *      org.apache.wicket.request.Response, String)
-	 */
 	public final void render(final T object, final Response response, final String criteria)
 	{
 		String textValue = getTextValue(object);
@@ -64,19 +55,12 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 		response.write("</li>");
 	}
 
-
-	/**
-	 * @see org.apache.wicket.extensions.ajax.markup.html.autocomplete.IAutoCompleteRenderer#renderHeader(org.apache.wicket.request.Response)
-	 */
 	public final void renderHeader(final Response response)
 	{
 		response.write("<ul>");
 	}
 
-	/**
-	 * @see org.apache.wicket.extensions.ajax.markup.html.autocomplete.IAutoCompleteRenderer#renderFooter(org.apache.wicket.request.Response)
-	 */
-	public final void renderFooter(final Response response)
+	public final void renderFooter(final Response response, int count)
 	{
 		response.write("</ul>");
 	}
