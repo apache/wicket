@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Stack;
 
 import org.apache.wicket.ajax.IAjaxRegionMarkupIdProvider;
 import org.apache.wicket.authorization.Action;
@@ -761,93 +760,6 @@ public abstract class Component
 		{
 			log.debug("Markup available " + toString());
 		}
-
-		// move the component to its real parent if necessary
-		// moveComponentToItsRealParent();
-	}
-
-	/**
-	 * Move the component to its real parent if necessary
-	 * 
-	 * @return true, if it has been moved
-	 */
-	private boolean moveComponentToItsRealParent()
-	{
-		MarkupContainer parent = getParent();
-		IMarkupFragment markup = getMarkup();
-		if ((parent != null) && (markup != null))
-		{
-			IMarkupFragment parentMarkup = parent.getMarkup(null);
-			if ((parentMarkup != null) && (markup != parentMarkup))
-			{
-				// The component's markup must be in the same file as its parent
-				if (markup.getMarkupResourceStream() == parentMarkup.getMarkupResourceStream())
-				{
-					MarkupStream stream = new MarkupStream(markup);
-					stream.skipUntil(ComponentTag.class);
-					ComponentTag openTag = stream.getTag();
-					if (openTag != null)
-					{
-						MarkupStream parentStream = new MarkupStream(parentMarkup);
-						if (parentStream.skipUntil(ComponentTag.class))
-						{
-							parentStream.next();
-						}
-
-						Stack<ComponentTag> stack = new Stack<ComponentTag>();
-						while (parentStream.skipUntil(ComponentTag.class))
-						{
-							ComponentTag tag = parentStream.getTag();
-							if (openTag == tag)
-							{
-								if (stack.isEmpty() == false)
-								{
-									// This tag belong to the real parent
-									final ComponentTag lastTag = stack.pop();
-									parent.visitChildren(MarkupContainer.class,
-										new IVisitor<MarkupContainer, Void>()
-										{
-											public void component(final MarkupContainer component,
-												final IVisit<Void> visit)
-											{
-												IMarkupFragment m = component.getMarkup();
-												MarkupStream ms = new MarkupStream(m);
-												ms.skipUntil(ComponentTag.class);
-												if (ms.hasMore() && (lastTag == ms.getTag()))
-												{
-													component.add(Component.this);
-													visit.stop();
-												}
-											}
-										});
-								}
-								return false;
-							}
-							if (tag.isOpen())
-							{
-								if (tag.hasNoCloseTag() == false)
-								{
-									stack.push(tag);
-								}
-							}
-							else if (tag.isOpenClose())
-							{
-								// noop
-							}
-							else if (tag.isClose())
-							{
-								if (stack.isEmpty() == false)
-								{
-									stack.pop();
-								}
-							}
-							parentStream.next();
-						}
-					}
-				}
-			}
-		}
-		return false;
 	}
 
 	/**
@@ -1397,6 +1309,7 @@ public abstract class Component
 	/**
 	 * @return Any feedback message for this component
 	 */
+	@SuppressWarnings("deprecation")
 	public final FeedbackMessage getFeedbackMessage()
 	{
 		return Session.get().getFeedbackMessages().messageForComponent(this);
