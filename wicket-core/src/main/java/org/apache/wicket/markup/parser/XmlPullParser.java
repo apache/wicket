@@ -357,7 +357,7 @@ public final class XmlPullParser implements IXmlPullParser
 		// and also <!--<![endif]-->"
 		if (tagText.equals("![endif]--"))
 		{
-			lastType = HttpTagType.CONDITIONAL_COMMENT;
+			lastType = HttpTagType.CONDITIONAL_COMMENT_ENDIF;
 			input.setPosition(closeBracketIndex + 1);
 			return;
 		}

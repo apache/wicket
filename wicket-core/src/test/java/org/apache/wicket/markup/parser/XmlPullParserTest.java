@@ -359,7 +359,7 @@ public class XmlPullParserTest extends TestCase
 		assertEquals("a", (parser.getElement()).getName());
 		assertTrue((parser.getElement()).isClose());
 		type = parser.next();
-		assertEquals(type, HttpTagType.CONDITIONAL_COMMENT);
+		assertEquals(type, HttpTagType.CONDITIONAL_COMMENT_ENDIF);
 		type = parser.next();
 		assertEquals(type, HttpTagType.NOT_INITIALIZED);
 	}
