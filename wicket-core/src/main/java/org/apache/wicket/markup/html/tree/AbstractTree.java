@@ -33,6 +33,7 @@ import javax.swing.tree.TreeNode;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
@@ -45,10 +46,10 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
@@ -67,10 +68,6 @@ public abstract class AbstractTree extends Panel
 		TreeModelListener,
 		AjaxRequestTarget.ITargetRespondListener
 {
-
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -1001,21 +998,6 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
-	 * Convenience method that updates changed portions on tree. You can call this method during
-	 * Ajax response, where calling {@link #updateTree(AjaxRequestTarget)} would be appropriate, but
-	 * you don't have the AjaxRequestTarget instance. However, it is also safe to call this method
-	 * outside Ajax response.
-	 */
-	public final void updateTree()
-	{
-		IRequestHandler handler = getRequestCycle().getActiveRequestHandler();
-		if (handler instanceof AjaxRequestTarget)
-		{
-			updateTree((AjaxRequestTarget)handler);
-		}
-	}
-
-	/**
 	 * Allows to intercept adding dirty components to AjaxRequestTarget.
 	 * 
 	 * @param target
@@ -1124,6 +1106,24 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
+	 * Convenience method that updates changed portions on tree. You can call this method during
+	 * Ajax response, where calling {@link #updateTree(AjaxRequestTarget)} would be appropriate, but
+	 * you don't have the AjaxRequestTarget instance. However, it is also safe to call this method
+	 * outside Ajax response.
+	 */
+	public final void updateTree()
+	{
+		AjaxRequestTarget handler = AjaxRequestTarget.get();
+		if (handler == null)
+		{
+			throw new WicketRuntimeException(
+				"No AjaxRequestTarget available to execute updateTree(ART target)");
+		}
+
+		updateTree(handler);
+	}
+
+	/**
 	 * Updates the changed portions of the tree using given AjaxRequestTarget. Call this method if
 	 * you modified the tree model during an ajax request target and you want to partially update
 	 * the component on page. Make sure that the tree model has fired the proper listener functions.
@@ -1135,11 +1135,7 @@ public abstract class AbstractTree extends Panel
 	 */
 	public final void updateTree(final AjaxRequestTarget target)
 	{
-		if (target == null)
-		{
-			return;
-		}
-
+		Args.notNull(target, "target");
 		target.registerRespondListener(this);
 	}
 
