@@ -39,7 +39,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * TreeTable is a component that represents a grid with a tree. It's divided into columns. One of
- * the columns has to be column derived from {@link AbstractTreeColumn}.
+ * the columns has to be column derived from {@link PropertyTreeColumn}.
  * 
  * @author Matej Knopp
  */
@@ -417,7 +417,7 @@ public class TreeTable extends DefaultAbstractTree
 		{
 			for (IColumn column : columns)
 			{
-				if (column instanceof AbstractTreeColumn)
+				if (column instanceof PropertyTreeColumn)
 				{
 					found = true;
 					break;

@@ -16,132 +16,129 @@
  */
 package org.apache.wicket.extensions.markup.html.tree.table;
 
-import java.util.Locale;
-
 import javax.swing.tree.TreeNode;
 
-import org.apache.wicket.Application;
-import org.apache.wicket.Session;
-import org.apache.wicket.util.convert.IConverter;
-import org.apache.wicket.util.lang.PropertyResolver;
+import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.request.Response;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
- * Lightweight column that uses a property expression to get the value from the node.
+ * Convenience class for creating non-interactive lightweight (IRenderable based) columns.
  * 
  * @author Matej Knopp
  * @param <T>
  *            the type of the property that is rendered in this column
  */
-public class PropertyRenderableColumn<T> extends AbstractRenderableColumn
+public class PropertyRenderableColumn<T> extends AbstractPropertyColumn<T>
 {
 	private static final long serialVersionUID = 1L;
 
-	private IConverter<T> converter;
+	private boolean contentAsTooltip = false;
 
-	private Locale locale;
-
-	private final String propertyExpression;
+	private boolean escapeContent = true;
 
 	/**
-	 * Creates the columns.
+	 * Creates the column
 	 * 
 	 * @param location
 	 *            Specifies how the column should be aligned and what his size should be
-	 * 
 	 * @param header
 	 *            Header caption
-	 * 
 	 * @param propertyExpression
 	 *            Expression for property access
 	 */
 	public PropertyRenderableColumn(final ColumnLocation location, final String header,
 		final String propertyExpression)
 	{
-		super(location, header);
-		this.propertyExpression = propertyExpression;
+		super(location, header, propertyExpression);
 	}
 
 	/**
-	 * Returns the converter or null if no converter is specified.
+	 * Returns whether the content should also be visible as tooltip of the cell.
 	 * 
-	 * @return The converter or null
+	 * @return whether the content should also be visible as tooltip
 	 */
-	public IConverter<T> getConverter()
+	public boolean isContentAsTooltip()
 	{
-		return converter;
+		return contentAsTooltip;
 	}
 
 	/**
-	 * Returns the locale or null if no locale is specified.
+	 * Returns whether the special html characters of content will be escaped.
 	 * 
-	 * @return The locale or null
+	 * @return Whether html characters should be escaped
 	 */
-	public Locale getLocale()
+	public boolean isEscapeContent()
 	{
-		return locale;
+		return escapeContent;
 	}
 
 	/**
-	 * @see AbstractRenderableColumn#getNodeValue(TreeNode)
+	 * @see IColumn#newCell(MarkupContainer, String, TreeNode, int)
 	 */
-	@Override
-	public String getNodeValue(final TreeNode node)
+	public Component newCell(final MarkupContainer parent, final String id, final TreeNode node,
+		final int level)
 	{
-		Object result = PropertyResolver.getValue(propertyExpression, node);
-		IConverter converter = getConverter();
-		if (converter == null && result != null)
+		return null;
+	}
+
+	/**
+	 * @see IColumn#newCell(TreeNode, int)
+	 */
+	public IRenderable newCell(final TreeNode node, final int level)
+	{
+		return new IRenderable()
 		{
-			converter = Application.get().getConverterLocator().getConverter(result.getClass());
-		}
-		if (converter != null)
-		{
-			Locale locale = this.locale;
-			if (locale == null)
+			private static final long serialVersionUID = 1L;
+
+			public void render(final TreeNode node, final Response response)
 			{
-				locale = Session.get().getLocale();
+				String content = getNodeValue(node);
+				if (content == null)
+				{
+					content = "";
+				}
+
+				// escape if necessary
+				if (isEscapeContent())
+				{
+					content = Strings.escapeMarkup(content).toString();
+				}
+
+				response.write("<span");
+				if (isContentAsTooltip())
+				{
+					response.write(" title=\"" + content + "\"");
+				}
+				response.write(">");
+				response.write(content);
+				response.write("</span>");
 			}
-
-			String string = converter.convertToString(result, locale);
-			return string;
-		}
-		else
-		{
-			return result != null ? result.toString() : "";
-		}
+		};
 	}
 
 	/**
-	 * By default the property is converted to string using <code>toString</code> method. If you
-	 * want to alter this behavior, you can specify a custom converter.
+	 * Sets whether the content should also be visible as tooltip (html title attribute) of the
+	 * cell.
 	 * 
-	 * @param converter
-	 *            any converter
+	 * @param contentAsTooltip
+	 *            whether the content should also be visible as tooltip
 	 */
-	public void setConverter(final IConverter<T> converter)
+	public void setContentAsTooltip(final boolean contentAsTooltip)
 	{
-		this.converter = converter;
+		this.contentAsTooltip = contentAsTooltip;
 	}
 
 	/**
-	 * Sets the locale to be used as parameter for custom converter (if one is specified). If no
-	 * locale is set, session locale is used.
+	 * Sets whether the special html characters of content should be escaped.
 	 * 
-	 * @param locale
-	 *            Any locale
+	 * @param escapeContent
+	 *            Whether to espcape html characters
 	 */
-	public void setLocale(final Locale locale)
+	public void setEscapeContent(final boolean escapeContent)
 	{
-		this.locale = locale;
-	}
-
-	/**
-	 * Returns the property expression.
-	 * 
-	 * @return The property expression
-	 */
-	protected String getPropertyExpression()
-	{
-		return propertyExpression;
+		this.escapeContent = escapeContent;
 	}
 }
