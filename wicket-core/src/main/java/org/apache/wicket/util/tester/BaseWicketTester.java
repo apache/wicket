@@ -600,10 +600,15 @@ public class BaseWicketTester
 				{
 					request.setUrl(newUrl);
 
-					if (newUrl.getProtocol() != null)
+					final String protocol = newUrl.getProtocol();
+					
+					if (protocol != null)
 					{
-						request.setScheme(newUrl.getProtocol());
+						request.setScheme(protocol);
 					}
+
+					request.setSecure("https".equals(protocol));
+
 					if (newUrl.getHost() != null)
 					{
 						request.setServerName(newUrl.getHost());
