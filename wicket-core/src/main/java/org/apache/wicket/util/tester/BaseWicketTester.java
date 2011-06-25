@@ -598,15 +598,31 @@ public class BaseWicketTester
 
 				if (newUrl.isAbsolute())
 				{
-					fail("Can not follow absolute redirect URL.");
+					request.setUrl(newUrl);
+
+					if (newUrl.getProtocol() != null)
+					{
+						request.setScheme(newUrl.getProtocol());
+					}
+					if (newUrl.getHost() != null)
+					{
+						request.setServerName(newUrl.getHost());
+					}
+					if (newUrl.getPort() != null)
+					{
+						request.setServerPort(newUrl.getPort());
+					}
+				}
+				else
+				{
+					// append redirect URL to current URL (what browser would do)
+					Url mergedURL = new Url(lastRequest.getUrl().getSegments(),
+					    newUrl.getQueryParameters());
+					mergedURL.concatSegments(newUrl.getSegments());
+
+					request.setUrl(mergedURL);
 				}
 
-				// append redirect URL to current URL (what browser would do)
-				Url mergedURL = new Url(lastRequest.getUrl().getSegments(),
-					newUrl.getQueryParameters());
-				mergedURL.concatSegments(newUrl.getSegments());
-
-				request.setUrl(mergedURL);
 				processRequest(null, null, true);
 
 				--redirectCount;

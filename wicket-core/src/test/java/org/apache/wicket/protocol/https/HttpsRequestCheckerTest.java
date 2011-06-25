@@ -17,7 +17,6 @@
 package org.apache.wicket.protocol.https;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.handler.IPageRequestHandler;
 import org.junit.Test;
@@ -56,16 +55,5 @@ public class HttpsRequestCheckerTest extends WicketTestCase
 		IRequestHandler httpPageSecureIncoming = checker.checkSecureIncoming(
 			httpPageRequestHandler, httpsConfig);
 		assertSame(httpPageRequestHandler, httpPageSecureIncoming);
-	}
-
-	@RequireHttps
-	private static class HttpsPage extends WebPage
-	{
-		private static final long serialVersionUID = 1L;
-	}
-
-	private static class HttpPage extends WebPage
-	{
-		private static final long serialVersionUID = 1L;
 	}
 }

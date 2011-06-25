@@ -64,17 +64,31 @@ public class UrlTest extends Assert
 		assertTrue(url.isAbsolute());
 
 		url = Url.parse("https://myhost/foo");
-		checkUrl(url, "https", "myhost", null, "", "foo");
+		checkUrl(url, "https", "myhost", 443, "", "foo");
 		assertTrue(url.isAbsolute());
 
 		url = Url.parse("https://myhost/foo:123");
-		checkUrl(url, "https", "myhost", null, "", "foo:123");
+		checkUrl(url, "https", "myhost", 443, "", "foo:123");
 		assertTrue(url.isAbsolute());
+
+		url = Url.parse("ftp://myhost/foo");
+		checkUrl(url, "ftp", "myhost", 21, "", "foo");
+		assertTrue(url.isAbsolute());
+
+		url = Url.parse("FTp://myhost/foo");
+		checkUrl(url, "ftp", "myhost", 21, "", "foo");
+		assertTrue(url.isAbsolute());
+
+		url = Url.parse("unknown://myhost/foo");
+		checkUrl(url, "unknown", "myhost", null, "", "foo");
+		assertTrue(url.isAbsolute());
+
 	}
 
 	private void checkUrl(Url url, String protocol, String host, Integer port, String... segments)
 	{
 		assertNotNull(url);
+		assertEquals(protocol, url.getProtocol());
 		assertEquals(host, url.getHost());
 		assertEquals(port, url.getPort());
 		assertEquals(Arrays.asList(segments), url.getSegments());
