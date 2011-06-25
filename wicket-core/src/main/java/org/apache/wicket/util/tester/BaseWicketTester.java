@@ -358,6 +358,20 @@ public class BaseWicketTester
 	{
 		request = new MockHttpServletRequest(application, httpSession, servletContext);
 		request.setURL(request.getContextPath() + request.getServletPath() + "/");
+
+		// assign protocol://host:port to next request unless the last request was ajax
+		final boolean assignBaseLocation =
+			lastRequest != null && lastRequest.getHeader("Wicket-Ajax") == null;
+
+		// resume request processing with scheme://host:port from last request
+		if (assignBaseLocation)
+		{
+			request.setScheme(lastRequest.getScheme());
+			request.setSecure(lastRequest.isSecure());
+			request.setServerName(lastRequest.getServerName());
+			request.setServerPort(lastRequest.getServerPort());
+		}
+		
 		response = new MockHttpServletResponse(request);
 
 		ServletWebRequest servletWebRequest = newServletWebRequest();
