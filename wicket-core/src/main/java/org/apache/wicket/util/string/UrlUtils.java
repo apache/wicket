@@ -64,7 +64,7 @@ public class UrlUtils
 	{
 		if (isRelative(url))
 		{
-			return requestCycle.getUrlRenderer().renderContextPathRelativeUrl(url);
+			return requestCycle.getUrlRenderer().renderContextRelativeUrl(url);
 		}
 		else
 		{

@@ -115,14 +115,14 @@ public class UrlRendererTest extends TestCase
 			"/filterPath", "../");
 
 		UrlRenderer r = new UrlRenderer(request);
-		assertEquals("../../../../../", r.renderContextPathRelativeUrl(""));
-		assertEquals("../../../../../", r.renderContextPathRelativeUrl("/"));
-		assertEquals("../../../../../f", r.renderContextPathRelativeUrl("/f"));
-		assertEquals("../../../../../../f", r.renderContextPathRelativeUrl("../f"));
+		assertEquals("../../../../../", r.renderContextRelativeUrl(""));
+		assertEquals("../../../../../", r.renderContextRelativeUrl("/"));
+		assertEquals("../../../../../f", r.renderContextRelativeUrl("/f"));
+		assertEquals("../../../../../../f", r.renderContextRelativeUrl("../f"));
 
 		try
 		{
-			r.renderContextPathRelativeUrl(null);
+			r.renderContextRelativeUrl(null);
 			fail("Null 'url' is not allowed!");
 		}
 		catch (IllegalArgumentException iax)
