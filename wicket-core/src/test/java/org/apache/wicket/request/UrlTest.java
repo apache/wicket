@@ -32,6 +32,8 @@ import org.apache.wicket.util.lang.WicketObjects;
  */
 
 // TODO test removeleadingsegments,prependleadingsegments
+// TODO move this test to wicket-request where class Url is located 
+//      (once the dependency to WicketObjects is replaced)
 public class UrlTest extends TestCase
 {
 	private void checkSegments(Url url, String... segments)
@@ -388,5 +390,71 @@ public class UrlTest extends TestCase
 		Url url = new Url(expected);
 		Url clonedUrl = (Url)WicketObjects.cloneObject(url);
 		assertEquals(expected, clonedUrl.getCharset());
+	}
+	
+	public void testParseRelativeUrl()
+	{
+		Url url = Url.parse("foo");
+		checkUrl(url, null, null, null, "foo");
+		assertFalse(url.isAbsolute());
+
+		url = Url.parse("foo/bar/baz");
+		checkUrl(url, null, null, null, "foo", "bar", "baz");
+		assertFalse(url.isAbsolute());
+
+		url = Url.parse("?foobar");
+		checkUrl(url, null, null, null);
+		assertEquals("", url.getQueryParameter("foobar").getValue());
+		assertFalse(url.isAbsolute());
+
+		url = Url.parse("foo?a=123");
+		checkUrl(url, null, null, null, "foo");
+		assertEquals("123", url.getQueryParameter("a").getValue());
+		assertFalse(url.isAbsolute());
+	
+		url = Url.parse("/foo");
+		checkUrl(url, null, null, null, "", "foo");
+		assertTrue(url.isAbsolute());
+	}
+
+	public void testParseAbsoluteUrl()
+	{
+		Url url = Url.parse("ftp://myhost:8081");
+		checkUrl(url, "ftp", "myhost", 8081);
+		assertFalse(url.isAbsolute());
+	
+		url = Url.parse("gopher://myhost:8081/foo");
+		checkUrl(url, "gopher", "myhost", 8081, "", "foo");
+		assertTrue(url.isAbsolute());
+
+		url = Url.parse("https://myhost/foo");
+		checkUrl(url, "https", "myhost", 443, "", "foo");
+		assertTrue(url.isAbsolute());
+
+		url = Url.parse("https://myhost/foo:123");
+		checkUrl(url, "https", "myhost", 443, "", "foo:123");
+		assertTrue(url.isAbsolute());
+
+		url = Url.parse("ftp://myhost/foo");
+		checkUrl(url, "ftp", "myhost", 21, "", "foo");
+		assertTrue(url.isAbsolute());
+
+		url = Url.parse("FTp://myhost/foo");
+		checkUrl(url, "ftp", "myhost", 21, "", "foo");
+		assertTrue(url.isAbsolute());
+
+		url = Url.parse("unknown://myhost/foo");
+		checkUrl(url, "unknown", "myhost", null, "", "foo");
+		assertTrue(url.isAbsolute());
+
+	}
+
+	private void checkUrl(Url url, String protocol, String host, Integer port, String... segments)
+	{
+		assertNotNull(url);
+		assertEquals(protocol, url.getProtocol());
+		assertEquals(host, url.getHost());
+		assertEquals(port, url.getPort());
+		assertEquals(Arrays.asList(segments), url.getSegments());
 	}
 }
