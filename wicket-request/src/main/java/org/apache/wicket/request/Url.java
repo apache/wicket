@@ -126,7 +126,7 @@ public final class Url implements Serializable
 	{
 		Args.notNull(url, "url");
 
-		Url result = new Url(charset);
+		final Url result = new Url(charset);
 
 		// the url object resolved the charset, use that
 		charset = result.getCharset();
@@ -135,7 +135,7 @@ public final class Url implements Serializable
 		final String queryString;
 		final String absoluteUrl;
 
-		int queryAt = url.indexOf('?');
+		final int queryAt = url.indexOf('?');
 
 		if (queryAt == -1)
 		{
@@ -157,11 +157,11 @@ public final class Url implements Serializable
 		if (protocolAt != -1)
 		{
 			result.protocol = absoluteUrl.substring(0, protocolAt).toLowerCase(Locale.US);
+			
 			final String afterProto = absoluteUrl.substring(protocolAt + 3);
 			final String hostAndPort;
 
-			int relativeAt = afterProto.indexOf('/');
-			
+			final int relativeAt = afterProto.indexOf('/');
 			
 			if (relativeAt == -1)
 			{
@@ -174,7 +174,7 @@ public final class Url implements Serializable
 				hostAndPort = afterProto.substring(0, relativeAt);
 			}
 
-			int portAt = hostAndPort.indexOf(':');
+			final int portAt = hostAndPort.lastIndexOf(':');
 
 			if (portAt == -1)
 			{
@@ -589,6 +589,47 @@ public final class Url implements Serializable
 	public String toString()
 	{
 		return toString(getCharset());
+	}
+
+	/**
+	 * render full representation of url (including protocol, host and port) 
+	 * into string representation
+	 */
+	public String toAbsoluteString()
+	{
+		return toAbsoluteString(getCharset());
+	}
+
+	/**
+	 * render full representation of url (including protocol, host and port) 
+	 * into string representation
+	 * 
+	 * @param charset
+	 * 
+	 * @return see toStringRepresentation
+	 */
+	public String toAbsoluteString(final Charset charset)
+	{
+		StringBuilder result = new StringBuilder();
+
+		// output scheme://host:port if specified
+		if(protocol != null && Strings.isEmpty(host) == false)
+		{
+			result.append(protocol);
+			result.append("://");
+			result.append(host);
+			
+			if(port != null && port.equals(getDefaultPortForProtocol(protocol)) == false)
+			{
+				result.append(':');
+				result.append(port);
+			}
+		}
+		// append relative part
+		result.append(this.toString());
+	
+		// return url string
+		return result.toString();
 	}
 
 	/**
