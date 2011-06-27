@@ -52,7 +52,7 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 	public RestartResponseAtInterceptPageException(Page interceptPage)
 	{
 		super(new RenderPageRequestHandler(new PageProvider(interceptPage),
-			RedirectPolicy.ALWAYS_REDIRECT));
+			RedirectPolicy.AUTO_REDIRECT));
 		InterceptData.set();
 	}
 
@@ -76,7 +76,7 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 		PageParameters parameters)
 	{
 		super(new RenderPageRequestHandler(new PageProvider(interceptPageClass, parameters),
-			RedirectPolicy.ALWAYS_REDIRECT));
+			RedirectPolicy.AUTO_REDIRECT));
 		InterceptData.set();
 	}
 
