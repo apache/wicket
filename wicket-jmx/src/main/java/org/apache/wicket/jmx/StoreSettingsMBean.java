@@ -17,6 +17,7 @@
 package org.apache.wicket.jmx;
 
 import org.apache.wicket.pageStore.DiskDataStore;
+import org.apache.wicket.pageStore.IDataStore;
 
 /**
  * JMX MBean for Application's StoreSettings
@@ -46,4 +47,10 @@ public interface StoreSettingsMBean
 	 * @return the capacity of the queue used to store the pages which will be stored asynchronously
 	 */
 	int getAsynchronousQueueCapacity();
+
+	/**
+	 * @return {@code true} when the HTTP worker thread doesn't wait for the storing of the page's
+	 *         bytes in {@link IDataStore}
+	 */
+	boolean isAsynchronous();
 }

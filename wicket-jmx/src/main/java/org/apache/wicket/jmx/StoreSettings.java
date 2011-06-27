@@ -55,4 +55,9 @@ public class StoreSettings implements StoreSettingsMBean
 		return application.getStoreSettings().getAsynchronousQueueCapacity();
 	}
 
+	public boolean isAsynchronous()
+	{
+		return application.getStoreSettings().isAsynchronous();
+	}
+
 }

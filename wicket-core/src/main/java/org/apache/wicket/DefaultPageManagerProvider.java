@@ -21,6 +21,7 @@ import java.io.File;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.page.PageStoreManager;
+import org.apache.wicket.pageStore.AsynchronousDataStore;
 import org.apache.wicket.pageStore.DefaultPageStore;
 import org.apache.wicket.pageStore.DiskDataStore;
 import org.apache.wicket.pageStore.IDataStore;
@@ -50,6 +51,14 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 	public IPageManager get(IPageManagerContext pageManagerContext)
 	{
 		IDataStore dataStore = newDataStore();
+
+		IStoreSettings storeSettings = getStoreSettings();
+		if (storeSettings.isAsynchronous())
+		{
+			int capacity = storeSettings.getAsynchronousQueueCapacity();
+			dataStore = new AsynchronousDataStore(dataStore, capacity);
+		}
+
 		IPageStore pageStore = newPageStore(dataStore);
 		return new PageStoreManager(application.getName(), pageStore, pageManagerContext);
 

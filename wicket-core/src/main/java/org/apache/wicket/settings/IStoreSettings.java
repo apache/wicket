@@ -94,4 +94,19 @@ public interface IStoreSettings
 	 * @see AsynchronousDataStore
 	 */
 	void setAsynchronousQueueCapacity(int capacity);
+
+	/**
+	 * Sets a flag whether to wrap the configured {@link IDataStore} with
+	 * {@link AsynchronousDataStore}. By doing this the HTTP worker thread will not wait for the
+	 * actual write of the page's bytes into the wrapped {@link IDataStore}.
+	 * 
+	 * @param async
+	 *            {@code true} to make it asynchronous, {@code false} - otherwise
+	 */
+	void setAsynchronous(boolean async);
+
+	/**
+	 * @return {@code true} if the storing of page's bytes is asynchronous
+	 */
+	boolean isAsynchronous();
 }

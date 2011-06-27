@@ -45,6 +45,8 @@ public class StoreSettings implements IStoreSettings
 
 	private int asynchronousQueueCapacity = DEFAULT_ASYNCHRONOUS_QUEUE_CAPACITY;
 
+	private boolean isAsynchronous = true;
+
 	/**
 	 * Construct.
 	 * 
@@ -119,5 +121,15 @@ public class StoreSettings implements IStoreSettings
 				"The capacity of the asynchronous queue should be at least 1.");
 		}
 		asynchronousQueueCapacity = queueCapacity;
+	}
+
+	public void setAsynchronous(boolean async)
+	{
+		isAsynchronous = async;
+	}
+
+	public boolean isAsynchronous()
+	{
+		return isAsynchronous;
 	}
 }
