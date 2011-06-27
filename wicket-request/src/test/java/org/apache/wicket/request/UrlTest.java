@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.request;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +28,6 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.apache.wicket.request.Url.QueryParameter;
-import org.apache.wicket.util.lang.WicketObjects;
 
 /**
  * @author Matej Knopp
@@ -32,8 +35,8 @@ import org.apache.wicket.util.lang.WicketObjects;
  */
 
 // TODO test removeleadingsegments,prependleadingsegments
-// TODO move this test to wicket-request where class Url is located 
-//      (once the dependency to WicketObjects is replaced)
+// TODO move this test to wicket-request where class Url is located
+// (once the dependency to WicketObjects is replaced)
 public class UrlTest extends TestCase
 {
 	private void checkSegments(Url url, String... segments)
@@ -383,15 +386,26 @@ public class UrlTest extends TestCase
 
 	/**
 	 * Tests that the charset is recovered after deserialization (from Url#charsetName)
+	 * 
+	 * @throws Exception
 	 */
-	public void testCharset3()
+	public void testCharset3() throws Exception
 	{
 		Charset expected = Charset.forName("ISO-8859-1");
 		Url url = new Url(expected);
-		Url clonedUrl = (Url)WicketObjects.cloneObject(url);
+		Url clonedUrl = (Url)cloneObject(url);
 		assertEquals(expected, clonedUrl.getCharset());
 	}
-	
+
+	private Url cloneObject(Url url) throws Exception
+	{
+		final ByteArrayOutputStream out = new ByteArrayOutputStream(256);
+		ObjectOutputStream oos = new ObjectOutputStream(out);
+		oos.writeObject(url);
+		ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(out.toByteArray()));
+		return (Url)ois.readObject();
+	}
+
 	public void testParseRelativeUrl()
 	{
 		Url url = Url.parse("foo");
@@ -411,7 +425,7 @@ public class UrlTest extends TestCase
 		checkUrl(url, null, null, null, "foo");
 		assertEquals("123", url.getQueryParameter("a").getValue());
 		assertFalse(url.isAbsolute());
-	
+
 		url = Url.parse("/foo");
 		checkUrl(url, null, null, null, "", "foo");
 		assertTrue(url.isAbsolute());
@@ -428,7 +442,7 @@ public class UrlTest extends TestCase
 		checkUrl(url, "gopher", "myhost", 8081, "", "foo");
 		assertTrue(url.isAbsolute());
 		assertEquals("gopher://myhost:8081/foo", url.toAbsoluteString());
-		
+
 		url = Url.parse("http://myhost:80/foo");
 		checkUrl(url, "http", "myhost", 80, "", "foo");
 		assertTrue(url.isAbsolute());
