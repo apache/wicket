@@ -30,11 +30,12 @@ import org.apache.wicket.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.request.mapper.PackageMapperTest.OuterPage.InnerPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.PackageName;
 
 /**
- * 
+ * Tests for {@link PackageMapper}
  */
 public class PackageMapperTest extends AbstractMapperTest
 {
@@ -409,4 +410,55 @@ public class PackageMapperTest extends AbstractMapperTest
 
 		assertEquals(PAGE_CLASS_NAME, url.toString());
 	}
+
+
+	private final PackageMapper innerClassEncoder = new PackageMapper(
+		PackageName.forClass(OuterPage.class))
+	{
+		@Override
+		protected IMapperContext getContext()
+		{
+			return context;
+		}
+	};
+
+	public static class OuterPage extends MockPage
+	{
+		private static final long serialVersionUID = 1L;
+
+		public static class InnerPage extends MockPage
+		{
+			private static final long serialVersionUID = 1L;
+		}
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-3838
+	 */
+	public void testEncodeInnerClass()
+	{
+		InnerPage page = new OuterPage.InnerPage();
+		IPageProvider provider = new PageProvider(page);
+		IRequestHandler handler = new BookmarkablePageRequestHandler(provider);
+
+		Url url = innerClassEncoder.mapHandler(handler);
+
+		assertEquals("PackageMapperTest$OuterPage$InnerPage", url.toString());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-3838
+	 */
+	public void testDecodeInnerClass()
+	{
+		Url url = Url.parse("PackageMapperTest$OuterPage$InnerPage");
+		IRequestHandler handler = innerClassEncoder.mapRequest(getRequest(url));
+
+		assertTrue(handler instanceof RenderPageRequestHandler);
+		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
+		assertEquals("InnerPage", page.getClass().getSimpleName());
+		assertEquals(0, page.getPageParameters().getIndexedCount());
+		assertTrue(page.getPageParameters().getNamedKeys().isEmpty());
+	}
+
 }
