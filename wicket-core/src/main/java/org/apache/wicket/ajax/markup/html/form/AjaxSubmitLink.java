@@ -87,6 +87,12 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			}
 
 			@Override
+			protected Form<?> findForm()
+			{
+				return AjaxSubmitLink.this.getForm();
+			}
+
+			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				// write the onclick handler only if link is enabled
