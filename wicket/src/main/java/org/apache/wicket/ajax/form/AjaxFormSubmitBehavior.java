@@ -84,9 +84,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	{
 		if (__form == null)
 		{
-			// try to find form in the hierarchy of owning component
-			Component component = getComponent();
-			__form = component.findParent(Form.class);
+			__form = findForm();
 			if (__form == null)
 			{
 				throw new IllegalStateException(
@@ -96,6 +94,18 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 			}
 		}
 		return __form;
+	}
+
+	/**
+	 * Finds the form this behavior is linked to
+	 * 
+	 * @return form this behavior is linked to or {@code null} if none
+	 */
+	protected Form<?> findForm()
+	{
+		// try to find form in the hierarchy of owning component
+		Component component = getComponent();
+		return component.findParent(Form.class);
 	}
 
 	/**
@@ -109,7 +119,10 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		final CharSequence url = getCallbackUrl();
 
 		AppendingStringBuffer call = new AppendingStringBuffer("wicketSubmitFormById('").append(
-			formId).append("', '").append(url).append("', ");
+			formId)
+			.append("', '")
+			.append(url)
+			.append("', ");
 
 		if (getComponent() instanceof IFormSubmittingComponent)
 		{
