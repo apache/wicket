@@ -16,17 +16,14 @@
  */
 package org.apache.wicket.request.resource.caching;
 
-import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Time;
 
 /**
  * resource caching strategy that adds a last-modified timestamp to the filename
  * <p/>
  * timestamped_filename := [basename][timestamp-prefix][last-modified-milliseconds](.extension)
- * 
+ *
  * Normally the resource names won't change when the resource ifself changes, for example when you
  * add a new style to your CSS sheet. This can be very annoying as browsers (and proxies) usally
  * cache resources in their cache based on the filename and therefore won't update. Unless you
@@ -44,112 +41,32 @@ import org.apache.wicket.util.time.Time;
  * Since browsers and proxies use the filename of the resource as a cache key the changed filename
  * will not hit the cache and the page gets rendered with the changed file.
  * <p/>
- * 
+ *
  * @author Peter Ertl
  */
-public class FilenameWithTimestampResourceCachingStrategy extends AbstractResourceCachingStrategy
+public class FilenameWithTimestampResourceCachingStrategy extends AbstractFilenameWithVersionResourceCachingStrategy
 {
-	protected static final String DEFAULT_TIMESTAMP_SUFFIX = "-ts";
+	private static final String DEFAULT_VERSION_SUFFIX = "-ts_"; // 'ts' = timestamp
 
-	private final String timestampPrefix;
-
-	/**
-	 * Constructor
-	 */
 	public FilenameWithTimestampResourceCachingStrategy()
 	{
-		this(DEFAULT_TIMESTAMP_SUFFIX);
+		super(DEFAULT_VERSION_SUFFIX);
 	}
 
-	/**
-	 * Constructor
-	 * 
-	 * @param timestampSuffix
-	 *            string appended to the filename before the timestamp
-	 */
-	public FilenameWithTimestampResourceCachingStrategy(String timestampSuffix)
+	public FilenameWithTimestampResourceCachingStrategy(String versionSuffix)
 	{
-		Args.notEmpty(timestampSuffix, "timestampPrefix");
-		timestampPrefix = timestampSuffix;
+		super(versionSuffix);
 	}
 
-	/**
-	 * @return string appended to the filename before the timestamp
-	 */
-	public final String getTimestampPrefix()
+	@Override
+	protected String getVersionStringForResource(ResourceReference reference)
 	{
-		return timestampPrefix;
-	}
-
-	public void decorateUrl(ResourceUrl url, ResourceReference reference)
-	{
-		Time lastModified = getLastModified(reference);
-
-		final String filename = url.getFileName();
+		final Time lastModified = getLastModified(reference);
 
 		if (lastModified == null)
-			return;
-
-		// check if resource name has extension
-		int extensionAt = filename.lastIndexOf('.');
-
-		// create timestamped version of filename:
-		//
-		// filename :=
-		// [basename][timestamp-prefix][last-modified-milliseconds](.extension)
-		//
-		StringBuilder timestampedFilename = new StringBuilder();
-		timestampedFilename.append(extensionAt == -1 ? filename
-			: filename.substring(0, extensionAt));
-		timestampedFilename.append(timestampPrefix);
-		timestampedFilename.append(lastModified.getMilliseconds());
-
-		if (extensionAt != -1)
-			timestampedFilename.append(filename.substring(extensionAt));
-
-		url.setFileName(timestampedFilename.toString());
-	}
-
-	public void undecorateUrl(ResourceUrl url)
-	{
-		final String filename = url.getFileName();
-		int pos = filename.lastIndexOf('.');
-
-		final String fullname = pos == -1 ? filename : filename.substring(0, pos);
-		final String extension = pos == -1 ? null : filename.substring(pos);
-
-		pos = fullname.lastIndexOf(timestampPrefix);
-
-		if (pos != -1)
 		{
-			final String timestamp = fullname.substring(pos + timestampPrefix.length());
-			final String basename = fullname.substring(0, pos);
-
-			try
-			{
-				Long.parseLong(timestamp); // just check the timestamp is numeric
-
-				// create filename without timestamp for resource lookup
-				url.setFileName(extension == null ? basename : basename + extension);
-				return;
-			}
-			catch (NumberFormatException e)
-			{
-				// some strange case of coincidence where the filename contains the timestamp prefix
-				// but the timestamp itself is non-numeric - we interpret this situation as
-				// "file has no timestamp"
-			}
+			return null;
 		}
-	}
-
-	/**
-	 * set resource caching to maximum and set cache-visibility to 'public'
-	 * 
-	 * @param response
-	 */
-	public void decorateResponse(AbstractResource.ResourceResponse response)
-	{
-		response.setCacheDurationToMaximum();
-		response.setCacheScope(WebResponse.CacheScope.PUBLIC);
+		return String.valueOf(lastModified.getMilliseconds());
 	}
 }

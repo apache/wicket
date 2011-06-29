@@ -23,11 +23,16 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
+import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.caching.FilenameWithStaticVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.FilenameWithTimestampResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
+import org.apache.wicket.request.resource.caching.ResourceUrl;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.ValueProvider;
 import org.apache.wicket.util.tester.WicketTester;
@@ -456,7 +461,7 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		Url url = encoderWithTimestamps.mapHandler(handler);
 
 		// check that url contains timestamp
-		String timestampPart = CACHE_FILENAME_WITH_TIMESTAMP.get().getTimestampPrefix() +
+		String timestampPart = CACHE_FILENAME_WITH_TIMESTAMP.get().getVersionSuffix() +
 			Long.toString(millis) + "?";
 		assertTrue(url.toString().contains(timestampPart));
 	}
@@ -495,5 +500,60 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		assertEquals(url1, url2);
 		assertEquals(url1, url3);
 		tester.destroy();
+	}
+
+	public void testVersionStringInResourceFilename()
+	{
+		final IResource resource = new IResource()
+		{
+			public void respond(Attributes attributes)
+			{
+			}
+		};
+
+		final ResourceReference reference =
+			new ResourceReference(getClass(), "versioned", Locale.ENGLISH, "style", null)
+			{
+				@Override
+				public IResource getResource()
+				{
+					return resource;
+				}
+			};
+
+		FilenameWithStaticVersionResourceCachingStrategy strategy =
+			new FilenameWithStaticVersionResourceCachingStrategy("-version-", "foobar");
+
+		INamedParameters params = new PageParameters();
+		ResourceUrl url = new ResourceUrl("test.js", params);
+		strategy.decorateUrl(url, reference);
+		assertEquals("test-version-foobar.js", url.getFileName());
+		strategy.undecorateUrl(url);
+		assertEquals("test.js", url.getFileName());
+
+		url = new ResourceUrl("test", params);
+		strategy.decorateUrl(url, reference);
+		assertEquals("test-version-foobar", url.getFileName());
+		strategy.undecorateUrl(url);
+		assertEquals("test", url.getFileName());
+
+		// this behavior is o.k. since a browser could request an 
+		// previous version of the resource. for example we
+		// could first have 'test-alpha.txt' which would be later replaced
+		// by 'test-beta.txt' but in any case will point to 
+		// internal resource 'test.txt'
+		url = new ResourceUrl("test-version-older.txt", params);
+		strategy.undecorateUrl(url);
+		assertEquals("test.txt", url.getFileName());
+
+		// weird but valid
+		url = new ResourceUrl("test-version-.txt", params);
+		strategy.undecorateUrl(url);
+		assertEquals("test.txt", url.getFileName());
+
+		// weird but valid
+		url = new ResourceUrl("test-version--------", params);
+		strategy.undecorateUrl(url);
+		assertEquals("test", url.getFileName());
 	}
 }
