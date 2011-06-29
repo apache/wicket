@@ -27,9 +27,14 @@ import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.PackageResourceGuard;
 import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.request.resource.caching.FilenameWithTimestampResourceCachingStrategy;
+import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
+import org.apache.wicket.request.resource.caching.version.CachingResourceVersion;
+import org.apache.wicket.request.resource.caching.version.IResourceVersion;
+import org.apache.wicket.request.resource.caching.version.LastModifiedResourceVersion;
+import org.apache.wicket.request.resource.caching.version.MessageDigestResourceVersion;
+import org.apache.wicket.request.resource.caching.version.RequestCycleCachedResourceVersion;
 import org.apache.wicket.resource.PropertiesFactory;
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
@@ -112,8 +117,10 @@ public class ResourceSettings implements IResourceSettings
 	private String parentFolderPlaceholder = null;
 
 	// resource caching strategy
-	private IResourceCachingStrategy resourceCachingStrategy = new FilenameWithTimestampResourceCachingStrategy();
-
+	private IResourceCachingStrategy resourceCachingStrategy;
+	
+	// application these settings are bound to
+	private final Application application;
 
 	/**
 	 * Construct
@@ -122,6 +129,7 @@ public class ResourceSettings implements IResourceSettings
 	 */
 	public ResourceSettings(final Application application)
 	{
+		this.application = application;
 		stringResourceLoaders.add(new ComponentStringResourceLoader());
 		stringResourceLoaders.add(new PackageStringResourceLoader());
 		stringResourceLoaders.add(new ClassStringResourceLoader(application.getClass()));
@@ -426,6 +434,23 @@ public class ResourceSettings implements IResourceSettings
 	 */
 	public IResourceCachingStrategy getCachingStrategy()
 	{
+		if (resourceCachingStrategy == null)
+		{
+			final IResourceVersion resourceVersion;
+
+			if (application.usesDevelopmentConfig())
+			{
+				// use file last modified for resource cache keys
+				resourceVersion = new RequestCycleCachedResourceVersion(new LastModifiedResourceVersion());
+			}
+			else
+			{
+				// use md5 message digest for resource cache keys
+				resourceVersion = new CachingResourceVersion(new MessageDigestResourceVersion());
+			}
+			resourceCachingStrategy =
+				new FilenameWithVersionResourceCachingStrategy(resourceVersion);
+		}
 		return resourceCachingStrategy;
 	}
 

@@ -20,57 +20,73 @@ import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.caching.version.IResourceVersion;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.time.Time;
 
 /**
  * resource caching strategy that adds a last-modified timestamp to the query string of the resource
  * (this is similar to how wicket 1.4 does it when enabling timestamps on resources).
  * 
  * @author Peter Ertl
+ * 
+ * @since 1.5
  */
-public class QueryStringWithTimestampResourceCachingStrategy extends
-	AbstractResourceCachingStrategy
+public class QueryStringWithVersionResourceCachingStrategy implements IResourceCachingStrategy
 {
-	private static final String DEFAULT_TIMESTAMP_PARAMETER = "ts";
-
-	private final String timestampParameter;
+	private static final String DEFAULT_VERSION_PARAMETER = "ver";
 
 	/**
-	 * Constructor
+	 * query string parameter name that contains the version string for the resource
 	 */
-	public QueryStringWithTimestampResourceCachingStrategy()
-	{
-		this(DEFAULT_TIMESTAMP_PARAMETER);
-	}
+	private final String versionParameter;
+
+	/**
+	 * resource version provider
+	 */
+	private final IResourceVersion resourceVersion;
 
 	/**
 	 * Constructor
 	 * 
-	 * @param timestampParameter
-	 *            name of timestamp parameter which will be added to query string
+	 * @param resourceVersion
+	 *                resource version provider
 	 */
-	public QueryStringWithTimestampResourceCachingStrategy(String timestampParameter)
+	public QueryStringWithVersionResourceCachingStrategy(IResourceVersion resourceVersion)
 	{
-		Args.notEmpty(timestampParameter, "timestampParameter");
-		this.timestampParameter = timestampParameter;
+		this(DEFAULT_VERSION_PARAMETER, resourceVersion);
+	}
+
+	/**
+	 * Constructor
+	 *
+	 * @param versionParameter
+	 *            name of timestamp parameter which will be added to query string
+	 *            and contain the resource version string
+	 * @param resourceVersion
+	 *                resource version provider
+	 */
+	public QueryStringWithVersionResourceCachingStrategy(String versionParameter, 
+	                                                     IResourceVersion resourceVersion)
+	{
+		this.versionParameter = Args.notEmpty(versionParameter, "timestampParameter");
+		this.resourceVersion = Args.notNull(resourceVersion, "resourceVersion");
 	}
 
 	/**
 	 * @return name of timestamp parameter which will be added to query string
 	 */
-	public final String getTimestampParameter()
+	public final String getVersionParameter()
 	{
-		return timestampParameter;
+		return versionParameter;
 	}
 
 	public void decorateUrl(ResourceUrl url, final ResourceReference reference)
 	{
-		Time lastModified = getLastModified(reference);
+		String version = resourceVersion.getVersion(reference);
 
-		if (lastModified != null)
+		if (version != null)
 		{
-			url.getParameters().set(timestampParameter, lastModified.getMilliseconds());
+			url.getParameters().set(versionParameter, version);
 		}
 	}
 
@@ -80,7 +96,7 @@ public class QueryStringWithTimestampResourceCachingStrategy extends
 		
 		if (parameters != null)
 		{
-			parameters.remove(timestampParameter);
+			parameters.remove(versionParameter);
 		}
 	}
 

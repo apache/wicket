@@ -19,15 +19,17 @@ package org.apache.wicket.request.resource.caching;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.caching.version.IResourceVersion;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * base resource caching strategy that adds a version string for the 
+ * resource caching strategy that adds a version string for the 
  * requested resource to the filename.
  * <p/>
- * versioned_filename := [basename][version-suffix][version](.extension)
+ * versioned_filename := [basename][version-prefix][version](.extension)
  * <p/>
- * the <code>version</code> must not contain the <code>version-suffix</code>.
+ * the <code>version</code> must not contain the <code>version-prefix</code> so
+ * please use an unambigous value for the <code>version-prefix</code>.
  * <p/> 
  * Since browsers and proxies use the versioned filename of the resource url 
  * as a cache key a change to the version will cause a cache miss and subsequent 
@@ -36,39 +38,64 @@ import org.apache.wicket.util.lang.Args;
  * <p/>
  * 
  * @author Peter Ertl
+ * 
+ * @since 1.5
  */
-public abstract class AbstractFilenameWithVersionResourceCachingStrategy 
-	extends AbstractResourceCachingStrategy
+public class FilenameWithVersionResourceCachingStrategy implements IResourceCachingStrategy
 {
+	private static final String DEFAULT_VERSION_PREFIX = "-ver-";
+	
 	/** 
-	 * suffix that marks the beginning the of the version 
-	 * string inside the resource filename */
-	private final String versionSuffix;
+	 * prefix that marks the beginning the of the version 
+	 * string contained in the decorated resource filename 
+	 * */
+	private final String versionPrefix;
+
+	/**
+	 * resource version provider
+	 */
+	private final IResourceVersion resourceVersion;
 
 	/**
 	 * Constructor
 	 * 
-	 * @param versionSuffix
-	 *            string appended to the filename before the version string
+	 * @param resourceVersion
+	 *            resource version object
 	 */
-	public AbstractFilenameWithVersionResourceCachingStrategy(String versionSuffix)
+	public FilenameWithVersionResourceCachingStrategy(IResourceVersion resourceVersion)
 	{
-		this.versionSuffix = Args.notEmpty(versionSuffix, "versionSuffix");
+		this(DEFAULT_VERSION_PREFIX, resourceVersion);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param versionPrefix
+	 *            string appended after the base filename before the version string
+	 *            and followed by the extension            
+	 * @param resourceVersion
+	 *            resource version object
+	 */
+	public FilenameWithVersionResourceCachingStrategy(String versionPrefix,
+	                                                  IResourceVersion resourceVersion)
+	{
+		this.resourceVersion = Args.notNull(resourceVersion, "resourceVersion");
+		this.versionPrefix = Args.notEmpty(versionPrefix, "versionPrefix");
 	}
 
 	/**
 	 * @return string appended to the filename before the version string
 	 */
-	public final String getVersionSuffix()
+	public final String getVersionPrefix()
 	{
-		return versionSuffix;
+		return versionPrefix;
 	}
 
 	public void decorateUrl(ResourceUrl url, ResourceReference reference)
 	{
 		// get version string for requested resource
-		final String version = getVersionStringForResource(reference);
-		
+		final String version = this.resourceVersion.getVersion(reference);
+
 		// ignore resource if no version information is available
 		if (version == null)
 		{
@@ -84,7 +111,7 @@ public abstract class AbstractFilenameWithVersionResourceCachingStrategy
 		// create filename with version:
 		//
 		// filename :=
-		// [basename][version-suffix][version](.extension)
+		// [basename][version-prefix][version](.extension)
 		//
 		final StringBuilder versionedFilename = new StringBuilder();
 		
@@ -98,7 +125,7 @@ public abstract class AbstractFilenameWithVersionResourceCachingStrategy
 			versionedFilename.append(filename.substring(0, extensionAt));
 		}
 		// add version suffix
-		versionedFilename.append(versionSuffix);
+		versionedFilename.append(versionPrefix);
 		
 		// add version
 		versionedFilename.append(version);
@@ -126,7 +153,7 @@ public abstract class AbstractFilenameWithVersionResourceCachingStrategy
 		final String extension = pos == -1 ? null : filename.substring(pos);
 
 		// get position of version string
-		pos = fullname.lastIndexOf(versionSuffix);
+		pos = fullname.lastIndexOf(versionPrefix);
 
 		// remove version string if it exists
 		if (pos != -1)
@@ -139,15 +166,6 @@ public abstract class AbstractFilenameWithVersionResourceCachingStrategy
 			url.setFileName(extension == null? basename : basename + extension);
 		}
 	}
-
-	/**
-	 * get string that uniquely identifies the current version of the resource
-	 * 
-	 * @param reference
-	 *          resource reference
-	 * @return string that uniquely identifies the current version of the resource
-	 */
-	protected abstract String getVersionStringForResource(ResourceReference reference);
 
 	/**
 	 * set resource caching to maximum and set cache-visibility to 'public'

@@ -18,26 +18,23 @@ package org.apache.wicket.request.mapper;
 
 import java.util.Locale;
 
-import org.apache.wicket.ThreadContext;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.request.resource.caching.FilenameWithStaticVersionResourceCachingStrategy;
-import org.apache.wicket.request.resource.caching.FilenameWithTimestampResourceCachingStrategy;
+import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
+import org.apache.wicket.request.resource.caching.version.LastModifiedResourceVersion;
+import org.apache.wicket.request.resource.caching.version.StaticResourceVersion;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.ValueProvider;
-import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.time.Time;
-import org.mockito.Mockito;
 
 /**
  * @author Matej Knopp
@@ -47,8 +44,9 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	private static final IProvider<IResourceCachingStrategy> NO_CACHING = new ValueProvider<IResourceCachingStrategy>(
 		NoOpResourceCachingStrategy.INSTANCE);
 
-	private static final IProvider<FilenameWithTimestampResourceCachingStrategy> CACHE_FILENAME_WITH_TIMESTAMP = new ValueProvider<FilenameWithTimestampResourceCachingStrategy>(
-		new FilenameWithTimestampResourceCachingStrategy());
+	private static final IProvider<FilenameWithVersionResourceCachingStrategy> CACHE_FILENAME_WITH_TIMESTAMP =
+		new ValueProvider<FilenameWithVersionResourceCachingStrategy>(
+			new FilenameWithVersionResourceCachingStrategy(new LastModifiedResourceVersion()));
 
 	/**
 	 * Construct.
@@ -461,45 +459,9 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		Url url = encoderWithTimestamps.mapHandler(handler);
 
 		// check that url contains timestamp
-		String timestampPart = CACHE_FILENAME_WITH_TIMESTAMP.get().getVersionSuffix() +
+		String timestampPart = CACHE_FILENAME_WITH_TIMESTAMP.get().getVersionPrefix() +
 			Long.toString(millis) + "?";
 		assertTrue(url.toString().contains(timestampPart));
-	}
-
-	/**
-	 * 
-	 */
-	public void testLastModifiedTimestampCache()
-	{
-		long millis = 87654321L;
-		final ResourceReferenceWithTimestamp reference = new ResourceReferenceWithTimestamp(
-			Time.millis(millis));
-		final IRequestHandler handler = new ResourceReferenceRequestHandler(reference, null);
-
-		WicketTester tester = new WicketTester();
-
-		// setup mock request cycle
-		RequestCycle cycle = Mockito.mock(RequestCycle.class);
-		ThreadContext.setRequestCycle(cycle);
-
-		// request url with timestamp
-		Url url1 = encoderWithTimestamps.mapHandler(handler);
-		assertNotNull(url1);
-		assertEquals(1, reference.lastModifiedInvocationCount);
-
-		// subsequent request should take timestamp from request cycle scoped cache
-		Url url2 = encoderWithTimestamps.mapHandler(handler);
-		assertNotNull(url2);
-
-		Url url3 = encoderWithTimestamps.mapHandler(handler);
-		assertNotNull(url3);
-
-		assertEquals(1, reference.lastModifiedInvocationCount);
-
-		// urls should be equal
-		assertEquals(url1, url2);
-		assertEquals(url1, url3);
-		tester.destroy();
 	}
 
 	public void testVersionStringInResourceFilename()
@@ -521,8 +483,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 				}
 			};
 
-		FilenameWithStaticVersionResourceCachingStrategy strategy =
-			new FilenameWithStaticVersionResourceCachingStrategy("-version-", "foobar");
+		IResourceCachingStrategy strategy =
+			new FilenameWithVersionResourceCachingStrategy("-version-", new StaticResourceVersion("foobar"));
 
 		INamedParameters params = new PageParameters();
 		ResourceUrl url = new ResourceUrl("test.js", params);
@@ -562,7 +524,7 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		assertEquals("test.txt", url.getFileName());
 
 		// check a version that contains a dot which also marks the filename extension
-		strategy = new FilenameWithStaticVersionResourceCachingStrategy("-version-", "1.0.4-beta");
+		strategy = new FilenameWithVersionResourceCachingStrategy("-version-", new StaticResourceVersion("1.0.4-beta"));
 		url = new ResourceUrl("test.txt", params);
 		strategy.decorateUrl(url, reference);
 		assertEquals("test-version-1.0.4-beta.txt", url.getFileName());

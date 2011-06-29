@@ -22,10 +22,13 @@ import org.apache.wicket.request.resource.ResourceReference;
 /**
  * caching strategy for resources
  * <p/>
- * it can add and remove caching information to the filename and query string parameters of the
- * requested resource
+ * it can add and remove caching information to the filename and query 
+ * string parameters of the requested resource to control caches in the
+ * browser and on the internet. It also can set http response caching headers.
  * 
  * @author Peter Ertl
+ * 
+ * @since 1.5
  */
 public interface IResourceCachingStrategy
 {

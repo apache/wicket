@@ -14,36 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.request.resource.caching;
+package org.apache.wicket.request.resource.caching.version;
 
-import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.time.Time;
 
 /**
- * resource caching strategy that does nothing
- * <p/>
- * caching will resources will effectively be disabled
- * 
+ * Uses the last modified timestamp of a {@link ResourceReference} 
+ * in milliseconds as a version string.
+ *
  * @author Peter Ertl
- * 
+ *
  * @since 1.5
  */
-public class NoOpResourceCachingStrategy implements IResourceCachingStrategy
+public class LastModifiedResourceVersion implements IResourceVersion
 {
-	/**
-	 * Global instance of {@link NoOpResourceCachingStrategy} strategy
-	 */
-	public static final IResourceCachingStrategy INSTANCE = new NoOpResourceCachingStrategy();
-
-	public void decorateUrl(ResourceUrl url, ResourceReference reference)
+	public String getVersion(ResourceReference resourceReference)
 	{
-	}
+		final Time lastModified = resourceReference.getLastModified();
 
-	public void undecorateUrl(ResourceUrl url)
-	{
-	}
-
-	public void decorateResponse(AbstractResource.ResourceResponse response)
-	{
+		if (lastModified == null)
+		{
+			return null;
+		}
+		return String.valueOf(lastModified.getMilliseconds());
 	}
 }

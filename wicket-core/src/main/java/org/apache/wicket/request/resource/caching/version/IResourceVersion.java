@@ -14,36 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.request.resource.caching;
+package org.apache.wicket.request.resource.caching.version;
 
-import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.ResourceReference;
 
 /**
- * resource caching strategy that does nothing
+ * Provides a version string for a resource specified by {@link ResourceReference} 
  * <p/>
- * caching will resources will effectively be disabled
+ * the version string will be used as a caching key for resources
+ * 
+ * @see org.apache.wicket.request.resource.caching.QueryStringWithVersionResourceCachingStrategy
+ * @see org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy
  * 
  * @author Peter Ertl
  * 
  * @since 1.5
  */
-public class NoOpResourceCachingStrategy implements IResourceCachingStrategy
+public interface IResourceVersion
 {
 	/**
-	 * Global instance of {@link NoOpResourceCachingStrategy} strategy
+	 * get unique string identifying the version of the resource
+	 * 
+	 * @param resourceReference
+	 *             reference to resource
+	 * @return unique version string
 	 */
-	public static final IResourceCachingStrategy INSTANCE = new NoOpResourceCachingStrategy();
-
-	public void decorateUrl(ResourceUrl url, ResourceReference reference)
-	{
-	}
-
-	public void undecorateUrl(ResourceUrl url)
-	{
-	}
-
-	public void decorateResponse(AbstractResource.ResourceResponse response)
-	{
-	}
+	String getVersion(ResourceReference resourceReference);
 }
