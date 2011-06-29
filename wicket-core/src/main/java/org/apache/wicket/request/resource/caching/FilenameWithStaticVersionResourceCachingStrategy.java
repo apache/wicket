@@ -27,9 +27,6 @@ import org.apache.wicket.util.lang.Args;
  * When deploying an updated version of the application the version string should be 
  * changed. The version string could be hardcoded, taken from some build-tool generated 
  * properties file, injected by spring, etc.
- * <p/>
- * Tt is recommended to use only numbers and characters for the version string to avoid 
- * ambiguities when parsing resource filenames.
  * 
  * @author Peter Ertl
  */

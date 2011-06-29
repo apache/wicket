@@ -555,5 +555,16 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		url = new ResourceUrl("test-version--------", params);
 		strategy.undecorateUrl(url);
 		assertEquals("test", url.getFileName());
+
+		// weird but valid
+		url = new ResourceUrl("test-version-1.0.3-alpha.txt", params);
+		strategy.undecorateUrl(url);
+		assertEquals("test.txt", url.getFileName());
+
+		// check a version that contains a dot which also marks the filename extension
+		strategy = new FilenameWithStaticVersionResourceCachingStrategy("-version-", "1.0.4-beta");
+		url = new ResourceUrl("test.txt", params);
+		strategy.decorateUrl(url, reference);
+		assertEquals("test-version-1.0.4-beta.txt", url.getFileName());
 	}
 }

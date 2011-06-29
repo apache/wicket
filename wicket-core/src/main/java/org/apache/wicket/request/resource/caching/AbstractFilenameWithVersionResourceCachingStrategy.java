@@ -27,8 +27,12 @@ import org.apache.wicket.util.lang.Args;
  * <p/>
  * versioned_filename := [basename][version-suffix][version](.extension)
  * <p/>
- * Since browsers and proxies use this versioned filename of the resource as a 
- * cache key a change to the version will cause a cache miss and subsequent reload.
+ * the <code>version</code> must not contain the <code>version-suffix</code>.
+ * <p/> 
+ * Since browsers and proxies use the versioned filename of the resource url 
+ * as a cache key a change to the version will cause a cache miss and subsequent 
+ * reload of the updated version. This enables us to set the caching duration
+ * of the resource to a maximum.
  * <p/>
  * 
  * @author Peter Ertl
@@ -36,7 +40,8 @@ import org.apache.wicket.util.lang.Args;
 public abstract class AbstractFilenameWithVersionResourceCachingStrategy 
 	extends AbstractResourceCachingStrategy
 {
-	/** suffix that uniquely identifies beginning of the version 
+	/** 
+	 * suffix that marks the beginning the of the version 
 	 * string inside the resource filename */
 	private final String versionSuffix;
 
