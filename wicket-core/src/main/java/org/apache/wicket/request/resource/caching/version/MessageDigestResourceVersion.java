@@ -30,6 +30,7 @@ import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,7 +122,7 @@ public class MessageDigestResourceVersion implements IResourceVersion
 			final byte[] hash = computeDigest(resourceStream);
 
 			// convert to hexadecimal
-			return new BigInteger(hash).toString(16);
+			return Strings.toHexString(hash);
 		}
 		catch (ResourceStreamNotFoundException e)
 		{

@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.wicket.util.lang.Args;
 
 /**
  * A variety of static String utility methods.
@@ -1491,5 +1492,27 @@ public final class Strings
 		// our last action in the above loop was to switch d and p, so p now
 		// actually has the most recent cost counts
 		return p[n];
+	}
+
+	/**
+	 * convert byte array to hex string
+	 * 
+	 * @param bytes
+	 *          bytes to convert to hexadecimal representation
+	 *
+	 * @return hex string 
+	 */
+	public static String toHexString(byte[] bytes)
+	{
+		Args.notNull(bytes, "bytes");
+
+		final StringBuilder hex = new StringBuilder(bytes.length << 1);
+
+		for (final byte b : bytes)
+		{
+			hex.append(toHex(b >> 4));
+			hex.append(toHex(b));
+		}
+		return hex.toString();
 	}
 }
