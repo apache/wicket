@@ -72,15 +72,15 @@ public class RequestCycleCachedResourceVersion implements IResourceVersion
 			// retrieve cache from current request cycle
 			cache = requestCycle.getMetaData(CACHE_KEY);
 
-			// create it on first call
+			// does cache exist within current request cycle?
 			if (cache == null)
 			{
+				// no, so create it
 				requestCycle.setMetaData(CACHE_KEY, cache = Generics.newHashMap());
 			}
-			
-			// lookup timestamp from cache (may contain NULL values which are valid)
-			if (cache.containsKey(resourceReference))
+			else if (cache.containsKey(resourceReference))
 			{
+				// lookup timestamp from cache (may contain NULL values which are valid)
 				return cache.get(resourceReference);
 			}
 		}
