@@ -213,8 +213,13 @@ public class WebPageRenderer extends PageRenderer
 			// is pretty much what the next step does)
 			redirectTo(targetUrl, requestCycle);
 		}
-		else if (isRedirectToBuffer())
+		else
 		{
+			if (isRedirectToBuffer() == false && logger.isWarnEnabled())
+			{
+				logger.warn("Falling back to Redirect_To_Buffer render strategy because none of the conditions matched.");
+			}
+
 			// redirect to buffer
 			BufferedWebResponse response = renderPage(targetUrl, requestCycle);
 
@@ -260,10 +265,6 @@ public class WebPageRenderer extends PageRenderer
 
 				redirectTo(targetUrl2, requestCycle);
 			}
-		}
-		else
-		{
-			throw new IllegalStateException("Unknown RenderStrategy.");
 		}
 	}
 }

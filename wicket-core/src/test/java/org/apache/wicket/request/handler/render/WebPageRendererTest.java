@@ -591,8 +591,8 @@ public class WebPageRendererTest
 	}
 
 	/**
-	 * Tests that when the page is stateful and the urls are the same then there should be a
-	 * redirect
+	 * Tests that when the page is stateful and the urls are the same then the response is written
+	 * directly
 	 */
 	@Test
 	public void testRedirectToBufferStatefulPageAndSameUrls()
@@ -627,6 +627,61 @@ public class WebPageRendererTest
 		verify(response).write(any(byte[].class));
 		verify(response, never()).sendRedirect(anyString());
 		Assert.assertFalse(stored.get());
+	}
+
+	/**
+	 * Tests that when all the conditions fail the redirect_to_buffer should be used as a fallback
+	 */
+	@Test
+	public void testRedirectToBufferIsFallback()
+	{
+		final AtomicBoolean stored = new AtomicBoolean(false);
+
+		PageRenderer renderer = new TestPageRenderer(handler)
+		{
+			@Override
+			protected boolean isRedirectToBuffer()
+			{
+				return false;
+			}
+
+			@Override
+			protected boolean isOnePassRender()
+			{
+				return false;
+			}
+
+			@Override
+			protected boolean isRedirectToRender()
+			{
+				return false;
+			}
+
+			@Override
+			protected boolean isSessionTemporary()
+			{
+				return false;
+			}
+
+			@Override
+			protected void storeBufferedResponse(Url url, BufferedWebResponse response)
+			{
+				stored.set(true);
+			}
+		};
+
+		when(page.isPageStateless()).thenReturn(false);
+		when(provider.isNewPageInstance()).thenReturn(false);
+
+		// needed for earlier checks
+		when(urlRenderer.getBaseUrl()).thenReturn(Url.parse("url1"));
+		when(requestCycle.mapUrlFor(eq(handler))).thenReturn(Url.parse("url2"));
+
+		renderer.respond(requestCycle);
+
+		verify(response, never()).write(any(byte[].class));
+		verify(response).sendRedirect(anyString());
+		Assert.assertTrue(stored.get());
 	}
 
 	/**
