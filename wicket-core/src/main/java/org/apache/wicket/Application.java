@@ -59,6 +59,7 @@ import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.RequestLogger;
+import org.apache.wicket.protocol.http.RequestLoggerRequestCycleListener;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.IExceptionMapper;
@@ -704,6 +705,9 @@ public abstract class Application implements UnboundListener, IEventSink
 
 		requestCycleProvider = new DefaultRequestCycleProvider();
 		exceptionMapperProvider = new DefaultExceptionMapperProvider();
+
+		// add a request cycle listener that logs each request for the requestlogger.
+		getRequestCycleListeners().add(new RequestLoggerRequestCycleListener());
 	}
 
 	/**

@@ -32,11 +32,13 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.BookmarkablePageRequestHandler;
+import org.apache.wicket.request.handler.BufferedResponseRequestHandler;
 import org.apache.wicket.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,7 +103,6 @@ public class RequestLogger implements IRequestLogger
 			}
 		});
 		liveSessions = new ConcurrentHashMap<String, SessionData>();
-
 	}
 
 	public int getCurrentActiveRequestCount()
@@ -135,6 +136,11 @@ public class RequestLogger implements IRequestLogger
 	public int getTotalCreatedSessions()
 	{
 		return totalCreatedSessions.get();
+	}
+
+	public void logRequestedUrl(String url)
+	{
+		getCurrentRequest().setRequestedUrl(url);
 	}
 
 	public void logEventTarget(IRequestHandler requestHandler)
@@ -183,9 +189,9 @@ public class RequestLogger implements IRequestLogger
 		{
 			IPageRequestHandler pageRequestHandler = (IPageRequestHandler)requestHandler;
 			sb.append("PageRequest[");
-			sb.append(pageRequestHandler.getPage().getClass().getName());
+			sb.append(pageRequestHandler.getPageClass().getName());
 			sb.append("(");
-			sb.append(pageRequestHandler.getPage().getId());
+			sb.append(pageRequestHandler.getPageId());
 			sb.append(")]");
 		}
 		else if (requestHandler instanceof ResourceReferenceRequestHandler)
@@ -202,6 +208,11 @@ public class RequestLogger implements IRequestLogger
 				.append(
 					getRequestHandlerString(((IRequestHandlerDelegate)requestHandler).getDelegateHandler()));
 		}
+		else if (requestHandler instanceof BufferedResponseRequestHandler)
+		{
+			BufferedResponseRequestHandler bufferedResponseHandler = (BufferedResponseRequestHandler)requestHandler;
+			sb.append(bufferedResponseHandler.getClass().getSimpleName());
+		}
 		else
 		{
 			sb.append(requestHandler.toString());
@@ -209,14 +220,14 @@ public class RequestLogger implements IRequestLogger
 		return sb.toString();
 	}
 
-
 	public void objectCreated(Object value)
 	{
 		RequestData rd = getCurrentRequest();
 
 		if (value instanceof Session)
 		{
-			rd.addEntry("Session created");
+			Session session = (Session)value;
+			rd.addEntry("Session created, id: " + session.getId());
 		}
 		else if (value instanceof Page)
 		{
@@ -227,7 +238,6 @@ public class RequestLogger implements IRequestLogger
 		{
 			rd.addEntry("Custom object created: " + value);
 		}
-
 	}
 
 	public void objectRemoved(Object value)
@@ -268,19 +278,19 @@ public class RequestLogger implements IRequestLogger
 
 	public void requestTime(long timeTaken)
 	{
-		RequestData rd = RequestCycle.get().getMetaData(REQUEST_DATA);
-		if (rd != null)
+		RequestData requestdata = RequestCycle.get().getMetaData(REQUEST_DATA);
+		if (requestdata != null)
 		{
 			if (activeRequests.get() > 0)
 			{
-				rd.setActiveRequest(activeRequests.decrementAndGet());
+				requestdata.setActiveRequest(activeRequests.decrementAndGet());
 			}
 			Session session = Session.get();
 			String sessionId = session.getId();
-			rd.setSessionId(sessionId);
+			requestdata.setSessionId(sessionId);
 
 			Object sessionInfo = getSessionInfo(session);
-			rd.setSessionInfo(sessionInfo);
+			requestdata.setSessionInfo(sessionInfo);
 
 			long sizeInBytes = -1;
 			if (Application.get().getRequestLoggerSettings().getRecordSessionSize())
@@ -292,42 +302,37 @@ public class RequestLogger implements IRequestLogger
 				catch (Exception e)
 				{
 					// log the error and let the request logging continue (this is what happens in
-					// the
-					// detach phase of the request cycle anyway. This provides better diagnostics).
+					// the detach phase of the request cycle anyway. This provides better
+					// diagnostics).
 					log.error(
 						"Exception while determining the size of the session in the request logger: " +
 							e.getMessage(), e);
 				}
 			}
-			rd.setSessionSize(sizeInBytes);
-			rd.setTimeTaken(timeTaken);
+			requestdata.setSessionSize(sizeInBytes);
+			requestdata.setTimeTaken(timeTaken);
 
-			requests.add(0, rd);
+			requests.add(0, requestdata);
+
+			SessionData sessiondata = null;
 			if (sessionId != null)
 			{
-				SessionData sd = liveSessions.get(sessionId);
-				if (sd == null)
+				sessiondata = liveSessions.get(sessionId);
+				if (sessiondata == null)
 				{
 					// passivated session or logger only started after it.
 					sessionCreated(sessionId);
-					sd = liveSessions.get(sessionId);
+					sessiondata = liveSessions.get(sessionId);
 				}
-				if (sd != null)
+				if (sessiondata != null)
 				{
-					sd.setSessionInfo(sessionInfo);
-					sd.setSessionSize(sizeInBytes);
-					sd.addTimeTaken(timeTaken);
-					log(rd, sd);
-				}
-				else
-				{
-					log(rd, null);
+					sessiondata.setSessionInfo(sessionInfo);
+					sessiondata.setSessionSize(sizeInBytes);
+					sessiondata.addTimeTaken(timeTaken);
 				}
 			}
-			else
-			{
-				log(rd, null);
-			}
+			// log the request- and sessiondata (the latter can be null)
+			log(requestdata, sessiondata);
 		}
 	}
 
@@ -379,51 +384,56 @@ public class RequestLogger implements IRequestLogger
 	protected final AppendingStringBuffer createLogString(RequestData rd, SessionData sd,
 		boolean includeRuntimeInfo)
 	{
-		AppendingStringBuffer asb = new AppendingStringBuffer(150);
-		asb.append("time=");
-		asb.append(rd.getTimeTaken());
-		asb.append(",event=");
-		asb.append(rd.getEventTarget());
-		asb.append(",response=");
-		asb.append(rd.getResponseTarget());
-		if (rd.getSessionInfo() != null && !rd.getSessionInfo().equals(""))
+		AppendingStringBuffer sb = new AppendingStringBuffer(150);
+		sb.append("time=");
+		sb.append(rd.getTimeTaken());
+		if (!Strings.isEmpty(rd.getRequestedUrl()))
 		{
-			asb.append(",sessioninfo=");
-			asb.append(rd.getSessionInfo());
+			sb.append(",url=");
+			sb.append(rd.getRequestedUrl());
+		}
+		sb.append(",event=");
+		sb.append(rd.getEventTarget());
+		sb.append(",response=");
+		sb.append(rd.getResponseTarget());
+		if (rd.getSessionInfo() != null && !Strings.isEmpty(rd.getSessionInfo().toString()))
+		{
+			sb.append(",sessioninfo=");
+			sb.append(rd.getSessionInfo());
 		}
 		else
 		{
-			asb.append(",sessionid=");
-			asb.append(rd.getSessionId());
+			sb.append(",sessionid=");
+			sb.append(rd.getSessionId());
 		}
-		asb.append(",sessionsize=");
-		asb.append(rd.getSessionSize());
+		sb.append(",sessionsize=");
+		sb.append(rd.getSessionSize());
 		if (sd != null)
 		{
-			asb.append(",sessionstart=");
-			asb.append(sd.getStartDate());
-			asb.append(",requests=");
-			asb.append(sd.getNumberOfRequests());
-			asb.append(",totaltime=");
-			asb.append(sd.getTotalTimeTaken());
+			sb.append(",sessionstart=");
+			sb.append(sd.getStartDate());
+			sb.append(",requests=");
+			sb.append(sd.getNumberOfRequests());
+			sb.append(",totaltime=");
+			sb.append(sd.getTotalTimeTaken());
 		}
-		asb.append(",activerequests=");
-		asb.append(rd.getActiveRequest());
+		sb.append(",activerequests=");
+		sb.append(rd.getActiveRequest());
 		if (includeRuntimeInfo)
 		{
 			Runtime runtime = Runtime.getRuntime();
 			long max = runtime.maxMemory() / 1000000;
 			long total = runtime.totalMemory() / 1000000;
 			long used = total - runtime.freeMemory() / 1000000;
-			asb.append(",maxmem=");
-			asb.append(max);
-			asb.append("M,total=");
-			asb.append(total);
-			asb.append("M,used=");
-			asb.append(used);
-			asb.append("M");
+			sb.append(",maxmem=");
+			sb.append(max);
+			sb.append("M,total=");
+			sb.append(total);
+			sb.append("M,used=");
+			sb.append(used);
+			sb.append("M");
 		}
-		return asb;
+		return sb;
 	}
 
 	private Object getSessionInfo(Session session)
@@ -434,5 +444,4 @@ public class RequestLogger implements IRequestLogger
 		}
 		return "";
 	}
-
 }

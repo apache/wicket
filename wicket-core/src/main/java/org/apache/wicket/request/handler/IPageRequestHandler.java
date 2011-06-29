@@ -26,9 +26,16 @@ import org.apache.wicket.request.component.IRequestablePage;
 public interface IPageRequestHandler extends IPageClassRequestHandler
 {
 	/**
-	 * Returns the page
+	 * Returns the page. Be aware that the page can be instantiated if this wasn't the case already.
 	 * 
 	 * @return page instance
 	 */
 	IRequestablePage getPage();
+
+	/**
+	 * Returns the page id.
+	 * 
+	 * @return page id
+	 */
+	Integer getPageId();
 }

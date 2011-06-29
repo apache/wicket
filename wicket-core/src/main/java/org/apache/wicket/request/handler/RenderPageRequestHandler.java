@@ -114,6 +114,14 @@ public class RenderPageRequestHandler implements IPageRequestHandler, IPageClass
 		return pageProvider.getPageClass();
 	}
 
+	/**
+	 * @see org.apache.wicket.request.handler.IPageRequestHandler#getPageId()
+	 */
+	public Integer getPageId()
+	{
+		return pageProvider.getPageId();
+	}
+
 	/** {@inheritDoc} */
 	public PageParameters getPageParameters()
 	{

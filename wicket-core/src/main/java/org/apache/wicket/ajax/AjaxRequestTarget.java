@@ -1350,11 +1350,25 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		return Strings.isEmpty(id) ? null : id;
 	}
 
+	/**
+	 * @see org.apache.wicket.request.handler.IPageRequestHandler#getPageClass()
+	 */
 	public Class<? extends IRequestablePage> getPageClass()
 	{
 		return page.getPageClass();
 	}
 
+	/**
+	 * @see org.apache.wicket.request.handler.IPageRequestHandler#getPageId()
+	 */
+	public Integer getPageId()
+	{
+		return page.getPageId();
+	}
+
+	/**
+	 * @see org.apache.wicket.request.handler.IPageRequestHandler#getPageParameters()
+	 */
 	public PageParameters getPageParameters()
 	{
 		return page.getPageParameters();

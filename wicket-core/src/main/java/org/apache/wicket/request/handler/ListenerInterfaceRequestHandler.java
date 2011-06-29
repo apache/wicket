@@ -98,6 +98,14 @@ public class ListenerInterfaceRequestHandler
 	}
 
 	/**
+	 * @see org.apache.wicket.request.handler.IPageRequestHandler#getPageId()
+	 */
+	public Integer getPageId()
+	{
+		return pageComponentProvider.getPageId();
+	}
+
+	/**
 	 * @see org.apache.wicket.request.handler.IPageClassRequestHandler#getPageParameters()
 	 */
 	public PageParameters getPageParameters()

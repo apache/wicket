@@ -23,8 +23,7 @@ import java.util.List;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.session.ISessionStore;
-import org.apache.wicket.util.string.AppendingStringBuffer;
-
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Interface for the request logger and viewer.
@@ -35,24 +34,22 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  */
 public interface IRequestLogger
 {
-
 	/**
 	 * @return The total created sessions counter
 	 */
-	public abstract int getTotalCreatedSessions();
+	int getTotalCreatedSessions();
 
 	/**
 	 * @return The peak sessions counter
 	 */
-	public abstract int getPeakSessions();
+	int getPeakSessions();
 
 	/**
 	 * This method returns a List of the current requests that are in mem. This is a readonly list.
 	 * 
 	 * @return Collection of the current requests
 	 */
-	public abstract List<RequestData> getRequests();
-
+	List<RequestData> getRequests();
 
 	/**
 	 * @return Collection of live Sessions Data
@@ -76,7 +73,7 @@ public interface IRequestLogger
 	 * @param id
 	 *            the session id
 	 */
-	public abstract void sessionCreated(String id);
+	void sessionCreated(String id);
 
 	/**
 	 * Method used to cleanup a livesession when the session was invalidated by the webcontainer
@@ -84,7 +81,7 @@ public interface IRequestLogger
 	 * @param sessionId
 	 *            the session id
 	 */
-	public abstract void sessionDestroyed(String sessionId);
+	void sessionDestroyed(String sessionId);
 
 	/**
 	 * This method is called when the request is over. This will set the total time a request takes
@@ -93,7 +90,7 @@ public interface IRequestLogger
 	 * @param timeTaken
 	 *            the time taken in milliseconds
 	 */
-	public abstract void requestTime(long timeTaken);
+	void requestTime(long timeTaken);
 
 	/**
 	 * Called to monitor removals of objects out of the {@link ISessionStore}
@@ -101,7 +98,7 @@ public interface IRequestLogger
 	 * @param value
 	 *            the object being removed
 	 */
-	public abstract void objectRemoved(Object value);
+	void objectRemoved(Object value);
 
 	/**
 	 * Called to monitor updates of objects in the {@link ISessionStore}
@@ -109,7 +106,7 @@ public interface IRequestLogger
 	 * @param value
 	 *            the object being updated
 	 */
-	public abstract void objectUpdated(Object value);
+	void objectUpdated(Object value);
 
 	/**
 	 * Called to monitor additions of objects in the {@link ISessionStore}
@@ -117,7 +114,7 @@ public interface IRequestLogger
 	 * @param value
 	 *            the object being created/added
 	 */
-	public abstract void objectCreated(Object value);
+	void objectCreated(Object value);
 
 	/**
 	 * Sets the target that was the response target for the current request
@@ -125,7 +122,7 @@ public interface IRequestLogger
 	 * @param target
 	 *            the response target
 	 */
-	public abstract void logResponseTarget(IRequestHandler target);
+	void logResponseTarget(IRequestHandler target);
 
 	/**
 	 * Sets the target that was the event target for the current request
@@ -133,7 +130,15 @@ public interface IRequestLogger
 	 * @param target
 	 *            the event target
 	 */
-	public abstract void logEventTarget(IRequestHandler target);
+	void logEventTarget(IRequestHandler target);
+
+	/**
+	 * Logs the URL that was requested by the browser.
+	 * 
+	 * @param url
+	 *            the requested URL
+	 */
+	void logRequestedUrl(String url);
 
 	/**
 	 * This class hold the information one request of a session has.
@@ -242,7 +247,6 @@ public interface IRequestLogger
 		{
 			return (int)(sd.lastActive - lastActive);
 		}
-
 	}
 
 
@@ -258,15 +262,12 @@ public interface IRequestLogger
 		private long startDate;
 		private long timeTaken;
 		private final List<String> entries = new ArrayList<String>(5);
+		private String requestedUrl;
 		private String eventTarget;
 		private String responseTarget;
-
 		private String sessionId;
-
 		private long totalSessionSize;
-
 		private Object sessionInfo;
-
 		private int activeRequest;
 
 		/**
@@ -353,6 +354,22 @@ public interface IRequestLogger
 		}
 
 		/**
+		 * @return the requested URL by the browser
+		 */
+		public String getRequestedUrl()
+		{
+			return requestedUrl;
+		}
+
+		/**
+		 * @param requestedUrl
+		 */
+		public void setRequestedUrl(String requestedUrl)
+		{
+			this.requestedUrl = requestedUrl;
+		}
+
+		/**
 		 * @param target
 		 */
 		public void addResponseTarget(String target)
@@ -390,17 +407,7 @@ public interface IRequestLogger
 		 */
 		public String getAlteredObjects()
 		{
-			AppendingStringBuffer sb = new AppendingStringBuffer();
-			for (int i = 0; i < entries.size(); i++)
-			{
-				String element = entries.get(i);
-				sb.append(element);
-				if (entries.size() != i + 1)
-				{
-					sb.append("<br/>");
-				}
-			}
-			return sb.toString();
+			return Strings.join(", ", entries);
 		}
 
 		/**
@@ -437,7 +444,6 @@ public interface IRequestLogger
 	 */
 	public interface ISessionLogInfo
 	{
-
 		/**
 		 * If you use the request logger log functionality then this object should have a nice
 		 * String representation. So make sure that the toString() is implemented for the returned
@@ -447,6 +453,4 @@ public interface IRequestLogger
 		 */
 		Object getSessionInfo();
 	}
-
-
 }

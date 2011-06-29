@@ -68,6 +68,13 @@ public interface IPageProvider
 	Class<? extends IRequestablePage> getPageClass();
 
 	/**
+	 * Returns the page id.
+	 * 
+	 * @return page id
+	 */
+	Integer getPageId();
+
+	/**
 	 * Detaches the page if it has been loaded.
 	 */
 	void detach();
