@@ -16,8 +16,7 @@
  */
 package org.apache.wicket.request.resource;
 
-import java.io.Serializable;
-
+import org.apache.wicket.IClusterable;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
@@ -29,7 +28,7 @@ import org.apache.wicket.util.lang.Args;
  * 
  * @author Matej Knopp
  */
-public interface IResource extends Serializable
+public interface IResource extends IClusterable
 {
 	/**
 	 * Attributes that are provided to resource in the {@link IResource#respond(Attributes)} method.
