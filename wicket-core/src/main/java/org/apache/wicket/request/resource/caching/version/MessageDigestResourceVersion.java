@@ -26,6 +26,7 @@ import org.apache.wicket.request.resource.PackageResource;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.string.Strings;
@@ -34,9 +35,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * uses the message digest of a {@link PackageResource} as a version string
- *
+ * 
  * @author Peter Ertl
- *
+ * 
  * @since 1.5
  */
 public class MessageDigestResourceVersion implements IResourceVersion
@@ -44,13 +45,13 @@ public class MessageDigestResourceVersion implements IResourceVersion
 	private static final Logger log = LoggerFactory.getLogger(MessageDigestResourceVersion.class);
 
 	private static final String DEFAULT_ALGORITHM = "MD5";
-	private static final int DEFAULT_BUFFER_SIZE = 8192;
+	private static final Bytes DEFAULT_BUFFER_SIZE = Bytes.bytes(8192);
 
 	/** message digest algorithm for computing hashes */
 	private final String algorithm;
 
 	/** buffer size for computing the digest */
-	private final int bufferSize;
+	private final Bytes bufferSize;
 
 	/**
 	 * create an instance using {@value #DEFAULT_ALGORITHM}
@@ -61,14 +62,12 @@ public class MessageDigestResourceVersion implements IResourceVersion
 	}
 
 	/**
-	 * create an instance using an algorihm that can be 
-	 * retrieved by Java Cryptography Architecture (JCA) 
-	 * using {@link MessageDigest#getInstance(String)} and 
-	 * using an fixed-size internal buffer for digest computation of
-	 * {@value #DEFAULT_BUFFER_SIZE} bytes.
-	 *
+	 * create an instance using an algorithm that can be retrieved by Java Cryptography Architecture
+	 * (JCA) using {@link MessageDigest#getInstance(String)} and using an fixed-size internal buffer
+	 * for digest computation of {@value #DEFAULT_BUFFER_SIZE} bytes.
+	 * 
 	 * @param algorithm
-	 *           digest algorithm
+	 *            digest algorithm
 	 */
 	public MessageDigestResourceVersion(String algorithm)
 	{
@@ -76,20 +75,19 @@ public class MessageDigestResourceVersion implements IResourceVersion
 	}
 
 	/**
-	 * create an instance using an algorihm that can be 
-	 * retrieved by Java Cryptography Architecture (JCA) 
-	 * using {@link MessageDigest#getInstance(String)} and 
-	 * using an specified internal buffer for digest computation.
-	 *
+	 * create an instance using an algorithm that can be retrieved by Java Cryptography Architecture
+	 * (JCA) using {@link MessageDigest#getInstance(String)} and using an specified internal buffer
+	 * for digest computation.
+	 * 
 	 * @param algorithm
-	 *           digest algorithm
+	 *            digest algorithm
 	 * @param bufferSize
-	 *           internal buffer size for digest computation
+	 *            internal buffer size for digest computation
 	 */
-	public MessageDigestResourceVersion(String algorithm, int bufferSize)
+	public MessageDigestResourceVersion(String algorithm, Bytes bufferSize)
 	{
 		this.algorithm = Args.notEmpty(algorithm, "algorithm");
-		this.bufferSize = bufferSize;
+		this.bufferSize = Args.notNull(bufferSize, "bufferSize");
 	}
 
 	public String getVersion(PackageResourceReference resourceReference)
@@ -98,7 +96,7 @@ public class MessageDigestResourceVersion implements IResourceVersion
 
 		if (streamInfo == null)
 		{
-			log.debug("could not get stream info for " + resourceReference);
+			log.debug("could not get stream info for '{}'", resourceReference);
 			return null;
 		}
 
@@ -112,7 +110,7 @@ public class MessageDigestResourceVersion implements IResourceVersion
 		}
 		catch (ResourceStreamNotFoundException e)
 		{
-			log.warn("resource stream not found for " + resourceReference);
+			log.warn("resource stream not found for '{}'", resourceReference);
 			return null;
 		}
 		catch (IOException e)
@@ -143,7 +141,7 @@ public class MessageDigestResourceVersion implements IResourceVersion
 	 * compute digest for resource stream
 	 * 
 	 * @param resourceStream
-	 *           resource stream to compute message digest for
+	 *            resource stream to compute message digest for
 	 * 
 	 * @return binary message digest
 	 * 
@@ -158,7 +156,8 @@ public class MessageDigestResourceVersion implements IResourceVersion
 
 		try
 		{
-			final byte[] buf = new byte[bufferSize];
+			int bufferLen = (int)Math.min(Integer.MAX_VALUE, bufferSize.bytes());
+			final byte[] buf = new byte[bufferLen];
 			int len;
 
 			while ((len = inputStream.read(buf)) != -1)
