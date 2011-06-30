@@ -111,10 +111,16 @@ public class Files
 	 * 
 	 * @param file
 	 *            File to delete
-	 * @return True if file was deleted
+	 * @return {@code true} if file was deleted, {@code false} if the file didn't exist or it cannot
+	 *         be removed for some reason
 	 */
 	public static boolean remove(final java.io.File file)
 	{
+		if (file.exists() == false)
+		{
+			return false;
+		}
+
 		int retries = 10;
 
 		boolean deleted = false;
