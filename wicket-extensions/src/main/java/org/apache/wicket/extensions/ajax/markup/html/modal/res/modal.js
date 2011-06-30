@@ -352,6 +352,7 @@ Wicket.Window.prototype = {
 					 idBottom, idCaptionText, this.isIframe());								
 		
 		var element = document.createElement("div");
+		element.id = idWindow;
 		document.body.appendChild(element);		
 		Wicket.replaceOuterHtml(element, markup);
 				

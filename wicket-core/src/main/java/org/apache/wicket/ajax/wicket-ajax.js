@@ -356,6 +356,12 @@ Wicket.replaceOuterHtmlSafari = function(element, text) {
  * browsers that don't do that automatically.
  * Also this method takes care of replacing table elements (tbody, tr, td, thead)
  * on browser where it's not supported when using outerHTML (IE).
+ * 
+ * This method sends notifications to all subsribers for channels with names
+ * '/dom/node/removing' with the element that is going to be replaced and 
+ * '/dom/node/added' with the newly created element (the replacement).
+ * 
+ * Note: the 'to be replaced' element must have an 'id' attribute
  */
 Wicket.replaceOuterHtml = function(element, text) {	
 
