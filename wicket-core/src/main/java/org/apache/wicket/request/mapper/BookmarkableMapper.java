@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.request.mapper;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -90,6 +91,14 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 	@Override
 	protected UrlInfo parseRequest(Request request)
 	{
+		if (Application.exists())
+		{
+			if (Application.get().getSecuritySettings().getEnforceMounts())
+			{
+				return null;
+			}
+		}
+
 		Url url = request.getUrl();
 		if (url.getSegments().size() >= 3 &&
 			urlStartsWith(url, getContext().getNamespace(),
