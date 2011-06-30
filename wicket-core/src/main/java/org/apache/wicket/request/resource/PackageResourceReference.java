@@ -220,5 +220,18 @@ public class PackageResourceReference extends ResourceReference
 		{
 			return variation;
 		}
+
+		@Override
+		public String toString()
+		{
+			final StringBuilder sb = new StringBuilder();
+			sb.append("StreamInfo");
+			sb.append("{stream=").append(stream);
+			sb.append(", locale=").append(locale);
+			sb.append(", style='").append(style).append('\'');
+			sb.append(", variation='").append(variation).append('\'');
+			sb.append('}');
+			return sb.toString();
+		}
 	}
 }

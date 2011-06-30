@@ -85,6 +85,11 @@ public class CachingResourceVersion implements IResourceVersion
 	 */        
 	public CachingResourceVersion(IResourceVersion delegate, int maxEntries)
 	{
+		if (maxEntries < 1)
+		{
+			throw new IllegalArgumentException("maxEntries must be greater than zero");
+		}
+
 		this.delegate = Args.notNull(delegate, "delegate");
 		this.cache = Collections.synchronizedMap(
 			new MostRecentlyUsedMap<CacheResourceVersionKey, String>(maxEntries));
