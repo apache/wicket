@@ -18,11 +18,8 @@ package org.apache.wicket.request.resource.caching.version;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.collections.MostRecentlyUsedMap;
 import org.apache.wicket.util.lang.Args;
 

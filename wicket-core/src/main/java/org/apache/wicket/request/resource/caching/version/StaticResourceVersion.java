@@ -17,7 +17,6 @@
 package org.apache.wicket.request.resource.caching.version;
 
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
 
 /**

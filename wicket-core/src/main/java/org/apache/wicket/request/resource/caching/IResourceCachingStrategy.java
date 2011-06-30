@@ -18,7 +18,6 @@ package org.apache.wicket.request.resource.caching;
 
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * caching strategy for resources
