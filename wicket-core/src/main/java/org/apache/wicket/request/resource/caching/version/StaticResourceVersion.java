@@ -21,7 +21,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * provides a static version string for all queries resources 
+ * provides a static version string for all package resources 
  *
  * @author Peter Ertl
  *
@@ -32,7 +32,7 @@ public class StaticResourceVersion implements IResourceVersion
 	private final String version;
 
 	/**
-	 * Constructor
+	 * create static version provider
 	 *
 	 * @param version
 	 *             static version string to deliver for all queries resources

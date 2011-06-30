@@ -21,8 +21,8 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.time.Time;
 
 /**
- * Uses the last modified timestamp of a {@link ResourceReference} 
- * in milliseconds as a version string.
+ * Uses the last modified timestamp of a {@link PackageResourceReference} 
+ * converted to milliseconds as a version string.
  *
  * @author Peter Ertl
  *
@@ -32,12 +32,15 @@ public class LastModifiedResourceVersion implements IResourceVersion
 {
 	public String getVersion(PackageResourceReference resourceReference)
 	{
+		// get last modified timestamp of resource
 		final Time lastModified = resourceReference.getLastModified();
 
+		// if no timestamp is available we can not provide a version
 		if (lastModified == null)
 		{
 			return null;
 		}
+		// version string = last modified timestamp converted to milliseconds
 		return String.valueOf(lastModified.getMilliseconds());
 	}
 }

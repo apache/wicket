@@ -24,15 +24,21 @@ import org.apache.wicket.request.resource.caching.version.IResourceVersion;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * resource caching strategy that adds a last-modified timestamp to the query string of the resource
- * (this is similar to how wicket 1.4 does it when enabling timestamps on resources).
+ * resource caching strategy that adds a version string to the query parameters of the resource
+ * (this is similar to how wicket 1.4 does it when enabling timestamps on resources). You should
+ * preferably use {@link FilenameWithVersionResourceCachingStrategy} since it is more reliable. 
  * 
  * @author Peter Ertl
+ *
+ * @see FilenameWithVersionResourceCachingStrategy
  * 
  * @since 1.5
  */
 public class QueryStringWithVersionResourceCachingStrategy implements IResourceCachingStrategy
 {
+	/**
+	 * default query parameter for version information
+	 */
 	private static final String DEFAULT_VERSION_PARAMETER = "ver";
 
 	/**
@@ -46,7 +52,10 @@ public class QueryStringWithVersionResourceCachingStrategy implements IResourceC
 	private final IResourceVersion resourceVersion;
 
 	/**
-	 * Constructor
+	 * create query string resource caching strategy
+	 * <p/>
+	 * it will use a query parameter named <code>{@value #DEFAULT_VERSION_PARAMETER}</code>
+	 * for storing the version information.
 	 * 
 	 * @param resourceVersion
 	 *                resource version provider
@@ -57,23 +66,26 @@ public class QueryStringWithVersionResourceCachingStrategy implements IResourceC
 	}
 
 	/**
-	 * Constructor
+	 * create query string resource caching strategy
+	 * <p/>
+	 * it will use a query parameter with name specified by 
+	 * parameter <code>resourceVersion</code> for storing the version information.
 	 *
 	 * @param versionParameter
-	 *            name of timestamp parameter which will be added to query string
-	 *            and contain the resource version string
+	 *            name of version parameter which will be added to query string
+	 *            containing the resource version
 	 * @param resourceVersion
 	 *                resource version provider
 	 */
 	public QueryStringWithVersionResourceCachingStrategy(String versionParameter, 
 	                                                     IResourceVersion resourceVersion)
 	{
-		this.versionParameter = Args.notEmpty(versionParameter, "timestampParameter");
+		this.versionParameter = Args.notEmpty(versionParameter, "versionParameter");
 		this.resourceVersion = Args.notNull(resourceVersion, "resourceVersion");
 	}
 
 	/**
-	 * @return name of timestamp parameter which will be added to query string
+	 * @return name of version parameter which will be added to query string
 	 */
 	public final String getVersionParameter()
 	{

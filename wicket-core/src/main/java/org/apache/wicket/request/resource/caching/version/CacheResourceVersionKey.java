@@ -22,21 +22,48 @@ import java.util.Locale;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.lang.Args;
 
+/**
+ * cache key for resource lookup
+ * <p/>
+ * this key will take the localized version of the resource as a key
+ *
+ * @author Peter Ertl
+ * 
+ * @since 1.5
+ */
 public class CacheResourceVersionKey implements Serializable
 {
+	/** resource scope */
 	private final Class<?> scope;
+	
+	/** resource name */
 	private final String name;
+	
+	/** current locale */
 	private final Locale locale;
+
+	/** current style */
 	private final String style;
+	
+	/** current variation */
 	private final String variation;
 
+	/**
+	 * create cache key from localized resource information 
+	 * 
+	 * @param resourceReference
+	 *           base package resource reference
+	 * @param streamInfo
+	 *           current localized stream information     
+	 */
 	public CacheResourceVersionKey(PackageResourceReference resourceReference,
 	                               PackageResourceReference.StreamInfo streamInfo)
 	{
 		Args.notNull(resourceReference, "resourceReference");
 		Args.notNull(streamInfo, "streamInfo");
-		this.scope = resourceReference.getScope();
-		this.name = resourceReference.getName();
+		
+		this.scope = Args.notNull(resourceReference.getScope(), "resource scope");
+		this.name = Args.notEmpty(resourceReference.getName(), "resource name");
 		this.locale = streamInfo.locale;
 		this.style = streamInfo.style;
 		this.variation = streamInfo.variation;
@@ -51,16 +78,20 @@ public class CacheResourceVersionKey implements Serializable
 		if (!(o instanceof CacheResourceVersionKey))
 			return false;
 
-		CacheResourceVersionKey that = (CacheResourceVersionKey)o;
+		final CacheResourceVersionKey that = (CacheResourceVersionKey)o;
 
 		if (locale != null? !locale.equals(that.locale) : that.locale != null)
 			return false;
+		
 		if (!name.equals(that.name))
 			return false;
+		
 		if (!scope.equals(that.scope))
 			return false;
+		
 		if (style != null? !style.equals(that.style) : that.style != null)
 			return false;
+		
 		if (variation != null? !variation.equals(that.variation) : that.variation != null)
 			return false;
 

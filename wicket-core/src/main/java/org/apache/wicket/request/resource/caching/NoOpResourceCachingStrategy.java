@@ -20,9 +20,9 @@ import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
- * resource caching strategy that does nothing
+ * resource caching strategy that does nothing at all
  * <p/>
- * caching will resources will effectively be disabled
+ * when using this strategy caching of resources will effectively be disabled
  * 
  * @author Peter Ertl
  * 

@@ -23,18 +23,19 @@ import org.apache.wicket.request.resource.caching.version.IResourceVersion;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * resource caching strategy that adds a version string for the 
+ * resource caching strategy that adds a version for the 
  * requested resource to the filename.
  * <p/>
  * versioned_filename := [basename][version-prefix][version](.extension)
  * <p/>
  * the <code>version</code> must not contain the <code>version-prefix</code> so
- * please use an unambigous value for the <code>version-prefix</code>.
+ * please use an unambigous value for the <code>version-prefix</code>. The default
+ * <code>version-prefix</code> is <code>{@value #DEFAULT_VERSION_PREFIX}</code>.
  * <p/> 
- * Since browsers and proxies use the versioned filename of the resource url 
- * as a cache key a change to the version will cause a cache miss and subsequent 
- * reload of the updated version. This enables us to set the caching duration
- * of the resource to a maximum.
+ * Since browsers and proxies use the versioned filename of the resource 
+ * as a cache key a change to the version will also change the filename and 
+ * cause a reliable cache miss. This enables us to set the caching duration
+ * of the resource to a maximum and get best network performance.
  * <p/>
  * 
  * @author Peter Ertl
@@ -45,22 +46,20 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 {
 	private static final String DEFAULT_VERSION_PREFIX = "-ver-";
 	
-	/** 
-	 * prefix that marks the beginning the of the version 
-	 * string contained in the decorated resource filename 
-	 * */
+	/** string that marks the beginning the of the version in the decorated filename */
 	private final String versionPrefix;
 
-	/**
-	 * resource version provider
-	 */
+	/** resource version provider */
 	private final IResourceVersion resourceVersion;
 
 	/**
-	 * Constructor
+	 * create filename caching strategy with given version provider and 
+	 * <code>version-prefix = '{@value #DEFAULT_VERSION_PREFIX}'</code>
 	 * 
 	 * @param resourceVersion
-	 *            resource version object
+	 *            version provider
+	 *            
+	 * @see #FilenameWithVersionResourceCachingStrategy(String, org.apache.wicket.request.resource.caching.version.IResourceVersion) 
 	 */
 	public FilenameWithVersionResourceCachingStrategy(IResourceVersion resourceVersion)
 	{
@@ -71,10 +70,11 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 	 * Constructor
 	 * 
 	 * @param versionPrefix
-	 *            string appended after the base filename before the version string
-	 *            and followed by the extension            
+	 *            string that marks the beginning the of the version in the decorated filename 
 	 * @param resourceVersion
 	 *            resource version object
+	 * 
+	 * @see #FilenameWithVersionResourceCachingStrategy(org.apache.wicket.request.resource.caching.version.IResourceVersion) 
 	 */
 	public FilenameWithVersionResourceCachingStrategy(String versionPrefix,
 	                                                  IResourceVersion resourceVersion)

@@ -27,8 +27,7 @@ import org.apache.wicket.util.lang.Generics;
 
 /**
  * Caches the results of a delegating {@link IResourceVersion} instance
- * in the current request meta data. It will be cached for the lifetime
- * of the current http request.
+ * for the lifetime of the current http request.
  *
  * @author Peter Ertl
  *
@@ -44,12 +43,12 @@ public class RequestCycleCachedResourceVersion implements IResourceVersion
 
 	/**
 	 * resource version provider which will actually do 
-	 * the work and retrieve the version
+	 * the hard work and retrieve the version
 	 */
 	private final IResourceVersion delegate;
 
 	/**
-	 * Constructor
+	 * create request-scoped resource provider cache
 	 * 
 	 * @param delegate
 	 *           resource version provider to cache
@@ -64,16 +63,20 @@ public class RequestCycleCachedResourceVersion implements IResourceVersion
 		// get current request cycle
 		final RequestCycle requestCycle = ThreadContext.getRequestCycle();
 
-		Map<CacheResourceVersionKey, String> cache = null;
-
-		PackageResourceReference.StreamInfo streamInfo = resourceReference.getCurrentStreamInfo();
+		// get current stream information for package resource
+		final PackageResourceReference.StreamInfo streamInfo = resourceReference.getCurrentStreamInfo();
 		
+		// if no stream info is available we can not provide a version
 		if(streamInfo == null)
 		{
 			return null;
 		}
 		
-		final CacheResourceVersionKey key = new CacheResourceVersionKey(resourceReference, streamInfo);
+		// cache instance
+		Map<CacheResourceVersionKey, String> cache = null;
+
+		// cache key
+		CacheResourceVersionKey key = null;
 
 		// is request cycle available?
 		if (requestCycle != null)
@@ -92,13 +95,15 @@ public class RequestCycleCachedResourceVersion implements IResourceVersion
 				// lookup timestamp from cache (may contain NULL values which are valid)
 				return cache.get(key);
 			}
+			// create caching key
+			key = new CacheResourceVersionKey(resourceReference, streamInfo);
 		}
 		
 		// no cache entry found, query version from delegate
 		final String version = delegate.getVersion(resourceReference);
 
 		// store value in cache (if it is available)
-		if (cache != null)
+		if (cache != null && key != null)
 		{
 			cache.put(key, version);
 		}
