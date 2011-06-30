@@ -423,7 +423,7 @@ public abstract class AbstractResource implements IResource
 		}
 
 		/**
-		 * set a response header
+		 * add a response header value
 		 * 
 		 * you can only set header values that or not already modified by
 		 * the other methods of this class like 'Content-Length', 'Last-Modified', etc.
@@ -433,13 +433,13 @@ public abstract class AbstractResource implements IResource
 		 * @param value
 		 *          header value
 		 */
-		public void setHeader(String name, String value)
+		public void addHeader(String name, String value)
 		{
 			// check if header can be directly access
 			checkHeaderAccess(name);
 			
 			//set header value
-			headers.setHeader(name, value);
+			headers.addHeader(name, value);
 		}
 
 		/**
@@ -448,18 +448,19 @@ public abstract class AbstractResource implements IResource
 		 * you can only get header values that or not already handled by
 		 * the other methods of this class like 'Content-Length', 'Last-Modified', etc.
 		 *  
+		 *
 		 * @param name
 		 *          header name
 		 *          
-		 * @return header value or <code>null</code> if not found
+		 * @return array of header values
 		 */
-		public String getHeader(final String name)
+		public String[] getHeaderValues(final String name)
 		{
 			// check if header can be directly access
 			checkHeaderAccess(name);
 
 			// get header value
-			return headers.getValue(name);
+			return headers.getValues(name);
 		}
 
 		/**
@@ -477,7 +478,7 @@ public abstract class AbstractResource implements IResource
 			checkHeaderAccess(name);
 
 			// remove header value
-			headers.removeHeader(name);
+			headers.removeHeaderValues(name);
 		}
 
 		/**
@@ -630,7 +631,10 @@ public abstract class AbstractResource implements IResource
 			// set additional response headers
 			for (HeaderCollection.Entry entry : data.headers)
 			{
-				webResponse.setHeader(entry.getName(), entry.getValue());
+				for (String value : entry.getValues())
+				{
+					webResponse.setHeader(entry.getName(), value);
+				}
 			}
 
 			// 6. Flush the response

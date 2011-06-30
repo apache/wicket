@@ -16,14 +16,16 @@
  */
 package org.apache.wicket.request;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.util.lang.Args;
 
 /**
- * a collection of headers with name and value suitable for 
+ * a multivalue map of headers names and header values suitable for 
  * processing request and response headers.
  *
  * @author Peter Ertl
@@ -32,50 +34,54 @@ import org.apache.wicket.util.lang.Args;
  */
 public class HeaderCollection implements Iterable<HeaderCollection.Entry>
 {
-	private final Map<String, String> headers;
+	private static final String[] NO_VALUES = new String[0];
+
+	private final Map<String, List<String>> headers;
 
 	public HeaderCollection()
 	{
-		headers = new HashMap<String, String>();
+		headers = new HashMap<String, List<String>>();
 	}
 
 	/**
-	 * set header value
+	 * add header value
 	 *
 	 * @param name
 	 *          header name
 	 * @param value
 	 *          header value
 	 */
-	public void setHeader(String name, String value)
+	public void addHeader(String name, String value)
 	{
 		// be lenient and strip leading / trailing blanks
 		name = Args.notEmpty(name, "name").trim();
 		value = Args.notEmpty(value, "value").trim();
 
-		// remove previous value (required since headers are handled case-sensitive)
-		// for example adding 'Content-Type' will overwrite 'content-type' 
-		removeHeader(name);
+		List<String> values = headers.get(name);
 
-		// add new value
-		headers.put(name, value);
+		if (values == null)
+		{
+			values = new ArrayList<String>();
+			headers.put(name, values);
+		}
+		values.add(value);
 	}
 
 	/**
-	 * remove header value
+	 * remove header values for header name
 	 *
 	 * @param name
 	 *          header name
 	 */
-	public void removeHeader(String name)
+	public void removeHeaderValues(String name)
 	{
 		name = Args.notEmpty(name, "name").trim();
 
-		final Iterator<Map.Entry<String, String>> it = headers.entrySet().iterator();
+		final Iterator<Map.Entry<String, List<String>>> it = headers.entrySet().iterator();
 
 		while (it.hasNext())
 		{
-			Map.Entry<String, String> header = it.next();
+			Map.Entry<String, List<String>> header = it.next();
 
 			if (header.getKey().equalsIgnoreCase(name))
 			{
@@ -85,26 +91,28 @@ public class HeaderCollection implements Iterable<HeaderCollection.Entry>
 	}
 
 	/**
-	 * get header value
+	 * get header values
+	 *
+	 *
 	 *
 	 * @param name
 	 *          header name
 	 *
 	 * @return header value or <code>null</code> if not found
 	 */
-	public String getValue(String name)
+	public String[] getValues(String name)
 	{
 		Args.notEmpty(name, "name");
 
 		// get the header value (case might differ)
-		for (Map.Entry<String, String> header : headers.entrySet())
+		for (Map.Entry<String, List<String>> header : headers.entrySet())
 		{
 			if (header.getKey().equalsIgnoreCase(name))
 			{
-				return header.getValue();
+				return header.getValue().toArray(new String[header.getValue().size()]);
 			}
 		}
-		return null;
+		return NO_VALUES;
 	}
 
 	/**
@@ -114,7 +122,7 @@ public class HeaderCollection implements Iterable<HeaderCollection.Entry>
 	 */
 	public Iterator<Entry> iterator()
 	{
-		final Iterator<Map.Entry<String, String>> iterator = headers.entrySet().iterator();
+		final Iterator<Map.Entry<String,List<String>>> iterator = headers.entrySet().iterator();
 
 		return new Iterator<Entry>()
 		{
@@ -160,9 +168,9 @@ public class HeaderCollection implements Iterable<HeaderCollection.Entry>
 	 */
 	public static class Entry
 	{
-		private final Map.Entry<String, String> header;
+		private final Map.Entry<String, List<String>> header;
 
-		public Entry(Map.Entry<String, String> header)
+		public Entry(Map.Entry<String, List<String>> header)
 		{
 			this.header = header;
 		}
@@ -172,9 +180,9 @@ public class HeaderCollection implements Iterable<HeaderCollection.Entry>
 			return header.getKey();
 		}
 
-		public String getValue()
+		public String[] getValues()
 		{
-			return header.getValue();
+			return header.getValue().toArray(new String[header.getValue().size()]);
 		}
 	}
 }

@@ -18,8 +18,7 @@ package org.apache.wicket.request;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class HeadersCollectionTest
 {
@@ -28,23 +27,23 @@ public class HeadersCollectionTest
 	{
 		HeaderCollection headers = new HeaderCollection();
 		assertTrue(headers.isEmpty());
-		
-		headers.setHeader("Content-Type", "text/html");
-		headers.setHeader("content-type", "text/plain");
-		assertEquals("text/plain", headers.getValue("CONTENT-TYPE"));
-		
-		headers.removeHeader("content-TYPE");
+
+		headers.addHeader("X-Test", "foo");
+		headers.addHeader("X-Test", "bar");
+		assertArrayEquals(new String[]{"foo", "bar"}, headers.getValues("X-Test"));
+
+		headers.removeHeaderValues("x-test");
 		assertTrue(headers.isEmpty());
-		
-		headers.setHeader("   Content-Type    ", "    image/jpeg     ");
-		headers.setHeader("Content-TYPE    ", "    image/gif     ");
-		assertEquals("image/gif", headers.getValue("CONTENT-TYPE"));
+
+		headers.addHeader("   X-Image    ", "    jpeg     ");
+		headers.addHeader("X-Image    ", "    gif     ");
+		assertArrayEquals(new String[]{"jpeg", "gif"}, headers.getValues("X-IMAGE"));
 		assertEquals(1, headers.getCount());
-		
-		headers.setHeader("X-Test", "123");
+
+		headers.addHeader("X-Test", "123");
 		assertEquals(2, headers.getCount());
-		
-		headers.removeHeader("   content-TYPE");
+
+		headers.removeHeaderValues(" x-tesT ");
 		assertEquals(1, headers.getCount());
 	}
 }
