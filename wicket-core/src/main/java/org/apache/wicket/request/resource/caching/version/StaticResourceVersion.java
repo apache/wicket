@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.request.resource.caching.version;
 
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
 
@@ -41,7 +42,7 @@ public class StaticResourceVersion implements IResourceVersion
 		this.version = Args.notNull(version, "version");
 	}
 
-	public String getVersion(ResourceReference resourceReference)
+	public String getVersion(PackageResourceReference resourceReference)
 	{
 		return version;
 	}

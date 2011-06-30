@@ -20,7 +20,6 @@ import java.util.Locale;
 
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.util.time.Time;
 
 /**
  * @author Matej Knopp
@@ -215,35 +214,5 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		context.getResourceReferenceRegistry().registerResourceReference(reference4);
 		context.getResourceReferenceRegistry().registerResourceReference(reference5);
 		context.getResourceReferenceRegistry().registerResourceReference(reference6);
-	}
-
-	/**
-	 * resource reference that monitors and supports the last modified timestamp
-	 */
-	protected class ResourceReferenceWithTimestamp extends ResourceReference
-	{
-		private static final long serialVersionUID = 1L;
-		protected int lastModifiedInvocationCount = 0;
-		private final Time lastModified;
-
-		public ResourceReferenceWithTimestamp(Time lastModified)
-		{
-			super(AbstractResourceReferenceMapperTest.class, "timestamped", Locale.ENGLISH,
-				"style", null);
-			this.lastModified = lastModified;
-		}
-
-		@Override
-		public IResource getResource()
-		{
-			return resource4;
-		}
-
-		@Override
-		public Time getLastModified()
-		{
-			lastModifiedInvocationCount++;
-			return lastModified;
-		}
 	}
 }

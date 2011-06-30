@@ -18,14 +18,12 @@ package org.apache.wicket.request.resource.caching.version;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.PackageResource;
-import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -94,44 +92,32 @@ public class MessageDigestResourceVersion implements IResourceVersion
 		this.bufferSize = bufferSize;
 	}
 
-	public String getVersion(ResourceReference resourceReference)
+	public String getVersion(PackageResourceReference resourceReference)
 	{
-		final IResource resource = resourceReference.getResource();
+		final PackageResourceReference.StreamInfo streamInfo = resourceReference.getCurrentStreamInfo();
 
-		if (PackageResource.class.isInstance(resource) == false)
+		if (streamInfo == null)
 		{
-			log.warn("message digests are only available with package " +
-			         "resource, not with " + resourceReference);
-
-			return null;
-		}
-
-		// get resource data
-		final PackageResource packageResource = (PackageResource)resource;
-		final IResourceStream resourceStream = packageResource.getResourceStream();
-
-		if (resourceStream == null)
-		{
-			log.debug("could not get resource stream for " + resource);
+			log.debug("could not get stream info for " + resourceReference);
 			return null;
 		}
 
 		try
 		{
 			// get binary hash
-			final byte[] hash = computeDigest(resourceStream);
+			final byte[] hash = computeDigest(streamInfo.stream);
 
 			// convert to hexadecimal
 			return Strings.toHexString(hash);
 		}
 		catch (ResourceStreamNotFoundException e)
 		{
-			log.warn("resource stream not found for " + resource);
+			log.warn("resource stream not found for " + resourceReference);
 			return null;
 		}
 		catch (IOException e)
 		{
-			log.warn("resource stream not be read for " + resource, e);
+			log.warn("resource stream not be read for " + resourceReference, e);
 			return null;
 		}
 	}

@@ -304,7 +304,7 @@ public class PackageResource extends AbstractResource
 	 * 
 	 * @return resource stream or <code>null</code> if not found
 	 */
-	public IResourceStream getResourceStream()
+	protected IResourceStream getResourceStream()
 	{
 		// Locate resource
 		return ThreadContext.getApplication()

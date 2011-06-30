@@ -21,7 +21,7 @@ import java.util.Map;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 
@@ -36,8 +36,8 @@ import org.apache.wicket.util.lang.Generics;
  */
 public class RequestCycleCachedResourceVersion implements IResourceVersion
 {
-	private static final MetaDataKey<Map<ResourceReference, String>> CACHE_KEY =
-		new MetaDataKey<Map<ResourceReference, String>>()
+	private static final MetaDataKey<Map<CacheResourceVersionKey, String>> CACHE_KEY =
+		new MetaDataKey<Map<CacheResourceVersionKey, String>>()
 		{
 			private static final long serialVersionUID = 1L;
 		};
@@ -59,12 +59,21 @@ public class RequestCycleCachedResourceVersion implements IResourceVersion
 		this.delegate = Args.notNull(delegate, "delegate");
 	}
 
-	public String getVersion(ResourceReference resourceReference)
+	public String getVersion(PackageResourceReference resourceReference)
 	{
 		// get current request cycle
 		final RequestCycle requestCycle = ThreadContext.getRequestCycle();
 
-		Map<ResourceReference, String> cache = null;
+		Map<CacheResourceVersionKey, String> cache = null;
+
+		PackageResourceReference.StreamInfo streamInfo = resourceReference.getCurrentStreamInfo();
+		
+		if(streamInfo == null)
+		{
+			return null;
+		}
+		
+		final CacheResourceVersionKey key = new CacheResourceVersionKey(resourceReference, streamInfo);
 
 		// is request cycle available?
 		if (requestCycle != null)
@@ -78,10 +87,10 @@ public class RequestCycleCachedResourceVersion implements IResourceVersion
 				// no, so create it
 				requestCycle.setMetaData(CACHE_KEY, cache = Generics.newHashMap());
 			}
-			else if (cache.containsKey(resourceReference))
+			else if (cache.containsKey(key))
 			{
 				// lookup timestamp from cache (may contain NULL values which are valid)
-				return cache.get(resourceReference);
+				return cache.get(key);
 			}
 		}
 		
@@ -91,7 +100,7 @@ public class RequestCycleCachedResourceVersion implements IResourceVersion
 		// store value in cache (if it is available)
 		if (cache != null)
 		{
-			cache.put(resourceReference, version);
+			cache.put(key, version);
 		}
 		
 		return version;

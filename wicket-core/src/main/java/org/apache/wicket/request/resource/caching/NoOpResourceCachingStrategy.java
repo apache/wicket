@@ -17,7 +17,7 @@
 package org.apache.wicket.request.resource.caching;
 
 import org.apache.wicket.request.resource.AbstractResource;
-import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
  * resource caching strategy that does nothing
@@ -35,7 +35,7 @@ public class NoOpResourceCachingStrategy implements IResourceCachingStrategy
 	 */
 	public static final IResourceCachingStrategy INSTANCE = new NoOpResourceCachingStrategy();
 
-	public void decorateUrl(ResourceUrl url, ResourceReference reference)
+	public void decorateUrl(ResourceUrl url, PackageResourceReference reference)
 	{
 	}
 

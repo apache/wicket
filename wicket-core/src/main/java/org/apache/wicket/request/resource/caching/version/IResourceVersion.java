@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.request.resource.caching.version;
 
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 
 /**
@@ -36,8 +37,8 @@ public interface IResourceVersion
 	 * get unique string identifying the version of the resource
 	 * 
 	 * @param resourceReference
-	 *             reference to resource
+	 *             reference to package resource
 	 * @return unique version string
 	 */
-	String getVersion(ResourceReference resourceReference);
+	String getVersion(PackageResourceReference resourceReference);
 }

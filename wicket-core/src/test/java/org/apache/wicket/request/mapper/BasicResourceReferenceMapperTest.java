@@ -25,16 +25,14 @@ import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
-import org.apache.wicket.request.resource.caching.version.LastModifiedResourceVersion;
 import org.apache.wicket.request.resource.caching.version.StaticResourceVersion;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.ValueProvider;
-import org.apache.wicket.util.time.Time;
 
 /**
  * @author Matej Knopp
@@ -43,10 +41,6 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 {
 	private static final IProvider<IResourceCachingStrategy> NO_CACHING = new ValueProvider<IResourceCachingStrategy>(
 		NoOpResourceCachingStrategy.INSTANCE);
-
-	private static final IProvider<FilenameWithVersionResourceCachingStrategy> CACHE_FILENAME_WITH_TIMESTAMP =
-		new ValueProvider<FilenameWithVersionResourceCachingStrategy>(
-			new FilenameWithVersionResourceCachingStrategy(new LastModifiedResourceVersion()));
 
 	/**
 	 * Construct.
@@ -57,16 +51,6 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 
 	private final BasicResourceReferenceMapper encoder = new BasicResourceReferenceMapper(
 		new PageParametersEncoder(), NO_CACHING)
-	{
-		@Override
-		protected IMapperContext getContext()
-		{
-			return context;
-		}
-	};
-
-	private final BasicResourceReferenceMapper encoderWithTimestamps = new BasicResourceReferenceMapper(
-		new PageParametersEncoder(), CACHE_FILENAME_WITH_TIMESTAMP)
 	{
 		@Override
 		protected IMapperContext getContext()
@@ -445,25 +429,6 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		assertEquals("wicket/resource/" + CLASS_NAME + "/reference5?en--variation", url.toString());
 	}
 
-	/**
-	 * 
-	 */
-	public void testLastModifiedTimestampIsPartOfUrl()
-	{
-		long millis = 12345678L;
-		final ResourceReferenceWithTimestamp reference = new ResourceReferenceWithTimestamp(
-			Time.millis(millis));
-		final IRequestHandler handler = new ResourceReferenceRequestHandler(reference, null);
-
-		// request url with timestamp
-		Url url = encoderWithTimestamps.mapHandler(handler);
-
-		// check that url contains timestamp
-		String timestampPart = CACHE_FILENAME_WITH_TIMESTAMP.get().getVersionPrefix() +
-			Long.toString(millis) + "?";
-		assertTrue(url.toString().contains(timestampPart));
-	}
-
 	public void testVersionStringInResourceFilename()
 	{
 		final IResource resource = new IResource()
@@ -473,8 +438,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 			}
 		};
 
-		final ResourceReference reference =
-			new ResourceReference(getClass(), "versioned", Locale.ENGLISH, "style", null)
+		final PackageResourceReference reference =
+			new PackageResourceReference(getClass(), "versioned", Locale.ENGLISH, "style", null)
 			{
 				@Override
 				public IResource getResource()

@@ -16,10 +16,14 @@
  */
 package org.apache.wicket.request.resource.caching.version;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.collections.MostRecentlyUsedMap;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -31,20 +35,44 @@ import org.apache.wicket.util.lang.Args;
  */
 public class CachingResourceVersion implements IResourceVersion
 {
+	private static final int DEFAULT_MAX_CACHE_ENTRIES = 5000;
 	private static final String NULL_VALUE = "null";
 
 	private final IResourceVersion delegate;
-	private final ConcurrentMap<ResourceReference, String> cache;
+	private final Map<CacheResourceVersionKey, String> cache;
 
 	public CachingResourceVersion(IResourceVersion delegate)
 	{
-		this.delegate = Args.notNull(delegate, "delegate");
-		this.cache = new ConcurrentHashMap<ResourceReference, String>();
+		this(delegate, DEFAULT_MAX_CACHE_ENTRIES);
 	}
 
-	public String getVersion(ResourceReference resourceReference)
+	/**
+	 * constructor
+	 * 
+	 * @param delegate
+	 *          resource version provider
+	 * @param maxEntries
+	 *          maximum number of cache entries
+	 */        
+	public CachingResourceVersion(IResourceVersion delegate, int maxEntries)
 	{
-		String version = cache.get(resourceReference);
+		this.delegate = Args.notNull(delegate, "delegate");
+		this.cache = Collections.synchronizedMap(
+			new MostRecentlyUsedMap<CacheResourceVersionKey, String>(maxEntries));
+	}
+
+	public String getVersion(PackageResourceReference resourceReference)
+	{
+		PackageResourceReference.StreamInfo streamInfo = resourceReference.getCurrentStreamInfo();
+		
+		if(streamInfo == null)
+		{
+			return null;
+		}
+
+		final CacheResourceVersionKey key = new CacheResourceVersionKey(resourceReference, streamInfo);
+
+		String version = cache.get(key);
 
 		if (version == null)
 		{
@@ -54,7 +82,7 @@ public class CachingResourceVersion implements IResourceVersion
 			{
 				version = NULL_VALUE;
 			}
-			cache.put(resourceReference, version);
+			cache.put(key, version);
 		}
 
 		//noinspection StringEquality

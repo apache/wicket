@@ -158,6 +158,11 @@ public class PackageResourceReference extends ResourceReference
 		return info.stream.lastModifiedTime();
 	}
 
+	public StreamInfo getCurrentStreamInfo()
+	{
+		return lookupStream(getCurrentLocale(), getCurrentStyle(), getVariation());
+	}
+
 	@Override
 	public UrlAttributes getUrlAttributes()
 	{
@@ -181,7 +186,7 @@ public class PackageResourceReference extends ResourceReference
 		return value;
 	}
 
-	private static class StreamInfo
+	public static class StreamInfo
 	{
 		public final IResourceStream stream;
 		public final Locale locale;

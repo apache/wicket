@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.request.resource.caching.version;
 
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.time.Time;
 
@@ -29,7 +30,7 @@ import org.apache.wicket.util.time.Time;
  */
 public class LastModifiedResourceVersion implements IResourceVersion
 {
-	public String getVersion(ResourceReference resourceReference)
+	public String getVersion(PackageResourceReference resourceReference)
 	{
 		final Time lastModified = resourceReference.getLastModified();
 

@@ -18,7 +18,7 @@ package org.apache.wicket.request.resource.caching;
 
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.resource.AbstractResource;
-import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.caching.version.IResourceVersion;
 import org.apache.wicket.util.lang.Args;
 
@@ -91,7 +91,7 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 		return versionPrefix;
 	}
 
-	public void decorateUrl(ResourceUrl url, ResourceReference reference)
+	public void decorateUrl(ResourceUrl url, PackageResourceReference reference)
 	{
 		// get version string for requested resource
 		final String version = this.resourceVersion.getVersion(reference);

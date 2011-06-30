@@ -26,6 +26,7 @@ import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandle
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.MetaInfStaticResourceReference;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
@@ -191,20 +192,25 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 			{
 				String token = tokens.nextToken();
 
-				// on the last component of the resource path add the timestamp
+				// on the last component of the resource path add a version string ...
 				if (tokens.hasMoreTokens() == false)
 				{
-					ResourceUrl resourceUrl = new ResourceUrl(token, parameters);
-					getCachingStrategy().decorateUrl(resourceUrl, reference);
-					token = resourceUrl.getFileName();
+					// ... but only for package resources
+					if(reference instanceof PackageResourceReference)
+					{
+						final PackageResourceReference pkgref = (PackageResourceReference)reference;
+						final ResourceUrl resourceUrl = new ResourceUrl(token, parameters);
+						getCachingStrategy().decorateUrl(resourceUrl, pkgref);
+						token = resourceUrl.getFileName();
 
-					if (Strings.isEmpty(token))
-						throw new NullPointerException(
-							"caching strategy must not return an empty filename");
+						if (Strings.isEmpty(token))
+							throw new NullPointerException(
+								"caching strategy must not return an empty filename");
 
-					if (parameters.getIndexedCount() > 0)
-						throw new IllegalStateException(
-							"caching strategy must not add indexed parameters");
+						if (parameters.getIndexedCount() > 0)
+							throw new IllegalStateException(
+								"caching strategy must not add indexed parameters");
+					}
 				}
 				segments.add(token);
 			}

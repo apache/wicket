@@ -19,7 +19,7 @@ package org.apache.wicket.request.resource.caching;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.resource.AbstractResource;
-import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.caching.version.IResourceVersion;
 import org.apache.wicket.util.lang.Args;
 
@@ -80,7 +80,7 @@ public class QueryStringWithVersionResourceCachingStrategy implements IResourceC
 		return versionParameter;
 	}
 
-	public void decorateUrl(ResourceUrl url, final ResourceReference reference)
+	public void decorateUrl(ResourceUrl url, final PackageResourceReference reference)
 	{
 		String version = resourceVersion.getVersion(reference);
 
