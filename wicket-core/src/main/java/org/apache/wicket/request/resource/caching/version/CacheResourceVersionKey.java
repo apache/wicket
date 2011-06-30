@@ -64,9 +64,9 @@ public class CacheResourceVersionKey implements Serializable
 		
 		this.scope = Args.notNull(resourceReference.getScope(), "resource scope");
 		this.name = Args.notEmpty(resourceReference.getName(), "resource name");
-		this.locale = streamInfo.locale;
-		this.style = streamInfo.style;
-		this.variation = streamInfo.variation;
+		this.locale = streamInfo.getLocale();
+		this.style = streamInfo.getStyle();
+		this.variation = streamInfo.getVariation();
 	}
 
 	@Override

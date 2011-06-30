@@ -128,7 +128,7 @@ public class MessageDigestResourceVersion implements IResourceVersion
 		try
 		{
 			// get binary hash
-			final byte[] hash = computeDigest(streamInfo.stream);
+			final byte[] hash = computeDigest(streamInfo.getStream());
 
 			// convert to hexadecimal
 			return Strings.toHexString(hash);

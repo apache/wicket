@@ -185,20 +185,40 @@ public class PackageResourceReference extends ResourceReference
 
 		return value;
 	}
-
+	
 	public static class StreamInfo
 	{
-		public final IResourceStream stream;
-		public final Locale locale;
-		public final String style;
-		public final String variation;
+		private final IResourceStream stream;
+		private final Locale locale;
+		private final String style;
+		private final String variation;
 
 		public StreamInfo(IResourceStream stream)
 		{
 			this.stream = stream;
-			locale = stream.getLocale();
-			style = stream.getStyle();
-			variation = stream.getVariation();
+			this.locale = stream.getLocale();
+			this.style = stream.getStyle();
+			this.variation = stream.getVariation();
+		}
+
+		public IResourceStream getStream()
+		{
+			return stream;
+		}
+
+		public Locale getLocale()
+		{
+			return locale;
+		}
+
+		public String getStyle()
+		{
+			return style;
+		}
+
+		public String getVariation()
+		{
+			return variation;
 		}
 	}
 }
