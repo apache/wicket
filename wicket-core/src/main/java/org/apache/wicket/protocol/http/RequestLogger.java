@@ -36,6 +36,7 @@ import org.apache.wicket.request.handler.BufferedResponseRequestHandler;
 import org.apache.wicket.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.settings.IRequestLoggerSettings;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -96,7 +97,11 @@ public class RequestLogger implements IRequestLogger
 			public void add(int index, RequestData o)
 			{
 				super.add(index, o);
-				if (size() > Application.get().getRequestLoggerSettings().getRequestsWindowSize())
+
+				// should not happen often that the requests window size changes, but now we can
+				// increase and shrink the list at will.
+				IRequestLoggerSettings settings = Application.get().getRequestLoggerSettings();
+				while (size() > Math.max(0, settings.getRequestsWindowSize()))
 				{
 					removeLast();
 				}
@@ -248,7 +253,7 @@ public class RequestLogger implements IRequestLogger
 			Page page = (Page)value;
 			rd.addEntry("Page removed, id: " + page.getId() + ", class:" + page.getClass());
 		}
-		else if (value instanceof WebSession)
+		else if (value instanceof Session)
 		{
 			rd.addEntry("Session removed");
 		}
