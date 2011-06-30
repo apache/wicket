@@ -19,11 +19,14 @@ package org.apache.wicket.request.resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.request.HeaderCollection;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
@@ -66,6 +69,9 @@ public abstract class AbstractResource implements IResource
 	 */
 	public static class ResourceResponse
 	{
+		/** header values that are managed internally and must not be set directly */
+		public static final Set<String> INTERNAL_HEADERS; 
+		
 		private Integer errorCode;
 		private String errorMessage;
 		private String fileName = null;
@@ -77,7 +83,23 @@ public abstract class AbstractResource implements IResource
 		private WriteCallback writeCallback;
 		private Duration cacheDuration;
 		private WebResponse.CacheScope cacheScope;
+		private final HeaderCollection headers;
 
+		static
+		{
+			INTERNAL_HEADERS = new HashSet<String>();
+			INTERNAL_HEADERS.add("server");
+			INTERNAL_HEADERS.add("date");
+			INTERNAL_HEADERS.add("expires");
+			INTERNAL_HEADERS.add("last-modified");
+			INTERNAL_HEADERS.add("content-type");
+			INTERNAL_HEADERS.add("content-length");
+			INTERNAL_HEADERS.add("content-disposition");
+			INTERNAL_HEADERS.add("transfer-encoding");
+			INTERNAL_HEADERS.add("connection");
+			INTERNAL_HEADERS.add("content-disposition");
+		}
+		
 		/**
 		 * Construct.
 		 */
@@ -87,6 +109,9 @@ public abstract class AbstractResource implements IResource
 			// setting it to [PUBLIC] seems to be sexy but could potentially cache confidential
 			// data on public proxies for users migrating to 1.5
 			cacheScope = WebResponse.CacheScope.PRIVATE;
+			
+			// collection of directly set response headers
+			headers = new HeaderCollection();
 		}
 
 		/**
@@ -396,6 +421,86 @@ public abstract class AbstractResource implements IResource
 		{
 			return writeCallback;
 		}
+
+		/**
+		 * set a response header
+		 * 
+		 * you can only set header values that or not already modified by
+		 * the other methods of this class like 'Content-Length', 'Last-Modified', etc.
+		 *  
+		 * @param name
+		 *          header name
+		 * @param value
+		 *          header value
+		 */
+		public void setHeader(String name, String value)
+		{
+			// check if header can be directly access
+			checkHeaderAccess(name);
+			
+			//set header value
+			headers.setHeader(name, value);
+		}
+
+		/**
+		 * get header value
+		 * <p/>
+		 * you can only get header values that or not already handled by
+		 * the other methods of this class like 'Content-Length', 'Last-Modified', etc.
+		 *  
+		 * @param name
+		 *          header name
+		 *          
+		 * @return header value or <code>null</code> if not found
+		 */
+		public String getHeader(final String name)
+		{
+			// check if header can be directly access
+			checkHeaderAccess(name);
+
+			// get header value
+			return headers.getValue(name);
+		}
+
+		/**
+		 * remove header value
+		 * 
+		 * you can only access header values that or not already modified by
+		 * the other methods of this class like 'Content-Length', 'Last-Modified', etc.
+		 *  
+		 * @param name
+		 *          header name
+		 */
+		public void removeHeader(String name)
+		{
+			// check if header can be directly access
+			checkHeaderAccess(name);
+
+			// remove header value
+			headers.removeHeader(name);
+		}
+
+		/**
+		 * check if header is directly modifyable 
+		 * 
+		 * @param name
+		 *         header name
+		 *
+		 * @throws IllegalArgumentException 
+		 *         if access is forbidden 
+		 */
+		private void checkHeaderAccess(String name)
+		{
+			name = Args.notEmpty(name.trim().toLowerCase(), "name");
+
+			if (INTERNAL_HEADERS.contains(name))
+			{
+				throw new IllegalArgumentException(
+					"you are not allowed to directly access header [" + name + "], " +
+					"use one of the other specialized methods of " + getClass().getSimpleName() +
+					" to get or modify its value");
+			}
+		}
 	}
 
 	/**
@@ -520,6 +625,12 @@ public abstract class AbstractResource implements IResource
 			if (contentLength != -1)
 			{
 				webResponse.setContentLength(contentLength);
+			}
+
+			// set additional response headers
+			for (HeaderCollection.Entry entry : data.headers)
+			{
+				webResponse.setHeader(entry.getName(), entry.getValue());
 			}
 
 			// 6. Flush the response
