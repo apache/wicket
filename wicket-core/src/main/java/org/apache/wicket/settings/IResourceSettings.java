@@ -27,6 +27,7 @@ import org.apache.wicket.markup.html.PackageResourceGuard;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.resource.IPropertiesFactory;
+import org.apache.wicket.resource.IPropertiesFactoryContext;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.util.file.IFileUploadCleaner;
 import org.apache.wicket.util.file.IResourceFinder;
@@ -73,7 +74,7 @@ import org.apache.wicket.util.watch.IModificationWatcher;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public interface IResourceSettings
+public interface IResourceSettings extends IPropertiesFactoryContext
 {
 	/**
 	 * Adds a resource factory to the list of factories to consult when generating resources
@@ -105,17 +106,6 @@ public interface IResourceSettings
 	 * @see org.apache.wicket.util.time.Duration#NONE
 	 */
 	Duration getDefaultCacheDuration();
-
-	/**
-	 * Get the application's localizer.
-	 * 
-	 * to modify the way Wicket resolves keys to localized messages you can 
-	 * add custom resource loaders to the list returned by 
-	 * {@link org.apache.wicket.settings.IResourceSettings#getStringResourceLoaders()}.
-	 * 
-	 * @return The application wide localizer instance
-	 */
-	Localizer getLocalizer();
 
 	/**
 	 * Gets the {@link PackageResourceGuard package resource guard}.
@@ -151,20 +141,6 @@ public interface IResourceSettings
 	 * @see IResourceSettings#setResourcePollFrequency(Duration)
 	 */
 	Duration getResourcePollFrequency();
-
-	/**
-	 * @return Resource locator for this application
-	 */
-	IResourceStreamLocator getResourceStreamLocator();
-
-	/**
-	 * @param start
-	 *            boolean if the resource watcher should be started if not already started.
-	 * 
-	 * @return Resource watcher with polling frequency determined by setting, or null if no polling
-	 *         frequency has been set.
-	 */
-	IModificationWatcher getResourceWatcher(boolean start);
 
 	/**
 	 * @return mutable list of all available string resource loaders

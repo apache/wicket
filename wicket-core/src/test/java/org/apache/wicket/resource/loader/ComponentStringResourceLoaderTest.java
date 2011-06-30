@@ -18,10 +18,10 @@ package org.apache.wicket.resource.loader;
 
 import java.util.Map;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.resource.IPropertiesFactory;
+import org.apache.wicket.resource.IPropertiesFactoryContext;
 import org.apache.wicket.resource.IsoPropertiesFilePropertiesLoader;
 import org.apache.wicket.resource.Properties;
 import org.apache.wicket.resource.PropertiesFactory;
@@ -64,7 +64,7 @@ public class ComponentStringResourceLoaderTest extends WicketTestCase
 	{
 		// Avoid the conflict by limiting the search for properties files
 		// to *.properties
-		IPropertiesFactory myFac = new MyPropertiesFactory(tester.getApplication());
+		IPropertiesFactory myFac = new MyPropertiesFactory(tester.getApplication().getResourceSettings());
 		tester.getApplication().getResourceSettings().setPropertiesFactory(myFac);
 
 		executeTest(TestPage_1.class, "TestPageExpectedResult_1.xml");
@@ -75,7 +75,7 @@ public class ComponentStringResourceLoaderTest extends WicketTestCase
 	 */
 	public void testDisabledCache() throws Exception
 	{
-		IPropertiesFactory myFac = new DisabledCachePropertiesFactory(tester.getApplication());
+		IPropertiesFactory myFac = new DisabledCachePropertiesFactory(tester.getApplication().getResourceSettings());
 		tester.getApplication().getResourceSettings().setPropertiesFactory(myFac);
 
 		executeTest(TestPage_1.class, "TestPageExpectedResult_1.xml");
@@ -90,12 +90,12 @@ public class ComponentStringResourceLoaderTest extends WicketTestCase
 	{
 		/**
 		 * Construct.
-		 * 
-		 * @param application
+		 *
+		 * @param context
 		 */
-		public MyPropertiesFactory(Application application)
+		public MyPropertiesFactory(IPropertiesFactoryContext context)
 		{
-			super(application);
+			super(context);
 
 			getPropertiesLoaders().clear();
 			getPropertiesLoaders().add(new IsoPropertiesFilePropertiesLoader("properties"));
@@ -110,11 +110,11 @@ public class ComponentStringResourceLoaderTest extends WicketTestCase
 		/**
 		 * Construct.
 		 * 
-		 * @param application
+		 * @param context
 		 */
-		public DisabledCachePropertiesFactory(Application application)
+		public DisabledCachePropertiesFactory(IPropertiesFactoryContext context)
 		{
-			super(application);
+			super(context);
 		}
 
 		/**

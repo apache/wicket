@@ -87,7 +87,7 @@ public class XmlPageTest extends WicketTestCase
 		 */
 		public MyPropertiesFactory(Application application)
 		{
-			super(application);
+			super(application.getResourceSettings());
 
 			getPropertiesLoaders().clear();
 			getPropertiesLoaders().add(new IsoPropertiesFilePropertiesLoader("properties"));

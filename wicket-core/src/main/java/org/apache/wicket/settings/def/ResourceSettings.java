@@ -192,7 +192,7 @@ public class ResourceSettings implements IResourceSettings
 	{
 		if (propertiesFactory == null)
 		{
-			propertiesFactory = new PropertiesFactory(Application.get());
+			propertiesFactory = new PropertiesFactory(this);
 		}
 		return propertiesFactory;
 	}

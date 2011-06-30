@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.listener.IChangeListener;
@@ -60,8 +59,8 @@ public class PropertiesFactory implements IPropertiesFactory
 	/** Cache for all property files loaded */
 	private final Map<String, Properties> propertiesCache = newPropertiesCache();
 
-	/** This is necessary since the ModificationWatcher runs in a separate thread */
-	private final Application application;
+	/** Provides the environment for properties factory */
+	private final IPropertiesFactoryContext context;
 
 	/** List of Properties Loader */
 	private final List<IPropertiesLoader> propertiesLoader;
@@ -69,17 +68,16 @@ public class PropertiesFactory implements IPropertiesFactory
 	/**
 	 * Construct.
 	 * 
-	 * @param application
-	 *            Application for this properties factory.
+	 * @param context
+	 *            context for properties factory
 	 */
-	public PropertiesFactory(final Application application)
+	public PropertiesFactory(final IPropertiesFactoryContext context)
 	{
-		this.application = application;
-
-		propertiesLoader = new ArrayList<IPropertiesLoader>();
-		propertiesLoader.add(new IsoPropertiesFilePropertiesLoader("properties"));
-		propertiesLoader.add(new UtfPropertiesFilePropertiesLoader("utf8.properties", "utf-8"));
-		propertiesLoader.add(new XmlFilePropertiesLoader("properties.xml"));
+		this.context = context;
+		this.propertiesLoader = new ArrayList<IPropertiesLoader>();
+		this.propertiesLoader.add(new IsoPropertiesFilePropertiesLoader("properties"));
+		this.propertiesLoader.add(new UtfPropertiesFilePropertiesLoader("utf8.properties", "utf-8"));
+		this.propertiesLoader.add(new XmlFilePropertiesLoader("properties.xml"));
 	}
 
 	/**
@@ -124,7 +122,7 @@ public class PropertiesFactory implements IPropertiesFactory
 		}
 
 		// clear the localizer cache as well
-		application.getResourceSettings().getLocalizer().clearCache();
+		context.getLocalizer().clearCache();
 	}
 
 	/**
@@ -142,8 +140,6 @@ public class PropertiesFactory implements IPropertiesFactory
 
 		if (properties == null)
 		{
-			IResourceSettings resourceSettings = application.getResourceSettings();
-
 			Iterator<IPropertiesLoader> iter = propertiesLoader.iterator();
 			while ((properties == null) && iter.hasNext())
 			{
@@ -151,7 +147,7 @@ public class PropertiesFactory implements IPropertiesFactory
 				String fullPath = path + loader.getFileExtension();
 
 				// If not in the cache than try to load properties
-				IResourceStream resourceStream = resourceSettings.getResourceStreamLocator()
+				IResourceStream resourceStream = context.getResourceStreamLocator()
 					.locate(clazz, fullPath);
 				if (resourceStream == null)
 				{
@@ -159,7 +155,7 @@ public class PropertiesFactory implements IPropertiesFactory
 				}
 
 				// Watch file modifications
-				final IModificationWatcher watcher = resourceSettings.getResourceWatcher(true);
+				final IModificationWatcher watcher = context.getResourceWatcher(true);
 				if (watcher != null)
 				{
 					addToWatcher(path, resourceStream, watcher);
