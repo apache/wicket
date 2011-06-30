@@ -142,7 +142,7 @@ public class PropertiesFactory implements IPropertiesFactory
 
 		if (properties == null)
 		{
-			IResourceSettings resourceSettings = Application.get().getResourceSettings();
+			IResourceSettings resourceSettings = application.getResourceSettings();
 
 			Iterator<IPropertiesLoader> iter = propertiesLoader.iterator();
 			while ((properties == null) && iter.hasNext())
