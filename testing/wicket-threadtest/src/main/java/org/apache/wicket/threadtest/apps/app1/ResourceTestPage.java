@@ -81,7 +81,7 @@ public class ResourceTestPage extends WebPage
 				{
 					encoder.encode(image);
 				}
-				catch (IOException e)
+				catch (Exception e)
 				{
 					throw new WicketRuntimeException(e);
 				}
