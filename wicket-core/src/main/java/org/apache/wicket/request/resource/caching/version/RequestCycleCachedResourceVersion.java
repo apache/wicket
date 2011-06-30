@@ -84,6 +84,9 @@ public class RequestCycleCachedResourceVersion implements IResourceVersion
 			// retrieve cache from current request cycle
 			cache = requestCycle.getMetaData(CACHE_KEY);
 
+			// create caching key
+			key = new CacheResourceVersionKey(resourceReference, streamInfo);
+
 			// does cache exist within current request cycle?
 			if (cache == null)
 			{
@@ -95,8 +98,6 @@ public class RequestCycleCachedResourceVersion implements IResourceVersion
 				// lookup timestamp from cache (may contain NULL values which are valid)
 				return cache.get(key);
 			}
-			// create caching key
-			key = new CacheResourceVersionKey(resourceReference, streamInfo);
 		}
 		
 		// no cache entry found, query version from delegate
