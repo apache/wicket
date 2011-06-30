@@ -440,14 +440,19 @@ public class ResourceSettings implements IResourceSettings
 
 			if (application.usesDevelopmentConfig())
 			{
-				// use file last modified for resource cache keys
+				// development mode:
+				// use last-modified timestamp of packaged resource for resource caching
+				// cache the version information for the lifetime of the current http request
 				resourceVersion = new RequestCycleCachedResourceVersion(new LastModifiedResourceVersion());
 			}
 			else
 			{
-				// use md5 message digest for resource cache keys
+				// deployment mode:
+				// use message digest over resource content for resource caching
+				// cache the version information for the lifetime of the application
 				resourceVersion = new CachingResourceVersion(new MessageDigestResourceVersion());
 			}
+			// cache resource with a version string in the filename
 			resourceCachingStrategy =
 				new FilenameWithVersionResourceCachingStrategy(resourceVersion);
 		}
