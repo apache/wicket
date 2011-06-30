@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.request.HeaderCollection;
+import org.apache.wicket.request.HttpHeaderCollection;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
@@ -46,6 +46,24 @@ public abstract class AbstractResource implements IResource
 {
 	private static final long serialVersionUID = 1L;
 
+	/** header values that are managed internally and must not be set directly */
+	public static final Set<String> INTERNAL_HEADERS; 
+		
+	static
+	{
+		INTERNAL_HEADERS = new HashSet<String>();
+		INTERNAL_HEADERS.add("server");
+		INTERNAL_HEADERS.add("date");
+		INTERNAL_HEADERS.add("expires");
+		INTERNAL_HEADERS.add("last-modified");
+		INTERNAL_HEADERS.add("content-type");
+		INTERNAL_HEADERS.add("content-length");
+		INTERNAL_HEADERS.add("content-disposition");
+		INTERNAL_HEADERS.add("transfer-encoding");
+		INTERNAL_HEADERS.add("connection");
+		INTERNAL_HEADERS.add("content-disposition");
+	}
+	
 	/**
 	 * Construct.
 	 */
@@ -69,9 +87,6 @@ public abstract class AbstractResource implements IResource
 	 */
 	public static class ResourceResponse
 	{
-		/** header values that are managed internally and must not be set directly */
-		public static final Set<String> INTERNAL_HEADERS; 
-		
 		private Integer errorCode;
 		private String errorMessage;
 		private String fileName = null;
@@ -83,23 +98,8 @@ public abstract class AbstractResource implements IResource
 		private WriteCallback writeCallback;
 		private Duration cacheDuration;
 		private WebResponse.CacheScope cacheScope;
-		private final HeaderCollection headers;
+		private final HttpHeaderCollection headers;
 
-		static
-		{
-			INTERNAL_HEADERS = new HashSet<String>();
-			INTERNAL_HEADERS.add("server");
-			INTERNAL_HEADERS.add("date");
-			INTERNAL_HEADERS.add("expires");
-			INTERNAL_HEADERS.add("last-modified");
-			INTERNAL_HEADERS.add("content-type");
-			INTERNAL_HEADERS.add("content-length");
-			INTERNAL_HEADERS.add("content-disposition");
-			INTERNAL_HEADERS.add("transfer-encoding");
-			INTERNAL_HEADERS.add("connection");
-			INTERNAL_HEADERS.add("content-disposition");
-		}
-		
 		/**
 		 * Construct.
 		 */
@@ -111,7 +111,7 @@ public abstract class AbstractResource implements IResource
 			cacheScope = WebResponse.CacheScope.PRIVATE;
 			
 			// collection of directly set response headers
-			headers = new HeaderCollection();
+			headers = new HttpHeaderCollection();
 		}
 
 		/**
@@ -423,84 +423,11 @@ public abstract class AbstractResource implements IResource
 		}
 
 		/**
-		 * add a response header value
-		 * 
-		 * you can only set header values that or not already modified by
-		 * the other methods of this class like 'Content-Length', 'Last-Modified', etc.
-		 *  
-		 * @param name
-		 *          header name
-		 * @param value
-		 *          header value
+		 * get custom headers
 		 */
-		public void addHeader(String name, String value)
+		public HttpHeaderCollection getHeaders()
 		{
-			// check if header can be directly access
-			checkHeaderAccess(name);
-			
-			//set header value
-			headers.addHeader(name, value);
-		}
-
-		/**
-		 * get header value
-		 * <p/>
-		 * you can only get header values that or not already handled by
-		 * the other methods of this class like 'Content-Length', 'Last-Modified', etc.
-		 *  
-		 *
-		 * @param name
-		 *          header name
-		 *          
-		 * @return array of header values
-		 */
-		public String[] getHeaderValues(final String name)
-		{
-			// check if header can be directly access
-			checkHeaderAccess(name);
-
-			// get header value
-			return headers.getValues(name);
-		}
-
-		/**
-		 * remove header value
-		 * 
-		 * you can only access header values that or not already modified by
-		 * the other methods of this class like 'Content-Length', 'Last-Modified', etc.
-		 *  
-		 * @param name
-		 *          header name
-		 */
-		public void removeHeader(String name)
-		{
-			// check if header can be directly access
-			checkHeaderAccess(name);
-
-			// remove header value
-			headers.removeHeaderValues(name);
-		}
-
-		/**
-		 * check if header is directly modifyable 
-		 * 
-		 * @param name
-		 *         header name
-		 *
-		 * @throws IllegalArgumentException 
-		 *         if access is forbidden 
-		 */
-		private void checkHeaderAccess(String name)
-		{
-			name = Args.notEmpty(name.trim().toLowerCase(), "name");
-
-			if (INTERNAL_HEADERS.contains(name))
-			{
-				throw new IllegalArgumentException(
-					"you are not allowed to directly access header [" + name + "], " +
-					"use one of the other specialized methods of " + getClass().getSimpleName() +
-					" to get or modify its value");
-			}
+			return headers;
 		}
 	}
 
@@ -554,6 +481,28 @@ public abstract class AbstractResource implements IResource
 		data.getWriteCallback().writeData(attributes);
 	}
 
+	/**
+	 * check if header is directly modifyable 
+	 * 
+	 * @param name
+	 *         header name
+	 *
+	 * @throws IllegalArgumentException 
+	 *         if access is forbidden 
+	 */
+	private void checkHeaderAccess(String name)
+	{
+		name = Args.notEmpty(name.trim().toLowerCase(), "name");
+
+		if (INTERNAL_HEADERS.contains(name))
+		{
+			throw new IllegalArgumentException(
+				"you are not allowed to directly access header [" + name + "], " +
+				"use one of the other specialized methods of " + getClass().getSimpleName() +
+				" to get or modify its value");
+		}
+	}
+	
 	/**
 	 * @param data
 	 * @param attributes
@@ -628,15 +577,19 @@ public abstract class AbstractResource implements IResource
 				webResponse.setContentLength(contentLength);
 			}
 
-			// set additional response headers
-			for (HeaderCollection.Entry entry : data.headers)
+			// add custom headers and values
+			final HttpHeaderCollection headers = data.getHeaders();
+			
+			for (String name : headers.getHeaderNames())
 			{
-				for (String value : entry.getValues())
+				checkHeaderAccess(name);
+				
+				for (String value : headers.getHeaderValues(name))
 				{
-					webResponse.setHeader(entry.getName(), value);
+					webResponse.addHeader(name, value);
 				}
 			}
-
+			
 			// 6. Flush the response
 			// This is necessary for firefox if this resource is an image, otherwise it messes up
 			// other images on page

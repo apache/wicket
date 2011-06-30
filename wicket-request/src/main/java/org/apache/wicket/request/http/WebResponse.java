@@ -62,6 +62,14 @@ public abstract class WebResponse extends Response
 	public abstract void setHeader(String name, String value);
 
 	/**
+	 * Add a value to the servlet response stream.
+	 * 
+	 * @param name
+	 * @param value
+	 */
+	public abstract void addHeader(String name, String value);
+	
+	/**
 	 * Set a header to the date value in the servlet response stream.
 	 * 
 	 * @param name
@@ -109,7 +117,7 @@ public abstract class WebResponse extends Response
 	public void setAttachmentHeader(final String filename)
 	{
 		setHeader("Content-Disposition", "attachment" +
-			((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename + "\"") : ""));
+		                                 ((!Strings.isEmpty(filename))? ("; filename=\"" + filename + "\"") : ""));
 	}
 
 	/**
@@ -206,7 +214,8 @@ public abstract class WebResponse extends Response
 		setDateHeader("Expires", now.add(duration));
 
 		// Enable caching and set max age
-		setHeader("Cache-Control", scope.cacheControl + ", max-age=" + duration.getMilliseconds());
+		setHeader("Cache-Control", scope.cacheControl);
+		addHeader("Cache-Control", "max-age=" + duration.getMilliseconds());
 	}
 
 	/**

@@ -96,6 +96,12 @@ public class ServletWebResponse extends WebResponse
 	}
 
 	@Override
+	public void addHeader(String name, String value)
+	{
+		httpServletResponse.addHeader(name, value);
+	}
+
+	@Override
 	public void write(CharSequence sequence)
 	{
 		try

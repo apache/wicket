@@ -143,6 +143,13 @@ class HeaderBufferingWebResponse extends WebResponse implements IMetaDataBufferi
 	}
 
 	@Override
+	public void addHeader(String name, String value)
+	{
+		checkHeader();
+		bufferedResponse.addHeader(name, value);
+	}
+
+	@Override
 	public void setStatus(int sc)
 	{
 		bufferedResponse.setStatus(sc);

@@ -251,6 +251,24 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		}
 	}
 
+	private static class AddHeaderAction extends MetaDataAction
+	{
+		private final String name;
+		private final String value;
+
+		public AddHeaderAction(String name, String value)
+		{
+			this.name = name;
+			this.value = value;
+		}
+
+		@Override
+		protected void invoke(WebResponse response)
+		{
+			response.addHeader(name, value);
+		}
+	}
+
 	private static class SetDateHeaderAction extends MetaDataAction
 	{
 		private final String name;
@@ -407,6 +425,12 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	public void setHeader(String name, String value)
 	{
 		actions.add(new SetHeaderAction(name, value));
+	}
+
+	@Override
+	public void addHeader(String name, String value)
+	{
+		actions.add(new AddHeaderAction(name, value));
 	}
 
 	@Override

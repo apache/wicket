@@ -20,14 +20,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.Cookie;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.request.HttpHeaderCollection;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Time;
@@ -127,13 +126,13 @@ public class MockWebResponse extends WebResponse
 		return contentType;
 	}
 
-	private final Map<String, Object> headers = new HashMap<String, Object>();
+	private final HttpHeaderCollection headers = new HttpHeaderCollection();
 
 	@Override
 	public void setDateHeader(String name, Time date)
 	{
 		Args.notNull(date, "date");
-		headers.put(name, date);
+		headers.setDateHeader(name, date);
 	}
 
 	/**
@@ -143,29 +142,30 @@ public class MockWebResponse extends WebResponse
 	 */
 	public Time getDateHeader(String name)
 	{
-		Object value = headers.get(name);
-		if (value == null)
+		final Time time = headers.getDateHeader(name);
+
+		if (time == null)
 		{
 			throw new WicketRuntimeException("Date header '" + name + "' is not set.");
 		}
-		else if (value instanceof Time == false)
-		{
-			throw new WicketRuntimeException("Header '" + name + "' is not date type.");
-		}
-		else
-		{
-			return (Time)value;
-		}
+		return time;
 	}
 
 	@Override
 	public void setHeader(String name, String value)
 	{
-		headers.put(name, value);
+		headers.setHeader(name, value);
+		
 		if (name.equals("Content-Type"))
 		{
 			setContentType(value);
 		}
+	}
+
+	@Override
+	public void addHeader(String name, String value)
+	{
+		headers.addHeader(name, value);
 	}
 
 	/**
@@ -175,8 +175,7 @@ public class MockWebResponse extends WebResponse
 	 */
 	public String getHeader(String name)
 	{
-		Object value = headers.get(name);
-		return value != null ? value.toString() : null;
+		return headers.getHeader(name);
 	}
 
 	/**
@@ -186,7 +185,7 @@ public class MockWebResponse extends WebResponse
 	 */
 	public boolean hasHeader(String name)
 	{
-		return headers.containsKey(name);
+		return headers.containsHeader(name);
 	}
 
 	/**
@@ -194,7 +193,7 @@ public class MockWebResponse extends WebResponse
 	 */
 	public Set<String> getHeaderNames()
 	{
-		return Collections.unmodifiableSet(headers.keySet());
+		return headers.getHeaderNames();
 	}
 
 	Integer status;
