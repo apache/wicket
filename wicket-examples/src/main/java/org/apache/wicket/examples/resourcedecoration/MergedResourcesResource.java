@@ -19,7 +19,6 @@ package org.apache.wicket.examples.resourcedecoration;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import org.apache.wicket.request.HttpHeaderCollection;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.util.lang.WicketObjects;
@@ -46,14 +45,6 @@ public class MergedResourcesResource extends AbstractResource
 
 		ResourceResponse resourceResponse = new ResourceResponse();
 
-		HttpHeaderCollection headers = resourceResponse.getHeaders();
-		
-		headers.addHeader(" blA  ", "xx ");
-		headers.addHeader("BLA", "   12xx ");
-		headers.addHeader("xx", "xX12x ");
-		String[] val = headers.getHeaderValues("bla");
-//		resourceResponse.removeHeader("bla");
-		
 		if (resourceResponse.dataNeedsToBeWritten(attributes))
 		{
 			if (isCss)
