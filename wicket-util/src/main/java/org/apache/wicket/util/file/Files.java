@@ -30,6 +30,8 @@ import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * File utility methods.
@@ -38,6 +40,8 @@ import org.apache.wicket.util.time.Time;
  */
 public class Files
 {
+	private static final Logger logger = LoggerFactory.getLogger(Files.class);
+
 	// protocols for urls
 	private static final String URL_FILE_PREFIX = "file:";
 	private static final String URL_LOCAL_JAR_FILE_PREFIX = "jar:file:";
@@ -99,7 +103,11 @@ public class Files
 	}
 
 	/**
-	 * Deletes a file, dealing with a particularly nasty bug on Windows.
+	 * Deletes a file.
+	 * <p>
+	 * If the file cannot be deleted for any reason then at most 10 retries are attempted with delay
+	 * of 100ms. If the file still cannot be deleted then it is scheduled to be deleted at JVM exit
+	 * time.
 	 * 
 	 * @param file
 	 *            File to delete
@@ -107,13 +115,13 @@ public class Files
 	 */
 	public static boolean remove(final java.io.File file)
 	{
-		// Delete current file
-		if (!file.delete())
+		int retries = 10;
+
+		boolean deleted = false;
+
+		while ((deleted = file.delete()) == false && retries > 0)
 		{
-			// NOTE: fix for java/win bug. see:
-			// http://forum.java.sun.com/thread.jsp?forum=4&thread=158689&tstart=
-			// 0&trange=15
-			System.gc();
+			retries--;
 			try
 			{
 				Thread.sleep(100);
@@ -121,11 +129,17 @@ public class Files
 			catch (InterruptedException ignored)
 			{
 			}
-
-			// Try one more time to delete the file
-			return file.delete();
 		}
-		return true;
+
+		if (deleted == false && logger.isWarnEnabled())
+		{
+			logger.warn(
+				"Cannot delete file '{}' for unknown reason. The file will be scheduled for deletion at JVM exit time.",
+				file);
+			file.deleteOnExit();
+		}
+
+		return deleted;
 	}
 
 	/**
@@ -249,16 +263,17 @@ public class Files
 			}
 		}
 	}
-	
+
 	/**
-	 * for urls that point to local files (e.g. 'file:' or 'jar:file:') this
-	 * methods returns a reference to the local file
-	 *
-	 * @param url url of the resource
+	 * for urls that point to local files (e.g. 'file:' or 'jar:file:') this methods returns a
+	 * reference to the local file
+	 * 
+	 * @param url
+	 *            url of the resource
 	 * 
 	 * @return reference to a local file if url contains one, <code>null</code> otherwise
 	 * 
-	 * @see #getLocalFileFromUrl(String) 
+	 * @see #getLocalFileFromUrl(String)
 	 */
 	public static File getLocalFileFromUrl(URL url)
 	{
@@ -266,14 +281,15 @@ public class Files
 	}
 
 	/**
-	 * for urls that point to local files (e.g. 'file:' or 'jar:file:') this
-	 * methods returns a reference to the local file
-	 *
-	 * @param url url of the resource
+	 * for urls that point to local files (e.g. 'file:' or 'jar:file:') this methods returns a
+	 * reference to the local file
+	 * 
+	 * @param url
+	 *            url of the resource
 	 * 
 	 * @return reference to a local file if url contains one, <code>null</code> otherwise
 	 * 
-	 * @see #getLocalFileFromUrl(URL) 
+	 * @see #getLocalFileFromUrl(URL)
 	 */
 	public static File getLocalFileFromUrl(String url)
 	{
