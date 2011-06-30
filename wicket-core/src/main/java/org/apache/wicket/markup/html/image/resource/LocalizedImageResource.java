@@ -28,9 +28,7 @@ import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.border.Border;
-import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.IResource.Attributes;
@@ -329,10 +327,8 @@ public final class LocalizedImageResource implements IClusterable
 		final CharSequence url;
 		if (resourceReference != null)
 		{
-			// Create URL to shared resource
-			IRequestHandler handler = new ResourceReferenceRequestHandler(resourceReference,
-				resourceParameters);
-			url = RequestCycle.get().urlFor(handler);
+//			// Create URL to resource
+			url = RequestCycle.get().urlFor(resourceReference, resourceParameters);
 		}
 		else
 		{
