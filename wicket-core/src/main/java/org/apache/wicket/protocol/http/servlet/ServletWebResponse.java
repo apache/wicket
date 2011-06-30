@@ -207,8 +207,17 @@ public class ServletWebResponse extends WebResponse
 			Url append = Url.parse(url, charset);
 			current.concatSegments(append.getSegments());
 			Url result = new Url(current.getSegments(), append.getQueryParameters());
+			
+			String path = result.toString();
+			
+			// replace redirect to empty path with '/'
+			if(Strings.isEmpty(path))
+			{
+				path = "/";
+			}
+			
 			return Strings.join("/", getAbsolutePrefix(), httpServletRequest.getContextPath(),
-				webRequest.getFilterPrefix(), result.toString());
+				webRequest.getFilterPrefix(), path);
 		}
 	}
 
