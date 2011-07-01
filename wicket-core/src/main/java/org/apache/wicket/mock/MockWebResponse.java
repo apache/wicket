@@ -170,18 +170,34 @@ public class MockWebResponse extends WebResponse
 	@Override
 	public void setHeader(String name, String value)
 	{
+		internalSetContentType(name, value);
 		headers.setHeader(name, value);
-		
-		if (name.equals("Content-Type"))
-		{
-			setContentType(value);
-		}
 	}
 
 	@Override
 	public void addHeader(String name, String value)
 	{
+		internalSetContentType(name, value);
 		headers.addHeader(name, value);
+	}
+
+	/**
+	 * set content type if it is specified
+	 * 
+	 * @param name
+	 *         header name
+	 * @param value
+	 *         header value
+	 */
+	private void internalSetContentType(String name, String value)
+	{
+		if ("Content-Type".equalsIgnoreCase(name))
+		{
+			if (headers.containsHeader(name) == false)
+			{
+				setContentType(value);
+			}
+		}
 	}
 
 	/**
