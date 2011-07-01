@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.validation;
 
+import org.apache.wicket.model.IModel;
+
 
 /**
  * Interface representing any object that can be validated.
@@ -51,4 +53,11 @@ public interface IValidatable<T>
 	 * @return <code>true</code> if the object is in a valid state, <code>false</code> if otherwise
 	 */
 	boolean isValid();
+
+	/**
+	 * Returns the model of the component being validated
+	 * 
+	 * @return component's model
+	 */
+	IModel<T> getModel();
 }

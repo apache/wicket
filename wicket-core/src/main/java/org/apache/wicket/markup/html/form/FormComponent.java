@@ -301,6 +301,11 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		{
 			return FormComponent.this.isValid();
 		}
+
+		public IModel<T> getModel()
+		{
+			return FormComponent.this.getModel();
+		}
 	}
 
 	/**

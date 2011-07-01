@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.wicket.model.IModel;
+
 /**
  * This implementation of {@link IValidatable} is meant to be used outside of Wicket. It allows
  * other parts of the application to utilize {@link IValidator}s for validation.
@@ -60,6 +62,8 @@ public class Validatable<T> implements IValidatable<T>
 	/** the list of errors */
 	private ArrayList<IValidationError> errors;
 
+	private IModel<T> model;
+
 	/**
 	 * Constructor.
 	 */
@@ -76,6 +80,16 @@ public class Validatable<T> implements IValidatable<T>
 	public Validatable(T value)
 	{
 		this.value = value;
+	}
+
+	/**
+	 * Sets model
+	 * 
+	 * @param model
+	 */
+	public void setModel(IModel<T> model)
+	{
+		this.model = model;
 	}
 
 	/**
@@ -133,6 +147,11 @@ public class Validatable<T> implements IValidatable<T>
 	public boolean isValid()
 	{
 		return errors == null;
+	}
+
+	public IModel<T> getModel()
+	{
+		return null;
 	}
 
 }
