@@ -38,6 +38,32 @@ import org.apache.wicket.util.time.Time;
  */
 public class MockWebResponse extends WebResponse
 {
+	/** response headers */
+	private final HttpHeaderCollection headers = new HttpHeaderCollection();
+
+	/** response cookies */
+	private final List<Cookie> cookies = new ArrayList<Cookie>();
+
+	/** url for redirection */
+	private String redirectUrl;
+
+	/** content type of response */
+	private String contentType;
+
+	/** content length of response in bytes */
+	private Long contentLength;
+
+	/** current characters in response body */
+	private StringBuilder textResponse;
+
+	/** current octets in response body */
+	private ByteArrayOutputStream binaryResponse;
+	
+	/** http response status */
+	private Integer status;
+
+	/** response error message */
+	private String errorMessage;
 
 	/**
 	 * Construct.
@@ -45,8 +71,6 @@ public class MockWebResponse extends WebResponse
 	public MockWebResponse()
 	{
 	}
-
-	private final List<Cookie> cookies = new ArrayList<Cookie>();
 
 	@Override
 	public void addCookie(Cookie cookie)
@@ -67,8 +91,6 @@ public class MockWebResponse extends WebResponse
 	{
 		return Collections.unmodifiableList(cookies);
 	}
-
-	private String redirectUrl;
 
 	@Override
 	public void sendRedirect(String url)
@@ -93,8 +115,6 @@ public class MockWebResponse extends WebResponse
 		return redirectUrl != null;
 	}
 
-	private Long contentLength;
-
 	@Override
 	public void setContentLength(long length)
 	{
@@ -110,8 +130,6 @@ public class MockWebResponse extends WebResponse
 		return contentLength;
 	}
 
-	private String contentType;
-
 	@Override
 	public void setContentType(String mimeType)
 	{
@@ -125,8 +143,6 @@ public class MockWebResponse extends WebResponse
 	{
 		return contentType;
 	}
-
-	private final HttpHeaderCollection headers = new HttpHeaderCollection();
 
 	@Override
 	public void setDateHeader(String name, Time date)
@@ -196,8 +212,6 @@ public class MockWebResponse extends WebResponse
 		return headers.getHeaderNames();
 	}
 
-	Integer status;
-
 	@Override
 	public void setStatus(int sc)
 	{
@@ -217,9 +231,6 @@ public class MockWebResponse extends WebResponse
 	{
 		return url.toString();
 	}
-
-	private StringBuilder textResponse;
-	private ByteArrayOutputStream binaryResponse;
 
 	@Override
 	public void write(CharSequence sequence)
@@ -284,8 +295,6 @@ public class MockWebResponse extends WebResponse
 			return bytes;
 		}
 	}
-
-	String errorMessage;
 
 	@Override
 	public void sendError(int sc, String msg)
