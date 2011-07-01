@@ -26,7 +26,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.wicket.util.date.RFC1123DateFormatter;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Time;
 
@@ -161,7 +160,7 @@ public class HttpHeaderCollection
 	{
 		if (value instanceof Time)
 		{
-			return RFC1123DateFormatter.formatDate((Time)value);
+			return ((Time)value).toRfc1123DateString();
 		}
 		else
 		{

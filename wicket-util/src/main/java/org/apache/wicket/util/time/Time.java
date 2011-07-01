@@ -20,7 +20,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * An immutable <code>Time</code> class that represents a specific point in time. The underlying
@@ -47,6 +49,17 @@ public final class Time extends AbstractTime
 	private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy.MM.dd-h.mma",
 		Locale.ENGLISH);
 
+	/** required for rfc1123 date format */
+	private static final String[] DAYS =
+		{"Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+
+	/** required for rfc1123 date format */
+	private static final String[] MONTHS =
+		{"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan"};
+
+	/** time zone for greenwich mean time */
+	public static final TimeZone GMT = TimeZone.getTimeZone("GMT");
+	
 	/**
 	 * Retrieves a <code>Time</code> instance based on the current time.
 	 * 
@@ -551,5 +564,64 @@ public final class Time extends AbstractTime
 	public String toString(final String format)
 	{
 		return toString(null, format);
+	}
+
+	/**
+	 * return timestamp string in RFC1123 format
+	 * <p/>
+	 * Contrary to {@link java.text.SimpleDateFormat} this is thread-safe.
+	 * <p/> 
+	 * taken from the source code of jetty 7.3.0, credits + thanks to Greg Wilkins!
+	 */
+	public String toRfc1123DateString()
+	{
+		final Calendar cal = GregorianCalendar.getInstance(GMT);
+		final StringBuilder buf = new StringBuilder(32);
+
+		cal.setTimeInMillis(getMilliseconds());
+
+		int day_of_week = cal.get(Calendar.DAY_OF_WEEK);
+		int day_of_month = cal.get(Calendar.DAY_OF_MONTH);
+		int month = cal.get(Calendar.MONTH);
+		int year = cal.get(Calendar.YEAR);
+		int century = year / 100;
+		year = year % 100;
+
+		int hours = cal.get(Calendar.HOUR_OF_DAY);
+		int minutes = cal.get(Calendar.MINUTE);
+		int seconds = cal.get(Calendar.SECOND);
+
+		buf.append(DAYS[day_of_week]);
+		buf.append(',');
+		buf.append(' ');
+		appendTwoDigits(buf, day_of_month);
+
+		buf.append(' ');
+		buf.append(MONTHS[month]);
+		buf.append(' ');
+		appendTwoDigits(buf, century);
+		appendTwoDigits(buf, year);
+
+		buf.append(' ');
+		appendTwoDigits(buf, hours);
+		buf.append(':');
+		appendTwoDigits(buf, minutes);
+		buf.append(':');
+		appendTwoDigits(buf, seconds);
+		buf.append(" GMT");
+
+		return buf.toString();
+	}
+
+	/**
+	 * helper method for {@link #toRfc1123DateString()}
+	 * 
+	 * @param str
+	 * @param number
+	 */
+	private static void appendTwoDigits(StringBuilder str, int number)
+	{
+		str.append((char)(number / 10 + '0'));
+		str.append((char)(number % 10 + '0'));
 	}
 }
