@@ -16,11 +16,8 @@
  */
 package org.apache.wicket.request;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -28,8 +25,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.TimeZone;
 
+import org.apache.wicket.util.date.RFC1123DateFormatter;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Time;
 
@@ -45,23 +42,8 @@ public class HttpHeaderCollection
 {
 	private final Map<HeaderKey, List<Object>> headers;
 
-	/** Greenwich Mean Time (GMT) timezone */
-	private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
-
-	/** rfc 1123 compliant time stamp for headers */
-	private static final String RFC_1123_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss zzz";
-
-	/** date format for date headers */
-	public static final DateFormat DATE_FORMAT;
-	
 	/** returned in case no header values were found */
 	private static final String[] NO_VALUES = new String[0];
-
-	static
-	{
-		DATE_FORMAT = new SimpleDateFormat(RFC_1123_DATE_FORMAT, Locale.US);
-		DATE_FORMAT.setTimeZone(GMT);
-	}
 
 	public HttpHeaderCollection()
 	{
@@ -179,10 +161,7 @@ public class HttpHeaderCollection
 	{
 		if (value instanceof Time)
 		{
-			synchronized(DATE_FORMAT)
-			{
-				return DATE_FORMAT.format(new Date(((Time)value).getMilliseconds()));
-			}
+			return RFC1123DateFormatter.formatDate((Time)value);
 		}
 		else
 		{

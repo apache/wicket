@@ -18,6 +18,7 @@ package org.apache.wicket.request;
 
 import java.util.Locale;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.apache.wicket.util.time.Time;
 import org.junit.Test;
@@ -81,17 +82,26 @@ public class HttpHeaderCollectionTest
 		assertEquals(time1, headers.getDateHeader("date"));
 		assertEquals("Thu, 01 Jan 1970 00:16:40 GMT", headers.getHeader("date"));
 
-		// a change of the locale must not affect the date format
+		// a change of the locale or timezone must not affect the date format
 		final Locale defaultLocale = Locale.getDefault();
+		final TimeZone defaultLocaleefaultTimezone = TimeZone.getDefault();
 
 		try
 		{
+			final String expected = "Thu, 01 Jan 1970 00:16:40 GMT";
+
 			Locale.setDefault(Locale.CHINESE);
-			assertEquals("Thu, 01 Jan 1970 00:16:40 GMT", headers.getHeader("date"));
+			TimeZone.setDefault(TimeZone.getTimeZone("CET"));
+			assertEquals(expected, headers.getHeader("date"));
+
+			Locale.setDefault(Locale.US);
+			TimeZone.setDefault(TimeZone.getTimeZone("EST"));
+			assertEquals(expected, headers.getHeader("date"));
 		}
 		finally
 		{
 			Locale.setDefault(defaultLocale);
+			TimeZone.setDefault(defaultLocaleefaultTimezone);
 		}
 
 		assertArrayEquals(new String[]{"Thu, 01 Jan 1970 00:16:40 GMT", "Thu, 01 Jan 1970 00:33:20 GMT", "not-a-date"},
