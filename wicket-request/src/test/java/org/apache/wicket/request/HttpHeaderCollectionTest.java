@@ -24,7 +24,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class HeadersCollectionTest
+public class HttpHeaderCollectionTest
 {
 	@Test
 	public void testHeaderCollection()
