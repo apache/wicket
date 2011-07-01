@@ -82,6 +82,6 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 
 	IStoreSettings getStoreSettings()
 	{
-		return Application.get().getStoreSettings();
+		return application.getStoreSettings();
 	}
 }
