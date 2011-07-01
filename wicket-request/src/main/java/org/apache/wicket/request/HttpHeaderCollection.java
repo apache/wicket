@@ -160,7 +160,7 @@ public class HttpHeaderCollection
 	{
 		if (value instanceof Time)
 		{
-			return ((Time)value).toRfc1123DateString();
+			return ((Time)value).toRfc1123TimestampString();
 		}
 		else
 		{

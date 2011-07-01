@@ -573,7 +573,7 @@ public final class Time extends AbstractTime
 	 * <p/> 
 	 * taken from the source code of jetty 7.3.0, credits + thanks to Greg Wilkins!
 	 */
-	public String toRfc1123DateString()
+	public String toRfc1123TimestampString()
 	{
 		final Calendar cal = GregorianCalendar.getInstance(GMT);
 		final StringBuilder buf = new StringBuilder(32);
@@ -614,7 +614,7 @@ public final class Time extends AbstractTime
 	}
 
 	/**
-	 * helper method for {@link #toRfc1123DateString()}
+	 * helper method for {@link #toRfc1123TimestampString()}
 	 * 
 	 * @param str
 	 * @param number
