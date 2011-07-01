@@ -44,6 +44,7 @@ import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.apache.wicket.validation.IErrorMessageSource;
+import org.apache.wicket.validation.IModelAwareValidatable;
 import org.apache.wicket.validation.INullAcceptingValidator;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidationError;
@@ -325,7 +326,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * 
 	 * @author ivaynberg
 	 */
-	private class ValidatableAdapter implements IValidatable<T>
+	private class ValidatableAdapter implements IModelAwareValidatable<T>
 	{
 		/**
 		 * @see org.apache.wicket.validation.IValidatable#error(org.apache.wicket.validation.IValidationError)
@@ -349,6 +350,11 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		public boolean isValid()
 		{
 			return FormComponent.this.isValid();
+		}
+
+		public IModel<T> getModel()
+		{
+			return FormComponent.this.getModel();
 		}
 	}
 
