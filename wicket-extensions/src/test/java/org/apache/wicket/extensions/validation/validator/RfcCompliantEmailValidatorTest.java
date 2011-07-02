@@ -18,8 +18,8 @@ package org.apache.wicket.extensions.validation.validator;
 
 import junit.framework.TestCase;
 
+import org.apache.wicket.extensions.validation.Validatable;
 import org.apache.wicket.validation.IValidator;
-import org.apache.wicket.validation.Validatable;
 
 /**
  * Test that it really validates RFC valid email addresses.
