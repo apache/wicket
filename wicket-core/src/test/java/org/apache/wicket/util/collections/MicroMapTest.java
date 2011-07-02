@@ -19,9 +19,9 @@ package org.apache.wicket.util.collections;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import junit.framework.TestCase;
 

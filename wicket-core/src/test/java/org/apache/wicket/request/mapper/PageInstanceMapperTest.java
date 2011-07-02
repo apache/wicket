@@ -27,9 +27,6 @@ import org.apache.wicket.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
-import org.apache.wicket.request.mapper.IMapperContext;
-import org.apache.wicket.request.mapper.PageInstanceMapper;
-import org.apache.wicket.request.mapper.StalePageException;
 
 /**
  * 

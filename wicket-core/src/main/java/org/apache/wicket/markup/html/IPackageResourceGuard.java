@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html;
 
+import org.apache.wicket.request.resource.PackageResource;
+
 
 /**
  * Guards lazily loaded {@link PackageResource package resources} against unwanted access.

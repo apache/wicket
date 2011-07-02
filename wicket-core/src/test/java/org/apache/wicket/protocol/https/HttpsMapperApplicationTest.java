@@ -16,11 +16,12 @@
  */
 package org.apache.wicket.protocol.https;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * Test for proper switching of http and https in {@link WicketTester}

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.parser.filter;
 
+import java.text.ParseException;
+
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
@@ -23,8 +25,6 @@ import org.apache.wicket.markup.RawMarkup;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.util.string.JavaScriptUtils;
-
-import java.text.ParseException;
 
 
 /**

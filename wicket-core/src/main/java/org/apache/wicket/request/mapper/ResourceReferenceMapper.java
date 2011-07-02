@@ -17,8 +17,8 @@
 package org.apache.wicket.request.mapper;
 
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
-import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.util.IProvider;
 
 /**
