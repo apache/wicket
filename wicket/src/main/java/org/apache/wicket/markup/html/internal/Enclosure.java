@@ -212,6 +212,14 @@ public class Enclosure extends WebMarkupContainer
 		while (it.hasNext())
 		{
 			final ComponentTag tag = it.next();
+
+			if (childId.equals(tag.getId()))
+			{
+				// we dont need to worry about visibility of enclosure child or its children because
+				// it is controlled directly, not via the enclosure
+				continue;
+			}
+
 			if (tag.isAutoComponentTag() == false)
 			{
 				final Component child = container.get(tag.getId());
