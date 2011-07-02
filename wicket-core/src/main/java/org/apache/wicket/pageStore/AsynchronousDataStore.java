@@ -94,7 +94,9 @@ public class AsynchronousDataStore implements IDataStore
 
 		PageSavingRunnable savingRunnable = new PageSavingRunnable(dataStore, entries, entryMap,
 			destroy);
-		new Thread(savingRunnable, "Wicket-PageSavingThread").start();
+		Thread thread = new Thread(savingRunnable, "Wicket-PageSavingThread");
+		thread.setDaemon(true);
+		thread.start();
 	}
 
 	/**
