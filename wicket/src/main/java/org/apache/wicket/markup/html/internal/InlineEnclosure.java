@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.parser.filter.InlineEnclosureHandler;
@@ -150,6 +151,11 @@ public class InlineEnclosure extends Enclosure
 						}
 					}.execute();
 					child = container.get(tag.getId());
+					if (child == null)
+					{
+						throw new WicketRuntimeException("Could not find child with id: " +
+							tag.getId() + " in the wicket:enclosure");
+					}
 				}
 				children.add(child);
 			}

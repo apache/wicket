@@ -18,13 +18,21 @@ package org.apache.wicket.markup.html.internal;
 
 import java.io.IOException;
 
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.resource.DummyApplication;
 import org.apache.wicket.util.diff.DiffUtil;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 
@@ -331,5 +339,31 @@ public class EnclosureTest extends WicketTestCase
 		executeTest(EnclosurePage_11.class, "EnclosurePageExpectedResult_11.html");
 	}
 
+	public void testBadEnclosure1()
+	{
+		class TestPage extends WebPage implements IMarkupResourceStreamProvider
+		{
+			public TestPage()
+			{
+				add(new WebMarkupContainer("d"));
+				add(new Label("msg", "hi"));
+			}
 
+			public IResourceStream getMarkupResourceStream(MarkupContainer container,
+				Class<?> containerClass)
+			{
+				return new StringResourceStream(
+					"<html><body><div wicket:id='d'><div wicket:enclosure='msg'><span wicket:id='msg'></span></div></div></body></html>");
+			}
+		}
+
+		try
+		{
+			tester.startPage(new TestPage());
+		}
+		catch (WicketRuntimeException e)
+		{
+			assertTrue(e.getMessage().startsWith("Could not find child"));
+		}
+	}
 }
