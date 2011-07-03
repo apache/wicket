@@ -32,20 +32,38 @@ import org.apache.wicket.util.string.Strings;
 public class ComponentInfo
 {
 	private static final char BEHAVIOR_INDEX_SEPARATOR = '.';
-	private static final String SEPARATOR = "-";
-	private static final String COMPONENT_SEPARATOR = ":";
+	private static final char SEPARATOR = '-';
+	private static final char COMPONENT_SEPARATOR = ':';
 
-	private static final String TMP_PLACEHOLDER = "[[[[[[[WICKET[[TMP]]DASH]]" + Math.random() +
-		"]]]]";
-
+	/**
+	 * Replaces ':' with '-', and '-' with '--'.
+	 * 
+	 * @param path
+	 *            the path to the component in its page
+	 * @return the encoded path
+	 */
 	private static String encodeComponentPath(CharSequence path)
 	{
 		if (path != null)
 		{
-			path = Strings.replaceAll(path, SEPARATOR, TMP_PLACEHOLDER);
-			path = Strings.replaceAll(path, COMPONENT_SEPARATOR, SEPARATOR);
-			path = Strings.replaceAll(path, TMP_PLACEHOLDER, SEPARATOR + SEPARATOR);
-			return path.toString();
+			StringBuilder result = new StringBuilder();
+			int length = path.length();
+			for (int i = 0; i < length; i++)
+			{
+				char c = path.charAt(i);
+				switch (c)
+				{
+					case COMPONENT_SEPARATOR :
+						result.append(SEPARATOR);
+						break;
+					case SEPARATOR :
+						result.append(SEPARATOR).append(SEPARATOR);
+						break;
+					default :
+						result.append(c);
+				}
+			}
+			return result.toString();
 		}
 		else
 		{
@@ -53,14 +71,40 @@ public class ComponentInfo
 		}
 	}
 
+	/**
+	 * Replaces '--' with '-' and '-' with ':'
+	 * 
+	 * @param path
+	 *            the encoded path of the component in its page
+	 * @return the (non-encoded) path of the component in its page
+	 */
 	private static String decodeComponentPath(CharSequence path)
 	{
 		if (path != null)
 		{
-			path = Strings.replaceAll(path, SEPARATOR + SEPARATOR, TMP_PLACEHOLDER).toString();
-			path = Strings.replaceAll(path, SEPARATOR, COMPONENT_SEPARATOR);
-			path = Strings.replaceAll(path, TMP_PLACEHOLDER, SEPARATOR).toString();
-			return path.toString();
+			StringBuilder result = new StringBuilder();
+			int length = path.length();
+			for (int i = 0; i < length; i++)
+			{
+				char c = path.charAt(i);
+				switch (c)
+				{
+					case SEPARATOR :
+						if ((i < length - 1) && (path.charAt(i + 1) == SEPARATOR))
+						{
+							i++;
+							result.append(SEPARATOR);
+						}
+						else
+						{
+							result.append(COMPONENT_SEPARATOR);
+						}
+						break;
+					default :
+						result.append(c);
+				}
+			}
+			return result.toString();
 		}
 		else
 		{
