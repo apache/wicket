@@ -18,9 +18,9 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
 import java.util.List;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.DataGridView;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -199,7 +199,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 	 */
 	public final void setTableBodyCss(final String cssStyle)
 	{
-		body.add(new SimpleAttributeModifier("class", cssStyle));
+		body.add(AttributeModifier.replace("class", cssStyle));
 	}
 
 	/**
