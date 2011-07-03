@@ -18,6 +18,7 @@ package org.apache.wicket.markup.transformer;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -74,7 +75,7 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 		// Make the XSLT processor happy and allow him to handle the wicket
 		// tags and attributes which are in the wicket namespace
 		add(AttributeModifier.replace("xmlns:wicket",
-			Model.of("http://wicket.apache.org/dtds.data/wicket-xhtml1.3-strict.dtd")));
+			Model.of(MarkupResourceStream.WICKET_XHTML_DTD)));
 	}
 
 	/**

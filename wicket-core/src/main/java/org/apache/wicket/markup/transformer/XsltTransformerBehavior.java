@@ -20,6 +20,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.MarkupResourceStream;
 
 /**
  * An IBehavior which can be added to any component except ListView. It allows to post-process
@@ -69,10 +70,10 @@ public class XsltTransformerBehavior extends AbstractTransformerBehavior
 	@Override
 	public void onComponentTag(final Component component, final ComponentTag tag)
 	{
-		tag.put("xmlns:wicket", "http://wicket.apache.org/dtds.data/wicket-xhtml1.3-strict.dtd");
-
 		// Make the XSLT processor happy and allow it to handle the wicket tags
 		// and attributes that are in the wicket namespace
+		tag.put("xmlns:wicket", MarkupResourceStream.WICKET_XHTML_DTD);
+
 		super.onComponentTag(component, tag);
 	}
 

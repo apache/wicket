@@ -2,7 +2,7 @@
 
 <xsl:stylesheet version="1.0" 
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:wicket="http://wicket.sourceforge.net"
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd"
 	exclude-result-prefixes="wicket">
 	
 <xsl:output method="xml" omit-xml-declaration="yes"/>

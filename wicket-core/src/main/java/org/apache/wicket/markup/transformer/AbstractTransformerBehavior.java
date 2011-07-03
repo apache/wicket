@@ -19,7 +19,6 @@ package org.apache.wicket.markup.transformer;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
@@ -56,12 +55,6 @@ public abstract class AbstractTransformerBehavior extends Behavior implements IT
 	protected BufferedWebResponse newResponse(final WebResponse originalResponse)
 	{
 		return new BufferedWebResponse(originalResponse);
-	}
-
-	@Override
-	public void onComponentTag(final Component component, final ComponentTag tag)
-	{
-		tag.put("xmlns:wicket", "http://wicket.apache.org");
 	}
 
 	@Override
