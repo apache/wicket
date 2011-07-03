@@ -23,6 +23,7 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.form.Form;
 import org.junit.Test;
 
 /**
@@ -30,6 +31,12 @@ import org.junit.Test;
  */
 public class ComponentIteratorTest extends WicketTestCase
 {
+	/** */
+	public static class MyPage extends WebPage
+	{
+		private static final long serialVersionUID = 1L;
+	}
+
 	/** */
 	@Test(expected = IllegalArgumentException.class)
 	public void nullParent()
@@ -553,8 +560,77 @@ public class ComponentIteratorTest extends WicketTestCase
 	}
 
 	/** */
-	public static class MyPage extends WebPage
+	@Test
+	public void classFilter()
 	{
-		private static final long serialVersionUID = 1L;
+		Page page = new MyPage();
+		WebComponent a;
+		page.add(a = new WebComponent("a"));
+		WebMarkupContainer b;
+		page.add(b = new WebMarkupContainer("b"));
+		WebMarkupContainer b1;
+		b.add(b1 = new WebMarkupContainer("b1"));
+		WebMarkupContainer b2;
+		b.add(b2 = new WebMarkupContainer("b2"));
+		WebMarkupContainer b12;
+		b1.add(b12 = new WebMarkupContainer("b12"));
+		WebComponent b121;
+		b12.add(b121 = new WebComponent("b121"));
+
+		GenericComponentHierarchyIterator<MarkupContainer> iter = new GenericComponentHierarchyIterator<MarkupContainer>(
+			page, MarkupContainer.class);
+
+		assertTrue(iter.hasNext());
+		assertEquals("b", iter.next().getId());
+		assertTrue(iter.hasNext());
+		assertEquals("b1", iter.next().getId());
+		assertTrue(iter.hasNext());
+		assertEquals("b12", iter.next().getId());
+		assertTrue(iter.hasNext());
+		assertEquals("b2", iter.next().getId());
+		assertFalse(iter.hasNext());
+		assertNull(iter.next());
+	}
+
+	/** */
+	@Test
+	public void classFilterWithForeach()
+	{
+		Page page = new MyPage();
+		WebComponent a;
+		page.add(a = new WebComponent("a"));
+		WebMarkupContainer b;
+		page.add(b = new WebMarkupContainer("b"));
+		WebMarkupContainer b1;
+		b.add(b1 = new WebMarkupContainer("b1"));
+		WebMarkupContainer b2;
+		b.add(b2 = new WebMarkupContainer("b2"));
+		WebMarkupContainer b12;
+		b1.add(b12 = new WebMarkupContainer("b12"));
+		WebComponent b121;
+		b12.add(b121 = new WebComponent("b121"));
+
+		String buf = "";
+		for (MarkupContainer container : new GenericComponentHierarchyIterator<MarkupContainer>(
+			page, MarkupContainer.class))
+		{
+			buf += container.getId();
+		}
+
+		assertEquals("bb1b12b2", buf);
+	}
+
+	/** */
+	@Test
+	public void classFilterWrongClass()
+	{
+		Page page = new MyPage();
+
+		// This is ok. It'll return only Form components, though the next() return type is
+		// MarkupContainer
+		new GenericComponentHierarchyIterator<MarkupContainer>(page, Form.class);
+
+		// Compile Time error
+		// new GenericComponentHierarchyIterator<Form>(page, MarkupContainer.class);
 	}
 }

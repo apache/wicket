@@ -37,18 +37,19 @@ import org.apache.wicket.util.lang.Args;
  * @TODO Replace ChildFirst with a strategy
  * 
  * @author Juergen Donnerstag
- * @param <S>
- *            E.g. Component
- * @param <T>
- *            E.g. MarkupContainer
+ * @param <I>
+ *            The type relevant for the iterator. What you expect to get back from next(), e.g.
+ *            Form.
+ * @param <N>
+ *            The base type of all nodes, e.g. Component
  */
-public abstract class AbstractHierarchyIterator<S> implements Iterator<S>, Iterable<S>
+public abstract class AbstractHierarchyIterator<N, I extends N> implements Iterator<I>, Iterable<I>
 {
 	// An iterator for each level we are down from root
-	private ArrayListStack<LevelIterator<S>> stack = new ArrayListStack<LevelIterator<S>>();
+	private ArrayListStack<LevelIterator<N>> stack = new ArrayListStack<LevelIterator<N>>();
 
 	// The current level iterator
-	private LevelIterator<S> data;
+	private LevelIterator<N> data;
 
 	// Whether we need to traverse into the next level with the next invocation of hasNext()
 	private boolean traverse;
@@ -67,13 +68,13 @@ public abstract class AbstractHierarchyIterator<S> implements Iterator<S>, Itera
 	 * 
 	 * @param root
 	 */
-	public AbstractHierarchyIterator(final S root)
+	public AbstractHierarchyIterator(final N root)
 	{
 		Args.notNull(root, "root");
 
 		if (hasChildren(root))
 		{
-			data = new LevelIterator<S>(root, newIterator(root));
+			data = new LevelIterator<N>(root, newIterator(root));
 		}
 	}
 
@@ -82,7 +83,7 @@ public abstract class AbstractHierarchyIterator<S> implements Iterator<S>, Itera
 	 * @param node
 	 * @return True, if node is a container and has at least one child.
 	 */
-	abstract protected boolean hasChildren(final S node);
+	abstract protected boolean hasChildren(final N node);
 
 	/**
 	 * If node is a container than return an iterator for its children.
@@ -92,7 +93,7 @@ public abstract class AbstractHierarchyIterator<S> implements Iterator<S>, Itera
 	 * @param node
 	 * @return container iterator
 	 */
-	abstract protected Iterator<S> newIterator(final S node);
+	abstract protected Iterator<N> newIterator(final N node);
 
 	public boolean hasNext()
 	{
@@ -145,13 +146,13 @@ public abstract class AbstractHierarchyIterator<S> implements Iterator<S>, Itera
 	 * @param node
 	 * @return False if no more elements were found
 	 */
-	private boolean moveDown(final S node)
+	private boolean moveDown(final N node)
 	{
 		// Remember all details of the current level
 		stack.push(data);
 
 		// Initialize the data for the next level
-		data = new LevelIterator<S>(node, newIterator(node));
+		data = new LevelIterator<N>(node, newIterator(node));
 
 		// Get the next node on the current level. If it's a container, than move downwards. If
 		// there are no more elements, than move up again.
@@ -165,7 +166,7 @@ public abstract class AbstractHierarchyIterator<S> implements Iterator<S>, Itera
 	 * @return if false, than skip (filter) the element. It'll not stop the iterator from traversing
 	 *         into children though.
 	 */
-	protected boolean onFilter(final S node)
+	protected boolean onFilter(final N node)
 	{
 		return true;
 	}
@@ -176,7 +177,7 @@ public abstract class AbstractHierarchyIterator<S> implements Iterator<S>, Itera
 	 * @param node
 	 * @return if false, than do not traverse into the children and grand-children.
 	 */
-	protected boolean onTraversalFilter(final S node)
+	protected boolean onTraversalFilter(final N node)
 	{
 		return true;
 	}
@@ -297,7 +298,8 @@ public abstract class AbstractHierarchyIterator<S> implements Iterator<S>, Itera
 	/**
 	 * Traverse the hierarchy and get the next element
 	 */
-	public S next()
+	@SuppressWarnings("unchecked")
+	public I next()
 	{
 		// Did we reach the end already?
 		if (data == null)
@@ -318,7 +320,7 @@ public abstract class AbstractHierarchyIterator<S> implements Iterator<S>, Itera
 		// Remember that we need to call hasNext() to get the next element
 		hasNextWasLast = false;
 
-		return data.lastNode;
+		return (I)data.lastNode;
 	}
 
 	public void remove()
@@ -353,7 +355,7 @@ public abstract class AbstractHierarchyIterator<S> implements Iterator<S>, Itera
 		traverse = false;
 	}
 
-	public final Iterator<S> iterator()
+	public final Iterator<I> iterator()
 	{
 		return this;
 	}
@@ -386,15 +388,15 @@ public abstract class AbstractHierarchyIterator<S> implements Iterator<S>, Itera
 	 * We need a little helper to store the iterator of the level and the last node returned by
 	 * next().
 	 * 
-	 * @param <S>
+	 * @param <N>
 	 */
-	private static class LevelIterator<S> implements Iterator<S>
+	private static class LevelIterator<N> implements Iterator<N>
 	{
-		private final S node;
+		private final N node;
 
-		private final Iterator<S> iter;
+		private final Iterator<N> iter;
 
-		private S lastNode;
+		private N lastNode;
 
 		/**
 		 * Construct.
@@ -404,7 +406,7 @@ public abstract class AbstractHierarchyIterator<S> implements Iterator<S>, Itera
 		 * @param iter
 		 *            The iterator for 'node'
 		 */
-		public LevelIterator(final S node, final Iterator<S> iter)
+		public LevelIterator(final N node, final Iterator<N> iter)
 		{
 			Args.notNull(iter, "iter");
 
@@ -417,7 +419,7 @@ public abstract class AbstractHierarchyIterator<S> implements Iterator<S>, Itera
 			return iter.hasNext();
 		}
 
-		public S next()
+		public N next()
 		{
 			lastNode = iter.next();
 			return lastNode;

@@ -29,65 +29,27 @@ import org.apache.wicket.util.lang.Args;
  * A fluent or builder type of API is provided to configure the iterator with filters.
  * 
  * @author Juergen Donnerstag
+ * @param <I>
+ *            The type which next() should return (the iterator type)
  */
-public class ComponentHierarchyIterator extends
-	AbstractHierarchyIteratorWithFilter<Component, Component>
+public class GenericComponentHierarchyIterator<I extends Component> extends
+	AbstractHierarchyIteratorWithFilter<Component, I>
 {
 	/**
 	 * Construct.
 	 * 
 	 * @param component
 	 *            Iterate over the containers children
+	 * @param clazz
+	 *            Must be the same as the iterator type provided
 	 */
-	public ComponentHierarchyIterator(final Component component)
+	public GenericComponentHierarchyIterator(final Component component,
+		final Class<? extends I> clazz)
 	{
 		super(component);
-	}
 
-	/**
-	 * Convenience Constructor
-	 * 
-	 * @param component
-	 *            Iterate over the containers children
-	 * @param clazz
-	 *            Add filter by class
-	 * @param visible
-	 *            Add filter by visibility
-	 * @param enabled
-	 *            Add filter by "enabled"
-	 */
-	public ComponentHierarchyIterator(final Component component, Class<?> clazz, boolean visible,
-		boolean enabled)
-	{
-		this(component);
-
-		if (clazz != null)
-		{
-			filterByClass(clazz);
-		}
-
-		if (visible)
-		{
-			filterByVisibility();
-		}
-
-		if (enabled)
-		{
-			filterEnabled();
-		}
-	}
-
-	/**
-	 * Convenience Constructor
-	 * 
-	 * @param component
-	 *            Iterate over the containers children
-	 * @param clazz
-	 *            Add filter by class
-	 */
-	public ComponentHierarchyIterator(final Component component, Class<?> clazz)
-	{
-		this(component, clazz, false, false);
+		Args.notNull(clazz, "clazz");
+		filterByClass(clazz);
 	}
 
 	/**
@@ -117,7 +79,7 @@ public class ComponentHierarchyIterator extends
 	 * 
 	 * @return this
 	 */
-	public final ComponentHierarchyIterator filterLeavesOnly()
+	public final GenericComponentHierarchyIterator<I> filterLeavesOnly()
 	{
 		getFilters().add(new IteratorFilter<Component>()
 		{
@@ -141,7 +103,7 @@ public class ComponentHierarchyIterator extends
 	 * @param clazz
 	 * @return this
 	 */
-	public ComponentHierarchyIterator filterByClass(final Class<?> clazz)
+	public GenericComponentHierarchyIterator<I> filterByClass(final Class<?> clazz)
 	{
 		if (clazz != null)
 		{
@@ -163,7 +125,7 @@ public class ComponentHierarchyIterator extends
 	 * 
 	 * @return this
 	 */
-	public ComponentHierarchyIterator filterByVisibility()
+	public GenericComponentHierarchyIterator<I> filterByVisibility()
 	{
 		IteratorFilter<Component> filter = new IteratorFilter<Component>()
 		{
@@ -185,7 +147,7 @@ public class ComponentHierarchyIterator extends
 	 * 
 	 * @return this
 	 */
-	public ComponentHierarchyIterator filterEnabled()
+	public GenericComponentHierarchyIterator<I> filterEnabled()
 	{
 		IteratorFilter<Component> filter = new IteratorFilter<Component>()
 		{
@@ -209,7 +171,7 @@ public class ComponentHierarchyIterator extends
 	 *            Regex to find Components matching
 	 * @return this
 	 */
-	public ComponentHierarchyIterator filterById(final String match)
+	public GenericComponentHierarchyIterator<I> filterById(final String match)
 	{
 		Args.notEmpty(match, "match");
 
@@ -226,14 +188,14 @@ public class ComponentHierarchyIterator extends
 	}
 
 	@Override
-	public ComponentHierarchyIterator addFilter(final IteratorFilter<Component> filter)
+	public GenericComponentHierarchyIterator<I> addFilter(final IteratorFilter<Component> filter)
 	{
 		super.addFilter(filter);
 		return this;
 	}
 
 	@Override
-	public ComponentHierarchyIterator addTraverseFilters(IteratorFilter<Component> filter)
+	public GenericComponentHierarchyIterator<I> addTraverseFilters(IteratorFilter<Component> filter)
 	{
 		super.addTraverseFilters(filter);
 		return this;
