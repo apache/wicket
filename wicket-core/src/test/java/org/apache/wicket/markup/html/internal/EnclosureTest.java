@@ -19,14 +19,21 @@ package org.apache.wicket.markup.html.internal;
 import java.io.IOException;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
+import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
@@ -346,5 +353,53 @@ public class EnclosureTest extends WicketTestCase
 		});
 
 		executeTest(EnclosurePage_13.class, "EnclosurePageExpectedResult_13.html");
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-3842
+	 */
+	public void testAtrribute()
+	{
+		/**
+		 * Page for the test
+		 */
+		class TestPage extends WebPage implements IMarkupResourceStreamProvider
+		{
+			private static final long serialVersionUID = 1L;
+
+			public TestPage()
+			{
+				final Label l = new Label("msg", "$label$");
+				add(l);
+				add(new Link<Void>("b")
+				{
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void onClick()
+					{
+						l.setVisible(!l.isVisible());
+					}
+				});
+			}
+
+			public IResourceStream getMarkupResourceStream(MarkupContainer container,
+				Class<?> containerClass)
+			{
+				return new StringResourceStream(
+					"<html><body><div wicket:enclosure='msg'><span wicket:id='msg'></span></div><input type='button' value='Toggle' wicket:id='b'/></body></html>");
+			}
+		}
+
+		tester.startPage(new TestPage());
+		assertTrue(tester.getLastResponseAsString().contains("$label$"));
+
+		// toggle visibility of enclosure to false
+		tester.clickLink("b");
+		assertFalse(tester.getLastResponseAsString().contains("$label$"));
+
+		// toggle visibility of enclosure to back to true
+		tester.clickLink("b");
+		assertTrue(tester.getLastResponseAsString().contains("$label$"));
 	}
 }
