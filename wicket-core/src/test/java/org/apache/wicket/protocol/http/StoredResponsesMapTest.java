@@ -127,7 +127,9 @@ public class StoredResponsesMapTest
 					keys.add(key);
 					map.put(key, new BufferedWebResponse(null));
 
-					String key2 = keys.get(rnd.nextInt(keys.size() - 1));
+					int randomMax = keys.size() - 1;
+					int toRemove = randomMax == 0 ? 0 : rnd.nextInt(randomMax);
+					String key2 = keys.get(toRemove);
 					map.remove(key2);
 				}
 				endLatch.countDown();
