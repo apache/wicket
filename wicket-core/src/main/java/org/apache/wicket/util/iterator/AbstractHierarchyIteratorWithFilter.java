@@ -23,6 +23,7 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 
 /**
+ * Extend {@link AbstractHierarchyIterator} and add support for filters.
  * 
  * @author Juergen Donnerstag
  * @param <S>
@@ -46,19 +47,19 @@ public abstract class AbstractHierarchyIteratorWithFilter<S> extends AbstractHie
 	}
 
 	/**
-	 * Allows to filter out component from the search.
+	 * Apply all registered filters
 	 * 
-	 * @param comp
-	 * @return false, to filter the component. True, to continue processing the component.
+	 * @param node
+	 * @return False, to filter the component. True, to continue processing the component.
 	 */
 	@Override
-	protected final boolean onFilter(final S comp)
+	protected final boolean onFilter(final S node)
 	{
 		if (filters != null)
 		{
 			for (IteratorFilter<S> filter : filters)
 			{
-				if (filter.onFilter(comp) == false)
+				if (filter.onFilter(node) == false)
 				{
 					return false;
 				}
@@ -70,7 +71,8 @@ public abstract class AbstractHierarchyIteratorWithFilter<S> extends AbstractHie
 	/**
 	 * 
 	 * @param filter
-	 * @return Filters
+	 * @return Gets the List of all registered filters. A new list will be created if no filter has
+	 *         been registered yet (never return null).
 	 */
 	public final List<IteratorFilter<S>> getFilters()
 	{
@@ -83,7 +85,7 @@ public abstract class AbstractHierarchyIteratorWithFilter<S> extends AbstractHie
 	}
 
 	/**
-	 * Allow to add your own filter (fluent API)
+	 * Add a filter (fluent API)
 	 * 
 	 * @param filter
 	 * @return this
@@ -97,11 +99,12 @@ public abstract class AbstractHierarchyIteratorWithFilter<S> extends AbstractHie
 	}
 
 	/**
-	 * Replace the current set of filters
+	 * Replace the current set of filters. Sometimes you need to first find X to than start
+	 * searching for Y.
 	 * 
 	 * @param filters
-	 *            New filter set
-	 * @return Old filter set
+	 *            New filter set. May be null to remove all filters.
+	 * @return Old filter set. Null, if no filter was registered.
 	 */
 	public Collection<IteratorFilter<S>> replaceFilterSet(
 		final Collection<IteratorFilter<S>> filters)
@@ -122,7 +125,8 @@ public abstract class AbstractHierarchyIteratorWithFilter<S> extends AbstractHie
 
 	/**
 	 * @param throwException
-	 * @return Find the the first Component matching all filters
+	 *            If true, an exception is thrown if no matching element was found.
+	 * @return Find the the first element matching all filters
 	 */
 	public final S getFirst(final boolean throwException)
 	{
@@ -155,7 +159,8 @@ public abstract class AbstractHierarchyIteratorWithFilter<S> extends AbstractHie
 	}
 
 	/**
-	 * @return Gets the traversal filters
+	 * @return Gets the List of all registered traversal filters. A new list will be created if no
+	 *         traversal filter has been registered yet (never return null).
 	 */
 	public final List<IteratorFilter<S>> getTraverseFilters()
 	{
@@ -173,18 +178,17 @@ public abstract class AbstractHierarchyIteratorWithFilter<S> extends AbstractHie
 	 * @param filter
 	 * @return this
 	 */
-	public final AbstractHierarchyIteratorWithFilter<S> addTraverseFilters(
-		final IteratorFilter<S> filter)
+	public AbstractHierarchyIteratorWithFilter<S> addTraverseFilters(final IteratorFilter<S> filter)
 	{
 		getTraverseFilters().add(filter);
 		return this;
 	}
 
 	/**
-	 * Allows to filter out component from the search.
+	 * Apply all registered traversal filters
 	 * 
 	 * @param node
-	 * @return false to skip traversing its children
+	 * @return False, to filter the element. True, to continue processing the component.
 	 */
 	@Override
 	protected boolean onTraversalFilter(final S node)

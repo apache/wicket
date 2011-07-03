@@ -18,6 +18,7 @@ package org.apache.wicket.util.iterator;
 
 
 /**
+ * A simple filter interface for the hierarchy iterator.
  * 
  * @author Juergen Donnerstag
  * @param <S>
@@ -27,7 +28,7 @@ public abstract class IteratorFilter<S>
 	/**
 	 * 
 	 * @param node
-	 * @return false, to filter the component. True, to continue processing the component.
+	 * @return false, to filter the component. True, to continue processing the node.
 	 */
 	abstract boolean onFilter(S node);
 }

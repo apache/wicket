@@ -25,12 +25,8 @@ import org.apache.wicket.util.lang.Args;
 /**
  * Iterator over the complete Component hierarchy. The implementation is parent first, meaning that
  * first the parent gets returned upon next() and only than it's children.
- * 
- * @TODO wrong sematic. next() should move it forward. hasNext() should never do it.
- * @TODO It'd be cool if next would return the class/generics provided via filterByClass
- * @TODO currently we have a parent first strategy only. A deepest child first strategy must be
- *       useful as well.
- * @TODO make it more generic to work with Markup as well.
+ * <p>
+ * A fluent or builder type of API is provided to configure the iterator with filters.
  * 
  * @author Juergen Donnerstag
  */
@@ -53,11 +49,11 @@ public class ComponentHierarchyIterator extends AbstractHierarchyIteratorWithFil
 	 * @param component
 	 *            Iterate over the containers children
 	 * @param clazz
-	 *            filter by class
+	 *            Add filter by class
 	 * @param visible
-	 *            if true, than ignore invisible components
+	 *            Add filter by visibility
 	 * @param enabled
-	 *            if true, than ignore disabled components
+	 *            Add filter by "enabled"
 	 */
 	public ComponentHierarchyIterator(final Component component, Class<?> clazz, boolean visible,
 		boolean enabled)
@@ -86,7 +82,7 @@ public class ComponentHierarchyIterator extends AbstractHierarchyIteratorWithFil
 	 * @param component
 	 *            Iterate over the containers children
 	 * @param clazz
-	 *            filter by class
+	 *            Add filter by class
 	 */
 	public ComponentHierarchyIterator(final Component component, Class<?> clazz)
 	{
@@ -94,7 +90,7 @@ public class ComponentHierarchyIterator extends AbstractHierarchyIteratorWithFil
 	}
 
 	/**
-	 * Add a filter which returns only leaf components
+	 * Add a filter which returns only leaf components.
 	 * 
 	 * @return this
 	 */
@@ -117,12 +113,10 @@ public class ComponentHierarchyIterator extends AbstractHierarchyIteratorWithFil
 	}
 
 	/**
-	 * Part of the fluent API: Filter Components by Class.
-	 * <p>
-	 * Must only be used before hasNext() has been called.
+	 * Ignore components which don't implement (instanceof) the class provided.
 	 * 
 	 * @param clazz
-	 * @return A new iterator with the added filter
+	 * @return this
 	 */
 	public ComponentHierarchyIterator filterByClass(final Class<?> clazz)
 	{
@@ -142,11 +136,9 @@ public class ComponentHierarchyIterator extends AbstractHierarchyIteratorWithFil
 	}
 
 	/**
-	 * Part of the fluent API: Ignore all Components which not visible in the hierachy
-	 * <p>
-	 * Must only be used before hasNext() has been called.
+	 * Ignore all Components which not visible.
 	 * 
-	 * @return A new iterator with the added filter
+	 * @return this
 	 */
 	public ComponentHierarchyIterator filterByVisibility()
 	{
@@ -166,11 +158,9 @@ public class ComponentHierarchyIterator extends AbstractHierarchyIteratorWithFil
 	}
 
 	/**
-	 * Part of the fluent API: Ignore all Components which not enabled in the hierachy
-	 * <p>
-	 * Must only be used before hasNext() has been called.
+	 * Ignore all Components which not enabled (disabled) in the hierarchy
 	 * 
-	 * @return A new iterator with the added filter
+	 * @return this
 	 */
 	public ComponentHierarchyIterator filterEnabled()
 	{
@@ -190,13 +180,11 @@ public class ComponentHierarchyIterator extends AbstractHierarchyIteratorWithFil
 	}
 
 	/**
-	 * Part of the fluent API: Accept only Components with matching id's.
-	 * <p>
-	 * Must only be used before hasNext() has been called.
+	 * Ignore all components which don't match the id (regex).
 	 * 
 	 * @param match
 	 *            Regex to find Components matching
-	 * @return A new iterator with the added filter
+	 * @return this
 	 */
 	public ComponentHierarchyIterator filterById(final String match)
 	{
@@ -214,6 +202,9 @@ public class ComponentHierarchyIterator extends AbstractHierarchyIteratorWithFil
 		return this;
 	}
 
+	/**
+	 * The component must be a MarkupContainer to contain children
+	 */
 	@Override
 	protected Iterator<Component> newIterator(final Component node)
 	{
@@ -224,6 +215,9 @@ public class ComponentHierarchyIterator extends AbstractHierarchyIteratorWithFil
 		return null;
 	}
 
+	/**
+	 * Only MarkupContainer's might have children
+	 */
 	@Override
 	protected boolean hasChildren(Component elem)
 	{
@@ -238,6 +232,13 @@ public class ComponentHierarchyIterator extends AbstractHierarchyIteratorWithFil
 	public ComponentHierarchyIterator addFilter(final IteratorFilter<Component> filter)
 	{
 		super.addFilter(filter);
+		return this;
+	}
+
+	@Override
+	public ComponentHierarchyIterator addTraverseFilters(IteratorFilter<Component> filter)
+	{
+		super.addTraverseFilters(filter);
 		return this;
 	}
 }

@@ -22,16 +22,17 @@ import org.apache.wicket.util.collections.ArrayListStack;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * This is a basic iterator for hierarchical structure such as Component hierarchies or HTML markup.
- * It supports child first and parent first traversal and intercepts while moving down or up the
- * hierarchy.
+ * This is a basic iterator for hierarchical structures such as Component hierarchies or HTML
+ * markup. It supports child first and parent first traversal and intercepts while moving down or up
+ * the hierarchy.
  * <p>
  * It assume the container class implements <code>Iterable</code>. The leaf nodes don't need to.
  * <p>
- * Consecutive calls to hasNext() without next() in between, does not move the cursor, but returns
- * the same value until next() is called.
+ * Consecutive calls to <code>hasNext()</code> without <code>next()</code> in between, don't move
+ * the cursor, but return the same value until <code>next()</code> is called.
  * <p>
- * Every call to next(), with or without hasNext(), will move the cursor to the next element.
+ * Every call to <code>next()</code>, with or without <code>hasNext()</code>, will move the cursor
+ * to the next element.
  * 
  * @TODO Replace ChildFirst with a strategy
  * 
@@ -78,15 +79,15 @@ public abstract class AbstractHierarchyIterator<S> implements Iterator<S>, Itera
 
 	/**
 	 * 
-	 * @param elem
-	 * @return True, if elem is a container and has at least one child.
+	 * @param node
+	 * @return True, if node is a container and has at least one child.
 	 */
-	abstract protected boolean hasChildren(final S elem);
+	abstract protected boolean hasChildren(final S node);
 
 	/**
 	 * If node is a container than return an iterator for its children.
 	 * <p>
-	 * Gets only called if {@link #hasChildren()} return true.
+	 * Gets only called if {@link #hasChildren(Object)} return true.
 	 * 
 	 * @param node
 	 * @return container iterator
@@ -144,7 +145,7 @@ public abstract class AbstractHierarchyIterator<S> implements Iterator<S>, Itera
 	 * @param node
 	 * @return False if no more elements were found
 	 */
-	protected boolean moveDown(final S node)
+	private boolean moveDown(final S node)
 	{
 		// Remember all details of the current level
 		stack.push(data);
@@ -158,9 +159,11 @@ public abstract class AbstractHierarchyIterator<S> implements Iterator<S>, Itera
 	}
 
 	/**
+	 * Gets called for each element within the hierarchy (nodes and leafs)
 	 * 
 	 * @param node
-	 * @return if false, than skip (filter) the node
+	 * @return if false, than skip (filter) the element. It'll not stop the iterator from traversing
+	 *         into children though.
 	 */
 	protected boolean onFilter(final S node)
 	{
@@ -168,15 +171,21 @@ public abstract class AbstractHierarchyIterator<S> implements Iterator<S>, Itera
 	}
 
 	/**
+	 * Gets called for each element where {@link #hasChildren(Object)} return true.
 	 * 
 	 * @param node
-	 * @return if false, than skip (filter) the node
+	 * @return if false, than do not traverse into the children and grand-children.
 	 */
 	protected boolean onTraversalFilter(final S node)
 	{
 		return true;
 	}
 
+	/**
+	 * Get the next node from the underlying iterator and handle it.
+	 * 
+	 * @return true, if one more element was found
+	 */
 	private boolean nextNode()
 	{
 		// Get the next element
