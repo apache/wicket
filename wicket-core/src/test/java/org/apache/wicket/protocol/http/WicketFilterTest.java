@@ -58,6 +58,7 @@ import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.util.file.WebXmlFile;
+import org.apache.wicket.util.tester.DummyHomePage;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.xml.sax.SAXException;
@@ -346,10 +347,11 @@ public class WicketFilterTest extends TestCase
 		filter.init(new FilterTestingConfig());
 
 		HttpServletRequest request = mock(HttpServletRequest.class);
+		when(request.getLocale()).thenReturn(new Locale("bg", "BG"));
 		when(request.getRequestURI()).thenReturn("/contextPath/js/bla.js")
 			.thenReturn("/contextPath/css/bla.css")
 			.thenReturn("/contextPath/images/bla.img")
-			.thenReturn("/contextPath/something/real");
+			.thenReturn("/contextPath/servlet/wicket/bookmarkable/" + DummyHomePage.class.getName());
 		when(request.getContextPath()).thenReturn("/contextPath");
 		HttpServletResponse response = mock(HttpServletResponse.class);
 		FilterChain chain = mock(FilterChain.class);
