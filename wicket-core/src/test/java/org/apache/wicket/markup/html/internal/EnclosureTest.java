@@ -18,12 +18,18 @@ package org.apache.wicket.markup.html.internal;
 
 import java.io.IOException;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.authorization.Action;
+import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTester;
 
 
 /**
@@ -300,5 +306,45 @@ public class EnclosureTest extends WicketTestCase
 	public void testRenderPage11() throws Exception
 	{
 		executeTest(EnclosurePage_11.class, "EnclosurePageExpectedResult_11.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderPage12() throws Exception
+	{
+		executeTest(EnclosurePage_12.class, "EnclosurePageExpectedResult_12.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderPage13() throws Exception
+	{
+		tester = new WicketTester(new MockApplication()
+		{
+			@Override
+			protected void init()
+			{
+				super.init();
+
+				// This should cause all SecuredContainer components to be hidden
+				getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy()
+				{
+					public boolean isActionAuthorized(Component component, Action action)
+					{
+						return !(component instanceof SecuredContainer_13);
+					}
+
+					public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
+						Class<T> componentClass)
+					{
+						return true;
+					}
+				});
+			}
+		});
+
+		executeTest(EnclosurePage_13.class, "EnclosurePageExpectedResult_13.html");
 	}
 }

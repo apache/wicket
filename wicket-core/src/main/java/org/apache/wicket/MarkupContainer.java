@@ -40,6 +40,7 @@ import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
 import org.apache.wicket.settings.IDebugSettings;
+import org.apache.wicket.util.iterator.ComponentHierarchyIterator;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.ComponentStrings;
@@ -901,6 +902,25 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	public final <R> R visitChildren(final IVisitor<Component, R> visitor)
 	{
 		return Visits.visitChildren(this, visitor);
+	}
+
+	/**
+	 * @return A iterator which iterators over all children and grand-children the Component
+	 */
+	public final ComponentHierarchyIterator visitChildren()
+	{
+		return new ComponentHierarchyIterator(this);
+	}
+
+	/**
+	 * @param clazz
+	 *            Filter condition
+	 * @return A iterator which iterators over all children and grand-children the Component,
+	 *         returning only components which implement (instanceof) the provided clazz.
+	 */
+	public final ComponentHierarchyIterator visitChildren(final Class<?> clazz)
+	{
+		return new ComponentHierarchyIterator(this).filterByClass(clazz);
 	}
 
 	/**

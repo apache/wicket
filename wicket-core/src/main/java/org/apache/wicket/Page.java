@@ -40,6 +40,7 @@ import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.apache.wicket.util.lang.Classes;
+import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.visit.IVisit;
@@ -687,10 +688,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			// Throw exception if any errors were found
 			if (unrenderedComponents.size() > 0)
 			{
-				// Get rid of set
 				renderedComponents = null;
 
-				List<Component> transparentContainerChildren = new ArrayList<Component>();
+				List<Component> transparentContainerChildren = Generics.newArrayList();
 
 				Iterator<Component> iterator = unrenderedComponents.iterator();
 				outerWhile : while (iterator.hasNext())
@@ -713,29 +713,23 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 						}
 					}
 
-					// Now first test if the component has a sibling that is a transparent resolver.
-					for (Object o : component.getParent())
+					if (hasInvisibleTransparentChild(component.getParent(), component))
 					{
-						Component sibling = (Component)o;
-						if (!sibling.isVisible())
+						// If we found a transparent container that isn't visible then ignore this
+						// component and only do a debug statement here.
+						if (log.isDebugEnabled())
 						{
-							if (sibling instanceof IComponentResolver)
-							{
-								// we found a transparent container that isn't visible
-								// then ignore this component and only do a debug statement here.
-								if (log.isDebugEnabled())
-								{
-									log.debug(
-										"Component {} wasn't rendered but most likely it has a transparent parent: {}",
-										component, sibling);
-								}
-								transparentContainerChildren.add(component);
-								iterator.remove();
-								continue outerWhile;
-							}
+							log.debug(
+								"Component {} wasn't rendered but might have a transparent parent.",
+								component);
 						}
+
+						transparentContainerChildren.add(component);
+						iterator.remove();
+						continue outerWhile;
 					}
 				}
+
 				// if still > 0
 				if (unrenderedComponents.size() > 0)
 				{
@@ -749,6 +743,31 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 		// Get rid of set
 		renderedComponents = null;
+	}
+
+	private boolean hasInvisibleTransparentChild(final MarkupContainer root, final Component self)
+	{
+		for (Component sibling : root)
+		{
+			if ((sibling != self) && (sibling instanceof IComponentResolver) &&
+				(sibling instanceof MarkupContainer))
+			{
+				if (!sibling.isVisible())
+				{
+					return true;
+				}
+				else
+				{
+					boolean rtn = hasInvisibleTransparentChild((MarkupContainer)sibling, self);
+					if (rtn == true)
+					{
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**

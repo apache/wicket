@@ -19,22 +19,15 @@ package org.apache.wicket.markup.html.internal;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.application.IComponentOnAfterRenderListener;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.EnclosureContainer;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.markup.resolver.ComponentResolvers.ResolverFilter;
 import org.apache.wicket.markup.resolver.IComponentResolver;
-import org.apache.wicket.request.Response;
-import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.response.NullResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -139,6 +132,12 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 		return childComponent;
 	}
 
+	@Override
+	public boolean isVisible()
+	{
+		return childComponent.determineVisibility() && super.isVisible();
+	}
+
 	/**
 	 * Get the real parent container
 	 * 
@@ -158,48 +157,6 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 				"Unable to find parent component which is not a transparent resolver");
 		}
 		return parent;
-	}
-
-	@Override
-	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
-	{
-		// TODO this is where I wish we had something like "enum(TAG, BODY, NONE, ALL) isVisible()"
-		// set the enclosure visibility
-		boolean visible = childComponent.determineVisibility();
-
-		// We want to know which components are rendered inside the enclosure
-		final IComponentOnAfterRenderListener listener = new EnclosureListener(this);
-
-		try
-		{
-			// register the listener
-			getApplication().getComponentOnAfterRenderListeners().add(listener);
-
-			if (visible)
-			{
-				super.onComponentTagBody(markupStream, openTag);
-			}
-			else
-			{
-				RequestCycle cycle = getRequestCycle();
-				Response response = cycle.getResponse();
-				try
-				{
-					cycle.setResponse(NullResponse.getInstance());
-
-					super.onComponentTagBody(markupStream, openTag);
-				}
-				finally
-				{
-					cycle.setResponse(response);
-				}
-			}
-		}
-		finally
-		{
-			// make sure we remove the listener
-			getApplication().getComponentOnAfterRenderListeners().remove(listener);
-		}
 	}
 
 	/**
@@ -274,33 +231,6 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 		{
 			throw new WicketRuntimeException(
 				"Programming error: childComponent == enclose component; endless loop");
-		}
-	}
-
-	/**
-	 * Enclosure will register this listener during the body render phase of the Enclosure
-	 */
-	private static class EnclosureListener implements IComponentOnAfterRenderListener
-	{
-		private final Enclosure enclosure;
-
-		private EnclosureListener(final Enclosure enclosure)
-		{
-			this.enclosure = enclosure;
-		}
-
-		public void onAfterRender(final Component component)
-		{
-			if (log.isWarnEnabled())
-			{
-				if ((component instanceof FormComponent) ||
-					(component instanceof IFormSubmittingComponent) || (component instanceof Form))
-				{
-					log.warn("Please note that onBeforeRender() and validate() might be called on invisible components inside an Enclosure. " +
-						"Please see EnclosureContainer for an alternative. Enclosure: " +
-						enclosure.toString());
-				}
-			}
 		}
 	}
 }

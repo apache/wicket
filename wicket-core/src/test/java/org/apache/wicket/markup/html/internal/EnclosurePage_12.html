@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+  <wicket:enclosure child="invisible">
+    This entire enclosure should be hidden.
+    <p wicket:id="invisible"></p>
+    <p wicket:id="shouldntrendereither">
+      <span wicket:id="label"></span>
+    </p>
+  </wicket:enclosure>
+</body>
+</html>
