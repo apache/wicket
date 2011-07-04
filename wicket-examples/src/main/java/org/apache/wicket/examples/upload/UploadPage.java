@@ -91,7 +91,7 @@ public class UploadPage extends WicketExamplePage
 	 */
 	private class FileUploadForm extends Form<Void>
 	{
-		private FileUploadField fileUploadField;
+		FileUploadField fileUploadField;
 
 		/**
 		 * Construct.
@@ -185,11 +185,12 @@ public class UploadPage extends WicketExamplePage
 		});
 		add(fileListView);
 
-		// Add upload form with ajax progress bar
-		final FileUploadForm ajaxSimpleUploadForm = new FileUploadForm("ajax-simpleUpload");
+		// Add upload form with progress bar
+		final FileUploadForm progressUploadForm = new FileUploadForm("progressUpload");
 
-		ajaxSimpleUploadForm.add(new UploadProgressBar("progress", ajaxSimpleUploadForm));
-		add(ajaxSimpleUploadForm);
+		progressUploadForm.add(new UploadProgressBar("progress", progressUploadForm,
+			progressUploadForm.fileUploadField));
+		add(progressUploadForm);
 
 		// Add upload form that uses HTML5 <input type="file" multiple />, so it can upload
 		// more than one file in browsers which support "multiple" attribute

@@ -17,6 +17,8 @@
 -->
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-	<entry key="simpleUpload.uploadTooLarge">Размер файла не должен превышать ${maxSize}.</entry>
-	<entry key="simpleUpload.uploadFailed">Ошибка загрузки файла на сервер: ${exception.localizedMessage}.</entry>
+	<entry key="simpleUpload.uploadTooLarge">Simple - Размер файла не должен превышать ${maxSize}.</entry>
+	<entry key="simpleUpload.uploadFailed">Simple - Ошибка загрузки файла на сервер: ${exception.localizedMessage}.</entry>
+	<entry key="progressUpload.uploadTooLarge">Progress - Размер файла не должен превышать ${maxSize}.</entry>
+	<entry key="progressUpload.uploadFailed">Progress - Ошибка загрузки файла на сервер: ${exception.localizedMessage}.</entry>
 </properties>
