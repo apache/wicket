@@ -418,7 +418,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	 * @see org.springframework.beans.factory.BeanFactory#getBean(java.lang.String,
 	 *      java.lang.Object[])
 	 */
-	public Object getBean(final String name, final Object[] args) throws BeansException
+	public Object getBean(final String name, final Object... args) throws BeansException
 	{
 		throw new UnsupportedOperationException();
 
