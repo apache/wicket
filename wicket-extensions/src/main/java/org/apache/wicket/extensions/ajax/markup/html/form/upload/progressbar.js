@@ -17,11 +17,15 @@
 if (typeof(Wicket) == "undefined") Wicket = { };
 
 Wicket.WUPB = Wicket.Class.create();
-
 Wicket.WUPB.prototype = {
 		
-	initialize : function(def) {
-		this.def = def;
+	initialize : function(formid, statusid, barid, url, fileid, initialStatus) {
+		this.formid = formid;
+		this.statusid = statusid;
+		this.barid = barid;
+		this.url = url;
+		this.fileid = fileid;
+		this.initialStatus = initialStatus;
 	},
 
 	bind : function(formid) {
@@ -41,16 +45,15 @@ Wicket.WUPB.prototype = {
 	
 	start : function(){
 		this.displayprogress = true;
-		if (this.def.fileid) {
-			var fileupload = Wicket.$(this.def.fileid);
+		if (this.fileid) {
+			var fileupload = Wicket.$(this.fileid);
 			this.displayprogress = fileupload && fileupload.value && fileupload.value != '';
 		}
-		if(this.displayprogress) {
-			this.setStatus('Upload starting...');
-			Wicket.$(this.def.barid).firstChild.firstChild.style.width='0%';
-
-			Wicket.$(this.def.statusid).style.display='block';
-			Wicket.$(this.def.barid).style.display='block';
+		if (this.displayprogress) {
+			this.setPercent(0);
+			this.setStatus(this.initialStatus);
+			Wicket.$(this.statusid).style.display='block';
+			Wicket.$(this.barid).style.display='block';
 			this.scheduleUpdate();
 		}
 	},
@@ -58,19 +61,23 @@ Wicket.WUPB.prototype = {
 	setStatus : function(status){
 		var label = document.createElement("label");
 		label.innerHTML = status;
-		var oldLabel = Wicket.$(this.def.statusid).firstChild;
+		var oldLabel = Wicket.$(this.statusid).firstChild;
 		if( oldLabel != null){
-			Wicket.$(this.def.statusid).removeChild(oldLabel);
+			Wicket.$(this.statusid).removeChild(oldLabel);
 		}
-		Wicket.$(this.def.statusid).appendChild(label);		
+		Wicket.$(this.statusid).appendChild(label);		
+	},
+	
+	setPercent : function(progressPercent){
+		Wicket.$(this.barid).firstChild.firstChild.style.width = progressPercent + '%';
 	},
 	
 	scheduleUpdate : function(){
-		window.setTimeout(this.ajax.bind(this), 1000);
+		window.setTimeout(this.load.bind(this), 1000);
 	},
 
-	ajax : function() {
-		var URL = this.def.url + '?anticache=' + Math.random();
+	load : function() {
+		var URL = this.url + '?anticache=' + Math.random();
 		
     	this.iframe = Wicket._createIFrame(""+Math.random());
 		
@@ -78,11 +85,9 @@ Wicket.WUPB.prototype = {
 		
 		Wicket.Event.add(this.iframe, "load", this.update.bind(this));
 		this.iframe.src = URL; 
-		
 	},
 
 	update : function() {
-		
 		if(this.iframe.contentDocument){
 			var responseAsText = this.iframe.contentDocument.body.innerHTML;
 		}else{
@@ -92,45 +97,20 @@ Wicket.WUPB.prototype = {
 		
 		var update = responseAsText.split('|');
 
-		var completed_upload_size = update[2];
-		var total_upload_size = update[3];
 		var progressPercent = update[1];
-		var transferRate = update[4];
-		var timeRemaining = update[5];
+		var status = update[2];
 
-		if ((timeRemaining != "") && (completed_upload_size != 0)) {
+		this.setPercent(progressPercent);
+		this.setStatus( status );
 
-			Wicket.$(this.def.barid).firstChild.firstChild.style.width = progressPercent + '%';
-			this.setStatus( progressPercent
-				+ '% finished, ' + completed_upload_size + ' of '
-				+ total_upload_size + ' at ' + transferRate + "; "
-				+ timeRemaining );
-
-		}
-		
 		this.iframe.parentNode.removeChild(this.iframe);
 		this.iframe = null;
 		
-		if (progressPercent == 100 || timeRemaining == 0) {
-			if (progressPercent == 100) {
-				Wicket.$(this.def.barid).firstChild.firstChild.style.width = '100%';
-			}
-			wicketHide(this.def.statusid);
-			wicketHide(this.def.barid);
+		if (progressPercent == 100) {
+			wicketHide(this.statusid);
+			wicketHide(this.barid);
 		} else {
 			this.scheduleUpdate();
 		}
-	}
-};
-
-Wicket.WUPB.Def = Wicket.Class.create();
-
-Wicket.WUPB.Def.prototype = {
-	initialize : function(formid, statusid, barid, url, fileid) {
-		this.formid = formid;
-		this.statusid = statusid;
-		this.barid = barid;
-		this.url = url;
-		this.fileid = fileid;
 	}
 };

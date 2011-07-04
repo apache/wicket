@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
+import java.util.Locale;
+
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.time.Duration;
@@ -63,19 +65,23 @@ public class UploadInfo implements IClusterable
 	}
 
 	/**
+	 * @param locale
+	 *            locale for formatting
 	 * @return human readable string of bytes uploaded so far
 	 */
-	public String getBytesUploadedString()
+	public String getBytesUploadedString(Locale locale)
 	{
-		return Bytes.bytes(bytesUploaded).toString();
+		return Bytes.bytes(bytesUploaded).toString(locale);
 	}
 
 	/**
+	 * @param locale
+	 *            locale for formatting
 	 * @return human readable string of total number of bytes
 	 */
-	public String getTotalBytesString()
+	public String getTotalBytesString(Locale locale)
 	{
-		return Bytes.bytes(totalBytes).toString();
+		return Bytes.bytes(totalBytes).toString(locale);
 	}
 
 	/**
@@ -112,11 +118,13 @@ public class UploadInfo implements IClusterable
 	}
 
 	/**
+	 * @param locale
+	 *            locale for formatting
 	 * @return transfer rate in a human readable string
 	 */
-	public String getTransferRateString()
+	public String getTransferRateString(Locale locale)
 	{
-		return Bytes.bytes(getTransferRateBPS()).toString() + "/s";
+		return Bytes.bytes(getTransferRateBPS()).toString(locale) + "/s";
 	}
 
 	/**
@@ -147,11 +155,13 @@ public class UploadInfo implements IClusterable
 	}
 
 	/**
+	 * @param locale
+	 *            locale for formatting
 	 * @return estimate of the remaining time in a human readable string
 	 */
-	public String getRemainingTimeString()
+	public String getRemainingTimeString(Locale locale)
 	{
-		return Duration.milliseconds(getRemainingMilliseconds()).toString();
+		return Duration.milliseconds(getRemainingMilliseconds()).toString(locale);
 	}
 
 

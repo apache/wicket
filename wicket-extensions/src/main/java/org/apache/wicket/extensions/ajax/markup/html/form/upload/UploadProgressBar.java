@@ -16,8 +16,7 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.form.upload;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.util.Formatter;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -58,6 +57,10 @@ import org.slf4j.LoggerFactory;
  * </code>
  * </pre>
  * 
+ * Implementation detail: Despite being located in an Ajax package, the progress communication is
+ * not done via Ajax but with an IFrame instead due to a bug in Webkit based browsers, see
+ * WICKET-3202.
+ * 
  * @author Andrew Lombardi
  */
 public class UploadProgressBar extends Panel
@@ -84,7 +87,7 @@ public class UploadProgressBar extends Panel
 		@Override
 		public String toString()
 		{
-			return "Ajax UploadProgressBar initializer";
+			return "UploadProgressBar initializer";
 		}
 
 		/** {@inheritDoc} */
@@ -133,21 +136,23 @@ public class UploadProgressBar extends Panel
 	 *            component id (not null)
 	 * @param form
 	 *            form that is submitted (not null)
-	 * @param fileUploadField
+	 * @param uploadField
 	 *            the file upload field to check for a file upload, or null to display the upload
 	 *            field for every submit of the given form
 	 */
-	public UploadProgressBar(final String id, final Form<?> form,
-		final FileUploadField fileUploadField)
+	public UploadProgressBar(final String id, final Form<?> form, final FileUploadField uploadField)
 	{
 		super(id);
-		uploadField = fileUploadField;
+
+		this.uploadField = uploadField;
+		if (uploadField != null)
+		{
+			uploadField.setOutputMarkupId(true);
+		}
+
 		this.form = form;
 		form.setOutputMarkupId(true);
-		if (fileUploadField != null)
-		{
-			fileUploadField.setOutputMarkupId(true);
-		}
+
 		setRenderBodyOnly(true);
 
 		barDiv = new WebMarkupContainer("bar");
@@ -199,14 +204,14 @@ public class UploadProgressBar extends Panel
 
 		final String uploadFieldId = (uploadField == null) ? "" : uploadField.getMarkupId();
 
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		PrintStream js = new PrintStream(out);
+		final String status = UploadStatusResource.getStatus("statusStarting", getLocale());
 
-		js.printf("  var def=new Wicket.WUPB.Def('%s', '%s', '%s', '%s','%s');", getMarkupId(),
-			statusDiv.getMarkupId(), barDiv.getMarkupId(), urlFor(ref, null), uploadFieldId);
-		js.printf(" new Wicket.WUPB(def).bind('%s');", getCallbackForm().getMarkupId());
-
-		response.renderOnDomReadyJavaScript(new String(out.toByteArray()));
+		StringBuilder builder = new StringBuilder(128);
+		Formatter formatter = new Formatter(builder);
+		formatter.format("new Wicket.WUPB('%s', '%s', '%s', '%s', '%s', '%s').bind('%s')",
+			getMarkupId(), statusDiv.getMarkupId(), barDiv.getMarkupId(), urlFor(ref, null),
+			uploadFieldId, status, getCallbackForm().getMarkupId());
+		response.renderOnDomReadyJavaScript(builder.toString());
 	}
 
 	/**

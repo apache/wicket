@@ -16,12 +16,17 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.form.upload;
 
+import java.text.MessageFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequestImpl;
 import org.apache.wicket.protocol.http.servlet.UploadInfo;
 import org.apache.wicket.request.resource.AbstractResource;
-
 
 /**
  * A resource that prints out basic statistics about the current upload. This resource is used to
@@ -39,24 +44,27 @@ class UploadStatusResource extends AbstractResource
 	@Override
 	protected ResourceResponse newResourceResponse(final Attributes attributes)
 	{
-		ResourceResponse response = new ResourceResponse();
-		response.setContentType("text/html");
+		// Determine encoding
+		final String encoding = Application.get()
+			.getRequestCycleSettings()
+			.getResponseRequestEncoding();
 
-		final String content = getStatus(attributes);
+		ResourceResponse response = new ResourceResponse();
+		response.setContentType("text/html; charset=" + encoding);
+
+		final String status = getStatus(attributes);
 		response.setWriteCallback(new WriteCallback()
 		{
 			@Override
 			public void writeData(final Attributes attributes)
 			{
-				attributes.getResponse().write(content);
+				attributes.getResponse().write("<html><body>|");
+				attributes.getResponse().write(status);
+				attributes.getResponse().write("|</body></html>");
 			}
 		});
 
-		response.setContentLength(content.getBytes().length);
-
 		return response;
-
-
 	}
 
 	/**
@@ -72,17 +80,35 @@ class UploadStatusResource extends AbstractResource
 		String status = null;
 		if ((info == null) || (info.getTotalBytes() < 1))
 		{
-			status = "0|0|0|0|0";
+			status = "100|";
 		}
 		else
 		{
-			status = "" + info.getPercentageComplete() + "|" + info.getBytesUploadedString() + "|" +
-				info.getTotalBytesString() + "|" + info.getTransferRateString() + "|" +
-				info.getRemainingTimeString();
+			Locale locale = Session.get().getLocale();
+
+			String pattern = getStatus("statusUpdate", locale);
+
+			status = info.getPercentageComplete() +
+				"|" +
+				MessageFormat.format(pattern, info.getPercentageComplete(),
+					info.getBytesUploadedString(locale), info.getTotalBytesString(locale),
+					info.getTransferRateString(locale), info.getRemainingTimeString(locale));
 		}
-		status = "<html><body>|" + status + "|</body></html>";
 		return status;
 	}
 
-
+	/**
+	 * Get a status message for the given key.
+	 * 
+	 * @param key
+	 *            message key
+	 * @param locale
+	 *            locale for message
+	 * @return status message
+	 */
+	static String getStatus(String key, Locale locale)
+	{
+		return ResourceBundle.getBundle(UploadStatusResource.class.getName(), locale)
+			.getString(key);
+	}
 }
