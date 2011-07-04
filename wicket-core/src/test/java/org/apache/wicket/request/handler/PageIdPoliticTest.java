@@ -56,16 +56,27 @@ public class PageIdPoliticTest extends TestCase
 	 * 
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3667">WICKET-3667</a>
 	 */
-	public void testPageNotTouchedInAjaxRequest()
+	public void testPageGetsTouchedInAjaxRequest()
 	{
 		TestPage testPage = new TestPage();
-		Url ajaxUrl = Url.parse(testPage.eventBehavior.getCallbackUrl().toString(),
-			Charset.forName(tester.getRequest().getCharacterEncoding()));
 		tester.startPage(TestPage.class);
 		int referenceStoreCount = storeCount;
-		tester.executeAjaxUrl(ajaxUrl);
+		tester.executeAjaxUrl(testPage.getAjaxUrl(tester.getRequest().getCharacterEncoding()));
 		// the page should be stored even for ajax requests
 		assertEquals(referenceStoreCount + 1, storeCount);
+	}
+
+	/**
+	 * 
+	 */
+	public void testPageIdDontGetIncreasedInAjaxRequest()
+	{
+		TestPage testPage = new TestPage();
+		tester.startPage(testPage);
+		String testPageId = testPage.getId();
+		tester.executeAjaxUrl(testPage.getAjaxUrl(tester.getRequest().getCharacterEncoding()));
+		assertEquals(testPageId, testPage.getId());
+		assertTrue(testPage.ajaxCallbackExecuted);
 	}
 
 	@Override
@@ -112,6 +123,7 @@ public class PageIdPoliticTest extends TestCase
 		/** */
 		private static final long serialVersionUID = 1L;
 		AjaxEventBehavior eventBehavior;
+		boolean ajaxCallbackExecuted;
 
 		/**
 		 * Construct.
@@ -128,9 +140,19 @@ public class PageIdPoliticTest extends TestCase
 				@Override
 				protected void onEvent(AjaxRequestTarget target)
 				{
+					ajaxCallbackExecuted = true;
 				}
 			});
 			add(component);
+		}
+
+		/**
+		 * @param encoding
+		 * @return ajaxUrl
+		 */
+		public Url getAjaxUrl(String encoding)
+		{
+			return Url.parse(eventBehavior.getCallbackUrl().toString(), Charset.forName(encoding));
 		}
 
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,

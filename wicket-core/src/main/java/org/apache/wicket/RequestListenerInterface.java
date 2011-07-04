@@ -25,11 +25,9 @@ import java.util.Map;
 
 import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.request.Request;
 import org.apache.wicket.request.RequestHandlerStack.ReplaceHandlerException;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.handler.ListenerInvocationNotAllowedException;
-import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -251,12 +249,6 @@ public class RequestListenerInterface
 		// during the invocation of the listener and thus lose its parent
 		Page page = component.getPage();
 
-		if (isAjax(component))
-		{
-			// do not increment page id for ajax requests
-			frozen = page.setFreezePageId(true);
-		}
-
 		// initialization is required for stateless pages
 		if (!page.isInitialized())
 		{
@@ -293,21 +285,6 @@ public class RequestListenerInterface
 			}
 		}
 	}
-
-	private boolean isAjax(Component component)
-	{
-		boolean isAjax = false;
-
-		Request request = component.getRequest();
-		if (request instanceof WebRequest)
-		{
-			WebRequest webRequest = (WebRequest)request;
-			isAjax = webRequest.isAjax();
-		}
-
-		return isAjax;
-	}
-
 
 	/**
 	 * Method to call to register this interface for use

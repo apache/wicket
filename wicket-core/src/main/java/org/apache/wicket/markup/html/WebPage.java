@@ -26,9 +26,11 @@ import org.apache.wicket.markup.renderStrategy.AbstractHeaderRenderStrategy;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.IPageRequestHandler;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.response.StringResponse;
@@ -306,4 +308,17 @@ public class WebPage extends Page
 		return new BookmarkablePageLink<Void>(id, getApplication().getHomePage());
 	}
 
+	/**
+	 * Prevents page from get dirt inside an AJAX request.
+	 */
+	@Override
+	public final void dirty(boolean isInitialization)
+	{
+		Request request = getRequest();
+		if (request instanceof WebRequest && ((WebRequest)request).isAjax())
+		{
+			return;
+		}
+		super.dirty(isInitialization);
+	}
 }

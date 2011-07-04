@@ -309,7 +309,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @param isInitialization
 	 *            a flag whether this is a page instantiation
 	 */
-	public final void dirty(final boolean isInitialization)
+	public void dirty(final boolean isInitialization)
 	{
 		checkHierarchyChange(this);
 
