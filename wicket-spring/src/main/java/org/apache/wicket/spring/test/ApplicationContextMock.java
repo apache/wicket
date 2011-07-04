@@ -97,7 +97,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	/**
 	 * @see org.springframework.beans.factory.BeanFactory#getBean(java.lang.String, java.lang.Class)
 	 */
-	@SuppressWarnings({"unchecked"})
+	@SuppressWarnings({ "unchecked" })
 	public <T> T getBean(String name, Class<T> requiredType) throws BeansException
 	{
 		Object bean = getBean(name);
@@ -111,7 +111,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	/**
 	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeansOfType(java.lang.Class)
 	 */
-	@SuppressWarnings({"unchecked"})
+	@SuppressWarnings({ "unchecked" })
 	public <T> Map<String, T> getBeansOfType(Class<T> type) throws BeansException
 	{
 		final Map<String, T> found = new HashMap<String, T>();
@@ -130,23 +130,23 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	public <T> T getBean(Class<T> requiredType) throws BeansException
 	{
 		Iterator<T> beans = getBeansOfType(requiredType).values().iterator();
-		
-		if(beans.hasNext() == false)
+
+		if (beans.hasNext() == false)
 		{
-			throw new NoSuchBeanDefinitionException(
-				"bean of required type " + requiredType + " not found");
+			throw new NoSuchBeanDefinitionException("bean of required type " + requiredType +
+				" not found");
 		}
 		final T bean = beans.next();
-		
-		if(beans.hasNext() == false)
+
+		if (beans.hasNext() == false)
 		{
-			throw new NoSuchBeanDefinitionException(
-				"more than one bean of required type " + requiredType + " found");
+			throw new NoSuchBeanDefinitionException("more than one bean of required type " +
+				requiredType + " found");
 		}
 		return bean;
 	}
 
-	public Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> annotationType) 
+	public Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> annotationType)
 		throws BeansException
 	{
 		final Map<String, Object> found = new HashMap<String, Object>();
@@ -170,27 +170,27 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	{
 		// lookup annotation type on class
 		A annotation = cls.getAnnotation(annotationType);
-		
+
 		// lookup annotation type on superclass
-		if(annotation == null && cls.getSuperclass() != null)
+		if (annotation == null && cls.getSuperclass() != null)
 		{
-		    annotation = findAnnotationOnClass(cls.getSuperclass(), annotationType);
+			annotation = findAnnotationOnClass(cls.getSuperclass(), annotationType);
 		}
 
 		// lookup annotation type on interfaces
-		if(annotation == null)
+		if (annotation == null)
 		{
 			for (Class<?> intfClass : cls.getInterfaces())
 			{
 				annotation = findAnnotationOnClass(intfClass, annotationType);
-			
-				if(annotation != null)
+
+				if (annotation != null)
 				{
 					break;
 				}
 			}
 		}
-		
+
 		return annotation;
 	}
 
@@ -255,7 +255,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	 * @see org.springframework.beans.factory.ListableBeanFactory#
 	 *      getBeanNamesForType(java.lang.Class)
 	 */
-	@SuppressWarnings({"unchecked"})
+	@SuppressWarnings({ "unchecked" })
 	public String[] getBeanNamesForType(final Class type)
 	{
 		ArrayList<String> names = new ArrayList<String>();
@@ -275,17 +275,18 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	 * @see org.springframework.beans.factory.ListableBeanFactory#
 	 *      getBeanNamesForType(java.lang.Class, boolean, boolean)
 	 */
-	@SuppressWarnings({"unchecked"})
-	public String[] getBeanNamesForType(Class type, boolean includeNonSingletons, boolean allowEagerInit)
+	@SuppressWarnings({ "unchecked" })
+	public String[] getBeanNamesForType(Class type, boolean includeNonSingletons,
+		boolean allowEagerInit)
 	{
 		throw new UnsupportedOperationException();
 	}
-	
+
 	/**
 	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeansOfType(java.lang.Class,
 	 *      boolean, boolean)
 	 */
-	public <T> Map<String, T> getBeansOfType(Class<T> type, boolean includeNonSingletons, 
+	public <T> Map<String, T> getBeansOfType(Class<T> type, boolean includeNonSingletons,
 		boolean allowEagerInit) throws BeansException
 	{
 		throw new UnsupportedOperationException();
@@ -351,7 +352,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 		throw new UnsupportedOperationException();
 	}
 
-	
+
 	/**
 	 * @see org.springframework.context.MessageSource#getMessage(org.springframework
 	 *      .context.MessageSourceResolvable, java.util.Locale)
@@ -435,7 +436,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	 * @see org.springframework.beans.factory.BeanFactory#isTypeMatch(java.lang.String,
 	 *      java.lang.Class)
 	 */
-	@SuppressWarnings({"unchecked"})
+	@SuppressWarnings({ "unchecked" })
 	public boolean isTypeMatch(final String name, final Class targetType)
 		throws NoSuchBeanDefinitionException
 	{
