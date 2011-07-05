@@ -57,7 +57,7 @@ import org.apache.wicket.model.IModel;
  * </pre>
  * 
  * To expand a bit: the repeater itself produces no markup, instead every direct child inherits the
- * entire markup of the repeater. In the example above reeaters's markup is:
+ * entire markup of the repeater. In the example above repeaters's markup is:
  * 
  * <pre>
  *  &lt;li wicket:id=&quot;repeater&quot;&gt;&lt;/li&gt;
