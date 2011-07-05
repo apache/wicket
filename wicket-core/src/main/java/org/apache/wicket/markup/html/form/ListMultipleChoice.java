@@ -22,15 +22,11 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.wicket.MetaDataKey;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -52,9 +48,6 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	{
 		private static final long serialVersionUID = 1L;
 	};
-
-	/** Log. */
-	private static final Logger log = LoggerFactory.getLogger(ListMultipleChoice.class);
 
 	/** The default maximum number of rows to display. */
 	private static int defaultMaxRows = 8;
@@ -367,52 +360,13 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	}
 
 	/**
-	 * If the model object exists, it is assumed to be a Collection, and it is modified in-place.
-	 * Then {@link Model#setObject(Object)} is called with the same instance: it allows the Model to
-	 * be notified of changes even when {@link Model#getObject()} returns a different
-	 * {@link Collection} at every invocation.
-	 * 
-	 * @see FormComponent#updateModel()
-	 * @throws UnsupportedOperationException
-	 *             if the model object Collection cannot be modified
+	 * See {@link FormComponent#updateCollectionModel(FormComponent)} for details on how the model
+	 * is updated.
 	 */
 	@Override
 	public void updateModel()
 	{
-		Collection<T> selectedValues = getModelObject();
-		if (selectedValues != null)
-		{
-			if (getDefaultModelObject() != selectedValues)
-			{
-				throw new WicketRuntimeException(
-					"Updating a ListMultipleChoice works by modifying the underlying model object in-place, so please make sure that getObject() always returns the same Collection instance!");
-			}
-
-			modelChanging();
-			selectedValues.clear();
-			final Collection<T> converted = getConvertedInput();
-			if (converted != null)
-			{
-				selectedValues.addAll(converted);
-			}
-			modelChanged();
-			// call model.setObject()
-			try
-			{
-				getModel().setObject(selectedValues);
-			}
-			catch (Exception e)
-			{
-				// ignore this exception because it could be that there
-				// is not setter for this collection.
-				log.info("no setter for the property attached to " + this);
-			}
-		}
-		else
-		{
-			selectedValues = new ArrayList<T>(getConvertedInput());
-			setDefaultModelObject(selectedValues);
-		}
+		FormComponent.updateCollectionModel(this);
 	}
 
 	/**

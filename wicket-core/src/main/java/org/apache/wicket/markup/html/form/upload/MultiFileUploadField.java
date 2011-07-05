@@ -29,6 +29,7 @@ import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
@@ -291,33 +292,13 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
+	 * See {@link FormComponent#updateCollectionModel(FormComponent)} for details on how the model
+	 * is updated.
 	 */
 	@Override
 	public void updateModel()
 	{
-		final Collection<FileUpload> collection = getModelObject();
-
-		// figure out if there is an existing model object collection for us to
-		// reuse
-		if (collection == null)
-		{
-			// no existing collection, push the one we created
-			setDefaultModelObject(getConvertedInput());
-		}
-		else
-		{
-			// refresh the existing collection
-			collection.clear();
-			if (getConvertedInput() != null)
-			{
-				collection.addAll(getConvertedInput());
-			}
-
-			// push the collection in case the model is listening to
-			// setobject calls
-			setDefaultModelObject(collection);
-		}
+		FormComponent.updateCollectionModel(this);
 	}
 
 	/**

@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.form;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -37,6 +38,7 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IPropertyReflectionAwareModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Args;
@@ -466,7 +468,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * @see IValidatorAddListener
 	 * 
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings( { "rawtypes", "unchecked" })
 	public final FormComponent<T> add(final IValidator<? super T> validator)
 	{
 		if (validator == null)
@@ -1493,5 +1495,55 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	public final void setModelObject(T object)
 	{
 		setDefaultModelObject(object);
+	}
+
+	/**
+	 * Update the model of a {@link FormComponent} containing a {@link Collection}.
+	 * 
+	 * If the model object does not yet exists, a new {@link ArrayList} is filled with the converted
+	 * input and used as the new model object. Otherwise the existing collection is modified
+	 * in-place, then {@link Model#setObject(Object)} is called with the same instance: it allows
+	 * the Model to be notified of changes even when {@link Model#getObject()} returns a different
+	 * {@link Collection} at every invocation.
+	 * 
+	 * @param <S>
+	 *            collection type
+	 * @param formComponent
+	 *            the form component to update
+	 * @see FormComponent#updateModel()
+	 * @throws UnsupportedOperationException
+	 *             if the existing model object Collection cannot be modified
+	 */
+	protected static <S> void updateCollectionModel(FormComponent<Collection<S>> formComponent)
+	{
+		Collection<S> convertedInput = formComponent.getConvertedInput();
+
+		Collection<S> collection = formComponent.getModelObject();
+		if (collection == null)
+		{
+			collection = new ArrayList<S>(convertedInput);
+			formComponent.setDefaultModelObject(collection);
+		}
+		else
+		{
+			formComponent.modelChanging();
+			collection.clear();
+			if (convertedInput != null)
+			{
+				collection.addAll(convertedInput);
+			}
+			formComponent.modelChanged();
+
+			try
+			{
+				formComponent.getModel().setObject(collection);
+			}
+			catch (Exception e)
+			{
+				// ignore this exception because it could be that there
+				// is not setter for this collection.
+				logger.info("no setter for the property attached to " + formComponent);
+			}
+		}
 	}
 }

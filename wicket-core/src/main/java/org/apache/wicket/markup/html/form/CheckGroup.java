@@ -23,7 +23,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.lang.Generics;
@@ -152,43 +151,13 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	}
 
 	/**
-	 * If the model object exists, it is assumed to be a Collection, and it is modified in-place.
-	 * Then {@link Model#setObject(Object)} is called with the same instance: it allows the Model to
-	 * be notified of changes even when {@link Model#getObject()} returns a different
-	 * {@link Collection} at every invocation.
-	 * 
-	 * @see FormComponent#updateModel()
-	 * @throws UnsupportedOperationException
-	 *             if the model object Collection cannot be modified
+	 * See {@link FormComponent#updateCollectionModel(FormComponent)} for details on how the model
+	 * is updated.
 	 */
 	@Override
 	public void updateModel()
 	{
-		Collection<T> collection = getModelObject();
-		if (collection == null)
-		{
-			collection = getConvertedInput();
-			setDefaultModelObject(collection);
-		}
-		else
-		{
-			modelChanging();
-			collection.clear();
-			collection.addAll(getConvertedInput());
-			modelChanged();
-
-			// call model.setObject()
-			try
-			{
-				getModel().setObject(collection);
-			}
-			catch (Exception e)
-			{
-				// ignore this exception because it could be that there
-				// is not setter for this collection.
-				log.info("no setter for the property attached to " + this);
-			}
-		}
+		FormComponent.updateCollectionModel(this);
 	}
 
 	@Override
