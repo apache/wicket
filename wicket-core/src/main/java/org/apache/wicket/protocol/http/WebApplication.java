@@ -361,6 +361,17 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
+	 * Unregisters all {@link IRequestMapper}s which would match on a this path
+	 * 
+	 * @param path
+	 *            the path to unmount
+	 */
+	public final void unmount(final String path)
+	{
+		getRootRequestMapperAsCompound().unmount(path);
+	}
+
+	/**
 	 * Partly unmounts/ignores a path that normally would map to another mount path. Like
 	 * mount("/mypage", MyPage.class); and then "/mypage/arealdir" should be ignored. This can be
 	 * done by calling unMount("/mypage/arealdir");
