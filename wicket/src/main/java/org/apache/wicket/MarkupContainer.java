@@ -629,7 +629,7 @@ public abstract class MarkupContainer extends Component
 					// Do not call remove() because the state change would than be
 					// recorded twice.
 					child.internalOnRemove();
-					child.detachModel();
+					child.detach();
 					child.setParent(null);
 				}
 			}
