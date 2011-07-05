@@ -16,12 +16,15 @@
  */
 package org.apache.wicket.application;
 
-import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -130,7 +133,10 @@ public final class DefaultClassResolver implements IClassResolver
 	 */
 	public Iterator<URL> getResources(String name)
 	{
-		HashSet<URL> loadedFiles = new HashSet<URL>();
+		List<URL> resultList = new ArrayList<URL>();
+
+		// URIs should be used instead of URLs as Set keys. See WICKET-3867.
+		HashSet<URI> loadedFiles = new HashSet<URI>();
 		try
 		{
 			// Try the classloader for the wicket jar/bundle
@@ -144,30 +150,39 @@ public final class DefaultClassResolver implements IClassResolver
 			// Try the context class loader
 			resources = Thread.currentThread().getContextClassLoader().getResources(name);
 			loadResources(resources, loadedFiles);
+
+			for (URI uri : loadedFiles)
+			{
+				resultList.add(uri.toURL());
+			}
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
 			throw new WicketRuntimeException(e);
 		}
 
-		return loadedFiles.iterator();
+		return resultList.iterator();
 	}
 
 	/**
 	 * 
 	 * @param resources
 	 * @param loadedFiles
+	 * @throws URISyntaxException
+	 *             if URL.toURI() throws
 	 */
-	private void loadResources(Enumeration<URL> resources, Set<URL> loadedFiles)
+	private void loadResources(Enumeration<URL> resources, Set<URI> loadedFiles)
+		throws URISyntaxException
 	{
 		if (resources != null)
 		{
 			while (resources.hasMoreElements())
 			{
 				final URL url = resources.nextElement();
-				if (!loadedFiles.contains(url))
+				URI uri = url.toURI();
+				if (!loadedFiles.contains(uri))
 				{
-					loadedFiles.add(url);
+					loadedFiles.add(uri);
 				}
 			}
 		}
