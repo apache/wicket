@@ -23,6 +23,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.settings.IResourceSettings;
+import org.apache.wicket.util.collections.ReverseListIterator;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,13 +143,14 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 
 		// Check against the pattern
 		boolean hit = false;
-		for (SearchPattern pattern : this.pattern)
+		for (SearchPattern pattern : new ReverseListIterator<SearchPattern>(this.pattern))
 		{
 			if ((pattern != null) && pattern.isActive())
 			{
 				if (pattern.matches(path))
 				{
 					hit = pattern.isInclude();
+					break;
 				}
 			}
 		}
