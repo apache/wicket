@@ -464,10 +464,10 @@ public class AjaxEditableLabel<T> extends Panel
 	protected void onError(final AjaxRequestTarget target)
 	{
 		Serializable errorMessage = editor.getFeedbackMessage().getMessage();
-		if (errorMessage instanceof String)
+		if (errorMessage != null)
 		{
 			target.appendJavaScript("window.status='" +
-				JavaScriptUtils.escapeQuotes((String)errorMessage) + "';");
+				JavaScriptUtils.escapeQuotes(errorMessage.toString()) + "';");
 		}
 		target.appendJavaScript("{var el=wicketGet('" + editor.getMarkupId() +
 			"'); el.select(); el.focus();}");
