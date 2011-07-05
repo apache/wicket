@@ -22,9 +22,13 @@ import junit.framework.TestCase;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.model.IDetachable;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.IValidator;
 
 /**
  * 
@@ -69,6 +73,31 @@ public class FormComponentTest extends TestCase
 		assertEquals("field2", page.field2.getDefaultLabel());
 	}
 
+	public void testValidatorsDetach()
+	{
+		class TestValidator<T> implements IValidator<T>, IDetachable
+		{
+			boolean detached = false;
+
+			public void detach()
+			{
+				detached = true;
+			}
+
+			public void validate(IValidatable<T> validatable)
+			{
+			}
+		}
+
+		TextField<String> field = new TextField<String>("s", Model.of(""));
+		TestValidator<String> v1 = new TestValidator();
+		TestValidator<String> v2 = new TestValidator();
+		field.add(v1).add(v2);
+		field.detach();
+		assertTrue(v1.detached);
+		assertTrue(v2.detached);
+	}
+
 	@Override
 	protected void tearDown() throws Exception
 	{
@@ -95,7 +124,5 @@ public class FormComponentTest extends TestCase
 			return new StringResourceStream(
 				"<html><body><form wicket:id='form'><input wicket:id='field1' type='text'/><input wicket:id='field2' type='text'/></form></body></html>");
 		}
-
-
 	}
 }

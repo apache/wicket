@@ -22,6 +22,8 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.form.validation.IFormValidator;
+import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 
@@ -100,6 +102,37 @@ public class FormTest extends WicketTestCase
 		tester.startPage(TestPage.class);
 		tester.newFormTester("form").submit();
 		tester.assertRenderedPage(TestPage.class);
+	}
+
+	public void testValidatorsDetach()
+	{
+		class TestValidator implements IFormValidator, IDetachable
+		{
+			boolean detached = false;
+
+			public void detach()
+			{
+				detached = true;
+			}
+
+			public FormComponent<?>[] getDependentFormComponents()
+			{
+				return new FormComponent[] { };
+			}
+
+			public void validate(Form<?> form)
+			{
+			}
+		}
+
+		Form<?> form = new Form<Void>("form");
+		TestValidator v1 = new TestValidator();
+		TestValidator v2 = new TestValidator();
+		form.add(v1);
+		form.add(v2);
+		form.detach();
+		assertTrue(v1.detached);
+		assertTrue(v2.detached);
 	}
 
 	/** */
