@@ -50,6 +50,15 @@ public class HttpHeaderCollectionTest
 
 		headers.removeHeader(" x-tesT ");
 		assertEquals(1, headers.getCount());
+
+		// empty header values are valid (RFC2616)
+		headers.setHeader("foobaz", "");
+		assertEquals("", headers.getHeader("foobaz"));
+
+		// empty header values are valid (RFC2616)
+		headers.setHeader("foobaz", "     ");
+		assertEquals("", headers.getHeader("foobaz"));
+		
 	}
 
 	@Test
