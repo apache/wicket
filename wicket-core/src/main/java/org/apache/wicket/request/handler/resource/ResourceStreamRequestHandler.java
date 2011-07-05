@@ -23,6 +23,7 @@ import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +42,7 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 	 * with web requests.
 	 */
 	private String fileName;
-	private ContentDisposition contentDisposition = ContentDisposition.INLINE;
+	private ContentDisposition contentDisposition;
 
 	/** the resource stream for the response. */
 	private final IResourceStream resourceStream;
@@ -74,7 +75,6 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 
 	public void detach(IRequestCycle requestCycle)
 	{
-
 	}
 
 	/**
@@ -108,7 +108,12 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 
 		ResourceStreamResource resource = new ResourceStreamResource(resourceStream);
 		resource.setFileName(fileName);
-		resource.setContentDisposition(contentDisposition);
+		if (contentDisposition != null)
+			resource.setContentDisposition(contentDisposition);
+		else
+			resource.setContentDisposition(Strings.isEmpty(fileName) ? ContentDisposition.INLINE
+				: ContentDisposition.ATTACHMENT);
+
 		resource.respond(attributes);
 	}
 
@@ -189,6 +194,4 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 		this.contentDisposition = contentDisposition;
 		return this;
 	}
-
-
 }
