@@ -54,17 +54,27 @@ public interface IRequestLogger
 	/**
 	 * @return Collection of live Sessions Data
 	 */
-	public SessionData[] getLiveSessions();
+	SessionData[] getLiveSessions();
 
 	/**
 	 * @return The current active requests
 	 */
-	public int getCurrentActiveRequestCount();
+	int getCurrentActiveRequestCount();
 
 	/**
 	 * @return The peak active requests
 	 */
-	public int getPeakActiveRequestCount();
+	int getPeakActiveRequestCount();
+
+	/**
+	 * @return The number of requests per minute.
+	 */
+	long getRequestsPerMinute();
+
+	/**
+	 * @return The average request time.
+	 */
+	long getAverageRequestTime();
 
 	/**
 	 * called when the session is created and has an id. (for http it means that the http session is
@@ -226,19 +236,34 @@ public interface IRequestLogger
 			return sessionId;
 		}
 
-		void addTimeTaken(long time)
+		/**
+		 * Adds {@code time} to the total server time.
+		 * 
+		 * @param time
+		 */
+		public void addTimeTaken(long time)
 		{
 			lastActive = System.currentTimeMillis();
 			numberOfRequests++;
 			totalTimeTaken += time;
 		}
 
-		void setSessionInfo(Object sessionInfo)
+		/**
+		 * Sets additional session info (e.g. logged in user).
+		 * 
+		 * @param sessionInfo
+		 */
+		public void setSessionInfo(Object sessionInfo)
 		{
 			this.sessionInfo = sessionInfo;
 		}
 
-		void setSessionSize(long size)
+		/**
+		 * Sets the recorded session size.
+		 * 
+		 * @param size
+		 */
+		public void setSessionSize(long size)
 		{
 			sessionSize = size;
 		}
