@@ -94,6 +94,8 @@ public class MarkupContainerTest extends WicketTestCase
 		assertTrue(b.get("..") == a);
 		assertTrue(e.get("..:..") == a);
 		assertTrue(d.get("..:..:c:e:f") == f);
+		assertTrue(e.get("..:d:..:e:f") == f);
+		assertTrue(e.get("..:d:..:..") == a);
 
 		// invalid gets
 
