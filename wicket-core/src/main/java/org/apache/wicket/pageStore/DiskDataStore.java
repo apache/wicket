@@ -177,7 +177,7 @@ public class DiskDataStore implements IDataStore
 	 * @param create
 	 * @return the session entry
 	 */
-	private SessionEntry getSessionEntry(final String sessionId, final boolean create)
+	protected SessionEntry getSessionEntry(final String sessionId, final boolean create)
 	{
 		if (!create)
 		{
@@ -275,7 +275,7 @@ public class DiskDataStore implements IDataStore
 			this.sessionId = sessionId;
 		}
 
-		private PageWindowManager getManager()
+		public PageWindowManager getManager()
 		{
 			if (manager == null)
 			{

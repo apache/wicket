@@ -431,6 +431,8 @@ public class PageWindowManager implements Serializable
 	public synchronized List<PageWindow> getLastPageWindows(int count)
 	{
 		List<PageWindow> result = new ArrayList<PageWindow>();
+
+		// start from current index to 0
 		int currentIndex = indexPointer;
 
 		do
@@ -440,16 +442,20 @@ public class PageWindowManager implements Serializable
 				break;
 			}
 
-			PageWindowInternal window = windows.get(currentIndex);
-			if (window.pageId != -1)
+			if (currentIndex < windows.size())
 			{
-				result.add(new PageWindow(window));
+				PageWindowInternal window = windows.get(currentIndex);
+				if (window.pageId != -1)
+				{
+					result.add(new PageWindow(window));
+				}
 			}
 
 			--currentIndex;
 			if (currentIndex == -1)
 			{
-				currentIndex = result.size() - 1;
+				// rewind to the last entry and collect all entries until current index
+				currentIndex = windows.size() - 1;
 			}
 		}
 		while (result.size() < count && currentIndex != indexPointer);
