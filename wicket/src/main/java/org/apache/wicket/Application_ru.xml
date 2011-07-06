@@ -48,4 +48,7 @@
 
 	<entry key="null">Выберите значение</entry>
 	<entry key="nullValid"></entry>
+	
+	<entry key="org.apache.wicket.mfu.caption.unlimited">Файлы:</entry>
+	<entry key="org.apache.wicket.mfu.caption.limited">Файлы (всего не больше ${max}): </entry>
 </properties>
