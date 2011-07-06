@@ -257,6 +257,8 @@ public abstract class Component
 
 	/** Separator for component paths */
 	public static final char PATH_SEPARATOR = ':';
+	/** Path segment that represents this component's parent */
+	public static final String PARENT_PATH = "..";
 
 	/**
 	 * Action used with IAuthorizationStrategy to determine whether a component and its children are

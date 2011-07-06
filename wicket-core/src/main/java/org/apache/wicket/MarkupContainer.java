@@ -348,19 +348,38 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @return The component at the path
 	 */
 	@Override
-	public final Component get(final String path)
+	public final Component get(String path)
 	{
 		// Reference to this container
-		if (path == null || path.trim().equals(""))
+		if (Strings.isEmpty(path))
 		{
 			return this;
 		}
 
-		// Get child's id, if any
-		final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
+		// process parent .. references
+
+		MarkupContainer container = this;
+
+		String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
+
+		while (Component.PARENT_PATH.equals(id))
+		{
+			container = container.getParent();
+			if (container == null)
+			{
+				return null;
+			}
+			path = path.length() == id.length() ? "" : path.substring(id.length() + 1);
+			id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
+		}
+
+		if (Strings.isEmpty(id))
+		{
+			return container;
+		}
 
 		// Get child by id
-		Component child = children_get(id);
+		Component child = container.children_get(id);
 
 		// Found child?
 		if (child != null)
