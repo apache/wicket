@@ -26,6 +26,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.util.lang.Args;
 
 /**
+ * A markup sourcing strategy suitable for Fragment components.
  * 
  * @author Juergen Donnerstag
  */
@@ -55,12 +56,17 @@ public class FragmentMarkupSourcingStrategy extends AbstractMarkupSourcingStrate
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Skip the body markup associated with the 'component'. The body markup is expected to be raw
+	 * markup only, not containing an wicket component. The body markup may serve documentary
+	 * purposes for the developer / designer.
+	 * <p>
+	 * Than search for the markup of the fragment, effectively replacing the original markup.
 	 */
 	@Override
 	public void onComponentTagBody(final Component component, final MarkupStream markupStream,
 		final ComponentTag openTag)
 	{
+		// Skip the body markup making sure it contains only raw markup
 		super.onComponentTagBody(component, markupStream, openTag);
 
 		// Get the fragments open tag
@@ -70,8 +76,7 @@ public class FragmentMarkupSourcingStrategy extends AbstractMarkupSourcingStrate
 		// if it is an open close tag, skip this fragment.
 		if (!fragmentOpenTag.isOpenClose())
 		{
-			// We'll completely ignore the fragments open tag. It'll not be
-			// rendered
+			// We'll completely ignore the fragments open tag. It'll not be rendered
 			stream.next();
 
 			// Render the body of the fragment
@@ -102,7 +107,7 @@ public class FragmentMarkupSourcingStrategy extends AbstractMarkupSourcingStrate
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Search for the child's markup in the fragment markup.
 	 */
 	@Override
 	public IMarkupFragment getMarkup(final MarkupContainer container, final Component child)

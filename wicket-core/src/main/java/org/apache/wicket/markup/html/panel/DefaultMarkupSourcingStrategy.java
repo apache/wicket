@@ -28,7 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This is a no-op sourcing strategy.
+ * This is a no-op sourcing strategy implementing the default behavior for most components.
  * 
  * @author Juergen Donnerstag
  */
@@ -56,14 +56,14 @@ public final class DefaultMarkupSourcingStrategy implements IMarkupSourcingStrat
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Nothing to add to the response by default
 	 */
 	public void onComponentTag(final Component component, final ComponentTag tag)
 	{
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Invoke the component's onComponentTagBody().
 	 */
 	public void onComponentTagBody(final Component component, final MarkupStream markupStream,
 		final ComponentTag openTag)
@@ -72,7 +72,7 @@ public final class DefaultMarkupSourcingStrategy implements IMarkupSourcingStrat
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Get the markup for the child component, which is assumed to be a child of 'container'.
 	 */
 	public IMarkupFragment getMarkup(final MarkupContainer container, final Component child)
 	{
@@ -154,7 +154,7 @@ public final class DefaultMarkupSourcingStrategy implements IMarkupSourcingStrat
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Empty: nothing will be added to the header by default
 	 */
 	public void renderHead(final Component component, HtmlHeaderContainer container)
 	{

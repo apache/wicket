@@ -20,10 +20,11 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
-import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.border.Border;
 
 /**
+ * The Border component's markup sourcing strategy
  * 
  * @author Juergen Donnerstag
  */
@@ -34,39 +35,20 @@ public class BorderMarkupSourcingStrategy extends AssociatedMarkupSourcingStrate
 	 */
 	public BorderMarkupSourcingStrategy()
 	{
+		super(Border.BORDER);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void onComponentTag(Component component, ComponentTag tag)
-	{
-		if (tag.isOpen() == false)
-		{
-			throw new MarkupException(
-				"The border tag must be an open tag. Open-close is not allowed: " + tag.toString());
-		}
-
-		super.onComponentTag(component, tag);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void onComponentTagBody(Component component, MarkupStream markupStream,
 		ComponentTag openTag)
 	{
-		// Render the associated markup
-		((MarkupContainer)component).renderAssociatedMarkup("border",
-			"Markup for a border component must begin a tag like '<wicket:border>'");
+		renderAssociatedMarkup(component);
 
 		markupStream.skipToMatchingCloseTag(openTag);
 	}
 
 	/**
-	 * Return null and thus use <code>component.getMarkup(child)</code> to provide the Markup
+	 * Return null and thus use <code>Border.getMarkup(child)</code> to provide the Markup
 	 */
 	@Override
 	public IMarkupFragment getMarkup(final MarkupContainer container, final Component child)

@@ -26,12 +26,21 @@ import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 
 /**
- * Implements boiler plate as needed by most markup sourcing strategies.
+ * Implements boilerplate as needed by many markup sourcing strategies.
  * 
  * @author Juergen Donnerstag
  */
 public abstract class AbstractMarkupSourcingStrategy implements IMarkupSourcingStrategy
 {
+	/**
+	 * Construct.
+	 */
+	public AbstractMarkupSourcingStrategy()
+	{
+	}
+
+	public abstract IMarkupFragment getMarkup(final MarkupContainer container, final Component child);
+
 	/**
 	 * Make sure we open up open-close tags to open-body-close
 	 */
@@ -44,7 +53,8 @@ public abstract class AbstractMarkupSourcingStrategy implements IMarkupSourcingS
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Skip the components body which is expected to be raw markup only (no wicket components). It
+	 * will be replaced by the associated markup.
 	 */
 	public void onComponentTagBody(final Component component, final MarkupStream markupStream,
 		final ComponentTag openTag)
@@ -55,19 +65,20 @@ public abstract class AbstractMarkupSourcingStrategy implements IMarkupSourcingS
 			markupStream.skipRawMarkup();
 			if (markupStream.get().closes(openTag) == false)
 			{
-				throw new MarkupException(markupStream, "Close tag not found for tag: " +
-					openTag.toString() + ". Component: " + component.toString());
+				throw new MarkupException(
+					markupStream,
+					"Close tag not found for tag: " +
+						openTag.toString() +
+						". For " +
+						component.getClass().getSimpleName() +
+						" Components only raw markup is allow in between the tags but not other Wicket Component." +
+						". Component: " + component.toString());
 			}
 		}
 	}
 
 	/**
-	 * {@inheritDoc}
-	 */
-	public abstract IMarkupFragment getMarkup(final MarkupContainer container, final Component child);
-
-	/**
-	 * {@inheritDoc}
+	 * Empty. Nothing to be added to the response by default.
 	 */
 	public void renderHead(final Component component, HtmlHeaderContainer container)
 	{

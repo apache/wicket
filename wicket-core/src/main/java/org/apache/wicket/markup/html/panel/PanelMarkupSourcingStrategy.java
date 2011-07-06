@@ -17,107 +17,98 @@
 package org.apache.wicket.markup.html.panel;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.IMarkupFragment;
-import org.apache.wicket.markup.MarkupNotFoundException;
+import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.WicketTag;
 
 /**
+ * The Panel components markup sourcing strategy.
+ * <p>
+ * The strategy supports two modes on how to handle the body markup. A typical Panel will ignore the
+ * body markup and replace it with the associated markup. The body markup is allowed to have raw
+ * markup only and no Wicket components. But e.g. a Border component will associate the body markup
+ * with a Body component which renders the markup including all any number of child Components.
  * 
  * @author Juergen Donnerstag
  */
 public class PanelMarkupSourcingStrategy extends AssociatedMarkupSourcingStrategy
 {
+	// False for Panel and true for Border components.
+	private final boolean allowWicketComponentsInBodyMarkup;
+
 	/**
 	 * Constructor.
+	 * 
+	 * @param wicketTagName
+	 *            The tag name for <code>&lt;wicket:'name' ..&gt;</code>. Please note that any such
+	 *            tag must have been registed via
+	 *            <code>WicketTagIdentifier.registerWellKnownTagName('name');</code>
+	 * @param allowWicketComponentsInBodyMarkup
+	 *            False for Panel and true for Border components. If Panel than the body markup
+	 *            should only contain raw markup, which is ignored (removed), but no Wicket
+	 *            Component. With Border components, the body markup will be associated with the
+	 *            Body Component.
 	 */
-	public PanelMarkupSourcingStrategy()
+	public PanelMarkupSourcingStrategy(final String wicketTagName,
+		final boolean allowWicketComponentsInBodyMarkup)
 	{
+		super(wicketTagName);
+
+		this.allowWicketComponentsInBodyMarkup = allowWicketComponentsInBodyMarkup;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Constructor.
+	 * 
+	 * @param allowWicketComponentsInBodyMarkup
+	 *            False for Panel and true for Border components. If Panel than the body markup
+	 *            should only contain raw markup, which is ignored (removed), but no Wicket
+	 *            Component. With Border components, the body markup will be associated with the
+	 *            Body Component.
+	 */
+	public PanelMarkupSourcingStrategy(final boolean allowWicketComponentsInBodyMarkup)
+	{
+		this(Panel.PANEL, allowWicketComponentsInBodyMarkup);
+	}
+
+	/**
+	 * Skip the panel's body markup which is expected to contain raw markup only (no wicket
+	 * components) and which will be ignored / removed. It'll be replaced with the content of the
+	 * associated markup file.
 	 */
 	@Override
 	public void onComponentTagBody(final Component component, final MarkupStream markupStream,
 		final ComponentTag openTag)
 	{
-		super.onComponentTagBody(component, markupStream, openTag);
-
-		// Render the associated markup
-		((MarkupContainer)component).renderAssociatedMarkup(Panel.PANEL,
-			"Markup for a panel component has to contain part '<wicket:panel>'");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public IMarkupFragment getMarkup(final MarkupContainer parent, final Component child)
-	{
-		IMarkupFragment markup = parent.getAssociatedMarkup();
-		if (markup == null)
+		if (allowWicketComponentsInBodyMarkup)
 		{
-			throw new MarkupNotFoundException("Failed to find markup file associated. " +
-				parent.getClass().getSimpleName() + ": " + parent.toString());
+			// Skip the body markup. Will be picked up by the Body component.
+			markupStream.skipToMatchingCloseTag(openTag);
 		}
-
-		// Find <wicket:panel>
-		IMarkupFragment panelMarkup = findPanelTag(markup);
-		if (panelMarkup == null)
+		else
 		{
-			throw new MarkupNotFoundException(
-				"Expected to find <wicket:panel> in associated markup file. Markup: " +
-					markup.toString());
-		}
-
-		// If child == null, than return the markup fragment starting with <wicket:panel>
-		if (child == null)
-		{
-			return panelMarkup;
-		}
-
-		// Find the markup for the child component
-		markup = panelMarkup.find(child.getId());
-		if (markup != null)
-		{
-			return markup;
-		}
-
-		return findMarkupInAssociatedFileHeader(parent, child);
-	}
-
-	/**
-	 * Search for &lt;wicket:panel ...&gt; on the same level.
-	 * 
-	 * @param markup
-	 * @return null, if not found
-	 */
-	private final static IMarkupFragment findPanelTag(final IMarkupFragment markup)
-	{
-		MarkupStream stream = new MarkupStream(markup);
-
-		while (stream.skipUntil(ComponentTag.class))
-		{
-			ComponentTag tag = stream.getTag();
-			if (tag.isOpen() || tag.isOpenClose())
+			// Skip the components body. Like with Panels or Fragments, it'll be replaced with the
+			// associated markup
+			if (markupStream.getPreviousTag().isOpen())
 			{
-				if (tag instanceof WicketTag)
+				markupStream.skipRawMarkup();
+				if (markupStream.get().closes(openTag) == false)
 				{
-					WicketTag wtag = (WicketTag)tag;
-					if (wtag.isPanelTag())
-					{
-						return stream.getMarkupFragment();
-					}
-				}
-				stream.skipToMatchingCloseTag(tag);
-			}
+					StringBuilder msg = new StringBuilder();
 
-			stream.next();
+					msg.append("Close tag not found for tag: ")
+						.append(openTag.toString())
+						.append(". For ")
+						.append(component.getClass().getSimpleName())
+						.append(" Components only raw markup is allow in between the tags but not ")
+						.append("other Wicket Component. Component: ")
+						.append(component.toString());
+
+					throw new MarkupException(markupStream, msg.toString());
+				}
+			}
 		}
 
-		return null;
+		renderAssociatedMarkup(component);
 	}
 }

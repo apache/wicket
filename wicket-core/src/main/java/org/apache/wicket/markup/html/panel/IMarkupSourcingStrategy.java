@@ -79,9 +79,9 @@ public interface IMarkupSourcingStrategy
 	 * @see MarkupContainer#getMarkup(Component)
 	 * 
 	 * @param container
-	 *            The parent containing the child.
+	 *            The parent containing the child. (@TODO Is container ever != child.getParent()??)
 	 * @param child
-	 *            The componen to find the markup for.
+	 *            The component to find the markup for.
 	 * @return markup fragment
 	 */
 	IMarkupFragment getMarkup(final MarkupContainer container, final Component child);

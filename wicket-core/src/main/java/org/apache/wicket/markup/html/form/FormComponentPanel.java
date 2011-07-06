@@ -159,7 +159,7 @@ public abstract class FormComponentPanel<T> extends FormComponent<T>
 	@Override
 	protected IMarkupSourcingStrategy newMarkupSourcingStrategy()
 	{
-		return new PanelMarkupSourcingStrategy();
+		return new PanelMarkupSourcingStrategy(false);
 	}
 
 	/**

@@ -23,16 +23,19 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
+import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.TagUtils;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.HeaderPartContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
 
 /**
- * Boiler plate for markup sourcing strategy which retrieve the markup from associated markup files.
+ * Boilerplate for a markup sourcing strategy which retrieves the markup from associated markup
+ * files.
  * 
  * @author Juergen Donnerstag
  */
@@ -41,11 +44,17 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 	/** <wicket:head> is only allowed before <body>, </head>, <wicket:panel> etc. */
 	private boolean noMoreWicketHeadTagsAllowed = false;
 
+	private final String tagName;
+
 	/**
 	 * Constructor.
+	 * 
+	 * @param tagName
+	 *            Either "panel" or "border"
 	 */
-	public AssociatedMarkupSourcingStrategy()
+	public AssociatedMarkupSourcingStrategy(final String tagName)
 	{
+		this.tagName = Args.notNull(tagName, "tagName");
 	}
 
 	@Override
@@ -55,6 +64,95 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 
 		// In case you want to copy attributes from <wicket:panel> tag to the "calling" tag, you
 		// may subclass onComponentTag of your component and call TagUtils.copyAttributes().
+	}
+
+	/**
+	 * Render the associated markup markup
+	 * 
+	 * @param component
+	 */
+	protected final void renderAssociatedMarkup(final Component component)
+	{
+		((MarkupContainer)component).renderAssociatedMarkup(tagName, "Markup for a " + tagName +
+			" component must begin a tag like '<wicket:" + tagName + ">'");
+	}
+
+	/**
+	 * Search for the child's markup in the associated markup file.
+	 * 
+	 * @param parent
+	 *            The container expected to contain the markup for child
+	 * @param child
+	 *            The child component to find the markup for
+	 * @return The markup associated with the child
+	 */
+	@Override
+	public IMarkupFragment getMarkup(final MarkupContainer parent, final Component child)
+	{
+		Args.notNull(tagName, "tagName");
+
+		IMarkupFragment associatedMarkup = parent.getAssociatedMarkup();
+		if (associatedMarkup == null)
+		{
+			throw new MarkupNotFoundException("Failed to find markup file associated. " +
+				parent.getClass().getSimpleName() + ": " + parent.toString());
+		}
+
+		// Find <wicket:panel>
+		IMarkupFragment markup = findStartTag(associatedMarkup);
+		if (markup == null)
+		{
+			throw new MarkupNotFoundException("Expected to find <wicket:" + tagName +
+				"> in associated markup file. Markup: " + associatedMarkup.toString());
+		}
+
+		// If child == null, than return the markup fragment starting with <wicket:panel>
+		if (child == null)
+		{
+			return markup;
+		}
+
+		// Find the markup for the child component
+		associatedMarkup = markup.find(child.getId());
+		if (associatedMarkup != null)
+		{
+			return associatedMarkup;
+		}
+
+		return findMarkupInAssociatedFileHeader(parent, child);
+	}
+
+	/**
+	 * Search for &lt;wicket:panel ...&gt; on the same level.
+	 * 
+	 * @param markup
+	 * @return null, if not found
+	 */
+	private final IMarkupFragment findStartTag(final IMarkupFragment markup)
+	{
+		MarkupStream stream = new MarkupStream(markup);
+
+		while (stream.skipUntil(ComponentTag.class))
+		{
+			ComponentTag tag = stream.getTag();
+			if (tag.isOpen() || tag.isOpenClose())
+			{
+				if (tag instanceof WicketTag)
+				{
+					WicketTag wtag = (WicketTag)tag;
+					if (tagName.equalsIgnoreCase(wtag.getName()))
+					{
+						return stream.getMarkupFragment();
+					}
+				}
+
+				stream.skipToMatchingCloseTag(tag);
+			}
+
+			stream.next();
+		}
+
+		return null;
 	}
 
 	/**

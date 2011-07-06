@@ -24,6 +24,7 @@ import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.settings.IMarkupSettings;
+import org.junit.Test;
 
 /**
  * Test the component: PageView
@@ -174,23 +175,10 @@ public class BoxBorderTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test(expected = WicketRuntimeException.class)
 	public void test10() throws Exception
 	{
-		Exception e = null;
-		try
-		{
-			executeTest(BoxBorderTestPage_10.class, "BoxBorderTestPage_ExpectedResult_10.html");
-		}
-		catch (WicketRuntimeException ex)
-		{
-			if (ex.getMessage().startsWith("The border tag must be an open tag."))
-			{
-				e = ex;
-			}
-		}
-		assertNotNull(
-			"Expected a WicketRuntimeException. Border tag must be open tags. Open-close tags are not allowed",
-			e);
+		executeTest(BoxBorderTestPage_10.class, "BoxBorderTestPage_ExpectedResult_10.html");
 	}
 
 	/**

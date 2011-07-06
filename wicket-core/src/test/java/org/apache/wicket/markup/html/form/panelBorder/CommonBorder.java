@@ -14,14 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.border;
+package org.apache.wicket.markup.html.form.panelBorder;
+
+import org.apache.wicket.markup.html.border.BorderPanel;
 
 
 /**
- * @deprecated Please use {@link BorderBehavior} instead.
+ *
  */
-@Deprecated
-public class MarkupComponentBorder extends BorderBehavior
+public class CommonBorder extends BorderPanel
 {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 */
+	public CommonBorder(String id)
+	{
+		super(id);
+
+		add(newBodyContainer("body"));
+	}
 }

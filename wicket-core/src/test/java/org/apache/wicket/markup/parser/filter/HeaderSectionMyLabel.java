@@ -59,7 +59,7 @@ public class HeaderSectionMyLabel extends WebMarkupContainer
 	@Override
 	protected IMarkupSourcingStrategy newMarkupSourcingStrategy()
 	{
-		return new PanelMarkupSourcingStrategy()
+		return new PanelMarkupSourcingStrategy(false)
 		{
 			@Override
 			public IMarkupFragment getMarkup(final MarkupContainer parent, final Component child)

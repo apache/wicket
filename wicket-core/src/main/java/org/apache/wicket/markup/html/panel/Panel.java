@@ -85,6 +85,6 @@ public abstract class Panel extends WebMarkupContainer
 	@Override
 	protected IMarkupSourcingStrategy newMarkupSourcingStrategy()
 	{
-		return new PanelMarkupSourcingStrategy();
+		return new PanelMarkupSourcingStrategy(false);
 	}
 }
