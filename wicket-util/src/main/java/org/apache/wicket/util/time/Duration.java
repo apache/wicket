@@ -17,7 +17,6 @@
 package org.apache.wicket.util.time;
 
 import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -536,29 +535,18 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Converts a value to a unit-suffixed value.
+	 * Converts a value to a unit-suffixed value, taking care of English singular/plural suffix.
 	 * 
 	 * @param value
 	 *            a <code>double</code> value to format
 	 * @param units
-	 *            the units
+	 *            the units to apply singular or plural suffix to
 	 * @param locale
 	 *            the <code>Locale</code>
 	 * @return a <code>String</code> representation
 	 */
 	private String unitString(final double value, final String units, final Locale locale)
 	{
-		final String key;
-		if (value > 1.0)
-		{
-			key = units + "s";
-		}
-		else
-		{
-			key = units;
-		}
-
-		return StringValue.valueOf(value, locale) + " " +
-			ResourceBundle.getBundle(Duration.class.getName(), locale).getString(key);
+		return StringValue.valueOf(value, locale) + " " + units + ((value > 1.0) ? "s" : "");
 	}
 }

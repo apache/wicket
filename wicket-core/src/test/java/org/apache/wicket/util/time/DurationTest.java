@@ -70,8 +70,8 @@ public final class DurationTest
 
 		String value = NumberFormat.getNumberInstance().format(1.5);
 
-		assertEquals(value + " minutes", Duration.seconds(90).toString());
-		assertEquals("12 hours", Duration.days(0.5).toString());
+		assertEquals(value + " minutes", Duration.seconds(90).toString(Locale.US));
+		assertEquals("12 hours", Duration.days(0.5).toString(Locale.US));
 	}
 
 	/** */
@@ -104,9 +104,7 @@ public final class DurationTest
 		assertEquals(Duration.minutes(90), Duration.valueOf("90 minutes"));
 		assertEquals(Duration.hours(1.5), Duration.valueOf("1.5 hour", Locale.US));
 		assertEquals(Duration.hours(1.5), Duration.valueOf("1,5 hour", Locale.GERMAN));
-		assertEquals("1 hour", Duration.hours(1).toString(Locale.US));
 		assertEquals("1.5 hours", Duration.hours(1.5).toString(Locale.US));
-		assertEquals("1 Stunde", Duration.hours(1).toString(Locale.GERMAN));
-		assertEquals("1,5 Stunden", Duration.hours(1.5).toString(Locale.GERMAN));
+		assertEquals("1,5 hours", Duration.hours(1.5).toString(Locale.GERMAN));
 	}
 }
