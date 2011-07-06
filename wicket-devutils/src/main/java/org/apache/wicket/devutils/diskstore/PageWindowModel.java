@@ -22,10 +22,15 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.markup.html.tree.AbstractTree;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.pageStore.PageWindowManager.PageWindow;
 import org.apache.wicket.serialize.ISerializer;
 
+/**
+ * A model which can be used to show the PageWindows in a {@link AbstractTree tree}
+ */
+// Currently not used
 class PageWindowModel extends AbstractReadOnlyModel<DefaultTreeModel>
 {
 	private final DefaultTreeModel treeModel;

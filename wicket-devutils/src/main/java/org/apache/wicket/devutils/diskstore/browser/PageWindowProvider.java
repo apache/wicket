@@ -34,7 +34,7 @@ import org.apache.wicket.pageStore.PageWindowManager.PageWindow;
 /**
  * An {@link IDataProvider} that extracts the information about the stored pages
  */
-public class PageWindowProvider implements ISortableDataProvider<PageWindowDescription>
+class PageWindowProvider implements ISortableDataProvider<PageWindowDescription>
 {
 	private static final int MAX_PAGES_TO_READ = 1000;
 

@@ -30,7 +30,7 @@ import org.apache.wicket.serialize.ISerializer;
 /**
  * A column that shows the page attributes (id, name, size)
  */
-public class PageWindowColumn extends PropertyColumn<PageWindowDescription>
+class PageWindowColumn extends PropertyColumn<PageWindowDescription>
 {
 	/**
 	 * Construct.

@@ -20,12 +20,14 @@ import org.apache.wicket.IClusterable;
 import org.apache.wicket.pageStore.PageWindowManager.PageWindow;
 
 /**
- * 
+ * A serializable representation of the page information
  */
-public class PageWindowDescription implements IClusterable
+class PageWindowDescription implements IClusterable
 {
+	/** the page id */
 	private final int id;
 
+	/** the page size */
 	private final int size;
 
 	PageWindowDescription(PageWindow pageWindow)
@@ -35,7 +37,7 @@ public class PageWindowDescription implements IClusterable
 	}
 
 	/**
-	 * @return
+	 * @return the page id
 	 */
 	public int getId()
 	{
@@ -43,7 +45,7 @@ public class PageWindowDescription implements IClusterable
 	}
 
 	/**
-	 * @return
+	 * @return the page size
 	 */
 	public int getSize()
 	{
