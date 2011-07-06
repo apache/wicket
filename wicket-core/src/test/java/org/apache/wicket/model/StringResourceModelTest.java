@@ -27,6 +27,7 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.MockPage;
 import org.apache.wicket.resource.loader.BundleStringResourceLoader;
+import org.junit.Test;
 
 /**
  * Test cases for the <code>StringResourceModel</code> class.
@@ -66,11 +67,9 @@ public class StringResourceModelTest extends WicketTestCase
 	}
 
 
-	/**
-	 * 
-	 * 
-	 */
-	public void testGetSimpleResource()
+	/** */
+	@Test
+	public void getSimpleResource()
 	{
 		StringResourceModel model = new StringResourceModel("simple.text", page, null);
 		Assert.assertEquals("Text should be as expected", "Simple text", model.getString());
@@ -78,28 +77,16 @@ public class StringResourceModelTest extends WicketTestCase
 // Assert.assertEquals("Text should be as expected", "Simple text", model.toString());
 	}
 
-	/**
-	 * 
-	 * 
-	 */
-	public void testNullResourceKey()
+	/** */
+	@Test(expected = IllegalArgumentException.class)
+	public void nullResourceKey()
 	{
-		try
-		{
-			new StringResourceModel(null, page, null);
-			Assert.fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException e)
-		{
-			// Expected result
-		}
+		new StringResourceModel(null, page, null);
 	}
 
-	/**
-	 * 
-	 * 
-	 */
-	public void testGetSimpleResourceWithKeySubstitution()
+	/** */
+	@Test
+	public void getSimpleResourceWithKeySubstitution()
 	{
 		StringResourceModel model = new StringResourceModel("weather.${currentStatus}", page,
 			wsModel);
@@ -110,11 +97,9 @@ public class StringResourceModelTest extends WicketTestCase
 			model.getString());
 	}
 
-	/**
-	 * 
-	 * 
-	 */
-	public void testGetPropertySubstitutedResource()
+	/** */
+	@Test
+	public void getPropertySubstitutedResource()
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
 		StringResourceModel model = new StringResourceModel("weather.message", page, wsModel);
@@ -129,11 +114,9 @@ public class StringResourceModelTest extends WicketTestCase
 			model.getString());
 	}
 
-	/**
-	 * 
-	 * 
-	 */
-	public void testSubstitutedPropertyAndParameterResource()
+	/** */
+	@Test
+	public void substitutedPropertyAndParameterResource()
 	{
 		StringResourceModel model = new StringResourceModel("weather.mixed", page, wsModel,
 			new PropertyModel<Double>(wsModel, "currentTemperature"), new PropertyModel<String>(
@@ -151,11 +134,9 @@ public class StringResourceModelTest extends WicketTestCase
 		Assert.assertEquals("Text should be as expected", expected, model.getString());
 	}
 
-	/**
-	 * 
-	 * 
-	 */
-	public void testSubstitutionParametersResource()
+	/** */
+	@Test
+	public void substitutionParametersResource()
 	{
 		Calendar cal = Calendar.getInstance();
 		cal.set(2004, Calendar.OCTOBER, 15, 13, 21);
@@ -173,45 +154,41 @@ public class StringResourceModelTest extends WicketTestCase
 		Assert.assertEquals("Text should be as expected", expected, model.getString());
 	}
 
-
-	/**
-	 * @throws Exception
-	 */
-	public void testSubstitutionParametersResourceWithSingleQuote() throws Exception
+	/** */
+	@Test
+	public void substitutionParametersResourceWithSingleQuote()
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
 		StringResourceModel model = new StringResourceModel("with.quote", page, null, 10, 20);
 		assertEquals("2010.00", model.getString());
-
 	}
 
-
-	/**
-	 * 
-	 */
-	public void testSetObject()
+	/** */
+	@Test
+	public void textResourceWithSubstitutionAndSingleQuote()
 	{
-		try
-		{
-			StringResourceModel model = new StringResourceModel("simple.text", page, null);
-			model.setObject("Some value");
-			Assert.fail("UnsupportedOperationException expected");
-		}
-		catch (Exception e)
-		{
-			if (!(e instanceof UnsupportedOperationException || e.getCause() instanceof UnsupportedOperationException))
-			{
-				Assert.fail("UnsupportedOperationException expected");
-			}
-			// Expected result
-		}
+		tester.getSession().setLocale(Locale.ENGLISH);
+
+		StringResourceModel model = new StringResourceModel("with.quote.and.no.substitution", page,
+			null, (Object[])null);
+		assertEquals("Let's play in the rain!", model.getString());
+
+		model = new StringResourceModel("with.quote.substitution", page, null,
+			new Object[] { "rain!" });
+		assertEquals("Let's play in the rain!", model.getString());
 	}
 
+	/** */
+	@Test(expected = UnsupportedOperationException.class)
+	public void setObject()
+	{
+		StringResourceModel model = new StringResourceModel("simple.text", page, null);
+		model.setObject("Some value");
+	}
 
-	/**
-	 * @throws Exception
-	 */
-	public void testDetachAttachDetachableModel() throws Exception
+	/** */
+	@Test
+	public void detachAttachDetachableModel()
 	{
 		IModel<WeatherStation> wsDetachModel = new LoadableDetachableModel<WeatherStation>()
 		{
@@ -225,11 +202,11 @@ public class StringResourceModelTest extends WicketTestCase
 
 
 		};
+
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsDetachModel);
 		model.getObject();
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();
-
 	}
 
 	/**
@@ -293,5 +270,4 @@ public class StringResourceModelTest extends WicketTestCase
 			return name;
 		}
 	}
-
 }

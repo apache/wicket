@@ -273,7 +273,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	 * to take place on either the resource key or the actual resource strings.
 	 * <p>
 	 * The parameters parameter is also optional and is used for substitutions.
-	 *
+	 * 
 	 * @param resourceKey
 	 *            The resource key for this string resource
 	 * @param component
@@ -468,12 +468,19 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 					}
 				}
 
+				// Escape all single quotes outside {..}
+				if (value.indexOf('\'') != -1)
+				{
+					value = escapeQuotes(value);
+				}
+
 				if (model != null)
 				{
 					// First escape all substitute properties so that message format doesn't try to
 					// parse that.
 					value = Strings.replaceAll(value, "${", "$'{'").toString();
 				}
+
 				// Apply the parameters
 				final MessageFormat format = new MessageFormat(value, component != null
 					? component.getLocale() : locale);
@@ -491,6 +498,39 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 
 		// Return the string resource
 		return value;
+	}
+
+	/**
+	 * Replace "'" with "''" outside of "{..}"
+	 * 
+	 * @param value
+	 * @return escaped message format
+	 */
+	private String escapeQuotes(final String value)
+	{
+		StringBuilder newValue = new StringBuilder(value.length() + 10);
+		int count = 0;
+		for (int i = 0; i < value.length(); i++)
+		{
+			char ch = value.charAt(i);
+			if (ch == '{')
+			{
+				count += 1;
+			}
+			else if (ch == '}')
+			{
+				count -= 1;
+			}
+
+			newValue.append(ch);
+			if ((ch == '\'') && (count == 0))
+			{
+				// Escape "'"
+				newValue.append(ch);
+			}
+		}
+
+		return newValue.toString();
 	}
 
 	/**
@@ -514,7 +554,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	@Override
 	public String toString()
 	{
-	 StringBuilder sb = new StringBuilder("StringResourceModel[");
+		StringBuilder sb = new StringBuilder("StringResourceModel[");
 		sb.append("key:");
 		sb.append(resourceKey);
 		sb.append(",default:");
