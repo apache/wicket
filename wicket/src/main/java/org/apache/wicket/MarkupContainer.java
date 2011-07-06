@@ -302,28 +302,49 @@ public abstract class MarkupContainer extends Component
 	 * @return The component at the path
 	 */
 	@Override
-	public final Component get(final String path)
+	public final Component get(String path_)
 	{
 		// Reference to this container
-		if (path == null || path.trim().equals(""))
+		if (Strings.isEmpty(path_))
 		{
 			return this;
 		}
 
-		// Get child's id, if any
-		final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
+		// process parent .. references
+
+		MarkupContainer container = this;
+
+		String path = path_;
+		String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
+
+		while (Component.PARENT_PATH.equals(id))
+		{
+			container = container.getParent();
+			if (container == null)
+			{
+				return null;
+			}
+			path = path.length() == id.length() ? "" : path.substring(id.length() + 1);
+			id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
+		}
+
+		if (Strings.isEmpty(id))
+		{
+			return container;
+		}
+
 
 		// Get child by id
-		Component child = children_get(id);
+		Component child = container.children_get(id);
 
 		// If the container is transparent, than ask its parent.
 		// ParentResolver does something quite similar, but because of <head>,
 		// <body>, <wicket:panel> etc. it is quite common to have transparent
 		// components. Hence, this is little short cut for a tiny performance
 		// optimization.
-		if ((child == null) && isTransparentResolver() && (getParent() != null))
+		if ((child == null) && isTransparentResolver() && (container.getParent() != null))
 		{
-			child = getParent().get(path);
+			child = container.getParent().get(path);
 		}
 
 		// Found child?

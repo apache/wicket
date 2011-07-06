@@ -61,4 +61,45 @@ public class MarkupContainerTest extends WicketTestCase
 	{
 		executeTest(MarkupIdTestPage.class, "MarkupIdTestPageExpectedResult.html");
 	}
+
+	public void testGet()
+	{
+		WebMarkupContainer a = new WebMarkupContainer("a");
+		WebMarkupContainer b = new WebMarkupContainer("b");
+		WebMarkupContainer c = new WebMarkupContainer("c");
+		WebMarkupContainer d = new WebMarkupContainer("d");
+		WebMarkupContainer e = new WebMarkupContainer("e");
+		WebMarkupContainer f = new WebMarkupContainer("f");
+
+		// ....A
+		// ...B....C
+		// .......D..E
+		// ...........F
+
+		a.add(b);
+		a.add(c);
+		c.add(d);
+		c.add(e);
+		e.add(f);
+
+		// basic gets
+
+		assertTrue(a.get(null) == a);
+		assertTrue(a.get("") == a);
+		assertTrue(a.get("b") == b);
+		assertTrue(a.get("c") == c);
+		assertTrue(a.get("c:d") == d);
+		assertTrue(a.get("c:e:f") == f);
+
+		assertTrue(b.get("..") == a);
+		assertTrue(e.get("..:..") == a);
+		assertTrue(d.get("..:..:c:e:f") == f);
+
+		// invalid gets
+
+		assertNull(a.get(".."));
+		assertNull(a.get("..:a"));
+		assertNull(b.get("..|.."));
+		assertNull(a.get("q"));
+	}
 }
