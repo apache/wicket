@@ -70,8 +70,8 @@ public final class DurationTest
 
 		String value = NumberFormat.getNumberInstance().format(1.5);
 
-		assertEquals(value + " minutes", Duration.seconds(90).toString(Locale.US));
-		assertEquals("12 hours", Duration.days(0.5).toString(Locale.US));
+		assertEquals(value + " minutes", Duration.seconds(90).toString());
+		assertEquals("12 hours", Duration.days(0.5).toString());
 	}
 
 	/** */
