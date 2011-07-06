@@ -302,10 +302,10 @@ public abstract class MarkupContainer extends Component
 	 * @return The component at the path
 	 */
 	@Override
-	public final Component get(String path_)
+	public final Component get(String path)
 	{
 		// Reference to this container
-		if (Strings.isEmpty(path_))
+		if (Strings.isEmpty(path))
 		{
 			return this;
 		}
@@ -314,7 +314,6 @@ public abstract class MarkupContainer extends Component
 
 		MarkupContainer container = this;
 
-		String path = path_;
 		String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
 
 		while (Component.PARENT_PATH.equals(id))
