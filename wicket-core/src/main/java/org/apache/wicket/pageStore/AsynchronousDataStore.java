@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.pageStore;
 
+import java.util.Iterator;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -144,7 +145,7 @@ public class AsynchronousDataStore implements IDataStore
 			log.debug(
 				"Returning the data of a non-stored entry with sessionId '{}' and pageId '{}'",
 				sessionId, id);
-			return entry.getData();
+			return entry.data;
 		}
 		byte[] data = dataStore.getData(sessionId, id);
 
@@ -185,14 +186,18 @@ public class AsynchronousDataStore implements IDataStore
 	 */
 	public void removeData(final String sessionId)
 	{
-		// make a copy to iterate to avoid ConcurrentModificationException
-		Entry[] entriesCopy = entries.toArray(new Entry[entries.size()]);
-		for (Entry entry : entriesCopy)
+		for (Iterator<Entry> itor = entries.iterator(); itor.hasNext();)
 		{
-			if (entry.getSessionId().equals(sessionId))
+			Entry entry = itor.next();
+			if (entry != null) // this check is not needed in JDK6
 			{
-				entryMap.remove(getKey(entry));
-				entries.remove(entry);
+				String entrySessionId = entry.sessionId;
+
+				if (sessionId.equals(entrySessionId))
+				{
+					entryMap.remove(getKey(entry));
+					itor.remove();
+				}
 			}
 		}
 
@@ -247,7 +252,7 @@ public class AsynchronousDataStore implements IDataStore
 	 */
 	private static String getKey(final Entry entry)
 	{
-		return getKey(entry.getSessionId(), entry.getPageId());
+		return getKey(entry.sessionId, entry.pageId);
 	}
 
 	/**
@@ -264,21 +269,6 @@ public class AsynchronousDataStore implements IDataStore
 			this.sessionId = Args.notNull(sessionId, "sessionId");
 			this.pageId = pageId;
 			this.data = Args.notNull(data, "data");
-		}
-
-		public String getSessionId()
-		{
-			return sessionId;
-		}
-
-		public int getPageId()
-		{
-			return pageId;
-		}
-
-		public byte[] getData()
-		{
-			return data;
 		}
 
 		@Override
@@ -362,7 +352,7 @@ public class AsynchronousDataStore implements IDataStore
 				if (entry != null)
 				{
 					log.debug("Saving asynchronously: {}...", entry);
-					dataStore.storeData(entry.getSessionId(), entry.getPageId(), entry.getData());
+					dataStore.storeData(entry.sessionId, entry.pageId, entry.data);
 					entryMap.remove(getKey(entry));
 				}
 			}
