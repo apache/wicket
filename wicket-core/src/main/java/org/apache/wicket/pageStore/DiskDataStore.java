@@ -433,7 +433,7 @@ public class DiskDataStore implements IDataStore
 			File sessionFolder = diskDataStore.getSessionFolder(sessionId, false);
 			if (sessionFolder.exists())
 			{
-				Files.remove(sessionFolder);
+				Files.removeFolder(sessionFolder);
 			}
 			unbound = true;
 		}
@@ -481,36 +481,9 @@ public class DiskDataStore implements IDataStore
 		File sessionFolder = new File(storeFolder, sessionId);
 		if (create && sessionFolder.exists() == false)
 		{
-			mkdirs(sessionFolder);
+			Files.mkdirs(sessionFolder);
 		}
 		return sessionFolder;
 	}
 
-	/**
-	 * Utility method for creating a directory
-	 * 
-	 * @param file
-	 */
-	private void mkdirs(File file)
-	{
-		// for some reason, simple file.mkdirs sometimes fails under heavy load
-		for (int j = 0; j < 5; ++j)
-		{
-			for (int i = 0; i < 10; ++i)
-			{
-				if (file.mkdirs())
-				{
-					return;
-				}
-			}
-			try
-			{
-				Thread.sleep(100);
-			}
-			catch (InterruptedException ignore)
-			{
-			}
-		}
-		log.error("Failed to make directory " + file);
-	}
 }
