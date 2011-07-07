@@ -116,7 +116,7 @@ public class Files
 	 */
 	public static boolean remove(final java.io.File file)
 	{
-		if (file.exists() == false)
+		if (file == null || file.exists() == false || file.isDirectory())
 		{
 			return false;
 		}
@@ -146,6 +146,44 @@ public class Files
 		}
 
 		return deleted;
+	}
+
+	/**
+	 * Deletes a folder by recursively removing the files and folders inside it. Delegates the work
+	 * to {@link #remove(File)} for plain files.
+	 * 
+	 * @param folder
+	 *            the folder to delete
+	 * @return {@code true} if the folder is deleted successfully.
+	 */
+	public static final boolean removeFolder(final File folder)
+	{
+		if (folder == null)
+		{
+			return false;
+		}
+
+		if (folder.isDirectory())
+		{
+			File[] files = folder.listFiles();
+			if (files != null)
+			{
+				for (File file : files)
+				{
+					if (file.isDirectory())
+					{
+						removeFolder(file);
+					}
+					else
+					{
+						remove(file);
+					}
+				}
+			}
+		}
+
+		// delete the empty folder
+		return folder.delete();
 	}
 
 	/**
@@ -345,5 +383,33 @@ public class Files
 
 		// last file modification timestamp
 		return Time.millis(millis);
+	}
+
+	/**
+	 * Utility method for creating a directory
+	 * 
+	 * @param file
+	 */
+	public static void mkdirs(File file)
+	{
+		// for some reason, simple file.mkdirs sometimes fails under heavy load
+		for (int j = 0; j < 5; ++j)
+		{
+			for (int i = 0; i < 10; ++i)
+			{
+				if (file.mkdirs())
+				{
+					return;
+				}
+			}
+			try
+			{
+				Thread.sleep(100);
+			}
+			catch (InterruptedException ignore)
+			{
+			}
+		}
+		logger.error("Failed to make directory " + file);
 	}
 }
