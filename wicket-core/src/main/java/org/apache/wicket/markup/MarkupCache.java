@@ -124,67 +124,52 @@ public class MarkupCache implements IMarkupCache
 
 		if (log.isDebugEnabled())
 		{
-			log.debug("Remove from cache: cacheKey=" + cacheKey);
+			log.debug("Remove from cache: " + cacheKey);
 		}
 
 		// Remove the markup from the cache
 		String locationString = markupKeyCache.get(cacheKey);
 		IMarkupFragment markup = (locationString != null ? markupCache.get(locationString) : null);
-		if (markup != null)
+		if (markup == null)
 		{
-			// Found an entry: actual markup or Markup.NO_MARKUP. Null values are not possible
-			// because of ConcurrentHashMap.
-			markupCache.remove(locationString);
+			return null;
+		}
 
-			// If a base markup file has been removed from the cache, than
-			// the derived markup should be removed as well.
+		// Found an entry: actual markup or Markup.NO_MARKUP. Null values are not possible
+		// because of ConcurrentHashMap.
+		markupCache.remove(locationString);
 
-			// Repeat until all dependent resources have been removed (count == 0)
-			int count = 1;
-			while (count > 0)
+		if (log.isDebugEnabled())
+		{
+			log.debug("Removed from cache: " + locationString);
+		}
+
+		// If a base markup file has been removed from the cache, than
+		// the derived markup should be removed as well.
+		removeMarkupWhereBaseMarkupIsNoLongerInTheCache();
+
+		// And now remove all watcher entries associated with markup
+		// resources no longer in the cache.
+
+		// Note that you can not use Application.get() since removeMarkup() will be called from a
+		// ModificationWatcher thread which has no associated Application.
+
+		IModificationWatcher watcher = application.getResourceSettings().getResourceWatcher(false);
+		if (watcher != null)
+		{
+			Iterator<IModifiable> iter = watcher.getEntries().iterator();
+			while (iter.hasNext())
 			{
-				// Reset prior to next round
-				count = 0;
-
-				// Iterate though all entries of the cache
-				Iterator<String> iter = markupCache.getKeys().iterator();
-				while (iter.hasNext())
+				IModifiable modifiable = iter.next();
+				if (modifiable instanceof MarkupResourceStream)
 				{
-					String key = iter.next();
-
-					// Check if the markup associated with key has a base markup. And if yes, test
-					// if that is cached.
-					if (isBaseMarkupCached(key))
+					if (!isMarkupCached((MarkupResourceStream)modifiable))
 					{
+						iter.remove();
+
 						if (log.isDebugEnabled())
 						{
-							log.debug("Remove from cache: cacheKey=" + key);
-						}
-
-						iter.remove();
-						count++;
-					}
-				}
-			}
-
-			// And now remove all watcher entries associated with markup
-			// resources no longer in the cache. Note that you can not use
-			// Application.get() since removeMarkup() will be called from a
-			// ModificationWatcher thread which has no associated Application.
-
-			IModificationWatcher watcher = application.getResourceSettings().getResourceWatcher(
-				false);
-			if (watcher != null)
-			{
-				Iterator<IModifiable> iter = watcher.getEntries().iterator();
-				while (iter.hasNext())
-				{
-					IModifiable modifiable = iter.next();
-					if (modifiable instanceof MarkupResourceStream)
-					{
-						if (isMarkupCached((MarkupResourceStream)modifiable))
-						{
-							iter.remove();
+							log.debug("Removed from watcher: " + modifiable);
 						}
 					}
 				}
@@ -194,32 +179,42 @@ public class MarkupCache implements IMarkupCache
 		return markup;
 	}
 
-	/**
-	 * @param key
-	 * @return True, if base markup for entry with cache 'key' is available in the cache as well.
-	 */
-	private boolean isBaseMarkupCached(final String key)
+	private void removeMarkupWhereBaseMarkupIsNoLongerInTheCache()
 	{
-		// Get the markup associated with key. Null in case the key has no associated value. A null
-		// value is not possible because of ConcurrentHashMap.
-		Markup markup = markupCache.get(key);
-		if (markup == null)
+		// Repeat until all dependent resources have been removed (count == 0)
+		int count = 1;
+		while (count > 0)
 		{
-			return false;
+			// Reset prior to next round
+			count = 0;
+
+			// Iterate though all entries of the cache
+			Iterator<Markup> iter = markupCache.getValues().iterator();
+			while (iter.hasNext())
+			{
+				Markup markup = iter.next();
+
+				// Check if the markup associated with key has a base markup. And if yes, test
+				// if that is cached. If the base markup has been removed, than remove the derived
+				// markup as well.
+
+				MarkupResourceStream resourceStream = markup.getMarkupResourceStream()
+					.getBaseMarkupResourceStream();
+
+				// Is the base markup available in the cache?
+				if ((resourceStream != null) && !isMarkupCached(resourceStream))
+				{
+					iter.remove();
+					count++;
+
+					if (log.isDebugEnabled())
+					{
+						log.debug("Removed derived markup from cache: " +
+							markup.getMarkupResourceStream());
+					}
+				}
+			}
 		}
-
-		// NO_MARKUP does not have an associated resource stream
-		if (markup == Markup.NO_MARKUP)
-		{
-			return false;
-		}
-
-		// Get the base markup resource stream from the markup
-		MarkupResourceStream resourceStream = markup.getMarkupResourceStream()
-			.getBaseMarkupResourceStream();
-
-		// Is the base markup available in the cache?
-		return isMarkupCached(resourceStream);
 	}
 
 	/**
@@ -514,7 +509,7 @@ public class MarkupCache implements IMarkupCache
 					{
 						if (log.isDebugEnabled())
 						{
-							log.debug("Remove markup from cache: " + markupResourceStream);
+							log.debug("Remove markup from watcher: " + markupResourceStream);
 						}
 
 						// Remove the markup from the cache. It will be reloaded
@@ -607,6 +602,13 @@ public class MarkupCache implements IMarkupCache
 		Collection<K> getKeys();
 
 		/**
+		 * Get all the values referencing cache entries
+		 * 
+		 * @return collection of cached keys
+		 */
+		Collection<V> getValues();
+
+		/**
 		 * Check if key is in the cache
 		 * 
 		 * @param key
@@ -679,6 +681,11 @@ public class MarkupCache implements IMarkupCache
 		public Collection<K> getKeys()
 		{
 			return cache.keySet();
+		}
+
+		public Collection<V> getValues()
+		{
+			return cache.values();
 		}
 
 		public void put(K key, V value)
