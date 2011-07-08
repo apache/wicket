@@ -448,13 +448,27 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * was set via {@link #getLabel()}. The value of this string is usually set in a property file;
 	 * if the value is not set the default value equivalent to component id will be returned.
 	 * 
-	 * @param fc
-	 * @return Localized label string
+	 * @return localized label
 	 */
 	public final String getDefaultLabel()
 	{
-		return getLocalizer().getString(getId(), getParent(), getId());
+		return getDefaultLabel(getId());
 	}
+
+	/**
+	 * Gets the string the component would use as a label when one was requested but no label model
+	 * was set via {@link #getLabel()}. The value of this string is usually set in a property file;
+	 * if the value is not set the {@code defaultValue} will be returned.
+	 * 
+	 * @param defaultValue
+	 * 
+	 * @return localized label
+	 */
+	public final String getDefaultLabel(String defaultValue)
+	{
+		return getLocalizer().getString(getId(), getParent(), defaultValue);
+	}
+
 
 	/**
 	 * Adds a validator to this form component
@@ -468,7 +482,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * @see IValidatorAddListener
 	 * 
 	 */
-	@SuppressWarnings( { "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public final FormComponent<T> add(final IValidator<? super T> validator)
 	{
 		if (validator == null)
