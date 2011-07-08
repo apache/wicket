@@ -65,6 +65,7 @@ public final class BytesTest extends TestCase
 		Assert.assertTrue(Bytes.bytes(1024 * 1024).equals(Bytes.megabytes(1)));
 		Assert.assertTrue("1G".equals(Bytes.gigabytes(1).toString()));
 
+
 		final Bytes b = Bytes.kilobytes(7.3);
 
 		Assert.assertTrue(b.equals(Bytes.kilobytes(7.3)));

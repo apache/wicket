@@ -27,12 +27,24 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.wicket.util.Log4jEventHistory;
 import org.apache.wicket.util.io.SerializableChecker.WicketNotSerializableException;
+import org.apache.wicket.util.value.ValueMap;
 
 /**
  * @author Pedro Santos
  */
 public class SerializableCheckerTest extends TestCase
 {
+
+	/**
+	 * Test {@link ValueMap} serializability.
+	 * 
+	 * @throws IOException
+	 */
+	public void testValueMap() throws IOException
+	{
+		SerializableChecker checker = new SerializableChecker(new NotSerializableException());
+		checker.writeObject(new ValueMap());
+	}
 
 	/**
 	 * Asserting an meaningful message get logged on console when serializable checker is testing

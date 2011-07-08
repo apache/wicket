@@ -41,10 +41,9 @@ public final class MetaPatternTest extends TestCase
 		// Parse "variable = <number>"
 		final Group variable = new Group(MetaPattern.VARIABLE_NAME);
 		final IntegerGroup value = new IntegerGroup(MetaPattern.INTEGER);
-		final MetaPattern variableAssignment = new MetaPattern(
-			variable,
-			MetaPattern.OPTIONAL_WHITESPACE, MetaPattern.EQUALS,
-			MetaPattern.OPTIONAL_WHITESPACE, value);
+		final MetaPattern variableAssignment = new MetaPattern(variable,
+			MetaPattern.OPTIONAL_WHITESPACE, MetaPattern.EQUALS, MetaPattern.OPTIONAL_WHITESPACE,
+			value);
 
 		final Matcher matcher = variableAssignment.matcher("foo = 9");
 		assertTrue(matcher.matches());

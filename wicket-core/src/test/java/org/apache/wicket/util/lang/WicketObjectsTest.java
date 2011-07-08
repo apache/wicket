@@ -25,11 +25,11 @@ import org.apache.wicket.model.PropertyModel;
 
 
 /**
- * Tests the Objects class.
+ * Tests the WicketObjects class.
  * 
  * @author Martijn Dashorst
  */
-public class ObjectsTest extends WicketTestCase
+public class WicketObjectsTest extends WicketTestCase
 {
 
 	/**
@@ -37,29 +37,9 @@ public class ObjectsTest extends WicketTestCase
 	 * 
 	 * @param name
 	 */
-	public ObjectsTest(String name)
+	public WicketObjectsTest(String name)
 	{
 		super(name);
-	}
-
-	/**
-	 * Test method for 'org.apache.wicket.util.lang.Objects.equal(Object, Object)'
-	 */
-	public void testEqual()
-	{
-		Object object = new Object();
-		assertTrue(Objects.equal(object, object));
-
-		assertFalse(Objects.equal(null, object));
-		assertFalse(Objects.equal(object, null));
-		assertTrue(Objects.equal(null, null));
-
-		assertFalse(Objects.equal(new Object(), new Object()));
-		assertTrue(Objects.equal(1, 1));
-		assertFalse(Objects.equal("1", 1));
-		assertFalse(Objects.equal(1, "1"));
-		assertTrue(Objects.equal("1", Integer.toString(1)));
-		assertTrue(Objects.equal(Integer.toString(1), "1"));
 	}
 
 	/**

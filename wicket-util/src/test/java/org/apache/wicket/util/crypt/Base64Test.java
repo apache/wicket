@@ -22,9 +22,6 @@ import java.util.Random;
 
 import junit.framework.TestCase;
 
-import org.apache.wicket.settings.ISecuritySettings;
-import org.apache.wicket.util.tester.WicketTester;
-
 /**
  * 
  * @author Juergen Donnerstag
@@ -137,7 +134,7 @@ public class Base64Test extends TestCase
 	public void test_3() throws IOException
 	{
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
-		ICrypt crypt = new CachingSunJceCryptFactory(ISecuritySettings.DEFAULT_ENCRYPTION_KEY).newCrypt();
+		ICrypt crypt = new CachingSunJceCryptFactory("WiCkEt-FRAMEwork").newCrypt();
 		String s = crypt.encryptUrlSafe(input);
 
 		String output = crypt.decryptUrlSafe(s);
@@ -237,19 +234,6 @@ public class Base64Test extends TestCase
 	/**
 	 * @throws IOException
 	 */
-	public void test_UrlSafe_3() throws IOException
-	{
-		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
-		ICrypt crypt = new CachingSunJceCryptFactory(ISecuritySettings.DEFAULT_ENCRYPTION_KEY).newCrypt();
-		String s = crypt.encryptUrlSafe(input);
-
-		String output = crypt.decryptUrlSafe(s);
-		assertEquals(input, output);
-	}
-
-	/**
-	 * @throws IOException
-	 */
 	public void test_4() throws IOException
 	{
 		String input = "wicket-sep-wicket";
@@ -269,8 +253,7 @@ public class Base64Test extends TestCase
 	 */
 	public void test_5() throws IOException
 	{
-		WicketTester tester = new WicketTester();
-		ICrypt crypt = tester.getApplication().getSecuritySettings().getCryptFactory().newCrypt();
+		ICrypt crypt = new CachingSunJceCryptFactory("WiCkEt-FRAMEwork").newCrypt();
 
 		String input = "wicket-sep-wicket";
 		for (int i = input.length(); i >= 0; i--)
@@ -281,7 +264,5 @@ public class Base64Test extends TestCase
 			String output = crypt.decryptUrlSafe(encrypted);
 			assertEquals(in, output);
 		}
-
-		tester.destroy();
 	}
 }
