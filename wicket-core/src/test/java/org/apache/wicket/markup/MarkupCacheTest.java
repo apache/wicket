@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -35,6 +36,15 @@ public class MarkupCacheTest extends WicketTestCase
 		super.setUp();
 		cache = new MarkupCache();
 
+		Application.get().getMarkupSettings().setMarkupFactory(new MarkupFactory()
+		{
+			@Override
+			public IMarkupCache getMarkupCache()
+			{
+				return cache;
+			}
+		});
+
 		component = new MarkupCachingAssumingComponent("panel");
 		tester.startComponent(component);
 	}
@@ -48,6 +58,25 @@ public class MarkupCacheTest extends WicketTestCase
 		assertNull(markup);
 
 		markup = cache.getMarkup(component, null, false);
+		assertNull(markup);
+	}
+
+	/**
+	 * testRemoveMarkupWhereBaseMarkupIsNoLongerInTheCache()
+	 */
+	public void testRemoveMarkupWhereBaseMarkupIsNoLongerInTheCache()
+	{
+		tester.startPage(MarkupInheritanceExtension_1.class);
+		tester.assertRenderedPage(MarkupInheritanceExtension_1.class);
+		MarkupInheritanceExtension_1 page = (MarkupInheritanceExtension_1)tester.getLastRenderedPage();
+
+		IMarkupFragment markup = cache.getMarkup(page, null, false);
+		assertNotNull(markup);
+
+		String key = markup.getMarkupResourceStream().getBaseMarkupResourceStream().getCacheKey();
+		cache.removeMarkup(key);
+
+		markup = cache.getMarkupFromCache(markup.getMarkupResourceStream().getCacheKey(), page);
 		assertNull(markup);
 	}
 
