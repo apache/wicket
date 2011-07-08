@@ -294,6 +294,40 @@ public class AbstractHierarchyIteratorTest extends WicketTestCase
 	}
 
 	/** */
+	@Test
+	public void childFirst()
+	{
+		Page page = new MyPage();
+		WebComponent a;
+		page.add(a = new WebComponent("a"));
+		WebMarkupContainer b;
+		page.add(b = new WebMarkupContainer("b"));
+		WebMarkupContainer b1;
+		b.add(b1 = new WebMarkupContainer("b1"));
+		WebMarkupContainer b2;
+		b.add(b2 = new WebMarkupContainer("b2"));
+		WebMarkupContainer b12;
+		b1.add(b12 = new WebMarkupContainer("b12"));
+		WebMarkupContainer b121;
+		b12.add(b121 = new WebMarkupContainer("b121"));
+
+		// Filter leaf components only
+		int count = 0;
+		String buf = "";
+		ComponentHierarchyIterator iter = new ComponentHierarchyIterator(page);
+		iter.setChildFirst(true);
+		while (iter.hasNext())
+		{
+			Component component = iter.next();
+			count += 1;
+			buf += component.getId();
+		}
+
+		assertEquals(6, count);
+		assertEquals("ab121b12b1b2b", buf);
+	}
+
+	/** */
 	public static class MyPage extends WebPage
 	{
 		private static final long serialVersionUID = 1L;

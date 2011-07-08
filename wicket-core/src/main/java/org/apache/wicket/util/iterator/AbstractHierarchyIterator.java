@@ -80,6 +80,16 @@ public abstract class AbstractHierarchyIterator<N, I extends N> implements Itera
 
 	/**
 	 * 
+	 * @param childFirst
+	 *            If true, than children are visited before their parent is.
+	 */
+	public final void setChildFirst(final boolean childFirst)
+	{
+		this.childFirst = childFirst;
+	}
+
+	/**
+	 * 
 	 * @param node
 	 * @return True, if node is a container and has at least one child.
 	 */
@@ -121,7 +131,7 @@ public abstract class AbstractHierarchyIterator<N, I extends N> implements Itera
 		}
 
 		// Do we need to traverse into the next level?
-		if (traverse)
+		if (!childFirst && traverse)
 		{
 			// Try to find the next element
 			if (moveDown(data.lastNode) == false)
@@ -209,9 +219,6 @@ public abstract class AbstractHierarchyIterator<N, I extends N> implements Itera
 					// No more elements
 					return false;
 				}
-
-				// We did traverse the children already
-				traverse = false;
 			}
 
 			// The user interested in the node?
@@ -274,7 +281,7 @@ public abstract class AbstractHierarchyIterator<N, I extends N> implements Itera
 		data = stack.pop();
 
 		// If we are on childFirst, than it's now time to handle the parent
-		if (traverse)
+		if (childFirst)
 		{
 			hasNextWasLast = true;
 			if (onFilter(data.lastNode) == true)
