@@ -339,7 +339,10 @@ public class RequestLogger implements IRequestLogger
 
 	public void sessionDestroyed(String sessionId)
 	{
-		RequestCycle.get().setMetaData(SESSION_DATA, liveSessions.remove(sessionId));
+		RequestCycle requestCycle = RequestCycle.get();
+		SessionData sessionData = liveSessions.remove(sessionId);
+		if (requestCycle != null)
+			requestCycle.setMetaData(SESSION_DATA, sessionData);
 	}
 
 	protected RequestData getCurrentRequest()
