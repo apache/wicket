@@ -58,7 +58,7 @@ public class MockWebResponse extends WebResponse
 
 	/** current octets in response body */
 	private ByteArrayOutputStream binaryResponse;
-	
+
 	/** http response status */
 	private Integer status;
 
@@ -185,9 +185,9 @@ public class MockWebResponse extends WebResponse
 	 * set content type if it is specified
 	 * 
 	 * @param name
-	 *         header name
+	 *            header name
 	 * @param value
-	 *         header value
+	 *            header value
 	 */
 	private void internalSetContentType(String name, String value)
 	{
@@ -244,6 +244,12 @@ public class MockWebResponse extends WebResponse
 
 	@Override
 	public String encodeURL(CharSequence url)
+	{
+		return url.toString();
+	}
+
+	@Override
+	public String encodeRedirectURL(CharSequence url)
 	{
 		return url.toString();
 	}

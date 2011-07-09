@@ -90,6 +90,19 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		}
 	}
 
+	@Override
+	public String encodeRedirectURL(CharSequence url)
+	{
+		if (originalResponse != null)
+		{
+			return originalResponse.encodeRedirectURL(url);
+		}
+		else
+		{
+			return url != null ? url.toString() : null;
+		}
+	}
+
 	private static abstract class Action implements Comparable<Action>
 	{
 		protected abstract void invoke(WebResponse response);

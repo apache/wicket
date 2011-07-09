@@ -213,15 +213,15 @@ public class ServletWebResponse extends WebResponse
 			Url append = Url.parse(url, charset);
 			current.concatSegments(append.getSegments());
 			Url result = new Url(current.getSegments(), append.getQueryParameters());
-			
+
 			String path = result.toString();
-			
+
 			// replace redirect to empty path with '/'
-			if(Strings.isEmpty(path))
+			if (Strings.isEmpty(path))
 			{
 				path = "/";
 			}
-			
+
 			return Strings.join("/", getAbsolutePrefix(), httpServletRequest.getContextPath(),
 				webRequest.getFilterPrefix(), path);
 		}
@@ -230,13 +230,19 @@ public class ServletWebResponse extends WebResponse
 	private boolean redirect = false;
 
 	@Override
+	public String encodeRedirectURL(CharSequence url)
+	{
+		return httpServletResponse.encodeRedirectURL(url.toString());
+	}
+
+	@Override
 	public void sendRedirect(String url)
 	{
 		try
 		{
 			redirect = true;
 			url = getAbsoluteURL(url);
-			url = httpServletResponse.encodeRedirectURL(url);
+			url = encodeRedirectURL(url);
 
 			// wicket redirects should never be cached
 			disableCaching();

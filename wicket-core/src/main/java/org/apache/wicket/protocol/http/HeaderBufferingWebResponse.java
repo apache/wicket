@@ -162,6 +162,12 @@ class HeaderBufferingWebResponse extends WebResponse implements IMetaDataBufferi
 	}
 
 	@Override
+	public String encodeRedirectURL(CharSequence url)
+	{
+		return originalResponse.encodeRedirectURL(url);
+	}
+
+	@Override
 	public void write(CharSequence sequence)
 	{
 		writeBuffered();
