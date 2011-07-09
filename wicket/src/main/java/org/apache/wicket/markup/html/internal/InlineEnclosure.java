@@ -69,6 +69,14 @@ public class InlineEnclosure extends Enclosure
 	}
 
 	@Override
+	public boolean isVisible()
+	{
+		updateVisibility();
+
+		return super.isVisible();
+	}
+
+	@Override
 	protected void onAfterRenderChildren()
 	{
 		if (children == null)
@@ -107,6 +115,12 @@ public class InlineEnclosure extends Enclosure
 	public boolean updateVisibility()
 	{
 		Component child = getChildComponent();
+		if (child == null)
+		{
+			throw new WicketRuntimeException("Could not find child with id: " + childId +
+				" in the wicket:enclosure");
+		}
+
 		boolean visible = child.isVisible();
 		setVisible(visible);
 		return visible;

@@ -28,6 +28,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.resource.DummyApplication;
 import org.apache.wicket.util.diff.DiffUtil;
@@ -339,6 +340,9 @@ public class EnclosureTest extends WicketTestCase
 		executeTest(EnclosurePage_11.class, "EnclosurePageExpectedResult_11.html");
 	}
 
+	/**
+	 * 
+	 */
 	public void testBadEnclosure1()
 	{
 		class TestPage extends WebPage implements IMarkupResourceStreamProvider
@@ -365,5 +369,49 @@ public class EnclosureTest extends WicketTestCase
 		{
 			assertTrue(e.getMessage().startsWith("Could not find child"));
 		}
+	}
+
+	/**
+	 * 
+	 */
+	public void testAttribute()
+	{
+		class TestPage extends WebPage implements IMarkupResourceStreamProvider
+		{
+			public TestPage()
+			{
+				final Label l = new Label("msg", "$label$");
+				add(l);
+				add(new Link<Void>("b")
+				{
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void onClick()
+					{
+						l.setVisible(!l.isVisible());
+					}
+				});
+			}
+
+			public IResourceStream getMarkupResourceStream(MarkupContainer container,
+				Class<?> containerClass)
+			{
+				return new StringResourceStream(
+					"<html><body><div wicket:enclosure='msg'><span wicket:id='msg'></span></div><input type='button' value='Toggle' wicket:id='b'></body></html>");
+			}
+		}
+
+		tester.startPage(new TestPage());
+		assertTrue(tester.getServletResponse().getDocument().contains("$label$"));
+
+		// toggle visibility of enclosure to false
+		tester.clickLink("b");
+		assertFalse(tester.getServletResponse().getDocument().contains("$label$"));
+
+		// toggle visibility of enclosure to back to true
+		tester.clickLink("b");
+		assertTrue(tester.getServletResponse().getDocument().contains("$label$"));
+
 	}
 }
