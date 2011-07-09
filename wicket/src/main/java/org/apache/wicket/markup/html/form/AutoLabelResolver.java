@@ -56,11 +56,11 @@ import org.slf4j.LoggerFactory;
  * 
  * <p>
  * The value of the {@code wicket:for} atribute can either contain an id of the form component or a
- * path a path to it using the standard {@code :} path separator. Note that {@code ..} can be used
- * as part of the path to construct a reference to the parent container, eg {@code ..:..:foo:bar}.
- * First the value of the attribute will be treated as a path and the {@code <label>} tag's closest
- * parent container will be queried for the form component. If the form component cannot be resolved
- * the value of the {@code wicket:for} attribute will be treated as an id and all containers will be
+ * path to it using the standard {@code :} path separator. Note that {@code ..} can be used as part
+ * of the path to construct a reference to the parent container, eg {@code ..:..:foo:bar}. First the
+ * value of the attribute will be treated as a path and the {@code <label>} tag's closest parent
+ * container will be queried for the form component. If the form component cannot be resolved the
+ * value of the {@code wicket:for} attribute will be treated as an id and all containers will be
  * searched from the closest parent to the page.
  * </p>
  * 
