@@ -68,7 +68,7 @@ public abstract class WebResponse extends Response
 	 * @param value
 	 */
 	public abstract void addHeader(String name, String value);
-	
+
 	/**
 	 * Set a header to the date value in the servlet response stream.
 	 * 
@@ -117,7 +117,7 @@ public abstract class WebResponse extends Response
 	public void setAttachmentHeader(final String filename)
 	{
 		setHeader("Content-Disposition", "attachment" +
-		                                 ((!Strings.isEmpty(filename))? ("; filename=\"" + filename + "\"") : ""));
+			((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename + "\"") : ""));
 	}
 
 	/**
@@ -152,8 +152,19 @@ public abstract class WebResponse extends Response
 	public abstract void sendError(int sc, String msg);
 
 	/**
+	 * Encodes urls used to redirect. Sometimes rules for encoding URLs for redirecting differ from
+	 * encoding URLs for links, so this method is broken out away form
+	 * {@link #encodeURL(CharSequence)}.
+	 * 
+	 * @param url
+	 * @return encoded URL
+	 */
+	public abstract String encodeRedirectURL(CharSequence url);
+
+	/**
 	 * Redirects the response to specified URL. The implementation is responsible for properly
-	 * encoding the URL.
+	 * encoding the URL. Implementations of this method should run passed in {@code url} parameters
+	 * throu the {@link #encodeRedirectURL(String)} method.
 	 * 
 	 * @param url
 	 */
