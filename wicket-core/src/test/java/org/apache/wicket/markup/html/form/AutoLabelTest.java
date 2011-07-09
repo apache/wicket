@@ -16,15 +16,12 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.markup.IMarkupCacheKeyProvider;
-import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.StringResourceStream;
 
 /**
  * Tests {@code wicket:for} attribute functionality
@@ -33,10 +30,13 @@ import org.apache.wicket.util.resource.StringResourceStream;
  */
 public class AutoLabelTest extends WicketTestCase
 {
+	/** */
 	public void testLabelIntoMarkupInsertion()
 	{
 		class MyTestPage extends TestPage
 		{
+			private static final long serialVersionUID = 1L;
+
 			public MyTestPage(String labelMarkup)
 			{
 				super("<label wicket:for='t'>" + labelMarkup + "</label>");
@@ -48,11 +48,9 @@ public class AutoLabelTest extends WicketTestCase
 		assertRendered(new MyTestPage("<span class='text'>text</span>"),
 			"<span class='text'>t</span>");
 
-
 		// preserves markup before and after
 		assertRendered(new MyTestPage(" <div> a </div> <span class='text'>text</span> b "),
 			" <div> a </div> <span class='text'>t</span> b ");
-
 
 		// embedded span tags
 		assertRendered(new MyTestPage(" a <div> b <span class='text'>text</span> c </div> d"),
@@ -80,10 +78,13 @@ public class AutoLabelTest extends WicketTestCase
 			"<span class='foo text bar'>t</span>");
 	}
 
+	/** */
 	public void testMarkupIntoLabelInsertion()
 	{
 		class MyTestPage extends TestPage
 		{
+			private static final long serialVersionUID = 1L;
+
 			public MyTestPage(String labelMarkup)
 			{
 				super("<label wicket:for='t'>" + labelMarkup + "</label>");
@@ -98,17 +99,23 @@ public class AutoLabelTest extends WicketTestCase
 			.getObject());
 	}
 
+	/** */
 	public void testLabelTagClasses()
 	{
 		class MyTestPage extends TestPage
 		{
+			private static final long serialVersionUID = 1L;
+
 			public MyTestPage()
 			{
 				super("<label wicket:for='t'><span class='text'>field</span></label>");
 			}
 		}
+
 		class MyErrorTestPage extends MyTestPage
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onConfigure()
 			{
@@ -140,6 +147,8 @@ public class AutoLabelTest extends WicketTestCase
 		// test existing classes are preserved
 		class MyTestPage2 extends TestPage
 		{
+			private static final long serialVersionUID = 1L;
+
 			public MyTestPage2()
 			{
 				super("<label class='long' wicket:for='t'><span class='text'>field</span></label>");
@@ -174,10 +183,9 @@ public class AutoLabelTest extends WicketTestCase
 	}
 
 	private static class TestPage extends WebPage
-		implements
-			IMarkupResourceStreamProvider,
-			IMarkupCacheKeyProvider
 	{
+		private static final long serialVersionUID = 1L;
+
 		TextField<String> field;
 
 		private final String labelMarkup;
@@ -190,17 +198,11 @@ public class AutoLabelTest extends WicketTestCase
 			form.add(field = new TextField<String>("t", Model.of("")));
 		}
 
-		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-			Class<?> containerClass)
+		@Override
+		public IMarkupFragment getMarkup()
 		{
-			return new StringResourceStream("<html><body><form wicket:id='f'>\n" + labelMarkup +
+			return Markup.of("<html><body><form wicket:id='f'>\n" + labelMarkup +
 				"\n<input type='text' wicket:id='t'/>\n</form></body></html>");
-		}
-
-		public String getCacheKey(MarkupContainer container, Class<?> containerClass)
-		{
-			// no cache
-			return null;
 		}
 	}
 }

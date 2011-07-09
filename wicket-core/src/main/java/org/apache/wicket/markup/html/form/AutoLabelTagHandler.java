@@ -32,7 +32,7 @@ import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 public class AutoLabelTagHandler extends AbstractMarkupFilter
 {
 	@Override
-	protected MarkupElement onComponentTag(ComponentTag tag) throws ParseException
+	protected MarkupElement onComponentTag(final ComponentTag tag) throws ParseException
 	{
 		if (tag == null || tag.isClose() || tag instanceof WicketTag)
 		{

@@ -55,7 +55,7 @@ import org.slf4j.LoggerFactory;
  * </ul>
  * 
  * <p>
- * The value of the {@code wicket:for} atribute can either contain an id of the form component or a
+ * The value of the {@code wicket:for} attribute can either contain an id of the form component or a
  * path a path to it using the standard {@code :} path separator. Note that {@code ..} can be used
  * as part of the path to construct a reference to the parent container, eg {@code ..:..:foo:bar}.
  * First the value of the attribute will be treated as a path and the {@code <label>} tag's closest
@@ -196,7 +196,7 @@ public class AutoLabelResolver implements IComponentResolver
 
 		private final FormComponent<?> fc;
 
-		public AutoLabel(String id, FormComponent<?> fc)
+		public AutoLabel(final String id, final FormComponent<?> fc)
 		{
 			super(id);
 			this.fc = fc;
@@ -212,6 +212,7 @@ public class AutoLabelResolver implements IComponentResolver
 			{
 				tag.append(CLASS, "required", " ");
 			}
+
 			if (!fc.isValid())
 			{
 				tag.append(CLASS, "error", " ");
@@ -248,7 +249,6 @@ public class AutoLabelResolver implements IComponentResolver
 			// markup
 
 			String label = getFormComponentLabelText(fc);
-
 			if (label != null)
 			{
 				// if label is set write it into the markup
