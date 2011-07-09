@@ -34,6 +34,7 @@ import org.apache.wicket.Response;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.form.AutoLabelResolver;
 import org.apache.wicket.markup.html.pages.AccessDeniedPage;
 import org.apache.wicket.markup.html.pages.InternalErrorPage;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
@@ -555,6 +556,7 @@ public abstract class WebApplication extends Application
 
 		// Add resolver for automatically resolving HTML links
 		getPageSettings().addComponentResolver(new AutoLinkResolver());
+		getPageSettings().addComponentResolver(new AutoLabelResolver());
 
 		// Set resource finder to web app path
 		getResourceSettings().setResourceFinder(getResourceFinder());

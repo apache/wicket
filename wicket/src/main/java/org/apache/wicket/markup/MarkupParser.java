@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.markup.html.form.AutoLabelTagHandler;
 import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.IXmlPullParser;
 import org.apache.wicket.markup.parser.XmlPullParser;
@@ -163,6 +164,7 @@ public class MarkupParser
 		appendMarkupFilter(new WicketLinkTagHandler());
 		appendMarkupFilter(new WicketNamespaceHandler(markupResourceData));
 
+
 		// Provided the wicket component requesting the markup is known ...
 		final MarkupResourceStream resource = markupResourceData.getResource();
 		if (resource != null)
@@ -186,6 +188,7 @@ public class MarkupParser
 		appendMarkupFilter(new RelativePathPrefixHandler());
 		appendMarkupFilter(new EnclosureHandler());
 		appendMarkupFilter(new InlineEnclosureHandler());
+		appendMarkupFilter(new AutoLabelTagHandler());
 	}
 
 	/**
