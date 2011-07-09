@@ -21,6 +21,7 @@ import java.text.ParseException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Markup filter that identifies tags with the {@code wicket:for} attribute. See
@@ -45,7 +46,7 @@ public class AutoLabelTagHandler extends AbstractMarkupFilter
 		}
 
 		related = related.trim();
-		if (related.isEmpty())
+		if (Strings.isEmpty(related))
 		{
 			throw new ParseException("Tag contains an empty wicket:for attribute", tag.getPos());
 		}
