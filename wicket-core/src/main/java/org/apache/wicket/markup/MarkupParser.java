@@ -19,6 +19,7 @@ package org.apache.wicket.markup;
 import java.util.ArrayList;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.markup.html.form.AutoLabelTagHandler;
 import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.IXmlPullParser;
 import org.apache.wicket.markup.parser.filter.ConditionalCommentFilter;
@@ -146,6 +147,7 @@ public class MarkupParser extends AbstractMarkupParser
 		filters.add(new HtmlHandler());
 		filters.add(new WicketRemoveTagHandler());
 		filters.add(new WicketLinkTagHandler());
+		filters.add(new AutoLabelTagHandler());
 		filters.add(new WicketNamespaceHandler(markupResourceStream));
 
 		// Provided the wicket component requesting the markup is known ...
