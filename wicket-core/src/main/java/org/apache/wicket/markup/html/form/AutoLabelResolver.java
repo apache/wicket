@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.Component;
@@ -68,24 +84,29 @@ import org.slf4j.LoggerFactory;
  */
 public class AutoLabelResolver implements IComponentResolver
 {
+	private static final long serialVersionUID = 1L;
+
 	private static Logger logger = LoggerFactory.getLogger(AutoLabelResolver.class);
 
-	public Component resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
+	static final String WICKET_FOR = "wicket:for";
+
+	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
+		final ComponentTag tag)
 	{
 		if (!AutoLabelTagHandler.class.getName().equals(tag.getId()))
 		{
 			return null;
 		}
 
-		final String id = tag.getAttribute("wicket:for").trim();
+		final String id = tag.getAttribute(WICKET_FOR).trim();
 
 		FormComponent<?> component = findRelatedComponent(container, id);
-
 		if (component == null)
 		{
 			throw new WicketRuntimeException("Could not find form component with id: " + id +
 				" while trying to resolve wicket:for attribute");
 		}
+
 		if (!(component instanceof FormComponent<?>))
 		{
 			throw new WicketRuntimeException("Component pointed to by wicket:for attribute: " + id +
@@ -102,11 +123,17 @@ public class AutoLabelResolver implements IComponentResolver
 					component.toString(false));
 			}
 		}
-		final FormComponent<?> fc = component;
 
+		FormComponent<?> fc = component;
 		return new AutoLabel("label" + container.getPage().getAutoIndex(), fc);
 	}
 
+	/**
+	 * 
+	 * @param container
+	 * @param id
+	 * @return FormComponent
+	 */
 	protected FormComponent<?> findRelatedComponent(MarkupContainer container, final String id)
 	{
 		// try the quick and easy route first
@@ -162,6 +189,11 @@ public class AutoLabelResolver implements IComponentResolver
 	 */
 	protected static class AutoLabel extends WebMarkupContainer
 	{
+		private static final long serialVersionUID = 1L;
+
+		private static final String WICKET_UNKNOWN = "wicket:unknown";
+		private static final String CLASS = "class";
+
 		private final FormComponent<?> fc;
 
 		public AutoLabel(String id, FormComponent<?> fc)
@@ -171,22 +203,23 @@ public class AutoLabelResolver implements IComponentResolver
 		}
 
 		@Override
-		protected void onComponentTag(ComponentTag tag)
+		protected void onComponentTag(final ComponentTag tag)
 		{
 			super.onComponentTag(tag);
+
 			tag.put("for", fc.getMarkupId());
 			if (fc.isRequired())
 			{
-				tag.append("class", "required", " ");
+				tag.append(CLASS, "required", " ");
 			}
 			if (!fc.isValid())
 			{
-				tag.append("class", "error", " ");
+				tag.append(CLASS, "error", " ");
 			}
 		}
 
 		@Override
-		public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+		public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 		{
 			if (!(markupStream.get() instanceof RawMarkup))
 			{
@@ -238,9 +271,9 @@ public class AutoLabelResolver implements IComponentResolver
 		 * the {@code <span class='text'></span>} tag
 		 * 
 		 * @param markup
-		 * @return
+		 * @return Start and end index of text in the label
 		 */
-		protected int[] findLabelTextRange(AppendingStringBuffer markup)
+		protected int[] findLabelTextRange(final AppendingStringBuffer markup)
 		{
 			int[] range = new int[] { -1, -1 };
 
@@ -300,7 +333,12 @@ public class AutoLabelResolver implements IComponentResolver
 			return range;
 		}
 
-		protected AppendingStringBuffer readBodyMarkup(MarkupStream markupStream)
+		/**
+		 * 
+		 * @param markupStream
+		 * @return buffer
+		 */
+		protected AppendingStringBuffer readBodyMarkup(final MarkupStream markupStream)
 		{
 			int streamIndex = markupStream.getCurrentIndex();
 
@@ -317,13 +355,18 @@ public class AutoLabelResolver implements IComponentResolver
 			return markup;
 		}
 
-		protected String getFormComponentLabelText(FormComponent<?> fc)
+		/**
+		 * 
+		 * @param fc
+		 * @return ??
+		 */
+		protected String getFormComponentLabelText(final FormComponent<?> fc)
 		{
 			String label = fc.getLabel() != null ? fc.getLabel().getObject() : null;
 			if (label == null)
 			{
-				label = fc.getDefaultLabel("wicket:unknown");
-				if ("wicket:unknown".equals(label))
+				label = fc.getDefaultLabel(WICKET_UNKNOWN);
+				if (WICKET_UNKNOWN.equals(label))
 				{
 					label = null;
 				}
@@ -331,17 +374,28 @@ public class AutoLabelResolver implements IComponentResolver
 			return label;
 		}
 
-		protected final boolean isTextSpan(XmlTag tag)
+		/**
+		 * 
+		 * @param tag
+		 * @return true, if ???
+		 */
+		protected final boolean isTextSpan(final XmlTag tag)
 		{
 			if (!tag.isOpen())
+			{
 				return false;
+			}
 
 			if (!"span".equalsIgnoreCase(tag.getName()) || tag.getNamespace() != null)
+			{
 				return false;
+			}
 
-			String classNames = tag.getAttributes().getString("class");
+			String classNames = tag.getAttributes().getString(CLASS);
 			if (Strings.isEmpty(classNames))
+			{
 				return false;
+			}
 
 			boolean textClassFound = false;
 			for (String className : classNames.split(" "))
@@ -352,14 +406,13 @@ public class AutoLabelResolver implements IComponentResolver
 					break;
 				}
 			}
-			if (!textClassFound)
-				return false;
 
+			if (!textClassFound)
+			{
+				return false;
+			}
 
 			return true;
 		}
-
 	}
-
-
 }
