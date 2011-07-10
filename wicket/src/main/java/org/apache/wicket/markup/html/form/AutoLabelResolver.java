@@ -97,17 +97,17 @@ public class AutoLabelResolver implements IComponentResolver
 
 		final String id = tag.getAttribute("wicket:for").trim();
 
-		FormComponent<?> component = findRelatedComponent(container, id);
+		Component component = findRelatedComponent(container, id);
 
 		if (component == null)
 		{
 			throw new WicketRuntimeException("Could not find form component with id: " + id +
 				" while trying to resolve wicket:for attribute");
 		}
-		if (!(component instanceof FormComponent<?>))
+		if (!(component instanceof ILabelProvider))
 		{
 			throw new WicketRuntimeException("Component pointed to by wicket:for attribute: " + id +
-				" is not a form component");
+				" does not implement " + ILabelProvider.class.getName());
 		}
 
 		if (!component.getOutputMarkupId())
@@ -116,26 +116,25 @@ public class AutoLabelResolver implements IComponentResolver
 			if (!component.hasBeenRendered())
 			{
 				logger.warn(
-					"Form component: {} is reference via a wicket:for attribute but does not have its outputMarkupId property set to true",
+					"Component: {} is reference via a wicket:for attribute but does not have its outputMarkupId property set to true",
 					component.toString(false));
 			}
 		}
-		final FormComponent<?> fc = component;
 
-		container.autoAdd(new AutoLabel("label" + container.getPage().getAutoIndex2(), fc),
+		container.autoAdd(new AutoLabel("label" + container.getPage().getAutoIndex2(), component),
 			markupStream);
 
 		return true;
 	}
 
-	protected FormComponent<?> findRelatedComponent(MarkupContainer container, final String id)
+	protected Component findRelatedComponent(MarkupContainer container, final String id)
 	{
 		// try the quick and easy route first
 
 		Component component = container.get(id);
-		if (component != null && (component instanceof FormComponent<?>))
+		if (component != null && (component instanceof ILabelProvider))
 		{
-			return (FormComponent<?>)component;
+			return component;
 		}
 
 		// try the long way, search the hierarchy from the closest container up to the page
@@ -153,7 +152,7 @@ public class AutoLabelResolver implements IComponentResolver
 							// this container was already searched
 							return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
 						}
-						if (id.equals(child.getId()) && (child instanceof FormComponent))
+						if (id.equals(child.getId()))
 						{
 							return child;
 						}
@@ -161,9 +160,9 @@ public class AutoLabelResolver implements IComponentResolver
 					}
 				});
 
-			if (component != null && (component instanceof FormComponent))
+			if (component != null)
 			{
-				return (FormComponent<?>)component;
+				return component;
 			}
 
 			// remember the container so we dont search it again, and search the parent
@@ -184,26 +183,31 @@ public class AutoLabelResolver implements IComponentResolver
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final FormComponent<?> fc;
+		private final Component component;
 
-		public AutoLabel(String id, FormComponent<?> fc)
+		public AutoLabel(String id, Component fc)
 		{
 			super(id);
-			this.fc = fc;
+			component = fc;
 		}
 
 		@Override
 		protected void onComponentTag(ComponentTag tag)
 		{
 			super.onComponentTag(tag);
-			tag.put("for", fc.getMarkupId());
-			if (fc.isRequired())
+			tag.put("for", component.getMarkupId());
+
+			if (component instanceof FormComponent)
 			{
-				tag.append("class", "required", " ");
-			}
-			if (!fc.isValid())
-			{
-				tag.append("class", "error", " ");
+				FormComponent<?> fc = (FormComponent<?>)component;
+				if (fc.isRequired())
+				{
+					tag.append("class", "required", " ");
+				}
+				if (!fc.isValid())
+				{
+					tag.append("class", "error", " ");
+				}
 			}
 		}
 
@@ -236,7 +240,7 @@ public class AutoLabelResolver implements IComponentResolver
 			// based on whether or not the form component has a label set read or write it into the
 			// markup
 
-			String label = getFormComponentLabelText(fc);
+			String label = getLabelText();
 
 			if (label != null)
 			{
@@ -249,9 +253,13 @@ public class AutoLabelResolver implements IComponentResolver
 			{
 				// if label is not set, read it from the markup into the form component
 
-				String markupLabel = markup.substring(start, end);
-				fc.setLabel(Model.of(markupLabel));
-				super.onComponentTagBody(markupStream, openTag);
+				if (component instanceof FormComponent)
+				{
+					FormComponent<?> fc = (FormComponent<?>)component;
+					String markupLabel = markup.substring(start, end);
+					fc.setLabel(Model.of(markupLabel));
+					super.onComponentTagBody(markupStream, openTag);
+				}
 			}
 		}
 
@@ -309,7 +317,7 @@ public class AutoLabelResolver implements IComponentResolver
 			{
 				throw new WicketRuntimeException(
 					"Could not parse markup while processing an auto label for component: " +
-						fc.toString(false), e);
+						component.toString(false), e);
 			}
 
 			if (opening != null)
@@ -339,12 +347,25 @@ public class AutoLabelResolver implements IComponentResolver
 			return markup;
 		}
 
-		protected String getFormComponentLabelText(FormComponent<?> fc)
+		protected String getLabelText()
 		{
-			String label = fc.getLabel() != null ? fc.getLabel().getObject() : null;
-			if (label == null)
+			String label = null;
+			if (component instanceof ILabelProvider)
 			{
-				label = fc.getDefaultLabel("wicket:unknown");
+				ILabelProvider<?> provider = (ILabelProvider<?>)component;
+				if (provider.getLabel() != null)
+				{
+					Object value = provider.getLabel().getObject();
+					if (value != null)
+					{
+						label = value.toString();
+					}
+				}
+			}
+
+			if (label == null && component instanceof FormComponent)
+			{
+				label = ((FormComponent<?>)component).getDefaultLabel("wicket:unknown");
 				if ("wicket:unknown".equals(label))
 				{
 					label = null;
