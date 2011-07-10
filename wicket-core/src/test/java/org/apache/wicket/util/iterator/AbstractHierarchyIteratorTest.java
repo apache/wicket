@@ -313,18 +313,22 @@ public class AbstractHierarchyIteratorTest extends WicketTestCase
 
 		// Filter leaf components only
 		int count = 0;
-		String buf = "";
+		StringBuilder buf = new StringBuilder();
 		ComponentHierarchyIterator iter = new ComponentHierarchyIterator(page);
 		iter.setChildFirst(true);
 		while (iter.hasNext())
 		{
 			Component component = iter.next();
 			count += 1;
-			buf += component.getId();
+			if (buf.length() > 0)
+			{
+				buf.append(Component.PATH_SEPARATOR);
+			}
+			buf.append(component.getId());
 		}
 
 		assertEquals(6, count);
-		assertEquals("ab121b12b1b2b", buf);
+		assertEquals("a:b121:b12:b1:b2:b", buf.toString());
 	}
 
 	/** */
