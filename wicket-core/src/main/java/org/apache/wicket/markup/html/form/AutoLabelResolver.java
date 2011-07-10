@@ -103,14 +103,14 @@ public class AutoLabelResolver implements IComponentResolver
 		FormComponent<?> component = findRelatedComponent(container, id);
 		if (component == null)
 		{
-			throw new WicketRuntimeException("Could not find form component with id: " + id +
-				" while trying to resolve wicket:for attribute");
+			throw new WicketRuntimeException("Could not find form component with id '" + id +
+				"' while trying to resolve wicket:for attribute");
 		}
 
 		if (!(component instanceof FormComponent<?>))
 		{
-			throw new WicketRuntimeException("Component pointed to by wicket:for attribute: " + id +
-				" is not a form component");
+			throw new WicketRuntimeException("Component pointed to by wicket:for attribute '" + id +
+				"' is not a form component");
 		}
 
 		if (!component.getOutputMarkupId())
@@ -119,7 +119,7 @@ public class AutoLabelResolver implements IComponentResolver
 			if (!component.hasBeenRendered())
 			{
 				logger.warn(
-					"Form component: {} is reference via a wicket:for attribute but does not have its outputMarkupId property set to true",
+					"Form component: {} is referenced via a wicket:for attribute but does not have its outputMarkupId property set to true",
 					component.toString(false));
 			}
 		}
