@@ -47,8 +47,8 @@ public abstract class AbstractResource implements IResource
 	private static final long serialVersionUID = 1L;
 
 	/** header values that are managed internally and must not be set directly */
-	public static final Set<String> INTERNAL_HEADERS; 
-		
+	public static final Set<String> INTERNAL_HEADERS;
+
 	static
 	{
 		INTERNAL_HEADERS = new HashSet<String>();
@@ -63,7 +63,7 @@ public abstract class AbstractResource implements IResource
 		INTERNAL_HEADERS.add("connection");
 		INTERNAL_HEADERS.add("content-disposition");
 	}
-	
+
 	/**
 	 * Construct.
 	 */
@@ -109,7 +109,7 @@ public abstract class AbstractResource implements IResource
 			// setting it to [PUBLIC] seems to be sexy but could potentially cache confidential
 			// data on public proxies for users migrating to 1.5
 			cacheScope = WebResponse.CacheScope.PRIVATE;
-			
+
 			// collection of directly set response headers
 			headers = new HttpHeaderCollection();
 		}
@@ -424,6 +424,8 @@ public abstract class AbstractResource implements IResource
 
 		/**
 		 * get custom headers
+		 * 
+		 * @return collection of the response headers
 		 */
 		public HttpHeaderCollection getHeaders()
 		{
@@ -482,13 +484,13 @@ public abstract class AbstractResource implements IResource
 	}
 
 	/**
-	 * check if header is directly modifyable 
+	 * check if header is directly modifyable
 	 * 
 	 * @param name
-	 *         header name
-	 *
-	 * @throws IllegalArgumentException 
-	 *         if access is forbidden 
+	 *            header name
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if access is forbidden
 	 */
 	private void checkHeaderAccess(String name)
 	{
@@ -496,13 +498,12 @@ public abstract class AbstractResource implements IResource
 
 		if (INTERNAL_HEADERS.contains(name))
 		{
-			throw new IllegalArgumentException(
-				"you are not allowed to directly access header [" + name + "], " +
-				"use one of the other specialized methods of " + getClass().getSimpleName() +
-				" to get or modify its value");
+			throw new IllegalArgumentException("you are not allowed to directly access header [" +
+				name + "], " + "use one of the other specialized methods of " +
+				getClass().getSimpleName() + " to get or modify its value");
 		}
 	}
-	
+
 	/**
 	 * @param data
 	 * @param attributes
@@ -579,17 +580,17 @@ public abstract class AbstractResource implements IResource
 
 			// add custom headers and values
 			final HttpHeaderCollection headers = data.getHeaders();
-			
+
 			for (String name : headers.getHeaderNames())
 			{
 				checkHeaderAccess(name);
-				
+
 				for (String value : headers.getHeaderValues(name))
 				{
 					webResponse.addHeader(name, value);
 				}
 			}
-			
+
 			// 6. Flush the response
 			// This is necessary for firefox if this resource is an image, otherwise it messes up
 			// other images on page
