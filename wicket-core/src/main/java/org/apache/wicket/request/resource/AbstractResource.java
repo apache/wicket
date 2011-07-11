@@ -470,7 +470,7 @@ public abstract class AbstractResource implements IResource
 		ResourceResponse data = newResourceResponse(attributes);
 		setResponseHeaders(data, attributes);
 
-		if (!data.dataNeedsToBeWritten(attributes))
+		if (!data.dataNeedsToBeWritten(attributes) || data.getErrorCode() != null)
 		{
 			return;
 		}
