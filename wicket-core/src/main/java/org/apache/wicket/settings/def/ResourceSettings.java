@@ -42,7 +42,7 @@ import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.resource.loader.PackageStringResourceLoader;
 import org.apache.wicket.resource.loader.ValidatorStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
-import org.apache.wicket.util.file.IFileUploadCleaner;
+import org.apache.wicket.util.file.IFileCleaner;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.IResourcePath;
 import org.apache.wicket.util.file.Path;
@@ -92,8 +92,12 @@ public class ResourceSettings implements IResourceSettings
 	/** ModificationWatcher to watch for changes in markup files */
 	private IModificationWatcher resourceWatcher;
 
-	/** a cleaner for the temporary files created by FileUpload functionality */
-	private IFileUploadCleaner fileUploadCleaner;
+	/**
+	 * A cleaner that removes files asynchronously.
+	 * <p>
+	 * Used internally to remove the temporary files created by FileUpload functionality.
+	 */
+	private IFileCleaner fileCleaner;
 
 	/** Chain of string resource loaders to use */
 	private final List<IStringResourceLoader> stringResourceLoaders = Generics.newArrayList(4);
@@ -118,7 +122,7 @@ public class ResourceSettings implements IResourceSettings
 
 	// resource caching strategy
 	private IResourceCachingStrategy resourceCachingStrategy;
-	
+
 	// application these settings are bound to
 	private final Application application;
 
@@ -260,14 +264,14 @@ public class ResourceSettings implements IResourceSettings
 		resourceWatcher = watcher;
 	}
 
-	public IFileUploadCleaner getFileUploadCleaner()
+	public IFileCleaner getFileCleaner()
 	{
-		return fileUploadCleaner;
+		return fileCleaner;
 	}
 
-	public void setFileUploadCleaner(IFileUploadCleaner fileUploadCleaner)
+	public void setFileCleaner(IFileCleaner fileUploadCleaner)
 	{
-		this.fileUploadCleaner = fileUploadCleaner;
+		fileCleaner = fileUploadCleaner;
 	}
 
 	/**
@@ -443,7 +447,8 @@ public class ResourceSettings implements IResourceSettings
 				// development mode:
 				// use last-modified timestamp of packaged resource for resource caching
 				// cache the version information for the lifetime of the current http request
-				resourceVersion = new RequestCycleCachedResourceVersion(new LastModifiedResourceVersion());
+				resourceVersion = new RequestCycleCachedResourceVersion(
+					new LastModifiedResourceVersion());
 			}
 			else
 			{
@@ -453,8 +458,8 @@ public class ResourceSettings implements IResourceSettings
 				resourceVersion = new CachingResourceVersion(new MessageDigestResourceVersion());
 			}
 			// cache resource with a version string in the filename
-			resourceCachingStrategy =
-				new FilenameWithVersionResourceCachingStrategy(resourceVersion);
+			resourceCachingStrategy = new FilenameWithVersionResourceCachingStrategy(
+				resourceVersion);
 		}
 		return resourceCachingStrategy;
 	}

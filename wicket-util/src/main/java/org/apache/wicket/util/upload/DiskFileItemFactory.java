@@ -19,7 +19,7 @@ package org.apache.wicket.util.upload;
 import java.io.File;
 
 import org.apache.wicket.util.file.FileCleaningTracker;
-import org.apache.wicket.util.file.IFileUploadCleaner;
+import org.apache.wicket.util.file.IFileCleaner;
 
 
 /**
@@ -78,7 +78,7 @@ public class DiskFileItemFactory implements FileItemFactory
 	 */
 	private int sizeThreshold = DEFAULT_SIZE_THRESHOLD;
 
-	private final IFileUploadCleaner fileUploadCleaner;
+	private final IFileCleaner fileUploadCleaner;
 
 	// ----------------------------------------------------------- Constructors
 
@@ -89,7 +89,7 @@ public class DiskFileItemFactory implements FileItemFactory
 	 * 
 	 * @param fileUploadCleaner
 	 */
-	public DiskFileItemFactory(final IFileUploadCleaner fileUploadCleaner)
+	public DiskFileItemFactory(final IFileCleaner fileUploadCleaner)
 	{
 		this(DEFAULT_SIZE_THRESHOLD, null, fileUploadCleaner);
 	}
@@ -107,7 +107,7 @@ public class DiskFileItemFactory implements FileItemFactory
 	 * @param fileUploadCleaner
 	 */
 	public DiskFileItemFactory(final int sizeThreshold, final File repository,
-		final IFileUploadCleaner fileUploadCleaner)
+		final IFileCleaner fileUploadCleaner)
 	{
 		this.sizeThreshold = sizeThreshold;
 		this.repository = repository;

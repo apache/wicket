@@ -25,7 +25,7 @@ import java.io.File;
  * <p>
  * Needed to remove files created temporarily for the needs of FileUpload functionality.
  */
-public interface IFileUploadCleaner
+public interface IFileCleaner
 {
 
 	/**
@@ -40,6 +40,22 @@ public interface IFileUploadCleaner
 	 *             if the file is null
 	 */
 	void track(File file, Object marker);
+
+	/**
+	 * Track the specified file, using the provided marker, deleting the file when the marker
+	 * instance is garbage collected.
+	 * 
+	 * @param file
+	 *            the file to be tracked, not null
+	 * @param marker
+	 *            the marker object used to track the file, not null
+	 * @param deleteStrategy
+	 *            the strategy that actually deletes the file. E.g. to delete a non-empty folder the
+	 *            strategy should delete all children first
+	 * @throws NullPointerException
+	 *             if the file is null
+	 */
+	void track(File file, Object marker, FileDeleteStrategy deleteStrategy);
 
 	/**
 	 * Call this method to stop the cleaner and to free all allocated resources by it

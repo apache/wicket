@@ -33,7 +33,7 @@ import java.util.Random;
 import java.util.UUID;
 
 import org.apache.wicket.util.file.Files;
-import org.apache.wicket.util.file.IFileUploadCleaner;
+import org.apache.wicket.util.file.IFileCleaner;
 import org.apache.wicket.util.io.DeferredFileOutputStream;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
@@ -167,7 +167,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 * This is transient because it is needed only for the upload request lifetime to add this file
 	 * item in the tracker. After that the cleaner is not needed anymore.
 	 */
-	private transient final IFileUploadCleaner fileUploadCleaner;
+	private transient final IFileCleaner fileUploadCleaner;
 
 	/**
 	 * Constructs a new <code>DiskFileItem</code> instance.
@@ -191,7 +191,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 */
 	public DiskFileItem(final String fieldName, final String contentType,
 		final boolean isFormField, final String fileName, final int sizeThreshold,
-		final File repository, final IFileUploadCleaner fileUploadCleaner)
+		final File repository, final IFileCleaner fileUploadCleaner)
 	{
 		this.fieldName = fieldName;
 		this.contentType = contentType;

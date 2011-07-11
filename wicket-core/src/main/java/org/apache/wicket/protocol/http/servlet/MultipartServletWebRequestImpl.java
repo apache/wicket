@@ -87,7 +87,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	{
 		this(request, filterPrefix, maxSize, new DiskFileItemFactory(Application.get()
 			.getResourceSettings()
-			.getFileUploadCleaner()));
+			.getFileCleaner()));
 	}
 
 	/**

@@ -29,7 +29,7 @@ import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.resource.IPropertiesFactory;
 import org.apache.wicket.resource.IPropertiesFactoryContext;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
-import org.apache.wicket.util.file.IFileUploadCleaner;
+import org.apache.wicket.util.file.IFileCleaner;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.time.Duration;
@@ -210,9 +210,9 @@ public interface IResourceSettings extends IPropertiesFactoryContext
 	 * The default is one second in 'development' mode and 'never' in deployment mode.
 	 * 
 	 * @param resourcePollFrequency
-	 *            Frequency at which to poll resources or 
-	 *            <code>null</code> if polling should be disabled
-	 *            
+	 *            Frequency at which to poll resources or <code>null</code> if polling should be
+	 *            disabled
+	 * 
 	 * @see IResourceSettings#setResourceFinder(IResourceFinder)
 	 */
 	void setResourcePollFrequency(final Duration resourcePollFrequency);
@@ -233,18 +233,19 @@ public interface IResourceSettings extends IPropertiesFactoryContext
 	void setResourceWatcher(IModificationWatcher watcher);
 
 	/**
-	 * Sets a cleaner for the temporary files created by FileUpload functionality
+	 * Sets a cleaner that can be used to remove files asynchronously.
+	 * <p>
+	 * Used internally to delete the temporary files created by FileUpload functionality
 	 * 
-	 * @param fileUploadCleaner
+	 * @param fileCleaner
 	 *            the actual cleaner implementation. Can be <code>null</code>
 	 */
-	void setFileUploadCleaner(IFileUploadCleaner fileUploadCleaner);
+	void setFileCleaner(IFileCleaner fileCleaner);
 
 	/**
-	 * @return the cleaner for the temporary files created by FileUpload functionality. Can be
-	 *         <code>null</code>
+	 * @return the a cleaner which can be used to remove files asynchronously.
 	 */
-	IFileUploadCleaner getFileUploadCleaner();
+	IFileCleaner getFileCleaner();
 
 	/**
 	 * @param throwExceptionOnMissingResource
@@ -258,10 +259,10 @@ public interface IResourceSettings extends IPropertiesFactoryContext
 	void setUseDefaultOnMissingResource(final boolean useDefaultOnMissingResource);
 
 	/**
-	 * Set the javascript compressor implemententation use e.g. by 
-	 * {@link org.apache.wicket.request.resource.JavaScriptPackageResource JavaScriptPackageResource}. 
-	 * A typical implementation will remove comments and whitespace. But a no-op implementation is
-	 * available as well.
+	 * Set the javascript compressor implemententation use e.g. by
+	 * {@link org.apache.wicket.request.resource.JavaScriptPackageResource
+	 * JavaScriptPackageResource}. A typical implementation will remove comments and whitespace. But
+	 * a no-op implementation is available as well.
 	 * 
 	 * @param compressor
 	 *            The implementation to be used
@@ -272,10 +273,9 @@ public interface IResourceSettings extends IPropertiesFactoryContext
 	/**
 	 * Get the javascript compressor to remove comments and whitespace characters from javascripts
 	 * 
-	 * @return whether the comments and whitespace characters will be stripped from 
-	 *         resources served through 
-	 *         {@link org.apache.wicket.request.resource.JavaScriptPackageResource JavaScriptPackageResource}. 
-	 *         Null is a valid value.
+	 * @return whether the comments and whitespace characters will be stripped from resources served
+	 *         through {@link org.apache.wicket.request.resource.JavaScriptPackageResource
+	 *         JavaScriptPackageResource}. Null is a valid value.
 	 */
 	IJavaScriptCompressor getJavaScriptCompressor();
 
@@ -328,10 +328,10 @@ public interface IResourceSettings extends IPropertiesFactoryContext
 	void setCachingStrategy(IResourceCachingStrategy strategy);
 
 	/**
-	 * Set the CSS compressor implemententation use e.g. by 
-	 * {@link org.apache.wicket.request.resource.CssPackageResource CssPackageResource}. 
-	 * A typical implementation will remove comments and whitespace. But a no-op implementation 
-	 * is available as well.
+	 * Set the CSS compressor implemententation use e.g. by
+	 * {@link org.apache.wicket.request.resource.CssPackageResource CssPackageResource}. A typical
+	 * implementation will remove comments and whitespace. But a no-op implementation is available
+	 * as well.
 	 * 
 	 * @param compressor
 	 *            The implementation to be used
@@ -343,8 +343,8 @@ public interface IResourceSettings extends IPropertiesFactoryContext
 	 * Get the CSS compressor to remove comments and whitespace characters from css resources
 	 * 
 	 * @return whether the comments and whitespace characters will be stripped from resources served
-	 *         through {@link org.apache.wicket.request.resource.CssPackageResource CssPackageResource}. 
-	 *         Null is a valid value.
+	 *         through {@link org.apache.wicket.request.resource.CssPackageResource
+	 *         CssPackageResource}. Null is a valid value.
 	 */
 	ICssCompressor getCssCompressor();
 }

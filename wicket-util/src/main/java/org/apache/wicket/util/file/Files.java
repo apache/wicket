@@ -103,49 +103,42 @@ public class Files
 	}
 
 	/**
-	 * Deletes a file.
+	 * Deletes a normal file.
 	 * <p>
-	 * If the file cannot be deleted for any reason then at most 10 retries are attempted with delay
-	 * of 100ms. If the file still cannot be deleted then it is scheduled to be deleted at JVM exit
-	 * time.
+	 * If the file cannot be deleted for any reason then at most 50 retries are attempted with delay
+	 * of 100ms at each 10th attempt.
 	 * 
 	 * @param file
-	 *            File to delete
-	 * @return {@code true} if file was deleted, {@code false} if the file didn't exist or it cannot
-	 *         be removed for some reason
+	 *            the file to delete
+	 * @return {@code true} if file was deleted, {@code false} if the file don't exist, is a folder
+	 *         or cannot be removed for some reason
 	 */
 	public static boolean remove(final java.io.File file)
 	{
-		if (file == null || file.exists() == false || file.isDirectory())
+		if (file != null && file.isFile())
 		{
-			return false;
-		}
-
-		int retries = 10;
-
-		boolean deleted = false;
-
-		while ((deleted = file.delete()) == false && retries > 0)
-		{
-			retries--;
-			try
+			for (int j = 0; j < 5; ++j)
 			{
-				Thread.sleep(100);
-			}
-			catch (InterruptedException ignored)
-			{
+				for (int i = 0; i < 10; ++i)
+				{
+					if (file.delete())
+					{
+						return true;
+					}
+
+					try
+					{
+						Thread.sleep(100);
+					}
+					catch (InterruptedException ix)
+					{
+						Thread.currentThread().interrupt();
+					}
+				}
 			}
 		}
 
-		if (deleted == false && logger.isWarnEnabled())
-		{
-			logger.warn(
-				"Cannot delete file '{}' for unknown reason. The file will be scheduled for deletion at JVM exit time.",
-				file);
-			file.deleteOnExit();
-		}
-
-		return deleted;
+		return false;
 	}
 
 	/**
@@ -184,6 +177,55 @@ public class Files
 
 		// delete the empty folder
 		return folder.delete();
+	}
+
+	/**
+	 * Schedules a file for removal asynchronously.
+	 * 
+	 * @param file
+	 *            the file to be removed
+	 * @param fileCleaner
+	 *            the file cleaner that will be used to remove the file
+	 * @return {@code false} if the {@code file} is <em>null</em> or a folder, {@code true} -
+	 *         otherwise (i.e. if it is scheduled)
+	 */
+	public static final boolean removeAsync(final File file, final IFileCleaner fileCleaner)
+	{
+		if (file == null || file.isDirectory())
+		{
+			return false;
+		}
+
+		Args.notNull(fileCleaner, "fileCleaner");
+
+		fileCleaner.track(file, new Object());
+
+		return true;
+	}
+
+
+	/**
+	 * Schedules a folder and all files inside it for asynchronous removal.
+	 * 
+	 * @param folder
+	 *            the folder to be removed
+	 * @param fileCleaner
+	 *            the file cleaner that will be used to remove the file
+	 * @return {@code false} if the {@code folder} is <em>null</em> or a normal file, {@code true} -
+	 *         otherwise (i.e. if it is scheduled)
+	 */
+	public static final boolean removeFolderAsync(final File folder, final IFileCleaner fileCleaner)
+	{
+		if (folder == null || folder.isFile())
+		{
+			return false;
+		}
+
+		Args.notNull(fileCleaner, "fileCleaner");
+
+		fileCleaner.track(folder, new Object(), new FolderDeleteStrategy());
+
+		return true;
 	}
 
 	/**
@@ -386,30 +428,35 @@ public class Files
 	}
 
 	/**
-	 * Utility method for creating a directory
+	 * Utility method for creating a directory. If the creation didn't succeed for some reason then
+	 * at most 50 attempts are made with delay of 100ms at every 10th attempt.
 	 * 
-	 * @param file
+	 * @param folder
+	 *            the folder to create
+	 * @return {@code true} if the creation is successful, {@code false} - otherwise
 	 */
-	public static void mkdirs(File file)
+	public static boolean mkdirs(File folder)
 	{
 		// for some reason, simple file.mkdirs sometimes fails under heavy load
 		for (int j = 0; j < 5; ++j)
 		{
 			for (int i = 0; i < 10; ++i)
 			{
-				if (file.mkdirs())
+				if (folder.mkdirs())
 				{
-					return;
+					return true;
 				}
 			}
 			try
 			{
 				Thread.sleep(100);
 			}
-			catch (InterruptedException ignore)
+			catch (InterruptedException ix)
 			{
+				Thread.currentThread().interrupt();
 			}
 		}
-		logger.error("Failed to make directory " + file);
+		logger.error("Failed to create directory: " + folder);
+		return false;
 	}
 }

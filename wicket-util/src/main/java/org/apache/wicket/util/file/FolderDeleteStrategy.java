@@ -17,39 +17,67 @@
 package org.apache.wicket.util.file;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
- * Default implementation of {@link IFileUploadCleaner} that uses Apache commons-io
- * {@link FileCleaningTracker} to track and clean the temporary created files.
- * <p>
- * Note: this implementation starts a daemon thread to do the actual work, so it may not be used in
- * some environments like Google AppEngine.
+ * A {@link FileDeleteStrategy} that can delete folders.
  */
-public class FileUploadCleaner implements IFileUploadCleaner
+public class FolderDeleteStrategy extends FileDeleteStrategy
 {
-	private final FileCleaningTracker cleaner;
-
 	/**
 	 * Construct.
+	 * 
+	 * @param name
 	 */
-	public FileUploadCleaner()
+	protected FolderDeleteStrategy()
 	{
-		cleaner = new FileCleaningTracker();
+		super("folder");
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void track(final File file, final Object marker)
+	@Override
+	public boolean deleteQuietly(final File folder)
 	{
-		cleaner.track(file, marker);
+		if (folder == null || folder.isFile())
+		{
+			return false;
+		}
+
+		File[] files = folder.listFiles();
+		if (files != null)
+		{
+			for (File file : files)
+			{
+				if (file.isDirectory())
+				{
+					deleteQuietly(file);
+				}
+				else
+				{
+					super.deleteQuietly(file);
+				}
+			}
+		}
+
+		return super.deleteQuietly(folder);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void destroy()
+	@Override
+	public void delete(final File folder) throws IOException
 	{
-		cleaner.exitWhenFinished();
+		if (folder == null || folder.isFile())
+		{
+			return;
+		}
+
+		File[] files = folder.listFiles();
+		if (files != null)
+		{
+			for (File file : files)
+			{
+				super.delete(file);
+			}
+		}
 	}
+
+
 }

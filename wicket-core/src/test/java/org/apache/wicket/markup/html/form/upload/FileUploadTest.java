@@ -23,8 +23,8 @@ import java.util.List;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.file.File;
-import org.apache.wicket.util.file.FileUploadCleaner;
-import org.apache.wicket.util.file.IFileUploadCleaner;
+import org.apache.wicket.util.file.FileCleaner;
+import org.apache.wicket.util.file.IFileCleaner;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.upload.DiskFileItemFactory;
 import org.apache.wicket.util.upload.FileItem;
@@ -55,7 +55,7 @@ public class FileUploadTest extends WicketTestCase
 	 */
 	public void testGetInputStream() throws Exception
 	{
-		IFileUploadCleaner fileUploadCleaner = new FileUploadCleaner();
+		IFileCleaner fileUploadCleaner = new FileCleaner();
 
 		FileItem fileItem = new DiskFileItemFactory(fileUploadCleaner).createItem("dummyFieldName",
 			"text/java", false, "FileUploadTest.java");
