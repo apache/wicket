@@ -42,7 +42,7 @@ public class AsynchronousDataStore implements IDataStore
 {
 
 	/** Log for reporting. */
-	private static final Logger log = LoggerFactory.getLogger(AsyncDataStore.class);
+	private static final Logger log = LoggerFactory.getLogger(AsynchronousDataStore.class);
 
 	/**
 	 * The maximum number of threads to be started by the {@link #savePagesExecutor}.
