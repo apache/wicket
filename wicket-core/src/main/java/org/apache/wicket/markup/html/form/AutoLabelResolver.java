@@ -396,7 +396,7 @@ public class AutoLabelResolver implements IComponentResolver
 			boolean textClassFound = false;
 			for (String className : classNames.split(" "))
 			{
-				if ("text".equals(className))
+				if ("label-text".equals(className))
 				{
 					textClassFound = true;
 					break;
