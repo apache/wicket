@@ -16,67 +16,50 @@
  */
 package org.apache.wicket.pageStore;
 
-import java.util.Iterator;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Facade for {@link IDataStore} that does the actual saving in worker thread.
+ * Facade for {@link IDataStore} that does the actual saving asynchronously (in non-httpWorker
+ * thread).
  * <p>
- * Creates an {@link Entry} for each triple (sessionId, pageId, data) and puts it in
- * {@link #entries} queue if there is room. Acts as producer.<br/>
- * Later {@link PageSavingRunnable} reads in blocking manner from {@link #entries} and saves each
- * entry. Acts as consumer.
- * </p>
- * It starts only one instance of {@link PageSavingRunnable} because all we need is to make the page
- * storing asynchronous. We don't want to write concurrently in the wrapped {@link IDataStore},
- * though it may happen in the extreme case when the queue is full. These cases should be avoided.
+ * Creates an {@link Entry} for each triple (sessionId, pageId, data). Entry are saved using a
+ * {@link java.lang.Runnable} implementation called StoreEntryRunnable. Tasks running and thread
+ * coordination is managed using a {@linkjava.util.concurrent.ThreadPoolExecutor}
+ * 
  * 
  * @author Matej Knopp
+ * @author Andrea Del Bene
  */
 public class AsynchronousDataStore implements IDataStore
 {
+
 	/** Log for reporting. */
-	private static final Logger log = LoggerFactory.getLogger(AsynchronousDataStore.class);
+	private static final Logger log = LoggerFactory.getLogger(AsyncDataStore.class);
 
 	/**
-	 * The time to wait when adding an {@link Entry} into the entries. In millis.
+	 * The maximum number of threads to be started by the {@link #savePagesExecutor}.
 	 */
-	private static final long OFFER_WAIT = 30L;
-
-	/**
-	 * The time to wait for an entry to save with the wrapped {@link IDataStore}. In millis.
-	 */
-	private static final long POLL_WAIT = 1000L;
-
-	/**
-	 * A flag indicating that this {@link IDataStore} should stop
-	 */
-	private final AtomicBoolean destroy;
+	private static final int MAX_THREADS = 1;
 
 	/**
 	 * The wrapped {@link IDataStore} that actually stores that pages
 	 */
 	private final IDataStore dataStore;
 
+	private final ThreadPoolExecutor savePagesExecutor;
+
 	/**
 	 * The queue where the entries which have to be saved are temporary stored
 	 */
-	private final BlockingQueue<Entry> entries;
-
-	/**
-	 * A map 'sessionId:::pageId' -> {@link Entry}. Used for fast retrieval of {@link Entry}s which
-	 * are not yet stored by the wrapped {@link IDataStore}
-	 */
-	private final ConcurrentMap<String, Entry> entryMap;
+	private final BlockingQueue<Runnable> entries;
 
 	/**
 	 * Construct.
@@ -89,15 +72,106 @@ public class AsynchronousDataStore implements IDataStore
 	public AsynchronousDataStore(final IDataStore dataStore, final int capacity)
 	{
 		this.dataStore = dataStore;
-		destroy = new AtomicBoolean(false);
-		entries = new LinkedBlockingQueue<Entry>(capacity);
-		entryMap = new ConcurrentHashMap<String, Entry>();
+		entries = new LinkedBlockingQueue<Runnable>(capacity);
+		savePagesExecutor = new ThreadPoolExecutor(MAX_THREADS, MAX_THREADS, 1l, TimeUnit.SECONDS,
+			entries, new RejectStoringTask());
 
-		PageSavingRunnable savingRunnable = new PageSavingRunnable(dataStore, entries, entryMap,
-			destroy);
-		Thread thread = new Thread(savingRunnable, "Wicket-PageSavingThread");
-		thread.setDaemon(true);
-		thread.start();
+	}
+
+	/**
+	 * @see org.apache.wicket.pageStore.IDataStore#getData(java.lang.String, int)
+	 */
+	public byte[] getData(final String sessionId, final int pageId)
+	{
+		Entry entry = null;
+
+		for (Runnable runnable : savePagesExecutor.getQueue())
+		{
+			StoreEntryRunnable storeEntryRunnable = (StoreEntryRunnable)runnable;
+			Entry cursorEntry = storeEntryRunnable.getEntry();
+
+			if (cursorEntry.getPageId() == pageId && cursorEntry.getSessionId().equals(sessionId))
+			{
+				entry = cursorEntry;
+				break;
+			}
+		}
+
+		final byte[] data;
+		if (entry != null)
+		{
+			data = entry.getData();
+			if (log.isDebugEnabled())
+			{
+				log.debug(
+					"Returning the data (with length '{}') of a non-stored entry with sessionId '{}' and pageId '{}'",
+					new Object[] { data.length, sessionId, pageId });
+			}
+		}
+		else
+		{
+			data = dataStore.getData(sessionId, pageId);
+			if (log.isDebugEnabled())
+			{
+				log.debug(
+					"Returning the data (with length '{}') of a stored entry with sessionId '{}' and pageId '{}'",
+					new Object[] { data.length, sessionId, pageId });
+			}
+		}
+		return data;
+	}
+
+	/**
+	 * @see org.apache.wicket.pageStore.IDataStore#removeData(java.lang.String, int)
+	 */
+	public void removeData(final String sessionId, final int pageId)
+	{
+		for (Runnable runnable : savePagesExecutor.getQueue())
+		{
+			StoreEntryRunnable storeEntryRunnable = (StoreEntryRunnable)runnable;
+			Entry cursorEntry = storeEntryRunnable.getEntry();
+
+			if (cursorEntry.getPageId() == pageId && cursorEntry.getSessionId().equals(sessionId))
+			{
+				savePagesExecutor.remove(runnable);
+			}
+		}
+
+		dataStore.removeData(sessionId, pageId);
+	}
+
+	/**
+	 * @see org.apache.wicket.pageStore.IDataStore#removeData(java.lang.String)
+	 */
+	public void removeData(final String sessionId)
+	{
+		for (Runnable runnable : savePagesExecutor.getQueue())
+		{
+			StoreEntryRunnable storeEntryRunnable = (StoreEntryRunnable)runnable;
+			Entry cursorEntry = storeEntryRunnable.getEntry();
+
+			if (cursorEntry.getSessionId().equals(sessionId))
+			{
+				savePagesExecutor.remove(runnable);
+			}
+		}
+
+		dataStore.removeData(sessionId);
+	}
+
+
+	/**
+	 * Save the entry in the queue if there is a room or directly pass it to the wrapped
+	 * {@link IDataStore} if there is no such
+	 * 
+	 * @see org.apache.wicket.pageStore.IDataStore#storeData(java.lang.String, int, byte[])
+	 */
+	public void storeData(final String sessionId, final int pageId, final byte[] data)
+	{
+		Entry entry = new Entry(sessionId, pageId, data);
+		StoreEntryRunnable storeEntryRunnable = new StoreEntryRunnable(entry, dataStore);
+
+		savePagesExecutor.execute(storeEntryRunnable);
 	}
 
 	/**
@@ -105,54 +179,24 @@ public class AsynchronousDataStore implements IDataStore
 	 */
 	public void destroy()
 	{
-		destroy.set(true);
-
+		log.debug("Going to shutdown the shutdown the task executor.");
+		savePagesExecutor.shutdown();
 		try
 		{
-			synchronized (destroy)
+			boolean stopped = savePagesExecutor.awaitTermination(30, TimeUnit.SECONDS);
+			if (stopped == false)
 			{
-				destroy.wait();
+				log.warn("Some tasks didn't stop successfully. They were forcefully stopped.");
+				savePagesExecutor.shutdownNow();
 			}
 		}
 		catch (InterruptedException e)
 		{
-			log.error(e.getMessage(), e);
+			throw new RuntimeException(e);
 		}
 
+		log.debug("Going to shutdown the shutdown the underlying IDataStore.");
 		dataStore.destroy();
-	}
-
-	/**
-	 * Little helper
-	 * 
-	 * @param sessionId
-	 * @param id
-	 * @return Entry
-	 */
-	private Entry getEntry(final String sessionId, final int id)
-	{
-		return entryMap.get(getKey(sessionId, id));
-	}
-
-	/**
-	 * @see org.apache.wicket.pageStore.IDataStore#getData(java.lang.String, int)
-	 */
-	public byte[] getData(final String sessionId, final int id)
-	{
-		Entry entry = getEntry(sessionId, id);
-		if (entry != null)
-		{
-			log.debug(
-				"Returning the data of a non-stored entry with sessionId '{}' and pageId '{}'",
-				sessionId, id);
-			return entry.data;
-		}
-		byte[] data = dataStore.getData(sessionId, id);
-
-		log.debug("Returning the data of a stored entry with sessionId '{}' and pageId '{}'",
-			sessionId, id);
-
-		return data;
 	}
 
 	/**
@@ -164,95 +208,54 @@ public class AsynchronousDataStore implements IDataStore
 	}
 
 	/**
-	 * @see org.apache.wicket.pageStore.IDataStore#removeData(java.lang.String, int)
+	 * Rejecting task handler.
+	 * <p>
+	 * If the queue is full a task is rejected and must be saved synchronously in this handler
 	 */
-	public void removeData(final String sessionId, final int id)
+	private static class RejectStoringTask implements RejectedExecutionHandler
 	{
-		String key = getKey(sessionId, id);
-		if (key != null)
+
+		public void rejectedExecution(final Runnable runnable, final ThreadPoolExecutor executor)
 		{
-			Entry entry = entryMap.remove(key);
-			if (entry != null)
-			{
-				entries.remove(entry);
-			}
+			StoreEntryRunnable storeEntryRunnable = (StoreEntryRunnable)runnable;
+			IDataStore dataStore = storeEntryRunnable.getDataStore();
+			Entry entry = storeEntryRunnable.getEntry();
+
+			log.debug("Queue is full. Entry '{}' will be saved synchronously.", entry);
+			dataStore.storeData(entry.getSessionId(), entry.getPageId(), entry.getData());
 		}
 
-		dataStore.removeData(sessionId, id);
 	}
 
 	/**
-	 * @see org.apache.wicket.pageStore.IDataStore#removeData(java.lang.String)
+	 * Task implementation to save a page entry in a separate thread
 	 */
-	public void removeData(final String sessionId)
+	private static class StoreEntryRunnable implements Runnable
 	{
-		for (Iterator<Entry> itor = entries.iterator(); itor.hasNext();)
-		{
-			Entry entry = itor.next();
-			if (entry != null) // this check is not needed in JDK6
-			{
-				String entrySessionId = entry.sessionId;
+		private final Entry entry;
+		private final IDataStore dataStore;
 
-				if (sessionId.equals(entrySessionId))
-				{
-					entryMap.remove(getKey(entry));
-					itor.remove();
-				}
-			}
+		public StoreEntryRunnable(final Entry entry, final IDataStore dataStore)
+		{
+			this.entry = entry;
+			this.dataStore = dataStore;
 		}
 
-		dataStore.removeData(sessionId);
-	}
-
-	/**
-	 * Save the entry in the queue if there is a room or directly pass it to the wrapped
-	 * {@link IDataStore} if there is no such
-	 * 
-	 * @see org.apache.wicket.pageStore.IDataStore#storeData(java.lang.String, int, byte[])
-	 */
-	public void storeData(final String sessionId, final int id, final byte[] data)
-	{
-		Entry entry = new Entry(sessionId, id, data);
-		try
+		public void run()
 		{
-			boolean added = entries.offer(entry, OFFER_WAIT, TimeUnit.MILLISECONDS);
-
-			if (added == false)
-			{
-				log.debug("Storing synchronously page with id '{}' in session '{}'", id, sessionId);
-				dataStore.storeData(sessionId, id, data);
-			}
-			else
-			{
-				entryMap.put(getKey(entry), entry);
-			}
+			log.debug("Saving asynchronously: '{}'...", entry);
+			dataStore.storeData(entry.getSessionId(), entry.getPageId(), entry.getData());
 		}
-		catch (InterruptedException e)
+
+		public Entry getEntry()
 		{
-			log.error(e.getMessage(), e);
-			dataStore.storeData(sessionId, id, data);
+			return entry;
 		}
-	}
 
-	/**
-	 * 
-	 * @param pageId
-	 * @param sessionId
-	 * @return generated key
-	 */
-	private static String getKey(final String sessionId, final int pageId)
-	{
-		return pageId + ":::" + sessionId;
-	}
-
-	/**
-	 * 
-	 * @param entry
-	 * @return generated key
-	 */
-	private static String getKey(final Entry entry)
-	{
-		return getKey(entry.sessionId, entry.pageId);
+		public IDataStore getDataStore()
+		{
+			return dataStore;
+		}
 	}
 
 	/**
@@ -269,6 +272,21 @@ public class AsynchronousDataStore implements IDataStore
 			this.sessionId = Args.notNull(sessionId, "sessionId");
 			this.pageId = pageId;
 			this.data = Args.notNull(data, "data");
+		}
+
+		public String getSessionId()
+		{
+			return sessionId;
+		}
+
+		public int getPageId()
+		{
+			return pageId;
+		}
+
+		public byte[] getData()
+		{
+			return data;
 		}
 
 		@Override
@@ -307,60 +325,6 @@ public class AsynchronousDataStore implements IDataStore
 		public String toString()
 		{
 			return "Entry [sessionId=" + sessionId + ", pageId=" + pageId + "]";
-		}
-
-	}
-
-	/**
-	 * The thread that acts as consumer of {@link Entry}ies
-	 */
-	private static class PageSavingRunnable implements Runnable
-	{
-		private static final Logger log = LoggerFactory.getLogger(PageSavingRunnable.class);
-
-		private final AtomicBoolean destroy;
-
-		private final BlockingQueue<Entry> entries;
-
-		private final ConcurrentMap<String, Entry> entryMap;
-
-		private final IDataStore dataStore;
-
-		private PageSavingRunnable(IDataStore dataStore, BlockingQueue<Entry> entries,
-			ConcurrentMap<String, Entry> entryMap, AtomicBoolean destroy)
-		{
-			this.dataStore = dataStore;
-			this.entries = entries;
-			this.entryMap = entryMap;
-			this.destroy = destroy;
-		}
-
-		public void run()
-		{
-			while (destroy.get() == false)
-			{
-				Entry entry = null;
-				try
-				{
-					entry = entries.poll(POLL_WAIT, TimeUnit.MILLISECONDS);
-				}
-				catch (InterruptedException e)
-				{
-					log.error(e.getMessage(), e);
-				}
-
-				if (entry != null)
-				{
-					log.debug("Saving asynchronously: {}...", entry);
-					dataStore.storeData(entry.sessionId, entry.pageId, entry.data);
-					entryMap.remove(getKey(entry));
-				}
-			}
-
-			synchronized (destroy)
-			{
-				destroy.notify();
-			}
 		}
 	}
 }

@@ -71,6 +71,7 @@ public class AsynchronousDataStoreTest
 		}
 		LATCH.await();
 		executorService.shutdown();
+		DATA_STORE.destroy();
 	}
 
 	private static abstract class AbstractTask implements Runnable
