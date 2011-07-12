@@ -722,13 +722,13 @@ Wicket.channelManager = new Wicket.ChannelManager();
  	// Creates a new instance of a XmlHttpRequest
 	createTransport: function() {
 	    var transport = null;
-	    if (window.ActiveXObject) {
-	        transport = new ActiveXObject("Microsoft.XMLHTTP");
-	        Wicket.Log.info("Using ActiveX transport");
-	    } else if (window.XMLHttpRequest) {
-	        transport = new XMLHttpRequest();
-	        Wicket.Log.info("Using XMLHttpRequest transport");
-	    } 
+	    if (window.XMLHttpRequest) {
+               transport = new XMLHttpRequest();
+               Wicket.Log.info("Using XMLHttpRequest transport");
+            } else if (window.ActiveXObject) {
+               transport = new ActiveXObject("Microsoft.XMLHTTP");
+               Wicket.Log.info("Using ActiveX transport");
+            }
 	    
 	    if (transport == null) {
 	        Wicket.Log.error("Wicket.Ajax.createTransport: Could not locate ajax transport. Your browser does not support the required XMLHttpRequest object or wicket could not gain access to it.");
