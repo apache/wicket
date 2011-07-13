@@ -23,7 +23,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.wicket.Application;
 
 /**
- * TODO javadoc
+ * A {@link ResourceReference} which should be used to lookup a {@link IResource} from the globally
+ * registered ones (also known as application shared resources). If there is no shared resource with
+ * such {@link Key key} then it checks whether there is a {@link PackageResource} with this
+ * {@link Key key} and registers it automatically if it exists.
+ * <p>
+ * Note: Cannot be registered in {@link ResourceReferenceRegistry} because
+ * {@link SharedResourceReference} is just a shortcut to the {@link IResource resource} of another
+ * {@link ResourceReference}
  */
 public class SharedResourceReference extends ResourceReference
 {
@@ -33,15 +40,15 @@ public class SharedResourceReference extends ResourceReference
 	 * Construct.
 	 * 
 	 * @param scope
-	 *            mandatory parameter
+	 *            Scope of resource
 	 * @param name
-	 *            mandatory parameter
+	 *            Logical name of resource
 	 * @param locale
-	 *            resource locale
+	 *            The locale of the resource
 	 * @param style
-	 *            resource style
+	 *            The resource style (see {@link org.apache.wicket.Session})
 	 * @param variation
-	 *            resource variation
+	 *            The component specific variation of the style
 	 */
 	public SharedResourceReference(Class<?> scope, String name, Locale locale, String style,
 		String variation)
@@ -53,9 +60,9 @@ public class SharedResourceReference extends ResourceReference
 	 * Construct.
 	 * 
 	 * @param scope
-	 *            mandatory parameter
+	 *            Scope of resource
 	 * @param name
-	 *            mandatory parameter
+	 *            Logical name of resource
 	 */
 	public SharedResourceReference(Class<?> scope, String name)
 	{
@@ -103,7 +110,7 @@ public class SharedResourceReference extends ResourceReference
 		else
 		{
 			throw new IllegalStateException(
-				"SharedResourceReference can not be registered globally.");
+				"SharedResourceReference can not be registered globally. See the documentation of this class.");
 		}
 	}
 

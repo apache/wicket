@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.ResourceReference.Key;
 import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 
 /**
@@ -46,13 +47,16 @@ public class SharedResources
 		this.registry = registry;
 	}
 
-	private static final class SharedResourceReference extends ResourceReference
+	/**
+	 * A {@link ResourceReference} that is used to register a reference to a known {@link IResource}
+	 */
+	private static final class AutoResourceReference extends ResourceReference
 	{
 		private static final long serialVersionUID = 1L;
 
 		private final IResource resource;
 
-		public SharedResourceReference(Class<?> scope, String name, Locale locale, String style,
+		private AutoResourceReference(Class<?> scope, String name, Locale locale, String style,
 			String variation, IResource resource)
 		{
 			super(scope, name, locale, style, variation);
@@ -85,7 +89,7 @@ public class SharedResources
 	public final void add(final Class<?> scope, final String name, final Locale locale,
 		final String style, final String variation, final IResource resource)
 	{
-		ResourceReference ref = new SharedResourceReference(scope, name, locale, style, variation,
+		ResourceReference ref = new AutoResourceReference(scope, name, locale, style, variation,
 			resource);
 		registry.registerResourceReference(ref);
 	}
@@ -122,16 +126,37 @@ public class SharedResources
 	 * Resolves a {@link ResourceReference} for a shared resource.
 	 * 
 	 * @param scope
+	 *            Scope of resource
 	 * @param name
+	 *            Logical name of resource
 	 * @param locale
+	 *            The locale of the resource
 	 * @param style
+	 *            The resource style (see {@link org.apache.wicket.Session})
 	 * @param variation
+	 *            The component specific variation of the style
 	 * @param strict
-	 * @return resource reference
+	 *            If true, "weaker" combination of scope, name, locale etc. are not tested
+	 * @return Either the resource reference found in the registry or, if requested, a resource
+	 *         reference automatically created based on the parameters provided. The automatically
+	 *         created resource reference will automatically be added to the registry.
 	 */
 	public ResourceReference get(Class<?> scope, String name, Locale locale, String style,
 		String variation, boolean strict)
 	{
 		return registry.getResourceReference(scope, name, locale, style, variation, strict, true);
+	}
+
+	/**
+	 * Removes a resource.
+	 * 
+	 * @param key
+	 *            the resource reference's identifier
+	 * @return the removed {@link ResourceReference}. {@code null} if there was no registration for
+	 *         this {@link Key}
+	 */
+	public final ResourceReference remove(final Key key)
+	{
+		return registry.unregisterResourceReference(key);
 	}
 }

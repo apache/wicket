@@ -107,29 +107,24 @@ public class ResourceReferenceRegistry
 		if (reference.canBeRegistered())
 		{
 			Key key = reference.getKey();
-			if (map.containsKey(key) == false)
-			{
-				map.put(key, reference);
-			}
-
+			map.putIfAbsent(key, reference);
 			return key;
 		}
 
-		log.warn("Resource reference not added to registry. reference.canBeRegistered() == false");
+		log.warn("{} cannot be added to the registry.", reference.getClass().getName());
 		return null;
 	}
 
 	/**
 	 * Unregisters the given {@link ResourceReference}.
 	 * 
-	 * @param reference
+	 * @param key
+	 *            the {@link ResourceReference}'s identifier
 	 * @return Null, if the registry did not contain an entry for the resource reference.
 	 */
-	public final ResourceReference unregisterResourceReference(final ResourceReference reference)
+	public final ResourceReference unregisterResourceReference(final Key key)
 	{
-		Args.notNull(reference, "reference");
-
-		Key key = reference.getKey();
+		Args.notNull(key, "key");
 
 		// remove from registry
 		ResourceReference removed = map.remove(key);
