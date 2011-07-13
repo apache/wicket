@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.request.mapper.parameter;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.wicket.IClusterable;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
@@ -48,9 +48,9 @@ import org.apache.wicket.util.value.ValueMap;
  * 
  * @author Matej Knopp
  */
-public class PageParameters implements Serializable, IIndexedParameters, INamedParameters
+public class PageParameters implements IClusterable, IIndexedParameters, INamedParameters
 {
-	private static class Entry implements Serializable
+	private static class Entry implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 

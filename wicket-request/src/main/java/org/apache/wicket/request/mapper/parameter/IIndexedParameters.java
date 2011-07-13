@@ -34,7 +34,7 @@ public interface IIndexedParameters
 	 * @param object
 	 * @return this
 	 */
-	PageParameters set(final int index, final Object object);
+	IIndexedParameters set(final int index, final Object object);
 
 	/**
 	 * @param index
@@ -48,13 +48,13 @@ public interface IIndexedParameters
 	 * @param index
 	 * @return this
 	 */
-	PageParameters remove(final int index);
+	IIndexedParameters remove(final int index);
 
 	/**
 	 * Removes all indexed parameters.
 	 * 
 	 * @return this
 	 */
-	PageParameters clearIndexed();
+	IIndexedParameters clearIndexed();
 
 }

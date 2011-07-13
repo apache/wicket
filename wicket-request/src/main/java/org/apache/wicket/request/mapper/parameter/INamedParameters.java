@@ -65,7 +65,7 @@ public interface INamedParameters
 	 * @param name
 	 * @return this
 	 */
-	PageParameters remove(final String name);
+	INamedParameters remove(final String name);
 
 	/**
 	 * Adds value to named parameter with given name.
@@ -74,7 +74,7 @@ public interface INamedParameters
 	 * @param value
 	 * @return this
 	 */
-	PageParameters add(final String name, final Object value);
+	INamedParameters add(final String name, final Object value);
 
 	/**
 	 * Adds named parameter to a specified position. The {@link IRequestMapper}s may or may not take
@@ -85,7 +85,7 @@ public interface INamedParameters
 	 * @param index
 	 * @return this
 	 */
-	PageParameters add(final String name, final Object value, final int index);
+	INamedParameters add(final String name, final Object value, final int index);
 
 	/**
 	 * Sets the named parameter on specified position. The {@link IRequestMapper}s may or may not
@@ -96,7 +96,7 @@ public interface INamedParameters
 	 * @param index
 	 * @return this
 	 */
-	PageParameters set(final String name, final Object value, final int index);
+	INamedParameters set(final String name, final Object value, final int index);
 
 	/**
 	 * Sets the value for named parameter with given name.
@@ -105,13 +105,13 @@ public interface INamedParameters
 	 * @param value
 	 * @return this
 	 */
-	PageParameters set(final String name, final Object value);
+	INamedParameters set(final String name, final Object value);
 
 	/**
 	 * Removes all named parameters.
 	 * 
 	 * @return this
 	 */
-	PageParameters clearNamed();
+	INamedParameters clearNamed();
 
 }
