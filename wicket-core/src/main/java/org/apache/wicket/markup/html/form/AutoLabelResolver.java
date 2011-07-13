@@ -45,12 +45,12 @@ import org.slf4j.LoggerFactory;
  * component is required</li>
  * <li>Appends {@code error} css class to the {@code <label>} tag if the referenced form component
  * has failed validation</li>
- * <li>If the {@code <label>} tag contains {@code <span class='text'></span>} markup and the form
- * component has a label configured either via the label model or a property files, the body of the
- * {code <span>} will be replaced with the label</li>
- * <li>If the {@code <label>} tag contains {@code <span class='text'>body</span>} markup and the
- * form component does not have a label configured either via the label model or a properties file,
- * the label of the form component will be set to the body of the {@code <span>} tag - in this
+ * <li>If the {@code <label>} tag contains {@code <span class='label-text'></span>} markup and the
+ * form component has a label configured either via the label model or a property files, the body of
+ * the {code <span>} will be replaced with the label</li>
+ * <li>If the {@code <label>} tag contains {@code <span class='label-text'>body</span>} markup and
+ * the form component does not have a label configured either via the label model or a properties
+ * file, the label of the form component will be set to the body of the {@code <span>} tag - in this
  * example {@code body}</li>
  * </ul>
  * 
@@ -68,12 +68,12 @@ import org.slf4j.LoggerFactory;
  * Given markup like this:
  * 
  * <code>
- * [label wicket:for="name"][span class="text"]Name[/span]:[/label][input wicket:id="name" type="text"/]
+ * [label wicket:for="name"][span class="label-text"]Name[/span]:[/label][input wicket:id="name" type="text"/]
  * </code>
  * 
  * If the {@code name} component has its label set to 'First Name' the resulting output will be:
  * <code>
- * [label for="name5"][span class="text"]First Name[/span]:[/label][input name="name" type="text" id="name5"/]
+ * [label for="name5"][span class="label-text"]First Name[/span]:[/label][input name="name" type="text" id="name5"/]
  * </code>
  * 
  * However, if the {@code name} component does not have a label set then it will be set to
