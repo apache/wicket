@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.mapper;
 
+import java.lang.reflect.Modifier;
+
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
@@ -137,7 +139,8 @@ public class PackageMapper extends AbstractBookmarkableMapper
 			String fullyQualifiedClassName = packageName.getName() + '.' + className;
 			Class<? extends IRequestablePage> pageClass = getPageClass(fullyQualifiedClassName);
 
-			if (pageClass != null && IRequestablePage.class.isAssignableFrom(pageClass))
+			if (pageClass != null && Modifier.isAbstract(pageClass.getModifiers()) == false &&
+				IRequestablePage.class.isAssignableFrom(pageClass))
 			{
 				// extract the PageParameters from URL if there are any
 				PageParameters pageParameters = extractPageParameters(request, 1,
