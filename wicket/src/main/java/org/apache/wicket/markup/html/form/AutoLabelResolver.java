@@ -68,12 +68,12 @@ import org.slf4j.LoggerFactory;
  * Given markup like this:
  * 
  * <code>
- * [label wicket:for="name"][span class="text"]Name[/span]:[/label][input wicket:id="name" type="text"/]
+ * [label wicket:for="name"][span class="label-text"]Name[/span]:[/label][input wicket:id="name" type="text"/]
  * </code>
  * 
  * If the {@code name} component has its label set to 'First Name' the resulting output will be:
  * <code>
- * [label for="name5"][span class="text"]First Name[/span]:[/label][input name="name" type="text" id="name5"/]
+ * [label for="name5"][span class="label-text"]First Name[/span]:[/label][input name="name" type="text" id="name5"/]
  * </code>
  * 
  * However, if the {@code name} component does not have a label set then it will be set to
