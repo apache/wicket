@@ -17,7 +17,6 @@
 package org.apache.wicket.devutils.diskstore.browser;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Session;
 import org.apache.wicket.devutils.diskstore.DebugDiskDataStore;
 import org.apache.wicket.devutils.diskstore.DebugPageManagerProvider;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
@@ -57,7 +56,7 @@ class PageWindowColumn extends PropertyColumn<PageWindowDescription>
 			DebugPageManagerProvider pageManagerProvider = (DebugPageManagerProvider)Application.get()
 				.getPageManagerProvider();
 			DebugDiskDataStore dataStore = pageManagerProvider.getDataStore();
-			String sessionId = Session.get().getId();
+			String sessionId = windowDescription.getSessionId();
 			byte[] data = dataStore.getData(sessionId, pageId);
 			ISerializer serializer = Application.get().getFrameworkSettings().getSerializer();
 			Object page = serializer.deserialize(data);

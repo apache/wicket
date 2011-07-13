@@ -20,10 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.wicket.Application;
-import org.apache.wicket.Session;
 import org.apache.wicket.devutils.diskstore.DebugDiskDataStore;
-import org.apache.wicket.devutils.diskstore.DebugPageManagerProvider;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.ISortableDataProvider;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
@@ -38,6 +35,16 @@ class PageWindowProvider implements ISortableDataProvider<PageWindowDescription>
 {
 	private static final int MAX_PAGES_TO_READ = 1000;
 
+	/**
+	 * The model that brings the currently selected session id
+	 */
+	private final IModel<String> sessionId;
+
+	PageWindowProvider(final IModel<String> sessionId)
+	{
+		this.sessionId = sessionId;
+	}
+
 	public Iterator<? extends PageWindowDescription> iterator(int first, int count)
 	{
 		List<PageWindow> lastPageWindows = getPageWindows();
@@ -45,7 +52,7 @@ class PageWindowProvider implements ISortableDataProvider<PageWindowDescription>
 		List<PageWindowDescription> pageDescriptions = new ArrayList<PageWindowDescription>();
 		for (PageWindow pw : subList)
 		{
-			pageDescriptions.add(new PageWindowDescription(pw));
+			pageDescriptions.add(new PageWindowDescription(pw, sessionId.getObject()));
 		}
 
 		return pageDescriptions.iterator();
@@ -54,13 +61,12 @@ class PageWindowProvider implements ISortableDataProvider<PageWindowDescription>
 	private List<PageWindow> getPageWindows()
 	{
 		List<PageWindow> lastPageWindows = new ArrayList<PageWindow>();
-		if (Session.exists() && Session.get().isTemporary() == false)
+		if (sessionId != null && sessionId.getObject() != null)
 		{
-			String sessionId = Session.get().getId();
-			DebugPageManagerProvider pageManagerProvider = (DebugPageManagerProvider)Application.get()
-				.getPageManagerProvider();
-			DebugDiskDataStore dataStore = pageManagerProvider.getDataStore();
-			lastPageWindows.addAll(dataStore.getLastPageWindows(sessionId, MAX_PAGES_TO_READ));
+			String sessId = sessionId.getObject();
+			DebugDiskDataStore dataStore = DataStoreHelper.getDataStore();
+			List<PageWindow> pageWindows = dataStore.getLastPageWindows(sessId, MAX_PAGES_TO_READ);
+			lastPageWindows.addAll(pageWindows);
 		}
 		return lastPageWindows;
 	}
@@ -82,6 +88,7 @@ class PageWindowProvider implements ISortableDataProvider<PageWindowDescription>
 
 	public void detach()
 	{
+		sessionId.detach();
 	}
 
 	/*

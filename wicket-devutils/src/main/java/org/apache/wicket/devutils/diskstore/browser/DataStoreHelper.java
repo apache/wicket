@@ -16,42 +16,28 @@
  */
 package org.apache.wicket.devutils.diskstore.browser;
 
-import org.apache.wicket.IClusterable;
-import org.apache.wicket.pageStore.PageWindowManager.PageWindow;
+import org.apache.wicket.Application;
+import org.apache.wicket.devutils.diskstore.DebugDiskDataStore;
+import org.apache.wicket.devutils.diskstore.DebugPageManagerProvider;
 
 /**
- * A serializable representation of the page information
+ * A helper to work with {@link DebugDiskDataStore}
  */
-class PageWindowDescription implements IClusterable
+public final class DataStoreHelper
 {
-	/** the page id */
-	private final int id;
 
-	/** the page size */
-	private final int size;
-
-	/** the id of the session for which this page has been used */
-	private final String sessionId;
-
-	PageWindowDescription(PageWindow pageWindow, String sessionId)
+	private DataStoreHelper()
 	{
-		id = pageWindow.getPageId();
-		size = pageWindow.getFilePartSize();
-		this.sessionId = sessionId;
 	}
 
-	public String getSessionId()
+	/**
+	 * @return the configured {@link DebugDiskDataStore}
+	 */
+	public static DebugDiskDataStore getDataStore()
 	{
-		return sessionId;
-	}
-
-	public int getId()
-	{
-		return id;
-	}
-
-	public int getSize()
-	{
-		return size;
+		DebugPageManagerProvider pageManagerProvider = (DebugPageManagerProvider)Application.get()
+			.getPageManagerProvider();
+		DebugDiskDataStore dataStore = pageManagerProvider.getDataStore();
+		return dataStore;
 	}
 }

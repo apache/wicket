@@ -454,10 +454,11 @@ public class DiskDataStore implements IDataStore
 	}
 
 	/**
+	 * This folder contains sub-folders named as the session id for which they hold the data.
 	 * 
-	 * @return folder
+	 * @return the folder where the pages are stored
 	 */
-	private File getStoreFolder()
+	protected File getStoreFolder()
 	{
 		return new File(fileStoreFolder, applicationName + "-filestore");
 	}

@@ -18,7 +18,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
 
-	<table wicket:id="table" border="1"></table>
+    <h3>Active sessions</h3>
+    <select wicket:id="sessions"></select> <a wicket:id="currentSessionLink" title="Selects the current session">Current session</a>
+
+    <h3>Stored pages</h3> <a wicket:id="refresh" title="Refreshes the content of the table below">refresh</a>
+	<table wicket:id="table" border="1" cellpadding="3" cellspacing="1"></table>
 
 </wicket:panel>
 </html>

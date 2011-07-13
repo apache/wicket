@@ -65,6 +65,12 @@ public class DebugDiskDataStore extends DiskDataStore
 		return pageWindows;
 	}
 
+	@Override
+	public File getStoreFolder()
+	{
+		return super.getStoreFolder();
+	}
+
 	/**
 	 * 
 	 * @param application
