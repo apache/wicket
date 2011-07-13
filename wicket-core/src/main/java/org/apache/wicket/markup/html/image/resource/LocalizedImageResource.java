@@ -327,7 +327,7 @@ public final class LocalizedImageResource implements IClusterable
 		final CharSequence url;
 		if (resourceReference != null)
 		{
-//			// Create URL to resource
+			// Create URL to resource
 			url = RequestCycle.get().urlFor(resourceReference, resourceParameters);
 		}
 		else
@@ -337,7 +337,7 @@ public final class LocalizedImageResource implements IClusterable
 		}
 
 		// Set the SRC attribute to point to the component or shared resource
-		tag.put("src", RequestCycle.get().getOriginalResponse().encodeURL(url));
+		tag.put("src", url);
 	}
 
 	/**
