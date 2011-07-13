@@ -81,8 +81,14 @@ public class AsynchronousDataStoreTest
 
 		public void run()
 		{
-			r();
-			LATCH.countDown();
+			try
+			{
+				r();
+			}
+			finally
+			{
+				LATCH.countDown();
+			}
 		}
 
 		protected String getSessionId()
