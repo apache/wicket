@@ -16,14 +16,12 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.form.upload;
 
-import java.text.MessageFormat;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Session;
+import org.apache.wicket.Component;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequestImpl;
 import org.apache.wicket.protocol.http.servlet.UploadInfo;
 import org.apache.wicket.request.resource.AbstractResource;
@@ -33,6 +31,8 @@ import org.apache.wicket.request.resource.AbstractResource;
  * feed the progress bar information by the progress bar javascript which requests this resource
  * through ajax.
  * 
+ * For customizing status text see {@link #RESOURCE_STATUS}.
+ * 
  * @author Andrew Lombardi
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -40,6 +40,14 @@ class UploadStatusResource extends AbstractResource
 {
 
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Resource key used to retrieve status message for.
+	 * 
+	 * Example: UploadStatusResource.status=${percentageComplete}% finished, ${bytesUploadedString}
+	 * of ${totalBytesString} at ${transferRateString}; ${remainingTimeString}
+	 */
+	public static final String RESOURCE_STATUS = "UploadStatusResource.status";
 
 	@Override
 	protected ResourceResponse newResourceResponse(final Attributes attributes)
@@ -74,7 +82,9 @@ class UploadStatusResource extends AbstractResource
 	 */
 	private String getStatus(final Attributes attributes)
 	{
-		HttpServletRequest req = (HttpServletRequest)attributes.getRequest().getContainerRequest();
+		final HttpServletRequest req = (HttpServletRequest)attributes.getRequest()
+			.getContainerRequest();
+
 		UploadInfo info = MultipartServletWebRequestImpl.getUploadInfo(req);
 
 		String status = null;
@@ -84,31 +94,14 @@ class UploadStatusResource extends AbstractResource
 		}
 		else
 		{
-			Locale locale = Session.get().getLocale();
-
-			String pattern = getStatus("statusUpdate", locale);
-
 			status = info.getPercentageComplete() +
 				"|" +
-				MessageFormat.format(pattern, info.getPercentageComplete(),
-					info.getBytesUploadedString(locale), info.getTotalBytesString(locale),
-					info.getTransferRateString(locale), info.getRemainingTimeString(locale));
+				new StringResourceModel(
+					RESOURCE_STATUS,
+					(Component)null,
+					Model.of(info),
+					"${percentageComplete}% finished, ${bytesUploadedString} of ${totalBytesString} at ${transferRateString}; ${remainingTimeString}").getString();
 		}
 		return status;
-	}
-
-	/**
-	 * Get a status message for the given key.
-	 * 
-	 * @param key
-	 *            message key
-	 * @param locale
-	 *            locale for message
-	 * @return status message
-	 */
-	static String getStatus(String key, Locale locale)
-	{
-		return ResourceBundle.getBundle(UploadStatusResource.class.getName(), locale)
-			.getString(key);
 	}
 }

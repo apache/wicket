@@ -29,6 +29,8 @@ import org.apache.wicket.markup.html.WicketEventReference;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.SharedResourceReference;
@@ -57,6 +59,8 @@ import org.slf4j.LoggerFactory;
  * </code>
  * </pre>
  * 
+ * For customizing starting text see {@link #RESOURCE_STARTING}.
+ * 
  * Implementation detail: Despite being located in an Ajax package, the progress communication is
  * not done via Ajax but with an IFrame instead due to a bug in Webkit based browsers, see
  * WICKET-3202.
@@ -66,6 +70,13 @@ import org.slf4j.LoggerFactory;
 public class UploadProgressBar extends Panel
 {
 	private static final Logger log = LoggerFactory.getLogger(UploadProgressBar.class);
+
+	/**
+	 * Resource key used to retrieve starting message for.
+	 * 
+	 * Example: UploadProgressBar.starting=Upload starting...
+	 */
+	public static final String RESOURCE_STARTING = "UploadProgressBar.starting";
 
 	/**
 	 * Initializer for this component; binds static resources.
@@ -204,13 +215,17 @@ public class UploadProgressBar extends Panel
 
 		final String uploadFieldId = (uploadField == null) ? "" : uploadField.getMarkupId();
 
-		final String status = UploadStatusResource.getStatus("statusStarting", getLocale());
+		final String status = new StringResourceModel("UploadProgressBar.starting", this,
+			(IModel<?>)null, "Upload starting...").getString();
+
+		CharSequence url = urlFor(ref, null);
 
 		StringBuilder builder = new StringBuilder(128);
 		Formatter formatter = new Formatter(builder);
+
 		formatter.format("new Wicket.WUPB('%s', '%s', '%s', '%s', '%s', '%s').bind('%s')",
-			getMarkupId(), statusDiv.getMarkupId(), barDiv.getMarkupId(), urlFor(ref, null),
-			uploadFieldId, status, getCallbackForm().getMarkupId());
+			getMarkupId(), statusDiv.getMarkupId(), barDiv.getMarkupId(), url, uploadFieldId,
+			status, getCallbackForm().getMarkupId());
 		response.renderOnDomReadyJavaScript(builder.toString());
 	}
 
