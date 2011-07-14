@@ -232,7 +232,7 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	 * @param <Z>
 	 * @param model
 	 *            model
-	 * @return {@link PropertyModel} instance
+	 * @return {@link CompoundPropertyModel} instance
 	 */
 	public static <Z> CompoundPropertyModel<Z> of(IModel<Z> model)
 	{
