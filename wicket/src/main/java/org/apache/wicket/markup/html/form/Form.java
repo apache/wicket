@@ -988,6 +988,22 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	}
 
 	/**
+	 * Called after form components have updated their models. This is a late-stage validation that
+	 * allows outside frameworks to validate any beans that the form is updating.
+	 * 
+	 * This validation method is not preferred because at this point any errors will not unroll any
+	 * changes to the model object, so the model object is in a modified state potentially
+	 * containing illegal values. However, with external frameworks there may not be an alternate
+	 * way to validate the model object. A good example of this is a JSR303 Bean Validator
+	 * validating the model object to check any class-level constraints, in order to check such
+	 * constaints the model object must contain the values set by the user.
+	 */
+	protected void onValidateModelObjects()
+	{
+
+	}
+
+	/**
 	 * Process the form. Though you can override this method to provide your whole own algorithm, it
 	 * is not recommended to do so.
 	 * <p>
@@ -1033,6 +1049,13 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 
 			// Update model using form data
 			updateFormComponentModels();
+
+			onValidateModelObjects();
+			if (hasError())
+			{
+				callOnError();
+				return false;
+			}
 
 			// Persist FormComponents if requested
 			persistFormComponentData();
