@@ -230,9 +230,8 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	 * Type-infering factory method
 	 * 
 	 * @param <Z>
-	 * @param modelObject
 	 * @param model
-	 *            model object
+	 *            model
 	 * @return {@link PropertyModel} instance
 	 */
 	public static <Z> CompoundPropertyModel<Z> of(IModel<Z> model)
