@@ -48,8 +48,8 @@ public class Connections
 	{
 		// check if url points to a local file
 		final File file = Files.getLocalFileFromUrl(url);
-		
-		if(file != null)
+
+		if (file != null)
 		{
 			// in that case we can get the timestamp faster
 			return Files.getLastModified(file);
@@ -59,7 +59,7 @@ public class Connections
 		URLConnection connection = url.openConnection();
 
 		final long milliseconds;
-		
+
 		try
 		{
 			if (connection instanceof JarURLConnection)
@@ -67,36 +67,28 @@ public class Connections
 				JarURLConnection jarUrlConnection = (JarURLConnection)connection;
 				URL jarFileUrl = jarUrlConnection.getJarFileURL();
 				URLConnection jarFileConnection = jarFileUrl.openConnection();
-				
-				try
-				{
-					// get timestamp from JAR
-					milliseconds = jarFileConnection.getLastModified();
-				}
-				finally
-				{
-					close(jarFileConnection);
-				}
+				// get timestamp from JAR
+				milliseconds = jarFileConnection.getLastModified();
 			}
 			else
 			{
 				// get timestamp from URL
 				milliseconds = connection.getLastModified();
 			}
-			
+
 			// return null if timestamp is unavailable
 			if (milliseconds == 0)
 			{
 				return null;
 			}
-			
+
 			// return UNIX timestamp
 			return Time.millis(milliseconds);
-			
+
 		}
 		finally
 		{
-			close(connection);
+			closeQuietly(connection);
 		}
 	}
 
