@@ -88,12 +88,16 @@ public class AsynchronousDataStore implements IDataStore
 		for (Runnable runnable : savePagesExecutor.getQueue())
 		{
 			StoreEntryRunnable storeEntryRunnable = (StoreEntryRunnable)runnable;
-			Entry cursorEntry = storeEntryRunnable.getEntry();
-
-			if (cursorEntry.getPageId() == pageId && cursorEntry.getSessionId().equals(sessionId))
+			if (storeEntryRunnable != null)
 			{
-				entry = cursorEntry;
-				break;
+				Entry cursorEntry = storeEntryRunnable.getEntry();
+
+				if (cursorEntry.getPageId() == pageId &&
+					cursorEntry.getSessionId().equals(sessionId))
+				{
+					entry = cursorEntry;
+					break;
+				}
 			}
 		}
 
@@ -129,11 +133,15 @@ public class AsynchronousDataStore implements IDataStore
 		for (Runnable runnable : savePagesExecutor.getQueue())
 		{
 			StoreEntryRunnable storeEntryRunnable = (StoreEntryRunnable)runnable;
-			Entry cursorEntry = storeEntryRunnable.getEntry();
-
-			if (cursorEntry.getPageId() == pageId && cursorEntry.getSessionId().equals(sessionId))
+			if (storeEntryRunnable != null)
 			{
-				savePagesExecutor.remove(runnable);
+				Entry cursorEntry = storeEntryRunnable.getEntry();
+
+				if (cursorEntry.getPageId() == pageId &&
+					cursorEntry.getSessionId().equals(sessionId))
+				{
+					savePagesExecutor.remove(runnable);
+				}
 			}
 		}
 
@@ -148,11 +156,14 @@ public class AsynchronousDataStore implements IDataStore
 		for (Runnable runnable : savePagesExecutor.getQueue())
 		{
 			StoreEntryRunnable storeEntryRunnable = (StoreEntryRunnable)runnable;
-			Entry cursorEntry = storeEntryRunnable.getEntry();
-
-			if (cursorEntry.getSessionId().equals(sessionId))
+			if (storeEntryRunnable != null)
 			{
-				savePagesExecutor.remove(runnable);
+				Entry cursorEntry = storeEntryRunnable.getEntry();
+
+				if (cursorEntry.getSessionId().equals(sessionId))
+				{
+					savePagesExecutor.remove(runnable);
+				}
 			}
 		}
 
