@@ -837,7 +837,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 * 
 	 * @param submitter
 	 */
-	private void callOnError(IFormSubmitter submitter)
+	protected void callOnError(IFormSubmitter submitter)
 	{
 		if (submitter != null)
 		{
