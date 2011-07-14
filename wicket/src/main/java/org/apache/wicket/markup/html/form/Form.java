@@ -1046,7 +1046,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener, 
 	 * Calls onError on this {@link Form} and any enabled and visible nested form, if the respective
 	 * {@link Form} actually has errors.
 	 */
-	private void callOnError()
+	protected void callOnError()
 	{
 		onError();
 		// call onError on nested forms
