@@ -1514,14 +1514,14 @@ Wicket.Head.Contributor.prototype = {
 				
 		// build a DOM tree of the contribution
 		var xmldoc;
-		if (window.ActiveXObject) {
+		if (window.DOMParser) {
+			var parser = new DOMParser();    
+			xmldoc = parser.parseFromString(text, "text/xml");
+		} else if (window.ActiveXObject) {
 			xmldoc = new ActiveXObject("Microsoft.XMLDOM");
 			if (!xmldoc.loadXML(text)) {
 				Wicket.Log.error("Error parsing response: "+text);
 			}
-		} else {
-		    var parser = new DOMParser();    
-		    xmldoc = parser.parseFromString(text, "text/xml");	
 		}	
 		
 		return xmldoc;	
