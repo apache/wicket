@@ -70,7 +70,7 @@ public class Connections
 		}
 		finally
 		{
-			close(connection);
+			closeQuietly(connection);
 		}
 	}
 
