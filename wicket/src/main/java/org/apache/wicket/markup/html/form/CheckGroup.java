@@ -142,7 +142,7 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 								"] contains an illegal relative path " +
 								"element [" +
 								value +
-								"] which does not point to a Check component. Due to this the CheckGroup component cannot resolve the selected Check component pointed to by the illegal value. A possible reason is that componment hierarchy changed between rendering and form submission.");
+								"] which does not point to a Check component. Due to this the CheckGroup component cannot resolve the selected Check component pointed to by the illegal value. A possible reason is that component hierarchy changed between rendering and form submission.");
 					}
 
 					// assign the value of the group's model

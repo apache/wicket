@@ -23,7 +23,7 @@ import org.apache.wicket.markup.repeater.data.GridView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 
 /**
- * page for demonstrating the gridview componnet
+ * page for demonstrating the gridview component
  * 
  * @author igor
  */
