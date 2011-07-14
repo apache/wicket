@@ -196,7 +196,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 				if (tokens.hasMoreTokens() == false)
 				{
 					// ... but only for package resources
-					if(reference instanceof PackageResourceReference)
+					if (reference instanceof PackageResourceReference)
 					{
 						final PackageResourceReference pkgref = (PackageResourceReference)reference;
 						final ResourceUrl resourceUrl = new ResourceUrl(token, parameters);
@@ -227,7 +227,15 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 
 	public int getCompatibilityScore(Request request)
 	{
-		// always return 0 here so that the mounts have higher priority
-		return 0;
+		Url url = request.getUrl();
+
+		int score = -1;
+		if (url.getSegments().size() >= 4 &&
+			urlStartsWith(url, getContext().getNamespace(), getContext().getResourceIdentifier()))
+		{
+			score = 1;
+		}
+
+		return score;
 	}
 }
