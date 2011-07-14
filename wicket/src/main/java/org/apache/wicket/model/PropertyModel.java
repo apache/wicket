@@ -122,4 +122,19 @@ public class PropertyModel<T> extends AbstractPropertyModel<T>
 	{
 		return expression;
 	}
+
+	/**
+	 * Type-infering factory method
+	 * 
+	 * @param <Z>
+	 * @param parent
+	 *            object that contains the property
+	 * @param property
+	 *            property path
+	 * @return {@link PropertyModel} instance
+	 */
+	public static <Z> PropertyModel<Z> of(Object parent, String property)
+	{
+		return new PropertyModel<Z>(parent, property);
+	}
 }

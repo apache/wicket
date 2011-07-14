@@ -239,4 +239,18 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 		throw new UnsupportedOperationException();
 	}
 
+
+	/**
+	 * Type-infering factory method
+	 * 
+	 * @param <Z>
+	 * @param modelObject
+	 * @param model
+	 *            model object
+	 * @return {@link PropertyModel} instance
+	 */
+	public static <Z> CompoundPropertyModel<Z> of(Object modelObject)
+	{
+		return new CompoundPropertyModel<Z>(modelObject);
+	}
 }
