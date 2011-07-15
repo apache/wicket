@@ -59,7 +59,7 @@ public class FormHasErrorPage extends WebPage
 		final SubmitLink submitForm = new SubmitLink("submitForm");
 
 		final InvalidPanel invalidPanel = new InvalidPanel("invalidPanel");
-		final CheckBox formComponent = new CheckBox("formComponent", new Model());
+		final CheckBox formComponent = new CheckBox("labeled", new Model());
 
 		Form form = new Form("form")
 		{

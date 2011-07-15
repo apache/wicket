@@ -45,24 +45,17 @@ public class AutoLabelTest extends WicketTestCase
 		}
 
 		// simple insertion
-		assertRendered(new MyTestPage("<span class='label-text'>text</span>"),
-			"<span class='label-text'>t</span>");
+		assertRendered(new MyTestPage("<wicket:label>text</wicket:label>"), ">t</label>");
 
 
 		// preserves markup before and after
-		assertRendered(new MyTestPage(" <div> a </div> <span class='label-text'>text</span> b "),
-			" <div> a </div> <span class='label-text'>t</span> b ");
+		assertRendered(new MyTestPage(" <div> a </div> <wicket:label>text</wicket:label> b "),
+			" <div> a </div> t b ");
 
 
 		// embedded span tags
-		assertRendered(
-			new MyTestPage(" a <div> b <span class='label-text'>text</span> c </div> d"),
-			" a <div> b <span class='label-text'>t</span> c </div> d");
-
-		// double text span tags - only the first one is touched
-		assertRendered(new MyTestPage(
-			"<span class='label-text'>text</span><span class='label-text'>text</span>"),
-			"<span class='label-text'>t</span><span class='label-text'>text</span>");
+		assertRendered(new MyTestPage(" a <div> b <wicket:label>text</wicket:label> c </div> d"),
+			" a <div> b t c </div> d");
 
 		// no span - no insertion
 		assertRendered(new MyTestPage(" text "), " text ");
@@ -71,16 +64,10 @@ public class AutoLabelTest extends WicketTestCase
 		assertRendered(new MyTestPage(""), "></label>");
 
 		// empty span tag
-		assertRendered(new MyTestPage("<span class='label-text'></span>"),
-			"<span class='label-text'>t</span>");
+		assertRendered(new MyTestPage("<wicket:label></wicket:label>"), "t");
 
 		// open/close span tag
-		assertRendered(new MyTestPage("<span class='label-text'/>"),
-			"<span class='label-text'>t</span>");
-
-		// test additional classes on the span are preserved
-		assertRendered(new MyTestPage("<span class='foo label-text bar'/>"),
-			"<span class='foo label-text bar'>t</span>");
+		assertRendered(new MyTestPage("<wicket:label/>"), "t");
 	}
 
 	public void testMarkupIntoLabelInsertion()
@@ -95,7 +82,7 @@ public class AutoLabelTest extends WicketTestCase
 
 		// test form component label is defaulted to the contents of span class='label-text'
 
-		MyTestPage page = new MyTestPage("<span class='label-text'>text</span>");
+		MyTestPage page = new MyTestPage("<wicket:label>text</wicket:label>");
 		tester.startPage(page);
 		assertEquals("text", ((MyTestPage)tester.getLastRenderedPage()).field.getLabel()
 			.getObject());
@@ -107,7 +94,7 @@ public class AutoLabelTest extends WicketTestCase
 		{
 			public MyTestPage()
 			{
-				super("<label wicket:for='t'><span class='label-text'>field</span></label>");
+				super("<label wicket:for='t'><wicket:label>field</wicket:label></label>");
 			}
 		}
 
@@ -138,7 +125,7 @@ public class AutoLabelTest extends WicketTestCase
 			public MyTestPage2()
 			{
 				super(
-					"<label class='long' wicket:for='t'><span class='label-text'>field</span></label>");
+					"<label class='long' wicket:for='t'><wicket:label>field</wicket:label></label>");
 			}
 		}
 

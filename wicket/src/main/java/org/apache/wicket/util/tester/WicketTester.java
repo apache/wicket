@@ -416,6 +416,17 @@ public class WicketTester extends BaseWicketTester
 	}
 
 	/**
+	 * The opposite of {@link #assertContains(String)}.
+	 * 
+	 * @param pattern
+	 *            pattern
+	 */
+	public void assertContainsNot(String pattern)
+	{
+		assertResult(ifContainsNot(pattern));
+	}
+
+	/**
 	 * Asserts error-level feedback messages.
 	 * 
 	 * @param expectedErrorMessages
@@ -694,4 +705,6 @@ public class WicketTester extends BaseWicketTester
 			throw new AssertionFailedError(result.getMessage());
 		}
 	}
+
+
 }

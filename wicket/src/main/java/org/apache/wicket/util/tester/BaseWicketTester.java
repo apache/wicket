@@ -697,6 +697,19 @@ public class BaseWicketTester extends MockWebApplication
 	}
 
 	/**
+	 * assert the content of last rendered page contains(matches) regex pattern.
+	 * 
+	 * @param pattern
+	 *            reqex pattern to match
+	 * @return a <code>Result</code>
+	 */
+	public Result ifContainsNot(String pattern)
+	{
+		return isFalse("pattern '" + pattern + "' found", getServletResponse().getDocument()
+			.matches("(?s).*" + pattern + ".*"));
+	}
+
+	/**
 	 * assert the model of {@link ListView} use expectedList
 	 * 
 	 * @param path
