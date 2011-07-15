@@ -429,7 +429,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 			entry.key = name;
 			entry.value = val;
 
-			if (index == -1)
+			if (index < 0)
 			{
 				namedParameters.add(entry);
 			}
@@ -451,7 +451,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 		if (value != null)
 		{
-			add(name, value);
+			add(name, value, index);
 		}
 		return this;
 	}
