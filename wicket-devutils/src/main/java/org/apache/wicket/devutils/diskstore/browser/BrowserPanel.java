@@ -22,7 +22,7 @@ import java.util.List;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -52,23 +52,29 @@ public class BrowserPanel extends Panel
 		final BrowserTable table = createTable("table", sessionsSelector.getModel());
 		add(table);
 
-		AjaxLink<Void> refreshLink = new AjaxLink<Void>("refresh")
+		AjaxFallbackLink<Void> refreshLink = new AjaxFallbackLink<Void>("refresh")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
-				target.add(table);
+				if (target != null)
+				{
+					target.add(table);
+				}
 			}
 		};
 		add(refreshLink);
 
-		AjaxLink<Void> currentSessionLink = new AjaxLink<Void>("currentSessionLink")
+		AjaxFallbackLink<Void> currentSessionLink = new AjaxFallbackLink<Void>("currentSessionLink")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				sessionsSelector.setModelObject(getCurrentSession().getObject());
-				target.add(sessionsSelector, table);
+				if (target != null)
+				{
+					target.add(sessionsSelector, table);
+				}
 			}
 
 			@Override
