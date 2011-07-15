@@ -315,7 +315,8 @@ public class WebPage extends Page
 	public final void dirty(boolean isInitialization)
 	{
 		Request request = getRequest();
-		if (request instanceof WebRequest && ((WebRequest)request).isAjax())
+		if (isInitialization == false && request instanceof WebRequest &&
+			((WebRequest)request).isAjax())
 		{
 			return;
 		}
