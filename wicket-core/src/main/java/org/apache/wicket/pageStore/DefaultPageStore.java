@@ -118,7 +118,7 @@ public class DefaultPageStore implements IPageStore
 	public IManageablePage getPage(final String sessionId, final int id)
 	{
 		SerializedPage fromCache = serializedPagesCache.getPage(sessionId, id);
-		if (fromCache != null)
+		if (fromCache != null && fromCache.data != null)
 		{
 			return deserializePage(fromCache.data);
 		}
