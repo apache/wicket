@@ -215,8 +215,8 @@ public class UploadProgressBar extends Panel
 
 		final String uploadFieldId = (uploadField == null) ? "" : uploadField.getMarkupId();
 
-		final String status = new StringResourceModel("UploadProgressBar.starting", this,
-			(IModel<?>)null, "Upload starting...").getString();
+		final String status = new StringResourceModel(RESOURCE_STARTING, this, (IModel<?>)null,
+			"Upload starting...").getString();
 
 		CharSequence url = urlFor(ref, UploadStatusResource.newParameter(getPage().getId()));
 
