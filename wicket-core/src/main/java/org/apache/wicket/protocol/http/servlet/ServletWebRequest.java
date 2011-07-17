@@ -378,28 +378,33 @@ public class ServletWebRequest extends WebRequest
 	 * Creates multipart web request from this request.
 	 * 
 	 * @param maxSize
+	 * @param upload
+	 *            upload identifier for {@link UploadInfo}
 	 * @return multipart request
 	 * @throws FileUploadException
 	 */
-	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize)
+	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, String upload)
 		throws FileUploadException
 	{
-		return new MultipartServletWebRequestImpl(getContainerRequest(), filterPrefix, maxSize);
+		return new MultipartServletWebRequestImpl(getContainerRequest(), filterPrefix, maxSize,
+			upload);
 	}
 
 	/**
 	 * Creates multipart web request from this request.
 	 * 
 	 * @param maxSize
+	 * @param upload
+	 *            upload identifier for {@link UploadInfo}
 	 * @param factory
 	 * @return multipart request
 	 * @throws FileUploadException
 	 */
-	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, FileItemFactory factory)
-		throws FileUploadException
+	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, String upload,
+		FileItemFactory factory) throws FileUploadException
 	{
 		return new MultipartServletWebRequestImpl(getContainerRequest(), filterPrefix, maxSize,
-			factory);
+			upload, factory);
 	}
 
 	private static final Logger logger = LoggerFactory.getLogger(ServletWebRequest.class);

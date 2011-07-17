@@ -77,7 +77,7 @@ Wicket.WUPB.prototype = {
 	},
 
 	load : function() {
-		var URL = this.url + '?anticache=' + Math.random();
+		var URL = this.url + '&anticache=' + Math.random();
 		
     	this.iframe = Wicket._createIFrame(""+Math.random());
 		

@@ -24,6 +24,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequestImpl;
 import org.apache.wicket.protocol.http.servlet.UploadInfo;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.AbstractResource;
 
 /**
@@ -40,6 +41,8 @@ class UploadStatusResource extends AbstractResource
 {
 
 	private static final long serialVersionUID = 1L;
+
+	private static final String UPLOAD_PARAMETER = "upload";
 
 	/**
 	 * Resource key used to retrieve status message for.
@@ -77,7 +80,7 @@ class UploadStatusResource extends AbstractResource
 
 	/**
 	 * @param attributes
-	 * @return Status string with progress data that will feed the progressbar.js variables on
+	 * @return status string with progress data that will feed the progressbar.js variables on
 	 *         browser to update the progress bar
 	 */
 	private String getStatus(final Attributes attributes)
@@ -85,7 +88,9 @@ class UploadStatusResource extends AbstractResource
 		final HttpServletRequest req = (HttpServletRequest)attributes.getRequest()
 			.getContainerRequest();
 
-		UploadInfo info = MultipartServletWebRequestImpl.getUploadInfo(req);
+		final String upload = req.getParameter(UPLOAD_PARAMETER);
+
+		UploadInfo info = MultipartServletWebRequestImpl.getUploadInfo(req, upload);
 
 		String status = null;
 		if ((info == null) || (info.getTotalBytes() < 1))
@@ -103,5 +108,17 @@ class UploadStatusResource extends AbstractResource
 					"${percentageComplete}% finished, ${bytesUploadedString} of ${totalBytesString} at ${transferRateString}; ${remainingTimeString}").getString();
 		}
 		return status;
+	}
+
+	/**
+	 * Create a new parameter for the given identifier of a {@link UploadInfo}.
+	 * 
+	 * @param upload
+	 *            identifier
+	 * @return page parameter suitable for URLs to this resource
+	 */
+	public static PageParameters newParameter(String upload)
+	{
+		return new PageParameters().add(UPLOAD_PARAMETER, upload);
 	}
 }

@@ -58,6 +58,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	/** Map of parameters. */
 	private final ValueMap parameters = new ValueMap();
 
+	private String upload;
 
 	/**
 	 * total bytes uploaded (downloaded from server's pov) so far. used for upload notifications
@@ -67,7 +68,6 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	/** content length cache, used for upload notifications */
 	private int totalBytes;
 
-
 	/**
 	 * Constructor.
 	 * 
@@ -75,6 +75,8 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 * 
 	 * @param maxSize
 	 *            the maximum size allowed for this request
+	 * @param upload
+	 *            upload identifier for {@link UploadInfo}
 	 * @param request
 	 *            the servlet request
 	 * @param filterPrefix
@@ -83,9 +85,9 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 *             Thrown if something goes wrong with upload
 	 */
 	public MultipartServletWebRequestImpl(HttpServletRequest request, String filterPrefix,
-		Bytes maxSize) throws FileUploadException
+		Bytes maxSize, String upload) throws FileUploadException
 	{
-		this(request, filterPrefix, maxSize, new DiskFileItemFactory(Application.get()
+		this(request, filterPrefix, maxSize, upload, new DiskFileItemFactory(Application.get()
 			.getResourceSettings()
 			.getFileCleaner()));
 	}
@@ -95,6 +97,8 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 * 
 	 * @param maxSize
 	 *            the maximum size allowed for this request
+	 * @param upload
+	 *            upload identifier for {@link UploadInfo}
 	 * @param request
 	 *            the servlet request
 	 * @param filterPrefix
@@ -106,14 +110,13 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 *             Thrown if something goes wrong with upload
 	 */
 	public MultipartServletWebRequestImpl(HttpServletRequest request, String filterPrefix,
-		Bytes maxSize, FileItemFactory factory) throws FileUploadException
+		Bytes maxSize, String upload, FileItemFactory factory) throws FileUploadException
 	{
 		super(request, filterPrefix);
 
-		if (maxSize == null)
-		{
-			throw new IllegalArgumentException("argument maxSize must be not null");
-		}
+		Args.notNull(maxSize, "maxSize");
+		Args.notNull(upload, "upload");
+		this.upload = upload;
 
 		// Check that request is multipart
 		final boolean isMultipart = ServletFileUpload.isMultipartContent(request);
@@ -124,7 +127,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		}
 
 		// Configure the factory here, if desired.
-		ServletFileUpload upload = new ServletFileUpload(factory);
+		ServletFileUpload fileUpload = new ServletFileUpload(factory);
 
 		// The encoding that will be used to decode the string parameters
 		// It should NOT be null at this point, but it may be
@@ -142,10 +145,10 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		// set encoding specifically when we found it
 		if (encoding != null)
 		{
-			upload.setHeaderEncoding(encoding);
+			fileUpload.setHeaderEncoding(encoding);
 		}
 
-		upload.setSizeMax(maxSize.bytes());
+		fileUpload.setSizeMax(maxSize.bytes());
 
 		final List<FileItem> items;
 
@@ -162,13 +165,13 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			totalBytes = request.getContentLength();
 
 			onUploadStarted(totalBytes);
-			items = upload.parseRequest(ctx);
+			items = fileUpload.parseRequest(ctx);
 			onUploadCompleted();
 
 		}
 		else
 		{
-			items = upload.parseRequest(request);
+			items = fileUpload.parseRequest(request);
 		}
 
 		// Loop through items
@@ -301,7 +304,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	{
 		UploadInfo info = new UploadInfo(totalBytes);
 
-		setUploadInfo(getContainerRequest(), info);
+		setUploadInfo(getContainerRequest(), upload, info);
 	}
 
 	/**
@@ -313,7 +316,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	protected void onUploadUpdate(int bytesUploaded, int total)
 	{
 		HttpServletRequest request = getContainerRequest();
-		UploadInfo info = getUploadInfo(request);
+		UploadInfo info = getUploadInfo(request, upload);
 		if (info == null)
 		{
 			throw new IllegalStateException(
@@ -321,7 +324,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		}
 		info.setBytesUploaded(bytesUploaded);
 
-		setUploadInfo(request, info);
+		setUploadInfo(request, upload, info);
 	}
 
 	/**
@@ -329,7 +332,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 */
 	protected void onUploadCompleted()
 	{
-		clearUploadInfo(getContainerRequest());
+		clearUploadInfo(getContainerRequest(), upload);
 	}
 
 	/**
@@ -392,32 +395,39 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	}
 
 	@Override
-	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize)
+	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, String upload)
 		throws FileUploadException
 	{
 		return this;
 	}
 
 	@Override
-	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, FileItemFactory factory)
-		throws FileUploadException
+	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, String upload,
+		FileItemFactory factory) throws FileUploadException
 	{
 		return this;
 	}
 
 	private static final String SESSION_KEY = MultipartServletWebRequestImpl.class.getName();
 
+	private static String getSessionKey(String upload)
+	{
+		return SESSION_KEY + ":" + upload;
+	}
+
 	/**
 	 * Retrieves {@link UploadInfo} from session, null if not found.
 	 * 
 	 * @param req
 	 *            http servlet request, not null
+	 * @param upload
+	 *            upload identifier
 	 * @return {@link UploadInfo} object from session, or null if not found
 	 */
-	public static UploadInfo getUploadInfo(final HttpServletRequest req)
+	public static UploadInfo getUploadInfo(final HttpServletRequest req, String upload)
 	{
 		Args.notNull(req, "req");
-		return (UploadInfo)req.getSession().getAttribute(SESSION_KEY);
+		return (UploadInfo)req.getSession().getAttribute(getSessionKey(upload));
 	}
 
 	/**
@@ -425,14 +435,18 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 * 
 	 * @param req
 	 *            http servlet request, not null
+	 * @param upload
+	 *            upload identifier
 	 * @param uploadInfo
 	 *            {@link UploadInfo} object to be put into session, not null
 	 */
-	public static void setUploadInfo(final HttpServletRequest req, final UploadInfo uploadInfo)
+	public static void setUploadInfo(final HttpServletRequest req, String upload,
+		final UploadInfo uploadInfo)
 	{
 		Args.notNull(req, "req");
+		Args.notNull(upload, "upload");
 		Args.notNull(uploadInfo, "uploadInfo");
-		req.getSession().setAttribute(SESSION_KEY, uploadInfo);
+		req.getSession().setAttribute(getSessionKey(upload), uploadInfo);
 	}
 
 	/**
@@ -440,10 +454,13 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 * 
 	 * @param req
 	 *            http servlet request, not null
+	 * @param upload
+	 *            upload identifier
 	 */
-	public static void clearUploadInfo(final HttpServletRequest req)
+	public static void clearUploadInfo(final HttpServletRequest req, String upload)
 	{
 		Args.notNull(req, "req");
-		req.getSession().removeAttribute(SESSION_KEY);
+		Args.notNull(upload, "upload");
+		req.getSession().removeAttribute(getSessionKey(upload));
 	}
 }

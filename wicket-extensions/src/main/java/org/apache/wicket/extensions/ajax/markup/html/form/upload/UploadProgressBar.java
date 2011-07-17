@@ -218,7 +218,7 @@ public class UploadProgressBar extends Panel
 		final String status = new StringResourceModel("UploadProgressBar.starting", this,
 			(IModel<?>)null, "Upload starting...").getString();
 
-		CharSequence url = urlFor(ref, null);
+		CharSequence url = urlFor(ref, UploadStatusResource.newParameter(getPage().getId()));
 
 		StringBuilder builder = new StringBuilder(128);
 		Formatter formatter = new Formatter(builder);
