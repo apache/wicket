@@ -124,10 +124,10 @@ public class ModalWindow extends Panel
 	/** CSS class for window with gray border. */
 	public final static String CSS_CLASS_GRAY = "w_silver";
 
-	private static ResourceReference JAVASCRIPT = new JavaScriptResourceReference(
+	private static final ResourceReference JAVASCRIPT = new JavaScriptResourceReference(
 		ModalWindow.class, "res/modal.js");
 
-	private static ResourceReference CSS = new PackageResourceReference(ModalWindow.class,
+	private static final ResourceReference CSS = new PackageResourceReference(ModalWindow.class,
 		"res/modal.css");
 
 	/** the default id of the content component */
