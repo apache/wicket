@@ -62,6 +62,7 @@ import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.IContextProvider;
 import org.apache.wicket.util.IProvider;
+import org.apache.wicket.util.crypt.CharEncoding;
 import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.file.IFileCleaner;
 import org.apache.wicket.util.file.IResourceFinder;
@@ -388,26 +389,32 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Create a new WebRequest. Subclasses of WebRequest could e.g. decode and obfuscated URL which
+	 * Create a new WebRequest. Subclasses of WebRequest could e.g. decode and obfuscate URL which
 	 * has been encoded by an appropriate WebResponse.
 	 * 
 	 * @param servletRequest
+	 *            the current HTTP Servlet request
 	 * @param filterPath
 	 *            the filter mapping read from web.xml
 	 * @return a WebRequest object
 	 */
 	protected WebRequest newWebRequest(HttpServletRequest servletRequest, final String filterPath)
 	{
-		String requestEncoding = getRequestCycleSettings().getResponseRequestEncoding();
-		try
-		{
-			servletRequest.setCharacterEncoding(requestEncoding);
-		}
-		catch (UnsupportedEncodingException e)
-		{
-			throw new RuntimeException(e);
-		}
+		return new ServletWebRequest(servletRequest, filterPath);
+	}
 
+	/**
+	 * Pre- and post- configures the {@link WebRequest} created by user override-able
+	 * {@link #newWebRequest(HttpServletRequest, String)}
+	 * 
+	 * @param servletRequest
+	 *            the current HTTP Sservlet request
+	 * @param filterPath
+	 *            the filter mapping read from web.xml
+	 * @return a WebRequest object
+	 */
+	WebRequest createWebRequest(HttpServletRequest servletRequest, final String filterPath)
+	{
 		if (hasFilterFactoryManager())
 		{
 			for (AbstractRequestWrapperFactory factory : getFilterFactoryManager())
@@ -416,7 +423,27 @@ public abstract class WebApplication extends Application
 			}
 		}
 
-		return new ServletWebRequest(servletRequest, filterPath);
+		WebRequest webRequest = newWebRequest(servletRequest, filterPath);
+
+		try
+		{
+			if (webRequest.isAjax())
+			{
+				// WICKET-3908: Forms submitted with Ajax are always UTF-8 encoded
+				servletRequest.setCharacterEncoding(CharEncoding.UTF_8);
+			}
+			else
+			{
+				String requestEncoding = getRequestCycleSettings().getResponseRequestEncoding();
+				servletRequest.setCharacterEncoding(requestEncoding);
+			}
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			throw new RuntimeException(e);
+		}
+
+		return webRequest;
 	}
 
 	/**
@@ -425,14 +452,31 @@ public abstract class WebApplication extends Application
 	 * to decode the encoded URL.
 	 * 
 	 * @param webRequest
+	 *            the {@link WebRequest} that will handle the current HTTP Servlet request
 	 * @param httpServletResponse
+	 *            the current HTTP Servlet response
 	 * @return a WebResponse object
 	 */
 	protected WebResponse newWebResponse(final WebRequest webRequest,
 		final HttpServletResponse httpServletResponse)
 	{
-		ServletWebResponse webResponse = new ServletWebResponse((ServletWebRequest)webRequest,
-			httpServletResponse);
+		return new ServletWebResponse((ServletWebRequest)webRequest, httpServletResponse);
+	}
+
+	/**
+	 * Pre- and post- configures the {@link WebResponse} returned from
+	 * {@link #newWebResponse(WebRequest, HttpServletResponse)}
+	 * 
+	 * @param webRequest
+	 *            the {@link WebRequest} that will handle the current HTTP Servlet request
+	 * @param httpServletResponse
+	 *            the current HTTP Servlet response
+	 * @return the configured WebResponse object
+	 */
+	WebResponse createWebResponse(final WebRequest webRequest,
+		final HttpServletResponse httpServletResponse)
+	{
+		WebResponse webResponse = newWebResponse(webRequest, httpServletResponse);
 
 		boolean shouldBufferResponse = getRequestCycleSettings().getBufferResponse();
 		return shouldBufferResponse ? new HeaderBufferingWebResponse(webResponse) : webResponse;

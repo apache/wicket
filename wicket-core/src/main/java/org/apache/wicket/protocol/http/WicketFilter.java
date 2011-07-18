@@ -152,8 +152,8 @@ public class WicketFilter implements Filter
 				// No redirect; process the request
 				ThreadContext.setApplication(application);
 
-				WebRequest webRequest = application.newWebRequest(httpServletRequest, filterPath);
-				WebResponse webResponse = application.newWebResponse(webRequest,
+				WebRequest webRequest = application.createWebRequest(httpServletRequest, filterPath);
+				WebResponse webResponse = application.createWebResponse(webRequest,
 					httpServletResponse);
 
 				RequestCycle requestCycle = application.createRequestCycle(webRequest, webResponse);
