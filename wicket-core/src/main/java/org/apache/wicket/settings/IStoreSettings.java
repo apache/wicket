@@ -28,23 +28,28 @@ import org.apache.wicket.util.lang.Bytes;
 /**
  * An interface for settings related to the the storages where page instances are persisted -
  * {@link IPageStore}, {@link IDataStore} and {@link IPageManager}.
+ * <p>
+ * For more information about page storages read <a
+ * href="https://cwiki.apache.org/confluence/x/qIaoAQ">Page Storage - Wiki page</a>
+ * </p>
  * 
  * @since 1.5
  */
 public interface IStoreSettings
 {
 	/**
-	 * @return the number of page instances which will be stored in the http session for faster
-	 *         retrieval
+	 * @return the number of page instances which will be stored in the application scoped cache for
+	 *         faster retrieval
 	 */
 	int getInmemoryCacheSize();
 
 	/**
-	 * Sets the maximum number of page instances which will be stored in the http session for faster
-	 * retrieval
+	 * Sets the maximum number of page instances which will be stored in the application scoped
+	 * second level cache for faster retrieval
 	 * 
 	 * @param inmemoryCacheSize
-	 *            the maximum number of page instances which will be held in the http session
+	 *            the maximum number of page instances which will be held in the application scoped
+	 *            cache
 	 */
 	void setInmemoryCacheSize(int inmemoryCacheSize);
 
