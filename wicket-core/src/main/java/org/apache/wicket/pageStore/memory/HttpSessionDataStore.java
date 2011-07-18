@@ -38,11 +38,9 @@ import org.slf4j.LoggerFactory;
  * 
  * 	setPageManagerProvider(new DefaultPageManagerProvider() 
  * 	{
- * 		public IPageManager get(IPageManagerContext pageManagerContext) 
+ * 		protected IDataStore newDataStore() 
  * 		{ 
- * 			IDataStore dataStore = new HttpSessionDataStore(pageManagerContext, new PageNumberEvictionStrategy(20)); 
- * 			IPageStore pageStore = new DefaultPageStore(application.getName(), dataStore, getCacheSize()); 
- * 			return new PersistentPageManager(application.getName(), pageStore, pageManagerContext);
+ * 			return  new HttpSessionDataStore(pageManagerContext, new PageNumberEvictionStrategy(20));
  * 		}
  * 	}
  * }
