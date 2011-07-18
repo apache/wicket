@@ -41,6 +41,13 @@ public class LocaleHelper
 			String country = localeAsString.substring(idxOfUnderbar + 1);
 			result = new Locale(lang, country);
 		}
+		else
+		{
+			String lang = localeAsString;
+
+			result = new Locale(lang);
+		}
+
 
 		if (result == null)
 		{
