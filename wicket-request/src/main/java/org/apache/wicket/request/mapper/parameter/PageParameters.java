@@ -369,6 +369,27 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	}
 
 	/**
+	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#getPosition(String)
+	 */
+	public int getPosition(final String name)
+	{
+		int index = -1;
+		if (namedParameters != null)
+		{
+			for (int i = 0; i < namedParameters.size(); i++)
+			{
+				Entry entry = namedParameters.get(i);
+				if (entry.key.equals(name))
+				{
+					index = i;
+					break;
+				}
+			}
+		}
+		return index;
+	}
+
+	/**
 	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#remove(java.lang.String)
 	 */
 	public PageParameters remove(final String name)
@@ -429,7 +450,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 			entry.key = name;
 			entry.value = val;
 
-			if (index < 0)
+			if (index < 0 || index > namedParameters.size())
 			{
 				namedParameters.add(entry);
 			}

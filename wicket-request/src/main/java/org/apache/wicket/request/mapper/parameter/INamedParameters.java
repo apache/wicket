@@ -60,6 +60,15 @@ public interface INamedParameters
 	List<NamedPair> getAllNamed();
 
 	/**
+	 * Returns the position of a named parameter.
+	 * 
+	 * @param name
+	 *            the name of the parameter to look for
+	 * @return the position of the parameter. {@code -1} if there is no parameter with that name.
+	 */
+	int getPosition(String name);
+
+	/**
 	 * Removes named parameter with given name.
 	 * 
 	 * @param name
