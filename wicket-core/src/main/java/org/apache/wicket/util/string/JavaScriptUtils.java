@@ -105,7 +105,7 @@ public class JavaScriptUtils
 	public static void writeJavaScriptUrl(final Response response, final CharSequence url,
 		final String id)
 	{
-		writeJavaScriptUrl(response, url, id, false);
+		writeJavaScriptUrl(response, url, id, false, null);
 	}
 
 	/**
@@ -120,9 +120,11 @@ public class JavaScriptUtils
 	 * @param defer
 	 *            specifies that the execution of a script should be deferred (delayed) until after
 	 *            the page has been loaded.
+	 * @param charset
+	 *            a non null value specifies the charset attribute of the script tag
 	 */
 	public static void writeJavaScriptUrl(final Response response, final CharSequence url,
-		final String id, boolean defer)
+		final String id, boolean defer, String charset)
 	{
 		response.write("<script type=\"text/javascript\" ");
 		if (id != null)
@@ -132,6 +134,10 @@ public class JavaScriptUtils
 		if (defer)
 		{
 			response.write("defer=\"defer\" ");
+		}
+		if (charset != null)
+		{
+			response.write("charset=\"" + charset + "\" ");
 		}
 		response.write("src=\"");
 		response.write(url);

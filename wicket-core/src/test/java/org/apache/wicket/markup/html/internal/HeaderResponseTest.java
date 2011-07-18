@@ -159,4 +159,35 @@ public class HeaderResponseTest
 		Assert.assertEquals(expected, actual);
 	}
 
+	/**
+	 * Tests setting of 'charset' attribute
+	 * <p>
+	 * WICKET-3909
+	 */
+	@Test
+	public void testCharsetSetJavaScriptReference()
+	{
+		String charset = "foo";
+		headerResponse.renderJavaScriptReference("js-resource.js", "some-id", false, charset);
+		String expected = "<script type=\"text/javascript\" id=\"some-id\" charset=\"" + charset +
+			"\" src=\"" + RESOURCE_NAME + "\"></script>\n";
+		String actual = headerResponse.getResponse().toString();
+		Assert.assertEquals(expected, actual);
+	}
+
+	/**
+	 * Tests non-setting of 'charset' attribute
+	 * <p>
+	 * WICKET-3909
+	 */
+	@Test
+	public void testCharsetNotSetJavaScriptReference()
+	{
+		headerResponse.renderJavaScriptReference("js-resource.js", "some-id", false, null);
+		String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"" + RESOURCE_NAME +
+			"\"></script>\n";
+		String actual = headerResponse.getResponse().toString();
+		Assert.assertEquals(expected, actual);
+	}
+
 }

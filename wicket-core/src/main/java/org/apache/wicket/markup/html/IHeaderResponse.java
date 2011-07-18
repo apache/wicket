@@ -85,6 +85,26 @@ public interface IHeaderResponse extends Closeable
 		PageParameters pageParameters, String id, boolean defer);
 
 	/**
+	 * Writes a javascript reference with query parameters, if the specified reference hasn't been
+	 * rendered yet.
+	 * 
+	 * @param reference
+	 *            resource reference pointing to the javascript resource
+	 * @param pageParameters
+	 *            the parameters for this Javascript resource reference
+	 * @param id
+	 *            id that will be used to filter duplicate reference (it's still filtered by URL
+	 *            too)
+	 * @param defer
+	 *            specifies that the execution of a script should be deferred (delayed) until after
+	 *            the page has been loaded.
+	 * @param charset
+	 *            a non null value specifies the charset attribute of the script tag
+	 */
+	public void renderJavaScriptReference(ResourceReference reference,
+		PageParameters pageParameters, String id, boolean defer, String charset);
+
+	/**
 	 * Writes a javascript reference, if the specified reference hasn't been rendered yet.
 	 * 
 	 * @param url
@@ -116,6 +136,22 @@ public interface IHeaderResponse extends Closeable
 	 *            the page has been loaded.
 	 */
 	public void renderJavaScriptReference(String url, String id, boolean defer);
+
+	/**
+	 * Writes a javascript reference, if the specified reference hasn't been rendered yet.
+	 * 
+	 * @param url
+	 *            context-relative url of the the javascript resource
+	 * @param id
+	 *            id that will be used to filter duplicate reference (it's still filtered by URL
+	 *            too)
+	 * @param defer
+	 *            specifies that the execution of a script should be deferred (delayed) until after
+	 *            the page has been loaded.
+	 * @param charset
+	 *            a non null value specifies the charset attribute of the script tag
+	 */
+	public void renderJavaScriptReference(String url, String id, boolean defer, String charset);
 
 	/**
 	 * Renders javascript code to the response, if the javascript has not already been rendered.

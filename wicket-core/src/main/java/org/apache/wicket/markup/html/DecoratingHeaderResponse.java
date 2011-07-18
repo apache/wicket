@@ -79,6 +79,12 @@ public abstract class DecoratingHeaderResponse implements IHeaderResponse
 		realResponse.renderJavaScriptReference(reference, pageParameters, id, defer);
 	}
 
+	public void renderJavaScriptReference(ResourceReference reference,
+		PageParameters pageParameters, String id, boolean defer, String charset)
+	{
+		realResponse.renderJavaScriptReference(reference, pageParameters, id, defer, charset);
+	}
+
 	public void renderJavaScriptReference(String url)
 	{
 		realResponse.renderJavaScriptReference(url);
@@ -92,6 +98,11 @@ public abstract class DecoratingHeaderResponse implements IHeaderResponse
 	public void renderJavaScriptReference(String url, String id, boolean defer)
 	{
 		realResponse.renderJavaScriptReference(url, id, defer);
+	}
+
+	public void renderJavaScriptReference(String url, String id, boolean defer, String charset)
+	{
+		realResponse.renderJavaScriptReference(url, id, defer, charset);
 	}
 
 	public void renderJavaScript(CharSequence javascript, String id)

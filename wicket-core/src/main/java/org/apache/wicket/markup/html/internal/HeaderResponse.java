@@ -196,13 +196,19 @@ public abstract class HeaderResponse implements IHeaderResponse
 	public void renderJavaScriptReference(ResourceReference reference,
 		PageParameters pageParameters, String id, boolean defer)
 	{
+		renderJavaScriptReference(reference, pageParameters, id, defer, null);
+	}
+
+	public void renderJavaScriptReference(ResourceReference reference,
+		PageParameters pageParameters, String id, boolean defer, String charset)
+	{
 		Args.notNull(reference, "reference");
 
 		if (!closed)
 		{
 			IRequestHandler handler = new ResourceReferenceRequestHandler(reference, pageParameters);
 			CharSequence url = RequestCycle.get().urlFor(handler);
-			internalRenderJavaScriptReference(url.toString(), id, defer);
+			internalRenderJavaScriptReference(url.toString(), id, defer, charset);
 		}
 	}
 
@@ -218,10 +224,16 @@ public abstract class HeaderResponse implements IHeaderResponse
 
 	public void renderJavaScriptReference(String url, String id, boolean defer)
 	{
-		internalRenderJavaScriptReference(relative(url), id, defer);
+		renderJavaScriptReference(url, id, defer, null);
 	}
 
-	private void internalRenderJavaScriptReference(String url, String id, boolean defer)
+	public void renderJavaScriptReference(String url, String id, boolean defer, String charset)
+	{
+		internalRenderJavaScriptReference(relative(url), id, defer, charset);
+	}
+
+	private void internalRenderJavaScriptReference(String url, String id, boolean defer,
+		String charset)
 	{
 		if (Strings.isEmpty(url))
 		{
@@ -239,7 +251,8 @@ public abstract class HeaderResponse implements IHeaderResponse
 
 			if (token1Unused && token2Unused)
 			{
-				JavaScriptUtils.writeJavaScriptUrl(getResponse(), urlWoSessionId, id, defer);
+				JavaScriptUtils.writeJavaScriptUrl(getResponse(), urlWoSessionId, id, defer,
+					charset);
 				markRendered(token1);
 				if (token2 != null)
 				{
