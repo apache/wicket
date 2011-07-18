@@ -53,12 +53,12 @@ import org.apache.wicket.util.value.ValueMap;
 public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 {
 	/** Map of file items. */
-	private final Map<String, List<FileItem>> files = new HashMap<String, List<FileItem>>();
+	private final Map<String, List<FileItem>> files;
 
 	/** Map of parameters. */
-	private final ValueMap parameters = new ValueMap();
+	private final ValueMap parameters;
 
-	private String upload;
+	private final String upload;
 
 	/**
 	 * total bytes uploaded (downloaded from server's pov) so far. used for upload notifications
@@ -117,6 +117,8 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		Args.notNull(maxSize, "maxSize");
 		Args.notNull(upload, "upload");
 		this.upload = upload;
+		parameters = new ValueMap();
+		files = new HashMap<String, List<FileItem>>();
 
 		// Check that request is multipart
 		final boolean isMultipart = ServletFileUpload.isMultipartContent(request);
