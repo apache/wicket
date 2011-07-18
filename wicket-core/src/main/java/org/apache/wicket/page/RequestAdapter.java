@@ -57,7 +57,7 @@ public abstract class RequestAdapter
 	protected abstract IManageablePage getPage(int id);
 
 	/**
-	 * Store the list of pages.
+	 * Store the list of stateful pages.
 	 * 
 	 * @param touchedPages
 	 */
