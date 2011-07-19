@@ -18,18 +18,18 @@ package org.apache.wicket.request;
 
 
 /**
- * Encodes {@link IRequestHandler}(s) into {@link Url}(s) and decodes {@link Request}(s) to
+ * Maps {@link IRequestHandler}(s) into {@link Url}(s) and {@link Request}(s) to
  * {@link IRequestHandler}(s). For {@link IRequestHandler}s and {@link Request}s the implementation
- * doesn't know the {@link #mapHandler(IRequestHandler)} and {@link #mapRequest(Request)} methods
- * must return <code>null</code>.
+ * doesn't recognize, the {@link #mapHandler(IRequestHandler)} and {@link #mapRequest(Request)}
+ * methods must return {@code null}.
  * 
  * @author Matej Knopp
  */
 public interface IRequestMapper
 {
 	/**
-	 * Returns {@link IRequestHandler} for the request or <code>null</code> if the encoder does not
-	 * recognize the URL.
+	 * Returns {@link IRequestHandler} for the request or <code>null</code> if the {@link Url} is
+	 * not recognized.
 	 * 
 	 * @param request
 	 *            provides access to request data (i.e. Url and Parameters)
@@ -44,22 +44,22 @@ public interface IRequestMapper
 	 * score to lowest.
 	 * <p>
 	 * A good criteria for calculating the score is the number of matched url segments. For example
-	 * when there are two encoders for mounted page, one mapped to <code>/foo</code> another to
-	 * <code>/foo/bar</code> and the incoming request URL is </code>/foo/bar/baz</code>, the encoder
-	 * mapped to <code>/foo/bar</code> will handle the request first as it has matching segments
+	 * when there are two mappers for a mounted page, one mapped to <code>/foo</code> another to
+	 * <code>/foo/bar</code> and the incoming request URL is </code>/foo/bar/baz</code>, the mapping
+	 * to <code>/foo/bar</code> should probably handle the request first as it has matching segments
 	 * count of 2 while the first one has only matching segments count of 1.
 	 * <p>
-	 * Note that the method can return value greater then zero even if the encoder can not decode
+	 * Note that the method can return value greater then zero even if the mapper does not recognize
 	 * the request.
 	 * 
 	 * @param request
-	 * @return count of matching segments
+	 * @return the compatibility score, e.g. count of matching segments
 	 */
 	int getCompatibilityScore(Request request);
 
 	/**
-	 * Returns the {@link Url} for given {@link IRequestHandler} or <code>null</code> if the encoder
-	 * does not recognize the request handler.
+	 * Returns the {@link Url} for given {@link IRequestHandler} or <code>null</code> if the request
+	 * handler is not recognized.
 	 * 
 	 * @param requestHandler
 	 * @return Url instance or <code>null</code>.

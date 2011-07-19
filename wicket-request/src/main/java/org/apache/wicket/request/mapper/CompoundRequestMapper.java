@@ -43,18 +43,18 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 	/**
 	 * 
 	 */
-	private static class EncoderWithSegmentsCount implements Comparable<EncoderWithSegmentsCount>
+	private static class MapperWithScore implements Comparable<MapperWithScore>
 	{
 		private final IRequestMapper mapper;
 		private final int compatibilityScore;
 
-		public EncoderWithSegmentsCount(final IRequestMapper encoder, final int compatibilityScore)
+		public MapperWithScore(final IRequestMapper mapper, final int compatibilityScore)
 		{
-			mapper = encoder;
+			this.mapper = mapper;
 			this.compatibilityScore = compatibilityScore;
 		}
 
-		public int compareTo(final EncoderWithSegmentsCount o)
+		public int compareTo(final MapperWithScore o)
 		{
 			return o.compatibilityScore - compatibilityScore;
 		}
@@ -86,49 +86,48 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 	/**
 	 * @see org.apache.wicket.request.mapper.ICompoundRequestMapper#add(org.apache.wicket.request.IRequestMapper)
 	 */
-	public CompoundRequestMapper add(final IRequestMapper encoder)
+	public CompoundRequestMapper add(final IRequestMapper mapper)
 	{
-		mappers.add(0, encoder);
+		mappers.add(0, mapper);
 		return this;
 	}
 
 	/**
 	 * @see org.apache.wicket.request.mapper.ICompoundRequestMapper#remove(org.apache.wicket.request.IRequestMapper)
 	 */
-	public CompoundRequestMapper remove(final IRequestMapper encoder)
+	public CompoundRequestMapper remove(final IRequestMapper mapper)
 	{
-		mappers.remove(encoder);
+		mappers.remove(mapper);
 		return this;
 	}
 
 	/**
-	 * Searches the registered {@link IRequestMapper}s to find one that can decode the
-	 * {@link Request}. Each registered {@link IRequestMapper} is asked to provide the matching
-	 * segments count. Then the encoders are asked to decode the request in order depending on the
-	 * provided segments count.
+	 * Searches the registered {@link IRequestMapper}s to find one that can map the {@link Request}.
+	 * Each registered {@link IRequestMapper} is asked to provide its compatibility score. Then the
+	 * mappers are asked to map the request in order depending on the provided compatibility
+	 * score.
 	 * <p>
-	 * The encoder with highest matching segments count that can decode the request is returned.
+	 * The mapper with highest compatibility score which can map the request is returned.
 	 * 
 	 * @param request
-	 * @return RequestHandler for the request or <code>null</code> if no encoder for the request is
+	 * @return RequestHandler for the request or <code>null</code> if no mapper for the request is
 	 *         found.
 	 */
 	public IRequestHandler mapRequest(final Request request)
 	{
-		List<EncoderWithSegmentsCount> list = new ArrayList<EncoderWithSegmentsCount>(
-			mappers.size());
+		List<MapperWithScore> list = new ArrayList<MapperWithScore>(mappers.size());
 
-		for (IRequestMapper encoder : mappers)
+		for (IRequestMapper mapper : mappers)
 		{
-			int score = encoder.getCompatibilityScore(request);
-			list.add(new EncoderWithSegmentsCount(encoder, score));
+			int score = mapper.getCompatibilityScore(request);
+			list.add(new MapperWithScore(mapper, score));
 		}
 
 		Collections.sort(list);
 
-		for (EncoderWithSegmentsCount encoder : list)
+		for (MapperWithScore mapperWithScore : list)
 		{
-			IRequestHandler handler = encoder.getMapper().mapRequest(request);
+			IRequestHandler handler = mapperWithScore.getMapper().mapRequest(request);
 			if (handler != null)
 			{
 				return handler;
@@ -139,22 +138,22 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 	}
 
 	/**
-	 * Searches the registered {@link IRequestMapper}s to find one that can encode the
-	 * {@link IRequestHandler}. Each registered {@link IRequestMapper} is asked to encode the
-	 * {@link IRequestHandler} until an encoder that can encode the {@link IRequestHandler} is found
-	 * or no more encoders are left.
+	 * Searches the registered {@link IRequestMapper}s to find one that can map the
+	 * {@link IRequestHandler}. Each registered {@link IRequestMapper} is asked to map the
+	 * {@link IRequestHandler} until a mapper which can map the {@link IRequestHandler} is found or
+	 * no more mappers are left.
 	 * <p>
-	 * The handlers are searched in reverse order as they have been registered. More recently
-	 * registered handlers have bigger priority.
+	 * The mappers are searched in reverse order as they have been registered. More recently
+	 * registered mappers have bigger priority.
 	 * 
 	 * @param handler
-	 * @return Url for the handler or <code>null</code> if no encoder for the handler is found.
+	 * @return Url for the handler or <code>null</code> if no mapper for the handler is found.
 	 */
 	public Url mapHandler(final IRequestHandler handler)
 	{
-		for (IRequestMapper encoder : mappers)
+		for (IRequestMapper mapper : mappers)
 		{
-			Url url = encoder.mapHandler(handler);
+			Url url = mapper.mapHandler(handler);
 			if (url != null)
 			{
 				return url;
