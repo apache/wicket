@@ -37,7 +37,7 @@ import org.apache.wicket.response.StringResponse;
 
 /**
  * The HtmlHeaderContainer is automatically created and added to the component hierarchy by a
- * HtmlHeaderResolver instance. HtmlHeaderContainer tries to handle/render the &gt;head&gt; tag and
+ * HtmlHeaderResolver instance. HtmlHeaderContainer tries to handle/render the &lt;head&gt; tag and
  * its body. However depending on the parent component, the behavior must be different. E.g. if
  * parent component is a Page all components of the page's hierarchy must be asked if they have
  * something to contribute to the &lt;head&gt; section of the html response. If yes, it must
