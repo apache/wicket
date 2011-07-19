@@ -31,12 +31,12 @@ import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.validation.AbstractFormValidator;
+import org.apache.wicket.markup.html.form.validation.EqualInputValidator;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
-import org.apache.wicket.validation.IValidationError;
 import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
 
@@ -100,8 +100,17 @@ public class NewUserWizard extends Wizard
 		public UserNameStep()
 		{
 			super(new ResourceModel("username.title"), new ResourceModel("username.summary"));
+
 			add(new RequiredTextField<String>("user.userName"));
-			add(new RequiredTextField<String>("user.email").add(EmailAddressValidator.getInstance()));
+
+			FormComponent<String> email = new RequiredTextField<String>("user.email").add(EmailAddressValidator.getInstance());
+			add(email);
+
+			TextField<String> emailRepeat = new TextField<String>("emailRepeat",
+				new Model<String>());
+			add(emailRepeat);
+
+			add(new EqualInputValidator(email, emailRepeat));
 		}
 	}
 
@@ -139,7 +148,7 @@ public class NewUserWizard extends Wizard
 					{
 						if ("".equals(rolesSetNameField.getInput()))
 						{
-							rolesSetNameField.error((IValidationError)new ValidationError().addMessageKey("error.noSetNameForRoles"));
+							rolesSetNameField.error(new ValidationError().addMessageKey("error.noSetNameForRoles"));
 						}
 					}
 				}
@@ -156,7 +165,8 @@ public class NewUserWizard extends Wizard
 	}
 
 	/** cheap ass roles database. */
-	private static final List<String> allRoles = Arrays.asList("admin", "user", "moderator", "joker", "slacker");
+	private static final List<String> allRoles = Arrays.asList("admin", "user", "moderator",
+		"joker", "slacker");
 
 	/** Whether the assign roles step should be executed. */
 	private boolean assignRoles = false;
