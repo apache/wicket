@@ -438,18 +438,18 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 			}
 		};
 
-		final PackageResourceReference reference =
-			new PackageResourceReference(getClass(), "versioned", Locale.ENGLISH, "style", null)
+		final PackageResourceReference reference = new PackageResourceReference(getClass(),
+			"versioned", Locale.ENGLISH, "style", null)
+		{
+			@Override
+			public IResource getResource()
 			{
-				@Override
-				public IResource getResource()
-				{
-					return resource;
-				}
-			};
+				return resource;
+			}
+		};
 
-		IResourceCachingStrategy strategy =
-			new FilenameWithVersionResourceCachingStrategy("-version-", new StaticResourceVersion("foobar"));
+		IResourceCachingStrategy strategy = new FilenameWithVersionResourceCachingStrategy(
+			"-version-", new StaticResourceVersion("foobar"));
 
 		INamedParameters params = new PageParameters();
 		ResourceUrl url = new ResourceUrl("test.js", params);
@@ -464,10 +464,10 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		strategy.undecorateUrl(url);
 		assertEquals("test", url.getFileName());
 
-		// this behavior is o.k. since a browser could request an 
+		// this behavior is o.k. since a browser could request an
 		// previous version of the resource. for example we
 		// could first have 'test-alpha.txt' which would be later replaced
-		// by 'test-beta.txt' but in any case will point to 
+		// by 'test-beta.txt' but in any case will point to
 		// internal resource 'test.txt'
 		url = new ResourceUrl("test-version-older.txt", params);
 		strategy.undecorateUrl(url);
@@ -489,9 +489,20 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		assertEquals("test.txt", url.getFileName());
 
 		// check a version that contains a dot which also marks the filename extension
-		strategy = new FilenameWithVersionResourceCachingStrategy("-version-", new StaticResourceVersion("1.0.4-beta"));
+		strategy = new FilenameWithVersionResourceCachingStrategy("-version-",
+			new StaticResourceVersion("1.0.4-beta"));
 		url = new ResourceUrl("test.txt", params);
 		strategy.decorateUrl(url, reference);
 		assertEquals("test-version-1.0.4-beta.txt", url.getFileName());
+	}
+
+	/**
+	 * Tests <a href="https://issues.apache.org/jira/browse/WICKET-3918">WICKET-3918</a>.
+	 */
+	public void testWicket3918()
+	{
+		Url url = Url.parse("wicket/resource/org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow/res/");
+		IRequestHandler handler = encoder.mapRequest(getRequest(url));
+		assertNull(handler);
 	}
 }

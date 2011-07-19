@@ -33,6 +33,8 @@ import org.apache.wicket.request.resource.caching.ResourceUrl;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Generic {@link ResourceReference} encoder that encodes and decodes non-mounted
@@ -53,6 +55,8 @@ import org.apache.wicket.util.string.Strings;
  */
 class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 {
+	private static final Logger log = LoggerFactory.getLogger(BasicResourceReferenceMapper.class);
+
 	private final IPageParametersEncoder pageParametersEncoder;
 
 	/** resource caching strategy */
@@ -100,8 +104,11 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 					segment = resourceUrl.getFileName();
 
 					if (Strings.isEmpty(segment))
-						throw new NullPointerException(
-							"caching strategy must not return an empty filename");
+					{
+						log.debug("Caching strategy {} returned an empty name, not mapping {}",
+							getCachingStrategy().getClass(), url);
+						return null;
+					}
 				}
 				if (name.length() > 0)
 				{
