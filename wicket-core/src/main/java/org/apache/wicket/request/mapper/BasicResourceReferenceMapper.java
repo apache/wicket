@@ -106,7 +106,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 					if (Strings.isEmpty(segment))
 					{
 						log.debug("Caching strategy {} returned an empty name, not mapping {}",
-							getCachingStrategy().getClass(), url);
+							getCachingStrategy().getClass().getName(), url);
 						return null;
 					}
 				}
@@ -211,8 +211,11 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 						token = resourceUrl.getFileName();
 
 						if (Strings.isEmpty(token))
-							throw new NullPointerException(
-								"caching strategy must not return an empty filename");
+						{
+							log.debug("Caching strategy {} returned an empty name, not mapping {}",
+								getCachingStrategy().getClass().getName(), url);
+							return null;
+						}
 
 						if (parameters.getIndexedCount() > 0)
 							throw new IllegalStateException(
