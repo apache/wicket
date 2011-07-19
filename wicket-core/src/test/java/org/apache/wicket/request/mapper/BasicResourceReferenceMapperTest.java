@@ -429,10 +429,15 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		assertEquals("wicket/resource/" + CLASS_NAME + "/reference5?en--variation", url.toString());
 	}
 
+	/**
+	 * 
+	 */
 	public void testVersionStringInResourceFilename()
 	{
 		final IResource resource = new IResource()
 		{
+			private static final long serialVersionUID = 1L;
+
 			public void respond(Attributes attributes)
 			{
 			}
@@ -441,6 +446,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		final PackageResourceReference reference = new PackageResourceReference(getClass(),
 			"versioned", Locale.ENGLISH, "style", null)
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public IResource getResource()
 			{
