@@ -143,6 +143,8 @@ public class DiskDataStoreTest extends TestCase
 
 	private final AtomicInteger saveTime = new AtomicInteger(0);
 
+	private RuntimeException exceptionThrownByThread;
+
 	private String randomSessionId()
 	{
 		List<String> s = new ArrayList<String>(sessionCounter.keySet());
@@ -174,10 +176,35 @@ public class DiskDataStoreTest extends TestCase
 
 	private IDataStore dataStore;
 
-	// Store/Save data in DataStore
-	private class SaveRunnable implements Runnable
+	/**
+	 * Stores RuntimeException into a field.
+	 */
+	private abstract class ExceptionCapturingRunnable implements Runnable
 	{
-		public void run()
+		public final void run()
+		{
+			try
+			{
+				doRun();
+			}
+			catch (RuntimeException e)
+			{
+				exceptionThrownByThread = e;
+			}
+		}
+
+		/**
+		 * Called by {@link #run()}. Thrown RuntimeExceptions are stores into a field for later
+		 * check.
+		 */
+		protected abstract void doRun();
+	}
+
+	// Store/Save data in DataStore
+	private class SaveRunnable extends ExceptionCapturingRunnable
+	{
+		@Override
+		protected void doRun()
 		{
 			File file;
 
@@ -211,9 +238,10 @@ public class DiskDataStoreTest extends TestCase
 	};
 
 	// Read data from DataStore
-	private class Read1Runnable implements Runnable
+	private class Read1Runnable extends ExceptionCapturingRunnable
 	{
-		public void run()
+		@Override
+		protected void doRun()
 		{
 			File file;
 			while ((file = filesToRead1.poll()) != null || !saveDone.get())
@@ -245,9 +273,10 @@ public class DiskDataStoreTest extends TestCase
 		}
 	};
 
-	private class Read2Runnable implements Runnable
+	private class Read2Runnable extends ExceptionCapturingRunnable
 	{
-		public void run()
+		@Override
+		protected void doRun()
 		{
 			File file;
 			while ((file = filesToRead2.poll()) != null || !read1Done.get())
@@ -285,17 +314,17 @@ public class DiskDataStoreTest extends TestCase
 
 		for (int i = 0; i < THREAD_COUNT; ++i)
 		{
-			new Thread(new SaveRunnable()).start();
-		}
-
-		for (int i = 0; i < THREAD_COUNT; ++i)
-		{
 			new Thread(new Read1Runnable()).start();
 		}
 
 		for (int i = 0; i < THREAD_COUNT; ++i)
 		{
 			new Thread(new Read2Runnable()).start();
+		}
+
+		for (int i = 0; i < THREAD_COUNT; ++i)
+		{
+			new Thread(new SaveRunnable()).start();
 		}
 
 		while (!(read1Done.get() && read2Done.get() && saveDone.get()))
@@ -308,6 +337,11 @@ public class DiskDataStoreTest extends TestCase
 			{
 				log.error(e.getMessage(), e);
 			}
+		}
+
+		if (exceptionThrownByThread != null)
+		{
+			throw new RuntimeException("One of the worker threads failed.", exceptionThrownByThread);
 		}
 
 		long duration = System.currentTimeMillis() - start;
