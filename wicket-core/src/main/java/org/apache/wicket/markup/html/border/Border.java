@@ -105,7 +105,7 @@ import org.apache.wicket.util.lang.Args;
  * </pre>
  * 
  * The component "someContainer" in the previous example must be added to the border, and not the
- * body, which is achieved via {@link #add(Component...)}.
+ * body, which is achieved via {@link #addToBorder(Component...)}.
  * <p/>
  * {@link #add(Component...)} is an alias to {@link #addToBody(Component...)} and will add a child
  * component to the border body as shown in the example below.
