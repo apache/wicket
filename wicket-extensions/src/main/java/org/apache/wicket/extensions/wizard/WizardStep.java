@@ -80,24 +80,6 @@ import org.apache.wicket.model.Model;
 public class WizardStep extends Panel implements IWizardStep
 {
 	/**
-	 * Adds form validators. We don't need this in 2.0 as the hierarchy is know at construction time
-	 * from then.
-	 */
-	private final class AddFormValidatorAction
-	{
-		/**
-		 * Wrapper for any form validators.
-		 */
-		final FormValidatorWrapper formValidatorWrapper = new FormValidatorWrapper();
-
-		void execute()
-		{
-			Form<?> form = findParent(Form.class);
-			form.add(formValidatorWrapper);
-		}
-	}
-
-	/**
 	 * Wraps form validators for this step such that they are only executed when this step is
 	 * active.
 	 */
@@ -216,8 +198,6 @@ public class WizardStep extends Panel implements IWizardStep
 	 */
 	private boolean complete = true;
 
-	private transient AddFormValidatorAction onAttachAction;
-
 	/**
 	 * A summary of this step, or some usage advice.
 	 */
@@ -232,6 +212,11 @@ public class WizardStep extends Panel implements IWizardStep
 	 * The wizard model.
 	 */
 	private IWizardModel wizardModel;
+
+	/**
+	 * The wrapper of {@link IFormValidator}s for this step.
+	 */
+	private FormValidatorWrapper formValidatorWrapper = new FormValidatorWrapper();
 
 	/**
 	 * Construct without a title and a summary. Useful for when you provide a custom header by
@@ -313,11 +298,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 */
 	public final void add(final IFormValidator validator)
 	{
-		if (onAttachAction == null)
-		{
-			onAttachAction = new AddFormValidatorAction();
-		}
-		onAttachAction.formValidatorWrapper.add(validator);
+		formValidatorWrapper.add(validator);
 	}
 
 	/**
@@ -455,20 +436,13 @@ public class WizardStep extends Panel implements IWizardStep
 		}
 	}
 
-	/**
-	 * Workaround for adding the form validators.
-	 * 
-	 * @see org.apache.wicket.Component#onBeforeRender()
-	 */
 	@Override
-	protected void onBeforeRender()
+	protected void onInitialize()
 	{
-		if (onAttachAction != null)
-		{
-			onAttachAction.execute();
-			onAttachAction = null;
-		}
-		super.onBeforeRender();
+		super.onInitialize();
+
+		Form<?> form = findParent(Form.class);
+		form.add(formValidatorWrapper);
 	}
 
 	/**
