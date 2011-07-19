@@ -24,6 +24,7 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.DataGridView;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.navigation.paging.IPageableItems;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.IItemReuseStrategy;
@@ -115,6 +116,8 @@ public class DataTable<T> extends Panel implements IPageableItems
 
 	private final ToolbarsContainer bottomToolbars;
 
+	private final Caption caption;
+
 	/**
 	 * Constructor
 	 * 
@@ -138,6 +141,8 @@ public class DataTable<T> extends Panel implements IPageableItems
 		}
 
 		this.columns = columns;
+		this.caption = new Caption("caption", getCaptionModel());
+		add(caption);
 		body = newBodyContainer("body");
 		datagrid = new DataGridView<T>("rows", columns, dataProvider)
 		{
@@ -178,6 +183,17 @@ public class DataTable<T> extends Panel implements IPageableItems
 		bottomToolbars = new ToolbarsContainer("bottomToolbars");
 		add(topToolbars);
 		add(bottomToolbars);
+	}
+
+	/**
+	 * Returns the model for table's caption. The caption wont be rendered if the model has empty
+	 * value.
+	 * 
+	 * @return the model for table's caption
+	 */
+	protected IModel<String> getCaptionModel()
+	{
+		return null;
 	}
 
 	/**
@@ -450,6 +466,34 @@ public class DataTable<T> extends Panel implements IPageableItems
 				visible = false;
 			}
 			setVisible(visible);
+		}
+	}
+
+	/**
+	 * A caption for the table. It renders itself only if {@link DataTable#getCaptionModel()} has
+	 * non-empty value.
+	 */
+	private static class Caption extends Label
+	{
+		/**
+		 * Construct.
+		 * 
+		 * @param id
+		 *            the component id
+		 * @param model
+		 *            the caption model
+		 */
+		public Caption(String id, IModel<String> model)
+		{
+			super(id, model);
+		}
+
+		@Override
+		protected void onConfigure()
+		{
+			setRenderBodyOnly(Strings.isEmpty(getDefaultModelObjectAsString()));
+
+			super.onConfigure();
 		}
 	}
 }

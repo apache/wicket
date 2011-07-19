@@ -87,7 +87,21 @@ public class DataTablePage extends WebPage
 
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		DefaultDataTable defaultDataTable = new DefaultDataTable("table", columns,
-			new SortableContactDataProvider(), 8);
+			new SortableContactDataProvider(), 8)
+		{
+
+			@Override
+			protected IModel getCaptionModel()
+			{
+				return DataTablePage.this.getCaptionModel();
+			}
+
+		};
 		add(defaultDataTable);
+	}
+
+	protected IModel<String> getCaptionModel()
+	{
+		return null;
 	}
 }

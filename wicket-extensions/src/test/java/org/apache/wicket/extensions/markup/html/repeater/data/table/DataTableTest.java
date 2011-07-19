@@ -81,6 +81,9 @@ public class DataTableTest extends TestCase
 		index = document.indexOf("<tbody", index + 1);
 		assertTrue("There must be only one <tbody>", index == -1);
 
+		index = document.indexOf("<caption", index + 1);
+		assertTrue("There must be not be <caption>", index == -1);
+
 		log.error(document);
 		log.error("==============================================");
 		log.error("==============================================");
@@ -108,6 +111,30 @@ public class DataTableTest extends TestCase
 		System.err.println(tester.getLastResponseAsString());
 		Assert.assertFalse(tester.getLastResponseAsString().contains("thead"));
 		Assert.assertFalse(tester.getLastResponseAsString().contains("tfoot"));
+	}
+
+	/**
+	 * Tests that a {@link DataTable} with non-empty {@link DataTable#getCaptionModel()} will render
+	 * &lt;caption&gt; element.
+	 */
+	public void testWicket3886()
+	{
+		DataTablePage page = new DataTablePage()
+		{
+			@Override
+			protected IModel<String> getCaptionModel()
+			{
+				return Model.of("Caption");
+			}
+		};
+
+		tester.startPage(page);
+		tester.assertRenderedPage(DataTablePage.class);
+
+		String document = tester.getLastResponseAsString();
+		int index = document.indexOf("<caption wicket:id=\"caption\">Caption</caption>");
+		assertTrue("Caption must be rendered!", index > -1);
+
 	}
 
 	private String removeFillers(String doc)
