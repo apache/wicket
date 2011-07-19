@@ -105,7 +105,7 @@ public class FilterForm<T> extends Form<T>
 			@Override
 			public void onComponentTag(final Component component, final ComponentTag tag)
 			{
-				tag.put("id", component.getMarkupId());
+				component.setOutputMarkupId(true);
 				tag.put("onfocus", getFocusTrackingHandler(component));
 				super.onComponentTag(component, tag);
 			}
