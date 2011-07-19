@@ -360,8 +360,8 @@ public class BaseWicketTester
 		request.setURL(request.getContextPath() + request.getServletPath() + "/");
 
 		// assign protocol://host:port to next request unless the last request was ajax
-		final boolean assignBaseLocation =
-			lastRequest != null && lastRequest.getHeader("Wicket-Ajax") == null;
+		final boolean assignBaseLocation = lastRequest != null &&
+			lastRequest.getHeader("Wicket-Ajax") == null;
 
 		// resume request processing with scheme://host:port from last request
 		if (assignBaseLocation)
@@ -371,7 +371,7 @@ public class BaseWicketTester
 			request.setServerName(lastRequest.getServerName());
 			request.setServerPort(lastRequest.getServerPort());
 		}
-		
+
 		response = new MockHttpServletResponse(request);
 
 		ServletWebRequest servletWebRequest = newServletWebRequest();
@@ -615,7 +615,7 @@ public class BaseWicketTester
 					request.setUrl(newUrl);
 
 					final String protocol = newUrl.getProtocol();
-					
+
 					if (protocol != null)
 					{
 						request.setScheme(protocol);
@@ -636,7 +636,7 @@ public class BaseWicketTester
 				{
 					// append redirect URL to current URL (what browser would do)
 					Url mergedURL = new Url(lastRequest.getUrl().getSegments(),
-					    newUrl.getQueryParameters());
+						newUrl.getQueryParameters());
 					mergedURL.concatSegments(newUrl.getSegments());
 
 					request.setUrl(mergedURL);
@@ -2443,6 +2443,8 @@ public class BaseWicketTester
 	{
 		private final IPageRendererProvider delegate;
 
+		private Page lastPage;
+
 		public LastPageRecordingPageRendererProvider(IPageRendererProvider delegate)
 		{
 			this.delegate = delegate;
@@ -2450,7 +2452,14 @@ public class BaseWicketTester
 
 		public PageRenderer get(RenderPageRequestHandler handler)
 		{
-			lastRenderedPage = (Page)handler.getPageProvider().getPageInstance();
+			Page newPage = (Page)handler.getPageProvider().getPageInstance();
+			if (startComponent != null && lastPage != null &&
+				lastPage.getPageClass() != newPage.getPageClass())
+			{
+				// WICKET-3913: reset startComponent if a new page type is rendered
+				startComponent = null;
+			}
+			lastRenderedPage = lastPage = newPage;
 			return delegate.get(handler);
 		}
 	}

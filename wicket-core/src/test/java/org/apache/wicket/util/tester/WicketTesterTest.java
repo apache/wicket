@@ -28,6 +28,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MockPageParametersAware;
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.MockPageWithOneComponent;
+import org.apache.wicket.MockPanelWithLink;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
@@ -52,6 +53,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResource.PackageResourceBlockedException;
 import org.apache.wicket.resource.DummyPage;
 import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.util.tester.DummyHomePage.TestLink;
 import org.apache.wicket.util.tester.MockPageParameterPage.MockInnerClassPage;
 import org.apache.wicket.util.tester.MockPageWithFormAndAjaxFormSubmitBehavior.Pojo;
 import org.apache.wicket.util.tester.apps_1.Book;
@@ -950,6 +952,8 @@ public class WicketTesterTest extends WicketTestCase
 
 	/**
 	 * <a href="https://issues.apache.org/jira/browse/WICKET-3716">WICKET-3716</a>
+	 * 
+	 * @throws Exception
 	 */
 	@Test
 	public void testAssertRenderedPageErrorMessage() throws Exception
@@ -960,5 +964,25 @@ public class WicketTesterTest extends WicketTestCase
 		Result result = tester.isRenderedPage(DummyPage.class);
 		assertEquals(String.format("classes not the same, expected '%s', current '%s'",
 			DummyPage.class, MockPageParametersAware.class), result.getMessage());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-3913
+	 */
+	@Test
+	public void testStartPanelGoesToAnotherPage()
+	{
+		tester.startComponentInPage(new MockPanelWithLink("testPanel")
+		{
+			@Override
+			protected void onLinkClick(AjaxRequestTarget target)
+			{
+				setResponsePage(DummyHomePage.class);
+			}
+		});
+		tester.clickLink("link");
+
+		tester.assertRenderedPage(DummyHomePage.class);
+		tester.assertComponent("testPage", TestLink.class);
 	}
 }
