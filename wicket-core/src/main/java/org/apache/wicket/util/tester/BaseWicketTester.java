@@ -1797,12 +1797,14 @@ public class BaseWicketTester
 	 */
 	public <C extends Page> Result isRenderedPage(Class<C> expectedRenderedPageClass)
 	{
+		Args.notNull(expectedRenderedPageClass, "expectedRenderedPageClass");
+
 		Page page = getLastRenderedPage();
 		if (page == null)
 		{
 			return Result.fail("page was null");
 		}
-		if (!page.getClass().isAssignableFrom(expectedRenderedPageClass))
+		if (!expectedRenderedPageClass.isAssignableFrom(page.getClass()))
 		{
 			return Result.fail(String.format("classes not the same, expected '%s', current '%s'",
 				expectedRenderedPageClass, page.getClass()));
