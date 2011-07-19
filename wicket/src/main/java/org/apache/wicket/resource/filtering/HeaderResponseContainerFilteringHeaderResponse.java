@@ -19,7 +19,6 @@ package org.apache.wicket.resource.filtering;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
@@ -45,7 +44,7 @@ import org.slf4j.LoggerFactory;
 public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHeaderResponse
 {
 
-	private static final Logger log = LoggerFactory.getLogger(Component.class);
+	private static final Logger log = LoggerFactory.getLogger(HeaderResponseContainerFilteringHeaderResponse.class);
 
 	/**
 	 * A filter used to bucket your resources, inline scripts, etc, into different responses. The
