@@ -39,7 +39,7 @@ public abstract class WebRequest extends Request
 	/** marker for Ajax requests */
 	protected static final String PARAM_AJAX = "wicket-ajax";
 	/** marker for Ajax requests */
-	protected static final String HEADER_AJAX = "Wicket-Ajax";
+	public static final String HEADER_AJAX = "Wicket-Ajax";
 	/** marker for Ajax-relative url */
 	protected static final String PARAM_AJAX_BASE_URL = "wicket-ajax-baseurl";
 	/** marker for Ajax-relative url */

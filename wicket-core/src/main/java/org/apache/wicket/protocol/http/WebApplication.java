@@ -415,6 +415,28 @@ public abstract class WebApplication extends Application
 	 */
 	WebRequest createWebRequest(HttpServletRequest servletRequest, final String filterPath)
 	{
+		if (servletRequest.getCharacterEncoding() == null)
+		{
+			try
+			{
+				String wicketAjaxHeader = servletRequest.getHeader(WebRequest.HEADER_AJAX);
+				if (Strings.isTrue(wicketAjaxHeader))
+				{
+					// WICKET-3908, WICKET-1816: Forms submitted with Ajax are always UTF-8 encoded
+					servletRequest.setCharacterEncoding(CharEncoding.UTF_8);
+				}
+				else
+				{
+					String requestEncoding = getRequestCycleSettings().getResponseRequestEncoding();
+					servletRequest.setCharacterEncoding(requestEncoding);
+				}
+			}
+			catch (UnsupportedEncodingException e)
+			{
+				throw new WicketRuntimeException(e);
+			}
+		}
+
 		if (hasFilterFactoryManager())
 		{
 			for (AbstractRequestWrapperFactory factory : getFilterFactoryManager())
@@ -424,24 +446,6 @@ public abstract class WebApplication extends Application
 		}
 
 		WebRequest webRequest = newWebRequest(servletRequest, filterPath);
-
-		try
-		{
-			if (webRequest.isAjax())
-			{
-				// WICKET-3908: Forms submitted with Ajax are always UTF-8 encoded
-				servletRequest.setCharacterEncoding(CharEncoding.UTF_8);
-			}
-			else
-			{
-				String requestEncoding = getRequestCycleSettings().getResponseRequestEncoding();
-				servletRequest.setCharacterEncoding(requestEncoding);
-			}
-		}
-		catch (UnsupportedEncodingException e)
-		{
-			throw new RuntimeException(e);
-		}
 
 		return webRequest;
 	}
