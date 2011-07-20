@@ -25,7 +25,6 @@ import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.TagUtils;
-import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.BorderMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
@@ -375,7 +374,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	/**
 	 * The container to be associated with the &lt;wicket:body&gt; tag
 	 */
-	public class BorderBodyContainer extends TransparentWebMarkupContainer
+	public class BorderBodyContainer extends WebMarkupContainer
 	{
 		private static final long serialVersionUID = 1L;
 
