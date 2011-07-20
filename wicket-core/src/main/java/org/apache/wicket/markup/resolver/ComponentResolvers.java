@@ -42,10 +42,14 @@ public class ComponentResolvers
 	 * </p>
 	 * 
 	 * @param container
+	 *            The container parsing its markup
 	 * @param markupStream
+	 *            The current markupStream
 	 * @param tag
+	 *            The current component tag while parsing the markup
 	 * @param filter
-	 * @return <code>null</code> if a component was could not be found
+	 *            A filter for application-wide resolvers
+	 * @return component or {@code null} if not found
 	 */
 	public static Component resolve(final MarkupContainer container,
 		final MarkupStream markupStream, final ComponentTag tag, final ResolverFilter filter)
