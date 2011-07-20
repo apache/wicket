@@ -131,16 +131,14 @@ public class ParameterParser
 	 */
 	private boolean isOneOf(final char ch, final char[] charray)
 	{
-		boolean result = false;
-		for (char character : charray)
+		for (char c : charray)
 		{
-			if (ch == character)
+			if (ch == c)
 			{
-				result = true;
-				break;
+				return true;
 			}
 		}
-		return result;
+		return false;
 	}
 
 	/**
