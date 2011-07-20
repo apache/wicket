@@ -495,5 +495,12 @@ public class DataTable<T> extends Panel implements IPageableItems
 
 			super.onConfigure();
 		}
+
+		@Override
+		protected IModel<?> initModel()
+		{
+			// don't try to find the model in the parent
+			return null;
+		}
 	}
 }
