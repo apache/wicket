@@ -52,11 +52,11 @@ public class TemplateBorder extends Border
 			{
 				if (currentBanner.getClass() == Banner1.class)
 				{
-					TemplateBorder.this.replace(currentBanner = new Banner2("ad"));
+					TemplateBorder.this.replaceInBorder(currentBanner = new Banner2("ad"));
 				}
 				else
 				{
-					TemplateBorder.this.replace(currentBanner = new Banner1("ad"));
+					TemplateBorder.this.replaceInBorder(currentBanner = new Banner1("ad"));
 				}
 			}
 		});
