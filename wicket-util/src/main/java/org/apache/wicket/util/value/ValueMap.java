@@ -510,15 +510,11 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	 */
 	public String getKey(final String key)
 	{
-		for (Object keyValue : keySet())
+		for (String other : keySet())
 		{
-			if (keyValue instanceof String)
+			if (other.equalsIgnoreCase(key))
 			{
-				String keyString = (String)keyValue;
-				if (key.equalsIgnoreCase(keyString))
-				{
-					return keyString;
-				}
+				return other;
 			}
 		}
 		return null;
