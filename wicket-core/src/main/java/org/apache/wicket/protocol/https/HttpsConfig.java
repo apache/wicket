@@ -19,7 +19,7 @@ package org.apache.wicket.protocol.https;
 /**
  * Configuration for http-https switching
  * 
- * @see HttpsRequestCycleProcessor
+ * @see HttpsMapper
  */
 public class HttpsConfig
 {
@@ -27,8 +27,8 @@ public class HttpsConfig
 	private int httpsPort;
 
 	/**
-	 * A flag which can be used to configure {@link HttpsRequestCycleProcessor} to bind or not the
-	 * session before switching to secure (https) mode
+	 * A flag which can be used to configure {@link HttpsMapper} to bind or not the session before
+	 * switching to secure (https) mode
 	 */
 	private boolean preferStateful = true;
 
@@ -101,8 +101,8 @@ public class HttpsConfig
 	}
 
 	/**
-	 * Sets whether or not a new session is created before redirecting from {@code http} to
-	 * {@code https}
+	 * Sets whether or not a new session is created before redirecting from {@code http} to {@code
+	 * https}
 	 * <p>
 	 * BE VERY CAREFUL WHEN SETTING THIS VALUE TO {@code false}.
 	 * 
