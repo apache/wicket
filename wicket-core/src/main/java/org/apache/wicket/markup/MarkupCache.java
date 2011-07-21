@@ -194,23 +194,29 @@ public class MarkupCache implements IMarkupCache
 			{
 				Markup markup = iter.next();
 
-				// Check if the markup associated with key has a base markup. And if yes, test
-				// if that is cached. If the base markup has been removed, than remove the derived
-				// markup as well.
-
-				MarkupResourceStream resourceStream = markup.getMarkupResourceStream()
-					.getBaseMarkupResourceStream();
-
-				// Is the base markup available in the cache?
-				if ((resourceStream != null) && !isMarkupCached(resourceStream))
+				if ((markup != null) && (markup != Markup.NO_MARKUP))
 				{
-					iter.remove();
-					count++;
+					// Check if the markup associated with key has a base markup. And if yes, test
+					// if that is cached. If the base markup has been removed, than remove the
+					// derived markup as well.
 
-					if (log.isDebugEnabled())
+					MarkupResourceStream resourceStream = markup.getMarkupResourceStream();
+					if (resourceStream != null)
 					{
-						log.debug("Removed derived markup from cache: " +
-							markup.getMarkupResourceStream());
+						resourceStream = resourceStream.getBaseMarkupResourceStream();
+					}
+
+					// Is the base markup available in the cache?
+					if ((resourceStream != null) && !isMarkupCached(resourceStream))
+					{
+						iter.remove();
+						count++;
+
+						if (log.isDebugEnabled())
+						{
+							log.debug("Removed derived markup from cache: " +
+								markup.getMarkupResourceStream());
+						}
 					}
 				}
 			}
