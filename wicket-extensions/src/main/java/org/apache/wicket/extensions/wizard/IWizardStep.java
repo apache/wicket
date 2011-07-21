@@ -37,14 +37,6 @@ import org.apache.wicket.IClusterable;
 public interface IWizardStep extends IClusterable
 {
 	/**
-	 * This method is called whenever the user presses next while this step is active.
-	 * <p>
-	 * This method will only be called if {@link IWizardModel#isNextAvailable} and
-	 * {@link #isComplete} return true.
-	 */
-	void applyState();
-
-	/**
 	 * Gets the header component for this step. This component is displayed in a special section of
 	 * the wizard.
 	 * 
@@ -82,10 +74,17 @@ public interface IWizardStep extends IClusterable
 	void init(IWizardModel wizardModel);
 
 	/**
-	 * Checks if this step is compete. This method should return true if the wizard can proceed to
-	 * the next step.
+	 * This method is called whenever the user presses next while this step is active.
+	 * <p>
+	 * This method will only be called if {@link IWizardModel#isNextAvailable} returns {@code true}.
+	 */
+	void applyState();
+
+	/**
+	 * Checks if this step is complete. This method should return {@code true} if the wizard can
+	 * proceed to the next step.
 	 * 
-	 * @return <tt>true</tt> if the wizard can proceed from this step, <tt>false</tt> otherwise.
+	 * @return {@code true} if the wizard can proceed from this step, {@code false} otherwise.
 	 */
 	boolean isComplete();
 }
