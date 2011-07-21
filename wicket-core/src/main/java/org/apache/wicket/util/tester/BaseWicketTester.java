@@ -16,8 +16,7 @@
  */
 package org.apache.wicket.util.tester;
 
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.fail;
+import static junit.framework.Assert.*;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -352,7 +351,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void setupNextRequestCycle()
 	{
@@ -404,7 +403,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void newSession()
 	{
@@ -680,7 +679,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void recordRequestResponse()
 	{
@@ -1593,6 +1592,19 @@ public class BaseWicketTester
 	}
 
 	/**
+	 * assert the content of last rendered page contains(matches) regex pattern.
+	 * 
+	 * @param pattern
+	 *            reqex pattern to match
+	 * @return a <code>Result</code>
+	 */
+	public Result ifContainsNot(String pattern)
+	{
+		return isFalse("pattern '" + pattern + "' found",
+			getLastResponseAsString().matches("(?s).*" + pattern + ".*"));
+	}
+
+	/**
 	 * assert the model of {@link ListView} use expectedList
 	 * 
 	 * @param path
@@ -2439,7 +2451,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private class LastPageRecordingPageRendererProvider implements IPageRendererProvider
 	{
@@ -2467,7 +2479,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private class TestExceptionMapper implements IExceptionMapper
 	{
@@ -2499,7 +2511,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private class TestRequestCycleProvider implements IRequestCycleProvider
 	{
@@ -2520,7 +2532,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private class TestRequestMapper implements IRequestMapper
 	{
@@ -2557,11 +2569,11 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
+	 *
 	 */
 
 	/**
-	 * 
+	 *
 	 */
 	private static class TestPageManagerProvider implements IPageManagerProvider
 	{
@@ -2572,7 +2584,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private class TestFilterConfig implements FilterConfig
 	{
@@ -2605,7 +2617,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private static class WicketTesterServletWebResponse extends ServletWebResponse
 		implements

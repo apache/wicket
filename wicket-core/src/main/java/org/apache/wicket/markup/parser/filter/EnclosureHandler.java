@@ -125,7 +125,8 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 			}
 		}
 		// Are we inside a wicket:enclosure tag?
-		else if ((tag.getId() != null) && (isWicketTag == false) && (stack != null))
+		else if ((tag.getId() != null) && (isWicketTag == false) && (stack != null) &&
+			(!tag.isAutoComponentTag()))
 		{
 			ComponentTag lastEnclosure = stack.lastElement();
 

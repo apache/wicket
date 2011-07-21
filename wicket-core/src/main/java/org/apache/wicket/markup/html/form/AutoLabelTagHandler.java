@@ -66,6 +66,7 @@ public class AutoLabelTagHandler extends AbstractMarkupFilter
 
 		tag.setId(getClass().getName());
 		tag.setModified(true);
+		tag.setAutoComponentTag(true);
 		return tag;
 	}
 }

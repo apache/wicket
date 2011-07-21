@@ -16,10 +16,7 @@
  */
 package org.apache.wicket.util.tester;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
+import static junit.framework.Assert.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -304,6 +301,17 @@ public class WicketTester extends BaseWicketTester
 	public void assertContains(String pattern)
 	{
 		assertResult(ifContains(pattern));
+	}
+
+	/**
+	 * The opposite of {@link #assertContains(String)}.
+	 * 
+	 * @param pattern
+	 *            pattern
+	 */
+	public void assertContainsNot(String pattern)
+	{
+		assertResult(ifContainsNot(pattern));
 	}
 
 	/**
