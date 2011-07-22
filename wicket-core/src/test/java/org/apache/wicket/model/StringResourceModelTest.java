@@ -23,14 +23,14 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.protocol.http.MockPage;
-import org.apache.wicket.resource.loader.BundleStringResourceLoader;
+import org.apache.wicket.markup.html.basic.Label;
 import org.junit.Test;
 
 /**
- * Test cases for the <code>StringResourceModel</code> class.
+ * Test cases for the {@link StringResourceModel}.
  * 
  * @author Chris Turner
  */
@@ -57,11 +57,7 @@ public class StringResourceModelTest extends WicketTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		tester.getApplication()
-			.getResourceSettings()
-			.getStringResourceLoaders()
-			.add(new BundleStringResourceLoader("org.apache.wicket.model.StringResourceModelTest"));
-		page = new MockPage();
+		page = new TestPage();
 		ws = new WeatherStation();
 		wsModel = new Model<WeatherStation>(ws);
 	}
@@ -74,7 +70,23 @@ public class StringResourceModelTest extends WicketTestCase
 		StringResourceModel model = new StringResourceModel("simple.text", page, null);
 		Assert.assertEquals("Text should be as expected", "Simple text", model.getString());
 		Assert.assertEquals("Text should be as expected", "Simple text", model.getObject());
-// Assert.assertEquals("Text should be as expected", "Simple text", model.toString());
+	}
+
+	/** */
+	@Test
+	public void getWrappedOnAssignmentResource()
+	{
+		Label label1 = new Label("resourceModelWithComponent", new StringResourceModel(
+			"wrappedOnAssignment.text", page, null));
+		page.add(label1);
+		Assert.assertEquals("Text should be as expected", "Non-wrapped text",
+			label1.getDefaultModelObject());
+
+		Label label2 = new Label("resourceModelWithoutComponent", new StringResourceModel(
+			"wrappedOnAssignment.text", (Component)null, null));
+		page.add(label2);
+		Assert.assertEquals("Text should be as expected", "Wrapped text",
+			label2.getDefaultModelObject());
 	}
 
 	/** */
@@ -268,6 +280,21 @@ public class StringResourceModelTest extends WicketTestCase
 		public String getName()
 		{
 			return name;
+		}
+	}
+
+	/**
+	 * Test page.
+	 */
+	public static class TestPage extends WebPage
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 */
+		public TestPage()
+		{
 		}
 	}
 }
