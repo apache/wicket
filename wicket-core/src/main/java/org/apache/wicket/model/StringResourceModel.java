@@ -24,7 +24,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Localizer;
 import org.apache.wicket.Session;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
@@ -396,13 +395,15 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	{
 
 		final Localizer localizer = getLocalizer();
-		final Session session = Session.get();
-		if (session == null)
+		final Locale locale;
+		if (component != null)
 		{
-			throw new WicketRuntimeException(
-				"Cannot attach a string resource model without a Session context because that is required to get a Locale");
+			locale = component.getLocale();
 		}
-		final Locale locale = session.getLocale();
+		else
+		{
+			locale = Session.exists() ? Session.get().getLocale() : Locale.getDefault();
+		}
 
 		String value;
 
@@ -462,8 +463,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 				}
 
 				// Apply the parameters
-				final MessageFormat format = new MessageFormat(value, component != null
-					? component.getLocale() : locale);
+				final MessageFormat format = new MessageFormat(value, locale);
 				value = format.format(realParams);
 
 				if (model != null)
