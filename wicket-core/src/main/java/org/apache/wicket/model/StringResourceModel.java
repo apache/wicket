@@ -52,9 +52,11 @@ import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
  * reusable components/containers that are packaged with their own string resource bundles it should
  * be the actual component/container rather than the page. For more information on this please see
  * {@link org.apache.wicket.resource.loader.ComponentStringResourceLoader}. The relative component
- * may actually be <code>null</code> when all resource loading is to be done from a global resource
- * loader. However, we recommend that a relative component is still supplied even in these cases in
- * order to 'future proof' your application with regards to changing resource loading strategies.
+ * may actually be {@code null} if this model is wrapped on assignment (
+ * {@link IComponentAssignedModel}) or when all resource loading is to be done from a global
+ * resource loader. However, we recommend that a relative component is still supplied even in the
+ * latter case in order to 'future proof' your application with regards to changing resource loading
+ * strategies.
  * <li><b>model </b>- This parameter is mandatory if either the resourceKey, the found string
  * resource (see below) or any of the substitution parameters (see below) contain property
  * expressions. Where property expressions are present they will all be evaluated relative to this
@@ -184,15 +186,6 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 {
 	private static final long serialVersionUID = 1L;
 
-	/** The locale to use. */
-	private transient Locale locale;
-
-	/**
-	 * The localizer to be used to access localized resources and the associated locale for
-	 * formatting.
-	 */
-	private transient Localizer localizer;
-
 	/** The wrapped model. */
 	private final IModel<?> model;
 
@@ -200,7 +193,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	private final Object[] parameters;
 
 	/** The relative component used for lookups. */
-	private Component component;
+	private final Component component;
 
 	/** The key of message to get. */
 	private final String resourceKey;
@@ -213,7 +206,9 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 		return new AssignmentWrapper(component);
 	}
 
-	private class AssignmentWrapper implements IWrapModel<String>
+	private class AssignmentWrapper extends LoadableDetachableModel<String>
+		implements
+			IWrapModel<String>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -229,27 +224,29 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 			this.component = component;
 		}
 
+		@Override
 		public void detach()
 		{
+			super.detach();
+
 			StringResourceModel.this.detach();
 		}
 
-		public String getObject()
+		@Override
+		protected String load()
 		{
 			if (StringResourceModel.this.component != null)
 			{
+				// ignore assignment if component was specified explicitely
 				return StringResourceModel.this.getObject();
 			}
 			else
 			{
-				// TODO: Remove this as soon as we can break binary compatibility
-				StringResourceModel.this.component = component;
-				String res = StringResourceModel.this.getObject();
-				StringResourceModel.this.component = null;
-				return res;
+				return getString(component);
 			}
 		}
 
+		@Override
 		public void setObject(String object)
 		{
 			StringResourceModel.this.setObject(object);
@@ -379,50 +376,33 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	 */
 	public Localizer getLocalizer()
 	{
-		if (localizer != null)
-		{
-			return localizer;
-		}
-		else if (component != null)
-		{
-			return component.getLocalizer();
-		}
-		else
-		{
-			return Application.get().getResourceSettings().getLocalizer();
-		}
+		return Application.get().getResourceSettings().getLocalizer();
 	}
 
 
 	/**
-	 * Gets the string currently represented by this string resource model. The string that is
-	 * returned may vary for each call to this method depending on the values contained in the model
-	 * and an the parameters that were passed when this string resource model was created.
+	 * Gets the string currently represented by this model. The string that is returned may vary for
+	 * each call to this method depending on the values contained in the model and an the parameters
+	 * that were passed when this string resource model was created.
 	 * 
 	 * @return The string
 	 */
 	public final String getString()
 	{
+		return getString(component);
+	}
+
+	private String getString(Component component)
+	{
+
 		final Localizer localizer = getLocalizer();
-
-		// Make sure we have a localizer before commencing
-		if (getLocalizer() == null)
+		final Session session = Session.get();
+		if (session == null)
 		{
-			if (component != null)
-			{
-				setLocalizer(component.getLocalizer());
-			}
-			else
-			{
-				throw new IllegalStateException("No localizer has been set");
-			}
+			throw new WicketRuntimeException(
+				"Cannot attach a string resource model without a Session context because that is required to get a Locale");
 		}
-
-		// Make sure we have the locale
-		if (locale == null)
-		{
-			locale = Session.get().getLocale();
-		}
+		final Locale locale = session.getLocale();
 
 		String value;
 
@@ -453,7 +433,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 				Object[] realParams = new Object[parameters.length];
 				for (int i = 0; i < parameters.length; i++)
 				{
-					if (parameters[i] instanceof IModel)
+					if (parameters[i] instanceof IModel<?>)
 					{
 						realParams[i] = ((IModel<?>)parameters[i]).getObject();
 					}
@@ -534,18 +514,6 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	}
 
 	/**
-	 * Sets the localizer that is being used by this string resource model. This method is provided
-	 * to allow the default application localizer to be overridden if required.
-	 * 
-	 * @param localizer
-	 *            The localizer to use
-	 */
-	public final void setLocalizer(final Localizer localizer)
-	{
-		this.localizer = localizer;
-	}
-
-	/**
 	 * This method just returns debug information, so it won't return the localized string. Please
 	 * use getString() for that.
 	 * 
@@ -598,55 +566,37 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	}
 
 	/**
-	 * Gets the string that this string resource model currently represents. The string is returned
-	 * as an object to allow it to be used generically within components.
-	 * 
+	 * Gets the string that this string resource model currently represents.
 	 */
 	@Override
 	protected String load()
 	{
-		// Initialize information that we need to work successfully
-		final Session session = Session.get();
-		if (session != null)
-		{
-			locale = session.getLocale();
-		}
-		else
-		{
-			throw new WicketRuntimeException(
-				"Cannot attach a string resource model without a Session context because that is required to get a Localizer");
-		}
 		return getString();
 	}
 
 	/**
-	 * Detaches from the given session
+	 * @see org.apache.wicket.model.IDetachable#detach()
 	 */
 	@Override
 	protected final void onDetach()
 	{
-		// Detach any model
+		// detach any model
 		if (model != null)
 		{
 			model.detach();
 		}
 
-		// some parameters can be imodels, detach them
+		// some parameters can be detachable
 		if (parameters != null)
 		{
 			for (Object parameter : parameters)
 			{
-				if (parameter instanceof IModel<?>)
+				if (parameter instanceof IDetachable)
 				{
-					((IModel<?>)parameter).detach();
+					((IDetachable)parameter).detach();
 				}
 			}
 		}
-
-
-		// Null out references
-		localizer = null;
-		locale = null;
 	}
 
 	@Override
