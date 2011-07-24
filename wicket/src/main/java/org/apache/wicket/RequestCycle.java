@@ -44,6 +44,7 @@ import org.apache.wicket.request.target.component.listener.ListenerInterfaceRequ
 import org.apache.wicket.request.target.resource.SharedResourceRequestTarget;
 import org.apache.wicket.util.collections.ArrayListStack;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.string.JavascriptUtils;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 import org.apache.wicket.util.value.ValueMap;
@@ -241,7 +242,7 @@ public abstract class RequestCycle
 	 */
 	private boolean redirect;
 
-	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
+	/** holds the stack of set {@link IRequestTarget}, the last set on top. */
 	private transient final ArrayListStack<IRequestTarget> requestTargets = new ArrayListStack<IRequestTarget>(
 		3)
 	{
@@ -310,8 +311,8 @@ public abstract class RequestCycle
 	protected Response response;
 
 	/**
-	 * Boolean if the next to be encoded url is targeting a new window (ModalWindow, popup, tab).
-	 * This temporary flag is specifically needed for portlet-support as then such a page needs a
+	 * Boolean if the next to be encoded url is targeting a new window (ModalWindow, Pop-up, tab).
+	 * This temporary flag is specifically needed for Portlet-support as then such a page needs a
 	 * special target (Resource) url. After each urlFor call, this flag is reset to false.
 	 */
 	private transient boolean urlForNewWindowEncoding;
@@ -747,7 +748,7 @@ public abstract class RequestCycle
 	 * @param pageParameters
 	 *            The page parameters that gets appended to the bookmarkable url,
 	 * @param pageMapName
-	 *            The pagemap in which the response page should be created
+	 *            The Pagemap in which the response page should be created
 	 */
 	public final <C extends Page> void setResponsePage(final Class<C> pageClass,
 		final PageParameters pageParameters, final String pageMapName)
@@ -780,7 +781,7 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * @return true if the next to be encoded url is targeting a new window (ModalWindow, popup,
+	 * @return true if the next to be encoded url is targeting a new window (ModalWindow, Pop-up,
 	 *         tab).
 	 */
 	public final boolean isUrlForNewWindowEncoding()
@@ -789,8 +790,8 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Indicate if the next to be encoded url is targeting a new window (ModalWindow, popup, tab).
-	 * This temporary flag is specifically needed for portlet-support as then such a page needs a
+	 * Indicate if the next to be encoded url is targeting a new window (ModalWindow, Pop-up, tab).
+	 * This temporary flag is specifically needed for Portlet-support as then such a page needs a
 	 * special target (Resource) url. After each urlFor call, this flag is reset to false.
 	 */
 	public final void setUrlForNewWindowEncoding()
@@ -809,6 +810,7 @@ public abstract class RequestCycle
 	private final CharSequence encodeUrlFor(final IRequestTarget requestTarget)
 	{
 		CharSequence url = getProcessor().getRequestCodingStrategy().encode(this, requestTarget);
+		url = JavascriptUtils.escapeQuotes(url);
 		urlForNewWindowEncoding = false;
 		return url;
 	}
@@ -1111,7 +1113,7 @@ public abstract class RequestCycle
 	{
 		// clean up target stack; calling detach has effects like
 		// NOTE: don't remove the targets as testing code might need them
-		// furthermore, the targets will be gc-ed with this cycle too
+		// furthermore, the targets will be GC-ed with this cycle too
 		for (int i = 0; i < requestTargets.size(); i++)
 		{
 			IRequestTarget target = requestTargets.get(i);
@@ -1246,9 +1248,9 @@ public abstract class RequestCycle
 	 */
 	private final void processEventsAndRespond()
 	{
-		// let the processor handle/ issue any events, including building the component hireachy
+		// let the processor handle/ issue any events, including building the component hierarchy
 		processor.processEvents(this);
-		// process portlet events - or, perhaps save the event on the session, and get it back out
+		// process Portlet events - or, perhaps save the event on the session, and get it back out
 		// later
 
 		// set current stage manually this time
@@ -1347,7 +1349,7 @@ public abstract class RequestCycle
 		{
 			/*
 			 * check if the raised exception wraps an abort exception. if so, it is probably wise to
-			 * unwrap and rethrow the abort exception
+			 * unwrap and re-throw the abort exception
 			 */
 			Throwable cause = e.getCause();
 			while (cause != null)
@@ -1467,8 +1469,8 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Releases the current thread local related resources. The threadlocal of this request cycle is
-	 * reset. If we are in a 'redirect' state, we do not want to lose our messages as - e.g. when
+	 * Releases the current thread local related resources. The thread-local of this request cycle
+	 * is reset. If we are in a 'redirect' state, we do not want to lose our messages as - e.g. when
 	 * handling a form - there's a fat chance we are coming back for the rendering of it.
 	 */
 	private final void threadDetach()
