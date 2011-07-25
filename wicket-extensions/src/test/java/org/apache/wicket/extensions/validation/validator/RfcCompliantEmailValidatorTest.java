@@ -38,7 +38,8 @@ public class RfcCompliantEmailValidatorTest extends TestCase
 		String[] validEmails = new String[] { "bill.gates@gmail.com",
 				"firstname.middlename@lastname.dk", "buy@something.nu", "user@post.inet.tele.dk",
 				"read@my.info", "my @email.com", "my@ email.com", "\"John Doe\"@email.com",
-				"no@domain", "german@m�dchen.de", "another.german@�m��l.com" };
+				"no@domain", "german@m�dchen.de", "another.german@�m��l.com",
+				"giovanni+cuccu@email.com" };
 		for (String emailAddress : validEmails)
 		{
 			Validatable<String> validatable = new Validatable<String>(emailAddress);
