@@ -180,6 +180,7 @@ public class DatesPage extends WicketExamplePage
 
 		DatePicker datePicker = new DatePicker();
 		datePicker.setShowOnFieldClick(true);
+		datePicker.setAutoHide(true);
 		dateTextField.add(datePicker);
 		add(new FeedbackPanel("feedback"));
 

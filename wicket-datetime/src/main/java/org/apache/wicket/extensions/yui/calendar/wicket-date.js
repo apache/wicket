@@ -262,12 +262,25 @@ Wicket.DateTime.init = function(cfg) {
 	}
 
 	YAHOO.wicket[cfg.dpJs].selectEvent.subscribe(selectHandler,YAHOO.wicket[cfg.dpJs]);
-	YAHOO.wicket[cfg.dpJs].render();
+
+	if(cfg.autoHide) {
+		YAHOO.util.Event.on(document, "click", function(e) {
+
+			var el = YAHOO.util.Event.getTarget(e);
+			var dialogEl = document.getElementById(cfg.dpJs);
+			var showBtn = document.getElementById(cfg.icon);
+
+			if (el != dialogEl && !YAHOO.util.Dom.isAncestor(dialogEl, el) && el != showBtn && !YAHOO.util.Dom.isAncestor(showBtn, el)) {
+				YAHOO.wicket[cfg.dpJs].hide();
+			}
+        });
+    }
+    YAHOO.wicket[cfg.dpJs].render();
 }
 
 // init method variant that needs less character to invoke
 Wicket.DateTime.init2 = function(widgetId, componentId, calendarInit, datePattern,
-		alignWithIcon, fireChangeEvent, hideOnSelect, showOnFieldClick, i18n) {
+		alignWithIcon, fireChangeEvent, hideOnSelect, showOnFieldClick, i18n, autoHide) {
 	calendarInit.MONTHS_SHORT = i18n.MONTHS_SHORT;
 	calendarInit.MONTHS_LONG = i18n.MONTHS_LONG;
 	calendarInit.WEEKDAYS_MEDIUM = i18n.WEEKDAYS_MEDIUM;
@@ -284,8 +297,9 @@ Wicket.DateTime.init2 = function(widgetId, componentId, calendarInit, datePatter
 		alignWithIcon: alignWithIcon,
 		fireChangeEvent: fireChangeEvent,
 		hideOnSelect: hideOnSelect,
-		showOnFieldClick: showOnFieldClick
+		showOnFieldClick: showOnFieldClick,
+		autoHide: autoHide
 	});
 }
 
-YAHOO.register("wicket-date", Wicket.DateTime, {version: "1.5", build: "rc3"});
+YAHOO.register("wicket-date", Wicket.DateTime, {version: "1.5", build: "RC6"});

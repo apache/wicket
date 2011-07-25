@@ -138,6 +138,12 @@ public class DatePicker extends Behavior
 	private boolean showOnFieldClick = false;
 
 	/**
+	 * A setting that decides whether to close the date picker when the user clicks somewhere else
+	 * on the document.
+	 */
+	private boolean autoHide = false;
+
+	/**
 	 * Construct.
 	 */
 	public DatePicker()
@@ -240,6 +246,7 @@ public class DatePicker extends Behavior
 		variables.put("alignWithIcon", alignWithIcon());
 		variables.put("hideOnSelect", hideOnSelect());
 		variables.put("showOnFieldClick", showOnFieldClick());
+		variables.put("autoHide", autoHide());
 
 		String script = getAdditionalJavaScript();
 		if (script != null)
@@ -740,6 +747,31 @@ public class DatePicker extends Behavior
 	public DatePicker setShowOnFieldClick(boolean show)
 	{
 		showOnFieldClick = show;
+		return this;
+	}
+
+
+	/**
+	 * Indicates whether the calendar should be hidden when the user clicks on an area of the
+	 * document outside of the dialog.
+	 * 
+	 * @return <code>true</code> <br/>
+	 *         <code>false</code> (default)
+	 */
+	protected boolean autoHide()
+	{
+		return autoHide;
+	}
+
+	/**
+	 * @param autoHide
+	 *            a flag indicating whether to hide the picker on click event
+	 * @return {@code this} instance to be able to chain calls
+	 * @see {@link #autoHide()}
+	 */
+	public DatePicker setAutoHide(boolean autoHide)
+	{
+		this.autoHide = autoHide;
 		return this;
 	}
 

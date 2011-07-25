@@ -16,6 +16,6 @@
  */
 wicketCalendarAdd(function() {
 	Wicket.DateTime.init2("${widgetId}", "${componentId}", ${calendarInit}, "${datePattern}",
-			${alignWithIcon}, ${fireChangeEvent}, ${hideOnSelect}, ${showOnFieldClick}, ${i18n});
+			${alignWithIcon}, ${fireChangeEvent}, ${hideOnSelect}, ${showOnFieldClick}, ${i18n}, ${autoHide});
 	${additionalJavascript}
 });
