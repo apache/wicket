@@ -121,4 +121,28 @@ public class CryptoMapperTest extends AbstractMapperTest
 		PageParameters actualParameters = handler.getPageParameters();
 		assertEquals(expectedParameters, actualParameters);
 	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-3926
+	 */
+	public void testHomePageWithParameters()
+	{
+		String expectedEncrypted = "0lhSFdMIt3yZUNwbtLuXgDePMclxSbks/0lh9b";
+		PageParameters expectedParameters = new PageParameters();
+		expectedParameters.add("namedKey1", "namedValue1");
+
+		RenderPageRequestHandler renderPageRequestHandler = new RenderPageRequestHandler(
+			new PageProvider(tester.getApplication().getHomePage(), expectedParameters));
+		Url url = mapper.mapHandler(renderPageRequestHandler);
+		assertEquals(expectedEncrypted, url.toString());
+
+		Request request = getRequest(url);
+		IRequestHandler requestHandler = mapper.mapRequest(request);
+		assertTrue(requestHandler instanceof RenderPageRequestHandler);
+
+		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
+		assertEquals(tester.getApplication().getHomePage(), handler.getPageClass());
+		PageParameters actualParameters = handler.getPageParameters();
+		assertEquals(expectedParameters, actualParameters);
+	}
 }

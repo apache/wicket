@@ -175,6 +175,11 @@ public class CryptoMapper implements IRequestMapper
 			Url originalUrl = Url.parse(decryptedUrl, request.getCharset());
 
 			int originalNumberOfSegments = originalUrl.getSegments().size();
+			if (originalNumberOfSegments == 0 &&
+				originalUrl.getQueryParameters().isEmpty() == false)
+			{
+				originalNumberOfSegments = 1;
+			}
 			int numberOfSegments = encryptedUrl.getSegments().size();
 
 			char[] encryptedChars = encryptedUrlString.toCharArray();
@@ -195,7 +200,8 @@ public class CryptoMapper implements IRequestMapper
 				segment += String.format("%02x", Math.abs(hash % 256));
 				hash = hashString(segment);
 
-				if (segment.equals(segments.get(segNo)))
+				if (segment.equals(segments.get(segNo)) &&
+					originalUrl.getSegments().size() >= segNo)
 				{
 					url.getSegments().add(originalUrl.getSegments().get(segNo - 1));
 				}
