@@ -221,7 +221,7 @@ public class AttributeModifierTest extends Assert
 	@Test
 	public void testNewValue1Append()
 	{
-		AttributeModifier appender = AttributeModifier.append("", null);
+		AttributeModifier appender = AttributeModifier.append("attr", null);
 		assertEquals("oldvalue newvalue", appender.newValue("oldvalue", "newvalue"));
 		assertEquals("newvalue", appender.newValue("", "newvalue"));
 		assertEquals("newvalue", appender.newValue(null, "newvalue"));
@@ -236,7 +236,7 @@ public class AttributeModifierTest extends Assert
 	@Test
 	public void testNewValue1Prepend()
 	{
-		AttributeModifier prepender = AttributeModifier.prepend("", null);
+		AttributeModifier prepender = AttributeModifier.prepend("attr", null);
 		assertEquals("newvalue oldvalue", prepender.newValue("oldvalue", "newvalue"));
 		assertEquals("newvalue", prepender.newValue("", "newvalue"));
 		assertEquals("newvalue", prepender.newValue(null, "newvalue"));
@@ -251,7 +251,7 @@ public class AttributeModifierTest extends Assert
 	@Test
 	public void testNewValue2Append()
 	{
-		AttributeModifier appender = AttributeModifier.append("", null).setSeparator(";");
+		AttributeModifier appender = AttributeModifier.append("attr", null).setSeparator(";");
 		assertEquals("oldvalue;newvalue", appender.newValue("oldvalue", "newvalue"));
 		assertEquals("newvalue", appender.newValue("", "newvalue"));
 		assertEquals("newvalue", appender.newValue(null, "newvalue"));
@@ -266,7 +266,7 @@ public class AttributeModifierTest extends Assert
 	@Test
 	public void testNewValue2Prepend()
 	{
-		AttributeModifier appender = AttributeModifier.prepend("", null).setSeparator(";");
+		AttributeModifier appender = AttributeModifier.prepend("attr", null).setSeparator(";");
 		assertEquals("newvalue;oldvalue", appender.newValue("oldvalue", "newvalue"));
 		assertEquals("newvalue", appender.newValue("", "newvalue"));
 		assertEquals("newvalue", appender.newValue(null, "newvalue"));
