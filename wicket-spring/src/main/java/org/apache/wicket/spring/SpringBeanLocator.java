@@ -17,23 +17,12 @@
 package org.apache.wicket.spring;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
 import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.lang.WicketObjects;
-import org.apache.wicket.util.string.Strings;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.AbstractApplicationContext;
 
 /**
  * Implementation of {@link IProxyTargetLocator} that can locate beans within a spring application
@@ -101,110 +90,6 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	}
 
 	/**
-	 * Returns the name of the Bean as registered to Spring. Throws IllegalState exception if none
-	 * or more than one beans are found.
-	 * 
-	 * @param ctx
-	 *            spring application context
-	 * @param clazz
-	 *            bean class
-	 * @throws IllegalStateException
-	 * @return spring name of the bean
-	 */
-	private final String getBeanNameOfClass(final ApplicationContext ctx, final Class<?> clazz)
-	{
-		// get the list of all possible matching beans
-		List<String> names = new ArrayList<String>(
-			Arrays.asList(BeanFactoryUtils.beanNamesForTypeIncludingAncestors(ctx, clazz)));
-
-		// filter out beans that are not candidates for autowiring
-		if (ctx instanceof AbstractApplicationContext)
-		{
-			Iterator<String> it = names.iterator();
-			while (it.hasNext())
-			{
-				String possibility = it.next();
-				BeanDefinition beanDef = getBeanDefinition(
-					((AbstractApplicationContext)ctx).getBeanFactory(), possibility);
-				if (BeanFactoryUtils.isFactoryDereference(possibility) ||
-					possibility.startsWith("scopedTarget.") || !beanDef.isAutowireCandidate())
-				{
-					it.remove();
-				}
-			}
-		}
-
-		if (names.isEmpty())
-		{
-			throw new IllegalStateException("bean of type [" + clazz.getName() + "] not found");
-		}
-		else if (names.size() > 1)
-		{
-			if (ctx instanceof AbstractApplicationContext)
-			{
-				List<String> primaries = new ArrayList<String>();
-				for (String name : names)
-				{
-					BeanDefinition beanDef = getBeanDefinition(
-						((AbstractApplicationContext)ctx).getBeanFactory(), name);
-					if (beanDef instanceof AbstractBeanDefinition)
-					{
-						if (beanDef.isPrimary())
-						{
-							primaries.add(name);
-						}
-					}
-				}
-				if (primaries.size() == 1)
-				{
-					return primaries.get(0);
-				}
-			}
-
-			StringBuilder msg = new StringBuilder();
-			msg.append("More than one bean of type [");
-			msg.append(clazz.getName());
-			msg.append("] found, you have to specify the name of the bean ");
-			msg.append("(@SpringBean(name=\"foo\")) in order to resolve this conflict. ");
-			msg.append("Matched beans: ");
-			msg.append(Strings.join(",", names.toArray(new String[names.size()])));
-			throw new IllegalStateException(msg.toString());
-		}
-		else
-		{
-			return names.get(0);
-		}
-	}
-
-	/**
-	 * 
-	 * @param beanFactory
-	 * @param name
-	 * @return BeanDefinition
-	 */
-	private BeanDefinition getBeanDefinition(final ConfigurableListableBeanFactory beanFactory,
-		final String name)
-	{
-		if (beanFactory.containsBeanDefinition(name))
-		{
-			return beanFactory.getBeanDefinition(name);
-		}
-		else
-		{
-			BeanFactory parent = beanFactory.getParentBeanFactory();
-			if ((parent != null) && (parent instanceof ConfigurableListableBeanFactory))
-			{
-				return getBeanDefinition((ConfigurableListableBeanFactory)parent, name);
-			}
-			else
-			{
-				return null;
-			}
-		}
-	}
-
-
-	/**
 	 * @return returns whether the bean (the locator is supposed to istantiate) is a singleton or
 	 *         not
 	 */
@@ -244,14 +129,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	{
 		final ApplicationContext context = getSpringContext();
 
-		if ((beanName != null) && (beanName.length() > 0))
-		{
-			return lookupSpringBean(context, beanName, getBeanType());
-		}
-		else
-		{
-			return lookupSpringBean(context, getBeanType());
-		}
+		return lookupSpringBean(context, beanName, getBeanType());
 	}
 
 	/**
@@ -274,10 +152,6 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 */
 	public final String getBeanName()
 	{
-		if ((beanName == null) || "".equals(beanName))
-		{
-			beanName = getBeanNameOfClass(getSpringContext(), getBeanType());
-		}
 		return beanName;
 	}
 
@@ -287,23 +161,6 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	public final ISpringContextLocator getSpringContextLocator()
 	{
 		return springContextLocator;
-	}
-
-	/**
-	 * Looks up a bean by its class. Throws IllegalState exception if none or more than one beans
-	 * are found.
-	 * 
-	 * @param ctx
-	 *            spring application context
-	 * 
-	 * @param clazz
-	 *            bean class
-	 * @throws IllegalStateException
-	 * @return found bean
-	 */
-	private final Object lookupSpringBean(final ApplicationContext ctx, final Class<?> clazz)
-	{
-		return lookupSpringBean(ctx, getBeanNameOfClass(ctx, clazz), clazz);
 	}
 
 	/**
@@ -324,7 +181,14 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	{
 		try
 		{
-			return ctx.getBean(name, clazz);
+			if (name == null)
+			{
+				return ctx.getBean(clazz);
+			}
+			else
+			{
+				return ctx.getBean(name, clazz);
+			}
 		}
 		catch (NoSuchBeanDefinitionException e)
 		{

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.wicket.injection.IFieldValueFactory;
 import org.apache.wicket.proxy.LazyInitProxyFactory;
@@ -40,9 +40,9 @@ import org.springframework.context.support.AbstractApplicationContext;
 /**
  * {@link IFieldValueFactory} that uses {@link LazyInitProxyFactory} to create proxies for Spring
  * dependencies based on the {@link SpringBean} annotation applied to a field. This class is usually
- * used by the {@link SpringComponentInjector} to inject objects with lazy init proxies. However, this
- * class can be used on its own to create proxies for any field decorated with a {@link SpringBean}
- * annotation.
+ * used by the {@link SpringComponentInjector} to inject objects with lazy init proxies. However,
+ * this class can be used on its own to create proxies for any field decorated with a
+ * {@link SpringBean} annotation.
  * <p>
  * Example:
  * 
@@ -72,9 +72,9 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 {
 	private final ISpringContextLocator contextLocator;
 
-	private final ConcurrentHashMap<SpringBeanLocator, Object> cache = Generics.newConcurrentHashMap();
+	private final ConcurrentMap<SpringBeanLocator, Object> cache = Generics.newConcurrentHashMap();
 
-	private final ConcurrentHashMap<Class<?>, String> beanNameCache = Generics.newConcurrentHashMap();
+	private final ConcurrentMap<Class<?>, String> beanNameCache = Generics.newConcurrentHashMap();
 
 	private final boolean wrapInProxies;
 
@@ -109,7 +109,14 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	{
 		if (supportsField(field))
 		{
-			SpringBeanLocator locator = new SpringBeanLocator(getBeanName(field), field.getType(),
+			String beanName = getBeanName(field);
+
+			if (beanName == null)
+			{
+				return null;
+			}
+
+			SpringBeanLocator locator = new SpringBeanLocator(beanName, field.getType(),
 				contextLocator);
 
 			// only check the cache if the bean is a singleton
@@ -154,8 +161,12 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			name = beanNameCache.get(field.getType());
 			if (name == null)
 			{
-				name = getBeanNameOfClass(contextLocator.getSpringContext(), field.getType());
-				beanNameCache.put(field.getType(), name);
+				name = getBeanNameOfClass(contextLocator.getSpringContext(), field.getType(), annot);
+
+				if (name != null)
+				{
+					beanNameCache.put(field.getType(), name);
+				}
 			}
 		}
 		return name;
@@ -169,10 +180,13 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	 *            spring application context
 	 * @param clazz
 	 *            bean class
+	 * @param annot
+	 *            the SpringBean annotation
 	 * @throws IllegalStateException
 	 * @return spring name of the bean
 	 */
-	private final String getBeanNameOfClass(final ApplicationContext ctx, final Class<?> clazz)
+	private final String getBeanNameOfClass(final ApplicationContext ctx, final Class<?> clazz,
+		final SpringBean annot)
 	{
 		// get the list of all possible matching beans
 		List<String> names = new ArrayList<String>(
@@ -198,7 +212,11 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 
 		if (names.isEmpty())
 		{
-			throw new IllegalStateException("bean of type [" + clazz.getName() + "] not found");
+			if (annot.required())
+			{
+				throw new IllegalStateException("bean of type [" + clazz.getName() + "] not found");
+			}
+			return null;
 		}
 		else if (names.size() > 1)
 		{

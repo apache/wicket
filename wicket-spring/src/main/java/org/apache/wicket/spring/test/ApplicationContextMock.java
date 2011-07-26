@@ -138,7 +138,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 		}
 		final T bean = beans.next();
 
-		if (beans.hasNext() == false)
+		if (beans.hasNext() != false)
 		{
 			throw new NoSuchBeanDefinitionException("more than one bean of required type " +
 				requiredType + " found");

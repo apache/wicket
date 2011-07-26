@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * @author Igor Vaynberg (ivaynberg)
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({/* ElementType.METHOD, */ElementType.FIELD })
+@Target({ ElementType.FIELD })
 @Documented
 public @interface SpringBean {
 	/**
@@ -38,4 +38,12 @@ public @interface SpringBean {
 	 * @return name attr
 	 */
 	String name() default "";
+
+
+	/**
+	 * Optional attribute for specifying if bean is required or not.
+	 * 
+	 * @return {@code false} if the bean is optional. Default: {@code true}.
+	 */
+	boolean required() default true;
 }
