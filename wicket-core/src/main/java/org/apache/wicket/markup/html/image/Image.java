@@ -268,7 +268,7 @@ public class Image extends WebComponent implements IResourceListener
 	{
 		String url = tag.getAttributes().getString("src");
 		url = url + (url.contains("?") ? "&" : "?");
-		url = url + "wicket:antiCache=" + System.currentTimeMillis();
+		url = url + "antiCache=" + System.currentTimeMillis();
 
 		tag.put("src", url);
 	}
