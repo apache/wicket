@@ -266,72 +266,82 @@ public class AttributeModifier extends Behavior implements IClusterable
 	/**
 	 * Creates a attribute modifier that replaces the current value with the given value.
 	 * 
-	 * @param attribute
+	 * @param attributeName
 	 * @param value
 	 * @return the attribute modifier
 	 * @since 1.5
 	 */
-	public static AttributeModifier replace(String attribute, IModel<?> value)
+	public static AttributeModifier replace(String attributeName, IModel<?> value)
 	{
-		return new AttributeModifier(attribute, value);
+		Args.notEmpty(attributeName, "attributeName");
+
+		return new AttributeModifier(attributeName, value);
 	}
 
 	/**
 	 * Creates a attribute modifier that replaces the current value with the given value.
 	 * 
-	 * @param attribute
+	 * @param attributeName
 	 * @param value
 	 * @return the attribute modifier
 	 * @since 1.5
 	 */
-	public static AttributeModifier replace(String attribute, Serializable value)
+	public static AttributeModifier replace(String attributeName, Serializable value)
 	{
-		return new AttributeModifier(attribute, value);
+		Args.notEmpty(attributeName, "attributeName");
+
+		return new AttributeModifier(attributeName, value);
 	}
 
 	/**
 	 * Creates a attribute modifier that appends the current value with the given {@code value}
 	 * using a default space character (' ') separator.
 	 * 
-	 * @param attribute
+	 * @param attributeName
 	 * @param value
 	 * @return the attribute modifier
 	 * @since 1.5
 	 * @see AttributeAppender
 	 */
-	public static AttributeAppender append(String attribute, IModel<?> value)
+	public static AttributeAppender append(String attributeName, IModel<?> value)
 	{
-		return new AttributeAppender(attribute, value).setSeparator(" ");
+		Args.notEmpty(attributeName, "attributeName");
+
+		return new AttributeAppender(attributeName, value).setSeparator(" ");
 	}
 
 	/**
 	 * Creates a attribute modifier that appends the current value with the given {@code value}
 	 * using a default space character (' ') separator.
 	 * 
-	 * @param attribute
+	 * @param attributeName
 	 * @param value
 	 * @return the attribute modifier
 	 * @since 1.5
 	 * @see AttributeAppender
 	 */
-	public static AttributeAppender append(String attribute, Serializable value)
+	public static AttributeAppender append(String attributeName, Serializable value)
 	{
-		return append(attribute, Model.of(value));
+		Args.notEmpty(attributeName, "attributeName");
+
+		return append(attributeName, Model.of(value));
 	}
 
 	/**
 	 * Creates a attribute modifier that prepends the current value with the given {@code value}
 	 * using a default space character (' ') separator.
 	 * 
-	 * @param attribute
+	 * @param attributeName
 	 * @param value
 	 * @return the attribute modifier
 	 * @since 1.5
 	 * @see AttributeAppender
 	 */
-	public static AttributeAppender prepend(String attribute, IModel<?> value)
+	public static AttributeAppender prepend(String attributeName, IModel<?> value)
 	{
-		return new AttributeAppender(attribute, value)
+		Args.notEmpty(attributeName, "attributeName");
+
+		return new AttributeAppender(attributeName, value)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -348,29 +358,31 @@ public class AttributeModifier extends Behavior implements IClusterable
 	 * Creates a attribute modifier that prepends the current value with the given {@code value}
 	 * using a default space character (' ') separator.
 	 * 
-	 * @param attribute
+	 * @param attributeName
 	 * @param value
 	 * @return the attribute modifier
 	 * @since 1.5
 	 * @see AttributeAppender
 	 */
-	public static AttributeAppender prepend(String attribute, Serializable value)
+	public static AttributeAppender prepend(String attributeName, Serializable value)
 	{
-		return prepend(attribute, Model.of(value));
+		Args.notEmpty(attributeName, "attributeName");
+
+		return prepend(attributeName, Model.of(value));
 	}
 
 	/**
-	 * Creates a attribute modifier that prepends the current value with the given {@code value}
-	 * using a default space character (' ') separator.
+	 * Creates a attribute modifier that removes an attribute with the specified name
 	 * 
-	 * @param attribute
-	 * @param value
+	 * @param attributeName
+	 *            the name of the attribute to be removed
 	 * @return the attribute modifier
 	 * @since 1.5
-	 * @see AttributeAppender
 	 */
-	public static AttributeModifier remove(String attribute)
+	public static AttributeModifier remove(String attributeName)
 	{
-		return prepend(attribute, Model.of(VALUELESS_ATTRIBUTE_REMOVE));
+		Args.notEmpty(attributeName, "attributeName");
+
+		return replace(attributeName, Model.of(VALUELESS_ATTRIBUTE_REMOVE));
 	}
 }
