@@ -97,7 +97,7 @@ public final class DefaultMarkupSourcingStrategy implements IMarkupSourcingStrat
 		}
 
 		// If the child has not been directly added to the container, but via a
-		// TransparentWebMarkupContainer, than we are in trouble. In general Wicket iterates over
+		// TransparentWebMarkupContainer, then we are in trouble. In general Wicket iterates over
 		// the markup elements and searches for associated components, not the other way around.
 		// Because of TransparentWebMarkupContainer (or more generally resolvers), there is no
 		// "synchronous" search possible.

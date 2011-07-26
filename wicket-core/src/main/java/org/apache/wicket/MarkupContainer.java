@@ -177,7 +177,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				// Check if the markup is available after the child has been added to the parent
 				try
 				{
-					// If not yet triggered, than do now (e.g. Pages)
+					// If not yet triggered, then do now (e.g. Pages)
 					if (getMarkup() != null)
 					{
 						internalOnMarkupAttached();
