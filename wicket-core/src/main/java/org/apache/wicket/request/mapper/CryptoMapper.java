@@ -211,19 +211,7 @@ public class CryptoMapper implements IRequestMapper
 				}
 			}
 
-			if (segNo < numberOfSegments)
-			{
-				url.getQueryParameters().addAll(originalUrl.getQueryParameters());
-
-				for (; segNo < numberOfSegments; segNo++)
-				{
-					url.getSegments().add(encryptedUrl.getSegments().get(segNo));
-				}
-			}
-			else
-			{
-				url.getQueryParameters().addAll(originalUrl.getQueryParameters());
-			}
+			url.getQueryParameters().addAll(originalUrl.getQueryParameters());
 		}
 		catch (Exception e)
 		{
