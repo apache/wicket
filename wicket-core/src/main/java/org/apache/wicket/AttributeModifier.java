@@ -67,10 +67,10 @@ import org.apache.wicket.util.value.IValueMap;
 public class AttributeModifier extends Behavior implements IClusterable
 {
 	/** Marker value to have an attribute without a value added. */
-	public static final String VALUELESS_ATTRIBUTE_ADD = "VA_ADD";
+	public static final String VALUELESS_ATTRIBUTE_ADD = new String("VA_ADD");
 
 	/** Marker value to have an attribute without a value removed. */
-	public static final String VALUELESS_ATTRIBUTE_REMOVE = "VA_REMOVE";
+	public static final String VALUELESS_ATTRIBUTE_REMOVE = new String("VA_REMOVE");
 
 	private static final long serialVersionUID = 1L;
 
@@ -180,11 +180,11 @@ public class AttributeModifier extends Behavior implements IClusterable
 			final IValueMap attributes = tag.getAttributes();
 			final Object replacementValue = getReplacementOrNull(component);
 
-			if (VALUELESS_ATTRIBUTE_ADD.equals(replacementValue))
+			if (VALUELESS_ATTRIBUTE_ADD == replacementValue)
 			{
 				attributes.put(attribute, null);
 			}
-			else if (VALUELESS_ATTRIBUTE_REMOVE.equals(replacementValue))
+			else if (VALUELESS_ATTRIBUTE_REMOVE == replacementValue)
 			{
 				attributes.remove(attribute);
 			}
@@ -357,5 +357,20 @@ public class AttributeModifier extends Behavior implements IClusterable
 	public static AttributeAppender prepend(String attribute, Serializable value)
 	{
 		return prepend(attribute, Model.of(value));
+	}
+
+	/**
+	 * Creates a attribute modifier that prepends the current value with the given {@code value}
+	 * using a default space character (' ') separator.
+	 * 
+	 * @param attribute
+	 * @param value
+	 * @return the attribute modifier
+	 * @since 1.5
+	 * @see AttributeAppender
+	 */
+	public static AttributeModifier remove(String attribute)
+	{
+		return prepend(attribute, Model.of(VALUELESS_ATTRIBUTE_REMOVE));
 	}
 }

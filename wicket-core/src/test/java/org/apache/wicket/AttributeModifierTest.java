@@ -290,4 +290,37 @@ public class AttributeModifierTest extends Assert
 		assertTrue(attributes.isEmpty());
 	}
 
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-3934
+	 */
+	@Test
+	public void removeAttribute()
+	{
+		AttributeModifier appender = AttributeModifier.remove("class");
+		XmlTag xmlTag = new XmlTag();
+		ComponentTag tag = new ComponentTag(xmlTag);
+		Map<String, Object> attributes = tag.getAttributes();
+		attributes.put("class", "someValue");
+		appender.replaceAttributeValue(null, tag);
+		assertTrue(attributes.isEmpty());
+	}
+
+	/**
+	 * Add an attribute with name equal to the special
+	 * {@link AttributeModifier#VALUELESS_ATTRIBUTE_REMOVE}
+	 * 
+	 * https://issues.apache.org/jira/browse/WICKET-3934
+	 */
+	@Test
+	public void appendSpecialAttribute()
+	{
+		AttributeModifier appender = AttributeModifier.append("VA_REMOVE", "newValue");
+		XmlTag xmlTag = new XmlTag();
+		ComponentTag tag = new ComponentTag(xmlTag);
+		Map<String, Object> attributes = tag.getAttributes();
+		attributes.put("VA_REMOVE", "oldValue");
+		appender.replaceAttributeValue(null, tag);
+		assertFalse(attributes.isEmpty());
+		assertEquals("oldValue newValue", attributes.get("VA_REMOVE"));
+	}
 }
