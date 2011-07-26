@@ -160,13 +160,18 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 	}
 
 	/**
+	 * Resolves the child component which is the controller of this Enclosure
+	 * 
 	 * @param markupStream
-	 * @param container
-	 * @return The component associated with the
+	 *            the markup stream of this Enclosure
+	 * @param enclosureParent
+	 *            the non-auto parent component of this Enclosure
+	 * @return The component associated with the {@value childId}
 	 */
-	private Component getChildComponent(final MarkupStream markupStream, MarkupContainer container)
+	private Component getChildComponent(final MarkupStream markupStream,
+		MarkupContainer enclosureParent)
 	{
-		Component controller = getEnclosureParent().get(getChildId());
+		Component controller = enclosureParent.get(getChildId());
 		if (controller == null)
 		{
 			int orgIndex = markupStream.getCurrentIndex();
@@ -182,8 +187,8 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 						{
 							if (childId.equals(tag.getId()))
 							{
-								controller = ComponentResolvers.resolve(container, markupStream,
-									tag, new ResolverFilter()
+								controller = ComponentResolvers.resolve(enclosureParent,
+									markupStream, tag, new ResolverFilter()
 									{
 										public boolean ignoreResolver(
 											final IComponentResolver resolver)
