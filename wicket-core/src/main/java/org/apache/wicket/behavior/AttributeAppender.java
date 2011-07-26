@@ -152,9 +152,9 @@ public class AttributeAppender extends AttributeModifier
 	{
 		// Short circuit when one of the values is empty: return the other value.
 		if (Strings.isEmpty(currentValue))
-			return appendValue != null ? appendValue : "";
+			return appendValue != null ? appendValue : null;
 		else if (Strings.isEmpty(appendValue))
-			return currentValue != null ? currentValue : "";
+			return currentValue != null ? currentValue : null;
 
 		StringBuilder sb = new StringBuilder(currentValue);
 		sb.append((getSeparator() == null ? "" : getSeparator()));

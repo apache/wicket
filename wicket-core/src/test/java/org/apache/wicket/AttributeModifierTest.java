@@ -16,15 +16,12 @@
  */
 package org.apache.wicket;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Map;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.model.Model;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -33,7 +30,7 @@ import org.junit.Test;
  * @author Chris Turner
  * @author Eelco Hillenius
  */
-public class AttributeModifierTest
+public class AttributeModifierTest extends Assert
 {
 	/**
 	 * Test constructors.
@@ -230,7 +227,7 @@ public class AttributeModifierTest
 		assertEquals("newvalue", appender.newValue(null, "newvalue"));
 		assertEquals("oldvalue", appender.newValue("oldvalue", ""));
 		assertEquals("oldvalue", appender.newValue("oldvalue", null));
-		assertEquals("", appender.newValue(null, null));
+		assertNull(appender.newValue(null, null));
 	}
 
 	/**
@@ -245,7 +242,7 @@ public class AttributeModifierTest
 		assertEquals("newvalue", prepender.newValue(null, "newvalue"));
 		assertEquals("oldvalue", prepender.newValue("oldvalue", ""));
 		assertEquals("oldvalue", prepender.newValue("oldvalue", null));
-		assertEquals("", prepender.newValue(null, null));
+		assertNull(prepender.newValue(null, null));
 	}
 
 	/**
@@ -260,7 +257,7 @@ public class AttributeModifierTest
 		assertEquals("newvalue", appender.newValue(null, "newvalue"));
 		assertEquals("oldvalue", appender.newValue("oldvalue", ""));
 		assertEquals("oldvalue", appender.newValue("oldvalue", null));
-		assertEquals("", appender.newValue(null, null));
+		assertNull(appender.newValue(null, null));
 	}
 
 	/**
@@ -275,6 +272,22 @@ public class AttributeModifierTest
 		assertEquals("newvalue", appender.newValue(null, "newvalue"));
 		assertEquals("oldvalue", appender.newValue("oldvalue", ""));
 		assertEquals("oldvalue", appender.newValue("oldvalue", null));
-		assertEquals("", appender.newValue(null, null));
+		assertNull(appender.newValue(null, null));
 	}
+
+	/**
+	 * Test that a null model does not append an empty attribute
+	 * https://issues.apache.org/jira/browse/WICKET-3884
+	 */
+	@Test
+	public void nullModelDoesNotAppendEmptyAttribute()
+	{
+		AttributeModifier appender = AttributeModifier.append("class", null);
+		XmlTag xmlTag = new XmlTag();
+		ComponentTag tag = new ComponentTag(xmlTag);
+		appender.replaceAttributeValue(null, tag);
+		Map<String, Object> attributes = tag.getAttributes();
+		assertTrue(attributes.isEmpty());
+	}
+
 }
