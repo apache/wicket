@@ -17,8 +17,8 @@
 package org.apache.wicket.util.crypt;
 
 /**
- * Default crypt factory. this factory will instantiate the object via the provided Class and cache
- * the result so that the object is only instantiated once.
+ * Default crypt factory. This factory will instantiate a {@link SunJceCrypt} once and cache it for
+ * all further invocations of {@link #newCrypt()}.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
