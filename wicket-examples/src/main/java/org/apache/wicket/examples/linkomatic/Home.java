@@ -176,7 +176,7 @@ public class Home extends WicketExamplePage
 			{
 			}
 		};
-		linkWithLabel.setBody(Model.of("A link that provides its body with Link.setBodyLabel(someModel)"));
+		linkWithLabel.setBody(Model.of("A link that provides its body with Link.setBody(someModel)"));
 		add(linkWithLabel);
 	}
 
