@@ -22,6 +22,7 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.WicketTester;
@@ -127,7 +128,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 */
 	public void testHomePageWithParameters()
 	{
-		String expectedEncrypted = "0lhSFdMIt3yZUNwbtLuXgDePMclxSbks/0lh9b";
+		String expectedEncrypted = "0lhSFdMIt3yZUNwbtLuXgDePMclxSbks";
 		PageParameters expectedParameters = new PageParameters();
 		expectedParameters.add("namedKey1", "namedValue1");
 
@@ -144,5 +145,24 @@ public class CryptoMapperTest extends AbstractMapperTest
 		assertEquals(tester.getApplication().getHomePage(), handler.getPageClass());
 		PageParameters actualParameters = handler.getPageParameters();
 		assertEquals(expectedParameters, actualParameters);
+	}
+
+	/**
+	 * Test resources appended via CSS, WICKET-3514
+	 */
+	public void testCSSResource()
+	{
+		String encrypted = "X5EA-RpmG5-t7GSByiSposVVWJ28fpoU-XgFo7bOPIRVhLnwK6Xt2SsvC5G0ygfWLeZ9Qr1gPztSHdUoNloddRxz1zXnW4JHmqip6HVj10wfCyvF7GzNwI7oJfqdt5GjpprCHL1dEe89Ef8QXhwD-ag1NTrt8in9/X5E87/1dEa1/qipf7/10w47/base-tree-images.png";
+
+		Request request = getRequest(Url.parse(encrypted));
+
+		IRequestHandler requestHandler = mapper.mapRequest(request);
+
+		assertTrue(requestHandler instanceof ResourceReferenceRequestHandler);
+		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler)requestHandler;
+
+		assertEquals(org.apache.wicket.markup.html.tree.BaseTree.class,
+			handler.getResourceReference().getScope());
+		assertEquals("res/base-tree-images.png", handler.getResourceReference().getName());
 	}
 }

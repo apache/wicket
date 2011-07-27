@@ -125,10 +125,6 @@ public class CryptoMapper implements IRequestMapper
 		encryptedUrl.getSegments().add(encryptedUrlString);
 
 		int numberOfSegments = url.getSegments().size();
-		if (numberOfSegments == 0 && !url.getQueryParameters().isEmpty())
-		{
-			numberOfSegments = 1;
-		}
 		char[] encryptedChars = encryptedUrlString.toCharArray();
 		int hash = 0;
 		for (int segNo = 0; segNo < numberOfSegments; segNo++)
@@ -157,7 +153,7 @@ public class CryptoMapper implements IRequestMapper
 		}
 
 		List<String> segments = encryptedUrl.getSegments();
-		if (segments.size() < 2)
+		if (segments.size() < 1)
 		{
 			return null;
 		}
@@ -175,11 +171,6 @@ public class CryptoMapper implements IRequestMapper
 			Url originalUrl = Url.parse(decryptedUrl, request.getCharset());
 
 			int originalNumberOfSegments = originalUrl.getSegments().size();
-			if (originalNumberOfSegments == 0 &&
-				originalUrl.getQueryParameters().isEmpty() == false)
-			{
-				originalNumberOfSegments = 1;
-			}
 			int numberOfSegments = encryptedUrl.getSegments().size();
 
 			char[] encryptedChars = encryptedUrlString.toCharArray();
@@ -207,6 +198,12 @@ public class CryptoMapper implements IRequestMapper
 				}
 				else
 				{
+					// append new segments from browser
+					while (segNo < numberOfSegments)
+					{
+						url.getSegments().add(encryptedUrl.getSegments().get(segNo));
+						segNo++;
+					}
 					break;
 				}
 			}
