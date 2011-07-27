@@ -121,7 +121,8 @@ public abstract class DynamicImageResource extends AbstractResource
 	 * @param attributes
 	 *            the context bringing the request, response and the parameters
 	 * 
-	 * @return The image data for this dynamic image
+	 * @return The image data for this dynamic image. {@code null} means there is no image and 404
+	 *         (Not found) response will be return.
 	 */
 	protected abstract byte[] getImageData(Attributes attributes);
 
