@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.lang.Args;
@@ -150,15 +151,22 @@ public abstract class DynamicImageResource extends AbstractResource
 
 			response.setContentDisposition(ContentDisposition.INLINE);
 
-			response.setWriteCallback(new WriteCallback()
+			final byte[] imageData = getImageData(attributes);
+			if (imageData == null)
 			{
-				@Override
-				public void writeData(final Attributes attributes)
+				response.setError(HttpServletResponse.SC_NOT_FOUND);
+			}
+			else
+			{
+				response.setWriteCallback(new WriteCallback()
 				{
-					attributes.getResponse().write(getImageData(attributes));
-				}
-			});
-
+					@Override
+					public void writeData(final Attributes attributes)
+					{
+						attributes.getResponse().write(imageData);
+					}
+				});
+			}
 			configureResponse(response, attributes);
 		}
 
