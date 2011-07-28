@@ -148,11 +148,11 @@ public class CryptoMapperTest extends AbstractMapperTest
 	}
 
 	/**
-	 * Test resources appended via CSS, WICKET-3514
+	 * Relative ResourceReferences, WICKET-3514
 	 */
-	public void testCSSResource()
+	public void testResourceReference()
 	{
-		String encrypted = "X5EA-RpmG5-t7GSByiSposVVWJ28fpoU-XgFo7bOPIRVhLnwK6Xt2SsvC5G0ygfWLeZ9Qr1gPztSHdUoNloddRxz1zXnW4JHmqip6HVj10wfCyvF7GzNwI7oJfqdt5GjpprCHL1dEe89Ef8QXhwD-ag1NTrt8in9/X5E87/1dEa1/qipf7/10w47/base-tree-images.png";
+		String encrypted = "X5EA-RpmG5-t7GSByiSposVVWJ28fpoU-XgFo7bOPITjbCTT6mLI5l-7b-WJucu-Kc8StVsu-PL5htkbIxuxphv3mYi5-mmkCvkxPsriihj5VPg3naw2fA/X5E87/b-W6b/l-795/Juc97/mG5fa";
 
 		Request request = getRequest(Url.parse(encrypted));
 
@@ -161,8 +161,61 @@ public class CryptoMapperTest extends AbstractMapperTest
 		assertTrue(requestHandler instanceof ResourceReferenceRequestHandler);
 		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler)requestHandler;
 
-		assertEquals(org.apache.wicket.markup.html.tree.BaseTree.class,
-			handler.getResourceReference().getScope());
-		assertEquals("res/base-tree-images.png", handler.getResourceReference().getName());
+		assertEquals(getClass(), handler.getResourceReference().getScope());
+		assertEquals("crypt/crypt.txt", handler.getResourceReference().getName());
+	}
+
+	/**
+	 * Relative ResourceReferences, WICKET-3514
+	 */
+	public void testResourceReferenceWithModifiedSegments()
+	{
+		String encrypted = "X5EA-RpmG5-t7GSByiSposVVWJ28fpoU-XgFo7bOPITjbCTT6mLI5l-7b-WJucu-Kc8StVsu-PL5htkbIxuxphv3mYi5-mmkCvkxPsriihj5VPg3naw2fA/X5E87/b-W6b/l-795/Juc97/modified-crypt.txt";
+
+		Request request = getRequest(Url.parse(encrypted));
+
+		IRequestHandler requestHandler = mapper.mapRequest(request);
+
+		assertTrue(requestHandler instanceof ResourceReferenceRequestHandler);
+		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler)requestHandler;
+
+		assertEquals(getClass(), handler.getResourceReference().getScope());
+		assertEquals("crypt/modified-crypt.txt", handler.getResourceReference().getName());
+	}
+
+	/**
+	 * Relative ResourceReferences, WICKET-3514
+	 */
+	public void testResourceReferenceWithMoreSegments()
+	{
+		String encrypted = "X5EA-RpmG5-t7GSByiSposVVWJ28fpoU-XgFo7bOPITjbCTT6mLI5l-7b-WJucu-Kc8StVsu-PL5htkbIxuxphv3mYi5-mmkCvkxPsriihj5VPg3naw2fA/X5E87/b-W6b/l-795/Juc97/more/crypt.txt";
+
+		Request request = getRequest(Url.parse(encrypted));
+
+		IRequestHandler requestHandler = mapper.mapRequest(request);
+
+		assertTrue(requestHandler instanceof ResourceReferenceRequestHandler);
+		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler)requestHandler;
+
+		assertEquals(getClass(), handler.getResourceReference().getScope());
+		assertEquals("crypt/more/crypt.txt", handler.getResourceReference().getName());
+	}
+
+	/**
+	 * Relative ResourceReferences, WICKET-3514
+	 */
+	public void testResourceReferenceWithLessSegments()
+	{
+		String encrypted = "X5EA-RpmG5-t7GSByiSposVVWJ28fpoU-XgFo7bOPITjbCTT6mLI5l-7b-WJucu-Kc8StVsu-PL5htkbIxuxphv3mYi5-mmkCvkxPsriihj5VPg3naw2fA/X5E87/b-W6b/l-795/less-crypt.txt";
+
+		Request request = getRequest(Url.parse(encrypted));
+
+		IRequestHandler requestHandler = mapper.mapRequest(request);
+
+		assertTrue(requestHandler instanceof ResourceReferenceRequestHandler);
+		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler)requestHandler;
+
+		assertEquals(getClass(), handler.getResourceReference().getScope());
+		assertEquals("less-crypt.txt", handler.getResourceReference().getName());
 	}
 }

@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author igor.vaynberg
  * @author Jesse Long
+ * @author svenmeier
  */
 public class CryptoMapper implements IRequestMapper
 {
@@ -125,22 +126,10 @@ public class CryptoMapper implements IRequestMapper
 		encryptedUrl.getSegments().add(encryptedUrlString);
 
 		int numberOfSegments = url.getSegments().size();
-		char[] encryptedChars = encryptedUrlString.toCharArray();
-		int hash = 0;
+		HashedSegmentGenerator generator = new HashedSegmentGenerator(encryptedUrlString);
 		for (int segNo = 0; segNo < numberOfSegments; segNo++)
 		{
-			char a = encryptedChars[Math.abs(hash % encryptedChars.length)];
-			hash++;
-			char b = encryptedChars[Math.abs(hash % encryptedChars.length)];
-			hash++;
-			char c = encryptedChars[Math.abs(hash % encryptedChars.length)];
-
-			String segment = "" + a + b + c;
-			hash = hashString(segment);
-
-			segment += String.format("%02x", Math.abs(hash % 256));
-			encryptedUrl.getSegments().add(segment);
-			hash = hashString(segment);
+			encryptedUrl.getSegments().add(generator.next());
 		}
 		return encryptedUrl;
 	}
@@ -152,8 +141,8 @@ public class CryptoMapper implements IRequestMapper
 			return encryptedUrl;
 		}
 
-		List<String> segments = encryptedUrl.getSegments();
-		if (segments.size() < 1)
+		List<String> encryptedSegments = encryptedUrl.getSegments();
+		if (encryptedSegments.size() < 1)
 		{
 			return null;
 		}
@@ -161,7 +150,7 @@ public class CryptoMapper implements IRequestMapper
 		Url url = new Url(request.getCharset());
 		try
 		{
-			String encryptedUrlString = segments.get(0);
+			String encryptedUrlString = encryptedSegments.get(0);
 			if (Strings.isEmpty(encryptedUrlString))
 			{
 				return null;
@@ -171,41 +160,25 @@ public class CryptoMapper implements IRequestMapper
 			Url originalUrl = Url.parse(decryptedUrl, request.getCharset());
 
 			int originalNumberOfSegments = originalUrl.getSegments().size();
-			int numberOfSegments = encryptedUrl.getSegments().size();
+			int encryptedNumberOfSegments = encryptedUrl.getSegments().size();
 
-			char[] encryptedChars = encryptedUrlString.toCharArray();
-			int hash = 0;
-
-			int segNo;
-			for (segNo = 1; segNo < numberOfSegments && segNo < originalNumberOfSegments + 1; segNo++)
+			HashedSegmentGenerator generator = new HashedSegmentGenerator(encryptedUrlString);
+			int segNo = 1;
+			for (; segNo < encryptedNumberOfSegments; segNo++)
 			{
-				char a = encryptedChars[Math.abs(hash % encryptedChars.length)];
-				hash++;
-				char b = encryptedChars[Math.abs(hash % encryptedChars.length)];
-				hash++;
-				char c = encryptedChars[Math.abs(hash % encryptedChars.length)];
-
-				String segment = "" + a + b + c;
-				hash = hashString(segment);
-
-				segment += String.format("%02x", Math.abs(hash % 256));
-				hash = hashString(segment);
-
-				if (segment.equals(segments.get(segNo)) &&
-					originalUrl.getSegments().size() >= segNo)
+				if (segNo > originalNumberOfSegments ||
+					!generator.next().equals(encryptedSegments.get(segNo)))
 				{
-					url.getSegments().add(originalUrl.getSegments().get(segNo - 1));
-				}
-				else
-				{
-					// append new segments from browser
-					while (segNo < numberOfSegments)
-					{
-						url.getSegments().add(encryptedUrl.getSegments().get(segNo));
-						segNo++;
-					}
 					break;
 				}
+
+				// unmodified segment
+				url.getSegments().add(originalUrl.getSegments().get(segNo - 1));
+			}
+			for (; segNo < encryptedNumberOfSegments; segNo++)
+			{
+				// modified or additional segment
+				url.getSegments().add(encryptedUrl.getSegments().get(segNo));
 			}
 
 			url.getQueryParameters().addAll(originalUrl.getQueryParameters());
@@ -217,19 +190,6 @@ public class CryptoMapper implements IRequestMapper
 		}
 
 		return url;
-	}
-
-	private int hashString(final String str)
-	{
-		int hash = 97;
-
-		for (char c : str.toCharArray())
-		{
-			int i = c;
-			hash = 47 * hash + i;
-		}
-
-		return hash;
 	}
 
 	private static class ApplicationCryptProvider implements IProvider<ICrypt>
@@ -247,4 +207,53 @@ public class CryptoMapper implements IRequestMapper
 		}
 	}
 
+	/**
+	 * A generator of hashed segments.
+	 */
+	private static class HashedSegmentGenerator
+	{
+		private char[] characters;
+
+		private int hash = 0;
+
+		public HashedSegmentGenerator(String string)
+		{
+			characters = string.toCharArray();
+		}
+
+		/**
+		 * Generate the next segment
+		 * 
+		 * @return segment
+		 */
+		public String next()
+		{
+			char a = characters[Math.abs(hash % characters.length)];
+			hash++;
+			char b = characters[Math.abs(hash % characters.length)];
+			hash++;
+			char c = characters[Math.abs(hash % characters.length)];
+
+			String segment = "" + a + b + c;
+			hash = hashString(segment);
+
+			segment += String.format("%02x", Math.abs(hash % 256));
+			hash = hashString(segment);
+
+			return segment;
+		}
+
+		private int hashString(final String str)
+		{
+			int hash = 97;
+
+			for (char c : str.toCharArray())
+			{
+				int i = c;
+				hash = 47 * hash + i;
+			}
+
+			return hash;
+		}
+	}
 }
