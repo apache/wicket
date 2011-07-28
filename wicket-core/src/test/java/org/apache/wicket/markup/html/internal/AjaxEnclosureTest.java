@@ -218,7 +218,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 
 		{
 			// enclosure On
-			AjaxEnclosurePage_3 ajaxPage = (AjaxEnclosurePage_3)tester.startPage(AjaxEnclosurePage_3.class);
+			AjaxEnclosurePage_3 ajaxPage = tester.startPage(AjaxEnclosurePage_3.class);
 			assertVisible(ajaxPage.getLabel1(), true);
 			ensureEnclosureIsVisible(enclosurePath, ajaxPage);
 			tester.clickLink(ajaxPage.getToggleLabel1Link().getPageRelativePath());

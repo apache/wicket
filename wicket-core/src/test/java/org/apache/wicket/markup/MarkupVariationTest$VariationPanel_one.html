@@ -1,0 +1,25 @@
+<wicket:panel>
+
+    <a wicket:id="l">Change variation</a>
+
+    <br/>One
+
+    <span wicket:id="simpleLabel">Text</span>
+    <br/>One after Label
+    <form action="#" wicket:id="a_form">
+        <br/>in One Form
+        <input type="submit" value="Delete" name="delete"/>
+    </form>
+    
+    <div wicket:enclosure="child">
+        Enclosure One
+        <span wicket:id="child"></span>
+    
+        <div wicket:enclosure="nestedChild">
+            Nested Enclosure One
+            <span wicket:id="nestedChild"></span>
+        </div>
+    </div>
+    
+    <br/>One
+</wicket:panel>

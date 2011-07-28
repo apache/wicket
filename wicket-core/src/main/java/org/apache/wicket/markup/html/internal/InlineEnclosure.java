@@ -17,6 +17,8 @@
 package org.apache.wicket.markup.html.internal;
 
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.parser.filter.InlineEnclosureHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +44,8 @@ public class InlineEnclosure extends Enclosure
 
 	private static final Logger log = LoggerFactory.getLogger(InlineEnclosure.class);
 
+	private String enclosureMarkupAsString;
+
 	/**
 	 * Construct.
 	 * 
@@ -53,8 +57,9 @@ public class InlineEnclosure extends Enclosure
 	{
 		super(id, childId);
 
+		enclosureMarkupAsString = null;
+
 		// ensure that the Enclosure is ready for ajax updates
-		setOutputMarkupId(true);
 		setOutputMarkupPlaceholderTag(true);
 		setMarkupId(getId());
 	}
@@ -78,5 +83,33 @@ public class InlineEnclosure extends Enclosure
 		boolean visible = getChild().isVisible();
 		setVisible(visible);
 		return visible;
+	}
+
+	/**
+	 * {@link InlineEnclosure}s keep their own cache of their markup because Component#markup is
+	 * detached and later during Ajax request it is hard to re-lookup {@link InlineEnclosure}'s
+	 * markup from its parent.
+	 * 
+	 * @see org.apache.wicket.Component#getMarkup()
+	 */
+	@Override
+	public IMarkupFragment getMarkup()
+	{
+		IMarkupFragment enclosureMarkup = null;
+		if (enclosureMarkupAsString == null)
+		{
+			IMarkupFragment markup = super.getMarkup();
+			if (markup != null && markup != Markup.NO_MARKUP)
+			{
+				enclosureMarkup = markup;
+				enclosureMarkupAsString = markup.toString(true);
+			}
+		}
+		else
+		{
+			enclosureMarkup = Markup.of(enclosureMarkupAsString);
+		}
+
+		return enclosureMarkup;
 	}
 }
