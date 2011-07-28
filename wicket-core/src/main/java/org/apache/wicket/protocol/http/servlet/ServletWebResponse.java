@@ -261,6 +261,7 @@ public class ServletWebResponse extends WebResponse
 
 				setContentType("text/xml;charset=" +
 					webRequest.getContainerRequest().getCharacterEncoding());
+				disableCaching();
 			}
 			else
 			{

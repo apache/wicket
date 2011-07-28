@@ -23,12 +23,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.MockPageWithLinkAndComponent;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebComponent;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.DiffUtil;
+import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +46,7 @@ import org.slf4j.LoggerFactory;
 public class AjaxRequestTargetTest extends WicketTestCase
 {
 	private static final Logger log = LoggerFactory.getLogger(AjaxRequestTargetTest.class);
-	
+
 	/**
 	 * Test that a normal <style> header contribution is added correctly.
 	 * 
@@ -219,6 +225,71 @@ public class AjaxRequestTargetTest extends WicketTestCase
 
 		assertTrue(listener.onBeforeRespondExecuted);
 		assertTrue(listener.onAfterRespondExecuted);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-3921
+	 */
+	public void testAjaxRedirectSetsNoCachingHeaders()
+	{
+		tester.startPage(new Wicket3921());
+
+		tester.clickLink("updatePage");
+		assertEquals(Time.START_OF_UNIX_TIME.toRfc1123TimestampString(), tester.getLastResponse()
+			.getHeader("Expires"));
+		assertEquals("no-cache", tester.getLastResponse().getHeader("Pragma"));
+		assertEquals("no-cache, no-store", tester.getLastResponse().getHeader("Cache-Control"));
+
+
+		tester.clickLink("updateComponent");
+		assertEquals(Time.START_OF_UNIX_TIME.toRfc1123TimestampString(), tester.getLastResponse()
+			.getHeader("Expires"));
+		assertEquals("no-cache", tester.getLastResponse().getHeader("Pragma"));
+		assertEquals("no-cache, no-store", tester.getLastResponse().getHeader("Cache-Control"));
+	}
+
+	/**
+	 * Test page for {@linkplain AjaxRequestTargetTest#testAjaxRedirectSetsNoCachingHeaders()}
+	 */
+	private static class Wicket3921 extends WebPage implements IMarkupResourceStreamProvider
+	{
+
+		/**
+		 * Construct.
+		 */
+		private Wicket3921()
+		{
+			setOutputMarkupId(true);
+
+			add(new AjaxLink<Void>("updatePage")
+			{
+				@Override
+				public void onClick(AjaxRequestTarget target)
+				{
+					// adding the page to the target will produce a wicket ajax redirect
+					// without any cache headers
+					target.add(getPage());
+				}
+			});
+
+			add(new AjaxLink<Void>("updateComponent")
+			{
+				@Override
+				public void onClick(AjaxRequestTarget target)
+				{
+					// this produces an ajax response with cache headers set properly
+					target.add(this);
+				}
+			}.setOutputMarkupId(true));
+
+		}
+
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream(
+				"<html><body><a wicket:id='updatePage'>link1</a><br/><br/><br/><a wicket:id='updateComponent'>Link2</a></body></html>");
+		}
 	}
 
 	private static class ValidatingAjaxRequestTargetListener implements AjaxRequestTarget.IListener
