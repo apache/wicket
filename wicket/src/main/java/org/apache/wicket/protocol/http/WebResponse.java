@@ -312,6 +312,9 @@ public class WebResponse extends Response
 		// Set content type based on markup type for page
 		setCharacterEncoding(encoding);
 		setContentType("text/xml; charset=" + encoding);
+		setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
+		setHeader("Cache-Control", "no-cache, must-revalidate");
+		setHeader("Pragma", "no-cache");
 	}
 
 	/**
