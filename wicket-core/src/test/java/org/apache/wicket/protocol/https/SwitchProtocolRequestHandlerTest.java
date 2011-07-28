@@ -21,19 +21,15 @@ import java.net.URL;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.MockPage;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.IRequestCycle;
-import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.AbstractMapperTest;
-import org.apache.wicket.request.mapper.IMapperContext;
-import org.apache.wicket.request.mapper.MountedMapper;
 import org.mockito.Mockito;
 
 /**
- * Test for SwitchProtocolRequestHandler
+ * Test for {@link SwitchProtocolRequestHandler}.
  */
 public class SwitchProtocolRequestHandlerTest extends AbstractMapperTest
 {
@@ -72,35 +68,5 @@ public class SwitchProtocolRequestHandlerTest extends AbstractMapperTest
 		handler.respond(requestCycle);
 
 		Mockito.verify(webResponse).sendRedirect(httpsUrl.toString());
-	}
-
-	/**
-	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3380">WICKET-3380</a>
-	 */
-	public void testMapHandler()
-	{
-		final MountedMapper encoder = new MountedMapper("/securedPage", SecuredMockPage.class)
-		{
-			@Override
-			protected IMapperContext getContext()
-			{
-				return context;
-			}
-		};
-
-		Url originalUrl = Url.parse("securedPage");
-		IRequestHandler handler = encoder.mapRequest(getRequest(originalUrl));
-
-		SwitchProtocolRequestHandler switchProtocolRequestHandler = new SwitchProtocolRequestHandler(
-			Protocol.HTTPS, handler, new HttpsConfig());
-
-		Url mappedUrl = encoder.mapHandler(switchProtocolRequestHandler);
-		assertEquals(originalUrl, mappedUrl);
-	}
-
-	@RequireHttps
-	private static class SecuredMockPage extends MockPage
-	{
-		private static final long serialVersionUID = 1L;
 	}
 }

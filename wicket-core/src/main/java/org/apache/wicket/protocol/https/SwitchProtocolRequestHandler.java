@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
@@ -29,14 +28,11 @@ import org.apache.wicket.util.lang.Args;
 /**
  * Request handler that performs redirects across http and https
  */
-class SwitchProtocolRequestHandler implements IRequestHandlerDelegate
+class SwitchProtocolRequestHandler implements IRequestHandler
 {
 
 	/** the protocol this request handler is going to switch to */
 	private final Protocol protocol;
-
-	/** the original request handler */
-	private final IRequestHandler handler;
 
 	private final HttpsConfig httpsConfig;
 
@@ -48,23 +44,7 @@ class SwitchProtocolRequestHandler implements IRequestHandlerDelegate
 	 * @param httpsConfig
 	 *            the https configuration
 	 */
-	SwitchProtocolRequestHandler(Protocol protocol, HttpsConfig httpsConfig)
-	{
-		this(protocol, null, httpsConfig);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param protocol
-	 *            required protocol
-	 * @param handler
-	 *            target to redirect to, or {@code null} to replay the current url
-	 * @param httpsConfig
-	 *            the https configuration
-	 */
-	SwitchProtocolRequestHandler(Protocol protocol, IRequestHandler handler,
-		final HttpsConfig httpsConfig)
+	SwitchProtocolRequestHandler(Protocol protocol, final HttpsConfig httpsConfig)
 	{
 		Args.notNull(protocol, "protocol");
 		Args.notNull(httpsConfig, "httpsConfig");
@@ -76,7 +56,6 @@ class SwitchProtocolRequestHandler implements IRequestHandlerDelegate
 		}
 
 		this.protocol = protocol;
-		this.handler = handler;
 		this.httpsConfig = httpsConfig;
 	}
 
@@ -132,15 +111,7 @@ class SwitchProtocolRequestHandler implements IRequestHandlerDelegate
 			}
 		}
 
-		final String url;
-		if (handler == null)
-		{
-			url = getUrl(protocol.toString().toLowerCase(), port, request);
-		}
-		else
-		{
-			url = ((RequestCycle)requestCycle).mapUrlFor(handler).toString();
-		}
+		final String url = getUrl(protocol.toString().toLowerCase(), port, request);
 
 		WebResponse response = (WebResponse)requestCycle.getResponse();
 
@@ -155,27 +126,9 @@ class SwitchProtocolRequestHandler implements IRequestHandlerDelegate
 	 *            required protocol
 	 * @param httpsConfig
 	 *            the https configuration
-	 * @return request target or {@code null}
-	 */
-	public static IRequestHandler requireProtocol(Protocol protocol, final HttpsConfig httpsConfig)
-	{
-		return requireProtocol(protocol, null, httpsConfig);
-	}
-
-	/**
-	 * Returns a target that can be used to redirect to the specified protocol. If no change is
-	 * required {@code null} will be returned.
-	 * 
-	 * @param protocol
-	 *            required protocol
-	 * @param handler
-	 *            request target to redirect to or {@code null} to redirect to current url
-	 * @param httpsConfig
-	 *            the https configuration
 	 * @return request handler or {@code null}
 	 */
-	public static IRequestHandler requireProtocol(Protocol protocol, IRequestHandler handler,
-		final HttpsConfig httpsConfig)
+	public static IRequestHandler requireProtocol(Protocol protocol, final HttpsConfig httpsConfig)
 	{
 		IRequestCycle requestCycle = RequestCycle.get();
 		WebRequest webRequest = (WebRequest)requestCycle.getRequest();
@@ -187,7 +140,7 @@ class SwitchProtocolRequestHandler implements IRequestHandlerDelegate
 		}
 		else
 		{
-			return new SwitchProtocolRequestHandler(protocol, handler, httpsConfig);
+			return new SwitchProtocolRequestHandler(protocol, httpsConfig);
 		}
 	}
 
@@ -196,9 +149,12 @@ class SwitchProtocolRequestHandler implements IRequestHandlerDelegate
 	{
 	}
 
-	/** {@inheritDoc} */
-	public IRequestHandler getDelegateHandler()
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
 	{
-		return handler;
+		return "SwitchProtocolRequestHandler";
 	}
 }
