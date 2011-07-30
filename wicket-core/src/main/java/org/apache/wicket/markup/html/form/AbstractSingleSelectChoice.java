@@ -297,6 +297,8 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 * 
 	 * Otherwise no additional default choice will be returned.
 	 * 
+	 * @see #getNullValidKey()
+	 * @see #getNullKey()
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#getDefaultChoice(String)
 	 */
 	@Override
