@@ -281,12 +281,14 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	}
 
 	/**
+	 * Get a default choice to be rendered additionally to the choices available in the model.
 	 * 
-	 * @param selected
-	 *            The object that's currently selected
+	 * @param selectedValue
+	 *            The currently selected value
 	 * @return Any default choice, such as "Choose One", depending on the subclass
+	 * @see #setChoices(IModel)
 	 */
-	protected CharSequence getDefaultChoice(final Object selected)
+	protected CharSequence getDefaultChoice(final String selectedValue)
 	{
 		return "";
 	}
@@ -333,15 +335,15 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	{
 		List<? extends E> choices = getChoices();
 		final AppendingStringBuffer buffer = new AppendingStringBuffer((choices.size() * 50) + 16);
-		final String selected = getValue();
+		final String selectedValue = getValue();
 
 		// Append default option
-		buffer.append(getDefaultChoice(selected));
+		buffer.append(getDefaultChoice(selectedValue));
 
 		for (int index = 0; index < choices.size(); index++)
 		{
 			final E choice = choices.get(index);
-			appendOptionHtml(buffer, choice, index, selected);
+			appendOptionHtml(buffer, choice, index, selectedValue);
 		}
 
 		buffer.append("\n");

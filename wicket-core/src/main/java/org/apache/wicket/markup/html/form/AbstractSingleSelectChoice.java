@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form;
 
 import java.util.List;
 
+import org.apache.wicket.Localizer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -39,10 +40,6 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 
 	/** String to display when the selected value is null and nullValid is false. */
 	private static final String CHOOSE_ONE = "Choose One";
-
-	protected static final Object NO_SELECTION_VALUE = "-1";
-
-	private static final String EMPTY_STRING = "";
 
 	/** whether or not null will be offered as a choice once a nonnull value is saved */
 	private boolean nullValid = false;
@@ -185,24 +182,6 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	}
 
 	/**
-	 * In case "-1" is not a suitable "no selection value", you may provide your own implementation
-	 * of getNoSelectionValue(). The return Object's toString() will be used as the
-	 * "no selection value". Object.equals() must return true when equal. Thus besides special
-	 * object, simply returning a String (e.g. "999") would be ok as well.
-	 * 
-	 * By default NO_SELECTION_VALUE will be returned.
-	 * 
-	 * By purpose there is no setter for the "no selection object". You should add the variable to
-	 * your subclass.
-	 * 
-	 * @return The "no selection object"
-	 */
-	protected Object getNoSelectionValue()
-	{
-		return NO_SELECTION_VALUE;
-	}
-
-	/**
 	 * @see FormComponent#getModelValue()
 	 */
 	@Override
@@ -214,8 +193,10 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 			int index = getChoices().indexOf(object);
 			return getChoiceRenderer().getIdValue(object, index);
 		}
-		Object noSelectionValue = getNoSelectionValue();
-		return noSelectionValue != null ? noSelectionValue.toString() : null;
+		else
+		{
+			return "";
+		}
 	}
 
 	/**
@@ -303,25 +284,24 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	}
 
 	/**
-	 * The localizer will be ask for the property to display Depending on if null is allowed or not
-	 * it will ask for:
+	 * Asks the {@link Localizer} for the property to display for an additional default choice
+	 * depending on {@link #isNullValid()}:
 	 * 
 	 * <ul>
-	 * <li>nullValid: when null is valid and by default it will show an empty string as a choice.</li>
-	 * <li>null: when null is not a valid choice and it will make a choice with "Choose One"</li>
+	 * <li>
+	 * "nullValid" if {@code null} is valid, defaulting to an empty string.</li>
+	 * <li>
+	 * "null" if {@code null} is not valid but no choice is selected (i.e. {@code selectedValue} is
+	 * empty), defaulting to "Choose one".</li>
 	 * </ul>
 	 * 
-	 * The choice for null is valid will always be returned. The choice when null is not valid will
-	 * only be returned if the selected object is null.
+	 * Otherwise no additional default choice will be returned.
 	 * 
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#getDefaultChoice(Object)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#getDefaultChoice(String)
 	 */
 	@Override
-	protected CharSequence getDefaultChoice(final Object selected)
+	protected CharSequence getDefaultChoice(final String selectedValue)
 	{
-
-		final Object noSelectionValue = getNoSelectionValue();
-
 		// Is null a valid selection value?
 		if (isNullValid())
 		{
@@ -340,22 +320,19 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 			buffer.append("\n<option");
 
 			// If null is selected, indicate that
-			if (selected == noSelectionValue)
+			if ("".equals(selectedValue))
 			{
 				buffer.append(" selected=\"selected\"");
 			}
 
 			// Add body of option tag
-			buffer.append(" value=\"" + noSelectionValue + "\">")
-				.append(option)
-				.append("</option>");
+			buffer.append(" value=\"\">").append(option).append("</option>");
 			return buffer;
 		}
 		else
 		{
 			// Null is not valid. Is it selected anyway?
-			if ((selected == null) || selected.equals(noSelectionValue) ||
-				selected.equals(EMPTY_STRING))
+			if ("".equals(selectedValue))
 			{
 				// Force the user to pick a non-null value
 				String option = getLocalizer().getStringIgnoreSettings(getNullKey(), this, null,
@@ -366,8 +343,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 					option = getLocalizer().getString("null", this, CHOOSE_ONE);
 				}
 
-				return "\n<option selected=\"selected\" value=\"" + noSelectionValue + "\">" +
-					option + "</option>";
+				return "\n<option selected=\"selected\" value=\"\">" + option + "</option>";
 			}
 		}
 		return "";

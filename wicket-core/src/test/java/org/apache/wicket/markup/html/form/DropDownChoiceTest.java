@@ -16,23 +16,66 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import java.util.Locale;
+
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.util.tester.FormTester;
 
 /**
  * @author Juergen Donnerstag
+ * @author svenmeier
  */
 public class DropDownChoiceTest extends WicketTestCase
 {
 
-	/**
-	 * Test Case for jira issue 1979
-	 */
-	public void test_1979()
+	@Override
+	protected void setUp() throws Exception
 	{
-		tester.startPage(DropDownChoiceTestPage.class);
+		super.setUp();
 
-		FormTester formTester = tester.newFormTester("form");
-		formTester.submit();
+		tester.getSession().setLocale(Locale.ENGLISH);
+	}
+
+	/**
+	 * Null model object with null not valid.
+	 * 
+	 * @throws Exception
+	 */
+	public void testNullWithNullValidFalse() throws Exception
+	{
+		executeTest(new DropDownChoiceTestPage(null, false),
+			"DropDownChoiceTestPage_null_false_expected.html");
+	}
+
+	/**
+	 * Null model object with null valid.
+	 * 
+	 * @throws Exception
+	 */
+	public void testNullWithNullValidTrue() throws Exception
+	{
+		executeTest(new DropDownChoiceTestPage(null, true),
+			"DropDownChoiceTestPage_null_true_expected.html");
+	}
+
+	/**
+	 * "A" model object with null not valid.
+	 * 
+	 * @throws Exception
+	 */
+	public void testNonNullWithNullValidFalse() throws Exception
+	{
+		executeTest(new DropDownChoiceTestPage("A", false),
+			"DropDownChoiceTestPage_A_false_expected.html");
+	}
+
+	/**
+	 * "A" model object with null valid.
+	 * 
+	 * @throws Exception
+	 */
+	public void testNonNullWithNullValidTrue() throws Exception
+	{
+		executeTest(new DropDownChoiceTestPage("A", true),
+			"DropDownChoiceTestPage_A_true_expected.html");
 	}
 }

@@ -16,10 +16,7 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.PropertyModel;
@@ -31,185 +28,26 @@ public class DropDownChoiceTestPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
-	/** */
-	public class DocumentType
-	{
-		private String name;
-		private boolean hasExpiryDate;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param name
-		 * @param expiryDate
-		 */
-		public DocumentType(String name, boolean expiryDate)
-		{
-			this.name = name;
-			hasExpiryDate = expiryDate;
-		}
-
-		/**
-		 * Gets name.
-		 * 
-		 * @return name
-		 */
-		public String getName()
-		{
-			return name;
-		}
-
-		/**
-		 * Sets name.
-		 * 
-		 * @param name
-		 *            name
-		 */
-		public void setName(String name)
-		{
-			this.name = name;
-		}
-
-		/**
-		 * Gets hasExpiryDate.
-		 * 
-		 * @return hasExpiryDate
-		 */
-		public boolean getHasExpiryDate()
-		{
-			return hasExpiryDate;
-		}
-
-		/**
-		 * Sets hasExpiryDate.
-		 * 
-		 * @param hasExpiryDate
-		 *            hasExpiryDate
-		 */
-		public void setHasExpiryDate(boolean hasExpiryDate)
-		{
-			this.hasExpiryDate = hasExpiryDate;
-		}
-	}
-
-	/**
-	 * 
-	 */
-	enum MyEnum {
-		A("a"), B("b"), C("c"), D("d"), E("e");
-
-		MyEnum(String text)
-		{
-		}
-	}
-
-	DocumentType dtype;
-
-	String myDate;
+	private String string = null;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param name
+	 * @param string
+	 *            selected string
+	 * @param nullValid
+	 *            is null valid
 	 */
-	public DropDownChoiceTestPage()
+	public DropDownChoiceTestPage(String string, boolean nullValid)
 	{
-		Form<String> form = new MyForm("form");
+		this.string = string;
+
+		Form<Void> form = new Form<Void>("form");
 		add(form);
 
-		DocumentType[] docTypes = new DocumentType[3];
-		docTypes[0] = new DocumentType("a", true);
-		docTypes[1] = new DocumentType("b", false);
-		docTypes[2] = new DocumentType("c", true);
-
-		List<DocumentType> docTypes2 = new ArrayList<DocumentType>();
-		docTypes2.add(new DocumentType("a", true));
-		docTypes2.add(new DocumentType("b", false));
-		docTypes2.add(new DocumentType("c", true));
-
-		// List<DocumentType> allDocumentTypes = docTypes2;
-		// List<DocumentType> allDocumentTypes = Arrays.asList(docTypes);
-		List<MyEnum> allDocumentTypes = Arrays.asList(MyEnum.values());
-
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		final DropDownChoice ddc = new DropDownChoice("dropdown", new PropertyModel(this, "dtype"),
-			allDocumentTypes, new ChoiceRenderer("name"));
-
-		TextField<Date> expiryDate = new TextField<Date>("text", new PropertyModel<Date>(this,
-			"myDate"), Date.class)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public boolean isRequired()
-			{
-				// ddc.validate();
-				DocumentType dt = (DocumentType)ddc.getConvertedInput();
-				return dt != null && dt.getHasExpiryDate();
-			}
-		};
-
+		final DropDownChoice<String> ddc = new DropDownChoice<String>("dropdown",
+			new PropertyModel<String>(this, "string"), Arrays.asList("A", "B", "C"));
+		ddc.setNullValid(nullValid);
 		form.add(ddc);
-		form.add(expiryDate);
-	}
-
-	/**
-	 * 
-	 */
-	public class MyForm extends Form<String>
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param id
-		 */
-		public MyForm(String id)
-		{
-			super(id);
-		}
-	}
-
-	/**
-	 * Gets dtype.
-	 * 
-	 * @return dtype
-	 */
-	public DocumentType getDtype()
-	{
-		return dtype;
-	}
-
-	/**
-	 * Sets dtype.
-	 * 
-	 * @param dtype
-	 *            dtype
-	 */
-	public void setDtype(DocumentType dtype)
-	{
-		this.dtype = dtype;
-	}
-
-	/**
-	 * Gets myDate.
-	 * 
-	 * @return myDate
-	 */
-	public String getMyDate()
-	{
-		return myDate;
-	}
-
-	/**
-	 * Sets myDate.
-	 * 
-	 * @param myDate
-	 *            myDate
-	 */
-	public void setMyDate(String myDate)
-	{
-		this.myDate = myDate;
 	}
 }
