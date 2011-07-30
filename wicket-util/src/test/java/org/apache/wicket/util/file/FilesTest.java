@@ -98,8 +98,8 @@ public class FilesTest extends Assert
 
 		File nonExistingFile = new File(
 			"/somethingThatDoesntExistsOnMostMachines-111111111111111111111111111111");
-		assertTrue("Even non existing file are scheduled for deletion.",
-			Files.removeFolderAsync(nonExistingFile, fileCleaner));
+		assertTrue("Even non existing file are scheduled for deletion.", Files.removeFolderAsync(
+			nonExistingFile, fileCleaner));
 		assertFalse(nonExistingFile.exists());
 
 		java.io.File file = java.io.File.createTempFile("wicket-test--", ".tmp");
@@ -110,8 +110,17 @@ public class FilesTest extends Assert
 		assertTrue("The file is scheduled for deletion.", Files.removeAsync(file, fileCleaner));
 		// give chance to the file cleaner to run and delete the folder
 		System.gc();
-		Thread.sleep(5);
-		assertFalse("", file.exists());
+		boolean exists = true;
+		for (int i = 0; i < 10; i++)
+		{
+			Thread.sleep(5);
+			if (!file.exists())
+			{
+				exists = false;
+				break;
+			}
+		}
+		assertFalse("The file no longer exists", exists);
 	}
 
 	/**
@@ -139,8 +148,8 @@ public class FilesTest extends Assert
 		file.createNewFile();
 		assertTrue(file.exists());
 
-		assertTrue("The folder is scheduled for deletion.",
-			Files.removeFolderAsync(folder, fileCleaner));
+		assertTrue("The folder is scheduled for deletion.", Files.removeFolderAsync(folder,
+			fileCleaner));
 		// give chance to the file cleaner to run and delete the folder
 		System.gc();
 		Thread.sleep(5);
