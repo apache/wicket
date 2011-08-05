@@ -1,5 +1,64 @@
 This file contains all changes done on the 1.4 version.
 
+Release Notes - Wicket - Version 1.4.18
+                
+** Bug
+    * WICKET-3023 - Ajax does not work with XHTML
+    * WICKET-3328 - Selection remains after removing collapsed node in the tree.
+    * WICKET-3449 - Tree doesn't update correctly
+    * WICKET-3471 - WicketTester checkUsability is called before the request has started
+    * WICKET-3520 - SHOW_NO_EXCEPTION_PAGE responding with HTTP status 500 is overwritten by redirect
+    * WICKET-3563 - Interaction betwen IAjaxRegionMarkupIdProvider, renderPlaceholderTag and visibility
+    * WICKET-3575 - ResourceLink uses the wrong PageMap, if used as a PopupLink
+    * WICKET-3586 - EnclosureContainer should honor relevantChild.determineVisibility
+    * WICKET-3587 - InspectorPage's RequestPage doesn't properly print the collected data
+    * WICKET-3605 - Ajax header-contribution omits IE conditional comments
+    * WICKET-3606 - wicket-ajax.js replaceOuterhtmlIE() fails when the page title has to be updated with Ajax
+    * WICKET-3615 - ModalWindow does not work in Opera 11.10 and MSIE 6
+    * WICKET-3616 - Wicket Tester behavior changed - Form Tester Ajax Submit clears already filled in TextField 
+    * WICKET-3650 - parentFolderPlaceholder default value in Settings implementation is inconsistent with the javadoc
+    * WICKET-3656 - Maven quickstart gives warnings about missing plugin versions
+    * WICKET-3666 - IValidationError should extend IClusterable
+    * WICKET-3668 - Session.getPageMaps is not thread safe.
+    * WICKET-3671 - ListItem partakes in stringresource key generation, resulting in formName.repeaterName.0.fieldName like keys.
+    * WICKET-3711 - FormTester doesn't treat SubmitLink and AjaxSubmitLink correctly
+    * WICKET-3715 - FileUpload writeToTempFile() method throws NPE for sessionless requests
+    * WICKET-3727 - MultiFileUploadField internationalisation does not work
+    * WICKET-3739 - wicket-datetime datepicker fails to display calendar with js error in calendar.js:3225 in IE8
+    * WICKET-3766 - Strings#escapeMarkup() creates invalid XML for control characters
+    * WICKET-3774 - html file are not encoding to utf-8
+    * WICKET-3779 - Session MetaData changes aren't synchronized and don't call dirty()
+    * WICKET-3780 - Warning text outdated in InheritedMarkupMarkupLoader
+    * WICKET-3820 - New Chrome merges text in replaceOuterHtml, breaking wicket-ajax
+    * WICKET-3840 - AjaxSubmitLink does not respect its getForm()
+    * WICKET-3842 - The wicket:enclosure attribute doesn't work properly
+    * WICKET-3843 - NPE with wicket:enclosure attribute and hierarchy mismatch
+    * WICKET-3868 - Feedback message should be handled the same way everywhere.
+    * WICKET-3872 - MarkupContainer.removeAll() does not detach models recursively
+    * WICKET-3887 - Problems concerning IE9 with &quot;ActiveX Filtering&quot; enabled
+    * WICKET-3921 - No HTTP response cache headers are set in Wicket Ajax redirects
+            
+** Improvement
+    * WICKET-3446 - Upgrade to new Guice 3.0
+    * WICKET-3550 - Make Select component generic
+    * WICKET-3580 - Remove ISortStateLocator.setSortState() method.
+    * WICKET-3585 - Let AbstractResourceStreamWriter implement empty getContentType()
+    * WICKET-3607 - make ModalWindow CSS contibution more configurable
+    * WICKET-3630 - Patch to make ModalWindow's WindowClosedBehavior extensible
+    * WICKET-3709 - SignInPanel shouldn't hard code input field size
+    * WICKET-3710 - org/ apache/wicket/markup/html/tree/AbstractTree.java treeNodesRemoved loops forever
+    * WICKET-3856 - Relax wicket:enclosure warning suggesting the usage of EnclosureContainer
+    * WICKET-3873 - Allow validators to detach by mixing in IDetachable
+    * WICKET-3895 - Ignore the exception when closing a connection used to get the resource last modification time
+    * WICKET-3903 - Split AutoLabelResolver into wicket:for and wicket:label
+    * WICKET-3904 - Error Message Typo - should be <head> element not header
+    
+** New Feature
+    * WICKET-1469 - New Wicket tag 'wicket:for'
+    * WICKET-3738 - Provide an API for retrieving form component label when one is not set via setLabel(IModel)
+    * WICKET-3857 - Allow validators access to component's model
+
+
 Release Notes - Wicket - Version 1.4.17
 
 ** Sub-task
