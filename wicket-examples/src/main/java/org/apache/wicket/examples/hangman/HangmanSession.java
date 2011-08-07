@@ -45,6 +45,7 @@ public class HangmanSession extends WebSession
 	 */
 	public Game getGame()
 	{
+		bind();
 		return game;
 	}
 }
