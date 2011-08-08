@@ -127,10 +127,7 @@ public class Visits
 	private static final <S, R> void visitChildren(final Iterable<? super S> container,
 		final IVisitor<S, R> visitor, final IVisitFilter filter, final Visit<R> visit)
 	{
-		if (visitor == null)
-		{
-			throw new IllegalArgumentException("argument visitor may not be null");
-		}
+		Args.notNull(visitor, "visitor");
 
 		// Iterate through children of this container
 		for (final Object child : container)
