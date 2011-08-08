@@ -639,33 +639,8 @@ public final class Url implements Serializable
 	public String toString(final Charset charset)
 	{
 		StringBuilder result = new StringBuilder();
-		boolean first = true;
-		for (String s : getSegments())
-		{
-			if (!first)
-			{
-				result.append('/');
-			}
-			first = false;
-			result.append(encodeSegment(s, charset));
-		}
-
-		first = true;
-
-		for (QueryParameter p : getQueryParameters())
-		{
-			if (first)
-			{
-				result.append("?");
-				first = false;
-			}
-			else
-			{
-				result.append("&");
-			}
-			result.append(p.toString(charset));
-		}
-
+		result.append(getPath(charset));
+		result.append(getQueryString(charset));
 		return result.toString();
 	}
 
@@ -987,5 +962,74 @@ public final class Url implements Serializable
 	public void setHost(final String host)
 	{
 		this.host = host;
+	}
+	
+	/**
+	 * return path for current url in given encoding 
+	 * 
+	 * @param charset
+	 *           character set for encoding
+	 *           
+	 * @return path string
+	 */
+	public String getPath(Charset charset)
+	{
+		Args.notNull(charset, "charset");
+
+		StringBuilder path = new StringBuilder();
+		boolean slash = false;
+
+		for (String segment : getSegments())
+		{
+			if (slash)
+			{
+				path.append('/');
+			}
+			path.append(encodeSegment(segment, charset));
+			slash = true;
+		}
+		return path.toString();
+	}
+
+	/**
+	 * return path for current url in original encoding 
+	 * 
+	 * @return path string
+	 */
+	public String getPath()
+	{
+		return getPath(getCharset());
+	}
+
+	/**
+	 * return query string part of url in given encoding
+	 * 
+	 * @param charset
+	 *          character set for encoding
+	 * 
+	 * @return query string
+	 */
+	public String getQueryString(Charset charset)
+	{
+		Args.notNull(charset, "charset");
+
+		StringBuilder query = new StringBuilder();
+
+		for (QueryParameter parameter : getQueryParameters())
+		{
+			query.append(query.length() == 0 ? '?' : '&');
+			query.append(parameter.toString(charset));
+		}
+		return query.toString();
+	}
+
+	/**
+	 * return query string part of url in original encoding
+	 * 
+	 * @return query string
+	 */
+	public String getQueryString()
+	{
+		return getQueryString(getCharset());
 	}
 }

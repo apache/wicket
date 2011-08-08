@@ -348,6 +348,16 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
+	 * Get the current character set.
+	 * 
+	 * @return The character set
+	 */
+	public Charset getCharset()
+	{
+		return Charset.forName(characterEncoding);
+	}
+	
+	/**
 	 * true will force Request generate multiPart ContentType and ContentLength
 	 * 
 	 * @param useMultiPartContentType
@@ -777,14 +787,12 @@ public class MockHttpServletRequest implements HttpServletRequest
 				{
 					if (name != null)
 					{
-						buf.append(UrlEncoder.QUERY_INSTANCE.encode(name,
-							Charset.forName(getCharacterEncoding())));
+						buf.append(UrlEncoder.QUERY_INSTANCE.encode(name, getCharset()));
 					}
 					buf.append('=');
 					if (values[i] != null)
 					{
-						buf.append(UrlEncoder.QUERY_INSTANCE.encode(values[i],
-							Charset.forName(getCharacterEncoding())));
+						buf.append(UrlEncoder.QUERY_INSTANCE.encode(values[i], getCharset()));
 					}
 					if (i + 1 < values.length)
 					{
@@ -949,12 +957,19 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Sets the scheme of this request
+	 * <p/>
+	 * set the <code>secure</code> flag accordingly 
+	 * (<code>true</code> for 'https', <code>false</code> otherwise) 
 	 * 
 	 * @param scheme
+	 *          protocol scheme (e.g. https, http, ftp)
+	 * 
+	 * @see #isSecure() 
 	 */
 	public void setScheme(String scheme)
 	{
 		this.scheme = scheme;
+		this.secure = "https".equalsIgnoreCase(scheme);
 	}
 
 	/**
@@ -1290,7 +1305,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void setPath(final String path)
 	{
-		this.path = UrlDecoder.PATH_INSTANCE.decode(path, Charset.forName(getCharacterEncoding()));
+		this.path = UrlDecoder.PATH_INSTANCE.decode(path, getCharset());
 	}
 
 	/**
@@ -1300,46 +1315,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void setURL(String url)
 	{
-		if (url.startsWith("http://"))
-		{
-			int index = url.indexOf("/", 7);
-			url = url.substring(index);
-		}
-		if (!url.startsWith("/"))
-		{
-			url = getContextPath() + getServletPath() + "/" + url;
-		}
-		this.url = url;
-		if (url.startsWith(getContextPath()))
-		{
-			url = url.substring(getContextPath().length());
-		}
-		if (url.startsWith(getServletPath()))
-		{
-			url = url.substring(getServletPath().length());
-		}
-
-		int index = url.indexOf("?");
-		if (index == -1)
-		{
-			setPath(url);
-		}
-		else
-		{
-			setPath(url.substring(0, index));
-
-			String queryString = url.substring(index + 1);
-/*
- * We can't clear the parameters here because users may have set custom parameters in request. An
- * better place to clear they is when tester setups the next request cycle
- */
-// parameters.clear();
-			for (QueryParameter parameter : Url.parse("?" + queryString,
-				Charset.forName(getCharacterEncoding())).getQueryParameters())
-			{
-				addParameter(parameter.getName(), parameter.getValue());
-			}
-		}
+		setUrl(Url.parse(url));
 	}
 
 // /**
@@ -1660,7 +1636,48 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void setUrl(Url url)
 	{
-		setURL(url.toString());
+		if (url.getProtocol() != null)
+		{
+			setScheme(url.getProtocol());
+		}
+		if (url.getHost() != null)
+		{
+			serverName = url.getHost();
+		}
+		if (url.getPort() != null)
+		{
+			serverPort = url.getPort();
+		}
+		String path = url.getPath(getCharset());
+
+		if (path.startsWith("/") == false)
+		{
+			path = getContextPath() + getServletPath() + '/' + path;
+		}
+		this.url = path;
+		
+		if (path.startsWith(getContextPath()))
+		{
+			path = path.substring(getContextPath().length());
+		}
+		if (path.startsWith(getServletPath()))
+		{
+			path = path.substring(getServletPath().length());
+		}
+
+		setPath(path);
+
+		//
+		// We can't clear the parameters here because users may have set custom 
+		// parameters in request. An better place to clear they is when tester 
+		// setups the next request cycle
+		//
+		// parameters.clear();
+		
+		for (QueryParameter parameter : url.getQueryParameters())
+		{
+			addParameter(parameter.getName(), parameter.getValue());
+		}
 	}
 
 	/**
@@ -1668,9 +1685,12 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public Url getUrl()
 	{
-		String url = getRequestURI();
-		url += "?" + getQueryString();
-		return Url.parse(url, Charset.forName(getCharacterEncoding()));
+		String urlString = getRequestURI() + '?' + getQueryString();
+		Url url = Url.parse(urlString, getCharset());
+		url.setProtocol(scheme);
+		url.setHost(serverName);
+		url.setPort(serverPort);
+		return url;
 	}
 
 	/**
