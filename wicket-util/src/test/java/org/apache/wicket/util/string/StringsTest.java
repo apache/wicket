@@ -40,7 +40,7 @@ public class StringsTest extends TestCase
 	 */
 	public void testLogger()
 	{
-		log.error("Test: '{}'", 1);
+		log.debug("Test: '{}'", 1);
 
 		try
 		{
@@ -48,7 +48,7 @@ public class StringsTest extends TestCase
 		}
 		catch (Exception ex)
 		{
-			log.error("Test: '{}'", 1, ex);
+			log.debug("Test: '{}'", 1, ex);
 		}
 
 		try
@@ -57,7 +57,7 @@ public class StringsTest extends TestCase
 		}
 		catch (Exception ex)
 		{
-			log.error("Test: '{}'", 321, ex);
+			log.debug("Test: '{}'", 321, ex);
 		}
 	}
 
