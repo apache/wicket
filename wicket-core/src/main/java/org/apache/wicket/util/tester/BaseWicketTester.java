@@ -16,7 +16,8 @@
  */
 package org.apache.wicket.util.tester;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.fail;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -70,6 +71,7 @@ import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.ContainerInfo;
 import org.apache.wicket.markup.IMarkupFragment;
+import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.html.WebPage;
@@ -1271,7 +1273,6 @@ public class BaseWicketTester
 			fail("The automatically created page should not be null.");
 		}
 
-
 		// Automatically create the page markup if not provided
 		if (pageMarkup == null)
 		{
@@ -1280,16 +1281,19 @@ public class BaseWicketTester
 			{
 				fail("The markup for the automatically created page should not be null.");
 			}
-			markup = "<html><head></head><body>" + markup + "</body></html>";
 
-			// set a ContainerInfo to be able to use HtmlHeaderContainer so header contribution
-			// still work. WICKET-3700
-			ContainerInfo containerInfo = new ContainerInfo(page);
-			MarkupResourceStream markupResourceStream = new MarkupResourceStream(
-				new StringResourceStream(markup), containerInfo, page.getClass());
 			try
 			{
-				pageMarkup = new MarkupParser(markupResourceStream).parse();
+				// set a ContainerInfo to be able to use HtmlHeaderContainer so header contribution
+				// still work. WICKET-3700
+				ContainerInfo containerInfo = new ContainerInfo(page);
+				MarkupResourceStream markupResourceStream = new MarkupResourceStream(
+					new StringResourceStream(markup), containerInfo, page.getClass());
+
+				MarkupParser markupParser = getApplication().getMarkupSettings()
+					.getMarkupFactory()
+					.newMarkupParser(markupResourceStream);
+				pageMarkup = markupParser.parse();
 			}
 			catch (Exception e)
 			{
@@ -1320,7 +1324,8 @@ public class BaseWicketTester
 	 */
 	protected String createPageMarkup(final String componentId)
 	{
-		return "<span wicket:id='" + componentId + "'></span>";
+		return "<html><head></head><body><span wicket:id='" + componentId +
+			"'></span></body></html>";
 	}
 
 	/**
@@ -1331,10 +1336,42 @@ public class BaseWicketTester
 	 */
 	protected Page createPage()
 	{
-		return new WebPage()
+		return new StartComponentInPage();
+	}
+
+	/**
+	 * A page that is used as the automatically created page for
+	 * {@link BaseWicketTester#startComponentInPage(Class)} and the other variations.
+	 * <p>
+	 * This page caches the generated markup so that it is available even after
+	 * {@link Component#detach()} where the {@link Component#markup component's markup cache} is
+	 * cleared.
+	 */
+	public static class StartComponentInPage extends WebPage
+	{
+		private IMarkupFragment pageMarkup = null;
+
+		@Override
+		public IMarkupFragment getMarkup()
 		{
-			private static final long serialVersionUID = 1L;
-		};
+			IMarkupFragment calculatedMarkup = null;
+			if (pageMarkup == null)
+			{
+				IMarkupFragment markup = super.getMarkup();
+				if (markup != null && markup != Markup.NO_MARKUP)
+				{
+					calculatedMarkup = markup;
+					pageMarkup = markup;
+				}
+			}
+			else
+			{
+				calculatedMarkup = pageMarkup;
+			}
+
+			return calculatedMarkup;
+		}
+
 	}
 
 	/**

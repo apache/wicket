@@ -40,7 +40,8 @@ public class SimplePageTest extends WicketTestCase
 	}
 
 	/**
-	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3670">WICKET-3670</a>
+	 * https://issues.apache.org/jira/browse/WICKET-3700
+	 * 
 	 * @throws Exception
 	 */
 	public void testRenderHomePageWithHeaderContribution() throws Exception

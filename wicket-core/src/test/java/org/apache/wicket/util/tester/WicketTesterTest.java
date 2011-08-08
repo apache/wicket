@@ -985,4 +985,14 @@ public class WicketTesterTest extends WicketTestCase
 		tester.assertRenderedPage(DummyHomePage.class);
 		tester.assertComponent("testPage", TestLink.class);
 	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-3940
+	 */
+	@Test
+	public void testRerenderComponentInPage()
+	{
+		tester.startComponentInPage(new Label("testLabel"));
+		tester.startPage(tester.getLastRenderedPage());
+	}
 }
