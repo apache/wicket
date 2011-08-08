@@ -40,6 +40,8 @@ import org.apache.wicket.util.lang.PackageName;
 public class PackageMapperTest extends AbstractMapperTest
 {
 
+	private static final String ALIAS = "alias";
+
 	/**
 	 * Construct.
 	 */
@@ -57,6 +59,46 @@ public class PackageMapperTest extends AbstractMapperTest
 	};
 
 	private static final String PAGE_CLASS_NAME = MockPage.class.getSimpleName();
+
+	private final PackageMapper aliasEncoder = new PackageMapper(
+		PackageName.forClass(MockPage.class))
+	{
+		@Override
+		protected IMapperContext getContext()
+		{
+			return context;
+		}
+
+		@Override
+		protected String transformFromUrl(String classNameAlias)
+		{
+			final String realClassName;
+			if (ALIAS.equals(classNameAlias))
+			{
+				realClassName = PAGE_CLASS_NAME;
+			}
+			else
+			{
+				realClassName = super.transformFromUrl(classNameAlias);
+			}
+			return realClassName;
+		}
+
+		@Override
+		protected String transformForUrl(String className)
+		{
+			final String alias;
+			if (PAGE_CLASS_NAME.equals(className))
+			{
+				alias = ALIAS;
+			}
+			else
+			{
+				alias = super.transformForUrl(className);
+			}
+			return alias;
+		}
+	};
 
 	/**
 	 * 
@@ -461,4 +503,35 @@ public class PackageMapperTest extends AbstractMapperTest
 		assertTrue(page.getPageParameters().getNamedKeys().isEmpty());
 	}
 
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-3941
+	 */
+	public void testEncodeAlias()
+	{
+		MockPage page = new MockPage(15);
+		page.setBookmarkable(true);
+		page.setCreatedBookmarkable(true);
+		page.setPageStateless(true);
+
+		IPageProvider provider = new PageProvider(page);
+		IRequestHandler handler = new RenderPageRequestHandler(provider);
+
+		Url url = aliasEncoder.mapHandler(handler);
+
+		assertEquals(ALIAS, url.toString());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-3941
+	 */
+	public void testDecodeAlias()
+	{
+		Url url = Url.parse(ALIAS + "?15");
+		IRequestHandler handler = aliasEncoder.mapRequest(getRequest(url));
+
+		assertTrue(handler instanceof RenderPageRequestHandler);
+		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
+		checkPage(page, 15);
+		assertEquals(PAGE_CLASS_NAME, page.getClass().getSimpleName());
+	}
 }

@@ -114,6 +114,7 @@ public class PackageMapper extends AbstractBookmarkableMapper
 			{
 				packageRelativeClassName = fullyQualifiedClassName.substring(packageNameLength + 1);
 			}
+			packageRelativeClassName = transformForUrl(packageRelativeClassName);
 			url.getSegments().add(packageRelativeClassName);
 			encodePageComponentInfo(url, info.getPageComponentInfo());
 			return encodePageParameters(url, info.getPageParameters(), pageParametersEncoder);
@@ -136,6 +137,7 @@ public class PackageMapper extends AbstractBookmarkableMapper
 
 			// load the page class
 			String className = url.getSegments().get(0);
+			className = transformFromUrl(className);
 			String fullyQualifiedClassName = packageName.getName() + '.' + className;
 			Class<? extends IRequestablePage> pageClass = getPageClass(fullyQualifiedClassName);
 
@@ -150,6 +152,32 @@ public class PackageMapper extends AbstractBookmarkableMapper
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Gives a chance to specializations of this mapper to transform the alias of the class name to
+	 * the real class name
+	 * 
+	 * @param classNameAlias
+	 *            the alias for the class name
+	 * @return the real class name
+	 */
+	protected String transformFromUrl(final String classNameAlias)
+	{
+		return classNameAlias;
+	}
+
+	/**
+	 * Gives a chance to specializations of this mapper to transform the real class name to an alias
+	 * which is prettier to represent in the Url
+	 * 
+	 * @param className
+	 *            the real class name
+	 * @return the class name alias
+	 */
+	protected String transformForUrl(final String className)
+	{
+		return className;
 	}
 
 	/**
