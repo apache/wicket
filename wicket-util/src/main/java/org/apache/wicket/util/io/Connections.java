@@ -57,6 +57,7 @@ public class Connections
 
 		// otherwise open the url and proceed
 		URLConnection connection = url.openConnection();
+		connection.setDoInput(false);
 
 		final long milliseconds;
 
@@ -67,6 +68,7 @@ public class Connections
 				JarURLConnection jarUrlConnection = (JarURLConnection)connection;
 				URL jarFileUrl = jarUrlConnection.getJarFileURL();
 				URLConnection jarFileConnection = jarFileUrl.openConnection();
+				jarFileConnection.setDoInput(false);
 				// get timestamp from JAR
 				milliseconds = jarFileConnection.getLastModified();
 			}
