@@ -354,11 +354,11 @@ public class MarkupCache implements IMarkupCache
 	 * instance.
 	 * 
 	 * @param locationString
-	 *            If null, than ignore the cache
+	 *            If {@code null} then ignore the cache
 	 * @param container
 	 *            The container this markup is for.
 	 * @param markup
-	 * @return markup The markup provided, except if the cacheKey already existed in the cache, than
+	 * @return markup The markup provided, except if the cacheKey already existed in the cache, then
 	 *         the markup from the cache is provided.
 	 */
 	protected Markup putIntoCache(final String locationString, final MarkupContainer container,
