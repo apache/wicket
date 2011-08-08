@@ -123,23 +123,23 @@ public interface IObjectStreamFactory
 					{
 						oos.writeObject(obj);
 					}
-					catch (IOException e)
+					catch (NotSerializableException nsx)
 					{
 						if (SerializableChecker.isAvailable())
 						{
 							// trigger serialization again, but this time gather
 							// some more info
-							new SerializableChecker((NotSerializableException)e).writeObject(obj);
+							new SerializableChecker(nsx).writeObject(obj);
 							// if we get here, we didn't fail, while we
 							// should;
-							throw e;
+							throw nsx;
 						}
-						throw e;
+						throw nsx;
 					}
-					catch (RuntimeException e)
+					catch (Exception e)
 					{
 						log.error("error writing object " + obj + ": " + e.getMessage(), e);
-						throw e;
+						throw new WicketRuntimeException(e);
 					}
 				}
 
