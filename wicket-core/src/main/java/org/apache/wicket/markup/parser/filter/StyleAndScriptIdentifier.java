@@ -33,8 +33,6 @@ import org.apache.wicket.util.string.JavaScriptUtils;
  */
 public final class StyleAndScriptIdentifier extends AbstractMarkupFilter
 {
-	private boolean found;
-
 	private final Markup markup;
 
 	/**
