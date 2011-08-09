@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.request.resource;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentMap;
 
@@ -26,7 +24,6 @@ import org.apache.wicket.Session;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 
 /**
@@ -112,7 +109,7 @@ public class PackageResourceReference extends ResourceReference
 		}
 	}
 
-	private StreamInfo lookupStream(Locale locale, String style, String variation)
+	private UrlAttributes getUrlAttributes(Locale locale, String style, String variation)
 	{
 		IResourceStreamLocator locator = Application.get()
 			.getResourceSettings()
@@ -124,19 +121,9 @@ public class PackageResourceReference extends ResourceReference
 			null, false);
 
 		if (stream == null)
-			return null;
+			return new UrlAttributes(null, null, null);
 
-		return new StreamInfo(stream);
-	}
-
-	private UrlAttributes getUrlAttributes(Locale locale, String style, String variation)
-	{
-		StreamInfo info = lookupStream(locale, style, variation);
-
-		if (info != null)
-			return new UrlAttributes(info.locale, info.style, info.variation);
-
-		return new UrlAttributes(null, null, null);
+		return new UrlAttributes(stream.getLocale(), stream.getStyle(), stream.getVariation());
 	}
 
 	private Locale getCurrentLocale()
@@ -147,25 +134,6 @@ public class PackageResourceReference extends ResourceReference
 	private String getCurrentStyle()
 	{
 		return getStyle() != null ? getStyle() : Session.get().getStyle();
-	}
-
-	private StreamInfo getCurrentStreamInfo()
-	{
-		return lookupStream(getCurrentLocale(), getCurrentStyle(), getVariation());
-	}
-
-	public InputStream openInputStream() throws IOException
-	{
-		try
-		{
-			return getCurrentStreamInfo().getStream().getInputStream();
-		}
-		catch (ResourceStreamNotFoundException e)
-		{
-			IOException exception = new IOException(e.getMessage());
-			exception.initCause(e);
-			throw exception;
-		}
 	}
 	
 	@Override
@@ -189,54 +157,5 @@ public class PackageResourceReference extends ResourceReference
 		}
 
 		return value;
-	}
-	
-	public static class StreamInfo
-	{
-		private final IResourceStream stream;
-		private final Locale locale;
-		private final String style;
-		private final String variation;
-
-		public StreamInfo(IResourceStream stream)
-		{
-			this.stream = stream;
-			this.locale = stream.getLocale();
-			this.style = stream.getStyle();
-			this.variation = stream.getVariation();
-		}
-
-		public IResourceStream getStream()
-		{
-			return stream;
-		}
-
-		public Locale getLocale()
-		{
-			return locale;
-		}
-
-		public String getStyle()
-		{
-			return style;
-		}
-
-		public String getVariation()
-		{
-			return variation;
-		}
-
-		@Override
-		public String toString()
-		{
-			final StringBuilder sb = new StringBuilder();
-			sb.append("StreamInfo");
-			sb.append("{stream=").append(stream);
-			sb.append(", locale=").append(locale);
-			sb.append(", style='").append(style).append('\'');
-			sb.append(", variation='").append(variation).append('\'');
-			sb.append('}');
-			return sb.toString();
-		}
 	}
 }
