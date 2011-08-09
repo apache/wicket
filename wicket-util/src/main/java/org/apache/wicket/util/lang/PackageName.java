@@ -62,9 +62,6 @@ public class PackageName implements IClusterable
 		this.name = name;
 	}
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(final Object that)
 	{
@@ -73,6 +70,15 @@ public class PackageName implements IClusterable
 			return ((PackageName)that).name.equals(name);
 		}
 		return false;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
 	}
 
 	/**
