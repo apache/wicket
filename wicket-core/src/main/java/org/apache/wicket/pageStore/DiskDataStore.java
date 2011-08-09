@@ -79,8 +79,14 @@ public class DiskDataStore implements IDataStore
 
 		try
 		{
-			this.fileStoreFolder.mkdirs();
-			loadIndex();
+			if (this.fileStoreFolder.exists() || this.fileStoreFolder.mkdirs())
+			{
+				loadIndex();
+			}
+			else
+			{
+				log.warn("Cannot create file store folder for some reason.");
+			}
 		}
 		catch (SecurityException e)
 		{
