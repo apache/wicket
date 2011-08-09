@@ -18,8 +18,10 @@ package org.apache.wicket.request.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.util.io.ByteArrayOutputStream;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
@@ -33,8 +35,9 @@ import org.slf4j.LoggerFactory;
  * 
  * @author almaw
  */
-public class ContextRelativeResource extends AbstractResource
+public class ContextRelativeResource extends AbstractResource implements IStaticCacheableResource
 {
+	private static final String CACHE_PREFIX = "context-relative:/";
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger log = LoggerFactory.getLogger(ContextRelativeResource.class);
@@ -60,7 +63,17 @@ public class ContextRelativeResource extends AbstractResource
 		}
 		path = pathRelativeToContextRoot;
 	}
+	
+	public Serializable getCacheKey()
+	{
+		return CACHE_PREFIX + path;
+	}
 
+	public WebExternalResourceStream getResourceStream()
+	{
+		return new WebExternalResourceStream(path);
+	}
+	
 	@Override
 	protected ResourceResponse newResourceResponse(final Attributes attributes)
 	{
@@ -68,9 +81,7 @@ public class ContextRelativeResource extends AbstractResource
 
 		if (resourceResponse.dataNeedsToBeWritten(attributes))
 		{
-			final WebExternalResourceStream webExternalResourceStream = new WebExternalResourceStream(
-				path);
-
+			final WebExternalResourceStream webExternalResourceStream = getResourceStream();
 			resourceResponse.setContentType(webExternalResourceStream.getContentType());
 			resourceResponse.setLastModified(webExternalResourceStream.lastModifiedTime());
 			resourceResponse.setFileName(path);
@@ -135,6 +146,4 @@ public class ContextRelativeResource extends AbstractResource
 			return false;
 		return true;
 	}
-
-
 }

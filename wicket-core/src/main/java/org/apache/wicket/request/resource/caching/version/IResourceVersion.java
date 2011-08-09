@@ -16,13 +16,12 @@
  */
 package org.apache.wicket.request.resource.caching.version;
 
-import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 
 /**
- * Provides a version string for a resource specified by {@link ResourceReference} 
+ * Provides a version string for a cacheable resource specified by {@link org.apache.wicket.request.resource.caching.IStaticCacheableResource} 
  * <p/>
- * the version string will be used as a caching key for resources
+ * the version string will be used as a distinguishing mark when rendering resources
  * 
  * @see org.apache.wicket.request.resource.caching.QueryStringWithVersionResourceCachingStrategy
  * @see org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy
@@ -36,9 +35,10 @@ public interface IResourceVersion
 	/**
 	 * get unique string identifying the version of the resource
 	 * 
-	 * @param resourceReference
-	 *             reference to package resource
-	 * @return unique version string
+	 * @param resource
+	 *             cacheable resource
+	 * @return unique version string or <code>null</code> 
+	 *         if version string could not be calculated
 	 */
-	String getVersion(PackageResourceReference resourceReference);
+	String getVersion(IStaticCacheableResource resource);
 }

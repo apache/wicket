@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.resource;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentMap;
 
@@ -24,8 +26,8 @@ import org.apache.wicket.Session;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
-import org.apache.wicket.util.time.Time;
 
 /**
  * TODO javadoc
@@ -147,22 +149,23 @@ public class PackageResourceReference extends ResourceReference
 		return getStyle() != null ? getStyle() : Session.get().getStyle();
 	}
 
-	@Override
-	public Time getLastModified()
-	{
-		StreamInfo info = lookupStream(getCurrentLocale(), getCurrentStyle(), getVariation());
-
-		if (info == null)
-			return null;
-
-		return info.stream.lastModifiedTime();
-	}
-
-	public StreamInfo getCurrentStreamInfo()
+	private StreamInfo getCurrentStreamInfo()
 	{
 		return lookupStream(getCurrentLocale(), getCurrentStyle(), getVariation());
 	}
 
+	public InputStream openInputStream() throws IOException
+	{
+		try
+		{
+			return getCurrentStreamInfo().getStream().getInputStream();
+		}
+		catch (ResourceStreamNotFoundException e)
+		{
+			throw new IOException(e.getMessage(), e);
+		}
+	}
+	
 	@Override
 	public UrlAttributes getUrlAttributes()
 	{

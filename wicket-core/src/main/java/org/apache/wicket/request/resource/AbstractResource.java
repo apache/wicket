@@ -30,6 +30,8 @@ import org.apache.wicket.request.HttpHeaderCollection;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
+import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Args;
@@ -460,6 +462,11 @@ public abstract class AbstractResource implements IResource
 		}
 	}
 
+	protected IResourceCachingStrategy getCachingStrategy()
+	{
+		return Application.get().getResourceSettings().getCachingStrategy();
+	}
+
 	/**
 	 * 
 	 * @see org.apache.wicket.request.resource.IResource#respond(org.apache.wicket.request.resource.IResource.Attributes)
@@ -468,6 +475,13 @@ public abstract class AbstractResource implements IResource
 	{
 		// Get a "new" ResourceResponse to write a response
 		ResourceResponse data = newResourceResponse(attributes);
+
+		// let caching strategy decorate response if resource is intended to be cached
+		if (this instanceof IStaticCacheableResource)
+		{
+			getCachingStrategy().decorateResponse(data, (IStaticCacheableResource)this);
+		}
+		// set response header
 		setResponseHeaders(data, attributes);
 
 		if (!data.dataNeedsToBeWritten(attributes) || data.getErrorCode() != null)

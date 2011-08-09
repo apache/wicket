@@ -16,11 +16,15 @@
  */
 package org.apache.wicket.request.resource.caching.version;
 
-import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.time.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Uses the last modified timestamp of a {@link PackageResourceReference} 
+ * Uses the last modified timestamp of a {@link org.apache.wicket.request.resource.caching.IStaticCacheableResource} 
  * converted to milliseconds as a version string.
  *
  * @author Peter Ertl
@@ -29,10 +33,19 @@ import org.apache.wicket.util.time.Time;
  */
 public class LastModifiedResourceVersion implements IResourceVersion
 {
-	public String getVersion(PackageResourceReference resourceReference)
+	private static final Logger log = LoggerFactory.getLogger(LastModifiedResourceVersion.class);
+	
+	public String getVersion(IStaticCacheableResource resource)
 	{
 		// get last modified timestamp of resource
-		final Time lastModified = resourceReference.getLastModified();
+		IResourceStream stream = resource.getResourceStream();
+
+		if (stream == null)
+		{
+			return null;
+		}
+
+		final Time lastModified = stream.lastModifiedTime();
 
 		// if no timestamp is available we can not provide a version
 		if (lastModified == null)

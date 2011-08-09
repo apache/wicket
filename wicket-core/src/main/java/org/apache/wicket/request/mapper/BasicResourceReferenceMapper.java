@@ -25,8 +25,9 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.MetaInfStaticResourceReference;
-import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
@@ -93,9 +94,8 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 			{
 				String segment = url.getSegments().get(i);
 
-				// if timestamps are enabled the last segment (=resource name)
-				// should be stripped of timestamps
-				if (i + 1 == segmentsSize)
+				// remove caching information
+				if (i + 1 == segmentsSize && Strings.isEmpty(segment) == false)
 				{
 					// The filename + parameters eventually contain caching
 					// related information which needs to be removed
@@ -105,9 +105,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 
 					if (Strings.isEmpty(segment))
 					{
-						log.debug("Caching strategy {} returned an empty name, not mapping {}",
-							getCachingStrategy().getClass().getName(), url);
-						return null;
+						throw new IllegalStateException("caching strategy returned empty name for " + resourceUrl);
 					}
 				}
 				if (name.length() > 0)
@@ -199,27 +197,24 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 			{
 				String token = tokens.nextToken();
 
-				// on the last component of the resource path add a version string ...
-				if (tokens.hasMoreTokens() == false)
+				// on the last component of the resource path
+				if (tokens.hasMoreTokens() == false && Strings.isEmpty(token) == false)
 				{
-					// ... but only for package resources
-					if (reference instanceof PackageResourceReference)
+					final IResource resource = reference.getResource();
+
+					// apply caching if required
+					if (resource instanceof IStaticCacheableResource)
 					{
-						final PackageResourceReference pkgref = (PackageResourceReference)reference;
+						// add caching related information to filename + query parameters
+						final IStaticCacheableResource cacheable = (IStaticCacheableResource)resource;
 						final ResourceUrl resourceUrl = new ResourceUrl(token, parameters);
-						getCachingStrategy().decorateUrl(resourceUrl, pkgref);
+						getCachingStrategy().decorateUrl(resourceUrl, cacheable);
 						token = resourceUrl.getFileName();
 
 						if (Strings.isEmpty(token))
 						{
-							log.debug("Caching strategy {} returned an empty name, not mapping {}",
-								getCachingStrategy().getClass().getName(), url);
-							return null;
+							throw new IllegalStateException("caching strategy returned empty name for " + resource);
 						}
-
-						if (parameters.getIndexedCount() > 0)
-							throw new IllegalStateException(
-								"caching strategy must not add indexed parameters");
 					}
 				}
 				segments.add(token);

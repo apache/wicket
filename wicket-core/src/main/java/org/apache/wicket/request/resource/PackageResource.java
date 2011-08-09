@@ -17,14 +17,17 @@
 package org.apache.wicket.request.resource;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
+import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Packages;
@@ -57,7 +60,7 @@ import org.slf4j.LoggerFactory;
  * @author Juergen Donnerstag
  * @author Matej Knopp
  */
-public class PackageResource extends AbstractResource
+public class PackageResource extends AbstractResource implements IStaticCacheableResource
 {
 	private static final Logger log = LoggerFactory.getLogger(PackageResource.class);
 
@@ -160,6 +163,21 @@ public class PackageResource extends AbstractResource
 		this.variation = variation;
 	}
 
+	private Locale getCurrentLocale()
+	{
+		return locale != null ? locale : Session.get().getLocale();
+	}
+
+	private String getCurrentStyle()
+	{
+		return style != null ? style : Session.get().getStyle();
+	}
+
+	public Serializable getCacheKey()
+	{
+		return new CacheKey(scopeName, absolutePath, getCurrentLocale(), getCurrentStyle(), variation);
+	}
+
 	/**
 	 * Gets the scoping class, used for class loading and to determine the package.
 	 * 
@@ -252,12 +270,6 @@ public class PackageResource extends AbstractResource
 			}
 		}
 
-		// modify the resource response depending on the current caching strategy needs
-		Application.get()
-			.getResourceSettings()
-			.getCachingStrategy()
-			.decorateResponse(resourceResponse);
-
 		return resourceResponse;
 	}
 
@@ -304,7 +316,7 @@ public class PackageResource extends AbstractResource
 	 * 
 	 * @return resource stream or <code>null</code> if not found
 	 */
-	protected IResourceStream getResourceStream()
+	public IResourceStream getResourceStream()
 	{
 		// Locate resource
 		return ThreadContext.getApplication()
@@ -446,5 +458,56 @@ public class PackageResource extends AbstractResource
 		return true;
 	}
 
+	private static class CacheKey implements Serializable
+	{
+		private final String scopeName;
+		private final String path;
+		private final Locale locale;
+		private final String style;
+		private final String variation;
 
+		public CacheKey(String scopeName, String path, Locale locale, String style, String variation)
+		{
+			this.scopeName = scopeName;
+			this.path = path;
+			this.locale = locale;
+			this.style = style;
+			this.variation = variation;
+		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			if (this == o)
+				return true;
+			if (!(o instanceof CacheKey))
+				return false;
+
+			CacheKey cacheKey = (CacheKey)o;
+
+			if (locale != null ? !locale.equals(cacheKey.locale) : cacheKey.locale != null)
+				return false;
+			if (!path.equals(cacheKey.path))
+				return false;
+			if (!scopeName.equals(cacheKey.scopeName))
+				return false;
+			if (style != null ? !style.equals(cacheKey.style) : cacheKey.style != null)
+				return false;
+			if (variation != null ? !variation.equals(cacheKey.variation) : cacheKey.variation != null)
+				return false;
+
+			return true;
+		}
+
+		@Override
+		public int hashCode()
+		{
+			int result = scopeName.hashCode();
+			result = 31 * result + path.hashCode();
+			result = 31 * result + (locale != null ? locale.hashCode() : 0);
+			result = 31 * result + (style != null ? style.hashCode() : 0);
+			result = 31 * result + (variation != null ? variation.hashCode() : 0);
+			return result;
+		}
+	}
 }

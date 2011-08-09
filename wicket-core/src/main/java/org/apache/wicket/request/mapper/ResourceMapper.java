@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.request.mapper;
 
+import java.util.List;
+
+import org.apache.wicket.Application;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
@@ -24,8 +27,13 @@ import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandle
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
+import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
+import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
+import org.apache.wicket.request.resource.caching.ResourceUrl;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * A {@link IRequestMapper} to mount resources to a custom mount path
@@ -108,17 +116,20 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 
 	public IRequestHandler mapRequest(final Request request)
 	{
-		final Url url = request.getUrl();
+		final Url url = new Url(request.getUrl());
+
+		// now extract the page parameters from the request url
+		PageParameters parameters = extractPageParameters(request, mountSegments.length,
+			parametersEncoder);
+
+		// remove caching information from current request
+		removeCachingDecoration(url, parameters);
 
 		// check if url matches mount path
 		if (urlStartsWith(url, mountSegments) == false)
 		{
 			return null;
 		}
-
-		// now extract the page parameters from the request url
-		PageParameters parameters = extractPageParameters(request, mountSegments.length,
-			parametersEncoder);
 
 		// check if there are placeholders in mount segments
 		for (int index = 0; index < mountSegments.length; ++index)
@@ -181,7 +192,62 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 			}
 		}
 
+		// add caching information
+		addCachingDecoration(url, parameters);
+		
 		// create url
 		return encodePageParameters(url, parameters, parametersEncoder);
+	}
+
+	protected IResourceCachingStrategy getCachingStrategy()
+	{
+		return Application.get().getResourceSettings().getCachingStrategy();
+	}
+
+	protected void addCachingDecoration(Url url, PageParameters parameters)
+	{
+		final List<String> segments = url.getSegments();
+		final int lastSegmentAt = segments.size() - 1;
+		final String filename = segments.get(lastSegmentAt);
+
+		if (Strings.isEmpty(filename) == false)
+		{
+			// TODO is calling getResource() a potential performance bottleneck?
+			final IResource resource = resourceReference.getResource();
+
+			if (resource instanceof IStaticCacheableResource)
+			{
+				final IStaticCacheableResource cacheable = (IStaticCacheableResource)resource;
+				final ResourceUrl cacheUrl = new ResourceUrl(filename, parameters);
+
+				getCachingStrategy().decorateUrl(cacheUrl, cacheable);
+
+				if (Strings.isEmpty(cacheUrl.getFileName()))
+				{
+					throw new IllegalStateException("caching strategy returned empty name for " + resource);
+				}
+				segments.set(lastSegmentAt, cacheUrl.getFileName());
+			}
+		}
+	}
+
+	protected void removeCachingDecoration(Url url, PageParameters parameters)
+	{
+		final List<String> segments = url.getSegments();
+
+		if (segments.isEmpty() == false)
+		{
+			final int lastSegmentAt = segments.size() - 1;
+			final ResourceUrl resourceUrl = new ResourceUrl(segments.get(lastSegmentAt), parameters);
+
+			getCachingStrategy().undecorateUrl(resourceUrl);
+			
+			if (Strings.isEmpty(resourceUrl.getFileName()))
+			{
+				throw new IllegalStateException("caching strategy returned empty name for " + resourceUrl);
+			}
+
+			segments.set(lastSegmentAt, resourceUrl.getFileName());
+		}
 	}
 }

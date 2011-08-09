@@ -16,33 +16,35 @@
  */
 package org.apache.wicket.request.resource.caching;
 
-import org.apache.wicket.request.resource.AbstractResource;
+import java.io.Serializable;
+
+import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 
 /**
- * resource caching strategy that does nothing at all
- * <p/>
- * when using this strategy caching of resources will effectively be disabled
+ * static resource which does not change for the lifetime of the application 
+ * and should be considered a candidate for long-term caching. 
  * 
  * @author Peter Ertl
- * 
  * @since 1.5
  */
-public class NoOpResourceCachingStrategy implements IResourceCachingStrategy
+public interface IStaticCacheableResource extends IResource
 {
 	/**
-	 * Global instance of {@link NoOpResourceCachingStrategy} strategy
+	 * get unique caching key for storing information 
+	 * related to the output of the resource
+	 * 
+	 * @return serializable key with properly 
+	 * supports {@link #equals(Object)} and {@link #hashCode()}
 	 */
-	public static final IResourceCachingStrategy INSTANCE = new NoOpResourceCachingStrategy();
+	Serializable getCacheKey();
 
-	public void decorateUrl(ResourceUrl url, IStaticCacheableResource resource)
-	{
-	}
-
-	public void undecorateUrl(ResourceUrl url)
-	{
-	}
-
-	public void decorateResponse(AbstractResource.ResourceResponse response, IStaticCacheableResource resource)
-	{
-	}
+	/**
+	 * get resource stream for static resource data 
+	 * 
+	 * @return stream or <code>null</code> if not found
+	 * @throws ResourceStreamNotFoundException
+	 */
+	IResourceStream getResourceStream();
 }

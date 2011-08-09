@@ -16,12 +16,13 @@
  */
 package org.apache.wicket.request.resource.caching.version;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 
@@ -35,8 +36,8 @@ import org.apache.wicket.util.lang.Generics;
  */
 public class RequestCycleCachedResourceVersion implements IResourceVersion
 {
-	private static final MetaDataKey<Map<CacheResourceVersionKey, String>> CACHE_KEY =
-		new MetaDataKey<Map<CacheResourceVersionKey, String>>()
+	private static final MetaDataKey<Map<Serializable, String>> CACHE_KEY =
+		new MetaDataKey<Map<Serializable, String>>()
 		{
 			private static final long serialVersionUID = 1L;
 		};
@@ -58,25 +59,16 @@ public class RequestCycleCachedResourceVersion implements IResourceVersion
 		this.delegate = Args.notNull(delegate, "delegate");
 	}
 
-	public String getVersion(PackageResourceReference resourceReference)
+	public String getVersion(IStaticCacheableResource resource)
 	{
 		// get current request cycle
 		final RequestCycle requestCycle = ThreadContext.getRequestCycle();
 
-		// get current stream information for package resource
-		final PackageResourceReference.StreamInfo streamInfo = resourceReference.getCurrentStreamInfo();
-		
-		// if no stream info is available we can not provide a version
-		if(streamInfo == null)
-		{
-			return null;
-		}
-		
 		// cache instance
-		Map<CacheResourceVersionKey, String> cache = null;
+		Map<Serializable, String> cache = null;
 
 		// cache key
-		CacheResourceVersionKey key = null;
+		Serializable key = null;
 
 		// is request cycle available?
 		if (requestCycle != null)
@@ -85,7 +77,7 @@ public class RequestCycleCachedResourceVersion implements IResourceVersion
 			cache = requestCycle.getMetaData(CACHE_KEY);
 
 			// create caching key
-			key = new CacheResourceVersionKey(resourceReference, streamInfo);
+			key = resource.getCacheKey();
 
 			// does cache exist within current request cycle?
 			if (cache == null)
@@ -101,7 +93,7 @@ public class RequestCycleCachedResourceVersion implements IResourceVersion
 		}
 		
 		// no cache entry found, query version from delegate
-		final String version = delegate.getVersion(resourceReference);
+		final String version = delegate.getVersion(resource);
 
 		// store value in cache (if it is available)
 		if (cache != null && key != null)

@@ -16,10 +16,11 @@
  */
 package org.apache.wicket.request.resource.caching.version;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
 
-import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.util.collections.MostRecentlyUsedMap;
 import org.apache.wicket.util.lang.Args;
 
@@ -53,7 +54,7 @@ public class CachingResourceVersion implements IResourceVersion
 	/**
 	 * cache for resource versions
 	 */
-	private final Map<CacheResourceVersionKey, String> cache;
+	private final Map<Serializable, String> cache;
 
 	/**
 	 * create version cache
@@ -89,22 +90,13 @@ public class CachingResourceVersion implements IResourceVersion
 
 		this.delegate = Args.notNull(delegate, "delegate");
 		this.cache = Collections.synchronizedMap(
-			new MostRecentlyUsedMap<CacheResourceVersionKey, String>(maxEntries));
+			new MostRecentlyUsedMap<Serializable, String>(maxEntries));
 	}
 
-	public String getVersion(PackageResourceReference resourceReference)
+	public String getVersion(IStaticCacheableResource resource)
 	{
-		// get current stream information for package resource
-		PackageResourceReference.StreamInfo streamInfo = resourceReference.getCurrentStreamInfo();
-		
-		// if no stream info is available we can not provide a version
-		if(streamInfo == null)
-		{
-			return null;
-		}
-
-		// cache key
-		final CacheResourceVersionKey key = new CacheResourceVersionKey(resourceReference, streamInfo);
+		// get unique cache key for resource reference
+		final Serializable key = resource.getCacheKey();
 
 		// lookup version in cache
 		String version = cache.get(key);
@@ -113,7 +105,7 @@ public class CachingResourceVersion implements IResourceVersion
 		if (version == null)
 		{
 			// get version from delegate
-			version = delegate.getVersion(resourceReference);
+			version = delegate.getVersion(resource);
 
 			// replace null values with holder
 			if (version == null)

@@ -22,8 +22,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.request.resource.PackageResource;
-import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
@@ -34,7 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * computes the message digest of a {@link PackageResource} 
+ * computes the message digest of a {@link org.apache.wicket.request.resource.caching.IStaticCacheableResource} 
  * and uses it as a version string
  * <p/>
  * you can use any message digest algorithm that can be retrieved 
@@ -114,33 +113,40 @@ public class MessageDigestResourceVersion implements IResourceVersion
 		this.bufferSize = Args.notNull(bufferSize, "bufferSize");
 	}
 
-	public String getVersion(PackageResourceReference resourceReference)
+	public String getVersion(IStaticCacheableResource resource)
 	{
-		// get current stream information for package resource
-		final PackageResourceReference.StreamInfo streamInfo = resourceReference.getCurrentStreamInfo();
+		IResourceStream stream = resource.getResourceStream();
 
-		// if no stream info is available we can not provide a version
-		if (streamInfo == null)
+		if (stream == null)
 		{
 			return null;
 		}
 
 		try
 		{
-			// get binary hash
-			final byte[] hash = computeDigest(streamInfo.getStream());
+			final InputStream inputStream = stream.getInputStream();
 
-			// convert to hexadecimal
-			return Strings.toHexString(hash);
-		}
-		catch (ResourceStreamNotFoundException e)
-		{
-			log.warn("resource stream not found for '{}'", resourceReference);
-			return null;
+			try
+			{
+				// get binary hash
+				final byte[] hash = computeDigest(inputStream);
+
+				// convert to hexadecimal
+				return Strings.toHexString(hash);
+			}
+			finally
+			{
+				IOUtils.close(inputStream);
+			}
 		}
 		catch (IOException e)
 		{
-			log.warn("resource stream not be read for " + resourceReference, e);
+			log.warn("unable to compute hash for " + resource, e);
+			return null;
+		}
+		catch (ResourceStreamNotFoundException e)
+		{
+			log.warn("unable to locate resource for " + resource, e);
 			return null;
 		}
 	}
@@ -165,40 +171,31 @@ public class MessageDigestResourceVersion implements IResourceVersion
 	/**
 	 * compute digest for resource stream
 	 * 
-	 * @param resourceStream
-	 *            resource stream to compute message digest for
+	 * @param inputStream
+	 *            input stream to compute message digest for
 	 * 
 	 * @return binary message digest
 	 * 
 	 * @throws ResourceStreamNotFoundException
 	 * @throws IOException
 	 */
-	protected byte[] computeDigest(IResourceStream resourceStream)
-		throws ResourceStreamNotFoundException, IOException
+	protected byte[] computeDigest(InputStream inputStream) throws IOException
 	{
 		final MessageDigest digest = getMessageDigest();
-		final InputStream inputStream = resourceStream.getInputStream();
 
-		try
+		// get actual buffer size
+		final int bufferLen = (int)Math.min(Integer.MAX_VALUE, bufferSize.bytes());
+
+		// allocate read buffer
+		final byte[] buf = new byte[bufferLen];
+		int len;
+
+		// read stream and update message digest
+		while ((len = inputStream.read(buf)) != -1)
 		{
-			// get actual buffer size
-			final int bufferLen = (int)Math.min(Integer.MAX_VALUE, bufferSize.bytes());
-
-			// allocate read buffer
-			final byte[] buf = new byte[bufferLen];
-			int len;
-
-			// read stream and update message digest
-			while ((len = inputStream.read(buf)) != -1)
-			{
-				digest.update(buf, 0, len);
-			}
-			// finish message digest and return hash
-			return digest.digest();
+			digest.update(buf, 0, len);
 		}
-		finally
-		{
-			IOUtils.close(inputStream);
-		}
+		// finish message digest and return hash
+		return digest.digest();
 	}
 }

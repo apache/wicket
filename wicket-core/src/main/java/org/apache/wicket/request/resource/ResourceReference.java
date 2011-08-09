@@ -23,7 +23,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.lang.WicketObjects;
-import org.apache.wicket.util.time.Time;
 
 /**
  * Reference to a resource. Can be used to reference global resources.
@@ -192,17 +191,6 @@ public abstract class ResourceReference implements Serializable
 	public boolean canBeRegistered()
 	{
 		return true;
-	}
-
-	/**
-	 * return the last modification date of the referred resource
-	 * <p/>
-	 * 
-	 * @return last modification time or <code>null</code> if not supported
-	 */
-	public Time getLastModified()
-	{
-		return null;
 	}
 
 	/**

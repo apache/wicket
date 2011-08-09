@@ -17,10 +17,9 @@
 package org.apache.wicket.request.resource.caching;
 
 import org.apache.wicket.request.resource.AbstractResource;
-import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
- * caching strategy for resources
+ * caching strategy for cacheable resources
  * <p/>
  * it can add and remove caching information to the filename and query 
  * string parameters of the requested resource to control caches in the
@@ -39,14 +38,16 @@ public interface IResourceCachingStrategy
 	 *            parameters to which caching information should be added and which will be used to
 	 *            construct the url to the resource
 	 * 
-	 * @param reference
-	 *            resource reference
+	 * @param resource
+	 *            cacheable resource
 	 */
-	void decorateUrl(ResourceUrl url, PackageResourceReference reference);
+	void decorateUrl(ResourceUrl url, IStaticCacheableResource resource);
 
 	/**
 	 * Removes caching related information from filename + parameters. In essenese this method
-	 * undoes what {@link #decorateUrl(ResourceUrl, PackageResourceReference)} did.
+	 * undoes what 
+	 * {@link #decorateUrl(ResourceUrl, IStaticCacheableResource)} 
+	 * did.
 	 * 
 	 * @param url
 	 *            parameters that were used to construct the url to the resource and from which
@@ -59,5 +60,5 @@ public interface IResourceCachingStrategy
 	 * 
 	 * @param response
 	 */
-	void decorateResponse(AbstractResource.ResourceResponse response);
+	void decorateResponse(AbstractResource.ResourceResponse response, IStaticCacheableResource resource);
 }

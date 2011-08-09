@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.request.mapper;
 
+import java.io.Serializable;
 import java.util.Locale;
 
 import org.apache.wicket.request.IRequestHandler;
@@ -24,6 +25,7 @@ import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandle
 import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
+import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
@@ -33,6 +35,8 @@ import org.apache.wicket.request.resource.caching.ResourceUrl;
 import org.apache.wicket.request.resource.caching.version.StaticResourceVersion;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.ValueProvider;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
 
 /**
  * @author Matej Knopp
@@ -434,9 +438,17 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	 */
 	public void testVersionStringInResourceFilename()
 	{
-		final IResource resource = new IResource()
+		final IStaticCacheableResource resource = new IStaticCacheableResource()
 		{
-			private static final long serialVersionUID = 1L;
+			public Serializable getCacheKey()
+			{
+				return null;
+			}
+
+			public IResourceStream getResourceStream()
+			{
+				return new StringResourceStream("foo-bar");
+			}
 
 			public void respond(Attributes attributes)
 			{
@@ -460,13 +472,13 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 
 		INamedParameters params = new PageParameters();
 		ResourceUrl url = new ResourceUrl("test.js", params);
-		strategy.decorateUrl(url, reference);
+		strategy.decorateUrl(url, resource);
 		assertEquals("test-version-foobar.js", url.getFileName());
 		strategy.undecorateUrl(url);
 		assertEquals("test.js", url.getFileName());
 
 		url = new ResourceUrl("test", params);
-		strategy.decorateUrl(url, reference);
+		strategy.decorateUrl(url, resource);
 		assertEquals("test-version-foobar", url.getFileName());
 		strategy.undecorateUrl(url);
 		assertEquals("test", url.getFileName());
@@ -499,7 +511,7 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		strategy = new FilenameWithVersionResourceCachingStrategy("-version-",
 			new StaticResourceVersion("1.0.4-beta"));
 		url = new ResourceUrl("test.txt", params);
-		strategy.decorateUrl(url, reference);
+		strategy.decorateUrl(url, resource);
 		assertEquals("test-version-1.0.4-beta.txt", url.getFileName());
 	}
 

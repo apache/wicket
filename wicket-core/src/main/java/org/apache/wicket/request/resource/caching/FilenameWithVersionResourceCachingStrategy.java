@@ -18,7 +18,6 @@ package org.apache.wicket.request.resource.caching;
 
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.resource.AbstractResource;
-import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.caching.version.IResourceVersion;
 import org.apache.wicket.util.lang.Args;
 
@@ -91,10 +90,10 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 		return versionPrefix;
 	}
 
-	public void decorateUrl(ResourceUrl url, PackageResourceReference reference)
+	public void decorateUrl(ResourceUrl url, IStaticCacheableResource resource)
 	{
 		// get version string for requested resource
-		final String version = this.resourceVersion.getVersion(reference);
+		final String version = this.resourceVersion.getVersion(resource);
 
 		// ignore resource if no version information is available
 		if (version == null)
@@ -172,7 +171,7 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 	 * 
 	 * @param response
 	 */
-	public void decorateResponse(AbstractResource.ResourceResponse response)
+	public void decorateResponse(AbstractResource.ResourceResponse response, IStaticCacheableResource resource)
 	{
 		response.setCacheDurationToMaximum();
 		response.setCacheScope(WebResponse.CacheScope.PUBLIC);

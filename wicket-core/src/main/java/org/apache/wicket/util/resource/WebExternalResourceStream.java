@@ -23,9 +23,12 @@ import javax.servlet.ServletContext;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.io.Connections;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.time.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An {@link IResourceStream} that reads data from a file in the web application
@@ -34,6 +37,7 @@ import org.apache.wicket.util.time.Time;
  */
 public class WebExternalResourceStream extends AbstractResourceStream
 {
+	private static final Logger log = LoggerFactory.getLogger(WebExternalResourceStream.class);
 	private static final long serialVersionUID = 1L;
 
 	transient InputStream in;
@@ -72,8 +76,17 @@ public class WebExternalResourceStream extends AbstractResourceStream
 	@Override
 	public Time lastModifiedTime()
 	{
-		// external resource pretends to be just modified
-		return Time.now();
+		try
+		{
+			final ServletContext context = ((WebApplication)Application.get()).getServletContext();
+
+			return Connections.getLastModified(context.getResource(url));
+		}
+		catch (IOException e)
+		{
+			log.warn("failed to retrieve last modified timestamp", e);
+			return null;
+		}
 	}
 
 	@Override
