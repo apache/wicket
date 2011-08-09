@@ -162,7 +162,9 @@ public class PackageResourceReference extends ResourceReference
 		}
 		catch (ResourceStreamNotFoundException e)
 		{
-			throw new IOException(e.getMessage(), e);
+			IOException exception = new IOException(e.getMessage());
+			exception.initCause(e);
+			throw exception;
 		}
 	}
 	
