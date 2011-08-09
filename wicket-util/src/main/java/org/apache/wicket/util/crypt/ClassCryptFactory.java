@@ -69,7 +69,7 @@ public class ClassCryptFactory implements ICryptFactory
 			crypt.setKey(encryptionKey);
 			return crypt;
 		}
-		catch (Throwable e)
+		catch (Exception e)
 		{
 			log.warn("************************** WARNING **************************");
 			log.warn("As the instantion of encryption/decryption class:");
