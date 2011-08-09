@@ -115,8 +115,9 @@ public class MessageDigestResourceVersion implements IResourceVersion
 
 	public String getVersion(IStaticCacheableResource resource)
 	{
-		IResourceStream stream = resource.getResourceStream();
+		IResourceStream stream = resource.getCacheableResourceStream();
 
+		// if resource stream can not be found do not cache
 		if (stream == null)
 		{
 			return null;

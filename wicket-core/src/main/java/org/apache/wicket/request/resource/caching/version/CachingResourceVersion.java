@@ -98,6 +98,12 @@ public class CachingResourceVersion implements IResourceVersion
 		// get unique cache key for resource reference
 		final Serializable key = resource.getCacheKey();
 
+		// if key can not be determined do not cache
+		if(key == null)
+		{
+			return null;
+		}
+		
 		// lookup version in cache
 		String version = cache.get(key);
 

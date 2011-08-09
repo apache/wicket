@@ -32,8 +32,8 @@ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 public interface IStaticCacheableResource extends IResource
 {
 	/**
-	 * get unique caching key for storing information 
-	 * related to the output of the resource
+	 * get unique caching key for the resource stream produced 
+	 * by {@link #getCacheableResourceStream()}
 	 * 
 	 * @return serializable key with properly 
 	 * supports {@link #equals(Object)} and {@link #hashCode()}
@@ -41,10 +41,10 @@ public interface IStaticCacheableResource extends IResource
 	Serializable getCacheKey();
 
 	/**
-	 * get resource stream for static resource data 
+	 * get static resource stream which will be unique to the 
+	 * related caching key {@link #getCacheKey()}
 	 * 
-	 * @return stream or <code>null</code> if not found
-	 * @throws ResourceStreamNotFoundException
+	 * @return stream or <code>null</code> if no stream could be found
 	 */
-	IResourceStream getResourceStream();
+	IResourceStream getCacheableResourceStream();
 }

@@ -38,8 +38,9 @@ public class LastModifiedResourceVersion implements IResourceVersion
 	public String getVersion(IStaticCacheableResource resource)
 	{
 		// get last modified timestamp of resource
-		IResourceStream stream = resource.getResourceStream();
+		IResourceStream stream = resource.getCacheableResourceStream();
 
+		// if resource stream can not be found do not cache
 		if (stream == null)
 		{
 			return null;

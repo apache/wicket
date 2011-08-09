@@ -34,6 +34,7 @@ import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
@@ -173,9 +174,32 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		return style != null ? style : Session.get().getStyle();
 	}
 
+	public IResourceStream getCacheableResourceStream()
+	{
+		// get resource locator
+		IResourceStreamLocator locator = ThreadContext.getApplication()
+			.getResourceSettings()
+			.getResourceStreamLocator();
+
+		// determine current resource stream 
+		// taking client locale and style into account
+		return locator.locate(getScope(), absolutePath,
+		                      getCurrentStyle(), variation, getCurrentLocale(),
+		                      null, false);
+	}
+
 	public Serializable getCacheKey()
 	{
-		return new CacheKey(scopeName, absolutePath, getCurrentLocale(), getCurrentStyle(), variation);
+		IResourceStream stream = getCacheableResourceStream();
+
+		// if resource stream can not be found do not cache
+		if (stream == null)
+		{
+			return null;
+		}
+
+		return new CacheKey(scopeName, absolutePath, 
+		                    stream.getLocale(), stream.getStyle(), stream.getVariation());
 	}
 
 	/**
@@ -316,7 +340,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 * 
 	 * @return resource stream or <code>null</code> if not found
 	 */
-	public IResourceStream getResourceStream()
+	protected IResourceStream getResourceStream()
 	{
 		// Locate resource
 		return ThreadContext.getApplication()
@@ -508,6 +532,20 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			result = 31 * result + (style != null ? style.hashCode() : 0);
 			result = 31 * result + (variation != null ? variation.hashCode() : 0);
 			return result;
+		}
+
+		@Override
+		public String toString()
+		{
+			final StringBuilder sb = new StringBuilder();
+			sb.append("CacheKey");
+			sb.append("{scopeName='").append(scopeName).append('\'');
+			sb.append(", path='").append(path).append('\'');
+			sb.append(", locale=").append(locale);
+			sb.append(", style='").append(style).append('\'');
+			sb.append(", variation='").append(variation).append('\'');
+			sb.append('}');
+			return sb.toString();
 		}
 	}
 }

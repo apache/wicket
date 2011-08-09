@@ -25,6 +25,7 @@ import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.util.io.ByteArrayOutputStream;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
+import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.WebExternalResourceStream;
 import org.slf4j.Logger;
@@ -69,7 +70,7 @@ public class ContextRelativeResource extends AbstractResource implements IStatic
 		return CACHE_PREFIX + path;
 	}
 
-	public WebExternalResourceStream getResourceStream()
+	public IResourceStream getCacheableResourceStream()
 	{
 		return new WebExternalResourceStream(path);
 	}
@@ -81,7 +82,8 @@ public class ContextRelativeResource extends AbstractResource implements IStatic
 
 		if (resourceResponse.dataNeedsToBeWritten(attributes))
 		{
-			final WebExternalResourceStream webExternalResourceStream = getResourceStream();
+			final WebExternalResourceStream webExternalResourceStream = 
+				new WebExternalResourceStream(path);
 			resourceResponse.setContentType(webExternalResourceStream.getContentType());
 			resourceResponse.setLastModified(webExternalResourceStream.lastModifiedTime());
 			resourceResponse.setFileName(path);

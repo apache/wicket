@@ -445,7 +445,7 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 				return null;
 			}
 
-			public IResourceStream getResourceStream()
+			public IResourceStream getCacheableResourceStream()
 			{
 				return new StringResourceStream("foo-bar");
 			}
