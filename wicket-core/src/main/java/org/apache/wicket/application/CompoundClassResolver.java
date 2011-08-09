@@ -17,6 +17,7 @@
 package org.apache.wicket.application;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -90,15 +91,21 @@ public class CompoundClassResolver implements IClassResolver
 	{
 		Args.notNull(name, "name");
 
-		Set<URL> urls = new TreeSet<URL>();
+		Set<String> externalForms = new TreeSet<String>();
+		List<URL> urls = new ArrayList<URL>();
 		for (IClassResolver resolver : resolvers)
 		{
 			Iterator<URL> it = resolver.getResources(name);
 			while (it.hasNext())
 			{
 				URL url = it.next();
-				if (urls.contains(url) == false)
+
+				// use URL's external form to make the check for equality/containment
+				// because URL makes domain name resolution and is slow
+				String externalForm = url.toExternalForm();
+				if (externalForms.contains(externalForm) == false)
 				{
+					externalForms.add(externalForm);
 					urls.add(url);
 				}
 			}
