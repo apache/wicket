@@ -137,6 +137,7 @@ public class FormTester
 				if (foundRadio == null)
 				{
 					fail("RadioGroup " + formComponent.getPath() + " does not have index:" + index);
+					return;
 				}
 				assignValueToFormComponent(formComponent, foundRadio.getValue());
 			}
@@ -147,6 +148,7 @@ public class FormTester
 				if (foundCheck == null)
 				{
 					fail("CheckGroup " + formComponent.getPath() + " does not have index:" + index);
+					return;
 				}
 
 				assignValueToFormComponent(formComponent, foundCheck.getValue());
