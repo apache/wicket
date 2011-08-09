@@ -497,7 +497,7 @@ public final class PropertyResolver
 						else
 						{
 							getAndSetter = new MethodGetAndSet(method, MethodGetAndSet.findSetter(
-								method, clz), field);
+								method, clz), null);
 						}
 					}
 					else
