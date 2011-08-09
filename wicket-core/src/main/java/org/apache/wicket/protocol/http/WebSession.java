@@ -212,7 +212,6 @@ public class WebSession extends Session
 					// we haven't done the redirect yet; record that we will be
 					// doing that now and redirect
 					setMetaData(BROWSER_WAS_POLLED_KEY, Boolean.TRUE);
-					Request request = requestCycle.getRequest();
 
 					WebPage browserInfoPage = newBrowserInfoPage();
 					getPageManager().touchPage(browserInfoPage);

@@ -161,7 +161,6 @@ public class WebPage extends Page
 	 */
 	protected void configureResponse(final WebResponse response)
 	{
-		final RequestCycle cycle = getRequestCycle();
 		final WebApplication application = WebApplication.get();
 
 		// Users may sublcass setHeader() to set there own headers

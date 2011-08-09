@@ -28,7 +28,6 @@ import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.util.diff.Diff;
 import org.apache.wicket.util.diff.DifferentiationFailedException;
-import org.apache.wicket.util.diff.Revision;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
@@ -146,10 +145,9 @@ public final class DiffUtil
 			String[] test1 = StringList.tokenize(reference, "\n").toArray();
 			String[] test2 = StringList.tokenize(document, "\n").toArray();
 			Diff df = new Diff(test1);
-			Revision r;
 			try
 			{
-				r = df.diff(test2);
+				df.diff(test2);
 			}
 			catch (DifferentiationFailedException e)
 			{
