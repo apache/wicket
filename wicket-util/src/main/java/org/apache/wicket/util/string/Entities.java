@@ -467,7 +467,7 @@ class Entities
 		// TODO not thread-safe as there is a window between changing the two maps
 		public void add(String name, int value)
 		{
-			mapNameToValue.put(name, new Integer(value));
+			mapNameToValue.put(name, Integer.valueOf(value));
 			mapValueToName.put(value, name);
 		}
 
@@ -510,12 +510,12 @@ class Entities
 		public void add(String name, int value)
 		{
 			mapNameToValue.put(name, new Integer(value));
-			mapValueToName.put(new Integer(value), name);
+			mapValueToName.put(Integer.valueOf(value), name);
 		}
 
 		public String name(int value)
 		{
-			return mapValueToName.get(new Integer(value));
+			return mapValueToName.get(Integer.valueOf(value));
 		}
 
 		/**
@@ -561,6 +561,7 @@ class Entities
 
 		private static final int LOOKUP_TABLE_SIZE = 256;
 
+		@Override
 		public String name(int value)
 		{
 			if (value < LOOKUP_TABLE_SIZE)
@@ -758,6 +759,7 @@ class Entities
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void add(String name, int value)
 		{
 			ensureCapacity(size + 1);
@@ -777,6 +779,7 @@ class Entities
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public String name(int value)
 		{
 			int index = binarySearch(value);
