@@ -313,7 +313,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	/**
 	 * The value separator
 	 */
-	public static String VALUE_SEPARATOR = ";";
+	public static final String VALUE_SEPARATOR = ";";
 
 	private static final String[] EMPTY_STRING_ARRAY = new String[] { "" };
 
