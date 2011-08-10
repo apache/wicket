@@ -171,7 +171,7 @@ public class DiskDataStore implements IDataStore
 		SessionEntry sessionEntry = getSessionEntry(sessionId, true);
 		if (sessionEntry != null)
 		{
-			log.debug("Stroing data for page with id '{}' in session with id '{}'", new Object[] {
+			log.debug("Storing data for page with id '{}' in session with id '{}'", new Object[] {
 					id, sessionId });
 			sessionEntry.savePage(id, data);
 		}
