@@ -486,19 +486,18 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 
 		buf.append(year);
 		buf.append('-');
-		Time.appendTwoDigits(buf, month);
+		buf.append(String.format("%02d", month));
 		buf.append('-');
-		Time.appendTwoDigits(buf, day);
+		buf.append(String.format("%02d", day));
 		buf.append(' ');
-		Time.appendTwoDigits(buf, hours);
+		buf.append(String.format("%02d", hours));
 		buf.append(':');
-		Time.appendTwoDigits(buf, minutes);
+		buf.append(String.format("%02d", minutes));
 		buf.append(':');
-		Time.appendTwoDigits(buf, seconds);
+		buf.append(String.format("%02d", seconds));
 		buf.append(',');
-		buf.append(millis);
+		buf.append(String.format("%03d", millis));
 
 		return buf.toString();
 	}
-
 }
