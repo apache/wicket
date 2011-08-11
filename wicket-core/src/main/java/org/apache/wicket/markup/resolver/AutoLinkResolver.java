@@ -26,6 +26,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -443,29 +444,34 @@ public final class AutoLinkResolver implements IComponentResolver
 				if ((parentWithContainer instanceof Page) && !pathInfo.path.startsWith("/") &&
 					new MarkupStream(page.getMarkup()).isMergedMarkup())
 				{
-					Class<? extends Page> clazz = (Class<? extends Page>)new MarkupStream(
-						container.getMarkup()).getTag().getMarkupClass();
-					if (clazz != null)
+					IMarkupFragment containerMarkup = container.getMarkup();
+					MarkupStream containerMarkupStream = new MarkupStream(containerMarkup);
+					if (containerMarkupStream.atTag())
 					{
-						// Href is relative. Resolve the url given relative to
-						// the current page
-						className = Packages.absolutePath(clazz, pathInfo.path);
-						className = Strings.replaceAll(className, "/", ".").toString();
-						if (className.startsWith("."))
+						ComponentTag tag = containerMarkupStream.getTag();
+						Class<? extends Page> clazz = (Class<? extends Page>)tag.getMarkupClass();
+						if (clazz != null)
 						{
-							className = className.substring(1);
-						}
+							// Href is relative. Resolve the url given relative to
+							// the current page
+							className = Packages.absolutePath(clazz, pathInfo.path);
+							className = Strings.replaceAll(className, "/", ".").toString();
+							if (className.startsWith("."))
+							{
+								className = className.substring(1);
+							}
 
-						try
-						{
-							clazz = (Class<? extends Page>)defaultClassResolver.resolveClass(className);
-							return new AutolinkBookmarkablePageLink<Void>(autoId, clazz,
-								pathInfo.getPageParameters(), pathInfo.anchor);
-						}
-						catch (ClassNotFoundException ex)
-						{
-							log.warn("Did not find corresponding java class: " + className);
-							// fall through
+							try
+							{
+								clazz = (Class<? extends Page>)defaultClassResolver.resolveClass(className);
+								return new AutolinkBookmarkablePageLink<Void>(autoId, clazz,
+									pathInfo.getPageParameters(), pathInfo.anchor);
+							}
+							catch (ClassNotFoundException ex)
+							{
+								log.warn("Did not find corresponding java class: " + className);
+								// fall through
+							}
 						}
 					}
 				}
