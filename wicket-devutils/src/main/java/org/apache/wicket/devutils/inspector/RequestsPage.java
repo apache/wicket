@@ -115,8 +115,14 @@ public class RequestsPage extends DevUtilsPage
 				item.add(new Label("id", new Model<String>(rd.getSessionId())).setVisible(sessionData == null));
 				item.add(new Label("startDate", new Model<String>(sdf.format(rd.getStartDate()))));
 				item.add(new Label("timeTaken", new Model<Long>(rd.getTimeTaken())));
-				item.add(new Label("eventTarget", new Model<String>(rd.getEventTarget())));
-				item.add(new Label("responseTarget", new Model<String>(rd.getResponseTarget())));
+				String eventTarget = rd.getEventTarget() != null ? rd.getEventTarget()
+					.getClass()
+					.getName() : "";
+				item.add(new Label("eventTarget", new Model<String>(eventTarget)));
+				String responseTarget = rd.getResponseTarget() != null ? rd.getResponseTarget()
+					.getClass()
+					.getName() : "";
+				item.add(new Label("responseTarget", new Model<String>(responseTarget)));
 				item.add(new Label("alteredObjects", new Model<String>(rd.getAlteredObjects())).setEscapeModelStrings(false));
 				item.add(new Label("sessionSize", new Model<Bytes>(Bytes.bytes(rd.getSessionSize()
 					.longValue()))));

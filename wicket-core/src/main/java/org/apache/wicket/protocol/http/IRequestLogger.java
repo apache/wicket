@@ -288,8 +288,8 @@ public interface IRequestLogger
 		private long timeTaken;
 		private final List<String> entries = new ArrayList<String>(5);
 		private String requestedUrl;
-		private String eventTarget;
-		private String responseTarget;
+		private IRequestHandler eventTarget;
+		private IRequestHandler responseTarget;
 		private String sessionId;
 		private long totalSessionSize;
 		private Object sessionInfo;
@@ -365,7 +365,7 @@ public interface IRequestLogger
 		/**
 		 * @return The event target string
 		 */
-		public String getEventTarget()
+		public IRequestHandler getEventTarget()
 		{
 			return eventTarget;
 		}
@@ -373,7 +373,7 @@ public interface IRequestLogger
 		/**
 		 * @return The response target string
 		 */
-		public String getResponseTarget()
+		public IRequestHandler getResponseTarget()
 		{
 			return responseTarget;
 		}
@@ -397,7 +397,7 @@ public interface IRequestLogger
 		/**
 		 * @param target
 		 */
-		public void addResponseTarget(String target)
+		public void setResponseTarget(IRequestHandler target)
 		{
 			responseTarget = target;
 		}
@@ -405,7 +405,7 @@ public interface IRequestLogger
 		/**
 		 * @param target
 		 */
-		public void addEventTarget(String target)
+		public void setEventTarget(IRequestHandler target)
 		{
 			eventTarget = target;
 		}
