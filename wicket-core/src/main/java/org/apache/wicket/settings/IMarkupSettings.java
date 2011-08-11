@@ -84,13 +84,12 @@ public interface IMarkupSettings
 	boolean getThrowExceptionOnMissingXmlDeclaration();
 
 	/**
-	 * Application default for automatic link resolution. Please
-	 * 
-	 * @see org.apache.wicket.markup.resolver.AutoLinkResolver and
-	 * @see org.apache.wicket.markup.parser.filter.WicketLinkTagHandler for more details.
+	 * Application default for automatic link resolution.
 	 * 
 	 * @param automaticLinking
 	 *            The automaticLinking to set.
+	 * @see org.apache.wicket.markup.resolver.AutoLinkResolver
+	 * @see org.apache.wicket.markup.parser.filter.WicketLinkTagHandler
 	 */
 	void setAutomaticLinking(boolean automaticLinking);
 

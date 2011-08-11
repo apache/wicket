@@ -97,7 +97,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter implements ICompo
 		// considered for autolinking. This is because it is assumed that Wicket
 		// components like images or all other kind of Wicket Links will handle
 		// it themselves.
-		// Subclass analyzeAutolinkCondition() to implement you own
+		// Subclass analyzeAutolinkCondition() to implement your own
 		// implementation and register the new tag handler with the markup
 		// parser through Application.newMarkupParser().
 		if ((autolinking == true) && (analyzeAutolinkCondition(tag) == true))
