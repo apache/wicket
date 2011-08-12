@@ -54,8 +54,8 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
-import org.apache.wicket.util.upload.FileUploadException;
 import org.apache.wicket.util.upload.FileUploadBase.SizeLimitExceededException;
+import org.apache.wicket.util.upload.FileUploadException;
 import org.apache.wicket.util.value.LongValue;
 import org.apache.wicket.util.visit.ClassVisitFilter;
 import org.apache.wicket.util.visit.IVisit;
@@ -166,10 +166,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			{
 				validate(formComponent);
 			}
-			if (formComponent.processChildren())
-			{
-			}
-			else
+			if (formComponent.processChildren() == false)
 			{
 				visit.dontGoDeeper();
 			}
@@ -536,8 +533,12 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 
 		Form<?> root = getRootForm();
 		return new AppendingStringBuffer("document.getElementById('").append(
-			root.getHiddenFieldId()).append("').value='").append(url).append(
-			"';document.getElementById('").append(root.getMarkupId()).append("').submit();");
+			root.getHiddenFieldId())
+			.append("').value='")
+			.append(url)
+			.append("';document.getElementById('")
+			.append(root.getMarkupId())
+			.append("').submit();");
 	}
 
 	/**
@@ -1551,8 +1552,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 
 			// render the hidden field
 			AppendingStringBuffer buffer = new AppendingStringBuffer(HIDDEN_DIV_START).append(
-				"<input type=\"hidden\" name=\"").append(nameAndId).append("\" id=\"").append(
-				nameAndId).append("\" />");
+				"<input type=\"hidden\" name=\"")
+				.append(nameAndId)
+				.append("\" id=\"")
+				.append(nameAndId)
+				.append("\" />");
 
 			// if it's a get, did put the parameters in the action attribute,
 			// and have to write the url parameters as hidden fields
@@ -1594,8 +1598,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		{
 			String[] pair = Strings.split(param, '=');
 
-			buffer.append("<input type=\"hidden\" name=\"").append(recode(pair[0])).append(
-				"\" value=\"").append(pair.length > 1 ? recode(pair[1]) : "").append("\" />");
+			buffer.append("<input type=\"hidden\" name=\"")
+				.append(recode(pair[0]))
+				.append("\" value=\"")
+				.append(pair.length > 1 ? recode(pair[1]) : "")
+				.append("\" />");
 		}
 	}
 
