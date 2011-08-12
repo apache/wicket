@@ -383,10 +383,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	public static final <R> R visitComponentsPostOrder(Component component,
 		final org.apache.wicket.util.visit.IVisitor<Component, R> visitor)
 	{
-		if (visitor == null)
-		{
-			throw new IllegalArgumentException("Argument `visitor` cannot be null");
-		}
+		Args.notNull(visitor, "visitor");
 
 		return Visits.visitPostOrder(component, visitor, new IVisitFilter()
 		{
@@ -424,10 +421,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 */
 	public FormComponent(final String id)
 	{
-		super(id);
-		// the form decides whether form components are versioned or not
-		// see Form.setVersioned
-		setVersioned(false);
+		this(id, null);
 	}
 
 	/**
@@ -485,10 +479,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public final FormComponent<T> add(final IValidator<? super T> validator)
 	{
-		if (validator == null)
-		{
-			throw new IllegalArgumentException("validator argument cannot be null");
-		}
+		Args.notNull(validator, "validator");
 
 		if (validator instanceof Behavior)
 		{
@@ -559,10 +550,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 */
 	public final FormComponent<T> add(final IValidator<? super T>... validators)
 	{
-		if (validators == null)
-		{
-			throw new IllegalArgumentException("validator argument cannot be null");
-		}
+		Args.notNull(validators, "validators");
 
 		for (IValidator<? super T> validator : validators)
 		{
@@ -629,10 +617,8 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 */
 	public void error(IValidationError error)
 	{
-		if (error == null)
-		{
-			throw new IllegalArgumentException("Argument [[error]] cannot be null");
-		}
+		Args.notNull(error, "error");
+
 		MessageSource source = new MessageSource();
 		String message = error.getErrorMessage(source);
 
@@ -1070,7 +1056,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 */
 	public void updateModel()
 	{
-		setDefaultModelObject(getConvertedInput());
+		setModelObject(getConvertedInput());
 	}
 
 
@@ -1450,14 +1436,15 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		}
 		catch (Exception e)
 		{
-			throw new WicketRuntimeException("Exception '" + e + "' occurred during validation " +
-				validator.getClass().getName() + " on component " + getPath(), e);
+			throw new WicketRuntimeException("Exception '" + e.getMessage() +
+				"' occurred during validation " + validator.getClass().getName() +
+				" on component " + getPath(), e);
 		}
 	}
 
 	/**
 	 * Creates an IValidatable that can be used to validate this form component. This validatable
-	 * encorporates error key lookups that correspend to this form component.
+	 * incorporates error key lookups that correspond to this form component.
 	 * 
 	 * This method is useful when validation needs to happen outside the regular validation workflow
 	 * but error messages should still be properly reported against the form component.
