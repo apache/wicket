@@ -49,6 +49,7 @@ import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.settings.IApplicationSettings;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.PrependingStringBuffer;
@@ -269,8 +270,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	private short multiPart = 0;
 
 	/**
-	 * A user has explicitly called {@link #setMultiPart(boolean)} with value {@code true}forcing it
-	 * to be true
+	 * A user has explicitly called {@link #setMultiPart(boolean)} with value {@code true} forcing
+	 * it to be true
 	 */
 	private static final short MULTIPART_HARD = 0x01;
 
@@ -288,8 +289,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	public Form(final String id)
 	{
-		super(id);
-		setOutputMarkupId(true);
+		this(id, null);
 	}
 
 	/**
@@ -299,7 +299,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 *            See Component
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public Form(final String id, IModel<T> model)
+	public Form(final String id, final IModel<T> model)
 	{
 		super(id, model);
 		setOutputMarkupId(true);
@@ -314,12 +314,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 *             if validator is null
 	 * @see IFormValidator
 	 */
-	public void add(IFormValidator validator)
+	public void add(final IFormValidator validator)
 	{
-		if (validator == null)
-		{
-			throw new IllegalArgumentException("Argument `validator` cannot be null");
-		}
+		Args.notNull(validator, "validator");
 
 		if (validator instanceof Behavior)
 		{
@@ -340,12 +337,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 *             if validator is null
 	 * @see IFormValidator
 	 */
-	public void remove(IFormValidator validator)
+	public void remove(final IFormValidator validator)
 	{
-		if (validator == null)
-		{
-			throw new IllegalArgumentException("Argument `validator` cannot be null");
-		}
+		Args.notNull(validator, "validator");
 
 		Behavior match = null;
 		for (Behavior behavior : getBehaviors())
@@ -526,10 +520,16 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		 */
 		UrlRenderer renderer = getRequestCycle().getUrlRenderer();
 		Url oldBase = renderer.getBaseUrl();
-		Url action = Url.parse(getActionUrl().toString());
-		renderer.setBaseUrl(action);
-		url = renderer.renderUrl(Url.parse(url.toString()));
-		renderer.setBaseUrl(oldBase);
+		try
+		{
+			Url action = Url.parse(getActionUrl().toString());
+			renderer.setBaseUrl(action);
+			url = renderer.renderUrl(Url.parse(url.toString()));
+		}
+		finally
+		{
+			renderer.setBaseUrl(oldBase);
+		}
 
 		Form<?> root = getRootForm();
 		return new AppendingStringBuffer("document.getElementById('").append(
@@ -656,17 +656,6 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	public final boolean isSubmitted()
 	{
 		return getFlag(FLAG_SUBMITTED);
-	}
-
-	/**
-	 * Method made final because we want to ensure users call setVersioned.
-	 * 
-	 * @see org.apache.wicket.Component#isVersioned()
-	 */
-	@Override
-	public boolean isVersioned()
-	{
-		return super.isVersioned();
 	}
 
 	/**
@@ -1259,11 +1248,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Handles multi-part processing of the submitted data.
-	 * 
-	 * WARNING
-	 * 
-	 * If this method is overridden it can break {@link FileUploadField}s on this form
+	 * Handles multi-part processing of the submitted data. <h3>
+	 * WARNING</h3> If this method is overridden it can break {@link FileUploadField}s on this form
 	 * 
 	 * @return false if form is multipart and upload failed
 	 */
@@ -1530,8 +1516,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected boolean encodeUrlInHiddenFields()
 	{
-		String method = getMethod().toLowerCase();
-		return method.equals("get");
+		return METHOD_GET.equalsIgnoreCase(getMethod());
 	}
 
 	/**
@@ -1794,10 +1779,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected final void validateFormValidator(final IFormValidator validator)
 	{
-		if (validator == null)
-		{
-			throw new IllegalArgumentException("Argument [[validator]] cannot be null");
-		}
+		Args.notNull(validator, "validator");
 
 		final FormComponent<?>[] dependents = validator.getDependentFormComponents();
 
