@@ -173,11 +173,28 @@ public final class LocalizedImageResource implements IClusterable
 	}
 
 	/**
+	 * Binds this resource if it is shared
+	 */
+	public final void bind()
+	{
+		// If we have a resource reference
+		if (resourceReference != null && resourceReference.canBeRegistered() &&
+			Application.exists())
+		{
+			// Bind the reference to the application
+			Application.get()
+				.getResourceReferenceRegistry()
+				.registerResourceReference(resourceReference);
+		}
+	}
+
+	/**
 	 * @param parameters
 	 *            page parameters
 	 */
 	public final void onResourceRequested(PageParameters parameters)
 	{
+		bind();
 		RequestCycle requestCycle = RequestCycle.get();
 		Attributes attributes = new Attributes(requestCycle.getRequest(),
 			requestCycle.getResponse(), parameters);
@@ -229,6 +246,7 @@ public final class LocalizedImageResource implements IClusterable
 			this.resourceReference = resourceReference;
 		}
 		this.resourceParameters = resourceParameters;
+		bind();
 	}
 
 	/**
@@ -386,6 +404,7 @@ public final class LocalizedImageResource implements IClusterable
 		}
 		final Class<?> scope = parent.getClass();
 		resourceReference = new PackageResourceReference(scope, path, locale, style, variation);
+		bind();
 	}
 
 	/**
