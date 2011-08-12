@@ -131,9 +131,11 @@ public class ResourceLink<T> extends Link<T> implements IResourceListener
 			// exists.
 			// something like
 			// SharedResource.getResourceReferenceForLocale(resourceReference);
-
-			getApplication().getResourceReferenceRegistry().registerResourceReference(
-				resourceReference);
+			if (resourceReference.canBeRegistered())
+			{
+				getApplication().getResourceReferenceRegistry().registerResourceReference(
+					resourceReference);
+			}
 
 			return getRequestCycle().urlFor(
 				new ResourceReferenceRequestHandler(resourceReference, resourceParameters));
