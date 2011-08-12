@@ -257,6 +257,13 @@ public final class PropertyResolver
 	{
 		String expressionBracketsSeperated = Strings.replaceAll(expression, "[", ".[").toString();
 		int index = getNextDotIndex(expressionBracketsSeperated, 0);
+		while (index == 0 && expressionBracketsSeperated.startsWith("."))
+		{
+			// eat dots at the beginning of the expression since they will confuse
+			// later steps
+			expressionBracketsSeperated = expressionBracketsSeperated.substring(1);
+			index = getNextDotIndex(expressionBracketsSeperated, 0);
+		}
 		int lastIndex = 0;
 		Object value = object;
 		String exp = expressionBracketsSeperated;
