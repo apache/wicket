@@ -530,33 +530,26 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 		if (stateless == null)
 		{
-			Boolean returnValue = visitChildren(Component.class, new IVisitor<Component, Boolean>()
-			{
-				public void component(final Component component, final IVisit<Boolean> visit)
+			Component statefulComponent = visitChildren(Component.class,
+				new IVisitor<Component, Component>()
 				{
-					if (!component.isStateless())
+					public void component(final Component component, final IVisit<Component> visit)
 					{
-						visit.stop(Boolean.FALSE);
+						if (!component.isStateless())
+						{
+							visit.stop(component);
+						}
 					}
-				}
-			});
-			if (returnValue == null)
+				});
+
+			stateless = statefulComponent == null;
+
+			if (log.isDebugEnabled() && !stateless.booleanValue() && getStatelessHint())
 			{
-				stateless = Boolean.TRUE;
-			}
-			else
-			{
-				stateless = returnValue;
+				log.debug("Page '{}' is not stateless because of component with path '{}'.", this,
+					statefulComponent.getPageRelativePath());
 			}
 
-			// TODO (matej_k): The stateless hint semantics has been changed, this warning doesn't
-			// work anymore. but we don't really have
-			// alternative to this
-			/*
-			 * if (!stateless.booleanValue() && getStatelessHint()) { log.warn("Page '" + this + "'
-			 * is not stateless because of '" + returnArray[0] + "' but the stateless hint is set to
-			 * true!"); }
-			 */
 		}
 
 		return stateless;
