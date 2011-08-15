@@ -1351,6 +1351,14 @@ public class BaseWicketTester
 	{
 		private IMarkupFragment pageMarkup = null;
 
+		/**
+		 * Construct.
+		 */
+		public StartComponentInPage()
+		{
+			setStatelessHint(false);
+		}
+
 		@Override
 		public IMarkupFragment getMarkup()
 		{
