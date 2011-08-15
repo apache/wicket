@@ -161,13 +161,12 @@ public class WebPage extends Page
 	 */
 	protected void configureResponse(final WebResponse response)
 	{
-		final WebApplication application = WebApplication.get();
-
-		// Users may sublcass setHeader() to set there own headers
+		// Users may subclass setHeader() to set there own headers
 		setHeaders(response);
 
 		// The response encoding is an application setting
-		final String encoding = application.getRequestCycleSettings().getResponseRequestEncoding();
+		final String encoding = getApplication().getRequestCycleSettings()
+			.getResponseRequestEncoding();
 		final boolean validEncoding = (Strings.isEmpty(encoding) == false);
 		final String contentType;
 		if (validEncoding)

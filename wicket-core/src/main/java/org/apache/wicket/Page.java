@@ -242,7 +242,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	public final void componentRendered(final Component component)
 	{
 		// Inform the page that this component rendered
-		if (Application.get().getDebugSettings().getComponentUseCheck())
+		if (getApplication().getDebugSettings().getComponentUseCheck())
 		{
 			if (renderedComponents == null)
 			{
@@ -633,7 +633,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		// If the application wants component uses checked and
 		// the response is not a redirect
-		final IDebugSettings debugSettings = Application.get().getDebugSettings();
+		final IDebugSettings debugSettings = getApplication().getDebugSettings();
 		if (debugSettings.getComponentUseCheck())
 		{
 			final List<Component> unrenderedComponents = new ArrayList<Component>();
@@ -774,7 +774,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 
 		// Set versioning of page based on default
-		setVersioned(Application.get().getPageSettings().getVersionPagesByDefault());
+		setVersioned(getApplication().getPageSettings().getVersionPagesByDefault());
 
 		// All Pages are born dirty so they get clustered right away
 		dirty(true);
@@ -880,7 +880,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		checkRendering(this);
 
 		// clean up debug meta data if component check is on
-		if (Application.get().getDebugSettings().getComponentUseCheck())
+		if (getApplication().getDebugSettings().getComponentUseCheck())
 		{
 			visitChildren(new IVisitor<Component, Void>()
 			{
@@ -895,7 +895,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		if (!isPageStateless())
 		{
 			// trigger creation of the actual session in case it was deferred
-			Session.get().getSessionStore().getSessionId(RequestCycle.get().getRequest(), true);
+			getSession().getSessionStore().getSessionId(RequestCycle.get().getRequest(), true);
 
 			// Add/touch the response page in the session.
 			getSession().getPageManager().touchPage(this);

@@ -677,7 +677,7 @@ public abstract class Component
 		setId(id);
 		getApplication().getComponentInstantiationListeners().onInstantiation(this);
 
-		final IDebugSettings debugSettings = Application.get().getDebugSettings();
+		final IDebugSettings debugSettings = getApplication().getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled())
 		{
 			setMetaData(CONSTRUCTED_AT_KEY,
@@ -1106,8 +1106,8 @@ public abstract class Component
 	 */
 	public final void debug(final Serializable message)
 	{
-		Session.get().getFeedbackMessages().debug(this, message);
-		Session.get().dirty();
+		getSession().getFeedbackMessages().debug(this, message);
+		getSession().dirty();
 	}
 
 	/**
@@ -1208,8 +1208,8 @@ public abstract class Component
 	 */
 	public final void error(final Serializable message)
 	{
-		Session.get().getFeedbackMessages().error(this, message);
-		Session.get().dirty();
+		getSession().getFeedbackMessages().error(this, message);
+		getSession().dirty();
 	}
 
 	/**
@@ -1220,8 +1220,8 @@ public abstract class Component
 	 */
 	public final void fatal(final Serializable message)
 	{
-		Session.get().getFeedbackMessages().fatal(this, message);
-		Session.get().dirty();
+		getSession().getFeedbackMessages().fatal(this, message);
+		getSession().dirty();
 	}
 
 	/**
@@ -1326,7 +1326,7 @@ public abstract class Component
 	@SuppressWarnings("deprecation")
 	public final FeedbackMessage getFeedbackMessage()
 	{
-		return Session.get().getFeedbackMessages().messageForComponent(this);
+		return getSession().getFeedbackMessages().messageForComponent(this);
 	}
 
 	/**
@@ -1334,7 +1334,7 @@ public abstract class Component
 	 */
 	public final List<FeedbackMessage> getFeedbackMessages()
 	{
-		return Session.get().getFeedbackMessages().messagesForComponent(this);
+		return getSession().getFeedbackMessages().messagesForComponent(this);
 	}
 
 	/**
@@ -1503,7 +1503,7 @@ public abstract class Component
 		}
 
 		final int generatedMarkupId = storedMarkupId instanceof Integer ? (Integer)storedMarkupId
-			: Session.get().nextSequenceValue();
+			: getSession().nextSequenceValue();
 
 		if (storedMarkupId == null)
 		{
@@ -1948,7 +1948,7 @@ public abstract class Component
 	 */
 	public final boolean hasErrorMessage()
 	{
-		return Session.get().getFeedbackMessages().hasErrorMessageFor(this);
+		return getSession().getFeedbackMessages().hasErrorMessageFor(this);
 	}
 
 	/**
@@ -1956,7 +1956,7 @@ public abstract class Component
 	 */
 	public final boolean hasFeedbackMessage()
 	{
-		return Session.get().getFeedbackMessages().hasMessageFor(this);
+		return getSession().getFeedbackMessages().hasMessageFor(this);
 	}
 
 	/**
@@ -1967,8 +1967,8 @@ public abstract class Component
 	 */
 	public final void info(final Serializable message)
 	{
-		Session.get().getFeedbackMessages().info(this, message);
-		Session.get().dirty();
+		getSession().getFeedbackMessages().info(this, message);
+		getSession().dirty();
 	}
 
 	/**
@@ -1979,8 +1979,8 @@ public abstract class Component
 	 */
 	public final void success(final Serializable message)
 	{
-		Session.get().getFeedbackMessages().success(this, message);
-		Session.get().dirty();
+		getSession().getFeedbackMessages().success(this, message);
+		getSession().dirty();
 	}
 
 	/**
@@ -3399,8 +3399,8 @@ public abstract class Component
 	 */
 	public final void warn(final Serializable message)
 	{
-		Session.get().getFeedbackMessages().warn(this, message);
-		Session.get().dirty();
+		getSession().getFeedbackMessages().warn(this, message);
+		getSession().dirty();
 	}
 
 	/**
