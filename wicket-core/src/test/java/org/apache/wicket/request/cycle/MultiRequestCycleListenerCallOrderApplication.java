@@ -95,5 +95,10 @@ class MultiRequestCycleListenerCallOrderApplication extends WebApplication
 		{
 			return "Listener " + name;
 		}
+
+		public void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler)
+		{
+			callSequence.add(name + ".onRequestHandlerExecuted");
+		}
 	}
 }

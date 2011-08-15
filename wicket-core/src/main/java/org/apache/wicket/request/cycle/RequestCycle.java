@@ -208,6 +208,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 			{
 				listeners.onRequestHandlerResolved(this, handler);
 				requestHandlerExecutor.execute(handler);
+				listeners.onRequestHandlerExecuted(this, handler);
 				return true;
 			}
 
@@ -223,6 +224,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 			{
 				listeners.onExceptionRequestHandlerResolved(this, handler, e);
 				executeExceptionRequestHandler(handler, getExceptionRetryCount());
+				listeners.onRequestHandlerExecuted(this, handler);
 			}
 			else
 			{

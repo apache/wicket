@@ -164,4 +164,13 @@ public interface IRequestCycleListener
 	 */
 	void onExceptionRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler,
 		Exception exception);
+
+	/**
+	 * Called after an {@link IRequestHandler} has been executed. If the execution resulted in an
+	 * exception this method will not be called for that particular {@link IRequestHandler}.
+	 * 
+	 * @param cycle
+	 * @param handler
+	 */
+	void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler);
 }

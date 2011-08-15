@@ -148,4 +148,9 @@ public class BookmarkableListenerInterfaceRequestHandler
 	{
 		// nothing to do here, this handler is only used to generate URLs
 	}
+
+	public final boolean isPageInstanceCreated()
+	{
+		return !pageComponentProvider.isNewPageInstance();
+	}
 }

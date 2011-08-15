@@ -53,4 +53,8 @@ public abstract class AbstractRequestCycleListener implements IRequestCycleListe
 		Exception exception)
 	{
 	}
+
+	public void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler)
+	{
+	}
 }

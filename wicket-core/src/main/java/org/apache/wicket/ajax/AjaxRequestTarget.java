@@ -1363,4 +1363,9 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	{
 		return page.getPageParameters();
 	}
+
+	public final boolean isPageInstanceCreated()
+	{
+		return true;
+	}
 }

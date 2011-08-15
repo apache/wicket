@@ -66,9 +66,11 @@ public class MultiRequestCycleListenerCallOrderTest extends WicketTestCase
 
 		List<String> primaryRequest = asList("first.onBeginRequest", "second.onBeginRequest",
 			"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
+			"first.onRequestHandlerExecuted", "second.onRequestHandlerExecuted",
 			"second.onEndRequest", "first.onEndRequest", "second.onDetach", "first.onDetach");
 		List<String> redirectRequest = asList("first.onBeginRequest", "second.onBeginRequest",
 			"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
+			"first.onRequestHandlerExecuted", "second.onRequestHandlerExecuted",
 			"second.onEndRequest", "first.onEndRequest", "second.onDetach", "first.onDetach");
 
 		List<String> expected = new ArrayList<String>();
@@ -89,9 +91,11 @@ public class MultiRequestCycleListenerCallOrderTest extends WicketTestCase
 
 		List<String> primaryRequest = asList("first.onBeginRequest", "second.onBeginRequest",
 			"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
+			"first.onRequestHandlerExecuted", "second.onRequestHandlerExecuted",
 			"second.onEndRequest", "first.onEndRequest", "second.onDetach", "first.onDetach");
 		List<String> redirectRequest = asList("first.onBeginRequest", "second.onBeginRequest",
 			"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
+			"first.onRequestHandlerExecuted", "second.onRequestHandlerExecuted",
 			"second.onEndRequest", "first.onEndRequest", "second.onDetach", "first.onDetach");
 
 		List<String> expected = new ArrayList<String>();
@@ -117,9 +121,11 @@ public class MultiRequestCycleListenerCallOrderTest extends WicketTestCase
 		List<String> primaryRequest = asList("first.onBeginRequest", "second.onBeginRequest",
 			"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
 			"first.onRequestHandlerScheduled", "second.onRequestHandlerScheduled",
+			"first.onRequestHandlerExecuted", "second.onRequestHandlerExecuted",
 			"second.onEndRequest", "first.onEndRequest", "second.onDetach", "first.onDetach");
 		List<String> redirectRequest = asList("first.onBeginRequest", "second.onBeginRequest",
 			"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
+			"first.onRequestHandlerExecuted", "second.onRequestHandlerExecuted",
 			"second.onEndRequest", "first.onEndRequest", "second.onDetach", "first.onDetach");
 
 		List<String> expected = new ArrayList<String>();
@@ -146,6 +152,7 @@ public class MultiRequestCycleListenerCallOrderTest extends WicketTestCase
 		List<String> primaryRequest = asList("first.onBeginRequest", "second.onBeginRequest",
 			"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
 			"first.onRequestHandlerScheduled", "second.onRequestHandlerScheduled",
+			"first.onRequestHandlerExecuted", "second.onRequestHandlerExecuted",
 			"second.onEndRequest", "first.onEndRequest", "second.onDetach", "first.onDetach");
 
 		// with ajax requests we don't expect a redirect

@@ -38,4 +38,12 @@ public interface IPageRequestHandler extends IPageClassRequestHandler
 	 * @return page id
 	 */
 	Integer getPageId();
+
+	/**
+	 * Checks if the page instance is already created or if it will be created when
+	 * {@link #getPage()} is called
+	 * 
+	 * @return {@code true} iff page instance is not yet created
+	 */
+	boolean isPageInstanceCreated();
 }

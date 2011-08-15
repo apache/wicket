@@ -146,4 +146,9 @@ public class RenderPageRequestHandler implements IPageRequestHandler, IPageClass
 		PageRenderer renderer = Application.get().getPageRendererProvider().get(this);
 		renderer.respond((RequestCycle)requestCycle);
 	}
+
+	public final boolean isPageInstanceCreated()
+	{
+		return !pageProvider.isNewPageInstance();
+	}
 }

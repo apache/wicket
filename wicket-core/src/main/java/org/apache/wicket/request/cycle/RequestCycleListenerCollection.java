@@ -175,4 +175,15 @@ public class RequestCycleListenerCollection extends ListenerCollection<IRequestC
 			}
 		});
 	}
+
+	public void onRequestHandlerExecuted(final RequestCycle cycle, final IRequestHandler handler)
+	{
+		notify(new INotifier<IRequestCycleListener>()
+		{
+			public void notify(IRequestCycleListener listener)
+			{
+				listener.onRequestHandlerExecuted(cycle, handler);
+			}
+		});
+	}
 }

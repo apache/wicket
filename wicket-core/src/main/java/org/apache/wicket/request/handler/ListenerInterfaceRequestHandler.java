@@ -192,4 +192,9 @@ public class ListenerInterfaceRequestHandler
 
 		}
 	}
+
+	public final boolean isPageInstanceCreated()
+	{
+		return !pageComponentProvider.isNewPageInstance();
+	}
 }

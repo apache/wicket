@@ -284,7 +284,7 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 	{
 
 		private int begins, ends, exceptions, detachesnotified, resolutions, exceptionResolutions,
-			schedules = 0;
+			schedules, executions = 0;
 
 		public IRequestHandler onException(final RequestCycle cycle, Exception ex)
 		{
@@ -330,6 +330,11 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 			assertEquals(ends, this.ends);
 			assertEquals(exceptions, this.exceptions);
 			assertEquals(detachesnotified, this.detachesnotified);
+		}
+
+		public void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler)
+		{
+			executions++;
 		}
 	}
 }
