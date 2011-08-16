@@ -115,6 +115,8 @@ public class WicketFilter implements Filter
 	boolean processRequest(ServletRequest request, final ServletResponse response,
 		final FilterChain chain) throws IOException, ServletException
 	{
+		final ThreadContext previousThreadContext = ThreadContext.detach();
+
 		// Assume we are able to handle the request
 		boolean res = true;
 
@@ -191,7 +193,7 @@ public class WicketFilter implements Filter
 		}
 		finally
 		{
-			ThreadContext.detach();
+			ThreadContext.restore(previousThreadContext);
 
 			if (newClassLoader != previousClassLoader)
 			{
