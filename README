@@ -94,6 +94,7 @@ Here is a list of projects in this distribution and what they do.
  - wicket-examples: contains a basic component reference and many examples of 
 		how to use Wicket and Wicket components, including examples for sub 
 		projects such as wicket-spring, wicket-velocity and wicket-auth-roles.
+ - wicket-devutils: provides small utilities which can help in development phase
 
 Getting started
 ---------------
