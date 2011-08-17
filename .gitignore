@@ -2,4 +2,7 @@ target
 velocity.log
 .project
 .classpath
+*.ipr
+*.iml
+*.iws
 
