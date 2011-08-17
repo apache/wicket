@@ -18,6 +18,7 @@ package org.apache.wicket.request.cycle;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Url;
 
 /**
  * A callback interface for various methods in the request cycle. If you are creating a framework
@@ -173,4 +174,14 @@ public interface IRequestCycleListener
 	 * @param handler
 	 */
 	void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler);
+
+	/**
+	 * Called after a Url is generated for a {@link IRequestHandler}. This method can be used to
+	 * modify generated urls, for example query parameters can be added.
+	 * 
+	 * @param cycle
+	 * @param handler
+	 * @param url
+	 */
+	void onUrlMapped(RequestCycle cycle, IRequestHandler handler, Url url);
 }

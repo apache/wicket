@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.util.listener.ListenerCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -185,5 +186,17 @@ public class RequestCycleListenerCollection extends ListenerCollection<IRequestC
 				listener.onRequestHandlerExecuted(cycle, handler);
 			}
 		});
+	}
+
+	public void onUrlMapped(final RequestCycle cycle, final IRequestHandler handler, final Url url)
+	{
+		notify(new INotifier<IRequestCycleListener>()
+		{
+			public void notify(IRequestCycleListener listener)
+			{
+				listener.onUrlMapped(cycle, handler, url);
+			}
+		});
+
 	}
 }

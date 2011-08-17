@@ -371,7 +371,9 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 */
 	public Url mapUrlFor(IRequestHandler handler)
 	{
-		return requestMapper.mapHandler(handler);
+		final Url url = requestMapper.mapHandler(handler);
+		listeners.onUrlMapped(this, handler, url);
+		return url;
 	}
 
 	/**

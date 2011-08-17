@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Url;
 
 class MultiRequestCycleListenerCallOrderApplication extends WebApplication
 {
@@ -99,6 +100,10 @@ class MultiRequestCycleListenerCallOrderApplication extends WebApplication
 		public void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler)
 		{
 			callSequence.add(name + ".onRequestHandlerExecuted");
+		}
+
+		public void onUrlMapped(RequestCycle cycle, IRequestHandler handler, Url url)
+		{
 		}
 	}
 }

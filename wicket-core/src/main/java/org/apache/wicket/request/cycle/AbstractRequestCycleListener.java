@@ -17,6 +17,7 @@
 package org.apache.wicket.request.cycle;
 
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Url;
 
 /**
  * Empty implementation of an {@link IRequestCycleListener} useful as a starting point for your own
@@ -55,6 +56,10 @@ public abstract class AbstractRequestCycleListener implements IRequestCycleListe
 	}
 
 	public void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler)
+	{
+	}
+
+	public void onUrlMapped(RequestCycle cycle, IRequestHandler handler, Url url)
 	{
 	}
 }

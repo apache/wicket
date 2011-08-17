@@ -336,5 +336,9 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 		{
 			executions++;
 		}
+
+		public void onUrlMapped(RequestCycle cycle, IRequestHandler handler, Url url)
+		{
+		}
 	}
 }
