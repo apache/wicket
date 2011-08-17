@@ -124,7 +124,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 			// propagate cid to a scheduled bookmarkable page
 
 			PageParameters parameters = getPageParameters(handler);
-			if (parameters != null && propagation == ConversationPropagation.ALL)
+			if (parameters != null)
 			{
 				parameters.add(CID, conversation.getId());
 			}
