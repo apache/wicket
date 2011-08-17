@@ -32,8 +32,8 @@ import javax.crypto.spec.PBEParameterSpec;
 /**
  * Provide some simple means to encrypt and decrypt strings such as passwords. The whole
  * implementation is based around Sun's security providers and uses the <a
- * href="http://www.semoa.org/docs/api/cdc/standard/pbe/PBEWithMD5AndDES.html">PBEWithMD5AndDES</a>
- * method to encrypt and decrypt the data.
+ * href="http://www.ietf.org/rfc/rfc2898.txt">PBEWithMD5AndDES</a> method to encrypt and decrypt the
+ * data.
  * 
  * @author Juergen Donnerstag
  */

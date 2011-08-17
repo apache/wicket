@@ -240,6 +240,6 @@ Section 740.13) for both object code and source code.
 
 The following provides more details on the included cryptographic software:
 
-For encoding HTTP URL data (see org.apache.wicket.protocol.http.request.CryptedUrlWebRequestCodingStrategy) 
+For encoding HTTP URL data (see org.apache.wicket.request.mapper.CryptoMapper) 
 Wicket requires the Java Cryptography extensions (http://java.sun.com/javase/technologies/security/). Wicket
 does not include these libraries itself, but is designed to use them.
