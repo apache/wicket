@@ -847,8 +847,8 @@ public abstract class Component
 	 * {
 	 * 	protected void onConfigure()
 	 * 	{
-	 * 		setVisible(Math.rand() &gt; 0.5f);
 	 * 		super.onConfigure();
+	 * 		setVisible(Math.rand() &gt; 0.5f);
 	 * 	}
 	 * }
 	 * </pre>
