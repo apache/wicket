@@ -19,6 +19,7 @@ package org.apache.wicket.resource;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.IResource;
@@ -140,6 +141,11 @@ public class TextTemplateResourceReference extends ResourceReference implements 
 
 		textTemplate = new PackageTextTemplate(scope, fileName, contentType, encoding);
 		this.variablesModel = variablesModel;
+
+		if (Application.exists())
+		{
+			Application.get().getResourceReferenceRegistry().registerResourceReference(this);
+		}
 	}
 
 // **********************************************************************************************************************
