@@ -64,6 +64,7 @@
 				<module>wicket-objectssizeof-agent</module>
 				<module>wicket-examples</module>
 				<module>archetypes/quickstart</module>
+				<module>wicket-weld</module>
 			</modules>
 			<build>
 				<plugins>
@@ -136,6 +137,7 @@
 				<module>wicket-objectssizeof-agent</module>
 				<module>wicket-examples</module>
 				<module>archetypes/quickstart</module>
+				<module>wicket-weld</module>
 			</modules>
 			<build>
 				<plugins>
@@ -196,6 +198,7 @@
 				<module>wicket-examples</module>
 				<module>archetypes/quickstart</module>
 				<module>testing/wicket-threadtest</module>
+				<module>wicket-weld</module>
 			</modules>
 
 
@@ -379,17 +382,17 @@
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
-				<version>1.5.10</version>
+				<version>1.6.1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-log4j12</artifactId>
-				<version>1.5.10</version>
+				<version>1.6.1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>jcl-over-slf4j</artifactId>
-				<version>1.5.10</version>
+				<version>1.6.1</version>
 			</dependency>
 			<dependency>
 				<groupId>log4j</groupId>
@@ -826,7 +829,4 @@
 			</plugin>
 		</plugins>
 	</reporting>
-  <modules>
-    <module>wicket-weld</module>
-  </modules>
 </project>
