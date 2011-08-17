@@ -16,8 +16,10 @@
  */
 package org.apache.wicket.examples.weld;
 
+import javax.enterprise.context.ApplicationScoped;
 
-//@ApplicationScoped
+
+@ApplicationScoped
 public class ApplicationCounter extends Counter
 {
 }

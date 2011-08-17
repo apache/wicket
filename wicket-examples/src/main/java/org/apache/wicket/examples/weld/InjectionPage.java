@@ -16,14 +16,16 @@
  */
 package org.apache.wicket.examples.weld;
 
+import javax.inject.Inject;
+
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.PropertyModel;
 
 public class InjectionPage extends ExamplePage
 {
-	// @Inject
-	ApplicationCounter counter = new ApplicationCounter();
+	@Inject
+	ApplicationCounter counter;
 
 	public InjectionPage()
 	{

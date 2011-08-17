@@ -14,26 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.weld;
+package org.apache.wicket.cdi;
 
-import org.apache.wicket.Page;
-import org.apache.wicket.cdi.weld.WeldConfiguration;
-import org.apache.wicket.protocol.http.WebApplication;
+import javax.enterprise.context.ConversationScoped;
 
-public class WeldApplication extends WebApplication
-{
-
-	@Override
-	public Class<? extends Page> getHomePage()
-	{
-		return WeldHomePage.class;
-	}
-
-	@Override
-	protected void init()
-	{
-		super.init();
-		new WeldConfiguration().configure(this);
-	}
-
+/**
+ * Various modes of propagating persistent conversations across requests.
+ * 
+ * @see ConversationScoped
+ * 
+ * @author igor
+ */
+public enum ConversationPropagation {
+	/** No conversational propagation takes place */
+	NONE,
+	/**
+	 * Pesistent conversations are propagated between non-bookmarkable pages only
+	 */
+	NONBOOKMARKABLE,
+	/**
+	 * Persistent conversations are propagated between bookmarkable and non-bookmarkable pages
+	 */
+	ALL;
 }

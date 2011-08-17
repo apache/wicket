@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.weld;
 
+import javax.inject.Inject;
+
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
@@ -23,12 +25,11 @@ import org.apache.wicket.model.PropertyModel;
 
 public class ConversationPage2 extends ExamplePage
 {
-	// @Inject
-	ConversationCounter counter = new ConversationCounter();
+	@Inject
+	ConversationCounter counter;
 
 	public ConversationPage2()
 	{
-		System.out.println("2:" + getSession().getMetaData(ConversationPage1.KEY));
 		add(new Label("count", new PropertyModel(this, "counter.count")));
 
 		add(new Link<Void>("increment")
@@ -36,7 +37,6 @@ public class ConversationPage2 extends ExamplePage
 			@Override
 			public void onClick()
 			{
-				System.out.println("2:" + getSession().getMetaData(ConversationPage1.KEY));
 				counter.increment();
 			}
 		});

@@ -16,8 +16,10 @@
  */
 package org.apache.wicket.examples.weld;
 
+import javax.enterprise.context.ConversationScoped;
 
-//@ConversationScoped
+
+@ConversationScoped
 public class ConversationCounter extends Counter
 {
 }

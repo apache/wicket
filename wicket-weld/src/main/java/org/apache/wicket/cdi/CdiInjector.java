@@ -14,26 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.weld;
+package org.apache.wicket.cdi;
 
-import org.apache.wicket.Page;
-import org.apache.wicket.cdi.weld.WeldConfiguration;
-import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.Component;
+import org.apache.wicket.application.IComponentInstantiationListener;
 
-public class WeldApplication extends WebApplication
+/**
+ * Injects components with CDI dependencies
+ * 
+ * @author igor
+ * 
+ */
+public class CdiInjector implements IComponentInstantiationListener
 {
+	private final CdiContainer container;
 
-	@Override
-	public Class<? extends Page> getHomePage()
+	/**
+	 * Constructor
+	 * 
+	 * @param container
+	 */
+	public CdiInjector(CdiContainer container)
 	{
-		return WeldHomePage.class;
+		this.container = container;
 	}
 
-	@Override
-	protected void init()
+	public void onInstantiation(Component component)
 	{
-		super.init();
-		new WeldConfiguration().configure(this);
+		container.inject(component);
 	}
 
 }

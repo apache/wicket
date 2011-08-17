@@ -16,32 +16,25 @@
  */
 package org.apache.wicket.examples.weld;
 
-import java.util.UUID;
+import javax.enterprise.context.Conversation;
+import javax.inject.Inject;
 
-import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.PropertyModel;
 
 public class ConversationPage1 extends ExamplePage
 {
-	public static MetaDataKey<String> KEY = new MetaDataKey<String>()
-	{
-	};
+	@Inject
+	ConversationCounter counter;
 
-	// @Inject
-	ConversationCounter counter = new ConversationCounter();
-
-	// @Inject
-	// Conversation conversation;
+	@Inject
+	Conversation conversation;
 
 	public ConversationPage1()
 	{
 		// make the conversation long running
-		// conversation.begin();
-
-		getSession().setMetaData(KEY, UUID.randomUUID().toString());
-		System.out.println("1:" + getSession().getMetaData(KEY));
+		conversation.begin();
 
 		add(new Label("count", new PropertyModel(this, "counter.count")));
 
@@ -51,7 +44,6 @@ public class ConversationPage1 extends ExamplePage
 			public void onClick()
 			{
 				counter.increment();
-				System.out.println("1:" + getSession().getMetaData(KEY));
 			}
 		});
 
@@ -61,7 +53,6 @@ public class ConversationPage1 extends ExamplePage
 			public void onClick()
 			{
 				setResponsePage(new ConversationPage2());
-				System.out.println("1:" + getSession().getMetaData(KEY));
 			}
 		});
 	}

@@ -19,7 +19,7 @@ package org.apache.wicket.examples.weld;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Counter implements Serializable
+public abstract class Counter implements Serializable
 {
 	private AtomicInteger counter = new AtomicInteger();
 
