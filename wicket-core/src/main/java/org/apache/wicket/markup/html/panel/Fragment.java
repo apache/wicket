@@ -50,7 +50,8 @@ public class Fragment extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
-	private final String markupId;
+	/** The wicket:id of the associated markup fragment */
+	private final String associatedMarkupId;
 
 	private final MarkupContainer markupProvider;
 
@@ -90,7 +91,7 @@ public class Fragment extends WebMarkupContainer
 	{
 		super(id, model);
 
-		this.markupId = markupId;
+		associatedMarkupId = markupId;
 		this.markupProvider = markupProvider;
 
 		Args.notNull(markupId, "markupId");
@@ -102,7 +103,7 @@ public class Fragment extends WebMarkupContainer
 	@Override
 	protected IMarkupSourcingStrategy newMarkupSourcingStrategy()
 	{
-		return new FragmentMarkupSourcingStrategy(markupId, markupProvider)
+		return new FragmentMarkupSourcingStrategy(associatedMarkupId, markupProvider)
 		{
 			@Override
 			public IMarkupFragment chooseMarkup(Component component)
@@ -122,4 +123,13 @@ public class Fragment extends WebMarkupContainer
 	{
 		return provider.getMarkup(null);
 	}
+
+	/**
+	 * @return the markup id associated to this Fragment
+	 */
+	public final String getAssociatedMarkupId()
+	{
+		return associatedMarkupId;
+	}
+
 }
