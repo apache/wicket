@@ -55,7 +55,7 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	private static final long serialVersionUID = 1L;
 
 	/** The wicket:id of the associated markup fragment */
-	private String markupId;
+	private String associatedMarkupId;
 
 	/** The container providing the inline markup */
 	private final MarkupContainer markupProvider;
@@ -139,7 +139,7 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 			throw new IllegalArgumentException("markupId cannot be null");
 		}
 
-		this.markupId = markupId;
+		associatedMarkupId = markupId;
 		this.markupProvider = markupProvider;
 	}
 
@@ -154,22 +154,22 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 		{
 			throw new IllegalArgumentException("markupId cannot be null");
 		}
-		if (!Objects.equal(this.markupId, markupId))
+		if (!Objects.equal(associatedMarkupId, markupId))
 		{
 			addStateChange(new Change()
 			{
 				private static final long serialVersionUID = 1L;
-				private final String oldMarkupId = Fragment.this.markupId;
+				private final String oldMarkupId = associatedMarkupId;
 
 				@Override
 				public void undo()
 				{
-					Fragment.this.markupId = oldMarkupId;
+					associatedMarkupId = oldMarkupId;
 				}
 
 			});
 		}
-		this.markupId = markupId;
+		associatedMarkupId = markupId;
 	}
 
 	/**
@@ -256,13 +256,13 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 		int currentIndex = providerMarkupStream.getCurrentIndex();
 
 		// Find the markup fragment
-		int index = providerMarkupStream.findComponentIndex(null, markupId);
+		int index = providerMarkupStream.findComponentIndex(null, associatedMarkupId);
 		if (index == -1)
 		{
 			throw new MarkupException("Markup of component class `" +
 				providerMarkupStream.getContainerClass().getName() +
-				"` does not contain a fragment with wicket:id `" + markupId + "`. Context: " +
-				toString());
+				"` does not contain a fragment with wicket:id `" + associatedMarkupId +
+				"`. Context: " + toString());
 		}
 
 		// Set the markup stream position to where the fragment begins
@@ -301,13 +301,13 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	public MarkupStream findComponentIndex(final String path)
 	{
 		MarkupStream markupStream = getAssociatedMarkupStream(true);
-		int index = markupStream.findComponentIndex(markupId, path);
+		int index = markupStream.findComponentIndex(associatedMarkupId, path);
 		if (index == -1)
 		{
 			throw new MarkupException("Markup of component class `" +
 				markupStream.getContainerClass().getName() +
-				"` does not contain a fragment with wicket:id `" + markupId + "`. Context: " +
-				toString());
+				"` does not contain a fragment with wicket:id `" + associatedMarkupId +
+				"`. Context: " + toString());
 		}
 		markupStream.setCurrentIndex(index);
 		return markupStream;
@@ -384,5 +384,12 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 		return markupProvider;
 	}
 
+	/**
+	 * @return the markup id associated to this Fragment
+	 */
+	public final String getAssociatedMarkupId()
+	{
+		return associatedMarkupId;
+	}
 
 }
