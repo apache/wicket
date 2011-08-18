@@ -148,7 +148,13 @@ Wicket.FunctionsExecuter.prototype = {
 		if (this.current < this.functions.length) {
 			var f = this.functions[this.current];
 			var run = function() {
-				f(this.notify.bind(this));
+				try {
+					f(this.notify.bind(this));
+				}
+				catch (e) {
+					Wicket.Log.error("Wicket.FunctionsExecuter.processNext: " + e);
+					this.notify();
+				}
 			}.bind(this);
 			this.current++;
 						
