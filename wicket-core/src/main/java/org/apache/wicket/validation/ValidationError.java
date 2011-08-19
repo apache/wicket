@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
 
 /**
@@ -77,10 +78,8 @@ public class ValidationError implements IValidationError
 	 */
 	public ValidationError addMessageKey(String key)
 	{
-		if (key == null || key.trim().length() == 0)
-		{
-			throw new IllegalArgumentException("Argument [[key]] cannot be null or an empty string");
-		}
+		Args.notEmpty(key, "key");
+
 		keys.add(key);
 		return this;
 	}
@@ -96,16 +95,8 @@ public class ValidationError implements IValidationError
 	 */
 	public ValidationError setVariable(String name, Object value)
 	{
-		if (name == null || name.trim().length() == 0)
-		{
-			throw new IllegalArgumentException(
-				"Argument [[name]] cannot be null or an empty string");
-		}
-		if (value == null)
-		{
-			throw new IllegalArgumentException(
-				"Argument [[value]] cannot be null or an empty string");
-		}
+		Args.notEmpty(name, "name");
+		Args.notNull(value, "value");
 
 		getVariables().put(name, value);
 
@@ -135,10 +126,8 @@ public class ValidationError implements IValidationError
 	 */
 	public final ValidationError setVariables(Map<String, Object> vars)
 	{
-		if (vars == null)
-		{
-			throw new IllegalArgumentException("Argument `vars` cannot be null");
-		}
+		Args.notNull(vars, "vars");
+
 		this.vars = vars;
 		return this;
 	}
@@ -195,10 +184,8 @@ public class ValidationError implements IValidationError
 	 */
 	public final ValidationError setMessage(String message)
 	{
-		if (message == null)
-		{
-			throw new IllegalArgumentException("Argument [[defaultMessage]] cannot be null");
-		}
+		Args.notNull(message, "message");
+
 		this.message = message;
 		return this;
 	}
