@@ -690,7 +690,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				{
 					Component component = iterator.next();
 
-					// If any of the transparentContainerChildren is a parent to component, than
+					// If any of the transparentContainerChildren is a parent to component, then
 					// ignore it.
 					for (Component transparentContainerChild : transparentContainerChildren)
 					{
