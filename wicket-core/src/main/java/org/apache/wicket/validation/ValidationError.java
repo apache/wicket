@@ -50,9 +50,8 @@ public class ValidationError implements IValidationError
 
 	private static final Map<String, Object> EMPTY_VARS = Collections.emptyMap();
 
-	// XXX 2.0: optimization - keys can be null by default until a key is added
 	/** list of message keys to try against the <code>IErrorMessageSource</code> */
-	private final List<String> keys = new ArrayList<String>(1);
+	private List<String> keys;
 
 	/** variables map to use in variable substitution */
 	private Map<String, Object> vars;
@@ -80,6 +79,10 @@ public class ValidationError implements IValidationError
 	{
 		Args.notEmpty(key, "key");
 
+		if (keys == null)
+		{
+			keys = new ArrayList<String>(1);
+		}
 		keys.add(key);
 		return this;
 	}
@@ -139,13 +142,16 @@ public class ValidationError implements IValidationError
 	{
 		String errorMessage = null;
 
-		// try any message keys ...
-		for (String key : keys)
+		if (keys != null)
 		{
-			errorMessage = messageSource.getMessage(key);
-			if (errorMessage != null)
+			// try any message keys ...
+			for (String key : keys)
 			{
-				break;
+				errorMessage = messageSource.getMessage(key);
+				if (errorMessage != null)
+				{
+					break;
+				}
 			}
 		}
 
