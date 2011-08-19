@@ -151,7 +151,7 @@ public class Validatable<T> implements IValidatable<T>
 
 	public IModel<T> getModel()
 	{
-		return null;
+		return model;
 	}
 
 }
