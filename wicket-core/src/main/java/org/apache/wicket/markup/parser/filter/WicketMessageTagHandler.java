@@ -154,8 +154,8 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 		if ((tag != null) && (tag.getId().startsWith(WICKET_MESSAGE_CONTAINER_ID)))
 		{
 			Component wc = null;
-			String id = WICKET_MESSAGE_CONTAINER_ID + container.getPage().getAutoIndex();
-			tag.setId(id);
+			int autoIndex = container.getPage().getAutoIndex();
+			String id = WICKET_MESSAGE_CONTAINER_ID + autoIndex;
 
 			if (tag.isOpenClose())
 			{
