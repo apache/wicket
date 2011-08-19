@@ -67,6 +67,48 @@
       <classifier>sources</classifier>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-core</artifactId>
+      <scope>provided</scope>
+      <classifier>tests</classifier>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-util</artifactId>
+      <scope>provided</scope>
+      <classifier>tests</classifier>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-request</artifactId>
+      <scope>provided</scope>
+      <classifier>tests</classifier>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-core</artifactId>
+      <classifier>test-sources</classifier>
+      <scope>provided</scope>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-util</artifactId>
+      <classifier>test-sources</classifier>
+      <scope>provided</scope>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-request</artifactId>
+      <classifier>test-sources</classifier>
+      <scope>provided</scope>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -78,17 +120,43 @@
           <tarLongFileMode>gnu</tarLongFileMode>
           <outputDirectory>target</outputDirectory>
           <finalName>${project.artifactId}-${project.version}</finalName>
-          <descriptors>
-            <descriptor>src/assembly/sources.xml</descriptor>
-          </descriptors>
         </configuration>
         <executions>
           <execution>
-            <id>make-sources</id>
+            <id>make-main-sources</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
             </goals>
+          <configuration>
+            <descriptors>
+              <descriptor>src/assembly/sources.xml</descriptor>
+            </descriptors>
+          </configuration>
+          </execution>
+          <execution>
+            <id>make-test-package</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>src/assembly/tests.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+          <execution>
+            <id>make-test-sources</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>src/assembly/test-sources.xml</descriptor>
+              </descriptors>
+            </configuration>
           </execution>
         </executions>
       </plugin>
