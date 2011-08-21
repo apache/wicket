@@ -26,6 +26,7 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebComponent;
+import org.junit.Test;
 
 /**
  * @author Pedro Santos
@@ -37,7 +38,8 @@ public class EventDispatcherTest extends WicketTestCase
 	 * Testing DispatchToAnnotatedMethod event dispatchers in frameworksettings. This dispatcher
 	 * invoke the methods annotated with @EvenCallback
 	 * */
-	public void testDispatchToAnnotatedMethod()
+	@Test
+	public void dispatchToAnnotatedMethod()
 	{
 		tester.getApplication().getFrameworkSettings().add(new DispatchToAnnotatedMethod());
 		MockPageWithOneComponent page = new MockPageWithOneComponent();

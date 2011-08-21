@@ -16,12 +16,13 @@
  */
 package org.apache.wicket;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Some tests for meta data.
  */
-public class MetaDataTest extends TestCase
+public class MetaDataTest extends Assert
 {
 	private static final MetaDataKey<String> KEY1 = new MetaDataKey<String>()
 	{
@@ -44,26 +45,10 @@ public class MetaDataTest extends TestCase
 	};
 
 	/**
-	 * Construct.
-	 */
-	public MetaDataTest()
-	{
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public MetaDataTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * Test bounds and basic operations.
 	 */
-	public void testMetaDataKey()
+	@Test
+	public void metaDataKey()
 	{
 		MetaDataEntry<?>[] md = KEY1.set(null, "1");
 		assertNotNull(md);

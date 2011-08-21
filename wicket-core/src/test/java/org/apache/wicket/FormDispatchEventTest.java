@@ -17,26 +17,19 @@
 package org.apache.wicket;
 
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Test;
 
 /**
  * @author jcompagner
  */
 public class FormDispatchEventTest extends WicketTestCase
 {
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public FormDispatchEventTest(String name)
-	{
-		super(name);
-	}
 
 	/**
 	 * @throws Exception
 	 */
-	public void testDropDownEvent() throws Exception
+	@Test
+	public void dropDownEvent() throws Exception
 	{
 		tester.startPage(MockPageWithForm.class);
 

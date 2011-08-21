@@ -17,6 +17,7 @@
 package org.apache.wicket.ajax;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,8 @@ public class DomReadyOrderTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testDomReadyOrder() throws Exception
+	@Test
+	public void domReadyOrder() throws Exception
 	{
 		tester.startPage(DomReadyOrderPage.class);
 		tester.assertResultPage(DomReadyOrderPage.class, "DomReadyOrderPage_expected.html");
@@ -43,7 +45,8 @@ public class DomReadyOrderTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testDomReadyOrder2() throws Exception
+	@Test
+	public void domReadyOrder2() throws Exception
 	{
 		tester.startPage(DomReadyOrderPage.class);
 		tester.assertResultPage(DomReadyOrderPage.class, "DomReadyOrderPage_expected.html");
@@ -55,7 +58,8 @@ public class DomReadyOrderTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testAjaxSubmitWhileAnotherButtonIsNotVisible()
+	@Test
+	public void ajaxSubmitWhileAnotherButtonIsNotVisible()
 	{
 		// start and render the test page
 		tester.startPage(HomePage.class);

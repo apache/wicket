@@ -17,6 +17,7 @@
 package org.apache.wicket;
 
 import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.junit.Test;
 
 /**
  * Test for ajax handler.
@@ -41,7 +42,8 @@ public class ComponentTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testDetachPage() throws Exception
+	@Test
+	public void detachPage() throws Exception
 	{
 		executeTest(TestDetachPage.class, "TestDetachPageExpectedResult.html");
 		TestDetachPage page = (TestDetachPage)tester.getLastRenderedPage();
@@ -61,7 +63,8 @@ public class ComponentTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testDetachPageAjaxRequest() throws Exception
+	@Test
+	public void detachPageAjaxRequest() throws Exception
 	{
 		executeTest(TestDetachPage.class, "TestDetachPageExpectedResult.html");
 		TestDetachPage page = (TestDetachPage)tester.getLastRenderedPage();
@@ -90,7 +93,8 @@ public class ComponentTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_1() throws Exception
+	@Test
+	public void renderHomePage_1() throws Exception
 	{
 		executeTest(TestPage_1.class, "TestPageExpectedResult_1.html");
 	}

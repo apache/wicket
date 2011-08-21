@@ -21,6 +21,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.util.tester.TagTester;
+import org.junit.Test;
 
 
 /**
@@ -29,20 +30,11 @@ import org.apache.wicket.util.tester.TagTester;
 public class AjaxLinkTest extends WicketTestCase
 {
 	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public AjaxLinkTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * If the AjaxLink is attached to an "a" tag the href value should be replaced with "#" because
 	 * we use the onclick to execute the javascript.
 	 */
-	public void testAnchorGetsHrefReplaced()
+	@Test
+	public void anchorGetsHrefReplaced()
 	{
 		tester.startPage(AjaxLinkPage.class);
 
@@ -55,7 +47,8 @@ public class AjaxLinkTest extends WicketTestCase
 	/**
 	 * Tests setting the request target to a normal page request from an ajax request.
 	 */
-	public void testFromAjaxRequestToNormalPage()
+	@Test
+	public void fromAjaxRequestToNormalPage()
 	{
 		tester.startPage(AjaxLinkPageToNormalPage.class);
 		tester.assertRenderedPage(AjaxLinkPageToNormalPage.class);
@@ -70,7 +63,8 @@ public class AjaxLinkTest extends WicketTestCase
 	 * Test that the onclick on ajax link has "return !wcall;" at the end. This ensures that
 	 * execution is not turned over to the href attribute, which would then append # to the url.
 	 */
-	public void testJavaScriptEndsWithReturn()
+	@Test
+	public void javaScriptEndsWithReturn()
 	{
 		tester.startPage(AjaxLinkPage.class);
 
@@ -83,7 +77,8 @@ public class AjaxLinkTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testPage_2() throws Exception
+	@Test
+	public void page_2() throws Exception
 	{
 		executeTest(AjaxPage2.class, "AjaxPage2_ExpectedResult.html");
 
@@ -98,7 +93,8 @@ public class AjaxLinkTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_1() throws Exception
+	@Test
+	public void renderHomePage_1() throws Exception
 	{
 		executeTest(AjaxLinkPage.class, "AjaxLinkPageExpectedResult.html");
 	}
@@ -107,7 +103,8 @@ public class AjaxLinkTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_2() throws Exception
+	@Test
+	public void renderHomePage_2() throws Exception
 	{
 		executeTest(AjaxLinkWithBorderPage.class, "AjaxLinkWithBorderPageExpectedResult.html");
 

@@ -23,6 +23,7 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.junit.Test;
 
 /**
  * @author Pedro Santos
@@ -33,7 +34,8 @@ public class ComponentTagAttributeEscapingTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testComponentAttributesNotDoubleEscaped() throws Exception
+	@Test
+	public void componentAttributesNotDoubleEscaped() throws Exception
 	{
 		tester.startPage(ButtonValuePage.class);
 		String response = tester.getLastResponseAsString();

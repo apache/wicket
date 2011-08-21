@@ -20,6 +20,7 @@ package org.apache.wicket.markup;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.parser.filter.HtmlProblemFinder;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
+import org.junit.Test;
 
 
 /**
@@ -28,34 +29,18 @@ import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
 public class HtmlProblemFinderTest extends WicketTestCase
 {
 
-
 	/**
-	 * Construct.
-	 * 
-	 * @param name
+	 * @throws Exception
 	 */
-	public HtmlProblemFinderTest(String name)
-	{
-		super(name);
-	}
-
-	/**
-	 * 
-	 */
-	public void testProblemFinder()
+	@Test(expected = MarkupException.class)
+	public void problemFinder() throws Exception
 	{
 		final MarkupParser parser = new MarkupParser("<img src=\"\"/>");
 		parser.add(new HtmlProblemFinder(HtmlProblemFinder.ERR_THROW_EXCEPTION),
 			RelativePathPrefixHandler.class);
 
-		try
-		{
-			parser.parse();
-			assertTrue("Should have thrown an exception", false);
-		}
-		catch (Exception ex)
-		{
-			// ignore
-		}
+		parser.parse();
+		assertTrue("Should have thrown an exception", false);
+
 	}
 }

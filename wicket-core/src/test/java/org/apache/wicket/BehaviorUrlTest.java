@@ -30,6 +30,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
+import org.junit.Test;
 
 
 /**
@@ -39,7 +40,8 @@ public class BehaviorUrlTest extends WicketTestCase
 	/**
 	 * @see href https://issues.apache.org/jira/browse/WICKET-3097
 	 */
-	public void testUrlRemainsStable()
+	@Test
+	public void urlRemainsStable()
 	{
 		TestPage page = new TestPage();
 
@@ -60,7 +62,8 @@ public class BehaviorUrlTest extends WicketTestCase
 	 * 
 	 * @see href https://issues.apache.org/jira/browse/WICKET-3142
 	 */
-	public void testUrlRemainsStableAfterComponentReceiveAnModel()
+	@Test
+	public void urlRemainsStableAfterComponentReceiveAnModel()
 	{
 		TestPage page = new TestPage();
 

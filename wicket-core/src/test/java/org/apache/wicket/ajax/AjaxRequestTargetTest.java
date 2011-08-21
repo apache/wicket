@@ -35,6 +35,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.time.Time;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +53,8 @@ public class AjaxRequestTargetTest extends WicketTestCase
 	 * 
 	 * @throws IOException
 	 */
-	public void testHeaderContribution1() throws IOException
+	@Test
+	public void headerContribution1() throws IOException
 	{
 		executeHeaderTest(MockComponent1.class, "MockComponent1-expected.html");
 	}
@@ -63,7 +65,8 @@ public class AjaxRequestTargetTest extends WicketTestCase
 	 * 
 	 * @throws IOException
 	 */
-	public void testHeaderContribution2() throws IOException
+	@Test
+	public void jeaderContribution2() throws IOException
 	{
 		executeHeaderTest(MockComponent2.class);
 	}
@@ -73,7 +76,8 @@ public class AjaxRequestTargetTest extends WicketTestCase
 	 * 
 	 * @throws IOException
 	 */
-	public void testHeaderContribution3() throws IOException
+	@Test
+	public void headerContribution3() throws IOException
 	{
 		executeHeaderTest(MockComponent3.class, "MockComponent3-expected.html");
 	}
@@ -155,7 +159,8 @@ public class AjaxRequestTargetTest extends WicketTestCase
 	/**
 	 * WICKET-2328
 	 */
-	public void testRenderMyPage()
+	@Test
+	public void renderMyPage()
 	{
 		// start and render the test page
 		tester.startPage(HomePage2.class);
@@ -178,7 +183,8 @@ public class AjaxRequestTargetTest extends WicketTestCase
 	/**
 	 * WICKET-2543
 	 */
-	public void testVarargsAddComponent()
+	@Test
+	public void varargsAddComponent()
 	{
 		tester.startPage(VarargsAddComponentPage.class);
 
@@ -203,7 +209,8 @@ public class AjaxRequestTargetTest extends WicketTestCase
 	/**
 	 * Testing the default event raised whenever Wicket begins to create an AJAX response
 	 */
-	public void testDefaultEventRaisedOnAjaxResponse()
+	@Test
+	public void defaultEventRaisedOnAjaxResponse()
 	{
 		tester.startPage(TestEventPage.class);
 		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID, true);
@@ -214,7 +221,8 @@ public class AjaxRequestTargetTest extends WicketTestCase
 	/**
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3263">WICKET-3263</a>
 	 */
-	public void testGlobalAjaxRequestTargetListeners()
+	@Test
+	public void globalAjaxRequestTargetListeners()
 	{
 		final ValidatingAjaxRequestTargetListener listener = new ValidatingAjaxRequestTargetListener();
 
@@ -230,7 +238,8 @@ public class AjaxRequestTargetTest extends WicketTestCase
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-3921
 	 */
-	public void testAjaxRedirectSetsNoCachingHeaders()
+	@Test
+	public void ajaxRedirectSetsNoCachingHeaders()
 	{
 		tester.startPage(new Wicket3921());
 

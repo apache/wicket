@@ -21,6 +21,8 @@ import junit.framework.Assert;
 import org.apache.wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import org.apache.wicket.protocol.http.documentvalidation.Tag;
 import org.apache.wicket.protocol.http.documentvalidation.TextContent;
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +51,8 @@ public class AttributeModifierComponentTest extends WicketTestCase
 	}
 
 	@Override
-	protected void setUp() throws Exception
+	@Before
+	public void setUp() throws Exception
 	{
 		super.setUp();
 		tester.startPage(AttributeModifierComponentPage.class);
@@ -58,7 +61,8 @@ public class AttributeModifierComponentTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testComponentTagAttributeModification() throws Exception
+	@Test
+	public void componentTagAttributeModification() throws Exception
 	{
 		String document = tester.getLastResponseAsString();
 		// log.info(document);

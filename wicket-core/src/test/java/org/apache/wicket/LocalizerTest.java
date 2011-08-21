@@ -21,9 +21,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.MissingResourceException;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
-
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -37,13 +34,16 @@ import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.value.ValueMap;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 
 /**
  * Test cases for the <code>Localizer</code> class.
  * 
  * @author Chris Turner
  */
-public class LocalizerTest extends TestCase
+public class LocalizerTest extends Assert
 {
 
 	private static class MyMockPage extends WebPage
@@ -79,18 +79,17 @@ public class LocalizerTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
-	@Override
-	protected void setUp() throws Exception
+	@Before
+	public void setUp() throws Exception
 	{
 		tester = new WicketTester(new DummyApplication());
 		settings = tester.getApplication().getResourceSettings();
 		localizer = tester.getApplication().getResourceSettings().getLocalizer();
 	}
 
-	@Override
+	@After
 	protected void tearDown() throws Exception
 	{
-		super.tearDown();
 		tester.destroy();
 	}
 

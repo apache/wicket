@@ -29,6 +29,8 @@ import org.apache.wicket.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.junit.Before;
+import org.junit.Test;
 
 
 /**
@@ -39,7 +41,8 @@ public class BehaviorRequestTest extends WicketTestCase
 	private TestPage page;
 
 	@Override
-	protected void setUp() throws Exception
+	@Before
+	public void setUp() throws Exception
 	{
 		super.setUp();
 		page = new TestPage();
@@ -49,7 +52,8 @@ public class BehaviorRequestTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testEnabledBehaviorRequest()
+	@Test
+	public void enabledBehaviorRequest()
 	{
 		tester.executeUrl(urlForBehavior(page.enabledBehavior));
 		assertTrue(page.enabledBehavior.wasCalled());
@@ -58,7 +62,8 @@ public class BehaviorRequestTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testDisabledBehaviorRequest()
+	@Test
+	public void disabledBehaviorRequest()
 	{
 		try
 		{

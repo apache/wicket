@@ -18,6 +18,8 @@ package org.apache.wicket;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.session.DefaultPageFactory;
+import org.junit.Before;
+import org.junit.Test;
 
 
 /**
@@ -27,19 +29,9 @@ public class PageFactoryTest extends WicketTestCase
 {
 	private DefaultPageFactory factory;
 
-	/**
-	 * Create the test case.
-	 * 
-	 * @param message
-	 *            The test name
-	 */
-	public PageFactoryTest(String message)
-	{
-		super(message);
-	}
-
 	@Override
-	protected void setUp() throws Exception
+	@Before
+	public void setUp() throws Exception
 	{
 		super.setUp();
 		factory = new DefaultPageFactory();
@@ -48,7 +40,8 @@ public class PageFactoryTest extends WicketTestCase
 	/**
 	 * Test creating a new page using a class.
 	 */
-	public void testNewPageClass()
+	@Test
+	public void newPageClass()
 	{
 		// MyPage0: no constructor at all
 		assertEquals(MyPage0.class, factory.newPage(MyPage0.class).getClass());
@@ -97,7 +90,8 @@ public class PageFactoryTest extends WicketTestCase
 	/**
 	 * Test a new page using a class and page parameters.
 	 */
-	public void testNewPageClassPageParameters()
+	@Test
+	public void newPageClassPageParameters()
 	{
 		assertEquals(MyPage0.class, factory.newPage(MyPage0.class, null).getClass());
 

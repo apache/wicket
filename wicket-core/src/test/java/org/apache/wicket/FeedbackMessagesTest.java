@@ -19,6 +19,7 @@ package org.apache.wicket;
 import junit.framework.Assert;
 
 import org.apache.wicket.feedback.FeedbackMessage;
+import org.junit.Test;
 
 /**
  * @author oli
@@ -31,7 +32,8 @@ public class FeedbackMessagesTest extends WicketTestCase
 	 * {@link org.apache.wicket.feedback.FeedbackMessages#hasMessageFor(org.apache.wicket.Component, int)}
 	 * .
 	 */
-	public void testHasMessageForComponentInt()
+	@Test
+	public void hasMessageForComponentInt()
 	{
 		final Page page = new TestPage_1();
 		tester.startPage(page);

@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.junit.Test;
 
 /**
  * Tests {@link Component#onInitialize()} contract
@@ -37,7 +38,8 @@ public class ComponentInitializationTest extends WicketTestCase
 	/**
 	 * testPropagation()
 	 */
-	public void testPropagation()
+	@Test
+	public void propagation()
 	{
 		TestPage page = new TestPage();
 
@@ -81,7 +83,8 @@ public class ComponentInitializationTest extends WicketTestCase
 	/**
 	 * testAtomicity()
 	 */
-	public void testAtomicity()
+	@Test
+	public void atomicity()
 	{
 		TestPage page = new TestPage();
 
@@ -114,7 +117,8 @@ public class ComponentInitializationTest extends WicketTestCase
 	/**
 	 * testOnInitializeSuperVerified()
 	 */
-	public void testOnInitializeSuperVerified()
+	@Test
+	public void onInitializeSuperVerified()
 	{
 		TestPage page = new TestPage();
 		page.internalInitialize();
@@ -134,7 +138,8 @@ public class ComponentInitializationTest extends WicketTestCase
 	/**
 	 * testInitListeners()
 	 */
-	public void testInitListeners()
+	@Test
+	public void initListeners()
 	{
 		TestInitListener listener1 = new TestInitListener();
 		TestInitListener listener2 = new TestInitListener();
@@ -164,7 +169,8 @@ public class ComponentInitializationTest extends WicketTestCase
 	/**
 	 * testInitializationOrder()
 	 */
-	public void testInitializationOrder()
+	@Test
+	public void initializationOrder()
 	{
 		TestInitListener listener1 = new TestInitListener();
 		tester.getApplication().getComponentInitializationListeners().add(listener1);

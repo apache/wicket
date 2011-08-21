@@ -18,39 +18,23 @@ package org.apache.wicket;
 
 import java.util.Locale;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Tests for converter locators.
  * 
  * @author Eelco Hillenius
  */
-public final class ConverterLocatorTest extends TestCase
+public final class ConverterLocatorTest extends Assert
 {
 	/** Dutch locale for localized testing. */
 	private static final Locale DUTCH_LOCALE = new Locale("nl", "NL");
 
 	/**
-	 * Construct.
-	 */
-	public ConverterLocatorTest()
-	{
-		super();
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public ConverterLocatorTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * Test generalized conversion
 	 */
+	@Test
 	public void test()
 	{
 		final IConverterLocator locator = new ConverterLocator();

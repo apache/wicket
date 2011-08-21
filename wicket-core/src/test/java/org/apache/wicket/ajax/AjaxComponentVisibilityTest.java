@@ -18,6 +18,8 @@ package org.apache.wicket.ajax;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Gerolf Seitz
@@ -29,8 +31,12 @@ public class AjaxComponentVisibilityTest extends WicketTestCase
 	private Component test2;
 	private Component test3;
 
+	/**
+	 * @throws Exception
+	 */
 	@Override
-	protected void setUp() throws Exception
+	@Before
+	public void setUp() throws Exception
 	{
 		super.setUp();
 		tester.startPage(new AjaxHeaderContributionPage());
@@ -42,7 +48,8 @@ public class AjaxComponentVisibilityTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testComponentsAddedToAjax()
+	@Test
+	public void componentsAddedToAjax()
 	{
 		test2.setVisible(false);
 		test3.setVisible(false).setOutputMarkupPlaceholderTag(true);

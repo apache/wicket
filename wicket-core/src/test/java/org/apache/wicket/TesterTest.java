@@ -20,6 +20,7 @@ import junit.framework.AssertionFailedError;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.junit.Test;
 
 /**
  * @author jcompagner
@@ -29,7 +30,8 @@ public class TesterTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testAssert()
+	@Test
+	public void assertTest()
 	{
 		tester.startPage(new MyPage());
 		tester.debugComponentTrees();

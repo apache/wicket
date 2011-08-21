@@ -16,6 +16,8 @@
  */
 package org.apache.wicket;
 
+import org.junit.Before;
+
 
 /**
  * Test cases for the <code>Localizer</code> class.
@@ -29,7 +31,8 @@ public class CachingDisabledLocalizerTest extends LocalizerTest
 	 * @throws Exception
 	 */
 	@Override
-	protected void setUp() throws Exception
+	@Before
+	public void setUp() throws Exception
 	{
 		super.setUp();
 		localizer.setEnableCache(false);

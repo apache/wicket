@@ -27,6 +27,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.time.Duration;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +45,8 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	/**
 	 * Tests timer behavior in a component added to an AjaxRequestTarget
 	 */
-	public void testAddToAjaxUpdate()
+	@Test
+	public void addToAjaxUpdate()
 	{
 		Duration dur = Duration.seconds(20);
 		final MyAjaxSelfUpdatingTimerBehavior timer = new MyAjaxSelfUpdatingTimerBehavior(dur);
@@ -80,7 +82,8 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	/**
 	 * tests timer behavior in a WebPage.
 	 */
-	public void testAddToWebPage()
+	@Test
+	public void addToWebPage()
 	{
 		Duration dur = Duration.seconds(20);
 		final MyAjaxSelfUpdatingTimerBehavior timer = new MyAjaxSelfUpdatingTimerBehavior(dur);

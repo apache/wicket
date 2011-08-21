@@ -27,6 +27,7 @@ import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +67,8 @@ public class ResourceTest extends WicketTestCase
 	/**
 	 * testStringResourceStream()
 	 */
-	public void testStringResourceStream()
+	@Test
+	public void stringResourceStream()
 	{
 		StringResourceStream resourceStream = new StringResourceStream(TEST_STRING);
 		bindToApplicationAsResourceAndRequestIt(resourceStream);

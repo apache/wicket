@@ -20,6 +20,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.SharedResourceReference;
+import org.junit.Test;
 
 /**
  * @author jcompagner
@@ -29,7 +30,8 @@ public class SharedResourceUrlTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testResourceReferenceUrl() throws Exception
+	@Test
+	public void resourceReferenceUrl() throws Exception
 	{
 		ResourceReference rr = new SharedResourceReference("test");
 		CharSequence url = tester.getRequestCycle().mapUrlFor(rr, null).toString();
@@ -43,7 +45,8 @@ public class SharedResourceUrlTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testResourceReferenceWithParamsUrl() throws Exception
+	@Test
+	public void resourceReferenceWithParamsUrl() throws Exception
 	{
 		ResourceReference rr = new SharedResourceReference("test");
 		CharSequence url = tester.getRequestCycle()

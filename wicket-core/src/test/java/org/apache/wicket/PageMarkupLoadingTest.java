@@ -19,6 +19,7 @@ package org.apache.wicket;
 import java.util.Locale;
 
 import org.apache.wicket.markup.html.WebPage;
+import org.junit.Test;
 
 /**
  * Tests markup loading.
@@ -30,7 +31,8 @@ public class PageMarkupLoadingTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testDefault() throws Exception
+	@Test
+	public void english() throws Exception
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
 		tester.startPage(Page1.class);
@@ -43,7 +45,8 @@ public class PageMarkupLoadingTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testDutch() throws Exception
+	@Test
+	public void dutch() throws Exception
 	{
 		tester.getSession().setLocale(new Locale("nl"));
 		tester.startPage(Page1.class);
@@ -56,6 +59,7 @@ public class PageMarkupLoadingTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testDutchMyStyle() throws Exception
 	{
 		tester.getSession().setLocale(new Locale("nl"));
@@ -70,7 +74,8 @@ public class PageMarkupLoadingTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testDutchMyStyleMyVar() throws Exception
+	@Test
+	public void dutchMyStyleMyVar() throws Exception
 	{
 		tester.getSession().setLocale(new Locale("nl"));
 		tester.getSession().setStyle("mystyle");

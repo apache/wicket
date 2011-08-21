@@ -31,6 +31,7 @@ import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Test;
 
 /**
  * @author Pedro Santos
@@ -42,7 +43,8 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testMarkupInheritanceResolver() throws Exception
+	@Test
+	public void markupInheritanceResolver() throws Exception
 	{
 		executeTest(MarkupInheritanceResolverTestPage3.class,
 			"MarkupInheritanceResolverTestPage_expected.html");
@@ -51,7 +53,8 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testUnableToFindComponents()
+	@Test
+	public void unableToFindComponents()
 	{
 		try
 		{
@@ -69,7 +72,8 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	 * Test if the render is OK even if users define its own component with the same id
 	 * WicketTagIdentifier is generation for internal components.
 	 */
-	public void testUsingGeneratedWicketIdAreSafe1()
+	@Test
+	public void usingGeneratedWicketIdAreSafe1()
 	{
 		tester.startPage(TestPage2.class);
 		assertTrue(tester.getLastResponseAsString().contains("test_message"));
@@ -79,7 +83,8 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	/**
 	 * Same test in different scenario
 	 */
-	public void testUsingGeneratedWicketIdAreSafe2()
+	@Test
+	public void usingGeneratedWicketIdAreSafe2()
 	{
 		tester.startPage(TestPage3.class);
 		String expected = tester.getApplication()
@@ -92,7 +97,8 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	/**
 	 * Test case for <a href="https://issues.apache.org/jira/browse/WICKET-3719">WICKET-3719</a>
 	 */
-	public void testAjaxUpdate()
+	@Test
+	public void ajaxUpdate()
 	{
 		WicketTester wicketTester = new WicketTester()
 		{

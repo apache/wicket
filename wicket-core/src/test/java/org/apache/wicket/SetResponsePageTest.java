@@ -17,14 +17,16 @@
 package org.apache.wicket;
 
 import org.apache.wicket.markup.html.WebPage;
+import org.junit.Test;
 
 /**
  * Test for calling {@link Component#setResponsePage(Class)} in constructor.
  */
 public class SetResponsePageTest extends WicketTestCase
 {
-	/** Fixe setting response page in constructor. */
-	public void testSetResponsePage()
+	/** Fix setting response page in constructor. */
+	@Test
+	public void setResponsePage()
 	{
 		tester.startPage(Page1.class);
 		tester.assertRenderedPage(Page3.class);

@@ -23,6 +23,7 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.apache.wicket.util.visit.Visits;
+import org.junit.Test;
 
 /**
  * <code>
@@ -43,7 +44,8 @@ public class VisitorTest extends WicketTestCase
 	/**
 	 * testVisit()
 	 */
-	public void testVisit()
+	@Test
+	public void visit()
 	{
 		final StringBuilder path = new StringBuilder();
 
@@ -64,7 +66,8 @@ public class VisitorTest extends WicketTestCase
 	/**
 	 * testContinueTraversal()
 	 */
-	public void testContinueTraversal()
+	@Test
+	public void continueTraversal()
 	{
 		final StringBuilder path = new StringBuilder();
 
@@ -84,7 +87,8 @@ public class VisitorTest extends WicketTestCase
 	/**
 	 * testContinuePostOrder()
 	 */
-	public void testContinuePostOrder()
+	@Test
+	public void continuePostOrder()
 	{
 		final StringBuilder path = new StringBuilder();
 
@@ -103,7 +107,8 @@ public class VisitorTest extends WicketTestCase
 	/**
 	 * testStop()
 	 */
-	public void testStop()
+	@Test
+	public void stop()
 	{
 		final StringBuilder path = new StringBuilder();
 
@@ -126,7 +131,8 @@ public class VisitorTest extends WicketTestCase
 	/**
 	 * testDoNotGoDeeper1()
 	 */
-	public void testDoNotGoDeeper1()
+	@Test
+	public void doNotGoDeeper1()
 	{
 		final StringBuilder path = new StringBuilder();
 
@@ -148,7 +154,8 @@ public class VisitorTest extends WicketTestCase
 	/**
 	 * testDoNotGoDeeper2()
 	 */
-	public void testDoNotGoDeeper2()
+	@Test
+	public void doNotGoDeeper2()
 	{
 		final StringBuilder path = new StringBuilder();
 

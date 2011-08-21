@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.internal.runners.statements.RunAfters;
 import org.junit.internal.runners.statements.RunBefores;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -170,6 +171,8 @@ public class WicketJUnitRunner extends BlockJUnit4ClassRunner
 	private boolean isJUnitMethod(final Method javaMethod)
 	{
 		return Modifier.isPublic(javaMethod.getModifiers()) &&
+			// is not JUnit 4 test method
+			javaMethod.getAnnotation(Test.class) == null &&
 			(Void.TYPE.equals(javaMethod.getReturnType()) || Void.class.equals(javaMethod.getReturnType())) &&
 			javaMethod.getName().startsWith("test");
 	}

@@ -29,6 +29,7 @@ import org.apache.wicket.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.junit.Test;
 
 /**
  * @see href https://issues.apache.org/jira/browse/WICKET3142
@@ -43,7 +44,8 @@ public class ComponentWithLazyModelCreationTest extends WicketTestCase
 	 * Simulates the reported problem at the ticket: an behavior at the position 0 on the component
 	 * data has its position incremented after its ULR get encoded.
 	 */
-	public void testUrlReferingSomeBehavior()
+	@Test
+	public void urlReferingSomeBehavior()
 	{
 		TestPage page = new TestPage(new CompoundPropertyModel<ComponentWithLazyModelCreationTest>(
 			this));
@@ -59,7 +61,8 @@ public class ComponentWithLazyModelCreationTest extends WicketTestCase
 	 * If the index used to encode the behavior URL is no longer valid, an possible problem is this
 	 * URL invoking the wrong component behavior
 	 */
-	public void testUrlDontCallOtherBehavior()
+	@Test
+	public void urlDontCallOtherBehavior()
 	{
 		TestPage page = new TestPage(new CompoundPropertyModel<ComponentWithLazyModelCreationTest>(
 			this));

@@ -17,6 +17,7 @@
 package org.apache.wicket.ajax.markup.html.form;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * Simple test using the WicketTester
@@ -26,7 +27,8 @@ public class AjaxButtonTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testAjaxButtonWhenCancelButtonHasAModelValue()
+	@Test
+	public void ajaxButtonWhenCancelButtonHasAModelValue()
 	{
 		// start and render the test page
 		tester.startPage(HomePage.class);

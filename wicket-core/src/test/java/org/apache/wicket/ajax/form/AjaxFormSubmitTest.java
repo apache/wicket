@@ -19,6 +19,7 @@ package org.apache.wicket.ajax.form;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Test;
 
 /**
  * Test case for WICKET-1291
@@ -31,7 +32,8 @@ public class AjaxFormSubmitTest extends WicketTestCase
 	/**
 	 * Test ajax form submit without default form processing.
 	 */
-	public void testSubmitNoDefProcessing()
+	@Test
+	public void submitNoDefProcessing()
 	{
 		Class<? extends Page> pageClass = AjaxFormSubmitTestPage.class;
 		System.out.println("=== " + pageClass.getName() + " ===");
@@ -60,7 +62,8 @@ public class AjaxFormSubmitTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testEventJavaScriptEscaped() throws Exception
+	@Test
+	public void eventJavaScriptEscaped() throws Exception
 	{
 		tester.startPage(AjaxFormSubmitTestPage.class);
 		tester.assertResultPage(AjaxFormSubmitTestPage.class,

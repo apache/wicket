@@ -34,6 +34,7 @@ import org.apache.wicket.resource.aggregation.ResourceReferenceCollection;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.junit.Test;
 
 /**
  * @author Pedro Santos
@@ -48,7 +49,8 @@ public class DecoratingHeaderResponseTest extends WicketTestCase
 	 * @throws ResourceStreamNotFoundException
 	 * @throws ParseException
 	 */
-	public void testDecoratedStringPrepend() throws IOException, ResourceStreamNotFoundException,
+	@Test
+	public void decoratedStringPrepend() throws IOException, ResourceStreamNotFoundException,
 		ParseException
 	{
 		tester.getApplication().setHeaderResponseDecorator(new IHeaderResponseDecorator()
@@ -95,7 +97,8 @@ public class DecoratingHeaderResponseTest extends WicketTestCase
 	 * @throws ParseException
 	 * 
 	 */
-	public void testEvenOddResourceIdGroup() throws IOException, ResourceStreamNotFoundException,
+	@Test
+	public void evenOddResourceIdGroup() throws IOException, ResourceStreamNotFoundException,
 		ParseException
 	{
 		tester.getApplication().setHeaderResponseDecorator(new IHeaderResponseDecorator()

@@ -28,6 +28,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.request.component.IRequestableComponent;
+import org.junit.Test;
 
 
 /**
@@ -42,7 +43,8 @@ public class AuthorizationTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testCreateAllowedComponent() throws Exception
+	@Test
+	public void createAllowedComponent() throws Exception
 	{
 		new WebComponent("component");
 	}

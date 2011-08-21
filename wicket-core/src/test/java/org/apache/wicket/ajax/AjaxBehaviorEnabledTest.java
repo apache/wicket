@@ -27,6 +27,8 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author marrink
@@ -67,20 +69,11 @@ public class AjaxBehaviorEnabledTest extends WicketTestCase
 	}
 
 	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public AjaxBehaviorEnabledTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * @see org.apache.wicket.WicketTestCase#setUp()
 	 */
 	@Override
-	protected void setUp() throws Exception
+	@Before
+	public void setUp() throws Exception
 	{
 		final IAuthorizationStrategy strategy = new CustomStrategy();
 		tester = new WicketTester(new MockApplication()
@@ -107,7 +100,8 @@ public class AjaxBehaviorEnabledTest extends WicketTestCase
 	 * 
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-1575">1575</a>
 	 */
-	public void testDisabledBehavior()
+	@Test
+	public void disabledBehavior()
 	{
 		tester.startPage(AjaxBehaviorEnabledPage.class);
 		tester.assertRenderedPage(AjaxBehaviorEnabledPage.class);

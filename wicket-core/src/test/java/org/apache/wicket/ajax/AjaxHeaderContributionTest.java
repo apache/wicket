@@ -17,6 +17,7 @@
 package org.apache.wicket.ajax;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * @author jcompagner
@@ -26,7 +27,8 @@ public class AjaxHeaderContributionTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testAjaxHeaderContribution() throws Exception
+	@Test
+	public void ajaxHeaderContribution() throws Exception
 	{
 		tester.startPage(AjaxHeaderContributionPage.class);
 		tester.assertResultPage(AjaxHeaderContributionPage.class,
@@ -41,7 +43,8 @@ public class AjaxHeaderContributionTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testDoubleAjaxHeaderContribution() throws Exception
+	@Test
+	public void doubleAjaxHeaderContribution() throws Exception
 	{
 		tester.startPage(AjaxHeaderContributionPage2.class);
 		tester.assertResultPage(AjaxHeaderContributionPage2.class,

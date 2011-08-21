@@ -17,6 +17,7 @@
 package org.apache.wicket.ajax.form;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * Test case for WICKET-1743
@@ -26,7 +27,8 @@ import org.apache.wicket.WicketTestCase;
 public class AjaxFormSubmitBehaviorTest extends WicketTestCase
 {
 	/**	 */
-	public void testAjaxFormSubmitBehavior()
+	@Test
+	public void ajaxFormSubmitBehavior()
 	{
 		// start and render the test page
 		tester.startPage(AjaxFormSubmitBehaviorTestPage.class);

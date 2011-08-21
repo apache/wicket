@@ -22,6 +22,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.junit.Test;
 
 /**
  * Tests {@link Component#onInitialize()} contract
@@ -33,7 +34,8 @@ public class ComponentConfigurationTest extends WicketTestCase
 	/**
 	 * testOnlyOncePerRequest()
 	 */
-	public void testOnlyOncePerRequest()
+	@Test
+	public void onlyOncePerRequest()
 	{
 		TestComponent t1 = new TestComponent("t1");
 		assertEquals(0, t1.getTotalCount());
@@ -55,7 +57,8 @@ public class ComponentConfigurationTest extends WicketTestCase
 	/**
 	 * testConfiguration()
 	 */
-	public void testConfiguration()
+	@Test
+	public void configuration()
 	{
 		tester.startPage(TestPage.class);
 		TestPage page = (TestPage)tester.getLastRenderedPage();

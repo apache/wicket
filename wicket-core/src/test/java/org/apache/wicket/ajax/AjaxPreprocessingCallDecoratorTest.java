@@ -16,24 +16,26 @@
  */
 package org.apache.wicket.ajax;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.calldecorator.AjaxPreprocessingCallDecorator;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author tetsuo WICKET-2057
  */
-public class AjaxPreprocessingCallDecoratorTest extends TestCase
+public class AjaxPreprocessingCallDecoratorTest extends Assert
 {
 	IAjaxCallDecorator delegate;
 	AjaxPreprocessingCallDecorator decorator;
 
-	@Override
-	protected void setUp() throws Exception
+	/**
+	 * 
+	 */
+	@Before
+	public void before()
 	{
-		super.setUp();
 		delegate = new IAjaxCallDecorator()
 		{
 			private static final long serialVersionUID = 1L;
@@ -78,19 +80,22 @@ public class AjaxPreprocessingCallDecoratorTest extends TestCase
 	}
 
 	/** test decorator */
-	public void testDecorateScript()
+	@Test
+	public void decorateScript()
 	{
 		Assert.assertEquals("^-.", decorator.decorateScript(null, "."));
 	}
 
 	/** test decorator */
-	public void testDecorateOnSuccessScript()
+	@Test
+	public void decorateOnSuccessScript()
 	{
 		Assert.assertEquals("^s-s.", decorator.decorateOnSuccessScript(null, "."));
 	}
 
 	/** test decorator */
-	public void testDecorateOnFailureScript()
+	@Test
+	public void decorateOnFailureScript()
 	{
 		Assert.assertEquals("^f-f.", decorator.decorateOnFailureScript(null, "."));
 	}

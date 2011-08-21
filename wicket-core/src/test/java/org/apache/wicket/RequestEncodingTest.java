@@ -16,17 +16,19 @@
  */
 package org.apache.wicket;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * 
  */
-public class RequestEncodingTest extends TestCase
+public class RequestEncodingTest extends Assert
 {
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(RequestEncodingTest.class);
@@ -37,8 +39,8 @@ public class RequestEncodingTest extends TestCase
 	/**
 	 * @see org.apache.wicket.WicketTestCase#setUp()
 	 */
-	@Override
-	protected void setUp() throws Exception
+	@Before
+	public void setUp()
 	{
 		application = new RedirectApplication();
 		tester = new WicketTester(application);
@@ -46,19 +48,23 @@ public class RequestEncodingTest extends TestCase
 		tester.assertRenderedPage(RedirectHomePage.class);
 	}
 
-	@Override
-	protected void tearDown() throws Exception
+	/**
+	 * 
+	 */
+	@After
+	public void tearDown()
 	{
-		super.tearDown();
 		tester.destroy();
 	}
 
 	/**
 	 * 
 	 */
-	public void testDefault()
+	@Test
+	public void defaultTest()
 	{
-		tester.startPage(RedirectA.class, new PageParameters().set("file", "umlaut-\u00E4-\u00F6-\u00FC"));
+		tester.startPage(RedirectA.class,
+			new PageParameters().set("file", "umlaut-\u00E4-\u00F6-\u00FC"));
 		tester.assertRenderedPage(RedirectB.class);
 
 		String url2 = ((RedirectB)tester.getLastRenderedPage()).getInterceptContinuationURL();
@@ -78,9 +84,10 @@ public class RequestEncodingTest extends TestCase
 	/**
 	 * 
 	 */
-	public void testUmlautsInRequestUri()
+	@Test
+	public void umlautsInRequestUri()
 	{
 		application.mountPage("Aparameter", RedirectA.class);
-		testDefault();
+		defaultTest();
 	}
 }

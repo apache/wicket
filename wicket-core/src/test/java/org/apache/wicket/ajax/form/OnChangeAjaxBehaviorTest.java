@@ -19,6 +19,7 @@ package org.apache.wicket.ajax.form;
 import java.util.Locale;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * @author Janne Hietam&auml;ki (janne)
@@ -28,7 +29,8 @@ public class OnChangeAjaxBehaviorTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRendering() throws Exception
+	@Test
+	public void rendering() throws Exception
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
 
@@ -39,7 +41,8 @@ public class OnChangeAjaxBehaviorTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testAjaxSubmitWhileAnotherButtonIsNotVisible()
+	@Test
+	public void ajaxSubmitWhileAnotherButtonIsNotVisible()
 	{
 		// start and render the test page
 		tester.startPage(HomePage.class);

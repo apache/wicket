@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * @author Juergen Donnerstag
@@ -27,7 +28,8 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void test_accept()
+	@Test
+	public void accept()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.addPattern("+*.gif");
@@ -54,7 +56,8 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void test_acceptAbsolutePath()
+	@Test
+	public void acceptAbsolutePath()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.addPattern("+*.gif");
@@ -66,7 +69,8 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void test_fileOnly()
+	@Test
+	public void fileOnly()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.addPattern("+**.gif");
@@ -92,7 +96,8 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void test_withDirectory()
+	@Test
+	public void withDirectory()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.addPattern("+mydir/*/*.gif");
@@ -107,7 +112,8 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void test_1()
+	@Test
+	public void one()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.addPattern("+mydir/**/*.gif");
@@ -122,7 +128,8 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void test_2()
+	@Test
+	public void two()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.addPattern("+*my*dir*/*/*.gif");
@@ -140,7 +147,8 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void test_3()
+	@Test
+	public void three()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.addPattern("+mydir**/*X/*.gif");
@@ -158,7 +166,8 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void test_4()
+	@Test
+	public void four()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.addPattern("+mydir/**/xxx/**/*.gif");
@@ -184,7 +193,8 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void test_5()
+	@Test
+	public void five()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.addPattern("+/**/*.gif");
@@ -200,7 +210,8 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void test_6()
+	@Test
+	public void six()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.addPattern("+**/*.gif");
@@ -215,7 +226,8 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void test_7()
+	@Test
+	public void seven()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.addPattern("+*/*.gif");
@@ -230,7 +242,8 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void test_8()
+	@Test
+	public void eight()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.addPattern("+/*/*.gif");

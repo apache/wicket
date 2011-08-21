@@ -21,6 +21,8 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.util.resource.IResourceStream;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Timo Rantalaiho
@@ -31,6 +33,7 @@ public class MarkupCacheTest extends WicketTestCase
 	private MarkupCachingAssumingComponent component;
 
 	@Override
+	@Before
 	public void setUp() throws Exception
 	{
 		super.setUp();
@@ -52,7 +55,8 @@ public class MarkupCacheTest extends WicketTestCase
 	/**
 	 * testMarkupNotFoundInformationIsCachedInDeploymentMode()
 	 */
-	public void testMarkupNotFoundInformationIsCachedInDeploymentMode()
+	@Test
+	public void markupNotFoundInformationIsCachedInDeploymentMode()
 	{
 		IMarkupFragment markup = cache.getMarkup(component, null, false);
 		assertNull(markup);
@@ -64,7 +68,8 @@ public class MarkupCacheTest extends WicketTestCase
 	/**
 	 * testRemoveMarkupWhereBaseMarkupIsNoLongerInTheCache()
 	 */
-	public void testRemoveMarkupWhereBaseMarkupIsNoLongerInTheCache()
+	@Test
+	public void removeMarkupWhereBaseMarkupIsNoLongerInTheCache()
 	{
 		tester.startPage(MarkupInheritanceExtension_1.class);
 		tester.assertRenderedPage(MarkupInheritanceExtension_1.class);

@@ -25,6 +25,8 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.resource.PackageResource;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests for package resources.
@@ -40,7 +42,8 @@ public class PackageResourceTest extends WicketTestCase
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Override
-	protected void setUp() throws Exception
+	@Before
+	public void setUp() throws Exception
 	{
 		super.setUp();
 		application = tester.getApplication();
@@ -51,7 +54,8 @@ public class PackageResourceTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testBindAbsolutePackageResource() throws Exception
+	@Test
+	public void bindAbsolutePackageResource() throws Exception
 	{
 		final SharedResources sharedResources = Application.get().getSharedResources();
 		assertNotNull("resource packaged1.txt should be available as a packaged resource",
@@ -63,7 +67,8 @@ public class PackageResourceTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testPackageResourceGuard() throws Exception
+	@Test
+	public void packageResourceGuard() throws Exception
 	{
 		PackageResourceGuard guard = new PackageResourceGuard();
 		assertTrue(guard.acceptExtension("txt"));
@@ -84,7 +89,8 @@ public class PackageResourceTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testLenientPackageResourceMatching() throws Exception
+	@Test
+	public void lenientPackageResourceMatching() throws Exception
 	{
 		ResourceReference invalidResource = new PackageResourceReference(PackageResourceTest.class,
 			"i_do_not_exist.txt", Locale.ENGLISH, null, null);

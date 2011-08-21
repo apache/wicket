@@ -23,6 +23,7 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.junit.Test;
 
 /**
  * <a href="https://issues.apache.org/jira/browse/WICKET-3761">WICKET-3761</a>
@@ -40,7 +41,8 @@ public class MarkupHeadFirstTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testRenderMyPage() throws Exception
+	@Test
+	public void renderMyPage() throws Exception
 	{
 		executeTest(MarkupHeadFirstPage.class, "MarkupHeadFirstPage.html");
 	}

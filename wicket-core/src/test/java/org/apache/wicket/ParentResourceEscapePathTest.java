@@ -21,6 +21,7 @@ import java.io.InputStream;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +34,8 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testParentEscapeSequenceInRenderedHtml() throws Exception
+	@Test
+	public void parentEscapeSequenceInRenderedHtmlTest() throws Exception
 	{
 		tester.getApplication().getResourceSettings().setParentFolderPlaceholder("-updir-");
 		parentEscapeSequenceInRenderedHtml();
@@ -66,7 +68,8 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 	/**
 	 * testResourceUrlGeneratedByResourceReference()
 	 */
-	public void testResourceUrlGeneratedByResourceReference()
+	@Test
+	public void resourceUrlGeneratedByResourceReferenceTest()
 	{
 		tester.getApplication().getResourceSettings().setParentFolderPlaceholder("-updir-");
 		resourceUrlGeneratedByResourceReference();
@@ -87,7 +90,8 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 	/**
 	 * testRequestHandlingOfResourceUrlWithEscapeStringInside()
 	 */
-	public void testRequestHandlingOfResourceUrlWithEscapeStringInside()
+	@Test
+	public void requestHandlingOfResourceUrlWithEscapeStringInsideTest()
 	{
 		tester.getApplication().getResourceSettings().setParentFolderPlaceholder("-updir-");
 		requestHandlingOfResourceUrlWithEscapeStringInside();

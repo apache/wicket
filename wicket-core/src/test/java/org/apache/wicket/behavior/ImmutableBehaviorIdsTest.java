@@ -18,6 +18,7 @@ package org.apache.wicket.behavior;
 
 import java.util.List;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
@@ -27,15 +28,17 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.junit.Test;
 
 /** IBehavior array management tests */
 public class ImmutableBehaviorIdsTest extends WicketTestCase
 {
 	/** Tests simple behavior */
-	public void testSimple()
+	@Test
+	public void simple()
 	{
 		MyPage page = new MyPage();
-		page.getContainer().add(new SimpleAttributeModifier("class", "border"));
+		page.getContainer().add(new AttributeModifier("class", "border"));
 		tester.startPage(page);
 
 		assertTrue(tester.getLastResponseAsString().contains("class=\"border\""));
@@ -44,12 +47,13 @@ public class ImmutableBehaviorIdsTest extends WicketTestCase
 	/**
 	 * Tests the fact that url-behavior indexes do not change even if behaviors are removed/added
 	 */
-	public void testUrlIndexRendering()
+	@Test
+	public void urlIndexRendering()
 	{
-		Behavior border = new SimpleAttributeModifier("class", "border");
-		Behavior border2 = new SimpleAttributeModifier("class2", "border");
-		Behavior auto = new SimpleAttributeModifier("autocomplete", "off");
-		Behavior auto2 = new SimpleAttributeModifier("autocomplete2", "off");
+		Behavior border = new AttributeModifier("class", "border");
+		Behavior border2 = new AttributeModifier("class2", "border");
+		Behavior auto = new AttributeModifier("autocomplete", "off");
+		Behavior auto2 = new AttributeModifier("autocomplete2", "off");
 		Behavior link = new LinkBehavior("href");
 		Behavior link2 = new LinkBehavior("onclick");
 
@@ -84,12 +88,13 @@ public class ImmutableBehaviorIdsTest extends WicketTestCase
 	/**
 	 * Tests that removal of behaviors properly cleans up the data array
 	 */
-	public void testBehaviorDataArrayCleanup()
+	@Test
+	public void behaviorDataArrayCleanup()
 	{
-		Behavior border = new SimpleAttributeModifier("class", "border");
-		Behavior border2 = new SimpleAttributeModifier("class2", "border");
-		Behavior auto = new SimpleAttributeModifier("autocomplete", "off");
-		Behavior auto2 = new SimpleAttributeModifier("autocomplete2", "off");
+		Behavior border = new AttributeModifier("class", "border");
+		Behavior border2 = new AttributeModifier("class2", "border");
+		Behavior auto = new AttributeModifier("autocomplete", "off");
+		Behavior auto2 = new AttributeModifier("autocomplete2", "off");
 		Behavior link = new LinkBehavior("href");
 		Behavior link2 = new LinkBehavior("onclick");
 

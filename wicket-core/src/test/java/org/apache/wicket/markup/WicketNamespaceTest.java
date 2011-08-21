@@ -17,26 +17,18 @@
 package org.apache.wicket.markup;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  */
 public class WicketNamespaceTest extends WicketTestCase
 {
-	/**
-	 * Create the test.
-	 * 
-	 * @param name
-	 *            The test name
-	 */
-	public WicketNamespaceTest(String name)
-	{
-		super(name);
-	}
 
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_1() throws Exception
+	@Test
+	public void renderHomePage_1() throws Exception
 	{
 		executeTest(WicketNamespace_1.class, "WicketNamespaceExpectedResult_1.html");
 	}
@@ -44,7 +36,8 @@ public class WicketNamespaceTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_2() throws Exception
+	@Test
+	public void renderHomePage_2() throws Exception
 	{
 		executeTest(WicketNamespace_2.class, "WicketNamespaceExpectedResult_2.html");
 	}
@@ -52,7 +45,8 @@ public class WicketNamespaceTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_3() throws Exception
+	@Test
+	public void renderHomePage_3() throws Exception
 	{
 		executeTest(WicketNamespace_3.class, "WicketNamespaceExpectedResult_3.html");
 	}
@@ -60,7 +54,8 @@ public class WicketNamespaceTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_4() throws Exception
+	@Test
+	public void renderHomePage_4() throws Exception
 	{
 		executeTest(WicketNamespace_4.class, "WicketNamespaceExpectedResult_4.html");
 	}
@@ -68,7 +63,8 @@ public class WicketNamespaceTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_5() throws Exception
+	@Test
+	public void renderHomePage_5() throws Exception
 	{
 		executeTest(WicketNamespace_5.class, "WicketNamespaceExpectedResult_5.html");
 	}
@@ -76,7 +72,8 @@ public class WicketNamespaceTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_6() throws Exception
+	@Test
+	public void renderHomePage_6() throws Exception
 	{
 		executeTest(WicketNamespace_6.class, "WicketNamespaceExpectedResult_6.html");
 	}
@@ -84,7 +81,8 @@ public class WicketNamespaceTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testDoctype_1() throws Exception
+	@Test
+	public void doctype_1() throws Exception
 	{
 		executeTest(Doctype_1.class, "DoctypeExpectedResult_1.html");
 		MarkupResourceStream rs = MarkupFactory.get()
@@ -97,7 +95,8 @@ public class WicketNamespaceTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testDoctype_InheritedPage() throws Exception
+	@Test
+	public void doctype_InheritedPage() throws Exception
 	{
 		executeTest(Doctype_1_InheritedPage.class, "DoctypeExpectedResult_1_Inherited.html");
 		MarkupResourceStream rs = MarkupFactory.get()
@@ -110,7 +109,8 @@ public class WicketNamespaceTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testDoctype_2() throws Exception
+	@Test
+	public void doctype_2() throws Exception
 	{
 		executeTest(Doctype_2.class, "DoctypeExpectedResult_2.html");
 		MarkupResourceStream rs = MarkupFactory.get()

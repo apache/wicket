@@ -33,6 +33,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.junit.Test;
 
 /**
  * Tests child's {@link Component#onRemove} is on refresh
@@ -47,6 +48,7 @@ public class RefreshingViewOnRemoveTest extends WicketTestCase
 	/**
 	 * test()
 	 */
+	@Test
 	public void test()
 	{
 		tester.startPage(new TestPage());

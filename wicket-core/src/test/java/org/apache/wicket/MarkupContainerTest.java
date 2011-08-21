@@ -18,6 +18,7 @@ package org.apache.wicket;
 
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.junit.Test;
 
 
 /**
@@ -27,19 +28,10 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 public class MarkupContainerTest extends WicketTestCase
 {
 	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public MarkupContainerTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * Make sure components are iterated in the order they were added. Required e.g. for Repeaters
 	 */
-	public void testIteratorOrder()
+	@Test
+	public void iteratorOrder()
 	{
 		MarkupContainer container = new WebMarkupContainer("component");
 		for (int i = 0; i < 10; i++)
@@ -56,12 +48,17 @@ public class MarkupContainerTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testMarkupId() throws Exception
+	@Test
+	public void markupId() throws Exception
 	{
 		executeTest(MarkupIdTestPage.class, "MarkupIdTestPageExpectedResult.html");
 	}
 
-	public void testGet()
+	/**
+	 * 
+	 */
+	@Test
+	public void get()
 	{
 		WebMarkupContainer a = new WebMarkupContainer("a");
 		WebMarkupContainer b = new WebMarkupContainer("b");
