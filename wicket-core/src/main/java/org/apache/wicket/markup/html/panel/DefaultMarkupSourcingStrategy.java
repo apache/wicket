@@ -136,7 +136,7 @@ public final class DefaultMarkupSourcingStrategy implements IMarkupSourcingStrat
 				if (!(child instanceof AbstractItem) && log.isWarnEnabled())
 				{
 					log.warn("1.4 to 1.5 migration issue: the childs wicket-id contains decimals only. " +
-						"By convention that +" +
+						"By convention that " +
 						"is only the case for children (Items) of Loop, ListView, " +
 						"Tree etc.. To avoid the warning, the childs container should implement:\n" +
 						"@Override public IMarkupFragment getMarkup(Component child) {\n" +
