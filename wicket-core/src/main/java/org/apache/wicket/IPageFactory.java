@@ -66,4 +66,16 @@ public interface IPageFactory
 	 */
 	<C extends IRequestablePage> IRequestablePage newPage(final Class<C> pageClass,
 		final PageParameters parameters);
+
+	/**
+	 * Checks whether a page can be instantiated using a bookmarkable URL.
+	 * 
+	 * @param C
+	 *            the type of the page class
+	 * @param pageClass
+	 *            The class of page to check for bookmarkability
+	 * 
+	 * @return {@code true} if the page can be instantiated by this {@link IPageFactory}
+	 */
+	<C extends IRequestablePage> boolean isBookmarkable(final Class<C> pageClass);
 }

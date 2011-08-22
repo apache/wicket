@@ -19,6 +19,8 @@ package org.apache.wicket.session;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.wicket.IPageFactory;
 import org.apache.wicket.Page;
@@ -49,6 +51,11 @@ public final class DefaultPageFactory implements IPageFactory
 
 	/** Map of Constructors for Page subclasses */
 	private final Map<Class<?>, Constructor<?>> constructorForClass = Generics.newConcurrentHashMap();
+
+	/**
+	 * {@link #isBookmarkable()} is expensive, we cache the result here
+	 */
+	private final ConcurrentMap<String, Boolean> pageToBookmarkableCache = new ConcurrentHashMap<String, Boolean>();
 
 	public final <C extends IRequestablePage> Page newPage(final Class<C> pageClass)
 	{
@@ -218,5 +225,41 @@ public final class DefaultPageFactory implements IPageFactory
 		}
 
 		return msg + "'. Might be it doesn't exist, may be it is not visible (public).";
+	}
+
+	public <C extends IRequestablePage> boolean isBookmarkable(Class<C> pageClass)
+	{
+		Boolean bookmarkable = pageToBookmarkableCache.get(pageClass.getName());
+		if (bookmarkable == null)
+		{
+			try
+			{
+				if (pageClass.getConstructor(new Class[] { }) != null)
+				{
+					bookmarkable = Boolean.TRUE;
+				}
+			}
+			catch (Exception ignore)
+			{
+				try
+				{
+					if (pageClass.getConstructor(new Class[] { PageParameters.class }) != null)
+					{
+						bookmarkable = Boolean.TRUE;
+					}
+				}
+				catch (Exception ignored)
+				{
+				}
+			}
+
+			if (bookmarkable == null)
+			{
+				bookmarkable = Boolean.FALSE;
+			}
+			pageToBookmarkableCache.put(pageClass.getName(), bookmarkable);
+		}
+
+		return bookmarkable;
 	}
 }

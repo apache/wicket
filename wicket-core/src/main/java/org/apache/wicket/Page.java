@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.UnauthorizedActionException;
@@ -133,11 +132,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Page.class);
-
-	/**
-	 * {@link #isBookmarkable()} is expensive, we cache the result here
-	 */
-	private static final ConcurrentHashMap<String, Boolean> pageClassToBookmarkableCache = new ConcurrentHashMap<String, Boolean>();
 
 	private static final long serialVersionUID = 1L;
 
@@ -438,38 +432,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public boolean isBookmarkable()
 	{
-		Boolean bookmarkable = pageClassToBookmarkableCache.get(getClass().getName());
-		if (bookmarkable == null)
-		{
-			try
-			{
-				if (getClass().getConstructor(new Class[] { }) != null)
-				{
-					bookmarkable = Boolean.TRUE;
-				}
-			}
-			catch (Exception ignore)
-			{
-				try
-				{
-					if (getClass().getConstructor(new Class[] { PageParameters.class }) != null)
-					{
-						bookmarkable = Boolean.TRUE;
-					}
-				}
-				catch (Exception ignored)
-				{
-				}
-			}
-
-			if (bookmarkable == null)
-			{
-				bookmarkable = Boolean.FALSE;
-			}
-			pageClassToBookmarkableCache.put(getClass().getName(), bookmarkable);
-		}
-
-		return bookmarkable;
+		return getApplication().getPageFactory().isBookmarkable(getClass());
 	}
 
 	/**
