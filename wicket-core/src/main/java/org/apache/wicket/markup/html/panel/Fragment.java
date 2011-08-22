@@ -91,10 +91,8 @@ public class Fragment extends WebMarkupContainer
 	{
 		super(id, model);
 
-		associatedMarkupId = markupId;
+		associatedMarkupId = Args.notNull(markupId, "markupId");
 		this.markupProvider = markupProvider;
-
-		Args.notNull(markupId, "markupId");
 	}
 
 	/**
