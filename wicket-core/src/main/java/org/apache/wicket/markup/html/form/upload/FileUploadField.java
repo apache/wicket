@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.model.util.ListModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.IMultipartWebRequest;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.util.convert.ConversionException;
@@ -62,7 +62,7 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 	 * @param model
 	 *            the model holding the uploaded {@link FileUpload}s
 	 */
-	public FileUploadField(final String id, ListModel<FileUpload> model)
+	public FileUploadField(final String id, IModel<List<FileUpload>> model)
 	{
 		super(id, model);
 	}
