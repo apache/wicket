@@ -35,7 +35,7 @@ import org.apache.wicket.util.lang.EnumeratedType;
  * all available space between columns on the left and columns on the right. How this space is
  * divided between middle columns is determined by the <b>size</b>. In this case the size can be
  * understand as weight. Columns with bigger size take more space than columns with smaller size.
- * For example, if there are three columns and their sizes are 2, 1, 1, the first column thakes 50%
+ * For example, if there are three columns and their sizes are 2, 1, 1, the first column takes 50%
  * of the space and the second two columns take 25% each.</li>
  * </ul>
  * 
@@ -138,7 +138,7 @@ public class ColumnLocation implements IClusterable
 	}
 
 	/**
-	 * Returns the allignment of this column.
+	 * Returns the alignment of this column.
 	 * 
 	 * @return The alignment of this column
 	 */

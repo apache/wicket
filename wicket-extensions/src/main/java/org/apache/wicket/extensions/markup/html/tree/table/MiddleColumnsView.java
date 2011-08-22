@@ -17,16 +17,13 @@
 package org.apache.wicket.extensions.markup.html.tree.table;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 
 import javax.swing.tree.TreeNode;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.extensions.markup.html.tree.table.ColumnLocation.Unit;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.response.NullResponse;
@@ -38,17 +35,9 @@ import org.apache.wicket.response.NullResponse;
  * 
  * @author Matej Knopp
  */
-final class MiddleColumnsView extends WebMarkupContainer
+final class MiddleColumnsView extends AbstractColumnsView
 {
 	private static final long serialVersionUID = 1L;
-
-	private final List<IColumn> columns = new ArrayList<IColumn>();
-
-	private final List<Component> components = new ArrayList<Component>();
-
-	private final TreeNode node;
-
-	private final List<IRenderable> renderables = new ArrayList<IRenderable>();
 
 	private final boolean treeHasLeftColumn;
 
@@ -64,30 +53,8 @@ final class MiddleColumnsView extends WebMarkupContainer
 	 */
 	public MiddleColumnsView(final String id, final TreeNode node, final boolean treeHasLeftColumn)
 	{
-		super(id);
-		this.node = node;
+		super(id, node);
 		this.treeHasLeftColumn = treeHasLeftColumn;
-	}
-
-	/**
-	 * Adds a column to be rendered.
-	 * 
-	 * @param column
-	 *            The column to render
-	 * @param component
-	 *            The component
-	 * @param renderable
-	 *            The renderer
-	 */
-	public void addColumn(final IColumn column, final Component component,
-		final IRenderable renderable)
-	{
-		if (column.isVisible())
-		{
-			columns.add(column);
-			components.add(component);
-			renderables.add(renderable);
-		}
 	}
 
 	/**
@@ -196,7 +163,7 @@ final class MiddleColumnsView extends WebMarkupContainer
 
 		NumberFormat nf = NumberFormat.getNumberInstance(Locale.ENGLISH);
 		nf.setMaximumFractionDigits(0);
-		nf.setMaximumFractionDigits(2);
+		nf.setMaximumIntegerDigits(2);
 
 		for (int i = 0; i < columns.size(); ++i)
 		{

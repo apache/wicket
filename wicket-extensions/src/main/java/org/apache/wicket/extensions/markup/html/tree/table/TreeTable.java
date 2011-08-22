@@ -31,6 +31,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.tree.AbstractTree;
+import org.apache.wicket.markup.html.tree.WicketTreeModel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -146,7 +147,7 @@ public class TreeTable extends DefaultAbstractTree
 	}
 
 	// columns of the TreeTable
-	private IColumn columns[];
+	private final IColumn columns[];
 
 	/**
 	 * Creates the TreeTable for the given array of columns.
@@ -156,8 +157,22 @@ public class TreeTable extends DefaultAbstractTree
 	 */
 	public TreeTable(final String id, final IColumn columns[])
 	{
-		super(id);
-		init(columns);
+		this(id, (TreeModel)null, columns);
+	}
+
+	/**
+	 * Creates the TreeTable for the given TreeModel and array of columns.
+	 * 
+	 * @param id
+	 *            The component id
+	 * @param model
+	 *            The tree model
+	 * @param columns
+	 *            The columns
+	 */
+	public TreeTable(final String id, final TreeModel model, final IColumn columns[])
+	{
+		this(id, new WicketTreeModel(model), columns);
 	}
 
 	/**
@@ -174,24 +189,26 @@ public class TreeTable extends DefaultAbstractTree
 		final IColumn columns[])
 	{
 		super(id, model);
-		init(columns);
-	}
 
+		this.columns = columns;
 
-	/**
-	 * Creates the TreeTable for the given TreeModel and array of columns.
-	 * 
-	 * @param id
-	 *            The component id
-	 * @param model
-	 *            The tree model
-	 * @param columns
-	 *            The columns
-	 */
-	public TreeTable(final String id, final TreeModel model, final IColumn columns[])
-	{
-		super(id, model);
-		init(columns);
+		// Attach the javascript that resizes the header according to the body
+		// This is necessary to support fixed position header. The header does
+		// not
+		// scroll together with body. The body contains vertical scrollbar. The
+		// header width must be same as body content width, so that the columns
+		// are properly aligned.
+		add(new Behavior()
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void renderHead(final Component component, final IHeaderResponse response)
+			{
+				response.renderOnDomReadyJavaScript("Wicket.TreeTable.attachUpdate(\"" +
+					getMarkupId() + "\")");
+			}
+		});
 	}
 
 	private boolean hasLeftColumn()
@@ -223,8 +240,9 @@ public class TreeTable extends DefaultAbstractTree
 				if ((column.getLocation().getAlignment() == Alignment.LEFT) ||
 					(column.getLocation().getAlignment() == Alignment.RIGHT))
 				{
-					Component component = column.newHeader(sideColumns, "" + i);
-					sideColumns.add(component);
+					TreeTableItem component = new TreeTableItem(i);
+					Component cell = column.newHeader(sideColumns, TreeTableItem.ID);
+					component.add(cell);
 					sideColumns.addColumn(column, component, null);
 				}
 			}
@@ -241,8 +259,9 @@ public class TreeTable extends DefaultAbstractTree
 				IColumn column = columns[i];
 				if (column.getLocation().getAlignment() == Alignment.MIDDLE)
 				{
-					Component component = column.newHeader(middleColumns, "" + i);
-					middleColumns.add(component);
+					TreeTableItem component = new TreeTableItem(i);
+					Component cell = column.newHeader(middleColumns, TreeTableItem.ID);
+					component.add(cell);
 					middleColumns.addColumn(column, component, null);
 				}
 			}
@@ -326,16 +345,16 @@ public class TreeTable extends DefaultAbstractTree
 				if ((column.getLocation().getAlignment() == Alignment.LEFT) ||
 					(column.getLocation().getAlignment() == Alignment.RIGHT))
 				{
-					Component component;
+					TreeTableItem component;
 					// first try to create a renderable
 					IRenderable renderable = column.newCell(node, level);
 
 					if (renderable == null)
 					{
 						// if renderable failed, try to create a regular component.
-						// Id's shall not be number except for ListItems etc.
-						component = column.newCell(sideColumns, "r" + i, node, level);
-						sideColumns.add(component);
+						component = new TreeTableItem(i);
+						Component cell = column.newCell(sideColumns, TreeTableItem.ID, node, level);
+						component.add(cell);
 					}
 					else
 					{
@@ -357,16 +376,17 @@ public class TreeTable extends DefaultAbstractTree
 				IColumn column = columns[i];
 				if (column.getLocation().getAlignment() == Alignment.MIDDLE)
 				{
-					Component component;
+					TreeTableItem component;
 					// first try to create a renderable
 					IRenderable renderable = column.newCell(node, level);
 
 					if (renderable == null)
 					{
-						// if renderable failed, try to create a regular
-						// component
-						component = column.newCell(middleColumns, "" + i, node, level);
-						middleColumns.add(component);
+						// if renderable failed, try to create a regular component
+						component = new TreeTableItem(i);
+						Component cell = column.newCell(middleColumns, TreeTableItem.ID, node,
+							level);
+						component.add(cell);
 					}
 					else
 					{
@@ -380,8 +400,7 @@ public class TreeTable extends DefaultAbstractTree
 		item.add(middleColumns);
 
 		// do distinguish between selected and unselected rows we add an
-		// behavior
-		// that modifies row css class.
+		// behavior that modifies row css class.
 		item.add(new Behavior()
 		{
 			private static final long serialVersionUID = 1L;
@@ -398,54 +417,6 @@ public class TreeTable extends DefaultAbstractTree
 				{
 					tag.put("class", "row");
 				}
-			}
-		});
-	}
-
-	/**
-	 * Internal initialization. Also checks if at least one of the columns is derived from
-	 * AbstractTreeColumn.
-	 * 
-	 * @param columns
-	 *            The columns
-	 */
-	private void init(final IColumn columns[])
-	{
-		boolean found = false;
-		if (columns != null)
-		{
-			for (IColumn column : columns)
-			{
-				if (column instanceof PropertyTreeColumn)
-				{
-					found = true;
-					break;
-				}
-			}
-		}
-		if (found == false)
-		{
-			throw new IllegalArgumentException(
-				"At least one column in TreeTable must be derived from AbstractTreeColumn.");
-		}
-
-		this.columns = columns;
-
-		// Attach the javascript that resizes the header according to the body
-		// This is necessary to support fixed position header. The header does
-		// not
-		// scroll together with body. The body contains vertical scrollbar. The
-		// header width must be same as body content width, so that the columns
-		// are properly aligned.
-		add(new Behavior()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void renderHead(final Component component, final IHeaderResponse response)
-			{
-				response.renderOnDomReadyJavaScript("Wicket.TreeTable.attachUpdate(\"" +
-					getMarkupId() + "\")");
 			}
 		});
 	}

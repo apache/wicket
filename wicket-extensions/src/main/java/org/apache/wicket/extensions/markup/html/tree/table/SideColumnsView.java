@@ -16,15 +16,11 @@
  */
 package org.apache.wicket.extensions.markup.html.tree.table;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.tree.TreeNode;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.extensions.markup.html.tree.table.ColumnLocation.Alignment;
 import org.apache.wicket.extensions.markup.html.tree.table.ColumnLocation.Unit;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 
@@ -34,17 +30,9 @@ import org.apache.wicket.request.cycle.RequestCycle;
  * 
  * @author Matej Knopp
  */
-final class SideColumnsView extends WebMarkupContainer
+final class SideColumnsView extends AbstractColumnsView
 {
 	private static final long serialVersionUID = 1L;
-
-	private final List<IColumn> columns = new ArrayList<IColumn>();
-
-	private final List<Component> components = new ArrayList<Component>();
-
-	private final TreeNode node;
-
-	private final List<IRenderable> renderables = new ArrayList<IRenderable>();
 
 	/**
 	 * Constructor.
@@ -56,9 +44,8 @@ final class SideColumnsView extends WebMarkupContainer
 	 */
 	public SideColumnsView(final String id, final TreeNode node)
 	{
-		super(id);
+		super(id, node);
 		setRenderBodyOnly(true);
-		this.node = node;
 	}
 
 	/**
@@ -71,41 +58,27 @@ final class SideColumnsView extends WebMarkupContainer
 	 * @param renderable
 	 *            The renderer
 	 */
+	@Override
 	public void addColumn(final IColumn column, final Component component,
 		final IRenderable renderable)
 	{
-		if (column.isVisible())
-		{
-			// if the column is aligned to the left, just append it.
-			// Otherwise we prepend it, because we want columns aligned to right
-			// to be rendered reverse order (because they will have set
-			// float:right
-			// in css, so they will be displayed in reverse order too).
-			if (column.getLocation().getAlignment() == Alignment.LEFT)
-			{
-				columns.add(column);
-				components.add(component);
-				renderables.add(renderable);
-			}
-			else
-			{
-				columns.add(0, column);
-				components.add(0, component);
-				renderables.add(0, renderable);
-			}
-		}
+		// if the column is aligned to the left, just append it.
+		// Otherwise we prepend it, because we want columns aligned to right
+		// to be rendered reverse order (because they will have set
+		// float:right
+		// in css, so they will be displayed in reverse order too).
+		Position position = (column.getLocation().getAlignment() == Alignment.LEFT)
+			? Position.APPEND : Position.PREPEND;
+		super.addColumn(column, component, renderable, position);
 	}
 
-	/**
-	 * @see org.apache.wicket.MarkupContainer#onRender()
-	 */
 	@Override
 	protected void onRender()
 	{
 		Response response = RequestCycle.get().getResponse();
 
-		boolean firstLeft = true; // whether there was no left column rendered
-		// yet
+		// whether there was no left column rendered yet
+		boolean firstLeft = true;
 
 		for (int i = 0; i < columns.size(); ++i)
 		{
