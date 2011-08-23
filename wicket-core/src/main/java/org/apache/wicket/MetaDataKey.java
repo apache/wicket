@@ -18,17 +18,27 @@ package org.apache.wicket;
 
 
 /**
- * A key to a piece of metadata associated with a Component at runtime. The key contains type
- * information that can be used to check the type of any metadata value for the key when the value
- * is set on the given Component. MetaDataKey is abstract in order to force the creation of a
- * subtype. That subtype is used to test for identity when looking for the metadata because actual
- * object identity would suffer from problems under serialization. So, the correct way to declare a
- * MetaDataKey is like this: public static MetaDataKey ROLE = new MetaDataKey(Role.class) { }
+ * A key to a piece of metadata associated with a {@link Component}, {@link Session} or
+ * {@link Application} at runtime. The key contains type information that can be used to check the
+ * type of any metadata value for the key when the value is set. MetaDataKey is abstract in order to
+ * force the creation of a subtype. That subtype is used to test for identity when looking for the
+ * metadata because actual object identity would suffer from problems under serialization. So, the
+ * correct way to declare a MetaDataKey is like this:
+ * 
+ * <pre>
+ * <code>
+ * public static MetaDataKey&lt;Role&gt; ROLE = new MetaDataKey&lt;Role&gt;() { };
+ * </code>
+ * </pre>
  * 
  * @author Jonathan Locke
  * 
  * @param <T>
- *            The object that is stored
+ *            The type of the object which is stored
+ * 
+ * @see Session#getMetaData(MetaDataKey)
+ * @see Component#getMetaData(MetaDataKey)
+ * @see Application#getMetaData(MetaDataKey)
  */
 public abstract class MetaDataKey<T> implements IClusterable
 {
