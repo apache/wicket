@@ -1,21 +1,20 @@
 <?xml version="1.0"?>
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
-   contributor license agreements. See the NOTICE file distributed with
+   contributor license agreements.	See the NOTICE file distributed with
    this work for additional information regarding copyright ownership.
    The ASF licenses this file to You under the Apache License, Version 2.0
    (the "License"); you may not use this file except in compliance with
-   the License. You may obtain a copy of the License at
+   the License.	 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+		http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+--><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.apache.wicket</groupId>
@@ -24,176 +23,38 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>wicket</artifactId>
-  <packaging>bundle</packaging>
+  <packaging>pom</packaging>
   <name>Wicket</name>
   <description>
-    A module that provides dependencies to all core submodules needed to run Wicket application.
-    This way Maven users can depend only on this module without bothering that Wicket core depends
-    on several modules. In addition this artifact adds OSGi headers to the new artifact making
-    Wicket usable in an OSGi container. Still, this artifact alone wouldn't do any magic in an
-    OSGi container without also adding org.apache.wicket/wicket-osgi
+	A module that provides dependencies to all core submodules
+	needed to run Wicket application. This way Maven users can
+	depend only on this module without bothering that Wicket core depends on several modules.
   </description>
   <dependencies>
     <dependency>
       <groupId>org.apache.wicket</groupId>
       <artifactId>wicket-core</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.wicket</groupId>
-      <artifactId>wicket-util</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.wicket</groupId>
-      <artifactId>wicket-request</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.wicket</groupId>
-      <artifactId>wicket-core</artifactId>
-      <classifier>sources</classifier>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.wicket</groupId>
-      <artifactId>wicket-util</artifactId>
-      <classifier>sources</classifier>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.wicket</groupId>
-      <artifactId>wicket-request</artifactId>
-      <classifier>sources</classifier>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.wicket</groupId>
-      <artifactId>wicket-core</artifactId>
-      <scope>provided</scope>
-      <classifier>tests</classifier>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.wicket</groupId>
-      <artifactId>wicket-util</artifactId>
-      <scope>provided</scope>
-      <classifier>tests</classifier>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.wicket</groupId>
-      <artifactId>wicket-request</artifactId>
-      <scope>provided</scope>
-      <classifier>tests</classifier>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.wicket</groupId>
-      <artifactId>wicket-core</artifactId>
-      <classifier>test-sources</classifier>
-      <scope>provided</scope>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.wicket</groupId>
-      <artifactId>wicket-util</artifactId>
-      <classifier>test-sources</classifier>
-      <scope>provided</scope>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.wicket</groupId>
-      <artifactId>wicket-request</artifactId>
-      <classifier>test-sources</classifier>
-      <scope>provided</scope>
-      <version>${project.version}</version>
+      <version>${project.parent.version}</version>
     </dependency>
   </dependencies>
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <appendAssemblyId>true</appendAssemblyId>
-          <tarLongFileMode>gnu</tarLongFileMode>
-          <outputDirectory>target</outputDirectory>
-          <finalName>${project.artifactId}-${project.version}</finalName>
-        </configuration>
-        <executions>
-          <execution>
-            <id>make-main-sources</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          <configuration>
-            <descriptors>
-              <descriptor>src/assembly/sources.xml</descriptor>
-            </descriptors>
-          </configuration>
-          </execution>
-          <execution>
-            <id>make-test-package</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <descriptors>
-                <descriptor>src/assembly/tests.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
-          <execution>
-            <id>make-test-sources</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <descriptors>
-                <descriptor>src/assembly/test-sources.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <extensions>true</extensions>
-        <configuration>
-          <instructions>
-            <Bundle-SymbolicName>org.apache.wicket</Bundle-SymbolicName>
-            <Bundle-Name>Apache Wicket :: Framework Core</Bundle-Name>
-            <Import-Package>junit.framework;resolution:=optional, *</Import-Package>
-            <Export-Package>org.apache.wicket.*;version=${project.version};-split-package:=merge-first</Export-Package>
-            <Embed-Dependency>groupId=org.apache.wicket;classifier=!sources;inline=true</Embed-Dependency>
-            <Embed-Transitive>false</Embed-Transitive>
-            <_nouses>true</_nouses>
-            <_failok>true</_failok>
-            <_removeheaders>Embed-Dependency,Embed-Transitive</_removeheaders>
-          </instructions>
-        </configuration>
-      </plugin>
-      <plugin>
-        <!-- Do not create -tests.jar for this project. It is created with maven-assembly-plugin -->
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>test-jar</goal>
-            </goals>
-            <configuration>
-              <skip>true</skip>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
+	<plugins>
+		<plugin>
+			<!-- Do not create (and deploy) -tests.jar for this project -->
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-jar-plugin</artifactId>
+			<version>2.3.1</version>
+			<executions>
+				<execution>
+					<goals>
+						<goal>test-jar</goal>
+					</goals>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</execution>
+			</executions>
+		</plugin>
+	</plugins>
   </build>
 </project>
-
