@@ -519,7 +519,7 @@ public final class SerializableChecker extends ObjectOutputStream
 							return null;
 						}
 
-						checked.put(original, null);
+						checked.put(streamObj, null);
 						String arrayPos = "[write:" + counter + "]";
 						simpleName = arrayPos;
 						fieldDescription += arrayPos;
