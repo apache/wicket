@@ -25,6 +25,7 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.ThreadContext;
 import org.apache.wicket.pageStore.DefaultPageStore;
 import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.pageStore.IPageStore;
@@ -53,6 +54,9 @@ public class PersistentPageManagerTest
 	@Test
 	public void serializationOutsideWicketLifecyle() throws IOException, ClassNotFoundException
 	{
+		// make sure no leaked threadlocals are present
+		ThreadContext.detach();
+
 		// create IPageManager (with IPageStore) and store a page instance
 		IPageManager pageManager = newPersistentPageManager(APP_NAME);
 		TestPage toSerializePage = new TestPage();
