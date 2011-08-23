@@ -347,9 +347,9 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		{
 			// listener interface URL with page class information
 			BookmarkableListenerInterfaceRequestHandler handler = (BookmarkableListenerInterfaceRequestHandler)requestHandler;
-			IRequestablePage page = handler.getPage();
+			Class<? extends IRequestablePage> pageClass = handler.getPageClass();
 
-			if (!checkPageClass(page.getClass()))
+			if (!checkPageClass(pageClass))
 			{
 				return null;
 			}
@@ -357,16 +357,16 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 			Integer renderCount = null;
 			if (handler.getListenerInterface().isIncludeRenderCount())
 			{
-				renderCount = page.getRenderCount();
+				renderCount = handler.getRenderCount();
 			}
 
-			PageInfo pageInfo = new PageInfo(page.getPageId());
+			PageInfo pageInfo = new PageInfo(handler.getPageId());
 			ComponentInfo componentInfo = new ComponentInfo(renderCount,
 				requestListenerInterfaceToString(handler.getListenerInterface()),
-				handler.getComponent().getPageRelativePath(), handler.getBehaviorIndex());
+				handler.getComponentPath(), handler.getBehaviorIndex());
 
 			UrlInfo urlInfo = new UrlInfo(new PageComponentInfo(pageInfo, componentInfo),
-				page.getClass(), handler.getPageParameters());
+				pageClass, handler.getPageParameters());
 			return buildUrl(urlInfo);
 		}
 

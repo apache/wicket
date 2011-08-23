@@ -151,4 +151,9 @@ public class RenderPageRequestHandler implements IPageRequestHandler, IPageClass
 	{
 		return !pageProvider.isNewPageInstance();
 	}
+
+	public final Integer getRenderCount()
+	{
+		return pageProvider.getRenderCount();
+	}
 }

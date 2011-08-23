@@ -32,4 +32,11 @@ public interface IComponentRequestHandler extends IRequestHandler
 	 * @return component instance
 	 */
 	IRequestableComponent getComponent();
+
+	/**
+	 * Returns the page relative path to the component instance.
+	 * 
+	 * @return the page relative path to the component instance
+	 */
+	String getComponentPath();
 }

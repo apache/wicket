@@ -31,13 +31,13 @@ public interface IPageAndComponentProvider extends IPageProvider
 	 * 
 	 * @return component
 	 */
-	public abstract IRequestableComponent getComponent();
+	IRequestableComponent getComponent();
 
 	/**
-	 * Returns the component path.
+	 * Returns the page relative component path.
 	 * 
-	 * @return component path
+	 * @return the page relative component path.
 	 */
-	public abstract String getComponentPath();
+	String getComponentPath();
 
 }

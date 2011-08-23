@@ -1368,4 +1368,9 @@ public class AjaxRequestTarget implements IPageRequestHandler
 	{
 		return true;
 	}
+
+	public final Integer getRenderCount()
+	{
+		return page.getRenderCount();
+	}
 }

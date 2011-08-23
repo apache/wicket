@@ -46,4 +46,12 @@ public interface IPageRequestHandler extends IPageClassRequestHandler
 	 * @return {@code true} iff page instance is not yet created
 	 */
 	boolean isPageInstanceCreated();
+
+	/**
+	 * Returns the number of times this page has been rendered.
+	 * 
+	 * @return the number of times this page has been rendered.
+	 * @see IRequestablePage#getRenderCount()
+	 */
+	Integer getRenderCount();
 }

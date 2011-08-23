@@ -197,4 +197,14 @@ public class ListenerInterfaceRequestHandler
 	{
 		return !pageComponentProvider.isNewPageInstance();
 	}
+
+	public final String getComponentPath()
+	{
+		return pageComponentProvider.getComponentPath();
+	}
+
+	public final Integer getRenderCount()
+	{
+		return pageComponentProvider.getRenderCount();
+	}
 }

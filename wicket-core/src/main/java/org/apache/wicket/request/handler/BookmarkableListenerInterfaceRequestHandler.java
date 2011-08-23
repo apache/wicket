@@ -80,6 +80,11 @@ public class BookmarkableListenerInterfaceRequestHandler
 		return pageComponentProvider.getComponent();
 	}
 
+	public final String getComponentPath()
+	{
+		return pageComponentProvider.getComponentPath();
+	}
+
 	/**
 	 * @see org.apache.wicket.request.handler.IPageRequestHandler#getPage()
 	 */
@@ -152,5 +157,13 @@ public class BookmarkableListenerInterfaceRequestHandler
 	public final boolean isPageInstanceCreated()
 	{
 		return !pageComponentProvider.isNewPageInstance();
+	}
+
+	/**
+	 * @return the render count of the page
+	 */
+	public final Integer getRenderCount()
+	{
+		return pageComponentProvider.getRenderCount();
 	}
 }

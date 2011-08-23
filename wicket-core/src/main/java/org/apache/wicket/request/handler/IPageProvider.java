@@ -75,6 +75,13 @@ public interface IPageProvider
 	Integer getPageId();
 
 	/**
+	 * Returns the number of times this page has been rendered.
+	 * 
+	 * @return the number of times this page has been rendered.
+	 */
+	Integer getRenderCount();
+
+	/**
 	 * Detaches the page if it has been loaded.
 	 */
 	void detach();

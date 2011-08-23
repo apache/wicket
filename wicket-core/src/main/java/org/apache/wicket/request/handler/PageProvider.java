@@ -149,6 +149,8 @@ public class PageProvider implements IPageProvider
 		Args.notNull(page, "page");
 
 		pageInstance = page;
+		pageId = page.getPageId();
+		renderCount = page.getRenderCount();
 		if (pageInstance instanceof Page)
 		{
 			((Page)pageInstance).setStatelessHint(false);
@@ -336,5 +338,10 @@ public class PageProvider implements IPageProvider
 	public Integer getPageId()
 	{
 		return pageId;
+	}
+
+	public Integer getRenderCount()
+	{
+		return renderCount;
 	}
 }

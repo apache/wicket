@@ -61,4 +61,9 @@ public class ComponentRenderingRequestHandler implements IComponentRequestHandle
 		component.render();
 	}
 
+	public final String getComponentPath()
+	{
+		return component.getPageRelativePath();
+	}
+
 }

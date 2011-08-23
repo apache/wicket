@@ -3289,8 +3289,9 @@ public abstract class Component
 		IRequestHandler handler;
 		if (page.isPageStateless())
 		{
-			PageAndComponentProvider provider = new PageAndComponentProvider(page.getPageClass(),
-				page.getPageParameters(), getPageRelativePath());
+			PageAndComponentProvider provider = new PageAndComponentProvider(page.getPageId(),
+				page.getPageClass(), page.getPageParameters(), page.getRenderCount(),
+				getPageRelativePath());
 			handler = new BookmarkableListenerInterfaceRequestHandler(provider, listener, id);
 		}
 		else
@@ -3331,8 +3332,9 @@ public abstract class Component
 		IRequestHandler handler;
 		if (page.isPageStateless())
 		{
-			PageAndComponentProvider provider = new PageAndComponentProvider(page.getPageClass(),
-				page.getPageParameters(), getPageRelativePath());
+			PageAndComponentProvider provider = new PageAndComponentProvider(page.getPageId(),
+				page.getPageClass(), page.getPageParameters(), page.getRenderCount(),
+				getPageRelativePath());
 			handler = new BookmarkableListenerInterfaceRequestHandler(provider, listener);
 		}
 		else
