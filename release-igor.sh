@@ -34,8 +34,8 @@ read passphrase
 stty $stty_orig
 
 echo "modifying poms with the new version: $version"
-mvn versions:set -DnewVersion=$version
-mvn versions:commit
+mvn5 versions:set -DnewVersion=$version
+mvn5 versions:commit
 find . -name "pom.xml" | xargs sed -i -e "s/1.5-SNAPSHOT/$version/g"
 find . -name "pom.xml" | xargs sed -i -e "s/wicket\/trunk/wicket\/releases\/$version/g"
 
@@ -72,8 +72,8 @@ do
 done
 
 # prebuilding to work around javadoc generation problem
-mvn clean install -Dmaven.test.skip=true
-mvn javadoc:jar
+mvn5 clean install -DskipTests=true
+mvn5 javadoc:jar
 
 # clean all projects
 echo "Clean all projects"
