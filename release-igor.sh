@@ -72,7 +72,7 @@ do
 done
 
 # prebuilding to work around javadoc generation problem
-mvn clean install -Dmaven.test.skip=true
+mvn clean install -DskipTests
 mvn javadoc:jar
 
 # clean all projects
