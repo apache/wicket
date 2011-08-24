@@ -22,6 +22,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
+import org.apache.wicket.markup.resolver.IComponentResolver;
 
 /**
  * Markup sourcing strategies determine whether a Component behaves like a "Panel" pulling its
@@ -79,10 +80,11 @@ public interface IMarkupSourcingStrategy
 	 * @see MarkupContainer#getMarkup(Component)
 	 * 
 	 * @param container
-	 *            The parent containing the child. (@TODO Is container ever != child.getParent()??)
+	 *            The parent containing the child. This is not the direct parent, transparent
+	 *            component {@link IComponentResolver resolver} may be in the hierarchy between.
 	 * @param child
 	 *            The component to find the markup for.
-	 * @return markup fragment
+	 * @return the markup fragment for the child, or {@code null}.
 	 */
 	IMarkupFragment getMarkup(final MarkupContainer container, final Component child);
 }

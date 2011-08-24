@@ -23,7 +23,6 @@ import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.list.AbstractItem;
-import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Juergen Donnerstag
  */
-public final class DefaultMarkupSourcingStrategy implements IMarkupSourcingStrategy
+public final class DefaultMarkupSourcingStrategy extends AbstractMarkupSourcingStrategy
 {
 	/** Log for reporting. */
 	private static final Logger log = LoggerFactory.getLogger(DefaultMarkupSourcingStrategy.class);
@@ -58,6 +57,7 @@ public final class DefaultMarkupSourcingStrategy implements IMarkupSourcingStrat
 	/**
 	 * Nothing to add to the response by default
 	 */
+	@Override
 	public void onComponentTag(final Component component, final ComponentTag tag)
 	{
 	}
@@ -65,6 +65,7 @@ public final class DefaultMarkupSourcingStrategy implements IMarkupSourcingStrat
 	/**
 	 * Invoke the component's onComponentTagBody().
 	 */
+	@Override
 	public void onComponentTagBody(final Component component, final MarkupStream markupStream,
 		final ComponentTag openTag)
 	{
@@ -74,6 +75,7 @@ public final class DefaultMarkupSourcingStrategy implements IMarkupSourcingStrat
 	/**
 	 * Get the markup for the child component, which is assumed to be a child of 'container'.
 	 */
+	@Override
 	public IMarkupFragment getMarkup(final MarkupContainer container, final Component child)
 	{
 		// If the sourcing strategy did not provide one, than ask the component.
@@ -96,22 +98,10 @@ public final class DefaultMarkupSourcingStrategy implements IMarkupSourcingStrat
 			return markup;
 		}
 
-		// If the child has not been directly added to the container, but via a
-		// TransparentWebMarkupContainer, then we are in trouble. In general Wicket iterates over
-		// the markup elements and searches for associated components, not the other way around.
-		// Because of TransparentWebMarkupContainer (or more generally resolvers), there is no
-		// "synchronous" search possible.
-		for (Component ch : container)
+		markup = searchMarkupInTransparentResolvers(container, child);
+		if (markup != null)
 		{
-			if ((ch != child) && (ch instanceof MarkupContainer) &&
-				(ch instanceof IComponentResolver))
-			{
-				markup = ((MarkupContainer)ch).getMarkup(child);
-				if (markup != null)
-				{
-					return markup;
-				}
-			}
+			return markup;
 		}
 
 		// This is to make migration for Items from 1.4 to 1.5 more easy
@@ -156,6 +146,7 @@ public final class DefaultMarkupSourcingStrategy implements IMarkupSourcingStrat
 	/**
 	 * Empty: nothing will be added to the header by default
 	 */
+	@Override
 	public void renderHead(final Component component, HtmlHeaderContainer container)
 	{
 	}
