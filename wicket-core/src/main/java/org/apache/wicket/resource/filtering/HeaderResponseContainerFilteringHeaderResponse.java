@@ -153,13 +153,13 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 		if (requestCycle == null)
 		{
 			throw new IllegalStateException(
-				"you can only get the HeaderResponseContainerFilteringHeaderResponse when there is a RequestCycle present");
+				"You can only get the HeaderResponseContainerFilteringHeaderResponse when there is a RequestCycle present");
 		}
 		HeaderResponseContainerFilteringHeaderResponse response = requestCycle.getMetaData(RESPONSE_KEY);
 		if (response == null)
 		{
 			throw new IllegalStateException(
-				"no HeaderResponseContainerFilteringHeaderResponse is present in the request cycle.  This may mean that you have not decorated the header response with a HeaderResponseContainerFilteringHeaderResponse.  Simply calling the HeaderResponseContainerFilteringHeaderResponse constructor sets itself on the request cycle");
+				"No HeaderResponseContainerFilteringHeaderResponse is present in the request cycle.  This may mean that you have not decorated the header response with a HeaderResponseContainerFilteringHeaderResponse.  Simply calling the HeaderResponseContainerFilteringHeaderResponse constructor sets itself on the request cycle");
 		}
 		return response;
 	}
@@ -363,7 +363,9 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 				return;
 			}
 		}
-		log.warn("a ResourceReference was rendered to the filtering header response, but did not match any filters, so it was effectively lost.  Make sure that you have filters that accept every possible case or else configure a default filter that returns true to all acceptance tests");
+		log.warn(
+			"A ResourceReference '{}' was rendered to the filtering header response, but did not match any filters, so it was effectively lost.  Make sure that you have filters that accept every possible case or else configure a default filter that returns true to all acceptance tests",
+			reference);
 	}
 
 	private void forJavaScript(Runnable runnable)
@@ -376,7 +378,7 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 				return;
 			}
 		}
-		log.warn("javascript was rendered to the filtering header response, but did not match any filters, so it was effectively lost.  Make sure that you have filters that accept every possible case or else configure a default filter that returns true to all acceptance tests");
+		log.warn("JavaScript was rendered to the filtering header response, but did not match any filters, so it was effectively lost.  Make sure that you have filters that accept every possible case or else configure a default filter that returns true to all acceptance tests");
 	}
 
 	private void forCss(Runnable runnable)
@@ -389,7 +391,7 @@ public class HeaderResponseContainerFilteringHeaderResponse extends DecoratingHe
 				return;
 			}
 		}
-		log.warn("css was rendered to the filtering header response, but did not match any filters, so it was effectively lost.  Make sure that you have filters that accept every possible case or else configure a default filter that returns true to all acceptance tests");
+		log.warn("CSS was rendered to the filtering header response, but did not match any filters, so it was effectively lost.  Make sure that you have filters that accept every possible case or else configure a default filter that returns true to all acceptance tests");
 	}
 
 	/**
