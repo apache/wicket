@@ -37,7 +37,7 @@ public abstract class AbstractMapper implements IRequestMapper
 	 * @param s
 	 * @return placeholder key or <code>null</code> if string is not in right format
 	 */
-	protected static String getPlaceholder(final String s)
+	protected String getPlaceholder(final String s)
 	{
 		return getPlaceholder(s, '$');
 	}
@@ -49,7 +49,7 @@ public abstract class AbstractMapper implements IRequestMapper
 	 * @param s
 	 * @return placeholder key or <code>null</code> if string is not in right format
 	 */
-	protected static String getOptionalPlaceholder(final String s)
+	protected String getOptionalPlaceholder(final String s)
 	{
 		return getPlaceholder(s, '#');
 	}
@@ -63,7 +63,7 @@ public abstract class AbstractMapper implements IRequestMapper
 	 *            the character used to indicate the start of the placeholder
 	 * @return placeholder key or <code>null</code> if string is not in right format
 	 */
-	protected static String getPlaceholder(final String s, char startChar)
+	protected String getPlaceholder(final String s, char startChar)
 	{
 		if ((s == null) || (s.length() < 4) || !s.startsWith(startChar + "{") || !s.endsWith("}"))
 		{
