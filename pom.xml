@@ -25,7 +25,7 @@
 
 	<groupId>org.apache.wicket</groupId>
 	<artifactId>wicket-parent</artifactId>
-	<version>1.5-SNAPSHOT</version>
+	<version>1.5-RC7</version>
 	<packaging>pom</packaging>
 	<name>Wicket Parent</name>
 	<description>Wicket is a Java-based open source component web application framework.</description>
@@ -224,9 +224,9 @@
 		<url>https://hudson.apache.org/hudson/job/Apache%20Wicket%201.5.x/</url>
 	</ciManagement>
 	<scm>
-		<connection>scm:svn:http://svn.apache.org/repos/asf/wicket/releases/1.5-SNAPSHOT</connection>
-		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/wicket/releases/1.5-SNAPSHOT</developerConnection>
-		<url>http://svn.apache.org/viewvc/wicket/releases/1.5-SNAPSHOT</url>
+		<connection>scm:svn:http://svn.apache.org/repos/asf/wicket/releases/1.5-RC7</connection>
+		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/wicket/releases/1.5-RC7</developerConnection>
+		<url>http://svn.apache.org/viewvc/wicket/releases/1.5-RC7</url>
 	</scm>
 	<mailingLists>
 		<mailingList>
