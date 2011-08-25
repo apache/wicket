@@ -291,6 +291,8 @@ public class AttributeModifierTest extends Assert
 	}
 
 	/**
+	 * Tests {@link AttributeModifier#remove(String)}
+	 * 
 	 * https://issues.apache.org/jira/browse/WICKET-3934
 	 */
 	@Test
@@ -306,21 +308,22 @@ public class AttributeModifierTest extends Assert
 	}
 
 	/**
-	 * Add an attribute with name equal to the special
-	 * {@link AttributeModifier#VALUELESS_ATTRIBUTE_REMOVE}
+	 * Add an attribute with name equal (Object#equals()) to the special
+	 * {@link AttributeModifier#VALUELESS_ATTRIBUTE_REMOVE} but not identity equal
 	 * 
 	 * https://issues.apache.org/jira/browse/WICKET-3934
 	 */
 	@Test
 	public void appendSpecialAttribute()
 	{
-		AttributeModifier appender = AttributeModifier.append("VA_REMOVE", "newValue");
+		String attrName = "attrName";
+		AttributeModifier appender = AttributeModifier.append(attrName, "VA_REMOVE");
 		XmlTag xmlTag = new XmlTag();
 		ComponentTag tag = new ComponentTag(xmlTag);
 		Map<String, Object> attributes = tag.getAttributes();
-		attributes.put("VA_REMOVE", "oldValue");
+		attributes.put(attrName, "VA_REMOVE");
 		appender.replaceAttributeValue(null, tag);
 		assertFalse(attributes.isEmpty());
-		assertEquals("oldValue newValue", attributes.get("VA_REMOVE"));
+		assertEquals("VA_REMOVE VA_REMOVE", attributes.get(attrName));
 	}
 }
