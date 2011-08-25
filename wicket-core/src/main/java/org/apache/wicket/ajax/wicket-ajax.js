@@ -2113,7 +2113,7 @@ Wicket.ChangeHandler=function(elementId){
     var KEY_SHIFT=16;
     var KEY_CTRL=17;
     var KEY_ALT=18;
-    var KEY_END=46;
+    var KEY_END=35;
     var KEY_HOME=36;
 
 	var obj = Wicket.$(elementId);
