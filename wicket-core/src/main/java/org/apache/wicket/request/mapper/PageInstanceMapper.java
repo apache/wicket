@@ -114,7 +114,7 @@ public class PageInstanceMapper extends AbstractComponentMapper
 		{
 			ListenerInterfaceRequestHandler handler = (ListenerInterfaceRequestHandler)requestHandler;
 			IRequestablePage page = handler.getPage();
-			String componentPath = handler.getComponent().getPageRelativePath();
+			String componentPath = handler.getComponentPath();
 			RequestListenerInterface listenerInterface = handler.getListenerInterface();
 
 			Integer renderCount = null;

@@ -112,10 +112,8 @@ public abstract class AbstractComponentMapper extends AbstractMapper implements 
 	 */
 	protected void encodePageComponentInfo(Url url, PageComponentInfo info)
 	{
-		if (url == null)
-		{
-			throw new IllegalStateException("Argument 'url' may not be null.");
-		}
+		Args.notNull(url, "url");
+
 		if (info != null)
 		{
 			String s = info.toString();
