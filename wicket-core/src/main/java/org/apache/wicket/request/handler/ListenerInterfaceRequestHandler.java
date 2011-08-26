@@ -156,10 +156,22 @@ public class ListenerInterfaceRequestHandler
 				// overridden
 				// during invocation of listener
 				// method (i.e. by calling RequestCycle#setResponsePage)
-				RedirectPolicy policy = page.isPageStateless() ? RedirectPolicy.NEVER_REDIRECT
-					: RedirectPolicy.AUTO_REDIRECT;
+				final IPageProvider pageProvider;
+				final RedirectPolicy policy;
+				if (page.isPageStateless())
+				{
+					policy = RedirectPolicy.NEVER_REDIRECT;
+					pageProvider = new PageProvider(page.getPageId(), page.getClass(),
+						page.getPageParameters(), page.getRenderCount());
+				}
+				else
+				{
+					policy = RedirectPolicy.AUTO_REDIRECT;
+					pageProvider = new PageProvider(page);
+				}
+
 				requestCycle.scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(
-					new PageProvider(page), policy));
+					pageProvider, policy));
 			}
 
 			invokeListener();
