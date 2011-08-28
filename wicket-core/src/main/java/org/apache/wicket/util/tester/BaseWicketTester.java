@@ -1025,6 +1025,13 @@ public class BaseWicketTester
 		request.addHeader("Wicket-Ajax-BaseURL", url.toString());
 		request.addHeader("Wicket-Ajax", "true");
 
+		if (behavior instanceof AjaxFormSubmitBehavior)
+		{
+			AjaxFormSubmitBehavior formSubmitBehavior = (AjaxFormSubmitBehavior)behavior;
+			Form<?> form = formSubmitBehavior.getForm();
+			getRequest().setUseMultiPartContentType(form.isMultiPart());
+		}
+
 		processRequest();
 	}
 
