@@ -67,63 +67,63 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Base class for forms. To implement a form, subclass this class, add FormComponents (such as
- * CheckBoxes, ListChoices or TextFields) to the form. You can nest multiple
- * IFormSubmittingComponents if you want to vary submit behavior. However, it is not necessary to
- * use any of Wicket's classes (such as Button or SubmitLink), just putting e.g. &lt;input
- * type="submit" value="go"&gt; suffices.
+ * Base class for forms. To implement a form, subclass this class, add {@link FormComponent}s (such
+ * as {@link CheckBox}es, {@link ListChoice}s or {@link TextField}s) to the form. You can nest
+ * multiple {@link IFormSubmittingComponent}s if you want to vary submit behavior. However, it is
+ * not necessary to use any of Wicket's classes (such as {@link Button} or {@link SubmitLink}), just
+ * putting e.g. &lt;input type="submit" value="go"/&gt; suffices.
  * <p>
  * By default, the processing of a form works like this:
- * <li>The submitting component is looked up. An submitting IFormSubmittingComponent (such as a
- * button) is nested in this form (is a child component) and was clicked by the user. If an
- * IFormSubmittingComponent was found, and it has the defaultFormProcessing field set to false
- * (default is true), it's onSubmit method will be called right away, thus no validition is done,
- * and things like updating form component models that would normally be done are skipped. In that
- * respect, nesting an IFormSubmittingComponent with the defaultFormProcessing field set to false
- * has the same effect as nesting a normal link. If you want you can call validate() to execute form
- * validation, hasError() to find out whether validate() resulted in validation errors, and
- * updateFormComponentModels() to update the models of nested form components.</li>
- * <li>When no submitting IFormSubmittingComponent with defaultFormProcessing set to false was
- * found, this form is processed (method process()). Now, two possible paths exist:
+ * <li>The submitting component is looked up. An submitting {@link IFormSubmittingComponent} (such
+ * as a button) is nested in this form (is a child component) and was clicked by the user. If an
+ * {@link IFormSubmittingComponent} was found, and it has the defaultFormProcessing field set to
+ * false (default is true), it's onSubmit method will be called right away, thus no validation is
+ * done, and things like updating form component models that would normally be done are skipped. In
+ * that respect, nesting an {@link IFormSubmittingComponent} with the defaultFormProcessing field
+ * set to false has the same effect as nesting a normal link. If you want you can call
+ * {@link #validate()} to execute form validation, {@link #hasError()} to find out whether
+ * validate() resulted in validation errors, and {@link #updateFormComponentModels()} to update the
+ * models of nested form components.</li>
+ * <li>When no submitting {@link IFormSubmittingComponent} with defaultFormProcessing set to false
+ * was found, this form is processed (method {@link #process(IFormSubmitter)}. Now, two possible
+ * paths exist:
  * <ul>
- * <li>Form validation failed. All nested form components will be marked invalid, and onError() is
- * called to allow clients to provide custom error handling code.</li>
+ * <li>Form validation failed. All nested form components will be marked invalid, and
+ * {@link #onError()} is called to allow clients to provide custom error handling code.</li>
  * <li>Form validation succeeded. The nested components will be asked to update their models and
  * persist their data is applicable. After that, method delegateSubmit with optionally the
- * submitting IFormSubmittingComponent is called. The default when there is a submitting
- * IFormSubmittingComponent is to first call onSubmit on that Component, and after that call
- * onSubmit on this form. Clients may override delegateSubmit if they want different behavior.</li>
+ * submitting {@link IFormSubmittingComponent} is called. The default when there is a submitting
+ * {@link IFormSubmittingComponent} is to first call onSubmit on that Component, and after that call
+ * {@link #onSubmit()} on this form. Clients may override {@link #delegateSubmit(IFormSubmitter)} if
+ * they want different behavior.</li>
  * </ul>
  * </li>
  * </li>
  * </p>
  * 
  * Form for handling (file) uploads with multipart requests is supported by calling
- * setMultiPart(true) ( although wicket will try to automatically detect this for you ). Use this
- * with {@link org.apache.wicket.markup.html.form.upload.FileUploadField} components. You can attach
- * multiple FileUploadField components for multiple file uploads.
+ * {@link #setMultiPart(boolean)}(true) ( although Wicket will try to automatically detect this for
+ * you ). Use this with {@link FileUploadField} components. You can attach multiple
+ * {@link FileUploadField} components for multiple file uploads.
  * <p>
  * In case of an upload error two resource keys are available to specify error messages:
  * uploadTooLarge and uploadFailed
  * 
- * ie in [page].properties
+ * i.e. in [page].properties
  * 
  * [form-id].uploadTooLarge=You have uploaded a file that is over the allowed limit of 2Mb
  * 
  * <p>
- * If you want to have multiple IFormSubmittingComponents which submit the same form, simply put two
- * or more IFormSubmittingComponents somewhere in the hierarchy of components that are children of
- * the form.
- * </p>
- * <p>
- * To get form components to persist their values for users via cookies, simply call
- * setPersistent(true) on each component.
+ * If you want to have multiple {@link IFormSubmittingComponent}s which submit the same form, simply
+ * put two or more {@link IFormSubmittingComponent}s somewhere in the hierarchy of components that
+ * are children of the form.
  * </p>
  * <p>
  * Forms can be nested. You can put a form in another form. Since HTML doesn't allow nested
  * &lt;form&gt; tags, the inner forms will be rendered using the &lt;div&gt; tag. You have to submit
- * the inner forms using explicit components (like Button or SubmitLink), you can't rely on implicit
- * submit behavior (by using just &lt;input type="submit"&gt; that is not attached to a component).
+ * the inner forms using explicit components (like {@link Button} or {@link SubmitLink}), you can't
+ * rely on implicit submit behavior (by using just &lt;input type="submit"&gt; that is not attached
+ * to a component).
  * </p>
  * <p>
  * When a nested form is submitted, the user entered values in outer (parent) forms are preserved
@@ -1077,6 +1077,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		buffer.append(HIDDEN_DIV_START);
 
 		// add an empty textfield (otherwise IE doesn't work)
+		// XXX shouldn't this be "autocomplete='off'"? on/off are the values set by Microsoft and
+		// later in HTML5
 		buffer.append("<input type=\"text\" autocomplete=\"false\"/>");
 
 		// add the submitting component
@@ -1949,7 +1951,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Utility method to assemble an id to distinct form components from diferent nesting levels.
+	 * Utility method to assemble an id to distinct form components from different nesting levels.
 	 * Useful to generate input names attributes.
 	 * 
 	 * @param component
