@@ -3286,17 +3286,14 @@ public abstract class Component
 	{
 		int id = getBehaviorId(behaviour);
 		Page page = getPage();
+		PageAndComponentProvider provider = new PageAndComponentProvider(page, this);
 		IRequestHandler handler;
 		if (page.isPageStateless())
 		{
-			PageAndComponentProvider provider = new PageAndComponentProvider(page.getPageId(),
-				page.getPageClass(), page.getPageParameters(), page.getRenderCount(),
-				getPageRelativePath());
 			handler = new BookmarkableListenerInterfaceRequestHandler(provider, listener, id);
 		}
 		else
 		{
-			PageAndComponentProvider provider = new PageAndComponentProvider(page, this);
 			handler = new ListenerInterfaceRequestHandler(provider, listener, id);
 		}
 		return getRequestCycle().urlFor(handler);
@@ -3329,17 +3326,14 @@ public abstract class Component
 	public final CharSequence urlFor(final RequestListenerInterface listener)
 	{
 		Page page = getPage();
+		PageAndComponentProvider provider = new PageAndComponentProvider(page, this);
 		IRequestHandler handler;
 		if (page.isPageStateless())
 		{
-			PageAndComponentProvider provider = new PageAndComponentProvider(page.getPageId(),
-				page.getPageClass(), page.getPageParameters(), page.getRenderCount(),
-				getPageRelativePath());
 			handler = new BookmarkableListenerInterfaceRequestHandler(provider, listener);
 		}
 		else
 		{
-			PageAndComponentProvider provider = new PageAndComponentProvider(page, this);
 			handler = new ListenerInterfaceRequestHandler(provider, listener);
 		}
 		return getRequestCycle().urlFor(handler);

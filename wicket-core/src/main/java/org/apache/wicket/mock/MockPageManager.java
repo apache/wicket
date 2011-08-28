@@ -78,7 +78,7 @@ public class MockPageManager implements IPageManager
 
 	public void touchPage(IManageablePage page)
 	{
-		if (page.isPageStateless() == false)
+		if (true || page.isPageStateless() == false)
 		{
 			pages.put(page.getPageId(), page);
 		}

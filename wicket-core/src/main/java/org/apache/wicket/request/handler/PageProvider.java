@@ -17,7 +17,6 @@
 package org.apache.wicket.request.handler;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.protocol.http.PageExpiredException;
@@ -151,10 +150,6 @@ public class PageProvider implements IPageProvider
 		pageInstance = page;
 		pageId = page.getPageId();
 		renderCount = page.getRenderCount();
-		if (pageInstance instanceof Page)
-		{
-			((Page)pageInstance).setStatelessHint(false);
-		}
 	}
 
 	/**

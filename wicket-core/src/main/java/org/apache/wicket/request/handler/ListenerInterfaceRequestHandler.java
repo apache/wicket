@@ -153,22 +153,11 @@ public class ListenerInterfaceRequestHandler
 			if (isAjax == false && listenerInterface.isRenderPageAfterInvocation())
 			{
 				// schedule page render after current request handler is done. this can be
-				// overridden
-				// during invocation of listener
+				// overridden during invocation of listener
 				// method (i.e. by calling RequestCycle#setResponsePage)
-				final IPageProvider pageProvider;
-				final RedirectPolicy policy;
-				if (page.isPageStateless())
-				{
-					policy = RedirectPolicy.NEVER_REDIRECT;
-					pageProvider = new PageProvider(page.getPageId(), page.getClass(),
-						page.getPageParameters(), page.getRenderCount());
-				}
-				else
-				{
-					policy = RedirectPolicy.AUTO_REDIRECT;
-					pageProvider = new PageProvider(page);
-				}
+				final IPageProvider pageProvider = new PageProvider(page);
+				final RedirectPolicy policy = page.isPageStateless()
+					? RedirectPolicy.NEVER_REDIRECT : RedirectPolicy.AUTO_REDIRECT;
 
 				requestCycle.scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(
 					pageProvider, policy));
