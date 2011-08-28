@@ -106,4 +106,21 @@ public class PageParametersTest extends Assert
 		assertEquals(1, parameters.getPosition("named2"));
 		assertEquals(2, parameters.getPosition("named3"));
 	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-3938
+	 */
+	@Test
+	public void removeParameters()
+	{
+		PageParameters parameters = new PageParameters().add("named1", "value1").add("named2",
+			"value2");
+
+		assertEquals("value1", parameters.get("named1").toString());
+		assertEquals("value2", parameters.get("named2").toString());
+
+		parameters.remove("named1");
+		parameters.remove("named2");
+		assertTrue(parameters.isEmpty());
+	}
 }
