@@ -16,12 +16,28 @@
  */
 package org.apache.wicket.protocol.http;
 
+import java.io.NotSerializableException;
+
+import javax.servlet.http.HttpSession;
+
+import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.request.handler.IPageProvider;
+import org.apache.wicket.settings.IStoreSettings;
 
 /**
- * Thrown when the {@link org.apache.wicket.protocol.http.WebRequestCycleProcessor} could not
- * process the request or {@link org.apache.wicket.request.AbstractRequestCycleProcessor} could not
- * resolve the rendered page.
+ * Thrown when a {@link Page} instance cannot be found by its id in the page stores. The page may be
+ * missing because of reasons like:
+ * <ul>
+ * <li>the page have never been stored there, e.g. an error occurred during the storing process</li>
+ * <li>the http session has expired and thus all pages related to this session are erased too</li>
+ * <li>the page instance has been erased because the store size exceeded</li>
+ * </ul>
+ * 
+ * @see HttpSession#setMaxInactiveInterval(int)
+ * @see IStoreSettings#setMaxSizePerSession(org.apache.wicket.util.lang.Bytes)
+ * @see NotSerializableException
+ * @see IPageProvider#getPageInstance()
  */
 public class PageExpiredException extends WicketRuntimeException
 {
