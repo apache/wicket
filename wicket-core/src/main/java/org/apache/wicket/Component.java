@@ -2058,7 +2058,9 @@ public abstract class Component
 	}
 
 	/**
-	 * @return True if this component is versioned
+	 * @return {@code true} if this component should notify its holding page about changes in its
+	 *         state. If a {@link Page} is not versioned then it wont track changes in its
+	 *         components and will use the same {@link Page#getPageId()} during its lifetime
 	 */
 	public boolean isVersioned()
 	{
