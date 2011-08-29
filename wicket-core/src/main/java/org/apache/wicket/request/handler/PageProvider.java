@@ -163,7 +163,7 @@ public class PageProvider implements IPageProvider
 
 			if (pageInstance == null)
 			{
-				throw new PageExpiredException("Page expired.");
+				throw new PageExpiredException("Page with id '" + pageId + "' has expired.");
 			}
 
 			touchPageInstance(pageInstance);
