@@ -109,6 +109,8 @@ public class PageParametersTest extends Assert
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-3938
+	 * 
+	 * Remove the parameter by its name
 	 */
 	@Test
 	public void removeParameters()
@@ -122,5 +124,22 @@ public class PageParametersTest extends Assert
 		parameters.remove("named1");
 		parameters.remove("named2");
 		assertTrue(parameters.isEmpty());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-3938
+	 * 
+	 * Remove the parameter by its name only if its value is equal to the criteria
+	 */
+	@Test
+	public void removeParametersByValue()
+	{
+		PageParameters parameters = new PageParameters().add("named1", "value1").add("named1",
+			"value2");
+
+		assertEquals(2, parameters.getAllNamed().size());
+
+		parameters.remove("named1", "value1");
+		assertEquals("value2", parameters.get("named1").toString());
 	}
 }

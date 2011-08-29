@@ -72,9 +72,13 @@ public interface INamedParameters
 	 * Removes named parameter with given name.
 	 * 
 	 * @param name
+	 *            the name of the parameter to remove
+	 * @param values
+	 *            values used as criteria. The parameter will be removed only if its value is equal
+	 *            to any of the criteria.
 	 * @return this
 	 */
-	INamedParameters remove(final String name);
+	INamedParameters remove(final String name, String... values);
 
 	/**
 	 * Adds value to named parameter with given name.

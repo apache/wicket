@@ -392,7 +392,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	/**
 	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#remove(java.lang.String)
 	 */
-	public PageParameters remove(final String name)
+	public PageParameters remove(final String name, final String... values)
 	{
 		Args.notNull(name, "name");
 
@@ -403,7 +403,21 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 				Entry e = i.next();
 				if (e.key.equals(name))
 				{
-					i.remove();
+					if (values != null && values.length > 0)
+					{
+						for (String value : values)
+						{
+							if (e.value.equals(value))
+							{
+								i.remove();
+								break;
+							}
+						}
+					}
+					else
+					{
+						i.remove();
+					}
 				}
 			}
 		}
