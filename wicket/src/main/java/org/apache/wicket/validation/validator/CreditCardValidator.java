@@ -517,7 +517,7 @@ public class CreditCardValidator extends AbstractValidator<String>
 		{
 			if (creditCardNumber.startsWith("4"))
 			{
-				cardId = CreditCardValidator.SWITCH;
+				cardId = CreditCardValidator.VISA;
 				returnValue = true;
 			}
 		}
