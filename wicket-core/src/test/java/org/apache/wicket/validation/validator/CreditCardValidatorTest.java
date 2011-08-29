@@ -16,40 +16,24 @@
  */
 package org.apache.wicket.validation.validator;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.Validatable;
+import org.apache.wicket.validation.validator.CreditCardValidator.CreditCard;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Tests a few valid and invalid credit card numbers.
  * 
  * @author Joachim F. Rohde
  */
-public class CreditCardValidatorTest extends TestCase
+public class CreditCardValidatorTest extends Assert
 {
-	/**
-	 * Constructor.
-	 */
-	public CreditCardValidatorTest()
-	{
-		super();
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param name
-	 */
-	public CreditCardValidatorTest(String name)
-	{
-		super(name);
-	}
-
 	/**
 	 * Tests a couple of credit card numbers that shouldn't be valid.
 	 */
-	public void testInvalidCreditCardNumbers()
+	@Test
+	public void invalidCreditCardNumbers()
 	{
 		// null value
 		CreditCardValidator test = new CreditCardValidator();
@@ -82,7 +66,8 @@ public class CreditCardValidatorTest extends TestCase
 	 * Tests a couple of credit card numbers that should be valid. Those numbers has been taken from
 	 * https://www.paypal.com/en_US/vhelp/paypalmanager_help/credit_card_numbers.htm
 	 */
-	public void testValidCreditCardNumbers()
+	@Test
+	public void validCreditCardNumbers()
 	{
 		// American Express
 		CreditCardValidator test = new CreditCardValidator();
@@ -160,5 +145,15 @@ public class CreditCardValidatorTest extends TestCase
 		validatable = new Validatable<String>("6331101999990016");
 		test.onValidate(validatable);
 		assertEquals(true, validatable.isValid());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-3998
+	 */
+	@Test
+	public void isVisa()
+	{
+		CreditCardValidator validator = new CreditCardValidator();
+		assertEquals(CreditCard.VISA, validator.determineCardId("4111111111111111"));
 	}
 }
