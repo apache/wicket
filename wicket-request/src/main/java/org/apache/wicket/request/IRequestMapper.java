@@ -23,6 +23,26 @@ package org.apache.wicket.request;
  * doesn't recognize, the {@link #mapHandler(IRequestHandler)} and {@link #mapRequest(Request)}
  * methods must return {@code null}.
  * 
+ * The workflow is: the Application class collects a set of {@link IRequestMapper}s and for each
+ * request the {@link IRequestCycle request cycle} asks these mappers whether any of them knows how
+ * to handle the current {@link Request}’s {@link Url url}. Wicket pre-configures several mappers
+ * which are used for the basic application functionality like a mapper for the home page, a mapper
+ * for Wicket resources, for bookmarkable pages, etc. The user application can add additional
+ * mappers with the various WebApplication#mountXYZ() methods.
+ * 
+ * The mapper has two main tasks:
+ * 
+ * <ol>
+ * <li>To create {@link IRequestHandler} that will produce the response. When a request comes Wicket
+ * uses {@link #getCompatibilityScore(Request)} to decide which mapper should be asked first to
+ * process the request. If two mappers have the same score then the one added later is asked first.
+ * This way user’s mappers have precedence than the system ones. If a mapper knows how to handle the
+ * request’s url then it should return non-{@code null} {@link IRequestHandler}.</li>
+ * <li>
+ * The second task is to produce {@link Url} for an {@link IRequestHandler}. This is needed at
+ * markup rendering time to create the urls for links, forms' action attribute, etc.</li>
+ * </ol>
+ * 
  * @author Matej Knopp
  */
 public interface IRequestMapper
