@@ -102,4 +102,14 @@ public class MarkupContainerTest extends WicketTestCase
 		assertNull(b.get("..|.."));
 		assertNull(a.get("q"));
 	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4006
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void addMyself()
+	{
+		WebMarkupContainer me = new WebMarkupContainer("a");
+		me.add(me);
+	}
 }

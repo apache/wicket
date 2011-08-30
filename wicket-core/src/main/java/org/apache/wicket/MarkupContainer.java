@@ -133,6 +133,12 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		{
 			Args.notNull(child, "child");
 
+			if (this == child)
+			{
+				throw new IllegalArgumentException(
+					exceptionMessage("Trying to add this component to itself."));
+			}
+
 			MarkupContainer parent = getParent();
 			while (parent != null)
 			{
