@@ -73,6 +73,18 @@ public interface INamedParameters
 	 * 
 	 * @param name
 	 *            the name of the parameter to remove
+	 * @return this
+	 * @deprecated use {@link #remove(String, String...)}
+	 */
+	@Deprecated
+	// TODO Wicket 1.6 - remove this method and leave only #remove(String, String...) (WICKET-3938)
+	INamedParameters remove(final String name);
+
+	/**
+	 * Removes named parameter with given name.
+	 * 
+	 * @param name
+	 *            the name of the parameter to remove
 	 * @param values
 	 *            values used as criteria. The parameter will be removed only if its value is equal
 	 *            to any of the criteria.

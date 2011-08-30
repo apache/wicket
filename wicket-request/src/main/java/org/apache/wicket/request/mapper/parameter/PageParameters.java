@@ -392,6 +392,16 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	/**
 	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#remove(java.lang.String)
 	 */
+	// TODO Wicket 1.6 - remove this method and leave only #remove(String, String...)
+	public PageParameters remove(final String name)
+	{
+		return remove(name, new String[0]);
+	}
+
+	/**
+	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#remove(java.lang.String,
+	 *      java.lang.String...)
+	 */
 	public PageParameters remove(final String name, final String... values)
 	{
 		Args.notNull(name, "name");
