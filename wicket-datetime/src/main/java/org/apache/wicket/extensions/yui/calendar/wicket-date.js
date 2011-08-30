@@ -269,8 +269,9 @@ Wicket.DateTime.init = function(cfg) {
 			var el = YAHOO.util.Event.getTarget(e);
 			var dialogEl = document.getElementById(cfg.dpJs);
 			var showBtn = document.getElementById(cfg.icon);
+			var fieldEl = document.getElementById(cfg.componentId);
 
-			if (el != dialogEl && !YAHOO.util.Dom.isAncestor(dialogEl, el) && el != showBtn && !YAHOO.util.Dom.isAncestor(showBtn, el)) {
+			if (el != dialogEl && el != fieldEl && !YAHOO.util.Dom.isAncestor(dialogEl, el) && el != showBtn && !YAHOO.util.Dom.isAncestor(showBtn, el)) {
 				YAHOO.wicket[cfg.dpJs].hide();
 			}
         });
