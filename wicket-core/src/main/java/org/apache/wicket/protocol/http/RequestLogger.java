@@ -135,43 +135,52 @@ public class RequestLogger extends AbstractRequestLogger
 		AppendingStringBuffer sb = new AppendingStringBuffer(128);
 		if (handler != null)
 		{
-			sb.append("handler=");
-			sb.append(handler.getClass().isAnonymousClass() ? handler.getClass().getName()
-				: handler.getClass().getSimpleName());
-			sb.append(",");
-			if (handler instanceof AjaxRequestTarget)
+			try
 			{
-				getAjaxString(sb, (AjaxRequestTarget)handler);
+				sb.append("handler=");
+				sb.append(handler.getClass().isAnonymousClass() ? handler.getClass().getName()
+					: handler.getClass().getSimpleName());
+				sb.append(",");
+				if (handler instanceof AjaxRequestTarget)
+				{
+					getAjaxString(sb, (AjaxRequestTarget)handler);
+				}
+				else if (handler instanceof BookmarkablePageRequestHandler)
+				{
+					getBookmarkableString(sb, (BookmarkablePageRequestHandler)handler);
+				}
+				else if (handler instanceof BufferedResponseRequestHandler)
+				{
+					// nothing extra to log... BufferedResponse doesn't have identifiable
+					// information about which request was buffered
+				}
+				else if (handler instanceof IRequestHandlerDelegate)
+				{
+					getDelegateString(sb, (IRequestHandlerDelegate)handler);
+				}
+				else if (handler instanceof ListenerInterfaceRequestHandler)
+				{
+					getListenerString(sb, (ListenerInterfaceRequestHandler)handler);
+				}
+				else if (handler instanceof RenderPageRequestHandler)
+				{
+					getRendererString(sb, (RenderPageRequestHandler)handler);
+				}
+				else if (handler instanceof ResourceReferenceRequestHandler)
+				{
+					getResourceString(sb, (ResourceReferenceRequestHandler)handler);
+				}
+				else if (handler instanceof ResourceStreamRequestHandler)
+				{
+					getResourceString(sb, (ResourceStreamRequestHandler)handler);
+				}
 			}
-			else if (handler instanceof BookmarkablePageRequestHandler)
+			catch (Exception x)
 			{
-				getBookmarkableString(sb, (BookmarkablePageRequestHandler)handler);
-			}
-			else if (handler instanceof BufferedResponseRequestHandler)
-			{
-				// nothing extra to log... BufferedResponse doesn't have identifiable information
-// about
-				// which request was buffered
-			}
-			else if (handler instanceof IRequestHandlerDelegate)
-			{
-				getDelegateString(sb, (IRequestHandlerDelegate)handler);
-			}
-			else if (handler instanceof ListenerInterfaceRequestHandler)
-			{
-				getListenerString(sb, (ListenerInterfaceRequestHandler)handler);
-			}
-			else if (handler instanceof RenderPageRequestHandler)
-			{
-				getRendererString(sb, (RenderPageRequestHandler)handler);
-			}
-			else if (handler instanceof ResourceReferenceRequestHandler)
-			{
-				getResourceString(sb, (ResourceReferenceRequestHandler)handler);
-			}
-			else if (handler instanceof ResourceStreamRequestHandler)
-			{
-				getResourceString(sb, (ResourceStreamRequestHandler)handler);
+				LOG.warn(
+					"An error occurred during construction of the log entry for '{}', because of: {}",
+					handler, x.getMessage());
+				sb.append("UNKNOWN");
 			}
 		}
 		else

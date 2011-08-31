@@ -65,6 +65,16 @@ public class RequestLoggerRequestCycleListener extends AbstractRequestCycleListe
 	}
 
 	@Override
+	public void onExceptionRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler,
+		Exception exception)
+	{
+		if (!isRequestLoggingEnabled())
+			return;
+
+		registerHandler(handler);
+	}
+
+	@Override
 	public void onEndRequest(RequestCycle cycle)
 	{
 		first.remove();
