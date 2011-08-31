@@ -116,10 +116,10 @@ public class SignInPanel extends Panel
 		// logged in already?
 		if (isSignedIn() == false)
 		{
+			IAuthenticationStrategy authenticationStrategy = getApplication().getSecuritySettings()
+				.getAuthenticationStrategy();
 			// get username and password from persistence store
-			String[] data = getApplication().getSecuritySettings()
-				.getAuthenticationStrategy()
-				.load();
+			String[] data = authenticationStrategy.load();
 
 			if ((data != null) && (data.length > 1))
 			{
@@ -137,6 +137,11 @@ public class SignInPanel extends Panel
 							.getPageFactory()
 							.newPage(getApplication().getHomePage()));
 					}
+				}
+				else
+				{
+					// the loaded credentials are wrong. erase them.
+					authenticationStrategy.remove();
 				}
 			}
 		}
