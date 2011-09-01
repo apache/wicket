@@ -27,6 +27,9 @@ import org.apache.wicket.util.visit.Visit;
  * 
  * @author Juergen Donnerstag
  */
+// TODO Wicket 1.6 :
+// - move to o.a.w.util.visit because this is a useful visitor impl
+// - relax its generics, it could be: DeepChildFirstVisitor<R> implements IVisitor<Component, R>
 public abstract class DeepChildFirstVisitor implements IVisitor<Component, Void>
 {
 	/**
