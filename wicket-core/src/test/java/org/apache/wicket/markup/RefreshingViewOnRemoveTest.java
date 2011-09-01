@@ -56,7 +56,7 @@ public class RefreshingViewOnRemoveTest extends WicketTestCase
 		// check everything was detached
 		for (TestComponent c : components)
 		{
-			assertTrue(c.detached);
+			assertTrue("Component " + c + " is not detached.", c.detached);
 		}
 
 		round++;
