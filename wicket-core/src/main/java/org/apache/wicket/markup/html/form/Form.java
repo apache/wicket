@@ -1047,10 +1047,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		{
 			public void component(final FormComponent<?> formComponent, IVisit<Void> visit)
 			{
-				if (formComponent.isVisibleInHierarchy())
-				{
-					formComponent.inputChanged();
-				}
+				formComponent.inputChanged();
 			}
 		});
 	}
