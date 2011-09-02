@@ -30,12 +30,13 @@ pre { border : 1px solid #ddd; margin-left : 2em; }
   <wicket:panel>
   	<h2>Page</h2>
   	<ul>
-    <p><span wicket:id="info">Page</span>:</p>
+    <p><span wicket:id="info">Page</span> | render time: | <span wicket:id="pageRenderDuration">n/a</span>:</p>
     <table class="tablestyle">
       <thead>
         <tr>
           <th align="left">#</th>
           <th align="left">Path</th>
+          <th align="left" nowrap="nowrap">Render time (ms)</th>
           <th align="left">Size</th>
           <th align="left">Type</th>
           <th align="left">Model Object</th>
@@ -45,6 +46,7 @@ pre { border : 1px solid #ddd; margin-left : 2em; }
 		<tr wicket:id="components">
 		  <td valign="top" align="left"><span wicket:id="row">99</span>&#160;&#160;&#160;</td>
 		  <td valign="top" align="left"><span wicket:id="path">0.test.murx</span>&#160;&#160;&#160;</td>
+		  <td valign="top" align="center"><span wicket:id="renderDuration">n/a</span>&#160;&#160;&#160;</td>
 		  <td valign="top" align="left" nowrap="nowrap"><span wicket:id="size">1.5K</span>&#160;&#160;&#160;</td>
 		  <td valign="top" align="left"><span wicket:id="type">PropertyModel</span>&#160;&#160;&#160;</td>
 		  <td valign="top" align="left"><span wicket:id="model">1234</span>&#160;&#160;&#160;</td>

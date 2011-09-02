@@ -19,12 +19,13 @@
 <span wicket:id="componentList"><wicket:panel>
   	<h2>Page</h2>
   	<ul>
-    <p><span wicket:id="info">[Page class = org.apache.wicket.markup.html.debug.WicketComponentTreeTestPage, id = 0, render count = 0]</span>:</p>
+    <p><span wicket:id="info">[Page class = org.apache.wicket.markup.html.debug.WicketComponentTreeTestPage, id = 0, render count = 0]</span> | render time: | <span wicket:id="pageRenderDuration">n/a</span>:</p>
     <table class="tablestyle">
       <thead>
         <tr>
           <th align="left">#</th>
           <th align="left">Path</th>
+          <th align="left" nowrap="nowrap">Render time (ms)</th>
           <th align="left">Size</th>
           <th align="left">Type</th>
           <th align="left">Model Object</th>
@@ -34,12 +35,14 @@
 		<tr wicket:id="components">
 		  <td valign="top" align="left"><span wicket:id="row">1</span>&#160;&#160;&#160;</td>
 		  <td valign="top" align="left"><span wicket:id="path">label1</span>&#160;&#160;&#160;</td>
+		  <td valign="top" align="center"><span wicket:id="renderDuration">n/a</span>&#160;&#160;&#160;</td>
 		  <td valign="top" align="left" nowrap="nowrap"><span wicket:id="size">396 bytes</span>&#160;&#160;&#160;</td>
 		  <td valign="top" align="left"><span wicket:id="type">org.apache.wicket.markup.html.basic.Label</span>&#160;&#160;&#160;</td>
 		  <td valign="top" align="left"><span wicket:id="model">test1</span>&#160;&#160;&#160;</td>
 		</tr><tr wicket:id="components">
 		  <td valign="top" align="left"><span wicket:id="row">2</span>&#160;&#160;&#160;</td>
 		  <td valign="top" align="left"><span wicket:id="path">label2</span>&#160;&#160;&#160;</td>
+		  <td valign="top" align="center"><span wicket:id="renderDuration">n/a</span>&#160;&#160;&#160;</td>
 		  <td valign="top" align="left" nowrap="nowrap"><span wicket:id="size">397 bytes</span>&#160;&#160;&#160;</td>
 		  <td valign="top" align="left"><span wicket:id="type">org.apache.wicket.markup.html.basic.Label</span>&#160;&#160;&#160;</td>
 		  <td valign="top" align="left"><span wicket:id="model">test22</span>&#160;&#160;&#160;</td>

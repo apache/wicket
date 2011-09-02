@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -55,6 +56,14 @@ import org.apache.wicket.util.visit.IVisitor;
 public final class PageView extends Panel
 {
 	/**
+	 * A meta data key used by RenderPerformaceListener in wicket-devutils to collect the time
+	 * needed by a component to render itself
+	 */
+	public static final MetaDataKey<Long> RENDER_KEY = new MetaDataKey<Long>()
+	{
+	};
+
+	/**
 	 * El cheapo data holder.
 	 * 
 	 * @author Juergen Donnerstag
@@ -74,6 +83,9 @@ public final class PageView extends Panel
 
 		/** Size of component in bytes */
 		public final long size;
+
+		/** the time it took to rended the component */
+		private Long renderDuration;
 
 		ComponentData(String path, String type, long size)
 		{
@@ -104,8 +116,16 @@ public final class PageView extends Panel
 		// Create an empty list. It'll be filled later
 		List<ComponentData> data = null;
 
+		String pageRenderDuration = "n/a";
+
 		if (page != null)
 		{
+			Long renderTime = page.getMetaData(RENDER_KEY);
+			if (renderTime != null)
+			{
+				pageRenderDuration = renderTime.toString();
+			}
+
 			// Get the components data and fill and sort the list
 			data = new ArrayList<ComponentData>(getComponentData(page));
 			Collections.sort(data, new Comparator<ComponentData>()
@@ -120,6 +140,9 @@ public final class PageView extends Panel
 		{
 			data = Collections.emptyList();
 		}
+
+		add(new Label("pageRenderDuration", pageRenderDuration));
+
 
 		// Create the table containing the list the components
 		add(new ListView<ComponentData>("components", data)
@@ -139,6 +162,8 @@ public final class PageView extends Panel
 				listItem.add(new Label("size", Bytes.bytes(componentData.size).toString()));
 				listItem.add(new Label("type", componentData.type));
 				listItem.add(new Label("model", componentData.value));
+				listItem.add(new Label("renderDuration", componentData.renderDuration != null
+					? componentData.renderDuration.toString() : "n/a"));
 			}
 		});
 	}
@@ -174,6 +199,12 @@ public final class PageView extends Panel
 
 					componentData = new ComponentData(component.getPageRelativePath(), name,
 						component.getSizeInBytes());
+
+					Long renderDuration = component.getMetaData(RENDER_KEY);
+					if (renderDuration != null)
+					{
+						componentData.renderDuration = renderDuration;
+					}
 
 					try
 					{
