@@ -1074,9 +1074,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 		buffer.append(HIDDEN_DIV_START);
 
 		// add an empty textfield (otherwise IE doesn't work)
-		// XXX shouldn't this be "autocomplete='off'"? on/off are the values set by Microsoft and
-		// later in HTML5
-		buffer.append("<input type=\"text\" autocomplete=\"false\"/>");
+		buffer.append("<input type=\"text\" autocomplete=\"off\"/>");
 
 		// add the submitting component
 		final Component submittingComponent = (Component)defaultSubmittingComponent;
