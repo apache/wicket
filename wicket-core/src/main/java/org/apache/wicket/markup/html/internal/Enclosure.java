@@ -166,7 +166,7 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 	 *            the markup stream of this Enclosure
 	 * @param enclosureParent
 	 *            the non-auto parent component of this Enclosure
-	 * @return The component associated with the {@value childId}
+	 * @return The component associated with the {@linkplain #childId}
 	 */
 	private Component getChildComponent(final MarkupStream markupStream,
 		MarkupContainer enclosureParent)
