@@ -59,10 +59,8 @@ public abstract class HeaderResponse implements IHeaderResponse
 
 	public void renderCSS(CharSequence css, String id)
 	{
-		if (css == null)
-		{
-			throw new IllegalArgumentException("css cannot be null");
-		}
+		Args.notNull(css, "css");
+
 		if (!closed)
 		{
 			List<String> token = Arrays.asList(css.toString(), id);
@@ -100,10 +98,8 @@ public abstract class HeaderResponse implements IHeaderResponse
 	public void renderCSSReference(ResourceReference reference, PageParameters pageParameters,
 		String media, String condition)
 	{
-		if (reference == null)
-		{
-			throw new IllegalArgumentException("reference cannot be null");
-		}
+		Args.notNull(reference, "reference");
+
 		if (!closed)
 		{
 			IRequestHandler handler = new ResourceReferenceRequestHandler(reference, pageParameters);
