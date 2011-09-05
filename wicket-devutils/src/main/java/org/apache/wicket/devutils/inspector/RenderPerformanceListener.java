@@ -43,12 +43,25 @@ public class RenderPerformanceListener implements IComponentInstantiationListene
 {
 	private static final Logger log = LoggerFactory.getLogger(RenderPerformanceListener.class);
 
-	public void onInstantiation(Component component)
+	public void onInstantiation(final Component component)
 	{
-		if (component.isAuto() == false)
+		if (accepts(component))
 		{
 			component.add(new RenderMeasuringBehavior());
 		}
+	}
+
+	/**
+	 * Filters which components' render performance should be measured.
+	 * 
+	 * @param component
+	 *            the component that is instantiated
+	 * @return {@code true} if render time should be measured the for this component, {@code false}
+	 *         - otherwise
+	 */
+	protected boolean accepts(final Component component)
+	{
+		return component.isAuto() == false;
 	}
 
 	/**
@@ -60,7 +73,7 @@ public class RenderPerformanceListener implements IComponentInstantiationListene
 	private static class RenderMeasuringBehavior extends Behavior
 	{
 		@Override
-		public void beforeRender(Component component)
+		public void beforeRender(final Component component)
 		{
 			super.beforeRender(component);
 			if (component.isAuto() == false)
@@ -71,7 +84,7 @@ public class RenderPerformanceListener implements IComponentInstantiationListene
 		}
 
 		@Override
-		public void afterRender(Component component)
+		public void afterRender(final Component component)
 		{
 			super.afterRender(component);
 			Long renderEnd = System.currentTimeMillis();
