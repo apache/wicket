@@ -59,7 +59,7 @@ public class PageInstanceMapper extends AbstractComponentMapper
 	public IRequestHandler mapRequest(Request request)
 	{
 		Url url = request.getUrl();
-		if (urlStartsWith(url, getContext().getNamespace(), getContext().getPageIdentifier()))
+		if (matches(url))
 		{
 			PageComponentInfo info = getPageComponentInfo(url);
 			if (info != null && info.getPageInfo().getPageId() != null)
@@ -147,9 +147,19 @@ public class PageInstanceMapper extends AbstractComponentMapper
 	/**
 	 * @see org.apache.wicket.request.IRequestMapper#getCompatibilityScore(org.apache.wicket.request.Request)
 	 */
-	public int getCompatibilityScore(Request request)
+	public int getCompatibilityScore(final Request request)
 	{
-		// always return 0 here so that the mounts have higher priority
-		return 0;
+		int score = 0;
+		Url url = request.getUrl();
+		if (matches(url))
+		{
+			score = Integer.MAX_VALUE;
+		}
+		return score;
+	}
+
+	private boolean matches(final Url url)
+	{
+		return urlStartsWith(url, getContext().getNamespace(), getContext().getPageIdentifier());
 	}
 }

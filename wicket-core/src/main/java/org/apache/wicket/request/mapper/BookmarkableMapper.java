@@ -100,9 +100,7 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 		}
 
 		Url url = request.getUrl();
-		if (url.getSegments().size() >= 3 &&
-			urlStartsWith(url, getContext().getNamespace(),
-				getContext().getBookmarkableIdentifier()))
+		if (matches(url))
 		{
 			// try to extract page and component information from URL
 			PageComponentInfo info = getPageComponentInfo(url);
@@ -139,7 +137,18 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 	@Override
 	public int getCompatibilityScore(Request request)
 	{
-		// always return 0 here so that the mounts have higher priority
-		return 0;
+		int score = 0;
+		Url url = request.getUrl();
+		if (matches(url))
+		{
+			score = Integer.MAX_VALUE;
+		}
+		return score;
+	}
+
+	private boolean matches(final Url url)
+	{
+		return (url.getSegments().size() >= 3 && urlStartsWith(url, getContext().getNamespace(),
+			getContext().getBookmarkableIdentifier()));
 	}
 }
