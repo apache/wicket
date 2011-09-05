@@ -941,6 +941,11 @@ public abstract class Component
 		try
 		{
 			setFlag(FLAG_AFTER_RENDERING, true);
+
+			// always detach children because components can be attached
+			// independently of their parents
+			onAfterRenderChildren();
+
 			onAfterRender();
 			getApplication().getComponentOnAfterRenderListeners().onAfterRender(this);
 			if (getFlag(FLAG_AFTER_RENDERING))
@@ -950,9 +955,6 @@ public abstract class Component
 					getClass().getName() +
 					" has not called super.onAfterRender() in the override of onAfterRender() method");
 			}
-			// always detach children because components can be attached
-			// independently of their parents
-			onAfterRenderChildren();
 		}
 		finally
 		{
@@ -2852,10 +2854,7 @@ public abstract class Component
 	 */
 	public Component setMarkupId(String markupId)
 	{
-		if (markupId != null && Strings.isEmpty(markupId))
-		{
-			throw new IllegalArgumentException("Markup id cannot be an empty string");
-		}
+		Args.notEmpty(markupId, "markupId");
 
 		// TODO check if an automatic id has already been generated or getmarkupid() called
 		// previously and throw an illegalstateexception because something else might be depending
@@ -4111,6 +4110,10 @@ public abstract class Component
 		{
 			setFlag(FLAG_PREPARED_FOR_RENDER, false);
 			setFlag(FLAG_RENDERING, true);
+		}
+		else
+		{
+			setFlag(FLAG_RENDERING, false);
 		}
 	}
 

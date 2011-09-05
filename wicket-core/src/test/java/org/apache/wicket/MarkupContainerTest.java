@@ -16,8 +16,12 @@
  */
 package org.apache.wicket;
 
+import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.Test;
 
 
@@ -111,5 +115,54 @@ public class MarkupContainerTest extends WicketTestCase
 	{
 		WebMarkupContainer me = new WebMarkupContainer("a");
 		me.add(me);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4012
+	 */
+	@Test
+	public void afterRenderJustOnce()
+	{
+		AfterRenderJustOncePage page = new AfterRenderJustOncePage();
+		tester.startPage(page);
+
+		assertEquals(1, page.afterRenderCalls);
+	}
+
+	private static class AfterRenderJustOncePage extends WebPage
+		implements
+			IMarkupResourceStreamProvider
+	{
+		private int afterRenderCalls = 0;
+
+		private AfterRenderJustOncePage()
+		{
+
+			WebMarkupContainer a1 = new WebMarkupContainer("a1");
+			add(a1);
+
+			WebMarkupContainer a2 = new WebMarkupContainer("a2");
+			a1.add(a2);
+
+			WebMarkupContainer a3 = new WebMarkupContainer("a3")
+			{
+
+				@Override
+				protected void onAfterRender()
+				{
+					super.onAfterRender();
+					afterRenderCalls++;
+				}
+
+			};
+			a2.add(a3);
+		}
+
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream(
+				"<html><body><div wicket:id='a1'><div wicket:id='a2'><div wicket:id='a3'></div></div></div></body></html>");
+		}
 	}
 }
