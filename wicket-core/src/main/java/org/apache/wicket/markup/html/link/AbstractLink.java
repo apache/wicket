@@ -236,4 +236,15 @@ public abstract class AbstractLink extends WebMarkupContainer
 		this.bodyModel = wrap(bodyModel);
 		return this;
 	}
+
+	@Override
+	protected void onDetach()
+	{
+		super.onDetach();
+
+		if (bodyModel != null)
+		{
+			bodyModel.detach();
+		}
+	}
 }
