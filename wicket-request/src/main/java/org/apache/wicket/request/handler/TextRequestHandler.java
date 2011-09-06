@@ -91,7 +91,9 @@ public class TextRequestHandler implements IRequestHandler
 		// send string to client
 		try
 		{
-			response.write(string.getBytes(encoding));
+			byte[] bytes = string.getBytes(encoding);
+			response.setContentLength(bytes.length);
+			response.write(bytes);
 		}
 		catch (IOException e)
 		{
