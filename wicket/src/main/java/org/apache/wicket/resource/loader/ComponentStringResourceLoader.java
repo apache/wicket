@@ -219,62 +219,54 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 			log.debug("component: '" + component.toString(false) + "'; key: '" + key + "'");
 		}
 
-		// The return value
-		String string = null;
-		Locale locale = component.getLocale();
-		String style = component.getStyle();
-
-		// The key prefix is equal to the component path relative to the
-		// current component on the top of the stack.
+		// get locale and style for resource lookup
+		final Locale locale = component.getLocale();
+		final String style = component.getStyle();
+		
+		// get relative path from page to component (but not including repeater items)
 		String prefix = getResourcePath(component);
 
-		// The reason why we need to create that stack is because we need to
-		// walk it downwards starting with Page down to the Component
-		List<Class<?>> searchStack = getResourceLookupComponentStack(component);
-
-		// Walk the component hierarchy down from page to the component
-		for (int i = searchStack.size() - 1; (i >= 0) && (string == null); i--)
+		// walk downwards starting with page going down to component
+		for (Component current : getComponentTrail(component))
 		{
-			Class<?> clazz = searchStack.get(i);
+			// get current component class
+			final Class<?> clazz = current.getClass();
+			
+			String string;
 
-			// First, try the fully qualified resource name relative to the
+			// first, try the fully qualified resource name relative to the
 			// component on the path from page down.
-			if ((prefix != null) && (prefix.length() > 0))
+			if (Strings.isEmpty(prefix) == false)
 			{
-				string = loadStringResource(clazz, prefix + '.' + key, locale, style);
+				// get fully qualified path relative to resource
+				final String keyWithPath = prefix + '.' + key;
+				
+				// lookup string
+				string = loadStringResource(clazz, keyWithPath, locale, style);
 
-				if (string == null)
+				// return string if we found it
+				if (string != null)
+				{
+					return string;
+				}
+
+				// shorten resource key prefix when going downwards (skip for repeaters) 
+				if ((current instanceof AbstractRepeater) == false)
 				{
 					prefix = Strings.afterFirst(prefix, '.');
 				}
 			}
-
 			// If not found, than check if a property with the 'key' provided by
 			// the user can be found.
-			if ((string == null))
+			string = loadStringResource(clazz, key, locale, style);
+
+			// return string if we found it
+			if (string != null)
 			{
-				string = loadStringResource(clazz, key, locale, style);
+				return string;
 			}
 		}
-
-		return string;
-	}
-
-	/**
-	 * return if component should be part of resource lookup
-	 * 
-	 * @param component 
-	 *           component to check
-	 * @return <code>true</code> if component is relevant for resource lookup path
-	 */
-	protected boolean useForResourcePath(Component component)
-	{
-		if (component == null)
-		{
-			throw new IllegalArgumentException("component must not be null");
-		}
-
-		return component.getParent() instanceof AbstractRepeater == false;
+		return null;
 	}
 
 	/**
@@ -296,7 +288,9 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 		
 		while (current.getParent() != null)
 		{
-			if (useForResourcePath(current))
+			MarkupContainer parent = current.getParent();
+
+			if ((parent instanceof AbstractRepeater) == false)
 			{
 				if (buffer.length() > 0)
 				{
@@ -304,49 +298,28 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 				}
 				buffer.insert(0, current.getId());
 			}
-			current = current.getParent();
+			current = parent;
 		}
 		return buffer.toString();
 	}
 	
 	/**
-	 * Traverse the component hierarchy up to the Page and add each component class to the list
-	 * (stack) returned
+	 * return the trail of components from page to specified component 
 	 * 
 	 * @param component
-	 *            The component to evaluate
-	 * @return The stack of classes
+	 *            The component to retrieve path for
+	 * @return The list of components starting from top going down to component
 	 */
-	private List<Class<?>> getResourceLookupComponentStack(final Component component)
+	private List<Component> getComponentTrail(Component component)
 	{
-		// Build the search stack
-		final List<Class<?>> searchStack = new ArrayList<Class<?>>();
-		searchStack.add(component.getClass());
+		final List<Component> path = new ArrayList<Component>();
 
-		if (!(component instanceof Page))
+		while (component != null)
 		{
-			// Add all the component on the way to the Page
-			MarkupContainer container = component.getParent();
-			
-			while (container != null)
-			{
-				// add all relevant classes for resource lookup 
-				if (useForResourcePath(container))
-				{
-					searchStack.add(container.getClass());
-				}
-
-				// stop when reaching page class
-				if (container instanceof Page)
-				{
-					break;
-				}
-
-				// go up in component hierarchy
-				container = container.getParent();
-			}
+			path.add(0, component);
+			component = component.getParent();
 		}
-		return searchStack;
+		return path;
 	}
 
 	/**
