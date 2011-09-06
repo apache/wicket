@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.Locale;
 
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.INamedParameters;
@@ -37,6 +38,7 @@ import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.ValueProvider;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.junit.Test;
 
 /**
  * @author Matej Knopp
@@ -513,6 +515,13 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		url = new ResourceUrl("test.txt", params);
 		strategy.decorateUrl(url, resource);
 		assertEquals("test-version-1.0.4-beta.txt", url.getFileName());
+	}
+
+	public void testRequestWithEmptyFilename()
+	{
+		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/");
+		IRequestHandler handler = encoder.mapRequest(getRequest(url));
+		assertNull(handler);
 	}
 
 	/**

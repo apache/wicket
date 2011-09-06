@@ -247,6 +247,16 @@ public class ResourceMapperTest extends WicketTestCase
 		assertEquals("123", params.get("val").toString());
 	}
 
+	@Test
+	public void requestWithEmptyFilename()
+	{
+		// request invalid path with empty filename
+		// this must not return a handler  
+		Request request = createRequest("test2/image/");
+		IRequestHandler handler = mapperWithPlaceholder.mapRequest(request);
+		assertNull(handler);
+	}
+
 	private static class TestResource implements IResource
 	{
 		private static final long serialVersionUID = -3130204487473856574L;
