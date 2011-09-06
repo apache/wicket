@@ -40,7 +40,7 @@ public class PageAccessSynchronizer implements Serializable
 	private static final Logger logger = LoggerFactory.getLogger(PageAccessSynchronizer.class);
 
 	/** map of which pages are owned by which threads */
-	private IProvider<ConcurrentMap<Integer, PageLock>> locks = new LazyInitializer<ConcurrentMap<Integer, PageLock>>()
+	private final IProvider<ConcurrentMap<Integer, PageLock>> locks = new LazyInitializer<ConcurrentMap<Integer, PageLock>>()
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -97,7 +97,7 @@ public class PageAccessSynchronizer implements Serializable
 			}
 
 			PageLock previous = locks.get().putIfAbsent(pageId, lock);
-			if (previous == null || previous.getThread() == thread)
+			if (previous == null || previous.thread == thread)
 			{
 				// first thread to acquire lock or lock is already owned by this thread
 				locked = true;
@@ -152,6 +152,22 @@ public class PageAccessSynchronizer implements Serializable
 	 */
 	public void unlockAllPages()
 	{
+		internalUnlockPages(null);
+	}
+
+	/**
+	 * Unlocks a single page locked by the current thread.
+	 * 
+	 * @param pageId
+	 *            the id of the page which should be unlocked.
+	 */
+	public void unlockPage(int pageId)
+	{
+		internalUnlockPages(pageId);
+	}
+
+	private void internalUnlockPages(final Integer pageId)
+	{
 		final Thread thread = Thread.currentThread();
 		final Iterator<PageLock> locks = this.locks.get().values().iterator();
 
@@ -159,26 +175,41 @@ public class PageAccessSynchronizer implements Serializable
 
 		while (locks.hasNext())
 		{
-			// remove all locks held by this thread
+			// remove all locks held by this thread if 'pageId' is not specified
+			// otherwise just the lock for this 'pageId'
 			final PageLock lock = locks.next();
-			if (lock.getThread() == thread)
+			if ((pageId == null || pageId == lock.pageId) && lock.thread == thread)
 			{
 				locks.remove();
 				if (isDebugEnabled)
 				{
-					logger.debug("{} released lock to page {}", thread.getName(), lock.getPageId());
+					logger.debug("'{}' released lock to page with id '{}'", thread.getName(),
+						lock.pageId);
 				}
 				// if any locks were removed notify threads waiting for a lock
 				synchronized (lock)
 				{
 					if (isDebugEnabled)
 					{
-						logger.debug("{} notifying blocked threads", thread.getName());
+						logger.debug("'{}' notifying blocked threads", thread.getName());
 					}
 					lock.notifyAll();
 				}
+				if (pageId != null)
+				{
+					// unlock just the page with the specified id
+					break;
+				}
 			}
 		}
+	}
+
+	/*
+	 * used by tests
+	 */
+	IProvider<ConcurrentMap<Integer, PageLock>> getLocks()
+	{
+		return locks;
 	}
 
 	/**
@@ -192,10 +223,22 @@ public class PageAccessSynchronizer implements Serializable
 		return new PageManagerDecorator(pagemanager)
 		{
 			@Override
-			public IManageablePage getPage(int id)
+			public IManageablePage getPage(int pageId)
 			{
-				lockPage(id);
-				return super.getPage(id);
+				IManageablePage page = null;
+				try
+				{
+					lockPage(pageId);
+					page = super.getPage(pageId);
+				}
+				finally
+				{
+					if (page == null)
+					{
+						unlockPage(pageId);
+					}
+				}
+				return page;
 			}
 
 			@Override

@@ -14,19 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.pageStore;
-
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+package org.apache.wicket.page;
 
 import java.util.Random;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.wicket.page.CouldNotLockPageException;
-import org.apache.wicket.page.PageAccessSynchronizer;
+import org.apache.wicket.MockPage;
+import org.apache.wicket.mock.MockPageManager;
+import org.apache.wicket.page.PageAccessSynchronizer.PageLock;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.time.Time;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  */
-public class PageAccessSynchronizerTest
+public class PageAccessSynchronizerTest extends Assert
 {
 	private static final Logger logger = LoggerFactory.getLogger(PageAccessSynchronizerTest.class);
 
@@ -299,5 +299,27 @@ public class PageAccessSynchronizerTest
 		Locker locker2 = new Locker(sync2);
 		locker2.run();
 		assertTrue(Duration.milliseconds(System.currentTimeMillis() - start).lessThan(timeout));
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4009
+	 */
+	@Test
+	public void unlockIfNoSuchPage()
+	{
+		PageAccessSynchronizer synchronizer = new PageAccessSynchronizer(Duration.seconds(2));
+		IPageManager pageManager = new MockPageManager();
+		IPageManager synchronizedPageManager = synchronizer.adapt(pageManager);
+		synchronizedPageManager.getPage(0);
+		ConcurrentMap<Integer, PageLock> locks = synchronizer.getLocks().get();
+		PageLock pageLock = locks.get(Integer.valueOf(0));
+		assertNull(pageLock);
+
+		int pageId = 1;
+		IManageablePage page = new MockPage(pageId);
+		synchronizedPageManager.touchPage(page);
+		synchronizedPageManager.getPage(pageId);
+		PageLock pageLock2 = locks.get(Integer.valueOf(pageId));
+		assertNotNull(pageLock2);
 	}
 }
