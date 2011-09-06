@@ -27,7 +27,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.list.Loop;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.resource.IPropertiesFactory;
 import org.apache.wicket.resource.Properties;
@@ -231,7 +230,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 
 		// The reason why we need to create that stack is because we need to
 		// walk it downwards starting with Page down to the Component
-		List<Class<?>> searchStack = getComponentStack(component);
+		List<Class<?>> searchStack = getResourceLookupComponentStack(component);
 
 		// TODO Should be changed to false in 1.5
 		final boolean old = true;
@@ -277,6 +276,23 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	}
 
 	/**
+	 * return if component should be part of resource lookup
+	 * 
+	 * @param component 
+	 *           component to check
+	 * @return <code>true</code> if component is relevant for resource lookup path
+	 */
+	protected boolean useForResourcePath(Component component)
+	{
+		if (component == null)
+		{
+			throw new IllegalArgumentException("component must not be null");
+		}
+
+		return component.getParent() instanceof AbstractRepeater == false;
+	}
+
+	/**
 	 * get path for resource lookup
 	 * 
 	 * @param component
@@ -295,9 +311,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 		
 		while (current.getParent() != null)
 		{
-			final boolean skip = current.getParent() instanceof AbstractRepeater;
-
-			if (skip == false)
+			if (useForResourcePath(current))
 			{
 				if (buffer.length() > 0)
 				{
@@ -318,7 +332,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	 *            The component to evaluate
 	 * @return The stack of classes
 	 */
-	private List<Class<?>> getComponentStack(final Component component)
+	private List<Class<?>> getResourceLookupComponentStack(final Component component)
 	{
 		// Build the search stack
 		final List<Class<?>> searchStack = new ArrayList<Class<?>>();
@@ -328,14 +342,22 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 		{
 			// Add all the component on the way to the Page
 			MarkupContainer container = component.getParent();
+			
 			while (container != null)
 			{
-				searchStack.add(container.getClass());
+				// add all relevant classes for resource lookup 
+				if (useForResourcePath(container))
+				{
+					searchStack.add(container.getClass());
+				}
+
+				// stop when reaching page class
 				if (container instanceof Page)
 				{
 					break;
 				}
 
+				// go up in component hierarchy
 				container = container.getParent();
 			}
 		}
