@@ -41,10 +41,9 @@ public class PropertiesResolverTest extends Assert
 	{
 		WicketTester tester = new WicketTester(new App());
 
-		// all the tests are performed in HomePage
-		MyPage page = tester.startPage(MyPage.class);
-
-		Assert.assertNotNull(page);
+		// all the tests are performed in page
+		tester.startPage(MyPage.class);
+		tester.assertRenderedPage(MyPage.class);
 	}
 
 	public static class App extends WebApplication
