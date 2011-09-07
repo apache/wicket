@@ -37,6 +37,18 @@ import org.slf4j.LoggerFactory;
  * Application, Server parsetime: ${servertime}, Client parsetime: ${clienttime} likewise for ajax
  * request use ajax.ServerAndClientTimeFilter.statustext
  * 
+ * <p>
+ * Usage: in YourApplication.java:
+ * 
+ * <pre>
+ * &#064;Override
+ * public init()
+ * {
+ * 	super.init();
+ * 	getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
+ * }
+ * </pre>
+ * 
  * @author jcompagner
  */
 public class AjaxServerAndClientTimeFilter implements IResponseFilter

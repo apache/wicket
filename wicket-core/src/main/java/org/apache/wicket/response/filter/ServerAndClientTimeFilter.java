@@ -37,6 +37,18 @@ import org.slf4j.LoggerFactory;
  * You can specify what the status text should be like this: ServerAndClientTimeFilter.statustext=My
  * Application, Server parsetime: ${servertime}, Client parsetime: ${clienttime}
  * 
+ * <p>
+ * Usage: in YourApplication.java:
+ * 
+ * <pre>
+ * &#064;Override
+ * public init()
+ * {
+ * 	super.init();
+ * 	getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
+ * }
+ * </pre>
+ * 
  * @author jcompagner
  */
 public class ServerAndClientTimeFilter implements IResponseFilter
