@@ -19,10 +19,15 @@ package org.apache.wicket.request.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.wicket.RequestListenerInterface;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.request.mapper.info.ComponentInfo;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
+import org.apache.wicket.request.mapper.info.PageInfo;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
@@ -352,6 +357,41 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	protected PageParameters newPageParameters()
 	{
 		return new PageParameters();
+	}
+
+	@Override
+	public Url mapHandler(IRequestHandler requestHandler)
+	{
+		Url url = super.mapHandler(requestHandler);
+
+		if (url == null && requestHandler instanceof ListenerInterfaceRequestHandler)
+		{
+			ListenerInterfaceRequestHandler handler = (ListenerInterfaceRequestHandler)requestHandler;
+			IRequestablePage page = handler.getPage();
+			Class<? extends IRequestablePage> pageClass = page.getClass();
+			if (checkPageClass(pageClass))
+			{
+				String componentPath = handler.getComponentPath();
+				RequestListenerInterface listenerInterface = handler.getListenerInterface();
+
+				Integer renderCount = null;
+				if (listenerInterface.isIncludeRenderCount())
+				{
+					renderCount = page.getRenderCount();
+				}
+
+				PageInfo pageInfo = new PageInfo(page.getPageId());
+				ComponentInfo componentInfo = new ComponentInfo(renderCount,
+					requestListenerInterfaceToString(listenerInterface), componentPath,
+					handler.getBehaviorIndex());
+				PageComponentInfo pageComponentInfo = new PageComponentInfo(pageInfo, componentInfo);
+				UrlInfo urlInfo = new UrlInfo(pageComponentInfo, page.getClass(),
+					handler.getPageParameters());
+				url = buildUrl(urlInfo);
+			}
+		}
+
+		return url;
 	}
 
 	/**

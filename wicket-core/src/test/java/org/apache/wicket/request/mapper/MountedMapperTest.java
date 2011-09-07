@@ -393,6 +393,36 @@ public class MountedMapperTest extends AbstractMapperTest
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4014
+	 * 
+	 * The difference with testEncode7 is that here ListenerInterfaceRequestHandler is used instead
+	 * of BookmarkableListenerInterfaceRequestHandler
+	 */
+	public void testEncode6_1()
+	{
+		MockPage page = new MockPage(15);
+		page.getPageParameters().set(0, "i1");
+		page.getPageParameters().set(1, "i2");
+		page.getPageParameters().set("a", "b");
+		page.getPageParameters().set("b", "c");
+		page.setRenderCount(4);
+
+		// shouldn't make any difference for ListenerInterfaceRequestHandler,
+		// as this explicitely says the url must be bookmarkable
+		page.setCreatedBookmarkable(false);
+
+		IRequestableComponent c = page.get("foo:bar");
+
+		PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
+		IRequestHandler handler = new ListenerInterfaceRequestHandler(provider,
+			ILinkListener.INTERFACE);
+
+		Url url = encoder.mapHandler(handler);
+
+		assertEquals("some/mount/path/i1/i2?15-4.ILinkListener-foo-bar&a=b&b=c", url.toString());
+	}
+
+	/**
 	 * 
 	 */
 	public void testEncode7()
@@ -412,6 +442,36 @@ public class MountedMapperTest extends AbstractMapperTest
 
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
 		IRequestHandler handler = new BookmarkableListenerInterfaceRequestHandler(provider,
+			ILinkListener.INTERFACE, 4);
+
+		Url url = encoder.mapHandler(handler);
+
+		assertEquals("some/mount/path/i1/i2?15-5.ILinkListener.4-foo-bar&a=b&b=c", url.toString());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4014
+	 * 
+	 * The difference with testEncode7 is that here ListenerInterfaceRequestHandler is used instead
+	 * of BookmarkableListenerInterfaceRequestHandler
+	 */
+	public void testEncode7_1()
+	{
+		MockPage page = new MockPage(15);
+		page.getPageParameters().set(0, "i1");
+		page.getPageParameters().set(1, "i2");
+		page.getPageParameters().set("a", "b");
+		page.getPageParameters().set("b", "c");
+		page.setRenderCount(5);
+
+		// shouldn't make any difference for ListenerInterfaceRequestHandler,
+		// as this explicitely says the url must be bookmarkable
+		page.setCreatedBookmarkable(false);
+
+		IRequestableComponent c = page.get("foo:bar");
+
+		PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
+		IRequestHandler handler = new ListenerInterfaceRequestHandler(provider,
 			ILinkListener.INTERFACE, 4);
 
 		Url url = encoder.mapHandler(handler);
