@@ -206,7 +206,8 @@ public class PageProvider implements IPageProvider
 
 	public boolean isNewPageInstance()
 	{
-		return pageInstance == null && pageId == null;
+		return pageInstance == null &&
+			(pageId == null || getPageSource().getPageInstance(pageId) == null);
 	}
 
 	/**
