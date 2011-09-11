@@ -26,7 +26,7 @@ import org.apache.wicket.util.lang.Args;
  * you know the value upfront and you do not need a pull-based model.
  * 
  * @author Igor Vaynberg (ivaynberg)
- * @deprecated use {@link AttributeModifier#replace(String, java.util.Serializable)} instead
+ * @deprecated use {@link AttributeModifier#replace(String, java.io.Serializable)} instead
  */
 @Deprecated
 public class SimpleAttributeModifier extends Behavior
