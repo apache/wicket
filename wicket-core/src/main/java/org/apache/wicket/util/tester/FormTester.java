@@ -661,7 +661,7 @@ public class FormTester
 		}
 		else
 		{
-			fail("Componet with id: " + formComponent.getId() + " is not a FormComponent");
+			fail("Component with id: " + formComponent.getId() + " is not a FormComponent");
 		}
 
 		return this;
