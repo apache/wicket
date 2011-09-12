@@ -31,6 +31,7 @@ import org.apache.wicket.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
@@ -405,6 +406,11 @@ public class MountedMapperTest extends AbstractMapperTest
 		page.getPageParameters().set(1, "i2");
 		page.getPageParameters().set("a", "b");
 		page.getPageParameters().set("b", "c");
+
+		// WICKET-4038
+		page.getPageParameters().add(WebRequest.PARAM_AJAX, "true");
+		page.getPageParameters().add(WebRequest.PARAM_AJAX_BASE_URL, "some/base/url");
+
 		page.setRenderCount(4);
 
 		// shouldn't make any difference for ListenerInterfaceRequestHandler,

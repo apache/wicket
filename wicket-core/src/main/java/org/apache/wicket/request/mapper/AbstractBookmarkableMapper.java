@@ -29,6 +29,7 @@ import org.apache.wicket.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.handler.PageAndComponentProvider;
 import org.apache.wicket.request.handler.PageProvider;
 import org.apache.wicket.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.info.ComponentInfo;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.info.PageInfo;
@@ -73,8 +74,28 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 			Args.notNull(pageClass, "pageClass");
 
 			this.pageComponentInfo = pageComponentInfo;
-			this.pageParameters = pageParameters;
+			this.pageParameters = cleanPageParameters(pageParameters);
+
 			this.pageClass = pageClass;
+		}
+
+		/**
+		 * Cleans the original parameters from entries used by Wicket internals.
+		 * 
+		 * @param originalParameters
+		 *            the current request's non-modified parameters
+		 * @return all parameters but Wicket internal ones
+		 */
+		private PageParameters cleanPageParameters(final PageParameters originalParameters)
+		{
+			PageParameters cleanParameters = new PageParameters(originalParameters);
+
+			// WICKET-4038: Ajax related parameters are set by wicket-ajax.js when needed.
+			// They shouldn't be propagated to the next requests
+			cleanParameters.remove(WebRequest.PARAM_AJAX);
+			cleanParameters.remove(WebRequest.PARAM_AJAX_BASE_URL);
+
+			return cleanParameters;
 		}
 
 		/**
