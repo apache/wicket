@@ -37,13 +37,13 @@ import org.apache.wicket.util.time.Time;
 public abstract class WebRequest extends Request
 {
 	/** marker for Ajax requests */
-	protected static final String PARAM_AJAX = "wicket-ajax";
+	public static final String PARAM_AJAX = "wicket-ajax";
 	/** marker for Ajax requests */
 	public static final String HEADER_AJAX = "Wicket-Ajax";
 	/** marker for Ajax-relative url */
-	protected static final String PARAM_AJAX_BASE_URL = "wicket-ajax-baseurl";
+	public static final String PARAM_AJAX_BASE_URL = "wicket-ajax-baseurl";
 	/** marker for Ajax-relative url */
-	protected static final String HEADER_AJAX_BASE_URL = "Wicket-Ajax-BaseURL";
+	public static final String HEADER_AJAX_BASE_URL = "Wicket-Ajax-BaseURL";
 
 	/**
 	 * @return request cookies
