@@ -1551,6 +1551,19 @@ public abstract class Application implements UnboundListener, IEventSink
 			{
 				Session.get().getPageManager().commitRequest();
 			}
+
+			@Override
+			public void onEndRequest(RequestCycle cycle)
+			{
+				if (Application.exists())
+				{
+					IRequestLogger requestLogger = Application.get().getRequestLogger();
+					if (requestLogger != null)
+					{
+						requestLogger.requestTime((System.currentTimeMillis() - cycle.getStartTime()));
+					}
+				}
+			}
 		});
 		requestCycle.getListeners().add(requestCycleListeners);
 		return requestCycle;
