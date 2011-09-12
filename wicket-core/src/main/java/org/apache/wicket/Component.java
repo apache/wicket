@@ -3207,23 +3207,22 @@ public abstract class Component
 	{
 		try
 		{
+			final StringBuilder buffer = new StringBuilder();
+			buffer.append("[Component id = ").append(getId());
+
 			if (detailed)
 			{
 				final Page page = findPage();
 				if (page == null)
 				{
-					return new StringBuilder("[Component id = ").append(getId())
-						.append(", page = <No Page>, path = ")
+					buffer.append(", page = <No Page>, path = ")
 						.append(getPath())
 						.append('.')
-						.append(Classes.simpleName(getClass()))
-						.append(']')
-						.toString();
+						.append(Classes.simpleName(getClass()));
 				}
 				else
 				{
-					return new StringBuilder("[Component id = ").append(getId())
-						.append(", page = ")
+					buffer.append(", page = ")
 						.append(getPage().getClass().getName())
 						.append(", path = ")
 						.append(getPath())
@@ -3232,15 +3231,18 @@ public abstract class Component
 						.append(", isVisible = ")
 						.append((determineVisibility()))
 						.append(", isVersioned = ")
-						.append(isVersioned())
-						.append(']')
-						.toString();
+						.append(isVersioned());
+				}
+
+				if (markup != null)
+				{
+					buffer.append(", markup = ").append(new MarkupStream(getMarkup()).toString());
 				}
 			}
-			else
-			{
-				return "[Component id = " + getId() + ']';
-			}
+
+			buffer.append(']');
+
+			return buffer.toString();
 		}
 		catch (Exception e)
 		{

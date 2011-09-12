@@ -129,6 +129,24 @@ public class MarkupContainerTest extends WicketTestCase
 		assertEquals(1, page.afterRenderCalls);
 	}
 
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4016
+	 */
+	@Test
+	public void callToStringFromConstructor()
+	{
+		ToStringComponent page = new ToStringComponent();
+	}
+
+	private static class ToStringComponent extends WebMarkupContainer
+	{
+		private ToStringComponent()
+		{
+			super("id");
+			toString(true);
+		}
+	}
+
 	private static class AfterRenderJustOncePage extends WebPage
 		implements
 			IMarkupResourceStreamProvider
