@@ -47,7 +47,7 @@ public class MockWebRequest extends WebRequest
 	private Locale locale = Locale.getDefault();
 	private String contextPath;
 	private String filterPath;
-	private String prefixToContextPath;
+	private String prefixToContextPath = "";
 
 	/**
 	 * Construct.

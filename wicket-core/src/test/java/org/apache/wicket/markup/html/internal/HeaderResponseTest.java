@@ -29,7 +29,6 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.IResource;
@@ -86,7 +85,7 @@ public class HeaderResponseTest
 		when(requestCycle.getRequest()).thenReturn(request);
 
 		UrlRenderer urlRenderer = mock(UrlRenderer.class);
-		when(urlRenderer.renderUrl(any(Url.class))).thenReturn(RESOURCE_NAME);
+		when(urlRenderer.renderContextRelativeUrl((any(String.class)))).thenReturn(RESOURCE_NAME);
 		when(requestCycle.getUrlRenderer()).thenReturn(urlRenderer);
 
 		ThreadContext.setRequestCycle(requestCycle);

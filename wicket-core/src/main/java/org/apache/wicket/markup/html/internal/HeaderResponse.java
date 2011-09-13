@@ -25,7 +25,6 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WicketEventReference;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -378,22 +377,22 @@ public abstract class HeaderResponse implements IHeaderResponse
 	}
 
 	/**
+	 * Rewrites a relative url into a context-relative one, leaves absolute urls alone
 	 * 
-	 * @param location
+	 * @param url
 	 * @return relative path
 	 */
-	private String relative(final String location)
+	private String relative(final String url)
 	{
-		Args.notEmpty(location, "location");
+		Args.notEmpty(url, "location");
 
-		if (location.startsWith("http://") || location.startsWith("https://") ||
-			location.startsWith("/"))
+		if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("/"))
 		{
-			return location;
+			return url;
 		}
 
 		RequestCycle rc = RequestCycle.get();
-		return rc.getUrlRenderer().renderUrl(Url.parse(location, rc.getRequest().getCharset()));
+		return rc.getUrlRenderer().renderContextRelativeUrl(url);
 	}
 
 	/**
