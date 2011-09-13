@@ -80,6 +80,13 @@ if (typeof(Wicket.Browser) == "undefined") {
 			return Wicket.Browser.isIE() && version >= 7;
 		},
 		
+
+		isIELessThan9: function() {
+			var index = navigator.userAgent.indexOf("MSIE");
+			var version = parseFloat(navigator.userAgent.substring(index + 5));
+			return Wicket.Browser.isIE() && version < 9;
+		},
+		
 		isGecko: function() {
 			return /Gecko/.test(navigator.userAgent) && !Wicket.Browser.isSafari();
 		}

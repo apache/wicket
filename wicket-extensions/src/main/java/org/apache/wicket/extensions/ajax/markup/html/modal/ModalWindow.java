@@ -1054,6 +1054,8 @@ public class ModalWindow extends Panel
 			{
 				IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(page));
 				pageUrl = RequestCycle.get().urlFor(handler);
+				String ie8_pageUrl = RequestCycle.get().mapUrlFor(handler).toString();
+				appendAssignment(buffer, "settings.ie8_src", ie8_pageUrl);
 			}
 			appendAssignment(buffer, "settings.src", pageUrl);
 		}
