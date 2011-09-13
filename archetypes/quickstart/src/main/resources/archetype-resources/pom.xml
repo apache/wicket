@@ -21,7 +21,7 @@
 	</licenses>
 	<properties>
 		<wicket.version>1.5-SNAPSHOT</wicket.version>
-		<jetty.version>7.3.0.v20110203</jetty.version>
+		<jetty.version>7.5.0.v20110901</jetty.version>
 	</properties>
 	<dependencies>
 		<!--  WICKET DEPENDENCIES -->
@@ -42,7 +42,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.6.1</version>
+			<version>1.6.2</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
@@ -84,6 +84,10 @@
 			</resource>
 		</resources>
 		<testResources>
+			<testResource>
+				<filtering>false</filtering>
+				<directory>src/test/resources</directory>
+			</testResource>
 			<testResource>
 				<filtering>false</filtering>
 				<directory>src/test/java</directory>
