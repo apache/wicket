@@ -83,6 +83,11 @@ enum UserAgent {
 	 */
 	public boolean matches(String userAgent)
 	{
+		if (userAgent == null)
+		{
+			return false;
+		}
+
 		if (notAllowedList != null)
 		{
 			for (String value : notAllowedList)
