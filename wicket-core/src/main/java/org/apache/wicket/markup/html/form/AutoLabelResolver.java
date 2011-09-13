@@ -189,10 +189,11 @@ public class AutoLabelResolver implements IComponentResolver
 				{
 					tag.append("class", "error", " ");
 				}
-				if (!fc.isEnabledInHierarchy())
-				{
-					tag.append("class", "disabled", " ");
-				}
+			}
+
+			if (!component.isEnabledInHierarchy())
+			{
+				tag.append("class", "disabled", " ");
 			}
 		}
 
