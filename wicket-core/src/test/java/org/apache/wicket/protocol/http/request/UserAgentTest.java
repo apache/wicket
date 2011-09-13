@@ -47,6 +47,9 @@ public class UserAgentTest
 	@Test
 	public void detectionGroups()
 	{
+		// IE always send the agent header, if don't:
+		assertFalse(UserAgent.INTERNET_EXPLORER.matches(null));
+
 		// no blacklisted entries, but not full match in a detection group
 		assertFalse(UserAgent.INTERNET_EXPLORER.matches("Mozilla MSIE"));
 
