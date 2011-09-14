@@ -115,7 +115,7 @@ public abstract class RequestAdapter
 	 * @param id
 	 * @return null, if not found
 	 */
-	private IManageablePage findPage(final int id)
+	protected IManageablePage findPage(final int id)
 	{
 		for (IManageablePage page : touchedPages)
 		{

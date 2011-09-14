@@ -199,7 +199,7 @@ public class PageStoreManager extends AbstractPageManager
 		 */
 		public synchronized void setSessionCache(final List<IManageablePage> pages)
 		{
-			this.sessionCache = new ArrayList<IManageablePage>(pages);
+			sessionCache = new ArrayList<IManageablePage>(pages);
 			afterReadObject = null;
 		}
 
@@ -313,6 +313,12 @@ public class PageStoreManager extends AbstractPageManager
 		@Override
 		protected IManageablePage getPage(int id)
 		{
+			IManageablePage touchedPage = findPage(id);
+			if (touchedPage != null)
+			{
+				return touchedPage;
+			}
+
 			// try to get session entry for this session
 			SessionEntry entry = getSessionEntry(false);
 
