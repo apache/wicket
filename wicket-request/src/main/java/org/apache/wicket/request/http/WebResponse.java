@@ -226,7 +226,7 @@ public abstract class WebResponse extends Response
 
 		// Enable caching and set max age
 		setHeader("Cache-Control", scope.cacheControl);
-		addHeader("Cache-Control", "max-age=" + duration.getMilliseconds());
+		addHeader("Cache-Control", "max-age=" + duration.seconds());
 	}
 
 	/**
