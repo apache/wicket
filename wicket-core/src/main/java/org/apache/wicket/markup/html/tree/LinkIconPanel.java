@@ -79,6 +79,10 @@ public class LinkIconPanel extends LabelIconPanel
 	protected void onNodeLinkClicked(Object node, BaseTree tree, AjaxRequestTarget target)
 	{
 		tree.getTreeState().selectNode(node, !tree.getTreeState().isNodeSelected(node));
-		tree.updateTree(target);
+
+		if (target != null)
+		{
+			tree.updateTree(target);
+		}
 	}
 }

@@ -291,7 +291,11 @@ public abstract class BaseTree extends AbstractTree
 						getTreeState().expandNode(node);
 					}
 					onJunctionLinkClicked(target, node);
-					updateTree(target);
+
+					if (target != null)
+					{
+						updateTree(target);
+					}
 				}
 			});
 			junctionLink.add(new Behavior()

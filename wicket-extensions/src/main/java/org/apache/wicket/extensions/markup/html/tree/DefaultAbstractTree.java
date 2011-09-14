@@ -517,7 +517,11 @@ public abstract class DefaultAbstractTree extends AbstractTree
 			{
 				getTreeState().selectNode(node, !getTreeState().isNodeSelected(node));
 				onNodeLinkClicked(target, node);
-				updateTree(target);
+
+				if (target != null)
+				{
+					updateTree(target);
+				}
 			}
 		});
 	}
