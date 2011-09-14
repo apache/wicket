@@ -224,9 +224,11 @@ public abstract class WebResponse extends Response
 		// Time for cache expiry = now + duration
 		setDateHeader("Expires", now.add(duration));
 
-		// Enable caching and set max age
+		// Set cache scope
 		setHeader("Cache-Control", scope.cacheControl);
-		addHeader("Cache-Control", "max-age=" + duration.seconds());
+		
+		// Set maximum age for caching in seconds (rounded)
+		addHeader("Cache-Control", "max-age=" + Math.round(duration.seconds()));
 	}
 
 	/**
