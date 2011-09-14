@@ -181,6 +181,14 @@ class HeaderBufferingWebResponse extends WebResponse implements IMetaDataBufferi
 		originalResponse.write(array);
 	}
 
+
+	@Override
+	public void write(byte[] array, int offset, int length)
+	{
+		writeBuffered();
+		originalResponse.write(array, offset, length);
+	}
+
 	@Override
 	public void reset()
 	{

@@ -296,6 +296,21 @@ public class MockWebResponse extends WebResponse
 		}
 	}
 
+	@Override
+	public void write(byte[] array, int offset, int length)
+	{
+		if (textResponse != null)
+		{
+			throw new IllegalStateException("Text response has already been initiated.");
+		}
+		if (binaryResponse == null)
+		{
+			binaryResponse = new ByteArrayOutputStream();
+		}
+
+		binaryResponse.write(array, offset, length);
+	}
+
 	/**
 	 * @return binary response
 	 */

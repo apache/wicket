@@ -76,11 +76,14 @@ public class StringResponse extends Response
 		return out;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.Response#getOutputStream()
-	 */
 	@Override
 	public void write(byte[] array)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void write(byte[] array, int offset, int length)
 	{
 		throw new UnsupportedOperationException();
 	}

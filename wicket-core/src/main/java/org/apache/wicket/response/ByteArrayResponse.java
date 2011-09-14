@@ -104,6 +104,20 @@ public class ByteArrayResponse extends Response
 	}
 
 	@Override
+	public void write(byte[] array, int offset, int length)
+	{
+		try
+		{
+			bytes.write(array, offset, length);
+		}
+		catch (Exception e)
+		{
+			throw new WicketRuntimeException("Cannot write into internal byte stream", e);
+		}
+
+	}
+
+	@Override
 	public String encodeURL(CharSequence url)
 	{
 		if (original != null)

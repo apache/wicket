@@ -59,6 +59,11 @@ public class NullResponse extends Response
 	}
 
 	@Override
+	public void write(byte[] array, int offset, int length)
+	{
+	}
+
+	@Override
 	public String encodeURL(CharSequence url)
 	{
 		return url != null ? url.toString() : null;

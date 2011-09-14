@@ -40,10 +40,34 @@ public abstract class Response
 	 * Writes the buffer to output.
 	 * 
 	 * @param array
+	 *            the data.
 	 * @throws IllegalStateException
 	 *             if {@link #write(CharSequence)} has already been called on this instance
 	 */
 	public abstract void write(byte[] array);
+
+	/**
+	 * Writes the buffer to output.
+	 * 
+	 * @param array
+	 *            the data.
+	 * @param offset
+	 *            the start offset in the data.
+	 * @param length
+	 *            the number of bytes to write.
+	 * 
+	 * @throws IllegalStateException
+	 *             if {@link #write(CharSequence)} has already been called on this instance
+	 * @since 1.5.1
+	 */
+	// TODO Wicket 1.6: make it abstract like other methods in this class
+	public void write(byte[] array, int offset, int length)
+	{
+		// default impl to be able to introduce it in 1.5.x series
+		byte[] towrite = new byte[length];
+		System.arraycopy(array, offset, towrite, 0, length);
+		write(towrite);
+	}
 
 	/**
 	 * Closes the response

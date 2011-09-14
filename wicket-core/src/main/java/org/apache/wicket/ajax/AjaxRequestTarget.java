@@ -226,6 +226,12 @@ public class AjaxRequestTarget implements IPageRequestHandler
 		}
 
 		@Override
+		public void write(byte[] array, int offset, int length)
+		{
+			throw new UnsupportedOperationException("Cannot write binary data.");
+		}
+
+		@Override
 		public Object getContainerResponse()
 		{
 			return originalResponse.getContainerResponse();

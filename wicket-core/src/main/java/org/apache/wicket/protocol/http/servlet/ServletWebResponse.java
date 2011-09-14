@@ -128,6 +128,20 @@ public class ServletWebResponse extends WebResponse
 	}
 
 	@Override
+	public void write(byte[] array, int offset, int length)
+	{
+		try
+		{
+			httpServletResponse.getOutputStream().write(array, offset, length);
+		}
+		catch (IOException e)
+		{
+			throw new ResponseIOException(e);
+		}
+	}
+
+
+	@Override
 	public void setStatus(int sc)
 	{
 		httpServletResponse.setStatus(sc);

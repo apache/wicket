@@ -38,6 +38,11 @@ public abstract class BaseRequestHandlerStackTest
 			}
 
 			@Override
+			public void write(byte[] array, int offset, int length)
+			{
+			}
+
+			@Override
 			public void write(CharSequence sequence)
 			{
 			}

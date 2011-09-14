@@ -190,6 +190,18 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 			}
 		}
 
+		public void append(byte data[], int offset, int length)
+		{
+			try
+			{
+				stream.write(data, offset, length);
+			}
+			catch (Exception e)
+			{
+				throw new WicketRuntimeException(e);
+			}
+		}
+
 		@Override
 		protected void invoke(WebResponse response)
 		{
@@ -518,6 +530,22 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	}
 
 	@Override
+	public void write(byte[] array, int offset, int length)
+	{
+		if (charSequenceAction != null)
+		{
+			throw new IllegalStateException(
+				"Can't call write(byte[]) after write(CharSequence) has been called.");
+		}
+		if (dataAction == null)
+		{
+			dataAction = new WriteDataAction();
+			actions.add(dataAction);
+		}
+		dataAction.append(array, offset, length);
+	}
+
+	@Override
 	public void sendRedirect(String url)
 	{
 		actions.add(new SendRedirectAction(url));
@@ -630,5 +658,4 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	{
 		return originalResponse.getContainerResponse();
 	}
-
 }
