@@ -20,11 +20,10 @@ import java.io.Serializable;
 
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 
 /**
- * static resource which does not change for the lifetime of the application 
- * and should be considered a candidate for long-term caching. 
+ * static resource which does not change for the lifetime of the application and should be
+ * considered a candidate for long-term caching.
  * 
  * @author Peter Ertl
  * @since 1.5
@@ -32,17 +31,17 @@ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 public interface IStaticCacheableResource extends IResource
 {
 	/**
-	 * get unique caching key for the resource stream produced 
-	 * by {@link #getCacheableResourceStream()}
+	 * get unique caching key for the resource stream produced by
+	 * {@link #getCacheableResourceStream()}
 	 * 
-	 * @return serializable key with properly 
-	 * supports {@link #equals(Object)} and {@link #hashCode()}
+	 * @return serializable key with properly supports {@link #equals(Object)} and
+	 *         {@link #hashCode()}
 	 */
 	Serializable getCacheKey();
 
 	/**
-	 * get static resource stream which will be unique to the 
-	 * related caching key {@link #getCacheKey()}
+	 * get static resource stream which will be unique to the related caching key
+	 * {@link #getCacheKey()}
 	 * 
 	 * @return stream or <code>null</code> if no stream could be found
 	 */
