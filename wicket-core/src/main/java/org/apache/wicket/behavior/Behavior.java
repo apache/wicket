@@ -32,7 +32,7 @@ import org.apache.wicket.markup.html.IHeaderResponse;
  * can have their own models as well, and they are notified when these are to be detached by the
  * component.
  * <p>
- * You also cannot modify a components model with a behavor.
+ * You also cannot modify a components model with a behavior.
  * </p>
  * 
  * @see org.apache.wicket.behavior.IBehaviorListener
