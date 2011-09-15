@@ -30,7 +30,7 @@ public class UrlInfoTest extends Assert
 {
 
 	/**
-	 * WICKET-4038
+	 * WICKET-4038 & WICKET-4054
 	 */
 	@Test
 	public void wicket4038()
@@ -38,6 +38,7 @@ public class UrlInfoTest extends Assert
 		PageParameters parameters = new PageParameters();
 		parameters.add(WebRequest.PARAM_AJAX, "true");
 		parameters.add(WebRequest.PARAM_AJAX_BASE_URL, "base/url");
+		parameters.add(WebRequest.PARAM_AJAX_REQUEST_ANTI_CACHE, "12345.6879");
 
 		AbstractBookmarkableMapper.UrlInfo info = new UrlInfo(null, MockPage.class, parameters);
 		assertTrue(info.getPageParameters().isEmpty());

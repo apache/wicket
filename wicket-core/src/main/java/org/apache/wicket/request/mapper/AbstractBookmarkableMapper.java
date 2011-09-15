@@ -97,6 +97,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 				// They shouldn't be propagated to the next requests
 				cleanParameters.remove(WebRequest.PARAM_AJAX);
 				cleanParameters.remove(WebRequest.PARAM_AJAX_BASE_URL);
+				cleanParameters.remove(WebRequest.PARAM_AJAX_REQUEST_ANTI_CACHE);
 			}
 			return cleanParameters;
 		}
