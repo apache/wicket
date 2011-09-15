@@ -65,6 +65,9 @@ public abstract class WicketTestCase extends TestCase
 	@Override
 	protected void setUp() throws Exception
 	{
+		// make sure no leaked threadlocals are present
+		ThreadContext.detach();
+
 		WebApplication application = newApplication();
 		tester = newWicketTester(application);
 	}

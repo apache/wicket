@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.text.ParseException;
 
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.MockPage;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -29,15 +30,64 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.mapper.StalePageException;
+import org.apache.wicket.request.mapper.TestMapperContext;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.junit.Test;
 
 /**
  * @author pedro
  */
 public class PageProviderTest extends WicketTestCase
 {
+
+	/**
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-4046">WICKET-4046</a>
+	 */
+	@Test
+	public void pageProviderDontDeserializeOnePageTwice()
+	{
+		int oldState = 0;
+		int newState = 1;
+
+		StatefullMockPage testPage = new StatefullMockPage();
+		testPage.state = oldState;
+
+		// storing test page
+		TestMapperContext mapperContext = new TestMapperContext();
+		mapperContext.getPageManager().touchPage(testPage);
+		mapperContext.getPageManager().commitRequest();
+
+		// by cleaning session cache we make sure of not being testing the same in-memory instance
+		mapperContext.cleanSessionCache();
+
+		PageProvider pageProvider = mapperContext.new TestPageProvider(testPage.getPageId(), 0);
+
+		// simulation an test call to isNewPageInstance
+		boolean isNewPageInstance = pageProvider.isNewPageInstance();
+		assertFalse("test page is already stored", isNewPageInstance);
+
+		// changing some sate
+		StatefullMockPage providedPage = (StatefullMockPage)pageProvider.getPageInstance();
+		providedPage.state = newState;
+		mapperContext.getPageManager().touchPage(providedPage);
+		mapperContext.getPageManager().commitRequest();
+
+
+		mapperContext.cleanSessionCache();
+
+		StatefullMockPage restauredPageAfterStateChage = (StatefullMockPage)mapperContext.getPageInstance(testPage.getPageId());
+
+		// OK, if the correct page got touched/stores its change will be visible now
+		assertEquals(newState, restauredPageAfterStateChage.state);
+	}
+
+	private static class StatefullMockPage extends MockPage
+	{
+		int state = 0;
+	}
+
 	/**
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3252">WICKET-3252</a>
 	 * */

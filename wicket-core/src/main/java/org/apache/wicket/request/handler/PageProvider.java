@@ -18,6 +18,7 @@ package org.apache.wicket.request.handler;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.page.IPageManager;
+import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
@@ -46,15 +47,15 @@ import org.apache.wicket.util.lang.Args;
  */
 public class PageProvider implements IPageProvider
 {
-	private Integer renderCount;
+	private final Integer renderCount;
+
+	private final Integer pageId;
 
 	private IPageSource pageSource;
 
 	private IRequestablePage pageInstance;
 
 	private Class<? extends IRequestablePage> pageClass;
-
-	private Integer pageId;
 
 	private PageParameters pageParameters;
 
@@ -123,6 +124,8 @@ public class PageProvider implements IPageProvider
 		{
 			setPageParameters(pageParameters);
 		}
+		pageId = null;
+		renderCount = null;
 	}
 
 	/**
@@ -187,10 +190,25 @@ public class PageProvider implements IPageProvider
 		}
 	}
 
+	/**
+	 * The page instance is new only if there is no cached instance or the data stores doesn't have
+	 * a page with that id with the same {@linkplain #pageClass}.
+	 * 
+	 * @see org.apache.wicket.request.handler.IPageProvider#isNewPageInstance()
+	 */
 	public boolean isNewPageInstance()
 	{
-		return pageInstance == null &&
-			(pageId == null || getPageSource().getPageInstance(pageId) == null);
+		boolean isNew = pageInstance == null;
+		if (isNew && pageId != null)
+		{
+			IRequestablePage storedPageInstance = getStoredPage(pageId);
+			if (storedPageInstance != null)
+			{
+				pageInstance = storedPageInstance;
+				isNew = false;
+			}
+		}
+		return isNew;
 	}
 
 	/**
@@ -235,16 +253,9 @@ public class PageProvider implements IPageProvider
 
 		if (pageId != null)
 		{
-			page = getPageSource().getPageInstance(pageId);
-			if (page != null && pageClass != null && page.getClass().equals(pageClass) == false)
-			{
-				page = null;
-			}
-			else if (page != null && pageParameters != null)
-			{
-				page.getPageParameters().overwriteWith(pageParameters);
-			}
+			page = getStoredPage(pageId);
 		}
+
 		if (page == null)
 		{
 			if (pageClass != null)
@@ -263,6 +274,32 @@ public class PageProvider implements IPageProvider
 		}
 
 		return page;
+	}
+
+	/**
+	 * Looks up a page by id from the {@link IPageStore}. <br/>
+	 * If {@linkplain #pageClass} is specified then compares it against the stored instance class
+	 * and returns the found instance only if they match.
+	 * 
+	 * @param pageId
+	 *            the id of the page to look for.
+	 * @return the found page instance by id.
+	 */
+	private IRequestablePage getStoredPage(final int pageId)
+	{
+		IRequestablePage storedPageInstance = getPageSource().getPageInstance(pageId);
+		if (storedPageInstance != null &&
+			(pageClass == null || pageClass.equals(storedPageInstance.getClass())))
+		{
+			pageInstance = storedPageInstance;
+
+			if (pageParameters != null)
+			{
+				storedPageInstance.getPageParameters().overwriteWith(pageParameters);
+			}
+
+		}
+		return storedPageInstance;
 	}
 
 	/**
