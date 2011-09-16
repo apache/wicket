@@ -180,7 +180,7 @@ public class PageProvider implements IPageProvider
 		{
 			return pageParameters;
 		}
-		else if (pageInstance != null)
+		else if (isNewPageInstance() == false)
 		{
 			return pageInstance.getPageParameters();
 		}
