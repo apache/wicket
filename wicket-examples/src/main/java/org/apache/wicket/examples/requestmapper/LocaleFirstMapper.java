@@ -51,16 +51,25 @@ public class LocaleFirstMapper extends AbstractComponentMapper
 	/**
 	 * @see org.apache.wicket.request.IRequestMapper#getCompatibilityScore(org.apache.wicket.request.Request)
 	 */
-	public int getCompatibilityScore(final Request request)
+	public int getCompatibilityScore(Request request)
 	{
+		if (getLocaleFromUrl(request) != null)
+		{
+			request = stripLocaleSegment(request);
+		}
+
 		// since we match all urls the score is simply delegated to the chain
 		return chain.getCompatibilityScore(request);
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestMapper#mapRequest(org.apache.wicket.request.Request)
-	 */
-	public IRequestHandler mapRequest(Request request)
+	private Request stripLocaleSegment(Request request)
+	{
+		Url url = request.getUrl();
+		url.getSegments().remove(0);
+		return request.cloneWithUrl(url);
+	}
+
+	private Locale getLocaleFromUrl(Request request)
 	{
 		// locale is the first segment in the url
 		List<String> segments = request.getUrl().getSegments();
@@ -69,19 +78,24 @@ public class LocaleFirstMapper extends AbstractComponentMapper
 			String localeAsString = segments.get(0);
 			if (!Strings.isEmpty(localeAsString))
 			{
-				Locale locale = LocaleHelper.parseLocale(localeAsString);
-				if (locale != null)
-				{
-					Session.get().setLocale(locale);
-
-					// now that we have proccessed the first segment we need to strip from the url
-					Url url = request.getUrl();
-					url.getSegments().remove(0);
-
-					// create a request based on the new url
-					request = request.cloneWithUrl(url);
-				}
+				return LocaleHelper.parseLocale(localeAsString);
 			}
+		}
+		return null;
+	}
+
+	/**
+	 * @see org.apache.wicket.request.IRequestMapper#mapRequest(org.apache.wicket.request.Request)
+	 */
+	public IRequestHandler mapRequest(Request request)
+	{
+		Locale locale = getLocaleFromUrl(request);
+		if (locale != null)
+		{
+			Session.get().setLocale(locale);
+
+			// now that we have proccessed the first segment we need to strip from the url
+			request = stripLocaleSegment(request);
 		}
 
 		// chain url processing
