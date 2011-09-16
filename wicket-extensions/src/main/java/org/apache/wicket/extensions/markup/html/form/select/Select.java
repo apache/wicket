@@ -27,6 +27,8 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 
 
 /**
@@ -99,18 +101,18 @@ public class Select<T> extends FormComponent<T>
 		boolean supportsMultiple = getModelObject() instanceof Collection;
 
 		/*
-		 * the input contains an array of full path of the selected option components unless nothing
-		 * was selected in which case the input contains null
+		 * + * the input contains an array of values of the selected option components unless
+		 * nothing was selected in which case the input contains null
 		 */
-		String[] paths = getInputAsArray();
+		String[] values = getInputAsArray();
 
-		if ((paths == null) || (paths.length == 0))
+		if ((values == null) || (values.length == 0))
 		{
 			setConvertedInput(null);
 			return;
 		}
 
-		if (!supportsMultiple && (paths.length > 1))
+		if (!supportsMultiple && (values.length > 1))
 		{
 			throw new WicketRuntimeException(
 				"The model of Select component [" +
@@ -118,35 +120,39 @@ public class Select<T> extends FormComponent<T>
 					"] is not of type java.util.Collection, but more then one SelectOption component has been selected. Either remove the multiple attribute from the select tag or make the model of the Select component a collection");
 		}
 
-		List<Object> converted = new ArrayList<Object>(paths.length);
+		List<Object> converted = new ArrayList<Object>(values.length);
 
 		/*
 		 * if the input is null we do not need to do anything since the model collection has already
 		 * been cleared
 		 */
-		for (String path : paths)
+		for (int i = 0; i < values.length; i++)
 		{
-			if (!Strings.isEmpty(path))
+			final String value = values[i];
+			if (!Strings.isEmpty(value))
 			{
-				/*
-				 * option component path sans select component path = relative path from group to
-				 * option since we know the option is child of select
-				 */
-				path = path.substring(getPath().length() + 1);
-
-				// retrieve the selected option component
-				SelectOption<?> option = (SelectOption<?>)get(path);
+				SelectOption<T> option = visitChildren(SelectOption.class,
+					new IVisitor<SelectOption<T>, SelectOption<T>>()
+					{
+						public void component(SelectOption<T> option, IVisit<SelectOption<T>> visit)
+						{
+							if (String.valueOf(option.getValue()).equals(value))
+							{
+								visit.stop(option);
+							}
+						}
+					});
 
 				if (option == null)
 				{
 					throw new WicketRuntimeException(
 						"submitted http post value [" +
-							Arrays.toString(paths) +
+							Arrays.toString(values) +
 							"] for SelectOption component [" +
 							getPath() +
-							"] contains an illegal relative path element [" +
-							path +
-							"] which does not point to an SelectOption component. Due to this the Select component cannot resolve the selected SelectOption component pointed to by the illegal value. A possible reason is that component hierarchy changed between rendering and form submission.");
+							"] contains an illegal value [" +
+							value +
+							"] which does not point to a SelectOption component. Due to this the Select component cannot resolve the selected SelectOption component pointed to by the illegal value. A possible reason is that component hierarchy changed between rendering and form submission.");
 				}
 				converted.add(option.getDefaultModelObject());
 			}
@@ -173,7 +179,7 @@ public class Select<T> extends FormComponent<T>
 	/**
 	 * @see FormComponent#updateModel()
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings( { "unchecked", "rawtypes" })
 	@Override
 	public void updateModel()
 	{

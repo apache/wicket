@@ -121,7 +121,7 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 						value +
 						"] for RadioGroup component [" +
 						getPath() +
-						"] is illegal because it does not contain relative path to a Radio component. " +
+						"] is illegal because it does not point to a Radio component. " +
 						"Due to this the RadioGroup component cannot resolve the selected Radio component pointed to by the illegal value. A possible reason is that component hierarchy changed between rendering and form submission.");
 			}
 

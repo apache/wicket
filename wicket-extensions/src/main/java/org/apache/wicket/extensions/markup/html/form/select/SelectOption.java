@@ -37,6 +37,12 @@ public class SelectOption<T> extends WebMarkupContainer
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * page-scoped uuid of this option. this property must not be accessed directly, instead
+	 * {@link #getValue()} must be used
+	 */
+	private int uuid = -1;
+
+	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String)
 	 */
 	public SelectOption(final String id)
@@ -54,6 +60,20 @@ public class SelectOption<T> extends WebMarkupContainer
 		super(id, model);
 	}
 
+	/**
+	 * Form submission value used for this select option. This string will appear as the value of
+	 * the <code>value</code> html attribute for the <code>option</code> tag.
+	 * 
+	 * @return form submission value
+	 */
+	public String getValue()
+	{
+		if (uuid < 0)
+		{
+			uuid = getPage().getAutoIndex();
+		}
+		return "option" + uuid;
+	}
 
 	/**
 	 * @see Component#onComponentTag(ComponentTag)
@@ -75,8 +95,10 @@ public class SelectOption<T> extends WebMarkupContainer
 					"] cannot find its parent Select. All SelectOption components must be a child of or below in the hierarchy of a Select component.");
 		}
 
-		// assign name and value
-		tag.put("value", getPath());
+		final String uuid = getValue();
+
+		// assign value
+		tag.put("value", uuid);
 
 		if (select.isSelected(this))
 		{
