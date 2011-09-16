@@ -139,8 +139,7 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 								Strings.join(",", values) +
 								"] for CheckGroup component [" +
 								getPath() +
-								"] contains an illegal relative path " +
-								"element [" +
+								"] contains an illegal value [" +
 								value +
 								"] which does not point to a Check component. Due to this the CheckGroup component cannot resolve the selected Check component pointed to by the illegal value. A possible reason is that component hierarchy changed between rendering and form submission.");
 					}
