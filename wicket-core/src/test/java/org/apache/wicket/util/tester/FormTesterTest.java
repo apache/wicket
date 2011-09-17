@@ -293,7 +293,6 @@ public class FormTesterTest extends WicketTestCase
 		final FormTester form = tester.newFormTester("form");
 		form.select("selector", 0);
 
-		// Fails, because of null value passed to onSelectionChanged.
 		assertEquals("opt 1", page.selection);
 	}
 }
