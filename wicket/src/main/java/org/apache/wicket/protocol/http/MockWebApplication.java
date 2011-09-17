@@ -696,6 +696,17 @@ public class MockWebApplication
 	}
 
 	/**
+	 * Clears cookie storage
+	 */
+	public void clearCookiesOfThisSession()
+	{
+		if (cookiesOfThisSession != null)
+		{
+			cookiesOfThisSession.clear();
+		}
+	}
+
+	/**
 	 * Reset the request and the response back to a starting state and recreate the necessary wicket
 	 * request, response and session objects. The request and response objects can be accessed and
 	 * Initialized at this point.
