@@ -199,7 +199,18 @@ public final class XmlPullParser implements IXmlPullParser
 		input.countLinesTo(openBracketIndex);
 
 		// Get index of closing tag and advance past the tag
-		int closeBracketIndex = input.find('>', openBracketIndex + 1);
+		int closeBracketIndex = -1;
+
+		if (openBracketIndex != -1 && openBracketIndex < input.size() - 1)
+		{
+			char nextChar = input.charAt(openBracketIndex + 1);
+
+			if ((nextChar == '!') || (nextChar == '?'))
+				closeBracketIndex = input.find('>', openBracketIndex);
+			else
+				closeBracketIndex = input.findOutOfQuotes('>', openBracketIndex);
+		}
+
 		if (closeBracketIndex == -1)
 		{
 			throw new ParseException("No matching close bracket at" + getLineAndColumnText(),

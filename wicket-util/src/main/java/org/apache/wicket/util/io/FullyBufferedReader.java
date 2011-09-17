@@ -18,6 +18,7 @@ package org.apache.wicket.util.io;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.text.ParseException;
 
 /**
  * This is not a reader like e.g. FileReader. It rather reads the whole data until the end from a
@@ -215,6 +216,77 @@ public final class FullyBufferedReader
 	public final int find(final String str, final int startPos)
 	{
 		return input.indexOf(str, startPos);
+	}
+
+	/**
+	 * Find a char starting at the position provided. The char must not be inside a quoted string
+	 * (single or double)
+	 * 
+	 * @param ch
+	 *            The char to search for
+	 * @param startPos
+	 *            The index to start at
+	 * @return -1 if not found
+	 */
+	public int findOutOfQuotes(final char ch, int startPos) throws ParseException
+	{
+		return findOutOfQuotes(ch, startPos, (char)0);
+	}
+
+	/**
+	 * Find a char starting at the position provided. The char must not be inside a quoted string
+	 * (single or double)
+	 * 
+	 * @param ch
+	 *            The char to search for
+	 * @param startPos
+	 *            The index to start at
+	 * @param quotationChar
+	 *            The current quotation char. Must be ' or ", otherwise will be ignored.
+	 * @param insideQuotations
+	 *            Indicates if we are inside quotes or not.
+	 * @return -1 if not found
+	 */
+	public int findOutOfQuotes(final char ch, int startPos, char quotationChar)
+		throws ParseException
+	{
+		int closeBracketIndex = find(ch, startPos + 1);
+		char nextChar = closeBracketIndex == -1 ? nextChar = (char)0 : input.charAt(startPos + 1);
+
+		if (closeBracketIndex != -1)
+		{
+			CharSequence tagCode = getSubstring(startPos, closeBracketIndex + 1);
+
+			for (int i = 0; i < tagCode.length(); i++)
+			{
+				char currentChar = tagCode.charAt(i);
+				char previousTag = tagCode.charAt(i > 0 ? i - 1 : 0);
+
+				if (quotationChar == 0 && (currentChar == '\'' || currentChar == '\"'))
+				{// I'm entering inside a quoted string. Set quotationChar
+					quotationChar = currentChar;
+					countLinesTo(startPos + i);
+				}
+				else if (currentChar == quotationChar && previousTag != '\\')
+				{ // I'm out of quotes, reset quotationChar
+					quotationChar = 0;
+				}
+				// I've found character but I'm inside quotes
+				if (currentChar == ch && quotationChar != 0)
+					return findOutOfQuotes(ch, closeBracketIndex + 1, quotationChar);
+			}
+		}
+
+		return closeBracketIndex;
+	}
+
+	/**
+	 * 
+	 * @return line and column number
+	 */
+	private String getLineAndColumnText()
+	{
+		return " (line " + getLineNumber() + ", column " + getColumnNumber() + ")";
 	}
 
 	/**
