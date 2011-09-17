@@ -123,12 +123,7 @@ public class FormTester
 		protected abstract void assignValueToFormComponent(FormComponent<?> formComponent,
 			String value);
 
-		/**
-		 * Selects a given index in a selectable <code>FormComponent</code>.
-		 * 
-		 * @param index
-		 */
-		protected final void doSelect(final int index)
+		public String getChoiceValueForIndex(int index)
 		{
 			if (formComponent instanceof RadioGroup)
 			{
@@ -137,9 +132,9 @@ public class FormTester
 				if (foundRadio == null)
 				{
 					fail("RadioGroup " + formComponent.getPath() + " does not have index:" + index);
-					return;
+					return null;
 				}
-				assignValueToFormComponent(formComponent, foundRadio.getValue());
+				return foundRadio.getValue();
 			}
 			else if (formComponent instanceof CheckGroup)
 			{
@@ -148,10 +143,10 @@ public class FormTester
 				if (foundCheck == null)
 				{
 					fail("CheckGroup " + formComponent.getPath() + " does not have index:" + index);
-					return;
+					return null;
 				}
 
-				assignValueToFormComponent(formComponent, foundCheck.getValue());
+				return foundCheck.getValue();
 			}
 			else
 			{
@@ -159,12 +154,25 @@ public class FormTester
 				if (idValue == null)
 				{
 					fail(formComponent.getPath() + " is not a selectable Component.");
+					return null;
 				}
 				else
 				{
-					assignValueToFormComponent(formComponent, idValue);
+					return idValue;
 				}
 			}
+
+		}
+
+		/**
+		 * Selects a given index in a selectable <code>FormComponent</code>.
+		 * 
+		 * @param index
+		 */
+		protected final void doSelect(final int index)
+		{
+			String value = getChoiceValueForIndex(index);
+			assignValueToFormComponent(formComponent, value);
 		}
 
 		/**
@@ -546,7 +554,7 @@ public class FormTester
 				boolean wantOnSelectionChangedNotifications = (Boolean)wantOnSelectionChangedNotificationsMethod.invoke(component);
 				if (wantOnSelectionChangedNotifications)
 				{
-					tester.executeListener(component, IOnChangeListener.INTERFACE);
+					tester.invokeListener(component, IOnChangeListener.INTERFACE);
 				}
 			}
 			catch (final Exception x)

@@ -16,15 +16,25 @@
  */
 package org.apache.wicket.util.tester;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.file.File;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.MockFormFileUploadPage.MockDomainObjectFileUpload;
 import org.apache.wicket.util.tester.MockFormPage.MockDomainObject;
 
@@ -238,7 +248,52 @@ public class FormTesterTest extends WicketTestCase
 		}
 		catch (ListenerInvocationNotAllowedException expected)
 		{
-			;
+			// expected
 		}
+	}
+
+	public void testWantOnChangeSelectionNotification()
+	{
+		class TestPage extends WebPage implements IMarkupResourceStreamProvider
+		{
+			private String selection;
+
+			public TestPage()
+			{
+				Form<Object> form = new Form<Object>("form");
+				add(form);
+				List<String> choices = Arrays.asList(new String[] { "opt 1", "opt 2" });
+				form.add(new DropDownChoice<String>("selector", Model.of(""), choices)
+				{
+					@Override
+					protected boolean wantOnSelectionChangedNotifications()
+					{
+						return true;
+					}
+
+					@Override
+					protected void onSelectionChanged(final String newSelection)
+					{
+						selection = newSelection;
+					}
+				});
+			}
+
+			public IResourceStream getMarkupResourceStream(MarkupContainer container,
+				Class<?> containerClass)
+			{
+				return new StringResourceStream(
+					"<html><body><form wicket:id='form'><select wicket:id='selector'></select></form></body></html>");
+			}
+		}
+
+		TestPage page = new TestPage();
+		tester.startPage(page);
+
+		final FormTester form = tester.newFormTester("form");
+		form.select("selector", 0);
+
+		// Fails, because of null value passed to onSelectionChanged.
+		assertEquals("opt 1", page.selection);
 	}
 }

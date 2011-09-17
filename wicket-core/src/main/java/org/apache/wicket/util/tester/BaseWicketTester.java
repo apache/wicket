@@ -989,6 +989,28 @@ public class BaseWicketTester
 	}
 
 	/**
+	 * Simulates invoking a listener on a component. As opposed to the
+	 * {@link #executeListener(Component)} method, current request/response objects will be used
+	 * 
+	 * After the listener interface is invoked the page containing the component will be rendered
+	 * (with an optional redirect - depending on {@link RenderStrategy}).
+	 * 
+	 * @param component
+	 * @param listener
+	 */
+	public void invokeListener(final Component component, final RequestListenerInterface listener)
+	{
+		Args.notNull(component, "component");
+
+		// there are two ways to do this. RequestCycle could be forced to call the handler
+		// directly but constructing and parsing the URL increases the chance of triggering bugs
+		IRequestHandler handler = new ListenerInterfaceRequestHandler(new PageAndComponentProvider(
+			component.getPage(), component), listener);
+
+		processRequest(handler);
+	}
+
+	/**
 	 * Builds and processes a request suitable for invoking a listener. The <code>Component</code>
 	 * must implement any of the known <code>IListener</code> interfaces.
 	 * 
