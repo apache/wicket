@@ -531,7 +531,6 @@ public class MockWebApplication
 				cycle.setRequestTarget(new WebErrorCodeResponseTarget(
 					HttpServletResponse.SC_NOT_FOUND));
 			}
-			cycle.detach();
 			createRequestCycle();
 			parametersForNextRequest.clear();
 			servletRequest.getParameterMap().clear();
