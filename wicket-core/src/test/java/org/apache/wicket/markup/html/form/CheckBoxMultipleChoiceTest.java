@@ -22,6 +22,7 @@ import java.util.List;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.junit.Test;
 
@@ -45,7 +46,7 @@ public class CheckBoxMultipleChoiceTest extends WicketTestCase
 		 * @param show2
 		 * @param show3
 		 */
-		public TestPage(final boolean show1, final boolean show2, final boolean show3)
+		public TestPage(final boolean show1, final boolean show2, final boolean show3, boolean show4)
 		{
 			List<? extends String> choices = Arrays.asList("a", "b", "c");
 			add(new CheckBoxMultipleChoice<String>("checkWithoutPrefix", choices)
@@ -90,6 +91,12 @@ public class CheckBoxMultipleChoiceTest extends WicketTestCase
 					return "suf" + index + choice;
 				}
 			});
+
+			WebMarkupContainer container = new WebMarkupContainer("container");
+			container.setVisibilityAllowed(show4);
+			container.setEnabled(false);
+			add(container);
+			container.add(new CheckBoxMultipleChoice<String>("disabled", choices));
 		}
 
 		@Override
@@ -99,6 +106,7 @@ public class CheckBoxMultipleChoiceTest extends WicketTestCase
 				+ "<div wicket:id='checkWithoutPrefix'></div>" //
 				+ "<div wicket:id='checkWithFixedPrefix'></div>" //
 				+ "<div wicket:id='checkWithDynamicPrefix'></div>" //
+				+ "<div wicket:id='container'><div wicket:id='disabled'></div></div>" //
 				+ "</body></html>");
 		}
 	}
@@ -107,7 +115,7 @@ public class CheckBoxMultipleChoiceTest extends WicketTestCase
 	@Test
 	public void noPrefix()
 	{
-		tester.startPage(new TestPage(true, false, false));
+		tester.startPage(new TestPage(true, false, false, false));
 		tester.assertContains("<div wicket:id=\"checkWithoutPrefix\"><input name=\"checkWithoutPrefix\"");
 	}
 
@@ -115,7 +123,7 @@ public class CheckBoxMultipleChoiceTest extends WicketTestCase
 	@Test
 	public void fixedPrefix()
 	{
-		tester.startPage(new TestPage(false, true, false));
+		tester.startPage(new TestPage(false, true, false, false));
 		tester.assertContains("<div wicket:id=\"checkWithFixedPrefix\">pre<input name=\"checkWithFixedPrefix\"");
 		tester.assertContains("</label>sufpre<input name=\"checkWithFixedPrefix\"");
 		tester.assertContains("</label>suf</div>");
@@ -125,9 +133,16 @@ public class CheckBoxMultipleChoiceTest extends WicketTestCase
 	@Test
 	public void dynamicPrefix()
 	{
-		tester.startPage(new TestPage(false, false, true));
+		tester.startPage(new TestPage(false, false, true, false));
 		tester.assertContains("<div wicket:id=\"checkWithDynamicPrefix\">pre0a<input name=\"checkWithDynamicPrefix\"");
 		tester.assertContains("</label>suf0apre1b<input name=\"checkWithDynamicPrefix\"");
 		tester.assertContains("</label>suf2c</div>");
+	}
+
+	@Test
+	public void disabledInHierarchy()
+	{
+		tester.startPage(new TestPage(false, false, false, true));
+		tester.assertContains("disabled=\"disabled\"");
 	}
 }
