@@ -25,6 +25,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
@@ -179,7 +180,7 @@ public class Select<T> extends FormComponent<T>
 	/**
 	 * @see FormComponent#updateModel()
 	 */
-	@SuppressWarnings( { "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void updateModel()
 	{
@@ -210,13 +211,15 @@ public class Select<T> extends FormComponent<T>
 	}
 
 	/**
-	 * Checks if the specified option is selected
+	 * Checks if the specified option is selected based on raw input
 	 * 
 	 * @param option
-	 * @return true if the option is selected, false otherwise
+	 * @return true} iff the option is selected
 	 */
 	boolean isSelected(final SelectOption<?> option)
 	{
+		Args.notNull(option, "option");
+
 		// if the raw input is specified use that, otherwise use model
 		if (hasRawInput())
 		{
