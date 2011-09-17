@@ -25,7 +25,7 @@ import org.apache.wicket.util.string.Strings;
  * &lt;listenerInterface&gt.&lt;behaviorIndex&gt;-&lt;componentPath&gt; or
  * &lt;render-count&gt;.&lt;listenerInterface&gt.&lt;behaviorIndex&gt;-&lt;componentPath&gt;
  * <p>
- * Component path is escaped (':' characters are replaced by '-')
+ * Component path is escaped (':' characters are replaced by '~')
  * 
  * @author Matej Knopp
  */
@@ -34,9 +34,10 @@ public class ComponentInfo
 	private static final char BEHAVIOR_INDEX_SEPARATOR = '.';
 	private static final char SEPARATOR = '-';
 	private static final char COMPONENT_SEPARATOR = ':';
+	private static final char SEPARATOR_ENCODED = '~';
 
 	/**
-	 * Replaces ':' with '-', and '-' with '--'.
+	 * Replaces ':' with '-', and '-' with '~'.
 	 * 
 	 * @param path
 	 *            the path to the component in its page
@@ -57,7 +58,7 @@ public class ComponentInfo
 						result.append(SEPARATOR);
 						break;
 					case SEPARATOR :
-						result.append(SEPARATOR).append(SEPARATOR);
+						result.append(SEPARATOR_ENCODED);
 						break;
 					default :
 						result.append(c);
@@ -72,7 +73,7 @@ public class ComponentInfo
 	}
 
 	/**
-	 * Replaces '--' with '-' and '-' with ':'
+	 * Replaces '~' with '-' and '-' with ':'
 	 * 
 	 * @param path
 	 *            the encoded path of the component in its page
@@ -89,16 +90,11 @@ public class ComponentInfo
 				char c = path.charAt(i);
 				switch (c)
 				{
+					case SEPARATOR_ENCODED :
+						result.append(SEPARATOR);
+						break;
 					case SEPARATOR :
-						if ((i < length - 1) && (path.charAt(i + 1) == SEPARATOR))
-						{
-							i++;
-							result.append(SEPARATOR);
-						}
-						else
-						{
-							result.append(COMPONENT_SEPARATOR);
-						}
+						result.append(COMPONENT_SEPARATOR);
 						break;
 					default :
 						result.append(c);

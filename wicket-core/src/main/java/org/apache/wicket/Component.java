@@ -4213,9 +4213,9 @@ public abstract class Component
 			}
 		}
 
-		if ((id != null) && (id.indexOf(':') != -1))
+		if ((id != null) && (id.indexOf(':') != -1|| id.indexOf('~') != -1))
 		{
-			throw new WicketRuntimeException("The component ID must not contain ':' chars.");
+			throw new WicketRuntimeException("The component ID must not contain ':' or '~' chars.");
 		}
 
 		this.id = id;

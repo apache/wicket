@@ -93,10 +93,10 @@ public class ComponentInfoTest extends TestCase
 	 */
 	public void test6()
 	{
-		String s = "listener-compo--nent-path";
+		String s = "listener-compo~~nent-path";
 		ComponentInfo info = ComponentInfo.parse(s);
 		assertEquals("listener", info.getListenerInterface());
-		assertEquals("compo-nent:path", info.getComponentPath());
+		assertEquals("compo--nent:path", info.getComponentPath());
 		assertNull(info.getBehaviorId());
 
 		assertEquals(s, info.toString());
@@ -107,7 +107,7 @@ public class ComponentInfoTest extends TestCase
 	 */
 	public void test7()
 	{
-		String s = "listener-co--mpo----nent-path";
+		String s = "listener-co~mpo~~nent-path";
 		ComponentInfo info = ComponentInfo.parse(s);
 		assertEquals("listener", info.getListenerInterface());
 		assertEquals("co-mpo--nent:path", info.getComponentPath());
@@ -157,4 +157,23 @@ public class ComponentInfoTest extends TestCase
 		assertEquals(s, info.toString());
 	}
 
+	public void test11_encode_decode()
+	{
+		final Integer renderCount = 1;
+		final String listenerInterface = "ILinkListener";
+		final String componentPath = "-nav-container-:-nav:1:link";
+		final Integer behaviorId = null;
+
+		ComponentInfo info = new ComponentInfo(renderCount, listenerInterface, componentPath,
+			behaviorId);
+
+		final String encoded = info.toString();
+		assertEquals("1.ILinkListener-~nav~container~-~nav-1-link", encoded);
+
+		ComponentInfo decoded = ComponentInfo.parse(encoded);
+		assertEquals(renderCount, decoded.getRenderCount());
+		assertEquals(listenerInterface, decoded.getListenerInterface());
+		assertEquals(componentPath, decoded.getComponentPath());
+		assertEquals(behaviorId, decoded.getBehaviorId());
+	}
 }
