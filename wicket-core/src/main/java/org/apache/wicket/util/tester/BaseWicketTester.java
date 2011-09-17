@@ -26,7 +26,6 @@ import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -2267,18 +2266,10 @@ public class BaseWicketTester
 				final String inputName = formComponent.getInputName();
 				if (!currentParameterNamesSet.contains(inputName))
 				{
-					final Object modelObject = formComponent.getModelObject();
-					if (modelObject instanceof Collection<?>)
+					String[] values = FormTester.getInputValue(formComponent);
+					for (String value : values)
 					{
-						final Collection<?> collectionModelObject = (Collection<?>)modelObject;
-						for (Object value : collectionModelObject)
-						{
-							postParameters.addParameterValue(inputName, value.toString());
-						}
-					}
-					else
-					{
-						postParameters.addParameterValue(inputName, formComponent.getValue());
+						postParameters.addParameterValue(inputName, value);
 					}
 				}
 			}
