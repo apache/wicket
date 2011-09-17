@@ -400,7 +400,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 			{
 				buffer.append(" checked=\"checked\"");
 			}
-			if (isDisabled(choice, index, selected))
+			if (isDisabled(choice, index, selected) || !isEnabledInHierarchy())
 			{
 				buffer.append(" disabled=\"disabled\"");
 			}
