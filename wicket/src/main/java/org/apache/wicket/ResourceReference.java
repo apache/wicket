@@ -74,6 +74,11 @@ public class ResourceReference implements IClusterable
 	/** Whether or not this resource reference is stateless */
 	private boolean stateless;
 
+	/** Whether to use the locale and style set in the session, dynamically */
+	private boolean useSessionLocale = false;
+
+	private boolean useSessionStyle;
+
 	/**
 	 * Constructs a ResourceReference with the given scope and name. The scope is used as a
 	 * namespace and the scope together with the name must uniquely identify the reference.
@@ -112,6 +117,35 @@ public class ResourceReference implements IClusterable
 	}
 
 	/**
+	 * Constructs a ResourceReference with the given scope and name that optionally follows the
+	 * locale and style settings in the {@link Session}.
+	 * 
+	 * @see Session#getStyle()
+	 * @see Session#getLocale()
+	 * @param scope
+	 *            The scope of the name
+	 * @param name
+	 *            The name of the resource
+	 * @param useSessionLocale
+	 *            Whether to follow the locale settings in the session. If <code>true</code>, the
+	 *            locale will be taken dynamically from the session. If this and useSessionStyle
+	 *            <code>false</code>, this ResourceReference will behave exactly as one constructed
+	 *            with {@link #ResourceReference(Class, String)}.
+	 * @param useSessionStyle
+	 *            Whether to follow the style settings in the session. If <code>true</code>, the
+	 *            style will be taken dynamically from the session. If this and useSessionLocale are
+	 *            <code>false</code>, this ResourceReference will behave exactly as one constructed
+	 *            with {@link #ResourceReference(Class, String)}.
+	 */
+	public ResourceReference(final Class<?> scope, final String name, boolean useSessionLocale,
+		boolean useSessionStyle)
+	{
+		this(scope, name);
+		this.useSessionLocale = useSessionLocale;
+		this.useSessionStyle = useSessionStyle;
+	}
+
+	/**
 	 * Constructs a resource reference with Application.class scope and the given name. All resource
 	 * references constructed with this constructor must have unique names since they all have the
 	 * same Application-wide scope that is the org.apache.wicket.Application.class
@@ -123,6 +157,31 @@ public class ResourceReference implements IClusterable
 	{
 		this(Application.class, name);
 	}
+
+	/**
+	 * Constructs a ResourceReference with the given scope and name that optionally follows the
+	 * locale and style settings in the {@link Session}. This is a convenience constructor that
+	 * calls {@link #ResourceReference(Class, String, boolean, boolean)} supplying the value of
+	 * useSessionLocaleAndStyle for both flags.
+	 * 
+	 * @see Session#getStyle()
+	 * @see Session#getLocale()
+	 * @param scope
+	 *            The scope of the name
+	 * @param name
+	 *            The name of the resource
+	 * @param useSessionLocaleAndStyle
+	 *            Whether to follow the locale and style settings in the session. If
+	 *            <code>true</code>, the locale and style will be taken dynamically from the
+	 *            session. If this is <code>false</code>, this ResourceReference will behave exactly
+	 *            as one constructed with {@link #ResourceReference(Class, String)}.
+	 */
+	public ResourceReference(final Class<?> scope, final String name,
+		boolean useSessionLocaleAndStyle)
+	{
+		this(scope, name, useSessionLocaleAndStyle, useSessionLocaleAndStyle);
+	}
+
 
 	/**
 	 * Binds this shared resource to the given application.
@@ -230,6 +289,20 @@ public class ResourceReference implements IClusterable
 	public final String getSharedResourceKey()
 	{
 		Application application = Application.get();
+		if (useSessionLocale)
+		{
+			if (!Objects.equal(locale, Session.get().getLocale()))
+			{
+				setLocale(Session.get().getLocale());
+			}
+		}
+		if (useSessionStyle)
+		{
+			if (!Objects.equal(style, Session.get().getStyle()))
+			{
+				setStyle(Session.get().getStyle());
+			}
+		}
 		bind(application);
 		return application.getSharedResources().resourceKey(getScope(), name, locale, style);
 	}
@@ -291,7 +364,8 @@ public class ResourceReference implements IClusterable
 	public String toString()
 	{
 		return "[ResourceReference name = " + name + ", scope = " + scopeName + ", locale = " +
-			locale + ", style = " + style + "]";
+			locale + ", style = " + style + ", useSessionLocale = " + useSessionLocale +
+			", useSessionStyle = " + useSessionStyle + "]";
 	}
 
 	/**
@@ -353,5 +427,37 @@ public class ResourceReference implements IClusterable
 		this.stateless = stateless;
 	}
 
+	/**
+	 * @return Whether or not to use the locale defined in the current session.
+	 */
+	public boolean isUseSessionLocale()
+	{
+		return useSessionLocale;
+	}
 
+	/**
+	 * @param useSessionLocale
+	 *            Whether or not to use the locale defined in the current session.
+	 */
+	public void setUseSessionLocale(boolean useSessionLocale)
+	{
+		this.useSessionLocale = useSessionLocale;
+	}
+
+	/**
+	 * @return Whether or not to use the style defined in the current session.
+	 */
+	public boolean isUseSessionStyle()
+	{
+		return useSessionStyle;
+	}
+
+	/**
+	 * @param useSessionStyle
+	 *            Whether or not to use the style defined in the current session.
+	 */
+	public void setUseSessionStyle(boolean useSessionStyle)
+	{
+		this.useSessionStyle = useSessionStyle;
+	}
 }
