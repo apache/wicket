@@ -2445,6 +2445,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 							{
 								data_remove(j);
 							}
+							else
+							{
+								break;
+							}
 						}
 					}
 				}
