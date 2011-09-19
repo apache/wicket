@@ -30,8 +30,8 @@ import org.apache.wicket.request.HttpHeaderCollection;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
+import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Args;
@@ -657,16 +657,7 @@ public abstract class AbstractResource implements IResource
 				@Override
 				public void write(byte[] b, int off, int len) throws IOException
 				{
-					if (off == 0 && len == b.length)
-					{
-						write(b);
-					}
-					else
-					{
-						byte[] copy = new byte[len];
-						System.arraycopy(b, off, copy, 0, len);
-						write(copy);
-					}
+					response.write(b, off, len);
 				}
 			};
 			try
