@@ -30,6 +30,8 @@ var WicketAjaxDebug = {
 	
 	debugWindowLogId : "wicketAjaxDebugWindowLogId",
 	
+	wicketDebugLink: "wicketDebugLink",
+	
 	getDebugWindow : function() {
 		WicketAjaxDebug.init();
 	    wicketGet(WicketAjaxDebug.debugWindowId);
@@ -38,6 +40,11 @@ var WicketAjaxDebug = {
 	showDebugWindow : function() {
 		WicketAjaxDebug.init();
 	    wicketShow(WicketAjaxDebug.debugWindowId);
+
+        var link = wicketGet(WicketAjaxDebug.wicketDebugLink);
+        link.style.backgroundColor = "white";
+        link.style.color = "blue";
+        
 	},
 	
 	hideDebugWindow : function() {
@@ -72,7 +79,13 @@ var WicketAjaxDebug = {
     
     logError : function(msg) {
 		WicketAjaxDebug.init();
-        WicketAjaxDebug.log(msg, "ERROR: ");
+        WicketAjaxDebug.log(msg, "<span style='color: red'>ERROR</span>: ");
+        
+        if (wicketGet(WicketAjaxDebug.debugWindowId).style.display === "none") {
+            var link = wicketGet(WicketAjaxDebug.wicketDebugLink);
+            link.style.backgroundColor = "crimson";
+            link.style.color = "aliceBlue";
+        }
 
         if (typeof(console) != "undefined"&&typeof(console.error) == 'function') {
         	console.error('Wicket.Ajax: ' + msg);
@@ -81,7 +94,7 @@ var WicketAjaxDebug = {
 
     logInfo : function(msg) {
 		WicketAjaxDebug.init();
-        WicketAjaxDebug.log(msg, "INFO: ");
+        WicketAjaxDebug.log(msg, "<span style='color: blue'>INFO</span>: ");
     },
 
     clearLog : function() {
@@ -126,12 +139,12 @@ var WicketAjaxDebug = {
 				// Special style for Internet 6 and 7 in quirks mode
 				if (Wicket.Browser.isIE() && (Wicket.Browser.isIEQuirks() || !Wicket.Browser.isIE7())) {
 					html +=	
-						"<a id='wicketDebugLink' style='position:absolute; right: 10px; bottom: 10px; z-index:1000000; padding-top: 0.3em; padding-bottom: 0.3em; line-height: normal ; _padding-top: 0em; width: 12em; border: 1px solid black; background-color: white; text-align: center; opacity: 0.7; filter: alpha(opacity=70); color: blue; " +
+						"<a id='"+WicketAjaxDebug.wicketDebugLink+"' style='position:absolute; right: 10px; bottom: 10px; z-index:1000000; padding-top: 0.3em; padding-bottom: 0.3em; line-height: normal ; _padding-top: 0em; width: 12em; border: 1px solid black; background-color: white; text-align: center; opacity: 0.7; filter: alpha(opacity=70); color: blue; " +
 						"                                  left: expression(-10 - wicketDebugLink.offsetWidth + eval(document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft) +(document.documentElement.clientWidth ? document.documentElement.clientWidth : document.body.clientWidth));"+
 						"                                  top: expression(-10 - wicketDebugLink.offsetHeight + eval(document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop) + (document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight));'";
 				} else {
 					html += 
-						"<a id='wicketDebugLink' style='position:fixed; right: 10px; bottom: 10px; z-index:1000000; padding-top: 0.3em; padding-bottom: 0.3em; line-height: normal ; _padding-top: 0em; width: 12em; border: 1px solid black; background-color: white; text-align: center; opacity: 0.7;  color: blue;'";
+						"<a id='"+WicketAjaxDebug.wicketDebugLink+"' style='position:fixed; right: 10px; bottom: 10px; z-index:1000000; padding-top: 0.3em; padding-bottom: 0.3em; line-height: normal ; _padding-top: 0em; width: 12em; border: 1px solid black; background-color: white; text-align: center; opacity: 0.7;  color: blue;'";
 				}
 				
 				html += "  href='javascript:WicketAjaxDebug.showDebugWindow()'>WICKET AJAX DEBUG</a>";
