@@ -133,6 +133,11 @@ public abstract class Behavior
 	 */
 	public boolean getStatelessHint(Component component)
 	{
+		if (this instanceof IBehaviorListener)
+		{
+			// this behavior implements a callback interface, so it cannot be stateless
+			return false;
+		}
 		return true;
 	}
 
