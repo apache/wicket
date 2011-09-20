@@ -1,5 +1,68 @@
 This file contains all changes done on the 1.5 version.
 
+Release Notes - Wicket - Version 1.5.1
+
+** Sub-task
+    * [WICKET-3934] - Provide AttributeModifier#remove(String)
+    * [WICKET-4029] - Improve RequestLogger to not do anything after IPageManager#commitRequest()
+
+** Bug
+    * [WICKET-3773] - Onclick Script displayed as Link Text
+    * [WICKET-3977] - Calling FormTester.select for DropDownChoice invokes onSelectionChanged with null argument
+    * [WICKET-3991] - SignInPanel prevents the page being Stateless when signing in with the "rember me" facility.
+    * [WICKET-3993] - Wrong ASCII Key Code for END Key. AutoComplete not working properly
+    * [WICKET-3998] - CreditCardValidator returns incorrect cardId for VISA
+    * [WICKET-4004] - PageExpiredException still thrown after handled by IRequestCycleListener
+    * [WICKET-4005] - AutoHide of DatePicker breaks showOnFieldClick
+    * [WICKET-4009] - Page Lock on Browser Back Button after Page Expiry
+    * [WICKET-4010] - SignInPanel may lead to infinite redirects if there is rememberMe cookie with outdated data
+    * [WICKET-4012] - Component's onAfterRender() is called so many times as it is depth in the component tree + 1
+    * [WICKET-4014] - Wicket 1.5 Form Post Action and Link Get discard Page Class Information
+    * [WICKET-4016] - MarkupContainer.toString(true) fails with MarkupNotFoundException if the call is made in the component constructor
+    * [WICKET-4020] - ResourceMapper throws IllegalStateException when attempting to map a request to a URL ending in a empty segment (directory)
+    * [WICKET-4021] - PageProvider can instantiate pages even if isNewPageInstance returns false
+    * [WICKET-4022] - Hidden auto generated field in Form has invalid value for autocomplete
+    * [WICKET-4025] - AbstractLink does not detach body model
+    * [WICKET-4030] - HeaderResponse.renderCSSReference does not render context path relative url, but wicket filter url-pattern relative url
+    * [WICKET-4031] - TextRequestHandler doesn't set Content-Length header
+    * [WICKET-4032] - ComponentStringResourceLoader must not include the index of repeater items in resource lookup but still resolve properties to them
+    * [WICKET-4038] - MountedMapper.mapHandler ruins Links inside mounted pages appending parameters wicket-ajax and wicket-ajax-baseurl
+    * [WICKET-4047] - WebClientInfocauses NullPointerException when the request header "User-Agent" is null.
+    * [WICKET-4048] - label's wicket:for does not work completely for Radios
+    * [WICKET-4051] - max-age header is set in milliseconds rather than seconds
+    * [WICKET-4053] - AbstractTree#updateTree(AjaxRequestTarget target) is invoked even when request is non-ajax
+    * [WICKET-4054] - Memory leakage in browser with AbstractAjaxTimerBehavior
+    * [WICKET-4055] - LocaleFirstMapper does not strip Locale from url in getCompatibilityScore()
+    * [WICKET-4058] - RadioGroup WicktTester with a AjaxSubmitLink fails
+    * [WICKET-4059] - CheckBoxMultipleChoice does not respect isEnabled
+    * [WICKET-4061] - Invalid listener url generated for nested components that have an id which starts with a dash
+    * [WICKET-4063] - Theading issue in AsynchronousDataStore causes OutOfMemory exception
+    * [WICKET-4066] - RestartResponseAtInterceptPageException.InterceptData is never cleared
+
+** Improvement
+    * [WICKET-2790] - Submitting a form with Ajax in WicketTester does not check if form is multiPart
+    * [WICKET-2930] - Method isSelected in Select should be public
+    * [WICKET-3938] - Impossible to remove particular key-value from PageParameters
+    * [WICKET-4006] - Add a check preventing trying to add the current component as a child to itself
+    * [WICKET-4023] - Please Allow AjaxLink to use getChannelName
+    * [WICKET-4024] - Provide a Convenience API for usage of Ajax Channels
+    * [WICKET-4028] - Improve PageInstanceMapper#getCompatibilityScore() to return higher value if the request starts with 'wicket/page'
+    * [WICKET-4037] - Archetype quickstart references release candidate
+    * [WICKET-4042] - Typo in FormTester fail message
+    * [WICKET-4044] - Change the style of "WICKET AJAX DEBUG" link when some error gets logged
+    * [WICKET-4046] - Touch pages only when they are returned from the data stores
+    * [WICKET-4049] - Enable SSL for quickstart to make debugging SSL errors easier
+    * [WICKET-4052] - Add org.apache.wicket.request.Response.write(byte[], int, int) to make it easier to write buffered data to the web response
+    * [WICKET-4065] - Improve behavior#getStatelessHint() by accounting for the common cases when behaviors are not stateless
+    * [WICKET-4067] - Register devutils only if IDebugSettings#isDevelopmentUtilitiesEnabled() is true
+    * [WICKET-4068] - Assume that form.onsubmit() without explicit return value means that submit should proceed
+
+** New Feature
+    * [WICKET-4015] - Implement a listener which can be used to measure the render time of a component
+
+
+Promoted Wicket 1.5-RC7 to 1.5.0
+
 Release Notes - Wicket - Version 1.5-RC7
 
 ** Bug
