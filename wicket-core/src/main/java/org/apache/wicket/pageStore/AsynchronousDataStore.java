@@ -213,6 +213,9 @@ public class AsynchronousDataStore implements IDataStore
 	public void storeData(final String sessionId, final int id, final byte[] data)
 	{
 		Entry entry = new Entry(sessionId, id, data);
+		String key = getKey(entry);
+		entryMap.put(key, entry);
+
 		try
 		{
 			boolean added = entries.offer(entry, OFFER_WAIT, TimeUnit.MILLISECONDS);
@@ -220,16 +223,14 @@ public class AsynchronousDataStore implements IDataStore
 			if (added == false)
 			{
 				log.debug("Storing synchronously page with id '{}' in session '{}'", id, sessionId);
+				entryMap.remove(key);
 				dataStore.storeData(sessionId, id, data);
-			}
-			else
-			{
-				entryMap.put(getKey(entry), entry);
 			}
 		}
 		catch (InterruptedException e)
 		{
 			log.error(e.getMessage(), e);
+			entryMap.remove(key);
 			dataStore.storeData(sessionId, id, data);
 		}
 	}
