@@ -36,7 +36,7 @@ public final class AbortWithHttpErrorCodeException extends ResetResponseExceptio
 	private final String message;
 
 	/**
-	 * Construct.
+	 * Constructor
 	 * 
 	 * @param errorCode
 	 *            the servlet error code; use one of the
@@ -51,6 +51,20 @@ public final class AbortWithHttpErrorCodeException extends ResetResponseExceptio
 		this.errorCode = errorCode;
 		this.message = message;
 	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param errorCode
+	 *            the servlet error code; use one of the
+	 *            {@link javax.servlet.http.HttpServletResponse} constants
+	 * @see javax.servlet.http.HttpServletResponse
+	 */
+	public AbortWithHttpErrorCodeException(final int errorCode)
+	{
+		this(errorCode, null);
+	}
+
 
 	/**
 	 * Gets the error code.
