@@ -16,8 +16,13 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.MockPageParametersAware;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisitor;
 
@@ -80,6 +85,61 @@ public class FormTest extends WicketTestCase
 		tester.startPage(TestPage.class);
 		String response = tester.getLastResponseAsString();
 		assertTrue(response.contains(Strings.escapeMarkup(TestPage.TEST_QUERY_STRING)));
+	}
+
+	public void testOnValidateModelObjects()
+	{
+
+		class TestPage extends WebPage implements IMarkupResourceStreamProvider
+		{
+			boolean shouldFail;
+			boolean submit;
+			boolean error;
+
+			public TestPage()
+			{
+				add(new Form<Void>("form")
+				{
+					@Override
+					protected void onValidateModelObjects()
+					{
+						if (shouldFail)
+							error("failed");
+					}
+
+					@Override
+					protected void onSubmit()
+					{
+						submit = true;
+					}
+
+					@Override
+					protected void onError()
+					{
+						error = true;
+					}
+				});
+			}
+
+			public IResourceStream getMarkupResourceStream(final MarkupContainer container,
+				Class<?> containerClass)
+			{
+				return new StringResourceStream("<form wicket:id='form'></form>");
+			}
+		}
+
+		TestPage page = new TestPage();
+		tester.startPage(page);
+		tester.submitForm("form");
+		assertTrue(page.submit);
+		assertFalse(page.error);
+
+		page = new TestPage();
+		page.shouldFail = true;
+		tester.startPage(page);
+		tester.submitForm("form");
+		assertFalse(page.submit);
+		assertTrue(page.error);
 	}
 
 	/** */
