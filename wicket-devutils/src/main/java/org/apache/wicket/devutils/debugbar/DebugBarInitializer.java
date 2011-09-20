@@ -32,12 +32,15 @@ public class DebugBarInitializer implements IInitializer
 	/** {@inheritDoc} */
 	public void init(final Application application)
 	{
-		// register standard debug contributors
-		DebugBar.registerContributor(VersionDebugContributor.DEBUG_BAR_CONTRIB, application);
-		DebugBar.registerContributor(InspectorDebugPanel.DEBUG_BAR_CONTRIB, application);
-		DebugBar.registerContributor(SessionSizeDebugPanel.DEBUG_BAR_CONTRIB, application);
-		DebugBar.registerContributor(PageSizeDebugPanel.DEBUG_BAR_CONTRIB, application);
-		DebugDiskDataStore.register(application);
+		if (application.getDebugSettings().isDevelopmentUtilitiesEnabled())
+		{
+			// register standard debug contributors
+			DebugBar.registerContributor(VersionDebugContributor.DEBUG_BAR_CONTRIB, application);
+			DebugBar.registerContributor(InspectorDebugPanel.DEBUG_BAR_CONTRIB, application);
+			DebugBar.registerContributor(SessionSizeDebugPanel.DEBUG_BAR_CONTRIB, application);
+			DebugBar.registerContributor(PageSizeDebugPanel.DEBUG_BAR_CONTRIB, application);
+			DebugDiskDataStore.register(application);
+		}
 	}
 
 	@Override
