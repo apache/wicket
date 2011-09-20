@@ -92,9 +92,7 @@ public class FormTest extends WicketTestCase
 
 		class TestPage extends WebPage implements IMarkupResourceStreamProvider
 		{
-			boolean shouldFail;
-			boolean submit;
-			boolean error;
+			boolean shouldFail, submit, error;
 
 			public TestPage()
 			{
