@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Apache Wicket Quickstart</title>
+  </head>
+  <body>
+    
+    <wicket:link>
+      <h1>Quickstart</h1>
+      <p>This quickstart illustrates a bug where the InterceptData is never cleared.</p>
+    
+      <h2>Step 1 - Intercepted Login</h2>
+      <p>
+        This link goes to Secure Page, which requires login. You should see the login page, followed
+        by Secure Page upon successful login. This is accomplished with
+        RestartResponseAtInterceptPageException, which places InterceptData in the Session.
+        The Login page then calls continueToOriginalDestination().
+      </p>
+      <p>Click:</p>
+      <blockquote><a href="SecurePage.html">Secure Page via Login</a></blockquote>
+    
+      <h2>Step 2 - Explicit Login</h2>
+      <p>
+        This link goes directly to the login page. Since no RestartResponseAtInterceptPageException
+        is used, and since the previous InterceptData should have been cleared by now, the
+        continueToOriginalDestination() on the Login page will return false. This branch of the
+        code should send you to the Success page.
+      </p>
+      <p>
+        <strong>However due to a bug, the InterceptData is apparently never cleared.</strong>
+        Therefore the Success page is never reached. Instead, you will be sent to Secure Page because
+        the InterceptData from step 1 is still in the Session.
+      </p>
+      <p>Click:</p>
+      <blockquote><a href="LoginPage.html">Success page via Login</a></blockquote>
+    </wicket:link>
+    
+  </body>
+</html>
