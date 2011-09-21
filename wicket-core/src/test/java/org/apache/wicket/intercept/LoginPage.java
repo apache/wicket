@@ -14,44 +14,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.wicket4066;
+package org.apache.wicket.intercept;
 
-import org.apache.wicket.protocol.http.WebSession;
-import org.apache.wicket.request.Request;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * 
  */
-public class MySession extends WebSession
+public class LoginPage extends WebPage
 {
-	private boolean anonymous = true;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param request
+	 * @param parameters
 	 */
-	public MySession(Request request)
+	public LoginPage(final PageParameters parameters)
 	{
-		super(request);
-	}
+		super(parameters);
 
-	/**
-	 * @return {@code false} if the user is authenticated
-	 */
-	public boolean isAnonymous()
-	{
-		return anonymous;
-	}
+		add(new Form<Void>("form")
+		{
+			@Override
+			public void onSubmit()
+			{
+				((MySession)getSession()).setAnonymous(false);
 
-	/**
-	 * Authenticates the session
-	 * 
-	 * @param flag
-	 *            the authentication flag
-	 */
-	public void setAnonymous(boolean flag)
-	{
-		anonymous = flag;
+				if (!continueToOriginalDestination())
+				{
+					setResponsePage(SuccessPage.class);
+				}
+			}
+		});
 	}
 }

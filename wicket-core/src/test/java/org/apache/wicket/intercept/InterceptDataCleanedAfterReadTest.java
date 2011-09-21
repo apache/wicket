@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.wicket4066;
+package org.apache.wicket.intercept;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -24,7 +24,7 @@ import org.junit.Test;
 /**
  * https://issues.apache.org/jira/browse/WICKET-4066
  */
-public class Wicket4066Test extends WicketTestCase
+public class InterceptDataCleanedAfterReadTest extends WicketTestCase
 {
 	@Override
 	protected WebApplication newApplication()
@@ -33,6 +33,8 @@ public class Wicket4066Test extends WicketTestCase
 	}
 
 	/**
+	 * Tests that InterceptData is cleared after the first successful read.
+	 * 
 	 * https://issues.apache.org/jira/browse/WICKET-4066
 	 */
 	@Test
