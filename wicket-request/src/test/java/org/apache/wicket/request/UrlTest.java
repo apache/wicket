@@ -366,6 +366,30 @@ public class UrlTest extends TestCase
 	}
 
 	/**
+	 * Tries to resolve a relative url against a base that has no segments
+	 */
+	public void testResolveRelative_NoSegmentsInBase()
+	{
+		Url relative = Url.parse("?a=b");
+		Url baseUrl = Url.parse("?foo=bar");
+		baseUrl.resolveRelative(relative);
+
+		assertEquals("?a=b", baseUrl.toString());
+	}
+
+	/**
+	 * Tries to resolve a relative url against a base that has no segments
+	 */
+	public void testResolveRelative_NoSegmentsInBase2()
+	{
+		Url relative = Url.parse("bar/baz?a=b");
+		Url baseUrl = Url.parse("?foo=bar");
+		baseUrl.resolveRelative(relative);
+
+		assertEquals("bar/baz?a=b", baseUrl.toString());
+	}
+
+	/**
 	 * Tests that the default charset is UTF-8
 	 */
 	public void testCharset1()
