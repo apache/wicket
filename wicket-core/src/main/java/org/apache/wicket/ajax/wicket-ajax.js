@@ -1115,7 +1115,7 @@ Wicket.Ajax.Call.prototype = {
 		if (form.onsubmit && !form.getAttribute(submittingAttribute)) {
 			form.setAttribute(submittingAttribute, submittingAttribute);
 			var retValue = form.onsubmit();
-			if (typeOf(retValue) === "undefined") retValue = true;
+			if (typeof(retValue) === "undefined") retValue = true;
 			form.removeAttribute(submittingAttribute);
 			if (!retValue) return;
 		}
