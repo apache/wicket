@@ -594,6 +594,8 @@ public final class Url implements Serializable
 	/**
 	 * render full representation of url (including protocol, host and port) into string
 	 * representation
+	 * 
+	 * @return absolute representation of the url
 	 */
 	public String toAbsoluteString()
 	{
