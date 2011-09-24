@@ -625,11 +625,9 @@ public final class Url implements Serializable
 				result.append(port);
 			}
 		}
-		// append relative part
-		result.append(this.toString());
 
-		// return url string
-		return result.toString();
+		// append relative part
+		return Strings.join("/", result.toString(), this.toString());
 	}
 
 	/**
