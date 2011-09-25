@@ -211,14 +211,22 @@ public class ServletWebRequest extends WebRequest
 	@Override
 	public Time getDateHeader(String name)
 	{
-		long value = httpServletRequest.getDateHeader(name);
-
-		if (value == -1)
+		try
 		{
+			long value = httpServletRequest.getDateHeader(name);
+
+			if (value == -1)
+			{
+				return null;
+			}
+
+			return Time.millis(value);
+		}
+		catch (IllegalArgumentException e)
+		{
+			// per spec thrown if the header contains a value that cannot be converted to a date
 			return null;
 		}
-
-		return Time.millis(value);
 	}
 
 	@Override

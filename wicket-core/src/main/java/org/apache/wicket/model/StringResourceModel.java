@@ -304,10 +304,10 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	 *            The component that the resource is relative to
 	 * @param model
 	 *            The model to use for property substitutions
-	 * @param parameters
-	 *            The parameters to substitute using a Java MessageFormat object
 	 * @param defaultValue
 	 *            The default value if the resource key is not found.
+	 * @param parameters
+	 *            The parameters to substitute using a Java MessageFormat object
 	 */
 	public StringResourceModel(final String resourceKey, final Component component,
 		final IModel<?> model, final String defaultValue, final Object... parameters)

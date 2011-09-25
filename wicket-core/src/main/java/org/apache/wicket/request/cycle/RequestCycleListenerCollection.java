@@ -102,7 +102,8 @@ public class RequestCycleListenerCollection extends ListenerCollection<IRequestC
 				}
 				catch (Exception e)
 				{
-					logger.error("Error detaching request cycle listener: " + listener, e);
+					logger.error("Error detaching request cycle listener: " + listener +
+						" of class: " + listener.getClass().getName(), e);
 				}
 			}
 		});

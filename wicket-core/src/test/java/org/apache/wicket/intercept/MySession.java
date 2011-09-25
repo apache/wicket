@@ -14,25 +14,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.wicket4066;
+package org.apache.wicket.intercept;
 
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.protocol.http.WebSession;
+import org.apache.wicket.request.Request;
 
 /**
  * 
  */
-public class HomePage extends WebPage
+public class MySession extends WebSession
 {
-	private static final long serialVersionUID = 1L;
+	private boolean anonymous = true;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param parameters
+	 * @param request
 	 */
-	public HomePage(final PageParameters parameters)
+	public MySession(Request request)
 	{
-		super(parameters);
+		super(request);
+	}
+
+	/**
+	 * @return {@code false} if the user is authenticated
+	 */
+	public boolean isAnonymous()
+	{
+		return anonymous;
+	}
+
+	/**
+	 * Authenticates the session
+	 * 
+	 * @param flag
+	 *            the authentication flag
+	 */
+	public void setAnonymous(boolean flag)
+	{
+		anonymous = flag;
 	}
 }

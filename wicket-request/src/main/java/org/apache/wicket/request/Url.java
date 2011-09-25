@@ -106,7 +106,7 @@ public final class Url implements Serializable
 	 * Parses the given URL string.
 	 * 
 	 * @param url
-	 *           absolute or relative url with query string
+	 *            absolute or relative url with query string
 	 * @return Url object
 	 */
 	public static Url parse(final String url)
@@ -118,7 +118,7 @@ public final class Url implements Serializable
 	 * Parses the given URL string.
 	 * 
 	 * @param url
-	 *           absolute or relative url with query string
+	 *            absolute or relative url with query string
 	 * @param charset
 	 * @return Url object
 	 */
@@ -147,7 +147,7 @@ public final class Url implements Serializable
 			absoluteUrl = url.substring(0, queryAt);
 			queryString = url.substring(queryAt + 1);
 		}
-		
+
 		// get absolute / relative part of url
 		String relativeUrl;
 
@@ -157,12 +157,12 @@ public final class Url implements Serializable
 		if (protocolAt != -1)
 		{
 			result.protocol = absoluteUrl.substring(0, protocolAt).toLowerCase(Locale.US);
-			
+
 			final String afterProto = absoluteUrl.substring(protocolAt + 3);
 			final String hostAndPort;
 
 			final int relativeAt = afterProto.indexOf('/');
-			
+
 			if (relativeAt == -1)
 			{
 				relativeUrl = "";
@@ -236,7 +236,7 @@ public final class Url implements Serializable
 	 * get default port number for protocol
 	 * 
 	 * @param protocol
-	 *           name of protocol
+	 *            name of protocol
 	 * @return default port for protocol or <code>null</code> if unknown
 	 */
 	private static Integer getDefaultPortForProtocol(String protocol)
@@ -311,7 +311,7 @@ public final class Url implements Serializable
 	 */
 	public Url(final List<String> segments, final Charset charset)
 	{
-		this(segments, Collections.<QueryParameter>emptyList(), charset);
+		this(segments, Collections.<QueryParameter> emptyList(), charset);
 	}
 
 	/**
@@ -592,8 +592,10 @@ public final class Url implements Serializable
 	}
 
 	/**
-	 * render full representation of url (including protocol, host and port) 
-	 * into string representation
+	 * render full representation of url (including protocol, host and port) into string
+	 * representation
+	 * 
+	 * @return absolute representation of the url
 	 */
 	public String toAbsoluteString()
 	{
@@ -601,8 +603,8 @@ public final class Url implements Serializable
 	}
 
 	/**
-	 * render full representation of url (including protocol, host and port) 
-	 * into string representation
+	 * render full representation of url (including protocol, host and port) into string
+	 * representation
 	 * 
 	 * @param charset
 	 * 
@@ -613,23 +615,21 @@ public final class Url implements Serializable
 		StringBuilder result = new StringBuilder();
 
 		// output scheme://host:port if specified
-		if(protocol != null && Strings.isEmpty(host) == false)
+		if (protocol != null && Strings.isEmpty(host) == false)
 		{
 			result.append(protocol);
 			result.append("://");
 			result.append(host);
-			
-			if(port != null && port.equals(getDefaultPortForProtocol(protocol)) == false)
+
+			if (port != null && port.equals(getDefaultPortForProtocol(protocol)) == false)
 			{
 				result.append(':');
 				result.append(port);
 			}
 		}
+
 		// append relative part
-		result.append(this.toString());
-	
-		// return url string
-		return result.toString();
+		return Strings.join("/", result.toString(), this.toString());
 	}
 
 	/**
@@ -880,9 +880,11 @@ public final class Url implements Serializable
 	 */
 	public void resolveRelative(final Url relative)
 	{
-		// strip the first non-folder segment
-		getSegments().remove(getSegments().size() - 1);
-
+		if (getSegments().size() > 0)
+		{
+			// strip the first non-folder segment
+			getSegments().remove(getSegments().size() - 1);
+		}
 		// remove all './' (current folder) from the relative url
 		if (!relative.getSegments().isEmpty() && ".".equals(relative.getSegments().get(0)))
 		{
@@ -963,13 +965,13 @@ public final class Url implements Serializable
 	{
 		this.host = host;
 	}
-	
+
 	/**
-	 * return path for current url in given encoding 
+	 * return path for current url in given encoding
 	 * 
 	 * @param charset
-	 *           character set for encoding
-	 *           
+	 *            character set for encoding
+	 * 
 	 * @return path string
 	 */
 	public String getPath(Charset charset)
@@ -992,7 +994,7 @@ public final class Url implements Serializable
 	}
 
 	/**
-	 * return path for current url in original encoding 
+	 * return path for current url in original encoding
 	 * 
 	 * @return path string
 	 */
@@ -1005,7 +1007,7 @@ public final class Url implements Serializable
 	 * return query string part of url in given encoding
 	 * 
 	 * @param charset
-	 *          character set for encoding
+	 *            character set for encoding
 	 * 
 	 * @return query string
 	 */

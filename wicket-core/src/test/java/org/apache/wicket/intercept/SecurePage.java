@@ -14,15 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.wicket4066;
+package org.apache.wicket.intercept;
 
+import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
- * The page that should be shown after successful login
+ * The protected page.
  */
-public class SuccessPage extends WebPage
+public class SecurePage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -31,8 +32,18 @@ public class SuccessPage extends WebPage
 	 * 
 	 * @param parameters
 	 */
-	public SuccessPage(final PageParameters parameters)
+	public SecurePage(final PageParameters parameters)
 	{
 		super(parameters);
+	}
+
+	@Override
+	protected void onBeforeRender()
+	{
+		if (((MySession)getSession()).isAnonymous())
+		{
+			throw new RestartResponseAtInterceptPageException(LoginPage.class);
+		}
+		super.onBeforeRender();
 	}
 }

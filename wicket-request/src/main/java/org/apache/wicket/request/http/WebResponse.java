@@ -229,6 +229,9 @@ public abstract class WebResponse extends Response
 		
 		// Set maximum age for caching in seconds (rounded)
 		addHeader("Cache-Control", "max-age=" + Math.round(duration.seconds()));
+
+		// Though 'cache' is not an official value it will eliminate an eventual 'no-cache' header
+		setHeader("Pragma", "cache");
 	}
 
 	/**

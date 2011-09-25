@@ -17,18 +17,13 @@
 package org.apache.wicket.protocol.http.servlet;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.protocol.http.RequestUtils;
-import org.apache.wicket.request.Url;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 
 /**
@@ -40,6 +35,8 @@ public class ServletWebResponse extends WebResponse
 {
 	private final HttpServletResponse httpServletResponse;
 	private final ServletWebRequest webRequest;
+
+	private boolean redirect = false;
 
 	/**
 	 * Construct.
@@ -193,55 +190,6 @@ public class ServletWebResponse extends WebResponse
 			return httpServletResponse.encodeURL(url.toString());
 		}
 	}
-
-	private String getAbsolutePrefix()
-	{
-		HttpServletRequest httpServletRequest = webRequest.getContainerRequest();
-
-		String port = "";
-		if (("http".equals(httpServletRequest.getScheme()) && httpServletRequest.getServerPort() != 80) ||
-			("https".equals(httpServletRequest.getScheme()) && httpServletRequest.getServerPort() != 443))
-		{
-			port = ":" + httpServletRequest.getServerPort();
-		}
-		return httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName() + port;
-	}
-
-	private String getAbsoluteURL(String url)
-	{
-		if (url.startsWith("http://") || url.startsWith("https://"))
-		{
-			return url;
-		}
-		else if (url.startsWith("/"))
-		{
-			return getAbsolutePrefix() + url;
-		}
-		else
-		{
-			HttpServletRequest httpServletRequest = webRequest.getContainerRequest();
-			Charset charset = RequestUtils.getCharset(httpServletRequest);
-
-			final Url current = webRequest.getClientUrl();
-
-			Url append = Url.parse(url, charset);
-			current.concatSegments(append.getSegments());
-			Url result = new Url(current.getSegments(), append.getQueryParameters());
-
-			String path = result.toString();
-
-			// replace redirect to empty path with '/'
-			if (Strings.isEmpty(path))
-			{
-				path = "/";
-			}
-
-			return Strings.join("/", getAbsolutePrefix(), httpServletRequest.getContextPath(),
-				webRequest.getFilterPrefix(), path);
-		}
-	}
-
-	private boolean redirect = false;
 
 	@Override
 	public String encodeRedirectURL(CharSequence url)
