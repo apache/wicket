@@ -5,8 +5,10 @@ Release Notes - Wicket - Version 1.5.1
 ** Sub-task
     * [WICKET-3934] - Provide AttributeModifier#remove(String)
     * [WICKET-4029] - Improve RequestLogger to not do anything after IPageManager#commitRequest()
+    * [WICKET-4036] - Confusion with Get Parameter Name same as Form Field Name
 
 ** Bug
+    * [WICKET-3705] - AjaxSubmit in modal window doesn't call form.onSubmit() before ending request
     * [WICKET-3773] - Onclick Script displayed as Link Text
     * [WICKET-3977] - Calling FormTester.select for DropDownChoice invokes onSelectionChanged with null argument
     * [WICKET-3991] - SignInPanel prevents the page being Stateless when signing in with the "rember me" facility.
@@ -38,6 +40,14 @@ Release Notes - Wicket - Version 1.5.1
     * [WICKET-4061] - Invalid listener url generated for nested components that have an id which starts with a dash
     * [WICKET-4063] - Theading issue in AsynchronousDataStore causes OutOfMemory exception
     * [WICKET-4066] - RestartResponseAtInterceptPageException.InterceptData is never cleared
+    * [WICKET-4070] - Errors reported from Form#onValidateModelObjects() are ignored
+    * [WICKET-4072] - Form Input example fails when changing the language
+    * [WICKET-4073] - Wicket quickstart advertise HTTPS but it doesn't work when started with jetty:run
+    * [WICKET-4075] - Extended browser info gathering is broken
+    * [WICKET-4080] - domready events not always fired in IE
+    * [WICKET-4081] - WebRequest.getIfModifiedSinceHeader does not handle IllegalArgumentException
+    * [WICKET-4082] - org.apache.wicket.request.Url#toAbsoluteString 
+    * [WICKET-4083] - WebResponse#enableCaching does not take care of a possible "Pragma: no-cache" header
 
 ** Improvement
     * [WICKET-2790] - Submitting a form with Ajax in WicketTester does not check if form is multiPart
@@ -52,12 +62,18 @@ Release Notes - Wicket - Version 1.5.1
     * [WICKET-4044] - Change the style of "WICKET AJAX DEBUG" link when some error gets logged
     * [WICKET-4046] - Touch pages only when they are returned from the data stores
     * [WICKET-4049] - Enable SSL for quickstart to make debugging SSL errors easier
+    * [WICKET-4050] - Start to use PageStoreManager.SessionEntry to cache last N touched pages
     * [WICKET-4052] - Add org.apache.wicket.request.Response.write(byte[], int, int) to make it easier to write buffered data to the web response
+    * [WICKET-4065] - Improve behavior#getStatelessHint() by accounting for the common cases when behaviors are not stateless
     * [WICKET-4067] - Register devutils only if IDebugSettings#isDevelopmentUtilitiesEnabled() is true
     * [WICKET-4068] - Assume that form.onsubmit() without explicit return value means that submit should proceed
+    * [WICKET-4079] - Provide new HybridPageParametersEncoder class for backwards compatibility with pre 1.5.x Hybrid URL encoding
 
 ** New Feature
     * [WICKET-4015] - Implement a listener which can be used to measure the render time of a component
+
+** Task
+    * [WICKET-4069] - Wickettester: submit select via AJAX
 
 
 Promoted Wicket 1.5-RC7 to 1.5.0
