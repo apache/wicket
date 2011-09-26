@@ -5,10 +5,8 @@ Release Notes - Wicket - Version 1.5.1
 ** Sub-task
     * [WICKET-3934] - Provide AttributeModifier#remove(String)
     * [WICKET-4029] - Improve RequestLogger to not do anything after IPageManager#commitRequest()
-    * [WICKET-4036] - Confusion with Get Parameter Name same as Form Field Name
 
 ** Bug
-    * [WICKET-3705] - AjaxSubmit in modal window doesn't call form.onSubmit() before ending request
     * [WICKET-3773] - Onclick Script displayed as Link Text
     * [WICKET-3977] - Calling FormTester.select for DropDownChoice invokes onSelectionChanged with null argument
     * [WICKET-3991] - SignInPanel prevents the page being Stateless when signing in with the "rember me" facility.
@@ -62,9 +60,7 @@ Release Notes - Wicket - Version 1.5.1
     * [WICKET-4044] - Change the style of "WICKET AJAX DEBUG" link when some error gets logged
     * [WICKET-4046] - Touch pages only when they are returned from the data stores
     * [WICKET-4049] - Enable SSL for quickstart to make debugging SSL errors easier
-    * [WICKET-4050] - Start to use PageStoreManager.SessionEntry to cache last N touched pages
     * [WICKET-4052] - Add org.apache.wicket.request.Response.write(byte[], int, int) to make it easier to write buffered data to the web response
-    * [WICKET-4065] - Improve behavior#getStatelessHint() by accounting for the common cases when behaviors are not stateless
     * [WICKET-4067] - Register devutils only if IDebugSettings#isDevelopmentUtilitiesEnabled() is true
     * [WICKET-4068] - Assume that form.onsubmit() without explicit return value means that submit should proceed
     * [WICKET-4079] - Provide new HybridPageParametersEncoder class for backwards compatibility with pre 1.5.x Hybrid URL encoding
