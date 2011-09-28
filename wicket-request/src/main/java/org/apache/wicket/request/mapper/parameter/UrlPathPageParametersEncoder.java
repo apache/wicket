@@ -21,6 +21,7 @@ import java.util.Iterator;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -67,9 +68,19 @@ public class UrlPathPageParametersEncoder implements IPageParametersEncoder
 		for (Iterator<String> segment = request.getUrl().getSegments().iterator(); segment.hasNext();)
 		{
 			String key = segment.next();
-			String value = segment.next();
+			if (Strings.isEmpty(key))
+			{
+				// keys cannot be empty
+				continue;
+			}
+			// A trailing slash can be seen as an extra segment with a "" value so check
+			// if there is a matching value for this parameter name and ignore it if not
+			if (segment.hasNext())
+			{
+				String value = segment.next();
 
-			params.add(key, value);
+				params.add(key, value);
+			}
 		}
 
 		return params.isEmpty() ? null : params;
