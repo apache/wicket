@@ -1188,7 +1188,7 @@ Wicket.Window.getMarkup = function(idWindow, idClassElement, idCaption, idConten
 						"<div class=\"w_right\" id='"+idRight+"'>"+
 							"<div class=\"w_content_1\" onmousedown=\"if (Wicket.Browser.isSafari()) { event.ignore = true; }  else { Wicket.stopEvent(event); } \">"+																			
 								"<div class=\"w_caption\"  id=\""+idCaption+"\">"+
-									"<a class=\"w_close\" href=\"#\"></a>"+									
+									"<a class=\"w_close\" style=\"z-index:1\" href=\"#\"></a>"+									
 									"<h3 id=\""+idCaptionText+"\" class=\"w_captionText\"></h3>"+
 								"</div>"+
 							
