@@ -1695,10 +1695,10 @@ Wicket.Head.Contributor.prototype = {
 						Wicket.Log.error("Wicket.Head.Contributor.processScript: " + e + ": eval -> " + text);
 					}
 				}
-				
-				// continue to next step
-				notify();
 			}
+			
+			// continue to next step
+			notify();
 		});					
 	},
 
