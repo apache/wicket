@@ -1664,28 +1664,18 @@ Wicket.Head.Contributor.prototype = {
 			var src = node.getAttribute("src");
 			
 			if (src != null && src != "") {
-				// load the external javascript using Wicket.Ajax.Request
-				
-				// callback when script is loaded
-                var onLoad = function(content) {
-					Wicket.Head.addJavascript(content, null, src);
-					setTimeout(function() {
-                        Wicket.Ajax.invokePostCallHandlers();
-                        notify();
-                    }, 0);
+                
+				// convert the XML node to DOM node
+				var scriptDomNode = document.createElement("script");
+
+				var attrs = node.attributes;
+				for (var a = 0; a < attrs.length; a++) {
+					var attr = attrs[a];
+					scriptDomNode[attr.name] = attr.value;
 				}
-				// we need to schedule the request as timeout
-				// calling xml http request from another request call stack doesn't work
-				window.setTimeout(function() {
-					var req = new Wicket.Ajax.Request(src, onLoad, false, false);
-					req.debugContent = false;
-					if (Wicket.Browser.isKHTML())
-						// konqueror can't process the ajax response asynchronously, therefore the 
-						// javascript loading must be also synchronous
-						req.async = false;
-					// get the javascript
-					req.get();					
-				},1);
+
+				Wicket.Head.addElement(scriptDomNode);
+			
 			} else {
 				// serialize the element content to string
 				var text = Wicket.DOM.serializeNodeChildren(node);
