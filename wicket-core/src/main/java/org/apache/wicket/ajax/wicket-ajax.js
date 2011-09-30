@@ -1596,12 +1596,19 @@ Wicket.Head.Contributor.prototype = {
 			css.rel = node.getAttribute("rel");
 			css.href = node.getAttribute("href");
 			css.type = node.getAttribute("type");
-			
+
 			// add element to head
 			Wicket.Head.addElement(css);
-			
-			// continue to next step
-			notify();
+					
+			// cross browser way to check when the css is loaded
+			// taked from http://www.backalleycoder.com/2011/03/20/link-tag-css-stylesheet-load-event/
+			// this makes a second GET request to the css but it gets it either from the cache or
+			// downloads just the first several bytes and realizes that the MIME is wrong and ignores the rest
+			var img = document.createElement('img');
+			img.onerror = function() {
+				notify();
+			}
+			img.src = css.href;
 		});
 	},
 	
@@ -1682,13 +1689,17 @@ Wicket.Head.Contributor.prototype = {
 				if (typeof(scriptDomNode.onload) !== 'undefined') {
 				    scriptDomNode.onload = onScriptReady;
 				} else if (typeof(scriptDomNode.onreadystatechange) !== 'undefined') {
-				    scriptDomNode.onreadystatechange = onScriptReady;
+					scriptDomNode.onreadystatechange = function () {
+						if (scriptDomNode.readyState === 'loaded' || scriptDomNode.readyState === 'complete') {     
+							onScriptReady();
+						}
+					};
 				} else if (Wicket.Browser.isGecko()) {
-				    // Firefox doesn't react on check above ...
+				    // Firefox doesn't react on the checks above but still supports 'onload'
 				    scriptDomNode.onload = onScriptReady;
 				} else {
-				    // as a final resort after the current function execution
-				    setTimeout(onScriptReady, 0);
+				    // as a final resort notify after the current function execution
+				    setTimeout(onScriptReady, 10);
 				}
 
 				Wicket.Head.addElement(scriptDomNode);
