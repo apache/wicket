@@ -1673,6 +1673,23 @@ Wicket.Head.Contributor.prototype = {
 					var attr = attrs[a];
 					scriptDomNode[attr.name] = attr.value;
 				}
+				
+				var onScriptReady = function () {
+				    notify();
+				};
+				
+				// first check for feature support
+				if (typeof(scriptDomNode.onload) !== 'undefined') {
+				    scriptDomNode.onload = onScriptReady;
+				} else if (typeof(scriptDomNode.onreadystatechange) !== 'undefined') {
+				    scriptDomNode.onreadystatechange = onScriptReady;
+				} else if (Wicket.Browser.isGecko()) {
+				    // Firefox doesn't react on check above ...
+				    scriptDomNode.onload = onScriptReady;
+				} else {
+				    // as a final resort after the current function execution
+				    setTimeout(onScriptReady, 0);
+				}
 
 				Wicket.Head.addElement(scriptDomNode);
 			
@@ -1695,10 +1712,10 @@ Wicket.Head.Contributor.prototype = {
 						Wicket.Log.error("Wicket.Head.Contributor.processScript: " + e + ": eval -> " + text);
 					}
 				}
+        
+				// continue to next step
+				notify();
 			}
-			
-			// continue to next step
-			notify();
 		});					
 	},
 
