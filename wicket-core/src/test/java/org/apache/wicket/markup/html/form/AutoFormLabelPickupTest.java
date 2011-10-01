@@ -16,11 +16,16 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import java.util.Locale;
+
+import org.apache.wicket.Page;
+import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Before;
+import org.junit.Test;
 
 @SuppressWarnings({ "rawtypes", "serial", "unchecked" })
 public class AutoFormLabelPickupTest extends WicketTestCase
@@ -43,27 +48,35 @@ public class AutoFormLabelPickupTest extends WicketTestCase
 			form.add(new TextField("inputMarkupLabel", Model.of("")).setLabel(labelModel));
 			form.add(new TextField("inputPropertiesLabel", Model.of("")).setLabel(labelModel));
 			form.add(new TextField("inputWithoutAutolabel", Model.of("")).setLabel(labelModel));
+			form.add(new TextField("inputWithDefaultLabel", Model.of("")));
 		}
 	}
 
+	@Override
+	@Before
+	public void setUp() throws Exception
+	{
+		super.setUp();
+		Session.get().setLocale(Locale.US);
+	}
 
+	@Test
 	public void testLabelIsPrintedFromModel() throws Exception
 	{
-		WicketTester tester = new WicketTester();
 		tester.startPage(new PrintLabelPage(Model.of("label from model")));
 		tester.assertContains("<label wicket:for=\"input\" for=\"input2\">\\|label from model\\|</label>");
 	}
 
+	@Test
 	public void testLabelIsPrintedFromProperties() throws Exception
 	{
-		WicketTester tester = new WicketTester();
 		tester.startPage(new PrintLabelPage(Model.of((String)null)));
 		tester.assertContains("<label wicket:for=\"input\" for=\"input2\">\\|label from properties\\|</label>");
 	}
 
+	@Test
 	public void testLabelIsPickedUpFromMarkup() throws Exception
 	{
-		WicketTester tester = new WicketTester();
 		tester.startPage(new PickUpLabelPage(null));
 		assertEquals(
 			"label from markup",
@@ -71,9 +84,9 @@ public class AutoFormLabelPickupTest extends WicketTestCase
 				.getObject());
 	}
 
+	@Test
 	public void testLabelIsPickedUpFromProperties() throws Exception
 	{
-		WicketTester tester = new WicketTester();
 		tester.startPage(new PickUpLabelPage(null));
 		assertEquals(
 			"label from properties",
@@ -83,12 +96,65 @@ public class AutoFormLabelPickupTest extends WicketTestCase
 
 	public void testWithoutAutolabel() throws Exception
 	{
-		WicketTester tester = new WicketTester();
 		tester.startPage(new PickUpLabelPage(null));
 		tester.assertContains("<label>label from markup without autolabel</label>");
 		assertEquals(
 			"label from markup without autolabel",
 			((FormComponent)tester.getComponentFromLastRenderedPage("form:inputWithoutAutolabel")).getLabel()
+				.getObject());
+	}
+
+	@Test
+	public void testLocaleChangesAreDetectedWithExplicitMessageKeys() throws Exception
+	{
+		Session.get().setLocale(Locale.GERMAN);
+		tester.startPage(new PickUpLabelPage(null));
+		assertEquals(
+			"label from properties DE",
+			((FormComponent)tester.getComponentFromLastRenderedPage("form:inputPropertiesLabel")).getLabel()
+				.getObject());
+		tester.assertContains("label from properties DE");
+
+		Session.get().setLocale(Locale.FRENCH); // change locale to see whether it picks it up
+		Page page = tester.getLastRenderedPage();
+		page.detach(); // make sure everything is detached after we just talked to that label model
+		tester.startPage(page); // just re-render the same page instance with the new locale
+		assertEquals(
+			"label from properties FR",
+			((FormComponent)tester.getComponentFromLastRenderedPage("form:inputPropertiesLabel")).getLabel()
+				.getObject());
+		tester.assertContains("label from properties FR");
+	}
+
+	@Test
+	public void testLocaleChangesAreDetectedWithDefaultLabels() throws Exception
+	{
+		Session.get().setLocale(Locale.GERMAN);
+		tester.startPage(new PickUpLabelPage(null));
+		assertEquals(
+			"propertiesDefaultLabel DE",
+			((FormComponent)tester.getComponentFromLastRenderedPage("form:inputWithDefaultLabel")).getLabel()
+				.getObject());
+		tester.assertContains("propertiesDefaultLabel DE");
+
+		Session.get().setLocale(Locale.FRENCH); // change locale to see whether it picks it up
+		Page page = tester.getLastRenderedPage();
+		page.detach(); // make sure everything is detached after we just talked to that label model
+		tester.startPage(page); // just re-render the same page instance with the new locale
+		assertEquals(
+			"propertiesDefaultLabel FR",
+			((FormComponent)tester.getComponentFromLastRenderedPage("form:inputWithDefaultLabel")).getLabel()
+				.getObject());
+		tester.assertContains("propertiesDefaultLabel FR");
+	}
+
+	@Test
+	public void testDefaultLabelIsPickedUpFromProperties() throws Exception
+	{
+		tester.startPage(new PickUpLabelPage(null));
+		assertEquals(
+			"propertiesDefaultLabel",
+			((FormComponent)tester.getComponentFromLastRenderedPage("form:inputWithDefaultLabel")).getLabel()
 				.getObject());
 	}
 }

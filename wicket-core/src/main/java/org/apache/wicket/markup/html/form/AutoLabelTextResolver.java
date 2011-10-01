@@ -28,7 +28,10 @@ import org.apache.wicket.markup.html.internal.ResponseBufferZone;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.markup.resolver.IComponentResolver;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.Strings;
 
@@ -130,76 +133,95 @@ public class AutoLabelTextResolver implements IComponentResolver
 		@Override
 		public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 		{
-			boolean storeLabelText = false;
 
 			// try and find some form of label content...
-			String labelText = null;
+			IModel<String> labelModel = findLabelContent(markupStream, openTag);
+			// print the label text
+			replaceComponentTagBody(markupStream, openTag,
+				labelModel != null ? labelModel.getObject() : "");
 
-			// check if the labeled component is a label provider
+			// store the label text in FormComponent's label model so its available to errors
+			if (labelModel != null)
+			{
+				if (labeled instanceof FormComponent)
+				{
+					FormComponent<?> fc = (FormComponent<?>)labeled;
+					fc.setLabel(labelModel);
+				}
+				else
+				{
+					// if we can't hand off the labelmodel to a component, we have to detach it
+					labelModel.detach();
+				}
+			}
+		}
 
+		private IModel<String> findLabelContent(final MarkupStream markupStream,
+			final ComponentTag tag)
+		{
 			if (labeled instanceof ILabelProvider)
 			{
+				// check if the labeled component is a label provider
 				ILabelProvider<String> provider = (ILabelProvider<String>)labeled;
 				if (provider.getLabel() != null)
 				{
-					String text = provider.getLabel().getObject();
-					if (!Strings.isEmpty(text))
+					if (!Strings.isEmpty(provider.getLabel().getObject()))
+
 					{
-						labelText = text;
+						return provider.getLabel();
 					}
 				}
 			}
 
 			// check if the labeled component is a form component
-
-			if (labelText == null && labeled instanceof FormComponent)
+			if (labeled instanceof FormComponent)
 			{
-				String text = ((FormComponent<?>)labeled).getDefaultLabel("wicket:unknown");
+				final FormComponent<?> formComponent = (FormComponent<?>)labeled;
+				String text = formComponent.getDefaultLabel("wicket:unknown");
 				if (!"wicket:unknown".equals(text) && !Strings.isEmpty(text))
 				{
-					labelText = text;
+					return new LoadableDetachableModel<String>()
+					{
+						@Override
+						protected String load()
+						{
+							return formComponent.getDefaultLabel("wicket:unknown");
+						}
+					};
 				}
 			}
 
 			// check if wicket:label tag has a message key
-			if (labelText == null && openTag.getAttribute("key") != null)
 			{
-				String text = labeled.getString(openTag.getAttribute("key"));
-				if (!Strings.isEmpty(text))
+				String resourceKey = tag.getAttribute("key");
+				if (resourceKey != null)
 				{
-					labelText = text;
-					storeLabelText = true;
+					String text = labeled.getString(resourceKey);
+					if (!Strings.isEmpty(text))
+					{
+						return new StringResourceModel(resourceKey, labeled, null);
+					}
 				}
 			}
 
 			// as last resort use the tag body
-			if (labelText == null)
 			{
 				String text = new ResponseBufferZone(RequestCycle.get(), markupStream)
 				{
 					@Override
 					protected void executeInsideBufferedZone()
 					{
-						TextLabel.super.onComponentTagBody(markupStream, openTag);
+						TextLabel.super.onComponentTagBody(markupStream, tag);
 					}
 				}.execute().toString();
 
 				if (!Strings.isEmpty(text))
 				{
-					labelText = text;
-					storeLabelText = true;
+					return Model.of(text);
 				}
 			}
 
-			// print the label text
-			replaceComponentTagBody(markupStream, openTag, labelText);
-
-			// store the label text in FormComponent's label model so its available to errors
-			if (labeled instanceof FormComponent)
-			{
-				FormComponent<?> fc = (FormComponent<?>)labeled;
-				fc.setLabel(Model.of(labelText));
-			}
+			return null;
 		}
 	}
 
