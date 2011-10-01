@@ -34,7 +34,7 @@ import org.apache.wicket.util.string.Strings;
  * migrations of 1.4.x application to 1.5.x+ codebase.
  * <p>
  * Example usage:
- * {@code mount(new MountedMapper("/myPage", MyPage.class, new HybridPageParametersEncoder()); }
+ * {@code mount(new MountedMapper("/myPage", MyPage.class, new UrlPathPageParametersEncoder()); }
  * 
  * @author Chris Colman
  * @authour Luniv (on Stack Overflow)
