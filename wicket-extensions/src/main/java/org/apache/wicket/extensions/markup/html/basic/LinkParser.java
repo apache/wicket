@@ -21,6 +21,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.wicket.util.string.Strings;
+
 
 /**
  * This base implementation iterates over all provided <code>ILinkRenderStrategy</code>
@@ -54,7 +56,7 @@ public class LinkParser implements ILinkParser
 	 */
 	public String parse(final String text)
 	{
-		if ((text == null) || ("".equals(text)))
+		if (Strings.isEmpty(text))
 		{
 			return text;
 		}
