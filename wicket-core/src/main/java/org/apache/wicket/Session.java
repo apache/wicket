@@ -428,7 +428,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public IPageFactory getPageFactory()
 	{
-		return getApplication().getSessionSettings().getPageFactory();
+		return getApplication().getPageFactory();
 	}
 
 	/**

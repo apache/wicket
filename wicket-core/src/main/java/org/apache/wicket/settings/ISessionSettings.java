@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.settings;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.IPageFactory;
+import org.apache.wicket.Session;
 
 /**
  * Interface for session related settings
@@ -38,7 +40,9 @@ public interface ISessionSettings
 	 * Gets the factory to be used when creating pages
 	 * 
 	 * @return The default page factory
+	 * @deprecated Use {@link Session#getPageFactory()}
 	 */
+	@Deprecated
 	IPageFactory getPageFactory();
 
 	/**
@@ -46,6 +50,8 @@ public interface ISessionSettings
 	 * 
 	 * @param pageFactory
 	 *            The default factory
+	 * @deprecated Use {@link Application#newPageFactory()} instead.
 	 */
+	@Deprecated
 	void setPageFactory(final IPageFactory pageFactory);
 }

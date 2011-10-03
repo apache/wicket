@@ -133,9 +133,8 @@ public class SignInPanel extends Panel
 					if (!continueToOriginalDestination())
 					{
 						// Ups, no original destination. Go to the home page
-						throw new RestartResponseException(getApplication().getSessionSettings()
-							.getPageFactory()
-							.newPage(getApplication().getHomePage()));
+						throw new RestartResponseException(getSession().getPageFactory().newPage(
+							getApplication().getHomePage()));
 					}
 				}
 				else

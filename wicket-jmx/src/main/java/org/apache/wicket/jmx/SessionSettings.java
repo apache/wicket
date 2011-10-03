@@ -40,7 +40,7 @@ public class SessionSettings implements SessionSettingsMBean
 	 */
 	public String getPageFactory()
 	{
-		return Stringz.className(application.getSessionSettings().getPageFactory());
+		return Stringz.className(application.getPageFactory());
 	}
 
 	/**

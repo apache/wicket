@@ -16,8 +16,9 @@
  */
 package org.apache.wicket.settings.def;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.IPageFactory;
-import org.apache.wicket.session.DefaultPageFactory;
+import org.apache.wicket.Session;
 import org.apache.wicket.settings.ISessionSettings;
 
 /**
@@ -33,22 +34,29 @@ import org.apache.wicket.settings.ISessionSettings;
  */
 public class SessionSettings implements ISessionSettings
 {
-	/** factory to create new Page objects */
-	private IPageFactory pageFactory = new DefaultPageFactory();
-
 	/**
 	 * @see org.apache.wicket.settings.ISessionSettings#getPageFactory()
+	 * @deprecated Use {@link Session#getPageFactory()}
 	 */
+	@Deprecated
 	public IPageFactory getPageFactory()
 	{
+		IPageFactory pageFactory = null;
+
+		if (Application.exists())
+		{
+			pageFactory = Application.get().getPageFactory();
+		}
+
 		return pageFactory;
 	}
 
 	/**
 	 * @see org.apache.wicket.settings.ISessionSettings#setPageFactory(org.apache.wicket.IPageFactory)
+	 * @deprecated Use {@link Application#newPageFactory()} instead.
 	 */
+	@Deprecated
 	public void setPageFactory(final IPageFactory defaultPageFactory)
 	{
-		pageFactory = defaultPageFactory;
 	}
 }
