@@ -30,8 +30,7 @@ import org.apache.wicket.util.crypt.NoCrypt;
 public abstract class WicketExampleApplication extends WebApplication
 {
 	/**
-	 * prevent wicket from launching a java application window on the desktop
-	 * <br/> 
+	 * prevent wicket from launching a java application window on the desktop <br/>
 	 * once someone uses awt-specific classes java will automatically do so and allocate a window
 	 * unless you tell java to run in 'headless-mode'
 	 */
@@ -67,16 +66,4 @@ public abstract class WicketExampleApplication extends WebApplication
 
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 	}
-
-	/**
-	 * 
-	 * @see org.apache.wicket.protocol.http.WebApplication#newRequestCycle(org.apache.wicket.Request,
-	 *      org.apache.wicket.Response)
-	 */
-	// TODD NG
-// @Override
-// public final RequestCycle newRequestCycle(Request request, Response response)
-// {
-// return new WicketExampleRequestCycle(this, (WebRequest)request, response);
-// }
 }
