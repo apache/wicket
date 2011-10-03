@@ -22,7 +22,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.util.tester.BaseWicketTester;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
@@ -44,12 +44,12 @@ public class AjaxLazyLoadPanelTester
 	 * {@link AjaxLazyLoadPanel}s.
 	 * 
 	 * @param wt
-	 *            the {@link WicketTester} to execute the behaviour (
-	 *            {@link WicketTester#executeBehavior} ).
+	 *            the {@link BaseWicketTester} to execute the behaviour (
+	 *            {@link BaseWicketTester#executeBehavior} ).
 	 * @param container
 	 *            contains the {@link AjaxLazyLoadPanel} to trigger
 	 */
-	public static void executeAjaxLazyLoadPanel(final WicketTester wt,
+	public static void executeAjaxLazyLoadPanel(final BaseWicketTester wt,
 		final MarkupContainer container)
 	{
 		container.visitChildren(AjaxLazyLoadPanel.class, new IVisitor<AjaxLazyLoadPanel, Void>()
