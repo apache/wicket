@@ -81,11 +81,10 @@ public class DefaultLinkParser extends LinkParser
 	{
 		public String buildLink(final String linkTarget)
 		{
-			return "<a href=\"" +
-				linkTarget +
-				"\">" +
-				(linkTarget.indexOf('?') == -1 ? linkTarget : linkTarget.substring(0,
-					linkTarget.indexOf('?'))) + "</a>";
+			int indexOfQuestion = linkTarget.indexOf('?');
+			return "<a href=\"" + linkTarget + "\">" +
+				(indexOfQuestion == -1 ? linkTarget : linkTarget.substring(0, indexOfQuestion)) +
+				"</a>";
 		}
 	};
 
