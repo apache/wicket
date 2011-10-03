@@ -25,19 +25,19 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
- * Encodes page parameters into url path fragments instead of the query string like the default
+ * Encodes page parameters into Url path fragments instead of the query string like the default
  * {@link PageParametersEncoder}. The parameters are encoded in the following format:
  * {@code /param1Name/param1Value/param2Name/param2Value}.
  * <p>
  * This used to be the default way of encoding page parameters in 1.4.x applications. Newer 1.5.x+
- * applications use the query string, by default. This class faciliates backwards compatibility and
+ * applications use the query string, by default. This class facilitates backwards compatibility and
  * migrations of 1.4.x application to 1.5.x+ codebase.
  * <p>
  * Example usage:
  * {@code mount(new MountedMapper("/myPage", MyPage.class, new UrlPathPageParametersEncoder()); }
  * 
  * @author Chris Colman
- * @authour Luniv (on Stack Overflow)
+ * @author Luniv (on Stack Overflow)
  * @author ivaynberg
  */
 public class UrlPathPageParametersEncoder implements IPageParametersEncoder
