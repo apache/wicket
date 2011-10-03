@@ -26,6 +26,8 @@ import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The {@link IPageStore} that converts {@link IManageablePage} instances to {@link SerializedPage}s
@@ -35,6 +37,8 @@ import org.apache.wicket.util.lang.Objects;
  */
 public class DefaultPageStore implements IPageStore
 {
+	private static final Logger LOG = LoggerFactory.getLogger(DefaultPageStore.class);
+
 	private final SerializedPagesCache serializedPagesCache;
 
 	private final IDataStore pageDataStore;
@@ -140,8 +144,11 @@ public class DefaultPageStore implements IPageStore
 	public void storePage(final String sessionId, final IManageablePage page)
 	{
 		SerializedPage serialized = serializePage(sessionId, page);
-		serializedPagesCache.storePage(serialized);
-		storePageData(sessionId, serialized.getPageId(), serialized.getData());
+		if (serialized != null)
+		{
+			serializedPagesCache.storePage(serialized);
+			storePageData(sessionId, serialized.getPageId(), serialized.getData());
+		}
 	}
 
 	public void unbind(final String sessionId)
@@ -216,7 +223,10 @@ public class DefaultPageStore implements IPageStore
 			if (result == null)
 			{
 				result = serializePage(sessionId, page);
-				serializedPagesCache.storePage(result);
+				if (result != null)
+				{
+					serializedPagesCache.storePage(result);
+				}
 			}
 		}
 		else if (object instanceof SerializedPage)
@@ -353,8 +363,19 @@ public class DefaultPageStore implements IPageStore
 		Args.notNull(sessionId, "sessionId");
 		Args.notNull(page, "page");
 
+		SerializedPage serializedPage = null;
+
 		byte[] data = pageSerializer.serialize(page);
-		return new SerializedPage(sessionId, page.getPageId(), data);
+
+		if (data != null)
+		{
+			serializedPage = new SerializedPage(sessionId, page.getPageId(), data);
+		}
+		else
+		{
+			LOG.warn("Page {} cannot be serialized. See previous logs for possible reasons.", page);
+		}
+		return serializedPage;
 	}
 
 	/**

@@ -104,11 +104,12 @@ public class JavaSerializer implements ISerializer
 		ObjectInputStream ois = null;
 		try
 		{
+			Application oldApplication = ThreadContext.getApplication();
 			try
 			{
 				ois = newObjectInputStream(in);
 				String applicationName = (String)ois.readObject();
-				if (applicationName != null && !Application.exists())
+				if (applicationName != null)
 				{
 					Application app = Application.get(applicationName);
 					if (app != null)
@@ -122,6 +123,7 @@ public class JavaSerializer implements ISerializer
 			{
 				try
 				{
+					ThreadContext.setApplication(oldApplication);
 					IOUtils.close(ois);
 				}
 				finally
