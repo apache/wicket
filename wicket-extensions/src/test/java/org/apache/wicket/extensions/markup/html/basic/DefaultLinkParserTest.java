@@ -16,48 +16,48 @@
  */
 package org.apache.wicket.extensions.markup.html.basic;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author Juergen Donnerstag
  */
-public class DefaultLinkParserTest extends TestCase
+public class DefaultLinkParserTest extends Assert
 {
 	/**
 	 * 
 	 */
+	@Test
 	public void test1()
 	{
 		ILinkParser parser = new DefaultLinkParser();
-		Assert.assertNull(parser.parse(null));
-		Assert.assertEquals("", parser.parse(""));
-		Assert.assertEquals("test", parser.parse("test"));
+		assertNull(parser.parse(null));
+		assertEquals("", parser.parse(""));
+		assertEquals("test", parser.parse("test"));
 
-		Assert.assertEquals("<a href=\"mailto:test@email.com\">test@email.com</a>",
+		assertEquals("<a href=\"mailto:test@email.com\">test@email.com</a>",
 			parser.parse("test@email.com"));
-		Assert.assertEquals("text (<a href=\"mailto:test@email.com\">test@email.com</a>) text",
+		assertEquals("text (<a href=\"mailto:test@email.com\">test@email.com</a>) text",
 			parser.parse("text (test@email.com) text"));
-		Assert.assertEquals("text <a href=\"mailto:test@email.com\">test@email.com</a> text",
+		assertEquals("text <a href=\"mailto:test@email.com\">test@email.com</a> text",
 			parser.parse("text test@email.com text"));
 
-		Assert.assertEquals("<a href=\"http://www.test.com\">http://www.test.com</a>",
+		assertEquals("<a href=\"http://www.test.com\">http://www.test.com</a>",
 			parser.parse("http://www.test.com"));
-		Assert.assertEquals("text (<a href=\"http://www.test.com\">http://www.test.com</a>) text",
+		assertEquals("text (<a href=\"http://www.test.com\">http://www.test.com</a>) text",
 			parser.parse("text (http://www.test.com) text"));
-		Assert.assertEquals("text <a href=\"http://www.test.com\">http://www.test.com</a> text",
+		assertEquals("text <a href=\"http://www.test.com\">http://www.test.com</a> text",
 			parser.parse("text http://www.test.com text"));
-		Assert.assertEquals(
-			"text <a href=\"http://www.test.com:8080\">http://www.test.com:8080</a> text",
+		assertEquals("text <a href=\"http://www.test.com:8080\">http://www.test.com:8080</a> text",
 			parser.parse("text http://www.test.com:8080 text"));
-		Assert.assertEquals(
+		assertEquals(
 			"text <a href=\"http://www.test.com/test/murx.jsp\">http://www.test.com/test/murx.jsp</a> text",
 			parser.parse("text http://www.test.com/test/murx.jsp text"));
-		Assert.assertEquals(
+		assertEquals(
 			"text <a href=\"http://www.test.com/test/murx.jsp?query=test&q2=murx\">http://www.test.com/test/murx.jsp</a> text",
 			parser.parse("text http://www.test.com/test/murx.jsp?query=test&q2=murx text"));
 
-		Assert.assertEquals(
+		assertEquals(
 			"line 1 <a href=\"http://www.test.com/test/murx.jsp\">http://www.test.com/test/murx.jsp</a> \nline2 <a href=\"mailto:murx@email.de\">murx@email.de</a> \r\nline3",
 			parser.parse("line 1 http://www.test.com/test/murx.jsp \nline2 murx@email.de \r\nline3"));
 	}
@@ -65,6 +65,7 @@ public class DefaultLinkParserTest extends TestCase
 	/**
 	 * testEmailWithPlusChar()
 	 */
+	@Test
 	public void testEmailWithPlusChar()
 	{
 		final String testEmailAddress = "my+test@example.com";
@@ -72,7 +73,7 @@ public class DefaultLinkParserTest extends TestCase
 
 		ILinkParser parser = new DefaultLinkParser();
 		final String result = parser.parse(testEmailAddress);
-		Assert.assertEquals("Expected chars to left of + to be included in the link.",
-			testExpectedLink, result);
+		assertEquals("Expected chars to left of + to be included in the link.", testExpectedLink,
+			result);
 	}
 }
