@@ -63,6 +63,19 @@ public class DefaultLinkParserTest extends Assert
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4099
+	 */
+	@Test
+	public void dontParseMarkup()
+	{
+		String text = "<a href=\"http://some.url\">label</a>";
+		ILinkParser parser = new DefaultLinkParser();
+
+		String parsed = parser.parse(text);
+		assertEquals(text, parsed);
+	}
+
+	/**
 	 * testEmailWithPlusChar()
 	 */
 	@Test
