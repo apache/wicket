@@ -1,0 +1,27 @@
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <title>Wicket Examples - Render mail templates</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+    
+    <div wicket:id="feedback"></div>
+    
+    <form wicket:id="form">
+        <label wicket:for="name"><wicket:label>Enter your name:</wicket:label></label><input wicket:id="name"/>
+    </form>
+    
+    Using Wicket page as template: <a wicket:id="pageBasedLink">generate</a>.
+    <br/>
+    Using Wicket TextTemplate as template: <a wicket:id="textTemplateBasedLink">generate</a>.
+    
+    <br/><br/>
+    
+    <h3>Here is the generated markup:</h3>
+    <div wicket:id="result">
+    
+    </div>
+    
+</body>
+</html>

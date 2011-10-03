@@ -432,6 +432,14 @@
  		</init-param>
  	</filter>
 
+    <filter>
+        <filter-name>wicket.mail-template</filter-name>
+        <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+        <init-param>
+            <param-name>applicationClassName</param-name>
+            <param-value>org.apache.wicket.examples.asemail.MailTemplateApplication</param-value>
+        </init-param>
+    </filter>
 	<!-- couple the session filter to the helloworld servlet -->
 
 
@@ -741,6 +749,12 @@
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
+     
+    <filter-mapping>
+        <filter-name>wicket.mail-template</filter-name>
+        <url-pattern>/mailtemplate/*</url-pattern>
+    </filter-mapping>
+ 
 	
 	<!-- LISTENER -->
 	<listener>
@@ -754,9 +768,9 @@
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>HelloWorldServlet</servlet-name>
-		<url-pattern>/helloworldservlet/*</url-pattern>
-	</servlet-mapping>
+        <servlet-name>HelloWorldServlet</servlet-name>
+        <url-pattern>/helloworldservlet/*</url-pattern>
+    </servlet-mapping>
 
 	<servlet>
    		<servlet-name>ServletTest</servlet-name>

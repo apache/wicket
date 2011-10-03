@@ -141,6 +141,7 @@
 					<include>**/*.xml</include>
 					<include>**/*.properties</include>
 					<include>**/*.vm</include>
+					<include>**/*.tmpl</include>
 				</includes>
 			</resource>
 		</resources> 
