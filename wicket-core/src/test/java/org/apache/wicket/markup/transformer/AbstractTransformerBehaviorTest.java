@@ -23,6 +23,7 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.junit.Test;
 
 /**
  * @author Pedro Santos
@@ -30,7 +31,8 @@ import org.apache.wicket.util.resource.StringResourceStream;
 public class AbstractTransformerBehaviorTest extends WicketTestCase
 {
 	/** */
-	public void testResponseTransformation()
+	@Test
+	public void responseTransformation()
 	{
 		TestPage testPage = new TestPage();
 		testPage.add(new AbstractTransformerBehavior()
