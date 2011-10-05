@@ -19,8 +19,11 @@ package org.apache.wicket.markup.transformer;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.Test;
@@ -51,8 +54,76 @@ public class AbstractTransformerBehaviorTest extends WicketTestCase
 		assertTrue(tester.getLastResponseAsString().contains("replacement"));
 	}
 
-	/** */
-	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4105
+	 */
+	@Test
+	public void transformationInAjaxRequest()
+	{
+		tester.startPage(new AjaxTestPage());
+		tester.assertRenderedPage(AjaxTestPage.class);
+
+		tester.assertContains("normal request");
+		tester.assertContainsNot("ajax request");
+
+		tester.clickLink("updateLabel", true);
+		tester.assertContains("ajax request");
+		tester.assertContainsNot("normal request");
+
+	}
+
+	private static class AjaxTestPage extends WebPage implements IMarkupResourceStreamProvider
+	{
+		/**
+		 * Constructor.
+		 * 
+		 * @param parameters
+		 */
+		private AjaxTestPage()
+		{
+			final Label label = new Label("label", "a label");
+			label.setOutputMarkupId(true);
+			label.add(new AbstractTransformerBehavior()
+			{
+				@Override
+				public CharSequence transform(Component component, CharSequence output)
+					throws Exception
+				{
+					CharSequence result;
+					if (AjaxRequestTarget.get() != null)
+					{
+						result = "ajax request";
+					}
+					else
+					{
+						result = "normal request";
+					}
+
+					return result;
+				}
+			});
+
+			add(label);
+
+			add(new AjaxLink<Void>("updateLabel")
+			{
+				@Override
+				public void onClick(AjaxRequestTarget target)
+				{
+					target.add(label);
+				}
+			});
+		}
+
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream(
+				"<html><body><span wicket:id='label'></span><a wicket:id='updateLabel'>Link</a></body></html>");
+		}
+	}
+
+	private static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		private static final long serialVersionUID = 1L;
 
