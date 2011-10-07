@@ -118,13 +118,9 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		checkPage(page, 15);
 
 		PageParameters p = page.getPageParameters();
-		assertEquals(2, p.getIndexedCount());
-		assertEquals("i1", p.get(0).toString());
-		assertEquals("i2", p.get(1).toString());
+		assertEquals(0, p.getIndexedCount());
 
-		assertEquals(2, p.getNamedKeys().size());
-		assertEquals("b", p.get("a").toString());
-		assertEquals("c", p.get("b").toString());
+		assertEquals(0, p.getNamedKeys().size());
 	}
 
 	/**
@@ -166,13 +162,9 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		assertEquals("foo:bar", h.getComponent().getPageRelativePath());
 
 		PageParameters p = page.getPageParameters();
-		assertEquals(2, p.getIndexedCount());
-		assertEquals("i1", p.get(0).toString());
-		assertEquals("i2", p.get(1).toString());
+		assertEquals(0, p.getIndexedCount());
 
-		assertEquals(2, p.getNamedKeys().size());
-		assertEquals("b", p.get("a").toString());
-		assertEquals("c", p.get("b").toString());
+		assertEquals(0, p.getNamedKeys().size());
 	}
 
 	/**

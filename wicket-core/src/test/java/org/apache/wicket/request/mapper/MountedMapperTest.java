@@ -137,13 +137,9 @@ public class MountedMapperTest extends AbstractMapperTest
 		checkPage(page, 15);
 
 		PageParameters p = page.getPageParameters();
-		assertEquals(2, p.getIndexedCount());
-		assertEquals("i1", p.get(0).toString());
-		assertEquals("i2", p.get(1).toString());
+		assertEquals(0, p.getIndexedCount());
 
-		assertEquals(2, p.getNamedKeys().size());
-		assertEquals("b", p.get("a").toString());
-		assertEquals("c", p.get("b").toString());
+		assertEquals(0, p.getNamedKeys().size());
 	}
 
 	/**
@@ -184,13 +180,9 @@ public class MountedMapperTest extends AbstractMapperTest
 		assertEquals("foo:bar", h.getComponent().getPageRelativePath());
 
 		PageParameters p = page.getPageParameters();
-		assertEquals(2, p.getIndexedCount());
-		assertEquals("i1", p.get(0).toString());
-		assertEquals("i2", p.get(1).toString());
+		assertEquals(0, p.getIndexedCount());
 
-		assertEquals(2, p.getNamedKeys().size());
-		assertEquals("b", p.get("a").toString());
-		assertEquals("c", p.get("b").toString());
+		assertEquals(0, p.getNamedKeys().size());
 	}
 
 	/**
@@ -664,8 +656,8 @@ public class MountedMapperTest extends AbstractMapperTest
 		assertTrue(page.getPageParameters().getNamedKeys().size() == 2);
 		assertEquals("path", page.getPageParameters().get("param1").toString());
 		assertEquals("path", page.getPageParameters().get("param2").toString());
-		assertFalse("param3 should not be set",
-			page.getPageParameters().getNamedKeys().contains("param3"));
+		assertFalse("param3 should not be set", page.getPageParameters().getNamedKeys().contains(
+			"param3"));
 	}
 
 	/** */
@@ -681,8 +673,8 @@ public class MountedMapperTest extends AbstractMapperTest
 		assertTrue(page.getPageParameters().getNamedKeys().size() == 2);
 		assertEquals("p1", page.getPageParameters().get("param1").toString());
 		assertEquals("p2", page.getPageParameters().get("param2").toString());
-		assertFalse("param3 should not be set",
-			page.getPageParameters().getNamedKeys().contains("param3"));
+		assertFalse("param3 should not be set", page.getPageParameters().getNamedKeys().contains(
+			"param3"));
 	}
 
 	/** */
@@ -696,11 +688,11 @@ public class MountedMapperTest extends AbstractMapperTest
 
 		assertEquals(0, page.getPageParameters().getIndexedCount());
 		assertTrue(page.getPageParameters().getNamedKeys().size() == 1);
-		assertFalse("param1 should not be set",
-			page.getPageParameters().getNamedKeys().contains("param1"));
+		assertFalse("param1 should not be set", page.getPageParameters().getNamedKeys().contains(
+			"param1"));
 		assertEquals("p2", page.getPageParameters().get("param2").toString());
-		assertFalse("param3 should not be set",
-			page.getPageParameters().getNamedKeys().contains("param3"));
+		assertFalse("param3 should not be set", page.getPageParameters().getNamedKeys().contains(
+			"param3"));
 	}
 
 	/** */
@@ -714,8 +706,8 @@ public class MountedMapperTest extends AbstractMapperTest
 
 		assertEquals(1, page.getPageParameters().getIndexedCount());
 		assertTrue(page.getPageParameters().getNamedKeys().size() == 2);
-		assertFalse("param1 should not be set",
-			page.getPageParameters().getNamedKeys().contains("param1"));
+		assertFalse("param1 should not be set", page.getPageParameters().getNamedKeys().contains(
+			"param1"));
 		assertEquals("p2", page.getPageParameters().get("param2").toString());
 		assertEquals("p3", page.getPageParameters().get("param3").toString());
 		assertEquals("p4", page.getPageParameters().get(0).toString());

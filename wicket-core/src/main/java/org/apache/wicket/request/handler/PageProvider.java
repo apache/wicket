@@ -292,12 +292,6 @@ public class PageProvider implements IPageProvider
 			(pageClass == null || pageClass.equals(storedPageInstance.getClass())))
 		{
 			pageInstance = storedPageInstance;
-
-			if (pageParameters != null)
-			{
-				storedPageInstance.getPageParameters().overwriteWith(pageParameters);
-			}
-
 		}
 		return storedPageInstance;
 	}
