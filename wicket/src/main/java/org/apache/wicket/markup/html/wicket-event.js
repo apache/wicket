@@ -200,7 +200,7 @@ if (typeof(Wicket.Event) == "undefined") {
 						var src = (window.location.protocol == 'https:') ? '\/\/:' : 'javascript:void(0)';
 						document.write('<script id="ie_ready" defer src="' + src + '"><\/script>');
 						document.getElementById('ie_ready').onreadystatechange = function() {
-							if (this.readyState == 'complete' || this.readyState == "loaded") domReady();
+							if (this.readyState == 'complete') domReady();
 						};
 					}
 				} else { 
