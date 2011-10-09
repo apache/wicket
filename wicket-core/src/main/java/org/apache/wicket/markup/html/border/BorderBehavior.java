@@ -229,7 +229,7 @@ public class BorderBehavior extends Behavior
 		{
 			throw new WicketRuntimeException(
 				"Could not parse markup from markup resource stream: " +
-					markupResourceStream.toString());
+					markupResourceStream.toString(), e);
 		}
 		finally
 		{
