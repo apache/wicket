@@ -26,6 +26,8 @@ import org.apache.wicket.request.handler.RenderPageRequestHandler.RedirectPolicy
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Request handler that invokes the listener interface on component and renders page afterwards.
@@ -37,6 +39,9 @@ public class ListenerInterfaceRequestHandler
 		IPageRequestHandler,
 		IComponentRequestHandler
 {
+
+	private static final Logger LOG = LoggerFactory.getLogger(ListenerInterfaceRequestHandler.class);
+
 	private final IPageAndComponentProvider pageComponentProvider;
 
 	private final RequestListenerInterface listenerInterface;
@@ -146,19 +151,42 @@ public class ListenerInterfaceRequestHandler
 	 */
 	public void respond(final IRequestCycle requestCycle)
 	{
+		final boolean isNewPageInstance = pageComponentProvider.isNewPageInstance();
+		final boolean isAjax = ((WebRequest)requestCycle.getRequest()).isAjax();
 		final IRequestablePage page = getPage();
+		final boolean isStateless = page.isPageStateless();
+		final IPageProvider pageProvider = new PageProvider(page);
+
 		if (getComponent().getPage() == page)
 		{
-			boolean isAjax = ((WebRequest)requestCycle.getRequest()).isAjax();
+			RedirectPolicy policy = isStateless ? RedirectPolicy.NEVER_REDIRECT
+				: RedirectPolicy.AUTO_REDIRECT;
+
+			if (isNewPageInstance)
+			{
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug(
+						"A ListenerInterface '{}' assigned to '{}' is executed on an expired page. "
+							+ "Scheduling re-create of the page and ignoring the listener interface...",
+						listenerInterface, getComponentPath());
+				}
+
+				if (isAjax)
+				{
+					policy = RedirectPolicy.ALWAYS_REDIRECT;
+				}
+
+				requestCycle.scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(
+					pageProvider, policy));
+				return;
+			}
+
 			if (isAjax == false && listenerInterface.isRenderPageAfterInvocation())
 			{
 				// schedule page render after current request handler is done. this can be
 				// overridden during invocation of listener
 				// method (i.e. by calling RequestCycle#setResponsePage)
-				final IPageProvider pageProvider = new PageProvider(page);
-				final RedirectPolicy policy = page.isPageStateless()
-					? RedirectPolicy.NEVER_REDIRECT : RedirectPolicy.AUTO_REDIRECT;
-
 				requestCycle.scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(
 					pageProvider, policy));
 			}

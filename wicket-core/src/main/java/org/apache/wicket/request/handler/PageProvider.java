@@ -59,6 +59,8 @@ public class PageProvider implements IPageProvider
 
 	private PageParameters pageParameters;
 
+	private Boolean isNewInstance = null;
+
 	/**
 	 * Creates a new page provider object. Upon calling of {@link #getPageInstance()} this provider
 	 * will return page instance with specified id.
@@ -198,17 +200,20 @@ public class PageProvider implements IPageProvider
 	 */
 	public boolean isNewPageInstance()
 	{
-		boolean isNew = pageInstance == null;
-		if (isNew && pageId != null)
+		if (isNewInstance == null)
 		{
-			IRequestablePage storedPageInstance = getStoredPage(pageId);
-			if (storedPageInstance != null)
+			isNewInstance = pageInstance == null;
+			if (isNewInstance && pageId != null)
 			{
-				pageInstance = storedPageInstance;
-				isNew = false;
+				IRequestablePage storedPageInstance = getStoredPage(pageId);
+				if (storedPageInstance != null)
+				{
+					pageInstance = storedPageInstance;
+					isNewInstance = false;
+				}
 			}
 		}
-		return isNew;
+		return isNewInstance;
 	}
 
 	/**
@@ -292,6 +297,14 @@ public class PageProvider implements IPageProvider
 			(pageClass == null || pageClass.equals(storedPageInstance.getClass())))
 		{
 			pageInstance = storedPageInstance;
+
+			if (pageInstance != null)
+			{
+				if (renderCount != null && pageInstance.getRenderCount() != renderCount)
+				{
+					throw new StalePageException(pageInstance);
+				}
+			}
 		}
 		return storedPageInstance;
 	}
