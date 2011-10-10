@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * A compound {@link IValidator}. Once an error is reported against the {@link IValidatable} being
@@ -54,10 +55,8 @@ public class CompoundValidator<T> extends Behavior implements IValidator<T>
 	 */
 	public final CompoundValidator<T> add(IValidator<T> validator)
 	{
-		if (validator == null)
-		{
-			throw new IllegalArgumentException("Argument `validator` cannot be null");
-		}
+		Args.notNull(validator, "validator");
+
 		validators.add(validator);
 		return this;
 	}

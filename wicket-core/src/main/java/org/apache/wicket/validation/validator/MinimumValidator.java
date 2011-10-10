@@ -19,6 +19,7 @@ package org.apache.wicket.validation.validator;
 import java.io.Serializable;
 
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
@@ -53,7 +54,7 @@ public class MinimumValidator<Z extends Comparable<Z> & Serializable> extends Be
 		if (value.compareTo(minimum) < 0)
 		{
 			ValidationError error = new ValidationError();
-			error.addMessageKey("MinimumValidator");
+			error.addMessageKey(resourceKey());
 			error.setVariable("minimum", minimum);
 			validatable.error(error);
 		}
@@ -68,4 +69,19 @@ public class MinimumValidator<Z extends Comparable<Z> & Serializable> extends Be
 	{
 		return minimum;
 	}
+
+	/**
+	 * Gets the message resource key for this validator's error message from the
+	 * <code>ApplicationSettings</code> class.
+	 * 
+	 * <strong>NOTE</strong>: THIS METHOD SHOULD NEVER RETURN <code>null</code>.
+	 * 
+	 * @return the message resource key for this validator
+	 */
+	// TODO Wicket 1.6 - remove that method and make this class extending AbstractValidator
+	protected String resourceKey()
+	{
+		return Classes.simpleName(getClass());
+	}
+
 }
