@@ -52,11 +52,10 @@ public class StatelessPage extends WicketExamplePage
 		field.add(new MaximumValidator<Integer>(20));
 		field.setRequired(true);
 
-		StatelessForm<?> statelessForm = new StatelessForm("statelessform")
+		StatelessForm<?> statelessForm = new StatelessForm<Void>("statelessform")
 		{
-			/**
-			 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
-			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onSubmit()
 			{
