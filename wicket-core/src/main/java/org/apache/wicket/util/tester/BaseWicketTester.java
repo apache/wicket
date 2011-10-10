@@ -193,9 +193,7 @@ public class BaseWicketTester
 	// Simulates the cookies maintained by the browser
 	private final List<Cookie> browserCookies = Generics.newArrayList();
 
-	// The root component used for the start. Usually the Page, but can also be a Panel
-	// see https://issues.apache.org/jira/browse/WICKET-1214
-	private Component startComponent;
+	private ComponentInPage componentInPage;
 
 	// User may provide request header value any time. They get applied (and reset) upon next
 	// invocation of processRequest()
@@ -715,7 +713,7 @@ public class BaseWicketTester
 	public Page startPage(final IPageProvider pageProvider)
 	{
 		// should be null for Pages
-		startComponent = null;
+		componentInPage = null;
 
 		// prepare request
 		request = new MockHttpServletRequest(application, httpSession, servletContext);
@@ -822,13 +820,13 @@ public class BaseWicketTester
 		String response = lastResponse.getDocument();
 
 		// null, if a Page was rendered last
-		if (startComponent == null)
+		if (componentInPage == null)
 		{
 			return response;
 		}
 
 		// remove the markup for the auto-generated page. leave just component's markup body
-		String componentId = startComponent.getId();
+		String componentId = componentInPage.component.getId();
 		String before = "wicket:id=\"" + componentId + "\">";
 		Matcher matcher = pattern.matcher(response);
 		if (matcher.matches())
@@ -1115,7 +1113,7 @@ public class BaseWicketTester
 		Args.notNull(pageClass, "pageClass");
 
 		// must be null for Pages
-		startComponent = null;
+		componentInPage = null;
 
 		// prepare the request
 		request.setUrl(application.getRootRequestMapper().mapHandler(
@@ -1250,7 +1248,10 @@ public class BaseWicketTester
 		try
 		{
 			Constructor<C> c = componentClass.getConstructor(String.class);
-			comp = c.newInstance("testObject");
+			comp = c.newInstance(ComponentInPage.ID);
+			componentInPage = new ComponentInPage();
+			componentInPage.component = comp;
+			componentInPage.isInstantiated = true;
 		}
 		catch (Exception e)
 		{
@@ -1333,12 +1334,22 @@ public class BaseWicketTester
 		// Add the child component
 		page.add(component);
 
+		// Preserve 'componentInPage' because #startPage() needs to null-fy it
+		ComponentInPage oldComponentInPage = componentInPage;
+
 		// Process the page
 		startPage(page);
 
 		// Remember the "root" component processes and return it
-		startComponent = component;
-
+		if (oldComponentInPage != null)
+		{
+			componentInPage = oldComponentInPage;
+		}
+		else
+		{
+			componentInPage = new ComponentInPage();
+			componentInPage.component = component;
+		}
 		return component;
 	}
 
@@ -1450,9 +1461,9 @@ public class BaseWicketTester
 	public Component getComponentFromLastRenderedPage(String path,
 		final boolean wantVisibleInHierarchy)
 	{
-		if (startComponent != null)
+		if (componentInPage != null && componentInPage.isInstantiated)
 		{
-			path = startComponent.getId() + ":" + path;
+			path = componentInPage.component.getId() + ":" + path;
 		}
 
 		Component component = getLastRenderedPage().get(path);
@@ -2532,11 +2543,11 @@ public class BaseWicketTester
 		public PageRenderer get(RenderPageRequestHandler handler)
 		{
 			Page newPage = (Page)handler.getPageProvider().getPageInstance();
-			if (startComponent != null && lastPage != null &&
+			if (componentInPage != null && lastPage != null &&
 				lastPage.getPageClass() != newPage.getPageClass())
 			{
 				// WICKET-3913: reset startComponent if a new page type is rendered
-				startComponent = null;
+				componentInPage = null;
 			}
 			lastRenderedPage = lastPage = newPage;
 			return delegate.get(handler);

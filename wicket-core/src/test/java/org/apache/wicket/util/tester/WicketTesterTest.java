@@ -980,7 +980,7 @@ public class WicketTesterTest extends WicketTestCase
 				setResponsePage(DummyHomePage.class);
 			}
 		});
-		tester.clickLink("link");
+		tester.clickLink("testPanel:link");
 
 		tester.assertRenderedPage(DummyHomePage.class);
 		tester.assertComponent("testPage", TestLink.class);
