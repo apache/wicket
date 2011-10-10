@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.request.handler;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.Behavior;
@@ -154,20 +155,34 @@ public class ListenerInterfaceRequestHandler
 		final boolean isNewPageInstance = pageComponentProvider.isNewPageInstance();
 		final boolean isAjax = ((WebRequest)requestCycle.getRequest()).isAjax();
 		final IRequestablePage page = getPage();
-		final boolean isStateless = page.isPageStateless();
-		final IPageProvider pageProvider = new PageProvider(page);
 
 		if (getComponent().getPage() == page)
 		{
+			if (page instanceof Page)
+			{
+				// initialize the page to be able to check whether it is stateless
+				((Page)page).internalInitialize();
+			}
+			final boolean isStateless = page.isPageStateless();
+
 			RedirectPolicy policy = isStateless ? RedirectPolicy.NEVER_REDIRECT
 				: RedirectPolicy.AUTO_REDIRECT;
+			final IPageProvider pageProvider = new PageProvider(page);
 
-			if (isNewPageInstance)
+			if (isNewPageInstance && isStateless == false)
 			{
+				// A listener interface is invoked on an expired page.
+
+				// If the page is stateful then we cannot assume that the listener interface is
+				// invoked on its initial state (right after page initialization) and that its
+				// component and/or behavior will be available. That's why the listener interface
+				// should be ignored and the best we can do is to re-paint the newly constructed
+				// page.
+
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug(
-						"A ListenerInterface '{}' assigned to '{}' is executed on an expired page. "
+						"A ListenerInterface '{}' assigned to '{}' is executed on an expired stateful page. "
 							+ "Scheduling re-create of the page and ignoring the listener interface...",
 						listenerInterface, getComponentPath());
 				}
