@@ -1640,8 +1640,9 @@ public abstract class Component
 			}
 			catch (RuntimeException ex)
 			{
-				log.error("Error while getting default model object for Component: " +
-					this.toString(true));
+				log.error(
+					"Error while getting default model object for Component: " +
+						this.toString(true), ex);
 
 				throw ex;
 			}
@@ -4213,7 +4214,7 @@ public abstract class Component
 			}
 		}
 
-		if ((id != null) && (id.indexOf(':') != -1|| id.indexOf('~') != -1))
+		if ((id != null) && (id.indexOf(':') != -1 || id.indexOf('~') != -1))
 		{
 			throw new WicketRuntimeException("The component ID must not contain ':' or '~' chars.");
 		}
