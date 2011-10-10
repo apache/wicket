@@ -274,8 +274,16 @@ public final class FullyBufferedReader
 				}
 				// I've found character but I'm inside quotes
 				if (currentChar == ch && quotationChar != 0)
+				{
 					return findOutOfQuotes(ch, closeBracketIndex + 1, quotationChar);
+				}
 			}
+		}
+		else if (quotationChar != 0)
+		{
+			// quotes not balanced!
+			throw new ParseException("Opening/closing quote not found for quote at " + "(line " +
+				getLineNumber() + ", column " + getColumnNumber() + ")", startPos);
 		}
 
 		return closeBracketIndex;

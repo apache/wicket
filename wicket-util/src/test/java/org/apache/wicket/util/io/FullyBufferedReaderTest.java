@@ -18,16 +18,23 @@ package org.apache.wicket.util.io;
 
 import java.text.ParseException;
 
-import junit.framework.TestCase;
-
+import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-
-public class FullyBufferedReaderTest extends TestCase
+/**
+ * Tests for {@link FullyBufferedReader}
+ */
+public class FullyBufferedReaderTest extends Assert
 {
 
+	/**
+	 * 
+	 * @throws ParseException
+	 */
 	@Test
-	public void testNestedQuotes() throws ParseException
+	public void nestedQuotes() throws ParseException
 	{
 		// testTag is <a href='b \'" > a' theAtr="at'r'\"r">
 		String testTag = "<a href='b \\'\" > a' theAtr=\"at'r'\\\"r\">";
@@ -42,8 +49,12 @@ public class FullyBufferedReaderTest extends TestCase
 		assertEquals(testTag.length(), position + 1);
 	}
 
+	/**
+	 * 
+	 * @throws ParseException
+	 */
 	@Test
-	public void testQuotedEsclamationQuotationMark() throws ParseException
+	public void quotedEsclamationQuotationMark() throws ParseException
 	{
 		// testTag is <a href='b " >!! a<??!!' theAtr=">">
 		String testTag = "<a href='b \" >!! a<??!!' theAtr=\">\">";
@@ -56,5 +67,87 @@ public class FullyBufferedReaderTest extends TestCase
 		assertEquals('>', testTag.charAt(position));
 		// close bracket must be at the end of the string
 		assertEquals(testTag.length(), position + 1);
+	}
+
+	/**
+	 * A rule for expecting ParseExceptions
+	 */
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4117
+	 * 
+	 * Test exception when we forgot to close quote
+	 * 
+	 * @throws ParseException
+	 */
+	@Test
+	public void missingClosingQuote() throws ParseException
+	{
+		thrown.expect(ParseException.class);
+		thrown.expectMessage("Opening/closing quote not found for quote at (line 1, column 9)");
+
+		String testTag = "<a href='blabla>";
+		FullyBufferedReader fullyBufferedReader = new FullyBufferedReader(testTag);
+
+		fullyBufferedReader.findOutOfQuotes('>', 0);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4117
+	 * 
+	 * Test exception when we forgot to close quote
+	 * 
+	 * @throws ParseException
+	 */
+	@Test
+	public void missingOpeningQuote() throws ParseException
+	{
+		thrown.expect(ParseException.class);
+		thrown.expectMessage("Opening/closing quote not found for quote at (line 1, column 15)");
+
+		String testTag = "<a href=blabla'>";
+		FullyBufferedReader fullyBufferedReader = new FullyBufferedReader(testTag);
+
+		fullyBufferedReader.findOutOfQuotes('>', 0);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4117
+	 * 
+	 * Test exception when we forgot to close quote
+	 * 
+	 * @throws ParseException
+	 */
+	@Test
+	public void missingClosingDoubleQuote() throws ParseException
+	{
+		thrown.expect(ParseException.class);
+		thrown.expectMessage("Opening/closing quote not found for quote at (line 1, column 9)");
+
+		String testTag = "<a href=\"blabla>";
+		FullyBufferedReader fullyBufferedReader = new FullyBufferedReader(testTag);
+
+		fullyBufferedReader.findOutOfQuotes('>', 0);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4117
+	 * 
+	 * Test exception when we forgot to close quote
+	 * 
+	 * @throws ParseException
+	 */
+	@Test
+	public void missingOpeningDoubleQuote() throws ParseException
+	{
+		thrown.expect(ParseException.class);
+		thrown.expectMessage("Opening/closing quote not found for quote at (line 1, column 15)");
+
+		String testTag = "<a href=blabla\">";
+		FullyBufferedReader fullyBufferedReader = new FullyBufferedReader(testTag);
+
+		fullyBufferedReader.findOutOfQuotes('>', 0);
 	}
 }
