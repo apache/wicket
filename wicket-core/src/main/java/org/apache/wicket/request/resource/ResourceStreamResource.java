@@ -21,6 +21,7 @@ import java.io.InputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -121,7 +122,13 @@ public class ResourceStreamResource extends AbstractResource
 				data.setContentLength(length.bytes());
 			}
 			data.setFileName(fileName);
-			data.setContentType(stream.getContentType());
+
+			String contentType = stream.getContentType();
+			if (contentType == null && fileName != null && Application.exists())
+			{
+				contentType = Application.get().getMimeType(fileName);
+			}
+			data.setContentType(contentType);
 			data.setTextEncoding(textEncoding);
 
 			if (stream instanceof IResourceStreamWriter)

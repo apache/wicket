@@ -109,10 +109,14 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 		ResourceStreamResource resource = new ResourceStreamResource(resourceStream);
 		resource.setFileName(fileName);
 		if (contentDisposition != null)
+		{
 			resource.setContentDisposition(contentDisposition);
+		}
 		else
+		{
 			resource.setContentDisposition(Strings.isEmpty(fileName) ? ContentDisposition.INLINE
 				: ContentDisposition.ATTACHMENT);
+		}
 
 		resource.respond(attributes);
 	}

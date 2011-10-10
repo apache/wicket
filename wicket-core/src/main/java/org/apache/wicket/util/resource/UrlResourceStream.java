@@ -22,7 +22,6 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.io.Connections;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
@@ -59,7 +58,7 @@ public class UrlResourceStream extends AbstractResourceStream
 
 	/** Last known time the stream was last modified. */
 	private Time lastModified;
-	
+
 	/**
 	 * Meta data class for the stream attributes
 	 */
@@ -108,18 +107,9 @@ public class UrlResourceStream extends AbstractResourceStream
 
 				if (streamData.contentType == null || streamData.contentType.contains("unknown"))
 				{
-					if (Application.exists() && Application.get() instanceof WebApplication)
+					if (Application.exists())
 					{
-						// TODO Post 1.2: General: For non webapplication another method
-						// should be implemented (getMimeType on application?)
-						streamData.contentType = WebApplication.get()
-							.getServletContext()
-							.getMimeType(url.getFile());
-						if (streamData.contentType == null)
-						{
-							streamData.contentType = URLConnection.getFileNameMap()
-								.getContentTypeFor(url.getFile());
-						}
+						streamData.contentType = Application.get().getMimeType(url.getFile());
 					}
 					else
 					{
@@ -193,7 +183,7 @@ public class UrlResourceStream extends AbstractResourceStream
 			if (Objects.equal(time, lastModified) == false)
 			{
 				lastModified = time;
-				this.updateContentLength();
+				updateContentLength();
 			}
 			return lastModified;
 		}
@@ -210,7 +200,7 @@ public class UrlResourceStream extends AbstractResourceStream
 	{
 		StreamData data = getData(false);
 
-		if(data != null)
+		if (data != null)
 		{
 			URLConnection connection = url.openConnection();
 			data.contentLength = connection.getContentLength();

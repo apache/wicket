@@ -175,11 +175,11 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	}
 
 	/**
-	 * be aware that method takes the current wicket session's locale 
-	 * and style into account when locating the stream.
+	 * be aware that method takes the current wicket session's locale and style into account when
+	 * locating the stream.
 	 * 
 	 * @return resource stream
-	 *
+	 * 
 	 * @see org.apache.wicket.request.resource.caching.IStaticCacheableResource#getCacheableResourceStream()
 	 * @see #getResourceStream()
 	 */
@@ -190,11 +190,10 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			.getResourceSettings()
 			.getResourceStreamLocator();
 
-		// determine current resource stream 
+		// determine current resource stream
 		// taking client locale and style into account
-		return locator.locate(getScope(), absolutePath,
-		                      getCurrentStyle(), variation, getCurrentLocale(),
-		                      null, false);
+		return locator.locate(getScope(), absolutePath, getCurrentStyle(), variation,
+			getCurrentLocale(), null, false);
 	}
 
 	public Serializable getCacheKey()
@@ -207,8 +206,8 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			return null;
 		}
 
-		return new CacheKey(scopeName, absolutePath, 
-		                    stream.getLocale(), stream.getStyle(), stream.getVariation());
+		return new CacheKey(scopeName, absolutePath, stream.getLocale(), stream.getStyle(),
+			stream.getVariation());
 	}
 
 	/**
@@ -253,8 +252,13 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 				return sendResourceError(resourceResponse, HttpServletResponse.SC_NOT_FOUND,
 					"Unable to find resource");
 
+			String contentType = resourceStream.getContentType();
+			if (contentType == null && Application.exists())
+			{
+				contentType = Application.get().getMimeType(path);
+			}
 			// set Content-Type (may be null)
-			resourceResponse.setContentType(resourceStream.getContentType());
+			resourceResponse.setContentType(contentType);
 
 			// add Last-Modified header (to support HEAD requests and If-Modified-Since)
 			final Time lastModified = resourceStream.lastModifiedTime();
@@ -348,35 +352,35 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 * locate resource stream for current resource
 	 * <p/>
 	 * Unfortunately this method has changed from scope 'public' in wicket 1.4 to scope 'protected'
-	 * in wicket 1.5. We realized this too late and now changing it would break the api. So
-	 * in case you need access to this method you have the following options:
+	 * in wicket 1.5. We realized this too late and now changing it would break the api. So in case
+	 * you need access to this method you have the following options:
 	 * 
 	 * <ul>
-	 *     <li>
-	 *         copy-paste the code in the method body of {@link #getResourceStream()} 
-	 *         and wait for wicket 1.6
-	 *     </li>
-	 *     <li>
-	 *         extend PackageResource, passing the package resources 
-	 *         attributes and make {@link #getResourceStream()} public again:
-	 *         
-	 *       <pre>
-	 *       public class MyPackageResource extends PackageResource
-	 *       { 
-	 *           public MyPackageResource(Class<?> scope, String name, Locale locale, String style,
-	 *                 String variation)
-	 *         {
-	 *           super(scope, name, locale, style, variation);
-	 *         }
-	 *
-	 *         // change access to public here
-	 *         public IResourceStream getResourceStream()
-	 *         {
-	 *           return super.getResourceStream();
-	 *         }
-	 *       }
-	 *       </pre>
-	 *     </li>
+	 * <li>
+	 * copy-paste the code in the method body of {@link #getResourceStream()} and wait for wicket
+	 * 1.6</li>
+	 * <li>
+	 * extend PackageResource, passing the package resources attributes and make
+	 * {@link #getResourceStream()} public again:
+	 * 
+	 * <pre>
+	 * public class MyPackageResource extends PackageResource
+	 * {
+	 * 	public MyPackageResource(Class&lt;?&gt; scope, String name, Locale locale, String style,
+	 * 		String variation)
+	 * 	{
+	 * 		super(scope, name, locale, style, variation);
+	 * 	}
+	 * 
+	 * 	// change access to public here
+	 * 	public IResourceStream getResourceStream()
+	 * 	{
+	 * 		return super.getResourceStream();
+	 * 	}
+	 * }
+	 * </pre>
+	 * 
+	 * </li>
 	 * </ul>
 	 * 
 	 * 
@@ -559,7 +563,8 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 				return false;
 			if (style != null ? !style.equals(cacheKey.style) : cacheKey.style != null)
 				return false;
-			if (variation != null ? !variation.equals(cacheKey.variation) : cacheKey.variation != null)
+			if (variation != null ? !variation.equals(cacheKey.variation)
+				: cacheKey.variation != null)
 				return false;
 
 			return true;
