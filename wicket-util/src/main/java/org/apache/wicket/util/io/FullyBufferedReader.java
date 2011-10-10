@@ -253,7 +253,6 @@ public final class FullyBufferedReader
 		throws ParseException
 	{
 		int closeBracketIndex = find(ch, startPos + 1);
-		char nextChar = closeBracketIndex == -1 ? nextChar = (char)0 : input.charAt(startPos + 1);
 
 		if (closeBracketIndex != -1)
 		{
