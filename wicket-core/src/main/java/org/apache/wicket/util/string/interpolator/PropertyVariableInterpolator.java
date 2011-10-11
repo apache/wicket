@@ -34,7 +34,9 @@ import org.apache.wicket.util.lang.PropertyResolver;
  * <code>getName()</code> returned <code>"Jonathan"</code>, then <code>interpolate()</code> would
  * return <code>"My name is Jonathan"</code>.
  * <p>
- * "$" is the escape char. Thus "$${text}" can be used to escape it (ignore interpretation).
+ * "$" is the escape char. Thus "$${text}" can be used to escape it (ignore interpretation). If
+ * '$3.24' is needed then '$$${amount}' should be used. The first $ sign escapes the second, and the
+ * third is used to interpolate the variable.
  * 
  * @author Jonathan Locke
  * @since 1.2.6

@@ -28,7 +28,9 @@ package org.apache.wicket.util.string.interpolator;
  * performs an interpolation by replacing each variable of the form <code>${variableName}</code>
  * with the value returned by <code>getValue("variableName")</code>.
  * <p>
- * "$" is the escape char. Thus "$${text}" can be used to escape it (ignore interpretation).
+ * "$" is the escape char. Thus "$${text}" can be used to escape it (ignore interpretation). If
+ * '$3.24' is needed then '$$${amount}' should be used. The first $ sign escapes the second, and the
+ * third is used to interpolate the variable.
  * 
  * @author Jonathan Locke
  * @since 1.2.6
