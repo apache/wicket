@@ -28,7 +28,19 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.lang.Bytes;
 
 /**
+ * An extension of {@link DiskDataStore} that is able to browse the content of the file storage.
+ * <p>
+ * To enable it add in YourApplication#init():
  * 
+ * <pre>
+ * <code>
+ * DebugDiskDataStore.register(this);
+ * </code>
+ * </pre>
+ * 
+ * </p>
+ * <p>
+ * The data can be browsed at: <em>/wicket/internal/debug/diskDataStore</em>
  */
 public class DebugDiskDataStore extends DiskDataStore
 {
@@ -72,6 +84,8 @@ public class DebugDiskDataStore extends DiskDataStore
 	}
 
 	/**
+	 * Configures the page manager provider and mounts the page at
+	 * <em>wicket/internal/debug/diskDataStore</em>
 	 * 
 	 * @param application
 	 */

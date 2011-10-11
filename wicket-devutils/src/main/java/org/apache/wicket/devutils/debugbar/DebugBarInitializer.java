@@ -18,7 +18,6 @@ package org.apache.wicket.devutils.debugbar;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.IInitializer;
-import org.apache.wicket.devutils.diskstore.DebugDiskDataStore;
 
 /**
  * Debug bar module initializer
@@ -39,7 +38,6 @@ public class DebugBarInitializer implements IInitializer
 			DebugBar.registerContributor(InspectorDebugPanel.DEBUG_BAR_CONTRIB, application);
 			DebugBar.registerContributor(SessionSizeDebugPanel.DEBUG_BAR_CONTRIB, application);
 			DebugBar.registerContributor(PageSizeDebugPanel.DEBUG_BAR_CONTRIB, application);
-			DebugDiskDataStore.register(application);
 		}
 	}
 
