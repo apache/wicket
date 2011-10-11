@@ -1,3 +1,7 @@
-#Mon Dec 20 21:41:20 CET 2010
+#Mon Oct 10 10:40:57 EEST 2011
 eclipse.preferences.version=1
+encoding//src/main/java=UTF-8
+encoding//src/main/resources=UTF-8
+encoding//src/test/java=UTF-8
 encoding//src/test/java/org/apache/wicket/extensions/yui/calendar/DatesPage1_ExpectedResult.html=UTF-8
+encoding/<project>=UTF-8

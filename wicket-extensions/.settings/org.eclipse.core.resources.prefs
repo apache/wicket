@@ -1,4 +1,4 @@
-#Sat May 17 15:31:21 CEST 2008
+#Mon Oct 10 10:41:03 EEST 2011
 eclipse.preferences.version=1
 encoding//src/java/wicket/extensions/markup/html/datepicker/lang/calendar-big5-utf8.js=UTF-8
 encoding//src/java/wicket/extensions/markup/html/datepicker/lang/calendar-cs-utf8.js=UTF-8
@@ -23,3 +23,7 @@ encoding//src/java/wicket/extensions/markup/html/datepicker/lang/calendar-sr-utf
 encoding//src/java/wicket/extensions/markup/html/datepicker/lang/calendar-sv-utf8.js=UTF-8
 encoding//src/java/wicket/extensions/markup/html/datepicker/lang/calendar-tr.js=ISO-8859-1
 encoding//src/java/wicket/extensions/markup/html/datepicker/lang/calendar-zh-utf8.js=UTF-8
+encoding//src/main/java=UTF-8
+encoding//src/main/resources=UTF-8
+encoding//src/test/java=UTF-8
+encoding/<project>=UTF-8
