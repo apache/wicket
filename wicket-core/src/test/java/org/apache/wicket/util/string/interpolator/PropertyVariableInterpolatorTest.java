@@ -16,19 +16,21 @@
  */
 package org.apache.wicket.util.string.interpolator;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Tests {@link PropertyVariableInterpolator}
  * 
  * @author Gerolf Seitz
  */
-public class PropertyVariableInterpolatorTest extends TestCase
+public class PropertyVariableInterpolatorTest extends Assert
 {
 	/**
 	 * 
 	 */
-	public void testWithValue()
+	@Test
+	public void withValue()
 	{
 		TestClass object = new TestClass("value");
 		String result = PropertyVariableInterpolator.interpolate("${key}", object);
@@ -36,9 +38,22 @@ public class PropertyVariableInterpolatorTest extends TestCase
 	}
 
 	/**
+	 * A test that shows a usage of escape character. The first two '$' characters are squashed to
+	 * '$' and '${key}' is interpolated to the respective value
+	 */
+	@Test
+	public void withValueAndEscape()
+	{
+		TestClass object = new TestClass("3.24");
+		String result = PropertyVariableInterpolator.interpolate("$$${key}", object);
+		assertEquals("$3.24", result.toString());
+	}
+
+	/**
 	 * 
 	 */
-	public void testWithoutValue()
+	@Test
+	public void withoutValue()
 	{
 		String result = PropertyVariableInterpolator.interpolate("${key}", null);
 		assertEquals("${key}", result.toString());
