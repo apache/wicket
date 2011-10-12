@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Exceptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,6 +96,22 @@ public abstract class RequestHandlerStack
 		{
 			execute(scheduled);
 		}
+	}
+
+	/**
+	 * Certain exceptions can carry a request handler they wish to be executed, this method tries to
+	 * resolve such a handler given an exception.
+	 * 
+	 * @param exception
+	 * @return request handler or null} if one cannot be resolved
+	 */
+	public final IRequestHandler resolveHandler(RuntimeException exception)
+	{
+		Args.notNull(exception, "exception");
+
+		ReplaceHandlerException replacer = Exceptions.findCause(exception,
+			ReplaceHandlerException.class);
+		return replacer != null ? replacer.replacementRequestHandler : null;
 	}
 
 	/**

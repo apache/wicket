@@ -204,9 +204,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 			IRequestHandler handler = resolveRequestHandler();
 			if (handler != null)
 			{
-				listeners.onRequestHandlerResolved(this, handler);
-				requestHandlerExecutor.execute(handler);
-				listeners.onRequestHandlerExecuted(this, handler);
+				execute(handler);
 				return true;
 			}
 
@@ -235,6 +233,35 @@ public class RequestCycle implements IRequestCycle, IEventSink
 			set(null);
 		}
 		return false;
+	}
+
+	/**
+	 * Executes a request handler and fires pre/post listener methods
+	 * 
+	 * @param handler
+	 */
+	private void execute(IRequestHandler handler)
+	{
+		Args.notNull(handler, "handler");
+
+		try
+		{
+			listeners.onRequestHandlerResolved(this, handler);
+			requestHandlerExecutor.execute(handler);
+			listeners.onRequestHandlerExecuted(this, handler);
+		}
+		catch (RuntimeException e)
+		{
+			IRequestHandler replacement = requestHandlerExecutor.resolveHandler(e);
+			if (replacement != null)
+			{
+				execute(replacement);
+			}
+			else
+			{
+				throw e;
+			}
+		}
 	}
 
 	/**
