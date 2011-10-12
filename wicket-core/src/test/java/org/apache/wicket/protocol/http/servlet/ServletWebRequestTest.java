@@ -16,15 +16,26 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.Page;
+import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * Tests for {@link ServletWebRequest}
  */
-public class ServletWebRequestTest
+public class ServletWebRequestTest extends Assert
 {
 
 	/**
@@ -41,13 +52,62 @@ public class ServletWebRequestTest
 
 		ServletWebRequest webRequest = new ServletWebRequest(httpRequest, "/");
 		Url clientUrl = webRequest.getClientUrl();
-		Assert.assertEquals("request/Uri?some=parameter", clientUrl.toString());
+		assertEquals("request/Uri?some=parameter", clientUrl.toString());
 
 		// error dispatched
 		httpRequest.setAttribute("javax.servlet.error.request_uri", "/some/error/url");
 		ServletWebRequest errorWebRequest = new ServletWebRequest(httpRequest, "/");
 		Url errorClientUrl = errorWebRequest.getClientUrl();
 
-		Assert.assertEquals("/some/error/url", errorClientUrl.toString());
+		assertEquals("/some/error/url", errorClientUrl.toString());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4123
+	 */
+	@Test
+	public void useCustomServletWebRequest()
+	{
+		WebApplication application = new WebApplication()
+		{
+			@Override
+			public Class<? extends Page> getHomePage()
+			{
+				return CustomRequestPage.class;
+			}
+
+			@Override
+			protected WebRequest newWebRequest(HttpServletRequest servletRequest, String filterPath)
+			{
+				return new CustomServletWebRequest(servletRequest, filterPath);
+			}
+		};
+
+		WicketTester tester = new WicketTester(application);
+		tester.startPage(new CustomRequestPage());
+	}
+
+	private static class CustomRequestPage extends WebPage implements IMarkupResourceStreamProvider
+	{
+		private static final long serialVersionUID = 1L;
+
+		private CustomRequestPage()
+		{
+			assertTrue(getRequest() instanceof CustomServletWebRequest);
+		}
+
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream("<html></html>");
+		}
+	}
+
+	private static class CustomServletWebRequest extends ServletWebRequest
+	{
+		public CustomServletWebRequest(HttpServletRequest httpServletRequest, String filterPrefix)
+		{
+			super(httpServletRequest, filterPrefix);
+		}
 	}
 }
