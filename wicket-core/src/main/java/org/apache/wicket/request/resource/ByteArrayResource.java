@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.resource;
 
+import java.net.URLConnection;
+
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.time.Time;
 
@@ -94,6 +96,22 @@ public class ByteArrayResource extends AbstractResource
 	protected ResourceResponse newResourceResponse(final Attributes attributes)
 	{
 		final ResourceResponse response = new ResourceResponse();
+
+		String contentType = this.contentType;
+
+		if (contentType == null)
+		{
+			if (filename != null)
+			{
+				contentType = URLConnection.getFileNameMap().getContentTypeFor(filename);
+			}
+
+			if (contentType == null)
+			{
+				contentType = "application/octet-stream";
+			}
+		}
+
 
 		response.setContentType(contentType);
 		response.setLastModified(lastModified);

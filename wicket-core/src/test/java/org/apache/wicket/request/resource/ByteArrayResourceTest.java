@@ -21,6 +21,7 @@ import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.resource.IResource.Attributes;
@@ -29,7 +30,7 @@ import org.junit.Test;
 /**
  * Unit tests for {@link ByteArrayResource}
  */
-public class ByteArrayResourceTest
+public class ByteArrayResourceTest extends WicketTestCase
 {
 
 	/**
@@ -38,7 +39,7 @@ public class ByteArrayResourceTest
 	@Test
 	public void staticResource()
 	{
-		String contentType = "application/x-octet";
+		String contentType = "application/octet-stream";
 		byte[] array = new byte[] { 1, 2, 3 };
 		ByteArrayResource resource = new ByteArrayResource(contentType, array)
 		{
@@ -68,7 +69,7 @@ public class ByteArrayResourceTest
 	@Test
 	public void dynamicResource()
 	{
-		String contentType = "application/x-octet";
+		String contentType = "application/octet-stream";
 		final byte[] array = new byte[] { 1, 2, 3 };
 		ByteArrayResource resource = new ByteArrayResource(contentType)
 		{
@@ -96,5 +97,38 @@ public class ByteArrayResourceTest
 		verify(response).write(same(array));
 		verify(response).setContentLength(eq(3L));
 		verify(response).setContentType(eq(contentType));
+	}
+
+	/**
+	 * Content-Type should be resolved in the following way:
+	 * <ol>
+	 * <li>first check if the user passed it</li>
+	 * <li>fallback to check by filename extension</li>
+	 * <li>as final resort always use 'application/octet-stream'</li>
+	 * </ol>
+	 * 
+	 * See https://issues.apache.org/jira/browse/WICKET-4119
+	 */
+	@Test
+	public void contentType()
+	{
+		String userSpecifiedContentType = "text/custom";
+		ByteArrayResource userSpecified = new ByteArrayResource(userSpecifiedContentType,
+			new byte[] { 1, 2, 3 });
+
+		tester.startResource(userSpecified);
+		assertEquals(userSpecifiedContentType, tester.getLastResponse().getContentType());
+
+		ByteArrayResource resolvedByExtension = new ByteArrayResource(null, new byte[] { 1, 2, 3 },
+			"image.png");
+
+		tester.startResource(resolvedByExtension);
+		assertEquals("image/png", tester.getLastResponse().getContentType());
+
+		ByteArrayResource finalResortOctetStream = new ByteArrayResource(null,
+			new byte[] { 1, 2, 3 }, null);
+
+		tester.startResource(finalResortOctetStream);
+		assertEquals("application/octet-stream", tester.getLastResponse().getContentType());
 	}
 }

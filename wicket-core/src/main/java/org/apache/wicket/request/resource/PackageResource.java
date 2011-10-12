@@ -252,10 +252,14 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 				return sendResourceError(resourceResponse, HttpServletResponse.SC_NOT_FOUND,
 					"Unable to find resource");
 
-			String contentType = resourceStream.getContentType();
-			if (contentType == null && Application.exists())
+			final String contentType;
+			if (Application.exists())
 			{
 				contentType = Application.get().getMimeType(path);
+			}
+			else
+			{
+				contentType = resourceStream.getContentType();
 			}
 			// set Content-Type (may be null)
 			resourceResponse.setContentType(contentType);

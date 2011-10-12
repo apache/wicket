@@ -107,7 +107,7 @@ public class MockServletContext implements ServletContext
 		mimeTypes.put("htm", "text/html");
 		mimeTypes.put("css", "text/css");
 		mimeTypes.put("xml", "text/xml");
-		mimeTypes.put("js", "text/plain");
+		mimeTypes.put("js", "text/javascript");
 		mimeTypes.put("gif", "image/gif");
 		mimeTypes.put("jpg", "image/jpeg");
 		mimeTypes.put("png", "image/png");

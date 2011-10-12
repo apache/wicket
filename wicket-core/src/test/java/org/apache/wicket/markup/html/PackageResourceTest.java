@@ -95,7 +95,7 @@ public class PackageResourceTest extends WicketTestCase
 		ResourceReference invalidResource = new PackageResourceReference(PackageResourceTest.class,
 			"i_do_not_exist.txt", Locale.ENGLISH, null, null);
 		assertNotNull(
-			"resource packaged3.txt SHOULD be available as a packaged resource even if it doesn't exist",
+			"resource i_do_not_exist.txt SHOULD be available as a packaged resource even if it doesn't exist",
 			invalidResource.getResource());
 
 		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1.txt", null, null,
@@ -130,5 +130,32 @@ public class PackageResourceTest extends WicketTestCase
 		// filter/servlet which will cause a 404 later
 		assertFalse(tester.processRequest());
 
+	}
+
+	/**
+	 * Test that {@link PackageResource} writes its Content-Type header in the response
+	 * 
+	 * https://issues.apache.org/jira/browse/WICKET-4119
+	 */
+	@Test
+	public void contentType()
+	{
+		PackageResource textResource = new PackageResource(PackageResourceTest.class,
+			"packaged1.txt", null, null, null)
+		{
+			private static final long serialVersionUID = 1L;
+		};
+
+		tester.startResource(textResource);
+		assertEquals("text/plain", tester.getLastResponse().getContentType());
+
+		PackageResource jsResource = new PackageResource(PackageResourceTest.class, "packaged3.js",
+			null, null, null)
+		{
+			private static final long serialVersionUID = 1L;
+		};
+
+		tester.startResource(jsResource);
+		assertEquals("text/javascript", tester.getLastResponse().getContentType());
 	}
 }

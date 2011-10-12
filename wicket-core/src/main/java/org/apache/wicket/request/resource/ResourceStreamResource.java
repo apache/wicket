@@ -123,10 +123,14 @@ public class ResourceStreamResource extends AbstractResource
 			}
 			data.setFileName(fileName);
 
-			String contentType = stream.getContentType();
-			if (contentType == null && fileName != null && Application.exists())
+			final String contentType;
+			if (fileName != null && Application.exists())
 			{
 				contentType = Application.get().getMimeType(fileName);
+			}
+			else
+			{
+				contentType = stream.getContentType();
 			}
 			data.setContentType(contentType);
 			data.setTextEncoding(textEncoding);
