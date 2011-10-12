@@ -1212,7 +1212,8 @@ Wicket.Ajax.Call.prototype = {
 		
 		// install handler to deal with the ajax response
 		// ... we add the onload event after form submit because chrome fires it prematurely
-		Wicket.Event.add(iframe, "load", this.handleMultipartComplete.bind(this));
+		this.handleMultipartCompleteBound = this.handleMultipartComplete.bind(this);
+		Wicket.Event.add(iframe, "load", this.handleMultipartCompleteBound);
 
 		// handled, restore state and return true
 		form.action=originalFormAction;
@@ -1243,11 +1244,15 @@ Wicket.Ajax.Call.prototype = {
 		if (event.stopPropagation) { event.stopPropagation(); } else { event.cancelBubble=true; }
 
 		// remove the event
-		if (iframe.detachEvent)  
-			iframe.detachEvent("onload", this.handleMultipartComplete);  
-		else  
-			iframe.removeEventListener("load", this.handleMultipartComplete, false);
-		
+		if (typeof (this.handleMultipartCompleteBound) === 'function') {
+			if (iframe.detachEvent) {
+				iframe.detachEvent("onload", this.handleMultipartCompleteBound);
+			}
+			else {
+				iframe.removeEventListener("load", this.handleMultipartCompleteBound, false);
+			}
+			this.handleMultipartCompleteBound = null;
+		}
 		// remove the iframe and button elements
 		setTimeout(function() {
 			var e=document.getElementById(iframe.id+"-btn");
