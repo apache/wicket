@@ -39,6 +39,7 @@ import java.util.regex.Pattern;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import junit.framework.AssertionFailedError;
@@ -198,6 +199,14 @@ public class BaseWicketTester
 	// User may provide request header value any time. They get applied (and reset) upon next
 	// invocation of processRequest()
 	private Map<String, String> preHeader;
+
+	/**
+	 * The method that is used to create the {@link ServletWebRequest} from the provided
+	 * {@link WebApplication}.
+	 */
+	// TODO Wicket 1.6 - make WebApplication.newWebRequest() somehow visible for BaseWicketTester
+	// to avoid the usage of reflection
+	private Method newWebRequestMethod = null;
 
 	/**
 	 * Creates <code>WicketTester</code> and automatically create a <code>WebApplication</code>, but
@@ -394,11 +403,35 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * @return servlet web request
+	 * @return the configured in the user's application web request
 	 */
 	private ServletWebRequest newServletWebRequest()
 	{
-		return new ServletWebRequest(request, request.getFilterPrefix());
+		if (newWebRequestMethod == null)
+		{
+			try
+			{
+				newWebRequestMethod = WebApplication.class.getDeclaredMethod("newWebRequest",
+					new Class[] { HttpServletRequest.class, String.class });
+				newWebRequestMethod.setAccessible(true);
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException(e);
+			}
+		}
+
+		ServletWebRequest webRequest;
+		try
+		{
+			webRequest = (ServletWebRequest)newWebRequestMethod.invoke(application, request,
+				request.getFilterPrefix());
+		}
+		catch (Exception x)
+		{
+			throw new RuntimeException(x);
+		}
+		return webRequest;
 	}
 
 	/**
@@ -2338,7 +2371,7 @@ public class BaseWicketTester
 	 */
 	public void applyRequest()
 	{
-		ServletWebRequest req = newServletWebRequest();
+		Request req = newServletWebRequest();
 		requestCycle.setRequest(req);
 		if (useRequestUrlAsBase)
 		{
