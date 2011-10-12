@@ -1,5 +1,32 @@
 This file contains all changes done on the 1.4 version.
 
+Release Notes - Wicket - Version 1.4.19
+
+** Bug
+    * [WICKET-3915] - Inconsistent behavior id under special circumstances 
+    * [WICKET-3929] - PropertyModel/PropertyResolver breaks when using a List as the root object
+    * [WICKET-3949] - ClassCastException: IOException cannot be cast to NotSerializableException
+    * [WICKET-3952] - NPE while opening hangman in wicket-examples
+    * [WICKET-3962] - the wrong option in select components is rendered (Combination of reusing panels and defaultFormProcessing==false)
+    * [WICKET-3993] - Wrong ASCII Key Code for END Key. AutoComplete not working properly
+    * [WICKET-3994] - MockWebApplication double invocation of cycle.detach()
+    * [WICKET-3996] - Slovenian (sl) properties file is corrupted in 1.4.18
+    * [WICKET-3998] - CreditCardValidator returns incorrect cardId for VISA
+    * [WICKET-3999] - Error in the save function of CookieValuePersister
+    * [WICKET-4032] - ComponentStringResourceLoader must not include the index of repeater items in resource lookup but still resolve properties to them
+    * [WICKET-4080] - domready events not always fired in IE
+    * [WICKET-4111] - addDomReadyEvent broken for IE
+
+** Improvement
+    * [WICKET-3145] - MockWebApplication does not allow to manually clear cookiesOfThisSession
+    * [WICKET-3888] - ResourceReference in 1.4 should optionally behave like PackageResourceReference in 1.5 and use the Session's locale and style
+    * [WICKET-3937] - Improve AJAX FunctionsExecutor robustness with try/catch
+
+** New Feature
+    * [WICKET-3901] - Provide a hook in form processing after models have been updated to validate model objects with values in place
+    * [WICKET-3966] - Create Fragment.getAssociatedMarkupId
+
+
 Release Notes - Wicket - Version 1.4.18
                 
 ** Bug
