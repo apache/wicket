@@ -1,5 +1,36 @@
 This file contains all changes done on the 1.5 version.
 
+Release Notes - Wicket - Version 1.5.2
+
+** Bug
+    * [WICKET-4077] - Error detaching RequestCycle listener after serialization failure
+    * [WICKET-4092] - Improve wicket-ajax.js processScript method to not use XMLHttpRequest for loading <script src="">
+    * [WICKET-4093] - Deprecate ISessionSettings#getPageFactory() and delegate it to Application#getPageFactory()
+    * [WICKET-4096] - AjaxIndicatorAppender.renderHead does not pass Components id  in its call of renderJavaScript
+    * [WICKET-4097] - ModalWindow: large title breaks close button 
+    * [WICKET-4099] - SmartLinkLabel doesn't recognize already tagged links
+    * [WICKET-4102] - AutoLabelTextResolver fails to pick up locale changes in the session
+    * [WICKET-4105] - Using ajax to update a component that has an AbstractTransformerBehavior attached throws a ClassCastException
+    * [WICKET-4109] - AutocompleteTextField after Submit does not work
+    * [WICKET-4111] - addDomReadyEvent broken for IE
+    * [WICKET-4112] - WicketTester#startComponentInPage and WicketTester#assertModelValue have inconsistent behavior.
+    * [WICKET-4116] - Ajax link reports weird error when session is expired
+    * [WICKET-4119] - FileResourceStream returns unknown content type
+    * [WICKET-4122] - Event listener not properly detached for multipart AJAX requests
+    * [WICKET-4123] - BaseWicketTester should use custom ServletWebRequest
+
+** Improvement
+    * [WICKET-2244] - Allow overriding of the Validator default MessageKey 
+    * [WICKET-4098] - AjaxLazyLoadPanelTester should take BaseWicketTester as parameter
+    * [WICKET-4117] - Improve markup parsing in order to generate a meaningful message when a not balanced quote is found.
+
+** Task
+    * [WICKET-4095] - Adding wicket-example for rendering a Page in the current requestCycle
+
+** Wish
+    * [WICKET-4120] - Don't register DebugDiskDataStore automatically when wicket-devutils are enabled
+
+
 Release Notes - Wicket - Version 1.5.1
 
 ** Sub-task
