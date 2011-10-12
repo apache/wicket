@@ -124,9 +124,11 @@ public class ImmutableBehaviorIndexTest extends WicketTestCase
 		// null,auto,null,border2,link2
 		page.getContainer().remove(link2); // last IBehaviorListener
 		behaviors = page.getContainer().getBehaviorsRawList();
-		assertEquals(2, behaviors.size());
-		assertSame(auto, behaviors.get(0));
-		assertSame(border2, behaviors.get(1));
+		assertEquals(4, behaviors.size());
+		assertNull(behaviors.get(0));
+		assertSame(auto, behaviors.get(1));
+		assertNull(behaviors.get(2));
+		assertSame(border2, behaviors.get(3));
 
 	}
 
