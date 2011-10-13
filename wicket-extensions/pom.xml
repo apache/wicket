@@ -45,5 +45,11 @@
 			<scope>test</scope>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.8.5</version>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 </project>

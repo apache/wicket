@@ -16,8 +16,10 @@
  */
 package org.apache.wicket.request.handler;
 
+import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.handler.logger.PageLogData;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
 
@@ -27,9 +29,14 @@ import org.apache.wicket.util.lang.Args;
  * 
  * @author Matej Knopp
  */
-public class BookmarkablePageRequestHandler implements IPageClassRequestHandler
+public class BookmarkablePageRequestHandler
+	implements
+		IPageClassRequestHandler,
+		ILoggableRequestHandler
 {
 	private final IPageProvider pageProvider;
+
+	private PageLogData logData;
 
 	/**
 	 * Construct.
@@ -74,5 +81,13 @@ public class BookmarkablePageRequestHandler implements IPageClassRequestHandler
 	 */
 	public void detach(IRequestCycle requestCycle)
 	{
+		if (logData == null)
+			logData = new PageLogData(pageProvider);
+	}
+
+	/** {@inheritDoc} */
+	public PageLogData getLogData()
+	{
+		return logData;
 	}
 }

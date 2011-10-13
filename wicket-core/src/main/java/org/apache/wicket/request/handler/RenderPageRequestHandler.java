@@ -17,10 +17,12 @@
 package org.apache.wicket.request.handler;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.handler.logger.PageLogData;
 import org.apache.wicket.request.handler.render.PageRenderer;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
@@ -33,11 +35,17 @@ import org.apache.wicket.util.lang.Args;
  * 
  * @author Matej Knopp
  */
-public class RenderPageRequestHandler implements IPageRequestHandler, IPageClassRequestHandler
+public class RenderPageRequestHandler
+	implements
+		IPageRequestHandler,
+		IPageClassRequestHandler,
+		ILoggableRequestHandler
 {
 	private final IPageProvider pageProvider;
 
 	private final RedirectPolicy redirectPolicy;
+
+	private PageLogData logData;
 
 	/**
 	 * Determines whether Wicket does a redirect when rendering a page
@@ -131,7 +139,15 @@ public class RenderPageRequestHandler implements IPageRequestHandler, IPageClass
 	/** {@inheritDoc} */
 	public void detach(IRequestCycle requestCycle)
 	{
+		if (logData == null)
+			logData = new PageLogData(pageProvider);
 		pageProvider.detach();
+	}
+
+	/** {@inheritDoc} */
+	public PageLogData getLogData()
+	{
+		return logData;
 	}
 
 	/** {@inheritDoc} */

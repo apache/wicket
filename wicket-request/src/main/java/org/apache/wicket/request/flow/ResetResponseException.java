@@ -16,10 +16,14 @@
  */
 package org.apache.wicket.request.flow;
 
+import org.apache.wicket.request.ILogData;
+import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.RequestHandlerStack.ReplaceHandlerException;
+import org.apache.wicket.request.handler.logger.DelegateLogData;
+import org.apache.wicket.request.handler.logger.NoLogData;
 
 /**
  * An exception that resets the response before executing the specified request handler
@@ -44,9 +48,12 @@ public abstract class ResetResponseException extends ReplaceHandlerException
 	private static class ResponseResettingDecorator
 		implements
 			IRequestHandler,
-			IRequestHandlerDelegate
+			IRequestHandlerDelegate,
+			ILoggableRequestHandler
 	{
 		private final IRequestHandler delegate;
+
+		private DelegateLogData logData;
 
 		/**
 		 * Construct.
@@ -61,6 +68,16 @@ public abstract class ResetResponseException extends ReplaceHandlerException
 		public void detach(final IRequestCycle requestCycle)
 		{
 			delegate.detach(requestCycle);
+
+			if (logData == null)
+			{
+				ILogData delegateData;
+				if (delegate instanceof ILoggableRequestHandler)
+					delegateData = ((ILoggableRequestHandler)delegate).getLogData();
+				else
+					delegateData = new NoLogData();
+				logData = new DelegateLogData(delegateData);
+			}
 		}
 
 		public void respond(final IRequestCycle requestCycle)
@@ -72,6 +89,12 @@ public abstract class ResetResponseException extends ReplaceHandlerException
 		public IRequestHandler getDelegateHandler()
 		{
 			return delegate;
+		}
+
+		/** {@inheritDoc} */
+		public DelegateLogData getLogData()
+		{
+			return logData;
 		}
 	}
 }
