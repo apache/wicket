@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.extensions.wizard;
 
-import java.util.Iterator;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -275,15 +273,6 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 		form.addOrReplace(newOverviewBar(OVERVIEW_ID));
 
 		wizardModel.addListener(this);
-
-		Iterator<IWizardStep> stepsIterator = wizardModel.stepIterator();
-		if (stepsIterator != null)
-		{
-			while (stepsIterator.hasNext())
-			{
-				(stepsIterator.next()).init(wizardModel);
-			}
-		}
 
 		// reset model to prepare for action
 		wizardModel.reset();

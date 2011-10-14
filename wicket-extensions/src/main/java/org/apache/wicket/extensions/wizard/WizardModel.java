@@ -217,6 +217,12 @@ public class WizardModel extends AbstractWizardModel
 	{
 		history.clear();
 		activeStep = null;
+		
+		for (IWizardStep step : steps)
+		{
+			step.init(this);
+		}
+
 		setActiveStep(findNextVisibleStep());
 	}
 
