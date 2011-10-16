@@ -85,4 +85,28 @@ public interface IPageProvider
 	 * Detaches the page if it has been loaded.
 	 */
 	void detach();
+
+	/**
+	 * Checks whether or not the provider has a page instance. This page instance might have been
+	 * passed to this page provider directly or it may have been instantiated or retrieved from the
+	 * page store.
+	 * 
+	 * @return {@code true} iff page instance has been created or retrieved
+	 */
+	// TODO wicket.next add this method to the interface
+	// public final boolean hasPageInstance();
+
+	/**
+	 * Returns whether or not the page instance held by this provider has been instantiated by the
+	 * provider.
+	 * 
+	 * @throws IllegalStateException
+	 *             if this method is called and the provider does not yet have a page instance, ie
+	 *             if {@link #getPageInstance()} has never been called on this provider
+	 * @return {@code true} iff the page instance held by this provider was instantiated by the
+	 *         provider
+	 */
+	// TODO wicket.next add this method to the interface
+	// public final boolean isPageInstanceFresh();
+
 }

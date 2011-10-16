@@ -45,7 +45,7 @@ import org.apache.wicket.util.lang.Args;
  * 
  * @author Matej Knopp
  */
-public class PageProvider implements IPageProvider
+public class PageProvider implements IPageProvider, IIntrospectablePageProvider
 {
 	private final Integer renderCount;
 
@@ -54,6 +54,7 @@ public class PageProvider implements IPageProvider
 	private IPageSource pageSource;
 
 	private IRequestablePage pageInstance;
+	private boolean pageInstanceIsFresh;
 
 	private Class<? extends IRequestablePage> pageClass;
 
@@ -163,7 +164,7 @@ public class PageProvider implements IPageProvider
 	{
 		if (pageInstance == null)
 		{
-			pageInstance = getPageInstance(pageId, pageClass, pageParameters, renderCount);
+			resolvePageInstance(pageId, pageClass, pageParameters, renderCount);
 
 			if (pageInstance == null)
 			{
@@ -248,9 +249,8 @@ public class PageProvider implements IPageProvider
 		}
 	}
 
-	private IRequestablePage getPageInstance(Integer pageId,
-		Class<? extends IRequestablePage> pageClass, PageParameters pageParameters,
-		Integer renderCount)
+	private void resolvePageInstance(Integer pageId, Class<? extends IRequestablePage> pageClass,
+		PageParameters pageParameters, Integer renderCount)
 	{
 		IRequestablePage page = null;
 
@@ -278,7 +278,8 @@ public class PageProvider implements IPageProvider
 			}
 		}
 
-		return page;
+		pageInstanceIsFresh = freshCreated;
+		pageInstance = page;
 	}
 
 	/**
@@ -366,5 +367,36 @@ public class PageProvider implements IPageProvider
 	public Integer getRenderCount()
 	{
 		return renderCount;
+	}
+
+	/**
+	 * Checks whether or not the provider has a page instance. This page instance might have been
+	 * passed to this page provider directly or it may have been instantiated or retrieved from the
+	 * page store.
+	 * 
+	 * @return {@code true} iff page instance has been created or retrieved
+	 */
+	public final boolean hasPageInstance()
+	{
+		return pageInstance != null;
+	}
+
+	/**
+	 * Returns whether or not the page instance held by this provider has been instantiated by the
+	 * provider.
+	 * 
+	 * @throws IllegalStateException
+	 *             if this method is called and the provider does not yet have a page instance, ie
+	 *             if {@link #getPageInstance()} has never been called on this provider
+	 * @return {@code true} iff the page instance held by this provider was instantiated by the
+	 *         provider
+	 */
+	public final boolean isPageInstanceFresh()
+	{
+		if (!hasPageInstance())
+		{
+			throw new IllegalStateException("Page instance not yet resolved");
+		}
+		return pageInstanceIsFresh;
 	}
 }

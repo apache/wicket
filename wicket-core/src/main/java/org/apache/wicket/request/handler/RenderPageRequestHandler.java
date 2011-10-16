@@ -165,8 +165,15 @@ public class RenderPageRequestHandler
 
 	public final boolean isPageInstanceCreated()
 	{
-		return !pageProvider.isNewPageInstance();
+		if (!(pageProvider instanceof IIntrospectablePageProvider))
+		{
+			throw new IllegalStateException(
+				"This method can only be used when a page provider implements: " +
+					IIntrospectablePageProvider.class.getName());
+		}
+		return ((IIntrospectablePageProvider)pageProvider).hasPageInstance();
 	}
+
 
 	public final Integer getRenderCount()
 	{

@@ -156,7 +156,13 @@ public class BookmarkableListenerInterfaceRequestHandler
 
 	public final boolean isPageInstanceCreated()
 	{
-		return !pageComponentProvider.isNewPageInstance();
+		if (!(pageComponentProvider instanceof IIntrospectablePageProvider))
+		{
+			throw new IllegalStateException(
+				"This method can only be used when a page provider implements: " +
+					IIntrospectablePageProvider.class.getName());
+		}
+		return ((IIntrospectablePageProvider)pageComponentProvider).hasPageInstance();
 	}
 
 	/**
