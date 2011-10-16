@@ -305,7 +305,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 			if (retryCount > 0)
 			{
 				IRequestHandler next = handleException(e);
-				if (handler != null)
+				if (next != null)
 				{
 					executeExceptionRequestHandler(next, retryCount - 1);
 					return;
