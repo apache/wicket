@@ -140,6 +140,11 @@ public abstract class RequestHandlerStack
 	}
 
 	/**
+	 * Replaces all request handlers on the stack with the specified one and executes it. If there
+	 * are any request handlers currently executing (this method is called from inside
+	 * {@link IRequestHandler#respond(IRequestCycle)}) the execution is interrupted via an
+	 * exception.
+	 * 
 	 * @param handler
 	 */
 	public void replaceAll(final IRequestHandler handler)

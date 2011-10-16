@@ -53,11 +53,10 @@ import org.slf4j.LoggerFactory;
  * <li>Resolve request handler
  * <li>Execute request handler
  * </ol>
- * During {@link IRequestHandler} execution the handler can execute other {@link IRequestHandler}s,
- * schedule another {@link IRequestHandler} or replace all {@link IRequestHandler}s on stack with
- * another {@link IRequestHandler}.
+ * During {@link IRequestHandler} execution the handler can schedule another {@link IRequestHandler}
+ * to run after it is done, or replace all {@link IRequestHandler}s on stack with another
+ * {@link IRequestHandler}.
  * 
- * @see #execute(IRequestHandler)
  * @see #scheduleRequestHandlerAfterCurrent(IRequestHandler)
  * @see #replaceAllRequestHandlers(IRequestHandler)
  * 
