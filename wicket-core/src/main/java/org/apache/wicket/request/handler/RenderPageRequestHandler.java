@@ -26,6 +26,8 @@ import org.apache.wicket.request.handler.logger.PageLogData;
 import org.apache.wicket.request.handler.render.PageRenderer;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * {@link IRequestHandler} that renders page instance. Depending on the <code>redirectPolicy</code>
@@ -41,6 +43,8 @@ public class RenderPageRequestHandler
 		IPageClassRequestHandler,
 		ILoggableRequestHandler
 {
+	private static final Logger logger = LoggerFactory.getLogger(RenderPageRequestHandler.class);
+
 	private final IPageProvider pageProvider;
 
 	private final RedirectPolicy redirectPolicy;
@@ -165,15 +169,17 @@ public class RenderPageRequestHandler
 
 	public final boolean isPageInstanceCreated()
 	{
+		// FIXME wicket.next remove the workaround for page providers that dont implement the
+		// interface
 		if (!(pageProvider instanceof IIntrospectablePageProvider))
 		{
-			throw new IllegalStateException(
-				"This method can only be used when a page provider implements: " +
-					IIntrospectablePageProvider.class.getName());
+			logger.warn(
+				"{} used by this application does not implement {}, the request handler is falling back on using incorrect behavior",
+				IPageProvider.class, IIntrospectablePageProvider.class);
+			return !pageProvider.isNewPageInstance();
 		}
 		return ((IIntrospectablePageProvider)pageProvider).hasPageInstance();
 	}
-
 
 	public final Integer getRenderCount()
 	{

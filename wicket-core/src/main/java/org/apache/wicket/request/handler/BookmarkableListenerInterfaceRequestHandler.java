@@ -22,6 +22,8 @@ import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Request handler for bookmarkable pages with listener interface. This handler is only used to
@@ -34,6 +36,8 @@ public class BookmarkableListenerInterfaceRequestHandler
 		IPageRequestHandler,
 		IComponentRequestHandler
 {
+	private static final Logger logger = LoggerFactory.getLogger(BookmarkableListenerInterfaceRequestHandler.class);
+
 	private final IPageAndComponentProvider pageComponentProvider;
 
 	private final RequestListenerInterface listenerInterface;
@@ -156,11 +160,14 @@ public class BookmarkableListenerInterfaceRequestHandler
 
 	public final boolean isPageInstanceCreated()
 	{
+		// FIXME wicket.next remove the workaround for page providers that dont implement the
+		// interface
 		if (!(pageComponentProvider instanceof IIntrospectablePageProvider))
 		{
-			throw new IllegalStateException(
-				"This method can only be used when a page provider implements: " +
-					IIntrospectablePageProvider.class.getName());
+			logger.warn(
+				"{} used by this application does not implement {}, the request handler is falling back on using incorrect behavior",
+				IPageProvider.class, IIntrospectablePageProvider.class);
+			return !pageComponentProvider.isNewPageInstance();
 		}
 		return ((IIntrospectablePageProvider)pageComponentProvider).hasPageInstance();
 	}
