@@ -130,8 +130,10 @@ public class ListenerInterfaceRequestHandler
 	public void detach(IRequestCycle requestCycle)
 	{
 		if (logData == null)
+		{
 			logData = new ListenerInterfaceLogData(pageComponentProvider, listenerInterface,
 				behaviorId);
+		}
 		pageComponentProvider.detach();
 	}
 
@@ -160,9 +162,9 @@ public class ListenerInterfaceRequestHandler
 	 */
 	public void respond(final IRequestCycle requestCycle)
 	{
-		final boolean isNewPageInstance = pageComponentProvider.isNewPageInstance();
-		final boolean isAjax = ((WebRequest)requestCycle.getRequest()).isAjax();
 		final IRequestablePage page = getPage();
+		final boolean freshPage = pageComponentProvider.isPageInstanceFresh();
+		final boolean isAjax = ((WebRequest)requestCycle.getRequest()).isAjax();
 
 		if (getComponent().getPage() == page)
 		{
@@ -177,7 +179,7 @@ public class ListenerInterfaceRequestHandler
 				: RedirectPolicy.AUTO_REDIRECT;
 			final IPageProvider pageProvider = new PageProvider(page);
 
-			if (isNewPageInstance && isStateless == false)
+			if (freshPage && isStateless == false)
 			{
 				// A listener interface is invoked on an expired page.
 

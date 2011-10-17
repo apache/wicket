@@ -33,7 +33,7 @@ public class ListenerInterfaceLogData extends PageLogData
 	private final Class<? extends IRequestableComponent> componentClass;
 	private final String componentPath;
 	private final Integer behaviorIndex;
-	private final Class<? extends Behavior> behaviorClass;
+	private Class<? extends Behavior> behaviorClass;
 	private final String interfaceName;
 	private final String interfaceMethod;
 
@@ -53,12 +53,21 @@ public class ListenerInterfaceLogData extends PageLogData
 		this.behaviorIndex = behaviorIndex;
 		if (behaviorIndex != null)
 		{
-			behaviorClass = pageAndComponentProvider.getComponent()
-				.getBehaviorById(behaviorIndex)
-				.getClass();
+			try
+			{
+				behaviorClass = pageAndComponentProvider.getComponent()
+					.getBehaviorById(behaviorIndex)
+					.getClass();
+			}
+			catch (Exception ignore)
+			{
+				behaviorClass = null;
+			}
 		}
 		else
+		{
 			behaviorClass = null;
+		}
 		interfaceName = listenerInterface.getName();
 		interfaceMethod = listenerInterface.getMethod().getName();
 	}
