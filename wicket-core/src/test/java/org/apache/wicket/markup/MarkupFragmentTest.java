@@ -82,4 +82,16 @@ public class MarkupFragmentTest extends WicketTestCase
 		assertEquals(3, count);
 		assertEquals("<div wicket:id=\"label\"> text </div>", xml);
 	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4136
+	 */
+	@Test
+	public void createMarkupFragmentOnOpenTag()
+	{
+		Markup markup = Markup.of("<body><img wicket:id='photo'><span wicket:id='label'/></body>");
+		MarkupFragment fragment = new MarkupFragment(markup, 1);
+
+		assertEquals(1, fragment.size());
+	}
 }

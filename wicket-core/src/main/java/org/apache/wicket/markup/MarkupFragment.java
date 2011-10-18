@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.markup;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -37,6 +39,21 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  */
 public class MarkupFragment implements IMarkupFragment
 {
+	/**
+	 * A set of tag names which are allowed to not have closing tags.<br/>
+	 * HTML standards don't require XML well formness.
+	 */
+	private static final Set<String> CAN_BE_OPEN_TAG_SET = new HashSet<String>();
+	static
+	{
+		CAN_BE_OPEN_TAG_SET.add("meta");
+		CAN_BE_OPEN_TAG_SET.add("link");
+		CAN_BE_OPEN_TAG_SET.add("img");
+		CAN_BE_OPEN_TAG_SET.add("input");
+		CAN_BE_OPEN_TAG_SET.add("br");
+		CAN_BE_OPEN_TAG_SET.add("hr");
+	}
+
 	/** The parent markup. Must not be null. */
 	private final IMarkupFragment markup;
 
@@ -65,7 +82,10 @@ public class MarkupFragment implements IMarkupFragment
 			throw new IllegalArgumentException("Parameter 'startIndex' must not be < 0");
 		}
 
-		if (startIndex >= markup.size())
+		// cache the value for better performance
+		int markupSize = markup.size();
+
+		if (startIndex >= markupSize)
 		{
 			throw new IllegalArgumentException(
 				"Parameter 'startIndex' must not be >= markup.size()");
@@ -79,7 +99,7 @@ public class MarkupFragment implements IMarkupFragment
 		if ((startElem instanceof ComponentTag) == false)
 		{
 			throw new IllegalArgumentException(
-				"Parameter 'index' does not point to a Wicket open tag");
+				"Parameter 'startIndex' does not point to a Wicket open tag");
 		}
 
 		// Determine the size. Find the close tag
@@ -91,19 +111,20 @@ public class MarkupFragment implements IMarkupFragment
 		}
 		else if (startTag.hasNoCloseTag())
 		{
-			for (endIndex = startIndex + 1; endIndex < markup.size(); endIndex++)
+			if (CAN_BE_OPEN_TAG_SET.contains(startTag.getName()))
 			{
-				MarkupElement elem = markup.get(endIndex);
-				if (elem instanceof ComponentTag)
-				{
-					endIndex--;
-					break;
-				}
+				// set endIndex to a "good" value
+				endIndex = startIndex;
+			}
+			else
+			{
+				// set endIndex to a value which will indicate an error
+				endIndex = markupSize;
 			}
 		}
 		else
 		{
-			for (endIndex = startIndex + 1; endIndex < markup.size(); endIndex++)
+			for (endIndex = startIndex + 1; endIndex < markupSize; endIndex++)
 			{
 				MarkupElement elem = markup.get(endIndex);
 				if (elem instanceof ComponentTag)
@@ -117,7 +138,7 @@ public class MarkupFragment implements IMarkupFragment
 			}
 		}
 
-		if (endIndex >= markup.size())
+		if (endIndex >= markupSize)
 		{
 			throw new MarkupException("Unable to find close tag for: '" + startTag.toString() +
 				"' in " + getRootMarkup().getMarkupResourceStream().toString());
