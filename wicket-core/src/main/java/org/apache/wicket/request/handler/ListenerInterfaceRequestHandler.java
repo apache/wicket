@@ -249,16 +249,8 @@ public class ListenerInterfaceRequestHandler
 
 	public final boolean isPageInstanceCreated()
 	{
-		// FIXME wicket.next remove the workaround for page providers that dont implement the
-		// interface
-		if (!(pageComponentProvider instanceof IIntrospectablePageProvider))
-		{
-			LOG.warn(
-				"{} used by this application does not implement {}, the request handler is falling back on using incorrect behavior",
-				IPageProvider.class, IIntrospectablePageProvider.class);
-			return !pageComponentProvider.isNewPageInstance();
-		}
-		return ((IIntrospectablePageProvider)pageComponentProvider).hasPageInstance();
+		// this request handler always operates on a created page instance
+		return true;
 	}
 
 	public final String getComponentPath()
