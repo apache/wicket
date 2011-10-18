@@ -20,6 +20,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
+import org.apache.wicket.markup.html.form.FormComponent;
 
 /**
  * Tests for {@link AjaxEditableLabel}
@@ -96,5 +97,37 @@ public class AjaxEditableTest extends WicketTestCase
 		// check for the *presence* of the ajax onclick call
 		markup = tester.getTagById(ajaxLabel.getMarkupId()).getMarkup();
 		assertTrue(markup.matches(".*onclick=\"var wcall=wicketAjaxGet.*"));
+	}
+
+	/**
+	 * A test that changes the value of the {@link AjaxEditableLabel}
+	 */
+	@SuppressWarnings({ "unchecked" })
+	public void testUpdateValue()
+	{
+		Page page = tester.getLastRenderedPage();
+		AjaxEditableLabel<String> ajaxLabel = (AjaxEditableLabel<String>)page.get("ajaxLabel");
+		AjaxLink<Void> toggle = (AjaxLink<Void>)page.get("toggle");
+
+		tester.assertInvisible("ajaxLabel:editor");
+		tester.assertVisible("ajaxLabel:label");
+		// assert the initial value
+		tester.assertLabel("ajaxLabel:label", "ajaxTest");
+
+		// click on the label to go to edit mode
+		tester.executeAjaxEvent("ajaxLabel:label", "onclick");
+
+		tester.assertVisible("ajaxLabel:editor");
+		tester.assertInvisible("ajaxLabel:label");
+
+		FormComponent<?> editor = (FormComponent<?>)ajaxLabel.get("editor");
+		// set some new value and submit it
+		tester.getRequest().setParameter(editor.getInputName(), "something");
+		tester.getRequest().setParameter("save", "true");
+		tester.executeBehavior((AbstractAjaxBehavior)editor.getBehaviorById(0));
+
+		tester.assertInvisible("ajaxLabel:editor");
+		tester.assertVisible("ajaxLabel:label");
+		tester.assertLabel("ajaxLabel:label", "something");
 	}
 }
