@@ -16,10 +16,9 @@
  */
 package org.apache.wicket.markup;
 
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
+import org.apache.wicket.markup.parser.filter.HtmlHandler;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
@@ -39,21 +38,6 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  */
 public class MarkupFragment implements IMarkupFragment
 {
-	/**
-	 * A set of tag names which are allowed to not have closing tags.<br/>
-	 * HTML standards don't require XML well formness.
-	 */
-	private static final Set<String> CAN_BE_OPEN_TAG_SET = new HashSet<String>();
-	static
-	{
-		CAN_BE_OPEN_TAG_SET.add("meta");
-		CAN_BE_OPEN_TAG_SET.add("link");
-		CAN_BE_OPEN_TAG_SET.add("img");
-		CAN_BE_OPEN_TAG_SET.add("input");
-		CAN_BE_OPEN_TAG_SET.add("br");
-		CAN_BE_OPEN_TAG_SET.add("hr");
-	}
-
 	/** The parent markup. Must not be null. */
 	private final IMarkupFragment markup;
 
@@ -111,7 +95,7 @@ public class MarkupFragment implements IMarkupFragment
 		}
 		else if (startTag.hasNoCloseTag())
 		{
-			if (CAN_BE_OPEN_TAG_SET.contains(startTag.getName()))
+			if (HtmlHandler.requiresCloseTag(startTag.getName()) == false)
 			{
 				// set endIndex to a "good" value
 				endIndex = startIndex;
