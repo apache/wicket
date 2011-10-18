@@ -487,13 +487,18 @@ public class Localizer
 				 * only append component id if component is not a loop item because (a) these ids
 				 * are irrelevant when generating resource cache keys (b) they cause a lot of
 				 * redundant keys to be generated
+				 * 
+				 * also if the cursor component is an auto component we append a constant string
+				 * instead of component's id because auto components have a newly generated id on
+				 * every render.
 				 */
 				final Component parent = cursor.getParent();
 				final boolean skip = parent instanceof AbstractRepeater;
 
 				if (skip == false)
 				{
-					buffer.append(':').append(cursor.getId());
+					String cursorKey = cursor.isAuto() ? "wicket-auto" : cursor.getId();
+					buffer.append(':').append(cursorKey);
 				}
 
 				cursor = parent;
