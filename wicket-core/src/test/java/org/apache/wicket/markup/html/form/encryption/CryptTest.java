@@ -55,6 +55,7 @@ public class CryptTest extends WicketTestCase
 				final String encrypted = crypt.encryptUrlSafe(text);
 				assertEquals(expectedUrlSafeEncrypted, encrypted);
 				assertEquals(text, crypt.decryptUrlSafe(expectedUrlSafeEncrypted));
+				assertNull(crypt.decryptUrlSafe("style.css"));
 			}
 		}
 		catch (Exception ex)
