@@ -573,19 +573,24 @@ public final class AutoLinkResolver implements IComponentResolver
 
 			this.parent = parent;
 			this.attribute = attribute;
+			ResourceReference reference = null;
 			// Check whether it is a valid resource reference
-			if (PackageResource.exists(clazz, href, getLocale(), getStyle(), getVariation()))
+			Class<?> cursor = clazz;
+			// iterate all parents because the auto linked resource may come from
+			// inherited markup
+			while (cursor != null || cursor != Object.class)
 			{
-				// Create the component implementing the link
-				resourceReference = new PackageResourceReference(clazz, href, getLocale(),
-					getStyle(), getVariation());
+				if (PackageResource.exists(cursor, href, getLocale(), getStyle(), getVariation()))
+				{
+					// Create the component implementing the link
+					reference = new PackageResourceReference(cursor, href, getLocale(), getStyle(),
+						getVariation());
+					break;
+				}
+				cursor = cursor.getSuperclass();
+
 			}
-			else
-			{
-				// The resource does not exist. Set to null and ignore when
-				// rendering.
-				resourceReference = null;
-			}
+			resourceReference = reference;
 		}
 
 		/**
