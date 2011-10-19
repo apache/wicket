@@ -85,10 +85,11 @@ public final class AutoLinkResolver implements IComponentResolver
 		 *            the attribute to replace the value of
 		 * @return a new auto component or null if the path was absolute
 		 */
-		protected final Component newPackageResourceReferenceAutoComponent(
-			final MarkupContainer container, final String autoId, final PathInfo pathInfo,
-			final String attribute)
+		protected final Component newPackageResourceReferenceAutoComponent(final String autoId,
+			final PathInfo pathInfo, final String attribute)
 		{
+			final MarkupContainer container = pathInfo.getContainer();
+
 			if (!pathInfo.absolute && (pathInfo.path != null) && (pathInfo.path.length() > 0))
 			{
 				// Href is relative. Create a resource reference pointing at this file
@@ -98,7 +99,7 @@ public final class AutoLinkResolver implements IComponentResolver
 				// header has been added to (e.g. the Page). What we need
 				// however, is the component (e.g. a Panel) which
 				// contributed it.
-				MarkupStream markupStream = new MarkupStream(container.getMarkup());
+				MarkupStream markupStream = pathInfo.getMarkupStream();
 				Class<? extends Component> clazz = markupStream.getContainerClass();
 
 				// However if the markup stream is a merged markup stream (inheritance), than we
@@ -207,8 +208,6 @@ public final class AutoLinkResolver implements IComponentResolver
 		 * the autoId assigned as it's id. Should return null in case the component could not be
 		 * created as expected and the default resolving should take place.
 		 * 
-		 * @param container
-		 *            the parent container
 		 * @param autoId
 		 *            the automatically generated id for the auto component
 		 * @param pathInfo
@@ -216,8 +215,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		 * @return a new auto component or null in case this method couldn't resolve to a proper
 		 *         auto component
 		 */
-		Component newAutoComponent(final MarkupContainer container, final String autoId,
-			final PathInfo pathInfo);
+		Component newAutoComponent(final String autoId, final PathInfo pathInfo);
 	}
 
 	/**
@@ -245,15 +243,26 @@ public final class AutoLinkResolver implements IComponentResolver
 		/** The original reference (e.g the full value of a href attribute). */
 		private final String reference;
 
+		/** The container for this path */
+		private final MarkupContainer container;
+
+		/** Parent markup stream */
+		private final MarkupStream markupStream;
+
 		/**
 		 * Construct.
 		 * 
 		 * @param reference
 		 *            the original reference (e.g the full value of a href attribute)
+		 * @param markupStream
+		 * @param container
 		 */
-		public PathInfo(final String reference)
+		public PathInfo(final String reference, MarkupContainer container, MarkupStream markupStream)
 		{
 			this.reference = reference;
+			this.container = container;
+			this.markupStream = markupStream;
+
 			// If href contains URL query parameters ..
 			String infoPath;
 			// get the query string
@@ -368,6 +377,26 @@ public final class AutoLinkResolver implements IComponentResolver
 		{
 			return absolute;
 		}
+
+		/**
+		 * Gets container.
+		 * 
+		 * @return container
+		 */
+		public MarkupContainer getContainer()
+		{
+			return container;
+		}
+
+		/**
+		 * Gets markup stream
+		 * 
+		 * @return markup stream
+		 */
+		public MarkupStream getMarkupStream()
+		{
+			return markupStream;
+		}
 	}
 
 	/**
@@ -402,9 +431,9 @@ public final class AutoLinkResolver implements IComponentResolver
 		 *      java.lang.String, org.apache.wicket.markup.resolver.AutoLinkResolver.PathInfo)
 		 */
 		@SuppressWarnings("unchecked")
-		public Component newAutoComponent(final MarkupContainer container, final String autoId,
-			PathInfo pathInfo)
+		public Component newAutoComponent(final String autoId, PathInfo pathInfo)
 		{
+			final MarkupContainer container = pathInfo.getContainer();
 			if ((pathInfo.extension != null) &&
 				supportedPageExtensions.contains(pathInfo.extension))
 			{
@@ -480,8 +509,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			{
 				// not a registered type for bookmarkable pages; create a link
 				// to a resource instead
-				return newPackageResourceReferenceAutoComponent(container, autoId, pathInfo,
-					attribute);
+				return newPackageResourceReferenceAutoComponent(autoId, pathInfo, attribute);
 			}
 
 			// fallthrough
@@ -669,10 +697,9 @@ public final class AutoLinkResolver implements IComponentResolver
 		 * @see org.apache.wicket.markup.resolver.AutoLinkResolver.IAutolinkResolverDelegate#newAutoComponent(org.apache.wicket.MarkupContainer,
 		 *      java.lang.String, org.apache.wicket.markup.resolver.AutoLinkResolver.PathInfo)
 		 */
-		public Component newAutoComponent(final MarkupContainer container, final String autoId,
-			final PathInfo pathInfo)
+		public Component newAutoComponent(final String autoId, final PathInfo pathInfo)
 		{
-			return newPackageResourceReferenceAutoComponent(container, autoId, pathInfo, attribute);
+			return newPackageResourceReferenceAutoComponent(autoId, pathInfo, attribute);
 		}
 	}
 
@@ -802,10 +829,25 @@ public final class AutoLinkResolver implements IComponentResolver
 		// Must be marked as autolink tag
 		if (tag.isAutolinkEnabled())
 		{
+			// get the reference resolver
+			ITagReferenceResolver referenceResolver = tagNameToTagReferenceResolvers.get(tag.getName());
+			if (referenceResolver == null)
+			{
+				// fallback on default
+				referenceResolver = DEFAULT_ATTRIBUTE_RESOLVER;
+			}
+
+			// get the reference, which is typically the value of e.g. a href or src
+			// attribute
+			String reference = referenceResolver.getReference(tag);
+
+			// create the path info object
+			PathInfo pathInfo = new PathInfo(reference, container, markupStream);
+
 			// Try to find the Page matching the href
 			// Note: to not use tag.getId() because it will be modified while
 			// resolving the link and hence the 2nd render will fail.
-			Component link = resolveAutomaticLink(container, WicketLinkTagHandler.AUTOLINK_ID, tag);
+			Component link = resolveAutomaticLink(pathInfo, WicketLinkTagHandler.AUTOLINK_ID, tag);
 
 			if (log.isDebugEnabled())
 			{
@@ -827,17 +869,18 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * <p>
 	 * None html references are treated similar.
 	 * 
-	 * @param container
-	 *            The container where the link is
+	 * @param pathInfo
+	 * 
 	 * @param id
 	 *            the name of the component
 	 * @param tag
 	 *            the component tag
 	 * @return A BookmarkablePageLink<?> to handle the href
 	 */
-	private final Component resolveAutomaticLink(final MarkupContainer container, final String id,
+	private final Component resolveAutomaticLink(final PathInfo pathInfo, final String id,
 		final ComponentTag tag)
 	{
+		final MarkupContainer container = pathInfo.getContainer();
 		final Page page = container.getPage();
 
 		// Make the id (page-)unique
@@ -852,28 +895,13 @@ public final class AutoLinkResolver implements IComponentResolver
 		{
 			tag.setAutoComponentTag(true);
 		}
-		// tag.setId(autoId);
 
-		// get the reference resolver
-		ITagReferenceResolver referenceResolver = tagNameToTagReferenceResolvers.get(tagName);
-		if (referenceResolver == null)
-		{
-			// fallback on default
-			referenceResolver = DEFAULT_ATTRIBUTE_RESOLVER;
-		}
-
-		// get the reference, which is typically the value of e.g. a href or src
-		// attribute
-		String reference = referenceResolver.getReference(tag);
-
-		// create the path info object
-		PathInfo pathInfo = new PathInfo(reference);
 		// now get the resolver delegate
 		IAutolinkResolverDelegate autolinkResolverDelegate = tagNameToAutolinkResolverDelegates.get(tagName);
 		Component autoComponent = null;
 		if (autolinkResolverDelegate != null)
 		{
-			autoComponent = autolinkResolverDelegate.newAutoComponent(container, autoId, pathInfo);
+			autoComponent = autolinkResolverDelegate.newAutoComponent(autoId, pathInfo);
 		}
 
 		if (autoComponent == null)
