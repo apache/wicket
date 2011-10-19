@@ -246,17 +246,18 @@ public class UrlRenderer
 	 */
 	protected boolean shouldRenderAsFull(final Url url)
 	{
+		Url clientUrl = request.getClientUrl();
+
 		if (!Strings.isEmpty(url.getProtocol()) &&
-			!url.getProtocol().equals(request.getClientUrl().getProtocol()))
+			!url.getProtocol().equals(clientUrl.getProtocol()))
 		{
 			return true;
 		}
-		if (!Strings.isEmpty(url.getHost()) &&
-			!url.getHost().equals(request.getClientUrl().getHost()))
+		if (!Strings.isEmpty(url.getHost()) && !url.getHost().equals(clientUrl.getHost()))
 		{
 			return true;
 		}
-		if ((url.getPort() != null) && !url.getPort().equals(request.getClientUrl().getPort()))
+		if ((url.getPort() != null) && !url.getPort().equals(clientUrl.getPort()))
 		{
 			return true;
 		}
