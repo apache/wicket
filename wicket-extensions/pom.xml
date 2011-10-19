@@ -23,7 +23,7 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>1.5.2</version>
+		<version>1.5-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -44,6 +44,12 @@
 			<classifier>tests</classifier>
 			<scope>test</scope>
 			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.8.5</version>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 </project>

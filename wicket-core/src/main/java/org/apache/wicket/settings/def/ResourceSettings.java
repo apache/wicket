@@ -118,7 +118,7 @@ public class ResourceSettings implements IResourceSettings
 	private ICssCompressor cssCompressor;
 
 	/** escape string for '..' within resource keys */
-	private String parentFolderPlaceholder = null;
+	private String parentFolderPlaceholder = "::";
 
 	// resource caching strategy
 	private IResourceCachingStrategy resourceCachingStrategy;

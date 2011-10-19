@@ -45,7 +45,7 @@ public class BufferedResponseMapper implements IRequestMapper
 	 */
 	protected String getSessionId()
 	{
-		return Session.get().getId();
+		return Session.exists() ? Session.get().getId() : null;
 	}
 
 

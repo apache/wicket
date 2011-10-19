@@ -90,7 +90,7 @@ public class AutoLabelResolver implements IComponentResolver
 		if (!component.getOutputMarkupId())
 		{
 			component.setOutputMarkupId(true);
-			if (!component.hasBeenRendered())
+			if (component.hasBeenRendered())
 			{
 				logger.warn(
 					"Component: {} is referenced via a wicket:for attribute but does not have its outputMarkupId property set to true",

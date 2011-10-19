@@ -108,16 +108,15 @@ public class ServletWebRequest extends WebRequest
 
 	/**
 	 * Returns base url without context or filter mapping.
-	 * 
+	 * <p>
 	 * Example: if current url is
 	 * 
 	 * <pre>
 	 * http://localhost:8080/context/filter/mapping/wicket/bookmarkable/com.foo.Page?1&id=2
 	 * </pre>
 	 * 
-	 * the base url is wicket/bookmarkable/com.foo.Page
-	 * 
-	 * <pre>
+	 * the base url is <em>wicket/bookmarkable/com.foo.Page</em>
+	 * </p>
 	 * 
 	 * @see org.apache.wicket.request.Request#getClientUrl()
 	 */

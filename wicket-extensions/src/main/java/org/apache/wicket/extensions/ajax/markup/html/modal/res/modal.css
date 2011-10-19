@@ -21,7 +21,6 @@ div.wicket-mask-dark {
 	width: 100%; 
 	height: 100%;
 	opacity: 0.1; 
-	-moz-opacity:0.1;  
 	background-color: black; 
 	filter: alpha(opacity=10); 
 	background-image: url('transparent2.png');

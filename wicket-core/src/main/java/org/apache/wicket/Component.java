@@ -2170,13 +2170,13 @@ public abstract class Component
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
 	 * <p>
 	 * Prepares the component and it's children for rendering. On whole page render this method must
-	 * be called on the page. On AJAX request, this method must be called on updated component.
+	 * be called on the page. On AJAX request, this method must be called on the updated component.
 	 * 
 	 * @param setRenderingFlag
 	 *            Whether to set the rendering flag. This must be true if the page is about to be
 	 *            rendered. However, there are usecases to call this method without an immediate
-	 *            render (e.g. on stateless listner request target to build the component
-	 *            hierarchy), in that case setRenderingFlag should be false
+	 *            render (e.g. on stateless listener request target to build the component
+	 *            hierarchy), in that case setRenderingFlag should be false.
 	 */
 	public void internalPrepareForRender(boolean setRenderingFlag)
 	{

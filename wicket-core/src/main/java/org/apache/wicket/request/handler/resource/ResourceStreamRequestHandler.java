@@ -16,8 +16,10 @@
  */
 package org.apache.wicket.request.handler.resource;
 
+import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.handler.logger.ResourceStreamLogData;
 import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.ResourceStreamResource;
@@ -32,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Eelco Hillenius
  */
-public class ResourceStreamRequestHandler implements IRequestHandler
+public class ResourceStreamRequestHandler implements IRequestHandler, ILoggableRequestHandler
 {
 	/** Logger */
 	private static final Logger log = LoggerFactory.getLogger(ResourceStreamRequestHandler.class);
@@ -46,6 +48,8 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 
 	/** the resource stream for the response. */
 	private final IResourceStream resourceStream;
+
+	private ResourceStreamLogData logData;
 
 	/**
 	 * Construct.
@@ -75,6 +79,15 @@ public class ResourceStreamRequestHandler implements IRequestHandler
 
 	public void detach(IRequestCycle requestCycle)
 	{
+		if (logData == null)
+			logData = getResourceStream() == null ? new ResourceStreamLogData(this)
+				: new ResourceStreamLogData(this, getResourceStream());
+	}
+
+	/** {@inheritDoc} */
+	public ResourceStreamLogData getLogData()
+	{
+		return logData;
 	}
 
 	/**

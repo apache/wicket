@@ -37,6 +37,7 @@ import org.apache.wicket.util.value.ValueMap;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test cases for the <code>Localizer</code> class.
@@ -88,7 +89,7 @@ public class LocalizerTest extends Assert
 	}
 
 	@After
-	protected void tearDown() throws Exception
+	public void tearDown() throws Exception
 	{
 		tester.destroy();
 	}
@@ -96,6 +97,7 @@ public class LocalizerTest extends Assert
 	/**
 	 * 
 	 */
+	@Test
 	public void testGetStringValidString()
 	{
 		Assert.assertEquals("Expected string should be returned", "This is a test",
@@ -105,6 +107,7 @@ public class LocalizerTest extends Assert
 	/**
 	 * 
 	 */
+	@Test
 	public void testGetStringMissingStringReturnDefault()
 	{
 		settings.setUseDefaultOnMissingResource(true);
@@ -115,6 +118,7 @@ public class LocalizerTest extends Assert
 	/**
 	 * 
 	 */
+	@Test
 	public void testGetStringMissingStringNoDefault()
 	{
 		settings.setUseDefaultOnMissingResource(true);
@@ -128,6 +132,7 @@ public class LocalizerTest extends Assert
 	/**
 	 * 
 	 */
+	@Test
 	public void testGetStringMissingStringDoNotUseDefault()
 	{
 		settings.setUseDefaultOnMissingResource(false);
@@ -140,6 +145,7 @@ public class LocalizerTest extends Assert
 	/**
 	 * 
 	 */
+	@Test
 	public void testGetStringMissingStringExceptionThrown()
 	{
 		settings.setUseDefaultOnMissingResource(false);
@@ -158,6 +164,7 @@ public class LocalizerTest extends Assert
 	/**
 	 * 
 	 */
+	@Test
 	public void testGetStringPropertySubstitution()
 	{
 		ValueMap vm = new ValueMap();
@@ -170,6 +177,7 @@ public class LocalizerTest extends Assert
 	/**
 	 * 
 	 */
+	@Test
 	public void testInComponentConstructor()
 	{
 		new MyLabel("myLabel");
@@ -178,6 +186,7 @@ public class LocalizerTest extends Assert
 	/**
 	 * Unit test for bug number [1416582] Resource loading caches wrong.
 	 */
+	@Test
 	public void testTwoComponents()
 	{
 		Session.get().setLocale(Locale.ENGLISH);
@@ -200,6 +209,7 @@ public class LocalizerTest extends Assert
 	/**
 	 * 
 	 */
+	@Test
 	public void testGetStringUseModel()
 	{
 		HashMap<String, String> model = new HashMap<String, String>();
@@ -217,6 +227,7 @@ public class LocalizerTest extends Assert
 	/**
 	 * See https://issues.apache.org/jira/browse/WICKET-1851
 	 */
+	@Test
 	public void test_1851_1()
 	{
 		MyMockPage page = new MyMockPage();

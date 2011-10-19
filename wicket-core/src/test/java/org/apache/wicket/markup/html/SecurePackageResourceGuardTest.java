@@ -82,15 +82,32 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 		assertTrue(guard.acceptAbsolutePath("mydir/test.gif"));
 		assertTrue(guard.acceptAbsolutePath("/root/mydir/test.gif"));
 
-		// ".." are not allowed
-		assertFalse(guard.acceptAbsolutePath("../test.gif"));
-
 		assertTrue(guard.acceptAbsolutePath("test.giX"));
 		assertTrue(guard.acceptAbsolutePath("mydir/test.gifABCD"));
 		assertTrue(guard.acceptAbsolutePath("mydir/testXXX.gif"));
 
 		guard.addPattern("-**/testA.gif");
 		assertFalse(guard.acceptAbsolutePath("mydir/testA.gif"));
+	}
+
+	@Test
+	public void fileOnly_relative_allowed()
+	{
+		// ".." is allowed as long as we have parent folder placeholder set in resource settings
+		tester.getApplication().getResourceSettings().setParentFolderPlaceholder("::");
+		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
+		guard.addPattern("+test*.gif");
+		assertTrue(guard.acceptAbsolutePath("../test.gif"));
+	}
+
+	@Test
+	public void fileOnly_relative_not_allowed()
+	{
+		// ".." is allowed as long as we have parent folder placeholder set in resource settings
+		tester.getApplication().getResourceSettings().setParentFolderPlaceholder(null);
+		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
+		guard.addPattern("+test*.gif");
+		assertFalse(guard.acceptAbsolutePath("../test.gif"));
 	}
 
 	/**

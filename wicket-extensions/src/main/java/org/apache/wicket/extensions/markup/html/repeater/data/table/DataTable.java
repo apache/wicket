@@ -33,6 +33,7 @@ import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
@@ -135,10 +136,8 @@ public class DataTable<T> extends Panel implements IPageableItems
 	{
 		super(id);
 
-		if ((columns == null) || (columns.size() < 1))
-		{
-			throw new IllegalArgumentException("Argument `columns` cannot be null or empty");
-		}
+		Args.notEmpty(columns, "columns");
+
 
 		this.columns = columns;
 		this.caption = new Caption("caption", getCaptionModel());
@@ -340,10 +339,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 
 	private void addToolbar(final AbstractToolbar toolbar, final ToolbarsContainer container)
 	{
-		if (toolbar == null)
-		{
-			throw new IllegalArgumentException("argument [toolbar] cannot be null");
-		}
+		Args.notNull(toolbar, "toolbar");
 
 		container.getRepeatingView().add(toolbar);
 	}

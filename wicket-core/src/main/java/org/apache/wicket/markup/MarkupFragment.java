@@ -18,6 +18,7 @@ package org.apache.wicket.markup;
 
 import java.util.Iterator;
 
+import org.apache.wicket.markup.parser.filter.HtmlHandler;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
@@ -65,7 +66,10 @@ public class MarkupFragment implements IMarkupFragment
 			throw new IllegalArgumentException("Parameter 'startIndex' must not be < 0");
 		}
 
-		if (startIndex >= markup.size())
+		// cache the value for better performance
+		int markupSize = markup.size();
+
+		if (startIndex >= markupSize)
 		{
 			throw new IllegalArgumentException(
 				"Parameter 'startIndex' must not be >= markup.size()");
@@ -79,7 +83,7 @@ public class MarkupFragment implements IMarkupFragment
 		if ((startElem instanceof ComponentTag) == false)
 		{
 			throw new IllegalArgumentException(
-				"Parameter 'index' does not point to a Wicket open tag");
+				"Parameter 'startIndex' does not point to a Wicket open tag");
 		}
 
 		// Determine the size. Find the close tag
@@ -91,19 +95,20 @@ public class MarkupFragment implements IMarkupFragment
 		}
 		else if (startTag.hasNoCloseTag())
 		{
-			for (endIndex = startIndex + 1; endIndex < markup.size(); endIndex++)
+			if (HtmlHandler.requiresCloseTag(startTag.getName()) == false)
 			{
-				MarkupElement elem = markup.get(endIndex);
-				if (elem instanceof ComponentTag)
-				{
-					endIndex--;
-					break;
-				}
+				// set endIndex to a "good" value
+				endIndex = startIndex;
+			}
+			else
+			{
+				// set endIndex to a value which will indicate an error
+				endIndex = markupSize;
 			}
 		}
 		else
 		{
-			for (endIndex = startIndex + 1; endIndex < markup.size(); endIndex++)
+			for (endIndex = startIndex + 1; endIndex < markupSize; endIndex++)
 			{
 				MarkupElement elem = markup.get(endIndex);
 				if (elem instanceof ComponentTag)
@@ -117,7 +122,7 @@ public class MarkupFragment implements IMarkupFragment
 			}
 		}
 
-		if (endIndex >= markup.size())
+		if (endIndex >= markupSize)
 		{
 			throw new MarkupException("Unable to find close tag for: '" + startTag.toString() +
 				"' in " + getRootMarkup().getMarkupResourceStream().toString());

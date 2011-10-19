@@ -21,7 +21,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.request.ILogData;
+import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.handler.logger.NoLogData;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.string.Strings;
 
@@ -363,7 +366,7 @@ public interface IRequestLogger
 		}
 
 		/**
-		 * @return The event target string
+		 * @return The event target
 		 */
 		public IRequestHandler getEventTarget()
 		{
@@ -371,11 +374,49 @@ public interface IRequestLogger
 		}
 
 		/**
-		 * @return The response target string
+		 * @return The class of the event target
+		 */
+		public Class<? extends IRequestHandler> getEventTargetClass()
+		{
+			return eventTarget == null ? null : eventTarget.getClass();
+		}
+
+		/**
+		 * @return The log data for the eventTarget, or {@link NoLogData} if the request handler is
+		 *         not loggable
+		 */
+		public ILogData getEventTargetLog()
+		{
+			if (eventTarget instanceof ILoggableRequestHandler)
+				return ((ILoggableRequestHandler)eventTarget).getLogData();
+			return new NoLogData();
+		}
+
+		/**
+		 * @return The response target
 		 */
 		public IRequestHandler getResponseTarget()
 		{
 			return responseTarget;
+		}
+
+		/**
+		 * @return The class of the response target
+		 */
+		public Class<? extends IRequestHandler> getResponseTargetClass()
+		{
+			return responseTarget == null ? null : responseTarget.getClass();
+		}
+
+		/**
+		 * @return The log data for the responseTarget, or {@link NoLogData} if the request handler
+		 *         is not loggable
+		 */
+		public ILogData getResponseTargetLog()
+		{
+			if (responseTarget instanceof ILoggableRequestHandler)
+				return ((ILoggableRequestHandler)responseTarget).getLogData();
+			return new NoLogData();
 		}
 
 		/**

@@ -20,10 +20,12 @@ import org.apache.wicket.Page;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.handler.RenderPageRequestHandler.RedirectPolicy;
+import org.apache.wicket.request.handler.logger.ListenerInterfaceLogData;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
@@ -38,7 +40,8 @@ import org.slf4j.LoggerFactory;
 public class ListenerInterfaceRequestHandler
 	implements
 		IPageRequestHandler,
-		IComponentRequestHandler
+		IComponentRequestHandler,
+		ILoggableRequestHandler
 {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ListenerInterfaceRequestHandler.class);
@@ -48,6 +51,8 @@ public class ListenerInterfaceRequestHandler
 	private final RequestListenerInterface listenerInterface;
 
 	private final Integer behaviorId;
+
+	private ListenerInterfaceLogData logData;
 
 	/**
 	 * Construct.
@@ -124,6 +129,11 @@ public class ListenerInterfaceRequestHandler
 	 */
 	public void detach(IRequestCycle requestCycle)
 	{
+		if (logData == null)
+		{
+			logData = new ListenerInterfaceLogData(pageComponentProvider, listenerInterface,
+				behaviorId);
+		}
 		pageComponentProvider.detach();
 	}
 
@@ -152,9 +162,9 @@ public class ListenerInterfaceRequestHandler
 	 */
 	public void respond(final IRequestCycle requestCycle)
 	{
-		final boolean isNewPageInstance = pageComponentProvider.isNewPageInstance();
-		final boolean isAjax = ((WebRequest)requestCycle.getRequest()).isAjax();
 		final IRequestablePage page = getPage();
+		final boolean freshPage = pageComponentProvider.isPageInstanceFresh();
+		final boolean isAjax = ((WebRequest)requestCycle.getRequest()).isAjax();
 
 		if (getComponent().getPage() == page)
 		{
@@ -169,7 +179,7 @@ public class ListenerInterfaceRequestHandler
 				: RedirectPolicy.AUTO_REDIRECT;
 			final IPageProvider pageProvider = new PageProvider(page);
 
-			if (isNewPageInstance && isStateless == false)
+			if (freshPage && isStateless == false)
 			{
 				// A listener interface is invoked on an expired page.
 
@@ -239,7 +249,8 @@ public class ListenerInterfaceRequestHandler
 
 	public final boolean isPageInstanceCreated()
 	{
-		return !pageComponentProvider.isNewPageInstance();
+		// this request handler always operates on a created page instance
+		return true;
 	}
 
 	public final String getComponentPath()
@@ -250,5 +261,11 @@ public class ListenerInterfaceRequestHandler
 	public final Integer getRenderCount()
 	{
 		return pageComponentProvider.getRenderCount();
+	}
+
+	/** {@inheritDoc} */
+	public ListenerInterfaceLogData getLogData()
+	{
+		return logData;
 	}
 }

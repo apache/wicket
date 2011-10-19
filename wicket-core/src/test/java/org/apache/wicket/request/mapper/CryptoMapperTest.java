@@ -96,6 +96,18 @@ public class CryptoMapperTest extends AbstractMapperTest
 	}
 
 	/**
+	 * Test a failed decrypt, WICKET-4139
+	 */
+	public void testDecryptFailed()
+	{
+		String encrypted = "style.css";
+
+		Request request = getRequest(Url.parse(encrypted));
+
+		assertNull(mapper.mapRequest(request));
+	}
+
+	/**
 	 * Tests that named and indexed parameters are properly (en|de)crypted
 	 */
 	public void testPageParameters()

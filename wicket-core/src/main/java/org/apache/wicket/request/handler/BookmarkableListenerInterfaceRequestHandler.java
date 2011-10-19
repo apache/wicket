@@ -22,6 +22,8 @@ import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Request handler for bookmarkable pages with listener interface. This handler is only used to
@@ -34,6 +36,8 @@ public class BookmarkableListenerInterfaceRequestHandler
 		IPageRequestHandler,
 		IComponentRequestHandler
 {
+	private static final Logger logger = LoggerFactory.getLogger(BookmarkableListenerInterfaceRequestHandler.class);
+
 	private final IPageAndComponentProvider pageComponentProvider;
 
 	private final RequestListenerInterface listenerInterface;
@@ -156,7 +160,8 @@ public class BookmarkableListenerInterfaceRequestHandler
 
 	public final boolean isPageInstanceCreated()
 	{
-		return !pageComponentProvider.isNewPageInstance();
+		// this request handler always operates on a created page instance
+		return true;
 	}
 
 	/**

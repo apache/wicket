@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.lang;
 
+import java.util.Collection;
+
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -62,6 +64,39 @@ public class Args
 			throw new IllegalArgumentException("Argument '" + name + "' may not be null or empty.");
 		}
 		return argument;
+	}
+
+
+	/**
+	 * 
+	 * Checks argument is not null or empty
+	 * 
+	 * @param collection
+	 * @param message
+	 * @param params
+	 * @throws IllegalArgumentException
+	 *             if the passed collection is either null or empty
+	 */
+	public static void notEmpty(final Collection<?> collection, final String message,
+		final Object... params)
+	{
+		if (collection == null || collection.isEmpty())
+		{
+			throw new IllegalArgumentException(Args.format(message, params));
+		}
+	}
+
+	/**
+	 * Checks argument is not null or empty
+	 * 
+	 * @param collection
+	 * @param name
+	 * @throws IllegalArgumentException
+	 *             if the passed collection is either null or empty
+	 */
+	public static void notEmpty(final Collection<?> collection, final String name)
+	{
+		notEmpty(collection, "Collection '%s' may not be null or empty.", name);
 	}
 
 	/**

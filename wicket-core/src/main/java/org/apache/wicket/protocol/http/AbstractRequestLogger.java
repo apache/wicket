@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
  * implementation: currently Wicket supports two formats: a {@link RequestLogger legacy, log4j
  * compatible format}, and a {@link JsonRequestLogger JSON format}.
  */
-public abstract class AbstractRequestLogger implements IRequestLogger
+public abstract class AbstractRequestLogger implements IStagedRequestLogger
 {
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractRequestLogger.class);
 
@@ -260,10 +260,9 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 					sessiondata.setSessionInfo(sessionInfo);
 					sessiondata.setSessionSize(sizeInBytes);
 					sessiondata.addTimeTaken(timeTaken);
+					RequestCycle.get().setMetaData(SESSION_DATA, sessiondata);
 				}
 			}
-			// log the request- and sessiondata (the latter can be null)
-			log(requestdata, sessiondata);
 		}
 	}
 
@@ -301,6 +300,17 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 			}
 		}
 		return rd;
+	}
+
+	public void performLogging()
+	{
+		RequestData requestdata = RequestCycle.get().getMetaData(REQUEST_DATA);
+		SessionData sessiondata = RequestCycle.get().getMetaData(SESSION_DATA);
+		if (requestdata != null)
+		{
+			// log the request- and sessiondata (the latter can be null)
+			log(requestdata, sessiondata);
+		}
 	}
 
 	protected abstract void log(RequestData rd, SessionData sd);

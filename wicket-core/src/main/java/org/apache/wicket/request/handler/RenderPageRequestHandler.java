@@ -17,13 +17,17 @@
 package org.apache.wicket.request.handler;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.handler.logger.PageLogData;
 import org.apache.wicket.request.handler.render.PageRenderer;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * {@link IRequestHandler} that renders page instance. Depending on the <code>redirectPolicy</code>
@@ -33,11 +37,19 @@ import org.apache.wicket.util.lang.Args;
  * 
  * @author Matej Knopp
  */
-public class RenderPageRequestHandler implements IPageRequestHandler, IPageClassRequestHandler
+public class RenderPageRequestHandler
+	implements
+		IPageRequestHandler,
+		IPageClassRequestHandler,
+		ILoggableRequestHandler
 {
+	private static final Logger logger = LoggerFactory.getLogger(RenderPageRequestHandler.class);
+
 	private final IPageProvider pageProvider;
 
 	private final RedirectPolicy redirectPolicy;
+
+	private PageLogData logData;
 
 	/**
 	 * Determines whether Wicket does a redirect when rendering a page
@@ -131,7 +143,15 @@ public class RenderPageRequestHandler implements IPageRequestHandler, IPageClass
 	/** {@inheritDoc} */
 	public void detach(IRequestCycle requestCycle)
 	{
+		if (logData == null)
+			logData = new PageLogData(pageProvider);
 		pageProvider.detach();
+	}
+
+	/** {@inheritDoc} */
+	public PageLogData getLogData()
+	{
+		return logData;
 	}
 
 	/** {@inheritDoc} */
@@ -149,7 +169,16 @@ public class RenderPageRequestHandler implements IPageRequestHandler, IPageClass
 
 	public final boolean isPageInstanceCreated()
 	{
-		return !pageProvider.isNewPageInstance();
+		// FIXME wicket.next remove the workaround for page providers that dont implement the
+		// interface
+		if (!(pageProvider instanceof IIntrospectablePageProvider))
+		{
+			logger.warn(
+				"{} used by this application does not implement {}, the request handler is falling back on using incorrect behavior",
+				IPageProvider.class, IIntrospectablePageProvider.class);
+			return !pageProvider.isNewPageInstance();
+		}
+		return ((IIntrospectablePageProvider)pageProvider).hasPageInstance();
 	}
 
 	public final Integer getRenderCount()
