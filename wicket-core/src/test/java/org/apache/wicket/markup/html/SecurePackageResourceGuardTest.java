@@ -32,12 +32,17 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	public void accept()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
+		guard.setAllowAccessToWebInfResources(false);
 		guard.addPattern("+*.gif");
 		assertTrue(guard.accept(Application.class, "test.gif"));
 		assertTrue(guard.accept(Application.class, "mydir/test.gif"));
 		assertTrue(guard.accept(Application.class, "/root/mydir/test.gif"));
 		assertTrue(guard.accept(Application.class, "../test.gif"));
 		assertTrue(guard.accept(Application.class, "../../test.gif"));
+
+		// web-inf (root package)
+		assertFalse(guard.accept(Application.class, "../../../test.gif"));
+		guard.setAllowAccessToWebInfResources(true);
 		assertTrue(guard.accept(Application.class, "../../../test.gif"));
 
 		boolean hit = false;
@@ -61,7 +66,8 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.addPattern("+*.gif");
-		assertTrue(guard.acceptAbsolutePath("test.gif"));
+		assertFalse(guard.acceptAbsolutePath("test.gif"));
+		assertFalse(guard.acceptAbsolutePath("/test.gif"));
 		assertTrue(guard.acceptAbsolutePath("mydir/test.gif"));
 		assertTrue(guard.acceptAbsolutePath("/root/mydir/test.gif"));
 	}
@@ -73,6 +79,7 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	public void fileOnly()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
+		guard.setAllowAccessToWebInfResources(true);
 		guard.addPattern("+**.gif");
 		guard.addPattern("+*.gif*");
 		guard.addPattern("+*.gi*");
@@ -231,6 +238,7 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	public void six()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
+		guard.setAllowAccessToWebInfResources(true);
 		guard.addPattern("+**/*.gif");
 
 		assertTrue(guard.acceptAbsolutePath("test.gif"));
