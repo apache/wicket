@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.apache.wicket.util.collections.ReverseListIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,6 +103,32 @@ public abstract class ListenerCollection<T> implements Serializable, Iterable<T>
 	}
 
 	/**
+	 * Notifies each listener in this set in reverse order ignoring exceptions
+	 * 
+	 * @param notifier
+	 *            notifier used to notify each listener
+	 */
+	protected void reversedNotifyIgnoringExceptions(final INotifier<T> notifier)
+	{
+		reversedNotify(new INotifier<T>()
+		{
+			public void notify(T listener)
+			{
+				try
+				{
+					notifier.notify(listener);
+				}
+				catch (Exception e)
+				{
+					logger.error("Error invoking listener: " + listener, e);
+				}
+
+			}
+
+		});
+	}
+
+	/**
 	 * Notifies each listener in this in reversed order
 	 * 
 	 * @param notifier
@@ -109,16 +136,10 @@ public abstract class ListenerCollection<T> implements Serializable, Iterable<T>
 	 */
 	protected void reversedNotify(final INotifier<T> notifier)
 	{
-		reversedNotify(iterator(), notifier);
-	}
-
-	private void reversedNotify(Iterator<T> iterator, final INotifier<T> notifier)
-	{
-		if (iterator.hasNext())
+		Iterator<T> it = new ReverseListIterator<T>(listeners);
+		while (it.hasNext())
 		{
-			T listener = iterator.next();
-			reversedNotify(iterator, notifier);
-			notifier.notify(listener);
+			notifier.notify(it.next());
 		}
 	}
 
