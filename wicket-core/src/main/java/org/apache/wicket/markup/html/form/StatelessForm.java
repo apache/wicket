@@ -59,4 +59,11 @@ public class StatelessForm<T> extends Form<T>
 	{
 		return true;
 	}
+
+	@Override
+	protected MethodMismatchResponse onMethodMismatch()
+	{
+		setResponsePage(getPage().getClass(), getPage().getPageParameters());
+		return MethodMismatchResponse.ABORT;
+	}
 }
