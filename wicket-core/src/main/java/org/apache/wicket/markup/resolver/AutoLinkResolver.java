@@ -578,7 +578,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			Class<?> cursor = clazz;
 			// iterate all parents because the auto linked resource may come from
 			// inherited markup
-			while (cursor != null || cursor != Object.class)
+			while (cursor != null && cursor != Object.class)
 			{
 				if (PackageResource.exists(cursor, href, getLocale(), getStyle(), getVariation()))
 				{
