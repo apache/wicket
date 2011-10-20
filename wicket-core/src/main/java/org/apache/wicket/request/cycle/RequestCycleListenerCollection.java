@@ -92,19 +92,11 @@ public class RequestCycleListenerCollection extends ListenerCollection<IRequestC
 	 */
 	public void onDetach(final RequestCycle cycle)
 	{
-		reversedNotify(new INotifier<IRequestCycleListener>()
+		reversedNotifyIgnoringExceptions(new INotifier<IRequestCycleListener>()
 		{
 			public void notify(IRequestCycleListener listener)
 			{
-				try
-				{
-					listener.onDetach(cycle);
-				}
-				catch (Exception e)
-				{
-					logger.error("Error detaching request cycle listener: " + listener +
-						" of class: " + listener.getClass().getName(), e);
-				}
+				listener.onDetach(cycle);
 			}
 		});
 	}

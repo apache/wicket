@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
@@ -667,9 +669,41 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	public final void onFormSubmitted()
 	{
+		// check methods match
+		if (getRequest().getContainerRequest() instanceof HttpServletRequest)
+		{
+			String desiredMethod = getMethod();
+			String actualMethod = ((HttpServletRequest)getRequest().getContainerRequest()).getMethod();
+			if (!actualMethod.equalsIgnoreCase(getMethod()))
+			{
+				MethodMismatchResponse response = onMethodMismatch();
+				switch (response)
+				{
+					case ABORT :
+						return;
+					case CONTINUE :
+						break;
+					default :
+						throw new IllegalStateException("Invalid " +
+							MethodMismatchResponse.class.getName() + " value: " + response);
+				}
+			}
+		}
 		onFormSubmitted(null);
 	}
 
+	/**
+	 * Called when a form has been submitted using a method differing from return value of
+	 * {@link #getMethod()}. For example, someone can copy and paste the action url and invoke the
+	 * form using a {@code GET} instead of the desired {@code POST}. This method allows the user to
+	 * react to this situation.
+	 * 
+	 * @return response that can either abort or continue the processing of the form
+	 */
+	protected MethodMismatchResponse onMethodMismatch()
+	{
+		return MethodMismatchResponse.CONTINUE;
+	}
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET API. DO NOT ATTEMPT TO OVERRIDE OR CALL IT.
@@ -1981,5 +2015,16 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener
 			inputName.prepend(Component.PATH_SEPARATOR);
 		}
 		return inputName.toString();
+	}
+
+	/**
+	 * Response when a submission method mismatch is detected
+	 * 
+	 * @see Form#getMethod()
+	 * 
+	 * @author igor
+	 */
+	public static enum MethodMismatchResponse {
+		CONTINUE, ABORT;
 	}
 }

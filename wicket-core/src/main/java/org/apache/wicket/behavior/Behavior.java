@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.behavior;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.IComponentAwareEventSink;
@@ -51,6 +52,17 @@ public abstract class Behavior
 		IComponentAwareHeaderContributor
 {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Constructor
+	 */
+	public Behavior()
+	{
+		if (Application.exists())
+		{
+			Application.get().getBehaviorInstantiationListeners().onInstantiation(this);
+		}
+	}
 
 	/**
 	 * Called when a component is about to render.
