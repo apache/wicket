@@ -23,7 +23,6 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -129,57 +128,5 @@ public class FilterForm<T> extends Form<T>
 	public final String getFocusTrackingHandler(final Component component)
 	{
 		return ("_filter_focus(this, '" + getFocusTrackerFieldCssId() + "');");
-	}
-
-	/**
-	 * Model that uses filter state locator as a passthrough for model objects
-	 * 
-	 * @param <T>
-	 *            type of filter state object
-	 * @author Igor Vaynberg (ivaynberg)
-	 */
-	private static class FilterStateModel<T> implements IModel<T>
-	{
-		private static final long serialVersionUID = 1L;
-
-		private final IFilterStateLocator<T> locator;
-
-		/**
-		 * Constructor
-		 * 
-		 * @param locator
-		 *            IFilterStateLocator implementation used to provide model object for this model
-		 */
-		public FilterStateModel(final IFilterStateLocator<T> locator)
-		{
-			if (locator == null)
-			{
-				throw new IllegalArgumentException("argument [locator] cannot be null");
-			}
-			this.locator = locator;
-		}
-
-		/**
-		 * @see org.apache.wicket.model.IModel#getObject()
-		 */
-		public T getObject()
-		{
-			return locator.getFilterState();
-		}
-
-		/**
-		 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
-		 */
-		public void setObject(final T object)
-		{
-			locator.setFilterState(object);
-		}
-
-		/**
-		 * @see org.apache.wicket.model.IDetachable#detach()
-		 */
-		public void detach()
-		{
-		}
 	}
 }
