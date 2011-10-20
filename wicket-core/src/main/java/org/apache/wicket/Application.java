@@ -636,6 +636,8 @@ public abstract class Application implements UnboundListener, IEventSink
 	 */
 	public void internalDestroy()
 	{
+		applicationListeners.onBeforeDestroyed(this);
+
 		// destroy detach listener
 		final IDetachListener detachListener = getFrameworkSettings().getDetachListener();
 		if (detachListener != null)
@@ -804,6 +806,7 @@ public abstract class Application implements UnboundListener, IEventSink
 		internalInit();
 		init();
 		initializeComponents();
+		applicationListeners.onAfterInitialized(this);
 
 		validateInit();
 	}
@@ -890,6 +893,10 @@ public abstract class Application implements UnboundListener, IEventSink
 
 	/** */
 	private final RequestCycleListenerCollection requestCycleListeners = new RequestCycleListenerCollection();
+
+	private final ApplicationListenerCollection applicationListeners = new ApplicationListenerCollection();
+
+	private final SessionListenerCollection sessionListeners = new SessionListenerCollection();
 
 	/** list of {@link IComponentInstantiationListener}s. */
 	private final ComponentInstantiationListenerCollection componentInstantiationListeners = new ComponentInstantiationListenerCollection();
@@ -1487,6 +1494,7 @@ public abstract class Application implements UnboundListener, IEventSink
 			session = newSession(requestCycle.getRequest(), requestCycle.getResponse());
 			ThreadContext.setSession(session);
 			internalGetPageManager().newSessionCreated();
+			sessionListeners.onCreated(session);
 		}
 		else
 		{
