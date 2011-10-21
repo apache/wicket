@@ -68,8 +68,8 @@ public class FilterForm<T> extends Form<T>
 		String id = Strings.escapeMarkup(getFocusTrackerFieldCssId()).toString();
 		String value = getRequest().getPostParameters().getParameterValue(id).toString("");
 		getResponse().write(
-			String.format("<input type=\"hidden\" name=\"%s\" id=\"%s\" value=\"%s\"/>", id, id,
-				value));
+			String.format("<div><input type=\"hidden\" name=\"%s\" id=\"%s\" value=\"%s\"/></div>",
+				id, id, value));
 	}
 
 	/**
