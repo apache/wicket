@@ -332,10 +332,10 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 			final String escapedComponentMarkupId = getEscapedComponentMarkupId();
 			final String javascript = "var e = Wicket.$('" + escapedComponentMarkupId + "Dp" +
 					"'); if (e != null && typeof(e.parentNode) != 'undefined' && " +
-					"typeof(e.parentNode.parentNode != 'undefined')) " +
+					"typeof(e.parentNode.parentNode != 'undefined')) {" +
 					"e.parentNode.parentNode.removeChild(e.parentNode);" + "YAHOO.wicket." +
 					escapedComponentMarkupId + "DpJs.destroy(); delete YAHOO.wicket." +
-					escapedComponentMarkupId + "DpJs;";
+					escapedComponentMarkupId + "DpJs;}";
 
 			response.renderJavascript(javascript, null);
 		}
