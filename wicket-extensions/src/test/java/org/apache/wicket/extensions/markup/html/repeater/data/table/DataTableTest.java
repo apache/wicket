@@ -63,9 +63,9 @@ public class DataTableTest extends TestCase
 	}
 
 	/**
-	 * Testing overall rendered markup.
+	 * @throws Exception
 	 */
-	public void testRenderedMarkup() throws Exception
+	public void test_1() throws Exception
 	{
 		tester.startPage(DataTablePage.class);
 		tester.assertRenderedPage(DataTablePage.class);
@@ -95,35 +95,29 @@ public class DataTableTest extends TestCase
 
 	/**
 	 * Tests that DataTable doesn't produce thead/tfoot if there are no top/bottom toolbars or if
-	 * their children components are all invisible.
-	 * 
-	 * WICKET-3603 and WICKET-4153
+	 * their children components are all invisible
 	 */
-	public void testTableHeaderFooterBody()
+	public void testWicket3603()
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.add("empty", Boolean.TRUE);
-		tester.startPage(TableHeadFooterBodyPage.class, parameters);
+		tester.startPage(Wicket3603Page.class, parameters);
 		System.err.println(tester.getLastResponseAsString());
 		Assert.assertTrue(tester.getLastResponseAsString().contains("thead"));
 		Assert.assertTrue(tester.getLastResponseAsString().contains("tfoot"));
-		Assert.assertFalse(tester.getLastResponseAsString().contains("tbody"));
 
 		parameters.set("empty", Boolean.FALSE);
-		tester.startPage(TableHeadFooterBodyPage.class);
+		tester.startPage(Wicket3603Page.class);
 		System.err.println(tester.getLastResponseAsString());
 		Assert.assertFalse(tester.getLastResponseAsString().contains("thead"));
 		Assert.assertFalse(tester.getLastResponseAsString().contains("tfoot"));
-		Assert.assertTrue(tester.getLastResponseAsString().contains("tbody"));
 	}
 
 	/**
 	 * Tests that a {@link DataTable} with non-empty {@link DataTable#getCaptionModel()} will render
 	 * &lt;caption&gt; element.
-	 * 
-	 * WICKET-3886
 	 */
-	public void testCaption()
+	public void testWicket3886()
 	{
 		DataTablePage page = new DataTablePage()
 		{
@@ -158,9 +152,7 @@ public class DataTableTest extends TestCase
 	/**
 	 * A page with a DataTable that either has items (tbody) or header and footer (thead/tfoot)
 	 */
-	public static class TableHeadFooterBodyPage extends WebPage
-		implements
-			IMarkupResourceStreamProvider
+	public static class Wicket3603Page extends WebPage implements IMarkupResourceStreamProvider
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -169,7 +161,7 @@ public class DataTableTest extends TestCase
 		 * 
 		 * @param parameters
 		 */
-		public TableHeadFooterBodyPage(PageParameters parameters)
+		public Wicket3603Page(PageParameters parameters)
 		{
 			super(parameters);
 
