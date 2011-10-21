@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.behavior;
 
+import java.lang.reflect.Method;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
@@ -199,11 +201,35 @@ public abstract class Behavior
 	 * 
 	 * @param component
 	 * @return true if a listener interface can be invoked on this behavior
+	 * 
+	 * @deprecated use {@link #canCallListenerInterface(Component, Method)}
 	 */
+	@Deprecated
 	public boolean canCallListenerInterface(Component component)
 	{
 		return isEnabled(component) && component.canCallListenerInterface();
 	}
+
+	/**
+	 * Checks whether or not a listener interface can be invoked on this behavior. For further
+	 * information please read the javadoc on {@link Component#canCallListenerInterface(Method)},
+	 * this method has the same semantics.
+	 * 
+	 * WARNING: Read the javadoc of {@link Component#canCallListenerInterface(Method)} for important
+	 * security-related information.
+	 * 
+	 * @param component
+	 *            component this behavior is attached to
+	 * @param method
+	 *            listener method being invoked
+	 * @return {@literal true} iff the listener method can be invoked
+	 */
+	public boolean canCallListenerInterface(Component component, Method method)
+	{
+		return canCallListenerInterface(component) && isEnabled(component) &&
+			component.canCallListenerInterface(method);
+	}
+
 
 	/**
 	 * Render to the web response whatever the component wants to contribute to the head section.

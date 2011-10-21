@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.image;
 
+import java.lang.reflect.Method;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -289,5 +291,21 @@ public class Image extends WebComponent implements IResourceListener
 	@Override
 	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
+	}
+
+	@Override
+	public boolean canCallListenerInterface(Method method)
+	{
+		boolean isResource = IResourceListener.class.isAssignableFrom(method.getDeclaringClass());
+		if (isResource && isVisibleInHierarchy())
+		{
+			// when the image data is requested we do not care if this component is enabled in
+			// hierarchy or not, only that it is visible
+			return true;
+		}
+		else
+		{
+			return super.canCallListenerInterface(method);
+		}
 	}
 }
