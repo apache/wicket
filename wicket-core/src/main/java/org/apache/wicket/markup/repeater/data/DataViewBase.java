@@ -22,6 +22,7 @@ import org.apache.wicket.markup.html.navigation.paging.IPageable;
 import org.apache.wicket.markup.repeater.AbstractPageableView;
 import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Args;
 
 
 /**
@@ -54,11 +55,8 @@ public abstract class DataViewBase<T> extends AbstractPageableView<T>
 	public DataViewBase(String id, IDataProvider<T> dataProvider)
 	{
 		super(id);
-		if (dataProvider == null)
-		{
-			throw new IllegalArgumentException("argument [dataProvider] cannot be null");
-		}
-		this.dataProvider = dataProvider;
+
+		this.dataProvider = Args.notNull(dataProvider, "dataProvider");
 	}
 
 	/**
