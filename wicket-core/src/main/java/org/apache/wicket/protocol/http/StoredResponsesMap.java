@@ -64,7 +64,7 @@ class StoredResponsesMap extends MostRecentlyUsedMap<String, Object>
 	}
 
 	@Override
-	protected boolean removeEldestEntry(java.util.Map.Entry<String, Object> eldest)
+	protected synchronized boolean removeEldestEntry(java.util.Map.Entry<String, Object> eldest)
 	{
 		boolean removed = super.removeEldestEntry(eldest);
 		if (removed == false)
@@ -95,7 +95,12 @@ class StoredResponsesMap extends MostRecentlyUsedMap<String, Object>
 		Value value = new Value();
 		value.creationTime = Time.now();
 		value.response = (BufferedWebResponse)bufferedResponse;
-		Value oldValue = (Value)super.put(key, value);
+
+		Value oldValue;
+		synchronized (this)
+		{
+			oldValue = (Value)super.put(key, value);
+		}
 
 		return oldValue != null ? oldValue.response : null;
 	}
@@ -104,7 +109,11 @@ class StoredResponsesMap extends MostRecentlyUsedMap<String, Object>
 	public BufferedWebResponse get(Object key)
 	{
 		BufferedWebResponse result = null;
-		Value value = (Value)super.get(key);
+		Value value;
+		synchronized (this)
+		{
+			value = (Value)super.get(key);
+		}
 		if (value != null)
 		{
 			Duration elapsedTime = Time.now().subtract(value.creationTime);
@@ -124,7 +133,12 @@ class StoredResponsesMap extends MostRecentlyUsedMap<String, Object>
 	@Override
 	public BufferedWebResponse remove(Object key)
 	{
-		Value removedValue = (Value)super.remove(key);
+		Value removedValue;
+		synchronized (this)
+		{
+			removedValue = (Value)super.remove(key);
+		}
+
 		return removedValue != null ? removedValue.response : null;
 	}
 

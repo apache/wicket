@@ -21,8 +21,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -98,15 +98,15 @@ public class StoredResponsesMapTest
 	@Ignore
 	public void heavyLoad() throws InterruptedException
 	{
-		int numberOfThreads = 100;
-		final int iterations = 10000;
+		final int numberOfThreads = 100;
+		final int iterations = 1000;
 		final CountDownLatch startLatch = new CountDownLatch(numberOfThreads);
 		final CountDownLatch endLatch = new CountDownLatch(numberOfThreads);
 		final SecureRandom rnd = new SecureRandom();
 		final StoredResponsesMap map = new StoredResponsesMap(1000, Duration.seconds(60));
-		final List<String> keys = new ArrayList<String>();
+		final List<String> keys = new CopyOnWriteArrayList<String>();
 
-		Runnable r = new Runnable()
+		final Runnable r = new Runnable()
 		{
 			public void run()
 			{
