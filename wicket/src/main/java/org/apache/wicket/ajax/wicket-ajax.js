@@ -1614,10 +1614,17 @@ Wicket.Head.Contributor.prototype = {
 			
 			// add element to head
 			Wicket.Head.addElement(css);
-			
-			// continue to next step
-			notify();
-		});
+
+			// cross browser way to check when the css is loaded
+			// taked from http://www.backalleycoder.com/2011/03/20/link-tag-css-stylesheet-load-event/
+			// this makes a second GET request to the css but it gets it either from the cache or
+			// downloads just the first several bytes and realizes that the MIME is wrong and ignores the rest
+			var img = document.createElement('img');
+			img.onerror = function() {
+				notify();
+			}
+			img.src = css.href;
+        });
 	},
 	
 	// Process an inline style element
