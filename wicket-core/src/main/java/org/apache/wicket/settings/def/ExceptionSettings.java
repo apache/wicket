@@ -36,6 +36,12 @@ public class ExceptionSettings implements IExceptionSettings
 	private AjaxErrorStrategy errorHandlingStrategyDuringAjaxRequests = AjaxErrorStrategy.REDIRECT_TO_ERROR_PAGE;
 
 	/**
+	 * A flag indicating whether Wicket can initiate dumping of the stack traces of all live threads
+	 * in the JVM.
+	 */
+	private boolean dumpThreadTraces = true;
+
+	/**
 	 * @see org.apache.wicket.settings.IRequestCycleSettings#getUnexpectedExceptionDisplay()
 	 */
 	public UnexpectedExceptionDisplay getUnexpectedExceptionDisplay()
@@ -66,5 +72,15 @@ public class ExceptionSettings implements IExceptionSettings
 		AjaxErrorStrategy errorHandlingStrategyDuringAjaxRequests)
 	{
 		this.errorHandlingStrategyDuringAjaxRequests = errorHandlingStrategyDuringAjaxRequests;
+	}
+
+	public void setDumpThreadsTraces(boolean dump)
+	{
+		dumpThreadTraces = dump;
+	}
+
+	public boolean getDumpThreadTraces()
+	{
+		return dumpThreadTraces;
 	}
 }

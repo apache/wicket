@@ -115,4 +115,17 @@ public interface IExceptionSettings
 		/** invoke client side failure handler */
 		INVOKE_FAILURE_HANDLER
 	}
+
+	/**
+	 * @param dump
+	 *            a flag indicating whether Wicket can initiate dumping of the stack traces of all
+	 *            live threads in the JVM.
+	 */
+	void setDumpThreadsTraces(boolean dump);
+
+	/**
+	 * @return {@code true} if Wicket can initiate dumping of the stack traces of all live threads
+	 *         in the JVM.
+	 */
+	boolean getDumpThreadTraces();
 }
