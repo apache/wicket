@@ -326,18 +326,27 @@ public class DiskDataStore implements IDataStore
 				PageWindow window = getManager().createPageWindow(pageId, data.length);
 
 				FileChannel channel = getFileChannel(true);
-				try
+				if (channel != null)
 				{
-					// write the content
-					channel.write(ByteBuffer.wrap(data), window.getFilePartOffset());
+					try
+					{
+						// write the content
+						channel.write(ByteBuffer.wrap(data), window.getFilePartOffset());
+					}
+					catch (IOException e)
+					{
+						log.error("Error writing to a channel " + channel, e);
+					}
+					finally
+					{
+						IOUtils.closeQuietly(channel);
+					}
 				}
-				catch (IOException e)
+				else
 				{
-					log.error("Error writing to a channel " + channel, e);
-				}
-				finally
-				{
-					IOUtils.closeQuietly(channel);
+					log.warn(
+						"Cannot save page with id '{}' because the data file cannot be opened.",
+						pageId);
 				}
 			}
 		}
@@ -403,7 +412,7 @@ public class DiskDataStore implements IDataStore
 				}
 				catch (FileNotFoundException fnfx)
 				{
-					// should not happen. we check explicitly earlier
+					// can happen if the file is locked. WICKET-4176
 					log.error(fnfx.getMessage(), fnfx);
 				}
 			}
