@@ -112,7 +112,7 @@ public class DecoratingHeaderResponseTest extends WicketTestCase
 					@Override
 					protected Integer newGroupingKey(ResourceReferenceAndStringData ref)
 					{
-						return Integer.parseInt(ref.getString()) % 2;
+						return Integer.parseInt(ref.getIdOrMedia()) % 2;
 					}
 				};
 			}

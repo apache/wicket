@@ -27,6 +27,8 @@ import java.util.TreeMap;
 
 import org.apache.wicket.markup.html.DecoratingHeaderResponse;
 import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.ResourceUtil;
 
@@ -74,25 +76,29 @@ public abstract class AbstractResourceAggregatingHeaderResponse<R extends Resour
 	@Override
 	public void renderJavaScriptReference(ResourceReference reference)
 	{
-		topLevelReferences.add(new ResourceReferenceAndStringData(reference, null, false));
+		topLevelReferences.add(new ResourceReferenceAndStringData(reference, null, null, null,
+			false, false, null, null));
 	}
 
 	@Override
 	public void renderJavaScriptReference(ResourceReference reference, String id)
 	{
-		topLevelReferences.add(new ResourceReferenceAndStringData(reference, id, false));
+		topLevelReferences.add(new ResourceReferenceAndStringData(reference, null, null, id, false,
+			false, null, null));
 	}
 
 	@Override
 	public void renderCSSReference(ResourceReference reference)
 	{
-		topLevelReferences.add(new ResourceReferenceAndStringData(reference, null, true));
+		topLevelReferences.add(new ResourceReferenceAndStringData(reference, null, null, null,
+			true, false, null, null));
 	}
 
 	@Override
 	public void renderCSSReference(ResourceReference reference, String media)
 	{
-		topLevelReferences.add(new ResourceReferenceAndStringData(reference, media, true));
+		topLevelReferences.add(new ResourceReferenceAndStringData(reference, null, null, media,
+			true, false, null, null));
 	}
 
 	@Override
@@ -188,7 +194,7 @@ public abstract class AbstractResourceAggregatingHeaderResponse<R extends Resour
 	 * to render your collection how you want to render them.
 	 * 
 	 * For instance, if you want to aggregate your groups into a single HTTP request, you can
-	 * override this method, create the URL to your aggregation servlet (or {@link Resource}), and
+	 * override this method, create the URL to your aggregation servlet (or {@link IResource}), and
 	 * then call <tt>getRealResponse().renderJavaScriptReference(yourUrl)</tt>, or the appropriate
 	 * method to render the URL for a group of CSS references.
 	 * 
@@ -239,8 +245,7 @@ public abstract class AbstractResourceAggregatingHeaderResponse<R extends Resour
 	 */
 	protected void render(ResourceReferenceAndStringData data)
 	{
-		ResourceUtil.renderTo(getRealResponse(), data.getReference(), data.isCss(),
-			data.getString());
+		ResourceUtil.renderTo(getRealResponse(), data);
 	}
 
 	/**
@@ -265,29 +270,102 @@ public abstract class AbstractResourceAggregatingHeaderResponse<R extends Resour
 	@Override
 	public void renderJavaScriptReference(String url)
 	{
-		// TODO: can we aggregate this? probably shouldn't...
-		getRealResponse().renderJavaScriptReference(url);
+		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, null, false,
+			false, null, null));
 	}
 
 	@Override
 	public void renderJavaScriptReference(String url, String id)
 	{
-		// TODO: can we aggregate this? probably shouldn't...
-		getRealResponse().renderJavaScriptReference(url, id);
+		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, id, false,
+			false, null, null));
 	}
 
 	@Override
 	public void renderCSSReference(String url)
 	{
-		// TODO: can we aggregate this? probably shouldn't...
-		getRealResponse().renderCSSReference(url);
+		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, null, true,
+			false, null, null));
 	}
 
 	@Override
 	public void renderCSSReference(String url, String media)
 	{
-		// TODO: can we aggregate this? probably shouldn't...
-		getRealResponse().renderCSSReference(url, media);
+		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, media, true,
+			false, null, null));
+	}
+
+	@Override
+	public void renderJavaScriptReference(ResourceReference reference, PageParameters parameters,
+		String id)
+	{
+		topLevelReferences.add(new ResourceReferenceAndStringData(reference, parameters, null, id,
+			false, false, null, null));
+	}
+
+	@Override
+	public void renderJavaScriptReference(ResourceReference reference, PageParameters parameters,
+		String id, boolean defer)
+	{
+		topLevelReferences.add(new ResourceReferenceAndStringData(reference, parameters, null, id,
+			false, defer, null, null));
+	}
+
+	@Override
+	public void renderJavaScriptReference(ResourceReference reference, PageParameters parameters,
+		String id, boolean defer, String charset)
+	{
+		topLevelReferences.add(new ResourceReferenceAndStringData(reference, parameters, null, id,
+			false, defer, charset, null));
+	}
+
+	@Override
+	public void renderJavaScriptReference(String url, String id, boolean defer)
+	{
+		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, null, false,
+			defer, null, null));
+	}
+
+	@Override
+	public void renderJavaScriptReference(String url, String id, boolean defer, String charset)
+	{
+		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, id, false,
+			defer, charset, null));
+	}
+
+	@Override
+	public void renderJavaScript(CharSequence javascript, String id)
+	{
+		topLevelReferences.add(new ResourceReferenceAndStringData(javascript, false, id));
+	}
+
+	@Override
+	public void renderCSS(CharSequence css, String media)
+	{
+		topLevelReferences.add(new ResourceReferenceAndStringData(css, true, media));
+	}
+
+	@Override
+	public void renderCSSReference(ResourceReference reference, PageParameters pageParameters,
+		String media)
+	{
+		topLevelReferences.add(new ResourceReferenceAndStringData(reference, pageParameters, null,
+			media, true, false, null, null));
+	}
+
+	@Override
+	public void renderCSSReference(ResourceReference reference, PageParameters pageParameters,
+		String media, String condition)
+	{
+		topLevelReferences.add(new ResourceReferenceAndStringData(reference, null, null, media,
+			true, false, null, condition));
+	}
+
+	@Override
+	public void renderCSSReference(String url, String media, String condition)
+	{
+		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, media, true,
+			false, null, condition));
 	}
 
 }

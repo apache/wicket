@@ -80,10 +80,11 @@ public abstract class AbstractDependencyRespectingResourceAggregatingHeaderRespo
 	}
 
 	private static ResourceReferenceAndStringData toData(
-		AbstractResourceDependentResourceReference child)
+		AbstractResourceDependentResourceReference reference)
 	{
-		boolean css = ResourceType.CSS.equals(child.getResourceType());
-		String string = css ? child.getMedia() : child.getUniqueId();
-		return new ResourceReferenceAndStringData(child, string, css);
+		boolean css = ResourceType.CSS.equals(reference.getResourceType());
+		String string = css ? reference.getMedia() : reference.getUniqueId();
+		return new ResourceReferenceAndStringData(reference, null, null, string, css, false, null,
+			null);
 	}
 }

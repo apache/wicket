@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.resource.aggregation;
 
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 
 /**
@@ -30,25 +31,88 @@ import org.apache.wicket.request.resource.ResourceReference;
  * 
  * @author Jeremy Thomerson
  */
+// TODO Wicket.next - Improve this class by splitting it in more specialized ones (one for JS,
+// another for CSS, ...)
 public class ResourceReferenceAndStringData
 {
 	private final ResourceReference reference;
-	private final String string;
-	private final boolean css;
+	private final PageParameters parameters;
+	private final String url;
+	private final String idOrMedia;
+	private final boolean isCss;
+	private final boolean jsDefer;
+	private final String charset;
+	private final String cssCondition;
+	private final CharSequence content;
 
 	/**
-	 * Construct with fields.
+	 * Construct.
 	 * 
 	 * @param reference
-	 * @param string
-	 * @param css
+	 * @param parameters
+	 * @param url
+	 * @param idOrMedia
+	 * @param isCss
+	 * @param jsDefer
+	 * @param charset
+	 * @param cssCondition
 	 */
-	public ResourceReferenceAndStringData(ResourceReference reference, String string, boolean css)
+	public ResourceReferenceAndStringData(ResourceReference reference, PageParameters parameters,
+		String url, String idOrMedia, boolean isCss, boolean jsDefer, String charset,
+		String cssCondition)
 	{
-		super();
 		this.reference = reference;
-		this.string = string;
-		this.css = css;
+		this.parameters = parameters;
+		this.url = url;
+		this.idOrMedia = idOrMedia;
+		this.isCss = isCss;
+		this.jsDefer = jsDefer;
+		this.charset = charset;
+		this.cssCondition = cssCondition;
+		content = null;
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param reference
+	 * @param idOrMedia
+	 * @param isCss
+	 * @deprecated use the other constructors instead
+	 */
+	@Deprecated
+	public ResourceReferenceAndStringData(ResourceReference reference, String idOrMedia,
+		boolean isCss)
+	{
+		this.reference = reference;
+		parameters = null;
+		url = null;
+		this.idOrMedia = idOrMedia;
+		this.isCss = isCss;
+		jsDefer = false;
+		charset = null;
+		cssCondition = null;
+		content = null;
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param content
+	 * @param isCss
+	 * @param idOrMedia
+	 */
+	public ResourceReferenceAndStringData(CharSequence content, boolean isCss, String idOrMedia)
+	{
+		this.content = content;
+		this.isCss = isCss;
+		reference = null;
+		parameters = null;
+		url = null;
+		this.idOrMedia = idOrMedia;
+		jsDefer = false;
+		charset = null;
+		cssCondition = null;
 	}
 
 	/**
@@ -60,11 +124,37 @@ public class ResourceReferenceAndStringData
 	}
 
 	/**
+	 * @return the parameters for the resource reference
+	 */
+	public PageParameters getParameters()
+	{
+		return parameters;
+	}
+
+	/**
+	 * @return the resource reference that the user rendered
+	 */
+	public String getUrl()
+	{
+		return url;
+	}
+
+	/**
 	 * @return the string representing media (if this isCss()), or id (if not, meaning it's js)
 	 */
+	public String getIdOrMedia()
+	{
+		return idOrMedia;
+	}
+
+	/**
+	 * @return the string representing media (if this isCss()), or id (if not, meaning it's js)
+	 * @deprecated use {@link #getIdOrMedia()} instead
+	 */
+	@Deprecated
 	public String getString()
 	{
-		return string;
+		return getIdOrMedia();
 	}
 
 	/**
@@ -72,7 +162,39 @@ public class ResourceReferenceAndStringData
 	 */
 	public boolean isCss()
 	{
-		return css;
+		return isCss;
+	}
+
+	/**
+	 * @return whether the script should be deferred
+	 */
+	public boolean isJsDefer()
+	{
+		return jsDefer;
+	}
+
+	/**
+	 * @return the charset to use when loading the script
+	 */
+	public String getCharset()
+	{
+		return charset;
+	}
+
+	/**
+	 * @return the IE CSS condition
+	 */
+	public String getCssCondition()
+	{
+		return cssCondition;
+	}
+
+	/**
+	 * @return inline content of CSS or JS contribution
+	 */
+	public CharSequence getContent()
+	{
+		return content;
 	}
 
 	@Override
@@ -80,9 +202,15 @@ public class ResourceReferenceAndStringData
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (css ? 1231 : 1237);
+		result = prime * result + ((charset == null) ? 0 : charset.hashCode());
+		result = prime * result + ((content == null) ? 0 : content.hashCode());
+		result = prime * result + ((cssCondition == null) ? 0 : cssCondition.hashCode());
+		result = prime * result + ((idOrMedia == null) ? 0 : idOrMedia.hashCode());
+		result = prime * result + (isCss ? 1231 : 1237);
+		result = prime * result + (jsDefer ? 1231 : 1237);
+		result = prime * result + ((parameters == null) ? 0 : parameters.hashCode());
 		result = prime * result + ((reference == null) ? 0 : reference.hashCode());
-		result = prime * result + ((string == null) ? 0 : string.hashCode());
+		result = prime * result + ((url == null) ? 0 : url.hashCode());
 		return result;
 	}
 
@@ -96,7 +224,44 @@ public class ResourceReferenceAndStringData
 		if (getClass() != obj.getClass())
 			return false;
 		ResourceReferenceAndStringData other = (ResourceReferenceAndStringData)obj;
-		if (css != other.css)
+		if (charset == null)
+		{
+			if (other.charset != null)
+				return false;
+		}
+		else if (!charset.equals(other.charset))
+			return false;
+		if (content == null)
+		{
+			if (other.content != null)
+				return false;
+		}
+		else if (!content.equals(other.content))
+			return false;
+		if (cssCondition == null)
+		{
+			if (other.cssCondition != null)
+				return false;
+		}
+		else if (!cssCondition.equals(other.cssCondition))
+			return false;
+		if (idOrMedia == null)
+		{
+			if (other.idOrMedia != null)
+				return false;
+		}
+		else if (!idOrMedia.equals(other.idOrMedia))
+			return false;
+		if (isCss != other.isCss)
+			return false;
+		if (jsDefer != other.jsDefer)
+			return false;
+		if (parameters == null)
+		{
+			if (other.parameters != null)
+				return false;
+		}
+		else if (!parameters.equals(other.parameters))
 			return false;
 		if (reference == null)
 		{
@@ -105,12 +270,12 @@ public class ResourceReferenceAndStringData
 		}
 		else if (!reference.equals(other.reference))
 			return false;
-		if (string == null)
+		if (url == null)
 		{
-			if (other.string != null)
+			if (other.url != null)
 				return false;
 		}
-		else if (!string.equals(other.string))
+		else if (!url.equals(other.url))
 			return false;
 		return true;
 	}
@@ -118,7 +283,9 @@ public class ResourceReferenceAndStringData
 	@Override
 	public String toString()
 	{
-		return "ResourceReferenceAndStringData [reference=" + reference + ", string=" + string +
-			", css=" + css + "]";
+		return "ResourceReferenceAndStringData [reference=" + reference + ", parameters=" +
+			parameters + ", url=" + url + ", idOrMedia=" + idOrMedia + ", isCss=" + isCss +
+			", jsDefer=" + jsDefer + ", charset=" + charset + ", cssCondition=" + cssCondition +
+			", content=" + content + "]";
 	}
 }
