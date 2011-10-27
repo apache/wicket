@@ -558,10 +558,8 @@
 				<version>2.3</version>
 				<configuration>
 					<comparisonVersion>1.5.2</comparisonVersion>
-					<excludes>
-						<!-- Exclude all IXyzSettings interfaces. They are no supposed to be used in the client application -->
-						<exclude>org/apache/wicket/settings/*</exclude>
-					</excludes>
+					<failOnError>false</failOnError>
+					<logResults>true</logResults>
 				</configuration>
 			</plugin>
 			<plugin>
