@@ -20,14 +20,17 @@ import javax.servlet.ServletContext;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
+import org.apache.wicket.IBehaviorInstantiationListener;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
 import org.apache.wicket.application.IComponentInstantiationListener;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.injection.IFieldValueFactory;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.ISpringContextLocator;
+import org.apache.wicket.util.lang.Args;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -44,7 +47,10 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * @author <a href="mailto:jlee@antwerkz.com">Justin Lee</a>
  * 
  */
-public class SpringComponentInjector extends Injector implements IComponentInstantiationListener
+public class SpringComponentInjector extends Injector
+	implements
+		IComponentInstantiationListener,
+		IBehaviorInstantiationListener
 {
 	private final IFieldValueFactory fieldValueFactory;
 
@@ -101,19 +107,14 @@ public class SpringComponentInjector extends Injector implements IComponentInsta
 	public SpringComponentInjector(final WebApplication webapp, final ApplicationContext ctx,
 		final boolean wrapInProxies)
 	{
-		if (webapp == null)
-		{
-			throw new IllegalArgumentException("Argument [[webapp]] cannot be null");
-		}
+		Args.notNull(webapp, "webapp");
 
-		if (ctx == null)
-		{
-			throw new IllegalArgumentException("Argument [[ctx]] cannot be null");
-		}
+		Args.notNull(ctx, "ctx");
 
 		// store context in application's metadata ...
 		webapp.setMetaData(CONTEXT_KEY, ctx);
 		fieldValueFactory = new AnnotProxyFieldValueFactory(new ContextLocator(), wrapInProxies);
+		webapp.getBehaviorInstantiationListeners().add(this);
 		bind(webapp);
 	}
 
@@ -130,6 +131,11 @@ public class SpringComponentInjector extends Injector implements IComponentInsta
 		inject(component);
 	}
 
+
+	public void onInstantiation(Behavior behavior)
+	{
+		inject(behavior);
+	}
 
 	/**
 	 * A context locator that locates the context in application's metadata. This locator also keeps
@@ -154,6 +160,5 @@ public class SpringComponentInjector extends Injector implements IComponentInsta
 		}
 
 	}
-
 
 }

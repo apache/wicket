@@ -62,6 +62,7 @@ public class TestComponent extends Component
 	{
 		super(id);
 		noComponent = new TestNoComponent();
+		add(new TestBehavior());
 	}
 
 	/**

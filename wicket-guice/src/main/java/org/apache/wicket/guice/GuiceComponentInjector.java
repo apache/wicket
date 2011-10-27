@@ -18,7 +18,9 @@ package org.apache.wicket.guice;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
+import org.apache.wicket.IBehaviorInstantiationListener;
 import org.apache.wicket.application.IComponentInstantiationListener;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.injection.IFieldValueFactory;
 
 import com.google.inject.Guice;
@@ -44,7 +46,8 @@ import com.google.inject.Stage;
  */
 public class GuiceComponentInjector extends org.apache.wicket.injection.Injector
 	implements
-		IComponentInstantiationListener
+		IComponentInstantiationListener,
+		IBehaviorInstantiationListener
 {
 	private final IFieldValueFactory fieldValueFactory;
 
@@ -102,6 +105,7 @@ public class GuiceComponentInjector extends org.apache.wicket.injection.Injector
 	{
 		app.setMetaData(GuiceInjectorHolder.INJECTOR_KEY, new GuiceInjectorHolder(injector));
 		fieldValueFactory = new GuiceFieldValueFactory(wrapInProxies);
+		app.getBehaviorInstantiationListeners().add(this);
 		bind(app);
 	}
 
@@ -120,5 +124,10 @@ public class GuiceComponentInjector extends org.apache.wicket.injection.Injector
 	public void onInstantiation(final Component component)
 	{
 		inject(component);
+	}
+
+	public void onInstantiation(Behavior behavior)
+	{
+		inject(behavior);
 	}
 }

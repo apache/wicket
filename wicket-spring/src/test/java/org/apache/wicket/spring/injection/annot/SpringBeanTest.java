@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.spring.injection.annot;
 
+import org.apache.wicket.Page;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.proxy.ILazyInitProxy;
 import org.apache.wicket.spring.Bean;
 import org.apache.wicket.spring.SpringBeanLocator;
@@ -125,6 +127,20 @@ public class SpringBeanTest extends Assert
 
 		assertTrue(locator.getBeanName().equals("mrBean"));
 	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4149
+	 */
+	@Test
+	public void beanInjectedInBehavior()
+	{
+		ctx.putBean("mrBean", new Bean());
+
+		// with no name specified we get IllegalStateException
+		Page page = tester.startPage(new AnnotatedFieldInBehaviorPage());
+		TestBehavior behavior = (TestBehavior)page.getBehaviorById(0);
+		assertNotNull(behavior.getBean());
+	}
 }
 
 class AnnotatedBeanRequired extends DummyHomePage
@@ -157,5 +173,34 @@ class AnnotatedBeanNotRequiredDifferentName extends DummyHomePage
 	public Bean getBean()
 	{
 		return bean;
+	}
+}
+
+/**
+ * A behavior which will be automatically processed for @SpringBean annotation
+ */
+class TestBehavior extends Behavior
+{
+	private static final long serialVersionUID = 1L;
+
+	@SpringBean()
+	private Bean bean;
+
+	public Bean getBean()
+	{
+		return bean;
+	}
+}
+
+/**
+ * A test page with a behavior which will be processed for @SpringBean annotations
+ */
+class AnnotatedFieldInBehaviorPage extends DummyHomePage
+{
+	private static final long serialVersionUID = 1L;
+
+	public AnnotatedFieldInBehaviorPage()
+	{
+		add(new TestBehavior());
 	}
 }
