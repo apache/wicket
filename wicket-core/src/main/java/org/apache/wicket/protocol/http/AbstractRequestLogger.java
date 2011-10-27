@@ -158,8 +158,6 @@ public abstract class AbstractRequestLogger implements IStagedRequestLogger
 	 */
 	private void copyRequestsInOrder(RequestData[] copy)
 	{
-		Args.isTrue(copy.length >= requestWindow.length, "copy.length must be at least {}",
-			requestWindow.length);
 		if (hasBufferRolledOver())
 		{
 			// first copy the oldest requests stored behind the cursor into the copy
