@@ -364,7 +364,10 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Unregisters all {@link IRequestMapper}s which would match on a this path
+	 * Unregisters all {@link IRequestMapper}s which would match on a this path.
+	 * <p>
+	 * Useful in OSGi environments where a bundle may want to update the mount point.
+	 * </p>
 	 * 
 	 * @param path
 	 *            the path to unmount
