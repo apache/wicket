@@ -139,7 +139,8 @@ public abstract class ListenerCollection<T> implements Serializable, Iterable<T>
 		Iterator<T> it = new ReverseListIterator<T>(listeners);
 		while (it.hasNext())
 		{
-			notifier.notify(it.next());
+			T listener = it.next();
+			notifier.notify(listener);
 		}
 	}
 
