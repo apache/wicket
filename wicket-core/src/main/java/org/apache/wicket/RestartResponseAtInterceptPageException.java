@@ -76,7 +76,7 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 		PageParameters parameters)
 	{
 		super(new RenderPageRequestHandler(new PageProvider(interceptPageClass, parameters),
-			RedirectPolicy.AUTO_REDIRECT));
+			RedirectPolicy.ALWAYS_REDIRECT));
 		InterceptData.set();
 	}
 
