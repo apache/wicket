@@ -41,13 +41,13 @@ public class PanelMarkupSourcingStrategy extends AssociatedMarkupSourcingStrateg
 	 * 
 	 * @param wicketTagName
 	 *            The tag name for <code>&lt;wicket:'name' ..&gt;</code>. Please note that any such
-	 *            tag must have been registed via
-	 *            <code>WicketTagIdentifier.registerWellKnownTagName('name');</code>
+	 *            tag must have been registered via
+	 *            <code>WicketTagIdentifier.registerWellKnownTagName("name");</code>
 	 * @param allowWicketComponentsInBodyMarkup
-	 *            False for Panel and true for Border components. If Panel than the body markup
-	 *            should only contain raw markup, which is ignored (removed), but no Wicket
-	 *            Component. With Border components, the body markup will be associated with the
-	 *            Body Component.
+	 *            {@code false} for Panel and {@code true} for Border components. If Panel then the
+	 *            body markup should only contain raw markup, which is ignored (removed), but no
+	 *            Wicket Component. With Border components, the body markup will be associated with
+	 *            the Body Component.
 	 */
 	public PanelMarkupSourcingStrategy(final String wicketTagName,
 		final boolean allowWicketComponentsInBodyMarkup)
@@ -61,10 +61,10 @@ public class PanelMarkupSourcingStrategy extends AssociatedMarkupSourcingStrateg
 	 * Constructor.
 	 * 
 	 * @param allowWicketComponentsInBodyMarkup
-	 *            False for Panel and true for Border components. If Panel than the body markup
-	 *            should only contain raw markup, which is ignored (removed), but no Wicket
-	 *            Component. With Border components, the body markup will be associated with the
-	 *            Body Component.
+	 *            {@code false} for Panel and {@code true} for Border components. If Panel then the
+	 *            body markup should only contain raw markup, which is ignored (removed), but no
+	 *            Wicket Component. With Border components, the body markup will be associated with
+	 *            the Body Component.
 	 */
 	public PanelMarkupSourcingStrategy(final boolean allowWicketComponentsInBodyMarkup)
 	{
