@@ -25,6 +25,7 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.BufferedResponseRequestHandler;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Encoder that intercepts requests for which there is already stored buffer with rendered data.
@@ -42,20 +43,33 @@ public class BufferedResponseMapper implements IRequestMapper
 
 	/**
 	 * @return the current session id for stateful pages and <code>null</code> for stateless pages
+	 *         and non-http threads
 	 */
 	protected String getSessionId()
 	{
-		return Session.get().getId();
+		return RequestCycle.get() != null ? Session.get().getId() : null;
 	}
 
 	protected boolean hasBufferedResponse(Url url)
 	{
-		return WebApplication.get().hasBufferedResponse(getSessionId(), url);
+		String sessionId = getSessionId();
+		boolean hasResponse = false;
+		if (Strings.isEmpty(sessionId) == false)
+		{
+			hasResponse = WebApplication.get().hasBufferedResponse(sessionId, url);
+		}
+		return hasResponse;
 	}
 
 	protected BufferedWebResponse getAndRemoveBufferedResponse(Url url)
 	{
-		return WebApplication.get().getAndRemoveBufferedResponse(getSessionId(), url);
+		String sessionId = getSessionId();
+		BufferedWebResponse response = null;
+		if (Strings.isEmpty(sessionId) == false)
+		{
+			response = WebApplication.get().getAndRemoveBufferedResponse(sessionId, url);
+		}
+		return response;
 	}
 
 	private Request getRequest(Request original)
