@@ -110,6 +110,41 @@ public class WebPageRendererTest
 	}
 
 	/**
+	 * Tests that even when {@link IRequestCycleSettings.RenderStrategy#ONE_PASS_RENDER} is
+	 * configured but the {@link RedirectPolicy} says that it needs to redirect it will redirect.
+	 */
+	@Test
+	public void testOnePassRenderWithAlwaysRedirect()
+	{
+
+		PageRenderer renderer = new TestPageRenderer(handler)
+		{
+			@Override
+			protected boolean isOnePassRender()
+			{
+				return true;
+			}
+
+			@Override
+			protected RedirectPolicy getRedirectPolicy()
+			{
+				return RedirectPolicy.ALWAYS_REDIRECT;
+			}
+		};
+
+		when(urlRenderer.getBaseUrl()).thenReturn(Url.parse("base"));
+
+		when(requestCycle.mapUrlFor(eq(handler))).thenReturn(Url.parse("base/a"));
+
+		when(request.shouldPreserveClientUrl()).thenReturn(false);
+
+		renderer.respond(requestCycle);
+
+		verify(response, never()).write(any(byte[].class));
+		verify(response).sendRedirect(anyString());
+	}
+
+	/**
 	 * Tests that when {@link IRequestCycleSettings.RenderStrategy#ONE_PASS_RENDER} is configured
 	 * but the current request is Ajax then a redirect should be issued
 	 */

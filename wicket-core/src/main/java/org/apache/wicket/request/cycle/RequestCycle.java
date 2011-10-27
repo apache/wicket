@@ -601,7 +601,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	{
 		IPageProvider provider = new PageProvider(pageClass, null);
 		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(provider,
-			RenderPageRequestHandler.RedirectPolicy.AUTO_REDIRECT));
+			RenderPageRequestHandler.RedirectPolicy.ALWAYS_REDIRECT));
 	}
 
 
@@ -616,7 +616,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	{
 		IPageProvider provider = new PageProvider(pageClass, parameters);
 		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(provider,
-			RenderPageRequestHandler.RedirectPolicy.AUTO_REDIRECT));
+			RenderPageRequestHandler.RedirectPolicy.ALWAYS_REDIRECT));
 	}
 
 	/**
