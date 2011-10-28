@@ -114,4 +114,40 @@ public class AppendingStringBufferTest extends TestCase
 		assertFalse(asb.endsWith("67890"));
 	}
 
+	public void testInsert() throws Exception
+	{
+		AppendingStringBuffer asb = new AppendingStringBuffer("123456789");
+		asb.insert(5, new StringBuffer("123"));
+		assertEquals("123451236789", asb.toString());
+
+		asb = new AppendingStringBuffer("123456789");
+		asb.insert(5, new StringBuilder("123"));
+		assertEquals("123451236789", asb.toString());
+
+		asb = new AppendingStringBuffer("123456789");
+		asb.insert(5, new String("123"));
+		assertEquals("123451236789", asb.toString());
+
+		asb = new AppendingStringBuffer("123456789");
+		asb.insert(5, 5);
+		assertEquals("1234556789", asb.toString());
+
+		asb = new AppendingStringBuffer("123456789");
+		asb.insert(5, (StringBuilder)null);
+		assertEquals("12345null6789", asb.toString());
+
+		asb = new AppendingStringBuffer("123456789");
+		asb.insert(5, (StringBuffer)null);
+		assertEquals("12345null6789", asb.toString());
+
+		asb = new AppendingStringBuffer("123456789");
+		asb.insert(5, (String)null);
+		assertEquals("12345null6789", asb.toString());
+
+		asb = new AppendingStringBuffer("123456789");
+		asb.insert(5, (Integer)null);
+		assertEquals("12345null6789", asb.toString());
+
+	}
+
 }
