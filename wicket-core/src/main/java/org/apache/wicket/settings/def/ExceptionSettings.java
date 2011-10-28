@@ -17,6 +17,7 @@
 package org.apache.wicket.settings.def;
 
 import org.apache.wicket.settings.IExceptionSettings;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * @author Jonathan Locke
@@ -36,10 +37,12 @@ public class ExceptionSettings implements IExceptionSettings
 	private AjaxErrorStrategy errorHandlingStrategyDuringAjaxRequests = AjaxErrorStrategy.REDIRECT_TO_ERROR_PAGE;
 
 	/**
-	 * A flag indicating whether Wicket can initiate dumping of the stack traces of all live threads
-	 * in the JVM.
+	 * Strategy to use for dumping stack traces of live threads in the JVM.
+	 * <p>
+	 * By default will dump the stacktrace of the thread that holds the lock on the page.
+	 * </p>
 	 */
-	private boolean dumpThreadTraces = true;
+	private ThreadDumpStrategy threadDumpStrategy = ThreadDumpStrategy.THREAD_HOLDING_LOCK;
 
 	/**
 	 * @see org.apache.wicket.settings.IRequestCycleSettings#getUnexpectedExceptionDisplay()
@@ -74,13 +77,13 @@ public class ExceptionSettings implements IExceptionSettings
 		this.errorHandlingStrategyDuringAjaxRequests = errorHandlingStrategyDuringAjaxRequests;
 	}
 
-	public void setDumpThreadsTraces(boolean dump)
+	public void setThreadDumpStrategy(ThreadDumpStrategy strategy)
 	{
-		dumpThreadTraces = dump;
+		threadDumpStrategy = Args.notNull(strategy, "strategy");
 	}
 
-	public boolean getDumpThreadTraces()
+	public ThreadDumpStrategy getThreadDumpStrategy()
 	{
-		return dumpThreadTraces;
+		return threadDumpStrategy;
 	}
 }

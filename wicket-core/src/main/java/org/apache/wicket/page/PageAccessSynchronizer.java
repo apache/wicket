@@ -22,6 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.settings.IExceptionSettings.ThreadDumpStrategy;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.LazyInitializer;
 import org.apache.wicket.util.lang.Threads;
@@ -148,10 +149,23 @@ public class PageAccessSynchronizer implements Serializable
 					"Thread '{}' failed to acquire lock to page with id '{}', attempted for {} out of allowed {}. The thread that holds the lock has name '{}'.",
 					new Object[] { thread.getName(), pageId, start.elapsedSince(), timeout,
 							previous.thread.getName() });
-				if (Application.exists() &&
-					Application.get().getExceptionSettings().getDumpThreadTraces())
+				if (Application.exists())
 				{
-					Threads.dumpAllThreads();
+					ThreadDumpStrategy strategy = Application.get()
+						.getExceptionSettings()
+						.getThreadDumpStrategy();
+					switch (strategy)
+					{
+						case ALL_THREADS :
+							Threads.dumpAllThreads(logger);
+							break;
+						case THREAD_HOLDING_LOCK :
+							Threads.dumpSingleThread(logger, previous.thread);
+							break;
+						case NO_THREADS :
+						default :
+							// do nothing
+					}
 				}
 			}
 			throw new CouldNotLockPageException(pageId, thread.getName(), timeout);

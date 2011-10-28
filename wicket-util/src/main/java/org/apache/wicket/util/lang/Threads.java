@@ -16,15 +16,14 @@
  */
 package org.apache.wicket.util.lang;
 
-import java.io.PrintStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
+import org.slf4j.Logger;
 
 /**
  * A utility class for dealing with {@link Thread}s.
@@ -32,18 +31,48 @@ import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 public class Threads
 {
 
+	private static final String FORMAT = "\"${name}\"${isDaemon} prio=${priority} tid=${threadIdDec} state=${state} ";
+
 	private Threads()
 	{
 	}
 
 	/**
-	 * Dumps the threads' stack traces in {@link System#out}.
+	 * Creates a dump of all the threads' state and stack traces similar to what JVM produces when
+	 * signal SIGQUIT is send to the process on Unix machine.
+	 * <p>
+	 * Note: This is a best effort to dump as much information as possible because the Java API
+	 * doesn't provide means to get all the information that is produced by jstack program for
+	 * example.
+	 * </p>
 	 * 
-	 * @see #dumpAllThreads(PrintStream)
+	 * @param logger
+	 *            the logger where the collected information will be written
 	 */
-	public static void dumpAllThreads()
+	public static void dumpAllThreads(Logger logger)
 	{
-		dumpAllThreads(System.out);
+		Args.notNull(logger, "logger");
+		if (!logger.isWarnEnabled())
+		{
+			return;
+		}
+
+		RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
+
+		StringBuilder dump = new StringBuilder();
+
+		dump.append("Full thread dump ")
+			.append(runtimeMXBean.getVmName())
+			.append('(')
+			.append(runtimeMXBean.getVmVersion())
+			.append(')');
+		logger.warn(dump.toString());
+
+		Map<Thread, StackTraceElement[]> allStackTraces = Thread.getAllStackTraces();
+		for (Entry<Thread, StackTraceElement[]> entry : allStackTraces.entrySet())
+		{
+			dumpSingleThread(logger, entry.getKey(), entry.getValue());
+		}
 	}
 
 	/**
@@ -55,72 +84,51 @@ public class Threads
 	 * example.
 	 * </p>
 	 * 
-	 * @param out
-	 *            the output stream where the collected information will be written
+	 * @param logger
+	 *            the logger where the collected information will be written
+	 * @param thread
+	 *            the thread to dump
 	 */
-	public static void dumpAllThreads(final PrintStream out)
+	public static void dumpSingleThread(Logger logger, Thread thread)
 	{
-		Args.notNull(out, "out");
-
-		RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
-
-		StringBuilder dump = new StringBuilder();
-
-		String newLine = System.getProperty("line.separator", "\n");
-
-		String format = "\"${name}\"${isDaemon} prio=${priority} tid=${threadIdDec} state=${state} ";
-
-		dump.append("Full thread dump ")
-			.append(runtimeMXBean.getVmName())
-			.append('(')
-			.append(runtimeMXBean.getVmVersion())
-			.append(')');
-		dump.append(newLine).append(newLine);
-
-		Map<Thread, StackTraceElement[]> allStackTraces = Thread.getAllStackTraces();
-		Iterator<Entry<Thread, StackTraceElement[]>> itor = allStackTraces.entrySet().iterator();
-		while (itor.hasNext())
+		Args.notNull(logger, "logger");
+		if (!logger.isWarnEnabled())
 		{
-			Entry<Thread, StackTraceElement[]> entry = itor.next();
-			Thread thread = entry.getKey();
-
-			Map<CharSequence, Object> variables = new HashMap<CharSequence, Object>();
-			variables.put("name", thread.getName());
-			variables.put("isDaemon", thread.isDaemon() ? " daemon" : "");
-			variables.put("priority", thread.getPriority());
-			variables.put("threadIdDec", thread.getId());
-			variables.put("state", thread.getState());
-
-			String interpolated = MapVariableInterpolator.interpolate(format, variables);
-			dump.append(interpolated).append(newLine);
-
-			StackTraceElement[] traceElements = entry.getValue();
-			for (int i = 0; i < traceElements.length; i++)
-			{
-				StackTraceElement element = traceElements[i];
-
-				dump.append("\tat ")
-					.append(element.getClassName())
-					.append('.')
-					.append(element.getMethodName())
-					.append('(');
-
-				if (element.getLineNumber() > 0)
-				{
-					dump.append(element.getFileName()).append(':').append(element.getLineNumber());
-				}
-				else
-				{
-					dump.append("Native method");
-				}
-
-				dump.append(')').append(newLine);
-			}
-
-			dump.append(newLine);
+			return;
 		}
 
-		out.println(dump.toString());
+		dumpSingleThread(logger, thread, thread.getStackTrace());
 	}
 
+	private static void dumpSingleThread(Logger logger, Thread thread, StackTraceElement[] trace)
+	{
+		Map<CharSequence, Object> variables = new HashMap<CharSequence, Object>();
+		variables.put("name", thread.getName());
+		variables.put("isDaemon", thread.isDaemon() ? " daemon" : "");
+		variables.put("priority", thread.getPriority());
+		variables.put("threadIdDec", thread.getId());
+		variables.put("state", thread.getState());
+
+		ThreadDump throwable = new ThreadDump();
+		throwable.setStackTrace(trace);
+		logger.warn(MapVariableInterpolator.interpolate(FORMAT, variables), throwable);
+	}
+
+	/**
+	 * An exception used to hold the stacktrace of a thread.
+	 */
+	private static class ThreadDump extends RuntimeException
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * @see java.lang.Throwable#fillInStackTrace()
+		 */
+		@Override
+		public synchronized Throwable fillInStackTrace()
+		{
+			// don't waste time to load the stack of the current thread
+			return null;
+		}
+	}
 }
