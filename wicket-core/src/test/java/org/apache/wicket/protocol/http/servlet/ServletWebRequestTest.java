@@ -54,12 +54,34 @@ public class ServletWebRequestTest extends Assert
 		Url clientUrl = webRequest.getClientUrl();
 		assertEquals("request/Uri?some=parameter", clientUrl.toString());
 
-		// error dispatched
-		httpRequest.setAttribute("javax.servlet.error.request_uri", "/some/error/url");
+		// simulates a request that has errors metadata
+		httpRequest.setAttribute("javax.servlet.error.request_uri",
+			"/" + httpRequest.getContextPath() + "/any/source/of/error");
 		ServletWebRequest errorWebRequest = new ServletWebRequest(httpRequest, "/");
 		Url errorClientUrl = errorWebRequest.getClientUrl();
 
-		assertEquals("/some/error/url", errorClientUrl.toString());
+		assertEquals("any/source/of/error", errorClientUrl.toString());
+	}
+
+	/**
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-4168">WICKET-4168</a>
+	 */
+	@Test
+	public void testClientURLIsContextRelativeInErrorResponses()
+	{
+		MockHttpServletRequest httpRequest = new MockHttpServletRequest(null, null, null);
+		httpRequest.setURL(httpRequest.getContextPath() + "/request/Uri");
+
+		String problematiURI = httpRequest.getContextPath() + "/any/source/of/error";
+
+		httpRequest.setAttribute("javax.servlet.error.request_uri", problematiURI);
+
+		ServletWebRequest errorWebRequest = new ServletWebRequest(httpRequest, "");
+
+		Url errorClientUrl = errorWebRequest.getClientUrl();
+
+		assertEquals("any/source/of/error", errorClientUrl.toString());
+
 	}
 
 	/**
