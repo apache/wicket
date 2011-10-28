@@ -26,7 +26,7 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig.Feature;
 import org.codehaus.jackson.map.introspect.AnnotatedClass;
-import org.codehaus.jackson.map.introspect.NopAnnotationIntrospector;
+import org.codehaus.jackson.map.introspect.JacksonAnnotationIntrospector;
 import org.codehaus.jackson.map.ser.impl.SimpleBeanPropertyFilter;
 import org.codehaus.jackson.map.ser.impl.SimpleFilterProvider;
 import org.slf4j.Logger;
@@ -57,7 +57,7 @@ public class JsonRequestLogger extends AbstractRequestLogger
 	 * Specify that the 'default' filter should be used for serialization. This filter will prevent
 	 * jackson from serializing the request handlers.
 	 */
-	private final class FilteredInspector extends NopAnnotationIntrospector
+	private final class FilteredIntrospector extends JacksonAnnotationIntrospector
 	{
 		@Override
 		public Object findFilterId(AnnotatedClass ac)
@@ -106,7 +106,7 @@ public class JsonRequestLogger extends AbstractRequestLogger
 		filters.addFilter("default",
 			SimpleBeanPropertyFilter.serializeAllExcept("eventTarget", "responseTarget"));
 		mapper.setFilters(filters);
-		mapper.setAnnotationIntrospector(new FilteredInspector());
+		mapper.setAnnotationIntrospector(new FilteredIntrospector());
 	}
 
 	/**
