@@ -65,12 +65,17 @@ import org.slf4j.LoggerFactory;
  *       }
  *    }
  * </pre>
- * 
+ * <p>
  * Please note that since a transparent auto-component is created for the tag, the markup and the
  * component hierarchy will not be in sync which leads to subtle differences if your code relies on
  * onBeforeRender() and validate() being called for the children inside the enclosure tag. E.g. it
  * might happen that onBeforeRender() and validate() gets called on invisible components. In doubt,
  * please fall back to {@link EnclosureContainer}.
+ * </p>
+ * <p>
+ * Additionally due to the reason above it is not possible to assert that children in Enclosure are
+ * not visible to WicketTester.
+ * </p>
  * 
  * @see EnclosureResolver
  * @see EnclosureHandler
