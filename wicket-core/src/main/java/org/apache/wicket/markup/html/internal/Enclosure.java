@@ -28,6 +28,7 @@ import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.markup.resolver.ComponentResolvers.ResolverFilter;
 import org.apache.wicket.markup.resolver.IComponentResolver;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -171,7 +172,9 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 	private Component getChildComponent(final MarkupStream markupStream,
 		MarkupContainer enclosureParent)
 	{
-		Component controller = enclosureParent.get(getChildId());
+		String fullChildId = getChildId();
+
+		Component controller = enclosureParent.get(fullChildId);
 		if (controller == null)
 		{
 			int orgIndex = markupStream.getCurrentIndex();
@@ -185,10 +188,15 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 						ComponentTag tag = markupStream.getTag();
 						if ((tag != null) && (tag.isOpen() || tag.isOpenClose()))
 						{
-							if (childId.equals(tag.getId()))
+							String tagId = tag.getId();
+
+							if (fullChildId.equals(tagId))
 							{
+								ComponentTag fullComponentTag = new ComponentTag(tag);
+								fullComponentTag.setId(childId.toString());
+
 								controller = ComponentResolvers.resolve(enclosureParent,
-									markupStream, tag, new ResolverFilter()
+									markupStream, fullComponentTag, new ResolverFilter()
 									{
 										public boolean ignoreResolver(
 											final IComponentResolver resolver)
@@ -197,6 +205,10 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 										}
 									});
 								break;
+							}
+							else if (fullChildId.startsWith(tagId + PATH_SEPARATOR))
+							{
+								fullChildId = Strings.afterFirst(fullChildId, PATH_SEPARATOR);
 							}
 						}
 					}
