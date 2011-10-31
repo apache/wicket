@@ -21,12 +21,14 @@ import java.text.ParseException;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
+import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
@@ -108,5 +110,18 @@ public class ListenerInterfaceRequestHandlerTest extends WicketTestCase
 				"<html><body><a wicket:id='test'>Link</a></body></html>");
 		}
 
+	}
+
+	/**
+	 * Testcase for WICKET-4185
+	 */
+	@Test
+	public void isPageInstanceCreatedOnClassLinks()
+	{
+		PageAndComponentProvider provider = new PageAndComponentProvider(Page.class, "link");
+		ListenerInterfaceRequestHandler handler = new ListenerInterfaceRequestHandler(provider,
+			RequestListenerInterface.forName(ILinkListener.class.getSimpleName()));
+		assertFalse("Handler should not report a page instance is available ",
+			handler.isPageInstanceCreated());
 	}
 }
