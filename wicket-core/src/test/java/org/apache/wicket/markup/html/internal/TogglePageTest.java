@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.basic.Label;
 /**
  * Simple test using the WicketTester
  */
-public class TogglePageTests extends WicketTestCase
+public class TogglePageTest extends WicketTestCase
 {
 
 
@@ -100,8 +100,7 @@ public class TogglePageTests extends WicketTestCase
 	{
 		{
 			// On
-			InlineEnclosureWithAdditionalAjaxTargetPage ajaxPage =
-				tester.startPage(InlineEnclosureWithAdditionalAjaxTargetPage.class);
+			InlineEnclosureWithAdditionalAjaxTargetPage ajaxPage = tester.startPage(InlineEnclosureWithAdditionalAjaxTargetPage.class);
 			assertVisible(ajaxPage.getLabel1());
 			assertVisible(ajaxPage.getLabel2());
 			tester.clickLink(ajaxPage.getLink().getPageRelativePath(), true);
