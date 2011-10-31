@@ -66,6 +66,8 @@ public class ServletWebRequest extends WebRequest
 
 	private final ErrorAttributes errorAttributes;
 
+	private final ForwardAttributes forwardAttributes;
+
 	/**
 	 * Construct.
 	 * 
@@ -95,6 +97,8 @@ public class ServletWebRequest extends WebRequest
 		this.filterPrefix = filterPrefix;
 
 		errorAttributes = ErrorAttributes.of(httpServletRequest);
+
+		forwardAttributes = ForwardAttributes.of(httpServletRequest);
 
 		if (url != null)
 		{
@@ -128,6 +132,12 @@ public class ServletWebRequest extends WebRequest
 			String problematicURI = Url.parse(errorAttributes.getRequestUri(), getCharset())
 				.toString();
 			return getContextRelativeUrl(problematicURI, filterPrefix);
+		}
+		else if (forwardAttributes != null && !Strings.isEmpty(forwardAttributes.getRequestUri()))
+		{
+			String forwardURI = Url.parse(forwardAttributes.getRequestUri(), getCharset())
+				.toString();
+			return getContextRelativeUrl(forwardURI, filterPrefix);
 		}
 		else if (!isAjax())
 		{
@@ -456,6 +466,7 @@ public class ServletWebRequest extends WebRequest
 	@Override
 	public boolean shouldPreserveClientUrl()
 	{
-		return errorAttributes != null && !Strings.isEmpty(errorAttributes.getRequestUri());
+		return (errorAttributes != null && !Strings.isEmpty(errorAttributes.getRequestUri()) || forwardAttributes != null &&
+			!Strings.isEmpty(forwardAttributes.getRequestUri()));
 	}
 }

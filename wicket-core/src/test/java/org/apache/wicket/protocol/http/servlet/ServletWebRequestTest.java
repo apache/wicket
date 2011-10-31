@@ -85,6 +85,30 @@ public class ServletWebRequestTest extends Assert
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4138
+	 * 
+	 * Relative Urls should be calculated against 'javax.servlet.forward.request_uri'
+	 */
+	@Test
+	public void parseForwardAttributes()
+	{
+		MockHttpServletRequest httpRequest = new MockHttpServletRequest(null, null, null);
+		httpRequest.setURL(httpRequest.getContextPath() + "/request/Uri");
+
+		String forwardedURI = httpRequest.getContextPath() + "/some/forwarded/url";
+
+		httpRequest.setAttribute("javax.servlet.forward.request_uri", forwardedURI);
+
+		ServletWebRequest forwardWebRequest = new ServletWebRequest(httpRequest, "");
+
+		Url forwardClientUrl = forwardWebRequest.getClientUrl();
+
+		assertEquals("some/forwarded/url", forwardClientUrl.toString());
+
+
+	}
+
+	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4123
 	 */
 	@Test
