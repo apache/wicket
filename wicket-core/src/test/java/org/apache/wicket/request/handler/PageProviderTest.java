@@ -216,21 +216,6 @@ public class PageProviderTest extends WicketTestCase
 		mapperContext.cleanSessionCache();
 
 		PageProvider provider = mapperContext.new TestPageProvider(page.getPageId(), 0);
-
-		// no instance yet
-		assertFalse(provider.hasPageInstance());
-		try
-		{
-			provider.isPageInstanceFresh();
-			fail("expected illegal state exception");
-		}
-		catch (IllegalStateException e)
-		{
-			// expected
-		}
-
-		provider.getPageInstance();
-
 		assertTrue(provider.hasPageInstance());
 		assertFalse(provider.isPageInstanceFresh());
 	}
