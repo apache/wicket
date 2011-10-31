@@ -294,7 +294,7 @@ public class PageProvider implements IPageProvider, IIntrospectablePageProvider
 			(pageClass == null || pageClass.equals(storedPageInstance.getClass())))
 		{
 			pageInstance = storedPageInstance;
-
+			pageInstanceIsFresh = false;
 			if (pageInstance != null)
 			{
 				if (renderCount != null && pageInstance.getRenderCount() != renderCount)
@@ -374,6 +374,11 @@ public class PageProvider implements IPageProvider, IIntrospectablePageProvider
 	 */
 	public final boolean hasPageInstance()
 	{
+		if (pageInstance == null && pageId != null)
+		{
+			// attempt to load a stored page instance from the page store
+			getStoredPage(pageId);
+		}
 		return pageInstance != null;
 	}
 
