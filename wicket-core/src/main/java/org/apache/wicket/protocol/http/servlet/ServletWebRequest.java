@@ -127,8 +127,7 @@ public class ServletWebRequest extends WebRequest
 		{
 			String problematicURI = Url.parse(errorAttributes.getRequestUri(), getCharset())
 				.toString();
-			Url url = getContextRelativeUrl(problematicURI, filterPrefix);
-			return setParameters(url);
+			return getContextRelativeUrl(problematicURI, filterPrefix);
 		}
 		else if (!isAjax())
 		{
@@ -159,14 +158,13 @@ public class ServletWebRequest extends WebRequest
 		return url;
 	}
 
-	private Url getContextRelativeUrl(String URI, String filterPrefix)
+	private Url getContextRelativeUrl(String uri, String filterPrefix)
 	{
 		if (filterPrefix.length() > 0 && !filterPrefix.endsWith("/"))
 		{
 			filterPrefix += "/";
 		}
 		StringBuilder url = new StringBuilder();
-		String uri = URI;
 		uri = Strings.stripJSessionId(uri);
 		final int start = httpServletRequest.getContextPath().length() + filterPrefix.length() + 1;
 		url.append(uri.substring(start));
