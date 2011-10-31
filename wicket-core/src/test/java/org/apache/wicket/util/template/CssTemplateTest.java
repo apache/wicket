@@ -33,7 +33,7 @@ public class CssTemplateTest
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3187">WICKET-3187</a>
 	 */
 	@Test
-	public void testSimpleConstructor()
+	public void simpleConstructor()
 	{
 		new CssTemplate(new TextTemplate()
 		{

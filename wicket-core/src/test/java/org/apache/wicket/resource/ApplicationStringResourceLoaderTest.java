@@ -18,10 +18,9 @@ package org.apache.wicket.resource;
 
 import java.util.Locale;
 
-import junit.framework.Assert;
-
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
+import org.junit.Test;
 
 /**
  * Tests for the <code>ApplicationStringResourceLoader</code> class.
@@ -45,10 +44,12 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 	 * @see org.apache.wicket.resource.StringResourceLoaderTestBase#testLoaderUnknownResources()
 	 */
 	@Override
-	public void testLoaderUnknownResources()
+	@Test
+	public void loaderUnknownResources()
 	{
-		Assert.assertNull("Unknown resource should return null", createLoader().loadStringResource(
-			component.getClass(), "test.string.that.does.not.exist", Locale.getDefault(), null,
-			null));
+		assertNull(
+			"Unknown resource should return null",
+			createLoader().loadStringResource(component.getClass(),
+				"test.string.that.does.not.exist", Locale.getDefault(), null, null));
 	}
 }

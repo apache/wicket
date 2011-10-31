@@ -29,11 +29,12 @@ public class PageFactoryTest extends WicketTestCase
 {
 	private DefaultPageFactory factory;
 
-	@Override
+	/**
+	 * 
+	 */
 	@Before
-	public void setUp() throws Exception
+	public void before()
 	{
-		super.setUp();
 		factory = new DefaultPageFactory();
 	}
 

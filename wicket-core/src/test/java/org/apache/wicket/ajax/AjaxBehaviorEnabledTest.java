@@ -69,11 +69,10 @@ public class AjaxBehaviorEnabledTest extends WicketTestCase
 	}
 
 	/**
-	 * @see org.apache.wicket.WicketTestCase#setUp()
+	 * 
 	 */
-	@Override
 	@Before
-	public void setUp() throws Exception
+	public void before()
 	{
 		final IAuthorizationStrategy strategy = new CustomStrategy();
 		tester = new WicketTester(new MockApplication()

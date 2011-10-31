@@ -16,26 +16,19 @@
  */
 package org.apache.wicket.request.mapper.info;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * 
  * @author Matej Knopp
  */
-public class ComponentInfoTest extends TestCase
+public class ComponentInfoTest extends Assert
 {
-
-	/**
-	 * 
-	 * Construct.
-	 */
-	public ComponentInfoTest()
-	{
-	}
-
 	/**
 	 * 
 	 */
+	@Test
 	public void test1()
 	{
 		String s = "listener-component-path";
@@ -50,6 +43,7 @@ public class ComponentInfoTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test2()
 	{
 		String s = "-component-path";
@@ -60,6 +54,7 @@ public class ComponentInfoTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test3()
 	{
 		String s = "listener-";
@@ -72,6 +67,7 @@ public class ComponentInfoTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test4()
 	{
 		String s = "-";
@@ -82,6 +78,7 @@ public class ComponentInfoTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test5()
 	{
 		String s = "abcd";
@@ -91,6 +88,7 @@ public class ComponentInfoTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test6()
 	{
 		String s = "listener-compo~~nent-path";
@@ -105,6 +103,7 @@ public class ComponentInfoTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test7()
 	{
 		String s = "listener-co~mpo~~nent-path";
@@ -119,6 +118,7 @@ public class ComponentInfoTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test8()
 	{
 		String s = "listener.12-component-path";
@@ -133,6 +133,7 @@ public class ComponentInfoTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test9()
 	{
 		String s = "4.listener-a-b";
@@ -146,6 +147,7 @@ public class ComponentInfoTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test10()
 	{
 		String s = "4.listener.5-a-b";
@@ -157,7 +159,11 @@ public class ComponentInfoTest extends TestCase
 		assertEquals(s, info.toString());
 	}
 
-	public void test11_encode_decode()
+	/**
+	 * 
+	 */
+	@Test
+	public void encodeDecode()
 	{
 		final Integer renderCount = 1;
 		final String listenerInterface = "ILinkListener";

@@ -17,27 +17,18 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * @author jcompagner
  */
 public class BookmarkableHomePageLinksTest extends WicketTestCase
 {
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public BookmarkableHomePageLinksTest(String name)
-	{
-		super(name);
-	}
-
 	/**
 	 * @throws Exception
 	 */
-	public void testTestLinks() throws Exception
+	@Test
+	public void testLinks() throws Exception
 	{
 		executeTest(BookmarkableHomePageLinksPage.class,
 			"BookmarkableHomePageLinksPage_result.html");

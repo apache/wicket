@@ -27,6 +27,8 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.util.cookies.CookieValuePersisterTestPage.TestForm;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * 
@@ -34,19 +36,21 @@ import org.apache.wicket.util.cookies.CookieValuePersisterTestPage.TestForm;
  */
 public class CookieUtilsTest extends WicketTestCase
 {
-	@Override
-	protected void setUp() throws Exception
+	/**
+	 * @throws Exception
+	 */
+	@Before
+	public void before() throws Exception
 	{
-		super.setUp();
 		tester.startPage(CookieValuePersisterTestPage.class);
 	}
-
 
 	/**
 	 * 
 	 * @throws Exception
 	 */
-	@SuppressWarnings( { "unchecked" })
+	@SuppressWarnings({ "unchecked" })
+	@Test
 	public void test1() throws Exception
 	{
 		// How does the test work: Make sure you have a page, form and form component properly set

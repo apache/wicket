@@ -20,6 +20,8 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Simple test using the WicketTester
@@ -27,10 +29,12 @@ import org.apache.wicket.util.tester.FormTester;
 public class HomePageTest extends WicketTestCase
 {
 
-	@Override
-	public void setUp() throws Exception
+	/**
+	 * 
+	 */
+	@Before
+	public void before()
 	{
-		super.setUp();
 		tester.startPage(HomePage.class);
 		tester.assertRenderedPage(HomePage.class);
 	}
@@ -38,7 +42,8 @@ public class HomePageTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testWithoutBorder()
+	@Test
+	public void withoutBorder()
 	{
 		tester.executeAjaxEvent("form:submit", "onclick");
 		assertEquals("Expected one error message",
@@ -50,7 +55,8 @@ public class HomePageTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testWithoutBorder2()
+	@Test
+	public void withoutBorder2()
 	{
 		FormTester formTester = tester.newFormTester("form");
 		formTester.setValue("textfield1", "testxxx");
@@ -63,7 +69,8 @@ public class HomePageTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testWithBorder()
+	@Test
+	public void withBorder()
 	{
 		tester.executeAjaxEvent("border:form2:submit", "onclick");
 		assertEquals("Expected one error message",
@@ -75,7 +82,8 @@ public class HomePageTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testWithBorder2()
+	@Test
+	public void withBorder2()
 	{
 		TextField<?> textfield = (TextField<?>)tester.getLastRenderedPage().get(
 			"border:form2:border_body:textfield1");
@@ -91,7 +99,8 @@ public class HomePageTest extends WicketTestCase
 	/**
 	 * wicket-2202
 	 */
-	public void testWithPanelAjax()
+	@Test
+	public void withPanelAjax()
 	{
 		tester.executeAjaxEvent("form3:submit", "onclick");
 
@@ -102,7 +111,8 @@ public class HomePageTest extends WicketTestCase
 	/**
 	 * wicket-2202
 	 */
-	public void testWithPanelForm()
+	@Test
+	public void withPanelForm()
 	{
 		tester.clickLink("form3:submit2");
 		HomePage page = (HomePage)tester.getLastRenderedPage();
@@ -112,6 +122,7 @@ public class HomePageTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void test_2589() throws Exception
 	{
 		tester.startPage(HomePage1.class);

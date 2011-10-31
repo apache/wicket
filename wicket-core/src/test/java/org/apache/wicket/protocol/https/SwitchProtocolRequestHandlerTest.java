@@ -26,6 +26,7 @@ import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.AbstractMapperTest;
+import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
@@ -40,7 +41,8 @@ public class SwitchProtocolRequestHandlerTest extends AbstractMapperTest
 	 * 
 	 * @throws MalformedURLException
 	 */
-	public void testRespond() throws MalformedURLException
+	@Test
+	public void respond() throws MalformedURLException
 	{
 		// the URL to redirect to
 		final URL httpsUrl = new URL("https://example.com:1443/app?param1=value1&param2=value2");

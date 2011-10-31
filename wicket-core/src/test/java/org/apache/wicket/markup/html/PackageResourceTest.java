@@ -39,13 +39,11 @@ public class PackageResourceTest extends WicketTestCase
 	public WebApplication application;
 
 	/**
-	 * @see junit.framework.TestCase#setUp()
+	 *
 	 */
-	@Override
 	@Before
-	public void setUp() throws Exception
+	public void before()
 	{
-		super.setUp();
 		application = tester.getApplication();
 	}
 

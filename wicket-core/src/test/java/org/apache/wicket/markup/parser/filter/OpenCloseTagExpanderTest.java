@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.parser.filter;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * 
@@ -26,7 +27,8 @@ public class OpenCloseTagExpanderTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage() throws Exception
+	@Test
+	public void renderHomePage() throws Exception
 	{
 		executeTest(OpenCloseTagExpanderPage_1.class,
 			"OpenCloseTagExpanderPageExpectedResult_1.html");

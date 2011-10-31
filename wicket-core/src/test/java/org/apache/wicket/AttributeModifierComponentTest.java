@@ -40,21 +40,11 @@ public class AttributeModifierComponentTest extends WicketTestCase
 	private static final Logger log = LoggerFactory.getLogger(AttributeModifierComponentTest.class);
 
 	/**
-	 * Create a test case instance.
 	 * 
-	 * @param name
-	 *            The name of the test being run
 	 */
-	public AttributeModifierComponentTest(final String name)
-	{
-		super(name);
-	}
-
-	@Override
 	@Before
-	public void setUp() throws Exception
+	public void before()
 	{
-		super.setUp();
 		tester.startPage(AttributeModifierComponentPage.class);
 	}
 

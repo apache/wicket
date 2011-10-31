@@ -23,12 +23,13 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author almaw
  */
-public class MiniMapTest extends TestCase
+public class MiniMapTest extends Assert
 {
 	private static final Object FOO = new Object();
 	private static final Object BAR = new Object();
@@ -36,7 +37,8 @@ public class MiniMapTest extends TestCase
 	/**
 	 * Basic test for keySet(), entrySet() and values().
 	 */
-	public void testMiniMap()
+	@Test
+	public void miniMap()
 	{
 		MiniMap<Object, Object> m = new MiniMap<Object, Object>(3);
 		m.put(FOO, BAR);

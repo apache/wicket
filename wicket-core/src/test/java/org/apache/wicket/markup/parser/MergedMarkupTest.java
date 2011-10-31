@@ -16,27 +16,25 @@
  */
 package org.apache.wicket.markup.parser;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.Page;
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Test;
 
 /**
  * 
  */
-public class MergedMarkupTest extends TestCase
+public class MergedMarkupTest extends WicketTestCase
 {
 	/**
 	 * test1()
 	 */
+	@Test
 	public void test1()
 	{
-		WicketTester tester = new WicketTester();
-
 		Page page = new SubPageWithoutMarkup();
 		Markup markup = page.getAssociatedMarkup();
 		MarkupResourceStream stream = markup.getMarkupResourceStream();
@@ -47,10 +45,9 @@ public class MergedMarkupTest extends TestCase
 	/**
 	 * test2()
 	 */
+	@Test
 	public void test2()
 	{
-		WicketTester tester = new WicketTester();
-
 		Page page = new SubPageWithMarkup();
 		MarkupStream markup = page.getAssociatedMarkupStream(true);
 		assertEquals("utf-8", markup.getEncoding());

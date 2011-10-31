@@ -26,20 +26,20 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.pageStore.AsynchronousDataStore;
 import org.apache.wicket.pageStore.DiskDataStore;
 import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.settings.IStoreSettings;
 import org.apache.wicket.settings.def.StoreSettings;
 import org.apache.wicket.util.lang.Bytes;
+import org.junit.Assert;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  */
-public class DiskDataStoreTest extends TestCase
+public class DiskDataStoreTest extends Assert
 {
 	/** Log for reporting. */
 	private static final Logger log = LoggerFactory.getLogger(DiskDataStoreTest.class);
@@ -362,9 +362,10 @@ public class DiskDataStoreTest extends TestCase
 	}
 
 	/**
-	 * test1()
+	 * store()
 	 */
-	public void test1()
+	@Test
+	public void store()
 	{
 		generateFiles();
 

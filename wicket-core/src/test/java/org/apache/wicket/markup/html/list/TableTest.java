@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.model.util.ListModel;
+import org.junit.Test;
 
 
 /**
@@ -30,15 +31,6 @@ import org.apache.wicket.model.util.ListModel;
  */
 public class TableTest extends WicketTestCase
 {
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public TableTest(String name)
-	{
-		super(name);
-	}
 
 	/**
 	 * creates a table.
@@ -71,7 +63,8 @@ public class TableTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testTable()
+	@Test
+	public void table()
 	{
 		PageableListView<?> table = createTable(20, 4);
 		assertEquals(4, table.getItemsPerPage());
@@ -103,7 +96,8 @@ public class TableTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testEmptyTable()
+	@Test
+	public void emptyTable()
 	{
 		PageableListView<?> table = createTable(0, 4);
 		assertEquals(4, table.getItemsPerPage());

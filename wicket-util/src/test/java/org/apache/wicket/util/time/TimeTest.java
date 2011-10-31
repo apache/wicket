@@ -20,20 +20,21 @@ package org.apache.wicket.util.time;
 import java.text.ParseException;
 import java.util.Calendar;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Test cases for this object
  * 
  * @author Jonathan Locke
  */
-public final class TimeTest extends TestCase
+public final class TimeTest extends Assert
 {
 	/**
 	 * 
 	 * @throws ParseException
 	 */
+	@Test
 	public void test() throws ParseException
 	{
 		Time.now();
@@ -44,12 +45,12 @@ public final class TimeTest extends TestCase
 
 		final Time birthday = Time.parseDate("1966.06.01");
 
-		Assert.assertEquals(1966, birthday.getYear());
-		Assert.assertEquals(Calendar.JUNE, birthday.getMonth());
-		Assert.assertEquals(1, birthday.getDayOfMonth());
+		assertEquals(1966, birthday.getYear());
+		assertEquals(Calendar.JUNE, birthday.getMonth());
+		assertEquals(1, birthday.getDayOfMonth());
 
 		final String y2k = "2000.01.01-12.00am";
 
-		Assert.assertEquals(y2k, Time.valueOf(y2k).toString());
+		assertEquals(y2k, Time.valueOf(y2k).toString());
 	}
 }

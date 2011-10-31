@@ -19,6 +19,7 @@ package org.apache.wicket.util.tester.apps_4;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Test;
 
 
 /**
@@ -26,25 +27,11 @@ import org.apache.wicket.util.tester.FormTester;
  */
 public class FormTesterTest extends WicketTestCase
 {
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public FormTesterTest(String name)
-	{
-		super(name);
-	}
-
-	@Override
-	protected void setUp() throws Exception
-	{
-		super.setUp();
-	}
 
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void test_1() throws Exception
 	{
 		tester.startPage(EmailPage.class);

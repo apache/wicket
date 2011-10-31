@@ -18,6 +18,8 @@ package org.apache.wicket.model;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  * Test class for exercising the {@link PropertyModel}.
@@ -71,7 +73,8 @@ public class PropertyModelTest extends WicketTestCase
 	 * interface type. This should end in an exception because Wicket can't decide what to
 	 * instantiate on behalf of the program.
 	 */
-	public void testSetWithNullPathInterface()
+	@Test
+	public void setWithNullPathInterface()
 	{
 		Person person = new Person();
 		PropertyModel<String> model = new PropertyModel<String>(person, "interfaceAddress.street");
@@ -91,19 +94,12 @@ public class PropertyModelTest extends WicketTestCase
 	 * abstract class type. This should end in an exception because Wicket can't decide what to
 	 * instantiate on behalf of the program.
 	 */
-	public void testSetWithNullPathAbstract()
+	@Test(expected = WicketRuntimeException.class)
+	public void setWithNullPathAbstract()
 	{
 		Person person = new Person();
 		PropertyModel<String> model = new PropertyModel<String>(person, "abstractAddress.street");
-		try
-		{
-			model.setObject("foo");
-			fail("Expected exception");
-		}
-		catch (WicketRuntimeException wre)
-		{
-			// ok!
-		}
+		model.setObject("foo");
 	}
 
 	/**
@@ -111,7 +107,8 @@ public class PropertyModelTest extends WicketTestCase
 	 * concrete type. This should work because Wicket can decide what to instantiate on behalf of
 	 * the program: the concrete class.
 	 */
-	public void testSetWithNullPathConcrete()
+	@Test
+	public void setWithNullPathConcrete()
 	{
 		Person person = new Person();
 		PropertyModel<String> model = new PropertyModel<String>(person, "concreteAddress.street");
@@ -129,26 +126,22 @@ public class PropertyModelTest extends WicketTestCase
 	 * This test has been disabled as it doesn't work on Mac OS X's 1.4 jdk (assignment doesn't
 	 * fail).
 	 */
-// public void testSetWithNullPathFinalJdk14()
-// {
-// Person person = new Person();
-// PropertyModel model = new PropertyModel(person, "finalAddress.street");
-//
-// try
-// {
-// model.setObject("foo");
-// fail("Expected exception");
-// }
-// catch (WicketRuntimeException wre)
-// {
-// // ok!
-// }
-// }
+	@Test(expected = WicketRuntimeException.class)
+	@Ignore
+	public void setWithNullPathFinalJdk14()
+	{
+		Person person = new Person();
+		PropertyModel<String> model = new PropertyModel<String>(person, "finalAddress.street");
+		model.setObject("foo");
+		fail("Expected exception");
+	}
+
 	/**
 	 * Tests setting a value on a null, final property using a {@link PropertyModel}. This test
 	 * should pass when run using JDK 1.5 or newer.
 	 */
-	public void testSetWithNullPathFinalJdk15()
+	@Test
+	public void setWithNullPathFinalJdk15()
 	{
 		Person person = new Person();
 		PropertyModel<String> model = new PropertyModel<String>(person, "finalAddress.street");

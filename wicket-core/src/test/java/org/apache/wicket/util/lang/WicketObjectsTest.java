@@ -22,6 +22,7 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.junit.Test;
 
 
 /**
@@ -33,19 +34,10 @@ public class WicketObjectsTest extends WicketTestCase
 {
 
 	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public WicketObjectsTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * Test method for 'org.apache.wicket.util.lang.Objects.clone(Object)'
 	 */
-	public void testCloneNull()
+	@Test
+	public void cloneNull()
 	{
 		Object clone = WicketObjects.cloneModel(null);
 		assertEquals(null, clone);
@@ -54,7 +46,8 @@ public class WicketObjectsTest extends WicketTestCase
 	/**
 	 * Test method for 'org.apache.wicket.util.lang.Objects.clone(Object)'
 	 */
-	public void testCloneString()
+	@Test
+	public void cloneString()
 	{
 		String cloneMe = "Mini-me";
 
@@ -66,7 +59,8 @@ public class WicketObjectsTest extends WicketTestCase
 	/**
 	 * Test method for 'org.apache.wicket.util.lang.Objects.clone(Object)'
 	 */
-	public void testCloneObject()
+	@Test
+	public void cloneObject()
 	{
 		Object cloneMe = new Object();
 
@@ -84,8 +78,9 @@ public class WicketObjectsTest extends WicketTestCase
 	/**
 	 * Test method for component cloning
 	 */
-	@SuppressWarnings( { "unchecked" })
-	public void testComponentClone()
+	@SuppressWarnings({ "unchecked" })
+	@Test
+	public void componentClone()
 	{
 		PropertyModel<String> pm = new PropertyModel<String>(new TextField<String>("test",
 			new Model<String>("test")), "modelObject");
@@ -96,7 +91,8 @@ public class WicketObjectsTest extends WicketTestCase
 	/**
 	 * Test method for 'org.apache.wicket.util.lang.Objects.clone(Object)'
 	 */
-	public void testCloneCloneObject()
+	@Test
+	public void cloneCloneObject()
 	{
 		CloneObject cloneMe = new CloneObject();
 		cloneMe.nr = 1;

@@ -27,6 +27,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Test;
 
 /**
  * @author Pedro Santos
@@ -36,7 +37,8 @@ public class NestedFormsTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testPostOrderSequenceSubmittingRootForm()
+	@Test
+	public void postOrderSequenceSubmittingRootForm()
 	{
 		tester.startPage(TestPage.class);
 		TestPage testPage = (TestPage)tester.getLastRenderedPage();
@@ -51,7 +53,8 @@ public class NestedFormsTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testPostOrderSequenceSubmittingInnerForm()
+	@Test
+	public void postOrderSequenceSubmittingInnerForm()
 	{
 		tester.startPage(TestPage.class);
 		TestPage testPage = (TestPage)tester.getLastRenderedPage();

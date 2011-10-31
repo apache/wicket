@@ -16,10 +16,6 @@
  */
 package org.apache.wicket.protocol.http;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -27,6 +23,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.wicket.util.time.Duration;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -34,7 +31,7 @@ import org.junit.experimental.categories.Category;
 /**
  * @see <a href="https://issues.apache.org/jira/browse/WICKET-3209">WICKET-3209</a>
  */
-public class StoredResponsesMapTest
+public class StoredResponsesMapTest extends Assert
 {
 	/**
 	 * Verifies that {@link StoredResponsesMap} will expire the oldest entry if it is older than 2

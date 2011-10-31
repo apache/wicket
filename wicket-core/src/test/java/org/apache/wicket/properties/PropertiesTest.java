@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.junit.Test;
 
 /**
  * 
@@ -35,6 +36,7 @@ public class PropertiesTest extends WicketTestCase
 
 	/**
 	 */
+	@Test
 	public void test_1()
 	{
 		tester.getSession().setLocale(Locale.GERMANY);
@@ -55,6 +57,7 @@ public class PropertiesTest extends WicketTestCase
 
 	/**
 	 */
+	@Test
 	public void test_2()
 	{
 		tester.getSession().setLocale(Locale.GERMANY);

@@ -18,18 +18,20 @@ package org.apache.wicket.util.io;
 
 import java.io.BufferedReader;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * 
  * @author Juergen Donnerstag
  */
-public class XmlReaderTest extends TestCase
+public class XmlReaderTest extends Assert
 {
 	/**
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test_1() throws Exception
 	{
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_1.html"), null);
@@ -45,6 +47,7 @@ public class XmlReaderTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test_2() throws Exception
 	{
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_2.html"), null);
@@ -59,6 +62,7 @@ public class XmlReaderTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test_3() throws Exception
 	{
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_3.html"), null);
@@ -74,6 +78,7 @@ public class XmlReaderTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test_4() throws Exception
 	{
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_4.html"), null);
@@ -89,6 +94,7 @@ public class XmlReaderTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test_5() throws Exception
 	{
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_5.html"), null);
@@ -104,6 +110,7 @@ public class XmlReaderTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test_6() throws Exception
 	{
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_6.html"), null);
@@ -119,6 +126,7 @@ public class XmlReaderTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test_7() throws Exception
 	{
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_7.html"), null);

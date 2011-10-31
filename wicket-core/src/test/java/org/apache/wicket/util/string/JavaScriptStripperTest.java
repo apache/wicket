@@ -16,54 +16,59 @@
  */
 package org.apache.wicket.util.string;
 
-import junit.framework.TestCase;
-
 import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Tests {@link JavaScriptStripper}
  * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
-public class JavaScriptStripperTest extends TestCase
+public class JavaScriptStripperTest extends Assert
 {
 	/**	 */
-	public void testUNIXWICKET501()
+	@Test
+	public void unixWICKET501()
 	{
 		String s = new JavaScriptStripper().stripCommentsAndWhitespace("    // Handle the common XPath // expression\n    if ( !t.indexOf(\"//\") ) {");
 		assertEquals("  if ( !t.indexOf(\"//\") ) {", s);
 	}
 
 	/**	 */
-	public void testDOSWICKET501()
+	@Test
+	public void dosWICKET501()
 	{
 		String s = new JavaScriptStripper().stripCommentsAndWhitespace("    // Handle the common XPath // expression\r\n    if ( !t.indexOf(\"//\") ) {");
 		assertEquals(" \nif ( !t.indexOf(\"//\") ) {", s);
 	}
 
 	/**	 */
-	public void testMACWICKET501()
+	@Test
+	public void macWICKET501()
 	{
 		String s = new JavaScriptStripper().stripCommentsAndWhitespace("    // Handle the common XPath // expression\r    if ( !t.indexOf(\"//\") ) {");
 		assertEquals("  if ( !t.indexOf(\"//\") ) {", s);
 	}
 
 	/**	 */
-	public void testRegexp()
+	@Test
+	public void regexp()
 	{
 		String s = new JavaScriptStripper().stripCommentsAndWhitespace("    t = jQuery.trim(t).replace( /^\\/\\//i, \"\" );");
 		assertEquals(" t = jQuery.trim(t).replace( /^\\/\\//i, \"\" );", s);
 	}
 
 	/**	 */
-	public void testRegexp2()
+	@Test
+	public void regexp2()
 	{
 		String s = new JavaScriptStripper().stripCommentsAndWhitespace("foo.replace(/\"//*strip me*/, \"\"); // strip me\rdoFoo();");
 		assertEquals("foo.replace(/\"/, \"\"); doFoo();", s);
 	}
 
 	/**	 */
-	public void testRegexp3()
+	@Test
+	public void regexp3()
 	{
 		String s = new JavaScriptStripper().stripCommentsAndWhitespace("parseFloat( elem.filter.match(/alpha\\(opacity=(.*)\\)/)[1] ) / 100 : 1;\r//foo");
 		assertEquals("parseFloat( elem.filter.match(/alpha\\(opacity=(.*)\\)/)[1] ) / 100 : 1;\r",
@@ -71,7 +76,8 @@ public class JavaScriptStripperTest extends TestCase
 	}
 
 	/**	 */
-	public void testRegexp4()
+	@Test
+	public void regexp4()
 	{
 		String before = " attr: /**/ //xyz\n /\\[((?:[\\w-]*:)?[\\w-]+)\\s*(?:([!^$*~|]?=)\\s*((['\"])([^\\4]*?)\\4|([^'\"][^\\]]*?)))?\\]/    after     regex";
 		String after = new JavaScriptStripper().stripCommentsAndWhitespace(before);
@@ -81,7 +87,8 @@ public class JavaScriptStripperTest extends TestCase
 	}
 
 	/**	 */
-	public void testWICKET1806()
+	@Test
+	public void WICKET1806()
 	{
 		String before = "a = [ /^(\\[) *@?([\\w-]+) *([!*$^~=]*) *('?\"?)(.*?)\\4 *\\]/ ];    b()";
 		String after = new JavaScriptStripper().stripCommentsAndWhitespace(before);
@@ -91,7 +98,8 @@ public class JavaScriptStripperTest extends TestCase
 	}
 
 	/**	 */
-	public void testWICKET2060_1()
+	@Test
+	public void WICKET2060_1()
 	{
 		String before = "   a   b   c";
 		String after = new JavaScriptStripper().stripCommentsAndWhitespace(before);
@@ -100,7 +108,8 @@ public class JavaScriptStripperTest extends TestCase
 	}
 
 	/**	 */
-	public void testWICKET2060_2()
+	@Test
+	public void WICKET2060_2()
 	{
 		String before = "   a \n  b   c\n\n";
 		String after = new JavaScriptStripper().stripCommentsAndWhitespace(before);
@@ -109,7 +118,8 @@ public class JavaScriptStripperTest extends TestCase
 	}
 
 	/**	 */
-	public void testWICKET2060_3()
+	@Test
+	public void WICKET2060_3()
 	{
 		String before = "return  this.__unbind__(type, fn);";
 		String after = new JavaScriptStripper().stripCommentsAndWhitespace(before);
@@ -136,12 +146,13 @@ public class JavaScriptStripperTest extends TestCase
 	// @formatter:on
 
 	/**	 */
-	public void testRegExThatStartsWithExclamationMark()
+	@Test
+	public void regExThatStartsWithExclamationMark()
 	{
 		String result = new JavaScriptStripper().stripCommentsAndWhitespace(TESTSTRING2);
-		Assert.assertFalse(result.contains("This code will be stripped"));
-		Assert.assertTrue(result.contains("something bad will happen"));
-		Assert.assertTrue(result.contains("really important function"));
+		assertFalse(result.contains("This code will be stripped"));
+		assertTrue(result.contains("something bad will happen"));
+		assertTrue(result.contains("really important function"));
 
 		System.out.println(result);
 	}

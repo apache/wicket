@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.model.util.ListModel;
+import org.junit.Test;
 
 /**
  * Test for ListView
@@ -58,7 +59,8 @@ public class ListViewTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testListView()
+	@Test
+	public void listView()
 	{
 		ListView<Integer> lv = createListView(4);
 		assertEquals(4, lv.getList().size());
@@ -94,7 +96,8 @@ public class ListViewTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testEmptyListView()
+	@Test
+	public void emptyListView()
 	{
 		// Empty tables
 		ListView<?> lv = createListView(0);

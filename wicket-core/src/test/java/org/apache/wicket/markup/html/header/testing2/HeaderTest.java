@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.header.testing2;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * 
@@ -25,19 +26,10 @@ import org.apache.wicket.WicketTestCase;
 public class HeaderTest extends WicketTestCase
 {
 	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public HeaderTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test_1() throws Exception
 	{
 		executeTest(TestExtendedPage.class, "TestExtendedPage_ExpectedResult.html");
@@ -47,6 +39,7 @@ public class HeaderTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test_2() throws Exception
 	{
 		executeTest(TestExtendedPage2.class, "TestExtendedPage2_ExpectedResult.html");

@@ -20,12 +20,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Tests the <code>StringList</code> class.
  */
-public class StringListTest extends TestCase
+public class StringListTest extends Assert
 {
 
 	/**
@@ -134,7 +135,8 @@ public class StringListTest extends TestCase
 	/**
 	 * Tests an empty stringlist.
 	 */
-	public void testEmptyStringList()
+	@Test
+	public void emptyStringList()
 	{
 		isEmptyList(new StringList());
 		isEmptyList(new StringList(0));
@@ -146,7 +148,8 @@ public class StringListTest extends TestCase
 	/**
 	 * Tests a list with one element.
 	 */
-	public void testSingleElementList()
+	@Test
+	public void singleElementList()
 	{
 		StringList list = new StringList();
 		list.add("foo");
@@ -160,7 +163,8 @@ public class StringListTest extends TestCase
 	/**
 	 * Tests the StringList.repeat method.
 	 */
-	public void testRepeat()
+	@Test
+	public void repeat()
 	{
 		assertEquals("[]", StringList.repeat(0, "foo").toString());
 		assertEquals("[foo]", StringList.repeat(1, "foo").toString());
@@ -172,7 +176,8 @@ public class StringListTest extends TestCase
 	/**
 	 * Tests the valueOf methods.
 	 */
-	public void testValueOf()
+	@Test
+	public void valueOf()
 	{
 		isEmptyList(StringList.valueOf((Collection<?>)null));
 		isEmptyList(StringList.valueOf((String)null));
@@ -196,7 +201,8 @@ public class StringListTest extends TestCase
 	/**
 	 * Tests the sort method.
 	 */
-	public void testSort()
+	@Test
+	public void sort()
 	{
 		StringList list = new StringList();
 		list.sort();
@@ -231,7 +237,8 @@ public class StringListTest extends TestCase
 	/**
 	 * Tests the add, remove, removeLast and prepend methods.
 	 */
-	public void testAddRemoveEtc()
+	@Test
+	public void addRemoveEtc()
 	{
 		StringList list = StringList.valueOf("b");
 		checkStringList(1, "[b]", list);
@@ -261,7 +268,8 @@ public class StringListTest extends TestCase
 	/**
 	 * Tests the contains method.
 	 */
-	public void testContains()
+	@Test
+	public void contains()
 	{
 		StringList list = new StringList();
 		assertFalse(list.contains(""));
@@ -294,7 +302,8 @@ public class StringListTest extends TestCase
 	/**
 	 * Tests the tokenize method.
 	 */
-	public void testTokenize()
+	@Test
+	public void tokenize()
 	{
 		isEmptyList(StringList.tokenize(""));
 

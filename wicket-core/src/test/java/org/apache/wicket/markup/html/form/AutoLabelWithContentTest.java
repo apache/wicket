@@ -19,11 +19,12 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Test;
 
 /**
- * Make sure AutoLabelForInputTagResolver works with nested {@literal <wicket:message>} and nested components
- * to support things like {@literal <label wicket:for="foo"><input wicket:id="foo"/></label>}.
+ * Make sure AutoLabelForInputTagResolver works with nested {@literal <wicket:message>} and nested
+ * components to support things like
+ * {@literal <label wicket:for="foo"><input wicket:id="foo"/></label>}.
  * 
  * @author Carl-Eric Menzel <cmenzel@wicketbuch.de>
  */
@@ -40,9 +41,9 @@ public class AutoLabelWithContentTest extends WicketTestCase
 		}
 	}
 
-	public void testLabelWithMessage() throws Exception
+	@Test
+	public void labelWithMessage() throws Exception
 	{
-		WicketTester tester = new WicketTester();
 		tester.startPage(LabelWithMessagePage.class);
 		tester.assertContains("<label wicket:for=\"textfield\" for=\"textfield2\"><wicket:message key=\"foo\">my test text</wicket:message></label>");
 	}
@@ -57,9 +58,9 @@ public class AutoLabelWithContentTest extends WicketTestCase
 		}
 	}
 
-	public void testLabelWithNestedComponent()
+	@Test
+	public void labelWithNestedComponent()
 	{
-		WicketTester tester = new WicketTester();
 		tester.startPage(LabelWithNestedComponentsPage.class);
 		tester.assertContains("<label wicket:for=\"textfield\" for=\"textfield2\"><input type=\"text\" wicket:id=\"textfield\" value=\"\" name=\"textfield\" id=\"textfield2\"/></label>");
 	}

@@ -18,6 +18,7 @@ package org.apache.wicket.markup.resolver;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * 
@@ -27,6 +28,7 @@ public class WicketMessageResolverTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void test_1() throws Exception
 	{
 		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(false);
@@ -36,6 +38,7 @@ public class WicketMessageResolverTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void test_2() throws Exception
 	{
 		executeTest(SimplePage_2.class, "SimplePageExpectedResult_2.html");
@@ -44,6 +47,7 @@ public class WicketMessageResolverTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void test_2a() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
@@ -53,6 +57,7 @@ public class WicketMessageResolverTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void test_3() throws Exception
 	{
 		executeTest(SimplePage_3.class, "SimplePageExpectedResult_3.html");
@@ -61,6 +66,7 @@ public class WicketMessageResolverTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void test_4() throws Exception
 	{
 		try
@@ -80,6 +86,7 @@ public class WicketMessageResolverTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void test_5() throws Exception
 	{
 		executeTest(SimplePage_5.class, "SimplePageExpectedResult_5.html");
@@ -88,6 +95,7 @@ public class WicketMessageResolverTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void test_6() throws Exception
 	{
 		executeTest(SimplePage_6.class, "SimplePageExpectedResult_6.html");

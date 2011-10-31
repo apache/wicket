@@ -20,6 +20,7 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.request.resource.ByteArrayResource;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.junit.Test;
 
 /**
  * @author jcompagner
@@ -29,7 +30,8 @@ public class ImageStatelessTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testResourceReference()
+	@Test
+	public void resourceReference()
 	{
 		final Image i = new Image("test", new PackageResourceReference("test"));
 		tester.startComponent(i);
@@ -39,7 +41,8 @@ public class ImageStatelessTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testResource()
+	@Test
+	public void resource()
 	{
 		final Image i = new Image("test", new ByteArrayResource("text/text", new byte[0]));
 		tester.startComponent(i);

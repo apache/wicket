@@ -30,7 +30,6 @@ import org.junit.Test;
 public class InnerFeedbackTest extends WicketTestCase
 {
 
-
 	@Override
 	protected WebApplication newApplication()
 	{

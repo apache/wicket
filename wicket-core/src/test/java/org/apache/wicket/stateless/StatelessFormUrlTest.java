@@ -25,6 +25,7 @@ import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.junit.Test;
 
 /**
  * @author Pedro Santos
@@ -34,7 +35,8 @@ public class StatelessFormUrlTest extends WicketTestCase
 	/**
 	 * Preventing WICKET-3438
 	 */
-	public void testSubmitLinkInputNameNotEncodedIntoFormAction()
+	@Test
+	public void submitLinkInputNameNotEncodedIntoFormAction()
 	{
 		tester.startPage(TestPage.class);
 		tester.clickLink("form:submitLink");

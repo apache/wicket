@@ -18,19 +18,14 @@ package org.apache.wicket.request.mapper.info;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
+
 /**
  * 
  * @author Matej Knopp
  */
 public class PageComponentInfoTest extends TestCase
 {
-
-	/**
-	 * Construct.
-	 */
-	public PageComponentInfoTest()
-	{
-	}
 
 	private void testPageInfoOnly(PageComponentInfo info, Integer pageId)
 	{
@@ -55,6 +50,7 @@ public class PageComponentInfoTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test1()
 	{
 		String s = "2-click-foo-bar-baz";
@@ -66,6 +62,7 @@ public class PageComponentInfoTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test2()
 	{
 		String s = "2";
@@ -77,7 +74,8 @@ public class PageComponentInfoTest extends TestCase
 	/**
 	 * <a href="https://issues.apache.org/jira/browse/WICKET-3490">WICKET-3490</a>
 	 */
-	public void testParsePageInfo()
+	@Test
+	public void parsePageInfo()
 	{
 		PageComponentInfo pageComponentInfo = PageComponentInfo.parse("99999999999999999999999999999999999999999999999999999999999999999999999");
 		assertNull(pageComponentInfo);

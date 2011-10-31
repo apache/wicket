@@ -20,26 +20,19 @@ import org.apache.wicket.Component;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.validator.AbstractValidator;
+import org.junit.Test;
 
 /**
  * 
  */
 public class ClassStringResourceLoaderTest extends WicketTestCase
 {
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public ClassStringResourceLoaderTest(String name)
-	{
-		super(name);
-	}
 
 	/**
 	 * 
 	 */
-	public void testValidator1()
+	@Test
+	public void validator1()
 	{
 		ClassStringResourceLoader loader = new ClassStringResourceLoader(MyValidator.class);
 		tester.getApplication().getResourceSettings().getStringResourceLoaders().add(loader);

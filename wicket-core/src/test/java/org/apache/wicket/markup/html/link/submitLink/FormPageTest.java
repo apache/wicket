@@ -20,6 +20,7 @@ import junit.framework.Assert;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Test;
 
 /**
  * 
@@ -29,7 +30,8 @@ public class FormPageTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testSubmitlinkIsSubmitted()
+	@Test
+	public void submitlinkIsSubmitted()
 	{
 		tester.startPage(FormPage.class);
 
@@ -48,7 +50,8 @@ public class FormPageTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testFormIsSubmitted()
+	@Test
+	public void formIsSubmitted()
 	{
 		tester.startPage(FormPage.class);
 
@@ -69,7 +72,8 @@ public class FormPageTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testFormAndLinkAreSubmitted()
+	@Test
+	public void formAndLinkAreSubmitted()
 	{
 		tester.startPage(FormPage.class);
 

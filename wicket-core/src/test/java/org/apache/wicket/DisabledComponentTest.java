@@ -25,17 +25,6 @@ import org.junit.Test;
  */
 public class DisabledComponentTest extends WicketTestCase
 {
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public DisabledComponentTest(String name)
-	{
-		super(name);
-	}
-
 	/**
 	 * @throws Exception
 	 */

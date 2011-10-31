@@ -104,7 +104,7 @@ public class HeaderResponseTest
 	 * Tests the creation of a proper IE conditional comment
 	 */
 	@Test
-	public void testConditionalRenderCSSReference()
+	public void conditionalRenderCSSReference()
 	{
 		headerResponse.renderCSSReference(reference, null, "screen", "lt IE 8");
 		String expected = "<!--[if lt IE 8]><link rel=\"stylesheet\" type=\"text/css\" href=\"" +
@@ -117,7 +117,7 @@ public class HeaderResponseTest
 	 * Tests the creation of a proper IE conditional comment
 	 */
 	@Test
-	public void testConditionalRenderCSSReferenceWithUrl()
+	public void conditionalRenderCSSReferenceWithUrl()
 	{
 		headerResponse.renderCSSReference("resource.css", "screen", "lt IE 8");
 		String expected = "<!--[if lt IE 8]><link rel=\"stylesheet\" type=\"text/css\" href=\"" +
@@ -132,7 +132,7 @@ public class HeaderResponseTest
 	 * WICKET-3661
 	 */
 	@Test
-	public void testDeferJavaScriptReference()
+	public void deferJavaScriptReference()
 	{
 		boolean defer = true;
 		headerResponse.renderJavaScriptReference("js-resource.js", "some-id", defer);
@@ -148,7 +148,7 @@ public class HeaderResponseTest
 	 * WICKET-3661
 	 */
 	@Test
-	public void testDeferFalseJavaScriptReference()
+	public void deferFalseJavaScriptReference()
 	{
 		boolean defer = false;
 		headerResponse.renderJavaScriptReference("js-resource.js", "some-id", defer);
@@ -164,7 +164,7 @@ public class HeaderResponseTest
 	 * WICKET-3909
 	 */
 	@Test
-	public void testCharsetSetJavaScriptReference()
+	public void charsetSetJavaScriptReference()
 	{
 		String charset = "foo";
 		headerResponse.renderJavaScriptReference("js-resource.js", "some-id", false, charset);
@@ -180,7 +180,7 @@ public class HeaderResponseTest
 	 * WICKET-3909
 	 */
 	@Test
-	public void testCharsetNotSetJavaScriptReference()
+	public void charsetNotSetJavaScriptReference()
 	{
 		headerResponse.renderJavaScriptReference("js-resource.js", "some-id", false, null);
 		String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"" + RESOURCE_NAME +

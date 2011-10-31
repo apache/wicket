@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * Test ExternalLink (href="...")
@@ -26,20 +27,10 @@ import org.apache.wicket.WicketTestCase;
 public class ExternalLinkTest extends WicketTestCase
 {
 	/**
-	 * Create the test.
-	 * 
-	 * @param name
-	 *            The test name
-	 */
-	public ExternalLinkTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * @throws Exception
 	 */
-	public void testRenderExternalLink_1() throws Exception
+	@Test
+	public void renderExternalLink_1() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
 		executeTest(ExternalLinkPage_1.class, "ExternalLinkPageExpectedResult_1.html");
@@ -48,7 +39,8 @@ public class ExternalLinkTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderExternalLink_2() throws Exception
+	@Test
+	public void renderExternalLink_2() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
 		executeTest(ExternalLinkPage_2.class, "ExternalLinkPageExpectedResult_2.html");

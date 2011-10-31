@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.internal;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.junit.Test;
 
 
 /**
@@ -31,7 +32,8 @@ public class InlineEnclosureTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testInlineEnclosurePage_1() throws Exception
+	@Test
+	public void inlineEnclosurePage_1() throws Exception
 	{
 		executeTest(InlineEnclosurePage_1.class, "InlineEnclosurePageExpectedResult_1.html");
 	}
@@ -39,7 +41,8 @@ public class InlineEnclosureTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testInlineEnclosurePage_2() throws Exception
+	@Test
+	public void inlineEnclosurePage_2() throws Exception
 	{
 		executeTest(InlineEnclosurePage_2.class, "InlineEnclosurePageExpectedResult_2.html");
 	}
@@ -47,7 +50,8 @@ public class InlineEnclosureTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testInlineEnclosurePanelPage() throws Exception
+	@Test
+	public void inlineEnclosurePanelPage() throws Exception
 	{
 		executeTest(InlineEnclosurePanelPage.class, "InlineEnclosurePanelPageExpectedResult.html");
 	}

@@ -24,6 +24,8 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * 
@@ -34,16 +36,18 @@ public class XForwardedRequestWrapperTest extends WicketTestCase
 	MockHttpServletRequest request;
 	XForwardedRequestWrapperFactory filter;
 
-	@Override
-	protected void setUp() throws Exception
+	/**
+	 * @throws Exception
+	 */
+	@Before
+	public void before() throws Exception
 	{
-		super.setUp();
-
 		filter = new XForwardedRequestWrapperFactory();
 		request = tester.getRequest();
 	}
 
 	/** */
+	@Test
 	public void test1()
 	{
 		HttpServletRequest resp = filter.getWrapper(request);
@@ -57,6 +61,7 @@ public class XForwardedRequestWrapperTest extends WicketTestCase
 	}
 
 	/** */
+	@Test
 	public void test2()
 	{
 		filter.getConfig().setProtocolHeader("x-forwarded-proto");
@@ -74,6 +79,7 @@ public class XForwardedRequestWrapperTest extends WicketTestCase
 	/**
 	 * Sample with internal proxies
 	 */
+	@Test
 	public void test3()
 	{
 		filter.getConfig().setAllowedInternalProxies("192\\.168\\.0\\.10, 192\\.168\\.0\\.11");
@@ -102,6 +108,7 @@ public class XForwardedRequestWrapperTest extends WicketTestCase
 	/**
 	 * Sample with trusted proxies
 	 */
+	@Test
 	public void test4()
 	{
 		filter.getConfig().setAllowedInternalProxies("192\\.168\\.0\\.10, 192\\.168\\.0\\.11");
@@ -121,6 +128,7 @@ public class XForwardedRequestWrapperTest extends WicketTestCase
 	/**
 	 * Sample with internal and trusted proxies
 	 */
+	@Test
 	public void test5()
 	{
 		filter.getConfig().setAllowedInternalProxies("192\\.168\\.0\\.10, 192\\.168\\.0\\.11");
@@ -140,6 +148,7 @@ public class XForwardedRequestWrapperTest extends WicketTestCase
 	/**
 	 * Sample with an untrusted proxy
 	 */
+	@Test
 	public void test6()
 	{
 		filter.getConfig().setAllowedInternalProxies("192\\.168\\.0\\.10, 192\\.168\\.0\\.11");
@@ -179,6 +188,7 @@ public class XForwardedRequestWrapperTest extends WicketTestCase
 	 * @throws Exception
 	 * 
 	 */
+	@Test
 	public void test7() throws Exception
 	{
 		MyApplication app = new MyApplication();

@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.basic;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.Form;
+import org.junit.Test;
 
 /**
  * @author jcompagner
@@ -28,7 +29,8 @@ public class SimpleResponsePageClassTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testResponsePageClass() throws Exception
+	@Test
+	public void responsePageClass() throws Exception
 	{
 		tester.startPage(SimpleResponsePageClass.class);
 		SimpleResponsePageClass manageBook = (SimpleResponsePageClass)tester.getLastRenderedPage();

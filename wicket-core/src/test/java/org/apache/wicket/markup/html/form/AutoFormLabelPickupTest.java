@@ -52,30 +52,31 @@ public class AutoFormLabelPickupTest extends WicketTestCase
 		}
 	}
 
-	@Override
+	/**
+	 * 
+	 */
 	@Before
-	public void setUp() throws Exception
+	public void before()
 	{
-		super.setUp();
 		Session.get().setLocale(Locale.US);
 	}
 
 	@Test
-	public void testLabelIsPrintedFromModel() throws Exception
+	public void labelIsPrintedFromModel() throws Exception
 	{
 		tester.startPage(new PrintLabelPage(Model.of("label from model")));
 		tester.assertContains("<label wicket:for=\"input\" for=\"input2\">\\|label from model\\|</label>");
 	}
 
 	@Test
-	public void testLabelIsPrintedFromProperties() throws Exception
+	public void labelIsPrintedFromProperties() throws Exception
 	{
 		tester.startPage(new PrintLabelPage(Model.of((String)null)));
 		tester.assertContains("<label wicket:for=\"input\" for=\"input2\">\\|label from properties\\|</label>");
 	}
 
 	@Test
-	public void testLabelIsPickedUpFromMarkup() throws Exception
+	public void labelIsPickedUpFromMarkup() throws Exception
 	{
 		tester.startPage(new PickUpLabelPage(null));
 		assertEquals(
@@ -85,7 +86,7 @@ public class AutoFormLabelPickupTest extends WicketTestCase
 	}
 
 	@Test
-	public void testLabelIsPickedUpFromProperties() throws Exception
+	public void labelIsPickedUpFromProperties() throws Exception
 	{
 		tester.startPage(new PickUpLabelPage(null));
 		assertEquals(
@@ -94,7 +95,8 @@ public class AutoFormLabelPickupTest extends WicketTestCase
 				.getObject());
 	}
 
-	public void testWithoutAutolabel() throws Exception
+	@Test
+	public void withoutAutolabel() throws Exception
 	{
 		tester.startPage(new PickUpLabelPage(null));
 		tester.assertContains("<label>label from markup without autolabel</label>");
@@ -105,7 +107,7 @@ public class AutoFormLabelPickupTest extends WicketTestCase
 	}
 
 	@Test
-	public void testLocaleChangesAreDetectedWithExplicitMessageKeys() throws Exception
+	public void localeChangesAreDetectedWithExplicitMessageKeys() throws Exception
 	{
 		Session.get().setLocale(Locale.GERMAN);
 		tester.startPage(new PickUpLabelPage(null));
@@ -127,7 +129,7 @@ public class AutoFormLabelPickupTest extends WicketTestCase
 	}
 
 	@Test
-	public void testLocaleChangesAreDetectedWithDefaultLabels() throws Exception
+	public void localeChangesAreDetectedWithDefaultLabels() throws Exception
 	{
 		Session.get().setLocale(Locale.GERMAN);
 		tester.startPage(new PickUpLabelPage(null));
@@ -149,7 +151,7 @@ public class AutoFormLabelPickupTest extends WicketTestCase
 	}
 
 	@Test
-	public void testDefaultLabelIsPickedUpFromProperties() throws Exception
+	public void defaultLabelIsPickedUpFromProperties() throws Exception
 	{
 		tester.startPage(new PickUpLabelPage(null));
 		assertEquals(

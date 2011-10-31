@@ -16,18 +16,20 @@
  */
 package org.apache.wicket.protocol.http;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * 
  * @author Johan
  */
-public class RequestUtilsTest extends TestCase
+public class RequestUtilsTest extends Assert
 {
 	/**
 	 * 
 	 */
-	public void testDoubleDotsMiddle()
+	@Test
+	public void doubleDotsMiddle()
 	{
 		assertEquals("/a/b", RequestUtils.removeDoubleDots("/a/b/../b"));
 		assertEquals("a/b", RequestUtils.removeDoubleDots("a/b/../b"));
@@ -37,7 +39,8 @@ public class RequestUtilsTest extends TestCase
 	/**
 	 * 
 	 */
-	public void testDoubleDotsEnd()
+	@Test
+	public void doubleDotsEnd()
 	{
 		assertEquals("/a/b", RequestUtils.removeDoubleDots("/a/b/c/.."));
 		assertEquals("a/b", RequestUtils.removeDoubleDots("a/b/c/.."));
@@ -46,7 +49,8 @@ public class RequestUtilsTest extends TestCase
 	/**
 	 * 
 	 */
-	public void testDoubleDotsStart()
+	@Test
+	public void doubleDotsStart()
 	{
 		assertEquals("/../a/b", RequestUtils.removeDoubleDots("/../a/b"));
 		assertEquals("../a/b", RequestUtils.removeDoubleDots("../a/b"));
@@ -55,7 +59,8 @@ public class RequestUtilsTest extends TestCase
 	/**
 	 * 
 	 */
-	public void testEmptyDoubleDots()
+	@Test
+	public void emptyDoubleDots()
 	{
 		assertEquals("", RequestUtils.removeDoubleDots(""));
 	}
@@ -63,7 +68,8 @@ public class RequestUtilsTest extends TestCase
 	/**
 	 * 
 	 */
-	public void testOneDoubleDots()
+	@Test
+	public void oneDoubleDots()
 	{
 		assertEquals("..", RequestUtils.removeDoubleDots(".."));
 		assertEquals("../", RequestUtils.removeDoubleDots("../"));
@@ -73,7 +79,8 @@ public class RequestUtilsTest extends TestCase
 	/**
 	 * 
 	 */
-	public void testToAbsolutePath()
+	@Test
+	public void toAbsolutePath()
 	{
 		assertEquals(RequestUtils.toAbsolutePath("http://aif.ru/test/test", "../blah/zzz"),
 			"http://aif.ru/blah/zzz");

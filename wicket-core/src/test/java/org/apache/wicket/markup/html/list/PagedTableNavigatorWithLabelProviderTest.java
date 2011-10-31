@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.list;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.tester.DiffUtil;
+import org.junit.Test;
 
 
 /**
@@ -31,7 +32,8 @@ public class PagedTableNavigatorWithLabelProviderTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testPagedTable() throws Exception
+	@Test
+	public void pagedTable() throws Exception
 	{
 		tester.startPage(PagedTableNavigatorWithLabelProviderPage.class);
 		PagedTableNavigatorWithLabelProviderPage page = (PagedTableNavigatorWithLabelProviderPage)tester.getLastRenderedPage();

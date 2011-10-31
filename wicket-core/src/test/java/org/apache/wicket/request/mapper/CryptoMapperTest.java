@@ -26,6 +26,9 @@ import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandle
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests for {@link CryptoMapper}
@@ -52,9 +55,9 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * @throws Exception
 	 */
 	@Override
-	protected void setUp() throws Exception
+	@Before
+	public void before() throws Exception
 	{
-		super.setUp();
 
 		tester = new WicketTester();
 		WebApplication webApplication = tester.getApplication();
@@ -62,19 +65,21 @@ public class CryptoMapperTest extends AbstractMapperTest
 		mapper = new CryptoMapper(webApplication.getRootRequestMapper(), webApplication);
 	}
 
-	@Override
-	protected void tearDown() throws Exception
+	/**
+	 * @throws Exception
+	 */
+	@After
+	public void after() throws Exception
 	{
 		tester.destroy();
-
-		super.tearDown();
 	}
 
 	/**
 	 * Tests that {@link CryptoMapper} wraps the original request mapper and encrypts the url
 	 * produced by it
 	 */
-	public void testEncrypt()
+	@Test
+	public void encrypt()
 	{
 		Url url = mapper.mapHandler(new RenderPageRequestHandler(new PageProvider(
 			DummyHomePage.class, new PageParameters())));
@@ -85,7 +90,8 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * Tests that {@link CryptoMapper} decrypts the passed url and pass it to the original request
 	 * mapper which resolves the page from the application mounts
 	 */
-	public void testDecrypt()
+	@Test
+	public void decrypt()
 	{
 		Request request = getRequest(Url.parse(ENCRYPTED_URL));
 		IRequestHandler requestHandler = mapper.mapRequest(request);
@@ -98,7 +104,8 @@ public class CryptoMapperTest extends AbstractMapperTest
 	/**
 	 * Test a failed decrypt, WICKET-4139
 	 */
-	public void testDecryptFailed()
+	@Test
+	public void decryptFailed()
 	{
 		String encrypted = "style.css";
 
@@ -110,7 +117,8 @@ public class CryptoMapperTest extends AbstractMapperTest
 	/**
 	 * Tests that named and indexed parameters are properly (en|de)crypted
 	 */
-	public void testPageParameters()
+	@Test
+	public void pageParameters()
 	{
 		String expectedEncrypted = "ywKWg-Qpk7YQBiYCmj9MaAJSIV1gtssNinjiALijtet62VMQc2-sMK_RchttkidUpYM_cplXKeZSfGxBkvWzH_E_zWv4Ii7MNSm5nXKno7o/ywK6c/MK_c0/nji3c/Qpk1b/XKnba/c2-cd";
 
@@ -138,7 +146,8 @@ public class CryptoMapperTest extends AbstractMapperTest
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-3926
 	 */
-	public void testHomePageWithParameters()
+	@Test
+	public void homePageWithParameters()
 	{
 		String expectedEncrypted = "0lhSFdMIt3yZUNwbtLuXgDePMclxSbks";
 		PageParameters expectedParameters = new PageParameters();
@@ -162,7 +171,8 @@ public class CryptoMapperTest extends AbstractMapperTest
 	/**
 	 * Relative ResourceReferences, WICKET-3514
 	 */
-	public void testResourceReference()
+	@Test
+	public void resourceReference()
 	{
 		String encrypted = "X5EA-RpmG5-t7GSByiSposVVWJ28fpoU-XgFo7bOPITjbCTT6mLI5l-7b-WJucu-Kc8StVsu-PL5htkbIxuxphv3mYi5-mmkCvkxPsriihj5VPg3naw2fA/X5E87/b-W6b/l-795/Juc97/mG5fa";
 
@@ -180,7 +190,8 @@ public class CryptoMapperTest extends AbstractMapperTest
 	/**
 	 * Relative ResourceReferences, WICKET-3514
 	 */
-	public void testResourceReferenceWithModifiedSegments()
+	@Test
+	public void resourceReferenceWithModifiedSegments()
 	{
 		String encrypted = "X5EA-RpmG5-t7GSByiSposVVWJ28fpoU-XgFo7bOPITjbCTT6mLI5l-7b-WJucu-Kc8StVsu-PL5htkbIxuxphv3mYi5-mmkCvkxPsriihj5VPg3naw2fA/X5E87/b-W6b/l-795/Juc97/modified-crypt.txt";
 
@@ -198,7 +209,8 @@ public class CryptoMapperTest extends AbstractMapperTest
 	/**
 	 * Relative ResourceReferences, WICKET-3514
 	 */
-	public void testResourceReferenceWithMoreSegments()
+	@Test
+	public void resourceReferenceWithMoreSegments()
 	{
 		String encrypted = "X5EA-RpmG5-t7GSByiSposVVWJ28fpoU-XgFo7bOPITjbCTT6mLI5l-7b-WJucu-Kc8StVsu-PL5htkbIxuxphv3mYi5-mmkCvkxPsriihj5VPg3naw2fA/X5E87/b-W6b/l-795/Juc97/more/crypt.txt";
 
@@ -216,7 +228,8 @@ public class CryptoMapperTest extends AbstractMapperTest
 	/**
 	 * Relative ResourceReferences, WICKET-3514
 	 */
-	public void testResourceReferenceWithLessSegments()
+	@Test
+	public void resourceReferenceWithLessSegments()
 	{
 		String encrypted = "X5EA-RpmG5-t7GSByiSposVVWJ28fpoU-XgFo7bOPITjbCTT6mLI5l-7b-WJucu-Kc8StVsu-PL5htkbIxuxphv3mYi5-mmkCvkxPsriihj5VPg3naw2fA/X5E87/b-W6b/l-795/less-crypt.txt";
 

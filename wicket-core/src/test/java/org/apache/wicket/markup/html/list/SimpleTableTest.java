@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.list;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.basic.Label;
+import org.junit.Test;
 
 
 /**
@@ -30,7 +31,8 @@ public class SimpleTableTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testSimpleTable_1() throws Exception
+	@Test
+	public void simpleTable_1() throws Exception
 	{
 		executeTest(SimpleTablePage_1.class, "SimpleTablePageExpectedResult_1.html");
 		String document = tester.getLastResponseAsString();
@@ -54,7 +56,8 @@ public class SimpleTableTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testSimpleTable_2() throws Exception
+	@Test
+	public void simpleTable_2() throws Exception
 	{
 		executeTest(SimpleTablePage_2.class, "SimpleTablePageExpectedResult_2.html");
 		String document = tester.getLastResponseAsString();

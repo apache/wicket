@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.debug;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * Test the component: PageView
@@ -25,22 +26,13 @@ import org.apache.wicket.WicketTestCase;
  */
 public class WicketComponentTreeTest extends WicketTestCase
 {
-	/**
-	 * Create the test.
-	 * 
-	 * @param name
-	 *            The test name
-	 */
-	public WicketComponentTreeTest(String name)
-	{
-		super(name);
-	}
 
 	/**
 	 * Test a simply page containing the debug component
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test1() throws Exception
 	{
 		// disable the component use check, as this consumes extra

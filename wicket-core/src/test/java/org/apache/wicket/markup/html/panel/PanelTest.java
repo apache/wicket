@@ -22,6 +22,7 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.html.markupId.MyPanel;
+import org.junit.Test;
 
 
 /**
@@ -33,20 +34,10 @@ import org.apache.wicket.markup.html.markupId.MyPanel;
 public class PanelTest extends WicketTestCase
 {
 	/**
-	 * Create the test.
-	 * 
-	 * @param name
-	 *            The test name
-	 */
-	public PanelTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_1() throws Exception
+	@Test
+	public void renderHomePage_1() throws Exception
 	{
 		boolean hit = false;
 		try
@@ -67,7 +58,8 @@ public class PanelTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_2() throws Exception
+	@Test
+	public void renderHomePage_2() throws Exception
 	{
 		boolean hit = false;
 		try
@@ -87,7 +79,8 @@ public class PanelTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testPanel3() throws Exception
+	@Test
+	public void panel3() throws Exception
 	{
 		executeTest(PanelPage_3.class, "PanelPageExpectedResult_3.html");
 	}
@@ -95,7 +88,8 @@ public class PanelTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testPanel4() throws Exception
+	@Test
+	public void panel4() throws Exception
 	{
 		executeTest(PanelPage_4.class, "PanelPageExpectedResult_4.html");
 	}
@@ -103,7 +97,8 @@ public class PanelTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testInlinePanel() throws Exception
+	@Test
+	public void inlinePanel() throws Exception
 	{
 		executeTest(InlinePanelPage_1.class, "InlinePanelPageExpectedResult_1.html");
 	}
@@ -111,7 +106,8 @@ public class PanelTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testInlinePanel_2() throws Exception
+	@Test
+	public void inlinePanel_2() throws Exception
 	{
 		executeTest(InlinePanelPage_2.class, "InlinePanelPageExpectedResult_2.html");
 	}
@@ -119,7 +115,8 @@ public class PanelTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testInlinePanel_3() throws Exception
+	@Test
+	public void inlinePanel_3() throws Exception
 	{
 		executeTest(InlinePanelPage_3.class, "InlinePanelPageExpectedResult_3.html");
 	}
@@ -127,7 +124,8 @@ public class PanelTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testInlinePanel_4() throws Exception
+	@Test
+	public void inlinePanel_4() throws Exception
 	{
 		executeTest(InlinePanelPage_4.class, "InlinePanelPageExpectedResult_4.html");
 	}
@@ -135,7 +133,8 @@ public class PanelTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testInlinePanel_5() throws Exception
+	@Test
+	public void inlinePanel_5() throws Exception
 	{
 		executeTest(InlinePanelPage_5.class, "InlinePanelPageExpectedResult_5.html");
 	}
@@ -145,7 +144,8 @@ public class PanelTest extends WicketTestCase
 	 */
 	// TODO FIX the implementation. Fragment markup provider can not be a
 	// sibling of the panel.
-	public void testInlinePanel_6() throws Exception
+	@Test
+	public void inlinePanel_6() throws Exception
 	{
 		executeTest(InlinePanelPage_6.class, "InlinePanelPageExpectedResult_6.html");
 	}
@@ -153,7 +153,8 @@ public class PanelTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testPanelWithAttributeModifier() throws Exception
+	@Test
+	public void panelWithAttributeModifier() throws Exception
 	{
 		executeTest(PanelWithAttributeModifierPage.class,
 			"PanelWithAttributeModifierPageExpectedResult_1.html");
@@ -162,7 +163,8 @@ public class PanelTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testInlinePanel_7() throws Exception
+	@Test
+	public void inlinePanel_7() throws Exception
 	{
 		executeTest(InlinePanelPage_7.class, "InlinePanelPageExpectedResult_7.html");
 	}
@@ -170,7 +172,8 @@ public class PanelTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testInlinePanel_8() throws Exception
+	@Test
+	public void inlinePanel_8() throws Exception
 	{
 		executeTest(InlinePanelPage_8.class, "InlinePanelPageExpectedResult_8.html");
 		Page page = tester.getLastRenderedPage();
@@ -183,7 +186,8 @@ public class PanelTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testStartPanel()
+	@Test
+	public void startPanel()
 	{
 		tester.startPanel(MyPanel.class);
 		tester.assertLabel("label", "Hello, World!");

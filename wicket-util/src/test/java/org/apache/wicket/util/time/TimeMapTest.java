@@ -21,21 +21,22 @@ import java.text.ParseException;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Test cases for this object
  * 
  * @author Jonathan Locke
  */
-public final class TimeMapTest extends TestCase
+public final class TimeMapTest extends Assert
 {
 	/**
 	 * 
 	 * @throws ParseException
 	 */
-	public void testSimpleStaticTimeFrame() throws ParseException
+	@Test
+	public void simpleStaticTimeFrame() throws ParseException
 	{
 		final TimeMap map = new TimeMap();
 		final Time start = Time.valueOf(TimeOfDay.valueOf(new GregorianCalendar(Locale.ENGLISH),
@@ -45,11 +46,12 @@ public final class TimeMapTest extends TestCase
 		final String value = "test";
 
 		map.put(TimeFrame.valueOf(start, end), value);
-		Assert.assertEquals(value, map.get(Time.valueOf(TimeOfDay.valueOf(new GregorianCalendar(
-			Locale.ENGLISH), "3.15pm"))));
-		Assert.assertNull(map.get(Time.valueOf(TimeOfDay.valueOf(new GregorianCalendar(
-			Locale.ENGLISH), "3.21pm"))));
-		Assert.assertNull(map.get(Time.valueOf(TimeOfDay.valueOf(new GregorianCalendar(
-			Locale.ENGLISH), "3.13pm"))));
+		assertEquals(
+			value,
+			map.get(Time.valueOf(TimeOfDay.valueOf(new GregorianCalendar(Locale.ENGLISH), "3.15pm"))));
+		assertNull(map.get(Time.valueOf(TimeOfDay.valueOf(new GregorianCalendar(Locale.ENGLISH),
+			"3.21pm"))));
+		assertNull(map.get(Time.valueOf(TimeOfDay.valueOf(new GregorianCalendar(Locale.ENGLISH),
+			"3.13pm"))));
 	}
 }

@@ -30,6 +30,7 @@ import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
+import org.junit.Test;
 
 
 /**
@@ -42,20 +43,13 @@ public class FileUploadFieldTest extends WicketTestCase
 	private static final String TEST_FILE_NAME = FileUploadFieldTest.class.getName();
 
 	/**
-	 * Construct.
-	 */
-	public FileUploadFieldTest()
-	{
-		super("Test of FileUploadField");
-	}
-
-	/**
 	 * Test that detach closes the streams
 	 * 
 	 * @throws IOException
 	 *             '
 	 */
-	public void testInternalDetach() throws IOException
+	@Test
+	public void internalDetach() throws IOException
 	{
 		tester.startPage(MockPageWithFormAndUploadField.class);
 
@@ -118,7 +112,8 @@ public class FileUploadFieldTest extends WicketTestCase
 	/**
 	 * @throws IOException
 	 */
-	public void testFileUploadCanBeValidated() throws IOException
+	@Test
+	public void fileUploadCanBeValidated() throws IOException
 	{
 		tester.startPage(TestValidationPage.class);
 		// creating the file expected by form validators
@@ -143,6 +138,7 @@ public class FileUploadFieldTest extends WicketTestCase
 			fileUploadField.add(new TestValidator());
 		}
 	}
+
 	private static class TestValidator implements IValidator<List<FileUpload>>
 	{
 		/** */

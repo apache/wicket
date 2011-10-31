@@ -18,8 +18,9 @@ package org.apache.wicket.util;
 
 import java.lang.reflect.Constructor;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
+
 
 /**
  * Base class for testing exceptions in order to make sure that they achieve 100% test coverage.
@@ -27,19 +28,8 @@ import junit.framework.TestCase;
  * 
  * @author Chris Turner
  */
-public abstract class ExceptionTestBase extends TestCase
+public abstract class ExceptionTestBase extends Assert
 {
-
-	/**
-	 * Create the test case.
-	 * 
-	 * @param s
-	 *            The test name
-	 */
-	protected ExceptionTestBase(String s)
-	{
-		super(s);
-	}
 
 	/**
 	 * Return the name of the exception class to be tested.
@@ -54,7 +44,8 @@ public abstract class ExceptionTestBase extends TestCase
 	 * @throws Exception
 	 *             If test fails
 	 */
-	public final void testEmptyConstructor() throws Exception
+	@Test
+	public final void emptyConstructor() throws Exception
 	{
 		Class<?> c = Class.forName(getExceptionClassName());
 		Constructor<?> constructor = c.getConstructor((Class[])null);
@@ -70,7 +61,8 @@ public abstract class ExceptionTestBase extends TestCase
 	 * @throws Exception
 	 *             If test fails
 	 */
-	public final void testMessageConstructor() throws Exception
+	@Test
+	public final void messageConstructor() throws Exception
 	{
 		Class<?> c = Class.forName(getExceptionClassName());
 		Constructor<?> constructor = c.getConstructor(new Class[] { String.class });
@@ -86,7 +78,8 @@ public abstract class ExceptionTestBase extends TestCase
 	 * @throws Exception
 	 *             If test fails
 	 */
-	public final void testCauseConstructor() throws Exception
+	@Test
+	public final void causeConstructor() throws Exception
 	{
 		NullPointerException npe = new NullPointerException();
 		Class<?> c = Class.forName(getExceptionClassName());
@@ -102,7 +95,8 @@ public abstract class ExceptionTestBase extends TestCase
 	 * @throws Exception
 	 *             If test fails
 	 */
-	public final void testMessageAndCauseConstructor() throws Exception
+	@Test
+	public final void messageAndCauseConstructor() throws Exception
 	{
 		NullPointerException npe = new NullPointerException();
 		Class<?> c = Class.forName(getExceptionClassName());

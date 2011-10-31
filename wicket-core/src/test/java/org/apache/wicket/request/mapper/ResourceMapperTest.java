@@ -31,6 +31,7 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.SharedResourceReference;
 import org.apache.wicket.util.string.StringValue;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -44,11 +45,12 @@ public class ResourceMapperTest extends WicketTestCase
 	private IRequestMapper mapperWithPlaceholder;
 	private TestResource resource;
 
-	@Override
-	protected void setUp() throws Exception
+	/**
+	 * @throws Exception
+	 */
+	@Before
+	public void before() throws Exception
 	{
-		super.setUp();
-
 		resource = new TestResource();
 		tester.getApplication().getSharedResources().add(SHARED_NAME, resource);
 		ResourceReference resourceReference = new SharedResourceReference(SHARED_NAME);
@@ -97,7 +99,7 @@ public class ResourceMapperTest extends WicketTestCase
 	 * testInvalidPathIsEmpty()
 	 */
 	@Test
-	public void testInvalidPathIsEmpty()
+	public void invalidPathIsEmpty()
 	{
 		IRequestHandler requestHandler = mapper.mapRequest(createRequest(""));
 		assertNull(requestHandler);
@@ -107,7 +109,7 @@ public class ResourceMapperTest extends WicketTestCase
 	 * testInvalidPathIsMismatch()
 	 */
 	@Test
-	public void testInvalidPathIsMismatch()
+	public void invalidPathIsMismatch()
 	{
 		IRequestHandler requestHandler = mapper.mapRequest(createRequest("test/resourcex"));
 		assertNull(requestHandler);
@@ -117,7 +119,7 @@ public class ResourceMapperTest extends WicketTestCase
 	 * testInvalidPathIsTooShort()
 	 */
 	@Test
-	public void testInvalidPathIsTooShort()
+	public void invalidPathIsTooShort()
 	{
 		IRequestHandler requestHandler = mapper.mapRequest(createRequest("test"));
 		assertNull(requestHandler);
@@ -127,7 +129,7 @@ public class ResourceMapperTest extends WicketTestCase
 	 * testValidPathWithParams()
 	 */
 	@Test
-	public void testValidPathWithParams()
+	public void validPathWithParams()
 	{
 		Request request = createRequest("test/resource/1/fred");
 		IRequestHandler requestHandler = mapper.mapRequest(request);
@@ -154,7 +156,7 @@ public class ResourceMapperTest extends WicketTestCase
 	 * testValidPathWithParamsAndQueryPath()
 	 */
 	@Test
-	public void testValidPathWithParamsAndQueryPath()
+	public void validPathWithParamsAndQueryPath()
 	{
 		Request request = createRequest("test/resource/1/fred?foo=bar&foo=baz&value=12");
 		IRequestHandler requestHandler = mapper.mapRequest(request);
@@ -189,7 +191,7 @@ public class ResourceMapperTest extends WicketTestCase
 	 * testPlaceholders()
 	 */
 	@Test
-	public void testPlaceholders()
+	public void placeholders()
 	{
 		Request request = createRequest("test2/image/resource/foo/bar?a=abc&b=123");
 		IRequestHandler requestHandler = mapperWithPlaceholder.mapRequest(request);
@@ -215,7 +217,7 @@ public class ResourceMapperTest extends WicketTestCase
 	 * testPlaceholdersWithQueryParamDuplicate()
 	 */
 	@Test
-	public void testPlaceholdersWithQueryParamDuplicate()
+	public void placeholdersWithQueryParamDuplicate()
 	{
 		// we have one named parameter that exists twice
 		Request request = createRequest("test2/image/resource/foo/bar?name=name-2&val=123");
@@ -247,11 +249,14 @@ public class ResourceMapperTest extends WicketTestCase
 		assertEquals("123", params.get("val").toString());
 	}
 
+	/**
+	 * 
+	 */
 	@Test
 	public void requestWithEmptyFilename()
 	{
 		// request invalid path with empty filename
-		// this must not return a handler  
+		// this must not return a handler
 		Request request = createRequest("test2/image/");
 		IRequestHandler handler = mapperWithPlaceholder.mapRequest(request);
 		assertNull(handler);

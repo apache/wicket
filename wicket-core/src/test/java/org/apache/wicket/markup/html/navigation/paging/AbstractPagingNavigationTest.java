@@ -76,14 +76,4 @@ public abstract class AbstractPagingNavigationTest extends WicketTestCase
 
 	/** mock current page. */
 	protected int currentpage = 0;
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public AbstractPagingNavigationTest(String name)
-	{
-		super(name);
-	}
 }

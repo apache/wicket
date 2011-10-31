@@ -20,19 +20,19 @@ import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.Serializable;
 
-import junit.framework.TestCase;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.wicket.util.Log4jEventHistory;
 import org.apache.wicket.util.io.SerializableChecker.WicketNotSerializableException;
 import org.apache.wicket.util.value.ValueMap;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author Pedro Santos
  */
-public class SerializableCheckerTest extends TestCase
+public class SerializableCheckerTest extends Assert
 {
 
 	/**
@@ -40,7 +40,8 @@ public class SerializableCheckerTest extends TestCase
 	 * 
 	 * @throws IOException
 	 */
-	public void testValueMap() throws IOException
+	@Test
+	public void valueMap() throws IOException
 	{
 		SerializableChecker checker = new SerializableChecker(new NotSerializableException());
 		checker.writeObject(new ValueMap());
@@ -53,7 +54,8 @@ public class SerializableCheckerTest extends TestCase
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3354">WICKET-3354</a>
 	 * @throws IOException
 	 */
-	public void testRuntimeExceptionTolerance() throws IOException
+	@Test
+	public void runtimeExceptionTolerance() throws IOException
 	{
 		Logger logger = LogManager.getLogger(SerializableChecker.class);
 		logger.setLevel(Level.WARN);
@@ -76,7 +78,8 @@ public class SerializableCheckerTest extends TestCase
 	/**
 	 * @throws IOException
 	 */
-	public void testNonSerializableTypeDetection() throws IOException
+	@Test
+	public void nonSerializableTypeDetection() throws IOException
 	{
 		SerializableChecker serializableChecker = new SerializableChecker(
 			new NotSerializableException());
@@ -108,7 +111,6 @@ public class SerializableCheckerTest extends TestCase
 
 	private static class NonSerializableType
 	{
-
 	}
 
 	private static class SerializableType implements Serializable

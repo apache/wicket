@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.form;
 import java.util.Locale;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * Test case for checking localized error messages.
@@ -29,15 +30,17 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 	 * Test for checking if changing the session's locale to another language actually causes the
 	 * feedback messages to be altered as well. Testcase for WICKET-891.
 	 */
-	public void testWICKET_891()
+	@Test
+	public void wicket891()
 	{
 		tester.getSession().setLocale(new Locale("nl"));
 
 		LocalizedMessagePage page = new LocalizedMessagePage();
 		tester.startPage(page);
 
-		tester.getRequest().getPostParameters().setParameterValue(
-			page.integerField.getInputName(), "foo");
+		tester.getRequest()
+			.getPostParameters()
+			.setParameterValue(page.integerField.getInputName(), "foo");
 		tester.submitForm(page.form);
 
 		tester.assertErrorMessages("'foo' in veld 'integer' moet een geheel getal zijn. ");
@@ -48,8 +51,9 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 		page = new LocalizedMessagePage();
 		tester.startPage(page);
 
-		tester.getRequest().getPostParameters().setParameterValue(
-			page.integerField.getInputName(), "foo");
+		tester.getRequest()
+			.getPostParameters()
+			.setParameterValue(page.integerField.getInputName(), "foo");
 
 		tester.submitForm(page.form);
 
@@ -62,7 +66,8 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 	 * for WICKET-1972.
 	 * 
 	 */
-	public void testWICKET_1927()
+	@Test
+	public void wicket_1927()
 	{
 		tester.getApplication().getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
 		tester.getSession().setLocale(new Locale("de"));
@@ -70,8 +75,9 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 		LocalizedMessagePage page = new LocalizedMessagePage();
 		tester.startPage(page);
 
-		tester.getRequest().getPostParameters().setParameterValue(
-			page.integerField.getInputName(), "foo");
+		tester.getRequest()
+			.getPostParameters()
+			.setParameterValue(page.integerField.getInputName(), "foo");
 
 		tester.submitForm(page.form);
 
@@ -83,8 +89,9 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 		page = new LocalizedMessagePage();
 		tester.startPage(page);
 
-		tester.getRequest().getPostParameters().setParameterValue(
-			page.integerField.getInputName(), "foo");
+		tester.getRequest()
+			.getPostParameters()
+			.setParameterValue(page.integerField.getInputName(), "foo");
 
 		tester.submitForm(page.form);
 		tester.assertErrorMessages("'foo' nie jest w\u0142a\u015Bciwym Integer.");

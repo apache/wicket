@@ -16,18 +16,20 @@
  */
 package org.apache.wicket.util.string;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author jcompagner
  */
-public class AppendingStringBufferTest extends TestCase
+public class AppendingStringBufferTest extends Assert
 {
 
 	/**
 	 * Test method for 'org.apache.wicket.util.string.AppendingStringBuffer.append(String)'
 	 */
-	public void testAppend()
+	@Test
+	public void append()
 	{
 		AppendingStringBuffer asb = new AppendingStringBuffer();
 		asb.append("test1");
@@ -41,7 +43,8 @@ public class AppendingStringBufferTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testLargeBegin() throws Exception
+	@Test
+	public void largeBegin() throws Exception
 	{
 		AppendingStringBuffer asb = new AppendingStringBuffer("123456789012345678901234567890");
 		assertEquals("123456789012345678901234567890", asb.toString());
@@ -50,7 +53,8 @@ public class AppendingStringBufferTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testCharPrepend() throws Exception
+	@Test
+	public void charPrepend() throws Exception
 	{
 		AppendingStringBuffer asb = new AppendingStringBuffer("123456789");
 		asb.append('0');
@@ -60,7 +64,8 @@ public class AppendingStringBufferTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testEqualsToAppeningBuffer() throws Exception
+	@Test
+	public void equalsToAppeningBuffer() throws Exception
 	{
 		AppendingStringBuffer asb1 = new AppendingStringBuffer("123456789");
 		AppendingStringBuffer asb2 = new AppendingStringBuffer("123456789");
@@ -70,7 +75,8 @@ public class AppendingStringBufferTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testEqualsToCharSequence() throws Exception
+	@Test
+	public void equalsToCharSequence() throws Exception
 	{
 		AppendingStringBuffer asb = new AppendingStringBuffer("123456789");
 		StringBuilder sb = new StringBuilder("123456789");
@@ -85,7 +91,8 @@ public class AppendingStringBufferTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testStartsWidth() throws Exception
+	@Test
+	public void startsWidth() throws Exception
 	{
 		AppendingStringBuffer asb = new AppendingStringBuffer("123456789");
 		StringBuilder sb = new StringBuilder("1234");
@@ -101,7 +108,8 @@ public class AppendingStringBufferTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testEndsWidth() throws Exception
+	@Test
+	public void endsWidth() throws Exception
 	{
 		AppendingStringBuffer asb = new AppendingStringBuffer("123456789");
 		StringBuilder sb = new StringBuilder("6789");

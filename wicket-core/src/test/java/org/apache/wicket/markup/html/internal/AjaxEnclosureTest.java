@@ -22,6 +22,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.basic.Label;
+import org.junit.Test;
 
 
 /**
@@ -41,7 +42,8 @@ public class AjaxEnclosureTest extends WicketTestCase
 	/**
 	 * Test toggling the controlling child inside the inline enclosure
 	 */
-	public void testAjaxTogglingControllingChildShouldToggleInlineEnclosure()
+	@Test
+	public void ajaxTogglingControllingChildShouldToggleInlineEnclosure()
 	{
 		{
 			// enclosure On
@@ -83,7 +85,8 @@ public class AjaxEnclosureTest extends WicketTestCase
 	/**
 	 * Test toggling a non-controlling child inside the inline enclosure
 	 */
-	public void testAjaxTogglingNonControllingChildShouldNotToggleEnclosure()
+	@Test
+	public void ajaxTogglingNonControllingChildShouldNotToggleEnclosure()
 	{
 		final String enclosurePath = "InlineEnclosure-1";
 		{
@@ -123,7 +126,8 @@ public class AjaxEnclosureTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testNestedInlineEnclosuresShouldToggleNormally()
+	@Test
+	public void nestedInlineEnclosuresShouldToggleNormally()
 	{
 		final String enclosure1Path = "InlineEnclosure-1";
 
@@ -212,7 +216,8 @@ public class AjaxEnclosureTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testControllingChildShouldDefaultToTheSingleComponentInsideEnclosure()
+	@Test
+	public void controllingChildShouldDefaultToTheSingleComponentInsideEnclosure()
 	{
 		final String enclosurePath = "InlineEnclosure-1";
 

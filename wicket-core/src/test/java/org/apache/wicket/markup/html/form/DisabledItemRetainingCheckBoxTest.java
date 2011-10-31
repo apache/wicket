@@ -25,6 +25,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Test;
 
 /**
  * Test for the retainDisabledSelected flag on ListMultipleChoice.
@@ -34,7 +35,8 @@ public class DisabledItemRetainingCheckBoxTest extends WicketTestCase
 	/**
 	 * testRenderMyPage()
 	 */
-	public void testRenderMyPage()
+	@Test
+	public void renderMyPage()
 	{
 		TestPage page = tester.startPage(TestPage.class);
 		tester.assertRenderedPage(TestPage.class);
@@ -47,7 +49,8 @@ public class DisabledItemRetainingCheckBoxTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRetainDisabledSelected_On() throws Exception
+	@Test
+	public void retainDisabledSelected_On() throws Exception
 	{
 		TestPage page = tester.startPage(TestPage.class);
 		FormTester form = tester.newFormTester("form");
@@ -61,7 +64,8 @@ public class DisabledItemRetainingCheckBoxTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRetainDisabledSelected_Off() throws Exception
+	@Test
+	public void retainDisabledSelected_Off() throws Exception
 	{
 		TestPage page = tester.startPage(TestPage.class);
 		FormTester form = tester.newFormTester("form");
@@ -75,7 +79,8 @@ public class DisabledItemRetainingCheckBoxTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRetainDisabledSelected_NoSelection() throws Exception
+	@Test
+	public void retainDisabledSelected_NoSelection() throws Exception
 	{
 		TestPage page = tester.startPage(TestPage.class);
 		FormTester form = tester.newFormTester("form");
@@ -88,7 +93,8 @@ public class DisabledItemRetainingCheckBoxTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRetainDisabledSelected_Off_NoSelection() throws Exception
+	@Test
+	public void retainDisabledSelected_Off_NoSelection() throws Exception
 	{
 		TestPage page = tester.startPage(TestPage.class);
 		FormTester form = tester.newFormTester("form");

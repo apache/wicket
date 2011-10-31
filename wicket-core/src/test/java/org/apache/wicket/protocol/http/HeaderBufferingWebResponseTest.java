@@ -20,8 +20,6 @@ import java.net.SocketException;
 
 import javax.servlet.http.HttpServletResponse;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.protocol.http.servlet.ResponseIOException;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
@@ -33,17 +31,24 @@ import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 
 /**
  * @author Pedro Santos
  */
-public class HeaderBufferingWebResponseTest extends TestCase
+public class HeaderBufferingWebResponseTest extends Assert
 {
 	private WicketTester tester;
 
-	@Override
-	protected void setUp() throws Exception
+	/**
+	 * @throws Exception
+	 */
+	@Before
+	public void before() throws Exception
 	{
 		tester = new WicketTester()
 		{
@@ -57,8 +62,11 @@ public class HeaderBufferingWebResponseTest extends TestCase
 		tester.setExposeExceptions(false);
 	}
 
-	@Override
-	protected void tearDown() throws Exception
+	/**
+	 * @throws Exception
+	 */
+	@After
+	public void after() throws Exception
 	{
 		tester.destroy();
 	}
@@ -66,7 +74,8 @@ public class HeaderBufferingWebResponseTest extends TestCase
 	/**
 	 * WICKET-3570
 	 */
-	public void testGiveUpRespondingOnIOExceptions()
+	@Test
+	public void giveUpRespondingOnIOExceptions()
 	{
 		TestRequestCycleListener testRequestCycleListener = new TestRequestCycleListener();
 		tester.getApplication().getRequestCycleListeners().add(testRequestCycleListener);

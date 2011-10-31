@@ -25,6 +25,7 @@ import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.InlinePanelPage_1;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.junit.Test;
 
 /**
  * 
@@ -37,7 +38,8 @@ public class MarkupFragmentTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testPage() throws Exception
+	@Test
+	public void page() throws Exception
 	{
 		IMarkupFragment markup = new MyPage().getAssociatedMarkup();
 		compareMarkupWithFile(markup, "MyPage_ExpectedResult.html");
@@ -53,7 +55,8 @@ public class MarkupFragmentTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testPanel() throws Exception
+	@Test
+	public void panel() throws Exception
 	{
 		Page page = new MyPage();
 		Panel panel = new MyPanel("panel");
@@ -87,7 +90,8 @@ public class MarkupFragmentTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testPanelWithAutoComponent() throws Exception
+	@Test
+	public void panelWithAutoComponent() throws Exception
 	{
 		Page page = new MyPage();
 		Panel panel = new MyPanelWithAutoComponent("panel");
@@ -118,7 +122,8 @@ public class MarkupFragmentTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testLabel() throws Exception
+	@Test
+	public void label() throws Exception
 	{
 		Component label = new MyPage().get("label");
 		IMarkupFragment markup = label.getMarkup();
@@ -133,7 +138,8 @@ public class MarkupFragmentTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testWebMarkupContainer() throws Exception
+	@Test
+	public void webMarkupContainer() throws Exception
 	{
 		MarkupContainer container = (MarkupContainer)new MyPage().get("container");
 		IMarkupFragment markup = container.getMarkup();
@@ -152,7 +158,8 @@ public class MarkupFragmentTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testBorder() throws Exception
+	@Test
+	public void border() throws Exception
 	{
 		Page page = new MyBorderPage();
 		Border border = (Border)page.get("border");
@@ -189,7 +196,8 @@ public class MarkupFragmentTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testBorder2() throws Exception
+	@Test
+	public void border2() throws Exception
 	{
 		Page page = new MyBorderPage();
 		Border border = (Border)page.get("border2");
@@ -225,7 +233,8 @@ public class MarkupFragmentTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testFragments() throws Exception
+	@Test
+	public void fragments() throws Exception
 	{
 		Page page = new InlinePanelPage_1();
 		Fragment fragment = (Fragment)page.get("myPanel1");

@@ -27,8 +27,8 @@ public class WellFormedXmlTest extends WellFormedXmlTestCase
 {
 	@Test
 	@Override
-	public void testMarkupFiles()
+	public void markupFiles()
 	{
-		super.testMarkupFiles();
+		super.markupFiles();
 	}
 }

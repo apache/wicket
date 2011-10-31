@@ -20,26 +20,31 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.request.handler.resource.WebExternalResourceRequestHandler;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.resource.WebExternalResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test WebExternalResourceRequestTarget and WebExternalResourceStream
  * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
-public class WebExternalResourceTest extends TestCase
+public class WebExternalResourceTest extends Assert
 {
 	private WicketTester tester;
 
-	@Override
-	protected void setUp() throws Exception
+	/**
+	 * @throws Exception
+	 */
+	@Before
+	public void before() throws Exception
 	{
 		File tempDir = new File("target/webapp");
 		tempDir.mkdir();
@@ -57,8 +62,8 @@ public class WebExternalResourceTest extends TestCase
 
 	}
 
-	@Override
-	protected void tearDown() throws Exception
+	@After
+	public void after() throws Exception
 	{
 		tester.destroy();
 	}
@@ -67,7 +72,8 @@ public class WebExternalResourceTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testWebExternalResourceRequestTarget() throws Exception
+	@Test
+	public void webExternalResourceRequestTarget() throws Exception
 	{
 		WebExternalResourceRequestHandler rt = new WebExternalResourceRequestHandler("/index.html");
 		tester.processRequest(rt);
@@ -80,7 +86,8 @@ public class WebExternalResourceTest extends TestCase
 	 * @throws Exception
 	 */
 	// FIXME WebExternalResourceStream does not implement length()
-	public void testWebExternalResource() throws Exception
+	@Test
+	public void webExternalResource() throws Exception
 	{
 		WebExternalResourceStream resource = new WebExternalResourceStream("/index.html");
 		ResourceStreamRequestHandler rt = new ResourceStreamRequestHandler(resource);

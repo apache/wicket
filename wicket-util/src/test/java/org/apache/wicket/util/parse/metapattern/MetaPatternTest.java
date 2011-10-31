@@ -19,24 +19,25 @@ package org.apache.wicket.util.parse.metapattern;
 
 import java.util.regex.Matcher;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.util.parse.metapattern.parsers.CommaSeparatedVariableParser;
 import org.apache.wicket.util.parse.metapattern.parsers.IntegerVariableAssignmentParser;
 import org.apache.wicket.util.parse.metapattern.parsers.TagNameParser;
 import org.apache.wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Test cases for this object
  * 
  * @author Jonathan Locke
  */
-public final class MetaPatternTest extends TestCase
+public final class MetaPatternTest extends Assert
 {
 	/**
 	 * 
 	 */
-	public void testSimple()
+	@Test
+	public void simple()
 	{
 		// Parse "variable = <number>"
 		final Group variable = new Group(MetaPattern.VARIABLE_NAME);
@@ -54,7 +55,8 @@ public final class MetaPatternTest extends TestCase
 	/**
 	 * Test assignment of variables.
 	 */
-	public void testVariableAssignmentParser()
+	@Test
+	public void variableAssignmentParser()
 	{
 		VariableAssignmentParser parser = new VariableAssignmentParser("foo = 9");
 		assertTrue(parser.matches());
@@ -70,7 +72,8 @@ public final class MetaPatternTest extends TestCase
 	/**
 	 * Test assignment of integers.
 	 */
-	public void testIntegerVariableAssignmentParser()
+	@Test
+	public void integerVariableAssignmentParser()
 	{
 		IntegerVariableAssignmentParser parser = new IntegerVariableAssignmentParser("foo = 9");
 		assertTrue(parser.matches());
@@ -91,7 +94,8 @@ public final class MetaPatternTest extends TestCase
 	/**
 	 * Test parsing of comma separated variables.
 	 */
-	public void testCommaSeparatedVariableParser()
+	@Test
+	public void commaSeparatedVariableParser()
 	{
 		CommaSeparatedVariableParser parser = new CommaSeparatedVariableParser("a,b,c");
 		assertTrue(parser.matches());
@@ -139,7 +143,8 @@ public final class MetaPatternTest extends TestCase
 	/**
 	 * Test the tag parser.
 	 */
-	public void testTagParser()
+	@Test
+	public void tagParser()
 	{
 		String tag = "name";
 		TagNameParser parser = new TagNameParser(tag);

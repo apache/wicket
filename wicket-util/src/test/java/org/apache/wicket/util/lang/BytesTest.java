@@ -18,14 +18,16 @@ package org.apache.wicket.util.lang;
 
 import java.util.Locale;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.util.string.StringValueConversionException;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests the <code>Bytes</code> class.
  */
-public class BytesTest extends TestCase
+public class BytesTest extends Assert
 {
 	/**
 	 * Backup of the default locale.
@@ -35,8 +37,8 @@ public class BytesTest extends TestCase
 	/**
 	 * Save the default locale.
 	 */
-	@Override
-	public void setUp()
+	@Before
+	public void before()
 	{
 		defaultLocale = Locale.getDefault();
 
@@ -47,8 +49,8 @@ public class BytesTest extends TestCase
 	/**
 	 * Restore the default locale.
 	 */
-	@Override
-	public void tearDown()
+	@After
+	public void after()
 	{
 		Locale.setDefault(defaultLocale);
 	}
@@ -56,7 +58,8 @@ public class BytesTest extends TestCase
 	/**
 	 * Tests the values.
 	 */
-	public void testTeraBytes()
+	@Test
+	public void teraBytes()
 	{
 		assertEquals(Bytes.gigabytes(1024), Bytes.terabytes(1));
 		assertEquals(Bytes.gigabytes(1024.0), Bytes.terabytes(1.0));
@@ -90,7 +93,8 @@ public class BytesTest extends TestCase
 	 * 
 	 * @throws StringValueConversionException
 	 */
-	public void testValueOf() throws StringValueConversionException
+	@Test
+	public void valueOf() throws StringValueConversionException
 	{
 		assertEquals(Bytes.valueOf("1024GB"), Bytes.valueOf("1TB"));
 		assertEquals(Bytes.valueOf("1024MB"), Bytes.valueOf("1GB"));
@@ -135,6 +139,7 @@ public class BytesTest extends TestCase
 	/**
 	 * Tests the toString() method.
 	 */
+	@Test
 	public void testToString()
 	{
 		assertEquals("1 bytes", Bytes.bytes(1).toString());
@@ -150,16 +155,10 @@ public class BytesTest extends TestCase
 	/**
 	 * Negative values are not supported
 	 */
-	public void testNegative()
+	@Test(expected = IllegalArgumentException.class)
+	public void negative()
 	{
-		try
-		{
-			Bytes.bytes(-1);
-			fail("Bytes should not support negative values!");
-		}
-		catch (IllegalArgumentException iax)
-		{
-			;
-		}
+		Bytes.bytes(-1);
+		fail("Bytes should not support negative values!");
 	}
 }

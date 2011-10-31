@@ -23,12 +23,13 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author almaw
  */
-public class MicroMapTest extends TestCase
+public class MicroMapTest extends Assert
 {
 	private static final Object FOO = new Object();
 	private static final Object BAR = new Object();
@@ -36,7 +37,8 @@ public class MicroMapTest extends TestCase
 	/**
 	 * Basic test for keySet(), entrySet() and values().
 	 */
-	public void testMicroMap()
+	@Test
+	public void microMap()
 	{
 		MicroMap<Object, Object> m = new MicroMap<Object, Object>();
 		m.put(FOO, BAR);

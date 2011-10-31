@@ -19,7 +19,7 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Test;
 
 @SuppressWarnings({ "rawtypes", "serial", "unchecked" })
 public class AutoLabelWithinEnclosureTest extends WicketTestCase
@@ -41,17 +41,17 @@ public class AutoLabelWithinEnclosureTest extends WicketTestCase
 		}
 	}
 
-	public void testLabelWithinEnclosure_Visible() throws Exception
+	@Test
+	public void labelWithinEnclosure_Visible() throws Exception
 	{
-		WicketTester tester = new WicketTester();
 		tester.startPage(new LabelWithinEnclosurePage(true));
 		tester.dumpPage();
 		tester.assertContains("<label wicket:for=\"textfield\" for=\"textfield2\">blabla</label>");
 	}
 
-	public void testLabelWithinEnclosure_Invisible() throws Exception
+	@Test
+	public void labelWithinEnclosure_Invisible() throws Exception
 	{
-		WicketTester tester = new WicketTester();
 		tester.startPage(new LabelWithinEnclosurePage(false));
 		tester.dumpPage();
 		tester.assertContainsNot("label");

@@ -18,53 +18,41 @@ package org.apache.wicket.resource.loader;
 
 import java.util.Map;
 
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.resource.IPropertiesFactory;
 import org.apache.wicket.resource.IPropertiesFactoryContext;
 import org.apache.wicket.resource.IsoPropertiesFilePropertiesLoader;
 import org.apache.wicket.resource.Properties;
 import org.apache.wicket.resource.PropertiesFactory;
+import org.junit.Test;
 
 /**
  * 
  */
 public class ComponentStringResourceLoaderTest extends WicketTestCase
 {
+
 	/**
-	 * Construct.
-	 * 
-	 * @param name
+	 * @throws Exception
 	 */
-	public ComponentStringResourceLoaderTest(String name)
+	@Test
+	public void renderHomePage_1() throws Exception
 	{
-		super(name);
+		// The xml markup file and the search for an xml properties
+		// file get in the way
+		executeTest(TestPage_1.class, "TestPageExpectedResult_1.xml");
 	}
 
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_1() throws Exception
-	{
-		try
-		{
-			// The xml markup file and the search for an xml properties
-			// file get in the way
-			executeTest(TestPage_1.class, "TestPageExpectedResult_1.xml");
-		}
-		catch (WicketRuntimeException ex)
-		{
-		}
-	}
-
-	/**
-	 * @throws Exception
-	 */
-	public void testRenderHomePage_2() throws Exception
+	@Test
+	public void renderHomePage_2() throws Exception
 	{
 		// Avoid the conflict by limiting the search for properties files
 		// to *.properties
-		IPropertiesFactory myFac = new MyPropertiesFactory(tester.getApplication().getResourceSettings());
+		IPropertiesFactory myFac = new MyPropertiesFactory(tester.getApplication()
+			.getResourceSettings());
 		tester.getApplication().getResourceSettings().setPropertiesFactory(myFac);
 
 		executeTest(TestPage_1.class, "TestPageExpectedResult_1.xml");
@@ -73,9 +61,11 @@ public class ComponentStringResourceLoaderTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testDisabledCache() throws Exception
+	@Test
+	public void disabledCache() throws Exception
 	{
-		IPropertiesFactory myFac = new DisabledCachePropertiesFactory(tester.getApplication().getResourceSettings());
+		IPropertiesFactory myFac = new DisabledCachePropertiesFactory(tester.getApplication()
+			.getResourceSettings());
 		tester.getApplication().getResourceSettings().setPropertiesFactory(myFac);
 
 		executeTest(TestPage_1.class, "TestPageExpectedResult_1.xml");
@@ -90,7 +80,7 @@ public class ComponentStringResourceLoaderTest extends WicketTestCase
 	{
 		/**
 		 * Construct.
-		 *
+		 * 
 		 * @param context
 		 */
 		public MyPropertiesFactory(IPropertiesFactoryContext context)

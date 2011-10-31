@@ -18,6 +18,7 @@ package org.apache.wicket.protocol.http.servlet;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
+import org.junit.Test;
 
 /**
  * 
@@ -28,6 +29,7 @@ public class SecuredRemoteAddressRequestWrapperFactoryTest extends WicketTestCas
 	/**
 	 * 
 	 */
+	@Test
 	public void test1()
 	{
 		SecuredRemoteAddressRequestWrapperFactory factory = new SecuredRemoteAddressRequestWrapperFactory();

@@ -19,6 +19,7 @@ package org.apache.wicket.markup.renderStrategy;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +35,7 @@ public class ChildFirstHeaderRenderStrategyTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void test1() throws Exception
 	{
 		executeCombinedTest(SimplePage1.class, "SimplePage1_ExpectedResult.html");
@@ -42,6 +44,7 @@ public class ChildFirstHeaderRenderStrategyTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void test2() throws Exception
 	{
 		executeCombinedTest(SimplePage2.class, "SimplePage2_ExpectedResult.html");

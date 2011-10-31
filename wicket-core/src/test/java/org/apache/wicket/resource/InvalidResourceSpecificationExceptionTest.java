@@ -29,17 +29,6 @@ public class InvalidResourceSpecificationExceptionTest extends ExceptionTestBase
 {
 
 	/**
-	 * Create the test.
-	 * 
-	 * @param s
-	 *            The test name
-	 */
-	public InvalidResourceSpecificationExceptionTest(String s)
-	{
-		super(s);
-	}
-
-	/**
 	 * Return the name of the exception class to be tested.
 	 * 
 	 * @return The name of the exception class

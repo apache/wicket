@@ -18,10 +18,9 @@ package org.apache.wicket.util.string;
 
 import java.io.UnsupportedEncodingException;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
-
 import org.apache.wicket.util.lang.Args;
+import org.junit.Assert;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,14 +30,15 @@ import org.slf4j.LoggerFactory;
  * @author Jonathan Locke
  * @author Martijn Dashorst
  */
-public class StringsTest extends TestCase
+public class StringsTest extends Assert
 {
 	private static final Logger log = LoggerFactory.getLogger(StringsTest.class);
 
 	/**
 	 * 
 	 */
-	public void testLogger()
+	@Test
+	public void logger()
 	{
 		log.debug("Test: '{}'", 1);
 
@@ -64,7 +64,8 @@ public class StringsTest extends TestCase
 	/**
 	 * 
 	 */
-	public void testStripJSessionId()
+	@Test
+	public void stripJSessionId()
 	{
 		String url = "http://localhost/abc";
 		assertEquals(url, Strings.stripJSessionId(url));
@@ -81,6 +82,7 @@ public class StringsTest extends TestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test()
 	{
 		Assert.assertEquals("foo", Strings.lastPathComponent("bar.garply.foo", '.'));
@@ -105,7 +107,8 @@ public class StringsTest extends TestCase
 	/**
 	 * Tests the <code>beforeFirst</code> method.
 	 */
-	public void testBeforeFirst()
+	@Test
+	public void beforeFirst()
 	{
 		assertNull(Strings.beforeFirst(null, '.'));
 		assertEquals("", Strings.beforeFirst("", '.'));
@@ -120,7 +123,8 @@ public class StringsTest extends TestCase
 	/**
 	 * Tests the <code>afterFirst</code> method.
 	 */
-	public void testAfterFirst()
+	@Test
+	public void afterFirst()
 	{
 		assertNull(Strings.afterFirst(null, '.'));
 		assertEquals("", Strings.afterFirst("", '.'));
@@ -135,7 +139,8 @@ public class StringsTest extends TestCase
 	/**
 	 * Tests the <code>afterLast</code> method.
 	 */
-	public void testAfterLast()
+	@Test
+	public void afterLast()
 	{
 		assertNull(Strings.afterLast(null, '.'));
 		assertEquals("", Strings.afterLast("", '.'));
@@ -150,7 +155,8 @@ public class StringsTest extends TestCase
 	/**
 	 * Tests the beforeLastPathComponent method
 	 */
-	public void testBeforeLastPathComponent()
+	@Test
+	public void beforeLastPathComponent()
 	{
 		assertNull(Strings.beforeLastPathComponent(null, '.'));
 		assertEquals("", Strings.beforeLastPathComponent("", '.'));
@@ -166,7 +172,8 @@ public class StringsTest extends TestCase
 	/**
 	 * Tests the capitalize method.
 	 */
-	public void testCapitalize()
+	@Test
+	public void capitalize()
 	{
 		assertEquals("Lorem ipsum dolor sit amet", Strings.capitalize("lorem ipsum dolor sit amet"));
 		assertEquals("Lorem ipsum dolor sit amet", Strings.capitalize("Lorem ipsum dolor sit amet"));
@@ -178,7 +185,8 @@ public class StringsTest extends TestCase
 	/**
 	 * Tests the escapeMarkup method.
 	 */
-	public void testEscapeMarkup()
+	@Test
+	public void escapeMarkup()
 	{
 		assertNull(Strings.escapeMarkup(null));
 		assertEquals("", Strings.escapeMarkup("").toString());
@@ -212,7 +220,8 @@ public class StringsTest extends TestCase
 	/**
 	 * Tests the escapeMarkup method with whitespace.
 	 */
-	public void testEscapeMarkupWhiteSpace()
+	@Test
+	public void escapeMarkupWhiteSpace()
 	{
 		assertNull(Strings.escapeMarkup(null, true));
 		assertEquals("", Strings.escapeMarkup("", true).toString());
@@ -229,7 +238,8 @@ public class StringsTest extends TestCase
 	 * 
 	 * @throws UnsupportedEncodingException
 	 */
-	public void testEscapeMarkupUnicode() throws UnsupportedEncodingException
+	@Test
+	public void escapeMarkupUnicode() throws UnsupportedEncodingException
 	{
 		assertNull(Strings.escapeMarkup(null, true, true));
 		assertEquals("", Strings.escapeMarkup("", true, true).toString());
@@ -247,7 +257,8 @@ public class StringsTest extends TestCase
 	 * 
 	 * @throws UnsupportedEncodingException
 	 */
-	public void testReplaceHtmlEscapeNumber() throws UnsupportedEncodingException
+	@Test
+	public void replaceHtmlEscapeNumber() throws UnsupportedEncodingException
 	{
 		assertNull(Strings.replaceHtmlEscapeNumber(null));
 		assertEquals("", Strings.replaceHtmlEscapeNumber(""));
@@ -266,7 +277,8 @@ public class StringsTest extends TestCase
 	/**
 	 * Tests the <code>firstPathComponent</code> method.
 	 */
-	public void testFirstPathComponent()
+	@Test
+	public void firstPathComponent()
 	{
 		assertNull(Strings.firstPathComponent(null, '.'));
 		assertEquals("", Strings.firstPathComponent("", '.'));
@@ -278,7 +290,8 @@ public class StringsTest extends TestCase
 	/**
 	 * Tests the <code>isEmpty</code> method.
 	 */
-	public void testIsEmpty()
+	@Test
+	public void isEmpty()
 	{
 		assertTrue(Strings.isEmpty(null));
 		assertTrue(Strings.isEmpty(""));
@@ -294,7 +307,8 @@ public class StringsTest extends TestCase
 	 * 
 	 * @throws StringValueConversionException
 	 */
-	public void testIsTrue() throws StringValueConversionException
+	@Test
+	public void isTrue() throws StringValueConversionException
 	{
 		assertFalse(Strings.isTrue(null));
 		assertFalse(Strings.isTrue(""));
@@ -331,7 +345,8 @@ public class StringsTest extends TestCase
 	/**
 	 * Tests the <code>replaceAll</code> method.
 	 */
-	public void testReplaceAll()
+	@Test
+	public void replaceAll()
 	{
 		assertNull(Strings.replaceAll(null, null, null));
 		assertNull(Strings.replaceAll(null, "", null));
@@ -367,7 +382,8 @@ public class StringsTest extends TestCase
 	/**
 	 * Tests the <code>split</code> method.
 	 */
-	public void testSplit()
+	@Test
+	public void split()
 	{
 		assertEquals(new String[0], Strings.split(null, '.'));
 		assertEquals(new String[0], Strings.split("", '.'));
@@ -382,7 +398,8 @@ public class StringsTest extends TestCase
 	/**
 	 * Tests the <code>stripEnding</code> method.
 	 */
-	public void testStripEnding()
+	@Test
+	public void stripEnding()
 	{
 		assertNull(Strings.stripEnding(null, null));
 		assertEquals("", Strings.stripEnding("", null));
@@ -398,7 +415,8 @@ public class StringsTest extends TestCase
 	 * 
 	 * @throws StringValueConversionException
 	 */
-	public void testToBoolean() throws StringValueConversionException
+	@Test
+	public void toBoolean() throws StringValueConversionException
 	{
 		assertEquals(Boolean.FALSE, Strings.toBoolean(null));
 		assertEquals(Boolean.FALSE, Strings.toBoolean("off"));
@@ -429,7 +447,8 @@ public class StringsTest extends TestCase
 	 * 
 	 * @throws StringValueConversionException
 	 */
-	public void testToChar() throws StringValueConversionException
+	@Test
+	public void toChar() throws StringValueConversionException
 	{
 		assertEquals(' ', Strings.toChar(" "));
 		assertEquals('a', Strings.toChar("a"));
@@ -463,7 +482,8 @@ public class StringsTest extends TestCase
 	/**
 	 * Tests the <code>toMultilineMarkup</code> method.
 	 */
-	public void testToMultilineMarkup()
+	@Test
+	public void toMultilineMarkup()
 	{
 		assertNull(Strings.toMultilineMarkup(null));
 		assertEquals("<p></p>", Strings.toMultilineMarkup("").toString());
@@ -490,6 +510,7 @@ public class StringsTest extends TestCase
 	/**
 	 * Tests the <code>toString</code> method.
 	 */
+	@Test
 	public void testToString()
 	{
 		assertNull(Strings.toString((Object)null));
@@ -511,7 +532,8 @@ public class StringsTest extends TestCase
 	/**
 	 * Test the toString(throwable)
 	 */
-	public void testToStringThrowable()
+	@Test
+	public void toStringThrowable()
 	{
 		NullPointerException np = new NullPointerException("null test");
 		RuntimeException wre = new RuntimeException("null test", np);

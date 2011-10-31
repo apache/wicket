@@ -30,6 +30,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Test;
 
 /**
  */
@@ -38,7 +39,8 @@ public class FormValidatorBehaviorTest extends WicketTestCase
 	/**
 	 * Tests validators are treated as behaviors
 	 */
-	public void testActAsBehavior()
+	@Test
+	public void actAsBehavior()
 	{
 		TestPage page = new TestPage();
 
@@ -60,7 +62,8 @@ public class FormValidatorBehaviorTest extends WicketTestCase
 	/**
 	 * Tests validators are treated as validators
 	 */
-	public void testActAsValidator()
+	@Test
+	public void actAsValidator()
 	{
 		TestPage page = new TestPage();
 

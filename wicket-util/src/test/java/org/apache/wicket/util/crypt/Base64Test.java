@@ -20,27 +20,19 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Random;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * 
  * @author Juergen Donnerstag
  */
-public class Base64Test extends TestCase
+public class Base64Test extends Assert
 {
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public Base64Test(String name)
-	{
-		super(name);
-	}
-
 	/**
 	 * @throws IOException
 	 */
+	@Test
 	public void test_1() throws IOException
 	{
 		for (int i = 0; i < 200; i++)
@@ -59,6 +51,7 @@ public class Base64Test extends TestCase
 	/**
 	 * @throws IOException
 	 */
+	@Test
 	public void test_1a() throws IOException
 	{
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
@@ -74,6 +67,7 @@ public class Base64Test extends TestCase
 	/**
 	 * @throws IOException
 	 */
+	@Test
 	public void test_1b() throws IOException
 	{
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerA";
@@ -89,6 +83,7 @@ public class Base64Test extends TestCase
 	/**
 	 * @throws IOException
 	 */
+	@Test
 	public void test_1c() throws IOException
 	{
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerAB";
@@ -104,6 +99,7 @@ public class Base64Test extends TestCase
 	/**
 	 * @throws IOException
 	 */
+	@Test
 	public void test_1d() throws IOException
 	{
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerABC";
@@ -119,6 +115,7 @@ public class Base64Test extends TestCase
 	/**
 	 * @throws IOException
 	 */
+	@Test
 	public void test_2() throws IOException
 	{
 		String input = "This is a text which is longer than 76 character and which contains some none-ascii chars like these: �����?�`=";
@@ -131,6 +128,7 @@ public class Base64Test extends TestCase
 	/**
 	 * @throws IOException
 	 */
+	@Test
 	public void test_3() throws IOException
 	{
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
@@ -144,6 +142,7 @@ public class Base64Test extends TestCase
 	/**
 	 * @throws IOException
 	 */
+	@Test
 	public void test_UrlSafe_1() throws IOException
 	{
 		for (int i = 0; i < 200; i++)
@@ -162,6 +161,7 @@ public class Base64Test extends TestCase
 	/**
 	 * @throws IOException
 	 */
+	@Test
 	public void test_UrlSafe_1a() throws IOException
 	{
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
@@ -177,6 +177,7 @@ public class Base64Test extends TestCase
 	/**
 	 * @throws IOException
 	 */
+	@Test
 	public void test_UrlSafe_1b() throws IOException
 	{
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerA";
@@ -192,6 +193,7 @@ public class Base64Test extends TestCase
 	/**
 	 * @throws IOException
 	 */
+	@Test
 	public void test_UrlSafe_1c() throws IOException
 	{
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerAB";
@@ -207,6 +209,7 @@ public class Base64Test extends TestCase
 	/**
 	 * @throws IOException
 	 */
+	@Test
 	public void test_UrlSafe_1d() throws IOException
 	{
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerABC";
@@ -222,6 +225,7 @@ public class Base64Test extends TestCase
 	/**
 	 * @throws IOException
 	 */
+	@Test
 	public void test_UrlSafe_2() throws IOException
 	{
 		String input = "This is a text which is longer than 76 character and which contains some none-ascii chars like these: �����?�`=";
@@ -234,6 +238,7 @@ public class Base64Test extends TestCase
 	/**
 	 * @throws IOException
 	 */
+	@Test
 	public void test_4() throws IOException
 	{
 		String input = "wicket-sep-wicket";
@@ -251,6 +256,7 @@ public class Base64Test extends TestCase
 	/**
 	 * @throws IOException
 	 */
+	@Test
 	public void test_5() throws IOException
 	{
 		ICrypt crypt = new CachingSunJceCryptFactory("WiCkEt-FRAMEwork").newCrypt();

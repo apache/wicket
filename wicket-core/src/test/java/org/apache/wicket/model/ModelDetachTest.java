@@ -16,13 +16,14 @@
  */
 package org.apache.wicket.model;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Tests the detach behavior for compatibility with IDetachable nested objects, ensuring that the
  * detach method is called for those nested objects.
  */
-public class ModelDetachTest extends TestCase
+public class ModelDetachTest extends Assert
 {
 	static class Detachable implements IDetachable
 	{
@@ -39,7 +40,8 @@ public class ModelDetachTest extends TestCase
 	/**
 	 * Performs the nested test for CompoundPropertyModel.
 	 */
-	public void testCompoundPropertyModelDetach()
+	@Test
+	public void compoundPropertyModelDetach()
 	{
 		Detachable detachable = new Detachable();
 		IModel<Detachable> model = new CompoundPropertyModel<Detachable>(detachable);
@@ -50,7 +52,8 @@ public class ModelDetachTest extends TestCase
 	/**
 	 * Performs the nested test for BoundCompoundPropertyModel.
 	 */
-	public void testBoundCompoundPropertyModelDetach()
+	@Test
+	public void boundCompoundPropertyModelDetach()
 	{
 		Detachable detachable = new Detachable();
 		IModel<Detachable> model = new CompoundPropertyModel<Detachable>(detachable);
@@ -61,7 +64,8 @@ public class ModelDetachTest extends TestCase
 	/**
 	 * Performs the nested test for AbstractPropertyModel.
 	 */
-	public void testAbstractPropertyModelDetach()
+	@Test
+	public void abstractPropertyModelDetach()
 	{
 		Detachable detachable = new Detachable();
 		IModel<?> model = new AbstractPropertyModel<Void>(detachable)
@@ -81,7 +85,8 @@ public class ModelDetachTest extends TestCase
 	/**
 	 * Performs the nested test for PropertyModel.
 	 */
-	public void testPropertyModelDetach()
+	@Test
+	public void propertyModelDetach()
 	{
 		Detachable detachable = new Detachable();
 		IModel<?> model = new PropertyModel<Void>(detachable, "foo");

@@ -24,10 +24,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Frank Bille Jensen (frankbille)
  */
-public abstract class ApacheLicenseHeaderTestCase extends TestCase
+public abstract class ApacheLicenseHeaderTestCase extends Assert
 {
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(ApacheLicenseHeaderTestCase.class);
@@ -202,7 +203,6 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 	 */
 	public ApacheLicenseHeaderTestCase()
 	{
-		super("Test of the legal aspects of the Wicket source code is correct.");
 
 		// -------------------------------
 		// Configure defaults
@@ -236,10 +236,9 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 
 	/**
 	 * 
-	 * @see junit.framework.TestCase#setUp()
 	 */
-	@Override
-	public final void setUp()
+	@Before
+	public final void before()
 	{
 		// setup the base directory for when running inside maven (building a release
 		// comes to mind).
@@ -253,7 +252,8 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 	/**
 	 * Test all the files in the project which has an associated {@link ILicenseHeaderHandler}.
 	 */
-	public void testLicenseHeaders()
+	@Test
+	public void licenseHeaders()
 	{
 		licenseHeaderHandlers = new ILicenseHeaderHandler[] {
 				new JavaLicenseHeaderHandler(javaIgnore),

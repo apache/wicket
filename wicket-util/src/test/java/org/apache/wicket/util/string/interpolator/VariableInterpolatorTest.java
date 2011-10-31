@@ -19,19 +19,21 @@ package org.apache.wicket.util.string.interpolator;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Tests {@link MapVariableInterpolator}
  * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
-public class VariableInterpolatorTest extends TestCase
+public class VariableInterpolatorTest extends Assert
 {
 	/**
 	 * 
 	 */
-	public void testWithValue()
+	@Test
+	public void withValue()
 	{
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("key", "value");
@@ -42,7 +44,8 @@ public class VariableInterpolatorTest extends TestCase
 	/**
 	 * 
 	 */
-	public void testWithoutValue()
+	@Test
+	public void withoutValue()
 	{
 		Map<String, String> params = new HashMap<String, String>();
 		MapVariableInterpolator in = new MapVariableInterpolator("${key}", params);
@@ -52,7 +55,8 @@ public class VariableInterpolatorTest extends TestCase
 	/**
 	 * 
 	 */
-	public void testWithoutValueAndException()
+	@Test
+	public void withoutValueAndException()
 	{
 		Map<String, String> params = new HashMap<String, String>();
 		MapVariableInterpolator in = new MapVariableInterpolator("${key}", params, true);
@@ -70,7 +74,8 @@ public class VariableInterpolatorTest extends TestCase
 	/**
 	 * 
 	 */
-	public void testLiteral()
+	@Test
+	public void literal()
 	{
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("key", "value");

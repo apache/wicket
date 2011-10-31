@@ -19,6 +19,7 @@ package org.apache.wicket.resource.loader;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.resource.loader.pages.Test1;
+import org.junit.Test;
 
 /**
  * 
@@ -26,41 +27,34 @@ import org.apache.wicket.resource.loader.pages.Test1;
 public class PackageStringResourceLoaderTest extends WicketTestCase
 {
 	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public PackageStringResourceLoaderTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * 
 	 */
-	public void testPackageFileInComponentPackage()
+	@Test
+	public void packageFileInComponentPackage()
 	{
 		Page page = new Test1();
 		PackageStringResourceLoader loader = new PackageStringResourceLoader();
-		assertEquals("test successful", loader.loadStringResource(page, "my_package_test_1", null,
-			null, null));
+		assertEquals("test successful",
+			loader.loadStringResource(page, "my_package_test_1", null, null, null));
 	}
 
 	/**
 	 * 
 	 */
-	public void testPackageFileInParentPackage()
+	@Test
+	public void packageFileInParentPackage()
 	{
 		Page page = new Test1();
 		PackageStringResourceLoader loader = new PackageStringResourceLoader();
-		assertEquals("test 222", loader.loadStringResource(page, "my_package_test_2", null, null,
-			null));
+		assertEquals("test 222",
+			loader.loadStringResource(page, "my_package_test_2", null, null, null));
 	}
 
 	/**
 	 * 
 	 */
-	public void testNotFound()
+	@Test
+	public void notFound()
 	{
 		Page page = new Test1();
 		PackageStringResourceLoader loader = new PackageStringResourceLoader();
@@ -70,6 +64,7 @@ public class PackageStringResourceLoaderTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void test_1() throws Exception
 	{
 		executeTest(Test1.class, "PackageTestPageExpectedResult_1.html");

@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.resolver;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * 
@@ -27,6 +28,7 @@ public class WicketContainerResolverTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void test_1() throws Exception
 	{
 		executeTest(SimpleContainerPage_1.class, "SimpleContainerPageExpectedResult_1.html");

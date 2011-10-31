@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.tags;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * @author jcompagner
@@ -24,19 +25,10 @@ import org.apache.wicket.WicketTestCase;
 public class InputTagNotClosedTest extends WicketTestCase
 {
 	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public InputTagNotClosedTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * @throws Exception
 	 */
-	public void testInputVisible() throws Exception
+	@Test
+	public void inputVisible() throws Exception
 	{
 		executeTest(InputTagVisibleWebPage.class, "InputTagVisibleWebPageResult.html");
 	}
@@ -44,7 +36,8 @@ public class InputTagNotClosedTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testInputNotVisible() throws Exception
+	@Test
+	public void inputNotVisible() throws Exception
 	{
 		executeTest(InputTagNotVisibleWebPage.class, "InputTagNotVisibleWebPageResult.html");
 	}

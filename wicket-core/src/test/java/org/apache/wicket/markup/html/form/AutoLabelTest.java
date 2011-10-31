@@ -22,6 +22,7 @@ import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
+import org.junit.Test;
 
 /**
  * Tests {@code wicket:for} attribute functionality
@@ -31,7 +32,8 @@ import org.apache.wicket.model.Model;
 public class AutoLabelTest extends WicketTestCase
 {
 	/** */
-	public void testLabelIntoMarkupInsertion()
+	@Test
+	public void labelIntoMarkupInsertion()
 	{
 		class MyTestPage extends TestPage
 		{
@@ -69,7 +71,8 @@ public class AutoLabelTest extends WicketTestCase
 	}
 
 	/** */
-	public void testMarkupIntoLabelInsertion()
+	@Test
+	public void markupIntoLabelInsertion()
 	{
 		class MyTestPage extends TestPage
 		{
@@ -90,7 +93,8 @@ public class AutoLabelTest extends WicketTestCase
 	}
 
 	/** */
-	public void testLabelTagClasses()
+	@Test
+	public void labelTagClasses()
 	{
 		class MyTestPage extends TestPage
 		{

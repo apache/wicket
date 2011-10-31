@@ -25,6 +25,8 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisitor;
+import org.junit.Before;
+import org.junit.Test;
 
 
 /**
@@ -36,19 +38,11 @@ public class FormTest extends WicketTestCase
 	private IVisitor<?, ?> visitor;
 
 	/**
-	 * Construct.
 	 * 
-	 * @param name
 	 */
-	public FormTest(String name)
+	@Before
+	public void before()
 	{
-		super(name);
-	}
-
-	@Override
-	protected void setUp() throws Exception
-	{
-		super.setUp();
 		visitor = new Form.ValidationVisitor()
 		{
 			@Override
@@ -62,7 +56,8 @@ public class FormTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testFormMethodGet() throws Exception
+	@Test
+	public void formMethodGet() throws Exception
 	{
 		executeTest(FormMethodTestPage.class, "FormMethodTestPage_expected.html");
 	}
@@ -70,7 +65,8 @@ public class FormTest extends WicketTestCase
 	/**
 	 * WICKET-3488
 	 */
-	public void testFormReplacement()
+	@Test
+	public void formReplacement()
 	{
 		tester.startPage(TestPage.class);
 		tester.newFormTester("form").submit();
@@ -80,14 +76,16 @@ public class FormTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testActionUrlNotDoubleEscaped()
+	@Test
+	public void actionUrlNotDoubleEscaped()
 	{
 		tester.startPage(TestPage.class);
 		String response = tester.getLastResponseAsString();
 		assertTrue(response.contains(Strings.escapeMarkup(TestPage.TEST_QUERY_STRING)));
 	}
 
-	public void testOnValidateModelObjects()
+	@Test
+	public void onValidateModelObjects()
 	{
 
 		class TestPage extends WebPage implements IMarkupResourceStreamProvider

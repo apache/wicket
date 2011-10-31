@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.util.lang;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests the <code>Primitives</code> class. The code for testing the hashcode is taken from the
@@ -26,7 +28,7 @@ import junit.framework.TestCase;
  * @author Martijn Dashorst
  * @author <a href="mailto:pholser@yahoo.com">Paul Holser</a>
  */
-public class PrimitivesTest extends TestCase
+public class PrimitivesTest extends Assert
 {
 	/**
 	 * Test stub for testing the hashcode function.
@@ -64,8 +66,8 @@ public class PrimitivesTest extends TestCase
 	/**
 	 * Creates the objects for the tests.
 	 */
-	@Override
-	public void setUp()
+	@Before
+	public void before()
 	{
 		eq1 = new HashCodeObject(26);
 		eq2 = new HashCodeObject(26);
@@ -78,7 +80,8 @@ public class PrimitivesTest extends TestCase
 	 * 
 	 * @author <a href="mailto:pholser@yahoo.com">Paul Holser</a>
 	 */
-	public final void testHashCodeContract()
+	@Test
+	public final void hashCodeContract()
 	{
 		assertEquals("1st vs. 2nd", eq1.hashCode(), eq2.hashCode());
 		assertEquals("1st vs. 3rd", eq1.hashCode(), eq3.hashCode());
@@ -91,7 +94,8 @@ public class PrimitivesTest extends TestCase
 	 * 
 	 * @author <a href="mailto:pholser@yahoo.com">Paul Holser</a>
 	 */
-	public final void testHashCodeIsConsistentAcrossInvocations()
+	@Test
+	public final void hashCodeIsConsistentAcrossInvocations()
 	{
 		int eq1Hash = eq1.hashCode();
 		int eq2Hash = eq2.hashCode();

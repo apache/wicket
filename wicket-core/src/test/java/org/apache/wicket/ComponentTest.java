@@ -26,15 +26,6 @@ import org.junit.Test;
  */
 public class ComponentTest extends WicketTestCase
 {
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public ComponentTest(String name)
-	{
-		super(name);
-	}
 
 	/**
 	 * Tests the number of detach calls on a Page, Component, Behavior and Model during a normal

@@ -32,13 +32,11 @@ public class AjaxComponentVisibilityTest extends WicketTestCase
 	private Component test3;
 
 	/**
-	 * @throws Exception
+	 * 
 	 */
-	@Override
 	@Before
-	public void setUp() throws Exception
+	public void before()
 	{
-		super.setUp();
 		tester.startPage(new AjaxHeaderContributionPage());
 		test1 = tester.getLastRenderedPage().get("test1");
 		test2 = tester.getLastRenderedPage().get("test2");

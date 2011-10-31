@@ -20,17 +20,16 @@ import java.io.Serializable;
 import java.util.Locale;
 
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
-import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
+import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
 import org.apache.wicket.request.resource.caching.version.StaticResourceVersion;
@@ -48,13 +47,6 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	private static final IProvider<IResourceCachingStrategy> NO_CACHING = new ValueProvider<IResourceCachingStrategy>(
 		NoOpResourceCachingStrategy.INSTANCE);
 
-	/**
-	 * Construct.
-	 */
-	public BasicResourceReferenceMapperTest()
-	{
-	}
-
 	private final BasicResourceReferenceMapper encoder = new BasicResourceReferenceMapper(
 		new PageParametersEncoder(), NO_CACHING)
 	{
@@ -68,7 +60,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testDecode1()
+	@Test
+	public void decode1()
 	{
 		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference1");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -82,7 +75,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testDecode1A()
+	@Test
+	public void decode1A()
 	{
 		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference1?en");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -99,7 +93,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testDecode2()
+	@Test
+	public void decode2()
 	{
 		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference1?p1=v1&p2=v2");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -117,7 +112,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testDecode2A()
+	@Test
+	public void decode2A()
 	{
 		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference1?-style&p1=v1&p2=v2");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -135,7 +131,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testDecode3()
+	@Test
+	public void decode3()
 	{
 		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference2/name2?en_EN");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -152,7 +149,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testDecode3A()
+	@Test
+	public void decode3A()
 	{
 		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference2/name2?en_EN-style");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -169,7 +167,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testDecode3B()
+	@Test
+	public void decode3B()
 	{
 		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference2/name2");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -179,7 +178,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testDecode4()
+	@Test
+	public void decode4()
 	{
 		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference2/name2?en_EN&p1=v1&p2=v2");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -196,7 +196,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testDecode5()
+	@Test
+	public void decode5()
 	{
 		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference3?-style");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -213,7 +214,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testDecode6()
+	@Test
+	public void decode6()
 	{
 		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference3?-style&p1=v1&p2=v2");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -232,7 +234,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testDecode7()
+	@Test
+	public void decode7()
 	{
 		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference4?en-style");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -249,7 +252,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testDecode7A()
+	@Test
+	public void decode7A()
 	{
 		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference4?sk");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -259,7 +263,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testDecode8()
+	@Test
+	public void decode8()
 	{
 		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference4?en-style&p1=v1&p2=v2");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -277,7 +282,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testDecode9()
+	@Test
+	public void decode9()
 	{
 		Url url = Url.parse("wicket/resource/" + CLASS_NAME +
 			"/reference5?en--variation&p1=v1&p2=v2");
@@ -296,7 +302,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testDecode10()
+	@Test
+	public void decode10()
 	{
 		Url url = Url.parse("wicket/resource/" + CLASS_NAME +
 			"/reference6?en-style-variation&p1=v1&p2=v2");
@@ -315,7 +322,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testEncode1()
+	@Test
+	public void encode1()
 	{
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference1,
 			null);
@@ -326,7 +334,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testEncode2()
+	@Test
+	public void encode2()
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "X");
@@ -342,7 +351,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testEncode3()
+	@Test
+	public void encode3()
 	{
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference2,
 			null);
@@ -353,7 +363,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testEncode4()
+	@Test
+	public void encode4()
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "X");
@@ -370,7 +381,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testEncode5()
+	@Test
+	public void encode5()
 	{
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference3,
 			null);
@@ -381,7 +393,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testEncode6()
+	@Test
+	public void encode6()
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "X");
@@ -398,7 +411,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testEncode7()
+	@Test
+	public void encode7()
 	{
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference4,
 			null);
@@ -409,7 +423,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testEncode8()
+	@Test
+	public void encode8()
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "X");
@@ -426,7 +441,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * Tests request to url encoding when style is null but variation is not
 	 */
-	public void testEncode9()
+	@Test
+	public void encode9()
 	{
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference5,
 			null);
@@ -438,10 +454,13 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * 
 	 */
-	public void testVersionStringInResourceFilename()
+	@Test
+	public void versionStringInResourceFilename()
 	{
 		final IStaticCacheableResource resource = new IStaticCacheableResource()
 		{
+			private static final long serialVersionUID = 1L;
+
 			public Serializable getCacheKey()
 			{
 				return null;
@@ -517,7 +536,11 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		assertEquals("test-version-1.0.4-beta.txt", url.getFileName());
 	}
 
-	public void testRequestWithEmptyFilename()
+	/**
+	 * 
+	 */
+	@Test
+	public void requestWithEmptyFilename()
 	{
 		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -527,7 +550,8 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 	/**
 	 * Tests <a href="https://issues.apache.org/jira/browse/WICKET-3918">WICKET-3918</a>.
 	 */
-	public void testWicket3918()
+	@Test
+	public void wicket3918()
 	{
 		Url url = Url.parse("wicket/resource/org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow/res/");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));

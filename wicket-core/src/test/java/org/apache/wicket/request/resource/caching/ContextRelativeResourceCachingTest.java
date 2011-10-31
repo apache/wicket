@@ -32,6 +32,9 @@ import org.apache.wicket.request.resource.caching.version.IResourceVersion;
 import org.apache.wicket.request.resource.caching.version.StaticResourceVersion;
 import org.junit.Test;
 
+/**
+ * 
+ */
 public class ContextRelativeResourceCachingTest extends WicketTestCase
 {
 	private static final Charset CHARSET = Charset.forName("UTF-8");
@@ -79,8 +82,8 @@ public class ContextRelativeResourceCachingTest extends WicketTestCase
 	private void init(ContextRelativeResource resource, String mountPath)
 	{
 		final IResourceVersion resourceVersion = new StaticResourceVersion("123");
-		final IResourceCachingStrategy strategy =
-			new FilenameWithVersionResourceCachingStrategy("-version-", resourceVersion);
+		final IResourceCachingStrategy strategy = new FilenameWithVersionResourceCachingStrategy(
+			"-version-", resourceVersion);
 
 		tester.getApplication().getSharedResources().add(SHARED_NAME, resource);
 		tester.getApplication().getResourceSettings().setCachingStrategy(strategy);
@@ -88,6 +91,9 @@ public class ContextRelativeResourceCachingTest extends WicketTestCase
 		tester.getApplication().mountResource(mountPath, resourceReference);
 	}
 
+	/**
+	 * 
+	 */
 	@Test
 	public void mapHandler()
 	{
@@ -95,19 +101,25 @@ public class ContextRelativeResourceCachingTest extends WicketTestCase
 		init(resource, "/test/resource");
 
 		Request request = createRequest("test/resource-version-4711?bla=123");
-		final IRequestHandler handler = tester.getApplication().getRootRequestMapper().mapRequest(request);
+		final IRequestHandler handler = tester.getApplication()
+			.getRootRequestMapper()
+			.mapRequest(request);
 		assertNotNull(handler);
 		assertTrue(handler instanceof ResourceReferenceRequestHandler);
 		assertEquals(((ResourceReferenceRequestHandler)handler).getResource(), resource);
 	}
 
+	/**
+	 * 
+	 */
 	@Test
 	public void mapRequest()
 	{
 		ContextRelativeResource resource = new ContextRelativeResource("/style.css");
 		init(resource, "/test/resource");
 
-		IRequestHandler handler = new ResourceReferenceRequestHandler(new SharedResourceReference(SHARED_NAME));
+		IRequestHandler handler = new ResourceReferenceRequestHandler(new SharedResourceReference(
+			SHARED_NAME));
 		Url url = tester.getApplication().getRootRequestMapper().mapHandler(handler);
 		assertNotNull(url);
 		assertEquals(url, Url.parse("test/resource-version-123"));

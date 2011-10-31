@@ -21,6 +21,7 @@ import java.io.IOException;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,19 +37,10 @@ public class DownloadLinkTest extends WicketTestCase
 	private static final Logger log = LoggerFactory.getLogger(DownloadLinkTest.class);
 
 	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public DownloadLinkTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * Tests custom type download.
 	 */
-	public void testCustomTypeDownloadLink()
+	@Test
+	public void customTypeDownloadLink()
 	{
 		tester.startPage(DownloadPage.class);
 		((MockServletContext)tester.getApplication().getServletContext()).addMimeType("custom",
@@ -61,7 +53,8 @@ public class DownloadLinkTest extends WicketTestCase
 	/**
 	 * Tests pdf download.
 	 */
-	public void testPdfDownloadLink()
+	@Test
+	public void pdfDownloadLink()
 	{
 		tester.startPage(DownloadPage.class);
 		tester.clickLink(DownloadPage.PDF_DOWNLOAD_LINK);
@@ -72,7 +65,8 @@ public class DownloadLinkTest extends WicketTestCase
 	/**
 	 * Tests text download.
 	 */
-	public void testTextDownloadLink()
+	@Test
+	public void textDownloadLink()
 	{
 		tester.startPage(DownloadPage.class);
 		tester.clickLink(DownloadPage.TEXT_DOWNLOAD_LINK);
@@ -85,7 +79,8 @@ public class DownloadLinkTest extends WicketTestCase
 	/**
 	 * Tests file removal after download
 	 */
-	public void testDeleteAfterLink()
+	@Test
+	public void deleteAfterLink()
 	{
 		DownloadPage page;
 

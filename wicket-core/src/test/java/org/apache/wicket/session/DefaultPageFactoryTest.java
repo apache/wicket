@@ -23,6 +23,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.flow.ResetResponseException;
 import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.junit.Test;
 
 
 /**
@@ -129,19 +130,10 @@ public class DefaultPageFactoryTest extends WicketTestCase
 	final private IPageFactory pageFactory = new DefaultPageFactory();
 
 	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public DefaultPageFactoryTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * Verifies page factory bubbles AbortAndRespondException
 	 */
-	public void testAbortAndRespondContract()
+	@Test
+	public void abortAndRespondContract()
 	{
 		try
 		{

@@ -23,6 +23,7 @@ import javax.servlet.http.Cookie;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Test;
 
 /**
  * Tests setting a cookie and calling setResponsePage() in the same request.
@@ -36,7 +37,8 @@ public class SetCookieAndRedirectTest extends WicketTestCase
 	/**
 	 * Validate proper cookie value set with statefull page
 	 */
-	public void testStatefullPage()
+	@Test
+	public void statefullPage()
 	{
 		tester.startPage(SetCookieAndRedirectStatefullTestPage.class);
 		FormTester formTester = tester.newFormTester("form");
@@ -52,7 +54,8 @@ public class SetCookieAndRedirectTest extends WicketTestCase
 	/**
 	 * Validate proper cookie value set with stateless page
 	 */
-	public void testStatelessPage()
+	@Test
+	public void statelessPage()
 	{
 		tester.startPage(SetCookieAndRedirectStatelessTestPage.class);
 		FormTester formTester = tester.newFormTester("form");

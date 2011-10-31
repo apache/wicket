@@ -31,6 +31,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.junit.Test;
 
 /**
  * <a href="https://issues.apache.org/jira/browse/WICKET-3711">WICKET-3711</a>
@@ -42,7 +43,8 @@ public class FormTesterSubmitLinkTest extends WicketTestCase
 	 * <p>
 	 * This should work the same as regular submit
 	 */
-	public void testSubmitLink()
+	@Test
+	public void submitLink()
 	{
 		tester.startPage(TestPage.class);
 
@@ -56,7 +58,8 @@ public class FormTesterSubmitLinkTest extends WicketTestCase
 	/**
 	 * Submit the form
 	 */
-	public void testRegularSubmit()
+	@Test
+	public void regularSubmit()
 	{
 		tester.startPage(TestPage.class);
 
@@ -67,7 +70,8 @@ public class FormTesterSubmitLinkTest extends WicketTestCase
 			.getDefaultModelObjectAsString());
 	}
 
-	public void testRadioComponentValueEncoding()
+	@Test
+	public void radioComponentValueEncoding()
 	{
 
 		class TestPage extends WebPage implements IMarkupResourceStreamProvider

@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.internal;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * Test for the {@link org.apache.wicket.markup.html.internal.HtmlHeaderContainer}.
@@ -26,19 +27,10 @@ import org.apache.wicket.WicketTestCase;
 public class HtmlHeaderContainerTest extends WicketTestCase
 {
 	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public HtmlHeaderContainerTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * Test clean-up of auto added components after removal of the HtmlHeaderContainer.
 	 */
-	public void testCleanUpOfAutoAddedComponents()
+	@Test
+	public void cleanUpOfAutoAddedComponents()
 	{
 		tester.startPage(ComponentResolvingPage.class);
 

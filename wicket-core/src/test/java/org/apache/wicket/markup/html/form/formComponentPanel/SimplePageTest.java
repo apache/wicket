@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.form.formComponentPanel;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,8 @@ public class SimplePageTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage() throws Exception
+	@Test
+	public void renderHomePage() throws Exception
 	{
 		tester.startComponentInPage(MyFormComponentPanel.class);
 		String doc = tester.getLastResponseAsString();
@@ -44,7 +46,8 @@ public class SimplePageTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testRenderHomePageWithHeaderContribution() throws Exception
+	@Test
+	public void renderHomePageWithHeaderContribution() throws Exception
 	{
 		tester.startComponentInPage(MyFormComponentPanel.class);
 		String doc = tester.getLastResponse().getDocument();

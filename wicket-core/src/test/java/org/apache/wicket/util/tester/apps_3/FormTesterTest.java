@@ -23,6 +23,8 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.apps_1.Book;
+import org.junit.Before;
+import org.junit.Test;
 
 
 /**
@@ -37,20 +39,11 @@ public class FormTesterTest extends WicketTestCase
 	private FormTester formTester;
 
 	/**
-	 * Construct.
 	 * 
-	 * @param name
 	 */
-	public FormTesterTest(String name)
+	@Before
+	public void before()
 	{
-		super(name);
-	}
-
-	@Override
-	protected void setUp() throws Exception
-	{
-		super.setUp();
-
 		books = new Book[] { new Book("1", "book1"), new Book("2", "book2"),
 				new Book("3", "book3"), new Book("4", "book4") };
 
@@ -61,7 +54,8 @@ public class FormTesterTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testSingleChoice() throws Exception
+	@Test
+	public void singleChoice() throws Exception
 	{
 		assertSame(books[1], choicePage.dropDownChoice);
 		assertSame(books[3], choicePage.listChoice);
@@ -81,7 +75,8 @@ public class FormTesterTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testSingleChoice_toggle() throws Exception
+	@Test
+	public void singleChoice_toggle() throws Exception
 	{
 		assertSame(books[1], choicePage.dropDownChoice);
 		assertSame(null, choicePage.radioGroup);
@@ -97,7 +92,8 @@ public class FormTesterTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testSingleChoiceComponentNotAllowSelectMuliple() throws Exception
+	@Test
+	public void singleChoiceComponentNotAllowSelectMuliple() throws Exception
 	{
 		try
 		{
@@ -121,7 +117,8 @@ public class FormTesterTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testSelectMultiple() throws Exception
+	@Test
+	public void selectMultiple() throws Exception
 	{
 		assertBooksEquals(new Book[0], choicePage.listMultipleChoice);
 		assertBooksEquals(new Book[0], choicePage.checkBoxMultipleChoice);
@@ -140,7 +137,8 @@ public class FormTesterTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testMultipleChoiceComponent_cumulate() throws Exception
+	@Test
+	public void multipleChoiceComponent_cumulate() throws Exception
 	{
 		assertBooksEquals(new Book[0], choicePage.listMultipleChoice);
 		assertBooksEquals(new Book[0], choicePage.checkGroup);
@@ -167,7 +165,8 @@ public class FormTesterTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testMultipleButtonSubmit() throws Exception
+	@Test
+	public void multipleButtonSubmit() throws Exception
 	{
 		formTester.submit();
 		assertFalse(choicePage.anotherButtonPressed);
@@ -180,7 +179,8 @@ public class FormTesterTest extends WicketTestCase
 	/**
 	 * Tests proper initialization.
 	 */
-	public void testInitialValues()
+	@Test
+	public void initialValues()
 	{
 		assertInitialValues();
 		formTester.submit();

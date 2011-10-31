@@ -21,6 +21,7 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Url;
+import org.junit.Test;
 
 /**
  * User: Anatoly Kupriyanov (kan.izh@gmail.com) Date: 12-Feb-2009 Time: 22:27:08 Bugfix for
@@ -53,7 +54,8 @@ public class StatelessFormTest extends WicketTestCase
 	/**
 	 * testBug()
 	 */
-	public void testBug()
+	@Test
+	public void bug()
 	{
 		{
 			tester.getRequest().setUrl(Url.parse("page2"));

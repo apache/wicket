@@ -20,24 +20,25 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.mock.MockWebRequest;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.resource.AbstractResource.WriteCallback;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.response.ByteArrayResponse;
+import org.junit.Assert;
+import org.junit.Test;
 
 
 /**
  * @author Kent Tong
  */
-public class WriteCallbackTest extends TestCase
+public class WriteCallbackTest extends Assert
 {
 
 	/**
 	 */
-	public void testWriteStream()
+	@Test
+	public void writeStream()
 	{
 		WriteCallback callback = new WriteCallback()
 		{

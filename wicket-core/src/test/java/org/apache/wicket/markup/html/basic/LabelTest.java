@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.basic;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * Test for Label components
@@ -26,22 +27,12 @@ import org.apache.wicket.WicketTestCase;
 public class LabelTest extends WicketTestCase
 {
 	/**
-	 * Create the test.
-	 * 
-	 * @param name
-	 *            The test name
-	 */
-	public LabelTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * Test escaping markup.
 	 * 
 	 * @throws Exception
 	 */
-	public void testLabelWithEscapeMarkup() throws Exception
+	@Test
+	public void labelWithEscapeMarkup() throws Exception
 	{
 		executeTest(LabelWithEscapeMarkupPage.class, "LabelWithEscapeMarkupPageExpectedResult.html");
 	}
@@ -51,7 +42,8 @@ public class LabelTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testLabelWithoutEscapeMarkup() throws Exception
+	@Test
+	public void labelWithoutEscapeMarkup() throws Exception
 	{
 		executeTest(LabelWithoutEscapeMarkupPage.class,
 			"LabelWithoutEscapeMarkupPageExpectedResult.html");

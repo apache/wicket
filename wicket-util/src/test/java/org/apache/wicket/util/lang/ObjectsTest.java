@@ -16,7 +16,8 @@
  */
 package org.apache.wicket.util.lang;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 
 /**
@@ -24,23 +25,13 @@ import junit.framework.TestCase;
  * 
  * @author Martijn Dashorst
  */
-public class ObjectsTest extends TestCase
+public class ObjectsTest extends Assert
 {
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public ObjectsTest(String name)
-	{
-		super(name);
-	}
-
 	/**
 	 * Test method for 'org.apache.wicket.util.lang.Objects.equal(Object, Object)'
 	 */
-	public void testEqual()
+	@Test
+	public void equal()
 	{
 		Object object = new Object();
 		assertTrue(Objects.equal(object, object));

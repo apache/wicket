@@ -81,7 +81,7 @@ public class ResponseFilterTest extends WicketTestCase
 	 * WICKET-3620
 	 */
 	@Test
-	public void testFilterAddCommentFilter()
+	public void filterAddCommentFilter()
 	{
 		tester.startPage(DummyHomePage.class);
 		Assert.assertTrue(tester.getLastResponseAsString().contains(AppendCommentFilter.COMMENT));
@@ -91,7 +91,7 @@ public class ResponseFilterTest extends WicketTestCase
 	 * WICKET-3620
 	 */
 	@Test
-	public void testAddCommentFilterInAjaxResponse()
+	public void addCommentFilterInAjaxResponse()
 	{
 		DummyHomePage testPage = new DummyHomePage();
 		testPage.getTestPageLink().add(new AjaxEventBehavior("event")

@@ -16,24 +16,24 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests {@link EnumChoiceRenderer}
  * 
  * @author igor.vaynberg
  */
-public class EnumChoiceRendererTest extends TestCase
+public class EnumChoiceRendererTest extends org.junit.Assert
 {
 
 	/**
 	 * 
 	 */
+	@Test
 	public void testResourceKeyGenerationForAnonymousEnums()
 	{
 		final EnumChoiceRenderer<TestEnum> renderer = new EnumChoiceRenderer<TestEnum>();
-		Assert.assertEquals("TestEnum.ANONYMOUS", renderer.resourceKey(TestEnum.ANONYMOUS));
+		assertEquals("TestEnum.ANONYMOUS", renderer.resourceKey(TestEnum.ANONYMOUS));
 	}
 
 	/**

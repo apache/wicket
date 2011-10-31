@@ -19,6 +19,8 @@ package org.apache.wicket.markup.html.form;
 import java.util.Locale;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Juergen Donnerstag
@@ -27,11 +29,12 @@ import org.apache.wicket.WicketTestCase;
 public class DropDownChoiceTest extends WicketTestCase
 {
 
-	@Override
-	protected void setUp() throws Exception
+	/**
+	 * @throws Exception
+	 */
+	@Before
+	public void before() throws Exception
 	{
-		super.setUp();
-
 		tester.getSession().setLocale(Locale.ENGLISH);
 	}
 
@@ -40,7 +43,8 @@ public class DropDownChoiceTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testNullWithNullValidFalse() throws Exception
+	@Test
+	public void nullWithNullValidFalse() throws Exception
 	{
 		executeTest(new DropDownChoiceTestPage(null, false),
 			"DropDownChoiceTestPage_null_false_expected.html");
@@ -51,7 +55,8 @@ public class DropDownChoiceTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testNullWithNullValidTrue() throws Exception
+	@Test
+	public void nullWithNullValidTrue() throws Exception
 	{
 		executeTest(new DropDownChoiceTestPage(null, true),
 			"DropDownChoiceTestPage_null_true_expected.html");
@@ -62,7 +67,8 @@ public class DropDownChoiceTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testNonNullWithNullValidFalse() throws Exception
+	@Test
+	public void nonNullWithNullValidFalse() throws Exception
 	{
 		executeTest(new DropDownChoiceTestPage("A", false),
 			"DropDownChoiceTestPage_A_false_expected.html");
@@ -73,7 +79,8 @@ public class DropDownChoiceTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testNonNullWithNullValidTrue() throws Exception
+	@Test
+	public void nonNullWithNullValidTrue() throws Exception
 	{
 		executeTest(new DropDownChoiceTestPage("A", true),
 			"DropDownChoiceTestPage_A_true_expected.html");

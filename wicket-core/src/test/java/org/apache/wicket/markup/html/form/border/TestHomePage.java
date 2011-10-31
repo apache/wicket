@@ -19,17 +19,19 @@ package org.apache.wicket.markup.html.form.border;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Before;
 
 /**
  * Simple test using the WicketTester
  */
 public class TestHomePage extends WicketTestCase
 {
-	@Override
-	public void setUp() throws Exception
+	/**
+	 * 
+	 */
+	@Before
+	public void before()
 	{
-		super.setUp();
-
 		// Start and render the test page
 		tester.startPage(HomePage.class);
 		tester.assertRenderedPage(HomePage.class);

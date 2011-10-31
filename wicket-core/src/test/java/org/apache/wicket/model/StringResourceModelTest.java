@@ -27,6 +27,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -43,20 +44,11 @@ public class StringResourceModelTest extends WicketTestCase
 	private IModel<WeatherStation> wsModel;
 
 	/**
-	 * Create the test case.
-	 * 
-	 * @param name
-	 *            The test name
+	 * @throws Exception
 	 */
-	public StringResourceModelTest(String name)
+	@Before
+	public void before() throws Exception
 	{
-		super(name);
-	}
-
-	@Override
-	protected void setUp() throws Exception
-	{
-		super.setUp();
 		page = new TestPage();
 		ws = new WeatherStation();
 		wsModel = new Model<WeatherStation>(ws);

@@ -18,19 +18,21 @@ package org.apache.wicket.protocol.http;
 
 import java.util.TimeZone;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Tests for ClientProperties that failed on Mac OS X Java platform.
  * 
  * @author Martijn Dashorst
  */
-public class ClientPropertiesTest extends TestCase
+public class ClientPropertiesTest extends Assert
 {
 	/**
 	 * Tests GMT-2:00
 	 */
-	public void testTimezoneMinus2()
+	@Test
+	public void timezoneMinus2()
 	{
 		String utc = "-2.0";
 		ClientProperties props = new ClientProperties();
@@ -42,7 +44,8 @@ public class ClientPropertiesTest extends TestCase
 	/**
 	 * Tests GMT+2:00
 	 */
-	public void testTimezonePlus2()
+	@Test
+	public void timezonePlus2()
 	{
 		String utc = "+2.0";
 		ClientProperties props = new ClientProperties();
@@ -54,7 +57,8 @@ public class ClientPropertiesTest extends TestCase
 	/**
 	 * Tests GMT+11:00
 	 */
-	public void testTimezonePlus10()
+	@Test
+	public void timezonePlus10()
 	{
 		String utc = "+11.0";
 		ClientProperties props = new ClientProperties();
@@ -66,7 +70,8 @@ public class ClientPropertiesTest extends TestCase
 	/**
 	 * Tests GMT+2:30
 	 */
-	public void testTimezonePlus2andAHalf()
+	@Test
+	public void timezonePlus2andAHalf()
 	{
 		String utc = "+2.5";
 		ClientProperties props = new ClientProperties();
@@ -78,7 +83,8 @@ public class ClientPropertiesTest extends TestCase
 	/**
 	 * Tests GMT-2:30
 	 */
-	public void testTimezoneMinus2andAHalf()
+	@Test
+	public void timezoneMinus2andAHalf()
 	{
 		String utc = "-2.5";
 		ClientProperties props = new ClientProperties();
@@ -90,7 +96,8 @@ public class ClientPropertiesTest extends TestCase
 	/**
 	 * Tests GMT+3:00
 	 */
-	public void testTimezonePlus3()
+	@Test
+	public void timezonePlus3()
 	{
 		String utc = "3";
 		ClientProperties props = new ClientProperties();
@@ -102,7 +109,8 @@ public class ClientPropertiesTest extends TestCase
 	/**
 	 * Tests GMT-3:00
 	 */
-	public void testTimezoneMinus3()
+	@Test
+	public void timezoneMinus3()
 	{
 		String utc = "-3";
 		ClientProperties props = new ClientProperties();

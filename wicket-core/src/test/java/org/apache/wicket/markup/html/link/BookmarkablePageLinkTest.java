@@ -20,6 +20,7 @@ import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author jcompagner
@@ -27,19 +28,10 @@ import org.junit.Assert;
 public class BookmarkablePageLinkTest extends WicketTestCase
 {
 	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public BookmarkablePageLinkTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * @throws Exception
 	 */
-	public void testBookmarkableRequest() throws Exception
+	@Test
+	public void bookmarkableRequest() throws Exception
 	{
 		tester.startPage(BookmarkableHomePageLinksPage.class);
 		assertEquals(tester.getLastRenderedPage().getClass(), BookmarkableHomePageLinksPage.class);
@@ -48,7 +40,8 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testBookmarkableRequestWithIntercept() throws Exception
+	@Test
+	public void bookmarkableRequestWithIntercept() throws Exception
 	{
 		tester.startPage(BookmarkableThrowsInterceptPage.class);
 
@@ -61,7 +54,8 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testBookmarkableRequestWithInterceptWithParams() throws Exception
+	@Test
+	public void bookmarkableRequestWithInterceptWithParams() throws Exception
 	{
 		PageParameters pp = new PageParameters();
 		pp.set("test", "test");
@@ -77,7 +71,8 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 	/**
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3721">WICKET-3721</a>
 	 */
-	public void testCustomParametersWithSpecialCharacters()
+	@Test
+	public void customParametersWithSpecialCharacters()
 	{
 		BookmarkablePageLink<MockPageWithLink> link = new BookmarkablePageLink<MockPageWithLink>(
 			"link", MockPageWithLink.class);

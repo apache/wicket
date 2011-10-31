@@ -22,6 +22,7 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.ResourceReference.UrlAttributes;
 import org.apache.wicket.response.ByteArrayResponse;
+import org.junit.Before;
 import org.junit.Test;
 
 
@@ -35,10 +36,12 @@ public class PackageResourceReferenceTest extends WicketTestCase
 	private static String[] styles = { null, "style" };
 	private static String[] variations = { null, "var" };
 
-	@Override
-	protected void setUp() throws Exception
+	/**
+	 * @throws Exception
+	 */
+	@Before
+	public void before() throws Exception
 	{
-		super.setUp();
 		// some locale outside those in locales array
 		tester.getSession().setLocale(Locale.CHINA);
 	}

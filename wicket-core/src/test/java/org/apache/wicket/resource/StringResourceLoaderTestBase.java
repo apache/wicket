@@ -18,12 +18,13 @@ package org.apache.wicket.resource;
 
 import java.util.Locale;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Abstract base class providing common test functionality to ensure that all loader implementations
@@ -31,7 +32,7 @@ import org.apache.wicket.util.tester.WicketTester;
  * 
  * @author Chris Turner
  */
-public abstract class StringResourceLoaderTestBase extends TestCase
+public abstract class StringResourceLoaderTestBase extends Assert
 {
 	protected WicketTester tester;
 
@@ -49,8 +50,11 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	 */
 	protected abstract IStringResourceLoader createLoader();
 
-	@Override
-	protected void setUp() throws Exception
+	/**
+	 * @throws Exception
+	 */
+	@Before
+	public void before() throws Exception
 	{
 		tester = new WicketTester(new DummyApplication());
 		component = new DummyComponent("test", tester.getApplication());
@@ -59,8 +63,11 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 		loader = createLoader();
 	}
 
-	@Override
-	protected void tearDown() throws Exception
+	/**
+	 * @throws Exception
+	 */
+	@After
+	public void after() throws Exception
 	{
 		tester.destroy();
 	}
@@ -68,7 +75,8 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	/**
 	 * 
 	 */
-	public void testLoaderValidKeyNoStyleDefaultLocale()
+	@Test
+	public void loaderValidKeyNoStyleDefaultLocale()
 	{
 		String s = loader.loadStringResource(component.getClass(), "test.string",
 			Locale.getDefault(), null, null);
@@ -83,7 +91,8 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	/**
 	 * 
 	 */
-	public void testLoaderInvalidKeyNoStyleDefaultLocale()
+	@Test
+	public void loaderInvalidKeyNoStyleDefaultLocale()
 	{
 		Assert.assertNull("Missing key should return null", loader.loadStringResource(
 			component.getClass(), "unknown.string", Locale.getDefault(), null, null));
@@ -92,7 +101,8 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	/**
 	 * 
 	 */
-	public void testLoaderValidKeyNoStyleAlternativeLocale()
+	@Test
+	public void loaderValidKeyNoStyleAlternativeLocale()
 	{
 		String s = loader.loadStringResource(component.getClass(), "test.string", new Locale("zz"),
 			null, null);
@@ -102,7 +112,8 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	/**
 	 * 
 	 */
-	public void testLoaderInvalidKeyNoStyleAlternativeLocale()
+	@Test
+	public void loaderInvalidKeyNoStyleAlternativeLocale()
 	{
 		Assert.assertNull("Missing key should return null", loader.loadStringResource(
 			component.getClass(), "unknown.string", new Locale("zz"), null, null));
@@ -111,7 +122,8 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	/**
 	 * 
 	 */
-	public void testLoaderValidKeyStyleNoLocale()
+	@Test
+	public void loaderValidKeyStyleNoLocale()
 	{
 		String s = loader.loadStringResource(component.getClass(), "test.string", null, "alt", null);
 		Assert.assertEquals("Resource should be loaded", "Alt test string", s);
@@ -120,5 +132,6 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	/**
 	 * 
 	 */
-	public abstract void testLoaderUnknownResources();
+	@Test
+	public abstract void loaderUnknownResources();
 }

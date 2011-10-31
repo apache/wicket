@@ -16,28 +16,28 @@
  */
 package org.apache.wicket.util.time;
 
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Test cases for this object
  * 
  * @author Jonathan Locke
  */
-public final class TimeOfDayTest extends TestCase
+public final class TimeOfDayTest extends Assert
 {
 	/**
 	 * 
 	 */
+	@Test
 	public void test()
 	{
-		Assert.assertEquals(0, TimeOfDay.MIDNIGHT.hour());
-		Assert.assertEquals(TimeOfDay.MIDNIGHT, TimeOfDay.valueOf(TimeOfDay.MIDNIGHT.next()));
+		assertEquals(0, TimeOfDay.MIDNIGHT.hour());
+		assertEquals(TimeOfDay.MIDNIGHT, TimeOfDay.valueOf(TimeOfDay.MIDNIGHT.next()));
 
 		final TimeOfDay three = TimeOfDay.time(3, 0, TimeOfDay.PM);
 		final TimeOfDay five = TimeOfDay.time(5, 0, TimeOfDay.PM);
 
-		Assert.assertTrue(five.after(three));
+		assertTrue(five.after(three));
 	}
 }

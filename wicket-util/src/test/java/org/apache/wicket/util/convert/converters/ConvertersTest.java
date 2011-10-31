@@ -21,8 +21,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.converter.BigDecimalConverter;
 import org.apache.wicket.util.convert.converter.BooleanConverter;
@@ -35,45 +33,30 @@ import org.apache.wicket.util.convert.converter.FloatConverter;
 import org.apache.wicket.util.convert.converter.IntegerConverter;
 import org.apache.wicket.util.convert.converter.LongConverter;
 import org.apache.wicket.util.convert.converter.ShortConverter;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Tests for the base converters.
  * 
  * @author Eelco Hillenius
  */
-public final class ConvertersTest extends TestCase
+public final class ConvertersTest extends Assert
 {
 	/** Dutch locale for localized testing. */
 	private static final Locale DUTCH_LOCALE = new Locale("nl", "NL");
 
 	/**
-	 * Construct.
-	 */
-	public ConvertersTest()
-	{
-		super();
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public ConvertersTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * @throws Exception
 	 */
-	public void testThousandSeperator() throws Exception
+	@Test
+	public void thousandSeperator() throws Exception
 	{
 		BigDecimalConverter bdc = new BigDecimalConverter();
 		assertEquals(new BigDecimal(3000), bdc.convertToObject("3 000", Locale.FRENCH));
 
 		DoubleConverter dc = new DoubleConverter();
-		assertEquals((double)3000, dc.convertToObject("3 000", Locale.FRENCH));
+		assertEquals(3000, dc.convertToObject("3 000", Locale.FRENCH), 0.001);
 
 	}
 
@@ -87,7 +70,8 @@ public final class ConvertersTest extends TestCase
 	/**
 	 * Test boolean conversions.
 	 */
-	public void testBooleanConversions()
+	@Test
+	public void booleanConversions()
 	{
 		BooleanConverter converter = new BooleanConverter();
 		assertEquals(Boolean.FALSE, converter.convertToObject("", Locale.US));
@@ -109,7 +93,8 @@ public final class ConvertersTest extends TestCase
 	/**
 	 * Test byte conversions.
 	 */
-	public void testByteConversions()
+	@Test
+	public void byteConversions()
 	{
 		ByteConverter converter = new ByteConverter();
 		assertNull(converter.convertToObject("", Locale.US));
@@ -147,13 +132,14 @@ public final class ConvertersTest extends TestCase
 	/**
 	 * Test double conversions.
 	 */
-	public void testDoubleConversions()
+	@Test
+	public void doubleConversions()
 	{
 		DoubleConverter converter = new DoubleConverter();
 		assertEquals("7.1", converter.convertToString(7.1, Locale.US));
 		assertEquals("7,1", converter.convertToString(7.1, DUTCH_LOCALE));
 		assertNull(converter.convertToObject("", Locale.US));
-		assertEquals(1.1, converter.convertToObject("1.1", Locale.US));
+		assertEquals(1.1, converter.convertToObject("1.1", Locale.US), 0.001);
 		assertEquals("1.1", converter.convertToString(1.1, Locale.US));
 		try
 		{
@@ -178,7 +164,8 @@ public final class ConvertersTest extends TestCase
 	/**
 	 * Test float conversions.
 	 */
-	public void testFloatConversions()
+	@Test
+	public void floatConversions()
 	{
 		FloatConverter converter = new FloatConverter();
 		assertNull(converter.convertToObject("", Locale.US));
@@ -207,7 +194,8 @@ public final class ConvertersTest extends TestCase
 	/**
 	 * Test integer conversions.
 	 */
-	public void testIntegerConversions()
+	@Test
+	public void integerConversions()
 	{
 		IntegerConverter converter = new IntegerConverter();
 		assertEquals("7", converter.convertToString(7, Locale.US));
@@ -246,7 +234,8 @@ public final class ConvertersTest extends TestCase
 	/**
 	 * Test long conversions.
 	 */
-	public void testLongConversions()
+	@Test
+	public void longConversions()
 	{
 		LongConverter converter = new LongConverter();
 		assertNull(converter.convertToObject("", Locale.US));
@@ -284,7 +273,8 @@ public final class ConvertersTest extends TestCase
 	/**
 	 * Test short conversions
 	 */
-	public void testShortConversions()
+	@Test
+	public void shortConversions()
 	{
 		ShortConverter converter = new ShortConverter();
 		assertNull(converter.convertToObject("", Locale.US));
@@ -322,7 +312,8 @@ public final class ConvertersTest extends TestCase
 	/**
 	 * Test for character locale conversions.
 	 */
-	public void testCharacterConverter()
+	@Test
+	public void characterConverter()
 	{
 		CharacterConverter converter = new CharacterConverter();
 
@@ -344,7 +335,8 @@ public final class ConvertersTest extends TestCase
 	/**
 	 * Test date locale conversions.
 	 */
-	public void testDateConverter()
+	@Test
+	public void dateConverter()
 	{
 		DateConverter converter = new DateConverter();
 
@@ -384,7 +376,8 @@ public final class ConvertersTest extends TestCase
 	/**
 	 * Test calendar locale conversions.
 	 */
-	public void testCalendarConverter()
+	@Test
+	public void calendarConverter()
 	{
 		CalendarConverter converter = new CalendarConverter();
 
@@ -425,7 +418,8 @@ public final class ConvertersTest extends TestCase
 	 * See WICKET-2878 and
 	 * http://java.sun.com/j2se/1.4.2/docs/api/java/math/BigDecimal.html#BigDecimal%28double%29
 	 */
-	public void testBigDecimalsDoubles()
+	@Test
+	public void bigDecimalsDoubles()
 	{
 		BigDecimal bd = new BigDecimalConverter().convertToObject("0.1", Locale.US);
 		assertTrue(bd.doubleValue() == 0.1d);

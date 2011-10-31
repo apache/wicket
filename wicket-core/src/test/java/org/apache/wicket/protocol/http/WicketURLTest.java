@@ -16,20 +16,21 @@
  */
 package org.apache.wicket.protocol.http;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.request.UrlDecoder;
 import org.apache.wicket.request.UrlEncoder;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author Doug Donohoe
  */
-public class WicketURLTest extends TestCase
+public class WicketURLTest extends Assert
 {
 	/**
 	 * testPathEncoder()
 	 */
-	public void testPathEncoder()
+	@Test
+	public void pathEncoder()
 	{
 		assertEquals("+", UrlEncoder.PATH_INSTANCE.encode("+", "UTF-8"));
 		assertEquals("%20", UrlEncoder.PATH_INSTANCE.encode(" ", "UTF-8"));
@@ -38,7 +39,8 @@ public class WicketURLTest extends TestCase
 	/**
 	 * testQueryEncoder()
 	 */
-	public void testQueryEncoder()
+	@Test
+	public void queryEncoder()
 	{
 		assertEquals("+", UrlEncoder.QUERY_INSTANCE.encode(" ", "UTF-8"));
 		assertEquals("%2B", UrlEncoder.QUERY_INSTANCE.encode("+", "UTF-8"));
@@ -47,7 +49,8 @@ public class WicketURLTest extends TestCase
 	/**
 	 * testPathDecoder()
 	 */
-	public void testPathDecoder()
+	@Test
+	public void pathDecoder()
 	{
 		assertEquals("+", UrlDecoder.PATH_INSTANCE.decode("+", "UTF-8"));
 		assertEquals(" ", UrlDecoder.PATH_INSTANCE.decode("%20", "UTF-8"));
@@ -56,7 +59,8 @@ public class WicketURLTest extends TestCase
 	/**
 	 * testQueryDecoder()
 	 */
-	public void testQueryDecoder()
+	@Test
+	public void queryDecoder()
 	{
 		assertEquals(" ", UrlDecoder.QUERY_INSTANCE.decode("+", "UTF-8"));
 		assertEquals("+", UrlDecoder.QUERY_INSTANCE.decode("%2B", "UTF-8"));

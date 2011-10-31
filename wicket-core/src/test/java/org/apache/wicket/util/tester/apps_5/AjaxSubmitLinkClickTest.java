@@ -21,6 +21,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.util.tester.apps_5.MockPageWithFormAndLink.MockPojo;
+import org.junit.Before;
 
 
 /**
@@ -32,14 +33,14 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 {
 	private boolean linkClicked;
 
-	@Override
-	protected void setUp() throws Exception
+	/**
+	 * 
+	 */
+	@Before
+	public void before()
 	{
-		super.setUp();
-
 		linkClicked = false;
 	}
-
 
 	/**
 	 * 

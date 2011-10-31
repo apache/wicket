@@ -22,6 +22,7 @@ import org.apache.wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import org.apache.wicket.protocol.http.documentvalidation.Tag;
 import org.apache.wicket.protocol.http.documentvalidation.TextContent;
 import org.apache.wicket.util.tester.DiffUtil;
+import org.junit.Test;
 
 
 /**
@@ -34,7 +35,8 @@ public class PagedTableTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testPagedTable() throws Exception
+	@Test
+	public void pagedTable() throws Exception
 	{
 		tester.startPage(PagedTablePage.class);
 		PagedTablePage page = (PagedTablePage)tester.getLastRenderedPage();

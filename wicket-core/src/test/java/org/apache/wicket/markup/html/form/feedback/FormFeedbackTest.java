@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form.feedback;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * @author jcompagner
@@ -28,7 +29,8 @@ public class FormFeedbackTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testFormComponentFeedbackBorder() throws Exception
+	@Test
+	public void formComponentFeedbackBorder() throws Exception
 	{
 		Page page = tester.startPage(FeedbackFormPage.class);
 		tester.assertRenderedPage(FeedbackFormPage.class);
@@ -41,7 +43,8 @@ public class FormFeedbackTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testFormComponentFeedbackIndicator() throws Exception
+	@Test
+	public void formComponentFeedbackIndicator() throws Exception
 	{
 		Page page = tester.startPage(FeedbackIndicatorFormPage.class);
 		tester.assertRenderedPage(FeedbackIndicatorFormPage.class);

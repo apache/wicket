@@ -28,6 +28,7 @@ import org.apache.wicket.util.file.IFileCleaner;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.upload.DiskFileItemFactory;
 import org.apache.wicket.util.upload.FileItem;
+import org.junit.Test;
 
 
 /**
@@ -39,21 +40,14 @@ public class FileUploadTest extends WicketTestCase
 {
 
 	/**
-	 * Construct.
-	 */
-	public FileUploadTest()
-	{
-		super("Test of FileUpload");
-	}
-
-	/**
 	 * Test that when getting an input stream a new input stream is returned every time.
 	 * 
 	 * Also test that the inputstream is saved internally for later closing.
 	 * 
 	 * @throws Exception
 	 */
-	public void testGetInputStream() throws Exception
+	@Test
+	public void getInputStream() throws Exception
 	{
 		IFileCleaner fileUploadCleaner = new FileCleaner();
 
@@ -105,7 +99,8 @@ public class FileUploadTest extends WicketTestCase
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3715">WICKET-3715</a>
 	 * @throws IOException
 	 */
-	public void testWriteToTempFile() throws IOException
+	@Test
+	public void writeToTempFile() throws IOException
 	{
 		tester.startPage(TestPage.class);
 

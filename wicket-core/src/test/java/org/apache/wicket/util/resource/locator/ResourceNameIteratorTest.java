@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.Locale;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 
 /**
@@ -31,7 +32,8 @@ public class ResourceNameIteratorTest extends WicketTestCase
 	/**
 	 * Asserting no duplicated locale sufix get iterated
 	 */
-	public void testLocaleResourceNameIterator()
+	@Test
+	public void localeResourceNameIterator()
 	{
 		Locale locale = new Locale("a", "b", "c");
 		LocaleResourceNameIterator iterator = new LocaleResourceNameIterator(locale, false);
@@ -73,7 +75,8 @@ public class ResourceNameIteratorTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testStyleAndVariationResourceNameIterator()
+	@Test
+	public void styleAndVariationResourceNameIterator()
 	{
 		StyleAndVariationResourceNameIterator iterator = new StyleAndVariationResourceNameIterator(
 			null, null);
@@ -106,7 +109,8 @@ public class ResourceNameIteratorTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testNoDuplicateVariations()
+	@Test
+	public void noDuplicateVariations()
 	{
 		String path = "patch.extension";
 		String style = null;

@@ -23,6 +23,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.util.value.ValueMap;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,20 +39,10 @@ public class SimplePageTest extends WicketTestCase
 	private static final Logger log = LoggerFactory.getLogger(SimplePageTest.class);
 
 	/**
-	 * Create the test.
-	 * 
-	 * @param name
-	 *            The test name
-	 */
-	public SimplePageTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage() throws Exception
+	@Test
+	public void renderHomePage() throws Exception
 	{
 		executeTest(SimplePage.class, "SimplePageExpectedResult.html");
 	}
@@ -59,7 +50,8 @@ public class SimplePageTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_2() throws Exception
+	@Test
+	public void renderHomePage_2() throws Exception
 	{
 		executeTest(SimplePage.class, "SimplePageExpectedResult.html");
 		String document = tester.getLastResponseAsString();
@@ -107,7 +99,8 @@ public class SimplePageTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_2a() throws Exception
+	@Test
+	public void renderHomePage_2a() throws Exception
 	{
 		// Render the component without having rendered the page previously
 		SimplePage page = new SimplePage();
@@ -150,7 +143,8 @@ public class SimplePageTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_2b() throws Exception
+	@Test
+	public void renderHomePage_2b() throws Exception
 	{
 		// Render the component without having rendered the page previously
 		SimplePage page = new SimplePage();
@@ -208,7 +202,8 @@ public class SimplePageTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_3() throws Exception
+	@Test
+	public void renderHomePage_3() throws Exception
 	{
 		executeTest(SimplePage_3.class, "SimplePageExpectedResult_3.html");
 	}
@@ -216,7 +211,8 @@ public class SimplePageTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_4() throws Exception
+	@Test
+	public void renderHomePage_4() throws Exception
 	{
 		boolean hit = false;
 		try
@@ -237,7 +233,8 @@ public class SimplePageTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_5() throws Exception
+	@Test
+	public void renderHomePage_5() throws Exception
 	{
 		boolean hit = false;
 		try
@@ -254,7 +251,8 @@ public class SimplePageTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_6() throws Exception
+	@Test
+	public void renderHomePage_6() throws Exception
 	{
 		boolean hit = false;
 		try
@@ -271,7 +269,8 @@ public class SimplePageTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_7() throws Exception
+	@Test
+	public void renderHomePage_7() throws Exception
 	{
 		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(false);
 		// This is for issue https://issues.apache.org/jira/browse/WICKET-590
@@ -281,7 +280,8 @@ public class SimplePageTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_8() throws Exception
+	@Test
+	public void renderHomePage_8() throws Exception
 	{
 		boolean hit = false;
 		try
@@ -298,7 +298,8 @@ public class SimplePageTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_9() throws Exception
+	@Test
+	public void renderHomePage_9() throws Exception
 	{
 		executeTest(SimplePage_9.class, "SimplePageExpectedResult_9.html");
 	}
@@ -306,7 +307,8 @@ public class SimplePageTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_10() throws Exception
+	@Test
+	public void renderHomePage_10() throws Exception
 	{
 		executeTest(new SimplePage_10(false), "SimplePageExpectedResult_10.html");
 		tester.startPage(new SimplePage_10(true));
@@ -317,7 +319,8 @@ public class SimplePageTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_11() throws Exception
+	@Test
+	public void renderHomePage_11() throws Exception
 	{
 		executeTest(SimplePage_11.class, "SimplePageExpectedResult_11.html");
 	}
@@ -325,7 +328,8 @@ public class SimplePageTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_12() throws Exception
+	@Test
+	public void renderHomePage_12() throws Exception
 	{
 		executeTest(SimplePage_12.class, "SimplePageExpectedResult_12.html");
 	}
@@ -333,7 +337,8 @@ public class SimplePageTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_13() throws Exception
+	@Test
+	public void renderHomePage_13() throws Exception
 	{
 		executeTest(SimplePage_13.class, "SimplePageExpectedResult_13.html");
 	}
@@ -341,7 +346,8 @@ public class SimplePageTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_14() throws Exception
+	@Test
+	public void renderHomePage_14() throws Exception
 	{
 		executeTest(SimplePage_14.class, "SimplePageExpectedResult_14.html");
 	}
@@ -349,7 +355,8 @@ public class SimplePageTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_15() throws Exception
+	@Test
+	public void renderHomePage_15() throws Exception
 	{
 		executeTest(SimplePage_15.class, "SimplePageExpectedResult_15.html");
 	}
@@ -357,7 +364,8 @@ public class SimplePageTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_16() throws Exception
+	@Test
+	public void renderHomePage_16() throws Exception
 	{
 		executeTest(SimplePage_16.class, "SimplePageExpectedResult_16.html");
 	}

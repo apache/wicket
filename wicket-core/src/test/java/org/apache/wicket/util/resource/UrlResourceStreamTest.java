@@ -22,22 +22,23 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.util.lang.Bytes;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * 
  * @author Kent Tong
  */
-public class UrlResourceStreamTest extends TestCase
+public class UrlResourceStreamTest extends Assert
 {
 	/**
 	 * lastModified() shouldn't change the content length if the file isn't really changed.
 	 * 
 	 * @throws IOException
 	 */
-	public void testLastModifiedForResourceInJar() throws IOException
+	@Test
+	public void lastModifiedForResourceInJar() throws IOException
 	{
 		String anyClassInJarFile = "/java/lang/String.class";
 		URL url = getClass().getResource(anyClassInJarFile);
@@ -54,7 +55,8 @@ public class UrlResourceStreamTest extends TestCase
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
 	 */
-	public void testLoadJustOnce() throws IOException, ResourceStreamNotFoundException
+	@Test
+	public void loadJustOnce() throws IOException, ResourceStreamNotFoundException
 	{
 		String anyClassInJarFile = "/java/lang/String.class";
 		URL realURL = getClass().getResource(anyClassInJarFile);

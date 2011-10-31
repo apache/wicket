@@ -24,6 +24,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.stateless.pages.HomePage;
 import org.apache.wicket.stateless.pages.LoginPage;
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Test;
 
 /**
  * A test to detect temporary sessions. However since the http stack has been mocked for this test,
@@ -51,7 +52,8 @@ public class TemporarySessionTest extends WicketTestCase
 	/**
 	 * Test if we can keep a session temporary.
 	 */
-	public void testSessionIsTemporary()
+	@Test
+	public void sessionIsTemporary()
 	{
 		tester.startPage(LoginPage.class);
 		assertTrue(tester.getSession().isTemporary());

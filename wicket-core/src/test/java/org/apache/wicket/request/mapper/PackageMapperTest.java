@@ -33,6 +33,7 @@ import org.apache.wicket.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.mapper.PackageMapperTest.OuterPage.InnerPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.PackageName;
+import org.junit.Test;
 
 /**
  * Tests for {@link PackageMapper}
@@ -41,13 +42,6 @@ public class PackageMapperTest extends AbstractMapperTest
 {
 
 	private static final String ALIAS = "alias";
-
-	/**
-	 * Construct.
-	 */
-	public PackageMapperTest()
-	{
-	}
 
 	private final PackageMapper encoder = new PackageMapper(PackageName.forClass(MockPage.class))
 	{
@@ -103,7 +97,8 @@ public class PackageMapperTest extends AbstractMapperTest
 	/**
 	 * 
 	 */
-	public void testDecode1()
+	@Test
+	public void decode1()
 	{
 		Url url = Url.parse(PAGE_CLASS_NAME);
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -118,7 +113,8 @@ public class PackageMapperTest extends AbstractMapperTest
 	/**
 	 * 
 	 */
-	public void testDecode2()
+	@Test
+	public void decode2()
 	{
 		Url url = Url.parse(PAGE_CLASS_NAME + "/indexed1?a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -139,7 +135,8 @@ public class PackageMapperTest extends AbstractMapperTest
 	/**
 	 * 
 	 */
-	public void testDecode3()
+	@Test
+	public void decode3()
 	{
 		Url url = Url.parse(PAGE_CLASS_NAME + "?15");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -152,7 +149,8 @@ public class PackageMapperTest extends AbstractMapperTest
 	/**
 	 * 
 	 */
-	public void testDecode4()
+	@Test
+	public void decode4()
 	{
 		Url url = Url.parse(PAGE_CLASS_NAME + "/i1/i2?15&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -170,7 +168,8 @@ public class PackageMapperTest extends AbstractMapperTest
 	/**
 	 * 
 	 */
-	public void testDecode5()
+	@Test
+	public void decode5()
 	{
 		Url url = Url.parse(PAGE_CLASS_NAME + "?15-ILinkListener-foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -190,7 +189,8 @@ public class PackageMapperTest extends AbstractMapperTest
 	/**
 	 * 
 	 */
-	public void testDecode6()
+	@Test
+	public void decode6()
 	{
 		Url url = Url.parse(PAGE_CLASS_NAME + "/i1/i2?15-ILinkListener-foo-bar&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -213,7 +213,8 @@ public class PackageMapperTest extends AbstractMapperTest
 	/**
 	 * 
 	 */
-	public void testDecode7()
+	@Test
+	public void decode7()
 	{
 		Url url = Url.parse(PAGE_CLASS_NAME + "?15-ILinkListener.4-foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -233,7 +234,8 @@ public class PackageMapperTest extends AbstractMapperTest
 	/**
 	 * 
 	 */
-	public void testDecode8()
+	@Test
+	public void decode8()
 	{
 		Url url = Url.parse(PAGE_CLASS_NAME + "/i1/i2?15-5.ILinkListener-foo-bar&a=b&b=c");
 
@@ -251,31 +253,24 @@ public class PackageMapperTest extends AbstractMapperTest
 	/**
 	 * 
 	 */
-	public void testDecode9()
+	@Test(expected = StalePageException.class)
+	public void decode9()
 	{
 		Url url = Url.parse(PAGE_CLASS_NAME + "/i1/i2?15-5.ILinkListener-foo-bar&a=b&b=c");
 
 		context.setNextPageRenderCount(6);
 
-		try
-		{
-			IRequestHandler handler = encoder.mapRequest(getRequest(url));
+		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-			((IPageRequestHandler)handler).getPage();
+		((IPageRequestHandler)handler).getPage();
 
-			// should never get here
-			assertFalse(true);
-		}
-		catch (StalePageException e)
-		{
-
-		}
 	}
 
 	/**
 	 * WICKET-2993
 	 */
-	public void testDecode10()
+	@Test
+	public void decode10()
 	{
 		// use String.class but any other non-Page will do the job as well
 		Url url = Url.parse(String.class.getSimpleName());
@@ -287,7 +282,8 @@ public class PackageMapperTest extends AbstractMapperTest
 	/**
 	 * 
 	 */
-	public void testEncode1()
+	@Test
+	public void encode1()
 	{
 		PageProvider provider = new PageProvider(MockPage.class, new PageParameters());
 		provider.setPageSource(context);
@@ -299,7 +295,8 @@ public class PackageMapperTest extends AbstractMapperTest
 	/**
 	 * 
 	 */
-	public void testEncode2()
+	@Test
+	public void encode2()
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "i1");
@@ -316,7 +313,8 @@ public class PackageMapperTest extends AbstractMapperTest
 	/**
 	 * 
 	 */
-	public void testEncode3()
+	@Test
+	public void encode3()
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "i1");
@@ -335,7 +333,8 @@ public class PackageMapperTest extends AbstractMapperTest
 	/**
 	 * 
 	 */
-	public void testEncode4()
+	@Test
+	public void encode4()
 	{
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
@@ -354,7 +353,8 @@ public class PackageMapperTest extends AbstractMapperTest
 	/**
 	 * 
 	 */
-	public void testEncode5()
+	@Test
+	public void encode5()
 	{
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
@@ -377,7 +377,8 @@ public class PackageMapperTest extends AbstractMapperTest
 	/**
 	 * 
 	 */
-	public void testEncode6()
+	@Test
+	public void encode6()
 	{
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
@@ -403,7 +404,8 @@ public class PackageMapperTest extends AbstractMapperTest
 	/**
 	 * 
 	 */
-	public void testEncode7()
+	@Test
+	public void encode7()
 	{
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
@@ -430,7 +432,8 @@ public class PackageMapperTest extends AbstractMapperTest
 	/**
 	 * 
 	 */
-	public void testEncode8()
+	@Test
+	public void encode8()
 	{
 		MockPage page = new MockPage(15);
 		page.setBookmarkable(true);
@@ -469,7 +472,8 @@ public class PackageMapperTest extends AbstractMapperTest
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-3838
 	 */
-	public void testEncodeInnerClass()
+	@Test
+	public void encodeInnerClass()
 	{
 		InnerPage page = new OuterPage.InnerPage();
 		IPageProvider provider = new PageProvider(page);
@@ -483,7 +487,8 @@ public class PackageMapperTest extends AbstractMapperTest
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-3838
 	 */
-	public void testDecodeInnerClass()
+	@Test
+	public void decodeInnerClass()
 	{
 		Url url = Url.parse("PackageMapperTest$OuterPage$InnerPage");
 		IRequestHandler handler = innerClassEncoder.mapRequest(getRequest(url));
@@ -498,7 +503,8 @@ public class PackageMapperTest extends AbstractMapperTest
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-3941
 	 */
-	public void testEncodeAlias()
+	@Test
+	public void encodeAlias()
 	{
 		MockPage page = new MockPage(15);
 		page.setBookmarkable(true);
@@ -516,7 +522,8 @@ public class PackageMapperTest extends AbstractMapperTest
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-3941
 	 */
-	public void testDecodeAlias()
+	@Test
+	public void decodeAlias()
 	{
 		Url url = Url.parse(ALIAS + "?15");
 		IRequestHandler handler = aliasEncoder.mapRequest(getRequest(url));

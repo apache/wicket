@@ -23,6 +23,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.stateless.pages.HomePage;
 import org.apache.wicket.stateless.pages.LoginPage;
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Test;
 
 /**
  * 
@@ -49,7 +50,8 @@ public class StatelessFormTest extends WicketTestCase
 	/**
 	 * Login through the login page.
 	 */
-	public void testLogin()
+	@Test
+	public void login()
 	{
 		tester.startPage(LOGIN);
 		tester.assertRenderedPage(LOGIN);
@@ -63,7 +65,8 @@ public class StatelessFormTest extends WicketTestCase
 	/**
 	 * test initialization of component on stateless components
 	 */
-	public void testOnInitializationForStatelessComponents()
+	@Test
+	public void onInitializationForStatelessComponents()
 	{
 		LoginPage page = new LoginPage();
 		assertFalse(page.isPageInitialized());

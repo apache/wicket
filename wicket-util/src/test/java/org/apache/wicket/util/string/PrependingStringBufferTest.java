@@ -16,18 +16,20 @@
  */
 package org.apache.wicket.util.string;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author jcompagner
  */
-public class PrependingStringBufferTest extends TestCase
+public class PrependingStringBufferTest extends Assert
 {
 
 	/**
 	 * Test method for 'org.apache.wicket.util.string.PrependingStringBuffer.prepend(String)'
 	 */
-	public void testPrepend()
+	@Test
+	public void prepend()
 	{
 		PrependingStringBuffer psb = new PrependingStringBuffer();
 		psb.prepend("test1");
@@ -41,7 +43,8 @@ public class PrependingStringBufferTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testLargeBegin() throws Exception
+	@Test
+	public void largeBegin() throws Exception
 	{
 		PrependingStringBuffer psb = new PrependingStringBuffer("123456789012345678901234567890");
 		assertEquals("123456789012345678901234567890", psb.toString());
@@ -50,7 +53,8 @@ public class PrependingStringBufferTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testCharPrepend() throws Exception
+	@Test
+	public void charPrepend() throws Exception
 	{
 		PrependingStringBuffer psb = new PrependingStringBuffer("234567890");
 		psb.prepend('1');
@@ -64,7 +68,8 @@ public class PrependingStringBufferTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testEqualsReflexive() throws Exception
+	@Test
+	public void equalsReflexive() throws Exception
 	{
 		PrependingStringBuffer psb = new PrependingStringBuffer("foo");
 		assertTrue(psb.equals(psb));
@@ -76,7 +81,8 @@ public class PrependingStringBufferTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testHash() throws Exception
+	@Test
+	public void hash() throws Exception
 	{
 		PrependingStringBuffer foo = new PrependingStringBuffer("foo");
 		PrependingStringBuffer bar = new PrependingStringBuffer("foo");

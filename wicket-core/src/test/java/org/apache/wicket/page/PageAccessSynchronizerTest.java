@@ -261,6 +261,9 @@ public class PageAccessSynchronizerTest extends Assert
 		runContentionTest(10, 20, Duration.seconds(10));
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	@Test
 	public void testSerialization() throws Exception
 	{

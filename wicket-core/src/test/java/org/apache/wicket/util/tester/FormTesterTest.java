@@ -37,6 +37,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.MockFormFileUploadPage.MockDomainObjectFileUpload;
 import org.apache.wicket.util.tester.MockFormPage.MockDomainObject;
+import org.junit.Test;
 
 
 /**
@@ -46,18 +47,12 @@ import org.apache.wicket.util.tester.MockFormPage.MockDomainObject;
  */
 public class FormTesterTest extends WicketTestCase
 {
-	/**
-	 * Construct.
-	 */
-	public FormTesterTest()
-	{
-		super("Form tester test");
-	}
 
 	/**
 	 * Test that normal use of the formtester (no file uploads) works.
 	 */
-	public void testFormTester()
+	@Test
+	public void formTester()
 	{
 		tester.startPage(MockFormPage.class);
 		MockFormPage page = (MockFormPage)tester.getLastRenderedPage();
@@ -81,7 +76,8 @@ public class FormTesterTest extends WicketTestCase
 	}
 
 	/**	 */
-	public void testCheckboxValuesCanBeSelectedWithBoolean()
+	@Test
+	public void checkboxValuesCanBeSelectedWithBoolean()
 	{
 		tester.startPage(MockFormPage.class);
 		MockFormPage page = (MockFormPage)tester.getLastRenderedPage();
@@ -105,7 +101,8 @@ public class FormTesterTest extends WicketTestCase
 	 * {@link FormTester#setFile(String, org.apache.wicket.util.file.File, String)} to test that
 	 * upload to a FileUploadField works.
 	 */
-	public void testAddFile()
+	@Test
+	public void addFile()
 	{
 		tester.startPage(MockFormFileUploadPage.class);
 		MockFormFileUploadPage page = (MockFormFileUploadPage)tester.getLastRenderedPage();
@@ -139,7 +136,8 @@ public class FormTesterTest extends WicketTestCase
 	 * {@link FormTester#setFile(String, org.apache.wicket.util.file.File, String)} to test that
 	 * upload to a FileUploadField works.
 	 */
-	public void testAddBinaryFile()
+	@Test
+	public void addBinaryFile()
 	{
 		tester.startPage(MockFormFileUploadPage.class);
 		MockFormFileUploadPage page = (MockFormFileUploadPage)tester.getLastRenderedPage();
@@ -174,7 +172,8 @@ public class FormTesterTest extends WicketTestCase
 	/**
 	 * Test that formTester deal with Multipart form correctly when no actual upload
 	 */
-	public void testSubmitWithoutUploadFile()
+	@Test
+	public void submitWithoutUploadFile()
 	{
 		// tester.startPage(MockFormFileUploadPage.class, new PageParameters("required=true"));
 		tester.startPage(MockFormFileUploadPage.class);
@@ -195,7 +194,8 @@ public class FormTesterTest extends WicketTestCase
 	/**
 	 * Test that formTester deal with Multipart form correctly when no actual upload
 	 */
-	public void testSubmitMultipartForm()
+	@Test
+	public void submitMultipartForm()
 	{
 		tester.startPage(MockFormFileUploadPage.class, new PageParameters().set("required", false));
 		MockFormFileUploadPage page = (MockFormFileUploadPage)tester.getLastRenderedPage();
@@ -217,7 +217,8 @@ public class FormTesterTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testNoParametersCreatedForDisabledComponents() throws Exception
+	@Test
+	public void noParametersCreatedForDisabledComponents() throws Exception
 	{
 		tester.startPage(new MockFormPage()
 		{
@@ -252,7 +253,8 @@ public class FormTesterTest extends WicketTestCase
 		}
 	}
 
-	public void testWantOnChangeSelectionNotification()
+	@Test
+	public void wantOnChangeSelectionNotification()
 	{
 		class TestPage extends WebPage implements IMarkupResourceStreamProvider
 		{

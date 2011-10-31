@@ -16,20 +16,21 @@
  */
 package org.apache.wicket.page.persistent.disk;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.pageStore.PageWindowManager;
 import org.apache.wicket.pageStore.PageWindowManager.PageWindow;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author Matej Knopp
  */
-public class PageWindowManagerTest extends TestCase
+public class PageWindowManagerTest extends Assert
 {
 	/**
 	 * 
 	 */
-	public void testAddRemove()
+	@Test
+	public void addRemove()
 	{
 		PageWindowManager manager = new PageWindowManager(300);
 		PageWindow window;
@@ -57,7 +58,8 @@ public class PageWindowManagerTest extends TestCase
 	/**
 	 * 
 	 */
-	public void testPageWindowCycle()
+	@Test
+	public void pageWindowCycle()
 	{
 		PageWindowManager manager = new PageWindowManager(100);
 		PageWindow window;
@@ -96,7 +98,7 @@ public class PageWindowManagerTest extends TestCase
 		assertWindow(window, 6, 20, 30);
 
 		assertNull(manager.getPageWindow(2));
-		assertNotNull(manager.getPageWindow( 3));
+		assertNotNull(manager.getPageWindow(3));
 
 		window = manager.createPageWindow(6, 60);
 		assertWindow(window, 6, 20, 60);
@@ -104,9 +106,9 @@ public class PageWindowManagerTest extends TestCase
 		assertNull(manager.getPageWindow(3));
 
 		window = manager.createPageWindow(7, 20);
-		assertWindow(window,7, 80, 20);
+		assertWindow(window, 7, 80, 20);
 
-		assertNotNull(manager.getPageWindow( 7));
+		assertNotNull(manager.getPageWindow(7));
 
 		// should start at the beginning again
 
@@ -116,18 +118,18 @@ public class PageWindowManagerTest extends TestCase
 		assertNull(manager.getPageWindow(5));
 		assertNotNull(manager.getPageWindow(6));
 
-		window = manager.createPageWindow( 9, 20);
+		window = manager.createPageWindow(9, 20);
 		assertWindow(window, 9, 10, 20);
 
 		assertNull(manager.getPageWindow(6));
 		assertNotNull(manager.getPageWindow(7));
 
 		window = manager.createPageWindow(10, 20);
-		assertWindow(window,10, 30, 20);
+		assertWindow(window, 10, 30, 20);
 
 		assertNull(manager.getPageWindow(6));
 		assertNotNull(manager.getPageWindow(7));
-		
+
 		// make sure when replacing a page that's not last the old "instance" is
 		// not valid anymore
 
@@ -140,8 +142,7 @@ public class PageWindowManagerTest extends TestCase
 
 	private void assertWindow(PageWindow window, int pageId, int filePartOffset, int filePartSize)
 	{
-		assertTrue(window.getPageId() == pageId && 
-				window.getFilePartOffset() == filePartOffset &&
-				window.getFilePartSize() == filePartSize);
+		assertTrue(window.getPageId() == pageId && window.getFilePartOffset() == filePartOffset &&
+			window.getFilePartSize() == filePartSize);
 	}
 }

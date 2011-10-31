@@ -62,6 +62,7 @@ public class TextTemplateResourceReferenceTest extends WicketTestCase
 		implements
 			IMarkupResourceStreamProvider
 	{
+		private static final long serialVersionUID = 1L;
 
 		@Override
 		public void renderHead(IHeaderResponse response)

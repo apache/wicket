@@ -35,14 +35,11 @@ public class MultiRequestCycleListenerCallOrderTest extends WicketTestCase
 	private MultiRequestCycleListenerCallOrderApplication application;
 
 	/**
-	 * @throws Exception
+	 * 
 	 */
-	@Override
 	@Before
-	public void setUp() throws Exception
+	public void before()
 	{
-		super.setUp();
-
 		application = (MultiRequestCycleListenerCallOrderApplication)tester.getApplication();
 		application.callSequence.clear();
 	}

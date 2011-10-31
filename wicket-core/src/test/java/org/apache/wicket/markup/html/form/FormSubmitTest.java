@@ -21,6 +21,8 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.NestedFormsPage.NestableForm;
 import org.apache.wicket.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Please see <a href="http://cwiki.apache.org/WICKET/nested-forms.html">"Nested Forms"</a> for more
@@ -37,12 +39,10 @@ public class FormSubmitTest extends WicketTestCase
 
 	/**
 	 * 
-	 * @see org.apache.wicket.WicketTestCase#setUp()
 	 */
-	@Override
-	protected void setUp() throws Exception
+	@Before
+	public void before()
 	{
-		super.setUp();
 		tester.startPage(new NestedFormsPage());
 		page = tester.getLastRenderedPage();
 		outerForm = (NestableForm)page.get("outerForm");
@@ -53,7 +53,8 @@ public class FormSubmitTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testAllFormsEnabledSubmitOuterForm()
+	@Test
+	public void allFormsEnabledSubmitOuterForm()
 	{
 		assertEnabledState(true, true, true);
 
@@ -67,7 +68,8 @@ public class FormSubmitTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testAllFormsEnabledSubmitMiddleForm()
+	@Test
+	public void allFormsEnabledSubmitMiddleForm()
 	{
 		assertEnabledState(true, true, true);
 
@@ -81,7 +83,8 @@ public class FormSubmitTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testAllFormsEnabledSubmitInnerForm()
+	@Test
+	public void allFormsEnabledSubmitInnerForm()
 	{
 		assertEnabledState(true, true, true);
 
@@ -95,7 +98,8 @@ public class FormSubmitTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testMiddleFormDisabledSubmitOuterForm()
+	@Test
+	public void middleFormDisabledSubmitOuterForm()
 	{
 		// disable middle form
 		middleForm.setEnabled(false);
@@ -112,7 +116,8 @@ public class FormSubmitTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testInnerFormDisabledSubmitOuterForm()
+	@Test
+	public void innerFormDisabledSubmitOuterForm()
 	{
 		// disable middle form
 		innerForm.setEnabled(false);
@@ -129,7 +134,8 @@ public class FormSubmitTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testSubmitDisabledOuterForm()
+	@Test
+	public void submitDisabledOuterForm()
 	{
 		outerForm.setEnabled(false);
 		assertEnabledState(false, true, true);
@@ -151,7 +157,8 @@ public class FormSubmitTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testErrorOnInnerFormSubmitOuterForm()
+	@Test
+	public void errorOnInnerFormSubmitOuterForm()
 	{
 		assertEnabledState(true, true, true);
 
@@ -164,7 +171,8 @@ public class FormSubmitTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testErrorOnMiddleFormSubmitOuterForm()
+	@Test
+	public void errorOnMiddleFormSubmitOuterForm()
 	{
 		assertEnabledState(true, true, true);
 
@@ -177,7 +185,8 @@ public class FormSubmitTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testErrorOnMiddleFormSubmitMiddleForm()
+	@Test
+	public void errorOnMiddleFormSubmitMiddleForm()
 	{
 		assertEnabledState(true, true, true);
 
@@ -190,7 +199,8 @@ public class FormSubmitTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testErrorOnInnerFormSubmitMiddleForm()
+	@Test
+	public void errorOnInnerFormSubmitMiddleForm()
 	{
 		assertEnabledState(true, true, true);
 
@@ -203,7 +213,8 @@ public class FormSubmitTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testMiddleFormDisabledErrorOnOuterFormSubmitOuterForm()
+	@Test
+	public void middleFormDisabledErrorOnOuterFormSubmitOuterForm()
 	{
 		middleForm.setEnabled(false);
 		assertEnabledState(true, false, true);
@@ -217,7 +228,8 @@ public class FormSubmitTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testErrorOnInnerFormDisabledMiddleFormSubmitOuterForm()
+	@Test
+	public void errorOnInnerFormDisabledMiddleFormSubmitOuterForm()
 	{
 		middleForm.setEnabled(false);
 		assertEnabledState(true, false, true);

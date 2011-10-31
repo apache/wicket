@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 
 /**
@@ -27,20 +28,10 @@ import org.apache.wicket.WicketTestCase;
 public class AutolinkTest extends WicketTestCase
 {
 	/**
-	 * Create the test.
-	 * 
-	 * @param name
-	 *            The test name
-	 */
-	public AutolinkTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_1() throws Exception
+	@Test
+	public void renderHomePage_1() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
 		tester.getApplication().getResourceSettings().setParentFolderPlaceholder("$up$");
@@ -50,7 +41,8 @@ public class AutolinkTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_2() throws Exception
+	@Test
+	public void renderHomePage_2() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
 		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
@@ -60,7 +52,8 @@ public class AutolinkTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_3() throws Exception
+	@Test
+	public void renderHomePage_3() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
 		executeTest(AutolinkPage_3.class, "AutolinkPageExpectedResult_3.html");
@@ -69,7 +62,8 @@ public class AutolinkTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_4() throws Exception
+	@Test
+	public void renderHomePage_4() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
 		executeTest(AutolinkPage_4.class, "AutolinkPageExpectedResult_4.html");

@@ -21,15 +21,15 @@ import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import junit.framework.TestCase;
-
+import org.junit.Assert;
+import org.junit.Test;
 import org.xml.sax.SAXException;
 
 
 /**
  * 
  */
-public class WebXmlFileTest extends TestCase
+public class WebXmlFileTest extends Assert
 {
 	/**
 	 * 
@@ -37,6 +37,7 @@ public class WebXmlFileTest extends TestCase
 	 * @throws SAXException
 	 * @throws IOException
 	 */
+	@Test
 	public void test_filter() throws ParserConfigurationException, SAXException, IOException
 	{
 		filterOrServlet(false);
@@ -48,6 +49,7 @@ public class WebXmlFileTest extends TestCase
 	 * @throws SAXException
 	 * @throws IOException
 	 */
+	@Test
 	public void test_servlet() throws ParserConfigurationException, SAXException, IOException
 	{
 		filterOrServlet(true);

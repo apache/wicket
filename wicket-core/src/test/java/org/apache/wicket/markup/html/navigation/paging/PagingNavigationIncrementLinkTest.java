@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.markup.html.navigation.paging;
 
+import org.junit.Before;
+import org.junit.Test;
+
 
 /**
  * Testcase for the navigation increment link.
@@ -24,16 +27,6 @@ package org.apache.wicket.markup.html.navigation.paging;
  */
 public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationTest
 {
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 *            the name of the test
-	 */
-	public PagingNavigationIncrementLinkTest(String name)
-	{
-		super(name);
-	}
 
 	/** the mock pageable driver. */
 	private MockPageable mock;
@@ -43,17 +36,17 @@ public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationT
 	 * 
 	 * @throws Exception
 	 */
-	@Override
-	public void setUp() throws Exception
+	@Before
+	public void before() throws Exception
 	{
-		super.setUp();
 		mock = new MockPageable();
 	}
 
 	/**
 	 * Performs the forward navigation by incrementing one page.
 	 */
-	public void testGetPageNumberPositive()
+	@Test
+	public void getPageNumberPositive()
 	{
 		PagingNavigationIncrementLink<Void> link = new PagingNavigationIncrementLink<Void>("xx",
 			mock, 1);
@@ -69,7 +62,8 @@ public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationT
 	/**
 	 * Performs the backward navigation by decrementing one page.
 	 */
-	public void testGetPageNumberNegative()
+	@Test
+	public void getPageNumberNegative()
 	{
 		PagingNavigationIncrementLink<Void> link = new PagingNavigationIncrementLink<Void>("xx",
 			mock, -1);
@@ -88,7 +82,8 @@ public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationT
 	/**
 	 * Performs the forward navigation by incrementing two pages.
 	 */
-	public void testGetPageNumberTwo()
+	@Test
+	public void getPageNumberTwo()
 	{
 		PagingNavigationIncrementLink<Void> link = new PagingNavigationIncrementLink<Void>("xx",
 			mock, 2);
@@ -110,7 +105,8 @@ public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationT
 	/**
 	 * Checks the logic behind the isFirst and isLast page methods.
 	 */
-	public void testIsFirstLastPage()
+	@Test
+	public void isFirstLastPage()
 	{
 		PagingNavigationIncrementLink<Void> link = new PagingNavigationIncrementLink<Void>("xx",
 			mock, 0);

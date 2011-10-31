@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.junit.Before;
 
 /**
  * @author Matej Knopp
@@ -201,10 +202,9 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 	};
 
 	@Override
-	protected void setUp() throws Exception
+	@Before
+	public void before() throws Exception
 	{
-		super.setUp();
-
 		context.getResourceReferenceRegistry().registerResourceReference(reference1);
 		context.getResourceReferenceRegistry().registerResourceReference(reference1_a);
 		context.getResourceReferenceRegistry().registerResourceReference(reference1_b);

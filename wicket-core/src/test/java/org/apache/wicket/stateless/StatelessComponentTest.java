@@ -19,6 +19,7 @@ package org.apache.wicket.stateless;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.junit.Test;
 
 /**
  * @author jcompagner
@@ -28,7 +29,8 @@ public class StatelessComponentTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testStatelessComponentPage() throws Exception
+	@Test
+	public void statelessComponentPage() throws Exception
 	{
 		executeTest(StatelessComponentPage.class, "StatelessComponentPage_result.html");
 
@@ -50,7 +52,8 @@ public class StatelessComponentTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testStatelessComponentPageWithMount() throws Exception
+	@Test
+	public void statelessComponentPageWithMount() throws Exception
 	{
 		tester.getApplication().mountPage("/stateless", StatelessComponentPage.class);
 		// test is always the home page. it doesn't work then
@@ -72,7 +75,8 @@ public class StatelessComponentTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testStatelessComponentPageWithParams() throws Exception
+	@Test
+	public void statelessComponentPageWithParams() throws Exception
 	{
 		PageParameters params = new PageParameters();
 		params.set("testParam1", "testValue1");
@@ -99,7 +103,8 @@ public class StatelessComponentTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testStatelessComponentPageWithParamsWithMount() throws Exception
+	@Test
+	public void statelessComponentPageWithParamsWithMount() throws Exception
 	{
 		PageParameters params = new PageParameters();
 		params.set("testParam1", "testValue1");
@@ -125,7 +130,8 @@ public class StatelessComponentTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testStatelessComponentPageWithParamsWithIndexMount() throws Exception
+	@Test
+	public void statelessComponentPageWithParamsWithIndexMount() throws Exception
 	{
 		PageParameters params = new PageParameters();
 		params.set(0, "testValue1");

@@ -18,10 +18,9 @@ package org.apache.wicket.resource;
 
 import java.util.Locale;
 
-import junit.framework.Assert;
-
 import org.apache.wicket.resource.loader.BundleStringResourceLoader;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
+import org.junit.Test;
 
 /**
  * Test case for the <code>BundleStringResourceLoader</code> class.
@@ -46,23 +45,25 @@ public class BundleStringResourceLoaderTest extends StringResourceLoaderTestBase
 	 * @see org.apache.wicket.resource.StringResourceLoaderTestBase#testLoaderValidKeyStyleNoLocale()
 	 */
 	@Override
-	public void testLoaderValidKeyStyleNoLocale()
+	@Test
+	public void loaderValidKeyStyleNoLocale()
 	{
 		String s = loader.loadStringResource(component.getClass(), "test.string", null, "alt", null);
-		Assert.assertEquals("Resource should be loaded", "This is a test", s);
+		assertEquals("Resource should be loaded", "This is a test", s);
 	}
 
 	/**
 	 * @see org.apache.wicket.resource.StringResourceLoaderTestBase#testLoaderUnknownResources()
 	 */
 	@Override
-	public void testLoaderUnknownResources()
+	@Test
+	public void loaderUnknownResources()
 	{
 		IStringResourceLoader loader = new BundleStringResourceLoader("unknown.resource");
-		Assert.assertNull("Unknown resource should return null", loader.loadStringResource(
+		assertNull("Unknown resource should return null", loader.loadStringResource(
 			component.getClass(), "test.string", Locale.getDefault(), null, null));
 	}
 
 }
 
-// 
+//

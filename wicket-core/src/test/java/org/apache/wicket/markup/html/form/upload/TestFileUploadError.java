@@ -22,6 +22,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Before;
 
 /**
  * see WICKET-2015
@@ -33,11 +34,12 @@ public class TestFileUploadError extends WicketTestCase
 	private final String fileUploadId = "fileUpload";
 	private final String testUploadFilePath = "src/test/java/org/apache/wicket/markup/html/form/upload/testfile.txt";
 
-	@Override
-	public void setUp() throws Exception
+	/**
+	 * 
+	 */
+	@Before
+	public void before()
 	{
-		super.setUp();
-
 		// Start and render the test page
 		tester.startPage(FileUploadError.class);
 		tester.assertRenderedPage(FileUploadError.class);

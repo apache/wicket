@@ -29,6 +29,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.protocol.http.MockPage;
+import org.junit.Test;
 
 
 /**
@@ -93,11 +94,12 @@ public class CheckGroupTest extends WicketTestCase
 	/**
 	 * test component form processing
 	 */
-	// TODO (Eelco) This is an aweful test. Why is 'mock page' (which isn't a
+	// TODO (Eelco) This is an awful test. Why is 'mock page' (which isn't a
 	// real mock, but just some arbitrary page) used rather than a page with
 	// markup that corresponds to the component structure that is build up?
 	// Components and markup go together in Wicket, period.
-	public void testFormProcessing()
+	@Test
+	public void formProcessing()
 	{
 		// setup some values we will use for testing as well as a test model
 		final String check1 = "check1-selection";
@@ -214,7 +216,8 @@ public class CheckGroupTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testRendering() throws Exception
+	@Test
+	public void rendering() throws Exception
 	{
 		executeTest(CheckGroupTestPage1.class, "CheckGroupTestPage1_expected.html");
 		executeTest(CheckGroupTestPage2.class, "CheckGroupTestPage2_expected.html");
@@ -239,7 +242,8 @@ public class CheckGroupTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testDisabledCheckGroup() throws Exception
+	@Test
+	public void disabledCheckGroup() throws Exception
 	{
 		executeTest(CheckGroupDisabledTestPage.class, "CheckGroupDisabledTestPage_expected.html");
 	}

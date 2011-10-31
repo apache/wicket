@@ -16,21 +16,22 @@
  */
 package org.apache.wicket.util.value;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.time.Time;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author jcompagner
  * @author Doug Donohoe
  */
-public class ValueMapTest extends TestCase
+public class ValueMapTest extends Assert
 {
 	/**
 	 * @throws Exception
 	 */
-	public void testStringParseConstructorSimple() throws Exception
+	@Test
+	public void stringParseConstructorSimple() throws Exception
 	{
 		ValueMap vm = new ValueMap("param=value");
 		assertEquals(1, vm.size());
@@ -50,7 +51,8 @@ public class ValueMapTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testStringParseConstructorSpecialChars() throws Exception
+	@Test
+	public void stringParseConstructorSpecialChars() throws Exception
 	{
 		ValueMap vm = new ValueMap("param1=val>ue1;param2=value2", ";");
 		assertEquals(2, vm.size());
@@ -72,7 +74,8 @@ public class ValueMapTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testStringParseConstructorDelimitersAndEqualsSign() throws Exception
+	@Test
+	public void stringParseConstructorDelimitersAndEqualsSign() throws Exception
 	{
 		ValueMap vm = new ValueMap("param1=val=ue1;param2=value2", ";");
 		assertEquals(2, vm.size());
@@ -117,6 +120,7 @@ public class ValueMapTest extends TestCase
 	/**
 	 * Test getting enums from value map
 	 */
+	@Test
 	public void testEnum()
 	{
 		String name = "name";
@@ -165,7 +169,8 @@ public class ValueMapTest extends TestCase
 	/**
 	 * test other getAs methods
 	 */
-	public void testGetAs()
+	@Test
+	public void getAs()
 	{
 		ValueMap vm = new ValueMap();
 
@@ -217,9 +222,9 @@ public class ValueMapTest extends TestCase
 		// double
 		assertEquals(doubleValue, vm.getAsDouble("num"));
 		assertNull(vm.getAsDouble("num.bad"));
-		assertEquals(defDouble, vm.getAsDouble("num.bad", defDouble));
+		assertEquals(defDouble, vm.getAsDouble("num.bad", defDouble), 0.001);
 		assertNull(vm.getAsDouble("num.missing"));
-		assertEquals(defDouble, vm.getAsDouble("num.missing", defDouble));
+		assertEquals(defDouble, vm.getAsDouble("num.missing", defDouble), 0.001);
 
 		// time
 		assertEquals(timeValue.toString(), vm.getAsTime("time").toString()); // use toSTring since
@@ -241,7 +246,8 @@ public class ValueMapTest extends TestCase
 	/**
 	 * 
 	 */
-	public void testArray2()
+	@Test
+	public void array2()
 	{
 		ValueMap parameters = new ValueMap("a=1,a=2,a=3");
 		String[] a = parameters.getStringArray("a");

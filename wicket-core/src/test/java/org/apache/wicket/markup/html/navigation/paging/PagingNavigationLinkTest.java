@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.markup.html.navigation.paging;
 
+import org.junit.Before;
+import org.junit.Test;
+
 
 /**
  * Tests the PagingNavigationLink.
@@ -24,17 +27,6 @@ package org.apache.wicket.markup.html.navigation.paging;
  */
 public class PagingNavigationLinkTest extends AbstractPagingNavigationTest
 {
-	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 *            the name of the test
-	 */
-	public PagingNavigationLinkTest(String name)
-	{
-		super(name);
-	}
-
 	/** the mock pageable driver. */
 	private MockPageable mock;
 
@@ -43,17 +35,17 @@ public class PagingNavigationLinkTest extends AbstractPagingNavigationTest
 	 * 
 	 * @throws Exception
 	 */
-	@Override
-	public void setUp() throws Exception
+	@Before
+	public void before() throws Exception
 	{
-		super.setUp();
 		mock = new MockPageable();
 	}
 
 	/**
 	 * Tests the get page number and is first and last methods.
 	 */
-	public void testGetPageNumber_1()
+	@Test
+	public void getPageNumber_1()
 	{
 		PagingNavigationLink<Void> link = new PagingNavigationLink<Void>("id", mock, 0);
 
@@ -78,7 +70,8 @@ public class PagingNavigationLinkTest extends AbstractPagingNavigationTest
 	/**
 	 * Tests the get page number and is first and last methods.
 	 */
-	public void testGetPageNumber_2()
+	@Test
+	public void getPageNumber_2()
 	{
 		PagingNavigationLink<Void> link = new PagingNavigationLink<Void>("id", mock, 2);
 
@@ -103,7 +96,8 @@ public class PagingNavigationLinkTest extends AbstractPagingNavigationTest
 	/**
 	 * Tests the get page number and is first and last methods.
 	 */
-	public void testGetPageNumber_3()
+	@Test
+	public void getPageNumber_3()
 	{
 		PagingNavigationLink<Void> link = new PagingNavigationLink<Void>("id", mock, -1);
 
@@ -128,7 +122,8 @@ public class PagingNavigationLinkTest extends AbstractPagingNavigationTest
 	/**
 	 * Tests the linksTo method.
 	 */
-	public void testLinksTo()
+	@Test
+	public void linksTo()
 	{
 		PagingNavigationLink<Void> link = new PagingNavigationLink<Void>("id", mock, -1);
 

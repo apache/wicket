@@ -62,7 +62,7 @@ public class FormParentDisabledRawInputTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test(expected = ListenerInvocationNotAllowedException.class)
-	public void testDisabledParent() throws Exception
+	public void disabledParent() throws Exception
 	{
 		TestPage page = new TestPage();
 		page.enabled = false;

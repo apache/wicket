@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.parser;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * Quite some tests are already with MarkupParser.
@@ -29,7 +30,8 @@ public class RelativePathPrefixHandlerTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public final void testBasics() throws Exception
+	@Test
+	public void basics() throws Exception
 	{
 		executeTest(Page_1.class, "PageExpectedResult_1.html");
 	}
@@ -37,7 +39,8 @@ public class RelativePathPrefixHandlerTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public final void testAnchors() throws Exception
+	@Test
+	public void anchors() throws Exception
 	{
 		executeTest(Page_2.class, "PageExpectedResult_2.html");
 	}
@@ -45,7 +48,8 @@ public class RelativePathPrefixHandlerTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public final void testTransparency() throws Exception
+	@Test
+	public void transparency() throws Exception
 	{
 		executeTest(Page_3.class, "PageExpectedResult_3.html");
 	}

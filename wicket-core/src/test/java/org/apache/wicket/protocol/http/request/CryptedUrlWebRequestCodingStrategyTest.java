@@ -26,13 +26,13 @@ import org.apache.wicket.request.mapper.CryptoMapper;
 import org.apache.wicket.util.crypt.Base64;
 import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.crypt.ICryptFactory;
+import org.junit.Test;
 
 /**
  * Simple test using the WicketTester
  */
 public class CryptedUrlWebRequestCodingStrategyTest extends WicketTestCase
 {
-
 
 	@Override
 	protected WebApplication newApplication()
@@ -55,7 +55,8 @@ public class CryptedUrlWebRequestCodingStrategyTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testClientBidListPage()
+	@Test
+	public void clientBidListPage()
 	{
 		WebPage page = new SimplePage();
 		WebPage p = (WebPage)tester.startPage(page);
@@ -65,7 +66,8 @@ public class CryptedUrlWebRequestCodingStrategyTest extends WicketTestCase
 	/**
 	 * testRenderMyPagePost()
 	 */
-	public void testRenderMyPagePost()
+	@Test
+	public void renderMyPagePost()
 	{
 		// start and render the test page
 		tester.startPage(HomePage.class);
@@ -79,7 +81,8 @@ public class CryptedUrlWebRequestCodingStrategyTest extends WicketTestCase
 	/**
 	 * testRenderMyPageGet()
 	 */
-	public void testRenderMyPageGet()
+	@Test
+	public void renderMyPageGet()
 	{
 		// start and render the test page
 		tester.startPage(HomePage.class);

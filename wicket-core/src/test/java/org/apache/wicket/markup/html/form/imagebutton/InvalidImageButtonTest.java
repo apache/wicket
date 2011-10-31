@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.form.imagebutton;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  */
@@ -25,7 +26,8 @@ public class InvalidImageButtonTest extends WicketTestCase
 	/**
 	 * testInvalidImage()
 	 */
-	public void testInvalidImage()
+	@Test
+	public void invalidImage()
 	{
 		tester.startPage(InvalidImageButtonPage.class);
 		tester.assertRenderedPage(InvalidImageButtonPage.class);

@@ -18,20 +18,21 @@ package org.apache.wicket.protocol.http;
 
 import java.util.Locale;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.mock.MockWebRequest;
 import org.apache.wicket.request.Url;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author Timo Rantalaiho
  */
-public class WebSessionTest extends TestCase
+public class WebSessionTest extends Assert
 {
 	/**
 	 * testReadsLocaleFromRequestOnConstruction()
 	 */
-	public void testReadsLocaleFromRequestOnConstruction()
+	@Test
+	public void readsLocaleFromRequestOnConstruction()
 	{
 		final Locale locale = Locale.TRADITIONAL_CHINESE;
 		MockWebRequest request = new MockWebRequest(Url.parse("/"))

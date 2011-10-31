@@ -16,13 +16,13 @@
  */
 package org.apache.wicket.util.time;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author v857829
  */
-public class TimeFrameTest extends TestCase
+public class TimeFrameTest extends Assert
 {
 
 	private final TimeOfDay three = TimeOfDay.time(3, 0, TimeOfDay.PM);
@@ -34,7 +34,8 @@ public class TimeFrameTest extends TestCase
 	 * {@link org.apache.wicket.util.time.TimeFrame#eachDay(org.apache.wicket.util.time.TimeOfDay, org.apache.wicket.util.time.TimeOfDay)}
 	 * .
 	 */
-	public void testEachDay()
+	@Test
+	public void eachDay()
 	{
 		ITimeFrameSource test = TimeFrame.eachDay(three, five);
 		Assert.assertTrue(test.getTimeFrame().contains(Time.valueOf(four)));
@@ -45,7 +46,8 @@ public class TimeFrameTest extends TestCase
 	 * {@link org.apache.wicket.util.time.TimeFrame#valueOf(org.apache.wicket.util.time.Time, org.apache.wicket.util.time.Duration)}
 	 * .
 	 */
-	public void testValueOfTimeDuration()
+	@Test
+	public void valueOfTimeDuration()
 	{
 		TimeFrame test = TimeFrame.valueOf(Time.valueOf(three), Duration.minutes(60));
 		Assert.assertEquals(test.getStart(), Time.valueOf(three));
@@ -56,7 +58,8 @@ public class TimeFrameTest extends TestCase
 	 * Test method for
 	 * {@link org.apache.wicket.util.time.TimeFrame#contains(org.apache.wicket.util.time.Time)}.
 	 */
-	public void testContains()
+	@Test
+	public void contains()
 	{
 		TimeFrame test = TimeFrame.valueOf(Time.valueOf(three), Duration.minutes(70));
 		Assert.assertTrue(test.contains(Time.valueOf(four)));
@@ -67,7 +70,8 @@ public class TimeFrameTest extends TestCase
 	 * {@link org.apache.wicket.util.time.TimeFrame#overlaps(org.apache.wicket.util.time.TimeFrame)}
 	 * .
 	 */
-	public void testOverlaps()
+	@Test
+	public void overlaps()
 	{
 		TimeFrame test = TimeFrame.valueOf(Time.valueOf(three), Duration.minutes(70));
 		TimeFrame test2 = TimeFrame.valueOf(Time.valueOf(four), Duration.minutes(50));
@@ -82,6 +86,7 @@ public class TimeFrameTest extends TestCase
 	/**
 	 * Test method for {@link org.apache.wicket.util.time.TimeFrame#equals(java.lang.Object)}.
 	 */
+	@Test
 	public void testEquals()
 	{
 		TimeFrame test = TimeFrame.valueOf(Time.valueOf(three), Duration.minutes(60));

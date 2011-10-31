@@ -27,6 +27,7 @@ import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
+import org.junit.Test;
 
 /**
  */
@@ -36,7 +37,8 @@ public class AbstractTextComponentConvertEmptyStringsToNullTest extends WicketTe
 	/**
 	 * @throws Exception
 	 */
-	public void test() throws Exception
+	@Test
+	public void convertEmptyStringsToNull() throws Exception
 	{
 		StringArrayPage page = tester.startPage(StringArrayPage.class);
 

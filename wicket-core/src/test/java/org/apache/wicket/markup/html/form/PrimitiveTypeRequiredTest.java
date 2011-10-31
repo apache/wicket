@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 
 /**
@@ -27,19 +28,10 @@ public class PrimitiveTypeRequiredTest extends WicketTestCase
 {
 
 	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public PrimitiveTypeRequiredTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * @throws Exception
 	 */
-	public void testPrimitiveClass() throws Exception
+	@Test
+	public void primitiveClass() throws Exception
 	{
 		TextField<Integer> tf = new TextField<Integer>("test", int.class);
 		assertTrue(tf.isRequired());
@@ -51,9 +43,7 @@ public class PrimitiveTypeRequiredTest extends WicketTestCase
 		}
 		catch (WicketRuntimeException wre)
 		{
-			// igore should happen
+			// ignore should happen
 		}
-
 	}
-
 }

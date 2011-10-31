@@ -22,6 +22,7 @@ import org.apache.wicket.resource.IPropertiesFactory;
 import org.apache.wicket.resource.IsoPropertiesFilePropertiesLoader;
 import org.apache.wicket.resource.PropertiesFactory;
 import org.apache.wicket.resource.XmlFilePropertiesLoader;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,20 +36,10 @@ public class XmlPageTest extends WicketTestCase
 	private static final Logger log = LoggerFactory.getLogger(XmlPageTest.class);
 
 	/**
-	 * Create the test.
-	 * 
-	 * @param name
-	 *            The test name
-	 */
-	public XmlPageTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_1() throws Exception
+	@Test
+	public void renderHomePage_1() throws Exception
 	{
 		executeTest(XmlPage_1.class, "XmlPageExpectedResult_1.xml");
 	}
@@ -56,7 +47,8 @@ public class XmlPageTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_2() throws Exception
+	@Test
+	public void renderHomePage_2() throws Exception
 	{
 		IPropertiesFactory myFac = new MyPropertiesFactory(tester.getApplication());
 		tester.getApplication().getResourceSettings().setPropertiesFactory(myFac);
@@ -67,7 +59,8 @@ public class XmlPageTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage_3() throws Exception
+	@Test
+	public void renderHomePage_3() throws Exception
 	{
 		IPropertiesFactory myFac = new MyPropertiesFactory(tester.getApplication());
 		tester.getApplication().getResourceSettings().setPropertiesFactory(myFac);
@@ -75,10 +68,7 @@ public class XmlPageTest extends WicketTestCase
 		executeTest(XmlPage_3.class, "XmlPageExpectedResult_3.xml");
 	}
 
-	/**
-	 * 
-	 */
-	private class MyPropertiesFactory extends PropertiesFactory
+	private static class MyPropertiesFactory extends PropertiesFactory
 	{
 		/**
 		 * Construct.

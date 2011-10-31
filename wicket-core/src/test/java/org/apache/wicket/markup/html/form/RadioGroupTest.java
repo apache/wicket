@@ -24,6 +24,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.MockPage;
+import org.junit.Test;
 
 
 /**
@@ -85,11 +86,12 @@ public class RadioGroupTest extends WicketTestCase
 	/**
 	 * test component form processing
 	 */
-	// TODO (Eelco) This is an aweful test. Why is 'mock page' (which isn't a
+	// TODO (Eelco) This is an awful test. Why is 'mock page' (which isn't a
 	// real mock, but just some arbitrary page) used rather than a page with
 	// markup that corresponds to the component structure that is build up?
 	// Components and markup go together in Wicket, period.
-	public void testFormProcessing()
+	@Test
+	public void formProcessing()
 	{
 		// setup some values we will use for testing as well as a test model
 		final String radio1 = "radio1-selection";
@@ -148,10 +150,12 @@ public class RadioGroupTest extends WicketTestCase
 		assertTrue("group2: running with nothing selected - model must be set to null",
 			model.getObject() == null);
 
-		tester.getRequest().getPostParameters().setParameterValue(group.getInputName(),
-			choice1.getValue());
-		tester.getRequest().getPostParameters().setParameterValue(group2.getInputName(),
-			choice3.getValue());
+		tester.getRequest()
+			.getPostParameters()
+			.setParameterValue(group.getInputName(), choice1.getValue());
+		tester.getRequest()
+			.getPostParameters()
+			.setParameterValue(group2.getInputName(), choice3.getValue());
 
 		tester.applyRequest();
 
@@ -162,15 +166,17 @@ public class RadioGroupTest extends WicketTestCase
 			"group2: running with choice3 selected - model must be set to value of radio1",
 			model.getObject(), choice3.getDefaultModelObject());
 
-		tester.getRequest().getPostParameters().setParameterValue(group.getInputName(),
-			choice2.getValue());
+		tester.getRequest()
+			.getPostParameters()
+			.setParameterValue(group.getInputName(), choice2.getValue());
 		tester.applyRequest();
 		form.onFormSubmitted();
 		assertEquals("group: running with choice2 selected - model must be set to value of radio2",
 			modelObject.getProp1(), choice2.getDefaultModelObject());
 
-		tester.getRequest().getPostParameters().setParameterValue(group2.getInputName(),
-			choice1.getValue());
+		tester.getRequest()
+			.getPostParameters()
+			.setParameterValue(group2.getInputName(), choice1.getValue());
 		tester.applyRequest();
 		try
 		{
@@ -189,7 +195,8 @@ public class RadioGroupTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testRendering() throws Exception
+	@Test
+	public void rendering() throws Exception
 	{
 		executeTest(RadioGroupTestPage1.class, "RadioGroupTestPage1_expected.html");
 		try
@@ -199,7 +206,8 @@ public class RadioGroupTest extends WicketTestCase
 		}
 		catch (WicketRuntimeException e)
 		{
-			if (!e.getMessage().contains("Radio component [1:form:radio2] cannot find its parent RadioGroup"))
+			if (!e.getMessage().contains(
+				"Radio component [1:form:radio2] cannot find its parent RadioGroup"))
 			{
 				fail("failed with wrong exception");
 			}
@@ -211,7 +219,8 @@ public class RadioGroupTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testRadioGroupTestPage3() throws Exception
+	@Test
+	public void radioGroupTestPage3() throws Exception
 	{
 		// this test fails. You can make the test pass by closing the input tags
 		// this was not the case in beta1
@@ -221,7 +230,8 @@ public class RadioGroupTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testDisabledRadioGroup() throws Exception
+	@Test
+	public void disabledRadioGroup() throws Exception
 	{
 		executeTest(RadioGroupDisabledTestPage.class, "RadioGroupDisabledTestPage_expected.html");
 	}

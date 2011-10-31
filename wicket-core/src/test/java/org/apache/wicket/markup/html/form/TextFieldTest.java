@@ -26,6 +26,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Test;
 
 /**
  * @author Pedro Santos
@@ -33,7 +34,8 @@ import org.apache.wicket.util.tester.FormTester;
 public class TextFieldTest extends WicketTestCase
 {
 	/** */
-	public void testEmptyInputConvertedToNull()
+	@Test
+	public void emptyInputConvertedToNull()
 	{
 		TestPage testPage = new TestPage();
 		testPage.textField.setType(String.class);
@@ -48,7 +50,8 @@ public class TextFieldTest extends WicketTestCase
 	/**
 	 * Asserting that the value attribute on tag input is escaped once by default
 	 */
-	public void testValueAttribute()
+	@Test
+	public void valueAttribute()
 	{
 		TestPage testPage = new TestPage();
 		String text = "some text & another text";

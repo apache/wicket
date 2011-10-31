@@ -28,6 +28,7 @@ import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.util.string.Strings;
+import org.junit.Test;
 
 
 /**
@@ -108,7 +109,8 @@ public class ResourceTest extends WicketTestCase
 	/**
 	 * Test locating a resource.
 	 */
-	public void testLocate()
+	@Test
+	public void locate()
 	{
 		// Execute without source path
 		executeMultiple(new Path());

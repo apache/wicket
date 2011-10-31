@@ -18,6 +18,7 @@ package org.apache.wicket.markup.resolver.issue3559;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * issue-3559
@@ -27,6 +28,7 @@ public class MyTest extends WicketTestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test1()
 	{
 		tester.startPage(HomePage.class);

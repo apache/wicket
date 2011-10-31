@@ -28,6 +28,7 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.junit.Test;
 
 /**
  * @author Pedro Santos
@@ -38,7 +39,8 @@ public class FormWithMultipleButtonsTest extends WicketTestCase
 	 * Testing if the correct submit button is invoked in an form with multiple submit buttons. The
 	 * browser set the clicked button input name as parameter on the HTTP request.
 	 */
-	public void testFindSubmittingButton()
+	@Test
+	public void findSubmittingButton()
 	{
 		TestPage testPage = new TestPage();
 		tester.startPage(testPage);
@@ -53,7 +55,8 @@ public class FormWithMultipleButtonsTest extends WicketTestCase
 	/**
 	 * @see href https://issues.apache.org/jira/browse/WICKET-1894
 	 */
-	public void testAjaxFallbackButtonInvokedFirst()
+	@Test
+	public void ajaxFallbackButtonInvokedFirst()
 	{
 		TestPage testPage = new TestPage();
 		tester.startPage(testPage);
@@ -65,7 +68,8 @@ public class FormWithMultipleButtonsTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	public void testButtonInvokedFirst()
+	@Test
+	public void buttonInvokedFirst()
 	{
 		TestPage testPage = new TestPage();
 		tester.startPage(testPage);
@@ -75,12 +79,6 @@ public class FormWithMultipleButtonsTest extends WicketTestCase
 		tester.submitForm(testPage.form);
 		assertEquals(0, testPage.submitSequence.indexOf(testPage.button));
 		assertEquals(1, testPage.submitSequence.indexOf(testPage.form));
-	}
-
-	@Override
-	protected void tearDown() throws Exception
-	{
-		tester.destroy();
 	}
 
 	/**

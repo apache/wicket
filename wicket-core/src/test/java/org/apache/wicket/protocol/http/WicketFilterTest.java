@@ -47,8 +47,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.mock.MockApplication;
@@ -59,20 +57,26 @@ import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.util.file.WebXmlFile;
 import org.apache.wicket.util.tester.DummyHomePage;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.xml.sax.SAXException;
 
 /**
  */
-public class WicketFilterTest extends TestCase
+public class WicketFilterTest extends Assert
 {
 	private static WebApplication application;
 	private final DateFormat headerDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z",
 		Locale.UK);
 
-	@Override
-	protected void tearDown() throws Exception
+	/**
+	 * @throws Exception
+	 */
+	@After
+	public void after() throws Exception
 	{
 		if (application != null)
 		{
@@ -84,7 +88,8 @@ public class WicketFilterTest extends TestCase
 	/**
 	 * testFilterPath1()
 	 */
-	public void testFilterPath1()
+	@Test
+	public void filterPath1()
 	{
 		InputStream in = WicketFilterTest.class.getResourceAsStream("web1.xml");
 		String filterPath = getFilterPath("FilterTestApplication", in);
@@ -94,7 +99,8 @@ public class WicketFilterTest extends TestCase
 	/**
 	 * testFilterPath2()
 	 */
-	public void testFilterPath2()
+	@Test
+	public void filterPath2()
 	{
 		InputStream in = WicketFilterTest.class.getResourceAsStream("web2.xml");
 		String filterPath = getFilterPath("FilterTestApplication", in);
@@ -106,8 +112,9 @@ public class WicketFilterTest extends TestCase
 	 * @throws ServletException
 	 * @throws ParseException
 	 */
-	public void testNotModifiedResponseIncludesExpiresHeader() throws IOException,
-		ServletException, ParseException
+	@Test
+	public void notModifiedResponseIncludesExpiresHeader() throws IOException, ServletException,
+		ParseException
 	{
 		try
 		{
@@ -242,7 +249,8 @@ public class WicketFilterTest extends TestCase
 	/**
 	 * testCheckRedirect_1()
 	 */
-	public void testCheckRedirect_1()
+	@Test
+	public void checkRedirect_1()
 	{
 		WicketFilter filter = new WicketFilter();
 
@@ -296,7 +304,7 @@ public class WicketFilterTest extends TestCase
 	 * @param threadCount
 	 *            the number of simultaneous threads
 	 */
-	private void testParallelCheckRedirect(int threadCount)
+	private void parallelCheckRedirect(int threadCount)
 	{
 		WicketFilter filter = new WicketFilter();
 		filter.setFilterPath("filter/");
@@ -325,13 +333,14 @@ public class WicketFilterTest extends TestCase
 	 * <p>
 	 * Runs 1000 times 8 simultaneous threads which try to initialize WicketFilter#filterPathLength
 	 */
-	public void testRepeatedParallelCheckRedirect()
+	@Test
+	public void repeatedParallelCheckRedirect()
 	{
 		int threadCount = 8;
 		int repeatCount = 1000;
 		for (int i = 0; i < repeatCount; i++)
 		{
-			testParallelCheckRedirect(threadCount);
+			parallelCheckRedirect(threadCount);
 		}
 	}
 
@@ -340,7 +349,8 @@ public class WicketFilterTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testIgnorePaths() throws Exception
+	@Test
+	public void ignorePaths() throws Exception
 	{
 		application = spy(new MockApplication());
 		WicketFilter filter = new WicketFilter();

@@ -32,11 +32,12 @@ public class MarkupCacheTest extends WicketTestCase
 	private MarkupCache cache;
 	private MarkupCachingAssumingComponent component;
 
-	@Override
+	/**
+	 * 
+	 */
 	@Before
-	public void setUp() throws Exception
+	public void before()
 	{
-		super.setUp();
 		cache = new MarkupCache();
 
 		Application.get().getMarkupSettings().setMarkupFactory(new MarkupFactory()

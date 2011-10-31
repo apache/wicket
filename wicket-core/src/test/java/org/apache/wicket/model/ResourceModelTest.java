@@ -19,6 +19,7 @@ package org.apache.wicket.model;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.junit.Test;
 
 /**
  * Tests {@link ResourceModel}.
@@ -46,7 +47,8 @@ public class ResourceModelTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testResourceModel() throws Exception
+	@Test
+	public void resourceModel() throws Exception
 	{
 		executeTest(TestPage.class, "ResourceModelTest$TestPage_expected.html");
 	}

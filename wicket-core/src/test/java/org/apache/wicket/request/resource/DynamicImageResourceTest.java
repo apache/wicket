@@ -36,6 +36,8 @@ public class DynamicImageResourceTest extends WicketTestCase
 	{
 		DynamicImageResource resource = new DynamicImageResource()
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected byte[] getImageData(Attributes attributes)
 			{

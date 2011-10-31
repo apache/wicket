@@ -19,23 +19,24 @@ package org.apache.wicket.markup.parser;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.markup.parser.IXmlPullParser.HttpTagType;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Quite some tests are already with MarkupParser.
  * 
  * @author Juergen Donnerstag
  */
-public class XmlPullParserTest extends TestCase
+public class XmlPullParserTest extends Assert
 {
 	/**
 	 * 
 	 * @throws Exception
 	 */
-	public final void testBasics() throws Exception
+	@Test
+	public final void basics() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("This is a text");
@@ -126,7 +127,8 @@ public class XmlPullParserTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
-	public final void testEncoding() throws Exception
+	@Test
+	public final void encoding() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse(
@@ -195,7 +197,8 @@ public class XmlPullParserTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
-	public final void testAttributes() throws Exception
+	@Test
+	public final void attributes() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<tag>");
@@ -260,7 +263,8 @@ public class XmlPullParserTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
-	public final void testComments() throws Exception
+	@Test
+	public final void comments() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<!-- test --><tag>");
@@ -293,7 +297,8 @@ public class XmlPullParserTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
-	public final void testCompressWhitespace() throws Exception
+	@Test
+	public final void compressWhitespace() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>");
@@ -303,7 +308,8 @@ public class XmlPullParserTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
-	public final void testScript() throws Exception
+	@Test
+	public final void script() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<html><script language=\"JavaScript\">... <x a> ...</script></html>");
@@ -325,7 +331,8 @@ public class XmlPullParserTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
-	public final void testConditionalComments() throws Exception
+	@Test
+	public final void conditionalComments() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<!--[if IE]><a href='test.html'>my link</a><![endif]-->");
@@ -343,7 +350,8 @@ public class XmlPullParserTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
-	public final void testConditionalComments2() throws Exception
+	@Test
+	public final void conditionalComments2() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<!--[if IE]><a href='test.html'>my link</a><![endif]-->");
@@ -368,7 +376,8 @@ public class XmlPullParserTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
-	public final void testNames() throws Exception
+	@Test
+	public final void names() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<filter-mapping>");
@@ -391,7 +400,8 @@ public class XmlPullParserTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
-	public final void testDoctype() throws Exception
+	@Test
+	public final void doctype() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<!DOCTYPE html>");
@@ -403,7 +413,8 @@ public class XmlPullParserTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
-	public final void testDownlevelRevealedConditionalComments() throws Exception
+	@Test
+	public final void downlevelRevealedConditionalComments() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<!--[if (gt IE 9)|!(IE)]><!--><html lang=\"en\" class=\"no-js\"><!--<![endif]--> <span>test</span>");

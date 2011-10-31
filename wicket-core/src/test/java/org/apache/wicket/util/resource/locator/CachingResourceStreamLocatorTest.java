@@ -42,7 +42,7 @@ public class CachingResourceStreamLocatorTest
 	 * Tests NullResourceStreamReference
 	 */
 	@Test
-	public void testNotExistingResource()
+	public void notExistingResource()
 	{
 
 		IResourceStreamLocator resourceStreamLocator = mock(IResourceStreamLocator.class);
@@ -62,7 +62,7 @@ public class CachingResourceStreamLocatorTest
 	 * Tests FileResourceStreamReference
 	 */
 	@Test
-	public void testFileResource()
+	public void fileResource()
 	{
 		IResourceStreamLocator resourceStreamLocator = mock(IResourceStreamLocator.class);
 
@@ -89,7 +89,7 @@ public class CachingResourceStreamLocatorTest
 	 * @throws Exception
 	 */
 	@Test
-	public void testUrlResource() throws Exception
+	public void urlResource() throws Exception
 	{
 		IResourceStreamLocator resourceStreamLocator = mock(IResourceStreamLocator.class);
 
@@ -112,7 +112,7 @@ public class CachingResourceStreamLocatorTest
 	 * UrlResourceStream). These should <strong>not</strong> be cached.
 	 */
 	@Test
-	public void testLightweightResource()
+	public void lightweightResource()
 	{
 		IResourceStreamLocator resourceStreamLocator = mock(IResourceStreamLocator.class);
 

@@ -23,6 +23,7 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.properties.MyApplication;
 import org.apache.wicket.properties.TestPage;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.junit.Test;
 
 /**
  * 
@@ -44,6 +45,7 @@ public class ValidatorPropertiesTest extends WicketTestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test1()
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
@@ -237,6 +239,7 @@ public class ValidatorPropertiesTest extends WicketTestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test2()
 	{
 		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(false);
@@ -251,6 +254,7 @@ public class ValidatorPropertiesTest extends WicketTestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void test3()
 	{
 		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(true);

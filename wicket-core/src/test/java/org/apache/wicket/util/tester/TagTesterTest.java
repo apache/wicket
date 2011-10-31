@@ -16,12 +16,13 @@
  */
 package org.apache.wicket.util.tester;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Test of TagTester
  */
-public class TagTesterTest extends TestCase
+public class TagTesterTest extends Assert
 {
 	/** Mock markup 1 */
 	public static final String MARKUP_1 = "<p id=\"test\" class=\"class1\"><span class=\"class2\" id=\"test2\">mock</span></p>";
@@ -30,7 +31,8 @@ public class TagTesterTest extends TestCase
 	/**
 	 * Test the static factory method
 	 */
-	public void testCreateTagByAttribute()
+	@Test
+	public void createTagByAttribute()
 	{
 		TagTester tester = TagTester.createTagByAttribute(null, null, null);
 		assertNull(tester);
@@ -48,7 +50,8 @@ public class TagTesterTest extends TestCase
 	/**
 	 * Test that getName returns the correct tag name.
 	 */
-	public void testGetName()
+	@Test
+	public void getName()
 	{
 		TagTester tester = TagTester.createTagByAttribute(MARKUP_1, "id", "test");
 		assertNotNull(tester);
@@ -67,7 +70,8 @@ public class TagTesterTest extends TestCase
 	 * 
 	 * It also tests that the order of the attributes doesn't matter.
 	 */
-	public void testHasAttribute()
+	@Test
+	public void hasAttribute()
 	{
 		TagTester tester = TagTester.createTagByAttribute(MARKUP_1, "id", "test");
 		assertNotNull(tester);
@@ -86,7 +90,8 @@ public class TagTesterTest extends TestCase
 	 * 
 	 * If the attribute doesn't exist on the tag, the method should return null.
 	 */
-	public void testGetAttribute()
+	@Test
+	public void getAttribute()
 	{
 		TagTester tester = TagTester.createTagByAttribute(MARKUP_1, "id", "test");
 		assertNotNull(tester);
@@ -122,7 +127,8 @@ public class TagTesterTest extends TestCase
 	 * getAttributeContains should only return true if the attribute value contains the expected
 	 * value. It should not be case in-sensitive and not trim the attribute value.
 	 */
-	public void testGetAttributeContains()
+	@Test
+	public void getAttributeContains()
 	{
 		TagTester tester = TagTester.createTagByAttribute(MARKUP_1, "id", "test");
 		assertNotNull(tester);
@@ -143,7 +149,8 @@ public class TagTesterTest extends TestCase
 	 * Test the convenience method getAttributeIs, which returns true if the attributes value is
 	 * exactly the same as the parameter.
 	 */
-	public void testGetAttributeIs()
+	@Test
+	public void getAttributeIs()
 	{
 		TagTester tester = TagTester.createTagByAttribute(MARKUP_1, "id", "test");
 		assertNotNull(tester);
@@ -162,7 +169,8 @@ public class TagTesterTest extends TestCase
 	 * getAttributeEndsWith behaves the same as getAttributeContains, but the parameter which should
 	 * be contained must only be at the end.
 	 */
-	public void testGetAttributeEndsWith()
+	@Test
+	public void getAttributeEndsWith()
 	{
 		TagTester tester = TagTester.createTagByAttribute(MARKUP_1, "id", "test");
 		assertNotNull(tester);
@@ -181,7 +189,8 @@ public class TagTesterTest extends TestCase
 	/**
 	 * 
 	 */
-	public void testHasChildTag()
+	@Test
+	public void hasChildTag()
 	{
 		TagTester tester = TagTester.createTagByAttribute(MARKUP_1, "id", "test");
 
@@ -229,7 +238,8 @@ public class TagTesterTest extends TestCase
 	/**
 	 * Test getMarkup returns the open-tag + content + close-tag
 	 */
-	public void testGetMarkup()
+	@Test
+	public void getMarkup()
 	{
 		TagTester tagTester = TagTester.createTagByAttribute(MARKUP_1, "id", "test2");
 
@@ -239,7 +249,8 @@ public class TagTesterTest extends TestCase
 	/**
 	 * Test getValue returns the data between the open and close tag.
 	 */
-	public void testGetValue()
+	@Test
+	public void getValue()
 	{
 		TagTester tagTester = TagTester.createTagByAttribute(MARKUP_1, "id", "test2");
 		assertEquals("mock", tagTester.getValue());

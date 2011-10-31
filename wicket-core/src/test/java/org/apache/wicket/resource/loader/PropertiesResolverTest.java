@@ -30,12 +30,15 @@ import org.junit.Test;
 
 /**
  * test hierarchic lookup of properties from component property files
- *
+ * 
  * @author Peter Ertl
- *
+ * 
  */
 public class PropertiesResolverTest extends Assert
 {
+	/**
+	 * 
+	 */
 	@Test
 	public void resolveProperties()
 	{
@@ -46,6 +49,8 @@ public class PropertiesResolverTest extends Assert
 		tester.assertRenderedPage(MyPage.class);
 	}
 
+	/**
+	 */
 	public static class App extends WebApplication
 	{
 		@Override
@@ -55,8 +60,15 @@ public class PropertiesResolverTest extends Assert
 		}
 	}
 
+	/**
+	 */
 	public static class MyPage extends WebPage
 	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 */
 		public MyPage()
 		{
 			MyRepeatingView repeater = new MyRepeatingView("repeater");

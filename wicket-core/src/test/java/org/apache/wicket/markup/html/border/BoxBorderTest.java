@@ -39,6 +39,7 @@ public class BoxBorderTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test1() throws Exception
 	{
 		executeTest(BoxBorderTestPage_1.class, "BoxBorderTestPage_ExpectedResult_1.html");
@@ -49,6 +50,7 @@ public class BoxBorderTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test2() throws Exception
 	{
 		executeTest(BoxBorderTestPage_2.class, "BoxBorderTestPage_ExpectedResult_2.html");
@@ -60,6 +62,7 @@ public class BoxBorderTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@SuppressWarnings({ "unchecked" })
+	@Test
 	public void test3() throws Exception
 	{
 		executeTest(BoxBorderTestPage_3.class, "BoxBorderTestPage_ExpectedResult_3.html");
@@ -86,6 +89,7 @@ public class BoxBorderTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test4() throws Exception
 	{
 		Class<? extends Page> pageClass = BorderTestHierarchyPage_4.class;
@@ -111,7 +115,8 @@ public class BoxBorderTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testRenderWrapped() throws Exception
+	@Test
+	public void renderWrapped() throws Exception
 	{
 		executeTest(BorderRenderWrappedTestPage_1.class,
 			"BorderRenderWrappedTestPage_ExpectedResult_1.html");
@@ -122,6 +127,7 @@ public class BoxBorderTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test5() throws Exception
 	{
 		executeTest(BoxBorderTestPage_5.class, "BoxBorderTestPage_ExpectedResult_5.html");
@@ -132,6 +138,7 @@ public class BoxBorderTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test6() throws Exception
 	{
 		executeTest(BoxBorderTestPage_6.class, "BoxBorderTestPage_ExpectedResult_6.html");
@@ -142,6 +149,7 @@ public class BoxBorderTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test7() throws Exception
 	{
 		final IMarkupSettings markupSettings = Application.get().getMarkupSettings();
@@ -157,6 +165,7 @@ public class BoxBorderTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test8() throws Exception
 	{
 		executeTest(BoxBorderTestPage_8.class, "BoxBorderTestPage_ExpectedResult_8.html");
@@ -167,6 +176,7 @@ public class BoxBorderTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test9() throws Exception
 	{
 		executeTest(BoxBorderTestPage_9.class, "BoxBorderTestPage_ExpectedResult_9.html");
@@ -186,6 +196,7 @@ public class BoxBorderTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test11() throws Exception
 	{
 		executeTest(BoxBorderTestPage_11.class, "BoxBorderTestPage_ExpectedResult_11.html");

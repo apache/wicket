@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.form.imagebutton;
 import java.util.Locale;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * @author Juergen Donnerstag
@@ -26,20 +27,11 @@ import org.apache.wicket.WicketTestCase;
 public class ImageButtonTest extends WicketTestCase
 {
 	/**
-	 * Construct.
-	 * 
-	 * @param name
-	 */
-	public ImageButtonTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * 
 	 * @throws Exception
 	 */
-	public void test_1() throws Exception
+	@Test
+	public void imageButton() throws Exception
 	{
 		Locale.setDefault(new Locale("en", "US"));
 

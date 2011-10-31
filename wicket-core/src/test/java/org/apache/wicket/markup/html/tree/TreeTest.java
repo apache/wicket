@@ -27,6 +27,7 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.junit.Test;
 
 /**
  * @author Pedro Santos
@@ -41,7 +42,8 @@ public class TreeTest extends WicketTestCase
 	 * 
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3309">WICKET-3309</a>
 	 */
-	public void testAddChildOnRootAtAnOnRootLessTree()
+	@Test
+	public void addChildOnRootAtAnOnRootLessTree()
 	{
 		TestPage testPage = new TestPage();
 		testPage.tree.setRootLess(true);
@@ -56,7 +58,8 @@ public class TreeTest extends WicketTestCase
 	 * 
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3309">WICKET-3309</a>
 	 */
-	public void testAddGrandchildOnRootAtAnRootLessTree()
+	@Test
+	public void addGrandchildOnRootAtAnRootLessTree()
 	{
 		TestPage testPage = new TestPage();
 		testPage.tree.setRootLess(true);
@@ -73,7 +76,8 @@ public class TreeTest extends WicketTestCase
 	 * 
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3449">WICKET-3449</a>
 	 */
-	public void testJunctionLinkRendered()
+	@Test
+	public void junctionLinkRendered()
 	{
 		TestPage testPage = new TestPage();
 		tester.startPage(testPage);

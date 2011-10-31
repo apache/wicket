@@ -20,6 +20,7 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import org.apache.wicket.protocol.http.documentvalidation.Tag;
 import org.apache.wicket.protocol.http.documentvalidation.TextContent;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,8 @@ public class WicketTagPanelTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePage() throws Exception
+	@Test
+	public void renderHomePage() throws Exception
 	{
 		tester.startPage(WicketPanelPage.class);
 		String document = tester.getLastResponseAsString();
@@ -73,7 +75,8 @@ public class WicketTagPanelTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePageWicketTagRemoved() throws Exception
+	@Test
+	public void renderHomePageWicketTagRemoved() throws Exception
 	{
 		// Remove wicket tags from output
 		tester.getApplication().getMarkupSettings().setStripWicketTags(true);

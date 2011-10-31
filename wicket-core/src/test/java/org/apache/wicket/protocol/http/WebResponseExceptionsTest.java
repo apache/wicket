@@ -22,6 +22,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IRequestCycleSettings;
+import org.junit.Test;
 
 
 /**
@@ -34,7 +35,8 @@ public class WebResponseExceptionsTest extends WicketTestCase
 	/**
 	 * Tests buffered exception error page.
 	 */
-	public void testBufferedExceptionErrorPage()
+	@Test
+	public void bufferedExceptionErrorPage()
 	{
 		tester.getApplication()
 			.getRequestCycleSettings()
@@ -42,24 +44,26 @@ public class WebResponseExceptionsTest extends WicketTestCase
 		tester.getApplication()
 			.getExceptionSettings()
 			.setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_EXCEPTION_PAGE);
-		testInternalErrorPage();
+		internalErrorPage();
 	}
 
 	/**
 	 * Tests exception error page.
 	 */
-	public void testExceptionErrorPage()
+	@Test
+	public void exceptionErrorPage()
 	{
 		tester.getApplication()
 			.getExceptionSettings()
 			.setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_EXCEPTION_PAGE);
-		testInternalErrorPage();
+		internalErrorPage();
 	}
 
 	/**
 	 * Tests page expired.
 	 */
-	public void testExpirePage()
+	@Test
+	public void expirePage()
 	{
 		tester.startPage(TestExpirePage.class);
 		String document = tester.getLastResponseAsString();
@@ -80,7 +84,8 @@ public class WebResponseExceptionsTest extends WicketTestCase
 	/**
 	 * Tests internal error page.
 	 */
-	public void testInternalErrorPage()
+	@Test
+	public void internalErrorPage()
 	{
 		tester.startPage(TestErrorPage.class);
 		tester.setExposeExceptions(false);

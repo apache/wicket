@@ -20,6 +20,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.junit.Test;
 
 /**
  * @author jcompagner
@@ -27,22 +28,12 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 public class ComponentBorderTest extends WicketTestCase
 {
 	/**
-	 * Create the test.
-	 * 
-	 * @param name
-	 *            The test name
-	 */
-	public ComponentBorderTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * Tests component use check does not fail when border starts out hidden
 	 * 
 	 * @throws Exception
 	 */
-	public void testComponentUseCheck() throws Exception
+	@Test
+	public void componentUseCheck() throws Exception
 	{
 		/*
 		 * Suppose:
@@ -69,7 +60,8 @@ public class ComponentBorderTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testHideableBorder() throws Exception
+	@Test
+	public void hideableBorder() throws Exception
 	{
 		executeTest(HideableBorderPage.class, "HideableBorderPage_ExpectedResult.html");
 

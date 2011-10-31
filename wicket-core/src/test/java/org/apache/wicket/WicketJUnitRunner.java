@@ -116,7 +116,7 @@ public class WicketJUnitRunner extends BlockJUnit4ClassRunner
 	}
 
 	/**
-	 * Finds a method is the hierarchy of the tested class by his name
+	 * Finds a method in the hierarchy of the tested class by his name
 	 * 
 	 * @param testClass
 	 *            the junit class representation
@@ -133,7 +133,7 @@ public class WicketJUnitRunner extends BlockJUnit4ClassRunner
 		try
 		{
 			Class<?> clazz = getTestClass().getJavaClass();
-			while (clazz != null || Object.class.equals(clazz) == false)
+			while (clazz != null && Object.class.equals(clazz) == false)
 			{
 				try
 				{

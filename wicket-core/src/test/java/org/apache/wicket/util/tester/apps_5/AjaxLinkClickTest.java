@@ -21,6 +21,7 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.junit.Before;
 
 
 /**
@@ -34,23 +35,11 @@ public class AjaxLinkClickTest extends WicketTestCase
 	private AjaxRequestTarget ajaxRequestTarget;
 
 	/**
-	 * Construct.
-	 */
-	public AjaxLinkClickTest()
-	{
-		super("AjaxLink click test");
-	}
-
-	/**
 	 * Make sure that our test flags are reset between every test.
-	 * 
-	 * @see org.apache.wicket.WicketTestCase#setUp()
 	 */
-	@Override
-	protected void setUp() throws Exception
+	@Before
+	public void before()
 	{
-		super.setUp();
-
 		linkClicked = false;
 		ajaxRequestTarget = null;
 	}
