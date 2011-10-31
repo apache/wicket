@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+    <head>
+        <meta charset="utf-8" />
+        <title>Apache Wicket Quickstart</title>
+        <link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:regular,bold' rel='stylesheet' type='text/css' />
+        <link rel="stylesheet" href="style.css" type="text/css" media="screen" title="Stylesheet" />
+    </head>
+    <body>
+        <p>
+            Wicket version: <wicket:container wicket:id="version">1.5-SNAPSHOT</wicket:container>
+        </p>
+        <table wicket:id="table_wrapper">
+            <tbody>
+                <wicket:enclosure child="column:info">
+                <tr>
+                    <td wicket:id="column">
+                        <div><h4 wicket:id="info">[Info]</h4></div>
+                    </td>
+                </tr>
+                </wicket:enclosure>
+                <tr>
+                    <td>
+                        <div wicket:id="list">[Item List]</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>

@@ -37,6 +37,7 @@ import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Test;
 
 
 /**
@@ -401,5 +402,22 @@ public class EnclosureTest extends WicketTestCase
 		// toggle visibility of enclosure to back to true
 		tester.clickLink("b");
 		assertTrue(tester.getLastResponseAsString().contains("$label$"));
+	}
+
+	/**
+	 * Test case for https://issues.apache.org/jira/browse/WICKET-4172
+	 */
+	@Test
+	public void childWithDeeperPathInTransparentContainer()
+	{
+		boolean enclosureChildVisible = true;
+		tester.startPage(new ChildWithDeeperPathInTransparentContainerPage(enclosureChildVisible));
+
+		tester.assertContains(ChildWithDeeperPathInTransparentContainerPage.LABEL_TEXT);
+
+		enclosureChildVisible = false;
+		tester.startPage(new ChildWithDeeperPathInTransparentContainerPage(enclosureChildVisible));
+
+		tester.assertContainsNot(ChildWithDeeperPathInTransparentContainerPage.LABEL_TEXT);
 	}
 }
