@@ -16,31 +16,33 @@
  */
 package org.apache.wicket.examples.asemail;
 
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
- * A page which acts a template for mails which should be send to the customers.
+ * A demo panel which will be used to render mail template
  */
-public class TemplateBasedOnPage extends WebPage
+public class MailTemplatePanel extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param parameters
-	 *            the current page parameters
+	 * @param id
+	 *            the component id
+	 * @param nameModel
+	 *            the model that brings the customer's name
 	 */
-	public TemplateBasedOnPage(final PageParameters parameters)
+	public MailTemplatePanel(String id, IModel<String> nameModel)
 	{
-		super(parameters);
+		super(id);
 
-		add(new Label("name", parameters.get("name").toString("Unknown")));
+		add(new Label("name", nameModel));
 
 		CharSequence relativeUrl = urlFor(new PackageResourceReference(MailTemplate.class,
 			"resource.txt"), null);
