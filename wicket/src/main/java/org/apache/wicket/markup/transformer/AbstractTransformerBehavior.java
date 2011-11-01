@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.transformer;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
@@ -78,6 +79,14 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 
 		// Temporarily replace the web response with a String response
 		webResponse = requestCycle.getResponse();
+
+		// Determine encoding
+		final String encoding = Application.exists() ? Application.get()
+			.getRequestCycleSettings()
+			.getResponseRequestEncoding() : "UTF-8";
+
+		// Set content type based on markup type for page
+		webResponse.setContentType("text/" + getMarkupType(component) + "; charset=" + encoding);
 
 		// Create a new response object
 		final Response response = newResponse();
@@ -147,4 +156,9 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 	 */
 	public abstract CharSequence transform(final Component component, final CharSequence output)
 		throws Exception;
+
+	private String getMarkupType(Component component)
+	{
+		return component.getPage().getMarkupType();
+	}
 }
