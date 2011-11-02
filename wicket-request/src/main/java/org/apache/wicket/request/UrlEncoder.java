@@ -197,8 +197,17 @@ public class UrlEncoder
 				dontNeedEncoding.set(' ');
 				// to allow direct passing of URL in query
 				dontNeedEncoding.set('/');
+
+				/*
+				 * the below encoding of a ? is disabled because it interferes in portlet
+				 * environments. as far as i can tell it will not interfere with the ability to pass
+				 * around urls in the query string. however, should it cause problems we can
+				 * re-enable it as portlet environments are not high priority. we can also add a
+				 * switch somewhere to enable/disable this on applicaiton level. (WICKET-4019)
+				 */
+
 				// to allow direct passing of URL in query
-				dontNeedEncoding.set('?');
+				// dontNeedEncoding.set('?');
 				break;
 
 			// this added to deal with encoding a PATH component
