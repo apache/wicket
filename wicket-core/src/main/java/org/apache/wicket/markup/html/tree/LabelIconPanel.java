@@ -86,6 +86,12 @@ public class LabelIconPanel extends Panel
 			{
 				return LabelIconPanel.this.getImageResourceReference(tree, model.getObject());
 			}
+
+			@Override
+			protected boolean shouldAddAntiCacheParameter()
+			{
+				return false;
+			}
 		};
 	}
 
