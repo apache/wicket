@@ -82,8 +82,8 @@ public abstract class LabeledWebMarkupContainer extends WebMarkupContainer
 	 * Provide internal setter. We need this because people want to be able to chain together our
 	 * setters in FormComponent, etc. e.g. for .setLabel(foo).setRequired()
 	 * 
-	 * TODO: When we move to JDK5 and covariant return types, we can push this into ILabelProvider
-	 * and still make chaining in FormComponent work properly.
+	 * TODO Wicket.next: When we move to JDK5 and covariant return types, we can push this into
+	 * ILabelProvider and still make chaining in FormComponent work properly.
 	 * 
 	 * @param labelModel
 	 */
