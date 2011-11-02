@@ -281,7 +281,10 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public final void clear()
 	{
-		// TODO:
+		if (isTemporary() == false)
+		{
+			getPageManager().sessionExpired(getId());
+		}
 	}
 
 	/**
