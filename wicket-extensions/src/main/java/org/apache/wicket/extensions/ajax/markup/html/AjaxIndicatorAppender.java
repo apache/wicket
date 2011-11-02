@@ -63,12 +63,15 @@ public class AjaxIndicatorAppender extends Behavior
 	@Override
 	public void renderHead(final Component component, final IHeaderResponse response)
 	{
-		if (AjaxRequestTarget.get() != null)
+		super.renderHead(component, response);
+
+		AjaxRequestTarget target = AjaxRequestTarget.get();
+		if (target != null)
 		{
 			final String javascript = "var e = Wicket.$('" + getMarkupId() +
 				"'); if (e != null && typeof(e.parentNode) != 'undefined') e.parentNode.removeChild(e);";
 
-			response.renderOnDomReadyJavaScript(javascript);
+			target.appendJavaScript(javascript);
 		}
 	}
 
