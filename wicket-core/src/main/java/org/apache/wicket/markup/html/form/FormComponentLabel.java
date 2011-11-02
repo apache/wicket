@@ -19,10 +19,12 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
+import org.apache.wicket.util.lang.Args;
 
 /**
- * A component that represents html &lt;label&gt; tag. This component will automatically make the
- * form component output an id attribute and link its for attribute with that value.
+ * A component that represents HTML &lt;label&gt; tag. This component will automatically make the
+ * form component output an <em>id</em> attribute and link its <em>for</em> attribute with that
+ * value.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -43,11 +45,8 @@ public class FormComponentLabel extends WebMarkupContainer
 	public FormComponentLabel(String id, LabeledWebMarkupContainer component)
 	{
 		super(id);
-		if (component == null)
-		{
-			throw new IllegalArgumentException("Component argument cannot be null");
-		}
-		this.component = component;
+
+		this.component = Args.notNull(component, "component");
 		component.setOutputMarkupId(true);
 	}
 
