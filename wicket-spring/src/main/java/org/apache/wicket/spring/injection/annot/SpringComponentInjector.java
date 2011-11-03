@@ -39,9 +39,12 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * {@link SpringBean} annotations.
  * 
  * To install in yourapplication.init() call
- * <code>addComponentInstantiationListener(new SpringComponentInjector(this));</code> Non-wicket
- * components such as {@link Session}, {@link Model}, and any other pojo can be injected by calling
+ * <code>getComponentInstantiationListeners().add(new SpringComponentInjector(this));</code>
+ * <p>
+ * Only Wicket {@link Component}s and {@link Behavior}s are automatically injected, other classes
+ * such as {@link Session}, {@link Model}, and any other POJO can be injected by calling
  * <code>Injector.get().inject(this)</code> in their constructor.
+ * </p>
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @author <a href="mailto:jlee@antwerkz.com">Justin Lee</a>

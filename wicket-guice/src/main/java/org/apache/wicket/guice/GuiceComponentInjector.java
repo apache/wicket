@@ -19,9 +19,11 @@ package org.apache.wicket.guice;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IBehaviorInstantiationListener;
+import org.apache.wicket.Session;
 import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.injection.IFieldValueFactory;
+import org.apache.wicket.model.Model;
 
 import com.google.inject.Guice;
 import com.google.inject.ImplementedBy;
@@ -35,12 +37,18 @@ import com.google.inject.Stage;
  * Add this to your application in its {@link Application#init()} method like so:
  * 
  * <pre>
- * addComponentInstantiationListener(new GuiceComponentInjector(this));
+ * getComponentInstantiationListeners().add(new GuiceComponentInjector(this));
  * </pre>
  * 
  * <p>
  * There are different constructors for this object depending on how you want to wire things. See
  * the javadoc for the constructors for more information.
+ * </p>
+ * <p>
+ * Only Wicket {@link Component}s and {@link Behavior}s are automatically injected, other classes
+ * such as {@link Session}, {@link Model}, and any other POJO can be injected by calling
+ * <code>Injector.get().inject(this)</code> in their constructor.
+ * </p>
  * 
  * @author Alastair Maw
  */
