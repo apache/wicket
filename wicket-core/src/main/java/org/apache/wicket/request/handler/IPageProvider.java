@@ -39,7 +39,7 @@ public interface IPageProvider
 	 * @throws StalePageException
 	 *             if render count has been specified in constructor and the render count of page
 	 *             does not match the value
-	 * @throw {@link PageExpiredException} if the specified page could not have been found and the
+	 * @throws {@link PageExpiredException} if the specified page could not have been found and the
 	 *        constructor used did not provide enough information to create new page instance
 	 */
 	IRequestablePage getPageInstance();
