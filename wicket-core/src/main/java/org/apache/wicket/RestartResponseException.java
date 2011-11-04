@@ -73,8 +73,7 @@ public class RestartResponseException extends ResetResponseException
 	 */
 	public RestartResponseException(final IRequestablePage page)
 	{
-		this(new PageProvider(page.getPageId(), page.getClass(), page.getPageParameters(),
-			page.getRenderCount()), RedirectPolicy.AUTO_REDIRECT);
+		this(new PageProvider(page), RedirectPolicy.AUTO_REDIRECT);
 	}
 
 	/**
