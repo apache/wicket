@@ -166,7 +166,22 @@ public class ListenerInterfaceRequestHandler
 		final boolean freshPage = pageComponentProvider.isPageInstanceFresh();
 		final boolean isAjax = ((WebRequest)requestCycle.getRequest()).isAjax();
 
-		if (getComponent().getPage() == page)
+		IRequestableComponent component = null;
+		try
+		{
+			component = getComponent();
+		}
+		catch (ComponentNotFoundException e)
+		{
+			// either the page is stateless and the component we are looking for is not added in the
+			// constructor
+			// or the page is stateful+stale and a new instances was created by pageprovider
+			// we denote this by setting component to null
+			component = null;
+		}
+
+		if ((component == null && freshPage) ||
+			(component != null && getComponent().getPage() == page))
 		{
 			if (page instanceof Page)
 			{
