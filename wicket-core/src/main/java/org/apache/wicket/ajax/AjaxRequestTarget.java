@@ -671,18 +671,20 @@ public class AjaxRequestTarget implements IPageRequestHandler, ILoggableRequestH
 		// invoke onbeforerespond event on listeners
 		fireOnBeforeRespondListeners();
 
-		// normal behavior
-		Iterator<CharSequence> it = prependJavaScripts.iterator();
-		while (it.hasNext())
-		{
-			CharSequence js = it.next();
-			respondInvocation(bodyResponse, js);
-		}
-
 		// process added components
 		respondComponents(bodyResponse);
 
 		fireOnAfterRespondListeners(bodyResponse);
+
+		// queue up prepend javascripts. unlike other steps these are executed out of order so that
+		// components can contribute them from inside their onbeforerender methods.
+		Iterator<CharSequence> it = prependJavaScripts.iterator();
+		while (it.hasNext())
+		{
+			CharSequence js = it.next();
+			respondPriorityInvocation(bodyResponse, js);
+		}
+
 
 		// execute the dom ready javascripts as first javascripts
 		// after component replacement
@@ -1284,12 +1286,26 @@ public class AjaxRequestTarget implements IPageRequestHandler, ILoggableRequestH
 		headerRendering = false;
 	}
 
+	private void respondInvocation(final Response response, final CharSequence js)
+	{
+		respondJavascriptInvocation("evaluate", response, js);
+	}
+
+	private void respondPriorityInvocation(final Response response, final CharSequence js)
+	{
+		respondJavascriptInvocation("priority-evaluate", response, js);
+	}
+
+
 	/**
-	 * 
+	 * @param invocation
+	 *            type of invocation tag, usually {@literal evaluate} or
+	 *            {@literal priority-evaluate}
 	 * @param response
 	 * @param js
 	 */
-	private void respondInvocation(final Response response, final CharSequence js)
+	private void respondJavascriptInvocation(final String invocation, final Response response,
+		final CharSequence js)
 	{
 		boolean encoded = false;
 		CharSequence javascript = js;
@@ -1301,7 +1317,8 @@ public class AjaxRequestTarget implements IPageRequestHandler, ILoggableRequestH
 			javascript = encode(js);
 		}
 
-		response.write("<evaluate");
+		response.write("<");
+		response.write(invocation);
 		if (encoded)
 		{
 			response.write(" encoding=\"");
@@ -1309,10 +1326,14 @@ public class AjaxRequestTarget implements IPageRequestHandler, ILoggableRequestH
 			response.write("\"");
 		}
 		response.write(">");
+
 		response.write("<![CDATA[");
 		response.write(javascript);
 		response.write("]]>");
-		response.write("</evaluate>");
+
+		response.write("</");
+		response.write(invocation);
+		response.write(">");
 
 		encodingBodyResponse.reset();
 	}

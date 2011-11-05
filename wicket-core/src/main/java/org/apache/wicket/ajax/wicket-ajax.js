@@ -1300,6 +1300,15 @@ Wicket.Ajax.Call.prototype = {
 			    }
 			}
 			
+			// go through the ajax response and execute all priority-invocations first
+
+		    for (var i = 0; i < root.childNodes.length; ++i) {
+		    	var node = root.childNodes[i];				
+		        if (node.tagName == "priority-evaluate") {
+		           this.processEvaluation(steps, node);
+		        }
+		    }
+
 			// go through the ajax response and for every action (component, js evaluation, header contribution)
 			// ad the proper closure to steps
 			var stepIndexOfLastReplacedComponent = -1;
@@ -1319,7 +1328,6 @@ Wicket.Ajax.Call.prototype = {
 		        } else if (node.tagName == "redirect") {
 		           this.processRedirect(steps, node);
 		        }
-
 		    }
 			if (stepIndexOfLastReplacedComponent != -1) {
 				this.processFocusedComponentReplaceCheck(steps, stepIndexOfLastReplacedComponent);
