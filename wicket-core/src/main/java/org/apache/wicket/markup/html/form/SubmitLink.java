@@ -181,7 +181,7 @@ public class SubmitLink extends AbstractSubmitLink
 	}
 
 	/**
-	 * The JavScript which triggers this link. Method is non-final so that subclasses can decorate
+	 * The JavaScript which triggers this link. Method is non-final so that subclasses can decorate
 	 * the provided script by wrapping their own JS around a call to super.getTriggerJavaScript().
 	 * 
 	 * @return The JavaScript to be executed when the link is clicked.
