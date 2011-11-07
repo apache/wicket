@@ -235,7 +235,7 @@ public class RequestListenerInterface
 			log.warn("behavior not enabled; ignore call. Behavior {} at component {}", behavior,
 				component);
 			throw new ListenerInvocationNotAllowedException(this, component, behavior,
-				"Behavior rejected interface invocation");
+				"Behavior rejected interface invocation. ");
 		}
 
 		internalInvoke(component, behavior);
