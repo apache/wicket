@@ -186,7 +186,7 @@ public class SubmitLink extends AbstractSubmitLink
 	 * 
 	 * @return The JavaScript to be executed when the link is clicked.
 	 */
-	protected CharSequence getTriggerJavaScript()
+	protected String getTriggerJavaScript()
 	{
 		if (getForm() != null)
 		{
