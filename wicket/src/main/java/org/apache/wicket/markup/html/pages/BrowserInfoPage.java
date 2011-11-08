@@ -206,6 +206,34 @@ public class BrowserInfoPage extends WebPage
 				}
 			};
 		}
+		continueTo = sanitize(continueTo);
 		this.continueTo = continueTo;
+	}
+
+	/**
+	 * Cleans the <code>cto</code> request parameter from malicious user input.
+	 * 
+	 * @param continueTo
+	 *            the url to redirect to after extracting the browser info
+	 * @return the url to redirect to after the cleaning.
+	 */
+	private String sanitize(String continueTo)
+	{
+		// continueTo is already checked against 'null'
+
+		// cut everything after \n or \r. WICKET-4196
+		int idx = continueTo.indexOf('\n');
+		if (idx > -1)
+		{
+			continueTo = continueTo.substring(0, idx);
+		}
+
+		idx = continueTo.indexOf('\r');
+		if (idx > -1)
+		{
+			continueTo = continueTo.substring(0, idx);
+		}
+
+		return continueTo;
 	}
 }
