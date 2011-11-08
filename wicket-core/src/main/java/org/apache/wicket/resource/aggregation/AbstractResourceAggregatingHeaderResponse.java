@@ -31,6 +31,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.ResourceUtil;
+import org.apache.wicket.resource.dependencies.AbstractResourceDependentResourceReference.ResourceType;
 
 /**
  * A header response that can be used to aggregate resources (primarily resource references) into
@@ -77,28 +78,28 @@ public abstract class AbstractResourceAggregatingHeaderResponse<R extends Resour
 	public void renderJavaScriptReference(ResourceReference reference)
 	{
 		topLevelReferences.add(new ResourceReferenceAndStringData(reference, null, null, null,
-			false, false, null, null));
+			ResourceType.JS, false, null, null));
 	}
 
 	@Override
 	public void renderJavaScriptReference(ResourceReference reference, String id)
 	{
-		topLevelReferences.add(new ResourceReferenceAndStringData(reference, null, null, id, false,
-			false, null, null));
+		topLevelReferences.add(new ResourceReferenceAndStringData(reference, null, null, id,
+			ResourceType.JS, false, null, null));
 	}
 
 	@Override
 	public void renderCSSReference(ResourceReference reference)
 	{
 		topLevelReferences.add(new ResourceReferenceAndStringData(reference, null, null, null,
-			true, false, null, null));
+			ResourceType.CSS, false, null, null));
 	}
 
 	@Override
 	public void renderCSSReference(ResourceReference reference, String media)
 	{
 		topLevelReferences.add(new ResourceReferenceAndStringData(reference, null, null, media,
-			true, false, null, null));
+			ResourceType.CSS, false, null, null));
 	}
 
 	@Override
@@ -270,29 +271,29 @@ public abstract class AbstractResourceAggregatingHeaderResponse<R extends Resour
 	@Override
 	public void renderJavaScriptReference(String url)
 	{
-		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, null, false,
-			false, null, null));
+		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, null,
+			ResourceType.JS, false, null, null));
 	}
 
 	@Override
 	public void renderJavaScriptReference(String url, String id)
 	{
-		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, id, false,
-			false, null, null));
+		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, id,
+			ResourceType.JS, false, null, null));
 	}
 
 	@Override
 	public void renderCSSReference(String url)
 	{
-		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, null, true,
-			false, null, null));
+		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, null,
+			ResourceType.CSS, false, null, null));
 	}
 
 	@Override
 	public void renderCSSReference(String url, String media)
 	{
-		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, media, true,
-			false, null, null));
+		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, media,
+			ResourceType.CSS, false, null, null));
 	}
 
 	@Override
@@ -300,7 +301,7 @@ public abstract class AbstractResourceAggregatingHeaderResponse<R extends Resour
 		String id)
 	{
 		topLevelReferences.add(new ResourceReferenceAndStringData(reference, parameters, null, id,
-			false, false, null, null));
+			ResourceType.JS, false, null, null));
 	}
 
 	@Override
@@ -308,7 +309,7 @@ public abstract class AbstractResourceAggregatingHeaderResponse<R extends Resour
 		String id, boolean defer)
 	{
 		topLevelReferences.add(new ResourceReferenceAndStringData(reference, parameters, null, id,
-			false, defer, null, null));
+			ResourceType.JS, defer, null, null));
 	}
 
 	@Override
@@ -316,33 +317,33 @@ public abstract class AbstractResourceAggregatingHeaderResponse<R extends Resour
 		String id, boolean defer, String charset)
 	{
 		topLevelReferences.add(new ResourceReferenceAndStringData(reference, parameters, null, id,
-			false, defer, charset, null));
+			ResourceType.JS, defer, charset, null));
 	}
 
 	@Override
 	public void renderJavaScriptReference(String url, String id, boolean defer)
 	{
-		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, null, false,
-			defer, null, null));
+		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, null,
+			ResourceType.JS, defer, null, null));
 	}
 
 	@Override
 	public void renderJavaScriptReference(String url, String id, boolean defer, String charset)
 	{
-		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, id, false,
-			defer, charset, null));
+		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, id,
+			ResourceType.JS, defer, charset, null));
 	}
 
 	@Override
 	public void renderJavaScript(CharSequence javascript, String id)
 	{
-		topLevelReferences.add(new ResourceReferenceAndStringData(javascript, false, id));
+		topLevelReferences.add(new ResourceReferenceAndStringData(javascript, ResourceType.JS, id));
 	}
 
 	@Override
 	public void renderCSS(CharSequence css, String media)
 	{
-		topLevelReferences.add(new ResourceReferenceAndStringData(css, true, media));
+		topLevelReferences.add(new ResourceReferenceAndStringData(css, ResourceType.CSS, media));
 	}
 
 	@Override
@@ -350,7 +351,7 @@ public abstract class AbstractResourceAggregatingHeaderResponse<R extends Resour
 		String media)
 	{
 		topLevelReferences.add(new ResourceReferenceAndStringData(reference, pageParameters, null,
-			media, true, false, null, null));
+			media, ResourceType.CSS, false, null, null));
 	}
 
 	@Override
@@ -358,14 +359,37 @@ public abstract class AbstractResourceAggregatingHeaderResponse<R extends Resour
 		String media, String condition)
 	{
 		topLevelReferences.add(new ResourceReferenceAndStringData(reference, null, null, media,
-			true, false, null, condition));
+			ResourceType.CSS, false, null, condition));
 	}
 
 	@Override
 	public void renderCSSReference(String url, String media, String condition)
 	{
-		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, media, true,
-			false, null, condition));
+		topLevelReferences.add(new ResourceReferenceAndStringData(null, null, url, media,
+			ResourceType.CSS, false, null, condition));
 	}
 
+	@Override
+	public void renderString(CharSequence string)
+	{
+		topLevelReferences.add(new ResourceReferenceAndStringData(string, ResourceType.PLAIN, null));
+	}
+
+	@Override
+	public void renderOnDomReadyJavaScript(String javascript)
+	{
+		super.renderOnDomReadyJavaScript(javascript);
+	}
+
+	@Override
+	public void renderOnLoadJavaScript(String javascript)
+	{
+		super.renderOnLoadJavaScript(javascript);
+	}
+
+	@Override
+	public void renderOnEventJavaScript(String target, String event, String javascript)
+	{
+		super.renderOnEventJavaScript(target, event, javascript);
+	}
 }

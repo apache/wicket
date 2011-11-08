@@ -84,7 +84,8 @@ public abstract class AbstractDependencyRespectingResourceAggregatingHeaderRespo
 	{
 		boolean css = ResourceType.CSS.equals(reference.getResourceType());
 		String string = css ? reference.getMedia() : reference.getUniqueId();
-		return new ResourceReferenceAndStringData(reference, null, null, string, css, false, null,
-			null);
+
+		return new ResourceReferenceAndStringData(reference, null, null, string,
+			reference.getResourceType(), false, null, null);
 	}
 }

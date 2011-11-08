@@ -18,6 +18,7 @@ package org.apache.wicket.resource.aggregation;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.dependencies.AbstractResourceDependentResourceReference.ResourceType;
 
 /**
  * A data holder built for the {@link AbstractResourceAggregatingHeaderResponse} that groups the
@@ -35,11 +36,12 @@ import org.apache.wicket.request.resource.ResourceReference;
 // another for CSS, ...)
 public class ResourceReferenceAndStringData
 {
+
 	private final ResourceReference reference;
 	private final PageParameters parameters;
 	private final String url;
 	private final String idOrMedia;
-	private final boolean isCss;
+	private final ResourceType type;
 	private final boolean jsDefer;
 	private final String charset;
 	private final String cssCondition;
@@ -52,20 +54,20 @@ public class ResourceReferenceAndStringData
 	 * @param parameters
 	 * @param url
 	 * @param idOrMedia
-	 * @param isCss
+	 * @param type
 	 * @param jsDefer
 	 * @param charset
 	 * @param cssCondition
 	 */
 	public ResourceReferenceAndStringData(ResourceReference reference, PageParameters parameters,
-		String url, String idOrMedia, boolean isCss, boolean jsDefer, String charset,
+		String url, String idOrMedia, ResourceType type, boolean jsDefer, String charset,
 		String cssCondition)
 	{
 		this.reference = reference;
 		this.parameters = parameters;
 		this.url = url;
 		this.idOrMedia = idOrMedia;
-		this.isCss = isCss;
+		this.type = type;
 		this.jsDefer = jsDefer;
 		this.charset = charset;
 		this.cssCondition = cssCondition;
@@ -88,7 +90,7 @@ public class ResourceReferenceAndStringData
 		parameters = null;
 		url = null;
 		this.idOrMedia = idOrMedia;
-		this.isCss = isCss;
+		type = isCss ? ResourceType.CSS : ResourceType.JS;
 		jsDefer = false;
 		charset = null;
 		cssCondition = null;
@@ -99,13 +101,13 @@ public class ResourceReferenceAndStringData
 	 * Construct.
 	 * 
 	 * @param content
-	 * @param isCss
+	 * @param type
 	 * @param idOrMedia
 	 */
-	public ResourceReferenceAndStringData(CharSequence content, boolean isCss, String idOrMedia)
+	public ResourceReferenceAndStringData(CharSequence content, ResourceType type, String idOrMedia)
 	{
 		this.content = content;
-		this.isCss = isCss;
+		this.type = type;
 		reference = null;
 		parameters = null;
 		url = null;
@@ -159,10 +161,20 @@ public class ResourceReferenceAndStringData
 
 	/**
 	 * @return true if this is css, false if it's js
+	 * @deprecated Use {@link #getResourceType()} instead.
 	 */
+	@Deprecated
 	public boolean isCss()
 	{
-		return isCss;
+		return type == ResourceType.CSS;
+	}
+
+	/**
+	 * @return the type of the resource
+	 */
+	public ResourceType getResourceType()
+	{
+		return type;
 	}
 
 	/**
@@ -206,10 +218,10 @@ public class ResourceReferenceAndStringData
 		result = prime * result + ((content == null) ? 0 : content.hashCode());
 		result = prime * result + ((cssCondition == null) ? 0 : cssCondition.hashCode());
 		result = prime * result + ((idOrMedia == null) ? 0 : idOrMedia.hashCode());
-		result = prime * result + (isCss ? 1231 : 1237);
 		result = prime * result + (jsDefer ? 1231 : 1237);
 		result = prime * result + ((parameters == null) ? 0 : parameters.hashCode());
 		result = prime * result + ((reference == null) ? 0 : reference.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		result = prime * result + ((url == null) ? 0 : url.hashCode());
 		return result;
 	}
@@ -252,8 +264,6 @@ public class ResourceReferenceAndStringData
 		}
 		else if (!idOrMedia.equals(other.idOrMedia))
 			return false;
-		if (isCss != other.isCss)
-			return false;
 		if (jsDefer != other.jsDefer)
 			return false;
 		if (parameters == null)
@@ -270,6 +280,8 @@ public class ResourceReferenceAndStringData
 		}
 		else if (!reference.equals(other.reference))
 			return false;
+		if (type != other.type)
+			return false;
 		if (url == null)
 		{
 			if (other.url != null)
@@ -284,7 +296,7 @@ public class ResourceReferenceAndStringData
 	public String toString()
 	{
 		return "ResourceReferenceAndStringData [reference=" + reference + ", parameters=" +
-			parameters + ", url=" + url + ", idOrMedia=" + idOrMedia + ", isCss=" + isCss +
+			parameters + ", url=" + url + ", idOrMedia=" + idOrMedia + ", type=" + type +
 			", jsDefer=" + jsDefer + ", charset=" + charset + ", cssCondition=" + cssCondition +
 			", content=" + content + "]";
 	}

@@ -50,7 +50,12 @@ public abstract class AbstractResourceDependentResourceReference extends Resourc
 		/**
 		 * CSS reference
 		 */
-		CSS
+		CSS,
+
+		/**
+		 * plain text
+		 */
+		PLAIN;
 	}
 
 	private String uniqueId;
@@ -154,11 +159,27 @@ public abstract class AbstractResourceDependentResourceReference extends Resourc
 	 */
 	public ResourceType getResourceType()
 	{
-		if (!Strings.isEmpty(getName()) && getName().endsWith(".css"))
+		String resourceName = getName();
+
+		final ResourceType type;
+		if (Strings.isEmpty(resourceName))
 		{
-			return ResourceType.CSS;
+			type = ResourceType.PLAIN;
 		}
-		return ResourceType.JS;
+		else if (resourceName.endsWith(".css"))
+		{
+			type = ResourceType.CSS;
+		}
+		else if (resourceName.endsWith(".js"))
+		{
+			type = ResourceType.JS;
+		}
+		else
+		{
+			throw new IllegalStateException("Cannot determine the resource's type by its name: " +
+				resourceName);
+		}
+		return type;
 	}
 
 	/**
