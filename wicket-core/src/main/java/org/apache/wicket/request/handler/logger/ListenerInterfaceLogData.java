@@ -48,10 +48,10 @@ public class ListenerInterfaceLogData extends PageLogData
 		RequestListenerInterface listenerInterface, Integer behaviorIndex)
 	{
 		super(pageAndComponentProvider);
-		componentClass = pageAndComponentProvider.getComponent().getClass();
-		componentPath = pageAndComponentProvider.getComponentPath();
+		componentClass = tryToGetComponentClass(pageAndComponentProvider);
+		componentPath = tryToGetComponentPath(pageAndComponentProvider);
 		this.behaviorIndex = behaviorIndex;
-		if (behaviorIndex != null)
+		if (behaviorIndex != null && componentClass != null)
 		{
 			try
 			{
@@ -70,6 +70,34 @@ public class ListenerInterfaceLogData extends PageLogData
 		}
 		interfaceName = listenerInterface.getName();
 		interfaceMethod = listenerInterface.getMethod().getName();
+	}
+
+	private static Class<? extends IRequestableComponent> tryToGetComponentClass(
+		IPageAndComponentProvider pageAndComponentProvider)
+	{
+		try
+		{
+			return pageAndComponentProvider.getComponent().getClass();
+		}
+		catch (Exception e)
+		{
+			// getComponent might fail if the page does not exist (ie session timeout)
+			return null;
+		}
+	}
+
+
+	private static String tryToGetComponentPath(IPageAndComponentProvider pageAndComponentProvider)
+	{
+		try
+		{
+			return pageAndComponentProvider.getComponentPath();
+		}
+		catch (Exception e)
+		{
+			// getComponentPath might fail if the page does not exist (ie session timeout)
+			return null;
+		}
 	}
 
 	/**
@@ -125,11 +153,19 @@ public class ListenerInterfaceLogData extends PageLogData
 	{
 		StringBuilder sb = new StringBuilder(super.toString());
 		sb.setCharAt(sb.length() - 1, ',');
-		sb.append("componentClass=");
-		sb.append(getComponentClass().getName());
-		sb.append(",componentPath=");
-		sb.append(getComponentPath());
-		sb.append(",behaviorIndex=");
+		if (getComponentClass() != null)
+		{
+			sb.append("componentClass=");
+			sb.append(getComponentClass().getName());
+			sb.append(',');
+		}
+		if (getComponentPath() != null)
+		{
+			sb.append("componentPath=");
+			sb.append(getComponentPath());
+			sb.append(',');
+		}
+		sb.append("behaviorIndex=");
 		sb.append(getBehaviorIndex());
 		if (getBehaviorClass() != null)
 		{

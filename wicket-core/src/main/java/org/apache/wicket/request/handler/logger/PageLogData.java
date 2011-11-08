@@ -46,10 +46,23 @@ public class PageLogData implements ILogData
 	 */
 	public PageLogData(IPageProvider pageProvider)
 	{
-		pageClass = pageProvider.getPageClass();
+		pageClass = tryToGetPageClass(pageProvider);
 		pageId = pageProvider.getPageId();
 		pageParameters = pageProvider.getPageParameters();
 		renderCount = pageProvider.getRenderCount();
+	}
+
+	private static Class<? extends IRequestablePage> tryToGetPageClass(IPageProvider pageProvider)
+	{
+		try
+		{
+			return pageProvider.getPageClass();
+		}
+		catch (Exception e)
+		{
+			// getPageClass might fail if the page does not exist (ie session timeout)
+			return null;
+		}
 	}
 
 	/**
@@ -101,9 +114,13 @@ public class PageLogData implements ILogData
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder("{");
-		sb.append("pageClass=");
-		sb.append(getPageClass().getName());
-		sb.append(",pageId=");
+		if (pageClass != null)
+		{
+			sb.append("pageClass=");
+			sb.append(getPageClass().getName());
+			sb.append(',');
+		}
+		sb.append("pageId=");
 		sb.append(getPageId());
 		sb.append(",pageParameters={");
 		sb.append(getPageParameters());
