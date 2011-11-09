@@ -267,7 +267,7 @@ Wicket.DateTime.init = function(cfg) {
 		YAHOO.util.Event.on(document, "click", function(e) {
 
 			var el = YAHOO.util.Event.getTarget(e);
-			var dialogEl = document.getElementById(cfg.dpJs);
+			var dialogEl = document.getElementById(cfg.dp);
 			var showBtn = document.getElementById(cfg.icon);
 			var fieldEl = document.getElementById(cfg.componentId);
 
