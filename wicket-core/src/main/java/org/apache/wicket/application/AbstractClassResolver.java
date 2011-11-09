@@ -17,8 +17,6 @@
 package org.apache.wicket.application;
 
 import java.lang.ref.WeakReference;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -130,25 +128,25 @@ public abstract class AbstractClassResolver implements IClassResolver
 	{
 		List<URL> resultList = new ArrayList<URL>();
 
-		// URIs should be used instead of URLs as Set keys. See WICKET-3867.
-		HashSet<URI> loadedFiles = new HashSet<URI>();
+		// URL's externalForm should be used instead of URLs as Set keys. See WICKET-3867/4203.
+		Set<String> loadedResources = new HashSet<String>();
 		try
 		{
 			// Try the classloader for the wicket jar/bundle
 			Enumeration<URL> resources = Application.class.getClassLoader().getResources(name);
-			loadResources(resources, loadedFiles);
+			loadResources(resources, loadedResources);
 
 			// Try the classloader for the user's application jar/bundle
 			resources = Application.get().getClass().getClassLoader().getResources(name);
-			loadResources(resources, loadedFiles);
+			loadResources(resources, loadedResources);
 
 			// Try the context class loader
 			resources = getClassLoader().getResources(name);
-			loadResources(resources, loadedFiles);
+			loadResources(resources, loadedResources);
 
-			for (URI uri : loadedFiles)
+			for (String urlExternalForm : loadedResources)
 			{
-				resultList.add(uri.toURL());
+				resultList.add(new URL(urlExternalForm));
 			}
 		}
 		catch (Exception e)
@@ -162,23 +160,17 @@ public abstract class AbstractClassResolver implements IClassResolver
 	/**
 	 * 
 	 * @param resources
-	 * @param loadedFiles
-	 * @throws URISyntaxException
-	 *             if URL.toURI() throws
+	 * @param loadedResources
 	 */
-	private void loadResources(Enumeration<URL> resources, Set<URI> loadedFiles)
-		throws URISyntaxException
+	private void loadResources(Enumeration<URL> resources, Set<String> loadedResources)
 	{
 		if (resources != null)
 		{
 			while (resources.hasMoreElements())
 			{
 				final URL url = resources.nextElement();
-				URI uri = url.toURI();
-				if (!loadedFiles.contains(uri))
-				{
-					loadedFiles.add(uri);
-				}
+				String externalForm = url.toExternalForm();
+				loadedResources.add(externalForm);
 			}
 		}
 	}
