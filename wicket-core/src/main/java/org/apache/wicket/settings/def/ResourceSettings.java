@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Component;
 import org.apache.wicket.IResourceFactory;
 import org.apache.wicket.Localizer;
 import org.apache.wicket.css.ICssCompressor;
@@ -39,6 +40,7 @@ import org.apache.wicket.resource.PropertiesFactory;
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
+import org.apache.wicket.resource.loader.JarStringResourceLoader;
 import org.apache.wicket.resource.loader.PackageStringResourceLoader;
 import org.apache.wicket.resource.loader.ValidatorStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
@@ -127,7 +129,44 @@ public class ResourceSettings implements IResourceSettings
 	private final Application application;
 
 	/**
-	 * Construct
+	 * Configures Wicket's default ResourceLoaders.<br>
+	 * For an example in {@code FooApplication} let {@code bar.Foo} extend {@link Component}, this
+	 * results in the following ordering:
+	 * <dl>
+	 * <dt>component specific</dt>
+	 * <dd>
+	 * <ul>
+	 * <li>bar/Foo.properties</li>
+	 * <li>org/apache/wicket/Component.properties</li>
+	 * </ul>
+	 * </dd>
+	 * <dt>package specific</dt>
+	 * <dd>
+	 * <ul>
+	 * <li>bar/package.properties</li>
+	 * <li>package.properties (on Foo's class loader)</li>
+	 * <li>org/apache/wicket/package.properties</li>
+	 * <li>org/apache/package.properties</li>
+	 * <li>org/package.properties</li>
+	 * <li>package.properties (on Component's class loader)</li>
+	 * </ul>
+	 * </dd>
+	 * <dt>application specific</dt>
+	 * <dd>
+	 * <ul>
+	 * <li>FooApplication.properties</li>
+	 * <li>Application.properties</li>
+	 * </ul>
+	 * </dd>
+	 * <dt>validator specific</dt>
+	 * <dt>jar specific</dt>
+	 * <dd>
+	 * <ul>
+	 * <li>wicket-jar.properties (in jar containing Foo)</li>
+	 * <li>wicket-jar.properties (in jar containing Component)</li>
+	 * </ul>
+	 * </dd>
+	 * </dl>
 	 * 
 	 * @param application
 	 */
@@ -138,6 +177,7 @@ public class ResourceSettings implements IResourceSettings
 		stringResourceLoaders.add(new PackageStringResourceLoader());
 		stringResourceLoaders.add(new ClassStringResourceLoader(application.getClass()));
 		stringResourceLoaders.add(new ValidatorStringResourceLoader());
+		stringResourceLoaders.add(new JarStringResourceLoader());
 	}
 
 	/**

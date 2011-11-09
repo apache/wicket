@@ -28,6 +28,7 @@ import org.apache.wicket.resource.loader.BundleStringResourceLoader;
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
+import org.apache.wicket.resource.loader.JarStringResourceLoader;
 import org.apache.wicket.resource.loader.PackageStringResourceLoader;
 import org.apache.wicket.resource.loader.ValidatorStringResourceLoader;
 import org.apache.wicket.settings.IFrameworkSettings;
@@ -118,15 +119,17 @@ public class ApplicationSettingsTest
 	{
 		IResourceSettings settings = new ResourceSettings(new MockApplication());
 		List<IStringResourceLoader> loaders = settings.getStringResourceLoaders();
-		Assert.assertEquals("There should be 4 default loaders", 4, loaders.size());
+		Assert.assertEquals("There should be 5 default loaders", 5, loaders.size());
 		Assert.assertTrue("First loader one should be the component one",
 			loaders.get(0) instanceof ComponentStringResourceLoader);
-		Assert.assertTrue("Second loader should be the application one",
+		Assert.assertTrue("Second loader should be the package one",
 			loaders.get(1) instanceof PackageStringResourceLoader);
 		Assert.assertTrue("Third loader should be the application one",
 			loaders.get(2) instanceof ClassStringResourceLoader);
 		Assert.assertTrue("Fourth loader should be the validator one",
 			loaders.get(3) instanceof ValidatorStringResourceLoader);
+		Assert.assertTrue("Fifth should be the classpath one",
+			loaders.get(4) instanceof JarStringResourceLoader);
 	}
 
 	/**
