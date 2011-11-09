@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.extensions.wizard;
 
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.html.panel.Panel;
 
@@ -61,15 +60,15 @@ public class WizardButtonBar extends Panel implements IDefaultButtonProvider
 	{
 		if (model.isNextAvailable())
 		{
-			return (Button)get("next");
+			return (IFormSubmittingComponent)get("next");
 		}
 		else if (model.isLastAvailable())
 		{
-			return (Button)get("last");
+			return (IFormSubmittingComponent)get("last");
 		}
 		else if (model.isLastStep(model.getActiveStep()))
 		{
-			return (Button)get("finish");
+			return (IFormSubmittingComponent)get("finish");
 		}
 		return null;
 	}
