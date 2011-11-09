@@ -1,5 +1,57 @@
 This file contains all changes done on the 1.5 version.
 
+Release Notes - Wicket - Version 1.5.3
+
+** Bug
+    * [WICKET-4071] - AjaxIndicatorAppender removes itself immediately when added via ajax
+    * [WICKET-4138] - BookmarkablePageLinks not working on a forwarded page
+    * [WICKET-4144] - FilterForm directly adds <input> to <form> --> invalid XHTML strict
+    * [WICKET-4146] - Image not showing if parent component is disabled
+    * [WICKET-4151] - Wrong argument to request logger in DebugBar panel
+    * [WICKET-4155] - FilterStateModel class is duplicated in DataTable FilterForm
+    * [WICKET-4161] - AbstractResourceAggregatingHeaderResponse does not order javascript properly
+    * [WICKET-4163] - BufferedResponseMapper doesn't recognize the the stored response because the session id is not available
+    * [WICKET-4164] - StoredResponsesMap not threadsafe
+    * [WICKET-4165] - HttpSessionDataStore uses asynchronous saving by default
+    * [WICKET-4168] - Error page resource relative urls are wrong
+    * [WICKET-4172] - Enclosure can't find a child with deeper path in TransparentWebMarkupContainer
+    * [WICKET-4173] - Incorrect URL for setResponsePage() within a Form#onSubmit( )
+    * [WICKET-4175] - AbstractTransformerBehavior: java.io.NotSerializableException: org.apache.wicket.protocol.http.BufferedWebResponse
+    * [WICKET-4176] - The process cannot access the file because it is being used by another process
+    * [WICKET-4178] - Use a strategy to decide how much information to log when a thread cannot get the lock to a page
+    * [WICKET-4180] - WebApplication.unmount(String) doesn't work if invoked from Application#init() (or IInitializer#init())
+    * [WICKET-4181] - RequestCycle listeners's ondetach() is ran before pages are detached, should be the other way around
+    * [WICKET-4183] - NullPointerException in JsonRequestLogger when logging resource requests
+    * [WICKET-4184] - AppendingStringBuffer.insert  infinite loop
+    * [WICKET-4185] - ListenerInterfaceRequestHandler should not assume existence of a page
+    * [WICKET-4197] - ListenerInterfaceRequestHandler fails with an exception if a new page is created and the component does not exist on that page
+    * [WICKET-4198] - RestartResponseException does not work correctly with newly created page instances
+    * [WICKET-4203] - Wicket fails to start when deployed filenames contain space characters
+    * [WICKET-4205] - AbstractResourceAggregatingHeaderResponse does not override all render functions
+    * [WICKET-4206] - DatePicker dialog closed, when the user clicks on calendar navigator with autoHide == true
+
+** Improvement
+    * [WICKET-4154] - Add localization resources for DataTable components
+    * [WICKET-4170] - Dump the threads' stack traces if a thread cannot acquire the lock on a page instance 
+    * [WICKET-4171] - Add additional constructor to DownloadLink that accepts the filename in a Model
+    * [WICKET-4189] - RequestHandlerStack: Unnecessary Stacktrace in log on PageExpiredException
+    * [WICKET-4192] - Do not add anti cache parameter to the images used for the Tree's junction links
+    * [WICKET-4194] - update/improve javadocs of SpringComponentInjector and GuiceComponentInjector.
+    * [WICKET-4199] - add a hook to  SubmitLink  that allows to insert arbitrary JavaScript before code that submit the form
+    * [WICKET-4200] - Allow AjaxRequestTarget.prependJavaScript() to work from Component#onBeforeRender
+    * [WICKET-4207] - Use the correct cast in WizardButtonBar
+    * [WICKET-4210] - AutoCompleteTextField should not kill Escape keypress event if options are not shown
+
+** New Feature
+    * [WICKET-4149] - Modify wicket-ioc modules to take advantage of the new IBehaviorInstantiationListener
+    * [WICKET-4162] - Add new StringResourceLoader to allow Wicket extensions to provide localization resource bundles
+
+** Task
+    * [WICKET-4125] - Remove the example for PageLink
+    * [WICKET-4177] - Use Clirr Maven Plugin to keep Wicket API backward compatible
+    * [WICKET-4190] - Implement Session.clear()
+
+
 Release Notes - Wicket - Version 1.5.2
 
 ** Bug
