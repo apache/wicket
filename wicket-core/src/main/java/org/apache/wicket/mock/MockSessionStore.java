@@ -46,6 +46,9 @@ public class MockSessionStore implements ISessionStore
 
 	private String sessionId;
 	private final Map<String, Serializable> attributes = new HashMap<String, Serializable>();
+	private final Set<UnboundListener> unboundListeners = new CopyOnWriteArraySet<UnboundListener>();
+	private final Set<BindListener> bindListeners = new CopyOnWriteArraySet<BindListener>();
+
 	private Session session;
 
 	@Override
@@ -107,8 +110,6 @@ public class MockSessionStore implements ISessionStore
 		return session;
 	}
 
-	private final Set<UnboundListener> unboundListeners = new CopyOnWriteArraySet<UnboundListener>();
-
 	@Override
 	public void registerUnboundListener(UnboundListener listener)
 	{
@@ -121,9 +122,6 @@ public class MockSessionStore implements ISessionStore
 		attributes.remove(name);
 	}
 
-	/**
-	 * @see org.apache.wicket.session.ISessionStore#getUnboundListener()
-	 */
 	@Override
 	public final Set<UnboundListener> getUnboundListener()
 	{
@@ -140,6 +138,21 @@ public class MockSessionStore implements ISessionStore
 	public void unregisterUnboundListener(UnboundListener listener)
 	{
 		unboundListeners.remove(listener);
+	}
+
+	public void registerBindListener(BindListener listener)
+	{
+		bindListeners.add(listener);
+	}
+
+	public void unregisterBindListener(BindListener listener)
+	{
+		bindListeners.remove(listener);
+	}
+
+	public Set<BindListener> getBindListeners()
+	{
+		return Collections.unmodifiableSet(bindListeners);
 	}
 
 	@Override
