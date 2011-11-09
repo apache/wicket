@@ -47,8 +47,7 @@ public class NavigatorLabel extends Label
 	{
 		super(id);
 		setDefaultModel(new StringResourceModel("NavigatorLabel", this,
-			new Model<LabelModelObject>(new LabelModelObject(pageable)),
-			"Showing ${from} to ${to} of ${of}"));
+			new Model<LabelModelObject>(new LabelModelObject(pageable))));
 	}
 
 	private static class LabelModelObject implements IClusterable

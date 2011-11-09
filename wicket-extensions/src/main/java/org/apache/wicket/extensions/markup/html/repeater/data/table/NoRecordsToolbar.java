@@ -38,7 +38,7 @@ public class NoRecordsToolbar extends AbstractToolbar
 	private static final long serialVersionUID = 1L;
 
 	private static final IModel<String> DEFAULT_MESSAGE_MODEL = new ResourceModel(
-		"datatable.no-records-found", "No Records Found");
+		"datatable.no-records-found");
 
 	/**
 	 * Constructor
