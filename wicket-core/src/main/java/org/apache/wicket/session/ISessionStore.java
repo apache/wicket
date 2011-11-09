@@ -180,4 +180,42 @@ public interface ISessionStore
 	 * @return The list of registered unbound listeners
 	 */
 	Set<UnboundListener> getUnboundListener();
+
+	/**
+	 * Listener invoked when session is bound.
+	 */
+	public interface BindListener
+	{
+		/**
+		 * Informs the listener that a session is about to be bound. Note that this method is also
+		 * called for {@link Session#isTemporary() temporary sessions}.
+		 * 
+		 * @param request
+		 *            The request the session is bound in
+		 * @param newSession
+		 *            The session that will be bound
+		 */
+		void bindingSession(Request request, Session newSession);
+	}
+
+	// TODO Wicket.next add these methods to the interface
+	/**
+	 * Registers listener invoked when session is bound.
+	 * 
+	 * @param listener
+	 */
+	// void registerBindListener(BindListener listener);
+
+	/**
+	 * Unregisters listener invoked when session is bound.
+	 * 
+	 * @param listener
+	 */
+	// void unregisterBindListener(BindListener listener);
+
+	/**
+	 * @return The list of registered bind listeners
+	 */
+	// Set<BindListener> getBindListener();
+
 }

@@ -55,6 +55,8 @@ public class HttpSessionStore implements ISessionStore
 	/** */
 	private final Set<UnboundListener> unboundListeners = new CopyOnWriteArraySet<UnboundListener>();
 
+	private final Set<BindListener> bindListeners = new CopyOnWriteArraySet<BindListener>();
+
 	/**
 	 * Construct.
 	 */
@@ -102,6 +104,10 @@ public class HttpSessionStore implements ISessionStore
 		{
 			// call template method
 			onBind(request, newSession);
+			for (BindListener listener : getBindListeners())
+			{
+				listener.bindingSession(request, newSession);
+			}
 
 			HttpSession httpSession = getHttpSession(request, false);
 
@@ -351,6 +357,34 @@ public class HttpSessionStore implements ISessionStore
 	public final Set<UnboundListener> getUnboundListener()
 	{
 		return Collections.unmodifiableSet(unboundListeners);
+	}
+
+	/**
+	 * Registers listener invoked when session is bound.
+	 * 
+	 * @param listener
+	 */
+	public void registerBindListener(BindListener listener)
+	{
+		bindListeners.add(listener);
+	}
+
+	/**
+	 * Unregisters listener invoked when session is bound.
+	 * 
+	 * @param listener
+	 */
+	public void unregisterBindListener(BindListener listener)
+	{
+		bindListeners.remove(listener);
+	}
+
+	/**
+	 * @return The list of registered bind listeners
+	 */
+	public Set<BindListener> getBindListeners()
+	{
+		return Collections.unmodifiableSet(bindListeners);
 	}
 
 	/**
