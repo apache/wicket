@@ -17,6 +17,7 @@
 package org.apache.wicket.ajax;
 
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * A Channel that used to process Ajax requests.
@@ -32,6 +33,7 @@ import org.apache.wicket.IClusterable;
  */
 public class AjaxChannel implements IClusterable
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The type of an {@link AjaxChannel}
@@ -73,8 +75,8 @@ public class AjaxChannel implements IClusterable
 	 */
 	public AjaxChannel(final String name, final Type type)
 	{
-		this.name = name;
-		this.type = type;
+		this.name = Args.notNull(name, "name");
+		this.type = Args.notNull(type, "type");
 	}
 
 	/**

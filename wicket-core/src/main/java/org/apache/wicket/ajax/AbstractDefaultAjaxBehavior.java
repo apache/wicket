@@ -203,7 +203,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			buff.append("}.bind(this)");
 		}
 
-		String channel = getChannelName();
+		AjaxChannel channel = getChannel();
 		if (channel != null)
 		{
 			if (precondition == null)
@@ -211,7 +211,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				buff.append(", null");
 			}
 			buff.append(", '");
-			buff.append(channel);
+			buff.append(channel.getChannelName());
 			buff.append("'");
 		}
 
@@ -254,7 +254,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 *         side
 	 * @deprecated Use {@link #getChannel()} instead
 	 */
-	// TODO Wicket 1.6 - Remove this method
+	// TODO Wicket.next - Remove this method
 	@Deprecated
 	protected String getChannelName()
 	{
