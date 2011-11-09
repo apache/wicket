@@ -152,8 +152,10 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     	            if(Wicket.Browser.isSafari())return killEvent(event);
         	        break;
                 case KEY_ESC:
-            	    hideAutoComplete();
-                	return killEvent(event);
+                    if (visible==1) {
+                        hideAutoComplete();
+                        return killEvent(event);
+                    }
                		break;
                 case KEY_TAB:
                 case KEY_ENTER:
