@@ -27,6 +27,8 @@ import java.io.StringWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
+import org.apache.wicket.util.time.Time;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Matchers;
@@ -98,5 +100,49 @@ public class ServletWebResponseTest extends Assert
 		verify(httpServletResponse).sendRedirect(url);
 		assertTrue(webResponse.isRedirect());
 
+	}
+
+	/**
+	 * Verifies that response headers' name and/or values doesn't contain malicious characters
+	 * 
+	 * https://issues.apache.org/jira/browse/WICKET-4196
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void sanitizeHeaders() throws IOException
+	{
+		final String badInput = "something\n\rbad\n\r\n";
+		final String badUrl = "bad\n\rurl\r\n";
+
+		ServletWebRequest webRequest = mock(ServletWebRequest.class);
+		when(webRequest.isAjax()).thenReturn(Boolean.FALSE);
+
+		MockHttpServletResponse httpServletResponse = new MockHttpServletResponse(null);
+
+		ServletWebResponse webResponse = new ServletWebResponse(webRequest, httpServletResponse);
+
+		webResponse.addHeader(badInput, "someValue");
+		assertNull(httpServletResponse.getHeader(badInput));
+		assertEquals(httpServletResponse.getHeader(webResponse.sanitize(badInput)), "someValue");
+
+		webResponse.addHeader("someName", badInput);
+		assertEquals(httpServletResponse.getHeader("someName"), "something  bad   ");
+
+		webResponse.setHeader(badInput, badInput);
+		assertNull(httpServletResponse.getHeader(badInput));
+		assertEquals(httpServletResponse.getHeader(webResponse.sanitize(badInput)),
+			"something  bad   ");
+
+		Time now = Time.now();
+		webResponse.setDateHeader(badInput, now);
+		assertNull(httpServletResponse.getHeader(badInput));
+		String dateHeaderValue = httpServletResponse.getHeader(webResponse.sanitize(badInput));
+		assertNotNull(dateHeaderValue);
+		assertEquals(-1, dateHeaderValue.indexOf('\n'));
+		assertEquals(-1, dateHeaderValue.indexOf('\r'));
+
+		webResponse.sendRedirect(badUrl);
+		assertEquals(httpServletResponse.getRedirectLocation(), "bad  url  ");
 	}
 }
