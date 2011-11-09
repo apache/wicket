@@ -71,7 +71,7 @@ public class AjaxIndicatorAppender extends Behavior
 			final String javascript = "var e = Wicket.$('" + getMarkupId() +
 				"'); if (e != null && typeof(e.parentNode) != 'undefined') e.parentNode.removeChild(e);";
 
-			target.appendJavaScript(javascript);
+			target.prependJavaScript(javascript);
 		}
 	}
 
