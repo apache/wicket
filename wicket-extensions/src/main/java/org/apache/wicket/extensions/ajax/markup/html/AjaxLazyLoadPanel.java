@@ -18,6 +18,7 @@ package org.apache.wicket.extensions.ajax.markup.html;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
+import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
@@ -38,9 +39,12 @@ import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandle
  */
 public abstract class AjaxLazyLoadPanel extends Panel
 {
-	private static final String LAZY_LOAD_COMPONENT_ID = "content";
-
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * The component id which will be used to load the lazily loaded component.
+	 */
+	public static final String LAZY_LOAD_COMPONENT_ID = "content";
 
 	// state,
 	// 0:add loading component
@@ -96,7 +100,19 @@ public abstract class AjaxLazyLoadPanel extends Panel
 					handleCallbackScript(response, getCallbackScript().toString());
 				}
 			}
+
+			@Override
+			protected AjaxChannel getChannel()
+			{
+				return AjaxLazyLoadPanel.this.getChannel();
+			}
+
 		});
+	}
+
+	protected AjaxChannel getChannel()
+	{
+		return null;
 	}
 
 	/**
