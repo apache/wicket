@@ -25,6 +25,7 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.crypt.ICrypt;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,8 +77,8 @@ public class CryptoMapper implements IRequestMapper
 	 */
 	public CryptoMapper(final IRequestMapper wrappedMapper, final IProvider<ICrypt> cryptProvider)
 	{
-		this.wrappedMapper = wrappedMapper;
-		this.cryptProvider = cryptProvider;
+		this.wrappedMapper = Args.notNull(wrappedMapper, "wrappedMapper");
+		this.cryptProvider = Args.notNull(cryptProvider, "cryptProvider");
 	}
 
 	public int getCompatibilityScore(final Request request)
@@ -109,9 +110,21 @@ public class CryptoMapper implements IRequestMapper
 		return wrappedMapper.mapRequest(request.cloneWithUrl(url));
 	}
 
-	private ICrypt getCrypt()
+	/**
+	 * @return the {@link ICrypt} implementation that may be used to encrypt/decrypt {@link Url}'s
+	 *         segments and/or query string
+	 */
+	protected final ICrypt getCrypt()
 	{
 		return cryptProvider.get();
+	}
+
+	/**
+	 * @return the wrapped root request mapper
+	 */
+	protected final IRequestMapper getWrappedMapper()
+	{
+		return wrappedMapper;
 	}
 
 	private Url encryptUrl(final Url url)
