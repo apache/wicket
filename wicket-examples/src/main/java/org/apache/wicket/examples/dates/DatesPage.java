@@ -178,7 +178,14 @@ public class DatesPage extends WicketExamplePage
 		add(form);
 		form.add(dateTextField);
 
-		DatePicker datePicker = new DatePicker();
+		DatePicker datePicker = new DatePicker()
+		{
+			@Override
+			protected String getAdditionalJavaScript()
+			{
+				return "${calendar}.cfg.setProperty(\"navigator\",true,false); ${calendar}.render();";
+			}
+		};
 		datePicker.setShowOnFieldClick(true);
 		datePicker.setAutoHide(true);
 		dateTextField.add(datePicker);
