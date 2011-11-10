@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.basic.Label;
+import org.junit.Test;
 
 /**
  * 
@@ -30,6 +31,7 @@ public class JarStringResourceLoaderTest extends WicketTestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void testLoader_default()
 	{
 		JarStringResourceLoader loader = new JarStringResourceLoader();
@@ -43,6 +45,7 @@ public class JarStringResourceLoaderTest extends WicketTestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void testLoader_fr()
 	{
 		JarStringResourceLoader loader = new JarStringResourceLoader();
@@ -54,6 +57,7 @@ public class JarStringResourceLoaderTest extends WicketTestCase
 	/**
 	 * 
 	 */
+	@Test
 	public void testLoader_notFound()
 	{
 		JarStringResourceLoader loader = new JarStringResourceLoader();
