@@ -75,6 +75,21 @@ public final class Url implements Serializable
 	private String host;
 
 	/**
+	 * Modes with which urls can be stringized
+	 * 
+	 * @author igor
+	 */
+	public static enum StringMode {
+		/** local urls are rendered without the host name */
+		LOCAL,
+		/**
+		 * full urls are written with hostname. if the hostname is not set or one of segments is
+		 * {@literal ..} an {@link IllegalStateException} is thrown.
+		 */
+		FULL;
+	}
+
+	/**
 	 * 
 	 * @param qp
 	 * @param charset
@@ -185,6 +200,11 @@ public final class Url implements Serializable
 			{
 				result.host = hostAndPort.substring(0, portAt);
 				result.port = Integer.parseInt(hostAndPort.substring(portAt + 1));
+			}
+
+			if (relativeAt < 0)
+			{
+				relativeUrl = "/";
 			}
 		}
 		else
@@ -388,9 +408,9 @@ public final class Url implements Serializable
 	}
 
 	/**
-	 * Returns whether the URL is absolute.
+	 * Returns whether the Url is absolute. Absolute Urls start with a '{@literal /}'.
 	 * 
-	 * @return <code>true</code> if URL is absolute, <code>false</code> otherwise.
+	 * @return <code>true</code> if Url is absolute, <code>false</code> otherwise.
 	 */
 	public boolean isAbsolute()
 	{
@@ -583,7 +603,7 @@ public final class Url implements Serializable
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Renders a url with {@link StringMode#LOCAL} using the url's charset
 	 */
 	@Override
 	public String toString()
@@ -596,7 +616,9 @@ public final class Url implements Serializable
 	 * representation
 	 * 
 	 * @return absolute representation of the url
+	 * @deprecated see {@link Url#toString(StringMode)}
 	 */
+	@Deprecated
 	public String toAbsoluteString()
 	{
 		return toAbsoluteString(getCharset());
@@ -609,10 +631,18 @@ public final class Url implements Serializable
 	 * @param charset
 	 * 
 	 * @return see toStringRepresentation
+	 * @deprecated see {@link Url#toString(StringMode, Charset)}
 	 */
+	@Deprecated
 	public String toAbsoluteString(final Charset charset)
 	{
 		StringBuilder result = new StringBuilder();
+
+		String protocol = this.protocol;
+		if (Strings.isEmpty(protocol))
+		{
+			protocol = "http";
+		}
 
 		// output scheme://host:port if specified
 		if (protocol != null && Strings.isEmpty(host) == false)
@@ -632,16 +662,88 @@ public final class Url implements Serializable
 		return Strings.join("/", result.toString(), this.toString());
 	}
 
+
 	/**
+	 * Stringizes this url
+	 * 
+	 * @param mode
+	 *            {@link StringMode} that determins how to stringize the url
 	 * @param charset
-	 * @return see toString()
+	 *            charset
+	 * @return sringized version of this url
+	 * 
+	 */
+	public String toString(StringMode mode, Charset charset)
+	{
+		StringBuilder result = new StringBuilder();
+		final String path = getPath(charset);
+
+		if (StringMode.FULL == mode)
+		{
+			if (Strings.isEmpty(host))
+			{
+				throw new IllegalStateException("Cannot render this url in " +
+					StringMode.FULL.name() + " mode because it does not have a host set.");
+			}
+
+			String protocol = this.protocol;
+			if (Strings.isEmpty(protocol))
+			{
+				protocol = "http";
+			}
+
+			// output scheme://host:port if specified
+			result.append(protocol);
+			result.append("://");
+			result.append(host);
+
+			if (port != null && port.equals(getDefaultPortForProtocol(protocol)) == false)
+			{
+				result.append(':');
+				result.append(port);
+			}
+
+			if (path.contains(".."))
+			{
+				throw new IllegalStateException("Cannot render this url in " +
+					StringMode.FULL.name() + " mode because it has a `..` segment: " + toString());
+			}
+
+			if (!path.startsWith("/"))
+			{
+				result.append("/");
+			}
+
+		}
+
+
+		result.append(path);
+		result.append(getQueryString(charset));
+		return result.toString();
+	}
+
+	/**
+	 * Stringizes this url using the specifid {@link StringMode} and url's charset
+	 * 
+	 * @param mode
+	 *            {@link StringMode} that determins how to stringize the url
+	 * @return stringized url
+	 */
+	public String toString(StringMode mode)
+	{
+		return toString(mode, getCharset());
+	}
+
+
+	/**
+	 * Stringizes this url using {@link StringMode#LOCAL} and the specified charset
+	 * 
+	 * @param charset
+	 * @return stringized url
 	 */
 	public String toString(final Charset charset)
 	{
-		StringBuilder result = new StringBuilder();
-		result.append(getPath(charset));
-		result.append(getQueryString(charset));
-		return result.toString();
+		return toString(StringMode.LOCAL, charset);
 	}
 
 	/**

@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.wicket.request.Url.QueryParameter;
+import org.apache.wicket.request.Url.StringMode;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -212,6 +213,22 @@ public class UrlTest extends Assert
 		assertEquals(url.toString(), s);
 	}
 
+	@Test
+	public void render5()
+	{
+		Url url = Url.parse("https://www.domain.com/foo/bar?baz=ban");
+
+		// local string mode
+		assertEquals("/foo/bar?baz=ban", url.toString(StringMode.LOCAL));
+
+		// full string mode
+		assertEquals("https://www.domain.com/foo/bar?baz=ban", url.toString(StringMode.FULL));
+
+		// local is the default mode
+		assertEquals(url.toString(StringMode.LOCAL), url.toString());
+	}
+
+
 	/**
 	 * 
 	 */
@@ -251,6 +268,17 @@ public class UrlTest extends Assert
 		Url url = Url.parse("/abc/efg");
 		assertTrue(url.isAbsolute());
 	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void absolute5()
+	{
+		Url url = Url.parse("http://www.domain.com");
+		assertTrue(url.isAbsolute());
+	}
+
 
 	/**
 	 * 
@@ -496,9 +524,9 @@ public class UrlTest extends Assert
 	public void testParseAbsoluteUrl()
 	{
 		Url url = Url.parse("ftp://myhost:8081");
-		checkUrl(url, "ftp", "myhost", 8081);
-		assertFalse(url.isAbsolute());
-		assertEquals("ftp://myhost:8081", url.toAbsoluteString());
+		checkUrl(url, "ftp", "myhost", 8081, "", "");
+		assertTrue(url.isAbsolute());
+		assertEquals("ftp://myhost:8081/", url.toAbsoluteString());
 
 		url = Url.parse("gopher://myhost:8081/foo");
 		checkUrl(url, "gopher", "myhost", 8081, "", "foo");
