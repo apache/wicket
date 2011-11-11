@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.wizard;
 import java.util.Iterator;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * Test for {@link WizardModel}.
@@ -27,8 +28,9 @@ public class WizardModelTest extends WicketTestCase
 {
 
 	/**
-	 * Test steps are intialized correctly.
+	 * Test steps are initialized correctly.
 	 */
+	@Test
 	public void testResetInitsSteps()
 	{
 		WizardModel model = new WizardModel();

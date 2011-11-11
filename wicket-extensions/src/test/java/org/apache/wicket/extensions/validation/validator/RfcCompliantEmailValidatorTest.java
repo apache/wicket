@@ -16,21 +16,22 @@
  */
 package org.apache.wicket.extensions.validation.validator;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.Validatable;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Test that it really validates RFC valid email addresses.
  * 
  * @author Frank Bille
  */
-public class RfcCompliantEmailValidatorTest extends TestCase
+public class RfcCompliantEmailValidatorTest extends Assert
 {
 	/**
 	 * Test a couple of valid email addresses.
 	 */
+	@Test
 	public void testValidEmailAddresses()
 	{
 		IValidator<String> validator = RfcCompliantEmailAddressValidator.getInstance();
@@ -52,6 +53,7 @@ public class RfcCompliantEmailValidatorTest extends TestCase
 	/**
 	 * Test a couple of invalid email addresses.
 	 */
+	@Test
 	public void testInValidEmailAddresses()
 	{
 		IValidator<String> validator = RfcCompliantEmailAddressValidator.getInstance();

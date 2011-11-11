@@ -22,8 +22,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
@@ -36,28 +34,37 @@ import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * 
  */
-public class DataTableTest extends TestCase
+public class DataTableTest extends Assert
 {
 	/** Log for reporting. */
 	private static final Logger log = LoggerFactory.getLogger(DataTableTest.class);
 
 	private WicketTester tester;
 
-	@Override
-	protected void setUp() throws Exception
+	/**
+	 * 
+	 */
+	@Before
+	public void before()
 	{
 		tester = new WicketTester(new RepeaterApplication());
 	}
 
-	@Override
-	protected void tearDown() throws Exception
+	/**
+	 * 
+	 */
+	@After
+	public void after()
 	{
 		tester.destroy();
 	}
@@ -65,6 +72,7 @@ public class DataTableTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void test_1() throws Exception
 	{
 		tester.startPage(DataTablePage.class);
@@ -84,10 +92,10 @@ public class DataTableTest extends TestCase
 		index = document.indexOf("<caption", index + 1);
 		assertTrue("There must be not be <caption>", index == -1);
 
-		log.error(document);
-		log.error("==============================================");
-		log.error("==============================================");
-		log.error(removeFillers(document));
+// log.error(document);
+// log.error("==============================================");
+// log.error("==============================================");
+// log.error(removeFillers(document));
 
 		String doc = removeFillers(document);
 		DiffUtil.validatePage(doc, getClass(), "DataTablePage_ExpectedResult.html", true);
@@ -97,18 +105,19 @@ public class DataTableTest extends TestCase
 	 * Tests that DataTable doesn't produce thead/tfoot if there are no top/bottom toolbars or if
 	 * their children components are all invisible
 	 */
+	@Test
 	public void testWicket3603()
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.add("empty", Boolean.TRUE);
 		tester.startPage(Wicket3603Page.class, parameters);
-		System.err.println(tester.getLastResponseAsString());
+// System.err.println(tester.getLastResponseAsString());
 		Assert.assertTrue(tester.getLastResponseAsString().contains("thead"));
 		Assert.assertTrue(tester.getLastResponseAsString().contains("tfoot"));
 
 		parameters.set("empty", Boolean.FALSE);
 		tester.startPage(Wicket3603Page.class);
-		System.err.println(tester.getLastResponseAsString());
+// System.err.println(tester.getLastResponseAsString());
 		Assert.assertFalse(tester.getLastResponseAsString().contains("thead"));
 		Assert.assertFalse(tester.getLastResponseAsString().contains("tfoot"));
 	}
@@ -117,6 +126,7 @@ public class DataTableTest extends TestCase
 	 * Tests that a {@link DataTable} with non-empty {@link DataTable#getCaptionModel()} will render
 	 * &lt;caption&gt; element.
 	 */
+	@Test
 	public void testWicket3886()
 	{
 		DataTablePage page = new DataTablePage()

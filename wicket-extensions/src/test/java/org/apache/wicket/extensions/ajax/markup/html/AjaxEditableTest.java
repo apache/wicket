@@ -21,6 +21,8 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests for {@link AjaxEditableLabel}
@@ -30,10 +32,12 @@ import org.apache.wicket.markup.html.form.FormComponent;
 public class AjaxEditableTest extends WicketTestCase
 {
 
-	@Override
-	protected void setUp() throws Exception
+	/**
+	 * 
+	 */
+	@Before
+	public void setUp()
 	{
-		super.setUp();
 		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
 		tester.startPage(AjaxEditableLabelPage.class);
 		tester.assertRenderedPage(AjaxEditableLabelPage.class);
@@ -44,6 +48,7 @@ public class AjaxEditableTest extends WicketTestCase
 	 * Tests default AjaxEditableLabel behavior
 	 */
 	@SuppressWarnings({ "unchecked" })
+	@Test
 	public void testAjaxEditableLabel()
 	{
 		Page page = tester.getLastRenderedPage();
@@ -72,6 +77,7 @@ public class AjaxEditableTest extends WicketTestCase
 	 * <code>LabelBehavior</code>
 	 */
 	@SuppressWarnings({ "unchecked" })
+	@Test
 	public void testDisabledAjaxEditableLabel()
 	{
 		Page page = tester.getLastRenderedPage();
@@ -103,6 +109,7 @@ public class AjaxEditableTest extends WicketTestCase
 	 * A test that changes the value of the {@link AjaxEditableLabel}
 	 */
 	@SuppressWarnings({ "unchecked" })
+	@Test
 	public void testUpdateValue()
 	{
 		Page page = tester.getLastRenderedPage();

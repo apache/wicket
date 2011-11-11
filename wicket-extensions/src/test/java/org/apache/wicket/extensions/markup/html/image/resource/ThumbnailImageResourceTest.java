@@ -25,6 +25,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
+import org.junit.Test;
 
 
 /**
@@ -37,6 +38,7 @@ public class ThumbnailImageResourceTest extends WicketTestCase
 	 * 
 	 * @throws IOException
 	 */
+	@Test
 	public void testThumbnailImageResource() throws IOException
 	{
 		DefaultButtonImageResource unscaled = new DefaultButtonImageResource(60, 60, "");

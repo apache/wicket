@@ -17,6 +17,7 @@
 package org.apache.wicket.extensions.markup.html.tree;
 
 import org.apache.wicket.WicketTestCase;
+import org.junit.Test;
 
 /**
  * Try to move the c3 node to the c2 at the described tree model:
@@ -36,6 +37,7 @@ public class MoveChildToParentNodeMarkedForRecreationTest extends WicketTestCase
 	/**
 	 * test()
 	 */
+	@Test
 	public void test()
 	{
 		MoveChildToParentNodeMarkedForRecreationTestPage testPage = new MoveChildToParentNodeMarkedForRecreationTestPage();

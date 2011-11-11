@@ -16,11 +16,12 @@
  */
 package org.apache.wicket;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 
 /**
  * Base class for tests which require comparing wicket response with a file.
@@ -29,37 +30,41 @@ import org.apache.wicket.util.tester.WicketTester;
  * -Dwicket.replace.expected.results=true
  * 
  */
-public abstract class WicketTestCase extends TestCase
+public abstract class WicketTestCase extends Assert
 {
 	/** */
 	public WicketTester tester;
 
 	/**
-	 * prevent wicket from launching a desktop window:
-	 * once someone uses AWT-specific classes the java runtime environment 
-	 * will automatically allocate a desktop window for interaction 
-	 * unless you tell java to run in 'headless-mode'. since wicket is 
-	 * supposed to run on servers, not desktops, this will be the default.
+	 * prevent wicket from launching a desktop window: once someone uses AWT-specific classes the
+	 * java runtime environment will automatically allocate a desktop window for interaction unless
+	 * you tell java to run in 'headless-mode'. since wicket is supposed to run on servers, not
+	 * desktops, this will be the default.
 	 * 
-	 * @see http://java.sun.com/developer/technicalArticles/J2SE/Desktop/headless
+	 * @see "http://java.sun.com/developer/technicalArticles/J2SE/Desktop/headless"
 	 */
 	static
 	{
 		System.setProperty("java.awt.headless", "true");
 	}
-	
-	@Override
-	protected void setUp() throws Exception
+
+	/**
+	 * 
+	 */
+	@Before
+	public void before()
 	{
 		tester = new WicketTester();
 	}
 
-	@Override
-	protected void tearDown() throws Exception
+	/**
+	 * 
+	 */
+	@After
+	public void after()
 	{
 		tester.destroy();
 	}
-
 
 	/**
 	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected

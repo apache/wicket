@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.junit.Test;
 
 /**
  */
@@ -34,6 +35,7 @@ public class UploadFormWithProgressBarTest extends WicketTestCase
 	/**
 	 * @see "https://issues.apache.org/jira/browse/WICKET-3200"
 	 */
+	@Test
 	public void testReCreateTheForm()
 	{
 		UploadFormWithProgressBarTestPage testPage = null;
