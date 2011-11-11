@@ -16,11 +16,12 @@
  */
 package org.apache.wicket.spring;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.apache.wicket.spring.test.SpringContextLocatorMock;
 import org.apache.wicket.util.lang.WicketObjects;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests {@link SpringBeanLocator}
@@ -28,22 +29,17 @@ import org.apache.wicket.util.lang.WicketObjects;
  * @author ivaynberg
  * 
  */
-public class SpringBeanLocatorTest extends TestCase
+public class SpringBeanLocatorTest extends Assert
 {
-	/**
-	 * @param name
-	 */
-	public SpringBeanLocatorTest(final String name)
-	{
-		super(name);
-	}
-
 	private ApplicationContextMock ctx;
 
 	private ISpringContextLocator ctxLocator;
 
-	@Override
-	protected void setUp() throws Exception
+	/**
+	 * 
+	 */
+	@Before
+	public void before()
 	{
 		ctx = new ApplicationContextMock();
 		ctxLocator = new SpringContextLocatorMock(ctx);
@@ -52,6 +48,7 @@ public class SpringBeanLocatorTest extends TestCase
 	/**
 	 * tests lookup of beans by class only
 	 */
+	@Test
 	public void testLookupByClass()
 	{
 		Bean bean = new Bean();
@@ -65,6 +62,7 @@ public class SpringBeanLocatorTest extends TestCase
 	/**
 	 * tests if lookup by class is still working after deserialization
 	 */
+	@Test
 	public void testLookupByClassAfterDeserialization()
 	{
 		Bean bean = new Bean();
@@ -80,6 +78,7 @@ public class SpringBeanLocatorTest extends TestCase
 	/**
 	 * tests error if bean with class is not in the context
 	 */
+	@Test
 	public void testLookupByClassNotFound()
 	{
 		SpringBeanLocator locator = new SpringBeanLocator(Bean.class, ctxLocator);
@@ -97,6 +96,7 @@ public class SpringBeanLocatorTest extends TestCase
 	/**
 	 * tests error when more then one bean of the same class found
 	 */
+	@Test
 	public void testLookupByClassTooManyFound()
 	{
 		Bean bean = new Bean();
@@ -119,6 +119,7 @@ public class SpringBeanLocatorTest extends TestCase
 	/**
 	 * tests lookup by name
 	 */
+	@Test
 	public void testLookupByName()
 	{
 		Bean bean = new Bean();
@@ -132,6 +133,7 @@ public class SpringBeanLocatorTest extends TestCase
 	/**
 	 * tests lookup by name after locator has been deserialized
 	 */
+	@Test
 	public void testLookupByNameAfterDeserialization()
 	{
 		Bean bean = new Bean();
@@ -146,6 +148,7 @@ public class SpringBeanLocatorTest extends TestCase
 	/**
 	 * tests error if no bean with name found
 	 */
+	@Test
 	public void testLookupByNameNotFound()
 	{
 		SpringBeanLocator locator = new SpringBeanLocator("bean", Bean.class, ctxLocator);
@@ -163,6 +166,7 @@ public class SpringBeanLocatorTest extends TestCase
 	/**
 	 * tests constructor argument checks
 	 */
+	@Test
 	public void testConstructorArguments()
 	{
 		try
@@ -189,6 +193,7 @@ public class SpringBeanLocatorTest extends TestCase
 	/**
 	 * tests error when context not found
 	 */
+	@Test
 	public void testContextNotFound()
 	{
 		SpringContextLocatorMock ctxLocator = new SpringContextLocatorMock(null);
@@ -206,6 +211,7 @@ public class SpringBeanLocatorTest extends TestCase
 	/**
 	 * tests equals and hashcode contracts
 	 */
+	@Test
 	public void testEqualsAndHashcode()
 	{
 		SpringBeanLocator a = new SpringBeanLocator("bean", SpringBeanLocator.class, ctxLocator);
