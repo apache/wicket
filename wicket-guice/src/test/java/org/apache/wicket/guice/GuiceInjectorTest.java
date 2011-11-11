@@ -19,8 +19,6 @@ package org.apache.wicket.guice;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.mock.MockApplication;
@@ -29,6 +27,8 @@ import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.lang.WicketObjects;
+import org.junit.Assert;
+import org.junit.Test;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;
@@ -37,11 +37,12 @@ import com.google.inject.TypeLiteral;
 
 /**
  */
-public class GuiceInjectorTest extends TestCase
+public class GuiceInjectorTest extends Assert
 {
 	/**
 	 * testInjectionAndSerialization()
 	 */
+	@Test
 	public void testInjectionAndSerialization()
 	{
 		MockApplication app = new MockApplication();
