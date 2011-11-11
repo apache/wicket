@@ -43,7 +43,7 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 	/**
 	 * 
 	 */
-	private static class MapperWithScore implements Comparable<MapperWithScore>
+	static class MapperWithScore implements Comparable<MapperWithScore>
 	{
 		private final IRequestMapper mapper;
 		private final int compatibilityScore;
@@ -56,7 +56,8 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 
 		public int compareTo(final MapperWithScore o)
 		{
-			return o.compatibilityScore - compatibilityScore;
+			return (compatibilityScore < o.compatibilityScore ? 1
+				: (compatibilityScore > o.compatibilityScore ? -1 : 0));
 		}
 
 		public IRequestMapper getMapper()

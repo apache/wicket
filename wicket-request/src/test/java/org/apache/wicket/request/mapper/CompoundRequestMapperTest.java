@@ -18,6 +18,7 @@ package org.apache.wicket.request.mapper;
 
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.EmptyRequestHandler;
+import org.apache.wicket.request.mapper.CompoundRequestMapper.MapperWithScore;
 import org.apache.wicket.request.mapper.mount.MountMapper;
 import org.junit.Assert;
 import org.junit.Test;
@@ -59,4 +60,26 @@ public class CompoundRequestMapperTest extends Assert
 			compound.mapRequest(compound.createRequest(Url.parse(MOUNT_PATH_3))) instanceof EmptyRequestHandler);
 	}
 
+	/**
+	 * Test {@link MapperWithScore#compareTo(MapperWithScore)}.
+	 */
+	@Test
+	public void score()
+	{
+		assertTrue(score(0).compareTo(score(0)) == 0);
+		assertTrue(score(0).compareTo(score(10)) > 0);
+		assertTrue(score(10).compareTo(score(0)) < 0);
+		assertTrue(score(0).compareTo(score(10)) > 0);
+		assertTrue(score(-10).compareTo(score(0)) > 0);
+		assertTrue(score(0).compareTo(score(-10)) < 0);
+		assertTrue(score(10).compareTo(score(Integer.MIN_VALUE + 1)) < 0);
+		assertTrue(score(Integer.MIN_VALUE + 1).compareTo(score(10)) > 0);
+		assertTrue(score(10).compareTo(score(Integer.MAX_VALUE)) > 0);
+		assertTrue(score(Integer.MAX_VALUE).compareTo(score(10)) < 0);
+	}
+
+	private MapperWithScore score(int score)
+	{
+		return new MapperWithScore(null, score);
+	}
 }
