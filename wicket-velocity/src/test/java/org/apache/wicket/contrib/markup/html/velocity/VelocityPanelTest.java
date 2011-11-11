@@ -16,36 +16,56 @@
  */
 package org.apache.wicket.contrib.markup.html.velocity;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests for <code>VelocityPanel</code>
  * 
  * @see org.apache.wicket.velocity.markup.html.VelocityPanel
  */
-public class VelocityPanelTest extends TestCase
+public class VelocityPanelTest extends Assert
 {
+	WicketTester tester;
+
+	/**
+	 * 
+	 */
+	@Before
+	public void before()
+	{
+		tester = new WicketTester();
+	}
+
+	/**
+	 * 
+	 */
+	@After
+	public void after()
+	{
+		tester.destroy();
+	}
+
 	/**
 	 * Basic test
 	 */
+	@Test
 	public void testVelocityPanel()
 	{
-		WicketTester tester = new WicketTester();
 		tester.startPage(VelocityPage.class);
 		tester.assertContains(VelocityPage.TEST_STRING);
-		tester.dumpPage();
 	}
 
 	/**
 	 * Test with Wicket markup parsing
 	 */
+	@Test
 	public void testVelocityPanelWithMarkupParsing()
 	{
-		WicketTester tester = new WicketTester();
 		tester.startPage(VelocityWithMarkupParsingPage.class);
 		tester.assertLabel("velocityPanel:message", VelocityPage.TEST_STRING);
-		tester.dumpPage();
 	}
 }

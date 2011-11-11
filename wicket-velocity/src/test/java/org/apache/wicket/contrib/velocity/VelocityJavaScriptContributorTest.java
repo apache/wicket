@@ -16,25 +16,31 @@
  */
 package org.apache.wicket.contrib.velocity;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Test header contributions.
  */
-public class VelocityJavaScriptContributorTest extends TestCase
+public class VelocityJavaScriptContributorTest extends Assert
 {
 	/**
 	 * Test that the header contribution is added correctly.
 	 */
+	@Test
 	public void testRenderHead()
 	{
 		WicketTester tester = new WicketTester();
-		tester.startPage(VelocityJavaScriptPage.class);
-		System.out.println(tester.getLastResponseAsString());
-		tester.assertContains("msg1: " + VelocityJavaScriptPage.MSG1);
-		tester.dumpPage();
-		tester.destroy();
+		try
+		{
+			tester.startPage(VelocityJavaScriptPage.class);
+			System.out.println(tester.getLastResponseAsString());
+			tester.assertContains("msg1: " + VelocityJavaScriptPage.MSG1);
+		}
+		finally
+		{
+			tester.destroy();
+		}
 	}
 }
