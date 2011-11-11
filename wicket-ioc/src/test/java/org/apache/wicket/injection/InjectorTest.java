@@ -18,10 +18,10 @@ package org.apache.wicket.injection;
 
 import java.lang.reflect.Field;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.injection.util.MockDependency;
 import org.apache.wicket.injection.util.TestObject;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Tests {@link Injector}
@@ -29,7 +29,7 @@ import org.apache.wicket.injection.util.TestObject;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class InjectorTest extends TestCase
+public class InjectorTest extends Assert
 {
 	private static MockDependency dependency = new MockDependency("inject");
 
@@ -62,6 +62,7 @@ public class InjectorTest extends TestCase
 	/**
 	 * Test injection
 	 */
+	@Test
 	public void testInjection()
 	{
 		TestObject testObject = new TestObject();

@@ -18,7 +18,9 @@ package org.apache.wicket.injection;
 
 import java.lang.reflect.Field;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test {@link NoopFieldValueFactory}
@@ -26,15 +28,18 @@ import junit.framework.TestCase;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class NoopFieldValueFactoryTest extends TestCase
+public class NoopFieldValueFactoryTest extends Assert
 {
 	private Field field;
 
 	// Not used, but needed for the test. Do not delete.
 	private Integer testField;
 
-	@Override
-	protected void setUp() throws Exception
+	/**
+	 * @throws Exception
+	 */
+	@Before
+	public void before() throws Exception
 	{
 		NoopFieldValueFactoryTest.class.getDeclaredField("testField");
 	}
@@ -42,6 +47,7 @@ public class NoopFieldValueFactoryTest extends TestCase
 	/**
 	 * make sure null is returned
 	 */
+	@Test
 	public void test()
 	{
 		NoopFieldValueFactory fact = new NoopFieldValueFactory();

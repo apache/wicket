@@ -20,9 +20,10 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.easymock.MockControl;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test {@link CompoundFieldValueFactory}
@@ -30,7 +31,7 @@ import org.easymock.MockControl;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class CompoundFieldValueFactoryTest extends TestCase
+public class CompoundFieldValueFactoryTest extends Assert
 {
 	private Integer testField;
 
@@ -40,8 +41,12 @@ public class CompoundFieldValueFactoryTest extends TestCase
 
 	private final IFieldValueFactory[] fact = new IFieldValueFactory[4];
 
-	@Override
-	protected void setUp() throws Exception
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Before
+	public void before() throws Exception
 	{
 		CompoundFieldValueFactoryTest.class.getDeclaredField("testField");
 
@@ -72,6 +77,7 @@ public class CompoundFieldValueFactoryTest extends TestCase
 	/**
 	 * Test array constructor
 	 */
+	@Test
 	public void testArrayConstructor()
 	{
 		prepare(2);
@@ -94,6 +100,7 @@ public class CompoundFieldValueFactoryTest extends TestCase
 	/**
 	 * Test list constructor
 	 */
+	@Test
 	public void testListConstructor()
 	{
 		prepare(4);
@@ -117,6 +124,7 @@ public class CompoundFieldValueFactoryTest extends TestCase
 	/**
 	 * Test list constructor
 	 */
+	@Test
 	public void testABConstructor()
 	{
 		prepare(2);
@@ -148,6 +156,7 @@ public class CompoundFieldValueFactoryTest extends TestCase
 	/**
 	 * Test list constructor
 	 */
+	@Test
 	public void testBreakOnNonNullReturn()
 	{
 		prepare(2);
@@ -165,6 +174,7 @@ public class CompoundFieldValueFactoryTest extends TestCase
 	/**
 	 * Test addFactory()
 	 */
+	@Test
 	public void testAdd()
 	{
 		prepare(3);

@@ -18,8 +18,6 @@ package org.apache.wicket.proxy;
 
 import java.lang.reflect.Proxy;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.proxy.LazyInitProxyFactory.ProxyReplacement;
 import org.apache.wicket.proxy.util.ConcreteObject;
 import org.apache.wicket.proxy.util.IInterface;
@@ -27,6 +25,8 @@ import org.apache.wicket.proxy.util.IObjectMethodTester;
 import org.apache.wicket.proxy.util.InterfaceObject;
 import org.apache.wicket.proxy.util.ObjectMethodTester;
 import org.apache.wicket.util.lang.WicketObjects;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Tests lazy init proxy factory
@@ -34,7 +34,7 @@ import org.apache.wicket.util.lang.WicketObjects;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class LazyInitProxyFactoryTest extends TestCase
+public class LazyInitProxyFactoryTest extends Assert
 {
 	private static InterfaceObject interfaceObject = new InterfaceObject("interface");
 
@@ -73,6 +73,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 	/**
 	 * Tests lazy init proxy to represent interfaces
 	 */
+	@Test
 	public void testInterfaceProxy()
 	{
 		// test proxy creation for an interface class
@@ -119,6 +120,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 	/**
 	 * Tests lazy init proxy to represent concrete objects
 	 */
+	@Test
 	public void testConcreteProxy()
 	{
 		ConcreteObject proxy = (ConcreteObject)LazyInitProxyFactory.createProxy(
@@ -164,6 +166,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 	/**
 	 * Tests lazy init concrete replacement replacement
 	 */
+	@Test
 	public void testCGLibInterceptorReplacement()
 	{
 		ProxyReplacement ser = new ProxyReplacement(ConcreteObject.class.getName(),
@@ -176,6 +179,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 	/**
 	 * Tests String beans.
 	 */
+	@Test
 	public void testStringProxy()
 	{
 		// We special-case String objects to avoid proxying them, as they're
