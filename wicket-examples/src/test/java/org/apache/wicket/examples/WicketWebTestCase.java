@@ -16,11 +16,9 @@
  */
 package org.apache.wicket.examples;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.After;
+import org.junit.Before;
 
-import com.meterware.httpunit.HttpUnitOptions;
 import com.meterware.httpunit.WebConversation;
 import com.meterware.httpunit.WebResponse;
 
@@ -31,51 +29,13 @@ import com.meterware.httpunit.WebResponse;
  * @author Juergen Donnerstag
  * @author Martijn Dashorst
  */
-public abstract class WicketWebTestCase extends TestCase
+public abstract class WicketWebTestCase extends JettyTestCaseDecorator
 {
 	/** The base url used to connect the conversation to */
 	private String baseUrl = "http://localhost:8098/";
 
 	/** The web conversation that keeps track of our requests. */
 	private WebConversation conversation;
-
-	/**
-	 * Suite method.
-	 * 
-	 * @param clazz
-	 * @return Test suite
-	 */
-	public static Test suite(Class clazz)
-	{
-		// The javascript 'history' variable is not supported by
-		// httpunit and we don't want httpunit to throw an
-		// exception just because they can not handle it.
-		HttpUnitOptions.setExceptionsThrownOnScriptError(false);
-
-		System.setProperty("wicket.configuration", "deployment");
-
-		TestSuite suite = new TestSuite();
-		suite.addTestSuite(clazz);
-
-		return new JettyTestCaseDecorator(suite);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param name
-	 */
-	public WicketWebTestCase(String name)
-	{
-		super(name);
-	}
-
-	/**
-	 * Constructor
-	 */
-	public WicketWebTestCase()
-	{
-	}
 
 	/**
 	 * @param base
@@ -86,12 +46,22 @@ public abstract class WicketWebTestCase extends TestCase
 	}
 
 	/**
-	 * @see junit.framework.TestCase#setUp()
+	 * @throws Exception
 	 */
 	@Override
-	public void setUp() throws Exception
+	@Before
+	public void before() throws Exception
 	{
+		super.before();
 		conversation = new WebConversation();
+	}
+
+	@Override
+	@After
+	public void after() throws Exception
+	{
+		baseUrl = null;
+		super.after();
 	}
 
 	protected WebResponse beginAt(String part) throws Exception

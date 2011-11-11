@@ -16,12 +16,11 @@
  */
 package org.apache.wicket.examples.hangman;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
-
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Testcase for the <code>Game</code> class.
@@ -29,24 +28,14 @@ import org.apache.wicket.util.tester.WicketTester;
  * @author Chris Turner
  * @version 1.0
  */
-public class HangManTest extends TestCase
+public class HangManTest extends Assert
 {
-	/**
-	 * Create the test case.
-	 * 
-	 * @param message
-	 *            The test name
-	 */
-	public HangManTest(String message)
-	{
-		super(message);
-	}
-
 	/**
 	 * Tests the hangman class directly for a winning game.
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test_1() throws Exception
 	{
 		Game hangman = new Game();
@@ -119,6 +108,7 @@ public class HangManTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testHangmanLoseGame() throws Exception
 	{
 		Game hangman = new Game();
@@ -147,50 +137,62 @@ public class HangManTest extends TestCase
 	/**
 	 * Tests the webapplication for a successful match.
 	 */
+	@Test
 	public void testHangmanSuccessWebGame()
 	{
 		WicketTester tester = new WicketTester(new HangmanApplication());
-
-		tester.startPage(Home.class, new PageParameters().set("word", "hangman"));
-		tester.assertComponent("start", Link.class);
-		tester.assertContains("Wicket Examples - hangman");
-		tester.clickLink("start");
-		tester.assertLabel("guessesRemaining", "5");
-		clickLetter(tester, 'f');
-		tester.assertLabel("guessesRemaining", "4");
-		clickLetter(tester, 'h');
-		tester.assertLabel("guessesRemaining", "4");
-		clickLetter(tester, 'a');
-		clickLetter(tester, 'n');
-		clickLetter(tester, 'g');
-		clickLetter(tester, 'm');
-		tester.assertRenderedPage(Win.class);
-		tester.destroy();
+		try
+		{
+			tester.startPage(Home.class, new PageParameters().set("word", "hangman"));
+			tester.assertComponent("start", Link.class);
+			tester.assertContains("Wicket Examples - hangman");
+			tester.clickLink("start");
+			tester.assertLabel("guessesRemaining", "5");
+			clickLetter(tester, 'f');
+			tester.assertLabel("guessesRemaining", "4");
+			clickLetter(tester, 'h');
+			tester.assertLabel("guessesRemaining", "4");
+			clickLetter(tester, 'a');
+			clickLetter(tester, 'n');
+			clickLetter(tester, 'g');
+			clickLetter(tester, 'm');
+			tester.assertRenderedPage(Win.class);
+		}
+		finally
+		{
+			tester.destroy();
+		}
 	}
 
 	/**
 	 * Tests the webapplication for an unsuccessful match.
 	 */
+	@Test
 	public void testHangmanFailureWebGame()
 	{
 		WicketTester tester = new WicketTester(new HangmanApplication());
-
-		tester.startPage(Home.class, new PageParameters().set("word", "hangman"));
-		tester.assertComponent("start", Link.class);
-		tester.assertContains("Wicket Examples - hangman");
-		tester.clickLink("start");
-		tester.assertLabel("guessesRemaining", "5");
-		clickLetter(tester, 'f');
-		tester.assertLabel("guessesRemaining", "4");
-		clickLetter(tester, 'e');
-		tester.assertLabel("guessesRemaining", "3");
-		clickLetter(tester, 't');
-		tester.assertLabel("guessesRemaining", "2");
-		clickLetter(tester, 'x');
-		tester.assertLabel("guessesRemaining", "1");
-		clickLetter(tester, 'z');
-		tester.assertRenderedPage(Lose.class);
-		tester.destroy();
+		try
+		{
+			tester.startPage(Home.class, new PageParameters().set("word", "hangman"));
+			tester.assertComponent("start", Link.class);
+			tester.assertContains("Wicket Examples - hangman");
+			tester.clickLink("start");
+			tester.assertLabel("guessesRemaining", "5");
+			clickLetter(tester, 'f');
+			tester.assertLabel("guessesRemaining", "4");
+			clickLetter(tester, 'e');
+			tester.assertLabel("guessesRemaining", "3");
+			clickLetter(tester, 't');
+			tester.assertLabel("guessesRemaining", "2");
+			clickLetter(tester, 'x');
+			tester.assertLabel("guessesRemaining", "1");
+			clickLetter(tester, 'z');
+			tester.assertRenderedPage(Lose.class);
+		}
+		finally
+		{
+			tester.destroy();
+		}
 	}
 
 	/**

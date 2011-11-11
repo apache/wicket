@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.encodings;
 
 import org.apache.wicket.examples.WicketTestCase;
+import org.junit.Test;
 
 /**
  * jWebUnit test for Hello World.
@@ -28,6 +29,7 @@ public class EncodingTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test_1() throws Exception
 	{
 		tester.startPage(Home.class);

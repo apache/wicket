@@ -16,38 +16,37 @@
  */
 package org.apache.wicket.examples;
 
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+
+import com.meterware.httpunit.HttpUnitOptions;
 
 /**
  * Test decorator that starts a jetty instance
  * 
  * @author ivaynberg
  */
-public class JettyTestCaseDecorator extends TestSetup
+public class JettyTestCaseDecorator extends Assert
 {
 	private Server server;
 	private String contextPath;
 	private String webappLocation;
 
 	/**
-	 * Construct.
-	 * 
-	 * @param test
+	 * @throws Exception
 	 */
-	public JettyTestCaseDecorator(Test test)
+	@Before
+	public void before() throws Exception
 	{
-		super(test);
-	}
+		HttpUnitOptions.setExceptionsThrownOnScriptError(false);
 
-	@Override
-	protected void setUp() throws Exception
-	{
+		System.setProperty("wicket.configuration", "deployment");
+
 		server = new Server();
 		SelectChannelConnector connector = new SelectChannelConnector();
 		connector.setPort(8098);
@@ -76,14 +75,16 @@ public class JettyTestCaseDecorator extends TestSetup
 		server.setHandler(web);
 
 		server.start();
-
-		super.setUp();
 	}
 
-	@Override
-	protected void tearDown() throws Exception
+	/**
+	 * @throws Exception
+	 */
+	@After
+	public void after() throws Exception
 	{
-		super.tearDown();
+		contextPath = null;
+		webappLocation = null;
 		server.stop();
 		server.join();
 	}

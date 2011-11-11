@@ -16,22 +16,33 @@
  */
 package org.apache.wicket.examples;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 
-public abstract class WicketTestCase extends TestCase
+/**
+ * 
+ */
+public abstract class WicketTestCase extends Assert
 {
+	/***/
 	public WicketTester tester;
 
-	@Override
-	protected void setUp() throws Exception
+	/**
+	 * 
+	 */
+	@Before
+	public void before()
 	{
 		tester = new WicketTester();
 	}
 
-	@Override
-	protected void tearDown() throws Exception
+	/**
+	 * 
+	 */
+	@After
+	public void after()
 	{
 		tester.destroy();
 	}

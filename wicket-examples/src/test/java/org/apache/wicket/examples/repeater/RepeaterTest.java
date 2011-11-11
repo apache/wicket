@@ -16,38 +16,43 @@
  */
 package org.apache.wicket.examples.repeater;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Test for Repeater application
  */
-public class RepeaterTest extends TestCase
+public class RepeaterTest extends Assert
 {
 	/**
 	 * Test page.
-	 * 
-	 * @throws Exception
 	 */
-	public void testHelloWorld() throws Exception
+	@Test
+	public void testHelloWorld()
 	{
 		WicketTester tester = new WicketTester(new RepeaterApplication());
-		tester.startPage(Index.class);
-		tester.assertContains("Wicket Examples - repeater views");
+		try
+		{
+			tester.startPage(Index.class);
+			tester.assertContains("Wicket Examples - repeater views");
 
-		checkPage(tester, RepeatingPage.class);
-		checkPage(tester, RefreshingPage.class);
-		checkPage(tester, FormPage.class);
-		checkPage(tester, SimplePage.class);
-		checkPage(tester, PagingPage.class);
-		checkPage(tester, SortingPage.class);
-		checkPage(tester, OIRPage.class);
-		checkPage(tester, DataGridPage.class);
-		checkPage(tester, GridViewPage.class);
-// checkPage(tester, AjaxDataTablePage.class);
-		tester.destroy();
+			checkPage(tester, RepeatingPage.class);
+			checkPage(tester, RefreshingPage.class);
+			checkPage(tester, FormPage.class);
+			checkPage(tester, SimplePage.class);
+			checkPage(tester, PagingPage.class);
+			checkPage(tester, SortingPage.class);
+			checkPage(tester, OIRPage.class);
+			checkPage(tester, DataGridPage.class);
+			checkPage(tester, GridViewPage.class);
+			checkPage(tester, AjaxDataTablePage.class);
+		}
+		finally
+		{
+			tester.destroy();
+		}
 	}
 
 	private void checkPage(WicketTester tester, Class<? extends WebPage> page)

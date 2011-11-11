@@ -16,42 +16,43 @@
  */
 package org.apache.wicket.examples.niceurl;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * jWebUnit test for Hello World.
  */
-public class NiceUrlTest extends TestCase
+public class NiceUrlTest extends Assert
 {
 	private WicketTester tester;
 
 	/**
-	 * @see junit.framework.TestCase#setUp()
+	 * 
 	 */
-	@Override
-	protected void setUp() throws Exception
+	@Before
+	public void before()
 	{
 		tester = new WicketTester(new NiceUrlApplication());
 		tester.startPage(Home.class);
 	}
 
 	/**
-	 * @see junit.framework.TestCase#tearDown()
+	 * 
 	 */
-	@Override
-	protected void tearDown() throws Exception
+	@After
+	public void tearDown()
 	{
 		tester.destroy();
 	}
 
 	/**
 	 * Test page.
-	 * 
-	 * @throws Exception
 	 */
-	public void testHomePage() throws Exception
+	@Test
+	public void testHomePage()
 	{
 		tester.assertContains("Wicket Examples - niceurl");
 		tester.assertContains("This example displays how you can work with 'nice' urls for bookmarkable pages.");
@@ -59,10 +60,9 @@ public class NiceUrlTest extends TestCase
 
 	/**
 	 * Test page.
-	 * 
-	 * @throws Exception
 	 */
-	public void testPage1() throws Exception
+	@Test
+	public void testPage1()
 	{
 		tester.clickLink("page1Link");
 		tester.assertRenderedPage(Page1.class);
@@ -72,10 +72,9 @@ public class NiceUrlTest extends TestCase
 
 	/**
 	 * Test page.
-	 * 
-	 * @throws Exception
 	 */
-	public void testPage2() throws Exception
+	@Test
+	public void testPage2()
 	{
 		tester.clickLink("page2Link");
 		tester.assertRenderedPage(Page2.class);
@@ -87,10 +86,9 @@ public class NiceUrlTest extends TestCase
 
 	/**
 	 * Test page.
-	 * 
-	 * @throws Exception
 	 */
-	public void testPage2QP() throws Exception
+	@Test
+	public void testPage2QP()
 	{
 		tester.clickLink("page2LinkQP");
 		tester.assertRenderedPage(Page2QP.class);
@@ -102,10 +100,9 @@ public class NiceUrlTest extends TestCase
 
 	/**
 	 * Test page.
-	 * 
-	 * @throws Exception
 	 */
-	public void testPage3() throws Exception
+	@Test
+	public void testPage3()
 	{
 		tester.clickLink("page3Link");
 		tester.assertRenderedPage(org.apache.wicket.examples.niceurl.mounted.Page3.class);
@@ -115,10 +112,9 @@ public class NiceUrlTest extends TestCase
 
 	/**
 	 * Test page.
-	 * 
-	 * @throws Exception
 	 */
-	public void testPage4() throws Exception
+	@Test
+	public void testPage4()
 	{
 		tester.clickLink("page4Link");
 		tester.assertRenderedPage(org.apache.wicket.examples.niceurl.mounted.Page4.class);
@@ -128,10 +124,9 @@ public class NiceUrlTest extends TestCase
 
 	/**
 	 * Test page.
-	 * 
-	 * @throws Exception
 	 */
-	public void testPage5() throws Exception
+	@Test
+	public void testPage5()
 	{
 		tester.clickLink("page5Link");
 		tester.assertRenderedPage(org.apache.wicket.examples.niceurl.mounted.Page5.class);

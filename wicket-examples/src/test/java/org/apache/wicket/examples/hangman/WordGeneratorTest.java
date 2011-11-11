@@ -19,9 +19,8 @@ package org.apache.wicket.examples.hangman;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.Assert;
-
 import org.apache.wicket.examples.WicketTestCase;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +39,7 @@ public class WordGeneratorTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testWordGenerator() throws Exception
 	{
 		WordGenerator wg = new WordGenerator();
@@ -50,7 +50,7 @@ public class WordGeneratorTest extends WicketTestCase
 		{
 			Word word = wg.next();
 			log.info("Word found: " + word);
-			Assert.assertFalse("Word should not be returned twice", words.contains(word));
+			assertFalse("Word should not be returned twice", words.contains(word));
 			words.add(word);
 		}
 		log.info("Second iteration...");
@@ -58,10 +58,9 @@ public class WordGeneratorTest extends WicketTestCase
 		{
 			Word word = wg.next();
 			log.info("Word found: " + word);
-			Assert.assertTrue("Word " + word + " should have been returned only once",
-				words.remove(word));
+			assertTrue("Word " + word + " should have been returned only once", words.remove(word));
 		}
-		Assert.assertTrue("All words should have been returned twice", words.isEmpty());
+		assertTrue("All words should have been returned twice", words.isEmpty());
 	}
 
 	/**
@@ -69,9 +68,10 @@ public class WordGeneratorTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testSuppliedWordConstructor() throws Exception
 	{
 		WordGenerator wg = new WordGenerator(new String[] { "testing" });
-		Assert.assertEquals("Word should be as expected", "testing", wg.next().asString());
+		assertEquals("Word should be as expected", "testing", wg.next().asString());
 	}
 }

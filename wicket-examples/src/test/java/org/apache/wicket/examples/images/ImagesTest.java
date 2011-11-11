@@ -16,25 +16,32 @@
  */
 package org.apache.wicket.examples.images;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * jWebUnit test for Hello World.
  */
-public class ImagesTest extends TestCase
+public class ImagesTest extends Assert
 {
 	/**
 	 * Test page.
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testImages() throws Exception
 	{
 		WicketTester tester = new WicketTester(new ImagesApplication());
-		tester.startPage(Home.class);
-		tester.assertContains("Wicket Examples - images");
-		tester.destroy();
+		try
+		{
+			tester.startPage(Home.class);
+			tester.assertContains("Wicket Examples - images");
+		}
+		finally
+		{
+			tester.destroy();
+		}
 	}
 }

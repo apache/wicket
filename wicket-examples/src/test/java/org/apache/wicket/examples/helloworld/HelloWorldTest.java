@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.helloworld;
 
 import org.apache.wicket.examples.WicketTestCase;
+import org.junit.Test;
 
 /**
  * jWebUnit test for Hello World.
@@ -28,6 +29,7 @@ public class HelloWorldTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testHelloWorld() throws Exception
 	{
 		tester.startPage(HelloWorld.class);

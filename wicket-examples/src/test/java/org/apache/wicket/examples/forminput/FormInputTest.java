@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.forminput;
 
 import org.apache.wicket.examples.WicketTestCase;
+import org.junit.Test;
 
 
 /**
@@ -27,6 +28,7 @@ public class FormInputTest extends WicketTestCase
 	/**
 	 * Test page.
 	 */
+	@Test
 	public void test_1()
 	{
 		tester.startPage(FormInput.class);

@@ -16,10 +16,9 @@
  */
 package org.apache.wicket.filtertest;
 
-import junit.framework.Test;
-
-import org.apache.wicket.examples.JettyTestCaseDecorator;
 import org.apache.wicket.examples.WicketWebTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.meterware.httpunit.WebResponse;
 
@@ -29,20 +28,26 @@ import com.meterware.httpunit.WebResponse;
 public class WithoutCPWithFPTest extends WicketWebTestCase
 {
 	/**
-	 * 
-	 * @return Test
+	 * @throws Exception
 	 */
-	public static Test suite()
+	@Override
+	@Before
+	public void before() throws Exception
 	{
-		JettyTestCaseDecorator deco = (JettyTestCaseDecorator)WicketWebTestCase.suite(WithoutCPWithFPTest.class);
-		deco.setContextPath("");
-		String basedir = System.getProperty("basedir");
-		String path = "";
-		if (basedir != null)
-			path = basedir + "/";
-		path += "src/main/testwebapp1";
-		deco.setWebappLocation(path);
-		return deco;
+		if (getContextPath() == null)
+		{
+			setContextPath("");
+		}
+		if (getWebappLocation() == null)
+		{
+			String basedir = System.getProperty("basedir");
+			String path = "";
+			if (basedir != null)
+				path = basedir + "/";
+			path += "src/main/testwebapp1";
+			setWebappLocation(path);
+		}
+		super.before();
 	}
 
 	/**
@@ -50,6 +55,7 @@ public class WithoutCPWithFPTest extends WicketWebTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testHelloWorld() throws Exception
 	{
 		WebResponse response = beginAt("/filtertest/hello?message=Test");
@@ -57,6 +63,10 @@ public class WithoutCPWithFPTest extends WicketWebTestCase
 		assertEquals("Message is: 'Test'", response.getElementWithID("message").getText());
 	}
 
+	/**
+	 * @throws Exception
+	 */
+	@Test
 	public void testWithSlash() throws Exception
 	{
 		WebResponse response = beginAt("/filtertest/hello?message=Test%2FWith%20a%20Slash");

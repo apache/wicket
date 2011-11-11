@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import org.apache.wicket.examples.WicketTestCase;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Before;
+import org.junit.Test;
 
 
 /**
@@ -30,13 +32,10 @@ public class GuestbookTest extends WicketTestCase
 {
 	/**
 	 * Sets up the test.
-	 * 
-	 * @throws Exception
 	 */
-	@Override
-	public void setUp() throws Exception
+	@Before
+	public void setUp()
 	{
-		super.setUp();
 		GuestBook.clear();
 	}
 
@@ -45,6 +44,7 @@ public class GuestbookTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test_1() throws Exception
 	{
 		tester.startPage(GuestBook.class);

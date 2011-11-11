@@ -16,21 +16,20 @@
  */
 package org.apache.wicket.examples.template;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Test for Template application
  */
-public class TemplateTest extends TestCase
+public class TemplateTest extends Assert
 {
 	/**
 	 * Test page.
-	 * 
-	 * @throws Exception
 	 */
-	public void test_1() throws Exception
+	@Test
+	public void test_1()
 	{
 		WicketTester tester = new WicketTester(new TemplateApplication());
 		tester.startPage(tester.getApplication().getHomePage());

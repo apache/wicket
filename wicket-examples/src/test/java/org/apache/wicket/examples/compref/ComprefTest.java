@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.compref;
 
 import org.apache.wicket.examples.WicketTestCase;
+import org.junit.Test;
 
 
 /**
@@ -29,6 +30,7 @@ public class ComprefTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test_1() throws Exception
 	{
 		tester.startPage(Index.class);

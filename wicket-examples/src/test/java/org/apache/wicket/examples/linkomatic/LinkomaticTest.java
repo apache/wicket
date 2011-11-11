@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.linkomatic;
 
 import org.apache.wicket.examples.WicketTestCase;
+import org.junit.Test;
 
 /**
  * jWebUnit test for Hello World.
@@ -26,6 +27,7 @@ public class LinkomaticTest extends WicketTestCase
 	/**
 	 * Test page.
 	 */
+	@Test
 	public void testLinkomatic()
 	{
 		tester.startPage(Home.class);

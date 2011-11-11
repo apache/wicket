@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.ajax.prototype;
 
 import org.apache.wicket.examples.WicketTestCase;
+import org.junit.Test;
 
 /**
  * jWebUnit test for Hello World.
@@ -28,6 +29,7 @@ public class AjaxTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test_1() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(false);

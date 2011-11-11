@@ -16,36 +16,43 @@
  */
 package org.apache.wicket.examples.library;
 
-import junit.framework.TestCase;
-
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * jWebUnit test for Hello World.
  */
-public class LibraryTest extends TestCase
+public class LibraryTest extends Assert
 {
 	/**
 	 * Test page.
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void test_1() throws Exception
 	{
 		WicketTester tester = new WicketTester(new LibraryApplication());
-		tester.startPage(SignIn.class);
-		tester.assertContains("Wicket Examples - library");
-		tester.assertContains("Username and password are both");
+		try
+		{
+			tester.startPage(SignIn.class);
+			tester.assertContains("Wicket Examples - library");
+			tester.assertContains("Username and password are both");
 
-		FormTester formTester = tester.newFormTester("signInPanel:signInForm");
-		formTester.setValue("username", "wicket");
-		formTester.setValue("password", "wicket");
-		formTester.submit();
+			FormTester formTester = tester.newFormTester("signInPanel:signInForm");
+			formTester.setValue("username", "wicket");
+			formTester.setValue("password", "wicket");
+			formTester.submit();
 
-		tester.assertRenderedPage(Home.class);
-		tester.assertContains("Wicket Examples - library");
-		tester.assertLabel("books:0:author", "Effective Java (Joshua Bloch)");
-		tester.destroy();
+			tester.assertRenderedPage(Home.class);
+			tester.assertContains("Wicket Examples - library");
+			tester.assertLabel("books:0:author", "Effective Java (Joshua Bloch)");
+		}
+		finally
+		{
+			tester.destroy();
+		}
 	}
 }

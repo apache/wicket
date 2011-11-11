@@ -16,10 +16,7 @@
  */
 package org.apache.wicket.filtertest;
 
-import junit.framework.Test;
-
-import org.apache.wicket.examples.JettyTestCaseDecorator;
-import org.apache.wicket.examples.WicketWebTestCase;
+import org.junit.Before;
 
 
 /**
@@ -29,29 +26,22 @@ public class WithCPWithFPTest extends WithoutCPWithFPTest
 {
 
 	/**
-	 * @see junit.framework.TestCase#setUp()
+	 * @throws Exception
 	 */
 	@Override
-	public void setUp() throws Exception
+	@Before
+	public void before() throws Exception
 	{
 		setBaseUrl("http://localhost:8098/somecontext");
-		super.setUp();
-	}
 
-	/**
-	 * 
-	 * @return Test
-	 */
-	public static Test suite()
-	{
-		JettyTestCaseDecorator deco = (JettyTestCaseDecorator)WicketWebTestCase.suite(WithCPWithFPTest.class);
-		deco.setContextPath("/somecontext");
+		setContextPath("/somecontext");
 		String basedir = System.getProperty("basedir");
 		String path = "";
 		if (basedir != null)
 			path = basedir + "/";
 		path += "src/main/testwebapp1";
-		deco.setWebappLocation(path);
-		return deco;
+		setWebappLocation(path);
+
+		super.before();
 	}
 }
