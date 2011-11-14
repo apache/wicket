@@ -645,7 +645,7 @@ public final class Url implements Serializable
 		}
 
 		// output scheme://host:port if specified
-		if (protocol != null && Strings.isEmpty(host) == false)
+		if (Strings.isEmpty(host) == false)
 		{
 			result.append(protocol);
 			result.append("://");
