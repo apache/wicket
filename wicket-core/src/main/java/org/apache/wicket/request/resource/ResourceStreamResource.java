@@ -27,6 +27,7 @@ import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.IResourceStreamWriter;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +47,8 @@ public class ResourceStreamResource extends AbstractResource
 	private ContentDisposition contentDisposition = ContentDisposition.INLINE;
 	private String textEncoding;
 	private String mimeType;
+
+	private Duration cacheDuration;
 
 	/**
 	 * Construct.
@@ -85,6 +88,25 @@ public class ResourceStreamResource extends AbstractResource
 	public ResourceStreamResource setTextEncoding(String textEncoding)
 	{
 		this.textEncoding = textEncoding;
+		return this;
+	}
+
+	/**
+	 * @return the duration for which the resource will be cached by the browser
+	 */
+	public Duration getCacheDuration()
+	{
+		return cacheDuration;
+	}
+
+	/**
+	 * @param cacheDuration
+	 *            the duration for which the resource will be cached by the browser
+	 * @return this component
+	 */
+	public ResourceStreamResource setCacheDuration(Duration cacheDuration)
+	{
+		this.cacheDuration = cacheDuration;
 		return this;
 	}
 
@@ -134,6 +156,11 @@ public class ResourceStreamResource extends AbstractResource
 			}
 			data.setContentType(contentType);
 			data.setTextEncoding(textEncoding);
+
+			if (cacheDuration != null)
+			{
+				data.setCacheDuration(cacheDuration);
+			}
 
 			if (stream instanceof IResourceStreamWriter)
 			{

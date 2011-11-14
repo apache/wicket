@@ -24,11 +24,13 @@ import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.UrlEncoder;
 import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.request.resource.ContentDisposition;
+import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.time.Duration;
 
 /**
  * A link that streams a file to the client. When clicked this link will prompt the save as dialog
@@ -56,6 +58,13 @@ public class DownloadLink extends Link<File>
 	 */
 	private boolean deleteAfter;
 
+	/**
+	 * The duration for which the file resource should be cached by the browser.
+	 * <p>
+	 * By default is {@code null} and {@link IResourceSettings#getDefaultCacheDuration()} is used.
+	 * </p>
+	 */
+	private Duration cacheDuration;
 
 	/**
 	 * Constructor. File name used will be the result of <code>file.getName()</code>
@@ -162,7 +171,9 @@ public class DownloadLink extends Link<File>
 						Files.remove(file);
 					}
 				}
-			}.setFileName(fileName).setContentDisposition(ContentDisposition.ATTACHMENT));
+			}.setFileName(fileName)
+				.setContentDisposition(ContentDisposition.ATTACHMENT)
+				.setCacheDuration(cacheDuration));
 	}
 
 	/**
@@ -182,4 +193,19 @@ public class DownloadLink extends Link<File>
 
 		return this;
 	}
+
+	/**
+	 * Sets the duration for which the file resource should be cached by the client.
+	 * 
+	 * @param duration
+	 *            the duration to cache
+	 * @return this component.
+	 */
+	public DownloadLink setCacheDuration(final Duration duration)
+	{
+		cacheDuration = duration;
+		return this;
+	}
+
+
 }

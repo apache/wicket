@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.examples.linkomatic;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -24,6 +29,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ClientSideImageMap;
+import org.apache.wicket.markup.html.link.DownloadLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.link.PopupSettings;
@@ -31,11 +37,14 @@ import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.SharedResourceReference;
+import org.apache.wicket.util.file.Files;
+import org.apache.wicket.util.time.Duration;
 
 
 /**
@@ -140,7 +149,32 @@ public class Home extends WicketExamplePage
 			"Click this link to go to Google in a popup").setPopupSettings(googlePopupSettings));
 
 		// Shared resource link
-		add(new ResourceLink("cancelButtonLink", new SharedResourceReference("cancelButton")));
+		add(new ResourceLink<Void>("cancelButtonLink", new SharedResourceReference("cancelButton")));
+
+		add(new DownloadLink("downloadLink", new AbstractReadOnlyModel<File>()
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public File getObject()
+			{
+				File tempFile;
+				try
+				{
+					tempFile = File.createTempFile("wicket-examples-download-link--", ".tmp");
+
+					InputStream data = new ByteArrayInputStream("some data".getBytes());
+					Files.writeTo(tempFile, data);
+
+				}
+				catch (IOException e)
+				{
+					throw new RuntimeException(e);
+				}
+
+				return tempFile;
+			}
+		}).setCacheDuration(Duration.NONE).setDeleteAfterDownload(true));
 
 		// redirect to external url form
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
