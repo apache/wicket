@@ -197,20 +197,6 @@ public abstract class Behavior
 	}
 
 	/**
-	 * Checks if a listener can be invoked on this behavior
-	 * 
-	 * @param component
-	 * @return true if a listener interface can be invoked on this behavior
-	 * 
-	 * @deprecated use {@link #canCallListenerInterface(Component, Method)}
-	 */
-	@Deprecated
-	public boolean canCallListenerInterface(Component component)
-	{
-		return isEnabled(component) && component.canCallListenerInterface();
-	}
-
-	/**
 	 * Checks whether or not a listener interface can be invoked on this behavior. For further
 	 * information please read the javadoc on {@link Component#canCallListenerInterface(Method)},
 	 * this method has the same semantics.
@@ -226,8 +212,7 @@ public abstract class Behavior
 	 */
 	public boolean canCallListenerInterface(Component component, Method method)
 	{
-		return canCallListenerInterface(component) && isEnabled(component) &&
-			component.canCallListenerInterface(method);
+		return isEnabled(component) && component.canCallListenerInterface(method);
 	}
 
 

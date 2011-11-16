@@ -127,7 +127,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/** True if the page should try to be stateless */
 	private static final int FLAG_STATELESS_HINT = FLAG_RESERVED5;
 
-	/** TODO WICKET-NG JAVADOC */
+	/** Flag that indicates if the page was created using one of its bookmarkable constructors */
 	private static final int FLAG_WAS_CREATED_BOOKMARKABLE = FLAG_RESERVED8;
 
 	/** Log. */
@@ -1004,7 +1004,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * TODO WICKET-NG javadoc
+	 * Sets the flag that determins whether or not this page was created using one of its
+	 * bookmarkable constructors
 	 * 
 	 * @param wasCreatedBookmarkable
 	 */
@@ -1013,7 +1014,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		setFlag(FLAG_WAS_CREATED_BOOKMARKABLE, wasCreatedBookmarkable);
 	}
 
-	/** TODO WICKET-NG javadoc */
+	/**
+	 * Checks if this page was created using one of its bookmarkable constructors
+	 * 
+	 * @see org.apache.wicket.request.component.IRequestablePage#wasCreatedBookmarkable()
+	 */
 	public final boolean wasCreatedBookmarkable()
 	{
 		return getFlag(FLAG_WAS_CREATED_BOOKMARKABLE);

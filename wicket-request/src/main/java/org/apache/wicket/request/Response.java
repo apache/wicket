@@ -65,14 +65,7 @@ public abstract class Response
 	 *             if {@link #write(CharSequence)} has already been called on this instance
 	 * @since 1.5.1
 	 */
-	// TODO Wicket 1.6: make it abstract like other methods in this class
-	public void write(byte[] array, int offset, int length)
-	{
-		// default impl to be able to introduce it in 1.5.x series
-		byte[] towrite = new byte[length];
-		System.arraycopy(array, offset, towrite, 0, length);
-		write(towrite);
-	}
+	public abstract void write(byte[] array, int offset, int length);
 
 	/**
 	 * Closes the response

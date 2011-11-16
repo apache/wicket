@@ -60,14 +60,6 @@ public interface IRequestableComponent
 	public IRequestableComponent get(String path);
 
 	/**
-	 * Returns true if the listener interface method can be called on this component. Normally this
-	 * would check if component is enabled and visible in hierarchy.
-	 * 
-	 * @return <code>true</code> if the listener can be called, <code>false</code> otherwise.
-	 */
-	public boolean canCallListenerInterface();
-
-	/**
 	 * Gets a stable id for the specified behavior. The id remains stable from the point this method
 	 * is first called for the behavior until the behavior has been removed from the component
 	 * 

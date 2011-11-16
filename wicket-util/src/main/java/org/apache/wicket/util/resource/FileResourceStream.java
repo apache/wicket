@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.net.URLConnection;
 
 import org.apache.wicket.util.file.File;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.time.Time;
 
@@ -34,7 +35,6 @@ import org.apache.wicket.util.time.Time;
  * @see org.apache.wicket.util.watch.IModifiable
  * @author Jonathan Locke
  */
-// TODO Wicket 1.6 - make #file mandatory. Args.notNull(file).
 public class FileResourceStream extends AbstractResourceStream
 	implements
 		IFixedLocationResourceStream
@@ -55,6 +55,7 @@ public class FileResourceStream extends AbstractResourceStream
 	 */
 	public FileResourceStream(final File file)
 	{
+		Args.notNull(file, "file");
 		this.file = file;
 	}
 

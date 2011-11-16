@@ -4336,31 +4336,31 @@ public abstract class Component
 		return state;
 	}
 
-
-	/** 
-	 * TODO WICKET-NG javadoc 
-	 * 
-	 * @deprecated use {@link #canCallListenerInterface(Method)} instead
-	 */
-	@Deprecated
-	public final boolean canCallListenerInterface()
-	{
-		return true;
-	}
-	
 	/**
-	 * Checks whether or not a listener method can be invoked on this component. Usually components deny these invocations if they are either invisible or disabled in hierarchy. Components can examine which listener interface is being invoked by examining the declaring class of the passed in {@literal method} parameter.
+	 * Checks whether or not a listener method can be invoked on this component. Usually components
+	 * deny these invocations if they are either invisible or disabled in hierarchy. Components can
+	 * examine which listener interface is being invoked by examining the declaring class of the
+	 * passed in {@literal method} parameter.
 	 * <p>
-	 * WARNING: be careful when overriding this method because it may open security holes - such as allowing a user to click on a link that should be disabled.
+	 * WARNING: be careful when overriding this method because it may open security holes - such as
+	 * allowing a user to click on a link that should be disabled.
 	 * </p>
 	 * <p>
-	 * Example usecase for overriding: Suppose you are building an component that displays images. The component generates a callback to itself using {@link IRequestListener} interface and uses this callback to stream image data. If such a component is placed inside a disable webmarkupcontainer we still want to allow the invocation of the request listener callback method so that image data can be streamed. Such a component would override this method and return {@literal true} if the listener method belongs to {@link IRequestListener}.
+	 * Example usecase for overriding: Suppose you are building an component that displays images.
+	 * The component generates a callback to itself using {@link IRequestListener} interface and
+	 * uses this callback to stream image data. If such a component is placed inside a disable
+	 * webmarkupcontainer we still want to allow the invocation of the request listener callback
+	 * method so that image data can be streamed. Such a component would override this method and
+	 * return {@literal true} if the listener method belongs to {@link IRequestListener}.
 	 * </p>
-	 * @param method listener method about to be invoked on this component
+	 * 
+	 * @param method
+	 *            listener method about to be invoked on this component
 	 * 
 	 * @return {@literal true} iff the listener method can be invoked on this component
 	 */
-	public boolean canCallListenerInterface(Method method) {
+	public boolean canCallListenerInterface(Method method)
+	{
 		return isEnabledInHierarchy() && isVisibleInHierarchy();
 	}
 
