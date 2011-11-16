@@ -58,7 +58,7 @@ public class MaximumValidator<Z extends Comparable<Z> & Serializable> extends Be
 		if (value.compareTo(maximum) > 0)
 		{
 			ValidationError error = new ValidationError();
-			error.addMessageKey(resourceKey());
+			error.addKey(resourceKey());
 			error.setVariable("maximum", maximum);
 			validatable.error(error);
 		}

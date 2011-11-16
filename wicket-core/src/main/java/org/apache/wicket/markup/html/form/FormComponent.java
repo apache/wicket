@@ -1134,13 +1134,13 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 				ValidationError error = new ValidationError();
 				if (e.getResourceKey() != null)
 				{
-					error.addMessageKey(e.getResourceKey());
+					error.addKey(e.getResourceKey());
 				}
 				if (e.getTargetType() != null)
 				{
-					error.addMessageKey("ConversionError." + e.getTargetType().getSimpleName());
+					error.addKey("ConversionError." + e.getTargetType().getSimpleName());
 				}
-				error.addMessageKey("ConversionError");
+				error.addKey("ConversionError");
 				reportValidationError(e, error);
 			}
 		}
@@ -1157,11 +1157,11 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 				ValidationError error = new ValidationError();
 				if (e.getResourceKey() != null)
 				{
-					error.addMessageKey(e.getResourceKey());
+					error.addKey(e.getResourceKey());
 				}
 				String simpleName = getType().getSimpleName();
-				error.addMessageKey("IConverter." + simpleName);
-				error.addMessageKey("IConverter");
+				error.addKey("IConverter." + simpleName);
+				error.addKey("IConverter");
 				error.setVariable("type", simpleName);
 				reportValidationError(e, error);
 			}
@@ -1405,7 +1405,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 */
 	private void reportRequiredError()
 	{
-		error(new ValidationError().addMessageKey("Required"));
+		error(new ValidationError().addKey("Required"));
 	}
 
 	/**

@@ -136,7 +136,7 @@ public class ValidationError implements IValidationError
 		String key = validator.getClass().getSimpleName();
 		if (!Strings.isEmpty(variation))
 		{
-			key = key + "." + variation;
+			key = key + "." + variation.trim();
 		}
 		addKey(key);
 		return this;

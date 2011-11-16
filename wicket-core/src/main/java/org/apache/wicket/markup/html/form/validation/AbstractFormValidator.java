@@ -108,11 +108,11 @@ public abstract class AbstractFormValidator extends Behavior implements IFormVal
 		}
 
 
-		ValidationError error = new ValidationError().addMessageKey(resourceKey);
+		ValidationError error = new ValidationError().addKey(resourceKey);
 		final String defaultKey = getClass().getSimpleName();
 		if (!resourceKey.equals(defaultKey))
 		{
-			error.addMessageKey(defaultKey);
+			error.addKey(defaultKey);
 		}
 
 		error.setVariables(vars);

@@ -77,7 +77,6 @@ public abstract class AbstractValidator<T> extends Behavior
 	/**
 	 * @see IValidator#validate(IValidatable)
 	 */
-	@Override
 	public final void validate(IValidatable<T> validatable)
 	{
 		if (validatable.getValue() != null || validateOnNullValue())
@@ -167,11 +166,11 @@ public abstract class AbstractValidator<T> extends Behavior
 		}
 
 
-		ValidationError error = new ValidationError().addMessageKey(resourceKey);
+		ValidationError error = new ValidationError().addKey(resourceKey);
 		final String defaultKey = getClass().getSimpleName();
 		if (!resourceKey.equals(defaultKey))
 		{
-			error.addMessageKey(defaultKey);
+			error.addKey(defaultKey);
 		}
 
 		error.setVariables(vars);

@@ -54,7 +54,7 @@ public class MinimumValidator<Z extends Comparable<Z> & Serializable> extends Be
 		if (value.compareTo(minimum) < 0)
 		{
 			ValidationError error = new ValidationError();
-			error.addMessageKey(resourceKey());
+			error.addKey(resourceKey());
 			error.setVariable("minimum", minimum);
 			validatable.error(error);
 		}

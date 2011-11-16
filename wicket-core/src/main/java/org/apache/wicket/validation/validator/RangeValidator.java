@@ -80,7 +80,7 @@ public class RangeValidator<Z extends Comparable<Z> & Serializable> extends Beha
 		if ((min != null && value.compareTo(min) < 0) || (max != null && value.compareTo(max) > 0))
 		{
 			ValidationError error = new ValidationError();
-			error.addMessageKey(resourceKey());
+			error.addKey(resourceKey());
 			error.setVariable("minimum", min);
 			error.setVariable("maximum", max);
 			validatable.error(error);
