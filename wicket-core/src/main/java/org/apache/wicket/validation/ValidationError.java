@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * A versatile implementation of {@link IValidationError} that supports message resolution from
@@ -33,7 +34,7 @@ import org.apache.wicket.util.lang.Args;
  * 
  * The final error message is constructed via the following process:
  * <ol>
- * <li>Try all keys added by calls to {@link #addMessageKey(String)} via the provided
+ * <li>Try all keys added by calls to {@link #addKey(String)} via the provided
  * <code>IErrorMessageSource</code>.</li>
  * <li>If none of the keys yielded a message, use the message set by {@link #setMessage(String)}, if
  * any.</li>
@@ -70,11 +71,26 @@ public class ValidationError implements IValidationError
 	 * Adds a key to the list of keys that will be tried against <code>IErrorMessageSource</code> to
 	 * locate the error message string.
 	 * 
+	 * @deprecated use {@link #addKey(String)}
+	 * 
+	 * @param key
+	 * @return this <code>ValidationError</code> for chaining purposes
+	 */
+	@Deprecated
+	public ValidationError addMessageKey(String key)
+	{
+		return addKey(key);
+	}
+
+	/**
+	 * Adds a key to the list of keys that will be tried against <code>IErrorMessageSource</code> to
+	 * locate the error message string.
+	 * 
 	 * @param key
 	 *            a message key to be added
 	 * @return this <code>ValidationError</code> for chaining purposes
 	 */
-	public ValidationError addMessageKey(String key)
+	public ValidationError addKey(String key)
 	{
 		Args.notEmpty(key, "key");
 
@@ -83,6 +99,46 @@ public class ValidationError implements IValidationError
 			keys = new ArrayList<String>(1);
 		}
 		keys.add(key);
+		return this;
+	}
+
+
+	/**
+	 * Shortcut for adding a standard message key which is the simple name of the validator' class
+	 * 
+	 * @param validator
+	 *            validator
+	 * @return {@code this}
+	 */
+	public ValidationError addKey(IValidator<?> validator)
+	{
+		Args.notNull(validator, "validator");
+		addKey(validator.getClass().getSimpleName());
+		return this;
+	}
+
+	/**
+	 * Shortcut for adding a standard message key variation which is the simple name of the
+	 * validator class followed by a dot and the {@literal variation}
+	 * <p>
+	 * If the variation is empty only the validator's simple class name is used
+	 * </p>
+	 * 
+	 * @param validator
+	 *            validator
+	 * @param variation
+	 *            key variation
+	 * @return {@code this}
+	 */
+	public ValidationError addKey(IValidator<?> validator, String variation)
+	{
+		Args.notNull(validator, "validator");
+		String key = validator.getClass().getSimpleName();
+		if (!Strings.isEmpty(variation))
+		{
+			key = key + "." + variation;
+		}
+		addKey(key);
 		return this;
 	}
 
