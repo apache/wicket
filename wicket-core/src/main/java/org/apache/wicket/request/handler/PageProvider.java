@@ -45,7 +45,7 @@ import org.apache.wicket.util.lang.Args;
  * 
  * @author Matej Knopp
  */
-public class PageProvider implements IPageProvider, IIntrospectablePageProvider
+public class PageProvider implements IPageProvider
 {
 	private final Integer renderCount;
 
@@ -372,6 +372,7 @@ public class PageProvider implements IPageProvider, IIntrospectablePageProvider
 	 * 
 	 * @return {@code true} iff page instance has been created or retrieved
 	 */
+	@Override
 	public final boolean hasPageInstance()
 	{
 		if (pageInstance == null && pageId != null)
@@ -392,6 +393,7 @@ public class PageProvider implements IPageProvider, IIntrospectablePageProvider
 	 * @return {@code true} iff the page instance held by this provider was instantiated by the
 	 *         provider
 	 */
+	@Override
 	public final boolean isPageInstanceFresh()
 	{
 		if (!hasPageInstance())

@@ -24,7 +24,7 @@ import org.apache.wicket.request.component.IRequestableComponent;
  * 
  * @author Matej Knopp
  */
-public interface IPageAndComponentProvider extends IPageProvider, IIntrospectablePageProvider
+public interface IPageAndComponentProvider extends IPageProvider
 {
 	/**
 	 * Returns component on specified page with given path.

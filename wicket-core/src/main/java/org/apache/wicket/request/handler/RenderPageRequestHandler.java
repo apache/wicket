@@ -169,16 +169,7 @@ public class RenderPageRequestHandler
 
 	public final boolean isPageInstanceCreated()
 	{
-		// FIXME wicket.next remove the workaround for page providers that dont implement the
-		// interface
-		if (!(pageProvider instanceof IIntrospectablePageProvider))
-		{
-			logger.warn(
-				"{} used by this application does not implement {}, the request handler is falling back on using incorrect behavior",
-				IPageProvider.class, IIntrospectablePageProvider.class);
-			return !pageProvider.isNewPageInstance();
-		}
-		return ((IIntrospectablePageProvider)pageProvider).hasPageInstance();
+		return pageProvider.hasPageInstance();
 	}
 
 	public final Integer getRenderCount()
