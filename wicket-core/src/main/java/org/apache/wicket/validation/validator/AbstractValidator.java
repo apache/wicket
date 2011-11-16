@@ -21,7 +21,6 @@ import java.util.Map;
 
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.validation.INullAcceptingValidator;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
@@ -167,7 +166,7 @@ public abstract class AbstractValidator<T> extends Behavior
 
 
 		ValidationError error = new ValidationError().addMessageKey(resourceKey);
-		final String defaultKey = Classes.simpleName(getClass());
+		final String defaultKey = getClass().getSimpleName();
 		if (!resourceKey.equals(defaultKey))
 		{
 			error.addMessageKey(defaultKey);
@@ -187,7 +186,7 @@ public abstract class AbstractValidator<T> extends Behavior
 	 */
 	protected String resourceKey()
 	{
-		return Classes.simpleName(getClass());
+		return getClass().getSimpleName();
 	}
 
 	/**

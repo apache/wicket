@@ -31,7 +31,6 @@ import org.apache.wicket.markup.html.HeaderPartContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.lang.Classes;
 
 /**
  * Boilerplate for a markup sourcing strategy which retrieves the markup from associated markup
@@ -292,7 +291,7 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 		// create a unique id for the HtmlHeaderContainer
 		StringBuilder builder = new StringBuilder(100);
 		builder.append("_");
-		builder.append(Classes.simpleName(markupClass));
+		builder.append(markupClass.getSimpleName());
 		if (container.getVariation() != null)
 		{
 			builder.append(container.getVariation());

@@ -17,7 +17,6 @@
 package org.apache.wicket.util.lang;
 
 
-import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -56,21 +55,6 @@ public final class Classes
 		throws ClassNotFoundException
 	{
 		return Class.forName(Packages.absolutePath(scope, path).replace('/', '.'));
-	}
-
-
-	/**
-	 * Gets the name of a given class without the prefixed package path
-	 * 
-	 * @param <C>
-	 * 
-	 * @param c
-	 *            The class
-	 * @return The class name
-	 */
-	public static <C> String simpleName(final Class<C> c)
-	{
-		return Strings.lastPathComponent(c.getName(), '.');
 	}
 
 	/**

@@ -42,7 +42,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.string.StringValue;
@@ -626,7 +625,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		{
 			StringBuilder buffer = new StringBuilder();
 			buffer.append("Could not locate error message for component: ");
-			buffer.append(Classes.simpleName(getClass()));
+			buffer.append(getClass().getSimpleName());
 			buffer.append("@");
 			buffer.append(getPageRelativePath());
 			buffer.append(" and error: ");
@@ -1126,7 +1125,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 				}
 				if (e.getTargetType() != null)
 				{
-					error.addMessageKey("ConversionError." + Classes.simpleName(e.getTargetType()));
+					error.addMessageKey("ConversionError." + e.getTargetType().getSimpleName());
 				}
 				error.addMessageKey("ConversionError");
 				reportValidationError(e, error);
@@ -1147,7 +1146,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 				{
 					error.addMessageKey(e.getResourceKey());
 				}
-				String simpleName = Classes.simpleName(getType());
+				String simpleName = getType().getSimpleName();
 				error.addMessageKey("IConverter." + simpleName);
 				error.addMessageKey("IConverter");
 				error.setVariable("type", simpleName);

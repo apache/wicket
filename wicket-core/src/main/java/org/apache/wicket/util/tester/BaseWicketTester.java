@@ -124,7 +124,6 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -1471,7 +1470,7 @@ public class BaseWicketTester
 		if (component == null)
 		{
 			fail("path: '" + path + "' does not exist for page: " +
-				Classes.simpleName(getLastRenderedPage().getClass()));
+				getLastRenderedPage().getClass().getSimpleName());
 			return null;
 		}
 
@@ -1533,8 +1532,8 @@ public class BaseWicketTester
 			return Result.fail("Component not found: " + path);
 		}
 
-		return isTrue("component '" + Classes.simpleName(component.getClass()) + "' is not type:" +
-			Classes.simpleName(expectedComponentClass),
+		return isTrue("component '" + component.getClass().getSimpleName() + "' is not type:" +
+			expectedComponentClass.getSimpleName(),
 			expectedComponentClass.isAssignableFrom(component.getClass()));
 	}
 
@@ -1553,7 +1552,7 @@ public class BaseWicketTester
 		if (component == null)
 		{
 			result = Result.fail("path: '" + path + "' does no exist for page: " +
-				Classes.simpleName(getLastRenderedPage().getClass()));
+				getLastRenderedPage().getClass().getSimpleName());
 		}
 		else
 		{
@@ -1579,7 +1578,7 @@ public class BaseWicketTester
 		if (component == null)
 		{
 			result = Result.fail("path: '" + path + "' does no exist for page: " +
-				Classes.simpleName(getLastRenderedPage().getClass()));
+				getLastRenderedPage().getClass().getSimpleName());
 		}
 		else
 		{
@@ -1603,7 +1602,7 @@ public class BaseWicketTester
 		if (component == null)
 		{
 			fail("path: '" + path + "' does no exist for page: " +
-				Classes.simpleName(getLastRenderedPage().getClass()));
+				getLastRenderedPage().getClass().getSimpleName());
 		}
 
 		return isTrue("component '" + path + "' is disabled", component.isEnabledInHierarchy());
@@ -1622,7 +1621,7 @@ public class BaseWicketTester
 		if (component == null)
 		{
 			fail("path: '" + path + "' does no exist for page: " +
-				Classes.simpleName(getLastRenderedPage().getClass()));
+				getLastRenderedPage().getClass().getSimpleName());
 		}
 
 		return isFalse("component '" + path + "' is enabled", component.isEnabledInHierarchy());
@@ -1641,7 +1640,7 @@ public class BaseWicketTester
 		if (component == null)
 		{
 			fail("path: '" + path + "' does no exist for page: " +
-				Classes.simpleName(getLastRenderedPage().getClass()));
+				getLastRenderedPage().getClass().getSimpleName());
 		}
 		else if (component instanceof FormComponent == false)
 		{

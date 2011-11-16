@@ -38,7 +38,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
-import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.lang.WicketObjects;
 import org.apache.wicket.util.string.StringValue;
@@ -419,7 +418,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				buffer.append(StringValue.repeat(levels, "	"))
 					.append(component.getPageRelativePath())
 					.append(":")
-					.append(Classes.simpleName(component.getClass()));
+					.append(component.getClass().getSimpleName());
 			}
 		});
 		return buffer.toString();

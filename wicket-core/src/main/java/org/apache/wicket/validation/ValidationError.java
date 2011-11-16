@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.lang.Classes;
 
 /**
  * A versatile implementation of {@link IValidationError} that supports message resolution from
@@ -221,7 +220,7 @@ public class ValidationError implements IValidationError
 	public String toString()
 	{
 		StringBuilder tostring = new StringBuilder();
-		tostring.append("[").append(Classes.simpleName(getClass()));
+		tostring.append("[").append(getClass().getSimpleName());
 
 		tostring.append(" message=[").append(message);
 

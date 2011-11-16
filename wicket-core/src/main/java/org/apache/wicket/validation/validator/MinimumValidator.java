@@ -19,7 +19,6 @@ package org.apache.wicket.validation.validator;
 import java.io.Serializable;
 
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
@@ -81,7 +80,7 @@ public class MinimumValidator<Z extends Comparable<Z> & Serializable> extends Be
 	// TODO Wicket 1.6 - remove that method and make this class extending AbstractValidator
 	protected String resourceKey()
 	{
-		return Classes.simpleName(getClass());
+		return getClass().getSimpleName();
 	}
 
 }
