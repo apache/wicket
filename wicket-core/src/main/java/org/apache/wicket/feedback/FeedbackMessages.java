@@ -245,6 +245,7 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	{
 		return hasMessage(new IFeedbackMessageFilter()
 		{
+			@Override
 			public boolean accept(FeedbackMessage message)
 			{
 				return Objects.equal(message.getReporter(), component) && message.isLevel(level);
@@ -270,6 +271,7 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 * 
 	 * @return iterator over stored messages
 	 */
+	@Override
 	public final Iterator<FeedbackMessage> iterator()
 	{
 		return messages.iterator();
@@ -310,6 +312,7 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 *         
 	 * @deprecated use {@link FeedbackMessages#messagesForComponent(org.apache.wicket.Component)} instead
 	 */
+	@Deprecated
 	public final FeedbackMessage messageForComponent(final Component component)
 	{
 		final List<FeedbackMessage> list = messagesForComponent(component);

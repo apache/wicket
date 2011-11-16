@@ -111,6 +111,7 @@ public class ChoiceRenderer<T> implements IChoiceRenderer<T>
 	/**
 	 * @see org.apache.wicket.markup.html.form.IChoiceRenderer#getDisplayValue(java.lang.Object)
 	 */
+	@Override
 	public Object getDisplayValue(T object)
 	{
 		Object returnValue = object;
@@ -130,6 +131,7 @@ public class ChoiceRenderer<T> implements IChoiceRenderer<T>
 	/**
 	 * @see org.apache.wicket.markup.html.form.IChoiceRenderer#getIdValue(java.lang.Object, int)
 	 */
+	@Override
 	public String getIdValue(T object, int index)
 	{
 		if (idExpression == null)

@@ -76,6 +76,7 @@ public class LocaleResourceNameIterator implements Iterator<String>
 	 * 
 	 * @see java.util.Iterator#hasNext()
 	 */
+	@Override
 	public boolean hasNext()
 	{
 		int limit = 4;
@@ -90,6 +91,7 @@ public class LocaleResourceNameIterator implements Iterator<String>
 	/**
 	 * @see java.util.Iterator#next()
 	 */
+	@Override
 	public String next()
 	{
 		if (locale == null)
@@ -145,6 +147,7 @@ public class LocaleResourceNameIterator implements Iterator<String>
 	 * 
 	 * @see java.util.Iterator#remove()
 	 */
+	@Override
 	public void remove()
 	{
 	}

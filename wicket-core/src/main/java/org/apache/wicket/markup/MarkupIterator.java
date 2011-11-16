@@ -49,6 +49,7 @@ public class MarkupIterator implements Iterator<MarkupElement>
 	/**
 	 * @see java.util.Iterator#hasNext()
 	 */
+	@Override
 	public boolean hasNext()
 	{
 		for (index++; index < markup.size(); index++)
@@ -80,6 +81,7 @@ public class MarkupIterator implements Iterator<MarkupElement>
 	/**
 	 * @see java.util.Iterator#next()
 	 */
+	@Override
 	public MarkupElement next()
 	{
 		return markup.get(index);
@@ -104,6 +106,7 @@ public class MarkupIterator implements Iterator<MarkupElement>
 	/**
 	 * @see java.util.Iterator#remove()
 	 */
+	@Override
 	public void remove()
 	{
 		throw new UnsupportedOperationException("You can not remove markup elements");

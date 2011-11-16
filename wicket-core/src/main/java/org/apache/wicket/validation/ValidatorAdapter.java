@@ -46,6 +46,7 @@ public class ValidatorAdapter<T> extends Behavior implements IValidator<T>
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void validate(IValidatable<T> validatable)
 	{
 		validator.validate(validatable);

@@ -105,6 +105,7 @@ public abstract class AbstractTransformerBehavior extends Behavior implements IT
 		super.detach(component);
 	}
 
+	@Override
 	public abstract CharSequence transform(final Component component, final CharSequence output)
 		throws Exception;
 }

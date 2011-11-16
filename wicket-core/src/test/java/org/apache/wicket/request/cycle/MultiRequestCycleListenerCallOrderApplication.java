@@ -53,38 +53,45 @@ class MultiRequestCycleListenerCallOrderApplication extends WebApplication
 			this.name = name;
 		}
 
+		@Override
 		public void onBeginRequest(RequestCycle cycle)
 		{
 			callSequence.add(name + ".onBeginRequest");
 		}
 
+		@Override
 		public void onRequestHandlerScheduled(final RequestCycle cycle, IRequestHandler handler)
 		{
 			if (handler != null)
 				callSequence.add(name + ".onRequestHandlerScheduled");
 		}
 
+		@Override
 		public void onRequestHandlerResolved(final RequestCycle cycle, IRequestHandler handler)
 		{
 			callSequence.add(name + ".onRequestHandlerResolved");
 		}
 
+		@Override
 		public void onEndRequest(RequestCycle cycle)
 		{
 			callSequence.add(name + ".onEndRequest");
 		}
 
+		@Override
 		public void onDetach(RequestCycle cycle)
 		{
 			callSequence.add(name + ".onDetach");
 		}
 
+		@Override
 		public void onExceptionRequestHandlerResolved(final RequestCycle cycle,
 			IRequestHandler handler, Exception exception)
 		{
 			callSequence.add(name + ".onExceptionRequestHandlerResolved");
 		}
 
+		@Override
 		public IRequestHandler onException(RequestCycle cycle, Exception ex)
 		{
 			callSequence.add(name + ".onException");
@@ -97,11 +104,13 @@ class MultiRequestCycleListenerCallOrderApplication extends WebApplication
 			return "Listener " + name;
 		}
 
+		@Override
 		public void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler)
 		{
 			callSequence.add(name + ".onRequestHandlerExecuted");
 		}
 
+		@Override
 		public void onUrlMapped(RequestCycle cycle, IRequestHandler handler, Url url)
 		{
 		}

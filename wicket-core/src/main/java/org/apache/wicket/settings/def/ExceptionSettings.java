@@ -47,6 +47,7 @@ public class ExceptionSettings implements IExceptionSettings
 	/**
 	 * @see org.apache.wicket.settings.IRequestCycleSettings#getUnexpectedExceptionDisplay()
 	 */
+	@Override
 	public UnexpectedExceptionDisplay getUnexpectedExceptionDisplay()
 	{
 		return unexpectedExceptionDisplay;
@@ -55,6 +56,7 @@ public class ExceptionSettings implements IExceptionSettings
 	/**
 	 * @see org.apache.wicket.settings.IRequestCycleSettings#setUnexpectedExceptionDisplay(org.apache.wicket.settings.Settings.UnexpectedExceptionDisplay)
 	 */
+	@Override
 	public void setUnexpectedExceptionDisplay(UnexpectedExceptionDisplay unexpectedExceptionDisplay)
 	{
 		this.unexpectedExceptionDisplay = unexpectedExceptionDisplay;
@@ -63,6 +65,7 @@ public class ExceptionSettings implements IExceptionSettings
 	/**
 	 * @see org.apache.wicket.settings.IExceptionSettings#getAjaxErrorHandlingStrategy()
 	 */
+	@Override
 	public AjaxErrorStrategy getAjaxErrorHandlingStrategy()
 	{
 		return errorHandlingStrategyDuringAjaxRequests;
@@ -71,17 +74,20 @@ public class ExceptionSettings implements IExceptionSettings
 	/**
 	 * @see org.apache.wicket.settings.IExceptionSettings#setAjaxErrorHandlingStrategy(org.apache.wicket.settings.IExceptionSettings.AjaxErrorStrategy)
 	 */
+	@Override
 	public void setAjaxErrorHandlingStrategy(
 		AjaxErrorStrategy errorHandlingStrategyDuringAjaxRequests)
 	{
 		this.errorHandlingStrategyDuringAjaxRequests = errorHandlingStrategyDuringAjaxRequests;
 	}
 
+	@Override
 	public void setThreadDumpStrategy(ThreadDumpStrategy strategy)
 	{
 		threadDumpStrategy = Args.notNull(strategy, "strategy");
 	}
 
+	@Override
 	public ThreadDumpStrategy getThreadDumpStrategy()
 	{
 		return threadDumpStrategy;

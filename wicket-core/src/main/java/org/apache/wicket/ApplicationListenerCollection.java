@@ -28,10 +28,12 @@ public class ApplicationListenerCollection extends ListenerCollection<IApplicati
 		IApplicationListener
 {
 
+	@Override
 	public void onAfterInitialized(final Application application)
 	{
 		notify(new INotifier<IApplicationListener>()
 		{
+			@Override
 			public void notify(IApplicationListener listener)
 			{
 				listener.onAfterInitialized(application);
@@ -39,10 +41,12 @@ public class ApplicationListenerCollection extends ListenerCollection<IApplicati
 		});
 	}
 
+	@Override
 	public void onBeforeDestroyed(final Application application)
 	{
 		reversedNotifyIgnoringExceptions(new INotifier<IApplicationListener>()
 		{
+			@Override
 			public void notify(IApplicationListener listener)
 			{
 				listener.onAfterInitialized(application);

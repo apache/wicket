@@ -46,6 +46,7 @@ public class PageNumberEvictionStrategy implements DataStoreEvictionStrategy
 	 * 
 	 * @see org.apache.wicket.pageStore.memory.DataStoreEvictionStrategy#evict(org.apache.wicket.pageStore.memory.PageTable)
 	 */
+	@Override
 	public void evict(PageTable pageTable)
 	{
 		int size = pageTable.size();

@@ -83,26 +83,31 @@ public class TestMapperContext implements IMapperContext
 		return pageManager;
 	}
 
+	@Override
 	public String getBookmarkableIdentifier()
 	{
 		return "bookmarkable";
 	}
 
+	@Override
 	public String getNamespace()
 	{
 		return MarkupParser.WICKET;
 	}
 
+	@Override
 	public String getPageIdentifier()
 	{
 		return "page";
 	}
 
+	@Override
 	public String getResourceIdentifier()
 	{
 		return "resource";
 	}
 
+	@Override
 	public ResourceReferenceRegistry getResourceReferenceRegistry()
 	{
 		return registry;
@@ -153,6 +158,7 @@ public class TestMapperContext implements IMapperContext
 		this.nextPageRenderCount = nextPageRenderCount;
 	}
 
+	@Override
 	public IRequestablePage getPageInstance(int pageId)
 	{
 
@@ -172,6 +178,7 @@ public class TestMapperContext implements IMapperContext
 
 	int idCounter = 0;
 
+	@Override
 	public IRequestablePage newPageInstance(Class<? extends IRequestablePage> pageClass,
 		PageParameters pageParameters)
 	{
@@ -194,16 +201,19 @@ public class TestMapperContext implements IMapperContext
 		}
 	}
 
+	@Override
 	public RequestListenerInterface requestListenerInterfaceFromString(String interfaceName)
 	{
 		return RequestListenerInterface.forName(interfaceName);
 	}
 
+	@Override
 	public String requestListenerInterfaceToString(RequestListenerInterface listenerInterface)
 	{
 		return listenerInterface.getName();
 	}
 
+	@Override
 	public Class<? extends IRequestablePage> getHomePageClass()
 	{
 		return MockPage.class;

@@ -54,6 +54,7 @@ public class BookmarkablePageRequestHandler
 	/**
 	 * @see org.apache.wicket.request.handler.IPageClassRequestHandler#getPageClass()
 	 */
+	@Override
 	public Class<? extends IRequestablePage> getPageClass()
 	{
 		return pageProvider.getPageClass();
@@ -62,6 +63,7 @@ public class BookmarkablePageRequestHandler
 	/**
 	 * @see org.apache.wicket.request.handler.IPageClassRequestHandler#getPageParameters()
 	 */
+	@Override
 	public PageParameters getPageParameters()
 	{
 		return pageProvider.getPageParameters();
@@ -70,6 +72,7 @@ public class BookmarkablePageRequestHandler
 	/**
 	 * @see org.apache.org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
 	 */
+	@Override
 	public void respond(IRequestCycle requestCycle)
 	{
 		// not used as BookmarkablePageRequestHandler is only used when generating URLs.
@@ -79,6 +82,7 @@ public class BookmarkablePageRequestHandler
 	/**
 	 * @see org.apache.org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
 	 */
+	@Override
 	public void detach(IRequestCycle requestCycle)
 	{
 		if (logData == null)
@@ -86,6 +90,7 @@ public class BookmarkablePageRequestHandler
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public PageLogData getLogData()
 	{
 		return logData;

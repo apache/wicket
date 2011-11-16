@@ -61,6 +61,7 @@ public class PageVersioningTest
 				return new IPageManagerProvider()
 				{
 
+					@Override
 					public IPageManager get(IPageManagerContext pageManagerContext)
 					{
 

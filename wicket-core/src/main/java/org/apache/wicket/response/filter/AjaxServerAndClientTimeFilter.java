@@ -58,6 +58,7 @@ public class AjaxServerAndClientTimeFilter implements IResponseFilter
 	/**
 	 * @see org.apache.wicket.IResponseFilter#filter(org.apache.wicket.util.string.AppendingStringBuffer)
 	 */
+	@Override
 	public AppendingStringBuffer filter(AppendingStringBuffer responseBuffer)
 	{
 		int headIndex = responseBuffer.indexOf("<head>");

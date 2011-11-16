@@ -273,6 +273,7 @@ public class WicketServlet extends HttpServlet
 			/**
 			 * @see javax.servlet.FilterConfig#getServletContext()
 			 */
+			@Override
 			public ServletContext getServletContext()
 			{
 				return WicketServlet.this.getServletContext();
@@ -281,6 +282,7 @@ public class WicketServlet extends HttpServlet
 			/**
 			 * @see javax.servlet.FilterConfig#getInitParameterNames()
 			 */
+			@Override
 			@SuppressWarnings("unchecked")
 			public Enumeration<String> getInitParameterNames()
 			{
@@ -290,6 +292,7 @@ public class WicketServlet extends HttpServlet
 			/**
 			 * @see javax.servlet.FilterConfig#getInitParameter(java.lang.String)
 			 */
+			@Override
 			public String getInitParameter(final String name)
 			{
 				return WicketServlet.this.getInitParameter(name);
@@ -298,6 +301,7 @@ public class WicketServlet extends HttpServlet
 			/**
 			 * @see javax.servlet.FilterConfig#getFilterName()
 			 */
+			@Override
 			public String getFilterName()
 			{
 				return WicketServlet.this.getServletName();

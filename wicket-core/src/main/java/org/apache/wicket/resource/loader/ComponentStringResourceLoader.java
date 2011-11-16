@@ -112,6 +112,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(java.lang.Class,
 	 *      java.lang.String, java.util.Locale, java.lang.String, java.lang.String)
 	 */
+	@Override
 	public String loadStringResource(Class<?> clazz, final String key, final Locale locale,
 		final String style, final String variation)
 	{
@@ -205,6 +206,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(org.apache.wicket.Component,
 	 *      java.lang.String, java.util.Locale, java.lang.String, java.lang.String)
 	 */
+	@Override
 	public String loadStringResource(final Component component, final String key,
 		final Locale locale, final String style, final String variation)
 	{

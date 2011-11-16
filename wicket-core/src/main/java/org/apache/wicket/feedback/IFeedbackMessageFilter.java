@@ -32,6 +32,7 @@ public interface IFeedbackMessageFilter extends IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public boolean accept(FeedbackMessage message)
 		{
 			return true;

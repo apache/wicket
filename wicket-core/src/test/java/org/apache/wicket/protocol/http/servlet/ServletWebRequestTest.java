@@ -142,6 +142,7 @@ public class ServletWebRequestTest extends Assert
 			assertTrue(getRequest() instanceof CustomServletWebRequest);
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

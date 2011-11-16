@@ -65,11 +65,13 @@ public class ContextRelativeResource extends AbstractResource implements IStatic
 		path = pathRelativeToContextRoot;
 	}
 	
+	@Override
 	public Serializable getCacheKey()
 	{
 		return CACHE_PREFIX + path;
 	}
 
+	@Override
 	public IResourceStream getCacheableResourceStream()
 	{
 		return new WebExternalResourceStream(path);

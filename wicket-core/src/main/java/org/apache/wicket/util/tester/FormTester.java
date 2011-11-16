@@ -85,6 +85,7 @@ public class FormTester
 			 * @see org.apache.wicket.util.visit.IVisitor#component(Object,
 			 *      org.apache.wicket.util.visit.IVisit)
 			 */
+			@Override
 			public void component(final Component component, final IVisit<Component> visit)
 			{
 				if (count == index)
@@ -379,6 +380,7 @@ public class FormTester
 		// fill blank String for Text Component.
 		workingForm.visitFormComponents(new IVisitor<FormComponent<?>, Void>()
 		{
+			@Override
 			public void component(final FormComponent<?> formComponent, final IVisit<Void> visit)
 			{
 				// do nothing for invisible or disabled component -- the browser would not send any
@@ -441,6 +443,7 @@ public class FormTester
 			final List<String> result = new ArrayList<String>();
 			formComponent.visitChildren(Check.class, new IVisitor<Component, Void>()
 			{
+				@Override
 				public void component(final Component component, final IVisit<Void> visit)
 				{
 					if (checkGroupValues.contains(component.getDefaultModelObject()))
@@ -462,6 +465,7 @@ public class FormTester
 			{
 				result = formComponent.visitChildren(Radio.class, new IVisitor<Component, String>()
 				{
+					@Override
 					public void component(final Component component, final IVisit<String> visit)
 					{
 						if (value.equals(component.getDefaultModelObject()))

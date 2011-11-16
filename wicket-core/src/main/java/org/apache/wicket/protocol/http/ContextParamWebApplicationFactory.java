@@ -32,6 +32,7 @@ public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 	public static final String APP_CLASS_PARAM = "applicationClassName";
 
 	/* @see IWebApplicationFactory#createApplication(WicketFilter) */
+	@Override
 	public WebApplication createApplication(WicketFilter filter)
 	{
 		final String applicationClassName = filter.getFilterConfig().getInitParameter(
@@ -103,6 +104,7 @@ public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void destroy(WicketFilter filter)
 	{
 	}

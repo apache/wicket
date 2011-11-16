@@ -199,6 +199,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter implements ICompo
 		return (ref != null) && (!ref.contains(":"));
 	}
 
+	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{

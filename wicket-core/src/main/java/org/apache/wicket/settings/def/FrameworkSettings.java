@@ -66,6 +66,7 @@ public class FrameworkSettings implements IFrameworkSettings
 	/**
 	 * @see org.apache.wicket.settings.IFrameworkSettings#getVersion()
 	 */
+	@Override
 	public String getVersion()
 	{
 		String implVersion = null;
@@ -80,6 +81,7 @@ public class FrameworkSettings implements IFrameworkSettings
 	/**
 	 * @see org.apache.wicket.settings.IFrameworkSettings#getDetachListener()
 	 */
+	@Override
 	public IDetachListener getDetachListener()
 	{
 		return detachListener;
@@ -88,11 +90,13 @@ public class FrameworkSettings implements IFrameworkSettings
 	/**
 	 * @see org.apache.wicket.settings.IFrameworkSettings#setDetachListener(org.apache.wicket.IDetachListener)
 	 */
+	@Override
 	public void setDetachListener(IDetachListener detachListener)
 	{
 		this.detachListener = detachListener;
 	}
 
+	@Override
 	public void add(IEventDispatcher dispatcher)
 	{
 		Args.notNull(dispatcher, "dispatcher");
@@ -115,6 +119,7 @@ public class FrameworkSettings implements IFrameworkSettings
 	 * @param event
 	 * @param component
 	 */
+	@Override
 	public void dispatchEvent(Object sink, IEvent<?> event, Component component)
 	{
 		// direct delivery
@@ -139,11 +144,13 @@ public class FrameworkSettings implements IFrameworkSettings
 	}
 
 
+	@Override
 	public void setSerializer(ISerializer pageSerializer)
 	{
 		this.pageSerializer = Args.notNull(pageSerializer, "pageSerializer");
 	}
 
+	@Override
 	public ISerializer getSerializer()
 	{
 		return pageSerializer;

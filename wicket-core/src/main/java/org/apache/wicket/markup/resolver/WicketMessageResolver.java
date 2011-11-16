@@ -111,6 +111,7 @@ public class WicketMessageResolver implements IComponentResolver
 	 */
 	private static final String DEFAULT_VALUE = "DEFAULT_WICKET_MESSAGE_RESOLVER_VALUE";
 
+	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
@@ -178,6 +179,7 @@ public class WicketMessageResolver implements IComponentResolver
 			setEscapeModelStrings(false);
 		}
 
+		@Override
 		public Component resolve(MarkupContainer container, MarkupStream markupStream,
 			ComponentTag tag)
 		{

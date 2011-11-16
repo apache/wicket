@@ -89,6 +89,7 @@ public abstract class AbstractPropertyModel<T>
 	 * 
 	 * @see org.apache.wicket.model.IDetachable#detach()
 	 */
+	@Override
 	public void detach()
 	{
 		// Detach nested object if it's a detachable
@@ -101,6 +102,7 @@ public abstract class AbstractPropertyModel<T>
 	/**
 	 * @see org.apache.wicket.model.IChainingModel#getChainedModel()
 	 */
+	@Override
 	public IModel<?> getChainedModel()
 	{
 		if (target instanceof IModel)
@@ -113,6 +115,7 @@ public abstract class AbstractPropertyModel<T>
 	/**
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public T getObject()
 	{
@@ -149,6 +152,7 @@ public abstract class AbstractPropertyModel<T>
 	/**
 	 * @see org.apache.wicket.model.IChainingModel#setChainedModel(org.apache.wicket.model.IModel)
 	 */
+	@Override
 	public void setChainedModel(IModel<?> model)
 	{
 		target = model;
@@ -161,6 +165,7 @@ public abstract class AbstractPropertyModel<T>
 	 *            The object that will be used when setting a value on the model object
 	 * @see IModel#setObject(Object)
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void setObject(T object)
 	{
@@ -220,6 +225,7 @@ public abstract class AbstractPropertyModel<T>
 	/**
 	 * @return model object class
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public Class<T> getObjectClass()
 	{
@@ -265,6 +271,7 @@ public abstract class AbstractPropertyModel<T>
 	/**
 	 * @see org.apache.wicket.model.IPropertyReflectionAwareModel#getPropertyField()
 	 */
+	@Override
 	public Field getPropertyField()
 	{
 		String expression = propertyExpression();
@@ -289,6 +296,7 @@ public abstract class AbstractPropertyModel<T>
 	/**
 	 * @see org.apache.wicket.model.IPropertyReflectionAwareModel#getPropertyGetter()
 	 */
+	@Override
 	public Method getPropertyGetter()
 	{
 		String expression = propertyExpression();
@@ -312,6 +320,7 @@ public abstract class AbstractPropertyModel<T>
 	/**
 	 * @see org.apache.wicket.model.IPropertyReflectionAwareModel#getPropertySetter()
 	 */
+	@Override
 	public Method getPropertySetter()
 	{
 		String expression = propertyExpression();

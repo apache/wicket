@@ -62,6 +62,7 @@ public class RefreshStatelessPageTest extends WicketTestCase
 			});
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{
@@ -77,6 +78,7 @@ public class RefreshStatelessPageTest extends WicketTestCase
 			setStatelessHint(true);
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

@@ -32,10 +32,12 @@ public class SessionListenerCollection extends ListenerCollection<ISessionListen
 		ISessionListener
 {
 
+	@Override
 	public void onCreated(final Session session)
 	{
 		notify(new INotifier<ISessionListener>()
 		{
+			@Override
 			public void notify(ISessionListener listener)
 			{
 				listener.onCreated(session);

@@ -56,6 +56,7 @@ public class ParentFirstHeaderRenderStrategy extends AbstractHeaderRenderStrateg
 			// Visit the children with parent first, than children
 			((MarkupContainer)rootComponent).visitChildren(new IVisitor<Component, Void>()
 			{
+				@Override
 				public void component(final Component component, final IVisit<Void> visit)
 				{
 					if (component.isVisibleInHierarchy())

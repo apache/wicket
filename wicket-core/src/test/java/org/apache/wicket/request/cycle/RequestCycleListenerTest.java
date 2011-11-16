@@ -77,6 +77,7 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 		Request request = new MockWebRequest(Url.parse("http://wicket.apache.org"));
 		handler = new IRequestHandler()
 		{
+			@Override
 			public void respond(IRequestCycle requestCycle)
 			{
 				if (throwExceptionInRespond)
@@ -86,6 +87,7 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 				responses++;
 			}
 
+			@Override
 			public void detach(IRequestCycle requestCycle)
 			{
 				detaches++;
@@ -93,16 +95,19 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 		};
 		IRequestMapper requestMapper = new IRequestMapper()
 		{
+			@Override
 			public IRequestHandler mapRequest(Request request)
 			{
 				return handler;
 			}
 
+			@Override
 			public Url mapHandler(IRequestHandler requestHandler)
 			{
 				throw new UnsupportedOperationException();
 			}
 
+			@Override
 			public int getCompatibilityScore(Request request)
 			{
 				throw new UnsupportedOperationException();
@@ -110,6 +115,7 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 		};
 		IExceptionMapper exceptionMapper = new IExceptionMapper()
 		{
+			@Override
 			public IRequestHandler map(Exception e)
 			{
 				exceptionsMapped++;
@@ -267,11 +273,13 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 		{
 			return new IRequestHandler()
 			{
+				@Override
 				public void respond(IRequestCycle requestCycle)
 				{
 					errorCode = code;
 				}
 
+				@Override
 				public void detach(IRequestCycle requestCycle)
 				{
 				}
@@ -286,39 +294,46 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 		private int begins, ends, exceptions, detachesnotified, resolutions, exceptionResolutions,
 			schedules, executions = 0;
 
+		@Override
 		public IRequestHandler onException(final RequestCycle cycle, Exception ex)
 		{
 			exceptions++;
 			return null;
 		}
 
+		@Override
 		public void onEndRequest(final RequestCycle cycle)
 		{
 			ends++;
 		}
 
+		@Override
 		public void onBeginRequest(final RequestCycle cycle)
 		{
 			assertNotNull(RequestCycle.get());
 			begins++;
 		}
 
+		@Override
 		public void onDetach(final RequestCycle cycle)
 		{
 			detachesnotified++;
 		}
 
+		@Override
 		public void onRequestHandlerResolved(final RequestCycle cycle, IRequestHandler handler)
 		{
 			resolutions++;
 		}
 
+		@Override
 		public void onExceptionRequestHandlerResolved(final RequestCycle cycle,
 			IRequestHandler handler, Exception exception)
 		{
 			exceptionResolutions++;
 		}
 
+		@Override
 		public void onRequestHandlerScheduled(final RequestCycle cycle, IRequestHandler handler)
 		{
 			schedules++;
@@ -332,11 +347,13 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 			assertEquals(detachesnotified, this.detachesnotified);
 		}
 
+		@Override
 		public void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler)
 		{
 			executions++;
 		}
 
+		@Override
 		public void onUrlMapped(RequestCycle cycle, IRequestHandler handler, Url url)
 		{
 		}

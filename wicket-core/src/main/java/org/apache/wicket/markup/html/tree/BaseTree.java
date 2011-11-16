@@ -280,6 +280,7 @@ public abstract class BaseTree extends AbstractTree
 			{
 				private static final long serialVersionUID = 1L;
 
+				@Override
 				public void onClick(AjaxRequestTarget target)
 				{
 					if (isNodeExpanded(node))

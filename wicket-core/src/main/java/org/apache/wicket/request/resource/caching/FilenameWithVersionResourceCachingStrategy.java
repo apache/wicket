@@ -90,6 +90,7 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 		return versionPrefix;
 	}
 
+	@Override
 	public void decorateUrl(ResourceUrl url, IStaticCacheableResource resource)
 	{
 		// get version string for requested resource
@@ -138,6 +139,7 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 		url.setFileName(versionedFilename.toString());
 	}
 
+	@Override
 	public void undecorateUrl(ResourceUrl url)
 	{
 		final String filename = url.getFileName();
@@ -171,6 +173,7 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 	 * 
 	 * @param response
 	 */
+	@Override
 	public void decorateResponse(AbstractResource.ResourceResponse response, IStaticCacheableResource resource)
 	{
 		response.setCacheDurationToMaximum();

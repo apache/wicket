@@ -54,11 +54,13 @@ public class MyPanel extends Panel
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public FormComponent<?>[] getDependentFormComponents()
 			{
 				return null;
 			}
 
+			@Override
 			public void validate(Form<?> form)
 			{
 				form.error("form validation error");

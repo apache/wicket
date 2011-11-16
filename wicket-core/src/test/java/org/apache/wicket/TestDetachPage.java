@@ -56,15 +56,18 @@ public class TestDetachPage extends WebPage
 		/** for serialization. */
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public String getObject()
 		{
 			return "body";
 		}
 
+		@Override
 		public void setObject(String object)
 		{
 		}
 
+		@Override
 		public void detach()
 		{
 			nrModelDetachCalls++;

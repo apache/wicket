@@ -137,6 +137,7 @@ public class ValidationError implements IValidationError
 	/**
 	 * @see IValidationError#getErrorMessage(IErrorMessageSource)
 	 */
+	@Override
 	public final String getErrorMessage(IErrorMessageSource messageSource)
 	{
 		String errorMessage = null;

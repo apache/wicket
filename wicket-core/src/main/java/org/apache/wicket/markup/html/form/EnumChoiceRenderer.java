@@ -67,6 +67,7 @@ public class EnumChoiceRenderer<T extends Enum<T>> implements IChoiceRenderer<T>
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public final Object getDisplayValue(T object)
 	{
 		final String value;
@@ -110,6 +111,7 @@ public class EnumChoiceRenderer<T extends Enum<T>> implements IChoiceRenderer<T>
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public String getIdValue(T object, int index)
 	{
 		return object.name();

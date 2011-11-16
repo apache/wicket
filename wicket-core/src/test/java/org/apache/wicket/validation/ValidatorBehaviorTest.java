@@ -132,6 +132,7 @@ public class ValidatorBehaviorTest extends WicketTestCase
 		private static final long serialVersionUID = 1L;
 		private final int len = 8;
 
+		@Override
 		public void validate(IValidatable<String> validatable)
 		{
 			String value = validatable.getValue();
@@ -157,6 +158,7 @@ public class ValidatorBehaviorTest extends WicketTestCase
 		private static final long serialVersionUID = 1L;
 		private int len = 5;
 
+		@Override
 		public void validate(IValidatable<String> validatable)
 		{
 			String value = validatable.getValue();
@@ -189,6 +191,7 @@ public class ValidatorBehaviorTest extends WicketTestCase
 			form.add(name);
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

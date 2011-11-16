@@ -77,6 +77,7 @@ public class TextTemplateResourceReferenceTest extends WicketTestCase
 			response.renderJavaScriptReference(reference);
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

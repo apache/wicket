@@ -46,21 +46,25 @@ public class OppositeHeaderResponseFilter implements IHeaderResponseFilter
 		this.other = other;
 	}
 
+	@Override
 	public String getName()
 	{
 		return name;
 	}
 
+	@Override
 	public boolean acceptReference(ResourceReference ref)
 	{
 		return !other.acceptReference(ref);
 	}
 
+	@Override
 	public boolean acceptOtherJavaScript()
 	{
 		return !other.acceptOtherJavaScript();
 	}
 
+	@Override
 	public boolean acceptOtherCss()
 	{
 		return !other.acceptOtherCss();

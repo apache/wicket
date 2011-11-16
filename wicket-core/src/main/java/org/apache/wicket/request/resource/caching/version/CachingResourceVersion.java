@@ -93,6 +93,7 @@ public class CachingResourceVersion implements IResourceVersion
 			new MostRecentlyUsedMap<Serializable, String>(maxEntries));
 	}
 
+	@Override
 	public String getVersion(IStaticCacheableResource resource)
 	{
 		// get unique cache key for resource reference

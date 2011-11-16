@@ -181,6 +181,7 @@ public class DiskDataStoreTest extends Assert
 	 */
 	private abstract class ExceptionCapturingRunnable implements Runnable
 	{
+		@Override
 		public final void run()
 		{
 			try

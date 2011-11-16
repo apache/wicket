@@ -79,6 +79,7 @@ public class WicketTesterSessionInvalidateTest extends WicketTestCase
 			});
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

@@ -97,6 +97,7 @@ public abstract class DeepChildFirstVisitor implements IVisitor<Component, Void>
 		return visit;
 	}
 
+	@Override
 	public abstract void component(Component component, IVisit<Void> visit);
 
 	/**

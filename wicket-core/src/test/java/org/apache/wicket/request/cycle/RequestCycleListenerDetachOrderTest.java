@@ -85,6 +85,7 @@ public class RequestCycleListenerDetachOrderTest
 			events.add(Event.PAGE_DETACHED);
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

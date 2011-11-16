@@ -416,6 +416,7 @@ public class PageStoreManager extends AbstractPageManager
 	/**
 	 * @see org.apache.wicket.page.IPageManager#destroy()
 	 */
+	@Override
 	public void destroy()
 	{
 		managers.remove(applicationName);

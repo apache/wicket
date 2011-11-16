@@ -50,6 +50,7 @@ public class ContainerFeedbackMessageFilter implements IFeedbackMessageFilter
 	/**
 	 * @see org.apache.wicket.feedback.IFeedbackMessageFilter#accept(org.apache.wicket.feedback.FeedbackMessage)
 	 */
+	@Override
 	public boolean accept(FeedbackMessage message)
 	{
 		final Component reporter = message.getReporter();

@@ -45,6 +45,7 @@ public class AjaxPreprocessingCallDecorator implements IAjaxCallDecorator
 	}
 
 
+	@Override
 	public CharSequence decorateScript(Component c, CharSequence script)
 	{
 		CharSequence s = preDecorateScript(script);
@@ -52,12 +53,14 @@ public class AjaxPreprocessingCallDecorator implements IAjaxCallDecorator
 
 	}
 
+	@Override
 	public CharSequence decorateOnSuccessScript(Component c, CharSequence script)
 	{
 		CharSequence s = preDecorateOnSuccessScript(script);
 		return (delegate == null) ? s : delegate.decorateOnSuccessScript(c, s);
 	}
 
+	@Override
 	public CharSequence decorateOnFailureScript(Component c, CharSequence script)
 	{
 		CharSequence s = preDecorateOnFailureScript(script);

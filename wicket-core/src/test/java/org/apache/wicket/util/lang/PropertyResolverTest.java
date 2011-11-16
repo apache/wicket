@@ -693,6 +693,7 @@ public class PropertyResolverTest extends WicketTestCase
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public Long convertToObject(String value, Locale locale)
 			{
 				Date date = dateConverter.convertToObject(value, locale);

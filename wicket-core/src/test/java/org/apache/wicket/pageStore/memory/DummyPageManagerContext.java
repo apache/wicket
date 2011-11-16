@@ -28,30 +28,36 @@ public class DummyPageManagerContext implements IPageManagerContext
 	Serializable attribute = null;
 	Object requestData;
 
+	@Override
 	public void setRequestData(Object data)
 	{
 		requestData = data;
 	}
 
+	@Override
 	public Object getRequestData()
 	{
 		return requestData;
 	}
 
+	@Override
 	public void setSessionAttribute(String key, Serializable value)
 	{
 		attribute = value;
 	}
 
+	@Override
 	public Serializable getSessionAttribute(String key)
 	{
 		return attribute;
 	}
 
+	@Override
 	public void bind()
 	{
 	}
 
+	@Override
 	public String getSessionId()
 	{
 		return "dummy_id";

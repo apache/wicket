@@ -73,6 +73,7 @@ public class DefaultPageStore implements IPageStore
 	/**
 	 * @see org.apache.wicket.pageStore.IPageStore#destroy()
 	 */
+	@Override
 	public void destroy()
 	{
 		pageDataStore.destroy();
@@ -119,6 +120,7 @@ public class DefaultPageStore implements IPageStore
 		pageDataStore.storeData(sessionId, pageId, data);
 	}
 
+	@Override
 	public IManageablePage getPage(final String sessionId, final int id)
 	{
 		SerializedPage fromCache = serializedPagesCache.getPage(sessionId, id);
@@ -135,12 +137,14 @@ public class DefaultPageStore implements IPageStore
 		return null;
 	}
 
+	@Override
 	public void removePage(final String sessionId, final int id)
 	{
 		serializedPagesCache.removePage(sessionId, id);
 		removePageData(sessionId, id);
 	}
 
+	@Override
 	public void storePage(final String sessionId, final IManageablePage page)
 	{
 		SerializedPage serialized = serializePage(sessionId, page);
@@ -151,12 +155,14 @@ public class DefaultPageStore implements IPageStore
 		}
 	}
 
+	@Override
 	public void unbind(final String sessionId)
 	{
 		removePageData(sessionId);
 		serializedPagesCache.removePages(sessionId);
 	}
 
+	@Override
 	public IManageablePage convertToPage(final Object object)
 	{
 		if (object == null)
@@ -207,6 +213,7 @@ public class DefaultPageStore implements IPageStore
 		return new SerializedPage(serializedPage.getSessionId(), serializedPage.getPageId(), data);
 	}
 
+	@Override
 	public Serializable prepareForSerialization(final String sessionId, final Object object)
 	{
 		if (pageDataStore.isReplicated())
@@ -258,6 +265,7 @@ public class DefaultPageStore implements IPageStore
 		return true;
 	}
 
+	@Override
 	public Object restoreAfterSerialization(final Serializable serializable)
 	{
 		if (serializable == null)

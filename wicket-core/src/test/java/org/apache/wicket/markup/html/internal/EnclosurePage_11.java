@@ -41,6 +41,7 @@ public class EnclosurePage_11 extends WebPage implements IComponentResolver
 	{
 	}
 
+	@Override
 	public Component resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
 		if ((tag instanceof WicketTag) || !"autoCreatedPanel".equals(tag.getId()))

@@ -60,6 +60,7 @@ public class DebugSettings implements IDebugSettings
 	/**
 	 * @see org.apache.wicket.settings.IDebugSettings#getComponentUseCheck()
 	 */
+	@Override
 	public boolean getComponentUseCheck()
 	{
 		return componentUseCheck;
@@ -68,6 +69,7 @@ public class DebugSettings implements IDebugSettings
 	/**
 	 * @see org.apache.wicket.settings.IDebugSettings#isAjaxDebugModeEnabled()
 	 */
+	@Override
 	public boolean isAjaxDebugModeEnabled()
 	{
 		return ajaxDebugModeEnabled;
@@ -77,6 +79,7 @@ public class DebugSettings implements IDebugSettings
 	 * 
 	 * @see org.apache.wicket.settings.IDebugSettings#isLinePreciseReportingOnAddComponentEnabled()
 	 */
+	@Override
 	public boolean isLinePreciseReportingOnAddComponentEnabled()
 	{
 		return linePreciseReportingOnAddComponentEnabled;
@@ -86,6 +89,7 @@ public class DebugSettings implements IDebugSettings
 	 * 
 	 * @see org.apache.wicket.settings.IDebugSettings#isLinePreciseReportingOnNewComponentEnabled()
 	 */
+	@Override
 	public boolean isLinePreciseReportingOnNewComponentEnabled()
 	{
 		return linePreciseReportingOnNewComponentEnabled;
@@ -94,6 +98,7 @@ public class DebugSettings implements IDebugSettings
 	/**
 	 * @see org.apache.wicket.settings.IDebugSettings#isOutputMarkupContainerClassName()
 	 */
+	@Override
 	public boolean isOutputMarkupContainerClassName()
 	{
 		return outputMarkupContainerClassName;
@@ -102,6 +107,7 @@ public class DebugSettings implements IDebugSettings
 	/**
 	 * @see org.apache.wicket.settings.IDebugSettings#setAjaxDebugModeEnabled(boolean)
 	 */
+	@Override
 	public void setAjaxDebugModeEnabled(boolean enable)
 	{
 		ajaxDebugModeEnabled = enable;
@@ -110,11 +116,13 @@ public class DebugSettings implements IDebugSettings
 	/**
 	 * @see org.apache.wicket.settings.IDebugSettings#setComponentUseCheck(boolean)
 	 */
+	@Override
 	public void setComponentUseCheck(final boolean componentUseCheck)
 	{
 		this.componentUseCheck = componentUseCheck;
 	}
 
+	@Override
 	public void setLinePreciseReportingOnAddComponentEnabled(boolean enable)
 	{
 		linePreciseReportingOnAddComponentEnabled = enable;
@@ -124,6 +132,7 @@ public class DebugSettings implements IDebugSettings
 	 * 
 	 * @see org.apache.wicket.settings.IDebugSettings#setLinePreciseReportingOnNewComponentEnabled(boolean)
 	 */
+	@Override
 	public void setLinePreciseReportingOnNewComponentEnabled(boolean enable)
 	{
 		linePreciseReportingOnNewComponentEnabled = enable;
@@ -132,18 +141,21 @@ public class DebugSettings implements IDebugSettings
 	/**
 	 * @see org.apache.wicket.settings.IDebugSettings#setOutputMarkupContainerClassName(boolean)
 	 */
+	@Override
 	public void setOutputMarkupContainerClassName(boolean enable)
 	{
 		outputMarkupContainerClassName = enable;
 	}
 
 	/** @see IDebugSettings#isOutputComponentPath() */
+	@Override
 	public boolean isOutputComponentPath()
 	{
 		return outputComponentPath;
 	}
 
 	/** @see IDebugSettings#setOutputComponentPath(boolean) */
+	@Override
 	public void setOutputComponentPath(boolean outputComponentPath)
 	{
 		this.outputComponentPath = outputComponentPath;
@@ -152,6 +164,7 @@ public class DebugSettings implements IDebugSettings
 	/**
 	 * @see org.apache.wicket.settings.IDebugSettings#setDevelopmentUtilitiesEnabled(boolean)
 	 */
+	@Override
 	public void setDevelopmentUtilitiesEnabled(boolean enable)
 	{
 		developmentUtilitiesEnabled = enable;
@@ -160,6 +173,7 @@ public class DebugSettings implements IDebugSettings
 	/**
 	 * @see org.apache.wicket.settings.IDebugSettings#isDevelopmentUtilitiesEnabled()
 	 */
+	@Override
 	public boolean isDevelopmentUtilitiesEnabled()
 	{
 		return developmentUtilitiesEnabled;

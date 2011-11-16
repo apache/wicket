@@ -48,26 +48,31 @@ public class MockSessionStore implements ISessionStore
 	private final Map<String, Serializable> attributes = new HashMap<String, Serializable>();
 	private Session session;
 
+	@Override
 	public void bind(Request request, Session newSession)
 	{
 		session = newSession;
 	}
 
+	@Override
 	public void destroy()
 	{
 		cleanup();
 	}
 
+	@Override
 	public Serializable getAttribute(Request request, String name)
 	{
 		return attributes.get(name);
 	}
 
+	@Override
 	public List<String> getAttributeNames(Request request)
 	{
 		return Collections.unmodifiableList(new ArrayList<String>(attributes.keySet()));
 	}
 
+	@Override
 	public String getSessionId(Request request, boolean create)
 	{
 		if (create && sessionId == null)
@@ -84,6 +89,7 @@ public class MockSessionStore implements ISessionStore
 		session = null;
 	}
 
+	@Override
 	public void invalidate(Request request)
 	{
 		String sessId = sessionId;
@@ -95,6 +101,7 @@ public class MockSessionStore implements ISessionStore
 
 	}
 
+	@Override
 	public Session lookup(Request request)
 	{
 		return session;
@@ -102,11 +109,13 @@ public class MockSessionStore implements ISessionStore
 
 	private final Set<UnboundListener> unboundListeners = new CopyOnWriteArraySet<UnboundListener>();
 
+	@Override
 	public void registerUnboundListener(UnboundListener listener)
 	{
 		unboundListeners.add(listener);
 	}
 
+	@Override
 	public void removeAttribute(Request request, String name)
 	{
 		attributes.remove(name);
@@ -115,21 +124,25 @@ public class MockSessionStore implements ISessionStore
 	/**
 	 * @see org.apache.wicket.session.ISessionStore#getUnboundListener()
 	 */
+	@Override
 	public final Set<UnboundListener> getUnboundListener()
 	{
 		return Collections.unmodifiableSet(unboundListeners);
 	}
 
+	@Override
 	public void setAttribute(Request request, String name, Serializable value)
 	{
 		attributes.put(name, value);
 	}
 
+	@Override
 	public void unregisterUnboundListener(UnboundListener listener)
 	{
 		unboundListeners.remove(listener);
 	}
 
+	@Override
 	public void flushSession(Request request, Session session)
 	{
 		this.session = session;

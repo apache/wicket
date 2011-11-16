@@ -73,6 +73,7 @@ public abstract class LabeledWebMarkupContainer extends WebMarkupContainer
 	/**
 	 * @see org.apache.wicket.markup.html.form.ILabelProvider#getLabel()
 	 */
+	@Override
 	public IModel<String> getLabel()
 	{
 		return labelModel;

@@ -86,17 +86,20 @@ public class AbstractTextComponentConvertEmptyStringsToNullTest extends WicketTe
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public String[] convertToObject(String value, Locale locale)
 			{
 				return Strings.split(value, ',');
 			}
 
+			@Override
 			public String convertToString(String[] value, Locale locale)
 			{
 				return Strings.join(",", value);
 			}
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

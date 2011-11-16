@@ -82,6 +82,7 @@ public class XsltTransformer implements ITransformer
 	 * located in the same path as the nearest parent with an associated markup and must have a
 	 * filename equal to the component's id.
 	 */
+	@Override
 	public CharSequence transform(final Component component, final CharSequence output)
 		throws Exception
 	{

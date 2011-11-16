@@ -239,6 +239,7 @@ public class WebPage extends Page
 		// if there are transparent resolvers used
 		HtmlHeaderContainer header = visitChildren(new IVisitor<Component, HtmlHeaderContainer>()
 		{
+			@Override
 			public void component(final Component component, final IVisit<HtmlHeaderContainer> visit)
 			{
 				if (component instanceof HtmlHeaderContainer)

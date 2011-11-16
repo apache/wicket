@@ -29,10 +29,12 @@ public class HeaderContributorListenerCollection extends ListenerCollection<IHea
 {
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	public void renderHead(final IHeaderResponse response)
 	{
 		notify(new INotifier<IHeaderContributor>()
 		{
+			@Override
 			public void notify(final IHeaderContributor listener)
 			{
 				listener.renderHead(response);

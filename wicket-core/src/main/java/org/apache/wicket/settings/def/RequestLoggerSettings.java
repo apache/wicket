@@ -39,6 +39,7 @@ public class RequestLoggerSettings implements IRequestLoggerSettings
 	/**
 	 * @see org.apache.wicket.settings.IRequestLoggerSettings#getRecordSessionSize()
 	 */
+	@Override
 	public boolean getRecordSessionSize()
 	{
 		return recordSessionSize;
@@ -47,6 +48,7 @@ public class RequestLoggerSettings implements IRequestLoggerSettings
 	/**
 	 * @see org.apache.wicket.settings.IRequestLoggerSettings#getRequestsWindowSize()
 	 */
+	@Override
 	public int getRequestsWindowSize()
 	{
 		return requestsWindowSize;
@@ -55,6 +57,7 @@ public class RequestLoggerSettings implements IRequestLoggerSettings
 	/**
 	 * @see org.apache.wicket.settings.IRequestLoggerSettings#isRequestLoggerEnabled()
 	 */
+	@Override
 	public boolean isRequestLoggerEnabled()
 	{
 		return requestLoggerEnabled;
@@ -63,6 +66,7 @@ public class RequestLoggerSettings implements IRequestLoggerSettings
 	/**
 	 * @see org.apache.wicket.settings.IRequestLoggerSettings#setRecordSessionSize(boolean)
 	 */
+	@Override
 	public void setRecordSessionSize(boolean record)
 	{
 		recordSessionSize = record;
@@ -71,6 +75,7 @@ public class RequestLoggerSettings implements IRequestLoggerSettings
 	/**
 	 * @see org.apache.wicket.settings.IRequestLoggerSettings#setRequestLoggerEnabled(boolean)
 	 */
+	@Override
 	public void setRequestLoggerEnabled(boolean enable)
 	{
 		requestLoggerEnabled = enable;
@@ -79,6 +84,7 @@ public class RequestLoggerSettings implements IRequestLoggerSettings
 	/**
 	 * @see org.apache.wicket.settings.IRequestLoggerSettings#setRequestsWindowSize(int)
 	 */
+	@Override
 	public void setRequestsWindowSize(int size)
 	{
 		requestsWindowSize = size;

@@ -107,6 +107,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 			{
 				return new IPageManagerProvider()
 				{
+					@Override
 					public IPageManager get(IPageManagerContext context)
 					{
 						return new MockPageManager()
@@ -140,6 +141,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 			add(new TestBorder("border"));
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{
@@ -162,6 +164,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 			addToBorder(new Label("c1", "some border title"));
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{
@@ -182,6 +185,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 			add(new TransparentWebMarkupContainer("container").add(new Label("msg", "test_message")));
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{
@@ -209,6 +213,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 			add(new TransparentWebMarkupContainer("container"));
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

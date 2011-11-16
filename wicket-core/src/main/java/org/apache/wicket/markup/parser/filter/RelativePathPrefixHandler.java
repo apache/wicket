@@ -132,6 +132,7 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 		return tag;
 	}
 
+	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{

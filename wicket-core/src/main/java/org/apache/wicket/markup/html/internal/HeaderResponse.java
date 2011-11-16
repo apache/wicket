@@ -51,11 +51,13 @@ public abstract class HeaderResponse implements IHeaderResponse
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderResponse#markRendered(java.lang.Object)
 	 */
+	@Override
 	public final void markRendered(Object object)
 	{
 		rendered.add(object);
 	}
 
+	@Override
 	public void renderCSS(CharSequence css, String id)
 	{
 		Args.notNull(css, "css");
@@ -74,6 +76,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderCSSReference(org.apache.wicket.request.resource.ResourceReference)
 	 */
+	@Override
 	public void renderCSSReference(ResourceReference reference)
 	{
 		renderCSSReference(reference, null, null);
@@ -83,17 +86,20 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderCSSReference(org.apache.wicket.request.resource.ResourceReference,
 	 *      String)
 	 */
+	@Override
 	public void renderCSSReference(ResourceReference reference, String media)
 	{
 		renderCSSReference(reference, null, media);
 	}
 
+	@Override
 	public void renderCSSReference(ResourceReference reference, PageParameters pageParameters,
 		String media)
 	{
 		renderCSSReference(reference, pageParameters, media, null);
 	}
 
+	@Override
 	public void renderCSSReference(ResourceReference reference, PageParameters pageParameters,
 		String media, String condition)
 	{
@@ -110,16 +116,19 @@ public abstract class HeaderResponse implements IHeaderResponse
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderCSSReference(java.lang.String)
 	 */
+	@Override
 	public void renderCSSReference(String url)
 	{
 		renderCSSReference(url, null);
 	}
 
+	@Override
 	public void renderCSSReference(String url, String media)
 	{
 		renderCSSReference(url, media, null);
 	}
 
+	@Override
 	public void renderCSSReference(String url, String media, String condition)
 	{
 		internalRenderCSSReference(relative(url), media, condition);
@@ -168,6 +177,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavaScriptReference(org.apache.wicket.request.resource.ResourceReference)
 	 */
+	@Override
 	public void renderJavaScriptReference(ResourceReference reference)
 	{
 		renderJavaScriptReference(reference, null);
@@ -177,23 +187,27 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavaScriptReference(org.apache.wicket.request.resource.ResourceReference,
 	 *      String)
 	 */
+	@Override
 	public void renderJavaScriptReference(ResourceReference reference, String id)
 	{
 		renderJavaScriptReference(reference, null, id);
 	}
 
+	@Override
 	public void renderJavaScriptReference(ResourceReference reference,
 		PageParameters pageParameters, String id)
 	{
 		renderJavaScriptReference(reference, pageParameters, id, false);
 	}
 
+	@Override
 	public void renderJavaScriptReference(ResourceReference reference,
 		PageParameters pageParameters, String id, boolean defer)
 	{
 		renderJavaScriptReference(reference, pageParameters, id, defer, null);
 	}
 
+	@Override
 	public void renderJavaScriptReference(ResourceReference reference,
 		PageParameters pageParameters, String id, boolean defer, String charset)
 	{
@@ -207,21 +221,25 @@ public abstract class HeaderResponse implements IHeaderResponse
 		}
 	}
 
+	@Override
 	public void renderJavaScriptReference(String url)
 	{
 		renderJavaScriptReference(url, null);
 	}
 
+	@Override
 	public void renderJavaScriptReference(String url, String id)
 	{
 		renderJavaScriptReference(url, id, false);
 	}
 
+	@Override
 	public void renderJavaScriptReference(String url, String id, boolean defer)
 	{
 		renderJavaScriptReference(url, id, defer, null);
 	}
 
+	@Override
 	public void renderJavaScriptReference(String url, String id, boolean defer, String charset)
 	{
 		internalRenderJavaScriptReference(relative(url), id, defer, charset);
@@ -261,6 +279,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavaScript(java.lang.CharSequence,
 	 *      java.lang.String)
 	 */
+	@Override
 	public void renderJavaScript(CharSequence javascript, String id)
 	{
 		Args.notNull(javascript, "javascript");
@@ -279,6 +298,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderString(java.lang.CharSequence)
 	 */
+	@Override
 	public void renderString(CharSequence string)
 	{
 		Args.notNull(string, "string");
@@ -297,6 +317,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderResponse#wasRendered(java.lang.Object)
 	 */
+	@Override
 	public final boolean wasRendered(Object object)
 	{
 		return rendered.contains(object);
@@ -305,6 +326,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderOnDomReadyJavaScript(java.lang.String)
 	 */
+	@Override
 	public void renderOnDomReadyJavaScript(String javascript)
 	{
 		if (javascript == null)
@@ -320,6 +342,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderOnLoadJavaScript(java.lang.String)
 	 */
+	@Override
 	public void renderOnLoadJavaScript(String javascript)
 	{
 		if (javascript == null)
@@ -337,6 +360,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderOnEventJavaScript(java.lang.String,
 	 *      java.lang.String, java.lang.String)
 	 */
+	@Override
 	public void renderOnEventJavaScript(String target, String event, String javascript)
 	{
 		if (!closed)
@@ -355,6 +379,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderResponse#close()
 	 */
+	@Override
 	public void close()
 	{
 		closed = true;
@@ -363,6 +388,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderResponse#getResponse()
 	 */
+	@Override
 	public final Response getResponse()
 	{
 		return closed ? NullResponse.getInstance() : getRealResponse();
@@ -371,6 +397,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderResponse#isClosed()
 	 */
+	@Override
 	public boolean isClosed()
 	{
 		return closed;

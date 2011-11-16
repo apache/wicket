@@ -100,6 +100,7 @@ public class DiskDataStore implements IDataStore
 	/**
 	 * @see org.apache.wicket.pageStore.IDataStore#destroy()
 	 */
+	@Override
 	public void destroy()
 	{
 		log.debug("Destroying...");
@@ -110,6 +111,7 @@ public class DiskDataStore implements IDataStore
 	/**
 	 * @see org.apache.wicket.pageStore.IDataStore#getData(java.lang.String, int)
 	 */
+	@Override
 	public byte[] getData(final String sessionId, final int id)
 	{
 		byte[] pageData = null;
@@ -127,6 +129,7 @@ public class DiskDataStore implements IDataStore
 	/**
 	 * @see org.apache.wicket.pageStore.IDataStore#isReplicated()
 	 */
+	@Override
 	public boolean isReplicated()
 	{
 		return false;
@@ -135,6 +138,7 @@ public class DiskDataStore implements IDataStore
 	/**
 	 * @see org.apache.wicket.pageStore.IDataStore#removeData(java.lang.String, int)
 	 */
+	@Override
 	public void removeData(final String sessionId, final int id)
 	{
 		SessionEntry sessionEntry = getSessionEntry(sessionId, false);
@@ -149,6 +153,7 @@ public class DiskDataStore implements IDataStore
 	/**
 	 * @see org.apache.wicket.pageStore.IDataStore#removeData(java.lang.String)
 	 */
+	@Override
 	public void removeData(final String sessionId)
 	{
 		SessionEntry sessionEntry = getSessionEntry(sessionId, false);
@@ -166,6 +171,7 @@ public class DiskDataStore implements IDataStore
 	/**
 	 * @see org.apache.wicket.pageStore.IDataStore#storeData(java.lang.String, int, byte[])
 	 */
+	@Override
 	public void storeData(final String sessionId, final int id, final byte[] data)
 	{
 		SessionEntry sessionEntry = getSessionEntry(sessionId, true);

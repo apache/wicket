@@ -40,6 +40,7 @@ public class DefaultButtonImageResourceFactory implements IResourceFactory
 	 * @see org.apache.wicket.IResourceFactory#newResource(java.lang.String, java.util.Locale,
 	 *      java.lang.String, java.lang.String)
 	 */
+	@Override
 	public IResource newResource(final String specification, final Locale locale,
 		final String style, final String variation)
 	{

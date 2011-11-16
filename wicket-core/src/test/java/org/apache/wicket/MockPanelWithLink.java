@@ -62,12 +62,14 @@ public abstract class MockPanelWithLink extends Panel
 	 */
 	protected abstract void onLinkClick(AjaxRequestTarget target);
 
+	@Override
 	public String getCacheKey(MarkupContainer container, Class<?> containerClass)
 	{
 		// no caching
 		return null;
 	}
 
+	@Override
 	public IResourceStream getMarkupResourceStream(MarkupContainer container,
 		Class<?> containerClass)
 	{

@@ -176,6 +176,7 @@ public class MarkupContainerTest extends WicketTestCase
 			a2.add(a3);
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

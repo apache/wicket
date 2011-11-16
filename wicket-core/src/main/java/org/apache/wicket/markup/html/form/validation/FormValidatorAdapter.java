@@ -42,12 +42,14 @@ public class FormValidatorAdapter extends Behavior implements IFormValidator
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public FormComponent<?>[] getDependentFormComponents()
 	{
 		return validator.getDependentFormComponents();
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void validate(Form<?> form)
 	{
 		validator.validate(form);

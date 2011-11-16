@@ -64,6 +64,7 @@ public class MarkupHeadFirstTest extends WicketTestCase
 			add(new MarkupHeadFirstPanel("panel"));
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{
@@ -91,6 +92,7 @@ public class MarkupHeadFirstTest extends WicketTestCase
 			super.renderHead(response);
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

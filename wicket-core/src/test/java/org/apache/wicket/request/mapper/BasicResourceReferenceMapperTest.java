@@ -461,16 +461,19 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public Serializable getCacheKey()
 			{
 				return null;
 			}
 
+			@Override
 			public IResourceStream getCacheableResourceStream()
 			{
 				return new StringResourceStream("foo-bar");
 			}
 
+			@Override
 			public void respond(Attributes attributes)
 			{
 			}

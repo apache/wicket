@@ -84,6 +84,7 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 		Application.get().getSecuritySettings().setUnauthorizedComponentInstantiationListener(
 			new IUnauthorizedComponentInstantiationListener()
 			{
+				@Override
 				public void onUnauthorizedInstantiation(final Component component)
 				{
 					// If there is a sign in page class declared, and the

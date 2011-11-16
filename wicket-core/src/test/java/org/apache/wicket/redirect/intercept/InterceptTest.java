@@ -48,11 +48,13 @@ public class InterceptTest extends WicketTestCase
 
 					private boolean block = true;
 
+					@Override
 					public boolean isActionAuthorized(Component component, Action action)
 					{
 						return true;
 					}
 
+					@Override
 					public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
 						Class<T> componentClass)
 					{

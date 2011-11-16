@@ -59,6 +59,7 @@ public class EventDispatcherTest extends WicketTestCase
 	/** */
 	public static class DispatchToAnnotatedMethod implements IEventDispatcher
 	{
+		@Override
 		public void dispatchEvent(Object sink, IEvent<?> event, Component component)
 		{
 			Method[] sinkMethods = sink.getClass().getMethods();

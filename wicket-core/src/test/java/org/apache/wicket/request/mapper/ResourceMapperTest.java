@@ -268,6 +268,7 @@ public class ResourceMapperTest extends WicketTestCase
 
 		public PageParameters pageParameters;
 
+		@Override
 		public void respond(Attributes attributes)
 		{
 			pageParameters = attributes.getParameters();

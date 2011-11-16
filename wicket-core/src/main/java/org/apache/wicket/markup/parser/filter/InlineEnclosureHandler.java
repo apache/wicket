@@ -170,6 +170,7 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 		return tag.getAttributes().getString(INLINE_ENCLOSURE_ATTRIBUTE_NAME);
 	}
 
+	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{

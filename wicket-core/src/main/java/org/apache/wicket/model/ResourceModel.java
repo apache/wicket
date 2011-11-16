@@ -80,6 +80,7 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 	/**
 	 * @see org.apache.wicket.model.IComponentAssignedModel#wrapOnAssignment(org.apache.wicket.Component)
 	 */
+	@Override
 	public IWrapModel<String> wrapOnAssignment(final Component component)
 	{
 		return new AssignmentWrapper(resourceKey, defaultValue, component);
@@ -110,6 +111,7 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 		/**
 		 * @see org.apache.wicket.model.IWrapModel#getWrappedModel()
 		 */
+		@Override
 		public IModel<String> getWrappedModel()
 		{
 			return ResourceModel.this;

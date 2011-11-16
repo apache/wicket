@@ -338,6 +338,7 @@ public interface IHeaderResponse extends Closeable
 	 * Mark Header rendering is completed and subsequent usage will be ignored. If some kind of
 	 * buffering is used internally, this action will mark that the contents has to be flushed out.
 	 */
+	@Override
 	public void close();
 
 	/**

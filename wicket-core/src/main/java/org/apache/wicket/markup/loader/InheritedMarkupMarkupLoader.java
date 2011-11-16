@@ -47,6 +47,7 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 	 * Load the markup from the resource stream with the base MarkupLoader provided, than check if
 	 * markup inheritance must be applied. If yes, than load the base markup and merge them.
 	 */
+	@Override
 	public final Markup loadMarkup(final MarkupContainer container,
 		final MarkupResourceStream markupResourceStream, final IMarkupLoader baseLoader,
 		final boolean enforceReload) throws IOException, ResourceStreamNotFoundException

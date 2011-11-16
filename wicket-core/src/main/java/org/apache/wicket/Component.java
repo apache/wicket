@@ -292,6 +292,7 @@ public abstract class Component
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public boolean compare(Component component, Object b)
 		{
 			final Object a = component.getDefaultModelObject();
@@ -1029,6 +1030,7 @@ public abstract class Component
 				((MarkupContainer)this).visitChildren(IFeedback.class,
 					new IVisitor<Component, Void>()
 					{
+						@Override
 						public void component(Component component, IVisit<Void> visit)
 						{
 							component.beforeRender();
@@ -1133,6 +1135,7 @@ public abstract class Component
 	 * Detaches the component. This is called at the end of the request for all the pages that are
 	 * touched in that request.
 	 */
+	@Override
 	public final void detach()
 	{
 		// if the component has been previously attached via attach()
@@ -1307,6 +1310,7 @@ public abstract class Component
 	 * 
 	 * @return The converter that should be used by this component
 	 */
+	@Override
 	public <C> IConverter<C> getConverter(Class<C> type)
 	{
 		return getApplication().getConverterLocator().getConverter(type);
@@ -1344,6 +1348,7 @@ public abstract class Component
 	 * 
 	 * @return The id of this component
 	 */
+	@Override
 	public String getId()
 	{
 		return id;
@@ -1736,6 +1741,7 @@ public abstract class Component
 	 * @throws IllegalStateException
 	 *             Thrown if component is not yet attached to a Page.
 	 */
+	@Override
 	public final Page getPage()
 	{
 		// Search for nearest Page
@@ -1756,6 +1762,7 @@ public abstract class Component
 	 * 
 	 * @return The path to this component relative to the page it is in
 	 */
+	@Override
 	public final String getPageRelativePath()
 	{
 		return Strings.afterFirstPathComponent(getPath(), PATH_SEPARATOR);
@@ -1766,6 +1773,7 @@ public abstract class Component
 	 * 
 	 * @return Any parent container, or null if there is none
 	 */
+	@Override
 	public final MarkupContainer getParent()
 	{
 		return parent;
@@ -4080,6 +4088,7 @@ public abstract class Component
 	 *            Path to component
 	 * @return The component at the path
 	 */
+	@Override
 	public Component get(final String path)
 	{
 		// Path to this component is an empty path
@@ -4388,17 +4397,20 @@ public abstract class Component
 	 * @param response
 	 *            Response object
 	 */
+	@Override
 	public void renderHead(IHeaderResponse response)
 	{
 		// noop
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void onEvent(IEvent<?> event)
 	{
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public final <T> void send(IEventSink sink, Broadcast type, T payload)
 	{
 		new ComponentEventSender(this, getApplication().getFrameworkSettings()).send(sink, type,
@@ -4424,12 +4436,14 @@ public abstract class Component
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public final Behavior getBehaviorById(int id)
 	{
 		return new Behaviors(this).getBehaviorById(id);
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public final int getBehaviorId(Behavior behavior)
 	{
 		return new Behaviors(this).getBehaviorId(behavior);

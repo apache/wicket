@@ -225,6 +225,7 @@ public class AutoLabelTextResolver implements IComponentResolver
 		}
 	}
 
+	@Override
 	public Component resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
 		if (tag instanceof WicketTag && "label".equals(((WicketTag)tag).getName()))

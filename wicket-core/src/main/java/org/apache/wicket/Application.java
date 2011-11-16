@@ -272,6 +272,7 @@ public abstract class Application implements UnboundListener, IEventSink
 			/**
 			 * @see org.apache.wicket.application.IComponentInstantiationListener#onInstantiation(org.apache.wicket.Component)
 			 */
+			@Override
 			public void onInstantiation(final Component component)
 			{
 				final Class<? extends Component> cl = component.getClass();
@@ -469,6 +470,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * @see org.apache.wicket.session.ISessionStore.UnboundListener#sessionUnbound(java.lang.String)
 	 */
+	@Override
 	public void sessionUnbound(final String sessionId)
 	{
 		internalGetPageManager().sessionExpired(sessionId);
@@ -870,6 +872,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void onEvent(final IEvent<?> event)
 	{
 	}
@@ -1550,6 +1553,7 @@ public abstract class Application implements UnboundListener, IEventSink
 
 	private static class DefaultExceptionMapperProvider implements IProvider<IExceptionMapper>
 	{
+		@Override
 		public IExceptionMapper get()
 		{
 			return new DefaultExceptionMapper();
@@ -1561,6 +1565,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 */
 	private static class DefaultRequestCycleProvider implements IRequestCycleProvider
 	{
+		@Override
 		public RequestCycle get(final RequestCycleContext context)
 		{
 			return new RequestCycle(context);

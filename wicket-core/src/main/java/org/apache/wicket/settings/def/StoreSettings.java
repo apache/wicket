@@ -56,26 +56,31 @@ public class StoreSettings implements IStoreSettings
 	{
 	}
 
+	@Override
 	public int getInmemoryCacheSize()
 	{
 		return inmemoryCacheSize;
 	}
 
+	@Override
 	public void setInmemoryCacheSize(int inmemoryCacheSize)
 	{
 		this.inmemoryCacheSize = inmemoryCacheSize;
 	}
 
+	@Override
 	public Bytes getMaxSizePerSession()
 	{
 		return maxSizePerSession;
 	}
 
+	@Override
 	public void setMaxSizePerSession(final Bytes maxSizePerSession)
 	{
 		this.maxSizePerSession = Args.notNull(maxSizePerSession, "maxSizePerSession");
 	}
 
+	@Override
 	public File getFileStoreFolder()
 	{
 		if (fileStoreFolder == null)
@@ -103,16 +108,19 @@ public class StoreSettings implements IStoreSettings
 		return fileStoreFolder;
 	}
 
+	@Override
 	public void setFileStoreFolder(final File fileStoreFolder)
 	{
 		this.fileStoreFolder = Args.notNull(fileStoreFolder, "fileStoreFolder");
 	}
 
+	@Override
 	public int getAsynchronousQueueCapacity()
 	{
 		return asynchronousQueueCapacity;
 	}
 
+	@Override
 	public void setAsynchronousQueueCapacity(int queueCapacity)
 	{
 		if (queueCapacity < 1)
@@ -123,11 +131,13 @@ public class StoreSettings implements IStoreSettings
 		asynchronousQueueCapacity = queueCapacity;
 	}
 
+	@Override
 	public void setAsynchronous(boolean async)
 	{
 		isAsynchronous = async;
 	}
 
+	@Override
 	public boolean isAsynchronous()
 	{
 		return isAsynchronous;

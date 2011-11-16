@@ -62,6 +62,7 @@ public class DefaultMarkupResourceStreamProvider implements IMarkupResourceStrea
 	 *            The container the markup should be associated with
 	 * @return A IResourceStream if the resource was found
 	 */
+	@Override
 	public IResourceStream getMarkupResourceStream(final MarkupContainer container,
 		Class<?> containerClass)
 	{

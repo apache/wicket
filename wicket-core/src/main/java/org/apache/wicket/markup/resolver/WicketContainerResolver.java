@@ -74,6 +74,7 @@ public class WicketContainerResolver implements IComponentResolver
 		WicketTagIdentifier.registerWellKnownTagName(CONTAINER);
 	}
 
+	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{

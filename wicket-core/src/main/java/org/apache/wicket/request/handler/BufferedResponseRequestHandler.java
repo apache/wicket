@@ -41,11 +41,13 @@ public class BufferedResponseRequestHandler implements IRequestHandler
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void detach(IRequestCycle requestCycle)
 	{
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void respond(IRequestCycle requestCycle)
 	{
 		bufferedWebResponse.writeTo((WebResponse)requestCycle.getResponse());

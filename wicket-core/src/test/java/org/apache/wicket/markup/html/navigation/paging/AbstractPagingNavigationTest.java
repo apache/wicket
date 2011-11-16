@@ -39,6 +39,7 @@ public abstract class AbstractPagingNavigationTest extends WicketTestCase
 		/**
 		 * @see IPageable#getCurrentPage()
 		 */
+		@Override
 		public int getCurrentPage()
 		{
 			return currentpage;
@@ -47,6 +48,7 @@ public abstract class AbstractPagingNavigationTest extends WicketTestCase
 		/**
 		 * @see IPageable#setCurrentPage(int)
 		 */
+		@Override
 		public void setCurrentPage(int page)
 		{
 			assertEquals("setCurrentPage", expectedPage, page);
@@ -55,6 +57,7 @@ public abstract class AbstractPagingNavigationTest extends WicketTestCase
 		/**
 		 * @see org.apache.wicket.markup.html.navigation.paging.IPageable#getPageCount()
 		 */
+		@Override
 		public int getPageCount()
 		{
 			return pagecount;

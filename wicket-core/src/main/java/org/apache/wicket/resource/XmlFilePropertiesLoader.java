@@ -44,6 +44,7 @@ public class XmlFilePropertiesLoader implements IPropertiesLoader
 	/**
 	 * @see org.apache.wicket.resource.IPropertiesLoader#getFileExtension()
 	 */
+	@Override
 	public final String getFileExtension()
 	{
 		return fileExtension;
@@ -53,6 +54,7 @@ public class XmlFilePropertiesLoader implements IPropertiesLoader
 	 * @throws IOException
 	 * @see org.apache.wicket.resource.IPropertiesLoader#loadJavaProperties(java.io.InputStream)
 	 */
+	@Override
 	public java.util.Properties loadJavaProperties(final InputStream in) throws IOException
 	{
 		java.util.Properties properties = new java.util.Properties();
@@ -63,6 +65,7 @@ public class XmlFilePropertiesLoader implements IPropertiesLoader
 	/**
 	 * @see org.apache.wicket.resource.IPropertiesLoader#loadWicketProperties(java.io.InputStream)
 	 */
+	@Override
 	public ValueMap loadWicketProperties(InputStream inputStream)
 	{
 		return null;

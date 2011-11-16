@@ -75,6 +75,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public Page getPage()
 			{
 				// TODO use PageProvider instead
@@ -89,6 +90,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 				}
 			}
 
+			@Override
 			public Class<? extends Page> getPageIdentity()
 			{
 				return c;
@@ -117,12 +119,14 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public Page getPage()
 			{
 				// use given page
 				return page;
 			}
 
+			@Override
 			public Class<? extends Page> getPageIdentity()
 			{
 				return page.getClass();
@@ -184,6 +188,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	/**
 	 * @see org.apache.wicket.markup.html.link.ILinkListener#onLinkClicked()
 	 */
+	@Override
 	public final void onLinkClicked()
 	{
 		setResponsePage(pageLink.getPage());

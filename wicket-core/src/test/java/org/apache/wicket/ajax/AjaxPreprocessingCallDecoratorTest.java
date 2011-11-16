@@ -40,16 +40,19 @@ public class AjaxPreprocessingCallDecoratorTest extends Assert
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public CharSequence decorateScript(Component c, CharSequence script)
 			{
 				return "^" + script;
 			}
 
+			@Override
 			public CharSequence decorateOnSuccessScript(Component c, CharSequence script)
 			{
 				return "^s" + script;
 			}
 
+			@Override
 			public CharSequence decorateOnFailureScript(Component c, CharSequence script)
 			{
 				return "^f" + script;

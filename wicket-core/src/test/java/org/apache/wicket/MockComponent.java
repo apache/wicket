@@ -40,6 +40,7 @@ public class MockComponent implements IRequestableComponent
 	{
 	}
 
+	@Override
 	public IRequestableComponent get(String path)
 	{
 		MockComponent c = new MockComponent();
@@ -56,6 +57,7 @@ public class MockComponent implements IRequestableComponent
 		return c;
 	}
 
+	@Override
 	public String getId()
 	{
 		return id;
@@ -94,6 +96,7 @@ public class MockComponent implements IRequestableComponent
 		return markupId;
 	}
 
+	@Override
 	public IRequestablePage getPage()
 	{
 		return page;
@@ -111,6 +114,7 @@ public class MockComponent implements IRequestableComponent
 		return this;
 	}
 
+	@Override
 	public String getPageRelativePath()
 	{
 		return path;
@@ -128,6 +132,7 @@ public class MockComponent implements IRequestableComponent
 		return this;
 	}
 
+	@Override
 	public void detach()
 	{
 	}
@@ -153,11 +158,13 @@ public class MockComponent implements IRequestableComponent
 		return false;
 	}
 
+	@Override
 	public int getBehaviorId(Behavior behavior)
 	{
 		throw new IllegalArgumentException();
 	}
 
+	@Override
 	public Behavior getBehaviorById(int id)
 	{
 		return null;

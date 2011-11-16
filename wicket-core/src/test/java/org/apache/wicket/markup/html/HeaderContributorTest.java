@@ -102,6 +102,7 @@ public class HeaderContributorTest extends WicketTestCase
 			component.set(true);
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{
@@ -131,21 +132,25 @@ public class HeaderContributorTest extends WicketTestCase
 			this.callDecorator = callDecorator;
 		}
 
+		@Override
 		public void renderHead(Component component, IHeaderResponse response)
 		{
 			callDecorator.set(true);
 		}
 
+		@Override
 		public CharSequence decorateScript(Component component, CharSequence script)
 		{
 			return null;
 		}
 
+		@Override
 		public CharSequence decorateOnSuccessScript(Component component, CharSequence script)
 		{
 			return null;
 		}
 
+		@Override
 		public CharSequence decorateOnFailureScript(Component component, CharSequence script)
 		{
 			return null;

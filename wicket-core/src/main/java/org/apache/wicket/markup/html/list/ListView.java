@@ -596,11 +596,13 @@ public abstract class ListView<T> extends AbstractRepeater
 		{
 			private int index = 0;
 
+			@Override
 			public boolean hasNext()
 			{
 				return index < size;
 			}
 
+			@Override
 			public Component next()
 			{
 				final String id = Integer.toString(firstIndex + index);

@@ -102,6 +102,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	/**
 	 * @see org.apache.wicket.resource.IPropertiesFactory#addListener(org.apache.wicket.resource.IPropertiesChangeListener)
 	 */
+	@Override
 	public void addListener(final IPropertiesChangeListener listener)
 	{
 		// Make sure listeners are added only once
@@ -114,6 +115,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	/**
 	 * @see org.apache.wicket.resource.IPropertiesFactory#clearCache()
 	 */
+	@Override
 	public final void clearCache()
 	{
 		if (propertiesCache != null)
@@ -129,6 +131,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	 * 
 	 * @see org.apache.wicket.resource.IPropertiesFactory#load(java.lang.Class, java.lang.String)
 	 */
+	@Override
 	public Properties load(final Class<?> clazz, final String path)
 	{
 		// Check the cache
@@ -259,6 +262,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	{
 		watcher.add(resourceStream, new IChangeListener()
 		{
+			@Override
 			public void onChange()
 			{
 				log.info("A properties files has changed. Removing all entries " +

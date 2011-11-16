@@ -853,6 +853,7 @@ public abstract class Session implements IClusterable, IEventSink
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void onEvent(IEvent<?> event)
 	{
 	}

@@ -59,6 +59,7 @@ public class RequestCycleCachedResourceVersion implements IResourceVersion
 		this.delegate = Args.notNull(delegate, "delegate");
 	}
 
+	@Override
 	public String getVersion(IStaticCacheableResource resource)
 	{
 		// get current request cycle

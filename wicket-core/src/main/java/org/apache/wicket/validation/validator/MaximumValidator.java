@@ -51,6 +51,7 @@ public class MaximumValidator<Z extends Comparable<Z> & Serializable> extends Be
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void validate(IValidatable<Z> validatable)
 	{
 		Z value = validatable.getValue();

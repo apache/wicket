@@ -64,6 +64,7 @@ public class JavaSerializer implements ISerializer
 		this.applicationKey = applicationKey;
 	}
 
+	@Override
 	public byte[] serialize(final Object object)
 	{
 		try
@@ -97,6 +98,7 @@ public class JavaSerializer implements ISerializer
 		return null;
 	}
 
+	@Override
 	public Object deserialize(final byte[] data)
 	{
 		ThreadContext old = ThreadContext.get(false);

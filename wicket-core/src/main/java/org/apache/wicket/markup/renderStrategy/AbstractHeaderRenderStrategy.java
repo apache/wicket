@@ -93,6 +93,7 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 	{
 	}
 
+	@Override
 	public void renderHeader(final HtmlHeaderContainer headerContainer,
 		final Component rootComponent)
 	{

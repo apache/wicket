@@ -38,6 +38,7 @@ public class SessionSettings implements ISessionSettings
 	 * @see org.apache.wicket.settings.ISessionSettings#getPageFactory()
 	 * @deprecated Use {@link Session#getPageFactory()}
 	 */
+	@Override
 	@Deprecated
 	public IPageFactory getPageFactory()
 	{
@@ -55,6 +56,7 @@ public class SessionSettings implements ISessionSettings
 	 * @see org.apache.wicket.settings.ISessionSettings#setPageFactory(org.apache.wicket.IPageFactory)
 	 * @deprecated Use {@link Application#newPageFactory()} instead.
 	 */
+	@Override
 	@Deprecated
 	public void setPageFactory(final IPageFactory defaultPageFactory)
 	{

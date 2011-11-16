@@ -67,6 +67,7 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	/**
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public T getObject()
 	{
@@ -80,6 +81,7 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	/**
 	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void setObject(T object)
 	{
@@ -96,6 +98,7 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	/**
 	 * @see org.apache.wicket.model.IChainingModel#getChainedModel()
 	 */
+	@Override
 	public IModel<?> getChainedModel()
 	{
 		if (target instanceof IModel)
@@ -108,6 +111,7 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	/**
 	 * @see org.apache.wicket.model.IChainingModel#setChainedModel(org.apache.wicket.model.IModel)
 	 */
+	@Override
 	public void setChainedModel(IModel<?> model)
 	{
 		target = model;
@@ -116,6 +120,7 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	/**
 	 * @see org.apache.wicket.model.IDetachable#detach()
 	 */
+	@Override
 	public void detach()
 	{
 		if (target instanceof IDetachable)
@@ -138,6 +143,7 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 	/**
 	 * @see org.apache.wicket.model.IComponentInheritedModel#wrapOnInheritance(org.apache.wicket.Component)
 	 */
+	@Override
 	public <C> IWrapModel<C> wrapOnInheritance(Component component)
 	{
 		return new AttachedCompoundPropertyModel<C>(component);
@@ -198,6 +204,7 @@ public class CompoundPropertyModel<T> implements IComponentInheritedModel<T>, IC
 		/**
 		 * @see org.apache.wicket.model.IWrapModel#getWrappedModel()
 		 */
+		@Override
 		public IModel<T> getWrappedModel()
 		{
 			return CompoundPropertyModel.this;

@@ -89,6 +89,7 @@ public final class HeaderPartContainer extends WebMarkupContainer implements ICo
 	/**
 	 * The tag must be resolved against the panel and not against the page
 	 */
+	@Override
 	public final Component resolve(final MarkupContainer container,
 		final MarkupStream markupStream, final ComponentTag tag)
 	{

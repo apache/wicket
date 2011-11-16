@@ -32,6 +32,7 @@ class FileResourceStreamReference extends AbstractResourceStreamReference
 		saveResourceStream(fileResourceStream);
 	}
 
+	@Override
 	public FileResourceStream getReference()
 	{
 		FileResourceStream fileResourceStream = new FileResourceStream(new File(fileName));

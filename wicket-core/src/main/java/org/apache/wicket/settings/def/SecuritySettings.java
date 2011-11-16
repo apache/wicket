@@ -64,6 +64,7 @@ public class SecuritySettings implements ISecuritySettings
 		 * @param component
 		 *            The partially constructed component (only the id is guaranteed to be valid).
 		 */
+		@Override
 		public void onUnauthorizedInstantiation(final Component component)
 		{
 			throw new UnauthorizedInstantiationException(component.getClass());
@@ -73,6 +74,7 @@ public class SecuritySettings implements ISecuritySettings
 	/**
 	 * @see org.apache.wicket.settings.ISecuritySettings#getAuthorizationStrategy()
 	 */
+	@Override
 	public IAuthorizationStrategy getAuthorizationStrategy()
 	{
 		return authorizationStrategy;
@@ -81,6 +83,7 @@ public class SecuritySettings implements ISecuritySettings
 	/**
 	 * @see org.apache.wicket.settings.ISecuritySettings#getCryptFactory()
 	 */
+	@Override
 	public synchronized ICryptFactory getCryptFactory()
 	{
 		if (cryptFactory == null)
@@ -93,6 +96,7 @@ public class SecuritySettings implements ISecuritySettings
 	/**
 	 * @see org.apache.wicket.settings.ISecuritySettings#getEnforceMounts()
 	 */
+	@Override
 	public boolean getEnforceMounts()
 	{
 		return enforceMounts;
@@ -101,6 +105,7 @@ public class SecuritySettings implements ISecuritySettings
 	/**
 	 * @see org.apache.wicket.settings.ISecuritySettings#getUnauthorizedComponentInstantiationListener()
 	 */
+	@Override
 	public IUnauthorizedComponentInstantiationListener getUnauthorizedComponentInstantiationListener()
 	{
 		return unauthorizedComponentInstantiationListener;
@@ -109,6 +114,7 @@ public class SecuritySettings implements ISecuritySettings
 	/**
 	 * @see org.apache.wicket.settings.ISecuritySettings#setAuthorizationStrategy(org.apache.wicket.authorization.IAuthorizationStrategy)
 	 */
+	@Override
 	public void setAuthorizationStrategy(IAuthorizationStrategy strategy)
 	{
 		if (strategy == null)
@@ -121,6 +127,7 @@ public class SecuritySettings implements ISecuritySettings
 	/**
 	 * @see org.apache.wicket.settings.ISecuritySettings#setCryptFactory(org.apache.wicket.util.crypt.ICryptFactory)
 	 */
+	@Override
 	public void setCryptFactory(ICryptFactory cryptFactory)
 	{
 		if (cryptFactory == null)
@@ -133,6 +140,7 @@ public class SecuritySettings implements ISecuritySettings
 	/**
 	 * @see org.apache.wicket.settings.ISecuritySettings#setEnforceMounts(boolean)
 	 */
+	@Override
 	public void setEnforceMounts(boolean enforce)
 	{
 		enforceMounts = enforce;
@@ -141,6 +149,7 @@ public class SecuritySettings implements ISecuritySettings
 	/**
 	 * @see org.apache.wicket.settings.ISecuritySettings#setUnauthorizedComponentInstantiationListener(org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener)
 	 */
+	@Override
 	public void setUnauthorizedComponentInstantiationListener(
 		IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener)
 	{
@@ -150,6 +159,7 @@ public class SecuritySettings implements ISecuritySettings
 	/**
 	 * @see org.apache.wicket.settings.ISecuritySettings#getAuthenticationStrategy()
 	 */
+	@Override
 	public IAuthenticationStrategy getAuthenticationStrategy()
 	{
 		if (authenticationStrategy == null)
@@ -162,6 +172,7 @@ public class SecuritySettings implements ISecuritySettings
 	/**
 	 * @see org.apache.wicket.settings.ISecuritySettings#setAuthenticationStrategy(org.apache.wicket.authentication.IAuthenticationStrategy)
 	 */
+	@Override
 	public void setAuthenticationStrategy(final IAuthenticationStrategy strategy)
 	{
 		authenticationStrategy = strategy;

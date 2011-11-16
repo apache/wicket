@@ -31,6 +31,7 @@ public class DefaultMapperContext implements IMapperContext
 	/**
 	 * @see org.apache.wicket.request.mapper.IMapperContext#getBookmarkableIdentifier()
 	 */
+	@Override
 	public String getBookmarkableIdentifier()
 	{
 		return "bookmarkable";
@@ -40,6 +41,7 @@ public class DefaultMapperContext implements IMapperContext
 	 * 
 	 * @see org.apache.wicket.request.mapper.IMapperContext#getNamespace()
 	 */
+	@Override
 	public String getNamespace()
 	{
 		return MarkupParser.WICKET;
@@ -49,6 +51,7 @@ public class DefaultMapperContext implements IMapperContext
 	 * 
 	 * @see org.apache.wicket.request.mapper.IMapperContext#getPageIdentifier()
 	 */
+	@Override
 	public String getPageIdentifier()
 	{
 		return "page";
@@ -58,6 +61,7 @@ public class DefaultMapperContext implements IMapperContext
 	 * 
 	 * @see org.apache.wicket.request.mapper.IMapperContext#getResourceIdentifier()
 	 */
+	@Override
 	public String getResourceIdentifier()
 	{
 		return "resource";
@@ -67,6 +71,7 @@ public class DefaultMapperContext implements IMapperContext
 	 * 
 	 * @see org.apache.wicket.request.mapper.IMapperContext#getResourceReferenceRegistry()
 	 */
+	@Override
 	public ResourceReferenceRegistry getResourceReferenceRegistry()
 	{
 		return Application.get().getResourceReferenceRegistry();
@@ -76,6 +81,7 @@ public class DefaultMapperContext implements IMapperContext
 	 * 
 	 * @see org.apache.wicket.request.mapper.IMapperContext#requestListenerInterfaceFromString(java.lang.String)
 	 */
+	@Override
 	public RequestListenerInterface requestListenerInterfaceFromString(final String interfaceName)
 	{
 		return RequestListenerInterface.forName(interfaceName);
@@ -85,6 +91,7 @@ public class DefaultMapperContext implements IMapperContext
 	 * 
 	 * @see org.apache.wicket.request.mapper.IMapperContext#requestListenerInterfaceToString(org.apache.wicket.RequestListenerInterface)
 	 */
+	@Override
 	public String requestListenerInterfaceToString(final RequestListenerInterface listenerInterface)
 	{
 		return listenerInterface.getName();
@@ -95,6 +102,7 @@ public class DefaultMapperContext implements IMapperContext
 	 * @see org.apache.wicket.request.mapper.IPageSource#newPageInstance(java.lang.Class,
 	 *      org.apache.wicket.request.mapper.parameter.PageParameters)
 	 */
+	@Override
 	public IRequestablePage newPageInstance(final Class<? extends IRequestablePage> pageClass,
 		final PageParameters pageParameters)
 	{
@@ -112,6 +120,7 @@ public class DefaultMapperContext implements IMapperContext
 	 * 
 	 * @see org.apache.wicket.request.mapper.IPageSource#getPageInstance(int)
 	 */
+	@Override
 	public IRequestablePage getPageInstance(final int pageId)
 	{
 		IManageablePage manageablePage = Session.get().getPageManager().getPage(pageId);
@@ -127,6 +136,7 @@ public class DefaultMapperContext implements IMapperContext
 	 * 
 	 * @see org.apache.wicket.request.mapper.IMapperContext#getHomePageClass()
 	 */
+	@Override
 	public Class<? extends IRequestablePage> getHomePageClass()
 	{
 		return Application.get().getHomePage();

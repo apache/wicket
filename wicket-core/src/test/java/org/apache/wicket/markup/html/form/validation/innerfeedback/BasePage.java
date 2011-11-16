@@ -44,6 +44,7 @@ public class BasePage extends WebPage
 			{
 				private static final long serialVersionUID = 1L;
 
+				@Override
 				public boolean accept(FeedbackMessage message)
 				{
 					return !message.isRendered();

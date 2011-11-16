@@ -183,6 +183,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 * @see org.apache.wicket.request.resource.caching.IStaticCacheableResource#getCacheableResourceStream()
 	 * @see #getResourceStream()
 	 */
+	@Override
 	public IResourceStream getCacheableResourceStream()
 	{
 		// get resource locator
@@ -196,6 +197,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			getCurrentLocale(), null, false);
 	}
 
+	@Override
 	public Serializable getCacheKey()
 	{
 		IResourceStream stream = getCacheableResourceStream();

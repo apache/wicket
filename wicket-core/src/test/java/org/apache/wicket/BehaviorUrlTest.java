@@ -101,6 +101,7 @@ public class BehaviorUrlTest extends WicketTestCase
 
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{
@@ -134,6 +135,7 @@ public class BehaviorUrlTest extends WicketTestCase
 			tag.put("href", component.urlFor(this, IBehaviorListener.INTERFACE));
 		}
 
+		@Override
 		public void onRequest()
 		{
 		}

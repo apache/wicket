@@ -66,6 +66,7 @@ public class EqualInputValidator extends AbstractFormValidator
 	/**
 	 * @see org.apache.wicket.markup.html.form.validation.IFormValidator#getDependentFormComponents()
 	 */
+	@Override
 	public FormComponent<?>[] getDependentFormComponents()
 	{
 		return components;
@@ -74,6 +75,7 @@ public class EqualInputValidator extends AbstractFormValidator
 	/**
 	 * @see org.apache.wicket.markup.html.form.validation.IFormValidator#validate(org.apache.wicket.markup.html.form.Form)
 	 */
+	@Override
 	public void validate(Form<?> form)
 	{
 		// we have a choice to validate the type converted values or the raw

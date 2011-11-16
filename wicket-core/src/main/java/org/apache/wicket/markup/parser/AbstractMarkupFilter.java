@@ -50,6 +50,7 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	/**
 	 * @return The next MarkupFilter in the chain
 	 */
+	@Override
 	public IMarkupFilter getNextFilter()
 	{
 		return parent;
@@ -61,6 +62,7 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	 * @param parent
 	 *            The parent of this component The next element in the chain
 	 */
+	@Override
 	public void setNextFilter(final IMarkupFilter parent)
 	{
 		this.parent = parent;
@@ -70,6 +72,7 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	 * Get the next xml element from the markup. If eof, than retun null. Ignore raw markup. Invoke
 	 * nextTag(tag) if a tag was found.
 	 */
+	@Override
 	public MarkupElement nextElement() throws ParseException
 	{
 		MarkupElement elem = getNextFilter().nextElement();
@@ -137,6 +140,7 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 // return rawMarkup;
 // }
 
+	@Override
 	public void postProcess(final Markup markup)
 	{
 	}

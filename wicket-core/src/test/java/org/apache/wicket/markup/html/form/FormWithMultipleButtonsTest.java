@@ -131,6 +131,7 @@ public class FormWithMultipleButtonsTest extends WicketTestCase
 			});
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

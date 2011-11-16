@@ -159,5 +159,6 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 	 * @param target
 	 *            ajax target if this linked was invoked using ajax, null otherwise
 	 */
+	@Override
 	public abstract void onClick(final AjaxRequestTarget target);
 }

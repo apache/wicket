@@ -27,10 +27,12 @@ public class ComponentInstantiationListenerCollection extends
 {
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	public void onInstantiation(final Component component)
 	{
 		notify(new INotifier<IComponentInstantiationListener>()
 		{
+			@Override
 			public void notify(IComponentInstantiationListener listener)
 			{
 				listener.onInstantiation(component);

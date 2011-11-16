@@ -35,6 +35,7 @@ class UrlResourceStreamReference extends AbstractResourceStreamReference
 		saveResourceStream(urlResourceStream);
 	}
 
+	@Override
 	public UrlResourceStream getReference()
 	{
 		try

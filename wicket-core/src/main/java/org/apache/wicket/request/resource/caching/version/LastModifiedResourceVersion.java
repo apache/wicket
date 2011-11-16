@@ -35,6 +35,7 @@ public class LastModifiedResourceVersion implements IResourceVersion
 {
 	private static final Logger log = LoggerFactory.getLogger(LastModifiedResourceVersion.class);
 	
+	@Override
 	public String getVersion(IStaticCacheableResource resource)
 	{
 		// get last modified timestamp of resource

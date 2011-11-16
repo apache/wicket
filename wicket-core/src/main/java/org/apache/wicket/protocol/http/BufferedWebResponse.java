@@ -67,6 +67,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	 * @param response
 	 *            web response that should receive the current cookie operation
 	 */
+	@Override
 	public void writeMetaData(WebResponse response)
 	{
 		for (Action action : actions)
@@ -107,6 +108,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	{
 		protected abstract void invoke(WebResponse response);
 
+		@Override
 		public int compareTo(Action o)
 		{
 			return 0;

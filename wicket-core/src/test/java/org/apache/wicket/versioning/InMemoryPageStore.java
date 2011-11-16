@@ -43,6 +43,7 @@ public class InMemoryPageStore implements IDataStore
 		store = new HashMap<String, Map<Integer, byte[]>>();
 	}
 
+	@Override
 	public void destroy()
 	{
 		store.clear();
@@ -51,6 +52,7 @@ public class InMemoryPageStore implements IDataStore
 	/**
 	 * @see org.apache.wicket.pageStore.IDataStore#getData(java.lang.String, int)
 	 */
+	@Override
 	public byte[] getData(String sessionId, int pageId)
 	{
 		byte[] pageAsBytes = null;
@@ -67,6 +69,7 @@ public class InMemoryPageStore implements IDataStore
 	/**
 	 * @see org.apache.wicket.pageStore.IDataStore#removeData(java.lang.String, int)
 	 */
+	@Override
 	public void removeData(String sessionId, int pageId)
 	{
 		final Map<Integer, byte[]> sessionPages = store.get(sessionId);
@@ -79,6 +82,7 @@ public class InMemoryPageStore implements IDataStore
 	/**
 	 * @see org.apache.wicket.pageStore.IDataStore#removeData(java.lang.String)
 	 */
+	@Override
 	public void removeData(String sessionId)
 	{
 		store.remove(sessionId);
@@ -87,6 +91,7 @@ public class InMemoryPageStore implements IDataStore
 	/**
 	 * @see org.apache.wicket.pageStore.IDataStore#storeData(java.lang.String, int, byte[])
 	 */
+	@Override
 	public void storeData(String sessionId, int pageId, byte[] pageAsBytes)
 	{
 		Map<Integer, byte[]> sessionPages = store.get(sessionId);
@@ -102,6 +107,7 @@ public class InMemoryPageStore implements IDataStore
 	/**
 	 * @see org.apache.wicket.pageStore.IDataStore#isReplicated()
 	 */
+	@Override
 	public boolean isReplicated()
 	{
 		return false;

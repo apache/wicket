@@ -70,6 +70,7 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 	 * {@link UrlResourceStream} if there is an entry in the cache. Otherwise asks the delegate to
 	 * find one and puts it in the cache.
 	 */
+	@Override
 	public IResourceStream locate(Class<?> clazz, String path)
 	{
 		Key key = new Key(clazz.getName(), path, null, null, null);
@@ -108,6 +109,7 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 		}
 	}
 
+	@Override
 	public IResourceStream locate(Class<?> scope, String path, String style, String variation,
 		Locale locale, String extension, boolean strict)
 	{
@@ -129,6 +131,7 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 		return result;
 	}
 
+	@Override
 	public ResourceNameIterator newResourceNameIterator(String path, Locale locale, String style,
 		String variation, String extension, boolean strict)
 	{

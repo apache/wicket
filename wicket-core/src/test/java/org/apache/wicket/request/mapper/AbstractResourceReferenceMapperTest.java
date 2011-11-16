@@ -38,6 +38,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public void respond(Attributes attributes)
 		{
 		}
@@ -47,6 +48,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public void respond(Attributes attributes)
 		{
 		}
@@ -56,6 +58,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public void respond(Attributes attributes)
 		{
 		}
@@ -65,6 +68,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public void respond(Attributes attributes)
 		{
 		}
@@ -74,6 +78,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public void respond(Attributes attributes)
 		{
 		}
@@ -83,6 +88,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public void respond(Attributes attributes)
 		{
 		}

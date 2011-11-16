@@ -41,6 +41,7 @@ public class StaticResourceVersion implements IResourceVersion
 		this.version = Args.notNull(version, "version");
 	}
 
+	@Override
 	public String getVersion(IStaticCacheableResource resource)
 	{
 		return version;

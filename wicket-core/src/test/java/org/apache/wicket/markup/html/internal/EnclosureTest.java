@@ -339,11 +339,13 @@ public class EnclosureTest extends WicketTestCase
 				// This should cause all SecuredContainer components to be hidden
 				getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy()
 				{
+					@Override
 					public boolean isActionAuthorized(Component component, Action action)
 					{
 						return !(component instanceof SecuredContainer_13);
 					}
 
+					@Override
 					public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
 						Class<T> componentClass)
 					{
@@ -384,6 +386,7 @@ public class EnclosureTest extends WicketTestCase
 				});
 			}
 
+			@Override
 			public IResourceStream getMarkupResourceStream(MarkupContainer container,
 				Class<?> containerClass)
 			{

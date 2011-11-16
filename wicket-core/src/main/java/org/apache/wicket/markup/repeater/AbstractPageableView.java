@@ -161,6 +161,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	/**
 	 * @return maximum number of items that will be shown per page
 	 */
+	@Override
 	public int getItemsPerPage()
 	{
 		return itemsPerPage;
@@ -223,6 +224,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	 * 
 	 * @return the item count
 	 */
+	@Override
 	public final int getItemCount()
 	{
 		if (isItemCountCached())
@@ -239,6 +241,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	/**
 	 * @see org.apache.wicket.markup.html.navigation.paging.IPageable#getCurrentPage()
 	 */
+	@Override
 	public final int getCurrentPage()
 	{
 		int page = currentPage;
@@ -261,6 +264,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	/**
 	 * @see org.apache.wicket.markup.html.navigation.paging.IPageable#setCurrentPage(int)
 	 */
+	@Override
 	public final void setCurrentPage(int page)
 	{
 		if (currentPage != page)
@@ -277,6 +281,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	/**
 	 * @see org.apache.wicket.markup.html.navigation.paging.IPageable#getPageCount()
 	 */
+	@Override
 	public final int getPageCount()
 	{
 		int total = getRowCount();
@@ -343,6 +348,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 		/**
 		 * @see java.util.Iterator#remove()
 		 */
+		@Override
 		public void remove()
 		{
 			throw new UnsupportedOperationException();
@@ -351,6 +357,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 		/**
 		 * @see java.util.Iterator#hasNext()
 		 */
+		@Override
 		public boolean hasNext()
 		{
 			return (index < max) && delegate.hasNext();
@@ -359,6 +366,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 		/**
 		 * @see java.util.Iterator#next()
 		 */
+		@Override
 		public IModel<T> next()
 		{
 			if (index >= max)

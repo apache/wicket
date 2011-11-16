@@ -107,6 +107,7 @@ public class FilterFactoryManager implements Iterable<AbstractRequestWrapperFact
 	/**
 	 * @see java.lang.Iterable#iterator()
 	 */
+	@Override
 	public Iterator<AbstractRequestWrapperFactory> iterator()
 	{
 		return filters.iterator();

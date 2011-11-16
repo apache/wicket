@@ -49,6 +49,7 @@ public abstract class ArrayIteratorAdapter<T> implements Iterator<IModel<T>>
 	/**
 	 * @see java.util.Iterator#remove()
 	 */
+	@Override
 	public void remove()
 	{
 		throw new UnsupportedOperationException("remove() is not allowed");
@@ -57,6 +58,7 @@ public abstract class ArrayIteratorAdapter<T> implements Iterator<IModel<T>>
 	/**
 	 * @see java.util.Iterator#hasNext()
 	 */
+	@Override
 	public boolean hasNext()
 	{
 		return pos < array.length;
@@ -65,6 +67,7 @@ public abstract class ArrayIteratorAdapter<T> implements Iterator<IModel<T>>
 	/**
 	 * @see java.util.Iterator#next()
 	 */
+	@Override
 	public IModel<T> next()
 	{
 		return model(array[pos++]);

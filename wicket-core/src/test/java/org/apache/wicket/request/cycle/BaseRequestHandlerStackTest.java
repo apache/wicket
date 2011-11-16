@@ -75,11 +75,13 @@ public abstract class BaseRequestHandlerStackTest
 			this.response = response;
 		}
 
+		@Override
 		public Response getResponse()
 		{
 			return response;
 		}
 
+		@Override
 		public Response setResponse(Response response)
 		{
 			Response original = this.response;
@@ -87,15 +89,18 @@ public abstract class BaseRequestHandlerStackTest
 			return original;
 		}
 
+		@Override
 		public Request getRequest()
 		{
 			return null;
 		}
 
+		@Override
 		public void scheduleRequestHandlerAfterCurrent(IRequestHandler handler)
 		{
 		}
 
+		@Override
 		public UrlRenderer getUrlRenderer()
 		{
 			return null;

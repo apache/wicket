@@ -104,6 +104,7 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 				new org.apache.wicket.util.visit.IVisitor<Radio<T>, Radio<T>>()
 				{
 
+					@Override
 					public void component(final Radio<T> radio, final IVisit<Radio<T>> visit)
 					{
 						if (radio.getValue().equals(value))
@@ -147,6 +148,7 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 	/**
 	 * Called when a selection changes.
 	 */
+	@Override
 	public final void onSelectionChanged()
 	{
 		convertInput();

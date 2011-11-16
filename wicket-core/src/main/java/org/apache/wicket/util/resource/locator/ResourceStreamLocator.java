@@ -86,6 +86,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	 * @see org.apache.wicket.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class,
 	 *      java.lang.String)
 	 */
+	@Override
 	public IResourceStream locate(final Class<?> clazz, final String path)
 	{
 		// First try with the resource finder registered with the application
@@ -112,6 +113,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	 *      java.lang.String, java.lang.String, java.lang.String, java.util.Locale,
 	 *      java.lang.String, boolean)
 	 */
+	@Override
 	public IResourceStream locate(final Class<?> clazz, String path, final String style,
 		final String variation, Locale locale, final String extension, final boolean strict)
 	{
@@ -244,6 +246,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	 * @see org.apache.wicket.util.resource.locator.IResourceStreamLocator#newResourceNameIterator(java.lang.String,
 	 *      java.util.Locale, java.lang.String, java.lang.String, java.lang.String, boolean)
 	 */
+	@Override
 	public ResourceNameIterator newResourceNameIterator(final String path, final Locale locale,
 		final String style, final String variation, final String extension, final boolean strict)
 	{

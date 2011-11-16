@@ -49,6 +49,7 @@ public class FragmentResolver implements IComponentResolver
 		WicketTagIdentifier.registerWellKnownTagName(FRAGMENT);
 	}
 
+	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{

@@ -76,6 +76,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 		this.cachingStrategy = cachingStrategy;
 	}
 
+	@Override
 	public IRequestHandler mapRequest(Request request)
 	{
 		Url url = request.getUrl();
@@ -148,6 +149,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 		return scope.getName();
 	}
 
+	@Override
 	public Url mapHandler(IRequestHandler requestHandler)
 	{
 		if (requestHandler instanceof ResourceReferenceRequestHandler)
@@ -230,6 +232,7 @@ class BasicResourceReferenceMapper extends AbstractResourceReferenceMapper
 		return null;
 	}
 
+	@Override
 	public int getCompatibilityScore(Request request)
 	{
 		Url url = request.getUrl();

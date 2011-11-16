@@ -102,6 +102,7 @@ public class ListenerInterfaceRequestHandlerTest extends WicketTestCase
 			});
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

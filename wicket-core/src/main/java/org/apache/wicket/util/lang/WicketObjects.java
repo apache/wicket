@@ -112,6 +112,7 @@ public class WicketObjects
 		/**
 		 * @see org.apache.wicket.util.lang.WicketObjects.IObjectSizeOfStrategy#sizeOf(java.io.Serializable)
 		 */
+		@Override
 		public long sizeOf(Serializable object)
 		{
 			if (object == null)

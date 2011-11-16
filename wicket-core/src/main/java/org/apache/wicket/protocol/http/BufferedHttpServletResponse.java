@@ -83,6 +83,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#addCookie(javax.servlet.http.Cookie)
 	 */
+	@Override
 	public void addCookie(Cookie cookie)
 	{
 		isOpen();
@@ -96,6 +97,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#containsHeader(java.lang.String)
 	 */
+	@Override
 	public boolean containsHeader(String name)
 	{
 		isOpen();
@@ -109,6 +111,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#encodeURL(java.lang.String)
 	 */
+	@Override
 	public String encodeURL(String url)
 	{
 		isOpen();
@@ -118,6 +121,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#encodeRedirectURL(java.lang.String)
 	 */
+	@Override
 	public String encodeRedirectURL(String url)
 	{
 		isOpen();
@@ -128,6 +132,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	 * @see javax.servlet.http.HttpServletResponse#encodeUrl(java.lang.String)
 	 * @deprecated
 	 */
+	@Override
 	@Deprecated
 	public String encodeUrl(String url)
 	{
@@ -139,6 +144,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	 * @see javax.servlet.http.HttpServletResponse#encodeRedirectUrl(java.lang.String)
 	 * @deprecated
 	 */
+	@Override
 	@Deprecated
 	public String encodeRedirectUrl(String url)
 	{
@@ -149,6 +155,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#sendError(int, java.lang.String)
 	 */
+	@Override
 	public void sendError(int sc, String msg) throws IOException
 	{
 		isOpen();
@@ -158,6 +165,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#sendError(int)
 	 */
+	@Override
 	public void sendError(int sc) throws IOException
 	{
 		isOpen();
@@ -167,6 +175,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#sendRedirect(java.lang.String)
 	 */
+	@Override
 	public void sendRedirect(String location) throws IOException
 	{
 		isOpen();
@@ -203,6 +212,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#setDateHeader(java.lang.String, long)
 	 */
+	@Override
 	public void setDateHeader(String name, long date)
 	{
 		testAndCreateHeaders();
@@ -212,6 +222,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#addDateHeader(java.lang.String, long)
 	 */
+	@Override
 	public void addDateHeader(String name, long date)
 	{
 		testAndCreateHeaders();
@@ -221,6 +232,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#setHeader(java.lang.String, java.lang.String)
 	 */
+	@Override
 	public void setHeader(String name, String value)
 	{
 		testAndCreateHeaders();
@@ -230,6 +242,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#addHeader(java.lang.String, java.lang.String)
 	 */
+	@Override
 	public void addHeader(String name, String value)
 	{
 		testAndCreateHeaders();
@@ -239,6 +252,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#setIntHeader(java.lang.String, int)
 	 */
+	@Override
 	public void setIntHeader(String name, int value)
 	{
 		testAndCreateHeaders();
@@ -248,6 +262,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#addIntHeader(java.lang.String, int)
 	 */
+	@Override
 	public void addIntHeader(String name, int value)
 	{
 		testAndCreateHeaders();
@@ -257,6 +272,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#setStatus(int)
 	 */
+	@Override
 	public void setStatus(int statusCode)
 	{
 		status = statusCode;
@@ -266,6 +282,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	 * @see javax.servlet.http.HttpServletResponse#setStatus(int, java.lang.String)
 	 * @deprecated use setStatus(int) instead
 	 */
+	@Override
 	@Deprecated
 	public void setStatus(int sc, String sm)
 	{
@@ -276,6 +293,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.ServletResponse#getCharacterEncoding()
 	 */
+	@Override
 	public String getCharacterEncoding()
 	{
 		isOpen();
@@ -287,6 +305,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	 * 
 	 * @param encoding
 	 */
+	@Override
 	public void setCharacterEncoding(String encoding)
 	{
 		this.encoding = encoding;
@@ -295,6 +314,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.ServletResponse#getOutputStream()
 	 */
+	@Override
 	public ServletOutputStream getOutputStream() throws IOException
 	{
 		throw new UnsupportedOperationException("Cannot get output stream on BufferedResponse");
@@ -303,6 +323,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.ServletResponse#getWriter()
 	 */
+	@Override
 	public PrintWriter getWriter() throws IOException
 	{
 		isOpen();
@@ -312,6 +333,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.ServletResponse#setContentLength(int)
 	 */
+	@Override
 	public void setContentLength(int len)
 	{
 		isOpen();
@@ -321,6 +343,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.ServletResponse#setContentType(java.lang.String)
 	 */
+	@Override
 	public void setContentType(String type)
 	{
 		isOpen();
@@ -330,6 +353,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @return The content type
 	 */
+	@Override
 	public String getContentType()
 	{
 		return contentType;
@@ -338,6 +362,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.ServletResponse#setBufferSize(int)
 	 */
+	@Override
 	public void setBufferSize(int size)
 	{
 		isOpen();
@@ -347,6 +372,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.ServletResponse#getBufferSize()
 	 */
+	@Override
 	public int getBufferSize()
 	{
 		isOpen();
@@ -356,6 +382,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.ServletResponse#flushBuffer()
 	 */
+	@Override
 	public void flushBuffer() throws IOException
 	{
 		isOpen();
@@ -364,6 +391,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.ServletResponse#resetBuffer()
 	 */
+	@Override
 	public void resetBuffer()
 	{
 		isOpen();
@@ -373,6 +401,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.ServletResponse#isCommitted()
 	 */
+	@Override
 	public boolean isCommitted()
 	{
 		return pw == null;
@@ -381,6 +410,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.ServletResponse#reset()
 	 */
+	@Override
 	public void reset()
 	{
 		resetBuffer();
@@ -391,6 +421,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.ServletResponse#setLocale(java.util.Locale)
 	 */
+	@Override
 	public void setLocale(Locale loc)
 	{
 		isOpen();
@@ -400,6 +431,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.ServletResponse#getLocale()
 	 */
+	@Override
 	public Locale getLocale()
 	{
 		isOpen();

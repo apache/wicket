@@ -113,6 +113,7 @@ public class MessageDigestResourceVersion implements IResourceVersion
 		this.bufferSize = Args.notNull(bufferSize, "bufferSize");
 	}
 
+	@Override
 	public String getVersion(IStaticCacheableResource resource)
 	{
 		IResourceStream stream = resource.getCacheableResourceStream();

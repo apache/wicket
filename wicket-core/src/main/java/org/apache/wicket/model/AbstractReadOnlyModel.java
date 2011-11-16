@@ -33,6 +33,7 @@ public abstract class AbstractReadOnlyModel<T> implements IModel<T>
 	/**
 	 * @see IModel#getObject()
 	 */
+	@Override
 	public abstract T getObject();
 
 	/**
@@ -44,6 +45,7 @@ public abstract class AbstractReadOnlyModel<T> implements IModel<T>
 	 *            The object to set into the model
 	 * @throws UnsupportedOperationException
 	 */
+	@Override
 	public final void setObject(final T object)
 	{
 		throw new UnsupportedOperationException("Model " + getClass() +
@@ -64,6 +66,7 @@ public abstract class AbstractReadOnlyModel<T> implements IModel<T>
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void detach()
 	{
 	}

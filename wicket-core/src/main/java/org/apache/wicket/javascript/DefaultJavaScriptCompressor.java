@@ -28,6 +28,7 @@ public class DefaultJavaScriptCompressor implements IJavaScriptCompressor
 	/**
 	 * @see org.apache.wicket.javascript.IJavaScriptCompressor#compress(java.lang.String)
 	 */
+	@Override
 	public String compress(String original)
 	{
 		return new JavaScriptStripper().stripCommentsAndWhitespace(original);

@@ -130,6 +130,7 @@ public final class PageView extends Panel
 			data = new ArrayList<ComponentData>(getComponentData(page));
 			Collections.sort(data, new Comparator<ComponentData>()
 			{
+				@Override
 				public int compare(ComponentData o1, ComponentData o2)
 				{
 					return (o1).path.compareTo((o2).path);
@@ -181,6 +182,7 @@ public final class PageView extends Panel
 
 		page.visitChildren(new IVisitor<Component, Void>()
 		{
+			@Override
 			public void component(final Component component, final IVisit<Void> visit)
 			{
 				if (!component.getPath().startsWith(PageView.this.getPath()))

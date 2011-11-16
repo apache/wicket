@@ -161,16 +161,19 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 
 	static IRequestMapper MAPPER = new IRequestMapper()
 	{
+		@Override
 		public int getCompatibilityScore(Request request)
 		{
 			return matchedData(request) != null ? Integer.MAX_VALUE : 0;
 		}
 
+		@Override
 		public Url mapHandler(IRequestHandler requestHandler)
 		{
 			return null;
 		}
 
+		@Override
 		public IRequestHandler mapRequest(Request request)
 		{
 			InterceptData data = matchedData(request);

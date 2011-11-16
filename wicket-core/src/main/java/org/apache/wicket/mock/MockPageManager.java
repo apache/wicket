@@ -40,25 +40,30 @@ public class MockPageManager implements IPageManager
 	{
 	}
 
+	@Override
 	public void commitRequest()
 	{
 	}
 
+	@Override
 	public void destroy()
 	{
 		pages.clear();
 	}
 
+	@Override
 	public IManageablePage getPage(int id)
 	{
 		return pages.get(id);
 	}
 
+	@Override
 	public void newSessionCreated()
 	{
 		pages.clear();
 	}
 
+	@Override
 	public void sessionExpired(String sessionId)
 	{
 		pages.clear();
@@ -71,11 +76,13 @@ public class MockPageManager implements IPageManager
 	{
 	}
 
+	@Override
 	public boolean supportsVersioning()
 	{
 		return true;
 	}
 
+	@Override
 	public void touchPage(IManageablePage page)
 	{
 		if (true || page.isPageStateless() == false)
@@ -87,6 +94,7 @@ public class MockPageManager implements IPageManager
 	/**
 	 * @see org.apache.wicket.page.IPageManager#getContext()
 	 */
+	@Override
 	public IPageManagerContext getContext()
 	{
 		return null;

@@ -81,11 +81,13 @@ public class CryptoMapper implements IRequestMapper
 		this.cryptProvider = Args.notNull(cryptProvider, "cryptProvider");
 	}
 
+	@Override
 	public int getCompatibilityScore(final Request request)
 	{
 		return 0;
 	}
 
+	@Override
 	public Url mapHandler(final IRequestHandler requestHandler)
 	{
 		final Url url = wrappedMapper.mapHandler(requestHandler);
@@ -98,6 +100,7 @@ public class CryptoMapper implements IRequestMapper
 		return encryptUrl(url);
 	}
 
+	@Override
 	public IRequestHandler mapRequest(final Request request)
 	{
 		Url url = decryptUrl(request, request.getUrl());
@@ -214,6 +217,7 @@ public class CryptoMapper implements IRequestMapper
 			this.application = application;
 		}
 
+		@Override
 		public ICrypt get()
 		{
 			return application.getSecuritySettings().getCryptFactory().newCrypt();

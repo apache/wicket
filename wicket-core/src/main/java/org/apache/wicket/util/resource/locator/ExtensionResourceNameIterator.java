@@ -57,6 +57,7 @@ public class ExtensionResourceNameIterator implements Iterator<String>
 	 * 
 	 * @see java.util.Iterator#hasNext()
 	 */
+	@Override
 	public boolean hasNext()
 	{
 		return (index < extensions.length);
@@ -65,6 +66,7 @@ public class ExtensionResourceNameIterator implements Iterator<String>
 	/**
 	 * @return The next filename extension. A leading '.' will be removed.
 	 */
+	@Override
 	public String next()
 	{
 		String rtn = extensions[index++].trim();
@@ -85,6 +87,7 @@ public class ExtensionResourceNameIterator implements Iterator<String>
 	 * 
 	 * @see java.util.Iterator#remove()
 	 */
+	@Override
 	public void remove()
 	{
 	}

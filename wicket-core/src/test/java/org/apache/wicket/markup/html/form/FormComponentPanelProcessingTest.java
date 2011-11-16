@@ -112,6 +112,7 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 			super.updateModel();
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{
@@ -131,6 +132,7 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 			form.add(new TestFormComponentPanel("panel", new Model<Serializable>()));
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

@@ -282,6 +282,7 @@ public abstract class GridView<T> extends DataViewBase<T>
 		/**
 		 * @see java.util.Iterator#remove()
 		 */
+		@Override
 		public void remove()
 		{
 			throw new UnsupportedOperationException();
@@ -290,6 +291,7 @@ public abstract class GridView<T> extends DataViewBase<T>
 		/**
 		 * @see java.util.Iterator#hasNext()
 		 */
+		@Override
 		public boolean hasNext()
 		{
 			return next != null;
@@ -298,6 +300,7 @@ public abstract class GridView<T> extends DataViewBase<T>
 		/**
 		 * @see java.util.Iterator#next()
 		 */
+		@Override
 		public Item<T> next()
 		{
 			Item<T> item = next;

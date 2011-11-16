@@ -48,6 +48,7 @@ public class ErrorLevelFeedbackMessageFilter implements IFeedbackMessageFilter
 	/**
 	 * @see org.apache.wicket.feedback.IFeedbackMessageFilter#accept(org.apache.wicket.feedback.FeedbackMessage)
 	 */
+	@Override
 	public boolean accept(FeedbackMessage message)
 	{
 		return message.isLevel(minimumErrorLevel);

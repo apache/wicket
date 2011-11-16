@@ -40,16 +40,19 @@ public class ComponentRenderingRequestHandler implements IComponentRequestHandle
 		this.component = component;
 	}
 
+	@Override
 	public IRequestableComponent getComponent()
 	{
 		return component;
 	}
 
+	@Override
 	public void detach(IRequestCycle requestCycle)
 	{
 		component.getPage().detach();
 	}
 
+	@Override
 	public void respond(IRequestCycle requestCycle)
 	{
 		// preventing the response to component from being cached
@@ -61,6 +64,7 @@ public class ComponentRenderingRequestHandler implements IComponentRequestHandle
 		component.render();
 	}
 
+	@Override
 	public final String getComponentPath()
 	{
 		return component.getPageRelativePath();

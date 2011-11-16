@@ -76,6 +76,7 @@ public class WicketTesterHelper
 		{
 			page.visitChildren(new IVisitor<Component, Void>()
 			{
+				@Override
 				public void component(final Component component, final IVisit<Void> visit)
 				{
 					final ComponentData object = new ComponentData();

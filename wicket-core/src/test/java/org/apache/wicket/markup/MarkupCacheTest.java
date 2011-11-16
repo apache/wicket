@@ -98,6 +98,7 @@ public class MarkupCacheTest extends WicketTestCase
 			super(id);
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

@@ -166,6 +166,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	/**
 	 * @see IRequestMapper#getCompatibilityScore(Request)
 	 */
+	@Override
 	public abstract int getCompatibilityScore(Request request);
 
 	/**
@@ -258,6 +259,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	/**
 	 * @see org.apache.wicket.request.IRequestMapper#mapRequest(org.apache.wicket.request.Request)
 	 */
+	@Override
 	public IRequestHandler mapRequest(Request request)
 	{
 		UrlInfo urlInfo = parseRequest(request);
@@ -299,6 +301,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Url mapHandler(IRequestHandler requestHandler)
 	{
 		// TODO see if we can refactor this to remove dependency on instanceof checks below and

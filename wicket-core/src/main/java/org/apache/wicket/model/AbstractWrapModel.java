@@ -38,6 +38,7 @@ public abstract class AbstractWrapModel<T> implements IWrapModel<T>
 	/**
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
+	@Override
 	public T getObject()
 	{
 		return null;
@@ -46,6 +47,7 @@ public abstract class AbstractWrapModel<T> implements IWrapModel<T>
 	/**
 	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
 	 */
+	@Override
 	public void setObject(T object)
 	{
 	}
@@ -55,6 +57,7 @@ public abstract class AbstractWrapModel<T> implements IWrapModel<T>
 	 * 
 	 * @see org.apache.wicket.model.IDetachable#detach()
 	 */
+	@Override
 	public void detach()
 	{
 		getWrappedModel().detach();

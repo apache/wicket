@@ -43,6 +43,7 @@ public class SimpleMarkupLoader implements IMarkupLoader
 	 * Uses {@link MarkupFactory#newMarkupParser(MarkupResourceStream)} and
 	 * {@link MarkupParser#parse()} to load the Markup.
 	 */
+	@Override
 	public final Markup loadMarkup(final MarkupContainer container,
 		final MarkupResourceStream markupResourceStream, final IMarkupLoader baseLoader,
 		final boolean enforceReload) throws IOException, ResourceStreamNotFoundException

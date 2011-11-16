@@ -40,6 +40,7 @@ public abstract class AbstractMarkupSourcingStrategy implements IMarkupSourcingS
 	{
 	}
 
+	@Override
 	public abstract IMarkupFragment getMarkup(final MarkupContainer container, final Component child);
 
 	/**
@@ -79,6 +80,7 @@ public abstract class AbstractMarkupSourcingStrategy implements IMarkupSourcingS
 	/**
 	 * Make sure we open up open-close tags to open-body-close
 	 */
+	@Override
 	public void onComponentTag(final Component component, final ComponentTag tag)
 	{
 		if (tag.isOpenClose())
@@ -91,6 +93,7 @@ public abstract class AbstractMarkupSourcingStrategy implements IMarkupSourcingS
 	 * Skip the components body which is expected to be raw markup only (no wicket components). It
 	 * will be replaced by the associated markup.
 	 */
+	@Override
 	public void onComponentTagBody(final Component component, final MarkupStream markupStream,
 		final ComponentTag openTag)
 	{
@@ -115,6 +118,7 @@ public abstract class AbstractMarkupSourcingStrategy implements IMarkupSourcingS
 	/**
 	 * Empty. Nothing to be added to the response by default.
 	 */
+	@Override
 	public void renderHead(final Component component, HtmlHeaderContainer container)
 	{
 	}

@@ -264,6 +264,7 @@ public class FeedbackMessage implements IDetachable
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void detach()
 	{
 		reporter = null;

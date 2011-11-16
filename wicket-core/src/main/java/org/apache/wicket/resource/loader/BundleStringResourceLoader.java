@@ -51,6 +51,7 @@ public class BundleStringResourceLoader implements IStringResourceLoader
 	/**
 	 * Get the value via a Java ResourceBundle
 	 */
+	@Override
 	public final String loadStringResource(final Class<?> clazz, final String key, Locale locale,
 		final String style, final String variation)
 	{
@@ -84,6 +85,7 @@ public class BundleStringResourceLoader implements IStringResourceLoader
 	 *            ignored
 	 * @return The string resource value or null if resource not found
 	 */
+	@Override
 	public final String loadStringResource(final Component component, final String key,
 		Locale locale, final String style, final String variation)
 	{

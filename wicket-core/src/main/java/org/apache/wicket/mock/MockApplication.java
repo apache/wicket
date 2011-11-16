@@ -80,6 +80,7 @@ public class MockApplication extends WebApplication
 
 	private static class MockSessionStoreProvider implements IProvider<ISessionStore>
 	{
+		@Override
 		public ISessionStore get()
 		{
 			return new MockSessionStore();
@@ -88,6 +89,7 @@ public class MockApplication extends WebApplication
 
 	private static class MockPageManagerProvider implements IPageManagerProvider
 	{
+		@Override
 		public IPageManager get(IPageManagerContext pageManagerContext)
 		{
 			return new MockPageManager();

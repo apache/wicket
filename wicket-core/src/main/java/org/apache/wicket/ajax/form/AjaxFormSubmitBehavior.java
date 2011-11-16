@@ -157,21 +157,25 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	{
 		getForm().getRootForm().onFormSubmitted(new IFormSubmitter()
 		{
+			@Override
 			public Form<?> getForm()
 			{
 				return AjaxFormSubmitBehavior.this.getForm();
 			}
 
+			@Override
 			public boolean getDefaultFormProcessing()
 			{
 				return AjaxFormSubmitBehavior.this.getDefaultProcessing();
 			}
 
+			@Override
 			public void onSubmit()
 			{
 				AjaxFormSubmitBehavior.this.onSubmit(target);
 			}
 
+			@Override
 			public void onError()
 			{
 				AjaxFormSubmitBehavior.this.onError(target);

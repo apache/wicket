@@ -106,6 +106,7 @@ public abstract class RefreshingView<T> extends RepeatingView
 	{
 		return new IItemFactory<T>()
 		{
+			@Override
 			public Item<T> newItem(int index, IModel<T> model)
 			{
 				String id = RefreshingView.this.newChildId();

@@ -305,6 +305,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	/**
 	 * @see org.apache.wicket.behavior.IBehaviorListener#onRequest()
 	 */
+	@Override
 	public final void onRequest()
 	{
 		WebApplication app = (WebApplication)getComponent().getApplication();

@@ -89,6 +89,7 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	/**
 	 * @see org.apache.wicket.model.IDetachable#detach()
 	 */
+	@Override
 	public void detach()
 	{
 		if (attached)
@@ -111,6 +112,7 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	/**
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
+	@Override
 	public T getObject()
 	{
 		if (!attached)
@@ -182,6 +184,7 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	 * @param object
 	 *            The object to set into the model
 	 */
+	@Override
 	public void setObject(final T object)
 	{
 		attached = true;

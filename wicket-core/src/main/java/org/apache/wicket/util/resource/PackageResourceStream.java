@@ -66,6 +66,7 @@ public class PackageResourceStream extends AbstractResourceStream
 		}
 	}
 
+	@Override
 	public void close() throws IOException
 	{
 		resourceStream.close();
@@ -77,6 +78,7 @@ public class PackageResourceStream extends AbstractResourceStream
 		return resourceStream.getContentType();
 	}
 
+	@Override
 	public InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
 		return resourceStream.getInputStream();

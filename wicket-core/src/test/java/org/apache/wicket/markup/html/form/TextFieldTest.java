@@ -75,6 +75,7 @@ public class TextFieldTest extends WicketTestCase
 			form.add(textField = new TextField<String>("text", textModel));
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

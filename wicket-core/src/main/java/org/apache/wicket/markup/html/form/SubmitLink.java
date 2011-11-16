@@ -227,6 +227,7 @@ public class SubmitLink extends AbstractSubmitLink
 	/**
 	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onSubmit()
 	 */
+	@Override
 	public void onSubmit()
 	{
 	}
@@ -234,6 +235,7 @@ public class SubmitLink extends AbstractSubmitLink
 	/**
 	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onError()
 	 */
+	@Override
 	public void onError()
 	{
 	}

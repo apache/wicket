@@ -64,6 +64,7 @@ public class AutoLabelResolver implements IComponentResolver
 
 	static final String WICKET_FOR = "wicket:for";
 
+	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
@@ -125,6 +126,7 @@ public class AutoLabelResolver implements IComponentResolver
 			component = container.visitChildren(Component.class,
 				new IVisitor<Component, Component>()
 				{
+					@Override
 					public void component(Component child, IVisit<Component> visit)
 					{
 						if (child == searched[0])

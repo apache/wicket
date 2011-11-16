@@ -27,10 +27,12 @@ public class ComponentOnAfterRenderListenerCollection extends
 {
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	public void onAfterRender(final Component component)
 	{
 		notify(new INotifier<IComponentOnAfterRenderListener>()
 		{
+			@Override
 			public void notify(IComponentOnAfterRenderListener listener)
 			{
 				listener.onAfterRender(component);

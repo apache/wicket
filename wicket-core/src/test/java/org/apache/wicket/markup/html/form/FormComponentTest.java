@@ -73,6 +73,7 @@ public class FormComponentTest extends WicketTestCase
 		{
 			boolean called = false;
 
+			@Override
 			public void validate(IValidatable validatable)
 			{
 				called = true;
@@ -100,6 +101,7 @@ public class FormComponentTest extends WicketTestCase
 			form.add(field2 = new TextField("field2"));
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

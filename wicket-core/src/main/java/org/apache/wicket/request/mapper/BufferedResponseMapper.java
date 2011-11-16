@@ -92,6 +92,7 @@ public class BufferedResponseMapper implements IRequestMapper
 	/**
 	 * @see org.apache.wicket.request.IRequestMapper#mapRequest(org.apache.wicket.request.Request)
 	 */
+	@Override
 	public IRequestHandler mapRequest(Request request)
 	{
 		request = getRequest(request);
@@ -110,6 +111,7 @@ public class BufferedResponseMapper implements IRequestMapper
 	/**
 	 * @see org.apache.wicket.request.IRequestMapper#mapHandler(org.apache.org.apache.wicket.request.IRequestHandler)
 	 */
+	@Override
 	public Url mapHandler(IRequestHandler requestHandler)
 	{
 		return null;
@@ -118,6 +120,7 @@ public class BufferedResponseMapper implements IRequestMapper
 	/**
 	 * @see org.apache.wicket.request.IRequestMapper#getCompatibilityScore(org.apache.wicket.request.Request)
 	 */
+	@Override
 	public int getCompatibilityScore(Request request)
 	{
 		request = getRequest(request);

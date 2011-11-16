@@ -200,6 +200,7 @@ class HeaderBufferingWebResponse extends WebResponse implements IMetaDataBufferi
 		bufferedWritten = false;
 	}
 
+	@Override
 	public void writeMetaData(WebResponse webResponse)
 	{
 		bufferedResponse.writeMetaData(webResponse);

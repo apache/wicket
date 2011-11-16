@@ -36,6 +36,7 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 	 *      org.apache.wicket.authorization.Action)
 	 */
+	@Override
 	public boolean isActionAuthorized(final Component component, final Action action)
 	{
 		return true;
@@ -44,6 +45,7 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	/**
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public final <T extends IRequestableComponent> boolean isInstantiationAuthorized(
 		final Class<T> componentClass)

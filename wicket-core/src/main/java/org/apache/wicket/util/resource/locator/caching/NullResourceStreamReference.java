@@ -27,6 +27,7 @@ class NullResourceStreamReference implements IResourceStreamReference
 {
 	final static NullResourceStreamReference INSTANCE = new NullResourceStreamReference();
 
+	@Override
 	public IResourceStream getReference()
 	{
 		return null;

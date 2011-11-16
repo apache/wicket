@@ -42,21 +42,25 @@ public abstract class AbstractHeaderResponseFilter implements IHeaderResponseFil
 		this.name = name;
 	}
 
+	@Override
 	public String getName()
 	{
 		return name;
 	}
 
+	@Override
 	public boolean acceptReference(ResourceReference object)
 	{
 		return true;
 	}
 
+	@Override
 	public boolean acceptOtherJavaScript()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean acceptOtherCss()
 	{
 		return true;

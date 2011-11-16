@@ -57,6 +57,7 @@ public final class DefaultPageFactory implements IPageFactory
 	 */
 	private final ConcurrentMap<String, Boolean> pageToBookmarkableCache = new ConcurrentHashMap<String, Boolean>();
 
+	@Override
 	public final <C extends IRequestablePage> Page newPage(final Class<C> pageClass)
 	{
 		try
@@ -84,6 +85,7 @@ public final class DefaultPageFactory implements IPageFactory
 		}
 	}
 
+	@Override
 	public final <C extends IRequestablePage> Page newPage(final Class<C> pageClass,
 		final PageParameters parameters)
 	{
@@ -227,6 +229,7 @@ public final class DefaultPageFactory implements IPageFactory
 		return msg + "'. Might be it doesn't exist, may be it is not visible (public).";
 	}
 
+	@Override
 	public <C extends IRequestablePage> boolean isBookmarkable(Class<C> pageClass)
 	{
 		Boolean bookmarkable = pageToBookmarkableCache.get(pageClass.getName());

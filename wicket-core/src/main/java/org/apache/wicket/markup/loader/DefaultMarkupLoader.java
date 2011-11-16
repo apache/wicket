@@ -43,6 +43,7 @@ public class DefaultMarkupLoader implements IMarkupLoader
 	 * inheritance applies. If yes, load the required other markup and merge them using
 	 * {@link InheritedMarkupMarkupLoader}.
 	 */
+	@Override
 	public final Markup loadMarkup(final MarkupContainer container,
 		final MarkupResourceStream markupResourceStream, final IMarkupLoader baseLoader,
 		final boolean enforceReload) throws IOException, ResourceStreamNotFoundException

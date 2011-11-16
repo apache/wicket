@@ -67,6 +67,7 @@ public class WebExternalResourceStream extends AbstractResourceStream
 		return null;
 	}
 
+	@Override
 	public void close() throws IOException
 	{
 		// getInputStream() is not always called (WICKET-790)
@@ -95,6 +96,7 @@ public class WebExternalResourceStream extends AbstractResourceStream
 		return WebApplication.get().getServletContext().getMimeType(url);
 	}
 
+	@Override
 	public InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
 		final ServletContext context = ((WebApplication)Application.get()).getServletContext();

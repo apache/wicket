@@ -43,6 +43,7 @@ public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssigne
 	 * 
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
+	@Override
 	public final T getObject()
 	{
 		throw new RuntimeException("get object call not expected on a IComponentAssignedModel");
@@ -51,6 +52,7 @@ public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssigne
 	/**
 	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
 	 */
+	@Override
 	public final void setObject(T object)
 	{
 		throw new RuntimeException("set object call not expected on a IComponentAssignedModel");
@@ -79,6 +81,7 @@ public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssigne
 	 * Detaches from the current request. Implement this method with custom behavior, such as
 	 * setting the model object to null.
 	 */
+	@Override
 	public void detach()
 	{
 	}
@@ -121,6 +124,7 @@ public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssigne
 	/**
 	 * @see org.apache.wicket.model.IComponentAssignedModel#wrapOnAssignment(org.apache.wicket.Component)
 	 */
+	@Override
 	public IWrapModel<T> wrapOnAssignment(Component comp)
 	{
 		return new WrapModel<T>(comp);
@@ -143,6 +147,7 @@ public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssigne
 		/**
 		 * @see org.apache.wicket.model.IWrapModel#getWrappedModel()
 		 */
+		@Override
 		public IModel<T> getWrappedModel()
 		{
 			return ComponentDetachableModel.this;
@@ -163,6 +168,7 @@ public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssigne
 		/**
 		 * @see org.apache.wicket.model.IModel#getObject()
 		 */
+		@Override
 		public T getObject()
 		{
 			attach();
@@ -172,6 +178,7 @@ public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssigne
 		/**
 		 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
 		 */
+		@Override
 		public void setObject(T object)
 		{
 			attach();
@@ -181,6 +188,7 @@ public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssigne
 		/**
 		 * @see org.apache.wicket.model.IDetachable#detach()
 		 */
+		@Override
 		public void detach()
 		{
 			if (attached)

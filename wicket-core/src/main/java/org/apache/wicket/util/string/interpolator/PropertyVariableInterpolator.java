@@ -116,6 +116,7 @@ public final class PropertyVariableInterpolator extends VariableInterpolator
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public <C> IConverter<C> getConverter(Class<C> type)
 	{
 		if (Application.exists())

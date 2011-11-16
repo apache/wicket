@@ -103,11 +103,13 @@ public class Markup implements IMarkupFragment
 		markupElements = new ArrayList<MarkupElement>();
 	}
 
+	@Override
 	public final MarkupElement get(final int index)
 	{
 		return markupElements.get(index);
 	}
 
+	@Override
 	public final MarkupResourceStream getMarkupResourceStream()
 	{
 		return markupResourceStream;
@@ -141,6 +143,7 @@ public class Markup implements IMarkupFragment
 		return markupResourceStream.locationAsString();
 	}
 
+	@Override
 	public final int size()
 	{
 		return markupElements.size();
@@ -184,6 +187,7 @@ public class Markup implements IMarkupFragment
 		markupElements = Collections.unmodifiableList(markupElements);
 	}
 
+	@Override
 	public final IMarkupFragment find(final String id)
 	{
 		Args.notEmpty(id, "id");
@@ -227,6 +231,7 @@ public class Markup implements IMarkupFragment
 	 *            True, if only the markup shall be returned
 	 * @return String
 	 */
+	@Override
 	public final String toString(final boolean markupOnly)
 	{
 		final AppendingStringBuffer buf = new AppendingStringBuffer(400);
@@ -258,6 +263,7 @@ public class Markup implements IMarkupFragment
 	/**
 	 * @see java.lang.Iterable#iterator()
 	 */
+	@Override
 	public final Iterator<MarkupElement> iterator()
 	{
 		return markupElements.iterator();

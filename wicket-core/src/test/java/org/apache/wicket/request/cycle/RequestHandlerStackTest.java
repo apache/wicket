@@ -66,11 +66,13 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 
 		final IRequestHandler handler3 = new IRequestHandler()
 		{
+			@Override
 			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag3 = false;
 			}
 
+			@Override
 			public void detach(IRequestCycle requestCycle)
 			{
 				detachedFlag3 = true;
@@ -79,6 +81,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 
 		final IRequestHandler handler2 = new IRequestHandler()
 		{
+			@Override
 			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag2 = false;
@@ -89,6 +92,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 				testFlag2 = true;
 			}
 
+			@Override
 			public void detach(IRequestCycle requestCycle)
 			{
 				detachedFlag2 = true;
@@ -97,6 +101,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 
 		final IRequestHandler handler1 = new IRequestHandler()
 		{
+			@Override
 			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag1 = false;
@@ -110,6 +115,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 				testFlag1 = true;
 			}
 
+			@Override
 			public void detach(IRequestCycle requestCycle)
 			{
 				detachedFlag1 = true;
@@ -144,6 +150,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 
 		final IRequestHandler handler4 = new IRequestHandler()
 		{
+			@Override
 			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag4 = false;
@@ -153,6 +160,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 				requestCycle.setResponse(newResponse());
 			}
 
+			@Override
 			public void detach(IRequestCycle requestCycle)
 			{
 				detachedFlag4 = true;
@@ -161,6 +169,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 
 		final IRequestHandler handler3 = new IRequestHandler()
 		{
+			@Override
 			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag3 = false;
@@ -170,6 +179,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 				testFlag3 = true;
 			}
 
+			@Override
 			public void detach(IRequestCycle requestCycle)
 			{
 				detachedFlag3 = true;
@@ -178,6 +188,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 
 		final IRequestHandler handler2 = new IRequestHandler()
 		{
+			@Override
 			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag2 = false;
@@ -187,6 +198,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 				testFlag2 = true;
 			}
 
+			@Override
 			public void detach(IRequestCycle requestCycle)
 			{
 				detachedFlag2 = true;
@@ -195,6 +207,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 
 		IRequestHandler handler1 = new IRequestHandler()
 		{
+			@Override
 			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag1 = false;
@@ -205,6 +218,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 				testFlag1 = true;
 			}
 
+			@Override
 			public void detach(IRequestCycle requestCycle)
 			{
 				detachedFlag1 = true;
@@ -240,6 +254,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 
 		final IRequestHandler handler4 = new IRequestHandler()
 		{
+			@Override
 			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag4 = true;
@@ -247,6 +262,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 				requestCycle.setResponse(newResponse());
 			}
 
+			@Override
 			public void detach(IRequestCycle requestCycle)
 			{
 				detachedFlag4 = true;
@@ -255,6 +271,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 
 		final IRequestHandler handler3 = new IRequestHandler()
 		{
+			@Override
 			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag3 = false;
@@ -268,6 +285,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 				testFlag3 = true;
 			}
 
+			@Override
 			public void detach(IRequestCycle requestCycle)
 			{
 				detachedFlag3 = true;
@@ -276,6 +294,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 
 		final IRequestHandler handler2 = new IRequestHandler()
 		{
+			@Override
 			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag2 = false;
@@ -284,6 +303,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 				testFlag2 = true;
 			}
 
+			@Override
 			public void detach(IRequestCycle requestCycle)
 			{
 				detachedFlag2 = true;
@@ -292,6 +312,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 
 		IRequestHandler handler1 = new IRequestHandler()
 		{
+			@Override
 			public void respond(IRequestCycle requestCycle)
 			{
 				testFlag1 = false;
@@ -301,6 +322,7 @@ public class RequestHandlerStackTest extends BaseRequestHandlerStackTest
 				testFlag1 = true;
 			}
 
+			@Override
 			public void detach(IRequestCycle requestCycle)
 			{
 				detachedFlag1 = true;

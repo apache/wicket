@@ -56,6 +56,7 @@ public class PageInstanceMapper extends AbstractComponentMapper
 	/**
 	 * @see org.apache.wicket.request.IRequestMapper#mapRequest(org.apache.wicket.request.Request)
 	 */
+	@Override
 	public IRequestHandler mapRequest(Request request)
 	{
 		Url url = request.getUrl();
@@ -99,6 +100,7 @@ public class PageInstanceMapper extends AbstractComponentMapper
 	/**
 	 * @see org.apache.wicket.request.IRequestMapper#mapHandler(org.apache.org.apache.wicket.request.IRequestHandler)
 	 */
+	@Override
 	public Url mapHandler(IRequestHandler requestHandler)
 	{
 		PageComponentInfo info = null;
@@ -147,6 +149,7 @@ public class PageInstanceMapper extends AbstractComponentMapper
 	/**
 	 * @see org.apache.wicket.request.IRequestMapper#getCompatibilityScore(org.apache.wicket.request.Request)
 	 */
+	@Override
 	public int getCompatibilityScore(final Request request)
 	{
 		int score = 0;

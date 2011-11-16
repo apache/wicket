@@ -293,6 +293,7 @@ public class AjaxRequestTargetTest extends WicketTestCase
 
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{
@@ -306,12 +307,14 @@ public class AjaxRequestTargetTest extends WicketTestCase
 		boolean onBeforeRespondExecuted = false;
 		boolean onAfterRespondExecuted = false;
 
+		@Override
 		public void onBeforeRespond(Map<String, Component> map, AjaxRequestTarget target)
 		{
 			onBeforeRespondExecuted = true;
 
 		}
 
+		@Override
 		public void onAfterRespond(Map<String, Component> map,
 			AjaxRequestTarget.IJavaScriptResponse response)
 		{

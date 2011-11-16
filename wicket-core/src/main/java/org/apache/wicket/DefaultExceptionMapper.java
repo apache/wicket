@@ -46,6 +46,7 @@ public class DefaultExceptionMapper implements IExceptionMapper
 {
 	private static final Logger logger = LoggerFactory.getLogger(DefaultExceptionMapper.class);
 
+	@Override
 	public IRequestHandler map(Exception e)
 	{
 		try

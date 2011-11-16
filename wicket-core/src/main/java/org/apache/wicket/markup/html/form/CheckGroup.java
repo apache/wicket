@@ -120,6 +120,7 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 					Check<T> checkbox = visitChildren(Check.class,
 						new org.apache.wicket.util.visit.IVisitor<Check<T>, Check<T>>()
 						{
+							@Override
 							public void component(final Check<T> check, final IVisit<Check<T>> visit)
 							{
 								if (String.valueOf(check.getValue()).equals(value))
@@ -172,6 +173,7 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	/**
 	 * Called when a selection changes.
 	 */
+	@Override
 	public final void onSelectionChanged()
 	{
 		convertInput();

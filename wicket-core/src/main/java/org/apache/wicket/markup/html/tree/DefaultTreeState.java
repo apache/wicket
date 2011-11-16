@@ -57,6 +57,7 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 	/**
 	 * @see org.apache.wicket.markup.html.tree.ITreeState#addTreeStateListener(org.apache.wicket.markup.html.tree.ITreeStateListener)
 	 */
+	@Override
 	public void addTreeStateListener(ITreeStateListener l)
 	{
 		if (listeners.contains(l) == false)
@@ -68,6 +69,7 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 	/**
 	 * @see org.apache.wicket.markup.html.tree.ITreeState#collapseAll()
 	 */
+	@Override
 	public void collapseAll()
 	{
 		if (nodes.isEmpty() && nodesCollapsed == false)
@@ -85,6 +87,7 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 		}
 	}
 
+	@Override
 	public void collapseNode(Object node)
 	{
 		if (nodesCollapsed == true)
@@ -103,6 +106,7 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 	/**
 	 * @see org.apache.wicket.markup.html.tree.ITreeState#expandAll()
 	 */
+	@Override
 	public void expandAll()
 	{
 		if (nodes.isEmpty() && nodesCollapsed == true)
@@ -120,6 +124,7 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 		}
 	}
 
+	@Override
 	public void expandNode(Object node)
 	{
 		if (nodesCollapsed == false)
@@ -138,6 +143,7 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 	/**
 	 * @see org.apache.wicket.markup.html.tree.ITreeState#getSelectedNodes()
 	 */
+	@Override
 	public Collection<Object> getSelectedNodes()
 	{
 		return Collections.unmodifiableList(new ArrayList<Object>(selectedNodes));
@@ -151,11 +157,13 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 	/**
 	 * @see org.apache.wicket.markup.html.tree.ITreeState#isAllowSelectMultiple()
 	 */
+	@Override
 	public boolean isAllowSelectMultiple()
 	{
 		return allowSelectMultiple;
 	}
 
+	@Override
 	public boolean isNodeExpanded(Object node)
 	{
 		if (nodesCollapsed == false)
@@ -168,6 +176,7 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 		}
 	}
 
+	@Override
 	public boolean isNodeSelected(Object node)
 	{
 		return selectedNodes.contains(node);
@@ -176,6 +185,7 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 	/**
 	 * @see org.apache.wicket.markup.html.tree.ITreeState#removeTreeStateListener(org.apache.wicket.markup.html.tree.ITreeStateListener)
 	 */
+	@Override
 	public void removeTreeStateListener(ITreeStateListener l)
 	{
 		listeners.remove(l);
@@ -243,6 +253,7 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 	 * @param selected
 	 *            true if node is to be selected, false if node is to be deselected
 	 */
+	@Override
 	public void selectNode(Object node, boolean selected)
 	{
 		if (selected)
@@ -259,11 +270,13 @@ public class DefaultTreeState implements ITreeState, IClusterable, IDetachable
 	/**
 	 * @see org.apache.wicket.markup.html.tree.ITreeState#setAllowSelectMultiple(boolean)
 	 */
+	@Override
 	public void setAllowSelectMultiple(boolean value)
 	{
 		allowSelectMultiple = value;
 	}
 
+	@Override
 	public void detach()
 	{
 		for (Object node : nodes)

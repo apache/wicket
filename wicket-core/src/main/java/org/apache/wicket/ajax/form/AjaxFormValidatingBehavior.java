@@ -80,6 +80,7 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	{
 		getComponent().getPage().visitChildren(IFeedback.class, new IVisitor<Component, Void>()
 		{
+			@Override
 			public void component(final Component component, final IVisit<Void> visit)
 			{
 				target.add(component);
@@ -110,6 +111,7 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	{
 		form.visitChildren(FormComponent.class, new IVisitor<Component, Void>()
 		{
+			@Override
 			public void component(final Component component, final IVisit<Void> visit)
 			{
 				AjaxFormValidatingBehavior behavior = new AjaxFormValidatingBehavior(form, event);

@@ -206,6 +206,7 @@ public class ComponentInitializationTest extends WicketTestCase
 
 		private int count;
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{
@@ -272,6 +273,7 @@ public class ComponentInitializationTest extends WicketTestCase
 	{
 		private List<Component> components = new ArrayList<Component>();
 
+		@Override
 		public void onInitialize(Component component)
 		{
 			System.out.println(component);

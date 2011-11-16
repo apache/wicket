@@ -90,6 +90,7 @@ class SwitchProtocolRequestHandler implements IRequestHandler
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void respond(IRequestCycle requestCycle)
 	{
 		WebRequest webRequest = (WebRequest)requestCycle.getRequest();
@@ -145,6 +146,7 @@ class SwitchProtocolRequestHandler implements IRequestHandler
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void detach(IRequestCycle requestCycle)
 	{
 	}

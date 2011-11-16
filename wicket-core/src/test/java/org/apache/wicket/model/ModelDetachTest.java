@@ -31,6 +31,7 @@ public class ModelDetachTest extends Assert
 
 		private boolean detached = false;
 
+		@Override
 		public void detach()
 		{
 			detached = true;

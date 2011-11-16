@@ -43,16 +43,19 @@ public abstract class AbstractResourceStreamWriter implements IResourceStreamWri
 	/**
 	 * Default implementation to return -1. Do override this if you know the length up front.
 	 */
+	@Override
 	public Bytes length()
 	{
 		return null;
 	}
 
+	@Override
 	public Locale getLocale()
 	{
 		return locale;
 	}
 
+	@Override
 	public void setLocale(final Locale locale)
 	{
 		this.locale = locale;
@@ -61,6 +64,7 @@ public abstract class AbstractResourceStreamWriter implements IResourceStreamWri
 	/**
 	 * Just returns now.
 	 */
+	@Override
 	public Time lastModifiedTime()
 	{
 		return Time.now();
@@ -69,6 +73,7 @@ public abstract class AbstractResourceStreamWriter implements IResourceStreamWri
 	/**
 	 * this method should not be used as it is not required for resource writers
 	 */
+	@Override
 	public final InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
 		throw new IllegalStateException("getInputStream is not used with IResourceStreamWriter");
@@ -80,30 +85,36 @@ public abstract class AbstractResourceStreamWriter implements IResourceStreamWri
 	 * resource write generate content directly, not using an input stream, so there's nothing to
 	 * close later.
 	 */
+	@Override
 	public final void close() throws IOException
 	{
 	}
 
+	@Override
 	public String getContentType()
 	{
 		return null;
 	}
 
+	@Override
 	public String getStyle()
 	{
 		return style;
 	}
 
+	@Override
 	public void setStyle(String style)
 	{
 		this.style = style;
 	}
 
+	@Override
 	public String getVariation()
 	{
 		return variation;
 	}
 
+	@Override
 	public void setVariation(String variation)
 	{
 		this.variation = variation;

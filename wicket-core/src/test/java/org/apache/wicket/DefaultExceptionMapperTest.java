@@ -103,6 +103,7 @@ public class DefaultExceptionMapperTest extends WicketTestCase
 			add(form);
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

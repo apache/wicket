@@ -52,6 +52,7 @@ public final class EmptyAjaxRequestHandler implements IRequestHandler
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void respond(IRequestCycle requestCycle)
 	{
 		WebResponse response = (WebResponse)requestCycle.getResponse();
@@ -71,6 +72,7 @@ public final class EmptyAjaxRequestHandler implements IRequestHandler
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void detach(IRequestCycle requestCycle)
 	{
 	}

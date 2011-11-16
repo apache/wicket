@@ -151,6 +151,7 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 		return tag;
 	}
 
+	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{

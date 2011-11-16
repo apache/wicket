@@ -81,21 +81,25 @@ public final class XmlPullParser implements IXmlPullParser
 	{
 	}
 
+	@Override
 	public final String getEncoding()
 	{
 		return xmlReader.getEncoding();
 	}
 
+	@Override
 	public final CharSequence getDoctype()
 	{
 		return doctype;
 	}
 
+	@Override
 	public final CharSequence getInputFromPositionMarker(final int toPos)
 	{
 		return input.getSubstring(toPos);
 	}
 
+	@Override
 	public final CharSequence getInput(final int fromPos, final int toPos)
 	{
 		return input.getSubstring(fromPos, toPos);
@@ -159,6 +163,7 @@ public final class XmlPullParser implements IXmlPullParser
 	 * @return XXX
 	 * @throws ParseException
 	 */
+	@Override
 	public final HttpTagType next() throws ParseException
 	{
 		// Reached end of markup file?
@@ -438,6 +443,7 @@ public final class XmlPullParser implements IXmlPullParser
 	/**
 	 * @return MarkupElement
 	 */
+	@Override
 	public final XmlTag getElement()
 	{
 		return lastTag;
@@ -446,6 +452,7 @@ public final class XmlPullParser implements IXmlPullParser
 	/**
 	 * @return The xml string from the last element
 	 */
+	@Override
 	public final CharSequence getString()
 	{
 		return lastText;
@@ -536,6 +543,7 @@ public final class XmlPullParser implements IXmlPullParser
 	 * @throws ResourceStreamNotFoundException
 	 *             Resource not found
 	 */
+	@Override
 	public void parse(final CharSequence string) throws IOException,
 		ResourceStreamNotFoundException
 	{
@@ -551,6 +559,7 @@ public final class XmlPullParser implements IXmlPullParser
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
 	 */
+	@Override
 	public void parse(final InputStream in) throws IOException, ResourceStreamNotFoundException
 	{
 		// When XML declaration does not specify encoding, it defaults to UTF-8
@@ -566,6 +575,7 @@ public final class XmlPullParser implements IXmlPullParser
 	 *            The default character encoding of the input
 	 * @throws IOException
 	 */
+	@Override
 	public void parse(final InputStream inputStream, final String encoding) throws IOException
 	{
 		Args.notNull(inputStream, "inputStream");
@@ -582,11 +592,13 @@ public final class XmlPullParser implements IXmlPullParser
 		}
 	}
 
+	@Override
 	public final void setPositionMarker()
 	{
 		input.setPositionMarker(input.getPosition());
 	}
 
+	@Override
 	public final void setPositionMarker(final int pos)
 	{
 		input.setPositionMarker(pos);

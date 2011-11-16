@@ -95,5 +95,6 @@ public abstract interface IMarkup
 	/**
 	 * @return String representation of markup list
 	 */
+	@Override
 	String toString();
 }

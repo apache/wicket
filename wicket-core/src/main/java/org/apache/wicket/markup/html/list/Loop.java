@@ -126,11 +126,13 @@ public abstract class Loop extends AbstractRepeater
 		{
 			private int index = 0;
 
+			@Override
 			public boolean hasNext()
 			{
 				return index < iterations;
 			}
 
+			@Override
 			public Component next()
 			{
 				return get(Integer.toString(index++));

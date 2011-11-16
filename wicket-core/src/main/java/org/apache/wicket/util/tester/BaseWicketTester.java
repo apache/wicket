@@ -311,6 +311,7 @@ public class BaseWicketTester
 		// create a new session when the old one is invalidated
 		application.getSessionStore().registerUnboundListener(new UnboundListener()
 		{
+			@Override
 			public void sessionUnbound(String sessionId)
 			{
 				newSession();
@@ -1986,6 +1987,7 @@ public class BaseWicketTester
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public boolean accept(FeedbackMessage message)
 			{
 				return message.getLevel() == level;
@@ -2129,6 +2131,7 @@ public class BaseWicketTester
 	{
 		container.visitChildren(MarkupContainer.class, new IVisitor<MarkupContainer, Void>()
 		{
+			@Override
 			public void component(final MarkupContainer component, final IVisit<Void> visit)
 			{
 				// get the AbstractAjaxBehaviour which is responsible for
@@ -2272,6 +2275,7 @@ public class BaseWicketTester
 
 		form.visitFormComponents(new IVisitor<FormComponent<?>, Void>()
 		{
+			@Override
 			public void component(final FormComponent<?> formComponent, final IVisit<Void> visit)
 			{
 				final String inputName = formComponent.getInputName();
@@ -2540,6 +2544,7 @@ public class BaseWicketTester
 			this.delegate = delegate;
 		}
 
+		@Override
 		public PageRenderer get(RenderPageRequestHandler handler)
 		{
 			Page newPage = (Page)handler.getPageProvider().getPageInstance();
@@ -2566,6 +2571,7 @@ public class BaseWicketTester
 			this.delegate = delegate;
 		}
 
+		@Override
 		public IRequestHandler map(Exception e)
 		{
 			if (exposeExceptions)
@@ -2598,6 +2604,7 @@ public class BaseWicketTester
 			this.delegate = delegate;
 		}
 
+		@Override
 		public RequestCycle get(RequestCycleContext context)
 		{
 			context.setRequestMapper(new TestRequestMapper(context.getRequestMapper()));
@@ -2619,16 +2626,19 @@ public class BaseWicketTester
 			this.delegate = delegate;
 		}
 
+		@Override
 		public int getCompatibilityScore(Request request)
 		{
 			return delegate.getCompatibilityScore(request);
 		}
 
+		@Override
 		public Url mapHandler(IRequestHandler requestHandler)
 		{
 			return delegate.mapHandler(requestHandler);
 		}
 
+		@Override
 		public IRequestHandler mapRequest(Request request)
 		{
 			if (forcedHandler != null)
@@ -2653,6 +2663,7 @@ public class BaseWicketTester
 	 */
 	private static class TestPageManagerProvider implements IPageManagerProvider
 	{
+		@Override
 		public IPageManager get(IPageManagerContext pageManagerContext)
 		{
 			return new MockPageManager();
@@ -2671,21 +2682,25 @@ public class BaseWicketTester
 			initParameters.put(WicketFilter.FILTER_MAPPING_PARAM, "/servlet/*");
 		}
 
+		@Override
 		public String getFilterName()
 		{
 			return getClass().getName();
 		}
 
+		@Override
 		public ServletContext getServletContext()
 		{
 			return servletContext;
 		}
 
+		@Override
 		public String getInitParameter(String s)
 		{
 			return initParameters.get(s);
 		}
 
+		@Override
 		public Enumeration<String> getInitParameterNames()
 		{
 			throw new UnsupportedOperationException("Not implemented");
@@ -2714,6 +2729,7 @@ public class BaseWicketTester
 			cookies.add(cookie);
 		}
 
+		@Override
 		public void writeMetaData(WebResponse webResponse)
 		{
 			for (Cookie cookie : cookies)

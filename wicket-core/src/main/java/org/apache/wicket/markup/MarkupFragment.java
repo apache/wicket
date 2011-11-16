@@ -131,6 +131,7 @@ public class MarkupFragment implements IMarkupFragment
 		size = endIndex - startIndex + 1;
 	}
 
+	@Override
 	public final MarkupElement get(final int index)
 	{
 		if ((index < 0) || (index > size))
@@ -143,6 +144,7 @@ public class MarkupFragment implements IMarkupFragment
 		return markup.get(startIndex + index);
 	}
 
+	@Override
 	public final IMarkupFragment find(final String id)
 	{
 		Args.notEmpty(id, "id");
@@ -174,11 +176,13 @@ public class MarkupFragment implements IMarkupFragment
 		return null;
 	}
 
+	@Override
 	public final MarkupResourceStream getMarkupResourceStream()
 	{
 		return markup.getMarkupResourceStream();
 	}
 
+	@Override
 	public final int size()
 	{
 		return size;
@@ -211,6 +215,7 @@ public class MarkupFragment implements IMarkupFragment
 		return toString(false);
 	}
 
+	@Override
 	public String toString(boolean markupOnly)
 	{
 		final AppendingStringBuffer buf = new AppendingStringBuffer(400);
@@ -230,6 +235,7 @@ public class MarkupFragment implements IMarkupFragment
 	/**
 	 * @see java.lang.Iterable#iterator()
 	 */
+	@Override
 	public Iterator<MarkupElement> iterator()
 	{
 		return getRootMarkup().iterator(startIndex, size);

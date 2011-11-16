@@ -41,6 +41,7 @@ public abstract class GenericBaseModel<T> implements IModel<T>
 	/**
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
+	@Override
 	public T getObject()
 	{
 		return object;
@@ -53,6 +54,7 @@ public abstract class GenericBaseModel<T> implements IModel<T>
 	 *            the model object
 	 * @see org.apache.wicket.model.IModel#setObject(Object)
 	 */
+	@Override
 	public void setObject(T object)
 	{
 		if (!(object instanceof Serializable))
@@ -73,6 +75,7 @@ public abstract class GenericBaseModel<T> implements IModel<T>
 	/**
 	 * @see org.apache.wicket.model.IDetachable#detach()
 	 */
+	@Override
 	public void detach()
 	{
 		if (object instanceof IDetachable)

@@ -48,6 +48,7 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 		this.application = application;
 	}
 
+	@Override
 	public IPageManager get(IPageManagerContext pageManagerContext)
 	{
 		IDataStore dataStore = newDataStore();

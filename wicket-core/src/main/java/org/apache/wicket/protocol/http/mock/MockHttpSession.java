@@ -65,6 +65,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	 *            The attribute name
 	 * @return The value or null
 	 */
+	@Override
 	public Object getAttribute(final String name)
 	{
 		return attributes.get(name);
@@ -75,6 +76,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	 * 
 	 * @return The attribute names
 	 */
+	@Override
 	public Enumeration<String> getAttributeNames()
 	{
 		return Collections.enumeration(attributes.keySet());
@@ -86,6 +88,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	 * 
 	 * @return The creation time
 	 */
+	@Override
 	public long getCreationTime()
 	{
 		return creationTime;
@@ -96,6 +99,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	 * 
 	 * @return The id
 	 */
+	@Override
 	public String getId()
 	{
 		return id;
@@ -106,6 +110,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	 * 
 	 * @return The last accessed time
 	 */
+	@Override
 	public long getLastAccessedTime()
 	{
 		return lastAccessedTime;
@@ -116,6 +121,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	 * 
 	 * @return Always returns 0
 	 */
+	@Override
 	public int getMaxInactiveInterval()
 	{
 		return 0;
@@ -126,6 +132,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	 * 
 	 * @return The servlet context
 	 */
+	@Override
 	public ServletContext getServletContext()
 	{
 		return context;
@@ -137,6 +144,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	 * @return Always null
 	 * @deprecated
 	 */
+	@Override
 	@Deprecated
 	public javax.servlet.http.HttpSessionContext getSessionContext()
 	{
@@ -151,6 +159,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	 * @return The value or null
 	 * @deprecated use getAttribute(String) instead
 	 */
+	@Override
 	@Deprecated
 	public Object getValue(final String name)
 	{
@@ -163,6 +172,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	 * @return The names of the attributes
 	 * @deprecated use getAttributeNames() instead
 	 */
+	@Override
 	@Deprecated
 	public String[] getValueNames()
 	{
@@ -173,6 +183,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	/**
 	 * Invalidate the session.
 	 */
+	@Override
 	public void invalidate()
 	{
 		attributes.clear();
@@ -183,6 +194,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	 * 
 	 * @return Always false
 	 */
+	@Override
 	public boolean isNew()
 	{
 		return false;
@@ -197,6 +209,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	 *            The value
 	 * @deprecated Use setAttribute(String, Object) instead
 	 */
+	@Override
 	@Deprecated
 	public void putValue(final String name, final Object o)
 	{
@@ -209,6 +222,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	 * @param name
 	 *            The name of the attribute
 	 */
+	@Override
 	public void removeAttribute(final String name)
 	{
 		attributes.remove(name);
@@ -221,6 +235,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	 *            The name of the value
 	 * @deprecated Use removeAttribute(String) instead
 	 */
+	@Override
 	@Deprecated
 	public void removeValue(String name)
 	{
@@ -235,6 +250,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	 * @param o
 	 *            The value to set
 	 */
+	@Override
 	public void setAttribute(final String name, final Object o)
 	{
 		attributes.put(name, o);
@@ -246,6 +262,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	 * @param i
 	 *            The value
 	 */
+	@Override
 	public void setMaxInactiveInterval(final int i)
 	{
 	}

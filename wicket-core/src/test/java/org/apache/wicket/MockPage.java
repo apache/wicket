@@ -67,6 +67,7 @@ public class MockPage extends MockComponent implements IRequestablePage
 		return this;
 	}
 
+	@Override
 	public int getPageId()
 	{
 		return pageId;
@@ -74,6 +75,7 @@ public class MockPage extends MockComponent implements IRequestablePage
 
 	private final PageParameters pageParameters = new PageParameters();
 
+	@Override
 	public PageParameters getPageParameters()
 	{
 		return pageParameters;
@@ -81,6 +83,7 @@ public class MockPage extends MockComponent implements IRequestablePage
 
 	private boolean bookmarkable;
 
+	@Override
 	public boolean isBookmarkable()
 	{
 		return bookmarkable;
@@ -112,17 +115,20 @@ public class MockPage extends MockComponent implements IRequestablePage
 		return this;
 	}
 
+	@Override
 	public boolean isPageStateless()
 	{
 		return stateless;
 	}
 
+	@Override
 	public void renderPage()
 	{
 	}
 
 	private boolean createBookmarkable;
 
+	@Override
 	public boolean wasCreatedBookmarkable()
 	{
 		return createBookmarkable;
@@ -144,6 +150,7 @@ public class MockPage extends MockComponent implements IRequestablePage
 
 	private int renderCount;
 
+	@Override
 	public int getRenderCount()
 	{
 		return renderCount;
@@ -160,6 +167,7 @@ public class MockPage extends MockComponent implements IRequestablePage
 	}
 
 
+	@Override
 	public boolean setFreezePageId(boolean freeze)
 	{
 		return false;

@@ -57,6 +57,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 		WicketTagIdentifier.registerWellKnownTagName(HEAD);
 	}
 
+	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{

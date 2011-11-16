@@ -123,6 +123,7 @@ public class WicketSessionFilter implements Filter
 	/**
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
 	 */
+	@Override
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
 		filterName = filterConfig.getInitParameter("filterName");
@@ -141,6 +142,7 @@ public class WicketSessionFilter implements Filter
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
 	 *      javax.servlet.ServletResponse, javax.servlet.FilterChain)
 	 */
+	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 		throws IOException, ServletException
 	{
@@ -219,6 +221,7 @@ public class WicketSessionFilter implements Filter
 	/**
 	 * @see javax.servlet.Filter#destroy()
 	 */
+	@Override
 	public void destroy()
 	{
 	}

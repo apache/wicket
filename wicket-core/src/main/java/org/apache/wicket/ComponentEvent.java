@@ -67,30 +67,35 @@ final class ComponentEvent<T> implements IEvent<T>
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public IEventSource getSource()
 	{
 		return source;
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public Broadcast getType()
 	{
 		return type;
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public T getPayload()
 	{
 		return payload;
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void dontBroadcastDeeper()
 	{
 		shallow = true;
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void stop()
 	{
 		stop = true;

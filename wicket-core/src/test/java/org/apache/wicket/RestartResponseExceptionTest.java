@@ -59,6 +59,7 @@ public class RestartResponseExceptionTest extends WicketTestCase
 	 */
 	public static class MyDummyPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

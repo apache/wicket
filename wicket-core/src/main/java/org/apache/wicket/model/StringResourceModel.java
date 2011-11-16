@@ -200,6 +200,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	/** The default value of the message. */
 	private final String defaultValue;
 
+	@Override
 	public IWrapModel<String> wrapOnAssignment(Component component)
 	{
 		return new AssignmentWrapper(component);
@@ -251,6 +252,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 			StringResourceModel.this.setObject(object);
 		}
 
+		@Override
 		public IModel<String> getWrappedModel()
 		{
 			return StringResourceModel.this;

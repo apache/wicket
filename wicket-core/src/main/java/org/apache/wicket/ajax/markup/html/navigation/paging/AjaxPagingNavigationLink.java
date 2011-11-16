@@ -88,6 +88,7 @@ public class AjaxPagingNavigationLink extends PagingNavigationLink<Void> impleme
 	 * @param target
 	 *            the request target, when <code>null</code>, a full page refresh will be generated
 	 */
+	@Override
 	public void onClick(AjaxRequestTarget target)
 	{
 		pageable.setCurrentPage(getPageNumber());

@@ -48,6 +48,7 @@ public abstract class ModelIteratorAdapter<T> implements Iterator<IModel<T>>
 	/**
 	 * @see java.util.Iterator#hasNext()
 	 */
+	@Override
 	public boolean hasNext()
 	{
 		return delegate.hasNext();
@@ -56,6 +57,7 @@ public abstract class ModelIteratorAdapter<T> implements Iterator<IModel<T>>
 	/**
 	 * @see java.util.Iterator#next()
 	 */
+	@Override
 	public IModel<T> next()
 	{
 		return model(delegate.next());
@@ -64,6 +66,7 @@ public abstract class ModelIteratorAdapter<T> implements Iterator<IModel<T>>
 	/**
 	 * @see java.util.Iterator#remove()
 	 */
+	@Override
 	public void remove()
 	{
 		delegate.remove();

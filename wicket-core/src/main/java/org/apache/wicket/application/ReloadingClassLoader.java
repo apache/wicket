@@ -333,6 +333,7 @@ public class ReloadingClassLoader extends URLClassLoader
 				log.info("Watching changes of class " + clzFile);
 				watcher.add(clzFile, new IChangeListener()
 				{
+					@Override
 					public void onChange()
 					{
 						log.info("Class file " + finalClzFile + " has changed, reloading");

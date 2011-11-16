@@ -81,6 +81,7 @@ public class ConverterLocator implements IConverterLocator
 		 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
 		 *      java.util.Locale)
 		 */
+		@Override
 		public C convertToObject(String value, Locale locale)
 		{
 			if (value == null)
@@ -120,6 +121,7 @@ public class ConverterLocator implements IConverterLocator
 		 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object,
 		 *      java.util.Locale)
 		 */
+		@Override
 		public String convertToString(C value, Locale locale)
 		{
 			if (value == null || "".equals(value))
@@ -203,6 +205,7 @@ public class ConverterLocator implements IConverterLocator
 	 * 
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(String, java.util.Locale)
 	 */
+	@Override
 	public final <C> IConverter<C> getConverter(Class<C> type)
 	{
 		// Null is always converted to null

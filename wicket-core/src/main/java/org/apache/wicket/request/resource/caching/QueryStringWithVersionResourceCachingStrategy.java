@@ -91,6 +91,7 @@ public class QueryStringWithVersionResourceCachingStrategy implements IResourceC
 		return versionParameter;
 	}
 
+	@Override
 	public void decorateUrl(ResourceUrl url, final IStaticCacheableResource resource)
 	{
 		String version = resourceVersion.getVersion(resource);
@@ -101,6 +102,7 @@ public class QueryStringWithVersionResourceCachingStrategy implements IResourceC
 		}
 	}
 
+	@Override
 	public void undecorateUrl(ResourceUrl url)
 	{
 		final INamedParameters parameters = url.getParameters();
@@ -111,6 +113,7 @@ public class QueryStringWithVersionResourceCachingStrategy implements IResourceC
 		}
 	}
 
+	@Override
 	public void decorateResponse(AbstractResource.ResourceResponse response, IStaticCacheableResource resource)
 	{
 		response.setCacheDurationToMaximum();

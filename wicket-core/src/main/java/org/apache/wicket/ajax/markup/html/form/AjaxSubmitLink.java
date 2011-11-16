@@ -146,6 +146,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 * 
 	 * @see org.apache.wicket.markup.html.form.Button#onSubmit()
 	 */
+	@Override
 	public final void onSubmit()
 	{
 	}
@@ -156,6 +157,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 * 
 	 * @see org.apache.wicket.markup.html.form.Button#onError()
 	 */
+	@Override
 	public final void onError()
 	{
 

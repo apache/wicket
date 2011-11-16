@@ -117,6 +117,7 @@ public class FormTest extends WicketTestCase
 				});
 			}
 
+			@Override
 			public IResourceStream getMarkupResourceStream(final MarkupContainer container,
 				Class<?> containerClass)
 			{

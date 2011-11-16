@@ -43,6 +43,7 @@ public class PageSettings implements IPageSettings
 	/**
 	 * @see org.apache.wicket.settings.IPageSettings#addComponentResolver(org.apache.wicket.markup.resolver.IComponentResolver)
 	 */
+	@Override
 	public void addComponentResolver(IComponentResolver resolver)
 	{
 		componentResolvers.add(resolver);
@@ -51,6 +52,7 @@ public class PageSettings implements IPageSettings
 	/**
 	 * @see org.apache.wicket.settings.IPageSettings#getComponentResolvers()
 	 */
+	@Override
 	public List<IComponentResolver> getComponentResolvers()
 	{
 		return componentResolvers;
@@ -59,6 +61,7 @@ public class PageSettings implements IPageSettings
 	/**
 	 * @see org.apache.wicket.settings.IPageSettings#getVersionPagesByDefault()
 	 */
+	@Override
 	public boolean getVersionPagesByDefault()
 	{
 		return versionPagesByDefault;
@@ -67,6 +70,7 @@ public class PageSettings implements IPageSettings
 	/**
 	 * @see org.apache.wicket.settings.IPageSettings#setVersionPagesByDefault(boolean)
 	 */
+	@Override
 	public void setVersionPagesByDefault(boolean pagesVersionedByDefault)
 	{
 		versionPagesByDefault = pagesVersionedByDefault;

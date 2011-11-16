@@ -70,6 +70,7 @@ public class ResourceRequestHandler implements IRequestHandler
 	/**
 	 * @see org.apache.org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
 	 */
+	@Override
 	public void respond(final IRequestCycle requestCycle)
 	{
 		IResource.Attributes a = new IResource.Attributes(requestCycle.getRequest(),
@@ -80,6 +81,7 @@ public class ResourceRequestHandler implements IRequestHandler
 	/**
 	 * @see org.apache.org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
 	 */
+	@Override
 	public void detach(IRequestCycle requestCycle)
 	{
 	}

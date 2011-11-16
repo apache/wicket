@@ -111,6 +111,7 @@ public class FormTesterSubmitLinkTest extends WicketTestCase
 			}
 
 
+			@Override
 			public IResourceStream getMarkupResourceStream(MarkupContainer container,
 				Class<?> containerClass)
 			{

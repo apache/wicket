@@ -62,6 +62,7 @@ public class WicketSessionFilterTest extends WicketTestCase
 				// use HttpSessionStore because we need to test it
 				setSessionStoreProvider(new IProvider<ISessionStore>()
 				{
+					@Override
 					public ISessionStore get()
 					{
 						return new HttpSessionStore();
@@ -86,6 +87,7 @@ public class WicketSessionFilterTest extends WicketTestCase
 		// not set by WicketTester
 		Thread testThread = new Thread(new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				try
@@ -114,6 +116,7 @@ public class WicketSessionFilterTest extends WicketTestCase
 
 		testThread.setUncaughtExceptionHandler(new UncaughtExceptionHandler()
 		{
+			@Override
 			public void uncaughtException(Thread t, Throwable e)
 			{
 				failMessage.append(e.getMessage());
@@ -136,17 +139,20 @@ public class WicketSessionFilterTest extends WicketTestCase
 		{
 			init(new FilterConfig()
 			{
+				@Override
 				public ServletContext getServletContext()
 				{
 					return tester.getServletContext();
 				}
 
+				@Override
 				@SuppressWarnings("rawtypes")
 				public Enumeration getInitParameterNames()
 				{
 					return null;
 				}
 
+				@Override
 				public String getInitParameter(String name)
 				{
 					if ("filterName".equals(name))
@@ -157,6 +163,7 @@ public class WicketSessionFilterTest extends WicketTestCase
 					return null;
 				}
 
+				@Override
 				public String getFilterName()
 				{
 					return "session-filter";
@@ -177,6 +184,7 @@ public class WicketSessionFilterTest extends WicketTestCase
 	 */
 	private static class TestFilterChain implements FilterChain
 	{
+		@Override
 		public void doFilter(ServletRequest request, ServletResponse response) throws IOException,
 			ServletException
 		{

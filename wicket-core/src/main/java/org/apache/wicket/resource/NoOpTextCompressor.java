@@ -27,6 +27,7 @@ import org.apache.wicket.javascript.IJavaScriptCompressor;
  */
 public class NoOpTextCompressor implements IJavaScriptCompressor, ICssCompressor
 {
+	@Override
 	public String compress(String original)
 	{
 		return original;

@@ -53,6 +53,7 @@ public class MarkupUtil
 		final boolean rtn[] = new boolean[] { true };
 		page.visitChildren(MarkupContainer.class, new IVisitor<MarkupContainer, Void>()
 		{
+			@Override
 			public void component(final MarkupContainer comp, final IVisit<Void> visit)
 			{
 				IMarkupFragment associatedMarkup = comp.getAssociatedMarkup();

@@ -206,6 +206,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	/**
 	 * Called when a selection changes.
 	 */
+	@Override
 	public final void onSelectionChanged()
 	{
 		convertInput();

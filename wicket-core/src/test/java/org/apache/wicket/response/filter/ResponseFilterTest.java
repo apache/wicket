@@ -47,6 +47,7 @@ public class ResponseFilterTest extends WicketTestCase
 	{
 		final IResponseFilter responseFilter = new IResponseFilter()
 		{
+			@Override
 			public AppendingStringBuffer filter(AppendingStringBuffer responseBuffer)
 			{
 				counter.getAndIncrement();
@@ -111,6 +112,7 @@ public class ResponseFilterTest extends WicketTestCase
 		static final AppendCommentFilter INSTANCE = new AppendCommentFilter();
 		static final String COMMENT = "<!-- comment -->";
 
+		@Override
 		public AppendingStringBuffer filter(AppendingStringBuffer responseBuffer)
 		{
 			return new AppendingStringBuffer(responseBuffer).append(COMMENT);

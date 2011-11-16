@@ -64,6 +64,7 @@ public class CompoundValidator<T> extends Behavior implements IValidator<T>
 	/**
 	 * @see IValidator#validate(IValidatable)
 	 */
+	@Override
 	public final void validate(IValidatable<T> validatable)
 	{
 		Iterator<IValidator<T>> it = validators.iterator();

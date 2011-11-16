@@ -45,6 +45,7 @@ public class CssPackageResourceTest extends WicketTestCase
 
 				getResourceSettings().setCssCompressor(new ICssCompressor()
 				{
+					@Override
 					public String compress(String original)
 					{
 						return APP_COMPRESSED;
@@ -71,6 +72,7 @@ public class CssPackageResourceTest extends WicketTestCase
 				return new ICssCompressor()
 				{
 
+					@Override
 					public String compress(String original)
 					{
 						return RESOURCE_COMPRESSED;

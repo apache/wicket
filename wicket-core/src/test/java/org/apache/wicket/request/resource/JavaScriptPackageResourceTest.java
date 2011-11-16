@@ -44,6 +44,7 @@ public class JavaScriptPackageResourceTest extends WicketTestCase
 
 				getResourceSettings().setJavaScriptCompressor(new IJavaScriptCompressor()
 				{
+					@Override
 					public String compress(String original)
 					{
 						return APP_COMPRESSED;
@@ -71,6 +72,7 @@ public class JavaScriptPackageResourceTest extends WicketTestCase
 				return new IJavaScriptCompressor()
 				{
 
+					@Override
 					public String compress(String original)
 					{
 						return RESOURCE_COMPRESSED;

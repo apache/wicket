@@ -75,6 +75,7 @@ public class WebPageTest extends WicketTestCase
 			add(mainLink);
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{
@@ -86,6 +87,7 @@ public class WebPageTest extends WicketTestCase
 	/** */
 	public static class TargetPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

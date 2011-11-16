@@ -60,6 +60,7 @@ public class WebSession extends Session
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public boolean accept(FeedbackMessage message)
 		{
 			return message.getReporter() != null;
@@ -74,6 +75,7 @@ public class WebSession extends Session
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public boolean accept(FeedbackMessage message)
 		{
 			return message.getReporter() == null && message.isRendered();

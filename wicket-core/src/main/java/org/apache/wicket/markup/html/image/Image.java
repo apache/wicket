@@ -145,6 +145,7 @@ public class Image extends WebComponent implements IResourceListener
 	/**
 	 * @see org.apache.wicket.IResourceListener#onResourceRequested()
 	 */
+	@Override
 	public void onResourceRequested()
 	{
 		localizedImageResource.onResourceRequested(null);

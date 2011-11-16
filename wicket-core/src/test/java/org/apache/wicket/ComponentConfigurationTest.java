@@ -126,6 +126,7 @@ public class ComponentConfigurationTest extends WicketTestCase
 			return link;
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

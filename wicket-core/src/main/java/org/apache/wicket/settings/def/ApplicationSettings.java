@@ -52,6 +52,7 @@ public class ApplicationSettings implements IApplicationSettings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#getAccessDeniedPage()
 	 */
+	@Override
 	public Class<? extends Page> getAccessDeniedPage()
 	{
 		return accessDeniedPage.get();
@@ -60,11 +61,13 @@ public class ApplicationSettings implements IApplicationSettings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#getClassResolver()
 	 */
+	@Override
 	public IClassResolver getClassResolver()
 	{
 		return classResolver;
 	}
 
+	@Override
 	public Bytes getDefaultMaximumUploadSize()
 	{
 		return defaultMaximumUploadSize;
@@ -73,6 +76,7 @@ public class ApplicationSettings implements IApplicationSettings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#getInternalErrorPage()
 	 */
+	@Override
 	public Class<? extends Page> getInternalErrorPage()
 	{
 		return internalErrorPage.get();
@@ -81,6 +85,7 @@ public class ApplicationSettings implements IApplicationSettings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#getPageExpiredErrorPage()
 	 */
+	@Override
 	public Class<? extends Page> getPageExpiredErrorPage()
 	{
 		return pageExpiredErrorPage.get();
@@ -89,6 +94,7 @@ public class ApplicationSettings implements IApplicationSettings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#isUploadProgressUpdatesEnabled()
 	 */
+	@Override
 	public boolean isUploadProgressUpdatesEnabled()
 	{
 		return uploadProgressUpdatesEnabled;
@@ -97,6 +103,7 @@ public class ApplicationSettings implements IApplicationSettings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#setAccessDeniedPage(java.lang.Class)
 	 */
+	@Override
 	public void setAccessDeniedPage(Class<? extends Page> accessDeniedPage)
 	{
 		if (accessDeniedPage == null)
@@ -111,6 +118,7 @@ public class ApplicationSettings implements IApplicationSettings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#setClassResolver(org.apache.wicket.application.IClassResolver)
 	 */
+	@Override
 	public void setClassResolver(final IClassResolver defaultClassResolver)
 	{
 		classResolver = defaultClassResolver;
@@ -119,6 +127,7 @@ public class ApplicationSettings implements IApplicationSettings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#setDefaultMaximumUploadSize(org.apache.wicket.util.lang.Bytes)
 	 */
+	@Override
 	public void setDefaultMaximumUploadSize(Bytes defaultMaximumUploadSize)
 	{
 		this.defaultMaximumUploadSize = defaultMaximumUploadSize;
@@ -127,6 +136,7 @@ public class ApplicationSettings implements IApplicationSettings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#setInternalErrorPage(java.lang.Class)
 	 */
+	@Override
 	public void setInternalErrorPage(final Class<? extends Page> internalErrorPage)
 	{
 		if (internalErrorPage == null)
@@ -141,6 +151,7 @@ public class ApplicationSettings implements IApplicationSettings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#setPageExpiredErrorPage(java.lang.Class)
 	 */
+	@Override
 	public void setPageExpiredErrorPage(final Class<? extends Page> pageExpiredErrorPage)
 	{
 		if (pageExpiredErrorPage == null)
@@ -155,6 +166,7 @@ public class ApplicationSettings implements IApplicationSettings
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#setUploadProgressUpdatesEnabled(boolean)
 	 */
+	@Override
 	public void setUploadProgressUpdatesEnabled(boolean uploadProgressUpdatesEnabled)
 	{
 		this.uploadProgressUpdatesEnabled = uploadProgressUpdatesEnabled;

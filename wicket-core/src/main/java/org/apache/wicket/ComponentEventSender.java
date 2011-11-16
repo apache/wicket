@@ -54,6 +54,7 @@ final class ComponentEventSender implements IEventSource
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public <T> void send(IEventSink sink, Broadcast type, T payload)
 	{
 		ComponentEvent<?> event = new ComponentEvent<T>(sink, source, type, payload);
@@ -300,6 +301,7 @@ final class ComponentEventSender implements IEventSource
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void component(Component object, IVisit<Void> visit)
 		{
 			dispatchToComponent(dispatcher, object, e);

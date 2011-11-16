@@ -76,6 +76,7 @@ public class HttpSessionDataStore implements IDataStore
 	 *            Ignored. Only pages from the current http session can be read
 	 * @see org.apache.wicket.pageStore.IDataStore#getData(java.lang.String, int)
 	 */
+	@Override
 	public byte[] getData(String sessionId, int pageId)
 	{
 		PageTable pageTable = getPageTable(false);
@@ -87,6 +88,7 @@ public class HttpSessionDataStore implements IDataStore
 		return pageAsBytes;
 	}
 
+	@Override
 	public void removeData(String sessionId, int pageId)
 	{
 		PageTable pageTable = getPageTable(false);
@@ -96,6 +98,7 @@ public class HttpSessionDataStore implements IDataStore
 		}
 	}
 
+	@Override
 	public void removeData(String sessionId)
 	{
 		PageTable pageTable = getPageTable(false);
@@ -105,6 +108,7 @@ public class HttpSessionDataStore implements IDataStore
 		}
 	}
 
+	@Override
 	public void storeData(String sessionId, int pageId, byte[] pageAsBytes)
 	{
 		PageTable pageTable = getPageTable(true);
@@ -120,6 +124,7 @@ public class HttpSessionDataStore implements IDataStore
 		}
 	}
 
+	@Override
 	public void destroy()
 	{
 		// do nothing
@@ -127,6 +132,7 @@ public class HttpSessionDataStore implements IDataStore
 		// so there is no reachable http session
 	}
 
+	@Override
 	public boolean isReplicated()
 	{
 		return true;

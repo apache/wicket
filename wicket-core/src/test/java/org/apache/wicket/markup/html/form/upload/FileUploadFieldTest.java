@@ -144,6 +144,7 @@ public class FileUploadFieldTest extends WicketTestCase
 		/** */
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public void validate(IValidatable<List<FileUpload>> validatable)
 		{
 			if (validatable.getValue() instanceof List == false)

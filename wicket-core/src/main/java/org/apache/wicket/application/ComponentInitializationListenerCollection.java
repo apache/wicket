@@ -29,10 +29,12 @@ public class ComponentInitializationListenerCollection extends
 {
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	public void onInitialize(final Component component)
 	{
 		notify(new INotifier<IComponentInitializationListener>()
 		{
+			@Override
 			public void notify(IComponentInitializationListener listener)
 			{
 				listener.onInitialize(component);

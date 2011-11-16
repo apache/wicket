@@ -69,6 +69,7 @@ public class ExceptionMapperTest extends WicketTestCase
 			this.wrapped = wrapped;
 		}
 
+		@Override
 		public IExceptionMapper get()
 		{
 			return wrapperExceptionMapper = new WrapperExceptionMapper(wrapped.get());
@@ -90,6 +91,7 @@ public class ExceptionMapperTest extends WicketTestCase
 			this.wrapped = wrapped;
 		}
 
+		@Override
 		public IRequestHandler map(Exception e)
 		{
 			if (Exceptions.findCause(e, TestException.class) != null)
@@ -115,6 +117,7 @@ public class ExceptionMapperTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

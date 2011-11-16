@@ -65,6 +65,7 @@ public class PackageResourceGuard implements IPackageResourceGuard
 	 * @see org.apache.wicket.markup.html.IPackageResourceGuard#accept(java.lang.Class,
 	 *      java.lang.String)
 	 */
+	@Override
 	public boolean accept(Class<?> scope, String path)
 	{
 		String absolutePath = Packages.absolutePath(scope, path);

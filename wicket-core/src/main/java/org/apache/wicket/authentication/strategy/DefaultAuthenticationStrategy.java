@@ -91,6 +91,7 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 	/**
 	 * @see org.apache.wicket.authentication.IAuthenticationStrategy#load()
 	 */
+	@Override
 	public String[] load()
 	{
 		String value = getCookieUtils().load(cookieKey);
@@ -134,6 +135,7 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 	 * @see org.apache.wicket.authentication.IAuthenticationStrategy#save(java.lang.String,
 	 *      java.lang.String)
 	 */
+	@Override
 	public void save(final String username, final String password)
 	{
 		String value = "" + username + VALUE_SEPARATOR + password;
@@ -146,6 +148,7 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 	/**
 	 * @see org.apache.wicket.authentication.IAuthenticationStrategy#remove()
 	 */
+	@Override
 	public void remove()
 	{
 		getCookieUtils().remove(cookieKey);

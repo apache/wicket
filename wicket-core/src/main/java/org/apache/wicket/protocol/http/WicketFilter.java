@@ -212,6 +212,7 @@ public class WicketFilter implements Filter
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
 	 *      javax.servlet.ServletResponse, javax.servlet.FilterChain)
 	 */
+	@Override
 	public void doFilter(final ServletRequest request, final ServletResponse response,
 		final FilterChain chain) throws IOException, ServletException
 	{
@@ -281,6 +282,7 @@ public class WicketFilter implements Filter
 	 * 
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
 	 */
+	@Override
 	public final void init(final FilterConfig filterConfig) throws ServletException
 	{
 		init(false, filterConfig);
@@ -468,6 +470,7 @@ public class WicketFilter implements Filter
 	/**
 	 * @see javax.servlet.Filter#destroy()
 	 */
+	@Override
 	public void destroy()
 	{
 		if (application != null)

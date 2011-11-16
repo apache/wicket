@@ -234,6 +234,7 @@ public abstract class AbstractTree extends Panel
 					// visit every child
 					visitItemChildren(this, new IItemCallback()
 					{
+						@Override
 						public void visitItem(TreeItem item)
 						{
 							// render child
@@ -270,11 +271,13 @@ public abstract class AbstractTree extends Panel
 				// visit every child
 				visitItemChildren(this, new IItemCallback()
 				{
+					@Override
 					public void visitItem(TreeItem item)
 					{
 						// write header contributions from the children of item
 						item.visitChildren(new IVisitor<Component, Void>()
 						{
+							@Override
 							public void component(final Component component,
 								final IVisit<Void> visit)
 							{
@@ -313,6 +316,7 @@ public abstract class AbstractTree extends Panel
 				// visit every child
 				visitItemChildren(this, new IItemCallback()
 				{
+					@Override
 					public void visitItem(TreeItem item)
 					{
 						item.detach();
@@ -335,6 +339,7 @@ public abstract class AbstractTree extends Panel
 				// visit every child
 				visitItemChildren(this, new IItemCallback()
 				{
+					@Override
 					public void visitItem(TreeItem item)
 					{
 						item.prepareForRender();
@@ -352,6 +357,7 @@ public abstract class AbstractTree extends Panel
 				// visit every child
 				visitItemChildren(this, new IItemCallback()
 				{
+					@Override
 					public void visitItem(TreeItem item)
 					{
 						item.afterRender();
@@ -413,6 +419,7 @@ public abstract class AbstractTree extends Panel
 			{
 				IItemCallback callback = new IItemCallback()
 				{
+					@Override
 					public void visitItem(TreeItem item)
 					{
 						// render component
@@ -511,12 +518,14 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/** called when all nodes are collapsed. */
+	@Override
 	public final void allNodesCollapsed()
 	{
 		invalidateAll();
 	}
 
 	/** called when all nodes are expanded. */
+	@Override
 	public final void allNodesExpanded()
 	{
 		invalidateAll();
@@ -680,6 +689,7 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeCollapsed(Object)
 	 */
+	@Override
 	public final void nodeCollapsed(Object node)
 	{
 		if (isNodeVisible(node) == true)
@@ -691,6 +701,7 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeExpanded(Object)
 	 */
+	@Override
 	public final void nodeExpanded(Object node)
 	{
 		if (isNodeVisible(node) == true)
@@ -702,6 +713,7 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeSelected(Object)
 	 */
+	@Override
 	public final void nodeSelected(Object node)
 	{
 		if (isNodeVisible(node))
@@ -713,6 +725,7 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeUnselected(Object)
 	 */
+	@Override
 	public final void nodeUnselected(Object node)
 	{
 		if (isNodeVisible(node))
@@ -756,6 +769,7 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * @see javax.swing.event.TreeModelListener#treeNodesChanged(javax.swing.event.TreeModelEvent)
 	 */
+	@Override
 	public final void treeNodesChanged(TreeModelEvent e)
 	{
 		if (dirtyAll)
@@ -819,6 +833,7 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * @see javax.swing.event.TreeModelListener#treeNodesInserted(javax.swing.event.TreeModelEvent)
 	 */
+	@Override
 	public final void treeNodesInserted(TreeModelEvent e)
 	{
 		if (dirtyAll)
@@ -904,6 +919,7 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * @see javax.swing.event.TreeModelListener#treeNodesRemoved(javax.swing.event.TreeModelEvent)
 	 */
+	@Override
 	public final void treeNodesRemoved(TreeModelEvent removalEvent)
 	{
 		if (dirtyAll)
@@ -953,6 +969,7 @@ public abstract class AbstractTree extends Panel
 						// remove all the deleted item's children
 						visitItemChildren(itemToDelete, new IItemCallback()
 						{
+							@Override
 							public void visitItem(TreeItem item)
 							{
 								removeItem(item);
@@ -976,6 +993,7 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * @see javax.swing.event.TreeModelListener#treeStructureChanged(javax.swing.event.TreeModelEvent)
 	 */
+	@Override
 	public final void treeStructureChanged(TreeModelEvent e)
 	{
 		if (dirtyAll)
@@ -1008,6 +1026,7 @@ public abstract class AbstractTree extends Panel
 		target.add(component);
 	}
 
+	@Override
 	public void onTargetRespond(AjaxRequestTarget target)
 	{
 		// check whether the model hasn't changed
@@ -1281,6 +1300,7 @@ public abstract class AbstractTree extends Panel
 	{
 		visitItemAndChildren(rootItem, new IItemCallback()
 		{
+			@Override
 			public void visitItem(TreeItem item)
 			{
 				item.remove();
@@ -1382,6 +1402,7 @@ public abstract class AbstractTree extends Panel
 		{
 			visitItemChildren(item, new IItemCallback()
 			{
+				@Override
 				public void visitItem(TreeItem item)
 				{
 					invalidateNode(item.getModelObject(), false);
@@ -1478,6 +1499,7 @@ public abstract class AbstractTree extends Panel
 				// go though item children and remove every one of them
 				visitItemChildren(item, new IItemCallback()
 				{
+					@Override
 					public void visitItem(TreeItem item)
 					{
 						removeItem(item);

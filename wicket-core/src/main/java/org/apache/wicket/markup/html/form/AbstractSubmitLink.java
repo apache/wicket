@@ -101,6 +101,7 @@ public abstract class AbstractSubmitLink extends AbstractLink implements IFormSu
 	 *            defaultFormProcessing
 	 * @return This
 	 */
+	@Override
 	public final AbstractSubmitLink setDefaultFormProcessing(boolean defaultFormProcessing)
 	{
 		if (this.defaultFormProcessing != defaultFormProcessing)
@@ -115,6 +116,7 @@ public abstract class AbstractSubmitLink extends AbstractLink implements IFormSu
 	/**
 	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#getDefaultFormProcessing()
 	 */
+	@Override
 	public boolean getDefaultFormProcessing()
 	{
 		return defaultFormProcessing;
@@ -123,6 +125,7 @@ public abstract class AbstractSubmitLink extends AbstractLink implements IFormSu
 	/**
 	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#getForm()
 	 */
+	@Override
 	public Form<?> getForm()
 	{
 		if (form != null)
@@ -138,6 +141,7 @@ public abstract class AbstractSubmitLink extends AbstractLink implements IFormSu
 	/**
 	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#getInputName()
 	 */
+	@Override
 	public String getInputName()
 	{
 		return Form.getRootFormRelativeId(this);

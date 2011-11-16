@@ -110,6 +110,7 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	 * 
 	 * @return defaultFormProcessing
 	 */
+	@Override
 	public final boolean getDefaultFormProcessing()
 	{
 		return defaultFormProcessing;
@@ -125,6 +126,7 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	 *            defaultFormProcessing
 	 * @return This
 	 */
+	@Override
 	public final Button setDefaultFormProcessing(boolean defaultFormProcessing)
 	{
 		if (this.defaultFormProcessing != defaultFormProcessing)
@@ -203,6 +205,7 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	 * Override this method to provide special submit handling in a multi-button form. It is called
 	 * whenever the user clicks this particular button, except if validation fails.
 	 */
+	@Override
 	public void onSubmit()
 	{
 	}
@@ -210,6 +213,7 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	/**
 	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onError()
 	 */
+	@Override
 	public void onError()
 	{
 

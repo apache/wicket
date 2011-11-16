@@ -112,6 +112,7 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 		setWicketNamespace(MarkupParser.WICKET);
 	}
 
+	@Override
 	public String locationAsString()
 	{
 		if (resourceStream instanceof IFixedLocationResourceStream)
@@ -121,36 +122,43 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 		return null;
 	}
 
+	@Override
 	public void close() throws IOException
 	{
 		resourceStream.close();
 	}
 
+	@Override
 	public String getContentType()
 	{
 		return resourceStream.getContentType();
 	}
 
+	@Override
 	public InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
 		return resourceStream.getInputStream();
 	}
 
+	@Override
 	public Locale getLocale()
 	{
 		return resourceStream.getLocale();
 	}
 
+	@Override
 	public Time lastModifiedTime()
 	{
 		return resourceStream.lastModifiedTime();
 	}
 
+	@Override
 	public Bytes length()
 	{
 		return resourceStream.length();
 	}
 
+	@Override
 	public void setLocale(Locale locale)
 	{
 		resourceStream.setLocale(locale);
@@ -300,21 +308,25 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 		return baseMarkup;
 	}
 
+	@Override
 	public String getStyle()
 	{
 		return resourceStream.getStyle();
 	}
 
+	@Override
 	public String getVariation()
 	{
 		return resourceStream.getVariation();
 	}
 
+	@Override
 	public void setStyle(String style)
 	{
 		resourceStream.setStyle(style);
 	}
 
+	@Override
 	public void setVariation(String variation)
 	{
 		resourceStream.setVariation(variation);

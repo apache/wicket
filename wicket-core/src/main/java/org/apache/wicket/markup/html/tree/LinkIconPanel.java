@@ -54,6 +54,7 @@ public class LinkIconPanel extends LabelIconPanel
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				onNodeLinkClicked(model.getObject(), tree, target);

@@ -114,6 +114,7 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 		parametersEncoder = encoder;
 	}
 
+	@Override
 	public IRequestHandler mapRequest(final Request request)
 	{
 		final Url url = new Url(request.getUrl());
@@ -149,11 +150,13 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 		return new ResourceReferenceRequestHandler(resourceReference, parameters);
 	}
 
+	@Override
 	public int getCompatibilityScore(Request request)
 	{
 		return 0; // pages always have priority over resources
 	}
 
+	@Override
 	public Url mapHandler(IRequestHandler requestHandler)
 	{
 		if ((requestHandler instanceof ResourceReferenceRequestHandler) == false)

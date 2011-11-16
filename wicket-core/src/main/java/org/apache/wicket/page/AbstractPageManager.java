@@ -54,17 +54,20 @@ public abstract class AbstractPageManager implements IPageManager
 	 * 
 	 * @see org.apache.wicket.page.IPageManager#supportsVersioning()
 	 */
+	@Override
 	public abstract boolean supportsVersioning();
 
 	/**
 	 * 
 	 * @see org.apache.wicket.page.IPageManager#sessionExpired(java.lang.String)
 	 */
+	@Override
 	public abstract void sessionExpired(String sessionId);
 
 	/**
 	 * @return The page manager context
 	 */
+	@Override
 	public IPageManagerContext getContext()
 	{
 		return context;
@@ -89,6 +92,7 @@ public abstract class AbstractPageManager implements IPageManager
 	/**
 	 * @see org.apache.wicket.page.IPageManager#commitRequest()
 	 */
+	@Override
 	public void commitRequest()
 	{
 		getRequestAdapter().commitRequest();
@@ -97,6 +101,7 @@ public abstract class AbstractPageManager implements IPageManager
 	/**
 	 * @see org.apache.wicket.page.IPageManager#getPage(int)
 	 */
+	@Override
 	public IManageablePage getPage(int id)
 	{
 		IManageablePage page = getRequestAdapter().getPage(id);
@@ -110,6 +115,7 @@ public abstract class AbstractPageManager implements IPageManager
 	/**
 	 * @see org.apache.wicket.page.IPageManager#newSessionCreated()
 	 */
+	@Override
 	public void newSessionCreated()
 	{
 		getRequestAdapter().newSessionCreated();
@@ -118,6 +124,7 @@ public abstract class AbstractPageManager implements IPageManager
 	/**
 	 * @see org.apache.wicket.page.IPageManager#touchPage(org.apache.wicket.page.IManageablePage)
 	 */
+	@Override
 	public void touchPage(IManageablePage page)
 	{
 		if (!page.isPageStateless())

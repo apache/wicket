@@ -124,20 +124,24 @@ public class PersistentPageManagerTest
 			instanceID = sequence++;
 		}
 
+		@Override
 		public boolean isPageStateless()
 		{
 			return false;
 		}
 
+		@Override
 		public int getPageId()
 		{
 			return instanceID;
 		}
 
+		@Override
 		public void detach()
 		{
 		}
 
+		@Override
 		public boolean setFreezePageId(boolean freeze)
 		{
 			return false;

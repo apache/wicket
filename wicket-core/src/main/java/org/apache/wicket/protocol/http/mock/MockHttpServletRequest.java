@@ -310,6 +310,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 *            The attribute name
 	 * @return The value, or null
 	 */
+	@Override
 	public Object getAttribute(final String name)
 	{
 		return attributes.get(name);
@@ -320,6 +321,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The names
 	 */
+	@Override
 	public Enumeration<String> getAttributeNames()
 	{
 		return Collections.enumeration(attributes.keySet());
@@ -332,6 +334,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The auth type
 	 */
+	@Override
 	public String getAuthType()
 	{
 		return authType;
@@ -342,6 +345,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The character encoding
 	 */
+	@Override
 	public String getCharacterEncoding()
 	{
 		return characterEncoding;
@@ -374,6 +378,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return -1 if useMultiPartContentType is false. Else the length of the generated request.
 	 */
+	@Override
 	public int getContentLength()
 	{
 		if (useMultiPartContentType)
@@ -390,6 +395,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The correct multipart content-type if useMultiPartContentType is true. Else null.
 	 */
+	@Override
 	public String getContentType()
 	{
 		if (useMultiPartContentType)
@@ -406,6 +412,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The context path
 	 */
+	@Override
 	public String getContextPath()
 	{
 		// return "/" + application.getName();
@@ -438,6 +445,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The cookies
 	 */
+	@Override
 	public Cookie[] getCookies()
 	{
 		if (cookies.size() == 0)
@@ -457,6 +465,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @throws IllegalArgumentException
 	 *             If the header cannot be converted
 	 */
+	@Override
 	public long getDateHeader(final String name) throws IllegalArgumentException
 	{
 		String value = getHeader(name);
@@ -484,6 +493,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 *            The header name
 	 * @return The header value or null
 	 */
+	@Override
 	public String getHeader(final String name)
 	{
 		@SuppressWarnings("unchecked")
@@ -503,6 +513,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The header names
 	 */
+	@Override
 	public Enumeration<String> getHeaderNames()
 	{
 		return Collections.enumeration(headers.keySet());
@@ -515,6 +526,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 *            The name
 	 * @return The header values
 	 */
+	@Override
 	public Enumeration<String> getHeaders(final String name)
 	{
 		@SuppressWarnings("unchecked")
@@ -534,6 +546,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @throws IOException
 	 *             If an I/O related problem occurs
 	 */
+	@Override
 	public ServletInputStream getInputStream() throws IOException
 	{
 		byte[] request = buildRequest();
@@ -560,6 +573,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @throws NumberFormatException
 	 *             If the header is not formatted correctly
 	 */
+	@Override
 	public int getIntHeader(final String name)
 	{
 		String value = getHeader(name);
@@ -576,6 +590,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The locale
 	 */
+	@Override
 	public Locale getLocale()
 	{
 		return getLocales().nextElement();
@@ -611,6 +626,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The locales
 	 */
+	@Override
 	public Enumeration<Locale> getLocales()
 	{
 		List<Locale> list = new ArrayList<Locale>();
@@ -641,6 +657,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The method
 	 */
+	@Override
 	public String getMethod()
 	{
 		return method;
@@ -653,6 +670,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 *            The parameter name
 	 * @return The parameter value, or null
 	 */
+	@Override
 	public String getParameter(final String name)
 	{
 		String[] param = getParameterMap().get(name);
@@ -671,6 +689,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The parameters
 	 */
+	@Override
 	public Map<String, String[]> getParameterMap()
 	{
 		Map<String, String[]> params = new HashMap<String, String[]>(parameters);
@@ -703,6 +722,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The parameter names
 	 */
+	@Override
 	public Enumeration<String> getParameterNames()
 	{
 		return Collections.enumeration(getParameterMap().keySet());
@@ -715,6 +735,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 *            The name of the parameter
 	 * @return The return values
 	 */
+	@Override
 	public String[] getParameterValues(final String name)
 	{
 		Object value = getParameterMap().get(name);
@@ -740,6 +761,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The path info
 	 */
+	@Override
 	public String getPathInfo()
 	{
 		return path;
@@ -750,6 +772,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return null
 	 */
+	@Override
 	public String getPathTranslated()
 	{
 		return null;
@@ -760,6 +783,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return Always HTTP/1.1
 	 */
+	@Override
 	public String getProtocol()
 	{
 		return "HTTP/1.1";
@@ -770,6 +794,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The query string
 	 */
+	@Override
 	public String getQueryString()
 	{
 		if (parameters.size() == 0)
@@ -816,6 +841,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @throws IOException
 	 *             If an I/O related problem occurs
 	 */
+	@Override
 	public BufferedReader getReader() throws IOException
 	{
 		return new BufferedReader(new InputStreamReader(getInputStream()));
@@ -829,6 +855,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @return The path
 	 * @deprecated Use ServletContext.getRealPath(String) instead.
 	 */
+	@Override
 	@Deprecated
 	public String getRealPath(String name)
 	{
@@ -838,6 +865,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * @return the remote address of the client
 	 */
+	@Override
 	public String getRemoteAddr()
 	{
 		return remoteAddr;
@@ -858,6 +886,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return Return 'localhost' by default
 	 */
+	@Override
 	public String getRemoteHost()
 	{
 		return "localhost";
@@ -868,6 +897,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The name of the remote user
 	 */
+	@Override
 	public String getRemoteUser()
 	{
 		return getHeader("REMOTE_USER");
@@ -881,6 +911,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 *            The name to dispatch to
 	 * @return The dispatcher
 	 */
+	@Override
 	public RequestDispatcher getRequestDispatcher(String name)
 	{
 		return context.getRequestDispatcher(name);
@@ -891,6 +922,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The session id
 	 */
+	@Override
 	public String getRequestedSessionId()
 	{
 		if (session instanceof MockHttpSession && ((MockHttpSession)session).isTemporary())
@@ -907,6 +939,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @return The path value
 	 * @see javax.servlet.http.HttpServletRequest#getRequestURI()
 	 */
+	@Override
 	public String getRequestURI()
 	{
 		if (url == null)
@@ -930,6 +963,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @return The url
 	 * @see javax.servlet.http.HttpServletRequest#getRequestURL()
 	 */
+	@Override
 	public StringBuffer getRequestURL()
 	{
 		StringBuffer buf = new StringBuffer();
@@ -950,6 +984,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return the scheme of this request
 	 */
+	@Override
 	public String getScheme()
 	{
 		return scheme;
@@ -977,6 +1012,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return by default returns 'localhost'
 	 */
+	@Override
 	public String getServerName()
 	{
 		return serverName;
@@ -996,6 +1032,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * @return the server port of this request
 	 */
+	@Override
 	public int getServerPort()
 	{
 		return serverPort;
@@ -1017,6 +1054,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The servlet path
 	 */
+	@Override
 	public String getServletPath()
 	{
 		return "/servlet";
@@ -1027,6 +1065,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The session
 	 */
+	@Override
 	public HttpSession getSession()
 	{
 		if (session instanceof MockHttpSession && ((MockHttpSession)session).isTemporary())
@@ -1043,6 +1082,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 *            Ignored, there is always a session
 	 * @return The session
 	 */
+	@Override
 	public HttpSession getSession(boolean b)
 	{
 		if (b && session instanceof MockHttpSession)
@@ -1057,6 +1097,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return A user principal
 	 */
+	@Override
 	public Principal getUserPrincipal()
 	{
 		final String user = getRemoteUser();
@@ -1068,6 +1109,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		{
 			return new Principal()
 			{
+				@Override
 				public String getName()
 				{
 					return user;
@@ -1107,6 +1149,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return Always true
 	 */
+	@Override
 	public boolean isRequestedSessionIdFromCookie()
 	{
 		return true;
@@ -1117,6 +1160,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return Always false
 	 */
+	@Override
 	public boolean isRequestedSessionIdFromUrl()
 	{
 		return false;
@@ -1127,6 +1171,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return Always false
 	 */
+	@Override
 	public boolean isRequestedSessionIdFromURL()
 	{
 		return false;
@@ -1137,6 +1182,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return Always true
 	 */
+	@Override
 	public boolean isRequestedSessionIdValid()
 	{
 		return true;
@@ -1145,6 +1191,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * @return <code>true</code> if this request's scheme is 'https', <code>false</code> - otherwise
 	 */
+	@Override
 	public boolean isSecure()
 	{
 		return secure;
@@ -1166,6 +1213,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 *            The role name
 	 * @return Always false
 	 */
+	@Override
 	public boolean isUserInRole(String name)
 	{
 		return false;
@@ -1177,6 +1225,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @param name
 	 *            The name of the attribute
 	 */
+	@Override
 	public void removeAttribute(final String name)
 	{
 		attributes.remove(name);
@@ -1190,6 +1239,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @param o
 	 *            The value to set
 	 */
+	@Override
 	public void setAttribute(final String name, final Object o)
 	{
 		attributes.put(name, o);
@@ -1214,6 +1264,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @throws UnsupportedEncodingException
 	 *             If encoding not supported
 	 */
+	@Override
 	public void setCharacterEncoding(final String encoding) throws UnsupportedEncodingException
 	{
 		characterEncoding = encoding;
@@ -1602,6 +1653,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * @return local address
 	 */
+	@Override
 	public String getLocalAddr()
 	{
 		return "127.0.0.1";
@@ -1610,6 +1662,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * @return local host name
 	 */
+	@Override
 	public String getLocalName()
 	{
 		return "127.0.0.1";
@@ -1618,6 +1671,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * @return local port
 	 */
+	@Override
 	public int getLocalPort()
 	{
 		return 80;
@@ -1626,6 +1680,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * @return remote port
 	 */
+	@Override
 	public int getRemotePort()
 	{
 		return 80;

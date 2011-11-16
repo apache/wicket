@@ -47,6 +47,7 @@ public class MinimumValidator<Z extends Comparable<Z> & Serializable> extends Be
 		this.minimum = minimum;
 	}
 
+	@Override
 	public void validate(IValidatable<Z> validatable)
 	{
 		Z value = validatable.getValue();

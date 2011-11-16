@@ -106,6 +106,7 @@ public class ResourceLink<T> extends Link<T> implements IResourceListener
 	/**
 	 * @see org.apache.wicket.IResourceListener#onResourceRequested()
 	 */
+	@Override
 	public final void onResourceRequested()
 	{
 

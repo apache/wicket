@@ -27,10 +27,12 @@ import org.apache.wicket.util.listener.ListenerCollection;
 public class BehaviorInstantiationListenerCollection extends
 	ListenerCollection<IBehaviorInstantiationListener> implements IBehaviorInstantiationListener
 {
+	@Override
 	public void onInstantiation(final Behavior behavior)
 	{
 		notify(new INotifier<IBehaviorInstantiationListener>()
 		{
+			@Override
 			public void notify(IBehaviorInstantiationListener listener)
 			{
 				listener.onInstantiation(behavior);

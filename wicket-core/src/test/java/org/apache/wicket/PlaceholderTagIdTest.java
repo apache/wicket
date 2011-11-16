@@ -64,6 +64,7 @@ public class PlaceholderTagIdTest extends WicketTestCase
 			form.add(new RegionBehavior());
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{
@@ -79,6 +80,7 @@ public class PlaceholderTagIdTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public String getAjaxRegionMarkupId(Component component)
 		{
 			return component.getMarkupId() + "_region";

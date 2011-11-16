@@ -132,6 +132,7 @@ public class UrlResourceStream extends AbstractResourceStream
 	 * 
 	 * @throws IOException
 	 */
+	@Override
 	public void close() throws IOException
 	{
 		StreamData data = getData(false);
@@ -147,6 +148,7 @@ public class UrlResourceStream extends AbstractResourceStream
 	 * @return A readable input stream for this resource.
 	 * @throws ResourceStreamNotFoundException
 	 */
+	@Override
 	public InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
 		try
@@ -236,6 +238,7 @@ public class UrlResourceStream extends AbstractResourceStream
 		return Bytes.bytes(length);
 	}
 
+	@Override
 	public String locationAsString()
 	{
 		return url.toExternalForm();

@@ -104,6 +104,7 @@ public class MockPageParametersAware extends WebPage
 		return textField;
 	}
 
+	@Override
 	public IResourceStream getMarkupResourceStream(MarkupContainer container,
 		Class<?> containerClass)
 	{

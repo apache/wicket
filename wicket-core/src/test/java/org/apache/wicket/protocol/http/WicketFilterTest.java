@@ -148,6 +148,7 @@ public class WicketFilterTest extends Assert
 			MockHttpServletResponse response = new MockHttpServletResponse(request);
 			filter.doFilter(request, response, new FilterChain()
 			{
+				@Override
 				public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse)
 					throws IOException, ServletException
 				{
@@ -210,21 +211,25 @@ public class WicketFilterTest extends Assert
 			initParameters.put(WicketFilter.IGNORE_PATHS_PARAM, "/css,/js,images");
 		}
 
+		@Override
 		public String getFilterName()
 		{
 			return getClass().getName();
 		}
 
+		@Override
 		public ServletContext getServletContext()
 		{
 			return new MockServletContext(null, null);
 		}
 
+		@Override
 		public String getInitParameter(String s)
 		{
 			return initParameters.get(s);
 		}
 
+		@Override
 		public Enumeration<String> getInitParameterNames()
 		{
 			throw new UnsupportedOperationException("Not implemented");
@@ -235,12 +240,14 @@ public class WicketFilterTest extends Assert
 	 */
 	public static class FilterTestingApplicationFactory implements IWebApplicationFactory
 	{
+		@Override
 		public WebApplication createApplication(WicketFilter filter)
 		{
 			return application;
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void destroy(WicketFilter filter)
 		{
 		}
@@ -275,6 +282,7 @@ public class WicketFilterTest extends Assert
 			this.successCount = successCount;
 		}
 
+		@Override
 		public void run()
 		{
 			try

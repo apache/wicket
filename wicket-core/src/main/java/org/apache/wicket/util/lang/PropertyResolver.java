@@ -737,6 +737,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Field getField()
 		{
 			return null;
@@ -745,6 +746,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Method getGetter()
 		{
 			return null;
@@ -753,6 +755,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Method getSetter()
 		{
 			return null;
@@ -761,6 +764,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Class<?> getTargetClass()
 		{
 			return null;
@@ -779,6 +783,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object getValue(final Object object)
 		{
 			return ((Map<?, ?>)object).get(key);
@@ -787,6 +792,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		@SuppressWarnings("unchecked")
 		public void setValue(final Object object, final Object value,
 			final PropertyResolverConverter converter)
@@ -797,6 +803,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object newValue(final Object object)
 		{
 			// Map can't make a newValue or should it look what is more in the
@@ -817,6 +824,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object getValue(final Object object)
 		{
 			if (((List<?>)object).size() <= index)
@@ -829,6 +837,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		@SuppressWarnings("unchecked")
 		public void setValue(final Object object, final Object value,
 			final PropertyResolverConverter converter)
@@ -856,6 +865,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object newValue(Object object)
 		{
 			// List can't make a newValue or should it look what is more in the
@@ -878,6 +888,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object getValue(Object object)
 		{
 			if (Array.getLength(object) > index)
@@ -890,6 +901,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
 			value = converter.convert(value, clzComponentType);
@@ -899,6 +911,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object newValue(Object object)
 		{
 			Object value = null;
@@ -934,6 +947,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object getValue(final Object object)
 		{
 			return Array.getLength(object);
@@ -942,6 +956,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void setValue(final Object object, final Object value,
 			final PropertyResolverConverter converter)
 		{
@@ -951,6 +966,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object newValue(final Object object)
 		{
 			throw new WicketRuntimeException("Can't get a new value from a length of an array: " +
@@ -998,6 +1014,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object getValue(Object object)
 		{
 			Object ret = null;
@@ -1021,6 +1038,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void setValue(final Object object, final Object value,
 			final PropertyResolverConverter converter)
 		{
@@ -1071,6 +1089,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object newValue(Object object)
 		{
 			if (setMethod == null)
@@ -1116,6 +1135,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public final Object getValue(final Object object)
 		{
 			Object ret = null;
@@ -1141,6 +1161,7 @@ public final class PropertyResolver
 		 * @param value
 		 * @param converter
 		 */
+		@Override
 		public final void setValue(final Object object, final Object value,
 			PropertyResolverConverter converter)
 		{
@@ -1264,6 +1285,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object newValue(Object object)
 		{
 			if (setMethod == null)
@@ -1345,6 +1367,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object getValue(final Object object)
 		{
 			try
@@ -1361,6 +1384,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object newValue(final Object object)
 		{
 			Class<?> clz = field.getType();
@@ -1380,6 +1404,7 @@ public final class PropertyResolver
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void setValue(final Object object, Object value,
 			final PropertyResolverConverter converter)
 		{
@@ -1502,11 +1527,13 @@ public final class PropertyResolver
 	{
 		private final ConcurrentHashMap<Class<?>, Map<String, IGetAndSet>> map = Generics.newConcurrentHashMap(16);
 
+		@Override
 		public Map<String, IGetAndSet> get(Class<?> clz)
 		{
 			return map.get(clz);
 		}
 
+		@Override
 		public void put(Class<?> clz, Map<String, IGetAndSet> values)
 		{
 			map.put(clz, values);

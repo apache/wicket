@@ -95,6 +95,7 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 	/**
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
+	@Override
 	public final List<FeedbackMessage> getObject()
 	{
 		if (messages == null)
@@ -163,6 +164,7 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 	 * 
 	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
 	 */
+	@Override
 	public void setObject(List<FeedbackMessage> object)
 	{
 	}
@@ -171,6 +173,7 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 	 * 
 	 * @see org.apache.wicket.model.IDetachable#detach()
 	 */
+	@Override
 	public void detach()
 	{
 		messages = null;

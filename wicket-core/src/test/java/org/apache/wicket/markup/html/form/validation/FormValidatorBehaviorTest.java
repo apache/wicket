@@ -152,11 +152,13 @@ public class FormValidatorBehaviorTest extends WicketTestCase
 			tag.put("foo", "bar");
 		}
 
+		@Override
 		public FormComponent<?>[] getDependentFormComponents()
 		{
 			return new FormComponent[] { field };
 		}
 
+		@Override
 		public void validate(Form<?> form)
 		{
 			String value = field.getConvertedInput();
@@ -185,11 +187,13 @@ public class FormValidatorBehaviorTest extends WicketTestCase
 			this.field = field;
 		}
 
+		@Override
 		public FormComponent<?>[] getDependentFormComponents()
 		{
 			return new FormComponent[] { field };
 		}
 
+		@Override
 		public void validate(Form<?> form)
 		{
 			String value = field.getConvertedInput();
@@ -221,6 +225,7 @@ public class FormValidatorBehaviorTest extends WicketTestCase
 			form.add(name);
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

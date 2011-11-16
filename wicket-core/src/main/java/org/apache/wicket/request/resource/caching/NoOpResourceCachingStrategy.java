@@ -34,14 +34,17 @@ public class NoOpResourceCachingStrategy implements IResourceCachingStrategy
 	 */
 	public static final IResourceCachingStrategy INSTANCE = new NoOpResourceCachingStrategy();
 
+	@Override
 	public void decorateUrl(ResourceUrl url, IStaticCacheableResource resource)
 	{
 	}
 
+	@Override
 	public void undecorateUrl(ResourceUrl url)
 	{
 	}
 
+	@Override
 	public void decorateResponse(AbstractResource.ResourceResponse response, IStaticCacheableResource resource)
 	{
 	}

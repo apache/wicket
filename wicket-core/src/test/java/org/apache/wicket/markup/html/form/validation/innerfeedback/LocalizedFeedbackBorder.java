@@ -45,6 +45,7 @@ class LocalizedFeedbackBorder extends FormComponentFeedbackBorder
 					.getFeedbackMessages()
 					.hasMessage(new IFeedbackMessageFilter()
 					{
+						@Override
 						public boolean accept(FeedbackMessage message)
 						{
 							return feedback.getFilter().accept(message) && message.isError();

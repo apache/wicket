@@ -121,6 +121,7 @@ public class RenderPageRequestHandler
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public Class<? extends IRequestablePage> getPageClass()
 	{
 		return pageProvider.getPageClass();
@@ -129,18 +130,21 @@ public class RenderPageRequestHandler
 	/**
 	 * @see org.apache.wicket.request.handler.IPageRequestHandler#getPageId()
 	 */
+	@Override
 	public Integer getPageId()
 	{
 		return pageProvider.getPageId();
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public PageParameters getPageParameters()
 	{
 		return pageProvider.getPageParameters();
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void detach(IRequestCycle requestCycle)
 	{
 		if (logData == null)
@@ -149,29 +153,34 @@ public class RenderPageRequestHandler
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public PageLogData getLogData()
 	{
 		return logData;
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public IRequestablePage getPage()
 	{
 		return pageProvider.getPageInstance();
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void respond(IRequestCycle requestCycle)
 	{
 		PageRenderer renderer = Application.get().getPageRendererProvider().get(this);
 		renderer.respond((RequestCycle)requestCycle);
 	}
 
+	@Override
 	public final boolean isPageInstanceCreated()
 	{
 		return pageProvider.hasPageInstance();
 	}
 
+	@Override
 	public final Integer getRenderCount()
 	{
 		return pageProvider.getRenderCount();

@@ -155,6 +155,7 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink
 	 * 
 	 * @param target
 	 */
+	@Override
 	public abstract void onClick(final AjaxRequestTarget target);
 
 	/**

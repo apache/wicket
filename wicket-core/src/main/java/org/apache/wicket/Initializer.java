@@ -31,6 +31,7 @@ public class Initializer implements IInitializer
 	/**
 	 * @see org.apache.wicket.IInitializer#init(org.apache.wicket.Application)
 	 */
+	@Override
 	public void init(Application application)
 	{
 		// Register listener interfaces explicitly (even though they implicitly
@@ -56,6 +57,7 @@ public class Initializer implements IInitializer
 	/**
 	 * @see org.apache.wicket.IInitializer#destroy(org.apache.wicket.Application)
 	 */
+	@Override
 	public void destroy(Application application)
 	{
 	}

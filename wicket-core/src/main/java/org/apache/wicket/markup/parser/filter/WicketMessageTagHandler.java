@@ -148,6 +148,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 		}
 	}
 
+	@Override
 	public Component resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
 		// localize any raw markup that has wicket:message attrs

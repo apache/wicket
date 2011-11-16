@@ -147,6 +147,7 @@ public class ResourceNameIterator implements Iterator<String>
 	/**
 	 * @see java.util.Iterator#hasNext()
 	 */
+	@Override
 	public boolean hasNext()
 	{
 		// Most inner loop. Loop through all extensions provided
@@ -209,6 +210,7 @@ public class ResourceNameIterator implements Iterator<String>
 	/**
 	 * @see java.util.Iterator#next()
 	 */
+	@Override
 	public String next()
 	{
 		if (extensionsIterator != null)
@@ -277,6 +279,7 @@ public class ResourceNameIterator implements Iterator<String>
 	/**
 	 * @see java.util.Iterator#remove()
 	 */
+	@Override
 	public void remove()
 	{
 		// ignore

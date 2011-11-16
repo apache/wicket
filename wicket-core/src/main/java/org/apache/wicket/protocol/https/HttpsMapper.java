@@ -86,6 +86,7 @@ public class HttpsMapper implements IRequestMapper
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IRequestHandler mapRequest(final Request request)
 	{
 		IRequestHandler requestHandler = delegate.mapRequest(request);
@@ -112,6 +113,7 @@ public class HttpsMapper implements IRequestMapper
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int getCompatibilityScore(final Request request)
 	{
 		return delegate.getCompatibilityScore(request);
@@ -120,6 +122,7 @@ public class HttpsMapper implements IRequestMapper
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Url mapHandler(IRequestHandler requestHandler)
 	{
 		Url url = delegate.mapHandler(requestHandler);

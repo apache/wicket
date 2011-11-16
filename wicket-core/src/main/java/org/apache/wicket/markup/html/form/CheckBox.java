@@ -71,6 +71,7 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 	/**
 	 * @see org.apache.wicket.markup.html.form.IOnChangeListener#onSelectionChanged()
 	 */
+	@Override
 	public void onSelectionChanged()
 	{
 		convertInput();
@@ -220,6 +221,7 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 		 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
 		 *      java.util.Locale)
 		 */
+		@Override
 		public Boolean convertToObject(String value, Locale locale)
 		{
 			if ("on".equals(value) || "true".equals(value))
@@ -236,6 +238,7 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 		 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object,
 		 *      java.util.Locale)
 		 */
+		@Override
 		public String convertToString(Boolean value, Locale locale)
 		{
 			return value.toString();

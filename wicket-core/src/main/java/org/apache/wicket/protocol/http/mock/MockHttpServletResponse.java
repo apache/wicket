@@ -98,6 +98,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * @param cookie
 	 *            The cookie to add
 	 */
+	@Override
 	public void addCookie(final Cookie cookie)
 	{
 		// remove any potential duplicates
@@ -113,6 +114,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * @param l
 	 *            The long value
 	 */
+	@Override
 	public void addDateHeader(String name, long l)
 	{
 		DateFormat df = DateFormat.getDateInstance(DateFormat.FULL);
@@ -127,6 +129,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * @param value
 	 *            The value for the header
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void addHeader(final String name, final String value)
 	{
@@ -147,6 +150,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * @param i
 	 *            The value
 	 */
+	@Override
 	public void addIntHeader(final String name, final int i)
 	{
 		addHeader(name, "" + i);
@@ -159,6 +163,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 *            The name to check
 	 * @return Whether header in response or not
 	 */
+	@Override
 	public boolean containsHeader(final String name)
 	{
 		return headers.containsKey(name);
@@ -172,6 +177,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 *            The url to encode
 	 * @return The encoded url
 	 */
+	@Override
 	public String encodeRedirectUrl(final String url)
 	{
 		return url;
@@ -185,6 +191,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 *            The url to encode
 	 * @return The encoded url
 	 */
+	@Override
 	public String encodeRedirectURL(final String url)
 	{
 		return url;
@@ -197,6 +204,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 *            The url to encode
 	 * @return The encoded url
 	 */
+	@Override
 	public String encodeUrl(final String url)
 	{
 		return url;
@@ -209,6 +217,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 *            The url to encode
 	 * @return The encoded url
 	 */
+	@Override
 	public String encodeURL(final String url)
 	{
 		return url;
@@ -219,6 +228,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * 
 	 * @throws IOException
 	 */
+	@Override
 	public void flushBuffer() throws IOException
 	{
 	}
@@ -238,6 +248,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * 
 	 * @return The buffer size
 	 */
+	@Override
 	public int getBufferSize()
 	{
 		if (mode == MODE_NONE)
@@ -259,6 +270,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * 
 	 * @return The character encoding
 	 */
+	@Override
 	public String getCharacterEncoding()
 	{
 		return characterEncoding;
@@ -338,6 +350,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * 
 	 * @return The locale
 	 */
+	@Override
 	public Locale getLocale()
 	{
 		return locale;
@@ -348,6 +361,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * 
 	 * @return The binary output stream.
 	 */
+	@Override
 	public ServletOutputStream getOutputStream()
 	{
 		if (mode == MODE_TEXT)
@@ -385,6 +399,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * @throws IOException
 	 *             Not used
 	 */
+	@Override
 	public PrintWriter getWriter() throws IOException
 	{
 		if (mode == MODE_BINARY)
@@ -440,6 +455,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * 
 	 * @return Always false
 	 */
+	@Override
 	public boolean isCommitted()
 	{
 		return false;
@@ -468,6 +484,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	/**
 	 * Delegate to initialize method.
 	 */
+	@Override
 	public void reset()
 	{
 		initialize();
@@ -476,6 +493,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	/**
 	 * Clears the buffer.
 	 */
+	@Override
 	public void resetBuffer()
 	{
 		if (mode == MODE_BINARY)
@@ -496,6 +514,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * @throws IOException
 	 *             Not used
 	 */
+	@Override
 	public void sendError(final int code) throws IOException
 	{
 		status = code;
@@ -512,6 +531,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * @throws IOException
 	 *             Not used
 	 */
+	@Override
 	public void sendError(final int code, final String msg) throws IOException
 	{
 		status = code;
@@ -568,6 +588,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * @throws IOException
 	 *             Not used
 	 */
+	@Override
 	public void sendRedirect(String location) throws IOException
 	{
 		redirectLocation = location;
@@ -579,6 +600,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * @param size
 	 *            The size
 	 */
+	@Override
 	public void setBufferSize(final int size)
 	{
 	}
@@ -589,6 +611,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * @param characterEncoding
 	 *            The character encoding
 	 */
+	@Override
 	public void setCharacterEncoding(final String characterEncoding)
 	{
 		this.characterEncoding = characterEncoding;
@@ -600,6 +623,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * @param length
 	 *            The length
 	 */
+	@Override
 	public void setContentLength(final int length)
 	{
 		setIntHeader("Content-Length", length);
@@ -611,6 +635,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * @param type
 	 *            The content type
 	 */
+	@Override
 	public void setContentType(final String type)
 	{
 		setHeader("Content-Type", type);
@@ -619,6 +644,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	/**
 	 * @return value of content-type header
 	 */
+	@Override
 	public String getContentType()
 	{
 		return getHeader("Content-Type");
@@ -632,6 +658,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * @param l
 	 *            The long value
 	 */
+	@Override
 	public void setDateHeader(final String name, final long l)
 	{
 		setHeader(name, formatDate(l));
@@ -733,6 +760,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * @param value
 	 *            The value for the header
 	 */
+	@Override
 	public void setHeader(final String name, final String value)
 	{
 		List<String> l = new ArrayList<String>(1);
@@ -748,6 +776,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * @param i
 	 *            The value
 	 */
+	@Override
 	public void setIntHeader(final String name, final int i)
 	{
 		setHeader(name, "" + i);
@@ -759,6 +788,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * @param locale
 	 *            The locale
 	 */
+	@Override
 	public void setLocale(final Locale locale)
 	{
 		this.locale = locale;
@@ -770,6 +800,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * @param status
 	 *            The status
 	 */
+	@Override
 	public void setStatus(final int status)
 	{
 		this.status = status;
@@ -784,6 +815,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 *            The message
 	 * @deprecated
 	 */
+	@Override
 	@Deprecated
 	public void setStatus(final int status, final String msg)
 	{
@@ -825,6 +857,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 		return Collections.singletonList(headers.get(name).toString());
 	}
 
+	@Override
 	public void writeMetaData(WebResponse webResponse)
 	{
 		for (Cookie cookie : cookies)

@@ -45,6 +45,7 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
 	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
+	@Override
 	public Component resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
 		Component resolvedComponent = getParent().get(tag.getId());

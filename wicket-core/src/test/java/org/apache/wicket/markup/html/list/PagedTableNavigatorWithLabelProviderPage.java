@@ -75,6 +75,7 @@ public class PagedTableNavigatorWithLabelProviderPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public String getPageLabel(int page)
 			{
 				int size = listview.getList().size();

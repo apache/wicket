@@ -48,6 +48,7 @@ public class EmptyDataProvider<T> implements IDataProvider<T>
 	/**
 	 * @see IDataProvider#iterator(int, int)
 	 */
+	@Override
 	public Iterator<T> iterator(int first, int count)
 	{
 		List<T> list = Collections.emptyList();
@@ -57,6 +58,7 @@ public class EmptyDataProvider<T> implements IDataProvider<T>
 	/**
 	 * @see IDataProvider#size()
 	 */
+	@Override
 	public int size()
 	{
 		return 0;
@@ -65,6 +67,7 @@ public class EmptyDataProvider<T> implements IDataProvider<T>
 	/**
 	 * @see IDataProvider#model(Object)
 	 */
+	@Override
 	public IModel<T> model(Object object)
 	{
 		return null;
@@ -73,6 +76,7 @@ public class EmptyDataProvider<T> implements IDataProvider<T>
 	/**
 	 * @see org.apache.wicket.model.IDetachable#detach()
 	 */
+	@Override
 	public void detach()
 	{
 	}

@@ -455,6 +455,7 @@ public class ComponentEventsTest
 			super.init();
 			setRequestCycleProvider(new IRequestCycleProvider()
 			{
+				@Override
 				public RequestCycle get(RequestCycleContext context)
 				{
 					return new TestRequestCycle(context);
@@ -462,6 +463,7 @@ public class ComponentEventsTest
 			});
 		}
 
+		@Override
 		public int getSequence()
 		{
 			return sequence;
@@ -480,6 +482,7 @@ public class ComponentEventsTest
 		}
 
 
+		@Override
 		public int getSequence()
 		{
 			return sequence;
@@ -508,6 +511,7 @@ public class ComponentEventsTest
 		}
 
 
+		@Override
 		public int getSequence()
 		{
 			return sequence;
@@ -538,6 +542,7 @@ public class ComponentEventsTest
 		}
 
 
+		@Override
 		public int getSequence()
 		{
 			return sequence;
@@ -584,6 +589,7 @@ public class ComponentEventsTest
 		}
 
 
+		@Override
 		public int getSequence()
 		{
 			return sequence;
@@ -615,6 +621,7 @@ public class ComponentEventsTest
 		}
 
 
+		@Override
 		public int getSequence()
 		{
 			return sequence;
@@ -644,6 +651,7 @@ public class ComponentEventsTest
 		}
 
 
+		@Override
 		public int getSequence()
 		{
 			return sequence;

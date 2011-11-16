@@ -38,10 +38,12 @@ public class Log4jEventHistory extends AppenderSkeleton
 		return history;
 	}
 
+	@Override
 	public void close()
 	{
 	}
 
+	@Override
 	public boolean requiresLayout()
 	{
 		return false;

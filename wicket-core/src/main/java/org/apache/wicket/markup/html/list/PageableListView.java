@@ -81,6 +81,7 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	 * 
 	 * @return Returns the currentPage.
 	 */
+	@Override
 	public final int getCurrentPage()
 	{
 		// If first cell is out of range, bring page back into range
@@ -97,6 +98,7 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	 * 
 	 * @return The number of pages in this list view
 	 */
+	@Override
 	public final int getPageCount()
 	{
 		return ((getItemCount() + itemsPerPage) - 1) / itemsPerPage;
@@ -107,6 +109,7 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	 * 
 	 * @return the maximum number of rows on each page.
 	 */
+	@Override
 	public final int getItemsPerPage()
 	{
 		return itemsPerPage;
@@ -140,6 +143,7 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	/**
 	 * @see org.apache.wicket.markup.html.navigation.paging.IPageableItems#getItemCount()
 	 */
+	@Override
 	public int getItemCount()
 	{
 		return getList().size();
@@ -166,6 +170,7 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	 * @param currentPage
 	 *            The currentPage to set.
 	 */
+	@Override
 	public final void setCurrentPage(int currentPage)
 	{
 		if (currentPage < 0)

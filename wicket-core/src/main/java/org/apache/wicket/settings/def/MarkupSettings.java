@@ -71,6 +71,7 @@ public class MarkupSettings implements IMarkupSettings
 	/**
 	 * @see org.apache.wicket.settings.IMarkupSettings#getAutomaticLinking()
 	 */
+	@Override
 	public boolean getAutomaticLinking()
 	{
 		return automaticLinking;
@@ -79,6 +80,7 @@ public class MarkupSettings implements IMarkupSettings
 	/**
 	 * @see org.apache.wicket.settings.IMarkupSettings#getCompressWhitespace()
 	 */
+	@Override
 	public boolean getCompressWhitespace()
 	{
 		return compressWhitespace;
@@ -87,6 +89,7 @@ public class MarkupSettings implements IMarkupSettings
 	/**
 	 * @see org.apache.wicket.settings.IMarkupSettings#getDefaultAfterDisabledLink()
 	 */
+	@Override
 	public String getDefaultAfterDisabledLink()
 	{
 		return defaultAfterDisabledLink;
@@ -95,6 +98,7 @@ public class MarkupSettings implements IMarkupSettings
 	/**
 	 * @see org.apache.wicket.settings.IMarkupSettings#getDefaultBeforeDisabledLink()
 	 */
+	@Override
 	public String getDefaultBeforeDisabledLink()
 	{
 		return defaultBeforeDisabledLink;
@@ -103,6 +107,7 @@ public class MarkupSettings implements IMarkupSettings
 	/**
 	 * @see org.apache.wicket.settings.IMarkupSettings#getDefaultMarkupEncoding()
 	 */
+	@Override
 	public String getDefaultMarkupEncoding()
 	{
 		return defaultMarkupEncoding;
@@ -111,6 +116,7 @@ public class MarkupSettings implements IMarkupSettings
 	/**
 	 * @see org.apache.wicket.settings.IMarkupSettings#getMarkupFactory()
 	 */
+	@Override
 	public MarkupFactory getMarkupFactory()
 	{
 		if (markupFactory == null)
@@ -123,6 +129,7 @@ public class MarkupSettings implements IMarkupSettings
 	/**
 	 * @see org.apache.wicket.settings.IMarkupSettings#getStripComments()
 	 */
+	@Override
 	public boolean getStripComments()
 	{
 		return stripComments;
@@ -131,6 +138,7 @@ public class MarkupSettings implements IMarkupSettings
 	/**
 	 * @see org.apache.wicket.settings.IMarkupSettings#getStripWicketTags()
 	 */
+	@Override
 	public boolean getStripWicketTags()
 	{
 		return stripWicketTags;
@@ -139,6 +147,7 @@ public class MarkupSettings implements IMarkupSettings
 	/**
 	 * @see org.apache.wicket.settings.IMarkupSettings#getThrowExceptionOnMissingXmlDeclaration()
 	 */
+	@Override
 	public boolean getThrowExceptionOnMissingXmlDeclaration()
 	{
 		return throwExceptionOnMissingXmlDeclaration;
@@ -147,6 +156,7 @@ public class MarkupSettings implements IMarkupSettings
 	/**
 	 * @see org.apache.wicket.settings.IMarkupSettings#setAutomaticLinking(boolean)
 	 */
+	@Override
 	public void setAutomaticLinking(boolean automaticLinking)
 	{
 		this.automaticLinking = automaticLinking;
@@ -155,6 +165,7 @@ public class MarkupSettings implements IMarkupSettings
 	/**
 	 * @see org.apache.wicket.settings.IMarkupSettings#setCompressWhitespace(boolean)
 	 */
+	@Override
 	public void setCompressWhitespace(final boolean compressWhitespace)
 	{
 		this.compressWhitespace = compressWhitespace;
@@ -163,6 +174,7 @@ public class MarkupSettings implements IMarkupSettings
 	/**
 	 * @see org.apache.wicket.settings.IMarkupSettings#setDefaultAfterDisabledLink(java.lang.String)
 	 */
+	@Override
 	public void setDefaultAfterDisabledLink(final String defaultAfterDisabledLink)
 	{
 		this.defaultAfterDisabledLink = defaultAfterDisabledLink;
@@ -171,6 +183,7 @@ public class MarkupSettings implements IMarkupSettings
 	/**
 	 * @see org.apache.wicket.settings.IMarkupSettings#setDefaultBeforeDisabledLink(java.lang.String)
 	 */
+	@Override
 	public void setDefaultBeforeDisabledLink(String defaultBeforeDisabledLink)
 	{
 		this.defaultBeforeDisabledLink = defaultBeforeDisabledLink;
@@ -179,6 +192,7 @@ public class MarkupSettings implements IMarkupSettings
 	/**
 	 * @see org.apache.wicket.settings.IMarkupSettings#setDefaultMarkupEncoding(java.lang.String)
 	 */
+	@Override
 	public void setDefaultMarkupEncoding(final String encoding)
 	{
 		defaultMarkupEncoding = encoding;
@@ -187,6 +201,7 @@ public class MarkupSettings implements IMarkupSettings
 	/**
 	 * @see org.apache.wicket.settings.IMarkupSettings#setMarkupFactory(org.apache.wicket.markup.MarkupFactory)
 	 */
+	@Override
 	public void setMarkupFactory(final MarkupFactory factory)
 	{
 		Args.notNull(factory, "markup factory");
@@ -196,6 +211,7 @@ public class MarkupSettings implements IMarkupSettings
 	/**
 	 * @see org.apache.wicket.settings.IMarkupSettings#setStripComments(boolean)
 	 */
+	@Override
 	public void setStripComments(boolean stripComments)
 	{
 		this.stripComments = stripComments;
@@ -204,6 +220,7 @@ public class MarkupSettings implements IMarkupSettings
 	/**
 	 * @see org.apache.wicket.settings.IMarkupSettings#setStripWicketTags(boolean)
 	 */
+	@Override
 	public void setStripWicketTags(boolean stripWicketTags)
 	{
 		this.stripWicketTags = stripWicketTags;
@@ -212,6 +229,7 @@ public class MarkupSettings implements IMarkupSettings
 	/**
 	 * @see org.apache.wicket.settings.IMarkupSettings#setThrowExceptionOnMissingXmlDeclaration(boolean)
 	 */
+	@Override
 	public void setThrowExceptionOnMissingXmlDeclaration(boolean throwException)
 	{
 		throwExceptionOnMissingXmlDeclaration = throwException;

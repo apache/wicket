@@ -59,6 +59,7 @@ public class SystemMapper extends CompoundRequestMapper
 	{
 		return new IProvider<IResourceCachingStrategy>()
 		{
+			@Override
 			public IResourceCachingStrategy get()
 			{
 				return application.getResourceSettings().getCachingStrategy();
@@ -75,6 +76,7 @@ public class SystemMapper extends CompoundRequestMapper
 			this.application = application;
 		}
 
+		@Override
 		public String get()
 		{
 			return application.getResourceSettings().getParentFolderPlaceholder();

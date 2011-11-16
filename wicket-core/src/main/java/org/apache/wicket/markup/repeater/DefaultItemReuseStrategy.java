@@ -48,6 +48,7 @@ public class DefaultItemReuseStrategy implements IItemReuseStrategy
 	 * @see org.apache.wicket.markup.repeater.IItemReuseStrategy#getItems(org.apache.wicket.markup.repeater.IItemFactory,
 	 *      java.util.Iterator, java.util.Iterator)
 	 */
+	@Override
 	public <T> Iterator<Item<T>> getItems(final IItemFactory<T> factory,
 		final Iterator<IModel<T>> newModels, Iterator<Item<T>> existingItems)
 	{
@@ -55,16 +56,19 @@ public class DefaultItemReuseStrategy implements IItemReuseStrategy
 		{
 			private int index = 0;
 
+			@Override
 			public void remove()
 			{
 				throw new UnsupportedOperationException();
 			}
 
+			@Override
 			public boolean hasNext()
 			{
 				return newModels.hasNext();
 			}
 
+			@Override
 			public Item<T> next()
 			{
 				IModel<T> model = newModels.next();

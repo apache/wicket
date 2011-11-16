@@ -199,6 +199,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 							MarkupContainer container = (MarkupContainer)child;
 							container.visitChildren(new IVisitor<Component, Void>()
 							{
+								@Override
 								public void component(final Component component,
 									final IVisit<Void> visit)
 								{
@@ -535,22 +536,26 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	/**
 	 * @return Iterator that iterates through children in the order they were added
 	 */
+	@Override
 	public Iterator<Component> iterator()
 	{
 		return new Iterator<Component>()
 		{
 			int index = 0;
 
+			@Override
 			public boolean hasNext()
 			{
 				return index < children_size();
 			}
 
+			@Override
 			public Component next()
 			{
 				return children_get(index++);
 			}
 
+			@Override
 			public void remove()
 			{
 				final Component removed = children_remove(--index);
@@ -810,6 +815,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		{
 			visitChildren(new IVisitor<Component, Void>()
 			{
+				@Override
 				public void component(final Component component, final IVisit<Void> visit)
 				{
 					IModel<?> compModel = component.getDefaultModel();
@@ -1002,6 +1008,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		super.fireInitialize();
 		visitChildren(new IVisitor<Component, Void>()
 		{
+			@Override
 			public void component(final Component component, final IVisit<Void> visit)
 			{
 				component.fireInitialize();
@@ -1538,6 +1545,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		{
 			page.visitChildren(new IVisitor<Component, Void>()
 			{
+				@Override
 				public void component(Component component, IVisit<Void> visit)
 				{
 					if (Strings.getLevenshteinDistance(id.toLowerCase(), component.getId()
@@ -1806,6 +1814,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		super.onEnabledStateChanged();
 		visitChildren(new IVisitor<Component, Void>()
 		{
+			@Override
 			public void component(Component component, IVisit<Void> visit)
 			{
 				component.clearEnabledInHierarchyCache();
@@ -1819,6 +1828,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		super.onVisibleStateChanged();
 		visitChildren(new IVisitor<Component, Void>()
 		{
+			@Override
 			public void component(Component component, IVisit<Void> visit)
 			{
 				component.clearVisibleInHierarchyCache();
@@ -1855,6 +1865,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 		visitChildren(new IVisitor<Component, Void>()
 		{
+			@Override
 			public void component(final Component component, final IVisit<Void> visit)
 			{
 				// Find out if this component can be rendered

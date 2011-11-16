@@ -51,6 +51,7 @@ public class ComponentInitializationIntegrationTest extends WicketTestCase
 
 		private int count;
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

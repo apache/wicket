@@ -158,6 +158,7 @@ public class PageProvider implements IPageProvider
 	/**
 	 * @see org.apache.wicket.request.handler.IPageProvider#getPageInstance()
 	 */
+	@Override
 	public IRequestablePage getPageInstance()
 	{
 		if (pageInstance == null)
@@ -175,6 +176,7 @@ public class PageProvider implements IPageProvider
 	/**
 	 * @see org.apache.wicket.request.handler.IPageProvider#getPageParameters()
 	 */
+	@Override
 	public PageParameters getPageParameters()
 	{
 		if (pageParameters != null)
@@ -197,6 +199,7 @@ public class PageProvider implements IPageProvider
 	 * 
 	 * @see org.apache.wicket.request.handler.IPageProvider#isNewPageInstance()
 	 */
+	@Override
 	public boolean isNewPageInstance()
 	{
 		boolean isNew = pageInstance == null;
@@ -216,6 +219,7 @@ public class PageProvider implements IPageProvider
 	/**
 	 * @see org.apache.wicket.request.handler.IPageProvider#getPageClass()
 	 */
+	@Override
 	public Class<? extends IRequestablePage> getPageClass()
 	{
 		if (pageClass != null)
@@ -311,6 +315,7 @@ public class PageProvider implements IPageProvider
 	 * {@link #PageProvider(IRequestablePage)} constructor has been used or
 	 * {@link #getPageInstance()} has been called).
 	 */
+	@Override
 	public void detach()
 	{
 		if (pageInstance != null)
@@ -355,11 +360,13 @@ public class PageProvider implements IPageProvider
 	 * 
 	 * @return page id
 	 */
+	@Override
 	public Integer getPageId()
 	{
 		return pageId;
 	}
 
+	@Override
 	public Integer getRenderCount()
 	{
 		return renderCount;

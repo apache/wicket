@@ -58,6 +58,7 @@ public class MarkupVariationTest extends WicketTestCase
 			add(new VariationPanel("p"));
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

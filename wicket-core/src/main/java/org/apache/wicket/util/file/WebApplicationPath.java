@@ -67,6 +67,7 @@ public final class WebApplicationPath implements IResourcePath
 	 * @param path
 	 *            add a path that is lookup through the servlet context
 	 */
+	@Override
 	public void add(String path)
 	{
 		final Folder folder = new Folder(path);
@@ -92,6 +93,7 @@ public final class WebApplicationPath implements IResourcePath
 	 * 
 	 * @see org.apache.wicket.util.file.IResourceFinder#find(Class, String)
 	 */
+	@Override
 	public IResourceStream find(final Class<?> clazz, final String pathname)
 	{
 		for (Folder folder : folders)

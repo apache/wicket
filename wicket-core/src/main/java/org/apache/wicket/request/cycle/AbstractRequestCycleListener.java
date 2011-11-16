@@ -25,40 +25,49 @@ import org.apache.wicket.request.Url;
  */
 public abstract class AbstractRequestCycleListener implements IRequestCycleListener
 {
+	@Override
 	public void onBeginRequest(RequestCycle cycle)
 	{
 	}
 
+	@Override
 	public void onEndRequest(RequestCycle cycle)
 	{
 	}
 
+	@Override
 	public void onDetach(RequestCycle cycle)
 	{
 	}
 
+	@Override
 	public void onRequestHandlerScheduled(RequestCycle cycle, IRequestHandler handler)
 	{
 	}
 
+	@Override
 	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
 	{
 	}
 
+	@Override
 	public IRequestHandler onException(RequestCycle cycle, Exception ex)
 	{
 		return null;
 	}
 
+	@Override
 	public void onExceptionRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler,
 		Exception exception)
 	{
 	}
 
+	@Override
 	public void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler)
 	{
 	}
 
+	@Override
 	public void onUrlMapped(RequestCycle cycle, IRequestHandler handler, Url url)
 	{
 	}

@@ -159,6 +159,7 @@ public class Model<T extends Serializable> implements IModel<T>
 	/**
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
+	@Override
 	public T getObject()
 	{
 		return object;
@@ -172,6 +173,7 @@ public class Model<T extends Serializable> implements IModel<T>
 	 *            the model object
 	 * @see org.apache.wicket.model.IModel#setObject(Object)
 	 */
+	@Override
 	public void setObject(final T object)
 	{
 		if (object != null)
@@ -187,6 +189,7 @@ public class Model<T extends Serializable> implements IModel<T>
 	/**
 	 * @see org.apache.wicket.model.IDetachable#detach()
 	 */
+	@Override
 	public void detach()
 	{
 		if (object instanceof IDetachable)

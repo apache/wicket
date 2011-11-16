@@ -82,6 +82,7 @@ public class ComponentTagAttributeEscapingTest extends WicketTestCase
 			});
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

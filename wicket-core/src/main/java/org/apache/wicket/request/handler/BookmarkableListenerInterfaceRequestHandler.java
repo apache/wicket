@@ -79,11 +79,13 @@ public class BookmarkableListenerInterfaceRequestHandler
 	/**
 	 * @see org.apache.wicket.request.handler.IComponentRequestHandler#getComponent()
 	 */
+	@Override
 	public IRequestableComponent getComponent()
 	{
 		return pageComponentProvider.getComponent();
 	}
 
+	@Override
 	public final String getComponentPath()
 	{
 		return pageComponentProvider.getComponentPath();
@@ -92,6 +94,7 @@ public class BookmarkableListenerInterfaceRequestHandler
 	/**
 	 * @see org.apache.wicket.request.handler.IPageRequestHandler#getPage()
 	 */
+	@Override
 	public IRequestablePage getPage()
 	{
 		return pageComponentProvider.getPageInstance();
@@ -100,6 +103,7 @@ public class BookmarkableListenerInterfaceRequestHandler
 	/**
 	 * @see org.apache.wicket.request.handler.IPageClassRequestHandler#getPageClass()
 	 */
+	@Override
 	public Class<? extends IRequestablePage> getPageClass()
 	{
 		return pageComponentProvider.getPageClass();
@@ -108,6 +112,7 @@ public class BookmarkableListenerInterfaceRequestHandler
 	/**
 	 * @see org.apache.wicket.request.handler.IPageRequestHandler#getPageId()
 	 */
+	@Override
 	public Integer getPageId()
 	{
 		return pageComponentProvider.getPageId();
@@ -116,6 +121,7 @@ public class BookmarkableListenerInterfaceRequestHandler
 	/**
 	 * @see org.apache.wicket.request.handler.IPageClassRequestHandler#getPageParameters()
 	 */
+	@Override
 	public PageParameters getPageParameters()
 	{
 		return pageComponentProvider.getPageParameters();
@@ -124,6 +130,7 @@ public class BookmarkableListenerInterfaceRequestHandler
 	/**
 	 * @see org.apache.org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.cycle.RequestCycle)
 	 */
+	@Override
 	public void detach(IRequestCycle requestCycle)
 	{
 		pageComponentProvider.detach();
@@ -153,11 +160,13 @@ public class BookmarkableListenerInterfaceRequestHandler
 	/**
 	 * @see org.apache.org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.cycle.RequestCycle)
 	 */
+	@Override
 	public void respond(IRequestCycle requestCycle)
 	{
 		// nothing to do here, this handler is only used to generate URLs
 	}
 
+	@Override
 	public final boolean isPageInstanceCreated()
 	{
 		// this request handler always operates on a created page instance
@@ -167,6 +176,7 @@ public class BookmarkableListenerInterfaceRequestHandler
 	/**
 	 * @return the render count of the page
 	 */
+	@Override
 	public final Integer getRenderCount()
 	{
 		return pageComponentProvider.getRenderCount();

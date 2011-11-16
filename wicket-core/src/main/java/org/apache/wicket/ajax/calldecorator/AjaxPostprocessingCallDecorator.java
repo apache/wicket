@@ -50,6 +50,7 @@ public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecora
 
 
 	/** {@inheritDoc} */
+	@Override
 	public final CharSequence decorateScript(Component component, CharSequence script)
 	{
 		CharSequence s = (delegate == null) ? script : delegate.decorateScript(component, script);
@@ -57,6 +58,7 @@ public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecora
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public final CharSequence decorateOnSuccessScript(Component component, CharSequence script)
 	{
 		CharSequence s = (delegate == null) ? script : delegate.decorateOnSuccessScript(component,
@@ -65,6 +67,7 @@ public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecora
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public final CharSequence decorateOnFailureScript(Component component, CharSequence script)
 	{
 		CharSequence s = (delegate == null) ? script : delegate.decorateOnFailureScript(component,

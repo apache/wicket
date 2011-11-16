@@ -115,16 +115,19 @@ public abstract class AbstractRequestLogger implements IStagedRequestLogger
 		liveSessions = new ConcurrentHashMap<String, SessionData>();
 	}
 
+	@Override
 	public int getCurrentActiveRequestCount()
 	{
 		return activeRequests.get();
 	}
 
+	@Override
 	public int getPeakActiveRequestCount()
 	{
 		return peakActiveRequests.get();
 	}
 
+	@Override
 	public SessionData[] getLiveSessions()
 	{
 		final SessionData[] sessions = liveSessions.values().toArray(
@@ -133,11 +136,13 @@ public abstract class AbstractRequestLogger implements IStagedRequestLogger
 		return sessions;
 	}
 
+	@Override
 	public int getPeakSessions()
 	{
 		return peakSessions.get();
 	}
 
+	@Override
 	public List<RequestData> getRequests()
 	{
 		synchronized (requestWindow)
@@ -182,23 +187,28 @@ public abstract class AbstractRequestLogger implements IStagedRequestLogger
 		return requestWindow[requestWindow.length - 1] != null;
 	}
 
+	@Override
 	public int getTotalCreatedSessions()
 	{
 		return totalCreatedSessions.get();
 	}
 
+	@Override
 	public void objectCreated(Object value)
 	{
 	}
 
+	@Override
 	public void objectRemoved(Object value)
 	{
 	}
 
+	@Override
 	public void objectUpdated(Object value)
 	{
 	}
 
+	@Override
 	public void requestTime(long timeTaken)
 	{
 		RequestData requestdata = RequestCycle.get().getMetaData(REQUEST_DATA);
@@ -264,6 +274,7 @@ public abstract class AbstractRequestLogger implements IStagedRequestLogger
 		}
 	}
 
+	@Override
 	public void sessionCreated(String sessionId)
 	{
 		liveSessions.put(sessionId, new SessionData(sessionId));
@@ -274,6 +285,7 @@ public abstract class AbstractRequestLogger implements IStagedRequestLogger
 		totalCreatedSessions.incrementAndGet();
 	}
 
+	@Override
 	public void sessionDestroyed(String sessionId)
 	{
 		RequestCycle requestCycle = RequestCycle.get();
@@ -300,6 +312,7 @@ public abstract class AbstractRequestLogger implements IStagedRequestLogger
 		return rd;
 	}
 
+	@Override
 	public void performLogging()
 	{
 		RequestData requestdata = RequestCycle.get().getMetaData(REQUEST_DATA);
@@ -367,6 +380,7 @@ public abstract class AbstractRequestLogger implements IStagedRequestLogger
 		}
 	}
 
+	@Override
 	public long getAverageRequestTime()
 	{
 		synchronized (requestWindow)
@@ -378,6 +392,7 @@ public abstract class AbstractRequestLogger implements IStagedRequestLogger
 		}
 	}
 
+	@Override
 	public long getRequestsPerMinute()
 	{
 		synchronized (requestWindow)
@@ -392,6 +407,7 @@ public abstract class AbstractRequestLogger implements IStagedRequestLogger
 		}
 	}
 
+	@Override
 	public void logEventTarget(IRequestHandler requestHandler)
 	{
 		RequestData requestData = getCurrentRequest();
@@ -401,11 +417,13 @@ public abstract class AbstractRequestLogger implements IStagedRequestLogger
 		}
 	}
 
+	@Override
 	public void logRequestedUrl(String url)
 	{
 		getCurrentRequest().setRequestedUrl(url);
 	}
 
+	@Override
 	public void logResponseTarget(IRequestHandler requestHandler)
 	{
 		RequestData requestData = getCurrentRequest();

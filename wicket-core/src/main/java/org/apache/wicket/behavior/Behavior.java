@@ -224,6 +224,7 @@ public abstract class Behavior
 	 * @param response
 	 *            Response object
 	 */
+	@Override
 	public void renderHead(Component component, IHeaderResponse response)
 	{
 	}
@@ -246,6 +247,7 @@ public abstract class Behavior
 	 * @see org.apache.wicket.IComponentAwareEventSink#onEvent(org.apache.wicket.Component,
 	 *      org.apache.wicket.event.IEvent)
 	 */
+	@Override
 	public void onEvent(Component component, IEvent<?> event)
 	{
 	}

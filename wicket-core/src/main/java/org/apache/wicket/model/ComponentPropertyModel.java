@@ -60,6 +60,7 @@ public class ComponentPropertyModel<T> extends AbstractReadOnlyModel<T>
 	/**
 	 * @see org.apache.wicket.model.IComponentAssignedModel#wrapOnAssignment(org.apache.wicket.Component)
 	 */
+	@Override
 	public IWrapModel<T> wrapOnAssignment(final Component component)
 	{
 		return new AssignmentWrapper<T>(component, propertyName);
@@ -88,6 +89,7 @@ public class ComponentPropertyModel<T> extends AbstractReadOnlyModel<T>
 		/**
 		 * @see org.apache.wicket.model.IWrapModel#getWrappedModel()
 		 */
+		@Override
 		public IModel<T> getWrappedModel()
 		{
 			return ComponentPropertyModel.this;

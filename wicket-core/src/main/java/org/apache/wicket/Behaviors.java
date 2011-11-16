@@ -133,6 +133,7 @@ final class Behaviors implements IDetachable
 	 * component's behaviors after header contribution has been done (which is separated from
 	 * component render).
 	 */
+	@Override
 	public final void detach()
 	{
 		final int len = component.data_length();

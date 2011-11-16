@@ -101,21 +101,25 @@ public class CryptedUrlWebRequestCodingStrategyTest extends WicketTestCase
 	private static class TestCryptFactory implements ICryptFactory
 	{
 
+		@Override
 		public ICrypt newCrypt()
 		{
 			return new ICrypt()
 			{
 
+				@Override
 				public String decryptUrlSafe(String text)
 				{
 					return new String(new Base64(true).decode(text));
 				}
 
+				@Override
 				public String encryptUrlSafe(String plainText)
 				{
 					return new String(new Base64(true).encode(plainText.getBytes()));
 				}
 
+				@Override
 				public void setKey(String key)
 				{
 				}

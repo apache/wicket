@@ -137,6 +137,7 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 	/**
 	 * @see org.apache.wicket.request.handler.IPageAndComponentProvider#getComponent()
 	 */
+	@Override
 	public IRequestableComponent getComponent()
 	{
 		if (component == null)
@@ -173,6 +174,7 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 	/**
 	 * @see org.apache.wicket.request.handler.IPageAndComponentProvider#getComponentPath()
 	 */
+	@Override
 	public String getComponentPath()
 	{
 		if (componentPath != null)

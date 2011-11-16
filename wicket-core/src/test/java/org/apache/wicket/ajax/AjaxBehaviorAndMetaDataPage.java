@@ -43,6 +43,7 @@ public class AjaxBehaviorAndMetaDataPage extends WebPage implements IAjaxIndicat
 
 	}
 
+	@Override
 	public String getAjaxIndicatorMarkupId()
 	{
 		return getMarkupId();

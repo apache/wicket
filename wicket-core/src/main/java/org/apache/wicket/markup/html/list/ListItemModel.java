@@ -53,6 +53,7 @@ public class ListItemModel<T> implements IModel<T>
 	/**
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
+	@Override
 	public T getObject()
 	{
 		return listView.getModelObject().get(index);
@@ -61,6 +62,7 @@ public class ListItemModel<T> implements IModel<T>
 	/**
 	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
 	 */
+	@Override
 	public void setObject(T object)
 	{
 		listView.getModelObject().set(index, object);
@@ -69,6 +71,7 @@ public class ListItemModel<T> implements IModel<T>
 	/**
 	 * @see org.apache.wicket.model.IDetachable#detach()
 	 */
+	@Override
 	public void detach()
 	{
 		// Do nothing. ListView will detach its own model object.

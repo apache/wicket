@@ -106,6 +106,7 @@ public class Validatable<T> implements IValidatable<T>
 	/**
 	 * @see IValidatable#getValue()
 	 */
+	@Override
 	public T getValue()
 	{
 		return value;
@@ -114,6 +115,7 @@ public class Validatable<T> implements IValidatable<T>
 	/**
 	 * @see IValidatable#error(IValidationError)
 	 */
+	@Override
 	public void error(IValidationError error)
 	{
 		if (errors == null)
@@ -144,11 +146,13 @@ public class Validatable<T> implements IValidatable<T>
 	/**
 	 * @see IValidatable#isValid()
 	 */
+	@Override
 	public boolean isValid()
 	{
 		return errors == null;
 	}
 
+	@Override
 	public IModel<T> getModel()
 	{
 		return model;

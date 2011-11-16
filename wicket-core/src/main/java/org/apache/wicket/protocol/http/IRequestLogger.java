@@ -271,6 +271,7 @@ public interface IRequestLogger
 			sessionSize = size;
 		}
 
+		@Override
 		public int compareTo(SessionData sd)
 		{
 			return (int)(sd.lastActive - lastActive);

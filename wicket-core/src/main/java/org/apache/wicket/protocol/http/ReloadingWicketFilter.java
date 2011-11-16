@@ -151,6 +151,7 @@ public class ReloadingWicketFilter extends WicketFilter
 	{
 		reloadingClassLoader.setListener(new IChangeListener()
 		{
+			@Override
 			public void onChange()
 			{
 				// Remove the ModificationWatcher from the current reloading class loader

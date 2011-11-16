@@ -99,6 +99,7 @@ public class PageIdPoliticTest extends TestCase
 			{
 				return new IPageManagerProvider()
 				{
+					@Override
 					public IPageManager get(IPageManagerContext pageManagerContext)
 					{
 						IPageStore pageStore = new DefaultPageStore(new JavaSerializer(
@@ -155,6 +156,7 @@ public class PageIdPoliticTest extends TestCase
 			return Url.parse(eventBehavior.getCallbackUrl().toString(), Charset.forName(encoding));
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

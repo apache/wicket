@@ -53,6 +53,7 @@ public class VisitorTest extends WicketTestCase
 
 		Visits.visit(container, new IVisitor<Component, Void>()
 		{
+			@Override
 			public void component(Component component, IVisit<Void> visit)
 			{
 				path.append(component.getId());
@@ -75,6 +76,7 @@ public class VisitorTest extends WicketTestCase
 
 		container.visitChildren(new IVisitor<Component, Void>()
 		{
+			@Override
 			public void component(Component component, IVisit<Void> visit)
 			{
 				path.append(component.getId());
@@ -95,6 +97,7 @@ public class VisitorTest extends WicketTestCase
 		TestContainer container = new TestContainer();
 		FormComponent.visitComponentsPostOrder(container, new IVisitor<Component, Void>()
 		{
+			@Override
 			public void component(Component component, IVisit<Void> visit)
 			{
 				path.append(component.getId());
@@ -115,6 +118,7 @@ public class VisitorTest extends WicketTestCase
 		TestContainer container = new TestContainer();
 		Object result = container.visitChildren(new IVisitor<Component, String>()
 		{
+			@Override
 			public void component(Component component, IVisit<String> visit)
 			{
 				path.append(component.getId());
@@ -139,6 +143,7 @@ public class VisitorTest extends WicketTestCase
 		TestContainer container = new TestContainer();
 		container.visitChildren(new IVisitor<Component, Void>()
 		{
+			@Override
 			public void component(Component component, IVisit<Void> visit)
 			{
 				path.append(component.getId());
@@ -162,6 +167,7 @@ public class VisitorTest extends WicketTestCase
 		TestContainer container = new TestContainer();
 		container.visitChildren(new IVisitor<Component, Void>()
 		{
+			@Override
 			public void component(Component component, IVisit<Void> visit)
 			{
 				path.append(component.getId());

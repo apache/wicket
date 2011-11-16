@@ -850,6 +850,7 @@ public abstract class WebApplication extends Application
 
 	private static class WebPageRendererProvider implements IPageRendererProvider
 	{
+		@Override
 		public PageRenderer get(RenderPageRequestHandler handler)
 		{
 			return new WebPageRenderer(handler);
@@ -858,6 +859,7 @@ public abstract class WebApplication extends Application
 
 	private static class WebSessionStoreProvider implements IProvider<ISessionStore>
 	{
+		@Override
 		public ISessionStore get()
 		{
 			return new HttpSessionStore();
@@ -900,6 +902,7 @@ public abstract class WebApplication extends Application
 		implements
 			IContextProvider<AjaxRequestTarget, Page>
 	{
+		@Override
 		public AjaxRequestTarget get(Page context)
 		{
 			return new AjaxRequestTarget(context);

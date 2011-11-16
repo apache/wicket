@@ -54,6 +54,7 @@ public class ReuseIfModelsEqualStrategy implements IItemReuseStrategy
 	 * @see org.apache.wicket.markup.repeater.IItemReuseStrategy#getItems(org.apache.wicket.markup.repeater.IItemFactory,
 	 *      java.util.Iterator, java.util.Iterator)
 	 */
+	@Override
 	public <T> Iterator<Item<T>> getItems(final IItemFactory<T> factory,
 		final Iterator<IModel<T>> newModels, Iterator<Item<T>> existingItems)
 	{
@@ -68,11 +69,13 @@ public class ReuseIfModelsEqualStrategy implements IItemReuseStrategy
 		{
 			private int index = 0;
 
+			@Override
 			public boolean hasNext()
 			{
 				return newModels.hasNext();
 			}
 
+			@Override
 			public Item<T> next()
 			{
 				final IModel<T> model = newModels.next();
@@ -93,6 +96,7 @@ public class ReuseIfModelsEqualStrategy implements IItemReuseStrategy
 				return item;
 			}
 
+			@Override
 			public void remove()
 			{
 				throw new UnsupportedOperationException();

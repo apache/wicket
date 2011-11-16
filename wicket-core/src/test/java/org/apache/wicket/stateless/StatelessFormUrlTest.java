@@ -61,6 +61,7 @@ public class StatelessFormUrlTest extends WicketTestCase
 			form.add(submitLink);
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{

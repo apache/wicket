@@ -503,16 +503,19 @@ public class WicketTesterTest extends WicketTestCase
 
 			private String value;
 
+			@Override
 			public String getObject()
 			{
 				return value;
 			}
 
+			@Override
 			public void setObject(String object)
 			{
 				value = object;
 			}
 
+			@Override
 			public void detach()
 			{
 			}

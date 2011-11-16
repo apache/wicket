@@ -287,6 +287,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{

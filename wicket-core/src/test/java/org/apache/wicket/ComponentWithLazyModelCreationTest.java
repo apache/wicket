@@ -100,6 +100,7 @@ public class ComponentWithLazyModelCreationTest extends WicketTestCase
 			add(label);
 		}
 
+		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{
@@ -125,6 +126,7 @@ public class ComponentWithLazyModelCreationTest extends WicketTestCase
 			statefullUrl = component.getRequestCycle().mapUrlFor(handler).toString();
 		}
 
+		@Override
 		public void onRequest()
 		{
 			requested = true;
