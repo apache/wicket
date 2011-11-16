@@ -197,7 +197,7 @@ public class ValidationError implements IValidationError
 
 
 	/**
-	 * Gets error keys.
+	 * Gets error keys
 	 * 
 	 * @return keys
 	 */
@@ -205,12 +205,19 @@ public class ValidationError implements IValidationError
 	{
 		if (keys == null)
 		{
-			return Collections.emptyList();
+			keys = new ArrayList<String>();
 		}
-		else
-		{
-			return Collections.unmodifiableList(keys);
-		}
+		return keys;
+	}
+
+	/**
+	 * Sets error keys
+	 * 
+	 * @param keys
+	 */
+	public void setKeys(List<String> keys)
+	{
+		this.keys = keys;
 	}
 
 	/**
