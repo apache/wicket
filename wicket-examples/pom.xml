@@ -15,8 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.wicket</groupId>
@@ -27,8 +26,10 @@
 	<artifactId>wicket-examples</artifactId>
 	<packaging>war</packaging>
 	<name>Wicket Examples</name>
-	<description>Examples displaying a component reference and
-		several components in action.</description>
+	<description>
+		Examples displaying a component reference and several components in
+		action.
+	</description>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
@@ -109,11 +110,11 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<resources> 
+		<resources>
 			<!-- include all these to be able to view their source -->
-			<resource> 
-				<filtering>false</filtering> 
-				<directory>${basedir}/src/main/java</directory> 
+			<resource>
+				<filtering>false</filtering>
+				<directory>${basedir}/src/main/java</directory>
 				<includes>
 					<include>**/*.java</include>
 					<include>**/*.html</include>
@@ -125,7 +126,7 @@
 					<include>**/*.txt</include>
 					<include>**/*.xml</include>
 					<include>**/*.properties</include>
-				</includes> 
+				</includes>
 			</resource>
 			<resource>
 				<filtering>false</filtering>
@@ -144,13 +145,12 @@
 					<include>**/*.tmpl</include>
 				</includes>
 			</resource>
-		</resources> 
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
-
 					<!--  include the manifest entries so that we can emit the version of the examples. -->
 					<archive>
 						<manifest>
@@ -158,7 +158,6 @@
 							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 						</manifest>
 					</archive>
-            		
 				</configuration>
 			</plugin>
 			<plugin>
