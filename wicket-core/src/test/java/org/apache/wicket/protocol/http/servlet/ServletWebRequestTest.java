@@ -123,7 +123,7 @@ public class ServletWebRequestTest extends Assert
 			}
 
 			@Override
-			protected WebRequest newWebRequest(HttpServletRequest servletRequest, String filterPath)
+			public WebRequest newWebRequest(HttpServletRequest servletRequest, String filterPath)
 			{
 				return new CustomServletWebRequest(servletRequest, filterPath);
 			}

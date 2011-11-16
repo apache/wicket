@@ -402,7 +402,7 @@ public abstract class WebApplication extends Application
 	 *            the filter mapping read from web.xml
 	 * @return a WebRequest object
 	 */
-	protected WebRequest newWebRequest(HttpServletRequest servletRequest, final String filterPath)
+	public WebRequest newWebRequest(HttpServletRequest servletRequest, final String filterPath)
 	{
 		return new ServletWebRequest(servletRequest, filterPath);
 	}
