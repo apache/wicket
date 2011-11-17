@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.examples.resourcedecoration.GroupedAndOrderedResourceReference.ResourceGroup;
 import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.markup.html.WicketEventReference;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -151,7 +151,9 @@ public class GroupingHeaderResponse
 	@Override
 	public void renderOnDomReadyJavaScript(final String javascript)
 	{
-		super.renderJavaScriptReference(WicketEventReference.INSTANCE);
+		super.renderJavaScriptReference(Application.get()
+			.getAjaxSettings()
+			.getWicketEventReference());
 		toJsResponse(new Runnable()
 		{
 			public void run()
@@ -165,7 +167,9 @@ public class GroupingHeaderResponse
 	public void renderOnEventJavaScript(final String target, final String event,
 		final String javascript)
 	{
-		super.renderJavaScriptReference(WicketEventReference.INSTANCE);
+		super.renderJavaScriptReference(Application.get()
+			.getAjaxSettings()
+			.getWicketEventReference());
 		toJsResponse(new Runnable()
 		{
 			public void run()
@@ -178,7 +182,9 @@ public class GroupingHeaderResponse
 	@Override
 	public void renderOnLoadJavaScript(final String javascript)
 	{
-		super.renderJavaScriptReference(WicketEventReference.INSTANCE);
+		super.renderJavaScriptReference(Application.get()
+			.getAjaxSettings()
+			.getWicketEventReference());
 		toJsResponse(new Runnable()
 		{
 			public void run()
