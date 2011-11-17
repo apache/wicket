@@ -87,9 +87,11 @@ public abstract class LabeledWebMarkupContainer extends WebMarkupContainer
 	 * ILabelProvider and still make chaining in FormComponent work properly.
 	 * 
 	 * @param labelModel
+	 * @return {@code this}
 	 */
-	protected void setLabelInternal(IModel<String> labelModel)
+	protected LabeledWebMarkupContainer setLabel(IModel<String> labelModel)
 	{
 		this.labelModel = wrap(labelModel);
+		return this;
 	}
 }

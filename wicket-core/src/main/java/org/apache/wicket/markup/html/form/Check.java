@@ -239,9 +239,10 @@ public class Check<T> extends LabeledWebMarkupContainer
 	 * @param labelModel
 	 * @return this for chaining
 	 */
+	@Override
 	public Check<T> setLabel(IModel<String> labelModel)
 	{
-		setLabelInternal(labelModel);
+		super.setLabel(labelModel);
 		return this;
 	}
 

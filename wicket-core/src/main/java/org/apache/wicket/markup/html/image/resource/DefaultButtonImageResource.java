@@ -232,7 +232,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 * @see RenderedDynamicImageResource#render(Graphics2D)
 	 */
 	@Override
-	protected boolean render(final Graphics2D graphics)
+	protected boolean render(Graphics2D graphics, Attributes attributes)
 	{
 		// Get width and height
 		final int width = getWidth();

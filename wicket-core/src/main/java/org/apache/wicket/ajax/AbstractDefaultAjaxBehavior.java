@@ -234,19 +234,6 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	}
 
 	/**
-	 * @return the name and the type of the channel to use when processing Ajax calls at the client
-	 *         side
-	 * @deprecated Use {@link #getChannel()} instead
-	 */
-	// TODO Wicket.next - Remove this method
-	@Deprecated
-	protected String getChannelName()
-	{
-		AjaxChannel channel = getChannel();
-		return channel != null ? channel.getChannelName() : null;
-	}
-
-	/**
 	 * Provides an AjaxChannel for this Behavior.
 	 * 
 	 * @return an AjaxChannel - Defaults to null.

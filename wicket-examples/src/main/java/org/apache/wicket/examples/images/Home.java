@@ -53,7 +53,7 @@ public final class Home extends WicketExamplePage
 		}
 
 		@Override
-		protected boolean render(Graphics2D graphics)
+		protected boolean render(Graphics2D graphics, Attributes attributes)
 		{
 			drawCircle(graphics);
 			return true;

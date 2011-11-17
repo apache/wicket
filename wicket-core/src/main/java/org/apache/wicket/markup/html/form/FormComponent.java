@@ -995,9 +995,10 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * @param labelModel
 	 * @return this for chaining
 	 */
+	@Override
 	public FormComponent<T> setLabel(IModel<String> labelModel)
 	{
-		setLabelInternal(labelModel);
+		super.setLabel(labelModel);
 		return this;
 	}
 

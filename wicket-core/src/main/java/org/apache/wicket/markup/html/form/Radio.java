@@ -225,9 +225,10 @@ public class Radio<T> extends LabeledWebMarkupContainer
 	 * @param labelModel
 	 * @return this for chaining
 	 */
+	@Override
 	public Radio<T> setLabel(IModel<String> labelModel)
 	{
-		setLabelInternal(labelModel);
+		super.setLabel(labelModel);
 		return this;
 	}
 
