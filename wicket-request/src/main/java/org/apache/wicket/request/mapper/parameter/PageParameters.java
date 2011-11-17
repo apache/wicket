@@ -319,47 +319,6 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	}
 
 	/**
-	 * Represents a named parameter entry. There can be multiple {@link NamedPair}s in
-	 * {@link PageParameters} that have same key.
-	 * 
-	 * @author Matej Knopp
-	 */
-	public static class NamedPair
-	{
-		private final String key;
-		private final String value;
-
-		/**
-		 * Constructor
-		 * 
-		 * @param key
-		 * @param value
-		 */
-		public NamedPair(final String key, final String value)
-		{
-			Args.notEmpty(key, "key");
-			this.key = key;
-			this.value = value;
-		}
-
-		/**
-		 * @return key
-		 */
-		public String getKey()
-		{
-			return key;
-		}
-
-		/**
-		 * @return value
-		 */
-		public String getValue()
-		{
-			return value;
-		}
-	}
-
-	/**
 	 * @see org.apache.wicket.request.mapper.parameter.INamedParameters#getAllNamed()
 	 */
 	public List<NamedPair> getAllNamed()

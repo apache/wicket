@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.wicket.request.IRequestMapper;
-import org.apache.wicket.request.mapper.parameter.PageParameters.NamedPair;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.StringValue;
 
 /**
@@ -30,6 +30,47 @@ import org.apache.wicket.util.string.StringValue;
  */
 public interface INamedParameters
 {
+	/**
+	 * Represents a named parameter entry. There can be multiple {@link NamedPair}s in
+	 * {@link PageParameters} that have same key.
+	 * 
+	 * @author Matej Knopp
+	 */
+	public static class NamedPair
+	{
+		private final String key;
+		private final String value;
+
+		/**
+		 * Constructor
+		 * 
+		 * @param key
+		 * @param value
+		 */
+		public NamedPair(final String key, final String value)
+		{
+			Args.notEmpty(key, "key");
+			this.key = key;
+			this.value = value;
+		}
+
+		/**
+		 * @return key
+		 */
+		public String getKey()
+		{
+			return key;
+		}
+
+		/**
+		 * @return value
+		 */
+		public String getValue()
+		{
+			return value;
+		}
+	}
+
 
 	/**
 	 * Return set of all named parameter names.
