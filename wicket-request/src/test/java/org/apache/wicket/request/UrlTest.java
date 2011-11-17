@@ -526,62 +526,62 @@ public class UrlTest extends Assert
 		Url url = Url.parse("ftp://myhost:8081");
 		checkUrl(url, "ftp", "myhost", 8081, "", "");
 		assertTrue(url.isAbsolute());
-		assertEquals("ftp://myhost:8081/", url.toAbsoluteString());
+		assertEquals("ftp://myhost:8081/", url.toString(StringMode.FULL));
 
 		url = Url.parse("gopher://myhost:8081/foo");
 		checkUrl(url, "gopher", "myhost", 8081, "", "foo");
 		assertTrue(url.isAbsolute());
-		assertEquals("gopher://myhost:8081/foo", url.toAbsoluteString());
+		assertEquals("gopher://myhost:8081/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("http://myhost:80/foo");
 		checkUrl(url, "http", "myhost", 80, "", "foo");
 		assertTrue(url.isAbsolute());
-		assertEquals("http://myhost/foo", url.toAbsoluteString());
+		assertEquals("http://myhost/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("http://myhost:81/foo");
 		checkUrl(url, "http", "myhost", 81, "", "foo");
 		assertTrue(url.isAbsolute());
-		assertEquals("http://myhost:81/foo", url.toAbsoluteString());
+		assertEquals("http://myhost:81/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("http://myhost/foo");
 		checkUrl(url, "http", "myhost", 80, "", "foo");
 		assertTrue(url.isAbsolute());
-		assertEquals("http://myhost/foo", url.toAbsoluteString());
+		assertEquals("http://myhost/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("https://myhost:443/foo");
 		checkUrl(url, "https", "myhost", 443, "", "foo");
 		assertTrue(url.isAbsolute());
-		assertEquals("https://myhost/foo", url.toAbsoluteString());
+		assertEquals("https://myhost/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("HTTPS://myhost/foo:123");
 		checkUrl(url, "https", "myhost", 443, "", "foo:123");
 		assertTrue(url.isAbsolute());
-		assertEquals("https://myhost/foo:123", url.toAbsoluteString());
+		assertEquals("https://myhost/foo:123", url.toString(StringMode.FULL));
 
 		url = Url.parse("ftp://myhost/foo");
 		checkUrl(url, "ftp", "myhost", 21, "", "foo");
 		assertTrue(url.isAbsolute());
-		assertEquals("ftp://myhost/foo", url.toAbsoluteString());
+		assertEquals("ftp://myhost/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("ftp://myhost:21/foo");
 		checkUrl(url, "ftp", "myhost", 21, "", "foo");
 		assertTrue(url.isAbsolute());
-		assertEquals("ftp://myhost/foo", url.toAbsoluteString());
+		assertEquals("ftp://myhost/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("ftp://user:pass@myhost:21/foo");
 		checkUrl(url, "ftp", "user:pass@myhost", 21, "", "foo");
 		assertTrue(url.isAbsolute());
-		assertEquals("ftp://user:pass@myhost/foo", url.toAbsoluteString());
+		assertEquals("ftp://user:pass@myhost/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("FTp://myhost/foo");
 		checkUrl(url, "ftp", "myhost", 21, "", "foo");
 		assertTrue(url.isAbsolute());
-		assertEquals("ftp://myhost/foo", url.toAbsoluteString());
+		assertEquals("ftp://myhost/foo", url.toString(StringMode.FULL));
 
 		url = Url.parse("unknown://myhost/foo");
 		checkUrl(url, "unknown", "myhost", null, "", "foo");
 		assertTrue(url.isAbsolute());
-		assertEquals("unknown://myhost/foo", url.toAbsoluteString());
+		assertEquals("unknown://myhost/foo", url.toString(StringMode.FULL));
 	}
 
 	private void checkUrl(Url url, String protocol, String host, Integer port, String... segments)
