@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.wicket.util.lang.Bytes;
+
 /**
  * This folder subclass provides some type safety and extensibility for "files" that hold other
  * files.
@@ -155,6 +157,14 @@ public class Folder extends File
 	public Folder folder(final String name)
 	{
 		return new Folder(this, name);
+	}
+
+	/**
+	 * @return Disk space free on the partition where this folder lives
+	 */
+	public Bytes freeDiskSpace()
+	{
+		return Bytes.bytes(super.getFreeSpace());
 	}
 
 	/**
