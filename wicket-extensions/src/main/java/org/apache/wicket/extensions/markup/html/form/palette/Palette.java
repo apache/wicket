@@ -492,25 +492,24 @@ public class Palette<T> extends Panel
 	 */
 	protected final void updateModel()
 	{
-		// prepare model
-		modelChanging();
-		Collection<T> model = getModelCollection();
-		model.clear();
-
-		// update model
+		// get the selected choices first, since the available choices might depend on the
+		// previously selected objects.
 		Iterator<T> it = getRecorderComponent().getSelectedChoices();
 
+		modelChanging();
+
+		Collection<T> collection = getModelCollection();
+		collection.clear();
 		while (it.hasNext())
 		{
-			final T selectedChoice = it.next();
-			model.add(selectedChoice);
+			collection.add(it.next());
 		}
+
 		modelChanged();
 
-		// call model.setObject()
 		@SuppressWarnings("unchecked")
 		IModel<Object> defaultModel = (IModel<Object>)getDefaultModel();
-		defaultModel.setObject(model);
+		defaultModel.setObject(collection);
 	}
 
 	/**
