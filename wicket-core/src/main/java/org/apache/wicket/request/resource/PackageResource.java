@@ -356,43 +356,10 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 	/**
 	 * locate resource stream for current resource
-	 * <p/>
-	 * Unfortunately this method has changed from scope 'public' in wicket 1.4 to scope 'protected'
-	 * in wicket 1.5. We realized this too late and now changing it would break the api. So in case
-	 * you need access to this method you have the following options:
-	 * 
-	 * <ul>
-	 * <li>
-	 * copy-paste the code in the method body of {@link #getResourceStream()} and wait for wicket
-	 * 1.6</li>
-	 * <li>
-	 * extend PackageResource, passing the package resources attributes and make
-	 * {@link #getResourceStream()} public again:
-	 * 
-	 * <pre>
-	 * public class MyPackageResource extends PackageResource
-	 * {
-	 * 	public MyPackageResource(Class&lt;?&gt; scope, String name, Locale locale, String style,
-	 * 		String variation)
-	 * 	{
-	 * 		super(scope, name, locale, style, variation);
-	 * 	}
-	 * 
-	 * 	// change access to public here
-	 * 	public IResourceStream getResourceStream()
-	 * 	{
-	 * 		return super.getResourceStream();
-	 * 	}
-	 * }
-	 * </pre>
-	 * 
-	 * </li>
-	 * </ul>
-	 * 
 	 * 
 	 * @return resource stream or <code>null</code> if not found
 	 */
-	protected IResourceStream getResourceStream()
+	public IResourceStream getResourceStream()
 	{
 		// Locate resource
 		return ThreadContext.getApplication()
