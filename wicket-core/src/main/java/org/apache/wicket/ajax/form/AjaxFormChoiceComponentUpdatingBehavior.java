@@ -64,13 +64,13 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 
 		AppendingStringBuffer asb = new AppendingStringBuffer();
 		asb.append("function attachChoiceHandlers(markupId, callbackScript) {\n");
-		asb.append(" var inputNodes = wicketGet(markupId).getElementsByTagName('input');\n");
+		asb.append(" var inputNodes = Wicket.$(markupId).getElementsByTagName('input');\n");
 		asb.append(" for (var i = 0 ; i < inputNodes.length ; i ++) {\n");
 		asb.append(" var inputNode = inputNodes[i];\n");
 		asb.append(" if (!inputNode.type) continue;\n");
 		asb.append(" if (!(inputNode.className.indexOf('wicket-'+markupId)>=0)&&!(inputNode.id.indexOf(markupId+'-')>=0)) continue;\n");
 		asb.append(" var inputType = inputNode.type.toLowerCase();\n");
-		asb.append(" if (inputType == 'checkbox' || inputType == 'radio') {\n");
+		asb.append(" if (inputType === 'checkbox' || inputType === 'radio') {\n");
 		asb.append(" Wicket.Event.add(inputNode, 'click', callbackScript);\n");
 		asb.append(" }\n");
 		asb.append(" }\n");
@@ -144,9 +144,9 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 	 */
 	protected final CharSequence getEventHandler()
 	{
-		return generateCallbackScript(new AppendingStringBuffer("wicketAjaxPost('").append(
+		return generateCallbackScript(new AppendingStringBuffer("Wicket.Ajax.post('").append(
 			getCallbackUrl()).append(
-			"', wicketSerializeForm(document.getElementById('" + getComponent().getMarkupId() +
+			"', Wicket.Form.serialize(document.getElementById('" + getComponent().getMarkupId() +
 				"',false))"));
 	}
 

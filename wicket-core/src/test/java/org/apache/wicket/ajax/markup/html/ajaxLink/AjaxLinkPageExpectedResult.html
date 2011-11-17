@@ -1,10 +1,11 @@
 <html>
-<head><script type="text/javascript" src="../resource/org.apache.wicket.markup.html.WicketEventReference/wicket-event.js"></script>
-<script type="text/javascript" src="../resource/org.apache.wicket.ajax.WicketAjaxReference/wicket-ajax.js"></script>
-<script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug.js"></script>
+<head><script type="text/javascript" src="../resource/org.apache.wicket.ajax.WicketJQueryReference/res/js/jquery/jquery.js"></script>
+<script type="text/javascript" src="../resource/org.apache.wicket.ajax.WicketEventReference/res/js/wicket-event-jquery.js"></script>
+<script type="text/javascript" src="../resource/org.apache.wicket.ajax.WicketAjaxReference/res/js/wicket-ajax-jquery.js"></script>
+<script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-jquery-debug.js"></script>
 <script type="text/javascript" id="wicket-ajax-debug-enable">
 /*<![CDATA[*/
-wicketAjaxDebugEnable=true;
+Wicket.Ajax.DebugWindow.enabled=true;
 /*]]>*/
 </script>
 <script type="text/javascript" id="wicket-ajax-base-url">
@@ -14,6 +15,6 @@ Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.ajax.markup.html.ajax
 </script>
 </head><body>
   <span wicket:id="ajaxLabel" id="ajaxLabel1">UpdateMe</span>
-  <a href="#" wicket:id="ajaxLink" id="ajaxLink2" onclick="var wcall=wicketAjaxGet(&#039;../page?0-1.IBehaviorListener.0-ajaxLink&#039;,function() { }.bind(this),function() { }.bind(this), function() {return Wicket.$(&#039;ajaxLink2&#039;) != null;}.bind(this));return !wcall;">Update</a>
+  <a href="#" wicket:id="ajaxLink" id="ajaxLink2" onclick="var wcall=Wicket.Ajax.get(&#039;../page?0-1.IBehaviorListener.0-ajaxLink&#039;,function() { }.bind(this),function() { }.bind(this), function() {return Wicket.$(&#039;ajaxLink2&#039;) != null;}.bind(this));return !wcall;">Update</a>
 </body>
 </html>

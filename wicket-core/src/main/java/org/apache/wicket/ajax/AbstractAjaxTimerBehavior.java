@@ -122,7 +122,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	@Override
 	protected CharSequence getCallbackScript()
 	{
-		return generateCallbackScript("wicketAjaxGet('" + getCallbackUrl() + "'");
+		return generateCallbackScript("Wicket.Ajax.get('" + getCallbackUrl() + "'");
 	}
 
 	/**

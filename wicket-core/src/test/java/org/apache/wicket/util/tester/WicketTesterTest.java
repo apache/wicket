@@ -980,7 +980,8 @@ public class WicketTesterTest extends WicketTestCase
 	public void startResourceReference()
 	{
 		tester.startResourceReference(WicketAjaxReference.INSTANCE);
-		tester.assertContains("wicketAjaxGet()");
+		// verify that a random string from that resource is in the response
+		tester.assertContains("getAjaxBaseUrl");
 	}
 
 	/**
@@ -990,7 +991,8 @@ public class WicketTesterTest extends WicketTestCase
 	public void startResource()
 	{
 		tester.startResource(WicketAjaxReference.INSTANCE.getResource());
-		tester.assertContains("wicketAjaxGet()");
+		// verify that a random string from that resource is in the response
+		tester.assertContains("getAjaxBaseUrl");
 	}
 
 	/**

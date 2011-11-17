@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+	<title id="titleId">All tests</title>
+	<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen" />
+	<script src="../../main/java/org/apache/wicket/ajax/res/js/jquery/jquery.js"></script>
+	<script src="../../main/java/org/apache/wicket/ajax/res/js/wicket-event-jquery.js"></script>
+	<script src="../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js"></script>
+	<script src="../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-debug.js"></script>
+	<script type="text/javascript" src="qunit/qunit.js"></script>
+
+	<!-- the module under test -->
+	<script type="text/javascript" src="ajax.js"></script>
+	<script type="text/javascript" src="dom.js"></script>
+	<script type="text/javascript" src="event.js"></script>
+	<script type="text/javascript" src="form.js"></script>
+	<script type="text/javascript" src="head.js"></script>
+</head>
+<body>
+	<h1 id="qunit-header">QUnit example</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">
+
+		test markup, will be hidden
+
+		<!--
+			AJAX
+		-->
+		<textarea id="evaluationId"><ajax-response><evaluate>ok(true, 'Evaluation must be executed!');</evaluate></ajax-response></textarea>
+
+		<textarea id="priorityEvaluationId"><ajax-response><priority-evaluate>ok(true, 'Priority Evaluation must be executed!');</priority-evaluate></ajax-response></textarea>
+
+		<!--
+			Executes the second part of 'something|functionBody' by passing 'notify' function as parameter
+		-->
+		<textarea id="evaluationIdentifierAndCodeId"><ajax-response><evaluate>ignored|start(); ok(true, 'Evaluation with identifier must be executed!'); arguments[0]();</evaluate></ajax-response></textarea>
+
+		<div id="componentToReplace">old body</div>
+
+		<textarea id="componentId"><ajax-response><component id="componentToReplace"><![CDATA[<span id="componentToReplace">new body</span>]]></component></ajax-response></textarea>
+
+
+		<textarea id="componentDoesNotExistsId"><ajax-response><component id="componentToReplaceDoesNotExist"><![CDATA[<span id="componentToReplaceDoesNotExist">new body</span>]]></component></ajax-response></textarea>
+
+
+		<textarea id="complexComponentId"><ajax-response><component id="componentToReplace"><![CDATA[
+
+			<table id="componentToReplace">
+				<thead>
+					<tr>
+						<th><div><script>start(); ok(true, 'script in thead > td has to be executed')</script></div>
+						</th>
+						<th>header 2</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>data 1
+<script>start(); ok(true, 'script in tbody > td has to be executed')</script>
+						</td>
+						<td>data 2</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td>footer 1</td>
+						<td>footer 2
+							<script>start(); ok(true, 'script in tfoot > td has to be executed')</script>
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+
+		]]></component></ajax-response></textarea>
+
+		<textarea id="componentToReplaceTitle">
+		<ajax-response><component id="titleId"><![CDATA[<title id="titleId">new title</title>]]></component></ajax-response>
+		</textarea>
+
+		<!--
+			DOM
+		-->
+				<span id="testElement"></span>
+
+		<div id="complexElement">
+			<a href="some/url">Link</a>
+		</div>
+
+		<iframe id="testInDocIFrame"></iframe>
+
+		<span id="toBeReplacedByTable"></span>
+		<span id="toBeReplacedByScript"></span>
+		<span id="toBeReplacedByDivWithChildren"></span>
+
+		<!--
+			Event
+		-->		
+		<span id="specifiedId" class="getIdClass1"></span>
+		<span class="getIdClass2"></span>
+
+		<!--
+			Form
+		-->
+				<form id="testForm" action="actionUrl">
+
+			<input type="text" id="textInputId" name="textInput" value="textValue"/>
+
+			<input type="text" id="textInputUTFId" name="textUTFInput" value="нещо на български"/>
+
+			<input type="checkbox" name="checkBoxInput1" checked="checked" value="cbValue1"/>
+			<input type="checkbox" name="checkBoxInput2" value="cbValue2"/>
+			<input type="checkbox" name="checkBoxInput3" checked="checked" value="cbValue3"/>
+
+			<input type="radio" name="radioInput" checked="checked" value="radioValue1"/>
+			<input type="radio" name="radioInput" value="radioValue2"/>
+
+			<input type="email" id="emailInputId" name="emailInput" value="m@g.com"/>
+
+			<input type="url" id="urlInputId" name="urlInput" value="http://example.com"/>
+
+			<input type="search" id="searchInputId" name="searchInput" value="wicket"/>
+
+			<input type="range" id="rangeInputId" name="rangeInput" min="0" max="100" value="67"/>
+
+			<input type="number" id="numberInputId" name="numberInput" min="0" max="100" value="16"/>
+
+			<input type="color" id="colorInputId" name="colorInput" value="123456"/>
+
+			<select id="multipleSelectId" name="multipleSelect" multiple="multiple">
+				<option value="0" selected="selected">zero</option>
+				<option value="1">one</option>
+				<option value="2" selected="selected">two</option>
+			</select>
+
+			<select id="selectId" name="select">
+				<option value="0" selected="selected">zero</option>
+				<option value="1">one</option>
+				<option value="2">two</option>
+			</select>
+
+			<textarea name="textArea">some text</textarea>
+
+		</form>
+
+	
+	</div>
+</body>
+</html>

@@ -22,7 +22,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.html.IComponentAwareHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.markup.html.WicketEventReference;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -53,7 +52,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 	/** reference to the default ajax debug support javascript file. */
 	private static final ResourceReference JAVASCRIPT_DEBUG = new JavaScriptResourceReference(
-		AbstractDefaultAjaxBehavior.class, "wicket-ajax-debug.js");
+		AbstractDefaultAjaxBehavior.class, "res/js/wicket-ajax-jquery-debug.js");
 
 	/**
 	 * Subclasses should call super.onBind()
@@ -74,6 +73,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	{
 		super.renderHead(component, response);
 
+		response.renderJavaScriptReference(WicketJQueryReference.INSTANCE);
 		response.renderJavaScriptReference(WicketEventReference.INSTANCE);
 		response.renderJavaScriptReference(WicketAjaxReference.INSTANCE);
 
@@ -81,7 +81,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		if (debugSettings.isAjaxDebugModeEnabled())
 		{
 			response.renderJavaScriptReference(JAVASCRIPT_DEBUG);
-			response.renderJavaScript("wicketAjaxDebugEnable=true;", "wicket-ajax-debug-enable");
+			response.renderJavaScript("Wicket.Ajax.DebugWindow.enabled=true;",
+				"wicket-ajax-debug-enable");
 		}
 
 		Url baseUrl = RequestCycle.get().getUrlRenderer().getBaseUrl();
@@ -111,7 +112,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 */
 	protected CharSequence getCallbackScript()
 	{
-		return generateCallbackScript("wicketAjaxGet('" + getCallbackUrl() + "'");
+		return generateCallbackScript("Wicket.Ajax.get('" + getCallbackUrl() + "'");
 	}
 
 	/**
@@ -179,7 +180,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 		if (!Strings.isEmpty(indicatorId))
 		{
-			String hide = ";Wicket.hideIncrementally('" + indicatorId + "');";
+			String hide = "; Wicket.DOM.hideIncrementally('" + indicatorId + "');";
 			success = success + hide;
 			failure = failure + hide;
 		}
@@ -233,7 +234,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			{
 				indicatorWithPrecondition.append("true");
 			}
-			indicatorWithPrecondition.append(") { Wicket.showIncrementally('")
+			indicatorWithPrecondition.append(") { Wicket.DOM.showIncrementally('")
 				.append(indicatorId)
 				.append("');}")
 				.append(call);
@@ -353,7 +354,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		Args.notEmpty(throttleId, "throttleId");
 		Args.notNull(throttleDelay, "throttleDelay");
 
-		return new AppendingStringBuffer("wicketThrottler.throttle( '").append(throttleId)
+		return new AppendingStringBuffer("Wicket.throttler.throttle( '").append(throttleId)
 			.append("', ")
 			.append(throttleDelay.getMilliseconds())
 			.append(", function() { ")

@@ -23,6 +23,9 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
+import org.apache.wicket.ajax.WicketAjaxReference;
+import org.apache.wicket.ajax.WicketEventReference;
+import org.apache.wicket.ajax.WicketJQueryReference;
 import org.apache.wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -259,6 +262,9 @@ public class ModalWindow extends Panel
 	public void renderHead(final IHeaderResponse response)
 	{
 		super.renderHead(response);
+		response.renderJavaScriptReference(WicketJQueryReference.INSTANCE);
+		response.renderJavaScriptReference(WicketEventReference.INSTANCE);
+		response.renderJavaScriptReference(WicketAjaxReference.INSTANCE);
 		response.renderJavaScriptReference(JAVASCRIPT);
 
 		ResourceReference cssResource = newCssResource();

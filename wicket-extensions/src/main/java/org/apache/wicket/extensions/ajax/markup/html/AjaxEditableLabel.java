@@ -98,16 +98,17 @@ public class AjaxEditableLabel<T> extends Panel
 		{
 			super.onComponentTag(tag);
 			final String saveCall = "{" +
-				generateCallbackScript("wicketAjaxGet('" + getCallbackUrl() +
-					"&save=true&'+this.name+'='+wicketEncode(this.value)") + "; return false;}";
+				generateCallbackScript("Wicket.Ajax.get('" + getCallbackUrl() +
+					"&save=true&'+this.name+'='+Wicket.Form.encode(this.value)") +
+				"; return false;}";
 
 			final String cancelCall = "{" +
-				generateCallbackScript("wicketAjaxGet('" + getCallbackUrl() + "&save=false'") +
+				generateCallbackScript("Wicket.Ajax.get('" + getCallbackUrl() + "&save=false'") +
 				"; return false;}";
 
 
-			final String keypress = "var kc=wicketKeyCode(event); if (kc==27) " + cancelCall +
-				" else if (kc!=13) { return true; } else " + saveCall;
+			final String keypress = "var kc=Wicket.Event.keyCode(event); if (kc==27) " +
+				cancelCall + " else if (kc!=13) { return true; } else " + saveCall;
 
 			tag.put("onblur", saveCall);
 			tag.put("onkeypress", "if (Wicket.Browser.isSafari()) { return; }; " + keypress);
@@ -448,7 +449,7 @@ public class AjaxEditableLabel<T> extends Panel
 		target.add(AjaxEditableLabel.this);
 		// put focus on the textfield and stupid explorer hack to move the
 		// caret to the end
-		target.appendJavaScript("{ var el=wicketGet('" + editor.getMarkupId() + "');" +
+		target.appendJavaScript("{ var el=Wicket.$('" + editor.getMarkupId() + "');" +
 			"   if (el.createTextRange) { " +
 			"     var v = el.value; var r = el.createTextRange(); " +
 			"     r.moveStart('character', v.length); r.select(); } }");
@@ -469,7 +470,7 @@ public class AjaxEditableLabel<T> extends Panel
 			target.appendJavaScript("window.status='" +
 				JavaScriptUtils.escapeQuotes(errorMessage.toString()) + "';");
 		}
-		target.appendJavaScript("{var el=wicketGet('" + editor.getMarkupId() +
+		target.appendJavaScript("{var el=Wicket.$('" + editor.getMarkupId() +
 			"'); el.select(); el.focus();}");
 	}
 

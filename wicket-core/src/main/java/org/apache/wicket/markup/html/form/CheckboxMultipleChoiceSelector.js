@@ -30,7 +30,7 @@ if (typeof (Wicket.CheckboxSelector.Choice) == "undefined") {
 			parentChoiceId) {
 		return function() {
 			var result = new Array();
-			var inputNodes = wicketGet(parentChoiceId).getElementsByTagName(
+			var inputNodes = Wicket.$(parentChoiceId).getElementsByTagName(
 					'input');
 			for ( var i = 0; i < inputNodes.length; i++) {
 				var inputNode = inputNodes[i];

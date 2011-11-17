@@ -35,6 +35,6 @@ public class WicketAjaxReference extends JavaScriptResourceReference
 
 	private WicketAjaxReference()
 	{
-		super(WicketAjaxReference.class, "wicket-ajax.js");
+		super(WicketAjaxReference.class, "res/js/wicket-ajax-jquery.js");
 	}
 }

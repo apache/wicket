@@ -168,7 +168,7 @@ public class KittenCaptchaPanel extends Panel
 			{
 				// Call-back script shows loading indicator and makes wicket
 				// ajax request passing in mouse co-ordinates
-				return generateCallbackScript("showLoadingIndicator(); wicketAjaxGet('" +
+				return generateCallbackScript("showLoadingIndicator(); Wicket.Ajax.get('" +
 					getCallbackUrl() +
 					"&x=' + getEventX(this, event) + '&y=' + getEventY(this, event)");
 			}

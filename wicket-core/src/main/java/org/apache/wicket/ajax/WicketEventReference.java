@@ -14,29 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// introduce a namespace, just to be nice
-if (typeof (Wicket.CheckboxSelector.Group) == "undefined") {
-	Wicket.CheckboxSelector.Group = {};
+package org.apache.wicket.ajax;
+
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
+
+/**
+ * Resource reference to wicket-event.js which is used to allow events via javascript
+ * 
+ * @author ivaynberg
+ */
+public class WicketEventReference extends JavaScriptResourceReference
+{
+	private static final long serialVersionUID = 1L;
+
 	/**
-	 * Returns a closure that finds all checkboxes associated with the given
-	 * CheckGroup.
-	 * 
-	 * @param formId
-	 *            The markup ID of the containing form (needed because the
-	 *            selector might be outside the form)
-	 * @param groupName
-	 *            The input name of the CheckGroup
+	 * Singleton instance of this reference
 	 */
-	Wicket.CheckboxSelector.Group.findCheckboxesFunction = function(formId, groupName) {
-		return function() {
-			var result = new Array();
-			var parentForm = Wicket.$(formId);
-			var parentGroup = parentForm[groupName];
-			for ( var i = 0; i < parentGroup.length; i++) {
-				var checkbox = parentGroup[i];
-				result.push(checkbox);
-			}
-			return result;
-		}
-	};
+	public static final ResourceReference INSTANCE = new WicketEventReference();
+
+	private WicketEventReference()
+	{
+		super(WicketEventReference.class, "res/js/wicket-event-jquery.js");
+	}
+
+
 }

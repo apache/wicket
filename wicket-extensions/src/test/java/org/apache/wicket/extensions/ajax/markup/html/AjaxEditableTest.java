@@ -102,7 +102,7 @@ public class AjaxEditableTest extends WicketTestCase
 
 		// check for the *presence* of the ajax onclick call
 		markup = tester.getTagById(ajaxLabel.getMarkupId()).getMarkup();
-		assertTrue(markup.matches(".*onclick=\"var wcall=wicketAjaxGet.*"));
+		assertTrue(markup.matches(".*onclick=\"var wcall=Wicket.Ajax.get.*"));
 	}
 
 	/**

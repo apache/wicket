@@ -62,7 +62,7 @@ if (typeof (Wicket.CheckboxSelector) == "undefined") {
 				break;
 			}
 		}
-		var selector = wicketGet(selectorId);
+		var selector = Wicket.$(selectorId);
 		selector.checked = allChecked;
 	};
 
@@ -97,7 +97,7 @@ if (typeof (Wicket.CheckboxSelector) == "undefined") {
 	 *            associated checkboxes
 	 */
 	Wicket.CheckboxSelector.initializeSelector = function(selectorId, findCheckboxes) {
-		var selector = wicketGet(selectorId);
+		var selector = Wicket.$(selectorId);
 		Wicket.Event.add(selector, 'click', function() {
 			Wicket.CheckboxSelector.updateAllCheckboxes(selector.checked,
 					findCheckboxes);

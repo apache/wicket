@@ -354,7 +354,7 @@ Wicket.Window.prototype = {
 		var element = document.createElement("div");
 		element.id = idWindow;
 		document.body.appendChild(element);		
-		Wicket.replaceOuterHtml(element, markup);
+		Wicket.DOM.replace(element, markup);
 				
 		var _ = function(name) { return document.getElementById(name); }
 		

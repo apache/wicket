@@ -37,6 +37,7 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		 */
 		htmlIgnore.add("src/main/java/org/apache/wicket/util/diff");
 		htmlIgnore.add("src/main/java/org/apache/wicket/markup/html/pages");
+		htmlIgnore.add("src/main/java/org/apache/wicket/ajax/res/js/jquery");
 
 		/*
 		 * See NOTICE.txt
@@ -48,6 +49,7 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		 * what the test is about.
 		 */
 		cssIgnore.add("src/test/java");
+		cssIgnore.add("src/test/js/qunit/qunit.css");
 
 		xmlIgnore.add("src/assembly/bin.xml");
 
@@ -88,7 +90,8 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		/*
 		 * See NOTICE.txt
 		 */
-		javaScriptIgnore.add("src/main/java/org/apache/wicket/ajax/wicket-ajax-debug-drag.js");
 		javaScriptIgnore.add("src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js");
+		javaScriptIgnore.add("src/main/java/org/apache/wicket/ajax/res/js/jquery");
+		javaScriptIgnore.add("src/test/js/qunit/qunit.js");
 	}
 }

@@ -86,7 +86,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
             choiceDiv.parentNode.parentNode.removeChild(choiceDiv.parentNode);
         } 
         	
-        var obj=wicketGet(elementId);
+        var obj = Wicket.$(elementId);
 
         objonkeydown=obj.onkeydown;
         objonblur=obj.onblur;
@@ -105,7 +105,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
       	obj.onblur=function(event){      		
     		if(mouseactive==1){
                 ignoreOneFocusGain = true;
-    			Wicket.$(elementId).focus();
+			Wicket.$(elementId).focus();
     			return killEvent(event);
     		}
           	hideAutoComplete();
@@ -129,7 +129,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         }
 
         obj.onkeydown=function(event){
-            switch(wicketKeyCode(Wicket.fixEvent(event))){
+            switch(Wicket.Event.keyCode(Wicket.Event.fix(event))){
                 case KEY_UP:
         	        if(selected>-1) setSelected(selected-1);
             	    if(selected==-1){
@@ -137,7 +137,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                    	} else {
 	                    render(true, false);
         	        }
-            	    if(Wicket.Browser.isSafari())return killEvent(event);
+		    if(Wicket.Browser.isSafari())return killEvent(event);
                 	break;
                 case KEY_DOWN:
                		if(selected<elementCount-1){
@@ -149,7 +149,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
                 	    render(true, false);
                     	showAutoComplete();
 	                }
-    	            if(Wicket.Browser.isSafari())return killEvent(event);
+	            if(Wicket.Browser.isSafari())return killEvent(event);
         	        break;
                 case KEY_ESC:
                     if (visible==1) {
@@ -181,7 +181,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         }
 
         obj.onkeyup=function(event){
-            switch(wicketKeyCode(Wicket.fixEvent(event))){
+            switch(Wicket.Event.keyCode(Wicket.Event.fix(event))){
                 case KEY_TAB:
                 case KEY_ENTER:
 	                return killEvent(event);
@@ -201,7 +201,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
         }
 
         obj.onkeypress=function(event){
-            if(wicketKeyCode(Wicket.fixEvent(event))==KEY_ENTER){
+            if(Wicket.Event.keyCode(Wicket.Event.fix(event))==KEY_ENTER){
                 if(selected>-1 || hidingAutocomplete==1){
 			        hidingAutocomplete=0;
 			        return killEvent(event);
@@ -278,8 +278,8 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
             container.style.padding="0px"; // this needs to be 0 or size/location calculations would not be exact
             container.id=getMenuId()+"-container";
             	
-            container.show = function() { wicketShow(this.id) };
-            container.hide = function() { wicketHide(this.id) };
+            container.show = function() { Wicket.DOM.show(this.id) };
+            container.hide = function() { Wicket.DOM.hide(this.id) };
             
             choiceDiv=document.createElement("div");
             container.appendChild(choiceDiv);
@@ -332,27 +332,27 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     function actualUpdateChoicesShowAll()
     {
     	showIndicator();
-       	var request = new Wicket.Ajax.Request(callbackUrl+"&q=", doUpdateChoices, false, true, false, "wicket-autocomplete|d");
+	var request = new Wicket.Ajax.Request(callbackUrl+"&q=", doUpdateChoices, false, true, false, "wicket-autocomplete|d");
        	request.get();
     }
 
     function actualUpdateChoices()
     {
     	showIndicator();
-        var value = wicketGet(elementId).value;
-       	var request = new Wicket.Ajax.Request(callbackUrl+(callbackUrl.indexOf("?")>-1 ? "&" : "?") + "q="+processValue(value), doUpdateChoices, false, true, false, "wicket-autocomplete|d");
+        var value = Wicket.$(elementId).value;
+	var request = new Wicket.Ajax.Request(callbackUrl+(callbackUrl.indexOf("?")>-1 ? "&" : "?") + "q="+processValue(value), doUpdateChoices, false, true, false, "wicket-autocomplete|d");
        	request.get();
     }
     
     function showIndicator() {
     	if (indicatorId!=null) {
-    		Wicket.$(indicatorId).style.display='';
+		Wicket.$(indicatorId).style.display='';
     	}
     }
     
     function hideIndicator() {
     	if (indicatorId!=null) {
-    		Wicket.$(indicatorId).style.display='none';
+		Wicket.$(indicatorId).style.display='none';
     	}
     }
     
@@ -361,7 +361,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     }
 
     function showAutoComplete(){
-        var input = wicketGet(elementId);
+        var input = Wicket.$(elementId);
         var container = getAutocompleteContainer();
         var index=getOffsetParentZIndex(elementId);
         container.show();
@@ -557,10 +557,10 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     function doUpdateChoices(resp){
     
     	// check if the input hasn't been cleared in the meanwhile
-    	var input=wicketGet(elementId);
+	var input=Wicket.$(elementId);
    		if ((document.activeElement != input) || !cfg.showListOnEmptyInput && (input.value==null || input.value=="")) {
    			hideAutoComplete();
-   			Wicket.Ajax.invokePostCallHandlers();
+			Wicket.Ajax.invokePostCallHandlers();
    			hideIndicator();
    			return;
    		}
@@ -578,7 +578,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
             var clickFunc = function(event) {
                 mouseactive = 0;
                 var value = getSelectedValue();
-                var input = wicketGet(elementId);
+                var input = Wicket.$(elementId);
                 if(value = handleSelection(value)) {
                   input.value = value;
                   if(typeof objonchange=="function") objonchange.apply(input,[event]);
@@ -631,7 +631,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
     
     function scheduleEmptyCheck() {
     	window.setTimeout(function() {
-    		var input=wicketGet(elementId);
+		var input=Wicket.$(elementId);
     		if (!cfg.showListOnEmptyInput && (input.value==null || input.value=="")) {
     			hideAutoComplete();
     		}
@@ -722,7 +722,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
             menu.parentNode.style.width = "auto";
             sizeAffected = true;
         }
-        if (sizeAffected) calculateAndSetPopupBounds(wicketGet(elementId), menu.parentNode); // update stuff related to bounds if needed 
+        if (sizeAffected) calculateAndSetPopupBounds(Wicket.$(elementId), menu.parentNode); // update stuff related to bounds if needed
     }
     
     // From http://www.robertnyman.com/2006/04/24/get-the-rendered-style-of-an-element/
@@ -746,7 +746,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
 	}
     
     function getOffsetParentZIndex(obj) {
-    	obj=typeof obj=="string"?Wicket.$(obj):obj;
+	obj=typeof obj=="string"?Wicket.$(obj):obj;
     	obj=obj.offsetParent;
     	var index="auto"; 
     	do {

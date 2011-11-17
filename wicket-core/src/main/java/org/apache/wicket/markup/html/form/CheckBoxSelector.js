@@ -28,7 +28,7 @@ if (typeof (Wicket.CheckboxSelector.Checkboxes) == "undefined") {
 		return function() {
 			var result = new Array();
 			for (i in checkBoxIDs) {
-				var checkBox = wicketGet(checkBoxIDs[i]);
+				var checkBox = Wicket.$(checkBoxIDs[i]);
 				result.push(checkBox)
 			}
 			return result;

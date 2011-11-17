@@ -1,10 +1,11 @@
 <html xmlns:wicket>
-<head><script type="text/javascript" src="../resource/org.apache.wicket.markup.html.WicketEventReference/wicket-event.js"></script>
-<script type="text/javascript" src="../resource/org.apache.wicket.ajax.WicketAjaxReference/wicket-ajax.js"></script>
-<script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug.js"></script>
+<head><script type="text/javascript" src="../resource/org.apache.wicket.ajax.WicketJQueryReference/res/js/jquery/jquery.js"></script>
+<script type="text/javascript" src="../resource/org.apache.wicket.ajax.WicketEventReference/res/js/wicket-event-jquery.js"></script>
+<script type="text/javascript" src="../resource/org.apache.wicket.ajax.WicketAjaxReference/res/js/wicket-ajax-jquery.js"></script>
+<script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-jquery-debug.js"></script>
 <script type="text/javascript" id="wicket-ajax-debug-enable">
 /*<![CDATA[*/
-wicketAjaxDebugEnable=true;
+Wicket.Ajax.DebugWindow.enabled=true;
 /*]]>*/
 </script>
 <script type="text/javascript" id="wicket-ajax-base-url">
@@ -18,7 +19,7 @@ Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.markup.html.panel.Inl
   <span wicket:id="number">0</span><br/>
   <div id="nextContainer1" style="display:none"></div>
 </div>
-<a wicket:id="add" id="add2" href="#" onclick="var wcall=wicketAjaxGet(&#039;../page?0-1.IBehaviorListener.0-add&#039;,function() { }.bind(this),function() { }.bind(this), function() {return Wicket.$(&#039;add2&#039;) != null;}.bind(this));return !wcall;">Add</a>
+<a wicket:id="add" id="add2" href="#" onclick="var wcall=Wicket.Ajax.get(&#039;../page?0-1.IBehaviorListener.0-add&#039;,function() { }.bind(this),function() { }.bind(this), function() {return Wicket.$(&#039;add2&#039;) != null;}.bind(this));return !wcall;">Add</a>
 
 
 
