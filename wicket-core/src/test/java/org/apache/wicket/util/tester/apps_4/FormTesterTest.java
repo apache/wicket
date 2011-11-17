@@ -16,8 +16,11 @@
  */
 package org.apache.wicket.util.tester.apps_4;
 
+import java.util.List;
+
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.util.tester.FormTester;
 import org.junit.Test;
 
@@ -49,10 +52,11 @@ public class FormTesterTest extends WicketTestCase
 
 		assertNull(page.getEmail());
 		assertTrue(Session.get().getFeedbackMessages().hasMessageFor(page.get("form:email")));
-		assertEquals("wrong email address pattern for email", Session.get()
-			.getFeedbackMessages()
-			.messageForComponent(page.get("form:email"))
-			.getMessage()
-			.toString());
+
+		final List<FeedbackMessage> messages =
+			Session.get().getFeedbackMessages().messagesForComponent(page.get("form:email"));
+		
+		assertEquals(1, messages.size());
+		assertEquals("wrong email address pattern for email", messages.get(0).getMessage().toString());
 	}
 }
