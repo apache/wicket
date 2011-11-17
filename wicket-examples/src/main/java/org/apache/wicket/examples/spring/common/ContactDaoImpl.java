@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.wicket.examples.spring.common.QueryParam;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 
 /**
@@ -92,8 +91,8 @@ public class ContactDaoImpl implements ContactDao
 	 */
 	public Iterator<Contact> find(QueryParam qp)
 	{
-		List<Contact> sublist = getIndex(qp.getSort()).subList(qp.getFirst(),
-			qp.getFirst() + qp.getCount());
+		List<Contact> sublist = getIndex(qp.getSort()).subList((int)qp.getFirst(),
+			(int)(qp.getFirst() + qp.getCount()));
 		return sublist.iterator();
 	}
 

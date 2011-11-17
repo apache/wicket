@@ -74,27 +74,24 @@ public class ListDataProvider<T extends Serializable> implements IDataProvider<T
 		return list;
 	}
 
-	/**
-	 * @see IDataProvider#iterator(int, int)
-	 */
 	@Override
-	public Iterator<? extends T> iterator(final int first, final int count)
+	public Iterator<? extends T> iterator(final long first, final long count)
 	{
 		List<T> list = getData();
 
-		int toIndex = first + count;
+		long toIndex = first + count;
 		if (toIndex > list.size())
 		{
 			toIndex = list.size();
 		}
-		return list.subList(first, toIndex).listIterator();
+		return list.subList((int)first, (int)toIndex).listIterator();
 	}
 
 	/**
 	 * @see IDataProvider#size()
 	 */
 	@Override
-	public int size()
+	public long size()
 	{
 		return getData().size();
 	}

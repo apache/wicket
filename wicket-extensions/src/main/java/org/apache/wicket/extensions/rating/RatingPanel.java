@@ -125,7 +125,7 @@ public abstract class RatingPanel extends Panel
 					// of our rating component, so other components can also get
 					// updated in case of an AJAX event.
 
-					onRated(item.getIndex() + 1, target);
+					onRated((int)(item.getIndex() + 1), target);
 
 					// if we process an AJAX event, update this panel
 					if (target != null)
@@ -141,7 +141,7 @@ public abstract class RatingPanel extends Panel
 				}
 			};
 
-			int iteration = item.getIndex();
+			int iteration = (int)item.getIndex();
 
 			// add the star image, which is either active (highlighted) or
 			// inactive (no star)

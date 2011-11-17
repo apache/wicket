@@ -49,7 +49,7 @@ public class EmptyDataProvider<T> implements IDataProvider<T>
 	 * @see IDataProvider#iterator(int, int)
 	 */
 	@Override
-	public Iterator<T> iterator(int first, int count)
+	public Iterator<T> iterator(long first, long count)
 	{
 		List<T> list = Collections.emptyList();
 		return list.iterator();
@@ -59,7 +59,7 @@ public class EmptyDataProvider<T> implements IDataProvider<T>
 	 * @see IDataProvider#size()
 	 */
 	@Override
-	public int size()
+	public long size()
 	{
 		return 0;
 	}

@@ -36,10 +36,10 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	private static final long serialVersionUID = 1L;
 
 	/** The page to show. */
-	private int currentPage;
+	private long currentPage;
 
 	/** Number of rows per page of the list view. */
-	private int itemsPerPage;
+	private long itemsPerPage;
 
 	/**
 	 * Constructor
@@ -82,7 +82,7 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	 * @return Returns the currentPage.
 	 */
 	@Override
-	public final int getCurrentPage()
+	public final long getCurrentPage()
 	{
 		// If first cell is out of range, bring page back into range
 		while ((currentPage > 0) && ((currentPage * itemsPerPage) >= getItemCount()))
@@ -99,7 +99,7 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	 * @return The number of pages in this list view
 	 */
 	@Override
-	public final int getPageCount()
+	public final long getPageCount()
 	{
 		return ((getItemCount() + itemsPerPage) - 1) / itemsPerPage;
 	}
@@ -110,7 +110,7 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	 * @return the maximum number of rows on each page.
 	 */
 	@Override
-	public final int getItemsPerPage()
+	public final long getItemsPerPage()
 	{
 		return itemsPerPage;
 	}
@@ -135,7 +135,7 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	/**
 	 * @return offset of first item
 	 */
-	public int getFirstItemOffset()
+	public long getFirstItemOffset()
 	{
 		return getCurrentPage() * getItemsPerPage();
 	}
@@ -144,7 +144,7 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	 * @see org.apache.wicket.markup.html.navigation.paging.IPageableItems#getItemCount()
 	 */
 	@Override
-	public int getItemCount()
+	public long getItemCount()
 	{
 		return getList().size();
 	}
@@ -157,8 +157,8 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	{
 		if (getDefaultModelObject() != null)
 		{
-			super.setStartIndex(getFirstItemOffset());
-			super.setViewSize(getItemsPerPage());
+			super.setStartIndex((int)getFirstItemOffset());
+			super.setViewSize((int)getItemsPerPage());
 		}
 
 		return super.getViewSize();
@@ -171,14 +171,14 @@ public abstract class PageableListView<T> extends ListView<T> implements IPageab
 	 *            The currentPage to set.
 	 */
 	@Override
-	public final void setCurrentPage(int currentPage)
+	public final void setCurrentPage(long currentPage)
 	{
 		if (currentPage < 0)
 		{
 			currentPage = 0;
 		}
 
-		int pageCount = getPageCount();
+		long pageCount = getPageCount();
 		if ((currentPage > 0) && (currentPage >= pageCount))
 		{
 			currentPage = pageCount - 1;

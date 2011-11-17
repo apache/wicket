@@ -45,10 +45,8 @@ public class SortableContactDataProvider extends SortableDataProvider<Contact>
 		return DatabaseLocator.getDatabase();
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#iterator(int, int)
-	 */
-	public Iterator<Contact> iterator(int first, int count)
+	@Override
+	public Iterator<Contact> iterator(long first, long count)
 	{
 		return getContactsDB().find(first, count, getSort()).iterator();
 	}
@@ -56,7 +54,7 @@ public class SortableContactDataProvider extends SortableDataProvider<Contact>
 	/**
 	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#size()
 	 */
-	public int size()
+	public long size()
 	{
 		return getContactsDB().getCount();
 	}

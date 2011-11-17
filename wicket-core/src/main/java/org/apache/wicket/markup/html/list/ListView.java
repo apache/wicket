@@ -264,7 +264,7 @@ public abstract class ListView<T> extends AbstractRepeater
 			@Override
 			public void onClick()
 			{
-				final int index = item.getIndex();
+				final int index = (int)item.getIndex();
 				if (index != -1)
 				{
 					addStateChange();
@@ -304,7 +304,7 @@ public abstract class ListView<T> extends AbstractRepeater
 			@Override
 			public void onClick()
 			{
-				final int index = item.getIndex();
+				final int index = (int)item.getIndex();
 				if (index != -1)
 				{
 
@@ -483,7 +483,7 @@ public abstract class ListView<T> extends AbstractRepeater
 					final ListItem<?> child = (ListItem<?>)iterator.next();
 					if (child != null)
 					{
-						final int index = child.getIndex();
+						final int index = (int)child.getIndex();
 						if (index < firstIndex || index >= maxIndex)
 						{
 							iterator.remove();

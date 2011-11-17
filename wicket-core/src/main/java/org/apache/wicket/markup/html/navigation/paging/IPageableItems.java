@@ -17,8 +17,8 @@
 package org.apache.wicket.markup.html.navigation.paging;
 
 /**
- * represents a countable amount of items that can be paginated. 
- * each page except the last one will contain an equal number of items.
+ * represents a countable amount of items that can be paginated. each page except the last one will
+ * contain an equal number of items.
  */
 public interface IPageableItems extends IPageable
 {
@@ -27,13 +27,13 @@ public interface IPageableItems extends IPageable
 	 * 
 	 * @return The total number of items this object has.
 	 */
-	int getItemCount();
+	long getItemCount();
 
 	/**
 	 * maximum number of visible items per page
 	 * 
 	 * @return number of items
 	 */
-	int getItemsPerPage();
+	long getItemsPerPage();
 
 }

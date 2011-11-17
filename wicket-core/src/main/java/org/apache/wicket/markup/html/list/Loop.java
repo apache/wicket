@@ -71,9 +71,9 @@ public abstract class Loop extends AbstractRepeater
 	/**
 	 * @return The number of loop iterations
 	 */
-	public final int getIterations()
+	public final long getIterations()
 	{
-		return (Integer) getDefaultModelObject();
+		return (Long)getDefaultModelObject();
 	}
 
 	/**
@@ -86,11 +86,11 @@ public abstract class Loop extends AbstractRepeater
 		removeAll();
 
 		// Get number of iterations
-		final int iterations = getIterations();
+		final long iterations = getIterations();
 		if (iterations > 0)
 		{
 			// Create LoopItems for each iteration
-			for (int iteration = 0; iteration < iterations; iteration++)
+			for (long iteration = 0; iteration < iterations; iteration++)
 			{
 				// Create item for loop iteration
 				LoopItem item = newItem(iteration);
@@ -109,7 +109,7 @@ public abstract class Loop extends AbstractRepeater
 	 *            iteration in the loop
 	 * @return LoopItem
 	 */
-	protected LoopItem newItem(int iteration)
+	protected LoopItem newItem(long iteration)
 	{
 		return new LoopItem(iteration);
 	}

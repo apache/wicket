@@ -40,13 +40,13 @@ public abstract class ContactDataProvider extends SortableDataProvider
 
 	protected abstract ContactDao getContactDao();
 
-	public final Iterator iterator(int first, int count)
+	public final Iterator iterator(long first, long count)
 	{
 		QueryParam qp = new QueryParam(first, count, getSort());
 		return getContactDao().find(qp);
 	}
 
-	public final int size()
+	public final long size()
 	{
 		return getContactDao().count();
 	}

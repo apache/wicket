@@ -158,7 +158,7 @@ public final class PageView extends Panel
 			{
 				final ComponentData componentData = listItem.getModelObject();
 
-				listItem.add(new Label("row", Integer.toString(listItem.getIndex() + 1)));
+				listItem.add(new Label("row", Long.toString(listItem.getIndex() + 1)));
 				listItem.add(new Label("path", componentData.path));
 				listItem.add(new Label("size", Bytes.bytes(componentData.size).toString()));
 				listItem.add(new Label("type", componentData.type));

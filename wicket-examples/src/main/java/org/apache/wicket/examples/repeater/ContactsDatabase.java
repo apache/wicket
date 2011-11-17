@@ -87,9 +87,9 @@ public class ContactsDatabase
 	 * @param sort
 	 * @return list of contacts
 	 */
-	public List<Contact> find(int first, int count, SortParam sort)
+	public List<Contact> find(long first, long count, SortParam sort)
 	{
-		return getIndex(sort).subList(first, first + count);
+		return getIndex(sort).subList((int)first, (int)(first + count));
 	}
 
 	protected List<Contact> getIndex(SortParam sort)
@@ -107,7 +107,8 @@ public class ContactsDatabase
 		{
 			return sort.isAscending() ? lnameIdx : lnameDescIdx;
 		}
-		throw new RuntimeException("unknown sort option [" + sort +	"]. valid fields: [firstName], [lastName]");
+		throw new RuntimeException("unknown sort option [" + sort +
+			"]. valid fields: [firstName], [lastName]");
 	}
 
 	/**

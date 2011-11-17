@@ -90,7 +90,7 @@ public class HomePage extends WebPage
 			@Override
 			protected void populateItem(ListItem<Object> item)
 			{
-				item.add(new Label("label", Integer.toString(item.getIndex())));
+				item.add(new Label("label", Long.toString(item.getIndex())));
 			}
 		});
 

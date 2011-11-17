@@ -36,7 +36,7 @@ public class PagingNavigationLink<T> extends Link<T>
 	protected final IPageable pageable;
 
 	/** The page of the PageableListView this link is for. */
-	private final int pageNumber;
+	private final long pageNumber;
 
 	/**
 	 * Constructor.
@@ -49,7 +49,7 @@ public class PagingNavigationLink<T> extends Link<T>
 	 *            The page number in the PageableListView that this link links to. Negative
 	 *            pageNumbers are relative to the end of the list.
 	 */
-	public PagingNavigationLink(final String id, final IPageable pageable, final int pageNumber)
+	public PagingNavigationLink(final String id, final IPageable pageable, final long pageNumber)
 	{
 		super(id);
 		setAutoEnable(true);
@@ -71,7 +71,7 @@ public class PagingNavigationLink<T> extends Link<T>
 	 * 
 	 * @return pageNumber.
 	 */
-	public final int getPageNumber()
+	public final long getPageNumber()
 	{
 		return cullPageNumber(pageNumber);
 	}
@@ -83,9 +83,9 @@ public class PagingNavigationLink<T> extends Link<T>
 	 * @param pageNumber
 	 * @return culled page number
 	 */
-	protected int cullPageNumber(int pageNumber)
+	protected long cullPageNumber(long pageNumber)
 	{
-		int idx = pageNumber;
+		long idx = pageNumber;
 		if (idx < 0)
 		{
 			idx = pageable.getPageCount() + idx;

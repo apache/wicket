@@ -32,7 +32,7 @@ public interface IPageable extends IClusterable
 	/**
 	 * @return The current page that is or will be rendered (page number is zero-based)
 	 */
-	int getCurrentPage();
+	long getCurrentPage();
 
 	/**
 	 * Sets the a page that should be rendered (page number is zero-based)
@@ -40,12 +40,12 @@ public interface IPageable extends IClusterable
 	 * @param page
 	 *            The page that should be rendered.
 	 */
-	void setCurrentPage(int page);
+	void setCurrentPage(long page);
 
 	/**
 	 * Gets the total number of pages this pageable object has.
 	 * 
 	 * @return The total number of pages this pageable object has
 	 */
-	int getPageCount();
+	long getPageCount();
 }

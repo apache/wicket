@@ -25,9 +25,9 @@ import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
  */
 public class QueryParam
 {
-	private int first;
+	private long first;
 
-	private int count;
+	private long count;
 
 	private SortParam sort;
 
@@ -39,7 +39,7 @@ public class QueryParam
 	 * @param count
 	 *            Number of elements to return.
 	 */
-	public QueryParam(int first, int count)
+	public QueryParam(long first, long count)
 	{
 		this(first, count, null);
 	}
@@ -53,19 +53,19 @@ public class QueryParam
 	 *            Number of elements to return.
 	 * @param sort
 	 */
-	public QueryParam(int first, int count, SortParam sort)
+	public QueryParam(long first, long count, SortParam sort)
 	{
 		this.first = first;
 		this.count = count;
 		this.sort = sort;
 	}
 
-	public int getCount()
+	public long getCount()
 	{
 		return count;
 	}
 
-	public int getFirst()
+	public long getFirst()
 	{
 		return first;
 	}

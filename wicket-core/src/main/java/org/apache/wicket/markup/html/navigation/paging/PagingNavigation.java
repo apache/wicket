@@ -123,13 +123,13 @@ public class PagingNavigation extends Loop
 	protected IPagingLabelProvider labelProvider;
 
 	/** Offset for the Loop */
-	private int startIndex;
+	private long startIndex;
 
 	/**
 	 * Number of links on the left and/or right to keep the current page link somewhere near the
 	 * middle.
 	 */
-	private int margin = -1;
+	private long margin = -1;
 
 	/** Default separator between page numbers. Null: no separator. */
 	private String separator = null;
@@ -137,7 +137,7 @@ public class PagingNavigation extends Loop
 	/**
 	 * The maximum number of page links to show.
 	 */
-	private int viewSize = 10;
+	private long viewSize = 10;
 
 
 	/**
@@ -177,7 +177,7 @@ public class PagingNavigation extends Loop
 	 * 
 	 * @return the margin
 	 */
-	public int getMargin()
+	public long getMargin()
 	{
 		if (margin == -1 && viewSize != 0)
 		{
@@ -201,7 +201,7 @@ public class PagingNavigation extends Loop
 	 * 
 	 * @return view size
 	 */
-	public int getViewSize()
+	public long getViewSize()
 	{
 		return viewSize;
 	}
@@ -242,7 +242,7 @@ public class PagingNavigation extends Loop
 	@Override
 	protected void onBeforeRender()
 	{
-		setDefaultModel(new Model<Integer>(pageable.getPageCount()));
+		setDefaultModel(new Model<Long>(pageable.getPageCount()));
 		// PagingNavigation itself (as well as the PageableListView)
 		// may have pages.
 
@@ -257,7 +257,7 @@ public class PagingNavigation extends Loop
 	 * 
 	 * @return start index
 	 */
-	protected final int getStartIndex()
+	protected final long getStartIndex()
 	{
 		return startIndex;
 	}
@@ -273,7 +273,7 @@ public class PagingNavigation extends Loop
 	protected void populateItem(final LoopItem loopItem)
 	{
 		// Get the index of page this link shall point to
-		final int pageIndex = getStartIndex() + loopItem.getIndex();
+		final long pageIndex = getStartIndex() + loopItem.getIndex();
 
 		// Add a page link pointing to the page
 		final AbstractLink link = newPagingNavigationLink("pageLink", pageable, pageIndex);
@@ -304,7 +304,7 @@ public class PagingNavigation extends Loop
 	 *            the page index the link points to
 	 * @return the page navigation link.
 	 */
-	protected AbstractLink newPagingNavigationLink(String id, IPageable pageable, int pageIndex)
+	protected AbstractLink newPagingNavigationLink(String id, IPageable pageable, long pageIndex)
 	{
 		return new PagingNavigationLink<Void>(id, pageable, pageIndex);
 	}
@@ -334,14 +334,14 @@ public class PagingNavigation extends Loop
 	private void setStartIndex()
 	{
 		// Which startIndex are we currently using
-		int firstListItem = startIndex;
+		long firstListItem = startIndex;
 
 		// How many page links shall be displayed
-		int viewSize = Math.min(getViewSize(), pageable.getPageCount());
-		int margin = getMargin();
+		long viewSize = Math.min(getViewSize(), pageable.getPageCount());
+		long margin = getMargin();
 
 		// What is the PageableListView's page index to be displayed
-		int currentPage = pageable.getCurrentPage();
+		long currentPage = pageable.getCurrentPage();
 
 		// Make sure the current page link index is within the current
 		// window taking the left and right margin into account
@@ -390,7 +390,7 @@ public class PagingNavigation extends Loop
 	 * @param i
 	 *            the number of iterations
 	 */
-	private void setIterations(int i)
+	private void setIterations(long i)
 	{
 		setDefaultModelObject(i);
 	}
@@ -406,7 +406,7 @@ public class PagingNavigation extends Loop
 		/** resource key for the message */
 		private static final String RES = "PagingNavigation.page";
 		/** page number */
-		private final int page;
+		private final long page;
 
 		/**
 		 * Constructor
@@ -414,7 +414,7 @@ public class PagingNavigation extends Loop
 		 * @param page
 		 *            page number to use as the ${page} var
 		 */
-		public TitleAppender(int page)
+		public TitleAppender(long page)
 		{
 			this.page = page;
 		}

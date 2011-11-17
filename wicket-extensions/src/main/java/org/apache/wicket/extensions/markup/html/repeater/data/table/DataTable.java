@@ -262,7 +262,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 	/**
 	 * @see org.apache.wicket.markup.html.navigation.paging.IPageable#getCurrentPage()
 	 */
-	public final int getCurrentPage()
+	public final long getCurrentPage()
 	{
 		return datagrid.getCurrentPage();
 	}
@@ -270,7 +270,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 	/**
 	 * @see org.apache.wicket.markup.html.navigation.paging.IPageable#getPageCount()
 	 */
-	public final int getPageCount()
+	public final long getPageCount()
 	{
 		return datagrid.getPageCount();
 	}
@@ -278,7 +278,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 	/**
 	 * @return total number of rows in this table
 	 */
-	public final int getRowCount()
+	public final long getRowCount()
 	{
 		return datagrid.getRowCount();
 	}
@@ -286,7 +286,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 	/**
 	 * @return number of rows per page
 	 */
-	public final int getItemsPerPage()
+	public final long getItemsPerPage()
 	{
 		return datagrid.getItemsPerPage();
 	}
@@ -294,7 +294,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 	/**
 	 * @see org.apache.wicket.markup.html.navigation.paging.IPageable#setCurrentPage(int)
 	 */
-	public final void setCurrentPage(final int page)
+	public final void setCurrentPage(final long page)
 	{
 		datagrid.setCurrentPage(page);
 		onPageChanged();
@@ -332,7 +332,7 @@ public class DataTable<T> extends Panel implements IPageableItems
 	/**
 	 * @see org.apache.wicket.markup.html.navigation.paging.IPageableItems#getItemCount()
 	 */
-	public int getItemCount()
+	public long getItemCount()
 	{
 		return datagrid.getItemCount();
 	}

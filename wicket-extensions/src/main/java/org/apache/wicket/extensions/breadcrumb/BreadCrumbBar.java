@@ -69,7 +69,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		 * @param enableLink
 		 *            Whether the link should be enabled
 		 */
-		public BreadCrumbComponent(final String id, final String separatorMarkup, final int index,
+		public BreadCrumbComponent(final String id, final String separatorMarkup, final long index,
 			final IBreadCrumbModel breadCrumbModel,
 			final IBreadCrumbParticipant breadCrumbParticipant, final boolean enableLink)
 		{
@@ -185,7 +185,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		@Override
 		protected void populateItem(final ListItem<IBreadCrumbParticipant> item)
 		{
-			int index = item.getIndex();
+			long index = item.getIndex();
 			IBreadCrumbParticipant breadCrumbParticipant = (IBreadCrumbParticipant)item.getDefaultModelObject();
 			item.add(newBreadCrumbComponent("crumb", index, size, breadCrumbParticipant));
 		}
@@ -287,7 +287,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	 *            the bread crumb
 	 * @return A new bread crumb component
 	 */
-	protected Component newBreadCrumbComponent(final String id, final int index, final int total,
+	protected Component newBreadCrumbComponent(final String id, final long index, final int total,
 		final IBreadCrumbParticipant breadCrumbParticipant)
 	{
 		boolean enableLink = getEnableLinkToCurrent() || (index < (total - 1));

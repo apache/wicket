@@ -31,5 +31,5 @@ public interface IPagingLabelProvider extends IClusterable
 	 *            The page number for which the label must be generated.
 	 * @return The string to be displayed for this page number
 	 */
-	String getPageLabel(int page);
+	String getPageLabel(long page);
 }

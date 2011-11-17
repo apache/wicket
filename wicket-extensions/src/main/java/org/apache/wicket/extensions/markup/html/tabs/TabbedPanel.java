@@ -116,7 +116,7 @@ public class TabbedPanel extends Panel
 			@Override
 			protected void populateItem(final LoopItem item)
 			{
-				final int index = item.getIndex();
+				final int index = (int)item.getIndex();
 				final ITab tab = TabbedPanel.this.tabs.get(index);
 
 				final WebMarkupContainer titleLink = newLink("link", index);
@@ -126,7 +126,7 @@ public class TabbedPanel extends Panel
 			}
 
 			@Override
-			protected LoopItem newItem(final int iteration)
+			protected LoopItem newItem(final long iteration)
 			{
 				return newTabContainer(iteration);
 			}
@@ -162,7 +162,7 @@ public class TabbedPanel extends Panel
 	 * @param tabIndex
 	 * @return new loop item
 	 */
-	protected LoopItem newTabContainer(final int tabIndex)
+	protected LoopItem newTabContainer(final long tabIndex)
 	{
 		return new LoopItem(tabIndex)
 		{
@@ -193,7 +193,7 @@ public class TabbedPanel extends Panel
 			@Override
 			public boolean isVisible()
 			{
-				return getTabs().get(tabIndex).isVisible();
+				return getTabs().get((int)tabIndex).isVisible();
 			}
 		};
 	}

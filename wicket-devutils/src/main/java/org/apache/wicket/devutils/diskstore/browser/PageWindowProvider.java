@@ -45,10 +45,10 @@ class PageWindowProvider implements ISortableDataProvider<PageWindowDescription>
 		this.sessionId = sessionId;
 	}
 
-	public Iterator<? extends PageWindowDescription> iterator(int first, int count)
+	public Iterator<? extends PageWindowDescription> iterator(long first, long count)
 	{
 		List<PageWindow> lastPageWindows = getPageWindows();
-		List<PageWindow> subList = lastPageWindows.subList(first, first + count);
+		List<PageWindow> subList = lastPageWindows.subList((int)first, (int)(first + count));
 		List<PageWindowDescription> pageDescriptions = new ArrayList<PageWindowDescription>();
 		for (PageWindow pw : subList)
 		{
@@ -71,7 +71,7 @@ class PageWindowProvider implements ISortableDataProvider<PageWindowDescription>
 		return lastPageWindows;
 	}
 
-	public int size()
+	public long size()
 	{
 		return getPageWindows().size();
 	}

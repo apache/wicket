@@ -57,14 +57,14 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	/**
 	 * Keeps track of the current page number.
 	 */
-	private int currentPage;
+	private long currentPage;
 
 	/**
 	 * <code>cachedItemCount</code> is used to cache the call to <code>internalGetItemCount()</code>
 	 * for the duration of the request because that call can potentially be expensive ( a select
 	 * count query ) and so we do not want to execute it multiple times.
 	 */
-	private transient int cachedItemCount;
+	private transient long cachedItemCount;
 
 	/**
 	 * Constructor
@@ -95,8 +95,8 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	@Override
 	protected Iterator<IModel<T>> getItemModels()
 	{
-		int offset = getFirstItemOffset();
-		int size = getViewSize();
+		long offset = getFirstItemOffset();
+		long size = getViewSize();
 
 		Iterator<IModel<T>> models = getItemModels(offset, size);
 
@@ -124,7 +124,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	 *            number of items that will be shown in the current page
 	 * @return an iterator over models for items in the current page
 	 */
-	protected abstract Iterator<IModel<T>> getItemModels(int offset, int size);
+	protected abstract Iterator<IModel<T>> getItemModels(long offset, long size);
 
 	// /////////////////////////////////////////////////////////////////////////
 	// ITEM COUNT CACHE
@@ -135,12 +135,12 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 		cachedItemCount = -1;
 	}
 
-	private void setCachedItemCount(int itemCount)
+	private void setCachedItemCount(long itemCount)
 	{
 		cachedItemCount = itemCount;
 	}
 
-	private int getCachedItemCount()
+	private long getCachedItemCount()
 	{
 		if (cachedItemCount < 0)
 		{
@@ -162,7 +162,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	 * @return maximum number of items that will be shown per page
 	 */
 	@Override
-	public int getItemsPerPage()
+	public long getItemsPerPage()
 	{
 		return itemsPerPage;
 	}
@@ -197,7 +197,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	/**
 	 * @return total item count
 	 */
-	protected abstract int internalGetItemCount();
+	protected abstract long internalGetItemCount();
 
 	/**
 	 * Get the row count.
@@ -206,7 +206,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	 * 
 	 * @return total item count, but 0 if not visible in the hierarchy
 	 */
-	public final int getRowCount()
+	public final long getRowCount()
 	{
 		if (!isVisibleInHierarchy())
 		{
@@ -225,14 +225,14 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	 * @return the item count
 	 */
 	@Override
-	public final int getItemCount()
+	public final long getItemCount()
 	{
 		if (isItemCountCached())
 		{
 			return getCachedItemCount();
 		}
 
-		int count = internalGetItemCount();
+		long count = internalGetItemCount();
 
 		setCachedItemCount(count);
 		return count;
@@ -242,9 +242,9 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	 * @see org.apache.wicket.markup.html.navigation.paging.IPageable#getCurrentPage()
 	 */
 	@Override
-	public final int getCurrentPage()
+	public final long getCurrentPage()
 	{
-		int page = currentPage;
+		long page = currentPage;
 
 		/*
 		 * trim current page if its out of bounds this can happen if items are added/deleted between
@@ -265,7 +265,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	 * @see org.apache.wicket.markup.html.navigation.paging.IPageable#setCurrentPage(int)
 	 */
 	@Override
-	public final void setCurrentPage(int page)
+	public final void setCurrentPage(long page)
 	{
 		if (currentPage != page)
 		{
@@ -282,11 +282,11 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	 * @see org.apache.wicket.markup.html.navigation.paging.IPageable#getPageCount()
 	 */
 	@Override
-	public final int getPageCount()
+	public final long getPageCount()
 	{
-		int total = getRowCount();
-		int itemsPerPage = getItemsPerPage();
-		int count = total / itemsPerPage;
+		long total = getRowCount();
+		long itemsPerPage = getItemsPerPage();
+		long count = total / itemsPerPage;
 
 		if (itemsPerPage * count < total)
 		{
@@ -300,7 +300,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	/**
 	 * @return the index of the first visible item in the view
 	 */
-	public int getFirstItemOffset()
+	public long getFirstItemOffset()
 	{
 		return getCurrentPage() * getItemsPerPage();
 	}
@@ -309,7 +309,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	/**
 	 * @return the number of items visible
 	 */
-	public int getViewSize()
+	public long getViewSize()
 	{
 		return Math.min(getItemsPerPage(), getRowCount() - getFirstItemOffset());
 	}
@@ -327,8 +327,8 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	 */
 	private static class CappedIteratorAdapter<T> implements Iterator<IModel<T>>
 	{
-		private final int max;
-		private int index;
+		private final long max;
+		private long index;
 		private final Iterator<IModel<T>> delegate;
 
 		/**
@@ -339,7 +339,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 		 * @param max
 		 *            maximum number of items that can be accessed.
 		 */
-		public CappedIteratorAdapter(Iterator<IModel<T>> delegate, int max)
+		public CappedIteratorAdapter(Iterator<IModel<T>> delegate, long max)
 		{
 			this.delegate = delegate;
 			this.max = max;

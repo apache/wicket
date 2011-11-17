@@ -28,7 +28,7 @@ public class LoopItem extends AbstractItem
 	private static final long serialVersionUID = 1L;
 
 	/** The index of the ListItem in the parent ListView */
-	private int index;
+	private long index;
 
 	/**
 	 * Constructor
@@ -36,7 +36,7 @@ public class LoopItem extends AbstractItem
 	 * @param index
 	 *            The index of the item
 	 */
-	public LoopItem(final int index)
+	public LoopItem(final long index)
 	{
 		super(index);
 		this.index = index;
@@ -51,7 +51,7 @@ public class LoopItem extends AbstractItem
 	 * @param model
 	 *            The model object of the item
 	 */
-	public LoopItem(final int index, final IModel<?> model)
+	public LoopItem(final long index, final IModel<?> model)
 	{
 		super(index, model);
 		this.index = index;
@@ -92,7 +92,7 @@ public class LoopItem extends AbstractItem
 	 * 
 	 * @return The index of this listItem in the parent listView
 	 */
-	public final int getIndex()
+	public final long getIndex()
 	{
 		return index;
 	}

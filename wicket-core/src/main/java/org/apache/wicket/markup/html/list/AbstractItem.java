@@ -60,9 +60,9 @@ public class AbstractItem extends WebMarkupContainer
 	 * @param model
 	 *            model for this item
 	 */
-	public AbstractItem(final int id, final IModel<?> model)
+	public AbstractItem(final long id, final IModel<?> model)
 	{
-		this(Integer.toString(id), model);
+		this(Long.toString(id), model);
 	}
 
 	/**
@@ -71,8 +71,8 @@ public class AbstractItem extends WebMarkupContainer
 	 * @param id
 	 *            component id
 	 */
-	public AbstractItem(final int id)
+	public AbstractItem(final long id)
 	{
-		this(Integer.toString(id));
+		this(Long.toString(id));
 	}
 }

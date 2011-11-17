@@ -85,11 +85,11 @@ public class PagingNavigationIncrementLink<T> extends Link<T>
 	 * 
 	 * @return the new page number
 	 */
-	public final int getPageNumber()
+	public final long getPageNumber()
 	{
 		// Determine the page number based on the current
 		// PageableListView page and the increment
-		int idx = pageable.getCurrentPage() + increment;
+		long idx = pageable.getCurrentPage() + increment;
 
 		// make sure the index lies between 0 and the last page
 		return Math.max(0, Math.min(pageable.getPageCount() - 1, idx));

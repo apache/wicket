@@ -185,14 +185,14 @@ public class DataTableTest extends Assert
 				{
 				}
 
-				public Iterator<? extends Number> iterator(int first, int count)
+				public Iterator<? extends Number> iterator(long first, long count)
 				{
 					StringValue emptyValue = getPageParameters().get("empty");
 					return emptyValue.toBoolean() ? Collections.<Integer> emptyList().iterator()
 						: items.iterator();
 				}
 
-				public int size()
+				public long size()
 				{
 					StringValue emptyValue = getPageParameters().get("empty");
 					return emptyValue.toBoolean() ? 0 : items.size();

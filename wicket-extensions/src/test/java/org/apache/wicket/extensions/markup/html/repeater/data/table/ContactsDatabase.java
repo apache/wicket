@@ -87,9 +87,9 @@ public class ContactsDatabase
 	 * @param sort
 	 * @return list of contacts
 	 */
-	public List<Contact> find(final int first, final int count, final SortParam sort)
+	public List<Contact> find(final long first, final long count, final SortParam sort)
 	{
-		return getIndex(sort).subList(first, first + count);
+		return getIndex(sort).subList((int)first, (int)(first + count));
 	}
 
 	protected List<Contact> getIndex(final SortParam sort)

@@ -83,9 +83,9 @@ public class ContactsDatabase
 	 * @param sortAsc
 	 * @return list of contacts
 	 */
-	public List<Contact> find(int first, int count, String sortProperty, boolean sortAsc)
+	public List<Contact> find(long first, long count, String sortProperty, boolean sortAsc)
 	{
-		return getIndex(sortProperty, sortAsc).subList(first, first + count);
+		return getIndex(sortProperty, sortAsc).subList((int)first, (int)(first + count));
 	}
 
 	/**

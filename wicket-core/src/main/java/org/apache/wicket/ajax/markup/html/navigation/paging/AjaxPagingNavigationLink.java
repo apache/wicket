@@ -43,7 +43,7 @@ public class AjaxPagingNavigationLink extends PagingNavigationLink<Void> impleme
 	 *            The page number in the PageableListView that this link links to. Negative
 	 *            pageNumbers are relative to the end of the list.
 	 */
-	public AjaxPagingNavigationLink(final String id, final IPageable pageable, final int pageNumber)
+	public AjaxPagingNavigationLink(final String id, final IPageable pageable, final long pageNumber)
 	{
 		super(id, pageable, pageNumber);
 

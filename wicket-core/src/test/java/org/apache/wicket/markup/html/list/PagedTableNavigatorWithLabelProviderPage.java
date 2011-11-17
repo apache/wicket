@@ -76,11 +76,11 @@ public class PagedTableNavigatorWithLabelProviderPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public String getPageLabel(int page)
+			public String getPageLabel(long page)
 			{
-				int size = listview.getList().size();
-				int current = page * pageSize;
-				int end = current + pageSize;
+				long size = listview.getList().size();
+				long current = page * pageSize;
+				long end = current + pageSize;
 				if (end > size)
 				{
 					end = size;
